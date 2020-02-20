@@ -1,3 +1,18 @@
+<h2>SVN migration</h2>
+<div class="hDetails">February, 2020</div>
+
+<p>For reasons of maintenance of the source code we have archived the sources up to version 6.2.1 in a read-only repository at: <a href="https://sourceforge.net/p/wikindxold/svn/">https://sourceforge.net/p/wikindxold/svn/</a></p>
+
+<p>Development continues in a new repository at: <a href="https://sourceforge.net/p/wikindx/svn/">https://sourceforge.net/p/wikindx/svn/</a></p>
+
+<p>The folder structure has been changed. Read the README.txt file at the root of the repository for details.</p>
+
+<p>For people following the stable branch you must clone again from svn.code.sf.net/p/wikindx/svn/tags/stable or change your clone with <em>svn switch</em>.</p>
+
+<p>See <a href="http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.switch.html">http://svnbook.red-bean.com/en/1.7/svn.ref.svn.c.switch.html</a></p>
+
+
+
 <h2>Wikindx v6.2.1 Released</h2>
 <div class="hDetails">February, 2020</div>
 <h3>CHANGELOG</h3>

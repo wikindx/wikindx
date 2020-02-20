@@ -1,0 +1,26 @@
+{
+    "component_type": "style",
+    "component_id": "ieee",
+    "component_version": "1.1",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "IEEE",
+    "component_description": "Institute of Electrical and Electronics Engineers (IEEE), a widely accepted format for writing research papers, commonly used in technical fields, particularly in computer science.",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_website": "https://en.wikipedia.org/wiki/IEEE_style",
+    "component_authors": [
+        {
+            "author_name": "Frank Goergen",
+            "author_role": "Compiler",
+            "author_copyright": "2005"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Editor",
+            "author_copyright": "2005, 2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        }
+    ],
+    "component_sha256": "f6bd57ba66349590091bcb0151a209c6bb12838421cce100ba1080990dd32639"
+}

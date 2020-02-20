@@ -1,0 +1,194 @@
+# Wikindx's Translation ressource: Русский.
+# For copyright see the component.json file
+# This file is distributed under the same license as the debugtools package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: debugtools\n"
+"Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
+"POT-Creation-Date: 2020-01-25 18:48+0100\n"
+"PO-Revision-Date: 2019-09-27 01:50+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: components/plugins/debugtools/debugtoolsmessages.php:19
+msgid "Action"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:20
+msgid "Backup"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:21
+msgid "Both"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:22
+msgid "Browse by category: "
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:23
+msgid "Core"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:24
+msgid "Decoded"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:25
+msgid "Delete"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:26
+msgid "Delete all session variables of the current user"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:27
+msgid "All user session variables have been deleted"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:28
+msgid "The Session variable have been deleted"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:29
+msgid "Destroy the whole session of the current user"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:30
+msgid "The whole session have been destroyed"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:31
+#: components/plugins/debugtools/debugtoolsmessages.php:55
+msgid "Extension"
+msgid_plural "Extensions"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:32
+msgid "Field"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:33
+msgid "Format<br>Raw/Decoded"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:34
+msgid "Application Configuration (in DB)"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:35
+msgid "User Configuration (in DB)"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:36
+msgid "Constants Debug"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:37
+msgid "Cookies Debug ($_COOKIE)"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:38
+msgid "Environment Debug"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:39
+msgid "Extensions Debug"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:40
+msgid "Server superglobal Debug ($_SERVER)"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:41
+msgid "Session Debug ($_SESSION)"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:42
+msgid "Id"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:43
+msgid "Keys"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:44
+msgid "Yes"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:45
+msgid "No"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:46
+msgid "Optional"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:47
+msgid "Mandatory"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:48
+msgid "Loaded"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:49
+msgid "Debug tools..."
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:50
+msgid "App. Config."
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:51
+msgid "User Config."
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:52
+msgid "Constants"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:53
+msgid "Cookies"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:54
+msgid "Environment"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:56
+msgid "Server"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:57
+msgid "Session"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:58
+msgid "Raw"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:59
+msgid "Requirements of WIKINDX"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:60
+msgid "(This value is hidden for security)"
+msgstr ""
+
+#: components/plugins/debugtools/debugtoolsmessages.php:61
+#: components/plugins/debugtools/debugtoolsmessages.php:62
+msgid "Value"
+msgid_plural "Values"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""

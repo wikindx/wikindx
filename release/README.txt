@@ -16,7 +16,7 @@ checklist.
 X.Y.Z is the number of the released version defined by the constant
 WIKINDX_PUBLIC_VERSION. trunk or stable is not a valid name.
 
-I. Code preparation et checks
+I. Code preparation and checks
 
 1. In the event of a change in structure or the addition of a
    third-party library in a plugin, update:
@@ -78,7 +78,7 @@ I. Code preparation et checks
 16. Format the php code with the PHP-CS-Fixer formater.
 
     $ cd trunk
-    $ php ../../tools/php-cs-fixer.phar fix --config php-fmt-dev.php
+    $ php ../tools/php-cs-fixer.phar fix --config php-fmt-dev.php
 
 17. Update the db schema of the Repair Kit.
 
@@ -161,7 +161,7 @@ one to modify SVN.
    History) to the current revision (HEAD).
 
    $ cd root_dir_of_svn_working_copy
-   $ svn merge -r XXXX:HEAD wikindx/trunk wikindx/stable --force --verbose
+   $ svn merge -r XXXX:HEAD trunk tags/stable --force --verbose
    [
       ...fix a conflict...
       $ svn resolve --accept working
@@ -171,8 +171,8 @@ one to modify SVN.
 4. Create the tag tags/X.Y.Z from the trunk branch with the message:
    Release tag X.Y.Z
 
-   $ svn copy https://svn.code.sf.net/p/wikindx/code/wikindx/trunk \
-              https://svn.code.sf.net/p/wikindx/code/wikindx/tags/X.Y.Z \
+   $ svn copy https://svn.code.sf.net/p/wikindx/svn/trunk \
+              https://svn.code.sf.net/p/wikindx/svn/tags/X.Y.Z \
               -m "Release tag X.Y.Z"
 
 5. Update your working copy to retrieve the new tag.

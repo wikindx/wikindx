@@ -48,15 +48,15 @@ define('DIR_ROOT', __DIR__ . DIRECTORY_SEPARATOR . "..");
 define('DIRPKG_ROOT', __DIR__);
 define('SF_RELEASE_SERVER', "https://sourceforge.net/projects/wikindx/files/archives");
 
-define('DIRSRC_ROOT', DIR_ROOT . DIRECTORY_SEPARATOR . 'wikindx');
+define('DIRSRC_ROOT', DIR_ROOT);
 define('DIRSRC_TAGS', DIRSRC_ROOT . DIRECTORY_SEPARATOR . 'tags');
 define('DIRSRC_TRUNK', DIRSRC_ROOT . DIRECTORY_SEPARATOR . 'trunk');
 
 define('BIN_PHPDOC', DIR_ROOT . DIRECTORY_SEPARATOR . 'tools' . DIRECTORY_SEPARATOR . 'phpDocumentor.phar');
 
-include_once(DIR_ROOT . "/wikindx/trunk/core/startup/CONSTANTS.php");
-include_once(DIR_ROOT . "/wikindx/trunk/core/file/FILE.php");
-include_once(DIR_ROOT . "/wikindx/trunk/core/utils/UTILS.php");
+include_once(DIRSRC_TRUNK . "/core/startup/CONSTANTS.php");
+include_once(DIRSRC_TRUNK . "/core/file/FILE.php");
+include_once(DIRSRC_TRUNK . "/core/utils/UTILS.php");
 
 $VersionsAvailable = \FILE\dirInDirToArray(DIRSRC_TAGS);
 $VersionsAvailable[] = 'trunk';

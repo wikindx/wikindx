@@ -1,0 +1,1 @@
+<h1>WAMP Install</h1>

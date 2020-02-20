@@ -1,0 +1,1466 @@
+[
+    {
+        "component_version": "1.5",
+        "component_sha256": "883a8cb3c2c91271fab2aa3cb68d877ecdb216e19163382d97d1b18364cf76dc",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_description": "Deutsch Sprachanpassun",
+        "component_name": "German",
+        "component_id": "de",
+        "component_builtin": "false",
+        "component_type": "language",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Stephan Matthiesen",
+                "author_role": "Translator",
+                "author_copyright": "2013",
+                "author_email": "info@stephan-matthiesen.de",
+                "author_website": "https://www.stephan-matthiesen.de/en/about-me.html"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_language_de.zip",
+                "package_sha256": "532f38f3dc9c1a322024a6798fcc9b529f76d7ef31239acfb95bbfade3b5ae53",
+                "package_size": 46109
+            }
+        ]
+    },
+    {
+        "component_version": "1.5",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Spanish",
+        "component_description": "Traducción al español",
+        "component_id": "es",
+        "component_sha256": "f2c7b36758bc3493fafe1b2b175b5704f3d42fc2179a94c542c9059cd7b6ba75",
+        "component_builtin": "false",
+        "component_type": "language",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Anonymous",
+                "author_role": "Translator",
+                "author_copyright": "2017"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_language_es.zip",
+                "package_sha256": "37728578c40f18849cbc5587940cc1112579b84505a03800f828c3a4bb4d1f93",
+                "package_size": 32252
+            }
+        ]
+    },
+    {
+        "component_version": "1.5",
+        "component_sha256": "3017eafc00ed13f3b8771c244743991743337d2ffe64940ebfc58293663894b2",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "French",
+        "component_description": "Traduction française",
+        "component_id": "fr",
+        "component_type": "language",
+        "component_builtin": "true",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Simon Côté-Lapointe",
+                "author_role": "Translator",
+                "author_copyright": "2017",
+                "author_email": "simonoliviercotelapointe@hotmail.com",
+                "author_website": "http://simoncotelapointe.com/"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Translator",
+                "author_copyright": "2017-2019",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_language_fr.zip",
+                "package_sha256": "cefd170084557f767c648c4ea7f0b7ee65bafeda27fe7a66cd051ec32944e6dd",
+                "package_size": 50944
+            }
+        ]
+    },
+    {
+        "component_version": "1.5",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Italian",
+        "component_description": "Traduzione italiana",
+        "component_sha256": "b4b0de53ea7b8343c35a22ca059139d14839f47638424f44121755b30364df7d",
+        "component_builtin": "false",
+        "component_id": "it",
+        "component_type": "language",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Fabrizio Tallarita",
+                "author_role": "Translator",
+                "author_copyright": "2017"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_language_it.zip",
+                "package_sha256": "0c127760efedea761fc1f658755fbf1fd1fcbd42307f3bf4c1a8a8075904d3be",
+                "package_size": 43275
+            }
+        ]
+    },
+    {
+        "component_version": "1.5",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Russian",
+        "component_sha256": "d502ced49da2586945e5d28b4f3f2133d70dd20c76f7f5f75ebf05bed5379cf9",
+        "component_builtin": "false",
+        "component_type": "language",
+        "component_id": "ru",
+        "component_updatable": "true",
+        "component_description": "Русский перевод",
+        "component_authors": [
+            {
+                "author_name": "Billy Bob",
+                "author_role": "Translator",
+                "author_copyright": "2017",
+                "author_email": "simple4all@users.sourceforge.com"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_language_ru.zip",
+                "package_sha256": "14b4a2cba2f7ec8c70c3b26b2bc0e017d5578238d5707a6b546242627112ca20",
+                "package_size": 41393
+            }
+        ]
+    },
+    {
+        "component_version": "1.5",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_description": "Gettext Sources Files (PO/POT)",
+        "component_name": "Gettext sources",
+        "component_sha256": "b38dc1e9ef8e89df03cfc6e9d4c0e27138fcea2698ac836f0abbeec691a7023b",
+        "component_builtin": "false",
+        "component_type": "language",
+        "component_id": "src",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2019-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2019-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_language_src.zip",
+                "package_sha256": "c005e98e41ea45e38f5bf5338b70a9156acb6374fba39f5302a924e9cf554e12",
+                "package_size": 492620
+            }
+        ]
+    },
+    {
+        "component_version": "1.12",
+        "component_sha256": "62f920733872d41e09e2dd50ebe0fa60000e0950c513152b954b019b66e09f88",
+        "component_name": "Admin Styles",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_description": "Create, edit and share with WIKINDX users your bibliographic and citation styles.",
+        "component_id": "adminstyle",
+        "component_builtin": "false",
+        "component_type": "plugin",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2013-2014, 2016-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_plugin_adminstyle.zip",
+                "package_sha256": "f9b7f30bec08bae83af566cb7a2953f9280f7d48ae1a96034f5126d288e488db",
+                "package_size": 45878
+            }
+        ]
+    },
+    {
+        "component_version": "1.7",
+        "component_sha256": "7d345402f36140128627bf7c93041505ee7548efc65f2ef5176134d234e90767",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "MySQL Backup",
+        "component_description": "MySQL backup database tools. This tool is limited by the maximum execution time of a web page of your hosting service. It can not replace an appropriate backup tool for large databases like mysqldump. This plugin can be a security vulnerability for a public site. Use with caution.",
+        "component_id": "backupmysql",
+        "component_builtin": "false",
+        "component_type": "plugin",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2013, 2016-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_plugin_backupmysql.zip",
+                "package_sha256": "a4d58a78956d74db41abf902f4fe468b13a82a223a672abaa8c3a31b1dc5c09a",
+                "package_size": 8705
+            }
+        ]
+    },
+    {
+        "component_version": "1.7",
+        "component_sha256": "30059821b909a4aedf19b96a21e5a17ff251914b6e25cc81c1e0872c309f2a40",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Choose Language",
+        "component_description": "Display a drop-down menu on all pages to choose the language of the interface. This is useful if your website is hosted on the web and on public access.",
+        "component_id": "chooselanguage",
+        "component_builtin": "false",
+        "component_type": "plugin",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2005-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_plugin_chooselanguage.zip",
+                "package_sha256": "3e430afe95c5c3fefe0ed98b5094919cc5be9cd19f2927e85e6f91413d3f2f24",
+                "package_size": 3837
+            }
+        ]
+    },
+    {
+        "component_version": "1.4",
+        "component_sha256": "223d7067996c2eb896eb2b53e7e396ce1fa6d3a6fee9921c6e53964a193bb625",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "DB Adminer",
+        "component_description": "Embedded version of the database manager Adminer, with a selection of tested plugins. This plugin can be a security vulnerability for a public site. Use with caution.",
+        "component_id": "dbadminer",
+        "component_builtin": "false",
+        "component_website": "https://www.adminer.org/",
+        "component_type": "plugin",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2019-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2019-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_plugin_dbadminer.zip",
+                "package_sha256": "ff0a18190a833e216eb378a789c0dc223f489b078d961792c8626a4f633ff966",
+                "package_size": 268274
+            }
+        ]
+    },
+    {
+        "component_version": "1.2",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Debug Tools",
+        "component_description": "Some tools for debugging Wikindx. For developers, testers, or difficult situations when a bug arises.",
+        "component_id": "debugtools",
+        "component_sha256": "e13d245a91da47252e97b9d41e61fcfaa4a7a650e7f9b924c80b49e3ebb06b89",
+        "component_builtin": "false",
+        "component_type": "plugin",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2019-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2019-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_plugin_debugtools.zip",
+                "package_sha256": "79dad84e8ee95dde60a87deff17c96ebed0b2d789f96d4a398983f8a21a513cb",
+                "package_size": 6888
+            }
+        ]
+    },
+    {
+        "component_version": "1.11",
+        "component_sha256": "4698e34e94eb7de186982ce489acdcaeb09d082d8d277736de9b732ef5c1ec23",
+        "component_name": "Amazon Products Import",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_description": "Import a resource from Amazon using Amazon's web services (imports only books). You must have a personal Amazon developer account to query the web service.",
+        "component_builtin": "false",
+        "component_website": "https://docs.aws.amazon.com/AWSECommerceService/latest/DG/CHAP_OperationListAlphabetical.html",
+        "component_id": "importamazon",
+        "component_type": "plugin",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2009-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_plugin_importamazon.zip",
+                "package_sha256": "15228775ca393350607f54ff6f171ed5aaa804a9c2b5444020631521963c6331",
+                "package_size": 10299
+            }
+        ]
+    },
+    {
+        "component_version": "1.14",
+        "component_sha256": "8e5d0b155fcdb4214c890f6dce938e2df143087123b3ef62f64fe6bde848938e",
+        "component_name": "Bibliography Import/Export",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_description": "Import and export bibliographies in various formats (Bibtex, EndNote, HTML, PubMed, RIS, RTF).",
+        "component_builtin": "false",
+        "component_id": "importexportbib",
+        "component_type": "plugin",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Brian Cade",
+                "author_role": "Developer",
+                "author_copyright": "2006-2007",
+                "author_email": "bcade@users.sourceforge.net"
+            },
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2006-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2017-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_plugin_importexportbib.zip",
+                "package_sha256": "148433ba1b4208bc77b516a352834eda3a006b56d66afe4640527f2c0aa5be42",
+                "package_size": 78823
+            }
+        ]
+    },
+    {
+        "component_version": "1.5",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_description": "Customize the description on the home page in various languages.",
+        "component_name": "Localized Front Page",
+        "component_sha256": "d97c72da2c4ddd876dfa161ede4ef0698c7d13804e4214a168129bb8af92fd92",
+        "component_builtin": "false",
+        "component_id": "localedescription",
+        "component_type": "plugin",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2013, 2016-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_plugin_localedescription.zip",
+                "package_sha256": "1c679fca81f3a4358a2a57aaf8e511568cac0c2d5b983b898233428a7fd41daf",
+                "package_size": 4630
+            }
+        ]
+    },
+    {
+        "component_version": "1.8.3",
+        "component_description": "Attempt to fix to a number of errors that can occur over time in the database. For developers, testers, or difficult situations when a db schema is corrupted.",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Repair Kit",
+        "component_sha256": "b7184fa5322b2d14ccba32a893bdbafda188dddd66209f5072ea87e9b137b5fe",
+        "component_builtin": "false",
+        "component_type": "plugin",
+        "component_id": "repairkit",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2013, 2016-2017, 2019-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_plugin_repairkit.zip",
+                "package_sha256": "bf92a3f4c3801d5e383d695f79f751b7190669a187bae4d683b0a9adc87564c7",
+                "package_size": 13863
+            }
+        ]
+    },
+    {
+        "component_version": "2.3",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_description": "Experimental plugin that plays sounds at certain Wikindx events.",
+        "component_name": "Sound Explorer",
+        "component_sha256": "d9c8e7f358a5d8e5a48f056acfd4508ab25d098903789b0257314d45b6704cae",
+        "component_builtin": "false",
+        "component_type": "plugin",
+        "component_id": "soundexplorer",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2013-2012, 2017, 2019-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_plugin_soundexplorer.zip",
+                "package_sha256": "418c2d8d0a0a7e6fbe018f30e886b90e9b71910df47b0d2c14764dc8286933c0",
+                "package_size": 13314
+            }
+        ]
+    },
+    {
+        "component_version": "1.9",
+        "component_sha256": "120387a43b61f7605e117c8075e56d1c77667ddde62a2631a84179c9400b6557",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Categories Administration for Users",
+        "component_description": "User administration of categories.",
+        "component_builtin": "false",
+        "component_type": "plugin",
+        "component_updatable": "true",
+        "component_id": "userwritecategory",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2012-2016, 2019-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_plugin_userwritecategory.zip",
+                "package_sha256": "6647df4b1759caf47cb4820c1a08f4bad0ace0c60c500724ba73affe359edd30",
+                "package_size": 3616
+            }
+        ]
+    },
+    {
+        "component_version": "1.4",
+        "component_sha256": "97ea30680cfc746d804c37ba01ad4749604db80b9d78d9fbc050525d32376cf0",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_description": "Create various graphical visualizations from WIKINDX data with the JpGraph PHP library.",
+        "component_name": "Visualize",
+        "component_builtin": "false",
+        "component_type": "plugin",
+        "component_updatable": "true",
+        "component_id": "visualize",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2019-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2019-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_plugin_visualize.zip",
+                "package_sha256": "1d42612f65075a97508b017ec9bec42eb62869ad60069569d33201fbbe53ee2d",
+                "package_size": 3777170
+            }
+        ]
+    },
+    {
+        "component_version": "1.10",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_description": "Logged in users can use a WYSIWYG word processor for the writing of articles.",
+        "component_name": "Word Processor",
+        "component_builtin": "false",
+        "component_sha256": "ffd06897559dd2f2808dd5f809044fd791350fc5fd37824457c39786aeff3883",
+        "component_type": "plugin",
+        "component_updatable": "true",
+        "component_id": "wordprocessor",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2012-2014, 2016-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2012, 2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_plugin_wordprocessor.zip",
+                "package_sha256": "952b52af8872610edbff4891427beb5d94f41b161eb9c6f10163f63e02ec3ebd",
+                "package_size": 44323
+            }
+        ]
+    },
+    {
+        "component_version": "1.1",
+        "component_name": "ABNT",
+        "component_description": "Associação Brasileira de Normas Técnicas (ABNT)",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_id": "abnt",
+        "component_sha256": "e88eca55d62b391ad5bd8529aae57582eb835114e99bfcb43c7413fcd498d7ee",
+        "component_builtin": "false",
+        "component_website": "https://referenciabibliografica.net/a/en/ref/abnt",
+        "component_type": "style",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Rui Alão",
+                "author_role": "Compiler",
+                "author_copyright": "2013, 2020",
+                "author_website": "https://ruialao.blogspot.com/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_style_abnt.zip",
+                "package_sha256": "ee139ee9590e77bac3ad25ebfa71f1d7ebc1469566182b61071d8e6035ce73f1",
+                "package_size": 4642
+            }
+        ]
+    },
+    {
+        "component_version": "1.1",
+        "component_sha256": "2ea87668b00c80751c3f08645803d52922bf2333cbb280ae8f40108b53dc2a28",
+        "component_name": "APA",
+        "component_description": "American Psychological Association (APA) (installed by default). APA is an author/date based style. This means emphasis is placed on the author and the date of a piece of work to uniquely identify it.",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_id": "apa",
+        "component_website": "https://apastyle.apa.org",
+        "component_type": "style",
+        "component_builtin": "true",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Compiler",
+                "author_copyright": "2005, 2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_style_apa.zip",
+                "package_sha256": "54b9018dc591c006b7a8db8c31e09bac151b1096714898b3515f58e9b48a0674",
+                "package_size": 5582
+            }
+        ]
+    },
+    {
+        "component_version": "1.1",
+        "component_name": "BMJ",
+        "component_description": "British Medical Journal (BMJ)",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_id": "britishmedicaljournal",
+        "component_sha256": "c05889856630ab8dcd8188eb427510b2f348f5c5d9d470775757a2b405811937",
+        "component_builtin": "false",
+        "component_website": "https://www.bmj.com/about-bmj/resources-authors/house-style",
+        "component_type": "style",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Compiler",
+                "author_copyright": "2005, 2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_style_britishmedicaljournal.zip",
+                "package_sha256": "d32ae223caad3c53c1ea79f03ec122c4c9bf79a4f1e2ee72eb01906cad32dde3",
+                "package_size": 4897
+            }
+        ]
+    },
+    {
+        "component_sha256": "08e17f47fa93a08d0c37e2f8a76fd2e40bf0134af8179f22e6f0147c03423661",
+        "component_version": "1.1",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "CFB",
+        "component_description": "Comicforschung-Bibliographie Stil (CFB)",
+        "component_id": "cfb",
+        "component_builtin": "false",
+        "component_website": "http://www.bobc.uni-bonn.de",
+        "component_type": "style",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Dr. Joachim Trinkwitz",
+                "author_role": "Compiler",
+                "author_copyright": "2016",
+                "author_email": "jtr@uni-bonn.de",
+                "author_website": "http://www.bobc.uni-bonn.de"
+            },
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Editor",
+                "author_copyright": "2016, 2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_style_cfb.zip",
+                "package_sha256": "2805156401b63ff31442b47775411e71ac621ffdc37f21ffeff51887e1960f8a",
+                "package_size": 5250
+            }
+        ]
+    },
+    {
+        "component_version": "1.1",
+        "component_sha256": "78804bc10db0b3cbfe9a733e3bf24fd93008e6e3787a6b99a339abe08f32c925",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Chicago",
+        "component_description": "Chicago Style. Turabian and Chicago are two separate styles but are very similar, just like Harvard and APA. These are widely used for history and economics.",
+        "component_id": "chicago",
+        "component_builtin": "false",
+        "component_website": "https://www.chicagomanualofstyle.org/home.html",
+        "component_type": "style",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Compiler",
+                "author_copyright": "2005, 2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_style_chicago.zip",
+                "package_sha256": "49e0187b09381cccefc38faf33c3b2212baf022be562f7bb1e5f8a5199da6e14",
+                "package_size": 5412
+            }
+        ]
+    },
+    {
+        "component_version": "1.1",
+        "component_sha256": "9da1056b5941209568b1fb62cc3ddc3cca244a7648c8874b948191e0f63b95eb",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Harvard",
+        "component_description": "Harvard Style. Harvard is very similar to APA. Where APA is primarily used in the USA, Harvard referencing is widely used in the UK and Australia and is encouraged for use with the humanities.",
+        "component_builtin": "false",
+        "component_id": "harvard",
+        "component_website": "https://library.aru.ac.uk/referencing/harvard.htm",
+        "component_type": "style",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Compiler",
+                "author_copyright": "2005, 2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_style_harvard.zip",
+                "package_sha256": "2e5e59c298df5a4358ddf293736ad0607f194af2d75df1d558c1e3532e149abe",
+                "package_size": 4933
+            }
+        ]
+    },
+    {
+        "component_version": "1.1",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "IEEE",
+        "component_description": "Institute of Electrical and Electronics Engineers (IEEE), a widely accepted format for writing research papers, commonly used in technical fields, particularly in computer science.",
+        "component_sha256": "f6bd57ba66349590091bcb0151a209c6bb12838421cce100ba1080990dd32639",
+        "component_builtin": "false",
+        "component_website": "https://en.wikipedia.org/wiki/IEEE_style",
+        "component_id": "ieee",
+        "component_type": "style",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Frank Goergen",
+                "author_role": "Compiler",
+                "author_copyright": "2005"
+            },
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Editor",
+                "author_copyright": "2005, 2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_style_ieee.zip",
+                "package_sha256": "2e46cc9a6fc48d497547c5cbf3956175134975f645edf16345e6115ba5294181",
+                "package_size": 4214
+            }
+        ]
+    },
+    {
+        "component_version": "1.1",
+        "component_sha256": "985c856aeee0b5791275247d0cb6c771c0e08df5a1451d8cd9c5ec6caa257a64",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "MLA",
+        "component_description": "Modern Language Association (MLA). MLA is most often applied by the arts and humanities, particularly in the USA. It is arguably the most well used of all of the citation styles.",
+        "component_builtin": "false",
+        "component_website": "https://style.mla.org/",
+        "component_id": "mla",
+        "component_type": "style",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Compiler",
+                "author_copyright": "2005, 2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_style_mla.zip",
+                "package_sha256": "5318919677efcdc8704bad551f5318d2f368c366c6a987898b82233b38ae45a7",
+                "package_size": 4986
+            }
+        ]
+    },
+    {
+        "component_version": "1.1",
+        "component_sha256": "9b87e940aed67282dde8454b7e468ac34f6ca58a1fc0edb84e29262189f804fa",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Turabian",
+        "component_description": "Turabian Style. Turabian and Chicago are two separate styles but are very similar, just like Harvard and APA. These are widely used for history and economics.",
+        "component_builtin": "false",
+        "component_website": "https://www.chicagomanualofstyle.org/turabian/citation-guide.html",
+        "component_type": "style",
+        "component_updatable": "true",
+        "component_id": "turabian",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Compiler",
+                "author_copyright": "2005, 2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_style_turabian.zip",
+                "package_sha256": "f3c0d26208f1374d5ad5844e34d8f4d73a710b5e4ecdf4a5b8e9061a84be80ca",
+                "package_size": 5458
+            }
+        ]
+    },
+    {
+        "component_version": "1.1",
+        "component_sha256": "993c61e5af0dc09e3e4e6b7e69ec961518b03939c589b4996380b0a4e5124664",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Wikindx",
+        "component_description": "Wikindx Style",
+        "component_builtin": "false",
+        "component_website": "https://wikindx.sourceforge.io/",
+        "component_type": "style",
+        "component_updatable": "true",
+        "component_id": "wikindx",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Compiler",
+                "author_copyright": "2005, 2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_style_wikindx.zip",
+                "package_sha256": "2bcf255fb145885978da361fad9ed78c95eee7536336e0839b94b5ef4caee5bf",
+                "package_size": 5829
+            }
+        ]
+    },
+    {
+        "component_version": "1.2",
+        "component_sha256": "3bd2841799379e912921b27802f775fc97cb20cd248a6e7aa5954d4e501b6068",
+        "component_description": "A green basic theme that talks about mosses (horizontal menu)",
+        "component_name": "Bryophyta",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_id": "bryophyta",
+        "component_builtin": "false",
+        "component_type": "template",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2012-2013, 2016-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2012, 2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_template_bryophyta.zip",
+                "package_sha256": "a3a2080760c1f8eb800b753496c8d1b40af89b7dfda49d6bdcb3db7ae02c3ef0",
+                "package_size": 54011
+            }
+        ]
+    },
+    {
+        "component_version": "1.2",
+        "component_sha256": "24473866c4c7b6406665498f766ed0b4a03f28d1a5b6ef7dc5423f050cf7b117",
+        "component_description": "A colorful theme (horizontal menu)",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Carambola",
+        "component_id": "carambola",
+        "component_builtin": "false",
+        "component_type": "template",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Rui Alão",
+                "author_role": "Developer",
+                "author_copyright": "2013",
+                "author_website": "https://ruialao.blogspot.com/"
+            },
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2012-2013, 2016-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2012, 2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_template_carambola.zip",
+                "package_sha256": "62f81faab70b6919bdb3907539fcec5e9df43473ee933dd2b7b11547fd17f910",
+                "package_size": 65766
+            }
+        ]
+    },
+    {
+        "component_version": "1.2",
+        "component_sha256": "556a793e4e0f27fd5484f18e55285a3fb1c467d82a47536f40e2f49192d77fa1",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Default",
+        "component_description": "Wikindx default theme (installed by default, horizontal menu)",
+        "component_id": "default",
+        "component_type": "template",
+        "component_builtin": "true",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2004-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2012-2013, 2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_template_default.zip",
+                "package_sha256": "29163a2bfceaab6ed98c79b009de9de9d90107c8cfe010709a7d520b9fdf53cc",
+                "package_size": 151649
+            }
+        ]
+    },
+    {
+        "component_version": "1.2",
+        "component_sha256": "21e8e874a991cbe3273bc7cd612b6e5bb63ae8e582736a97d68f8f2b231fb89e",
+        "component_description": "A theme around the medieval manuscript Liber Floridus (vertical menu)",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Enluminure",
+        "component_id": "enluminure",
+        "component_builtin": "false",
+        "component_type": "template",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2012-2013, 2016-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2012, 2014, 2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_template_enluminure.zip",
+                "package_sha256": "6da04187f355c80c80be51452b6699d8bd4e0400cea45e3ca9cbe851234486c4",
+                "package_size": 411921
+            }
+        ]
+    },
+    {
+        "component_version": "1.2",
+        "component_sha256": "79cb9e0e9389914eaa90adfdd548e90f8ed4efd43b0ebca93f23473ea3683d3c",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "PIAF",
+        "component_description": "Theme of the Portail International Archivistique Francophone (PIAF) (horizontal menu)",
+        "component_builtin": "false",
+        "component_id": "piaf",
+        "component_type": "template",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Portail International Archivistique Francophone",
+                "author_role": "Developer",
+                "author_copyright": "2014",
+                "author_website": "http://www.piaf-archives.org"
+            },
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2012-2013, 2016-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_template_piaf.zip",
+                "package_sha256": "0f4a855a6c490a4bb075670925b6cbae6ab0dd9b04ab32879ecf6776ef655d27",
+                "package_size": 74830
+            }
+        ]
+    },
+    {
+        "component_version": "1.2",
+        "component_description": "A blue basic theme (horizontal menu)",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Simple Blue",
+        "component_sha256": "e769623a96b594d88b6a6a8f26b9166d4c7588b9b7a77b7af88b6120544961ff",
+        "component_builtin": "false",
+        "component_id": "simpleblue",
+        "component_type": "template",
+        "component_updatable": "true",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2012-2013, 2016-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2012, 2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_template_simpleblue.zip",
+                "package_sha256": "87b4ec364d67daeab5799c243ec9df354b817ab3d42760432f4e666194cc2baf",
+                "package_size": 55090
+            }
+        ]
+    },
+    {
+        "component_version": "1.2",
+        "component_sha256": "866f4f232603bf28e3b2de55063aba0531bb7a1c673b79f1e538722adde41285",
+        "component_description": "An orange basic theme (vertical menu)",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Vertical Orange",
+        "component_builtin": "false",
+        "component_type": "template",
+        "component_updatable": "true",
+        "component_id": "verticalorange",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Developer",
+                "author_copyright": "2012-2013, 2016-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Developer",
+                "author_copyright": "2012, 2016-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_template_verticalorange.zip",
+                "package_sha256": "5d39c55bebfbfb2fa0371cfe68613531324ee22939c3519d119ff861a7269590",
+                "package_size": 58193
+            }
+        ]
+    },
+    {
+        "component_version": "3.3.1",
+        "component_sha256": "4fa6e5b11af1f9d98744ec7e6951bf3d1c6b4474b9e522126ee4305e8363499c",
+        "component_licence": "MIT License",
+        "component_website": "https://jquery.com/",
+        "component_name": "jQuery JS library",
+        "component_description": "jQuery is a fast, small, and feature-rich JavaScript library. It makes things like HTML document traversal and manipulation, event handling, animation, and Ajax much simpler with an easy-to-use API that works across a multitude of browsers. With a combination of versatility and extensibility, jQuery has changed the way that millions of people write JavaScript.",
+        "component_id": "jquery",
+        "component_builtin": "true",
+        "component_updatable": "true",
+        "component_type": "vendor",
+        "component_authors": [
+            {
+                "author_name": "JS Foundation and other contributors",
+                "author_role": "Developers",
+                "author_copyright": "2006-2019"
+            },
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Packager",
+                "author_copyright": "2017-2016, 2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Packager",
+                "author_copyright": "2017-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_vendor_jquery.zip",
+                "package_sha256": "25375f8c8c2451b514268e9725689b181c874a7a3d8a50dc3c1a2c0a7197e83c",
+                "package_size": 31145
+            }
+        ]
+    },
+    {
+        "component_version": "2017-06-12",
+        "component_description": "JSON library in JavaScript.",
+        "component_licence": "Public Domain",
+        "component_sha256": "bba9b785919cc4e40ef60920f6f56b68a242bb151d84426d993d077211d2248d",
+        "component_website": "https://github.com/douglascrockford/JSON-js",
+        "component_name": "json2.js library",
+        "component_id": "jsonjs",
+        "component_builtin": "true",
+        "component_updatable": "true",
+        "component_type": "vendor",
+        "component_authors": [
+            {
+                "author_name": "Douglas Crockford",
+                "author_role": "Developer",
+                "author_copyright": "2009-2019",
+                "author_website": "https://www.crockford.com"
+            },
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Packager",
+                "author_copyright": "2010-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Packager",
+                "author_copyright": "2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_vendor_jsonjs.zip",
+                "package_sha256": "286300b1849e6fd1acfa12416576e3c9a83a4db49f3d51f511abea0765b12b35",
+                "package_size": 6269
+            }
+        ]
+    },
+    {
+        "component_version": "1.1",
+        "component_licence": "CC-BY-NC-SA 4.0",
+        "component_name": "Licenses texts",
+        "component_description": "This package contains a copy of each license used by Wikindx or third-party software on which it depends.",
+        "component_sha256": "b4d7bf6e0a4b207d05f9e7197d4657ed78485544eb9584fc5f7607910429b3ad",
+        "component_builtin": "false",
+        "component_website": "https://wikindx.sourceforge.io/",
+        "component_id": "licenses",
+        "component_updatable": "true",
+        "component_type": "vendor",
+        "component_authors": [
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Packager",
+                "author_copyright": "2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Packager",
+                "author_copyright": "2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_vendor_licenses.zip",
+                "package_sha256": "5e1fc130a47202f4c03b358ad093287b8d53113536a911c3d1c0171e5d143df3",
+                "package_size": 34722
+            }
+        ]
+    },
+    {
+        "component_version": "1.6.6",
+        "component_sha256": "7f0900a01e1f5ae3378c99beba7c5a3b7b4d3db54a241a4fa9dd4e75f5d0593d",
+        "component_licence": "LGPL 2.1",
+        "component_name": "PdfToText",
+        "component_description": "The PdfToText class has been designed to extract textual contents from a PDF file.",
+        "component_website": "https://github.com/christian-vigh-phpclasses/PdfToText",
+        "component_id": "pdftotext",
+        "component_builtin": "true",
+        "component_updatable": "true",
+        "component_type": "vendor",
+        "component_authors": [
+            {
+                "author_name": "Christian Vigh",
+                "author_role": "Developer",
+                "author_copyright": "2016-2017",
+                "author_email": "christian.vigh@wuthering-bytes.com",
+                "author_website": "https://github.com/christian-vigh"
+            },
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Packager",
+                "author_copyright": "2016-2017, 2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Packager",
+                "author_copyright": "2016-2017, 2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_vendor_pdftotext.zip",
+                "package_sha256": "a2ff157f5828a35082683487afa3507ef003158c295768bd2a7f874dffde6a1d",
+                "package_size": 158659
+            }
+        ]
+    },
+    {
+        "component_version": "6.1.3",
+        "component_description": "A full-featured email creation and transfer class for PHP.",
+        "component_licence": "LGPL 2.1",
+        "component_name": "PHPMailer",
+        "component_sha256": "e97bdaae9634200a6a9a2874959cb155821a1a72029661efebb9540ed9acdd70",
+        "component_website": "https://github.com/PHPMailer/PHPMailer",
+        "component_id": "phpmailer",
+        "component_builtin": "true",
+        "component_updatable": "true",
+        "component_type": "vendor",
+        "component_authors": [
+            {
+                "author_name": "Marcus Bointon",
+                "author_role": "Maintainer, developer",
+                "author_copyright": "2012-2019",
+                "author_email": "marcus@synchromedia.co.uk",
+                "author_website": "https://marcus.bointon.com"
+            },
+            {
+                "author_name": "Jim Jagielski",
+                "author_role": "Ex-maintainer",
+                "author_copyright": "2010-2012",
+                "author_email": "jim@jaguNET.com",
+                "author_website": "http://jimjag.com/"
+            },
+            {
+                "author_name": "Andy Prevost",
+                "author_role": "Ex-maintainer",
+                "author_copyright": "2004-2009",
+                "author_email": "codeworxtech@users.sourceforge.net",
+                "author_website": "https://sourceforge.net/u/codeworxtech/profile/"
+            },
+            {
+                "author_name": "Brent R. Matzelle",
+                "author_role": "Founder",
+                "author_copyright": "2001-2003",
+                "author_email": "bmatzelle@users.sourceforge.net",
+                "author_website": "https://github.com/bmatzelle"
+            },
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Packager",
+                "author_copyright": "2019-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Packager",
+                "author_copyright": "2019-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_vendor_phpmailer.zip",
+                "package_sha256": "75f9f3f151c0eb9474c421f35c6ad0946f4fa960595e1f0cfc4fb4315a268021",
+                "package_size": 54058
+            }
+        ]
+    },
+    {
+        "component_version": "1.1.0",
+        "component_licence": "MIT License",
+        "component_name": "ProgressBar.js library",
+        "component_description": "Responsive and slick progress bars with animated SVG paths.",
+        "component_sha256": "c9d8c8b0f665ecbd04b219963d030d8ad0384cde2c6e1daca8f8bdb0ff779c92",
+        "component_website": "https://kimmobrunfeldt.github.io/progressbar.js/",
+        "component_id": "progressbarjs",
+        "component_builtin": "true",
+        "component_updatable": "true",
+        "component_type": "vendor",
+        "component_authors": [
+            {
+                "author_name": "Kimmo Brunfeldt",
+                "author_role": "Developer",
+                "author_copyright": "2014-2020",
+                "author_website": "https://kimmobrunfeldt.github.io/"
+            },
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Packager",
+                "author_copyright": "2014-2020",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Packager",
+                "author_copyright": "2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_vendor_progressbarjs.zip",
+                "package_sha256": "a6ac559782f9e5edf127c19c06be1f5f26a213d5bdb8c69cf81d1d81e435dbe8",
+                "package_size": 9287
+            }
+        ]
+    },
+    {
+        "component_version": "3.1.34-dev-7",
+        "component_sha256": "93585dec431a1acfb9825295655b03552cd9304063e0db84893d5e2a86abf93d",
+        "component_licence": "LGPL 3.0",
+        "component_name": "PHP Template Engine Smarty",
+        "component_description": "Smarty is a template engine for PHP, facilitating the separation of presentation (HTML/CSS) from application logic.",
+        "component_website": "https://www.smarty.net/",
+        "component_id": "smarty",
+        "component_builtin": "true",
+        "component_updatable": "true",
+        "component_type": "vendor",
+        "component_authors": [
+            {
+                "author_name": "New Digital Group, Inc.",
+                "author_role": "Developers",
+                "author_copyright": "2002-2019"
+            },
+            {
+                "author_name": "Mark Grimshaw-Aagaard",
+                "author_role": "Packager",
+                "author_copyright": "2012-2016",
+                "author_email": "sirfragalot@users.sourceforge.net",
+                "author_website": "https://vbn.aau.dk/en/persons/126217"
+            },
+            {
+                "author_name": "Stéphane Aulery",
+                "author_role": "Packager",
+                "author_copyright": "2017-2020",
+                "author_email": "lkppo@users.sourceforge.net",
+                "author_website": "http://saulery.legtux.org/"
+            }
+        ],
+        "component_packages": [
+            {
+                "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.1.0/components/wikindx_6.1.0_vendor_smarty.zip",
+                "package_sha256": "8a679b14b5fbc870f59408421670a50cf9cab91643a3359255cfc92cc5a4a5c8",
+                "package_size": 294592
+            }
+        ]
+    }
+]

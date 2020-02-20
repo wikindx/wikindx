@@ -1,0 +1,267 @@
+/*
+Copyright Stéphane Aulery, 2017
+
+<lkppo@users.sourceforge.net>
+
+This software is a computer program whose purpose is to power the wikindx's
+official website.
+
+This software is governed by the CeCILL-C license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL-C
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL-C license and that you accept its terms.
+*/
+
+/* Global */
+
+body
+{
+	display: flex;
+	min-height: 100vh;
+	flex-direction: column;
+	background-color: #F7F7F0;
+	margin: 0px 0px 0px 0px;
+	text-align: center;
+}
+
+a
+{
+   color: blue;
+   text-decoration: none;
+}
+
+a:hover
+{
+   text-decoration: underline;
+}
+
+
+/* Header / Navigation */
+
+nav
+{
+   height: 50px;
+   width: 100%;
+   padding: 0px;
+   background-color: #234CA5;
+   position: fixed;
+   top: 0px;
+   
+   border-bottom: 1px solid #457DBB;
+   border-bottom-left-radius: 10px;
+   border-bottom-right-radius: 10px;
+}
+
+#menu
+{
+	/*width: 1224px;*/
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+   padding: 0;
+   margin: 0;
+	margin: 0 auto;
+}
+
+#menu li
+{
+	display: block;
+	height: 50px;
+	width: auto;
+   text-align:center;
+   padding: 0;
+   margin: 0;
+}
+
+#menu li a
+{
+   display: block;
+   color: #FFF;
+   text-decoration: none;
+   padding: 15px 10px 4px 10px;
+   height: 30px;
+}
+
+#menu a:hover
+{
+   background-color: #457DBB;
+   color: #F7F7F0;
+}
+
+#menu .AppName a:hover
+{
+   border-bottom-left-radius: 10px;
+}
+
+#menu .DownloadLatest a:hover
+{
+   border-bottom-right-radius: 10px;
+}
+
+#menu .image a
+{
+   display: block;
+   color: #FFF;
+   text-decoration: none;
+   padding: 8px 8px;
+   height: 34px;
+}
+
+#menu .AppName
+{
+   font-style: italic;
+   font-size: 1.5em;
+   border-bottom-left-radius: 10px;
+}
+
+#menu .Spacer
+{
+	flex-grow: 2;
+}
+
+#menu .DownloadLatest
+{
+	font-weight: bold;
+}
+
+
+/* Corpus */
+
+#content
+{
+	flex: 1;
+   background-color: #F7F7F0;
+	line-height: 140%;
+	margin-right: auto;
+	margin-left: auto;
+	text-align: left;
+	padding: 0;
+	width: 980px;
+	margin-top: 60px;
+}
+
+#content .AppName
+{
+	font-variant: small-caps;
+}
+
+#content p
+{
+   padding: 5px;
+   text-align: justify;
+}
+
+#content h1,
+#content h2,
+#content h3,
+#content h4,
+#content h5,
+#content h6
+{
+	padding: 0;
+	margin: 0;
+}
+
+#content h1
+{
+	font-size: 1.5em;
+   padding-left: 5px;
+   padding-bottom: 5px;
+   border-bottom: 3px double #457DBB;
+   margin-bottom: 1em;
+}
+
+#content h2
+{
+	font-size: 1.1em;
+   border-bottom: 1px solid #457DBB;
+   padding-left: 5px;
+   text-align:left;
+   line-height: 25px;
+   font-weight: bold;
+}
+
+#content h3
+{
+	font-size: 1em;
+   padding-left: 5px;
+}
+
+#content .hDetails
+{
+	font-size: .75em;
+	padding-left: 10px;
+	font-style: italic;
+}
+
+#content .galery
+{
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+
+#content .galery img
+{
+	width: 460px;
+	padding: 5px;
+	margin: auto;
+	border: 1px solid #CCC;
+	border-radius: 3px;
+}
+
+#content .galery .legend
+{
+	text-align: center;
+	font-style: italic;
+	font-size: .75em;
+	margin-top: 0.5em;
+	margin-bottom: 1.5em;
+}
+
+#content .galery img:hover
+{
+	flex-grow: 2;
+	width: 100%;
+	padding: 5px;
+	margin: 5px;
+	border: 1px solid #CCC;
+	border-radius: 3px;
+}
+
+
+/* Footer */
+
+footer
+{
+   font-size: .9em;
+   color:#000;
+   border-top: 2px solid #234CA5;
+   text-align:center;
+   clear:both;
+   height: 90px;
+   background-color: #DFF2FF;
+   padding: 10px 0 0 0;
+   line-height: 30px;
+}

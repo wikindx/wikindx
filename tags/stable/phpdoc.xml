@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdocumentor>
+	<title>WIKINDX Documentation</title>
+	<parser>
+		<encoding>utf8</encoding>
+		<target>docs/manual</target>
+		<default-package-name>wikindx</default-package-name>
+		<extensions>
+			<extension>php</extension>
+		</extensions>
+	</parser>
+	<transformer>
+		<target>docs/manual</target>
+	</transformer>
+	<files>
+		<directory>.</directory>
+		<ignore>cache/*</ignore>
+		<ignore>data/*</ignore>
+		<ignore>components/*</ignore>
+		<ignore>core/javascript/*</ignore>
+		<ignore>core/modules/*</ignore>
+		<ignore>core/tiny_mce/*.js</ignore>
+		<ignore>core/tiny_mce/*.txt</ignore>
+		<ignore>core/tiny_mce/langs/*</ignore>
+		<ignore>core/tiny_mce/plugins/*</ignore>
+		<ignore>core/tiny_mce/themes/*</ignore>
+		<ignore>core/tiny_mce/utils/*</ignore>
+		<ignore>docs/*</ignore>
+		<ignore>dbschema/*</ignore>
+		<ignore>.php_cs.cache</ignore>
+		<ignore>cmsprint.php</ignore>
+		<ignore>config.php</ignore>
+		<ignore>config.php.dist</ignore>
+		<ignore>dump-repairkit-schema.php</ignore>
+		<ignore>index.php</ignore>
+		<ignore>make-languages.php</ignore>
+		<ignore>make-md-docs.php</ignore>
+		<ignore>phpdoc.xml</ignore>
+		<ignore>php-fmt-dev.php</ignore>
+		<ignore>rss.php</ignore>
+		<ignore>sign-components.php</ignore>
+		<ignore>sitemap.php</ignore>
+	</files>
+	<logging>
+		<level>warn</level>
+		<paths>
+			<default>../phpdoc_{DATE}.log</default>
+			<errors>../phpdoc_{DATE}.errors.log</errors>
+		</paths>
+	</logging>
+</phpdocumentor>

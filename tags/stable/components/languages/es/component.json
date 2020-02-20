@@ -1,0 +1,18 @@
+{
+    "component_type": "language",
+    "component_id": "es",
+    "component_version": "1.6",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Spanish",
+    "component_description": "Traducción al español",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_authors": [
+        {
+            "author_name": "Anonymous",
+            "author_role": "Translator",
+            "author_copyright": "2017"
+        }
+    ],
+    "component_sha256": "f2ec469aa1c05073cfe5855d6b814d5b714792f0d731e762093567d3790c9719"
+}

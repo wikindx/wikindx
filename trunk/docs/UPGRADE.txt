@@ -31,7 +31,7 @@ WIKINDX v6.0.8. If you have PHP 7.0 or greater, then you can now safely download
 and install the highest version of WIKINDX available.
 
 The above results from a code clean-out and the understanding that there are 
-very few (if any) current users of WIKINDX with pre-v5.1 database.
+very few (if any) current users of WIKINDX with pre-v5.1 databases.
 >>>>>>> <<<<<<<
 
 If you are upgrading a previous installation of WIKINDX 5.x to 6.x,

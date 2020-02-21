@@ -72,9 +72,23 @@ class LOADCONFIG
         $db = FACTORY_DB::getInstance();
     	if ($session->getVar('setup_UserId')) // logged on user so setup from users table
     	{
-			$basic = ["Paging", "PagingMaxLinks", "StringLimit",
-				"Language", "Style", "Template", "PagingStyle", "PagingTagCloud", "UseBibtexKey",
-				"UseWikindxKey", "DisplayBibtexLink", "DisplayCmsLink", "CmsTag", "Listlink", "TemplateMenu", ];
+			$basic = [
+				"CmsTag",
+				"DisplayBibtexLink",
+				"DisplayCmsLink",
+				"Language",
+				"Listlink",
+				"Paging",
+				"PagingMaxLinks",
+				"PagingStyle",
+				"PagingTagCloud",
+				"StringLimit",
+				"Style",
+				"Template",
+				"TemplateMenu",
+				"UseBibtexKey",
+				"UseWikindxKey",
+			];
 			$table = 'users';
 			$preferences = $db->prependTableToField($table, $basic);
 			$db->formatConditions([$table . 'Id' => $session->getVar('setup_UserId')]);
@@ -83,8 +97,18 @@ class LOADCONFIG
 		}
 		else // read only user – read default settings from config table
 		{
-			$basic = ["Paging", "PagingStyle", "PagingMaxLinks", "StringLimit", "Language", "Style", 
-				"Template", "TemplateMenu", "PagingTagCloud", "Listlink"];
+			$basic = [
+				"Language",
+				"Listlink",
+				"Paging",
+				"PagingMaxLinks",
+				"PagingStyle",
+				"PagingTagCloud",
+				"StringLimit",
+				"Style", 
+				"Template",
+				"TemplateMenu",
+			];
         	$co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
 			$table = 'config';
             $preferences = $db->prependTableToField($table, $basic);

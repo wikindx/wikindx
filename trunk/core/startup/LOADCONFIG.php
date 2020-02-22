@@ -826,19 +826,6 @@ class LOADCONFIG
             }
         }
 
-        // Set PASSWORD size
-        if (!property_exists($this->config, 'WIKINDX_PASSWORD_SIZE'))
-        {
-            $this->config->WIKINDX_PASSWORD_SIZE = WIKINDX_PASSWORD_SIZE_DEFAULT;
-        }
-        elseif (!is_int($this->config->WIKINDX_PASSWORD_SIZE))
-        {
-            if ($this->config->WIKINDX_PASSWORD_SIZE < 0)
-            {
-                die('WIKINDX_PASSWORD_SIZE must be a positive integer.');
-            }
-        }
-
         // Set RSS feed language
         if (!property_exists($this->config, 'WIKINDX_RSS_LANGUAGE'))
         {
@@ -847,48 +834,6 @@ class LOADCONFIG
         elseif (!is_string($this->config->WIKINDX_RSS_LANGUAGE))
         {
             die('WIKINDX_RSS_LANGUAGE must be a legal language code (en_GB, fr_FR, de_DE...).');
-        }
-
-        // Set CMS database user
-        if (!property_exists($this->config, 'WIKINDX_CMS_DB_USER'))
-        {
-            if ($this->config->WIKINDX_CMS_SQL)
-            {
-                die($dieMsgMissing . 'WIKINDX_CMS_DB_USER');
-            }
-            else
-            {
-                $this->config->WIKINDX_CMS_DB_USER = WIKINDX_CMS_DB_USER_DEFAULT;
-            }
-        }
-        elseif (!$this->config->WIKINDX_CMS_DB_USER)
-        {
-            $this->config->WIKINDX_CMS_DB_USER = '';
-        }
-        elseif (!is_string($this->config->WIKINDX_CMS_DB_USER))
-        {
-            die('WIKINDX_CMS_DB_USER must be a string.');
-        }
-
-        // Set CMS database password
-        if (!property_exists($this->config, 'WIKINDX_CMS_DB_PASSWORD'))
-        {
-            if ($this->config->WIKINDX_CMS_SQL)
-            {
-                die($dieMsgMissing . 'WIKINDX_CMS_DB_PASSWORD');
-            }
-            else
-            {
-                $this->config->WIKINDX_CMS_DB_PASSWORD = WIKINDX_CMS_DB_PASSWORD_DEFAULT;
-            }
-        }
-        elseif (!$this->config->WIKINDX_CMS_DB_PASSWORD)
-        {
-            $this->config->WIKINDX_CMS_DB_PASSWORD = '';
-        }
-        elseif (!is_string($this->config->WIKINDX_CMS_DB_PASSWORD))
-        {
-            die('WIKINDX_CMS_DB_PASSWORD must be a string.');
         }
     }
 }

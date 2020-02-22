@@ -910,23 +910,6 @@ class LOADCONFIG
             die('WIKINDX_MAIL_SMARGS must be a string.');
         }
 
-        // Set bibliographic style of CMS
-        if (!property_exists($this->config, 'WIKINDX_CMS_BIBSTYLE'))
-        {
-            if ($this->config->WIKINDX_CMS_ALLOW)
-            {
-                die($dieMsgMissing . 'WIKINDX_CMS_BIBSTYLE');
-            }
-            else
-            {
-                $this->config->WIKINDX_CMS_BIBSTYLE = WIKINDX_CMS_BIBSTYLE_DEFAULT;
-            }
-        }
-        elseif (!is_string($this->config->WIKINDX_CMS_BIBSTYLE))
-        {
-            die('WIKINDX_CMS_BIBSTYLE must an existing bibliographic style name.');
-        }
-
         // Enable / disable CMS database access
         if (!property_exists($this->config, 'WIKINDX_CMS_SQL'))
         {

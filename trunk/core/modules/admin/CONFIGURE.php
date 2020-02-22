@@ -623,7 +623,7 @@ class CONFIGURE
             \HTML\span($hint, 'hint');
         $pString .= \HTML\td($td);
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "lastChangesDayLimit"));
-        array_key_exists("configLastChangesDayLimit", $this->values) ? $input = $this->values["configLastChangesDayLimit"] : $input = WIKINDX_LAST_CHANGES_DAY_LIMIT _DEFAULT;
+        array_key_exists("configLastChangesDayLimit", $this->values) ? $input = $this->values["configLastChangesDayLimit"] : $input = WIKINDX_LAST_CHANGES_DAY_LIMIT_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "lastChanges4"),
             "configLastChangesDayLimit",
@@ -2133,7 +2133,7 @@ class CONFIGURE
             "configImgHeightLimit" => WIKINDX_IMG_HEIGHT_LIMIT_DEFAULT,
             "configImgWidthLimit" => WIKINDX_IMG_WIDTH_LIMIT_DEFAULT,
             "configLastChanges" => WIKINDX_LAST_CHANGES_DEFAULT,
-            "configLastChangesDayLimit" => WIKINDX_LAST_CHANGES_DAY_LIMIT _DEFAULT,
+            "configLastChangesDayLimit" => WIKINDX_LAST_CHANGES_DAY_LIMIT_DEFAULT,
             "configMaxPaste" => WIKINDX_MAX_PASTE_DEFAULT,
             "configPaging" => WIKINDX_PAGING_DEFAULT,
             "configPagingMaxLinks" => WIKINDX_PAGING_MAXLINKS_DEFAULT,

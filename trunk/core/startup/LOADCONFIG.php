@@ -866,16 +866,6 @@ class LOADCONFIG
             die('WIKINDX_RSS_LANGUAGE must be a legal language code (en_GB, fr_FR, de_DE...).');
         }
 
-        // Set mailer configuration
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SERVER'))
-        {
-            $this->config->WIKINDX_MAIL_SERVER = WIKINDX_MAIL_SERVER_DEFAULT;
-        }
-        elseif (!is_bool($this->config->WIKINDX_MAIL_SERVER))
-        {
-            die('WIKINDX_MAIL_SERVER must be a boolean (TRUE / FALSE).');
-        }
-
         // Set email from header
         if (!property_exists($this->config, 'WIKINDX_MAIL_FROM'))
         {
@@ -925,30 +915,6 @@ class LOADCONFIG
             {
                 $this->config->WIKINDX_MAIL_RETURN_PATH = WIKINDX_MAIL_RETURN_PATH_DEFAULT;
             }
-        }
-
-        // Set MAIL backend
-        if (!property_exists($this->config, 'WIKINDX_MAIL_BACKEND'))
-        {
-            $this->config->WIKINDX_MAIL_BACKEND = WIKINDX_MAIL_BACKEND_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_MAIL_BACKEND))
-        {
-            die('WIKINDX_MAIL_BACKEND must be of this value: ' . implode(', ', ['smtp', 'sendmail']));
-        }
-        elseif (!in_array($this->config->WIKINDX_MAIL_BACKEND, ['smtp', 'sendmail']))
-        {
-            die('WIKINDX_MAIL_BACKEND must be of this value: ' . implode(', ', ['smtp', 'sendmail']));
-        }
-
-        // Set sendmail path
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SENDMAIL_PATH'))
-        {
-            $this->config->WIKINDX_MAIL_SENDMAIL_PATH = WIKINDX_MAIL_SENDMAIL_PATH_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_MAIL_SENDMAIL_PATH))
-        {
-            die('WIKINDX_MAIL_SENDMAIL_PATH must be a string.');
         }
 
         // Set sendmail optional parameters

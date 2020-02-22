@@ -16,6 +16,7 @@ MAINTENANCE:
 3. Remove the option to send erroneous SQL requests by email.
 4. Change PHP error level to E_ALL in preparation for PHP 8 support (#186).
 5. Rename constants for clarity.
+6. Remove duplicate configuration checks.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

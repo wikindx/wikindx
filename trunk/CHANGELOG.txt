@@ -13,6 +13,9 @@ BUG FIXES:
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.
 2. Remove the PHP mail() function email backend.
+3. Remove the option to send erroneous SQL requests by email.
+4. Change PHP error level to E_ALL in preparation for PHP 8 support (#186).
+5. Rename constants for clarity.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

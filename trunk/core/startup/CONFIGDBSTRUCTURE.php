@@ -279,6 +279,17 @@ class CONFIGDBSTRUCTURE
             if (array_key_exists($coRow[$field], $this->dbStructure))
             {
                 $row[$coRow[$field]] = $this->convertVarDB2PHP($this->dbStructure[$coRow[$field]], $coRow[$this->dbStructure[$coRow[$field]]]);
+                
+                // Unserialize some options
+                if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
+                {
+                    $row[$coRow[$field]] = unserialize(base64_decode($row[$coRow[$field]]));
+                    if (!is_array($value))
+                    {
+                        $constName = $co->configToConstant[$coRow[$field]];
+                        $value = unserialize(base64_decode(constant($constName . "_DEFAULT")));
+                    }
+                }
             }
         }
 
@@ -307,6 +318,17 @@ class CONFIGDBSTRUCTURE
             if (array_key_exists($coRow[$field], $this->dbStructure))
             {
                 $row[$coRow[$field]] = $this->convertVarDB2PHP($this->dbStructure[$coRow[$field]], $coRow[$this->dbStructure[$coRow[$field]]]);
+                
+                // Unserialize some options
+                if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
+                {
+                    $row[$coRow[$field]] = unserialize(base64_decode($row[$coRow[$field]]));
+                    if (!is_array($value))
+                    {
+                        $constName = $co->configToConstant[$coRow[$field]];
+                        $value = unserialize(base64_decode(constant($constName . "_DEFAULT")));
+                    }
+                }
             }
             else
             {
@@ -348,6 +370,13 @@ class CONFIGDBSTRUCTURE
         {
             die('Supply a configuration variable to update');
         }
+        
+        // Serialize some options
+        if (in_array($name, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
+        {
+            $value = base64_encode(serialize($value));
+        }
+        
         $value = $this->convertVarPHP2DB($this->dbStructure[$name], $value);
         $this->db->formatConditions(['configName' => $name]);
         $this->db->update('config', [$this->dbStructure[$name] => $value]);

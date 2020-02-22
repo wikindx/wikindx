@@ -2352,7 +2352,10 @@ class CONFIGURE
         $tidy = [];
         foreach ($row as $key => $value)
         {
-            $tidy[$key] = \HTML\dbToFormTidy($value);
+            if (!is_array($value))
+            {
+                $tidy[$key] = \HTML\dbToFormTidy($value);
+            }
         }
 
         return $tidy;

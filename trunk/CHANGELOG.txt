@@ -13,6 +13,7 @@ BUG FIXES:
 7. Fix the default smtp encryption method (after a migration).
 8. Fix the default smtp backend (after a migration).
 9. Fix the type of the default value of WIKINDX_AUTHGATE_MESSAGE to a string and fix the current config.
+10. Fix accessors to config variables of array type.
 
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.
@@ -24,7 +25,6 @@ MAINTENANCE:
 7. Don't force email ReplyTo to a default wrong value. This option is facultative.
 8. Don't force email From to a default wrong value. This option is facultative if the SMTP don't validate the sender.
 9. Restrict the LDAP protocol to authorized values.
-10. Rename configMailServer to configMailUse for consistency with the LDAP option.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

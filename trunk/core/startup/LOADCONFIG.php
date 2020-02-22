@@ -633,6 +633,10 @@ class LOADCONFIG
             if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
             {
                 $value = unserialize(base64_decode($value));
+                if (!is_array($value))
+                {
+                    $value = unserialize(base64_decode(constant($constName . "_DEFAULT")));
+                }
             }
             
             // Create the constant config member 

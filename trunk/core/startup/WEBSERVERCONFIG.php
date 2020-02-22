@@ -34,8 +34,11 @@ include_once("core/startup/CONSTANTS.php");
  * After that, error reporting is reconfigured
  * by core/startup/LOADCONFIG.php (first called in AUTHORIZE) with user config.
  * This prevent to hide tricky errors.
+ *
+ * PHP 8 will make E_ALL the default error level,
+ * In preparation for its support we also make this level the default
  */
-error_reporting(WIKINDX_PHP_ERROR_REPORTING_DEFAULT);
+error_reporting(E_ALL);
 ini_set('display_startup_errors', 'On');
 ini_set('display_errors', WIKINDX_PHP_DISPLAY_ERRORS_DEFAULT);
 ini_set('html_errors', 'On');

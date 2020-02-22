@@ -117,12 +117,6 @@ define('WIKINDX_COMPONENTS_UPDATE_SERVER', 'https://wikindx.sourceforge.io/downl
 define('WIKINDX_PACKAGE_HASH_ALGO', 'sha256');
 
 // Debugging
-/**
- * Default values of config.php file
- * We keep here to check them at load time
- * NB: PHP 7 only can define a constant array
- */
-define('WIKINDX_PHP_ERROR_REPORTING_DEFAULT', E_ALL);
 define('WIKINDX_PHP_DISPLAY_ERRORS_DEFAULT', 'On');
 
 

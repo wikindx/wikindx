@@ -40,6 +40,10 @@ class TEMPLATE
         include_once(WIKINDX_DIR_COMPONENT_VENDOR . "/smarty/libs/Smarty.class.php");
         $this->tpl = new Smarty();
 
+        // PHP 8 will make E_ALL the default error level,
+        // in preparation for its support we also make this level the default
+        $this->tpl->error_reporting = E_ALL;
+
         // We never execute untrusted code, so we can disable this feature of Smarty
         $this->tpl->disableSecurity();
     }

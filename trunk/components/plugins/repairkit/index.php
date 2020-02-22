@@ -1034,7 +1034,6 @@ class repairkit_MODULE
      */
     private function errorsOn()
     {
-        error_reporting(E_ALL);
         ini_set('display_errors', 'On');
     }
 }

@@ -50,7 +50,6 @@ class FILETOTEXT
         ini_set('max_execution_time', '-1'); // NB not always possible to set
         // Turn error display off so that errors from PdfToText don't get written to screen (still written to the cache files)
         $errorDisplay = ini_get('display_errors');
-        error_reporting(0);
         ini_set('display_errors', 'Off');
         if (array_key_exists('cacheCurl', $vars) && ($vars['cacheCurl'] == 'on'))
         {
@@ -227,10 +226,6 @@ class FILETOTEXT
         }
         $session->setVar('cache_Attachments', count($cacheDirFiles));
         ini_set('display_errors', $errorDisplay);
-        if (\FACTORY_CONFIG::getInstance()->WIKINDX_DEBUG_ERRORS)
-        {
-            error_reporting(E_ALL);
-        }
         ini_set('memory_limit', $mem);
         ini_set('max_execution_time', $maxExecTime);
         include_once("core/startup/HOUSEKEEPING.php");

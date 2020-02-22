@@ -47,7 +47,6 @@ class UPDATEDATABASE
         // Turn on error reporting
         // Since this class is instancied only when a db upgrade
         // is needed we don't need to switch off at the end.
-        error_reporting(E_ALL);
         ini_set('display_errors', 'On');
 
         $this->db = FACTORY_DB::getInstance();

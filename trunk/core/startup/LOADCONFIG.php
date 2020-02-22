@@ -808,22 +808,5 @@ class LOADCONFIG
         {
             die('WIKINDX_AUTHGATE_USE must be a boolean (TRUE / FALSE).');
         }
-
-        // Set AUTHGATE message
-        if (!property_exists($this->config, 'WIKINDX_AUTHGATE_MESSAGE'))
-        {
-            $this->config->WIKINDX_AUTHGATE_MESSAGE = WIKINDX_AUTHGATE_MESSAGE_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_AUTHGATE_MESSAGE))
-        {
-            if ($this->config->WIKINDX_AUTHGATE_MESSAGE !== FALSE)
-            {
-                $this->config->WIKINDX_AUTHGATE_MESSAGE = WIKINDX_AUTHGATE_MESSAGE_DEFAULT;
-            }
-            elseif (trim($this->config->WIKINDX_AUTHGATE_MESSAGE == ''))
-            {
-                $this->config->WIKINDX_AUTHGATE_MESSAGE = WIKINDX_AUTHGATE_MESSAGE_DEFAULT;
-            }
-        }
     }
 }

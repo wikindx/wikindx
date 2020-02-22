@@ -665,20 +665,6 @@ class LOADCONFIG
         }
         
         $dieMsgMissing = 'Missing configuration variable: ';
-        
-        // Set timezone (default if needed)
-        if (!property_exists($this->config, 'WIKINDX_TIMEZONE'))
-        {
-            $this->config->WIKINDX_TIMEZONE = WIKINDX_TIMEZONE_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_TIMEZONE))
-        {
-            die('WIKINDX_TIMEZONE must be a valid PHP time zone. See https://secure.php.net/manual/fr/timezones.php');
-        }
-        elseif (trim($this->config->WIKINDX_TIMEZONE) == '')
-        {
-            die('WIKINDX_TIMEZONE must be a valid PHP time zone. See https://secure.php.net/manual/fr/timezones.php');
-        }
 
         date_default_timezone_set($this->config->WIKINDX_TIMEZONE);
 

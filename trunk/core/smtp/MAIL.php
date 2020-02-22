@@ -68,10 +68,10 @@ class MAIL
             if ($this->config->WIKINDX_MAIL_BACKEND == 'smtp')
             {
                 $this->mail->isSMTP();
-                $this->mail->Host = $this->config->WIKINDX_MAIL_SMTPSERVER;
-                $this->mail->Port = $this->config->WIKINDX_MAIL_SMTPPORT;
+                $this->mail->Host = $this->config->WIKINDX_MAIL_SMTP_SERVER;
+                $this->mail->Port = $this->config->WIKINDX_MAIL_SMTP_PORT;
                 $this->mail->SMTPAutoTLS = FALSE; // Never force TLS (some SMTP dislike it)
-                $this->mail->SMTPSecure = $this->config->WIKINDX_MAIL_SMTPENCRYPT;
+                $this->mail->SMTPSecure = $this->config->WIKINDX_MAIL_SMTP_ENCRYPT;
 
                 // Relax verification about certificats and DNS server name
                 // We are not in a very sensitive context and certificates tend to pose problems during renewals
@@ -83,18 +83,18 @@ class MAIL
                     ],
                 ];
 
-                $this->mail->SMTPKeepAlive = $this->config->WIKINDX_MAIL_SMTPPERSIST;
-                $this->mail->SMTPAuth = $this->config->WIKINDX_MAIL_SMTPAUTH;
-                if ($this->config->WIKINDX_MAIL_SMTPAUTH)
+                $this->mail->SMTPKeepAlive = $this->config->WIKINDX_MAIL_SMTP_PERSIST;
+                $this->mail->SMTPAuth = $this->config->WIKINDX_MAIL_SMTP_AUTH;
+                if ($this->config->WIKINDX_MAIL_SMTP_AUTH)
                 {
-                    $this->mail->Username = $this->config->WIKINDX_MAIL_SMTPUSERNAME;
-                    $this->mail->Password = $this->config->WIKINDX_MAIL_SMTPPASSWORD;
+                    $this->mail->Username = $this->config->WIKINDX_MAIL_SMTP_USERNAME;
+                    $this->mail->Password = $this->config->WIKINDX_MAIL_SMTP_PASSWORD;
                 }
             }
             elseif ($this->config->WIKINDX_MAIL_BACKEND == 'sendmail')
             {
                 $this->mail->isSendmail();
-                $this->mail->Sendmail = $this->config->WIKINDX_MAIL_SMPATH;
+                $this->mail->Sendmail = $this->config->WIKINDX_MAIL_SENDMAIL_PATH;
             }
             elseif ($this->config->WIKINDX_MAIL_BACKEND == 'mail')
             {
@@ -111,7 +111,7 @@ class MAIL
     {
         // We have to close the SMTP connection just before the object is destroyed
         // because we have enabled KeepAlive mode for SMTP
-        if ($this->config->WIKINDX_MAIL_SERVER && $this->config->WIKINDX_MAIL_BACKEND == 'smtp' && $this->config->WIKINDX_MAIL_SMTPPERSIST)
+        if ($this->config->WIKINDX_MAIL_SERVER && $this->config->WIKINDX_MAIL_BACKEND == 'smtp' && $this->config->WIKINDX_MAIL_SMTP_PERSIST)
         {
             $this->mail->smtpClose();
         }

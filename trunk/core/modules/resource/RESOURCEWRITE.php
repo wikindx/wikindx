@@ -1050,7 +1050,7 @@ class RESOURCEWRITE
         // tinyMCE adds P and BR tags in some cases
         $input['resourceTitle'] = str_ireplace(["<p>", "</p>", "</br>", "<br>"], '', $input['resourceTitle']);
         $input['resourceTitle'] = $this->trimString($input['resourceTitle']);
-        foreach ($this->config->WIKINDX_NOSORT as $pattern)
+        foreach ($this->config->WIKINDX_NO_SORT as $pattern)
         {
             if (preg_match("/^($pattern)\\s(.*)|^\\{($pattern)\\s(.*)/ui", $input['resourceTitle'], $matches))
             {
@@ -1097,7 +1097,7 @@ class RESOURCEWRITE
         if (array_key_exists('resourceTransTitle', $input))
         {
             $noSortFound = FALSE;
-            foreach ($this->config->WIKINDX_NOSORT as $pattern)
+            foreach ($this->config->WIKINDX_NO_SORT as $pattern)
             {
                 if (preg_match("/^($pattern)\\s(.*)|^\\{($pattern)\\s(.*)/ui", $input['resourceTransTitle'], $matches))
                 {

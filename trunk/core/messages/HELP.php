@@ -320,10 +320,10 @@ class adminstyle_CONFIG {
 		);
 		
 		
-		if(!isset($this->config->WIKINDX_SEARCHFILTER)) // i.e. at first install of a blank database
+		if(!isset($this->config->WIKINDX_SEARCH_FILTER)) // i.e. at first install of a blank database
 			$search = "an, a, the, and, to";
 		else
-			$search = implode(", ", $this->config->WIKINDX_SEARCHFILTER);
+			$search = implode(", ", $this->config->WIKINDX_SEARCH_FILTER);
 		
 		$pasteBibtex = $this->session->getVar("setup_MaxPaste");
 		

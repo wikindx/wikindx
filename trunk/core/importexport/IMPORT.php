@@ -201,7 +201,7 @@ class IMPORT
                 $title = trim($array[0]);
             }
         }
-        foreach ($this->config->WIKINDX_NOSORT as $pattern)
+        foreach ($this->config->WIKINDX_NO_SORT as $pattern)
         {
             if (preg_match("/^($pattern)\\s(.*)|^\\{($pattern)\\s(.*)/ui", $title, $matches))
             {

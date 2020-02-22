@@ -215,7 +215,7 @@ class RANDOMMETADATA
         $view = $this->icons->getHTML("viewmeta");
         $links['view'] = \HTML\a($this->icons->getClass("viewmeta"), $view, "index.php?action=resource_RESOURCEVIEW_CORE" .
             htmlentities("&id=" . $row['resourceId']));
-        if ($write && (!$this->config->WIKINDX_ORIGINATOR_EDITONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))
+        if ($write && (!$this->config->WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))
         {
             $links['edit'] = \HTML\a(
                 $this->icons->getClass("edit"),

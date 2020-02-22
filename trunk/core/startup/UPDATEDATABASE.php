@@ -62,7 +62,7 @@ class UPDATEDATABASE
         $this->oldTime = time();
 
         // Before upgrade process, clear all template cache
-        $this->config->WIKINDX_BYPASS_SMARTYCOMPILE = TRUE;
+        $this->config->WIKINDX_BYPASS_SMARTY_COMPILATION = TRUE;
         // Use the default template
         $this->session->setVar("setup_Template", WIKINDX_TEMPLATE_DEFAULT);
         // need to do this so the correct cache folder is set for the smarty cacheDir
@@ -323,7 +323,7 @@ class UPDATEDATABASE
             else
             {
                 // write preliminary stringLimit, write and superadmin to session and display super configuration screen
-                $this->session->setVar("setup_StringLimit", WIKINDX_STRINGLIMIT_DEFAULT);
+                $this->session->setVar("setup_StringLimit", WIKINDX_STRING_LIMIT_DEFAULT);
                 $this->session->setVar("setup_Write", TRUE);
                 $this->session->setVar("setup_Superadmin", TRUE);
                 // superadmin userId is always 1
@@ -622,7 +622,7 @@ class UPDATEDATABASE
         }
         else
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmPath', WIKINDX_MAIL_SMPATH_DEFAULT]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmPath', WIKINDX_MAIL_SENDMAIL_PATH_DEFAULT]);
         }
         if (isset($this->config->WIKINDX_MAIL_SMTPSERVER) && $this->config->WIKINDX_MAIL_SMTPSERVER)
         {
@@ -630,7 +630,7 @@ class UPDATEDATABASE
         }
         else
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpServer', WIKINDX_MAIL_SMTPSERVER_DEFAULT]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpServer', WIKINDX_MAIL_SMTP_SERVER_DEFAULT]);
         }
         if (isset($this->config->WIKINDX_MAIL_SMTPPORT) && $this->config->WIKINDX_MAIL_SMTPPORT)
         {
@@ -638,7 +638,7 @@ class UPDATEDATABASE
         }
         else
         {
-            $this->db->insert('configtemp', ['configName', 'configInt'], ['configMailSmtpPort', WIKINDX_MAIL_SMTPPORT_DEFAULT]);
+            $this->db->insert('configtemp', ['configName', 'configInt'], ['configMailSmtpPort', WIKINDX_MAIL_SMTP_PORT_DEFAULT]);
         }
         if (isset($this->config->WIKINDX_MAIL_SMTPENCRYPT) && $this->config->WIKINDX_MAIL_SMTPENCRYPT)
         {
@@ -646,7 +646,7 @@ class UPDATEDATABASE
         }
         else
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpEncrypt', WIKINDX_MAIL_SMTPENCRYPT_DEFAULT]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpEncrypt', WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT]);
         }
         if (isset($this->config->WIKINDX_MAIL_SMTPPERSIST) && $this->config->WIKINDX_MAIL_SMTPPERSIST)
         {
@@ -654,7 +654,7 @@ class UPDATEDATABASE
         }
         else
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpPersist', WIKINDX_MAIL_SMTPPERSIST_DEFAULT]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpPersist', WIKINDX_MAIL_SMTP_PERSIST_DEFAULT]);
         }
         if (isset($this->config->WIKINDX_MAIL_SMTPAUTH) && $this->config->WIKINDX_MAIL_SMTPAUTH)
         {
@@ -662,7 +662,7 @@ class UPDATEDATABASE
         }
         else
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpAuth', WIKINDX_MAIL_SMTPAUTH_DEFAULT]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpAuth', WIKINDX_MAIL_SMTP_AUTH_DEFAULT]);
         }
         if (isset($this->config->WIKINDX_MAIL_SMTPUSERNAME) && $this->config->WIKINDX_MAIL_SMTPUSERNAME)
         {
@@ -670,7 +670,7 @@ class UPDATEDATABASE
         }
         else
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpUsername', WIKINDX_MAIL_SMTPUSERNAME_DEFAULT]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpUsername', WIKINDX_MAIL_SMTP_USERNAME_DEFAULT]);
         }
         if (isset($this->config->WIKINDX_MAIL_SMTPPASSWORD) && $this->config->WIKINDX_MAIL_SMTPPASSWORD)
         {
@@ -678,7 +678,7 @@ class UPDATEDATABASE
         }
         else
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpPassword', WIKINDX_MAIL_SMTPPASSWORD_DEFAULT]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpPassword', WIKINDX_MAIL_SMTP_PASSWORD_DEFAULT]);
         }
         if (isset($this->config->WIKINDX_GS_ALLOW) && $this->config->WIKINDX_GS_ALLOW)
         {
@@ -817,7 +817,7 @@ class UPDATEDATABASE
         }
         else
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configBypassSmartyCompile', WIKINDX_BYPASS_SMARTYCOMPILE_DEFAULT]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configBypassSmartyCompile', WIKINDX_BYPASS_SMARTY_COMPILATION_DEFAULT]);
         }
         if (isset($this->config->WIKINDX_DISPLAY_STATISTICS) && $this->config->WIKINDX_DISPLAY_STATISTICS)
         {

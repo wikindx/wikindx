@@ -99,7 +99,7 @@ class AUTHORIZE
                 // keep template and language etc.
                 $language = $this->config->WIKINDX_LANGUAGE;
                 $template = $this->config->WIKINDX_TEMPLATE;
-                $userReg = $this->config->WIKINDX_USERREGISTRATION;
+                $userReg = $this->config->WIKINDX_USER_REGISTRATION;
                 $multiUser = $this->config->WIKINDX_MULTIUSER;
                 $this->session->setVar('setup_UserRegistration', $userReg);
                 $this->session->setVar('setup_MultiUser', $multiUser);
@@ -138,7 +138,7 @@ class AUTHORIZE
                 return FALSE;
             }
             // User registration
-            elseif ($this->config->WIKINDX_MULTIUSER && $this->config->WIKINDX_USERREGISTRATION && ($this->config->WIKINDX_MAIL_SERVER))
+            elseif ($this->config->WIKINDX_MULTIUSER && $this->config->WIKINDX_USER_REGISTRATION && ($this->config->WIKINDX_MAIL_SERVER))
             {
                 include_once("core/modules/usersgroups/REGISTER.php");
                 $obj = new REGISTER();
@@ -224,7 +224,7 @@ class AUTHORIZE
         if (!$this->session->getVar("setup_Write") && !$this->session->getVar('setup_ReadOnly'))
         {
             // Default == read only access.
-            if ($this->config->WIKINDX_READONLYACCESS && !$this->config->WIKINDX_DENY_READONLY)
+            if ($this->config->WIKINDX_READ_ONLY_ACCESS && !$this->config->WIKINDX_DENY_READONLY)
             {
                 $this->session->setVar("setup_ReadOnly", TRUE);
                 // populate session with default values from config

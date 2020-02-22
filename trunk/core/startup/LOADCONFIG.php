@@ -837,32 +837,32 @@ class LOADCONFIG
         }
 
         // Set PASSWORD size
-        if (!property_exists($this->config, 'WIKINDX_PASSWORDSIZE'))
+        if (!property_exists($this->config, 'WIKINDX_PASSWORD_SIZE'))
         {
-            $this->config->WIKINDX_PASSWORDSIZE = WIKINDX_PASSWORDSIZE_DEFAULT;
+            $this->config->WIKINDX_PASSWORD_SIZE = WIKINDX_PASSWORD_SIZE_DEFAULT;
         }
-        elseif (!is_int($this->config->WIKINDX_PASSWORDSIZE))
+        elseif (!is_int($this->config->WIKINDX_PASSWORD_SIZE))
         {
-            if ($this->config->WIKINDX_PASSWORDSIZE < 0)
+            if ($this->config->WIKINDX_PASSWORD_SIZE < 0)
             {
-                die('WIKINDX_PASSWORDSIZE must be a positive integer.');
+                die('WIKINDX_PASSWORD_SIZE must be a positive integer.');
             }
         }
 
         // Set PASSWORD strength
-        if (!property_exists($this->config, 'WIKINDX_PASSWORDSTRENGTH'))
+        if (!property_exists($this->config, 'WIKINDX_PASSWORD_STRENGTH'))
         {
-            $this->config->WIKINDX_PASSWORDSTRENGTH = WIKINDX_PASSWORDSTRENGTH_DEFAULT;
+            $this->config->WIKINDX_PASSWORD_STRENGTH = WIKINDX_PASSWORD_STRENGTH_DEFAULT;
         }
-        elseif (!is_string($this->config->WIKINDX_PASSWORDSTRENGTH))
+        elseif (!is_string($this->config->WIKINDX_PASSWORD_STRENGTH))
         {
-            if ($this->config->WIKINDX_PASSWORDSTRENGTH !== FALSE)
+            if ($this->config->WIKINDX_PASSWORD_STRENGTH !== FALSE)
             {
-                $this->config->WIKINDX_PASSWORDSTRENGTH = WIKINDX_PASSWORDSTRENGTH_DEFAULT;
+                $this->config->WIKINDX_PASSWORD_STRENGTH = WIKINDX_PASSWORD_STRENGTH_DEFAULT;
             }
-            elseif (trim($this->config->WIKINDX_PASSWORDSTRENGTH == ''))
+            elseif (trim($this->config->WIKINDX_PASSWORD_STRENGTH == ''))
             {
-                $this->config->WIKINDX_PASSWORDSTRENGTH = WIKINDX_PASSWORDSTRENGTH_DEFAULT;
+                $this->config->WIKINDX_PASSWORD_STRENGTH = WIKINDX_PASSWORD_STRENGTH_DEFAULT;
             }
         }
 
@@ -962,13 +962,13 @@ class LOADCONFIG
         }
 
         // Set sendmail path
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMPATH'))
+        if (!property_exists($this->config, 'WIKINDX_MAIL_SENDMAIL_PATH'))
         {
-            $this->config->WIKINDX_MAIL_SMPATH = WIKINDX_MAIL_SMPATH_DEFAULT;
+            $this->config->WIKINDX_MAIL_SENDMAIL_PATH = WIKINDX_MAIL_SENDMAIL_PATH_DEFAULT;
         }
-        elseif (!is_string($this->config->WIKINDX_MAIL_SMPATH))
+        elseif (!is_string($this->config->WIKINDX_MAIL_SENDMAIL_PATH))
         {
-            die('WIKINDX_MAIL_SMPATH must be a string.');
+            die('WIKINDX_MAIL_SENDMAIL_PATH must be a string.');
         }
 
         // Set sendmail optional parameters
@@ -982,91 +982,91 @@ class LOADCONFIG
         }
 
         // Set smtp hostname
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTPSERVER'))
+        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTP_SERVER'))
         {
-            $this->config->WIKINDX_MAIL_SMTPSERVER = WIKINDX_MAIL_SMTPSERVER_DEFAULT;
+            $this->config->WIKINDX_MAIL_SMTP_SERVER = WIKINDX_MAIL_SMTP_SERVER_DEFAULT;
         }
-        elseif (!is_string($this->config->WIKINDX_MAIL_SMTPSERVER))
+        elseif (!is_string($this->config->WIKINDX_MAIL_SMTP_SERVER))
         {
-            die('WIKINDX_MAIL_SMTPSERVER must be a string.');
+            die('WIKINDX_MAIL_SMTP_SERVER must be a string.');
         }
 
         // Set smtp port
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTPPORT'))
+        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTP_PORT'))
         {
-            $this->config->WIKINDX_MAIL_SMTPPORT = WIKINDX_MAIL_SMTPPORT_DEFAULT;
+            $this->config->WIKINDX_MAIL_SMTP_PORT = WIKINDX_MAIL_SMTP_PORT_DEFAULT;
         }
-        elseif (is_int($this->config->WIKINDX_MAIL_SMTPPORT))
+        elseif (is_int($this->config->WIKINDX_MAIL_SMTP_PORT))
         {
-            if ($this->config->WIKINDX_MAIL_SMTPPORT < 0)
+            if ($this->config->WIKINDX_MAIL_SMTP_PORT < 0)
             {
-                die('WIKINDX_MAIL_SMTPPORT must be a positive integer.');
+                die('WIKINDX_MAIL_SMTP_PORT must be a positive integer.');
             }
         }
 
         // Set smtp encryption
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTPENCRYPT'))
+        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTP_ENCRYPT'))
         {
-            $this->config->WIKINDX_MAIL_SMTPENCRYPT = WIKINDX_MAIL_SMTPENCRYPT_DEFAULT;
+            $this->config->WIKINDX_MAIL_SMTP_ENCRYPT = WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT;
         }
-        elseif (!$this->config->WIKINDX_MAIL_SMTPENCRYPT)
+        elseif (!$this->config->WIKINDX_MAIL_SMTP_ENCRYPT)
         {
-            $this->config->WIKINDX_MAIL_SMTPENCRYPT = '';
+            $this->config->WIKINDX_MAIL_SMTP_ENCRYPT = '';
         }
         // No encryption stored in the database as 'none' Рensure this is an empty string
-        elseif ($this->config->WIKINDX_MAIL_SMTPENCRYPT == 'none')
+        elseif ($this->config->WIKINDX_MAIL_SMTP_ENCRYPT == 'none')
         {
-            $this->config->WIKINDX_MAIL_SMTPENCRYPT = '';
+            $this->config->WIKINDX_MAIL_SMTP_ENCRYPT = '';
         }
-        elseif (!is_string($this->config->WIKINDX_MAIL_SMTPENCRYPT))
+        elseif (!is_string($this->config->WIKINDX_MAIL_SMTP_ENCRYPT))
         {
-            die('WIKINDX_MAIL_SMTPENCRYPT must be of this value: ' . implode(', ', ['tls', 'ssl', 'or an empty string']));
+            die('WIKINDX_MAIL_SMTP_ENCRYPT must be of this value: ' . implode(', ', ['tls', 'ssl', 'or an empty string']));
         }
-        elseif (!in_array($this->config->WIKINDX_MAIL_SMTPENCRYPT, ['', 'tls', 'ssl']))
+        elseif (!in_array($this->config->WIKINDX_MAIL_SMTP_ENCRYPT, ['', 'tls', 'ssl']))
         {
-            die('WIKINDX_MAIL_SMTPENCRYPT must be of this value: ' . implode(', ', ['tls', 'ssl', 'or an empty string']));
+            die('WIKINDX_MAIL_SMTP_ENCRYPT must be of this value: ' . implode(', ', ['tls', 'ssl', 'or an empty string']));
         }
-        elseif ($this->config->WIKINDX_MAIL_SMTPENCRYPT == '')
+        elseif ($this->config->WIKINDX_MAIL_SMTP_ENCRYPT == '')
         {
-            $this->config->WIKINDX_MAIL_SMTPENCRYPT == FALSE;
+            $this->config->WIKINDX_MAIL_SMTP_ENCRYPT == FALSE;
         }
 
         // Set smtp persist
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTPPERSIST'))
+        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTP_PERSIST'))
         {
-            $this->config->WIKINDX_MAIL_SMTPPERSIST = WIKINDX_MAIL_SMTPPERSIST_DEFAULT;
+            $this->config->WIKINDX_MAIL_SMTP_PERSIST = WIKINDX_MAIL_SMTP_PERSIST_DEFAULT;
         }
-        elseif (!is_bool($this->config->WIKINDX_MAIL_SMTPPERSIST))
+        elseif (!is_bool($this->config->WIKINDX_MAIL_SMTP_PERSIST))
         {
-            die('WIKINDX_MAIL_SMTPPERSIST must be a boolean (TRUE / FALSE).');
+            die('WIKINDX_MAIL_SMTP_PERSIST must be a boolean (TRUE / FALSE).');
         }
 
         // Set smtp user
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTPUSERNAME'))
+        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTP_USERNAME'))
         {
-            $this->config->WIKINDX_MAIL_SMTPUSERNAME = WIKINDX_MAIL_SMTPUSERNAME_DEFAULT;
+            $this->config->WIKINDX_MAIL_SMTP_USERNAME = WIKINDX_MAIL_SMTP_USERNAME_DEFAULT;
         }
-        elseif (!$this->config->WIKINDX_MAIL_SMTPUSERNAME)
+        elseif (!$this->config->WIKINDX_MAIL_SMTP_USERNAME)
         {
-            $this->config->WIKINDX_MAIL_SMTPUSERNAME = '';
+            $this->config->WIKINDX_MAIL_SMTP_USERNAME = '';
         }
-        elseif (!is_string($this->config->WIKINDX_MAIL_SMTPUSERNAME))
+        elseif (!is_string($this->config->WIKINDX_MAIL_SMTP_USERNAME))
         {
-            die('WIKINDX_MAIL_SMTPUSERNAME must be a string.');
+            die('WIKINDX_MAIL_SMTP_USERNAME must be a string.');
         }
 
         // Set smtp password
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTPPASSWORD'))
+        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTP_PASSWORD'))
         {
-            $this->config->WIKINDX_MAIL_SMTPPASSWORD = WIKINDX_MAIL_SMTPPASSWORD_DEFAULT;
+            $this->config->WIKINDX_MAIL_SMTP_PASSWORD = WIKINDX_MAIL_SMTP_PASSWORD_DEFAULT;
         }
-        elseif (!$this->config->WIKINDX_MAIL_SMTPPASSWORD)
+        elseif (!$this->config->WIKINDX_MAIL_SMTP_PASSWORD)
         {
-            $this->config->WIKINDX_MAIL_SMTPPASSWORD = '';
+            $this->config->WIKINDX_MAIL_SMTP_PASSWORD = '';
         }
-        elseif (!is_string($this->config->WIKINDX_MAIL_SMTPPASSWORD))
+        elseif (!is_string($this->config->WIKINDX_MAIL_SMTP_PASSWORD))
         {
-            die('WIKINDX_MAIL_SMTPPASSWORD must be a string.');
+            die('WIKINDX_MAIL_SMTP_PASSWORD must be a string.');
         }
 
         // Enable / disable GS attachments

@@ -430,9 +430,9 @@ class MENU
         {
             // On the first run after a fresh install this screen is displayed immediatly
             // and these two options are not yet set, so we avoid to check the READONLY mode strictly.
-        	if (property_exists($this->config, 'WIKINDX_DENY_READONLY') && property_exists($this->config, 'WIKINDX_READONLYACCESS'))
+        	if (property_exists($this->config, 'WIKINDX_DENY_READONLY') && property_exists($this->config, 'WIKINDX_READ_ONLY_ACCESS'))
         	{
-            	if (!$this->config->WIKINDX_DENY_READONLY && $this->config->WIKINDX_READONLYACCESS) 
+            	if (!$this->config->WIKINDX_DENY_READONLY && $this->config->WIKINDX_READ_ONLY_ACCESS) 
             	{
     	            $this->wikindx[$messages->text("menu", "readOnly")] = 'index.php?action=readOnly';
     	        }

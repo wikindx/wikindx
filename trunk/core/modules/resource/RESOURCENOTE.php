@@ -54,7 +54,7 @@ class RESOURCENOTE
             return $note;
         }
         if ($this->session->getVar("setup_Superadmin") ||
-            ($write && (!$this->config->WIKINDX_ORIGINATOR_EDITONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId))))
+            ($write && (!$this->config->WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId))))
         {
             if (!$row['resourcetextNote'])
             {

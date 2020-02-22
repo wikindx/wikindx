@@ -814,7 +814,7 @@ class LISTCOMMON
                     $resourceList[$resourceId]['links']['checkbox'] = \FORM\checkBox(FALSE, "bib_" . $resourceId);
                 }
 
-                if ($write && !$this->config->WIKINDX_ORIGINATOR_EDITONLY)
+                if ($write && !$this->config->WIKINDX_ORIGINATOR_EDIT_ONLY)
                 {
                     $resourceList[$resourceId]['links']['edit'] = \HTML\a(
                         $this->icons->getClass("edit"),

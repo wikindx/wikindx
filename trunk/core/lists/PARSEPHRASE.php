@@ -808,7 +808,7 @@ class PARSEPHRASE
                 {
                     if ((($array['type'] == 'AND') || ($array['type'] == 'OR') || ($array['type'] == 'NOT'))
                         &&
-                        (array_search(mb_strtolower($array['string']), $this->config->WIKINDX_SEARCHFILTER) !== FALSE))
+                        (array_search(mb_strtolower($array['string']), $this->config->WIKINDX_SEARCH_FILTER) !== FALSE))
                     {
                         $delete[] = $index;
 

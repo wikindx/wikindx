@@ -36,7 +36,7 @@ class GATEKEEP
      * Either return TRUE or stop the execution and display the login prompt
      *
      * @param bool $globalEdit If TRUE, config.php's $WIKINDX_GLOBAL_EDIT must be be set to TRUE. Default is FALSE
-     * @param bool $originatorEditOnly If TRUE, config.php's $WIKINDX_ORIGINATOR_EDITONLY must be TRUE. Default is FALSE
+     * @param bool $originatorEditOnly If TRUE, config.php's $WIKINDX_ORIGINATOR_EDIT_ONLY must be TRUE. Default is FALSE
      *
      * @return bool
      */
@@ -60,8 +60,8 @@ class GATEKEEP
                 $authorize->initLogon();
                 FACTORY_CLOSENOMENU::getInstance(); // die
             }
-            if ($originatorEditOnly && isset($this->config->WIKINDX_ORIGINATOR_EDITONLY) &&
-                !$this->config->WIKINDX_ORIGINATOR_EDITONLY)
+            if ($originatorEditOnly && isset($this->config->WIKINDX_ORIGINATOR_EDIT_ONLY) &&
+                !$this->config->WIKINDX_ORIGINATOR_EDIT_ONLY)
             {
                 $authorize = FACTORY_AUTHORIZE::getInstance();
                 $authorize->initLogon();

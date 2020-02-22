@@ -693,8 +693,8 @@ class RESOURCEVIEW
             array_unshift($files, $primary);
         }
         if ($this->session->getVar("setup_Superadmin") ||
-            ($this->config->WIKINDX_ORIGINATOR_EDITONLY && ($userAddId == $this->userId) && $this->session->getVar("setup_FileAttach")) ||
-            ($this->session->getVar("setup_Write") && !$this->config->WIKINDX_ORIGINATOR_EDITONLY && $this->session->getVar("setup_FileAttach")))
+            ($this->config->WIKINDX_ORIGINATOR_EDIT_ONLY && ($userAddId == $this->userId) && $this->session->getVar("setup_FileAttach")) ||
+            ($this->session->getVar("setup_Write") && !$this->config->WIKINDX_ORIGINATOR_EDIT_ONLY && $this->session->getVar("setup_FileAttach")))
         {
             if (isset($files))
             {
@@ -784,7 +784,7 @@ class RESOURCEVIEW
                 }
             }
         }
-        if ($this->session->getVar("setup_Write") && (!$this->config->WIKINDX_ORIGINATOR_EDITONLY || ($userAddId == $this->userId)
+        if ($this->session->getVar("setup_Write") && (!$this->config->WIKINDX_ORIGINATOR_EDIT_ONLY || ($userAddId == $this->userId)
             || $this->session->getVar("setup_Superadmin")))
         {
             if (isset($urls))
@@ -1004,7 +1004,7 @@ class RESOURCEVIEW
         $write = $this->session->getVar('setup_Write');
         $links = [];
         $edit = FALSE;
-        if ($write && (!$this->config->WIKINDX_ORIGINATOR_EDITONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))
+        if ($write && (!$this->config->WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))
         {
             $links['edit'] = \HTML\a(
                 $this->icons->getClass("edit"),
@@ -1639,7 +1639,7 @@ class RESOURCEVIEW
      */
     private function displayEmailFriendLink($row)
     {
-        if ($this->session->getVar("setup_MultiUser") && $this->config->WIKINDX_READONLYACCESS
+        if ($this->session->getVar("setup_MultiUser") && $this->config->WIKINDX_READ_ONLY_ACCESS
             && $this->config->WIKINDX_MAIL_SERVER)
         {
             $linkStyle = "link linkCiteHidden";

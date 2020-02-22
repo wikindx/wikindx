@@ -1458,18 +1458,14 @@ class CONFIGURE
             10,
             10
         ) . BR . \HTML\span($hint, 'hint'));
-        $array = ['none' => 'none', 'tls' => 'tls', 'ssl' => 'ssl'];
-        array_key_exists("configMailSmtpEncrypt", $this->values) ? $input = $this->values["configMailSmtpEncrypt"] : $input = 'none';
-        if (!$input)
-        {
-            $input = 'none';
-        }
+        array_key_exists("configMailSmtpEncrypt", $this->values) ? $input = $this->values["configMailSmtpEncrypt"] : $input = WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT;
+        $input = (!$input) ? WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT : $input;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "mailSmtpEncrypt"),
             "configMailSmtpEncrypt",
-            $array,
+            WIKINDX_PHPMAILER_SMTP_ENCRYPT,
             $input,
-            3
+            count(WIKINDX_PHPMAILER_SMTP_ENCRYPT)
         ));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailSmtpPersist"));
         $input = array_key_exists("configMailSmtpPersist", $this->values) && ($this->values['configMailSmtpPersist']) ? "CHECKED" : WIKINDX_MAIL_SMTP_PERSIST_DEFAULT;

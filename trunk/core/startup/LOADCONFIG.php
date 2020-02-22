@@ -773,19 +773,6 @@ class LOADCONFIG
             }
         }
 
-        // Set LDAP port
-        if (!property_exists($this->config, 'WIKINDX_LDAP_PORT'))
-        {
-            $this->config->WIKINDX_LDAP_PORT = WIKINDX_LDAP_PORT_DEFAULT;
-        }
-        elseif (is_int($this->config->WIKINDX_LDAP_PORT))
-        {
-            if ($this->config->WIKINDX_LDAP_PORT < 0)
-            {
-                die('WIKINDX_LDAP_PORT must be a positive integer.');
-            }
-        }
-
         // Set LDAP Opt Protocol Version
         if (!property_exists($this->config, 'WIKINDX_LDAP_PROTOCOL_VERSION'))
         {

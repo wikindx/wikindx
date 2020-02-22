@@ -1298,12 +1298,12 @@ class CONFIGURE
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "ldapUse"), "configLdapUse", $input));
         array_key_exists("configLdapProtocolVersion", $this->values) ? $input = $this->values["configLdapProtocolVersion"] :
             $input = WIKINDX_LDAP_PROTOCOL_VERSION_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "ldapProtocolVersion"),
             "configLdapProtocolVersion",
+            WIKINDX_LDAP_PROTOCOLE_VERSIONS,
             $input,
-            3,
-            3
+            1
         ));
         array_key_exists("configLdapServer", $this->values) ? $input = $this->values["configLdapServer"] : $input = WIKINDX_LDAP_SERVER_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(

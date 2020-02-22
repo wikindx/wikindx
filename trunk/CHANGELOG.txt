@@ -10,6 +10,8 @@ BUG FIXES:
 4. Fix SQL error in QUICKSEARCH resulting from a NULL id.
 5. Fix an error of version check in the repairKit.
 6. Fix the type of the default value of WIKINDX_MAIL_RETURN_PATH to a string and fix the current config.
+7. Fix the default smtp encryption method (after a migration).
+8. Fix the default smtp backend (after a migration).
 
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.

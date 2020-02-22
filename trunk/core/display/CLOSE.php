@@ -111,7 +111,7 @@ class CLOSE
         }
         else
         {
-            $title = WIKINDX_NAME;
+            $title = WIKINDX_TITLE_DEFAULT;
         }
 
         GLOBALS::addTplVar('title', \HTML\stripHtml($title)); // Admins can add HTML formatting in the configure interface.
@@ -141,7 +141,7 @@ class CLOSE
         // because someone can use them at an other place of his custom template
         GLOBALS::addTplVar("footerInfo", $footer);
         GLOBALS::addTplVar('wkx_link', WIKINDX_URL);
-        GLOBALS::addTplVar('wkx_title', mb_strtolower(WIKINDX_NAME));
+        GLOBALS::addTplVar('wkx_title', mb_strtolower(WIKINDX_TITLE_DEFAULT));
         GLOBALS::addTplVar('wkx_mimetype_rss', WIKINDX_MIMETYPE_RSS);
 
         // Get the time elapsed before template rendering

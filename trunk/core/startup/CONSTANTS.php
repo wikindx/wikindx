@@ -24,12 +24,6 @@ define('CR', "\r");
 define('LF', "\n");
 define('BR', '<br>');
 /**
- * WIKINDX official name
- *
- * @name WIKINDX_NAME
- */
-define('WIKINDX_NAME', 'WIKINDX');
-/**
  * WIKINDX official/public version information
  *
  * This number is the official release version

@@ -673,7 +673,7 @@ class LOADCONFIG
         $dieMsgMissing = 'Missing configuration variable: ';
         if (!property_exists($this->config, 'WIKINDX_TITLE') || !$this->config->WIKINDX_TITLE)
         {
-            $this->config->WIKINDX_TITLE = WIKINDX_NAME;
+            $this->config->WIKINDX_TITLE = WIKINDX_TITLE_DEFAULT;
         }
         // Set timezone (default if needed)
         if (!property_exists($this->config, 'WIKINDX_TIMEZONE'))

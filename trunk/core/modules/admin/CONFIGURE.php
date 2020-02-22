@@ -936,7 +936,7 @@ class CONFIGURE
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "title"));
-        array_key_exists("configTitle", $this->values) ? $input = $this->values["configTitle"] : $input = WIKINDX_NAME;
+        array_key_exists("configTitle", $this->values) ? $input = $this->values["configTitle"] : $input = WIKINDX_TITLE_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput($this->messages->text("config", "title"), "configTitle", $input, 30) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "stringLimit"));
         array_key_exists("configStringLimit", $this->values) ? $input = $this->values["configStringLimit"] : $input = WIKINDX_STRING_LIMIT_DEFAULT;

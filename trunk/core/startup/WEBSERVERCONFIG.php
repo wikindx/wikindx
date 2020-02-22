@@ -87,7 +87,7 @@ if (date_default_timezone_get() == '')
 // Check PHP minimum version and above.
 if (version_compare(PHP_VERSION, WIKINDX_PHP_VERSION_MIN, '<'))
 {
-    $AppName = WIKINDX_NAME;
+    $AppName = WIKINDX_TITLE_DEFAULT;
     $PHPVersion = PHP_VERSION;
     $PHPVersionMin = WIKINDX_PHP_VERSION_MIN;
     $SourceFile = __FILE__;
@@ -130,7 +130,7 @@ $MissingExtensions = array_diff($MandatoryExtensions, $InstalledExtensions);
 
 if (count($MissingExtensions) > 0)
 {
-    $AppName = WIKINDX_NAME;
+    $AppName = WIKINDX_TITLE_DEFAULT;
     $EnabledExtensions = array_intersect($MandatoryExtensions, $InstalledExtensions);
     $ListExtensions = '<tr><td>' . implode('</td><td style="color:red">DISABLED</td></tr><tr><td>', $MissingExtensions) . '<td style="color:red">DISABLED</td></tr>';
     $ListExtensions .= '<tr><td>' . implode('</td><td style="color:green">ENABLED</td></tr><tr><td>', $EnabledExtensions) . '<td style="color:green">ENABLED</td></tr>';
@@ -170,13 +170,13 @@ EOM;
 // Check PHP execution environnement (CLI isn't supported)
 if (PHP_SAPI === 'cli')
 {
-    die(WIKINDX_NAME . " doesn't support CLI execution.");
+    die(WIKINDX_TITLE_DEFAULT . " doesn't support CLI execution.");
 }
 
 // Check for presence of config.php
 if (!is_file('config.php'))
 {
-    $AppName = WIKINDX_NAME;
+    $AppName = WIKINDX_TITLE_DEFAULT;
     $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>

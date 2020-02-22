@@ -36,7 +36,7 @@ private $config;
         $baseURL = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL;
 
         // set up language
-        $messages = FACTORY_MESSAGES::getInstance($this->config->WIKINDX_RSS_LANGUAGE);
+        $messages = FACTORY_MESSAGES::getInstance($this->config->WIKINDX_LANGUAGE);
 
         list($numResults, $item) = $this->queryDb($db, $this->config->WIKINDX_RSS_LIMIT, $this->config->WIKINDX_RSS_BIBSTYLE);
 
@@ -55,7 +55,7 @@ private $config;
         echo TAB . "<link>" . $this->escape_xml($baseURL) . "</link>" . LF;
         echo TAB . TAB . "<title>" . $this->escape_xml($this->config->WIKINDX_RSS_TITLE) . "</title>" . LF;
         echo TAB . TAB . "<description>" . $this->escape_xml($this->config->WIKINDX_RSS_DESCRIPTION) . "</description>" . LF;
-        echo TAB . TAB . "<language>" . $this->escape_xml($this->config->WIKINDX_RSS_LANGUAGE) . "</language>" . LF;
+        echo TAB . TAB . "<language>" . $this->escape_xml($this->config->WIKINDX_LANGUAGE) . "</language>" . LF;
 
         // Extract the date of the last updated resource or use the date of the current date
         // for the date of last build of the feed

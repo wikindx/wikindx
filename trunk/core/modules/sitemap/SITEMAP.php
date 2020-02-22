@@ -38,7 +38,7 @@ class SITEMAP
         $baseURL = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL;
 
         // set up language
-        $messages = FACTORY_MESSAGES::getInstance($config->WIKINDX_RSS_LANGUAGE);
+        $messages = FACTORY_MESSAGES::getInstance($config->WIKINDX_LANGUAGE);
 
         // Get newspage flag: N = 0 = OFF, N > 0 = ON
         $newspage = isset($_GET['newspage']) ? $_GET['newspage'] : 0;

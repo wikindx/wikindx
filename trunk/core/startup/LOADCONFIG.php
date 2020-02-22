@@ -825,15 +825,5 @@ class LOADCONFIG
                 $this->config->WIKINDX_AUTHGATE_MESSAGE = WIKINDX_AUTHGATE_MESSAGE_DEFAULT;
             }
         }
-
-        // Set RSS feed language
-        if (!property_exists($this->config, 'WIKINDX_RSS_LANGUAGE'))
-        {
-            $this->config->WIKINDX_RSS_LANGUAGE = WIKINDX_LANGUAGE_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_RSS_LANGUAGE))
-        {
-            die('WIKINDX_RSS_LANGUAGE must be a legal language code (en_GB, fr_FR, de_DE...).');
-        }
     }
 }

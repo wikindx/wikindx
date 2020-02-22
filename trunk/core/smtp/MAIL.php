@@ -60,13 +60,12 @@ class MAIL
         {
             $ReplyTo = $this->config->WIKINDX_MAIL_REPLYTO;
         }
-        else
+        
+        if ($ReplyTo != "")
         {
-            $ReplyTo = WIKINDX_MAIL_REPLYTO_DEFAULT;
+            $this->mail->addReplyTo(filter_var($ReplyTo, FILTER_SANITIZE_EMAIL), $this->config->WIKINDX_TITLE);
         }
-
-        $this->mail->addReplyTo(filter_var($ReplyTo, FILTER_SANITIZE_EMAIL), 'WIKINDX');
-
+        
         // ContentType (work because it's globaly defined)
         $this->mail->ContentType = WIKINDX_MIMETYPE_TXT . ';charset=' . WIKINDX_CHARSET;
 

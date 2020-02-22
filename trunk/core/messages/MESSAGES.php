@@ -729,6 +729,7 @@ class MESSAGES
 				"pagingInfo" => dgettext($domain, "Displaying ### "),
 /// hint_pagingInfoOf Follows hint_pagingInfo: '... of 345'
 				"pagingInfoOf" => dgettext($domain, "of ###"),
+				"mailServerRequired" => dgettext($domain, "Requires a mail server to be enabled and configured"),
 				"registerEmail" => dgettext($domain, "An email will be sent with further instructions"),
 				"multiples" => dgettext($domain, "Multiples can be chosen"),
 				"imgWidthLimit" => dgettext($domain, "Default is 400"),

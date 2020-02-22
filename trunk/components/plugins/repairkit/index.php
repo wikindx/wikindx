@@ -1034,6 +1034,6 @@ class repairkit_MODULE
      */
     private function errorsOn()
     {
-        ini_set('display_errors', 'On');
+        ini_set('display_errors', TRUE);
     }
 }

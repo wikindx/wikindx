@@ -910,56 +910,6 @@ class LOADCONFIG
             die('WIKINDX_MAIL_SMARGS must be a string.');
         }
 
-        // Set smtp hostname
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTP_SERVER'))
-        {
-            $this->config->WIKINDX_MAIL_SMTP_SERVER = WIKINDX_MAIL_SMTP_SERVER_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_MAIL_SMTP_SERVER))
-        {
-            die('WIKINDX_MAIL_SMTP_SERVER must be a string.');
-        }
-
-        // Set smtp port
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTP_PORT'))
-        {
-            $this->config->WIKINDX_MAIL_SMTP_PORT = WIKINDX_MAIL_SMTP_PORT_DEFAULT;
-        }
-        elseif (is_int($this->config->WIKINDX_MAIL_SMTP_PORT))
-        {
-            if ($this->config->WIKINDX_MAIL_SMTP_PORT < 0)
-            {
-                die('WIKINDX_MAIL_SMTP_PORT must be a positive integer.');
-            }
-        }
-
-        // Set smtp encryption
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTP_ENCRYPT'))
-        {
-            $this->config->WIKINDX_MAIL_SMTP_ENCRYPT = WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT;
-        }
-        elseif (!$this->config->WIKINDX_MAIL_SMTP_ENCRYPT)
-        {
-            $this->config->WIKINDX_MAIL_SMTP_ENCRYPT = '';
-        }
-        // No encryption stored in the database as 'none' Рensure this is an empty string
-        elseif ($this->config->WIKINDX_MAIL_SMTP_ENCRYPT == 'none')
-        {
-            $this->config->WIKINDX_MAIL_SMTP_ENCRYPT = '';
-        }
-        elseif (!is_string($this->config->WIKINDX_MAIL_SMTP_ENCRYPT))
-        {
-            die('WIKINDX_MAIL_SMTP_ENCRYPT must be of this value: ' . implode(', ', ['tls', 'ssl', 'or an empty string']));
-        }
-        elseif (!in_array($this->config->WIKINDX_MAIL_SMTP_ENCRYPT, ['', 'tls', 'ssl']))
-        {
-            die('WIKINDX_MAIL_SMTP_ENCRYPT must be of this value: ' . implode(', ', ['tls', 'ssl', 'or an empty string']));
-        }
-        elseif ($this->config->WIKINDX_MAIL_SMTP_ENCRYPT == '')
-        {
-            $this->config->WIKINDX_MAIL_SMTP_ENCRYPT == FALSE;
-        }
-
         // Set smtp persist
         if (!property_exists($this->config, 'WIKINDX_MAIL_SMTP_PERSIST'))
         {

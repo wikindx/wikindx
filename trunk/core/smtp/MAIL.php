@@ -53,7 +53,7 @@ class MAIL
             $From = \HTML\stripHtml($this->config->WIKINDX_TITLE) . '@' . $_SERVER['HTTP_HOST'];
         }
 
-        $this->mail->setFrom(filter_var($From, FILTER_SANITIZE_EMAIL), 'WIKINDX');
+        $this->mail->setFrom(filter_var($From, FILTER_SANITIZE_EMAIL), $this->config->WIKINDX_TITLE);
 
         // ReplyTo (work because it's globaly defined)
         if (filter_var($this->config->WIKINDX_MAIL_REPLYTO, FILTER_VALIDATE_EMAIL) !== FALSE)

@@ -866,40 +866,6 @@ class LOADCONFIG
             die('WIKINDX_RSS_LANGUAGE must be a legal language code (en_GB, fr_FR, de_DE...).');
         }
 
-        // Set email from header
-        if (!property_exists($this->config, 'WIKINDX_MAIL_FROM'))
-        {
-            $this->config->WIKINDX_MAIL_FROM = WIKINDX_MAIL_FROM_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_MAIL_FROM))
-        {
-            if ($this->config->WIKINDX_MAIL_FROM !== FALSE)
-            {
-                $this->config->WIKINDX_MAIL_FROM = WIKINDX_MAIL_FROM_DEFAULT;
-            }
-            elseif (trim($this->config->WIKINDX_MAIL_FROM == ''))
-            {
-                $this->config->WIKINDX_MAIL_FROM = WIKINDX_MAIL_FROM_DEFAULT;
-            }
-        }
-
-        // Set email reply-to header
-        if (!property_exists($this->config, 'WIKINDX_MAIL_REPLYTO'))
-        {
-            $this->config->WIKINDX_MAIL_REPLYTO = WIKINDX_MAIL_REPLYTO_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_MAIL_REPLYTO))
-        {
-            if ($this->config->WIKINDX_MAIL_REPLYTO !== FALSE)
-            {
-                $this->config->WIKINDX_MAIL_REPLYTO = WIKINDX_MAIL_REPLYTO_DEFAULT;
-            }
-            elseif (trim($this->config->WIKINDX_MAIL_REPLYTO == ''))
-            {
-                $this->config->WIKINDX_MAIL_REPLYTO = WIKINDX_MAIL_REPLYTO_DEFAULT;
-            }
-        }
-
         // Enable / disable CMS database access
         if (!property_exists($this->config, 'WIKINDX_CMS_SQL'))
         {

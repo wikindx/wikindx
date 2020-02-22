@@ -277,7 +277,7 @@ class STATISTICS
         $lastStatisticsCompilation = $this->co->getOne('configStatisticsCompiled');
         $this->session->setVar('lastStatisticsCompilation', $lastStatisticsCompilation);
         $emailStats = $this->co->getOne('configEmailStatistics');
-        if ($emailStats && $this->config->WIKINDX_MAIL_SERVER)
+        if ($emailStats && $this->config->WIKINDX_MAIL_USE)
         {
             $emailStats = TRUE;
         }

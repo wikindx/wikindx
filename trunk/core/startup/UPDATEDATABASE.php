@@ -590,7 +590,7 @@ class UPDATEDATABASE
         }
         else
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailServer', WIKINDX_MAIL_SERVER_DEFAULT]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailServer', WIKINDX_MAIL_USE_DEFAULT]);
         }
         if (isset($tmpconfig->WIKINDX_MAIL_FROM) && $tmpconfig->WIKINDX_MAIL_FROM)
         {

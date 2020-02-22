@@ -32,7 +32,7 @@ class MAIL
         $this->config = FACTORY_CONFIG::getInstance();
         
         // If messaging is turned off, just do nothing
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!$this->config->WIKINDX_MAIL_USE)
         {
             return;
         }
@@ -110,7 +110,7 @@ class MAIL
     {
         // We have to close the SMTP connection just before the object is destroyed
         // because we have enabled KeepAlive mode for SMTP
-        if ($this->config->WIKINDX_MAIL_SERVER && $this->config->WIKINDX_MAIL_BACKEND == 'smtp' && $this->config->WIKINDX_MAIL_SMTP_PERSIST)
+        if ($this->config->WIKINDX_MAIL_USE && $this->config->WIKINDX_MAIL_BACKEND == 'smtp' && $this->config->WIKINDX_MAIL_SMTP_PERSIST)
         {
             $this->mail->smtpClose();
         }
@@ -130,7 +130,7 @@ class MAIL
         $SendStatus = TRUE;
         
         // If messaging is turned off, just do nothing
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!$this->config->WIKINDX_MAIL_USE)
         {
             return $SendStatus;
         }

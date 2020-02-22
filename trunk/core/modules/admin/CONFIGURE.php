@@ -1361,7 +1361,7 @@ class CONFIGURE
     private function emailConfigDisplay()
     {
         $mailMessage = FALSE;
-        if (array_key_exists("configMailServer", $this->values) && $this->values['configMailServer'])
+        if (array_key_exists("configMailUse", $this->values) && $this->values['configMailUse'])
         {
             // Ensure we're working with current input values. Database has been written to at this point.
             FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
@@ -1376,8 +1376,8 @@ class CONFIGURE
         $pString = $this->errorString . $mailMessage;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
-        $input = array_key_exists("configMailServer", $this->values) && ($this->values['configMailServer']) ? "CHECKED" : WIKINDX_MAIL_SERVER_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "mailServer"), "configMailServer", $input));
+        $input = array_key_exists("configMailUse", $this->values) && ($this->values['configMailUse']) ? "CHECKED" : WIKINDX_MAIL_USE_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "mailServer"), "configMailUse", $input));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailFrom"));
         array_key_exists("configMailFrom", $this->values) ? $input = $this->values["configMailFrom"] : $input = WIKINDX_MAIL_FROM_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
@@ -1850,7 +1850,7 @@ class CONFIGURE
                     "configMailFrom",
                     "configMailReplyTo",
                     "configMailReturnPath",
-                    "configMailServer",
+                    "configMailUse",
                     "configMailSmPath",
                     "configMailSmtpAuth",
                     "configMailSmtpEncrypt",
@@ -2061,7 +2061,7 @@ class CONFIGURE
                     "configImportBib",
                     "configLdapUse",
                     "configListLink",
-                    "configMailServer",
+                    "configMailUse",
                     "configMailSmtpAuth",
                     "configMailSmtpPersist",
                     "configMetadataAllow",
@@ -2254,16 +2254,16 @@ class CONFIGURE
         $this->dependencies('configRssAllow', ['configRssBibstyle', 'configRssTitle', 'configRssDescription', 'configRssLimit']);
         $this->dependencies('configCmsAllow', ['configCmsBibstyle']);
         $this->dependencies('configCmsSql', ['configCmsDbUser', 'configCmsDbPassword']);
-        $this->dependencies('configMailServer', ['configMailBackend']);
+        $this->dependencies('configMailUse', ['configMailBackend']);
         $this->dependencies('configLdapUse', ['configLdapServer', 'configLdapPort', 'configLdapProtocolVersion', 'configLdapDn']);
         $this->dependencies('configAuthGate', ['configAuthGateMessage']);
-        if (array_key_exists('configMailServer', $this->vars) && ($this->vars['configMailBackend'] == 'sendmail'))
+        if (array_key_exists('configMailUse', $this->vars) && ($this->vars['configMailBackend'] == 'sendmail'))
         {
-            $this->dependencies('configMailServer', ['configMailSmPath']);
+            $this->dependencies('configMailUse', ['configMailSmPath']);
         }
-        elseif (array_key_exists('configMailServer', $this->vars) && ($this->vars['configMailBackend'] == 'smtp'))
+        elseif (array_key_exists('configMailUse', $this->vars) && ($this->vars['configMailBackend'] == 'smtp'))
         {
-            $this->dependencies('configMailServer', ['configMailSmtpServer', 'configMailSmtpPort', 'configMailSmtpEncrypt']);
+            $this->dependencies('configMailUse', ['configMailSmtpServer', 'configMailSmtpPort', 'configMailSmtpEncrypt']);
             $this->dependencies('configMailSmtpAuth', ['configMailSmtpUsername', 'configMailSmtpPassword']);
         }
         // Check size of password is no less than N chars

@@ -138,7 +138,7 @@ class AUTHORIZE
                 return FALSE;
             }
             // User registration
-            elseif ($this->config->WIKINDX_MULTIUSER && $this->config->WIKINDX_USER_REGISTRATION && ($this->config->WIKINDX_MAIL_SERVER))
+            elseif ($this->config->WIKINDX_MULTIUSER && $this->config->WIKINDX_USER_REGISTRATION && ($this->config->WIKINDX_MAIL_USE))
             {
                 include_once("core/modules/usersgroups/REGISTER.php");
                 $obj = new REGISTER();
@@ -271,7 +271,7 @@ class AUTHORIZE
                 \HTML\strong($messages->text("user", "username") . ":&nbsp;&nbsp;") . "wikindx, " .
                 \HTML\strong($messages->text("user", "password") . ":&nbsp;&nbsp;") . "wikindx");
         }
-        $forgot = $this->config->WIKINDX_MAIL_SERVER ? \HTML\a("link", $messages->text("user", "forget6"), $link2) : FALSE;
+        $forgot = $this->config->WIKINDX_MAIL_USE ? \HTML\a("link", $messages->text("user", "forget6"), $link2) : FALSE;
         $pString .= $this->printLogonTable();
         // Give user the option to bypass logging in simply to read.
         if (!$this->config->WIKINDX_DENY_READONLY)
@@ -283,7 +283,7 @@ class AUTHORIZE
         {
             $links = $forgot;
         }
-        if (($row['configUserRegistration']) && ($row['configMultiUser']) && ($this->config->WIKINDX_MAIL_SERVER))
+        if (($row['configUserRegistration']) && ($row['configMultiUser']) && ($this->config->WIKINDX_MAIL_USE))
         {
             $links .= BR . \HTML\a("link", $messages->text("menu", "register"), $link3);
         }

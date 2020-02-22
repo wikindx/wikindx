@@ -50,7 +50,7 @@ class EMAIL
     public function userEdit()
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!$this->config->WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
@@ -79,7 +79,7 @@ class EMAIL
     public function register($hashKey, $email)
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!$this->config->WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
@@ -100,7 +100,7 @@ class EMAIL
     public function registerUserAdd($passwordShow = FALSE)
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!$this->config->WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
@@ -148,7 +148,7 @@ class EMAIL
     public function registerRequest()
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!$this->config->WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
@@ -192,7 +192,7 @@ class EMAIL
                 $message = $this->messages->text("user", "emailText5", " $scriptPath") . "\n" . LF;
             }
             // do nothing if email is not turned on
-            if ($this->config->WIKINDX_MAIL_SERVER)
+            if ($this->config->WIKINDX_MAIL_USE)
             {
                 if (!$this->smtp->sendEmail($email, $subject, $message))
                 {
@@ -272,7 +272,7 @@ class EMAIL
     public function emailFriend()
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!$this->config->WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
@@ -297,7 +297,7 @@ class EMAIL
     public function forgetProcess($username, $password)
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!$this->config->WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
@@ -324,7 +324,7 @@ class EMAIL
     public function news($title, $news)
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!$this->config->WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
@@ -362,7 +362,7 @@ class EMAIL
     public function notify($resourceId, $newResource = FALSE)
     {
         // do nothing if admin does not allow notification or email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER || !$this->session->getVar('setup_Notify'))
+        if (!$this->config->WIKINDX_MAIL_USE || !$this->session->getVar('setup_Notify'))
         {
             return TRUE;
         }

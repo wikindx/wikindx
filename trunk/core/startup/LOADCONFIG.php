@@ -735,42 +735,5 @@ class LOADCONFIG
         {
             die('WIKINDX_RSS_DESCRIPTION must be a string.');
         }
-
-        // Set LDAP configuration
-        if (!property_exists($this->config, 'WIKINDX_LDAP_USE'))
-        {
-            $this->config->WIKINDX_LDAP_USE = WIKINDX_LDAP_USE_DEFAULT;
-        }
-        elseif (!is_bool($this->config->WIKINDX_LDAP_USE))
-        {
-            die('WIKINDX_LDAP_USE must be a boolean (TRUE / FALSE).');
-        }
-
-        // Set LDAP SERVER
-        if (!property_exists($this->config, 'WIKINDX_LDAP_SERVER'))
-        {
-            $this->config->WIKINDX_LDAP_SERVER = WIKINDX_LDAP_SERVER_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_LDAP_SERVER))
-        {
-            die('WIKINDX_LDAP_SERVER must be a string.');
-        }
-
-        // Set LDAP DN
-        if (!property_exists($this->config, 'WIKINDX_LDAP_DN'))
-        {
-            $this->config->WIKINDX_LDAP_DN = WIKINDX_LDAP_DN_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_LDAP_DN))
-        {
-            if ($this->config->WIKINDX_LDAP_DN !== FALSE)
-            {
-            	$this->config->WIKINDX_LDAP_DN = WIKINDX_LDAP_DN_DEFAULT;
-            }
-            elseif (trim($this->config->WIKINDX_LDAP_DN == ''))
-            {
-                $this->config->WIKINDX_LDAP_DN = WIKINDX_LDAP_DN_DEFAULT;
-            }
-        }
     }
 }

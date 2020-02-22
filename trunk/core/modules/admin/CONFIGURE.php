@@ -2284,10 +2284,10 @@ class CONFIGURE
         {
             $this->dependencies('configPrintSql', ['configDebugEmail']);
         }
-        // Check size of password is no less than 6 chars
-        if (array_key_exists('configPasswordSize', $this->vars) && ($this->vars['configPasswordSize'] < 6))
+        // Check size of password is no less than N chars
+        if (array_key_exists('configPasswordSize', $this->vars) && ($this->vars['configPasswordSize'] < WIKINDX_PASSWORD_SIZE_DEFAULT))
         {
-            $this->vars['configPasswordSize'] = 6;
+            $this->vars['configPasswordSize'] = WIKINDX_PASSWORD_SIZE_DEFAULT;
         }
     }
     /** 

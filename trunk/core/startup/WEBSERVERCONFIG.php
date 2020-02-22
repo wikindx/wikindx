@@ -41,7 +41,7 @@ include_once("core/startup/CONSTANTS.php");
 error_reporting(E_ALL);
 ini_set('display_startup_errors', TRUE);
 ini_set('html_errors', (PHP_SAPI !== 'cli'));
-ini_set('display_errors', WIKINDX_PHP_DISPLAY_ERRORS_DEFAULT);
+ini_set('display_errors', TRUE);
 
 /**
  * Fix default charset of PHP interpret, PHP libs and protocols

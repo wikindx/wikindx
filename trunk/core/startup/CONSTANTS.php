@@ -116,9 +116,6 @@ define('WIKINDX_COMPONENTS_UPDATE_SERVER', 'https://wikindx.sourceforge.io/downl
  */
 define('WIKINDX_PACKAGE_HASH_ALGO', 'sha256');
 
-// Debugging
-define('WIKINDX_PHP_DISPLAY_ERRORS_DEFAULT', TRUE);
-
 
 // List of components directories
 define('WIKINDX_DIR_COMPONENT', 'components');

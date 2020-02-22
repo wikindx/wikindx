@@ -221,11 +221,7 @@ class LOADCONFIG
         GLOBALS::setVars($cleanVars, $dirtyVars);
     }
     /**
-     * Check and load configuration from config.php
-     * From WIKINDX v5.3 on, we have transferred many variables from config.php to the database.
-     * After checking for basic MYSQL and PATH variables that remain in config.php, we decide whether to check
-     * further variables in this function (i.e. we are in the process of upgrading to >= v5.3) or to return.
-     * If we return, the checks below are carried out in LOADCONFIG::checkConfigValidity().
+     * Load configuration from config.php
      */
     private function loadStaticConfig()
     {

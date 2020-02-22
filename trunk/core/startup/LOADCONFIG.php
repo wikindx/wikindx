@@ -839,23 +839,6 @@ class LOADCONFIG
             }
         }
 
-        // Set PASSWORD strength
-        if (!property_exists($this->config, 'WIKINDX_PASSWORD_STRENGTH'))
-        {
-            $this->config->WIKINDX_PASSWORD_STRENGTH = WIKINDX_PASSWORD_STRENGTH_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_PASSWORD_STRENGTH))
-        {
-            if ($this->config->WIKINDX_PASSWORD_STRENGTH !== FALSE)
-            {
-                $this->config->WIKINDX_PASSWORD_STRENGTH = WIKINDX_PASSWORD_STRENGTH_DEFAULT;
-            }
-            elseif (trim($this->config->WIKINDX_PASSWORD_STRENGTH == ''))
-            {
-                $this->config->WIKINDX_PASSWORD_STRENGTH = WIKINDX_PASSWORD_STRENGTH_DEFAULT;
-            }
-        }
-
         // Set RSS feed language
         if (!property_exists($this->config, 'WIKINDX_RSS_LANGUAGE'))
         {

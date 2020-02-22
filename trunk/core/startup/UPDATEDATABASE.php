@@ -501,308 +501,312 @@ class UPDATEDATABASE
                 $this->db->insert('configtemp', ['configName', 'configDatetime'], [$key, $value]);
             }
         }
+        
+        // Load a separate config class that containts original constant names
+        $tmpconfig = new CONFIG();
+        
         // Now copy across selected config.php variables
-        if (isset($this->config->WIKINDX_TIMEZONE) && $this->config->WIKINDX_TIMEZONE)
+        if (isset($tmpconfig->WIKINDX_TIMEZONE) && $tmpconfig->WIKINDX_TIMEZONE)
         {
-            $this->db->insert('configtemp', ['configName', 'configText'], ['configTimezone', $this->config->WIKINDX_TIMEZONE]);
+            $this->db->insert('configtemp', ['configName', 'configText'], ['configTimezone', $tmpconfig->WIKINDX_TIMEZONE]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configText'], ['configTimezone', WIKINDX_TIMEZONE_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_RESTRICT_USERID) && $this->config->WIKINDX_RESTRICT_USERID)
+        if (isset($tmpconfig->WIKINDX_RESTRICT_USERID) && $tmpconfig->WIKINDX_RESTRICT_USERID)
         {
-            $this->db->insert('configtemp', ['configName', 'configInt'], ['configRestrictUserId', $this->config->WIKINDX_RESTRICT_USERID]);
+            $this->db->insert('configtemp', ['configName', 'configInt'], ['configRestrictUserId', $tmpconfig->WIKINDX_RESTRICT_USERID]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configInt'], ['configRestrictUserId', WIKINDX_RESTRICT_USERID_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES) &&
-            is_array($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES) && !empty($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES))
+        if (isset($tmpconfig->WIKINDX_DEACTIVATE_RESOURCE_TYPES) &&
+            is_array($tmpconfig->WIKINDX_DEACTIVATE_RESOURCE_TYPES) && !empty($tmpconfig->WIKINDX_DEACTIVATE_RESOURCE_TYPES))
         {
             $this->db->insert('configtemp', ['configName', 'configText'], ['configDeactivateResourceTypes',
-                base64_encode(serialize($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES)), ]);
+                base64_encode(serialize($tmpconfig->WIKINDX_DEACTIVATE_RESOURCE_TYPES)), ]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configText'], ['configDeactivateResourceTypes', base64_encode(serialize([]))]);
         }
-        if (isset($this->config->WIKINDX_RSS_ALLOW) && $this->config->WIKINDX_RSS_ALLOW)
+        if (isset($tmpconfig->WIKINDX_RSS_ALLOW) && $tmpconfig->WIKINDX_RSS_ALLOW)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configRssAllow', $this->config->WIKINDX_RSS_ALLOW]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configRssAllow', $tmpconfig->WIKINDX_RSS_ALLOW]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configRssAllow', WIKINDX_RSS_ALLOW_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_RSS_BIBSTYLE) && $this->config->WIKINDX_RSS_BIBSTYLE)
+        if (isset($tmpconfig->WIKINDX_RSS_BIBSTYLE) && $tmpconfig->WIKINDX_RSS_BIBSTYLE)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssBibstyle', $this->config->WIKINDX_RSS_BIBSTYLE]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssBibstyle', $tmpconfig->WIKINDX_RSS_BIBSTYLE]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssBibstyle', WIKINDX_RSS_BIBSTYLE_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_RSS_LIMIT) && $this->config->WIKINDX_RSS_LIMIT)
+        if (isset($tmpconfig->WIKINDX_RSS_LIMIT) && $tmpconfig->WIKINDX_RSS_LIMIT)
         {
-            $this->db->insert('configtemp', ['configName', 'configInt'], ['configRssLimit', $this->config->WIKINDX_RSS_LIMIT]);
+            $this->db->insert('configtemp', ['configName', 'configInt'], ['configRssLimit', $tmpconfig->WIKINDX_RSS_LIMIT]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configInt'], ['configRssLimit', WIKINDX_RSS_LIMIT_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_RSS_DISPLAY) && $this->config->WIKINDX_RSS_DISPLAY)
+        if (isset($tmpconfig->WIKINDX_RSS_DISPLAY) && $tmpconfig->WIKINDX_RSS_DISPLAY)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configRssDisplay', $this->config->WIKINDX_RSS_DISPLAY]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configRssDisplay', $tmpconfig->WIKINDX_RSS_DISPLAY]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configRssDisplay', WIKINDX_RSS_DISPLAY_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_RSS_TITLE) && $this->config->WIKINDX_RSS_TITLE)
+        if (isset($tmpconfig->WIKINDX_RSS_TITLE) && $tmpconfig->WIKINDX_RSS_TITLE)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssTitle', $this->config->WIKINDX_RSS_TITLE]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssTitle', $tmpconfig->WIKINDX_RSS_TITLE]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssTitle', WIKINDX_RSS_TITLE_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_RSS_DESCRIPTION) && $this->config->WIKINDX_RSS_DESCRIPTION)
+        if (isset($tmpconfig->WIKINDX_RSS_DESCRIPTION) && $tmpconfig->WIKINDX_RSS_DESCRIPTION)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssDescription', $this->config->WIKINDX_RSS_DESCRIPTION]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssDescription', $tmpconfig->WIKINDX_RSS_DESCRIPTION]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssDescription', WIKINDX_RSS_DESCRIPTION_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_MAIL_SERVER) && $this->config->WIKINDX_MAIL_SERVER)
+        if (isset($tmpconfig->WIKINDX_MAIL_SERVER) && $tmpconfig->WIKINDX_MAIL_SERVER)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailServer', $this->config->WIKINDX_MAIL_SERVER]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailServer', $tmpconfig->WIKINDX_MAIL_SERVER]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailServer', WIKINDX_MAIL_SERVER_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_MAIL_FROM) && $this->config->WIKINDX_MAIL_FROM)
+        if (isset($tmpconfig->WIKINDX_MAIL_FROM) && $tmpconfig->WIKINDX_MAIL_FROM)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailFrom', $this->config->WIKINDX_MAIL_FROM]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailFrom', $tmpconfig->WIKINDX_MAIL_FROM]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailFrom', WIKINDX_MAIL_FROM_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_MAIL_REPLYTO) && $this->config->WIKINDX_MAIL_REPLYTO)
+        if (isset($tmpconfig->WIKINDX_MAIL_REPLYTO) && $tmpconfig->WIKINDX_MAIL_REPLYTO)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailReplyTo', $this->config->WIKINDX_MAIL_REPLYTO]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailReplyTo', $tmpconfig->WIKINDX_MAIL_REPLYTO]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailReplyTo', WIKINDX_MAIL_REPLYTO_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_MAIL_RETURN_PATH) && $this->config->WIKINDX_MAIL_RETURN_PATH)
+        if (isset($tmpconfig->WIKINDX_MAIL_RETURN_PATH) && $tmpconfig->WIKINDX_MAIL_RETURN_PATH)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailReturnPath', $this->config->WIKINDX_MAIL_RETURN_PATH]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailReturnPath', $tmpconfig->WIKINDX_MAIL_RETURN_PATH]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailReturnPath', WIKINDX_MAIL_RETURN_PATH_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_MAIL_BACKEND) && $this->config->WIKINDX_MAIL_BACKEND)
+        if (isset($tmpconfig->WIKINDX_MAIL_BACKEND) && $tmpconfig->WIKINDX_MAIL_BACKEND)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailBackend', $this->config->WIKINDX_MAIL_BACKEND]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailBackend', $tmpconfig->WIKINDX_MAIL_BACKEND]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailBackend', WIKINDX_MAIL_BACKEND_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_MAIL_SMPATH) && $this->config->WIKINDX_MAIL_SMPATH)
+        if (isset($tmpconfig->WIKINDX_MAIL_SMPATH) && $tmpconfig->WIKINDX_MAIL_SMPATH)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmPath', $this->config->WIKINDX_MAIL_SMPATH]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmPath', $tmpconfig->WIKINDX_MAIL_SMPATH]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmPath', WIKINDX_MAIL_SENDMAIL_PATH_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_MAIL_SMTPSERVER) && $this->config->WIKINDX_MAIL_SMTPSERVER)
+        if (isset($tmpconfig->WIKINDX_MAIL_SMTPSERVER) && $tmpconfig->WIKINDX_MAIL_SMTPSERVER)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpServer', $this->config->WIKINDX_MAIL_SMTPSERVER]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpServer', $tmpconfig->WIKINDX_MAIL_SMTPSERVER]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpServer', WIKINDX_MAIL_SMTP_SERVER_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_MAIL_SMTPPORT) && $this->config->WIKINDX_MAIL_SMTPPORT)
+        if (isset($tmpconfig->WIKINDX_MAIL_SMTPPORT) && $tmpconfig->WIKINDX_MAIL_SMTPPORT)
         {
-            $this->db->insert('configtemp', ['configName', 'configInt'], ['configMailSmtpPort', $this->config->WIKINDX_MAIL_SMTPPORT]);
+            $this->db->insert('configtemp', ['configName', 'configInt'], ['configMailSmtpPort', $tmpconfig->WIKINDX_MAIL_SMTPPORT]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configInt'], ['configMailSmtpPort', WIKINDX_MAIL_SMTP_PORT_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_MAIL_SMTPENCRYPT) && $this->config->WIKINDX_MAIL_SMTPENCRYPT)
+        if (isset($tmpconfig->WIKINDX_MAIL_SMTPENCRYPT) && $tmpconfig->WIKINDX_MAIL_SMTPENCRYPT)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpEncrypt', $this->config->WIKINDX_MAIL_SMTPENCRYPT]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpEncrypt', $tmpconfig->WIKINDX_MAIL_SMTPENCRYPT]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpEncrypt', WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_MAIL_SMTPPERSIST) && $this->config->WIKINDX_MAIL_SMTPPERSIST)
+        if (isset($tmpconfig->WIKINDX_MAIL_SMTPPERSIST) && $tmpconfig->WIKINDX_MAIL_SMTPPERSIST)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpPersist', $this->config->WIKINDX_MAIL_SMTPPERSIST]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpPersist', $tmpconfig->WIKINDX_MAIL_SMTPPERSIST]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpPersist', WIKINDX_MAIL_SMTP_PERSIST_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_MAIL_SMTPAUTH) && $this->config->WIKINDX_MAIL_SMTPAUTH)
+        if (isset($tmpconfig->WIKINDX_MAIL_SMTPAUTH) && $tmpconfig->WIKINDX_MAIL_SMTPAUTH)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpAuth', $this->config->WIKINDX_MAIL_SMTPAUTH]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpAuth', $tmpconfig->WIKINDX_MAIL_SMTPAUTH]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpAuth', WIKINDX_MAIL_SMTP_AUTH_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_MAIL_SMTPUSERNAME) && $this->config->WIKINDX_MAIL_SMTPUSERNAME)
+        if (isset($tmpconfig->WIKINDX_MAIL_SMTPUSERNAME) && $tmpconfig->WIKINDX_MAIL_SMTPUSERNAME)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpUsername', $this->config->WIKINDX_MAIL_SMTPUSERNAME]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpUsername', $tmpconfig->WIKINDX_MAIL_SMTPUSERNAME]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpUsername', WIKINDX_MAIL_SMTP_USERNAME_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_MAIL_SMTPPASSWORD) && $this->config->WIKINDX_MAIL_SMTPPASSWORD)
+        if (isset($tmpconfig->WIKINDX_MAIL_SMTPPASSWORD) && $tmpconfig->WIKINDX_MAIL_SMTPPASSWORD)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpPassword', $this->config->WIKINDX_MAIL_SMTPPASSWORD]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpPassword', $tmpconfig->WIKINDX_MAIL_SMTPPASSWORD]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpPassword', WIKINDX_MAIL_SMTP_PASSWORD_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_GS_ALLOW) && $this->config->WIKINDX_GS_ALLOW)
+        if (isset($tmpconfig->WIKINDX_GS_ALLOW) && $tmpconfig->WIKINDX_GS_ALLOW)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configGsAllow', $this->config->WIKINDX_GS_ALLOW]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configGsAllow', $tmpconfig->WIKINDX_GS_ALLOW]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configGsAllow', WIKINDX_GS_ALLOW_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_GS_ATTACHMENT) && $this->config->WIKINDX_GS_ATTACHMENT)
+        if (isset($tmpconfig->WIKINDX_GS_ATTACHMENT) && $tmpconfig->WIKINDX_GS_ATTACHMENT)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configGsAttachment', $this->config->WIKINDX_GS_ATTACHMENT]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configGsAttachment', $tmpconfig->WIKINDX_GS_ATTACHMENT]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configGsAttachment', WIKINDX_GS_ATTACHMENT_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_CMS_ALLOW) && $this->config->WIKINDX_CMS_ALLOW)
+        if (isset($tmpconfig->WIKINDX_CMS_ALLOW) && $tmpconfig->WIKINDX_CMS_ALLOW)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configCmsAllow', $this->config->WIKINDX_CMS_ALLOW]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configCmsAllow', $tmpconfig->WIKINDX_CMS_ALLOW]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configCmsAllow', WIKINDX_CMS_ALLOW_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_CMS_BIBSTYLE) && $this->config->WIKINDX_CMS_BIBSTYLE)
+        if (isset($tmpconfig->WIKINDX_CMS_BIBSTYLE) && $tmpconfig->WIKINDX_CMS_BIBSTYLE)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsBibstyle', $this->config->WIKINDX_CMS_BIBSTYLE]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsBibstyle', $tmpconfig->WIKINDX_CMS_BIBSTYLE]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsBibstyle', WIKINDX_CMS_BIBSTYLE_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_CMS_SQL) && $this->config->WIKINDX_CMS_SQL)
+        if (isset($tmpconfig->WIKINDX_CMS_SQL) && $tmpconfig->WIKINDX_CMS_SQL)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configCmsSql', $this->config->WIKINDX_CMS_SQL]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configCmsSql', $tmpconfig->WIKINDX_CMS_SQL]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configCmsSql', WIKINDX_CMS_SQL_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_CMS_DB_USER) && $this->config->WIKINDX_CMS_DB_USER)
+        if (isset($tmpconfig->WIKINDX_CMS_DB_USER) && $tmpconfig->WIKINDX_CMS_DB_USER)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsDbUser', $this->config->WIKINDX_CMS_DB_USER]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsDbUser', $tmpconfig->WIKINDX_CMS_DB_USER]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsDbUser', WIKINDX_CMS_DB_USER_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_CMS_DB_PASSWORD) && $this->config->WIKINDX_CMS_DB_PASSWORD)
+        if (isset($tmpconfig->WIKINDX_CMS_DB_PASSWORD) && $tmpconfig->WIKINDX_CMS_DB_PASSWORD)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsDbPassword', $this->config->WIKINDX_CMS_DB_PASSWORD]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsDbPassword', $tmpconfig->WIKINDX_CMS_DB_PASSWORD]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsDbPassword', WIKINDX_CMS_DB_PASSWORD_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_TAG_LOW_COLOUR) && $this->config->WIKINDX_TAG_LOW_COLOUR)
+        if (isset($tmpconfig->WIKINDX_TAG_LOW_COLOUR) && $tmpconfig->WIKINDX_TAG_LOW_COLOUR)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configTagLowColour', $this->config->WIKINDX_TAG_LOW_COLOUR]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configTagLowColour', $tmpconfig->WIKINDX_TAG_LOW_COLOUR]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configTagLowColour', WIKINDX_TAG_LOW_COLOUR_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_TAG_HIGH_COLOUR) && $this->config->WIKINDX_TAG_HIGH_COLOUR)
+        if (isset($tmpconfig->WIKINDX_TAG_HIGH_COLOUR) && $tmpconfig->WIKINDX_TAG_HIGH_COLOUR)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configTagHighColour', $this->config->WIKINDX_TAG_HIGH_COLOUR]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configTagHighColour', $tmpconfig->WIKINDX_TAG_HIGH_COLOUR]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configTagHighColour', WIKINDX_TAG_HIGH_COLOUR_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_TAG_LOW_SIZE) && $this->config->WIKINDX_TAG_LOW_SIZE)
+        if (isset($tmpconfig->WIKINDX_TAG_LOW_SIZE) && $tmpconfig->WIKINDX_TAG_LOW_SIZE)
         {
-            $this->db->insert('configtemp', ['configName', 'configFloat'], ['configTagLowSize', $this->config->WIKINDX_TAG_LOW_SIZE]);
+            $this->db->insert('configtemp', ['configName', 'configFloat'], ['configTagLowSize', $tmpconfig->WIKINDX_TAG_LOW_SIZE]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configFloat'], ['configTagLowSize', WIKINDX_TAG_LOW_SIZE_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_TAG_HIGH_SIZE) && $this->config->WIKINDX_TAG_HIGH_SIZE)
+        if (isset($tmpconfig->WIKINDX_TAG_HIGH_SIZE) && $tmpconfig->WIKINDX_TAG_HIGH_SIZE)
         {
-            $this->db->insert('configtemp', ['configName', 'configFloat'], ['configTagHighSize', $this->config->WIKINDX_TAG_HIGH_SIZE]);
+            $this->db->insert('configtemp', ['configName', 'configFloat'], ['configTagHighSize', $tmpconfig->WIKINDX_TAG_HIGH_SIZE]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configFloat'], ['configTagHighSize', WIKINDX_TAG_HIGH_SIZE_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_IMAGES_ALLOW) && $this->config->WIKINDX_IMAGES_ALLOW)
+        if (isset($tmpconfig->WIKINDX_IMAGES_ALLOW) && $tmpconfig->WIKINDX_IMAGES_ALLOW)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configImagesAllow', $this->config->WIKINDX_IMAGES_ALLOW]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configImagesAllow', $tmpconfig->WIKINDX_IMAGES_ALLOW]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configImagesAllow', WIKINDX_IMAGES_ALLOW_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_IMAGES_MAXSIZE) && $this->config->WIKINDX_IMAGES_MAXSIZE)
+        if (isset($tmpconfig->WIKINDX_IMAGES_MAXSIZE) && $tmpconfig->WIKINDX_IMAGES_MAXSIZE)
         {
-            $this->db->insert('configtemp', ['configName', 'configInt'], ['configImagesMaxSize', $this->config->WIKINDX_IMAGES_MAXSIZE]);
+            $this->db->insert('configtemp', ['configName', 'configInt'], ['configImagesMaxSize', $tmpconfig->WIKINDX_IMAGES_MAXSIZE]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configInt'], ['configImagesMaxSize', WIKINDX_IMAGES_MAXSIZE_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_DEBUG_ERRORS) && $this->config->WIKINDX_DEBUG_ERRORS)
+        if (isset($tmpconfig->WIKINDX_DEBUG_ERRORS) && $tmpconfig->WIKINDX_DEBUG_ERRORS)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configErrorReport', $this->config->WIKINDX_DEBUG_ERRORS]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configErrorReport', $tmpconfig->WIKINDX_DEBUG_ERRORS]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configErrorReport', WIKINDX_DEBUG_ERRORS_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_DEBUG_EMAIL) && $this->config->WIKINDX_DEBUG_EMAIL)
+        if (isset($tmpconfig->WIKINDX_DEBUG_EMAIL) && $tmpconfig->WIKINDX_DEBUG_EMAIL)
         {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configDebugEmail', $this->config->WIKINDX_DEBUG_EMAIL]);
+            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configDebugEmail', $tmpconfig->WIKINDX_DEBUG_EMAIL]);
         }
         else
         { // NB database name change for this field!
             $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configDebugEmail', WIKINDX_DEBUG_EMAIL_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_DEBUG_SQL) && $this->config->WIKINDX_DEBUG_SQL)
+        if (isset($tmpconfig->WIKINDX_DEBUG_SQL) && $tmpconfig->WIKINDX_DEBUG_SQL)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configPrintSql', $this->config->WIKINDX_DEBUG_SQL]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configPrintSql', $tmpconfig->WIKINDX_DEBUG_SQL]);
         }
         else
         { // NB database name change for this field!
@@ -810,26 +814,26 @@ class UPDATEDATABASE
         }
         // Add extra fields
         $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configSqlErrorOutput', 'printSql']);
-        if (isset($this->config->WIKINDX_BYPASS_SMARTYCOMPILE) && $this->config->WIKINDX_BYPASS_SMARTYCOMPILE)
+        if (isset($tmpconfig->WIKINDX_BYPASS_SMARTYCOMPILE) && $tmpconfig->WIKINDX_BYPASS_SMARTYCOMPILE)
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configBypassSmartyCompile',
-                $this->config->WIKINDX_BYPASS_SMARTYCOMPILE, ]);
+                $tmpconfig->WIKINDX_BYPASS_SMARTYCOMPILE, ]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configBypassSmartyCompile', WIKINDX_BYPASS_SMARTY_COMPILATION_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_DISPLAY_STATISTICS) && $this->config->WIKINDX_DISPLAY_STATISTICS)
+        if (isset($tmpconfig->WIKINDX_DISPLAY_STATISTICS) && $tmpconfig->WIKINDX_DISPLAY_STATISTICS)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configDisplayStatistics', $this->config->WIKINDX_DISPLAY_STATISTICS]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configDisplayStatistics', $tmpconfig->WIKINDX_DISPLAY_STATISTICS]);
         }
         else
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configDisplayStatistics', WIKINDX_DISPLAY_STATISTICS_DEFAULT]);
         }
-        if (isset($this->config->WIKINDX_DISPLAY_USER_STATISTICS) && $this->config->WIKINDX_DISPLAY_USER_STATISTICS)
+        if (isset($tmpconfig->WIKINDX_DISPLAY_USER_STATISTICS) && $tmpconfig->WIKINDX_DISPLAY_USER_STATISTICS)
         {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configDisplayUserStatistics', $this->config->WIKINDX_DISPLAY_USER_STATISTICS]);
+            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configDisplayUserStatistics', $tmpconfig->WIKINDX_DISPLAY_USER_STATISTICS]);
         }
         else
         {

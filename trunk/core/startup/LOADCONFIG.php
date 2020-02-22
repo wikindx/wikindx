@@ -900,23 +900,6 @@ class LOADCONFIG
             }
         }
 
-        // Set email path return header
-        if (!property_exists($this->config, 'WIKINDX_MAIL_RETURN_PATH'))
-        {
-            $this->config->WIKINDX_MAIL_RETURN_PATH = WIKINDX_MAIL_RETURN_PATH_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_MAIL_RETURN_PATH))
-        {
-            if ($this->config->WIKINDX_MAIL_RETURN_PATH !== FALSE)
-            {
-                $this->config->WIKINDX_MAIL_RETURN_PATH = WIKINDX_MAIL_RETURN_PATH_DEFAULT;
-            }
-            elseif (trim($this->config->WIKINDX_MAIL_RETURN_PATH == ''))
-            {
-                $this->config->WIKINDX_MAIL_RETURN_PATH = WIKINDX_MAIL_RETURN_PATH_DEFAULT;
-            }
-        }
-
         // Set sendmail optional parameters
         if (!property_exists($this->config, 'WIKINDX_MAIL_SMARGS'))
         {

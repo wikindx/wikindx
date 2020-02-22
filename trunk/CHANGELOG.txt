@@ -9,6 +9,7 @@ BUG FIXES:
 3. Fix display of user bibliography details when viewing a single resource.
 4. Fix SQL error in QUICKSEARCH resulting from a NULL id.
 5. Fix an error of version check in the repairKit.
+6. Fix the type of the default value of WIKINDX_MAIL_RETURN_PATH to a string and fix the current config.
 
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.

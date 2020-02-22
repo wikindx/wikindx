@@ -2209,6 +2209,7 @@ class CONFIGURE
             "configImgHeightLimit",
             "configImgWidthLimit",
             "configLowSize",
+            "configMailSmtpPort",
             "configMaxPaste",
             "configPagingMaxLinks",
             "configPasswordSize",

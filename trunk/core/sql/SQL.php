@@ -2979,7 +2979,6 @@ SQLCODE;
         if ($this->errno)
         {
             $errorMessage = $this->errors->text("dbError", "open");
-            $this->sendDebugMail($errorMessage);
             $this->sqlDie($errorMessage);
         }
 
@@ -3037,7 +3036,6 @@ SQLCODE;
                 $errorMessage = "In order to support UTF-8 character sets, WIKINDX requires MySQL " . WIKINDX_MYSQL_VERSION_MIN . " or greater,
                                  or MariaDB " . WIKINDX_MARIADB_VERSION_MIN . " or greater. Your MySQL version is {" . $this->getStringEngineVersion() . "}.
                                  Please upgrade MySQL or use WIKINDX v4.2.0 which supports MySQL v4.1 and above.";
-                $this->sendDebugMail($errorMessage);
                 GLOBALS::addTplVar('logsql', "<p style='font-weight:bold;color:red;'>" . $errorMessage . "</p>");
             }
         }
@@ -3101,7 +3099,6 @@ SQLCODE;
 
         if (!$execOk && !$bNoError)
         {
-            $this->sendDebugMail($this->error . "\n\n" . $querystring);
             $this->printSQLDebug($querystring, "EXEC ERROR");
             $this->sqlDie($this->error, $beautified);
         }
@@ -3300,27 +3297,12 @@ SQLCODE;
         }
     }
     /**
-     * Email error message (if configured)
-     *
-     * @param string $errorMessage
-     */
-    private function sendDebugMail($errorMessage)
-    {
-        if (property_exists($this->config, 'WIKINDX_DEBUG_ERRORS') && property_exists($this->config, 'WIKINDX_DEBUG_EMAIL') &&
-            property_exists($this->config, 'WIKINDX_MAIL_SERVER') &&
-            $this->config->WIKINDX_DEBUG_ERRORS && $this->config->WIKINDX_DEBUG_EMAIL && $this->config->WIKINDX_MAIL_SERVER)
-        {
-            $smtp = FACTORY_MAIL::getInstance();
-            $smtp->sendEmail($this->config->WIKINDX_DEBUG_EMAIL, "WIKINDX SQL error " . $this->errno, $errorMessage);
-        }
-    }
-    /**
      * Die or throw an exception depending on the configuration
      *
      * @param string $errorMessage
      * @param string $beautified Offending SQL statement
      */
-    private function sqlDie($errorMessage, $beautified = FALSE)
+    private function sqlDie($errorMessage, $beautified = "")
     {
         
         echo "<!DOCTYPE html>";
@@ -3333,7 +3315,7 @@ SQLCODE;
         echo "<pre>";
         debug_print_backtrace();
         echo "</pre>";
-        echo $beautified . '<P>\n';
+        echo (trim($beautified) != "") ? "<p>" . $beautified . "</p>\n" : "";
         echo $errorMessage;
         echo "</body>";
         die();

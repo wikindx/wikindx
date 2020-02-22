@@ -795,14 +795,6 @@ class UPDATEDATABASE
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configErrorReport', WIKINDX_DEBUG_ERRORS_DEFAULT]);
         }
-        if (isset($tmpconfig->WIKINDX_DEBUG_EMAIL) && $tmpconfig->WIKINDX_DEBUG_EMAIL)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configDebugEmail', $tmpconfig->WIKINDX_DEBUG_EMAIL]);
-        }
-        else
-        { // NB database name change for this field!
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configDebugEmail', WIKINDX_DEBUG_EMAIL_DEFAULT]);
-        }
         if (isset($tmpconfig->WIKINDX_DEBUG_SQL) && $tmpconfig->WIKINDX_DEBUG_SQL)
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configPrintSql', $tmpconfig->WIKINDX_DEBUG_SQL]);
@@ -811,8 +803,6 @@ class UPDATEDATABASE
         { // NB database name change for this field!
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configPrintSql', WIKINDX_DEBUG_SQL_DEFAULT]);
         }
-        // Add extra fields
-        $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configSqlErrorOutput', 'printSql']);
         if (isset($tmpconfig->WIKINDX_BYPASS_SMARTYCOMPILE) && $tmpconfig->WIKINDX_BYPASS_SMARTYCOMPILE)
         {
             $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configBypassSmartyCompile',

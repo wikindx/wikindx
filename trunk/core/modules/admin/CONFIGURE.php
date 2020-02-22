@@ -726,15 +726,7 @@ class CONFIGURE
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "errorReport"), "configErrorReport", $input));
         $input = array_key_exists("configPrintSql", $this->values) && ($this->values['configPrintSql']) ? "CHECKED" : WIKINDX_DEBUG_SQL_DEFAULT;
         $td = \FORM\checkbox($this->messages->text("config", "sqlStatements"), "configPrintSql", $input);
-        $td .= BR . BR;
-        $input = array_key_exists("configSqlErrorOutput", $this->values) && ($this->values['configSqlErrorOutput']) ?
-            $this->values['configSqlErrorOutput'] : WIKINDX_DEBUG_SQL_ERROR_OUTPUT_DEFAULT;
-        $options = ['printSql' => $this->messages->text("config", "printSql"), 'emailSql' => $this->messages->text("config", "emailSql1")];
-        $td .= \FORM\selectedBoxValue(FALSE, "configSqlErrorOutput", $options, $input, 2);
-        $td .= BR . BR;
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailServerRequired"));
-        $input = array_key_exists("configDebugEmail", $this->values) ? $this->values["configDebugEmail"] : WIKINDX_DEBUG_EMAIL_DEFAULT;
-        $td .= \FORM\textInput($this->messages->text("config", "emailSql2"), "configDebugEmail", $input, 30) . BR . \HTML\span($hint, 'hint');
+        
         $pString .= \HTML\td($td);
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -1817,10 +1809,8 @@ class CONFIGURE
             case 'debug': // debugging configuration
                 $array = [
                     "configBypassSmartyCompile",
-                    "configDebugEmail",
                     "configErrorReport",
                     "configPrintSql",
-                    "configSqlErrorOutput",
                 ];
 
                 break;
@@ -2270,7 +2260,6 @@ class CONFIGURE
         $this->dependencies('configMailServer', ['configMailBackend']);
         $this->dependencies('configLdapUse', ['configLdapServer', 'configLdapPort', 'configLdapProtocolVersion', 'configLdapDn']);
         $this->dependencies('configAuthGate', ['configAuthGateMessage']);
-        $this->dependencies('configPrintSql', ['configSqlErrorOutput']);
         if (array_key_exists('configMailServer', $this->vars) && ($this->vars['configMailBackend'] == 'sendmail'))
         {
             $this->dependencies('configMailServer', ['configMailSmPath']);
@@ -2279,10 +2268,6 @@ class CONFIGURE
         {
             $this->dependencies('configMailServer', ['configMailSmtpServer', 'configMailSmtpPort', 'configMailSmtpEncrypt']);
             $this->dependencies('configMailSmtpAuth', ['configMailSmtpUsername', 'configMailSmtpPassword']);
-        }
-        if (array_key_exists('configPrintSql', $this->vars) && ($this->vars['configSqlErrorOutput'] == 'emailSql'))
-        {
-            $this->dependencies('configPrintSql', ['configDebugEmail']);
         }
         // Check size of password is no less than N chars
         if (array_key_exists('configPasswordSize', $this->vars) && ($this->vars['configPasswordSize'] < WIKINDX_PASSWORD_SIZE_DEFAULT))

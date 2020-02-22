@@ -52,7 +52,6 @@ class CONFIGDBSTRUCTURE
             'configRssBibstyle',
             'configRssDescription',
             'configRssTitle',
-            'configSqlErrorOutput',
             'configStyle',
             'configTagHighColour',
             'configTagLowColour',
@@ -85,7 +84,6 @@ class CONFIGDBSTRUCTURE
             'configBypassSmartyCompile',
             'configCmsAllow',
             'configCmsSql',
-            'configDebugEmail',
             'configDenyReadOnly',
             'configDisplayStatistics',
             'configDisplayUserStatistics',
@@ -227,8 +225,6 @@ class CONFIGDBSTRUCTURE
             'configRssLimit' => 'WIKINDX_RSS_LIMIT',
             'configRssTitle' => 'WIKINDX_RSS_TITLE',
             'configSearchFilter' => 'WIKINDX_SEARCH_FILTER',
-            'configDebugEmail' => 'WIKINDX_DEBUG_EMAIL',
-            'configSqlErrorOutput' => 'WIKINDX_DEBUG_SQL_ERROR_OUTPUT',
             'configStatisticsCompiled' => 'WIKINDX_STATISTICS_COMPILED',
             'configStringLimit' => 'WIKINDX_STRING_LIMIT', // This is a user variables now found in GLOBALS::getUserVar()
             'configStyle' => 'WIKINDX_STYLE', // This is a user variables now found in GLOBALS::getUserVar()

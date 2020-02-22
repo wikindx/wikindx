@@ -691,49 +691,5 @@ class LOADCONFIG
         {
             $this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES = [];
         }
-
-        // Set number of items in RSS feed
-        if (!property_exists($this->config, 'WIKINDX_RSS_LIMIT'))
-        {
-            $this->config->WIKINDX_RSS_LIMIT = WIKINDX_RSS_LIMIT_DEFAULT;
-        }
-        elseif (!is_int($this->config->WIKINDX_RSS_LIMIT))
-        {
-            die('WIKINDX_RSS_LIMIT must be > 0.');
-        }
-        elseif ($this->config->WIKINDX_RSS_ALLOW && $this->config->WIKINDX_RSS_LIMIT < 1)
-        {
-            die('WIKINDX_RSS_LIMIT must be > 0.');
-        }
-
-        // Set bibliographic style of RSS feed
-        if (!property_exists($this->config, 'WIKINDX_RSS_BIBSTYLE'))
-        {
-            $this->config->WIKINDX_RSS_BIBSTYLE = WIKINDX_RSS_BIBSTYLE_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_RSS_BIBSTYLE))
-        {
-            die('WIKINDX_RSS_BIBSTYLE must be an existing bibliographic style name.');
-        }
-
-        // Set RSS feed title
-        if (!property_exists($this->config, 'WIKINDX_RSS_TITLE'))
-        {
-            $this->config->WIKINDX_RSS_TITLE = WIKINDX_RSS_TITLE_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_RSS_TITLE))
-        {
-            die('WIKINDX_RSS_TITLE must be a string.');
-        }
-
-        // Set RSS feed description
-        if (!property_exists($this->config, 'WIKINDX_RSS_DESCRIPTION'))
-        {
-            $this->config->WIKINDX_RSS_DESCRIPTION = WIKINDX_RSS_DESCRIPTION_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_RSS_DESCRIPTION))
-        {
-            die('WIKINDX_RSS_DESCRIPTION must be a string.');
-        }
     }
 }

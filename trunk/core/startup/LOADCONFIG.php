@@ -641,6 +641,12 @@ class LOADCONFIG
             
             // Create the constant config member 
             $this->config->{$constName} = $value;
+            
+            // Create the global constant 
+            if (!defined($constName))
+            {
+                define($constName, $value);
+            }
         }
         
         $this->checkConfigValidity();
@@ -663,15 +669,7 @@ class LOADCONFIG
         {
             return;
         }
-        
-        $dieMsgMissing = 'Missing configuration variable: ';
 
         date_default_timezone_set($this->config->WIKINDX_TIMEZONE);
-
-        // Set resource type
-        if (!property_exists($this->config, 'WIKINDX_DEACTIVATE_RESOURCE_TYPES'))
-        {
-            $this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES = [];
-        }
     }
 }

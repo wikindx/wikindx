@@ -1409,9 +1409,9 @@ class CONFIGURE
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "mailBackend"),
             "configMailBackend",
-            WIKINDX_MAIL_BACKEND_PHPMAILER,
+            WIKINDX_PHPMAILER_BACKENDS,
             $input,
-            count(WIKINDX_MAIL_BACKEND_PHPMAILER)
+            count(WIKINDX_PHPMAILER_BACKENDS)
         ) . " " . \HTML\span('*', 'required'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailReturnPath"));
         array_key_exists("configMailReturnPath", $this->values) ? $input = $this->values["configMailReturnPath"] : $input = WIKINDX_MAIL_RETURN_PATH_DEFAULT;

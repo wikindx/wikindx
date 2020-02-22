@@ -174,7 +174,8 @@ define('WIKINDX_LANGUAGE_DOMAIN_DEFAULT', 'wikindx');
 
 
 // Divers
-define('WIKINDX_MAIL_BACKEND_PHPMAILER', ['smtp' => 'SMTP', 'sendmail' => 'Sendmail']);
+define('WIKINDX_PHPMAILER_BACKENDS', ['smtp' => 'SMTP', 'sendmail' => 'Sendmail']);
+
 define('WIKINDX_DISPLAYBIBTEXLINK_DEFAULT', 'N');
 define('WIKINDX_DISPLAYCMSLINK_DEFAULT', 'N');
 define('WIKINDX_PAGINGSTYLE_DEFAULT', 'N');

@@ -33,7 +33,7 @@ define('BR', '<br>');
  *
  * @name WIKINDX_PUBLIC_VERSION
  */
-define('WIKINDX_PUBLIC_VERSION', '6.2.1');
+define('WIKINDX_PUBLIC_VERSION', '6.2.2');
 /**
  * WIKINDX internal version information
  *
@@ -43,7 +43,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.2.1');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 11.0);
+define('WIKINDX_INTERNAL_VERSION', 12.0);
 /**
  * WIKINDX copyright
  *

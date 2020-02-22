@@ -229,6 +229,11 @@ class UPDATEDATABASE
                 $this->numStages = 1;
                 $this->stage11();
             }
+            elseif ($dbVersion < 12.0)
+            { // upgrade v6.2.1 to 6.2.2
+                $this->numStages = 1;
+                $this->stage12();
+            }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
             // Refresh the locales list
@@ -1010,7 +1015,7 @@ class UPDATEDATABASE
         $this->pauseExecution('stage10');
     }
     /**
-     * Upgrade database schema to version 10 (6.2.1)
+     * Upgrade database schema to version 11 (6.2.1)
      */
     private function stage11()
     {
@@ -1020,6 +1025,18 @@ class UPDATEDATABASE
         $this->updateSoftwareVersion(11);
         $this->checkStatus('stage11');
         $this->pauseExecution('stage11');
+    }
+    /**
+     * Upgrade database schema to version 12 (6.2.2)
+     */
+    private function stage12()
+    {
+        // Convert tag sizes to scale factors
+        $this->updateDbSchema('12');
+        
+        $this->updateSoftwareVersion(12);
+        $this->checkStatus('stage12');
+        $this->pauseExecution('stage12');
     }
     /**
      * Copy non-official bibliographic styles (if they exist)

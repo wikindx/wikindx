@@ -1,7 +1,7 @@
 RELEASES:
 
-v6.2.X
-Focus: Minor bug fixes
+v6.2.2
+Focus: Minor bug fixes and maintenance.
 
 BUG FIXES:
 1. Fix SQL errors on insert citation.
@@ -12,6 +12,7 @@ BUG FIXES:
 
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.
+2. Remove the PHP mail() function email backend.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

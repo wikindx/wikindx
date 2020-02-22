@@ -934,21 +934,11 @@ class LOADCONFIG
         }
         elseif (!is_string($this->config->WIKINDX_MAIL_BACKEND))
         {
-            die('WIKINDX_MAIL_BACKEND must be of this value: ' . implode(', ', ['smtp', 'sendmail', 'mail']));
+            die('WIKINDX_MAIL_BACKEND must be of this value: ' . implode(', ', ['smtp', 'sendmail']));
         }
-        elseif (!in_array($this->config->WIKINDX_MAIL_BACKEND, ['smtp', 'sendmail', 'mail']))
+        elseif (!in_array($this->config->WIKINDX_MAIL_BACKEND, ['smtp', 'sendmail']))
         {
-            die('WIKINDX_MAIL_BACKEND must be of this value: ' . implode(', ', ['smtp', 'sendmail', 'mail']));
-        }
-        elseif ($this->config->WIKINDX_MAIL_BACKEND == 'mail' && !in_array('mail', explode(',', ini_get('disable_functions'))))
-        {
-            if (property_exists($this->config, 'WIKINDX_DEBUG_ERRORS') && $this->config->WIKINDX_DEBUG_ERRORS)
-            {
-                trigger_error(
-                    "Mail backend unavailable [configMailBackend/WIKINDX_MAIL_BACKEND] : mail() function is disabled in the configuration of PHP.",
-                    E_USER_NOTICE
-                );
-            }
+            die('WIKINDX_MAIL_BACKEND must be of this value: ' . implode(', ', ['smtp', 'sendmail']));
         }
 
         // Set sendmail path

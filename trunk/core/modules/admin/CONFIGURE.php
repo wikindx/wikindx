@@ -1405,14 +1405,14 @@ class CONFIGURE
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $array = ['mail' => 'PHP Mail', 'smtp' => 'SMTP', 'sendmail' => 'Sendmail'];
+        $EmailBackendList = ['smtp' => 'SMTP', 'sendmail' => 'Sendmail'];
         array_key_exists("configMailBackend", $this->values) ? $input = $this->values["configMailBackend"] : $input = WIKINDX_MAIL_BACKEND_DEFAULT;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "mailBackend"),
             "configMailBackend",
-            $array,
+            $EmailBackendList,
             $input,
-            3
+            count($EmailBackendList)
         ) . " " . \HTML\span('*', 'required'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailReturnPath"));
         array_key_exists("configMailReturnPath", $this->values) ? $input = $this->values["configMailReturnPath"] : $input = WIKINDX_MAIL_RETURN_PATH_DEFAULT;

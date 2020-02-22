@@ -96,10 +96,6 @@ class MAIL
                 $this->mail->isSendmail();
                 $this->mail->Sendmail = $this->config->WIKINDX_MAIL_SENDMAIL_PATH;
             }
-            elseif ($this->config->WIKINDX_MAIL_BACKEND == 'mail')
-            {
-                $this->mail->isMail();
-            }
         }
     }
     /**

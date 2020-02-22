@@ -284,10 +284,10 @@ class CONFIGDBSTRUCTURE
                 if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
                 {
                     $row[$coRow[$field]] = unserialize(base64_decode($row[$coRow[$field]]));
-                    if (!is_array($value))
+                    if (!is_array($row[$coRow[$field]]))
                     {
                         $constName = $co->configToConstant[$coRow[$field]];
-                        $value = unserialize(base64_decode(constant($constName . "_DEFAULT")));
+                        $row[$coRow[$field]] = unserialize(base64_decode(constant($constName . "_DEFAULT")));
                     }
                 }
             }
@@ -323,10 +323,10 @@ class CONFIGDBSTRUCTURE
                 if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
                 {
                     $row[$coRow[$field]] = unserialize(base64_decode($row[$coRow[$field]]));
-                    if (!is_array($value))
+                    if (!is_array($row[$coRow[$field]]))
                     {
                         $constName = $co->configToConstant[$coRow[$field]];
-                        $value = unserialize(base64_decode(constant($constName . "_DEFAULT")));
+                        $row[$coRow[$field]] = unserialize(base64_decode(constant($constName . "_DEFAULT")));
                     }
                 }
             }

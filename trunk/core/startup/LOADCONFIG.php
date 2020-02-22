@@ -910,44 +910,6 @@ class LOADCONFIG
             die('WIKINDX_MAIL_SMARGS must be a string.');
         }
 
-        // Set smtp persist
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTP_PERSIST'))
-        {
-            $this->config->WIKINDX_MAIL_SMTP_PERSIST = WIKINDX_MAIL_SMTP_PERSIST_DEFAULT;
-        }
-        elseif (!is_bool($this->config->WIKINDX_MAIL_SMTP_PERSIST))
-        {
-            die('WIKINDX_MAIL_SMTP_PERSIST must be a boolean (TRUE / FALSE).');
-        }
-
-        // Set smtp user
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTP_USERNAME'))
-        {
-            $this->config->WIKINDX_MAIL_SMTP_USERNAME = WIKINDX_MAIL_SMTP_USERNAME_DEFAULT;
-        }
-        elseif (!$this->config->WIKINDX_MAIL_SMTP_USERNAME)
-        {
-            $this->config->WIKINDX_MAIL_SMTP_USERNAME = '';
-        }
-        elseif (!is_string($this->config->WIKINDX_MAIL_SMTP_USERNAME))
-        {
-            die('WIKINDX_MAIL_SMTP_USERNAME must be a string.');
-        }
-
-        // Set smtp password
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMTP_PASSWORD'))
-        {
-            $this->config->WIKINDX_MAIL_SMTP_PASSWORD = WIKINDX_MAIL_SMTP_PASSWORD_DEFAULT;
-        }
-        elseif (!$this->config->WIKINDX_MAIL_SMTP_PASSWORD)
-        {
-            $this->config->WIKINDX_MAIL_SMTP_PASSWORD = '';
-        }
-        elseif (!is_string($this->config->WIKINDX_MAIL_SMTP_PASSWORD))
-        {
-            die('WIKINDX_MAIL_SMTP_PASSWORD must be a string.');
-        }
-
         // Enable / disable GS attachments
         if (!property_exists($this->config, 'WIKINDX_GS_ATTACHMENT'))
         {

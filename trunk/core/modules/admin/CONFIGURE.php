@@ -2204,6 +2204,7 @@ class CONFIGURE
             "configImagesMaxSize",
             "configImgHeightLimit",
             "configImgWidthLimit",
+            "configLdapPort",
             "configLowSize",
             "configMailSmtpPort",
             "configMaxPaste",

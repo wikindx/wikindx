@@ -30,72 +30,76 @@ class MAIL
     public function __construct()
     {
         $this->config = FACTORY_CONFIG::getInstance();
-        if ($this->config->WIKINDX_MAIL_SERVER)
+        
+        // If messaging is turned off, just do nothing
+        if (!$this->config->WIKINDX_MAIL_SERVER)
         {
-            require WIKINDX_DIR_COMPONENT_VENDOR . '/phpmailer/Exception.php';
-            require WIKINDX_DIR_COMPONENT_VENDOR . '/phpmailer/PHPMailer.php';
-            require WIKINDX_DIR_COMPONENT_VENDOR . '/phpmailer/SMTP.php';
+            return;
+        }
+        
+        require WIKINDX_DIR_COMPONENT_VENDOR . '/phpmailer/Exception.php';
+        require WIKINDX_DIR_COMPONENT_VENDOR . '/phpmailer/PHPMailer.php';
+        require WIKINDX_DIR_COMPONENT_VENDOR . '/phpmailer/SMTP.php';
 
-            $this->mail = new PHPMailer();
+        $this->mail = new PHPMailer();
 
-            // From (work because it's globaly defined)
-            if (filter_var($this->config->WIKINDX_MAIL_FROM, FILTER_VALIDATE_EMAIL) !== FALSE)
+        // From (work because it's globaly defined)
+        if (filter_var($this->config->WIKINDX_MAIL_FROM, FILTER_VALIDATE_EMAIL) !== FALSE)
+        {
+            $From = $this->config->WIKINDX_MAIL_FROM;
+        }
+        else
+        {
+            $From = \HTML\stripHtml($this->config->WIKINDX_TITLE) . '@' . $_SERVER['HTTP_HOST'];
+        }
+
+        $this->mail->setFrom(filter_var($From, FILTER_SANITIZE_EMAIL), 'WIKINDX');
+
+        // ReplyTo (work because it's globaly defined)
+        if (filter_var($this->config->WIKINDX_MAIL_REPLYTO, FILTER_VALIDATE_EMAIL) !== FALSE)
+        {
+            $ReplyTo = $this->config->WIKINDX_MAIL_REPLYTO;
+        }
+        else
+        {
+            $ReplyTo = WIKINDX_MAIL_REPLYTO_DEFAULT;
+        }
+
+        $this->mail->addReplyTo(filter_var($ReplyTo, FILTER_SANITIZE_EMAIL), 'WIKINDX');
+
+        // ContentType (work because it's globaly defined)
+        $this->mail->ContentType = WIKINDX_MIMETYPE_TXT . ';charset=' . WIKINDX_CHARSET;
+
+        if ($this->config->WIKINDX_MAIL_BACKEND == 'smtp')
+        {
+            $this->mail->isSMTP();
+            $this->mail->Host = $this->config->WIKINDX_MAIL_SMTP_SERVER;
+            $this->mail->Port = $this->config->WIKINDX_MAIL_SMTP_PORT;
+            $this->mail->SMTPAutoTLS = FALSE; // Never force TLS (some SMTP dislike it)
+            $this->mail->SMTPSecure = $this->config->WIKINDX_MAIL_SMTP_ENCRYPT;
+
+            // Relax verification about certificats and DNS server name
+            // We are not in a very sensitive context and certificates tend to pose problems during renewals
+            $this->mail->SMTPOptions = [
+                'ssl' => [
+                    'verify_peer' => FALSE,
+                    'verify_peer_name' => FALSE,
+                    'allow_self_signed' => TRUE,
+                ],
+            ];
+
+            $this->mail->SMTPKeepAlive = $this->config->WIKINDX_MAIL_SMTP_PERSIST;
+            $this->mail->SMTPAuth = $this->config->WIKINDX_MAIL_SMTP_AUTH;
+            if ($this->config->WIKINDX_MAIL_SMTP_AUTH)
             {
-                $From = $this->config->WIKINDX_MAIL_FROM;
+                $this->mail->Username = $this->config->WIKINDX_MAIL_SMTP_USERNAME;
+                $this->mail->Password = $this->config->WIKINDX_MAIL_SMTP_PASSWORD;
             }
-            else
-            {
-                $From = \HTML\stripHtml($this->config->WIKINDX_TITLE) . '@' . $_SERVER['HTTP_HOST'];
-            }
-
-            $this->mail->setFrom(filter_var($From, FILTER_SANITIZE_EMAIL), 'WIKINDX');
-
-            // ReplyTo (work because it's globaly defined)
-            if (filter_var($this->config->WIKINDX_MAIL_REPLYTO, FILTER_VALIDATE_EMAIL) !== FALSE)
-            {
-                $ReplyTo = $this->config->WIKINDX_MAIL_REPLYTO;
-            }
-            else
-            {
-                $ReplyTo = WIKINDX_MAIL_REPLYTO_DEFAULT;
-            }
-
-            $this->mail->addReplyTo(filter_var($ReplyTo, FILTER_SANITIZE_EMAIL), 'WIKINDX');
-
-            // ContentType (work because it's globaly defined)
-            $this->mail->ContentType = WIKINDX_MIMETYPE_TXT . ';charset=' . WIKINDX_CHARSET;
-
-            if ($this->config->WIKINDX_MAIL_BACKEND == 'smtp')
-            {
-                $this->mail->isSMTP();
-                $this->mail->Host = $this->config->WIKINDX_MAIL_SMTP_SERVER;
-                $this->mail->Port = $this->config->WIKINDX_MAIL_SMTP_PORT;
-                $this->mail->SMTPAutoTLS = FALSE; // Never force TLS (some SMTP dislike it)
-                $this->mail->SMTPSecure = $this->config->WIKINDX_MAIL_SMTP_ENCRYPT;
-
-                // Relax verification about certificats and DNS server name
-                // We are not in a very sensitive context and certificates tend to pose problems during renewals
-                $this->mail->SMTPOptions = [
-                    'ssl' => [
-                        'verify_peer' => FALSE,
-                        'verify_peer_name' => FALSE,
-                        'allow_self_signed' => TRUE,
-                    ],
-                ];
-
-                $this->mail->SMTPKeepAlive = $this->config->WIKINDX_MAIL_SMTP_PERSIST;
-                $this->mail->SMTPAuth = $this->config->WIKINDX_MAIL_SMTP_AUTH;
-                if ($this->config->WIKINDX_MAIL_SMTP_AUTH)
-                {
-                    $this->mail->Username = $this->config->WIKINDX_MAIL_SMTP_USERNAME;
-                    $this->mail->Password = $this->config->WIKINDX_MAIL_SMTP_PASSWORD;
-                }
-            }
-            elseif ($this->config->WIKINDX_MAIL_BACKEND == 'sendmail')
-            {
-                $this->mail->isSendmail();
-                $this->mail->Sendmail = $this->config->WIKINDX_MAIL_SENDMAIL_PATH;
-            }
+        }
+        elseif ($this->config->WIKINDX_MAIL_BACKEND == 'sendmail')
+        {
+            $this->mail->isSendmail();
+            $this->mail->Sendmail = $this->config->WIKINDX_MAIL_SENDMAIL_PATH;
         }
     }
     /**
@@ -125,92 +129,95 @@ class MAIL
     public function sendEmail($addresses, $subject, $message, $DebugMode = FALSE)
     {
         $SendStatus = TRUE;
-
-        if ($this->config->WIKINDX_MAIL_SERVER)
+        
+        // If messaging is turned off, just do nothing
+        if (!$this->config->WIKINDX_MAIL_SERVER)
         {
-            // Avoid a special case
-            if (!is_array($addresses))
+            return $SendStatus;
+        }
+        
+        // Avoid a special case
+        if (!is_array($addresses))
+        {
+            $addresses = [$addresses];
+        }
+
+        // To
+        $ToArray = [];
+        foreach ($addresses as $address)
+        {
+            // Split a single or multiple addresses in RFC822 format
+            $tmpAddresses = $this->mail->parseAddresses(str_replace(';', ',', trim($address)), FALSE);
+
+            // Send one message by address
+            foreach ($tmpAddresses as $tmpAddress)
             {
-                $addresses = [$addresses];
+                $ToArray[] = $tmpAddress;
+            }
+        }
+
+        // Avoid sending a message if there are no valid address
+        if (count($ToArray) > 0)
+        {
+            // Message
+            $this->mail->Subject = $subject;
+            $this->mail->Body = $message;
+
+            // If the debug mode is enabled,
+            // captures the SMTP log output...
+            if ($DebugMode === TRUE)
+            {
+                // Use only HTML because Wikindx is not usable with a CLI
+                $this->mail->Debugoutput = 'html';
+                $this->mail->SMTPDebug = 3;
+                $this->TransactionLog = '';
+                ob_start();
             }
 
-            // To
-            $ToArray = [];
-            foreach ($addresses as $address)
+            // Send one message by address
+            foreach ($ToArray as $To)
             {
-                // Split a single or multiple addresses in RFC822 format
-                $tmpAddresses = $this->mail->parseAddresses(str_replace(';', ',', trim($address)), FALSE);
+                $this->mail->addAddress($To['address'], $To['name']);
+                $SendStatus = $this->mail->send();
 
-                // Send one message by address
-                foreach ($tmpAddresses as $tmpAddress)
-                {
-                    $ToArray[] = $tmpAddress;
-                }
-            }
-
-            // Avoid sending a message if there are no valid address
-            if (count($ToArray) > 0)
-            {
-                // Message
-                $this->mail->Subject = $subject;
-                $this->mail->Body = $message;
-
-                // If the debug mode is enabled,
-                // captures the SMTP log output...
                 if ($DebugMode === TRUE)
                 {
-                    // Use only HTML because Wikindx is not usable with a CLI
-                    $this->mail->Debugoutput = 'html';
-                    $this->mail->SMTPDebug = 3;
-                    $this->TransactionLog = '';
-                    ob_start();
-                }
-
-                // Send one message by address
-                foreach ($ToArray as $To)
-                {
-                    $this->mail->addAddress($To['address'], $To['name']);
-                    $SendStatus = $this->mail->send();
-
-                    if ($DebugMode === TRUE)
+                    if ($SendStatus)
                     {
-                        if ($SendStatus)
-                        {
-                            $this->TransactionLog .= "Message sent with " . $this->config->WIKINDX_MAIL_BACKEND . " backend " .
-                                "to &lt;" . $To['address'] . "&gt; " . "without error.<br>\n\n";
-                        }
-                        else
-                        {
-                            $this->TransactionLog .= $this->mail->ErrorInfo . "<br>\n\n";
-                        }
+                        $this->TransactionLog .= "Message sent with " . $this->config->WIKINDX_MAIL_BACKEND . " backend " .
+                            "to &lt;" . $To['address'] . "&gt; " . "without error.<br>\n\n";
                     }
-
-                    $this->mail->clearAddresses();
+                    else
+                    {
+                        $this->TransactionLog .= $this->mail->ErrorInfo . "<br>\n\n";
+                    }
                 }
 
-                // If the debug mode is enabled,
-                // ... and save it
-                if ($DebugMode === TRUE)
-                {
-                    $this->TransactionLog .= trim(ob_get_clean());
-                    $this->mail->SMTPDebug = 0;
-                }
-
-                // Clear
-                $this->mail->clearBCCs();
-                $this->mail->Subject = '';
-                $this->mail->Body = '';
+                $this->mail->clearAddresses();
             }
-            else
+
+            // If the debug mode is enabled,
+            // ... and save it
+            if ($DebugMode === TRUE)
             {
-                if ($DebugMode === TRUE)
-                {
-                    $this->TransactionLog .= "No valid recipient address to send or addresses not RFC822 compliant.";
-                }
-
-                GLOBALS::setError("No valid recipient address to send to or addresses are not RFC822 compliant.");
-                $SendStatus = FALSE;
+                $this->TransactionLog .= trim(ob_get_clean());
+                $this->mail->SMTPDebug = 0;
             }
+
+            // Clear
+            $this->mail->clearBCCs();
+            $this->mail->Subject = '';
+            $this->mail->Body = '';
+        }
+        else
+        {
+            if ($DebugMode === TRUE)
+            {
+                $this->TransactionLog .= "No valid recipient address to send or addresses not RFC822 compliant.";
+            }
+
+            GLOBALS::setError("No valid recipient address to send to or addresses are not RFC822 compliant.");
+            $SendStatus = FALSE;
         }
 
         return $SendStatus;

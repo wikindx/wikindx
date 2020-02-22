@@ -80,11 +80,10 @@ ini_set('cgi.check_shebang_line', 'Off');
 //ini_set('session.use_strict_mode', 'On');
 
 
-// Configure a default timezone if empty
-if (date_default_timezone_get() == '')
-{
-    date_default_timezone_set(WIKINDX_TIMEZONE_DEFAULT);
-}
+
+// Set the time zone to whatever the default is to avoid 500 errors
+// Will default to UTC if it's not set properly in php.ini
+date_default_timezone_set(@date_default_timezone_get());
 
 
 // Check PHP minimum version and above.

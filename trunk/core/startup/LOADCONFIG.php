@@ -1144,55 +1144,5 @@ class LOADCONFIG
         {
             die('WIKINDX_CMS_DB_PASSWORD must be a string.');
         }
-
-        // Set Tag cloud low frequency color
-        if (!property_exists($this->config, 'WIKINDX_TAG_LOW_COLOUR'))
-        {
-            $this->config->WIKINDX_TAG_LOW_COLOUR = WIKINDX_TAG_LOW_COLOUR_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_TAG_LOW_COLOUR))
-        {
-            die('WIKINDX_TAG_LOW_COLOUR must be a valid HTML color (e.g. CCCCCC, gray).');
-        }
-
-        // Set Tag cloud high frequency color
-        if (!property_exists($this->config, 'WIKINDX_TAG_HIGH_COLOUR'))
-        {
-            $this->config->WIKINDX_TAG_HIGH_COLOUR = WIKINDX_TAG_HIGH_COLOUR_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_TAG_HIGH_COLOUR))
-        {
-            die('WIKINDX_TAG_HIGH_COLOUR must be a valid HTML color (e.g. FF0000, red).');
-        }
-
-        // Set Tag cloud low frequency size
-        if (!property_exists($this->config, 'WIKINDX_TAG_LOW_FACTOR'))
-        {
-            $this->config->WIKINDX_TAG_LOW_FACTOR = WIKINDX_TAG_LOW_FACTOR_DEFAULT;
-        }
-        elseif (!is_float($this->config->WIKINDX_TAG_LOW_FACTOR) && !is_int($this->config->WIKINDX_TAG_LOW_FACTOR))
-        {
-            die('WIKINDX_TAG_LOW_FACTOR must be a number.');
-        }
-
-        // Set Tag cloud low frequency size
-        if (!property_exists($this->config, 'WIKINDX_TAG_HIGH_FACTOR'))
-        {
-            $this->config->WIKINDX_TAG_HIGH_FACTOR = WIKINDX_TAG_HIGH_FACTOR_DEFAULT;
-        }
-        elseif (!is_float($this->config->WIKINDX_TAG_HIGH_FACTOR) && !is_int($this->config->WIKINDX_TAG_HIGH_FACTOR))
-        {
-            die('WIKINDX_TAG_HIGH_FACTOR must be a number.');
-        }
-
-        // Set image max size
-        if (!property_exists($this->config, 'WIKINDX_IMAGES_MAXSIZE'))
-        {
-            $this->config->WIKINDX_IMAGES_MAXSIZE = WIKINDX_IMAGES_MAXSIZE_DEFAULT;
-        }
-        elseif (!is_int($this->config->WIKINDX_IMAGES_MAXSIZE))
-        {
-            die('WIKINDX_IMAGES_MAXSIZE must be a positive integer (in MB).');
-        }
     }
 }

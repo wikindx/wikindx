@@ -910,26 +910,6 @@ class LOADCONFIG
             die('WIKINDX_MAIL_SMARGS must be a string.');
         }
 
-        // Enable / disable GS attachments
-        if (!property_exists($this->config, 'WIKINDX_GS_ATTACHMENT'))
-        {
-            $this->config->WIKINDX_GS_ATTACHMENT = WIKINDX_GS_ATTACHMENT_DEFAULT;
-        }
-        elseif (!is_bool($this->config->WIKINDX_GS_ATTACHMENT))
-        {
-            die('WIKINDX_GS_ATTACHMENT must be a boolean (TRUE / FALSE).');
-        }
-
-        // Enable / disable CMS
-        if (!property_exists($this->config, 'WIKINDX_CMS_ALLOW'))
-        {
-            $this->config->WIKINDX_CMS_ALLOW = WIKINDX_CMS_ALLOW_DEFAULT;
-        }
-        elseif (!is_bool($this->config->WIKINDX_CMS_ALLOW))
-        {
-            die('WIKINDX_CMS_ALLOW must be a boolean (TRUE / FALSE).');
-        }
-
         // Set bibliographic style of CMS
         if (!property_exists($this->config, 'WIKINDX_CMS_BIBSTYLE'))
         {

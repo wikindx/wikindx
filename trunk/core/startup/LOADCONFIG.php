@@ -668,11 +668,6 @@ class LOADCONFIG
 
         date_default_timezone_set($this->config->WIKINDX_TIMEZONE);
 
-        // Special userId (FALSE or userID from database). Used on the test wikindx to stop this write-enabled user changing login details
-        if (!property_exists($this->config, 'WIKINDX_RESTRICT_USERID'))
-        {
-            $this->config->WIKINDX_RESTRICT_USERID = WIKINDX_RESTRICT_USERID_DEFAULT;
-        }
         // Set resource type
         if (!property_exists($this->config, 'WIKINDX_DEACTIVATE_RESOURCE_TYPES'))
         {

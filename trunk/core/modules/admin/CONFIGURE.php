@@ -1715,7 +1715,7 @@ class CONFIGURE
             BR . \HTML\span($hint, 'hint'));
         
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "restrictUserId"));
-        array_key_exists("configRestrictUserId", $this->values) ? $input = $this->values["configRestrictUserId"] : 0;
+        array_key_exists("configRestrictUserId", $this->values) ? $input = $this->values["configRestrictUserId"] : WIKINDX_RESTRICT_USERID_DEFAULT;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "restrictUserId"),
             "configRestrictUserId",

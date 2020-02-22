@@ -80,6 +80,7 @@ class CONFIGDBSTRUCTURE
             'configTagLowFactor',
         ];
         $arrayBoolean = [
+            'configIsTrunk',
             'configAuthGate',
             'configBypassSmartyCompile',
             'configCmsAllow',
@@ -178,6 +179,7 @@ class CONFIGDBSTRUCTURE
             'configImgHeightLimit' => 'WIKINDX_IMG_HEIGHT_LIMIT',
             'configImgWidthLimit' => 'WIKINDX_IMG_WIDTH_LIMIT',
             'configImportBib' => 'WIKINDX_IMPORT_BIB',
+            'configIsTrunk' => 'WIKINDX_IS_TRUNK',
             'configLanguage' => 'WIKINDX_LANGUAGE', // These is also a user variable needed for the logon page where the defaults are required.
             'configLastChanges' => 'WIKINDX_LAST_CHANGES',
             'configLastChangesDayLimit' => 'WIKINDX_LAST_CHANGES_DAY_LIMIT ',

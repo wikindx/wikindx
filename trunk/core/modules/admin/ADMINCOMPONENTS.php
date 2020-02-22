@@ -58,7 +58,7 @@ class ADMINCOMPONENTS
      */
     public function checkUpdatesOnline($message = FALSE)
     {
-        if ($this->config->WIKINDX_TRUNK_VERSION)
+        if ($this->config->WIKINDX_IS_TRUNK)
         {
             $upd_srv_link = "https://sourceforge.net/projects/wikindx/files/archives/trunk/components/components.json";
         }

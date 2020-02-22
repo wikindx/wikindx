@@ -455,16 +455,6 @@ class LOADCONFIG
         {
             die('WIKINDX_MAX_WRITECHUNK must be a positive integer (or FALSE for default configuration).');
         }
-
-        // Set a boolean flag to activate debugging or experimental features of the trunk
-        if (!property_exists($this->config, 'WIKINDX_TRUNK_VERSION'))
-        {
-            $this->config->WIKINDX_TRUNK_VERSION = WIKINDX_TRUNK_VERSION_DEFAULT;
-        }
-        elseif (!is_bool($this->config->WIKINDX_TRUNK_VERSION))
-        {
-            die('WIKINDX_TRUNK_VERSION must be a boolean (TRUE / FALSE).');
-        }
     }
     private function getWikindxBasePath()
     {

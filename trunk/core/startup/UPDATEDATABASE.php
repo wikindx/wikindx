@@ -1884,21 +1884,6 @@ END;
             $string .= 'public $WIKINDX_MAX_WRITECHUNK = FALSE;' . "\n";
         }
         $string .= <<<END
-// WIKINDX_TRUNK_VERSION boolean activates experimental features of the trunk version, development tools,
-// and changes the link of the update server to use the components of this version in perpetual development.
-// DO NOT ACTIVATE THIS OPTION IF YOU ARE NOT A CORE DEVELOPER. If you need to debug your installation,
-// you will find suitable options in the administration screen.
-
-END;
-        if (property_exists($this->config, 'WIKINDX_TRUNK_VERSION') && ($this->config->WIKINDX_TRUNK_VERSION === TRUE))
-        {
-            $string .= 'public $WIKINDX_TRUNK_VERSION = TRUE;' . "\n";
-        }
-        else
-        {
-            $string .= 'public $WIKINDX_TRUNK_VERSION = FALSE;' . "\n";
-        }
-        $string .= <<<END
 /*****
 * END PHP MEMORY AND EXECUTION CONFIGURATION
 *****/

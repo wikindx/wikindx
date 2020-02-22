@@ -25,6 +25,7 @@ MAINTENANCE:
 7. Don't force email ReplyTo to a default wrong value. This option is facultative.
 8. Don't force email From to a default wrong value. This option is facultative if the SMTP don't validate the sender.
 9. Restrict the LDAP protocol to authorized values.
+10. Relocate WIKINDX_TRUNK_VERSION option in the database and rename it WIKINDX_IS_TRUNK.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

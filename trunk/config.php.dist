@@ -122,11 +122,6 @@ public $WIKINDX_MAX_EXECUTION_TIMEOUT = FALSE;
 // This can be a tricky figure to set as setting the figure too low increases SQL and PHP execution times significantly.
 // Do NOT use quotes around the value.
 public $WIKINDX_MAX_WRITECHUNK = FALSE;
-// WIKINDX_TRUNK_VERSION boolean activates experimental features of the trunk version, development tools,
-// and changes the link of the update server to use the components of this version in perpetual development.
-// DO NOT ACTIVATE THIS OPTION IF YOU ARE NOT A CORE DEVELOPER. If you need to debug your installation,
-// you will find suitable options in the administration screen.
-public $WIKINDX_TRUNK_VERSION = FALSE;
 /*****
 END PHP MEMORY AND EXECUTION CONFIGURATION
 *****/

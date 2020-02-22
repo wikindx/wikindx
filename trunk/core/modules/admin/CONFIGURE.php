@@ -720,14 +720,18 @@ class CONFIGURE
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "forceSmartyCompile"));
         $input = array_key_exists("configBypassSmartyCompile", $this->values) && ($this->values['configBypassSmartyCompile']) ? "CHECKED" : WIKINDX_BYPASS_SMARTY_COMPILATION_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "forceSmartyCompile"), "configBypassSmartyCompile", $input)
-            . BR . \HTML\span($hint, 'hint'));
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "forceSmartyCompile"), "configBypassSmartyCompile", $input) . BR . \HTML\span($hint, 'hint'));
+        
         $input = array_key_exists("configErrorReport", $this->values) && ($this->values['configErrorReport']) ? "CHECKED" : WIKINDX_DEBUG_ERRORS_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "errorReport"), "configErrorReport", $input));
-        $input = array_key_exists("configPrintSql", $this->values) && ($this->values['configPrintSql']) ? "CHECKED" : WIKINDX_DEBUG_SQL_DEFAULT;
-        $td = \FORM\checkbox($this->messages->text("config", "sqlStatements"), "configPrintSql", $input);
         
-        $pString .= \HTML\td($td);
+        $input = array_key_exists("configPrintSql", $this->values) && ($this->values['configPrintSql']) ? "CHECKED" : WIKINDX_DEBUG_SQL_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "sqlStatements"), "configPrintSql", $input));
+        
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "isTrunk"));
+        $input = array_key_exists("configIsTrunk", $this->values) && ($this->values['configIsTrunk']) ? "CHECKED" : WIKINDX_IS_TRUNK_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "isTrunk"), "configIsTrunk", $input). BR . \HTML\span($hint, 'hint'));
+        
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -1805,6 +1809,7 @@ class CONFIGURE
                 $array = [
                     "configBypassSmartyCompile",
                     "configErrorReport",
+                    "configIsTrunk",
                     "configPrintSql",
                 ];
 
@@ -2059,11 +2064,12 @@ class CONFIGURE
                     "configGsAttachment",
                     "configImagesAllow",
                     "configImportBib",
+                    "configIsTrunk",
                     "configLdapUse",
                     "configListLink",
-                    "configMailUse",
                     "configMailSmtpAuth",
                     "configMailSmtpPersist",
+                    "configMailUse",
                     "configMetadataAllow",
                     "configMetadataUserOnly",
                     "configMultiUser",

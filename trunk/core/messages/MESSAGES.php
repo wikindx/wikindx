@@ -308,6 +308,7 @@ class MESSAGES
 				"debug" => dgettext($domain, "All these should be disabled on a production server"),
 				"errorReport" => dgettext($domain, "Print PHP errors and warnings to the screen"),
 				"sqlStatements" => dgettext($domain, "Display SQL statements"),
+				"isTrunk" => dgettext($domain, "Trunk version"),
 				"printSql" => dgettext($domain, "Print SQL statements to the screen"),
 				"emailSql1" => dgettext($domain, "Email SQL statements"),
 				"emailSql2" => dgettext($domain, "Email SQL statements to this address"),
@@ -765,6 +766,7 @@ class MESSAGES
 				"gsAttachment" => dgettext($domain, "If checked, Google Scholar indexing will only occur where the resource has an attachment (if multiple attachments, only the primary is used). Additionally, to enable this, 'Allow only registered users to view file attachments' must be checked"),
 				"restrictUserId" => dgettext($domain, "Stop this write-enabled user changing login details. Typically this is used for a guest/test user (as on the WIKINDX testdrive database)"),
 				"forceSmartyCompile" => dgettext($domain, "If checked, Smarty templates are re-compiled for each web page load"),
+				"isTrunk" => dgettext($domain, "Activates experimental features of the trunk version, development tools, and changes the link of the update server to use the components of this version in perpetual development. DO NOT ACTIVATE THIS OPTION IF YOU ARE NOT A CORE DEVELOPER. If you need to debug your installation, you will find other suitable options in this screen."),
 				"displayStatistics" => dgettext($domain, "Display statistics to read-only users"),
 				"displayUserStatistics" => dgettext($domain, "If displaying statistics to read-only users, also display user statistics"),
 /// hint_initials For initials input in creator names (keep it short)

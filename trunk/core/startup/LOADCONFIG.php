@@ -866,23 +866,6 @@ class LOADCONFIG
             die('WIKINDX_RSS_LANGUAGE must be a legal language code (en_GB, fr_FR, de_DE...).');
         }
 
-        // Enable / disable CMS database access
-        if (!property_exists($this->config, 'WIKINDX_CMS_SQL'))
-        {
-            if ($this->config->WIKINDX_CMS_ALLOW)
-            {
-                die($dieMsgMissing . 'WIKINDX_CMS_SQL');
-            }
-            else
-            {
-                $this->config->WIKINDX_CMS_SQL = WIKINDX_CMS_SQL_DEFAULT;
-            }
-        }
-        elseif (!is_bool($this->config->WIKINDX_CMS_SQL))
-        {
-            die('WIKINDX_CMS_SQL must be a boolean (TRUE / FALSE).');
-        }
-
         // Set CMS database user
         if (!property_exists($this->config, 'WIKINDX_CMS_DB_USER'))
         {

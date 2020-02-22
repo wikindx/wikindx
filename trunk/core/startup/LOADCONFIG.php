@@ -772,18 +772,5 @@ class LOADCONFIG
                 $this->config->WIKINDX_LDAP_DN = WIKINDX_LDAP_DN_DEFAULT;
             }
         }
-
-        // Set LDAP Opt Protocol Version
-        if (!property_exists($this->config, 'WIKINDX_LDAP_PROTOCOL_VERSION'))
-        {
-            $this->config->WIKINDX_LDAP_PROTOCOL_VERSION = WIKINDX_LDAP_PROTOCOL_VERSION_DEFAULT;
-        }
-        elseif (is_int($this->config->WIKINDX_LDAP_PROTOCOL_VERSION))
-        {
-            if ($this->config->WIKINDX_LDAP_PROTOCOL_VERSION < 0)
-            {
-                die('WIKINDX_LDAP_PROTOCOL_VERSION must be a positive integer.');
-            }
-        }
     }
 }

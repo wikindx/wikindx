@@ -798,15 +798,5 @@ class LOADCONFIG
                 die('WIKINDX_LDAP_PROTOCOL_VERSION must be a positive integer.');
             }
         }
-
-        // Set AUTHGATE configuration (or similar authentication gate)
-        if (!property_exists($this->config, 'WIKINDX_AUTHGATE_USE'))
-        {
-            $this->config->WIKINDX_AUTHGATE_USE = WIKINDX_AUTHGATE_USE_DEFAULT;
-        }
-        elseif (!is_bool($this->config->WIKINDX_AUTHGATE_USE))
-        {
-            die('WIKINDX_AUTHGATE_USE must be a boolean (TRUE / FALSE).');
-        }
     }
 }

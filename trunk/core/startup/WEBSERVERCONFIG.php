@@ -36,10 +36,10 @@ include_once("core/startup/CONSTANTS.php");
  * This prevent to hide tricky errors.
  *
  * PHP 8 will make E_ALL the default error level,
- * In preparation for its support we also make this level the default
+ * in preparation for its support we also make this level the default
  */
 error_reporting(E_ALL);
-ini_set('display_startup_errors', 'On');
+ini_set('display_startup_errors', TRUE);
 ini_set('html_errors', (PHP_SAPI !== 'cli'));
 ini_set('display_errors', WIKINDX_PHP_DISPLAY_ERRORS_DEFAULT);
 

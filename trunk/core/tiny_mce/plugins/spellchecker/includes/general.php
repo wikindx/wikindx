@@ -5,7 +5,7 @@
  * @package MCManager.includes
  *
  * @author Moxiecode
- * @copyright Copyright ? 2007, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright © 2007, Moxiecode Systems AB, All rights reserved.
  */
 @error_reporting(E_ALL);
 $config = [];

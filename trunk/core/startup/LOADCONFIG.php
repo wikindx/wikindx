@@ -645,17 +645,7 @@ class LOADCONFIG
 
     public function configureErrorReporting()
     {
-        if ($this->config->WIKINDX_DEBUG_ERRORS)
-        {
-            error_reporting(E_ALL);
-            ini_set('display_errors', 'On');
-        }
-        else
-        {
-            // Disable all errors reports
-            error_reporting(0);
-            ini_set('display_errors', 'Off');
-        }
+        ini_set('display_errors', $this->config->WIKINDX_DEBUG_ERRORS);
     }
     /**
      * Check validity of configuration in database and amend where necessary (dying if required).

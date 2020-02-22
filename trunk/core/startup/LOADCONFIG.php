@@ -649,27 +649,7 @@ class LOADCONFIG
             }
         }
         
-        $this->checkConfigValidity();
-        $this->configureErrorReporting();
-    }
-
-    public function configureErrorReporting()
-    {
-        ini_set('display_errors', $this->config->WIKINDX_DEBUG_ERRORS);
-    }
-    /**
-     * Check validity of configuration in database and amend where necessary (dying if required).
-     */
-    private function checkConfigValidity()
-    {
-        ////////////////////////
-        // As a precaution it is better not to check the variables below before an upgrade to version = 5.3 because the config.php file has changed.
-        ////////////////////////
-        if (WIKINDX_INTERNAL_VERSION < 5.3)
-        {
-            return;
-        }
-
         date_default_timezone_set($this->config->WIKINDX_TIMEZONE);
+        ini_set('display_errors', $this->config->WIKINDX_DEBUG_ERRORS);
     }
 }

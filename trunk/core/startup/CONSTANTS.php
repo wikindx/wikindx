@@ -191,9 +191,5 @@ define('WIKINDX_TAG_FACTOR_STEP', 5);
 define('WIKINDX_RSS_PAGE', '/index.php?action=rss_RSS_CORE');
 
 
-// Mail system
-define('WIKINDX_MAIL_SMARGS_DEFAULT', '-i');
-
-
 // CMS API
 define('WIKINDX_CMS_PAGE', '/index.php?action=cms_CMS_CORE');

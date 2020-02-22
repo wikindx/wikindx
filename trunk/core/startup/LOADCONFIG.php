@@ -900,16 +900,6 @@ class LOADCONFIG
             }
         }
 
-        // Set sendmail optional parameters
-        if (!property_exists($this->config, 'WIKINDX_MAIL_SMARGS'))
-        {
-            $this->config->WIKINDX_MAIL_SMARGS = WIKINDX_MAIL_SMARGS_DEFAULT;
-        }
-        elseif (!is_string($this->config->WIKINDX_MAIL_SMARGS))
-        {
-            die('WIKINDX_MAIL_SMARGS must be a string.');
-        }
-
         // Enable / disable CMS database access
         if (!property_exists($this->config, 'WIKINDX_CMS_SQL'))
         {

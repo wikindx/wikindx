@@ -68,7 +68,6 @@ class VIEWBIBTEX
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->res = FACTORY_RESOURCECOMMON::getInstance();
@@ -766,7 +765,7 @@ class VIEWBIBTEX
      */
     private function grabAttachments(&$entryArray, $rIds)
     {
-        $path = $this->config->WIKINDX_BASE_URL . str_replace('index.php', WIKINDX_DIR_DATA_ATTACHMENTS . '/', $_SERVER['PHP_SELF']);
+        $path = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . str_replace('index.php', WIKINDX_DIR_DATA_ATTACHMENTS . '/', $_SERVER['PHP_SELF']);
         $files = [];
         $this->db->formatConditionsOneField($rIds, 'resourceattachmentsResourceId');
         $resultset = $this->db->select(

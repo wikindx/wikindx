@@ -49,10 +49,8 @@ class WPSaveDialog
 
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->pluginmessages = new PLUGINMESSAGES('wordprocessor', 'wordprocessorMessages');
-
 
         $this->session = FACTORY_SESSION::getInstance();
         $this->vars = GLOBALS::getVars();

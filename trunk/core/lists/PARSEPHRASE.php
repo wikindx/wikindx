@@ -22,8 +22,6 @@ class PARSEPHRASE
     /** object */
     private $session;
     /** object */
-    private $config;
-    /** object */
     private $errors;
     /** array */
     private $stringArray;
@@ -53,7 +51,6 @@ class PARSEPHRASE
     {
         $this->session = FACTORY_SESSION::getInstance();
         $this->db = FACTORY_DB::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
     }
     /**
@@ -808,7 +805,7 @@ class PARSEPHRASE
                 {
                     if ((($array['type'] == 'AND') || ($array['type'] == 'OR') || ($array['type'] == 'NOT'))
                         &&
-                        (array_search(mb_strtolower($array['string']), $this->config->WIKINDX_SEARCH_FILTER) !== FALSE))
+                        (array_search(mb_strtolower($array['string']), WIKINDX_SEARCH_FILTER) !== FALSE))
                     {
                         $delete[] = $index;
 

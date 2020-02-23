@@ -29,7 +29,6 @@ class TEXTQP
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -39,7 +38,7 @@ class TEXTQP
         $this->cite = FACTORY_CITE::getInstance();
 
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        \AJAX\loadJavascript($this->config->WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js');
+        \AJAX\loadJavascript(FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js');
     }
     /**
      * display the editing form

@@ -19,8 +19,6 @@ class ATTACHMENT
     public $primary = FALSE;
     /** object */
     private $db;
-    /** object */
-    private $config;
     /** array */
     private $vars;
 
@@ -31,7 +29,6 @@ class ATTACHMENT
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->config = FACTORY_CONFIG::getInstance();
     }
     /**
      * Make hyperlink of attachment

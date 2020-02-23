@@ -52,7 +52,6 @@ class WPExportDialog
 
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->pluginmessages = new PLUGINMESSAGES('wordprocessor', 'wordprocessorMessages');

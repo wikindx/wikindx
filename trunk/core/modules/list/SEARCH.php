@@ -19,7 +19,6 @@ class SEARCH
     private $errors;
     private $messages;
     private $common;
-    private $config;
     private $session;
     private $keyword;
     private $type;
@@ -70,7 +69,6 @@ class SEARCH
         $this->creator = FACTORY_CREATOR::getInstance();
         $this->publisher = FACTORY_PUBLISHER::getInstance();
         $this->collection = FACTORY_COLLECTION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->user = FACTORY_USER::getInstance();
         include_once("core/miscellaneous/TAG.php");
         $this->tag = new TAG();
@@ -264,7 +262,7 @@ class SEARCH
         }
 
         // Load at end because .js initialization needs various DIVs to be in the page before they are made invisible
-        \AJAX\loadJavascript($this->config->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js');
+        \AJAX\loadJavascript(FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js');
     }
     /**
      * Reset the form and clear the session

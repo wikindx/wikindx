@@ -26,8 +26,6 @@ class IMPORT
     /** object */
     private $session;
     /** object */
-    private $config;
-    /** object */
     private $creator;
     /** object */
     private $keyword;
@@ -53,7 +51,6 @@ class IMPORT
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
 
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->creator = FACTORY_CREATOR::getInstance();
         $this->keyword = FACTORY_KEYWORD::getInstance();
         $this->collection = FACTORY_COLLECTION::getInstance();
@@ -201,7 +198,7 @@ class IMPORT
                 $title = trim($array[0]);
             }
         }
-        foreach ($this->config->WIKINDX_NO_SORT as $pattern)
+        foreach (WIKINDX_NO_SORT as $pattern)
         {
             if (preg_match("/^($pattern)\\s(.*)|^\\{($pattern)\\s(.*)/ui", $title, $matches))
             {

@@ -16,7 +16,6 @@ class RESOURCECATEGORYEDIT
     public $userTags = [];
     private $db;
     private $vars;
-    private $config;
     private $errors;
     private $messages;
     private $success;
@@ -36,7 +35,6 @@ class RESOURCECATEGORYEDIT
         $gatekeep->init();
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
@@ -72,7 +70,7 @@ class RESOURCECATEGORYEDIT
         $pString .= $this->getTable();
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")));
         $pString .= \FORM\formEnd();
-        \AJAX\loadJavascript($this->config->WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js');
+        \AJAX\loadJavascript(FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js');
         GLOBALS::addTplVar('content', $pString);
         $this->session->delVar('resourceLock');
     }

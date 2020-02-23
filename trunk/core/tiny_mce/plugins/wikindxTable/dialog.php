@@ -40,14 +40,10 @@ $class = new WPTableDialog();
 class WPTableDialog
 {
     private $messages;
-    private $config;
 
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
-
         $this->messages = FACTORY_MESSAGES::getInstance();
-
         $this->tableDialogue();
     }
 

@@ -67,7 +67,6 @@ class adminstyle_MODULE
         $this->osbibVersion = \LOADSTYLE\OSBIB_VERSION;
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
 
         $this->styleMap = FACTORY_STYLEMAP::getInstance();
@@ -1687,7 +1686,7 @@ class adminstyle_MODULE
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Edit")));
         }
         $pString .= FORM\formEnd();
-        AJAX\loadJavascript($this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/adminstyle/adminstyle.js');
+        AJAX\loadJavascript(FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/adminstyle/adminstyle.js');
 
         return $pString;
     }

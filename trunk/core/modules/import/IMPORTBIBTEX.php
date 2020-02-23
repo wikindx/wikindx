@@ -34,7 +34,6 @@ class IMPORTBIBTEX
     private $monthObj;
     private $pages;
     private $parse;
-    private $config;
     private $oldTime;
     /** array */
     private $rejectTitles = [];
@@ -106,7 +105,6 @@ class IMPORTBIBTEX
         $this->monthObj = FACTORY_BIBTEXMONTHPARSE::getInstance();
         $this->pages = FACTORY_BIBTEXPAGEPARSE::getInstance();
         $this->parse = FACTORY_BIBTEXPARSE::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $constants->convertNumbers();
         $this->editionNumbers = array_flip($constants->cardinalToOrdinalWord());
         $this->parseCreator->separateInitials = TRUE;

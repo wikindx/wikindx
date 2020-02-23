@@ -25,7 +25,6 @@ class CMS
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
         if (!WIKINDX_CMS_ALLOW)
         { // deny access
@@ -86,7 +85,7 @@ class CMS
         $pString .= \HTML\td(implode("&nbsp;&nbsp;&nbsp;", $links), 'width50percent');
         if (array_key_exists('type', $this->vars))
         {
-            \AJAX\loadJavascript([$this->config->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
+            \AJAX\loadJavascript([FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
             if ($this->vars['type'] == 'categories')
             {
                 $category = FACTORY_CATEGORY::getInstance();
@@ -295,7 +294,7 @@ class CMS
         $div = \HTML\td(\HTML\div('qString', '&nbsp;')); // default
         if (array_key_exists('ajaxReturn', $this->vars))
         {
-            $qString = $this->config->WIKINDX_BASE_URL . '/cmsprint.php?action=' . $this->vars['type'] . '&id=' . $this->vars['ajaxReturn'];
+            $qString = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/cmsprint.php?action=' . $this->vars['type'] . '&id=' . $this->vars['ajaxReturn'];
             $div = \HTML\td(\HTML\div('qString', $qString));
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $div]));
@@ -785,7 +784,7 @@ class CMS
      */
     private function getResourceQuery($id)
     {
-        return $this->config->WIKINDX_BASE_URL . "/cmsprint.php?action=getResource&id=$id";
+        return FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . "/cmsprint.php?action=getResource&id=$id";
     }
     /**
      * Function form for generating CMS tag

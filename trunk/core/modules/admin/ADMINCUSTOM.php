@@ -30,7 +30,6 @@ class ADMINCUSTOM
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
 
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
@@ -120,7 +119,7 @@ class ADMINCUSTOM
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        \AJAX\loadJavascript([$this->config->WIKINDX_BASE_URL . '/core/modules/admin/customEdit.js']);
+        \AJAX\loadJavascript([FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/admin/customEdit.js']);
         GLOBALS::addTplVar('content', $pString);
     }
     /**

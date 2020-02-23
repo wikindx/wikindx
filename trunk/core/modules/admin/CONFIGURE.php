@@ -501,7 +501,7 @@ class CONFIGURE
                 break;
             }
         }
-        $pString = '<script type="text/javascript" src="' . $this->config->WIKINDX_BASE_URL . '/core/modules/admin/configure.js"></script>';
+        $pString = '<script type="text/javascript" src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/admin/configure.js"></script>';
         if ($item == 'super')
         {
             $password = FACTORY_PASSWORD::getInstance();

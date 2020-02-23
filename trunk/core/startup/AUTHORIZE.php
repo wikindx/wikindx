@@ -99,8 +99,8 @@ class AUTHORIZE
                 // keep template and language etc.
                 $language = $this->config->WIKINDX_LANGUAGE;
                 $template = $this->config->WIKINDX_TEMPLATE;
-                $userReg = $this->config->WIKINDX_USER_REGISTRATION;
-                $multiUser = $this->config->WIKINDX_MULTIUSER;
+                $userReg = WIKINDX_USER_REGISTRATION;
+                $multiUser = WIKINDX_MULTIUSER;
                 $this->session->setVar('setup_UserRegistration', $userReg);
                 $this->session->setVar('setup_MultiUser', $multiUser);
                 $this->initLogon(); // login prompt
@@ -138,7 +138,7 @@ class AUTHORIZE
                 return FALSE;
             }
             // User registration
-            elseif ($this->config->WIKINDX_MULTIUSER && $this->config->WIKINDX_USER_REGISTRATION && (WIKINDX_MAIL_USE))
+            elseif (WIKINDX_MULTIUSER && WIKINDX_USER_REGISTRATION && (WIKINDX_MAIL_USE))
             {
                 include_once("core/modules/usersgroups/REGISTER.php");
                 $obj = new REGISTER();
@@ -265,7 +265,7 @@ class AUTHORIZE
         /**
          * For a test user (see index.php)
          */
-        if ($this->config->WIKINDX_RESTRICT_USERID != WIKINDX_RESTRICT_USERID_DEFAULT)
+        if (WIKINDX_RESTRICT_USERID != WIKINDX_RESTRICT_USERID_DEFAULT)
         {
             $pString .= \HTML\p("For test drive purposes, " .
                 \HTML\strong($messages->text("user", "username") . ":&nbsp;&nbsp;") . "wikindx, " .

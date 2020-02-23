@@ -18,7 +18,6 @@ class EDITCOLLECTION
     private $success;
     private $session;
     private $sessionVars = [];
-    private $config;
     private $collection;
     private $gatekeep;
     private $badInput;
@@ -35,7 +34,6 @@ class EDITCOLLECTION
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
 
         $this->collection = FACTORY_COLLECTION::getInstance();
@@ -258,7 +256,7 @@ class EDITCOLLECTION
         $pString .= \FORM\formSubmit($this->messages->text("submit", "Edit")) . \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
         // Load at end because .js initialization needs various DIVs to be in the page before they are made invisible
-        \AJAX\loadJavascript($this->config->WIKINDX_BASE_URL . '/core/modules/resource/resourceForm.js');
+        \AJAX\loadJavascript(FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/resource/resourceForm.js');
     }
     /**
      * Add or remove a creator field (AJAX)

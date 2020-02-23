@@ -17,7 +17,6 @@ class IDEAEXPORT
     private $pluginmessages;
     private $errors;
     private $session;
-    private $config;
     private $coremessages;
     private $cite;
     private $bibStyle;
@@ -50,7 +49,6 @@ class IDEAEXPORT
         include_once("core/messages/PLUGINMESSAGES.php");
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->cite = FACTORY_CITE::getInstance('rtf');

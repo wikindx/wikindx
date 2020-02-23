@@ -1308,7 +1308,7 @@ END;
 // to http://www.myserver.com/wikindx
 
 END;
-        $string .= 'public $WIKINDX_BASE_URL = "' . $this->config->WIKINDX_BASE_URL . '";' . "\n";
+        $string .= 'public $WIKINDX_BASE_URL = "' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '";' . "\n";
 
         $string .= <<<END
 // The TinyMCE editor needs the WIKINDX server installation path.
@@ -1544,7 +1544,7 @@ END;
 // to http://www.myserver.com/wikindx
 
 END;
-        $string .= 'public $WIKINDX_BASE_URL = "' . $this->config->WIKINDX_BASE_URL . '";' . "\n";
+        $string .= 'public $WIKINDX_BASE_URL = "' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '";' . "\n";
 
         $string .= <<<END
 // The TinyMCE editor needs the WIKINDX server installation path.
@@ -1765,7 +1765,7 @@ END;
 // Otherwise, leave as "".
 
 END;
-        $string .= 'public $WIKINDX_BASE_URL = "' . $this->config->WIKINDX_BASE_URL . '";' . "\n";
+        $string .= 'public $WIKINDX_BASE_URL = "' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '";' . "\n";
 
         $string .= <<<END
 // If option auto-detection is disabled you must define the WIKINDX server installation path

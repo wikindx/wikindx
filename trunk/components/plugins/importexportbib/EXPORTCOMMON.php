@@ -22,7 +22,6 @@ class EXPORTCOMMON
     private $session;
     private $messages;
     private $errors;
-    private $config;
     private $cite;
 
     /*
@@ -36,7 +35,6 @@ class EXPORTCOMMON
         $this->session = FACTORY_SESSION::getInstance();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->cite = FACTORY_CITE::getInstance($outputType);
         $this->filesDir = WIKINDX_DIR_DATA_FILES;
         // Perform some system admin

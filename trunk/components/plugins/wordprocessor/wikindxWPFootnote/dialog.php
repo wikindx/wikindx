@@ -44,11 +44,9 @@ class WPFootnoteDialog
 {
     private $pluginmessages;
     private $coremessages;
-    private $config;
 
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->pluginmessages = new PLUGINMESSAGES('wordprocessor', 'wordprocessorMessages');
         

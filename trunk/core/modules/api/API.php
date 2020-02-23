@@ -15,7 +15,6 @@ class API
 {
     private $db;
     private $vars;
-    private $config;
     private $icons;
     private $stmt;
     private $errors;
@@ -36,7 +35,6 @@ class API
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();

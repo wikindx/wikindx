@@ -17,7 +17,6 @@ class PREFERENCES
     private $messages;
     private $success;
     private $session;
-    private $config;
     private $db;
     private $vars;
     private $bib;
@@ -29,7 +28,6 @@ class PREFERENCES
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();

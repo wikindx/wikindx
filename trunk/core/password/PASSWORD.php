@@ -19,8 +19,6 @@ class PASSWORD
     private $errors;
     /** object */
     private $messages;
-    /** object */
-    private $config;
     /** int */
     private $noChars;
     /** string */
@@ -37,7 +35,6 @@ class PASSWORD
         $this->db = FACTORY_DB::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->init();
     }
     /**

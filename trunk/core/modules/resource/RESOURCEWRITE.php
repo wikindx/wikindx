@@ -20,7 +20,6 @@ class RESOURCEWRITE
     private $resourceInput = [];
     private $resourceType;
     private $typeMaps;
-    private $config;
     private $edit = FALSE;
     private $resourceId = FALSE;
     private $userId = FALSE;
@@ -55,7 +54,6 @@ class RESOURCEWRITE
         $this->keyword = FACTORY_KEYWORD::getInstance();
         $this->userTag = FACTORY_USERTAGS::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->navigate = FACTORY_NAVIGATE::getInstance();
         $this->typeMaps = $this->resourceMap->getTypeMap();
         $this->userId = $this->session->getVar('setup_UserId');
@@ -1050,7 +1048,7 @@ class RESOURCEWRITE
         // tinyMCE adds P and BR tags in some cases
         $input['resourceTitle'] = str_ireplace(["<p>", "</p>", "</br>", "<br>"], '', $input['resourceTitle']);
         $input['resourceTitle'] = $this->trimString($input['resourceTitle']);
-        foreach ($this->config->WIKINDX_NO_SORT as $pattern)
+        foreach (WIKINDX_NO_SORT as $pattern)
         {
             if (preg_match("/^($pattern)\\s(.*)|^\\{($pattern)\\s(.*)/ui", $input['resourceTitle'], $matches))
             {
@@ -1097,7 +1095,7 @@ class RESOURCEWRITE
         if (array_key_exists('resourceTransTitle', $input))
         {
             $noSortFound = FALSE;
-            foreach ($this->config->WIKINDX_NO_SORT as $pattern)
+            foreach (WIKINDX_NO_SORT as $pattern)
             {
                 if (preg_match("/^($pattern)\\s(.*)|^\\{($pattern)\\s(.*)/ui", $input['resourceTransTitle'], $matches))
                 {

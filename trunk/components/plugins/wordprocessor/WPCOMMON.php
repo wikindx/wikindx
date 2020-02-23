@@ -51,7 +51,6 @@ class WPCommon
 
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->pluginmessages = new PLUGINMESSAGES('wordprocessor', 'wordprocessorMessages');
         $this->session = FACTORY_SESSION::getInstance();
         $this->vars = GLOBALS::getVars();

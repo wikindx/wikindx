@@ -21,8 +21,6 @@ class BROWSECOMMON
     private $messages;
     /** object */
     private $session;
-    /** object */
-    private $config;
     /** string */
     private $highColour;
     /** string */
@@ -47,15 +45,14 @@ class BROWSECOMMON
         $this->vars = GLOBALS::getVars();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->start = $this->total = 0;
-        $this->lowColour = $this->config->WIKINDX_TAG_LOW_COLOUR;
-        $this->highColour = $this->config->WIKINDX_TAG_HIGH_COLOUR;
+        $this->lowColour = WIKINDX_TAG_LOW_COLOUR;
+        $this->highColour = WIKINDX_TAG_HIGH_COLOUR;
         // The CSS font size is in em and the config factor is 100 times the em size
-        $this->lowSize = $this->config->WIKINDX_TAG_LOW_FACTOR / 100;
-        $this->highSize = $this->config->WIKINDX_TAG_HIGH_FACTOR / 100;
+        $this->lowSize = WIKINDX_TAG_LOW_FACTOR / 100;
+        $this->highSize = WIKINDX_TAG_HIGH_FACTOR / 100;
         $this->sizeDiff = $this->highSize - $this->lowSize;
     }
     /**

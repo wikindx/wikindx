@@ -44,11 +44,9 @@ class imageDialog
 {
     private $messages;
     private $session;
-    private $config;
 
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->imageDialogueRun();
@@ -66,9 +64,8 @@ class imageDialog
         $pString .= \HTML\hr();
         $pString .= \HTML\p();
         GLOBALS::addTplVar('content', $pString);
-        $configDbStructure = FACTORY_CONFIGDBSTRUCTURE::getInstance();
         include_once("core/file/images.php");
-        if ($configDbStructure->getOne('configImagesAllow'))
+        if (WIKINDX_IMAGES_ALLOW)
         {
             // As user can upload images, we check again that user is registered
             if ($this->session->getVar('setup_UserId'))

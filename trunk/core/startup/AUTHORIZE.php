@@ -190,7 +190,7 @@ class AUTHORIZE
                 }
             }
         }
-        if (isset($this->vars["method"]) && ($this->vars['method'] == 'RSS') && !$this->config->WIKINDX_DENY_READONLY)
+        if (isset($this->vars["method"]) && ($this->vars['method'] == 'RSS') && !WIKINDX_DENY_READONLY)
         {
             $this->session->setVar("setup_ReadOnly", TRUE);
 
@@ -224,7 +224,7 @@ class AUTHORIZE
         if (!$this->session->getVar("setup_Write") && !$this->session->getVar('setup_ReadOnly'))
         {
             // Default == read only access.
-            if ($this->config->WIKINDX_READ_ONLY_ACCESS && !$this->config->WIKINDX_DENY_READONLY)
+            if (WIKINDX_READ_ONLY_ACCESS && !WIKINDX_DENY_READONLY)
             {
                 $this->session->setVar("setup_ReadOnly", TRUE);
                 // populate session with default values from config
@@ -274,7 +274,7 @@ class AUTHORIZE
         $forgot = WIKINDX_MAIL_USE ? \HTML\a("link", $messages->text("user", "forget6"), $link2) : FALSE;
         $pString .= $this->printLogonTable();
         // Give user the option to bypass logging in simply to read.
-        if (!$this->config->WIKINDX_DENY_READONLY)
+        if (!WIKINDX_DENY_READONLY)
         {
             $links = \HTML\a("link", $messages->text("authorize", "readOnly") .
             BR . $forgot, $link1);

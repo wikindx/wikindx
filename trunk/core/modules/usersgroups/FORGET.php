@@ -127,8 +127,7 @@ class FORGET
         }
         if (!$questionFound)
         {
-            $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-            $email = $co->getOne('configContactEmail');
+            $email = WIKINDX_CONTACT_EMAIL;
             if ($email)
             {
                 $email = \HTML\dbToHtmlTidy($email);
@@ -177,8 +176,7 @@ class FORGET
         $password = time();
         if (!$emailClass->forgetProcess($username, $password))
         {
-            $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-            $email = $co->getOne('configContactEmail');
+            $email = WIKINDX_CONTACT_EMAIL;
             if ($email)
             {
                 $email = \HTML\dbToHtmlTidy($email);

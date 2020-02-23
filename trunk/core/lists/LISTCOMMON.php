@@ -50,8 +50,6 @@ class LISTCOMMON
     /** object */
     private $icons;
     /** object */
-    private $config;
-    /** object */
     private $session;
     /** object */
     private $messages;
@@ -81,7 +79,6 @@ class LISTCOMMON
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->icons = FACTORY_LOADICONS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
@@ -814,7 +811,7 @@ class LISTCOMMON
                     $resourceList[$resourceId]['links']['checkbox'] = \FORM\checkBox(FALSE, "bib_" . $resourceId);
                 }
 
-                if ($write && !$this->config->WIKINDX_ORIGINATOR_EDIT_ONLY)
+                if ($write && !WIKINDX_ORIGINATOR_EDIT_ONLY)
                 {
                     $resourceList[$resourceId]['links']['edit'] = \HTML\a(
                         $this->icons->getClass("edit"),
@@ -866,7 +863,7 @@ class LISTCOMMON
                 }
                 // display CMS link if required
                 // link is actually a JavaScript call
-                if (GLOBALS::getUserVar('DisplayCmsLink') && $this->config->WIKINDX_CMS_ALLOW)
+                if (GLOBALS::getUserVar('DisplayCmsLink') && WIKINDX_CMS_ALLOW)
                 {
                     $resourceList[$resourceId]['links']['cms'] = \HTML\a(
                         'cmsLink',
@@ -1003,7 +1000,7 @@ class LISTCOMMON
         }
         // display CMS link if required
         // link is actually a JavaScript call
-        if (GLOBALS::getUserVar('DisplayCmsLink') && $this->config->WIKINDX_CMS_ALLOW && $this->config->WIKINDX_CMS_SQL)
+        if (GLOBALS::getUserVar('DisplayCmsLink') && WIKINDX_CMS_ALLOW && WIKINDX_CMS_SQL)
         {
             $linksInfo['cms'] = \HTML\a(
                 'cmsLink',

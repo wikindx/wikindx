@@ -27,7 +27,7 @@ class CMS
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->config = FACTORY_CONFIG::getInstance();
 
-        if (!$this->config->WIKINDX_CMS_ALLOW)
+        if (!WIKINDX_CMS_ALLOW)
         { // deny access
             die("CMS access denied by WIKINDX configuration");
         }
@@ -317,14 +317,13 @@ class CMS
             die('Missing or incorrect queryString');
         }
         $db = FACTORY_DB::getInstance();
-        $config = FACTORY_CONFIG::getInstance();
         if (array_key_exists('bibStyle', $_GET))
         {
             GLOBALS::setUserVar('Style', $_GET['bibStyle']);
         }
         else
         {
-            GLOBALS::setUserVar('Style', $config->WIKINDX_CMS_BIBSTYLE);
+            GLOBALS::setUserVar('Style', WIKINDX_CMS_BIBSTYLE);
         }
         if (array_key_exists('language', $_GET))
         {
@@ -674,14 +673,13 @@ class CMS
     public function parseText()
     {
         // Set bibliographic style
-        $config = FACTORY_CONFIG::getInstance();
         if (array_key_exists('bibStyle', $_GET))
         {
             GLOBALS::setUserVar('Style', $_GET['bibStyle']);
         }
         else
         {
-            GLOBALS::setUserVar('Style', $config->WIKINDX_CMS_BIBSTYLE);
+            GLOBALS::setUserVar('Style', WIKINDX_CMS_BIBSTYLE);
         }
         if (array_key_exists('language', $_GET))
         {
@@ -737,8 +735,7 @@ class CMS
         }
         else
         {
-            $config = FACTORY_CONFIG::getInstance();
-            $this->session->setVar('setup_Style', $config->WIKINDX_CMS_BIBSTYLE);
+            $this->session->setVar('setup_Style', WIKINDX_CMS_BIBSTYLE);
         }
         $bibStyle = FACTORY_BIBSTYLE::getInstance();
 

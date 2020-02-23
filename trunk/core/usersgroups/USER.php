@@ -275,7 +275,7 @@ class USER
     public function checkPassword($username, $pwdInput)
     {
         $config = FACTORY_CONFIG::getInstance();
-        if ($config->WIKINDX_LDAP_USE !== FALSE)
+        if (WIKINDX_LDAP_USE !== FALSE)
         {
             return $this->ldapCheckPassword($config, $username, $pwdInput);
         }
@@ -1199,13 +1199,13 @@ class USER
      */
     private function ldapCheckPassword($config, $username, $pwdInput)
     {
-        if (($ds = ldap_connect($config->WIKINDX_LDAP_SERVER, $config->WIKINDX_LDAP_PORT)) === FALSE)
+        if (($ds = ldap_connect(WIKINDX_LDAP_SERVER, WIKINDX_LDAP_PORT)) === FALSE)
         {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapConnect"));
 
             return FALSE;
         }
-        ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, $config->WIKINDX_LDAP_PROTOCOL_VERSION);
+        ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, WIKINDX_LDAP_PROTOCOL_VERSION);
         if (($ldapbind = @ldap_bind($ds)) === FALSE)
         {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapBind"));

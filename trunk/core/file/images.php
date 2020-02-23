@@ -205,7 +205,7 @@ class FileManager
     {
         global $_ERROR;
         global $_ERROR2;
-        $configMaxSize = FACTORY_CONFIGDBSTRUCTURE::getInstance()->getOne('configImagesMaxSize');
+        $configMaxSize = WIKINDX_IMAGES_MAXSIZE;
         $this->readDir();
         $existingHashes = [];
         foreach ($this->files as $fileName)

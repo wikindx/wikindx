@@ -105,14 +105,7 @@ class CLOSE
 
         // Check if this parameter exists because throws an error at install stage
         // TODO (lkppo): loading process could be changed to load configuration separately of AUTHORIZE class
-        if (property_exists($this->config, 'WIKINDX_TITLE'))
-        {
-            $title = \HTML\dbToHtmlTidy(WIKINDX_TITLE);
-        }
-        else
-        {
-            $title = WIKINDX_TITLE_DEFAULT;
-        }
+        $title = \HTML\nlToHtml(defined('WIKINDX_TITLE') ? WIKINDX_TITLE : WIKINDX_TITLE_DEFAULT);
 
         GLOBALS::addTplVar('title', \HTML\stripHtml($title)); // Admins can add HTML formatting in the configure interface.
         GLOBALS::addTplVar('headTitle', $title);
@@ -214,7 +207,7 @@ class CLOSE
                 {
                     $errorMessage = "Mixed data type in '$k' template variable";
 
-                    if ($this->config->WIKINDX_DEBUG_ERRORS)
+                    if (WIKINDX_DEBUG_ERRORS)
                     {
                         trigger_error($errorMessage, E_USER_ERROR);
                     }
@@ -276,7 +269,7 @@ class CLOSE
                 $debugString .= $debugLogSQLString;
             }
             // Insert debug timers
-            if (property_exists($this->config, 'WIKINDX_DEBUG_ERRORS') && $this->config->WIKINDX_DEBUG_ERRORS)
+            if (defined('WIKINDX_DEBUG_ERRORS') && WIKINDX_DEBUG_ERRORS)
             {
                 $lineEnding = BR;
                 $debugString .= "<p style='font-family: monospace; font-size: 8pt; text-align: right;'>" . LF;

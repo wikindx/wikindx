@@ -161,7 +161,7 @@ class CONFIGDBSTRUCTURE
             'configIsTrunk' => 'WIKINDX_IS_TRUNK',
             'configLanguage' => 'WIKINDX_LANGUAGE', // These is also a user variable needed for the logon page where the defaults are required.
             'configLastChanges' => 'WIKINDX_LAST_CHANGES',
-            'configLastChangesDayLimit' => 'WIKINDX_LAST_CHANGES_DAY_LIMIT ',
+            'configLastChangesDayLimit' => 'WIKINDX_LAST_CHANGES_DAY_LIMIT',
             'configLastChangesType' => 'WIKINDX_LAST_CHANGES_TYPE',
             'configLdapDn' => 'WIKINDX_LDAP_DN',
             'configLdapPort' => 'WIKINDX_LDAP_PORT',

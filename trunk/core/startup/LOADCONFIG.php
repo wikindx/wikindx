@@ -376,7 +376,7 @@ class LOADCONFIG
         // This option is deprecated from version 5.9.1
         if ($this->config->WIKINDX_DB_TABLEPREFIX != WIKINDX_DB_TABLEPREFIX_DEFAULT)
         {
-            if (property_exists($this->config, 'WIKINDX_DEBUG_ERRORS') && $this->config->WIKINDX_DEBUG_ERRORS)
+            if (defined('WIKINDX_DEBUG_ERRORS') && WIKINDX_DEBUG_ERRORS)
             {
                 trigger_error(
                     "\$WIKINDX_DB_TABLEPREFIX configuration option is deprecated since version 5.9.1
@@ -650,6 +650,6 @@ class LOADCONFIG
         }
         
         date_default_timezone_set($this->config->WIKINDX_TIMEZONE);
-        ini_set('display_errors', $this->config->WIKINDX_DEBUG_ERRORS);
+        ini_set('display_errors', WIKINDX_DEBUG_ERRORS);
     }
 }

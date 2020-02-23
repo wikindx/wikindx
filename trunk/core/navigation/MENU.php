@@ -401,7 +401,7 @@ class MENU
                 $messages->text("menu", "statisticsUsers") => 'index.php?action=statistics_STATS_CORE&method=users',
             ];
         }
-        elseif ($this->config->WIKINDX_DISPLAY_STATISTICS)
+        elseif (WIKINDX_DISPLAY_STATISTICS)
         {
             $this->wikindx['statisticsSub'] = [
                 $messages->text("menu", "statisticsSub") => FALSE,
@@ -413,7 +413,7 @@ class MENU
                 $messages->text("menu", "statisticsPublishers") => 'index.php?action=statistics_STATS_CORE&method=publishers',
                 $messages->text("menu", "statisticsCollections") => 'index.php?action=statistics_STATS_CORE&method=collections',
             ];
-            if ($this->config->WIKINDX_DISPLAY_USER_STATISTICS)
+            if (WIKINDX_DISPLAY_USER_STATISTICS)
             {
                 $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsUsers")] = 'index.php?action=statistics_STATS_CORE&method=users';
             }
@@ -430,9 +430,9 @@ class MENU
         {
             // On the first run after a fresh install this screen is displayed immediatly
             // and these two options are not yet set, so we avoid to check the READONLY mode strictly.
-        	if (property_exists($this->config, 'WIKINDX_DENY_READONLY') && property_exists($this->config, 'WIKINDX_READ_ONLY_ACCESS'))
+        	if (defined('WIKINDX_DENY_READONLY') && defined('WIKINDX_READ_ONLY_ACCESS'))
         	{
-            	if (!$this->config->WIKINDX_DENY_READONLY && $this->config->WIKINDX_READ_ONLY_ACCESS) 
+            	if (!WIKINDX_DENY_READONLY && WIKINDX_READ_ONLY_ACCESS) 
             	{
     	            $this->wikindx[$messages->text("menu", "readOnly")] = 'index.php?action=readOnly';
     	        }
@@ -797,7 +797,7 @@ class MENU
         // Remove 'edit' array from resource array if non-admins not allowed to edit
         if ($this->resourcesExist && $this->write)
         { // if no resources, editSub does not exist anyway
-            if (!$this->config->WIKINDX_GLOBAL_EDIT && !$this->superAdmin)
+            if (!WIKINDX_GLOBAL_EDIT && !$this->superAdmin)
             {
                 array_splice($this->res, array_search('editSub', array_keys($this->res)), 1);
             }

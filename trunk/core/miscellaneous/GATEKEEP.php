@@ -19,8 +19,6 @@ class GATEKEEP
     public $requireSuper = FALSE;
     /** object */
     private $session;
-    /** object */
-    private $config;
 
     /**
      * GATEKEEP class
@@ -28,15 +26,14 @@ class GATEKEEP
     public function __construct()
     {
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
     }
     /**
      * Admins can do everything
      *
      * Either return TRUE or stop the execution and display the login prompt
      *
-     * @param bool $globalEdit If TRUE, config.php's $WIKINDX_GLOBAL_EDIT must be be set to TRUE. Default is FALSE
-     * @param bool $originatorEditOnly If TRUE, config.php's $WIKINDX_ORIGINATOR_EDIT_ONLY must be TRUE. Default is FALSE
+     * @param bool $globalEdit Default is FALSE
+     * @param bool $originatorEditOnly Default is FALSE
      *
      * @return bool
      */
@@ -54,14 +51,13 @@ class GATEKEEP
         }
         if ($this->session->getVar('setup_Write'))
         {
-            if ($globalEdit && isset($this->config->WIKINDX_GLOBAL_EDIT) && !$this->config->WIKINDX_GLOBAL_EDIT)
+            if ($globalEdit && defined('WIKINDX_GLOBAL_EDIT') && !WIKINDX_GLOBAL_EDIT)
             {
                 $authorize = FACTORY_AUTHORIZE::getInstance();
                 $authorize->initLogon();
                 FACTORY_CLOSENOMENU::getInstance(); // die
             }
-            if ($originatorEditOnly && isset($this->config->WIKINDX_ORIGINATOR_EDIT_ONLY) &&
-                !$this->config->WIKINDX_ORIGINATOR_EDIT_ONLY)
+            if ($originatorEditOnly && defined('WIKINDX_ORIGINATOR_EDIT_ONLY') && !WIKINDX_ORIGINATOR_EDIT_ONLY)
             {
                 $authorize = FACTORY_AUTHORIZE::getInstance();
                 $authorize->initLogon();

@@ -20,7 +20,6 @@ class RESOURCEABSTRACT
     private $user;
     private $icons;
     private $common;
-    private $config;
     private $cite;
     private $userId;
 
@@ -34,7 +33,6 @@ class RESOURCEABSTRACT
         $this->user = FACTORY_USER::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->cite = FACTORY_CITE::getInstance();
         $this->userId = $this->session->getVar('setup_UserId');
     }
@@ -54,7 +52,7 @@ class RESOURCEABSTRACT
             return $abstract;
         }
         if ($this->session->getVar("setup_Superadmin") ||
-            ($write && (!$this->config->WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId))))
+            ($write && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId))))
         {
             if (!$row['resourcetextAbstract'])
             {

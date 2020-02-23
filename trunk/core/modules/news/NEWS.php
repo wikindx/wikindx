@@ -137,7 +137,7 @@ class NEWS
         $this->session->setVar('setup_News', TRUE);
         $this->session->setVar('news_Done', TRUE);
         $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        if ($co->getOne('configEmailNews'))
+        if (WIKINDX_EMAIL_NEWS)
         {
             include_once("core/modules/email/EMAIL.php");
             $emailClass = new EMAIL();
@@ -286,7 +286,7 @@ class NEWS
         $this->db->update('news', $updateArray);
         $this->session->setVar('news_Done', TRUE);
         $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        if ($co->getOne('configEmailNews'))
+        if (WIKINDX_EMAIL_NEWS)
         {
             include_once("core/modules/email/EMAIL.php");
             $emailClass = new EMAIL();

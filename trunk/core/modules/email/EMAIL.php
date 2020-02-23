@@ -120,8 +120,7 @@ class EMAIL
             return FALSE;
         }
         // If needed, email admin about new user
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        $email = $co->getOne('configEmailNewRegistrations');
+        $email = WIKINDX_EMAIL_NEW_REGISTRATIONS;
         if ($email && !$this->session->getVar('setup_Superadmin'))
         {
             $message = "A new user has registered for" . "\n\nWIKINDX:\t\t$link\n\nUSERNAME:\t\t" .
@@ -150,8 +149,7 @@ class EMAIL
         {
             return TRUE;
         }
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        $adminEmail = $co->getOne('configEmailNewRegistrations');
+        $adminEmail = WIKINDX_EMAIL_NEW_REGISTRATIONS;
         if (!$adminEmail)
         {
             return FALSE;

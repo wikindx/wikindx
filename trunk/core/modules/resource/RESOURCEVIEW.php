@@ -611,7 +611,7 @@ class RESOURCEVIEW
         }
         GLOBALS::setTplVar('resourceSingle', $resourceSingle);
         unset($resourceSingle);
-        if ($this->config->WIKINDX_GS_ALLOW)
+        if (WIKINDX_GS_ALLOW)
         {
             if ($gs = $this->gs->export($row, $this->bibStyle->coinsCreators))
             {
@@ -693,8 +693,8 @@ class RESOURCEVIEW
             array_unshift($files, $primary);
         }
         if ($this->session->getVar("setup_Superadmin") ||
-            ($this->config->WIKINDX_ORIGINATOR_EDIT_ONLY && ($userAddId == $this->userId) && $this->session->getVar("setup_FileAttach")) ||
-            ($this->session->getVar("setup_Write") && !$this->config->WIKINDX_ORIGINATOR_EDIT_ONLY && $this->session->getVar("setup_FileAttach")))
+            (WIKINDX_ORIGINATOR_EDIT_ONLY && ($userAddId == $this->userId) && $this->session->getVar("setup_FileAttach")) ||
+            ($this->session->getVar("setup_Write") && !WIKINDX_ORIGINATOR_EDIT_ONLY && $this->session->getVar("setup_FileAttach")))
         {
             if (isset($files))
             {
@@ -784,7 +784,7 @@ class RESOURCEVIEW
                 }
             }
         }
-        if ($this->session->getVar("setup_Write") && (!$this->config->WIKINDX_ORIGINATOR_EDIT_ONLY || ($userAddId == $this->userId)
+        if ($this->session->getVar("setup_Write") && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($userAddId == $this->userId)
             || $this->session->getVar("setup_Superadmin")))
         {
             if (isset($urls))
@@ -1004,7 +1004,7 @@ class RESOURCEVIEW
         $write = $this->session->getVar('setup_Write');
         $links = [];
         $edit = FALSE;
-        if ($write && (!$this->config->WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))
+        if ($write && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))
         {
             $links['edit'] = \HTML\a(
                 $this->icons->getClass("edit"),
@@ -1046,7 +1046,7 @@ class RESOURCEVIEW
         }
         // display CMS link if required
         // link is actually a JavaScript call
-        if (GLOBALS::getUserVar('DisplayCmsLink') && $this->config->WIKINDX_CMS_ALLOW)
+        if (GLOBALS::getUserVar('DisplayCmsLink') && WIKINDX_CMS_ALLOW)
         {
             $links['cms'] = \HTML\a(
                 'cmsLink',
@@ -1639,8 +1639,7 @@ class RESOURCEVIEW
      */
     private function displayEmailFriendLink($row)
     {
-        if ($this->session->getVar("setup_MultiUser") && $this->config->WIKINDX_READ_ONLY_ACCESS
-            && WIKINDX_MAIL_USE)
+        if ($this->session->getVar("setup_MultiUser") && WIKINDX_READ_ONLY_ACCESS && WIKINDX_MAIL_USE)
         {
             $linkStyle = "link linkCiteHidden";
             $link = $this->messages->text("misc", "emailToFriend");

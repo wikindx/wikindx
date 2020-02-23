@@ -649,7 +649,7 @@ class LOADCONFIG
             }
         }
         
-        date_default_timezone_set($this->config->WIKINDX_TIMEZONE);
+        date_default_timezone_set(WIKINDX_TIMEZONE);
         ini_set('display_errors', WIKINDX_DEBUG_ERRORS);
     }
 }

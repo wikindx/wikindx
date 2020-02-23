@@ -64,7 +64,7 @@ class PASSWORD
             $this->messages->text("hint", "hint"),
             '#',
             "",
-            $this->messages->text("hint", $hintArray[$this->config->WIKINDX_PASSWORD_STRENGTH], $this->noChars) .
+            $this->messages->text("hint", $hintArray[WIKINDX_PASSWORD_STRENGTH], $this->noChars) .
             '     ' . $this->messages->text("hint", 'password4')
         );
         $formText = '';
@@ -124,28 +124,20 @@ class PASSWORD
      */
     private function init()
     {
-        // Set PASSWORD size
-        if (!property_exists($this->config, 'WIKINDX_PASSWORD_SIZE'))
-        {
-            $this->config->WIKINDX_PASSWORD_SIZE = WIKINDX_PASSWORD_SIZE_DEFAULT;
-        }
-        // Set PASSWORD strength
-        if (!property_exists($this->config, 'WIKINDX_PASSWORD_STRENGTH'))
-        {
-            $this->config->WIKINDX_PASSWORD_STRENGTH = WIKINDX_PASSWORD_STRENGTH_DEFAULT;
-        }
-        $this->noChars = $this->config->WIKINDX_PASSWORD_SIZE;
+        $pwdSize = defined('WIKINDX_PASSWORD_SIZE') ? WIKINDX_PASSWORD_SIZE : WIKINDX_PASSWORD_SIZE_DEFAULT;
+        $pwdStrengh = defined('WIKINDX_PASSWORD_STRENGTH') ? WIKINDX_PASSWORD_STRENGTH : WIKINDX_PASSWORD_STRENGTH_DEFAULT;
+        
         $errorArray = [
             "weak" => "invalidPassword1",
             "medium" => "invalidPassword2",
             "strong" => "invalidPassword3",
         ];
-        $this->invalidPassword = $this->errors->text('inputError', $errorArray[$this->config->WIKINDX_PASSWORD_STRENGTH], $this->noChars, FALSE);
+        $this->invalidPassword = $this->errors->text('inputError', $errorArray[$pwdStrengh], $pwdSize, FALSE);
         $regexpArray = [
             'weak' => "/^(?=.*[a-z])(?=.*[A-Z])\\S+$/", // UPPER/lower Latin, no spaces
             'medium' => "/^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])\\S+$/", // UPPER/lower Latin and numbers, no spaces
             'strong' => "/^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#!%*?&€])\\S+$/", // UPPER/lower Latin, numbers, and special chars, no spaces
         ];
-        $this->regexp = $regexpArray[$this->config->WIKINDX_PASSWORD_STRENGTH];
+        $this->regexp = $regexpArray[$pwdStrengh];
     }
 }

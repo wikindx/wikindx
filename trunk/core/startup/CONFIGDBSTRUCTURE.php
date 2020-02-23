@@ -128,27 +128,6 @@ class CONFIGDBSTRUCTURE
             'configTimezone',
         ];
 
-        foreach ($arrayVarchar as $name)
-        {
-            $this->dbStructure[$name] = 'configVarchar';
-        }
-        foreach ($arrayInt as $name)
-        {
-            $this->dbStructure[$name] = 'configInt';
-        }
-        foreach ($arrayBoolean as $name)
-        {
-            $this->dbStructure[$name] = 'configBoolean';
-        }
-        foreach ($arrayDatetime as $name)
-        {
-            $this->dbStructure[$name] = 'configDatetime';
-        }
-        foreach ($arrayText as $name)
-        {
-            $this->dbStructure[$name] = 'configText';
-        }
-
         $this->configToConstant = [
             'configAuthGate' => 'WIKINDX_AUTHGATE_USE',
             'configAuthGateMessage' => 'WIKINDX_AUTHGATE_MESSAGE',
@@ -240,6 +219,27 @@ class CONFIGDBSTRUCTURE
             'configUserRegistration' => 'WIKINDX_USER_REGISTRATION',
             'configUserRegistrationModerate' => 'WIKINDX_USER_REGISTRATION_MODERATE',
         ];
+
+        foreach ($arrayVarchar as $name)
+        {
+            $this->dbStructure[$name] = 'configVarchar';
+        }
+        foreach ($arrayInt as $name)
+        {
+            $this->dbStructure[$name] = 'configInt';
+        }
+        foreach ($arrayBoolean as $name)
+        {
+            $this->dbStructure[$name] = 'configBoolean';
+        }
+        foreach ($arrayDatetime as $name)
+        {
+            $this->dbStructure[$name] = 'configDatetime';
+        }
+        foreach ($arrayText as $name)
+        {
+            $this->dbStructure[$name] = 'configText';
+        }
     }
     /**
      * Get and return one value from the config table.

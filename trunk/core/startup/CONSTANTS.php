@@ -127,8 +127,8 @@ define('WIKINDX_DIR_COMPONENT_VENDOR', WIKINDX_DIR_COMPONENT . DIRECTORY_SEPARAT
 
 
 // List of data directories
-define('WIKINDX_DIR_DB_SCHEMA', 'dbschema');
 define('WIKINDX_DIR_DATA', 'data');
+define('WIKINDX_DIR_DB_SCHEMA', 'dbschema');
 define('WIKINDX_DIR_DATA_ATTACHMENTS', WIKINDX_DIR_DATA . DIRECTORY_SEPARATOR . 'attachments');
 define('WIKINDX_DIR_DATA_FILES', WIKINDX_DIR_DATA . DIRECTORY_SEPARATOR . 'files');
 define('WIKINDX_DIR_DATA_IMAGES', WIKINDX_DIR_DATA . DIRECTORY_SEPARATOR . 'images');
@@ -137,8 +137,8 @@ define('WIKINDX_DIR_DATA_PLUGINS', WIKINDX_DIR_DATA . DIRECTORY_SEPARATOR . 'plu
 
 // List of cache directories
 define('WIKINDX_DIR_CACHE', 'cache');
-define('WIKINDX_DIR_CACHE_FILES', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'files');
 define('WIKINDX_DIR_CACHE_ATTACHMENTS', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'attachments');
+define('WIKINDX_DIR_CACHE_FILES', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'files');
 define('WIKINDX_DIR_CACHE_LANGUAGES', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'languages');
 define('WIKINDX_DIR_CACHE_PLUGINS', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'plugins');
 define('WIKINDX_DIR_CACHE_STYLES', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'styles');
@@ -153,8 +153,8 @@ define('WIKINDX_MIMETYPE_BIB', 'application/x-bibtex');
 define('WIKINDX_MIMETYPE_DOC', 'application/msword');
 define('WIKINDX_MIMETYPE_DOCX', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 define('WIKINDX_MIMETYPE_ENDNOTE', 'application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml');
-define('WIKINDX_MIMETYPE_JSON', 'application/json');
 define('WIKINDX_MIMETYPE_HTM', 'text/html');
+define('WIKINDX_MIMETYPE_JSON', 'application/json');
 define('WIKINDX_MIMETYPE_PDF', 'application/pdf');
 define('WIKINDX_MIMETYPE_RIS', 'application/x-research-info-systems');
 define('WIKINDX_MIMETYPE_RSS', 'application/rss+xml');
@@ -174,19 +174,19 @@ define('WIKINDX_LANGUAGE_DOMAIN_DEFAULT', 'wikindx');
 
 
 // Divers
-define('WIKINDX_PHPMAILER_BACKENDS', ['smtp' => 'SMTP', 'sendmail' => 'Sendmail']);
-define('WIKINDX_PHPMAILER_SMTP_ENCRYPT', ['none' => 'none', 'tls' => 'tls', 'ssl' => 'ssl']);
-define('WIKINDX_LDAP_PROTOCOLE_VERSIONS', [2 => '2', 3 => '3']);
 define('WIKINDX_DISPLAYBIBTEXLINK_DEFAULT', 'N');
 define('WIKINDX_DISPLAYCMSLINK_DEFAULT', 'N');
+define('WIKINDX_LDAP_PROTOCOLE_VERSIONS', [2 => '2', 3 => '3']);
 define('WIKINDX_PAGINGSTYLE_DEFAULT', 'N');
+define('WIKINDX_PHPMAILER_BACKENDS', ['smtp' => 'SMTP', 'sendmail' => 'Sendmail']);
+define('WIKINDX_PHPMAILER_SMTP_ENCRYPT', ['none' => 'none', 'tls' => 'tls', 'ssl' => 'ssl']);
+define('WIKINDX_TAG_FACTOR_MAX', 200);
+define('WIKINDX_TAG_FACTOR_MIN', 50);
+define('WIKINDX_TAG_FACTOR_STEP', 5);
 define('WIKINDX_TEMPLATEMENU_DEFAULT', 0);
 define('WIKINDX_UNIX_PERMS_DEFAULT', 0777);
 define('WIKINDX_USEBIBTEXKEY_DEFAULT', 'N');
 define('WIKINDX_USEWIKINDXKEY_DEFAULT', 'N');
-define('WIKINDX_TAG_FACTOR_MIN', 50);
-define('WIKINDX_TAG_FACTOR_MAX', 200);
-define('WIKINDX_TAG_FACTOR_STEP', 5);
 
 // RSS feed
 define('WIKINDX_RSS_PAGE', '/index.php?action=rss_RSS_CORE');

@@ -34,7 +34,6 @@ class EMAIL
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->smtp = FACTORY_MAIL::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -331,7 +330,7 @@ class EMAIL
         $news = preg_replace('/\<br(\s*)?\/?\>/ui', CR . LF, $news);
         $news = preg_replace('/\<p(\s*)?\/?\>/ui', "\r\n\r" . LF, $news);
         $news = html_entity_decode(\HTML\stripHtml(stripslashes($news)));
-        $wikindxTitle = \HTML\stripHtml($this->config->WIKINDX_TITLE);
+        $wikindxTitle = \HTML\stripHtml(WIKINDX_TITLE);
         $subject = "$wikindxTitle News";
         $message = "\n\n$title\n" . LF;
         $message .= "$news\n" . LF;

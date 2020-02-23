@@ -176,7 +176,7 @@ if (PHP_SAPI === 'cli')
 }
 
 // Check for presence of config.php
-if (!is_file('config.php'))
+if (!is_file(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"])))
 {
     $AppName = WIKINDX_TITLE_DEFAULT;
     $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
@@ -194,6 +194,46 @@ if (!is_file('config.php'))
 <h1>Configuration error: <em>config.php</em> file missing</h1>
 
 <p><em>config.php</em> file is missing. If this is a new installation,
+copy <em>config.php.dist</em> to <em>config.php</em> and edit that file
+to ensure the MySQL access protocols match
+those you have specified for the $AppName database.</p>
+
+<p>Ensure also that the
+<em>components/languages</em>,
+<em>components/plugins</em>,
+<em>components/styles</em>,
+<em>components/templates</em>,
+and <em>components/vendor</em>
+folders and all they contain are writable by the web server user (usually <em>nobody</em> or <em>www-data</em> account).</p>
+
+<p>After that, refresh this page (with F5) or <a href="index.php">follow this link</a>.</p>
+
+</body>
+EOM;
+    die($msg);
+}
+
+// Include the config file and check if the CONFIG class is in place
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]));
+
+if (!class_exists("CONFIG"))
+{
+    $AppName = WIKINDX_TITLE_DEFAULT;
+    $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
+    $msg = <<<EOM
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>$AppName</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="$styledir/template.css" type="text/css">
+	<link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
+</head>
+<body>
+
+<h1>Configuration error: <strong>CONFIG</strong> class missing in <em>config.php</em> file</h1>
+
+<p><strong>CONFIG</strong> class is missing in <em>config.php</em> file. If this is a new installation,
 copy <em>config.php.dist</em> to <em>config.php</em> and edit that file
 to ensure the MySQL access protocols match
 those you have specified for the $AppName database.</p>

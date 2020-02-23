@@ -56,6 +56,7 @@ class CONFIGDBSTRUCTURE
             'configTagHighColour',
             'configTagLowColour',
             'configTemplate',
+            'configTimezone',
             'configTitle',
         ];
         $arrayInt = [
@@ -125,7 +126,6 @@ class CONFIGDBSTRUCTURE
             'configDescription',
             'configNoSort',
             'configSearchFilter',
-            'configTimezone',
         ];
 
         $this->configToConstant = [

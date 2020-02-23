@@ -17,8 +17,6 @@
  */
 class RSS
 {
-/** object */
-private $config;
     // Constructor
     public function init()
     {

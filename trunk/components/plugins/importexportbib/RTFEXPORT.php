@@ -202,7 +202,7 @@ class RTFEXPORT
             global $_SERVER;
             $link = $this->config->WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'] . "?action=resource_RESOURCEVIEW_CORE&id=";
             $this->session->setVar('exportRtf_link', TRUE);
-            $wikindxTitle = stripslashes($this->config->WIKINDX_TITLE);
+            $wikindxTitle = stripslashes(WIKINDX_TITLE);
         }
         else
         {

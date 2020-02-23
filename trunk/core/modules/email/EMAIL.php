@@ -13,7 +13,6 @@ class EMAIL
 {
     private $db;
     private $vars;
-    private $config;
     private $smtp;
     private $messages;
     private $errors;

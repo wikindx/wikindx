@@ -107,7 +107,7 @@ class CLOSE
         // TODO (lkppo): loading process could be changed to load configuration separately of AUTHORIZE class
         if (property_exists($this->config, 'WIKINDX_TITLE'))
         {
-            $title = \HTML\dbToHtmlTidy($this->config->WIKINDX_TITLE);
+            $title = \HTML\dbToHtmlTidy(WIKINDX_TITLE);
         }
         else
         {

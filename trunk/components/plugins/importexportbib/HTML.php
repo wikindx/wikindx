@@ -16,7 +16,6 @@ class HTMLEXPORT
     private $db;
     private $vars;
     private $session;
-    private $config;
     private $pluginmessages;
     private $coremessages;
     private $errors;
@@ -37,7 +36,6 @@ class HTMLEXPORT
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         include_once(__DIR__ . DIRECTORY_SEPARATOR . "EXPORTCOMMON.php");
         $this->common = new EXPORTCOMMON('html');
@@ -75,9 +73,9 @@ class HTMLEXPORT
         if (array_key_exists('exportHyperlink', $this->vars))
         {
             global $_SERVER;
-            $link = $this->config->WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'] . "?action=resource_RESOURCEVIEW_CORE&id=";
+            $link = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'] . "?action=resource_RESOURCEVIEW_CORE&id=";
             $this->session->setVar('exportHyperlink', TRUE);
-            $wikindxTitle = stripslashes($this->config->WIKINDX_TITLE);
+            $wikindxTitle = stripslashes(WIKINDX_TITLE);
         }
         else
         {

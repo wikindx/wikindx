@@ -28,8 +28,6 @@ class STATISTICS
     /** object */
     private $session;
     /** object */
-    private $config;
-    /** object */
     private $messages;
     /** object */
     private $co;
@@ -55,7 +53,6 @@ class STATISTICS
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
     }
     /**
@@ -373,11 +370,11 @@ class STATISTICS
         if (!empty($usersArray))
         {
             $smtp = FACTORY_MAIL::getInstance();
-            $subject = $this->messages->text('statistics', 'emailSubject', $this->config->WIKINDX_TITLE);
+            $subject = $this->messages->text('statistics', 'emailSubject', WIKINDX_TITLE);
             foreach ($usersArray as $uArray)
             {
                 $message = $uArray['name'] . LF . LF;
-                $message .= $this->messages->text('statistics', 'emailIntro', $this->config->WIKINDX_TITLE) . LF . LF;
+                $message .= $this->messages->text('statistics', 'emailIntro', WIKINDX_TITLE) . LF . LF;
                 foreach ($uArray['resources'] as $rId => $title)
                 {
                     //					$viewsIndex = $this->accessRatio($rId);

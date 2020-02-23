@@ -1536,7 +1536,7 @@ class CONFIGURE
     {
         include_once("core/smtp/MAIL.php");
         $mail = new MAIL();
-        if (!$mail->sendEmail($this->vars['configMailTest'], \HTML\stripHtml($this->config->WIKINDX_TITLE), $this->messages->text('config', 'mailTestSuccess'), TRUE))
+        if (!$mail->sendEmail($this->vars['configMailTest'], \HTML\stripHtml(WIKINDX_TITLE), $this->messages->text('config', 'mailTestSuccess'), TRUE))
         {
             $this->session->setVar('mailTransactionLogStatus', 'failure');
         }

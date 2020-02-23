@@ -32,7 +32,7 @@ class MAIL
         $this->config = FACTORY_CONFIG::getInstance();
         
         // If messaging is turned off, just do nothing
-        if (!$this->config->WIKINDX_MAIL_USE)
+        if (!WIKINDX_MAIL_USE)
         {
             return;
         }
@@ -44,9 +44,9 @@ class MAIL
         $this->mail = new PHPMailer();
 
         // From (work because it's globaly defined)
-        if (filter_var($this->config->WIKINDX_MAIL_FROM, FILTER_VALIDATE_EMAIL) !== FALSE)
+        if (filter_var(WIKINDX_MAIL_FROM, FILTER_VALIDATE_EMAIL) !== FALSE)
         {
-            $From = $this->config->WIKINDX_MAIL_FROM;
+            $From = WIKINDX_MAIL_FROM;
         }
         else
         {
@@ -56,9 +56,9 @@ class MAIL
         $this->mail->setFrom(filter_var($From, FILTER_SANITIZE_EMAIL), $this->config->WIKINDX_TITLE);
 
         // ReplyTo (work because it's globaly defined)
-        if (filter_var($this->config->WIKINDX_MAIL_REPLYTO, FILTER_VALIDATE_EMAIL) !== FALSE)
+        if (filter_var(WIKINDX_MAIL_REPLYTO, FILTER_VALIDATE_EMAIL) !== FALSE)
         {
-            $ReplyTo = $this->config->WIKINDX_MAIL_REPLYTO;
+            $ReplyTo = WIKINDX_MAIL_REPLYTO;
         }
         
         if ($ReplyTo != "")
@@ -69,11 +69,11 @@ class MAIL
         // ContentType (work because it's globaly defined)
         $this->mail->ContentType = WIKINDX_MIMETYPE_TXT . ';charset=' . WIKINDX_CHARSET;
 
-        if ($this->config->WIKINDX_MAIL_BACKEND == 'smtp')
+        if (WIKINDX_MAIL_BACKEND == 'smtp')
         {
             $this->mail->isSMTP();
-            $this->mail->Host = $this->config->WIKINDX_MAIL_SMTP_SERVER;
-            $this->mail->Port = $this->config->WIKINDX_MAIL_SMTP_PORT;
+            $this->mail->Host = WIKINDX_MAIL_SMTP_SERVER;
+            $this->mail->Port = WIKINDX_MAIL_SMTP_PORT;
             $this->mail->SMTPAutoTLS = FALSE; // Never force TLS (some SMTP dislike it)
             $this->mail->SMTPSecure = $this->config->WIKINDX_MAIL_SMTP_ENCRYPT;
 
@@ -87,18 +87,18 @@ class MAIL
                 ],
             ];
 
-            $this->mail->SMTPKeepAlive = $this->config->WIKINDX_MAIL_SMTP_PERSIST;
-            $this->mail->SMTPAuth = $this->config->WIKINDX_MAIL_SMTP_AUTH;
-            if ($this->config->WIKINDX_MAIL_SMTP_AUTH)
+            $this->mail->SMTPKeepAlive = WIKINDX_MAIL_SMTP_PERSIST;
+            $this->mail->SMTPAuth = WIKINDX_MAIL_SMTP_AUTH;
+            if (WIKINDX_MAIL_SMTP_AUTH)
             {
-                $this->mail->Username = $this->config->WIKINDX_MAIL_SMTP_USERNAME;
-                $this->mail->Password = $this->config->WIKINDX_MAIL_SMTP_PASSWORD;
+                $this->mail->Username = WIKINDX_MAIL_SMTP_USERNAME;
+                $this->mail->Password = WIKINDX_MAIL_SMTP_PASSWORD;
             }
         }
-        elseif ($this->config->WIKINDX_MAIL_BACKEND == 'sendmail')
+        elseif (WIKINDX_MAIL_BACKEND == 'sendmail')
         {
             $this->mail->isSendmail();
-            $this->mail->Sendmail = $this->config->WIKINDX_MAIL_SENDMAIL_PATH;
+            $this->mail->Sendmail = WIKINDX_MAIL_SENDMAIL_PATH;
         }
     }
     /**
@@ -110,7 +110,7 @@ class MAIL
     {
         // We have to close the SMTP connection just before the object is destroyed
         // because we have enabled KeepAlive mode for SMTP
-        if ($this->config->WIKINDX_MAIL_USE && $this->config->WIKINDX_MAIL_BACKEND == 'smtp' && $this->config->WIKINDX_MAIL_SMTP_PERSIST)
+        if (WIKINDX_MAIL_USE && WIKINDX_MAIL_BACKEND == 'smtp' && WIKINDX_MAIL_SMTP_PERSIST)
         {
             $this->mail->smtpClose();
         }
@@ -130,7 +130,7 @@ class MAIL
         $SendStatus = TRUE;
         
         // If messaging is turned off, just do nothing
-        if (!$this->config->WIKINDX_MAIL_USE)
+        if (!WIKINDX_MAIL_USE)
         {
             return $SendStatus;
         }
@@ -183,7 +183,7 @@ class MAIL
                 {
                     if ($SendStatus)
                     {
-                        $this->TransactionLog .= "Message sent with " . $this->config->WIKINDX_MAIL_BACKEND . " backend " .
+                        $this->TransactionLog .= "Message sent with " . WIKINDX_MAIL_BACKEND . " backend " .
                             "to &lt;" . $To['address'] . "&gt; " . "without error.<br>\n\n";
                     }
                     else

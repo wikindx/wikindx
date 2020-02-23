@@ -443,7 +443,7 @@ class MENU
         {
             $this->wikindx[$messages->text("menu", "userLogon")] = 'index.php?action=initLogon';
         }
-    	if ($this->multiUser && $this->userRegistration && $this->config->WIKINDX_MAIL_USE && !$this->userId)
+    	if ($this->multiUser && $this->userRegistration && WIKINDX_MAIL_USE && !$this->userId)
         {
             $this->wikindx[$messages->text("menu", "register")] = 'index.php?action=initRegisterUser';
         }

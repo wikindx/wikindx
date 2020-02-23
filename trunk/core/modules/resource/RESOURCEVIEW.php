@@ -1640,7 +1640,7 @@ class RESOURCEVIEW
     private function displayEmailFriendLink($row)
     {
         if ($this->session->getVar("setup_MultiUser") && $this->config->WIKINDX_READ_ONLY_ACCESS
-            && $this->config->WIKINDX_MAIL_USE)
+            && WIKINDX_MAIL_USE)
         {
             $linkStyle = "link linkCiteHidden";
             $link = $this->messages->text("misc", "emailToFriend");

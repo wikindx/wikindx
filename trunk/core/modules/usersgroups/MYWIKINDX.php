@@ -1586,7 +1586,7 @@ class MYWIKINDX
         ];
         if ($this->session->getVar('setup_UserId') != $this->config->WIKINDX_RESTRICT_USERID)
         {
-            if ($this->session->issetVar("mywikindx_Email") && $this->config->WIKINDX_MAIL_USE)
+            if ($this->session->issetVar("mywikindx_Email") && WIKINDX_MAIL_USE)
             {
                 $groups['forget'] = $this->messages->text('config', 'forget');
             }

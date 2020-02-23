@@ -24,7 +24,7 @@ class CONFIG
 * START DATABASE CONFIGURATION
 *****/
 // NB:
-// wikindx supports only MySQL with mysqli PHP driver ($WIKINDX_DB_TYPE parameter is deprecated).
+// wikindx supports only MySQL with mysqli PHP driver (WIKINDX_DB_TYPE parameter is deprecated).
 //
 // The database and permissions for accessing it must be created using your RDBMS client. Wikindx
 // will NOT do this for you.  If unsure how to do this, contact your server admin. After you have 
@@ -61,13 +61,13 @@ public $WIKINDX_DB_TABLEPREFIX = 'wkx_';
 // see https://www.php.net/manual/en/mysqli.persistconns.php
 public $WIKINDX_DB_PERSISTENT = TRUE;
 /*****
-END DATABASE CONFIGURATION
+* END DATABASE CONFIGURATION
 *****/
 
 /**********************************************************************************/
 
 /*****
-START PATHS CONFIGURATION
+* START PATHS CONFIGURATION
 *****/
 // If a Virtual Host Directory is not defined for this installation of Wikindx,
 // or you can't define it, use this variable to simulate it.
@@ -89,13 +89,13 @@ public $WIKINDX_BASE_URL = FALSE;
 // 		EnableSendfile on 
 public $WIKINDX_WIKINDX_PATH = FALSE;
 /*****
-END PATHS CONFIGURATION
+* END PATHS CONFIGURATION
 *****/
 
 /**********************************************************************************/
 
 /*****
-START PHP MEMORY AND EXECUTION CONFIGURATION
+* START PHP MEMORY AND EXECUTION CONFIGURATION
 *****/
 // WIKINDX usually runs with the standard PHP memory_limit of 32MB.
 // With some PHP configurations, however, this is not enough -- a mysterious blank page is often the result.
@@ -123,7 +123,7 @@ public $WIKINDX_MAX_EXECUTION_TIMEOUT = FALSE;
 // Do NOT use quotes around the value.
 public $WIKINDX_MAX_WRITECHUNK = FALSE;
 /*****
-END PHP MEMORY AND EXECUTION CONFIGURATION
+* END PHP MEMORY AND EXECUTION CONFIGURATION
 *****/
 }
 ?>

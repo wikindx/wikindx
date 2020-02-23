@@ -20,8 +20,6 @@ class MAIL
     /** string */
     public $TransactionLog = '';
     /** object */
-    private $config;
-    /** object */
     private $mail;
 
     /**
@@ -29,8 +27,6 @@ class MAIL
      */
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
-        
         // If messaging is turned off, just do nothing
         if (!WIKINDX_MAIL_USE)
         {
@@ -50,10 +46,10 @@ class MAIL
         }
         else
         {
-            $From = \HTML\stripHtml($this->config->WIKINDX_TITLE) . '@' . $_SERVER['HTTP_HOST'];
+            $From = \HTML\stripHtml(WIKINDX_TITLE) . '@' . $_SERVER['HTTP_HOST'];
         }
 
-        $this->mail->setFrom(filter_var($From, FILTER_SANITIZE_EMAIL), $this->config->WIKINDX_TITLE);
+        $this->mail->setFrom(filter_var($From, FILTER_SANITIZE_EMAIL), WIKINDX_TITLE);
 
         // ReplyTo (work because it's globaly defined)
         if (filter_var(WIKINDX_MAIL_REPLYTO, FILTER_VALIDATE_EMAIL) !== FALSE)
@@ -63,7 +59,7 @@ class MAIL
         
         if ($ReplyTo != "")
         {
-            $this->mail->addReplyTo(filter_var($ReplyTo, FILTER_SANITIZE_EMAIL), $this->config->WIKINDX_TITLE);
+            $this->mail->addReplyTo(filter_var($ReplyTo, FILTER_SANITIZE_EMAIL), WIKINDX_TITLE);
         }
         
         // ContentType (work because it's globaly defined)
@@ -75,7 +71,7 @@ class MAIL
             $this->mail->Host = WIKINDX_MAIL_SMTP_SERVER;
             $this->mail->Port = WIKINDX_MAIL_SMTP_PORT;
             $this->mail->SMTPAutoTLS = FALSE; // Never force TLS (some SMTP dislike it)
-            $this->mail->SMTPSecure = $this->config->WIKINDX_MAIL_SMTP_ENCRYPT;
+            $this->mail->SMTPSecure = WIKINDX_MAIL_SMTP_ENCRYPT;
 
             // Relax verification about certificats and DNS server name
             // We are not in a very sensitive context and certificates tend to pose problems during renewals
@@ -228,7 +224,7 @@ class MAIL
      */
     public function scriptPath()
     {
-        return $this->config->WIKINDX_BASE_URL;
+        return FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL;
     }
     /**
      * Get SCRIPT_NAME if redirect is in force

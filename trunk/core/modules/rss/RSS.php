@@ -22,12 +22,11 @@ private $config;
     // Constructor
     public function init()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $db = FACTORY_DB::getInstance();
         $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
         $denyReadOnly = $co->getOne('configDenyReadOnly');
         unset($co);
-        if (!$this->config->WIKINDX_RSS_ALLOW)
+        if (!WIKINDX_RSS_ALLOW)
         {
             header('HTTP/1.0 403 Forbidden');
             die("Access forbidden: this feature is disabled.");
@@ -36,9 +35,9 @@ private $config;
         $baseURL = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL;
 
         // set up language
-        $messages = FACTORY_MESSAGES::getInstance($this->config->WIKINDX_LANGUAGE);
+        $messages = FACTORY_MESSAGES::getInstance(WIKINDX_LANGUAGE);
 
-        list($numResults, $item) = $this->queryDb($db, $this->config->WIKINDX_RSS_LIMIT, $this->config->WIKINDX_RSS_BIBSTYLE);
+        list($numResults, $item) = $this->queryDb($db, WIKINDX_RSS_LIMIT, WIKINDX_RSS_BIBSTYLE);
 
 
         /** declare RSS content type */
@@ -53,9 +52,9 @@ private $config;
         /** print channel data */
         echo TAB . "<channel>" . LF;
         echo TAB . "<link>" . $this->escape_xml($baseURL) . "</link>" . LF;
-        echo TAB . TAB . "<title>" . $this->escape_xml($this->config->WIKINDX_RSS_TITLE) . "</title>" . LF;
-        echo TAB . TAB . "<description>" . $this->escape_xml($this->config->WIKINDX_RSS_DESCRIPTION) . "</description>" . LF;
-        echo TAB . TAB . "<language>" . $this->escape_xml($this->config->WIKINDX_LANGUAGE) . "</language>" . LF;
+        echo TAB . TAB . "<title>" . $this->escape_xml(WIKINDX_RSS_TITLE) . "</title>" . LF;
+        echo TAB . TAB . "<description>" . $this->escape_xml(WIKINDX_RSS_DESCRIPTION) . "</description>" . LF;
+        echo TAB . TAB . "<language>" . $this->escape_xml(WIKINDX_LANGUAGE) . "</language>" . LF;
 
         // Extract the date of the last updated resource or use the date of the current date
         // for the date of last build of the feed
@@ -149,11 +148,11 @@ private $config;
      *
      * @param object $db
      * @param int $WIKINDX_RSS_LIMIT
-     * @param string $WIKINDX_RSS_BIBSTYLE
+     * @param string $bibstyle
      *
      * @return array ($numResults, $item)
      */
-    private function queryDb($db, $WIKINDX_RSS_LIMIT, $WIKINDX_RSS_BIBSTYLE)
+    private function queryDb($db, $limit, $bibstyle)
     {
         $listFields = ['resourceId', 'creatorSurname', 'resourceType', 'resourceTitle', 'resourceSubtitle', 'resourceShortTitle',
             'resourceTransTitle', 'resourceTransSubtitle', 'resourceTransShortTitle', 'resourceField1', 'resourceField2', 'resourceField3',
@@ -170,15 +169,15 @@ private $config;
             'resourcemiscAccessesPeriod', ];
         $messages = FACTORY_MESSAGES::getInstance();
         $session = FACTORY_SESSION::getInstance();
-        $session->setVar('setup_Style', $WIKINDX_RSS_BIBSTYLE);
+        $session->setVar('setup_Style', $bibstyle);
         $bibStyle = FACTORY_BIBSTYLE::getInstance();
-        if (!$this->config->WIKINDX_RSS_DISPLAY)
+        if (!WIKINDX_RSS_DISPLAY)
         { // display only added resources
             $db->formatConditions($db->formatFields('resourcetimestampTimestampAdd') .
                 $db->equal . $db->formatFields('resourcetimestampTimestamp'));
         }
         $db->ascDesc = $db->desc;
-        $db->limit($WIKINDX_RSS_LIMIT, 0);
+        $db->limit($limit, 0);
         $db->groupBy(['resourcetimestampId', 'resourcetimestampTimestamp']);
         $db->orderBy('resourcetimestampTimestamp', TRUE, FALSE);
         $subQuery = $db->subQuery($db->queryNoExecute($db->selectNoExecute(

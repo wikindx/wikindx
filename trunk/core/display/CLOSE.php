@@ -90,10 +90,10 @@ class CLOSE
 
         GLOBALS::addTplVar('tplPath', $this->config->WIKINDX_BASE_URL . $tplPath);
         GLOBALS::addTplVar('lang', \LOCALES\localetoBCP47(\LOCALES\determine_locale()));
-        if (property_exists($this->config, 'WIKINDX_RSS_ALLOW'))
+        if (defined('WIKINDX_RSS_ALLOW'))
         {
-            GLOBALS::addTplVar('displayRss', $this->config->WIKINDX_RSS_ALLOW);
-            GLOBALS::addTplVar('rssTitle', $this->config->WIKINDX_RSS_TITLE);
+            GLOBALS::addTplVar('displayRss', WIKINDX_RSS_ALLOW);
+            GLOBALS::addTplVar('rssTitle', WIKINDX_RSS_TITLE);
             GLOBALS::addTplVar('rssFeed', $this->config->WIKINDX_BASE_URL . WIKINDX_RSS_PAGE);
         }
         else

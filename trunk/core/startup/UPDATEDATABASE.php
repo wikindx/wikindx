@@ -1750,24 +1750,35 @@ END;
 /*****
 * START PATHS CONFIGURATION
 *****/
-// You must define the base URL for the WIKINDX installation.
+// The auto-detection of the path installation and the base url is an experimental feature
+// which you can disable by changing this parameter to FALSE.
+// If you deactivate auto-detection you must fill in the options WIKINDX_BASE_URL and WIKINDX_WIKINDX_PATH.
+// If you don't define this option, auto-detection is enabled by default.
+
+END;
+        $string .= 'public $WIKINDX_PATH_AUTO_DETECTION = TRUE;' . "\n";
+
+        $string .= <<<END
+// If option auto-detection is disabled you must define the base URL for the WIKINDX installation.
 // You have to indicate protocol HTTP / HTTPS and remove the terminal /.
 // e.g. if wikindx's index.php file is in /wikindx/ under the httpd/ (or similar)
 // folder on the www.myserver.com, then set the variable
 // to http://www.myserver.com/wikindx
+// Otherwise, leave as "".
 
 END;
         $string .= 'public $WIKINDX_BASE_URL = "' . $this->config->WIKINDX_BASE_URL . '";' . "\n";
 
         $string .= <<<END
-// The TinyMCE editor needs the WIKINDX server installation path.
+// If option auto-detection is disabled you must define the WIKINDX server installation path
+// for plugins and dialogs.
 // WIKINDX tries to get this through getcwd() but this is not always possible.
 // In this case, you will receive an error message and WIKINDX will die and you should then set that path here.
 // The path should be the full path from the root folder to your wikindx folder with no trailing '/'.
-// On Apple OSX running XAMPP, for example, the case-sensitive path is:
+// On Apple OSX running XAMPP, for example, the case-sensitive path is: 
 // '/Applications/XAMPP/xamppfiles/htdocs/wikindx'.
 // The script will continue to die until it has a valid installation path.
-// If you get no error message and WIKINDX runs fine, then you can leave this value as FALSE and wikindx will try to compute it.
+// Otherwise, leave as "".
 
 END;
         if (property_exists($this->config, 'WIKINDX_WIKINDX_PATH') && ($this->config->WIKINDX_WIKINDX_PATH !== FALSE))

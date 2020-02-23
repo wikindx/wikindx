@@ -53,7 +53,7 @@ public $WIKINDX_DB_PASSWORD = "wikindx";
 // People who have changed the prefix should rename the tables with the default prefix (wkx_)
 // and correct their configuration. It will no longer be possible to install two WIKINDXs
 // in the same database. If you are in this rare case contact us.
-public $WIKINDX_DB_TABLEPREFIX = 'wkx_';
+public $WIKINDX_DB_TABLEPREFIX = "wkx_";
 // WIKINDX uses MySQL persistent connections by default.
 // Some hosting services are not configured for this: if you have problems 
 // connecting to your MySQL server and/or receive error messages about 'too many connections', 
@@ -69,25 +69,28 @@ public $WIKINDX_DB_PERSISTENT = TRUE;
 /*****
 * START PATHS CONFIGURATION
 *****/
-// If a Virtual Host Directory is not defined for this installation of Wikindx,
-// or you can't define it, use this variable to simulate it.
+// The auto-detection of the path installation and the base url is an experimental feature
+// which you can disable by changing this parameter to FALSE.
+// If you deactivate auto-detection you must fill in the options WIKINDX_BASE_URL and WIKINDX_WIKINDX_PATH.
+// If you don't define this option, auto-detection is enabled by default.
+public $WIKINDX_PATH_AUTO_DETECTION = TRUE;
+// If option auto-detection is disabled you must define the base URL for the WIKINDX installation.
 // You have to indicate protocol HTTP / HTTPS and remove the terminal /.
-// e.g. if wikindx's index.php file is in /wikindx/ under the httpd/ (or similiar) 
-// folder on the www.myserver.com, then set the variable 
+// e.g. if wikindx's index.php file is in /wikindx/ under the httpd/ (or similar)
+// folder on the www.myserver.com, then set the variable
 // to http://www.myserver.com/wikindx
-// Otherwise, leave as FALSE.
-public $WIKINDX_BASE_URL = FALSE;
-// The TinyMCE editor needs the WIKINDX server installation path.
+// Otherwise, leave as "".
+public $WIKINDX_BASE_URL = "";
+// If option auto-detection is disabled you must define the WIKINDX server installation path
+// for plugins and dialogs.
 // WIKINDX tries to get this through getcwd() but this is not always possible.
 // In this case, you will receive an error message and WIKINDX will die and you should then set that path here.
 // The path should be the full path from the root folder to your wikindx folder with no trailing '/'.
 // On Apple OSX running XAMPP, for example, the case-sensitive path is: 
 // '/Applications/XAMPP/xamppfiles/htdocs/wikindx'.
 // The script will continue to die until it has a valid installation path.
-// If you get no error message and WIKINDX runs fine, then you can leave this value as FALSE.
-// For tinymce to work properly with Apache on Ubuntu you need to set the following in the /etc/apache2/apache2.conf file:
-// 		EnableSendfile on 
-public $WIKINDX_WIKINDX_PATH = FALSE;
+// Otherwise, leave as "".
+public $WIKINDX_WIKINDX_PATH = "";
 /*****
 * END PATHS CONFIGURATION
 *****/

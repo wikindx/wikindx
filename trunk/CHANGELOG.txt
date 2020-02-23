@@ -27,6 +27,7 @@ MAINTENANCE:
 9. Restrict the LDAP protocol to authorized values.
 10. Relocate WIKINDX_TRUNK_VERSION option in the database and rename it WIKINDX_IS_TRUNK.
 11. Change the type of the timezone option from TEXT to Varchar.
+12. Add WIKINDX_PATH_AUTO_DETECTION option to explicitly control auto-detection of the path and base url.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

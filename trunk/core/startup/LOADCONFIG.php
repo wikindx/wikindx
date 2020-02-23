@@ -227,24 +227,33 @@ class LOADCONFIG
     {
         $dieMsgMissing = 'Missing configuration variable in config.php: ';
         
+        if (!property_exists($this->config, 'WIKINDX_PATH_AUTO_DETECTION'))
+        {
+            $this->config->WIKINDX_PATH_AUTO_DETECTION = WIKINDX_PATH_AUTO_DETECTION_DEFAULT;
+        }
+        elseif (!is_bool($this->config->WIKINDX_PATH_AUTO_DETECTION))
+        {
+        	die('WIKINDX_PATH_AUTO_DETECTION must be a valid boolean value');
+        }
+        
         // Set the current working directory -- useful for ensuring TinyMCE plug-ins can find the wikindx base path for include() commands.
         // Not all OSs allow getcwd() or sometimes the wikindx installation is in a directory that is not searchable.
-        if (!property_exists($this->config, 'WIKINDX_WIKINDX_PATH'))
+        if ($this->config->WIKINDX_PATH_AUTO_DETECTION)
         {
-        	die('WIKINDX_WIKINDX_PATH must be a valid absolute path or the boolean value FALSE');
-        }
-        elseif ($this->config->WIKINDX_WIKINDX_PATH === FALSE)
-        {
-	        $this->config->WIKINDX_WIKINDX_PATH = realpath($this->getWikindxBasePath());
-        }
-        elseif (is_string($this->config->WIKINDX_WIKINDX_PATH))
-        {
-	        $this->config->WIKINDX_WIKINDX_PATH = realpath(trim($this->config->WIKINDX_WIKINDX_PATH));
+            $this->config->WIKINDX_WIKINDX_PATH = realpath($this->getWikindxBasePath());
         }
         else
         {
-        	die('WIKINDX_WIKINDX_PATH must be a valid absolute path or the boolean value FALSE');
+            if (property_exists($this->config, 'WIKINDX_WIKINDX_PATH') && is_string($this->config->WIKINDX_WIKINDX_PATH))
+            {
+    	        $this->config->WIKINDX_WIKINDX_PATH = realpath(trim($this->config->WIKINDX_WIKINDX_PATH));
+            }
+            else
+            {
+            	die('WIKINDX_WIKINDX_PATH must be a valid absolute path');
+            }
         }
+        
         
         // Remove the last slash
         $this->config->WIKINDX_WIKINDX_PATH = trim(rtrim($this->config->WIKINDX_WIKINDX_PATH, "/"));
@@ -252,20 +261,26 @@ class LOADCONFIG
         // Test path is correct
         if (!is_file($this->config->WIKINDX_WIKINDX_PATH . '/core/startup/' . basename(__FILE__)))
         {
-            die("
-                \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
-                and WIKINDX is unable to set the installation path automatically.
-                You should set \$WIKINDX_WIKINDX_PATH in config.php.
-            ");
+            if ($this->config->WIKINDX_PATH_AUTO_DETECTION)
+            {
+                die("
+                    WIKINDX is unable to set the installation path automatically.
+                    You should set \$WIKINDX_PATH_AUTO_DETECTION to FALSE
+                    and \$WIKINDX_WIKINDX_PATH in config.php.
+                ");
+            }
+            else
+            {
+                die("
+                    The path \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly.
+                    You should set it to a right value.
+                ");
+            }
         }
 
         
         // Set base url (default if needed)
-        if (!property_exists($this->config, 'WIKINDX_BASE_URL'))
-        {
-        	die('WIKINDX_BASE_URL must be a valid URL or the boolean value FALSE');
-        }
-        elseif ($this->config->WIKINDX_BASE_URL === FALSE)
+        if ($this->config->WIKINDX_PATH_AUTO_DETECTION)
         {
             $this->config->WIKINDX_BASE_URL = $_SERVER['HTTP_HOST'];
             
@@ -280,13 +295,12 @@ class LOADCONFIG
                 $this->config->WIKINDX_BASE_URL .= $wikindxSubPath;
             }
         }
-        elseif (is_string($this->config->WIKINDX_BASE_URL))
-        {
-	        $this->config->WIKINDX_BASE_URL = $this->config->WIKINDX_BASE_URL;
-        }
         else
         {
-        	die('WIKINDX_BASE_URL must be a valid URL or the boolean value FALSE');
+            if (!property_exists($this->config, 'WIKINDX_BASE_URL') || !is_string($this->config->WIKINDX_BASE_URL))
+            {
+            	die('WIKINDX_BASE_URL must be a valid URL');
+            }
         }
         
         // Canonicalize the URL separator

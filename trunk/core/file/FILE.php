@@ -568,25 +568,18 @@ namespace FILE
             $fileArray = array_reverse($fileArray);
         }
 
-        $co = \FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        $db = \FACTORY_DB::getInstance();
-        $db->formatConditions(['configName' => 'configFileDeleteSeconds']);
-        $row = $db->selectFirstRow('config', '*');
-        $deleteSecs = $row[$co->dbStructure[$row['configName']]];
-
-        return [WIKINDX_DIR_DATA_FILES, $deleteSecs, $fileArray];
+        return [WIKINDX_DIR_DATA_FILES, WIKINDX_FILE_DELETE_SECONDS, $fileArray];
     }
 
     /**
-     * tidy up the files directory by removing all files and folders older than 'configFileDeleteSeconds'
+     * tidy up the files directory by removing all files and folders older than WIKINDX_FILE_DELETE_SECONDS
      */
     function tidyFiles()
     {
         if (file_exists(WIKINDX_DIR_DATA_FILES))
         {
             $now = time();
-            $co = \FACTORY_CONFIGDBSTRUCTURE::getInstance();
-            $maxTime = $co->getOne('configFileDeleteSeconds');
+            $maxTime = WIKINDX_FILE_DELETE_SECONDS;
             
             $fileDeleteArray = [];
             $fileKeepArray = [];

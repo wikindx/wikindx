@@ -155,14 +155,8 @@ class TEMPLATE
         $this->createDirectory($this->compileDir);
         $this->tpl->setCompileDir($this->compileDir);
 
-        if (!$setupMode)
-        {
-            $this->tpl->setForceCompile($co->getOne('configBypassSmartyCompile'));
-        }
-        else
-        {
-            $this->tpl->setForceCompile(TRUE);
-        }
+        // Force compilation on setup mode, or apply the current config policy
+        $this->tpl->setForceCompile($setupMode || WIKINDX_BYPASS_SMARTY_COMPILATION);
 
         // Configure cache options of Smarty
         // We use dynamic pages so certainly don't want caching!

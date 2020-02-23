@@ -398,13 +398,13 @@ class AUTHORIZE
      */
     private function authGate()
     {
-        if (($this->config->WIKINDX_AUTHGATE_USE === TRUE) && ($this->session->getVar('setup_UserId') != 1))
+        if ((WIKINDX_AUTHGATE_USE === TRUE) && ($this->session->getVar('setup_UserId') != 1))
         {
             $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
             $recordset = $this->db->select('users', 'usersGDPR');
             if ($this->db->fetchOne($recordset) == 'N')
             {
-                $pString = \HTML\p($this->config->WIKINDX_AUTHGATE_MESSAGE);
+                $pString = \HTML\p(WIKINDX_AUTHGATE_MESSAGE);
                 $pString .= \FORM\formHeader("authGate");
                 $pString .= \HTML\td(\FORM\formSubmit($this->messages->text("submit", "OK")));
                 $pString .= \FORM\formEnd();

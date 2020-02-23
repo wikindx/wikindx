@@ -60,8 +60,6 @@ class UPDATEDATABASE
         $this->vars = GLOBALS::getVars();
         $this->oldTime = time();
 
-        // Before upgrade process, clear all template cache
-        $this->config->WIKINDX_BYPASS_SMARTY_COMPILATION = TRUE;
         // Use the default template
         $this->session->setVar("setup_Template", WIKINDX_TEMPLATE_DEFAULT);
         // need to do this so the correct cache folder is set for the smarty cacheDir

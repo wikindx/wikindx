@@ -2917,6 +2917,9 @@ SQLCODE;
         $startTimer = $this->startTimer;
         $endTimer = $this->endTimer;
 
+        // Stop the timer, if not done
+        if (empty($endTimer)) $endTimer = microtime();;
+
         $tmp = UTF8::mb_explode(" ", $startTimer);
         $startTimer = $tmp[0] + $tmp[1];
         $tmp = UTF8::mb_explode(" ", $endTimer);

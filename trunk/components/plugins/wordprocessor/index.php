@@ -341,7 +341,7 @@ class wordprocessor_MODULE
         $recordSet = $this->db->select("plugin_wordprocessor", "pluginwordprocessorFilename");
         while ($row = $this->db->fetchRow($recordSet))
         {
-            $papers[] = HTML\dbToHtmlTidy($row['pluginwordprocessorFilename']);
+            $papers[] = \HTML\nlToHtml($row['pluginwordprocessorFilename']);
         }
         $paper = implode(", ", $papers);
         $pString .= HTML\p($this->pluginmessages->text("deleteConfirm") . $paper);

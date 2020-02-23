@@ -185,7 +185,7 @@ class ADMINCUSTOM
         $recordset = $this->db->select('custom', 'customLabel');
         while ($row = $this->db->fetchRow($recordset))
         {
-            $fieldValues[] = "'" . \HTML\dbToHtmlTidy($row['customLabel']) . "'";
+            $fieldValues[] = "'" . \HTML\nlToHtml($row['customLabel']) . "'";
         }
         $pString .= \HTML\p($this->messages->text("custom", "deleteConfirm", ": " . implode(", ", $fieldValues)));
         $pString .= BR . \FORM\formSubmit($this->messages->text("submit", "Confirm"));

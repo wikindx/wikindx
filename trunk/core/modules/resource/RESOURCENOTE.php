@@ -88,7 +88,7 @@ class RESOURCENOTE
             list($note['userAdd'], $note['userEdit']) = $this->user->displayUserAddEdit($row, TRUE, 'note');
             $note['note'] =
                 $this->cite->parseCitations(
-                    $this->common->doHighlight(\HTML\dbToHtmlTidy($row['resourcetextNote'])),
+                    $this->common->doHighlight(\HTML\nlToHtml($row['resourcetextNote'])),
                     'html'
                 );
         }

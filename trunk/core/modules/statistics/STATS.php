@@ -19,7 +19,6 @@ class STATS
     private $session;
     private $resourceMap;
     private $languageClass;
-    private $config;
     private $indexes = [];
     private $sum = [];
     private $totalResources;
@@ -39,7 +38,6 @@ class STATS
         $this->session = FACTORY_SESSION::getInstance();
         $this->resourceMap = FACTORY_RESOURCEMAP::getInstance();
         $this->languageClass = FACTORY_CONSTANTS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $type = '';
         if ($this->vars['method'] == 'totals')
         {
@@ -1089,7 +1087,7 @@ class STATS
             $this->indexes[$row['resourcekeywordKeywordId']] = preg_replace(
                 "/{(.*)}/Uu",
                 "$1",
-                \HTML\dbToHtmlTidy($row['keywordKeyword'])
+                \HTML\nlToHtml($row['keywordKeyword'])
             );
             if ($row['keywordGlossary'])
             {
@@ -1132,7 +1130,7 @@ class STATS
         {
             return;
         }
-        $this->indexes[$row['resourceyearYear1']] = \HTML\dbToHtmlTidy($row['resourceyearYear1']);
+        $this->indexes[$row['resourceyearYear1']] = \HTML\nlToHtml($row['resourceyearYear1']);
         $this->sum[$row['resourceyearYear1']] = $row['count'];
     }
     /**

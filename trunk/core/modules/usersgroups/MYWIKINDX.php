@@ -826,7 +826,7 @@ class MYWIKINDX
         $this->db->formatConditions(['usergroupsId' => $this->vars['groupId']]);
         $title = \HTML\strong($this->db->selectFirstField('user_groups', 'usergroupsTitle'));
         $pString .= \HTML\p($this->messages->text("user", "deleteConfirmGroup") . ":&nbsp;&nbsp;" .
-            \HTML\dbToHtmlTidy($title));
+            \HTML\nlToHtml($title));
         $pString .= \HTML\p($this->messages->text("user", "deleteGroup2"));
         $this->session->delVar('mywikindx_group_delete');
         $this->session->delVar("mywikindx_groupLock");
@@ -1107,7 +1107,7 @@ class MYWIKINDX
         $this->db->formatConditions(['usertagsId' => $this->vars['tagId']]);
         $title = \HTML\strong($this->db->selectFirstField('user_tags', 'usertagsTag'));
         $pString .= \HTML\p($this->messages->text("user", "deleteConfirmUserTag") . ":&nbsp;&nbsp;" .
-            \HTML\dbToHtmlTidy($title));
+            \HTML\nlToHtml($title));
         $this->session->delVar('mywikindx_tag_delete');
         $this->session->delVar("mywikindx_tagLock");
         $pString .= '<script type="text/javascript" src="' . $this->config->WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
@@ -1525,7 +1525,7 @@ class MYWIKINDX
         $this->db->formatConditions(['userbibliographyId' => $bibId]);
         $title = \HTML\strong($this->db->selectFirstField('user_bibliography', 'userbibliographyTitle'));
         $pString .= \HTML\p($this->messages->text("user", "deleteConfirmBib") . ":&nbsp;&nbsp;" .
-            \HTML\dbToHtmlTidy($title));
+            \HTML\nlToHtml($title));
         $this->session->delVar('mywikindx_bib_delete');
         $this->session->delVar("mywikindx_bibLock");
         $pString .= '<script type="text/javascript" src="' . $this->config->WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';

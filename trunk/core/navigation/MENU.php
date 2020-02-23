@@ -43,8 +43,6 @@ class MENU
     private $plugin2;
     /** array */
     private $plugin3;
-    /** object */
-    private $config;
     /** string */
     private $superAdmin;
     /** string */
@@ -100,7 +98,6 @@ class MENU
 
         $this->db = FACTORY_DB::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->superAdmin = $this->session->getVar("setup_Superadmin");
         $this->smartyMenu = new SmartyMenu();
         $this->write = $this->session->getVar("setup_Write");

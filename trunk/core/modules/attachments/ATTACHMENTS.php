@@ -655,7 +655,7 @@ class ATTACHMENTS
             $td .= \HTML\p(\FORM\textareaInput(
                 $this->messages->text('resources', 'attachmentDescription'),
                 "attachmentDescription_$hash",
-                \HTML\dbToHtmlTidy($desc),
+                \HTML\nlToHtml($desc),
                 60
             ), '', 2);
             $pString .= \HTML\td($td, 'attachmentBorder');

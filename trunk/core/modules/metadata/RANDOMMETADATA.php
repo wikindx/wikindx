@@ -61,7 +61,7 @@ class RANDOMMETADATA
         }
         $row = $this->db->fetchRow($resultset);
         $resourceId = $row['resourcemetadataResourceId'];
-        $mArray = $this->cite->parseCitations(\HTML\dbToHtmlTidy($row['resourcemetadataText']), 'html');
+        $mArray = $this->cite->parseCitations(\HTML\nlToHtml($row['resourcemetadataText']), 'html');
         $resultset = $this->common->getResource($resourceId);
         $this->display($resultset, $mArray, 'randomQuote');
     }
@@ -80,7 +80,7 @@ class RANDOMMETADATA
         }
         $row = $this->db->fetchRow($resultset);
         $resourceId = $row['resourcemetadataResourceId'];
-        $mArray = $this->cite->parseCitations(\HTML\dbToHtmlTidy($row['resourcemetadataText']), 'html');
+        $mArray = $this->cite->parseCitations(\HTML\nlToHtml($row['resourcemetadataText']), 'html');
         $resultset = $this->common->getResource($resourceId);
         $this->display($resultset, $mArray, 'randomParaphrase');
     }
@@ -121,7 +121,7 @@ class RANDOMMETADATA
         }
         $row = $this->db->fetchRow($resultset);
         $resourceId = $row['resourcemetadataResourceId'];
-        $mArray = $this->cite->parseCitations(\HTML\dbToHtmlTidy($row['resourcemetadataText']), 'html');
+        $mArray = $this->cite->parseCitations(\HTML\nlToHtml($row['resourcemetadataText']), 'html');
         $resultset = $this->common->getResource($resourceId);
         $this->display($resultset, $mArray, 'randomMusing');
     }

@@ -81,7 +81,7 @@ class BROWSEBIBLIOGRAPHY
         $count = $this->db->fetchOne($recordset);
         if ($count)
         {
-            $this->bibs[$id] = preg_replace("/{(.*)}/Uu", "$1", \HTML\dbToHtmlTidy($title));
+            $this->bibs[$id] = preg_replace("/{(.*)}/Uu", "$1", \HTML\nlToHtml($title));
             $this->sum[$id] = $count;
         }
     }

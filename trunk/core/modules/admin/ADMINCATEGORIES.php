@@ -325,7 +325,7 @@ class ADMINCATEGORIES
         $recordset = $this->db->select('subcategory', 'subcategorySubCategory');
         while ($row = $this->db->fetchRow($recordset))
         {
-            $list[] = \HTML\dbToHtmlTidy($row['subcategorySubCategory']);
+            $list[] = \HTML\nlToHtml($row['subcategorySubCategory']);
         }
         $subcategories = html_entity_decode(implode(', ', $list));
         $pString = \HTML\p($this->messages->text("category", "deleteSubConfirm", ": $subcategories"));

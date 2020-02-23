@@ -430,7 +430,7 @@ class ADMINUSER
             {
                 $pString .= \HTML\trStart();
                 $pString .= \HTML\td($row['userregisterEmail']);
-                $pString .= \HTML\td(\HTML\dbToHtmlTidy($row['userregisterRequest']));
+                $pString .= \HTML\td(\HTML\nlToHtml($row['userregisterRequest']));
                 $pString .= \HTML\td($row['userregisterTimestamp']);
                 $pString .= \HTML\td($this->messages->text('user', 'registrationAccept') . "&nbsp:&nbsp;" .
                     \FORM\radioButton(FALSE, 'registerUser_' . $row['userregisterId'], 'accept', TRUE) .

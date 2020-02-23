@@ -355,7 +355,7 @@ class ADMINCOMPONENTS
                     $h .= "<li>";
                     if (array_key_exists("author_email", $author))
                     {
-                        $email = \HTML\dbToHtmlTidy($author["author_email"]);
+                        $email = \HTML\nlToHtml($author["author_email"]);
                         $author["author_email"] = \HTML\a("link", "&#x1f4e7;", "mailto:$email");
                     }
                     if (array_key_exists("author_website", $author))

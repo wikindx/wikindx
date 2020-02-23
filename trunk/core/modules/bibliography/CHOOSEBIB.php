@@ -126,9 +126,9 @@ class CHOOSEBIB
             );
             $row = $this->db->fetchRow($recordset);
             $text = \HTML\strong($this->messages->text("user", "username") . ":&nbsp;&nbsp;") .
-                \HTML\dbToHtmlTidy($row['usersUsername']) . BR;
+                \HTML\nlToHtml($row['usersUsername']) . BR;
             $text .= \HTML\strong($this->messages->text("user", "fullname") . ":&nbsp;&nbsp;") .
-                \HTML\dbToHtmlTidy($row['usersFullname']);
+                \HTML\nlToHtml($row['usersFullname']);
             $pString = \HTML\p($text);
             $text = '';
             if ($row['count'])
@@ -137,15 +137,15 @@ class CHOOSEBIB
                     $row['count'] . BR;
             }
             $text .= \HTML\strong($this->messages->text("user", "bibTitle") . ":&nbsp;&nbsp;") .
-                \HTML\dbToHtmlTidy($row['userbibliographyTitle']) . BR;
+                \HTML\nlToHtml($row['userbibliographyTitle']) . BR;
             $text .= \HTML\strong($this->messages->text("user", "bibDescription") . ":&nbsp;&nbsp;") .
-                \HTML\dbToHtmlTidy($row['userbibliographyDescription']);
+                \HTML\nlToHtml($row['userbibliographyDescription']);
             if ($row['userbibliographyUserGroupId'])
             { // a group bibliography
                 $this->db->formatConditions(['usergroupsId' => $row['userbibliographyUserGroupId']]);
                 $userGroup = $this->db->selectFirstField('user_groups', 'usergroupsTitle');
                 $text .= BR . \HTML\strong($this->messages->text("user", "group") . ":&nbsp;&nbsp;") .
-                    \HTML\dbToHtmlTidy($userGroup);
+                    \HTML\nlToHtml($userGroup);
             }
             $pString .= \HTML\p($text);
         }

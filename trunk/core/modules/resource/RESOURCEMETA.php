@@ -174,7 +174,7 @@ class RESOURCEMETA
                 }
             }
             $this->musing[$index]['details'] = $this->getDetails($row);
-            $text = $this->cite->parseCitations(\HTML\dbToHtmlTidy($row['resourcemetadataText']), 'html');
+            $text = $this->cite->parseCitations(\HTML\nlToHtml($row['resourcemetadataText']), 'html');
             $this->musing[$index]['musing'] = $this->common->doHighlight($text);
             $this->musing[$index]['timestamp'] = $row['resourcemetadataTimestamp'];
             $this->db->formatConditions(['resourcekeywordMetadataId' => $row['resourcemetadataId']]);
@@ -185,7 +185,7 @@ class RESOURCEMETA
                 $this->musing[$index]['keywordTitle'] = $this->messages->text("resources", "keywords");
                 $this->musing[$index]['keywords'][] = \HTML\a(
                     "link",
-                    \HTML\dbToHtmlTidy($row2['keywordKeyword']),
+                    \HTML\nlToHtml($row2['keywordKeyword']),
                     "index.php?action=list_LISTSOMERESOURCES_CORE" .
                     '&method=metaKeywordProcess' . htmlentities("&id=" . $row2['keywordId']),
                     "",
@@ -249,7 +249,7 @@ class RESOURCEMETA
             $this->{$type}[$index]['metaId'] = $row['resourcemetadataId'];
             $this->{$type}[$index]['details'] = $this->getDetails($row);
             $this->{$type}[$index]['commentTitle'] = $this->messages->text("resources", "comment");
-            $text = $this->cite->parseCitations(\HTML\dbToHtmlTidy($row['resourcemetadataText']), 'html');
+            $text = $this->cite->parseCitations(\HTML\nlToHtml($row['resourcemetadataText']), 'html');
             $this->{$type}[$index][$type] = $this->common->doHighlight($text);
             $this->db->formatConditions(['resourcekeywordMetadataId' => $row['resourcemetadataId']]);
             $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
@@ -259,7 +259,7 @@ class RESOURCEMETA
                 $this->{$type}[$index]['keywordTitle'] = $this->messages->text("resources", "keywords");
                 $this->{$type}[$index]['keywords'][] = \HTML\a(
                     "link",
-                    \HTML\dbToHtmlTidy($row2['keywordKeyword']),
+                    \HTML\nlToHtml($row2['keywordKeyword']),
                     "index.php?action=list_LISTSOMERESOURCES_CORE" .
                     '&method=metaKeywordProcess' . htmlentities("&id=" . $row2['keywordId']),
                     "",
@@ -309,7 +309,7 @@ class RESOURCEMETA
                         }
                     }
                     // Else, comment is public
-                    $text = $this->cite->parseCitations(\HTML\dbToHtmlTidy($rowComment['resourcemetadataText']), 'html');
+                    $text = $this->cite->parseCitations(\HTML\nlToHtml($rowComment['resourcemetadataText']), 'html');
                     $users = $this->user->displayUserAddEdit($rowComment['resourcemetadataAddUserId'], TRUE, 'comment');
                     $this->{$type}[$index]['comments'][$index2]['userAdd'] = $users[0];
                     $this->{$type}[$index]['comments'][$index2]['comment'] = $this->common->doHighlight($text);

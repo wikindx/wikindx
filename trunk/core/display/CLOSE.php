@@ -49,7 +49,7 @@ class CLOSE
         if ($userId = $this->session->getVar('setup_UserId'))
         {
             $this->db->formatConditions(['usersId' => $userId]);
-            $username = \HTML\dbToHtmlTidy($this->db->selectFirstField('users', 'usersUsername'));
+            $username = \HTML\nlToHtml($this->db->selectFirstField('users', 'usersUsername'));
         }
         else
         {
@@ -64,7 +64,7 @@ class CLOSE
         if ($useBib = $this->session->getVar("mywikindx_Bibliography_use"))
         {
             $this->db->formatConditions(['userbibliographyId' => $useBib]);
-            $bib = \HTML\dbToHtmlTidy($this->db->selectFirstField('user_bibliography', 'userbibliographyTitle'));
+            $bib = \HTML\nlToHtml($this->db->selectFirstField('user_bibliography', 'userbibliographyTitle'));
         }
         else
         {

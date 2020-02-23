@@ -93,7 +93,7 @@ class BROWSEYEAR
         {
             return;
         }
-        $this->years[$row['resourceyearYear1']] = \HTML\dbToHtmlTidy($row['resourceyearYear1']);
+        $this->years[$row['resourceyearYear1']] = \HTML\nlToHtml($row['resourceyearYear1']);
         $this->sum[$row['resourceyearYear1']] = $row['count'];
     }
 }

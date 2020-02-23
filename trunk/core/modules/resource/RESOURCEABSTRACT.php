@@ -87,7 +87,7 @@ class RESOURCEABSTRACT
             $abstract['title'] = $this->messages->text("resources", "abstract");
             list($abstract['userAdd'], $abstract['userEdit']) = $this->user->displayUserAddEdit($row, TRUE, 'abstract');
             $abstract['abstract'] =
-                $this->cite->parseCitations($this->common->doHighlight(\HTML\dbToHtmlTidy($row['resourcetextAbstract'])), 'html');
+                $this->cite->parseCitations($this->common->doHighlight(\HTML\nlToHtml($row['resourcetextAbstract'])), 'html');
         }
 
         return $abstract;

@@ -60,7 +60,7 @@ class ATTACHMENT
             {
                 if (array_key_exists('resourceattachmentsFileName', $row) && !empty($row['resourceattachmentsFileName']))
                 {
-                    $name = \HTML\dbToHtmlTidy($row['resourceattachmentsFileName']) . " " .
+                    $name = \HTML\nlToHtml($row['resourceattachmentsFileName']) . " " .
                     $icons->getIconForAFileExtension($row['resourceattachmentsFileName']);
                 }
                 else
@@ -76,7 +76,7 @@ class ATTACHMENT
         {
             if (array_key_exists('resourceattachmentsFileName', $row) && !empty($row['resourceattachmentsFileName']))
             {
-                $name = \HTML\dbToHtmlTidy($row['resourceattachmentsFileName']) . " " .
+                $name = \HTML\nlToHtml($row['resourceattachmentsFileName']) . " " .
                     $icons->getIconForAFileExtension($row['resourceattachmentsFileName']);
                 $label = $row['resourceattachmentsFileName'];
             }
@@ -84,11 +84,11 @@ class ATTACHMENT
             {
                 if ($reduce)
                 {
-                    $name = \FORM\reduceLongText(\HTML\dbToHtmlTidy($row['resourceattachmentsFileName']));
+                    $name = \FORM\reduceLongText(\HTML\nlToHtml($row['resourceattachmentsFileName']));
                 }
                 else
                 {
-                    $name = \HTML\dbToHtmlTidy($row['resourceattachmentsFileName']);
+                    $name = \HTML\nlToHtml($row['resourceattachmentsFileName']);
                 }
             }
             if (!$hyperlink)

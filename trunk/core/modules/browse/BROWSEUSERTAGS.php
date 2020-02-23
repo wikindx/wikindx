@@ -76,7 +76,7 @@ class BROWSEUSERTAGS
         $this->userTags[$row['usertagsId']] = preg_replace(
             "/{(.*)}/Uu",
             "$1",
-            \HTML\dbToHtmlTidy($row['usertagsTag'])
+            \HTML\nlToHtml($row['usertagsTag'])
         );
         $this->sum[$row['usertagsId']] = $row['count'];
     }

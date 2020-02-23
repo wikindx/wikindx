@@ -29,8 +29,6 @@ class STATISTICS
     private $session;
     /** object */
     private $messages;
-    /** object */
-    private $co;
     /** int */
     private static $maxAccesses = FALSE;
     /** int */
@@ -53,7 +51,6 @@ class STATISTICS
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
-        $this->co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
     }
     /**
      * Check if statistics need compiling and emailing to registered users.

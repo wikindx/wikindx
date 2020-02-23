@@ -120,7 +120,7 @@ class FORGET
                 continue;
             }
             $string = $this->messages->text("user", "forget3", "&nbsp;" . $i) .
-                ":&nbsp;&nbsp;" . \HTML\dbToHtmlTidy($row["usersPasswordQuestion$i"]);
+                ":&nbsp;&nbsp;" . \HTML\nlToHtml($row["usersPasswordQuestion$i"]);
             $string .= BR . \FORM\textInput(FALSE, "answer$i", FALSE, 50, 100);
             $pString .= \HTML\p($string);
             $questionFound = TRUE;
@@ -130,7 +130,7 @@ class FORGET
             $email = WIKINDX_CONTACT_EMAIL;
             if ($email)
             {
-                $email = \HTML\dbToHtmlTidy($email);
+                $email = \HTML\nlToHtml($email);
                 $email = \HTML\a("link", $email, "mailto:$email");
                 $contact = "&nbsp;($email).";
             }
@@ -179,7 +179,7 @@ class FORGET
             $email = WIKINDX_CONTACT_EMAIL;
             if ($email)
             {
-                $email = \HTML\dbToHtmlTidy($email);
+                $email = \HTML\nlToHtml($email);
                 $email = \HTML\a("link", $email, "mailto:$email");
                 $contact = "&nbsp;($email).";
             }

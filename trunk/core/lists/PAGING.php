@@ -105,7 +105,7 @@ class PAGING
         if ($bibTitle)
         {
             $bib = ' (' . $this->messages->text("user", "bibliography") . ': ' .
-            \HTML\dbToHtmlTidy($bibTitle) . ")";
+            \HTML\nlToHtml($bibTitle) . ")";
         }
         elseif ($this->session->getVar('setup_MultiUser'))
         {

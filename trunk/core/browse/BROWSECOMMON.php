@@ -66,7 +66,7 @@ class BROWSECOMMON
     {
         if ($bibInfo)
         {
-            $this->bibInfo = \HTML\dbToHtmlTidy($this->commonBib->displayBib());
+            $this->bibInfo = \HTML\nlToHtml($this->commonBib->displayBib());
         }
         if ($useBib = $this->session->getVar("mywikindx_Bibliography_use"))
         {

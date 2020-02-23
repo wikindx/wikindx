@@ -157,14 +157,6 @@ class FACTORY_CONFIG
         {
             include_once("config.php");
             self::$instance = new CONFIG;
-            // Set print debug SQL
-            // This parameter must always be available at early stage
-            //			if (!property_exists(self::$instance, 'WIKINDX_PRINT_SQL'))
-            //				self::$instance->WIKINDX_PRINT_SQL = WIKINDX_PRINT_SQL_DEFAULT;
-            if (!property_exists(self::$instance, 'WIKINDX_DEBUG_SQL'))
-            {
-                self::$instance->WIKINDX_DEBUG_SQL = WIKINDX_DEBUG_SQL_DEFAULT;
-            }
         }
 
         return self::$instance;

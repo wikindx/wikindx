@@ -271,7 +271,7 @@ class CLOSE
         {
             $debugString = '';
             // Insert SQL log
-            if ($this->config->WIKINDX_DEBUG_SQL && in_array('logsql', $tplKeys))
+            if ((!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL) && in_array('logsql', $tplKeys))
             {
                 $debugString .= $debugLogSQLString;
             }

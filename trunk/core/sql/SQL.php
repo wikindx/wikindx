@@ -2898,7 +2898,7 @@ SQLCODE;
     public function printSQLDebug($querystring = '', $executionType = 'SQL')
     {
         $beautified = FALSE;
-        if ($this->config->WIKINDX_DEBUG_SQL)
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
         {
             $beautified = $this->beautify($querystring, $executionType);
             GLOBALS::addTplVar('logsql', $beautified);
@@ -3016,7 +3016,7 @@ SQLCODE;
      */
     private function CheckEngineVersion()
     {
-        if ($this->config->WIKINDX_DEBUG_SQL)
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
         {
             $this->sqlTimerOn();
             $EngineVersion = $this->getStringEngineVersion();
@@ -3056,7 +3056,7 @@ SQLCODE;
     {
         $querystring .= $this->subClause();
         // Ensure this is printed first.
-        if ($this->config->WIKINDX_DEBUG_SQL)
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
         {
             if ($this->session->getVar('sql_ConnectionTime'))
             {
@@ -3294,7 +3294,7 @@ SQLCODE;
      */
     private function printSQLDebugTime()
     {
-        if ($this->config->WIKINDX_DEBUG_SQL)
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
         {
             GLOBALS::addTplVar('logsql', '<hr><div>Elapsed time: ' . sprintf('%.3f', round($this->elapsedTime(), 3)) . ' s</div>');
         }

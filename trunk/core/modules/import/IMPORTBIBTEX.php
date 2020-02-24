@@ -669,7 +669,7 @@ class IMPORTBIBTEX
             unset($this->entriesLeft[$key]);
             $authors = $editors = [];
             // For a user cut 'n' pasting. Admin is unlimited.
-            if ($pasteLimit && ($this->resourceAdded >= $this->session->getVar("setup_MaxPaste")))
+            if ($pasteLimit && ($this->resourceAdded >= WIKINDX_MAX_PASTE))
             {
                 break;
             }

@@ -697,7 +697,7 @@ class MENU
         }
         if ($this->write)
         {
-            if ($this->session->getVar('setup_MaxPaste') || $this->superAdmin)
+            if (WIKINDX_MAX_PASTE || $this->superAdmin)
             {
                 $this->res[$messages->text("menu", "pasteBibtex")] = 'index.php?action=import_PASTEBIBTEX_CORE';
             }

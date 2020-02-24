@@ -80,7 +80,7 @@ class PASTEBIBTEX
             $pString .= \HTML\p($this->messages->text(
                 "import",
                 "pasteBibtex",
-                ' ' . $this->session->getVar('setup_MaxPaste') . " "
+                ' ' . WIKINDX_MAX_PASTE . " "
             ));
         }
         $pString .= \HTML\tableStart('borderSpacingMedium');

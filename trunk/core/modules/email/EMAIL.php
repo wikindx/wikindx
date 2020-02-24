@@ -358,7 +358,7 @@ class EMAIL
     public function notify($resourceId, $newResource = FALSE)
     {
         // do nothing if admin does not allow notification or email is not turned on
-        if (!WIKINDX_MAIL_USE || !$this->session->getVar('setup_Notify'))
+        if (!WIKINDX_MAIL_USE || !WIKINDX_NOTIFY)
         {
             return TRUE;
         }

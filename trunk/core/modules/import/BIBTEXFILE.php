@@ -40,7 +40,7 @@ class BIBTEXFILE
      */
     public function init()
     {
-        if (!$this->session->getVar("setup_ImportBib"))
+        if (!WIKINDX_IMPORT_BIB)
         {
             $this->gatekeep->requireSuper = TRUE;
         }

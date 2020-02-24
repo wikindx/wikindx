@@ -676,10 +676,6 @@ class USER
         {
             $this->session->setVar("setup_FileViewLoggedOnOnly", TRUE);
         }
-        if (array_key_exists('configImportBib', $row) && $row['configImportBib'])
-        {
-            $this->session->setVar("setup_ImportBib", TRUE);
-        }
         $this->session->setVar("config_configImgWidthLimit", $row['configImgWidthLimit']);
         $this->session->setVar("config_configImgHeightLimit", $row['configImgHeightLimit']);
         if ($userId)

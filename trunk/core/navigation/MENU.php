@@ -69,8 +69,6 @@ class MENU
     private $lastIdeaSearch;
     /** array */
     private $basketList;
-    /** string */
-    private $importBib;
     /** array */
     private $outputArray = [];
     /** boolean */
@@ -173,6 +171,7 @@ class MENU
         {
             $stateArray[] = $this->bookmarkView = $this->bookmarkArray['View'];
         }
+        $stateArray[] = WIKINDX_MULTIUSER;
         $stateArray[] = $this->bibliographies = $this->session->getVar("setup_Bibliographies");
         $stateArray[] = $this->lastSolo = $this->session->getVar("sql_LastSolo");
         $stateArray[] = $this->stmt = $this->session->getVar("sql_ListStmt");
@@ -181,7 +180,7 @@ class MENU
         $stateArray[] = $this->lastMultiMeta = $this->session->getVar("sql_LastMultiMeta");
         $stateArray[] = $this->lastIdeaSearch = $this->session->getVar("sql_LastIdeaSearch");
         $stateArray[] = $this->basketList = $this->session->getVar("basket_List");
-        $stateArray[] = $this->importBib = $this->session->getVar("setup_ImportBib");
+        $stateArray[] = WIKINDX_IMPORT_BIB;
         $state = base64_encode(serialize($stateArray));
         if (($state == $this->session->getVar('menu_state')) && ($menu = $this->session->getVar('menu_menu', FALSE) !== FALSE))
         {
@@ -695,7 +694,7 @@ class MENU
             {
                 $this->res[$messages->text("menu", "pasteBibtex")] = 'index.php?action=import_PASTEBIBTEX_CORE';
             }
-            if ($this->importBib && !$this->superAdmin)
+            if (WIKINDX_IMPORT_BIB && !$this->superAdmin)
             {
                 $this->res[$messages->text("menu", "importBibtex")] = 'index.php?action=import_BIBTEXFILE_CORE';
             }

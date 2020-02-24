@@ -654,7 +654,7 @@ class IMPORTBIBTEX
         {
             $this->tagId = FALSE;
         }
-        if ($this->session->getVar("setup_Superadmin") || $this->session->getVar("setup_ImportBib"))
+        if ($this->session->getVar("setup_Superadmin") || WIKINDX_IMPORT_BIB)
         {
             $pasteLimit = FALSE;
         }

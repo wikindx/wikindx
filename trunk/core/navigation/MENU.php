@@ -49,10 +49,6 @@ class MENU
     private $write;
     /** int */
     private $userId;
-    /** string */
-    private $multiUser;
-    /** string */
-    private $userRegistration;
     /** array */
     private $bibliographies;
     /** array */
@@ -102,7 +98,6 @@ class MENU
         $this->smartyMenu = new SmartyMenu();
         $this->write = $this->session->getVar("setup_Write");
         $this->userId = $this->session->getVar("setup_UserId");
-        $this->userRegistration = WIKINDX_USER_REGISTRATION;
         $this->reduceMenuLevel = $this->session->getVar("setup_ReduceMenuLevel");
         if ($this->session->issetVar("setup_ReduceMenuLevelPretext"))
         {
@@ -178,7 +173,6 @@ class MENU
         {
             $stateArray[] = $this->bookmarkView = $this->bookmarkArray['View'];
         }
-        $stateArray[] = $this->multiUser = WIKINDX_MULTIUSER;
         $stateArray[] = $this->bibliographies = $this->session->getVar("setup_Bibliographies");
         $stateArray[] = $this->lastSolo = $this->session->getVar("sql_LastSolo");
         $stateArray[] = $this->stmt = $this->session->getVar("sql_ListStmt");
@@ -415,11 +409,11 @@ class MENU
                 $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsUsers")] = 'index.php?action=statistics_STATS_CORE&method=users';
             }
         }
-        elseif ($this->multiUser && $this->userRegistration && !$this->userId)
+        elseif (WIKINDX_MULTIUSER && WIKINDX_USER_REGISTRATION && !$this->userId)
         {
             $this->wikindx[$messages->text("menu", "statistics")] = 'index.php?action=statistics_STATS_CORE&method=totals';
         }
-        elseif ($this->multiUser && !$this->userId)
+        elseif (WIKINDX_MULTIUSER && !$this->userId)
         {
             $this->wikindx[$messages->text("menu", "statistics")] = 'index.php?action=statistics_STATS_CORE&method=totals';
         }
@@ -440,7 +434,7 @@ class MENU
         {
             $this->wikindx[$messages->text("menu", "userLogon")] = 'index.php?action=initLogon';
         }
-    	if ($this->multiUser && $this->userRegistration && WIKINDX_MAIL_USE && !$this->userId)
+    	if (WIKINDX_MULTIUSER && WIKINDX_USER_REGISTRATION && WIKINDX_MAIL_USE && !$this->userId)
         {
             $this->wikindx[$messages->text("menu", "register")] = 'index.php?action=initRegisterUser';
         }
@@ -771,7 +765,7 @@ class MENU
         {
             $this->admin[$messages->text("menu", "quarantine")] = 'index.php?action=list_LISTSOMERESOURCES_CORE&method=quarantineProcess';
         }
-        if (!$this->multiUser)
+        if (!WIKINDX_MULTIUSER)
         {
             unset($this->admin['userSub']);
         }

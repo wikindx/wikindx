@@ -94,8 +94,6 @@ class AUTHORIZE
             {
                 // First delete any pre-existing session in case this user has been logging on and off as different users --
                 // keep template and language etc.
-                $language = WIKINDX_LANGUAGE;
-                $template = WIKINDX_TEMPLATE;
                 $this->initLogon(); // login prompt
                 FACTORY_CLOSENOMENU::getInstance();
             }

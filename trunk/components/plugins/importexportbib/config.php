@@ -8,7 +8,7 @@
 class importexportbib_CONFIG
 {
 	/** float */
-    public $wikindxVersion = 6;
+    public $wikindxVersion = 7;
 }
 class importexportbib_EXPORTCONFIG
 {

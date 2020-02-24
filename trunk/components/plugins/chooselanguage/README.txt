@@ -22,6 +22,8 @@ Thus, plugins/chooselanguage/index.php etc.
 
 CHANGELOG:
 
+v1.8, 2020
+1. Wikindx compatibility version 7.
 
 v1.7, 2020
 1. Fix a letter case issue stopping the plugin working on some systems.

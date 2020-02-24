@@ -64,7 +64,7 @@ define('WIKINDX_URL', 'https://wikindx.sourceforge.io');
  *
  * @name WIKINDX_PLUGIN_VERSION
  */
-define('WIKINDX_PLUGIN_VERSION', 6);
+define('WIKINDX_PLUGIN_VERSION', 7);
 /**
  * Max number of url by page in a sitemap (50000 max. allowed in the standard and 10 Mo max.)
  *

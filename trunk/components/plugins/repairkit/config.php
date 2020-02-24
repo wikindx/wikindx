@@ -12,5 +12,5 @@ class repairkit_CONFIG
 	/** int */
     public $authorize = 2;
 	/** float */
-    public $wikindxVersion = 6;
+    public $wikindxVersion = 7;
 }

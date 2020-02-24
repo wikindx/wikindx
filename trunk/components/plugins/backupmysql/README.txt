@@ -41,6 +41,9 @@ http://www.phpclasses.org/package/2779-PHP-Backup-MySQL-databases-to-files-with-
 
 CHANGELOG:
 
+v1.8, 2020
+1. Wikindx compatibility version 7.
+
 v1.7, 2020
 1. Add documentation.
 

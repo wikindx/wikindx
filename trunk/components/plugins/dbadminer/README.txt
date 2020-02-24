@@ -19,6 +19,9 @@ Adminer website: https://www.adminer.org/
 
 CHANGELOG:
 
+v1.6, 2020
+1. Wikindx compatibility version 7.
+
 v1.5, 2020
 1. Fix the config include.
 

@@ -18,6 +18,9 @@ Thus, plugins/localDescription/index.php etc.
 
 CHANGELOG:
 
+v1.6, 2020
+1. Wikindx compatibility version 7.
+
 v1.5, 2020
 1. Add documentation.
 

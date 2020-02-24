@@ -29,6 +29,9 @@ http://wolfgang.plaschg.net/bibwiki/
 
 CHANGELOG:
 
+v1.12, 2020
+1. Wikindx compatibility version 7.
+
 v1.11, 2020
 1. Add documentation.
 

@@ -30,8 +30,7 @@ class COOKIE
         {
             $this->cookieVars = &$_COOKIE;
         }
-        $config = FACTORY_CONFIG::getInstance();
-        $this->cookieName = "wikindx_" . $config->WIKINDX_DB;
+        $this->cookieName = "wikindx_" . WIKINDX_DB;
     }
     /**
      * Set a cookie if user requests through mywikindx 'remember me' checkbox

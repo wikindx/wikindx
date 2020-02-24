@@ -19,8 +19,6 @@ class AUTHORIZE
     private $db;
     /** object */
     private $session;
-    /** object */
-    private $config;
     /** array */
     private $vars;
     /** object */
@@ -32,7 +30,6 @@ class AUTHORIZE
     public function __construct()
     {
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->configDbStructure = FACTORY_CONFIGDBSTRUCTURE::getInstance();
@@ -97,8 +94,8 @@ class AUTHORIZE
             {
                 // First delete any pre-existing session in case this user has been logging on and off as different users --
                 // keep template and language etc.
-                $language = $this->config->WIKINDX_LANGUAGE;
-                $template = $this->config->WIKINDX_TEMPLATE;
+                $language = WIKINDX_LANGUAGE;
+                $template = WIKINDX_TEMPLATE;
                 $userReg = WIKINDX_USER_REGISTRATION;
                 $multiUser = WIKINDX_MULTIUSER;
                 $this->session->setVar('setup_UserRegistration', $userReg);

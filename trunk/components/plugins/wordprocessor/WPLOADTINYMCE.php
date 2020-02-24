@@ -16,8 +16,8 @@ class WPLOADTINYMCE extends LOADTINYMCE
     {
         $session = FACTORY_SESSION::getInstance();
         $session->setVar('tinyMCE_mode', 'wordprocessor');
-        $this->cssPath = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . GLOBALS::getUserVar('Template') . '/tinymce.css';
-        $this->cssPopupPath = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . GLOBALS::getUserVar('Template') . '/template.css';
+        $this->cssPath = WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . GLOBALS::getUserVar('Template') . '/tinymce.css';
+        $this->cssPopupPath = WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . GLOBALS::getUserVar('Template') . '/template.css';
     }
     /**
      * Load tinymce -- full configuration for the word processor
@@ -27,7 +27,7 @@ class WPLOADTINYMCE extends LOADTINYMCE
     public function loadWPTextarea()
     {
         $path = $this->path;
-        $externalPluginPath = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/' . basename(__DIR__) . '/';
+        $externalPluginPath = WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/' . basename(__DIR__) . '/';
         $exportPluginPath = $externalPluginPath . 'wikindxWPExport/editor_plugin.js';
         $savePluginPath = $externalPluginPath . 'wikindxWPSave/editor_plugin.js';
         $statsPluginPath = $externalPluginPath . 'wikindxWPStats/editor_plugin.js';
@@ -36,7 +36,7 @@ class WPLOADTINYMCE extends LOADTINYMCE
         $cssPopupPath = $this->cssPopupPath;
         if (!$this->pathLoaded)
         {
-            $tinymcePath = '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js"></script>';
+            $tinymcePath = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js"></script>';
             $this->pathLoaded = TRUE;
         }
         else

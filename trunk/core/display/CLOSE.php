@@ -85,13 +85,13 @@ class CLOSE
 
         GLOBALS::addTplVar('displayPopUp', $displayPopUp);
 
-        GLOBALS::addTplVar('tplPath', FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . $tplPath);
+        GLOBALS::addTplVar('tplPath', WIKINDX_BASE_URL . $tplPath);
         GLOBALS::addTplVar('lang', \LOCALES\localetoBCP47(\LOCALES\determine_locale()));
         if (defined('WIKINDX_RSS_ALLOW'))
         {
             GLOBALS::addTplVar('displayRss', WIKINDX_RSS_ALLOW);
             GLOBALS::addTplVar('rssTitle', WIKINDX_RSS_TITLE);
-            GLOBALS::addTplVar('rssFeed', FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . WIKINDX_RSS_PAGE);
+            GLOBALS::addTplVar('rssFeed', WIKINDX_BASE_URL . WIKINDX_RSS_PAGE);
         }
         else
         {
@@ -108,10 +108,10 @@ class CLOSE
         GLOBALS::addTplVar('headTitle', $title);
 
         // Mandatory script for Ajax and core functions
-        GLOBALS::addTplVar('scripts', '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/javascript/coreJavascript.js"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR) . '/progressbarjs/progressbar.min.js"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR) . '/jsonjs/json2.js"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/javascript/ajax.js"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/javascript/coreJavascript.js"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR) . '/progressbarjs/progressbar.min.js"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR) . '/jsonjs/json2.js"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/javascript/ajax.js"></script>');
 
         // MENU
         GLOBALS::addTplVar('displayMenu', $displayMenu);

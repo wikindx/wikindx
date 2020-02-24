@@ -16,8 +16,6 @@ class TEMPLATE
     /** object */
     public $tpl;
     /** object */
-    private $config;
-    /** object */
     private $errors;
     /** object */
     private $session;
@@ -95,12 +93,6 @@ class TEMPLATE
      */
     public function loadTemplate($setupMode = FALSE)
     {
-        // During the upgrade / update process the database is not always available to query the configuration
-        if (!$setupMode)
-        {
-            $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        }
-
         $this->session = FACTORY_SESSION::getInstance();
         $tplArray = $this->loadDir();
         $this->name = GLOBALS::getUserVar('Template');
@@ -133,8 +125,10 @@ class TEMPLATE
         // template may have been disabled by admin
         if (!is_file(WIKINDX_DIR_COMPONENT_TEMPLATES . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR . 'component.json'))
         {
+            // During the upgrade / update process the database is not always available to query the configuration
             if (!$setupMode)
             {
+                $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
                 $this->name = $co->getOne('configTemplate');
             }
         }

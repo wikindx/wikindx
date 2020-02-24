@@ -919,7 +919,7 @@ class LISTADDTO
         $pString .= \HTML\p($this->messages->text("resources", "replaceExisting") . "&nbsp;&nbsp;" .
             \FORM\checkbox(FALSE, "replaceExisting") . '&nbsp;&nbsp;' . \FORM\formSubmit($this->messages->text("submit", "Save")));
         $pString .= \FORM\formEnd();
-        \AJAX\loadJavascript(FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js');
+        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js');
         GLOBALS::addTplVar('content', $pString);
     }
     /**

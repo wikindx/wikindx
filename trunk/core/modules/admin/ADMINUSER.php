@@ -268,7 +268,7 @@ class ADMINUSER
     public function blockInit($error = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userBlock"));
-        $pString = '<script type="text/javascript" src="' . \FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL .
+        $pString = '<script type="text/javascript" src="' . \WIKINDX_BASE_URL .
             '/core/modules/admin/adminUser.js"></script>';
         $pString .= $error ? \HTML\p($error, "error", "center") : '';
         $this->grabUsers();

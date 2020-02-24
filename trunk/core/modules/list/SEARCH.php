@@ -262,7 +262,7 @@ class SEARCH
         }
 
         // Load at end because .js initialization needs various DIVs to be in the page before they are made invisible
-        \AJAX\loadJavascript(FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js');
+        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js');
     }
     /**
      * Reset the form and clear the session

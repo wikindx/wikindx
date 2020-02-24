@@ -27,7 +27,6 @@ class SITEMAP
     // Constructor
     public function init()
     {
-        $config = FACTORY_CONFIG::getInstance();
         $db = FACTORY_DB::getInstance();
         if (!WIKINDX_SITEMAP_ALLOW)
         {
@@ -35,7 +34,7 @@ class SITEMAP
             die("Access forbidden: this feature is disabled.");
         }
 
-        $baseURL = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL;
+        $baseURL = WIKINDX_BASE_URL;
 
         // set up language
         $messages = FACTORY_MESSAGES::getInstance(WIKINDX_LANGUAGE);
@@ -71,7 +70,7 @@ class SITEMAP
         // List of resources of the website
         $rsResource = $db->query("
         	SELECT `resourcetimestampId`, `resourcetimestampTimestamp`
-        	FROM `" . $config->WIKINDX_DB_TABLEPREFIX . "resource_timestamp`
+        	FROM `" . WIKINDX_DB_TABLEPREFIX . "resource_timestamp`
         	ORDER BY `resourcetimestampTimestamp` DESC, `resourcetimestampTimestampAdd` DESC, `resourcetimestampId` DESC
         ");
 
@@ -80,7 +79,7 @@ class SITEMAP
         // List of news of the website
         $rsNews = $db->query("
         	SELECT `newsId`, `newsTimestamp`
-        	FROM `" . $config->WIKINDX_DB_TABLEPREFIX . "news`
+        	FROM `" . WIKINDX_DB_TABLEPREFIX . "news`
         	ORDER BY `newsTimestamp` DESC, `newsId` DESC
         ");
 

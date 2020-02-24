@@ -44,7 +44,7 @@ class EDITCREATOR
      */
     public function init($message = FALSE)
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $this->session->clearArray('edit');
         $creators = $this->creator->grabAll();
         if (!$creators)
@@ -142,7 +142,7 @@ class EDITCREATOR
      */
     public function edit()
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         if (!array_key_exists('editCreatorId', $this->vars) || !$this->vars['editCreatorId'])
         {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
@@ -213,7 +213,7 @@ class EDITCREATOR
      */
     public function editConfirm()
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         if (!array_key_exists('editCreatorId', $this->vars) || !$this->vars['editCreatorId'])
         {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');

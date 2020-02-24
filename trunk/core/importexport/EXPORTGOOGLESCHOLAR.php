@@ -52,7 +52,7 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
         global $_SERVER;
         if ($attach = $this->attachedFiles($row['resourceId']))
         {
-            $entry .= '<meta name="citation_pdf_url" content="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/' . $attach . '">';
+            $entry .= '<meta name="citation_pdf_url" content="' . WIKINDX_BASE_URL . '/' . $attach . '">';
         }
         if ($this->noGs)
         {

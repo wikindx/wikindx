@@ -46,7 +46,7 @@ include_once("core/startup/WEBSERVERCONFIG.php");
 	}
 	</style>
 
-	<script src="<?php echo FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL; ?>/core/tiny_mce/tiny_mce_popup.js"></script>
+	<script src="<?php echo WIKINDX_BASE_URL; ?>/core/tiny_mce/tiny_mce_popup.js"></script>
 	<script>
 	tinyMCEPopup.requireLangPack();
 

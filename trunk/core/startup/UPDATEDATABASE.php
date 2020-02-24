@@ -20,8 +20,6 @@ class UPDATEDATABASE
     /** object */
     private $session;
     /** object */
-    private $config;
-    /** object */
     private $db;
     /** array */
     private $vars;
@@ -50,7 +48,6 @@ class UPDATEDATABASE
         ini_set('display_errors', TRUE);
 
         $this->db = FACTORY_DB::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
 
         $this->messages = FACTORY_MESSAGES::getInstance();
@@ -252,13 +249,13 @@ class UPDATEDATABASE
         // The db schema is stored in a series of SQL file in the directory /dbschema/full for the core
         // or /plugins/<PluginDirectory>/dbschema/full
         $dbSchemaPath =
-            $this->config->WIKINDX_WIKINDX_PATH
+            WIKINDX_WIKINDX_PATH
             . $pluginPath . WIKINDX_DIR_DB_SCHEMA
             . DIRECTORY_SEPARATOR . 'full';
         foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
         {
             $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
-            $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', $this->config->WIKINDX_DB_TABLEPREFIX, $sql);
+            $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
             $this->db->queryNoError($sql);
         }
     }
@@ -273,7 +270,7 @@ class UPDATEDATABASE
         // The db schema is stored in a serie of SQL file in the directory /dbschema/update/<$wkxVersion> for the core
         // or /plugins/<PluginDirectory>/dbschema/update/<$wkxVersion>
         $dbSchemaPath =
-            $this->config->WIKINDX_WIKINDX_PATH
+            WIKINDX_WIKINDX_PATH
             . $pluginPath . WIKINDX_DIR_DB_SCHEMA
             . DIRECTORY_SEPARATOR . 'update'
             . DIRECTORY_SEPARATOR . $wkxVersion;
@@ -282,7 +279,7 @@ class UPDATEDATABASE
             foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
             {
                 $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
-                $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', $this->config->WIKINDX_DB_TABLEPREFIX, $sql);
+                $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
                 $this->db->queryNoError($sql);
             }
         }
@@ -402,7 +399,6 @@ class UPDATEDATABASE
     private function stage5_4()
     {
         $this->writeConfigFile5_4(); // dies if not possible
-        $pf = $this->config->WIKINDX_DB_TABLEPREFIX;
 
         $this->updateDbSchema('5.4-begin');
 
@@ -1021,11 +1017,11 @@ class UPDATEDATABASE
      */
     private function correctIndices()
     {
-        $db = $this->config->WIKINDX_DB;
+        $db = WIKINDX_DB;
         foreach (['category', 'collection', 'config', 'creator', 'keyword', 'publisher', 'resource', 'resource_creator',
             'resource_metadata', 'resource_year', 'user_bibliography', ] as $table)
         {
-            $table = $this->config->WIKINDX_DB_TABLEPREFIX . $table;
+            $table = WIKINDX_DB_TABLEPREFIX . $table;
             $resultSet = $this->db->query("SHOW INDEX FROM `$table` FROM `$db`");
             while ($row = $this->db->fetchRow($resultSet))
             {
@@ -1224,6 +1220,9 @@ class UPDATEDATABASE
      */
     private function writeConfigFile5_4()
     {
+        // Load a separate config class that containts original constant names
+        $tmpconfig = new CONFIG();
+        
         $string = <<<END
 <?php
 /**********************************************************************************
@@ -1269,28 +1268,21 @@ class CONFIG
 // where 'xxxx' is the non-standard socket.
 
 END;
-        $string .= 'public $WIKINDX_DB_HOST = "' . $this->config->WIKINDX_DB_HOST . '";' . "\n";
+        $string .= 'public $WIKINDX_DB_HOST = "' . $tmpconfig->WIKINDX_DB_HOST . '";' . "\n";
         $string .= '// name of the database which these scripts interface with (case-sensitive):' . "\n" .
-                   'public $WIKINDX_DB = "' . $this->config->WIKINDX_DB . '";' . "\n";
+                   'public $WIKINDX_DB = "' . $tmpconfig->WIKINDX_DB . '";' . "\n";
         $string .= '// username and password required to connect to and open the database' . "\n" .
                    '// (it is strongly recommended that you change these default values):' . "\n" .
-                   'public $WIKINDX_DB_USER = "' . $this->config->WIKINDX_DB_USER . '";' . "\n" .
-                   'public $WIKINDX_DB_PASSWORD = "' . $this->config->WIKINDX_DB_PASSWORD . '";' . "\n";
+                   'public $WIKINDX_DB_USER = "' . $tmpconfig->WIKINDX_DB_USER . '";' . "\n" .
+                   'public $WIKINDX_DB_PASSWORD = "' . $tmpconfig->WIKINDX_DB_PASSWORD . '";' . "\n";
         $string .= '// If using WIKINDX on a shared database, set the WIKINDX table prefix here (lowercase only)' . "\n" .
                    '// (do not change after running WIKINDX and creating the tables!):' . "\n" .
-                   'public $WIKINDX_DB_TABLEPREFIX = "' . $this->config->WIKINDX_DB_TABLEPREFIX . '";' . "\n";
+                   'public $WIKINDX_DB_TABLEPREFIX = "' . $tmpconfig->WIKINDX_DB_TABLEPREFIX . '";' . "\n";
         $string .= '// WIKINDX uses MySQL persistent connections by default.' . "\n" .
                    '// Some hosting services are not configured for this: if you have problems' . "\n" .
                    "// connecting to your MySQL server and/or receive error messages about 'too many connections'," . "\n" .
                    '// set $WIKINDX_DB_PERSISTENT to FALSE and wikindx will try to compute it' . "\n";
-        if ($this->config->WIKINDX_DB_PERSISTENT === TRUE)
-        {
-            $string .= 'public $WIKINDX_DB_PERSISTENT = TRUE;' . "\n";
-        }
-        else
-        {
-            $string .= 'public $WIKINDX_DB_PERSISTENT = FALSE;' . "\n";
-        }
+        $string .= 'public $WIKINDX_DB_PERSISTENT = ' . ($tmpconfig->WIKINDX_DB_PERSISTENT ? "TRUE" : "FALSE") . ';' . "\n";
         $string .= <<<END
 /*****
 * END DATABASE CONFIGURATION
@@ -1308,7 +1300,7 @@ END;
 // to http://www.myserver.com/wikindx
 
 END;
-        $string .= 'public $WIKINDX_BASE_URL = "' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '";' . "\n";
+        $string .= 'public $WIKINDX_BASE_URL = "' . $tmpconfig->WIKINDX_BASE_URL . '";' . "\n";
 
         $string .= <<<END
 // The TinyMCE editor needs the WIKINDX server installation path.
@@ -1321,9 +1313,9 @@ END;
 // If you get no error message and WIKINDX runs fine, then you can leave this value as FALSE and wikindx will try to compute it.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_WIKINDX_PATH') && ($this->config->WIKINDX_WIKINDX_PATH !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_WIKINDX_PATH') && ($tmpconfig->WIKINDX_WIKINDX_PATH !== FALSE))
         {
-            $string .= 'public $WIKINDX_WIKINDX_PATH = "' . $this->config->WIKINDX_WIKINDX_PATH . '";' . "\n";
+            $string .= 'public $WIKINDX_WIKINDX_PATH = "' . $tmpconfig->WIKINDX_WIKINDX_PATH . '";' . "\n";
         }
         else
         {
@@ -1338,17 +1330,17 @@ END;
 // For example, for a *NIX system, WIKINDX_FILE_PATH might be "files"
 
 END;
-        if (property_exists($this->config, 'WIKINDX_ATTACHMENTS_PATH') && (WIKINDX_DIR_DATA_ATTACHMENTS !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_ATTACHMENTS_PATH') && ($tmpconfig->WIKINDX_ATTACHMENTS_PATH !== FALSE))
         {
-            $string .= 'public $WIKINDX_ATTACHMENTS_PATH = "' . WIKINDX_DIR_DATA_ATTACHMENTS . '";' . "\n";
+            $string .= 'public $WIKINDX_ATTACHMENTS_PATH = "' . $tmpconfig->WIKINDX_ATTACHMENTS_PATH . '";' . "\n";
         }
         else
         {
             $string .= 'public $WIKINDX_ATTACHMENTS_PATH = FALSE;' . "\n";
         }
-        if (property_exists($this->config, 'WIKINDX_FILE_PATH') && (WIKINDX_DIR_DATA_FILES !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_FILE_PATH') && ($tmpconfig->WIKINDX_FILE_PATH !== FALSE))
         {
-            $string .= 'public $WIKINDX_FILE_PATH = "' . WIKINDX_DIR_DATA_FILES . '";' . "\n";
+            $string .= 'public $WIKINDX_FILE_PATH = "' . $tmpconfig->WIKINDX_FILE_PATH . '";' . "\n";
         }
         else
         {
@@ -1372,9 +1364,9 @@ END;
 // Use double quotes around the value.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_MEMORY_LIMIT') && ($this->config->WIKINDX_MEMORY_LIMIT !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_MEMORY_LIMIT') && ($tmpconfig->WIKINDX_MEMORY_LIMIT !== FALSE))
         {
-            $string .= 'public $WIKINDX_MEMORY_LIMIT = "' . $this->config->WIKINDX_MEMORY_LIMIT . '";' . "\n";
+            $string .= 'public $WIKINDX_MEMORY_LIMIT = "' . $tmpconfig->WIKINDX_MEMORY_LIMIT . '";' . "\n";
         }
         else
         {
@@ -1390,9 +1382,9 @@ END;
 // Do NOT use quotes around the value.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_MAX_EXECUTION_TIMEOUT') && ($this->config->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_MAX_EXECUTION_TIMEOUT') && ($tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE))
         {
-            $string .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = ' . $this->config->WIKINDX_MAX_EXECUTION_TIMEOUT . ';' . "\n";
+            $string .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = ' . $tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT . ';' . "\n";
         }
         else
         {
@@ -1410,9 +1402,9 @@ END;
 // Do NOT use quotes around the value.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_MAX_WRITECHUNK') && ($this->config->WIKINDX_MAX_WRITECHUNK !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_MAX_WRITECHUNK') && ($tmpconfig->WIKINDX_MAX_WRITECHUNK !== FALSE))
         {
-            $string .= 'public $WIKINDX_MAX_WRITECHUNK = ' . $this->config->WIKINDX_MAX_WRITECHUNK . ';' . "\n";
+            $string .= 'public $WIKINDX_MAX_WRITECHUNK = ' . $tmpconfig->WIKINDX_MAX_WRITECHUNK . ';' . "\n";
         }
         else
         {
@@ -1455,6 +1447,9 @@ END;
      */
     private function writeConfigFile5_9()
     {
+        // Load a separate config class that containts original constant names
+        $tmpconfig = new CONFIG();
+        
         $string = <<<END
 <?php
 /**********************************************************************************
@@ -1500,33 +1495,26 @@ class CONFIG
 // where 'xxxx' is the non-standard socket.
 
 END;
-        $string .= 'public $WIKINDX_DB_HOST = "' . $this->config->WIKINDX_DB_HOST . '";' . "\n";
+        $string .= 'public $WIKINDX_DB_HOST = "' . $tmpconfig->WIKINDX_DB_HOST . '";' . "\n";
         $string .= '// name of the database which these scripts interface with (case-sensitive):' . "\n" .
-                   'public $WIKINDX_DB = "' . $this->config->WIKINDX_DB . '";' . "\n";
+                   'public $WIKINDX_DB = "' . $tmpconfig->WIKINDX_DB . '";' . "\n";
         $string .= '// username and password required to connect to and open the database' . "\n" .
                    '// (it is strongly recommended that you change these default values):' . "\n" .
-                   'public $WIKINDX_DB_USER = "' . $this->config->WIKINDX_DB_USER . '";' . "\n" .
-                   'public $WIKINDX_DB_PASSWORD = "' . $this->config->WIKINDX_DB_PASSWORD . '";' . "\n";
+                   'public $WIKINDX_DB_USER = "' . $tmpconfig->WIKINDX_DB_USER . '";' . "\n" .
+                   'public $WIKINDX_DB_PASSWORD = "' . $tmpconfig->WIKINDX_DB_PASSWORD . '";' . "\n";
         $string .= '// If using WIKINDX on a shared database, set the WIKINDX table prefix here (lowercase only)' . "\n" .
                    '// (do not change after running WIKINDX and creating the tables!).' . "\n" .
                    '// This option is deprecated since version 5.9.1 and will be removed in the next release.' . "\n" .
                    '// People who have changed the prefix should rename the tables with the default prefix (wkx_)' . "\n" .
                    '// and correct their configuration. It will no longer be possible to install two WIKINDXs' . "\n" .
                    '// in the same database. If you are in this rare case contact us.' . "\n" .
-                   'public $WIKINDX_DB_TABLEPREFIX = "' . $this->config->WIKINDX_DB_TABLEPREFIX . '";' . "\n";
+                   'public $WIKINDX_DB_TABLEPREFIX = "' . $tmpconfig->WIKINDX_DB_TABLEPREFIX . '";' . "\n";
         $string .= '// WIKINDX uses MySQL persistent connections by default.' . "\n" .
                    '// Some hosting services are not configured for this: if you have problems' . "\n" .
                    "// connecting to your MySQL server and/or receive error messages about 'too many connections'," . "\n" .
                    '// set $WIKINDX_DB_PERSISTENT to FALSE and wikindx will try to compute it' . "\n";
         '// see https://www.php.net/manual/en/mysqli.persistconns.php' . "\n";
-        if ($this->config->WIKINDX_DB_PERSISTENT === TRUE)
-        {
-            $string .= 'public $WIKINDX_DB_PERSISTENT = TRUE;' . "\n";
-        }
-        else
-        {
-            $string .= 'public $WIKINDX_DB_PERSISTENT = FALSE;' . "\n";
-        }
+        $string .= 'public $WIKINDX_DB_PERSISTENT = ' . ($tmpconfig->WIKINDX_DB_PERSISTENT ? "TRUE" : "FALSE") . ';' . "\n";
         $string .= <<<END
 /*****
 * END DATABASE CONFIGURATION
@@ -1544,7 +1532,7 @@ END;
 // to http://www.myserver.com/wikindx
 
 END;
-        $string .= 'public $WIKINDX_BASE_URL = "' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '";' . "\n";
+        $string .= 'public $WIKINDX_BASE_URL = "' . $tmpconfig->WIKINDX_BASE_URL . '";' . "\n";
 
         $string .= <<<END
 // The TinyMCE editor needs the WIKINDX server installation path.
@@ -1557,9 +1545,9 @@ END;
 // If you get no error message and WIKINDX runs fine, then you can leave this value as FALSE and wikindx will try to compute it.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_WIKINDX_PATH') && ($this->config->WIKINDX_WIKINDX_PATH !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_WIKINDX_PATH') && ($tmpconfig->WIKINDX_WIKINDX_PATH !== FALSE))
         {
-            $string .= 'public $WIKINDX_WIKINDX_PATH = "' . $this->config->WIKINDX_WIKINDX_PATH . '";' . "\n";
+            $string .= 'public $WIKINDX_WIKINDX_PATH = "' . $tmpconfig->WIKINDX_WIKINDX_PATH . '";' . "\n";
         }
         else
         {
@@ -1583,9 +1571,9 @@ END;
 // Use double quotes around the value.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_MEMORY_LIMIT') && ($this->config->WIKINDX_MEMORY_LIMIT !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_MEMORY_LIMIT') && ($tmpconfig->WIKINDX_MEMORY_LIMIT !== FALSE))
         {
-            $string .= 'public $WIKINDX_MEMORY_LIMIT = "' . $this->config->WIKINDX_MEMORY_LIMIT . '";' . "\n";
+            $string .= 'public $WIKINDX_MEMORY_LIMIT = "' . $tmpconfig->WIKINDX_MEMORY_LIMIT . '";' . "\n";
         }
         else
         {
@@ -1601,9 +1589,9 @@ END;
 // Do NOT use quotes around the value.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_MAX_EXECUTION_TIMEOUT') && ($this->config->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_MAX_EXECUTION_TIMEOUT') && ($tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE))
         {
-            $string .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = ' . $this->config->WIKINDX_MAX_EXECUTION_TIMEOUT . ';' . "\n";
+            $string .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = ' . $tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT . ';' . "\n";
         }
         else
         {
@@ -1621,9 +1609,9 @@ END;
 // Do NOT use quotes around the value.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_MAX_WRITECHUNK') && ($this->config->WIKINDX_MAX_WRITECHUNK !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_MAX_WRITECHUNK') && ($tmpconfig->WIKINDX_MAX_WRITECHUNK !== FALSE))
         {
-            $string .= 'public $WIKINDX_MAX_WRITECHUNK = ' . $this->config->WIKINDX_MAX_WRITECHUNK . ';' . "\n";
+            $string .= 'public $WIKINDX_MAX_WRITECHUNK = ' . $tmpconfig->WIKINDX_MAX_WRITECHUNK . ';' . "\n";
         }
         else
         {
@@ -1666,6 +1654,9 @@ END;
      */
     private function writeConfigFile6_2_2()
     {
+        // Load a separate config class that containts original constant names
+        $tmpconfig = new CONFIG();
+        
         $string = <<<END
 <?php
 /**********************************************************************************
@@ -1711,33 +1702,26 @@ class CONFIG
 // where 'xxxx' is the non-standard socket.
 
 END;
-        $string .= 'public $WIKINDX_DB_HOST = "' . $this->config->WIKINDX_DB_HOST . '";' . "\n";
+        $string .= 'public $WIKINDX_DB_HOST = "' . $tmpconfig->WIKINDX_DB_HOST . '";' . "\n";
         $string .= '// name of the database which these scripts interface with (case-sensitive):' . "\n" .
-                   'public $WIKINDX_DB = "' . $this->config->WIKINDX_DB . '";' . "\n";
+                   'public $WIKINDX_DB = "' . $tmpconfig->WIKINDX_DB . '";' . "\n";
         $string .= '// username and password required to connect to and open the database' . "\n" .
                    '// (it is strongly recommended that you change these default values):' . "\n" .
-                   'public $WIKINDX_DB_USER = "' . $this->config->WIKINDX_DB_USER . '";' . "\n" .
-                   'public $WIKINDX_DB_PASSWORD = "' . $this->config->WIKINDX_DB_PASSWORD . '";' . "\n";
+                   'public $WIKINDX_DB_USER = "' . $tmpconfig->WIKINDX_DB_USER . '";' . "\n" .
+                   'public $WIKINDX_DB_PASSWORD = "' . $tmpconfig->WIKINDX_DB_PASSWORD . '";' . "\n";
         $string .= '// If using WIKINDX on a shared database, set the WIKINDX table prefix here (lowercase only)' . "\n" .
                    '// (do not change after running WIKINDX and creating the tables!).' . "\n" .
                    '// This option is deprecated since version 5.9.1 and will be removed in the next release.' . "\n" .
                    '// People who have changed the prefix should rename the tables with the default prefix (wkx_)' . "\n" .
                    '// and correct their configuration. It will no longer be possible to install two WIKINDXs' . "\n" .
                    '// in the same database. If you are in this rare case contact us.' . "\n" .
-                   'public $WIKINDX_DB_TABLEPREFIX = "' . $this->config->WIKINDX_DB_TABLEPREFIX . '";' . "\n";
+                   'public $WIKINDX_DB_TABLEPREFIX = "' . $tmpconfig->WIKINDX_DB_TABLEPREFIX . '";' . "\n";
         $string .= '// WIKINDX uses MySQL persistent connections by default.' . "\n" .
                    '// Some hosting services are not configured for this: if you have problems' . "\n" .
                    "// connecting to your MySQL server and/or receive error messages about 'too many connections'," . "\n" .
                    '// set $WIKINDX_DB_PERSISTENT to FALSE and wikindx will try to compute it' . "\n";
         '// see https://www.php.net/manual/en/mysqli.persistconns.php' . "\n";
-        if ($this->config->WIKINDX_DB_PERSISTENT === TRUE)
-        {
-            $string .= 'public $WIKINDX_DB_PERSISTENT = TRUE;' . "\n";
-        }
-        else
-        {
-            $string .= 'public $WIKINDX_DB_PERSISTENT = FALSE;' . "\n";
-        }
+        $string .= 'public $WIKINDX_DB_PERSISTENT = ' . ($tmpconfig->WIKINDX_DB_PERSISTENT ? "TRUE" : "FALSE") . ';' . "\n";
         $string .= <<<END
 /*****
 * END DATABASE CONFIGURATION
@@ -1765,7 +1749,7 @@ END;
 // Otherwise, leave as "".
 
 END;
-        $string .= 'public $WIKINDX_BASE_URL = "' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '";' . "\n";
+        $string .= 'public $WIKINDX_BASE_URL = "' . $tmpconfig->WIKINDX_BASE_URL . '";' . "\n";
 
         $string .= <<<END
 // If option auto-detection is disabled you must define the WIKINDX server installation path
@@ -1779,9 +1763,9 @@ END;
 // Otherwise, leave as "".
 
 END;
-        if (property_exists($this->config, 'WIKINDX_WIKINDX_PATH') && ($this->config->WIKINDX_WIKINDX_PATH !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_WIKINDX_PATH') && ($tmpconfig->WIKINDX_WIKINDX_PATH !== FALSE))
         {
-            $string .= 'public $WIKINDX_WIKINDX_PATH = "' . $this->config->WIKINDX_WIKINDX_PATH . '";' . "\n";
+            $string .= 'public $WIKINDX_WIKINDX_PATH = "' . $tmpconfig->WIKINDX_WIKINDX_PATH . '";' . "\n";
         }
         else
         {
@@ -1805,9 +1789,9 @@ END;
 // Use double quotes around the value.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_MEMORY_LIMIT') && ($this->config->WIKINDX_MEMORY_LIMIT !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_MEMORY_LIMIT') && ($tmpconfig->WIKINDX_MEMORY_LIMIT !== FALSE))
         {
-            $string .= 'public $WIKINDX_MEMORY_LIMIT = "' . $this->config->WIKINDX_MEMORY_LIMIT . '";' . "\n";
+            $string .= 'public $WIKINDX_MEMORY_LIMIT = "' . $tmpconfig->WIKINDX_MEMORY_LIMIT . '";' . "\n";
         }
         else
         {
@@ -1823,9 +1807,9 @@ END;
 // Do NOT use quotes around the value.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_MAX_EXECUTION_TIMEOUT') && ($this->config->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_MAX_EXECUTION_TIMEOUT') && ($tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE))
         {
-            $string .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = ' . $this->config->WIKINDX_MAX_EXECUTION_TIMEOUT . ';' . "\n";
+            $string .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = ' . $tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT . ';' . "\n";
         }
         else
         {
@@ -1843,9 +1827,9 @@ END;
 // Do NOT use quotes around the value.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_MAX_WRITECHUNK') && ($this->config->WIKINDX_MAX_WRITECHUNK !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_MAX_WRITECHUNK') && ($tmpconfig->WIKINDX_MAX_WRITECHUNK !== FALSE))
         {
-            $string .= 'public $WIKINDX_MAX_WRITECHUNK = ' . $this->config->WIKINDX_MAX_WRITECHUNK . ';' . "\n";
+            $string .= 'public $WIKINDX_MAX_WRITECHUNK = ' . $tmpconfig->WIKINDX_MAX_WRITECHUNK . ';' . "\n";
         }
         else
         {
@@ -1901,7 +1885,7 @@ END;
             if (array_search('plugin_wordprocessor', $tables) === FALSE)
             {
                 $this->db->queryNoError("
-					CREATE TABLE `" . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor` (
+					CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor` (
 						`pluginwordprocessorId` int(11) NOT NULL AUTO_INCREMENT,
 						`pluginwordprocessorHashFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
 						`pluginwordprocessorFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -1927,23 +1911,23 @@ END;
                 $values[] = $row['papersTimestamp'];
                 $this->db->insert('plugin_wordprocessor', $fields, $values);
             }
-            $this->db->queryNoError("DROP TABLE IF EXISTS " . $this->config->WIKINDX_DB_TABLEPREFIX . "papers;");
+            $this->db->queryNoError("DROP TABLE IF EXISTS " . WIKINDX_DB_TABLEPREFIX . "papers;");
         }
         elseif (array_search('plugin_wordprocessor', $tables) !== FALSE)
         {
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor ENGINE=InnoDB;");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorHashFilename` varchar(1020) DEFAULT NULL;");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorFilename` varchar(1020) DEFAULT NULL;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor ENGINE=InnoDB;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorHashFilename` varchar(1020) DEFAULT NULL;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorFilename` varchar(1020) DEFAULT NULL;");
         }
         if (array_search('plugin_soundexplorer', $tables) !== FALSE)
         {
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer RENAME `" . $this->config->WIKINDX_DB_TABLEPREFIX . "4fc387ba1ae34ac28e6dee712679d7b5`");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "4fc387ba1ae34ac28e6dee712679d7b5 RENAME `" . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer`");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer ENGINE=InnoDB;");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerLabel` varchar(1020) DEFAULT NOT NULL;");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerArray` text DEFAULT NOT NULL;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer RENAME `" . WIKINDX_DB_TABLEPREFIX . "4fc387ba1ae34ac28e6dee712679d7b5`");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "4fc387ba1ae34ac28e6dee712679d7b5 RENAME `" . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer`");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer ENGINE=InnoDB;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerLabel` varchar(1020) DEFAULT NOT NULL;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerArray` text DEFAULT NOT NULL;");
         }
     }
     /**

@@ -70,7 +70,7 @@ class RESOURCECATEGORYEDIT
         $pString .= $this->getTable();
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")));
         $pString .= \FORM\formEnd();
-        \AJAX\loadJavascript(FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js');
+        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js');
         GLOBALS::addTplVar('content', $pString);
         $this->session->delVar('resourceLock');
     }

@@ -45,7 +45,7 @@ class EDITPUBLISHER
      */
     public function init($message = FALSE)
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         if (array_key_exists('PublisherType', $this->vars))
         {
             $publisherType = $this->vars['PublisherType'];
@@ -118,7 +118,7 @@ class EDITPUBLISHER
      */
     public function edit()
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         if (!array_key_exists('editPublisherId', $this->vars) || !$this->vars['editPublisherId'])
         {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
@@ -174,7 +174,7 @@ class EDITPUBLISHER
      */
     public function editConfirm()
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         if (!array_key_exists('editPublisherId', $this->vars) || !$this->vars['editPublisherId'])
         {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');

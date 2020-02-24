@@ -47,7 +47,7 @@ class EDITCOLLECTION
      */
     public function init($message = FALSE)
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         include_once("core/modules/help/HELPMESSAGES.php");
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('collection'));
@@ -88,7 +88,7 @@ class EDITCOLLECTION
      */
     public function editChooseCollection()
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         include_once("core/modules/help/HELPMESSAGES.php");
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('collection'));
@@ -138,7 +138,7 @@ class EDITCOLLECTION
      */
     public function editDisplayCollection($message = FALSE)
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         include_once("core/modules/help/HELPMESSAGES.php");
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('collection'));
@@ -256,7 +256,7 @@ class EDITCOLLECTION
         $pString .= \FORM\formSubmit($this->messages->text("submit", "Edit")) . \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
         // Load at end because .js initialization needs various DIVs to be in the page before they are made invisible
-        \AJAX\loadJavascript(FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/resource/resourceForm.js');
+        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/resource/resourceForm.js');
     }
     /**
      * Add or remove a creator field (AJAX)
@@ -317,7 +317,7 @@ class EDITCOLLECTION
      */
     public function edit()
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $this->writeVarsToSession();
         if ($this->session->getVar('editLock'))
         {
@@ -453,7 +453,7 @@ class EDITCOLLECTION
      */
     public function editConfirm()
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         if ($this->session->getVar('editLock'))
         {
             $this->badInput->close($this->errors->text("done", "collection"), $this, 'init');

@@ -501,7 +501,7 @@ class CONFIGURE
                 break;
             }
         }
-        $pString = '<script type="text/javascript" src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/admin/configure.js"></script>';
+        $pString = '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/admin/configure.js"></script>';
         if ($item == 'super')
         {
             $password = FACTORY_PASSWORD::getInstance();
@@ -1579,7 +1579,7 @@ class CONFIGURE
                 return FALSE;
             }
         }
-        $sr = @ldap_search($ds, $config->WIKINDX_LDAP_DN, '(uid=' . $this->vars['configLdapTestUser'] . ')');
+        $sr = @ldap_search($ds, WIKINDX_LDAP_DN, '(uid=' . $this->vars['configLdapTestUser'] . ')');
         $info = @ldap_get_entries($ds, $sr);
         if ($info['count'] > 1)
         {
@@ -1600,7 +1600,7 @@ class CONFIGURE
         }
         else
         {
-            $ldaprdn = "cn=" . $this->vars['configLdapTestUser'] . "," . $config->WIKINDX_LDAP_DN;
+            $ldaprdn = "cn=" . $this->vars['configLdapTestUser'] . "," . WIKINDX_LDAP_DN;
         }
         // Connexion au serveur LDAP
         $ldapbind = @ldap_bind($ds, $ldaprdn, $this->vars['configLdapTestPassword']);

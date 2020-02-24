@@ -174,7 +174,7 @@ class RESOURCEFORM
 
         GLOBALS::addTplVar('content', $pString);
         // Load at end because .js initialization needs various DIVs to be in the page before they are made invisible
-        \AJAX\loadJavascript(FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/resource/resourceForm.js');
+        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/resource/resourceForm.js');
     }
     /**
      * Print optional cells such as translated works, collection, publisher

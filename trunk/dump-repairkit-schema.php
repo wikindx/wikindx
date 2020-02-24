@@ -48,7 +48,9 @@ include_once("core/startup/GLOBALS.php");
 // Set up the FACTORY objects of commonly used classes and start the timer.
 include_once("core/startup/FACTORY.php");
 
-$config = FACTORY_CONFIG::getInstance();
+// Initialize the static config read from config.php file
+include_once("core/startup/LOADSTATICCONFIG.php");
+
 $db = FACTORY_DB::getInstance();
 
 $dbSchema = $db->createRepairKitDbSchema();

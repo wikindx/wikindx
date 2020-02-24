@@ -30,7 +30,6 @@ class visualize_MODULE
     private $coremessages;
     private $errors;
     private $config;
-    private $wConfig;
     private $session;
     private $vars;
     private $db;
@@ -66,7 +65,6 @@ class visualize_MODULE
         { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
-        $this->wConfig = FACTORY_CONFIG::getInstance();
         $this->vars = GLOBALS::getVars();
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('heading'));
     }
@@ -100,7 +98,7 @@ class visualize_MODULE
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
         $pString .= FORM\formEnd();
-        \AJAX\loadJavascript($this->wConfig->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/visualize/visualize.js');
+        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/visualize/visualize.js');
         GLOBALS::addTplVar('content', $pString);
     }
     /**
@@ -389,7 +387,7 @@ class visualize_MODULE
     */
     private function display($graph)
     {
-        $filesDir = property_exists($this->wConfig, 'WIKINDX_FILE_PATH') ? $this->wConfig->WIKINDX_FILE_PATH : WIKINDX_DIR_DATA_FILES;
+        $filesDir = WIKINDX_DIR_DATA_FILES;
         $file = $filesDir . DIRECTORY_SEPARATOR . 'jpGraph' . \UTILS\uuid() . '.png';
         $graph->Stroke($file);
         $pString = HTML\img($file, $this->config->width, $this->config->height);

@@ -663,7 +663,7 @@ class IMPORTBIBTEX
             $pasteLimit = TRUE;
         }
         $finalInput = TRUE;
-        $deactivatedTypes = \FACTORY_CONFIG::getInstance()->WIKINDX_DEACTIVATE_RESOURCE_TYPES;
+        $deactivatedTypes = WIKINDX_DEACTIVATE_RESOURCE_TYPES;
         foreach ($this->entries as $key => $entry)
         {
             unset($this->entriesLeft[$key]);

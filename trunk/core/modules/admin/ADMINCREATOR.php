@@ -174,7 +174,7 @@ class ADMINCREATOR
      */
     public function groupInit($message = FALSE)
     {
-        \AJAX\loadJavascript([FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
+        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
         $potentialMasters = $this->creator->grabGroupAvailableMasters();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "groupCreators"));
         $pString = $message;
@@ -331,7 +331,7 @@ class ADMINCREATOR
      */
     public function ungroupInit($message = FALSE)
     {
-        \AJAX\loadJavascript([FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
+        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
         $mastersCopy = $masters = $this->creator->grabGroupMasters();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "ungroupCreators"));
         $pString = $message;

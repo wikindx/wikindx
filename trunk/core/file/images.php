@@ -205,7 +205,6 @@ class FileManager
     {
         global $_ERROR;
         global $_ERROR2;
-        $configMaxSize = WIKINDX_IMAGES_MAXSIZE;
         $this->readDir();
         $existingHashes = [];
         foreach ($this->files as $fileName)
@@ -241,17 +240,17 @@ class FileManager
         {
             $maxSize = $uploadMax;
         }
-        if ($configMaxSize)
+        if (WIKINDX_IMAGES_MAXSIZE)
         {
-            if ($maxSize > ($configMaxSize * 1024 * 1024))
+            if ($maxSize > (WIKINDX_IMAGES_MAXSIZE * 1024 * 1024))
             {
-                $maxSize = $configMaxSize * 1024 * 1024;
+                $maxSize = WIKINDX_IMAGES_MAXSIZE * 1024 * 1024;
             }
         }
         if ($userfile['size'] > $maxSize)
         {
             $_ERROR = "imageSize";
-            $_ERROR2 = $configMaxSize;
+            $_ERROR2 = WIKINDX_IMAGES_MAXSIZE;
 
             return;
         }
@@ -924,7 +923,7 @@ class EncodeExplorer
     public function outputHtml()
     {
         $pString = '<link rel="stylesheet" href="images.css" type="text/css">';
-        $pString .= '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . "/" . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR) . '/jquery/jquery.min.js"></script>';
+        $pString .= '<script src="' . WIKINDX_BASE_URL . "/" . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR) . '/jquery/jquery.min.js"></script>';
         $pString .= <<<END
 <script>
 END;

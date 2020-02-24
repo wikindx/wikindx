@@ -32,7 +32,7 @@ class LOADTINYMCE
         $session = FACTORY_SESSION::getInstance();
         // Allows e.g. plugins to set different modes:  word processor plugin has a 'wordProcessor' mode.
         $session->setVar('tinyMCE_mode', 'standard');
-        $this->cssPath = $this->cssPopupPath = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . GLOBALS::getUserVar('Template') . '/template.css';
+        $this->cssPath = $this->cssPopupPath = WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . GLOBALS::getUserVar('Template') . '/template.css';
     }
     /**
      * Load tiny_mce using compressor script
@@ -658,11 +658,11 @@ END;
         {
             if (!$compressorLib)
             {
-                $includeLib = '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js"></script>';
+                $includeLib = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js"></script>';
             }
             else
             {
-                $includeLib = '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_gzip.js"></script>';
+                $includeLib = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_gzip.js"></script>';
             }
             $this->pathLoaded = TRUE;
         }

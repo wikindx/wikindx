@@ -109,7 +109,7 @@ class ADMINCATEGORIES
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        \AJAX\loadJavascript([FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/admin/categoryEdit.js']);
+        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/admin/categoryEdit.js']);
         GLOBALS::addTplVar('content', $pString);
     }
     /**
@@ -217,7 +217,7 @@ class ADMINCATEGORIES
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        \AJAX\loadJavascript([FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/modules/admin/categoryEdit.js']);
+        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/admin/categoryEdit.js']);
         GLOBALS::addTplVar('content', $pString);
     }
     /**

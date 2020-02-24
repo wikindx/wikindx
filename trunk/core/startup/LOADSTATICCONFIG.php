@@ -13,9 +13,6 @@
  *
  * @package wikindx\core\startup
  */
-
-
-
 loadStaticConfig();
 
 /**
@@ -269,4 +266,18 @@ function loadStaticConfig()
     {
         die('WIKINDX_MAX_WRITECHUNK must be a positive integer (or FALSE for default configuration).');
     }
+    
+    // Redefine all PHP config as constant for making them pervasive for the whole application
+    define("WIKINDX_DB_HOST", $config->WIKINDX_DB_HOST);
+    define("WIKINDX_DB", $config->WIKINDX_DB);
+    define("WIKINDX_DB_USER", $config->WIKINDX_DB_USER);
+    define("WIKINDX_DB_PASSWORD", $config->WIKINDX_DB_PASSWORD);
+    define("WIKINDX_DB_TABLEPREFIX", $config->WIKINDX_DB_TABLEPREFIX);
+    define("WIKINDX_DB_PERSISTENT", $config->WIKINDX_DB_PERSISTENT);
+    define("WIKINDX_PATH_AUTO_DETECTION", $config->WIKINDX_PATH_AUTO_DETECTION);
+    define("WIKINDX_BASE_URL", $config->WIKINDX_BASE_URL);
+    define("WIKINDX_WIKINDX_PATH", $config->WIKINDX_WIKINDX_PATH);
+    define("WIKINDX_MEMORY_LIMIT", $config->WIKINDX_MEMORY_LIMIT);
+    define("WIKINDX_MAX_EXECUTION_TIMEOUT", $config->WIKINDX_MAX_EXECUTION_TIMEOUT);
+    define("WIKINDX_MAX_WRITECHUNK", $config->WIKINDX_MAX_WRITECHUNK);
 }

@@ -89,7 +89,7 @@ include_once("core/startup/WEBSERVERCONFIG.php");
 		padding : 0 10px 0 0;
 	}
 	</style>
-        <script src="<?php echo FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . "/" . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR); ?>/jquery/jquery.min.js"></script>
+        <script src="<?php echo WIKINDX_BASE_URL . "/" . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR); ?>/jquery/jquery.min.js"></script>
 	<script language="JavaScript" type="text/javascript">
         // SET CURSOR POSITION
         $.fn.setCursorPosition = function(pos) {

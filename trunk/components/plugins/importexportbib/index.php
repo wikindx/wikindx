@@ -37,7 +37,6 @@ class importexportbib_MODULE
      */
     public function __construct($menuInit = FALSE)
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         include_once("core/messages/PLUGINMESSAGES.php");
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');

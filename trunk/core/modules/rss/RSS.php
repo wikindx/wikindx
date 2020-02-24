@@ -21,16 +21,13 @@ class RSS
     public function init()
     {
         $db = FACTORY_DB::getInstance();
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        $denyReadOnly = $co->getOne('configDenyReadOnly');
-        unset($co);
         if (!WIKINDX_RSS_ALLOW)
         {
             header('HTTP/1.0 403 Forbidden');
             die("Access forbidden: this feature is disabled.");
         }
 
-        $baseURL = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL;
+        $baseURL = WIKINDX_BASE_URL;
 
         // set up language
         $messages = FACTORY_MESSAGES::getInstance(WIKINDX_LANGUAGE);
@@ -104,7 +101,7 @@ class RSS
 
                 if (mb_strlen($item['link'][$i]) > 0)
                 {
-                    if ($denyReadOnly)
+                    if (WIKINDX_DENY_READONLY)
                     {
                         $ItemUrl = $baseURL . "/?action=logout";
                     }

@@ -33,9 +33,8 @@ class RESOURCEMAP
      */
     public function __construct()
     {
-        $config = FACTORY_CONFIG::getInstance();
         $this->loadMap();
-        foreach ($config->WIKINDX_DEACTIVATE_RESOURCE_TYPES as $removeType)
+        foreach (WIKINDX_DEACTIVATE_RESOURCE_TYPES as $removeType)
         {
             if (($index = array_search($removeType, $this->types)) !== FALSE)
             {

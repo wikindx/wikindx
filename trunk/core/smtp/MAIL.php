@@ -224,7 +224,7 @@ class MAIL
      */
     public function scriptPath()
     {
-        return FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL;
+        return WIKINDX_BASE_URL;
     }
     /**
      * Get SCRIPT_NAME if redirect is in force

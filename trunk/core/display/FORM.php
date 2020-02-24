@@ -948,7 +948,6 @@ namespace FORM
      */
     function reduceLongText($text, $override = FALSE)
     {
-        $config = \FACTORY_CONFIG::getInstance();
         // On setup, WIKINDX_STRING_LIMIT is not yet defined
         $userStringLimit = \GLOBALS::getUserVar('StringLimit', WIKINDX_STRING_LIMIT_DEFAULT);
         $limit = $override ? $override : $userStringLimit;

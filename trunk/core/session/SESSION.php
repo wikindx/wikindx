@@ -25,7 +25,6 @@ class SESSION
             $_SESSION = [];
         }
         ksort($_SESSION, SORT_LOCALE_STRING);
-        $config = FACTORY_CONFIG::getInstance();
     }
     /**
      * Set a session variable

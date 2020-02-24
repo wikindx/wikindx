@@ -664,10 +664,6 @@ class USER
             'FileAttach', 'FileViewLoggedOnOnly', 'MaxPaste', 'LastChanges', 'LastChangesType', 'ImportBib',
             'LastChangesDayLimit', 'Quarantine', 'ListLink', 'MetadataAllow', 'MetadataUserOnly', 'ImgWidthLimit', 'ImgHeightLimit', ]);
         $row = $co->getData($fields);
-        if (array_key_exists('configFileAttach', $row) && $row['configFileAttach'])
-        {
-            $this->session->setVar("setup_FileAttach", TRUE);
-        }
         $this->session->setVar("config_configImgWidthLimit", $row['configImgWidthLimit']);
         $this->session->setVar("config_configImgHeightLimit", $row['configImgHeightLimit']);
         if ($userId)

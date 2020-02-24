@@ -688,10 +688,11 @@ class RESOURCEVIEW
         {
             array_unshift($files, $primary);
         }
-        if ($this->session->getVar("setup_Superadmin") ||
-            (WIKINDX_ORIGINATOR_EDIT_ONLY && ($userAddId == $this->userId) && $this->session->getVar("setup_FileAttach")) ||
-            ($this->session->getVar("setup_Write") && !WIKINDX_ORIGINATOR_EDIT_ONLY && $this->session->getVar("setup_FileAttach")))
-        {
+        if (
+            $this->session->getVar("setup_Superadmin") ||
+            (WIKINDX_ORIGINATOR_EDIT_ONLY && WIKINDX_FILE_ATTACH && ($userAddId == $this->userId)) ||
+            (!WIKINDX_ORIGINATOR_EDIT_ONLY && WIKINDX_FILE_ATTACH && $this->session->getVar("setup_Write"))
+        ) {
             if (isset($files))
             {
                 $attachments['attachments'] = $files;

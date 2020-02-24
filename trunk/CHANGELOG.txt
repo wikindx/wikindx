@@ -9,11 +9,12 @@ BUG FIXES:
 3. Fix display of user bibliography details when viewing a single resource.
 4. Fix SQL error in QUICKSEARCH resulting from a NULL id.
 5. Fix an error of version check in the repairKit.
-6. Fix the type of the default value of WIKINDX_MAIL_RETURN_PATH to a string and fix the current config.
-7. Fix the default smtp encryption method (after a migration).
-8. Fix the default smtp backend (after a migration).
-9. Fix the type of the default value of WIKINDX_AUTHGATE_MESSAGE to a string and fix the current config.
-10. Fix accessors to config variables of array type.
+6. When loading the basic configuration, only check email settings if email is enabled.
+7. Fix the type of the default value of WIKINDX_MAIL_RETURN_PATH to a string and fix the current config.
+8. Fix the default smtp encryption method (after a migration).
+9. Fix the default smtp backend (after a migration).
+10. Fix the type of the default value of WIKINDX_AUTHGATE_MESSAGE to a string and fix the current config.
+11. Fix accessors to config variables of array type.
 
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.

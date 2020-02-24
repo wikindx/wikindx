@@ -61,7 +61,7 @@ class PASSWORD
             $this->messages->text("hint", "hint"),
             '#',
             "",
-            $this->messages->text("hint", $hintArray[WIKINDX_PASSWORD_STRENGTH], $this->noChars) .
+            $this->messages->text("hint", $hintArray[defined("WIKINDX_PASSWORD_STRENGTH") ? WIKINDX_PASSWORD_STRENGTH : WIKINDX_PASSWORD_STRENGTH_DEFAULT], $this->noChars) .
             '     ' . $this->messages->text("hint", 'password4')
         );
         $formText = '';

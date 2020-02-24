@@ -171,7 +171,7 @@ class MENU
         {
             $stateArray[] = $this->bookmarkView = $this->bookmarkArray['View'];
         }
-        $stateArray[] = WIKINDX_MULTIUSER;
+        $stateArray[] = defined("WIKINDX_MULTIUSER") ? WIKINDX_MULTIUSER : WIKINDX_MULTIUSER_DEFAULT;
         $stateArray[] = $this->bibliographies = $this->session->getVar("setup_Bibliographies");
         $stateArray[] = $this->lastSolo = $this->session->getVar("sql_LastSolo");
         $stateArray[] = $this->stmt = $this->session->getVar("sql_ListStmt");
@@ -180,7 +180,7 @@ class MENU
         $stateArray[] = $this->lastMultiMeta = $this->session->getVar("sql_LastMultiMeta");
         $stateArray[] = $this->lastIdeaSearch = $this->session->getVar("sql_LastIdeaSearch");
         $stateArray[] = $this->basketList = $this->session->getVar("basket_List");
-        $stateArray[] = WIKINDX_IMPORT_BIB;
+        $stateArray[] = defined("WIKINDX_IMPORT_BIB") ? WIKINDX_IMPORT_BIB : WIKINDX_IMPORT_BIB_DEFAULT;
         $state = base64_encode(serialize($stateArray));
         if (($state == $this->session->getVar("menu_state")) && ($menu = $this->session->getVar("menu_menu", FALSE) !== FALSE))
         {
@@ -408,7 +408,7 @@ class MENU
                 $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsUsers")] = 'index.php?action=statistics_STATS_CORE&method=users';
             }
         }
-        elseif (WIKINDX_MULTIUSER && WIKINDX_USER_REGISTRATION && !$this->userId)
+        elseif ((defined("WIKINDX_MULTIUSER") ? WIKINDX_MULTIUSER : WIKINDX_MULTIUSER_DEFAULT) && (defined("WIKINDX_USER_REGISTRATION") ? WIKINDX_USER_REGISTRATION : WIKINDX_USER_REGISTRATION_DEFAULT) && !$this->userId)
         {
             $this->wikindx[$messages->text("menu", "statistics")] = 'index.php?action=statistics_STATS_CORE&method=totals';
         }
@@ -433,7 +433,7 @@ class MENU
         {
             $this->wikindx[$messages->text("menu", "userLogon")] = 'index.php?action=initLogon';
         }
-    	if (WIKINDX_MULTIUSER && WIKINDX_USER_REGISTRATION && WIKINDX_MAIL_USE && !$this->userId)
+    	if ((defined("WIKINDX_MULTIUSER") ? WIKINDX_MULTIUSER : WIKINDX_MULTIUSER_DEFAULT) && (defined("WIKINDX_USER_REGISTRATION") ? WIKINDX_USER_REGISTRATION : WIKINDX_USER_REGISTRATION_DEFAULT) && (defined("WIKINDX_MAIL_USE") ? WIKINDX_MAIL_USE : WIKINDX_MAIL_USE_DEFAULT) && !$this->userId)
         {
             $this->wikindx[$messages->text("menu", "register")] = 'index.php?action=initRegisterUser';
         }
@@ -690,11 +690,11 @@ class MENU
         }
         if ($this->write)
         {
-            if (WIKINDX_MAX_PASTE || $this->superAdmin)
+            if ((defined("WIKINDX_MAX_PASTE") ? WIKINDX_MAX_PASTE : WIKINDX_MAX_PASTE_DEFAULT) || $this->superAdmin)
             {
                 $this->res[$messages->text("menu", "pasteBibtex")] = 'index.php?action=import_PASTEBIBTEX_CORE';
             }
-            if (WIKINDX_IMPORT_BIB && !$this->superAdmin)
+            if ((defined("WIKINDX_IMPORT_BIB") ? WIKINDX_IMPORT_BIB : WIKINDX_IMPORT_BIB_DEFAULT) && !$this->superAdmin)
             {
                 $this->res[$messages->text("menu", "importBibtex")] = 'index.php?action=import_BIBTEXFILE_CORE';
             }
@@ -760,11 +760,11 @@ class MENU
                 $this->admin[$messages->text("menu", "images")] = 'index.php?action=admin_DELETEIMAGES_CORE';
             }
         }
-        if ((WIKINDX_QUARANTINE) && $this->checkQuarantine())
+        if ((defined("WIKINDX_QUARANTINE") ? WIKINDX_QUARANTINE : WIKINDX_QUARANTINE_DEFAULT) && $this->checkQuarantine())
         {
             $this->admin[$messages->text("menu", "quarantine")] = 'index.php?action=list_LISTSOMERESOURCES_CORE&method=quarantineProcess';
         }
-        if (!WIKINDX_MULTIUSER)
+        if (!(defined("WIKINDX_MULTIUSER") ? WIKINDX_MULTIUSER : WIKINDX_MULTIUSER_DEFAULT))
         {
             unset($this->admin['userSub']);
         }

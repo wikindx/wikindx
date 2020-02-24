@@ -319,7 +319,7 @@ class adminstyle_CONFIG {
 		
 		$search = implode(", ", defined('WIKINDX_SEARCH_FILTER') ? WIKINDX_SEARCH_FILTER : unserialize(base64_decode(WIKINDX_SEARCH_FILTER_DEFAULT)));
 		
-		$pasteBibtex = WIKINDX_MAX_PASTE;
+		$pasteBibtex = defined("WIKINDX_MAX_PASTE") ? WIKINDX_MAX_PASTE : WIKINDX_MAX_PASTE_DEFAULT;
 		
 		$tempArray = array();
 		foreach($tmpLanguageArray as $k => $v)

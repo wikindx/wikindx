@@ -142,7 +142,7 @@ if (!$actionFound)
     $split = UTF8::mb_explode("_", $vars["action"]);
     if (count($split) == 2)
     {
-        $index = WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR . $split[0] . '/index.php';
+        $index = WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR . $split[0] . DIRECTORY_SEPARATOR . 'index.php';
         if (file_exists($index))
         {
             include_once($index);

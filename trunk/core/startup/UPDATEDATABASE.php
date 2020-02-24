@@ -866,11 +866,11 @@ class UPDATEDATABASE
             $file = $newDir . DIRECTORY_SEPARATOR . $file;
             
             $doc = file_get_contents($file);
-            $doc = str_replace('<img src="images/', '<img src="' . str_replace("\\", "/", WIKINDX_DIR_DATA_IMAGES) . '/', $doc);
+            $doc = str_replace('<img src="images/', '<img src="' . WIKINDX_URL_DATA_IMAGES . '/', $doc);
         
             // Fix in 6.0.6 a previous error during the migration of images links in papers introduced in 5.9
             // The folder separator must be / and not \ otherwise the image display is broken
-            $doc = str_replace('<img src="' . WIKINDX_DIR_DATA . '\\', '<img src="' . WIKINDX_DIR_DATA . '/', $doc);
+            $doc = str_replace('<img src="' . WIKINDX_DIR_DATA . '\\', '<img src="' . WIKINDX_URL_DATA . '/', $doc);
             
             if (!file_put_contents($file, $doc))
             {
@@ -891,7 +891,7 @@ class UPDATEDATABASE
         while ($row = $this->db->fetchRow($resultset))
         {
             $text = $row['resourcemetadataText'];
-            $text = str_replace('<img src="images/', '<img src="' . str_replace("\\", "/", WIKINDX_DIR_DATA_IMAGES) . '/', $text);
+            $text = str_replace('<img src="images/', '<img src="' . WIKINDX_URL_DATA_IMAGES . '/', $text);
             $this->db->formatConditions(['resourcemetadataId' => $row['resourcemetadataId']]);
             $this->db->update('resource_metadata', ['resourcemetadataText' => $text]);
         }
@@ -1600,7 +1600,7 @@ END;
      */
     private function close($pString)
     {
-        $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
+        $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
         $string = <<<END
 <!DOCTYPE html>
 <html>

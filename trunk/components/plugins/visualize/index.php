@@ -98,7 +98,7 @@ class visualize_MODULE
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
         $pString .= FORM\formEnd();
-        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/visualize/visualize.js');
+        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/visualize/visualize.js');
         GLOBALS::addTplVar('content', $pString);
     }
     /**

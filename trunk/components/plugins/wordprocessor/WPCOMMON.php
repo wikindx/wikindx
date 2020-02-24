@@ -36,7 +36,7 @@ SetWikindxBasePath();
 include_once("core/startup/WEBSERVERCONFIG.php");
 
 echo '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
-echo '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/wordprocessor/wikindxWPcommon.js"></script>';
+echo '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/wordprocessor/wikindxWPcommon.js"></script>';
 $class = new WPCommon();
 
 include_once("core/messages/PLUGINMESSAGES.php");

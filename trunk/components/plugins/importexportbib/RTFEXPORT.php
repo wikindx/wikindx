@@ -525,9 +525,8 @@ class RTFEXPORT
                 {
                     $fullText .= $this->makeParagraph('divider') . LF;
                 }
-var_dump($fullText);
                 // Cut the string in smaller pieces to isolate hexfile name from other content
-                $tString = preg_split('/(##' . preg_quote(str_replace("\\", "/", WIKINDX_DIR_CACHE_FILES), "/") . '\/hex[0-9a-zA-Z]+\.txt##)/u', $fullText, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+                $tString = preg_split('/(##' . preg_quote(WIKINDX_URL_CACHE_FILES, "/") . '\/hex[0-9a-zA-Z]+\.txt##)/u', $fullText, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
                 // Write the ressource in the tempfile by chunk
                 $k = 0;
@@ -536,7 +535,7 @@ var_dump($fullText);
                     $c = $tString[$k];
 
                     // Is an image: replace hexfile names by the content of these files
-                    if (\UTILS\matchPrefix($c, '##' . str_replace("\\", "/", WIKINDX_DIR_CACHE_FILES) . '/hex'))
+                    if (\UTILS\matchPrefix($c, '##' . WIKINDX_URL_CACHE_FILES . '/hex'))
                     {
                         $c = str_replace('#', '', $c);
                         $this->writeImageRTF($this->bodyTempFile, str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $c));

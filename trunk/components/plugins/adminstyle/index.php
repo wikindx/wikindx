@@ -1686,7 +1686,7 @@ class adminstyle_MODULE
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Edit")));
         }
         $pString .= FORM\formEnd();
-        AJAX\loadJavascript(WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/adminstyle/adminstyle.js');
+        AJAX\loadJavascript(WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/adminstyle/adminstyle.js');
 
         return $pString;
     }

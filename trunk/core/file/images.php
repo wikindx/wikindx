@@ -1089,8 +1089,8 @@ END;
                 list($width, $height, $type, $attr) = getimagesize(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $file->getName());
 
                 // We limit the display size of images. This can be changed by the user afterwards in the textarea.
-                $widthMax = $this->session->getVar('config_configImgWidthLimit');
-                $heightMax = $this->session->getVar('config_configImgHeightLimit');
+                $widthMax = WIKINDX_IMG_WIDTH_LIMIT;
+                $heightMax = WIKINDX_IMG_HEIGHT_LIMIT;
                 if (($width > $widthMax) && ($widthMax > 0))
                 {
                     $height *= $widthMax / $width;

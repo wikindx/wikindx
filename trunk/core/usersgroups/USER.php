@@ -664,15 +664,13 @@ class USER
             'FileAttach', 'FileViewLoggedOnOnly', 'MaxPaste', 'LastChanges', 'LastChangesType', 'ImportBib',
             'LastChangesDayLimit', 'Quarantine', 'ListLink', 'MetadataAllow', 'MetadataUserOnly', 'ImgWidthLimit', 'ImgHeightLimit', ]);
         $row = $co->getData($fields);
-        $this->session->setVar("config_configImgWidthLimit", $row['configImgWidthLimit']);
-        $this->session->setVar("config_configImgHeightLimit", $row['configImgHeightLimit']);
         if ($userId)
         {
             $this->session->setVar("setup_UserId", $userId);
         }
-        elseif (array_key_exists('configListLink', $row) && $row['configListLink'])
+        else
         {
-            $this->session->setVar("setup_ListLink", $row['configListLink']);
+            $this->session->setVar("setup_ListLink", WIKINDX_LIST_LINK);
         }
         $bibs = $bib->getUserBibs();
         if (empty($bibs))

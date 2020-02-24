@@ -138,7 +138,7 @@ class MENU
                 }
             }
         }
-        elseif ((!$this->session->getVar('setup_MetadataAllow')))
+        elseif ((!WIKINDX_METADATA_ALLOW))
         {
             if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
             {
@@ -155,7 +155,7 @@ class MENU
                 }
             }
         }
-        elseif ($this->session->getVar('setup_MetadataAllow'))
+        elseif (WIKINDX_METADATA_ALLOW)
         {
             if ($row['databaseSummaryTotalQuotes'] || $row['databaseSummaryTotalParaphrases'] || $row['databaseSummaryTotalMusings'])
             {

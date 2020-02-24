@@ -630,7 +630,7 @@ class STATS
         $this->totalResources = $row['databasesummaryTotalResources'];
         $string = BR . $this->messages->text("statistics", "totalResources") .
             "&nbsp;&nbsp;" . \HTML\em($this->totalResources);
-        if ($this->session->getVar('setup_MetadataAllow'))
+        if (WIKINDX_METADATA_ALLOW)
         {
             $string .= BR . $this->messages->text("statistics", "totalQuotes") .
                 "&nbsp;&nbsp;" . \HTML\em($row['databasesummaryTotalQuotes']);
@@ -724,7 +724,7 @@ class STATS
             $string .= $this->messages->text("statistics", "userResourceTotal") .
                 "&nbsp;&nbsp;" . \HTML\em($row['count'] . "&nbsp;($user)");
         }
-        if (!$this->session->getVar('setup_MetadataAllow'))
+        if (!WIKINDX_METADATA_ALLOW)
         {
             return \HTML\p($string);
         }

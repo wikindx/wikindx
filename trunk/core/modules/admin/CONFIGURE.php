@@ -2002,10 +2002,6 @@ class CONFIGURE
         {
             $this->session->setVar('setup_MultiUser', $array['configMultiUser']);
         }
-        if (array_key_exists('configMetadataAllow', $array))
-        {
-            $this->session->setVar('setup_MetadataAllow', $array['configMetadataAllow']);
-        }
         if (array_key_exists('configMetadataUserOnly', $array))
         {
             $this->session->setVar('setup_MetadataUserOnly', $array['configMetadataUserOnly']);

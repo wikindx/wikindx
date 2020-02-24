@@ -139,7 +139,7 @@ class SEARCH
         $pString .= \HTML\tableEnd();
 
         $updateJSElementIndex = FALSE;
-        if ((!$this->session->getVar('setup_MetadataAllow')))
+        if ((!WIKINDX_METADATA_ALLOW))
         {
             if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
             {
@@ -2415,7 +2415,7 @@ class SEARCH
         {
             $this->displayUserTags = TRUE;
         }
-        if ((!$this->session->getVar('setup_MetadataAllow')))
+        if ((!WIKINDX_METADATA_ALLOW))
         {
             if ((!$this->session->getVar('setup_MetadataUserOnly')))
             {
@@ -2566,7 +2566,7 @@ class SEARCH
         {
             $fields['attachments'] = $this->messages->text("search", "attachments");
         }
-        if ((!$this->session->getVar('setup_MetadataAllow')))
+        if ((!WIKINDX_METADATA_ALLOW))
         {
             if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
             {
@@ -2599,7 +2599,7 @@ class SEARCH
         {
             $fields['quoteComment'] = $this->messages->text("search", "quoteComment");
         }
-        if ((!$this->session->getVar('setup_MetadataAllow')))
+        if ((!WIKINDX_METADATA_ALLOW))
         {
             if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
             {

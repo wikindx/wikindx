@@ -560,8 +560,8 @@ class RESOURCEVIEW
         {
             $resourceSingle['note'] = $return;
         }
-        if (((($this->session->getVar('setup_MetadataAllow')) ||
-                ((!$this->session->getVar('setup_MetadataAllow')) &&
+        if ((((WIKINDX_METADATA_ALLOW) ||
+                ((!WIKINDX_METADATA_ALLOW) &&
                 ($this->session->getVar('setup_MetadataUserOnly')) &&
                 $this->session->getVar('setup_UserId'))) &&
             ($row['resourcemiscQuarantine'] == 'N'))

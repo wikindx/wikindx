@@ -571,99 +571,12 @@ class USER
      * Can come from users or config (default values for readOnly user in which case $userId = FALSE)
      *
      * @param int $userId
-     * @param string $table
-     * @param bool $upgrade Default is FALSE
      *
      * @return bool
      */
-    public function writeSessionPreferences($userId, $table = 'users', $upgrade = FALSE)
+    public function writeSessionPreferences($userId)
     {
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
         $bib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
-/*        if ($table == 'users')
-        {
-            $basic = ["Paging", "PagingMaxLinks", "StringLimit",
-                "Language", "Style", "Template", "PagingStyle", "PagingTagCloud", "UseBibtexKey",
-                "UseWikindxKey", "DisplayBibtexLink", "DisplayCmsLink", "CmsTag", "ListLink", "TemplateMenu", ];
-            $preferences = $this->db->prependTableToField($table, $basic);
-            if ($userId)
-            {
-                $this->db->formatConditions(['usersId' => $userId]);
-            }
-            $recordset = $this->db->select($table, $preferences);
-            if (!$this->db->numRows($recordset))
-            {
-                return FALSE;
-            }
-            $row = $this->db->fetchRow($recordset);
-        }
-        else
-        { // config table
-            $table = 'config';
-            $basic = ["Paging", "PagingMaxLinks", "StringLimit", "Language", "Style", "Template", "PagingTagCloud", "ListLink"];
-            $preferences = $this->db->prependTableToField($table, $basic);
-            $row = $co->getData($preferences);
-        }
-*/        /**
-         * Check requested style plug-in has not been deleted.  If so, return first in list so that something is safely
-         * displayed when listing bibliographies.  Not required after upgrading to v4
-         */
-/*        if (!$upgrade)
-        {
-            $styles = \LOADSTYLE\loadDir();
-            if (!array_key_exists($row[$table . 'Style'], $styles))
-            {
-                $styleKeys = array_keys($styles);
-                $row['style'] = array_shift($styleKeys);
-            }
-        }
-        $table = str_replace('_', '', $table);
-        foreach ($basic as $pref)
-        {
-            if (($pref == 'PagingStyle') || ($pref == 'UseWikindxKey') || ($pref == 'UseBibtexKey')
-                 || ($pref == 'DisplayBibtexLink') || ($pref == 'DisplayCmsLink') || ($pref == 'ListLink'))
-            {
-                if (array_key_exists($table . $pref, $row))
-                {
-                    if ($row[$table . $pref] == 'N')
-                    {
-                        $this->session->delVar("setup_$pref");
-                    }
-                    elseif ($pref == 'PagingStyle')
-                    {
-                        $this->session->setVar('setup_PagingStyle', $row[$table . $pref]);
-                    }
-                    else
-                    {
-                        $this->session->setVar("setup_$pref", $row[$table . $pref]);
-                    }
-                }
-            }
-            elseif ($pref == $table . 'CmsTag')
-            {
-                if ($row[$pref])
-                {
-                    $cms = unserialize(base64_decode($row[$pref]));
-                    $this->session->setVar("setup_CmsTagStart", $cms[0]);
-                    $this->session->setVar("setup_CmsTagEnd", $cms[1]);
-                }
-                else
-                {
-                    $this->session->delVar("setup_CmsTagStart");
-                    $this->session->delVar("setup_CmsTagEnd");
-                }
-            }
-            else
-            {
-                $this->session->setVar("setup_" . $pref, $row[$table . $pref]);
-            }
-        }
-*/        // The system also requires userRegistration, notify, multiUser, maxPaste fileAttach and fileViewLoggedOnOnly etc. from
-        // WKX_config
-        $fields = $this->db->prependTableToField('config', ['UserRegistration', 'MultiUser', 'Notify',
-            'FileAttach', 'FileViewLoggedOnOnly', 'MaxPaste', 'LastChanges', 'LastChangesType', 'ImportBib',
-            'LastChangesDayLimit', 'Quarantine', 'ListLink', 'MetadataAllow', 'MetadataUserOnly', 'ImgWidthLimit', 'ImgHeightLimit', ]);
-        $row = $co->getData($fields);
         if ($userId)
         {
             $this->session->setVar("setup_UserId", $userId);

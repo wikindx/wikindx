@@ -58,7 +58,7 @@ class AUTHORIZE
                     else
                     {
                         // populate session with default values from config
-                        $user->writeSessionPreferences(FALSE, 'config');
+                        $user->writeSessionPreferences(FALSE);
                     }
                 }
             }
@@ -123,7 +123,7 @@ class AUTHORIZE
                 $this->session->setVar("setup_UserId", '1'); // superAdmin always id = '1'
                 $this->session->setVar("setup_Write", TRUE);
                 $this->session->delVar("setup_ReadOnly");
-                $user->writeSessionPreferences(FALSE, 'config');
+                $user->writeSessionPreferences(FALSE);
                 // restore some session variables if stored from last logout
                 $this->restoreEnvironment();
                 return FALSE;
@@ -197,7 +197,7 @@ class AUTHORIZE
         {
             // populate session with default values from config
             //			$user = FACTORY_USER::getInstance();
-            //			$user->writeSessionPreferences(FALSE, 'config');
+            //			$user->writeSessionPreferences(FALSE);
             return TRUE;
         }
         if ((!array_key_exists('action', $this->vars) || $this->vars['action'] != 'upgradeDBLogon'))
@@ -220,7 +220,7 @@ class AUTHORIZE
                 $this->session->setVar("setup_ReadOnly", TRUE);
                 // populate session with default values from config
                 $user = FACTORY_USER::getInstance();
-                $user->writeSessionPreferences(FALSE, 'config');
+                $user->writeSessionPreferences(FALSE);
                 $this->checkNews();
 
                 return TRUE;
@@ -507,7 +507,7 @@ class AUTHORIZE
 // set the default language prior to displaying the login prompt
        $user = FACTORY_USER::getInstance();
 // populate session with default values from config
-        $user->writeSessionPreferences(FALSE, 'config');
+        $user->writeSessionPreferences(FALSE);
         // remove any wikindx cookie that has been set
         $cookie = FACTORY_COOKIE::getInstance();
         $cookie->deleteCookie();

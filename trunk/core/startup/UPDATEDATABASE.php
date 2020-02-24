@@ -581,7 +581,7 @@ class UPDATEDATABASE
 
         $this->session->setVar("setup_UserId", 1);
         $user = FACTORY_USER::getInstance();
-        $user->writeSessionPreferences(FALSE, 'config', TRUE);
+        $user->writeSessionPreferences(FALSE);
         
         $this->updateSoftwareVersion(5.4);
         $this->checkStatus('stage5_4');

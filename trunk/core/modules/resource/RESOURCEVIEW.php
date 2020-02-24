@@ -342,7 +342,7 @@ class RESOURCEVIEW
         $lastmodified = date('r', strtotime($row['resourcetimestampTimestamp']));
         @header("Last-Modified: $lastmodified");
         $this->multiUser = $this->session->getVar('setup_MultiUser');
-        if (($this->session->getVar('setup_Quarantine')) && ($row['resourcemiscQuarantine'] == 'Y'))
+        if ((WIKINDX_QUARANTINE) && ($row['resourcemiscQuarantine'] == 'Y'))
         {
             if (!$this->session->getVar('setup_Superadmin') && ($this->session->getVar('setup_UserId') != $row['resourcemiscAddUserIdResource']))
             {
@@ -474,8 +474,8 @@ class RESOURCEVIEW
         {
             $resourceSingle['info']['keyid'] = $this->messages->text('misc', 'bibtexKey') . ':&nbsp;' . $return;
         }
-        if (((($this->session->getVar('setup_Quarantine')) && ($row['resourcemiscQuarantine'] == 'N')) ||
-            (!$this->session->getVar('setup_Quarantine'))) && ($return = $this->displayEmailFriendLink($row)))
+        if ((((WIKINDX_QUARANTINE) && ($row['resourcemiscQuarantine'] == 'N')) ||
+            (!WIKINDX_QUARANTINE)) && ($return = $this->displayEmailFriendLink($row)))
         {
             $resourceSingle['info']['email'] = $return;
         }
@@ -488,7 +488,7 @@ class RESOURCEVIEW
             $this->viewDetails($row)
         );
         $resourceSingle['info']['basket'] = $this->displayBasket($row);
-        if (($this->session->getVar('setup_Quarantine')) && $this->session->getVar('setup_Superadmin') &&
+        if ((WIKINDX_QUARANTINE) && $this->session->getVar('setup_Superadmin') &&
             ($row['resourcemiscQuarantine'] == 'Y'))
         {
             $quarantine = \FORM\formHeader('admin_QUARANTINE_CORE');
@@ -498,7 +498,7 @@ class RESOURCEVIEW
             $quarantine .= \FORM\formEnd();
             $resourceSingle['info']['approveResource'] = $quarantine;
         }
-        elseif (($this->session->getVar('setup_Quarantine')) && $this->session->getVar('setup_Superadmin'))
+        elseif ((WIKINDX_QUARANTINE) && $this->session->getVar('setup_Superadmin'))
         {
             $quarantine = \FORM\formHeader('admin_QUARANTINE_CORE');
             $quarantine .= \FORM\hidden("method", 'putInQuarantine');

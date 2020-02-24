@@ -376,7 +376,7 @@ class IMPORT
     {
         $fields[] = 'resourcemiscId';
         $values[] = $this->resourceId;
-        if (($this->session->getVar('setup_Superadmin') != 1) && ($this->session->getVar('setup_Quarantine')))
+        if (($this->session->getVar('setup_Superadmin') != 1) && (WIKINDX_QUARANTINE))
         {
             $fields[] = 'resourcemiscQuarantine';
             $values[] = 'Y';

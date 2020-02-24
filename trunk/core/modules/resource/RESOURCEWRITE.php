@@ -65,7 +65,7 @@ class RESOURCEWRITE
     {
         if ($this->session->getVar('resourceFormType') == 'new')
         {
-            if (($this->session->getVar('setup_Superadmin') != 1) && ($this->session->getVar('setup_Quarantine')))
+            if (($this->session->getVar('setup_Superadmin') != 1) && (WIKINDX_QUARANTINE))
             {
                 $success = $this->success->text("resourceAdd") . \HTML\p($this->success->text('quarantined'));
             }
@@ -515,7 +515,7 @@ class RESOURCEWRITE
             $this->db->formatConditions(['resourcemiscId' => $this->resourceId]);
             $this->db->delete('resource_misc');
         }
-        elseif (($this->session->getVar('setup_Superadmin') != 1) && ($this->session->getVar('setup_Quarantine')))
+        elseif (($this->session->getVar('setup_Superadmin') != 1) && (WIKINDX_QUARANTINE))
         {
             $writeArray['resourcemiscQuarantine'] = 'Y';
         }

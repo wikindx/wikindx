@@ -767,7 +767,7 @@ class MENU
                 $this->admin[$messages->text("menu", "images")] = 'index.php?action=admin_DELETEIMAGES_CORE';
             }
         }
-        if (($this->session->getVar('setup_Quarantine')) && $this->checkQuarantine())
+        if ((WIKINDX_QUARANTINE) && $this->checkQuarantine())
         {
             $this->admin[$messages->text("menu", "quarantine")] = 'index.php?action=list_LISTSOMERESOURCES_CORE&method=quarantineProcess';
         }

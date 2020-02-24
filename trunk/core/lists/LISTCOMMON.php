@@ -207,7 +207,7 @@ class LISTCOMMON
         {
             GLOBALS::addTplVar('multiUser', TRUE);
         }
-        $quarantineSwitch = ($this->session->getVar('setup_Quarantine'));
+        $quarantineSwitch = (WIKINDX_QUARANTINE);
         $useDateFormatMethod = method_exists($this->languageClass, "dateFormat");
         //$citeRadioButtonFirst = TRUE;
 

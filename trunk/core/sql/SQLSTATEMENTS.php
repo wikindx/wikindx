@@ -736,7 +736,7 @@ class SQLSTATEMENTS
      */
     public function quarantine($front = FALSE, $joinId = 'resourceId', $joinMisc = TRUE)
     {
-        if (!$this->session->getVar('setup_Quarantine'))
+        if (!WIKINDX_QUARANTINE)
         {
             return '';
         }

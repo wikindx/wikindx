@@ -162,7 +162,7 @@ class RANDOMMETADATA
             $this->resourceLink = "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $row['resourceId']);
             $this->bibStyle->linkUrl = FALSE;
         }
-        if (($row['resourcemiscQuarantine'] == 'Y') && ($this->session->getVar('setup_Quarantine')))
+        if (($row['resourcemiscQuarantine'] == 'Y') && (WIKINDX_QUARANTINE))
         {
             $resourceList[0]['quarantine'] = $this->icons->getHTML("quarantine");
         }

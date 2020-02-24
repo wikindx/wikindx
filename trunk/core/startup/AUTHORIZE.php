@@ -96,8 +96,6 @@ class AUTHORIZE
                 // keep template and language etc.
                 $language = WIKINDX_LANGUAGE;
                 $template = WIKINDX_TEMPLATE;
-                $userReg = WIKINDX_USER_REGISTRATION;
-                $this->session->setVar('setup_UserRegistration', $userReg);
                 $this->initLogon(); // login prompt
                 FACTORY_CLOSENOMENU::getInstance();
             }

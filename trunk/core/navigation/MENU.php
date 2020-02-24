@@ -102,7 +102,7 @@ class MENU
         $this->smartyMenu = new SmartyMenu();
         $this->write = $this->session->getVar("setup_Write");
         $this->userId = $this->session->getVar("setup_UserId");
-        $this->userRegistration = $this->session->getVar("setup_UserRegistration");
+        $this->userRegistration = WIKINDX_USER_REGISTRATION;
         $this->reduceMenuLevel = $this->session->getVar("setup_ReduceMenuLevel");
         if ($this->session->issetVar("setup_ReduceMenuLevelPretext"))
         {

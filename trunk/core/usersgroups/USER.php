@@ -664,10 +664,6 @@ class USER
             'FileAttach', 'FileViewLoggedOnOnly', 'MaxPaste', 'LastChanges', 'LastChangesType', 'ImportBib',
             'LastChangesDayLimit', 'Quarantine', 'ListLink', 'MetadataAllow', 'MetadataUserOnly', 'ImgWidthLimit', 'ImgHeightLimit', ]);
         $row = $co->getData($fields);
-        if (array_key_exists('configUserRegistration', $row) && $row['configUserRegistration'])
-        {
-            $this->session->setVar("setup_UserRegistration", TRUE);
-        }
         if (array_key_exists('configNotify', $row) && $row['configNotify'])
         {
             $this->session->setVar("setup_Notify", $row['configNotify']);

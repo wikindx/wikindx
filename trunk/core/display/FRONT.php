@@ -95,7 +95,7 @@ class FRONT
             return FALSE;
         }
         $this->db->ascDesc = $this->db->desc; // descending order
-        if ($this->session->getVar("setup_LastChangesType") == 'days')
+        if (WIKINDX_LAST_CHANGES_TYPE == 'days')
         { // Display from last $limit days
             if (($limitResources = $this->session->getVar("setup_LastChangesDayLimit")) < 0)
             {

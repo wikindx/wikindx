@@ -688,7 +688,6 @@ class USER
         $this->session->setVar("setup_MaxPaste", $row['configMaxPaste']);
         $this->session->setVar("setup_LastChanges", $row['configLastChanges']);
         $this->session->setVar("setup_LastChangesDayLimit", $row['configLastChangesDayLimit']);
-        $this->session->setVar("setup_LastChangesType", $row['configLastChangesType']);
         $this->session->setVar("setup_MetadataUserOnly", $row['configMetadataUserOnly']);
         $this->session->setVar("config_configImgWidthLimit", $row['configImgWidthLimit']);
         $this->session->setVar("config_configImgHeightLimit", $row['configImgHeightLimit']);

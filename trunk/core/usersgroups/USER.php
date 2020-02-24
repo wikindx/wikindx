@@ -685,7 +685,6 @@ class USER
         {
             $this->session->setVar("setup_ImportBib", TRUE);
         }
-        $this->session->setVar("setup_MetadataUserOnly", $row['configMetadataUserOnly']);
         $this->session->setVar("config_configImgWidthLimit", $row['configImgWidthLimit']);
         $this->session->setVar("config_configImgHeightLimit", $row['configImgHeightLimit']);
         if ($userId)

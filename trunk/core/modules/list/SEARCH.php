@@ -141,7 +141,7 @@ class SEARCH
         $updateJSElementIndex = FALSE;
         if ((!WIKINDX_METADATA_ALLOW))
         {
-            if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
+            if ((WIKINDX_METADATA_USERONLY) && $this->session->getVar('setup_UserId'))
             {
                 $wordFields = ['title', 'note', 'abstract', 'quote', 'quoteComment', 'paraphrase', 'paraphraseComment', 'musing', 'idea'];
             }
@@ -2417,7 +2417,7 @@ class SEARCH
         }
         if ((!WIKINDX_METADATA_ALLOW))
         {
-            if ((!$this->session->getVar('setup_MetadataUserOnly')))
+            if ((!WIKINDX_METADATA_USERONLY))
             {
                 $this->displayIdeas = $this->displayQCs = $this->displayPCs = $this->displayMusings = $this->displayMKs = FALSE;
 
@@ -2568,7 +2568,7 @@ class SEARCH
         }
         if ((!WIKINDX_METADATA_ALLOW))
         {
-            if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
+            if ((WIKINDX_METADATA_USERONLY) && $this->session->getVar('setup_UserId'))
             {
                 if ($userBib)
                 {
@@ -2601,7 +2601,7 @@ class SEARCH
         }
         if ((!WIKINDX_METADATA_ALLOW))
         {
-            if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
+            if ((WIKINDX_METADATA_USERONLY) && $this->session->getVar('setup_UserId'))
             {
                 if ($userBib)
                 {

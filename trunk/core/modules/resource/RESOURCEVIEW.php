@@ -562,7 +562,7 @@ class RESOURCEVIEW
         }
         if ((((WIKINDX_METADATA_ALLOW) ||
                 ((!WIKINDX_METADATA_ALLOW) &&
-                ($this->session->getVar('setup_MetadataUserOnly')) &&
+                (WIKINDX_METADATA_USERONLY) &&
                 $this->session->getVar('setup_UserId'))) &&
             ($row['resourcemiscQuarantine'] == 'N'))
             ||

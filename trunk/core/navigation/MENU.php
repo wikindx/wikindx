@@ -140,7 +140,7 @@ class MENU
         }
         elseif ((!WIKINDX_METADATA_ALLOW))
         {
-            if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
+            if ((WIKINDX_METADATA_USERONLY) && $this->session->getVar('setup_UserId'))
             {
                 if ($row['databaseSummaryTotalQuotes'] || $row['databaseSummaryTotalParaphrases'] || $row['databaseSummaryTotalMusings'])
                 {

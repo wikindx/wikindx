@@ -29,7 +29,6 @@ class TEXTQP
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -39,7 +38,7 @@ class TEXTQP
         $this->cite = FACTORY_CITE::getInstance();
 
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        \AJAX\loadJavascript($this->config->WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js');
+        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js');
     }
     /**
      * display the editing form
@@ -84,7 +83,7 @@ class TEXTQP
             }
             else
             {
-                $text = \HTML\dbToHtmlTidy($row['resourcemetadataText']);
+                $text = \HTML\nlToHtml($row['resourcemetadataText']);
             }
             // Get user's comment
             $this->db->formatConditions(['resourcemetadataAddUserId' => $userId]);
@@ -226,7 +225,7 @@ class TEXTQP
                 }
                 // Comment can be viewed
                 $username = $this->user->displayUserAddEdit($row['resourcemetadataAddUserId'], TRUE, 'comment');
-                $metadata['otherComments'][$index]['comment'] = $this->cite->parseCitations(\HTML\dbToHtmlTidy($row['resourcemetadataText']), 'html');
+                $metadata['otherComments'][$index]['comment'] = $this->cite->parseCitations(\HTML\nlToHtml($row['resourcemetadataText']), 'html');
                 $metadata['otherComments'][$index]['userAdd'] = $username[0];
                 $metadata['otherComments'][$index]['timestamp'] = $row['resourcemetadataTimestamp'];
                 ++$index;

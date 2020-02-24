@@ -19,7 +19,6 @@ class ADMINCATEGORIES
     private $messages;
     private $success;
     private $session;
-    private $config;
     private $gatekeep;
     private $badInput;
     private $categories;
@@ -32,7 +31,6 @@ class ADMINCATEGORIES
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
         $this->category = FACTORY_CATEGORY::getInstance();
 
@@ -111,7 +109,7 @@ class ADMINCATEGORIES
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        \AJAX\loadJavascript([$this->config->WIKINDX_BASE_URL . '/core/modules/admin/categoryEdit.js']);
+        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/admin/categoryEdit.js']);
         GLOBALS::addTplVar('content', $pString);
     }
     /**
@@ -219,7 +217,7 @@ class ADMINCATEGORIES
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        \AJAX\loadJavascript([$this->config->WIKINDX_BASE_URL . '/core/modules/admin/categoryEdit.js']);
+        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/admin/categoryEdit.js']);
         GLOBALS::addTplVar('content', $pString);
     }
     /**
@@ -325,7 +323,7 @@ class ADMINCATEGORIES
         $recordset = $this->db->select('subcategory', 'subcategorySubCategory');
         while ($row = $this->db->fetchRow($recordset))
         {
-            $list[] = \HTML\dbToHtmlTidy($row['subcategorySubCategory']);
+            $list[] = \HTML\nlToHtml($row['subcategorySubCategory']);
         }
         $subcategories = html_entity_decode(implode(', ', $list));
         $pString = \HTML\p($this->messages->text("category", "deleteSubConfirm", ": $subcategories"));

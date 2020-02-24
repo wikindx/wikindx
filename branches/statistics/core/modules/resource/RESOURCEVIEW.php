@@ -15,7 +15,6 @@ class RESOURCEVIEW
 {
     private $db;
     private $vars;
-    private $config;
     private $icons;
     private $errors;
     private $messages;
@@ -32,7 +31,6 @@ class RESOURCEVIEW
     private $note;
     private $userId;
     private $nextDelete = FALSE;
-    private $url;
     private $custom;
     private $allowEdit = FALSE;
     private $multiUser = FALSE;
@@ -44,7 +42,6 @@ class RESOURCEVIEW
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -56,7 +53,6 @@ class RESOURCEVIEW
         $this->user = FACTORY_USER::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
-        $this->url = FACTORY_URL::getInstance();
         include_once("core/browse/BROWSECOMMON.php");
         $this->commonBib = new BROWSECOMMON();
         include_once('core/modules/resource/RESOURCEABSTRACT.php');
@@ -309,7 +305,7 @@ class RESOURCEVIEW
     public function readMe()
     {
         $this->db->formatConditions(['resourceattachmentsId' => $this->vars['id']]);
-        $pString = \HTML\dbToHtmlTidy($this->db->fetchOne($this->db->select('resource_attachments', 'resourceattachmentsDescription')));
+        $pString = \HTML\nlToHtml($this->db->fetchOne($this->db->select('resource_attachments', 'resourceattachmentsDescription')));
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSEPOPUP::getInstance();
     }
@@ -451,13 +447,13 @@ class RESOURCEVIEW
         {
             $resourceSingle['info']['peerReviewed'] = $this->messages->text('resources', 'peerReviewed');
         }
-        if ($return = \FORM\reduceLongText(\HTML\dbToHtmlTidy($row['resourceDoi']), 80))
+        if ($return = \FORM\reduceLongText(\HTML\nlToHtml($row['resourceDoi']), 80))
         {
             $resourceSingle['info']['doi'] = $this->messages->text('resources', 'doi') . ':&nbsp;' .
                 \HTML\a("link", $return, 'https://dx.doi.org/' .
-                \HTML\dbToHtmlTidy($row['resourceDoi']), "_new");
+                \HTML\nlToHtml($row['resourceDoi']), "_new");
         }
-        if ($return = \HTML\dbToHtmlTidy($row['resourceIsbn']))
+        if ($return = \HTML\nlToHtml($row['resourceIsbn']))
         {
             if (($row['resourceType'] == 'book') || ($row['resourceType'] == 'book_article') || ($row['resourceType'] == 'book_chapter'))
             {
@@ -611,7 +607,7 @@ class RESOURCEVIEW
         }
         GLOBALS::setTplVar('resourceSingle', $resourceSingle);
         unset($resourceSingle);
-        if ($this->config->WIKINDX_GS_ALLOW)
+        if (WIKINDX_GS_ALLOW)
         {
             if ($gs = $this->gs->export($row, $this->bibStyle->coinsCreators))
             {
@@ -693,8 +689,8 @@ class RESOURCEVIEW
             array_unshift($files, $primary);
         }
         if ($this->session->getVar("setup_Superadmin") ||
-            ($this->config->WIKINDX_ORIGINATOR_EDITONLY && ($userAddId == $this->userId) && $this->session->getVar("setup_FileAttach")) ||
-            ($this->session->getVar("setup_Write") && !$this->config->WIKINDX_ORIGINATOR_EDITONLY && $this->session->getVar("setup_FileAttach")))
+            (WIKINDX_ORIGINATOR_EDIT_ONLY && ($userAddId == $this->userId) && $this->session->getVar("setup_FileAttach")) ||
+            ($this->session->getVar("setup_Write") && !WIKINDX_ORIGINATOR_EDIT_ONLY && $this->session->getVar("setup_FileAttach")))
         {
             if (isset($files))
             {
@@ -753,10 +749,10 @@ class RESOURCEVIEW
         {
             if ($row['resourcetextUrls'])
             {
-                $links = $this->url->getUrls($row['resourcetextUrls']);
+                $links = \URL\getUrls($row['resourcetextUrls']);
                 if ($row['resourcetextUrlText'])
                 {
-                    $names = $this->url->getUrls($row['resourcetextUrlText']);
+                    $names = \URL\getUrls($row['resourcetextUrlText']);
                 }
                 foreach ($links as $url)
                 {
@@ -765,18 +761,18 @@ class RESOURCEVIEW
                         $name = array_shift($names);
                         if ($name)
                         {
-                            $urls[] = \HTML\a('link', $this->url->reduceUrl(\HTML\dbToHtmlTidy($name)), $url, '_new');
+                            $urls[] = \HTML\a('link', \URL\reduceUrl(\HTML\nlToHtml($name)), $url, '_new');
                         }
                         else
                         {
-                            $urls[] = \HTML\a('link', $this->url->reduceUrl($url), $url, '_new');
+                            $urls[] = \HTML\a('link', \URL\reduceUrl($url), $url, '_new');
                         }
                     }
                     else
                     {
                         $urls[] = \HTML\a(
                             'link',
-                            $this->url->reduceUrl($url),
+                            \URL\reduceUrl($url),
                             $url,
                             '_new'
                         );
@@ -784,7 +780,7 @@ class RESOURCEVIEW
                 }
             }
         }
-        if ($this->session->getVar("setup_Write") && (!$this->config->WIKINDX_ORIGINATOR_EDITONLY || ($userAddId == $this->userId)
+        if ($this->session->getVar("setup_Write") && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($userAddId == $this->userId)
             || $this->session->getVar("setup_Superadmin")))
         {
             if (isset($urls))
@@ -1004,7 +1000,7 @@ class RESOURCEVIEW
         $write = $this->session->getVar('setup_Write');
         $links = [];
         $edit = FALSE;
-        if ($write && (!$this->config->WIKINDX_ORIGINATOR_EDITONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))
+        if ($write && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))
         {
             $links['edit'] = \HTML\a(
                 $this->icons->getClass("edit"),
@@ -1046,7 +1042,7 @@ class RESOURCEVIEW
         }
         // display CMS link if required
         // link is actually a JavaScript call
-        if (GLOBALS::getUserVar('DisplayCmsLink') && $this->config->WIKINDX_CMS_ALLOW)
+        if (GLOBALS::getUserVar('DisplayCmsLink') && WIKINDX_CMS_ALLOW)
         {
             $links['cms'] = \HTML\a(
                 'cmsLink',
@@ -1115,12 +1111,12 @@ class RESOURCEVIEW
             $row2 = $this->db->fetchRow($resultset2);
             if ($row2['count'] > 1)
             { // i.e. more than one resource for this language
-                $array[] = \HTML\a("link", \HTML\dbToHtmlTidy($row['languageLanguage']), 'index.php?' .
+                $array[] = \HTML\a("link", \HTML\nlToHtml($row['languageLanguage']), 'index.php?' .
                     htmlentities('action=list_LISTSOMERESOURCES_CORE&method=languageProcess&id=' . $row2['resourcelanguageLanguageId']));
             }
             else
             {
-                $array[] = \HTML\dbToHtmlTidy($row['languageLanguage']);
+                $array[] = \HTML\nlToHtml($row['languageLanguage']);
             }
         }
         if (!isset($array))
@@ -1131,7 +1127,7 @@ class RESOURCEVIEW
             $resultset = $this->db->select('resource_language', ['resourcelanguageLanguageId', 'languageLanguage']);
             while ($row = $this->db->fetchRow($resultset))
             {
-                $array[] = \HTML\dbToHtmlTidy($row['languageLanguage']);
+                $array[] = \HTML\nlToHtml($row['languageLanguage']);
             }
             if (!isset($array))
             {
@@ -1168,12 +1164,12 @@ class RESOURCEVIEW
             $row2 = $this->db->fetchRow($resultset2);
             if ($row2['count'] > 1)
             { // i.e. more than one resource for this category
-                $array[] = \HTML\a("link", \HTML\dbToHtmlTidy($row['categoryCategory']), 'index.php?' .
+                $array[] = \HTML\a("link", \HTML\nlToHtml($row['categoryCategory']), 'index.php?' .
                     htmlentities('action=list_LISTSOMERESOURCES_CORE&method=categoryProcess&id=' . $row2['resourcecategoryCategoryId']));
             }
             else
             {
-                $array[] = \HTML\dbToHtmlTidy($row['categoryCategory']);
+                $array[] = \HTML\nlToHtml($row['categoryCategory']);
             }
         }
         if (!isset($array))
@@ -1185,7 +1181,7 @@ class RESOURCEVIEW
             $resultset = $this->db->select('resource_category', ['resourcecategoryCategoryId', 'categoryCategory']);
             while ($row = $this->db->fetchRow($resultset))
             {
-                $array[] = \HTML\dbToHtmlTidy($row['categoryCategory']);
+                $array[] = \HTML\nlToHtml($row['categoryCategory']);
             }
             if (!isset($array))
             {
@@ -1222,12 +1218,12 @@ class RESOURCEVIEW
             $row2 = $this->db->fetchRow($resultset2);
             if ($row2['count'] > 1)
             { // i.e. more than one resource for this subcategory
-                $array[] = \HTML\a("link", \HTML\dbToHtmlTidy($row['subcategorySubcategory']), 'index.php?' .
+                $array[] = \HTML\a("link", \HTML\nlToHtml($row['subcategorySubcategory']), 'index.php?' .
                     htmlentities('action=list_LISTSOMERESOURCES_CORE&method=subcategoryProcess&id=' . $row2['resourcecategorySubcategoryId']));
             }
             else
             {
-                $array[] = \HTML\dbToHtmlTidy($row['subcategorySubcategory']);
+                $array[] = \HTML\nlToHtml($row['subcategorySubcategory']);
             }
         }
         if (!isset($array))
@@ -1239,7 +1235,7 @@ class RESOURCEVIEW
             $resultset = $this->db->select('resource_category', ['resourcecategorySubcategoryId', 'subcategorySubcategory']);
             while ($row = $this->db->fetchRow($resultset))
             {
-                $array[] = \HTML\dbToHtmlTidy($row['subcategorySubcategory']);
+                $array[] = \HTML\nlToHtml($row['subcategorySubcategory']);
             }
             if (!isset($array))
             {
@@ -1281,7 +1277,7 @@ class RESOURCEVIEW
             $resultset = $this->db->selectCounts('resource_misc', 'resourcemiscPublisher');
             $publisherId = $row['resourcemiscPublisher'];
         }
-        $name = \HTML\dbToHtmlTidy($row['publisherLocation'] ? $row['publisherName'] .
+        $name = \HTML\nlToHtml($row['publisherLocation'] ? $row['publisherName'] .
             ' (' . $row['publisherLocation'] . ')' : $row['publisherName']);
         $countRow = $this->db->fetchRow($resultset);
         if ($countRow['count'] > 1)
@@ -1313,7 +1309,7 @@ class RESOURCEVIEW
         }
         $this->db->formatConditions(['resourcemiscCollection' => $row['resourcemiscCollection']]);
         $resultset = $this->db->selectCounts('resource_misc', 'resourcemiscCollection');
-        $name = preg_replace("/{(.*)}/Uu", "$1", \HTML\dbToHtmlTidy($row['collectionTitle']));
+        $name = preg_replace("/{(.*)}/Uu", "$1", \HTML\nlToHtml($row['collectionTitle']));
         $countRow = $this->db->fetchRow($resultset);
         if ($countRow['count'] > 1)
         { // i.e. more than one resource for this collection
@@ -1352,7 +1348,7 @@ class RESOURCEVIEW
             { // i.e. more than one resource for this keyword
                 $array[] = \HTML\a(
                     "link",
-                    \HTML\dbToHtmlTidy($row['keywordKeyword']),
+                    \HTML\nlToHtml($row['keywordKeyword']),
                     'index.php?' .
                     htmlentities('action=list_LISTSOMERESOURCES_CORE&method=keywordProcess&id=' . $row2['resourcekeywordKeywordId']),
                     "",
@@ -1364,7 +1360,7 @@ class RESOURCEVIEW
                 $array[] = \HTML\aBrowse(
                     'green',
                     '1em',
-                    \HTML\dbToHtmlTidy($row['keywordKeyword']),
+                    \HTML\nlToHtml($row['keywordKeyword']),
                     '#',
                     "",
                     \HTML\dbToHtmlPopupTidy($row['keywordGlossary'])
@@ -1372,7 +1368,7 @@ class RESOURCEVIEW
             }
             else
             {
-                $array[] = \HTML\dbToHtmlTidy($row['keywordKeyword']);
+                $array[] = \HTML\nlToHtml($row['keywordKeyword']);
             }
         }
         if (!isset($array))
@@ -1383,7 +1379,7 @@ class RESOURCEVIEW
             $resultset = $this->db->select('resource_keyword', ['resourcekeywordKeywordId', 'keywordKeyword']);
             while ($row = $this->db->fetchRow($resultset))
             {
-                $array[] = \HTML\dbToHtmlTidy($row['keywordKeyword']);
+                $array[] = \HTML\nlToHtml($row['keywordKeyword']);
             }
             if (!isset($array))
             {
@@ -1423,12 +1419,12 @@ class RESOURCEVIEW
             $row2 = $this->db->fetchRow($resultset2);
             if ($row2['count'] > 1)
             { // i.e. more than one resource for this usertag
-                $array[] = \HTML\a("link", \HTML\dbToHtmlTidy($row['usertagsTag']), 'index.php?' .
+                $array[] = \HTML\a("link", \HTML\nlToHtml($row['usertagsTag']), 'index.php?' .
                     htmlentities('action=list_LISTSOMERESOURCES_CORE&method=usertagProcess&id=' . $row2['resourceusertagsTagId']));
             }
             else
             {
-                $array[] = \HTML\dbToHtmlTidy($row['usertagsTag']);
+                $array[] = \HTML\nlToHtml($row['usertagsTag']);
             }
         }
         $title = $this->messages->text("resources", "userTags");
@@ -1491,8 +1487,8 @@ class RESOURCEVIEW
         );
         while ($catRow = $this->db->fetchRow($resultset))
         {
-            $name = ($catRow['creatorPrefix'] ? \HTML\dbToHtmlTidy($catRow['creatorPrefix']) . '&nbsp;' : '') .
-                \HTML\dbToHtmlTidy($catRow['creatorSurname']);
+            $name = ($catRow['creatorPrefix'] ? \HTML\nlToHtml($catRow['creatorPrefix']) . '&nbsp;' : '') .
+                \HTML\nlToHtml($catRow['creatorSurname']);
             if ($catRow['count'] > 1)
             { // i.e. more than one resource for this creator
                 if (array_key_exists($catRow['resourcecreatorCreatorId'], $alias))
@@ -1540,8 +1536,8 @@ class RESOURCEVIEW
             );
             while ($row = $this->db->fetchRow($resultset))
             {
-                $array[] = ($row['creatorPrefix'] ? \HTML\dbToHtmlTidy($row['creatorPrefix']) . '&nbsp;' : '') .
-                    \HTML\dbToHtmlTidy($row['creatorSurname']);
+                $array[] = ($row['creatorPrefix'] ? \HTML\nlToHtml($row['creatorPrefix']) . '&nbsp;' : '') .
+                    \HTML\nlToHtml($row['creatorSurname']);
             }
             if (!isset($array))
             {
@@ -1582,8 +1578,8 @@ class RESOURCEVIEW
         $resultSet = $this->db->select('creator', ['creatorSameAs', 'creatorSurname', 'creatorPrefix']);
         while ($row = $this->db->fetchRow($resultSet))
         {
-            $row['creatorPrefix'] !== FALSE ? $name = \HTML\dbToHtmlTidy($row['creatorPrefix']) . ' ' . \HTML\dbToHtmlTidy($row['creatorSurname']) :
-                $name = \HTML\dbToHtmlTidy($row['creatorSurname']);
+            $row['creatorPrefix'] !== FALSE ? $name = \HTML\nlToHtml($row['creatorPrefix']) . ' ' . \HTML\nlToHtml($row['creatorSurname']) :
+                $name = \HTML\nlToHtml($row['creatorSurname']);
             if (!array_key_exists($row['creatorSameAs'], $alias))
             {
                 $alias[$row['creatorSameAs']][] = $name;
@@ -1622,7 +1618,7 @@ class RESOURCEVIEW
         {
             $array[] = \HTML\a(
                 "link",
-                \HTML\dbToHtmlTidy($line['userbibliographyTitle']),
+                \HTML\nlToHtml($line['userbibliographyTitle']),
                 "index.php?action=bibliography_CHOOSEBIB_CORE" .
                 htmlentities("&method=displayBib") . htmlentities("&BibId=" . $line['userbibliographyId'])
             );
@@ -1639,8 +1635,7 @@ class RESOURCEVIEW
      */
     private function displayEmailFriendLink($row)
     {
-        if ($this->session->getVar("setup_MultiUser") && $this->config->WIKINDX_READONLYACCESS
-            && $this->config->WIKINDX_MAIL_SERVER)
+        if ($this->session->getVar("setup_MultiUser") && WIKINDX_READ_ONLY_ACCESS && WIKINDX_MAIL_USE)
         {
             $linkStyle = "link linkCiteHidden";
             $link = $this->messages->text("misc", "emailToFriend");
@@ -1726,7 +1721,7 @@ class RESOURCEVIEW
             $name = $this->db->selectFirstField('resource_creator', 'resourcecreatorCreatorSurname');
             if ($name)
             {
-                $name = \HTML\dbToHtmlTidy($name);
+                $name = \HTML\nlToHtml($name);
             }
             else
             {

@@ -16,8 +16,6 @@ class TEMPLATE
     /** object */
     public $tpl;
     /** object */
-    private $config;
-    /** object */
     private $errors;
     /** object */
     private $session;
@@ -39,6 +37,10 @@ class TEMPLATE
     {
         include_once(WIKINDX_DIR_COMPONENT_VENDOR . "/smarty/libs/Smarty.class.php");
         $this->tpl = new Smarty();
+
+        // PHP 8 will make E_ALL the default error level,
+        // in preparation for its support we also make this level the default
+        $this->tpl->error_reporting = E_ALL;
 
         // We never execute untrusted code, so we can disable this feature of Smarty
         $this->tpl->disableSecurity();
@@ -91,12 +93,6 @@ class TEMPLATE
      */
     public function loadTemplate($setupMode = FALSE)
     {
-        // During the upgrade / update process the database is not always available to query the configuration
-        if (!$setupMode)
-        {
-            $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        }
-
         $this->session = FACTORY_SESSION::getInstance();
         $tplArray = $this->loadDir();
         $this->name = GLOBALS::getUserVar('Template');
@@ -129,8 +125,10 @@ class TEMPLATE
         // template may have been disabled by admin
         if (!is_file(WIKINDX_DIR_COMPONENT_TEMPLATES . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR . 'component.json'))
         {
+            // During the upgrade / update process the database is not always available to query the configuration
             if (!$setupMode)
             {
+                $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
                 $this->name = $co->getOne('configTemplate');
             }
         }
@@ -151,14 +149,8 @@ class TEMPLATE
         $this->createDirectory($this->compileDir);
         $this->tpl->setCompileDir($this->compileDir);
 
-        if (!$setupMode)
-        {
-            $this->tpl->setForceCompile($co->getOne('configBypassSmartyCompile'));
-        }
-        else
-        {
-            $this->tpl->setForceCompile(TRUE);
-        }
+        // Force compilation on setup mode, or apply the current config policy
+        $this->tpl->setForceCompile($setupMode || WIKINDX_BYPASS_SMARTY_COMPILATION);
 
         // Configure cache options of Smarty
         // We use dynamic pages so certainly don't want caching!

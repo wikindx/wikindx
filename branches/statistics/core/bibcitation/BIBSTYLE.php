@@ -37,8 +37,6 @@ class BIBSTYLE
     public $linkUrl = TRUE;
     /** object */
     private $db;
-    /** object */
-    private $url;
     /** array */
     private $row = NULL;
 
@@ -501,8 +499,7 @@ class BIBSTYLE
         {
             return FALSE;
         }
-        $this->url = FACTORY_URL::getInstance();
-        $urls = $this->url->getUrls($this->row['resourcetextUrls']);
+        $urls = \URL\getUrls($this->row['resourcetextUrls']);
         if (empty($urls))
         {
             return FALSE;
@@ -512,7 +509,7 @@ class BIBSTYLE
         unset($this->row['resourcetextUrls']);
         if ($this->output == 'html')
         {
-            $label = $this->url->reduceUrl($url, 50);
+            $label = \URL\reduceUrl($url, 50);
             if ($this->linkUrl)
             {
                 return \HTML\a('rLink', $label, $url, "_blank");
@@ -538,14 +535,13 @@ class BIBSTYLE
         {
             return FALSE;
         }
-        $this->url = FACTORY_URL::getInstance();
         // In $urls array, [0] index is primary URL
         $doi = ($this->output == 'html') ? htmlspecialchars($this->row['resourceDoi']) : $this->row['resourceDoi'];
         unset($this->row['resourceDoi']);
         $doi = 'https://dx.doi.org/' . $doi;
         if ($this->output == 'html')
         {
-            $label = $this->url->reduceUrl($doi, 50);
+            $label = \URL\reduceUrl($doi, 50);
             if ($this->linkUrl)
             {
                 return \HTML\a('rLink', $label, $doi, "_blank");

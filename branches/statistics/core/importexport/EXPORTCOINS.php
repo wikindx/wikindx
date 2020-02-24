@@ -23,7 +23,6 @@ class EXPORTCOINS extends EXPORTER
      */
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->db = FACTORY_DB::getInstance();
         include_once("core/importexport/COINSMAP.php");
         $this->map = new COINSMAP();
@@ -68,7 +67,7 @@ class EXPORTCOINS extends EXPORTER
         {
             $abstract = '&amp;rft_id=info:abstract/' . $this->uEncode($row['resourcetextAbstract']);
         }
-        $sid = "&amp;rfr_sid=info:sid/" . $this->config->WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'];
+        $sid = "&amp;rfr_sid=info:sid/" . WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'];
         $return = "<span " . $this->map->coinsBase . "$type" . "$genre" .
             $entry . $authors . $url . $doi . $sid . $abstract . "\"></span>";
 

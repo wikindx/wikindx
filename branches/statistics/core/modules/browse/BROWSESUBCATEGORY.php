@@ -72,7 +72,7 @@ class BROWSESUBCATEGORY
         {
             if ($row['resourcecategorySubcategoryId'])
             {
-                $this->categories[$row['resourcecategorySubcategoryId']] = \HTML\dbToHtmlTidy($row['categoryCategory']);
+                $this->categories[$row['resourcecategorySubcategoryId']] = \HTML\nlToHtml($row['categoryCategory']);
             }
             $this->collate($row);
         }
@@ -89,7 +89,7 @@ class BROWSESUBCATEGORY
         $this->subcategory[$row['resourcecategorySubcategoryId']] = preg_replace(
             "/{(.*)}/Uu",
             "$1",
-            \HTML\dbToHtmlTidy($row['subcategorySubcategory'])
+            \HTML\nlToHtml($row['subcategorySubcategory'])
         );
         $this->sum[$row['resourcecategorySubcategoryId']] = $row['count'];
     }

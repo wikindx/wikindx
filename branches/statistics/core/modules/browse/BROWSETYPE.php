@@ -91,7 +91,7 @@ class BROWSETYPE
         $this->types[$row['resourceType']] = preg_replace(
             "/{(.*)}/Uu",
             "$1",
-            \HTML\dbToHtmlTidy($this->messages->text('resourceType', $row['resourceType']))
+            \HTML\nlToHtml($this->messages->text('resourceType', $row['resourceType']))
         );
         $this->sum[$row['resourceType']] = $row['count'];
     }

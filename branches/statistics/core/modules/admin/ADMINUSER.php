@@ -268,7 +268,7 @@ class ADMINUSER
     public function blockInit($error = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userBlock"));
-        $pString = '<script type="text/javascript" src="' . \FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL .
+        $pString = '<script type="text/javascript" src="' . \WIKINDX_BASE_URL .
             '/core/modules/admin/adminUser.js"></script>';
         $pString .= $error ? \HTML\p($error, "error", "center") : '';
         $this->grabUsers();
@@ -430,7 +430,7 @@ class ADMINUSER
             {
                 $pString .= \HTML\trStart();
                 $pString .= \HTML\td($row['userregisterEmail']);
-                $pString .= \HTML\td(\HTML\dbToHtmlTidy($row['userregisterRequest']));
+                $pString .= \HTML\td(\HTML\nlToHtml($row['userregisterRequest']));
                 $pString .= \HTML\td($row['userregisterTimestamp']);
                 $pString .= \HTML\td($this->messages->text('user', 'registrationAccept') . "&nbsp:&nbsp;" .
                     \FORM\radioButton(FALSE, 'registerUser_' . $row['userregisterId'], 'accept', TRUE) .

@@ -44,12 +44,11 @@ class MySQL_Backup
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $config = FACTORY_CONFIG::getInstance();
-        $this->server = $config->WIKINDX_DB_HOST;
-        $this->username = $config->WIKINDX_DB_USER;
-        $this->password = $config->WIKINDX_DB_PASSWORD;
-        $this->database = $config->WIKINDX_DB;
-        $this->prefix = $config->WIKINDX_DB_TABLEPREFIX;
+        $this->server = WIKINDX_DB_HOST;
+        $this->username = WIKINDX_DB_USER;
+        $this->password = WIKINDX_DB_PASSWORD;
+        $this->database = WIKINDX_DB;
+        $this->prefix = WIKINDX_DB_TABLEPREFIX;
     }
 
 

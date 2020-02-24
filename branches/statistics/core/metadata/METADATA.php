@@ -104,7 +104,7 @@ class METADATA
                     $ideaList[$index]['keywordTitle'] = $this->messages->text("resources", "keywords");
                     $ideaList[$index]['keywords'][] = \HTML\a(
                         "link",
-                        \HTML\dbToHtmlTidy($row2['keywordKeyword']),
+                        \HTML\nlToHtml($row2['keywordKeyword']),
                         "index.php?action=ideas_IDEAS_CORE" .
                         htmlentities("&method=" . 'keywordIdeaList') . htmlentities("&resourcekeywordKeywordId=" . $row2['keywordId'])
                     );

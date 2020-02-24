@@ -31,8 +31,8 @@ SetWikindxBasePath();
  */
 include_once("core/startup/WEBSERVERCONFIG.php");
 
-$script = '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
-$script .= '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/tiny_mce/plugins/' . basename(__DIR__) . '/js/wikindxTabledialog.js"></script>';
+$script = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
+$script .= '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/plugins/' . basename(__DIR__) . '/js/wikindxTabledialog.js"></script>';
 GLOBALS::addTplVar('scripts', $script);
 
 $class = new WPTableDialog();
@@ -40,14 +40,10 @@ $class = new WPTableDialog();
 class WPTableDialog
 {
     private $messages;
-    private $config;
 
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
-
         $this->messages = FACTORY_MESSAGES::getInstance();
-
         $this->tableDialogue();
     }
 

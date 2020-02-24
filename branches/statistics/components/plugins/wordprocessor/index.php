@@ -63,7 +63,6 @@ class wordprocessor_MODULE
 
 
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->checkTable();
         $icons = FACTORY_LOADICONS::getInstance('help');
         $jScript = "javascript:coreOpenPopup('index.php?action=wordprocessor_help&amp;message=Help', 80)";
@@ -341,7 +340,7 @@ class wordprocessor_MODULE
         $recordSet = $this->db->select("plugin_wordprocessor", "pluginwordprocessorFilename");
         while ($row = $this->db->fetchRow($recordSet))
         {
-            $papers[] = HTML\dbToHtmlTidy($row['pluginwordprocessorFilename']);
+            $papers[] = \HTML\nlToHtml($row['pluginwordprocessorFilename']);
         }
         $paper = implode(", ", $papers);
         $pString .= HTML\p($this->pluginmessages->text("deleteConfirm") . $paper);
@@ -517,7 +516,7 @@ class wordprocessor_MODULE
         if (array_search('plugin_wordprocessor', $tables) === FALSE)
         {
             $this->db->queryNoError("
-                CREATE TABLE `" . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor` (
+                CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor` (
                 	`pluginwordprocessorId` int(11) NOT NULL AUTO_INCREMENT,
                 	`pluginwordprocessorHashFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
                 	`pluginwordprocessorFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,

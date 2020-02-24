@@ -80,7 +80,7 @@ class BROWSELANGUAGE
         $this->languages[$row['languageId']] = preg_replace(
             "/{(.*)}/Uu",
             "$1",
-            \HTML\dbToHtmlTidy($row['languageLanguage'])
+            \HTML\nlToHtml($row['languageLanguage'])
         );
         $this->sum[$row['languageId']] = $row['count'];
     }

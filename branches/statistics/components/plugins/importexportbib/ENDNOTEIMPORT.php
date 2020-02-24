@@ -19,7 +19,6 @@ class ENDNOTEIMPORT
     private $map;
     private $date;
     private $parseCreator;
-    private $config;
     private $dirName;
     private $resourceAdded = 0;
     private $resourceDiscarded = 0;
@@ -76,7 +75,6 @@ class ENDNOTEIMPORT
         include_once(__DIR__ . DIRECTORY_SEPARATOR . "ENDNOTECREATORPARSE.php");
         $this->parseCreator = new ENDNOTECREATORPARSE();
         $this->pages = FACTORY_BIBTEXPAGEPARSE::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->common = FACTORY_IMPORT::getInstance();
         $this->creators = ['creator1', 'creator2', 'creator3', 'creator4', 'creator5'];
         $this->oldTime = time();
@@ -476,7 +474,7 @@ class ENDNOTEIMPORT
             list($noSort, $title, $subtitle) = $this->common->splitTitle($this->entry['title']);
             if ($this->common->checkDuplicates($noSort, $title, $subtitle, $this->entry['type'])
             ||
-            (array_search($this->entry['type'], $this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES) !== FALSE))
+            (array_search($this->entry['type'], WIKINDX_DEACTIVATE_RESOURCE_TYPES) !== FALSE))
             {
                 $rejectTitle = $this->entry['title'] . ".";
                 $this->rejectTitles[] = $rejectTitle;

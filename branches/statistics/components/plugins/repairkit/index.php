@@ -143,7 +143,6 @@ class repairkit_MODULE
     public function dbIntegrityFix()
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDbIntegrity'));
-        $config = FACTORY_CONFIG::getInstance();
         $currentDbSchema = $this->db->createRepairKitDbSchema();
         $correctDbSchema = $this->db->getRepairKitDbSchema(WIKINDX_FILE_REPAIRKIT_DB_SCHEMA);
         if ($correctDbSchema === FALSE)
@@ -188,7 +187,7 @@ class repairkit_MODULE
                         $fieldName = $correctField['Field'];
                         if (!$correctField['Key'])
                         {
-                            $this->db->query("DROP INDEX `$fieldName`" . " ON `" . $config->WIKINDX_DB_TABLEPREFIX . "$table`");
+                            $this->db->query("DROP INDEX `$fieldName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table`");
                         }
                     }
                 }
@@ -202,7 +201,7 @@ class repairkit_MODULE
                 //				$columnName = $parts['Column_name'];
                 //				$subPart = $parts['Sub_part'] ? '(' . $parts['Sub_part'] . ')' : FALSE;
                 // quietly drop any existing indices before adding them anew with the correct configuration
-                $this->db->queryNoError("DROP INDEX `$keyName`" . " ON `" . $config->WIKINDX_DB_TABLEPREFIX . "$table`");
+                $this->db->queryNoError("DROP INDEX `$keyName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table`");
             }
         }
         foreach ($this->dbTableInconsistenciesFix as $index => $tables)
@@ -211,14 +210,14 @@ class repairkit_MODULE
             {
                 foreach ($tables as $table)
                 {
-                    $this->db->query("ALTER TABLE `" . $config->WIKINDX_DB_TABLEPREFIX . "$table` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci");
+                    $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci");
                 }
             }
             elseif ($index == 'engine')
             {
                 foreach ($tables as $table)
                 {
-                    $this->db->query("ALTER TABLE `" . $config->WIKINDX_DB_TABLEPREFIX . "$table` ENGINE=InnoDB");
+                    $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` ENGINE=InnoDB");
                 }
             }
         }
@@ -249,11 +248,11 @@ class repairkit_MODULE
                         }
                         if ($correctField['Null'] == 'NO')
                         {
-                            $this->db->query("ALTER TABLE `" . $config->WIKINDX_DB_TABLEPREFIX . "$table` MODIFY COLUMN `$fieldName` $type NOT NULL");
+                            $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` MODIFY COLUMN `$fieldName` $type NOT NULL");
                         }
                         else
                         {
-                            $this->db->query("ALTER TABLE `" . $config->WIKINDX_DB_TABLEPREFIX . "$table` MODIFY COLUMN `$fieldName` $type $default NULL");
+                            $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` MODIFY COLUMN `$fieldName` $type $default NULL");
                         }
                     }
                 }
@@ -276,11 +275,11 @@ class repairkit_MODULE
                         }
                         elseif ($correctField['Key'] == 'MUL')
                         {
-                            $this->db->query("CREATE INDEX `$fieldName`" . " ON `" . $config->WIKINDX_DB_TABLEPREFIX . "$table` (`$fieldName`)");
+                            $this->db->query("CREATE INDEX `$fieldName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table` (`$fieldName`)");
                         }
                         elseif ($correctField['Key'] == 'PRI')
                         { // Primary key
-                            $this->db->query("ALTER TABLE `" . $config->WIKINDX_DB_TABLEPREFIX . "$table` MODIFY `$fieldName` INT(11) PRIMARY KEY AUTO_INCREMENT");
+                            $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` MODIFY `$fieldName` INT(11) PRIMARY KEY AUTO_INCREMENT");
                         }
                     }
                 }
@@ -293,7 +292,7 @@ class repairkit_MODULE
                 $keyName = $parts['Key_name'];
                 $columnName = $parts['Column_name'];
                 $subPart = $parts['Sub_part'] ? '(' . $parts['Sub_part'] . ')' : FALSE;
-                $this->db->query("CREATE INDEX `$keyName`" . " ON `" . $config->WIKINDX_DB_TABLEPREFIX . "$table` (`$columnName`$subPart)");
+                $this->db->query("CREATE INDEX `$keyName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table` (`$columnName`$subPart)");
             }
         }
         $pString = HTML\p($this->pluginmessages->text('success'));
@@ -1034,7 +1033,6 @@ class repairkit_MODULE
      */
     private function errorsOn()
     {
-        error_reporting(E_ALL);
-        ini_set('display_errors', 'On');
+        ini_set('display_errors', TRUE);
     }
 }

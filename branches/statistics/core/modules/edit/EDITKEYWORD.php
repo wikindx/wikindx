@@ -45,7 +45,7 @@ class EDITKEYWORD
     */
     public function init($message = FALSE)
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $keywords = $this->keyword->grabAll();
         if (!$keywords)
         {
@@ -155,7 +155,7 @@ class EDITKEYWORD
      */
     public function edit()
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         if (!array_key_exists('editKeywordId', $this->vars) || !$this->vars['editKeywordId'])
         {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
@@ -200,7 +200,7 @@ class EDITKEYWORD
      */
     public function editConfirm()
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         if (!array_key_exists('editKeywordId', $this->vars) || !$this->vars['editKeywordId'])
         {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');

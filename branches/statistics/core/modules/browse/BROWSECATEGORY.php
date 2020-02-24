@@ -87,7 +87,7 @@ class BROWSECATEGORY
         $this->category[$row['categoryId']] = preg_replace(
             "/{(.*)}/Uu",
             "$1",
-            \HTML\dbToHtmlTidy($row['categoryCategory'])
+            \HTML\nlToHtml($row['categoryCategory'])
         );
         $this->sum[$row['categoryId']] = $row['count'];
     }

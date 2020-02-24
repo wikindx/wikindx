@@ -19,7 +19,6 @@ class ADMINCREATOR
     private $messages;
     private $success;
     private $session;
-    private $config;
     private $creator;
     private $gatekeep;
     private $badInput;
@@ -34,7 +33,6 @@ class ADMINCREATOR
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
         $this->creator = FACTORY_CREATOR::getInstance();
 
@@ -176,7 +174,7 @@ class ADMINCREATOR
      */
     public function groupInit($message = FALSE)
     {
-        \AJAX\loadJavascript([$this->config->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
+        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
         $potentialMasters = $this->creator->grabGroupAvailableMasters();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "groupCreators"));
         $pString = $message;
@@ -333,7 +331,7 @@ class ADMINCREATOR
      */
     public function ungroupInit($message = FALSE)
     {
-        \AJAX\loadJavascript([$this->config->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
+        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
         $mastersCopy = $masters = $this->creator->grabGroupMasters();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "ungroupCreators"));
         $pString = $message;

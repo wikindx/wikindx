@@ -12,7 +12,7 @@
 require_once("core/importexport/EXPORTER.php");
 
 /**
- * Make WIKINDX resources available to Google Scholar (see config.php)
+ * Make WIKINDX resources available to Google Scholar
  *
  * @package wikindx\core\importexport
  */
@@ -24,8 +24,6 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
     protected $map;
     /** object */
     private $session;
-    /** object */
-    private $config;
     /** boolean */
     private $noGs = FALSE;
 
@@ -35,7 +33,6 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         include_once("core/importexport/GOOGLESCHOLARMAP.php");
         $this->map = new GOOGLESCHOLARMAP();
@@ -55,7 +52,7 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
         global $_SERVER;
         if ($attach = $this->attachedFiles($row['resourceId']))
         {
-            $entry .= '<meta name="citation_pdf_url" content="' . $this->config->WIKINDX_BASE_URL . '/' . $attach . '">';
+            $entry .= '<meta name="citation_pdf_url" content="' . WIKINDX_BASE_URL . '/' . $attach . '">';
         }
         if ($this->noGs)
         {
@@ -156,7 +153,7 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
         );
         if (!$this->db->numRows($recordset))
         {
-            if ($this->config->WIKINDX_GS_ATTACHMENT)
+            if (WIKINDX_GS_ATTACHMENT)
             {
                 $this->noGs = TRUE;
             }

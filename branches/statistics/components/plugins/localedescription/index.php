@@ -105,7 +105,6 @@ class localedescription_MODULE
     {
         $db = FACTORY_DB::getInstance();
         $vars = GLOBALS::getVars();
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
         if (!array_key_exists('language', $vars))
         {
             $this->display(HTML\p($this->pluginmessages->text("missingLanguage"), "error", "center"));
@@ -115,9 +114,9 @@ class localedescription_MODULE
         $db->formatConditions(['configName' => $field]);
         if ($input = $db->fetchOne($db->select('config', 'configText')))
         {
-            $input = HTML\dbToFormTidy($input);
+            $input = HTML\nlToHtml($input);
         }
-        $original = HTML\dbToHtmlTidy($co->getOne('configDescription'));
+        $original = HTML\nlToHtml(WIKINDX_DESCRIPTION);
         $pString = HTML\p(HTML\strong($this->pluginmessages->text('original')));
         $pString .= HTML\p($original);
         $pString .= HTML\hr();

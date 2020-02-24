@@ -13,7 +13,6 @@ class SUGGEST
 {
     private $db;
     private $vars;
-    private $config;
     private $stmt;
     private $errors;
     private $messages;
@@ -25,7 +24,6 @@ class SUGGEST
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();

@@ -628,8 +628,7 @@ class importamazon_MODULE
                 $array['subtitle'] = $this->trimString($titleArray[1]);
             }
             $array['title'] = $title = $resourceTitleSort = $this->trimString($titleArray[0]);
-            $config = FACTORY_CONFIG::getInstance();
-            foreach ($config->WIKINDX_NOSORT as $pattern)
+            foreach (WIKINDX_NO_SORT as $pattern)
             {
                 if (preg_match("/^($pattern)\\s(.*)|^\\{($pattern)\\s(.*)/ui", $array['title'], $matches))
                 {

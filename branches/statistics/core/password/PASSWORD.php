@@ -19,8 +19,6 @@ class PASSWORD
     private $errors;
     /** object */
     private $messages;
-    /** object */
-    private $config;
     /** int */
     private $noChars;
     /** string */
@@ -37,7 +35,6 @@ class PASSWORD
         $this->db = FACTORY_DB::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->init();
     }
     /**
@@ -64,7 +61,7 @@ class PASSWORD
             $this->messages->text("hint", "hint"),
             '#',
             "",
-            $this->messages->text("hint", $hintArray[$this->config->WIKINDX_PASSWORDSTRENGTH], $this->noChars) .
+            $this->messages->text("hint", $hintArray[WIKINDX_PASSWORD_STRENGTH], $this->noChars) .
             '     ' . $this->messages->text("hint", 'password4')
         );
         $formText = '';
@@ -124,28 +121,20 @@ class PASSWORD
      */
     private function init()
     {
-        // Set PASSWORD size
-        if (!property_exists($this->config, 'WIKINDX_PASSWORDSIZE'))
-        {
-            $this->config->WIKINDX_PASSWORDSIZE = WIKINDX_PASSWORDSIZE_DEFAULT;
-        }
-        // Set PASSWORD strength
-        if (!property_exists($this->config, 'WIKINDX_PASSWORDSTRENGTH'))
-        {
-            $this->config->WIKINDX_PASSWORDSTRENGTH = WIKINDX_PASSWORDSTRENGTH_DEFAULT;
-        }
-        $this->noChars = $this->config->WIKINDX_PASSWORDSIZE;
+        $pwdSize = defined('WIKINDX_PASSWORD_SIZE') ? WIKINDX_PASSWORD_SIZE : WIKINDX_PASSWORD_SIZE_DEFAULT;
+        $pwdStrengh = defined('WIKINDX_PASSWORD_STRENGTH') ? WIKINDX_PASSWORD_STRENGTH : WIKINDX_PASSWORD_STRENGTH_DEFAULT;
+        
         $errorArray = [
             "weak" => "invalidPassword1",
             "medium" => "invalidPassword2",
             "strong" => "invalidPassword3",
         ];
-        $this->invalidPassword = $this->errors->text('inputError', $errorArray[$this->config->WIKINDX_PASSWORDSTRENGTH], $this->noChars, FALSE);
+        $this->invalidPassword = $this->errors->text('inputError', $errorArray[$pwdStrengh], $pwdSize, FALSE);
         $regexpArray = [
             'weak' => "/^(?=.*[a-z])(?=.*[A-Z])\\S+$/", // UPPER/lower Latin, no spaces
             'medium' => "/^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])\\S+$/", // UPPER/lower Latin and numbers, no spaces
             'strong' => "/^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#!%*?&€])\\S+$/", // UPPER/lower Latin, numbers, and special chars, no spaces
         ];
-        $this->regexp = $regexpArray[$this->config->WIKINDX_PASSWORDSTRENGTH];
+        $this->regexp = $regexpArray[$pwdStrengh];
     }
 }

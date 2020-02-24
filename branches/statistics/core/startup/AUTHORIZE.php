@@ -19,8 +19,6 @@ class AUTHORIZE
     private $db;
     /** object */
     private $session;
-    /** object */
-    private $config;
     /** array */
     private $vars;
     /** object */
@@ -32,7 +30,6 @@ class AUTHORIZE
     public function __construct()
     {
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->configDbStructure = FACTORY_CONFIGDBSTRUCTURE::getInstance();
@@ -97,10 +94,10 @@ class AUTHORIZE
             {
                 // First delete any pre-existing session in case this user has been logging on and off as different users --
                 // keep template and language etc.
-                $language = $this->config->WIKINDX_LANGUAGE;
-                $template = $this->config->WIKINDX_TEMPLATE;
-                $userReg = $this->config->WIKINDX_USERREGISTRATION;
-                $multiUser = $this->config->WIKINDX_MULTIUSER;
+                $language = WIKINDX_LANGUAGE;
+                $template = WIKINDX_TEMPLATE;
+                $userReg = WIKINDX_USER_REGISTRATION;
+                $multiUser = WIKINDX_MULTIUSER;
                 $this->session->setVar('setup_UserRegistration', $userReg);
                 $this->session->setVar('setup_MultiUser', $multiUser);
                 $this->initLogon(); // login prompt
@@ -138,7 +135,7 @@ class AUTHORIZE
                 return FALSE;
             }
             // User registration
-            elseif ($this->config->WIKINDX_MULTIUSER && $this->config->WIKINDX_USERREGISTRATION && ($this->config->WIKINDX_MAIL_SERVER))
+            elseif (WIKINDX_MULTIUSER && WIKINDX_USER_REGISTRATION && (WIKINDX_MAIL_USE))
             {
                 include_once("core/modules/usersgroups/REGISTER.php");
                 $obj = new REGISTER();
@@ -190,7 +187,7 @@ class AUTHORIZE
                 }
             }
         }
-        if (isset($this->vars["method"]) && ($this->vars['method'] == 'RSS') && !$this->config->WIKINDX_DENY_READONLY)
+        if (isset($this->vars["method"]) && ($this->vars['method'] == 'RSS') && !WIKINDX_DENY_READONLY)
         {
             $this->session->setVar("setup_ReadOnly", TRUE);
 
@@ -224,7 +221,7 @@ class AUTHORIZE
         if (!$this->session->getVar("setup_Write") && !$this->session->getVar('setup_ReadOnly'))
         {
             // Default == read only access.
-            if ($this->config->WIKINDX_READONLYACCESS && !$this->config->WIKINDX_DENY_READONLY)
+            if (WIKINDX_READ_ONLY_ACCESS && !WIKINDX_DENY_READONLY)
             {
                 $this->session->setVar("setup_ReadOnly", TRUE);
                 // populate session with default values from config
@@ -265,16 +262,16 @@ class AUTHORIZE
         /**
          * For a test user (see index.php)
          */
-        if ($this->config->WIKINDX_RESTRICT_USERID != WIKINDX_RESTRICT_USERID_DEFAULT)
+        if (WIKINDX_RESTRICT_USERID != WIKINDX_RESTRICT_USERID_DEFAULT)
         {
             $pString .= \HTML\p("For test drive purposes, " .
                 \HTML\strong($messages->text("user", "username") . ":&nbsp;&nbsp;") . "wikindx, " .
                 \HTML\strong($messages->text("user", "password") . ":&nbsp;&nbsp;") . "wikindx");
         }
-        $forgot = $this->config->WIKINDX_MAIL_SERVER ? \HTML\a("link", $messages->text("user", "forget6"), $link2) : FALSE;
+        $forgot = WIKINDX_MAIL_USE ? \HTML\a("link", $messages->text("user", "forget6"), $link2) : FALSE;
         $pString .= $this->printLogonTable();
         // Give user the option to bypass logging in simply to read.
-        if (!$this->config->WIKINDX_DENY_READONLY)
+        if (!WIKINDX_DENY_READONLY)
         {
             $links = \HTML\a("link", $messages->text("authorize", "readOnly") .
             BR . $forgot, $link1);
@@ -283,7 +280,7 @@ class AUTHORIZE
         {
             $links = $forgot;
         }
-        if (($row['configUserRegistration']) && ($row['configMultiUser']) && ($this->config->WIKINDX_MAIL_SERVER))
+        if (($row['configUserRegistration']) && ($row['configMultiUser']) && (WIKINDX_MAIL_USE))
         {
             $links .= BR . \HTML\a("link", $messages->text("menu", "register"), $link3);
         }
@@ -398,13 +395,13 @@ class AUTHORIZE
      */
     private function authGate()
     {
-        if (($this->config->WIKINDX_AUTHGATE_USE === TRUE) && ($this->session->getVar('setup_UserId') != 1))
+        if ((WIKINDX_AUTHGATE_USE === TRUE) && ($this->session->getVar('setup_UserId') != 1))
         {
             $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
             $recordset = $this->db->select('users', 'usersGDPR');
             if ($this->db->fetchOne($recordset) == 'N')
             {
-                $pString = \HTML\p($this->config->WIKINDX_AUTHGATE_MESSAGE);
+                $pString = \HTML\p(WIKINDX_AUTHGATE_MESSAGE);
                 $pString .= \FORM\formHeader("authGate");
                 $pString .= \HTML\td(\FORM\formSubmit($this->messages->text("submit", "OK")));
                 $pString .= \FORM\formEnd();

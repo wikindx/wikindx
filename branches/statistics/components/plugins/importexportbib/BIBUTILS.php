@@ -45,7 +45,6 @@ class BIBUTILS
             $this->config->bibutilsPath = '/usr/local/bin/'; // default *NIX location
         }
 
-        $conf = FACTORY_CONFIG::getInstance();
         $this->filesDir = WIKINDX_DIR_DATA_FILES . DIRECTORY_SEPARATOR;
         $this->vars = GLOBALS::getVars();
         $this->outputTypesArray = $this->outputTypes();

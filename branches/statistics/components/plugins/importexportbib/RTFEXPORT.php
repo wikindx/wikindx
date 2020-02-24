@@ -17,7 +17,6 @@ class RTFEXPORT
     private $pluginmessages;
     private $errors;
     private $session;
-    private $config;
     private $coremessages;
     private $cite;
     private $bibStyle;
@@ -51,7 +50,6 @@ class RTFEXPORT
         include_once("core/messages/PLUGINMESSAGES.php");
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->cite = FACTORY_CITE::getInstance('rtf');
@@ -200,9 +198,9 @@ class RTFEXPORT
         if (array_key_exists('link', $this->input))
         {
             global $_SERVER;
-            $link = $this->config->WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'] . "?action=resource_RESOURCEVIEW_CORE&id=";
+            $link = WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'] . "?action=resource_RESOURCEVIEW_CORE&id=";
             $this->session->setVar('exportRtf_link', TRUE);
-            $wikindxTitle = stripslashes($this->config->WIKINDX_TITLE);
+            $wikindxTitle = stripslashes(WIKINDX_TITLE);
         }
         else
         {

@@ -15,7 +15,6 @@ class API
 {
     private $db;
     private $vars;
-    private $config;
     private $icons;
     private $stmt;
     private $errors;
@@ -30,13 +29,11 @@ class API
     private $common;
     private $abstract;
     private $note;
-    private $url;
 
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -49,7 +46,6 @@ class API
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
-        $this->url = FACTORY_URL::getInstance();
         include_once('core/modules/resource/RESOURCEABSTRACT.php');
         $this->abstract = new RESOURCEABSTRACT();
         include_once('core/modules/resource/RESOURCENOTE.php');

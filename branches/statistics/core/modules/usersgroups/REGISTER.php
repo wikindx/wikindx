@@ -21,7 +21,6 @@ class REGISTER
     private $session;
     private $user;
     private $badInput;
-    private $config;
 
     public function __construct()
     {
@@ -33,7 +32,6 @@ class REGISTER
         $this->session = FACTORY_SESSION::getInstance();
         $this->user = FACTORY_USER::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
     }
     /**
      * display options for user registration
@@ -44,8 +42,7 @@ class REGISTER
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
         $pString = $error ? \HTML\p($error, "error", "center") : FALSE;
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        $registrationModerate = $co->getOne('configUserRegistrationModerate');
+        $registrationModerate = WIKINDX_USER_REGISTRATION_MODERATE;
         if ($registrationModerate)
         {
             $pString .= \HTML\p($this->messages->text('config', 'registrationRequest1'));

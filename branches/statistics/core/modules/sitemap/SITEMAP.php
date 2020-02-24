@@ -27,18 +27,17 @@ class SITEMAP
     // Constructor
     public function init()
     {
-        $config = FACTORY_CONFIG::getInstance();
         $db = FACTORY_DB::getInstance();
-        if (!$config->WIKINDX_SITEMAP_ALLOW)
+        if (!WIKINDX_SITEMAP_ALLOW)
         {
             header('HTTP/1.0 403 Forbidden');
             die("Access forbidden: this feature is disabled.");
         }
 
-        $baseURL = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL;
+        $baseURL = WIKINDX_BASE_URL;
 
         // set up language
-        $messages = FACTORY_MESSAGES::getInstance($config->WIKINDX_RSS_LANGUAGE);
+        $messages = FACTORY_MESSAGES::getInstance(WIKINDX_LANGUAGE);
 
         // Get newspage flag: N = 0 = OFF, N > 0 = ON
         $newspage = isset($_GET['newspage']) ? $_GET['newspage'] : 0;
@@ -71,7 +70,7 @@ class SITEMAP
         // List of resources of the website
         $rsResource = $db->query("
         	SELECT `resourcetimestampId`, `resourcetimestampTimestamp`
-        	FROM `" . $config->WIKINDX_DB_TABLEPREFIX . "resource_timestamp`
+        	FROM `" . WIKINDX_DB_TABLEPREFIX . "resource_timestamp`
         	ORDER BY `resourcetimestampTimestamp` DESC, `resourcetimestampTimestampAdd` DESC, `resourcetimestampId` DESC
         ");
 
@@ -80,7 +79,7 @@ class SITEMAP
         // List of news of the website
         $rsNews = $db->query("
         	SELECT `newsId`, `newsTimestamp`
-        	FROM `" . $config->WIKINDX_DB_TABLEPREFIX . "news`
+        	FROM `" . WIKINDX_DB_TABLEPREFIX . "news`
         	ORDER BY `newsTimestamp` DESC, `newsId` DESC
         ");
 
@@ -198,12 +197,12 @@ class SITEMAP
      * Function to query the database and return formatted entries
      *
      * @param object $db
-     * @param int $WIKINDX_RSS_LIMIT
-     * @param string $WIKINDX_RSS_BIBSTYLE
+     * @param int $limit
+     * @param string $bibstyle
      *
      * @return array ($numResults, $item)
      */
-    private function queryDb($db, $WIKINDX_RSS_LIMIT, $WIKINDX_RSS_BIBSTYLE)
+    private function queryDb($db, $limit, $bibstyle)
     {
         $listFields = ['resourceId', 'creatorSurname', 'resourceType', 'resourceTitle', 'resourceSubtitle', 'resourceShortTitle',
             'resourceTransTitle', 'resourceTransSubtitle', 'resourceTransShortTitle', 'resourceField1', 'resourceField2', 'resourceField3',
@@ -220,10 +219,10 @@ class SITEMAP
             'resourcemiscAccessesPeriod', ];
         $messages = FACTORY_MESSAGES::getInstance();
         $session = FACTORY_SESSION::getInstance();
-        $session->setVar('setup_Style', $WIKINDX_RSS_BIBSTYLE);
+        $session->setVar('setup_Style', $bibstyle);
         $bibStyle = FACTORY_BIBSTYLE::getInstance();
         $db->ascDesc = $db->desc;
-        $db->limit($WIKINDX_RSS_LIMIT, 0);
+        $db->limit($limit, 0);
         $db->groupBy(['resourcetimestampId', 'resourcetimestampTimestamp']);
         $db->orderBy('resourcetimestampTimestamp', TRUE, FALSE);
         $subQuery = $db->subQuery($db->queryNoExecute($db->selectNoExecute(

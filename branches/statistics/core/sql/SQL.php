@@ -70,8 +70,6 @@ class SQL
     private $errors;
     /** object */
     private $handle = NULL;
-    /** object */
-    private $config;
     /** array */
     private $vars;
     /** mixed */
@@ -88,7 +86,6 @@ class SQL
     {
         $this->vars = GLOBALS::getVars();
         $this->errors = FACTORY_ERRORS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
 
         $this->open();
@@ -314,8 +311,8 @@ class SQL
     {
         $schema = [];
         
-        $dbname = $this->config->WIKINDX_DB;
-        $dbPrefix = $this->config->WIKINDX_DB_TABLEPREFIX;
+        $dbname = WIKINDX_DB;
+        $dbPrefix = WIKINDX_DB_TABLEPREFIX;
         
         $tables = $this->listTables();
         foreach ($tables as $table)
@@ -393,8 +390,8 @@ class SQL
     {
         $fields = [];
 
-        $db = $this->config->WIKINDX_DB;
-        $table = $this->config->WIKINDX_DB_TABLEPREFIX . $table;
+        $db = WIKINDX_DB;
+        $table = WIKINDX_DB_TABLEPREFIX . $table;
 
         // For ANSI behavior (MySQL, PG at least)
         // We must always use TABLE_SCHEMA in the WHERE clause
@@ -431,8 +428,8 @@ class SQL
     {
         $tables = [];
 
-        $db = $this->config->WIKINDX_DB;
-        $prefix = $this->config->WIKINDX_DB_TABLEPREFIX;
+        $db = WIKINDX_DB;
+        $prefix = WIKINDX_DB_TABLEPREFIX;
 
         // For ANSI behavior (MySQL, PG at least)
         // We must always use TABLE_SCHEMA in the WHERE clause
@@ -475,8 +472,8 @@ class SQL
     {
         if (is_string($table))
         {
-            $table = $this->config->WIKINDX_DB_TABLEPREFIX . $table;
-            $db = $this->config->WIKINDX_DB;
+            $table = WIKINDX_DB_TABLEPREFIX . $table;
+            $db = WIKINDX_DB;
 
             // We must always use TABLE_SCHEMA in the WHERE clause
             // and the raw value of TABLE_SCHEMA otherwise MySQL scans
@@ -520,7 +517,7 @@ SQLCODE;
      */
     public function createTable($newTable, $fieldsArray, $tempTable = FALSE)
     {
-        $newTable = $this->config->WIKINDX_DB_TABLEPREFIX . $newTable;
+        $newTable = WIKINDX_DB_TABLEPREFIX . $newTable;
         $sql = '(' . implode(', ', $fieldsArray) . ')';
         $sql .= 'ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci';
         if ($tempTable)
@@ -617,8 +614,8 @@ SQLCODE;
      */
     public function getFieldsProperties($table)
     {
-        $db = $this->config->WIKINDX_DB;
-        $table = $this->config->WIKINDX_DB_TABLEPREFIX . $table;
+        $db = WIKINDX_DB;
+        $table = WIKINDX_DB_TABLEPREFIX . $table;
 
         // For ANSI behavior (MySQL, PG at least)
         // We must always use TABLE_SCHEMA in the WHERE clause
@@ -1539,7 +1536,7 @@ SQLCODE;
         {
             if (!is_array($tables))
             {
-                $tableListe = $this->config->WIKINDX_DB_TABLEPREFIX . $tables;
+                $tableListe = WIKINDX_DB_TABLEPREFIX . $tables;
             }
             else
             {
@@ -1551,7 +1548,7 @@ SQLCODE;
                     }
                     else
                     {
-                        $array[] = $this->config->WIKINDX_DB_TABLEPREFIX . $table;
+                        $array[] = WIKINDX_DB_TABLEPREFIX . $table;
                     }
                 }
 
@@ -2898,7 +2895,7 @@ SQLCODE;
     public function printSQLDebug($querystring = '', $executionType = 'SQL')
     {
         $beautified = FALSE;
-        if ($this->config->WIKINDX_DEBUG_SQL)
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
         {
             $beautified = $this->beautify($querystring, $executionType);
             GLOBALS::addTplVar('logsql', $beautified);
@@ -2916,6 +2913,9 @@ SQLCODE;
     {
         $startTimer = $this->startTimer;
         $endTimer = $this->endTimer;
+
+        // Stop the timer, if not done
+        if (empty($endTimer)) $endTimer = microtime();;
 
         $tmp = UTF8::mb_explode(" ", $startTimer);
         $startTimer = $tmp[0] + $tmp[1];
@@ -2965,11 +2965,11 @@ SQLCODE;
     {
         $startTimer = microtime();
 
-        $dbpers = $this->config->WIKINDX_DB_PERSISTENT;
-        $dbhost = $this->config->WIKINDX_DB_HOST;
-        $dbname = $this->config->WIKINDX_DB;
-        $dbuser = $this->config->WIKINDX_DB_USER;
-        $dbpwd = $this->config->WIKINDX_DB_PASSWORD;
+        $dbpers = WIKINDX_DB_PERSISTENT;
+        $dbhost = WIKINDX_DB_HOST;
+        $dbname = WIKINDX_DB;
+        $dbuser = WIKINDX_DB_USER;
+        $dbpwd = WIKINDX_DB_PASSWORD;
 
         $dbhost = $dbpers === TRUE ? 'p:' . $dbhost : $dbhost;
         $this->handle = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname);
@@ -2979,7 +2979,6 @@ SQLCODE;
         if ($this->errno)
         {
             $errorMessage = $this->errors->text("dbError", "open");
-            $this->sendDebugMail($errorMessage);
             $this->sqlDie($errorMessage);
         }
 
@@ -3014,7 +3013,7 @@ SQLCODE;
      */
     private function CheckEngineVersion()
     {
-        if ($this->config->WIKINDX_DEBUG_SQL)
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
         {
             $this->sqlTimerOn();
             $EngineVersion = $this->getStringEngineVersion();
@@ -3037,7 +3036,6 @@ SQLCODE;
                 $errorMessage = "In order to support UTF-8 character sets, WIKINDX requires MySQL " . WIKINDX_MYSQL_VERSION_MIN . " or greater,
                                  or MariaDB " . WIKINDX_MARIADB_VERSION_MIN . " or greater. Your MySQL version is {" . $this->getStringEngineVersion() . "}.
                                  Please upgrade MySQL or use WIKINDX v4.2.0 which supports MySQL v4.1 and above.";
-                $this->sendDebugMail($errorMessage);
                 GLOBALS::addTplVar('logsql', "<p style='font-weight:bold;color:red;'>" . $errorMessage . "</p>");
             }
         }
@@ -3055,7 +3053,7 @@ SQLCODE;
     {
         $querystring .= $this->subClause();
         // Ensure this is printed first.
-        if ($this->config->WIKINDX_DEBUG_SQL)
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
         {
             if ($this->session->getVar('sql_ConnectionTime'))
             {
@@ -3101,7 +3099,6 @@ SQLCODE;
 
         if (!$execOk && !$bNoError)
         {
-            $this->sendDebugMail($this->error . "\n\n" . $querystring);
             $this->printSQLDebug($querystring, "EXEC ERROR");
             $this->sqlDie($this->error, $beautified);
         }
@@ -3216,11 +3213,11 @@ SQLCODE;
         {
             if ($tidyLeft)
             {
-                return '`' . $this->config->WIKINDX_DB_TABLEPREFIX . "$key` AS " . $this->config->WIKINDX_DB_TABLEPREFIX . $value;
+                return '`' . WIKINDX_DB_TABLEPREFIX . "$key` AS " . WIKINDX_DB_TABLEPREFIX . $value;
             }
             else
             {
-                return       $this->config->WIKINDX_DB_TABLEPREFIX . "$key AS " . $this->config->WIKINDX_DB_TABLEPREFIX . $value;
+                return       WIKINDX_DB_TABLEPREFIX . "$key AS " . WIKINDX_DB_TABLEPREFIX . $value;
             }
         }
         if (count($split = UTF8::mb_explode('.', $key)) > 1)
@@ -3294,24 +3291,9 @@ SQLCODE;
      */
     private function printSQLDebugTime()
     {
-        if ($this->config->WIKINDX_DEBUG_SQL)
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
         {
             GLOBALS::addTplVar('logsql', '<hr><div>Elapsed time: ' . sprintf('%.3f', round($this->elapsedTime(), 3)) . ' s</div>');
-        }
-    }
-    /**
-     * Email error message (if configured)
-     *
-     * @param string $errorMessage
-     */
-    private function sendDebugMail($errorMessage)
-    {
-        if (property_exists($this->config, 'WIKINDX_DEBUG_ERRORS') && property_exists($this->config, 'WIKINDX_DEBUG_EMAIL') &&
-            property_exists($this->config, 'WIKINDX_MAIL_SERVER') &&
-            $this->config->WIKINDX_DEBUG_ERRORS && $this->config->WIKINDX_DEBUG_EMAIL && $this->config->WIKINDX_MAIL_SERVER)
-        {
-            $smtp = FACTORY_MAIL::getInstance();
-            $smtp->sendEmail($this->config->WIKINDX_DEBUG_EMAIL, "WIKINDX SQL error " . $this->errno, $errorMessage);
         }
     }
     /**
@@ -3320,7 +3302,7 @@ SQLCODE;
      * @param string $errorMessage
      * @param string $beautified Offending SQL statement
      */
-    private function sqlDie($errorMessage, $beautified = FALSE)
+    private function sqlDie($errorMessage, $beautified = "")
     {
         
         echo "<!DOCTYPE html>";
@@ -3333,7 +3315,7 @@ SQLCODE;
         echo "<pre>";
         debug_print_backtrace();
         echo "</pre>";
-        echo $beautified . '<P>\n';
+        echo (trim($beautified) != "") ? "<p>" . $beautified . "</p>\n" : "";
         echo $errorMessage;
         echo "</body>";
         die();

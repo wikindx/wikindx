@@ -176,7 +176,7 @@ class RESOURCECOMMON
                 return \HTML\a(
                     'link',
                     $this->messages->text("resources", "citedResources", ' ' .
-                    \HTML\dbToHtmlTidy($this->commonBib->displayBib())),
+                    \HTML\nlToHtml($this->commonBib->displayBib())),
                     'index.php?action=list_LISTSOMERESOURCES_CORE&method=citeProcess&id=' . $resourceId
                 );
             }

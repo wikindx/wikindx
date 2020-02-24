@@ -13,7 +13,6 @@
 class RANDOMMETADATA
 {
     private $db;
-    private $config;
     private $icons;
     private $badInput;
     private $errors;
@@ -32,7 +31,6 @@ class RANDOMMETADATA
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -63,7 +61,7 @@ class RANDOMMETADATA
         }
         $row = $this->db->fetchRow($resultset);
         $resourceId = $row['resourcemetadataResourceId'];
-        $mArray = $this->cite->parseCitations(\HTML\dbToHtmlTidy($row['resourcemetadataText']), 'html');
+        $mArray = $this->cite->parseCitations(\HTML\nlToHtml($row['resourcemetadataText']), 'html');
         $resultset = $this->common->getResource($resourceId);
         $this->display($resultset, $mArray, 'randomQuote');
     }
@@ -82,7 +80,7 @@ class RANDOMMETADATA
         }
         $row = $this->db->fetchRow($resultset);
         $resourceId = $row['resourcemetadataResourceId'];
-        $mArray = $this->cite->parseCitations(\HTML\dbToHtmlTidy($row['resourcemetadataText']), 'html');
+        $mArray = $this->cite->parseCitations(\HTML\nlToHtml($row['resourcemetadataText']), 'html');
         $resultset = $this->common->getResource($resourceId);
         $this->display($resultset, $mArray, 'randomParaphrase');
     }
@@ -123,7 +121,7 @@ class RANDOMMETADATA
         }
         $row = $this->db->fetchRow($resultset);
         $resourceId = $row['resourcemetadataResourceId'];
-        $mArray = $this->cite->parseCitations(\HTML\dbToHtmlTidy($row['resourcemetadataText']), 'html');
+        $mArray = $this->cite->parseCitations(\HTML\nlToHtml($row['resourcemetadataText']), 'html');
         $resultset = $this->common->getResource($resourceId);
         $this->display($resultset, $mArray, 'randomMusing');
     }
@@ -215,7 +213,7 @@ class RANDOMMETADATA
         $view = $this->icons->getHTML("viewmeta");
         $links['view'] = \HTML\a($this->icons->getClass("viewmeta"), $view, "index.php?action=resource_RESOURCEVIEW_CORE" .
             htmlentities("&id=" . $row['resourceId']));
-        if ($write && (!$this->config->WIKINDX_ORIGINATOR_EDITONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))
+        if ($write && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))
         {
             $links['edit'] = \HTML\a(
                 $this->icons->getClass("edit"),

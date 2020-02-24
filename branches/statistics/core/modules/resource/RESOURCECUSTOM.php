@@ -67,7 +67,7 @@ class RESOURCECUSTOM
                     "index.php?action=resource_RESOURCECUSTOM_CORE" . htmlentities("&method=writeInit&id=" . $row['customId'] .
                     '&resourceId=' . $rId)
                 );
-                $array[$index]['title'] = \HTML\dbToHtmlTidy($row['customLabel']);
+                $array[$index]['title'] = \HTML\nlToHtml($row['customLabel']);
                 ++$index;
             }
         }
@@ -99,7 +99,7 @@ class RESOURCECUSTOM
             {
                 continue;
             }
-            $array[$index]['text'] = $this->common->doHighlight(\HTML\dbToHtmlTidy($text));
+            $array[$index]['text'] = $this->common->doHighlight(\HTML\nlToHtml($text));
             if ($row['resourcecustomEditUserIdCustom'])
             {
                 $this->db->formatConditions(['usersId' => $row['resourcecustomEditUserIdCustom']]);
@@ -112,7 +112,7 @@ class RESOURCECUSTOM
             $user['resourcecustomAddUserIdCustom'] = $row['resourcecustomAddUserIdCustom'];
             $user['resourcecustomEditUserIdCustom'] = $row['resourcecustomEditUserIdCustom'];
             list($array[$index]['userAdd'], $array[$index]['userEdit']) = $this->user->displayUserAddEdit($user, TRUE, 'custom');
-            $array[$index]['title'] = \HTML\dbToHtmlTidy($row['customLabel']);
+            $array[$index]['title'] = \HTML\nlToHtml($row['customLabel']);
             ++$index;
         }
 
@@ -150,7 +150,7 @@ class RESOURCECUSTOM
         if ($this->vars['size'] == 'L')
         {
             $pString .= \FORM\textareaInput(
-                \HTML\strong(\HTML\dbToHtmlTidy($row['customLabel'])),
+                \HTML\strong(\HTML\nlToHtml($row['customLabel'])),
                 "customText",
                 \HTML\dbToFormTidy($row[$fieldName]),
                 80,
@@ -160,7 +160,7 @@ class RESOURCECUSTOM
         else
         {
             $pString .= \FORM\textInput(
-                \HTML\strong(\HTML\dbToHtmlTidy($row['customLabel'])),
+                \HTML\strong(\HTML\nlToHtml($row['customLabel'])),
                 'customText',
                 \HTML\dbToFormTidy($row[$fieldName]),
                 80,
@@ -243,7 +243,7 @@ class RESOURCECUSTOM
         if ($row['customSize'] == 'L')
         {
             $pString .= \FORM\textareaInput(
-                \HTML\strong(\HTML\dbToHtmlTidy($row['customLabel'])),
+                \HTML\strong(\HTML\nlToHtml($row['customLabel'])),
                 "customText",
                 FALSE,
                 80,
@@ -253,7 +253,7 @@ class RESOURCECUSTOM
         else
         {
             $pString .= \FORM\textInput(
-                \HTML\strong(\HTML\dbToHtmlTidy($row['customLabel'])),
+                \HTML\strong(\HTML\nlToHtml($row['customLabel'])),
                 'customText',
                 FALSE,
                 80,

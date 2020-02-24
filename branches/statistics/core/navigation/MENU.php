@@ -43,8 +43,6 @@ class MENU
     private $plugin2;
     /** array */
     private $plugin3;
-    /** object */
-    private $config;
     /** string */
     private $superAdmin;
     /** string */
@@ -100,7 +98,6 @@ class MENU
 
         $this->db = FACTORY_DB::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->superAdmin = $this->session->getVar("setup_Superadmin");
         $this->smartyMenu = new SmartyMenu();
         $this->write = $this->session->getVar("setup_Write");
@@ -401,7 +398,7 @@ class MENU
                 $messages->text("menu", "statisticsUsers") => 'index.php?action=statistics_STATS_CORE&method=users',
             ];
         }
-        elseif ($this->config->WIKINDX_DISPLAY_STATISTICS)
+        elseif (WIKINDX_DISPLAY_STATISTICS)
         {
             $this->wikindx['statisticsSub'] = [
                 $messages->text("menu", "statisticsSub") => FALSE,
@@ -413,7 +410,7 @@ class MENU
                 $messages->text("menu", "statisticsPublishers") => 'index.php?action=statistics_STATS_CORE&method=publishers',
                 $messages->text("menu", "statisticsCollections") => 'index.php?action=statistics_STATS_CORE&method=collections',
             ];
-            if ($this->config->WIKINDX_DISPLAY_USER_STATISTICS)
+            if (WIKINDX_DISPLAY_USER_STATISTICS)
             {
                 $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsUsers")] = 'index.php?action=statistics_STATS_CORE&method=users';
             }
@@ -430,9 +427,9 @@ class MENU
         {
             // On the first run after a fresh install this screen is displayed immediatly
             // and these two options are not yet set, so we avoid to check the READONLY mode strictly.
-        	if (property_exists($this->config, 'WIKINDX_DENY_READONLY') && property_exists($this->config, 'WIKINDX_READONLYACCESS'))
+        	if (defined('WIKINDX_DENY_READONLY') && defined('WIKINDX_READ_ONLY_ACCESS'))
         	{
-            	if (!$this->config->WIKINDX_DENY_READONLY && $this->config->WIKINDX_READONLYACCESS) 
+            	if (!WIKINDX_DENY_READONLY && WIKINDX_READ_ONLY_ACCESS) 
             	{
     	            $this->wikindx[$messages->text("menu", "readOnly")] = 'index.php?action=readOnly';
     	        }
@@ -443,7 +440,7 @@ class MENU
         {
             $this->wikindx[$messages->text("menu", "userLogon")] = 'index.php?action=initLogon';
         }
-    	if ($this->multiUser && $this->userRegistration && $this->config->WIKINDX_MAIL_SERVER && !$this->userId)
+    	if ($this->multiUser && $this->userRegistration && WIKINDX_MAIL_USE && !$this->userId)
         {
             $this->wikindx[$messages->text("menu", "register")] = 'index.php?action=initRegisterUser';
         }
@@ -797,7 +794,7 @@ class MENU
         // Remove 'edit' array from resource array if non-admins not allowed to edit
         if ($this->resourcesExist && $this->write)
         { // if no resources, editSub does not exist anyway
-            if (!$this->config->WIKINDX_GLOBAL_EDIT && !$this->superAdmin)
+            if (!WIKINDX_GLOBAL_EDIT && !$this->superAdmin)
             {
                 array_splice($this->res, array_search('editSub', array_keys($this->res)), 1);
             }

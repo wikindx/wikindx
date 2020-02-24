@@ -24,7 +24,6 @@ class ATTACHMENTS
     private $resourceId;
     private $embargoArray = [];
     private $embargoNew;
-    private $config;
 
     public function __construct()
     {
@@ -35,7 +34,6 @@ class ATTACHMENTS
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->dateObject = FACTORY_DATE::getInstance();
         $this->attachment = FACTORY_ATTACHMENT::getInstance();
     }
@@ -543,7 +541,7 @@ class ATTACHMENTS
         $pString = \HTML\tableStart('generalTable left');
         $pString .= \HTML\trStart();
         // Quick and dirty multiple upload
-        GLOBALS::addTplVar('scripts', '<script src="' . $this->config->WIKINDX_BASE_URL . '/core/modules/attachments/multipleUpload.js"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/modules/attachments/multipleUpload.js"></script>');
         GLOBALS::addTplVar('scripts', '<script type="text/javascript">var rId = ' . $this->resourceId .
             '; var maxSize = ' . $maxSize . '; </script>');
         $error = base64_encode($this->errors->text("file", "upload"));
@@ -655,7 +653,7 @@ class ATTACHMENTS
             $td .= \HTML\p(\FORM\textareaInput(
                 $this->messages->text('resources', 'attachmentDescription'),
                 "attachmentDescription_$hash",
-                \HTML\dbToHtmlTidy($desc),
+                \HTML\nlToHtml($desc),
                 60
             ), '', 2);
             $pString .= \HTML\td($td, 'attachmentBorder');
@@ -694,7 +692,7 @@ class ATTACHMENTS
         $this->session->setVar('attachMaxSize', $maxSize);
         // Three ways to do this:
         // Quick and dirty multiple upload
-        GLOBALS::addTplVar('scripts', '<script src="' . $this->config->WIKINDX_BASE_URL . '/core/modules/attachments/multipleUpload.js"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/modules/attachments/multipleUpload.js"></script>');
         GLOBALS::addTplVar('scripts', '<script type="text/javascript">var rId = ' . $this->resourceId .
             '; var maxSize = ' . $maxSize . '; </script>');
         $error = base64_encode($this->errors->text("file", "upload"));

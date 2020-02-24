@@ -18,8 +18,6 @@ class CLOSE
     /** object */
     protected $template;
     /** object */
-    protected $config;
-    /** object */
     protected $messages;
     /** object */
     protected $session;
@@ -35,7 +33,6 @@ class CLOSE
      */
     public function __construct($displayHeader = TRUE, $displayFooter = TRUE, $displayMenu = TRUE, $displayPopUp = FALSE)
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->db = FACTORY_DB::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
 
@@ -49,7 +46,7 @@ class CLOSE
         if ($userId = $this->session->getVar('setup_UserId'))
         {
             $this->db->formatConditions(['usersId' => $userId]);
-            $username = \HTML\dbToHtmlTidy($this->db->selectFirstField('users', 'usersUsername'));
+            $username = \HTML\nlToHtml($this->db->selectFirstField('users', 'usersUsername'));
         }
         else
         {
@@ -64,7 +61,7 @@ class CLOSE
         if ($useBib = $this->session->getVar("mywikindx_Bibliography_use"))
         {
             $this->db->formatConditions(['userbibliographyId' => $useBib]);
-            $bib = \HTML\dbToHtmlTidy($this->db->selectFirstField('user_bibliography', 'userbibliographyTitle'));
+            $bib = \HTML\nlToHtml($this->db->selectFirstField('user_bibliography', 'userbibliographyTitle'));
         }
         else
         {
@@ -88,13 +85,13 @@ class CLOSE
 
         GLOBALS::addTplVar('displayPopUp', $displayPopUp);
 
-        GLOBALS::addTplVar('tplPath', $this->config->WIKINDX_BASE_URL . $tplPath);
+        GLOBALS::addTplVar('tplPath', WIKINDX_BASE_URL . $tplPath);
         GLOBALS::addTplVar('lang', \LOCALES\localetoBCP47(\LOCALES\determine_locale()));
-        if (property_exists($this->config, 'WIKINDX_RSS_ALLOW'))
+        if (defined('WIKINDX_RSS_ALLOW'))
         {
-            GLOBALS::addTplVar('displayRss', $this->config->WIKINDX_RSS_ALLOW);
-            GLOBALS::addTplVar('rssTitle', $this->config->WIKINDX_RSS_TITLE);
-            GLOBALS::addTplVar('rssFeed', $this->config->WIKINDX_BASE_URL . WIKINDX_RSS_PAGE);
+            GLOBALS::addTplVar('displayRss', WIKINDX_RSS_ALLOW);
+            GLOBALS::addTplVar('rssTitle', WIKINDX_RSS_TITLE);
+            GLOBALS::addTplVar('rssFeed', WIKINDX_BASE_URL . WIKINDX_RSS_PAGE);
         }
         else
         {
@@ -105,23 +102,16 @@ class CLOSE
 
         // Check if this parameter exists because throws an error at install stage
         // TODO (lkppo): loading process could be changed to load configuration separately of AUTHORIZE class
-        if (property_exists($this->config, 'WIKINDX_TITLE'))
-        {
-            $title = \HTML\dbToHtmlTidy($this->config->WIKINDX_TITLE);
-        }
-        else
-        {
-            $title = WIKINDX_NAME;
-        }
+        $title = \HTML\nlToHtml(defined('WIKINDX_TITLE') ? WIKINDX_TITLE : WIKINDX_TITLE_DEFAULT);
 
         GLOBALS::addTplVar('title', \HTML\stripHtml($title)); // Admins can add HTML formatting in the configure interface.
         GLOBALS::addTplVar('headTitle', $title);
 
         // Mandatory script for Ajax and core functions
-        GLOBALS::addTplVar('scripts', '<script src="' . $this->config->WIKINDX_BASE_URL . '/core/javascript/coreJavascript.js"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . $this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR) . '/progressbarjs/progressbar.min.js"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . $this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR) . '/jsonjs/json2.js"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . $this->config->WIKINDX_BASE_URL . '/core/javascript/ajax.js"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/javascript/coreJavascript.js"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR) . '/progressbarjs/progressbar.min.js"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR) . '/jsonjs/json2.js"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/javascript/ajax.js"></script>');
 
         // MENU
         GLOBALS::addTplVar('displayMenu', $displayMenu);
@@ -141,7 +131,7 @@ class CLOSE
         // because someone can use them at an other place of his custom template
         GLOBALS::addTplVar("footerInfo", $footer);
         GLOBALS::addTplVar('wkx_link', WIKINDX_URL);
-        GLOBALS::addTplVar('wkx_title', mb_strtolower(WIKINDX_NAME));
+        GLOBALS::addTplVar('wkx_title', mb_strtolower(WIKINDX_TITLE_DEFAULT));
         GLOBALS::addTplVar('wkx_mimetype_rss', WIKINDX_MIMETYPE_RSS);
 
         // Get the time elapsed before template rendering
@@ -214,7 +204,7 @@ class CLOSE
                 {
                     $errorMessage = "Mixed data type in '$k' template variable";
 
-                    if ($this->config->WIKINDX_DEBUG_ERRORS)
+                    if (WIKINDX_DEBUG_ERRORS)
                     {
                         trigger_error($errorMessage, E_USER_ERROR);
                     }
@@ -271,12 +261,12 @@ class CLOSE
         {
             $debugString = '';
             // Insert SQL log
-            if ($this->config->WIKINDX_DEBUG_SQL && in_array('logsql', $tplKeys))
+            if ((!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL) && in_array('logsql', $tplKeys))
             {
                 $debugString .= $debugLogSQLString;
             }
             // Insert debug timers
-            if (property_exists($this->config, 'WIKINDX_DEBUG_ERRORS') && $this->config->WIKINDX_DEBUG_ERRORS)
+            if (defined('WIKINDX_DEBUG_ERRORS') && WIKINDX_DEBUG_ERRORS)
             {
                 $lineEnding = BR;
                 $debugString .= "<p style='font-family: monospace; font-size: 8pt; text-align: right;'>" . LF;

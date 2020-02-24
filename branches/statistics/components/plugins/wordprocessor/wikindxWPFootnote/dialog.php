@@ -33,9 +33,9 @@ include_once("core/startup/WEBSERVERCONFIG.php");
 
 include_once("core/messages/PLUGINMESSAGES.php");
 
-$script = '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
-$script .= '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/wordprocessor/wikindxWPcommon.js"></script>';
-$script .= '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/wordprocessor/' . basename(__DIR__) . '/js/wikindxWPFootnotedialog.js"></script>';
+$script = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
+$script .= '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/wordprocessor/wikindxWPcommon.js"></script>';
+$script .= '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/wordprocessor/' . basename(__DIR__) . '/js/wikindxWPFootnotedialog.js"></script>';
 GLOBALS::addTplVar('scripts', $script);
 
 $class = new WPFootnoteDialog();
@@ -44,11 +44,9 @@ class WPFootnoteDialog
 {
     private $pluginmessages;
     private $coremessages;
-    private $config;
 
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->pluginmessages = new PLUGINMESSAGES('wordprocessor', 'wordprocessorMessages');
         

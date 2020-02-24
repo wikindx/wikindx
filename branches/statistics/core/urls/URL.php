@@ -7,24 +7,30 @@
  */
 
 /**
- * URL
- *
- * Common methods for handling URLs.
+ * Common methods for handling URLs
  *
  * @package wikindx\core\urls
  */
-class URL
+namespace URL
 {
-    /** object */
-    private $session;
-
-    /**
-     * URL
-     */
-    public function __construct()
+    function getWikindxBasePath()
     {
-        $this->session = FACTORY_SESSION::getInstance();
+        $wikindxBasePath = __DIR__;
+        while (!in_array(basename($wikindxBasePath), ["", "core"]))
+        {
+            $wikindxBasePath = dirname($wikindxBasePath);
+        }
+        if (basename($wikindxBasePath) == "")
+        {
+            die("
+                \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
+                and WIKINDX is unable to set the installation path automatically.
+                You should set \$WIKINDX_WIKINDX_PATH in config.php.
+            ");
+        }
+        return dirname($wikindxBasePath);
     }
+
     /**
      * grab URLs from provided db field value
      *
@@ -34,7 +40,7 @@ class URL
      *
      * @return array
      */
-    public function getUrls($field)
+    function getUrls($field)
     {
         $array = unserialize(base64_decode($field));
         if (!is_array($array))
@@ -52,7 +58,7 @@ class URL
      *
      * @return string
      */
-    public function reduceUrl($text, $limit = FALSE)
+    function reduceUrl($text, $limit = FALSE)
     {
         if (!$limit)
         {
@@ -62,7 +68,7 @@ class URL
         {
             $start = floor(($limit / 2) - 2);
             $length = $count - (2 * $start);
-            $text = UTF8::mb_substr_replace($text, " ... ", $start, $length);
+            $text = \UTF8::mb_substr_replace($text, " ... ", $start, $length);
         }
 
         return $text;
@@ -73,7 +79,7 @@ class URL
      *
      * @return string
      */
-    public function getCurrentProtocole()
+    function getCurrentProtocole()
     {
         if (
             (!empty($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https')

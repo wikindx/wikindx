@@ -21,7 +21,6 @@ class RESOURCENOTE
     private $icons;
     private $common;
     private $cite;
-    private $config;
     private $userId;
 
     public function __construct()
@@ -35,7 +34,6 @@ class RESOURCENOTE
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
         $this->cite = FACTORY_CITE::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->userId = $this->session->getVar('setup_UserId');
     }
     /**
@@ -54,7 +52,7 @@ class RESOURCENOTE
             return $note;
         }
         if ($this->session->getVar("setup_Superadmin") ||
-            ($write && (!$this->config->WIKINDX_ORIGINATOR_EDITONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId))))
+            ($write && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId))))
         {
             if (!$row['resourcetextNote'])
             {
@@ -90,7 +88,7 @@ class RESOURCENOTE
             list($note['userAdd'], $note['userEdit']) = $this->user->displayUserAddEdit($row, TRUE, 'note');
             $note['note'] =
                 $this->cite->parseCitations(
-                    $this->common->doHighlight(\HTML\dbToHtmlTidy($row['resourcetextNote'])),
+                    $this->common->doHighlight(\HTML\nlToHtml($row['resourcetextNote'])),
                     'html'
                 );
         }

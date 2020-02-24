@@ -50,8 +50,6 @@ class LISTCOMMON
     /** object */
     private $icons;
     /** object */
-    private $config;
-    /** object */
     private $session;
     /** object */
     private $messages;
@@ -81,7 +79,6 @@ class LISTCOMMON
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->icons = FACTORY_LOADICONS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
@@ -518,7 +515,7 @@ class LISTCOMMON
         $resultset = $this->db->select('resource_keyword', 'resourcemetadataText');
         while ($row = $this->db->fetchRow($resultset))
         {
-            $array[] = $this->cite->parseCitations(\HTML\dbToHtmlTidy($row['resourcemetadataText']), 'htmlNoBib', FALSE);
+            $array[] = $this->cite->parseCitations(\HTML\nlToHtml($row['resourcemetadataText']), 'htmlNoBib', FALSE);
         }
 
         return $array;
@@ -554,11 +551,11 @@ class LISTCOMMON
                     $array[] = \FORM\radioButton(FALSE, 'cite', $resourceId . '_' .
                     base64_encode(\HTML\dbToTinyMCE($row['text']))) .
                     '&nbsp;' .
-                    $this->resCommon->doHighlight($this->cite->parseCitations(\HTML\dbToHtmlTidy($row['text']), 'htmlNoBib', FALSE));
+                    $this->resCommon->doHighlight($this->cite->parseCitations(\HTML\nlToHtml($row['text']), 'htmlNoBib', FALSE));
                 }
                 else
                 {
-                    $array[] = $this->resCommon->doHighlight($this->cite->parseCitations(\HTML\dbToHtmlTidy($row['text']), 'htmlNoBib', FALSE));
+                    $array[] = $this->resCommon->doHighlight($this->cite->parseCitations(\HTML\nlToHtml($row['text']), 'htmlNoBib', FALSE));
                 }
             }
         }
@@ -814,7 +811,7 @@ class LISTCOMMON
                     $resourceList[$resourceId]['links']['checkbox'] = \FORM\checkBox(FALSE, "bib_" . $resourceId);
                 }
 
-                if ($write && !$this->config->WIKINDX_ORIGINATOR_EDITONLY)
+                if ($write && !WIKINDX_ORIGINATOR_EDIT_ONLY)
                 {
                     $resourceList[$resourceId]['links']['edit'] = \HTML\a(
                         $this->icons->getClass("edit"),
@@ -866,7 +863,7 @@ class LISTCOMMON
                 }
                 // display CMS link if required
                 // link is actually a JavaScript call
-                if (GLOBALS::getUserVar('DisplayCmsLink') && $this->config->WIKINDX_CMS_ALLOW)
+                if (GLOBALS::getUserVar('DisplayCmsLink') && WIKINDX_CMS_ALLOW)
                 {
                     $resourceList[$resourceId]['links']['cms'] = \HTML\a(
                         'cmsLink',
@@ -1003,7 +1000,7 @@ class LISTCOMMON
         }
         // display CMS link if required
         // link is actually a JavaScript call
-        if (GLOBALS::getUserVar('DisplayCmsLink') && $this->config->WIKINDX_CMS_ALLOW && $this->config->WIKINDX_CMS_SQL)
+        if (GLOBALS::getUserVar('DisplayCmsLink') && WIKINDX_CMS_ALLOW && WIKINDX_CMS_SQL)
         {
             $linksInfo['cms'] = \HTML\a(
                 'cmsLink',
@@ -1120,7 +1117,7 @@ class LISTCOMMON
                     $this->messages->text('listParams', 'listParams'),
                     '#',
                     "",
-                    \HTML\dbToHtmlPopupTidy(\HTML\dbToHtmlTidy($strings))
+                    \HTML\dbToHtmlPopupTidy(\HTML\nlToHtml($strings))
                 ) . BR;
             }
             if (empty($strings))
@@ -1162,7 +1159,7 @@ class LISTCOMMON
                 {
                     $this->db->formatConditions(['tagId' => $id]);
                     $strings[] = $this->messages->text('listParams', 'tag') . ':&nbsp;&nbsp;' .
-                        \HTML\dbToHtmlTidy($this->db->selectFirstField('tag', 'tagTag'));
+                        \HTML\nlToHtml($this->db->selectFirstField('tag', 'tagTag'));
                 }
             }
             if ($id = $this->session->getVar($listType . "_attachment"))
@@ -1187,7 +1184,7 @@ class LISTCOMMON
             {
                 $this->db->formatConditions(['categoryId' => $id]);
                 $strings[] = $this->messages->text('listParams', 'category') . ':&nbsp;&nbsp;' .
-                    \HTML\dbToHtmlTidy($this->db->selectFirstField('category', 'categoryCategory'));
+                    \HTML\nlToHtml($this->db->selectFirstField('category', 'categoryCategory'));
             }
         }
         if (($listType == 'listSubcategory') || ($id = $this->session->getVar($listType . '_Subcategory')))
@@ -1207,7 +1204,7 @@ class LISTCOMMON
             {
                 $this->db->formatConditions(['subcategoryId' => $id]);
                 $strings[] = $this->messages->text('listParams', 'subcategory') . ':&nbsp;&nbsp;' .
-                    \HTML\dbToHtmlTidy($this->db->selectFirstField('subcategory', 'subcategorySubcategory'));
+                    \HTML\nlToHtml($this->db->selectFirstField('subcategory', 'subcategorySubcategory'));
             }
         }
         if (($listType == 'listUserTag') || ($id = $this->session->getVar($listType . '_UserTag')))
@@ -1227,7 +1224,7 @@ class LISTCOMMON
             {
                 $this->db->formatConditions(['usertagsId' => $id]);
                 $strings[] = $this->messages->text('listParams', 'userTag') . ':&nbsp;&nbsp;' .
-                    \HTML\dbToHtmlTidy($this->db->selectFirstField('user_tags', 'usertagsTag'));
+                    \HTML\nlToHtml($this->db->selectFirstField('user_tags', 'usertagsTag'));
             }
         }
         if (($listType == 'listCollection') || ($id = $this->session->getVar($listType . '_Collection')))
@@ -1247,7 +1244,7 @@ class LISTCOMMON
             {
                 $this->db->formatConditions(['collectionId' => $id]);
                 $strings[] = $this->messages->text('listParams', 'collection') . ':&nbsp;&nbsp;' .
-                    \HTML\dbToHtmlTidy($this->db->selectFirstField('collection', 'collectionTitle'));
+                    \HTML\nlToHtml($this->db->selectFirstField('collection', 'collectionTitle'));
             }
         }
         if (($listType == 'listPublisher') || ($id = $this->session->getVar($listType . '_Publisher')))
@@ -1278,7 +1275,7 @@ class LISTCOMMON
                 }
                 $publisher = stripslashes($row['publisherName']) . $loc;
                 $strings[] = $this->messages->text('listParams', 'publisher') . ':&nbsp;&nbsp;' .
-                    \HTML\dbToHtmlTidy($publisher);
+                    \HTML\nlToHtml($publisher);
             }
         }
         if (($listType == 'listKeyword') || ($id = $this->session->getVar($listType . '_Keyword')))
@@ -1298,7 +1295,7 @@ class LISTCOMMON
             {
                 $this->db->formatConditions(['keywordId' => $id]);
                 $strings[] = $this->messages->text('listParams', 'keyword') . ':&nbsp;&nbsp;' .
-                    \HTML\dbToHtmlTidy($this->db->selectFirstField('keyword', 'keywordKeyword'));
+                    \HTML\nlToHtml($this->db->selectFirstField('keyword', 'keywordKeyword'));
             }
         }
         if ($id = $this->session->getVar($listType . '_Language'))
@@ -1314,7 +1311,7 @@ class LISTCOMMON
                 $this->db->formatConditions(['languageId' => $id]);
                 $recordset = $this->db->select('language', 'languageLanguage');
                 $strings[] = $this->messages->text('listParams', 'language') . ':&nbsp;&nbsp;' .
-                    \HTML\dbToHtmlTidy($this->db->selectFirstField('language', 'languageLanguage'));
+                    \HTML\nlToHtml($this->db->selectFirstField('language', 'languageLanguage'));
             }
         }
         if (($listType == 'listCreator') || ($listType == 'select'))
@@ -1323,7 +1320,7 @@ class LISTCOMMON
             {
                 $this->db->formatConditions(['userbibliographyId' => $id]);
                 $strings[] = $this->messages->text('listParams', 'notInUserBib') . ':&nbsp;&nbsp;' .
-                    \HTML\dbToHtmlTidy($this->db->selectFirstField('user_bibliography', 'userbibliographyTitle'));
+                    \HTML\nlToHtml($this->db->selectFirstField('user_bibliography', 'userbibliographyTitle'));
             }
             if (($listType == 'listCreator') || ($id = $this->session->getVar($listType . '_Creator')))
             {
@@ -1346,7 +1343,7 @@ class LISTCOMMON
                     $name = $row['creatorPrefix'] ? $row['creatorPrefix'] . ' ' .
                         $row['creatorSurname'] : $row['creatorSurname'];
                     $strings[] = $this->messages->text('listParams', 'creator') . ':&nbsp;&nbsp;' .
-                        \HTML\dbToHtmlTidy($name);
+                        \HTML\nlToHtml($name);
                 }
             }
         }
@@ -1360,7 +1357,7 @@ class LISTCOMMON
                     $this->messages->text('listParams', 'listParams'),
                     '#',
                     "",
-                    \HTML\dbToHtmlPopupTidy(\HTML\dbToHtmlTidy($param))
+                    \HTML\dbToHtmlPopupTidy(\HTML\nlToHtml($param))
                 ) . BR;
             }
             else
@@ -1394,7 +1391,7 @@ class LISTCOMMON
                     {
                         $id .= "&nbsp;(" . $this->messages->text('listParams', 'partial') . ")";
                     }
-                    $strings[] = $this->messages->text('listParams', 'word') . ':&nbsp;&nbsp;' . \HTML\dbToHtmlTidy($id);
+                    $strings[] = $this->messages->text('listParams', 'word') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
                 }
             }
         }
@@ -1446,7 +1443,7 @@ class LISTCOMMON
                 {
                     $this->db->formatConditions(['creatorId' => $id]);
                     $id = $this->db->selectFirstField('creator', 'creatorSurname');
-                    $strings[] = $this->messages->text('listParams', 'creator') . ':&nbsp;&nbsp;' . \HTML\dbToHtmlTidy($id);
+                    $strings[] = $this->messages->text('listParams', 'creator') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
                 }
             }
             elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'citeProcessCreator'))
@@ -1457,7 +1454,7 @@ class LISTCOMMON
             {
                 $this->db->formatConditions(['collectionId' => $id]);
                 $id = $this->db->selectFirstField('collection', 'collectionTitle');
-                $strings[] = $this->messages->text('listParams', 'collection') . ':&nbsp;&nbsp;' . \HTML\dbToHtmlTidy($id);
+                $strings[] = $this->messages->text('listParams', 'collection') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
             }
             elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'publisherProcess'))
             {
@@ -1471,7 +1468,7 @@ class LISTCOMMON
                 {
                     $id = $row['publisherName'];
                 }
-                $strings[] = $this->messages->text('listParams', 'publisher') . ':&nbsp;&nbsp;' . \HTML\dbToHtmlTidy($id);
+                $strings[] = $this->messages->text('listParams', 'publisher') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
             }
             elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'yearProcess'))
             {
@@ -1481,51 +1478,51 @@ class LISTCOMMON
             {
                 $this->db->formatConditions(['keywordId' => $id]);
                 $id = $this->db->selectFirstField('keyword', 'keywordKeyword');
-                $strings[] = $this->messages->text('listParams', 'keyword') . ':&nbsp;&nbsp;' . \HTML\dbToHtmlTidy($id);
+                $strings[] = $this->messages->text('listParams', 'keyword') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
             }
             elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'categoryProcess'))
             {
                 $this->db->formatConditions(['categoryId' => $id]);
                 $id = $this->db->selectFirstField('category', 'categoryCategory');
-                $strings[] = $this->messages->text('listParams', 'category') . ':&nbsp;&nbsp;' . \HTML\dbToHtmlTidy($id);
+                $strings[] = $this->messages->text('listParams', 'category') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
             }
             elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'subcategoryProcess'))
             {
                 $this->db->formatConditions(['subcategoryId' => $id]);
                 $id = $this->db->selectFirstField('subcategory', 'subcategorySubcategory');
-                $strings[] = $this->messages->text('listParams', 'subcategory') . ':&nbsp;&nbsp;' . \HTML\dbToHtmlTidy($id);
+                $strings[] = $this->messages->text('listParams', 'subcategory') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
             }
             elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'languageProcess'))
             {
                 $this->db->formatConditions(['languageId' => $id]);
                 $id = $this->db->selectFirstField('language', 'languageLanguage');
-                $strings[] = $this->messages->text('listParams', 'language') . ':&nbsp;&nbsp;' . \HTML\dbToHtmlTidy($id);
+                $strings[] = $this->messages->text('listParams', 'language') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
             }
             elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'bibliographyProcess'))
             {
                 $this->db->formatConditions(['userbibliographyId' => $id]);
                 $id = $this->db->selectFirstField('user_bibliography', 'userbibliographyTitle');
-                $strings[] = $this->messages->text('listParams', 'bibliography') . ':&nbsp;&nbsp;' . \HTML\dbToHtmlTidy($id);
+                $strings[] = $this->messages->text('listParams', 'bibliography') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
             }
             elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'processAdd'))
             {
                 $this->db->formatConditions(['usersId' => $id]);
                 $row = $this->db->selectFirstRow('users', ['usersFullname', 'usersUsername']);
                 $id = $row['usersFullname'] ? $row['usersFullname'] : $row['usersUsername'];
-                $strings[] = $this->messages->text('listParams', 'addedBy', \HTML\dbToHtmlTidy($id));
+                $strings[] = $this->messages->text('listParams', 'addedBy', \HTML\nlToHtml($id));
             }
             elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'processEdit'))
             {
                 $this->db->formatConditions(['usersId' => $id]);
                 $row = $this->db->selectFirstRow('users', ['usersFullname', 'usersUsername']);
                 $id = $row['usersFullname'] ? $row['usersFullname'] : $row['usersUsername'];
-                $strings[] = $this->messages->text('listParams', 'editedBy', \HTML\dbToHtmlTidy($id));
+                $strings[] = $this->messages->text('listParams', 'editedBy', \HTML\nlToHtml($id));
             }
             elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'usertagProcess'))
             {
                 $this->db->formatConditions(['usertagsId' => $id]);
                 $id = $this->db->selectFirstField('user_tags', 'usertagsTag');
-                $strings[] = $this->messages->text('listParams', 'userTag') . ':&nbsp;&nbsp;' . \HTML\dbToHtmlTidy($id);
+                $strings[] = $this->messages->text('listParams', 'userTag') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
             }
         }
         if (empty($strings))

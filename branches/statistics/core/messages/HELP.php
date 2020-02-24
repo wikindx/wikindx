@@ -30,13 +30,11 @@
 *****/
 class HELP
 {
-    private $config;
     private $session;
     private $languageArray = [];
 
 	public function __construct()
 	{
-		$this->config = FACTORY_CONFIG::getInstance();
 		$this->session = FACTORY_SESSION::getInstance();
 	    $this->languageArray = $this->loadArrays();
 	}
@@ -319,11 +317,7 @@ class adminstyle_CONFIG {
 . dgettext($domain, "<p>At least one template, one bibliographic style and one language must remain enabled. WIKINDX expects that the English language pack is available on the server (i.e. that you do not physically remove it from the wikindx/languages/ folder) whether it has been disabled or not.  This is because the English language pack is used to supply any messages that might be missing from other language packs.</p>"),
 		);
 		
-		
-		if(!isset($this->config->WIKINDX_SEARCHFILTER)) // i.e. at first install of a blank database
-			$search = "an, a, the, and, to";
-		else
-			$search = implode(", ", $this->config->WIKINDX_SEARCHFILTER);
+		$search = implode(", ", defined('WIKINDX_SEARCH_FILTER') ? WIKINDX_SEARCH_FILTER : unserialize(base64_decode(WIKINDX_SEARCH_FILTER_DEFAULT)));
 		
 		$pasteBibtex = $this->session->getVar("setup_MaxPaste");
 		

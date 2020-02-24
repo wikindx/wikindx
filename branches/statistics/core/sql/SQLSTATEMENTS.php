@@ -226,7 +226,7 @@ class SQLSTATEMENTS
      */
     public function getExportSql()
     {
-        $totalPossible = FACTORY_CONFIG::getInstance()->WIKINDX_MAX_WRITECHUNK;
+        $totalPossible = WIKINDX_MAX_WRITECHUNK;
         if ($this->session->getVar('list_AllIds') == 'all')
         {
             $total = $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources');

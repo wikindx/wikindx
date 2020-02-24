@@ -24,12 +24,6 @@ define('CR', "\r");
 define('LF', "\n");
 define('BR', '<br>');
 /**
- * WIKINDX official name
- *
- * @name WIKINDX_NAME
- */
-define('WIKINDX_NAME', 'WIKINDX');
-/**
  * WIKINDX official/public version information
  *
  * This number is the official release version
@@ -39,7 +33,7 @@ define('WIKINDX_NAME', 'WIKINDX');
  *
  * @name WIKINDX_PUBLIC_VERSION
  */
-define('WIKINDX_PUBLIC_VERSION', '6.2.1');
+define('WIKINDX_PUBLIC_VERSION', '6.2.2');
 /**
  * WIKINDX internal version information
  *
@@ -49,7 +43,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.2.1');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 11.0);
+define('WIKINDX_INTERNAL_VERSION', 12.0);
 /**
  * WIKINDX copyright
  *
@@ -122,15 +116,6 @@ define('WIKINDX_COMPONENTS_UPDATE_SERVER', 'https://wikindx.sourceforge.io/downl
  */
 define('WIKINDX_PACKAGE_HASH_ALGO', 'sha256');
 
-// Debugging
-/**
- * Default values of config.php file
- * We keep here to check them at load time
- * NB: PHP 7 only can define a constant array
- */
-define('WIKINDX_PHP_ERROR_REPORTING_DEFAULT', E_ALL);
-define('WIKINDX_PHP_DISPLAY_ERRORS_DEFAULT', 'On');
-
 
 // List of components directories
 define('WIKINDX_DIR_COMPONENT', 'components');
@@ -142,8 +127,8 @@ define('WIKINDX_DIR_COMPONENT_VENDOR', WIKINDX_DIR_COMPONENT . DIRECTORY_SEPARAT
 
 
 // List of data directories
-define('WIKINDX_DIR_DB_SCHEMA', 'dbschema');
 define('WIKINDX_DIR_DATA', 'data');
+define('WIKINDX_DIR_DB_SCHEMA', 'dbschema');
 define('WIKINDX_DIR_DATA_ATTACHMENTS', WIKINDX_DIR_DATA . DIRECTORY_SEPARATOR . 'attachments');
 define('WIKINDX_DIR_DATA_FILES', WIKINDX_DIR_DATA . DIRECTORY_SEPARATOR . 'files');
 define('WIKINDX_DIR_DATA_IMAGES', WIKINDX_DIR_DATA . DIRECTORY_SEPARATOR . 'images');
@@ -152,8 +137,8 @@ define('WIKINDX_DIR_DATA_PLUGINS', WIKINDX_DIR_DATA . DIRECTORY_SEPARATOR . 'plu
 
 // List of cache directories
 define('WIKINDX_DIR_CACHE', 'cache');
-define('WIKINDX_DIR_CACHE_FILES', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'files');
 define('WIKINDX_DIR_CACHE_ATTACHMENTS', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'attachments');
+define('WIKINDX_DIR_CACHE_FILES', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'files');
 define('WIKINDX_DIR_CACHE_LANGUAGES', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'languages');
 define('WIKINDX_DIR_CACHE_PLUGINS', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'plugins');
 define('WIKINDX_DIR_CACHE_STYLES', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'styles');
@@ -168,8 +153,8 @@ define('WIKINDX_MIMETYPE_BIB', 'application/x-bibtex');
 define('WIKINDX_MIMETYPE_DOC', 'application/msword');
 define('WIKINDX_MIMETYPE_DOCX', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 define('WIKINDX_MIMETYPE_ENDNOTE', 'application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml');
-define('WIKINDX_MIMETYPE_JSON', 'application/json');
 define('WIKINDX_MIMETYPE_HTM', 'text/html');
+define('WIKINDX_MIMETYPE_JSON', 'application/json');
 define('WIKINDX_MIMETYPE_PDF', 'application/pdf');
 define('WIKINDX_MIMETYPE_RIS', 'application/x-research-info-systems');
 define('WIKINDX_MIMETYPE_RSS', 'application/rss+xml');
@@ -191,21 +176,20 @@ define('WIKINDX_LANGUAGE_DOMAIN_DEFAULT', 'wikindx');
 // Divers
 define('WIKINDX_DISPLAYBIBTEXLINK_DEFAULT', 'N');
 define('WIKINDX_DISPLAYCMSLINK_DEFAULT', 'N');
+define('WIKINDX_LDAP_PROTOCOLE_VERSIONS', [2 => '2', 3 => '3']);
 define('WIKINDX_PAGINGSTYLE_DEFAULT', 'N');
+define('WIKINDX_PHPMAILER_BACKENDS', ['smtp' => 'SMTP', 'sendmail' => 'Sendmail']);
+define('WIKINDX_PHPMAILER_SMTP_ENCRYPT', ['none' => 'none', 'tls' => 'tls', 'ssl' => 'ssl']);
+define('WIKINDX_TAG_FACTOR_MAX', 200);
+define('WIKINDX_TAG_FACTOR_MIN', 50);
+define('WIKINDX_TAG_FACTOR_STEP', 5);
 define('WIKINDX_TEMPLATEMENU_DEFAULT', 0);
 define('WIKINDX_UNIX_PERMS_DEFAULT', 0777);
 define('WIKINDX_USEBIBTEXKEY_DEFAULT', 'N');
 define('WIKINDX_USEWIKINDXKEY_DEFAULT', 'N');
-define('WIKINDX_TAG_FACTOR_MIN', 50);
-define('WIKINDX_TAG_FACTOR_MAX', 200);
-define('WIKINDX_TAG_FACTOR_STEP', 5);
 
 // RSS feed
 define('WIKINDX_RSS_PAGE', '/index.php?action=rss_RSS_CORE');
-
-
-// Mail system
-define('WIKINDX_MAIL_SMARGS_DEFAULT', '-i');
 
 
 // CMS API

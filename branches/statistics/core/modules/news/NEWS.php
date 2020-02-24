@@ -95,11 +95,11 @@ class NEWS
         $pString .= \FORM\formHeader('news_NEWS_CORE');
         $pString .= \FORM\hidden('method', 'add');
         $sessVar = $this->session->issetVar("news_Title") ?
-            \HTML\dbToHtmlTidy($this->session->getVar("news_Title")) : FALSE;
+            \HTML\nlToHtml($this->session->getVar("news_Title")) : FALSE;
         $pString .= \FORM\textInput($this->messages->text("news", "title"), "title", $sessVar, 30, 255);
         $pString .= BR . "&nbsp;" . BR;
         $sessVar = $this->session->issetVar("news_Body") ?
-            \HTML\dbToHtmlTidy($this->session->getVar("news_Body")) : FALSE;
+            \HTML\nlToHtml($this->session->getVar("news_Body")) : FALSE;
         $pString .= \FORM\textAreaInput($this->messages->text("news", "body"), "body", $sessVar, 80, 10);
         $pString .= BR . "&nbsp;" . BR;
         $pString .= \FORM\formSubmit($this->messages->text("submit", "Add"));
@@ -136,8 +136,7 @@ class NEWS
         $this->session->delVar('news_Body');
         $this->session->setVar('setup_News', TRUE);
         $this->session->setVar('news_Done', TRUE);
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        if ($co->getOne('configEmailNews'))
+        if (WIKINDX_EMAIL_NEWS)
         {
             include_once("core/modules/email/EMAIL.php");
             $emailClass = new EMAIL();
@@ -285,8 +284,7 @@ class NEWS
         $this->db->formatConditions(['newsId' => $editId]);
         $this->db->update('news', $updateArray);
         $this->session->setVar('news_Done', TRUE);
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        if ($co->getOne('configEmailNews'))
+        if (WIKINDX_EMAIL_NEWS)
         {
             include_once("core/modules/email/EMAIL.php");
             $emailClass = new EMAIL();
@@ -312,7 +310,7 @@ class NEWS
             {
                 $pString .= \HTML\p(\HTML\a(
                     "link",
-                    \HTML\dbToHtmlTidy($title),
+                    \HTML\nlToHtml($title),
                     "index.php?action=news_NEWS_CORE&method=viewNewsItem&id=" . $id
                 ) .
                     '&nbsp;&nbsp;' . \HTML\em($this->newsTimestamp[$id]));
@@ -351,8 +349,8 @@ class NEWS
             $dateSplit = UTF8::mb_explode('-', $dateSplit[0]);
             $date = date("d/M/Y", mktime(0, 0, 0, $dateSplit[1], $dateSplit[2], $dateSplit[0]));
         }
-        $pString = \HTML\p(\HTML\strong(\HTML\dbToHtmlTidy($row['newsTitle'])) . BR . $date);
-        $pString .= \HTML\p(\HTML\dbToHtmlTidy($row['newsNews']));
+        $pString = \HTML\p(\HTML\strong(\HTML\nlToHtml($row['newsTitle'])) . BR . $date);
+        $pString .= \HTML\p(\HTML\nlToHtml($row['newsNews']));
         GLOBALS::addTplVar('content', $pString);
     }
     /**

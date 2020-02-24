@@ -34,11 +34,14 @@ include_once("core/startup/CONSTANTS.php");
  * After that, error reporting is reconfigured
  * by core/startup/LOADCONFIG.php (first called in AUTHORIZE) with user config.
  * This prevent to hide tricky errors.
+ *
+ * PHP 8 will make E_ALL the default error level,
+ * in preparation for its support we also make this level the default
  */
-error_reporting(WIKINDX_PHP_ERROR_REPORTING_DEFAULT);
-ini_set('display_startup_errors', 'On');
-ini_set('display_errors', WIKINDX_PHP_DISPLAY_ERRORS_DEFAULT);
-ini_set('html_errors', 'On');
+error_reporting(E_ALL);
+ini_set('display_startup_errors', TRUE);
+ini_set('html_errors', (PHP_SAPI !== 'cli'));
+ini_set('display_errors', TRUE);
 
 /**
  * Fix default charset of PHP interpret, PHP libs and protocols
@@ -77,17 +80,16 @@ ini_set('cgi.check_shebang_line', 'Off');
 //ini_set('session.use_strict_mode', 'On');
 
 
-// Configure a default timezone if empty
-if (date_default_timezone_get() == '')
-{
-    date_default_timezone_set(WIKINDX_TIMEZONE_DEFAULT);
-}
+
+// Set the time zone to whatever the default is to avoid 500 errors
+// Will default to UTC if it's not set properly in php.ini
+date_default_timezone_set(@date_default_timezone_get());
 
 
 // Check PHP minimum version and above.
 if (version_compare(PHP_VERSION, WIKINDX_PHP_VERSION_MIN, '<'))
 {
-    $AppName = WIKINDX_NAME;
+    $AppName = WIKINDX_TITLE_DEFAULT;
     $PHPVersion = PHP_VERSION;
     $PHPVersionMin = WIKINDX_PHP_VERSION_MIN;
     $SourceFile = __FILE__;
@@ -130,7 +132,7 @@ $MissingExtensions = array_diff($MandatoryExtensions, $InstalledExtensions);
 
 if (count($MissingExtensions) > 0)
 {
-    $AppName = WIKINDX_NAME;
+    $AppName = WIKINDX_TITLE_DEFAULT;
     $EnabledExtensions = array_intersect($MandatoryExtensions, $InstalledExtensions);
     $ListExtensions = '<tr><td>' . implode('</td><td style="color:red">DISABLED</td></tr><tr><td>', $MissingExtensions) . '<td style="color:red">DISABLED</td></tr>';
     $ListExtensions .= '<tr><td>' . implode('</td><td style="color:green">ENABLED</td></tr><tr><td>', $EnabledExtensions) . '<td style="color:green">ENABLED</td></tr>';
@@ -170,13 +172,13 @@ EOM;
 // Check PHP execution environnement (CLI isn't supported)
 if (PHP_SAPI === 'cli')
 {
-    die(WIKINDX_NAME . " doesn't support CLI execution.");
+    die(WIKINDX_TITLE_DEFAULT . " doesn't support CLI execution.");
 }
 
 // Check for presence of config.php
-if (!is_file('config.php'))
+if (!is_file(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"])))
 {
-    $AppName = WIKINDX_NAME;
+    $AppName = WIKINDX_TITLE_DEFAULT;
     $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
@@ -192,6 +194,46 @@ if (!is_file('config.php'))
 <h1>Configuration error: <em>config.php</em> file missing</h1>
 
 <p><em>config.php</em> file is missing. If this is a new installation,
+copy <em>config.php.dist</em> to <em>config.php</em> and edit that file
+to ensure the MySQL access protocols match
+those you have specified for the $AppName database.</p>
+
+<p>Ensure also that the
+<em>components/languages</em>,
+<em>components/plugins</em>,
+<em>components/styles</em>,
+<em>components/templates</em>,
+and <em>components/vendor</em>
+folders and all they contain are writable by the web server user (usually <em>nobody</em> or <em>www-data</em> account).</p>
+
+<p>After that, refresh this page (with F5) or <a href="index.php">follow this link</a>.</p>
+
+</body>
+EOM;
+    die($msg);
+}
+
+// Include the config file and check if the CONFIG class is in place
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]));
+
+if (!class_exists("CONFIG"))
+{
+    $AppName = WIKINDX_TITLE_DEFAULT;
+    $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
+    $msg = <<<EOM
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>$AppName</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="$styledir/template.css" type="text/css">
+	<link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
+</head>
+<body>
+
+<h1>Configuration error: <strong>CONFIG</strong> class missing in <em>config.php</em> file</h1>
+
+<p><strong>CONFIG</strong> class is missing in <em>config.php</em> file. If this is a new installation,
 copy <em>config.php.dist</em> to <em>config.php</em> and edit that file
 to ensure the MySQL access protocols match
 those you have specified for the $AppName database.</p>
@@ -289,8 +331,8 @@ include_once("core/startup/GLOBALS.php");
 // Set up the FACTORY objects of commonly used classes and start the timer.
 include_once("core/startup/FACTORY.php");
 
-// Init user config object
-//$config = FACTORY_CONFIG::getInstance(); // not needed here (and interferes with upgrade of v3.8 database because v3 config.php is not a class)
+// Initialize the static config read from config.php file
+include_once("core/startup/LOADSTATICCONFIG.php");
 
 /**
  *	Initialize the system

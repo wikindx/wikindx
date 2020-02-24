@@ -52,11 +52,11 @@ class CONFIGDBSTRUCTURE
             'configRssBibstyle',
             'configRssDescription',
             'configRssTitle',
-            'configSqlErrorOutput',
             'configStyle',
             'configTagHighColour',
             'configTagLowColour',
             'configTemplate',
+            'configTimezone',
             'configTitle',
         ];
         $arrayInt = [
@@ -81,11 +81,11 @@ class CONFIGDBSTRUCTURE
             'configTagLowFactor',
         ];
         $arrayBoolean = [
+            'configIsTrunk',
             'configAuthGate',
             'configBypassSmartyCompile',
             'configCmsAllow',
             'configCmsSql',
-            'configDebugEmail',
             'configDenyReadOnly',
             'configDisplayStatistics',
             'configDisplayUserStatistics',
@@ -101,9 +101,9 @@ class CONFIGDBSTRUCTURE
             'configImportBib',
             'configLdapUse',
             'configListLink',
-            'configMailServer',
             'configMailSmtpAuth',
             'configMailSmtpPersist',
+            'configMailUse',
             'configMetadataAllow',
             'configMetadataUserOnly',
             'configMultiUser',
@@ -126,7 +126,98 @@ class CONFIGDBSTRUCTURE
             'configDescription',
             'configNoSort',
             'configSearchFilter',
-            'configTimezone',
+        ];
+
+        $this->configToConstant = [
+            'configAuthGate' => 'WIKINDX_AUTHGATE_USE',
+            'configAuthGateMessage' => 'WIKINDX_AUTHGATE_MESSAGE',
+            'configBypassSmartyCompile' => 'WIKINDX_BYPASS_SMARTY_COMPILATION',
+            'configCmsAllow' => 'WIKINDX_CMS_ALLOW',
+            'configCmsBibstyle' => 'WIKINDX_CMS_BIBSTYLE',
+            'configCmsDbPassword' => 'WIKINDX_CMS_DB_PASSWORD',
+            'configCmsDbUser' => 'WIKINDX_CMS_DB_USER',
+            'configCmsSql' => 'WIKINDX_CMS_SQL',
+            'configContactEmail' => 'WIKINDX_CONTACT_EMAIL',
+            'configDeactivateResourceTypes' => 'WIKINDX_DEACTIVATE_RESOURCE_TYPES',
+            'configDenyReadOnly' => 'WIKINDX_DENY_READONLY',
+            'configDescription' => 'WIKINDX_DESCRIPTION',
+            'configDisplayStatistics' => 'WIKINDX_DISPLAY_STATISTICS',
+            'configDisplayUserStatistics' => 'WIKINDX_DISPLAY_USER_STATISTICS',
+            'configEmailNewRegistrations' => 'WIKINDX_EMAIL_NEW_REGISTRATIONS',
+            'configEmailNews' => 'WIKINDX_EMAIL_NEWS',
+            'configEmailStatistics' => 'WIKINDX_EMAIL_STATISTICS',
+            'configErrorReport' => 'WIKINDX_DEBUG_ERRORS',
+            'configFileAttach' => 'WIKINDX_FILE_ATTACH',
+            'configFileDeleteSeconds' => 'WIKINDX_FILE_DELETE_SECONDS',
+            'configFileViewLoggedOnOnly' => 'WIKINDX_FILE_VIEW_LOGGEDON_ONLY',
+            'configGlobalEdit' => 'WIKINDX_GLOBAL_EDIT',
+            'configGsAllow' => 'WIKINDX_GS_ALLOW',
+            'configGsAttachment' => 'WIKINDX_GS_ATTACHMENT',
+            'configImagesAllow' => 'WIKINDX_IMAGES_ALLOW',
+            'configImagesMaxSize' => 'WIKINDX_IMAGES_MAXSIZE',
+            'configImgHeightLimit' => 'WIKINDX_IMG_HEIGHT_LIMIT',
+            'configImgWidthLimit' => 'WIKINDX_IMG_WIDTH_LIMIT',
+            'configImportBib' => 'WIKINDX_IMPORT_BIB',
+            'configIsTrunk' => 'WIKINDX_IS_TRUNK',
+            'configLanguage' => 'WIKINDX_LANGUAGE', // These is also a user variable needed for the logon page where the defaults are required.
+            'configLastChanges' => 'WIKINDX_LAST_CHANGES',
+            'configLastChangesDayLimit' => 'WIKINDX_LAST_CHANGES_DAY_LIMIT',
+            'configLastChangesType' => 'WIKINDX_LAST_CHANGES_TYPE',
+            'configLdapDn' => 'WIKINDX_LDAP_DN',
+            'configLdapPort' => 'WIKINDX_LDAP_PORT',
+            'configLdapProtocolVersion' => 'WIKINDX_LDAP_PROTOCOL_VERSION',
+            'configLdapServer' => 'WIKINDX_LDAP_SERVER',
+            'configLdapUse' => 'WIKINDX_LDAP_USE',
+            'configListLink' => 'WIKINDX_LIST_LINK',
+            'configMailBackend' => 'WIKINDX_MAIL_BACKEND',
+            'configMailFrom' => 'WIKINDX_MAIL_FROM',
+            'configMailReplyTo' => 'WIKINDX_MAIL_REPLYTO',
+            'configMailReturnPath' => 'WIKINDX_MAIL_RETURN_PATH',
+            'configMailSmPath' => 'WIKINDX_MAIL_SENDMAIL_PATH',
+            'configMailSmtpAuth' => 'WIKINDX_MAIL_SMTP_AUTH',
+            'configMailSmtpEncrypt' => 'WIKINDX_MAIL_SMTP_ENCRYPT',
+            'configMailSmtpPassword' => 'WIKINDX_MAIL_SMTP_PASSWORD',
+            'configMailSmtpPersist' => 'WIKINDX_MAIL_SMTP_PERSIST',
+            'configMailSmtpPort' => 'WIKINDX_MAIL_SMTP_PORT',
+            'configMailSmtpServer' => 'WIKINDX_MAIL_SMTP_SERVER',
+            'configMailSmtpUsername' => 'WIKINDX_MAIL_SMTP_USERNAME',
+            'configMailUse' => 'WIKINDX_MAIL_USE',
+            'configMaxPaste' => 'WIKINDX_MAX_PASTE',
+            'configMetadataAllow' => 'WIKINDX_METADATA_ALLOW',
+            'configMetadataUserOnly' => 'WIKINDX_METADATA_USERONLY',
+            'configMultiUser' => 'WIKINDX_MULTIUSER',
+            'configNoSort' => 'WIKINDX_NO_SORT',
+            'configNotify' => 'WIKINDX_NOTIFY',
+            'configOriginatorEditOnly' => 'WIKINDX_ORIGINATOR_EDIT_ONLY',
+            'configPaging' => 'WIKINDX_PAGING', // This is a user variables now found in GLOBALS::getUserVar()
+            'configPagingMaxLinks' => 'WIKINDX_PAGING_MAXLINKS', // This is a user variables now found in GLOBALS::getUserVar()
+            'configPagingTagCloud' => 'WIKINDX_PAGING_TAG_CLOUD',
+            'configPasswordSize' => 'WIKINDX_PASSWORD_SIZE',
+            'configPasswordStrength' => 'WIKINDX_PASSWORD_STRENGTH',
+            'configPrintSql' => 'WIKINDX_DEBUG_SQL',
+            'configQuarantine' => 'WIKINDX_QUARANTINE',
+            'configReadOnlyAccess' => 'WIKINDX_READ_ONLY_ACCESS',
+            'configRestrictUserId' => 'WIKINDX_RESTRICT_USERID',
+            'configRssAllow' => 'WIKINDX_RSS_ALLOW',
+            'configRssBibstyle' => 'WIKINDX_RSS_BIBSTYLE',
+            'configRssDescription' => 'WIKINDX_RSS_DESCRIPTION',
+            'configRssDisplay' => 'WIKINDX_RSS_DISPLAY',
+            'configRssLimit' => 'WIKINDX_RSS_LIMIT',
+            'configRssTitle' => 'WIKINDX_RSS_TITLE',
+            'configSearchFilter' => 'WIKINDX_SEARCH_FILTER',
+            'configSiteMapAllow' => 'WIKINDX_SITEMAP_ALLOW',
+            'configStatisticsCompiled' => 'WIKINDX_STATISTICS_COMPILED',
+            'configStringLimit' => 'WIKINDX_STRING_LIMIT', // This is a user variables now found in GLOBALS::getUserVar()
+            'configStyle' => 'WIKINDX_STYLE', // This is a user variables now found in GLOBALS::getUserVar()
+            'configTagHighColour' => 'WIKINDX_TAG_HIGH_COLOUR',
+            'configTagHighFactor' => 'WIKINDX_TAG_HIGH_FACTOR',
+            'configTagLowColour' => 'WIKINDX_TAG_LOW_COLOUR',
+            'configTagLowFactor' => 'WIKINDX_TAG_LOW_FACTOR',
+            'configTemplate' => 'WIKINDX_TEMPLATE', // These is also a user variable needed for the logon page where the defaults are required.
+            'configTimezone' => 'WIKINDX_TIMEZONE',
+            'configTitle' => 'WIKINDX_TITLE',
+            'configUserRegistration' => 'WIKINDX_USER_REGISTRATION',
+            'configUserRegistrationModerate' => 'WIKINDX_USER_REGISTRATION_MODERATE',
         ];
 
         foreach ($arrayVarchar as $name)
@@ -149,99 +240,6 @@ class CONFIGDBSTRUCTURE
         {
             $this->dbStructure[$name] = 'configText';
         }
-
-        $this->configToConstant = [
-            'configAuthGate' => 'WIKINDX_AUTHGATE_USE',
-            'configAuthGateMessage' => 'WIKINDX_AUTHGATE_MESSAGE',
-            'configBypassSmartyCompile' => 'WIKINDX_BYPASS_SMARTYCOMPILE',
-            'configCmsAllow' => 'WIKINDX_CMS_ALLOW',
-            'configCmsBibstyle' => 'WIKINDX_CMS_BIBSTYLE',
-            'configCmsDbPassword' => 'WIKINDX_CMS_DB_PASSWORD',
-            'configCmsDbUser' => 'WIKINDX_CMS_DB_USER',
-            'configCmsSql' => 'WIKINDX_CMS_SQL',
-            'configContactEmail' => 'WIKINDX_CONTACT_EMAIL',
-            'configDeactivateResourceTypes' => 'WIKINDX_DEACTIVATE_RESOURCE_TYPES',
-            'configDenyReadOnly' => 'WIKINDX_DENY_READONLY',
-            'configDescription' => 'WIKINDX_DESCRIPTION',
-            'configDisplayStatistics' => 'WIKINDX_DISPLAY_STATISTICS',
-            'configDisplayUserStatistics' => 'WIKINDX_DISPLAY_USER_STATISTICS',
-            'configEmailNewRegistrations' => 'WIKINDX_EMAIL_NEWREGISTRATIONS',
-            'configEmailNews' => 'WIKINDX_EMAIL_NEWS',
-            'configEmailStatistics' => 'WIKINDX_EMAIL_STATISTICS',
-            'configErrorReport' => 'WIKINDX_DEBUG_ERRORS',
-            'configFileAttach' => 'WIKINDX_FILE_ATTACH',
-            'configFileDeleteSeconds' => 'WIKINDX_FILE_DELETESECONDS',
-            'configFileViewLoggedOnOnly' => 'WIKINDX_FILE_VIEWLOGGEDONONLY',
-            'configGlobalEdit' => 'WIKINDX_GLOBAL_EDIT',
-            'configGsAllow' => 'WIKINDX_GS_ALLOW',
-            'configGsAttachment' => 'WIKINDX_GS_ATTACHMENT',
-            'configImagesAllow' => 'WIKINDX_IMAGES_ALLOW',
-            'configImagesMaxSize' => 'WIKINDX_IMAGES_MAXSIZE',
-            'configImgHeightLimit' => 'WIKINDX_IMG_HEIGHTLIMIT',
-            'configImgWidthLimit' => 'WIKINDX_IMG_WIDTHLIMIT',
-            'configImportBib' => 'WIKINDX_IMPORTBIB',
-            'configLanguage' => 'WIKINDX_LANGUAGE', // These is also a user variable needed for the logon page where the defaults are required.
-            'configLastChanges' => 'WIKINDX_LASTCHANGES',
-            'configLastChangesDayLimit' => 'WIKINDX_LASTCHANGESDAYLIMIT',
-            'configLastChangesType' => 'WIKINDX_LASTCHANGESTYPE',
-            'configLdapDn' => 'WIKINDX_LDAP_DN',
-            'configLdapPort' => 'WIKINDX_LDAP_PORT',
-            'configLdapProtocolVersion' => 'WIKINDX_LDAP_PROTOCOL_VERSION',
-            'configLdapServer' => 'WIKINDX_LDAP_SERVER',
-            'configLdapUse' => 'WIKINDX_LDAP_USE',
-            'configListLink' => 'WIKINDX_LISTLINK',
-            'configMailBackend' => 'WIKINDX_MAIL_BACKEND',
-            'configMailFrom' => 'WIKINDX_MAIL_FROM',
-            'configMailReplyTo' => 'WIKINDX_MAIL_REPLYTO',
-            'configMailReturnPath' => 'WIKINDX_MAIL_RETURN_PATH',
-            'configMailServer' => 'WIKINDX_MAIL_SERVER',
-            'configMailSmPath' => 'WIKINDX_MAIL_SMPATH',
-            'configMailSmtpAuth' => 'WIKINDX_MAIL_SMTPAUTH',
-            'configMailSmtpEncrypt' => 'WIKINDX_MAIL_SMTPENCRYPT',
-            'configMailSmtpPassword' => 'WIKINDX_MAIL_SMTPPASSWORD',
-            'configMailSmtpPersist' => 'WIKINDX_MAIL_SMTPPERSIST',
-            'configMailSmtpPort' => 'WIKINDX_MAIL_SMTPPORT',
-            'configMailSmtpServer' => 'WIKINDX_MAIL_SMTPSERVER',
-            'configMailSmtpUsername' => 'WIKINDX_MAIL_SMTPUSERNAME',
-            'configMaxPaste' => 'WIKINDX_MAXPASTE',
-            'configMetadataAllow' => 'WIKINDX_METADATA_ALLOW',
-            'configMetadataUserOnly' => 'WIKINDX_METADATA_USERONLY',
-            'configMultiUser' => 'WIKINDX_MULTIUSER',
-            'configNoSort' => 'WIKINDX_NOSORT',
-            'configNotify' => 'WIKINDX_NOTIFY',
-            'configOriginatorEditOnly' => 'WIKINDX_ORIGINATOR_EDITONLY',
-            'configPaging' => 'WIKINDX_PAGING', // This is a user variables now found in GLOBALS::getUserVar()
-            'configPagingMaxLinks' => 'WIKINDX_PAGING_MAXLINKS', // This is a user variables now found in GLOBALS::getUserVar()
-            'configPagingTagCloud' => 'WIKINDX_PAGINGTAGCLOUD',
-            'configPasswordSize' => 'WIKINDX_PASSWORDSIZE',
-            'configPasswordStrength' => 'WIKINDX_PASSWORDSTRENGTH',
-            'configPrintSql' => 'WIKINDX_DEBUG_SQL',
-            'configQuarantine' => 'WIKINDX_QUARANTINE',
-            'configReadOnlyAccess' => 'WIKINDX_READONLYACCESS',
-            'configRestrictUserId' => 'WIKINDX_RESTRICT_USERID',
-            'configRssAllow' => 'WIKINDX_RSS_ALLOW',
-            'configSiteMapAllow' => 'WIKINDX_SITEMAP_ALLOW',
-            'configRssBibstyle' => 'WIKINDX_RSS_BIBSTYLE',
-            'configRssDescription' => 'WIKINDX_RSS_DESCRIPTION',
-            'configRssDisplay' => 'WIKINDX_RSS_DISPLAY',
-            'configRssLimit' => 'WIKINDX_RSS_LIMIT',
-            'configRssTitle' => 'WIKINDX_RSS_TITLE',
-            'configSearchFilter' => 'WIKINDX_SEARCHFILTER',
-            'configDebugEmail' => 'WIKINDX_DEBUG_EMAIL',
-            'configSqlErrorOutput' => 'WIKINDX_DEBUG_SQLERROROUTPUT',
-            'configStatisticsCompiled' => 'WIKINDX_STATISTICSCOMPILED',
-            'configStringLimit' => 'WIKINDX_STRINGLIMIT', // This is a user variables now found in GLOBALS::getUserVar()
-            'configStyle' => 'WIKINDX_STYLE', // This is a user variables now found in GLOBALS::getUserVar()
-            'configTagHighColour' => 'WIKINDX_TAG_HIGH_COLOUR',
-            'configTagHighFactor' => 'WIKINDX_TAG_HIGH_FACTOR',
-            'configTagLowColour' => 'WIKINDX_TAG_LOW_COLOUR',
-            'configTagLowFactor' => 'WIKINDX_TAG_LOW_FACTOR',
-            'configTemplate' => 'WIKINDX_TEMPLATE', // These is also a user variable needed for the logon page where the defaults are required.
-            'configTimezone' => 'WIKINDX_TIMEZONE',
-            'configTitle' => 'WIKINDX_TITLE',
-            'configUserRegistration' => 'WIKINDX_USERREGISTRATION',
-            'configUserRegistrationModerate' => 'WIKINDX_USERREGISTRATIONMODERATE',
-        ];
     }
     /**
      * Get and return one value from the config table.
@@ -283,6 +281,17 @@ class CONFIGDBSTRUCTURE
             if (array_key_exists($coRow[$field], $this->dbStructure))
             {
                 $row[$coRow[$field]] = $this->convertVarDB2PHP($this->dbStructure[$coRow[$field]], $coRow[$this->dbStructure[$coRow[$field]]]);
+                
+                // Unserialize some options
+                if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
+                {
+                    $row[$coRow[$field]] = unserialize(base64_decode($row[$coRow[$field]]));
+                    if (!is_array($row[$coRow[$field]]))
+                    {
+                        $constName = $co->configToConstant[$coRow[$field]];
+                        $row[$coRow[$field]] = unserialize(base64_decode(constant($constName . "_DEFAULT")));
+                    }
+                }
             }
         }
 
@@ -311,6 +320,17 @@ class CONFIGDBSTRUCTURE
             if (array_key_exists($coRow[$field], $this->dbStructure))
             {
                 $row[$coRow[$field]] = $this->convertVarDB2PHP($this->dbStructure[$coRow[$field]], $coRow[$this->dbStructure[$coRow[$field]]]);
+                
+                // Unserialize some options
+                if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
+                {
+                    $row[$coRow[$field]] = unserialize(base64_decode($row[$coRow[$field]]));
+                    if (!is_array($row[$coRow[$field]]))
+                    {
+                        $constName = $co->configToConstant[$coRow[$field]];
+                        $row[$coRow[$field]] = unserialize(base64_decode(constant($constName . "_DEFAULT")));
+                    }
+                }
             }
             else
             {
@@ -352,6 +372,13 @@ class CONFIGDBSTRUCTURE
         {
             die('Supply a configuration variable to update');
         }
+        
+        // Serialize some options
+        if (in_array($name, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
+        {
+            $value = base64_encode(serialize($value));
+        }
+        
         $value = $this->convertVarPHP2DB($this->dbStructure[$name], $value);
         $this->db->formatConditions(['configName' => $name]);
         $this->db->update('config', [$this->dbStructure[$name] => $value]);

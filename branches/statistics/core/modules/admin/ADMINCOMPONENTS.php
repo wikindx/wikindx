@@ -40,7 +40,6 @@ class ADMINCOMPONENTS
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
@@ -58,7 +57,7 @@ class ADMINCOMPONENTS
      */
     public function checkUpdatesOnline($message = FALSE)
     {
-        if ($this->config->WIKINDX_TRUNK_VERSION)
+        if (WIKINDX_IS_TRUNK)
         {
             $upd_srv_link = "https://sourceforge.net/projects/wikindx/files/archives/trunk/components/components.json";
         }
@@ -355,7 +354,7 @@ class ADMINCOMPONENTS
                     $h .= "<li>";
                     if (array_key_exists("author_email", $author))
                     {
-                        $email = \HTML\dbToHtmlTidy($author["author_email"]);
+                        $email = \HTML\nlToHtml($author["author_email"]);
                         $author["author_email"] = \HTML\a("link", "&#x1f4e7;", "mailto:$email");
                     }
                     if (array_key_exists("author_website", $author))

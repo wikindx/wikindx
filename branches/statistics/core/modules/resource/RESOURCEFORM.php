@@ -50,7 +50,6 @@ class RESOURCEFORM
         $this->gatekeep->init();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
@@ -175,7 +174,7 @@ class RESOURCEFORM
 
         GLOBALS::addTplVar('content', $pString);
         // Load at end because .js initialization needs various DIVs to be in the page before they are made invisible
-        \AJAX\loadJavascript($this->config->WIKINDX_BASE_URL . '/core/modules/resource/resourceForm.js');
+        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/resource/resourceForm.js');
     }
     /**
      * Print optional cells such as translated works, collection, publisher

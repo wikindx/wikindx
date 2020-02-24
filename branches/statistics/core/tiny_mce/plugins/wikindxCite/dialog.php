@@ -33,7 +33,7 @@ include_once("core/startup/WEBSERVERCONFIG.php");
 
 include_once("core/modules/cite/INSERTCITATION.php");
 
-GLOBALS::addTplVar('scripts', '<link href="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/tiny_mce/plugins/' . basename(__DIR__) . '/css/wikindxCite.css" rel="stylesheet" type="text/css">');
+GLOBALS::addTplVar('scripts', '<link href="' . WIKINDX_BASE_URL . '/core/tiny_mce/plugins/' . basename(__DIR__) . '/css/wikindxCite.css" rel="stylesheet" type="text/css">');
 
 $cite = new INSERTCITATION();
 $cite->init();

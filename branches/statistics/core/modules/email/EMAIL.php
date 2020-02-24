@@ -13,7 +13,6 @@ class EMAIL
 {
     private $db;
     private $vars;
-    private $config;
     private $smtp;
     private $messages;
     private $errors;
@@ -34,7 +33,6 @@ class EMAIL
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->smtp = FACTORY_MAIL::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -50,7 +48,7 @@ class EMAIL
     public function userEdit()
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
@@ -79,7 +77,7 @@ class EMAIL
     public function register($hashKey, $email)
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
@@ -100,7 +98,7 @@ class EMAIL
     public function registerUserAdd($passwordShow = FALSE)
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
@@ -122,8 +120,7 @@ class EMAIL
             return FALSE;
         }
         // If needed, email admin about new user
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        $email = $co->getOne('configEmailNewRegistrations');
+        $email = WIKINDX_EMAIL_NEW_REGISTRATIONS;
         if ($email && !$this->session->getVar('setup_Superadmin'))
         {
             $message = "A new user has registered for" . "\n\nWIKINDX:\t\t$link\n\nUSERNAME:\t\t" .
@@ -148,12 +145,11 @@ class EMAIL
     public function registerRequest()
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        $adminEmail = $co->getOne('configEmailNewRegistrations');
+        $adminEmail = WIKINDX_EMAIL_NEW_REGISTRATIONS;
         if (!$adminEmail)
         {
             return FALSE;
@@ -192,7 +188,7 @@ class EMAIL
                 $message = $this->messages->text("user", "emailText5", " $scriptPath") . "\n" . LF;
             }
             // do nothing if email is not turned on
-            if ($this->config->WIKINDX_MAIL_SERVER)
+            if (WIKINDX_MAIL_USE)
             {
                 if (!$this->smtp->sendEmail($email, $subject, $message))
                 {
@@ -272,7 +268,7 @@ class EMAIL
     public function emailFriend()
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
@@ -297,7 +293,7 @@ class EMAIL
     public function forgetProcess($username, $password)
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
@@ -324,14 +320,14 @@ class EMAIL
     public function news($title, $news)
     {
         // do nothing if email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER)
+        if (!WIKINDX_MAIL_USE)
         {
             return TRUE;
         }
         $news = preg_replace('/\<br(\s*)?\/?\>/ui', CR . LF, $news);
         $news = preg_replace('/\<p(\s*)?\/?\>/ui', "\r\n\r" . LF, $news);
         $news = html_entity_decode(\HTML\stripHtml(stripslashes($news)));
-        $wikindxTitle = \HTML\stripHtml($this->config->WIKINDX_TITLE);
+        $wikindxTitle = \HTML\stripHtml(WIKINDX_TITLE);
         $subject = "$wikindxTitle News";
         $message = "\n\n$title\n" . LF;
         $message .= "$news\n" . LF;
@@ -362,7 +358,7 @@ class EMAIL
     public function notify($resourceId, $newResource = FALSE)
     {
         // do nothing if admin does not allow notification or email is not turned on
-        if (!$this->config->WIKINDX_MAIL_SERVER || !$this->session->getVar('setup_Notify'))
+        if (!WIKINDX_MAIL_USE || !$this->session->getVar('setup_Notify'))
         {
             return TRUE;
         }

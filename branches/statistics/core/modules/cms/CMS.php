@@ -25,10 +25,10 @@ class CMS
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
-        if (!$this->config->WIKINDX_CMS_ALLOW)
-        { // deny access
+        if (!WIKINDX_CMS_ALLOW)
+        {
+            // deny access
             die("CMS access denied by WIKINDX configuration");
         }
 
@@ -86,7 +86,7 @@ class CMS
         $pString .= \HTML\td(implode("&nbsp;&nbsp;&nbsp;", $links), 'width50percent');
         if (array_key_exists('type', $this->vars))
         {
-            \AJAX\loadJavascript([$this->config->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
+            \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
             if ($this->vars['type'] == 'categories')
             {
                 $category = FACTORY_CATEGORY::getInstance();
@@ -295,7 +295,7 @@ class CMS
         $div = \HTML\td(\HTML\div('qString', '&nbsp;')); // default
         if (array_key_exists('ajaxReturn', $this->vars))
         {
-            $qString = $this->config->WIKINDX_BASE_URL . '/cmsprint.php?action=' . $this->vars['type'] . '&id=' . $this->vars['ajaxReturn'];
+            $qString = WIKINDX_BASE_URL . '/cmsprint.php?action=' . $this->vars['type'] . '&id=' . $this->vars['ajaxReturn'];
             $div = \HTML\td(\HTML\div('qString', $qString));
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $div]));
@@ -317,14 +317,13 @@ class CMS
             die('Missing or incorrect queryString');
         }
         $db = FACTORY_DB::getInstance();
-        $config = FACTORY_CONFIG::getInstance();
         if (array_key_exists('bibStyle', $_GET))
         {
             GLOBALS::setUserVar('Style', $_GET['bibStyle']);
         }
         else
         {
-            GLOBALS::setUserVar('Style', $config->WIKINDX_CMS_BIBSTYLE);
+            GLOBALS::setUserVar('Style', WIKINDX_CMS_BIBSTYLE);
         }
         if (array_key_exists('language', $_GET))
         {
@@ -674,14 +673,13 @@ class CMS
     public function parseText()
     {
         // Set bibliographic style
-        $config = FACTORY_CONFIG::getInstance();
         if (array_key_exists('bibStyle', $_GET))
         {
             GLOBALS::setUserVar('Style', $_GET['bibStyle']);
         }
         else
         {
-            GLOBALS::setUserVar('Style', $config->WIKINDX_CMS_BIBSTYLE);
+            GLOBALS::setUserVar('Style', WIKINDX_CMS_BIBSTYLE);
         }
         if (array_key_exists('language', $_GET))
         {
@@ -737,8 +735,7 @@ class CMS
         }
         else
         {
-            $config = FACTORY_CONFIG::getInstance();
-            $this->session->setVar('setup_Style', $config->WIKINDX_CMS_BIBSTYLE);
+            $this->session->setVar('setup_Style', WIKINDX_CMS_BIBSTYLE);
         }
         $bibStyle = FACTORY_BIBSTYLE::getInstance();
 
@@ -788,7 +785,7 @@ class CMS
      */
     private function getResourceQuery($id)
     {
-        return $this->config->WIKINDX_BASE_URL . "/cmsprint.php?action=getResource&id=$id";
+        return WIKINDX_BASE_URL . "/cmsprint.php?action=getResource&id=$id";
     }
     /**
      * Function form for generating CMS tag

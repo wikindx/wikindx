@@ -19,7 +19,6 @@ class STATS
     private $session;
     private $resourceMap;
     private $languageClass;
-    private $config;
     private $indexes = [];
     private $sum = [];
     private $totalResources;
@@ -39,7 +38,6 @@ class STATS
         $this->session = FACTORY_SESSION::getInstance();
         $this->resourceMap = FACTORY_RESOURCEMAP::getInstance();
         $this->languageClass = FACTORY_CONSTANTS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $type = '';
         if ($this->vars['method'] == 'totals')
         {
@@ -95,7 +93,7 @@ class STATS
     */
     public function users()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_USER_STATISTICS)
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_USER_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
@@ -285,7 +283,7 @@ class STATS
      */
     public function keywords()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_STATISTICS)
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
@@ -329,7 +327,7 @@ class STATS
      */
     public function years()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_STATISTICS)
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
@@ -373,7 +371,7 @@ class STATS
      */
     public function allCreators()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_STATISTICS)
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
@@ -422,7 +420,7 @@ class STATS
      */
     public function mainCreators()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_STATISTICS)
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
@@ -471,7 +469,7 @@ class STATS
      */
     public function collections()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_STATISTICS)
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
@@ -515,7 +513,7 @@ class STATS
      */
     public function publishers()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_STATISTICS)
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS)
         {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
@@ -1089,7 +1087,7 @@ class STATS
             $this->indexes[$row['resourcekeywordKeywordId']] = preg_replace(
                 "/{(.*)}/Uu",
                 "$1",
-                \HTML\dbToHtmlTidy($row['keywordKeyword'])
+                \HTML\nlToHtml($row['keywordKeyword'])
             );
             if ($row['keywordGlossary'])
             {
@@ -1132,7 +1130,7 @@ class STATS
         {
             return;
         }
-        $this->indexes[$row['resourceyearYear1']] = \HTML\dbToHtmlTidy($row['resourceyearYear1']);
+        $this->indexes[$row['resourceyearYear1']] = \HTML\nlToHtml($row['resourceyearYear1']);
         $this->sum[$row['resourceyearYear1']] = $row['count'];
     }
     /**

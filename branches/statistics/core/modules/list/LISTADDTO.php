@@ -30,7 +30,6 @@ class LISTADDTO
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->user = FACTORY_USER::getInstance();
@@ -920,7 +919,7 @@ class LISTADDTO
         $pString .= \HTML\p($this->messages->text("resources", "replaceExisting") . "&nbsp;&nbsp;" .
             \FORM\checkbox(FALSE, "replaceExisting") . '&nbsp;&nbsp;' . \FORM\formSubmit($this->messages->text("submit", "Save")));
         $pString .= \FORM\formEnd();
-        \AJAX\loadJavascript($this->config->WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js');
+        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js');
         GLOBALS::addTplVar('content', $pString);
     }
     /**

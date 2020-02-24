@@ -24,7 +24,6 @@ class soundexplorer_MODULE
     private $coremessages;
     private $session;
     private $db;
-    private $config;
     private $vars;
     private $scripts = [];
 
@@ -42,7 +41,6 @@ class soundexplorer_MODULE
             return;
         }
         $this->db = FACTORY_DB::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->checkTables();
         $this->vars = GLOBALS::getVars();
         // plugin folder name and generic message filename
@@ -52,7 +50,7 @@ class soundexplorer_MODULE
         include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
         $config = new soundexplorer_CONFIG();
         $this->authorize = $config->authorize;
-        $this->scripts[] = $this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/' . basename(__DIR__) . '/soundExplorer.js';
+        $this->scripts[] = WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/' . basename(__DIR__) . '/soundExplorer.js';
         if (!array_key_exists('action', $this->vars) || (array_key_exists('action', $this->vars) && ($this->vars['action'] != 'soundexplorer_seConfigure')))
         {
             GLOBALS::setTplVar($config->container, $this->display());
@@ -208,7 +206,7 @@ END;
         if (array_search('plugin_soundexplorer', $tables) === FALSE)
         {
             $this->db->queryNoError("
-                CREATE TABLE `" . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer` (
+                CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer` (
                     `pluginsoundexplorerId` int(11) NOT NULL AUTO_INCREMENT,
                     `pluginsoundexplorerUserId` int(11) NOT NULL,
                     `pluginsoundexplorerLabel` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,

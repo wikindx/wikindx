@@ -28,11 +28,7 @@ class STATISTICS
     /** object */
     private $session;
     /** object */
-    private $config;
-    /** object */
     private $messages;
-    /** object */
-    private $co;
     /** int */
     private static $maxAccesses = FALSE;
     /** int */
@@ -55,8 +51,6 @@ class STATISTICS
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
-        $this->co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
     }
     /**
      * Check if statistics need compiling and emailing to registered users.
@@ -71,7 +65,7 @@ class STATISTICS
         }
         else
         {
-            $lastStatisticsCompilation = $this->co->getOne('configStatisticsCompiled');
+            $lastStatisticsCompilation = WIKINDX_STATISTICS_COMPILED;
             $this->session->setVar('lastStatisticsCompilation', $lastStatisticsCompilation);
         }
         // We have to use compute date diff with db functions because we need a date free of user's locals
@@ -265,7 +259,7 @@ class STATISTICS
         // and check in db if the statistics have not been compiled by another running process
         // If compiled, abort
         $this->session->delVar('lastStatisticsCompilation');
-        $lastStatisticsCompilation = $this->co->getOne('configStatisticsCompiled');
+        $lastStatisticsCompilation = WIKINDX_STATISTICS_COMPILED;
         if (!$this->db->monthDiff($lastStatisticsCompilation))
         {
             return;
@@ -274,10 +268,10 @@ class STATISTICS
         // We use db functions because we need a date free of users locals
         $this->db->formatConditions(['configName' => 'configStatisticsCompiled']);
         $this->db->updateTimestamp('config', ['configDatetime' => $this->db->firstDayOfCurrentMonth()]);
-        $lastStatisticsCompilation = $this->co->getOne('configStatisticsCompiled');
+        $lastStatisticsCompilation = WIKINDX_STATISTICS_COMPILED;
         $this->session->setVar('lastStatisticsCompilation', $lastStatisticsCompilation);
-        $emailStats = $this->co->getOne('configEmailStatistics');
-        if ($emailStats && $this->config->WIKINDX_MAIL_SERVER)
+        $emailStats = WIKINDX_EMAIL_STATISTICS;
+        if ($emailStats && WIKINDX_MAIL_USE)
         {
             $emailStats = TRUE;
         }
@@ -373,11 +367,11 @@ class STATISTICS
         if (!empty($usersArray))
         {
             $smtp = FACTORY_MAIL::getInstance();
-            $subject = $this->messages->text('statistics', 'emailSubject', $this->config->WIKINDX_TITLE);
+            $subject = $this->messages->text('statistics', 'emailSubject', WIKINDX_TITLE);
             foreach ($usersArray as $uArray)
             {
                 $message = $uArray['name'] . LF . LF;
-                $message .= $this->messages->text('statistics', 'emailIntro', $this->config->WIKINDX_TITLE) . LF . LF;
+                $message .= $this->messages->text('statistics', 'emailIntro', WIKINDX_TITLE) . LF . LF;
                 foreach ($uArray['resources'] as $rId => $title)
                 {
                     //					$viewsIndex = $this->accessRatio($rId);

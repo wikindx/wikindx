@@ -19,8 +19,6 @@ class ATTACHMENT
     public $primary = FALSE;
     /** object */
     private $db;
-    /** object */
-    private $config;
     /** array */
     private $vars;
 
@@ -31,7 +29,6 @@ class ATTACHMENT
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->config = FACTORY_CONFIG::getInstance();
     }
     /**
      * Make hyperlink of attachment
@@ -60,7 +57,7 @@ class ATTACHMENT
             {
                 if (array_key_exists('resourceattachmentsFileName', $row) && !empty($row['resourceattachmentsFileName']))
                 {
-                    $name = \HTML\dbToHtmlTidy($row['resourceattachmentsFileName']) . " " .
+                    $name = \HTML\nlToHtml($row['resourceattachmentsFileName']) . " " .
                     $icons->getIconForAFileExtension($row['resourceattachmentsFileName']);
                 }
                 else
@@ -76,7 +73,7 @@ class ATTACHMENT
         {
             if (array_key_exists('resourceattachmentsFileName', $row) && !empty($row['resourceattachmentsFileName']))
             {
-                $name = \HTML\dbToHtmlTidy($row['resourceattachmentsFileName']) . " " .
+                $name = \HTML\nlToHtml($row['resourceattachmentsFileName']) . " " .
                     $icons->getIconForAFileExtension($row['resourceattachmentsFileName']);
                 $label = $row['resourceattachmentsFileName'];
             }
@@ -84,11 +81,11 @@ class ATTACHMENT
             {
                 if ($reduce)
                 {
-                    $name = \FORM\reduceLongText(\HTML\dbToHtmlTidy($row['resourceattachmentsFileName']));
+                    $name = \FORM\reduceLongText(\HTML\nlToHtml($row['resourceattachmentsFileName']));
                 }
                 else
                 {
-                    $name = \HTML\dbToHtmlTidy($row['resourceattachmentsFileName']);
+                    $name = \HTML\nlToHtml($row['resourceattachmentsFileName']);
                 }
             }
             if (!$hyperlink)

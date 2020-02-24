@@ -274,14 +274,13 @@ class USER
      */
     public function checkPassword($username, $pwdInput)
     {
-        $config = FACTORY_CONFIG::getInstance();
-        if ($config->WIKINDX_LDAP_USE !== FALSE)
+        if (WIKINDX_LDAP_USE !== FALSE)
         {
-            return $this->ldapCheckPassword($config, $username, $pwdInput);
+            return $this->ldapCheckPassword($username, $pwdInput);
         }
         else
         {
-            return $this->wikindxCheckPassword($config, $username, $pwdInput);
+            return $this->wikindxCheckPassword($username, $pwdInput);
         }
     }
     /**
@@ -906,12 +905,12 @@ class USER
         $preferences = [
             "Paging" => WIKINDX_PAGING_DEFAULT,
             "PagingMaxLinks" => WIKINDX_PAGING_MAXLINKS_DEFAULT,
-            "StringLimit" => WIKINDX_STRINGLIMIT_DEFAULT,
+            "StringLimit" => WIKINDX_STRING_LIMIT_DEFAULT,
             "Language" => "auto",
             "Style" => WIKINDX_STYLE_DEFAULT,
             "Template" => WIKINDX_TEMPLATE_DEFAULT,
             "PagingStyle" => WIKINDX_PAGINGSTYLE_DEFAULT,
-            "PagingTagCloud" => WIKINDX_PAGINGTAGCLOUD_DEFAULT,
+            "PagingTagCloud" => WIKINDX_PAGING_TAG_CLOUD_DEFAULT,
             "UseBibtexKey" => WIKINDX_USEBIBTEXKEY_DEFAULT,
             "UseWikindxKey" => WIKINDX_USEWIKINDXKEY_DEFAULT,
             "DisplayBibtexLink" => WIKINDX_DISPLAYBIBTEXLINK_DEFAULT,
@@ -1129,13 +1128,12 @@ class USER
      * Return FALSE for password not found or password doesn't match.
      * Superadmin is always id = 1
      *
-     * @param object $config
      * @param string $username
      * @param string $pwdInput
      *
      * @return bool
      */
-    private function wikindxCheckPassword($config, $username, $pwdInput)
+    private function wikindxCheckPassword($username, $pwdInput)
     {
         $fields = $this->db->prependTableToField('users', ["Id", "Password", "Admin", "Cookie", "Block"]);
         $this->db->formatConditions(['usersUsername' => $username]);
@@ -1146,7 +1144,7 @@ class USER
         }
         $row = $this->db->fetchRow($recordset);
         // only the superadmin may log on when multi user is not enabled
-        if (!$config->WIKINDX_MULTIUSER && ($row['usersId'] != 1))
+        if (!WIKINDX_MULTIUSER && ($row['usersId'] != 1))
         {
             return FALSE;
         }
@@ -1191,28 +1189,27 @@ class USER
      *
      * LDAP functions adapted from work by Fabrice Boyrie
      *
-     * @param object $config
      * @param string $username
      * @param string $pwdInput
      *
      * @return bool
      */
-    private function ldapCheckPassword($config, $username, $pwdInput)
+    private function ldapCheckPassword($username, $pwdInput)
     {
-        if (($ds = ldap_connect($config->WIKINDX_LDAP_SERVER, $config->WIKINDX_LDAP_PORT)) === FALSE)
+        if (($ds = ldap_connect(WIKINDX_LDAP_SERVER, WIKINDX_LDAP_PORT)) === FALSE)
         {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapConnect"));
 
             return FALSE;
         }
-        ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, $config->WIKINDX_LDAP_PROTOCOL_VERSION);
+        ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, WIKINDX_LDAP_PROTOCOL_VERSION);
         if (($ldapbind = @ldap_bind($ds)) === FALSE)
         {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapBind"));
 
             return FALSE;
         }
-        $sr = @ldap_search($ds, $config->WIKINDX_LDAP_DN, '(uid=' . $username . ')');
+        $sr = @ldap_search($ds, WIKINDX_LDAP_DN, '(uid=' . $username . ')');
         $info = @ldap_get_entries($ds, $sr);
         if ($info['count'] > 1)
         {
@@ -1226,7 +1223,7 @@ class USER
         }
         else
         {
-            $ldaprdn = "cn=" . $username . "," . $config->WIKINDX_LDAP_DN;
+            $ldaprdn = "cn=" . $username . "," . WIKINDX_LDAP_DN;
         }
         // Connexion au serveur LDAP
         $ldappass = $pwdInput;
@@ -1234,7 +1231,6 @@ class USER
         if ($ldapbind)
         {
             // L'utilisateur est authentifié
-            $config = FACTORY_CONFIG::getInstance();
             $fields = $this->db->prependTableToField('users', ["Id", "Password", "Admin", "Cookie", "Block"]);
             $this->db->formatConditions(['usersUsername' => $username]);
             $this->db->formatConditions(['usersPassword' => 'LDAP']);
@@ -1248,7 +1244,7 @@ class USER
             }
             $row = $this->db->fetchRow($recordset);
             // only the superadmin may log on when multi user is not enabled
-            if (!$config->WIKINDX_MULTIUSER && ($row['usersId'] != 1))
+            if (!WIKINDX_MULTIUSER && ($row['usersId'] != 1))
             {
                 return FALSE;
             }

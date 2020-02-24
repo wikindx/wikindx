@@ -683,20 +683,15 @@ namespace HTML
      * Used for display back from DB table
      *
      * @param string $string
-     * @param bool $updatev4 Default is FALSE
      *
      * @return string
      */
-    function nlToHtml($string, $updatev4 = FALSE)
+    function nlToHtml($string)
     {
-        $string = preg_replace("/(\015?\012){2,}/u", BR . BR, $string);
-        if ($updatev4)
-        {
-            $string = preg_replace("/(\015?\012){1,}/u", BR, $string);
-        }
+        $string = preg_replace("/(\015?\012){2,}/u",   BR . BR, $string);
         $string = preg_replace("/(\\\\r?\\\\n){2,}/u", BR . BR, $string);
-
-        return preg_replace("/(\\\\r?\\\\n){1,}/u", BR . LF, $string);
+        $string = preg_replace("/(\\\\r?\\\\n){1,}/u", BR . LF, $string);
+        return $string;
     }
     /**
      * replace HTML newlines and carriage returns with appropriate ANSI code.
@@ -729,17 +724,6 @@ namespace HTML
         $string = preg_replace("/(\015?\012){2,}/u", " ", $string);
 
         return preg_replace("/\r|\n/u", " ", $string);
-    }
-    /**
-     * Format text grabbed from database for printing to browser. Don't use the form elements.
-     *
-     * @param string $string
-     *
-     * @return string
-     */
-    function dbToHtmlTidy($string)
-    {
-        return \HTML\nlToHtml($string);
     }
     /**
      * Format text grabbed from database for printing to form elements.

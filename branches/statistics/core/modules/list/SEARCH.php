@@ -19,7 +19,6 @@ class SEARCH
     private $errors;
     private $messages;
     private $common;
-    private $config;
     private $session;
     private $keyword;
     private $type;
@@ -70,7 +69,6 @@ class SEARCH
         $this->creator = FACTORY_CREATOR::getInstance();
         $this->publisher = FACTORY_PUBLISHER::getInstance();
         $this->collection = FACTORY_COLLECTION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->user = FACTORY_USER::getInstance();
         include_once("core/miscellaneous/TAG.php");
         $this->tag = new TAG();
@@ -264,7 +262,7 @@ class SEARCH
         }
 
         // Load at end because .js initialization needs various DIVs to be in the page before they are made invisible
-        \AJAX\loadJavascript($this->config->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js');
+        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js');
     }
     /**
      * Reset the form and clear the session
@@ -399,7 +397,7 @@ class SEARCH
                         {
                             $this->db->formatConditions(['customId' => $split[2]]);
                             $customName = $this->db->selectFirstField('custom', 'customLabel');
-                            $testArray[$key1]['Field'] = \HTML\dbToHtmlTidy($customName);
+                            $testArray[$key1]['Field'] = \HTML\nlToHtml($customName);
                         }
                     }
                     else
@@ -611,7 +609,7 @@ class SEARCH
                 $this->db->formatConditions(['userbibliographyId' => $value]);
                 $row = $this->db->selectFirstRow('user_bibliography', 'userbibliographyTitle');
                 $final[++$index] = $newLine . 'AND NOT IN ' .
-                    \HTML\color(\HTML\dbToHtmlTidy($row['userbibliographyTitle']), 'greenText') . ' bibliography';
+                    \HTML\color(\HTML\nlToHtml($row['userbibliographyTitle']), 'greenText') . ' bibliography';
             }
             $arrayString .= implode(' ', $final);
             if ($search)
@@ -1362,7 +1360,7 @@ class SEARCH
             }
             $ideaList[$index]['links'] = $this->metadata->createLinks($row, TRUE);
             $data = preg_replace($patterns, \HTML\span("$1", "highlight"), $row['resourcemetadataText']);
-            $ideaList[$index]['metadata'] = $cite->parseCitations(\HTML\dbToHtmlTidy($data), 'html');
+            $ideaList[$index]['metadata'] = $cite->parseCitations(\HTML\nlToHtml($data), 'html');
             ++$index;
         }
         $this->session->setVar('sql_LastIdeaSearch', $queryString);
@@ -3946,7 +3944,7 @@ class SEARCH
             $name .= ', ' . str_replace(' ', '.', $row['creatorInitials']) . '.';
         }
 
-        return \HTML\dbToHtmlTidy(trim($name));
+        return \HTML\nlToHtml(trim($name));
     }
     /**
      * Format publishers returned from database
@@ -3961,12 +3959,12 @@ class SEARCH
         $row = $this->db->selectFirstRow('publisher', ["publisherName", "publisherLocation"]);
         if ($row['publisherLocation'])
         {
-            return \HTML\dbToHtmlTidy($row['publisherName'] .
+            return \HTML\nlToHtml($row['publisherName'] .
             ": " . $row['publisherLocation']);
         }
         else
         {
-            return \HTML\dbToHtmlTidy($row['publisherName']);
+            return \HTML\nlToHtml($row['publisherName']);
         }
     }
     /**
@@ -3981,7 +3979,7 @@ class SEARCH
         $this->db->formatConditions(['collectionId' => $id]);
         $row = $this->db->selectFirstRow('collection', ["collectionTitle"]);
 
-        return \HTML\dbToHtmlTidy($row['collectionTitle']);
+        return \HTML\nlToHtml($row['collectionTitle']);
     }
     /**
      * Format subcategories returned from database
@@ -3995,7 +3993,7 @@ class SEARCH
         $this->db->formatConditions(['subcategoryId' => $id]);
         $row = $this->db->selectFirstRow('subcategory', ["subcategorySubcategory"]);
 
-        return \HTML\dbToHtmlTidy($row['subcategorySubcategory']);
+        return \HTML\nlToHtml($row['subcategorySubcategory']);
     }
     /**
      * Format categories returned from database
@@ -4009,7 +4007,7 @@ class SEARCH
         $this->db->formatConditions(['categoryId' => $id]);
         $row = $this->db->selectFirstRow('category', ["categoryCategory"]);
 
-        return \HTML\dbToHtmlTidy($row['categoryCategory']);
+        return \HTML\nlToHtml($row['categoryCategory']);
     }
     /**
      * Format keywords returned from database
@@ -4023,7 +4021,7 @@ class SEARCH
         $this->db->formatConditions(['keywordId' => $id]);
         $row = $this->db->selectFirstRow('keyword', ["keywordKeyword"]);
 
-        return \HTML\dbToHtmlTidy($row['keywordKeyword']);
+        return \HTML\nlToHtml($row['keywordKeyword']);
     }
     /**
      * Format usertags returned from database
@@ -4037,7 +4035,7 @@ class SEARCH
         $this->db->formatConditions(['usertagsId' => $id]);
         $row = $this->db->selectFirstRow('user_tags', ["usertagsTag"]);
 
-        return \HTML\dbToHtmlTidy($row['usertagsTag']);
+        return \HTML\nlToHtml($row['usertagsTag']);
     }
     /**
      * Format languages returned from database
@@ -4051,7 +4049,7 @@ class SEARCH
         $this->db->formatConditions(['languageId' => $id]);
         $row = $this->db->selectFirstRow('language', ["languageLanguage"]);
 
-        return \HTML\dbToHtmlTidy($row['languageLanguage']);
+        return \HTML\nlToHtml($row['languageLanguage']);
     }
     /**
      * Format tags returned from database
@@ -4065,7 +4063,7 @@ class SEARCH
         $this->db->formatConditions(['tagId' => $id]);
         $row = $this->db->selectFirstRow('tag', ["tagTag"]);
 
-        return \HTML\dbToHtmlTidy($row['tagTag']);
+        return \HTML\nlToHtml($row['tagTag']);
     }
     /**
      * Format usernames returned from database
@@ -4080,12 +4078,12 @@ class SEARCH
         $row = $this->db->selectFirstRow('users', ["usersUsername", "usersFullname"]);
         if ($row['usersFullname'])
         {
-            return \HTML\dbToHtmlTidy($row['usersUsername'] .
+            return \HTML\nlToHtml($row['usersUsername'] .
             ' [' . $row['usersFullname'] . ']');
         }
         else
         {
-            return \HTML\dbToHtmlTidy($row['usersUsername']);
+            return \HTML\nlToHtml($row['usersUsername']);
         }
     }
 }

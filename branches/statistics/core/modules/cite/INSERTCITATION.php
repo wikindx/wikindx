@@ -22,8 +22,6 @@ class INSERTCITATION
 	/** array */
     private $vars = [];
 	/** object */
-    private $config;
-	/** object */
     private $stmt;
 	/** object */
     private $errors;
@@ -44,7 +42,6 @@ class INSERTCITATION
     
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->db = FACTORY_DB::getInstance();
         if (!empty($_POST))
         {
@@ -55,7 +52,7 @@ class INSERTCITATION
             $this->vars = $_GET;
         }
         GLOBALS::setVars($this->vars, $this->vars);
-        GLOBALS::addTplVar('content', '<script src="' . $this->config->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>');
+        GLOBALS::addTplVar('content', '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>');
         GLOBALS::addTplVar('content', '<script src="js/wikindxCitedialog.js"></script>');
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();

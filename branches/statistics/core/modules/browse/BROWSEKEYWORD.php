@@ -103,7 +103,7 @@ class BROWSEKEYWORD
             $this->keyword[$row['resourcekeywordKeywordId']] = preg_replace(
                 "/{(.*)}/Uu",
                 "$1",
-                \HTML\dbToHtmlTidy($row['keywordKeyword'])
+                \HTML\nlToHtml($row['keywordKeyword'])
             );
             if ($row['keywordGlossary'])
             {

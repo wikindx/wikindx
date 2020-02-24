@@ -160,7 +160,7 @@ class BROWSECOLLECTION
         if ($thisType)
         {
             $this->collections[$row['resourcemiscCollection']] =
-                preg_replace("/{(.*)}/Uu", "$1", \HTML\dbToHtmlTidy($title . " [$thisType]"));
+                preg_replace("/{(.*)}/Uu", "$1", \HTML\nlToHtml($title . " [$thisType]"));
         }
         else
         {

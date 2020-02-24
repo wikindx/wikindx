@@ -1553,8 +1553,7 @@ class CONFIGURE
      */
     private function testLdap()
     {
-        $config = FACTORY_CONFIG::getInstance();
-        if (($ds = @ldap_connect($config->WIKINDX_LDAP_SERVER, $config->WIKINDX_LDAP_PORT)) === FALSE)
+        if (($ds = @ldap_connect(WIKINDX_LDAP_SERVER, WIKINDX_LDAP_PORT)) === FALSE)
         {
             if (ldap_errno($ds))
             {
@@ -1565,7 +1564,7 @@ class CONFIGURE
                 return FALSE;
             }
         }
-        @ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, $config->WIKINDX_LDAP_PROTOCOL_VERSION);
+        @ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, WIKINDX_LDAP_PROTOCOL_VERSION);
         if (($ldapbind = @ldap_bind($ds)) === FALSE)
         {
             if (ldap_errno($ds))

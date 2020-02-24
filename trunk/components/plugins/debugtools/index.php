@@ -332,7 +332,7 @@ class debugtools_MODULE
                     $tmp = $value;
                         
                     // We know that when a Wikindx constant is base64 encoded these is because a constant can't embeded a raw array
-                    if (is_string($value))
+                    if (is_string($value) || is_array($value))
                     {
                         $tmp = $this->dumpEncodedData2Text($value);
                         if (mb_substr($tmp, 0, strlen("Array")) == "Array")
@@ -592,7 +592,7 @@ class debugtools_MODULE
         $pString .= HTML\theadEnd();
         $pString .= HTML\tbodyStart();
         
-        $envConfig = (array) FACTORY_CONFIG::getInstance();
+        $envConfig = (array) new CONFIG();
         ksort($envConfig, SORT_NATURAL | SORT_FLAG_CASE);
         
         foreach ($envConfig as $k => $v)

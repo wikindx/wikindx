@@ -334,9 +334,6 @@ include_once("core/startup/FACTORY.php");
 // Initialize the static config read from config.php file
 include_once("core/startup/LOADSTATICCONFIG.php");
 
-// Init user config object
-//$config = FACTORY_CONFIG::getInstance(); // not needed here (and interferes with upgrade of v3.8 database because v3 config.php is not a class)
-
 /**
  *	Initialize the system
  *	As ENVIRONMENT starts the session, we must check for 'remember me' cookie requests from MYWIKINDX.php prior to

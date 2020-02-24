@@ -221,18 +221,19 @@ class CONFIGURE
                             array_shift($this->vars[$field]);
                         }
                         // so that the select boxes display properly when returning to the DIV
-                        $this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES = [];
+                        $deactivateResourceTypes = [];
                         foreach ($this->vars[$field] as $key => $value)
                         {
-                            $this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES[$key] = $value;
+                            $deactivateResourceTypes[$key] = $value;
                         }
-                        $value = base64_encode(serialize($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES));
+                        $value = base64_encode(serialize($deactivateResourceTypes));
                     }
                     else
                     {
-                        $this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES = [];
+                        $deactivateResourceTypes = [];
                         $value = base64_encode(serialize([]));
                     }
+                    $this->session->setVar('config_deactivateResourceTypes', $value);
                 }
                 elseif ($this->configDbStructure->dbStructure[$field] == 'configBoolean')
                 {
@@ -1664,7 +1665,7 @@ class CONFIGURE
         $pString = $this->errorString;
         // need to force reload so display box of active types displays properly after DB write
         $resourceMap = FACTORY_RESOURCEMAP::getFreshInstance();
-        $typesRaw = $resourceMap->getTypes();
+        $typesRaw = $resourceMap->getTypesRaw();
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", 'deactivateResourceTypes'));
@@ -1673,9 +1674,22 @@ class CONFIGURE
             $types[$type] = $this->messages->text("resourceType", $type);
         }
         asort($types);
-        foreach ($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES as $type)
+        if ($this->session->getVar('config_deactivateResourceTypes')) // After updating the field
+        {
+            $array = unserialize(base64_decode($this->session->getVar('config_deactivateResourceTypes')));
+            $this->session->delVar('config_deactivateResourceTypes');
+        }
+        else
+        {
+        	$array = WIKINDX_DEACTIVATE_RESOURCE_TYPES;
+        }
+        foreach ($array as $type)
         {
             $deactivated[$type] = $this->messages->text("resourceType", $type);
+            if (array_key_exists($type, $types))
+            {
+            	unset($types[$type]);
+            }
         }
         $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
             $this->messages->text("config", 'activeResourceTypes'),

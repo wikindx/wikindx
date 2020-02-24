@@ -68,7 +68,7 @@ class RESOURCEFORM
         $this->tinymce = FACTORY_LOADTINYMCE::getInstance();
         $this->typeMaps = $this->resourceMap->getTypeMap();
         $this->loadElementDefinitions();
-        $this->session->delVar('resourceLock');
+        $this->session->delVar("resourceLock");
     }
     /**
      * Start the process of entering a new resource by asking for the choice of resource type and number of authors
@@ -105,12 +105,12 @@ class RESOURCEFORM
             {
                 $this->getEditSession();
             }
-            $this->session->setVar('resourceFormType', 'edit');
+            $this->session->setVar("resourceFormType", 'edit');
         }
         else
         {
             GLOBALS::setTplVar('heading', $this->messages->text('heading', 'newResource'));
-            $this->session->setVar('resourceFormType', 'new');
+            $this->session->setVar("resourceFormType", 'new');
         }
         $pString = \HTML\p($this->messages->text('resources', 'new', '&nbsp;' . $this->required()));
         $pString .= \HTML\hr();
@@ -565,7 +565,7 @@ class RESOURCEFORM
             {
                 $label = $this->makeCreatorLabel();
             }
-            $this->session->setVar('resourceFormValidate_' . $type . '_' . $index, TRUE);
+            $this->session->setVar("resourceFormValidate_" . $type . '_' . $index, TRUE);
             $entry = $type . '_' . $index . '_firstname';
             $text = array_key_exists($entry, $this->sessionVars) ? $this->sessionVars[$entry] : FALSE;
             $fields .= \HTML\trStart();
@@ -628,22 +628,22 @@ class RESOURCEFORM
             {
                 break;
             }
-            $this->session->setVar('resourceFormValidate_' . $type . '_' . $index, TRUE);
+            $this->session->setVar("resourceFormValidate_" . $type . '_' . $index, TRUE);
             $entry = $type . '_' . $index . '_firstname';
-            $value = $this->session->getVar('resourceForm_' . $entry) ? $this->session->getVar('resourceForm_' . $entry) : FALSE;
+            $value = $this->session->getVar("resourceForm_" . $entry) ? $this->session->getVar("resourceForm_" . $entry) : FALSE;
             $found = $value ? TRUE : FALSE;
             $thisRow .= \HTML\trStart();
             $thisRow .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 30, 255));
             $entry = $type . '_' . $index . '_initials';
-            $value = $this->session->getVar('resourceForm_' . $entry) ? $this->session->getVar('resourceForm_' . $entry) : FALSE;
+            $value = $this->session->getVar("resourceForm_" . $entry) ? $this->session->getVar("resourceForm_" . $entry) : FALSE;
             $found = $value ? TRUE : FALSE;
             $thisRow .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 6, 255));
             $entry = $type . '_' . $index . '_prefix';
-            $value = $this->session->getVar('resourceForm_' . $entry) ? $this->session->getVar('resourceForm_' . $entry) : FALSE;
+            $value = $this->session->getVar("resourceForm_" . $entry) ? $this->session->getVar("resourceForm_" . $entry) : FALSE;
             $found = $value ? TRUE : FALSE;
             $thisRow .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 11, 255));
             $entry = $type . '_' . $index . '_surname';
-            $value = $this->session->getVar('resourceForm_' . $entry) ? $this->session->getVar('resourceForm_' . $entry) : FALSE;
+            $value = $this->session->getVar("resourceForm_" . $entry) ? $this->session->getVar("resourceForm_" . $entry) : FALSE;
             $found = $value ? TRUE : FALSE;
             $thisRow .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 30, 255));
             if (array_key_exists($select, $this->sessionVars))
@@ -694,7 +694,7 @@ class RESOURCEFORM
     {
         $jsonArray = [];
         $jScript = "index.php?action=resource_RESOURCEFORMAJAX_CORE&method=addCreatorField&creatorType=$key";
-        if ($this->edit || $this->error || $this->collectionFill || ($this->session->getVar('resourceFormType') == 'edit'))
+        if ($this->edit || $this->error || $this->collectionFill || ($this->session->getVar("resourceFormType") == 'edit'))
         {
             list($index, $editCell) = $this->creatorFieldsEdit($key);
             $jsonArray[] = [
@@ -717,7 +717,7 @@ class RESOURCEFORM
         $addImage = \AJAX\jActionIcon('add', 'onclick', $jsonArray);
         $jsonArray = [];
         $jScript = "index.php?action=resource_RESOURCEFORMAJAX_CORE&method=removeCreatorField&creatorType=$key";
-        if ($this->edit || $this->error || $this->collectionFill || ($this->session->getVar('resourceFormType') == 'edit'))
+        if ($this->edit || $this->error || $this->collectionFill || ($this->session->getVar("resourceFormType") == 'edit'))
         {
             $jsonArray[] = [
                 'startFunction' => 'removeCreator',
@@ -740,7 +740,7 @@ class RESOURCEFORM
         $images = '&nbsp;&nbsp;' . $addImage . '&nbsp;&nbsp;' . $removeImage;
         $creatorCells = \HTML\trStart();
         $creatorCells .= \HTML\td(\HTML\h($this->messages->text('creators', $creatorMsg) . $images, FALSE, 4), $this->tdLabelWidth);
-        if ($this->edit || $this->error || $this->collectionFill || ($this->session->getVar('resourceFormType') == 'edit'))
+        if ($this->edit || $this->error || $this->collectionFill || ($this->session->getVar("resourceFormType") == 'edit'))
         {
             $creatorCells .= \HTML\td(\HTML\div($key . '_Inner', $editCell), $this->tdContentWidth);
         }
@@ -1157,7 +1157,7 @@ class RESOURCEFORM
             $this->sessionVars['resourceusertagsTagId'] = implode(',', $array);
         }
         // User bibliographies
-        $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
         $resultset = $this->db->select('user_bibliography', 'userbibliographyId');
         $array = [];
         while ($row = $this->db->fetchRow($resultset))
@@ -1250,8 +1250,8 @@ class RESOURCEFORM
             $value = FALSE;
             if ($this->error)
             {
-                $value = $this->session->getVar('resourceForm_customId' . $id) ?
-                    $this->session->getVar('resourceForm_customId' . $id) : FALSE;
+                $value = $this->session->getVar("resourceForm_customId" . $id) ?
+                    $this->session->getVar("resourceForm_customId" . $id) : FALSE;
             }
             elseif ($this->edit)
             {
@@ -1292,8 +1292,8 @@ class RESOURCEFORM
             $value = FALSE;
             if ($this->error)
             {
-                $value = $this->session->getVar('resourceForm_customId' . $id) ?
-                    $this->session->getVar('resourceForm_customId' . $id) : FALSE;
+                $value = $this->session->getVar("resourceForm_customId" . $id) ?
+                    $this->session->getVar("resourceForm_customId" . $id) : FALSE;
             }
             elseif ($this->edit)
             {
@@ -2745,7 +2745,7 @@ class RESOURCEFORM
         // bibliographies
         $bibs[0] = $this->messages->text("misc", "ignore");
         // Get this user's bibliographies
-        if ($this->session->getVar('mywikindx_Bibliographies'))
+        if ($this->session->getVar("mywikindx_Bibliographies"))
         {
             $bibsRaw = unserialize($this->session->getVar("mywikindx_Bibliographies"));
             foreach ($bibsRaw as $key => $value)
@@ -2754,7 +2754,7 @@ class RESOURCEFORM
             }
         }
         // Get this user's user group bibliographies
-        if ($this->session->getVar('mywikindx_Groupbibliographies'))
+        if ($this->session->getVar("mywikindx_Groupbibliographies"))
         {
             $bibsRaw = unserialize($this->session->getVar("mywikindx_Groupbibliographies"));
             foreach ($bibsRaw as $key => $value)

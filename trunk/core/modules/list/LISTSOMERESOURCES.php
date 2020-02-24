@@ -37,12 +37,12 @@ class LISTSOMERESOURCES
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "list"));
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
-        if (!$this->session->getVar('list_Order'))
+        if (!$this->session->getVar("list_Order"))
         {
-            $this->session->setVar('list_Order', 'creator');
+            $this->session->setVar("list_Order", "creator");
         }
-        $this->session->setVar('sql_LastOrder', $this->session->getVar('list_Order'));
-        switch ($this->session->getVar('list_Order'))
+        $this->session->setVar("sql_LastOrder", $this->session->getVar("list_Order"));
+        switch ($this->session->getVar("list_Order"))
         {
             case 'title':
                 break;
@@ -55,7 +55,7 @@ class LISTSOMERESOURCES
             case 'timestamp':
                 break;
             default:
-                $this->session->setVar('list_Order', 'creator');
+                $this->session->setVar("list_Order", "creator");
         }
     }
     /**
@@ -65,103 +65,103 @@ class LISTSOMERESOURCES
     {
         if (array_key_exists('list_AscDesc', $this->vars))
         {
-            $this->session->setVar('list_AscDesc', $this->vars['list_AscDesc']);
+            $this->session->setVar("list_AscDesc", $this->vars['list_AscDesc']);
         }
         if (array_key_exists('list_Order', $this->vars))
         {
-            $this->session->setVar('list_Order', $this->vars['list_Order']);
-            $this->session->setVar('sql_LastOrder', $this->vars['list_Order']);
+            $this->session->setVar("list_Order", $this->vars['list_Order']);
+            $this->session->setVar("sql_LastOrder", $this->vars['list_Order']);
             $this->order = $this->vars['list_Order'];
         }
-        if ($this->session->getVar('list_SomeResources_catId'))
+        if ($this->session->getVar("list_SomeResources_catId"))
         {
-            $this->vars['catId'] = $this->session->getVar('list_SomeResources_catId');
+            $this->vars['catId'] = $this->session->getVar("list_SomeResources_catId");
         }
-        if ($this->session->getVar('list_SomeResources_id'))
+        if ($this->session->getVar("list_SomeResources_id"))
         {
-            $this->vars['id'] = $this->session->getVar('list_SomeResources_id');
+            $this->vars['id'] = $this->session->getVar("list_SomeResources_id");
         }
-        elseif ($this->session->getVar('list_SomeResources_department'))
+        elseif ($this->session->getVar("list_SomeResources_department"))
         {
-            $this->vars['department'] = $this->session->getVar('list_SomeResources_department');
+            $this->vars['department'] = $this->session->getVar("list_SomeResources_department");
         }
-        elseif ($this->session->getVar('list_SomeResources_institution'))
+        elseif ($this->session->getVar("list_SomeResources_institution"))
         {
-            $this->vars['institution'] = $this->session->getVar('list_SomeResources_institution');
+            $this->vars['institution'] = $this->session->getVar("list_SomeResources_institution");
         }
-        if ($this->session->getVar('list_SomeResources') == 'category')
+        if ($this->session->getVar("list_SomeResources") == 'category')
         {
             $this->categoryProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'subcategory')
+        elseif ($this->session->getVar("list_SomeResources") == 'subcategory')
         {
             $this->subcategoryProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'userResource')
+        elseif ($this->session->getVar("list_SomeResources") == 'userResource')
         {
             $this->userResourceProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'userQuote')
+        elseif ($this->session->getVar("list_SomeResources") == 'userQuote')
         {
             $this->userQuoteProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'userParaphrase')
+        elseif ($this->session->getVar("list_SomeResources") == 'userParaphrase')
         {
             $this->userParaphraseProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'cite')
+        elseif ($this->session->getVar("list_SomeResources") == 'cite')
         {
             $this->citeProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'citeCreator')
+        elseif ($this->session->getVar("list_SomeResources") == 'citeCreator')
         {
             $this->citeProcessCreator();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'type')
+        elseif ($this->session->getVar("list_SomeResources") == 'type')
         {
             $this->typeProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'language')
+        elseif ($this->session->getVar("list_SomeResources") == 'language')
         {
             $this->languageProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'keyword')
+        elseif ($this->session->getVar("list_SomeResources") == 'keyword')
         {
             $this->keywordProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'metaKeyword')
+        elseif ($this->session->getVar("list_SomeResources") == 'metaKeyword')
         {
             $this->metaKeywordProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'publisher')
+        elseif ($this->session->getVar("list_SomeResources") == 'publisher')
         {
             $this->publisherProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'specialPublisher')
+        elseif ($this->session->getVar("list_SomeResources") == 'specialPublisher')
         {
             $this->specialPublisherProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'collection')
+        elseif ($this->session->getVar("list_SomeResources") == 'collection')
         {
             $this->collectionProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'creator')
+        elseif ($this->session->getVar("list_SomeResources") == 'creator')
         {
             $this->creatorProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'year')
+        elseif ($this->session->getVar("list_SomeResources") == 'year')
         {
             $this->yearProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'userTag')
+        elseif ($this->session->getVar("list_SomeResources") == 'userTag')
         {
             $this->userTagProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'bibliography')
+        elseif ($this->session->getVar("list_SomeResources") == 'bibliography')
         {
             $this->bibliographyProcess();
         }
-        elseif ($this->session->getVar('list_SomeResources') == 'quarantine')
+        elseif ($this->session->getVar("list_SomeResources") == 'quarantine')
         {
             $this->quarantineProcess();
         }
@@ -187,17 +187,17 @@ class LISTSOMERESOURCES
             $resCommon = FACTORY_RESOURCECOMMON::getInstance();
             $this->stmt->conditions[] = $this->db->formatFields('resourceId') . ' ' . $this->db->inClause($resCommon->showCitations($this->vars["id"]));
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'cite');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'cite');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -231,17 +231,17 @@ class LISTSOMERESOURCES
                 $this->stmt->conditions[] = ['resourceId' => $this->vars['id']];
             }
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'citeCreator');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'citeCreator');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -264,17 +264,17 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourcemiscAddUserIdResource' => $this->vars['id']];
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'userResource');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'userResource');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -298,17 +298,17 @@ class LISTSOMERESOURCES
                 $this->db->and . $this->db->formatFields('resourcemetadataType') . '=' . $this->db->tidyInput('q') . ')';
             $this->stmt->joins['resource_metadata'] = ['resourcemetadataResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'userQuote');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'userQuote');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -332,18 +332,18 @@ class LISTSOMERESOURCES
                 $this->db->and . $this->db->formatFields('resourcemetadataType') . '=' . $this->db->tidyInput('p') . ')';
             $this->stmt->joins['resource_metadata'] = ['resourcemetadataResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'userParaphrase');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'userParaphrase');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
-        $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+        $this->session->setVar("sql_LastMulti", $queryString);
+        $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         $this->common->display($sql, 'list');
     }
     /**
@@ -368,17 +368,17 @@ class LISTSOMERESOURCES
                 $this->db->and . $this->db->formatFields('resourcemetadataType') . '=' . $this->db->tidyInput('m') . ')';
             $this->stmt->joins['resource_metadata'] = ['resourcemetadataResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'userMusing');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'userMusing');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -401,17 +401,17 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourcelanguageLanguageId' => $this->vars['id']];
             $this->stmt->joins['resource_language'] = ['resourcelanguageResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'language');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'language');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -423,10 +423,10 @@ class LISTSOMERESOURCES
         {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        $catId = array_key_exists('catId', $this->vars) ? $this->vars["catId"] : $this->session->getVar('list_SomeResources_catId');
+        $catId = array_key_exists('catId', $this->vars) ? $this->vars["catId"] : $this->session->getVar("list_SomeResources_catId");
         if ($catId)
         { // From Category Tree browsing
-            $this->session->setVar('list_SomeResources_catId', $catId);
+            $this->session->setVar("list_SomeResources_catId", $catId);
             $this->stmt->conditions[] = '(' . $this->db->formatFields('resourcekeywordKeywordId') . '=' . $this->db->tidyInput($this->vars["id"]) .
                 $this->db->and . $this->db->formatFields('resourcecategoryCategoryId') . '=' . $this->db->tidyInput($catId) . ')';
             $this->stmt->joins['resource_category'] = ['resourcecategoryResourceId', 'resourceId'];
@@ -447,17 +447,17 @@ class LISTSOMERESOURCES
         {
             $this->stmt->joins['resource_keyword'] = ['resourcekeywordResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'keyword');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'keyword');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -495,17 +495,17 @@ class LISTSOMERESOURCES
             $this->stmt->joins['resource'] = ['resourceId', 'resourcemetadataResourceId'];
             $this->stmt->joins['resource_keyword'] = ['resourcekeywordMetadataId', 'resourcemetadataId'];
             $subStmt = $this->setSubQuery('resource_metadata');
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt, 'resource_metadata');
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'), 'resource_metadata');
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt, 'resource_metadata');
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"), 'resource_metadata');
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'metaKeyword');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'metaKeyword');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -528,17 +528,17 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourceyearYear1' => base64_decode($this->vars["id"])];
             $this->stmt->joins['resource_year'] = ['resourceyearId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'year');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'year');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -560,17 +560,17 @@ class LISTSOMERESOURCES
         {
             $this->stmt->conditions[] = ['resourceType' => $this->vars["id"]];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'type');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'type');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -593,17 +593,17 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourcecategoryCategoryId' => $this->vars["id"]];
             $this->stmt->joins['resource_category'] = ['resourcecategoryResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'category');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'category');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -626,17 +626,17 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourceusertagsTagId' => $this->vars["id"]];
             $this->stmt->joins['resource_user_tags'] = ['resourceusertagsResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'userTag');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'userTag');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -659,17 +659,17 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourcecategorySubcategoryId' => $this->vars["id"]];
             $this->stmt->joins['resource_category'] = ['resourcecategoryResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'subcategory');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'subcategory');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -682,9 +682,9 @@ class LISTSOMERESOURCES
         {
             $found = TRUE;
             $type = 'id';
-            $this->session->setVar('list_SomeResources_id', $this->vars['id']);
-            $this->session->delVar('list_SomeResources_department');
-            $this->session->delVar('list_SomeResources_institution');
+            $this->session->setVar("list_SomeResources_id", $this->vars['id']);
+            $this->session->delVar("list_SomeResources_department");
+            $this->session->delVar("list_SomeResources_institution");
             $queryString = "action=list_LISTSOMERESOURCES_CORE&method=creatorProcess&id=" . $this->vars["id"];
             $this->db->formatConditions(['creatorId' => $this->vars["id"]]);
             $sameAsId = $this->db->selectFirstField('creator', 'creatorSameAs');
@@ -710,9 +710,9 @@ class LISTSOMERESOURCES
         {
             $found = TRUE;
             $type = 'department';
-            $this->session->setVar('list_SomeResources_department', $this->vars['department']);
-            $this->session->delVar('list_SomeResources_id');
-            $this->session->delVar('list_SomeResources_institution');
+            $this->session->setVar("list_SomeResources_department", $this->vars['department']);
+            $this->session->delVar("list_SomeResources_id");
+            $this->session->delVar("list_SomeResources_institution");
             $queryString = "action=list_LISTSOMERESOURCES_CORE&method=creatorProcess&department=" . $this->vars["department"];
             $this->db->formatConditions(['usersDepartment' => base64_decode($this->vars["department"]),
                 'usersIsCreator' => 'IS NOT NULL', ]);
@@ -726,9 +726,9 @@ class LISTSOMERESOURCES
         {
             $found = TRUE;
             $type = 'institution';
-            $this->session->setVar('list_SomeResources_institution', $this->vars['institution']);
-            $this->session->delVar('list_SomeResources_id');
-            $this->session->delVar('list_SomeResources_department');
+            $this->session->setVar("list_SomeResources_institution", $this->vars['institution']);
+            $this->session->delVar("list_SomeResources_id");
+            $this->session->delVar("list_SomeResources_department");
             $queryString = "action=list_LISTSOMERESOURCES_CORE&method=creatorProcess&institution=" . $this->vars["institution"];
             $this->db->formatConditions(['usersInstitution' => base64_decode($this->vars["institution"]),
                 'usersIsCreator' => 'IS NOT NULL', ]);
@@ -752,8 +752,8 @@ class LISTSOMERESOURCES
             $this->stmt->joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
             $this->stmt->joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
@@ -761,18 +761,18 @@ class LISTSOMERESOURCES
         }
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti'))
         {
-            $sql = base64_decode($this->session->getVar('sql_ListStmt'));
+            $sql = base64_decode($this->session->getVar("sql_ListStmt"));
             // set back to beginning
             $sql = preg_replace('/LIMIT (\d+),/u', "LIMIT 0,", $sql);
             $this->common->display($sql, 'list');
-            $this->session->setVar('list_SubQuery', $this->session->getVar('list_SubQueryMulti'));
-            $this->session->delVar('list_NextPreviousIds');
+            $this->session->setVar("list_SubQuery", $this->session->getVar("list_SubQueryMulti"));
+            $this->session->delVar("list_NextPreviousIds");
 
             return;
         }
-        $this->session->setVar('list_SomeResources', 'creator');
+        $this->session->setVar("list_SomeResources", 'creator');
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -810,7 +810,7 @@ class LISTSOMERESOURCES
         {
             if ($miscField1)
             { // conference and translated publisher
-                $this->session->setVar('list_SomeResources', 'specialPublisher');
+                $this->session->setVar("list_SomeResources", 'specialPublisher');
                 $this->stmt->conditions[] = $this->db->formatFields('resourcemiscField1') . '=' . $this->db->tidyInput($this->vars["id"]) .
                     $this->db->and . '(' . $this->db->formatFields('resourceType') . '=' . $this->db->tidyInput('proceedings') .
                     $this->db->or . $this->db->formatFields('resourceType') . '=' . $this->db->tidyInput('proceedings_article') .
@@ -820,22 +820,22 @@ class LISTSOMERESOURCES
             }
             else
             {
-                $this->session->setVar('list_SomeResources', 'publisher');
+                $this->session->setVar("list_SomeResources", 'publisher');
                 $this->stmt->conditions[] = ['resourcemiscPublisher' => $this->vars["id"]];
             }
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
             $this->stmt->joins['publisher'] = ['publisherId', 'resourcemiscPublisher'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("sql_LastMulti", $queryString);
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         $this->common->display($sql, 'list');
     }
     /**
@@ -858,17 +858,17 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourcemiscCollection' => $this->vars["id"]];
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'collection');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'collection');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -893,17 +893,17 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['userbibliographyresourceBibliographyId' => $this->vars["id"]];
             $this->stmt->joins['user_bibliography_resource'] = ['userbibliographyresourceResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'bibliography');
-        $this->session->setVar('list_SomeResources_id', $this->vars['id']);
+        $this->session->setVar("list_SomeResources", 'bibliography');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -926,16 +926,16 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourcemiscQuarantine' => 'Y'];
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar('list_Order'), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar('list_Order'));
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
         }
         else
         {
             $sql = $this->quickQuery($queryString);
         }
-        $this->session->setVar('list_SomeResources', 'quarantine');
+        $this->session->setVar("list_SomeResources", 'quarantine');
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
     /**
@@ -945,11 +945,11 @@ class LISTSOMERESOURCES
     {
         if (!array_key_exists('PagingStart', $this->vars))
         {
-            $this->session->delVar('mywikindx_PagingStart');
-            $this->session->delVar('mywikindx_PagingStartAlpha');
-            $this->session->delVar('list_AllIds');
-            $this->session->delVar('list_PagingAlphaLinks');
-            $this->session->delVar('sql_ListStmt');
+            $this->session->delVar("mywikindx_PagingStart");
+            $this->session->delVar("mywikindx_PagingStartAlpha");
+            $this->session->delVar("list_AllIds");
+            $this->session->delVar("list_PagingAlphaLinks");
+            $this->session->delVar("sql_ListStmt");
         }
     }
     /**
@@ -961,7 +961,7 @@ class LISTSOMERESOURCES
      */
     private function quickQuery($queryString)
     {
-        $sql = $this->session->getVar('sql_ListStmt');
+        $sql = $this->session->getVar("sql_ListStmt");
         $this->pagingObject = FACTORY_PAGING::getInstance();
         $this->pagingObject->queryString = $queryString;
         $this->pagingObject->getPaging();
@@ -980,7 +980,7 @@ class LISTSOMERESOURCES
     {
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A'))
         {
-            $this->session->delVar('mywikindx_PagingStart');
+            $this->session->delVar("mywikindx_PagingStart");
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
@@ -999,12 +999,12 @@ class LISTSOMERESOURCES
      */
     private function setSubQuery($table = 'resource')
     {
-        $this->db->ascDesc = $this->session->getVar('list_AscDesc');
-        switch ($this->session->getVar('list_Order'))
+        $this->db->ascDesc = $this->session->getVar("list_AscDesc");
+        switch ($this->session->getVar("list_Order"))
         {
             case 'title':
                 $this->stmt->quarantine(FALSE, 'resourceId');
-                if ($this->session->getVar('list_SomeResources') != 'bibliography')
+                if ($this->session->getVar("list_SomeResources") != 'bibliography')
                 {
                     $this->stmt->useBib('resourceId');
                 }
@@ -1023,7 +1023,7 @@ class LISTSOMERESOURCES
                 $this->stmt->joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
                 $this->stmt->joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
                 $this->stmt->quarantine(FALSE, 'resourcecreatorResourceId');
-                if ($this->session->getVar('list_SomeResources') != 'bibliography')
+                if ($this->session->getVar("list_SomeResources") != 'bibliography')
                 {
                     $this->stmt->useBib('resourcecreatorResourceId');
                 }
@@ -1035,7 +1035,7 @@ class LISTSOMERESOURCES
                 $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
                 $this->stmt->joins['publisher'] = ['publisherId', 'resourcemiscPublisher'];
                 $this->stmt->quarantine(FALSE, 'resourcemiscId', FALSE);
-                if ($this->session->getVar('list_SomeResources') != 'bibliography')
+                if ($this->session->getVar("list_SomeResources") != 'bibliography')
                 {
                     $this->stmt->useBib('resourcemiscId');
                 }
@@ -1046,7 +1046,7 @@ class LISTSOMERESOURCES
             case 'year':
                 $this->stmt->joins['resource_year'] = ['resourceyearId', 'resourceId'];
                 $this->stmt->quarantine(FALSE, 'resourceyearId');
-                if ($this->session->getVar('list_SomeResources') != 'bibliography')
+                if ($this->session->getVar("list_SomeResources") != 'bibliography')
                 {
                     $this->stmt->useBib('resourceyearId');
                 }
@@ -1057,7 +1057,7 @@ class LISTSOMERESOURCES
             case 'timestamp':
                 $this->stmt->joins['resource_timestamp'] = ['resourcetimestampId', 'resourceId'];
                 $this->stmt->quarantine(FALSE, 'resourcetimestampId');
-                if ($this->session->getVar('list_SomeResources') != 'bibliography')
+                if ($this->session->getVar("list_SomeResources") != 'bibliography')
                 {
                     $this->stmt->useBib('resourcetimestampId');
                 }

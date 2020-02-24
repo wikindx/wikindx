@@ -138,14 +138,14 @@ class LISTCOMMON
      */
     public function lastMulti($listType = FALSE)
     {
-        $this->session->delVar('mywikindx_PagingStart');
-        $this->session->delVar('list_NextPreviousIds');
-        $sql = $this->session->getVar('sql_ListStmt');
+        $this->session->delVar("mywikindx_PagingStart");
+        $this->session->delVar("list_NextPreviousIds");
+        $sql = $this->session->getVar("sql_ListStmt");
         // set back to beginning
         $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         $this->display($sql . $limit, $listType);
         $this->session->saveState(['list', 'sql', 'bookmark']);
-        $this->session->setVar('list_SubQuery', $this->session->getVar('list_SubQueryMulti'));
+        $this->session->setVar("list_SubQuery", $this->session->getVar("list_SubQueryMulti"));
     }
     /**
      * Produce a list of resources
@@ -160,7 +160,7 @@ class LISTCOMMON
         $this->session->setVar("list_On", TRUE);
         if (!$this->keepHighlight)
         {
-            $this->session->delVar('search_Highlight');
+            $this->session->delVar("search_Highlight");
         }
         $this->bibStyle->bibformat->patterns = $this->patterns;
         if (GLOBALS::getUserVar('ListLink'))
@@ -197,11 +197,11 @@ class LISTCOMMON
         if ($this->session->getVar($listType . '_DisplayAttachment'))
         {
             $this->listAttachments($recordset, $listType);
-            $this->session->setVar('sql_DisplayAttachment', $listType . '_DisplayAttachment');
+            $this->session->setVar("sql_DisplayAttachment", $listType . '_DisplayAttachment');
 
             return;
         }
-        $this->session->delVar('sql_DisplayAttachment');
+        $this->session->delVar("sql_DisplayAttachment");
         $multiUserSwitch = (WIKINDX_MULTIUSER);
         if ($multiUserSwitch)
         {
@@ -711,9 +711,9 @@ class LISTCOMMON
         }
         else
         {
-            $write = $this->session->getVar('setup_Write');
-            $superAdmin = $this->session->getVar('setup_Superadmin');
-            $userId = $this->session->getVar('setup_UserId');
+            $write = $this->session->getVar("setup_Write");
+            $superAdmin = $this->session->getVar("setup_Superadmin");
+            $userId = $this->session->getVar("setup_UserId");
             $attachments = $musings = [];
             $edit = FALSE;
             // Check if these resources have attachments and display view icons accordingly. Also, calculate the resource's popularity index
@@ -806,7 +806,7 @@ class LISTCOMMON
                     $resourceList[$resourceId]['resource'] =
                         \HTML\a('rLink', $resourceList[$resourceId]['resource'], $resourceLink);
                 }
-                if (($this->pagingObject && $this->session->getVar('setup_Write')) || ($listType != 'front'))
+                if (($this->pagingObject && $this->session->getVar("setup_Write")) || ($listType != 'front'))
                 {
                     $resourceList[$resourceId]['links']['checkbox'] = \FORM\checkBox(FALSE, "bib_" . $resourceId);
                 }
@@ -903,7 +903,7 @@ class LISTCOMMON
         $uBibs = $this->commonBib->getUserBibs();
         $gBibs = $this->commonBib->getGroupBibs();
         $bibs = array_merge($uBibs, $gBibs);
-        $useBib = $this->session->getVar('mywikindx_Bibliography_use');
+        $useBib = $this->session->getVar("mywikindx_Bibliography_use");
         if ($useBib)
         {
             $this->db->formatConditions(['userbibliographyId' => $useBib]);
@@ -964,7 +964,7 @@ class LISTCOMMON
             $linksInfo['select'] = $this->createAddToBox($bibUserId, $bibs, $listType);
             if ($listType == 'list')
             {
-                if ($this->session->getVar('list_SomeResources'))
+                if ($this->session->getVar("list_SomeResources"))
                 {
                     $formHeader = 'list_LISTSOMERESOURCES_CORE';
                 }
@@ -1022,7 +1022,7 @@ class LISTCOMMON
      */
     private function createAddToBox($bibUserId, $bibs, $listType)
     {
-        if ($this->session->getVar('setup_Write'))
+        if ($this->session->getVar("setup_Write"))
         {
             $array[1] = $this->messages->text("resources", "organize");
         }
@@ -1030,7 +1030,7 @@ class LISTCOMMON
         {
             $array[0] = $this->messages->text("resources", "addToBib");
         }
-        if ($this->session->getVar('setup_UserId') && ($this->session->getVar('setup_UserId') == $bibUserId))
+        if ($this->session->getVar("setup_UserId") && ($this->session->getVar("setup_UserId") == $bibUserId))
         {
             $array[3] = $this->messages->text('resources', 'deleteFromBib');
         }
@@ -1046,7 +1046,7 @@ class LISTCOMMON
         {
             $array[7] = $this->messages->text('resources', 'basketAdd');
         }
-        if ($this->session->getVar('setup_Superadmin'))
+        if ($this->session->getVar("setup_Superadmin"))
         {
             $array[4] = $this->messages->text('resources', 'deleteResource');
         }
@@ -1106,9 +1106,9 @@ class LISTCOMMON
     {
         $strings = [];
         // Bookmarked multi view?
-        if ($this->session->getVar('bookmark_MultiView'))
+        if ($this->session->getVar("bookmark_MultiView"))
         {
-            $strings = unserialize(base64_decode($this->session->getVar('sql_ListParams')));
+            $strings = unserialize(base64_decode($this->session->getVar("sql_ListParams")));
             if (!is_array($strings) && $strings)
             { // From advanced search
                 return \HTML\aBrowse(
@@ -1124,7 +1124,7 @@ class LISTCOMMON
             {
                 return FALSE;
             }
-            $this->session->delVar('bookmark_MultiView');
+            $this->session->delVar("bookmark_MultiView");
 
             return $this->messages->text('listParams', 'listParams') . BR . implode(BR, $strings);
         }
@@ -1349,7 +1349,7 @@ class LISTCOMMON
         }
         if ($listType == 'search')
         {
-            if ($param = $this->session->getVar('advancedSearch_listParams'))
+            if ($param = $this->session->getVar("advancedSearch_listParams"))
             {
                 return \HTML\aBrowse(
                     'green',
@@ -1527,11 +1527,11 @@ class LISTCOMMON
         }
         if (empty($strings))
         {
-            $this->session->delVar('sql_ListParams');
+            $this->session->delVar("sql_ListParams");
 
             return FALSE;
         }
-        $this->session->setVar('sql_ListParams', base64_encode(serialize($strings)));
+        $this->session->setVar("sql_ListParams", base64_encode(serialize($strings)));
 
         return $this->messages->text('listParams', 'listParams') . BR . implode(BR, $strings);
     }

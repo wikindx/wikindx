@@ -280,7 +280,7 @@ class CMS
     public function displayList()
     {
         $pString = \HTML\p($this->messages->text('cms', 'introduction2'));
-        $sql = $this->session->getVar('sql_ListStmt');
+        $sql = $this->session->getVar("sql_ListStmt");
         $pString .= \FORM\textareaReadonly(FALSE, FALSE, base64_encode($sql), 100, 40);
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSENOMENU::getInstance();
@@ -731,11 +731,11 @@ class CMS
         // Set bibliographic style
         if (array_key_exists('bibStyle', $_GET))
         {
-            $this->session->setVar('setup_Style', $_GET['bibStyle']);
+            $this->session->setVar("setup_Style", $_GET['bibStyle']);
         }
         else
         {
-            $this->session->setVar('setup_Style', WIKINDX_CMS_BIBSTYLE);
+            $this->session->setVar("setup_Style", WIKINDX_CMS_BIBSTYLE);
         }
         $bibStyle = FACTORY_BIBSTYLE::getInstance();
 
@@ -933,17 +933,17 @@ class CMS
         if (GLOBALS::getUserVar('cmsTagStart') != $this->vars['cmsTagStart'])
         {
             $cmsTagChanged = TRUE;
-            $this->session->setVar('setup_cmsTagStart', $this->vars['cmsTagStart']);
+            $this->session->setVar("setup_cmsTagStart", $this->vars['cmsTagStart']);
         }
         if (GLOBALS::getUserVar('cmsTagEnd') != $this->vars['cmsTagEnd'])
         {
             $cmsTagChanged = TRUE;
-            $this->session->setVar('setup_cmsTagEnd', $this->vars['cmsTagEnd']);
+            $this->session->setVar("setup_cmsTagEnd", $this->vars['cmsTagEnd']);
         }
-        if ($cmsTagChanged && $this->session->getVar('setup_UserId'))
+        if ($cmsTagChanged && $this->session->getVar("setup_UserId"))
         {
             $string = base64_encode(serialize([$this->vars['cmsTagStart'], $this->vars['cmsTagEnd']]));
-            $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $this->db->update('users', ['usersCmsTag' => $string]);
         }
     }

@@ -60,7 +60,7 @@ class USER
             $username = \HTML\removeNl($this->vars['username']);
             // check for existing usernames (remove current user from search if already logged in with setup_userId)
             $this->db->formatConditions(['usersUsername' => $username]);
-            if ($userId = $this->session->getVar('setup_UserId') && !$add)
+            if ($userId = $this->session->getVar("setup_UserId") && !$add)
             {
                 $this->db->formatConditions(['usersId' => $userId], TRUE); // Not equal to
             }
@@ -76,7 +76,7 @@ class USER
         { // update
             if (!$admin)
             { // user editing own details
-                $userId = $this->session->getVar('setup_UserId');
+                $userId = $this->session->getVar("setup_UserId");
                 $cookie = FACTORY_COOKIE::getInstance();
                 if (array_key_exists('cookie', $this->vars) && $this->vars['cookie'])
                 {
@@ -254,7 +254,7 @@ class USER
             // write userId to session if not adding a new user
             if (!$add)
             {
-                $this->session->setVar('setup_UserId', $userId);
+                $this->session->setVar("setup_UserId", $userId);
             }
             // insert preferences to table
             $this->writePreferences($userId, TRUE);
@@ -784,7 +784,7 @@ class USER
     public function writePreferences($userId, $newUser = FALSE)
     {
         // Set paging_start back to 0
-        $this->session->setVar('mywikindx_PagingStart', 0);
+        $this->session->setVar("mywikindx_PagingStart", 0);
         $preferences = [
             "Paging" => WIKINDX_PAGING_DEFAULT,
             "PagingMaxLinks" => WIKINDX_PAGING_MAXLINKS_DEFAULT,
@@ -845,7 +845,7 @@ class USER
      */
     public function listUserGroups()
     {
-        $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar("setup_UserId")]);
         $this->db->orderBy('usergroupsTitle');
         $recordset = $this->db->select(['user_groups'], ['usergroupsId', 'usergroupsTitle']);
         if (!$this->db->numRows($recordset))

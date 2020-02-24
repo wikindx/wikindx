@@ -34,7 +34,7 @@ class RESOURCENOTE
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
         $this->cite = FACTORY_CITE::getInstance();
-        $this->userId = $this->session->getVar('setup_UserId');
+        $this->userId = $this->session->getVar("setup_UserId");
     }
     /**
      * Display resource's note
@@ -46,7 +46,7 @@ class RESOURCENOTE
     public function view($row)
     {
         $note = [];
-        $write = $this->session->getVar('setup_Write') ? TRUE : FALSE;
+        $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
         if (!$row['resourcetextNote'] && !$write)
         {
             return $note;

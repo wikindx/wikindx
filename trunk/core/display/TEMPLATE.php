@@ -116,7 +116,7 @@ class TEMPLATE
                 $this->name = WIKINDX_TEMPLATE_DEFAULT;
             }
 
-            if (!$this->session->getVar('setup_ReadOnly'))
+            if (!$this->session->getVar("setup_ReadOnly"))
             {
                 $this->session->setVar("setup_Template", $this->name);
             }
@@ -203,18 +203,18 @@ class TEMPLATE
         
         if (!$ignoreUserConfig && GLOBALS::getUserVar('TemplateMenu'))
         {
-            $this->session->setVar('setup_ReduceMenuLevel', GLOBALS::getUserVar('TemplateMenu'));
+            $this->session->setVar("setup_ReduceMenuLevel", GLOBALS::getUserVar('TemplateMenu'));
         }
         else
         {
-            $this->session->setVar('setup_ReduceMenuLevel', $level);
+            $this->session->setVar("setup_ReduceMenuLevel", $level);
         }
         
         // Configure pre text for menu items that were in a subSubmenu
         // Only valid for reduceMenuLevel == 1
         if ($ReduceMenuLevelPretextOption != "")
         {
-            $this->session->setVar('setup_ReduceMenuLevelPretext', $ReduceMenuLevelPretextOption);
+            $this->session->setVar("setup_ReduceMenuLevelPretext", $ReduceMenuLevelPretextOption);
         }
     }
 

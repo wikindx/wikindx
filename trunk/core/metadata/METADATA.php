@@ -88,7 +88,7 @@ class METADATA
                 GLOBALS::addTplVar('multiUser', TRUE);
             }
             $ideaList[$index]['timestamp'] = $row['resourcemetadataTimestamp'];
-            if ($row['resourcemetadataAddUserId'] == $this->session->getVar('setup_UserId'))
+            if ($row['resourcemetadataAddUserId'] == $this->session->getVar("setup_UserId"))
             {
                 $ideaList[$index]['links'] = $this->createLinks($row, FALSE, TRUE, TRUE);
             }
@@ -154,7 +154,7 @@ class METADATA
             }
             GLOBALS::addTplVar('multiUser', TRUE);
         }
-        if ($row['resourcemetadataAddUserId'] == $this->session->getVar('setup_UserId'))
+        if ($row['resourcemetadataAddUserId'] == $this->session->getVar("setup_UserId"))
         {
             $ideaList[0]['links'] = $this->createLinks($row, TRUE, TRUE, TRUE);
         }
@@ -244,7 +244,7 @@ class METADATA
      */
     public function setCondition($type = FALSE, $returnString = FALSE, $readOnly = FALSE)
     {
-        if ($userId = $this->session->getVar('setup_UserId'))
+        if ($userId = $this->session->getVar("setup_UserId"))
         {
             $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
             $this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .
@@ -343,7 +343,7 @@ class METADATA
     private function previousNextLinks($thisId)
     {
         $array = [];
-        if (($raw = $this->session->getVar('list_IdeaAllThreadIds')) === FALSE)
+        if (($raw = $this->session->getVar("list_IdeaAllThreadIds")) === FALSE)
         {
             return $array;
         }
@@ -381,7 +381,7 @@ class METADATA
         {
             $array['forward'] = FALSE;
         }
-        if ($this->session->getVar('setup_Superadmin'))
+        if ($this->session->getVar("setup_Superadmin"))
         {
             if (array_key_exists($thisKey + 1, $allIds))
             {

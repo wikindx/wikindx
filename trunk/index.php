@@ -39,8 +39,8 @@ if (array_key_exists('method', $vars) && ($vars['method'] == 'RSS'))
 // User bookmarks can only be added when looking at a single resource's details or resource lists.
 // Set default behaviour here to remove 'add bookmark' link from menu
 $session = FACTORY_SESSION::getInstance();
-$session->setVar('bookmark_DisplayAdd', FALSE);
-$session->delVar('bookmark_MultiView');
+$session->setVar("bookmark_DisplayAdd", FALSE);
+$session->delVar("bookmark_MultiView");
 //print_r($_SESSION);
 /**
  * If we get here, we're cleared to proceed.  If there is no $vars['action'], send users to the front of wikindx,

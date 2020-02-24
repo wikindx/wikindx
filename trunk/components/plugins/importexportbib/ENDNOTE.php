@@ -61,7 +61,7 @@ class ENDNOTE
                 $temp[$key] = $value;
             }
             $tags = $temp;
-            $sessionTag = $this->session->issetVar('import_TagId') ? $this->session->getVar('import_TagId') : FALSE;
+            $sessionTag = $this->session->issetVar("import_TagId") ? $this->session->getVar("import_TagId") : FALSE;
             if ($sessionTag && array_key_exists($sessionTag, $tags))
             {
                 $element = FORM\selectedBoxValue(FALSE, 'import_TagId', $tags, 5);
@@ -79,7 +79,7 @@ class ENDNOTE
         $categoryTd = FALSE;
         if (count($categories) > 1)
         {
-            if ($sessionCategories = $this->session->getVar('import_Categories'))
+            if ($sessionCategories = $this->session->getVar("import_Categories"))
             {
                 $sCategories = UTF8::mb_explode(",", $sessionCategories);
                 $element = FORM\selectedBoxValueMultiple(
@@ -121,10 +121,10 @@ class ENDNOTE
         $pString .= HTML\tableEnd();
         $pString .= HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= HTML\trStart();
-        $checked = $this->session->getVar('import_ImportDuplicates') ? TRUE : FALSE;
+        $checked = $this->session->getVar("import_ImportDuplicates") ? TRUE : FALSE;
         $td = HTML\p($this->pluginmessages->text('importDuplicates') . "&nbsp;&nbsp;" .
             FORM\checkbox(FALSE, 'import_ImportDuplicates'), $checked);
-        $checked = $this->session->getVar('import_KeywordIgnore') ? TRUE : FALSE;
+        $checked = $this->session->getVar("import_KeywordIgnore") ? TRUE : FALSE;
         $td .= HTML\p($this->pluginmessages->text('importKeywordIgnore') . "&nbsp;&nbsp;" .
             FORM\checkbox(FALSE, 'import_KeywordIgnore', $checked));
         $pString .= HTML\td($td);

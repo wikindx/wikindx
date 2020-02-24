@@ -65,7 +65,7 @@ class LOADCONFIG
     {
         $session = FACTORY_SESSION::getInstance();
         $db = FACTORY_DB::getInstance();
-    	if ($session->getVar('setup_UserId')) // logged on user so setup from users table
+    	if ($session->getVar("setup_UserId")) // logged on user so setup from users table
     	{
 			$basic = [
 				"CmsTag",
@@ -86,7 +86,7 @@ class LOADCONFIG
 			];
 			$table = 'users';
 			$preferences = $db->prependTableToField($table, $basic);
-			$db->formatConditions([$table . 'Id' => $session->getVar('setup_UserId')]);
+			$db->formatConditions([$table . 'Id' => $session->getVar("setup_UserId")]);
 			$resultSet = $db->select($table, $preferences);
 			$row = $db->fetchRow($resultSet);
 		}
@@ -112,9 +112,9 @@ class LOADCONFIG
 			foreach ($basic as $key)
 			{
 				$rowKey = $table . $key;
-				if ($session->issetVar('setup_' . $key))
+				if ($session->issetVar("setup_" . $key))
 				{
-					$row[$rowKey] = $session->getVar('setup_' . $key);
+					$row[$rowKey] = $session->getVar("setup_" . $key);
 				}
 				elseif ($key == 'Listlink')
 				{

@@ -58,7 +58,7 @@ class CHOOSEBIB
             'targetDiv' => 'div',
         ];
         $js = \AJAX\jActionForm('onchange', $jsonArray);
-        $selected = $this->session->getVar('mywikindx_Bibliography_use');
+        $selected = $this->session->getVar("mywikindx_Bibliography_use");
         $size = count($bibsArray);
         if ($size > 20)
         {
@@ -167,7 +167,7 @@ class CHOOSEBIB
         // bibId of < 0 == a label
         if (!array_key_exists('BibId', $this->vars) || !$this->vars['BibId'])
         {
-            $this->session->delVar('mywikindx_Bibliography_use');
+            $this->session->delVar("mywikindx_Bibliography_use");
         }
         elseif (array_key_exists('BibId', $this->vars) && ($this->vars['BibId'] < 0))
         {
@@ -175,12 +175,12 @@ class CHOOSEBIB
         }
         else
         {
-            $this->session->setVar('mywikindx_Bibliography_use', $this->vars['BibId']);
+            $this->session->setVar("mywikindx_Bibliography_use", $this->vars['BibId']);
         }
-        $this->session->delVar('mywikindx_Bibliography_add');
-        $this->session->delVar('mywikindx_PagingStart');
-        $this->session->delVar('mywikindx_PagingStartAlpha');
-        $this->session->delVar('sql_LastMulti');
+        $this->session->delVar("mywikindx_Bibliography_add");
+        $this->session->delVar("mywikindx_PagingStart");
+        $this->session->delVar("mywikindx_PagingStartAlpha");
+        $this->session->delVar("sql_LastMulti");
         $this->init($this->success->text("bibliographySet"));
     }
 }

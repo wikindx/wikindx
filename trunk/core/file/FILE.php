@@ -541,7 +541,7 @@ namespace FILE
     {
         $session = \FACTORY_SESSION::getInstance();
 
-        $fileExports = $session->getVar('fileExports');
+        $fileExports = $session->getVar("fileExports");
         if (!$fileExports)
         {
             // no files in directory
@@ -600,7 +600,7 @@ namespace FILE
 
             // Remove reference to these files in session
             $session = \FACTORY_SESSION::getInstance();
-            if (($sessVar = $session->getVar('fileExports')) && !empty($fileDeleteArray))
+            if (($sessVar = $session->getVar("fileExports")) && !empty($fileDeleteArray))
             {
                 $sessArray = unserialize($sessVar);
                 foreach ($fileDeleteArray as $f)
@@ -609,16 +609,16 @@ namespace FILE
                 }
                 if (!empty($sessArray))
                 {
-                    $session->setVar('fileExports', serialize($sessArray));
+                    $session->setVar("fileExports", serialize($sessArray));
                 }
                 else
                 {
-                    $session->delVar('fileExports');
+                    $session->delVar("fileExports");
                 }
             }
             elseif (!empty($fileKeepArray))
             {
-                $session->setVar('fileExports', serialize($fileKeepArray));
+                $session->setVar("fileExports", serialize($fileKeepArray));
             }
         }
     }

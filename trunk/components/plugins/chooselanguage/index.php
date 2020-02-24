@@ -64,7 +64,7 @@ class chooselanguage_MODULE
 		if ($session->getVar("setup_UserId"))
 		{
 	        $db = FACTORY_DB::getInstance();
-			$db->formatConditions(['usersId' => $session->getVar('setup_UserId')]);
+			$db->formatConditions(['usersId' => $session->getVar("setup_UserId")]);
 			$db->update('users', ['usersLanguage' => $language]);
         	GLOBALS::setUserVar('Language', $language);
 	    }
@@ -88,7 +88,7 @@ class chooselanguage_MODULE
         $languages = array_merge($languages, \LOCALES\getSystemLocales());
         
         // Don't use the session value in that case because the language could have been changed localy by the chooseLanguage plugin
-        $userId = $session->getVar('setup_UserId');
+        $userId = $session->getVar("setup_UserId");
         $db->formatConditions(['usersId' => $userId]);
         $language = $db->selectFirstField("users", "usersLanguage");
         array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;

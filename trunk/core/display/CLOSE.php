@@ -43,7 +43,7 @@ class CLOSE
         $numberOfResources = $this->db->selectFirstField("database_summary", "databasesummaryTotalResources");
 
         // if this is a logged in user, display the username after the heading
-        if ($userId = $this->session->getVar('setup_UserId'))
+        if ($userId = $this->session->getVar("setup_UserId"))
         {
             $this->db->formatConditions(['usersId' => $userId]);
             $username = \HTML\nlToHtml($this->db->selectFirstField('users', 'usersUsername'));

@@ -28,7 +28,7 @@ class BASKET
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
-        switch ($this->session->getVar('list_Order'))
+        switch ($this->session->getVar("list_Order"))
         {
             case 'title':
                 break;
@@ -41,7 +41,7 @@ class BASKET
             case 'timestamp':
                 break;
             default:
-                $this->session->setVar('list_Order', 'creator');
+                $this->session->setVar("list_Order", 'creator');
         }
     }
     /**
@@ -49,9 +49,9 @@ class BASKET
      */
     public function init()
     {
-        if ($this->session->issetVar('basket_List'))
+        if ($this->session->issetVar("basket_List"))
         {
-            $basket = unserialize($this->session->getVar('basket_List'));
+            $basket = unserialize($this->session->getVar("basket_List"));
         }
         else
         {
@@ -67,12 +67,12 @@ class BASKET
         }
         // Ensure array is unique
         array_unique($basket);
-        $this->session->setVar('basket_List', serialize($basket));
+        $this->session->setVar("basket_List", serialize($basket));
         $this->session->saveState('basket');
         // send back to view this resource with success message
         include_once("core/modules/resource/RESOURCEVIEW.php");
         $resource = new RESOURCEVIEW();
-        $resource->init($this->session->getVar('sql_LastSolo'));
+        $resource->init($this->session->getVar("sql_LastSolo"));
         GLOBALS::addTplVar('content', $this->success->text("basketAdd"));
     }
     /**
@@ -80,9 +80,9 @@ class BASKET
      */
     public function remove()
     {
-        if ($this->session->issetVar('basket_List'))
+        if ($this->session->issetVar("basket_List"))
         {
-            $basket = unserialize($this->session->getVar('basket_List'));
+            $basket = unserialize($this->session->getVar("basket_List"));
         }
         else
         {
@@ -93,12 +93,12 @@ class BASKET
         {
             unset($basket[$key]);
         }
-        $this->session->setVar('basket_List', serialize($basket));
+        $this->session->setVar("basket_List", serialize($basket));
         $this->session->saveState('basket');
         // send back to view this resource with success message
         include_once("core/modules/resource/RESOURCEVIEW.php");
         $resource = new RESOURCEVIEW();
-        $resource->init($this->session->getVar('sql_LastSolo'));
+        $resource->init($this->session->getVar("sql_LastSolo"));
         GLOBALS::addTplVar('content', $this->success->text("basketRemove"));
     }
     /**
@@ -106,7 +106,7 @@ class BASKET
      */
     public function reorder()
     {
-        $this->session->setVar('list_AscDesc', $this->vars['list_AscDesc']);
+        $this->session->setVar("list_AscDesc", $this->vars['list_AscDesc']);
         $this->view();
     }
     /**
@@ -117,9 +117,9 @@ class BASKET
         $sql = FALSE;
         $this->common = FACTORY_LISTCOMMON::getInstance();
         $queryString = 'action=basket_BASKET_CORE&method=view';
-        $bl = unserialize($this->session->getVar('basket_List'));
+        $bl = unserialize($this->session->getVar("basket_List"));
         $sizeOfbl = is_array($bl) ? count($bl) : 0;
-        $this->session->setVar('setup_PagingTotal', $sizeOfbl);
+        $this->session->setVar("setup_PagingTotal", $sizeOfbl);
         $this->pagingObject = FACTORY_PAGING::getInstance();
         $this->pagingObject->queryString = $queryString;
         $this->pagingObject->getPaging();
@@ -127,19 +127,19 @@ class BASKET
         GLOBALS::setTplVar('heading', $this->messages->text('heading', 'basket'));
         if (array_key_exists('list_Order', $this->vars))
         {
-            $this->session->setVar('list_Order', $this->vars['list_Order']);
+            $this->session->setVar("list_Order", $this->vars['list_Order']);
         }
-        $this->session->delVar('mywikindx_PagingStart');
-        $this->session->delVar('mywikindx_PagingStartAlpha');
+        $this->session->delVar("mywikindx_PagingStart");
+        $this->session->delVar("mywikindx_PagingStartAlpha");
         if ($this->lastMulti($queryString))
         {
             return;
         }
         if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
         {
-            $this->session->delVar('list_PagingAlphaLinks');
-            $this->session->delVar('list_AllIds');
-            $this->session->setVar('list_AllIds', base64_encode($this->session->getVar('basket_List')));
+            $this->session->delVar("list_PagingAlphaLinks");
+            $this->session->delVar("list_AllIds");
+            $this->session->setVar("list_AllIds", base64_encode($this->session->getVar("basket_List")));
             $sql = $this->returnBasketSql($queryString);
         }
         else
@@ -153,7 +153,7 @@ class BASKET
             $badInput->close($errors->text("inputError", "invalid"));
         }
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
         $this->session->saveState(['list', 'basket', 'bookmark']);
@@ -172,12 +172,12 @@ class BASKET
     {
         if (!$order)
         {
-            $order = $this->session->getVar('list_Order');
+            $order = $this->session->getVar("list_Order");
         }
-        $subStmt = $this->setSubQuery(unserialize($this->session->getVar('basket_List')));
+        $subStmt = $this->setSubQuery(unserialize($this->session->getVar("basket_List")));
         $this->stmt->listSubQuery($order, $queryString, $subStmt);
 
-        return $this->stmt->listList($this->session->getVar('list_Order'));
+        return $this->stmt->listList($this->session->getVar("list_Order"));
     }
     /**
      * Delete the basket
@@ -222,7 +222,7 @@ class BASKET
      */
     private function quickQuery($queryString)
     {
-        $sql = $this->session->getVar('sql_ListStmt');
+        $sql = $this->session->getVar("sql_ListStmt");
         $sql .= $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         return $sql;
     }
@@ -257,12 +257,12 @@ class BASKET
      */
     private function setSubQuery($ids)
     {
-        if (!$this->session->getVar('list_Order'))
+        if (!$this->session->getVar("list_Order"))
         {
-            $this->session->setVar('list_Order', 'creator');
+            $this->session->setVar("list_Order", "creator");
         }
-        $this->db->ascDesc = $this->session->getVar('list_AscDesc');
-        switch ($this->session->getVar('list_Order'))
+        $this->db->ascDesc = $this->session->getVar("list_AscDesc");
+        switch ($this->session->getVar("list_Order"))
         {
             case 'title':
                 $this->stmt->quarantine(FALSE, 'resourceId');

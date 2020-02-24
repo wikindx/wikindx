@@ -130,7 +130,7 @@ class SOUNDEXPLORERQUICKSEARCH
     public function process()
     {
         $session = FACTORY_SESSION::getInstance();
-        $this->db->formatConditions(['pluginsoundexplorerUserId' => $session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['pluginsoundexplorerUserId' => $session->getVar("setup_UserId")]);
         $resultset = $this->db->select('plugin_soundexplorer', ['pluginsoundexplorerLabel', 'pluginsoundexplorerArray']);
         $sounds = [];
         while ($row = $this->db->fetchRow($resultset))
@@ -150,11 +150,11 @@ class SOUNDEXPLORERQUICKSEARCH
         }
         if (!empty($this->foundResources))
         {
-            $session->setVar('seplugin_FoundResources', base64_encode(serialize($this->foundResources)));
+            $session->setVar("seplugin_FoundResources", base64_encode(serialize($this->foundResources)));
         }
         else
         {
-            $session->delVar('seplugin_FoundResources');
+            $session->delVar("seplugin_FoundResources");
         }
         if (!empty($sounds))
         {
@@ -180,13 +180,13 @@ class SOUNDEXPLORERQUICKSEARCH
         {
             $type = $this->vars["seplugin_Field"];
         }
-        elseif ($this->session->issetVar('seplugin_Field'))
+        elseif ($this->session->issetVar("seplugin_Field"))
         {
             $type = $this->session->getVar("seplugin_Field");
         }
         if (!$type)
         {
-            $this->session->setVar('seplugin_Field', 'title'); // force to default title search
+            $this->session->setVar("seplugin_Field", "title"); // force to default title search
         }
         if ((array_key_exists("seplugin_Label", $this->vars) && !trim($this->vars["seplugin_Label"]))
         || !$this->session->getVar("seplugin_Label"))
@@ -493,7 +493,7 @@ class SOUNDEXPLORERQUICKSEARCH
             {
                 $wc = str_replace('!WIKINDXFIELDWIKINDX!', $this->db->formatFields('usertagsTag'), $this->words);
                 $conditionArray[] = $wc;
-                $this->execCond[] = ['usertagsUserId' => $this->session->getVar('setup_UserId')];
+                $this->execCond[] = ['usertagsUserId' => $this->session->getVar("setup_UserId")];
                 $this->execJoin['resource_user_tags']['intField'] = 'resourceusertagsResourceId';
                 $this->execJoin['resource_user_tags']['extField'] = $this->joinResourceId;
                 $this->execJoin['user_tags']['intField'] = 'usertagsId';
@@ -581,7 +581,7 @@ class SOUNDEXPLORERQUICKSEARCH
      */
     private function runSearch($label)
     {
-        if (!$this->session->getVar('list_AllIds'))
+        if (!$this->session->getVar("list_AllIds"))
         {
             return FALSE;
         }
@@ -598,7 +598,7 @@ class SOUNDEXPLORERQUICKSEARCH
             return FALSE;
         }
         $this->fieldSql();
-        $this->db->formatConditionsOneField(unserialize(base64_decode($this->session->getVar('list_AllIds'))), 'resourceId');
+        $this->db->formatConditionsOneField(unserialize(base64_decode($this->session->getVar("list_AllIds"))), 'resourceId');
         $resultset = $this->db->select('resource', 'resourceId');
         $found = FALSE;
         while ($row = $this->db->fetchRow($resultset))
@@ -639,11 +639,11 @@ class SOUNDEXPLORERQUICKSEARCH
             }
         }
         // temp store plugin status (on/off) and plugin database status
-        $status = $this->session->getVar('seplugin_On');
-        $dbStatus = $this->session->getVar('seplugin_DatabaseCreated');
+        $status = $this->session->getVar("seplugin_On");
+        $dbStatus = $this->session->getVar("seplugin_DatabaseCreated");
         $this->session->clearArray("seplugin");
         $this->session->writeArray($temp, 'seplugin');
-        $this->session->setVar('seplugin_On', $status);
-        $this->session->setVar('seplugin_DatabaseCreated', $dbStatus);
+        $this->session->setVar("seplugin_On", $status);
+        $this->session->setVar("seplugin_DatabaseCreated", $dbStatus);
     }
 }

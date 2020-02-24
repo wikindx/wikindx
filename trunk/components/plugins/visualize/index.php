@@ -247,7 +247,7 @@ class visualize_MODULE
         $pString .= HTML\trStart();
         reset($yAxisTypes);
         $firstKey = key($yAxisTypes);
-        $selected = $this->session->getVar('visualize_YAxis') ? $this->session->getVar('visualize_YAxis') : $firstKey;
+        $selected = $this->session->getVar("visualize_YAxis") ? $this->session->getVar("visualize_YAxis") : $firstKey;
         $pString .= HTML\td(FORM\selectedBoxValue(
             $this->pluginmessages->text("yAxis"),
             "yAxis",
@@ -259,7 +259,7 @@ class visualize_MODULE
         ));
         reset($xAxisTypes);
         $firstKey = key($xAxisTypes);
-        $selected = $this->session->getVar('visualize_XAxis') ? $this->session->getVar('visualize_XAxis') : $firstKey;
+        $selected = $this->session->getVar("visualize_XAxis") ? $this->session->getVar("visualize_XAxis") : $firstKey;
         $pString .= HTML\td(FORM\selectedBoxValue(
             $this->pluginmessages->text("xAxis"),
             "xAxis",
@@ -267,7 +267,7 @@ class visualize_MODULE
             $selected,
             6
         ));
-        $selected = $this->session->getVar('visualize_MaxXAxis') ? $this->session->getVar('visualize_MaxXAxis') : -1;
+        $selected = $this->session->getVar("visualize_MaxXAxis") ? $this->session->getVar("visualize_MaxXAxis") : -1;
         $hint = \HTML\aBrowse('green', '', $this->coremessages->text("hint", "hint"), '#', "", $this->pluginmessages->text("maxXAxisLimit"));
         $pString .= HTML\td(FORM\textInput($this->pluginmessages->text("maxXAxis"), "maxXAxis", $selected, 3, 3) . BR . \HTML\span($hint, 'hint'));
         $pString .= HTML\td($this->choosePlot());
@@ -293,7 +293,7 @@ class visualize_MODULE
         ];
         reset($plots);
         $firstKey = key($plots);
-        $selected = $this->session->getVar('visualize_Plot') ? $this->session->getVar('visualize_Plot') : $firstKey;
+        $selected = $this->session->getVar("visualize_Plot") ? $this->session->getVar("visualize_Plot") : $firstKey;
 
         return HTML\td(FORM\selectedBoxValue(
             $this->pluginmessages->text("plotType"),
@@ -645,7 +645,7 @@ class visualize_MODULE
     {
         if (array_key_exists('yAxis', $this->vars) && $this->vars['yAxis'])
         {
-            $this->session->setVar('visualize_YAxis', $this->vars['yAxis']);
+            $this->session->setVar("visualize_YAxis", $this->vars['yAxis']);
         }
         else
         {
@@ -653,7 +653,7 @@ class visualize_MODULE
         }
         if (array_key_exists('xAxis', $this->vars) && $this->vars['xAxis'])
         {
-            $this->session->setVar('visualize_XAxis', $this->vars['xAxis']);
+            $this->session->setVar("visualize_XAxis", $this->vars['xAxis']);
         }
         else
         {
@@ -661,7 +661,7 @@ class visualize_MODULE
         }
         if (array_key_exists('plot', $this->vars) && $this->vars['plot'])
         {
-            $this->session->setVar('visualize_Plot', $this->vars['plot']);
+            $this->session->setVar("visualize_Plot", $this->vars['plot']);
         }
         else
         {
@@ -673,7 +673,7 @@ class visualize_MODULE
             { // need to check either '-1' or a positive integer
                 return FALSE;
             }
-            $this->session->setVar('visualize_MaxXAxis', $this->vars['maxXAxis']);
+            $this->session->setVar("visualize_MaxXAxis", $this->vars['maxXAxis']);
         }
         else
         {

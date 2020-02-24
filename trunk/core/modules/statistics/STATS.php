@@ -256,7 +256,7 @@ class STATS
         if (!array_key_exists('resourceId', $this->vars) || !array_key_exists('maturityIndex', $this->vars) ||
         !is_numeric($this->vars['maturityIndex']))
         {
-            $resource->init($this->session->getVar('sql_LastSolo'));
+            $resource->init($this->session->getVar("sql_LastSolo"));
             GLOBALS::addTplVar('content', $this->errors->text("inputError", "invalid"));
 
             return;
@@ -275,7 +275,7 @@ class STATS
             'resource_misc',
             $this->db->formatFields('resourcemiscMaturityIndex') . "=" . $this->db->tidyInput($mIndex)
         );
-        $resource->init($this->session->getVar('sql_LastSolo'));
+        $resource->init($this->session->getVar("sql_LastSolo"));
         GLOBALS::addTplVar('content', $this->success->text("maturityIndex"));
     }
     /**

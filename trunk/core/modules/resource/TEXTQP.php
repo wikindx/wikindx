@@ -58,7 +58,7 @@ class TEXTQP
         $chapter = 'Chapter';
         $typeText = 'Text';
         $typeComment = 'Comment';
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         $hidden = \FORM\hidden("resourceId", $this->vars['resourceId']);
         $page_start = $page_end = $db_paragraph = $db_section = $db_chapter = $text = $comment = FALSE;
         $private = 'Y';
@@ -341,7 +341,7 @@ class TEXTQP
         $typeText = 'Text';
         $typeComment = 'Comment';
         $summaryType = $type == 'quote' ? 'resourcesummaryQuotes' : 'resourcesummaryParaphrases';
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         // insert
         if (!array_key_exists('resourcemetadataId', $this->vars))
         {

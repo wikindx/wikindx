@@ -94,7 +94,7 @@ class UPDATEDATABASE
             FACTORY_LOADCONFIG::getInstance()->loadDBConfig(); // need some values from here in subsequent stage
             $this->session->setVar("setup_Superadmin", TRUE); // required for gatekeep function in CONFIG.php
         }
-        if (array_key_exists('action', $this->vars) && $this->session->getVar('setup_Superadmin') &&
+        if (array_key_exists('action', $this->vars) && $this->session->getVar("setup_Superadmin") &&
             (($this->vars['action'] == 'continueExecution') || ($this->vars['action'] == 'upgradeDB')))
         {
             $confirm = TRUE;
@@ -975,7 +975,7 @@ class UPDATEDATABASE
     private function correctCreators()
     {
         $max_execution_time = ini_get("max_execution_time");
-        $stage5_8_correctCreators_resourcecreatorId = $this->session->getVar('stage5_8_correctCreators_resourcecreatorId', -1);
+        $stage5_8_correctCreators_resourcecreatorId = $this->session->getVar("stage5_8_correctCreators_resourcecreatorId", -1);
         $creatorIds = [];
         $updateArray = [];
         $count = 0;

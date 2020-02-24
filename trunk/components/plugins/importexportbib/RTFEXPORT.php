@@ -199,13 +199,13 @@ class RTFEXPORT
         {
             global $_SERVER;
             $link = WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'] . "?action=resource_RESOURCEVIEW_CORE&id=";
-            $this->session->setVar('exportRtf_link', TRUE);
+            $this->session->setVar("exportRtf_link", TRUE);
             $wikindxTitle = stripslashes(WIKINDX_TITLE);
         }
         else
         {
             $link = FALSE;
-            $this->session->delVar('exportRtf_link');
+            $this->session->delVar("exportRtf_link");
         }
         $resourceIds = $metadataIds = [];
         $mainArray = $refArray = $abstractArray = $notesArray = [];
@@ -598,7 +598,7 @@ var_dump($fullText);
      */
     private function setViewConditions()
     {
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         if ($this->input['metadata'])
         { // export only this users quote/paraphrase comments and musings
             $this->db->formatConditions(['resourcemetadataAddUserId' => $userId]);

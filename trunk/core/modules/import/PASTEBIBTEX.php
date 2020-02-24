@@ -58,13 +58,13 @@ class PASTEBIBTEX
     {
         if (!$message)
         {
-            $this->session->delVar('import_Paste');
+            $this->session->delVar("import_Paste");
         }
         include_once("core/modules/help/HELPMESSAGES.php");
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('pasteBibtex'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexImport"));
-        $this->session->delVar('importLock');
+        $this->session->delVar("importLock");
         $category = FACTORY_CATEGORY::getInstance();
         $categories = $category->grabAll();
         $pString = $message;
@@ -88,7 +88,7 @@ class PASTEBIBTEX
         $categoryTd = FALSE;
         if (count($categories) > 1)
         {
-            if ($sessionCategories = $this->session->getVar('import_Categories'))
+            if ($sessionCategories = $this->session->getVar("import_Categories"))
             {
                 $sCategories = UTF8::mb_explode(",", $sessionCategories);
                 $element = \FORM\selectedBoxValueMultiple($this->messages->text(
@@ -114,8 +114,8 @@ class PASTEBIBTEX
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $paste = $this->session->issetVar('import_Paste') ?
-            unserialize(base64_decode($this->session->getVar('import_Paste'))) : FALSE;
+        $paste = $this->session->issetVar("import_Paste") ?
+            unserialize(base64_decode($this->session->getVar("import_Paste"))) : FALSE;
         $pString .= \HTML\td(BR . "&nbsp;" . BR . \FORM\textareaInput(
             FALSE,
             "import_Paste",

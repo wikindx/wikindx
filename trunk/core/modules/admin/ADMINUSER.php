@@ -278,7 +278,7 @@ class ADMINUSER
         }
         $authUsers = $this->grabAuthUsers(TRUE);
         // don't allow this user to operate on self or superadmin (id == 1)
-        $this->selfId = $this->session->getVar('setup_UserId');
+        $this->selfId = $this->session->getVar("setup_UserId");
         if (array_key_exists($this->selfId, $authUsers))
         {
             unset($authUsers[$this->selfId]);
@@ -639,7 +639,7 @@ class ADMINUSER
     {
         $this->users = $this->user->grabAll(TRUE);
         // don't allow this user to operate on self or superadmin (id == 1)
-        $this->selfId = $this->session->getVar('setup_UserId');
+        $this->selfId = $this->session->getVar("setup_UserId");
         if (array_key_exists($this->selfId, $this->users))
         {
             unset($this->users[$this->selfId]);

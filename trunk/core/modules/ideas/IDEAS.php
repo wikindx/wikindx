@@ -46,7 +46,7 @@ class IDEAS
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('ideas'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "ideas"));
-        if ($this->session->getVar('setup_ReadOnly'))
+        if ($this->session->getVar("setup_ReadOnly"))
         {
             $this->badInput->close($this->errors->text("inputError", "invalid"));
         }
@@ -76,7 +76,7 @@ class IDEAS
      */
     public function ideaList($keywordList = FALSE)
     {
-        $this->session->delVar('search_Highlight');
+        $this->session->delVar("search_Highlight");
         $icons = FACTORY_LOADICONS::getInstance();
         $cite = FACTORY_CITE::getInstance();
         $userObj = FACTORY_USER::getInstance();
@@ -84,15 +84,15 @@ class IDEAS
         $multiUser = WIKINDX_MULTIUSER;
         $ideaList = $ideaListInfo = [];
         $index = 0;
-        $backupPagingTotal = $this->session->getVar('setup_PagingTotal'); // Required for normal list operations 'last multi'
-        if ($total = $this->session->getVar('setup_IdeaPagingTotal'))
+        $backupPagingTotal = $this->session->getVar("setup_PagingTotal"); // Required for normal list operations 'last multi'
+        if ($total = $this->session->getVar("setup_IdeaPagingTotal"))
         {
-            $this->session->setVar('setup_PagingTotal', $total);
+            $this->session->setVar("setup_PagingTotal", $total);
         }
         if ((!array_key_exists('PagingStart', $this->vars) || !$this->vars['PagingStart']))
         {
-            $this->session->delVar('mywikindx_PagingStart'); // might be set from last multi resource list display
-            $this->session->delVar('list_IdeaAllIds');
+            $this->session->delVar("mywikindx_PagingStart"); // might be set from last multi resource list display
+            $this->session->delVar("list_IdeaAllIds";
         }
         if (array_key_exists('order', $this->vars))
         {
@@ -136,7 +136,7 @@ class IDEAS
             $queryString = "index.php?action=ideas_IDEAS_CORE" . "&method=" . 'ideaList';
         }
         $ids = $threadIds = [];
-        if (!$this->session->getVar('list_IdeaAllIds'))
+        if (!$this->session->getVar("list_IdeaAllIds"))
         {
             $resultSet = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataMetadataId']);
             while ($row = $this->db->fetchRow($resultSet))
@@ -155,9 +155,9 @@ class IDEAS
             {
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
-            $this->session->setVar('setup_PagingTotal', count($ids));
-            $this->session->setVar('setup_IdeaPagingTotal', $this->session->getVar('setup_PagingTotal'));
-            $this->session->setVar('list_IdeaAllIds', base64_encode(serialize($ids)));
+            $this->session->setVar("setup_PagingTotal", count($ids));
+            $this->session->setVar("setup_IdeaPagingTotal", $this->session->getVar("setup_PagingTotal"));
+            $this->session->setVar("list_IdeaAllIds", base64_encode(serialize($ids)));
             $this->db->formatConditionsOneField($ids, 'resourcemetadataId');
             $threadIds = array_unique($threadIds);
             if (!empty($threadIds))
@@ -167,11 +167,11 @@ class IDEAS
         }
         else
         {
-            $this->db->formatConditionsOneField(unserialize(base64_decode($this->session->getVar('list_IdeaAllIds'))), 'resourcemetadataId');
+            $this->db->formatConditionsOneField(unserialize(base64_decode($this->session->getVar("list_IdeaAllIds"))), 'resourcemetadataId');
         }
         $pagingObject->queryString = $queryString;
         $pagingObject->getPaging();
-        $this->session->setVar('setup_PagingTotal', $backupPagingTotal);
+        $this->session->setVar("setup_PagingTotal", $backupPagingTotal);
         // now get ideas
         $this->db->ascDesc = $this->session->getVar("list_IdeaAscDesc");
         if ($order == 'timestamp')
@@ -198,7 +198,7 @@ class IDEAS
                 }
                 GLOBALS::addTplVar('multiUser', TRUE);
             }
-            if ($row['resourcemetadataAddUserId'] == $this->session->getVar('setup_UserId'))
+            if ($row['resourcemetadataAddUserId'] == $this->session->getVar("setup_UserId"))
             {
                 $ideaList[$index]['links'] = $this->metadata->createLinks($row, TRUE, TRUE, TRUE);
             }
@@ -266,7 +266,7 @@ class IDEAS
     {
         if (!$ideaId && (!array_key_exists('resourcemetadataId', $this->vars) || !$this->vars['resourcemetadataId']))
         {
-            $this->session->setVar('sql_LastThread', FALSE);
+            $this->session->setVar("sql_LastThread", FALSE);;
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         if (!$ideaId)
@@ -283,11 +283,11 @@ class IDEAS
         $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
         if (!$this->db->numRows($resultset))
         {
-            $this->session->setVar('sql_LastThread', FALSE);
+            $this->session->setVar("sql_LastThread", FALSE);;
             $this->badInput->close($this->errors->text("inputError", "invalid"));
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "ideaThread"));
-        $this->session->setVar('sql_LastThread', $ideaId);
+        $this->session->setVar("sql_LastThread", $ideaId);
         $this->metadata->displayThread($ideaId);
     }
     /**
@@ -299,7 +299,7 @@ class IDEAS
         {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        if (!$this->session->getVar('setup_UserId'))
+        if (!$this->session->getVar("setup_UserId"))
         {
             $this->badInput->close($this->errors->text("inputError", "invalid"));
         }
@@ -316,11 +316,11 @@ class IDEAS
         { // editing
             // Check this user is allowed to edit the idea.
             $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
-            $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar('setup_UserId')]);
+            $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
             $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
             if (!$this->db->numRows($resultset))
             {
-                $this->session->setVar('sql_LastThread', FALSE);
+                $this->session->setVar("sql_LastThread", FALSE);;
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
             $hidden .= \FORM\hidden("resourcemetadataMetadataId", $this->vars['resourcemetadataMetadataId']);
@@ -348,7 +348,7 @@ class IDEAS
         $this->otherIdeas($metadataId, TRUE);
         $this->otherIdeas($metadataId, FALSE, 1);
         $idea['otherIdeas'] = $this->ideas;
-        $this->session->delVar('ideaLock');
+        $this->session->delVar("ideaLock");
         GLOBALS::addTplVar('ideaTemplate', TRUE);
         GLOBALS::addTplVar('idea', $idea);
     }
@@ -358,7 +358,7 @@ class IDEAS
     public function ideaEdit()
     {
         $text = $metadataId = $owner = FALSE;
-        $thisUserId = $this->session->getVar('setup_UserId');
+        $thisUserId = $this->session->getVar("setup_UserId");
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
         $pString = $tinymce->loadMetadataTextarea(['Text']);
         $pString .= \FORM\formHeader('ideas_IDEAS_CORE');
@@ -368,12 +368,12 @@ class IDEAS
         if (array_key_exists('resourcemetadataId', $this->vars))
         { // editing
             // Check this user is allowed to edit the idea.
-            $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar('setup_UserId')]);
+            $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
             $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
             $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
             if (!$this->db->numRows($resultset))
             {
-                $this->session->setVar('sql_LastThread', FALSE);
+                $this->session->setVar("sql_LastThread", FALSE);;
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
             $hidden .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
@@ -438,7 +438,7 @@ class IDEAS
             $this->otherIdeas($metadataId);
             $idea['otherIdeas'] = $this->ideas;
         }
-        $this->session->delVar('ideaLock');
+        $this->session->delVar("ideaLock");
         GLOBALS::addTplVar('ideaTemplate', TRUE);
         GLOBALS::addTplVar('idea', $idea);
     }
@@ -449,11 +449,11 @@ class IDEAS
      */
     public function edit()
     {
-        if ($this->session->getVar('ideaLock'))
+        if ($this->session->getVar("ideaLock"))
         {
             $this->error($this->errors->text("done", "idea"));
         }
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         // insert
         if (!array_key_exists('resourcemetadataId', $this->vars))
         {
@@ -494,12 +494,12 @@ class IDEAS
         else
         {
             // Check this user is allowed to edit the idea.
-            $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar('setup_UserId')]);
+            $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
             $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
             $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
             if (!$this->db->numRows($resultset))
             {
-                $this->session->setVar('sql_LastThread', FALSE);
+                $this->session->setVar("sql_LastThread", FALSE);;
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
             $mainIdea = FALSE;
@@ -563,7 +563,7 @@ class IDEAS
             }
         }
         // lock reload
-        $this->session->setVar('ideaLock', TRUE);
+        $this->session->setVar("ideaLock", TRUE);;
         // send back to idea thread with success message
         $this->threadView($ideaId, $message);
         FACTORY_CLOSE::getInstance();
@@ -575,11 +575,11 @@ class IDEAS
      */
     public function subIdeaAdd()
     {
-        if ($this->session->getVar('ideaLock'))
+        if ($this->session->getVar("ideaLock"))
         {
             $this->error($this->errors->text("done", "idea"));
         }
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
         $row = $this->db->selectFirstRow('resource_metadata', 'resourcemetadataPrivate');
         // insert
@@ -613,12 +613,12 @@ class IDEAS
         else
         {
             // Check this user is allowed to edit the idea.
-            $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar('setup_UserId')]);
+            $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
             $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
             $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
             if (!$this->db->numRows($resultset))
             {
-                $this->session->setVar('sql_LastThread', FALSE);
+                $this->session->setVar("sql_LastThread", FALSE);;
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
             // if Text is empty, delete the row
@@ -650,7 +650,7 @@ class IDEAS
             }
         }
         // lock reload
-        $this->session->setVar('ideaLock', TRUE);
+        $this->session->setVar("ideaLock", TRUE);;
         // send back to idea thread with success message
         $this->threadView($returnId, $message);
         FACTORY_CLOSE::getInstance();
@@ -665,7 +665,7 @@ class IDEAS
             $this->error($this->errors->text("inputError", "missing"));
         }
         // Check this user is allowed to delete the idea.
-        $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
         $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
         if (!$this->db->numRows($resultset))
@@ -694,7 +694,7 @@ class IDEAS
             $this->error($this->errors->text("inputError", "missing"));
         }
         // Check this user is allowed to delete the idea.
-        $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
         $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
         if (!$this->db->numRows($resultset))
@@ -719,7 +719,7 @@ class IDEAS
             $this->error($this->errors->text("inputError", "missing"));
         }
         // Check this user is allowed to delete the idea.
-        $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
         $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
         if (!$this->db->numRows($resultset))
@@ -754,7 +754,7 @@ class IDEAS
         }
         else
         {
-            $this->session->setVar('sql_LastThread', FALSE);
+            $this->session->setVar("sql_LastThread", FALSE);;
             $this->badInput->close($this->errors->text("inputError", "invalid"));
         }
         FACTORY_CLOSE::getInstance();

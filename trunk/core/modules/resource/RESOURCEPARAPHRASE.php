@@ -69,7 +69,7 @@ class RESOURCEPARAPHRASE
         $metadata['formfoot'] = \FORM\formEnd();
         GLOBALS::setTplVar('metadata', $metadata);
         unset($metadata);
-        $this->session->delVar('resourceParaphraseLock');
+        $this->session->delVar("resourceParaphraseLock");
     }
     /**
      * write to the database
@@ -78,7 +78,7 @@ class RESOURCEPARAPHRASE
      */
     public function edit()
     {
-        if ($this->session->getVar('resourceParaphraseLock'))
+        if ($this->session->getVar("resourceParaphraseLock"))
         {
             $this->badInput->close($this->errors->text("done", "paraphrase"));
         }
@@ -102,7 +102,7 @@ class RESOURCEPARAPHRASE
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // lock reload
-        $this->session->setVar('resourceParaphraseLock', TRUE);
+        $this->session->setVar("resourceParaphraseLock", TRUE);;
         // send back to view this resource with success message
         $this->navigate->resource($this->vars['resourceId'], $message);
     }

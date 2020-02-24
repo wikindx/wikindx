@@ -118,7 +118,7 @@ class ATTACHMENTS
      */
     private function editInit()
     {
-        $this->session->delVar('attachLock');
+        $this->session->delVar("attachLock");
         $fields = $this->attachment->listFiles($this->resourceId);
         if (!empty($fields))
         { // attachments exist for this resource
@@ -137,7 +137,7 @@ class ATTACHMENTS
      */
     private function add()
     {
-        if ($this->session->getVar('attachLock'))
+        if ($this->session->getVar("attachLock"))
         {
             $this->badInput->close($this->errors->text("done", "attachAdd"));
         }
@@ -150,7 +150,7 @@ class ATTACHMENTS
             return;
         }
         // Lock re-uploading
-        $this->session->setVar('attachLock', TRUE);
+        $this->session->setVar("attachLock", TRUE);
         // send back to view this resource with success message
         $navigate->resource($this->resourceId, $this->success->text("attachAdd"));
     }
@@ -174,7 +174,7 @@ class ATTACHMENTS
      */
     private function addMultipleFiles()
     {
-        if ($this->session->getVar('attachLock'))
+        if ($this->session->getVar("attachLock"))
         {
             $this->badInput->close($this->errors->text("done", "attachAdd"));
         }
@@ -187,7 +187,7 @@ class ATTACHMENTS
             return;
         }
         // Lock re-uploading
-        $this->session->setVar('attachLock', TRUE);
+        $this->session->setVar("attachLock", TRUE);
         // send back to view this resource with success message
         $navigate->resource($this->resourceId, $this->success->text("attachAdd"));
     }
@@ -262,7 +262,7 @@ class ATTACHMENTS
         // Store any new file
         if (array_key_exists('file', $_FILES) && $_FILES['file']['tmp_name'])
         {
-            if ($this->session->getVar('attachLock'))
+            if ($this->session->getVar("attachLock"))
             {
                 $message = $this->errors->text("done", "attachAdd");
             }
@@ -273,7 +273,7 @@ class ATTACHMENTS
                 return;
             }
             // Lock re-uploading
-            $this->session->setVar('attachLock', TRUE);
+            $this->session->setVar("attachLock", TRUE);
         }
         if (isset($deletes))
         {
@@ -536,7 +536,7 @@ class ATTACHMENTS
             $tinyEditors[] = $hash;
         }
         $maxSize = FILE\fileMaxSize();
-        $this->session->setVar('attachMaxSize', $maxSize);
+        $this->session->setVar("attachMaxSize", $maxSize);
         // Form elements for adding another attachment
         $pString = \HTML\tableStart('generalTable left');
         $pString .= \HTML\trStart();
@@ -689,7 +689,7 @@ class ATTACHMENTS
     {
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
         $maxSize = FILE\fileMaxSize();
-        $this->session->setVar('attachMaxSize', $maxSize);
+        $this->session->setVar("attachMaxSize", $maxSize);
         // Three ways to do this:
         // Quick and dirty multiple upload
         GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/modules/attachments/multipleUpload.js"></script>');
@@ -751,7 +751,7 @@ class ATTACHMENTS
      */
     private function embargoForm($hash = FALSE, $multiple = FALSE)
     {
-        if (!$this->session->getVar('setup_Superadmin'))
+        if (!$this->session->getVar("setup_Superadmin"))
         {
             return '&nbsp;';
         }

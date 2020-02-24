@@ -62,7 +62,7 @@ class PUBMED
      */
     public function displayImport($message = FALSE)
     {
-        $this->session->delVar('importLock');
+        $this->session->delVar("importLock");
 
         $pString = $message ? $message : FALSE;
         $pString .= FORM\formHeader("importexportbib_importPubMed");
@@ -139,7 +139,7 @@ class PUBMED
         $pString .= HTML\trStart();
         // Load tags
         $tags = $this->tag->grabAll();
-        $tagInput = FORM\textInput($this->coremessages->text("import", "tag"), "import_Tag", $this->session->getVar('import_Tag'), 30, 255);
+        $tagInput = FORM\textInput($this->coremessages->text("import", "tag"), "import_Tag", $this->session->getVar("import_Tag"), 30, 255);
         if ($tags)
         {
             // add 0 => IGNORE to tags array
@@ -149,8 +149,8 @@ class PUBMED
                 $temp[$key] = $value;
             }
             $tags = $temp;
-            $sessionTag = $this->session->issetVar('import_TagId') ?
-                $this->session->getVar('import_TagId') : FALSE;
+            $sessionTag = $this->session->issetVar("import_TagId") ?
+                $this->session->getVar("import_TagId") : FALSE;
             if ($sessionTag)
             {
                 $element = FORM\selectedBoxValue(FALSE, 'import_TagId', $tags, 5);
@@ -168,7 +168,7 @@ class PUBMED
         $categoryTd = FALSE;
         if (count($categories) > 1)
         {
-            if ($sessionCategories = $this->session->getVar('import_Categories'))
+            if ($sessionCategories = $this->session->getVar("import_Categories"))
             {
                 $sCategories = UTF8::mb_explode(",", $sessionCategories);
                 $element = FORM\selectedBoxValueMultiple($this->coremessages->text(
@@ -195,12 +195,12 @@ class PUBMED
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
         $pString .= HTML\tableStart('generalTable borderStyleSolid');
-        $checked = $this->session->issetVar('import_ImportDuplicates') ? TRUE : FALSE;
+        $checked = $this->session->issetVar("import_ImportDuplicates") ? TRUE : FALSE;
         $pString .= HTML\td($this->coremessages->text("import", "importDuplicates") . "&nbsp;&nbsp;" .
             FORM\checkbox(FALSE, 'import_ImportDuplicates'), $checked);
         $td = $this->coremessages->text("import", "storeRawBibtex");
         $pString .= HTML\td($td . "&nbsp;&nbsp;" . $this->coremessages->text("import", "storeRawLabel") . "&nbsp;&nbsp;" .
-            FORM\checkbox(FALSE, 'import_Raw', $this->session->issetVar('import_Raw')));
+            FORM\checkbox(FALSE, 'import_Raw', $this->session->issetVar("import_Raw")));
         $pString .= HTML\td($this->importCommon->keywordSeparator());
         $pString .= HTML\td($this->importCommon->titleSubtitleSeparator());
         $pString .= HTML\trEnd();
@@ -367,7 +367,7 @@ class PUBMED
             $obj = new IMPORTBIBTEX();
             $obj->importFile = $bibFile;
             $obj->type = 'file';
-            $this->session->setVar('importLock', FALSE);
+            $this->session->setVar("importLock", FALSE);
             $pString = $obj->stage1(TRUE);
         }
         else
@@ -486,7 +486,7 @@ class PUBMED
         // a multiple select box so handle as array
         if (array_key_exists('import_Categories', $this->vars) && $this->vars['import_Categories'])
         {
-            if (!$this->session->setVar('import_Categories', trim(implode(',', $this->vars['import_Categories']))))
+            if (!$this->session->setVar("import_Categories", trim(implode(',', $this->vars['import_Categories']))))
             {
                 $this->badInput($this->errors->text("sessionError", "write"));
             }
@@ -494,37 +494,37 @@ class PUBMED
         // a multiple select box so handle as array
         if (array_key_exists('import_BibId', $this->vars) && $this->vars['import_BibId'])
         {
-            if (!$this->session->setVar('import_BibId', trim(implode(',', $this->vars['import_BibId']))))
+            if (!$this->session->setVar("import_BibId", trim(implode(',', $this->vars['import_BibId']))))
             {
                 $this->badInput($this->errors->text("sessionError", "write"));
             }
         }
         if (array_key_exists('import_Raw', $this->vars) && $this->vars['import_Raw'])
         {
-            if (!$this->session->setVar('import_Raw', 1))
+            if (!$this->session->setVar("import_Raw", 1))
             {
                 $this->badInput($this->errors->text("sessionError", "write"));
             }
         }
-        if (!$this->session->setVar('import_KeywordSeparator', $this->vars['import_KeywordSeparator']))
+        if (!$this->session->setVar("import_KeywordSeparator", $this->vars['import_KeywordSeparator']))
         {
             $this->badInput($this->errors->text("sessionError", "write"));
         }
-        if (!$this->session->setVar('import_TitleSubtitleSeparator', $this->vars['import_TitleSubtitleSeparator']))
+        if (!$this->session->setVar("import_TitleSubtitleSeparator", $this->vars['import_TitleSubtitleSeparator']))
         {
             $this->badInput($this->errors->text("sessionError", "write"));
         }
         if (array_key_exists('import_ImportDuplicates', $this->vars) && $this->vars['import_ImportDuplicates'])
         {
-            if (!$this->session->setVar('import_ImportDuplicates', 1))
+            if (!$this->session->setVar("import_ImportDuplicates", 1))
             {
                 $this->badInput($this->errors->text("sessionError", "write"));
             }
         }
         // Force to 1 => 'General' category
-        if (!$this->session->getVar('import_Categories'))
+        if (!$this->session->getVar("import_Categories"))
         {
-            if (!$this->session->setVar('import_Categories', 1))
+            if (!$this->session->setVar("import_Categories", 1))
             {
                 $this->badInput($this->errors->text("sessionError", "write"));
             }
@@ -533,14 +533,14 @@ class PUBMED
         {
             if (!$tagId = $this->tag->checkExists(trim($this->vars['import_Tag'])))
             {
-                if (!$this->session->setVar('import_Tag', trim($this->vars['import_Tag'])))
+                if (!$this->session->setVar("import_Tag", trim($this->vars['import_Tag'])))
                 {
                     $this->badInput($this->errors->text("sessionError", "write"));
                 }
             }
             else
             {
-                if (!$this->session->setVar('import_TagId', $tagId))
+                if (!$this->session->setVar("import_TagId", $tagId))
                 {
                     $this->badInput($this->errors->text("sessionError", "write"));
                 }
@@ -548,7 +548,7 @@ class PUBMED
         }
         elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId'])
         {
-            if (!$this->session->setVar('import_TagId', $this->vars['import_TagId']))
+            if (!$this->session->setVar("import_TagId", $this->vars['import_TagId']))
             {
                 $this->badInput($this->errors->text("sessionError", "write"));
             }

@@ -477,12 +477,12 @@ class CITEFORMAT
 {\\*\\cs1 Numbering Symbols;}\n
 {\\cs2 \\additive \\super \\sbasedon10 footnote reference;}" . LF;
             // WIKINDX-specific: RTF page numbering
-            if ($session->getVar('exportPaper_pageNumber'))
+            if ($session->getVar("exportPaper_pageNumber"))
             { // 0 == no. 1 == footer, 2 == header
                 $this->styleSheet .= "{\\cs17 \\additive \\sbasedon10 page number;}\n}\n" . LF;
                 $this->styleSheet .= $this->rtfPageNumbers($session);
             }
-            if ($session->getVar('exportPaper_sectionFtRestart'))
+            if ($session->getVar("exportPaper_sectionFtRestart"))
             {
                 $this->styleSheet .= "\\ftnrestart\\aftnnar\\fet1" . LF;
             }
@@ -1515,15 +1515,15 @@ class CITEFORMAT
             include_once("core/session/SESSION.php");
             $session = new SESSION();
             // WIKINDX-specific:  Indentation of appended bibliography
-            if ($session->getVar('exportPaper_indentBib') == 'indentAll')
+            if ($session->getVar("exportPaper_indentBib") == 'indentAll')
             {
                 $bf = "\\li720 ";
             }
-            elseif ($session->getVar('exportPaper_indentBib') == 'indentFL')
+            elseif ($session->getVar("exportPaper_indentBib") == 'indentFL')
             {
                 $bf = "\\fi720 ";
             }
-            elseif ($session->getVar('exportPaper_indentBib') == 'indentNotFL')
+            elseif ($session->getVar("exportPaper_indentBib") == 'indentNotFL')
             {
                 $bf = "\\li720\\fi-720 ";
             }
@@ -1532,11 +1532,11 @@ class CITEFORMAT
                 $bf = "\\li1\\fi1 ";
             }
             // WIKINDX-specific:  Line spacing of appended bibliography
-            if ($session->getVar('exportPaper_spaceBib') == 'oneHalfSpace')
+            if ($session->getVar("exportPaper_spaceBib") == 'oneHalfSpace')
             {
                 $bf = "\\pard\\plain $bf\\sl360\\slmult1 ";
             }
-            elseif ($session->getVar('exportPaper_spaceBib') == 'doubleSpace')
+            elseif ($session->getVar("exportPaper_spaceBib") == 'doubleSpace')
             {
                 $bf = "\\pard\\plain $bf\\sl480\\slmult1 ";
             }
@@ -1545,15 +1545,15 @@ class CITEFORMAT
                 $bf = "\\pard\\plain$bf";
             }
             // WIKINDX-specific:  Indentation of footnotes
-            if ($session->getVar('exportPaper_indentFt') == 'indentAll')
+            if ($session->getVar("exportPaper_indentFt") == 'indentAll')
             {
                 $ftf = "\\li720 ";
             }
-            elseif ($session->getVar('exportPaper_indentFt') == 'indentFL')
+            elseif ($session->getVar("exportPaper_indentFt") == 'indentFL')
             {
                 $ftf = "\\fi720 ";
             }
-            elseif ($session->getVar('exportPaper_indentFt') == 'indentNotFL')
+            elseif ($session->getVar("exportPaper_indentFt") == 'indentNotFL')
             {
                 $ftf = "\\li720\\fi-720 ";
             }
@@ -1562,11 +1562,11 @@ class CITEFORMAT
                 $ftf = "\\li1\\fi1 ";
             }
             // WIKINDX-specific:  Line spacing of footnotes
-            if ($session->getVar('exportPaper_spaceFt') == 'oneHalfSpace')
+            if ($session->getVar("exportPaper_spaceFt") == 'oneHalfSpace')
             {
                 $ftf = "\\pard\\plain $ftf\\sl360\\slmult1 ";
             }
-            elseif ($session->getVar('exportPaper_spaceFt') == 'doubleSpace')
+            elseif ($session->getVar("exportPaper_spaceFt") == 'doubleSpace')
             {
                 $ftf = "\\pard\\plain $ftf\\sl480\\slmult1 ";
             }
@@ -1659,7 +1659,7 @@ class CITEFORMAT
 {\\*\\cs1 Bullet Symbols;}\n
 {\\*\\cs1 Numbering Symbols;}" . LF;
         // WIKINDX-specific: RTF page numbering
-        if ($session->getVar('exportPaper_pageNumber'))
+        if ($session->getVar("exportPaper_pageNumber"))
         { // 0 == no. 1 == footer, 2 == header
             $styleSheet .= "{\\cs17 \\additive \\sbasedon10 page number;}" . LF;
         }
@@ -1704,7 +1704,7 @@ class CITEFORMAT
         /fet0 produces lowercase roman numerals
         /fet1 produces arabic numerals
         */
-        if ($session->getVar('exportPaper_sectionFtRestart'))
+        if ($session->getVar("exportPaper_sectionFtRestart"))
         {
             $ft = "\\ftnrestart";
         }
@@ -1748,9 +1748,9 @@ class CITEFORMAT
     public function rtfPageNumbers($session)
     {
         // WIKINDX-specific: Page numbering
-        if ($pn = $session->getVar('exportPaper_pageNumber'))
+        if ($pn = $session->getVar("exportPaper_pageNumber"))
         { // 0 == no, 1 == footer, 2 == header
-            $pna = $session->getVar('exportPaper_pageNumberAlign'); // 0 == centre, 1 == left, 2 == right
+            $pna = $session->getVar("exportPaper_pageNumberAlign"); // 0 == centre, 1 == left, 2 == right
             if ($pna == 1)
             {
                 $pna = "\\ql";

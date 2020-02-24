@@ -81,7 +81,7 @@ class IMPORT
      */
     public function checkDuplicates($noSort, $title, $subtitle, $type)
     {
-        if ($this->session->getVar('import_ImportDuplicates'))
+        if ($this->session->getVar("import_ImportDuplicates"))
         {
             return FALSE; // i.e. allow duplicates
         }
@@ -152,7 +152,7 @@ class IMPORT
             return [FALSE, FALSE, FALSE];
         }
         $noSort = $subtitle = FALSE;
-        $split = $this->session->getVar('import_TitleSubtitleSeparator');
+        $split = $this->session->getVar("import_TitleSubtitleSeparator");
         if ($split)
         { // split title and subtitle
             switch ($split)
@@ -226,8 +226,8 @@ class IMPORT
      */
     public function keywordSeparator()
     {
-        $sessVar = $this->session->issetVar('import_KeywordSeparator') ?
-            $this->session->getVar('import_KeywordSeparator') : FALSE;
+        $sessVar = $this->session->issetVar("import_KeywordSeparator") ?
+            $this->session->getVar("import_KeywordSeparator") : FALSE;
         $array = [
             $this->messages->text('misc', 'keywordImport1'),
             $this->messages->text('misc', 'keywordImport2'),
@@ -253,7 +253,7 @@ class IMPORT
                 4
             );
         }
-        $sessVar = $this->session->issetVar('import_KeywordIgnore') ? TRUE : FALSE;
+        $sessVar = $this->session->issetVar("import_KeywordIgnore") ? TRUE : FALSE;
 
         return $pString .= \HTML\p(\FORM\checkBox(
             $this->messages->text('misc', 'keywordIgnore'),
@@ -268,7 +268,7 @@ class IMPORT
      */
     public function titleSubtitleSeparator()
     {
-        $sessVar = $this->session->getVar('import_TitleSubtitleSeparator');
+        $sessVar = $this->session->getVar("import_TitleSubtitleSeparator");
         $array = [
             $this->messages->text('misc', 'titleSubtitleSeparator1'),
             $this->messages->text('misc', 'titleSubtitleSeparator2'),
@@ -306,7 +306,7 @@ class IMPORT
     public function bibliographySelect()
     {
         // Get this user's bibliographies
-        if ($this->session->getVar('mywikindx_Bibliographies'))
+        if ($this->session->getVar("mywikindx_Bibliographies"))
         {
             $bibsRaw = unserialize($this->session->getVar("mywikindx_Bibliographies"));
             foreach ($bibsRaw as $key => $value)
@@ -315,7 +315,7 @@ class IMPORT
             }
         }
         // Get this user's user group bibliographies
-        if ($this->session->getVar('mywikindx_Groupbibliographies'))
+        if ($this->session->getVar("mywikindx_Groupbibliographies"))
         {
             $bibsRaw = unserialize($this->session->getVar("mywikindx_Groupbibliographies"));
             foreach ($bibsRaw as $key => $value)
@@ -376,7 +376,7 @@ class IMPORT
     {
         $fields[] = 'resourcemiscId';
         $values[] = $this->resourceId;
-        if (($this->session->getVar('setup_Superadmin') != 1) && (WIKINDX_QUARANTINE))
+        if (($this->session->getVar("setup_Superadmin") != 1) && (WIKINDX_QUARANTINE))
         {
             $fields[] = 'resourcemiscQuarantine';
             $values[] = 'Y';
@@ -609,7 +609,7 @@ class IMPORT
      */
     public function writeKeywordTables($keywords)
     {
-        if ($this->session->getVar('import_KeywordIgnore'))
+        if ($this->session->getVar("import_KeywordIgnore"))
         {
             return;
         }
@@ -661,7 +661,7 @@ class IMPORT
         {
             $writeArray['resourcecustomLong'] = $string;
         }
-        $writeArray['resourcecustomAddUserIdCustom'] = $this->session->getVar('setup_UserId');
+        $writeArray['resourcecustomAddUserIdCustom'] = $this->session->getVar("setup_UserId");
         $writeArray['resourcecustomCustomId'] = $customId;
         $writeArray['resourcecustomResourceId'] = $this->resourceId;
         $this->db->insert('resource_custom', array_keys($writeArray), array_values($writeArray));
@@ -728,11 +728,11 @@ class IMPORT
      */
     public function writeTagTable()
     {
-        if ($tagId = $this->session->getVar('import_TagId'))
+        if ($tagId = $this->session->getVar("import_TagId"))
         {
             return $tagId;
         }
-        if (!$tag = $this->session->getVar('import_Tag'))
+        if (!$tag = $this->session->getVar("import_Tag"))
         {
             return FALSE;
         }

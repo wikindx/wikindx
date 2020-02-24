@@ -51,8 +51,8 @@ class FRONT
      */
     private function init()
     {
-        $this->session->delVar('search_Highlight');
-        $this->session->delVar('list_AllIds');
+        $this->session->delVar("search_Highlight");
+        $this->session->delVar("list_AllIds");
         
         $this->db->formatConditions(['configName' => 'configDescription_' . \LOCALES\determine_locale()]);
         $input = $this->db->fetchOne($this->db->select('config', 'configText'));

@@ -53,7 +53,7 @@ class URLS
      */
     private function editInit()
     {
-        $this->session->delVar('urlLock');
+        $this->session->delVar("urlLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "url", $this->messages->text('misc', 'edit')));
         $this->db->formatConditions(['resourcetextId' => $this->resourceId]);
         $recordset = $this->db->select('resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
@@ -71,13 +71,13 @@ class URLS
      */
     private function add()
     {
-        if ($this->session->getVar('urlLock'))
+        if ($this->session->getVar("urlLock"))
         {
             $this->badInput->close($this->errors->text("done", "urlAdd"));
         }
         $this->storeUrl();
         // Lock re-uploading
-        $this->session->setVar('urlLock', TRUE);
+        $this->session->setVar("urlLock", TRUE);
         // send back to view this resource with success message
         $navigate = FACTORY_NAVIGATE::getInstance();
         $navigate->resource($this->resourceId, $this->success->text("urlAdd"));
@@ -149,7 +149,7 @@ class URLS
         // set primary URL
         $this->setPrimaryUrl($primary);
         $this->storeUrl();
-        $this->session->setVar('urlLock', TRUE);
+        $this->session->setVar("urlLock", TRUE);
         if (isset($deletes))
         {
             $this->deleteConfirm($deletes, $message);

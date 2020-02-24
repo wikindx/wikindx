@@ -94,10 +94,10 @@ class LISTADDTO
         include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
         $catForm = new RESOURCECATEGORYEDIT();
 
-        if ($this->session->getVar('organize_CategoryHide'))
+        if ($this->session->getVar("organize_CategoryHide"))
         { // currently hidden so show
             $div = $catForm->displayCategory(TRUE);
-            $this->session->setVar('organize_CategoryHide', FALSE);
+            $this->session->setVar("organize_CategoryHide", FALSE);
         }
         else
         { // currently visible so hide
@@ -115,7 +115,7 @@ class LISTADDTO
                 \FORM\checkbox(FALSE, "displayCategory", FALSE, '', $js = ''), 'padding3px');
             $div .= \HTML\trEnd();
             $div .= \HTML\tableEnd();
-            $this->session->setVar('organize_CategoryHide', TRUE);
+            $this->session->setVar("organize_CategoryHide", TRUE);
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$div"]));
         FACTORY_CLOSERAW::getInstance();
@@ -128,10 +128,10 @@ class LISTADDTO
         include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
         $catForm = new RESOURCECATEGORYEDIT();
 
-        if ($this->session->getVar('organize_SubcategoryHide'))
+        if ($this->session->getVar("organize_SubcategoryHide"))
         { // currently hidden so show
             $div = $catForm->displaySubcategory(TRUE);
-            $this->session->setVar('organize_SubcategoryHide', FALSE);
+            $this->session->setVar("organize_SubcategoryHide", FALSE);
         }
         else
         { // currently visible so hide
@@ -149,7 +149,7 @@ class LISTADDTO
                 \FORM\checkbox(FALSE, "displaySubcategory", FALSE, '', $js = ''), 'padding3px');
             $div .= \HTML\trEnd();
             $div .= \HTML\tableEnd();
-            $this->session->setVar('organize_SubcategoryHide', TRUE);
+            $this->session->setVar("organize_SubcategoryHide", TRUE);
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$div"]));
         FACTORY_CLOSERAW::getInstance();
@@ -162,10 +162,10 @@ class LISTADDTO
         include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
         $catForm = new RESOURCECATEGORYEDIT();
 
-        if ($this->session->getVar('organize_LanguageHide'))
+        if ($this->session->getVar("organize_LanguageHide"))
         { // currently hidden so show
             $div = $catForm->displayLanguage(TRUE);
-            $this->session->setVar('organize_LanguageHide', FALSE);
+            $this->session->setVar("organize_LanguageHide", FALSE);
         }
         else
         { // currently visible so hide
@@ -183,7 +183,7 @@ class LISTADDTO
                 \FORM\checkbox(FALSE, "displayLanguage", FALSE, '', $js = ''));
             $div .= \HTML\trEnd();
             $div .= \HTML\tableEnd();
-            $this->session->setVar('organize_LanguageHide', TRUE);
+            $this->session->setVar("organize_LanguageHide", TRUE);
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$div"]));
         FACTORY_CLOSERAW::getInstance();
@@ -196,10 +196,10 @@ class LISTADDTO
         include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
         $catForm = new RESOURCECATEGORYEDIT();
 
-        if ($this->session->getVar('organize_KeywordHide'))
+        if ($this->session->getVar("organize_KeywordHide"))
         { // currently hidden so show
             $div = $catForm->displayKeyword(TRUE);
-            $this->session->setVar('organize_KeywordHide', FALSE);
+            $this->session->setVar("organize_KeywordHide", FALSE);
         }
         else
         { // currently visible so hide
@@ -217,7 +217,7 @@ class LISTADDTO
                 \FORM\checkbox(FALSE, "displayKeyword", FALSE, '', $js = ''), 'padding3px');
             $div .= \HTML\trEnd();
             $div .= \HTML\tableEnd();
-            $this->session->setVar('organize_KeywordHide', TRUE);
+            $this->session->setVar("organize_KeywordHide", TRUE);
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$div"]));
         FACTORY_CLOSERAW::getInstance();
@@ -230,10 +230,10 @@ class LISTADDTO
         include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
         $catForm = new RESOURCECATEGORYEDIT();
 
-        if ($this->session->getVar('organize_UsertagHide'))
+        if ($this->session->getVar("organize_UsertagHide"))
         { // currently hidden so show
             $div = $catForm->displayUserTags(TRUE);
-            $this->session->setVar('organize_UsertagHide', FALSE);
+            $this->session->setVar("organize_UsertagHide", FALSE);
         }
         else
         { // currently visible so hide
@@ -251,7 +251,7 @@ class LISTADDTO
                 \FORM\checkbox(FALSE, "displayUsertag", FALSE, '', $js = ''), 'padding3px');
             $div .= \HTML\trEnd();
             $div .= \HTML\tableEnd();
-            $this->session->setVar('organize_UsertagHide', TRUE);
+            $this->session->setVar("organize_UsertagHide", TRUE);
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$div"]));
         FACTORY_CLOSERAW::getInstance();
@@ -547,7 +547,7 @@ class LISTADDTO
                     $fields[] = 'usertagsTag';
                     $values[] = $usertagText;
                     $fields[] = 'usertagsUserId';
-                    $values[] = $this->session->getVar('setup_UserId');
+                    $values[] = $this->session->getVar("setup_UserId");
                     $this->db->insert('user_tags', $fields, $values);
                     $usertagIds[] = $this->db->lastAutoId();
                 }
@@ -650,7 +650,7 @@ class LISTADDTO
                 );
             }
         }
-        $this->session->setVar('mywikindx_Bibliography_add', $this->vars['bibId']);
+        $this->session->setVar("mywikindx_Bibliography_add", $this->vars['bibId']);
         $this->session->setVar("setup_Bibliographies", TRUE);
         $success = FACTORY_SUCCESS::getInstance();
         $this->navigate->listView($success->text("addBib"));
@@ -671,11 +671,11 @@ class LISTADDTO
         }
         if ($string == 'display')
         {
-            $ids = unserialize(base64_decode($this->session->getVar('list_NextPreviousIds')));
+            $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
         }
         elseif ($string == 'all')
         {
-            $ids = unserialize(base64_decode($this->session->getVar('list_AllIds')));
+            $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
         }
         else
         {
@@ -736,11 +736,11 @@ class LISTADDTO
         $ids = [];
         if ($string == 'display')
         {
-            $ids = unserialize(base64_decode($this->session->getVar('list_NextPreviousIds')));
+            $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
         }
         elseif ($string == 'all')
         {
-            $ids = unserialize(base64_decode($this->session->getVar('list_AllIds')));
+            $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
         }
         else
         {
@@ -801,9 +801,9 @@ class LISTADDTO
         {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-        if ($this->session->issetVar('basket_List'))
+        if ($this->session->issetVar("basket_List"))
         {
-            $basket = unserialize($this->session->getVar('basket_List'));
+            $basket = unserialize($this->session->getVar("basket_List"));
         }
         else
         {
@@ -811,17 +811,17 @@ class LISTADDTO
         }
         if ($string == 'display')
         {
-            $ids = unserialize(base64_decode($this->session->getVar('list_NextPreviousIds')));
+            $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
         }
         elseif ($string == 'all')
         {
-            $ids = unserialize(base64_decode($this->session->getVar('list_AllIds')));
+            $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
         }
         else
         {
             $ids = unserialize(base64_decode($string));
         }
-        //$this->session->delVar('basket_List');
+        //$this->session->delVar("basket_List");
         foreach ($ids as $resourceId)
         {
             if (array_search($resourceId, $basket) === FALSE)
@@ -831,7 +831,7 @@ class LISTADDTO
         }
         // Ensure array is unique
         array_unique($basket);
-        $this->session->setVar('basket_List', serialize($basket));
+        $this->session->setVar("basket_List", serialize($basket));
         $this->session->saveState('basket');
         $this->session->setVar("addToKeywordCategory", TRUE);
         $success = FACTORY_SUCCESS::getInstance();
@@ -848,9 +848,9 @@ class LISTADDTO
         {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-        if ($this->session->issetVar('basket_List'))
+        if ($this->session->issetVar("basket_List"))
         {
-            $basket = unserialize($this->session->getVar('basket_List'));
+            $basket = unserialize($this->session->getVar("basket_List"));
         }
         else
         {
@@ -858,11 +858,11 @@ class LISTADDTO
         }
         if ($string == 'display')
         {
-            $ids = unserialize(base64_decode($this->session->getVar('list_NextPreviousIds')));
+            $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
         }
         elseif ($string == 'all')
         {
-            $ids = unserialize(base64_decode($this->session->getVar('list_AllIds')));
+            $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
         }
         else
         {
@@ -877,11 +877,11 @@ class LISTADDTO
         }
         if (empty($basket))
         {
-            $this->session->delVar('basket_List');
+            $this->session->delVar("basket_List");
         }
         else
         {
-            $this->session->setVar('basket_List', serialize($basket));
+            $this->session->setVar("basket_List", serialize($basket));
         }
         $this->session->saveState('basket');
         $this->session->setVar("addToKeywordCategory", TRUE);
@@ -929,7 +929,7 @@ class LISTADDTO
     {
         $usingBib = $pString = FALSE;
         $bibs = [];
-        $useBib = $this->session->getVar('mywikindx_Bibliography_use');
+        $useBib = $this->session->getVar("mywikindx_Bibliography_use");
         if ($useBib)
         {
             $this->db->formatConditions(['userbibliographyId' => $useBib]);
@@ -996,11 +996,11 @@ class LISTADDTO
         }
         if ($this->vars['ids'] == 'display')
         {
-            $ids = unserialize(base64_decode($this->session->getVar('list_NextPreviousIds')));
+            $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
         }
         elseif ($this->vars['ids'] == 'all')
         {
-            $ids = unserialize(base64_decode($this->session->getVar('list_AllIds')));
+            $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
         }
         else
         {
@@ -1025,11 +1025,11 @@ class LISTADDTO
         }
         if (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'display'))
         {
-            $ids = unserialize(base64_decode($this->session->getVar('list_NextPreviousIds')));
+            $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
         }
         elseif (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'all'))
         {
-            $ids = unserialize(base64_decode($this->session->getVar('list_AllIds')));
+            $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
         }
         else
         {

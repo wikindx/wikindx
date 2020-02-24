@@ -108,7 +108,7 @@ class MENU
             $this->resourcesExist = TRUE;
         }
         // Admin may have turned off metadata subsystem. Default for $this->metadataExist is FALSE in the class constructor
-        if ($this->session->getVar('setup_Superadmin')
+        if ($this->session->getVar("setup_Superadmin")
             &&
             ($row['databaseSummaryTotalQuotes'] || $row['databaseSummaryTotalParaphrases'] || $row['databaseSummaryTotalMusings']))
         {
@@ -121,7 +121,7 @@ class MENU
                 }
             }
         }
-        elseif ($this->session->getVar('setup_Superadmin'))
+        elseif ($this->session->getVar("setup_Superadmin"))
         {
             if ($this->setIdeasCondition())
             {
@@ -133,7 +133,7 @@ class MENU
         }
         elseif ((!WIKINDX_METADATA_ALLOW))
         {
-            if ((WIKINDX_METADATA_USERONLY) && $this->session->getVar('setup_UserId'))
+            if ((WIKINDX_METADATA_USERONLY) && $this->session->getVar("setup_UserId"))
             {
                 if ($row['databaseSummaryTotalQuotes'] || $row['databaseSummaryTotalParaphrases'] || $row['databaseSummaryTotalMusings'])
                 {
@@ -182,13 +182,13 @@ class MENU
         $stateArray[] = $this->basketList = $this->session->getVar("basket_List");
         $stateArray[] = WIKINDX_IMPORT_BIB;
         $state = base64_encode(serialize($stateArray));
-        if (($state == $this->session->getVar('menu_state')) && ($menu = $this->session->getVar('menu_menu', FALSE) !== FALSE))
+        if (($state == $this->session->getVar("menu_state")) && ($menu = $this->session->getVar("menu_menu", FALSE) !== FALSE))
         {
             GLOBALS::setTplVar('menu', $menu);
         }
         else
         {
-            $this->session->setVar('menu_state', $state);
+            $this->session->setVar("menu_state", $state);
         }
     }
     /**
@@ -266,7 +266,7 @@ class MENU
             $this->smartyMenu->addMenuItem($menu, $item);
         }
         GLOBALS::setTplVar('menu', $menu);
-        $this->session->setVar('menu_menu', $menu);
+        $this->session->setVar("menu_menu", $menu);
         /** $this->menus is public and available to, for example, the admin to remove messages etc.
          */
         foreach (['wikindx', 'res', 'search', 'text', 'admin', 'plugin1', 'plugin2', 'plugin3'] as $menuItem)
@@ -361,7 +361,7 @@ class MENU
             'Wikindx' => 'index.php?action=noMenu&method=wikindx',
             $messages->text("menu", "home") => 'index.php',
         ];
-        if ($this->session->getVar('setup_News'))
+        if ($this->session->getVar("setup_News"))
         {
             $this->wikindx[$messages->text("menu", "news")] = 'index.php?action=news_NEWS_CORE&method=viewNews';
         }
@@ -575,7 +575,7 @@ class MENU
                 $messages->text("menu", "categoryTree") => 'index.php?action=browse_CATEGORYTREE_CORE',
             ];
             $userTagsObject = FACTORY_USERTAGS::getInstance();
-            $userTags = $userTagsObject->grabAll($this->session->getVar('mywikindx_Bibliography_use'));
+            $userTags = $userTagsObject->grabAll($this->session->getVar("mywikindx_Bibliography_use"));
             if (!empty($userTags))
             {
                 $this->search['browseSub'][$messages->text("menu", "browseUserTags")] = 'index.php?action=browse_BROWSEUSERTAGS_CORE';
@@ -1193,7 +1193,7 @@ class MENU
      */
     private function setIdeasCondition()
     {
-        if ($userId = $this->session->getVar('setup_UserId'))
+        if ($userId = $this->session->getVar("setup_UserId"))
         {
             $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
             $this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .

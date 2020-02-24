@@ -80,71 +80,71 @@ class INSERTCITATION
         }
         if (!array_key_exists('PagingStart', $this->vars))
         { // reset paging counter and clear session
-            $this->session->delVar('mywikindx_PagingStart');
-            $this->session->delVar('mywikindx_PagingStartAlpha');
+            $this->session->delVar("mywikindx_PagingStart");
+            $this->session->delVar("mywikindx_PagingStartAlpha");
         }
         $pString = $error ? $error : '';
         $pString .= \HTML\h($this->messages->text("heading", "addCitation"), FALSE, 3);
-        $word = $this->session->issetVar('setup_CiteWord') ? $this->session->getVar('setup_CiteWord') : FALSE;
+        $word = $this->session->issetVar("setup_CiteWord") ? $this->session->getVar("setup_CiteWord") : FALSE;
         if (!array_key_exists('method', $this->vars))
         {
             $pString .= $this->search->init(FALSE, FALSE, TRUE, $word);
         }
         elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
         {
-            $this->session->setVar('setup_BackupWord', $this->session->getVar('search_Word'));
+            $this->session->setVar("setup_BackupWord", $this->session->getVar("search_Word"));
             $this->input = $this->checkInput();
-            $this->session->setVar('list_BackupAllIds', $this->session->getVar('list_AllIds'));
-            $this->session->delVar('list_AllIds');
-            $this->session->setVar('sql_BackupListStmt', $this->session->getVar('sql_ListStmt'));
-            $this->session->delVar('sql_ListStmt');
-            $this->session->setVar('setup_BackupPagingTotal', $this->session->getVar('setup_PagingTotal'));
-            $this->session->delVar('setup_PagingTotal');
-            $this->session->setVar('list_BackupPagingAlphaLinks', $this->session->getVar('list_PagingAlphaLinks'));
-            $this->session->delVar('list_PagingAlphaLinks');
+            $this->session->setVar("list_BackupAllIds", $this->session->getVar("list_AllIds"));
+            $this->session->delVar("list_AllIds");
+            $this->session->setVar("sql_BackupListStmt", $this->session->getVar("sql_ListStmt"));
+            $this->session->delVar("sql_ListStmt");
+            $this->session->setVar("setup_BackupPagingTotal", $this->session->getVar("setup_PagingTotal"));
+            $this->session->delVar("setup_PagingTotal");
+            $this->session->setVar("list_BackupPagingAlphaLinks", $this->session->getVar("list_PagingAlphaLinks"));
+            $this->session->delVar("list_PagingAlphaLinks");
             $pString .= $this->search->init(FALSE, FALSE, TRUE);
             $pString .= \HTML\hr();
             $pString .= $this->process();
-            $this->session->setVar('sql_CiteListStmt', $this->session->getVar('sql_ListStmt')); // Ready for reprocessing
-            $this->session->setVar('setup_CitePagingTotal', $this->session->getVar('setup_PagingTotal')); // Ready for reprocessing
-            $this->session->setVar('setup_CiteWord', $this->session->getVar('search_Word')); // Ready for reprocessing
-            if ($this->session->getVar('list_BackupAllIds'))
+            $this->session->setVar("sql_CiteListStmt", $this->session->getVar("sql_ListStmt")); // Ready for reprocessing
+            $this->session->setVar("setup_CitePagingTotal", $this->session->getVar("setup_PagingTotal")); // Ready for reprocessing
+            $this->session->setVar("setup_CiteWord", $this->session->getVar("search_Word")); // Ready for reprocessing
+            if ($this->session->getVar("list_BackupAllIds"))
             {
-                $this->session->setVar('list_AllIds', $this->session->getVar('list_BackupAllIds'));
+                $this->session->setVar("list_AllIds", $this->session->getVar("list_BackupAllIds"));
             }
-            if ($this->session->getVar('sql_BackupListStmt'))
+            if ($this->session->getVar("sql_BackupListStmt"))
             {
-                $this->session->setVar('sql_ListStmt', $this->session->getVar('sql_BackupListStmt'));
+                $this->session->setVar("sql_ListStmt", $this->session->getVar("sql_BackupListStmt"));
             }
-            if ($this->session->getVar('setup_BackupPagingTotal'))
+            if ($this->session->getVar("setup_BackupPagingTotal"))
             {
-                $this->session->setVar('setup_PagingTotal', $this->session->getVar('setup_BackupPagingTotal'));
+                $this->session->setVar("setup_PagingTotal", $this->session->getVar("setup_BackupPagingTotal"));
             }
-            $this->session->setVar('search_Word', $this->session->getVar('setup_BackupWord'));
+            $this->session->setVar("search_Word", $this->session->getVar("setup_BackupWord"));
         }
         elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'reprocess'))
         {
             $this->reprocess = TRUE;
-            $this->session->setVar('setup_Word', $this->session->getVar('search_CiteWord'));
+            $this->session->setVar("setup_Word", $this->session->getVar("search_CiteWord"));
             $this->input = $this->session->getArray("search");
             $pString .= $this->search->init(FALSE, FALSE, TRUE);
             $pString .= \HTML\hr();
             $pString .= $this->process();
-            if ($this->session->getVar('list_BackupAllIds'))
+            if ($this->session->getVar("list_BackupAllIds"))
             {
-                $this->session->setVar('list_AllIds', $this->session->getVar('list_BackupAllIds'));
+                $this->session->setVar("list_AllIds", $this->session->getVar("list_BackupAllIds"));
             }
-            if ($this->session->getVar('sql_BackupListStmt'))
+            if ($this->session->getVar("sql_BackupListStmt"))
             {
-                $this->session->setVar('sql_ListStmt', $this->session->getVar('sql_BackupListStmt'));
+                $this->session->setVar("sql_ListStmt", $this->session->getVar("sql_BackupListStmt"));
             }
-            if ($this->session->getVar('setup_BackupPagingTotal'))
+            if ($this->session->getVar("setup_BackupPagingTotal"))
             {
-                $this->session->setVar('setup_PagingTotal', $this->session->getVar('setup_BackupPagingTotal'));
+                $this->session->setVar("setup_PagingTotal", $this->session->getVar("setup_BackupPagingTotal"));
             }
-            if ($this->session->getVar('setup_BackupWord'))
+            if ($this->session->getVar("setup_BackupWord"))
             {
-                $this->session->setVar('search_Word', $this->session->getVar('setup_BackupWord'));
+                $this->session->setVar("search_Word", $this->session->getVar("setup_BackupWord"));
             }
         }
         $this->session->saveState(['search', 'sql', 'list']);
@@ -201,7 +201,7 @@ class INSERTCITATION
                 $this->common->noResources('search');
 				return FALSE;
 			}
-			$sql = $this->stmt->listList($this->session->getVar('search_Order'), FALSE, $this->subQ);
+			$sql = $this->stmt->listList($this->session->getVar("search_Order"), FALSE, $this->subQ);
         }
         else
         {
@@ -255,8 +255,8 @@ class INSERTCITATION
      */
     private function quickQuery($queryString)
     {
-        $sql = $this->session->getVar('sql_CiteListStmt');
-        $this->session->setVar('setup_PagingTotal', $this->session->getVar('setup_CitePagingTotal'));
+        $sql = $this->session->getVar("sql_CiteListStmt");
+        $this->session->setVar("setup_PagingTotal", $this->session->getVar("setup_CitePagingTotal"));
         $this->pagingObject = FACTORY_PAGING::getInstance();
         $this->pagingObject->queryString = $queryString;
         $this->pagingObject->getPaging();
@@ -284,7 +284,7 @@ class INSERTCITATION
      */
     private function setSubQuery()
     {
-        $this->db->ascDesc = $this->session->getVar('search_AscDesc');
+        $this->db->ascDesc = $this->session->getVar("search_AscDesc");
         $this->stmt->quarantine(FALSE, 'rId');
         $this->stmt->useBib('rId');
 //        $this->stmt->conditions[] = $this->search->words;

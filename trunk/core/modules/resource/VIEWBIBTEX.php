@@ -121,19 +121,19 @@ class VIEWBIBTEX
         }
         if (!array_key_exists('resubmit', $this->vars))
         {
-            if ($this->session->getVar('export_MergeStored'))
+            if ($this->session->getVar("export_MergeStored"))
             {
                 $this->vars['MergeStored'] = TRUE;
             }
-            if ($this->session->getVar('export_UseOriginalCitation'))
+            if ($this->session->getVar("export_UseOriginalCitation"))
             {
                 $this->vars['UseOriginalCitation'] = TRUE;
             }
-            if ($this->session->getVar('export_ShortString'))
+            if ($this->session->getVar("export_ShortString"))
             {
                 $this->vars['ShortString'] = TRUE;
             }
-            if ($this->session->getVar('export_EncloseField'))
+            if ($this->session->getVar("export_EncloseField"))
             { // braces
                 $this->vars['EncloseField'] = 'B';
             }
@@ -141,7 +141,7 @@ class VIEWBIBTEX
             { // double quotes
                 $this->vars['EncloseField'] = 'Q';
             }
-            if ($this->session->getVar('export_CharacterSet'))
+            if ($this->session->getVar("export_CharacterSet"))
             { // Latin + TeX
                 $this->vars['CharacterSet'] = 'T';
             }
@@ -149,7 +149,7 @@ class VIEWBIBTEX
             { // UTF-8
                 $this->vars['CharacterSet'] = 'U';
             }
-            if ($this->session->getVar('export_KeywordSeparator'))
+            if ($this->session->getVar("export_KeywordSeparator"))
             { // ;
                 $this->vars['KeywordSeparator'] = ';';
             }
@@ -287,56 +287,56 @@ class VIEWBIBTEX
     {
         if (isset($this->vars['MergeStored']))
         {
-            $this->session->setVar('export_MergeStored', $this->vars['MergeStored']);
+            $this->session->setVar("export_MergeStored", $this->vars['MergeStored']);
         }
         else
         {
-            $this->session->delVar('export_MergeStored');
+            $this->session->delVar("export_MergeStored");
         }
         if (isset($this->vars['UseOriginalCitation']))
         {
-            $this->session->setVar('export_UseOriginalCitation', $this->vars['UseOriginalCitation']);
+            $this->session->setVar("export_UseOriginalCitation", $this->vars['UseOriginalCitation']);
         }
         else
         {
-            $this->session->delVar('export_UseOriginalCitation');
+            $this->session->delVar("export_UseOriginalCitation");
         }
         if (isset($this->vars['ShortString']))
         {
-            $this->session->setVar('export_ShortString', $this->vars['ShortString']);
+            $this->session->setVar("export_ShortString", $this->vars['ShortString']);
         }
         else
         {
-            $this->session->delVar('export_ShortString');
+            $this->session->delVar("export_ShortString");
         }
         if (array_key_exists('EncloseField', $this->vars) && $this->vars['EncloseField'] == 'Q')
         {
-            $this->session->setVar('export_EncloseField', FALSE);
+            $this->session->setVar("export_EncloseField", FALSE);
             $this->startField = "\"";
             $this->endField = "\"";
         }
         else
         {
-            $this->session->setVar('export_EncloseField', TRUE);
+            $this->session->setVar("export_EncloseField", TRUE);
             $this->startField = "{";
             $this->endField = "}";
         }
         if (array_key_exists('CharacterSet', $this->vars) && $this->vars['CharacterSet'] == 'U')
         {
-            $this->session->setVar('export_CharacterSet', FALSE);
+            $this->session->setVar("export_CharacterSet", FALSE);
         }
         else
         {
-            $this->session->setVar('export_CharacterSet', TRUE);
+            $this->session->setVar("export_CharacterSet", TRUE);
             $this->convertTex = TRUE;
         }
         if (array_key_exists('KeywordSeparator', $this->vars) && $this->vars['KeywordSeparator'] == ',')
         {
-            $this->session->setVar('export_KeywordSeparator', FALSE);
+            $this->session->setVar("export_KeywordSeparator", FALSE);
         }
         else
         {
-            $this->session->setVar('export_KeywordSeparator', TRUE);
+            $this->session->setVar("export_KeywordSeparator", TRUE);
             $this->keywordSeparator = ';';
         }
         $checkDuplicates = [];
@@ -1876,7 +1876,7 @@ class VIEWBIBTEX
         {
             $alias = "$alias.";
         }
-        if ($userId = $this->session->getVar('setup_UserId'))
+        if ($userId = $this->session->getVar("setup_UserId"))
         {
             $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
             $this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal

@@ -298,7 +298,7 @@ class REGISTER
         imagedestroy($handle);
         // write answer to session
         $session = FACTORY_SESSION::getInstance();
-        $session->setVar('captcha', $answer);
+        $session->setVar("captcha", $answer);
         // display the captcha
         $pString = \HTML\td(
             $this->messages->text('config', 'captcha1') . BR .
@@ -318,7 +318,7 @@ class REGISTER
     {
         $session = FACTORY_SESSION::getInstance();
         $user_answer = $this->vars['answer'];
-        $correct_answer = $session->getVar('captcha');
+        $correct_answer = $session->getVar("captcha");
         if ($user_answer == $correct_answer)
         {
             return TRUE;

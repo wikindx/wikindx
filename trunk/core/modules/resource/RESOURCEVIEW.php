@@ -99,7 +99,7 @@ class RESOURCEVIEW
         }
         if (!array_key_exists('id', $this->vars) || !$this->vars['id'])
         {
-            if ($querySession = $this->session->getVar('sql_ListStmt'))
+            if ($querySession = $this->session->getVar("sql_ListStmt"))
             { // Numeric paging (see SQLSTATEMENTS.php)
                 if (array_key_exists('np', $this->vars) && ($this->vars['np'] == 'forward'))
                 {
@@ -136,7 +136,7 @@ class RESOURCEVIEW
             }
         }
         $this->session->setVar("sql_LastSolo", $this->vars['id']);
-        $this->userId = $this->session->getVar('setup_UserId');
+        $this->userId = $this->session->getVar("setup_UserId");
         $this->common->setHighlightPatterns();
         $this->updateAccesses();
         $this->displayResource($message);
@@ -344,7 +344,7 @@ class RESOURCEVIEW
         $this->multiUser = WIKINDX_MULTIUSER;
         if ((WIKINDX_QUARANTINE) && ($row['resourcemiscQuarantine'] == 'Y'))
         {
-            if (!$this->session->getVar('setup_Superadmin') && ($this->session->getVar('setup_UserId') != $row['resourcemiscAddUserIdResource']))
+            if (!$this->session->getVar("setup_Superadmin") && ($this->session->getVar("setup_UserId") != $row['resourcemiscAddUserIdResource']))
             {
                 $this->badInput->close($this->errors->text("warning", "quarantine"));
             }
@@ -393,7 +393,7 @@ class RESOURCEVIEW
             }
             $viewIndex = $this->messages->text("viewResource", "viewIndex", $this->stats->accessRatio);
             $popularityIndex = $this->messages->text("viewResource", "popIndex", $this->stats->getPopularityIndex($this->vars['id']));
-            if ($this->session->getVar('setup_Superadmin'))
+            if ($this->session->getVar("setup_Superadmin"))
             {
                 $maturityIndex = \FORM\formHeader('statistics_STATS_CORE');
                 $maturityIndex .= \FORM\hidden("method", 'setMaturityIndex');
@@ -488,7 +488,7 @@ class RESOURCEVIEW
             $this->viewDetails($row)
         );
         $resourceSingle['info']['basket'] = $this->displayBasket($row);
-        if ((WIKINDX_QUARANTINE) && $this->session->getVar('setup_Superadmin') &&
+        if ((WIKINDX_QUARANTINE) && $this->session->getVar("setup_Superadmin") &&
             ($row['resourcemiscQuarantine'] == 'Y'))
         {
             $quarantine = \FORM\formHeader('admin_QUARANTINE_CORE');
@@ -498,7 +498,7 @@ class RESOURCEVIEW
             $quarantine .= \FORM\formEnd();
             $resourceSingle['info']['approveResource'] = $quarantine;
         }
-        elseif ((WIKINDX_QUARANTINE) && $this->session->getVar('setup_Superadmin'))
+        elseif ((WIKINDX_QUARANTINE) && $this->session->getVar("setup_Superadmin"))
         {
             $quarantine = \FORM\formHeader('admin_QUARANTINE_CORE');
             $quarantine .= \FORM\hidden("method", 'putInQuarantine');
@@ -563,10 +563,10 @@ class RESOURCEVIEW
         if ((((WIKINDX_METADATA_ALLOW) ||
                 ((!WIKINDX_METADATA_ALLOW) &&
                 (WIKINDX_METADATA_USERONLY) &&
-                $this->session->getVar('setup_UserId'))) &&
+                $this->session->getVar("setup_UserId"))) &&
             ($row['resourcemiscQuarantine'] == 'N'))
             ||
-            ($this->session->getVar('setup_Superadmin')))
+            ($this->session->getVar("setup_Superadmin")))
         {
             $return = $this->meta->viewQuotes($row);
             if (!empty($return))
@@ -614,7 +614,7 @@ class RESOURCEVIEW
                 GLOBALS::addTplVar('gsMetaTags', $gs);
             }
         }
-        $this->session->setVar('sql_LastSolo', $row['resourceId']);
+        $this->session->setVar("sql_LastSolo", $row['resourceId']);
         $this->session->saveState('sql');
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
@@ -838,9 +838,9 @@ class RESOURCEVIEW
         }
         if ($this->startNP === FALSE)
         {
-            if ($this->session->getVar('mywikindx_PagingStart'))
+            if ($this->session->getVar("mywikindx_PagingStart"))
             {
-                $start = $this->session->getVar('mywikindx_PagingStart');
+                $start = $this->session->getVar("mywikindx_PagingStart");
             }
             else
             {
@@ -851,7 +851,7 @@ class RESOURCEVIEW
         {
             $start = $this->startNP;
         }
-        if (($raw = $this->session->getVar('list_NextPreviousIds')) === FALSE)
+        if (($raw = $this->session->getVar("list_NextPreviousIds")) === FALSE)
         {
             return $array;
         }
@@ -865,7 +865,7 @@ class RESOURCEVIEW
         {
             return $array;
         }
-        $order = $this->session->getVar('sql_LastOrder');
+        $order = $this->session->getVar("sql_LastOrder");
         if ((GLOBALS::getUserVar('PagingStyle') == 'A') &&
             (($order == 'title') || ($order == 'creator') || ($order == 'attachments')))
         {
@@ -903,7 +903,7 @@ class RESOURCEVIEW
                 "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $allIds[$thisKey + 1])
             );
         }
-        elseif (($start + GLOBALS::getUserVar('Paging') < $this->session->getVar('setup_PagingTotal')) && !$alpha)
+        elseif (($start + GLOBALS::getUserVar('Paging') < $this->session->getVar("setup_PagingTotal")) && !$alpha)
         {
             $array['forward'] = \HTML\a(
                 $this->icons->getClass("next"),
@@ -915,7 +915,7 @@ class RESOURCEVIEW
         {
             $array['forward'] = FALSE;
         }
-        if ($this->session->getVar('setup_Superadmin'))
+        if ($this->session->getVar("setup_Superadmin"))
         {
             if (array_key_exists($thisKey + 1, $allIds))
             {
@@ -941,25 +941,25 @@ class RESOURCEVIEW
      */
     private function setPreviousNext($querySession, $returnId = FALSE, $reload = FALSE, $thisId = FALSE)
     {
-        $allIds = unserialize(base64_decode($this->session->getVar('list_NextPreviousIds')));
-        if ($this->session->getVar('mywikindx_PagingStart'))
+        $allIds = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
+        if ($this->session->getVar("mywikindx_PagingStart"))
         {
             if ($returnId == 'forward')
             {
-                $this->session->setVar('mywikindx_PagingStart', $this->session->getVar('mywikindx_PagingStart') +
+                $this->session->setVar("mywikindx_PagingStart", $this->session->getVar("mywikindx_PagingStart") +
                     GLOBALS::getUserVar('Paging'));
             }
             else
             {
-                $this->session->setVar('mywikindx_PagingStart', $this->session->getVar('mywikindx_PagingStart') -
+                $this->session->setVar("mywikindx_PagingStart", $this->session->getVar("mywikindx_PagingStart") -
                     GLOBALS::getUserVar('Paging'));
             }
         }
         else
         {
-            $this->session->setVar('mywikindx_PagingStart', count($allIds));
+            $this->session->setVar("mywikindx_PagingStart", count($allIds));
         }
-        $start = $this->session->getVar('mywikindx_PagingStart');
+        $start = $this->session->getVar("mywikindx_PagingStart");
         $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $start, TRUE); // "LIMIT $limitStart, $limit";
         $query = $querySession . $limit;
         $resultset = $this->db->query($query);
@@ -976,7 +976,7 @@ class RESOURCEVIEW
         }
         if (isset($totalIds))
         {
-            $this->session->setVar('list_NextPreviousIds', base64_encode(serialize($totalIds)));
+            $this->session->setVar("list_NextPreviousIds", base64_encode(serialize($totalIds)));
         }
         if (isset($totalIds) && ($returnId == 'forward'))
         { // moving forwards
@@ -998,7 +998,7 @@ class RESOURCEVIEW
      */
     private function createLinks($row)
     {
-        $write = $this->session->getVar('setup_Write');
+        $write = $this->session->getVar("setup_Write");
         $links = [];
         $edit = FALSE;
         if ($write && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))
@@ -1017,7 +1017,7 @@ class RESOURCEVIEW
             }
             $edit = $this->allowEdit = TRUE;
         }
-        if ($this->session->getVar('setup_Superadmin'))
+        if ($this->session->getVar("setup_Superadmin"))
         {
             $this->allowEdit = TRUE;
             if (!$edit)
@@ -1403,7 +1403,7 @@ class RESOURCEVIEW
     {
         // get user tags in this resource
         $this->db->formatConditions(['resourceusertagsResourceId' => $row['resourceId']]);
-        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->leftJoin('user_tags', 'usertagsId', 'resourceusertagsTagId');
         $resultset = $this->db->select('resource_user_tags', ['resourceusertagsTagId', 'usertagsTag']);
         if (!$this->db->numRows($resultset))
@@ -1662,9 +1662,9 @@ class RESOURCEVIEW
      */
     private function displayBasket($row)
     {
-        if ($this->session->issetVar('basket_List'))
+        if ($this->session->issetVar("basket_List"))
         {
-            $basket = unserialize($this->session->getVar('basket_List'));
+            $basket = unserialize($this->session->getVar("basket_List"));
             if (array_search($row['resourceId'], $basket) !== FALSE)
             {
                 return \HTML\a(
@@ -1748,7 +1748,7 @@ class RESOURCEVIEW
             return;
         }
         // Don't increment if this resource has already been viewed in this session.
-        $viewedIds = unserialize(base64_decode($this->session->getVar('viewedIds')));
+        $viewedIds = unserialize(base64_decode($this->session->getVar("viewedIds")));
         if (is_array($viewedIds) && (array_search($this->vars['id'], $viewedIds) !== FALSE))
         {
             return;
@@ -1764,7 +1764,7 @@ class RESOURCEVIEW
             $viewedIds = [];
         }
         $viewedIds[] = $this->vars['id'];
-        $this->session->setVar('viewedIds', base64_encode(serialize($viewedIds)));
+        $this->session->setVar("viewedIds", base64_encode(serialize($viewedIds)));
     }
     /**
      * Show random resource hyperlink
@@ -1788,7 +1788,7 @@ class RESOURCEVIEW
             htmlentities('index.php?action=resource_RESOURCEVIEW_CORE&method=random')
         );
         /*
-        if ($this->session->getVar('setup_Superadmin'))
+        if ($this->session->getVar("setup_Superadmin"))
         {
             if(array_key_exists($thisKey + 1, $allIds))
                 $this->nextDelete = $allIds[$thisKey + 1];

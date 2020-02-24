@@ -53,10 +53,10 @@ class CONFIGURE
     public function init($message = FALSE)
     {
         // Anything in the session takes precedence
-        if (($messageIn = $this->session->getVar('configmessage')) && ($itemIn = $this->session->getVar('configitem')))
+        if (($messageIn = $this->session->getVar("configmessage")) && ($itemIn = $this->session->getVar("configitem")))
         {
-            $this->session->delVar('configmessage');
-            $this->session->delVar('configitem');
+            $this->session->delVar("configmessage");
+            $this->session->delVar("configitem");
             $messageString = $messageIn;
             $item = $itemIn;
         }
@@ -156,7 +156,7 @@ class CONFIGURE
      */
     public function mailTransactionReport()
     {
-        $pString = $this->session->getVar('mailTransactionLog');
+        $pString = $this->session->getVar("mailTransactionLog");
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSENOMENU::getInstance();
     }
@@ -165,7 +165,7 @@ class CONFIGURE
      */
     public function ldapTransactionReport()
     {
-        $pString = $this->session->getVar('ldapTransactionLog');
+        $pString = $this->session->getVar("ldapTransactionLog");
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSENOMENU::getInstance();
     }
@@ -231,7 +231,7 @@ class CONFIGURE
                         $deactivateResourceTypes = [];
                         $value = base64_encode(serialize([]));
                     }
-                    $this->session->setVar('config_deactivateResourceTypes', $value);
+                    $this->session->setVar("config_deactivateResourceTypes", $value);
                 }
                 elseif ($this->configDbStructure->dbStructure[$field] == 'configBoolean')
                 {
@@ -275,7 +275,7 @@ class CONFIGURE
                     if (isset($oldNoSort) && $oldNoSort != $value)
                     {
                         $this->updateNoSort($oldNoSort);
-                		$this->session->setVar('config_noSort', $value);
+                		$this->session->setVar("config_noSort", $value);
                     }
                 }
                 elseif ($field == 'configSearchFilter')
@@ -292,7 +292,7 @@ class CONFIGURE
                             }
                         }
                         $value = base64_encode(serialize($array));
-                		$this->session->setVar('config_searchFilter', $value);
+                		$this->session->setVar("config_searchFilter", $value);
                     }
                 }
                 elseif ($field == 'configTimezone')
@@ -422,8 +422,8 @@ class CONFIGURE
         // need to use header() to ensure any change in appearance is immediately picked up.
         if ($headerRedirect)
         {
-            $this->session->setVar('configmessage', $this->success->text("config"));
-            $this->session->setVar('configitem', $this->vars['selectItem']);
+            $this->session->setVar("configmessage", $this->success->text("config"));
+            $this->session->setVar("configitem", $this->vars['selectItem']);
             header("Location: index.php?action=admin_CONFIGURE_CORE&method=init");
         }
         else
@@ -456,7 +456,7 @@ class CONFIGURE
             'debug' => $this->messages->text('config', 'debugging'),
         ];
         // Only for superadmin who is always userid = 1
-        if (!$this->session->issetVar('setup_UserId') || ($this->session->getVar('setup_UserId') == 1))
+        if (!$this->session->issetVar("setup_UserId") || ($this->session->getVar("setup_UserId") == 1))
         {
             $groups = ['super' => $this->messages->text('config', 'superAdmin')] + $groups;
         }
@@ -879,10 +879,10 @@ class CONFIGURE
         {
             $input = implode(', ', unserialize(base64_decode(WIKINDX_NO_SORT_DEFAULT))); // default at first install
         }
-        elseif ($this->session->getVar('config_noSort')) // After updating the field
+        elseif ($this->session->getVar("config_noSort")) // After updating the field
         {
-            $input = implode(', ', unserialize(base64_decode($this->session->getVar('config_noSort'))));
-            $this->session->delVar('config_noSort');
+            $input = implode(', ', unserialize(base64_decode($this->session->getVar("config_noSort"))));
+            $this->session->delVar("config_noSort");
         }
         else
         {
@@ -900,10 +900,10 @@ class CONFIGURE
         {
             $input = implode(', ', unserialize(base64_decode(WIKINDX_SEARCH_FILTER_DEFAULT))); // default at first install
         }
-        elseif ($this->session->getVar('config_searchFilter')) // After updating the field
+        elseif ($this->session->getVar("config_searchFilter")) // After updating the field
         {
-            $input = implode(', ', unserialize(base64_decode($this->session->getVar('config_searchFilter'))));
-            $this->session->delVar('config_searchFilter');
+            $input = implode(', ', unserialize(base64_decode($this->session->getVar("config_searchFilter"))));
+            $this->session->delVar("config_searchFilter");
         }
         else
         {
@@ -1264,7 +1264,7 @@ class CONFIGURE
             {
                 $this->testLdap();
                 $jScript = "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=ldapTransactionReport', 80)";
-                $colour = $this->session->getVar('ldapTransactionLogStatus') == 'success' ? 'green' : 'red';
+                $colour = $this->session->getVar("ldapTransactionLogStatus") == 'success' ? 'green' : 'red';
                 $mailMessage = \HTML\p(\HTML\aBrowse($colour, '', $this->messages->text("config", "ldapTransactionReport"), $jScript));
             }
         }
@@ -1374,7 +1374,7 @@ class CONFIGURE
             {
                 $this->testMail();
                 $jScript = "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=mailTransactionReport', 80)";
-                $colour = $this->session->getVar('mailTransactionLogStatus') == 'success' ? 'green' : 'red';
+                $colour = $this->session->getVar("mailTransactionLogStatus") == 'success' ? 'green' : 'red';
                 $mailMessage = \HTML\p(\HTML\aBrowse($colour, '', $this->messages->text("config", "mailTransactionReport"), $jScript));
             }
         }
@@ -1539,13 +1539,13 @@ class CONFIGURE
         $mail = new MAIL();
         if (!$mail->sendEmail($this->vars['configMailTest'], \HTML\stripHtml(WIKINDX_TITLE), $this->messages->text('config', 'mailTestSuccess'), TRUE))
         {
-            $this->session->setVar('mailTransactionLogStatus', 'failure');
+            $this->session->setVar("mailTransactionLogStatus", "failure");
         }
         else
         {
-            $this->session->setVar('mailTransactionLogStatus', 'success');
+            $this->session->setVar("mailTransactionLogStatus", "success");
         }
-        $this->session->setVar('mailTransactionLog', $mail->TransactionLog);
+        $this->session->setVar("mailTransactionLog", $mail->TransactionLog);
     }
     /** 
      * Test the ldap configuration
@@ -1560,7 +1560,7 @@ class CONFIGURE
             {
                 $error = \HTML\p(ldap_err2str(ldap_errno($ds)));
                 $this->session->setVar("ldapTransactionLog", $error);
-                $this->session->setVar('ldapTransactionLogStatus', 'failure');
+                $this->session->setVar("ldapTransactionLogStatus", "failure");
 
                 return FALSE;
             }
@@ -1574,7 +1574,7 @@ class CONFIGURE
                 ldap_get_option($ds, 0x32, $err);
                 $error .= \HTML\p($err);
                 $this->session->setVar("ldapTransactionLog", $error);
-                $this->session->setVar('ldapTransactionLogStatus', 'failure');
+                $this->session->setVar("ldapTransactionLogStatus", "failure");
 
                 return FALSE;
             }
@@ -1589,7 +1589,7 @@ class CONFIGURE
                 ldap_get_option($ds, 0x32, $err);
                 $error .= \HTML\p($err);
                 $this->session->setVar("ldapTransactionLog", $error);
-                $this->session->setVar('ldapTransactionLogStatus', 'failure');
+                $this->session->setVar("ldapTransactionLogStatus", "failure");
 
                 return FALSE;
             }
@@ -1610,14 +1610,14 @@ class CONFIGURE
             ldap_get_option($ds, 0x32, $err);
             $error .= \HTML\p($err);
             $this->session->setVar("ldapTransactionLog", $error);
-            $this->session->setVar('ldapTransactionLogStatus', 'failure');
+            $this->session->setVar("ldapTransactionLogStatus", "failure");
 
             return FALSE;
         }
         else
         { // success
-            $this->session->setVar('ldapTransactionLog', $this->messages->text('config', 'ldapTestSuccess'));
-            $this->session->setVar('ldapTransactionLogStatus', 'success');
+            $this->session->setVar("ldapTransactionLog", $this->messages->text('config', 'ldapTestSuccess'));
+            $this->session->setVar("ldapTransactionLogStatus", "success");
         }
     }
     /** 
@@ -1672,10 +1672,10 @@ class CONFIGURE
             $types[$type] = $this->messages->text("resourceType", $type);
         }
         asort($types);
-        if ($this->session->getVar('config_deactivateResourceTypes')) // After updating the field
+        if ($this->session->getVar("config_deactivateResourceTypes")) // After updating the field
         {
-            $array = unserialize(base64_decode($this->session->getVar('config_deactivateResourceTypes')));
-            $this->session->delVar('config_deactivateResourceTypes');
+            $array = unserialize(base64_decode($this->session->getVar("config_deactivateResourceTypes")));
+            $this->session->delVar("config_deactivateResourceTypes");
         }
         else
         {
@@ -2309,7 +2309,7 @@ class CONFIGURE
             }
         }
         // user id is stored in session if user has already logged on.
-        if ($userId = $this->session->getVar('setup_UserId'))
+        if ($userId = $this->session->getVar("setup_UserId"))
         {
             $this->db->formatConditions(['usersId' => $userId]);
             $recordset = $this->db->select('users', ['usersUsername', 'usersPassword',

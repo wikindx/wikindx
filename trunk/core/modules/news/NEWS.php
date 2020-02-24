@@ -79,7 +79,7 @@ class NEWS
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        $this->session->delVar('news_Done');
+        $this->session->delVar("news_Done");
         GLOBALS::addTplVar('content', $pString);
     }
     /**
@@ -114,7 +114,7 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsAdd"));
-        if ($this->session->getVar('news_Done'))
+        if ($this->session->getVar("news_Done"))
         {
             $this->badInput->close($this->errors->text("done", "news"), $this, 'init');
         }
@@ -132,10 +132,10 @@ class NEWS
             ['newsTitle', 'newsNews', 'newsTimestamp'],
             [$title, $news, $this->db->formatTimestamp()]
         );
-        $this->session->delVar('news_Title');
-        $this->session->delVar('news_Body');
-        $this->session->setVar('setup_News', TRUE);
-        $this->session->setVar('news_Done', TRUE);
+        $this->session->delVar("news_Title");
+        $this->session->delVar("news_Body");
+        $this->session->setVar("setup_News", TRUE);
+        $this->session->setVar("news_Done", TRUE);
         if (WIKINDX_EMAIL_NEWS)
         {
             include_once("core/modules/email/EMAIL.php");
@@ -182,7 +182,7 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsDelete"));
-        if ($this->session->getVar('news_Done'))
+        if ($this->session->getVar("news_Done"))
         {
             $this->badInput->close($this->errors->text("done", "news"), $this, 'init');
         }
@@ -203,9 +203,9 @@ class NEWS
         $news = $this->grabAll();
         if (empty($news))
         {
-            $this->session->delVar('setup_News');
+            $this->session->delVar("setup_News");
         }
-        $this->session->setVar('news_Done', TRUE);
+        $this->session->setVar("news_Done", TRUE);
 
         return $this->init($this->success->text("newsDelete"));
     }
@@ -261,7 +261,7 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsEdit"));
-        if ($this->session->getVar('news_Done'))
+        if ($this->session->getVar("news_Done"))
         {
             $this->badInput->close($this->errors->text("done", "news"), $this, 'init');
         }
@@ -283,7 +283,7 @@ class NEWS
         $updateArray['newsTimestamp'] = $this->db->formatTimestamp();
         $this->db->formatConditions(['newsId' => $editId]);
         $this->db->update('news', $updateArray);
-        $this->session->setVar('news_Done', TRUE);
+        $this->session->setVar("news_Done", TRUE);
         if (WIKINDX_EMAIL_NEWS)
         {
             include_once("core/modules/email/EMAIL.php");

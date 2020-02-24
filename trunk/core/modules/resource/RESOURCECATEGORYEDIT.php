@@ -72,7 +72,7 @@ class RESOURCECATEGORYEDIT
         $pString .= \FORM\formEnd();
         \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js');
         GLOBALS::addTplVar('content', $pString);
-        $this->session->delVar('resourceLock');
+        $this->session->delVar("resourceLock");
     }
     /**
      * Display categories etc. in a table.
@@ -110,7 +110,7 @@ class RESOURCECATEGORYEDIT
      */
     public function edit()
     {
-        if ($this->session->getVar('resourceLock'))
+        if ($this->session->getVar("resourceLock"))
         {
             $this->badInput->close($this->errors->text("done", "resource"));
         }
@@ -131,8 +131,8 @@ class RESOURCECATEGORYEDIT
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // Update edit user
         $this->db->formatConditions(['resourcemiscId' => $this->vars['id']]);
-        $this->db->update('resource_misc', ['resourcemiscEditUserIdResource' => $this->session->getVar('setup_UserId')]);
-        $this->session->setVar('resourceLock', TRUE);
+        $this->db->update('resource_misc', ['resourcemiscEditUserIdResource' => $this->session->getVar("setup_UserId")]);
+        $this->session->setVar("resourceLock", TRUE);
         $this->navigate($this->success->text("categoryKeywordEdit"));
     }
     /**
@@ -556,7 +556,7 @@ class RESOURCECATEGORYEDIT
             ), "small");
             $radios = \HTML\p($radios);
         }
-        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->leftJoin('user_tags', 'usertagsId', 'resourceusertagsTagId');
         $resultset = $this->db->select('resource_user_tags', 'resourceusertagsTagId');
         $tagIds = [];
@@ -774,7 +774,7 @@ class RESOURCECATEGORYEDIT
                     $fields[] = 'usertagsTag';
                     $values[] = $inputTag;
                     $fields[] = 'usertagsUserId';
-                    $values[] = $this->session->getVar('setup_UserId');
+                    $values[] = $this->session->getVar("setup_UserId");
                     $this->db->insert('user_tags', $fields, $values);
                     $tagIds[] = $this->db->lastAutoID();
                 }

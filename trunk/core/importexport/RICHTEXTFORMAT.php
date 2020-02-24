@@ -924,11 +924,11 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
     private function init()
     {
         // Line spacing of main paper body
-        if ($this->session->getVar('wp_ExportPaperSpace') == 'oneHalfSpace')
+        if ($this->session->getVar("wp_ExportPaperSpace") == 'oneHalfSpace')
         {
             $this->lineSpacing = '\sl360\slmult1';
         }
-        elseif ($this->session->getVar('wp_ExportPaperSpace') == 'doubleSpace')
+        elseif ($this->session->getVar("wp_ExportPaperSpace") == 'doubleSpace')
         {
             $this->lineSpacing = '\sl480\slmult1';
         }
@@ -936,13 +936,13 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         {
             $this->lineSpacing = '';
         }
-        $this->paperSize = $this->session->getVar('wp_ExportPaperSize');
+        $this->paperSize = $this->session->getVar("wp_ExportPaperSize");
         // Line spacing of indented quotations
-        if ($this->session->getVar('wp_ExportSpaceIndentQ') == 'oneHalfSpace')
+        if ($this->session->getVar("wp_ExportSpaceIndentQ") == 'oneHalfSpace')
         {
             $this->lineSpacingIndentQ = '\sl360\slmult1';
         }
-        elseif ($this->session->getVar('wp_ExportSpaceIndentQ') == 'doubleSpace')
+        elseif ($this->session->getVar("wp_ExportSpaceIndentQ") == 'doubleSpace')
         {
             $this->lineSpacingIndentQ = '\sl480\slmult1';
         }
@@ -1659,15 +1659,15 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
             $preIDFormat = '';
             $postIDFormat = '';
         }
-        if ($this->session->getVar('wp_ExportIndentFt') == 'indentAll')
+        if ($this->session->getVar("wp_ExportIndentFt") == 'indentAll')
         {
             $ftf = '\li720 ';
         }
-        elseif ($this->session->getVar('wp_ExportIndentFt') == 'indentFL')
+        elseif ($this->session->getVar("wp_ExportIndentFt") == 'indentFL')
         {
             $ftf = '\fi720 ';
         }
-        elseif ($this->session->getVar('wp_ExportIndentFt') == 'indentNotFL')
+        elseif ($this->session->getVar("wp_ExportIndentFt") == 'indentNotFL')
         {
             $ftf = '\li720\fi-720 ';
         }
@@ -1676,11 +1676,11 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
             $ftf = '\li1\fi1 ';
         }
         $ftf .= '\fs' . $this->fontSizeFt;
-        if ($this->session->getVar('wp_ExportSpaceFt') == 'oneHalfSpace')
+        if ($this->session->getVar("wp_ExportSpaceFt") == 'oneHalfSpace')
         {
             $ftf = '\pard\plain ' . $ftf . '\sl360\slmult1 ';
         }
-        elseif ($this->session->getVar('wp_ExportSpaceFt') == 'doubleSpace')
+        elseif ($this->session->getVar("wp_ExportSpaceFt") == 'doubleSpace')
         {
             $ftf = '\pard\plain ' . $ftf . '\sl480\slmult1 ';
         }

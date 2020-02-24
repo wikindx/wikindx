@@ -88,7 +88,7 @@ class BROWSECITED
         $this->common->userBibCondition('resourcemetadataResourceId');
     	$matchAgainst = $this->db->fulltextSearch(['resourcemetadataText'], $search);
         $this->db->formatConditions($matchAgainst);
-        if ($this->session->getVar('setup_Write'))
+        if ($this->session->getVar("setup_Write"))
         {
             $this->db->formatConditionsOneField(['q', 'p', 'qc', 'pc', 'm', 'i'], 'resourcemetadataType');
         }

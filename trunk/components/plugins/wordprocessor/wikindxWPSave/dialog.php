@@ -80,11 +80,11 @@ class WPSaveDialog
         $js = "onsubmit=\"return wordprocessorSave('$savedMessage', '$notSavedMessage');\"";
         $pString .= FORM\formHeaderVisibleAction("dialog.php", "wpSave", $js);
         $pString .= FORM\hidden("method", "save");
-        if ($hashFilename = $this->session->getVar('wp_HashFilename'))
+        if ($hashFilename = $this->session->getVar("wp_HashFilename"))
         {
             $pString .= FORM\hidden("hashFilename", $hashFilename);
         }
-        if ($id = $this->session->getVar('wp_Id'))
+        if ($id = $this->session->getVar("wp_Id"))
         {
             $pString .= FORM\hidden("id", $id);
         }

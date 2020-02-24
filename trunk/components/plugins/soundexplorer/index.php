@@ -36,7 +36,7 @@ class soundexplorer_MODULE
     {
         $this->session = FACTORY_SESSION::getInstance();
         // only available for logged in users
-        if ($this->session->getVar('setup_ReadOnly'))
+        if ($this->session->getVar("setup_ReadOnly"))
         {
             return;
         }
@@ -92,7 +92,7 @@ class soundexplorer_MODULE
                 $sessionPluginState = FALSE;
             }
 
-            $this->session->setVar('seplugin_On', $sessionPluginState);
+            $this->session->setVar("seplugin_On", $sessionPluginState);
             $js = "onClick=\"coreOpenPopup('index.php?action=soundexplorer_seConfigure', 90); return false\"";
             $innerHtml = base64_encode(HTML\aBrowse($color, '1em', $this->pluginmessages->text('se'), '#', '', '', $js));
 
@@ -118,13 +118,13 @@ END;
         if (!$this->vars['ajaxReturn'])
         { // i.e. key is 0 so we want a new search
             // temp store plugin status (on/off) and plugin database status
-            $status = $this->session->getVar('seplugin_On');
-            $dbStatus = $this->session->getVar('seplugin_DatabaseCreated');
-            $foundResources = $this->session->getVar('seplugin_FoundResources');
+            $status = $this->session->getVar("seplugin_On");
+            $dbStatus = $this->session->getVar("seplugin_DatabaseCreated");
+            $foundResources = $this->session->getVar("seplugin_FoundResources");
             $this->session->clearArray("seplugin");
-            $this->session->setVar('seplugin_On', $status);
-            $this->session->setVar('seplugin_DatabaseCreated', $dbStatus);
-            $this->session->setVar('seplugin_FoundResources', $foundResources);
+            $this->session->setVar("seplugin_On", $status);
+            $this->session->setVar("seplugin_DatabaseCreated", $dbStatus);
+            $this->session->setVar("seplugin_FoundResources", $foundResources);
             $pString = $qs->display();
         }
         else
@@ -133,12 +133,12 @@ END;
             $resultset = $this->db->select('plugin_soundexplorer', ['pluginsoundexplorerLabel', 'pluginsoundexplorerArray']);
             while ($row = $this->db->fetchRow($resultset))
             {
-                $this->session->setVar('seplugin_Label', $row['pluginsoundexplorerLabel']);
+                $this->session->setVar("seplugin_Label", $row['pluginsoundexplorerLabel']);
                 $array = unserialize(base64_decode($row['pluginsoundexplorerArray']));
             }
             foreach ($array as $key => $value)
             {
-                $this->session->setVar('seplugin_' . $key, $value);
+                $this->session->setVar("seplugin_" . $key, $value);
             }
             $pString = $qs->display($this->vars['ajaxReturn']);
         }
@@ -155,11 +155,11 @@ END;
         {
             $this->seDeleteSearch();
             // temp store plugin status (on/off) and plugin database status
-            $status = $this->session->getVar('seplugin_On');
-            $dbStatus = $this->session->getVar('seplugin_DatabaseCreated');
+            $status = $this->session->getVar("seplugin_On");
+            $dbStatus = $this->session->getVar("seplugin_DatabaseCreated");
             $this->session->clearArray("seplugin");
-            $this->session->setVar('seplugin_On', $status);
-            $this->session->setVar('seplugin_DatabaseCreated', $dbStatus);
+            $this->session->setVar("seplugin_On", $status);
+            $this->session->setVar("seplugin_DatabaseCreated", $dbStatus);
             $pString = $this->seConfigureDisplay();
             $pString .= HTML\p($this->pluginmessages->text('seDeleteSuccess'), 'success');
         }
@@ -224,7 +224,7 @@ END;
     private function display()
     {
         $display = '';
-        if ($this->session->getVar('seplugin_On'))
+        if ($this->session->getVar("seplugin_On"))
         {
             $seColor = 'green';
         }
@@ -255,10 +255,10 @@ END;
     {
         // run if on FRONT page or displaying results of a list operation
         if (
-            $this->session->getVar('seplugin_On')
+            $this->session->getVar("seplugin_On")
             && (
                 !array_key_exists('action', $this->vars) // FRONT
-                || $this->session->getVar('list_On')
+                || $this->session->getVar("list_On")
                 || (
                     array_key_exists('action', $this->vars)
                     && array_key_exists('method', $this->vars)
@@ -275,7 +275,7 @@ END;
                 return $return;
             }
         }
-        $this->session->delVar('seplugin_FoundResources');
+        $this->session->delVar("seplugin_FoundResources");
 
         return FALSE;
     }
@@ -288,7 +288,7 @@ END;
         AJAX\loadJavascript();
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('se'));
         $pString = HTML\p($this->pluginmessages->text('seExplain'));
-        if ($this->session->getVar('seplugin_On'))
+        if ($this->session->getVar("seplugin_On"))
         {
             $selected = 'on';
         }
@@ -304,7 +304,7 @@ END;
         $td .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
         $td .= FORM\formEnd();
         $pString .= HTML\td($td);
-        if ($this->session->getVar('seplugin_FoundResources'))
+        if ($this->session->getVar("seplugin_FoundResources"))
         {
             $pString .= HTML\td('&nbsp;');
             $rc = FACTORY_RESOURCECOMMON::getInstance();
@@ -315,7 +315,7 @@ END;
             $pString .= HTML\td(HTML\strong(str_replace(' ', '&nbsp;', $this->pluginmessages->text("seMatchedSearches"))));
             $pString .= HTML\td('&nbsp;');
             $pString .= HTML\trEnd();
-            foreach (unserialize(base64_decode($this->session->getVar('seplugin_FoundResources'))) as $label => $ids)
+            foreach (unserialize(base64_decode($this->session->getVar("seplugin_FoundResources"))) as $label => $ids)
             {
                 $thisLabelPrinted = FALSE;
                 $resultset = $rc->getResource($ids);
@@ -341,7 +341,7 @@ END;
         $pString .= HTML\trEnd() . HTML\tableEnd();
         $pString .= HTML\hr();
         $pString .= FORM\formHeader(FALSE);
-        $this->db->formatConditions(['pluginsoundexplorerUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['pluginsoundexplorerUserId' => $this->session->getVar("setup_UserId")]);
         $resultset = $this->db->select('plugin_soundexplorer', ['pluginsoundexplorerId', 'pluginsoundexplorerLabel']);
         $searches = [0 => $this->pluginmessages->text('seNewSearch')];
         while ($row = $this->db->fetchRow($resultset))
@@ -384,7 +384,7 @@ END;
      */
     private function seUpdateSearch()
     {
-        $array['pluginsoundexplorerLabel'] = $this->session->getVar('seplugin_Label');
+        $array['pluginsoundexplorerLabel'] = $this->session->getVar("seplugin_Label");
         $array['pluginsoundexplorerArray'] = $this->seArrayToDatabase();
         $this->db->formatConditions(['pluginsoundexplorerId' => $this->vars['sepluginId']]);
         $this->db->update('plugin_soundexplorer', $array);
@@ -395,9 +395,9 @@ END;
     private function seInsertSearch()
     {
         $fields[] = 'pluginsoundexplorerUserId';
-        $values[] = $this->session->getVar('setup_UserId');
+        $values[] = $this->session->getVar("setup_UserId");
         $fields[] = 'pluginsoundexplorerLabel';
-        $values[] = $this->session->getVar('seplugin_Label');
+        $values[] = $this->session->getVar("seplugin_Label");
         $fields[] = 'pluginsoundexplorerArray';
         $values[] = $this->seArrayToDatabase();
         $this->db->insert('plugin_soundexplorer', $fields, $values);

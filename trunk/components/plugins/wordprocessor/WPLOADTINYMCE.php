@@ -15,7 +15,7 @@ class WPLOADTINYMCE extends LOADTINYMCE
     public function __construct()
     {
         $session = FACTORY_SESSION::getInstance();
-        $session->setVar('tinyMCE_mode', 'wordprocessor');
+        $session->setVar("tinyMCE_mode", "wordprocessor");
         $this->cssPath = WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . GLOBALS::getUserVar('Template') . '/tinymce.css';
         $this->cssPopupPath = WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . GLOBALS::getUserVar('Template') . '/template.css';
     }

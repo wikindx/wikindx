@@ -124,7 +124,7 @@ class BROWSEKEYWORD
      */
     private function process()
     {
-        $this->session->delVar('list_SomeResources_catId');
+        $this->session->delVar("list_SomeResources_catId");
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
         foreach ($this->keyword as $id => $name)
@@ -182,11 +182,11 @@ class BROWSEKEYWORD
             $this->collate($row);
         }
         // musings and ideas
-        if ($this->session->getVar('setup_ReadOnly'))
+        if ($this->session->getVar("setup_ReadOnly"))
         {
             $this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
         }
-        elseif ($userId = $this->session->getVar('setup_UserId'))
+        elseif ($userId = $this->session->getVar("setup_UserId"))
         {
             $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
             $this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .
@@ -219,7 +219,7 @@ class BROWSEKEYWORD
         );
         while ($row = $this->db->fetchRow($recordset))
         {
-            if (($userId = $this->session->getVar('setup_UserId')) && ($row['resourcemetadataPrivate'] != 'N') &&
+            if (($userId = $this->session->getVar("setup_UserId")) && ($row['resourcemetadataPrivate'] != 'N') &&
                 ($row['resourcemetadataPrivate'] != 'Y'))
             { // musing is part of user group
                 $this->db->formatConditions(['usergroupsusersUserId' => $userId]);

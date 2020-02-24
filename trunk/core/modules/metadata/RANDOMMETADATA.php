@@ -89,7 +89,7 @@ class RANDOMMETADATA
      */
     public function randomMusing()
     {
-        if ($userId = $this->session->getVar('setup_UserId'))
+        if ($userId = $this->session->getVar("setup_UserId"))
         {
             $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
             $this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .
@@ -107,7 +107,7 @@ class RANDOMMETADATA
             $case3 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
             $this->db->formatConditions($case1 . $this->db->or . $case2 . $this->db->or . $case3);
         }
-        elseif ($this->session->getVar('setup_ReadOnly'))
+        elseif ($this->session->getVar("setup_ReadOnly"))
         {
             $this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
         }
@@ -130,7 +130,7 @@ class RANDOMMETADATA
      */
     public function randomIdea()
     {
-        if (!$this->metadata->setCondition('i') && $this->session->getVar('setup_ReadOnly'))
+        if (!$this->metadata->setCondition('i') && $this->session->getVar("setup_ReadOnly"))
         {
             $this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
         }
@@ -207,7 +207,7 @@ class RANDOMMETADATA
      */
     private function createLinks($row)
     {
-        $write = $this->session->getVar('setup_Write');
+        $write = $this->session->getVar("setup_Write");
         $links = [];
         $edit = FALSE;
         $view = $this->icons->getHTML("viewmeta");
@@ -222,7 +222,7 @@ class RANDOMMETADATA
             );
             $edit = TRUE;
         }
-        if ($this->session->getVar('setup_Superadmin'))
+        if ($this->session->getVar("setup_Superadmin"))
         {
             if (!$edit)
             {
@@ -277,7 +277,7 @@ class RANDOMMETADATA
             return FALSE;
         $allIds = unserialize(base64_decode($raw));
         $thisKey = array_search($thisId, $allIds);
-        if ($this->session->getVar('setup_Superadmin'))
+        if ($this->session->getVar("setup_Superadmin"))
         {
             if(array_key_exists($thisKey + 1, $allIds))
                 $this->nextDelete = $allIds[$thisKey + 1];

@@ -41,9 +41,9 @@ class PREFERENCES
     {
     	if (!$message)
     	{
-    		if ($message = $this->session->getVar('mywikindx_Message'))
+    		if ($message = $this->session->getVar("mywikindx_Message"))
     		{
-    			$this->session->delVar('mywikindx_Message');
+    			$this->session->delVar("mywikindx_Message");
     		}
     	}
         $pString = $message;
@@ -224,7 +224,7 @@ class PREFERENCES
         {
             $this->session->delVar("setup_ListLink");
         }
-        $this->session->setVar('mywikindx_Message', $this->success->text("config"));
+        $this->session->setVar("mywikindx_Message", $this->success->text("config"));
         // need to use header() to ensure any change in appearance is immediately picked up.
         header("Location: index.php?action=usersgroups_PREFERENCES_CORE&method=init");
     }

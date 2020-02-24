@@ -219,7 +219,7 @@ class SITEMAP
             'resourcemiscAccessesPeriod', ];
         $messages = FACTORY_MESSAGES::getInstance();
         $session = FACTORY_SESSION::getInstance();
-        $session->setVar('setup_Style', $bibstyle);
+        $session->setVar("setup_Style", $bibstyle);
         $bibStyle = FACTORY_BIBSTYLE::getInstance();
         $db->ascDesc = $db->desc;
         $db->limit($limit, 0);

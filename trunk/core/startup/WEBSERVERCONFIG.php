@@ -331,6 +331,9 @@ include_once("core/startup/GLOBALS.php");
 // Set up the FACTORY objects of commonly used classes and start the timer.
 include_once("core/startup/FACTORY.php");
 
+// Initialize the static config read from config.php file
+include_once("core/startup/LOADSTATICCONFIG.php");
+
 // Init user config object
 //$config = FACTORY_CONFIG::getInstance(); // not needed here (and interferes with upgrade of v3.8 database because v3 config.php is not a class)
 

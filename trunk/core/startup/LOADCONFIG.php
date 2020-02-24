@@ -240,7 +240,7 @@ class LOADCONFIG
         // Not all OSs allow getcwd() or sometimes the wikindx installation is in a directory that is not searchable.
         if ($this->config->WIKINDX_PATH_AUTO_DETECTION)
         {
-            $this->config->WIKINDX_WIKINDX_PATH = realpath($this->getWikindxBasePath());
+            $this->config->WIKINDX_WIKINDX_PATH = realpath(\URL\getWikindxBasePath());
         }
         else
         {
@@ -469,23 +469,6 @@ class LOADCONFIG
         {
             die('WIKINDX_MAX_WRITECHUNK must be a positive integer (or FALSE for default configuration).');
         }
-    }
-    private function getWikindxBasePath()
-    {
-        $wikindxBasePath = __DIR__;
-        while (!in_array(basename($wikindxBasePath), ["", "core"]))
-        {
-            $wikindxBasePath = dirname($wikindxBasePath);
-        }
-        if (basename($wikindxBasePath) == "")
-        {
-            die("
-                \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
-                and WIKINDX is unable to set the installation path automatically.
-                You should set \$WIKINDX_WIKINDX_PATH in config.php.
-            ");
-        }
-        return dirname($wikindxBasePath);
     }
     /**
      * Strip some HTML tags from string.

@@ -370,7 +370,6 @@ FACTORY_LOADCONFIG::getInstance()->loadUserVars();
 
 FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
 
-
 // Locales setting needs to know the language prefered by the user which is now in GLOBALS
 include_once("core/locales/LOCALES.php");
 \LOCALES\load_locales();

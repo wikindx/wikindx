@@ -260,10 +260,7 @@ class CONFIGURE
                 if ($field == 'configNoSort')
                 {
                     $array = [];
-                    if (isset($this->config->WIKINDX_NO_SORT))
-                    {
-                        $oldNoSort = base64_encode(serialize($this->config->WIKINDX_NO_SORT));
-                    }
+                    $oldNoSort = base64_encode(serialize(WIKINDX_NO_SORT));
                     if ($value)
                     {
                         foreach (UTF8::mb_explode(',', $value) as $word)
@@ -276,10 +273,10 @@ class CONFIGURE
                         }
                         $value = base64_encode(serialize($array));
                     }
-                    $this->config->WIKINDX_NO_SORT = $array;
                     if (isset($oldNoSort) && $oldNoSort != $value)
                     {
                         $this->updateNoSort($oldNoSort);
+                		$this->session->setVar('config_noSort', $value);
                     }
                 }
                 elseif ($field == 'configSearchFilter')
@@ -296,8 +293,8 @@ class CONFIGURE
                             }
                         }
                         $value = base64_encode(serialize($array));
+                		$this->session->setVar('config_searchFilter', $value);
                     }
-                    $this->config->WIKINDX_SEARCH_FILTER = $array;
                 }
                 elseif ($field == 'configTimezone')
                 {
@@ -477,10 +474,6 @@ class CONFIGURE
      */
     private function getConfigDetails($groups, $item = FALSE)
     {
-        if (!isset($this->config->WIKINDX_SEARCH_FILTER))
-        {
-            $this->config->WIKINDX_SEARCH_FILTER = [];
-        }
         if (!$this->insert)
         {
             $this->values = $this->fromDbToSession();
@@ -885,11 +878,16 @@ class CONFIGURE
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "noSort"));
         if ($this->insert)
         {
-            $input = implode(', ', unserialize(base64_decode(WIKINDX_NO_SORT_DEFAULT))); // default at first intall
+            $input = implode(', ', unserialize(base64_decode(WIKINDX_NO_SORT_DEFAULT))); // default at first install
+        }
+        elseif ($this->session->getVar('config_noSort')) // After updating the field
+        {
+            $input = implode(', ', unserialize(base64_decode($this->session->getVar('config_noSort'))));
+            $this->session->delVar('config_noSort');
         }
         else
         {
-            $input = implode(', ', $this->config->WIKINDX_NO_SORT);
+            $input = implode(', ', WIKINDX_NO_SORT);
         }
         $pString .= \HTML\td(\HTML\p(\FORM\textareaInput(
             $this->messages->text("config", "noSort"),
@@ -903,9 +901,14 @@ class CONFIGURE
         {
             $input = implode(', ', unserialize(base64_decode(WIKINDX_SEARCH_FILTER_DEFAULT))); // default at first install
         }
+        elseif ($this->session->getVar('config_searchFilter')) // After updating the field
+        {
+            $input = implode(', ', unserialize(base64_decode($this->session->getVar('config_searchFilter'))));
+            $this->session->delVar('config_searchFilter');
+        }
         else
         {
-            $input = implode(', ', $this->config->WIKINDX_SEARCH_FILTER);
+            $input = implode(', ', WIKINDX_SEARCH_FILTER);
         }
         $pString .= \HTML\td(\HTML\p(\FORM\textareaInput(
             $this->messages->text("config", "searchFilter"),
@@ -1926,8 +1929,8 @@ class CONFIGURE
     private function updateNoSort($oldNoSort)
     {
         $oldArray = unserialize(base64_decode($oldNoSort));
-        $arrayNewNoSort = array_diff($this->config->WIKINDX_NO_SORT, $oldArray);
-        $arrayRemoveNoSort = array_diff($oldArray, $this->config->WIKINDX_NO_SORT);
+        $arrayNewNoSort = array_diff(WIKINDX_NO_SORT, $oldArray);
+        $arrayRemoveNoSort = array_diff($oldArray, WIKINDX_NO_SORT);
         $newNSPattern = $newNSPatternBrace = FALSE;
         if (!empty($arrayNewNoSort))
         {

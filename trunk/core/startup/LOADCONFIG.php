@@ -371,9 +371,6 @@ class LOADCONFIG
                 }
             }
             
-            // Create the constant config member 
-            $this->config->{$constName} = $value;
-            
             // Create the global constant 
             if (!defined($constName))
             {

@@ -37,6 +37,9 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL-C license and that you accept its terms.
 */
 
+// Include the config file and check if the CONFIG class is in place
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
+
 include_once("core/startup/CONSTANTS.php");
 include_once("core/file/FILE.php");
 include_once("core/locales/LOCALES.php");

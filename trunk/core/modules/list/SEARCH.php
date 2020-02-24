@@ -154,7 +154,7 @@ class SEARCH
         {
             $wordFields = ['title', 'note', 'abstract', 'quote', 'quoteComment', 'paraphrase', 'paraphraseComment', 'musing', 'idea'];
         }
-        if ((!$this->session->getVar("setup_FileViewLoggedOnOnly") || $this->session->getVar("setup_UserId")) &&
+        if ((!WIKINDX_FILE_VIEW_LOGGEDON_ONLY || $this->session->getVar("setup_UserId")) &&
             ($this->db->tableIsEmpty('resource_attachments') == 0))
         { // 0 means table is NOT empty
             array_splice($wordFields, 3, 0, "attachments");
@@ -1624,7 +1624,7 @@ class SEARCH
     {
         $pString = \HTML\tableStart();
         $pString .= \HTML\trStart();
-        if ($this->session->getVar("setup_ReadOnly") && $this->session->getVar("setup_FileViewLoggedOnOnly"))
+        if ($this->session->getVar("setup_ReadOnly") && WIKINDX_FILE_VIEW_LOGGEDON_ONLY)
         {
             $options = [];
         }
@@ -2561,7 +2561,7 @@ class SEARCH
         {
             $fields['abstract'] = $this->messages->text("search", "abstract");
         }
-        if ((!$this->session->getVar("setup_FileViewLoggedOnOnly") || $this->session->getVar("setup_UserId")) &&
+        if ((!WIKINDX_FILE_VIEW_LOGGEDON_ONLY || $this->session->getVar("setup_UserId")) &&
             ($this->db->tableIsEmpty('resource_attachments') == 0))
         {
             $fields['attachments'] = $this->messages->text("search", "attachments");

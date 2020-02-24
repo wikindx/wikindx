@@ -672,10 +672,6 @@ class USER
         {
             $this->session->setVar("setup_FileAttach", TRUE);
         }
-        if (array_key_exists('configFileViewLoggedOnOnly', $row) && $row['configFileViewLoggedOnOnly'])
-        {
-            $this->session->setVar("setup_FileViewLoggedOnOnly", TRUE);
-        }
         $this->session->setVar("config_configImgWidthLimit", $row['configImgWidthLimit']);
         $this->session->setVar("config_configImgHeightLimit", $row['configImgHeightLimit']);
         if ($userId)

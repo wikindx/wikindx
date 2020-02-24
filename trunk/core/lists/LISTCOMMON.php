@@ -571,7 +571,7 @@ class LISTCOMMON
     private function listAttachments($recordset, $listType)
     {
         // Are only logged on users allowed to view this file and is this user logged on?
-        if ($this->session->getVar("setup_FileViewLoggedOnOnly") && !$this->session->getVar("setup_UserId"))
+        if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId"))
         {
             $this->displayListInfo($listType, FALSE);
         }
@@ -717,7 +717,7 @@ class LISTCOMMON
             $attachments = $musings = [];
             $edit = FALSE;
             // Check if these resources have attachments and display view icons accordingly. Also, calculate the resource's popularity index
-            if ($this->session->getVar("setup_UserId") || !$this->session->getVar("setup_FileViewLoggedOnOnly"))
+            if ($this->session->getVar("setup_UserId") || !WIKINDX_FILE_VIEW_LOGGEDON_ONLY)
             {
                 $mdr = $this->stats->getMaxDownloadRatio();
                 $mar = $this->stats->getMaxAccessRatio();

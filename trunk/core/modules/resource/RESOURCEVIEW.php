@@ -379,7 +379,7 @@ class RESOURCEVIEW
                 "numAccesses",
                 $row['resourcemiscAccessesPeriod'] . '/' . $row['resourcemiscAccesses']
             );
-            if ($this->session->getVar("setup_FileViewLoggedOnOnly") && !$this->session->getVar("setup_UserId"))
+            if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId"))
             {
                 // display nothing
             }
@@ -631,7 +631,7 @@ class RESOURCEVIEW
     private function attachedFiles($resourceId, $userAddId)
     {
         // Are only logged on users allowed to view this file and is this user logged on?
-        if ($this->session->getVar("setup_FileViewLoggedOnOnly") && !$this->session->getVar("setup_UserId"))
+        if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId"))
         {
             return [];
         }
@@ -714,7 +714,7 @@ class RESOURCEVIEW
                 );
             }
         }
-        elseif (!$this->session->getVar("setup_FileViewLoggedOnOnly"))
+        elseif (!WIKINDX_FILE_VIEW_LOGGEDON_ONLY)
         { // Anyone can view
             if (isset($files))
             {

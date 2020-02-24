@@ -139,7 +139,7 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
     private function attachedFiles($resourceId)
     {
         // Are only logged on users allowed to view this file?
-        if ($this->session->getVar("setup_FileViewLoggedOnOnly"))
+        if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY)
         {
             return FALSE;
         }

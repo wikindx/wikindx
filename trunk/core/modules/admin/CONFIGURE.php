@@ -1990,10 +1990,6 @@ class CONFIGURE
         {
             $this->session->setVar('setup_LastChanges', $array['configLastChanges']);
         }
-        if (array_key_exists('configLastChangesDayLimit', $array))
-        {
-            $this->session->setVar('setup_LastChangesDayLimit', $array['configLastChangesDayLimit']);
-        }
         if (array_key_exists('configMultiUser', $array))
         {
             $this->session->setVar('setup_MultiUser', $array['configMultiUser']);

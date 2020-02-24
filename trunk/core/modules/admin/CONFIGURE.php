@@ -1986,10 +1986,6 @@ class CONFIGURE
      */
     private function writeSetupSession($array)
     {
-        if (array_key_exists('configLastChanges', $array))
-        {
-            $this->session->setVar('setup_LastChanges', $array['configLastChanges']);
-        }
         if (array_key_exists('configMultiUser', $array))
         {
             $this->session->setVar('setup_MultiUser', $array['configMultiUser']);

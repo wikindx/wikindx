@@ -69,7 +69,7 @@ class FRONT
             $replace = $qs->init(FALSE, FALSE, TRUE);
             $pString = str_replace('$QUICKSEARCH$', $replace, $pString);
         }
-        if ($lastChanges = $this->session->getVar("setup_LastChanges"))
+        if ($lastChanges = WIKINDX_LAST_CHANGES)
         {
             if ($this->getChanges($lastChanges))
             {

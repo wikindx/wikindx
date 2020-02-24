@@ -96,7 +96,7 @@ class BIBLIOGRAPHYCOMMON
             $row = $this->db->fetchRow($recordset);
             $bib = $row['userbibliographyTitle'];
         }
-        elseif ($this->session->getVar('setup_MultiUser'))
+        elseif (WIKINDX_MULTIUSER)
         {
             $bib = $this->messages->text("user", "masterBib");
         }

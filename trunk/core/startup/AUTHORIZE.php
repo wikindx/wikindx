@@ -97,9 +97,7 @@ class AUTHORIZE
                 $language = WIKINDX_LANGUAGE;
                 $template = WIKINDX_TEMPLATE;
                 $userReg = WIKINDX_USER_REGISTRATION;
-                $multiUser = WIKINDX_MULTIUSER;
                 $this->session->setVar('setup_UserRegistration', $userReg);
-                $this->session->setVar('setup_MultiUser', $multiUser);
                 $this->initLogon(); // login prompt
                 FACTORY_CLOSENOMENU::getInstance();
             }

@@ -144,7 +144,7 @@ class PAGINGALPHA
             $bib = " (" . $this->messages->text("user", "bibliography") . ": " .
             \HTML\nlToHtml($bibTitle) . ")";
         }
-        elseif ($this->session->getVar('setup_MultiUser'))
+        elseif (WIKINDX_MULTIUSER)
         {
             $bib = " (" . $this->messages->text("user", "bibliography") . ": " .
                 $this->messages->text("user", "masterBib") . ")";

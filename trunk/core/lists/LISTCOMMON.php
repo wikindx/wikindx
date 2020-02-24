@@ -202,7 +202,7 @@ class LISTCOMMON
             return;
         }
         $this->session->delVar('sql_DisplayAttachment');
-        $multiUserSwitch = ($this->session->getVar('setup_MultiUser'));
+        $multiUserSwitch = (WIKINDX_MULTIUSER);
         if ($multiUserSwitch)
         {
             GLOBALS::addTplVar('multiUser', TRUE);

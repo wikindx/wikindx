@@ -357,7 +357,7 @@ class USER
      */
     public function displayUserAddEdit($row, $both = FALSE, $type = 'resource')
     {
-        if (!$this->session->getVar('setup_MultiUser'))
+        if (!WIKINDX_MULTIUSER)
         {
             if ($both)
             {
@@ -668,7 +668,6 @@ class USER
         {
             $this->session->setVar("setup_UserRegistration", TRUE);
         }
-        $this->session->setVar("setup_MultiUser", $row['configMultiUser']);
         if (array_key_exists('configNotify', $row) && $row['configNotify'])
         {
             $this->session->setVar("setup_Notify", $row['configNotify']);

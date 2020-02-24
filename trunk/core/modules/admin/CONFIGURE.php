@@ -422,7 +422,6 @@ class CONFIGURE
                 $this->db->formatConditions(['configName' => $field]);
                 $this->db->updateNull('config', $this->configDbStructure->dbStructure[$field]);
             }
-            $this->writeSetupSession($updateArray);
         }
         // need to use header() to ensure any change in appearance is immediately picked up.
         if ($headerRedirect)
@@ -1977,18 +1976,6 @@ class CONFIGURE
                 $this->db->formatConditions(['resourceId' => $row['resourceId']]);
                 $this->db->update('resource', $update);
             }
-        }
-    }
-    /**
-     * When updating the configuration, some settings will have an effect on the admin's view (e.g. no. resources to show on front page) -- write them to session
-     *
-     * @param array $array
-     */
-    private function writeSetupSession($array)
-    {
-        if (array_key_exists('configMultiUser', $array))
-        {
-            $this->session->setVar('setup_MultiUser', $array['configMultiUser']);
         }
     }
     /** 

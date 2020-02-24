@@ -188,7 +188,7 @@ class IDEAEXPORT
     private function getData($recordset)
     {
         $mainArray = [];
-        $multiUser = $this->session->getVar('setup_MultiUser');
+        $multiUser = WIKINDX_MULTIUSER;
         while ($row = $this->db->fetchRow($recordset))
         {
             $string = $this->textFormat($row['resourcemetadataText']);

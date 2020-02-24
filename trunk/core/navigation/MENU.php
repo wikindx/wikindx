@@ -178,7 +178,7 @@ class MENU
         {
             $stateArray[] = $this->bookmarkView = $this->bookmarkArray['View'];
         }
-        $stateArray[] = $this->multiUser = $this->session->getVar("setup_MultiUser");
+        $stateArray[] = $this->multiUser = WIKINDX_MULTIUSER;
         $stateArray[] = $this->bibliographies = $this->session->getVar("setup_Bibliographies");
         $stateArray[] = $this->lastSolo = $this->session->getVar("sql_LastSolo");
         $stateArray[] = $this->stmt = $this->session->getVar("sql_ListStmt");

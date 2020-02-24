@@ -341,7 +341,7 @@ class RESOURCEVIEW
         $row = $this->db->fetchRow($resultset);
         $lastmodified = date('r', strtotime($row['resourcetimestampTimestamp']));
         @header("Last-Modified: $lastmodified");
-        $this->multiUser = $this->session->getVar('setup_MultiUser');
+        $this->multiUser = WIKINDX_MULTIUSER;
         if ((WIKINDX_QUARANTINE) && ($row['resourcemiscQuarantine'] == 'Y'))
         {
             if (!$this->session->getVar('setup_Superadmin') && ($this->session->getVar('setup_UserId') != $row['resourcemiscAddUserIdResource']))
@@ -1635,7 +1635,7 @@ class RESOURCEVIEW
      */
     private function displayEmailFriendLink($row)
     {
-        if ($this->session->getVar("setup_MultiUser") && WIKINDX_READ_ONLY_ACCESS && WIKINDX_MAIL_USE)
+        if (WIKINDX_MULTIUSER && WIKINDX_READ_ONLY_ACCESS && WIKINDX_MAIL_USE)
         {
             $linkStyle = "link linkCiteHidden";
             $link = $this->messages->text("misc", "emailToFriend");

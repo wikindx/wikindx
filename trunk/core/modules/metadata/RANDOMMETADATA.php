@@ -166,7 +166,7 @@ class RANDOMMETADATA
         {
             $resourceList[0]['quarantine'] = $this->icons->getHTML("quarantine");
         }
-        $multiUser = $this->session->getVar('setup_MultiUser');
+        $multiUser = WIKINDX_MULTIUSER;
         if ($multiUser)
         {
             $resourceList[0]['user'] = $this->user->displayUserAddEdit($row);

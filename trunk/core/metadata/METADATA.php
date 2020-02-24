@@ -61,7 +61,7 @@ class METADATA
      */
     public function displayThread($metadataId)
     {
-        $multiUser = $this->session->getVar('setup_MultiUser');
+        $multiUser = WIKINDX_MULTIUSER;
         $ideaList = [];
         $index = 0;
         $tempSep = $this->db->conditionSeparator;
@@ -134,7 +134,7 @@ class METADATA
      */
     public function displayIdea($metadataId)
     {
-        $multiUser = $this->session->getVar('setup_MultiUser');
+        $multiUser = WIKINDX_MULTIUSER;
         $ideaList = [];
         $this->db->formatConditions(['resourcemetadataId' => $metadataId]);
         $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataTimestamp', 'resourcemetadataTimestampEdited',

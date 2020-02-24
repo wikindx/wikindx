@@ -1302,7 +1302,7 @@ class SEARCH
         $icons = FACTORY_LOADICONS::getInstance();
         $cite = FACTORY_CITE::getInstance();
         $userObj = FACTORY_USER::getInstance();
-        $multiUser = $this->session->getVar('setup_MultiUser');
+        $multiUser = WIKINDX_MULTIUSER;
         $ideaList = [];
         $index = 0;
         // get count statement and set queryString
@@ -2720,7 +2720,7 @@ class SEARCH
             $fields['tag'] = $this->messages->text("search", "tag");
         }
         // If logged on and multiuser, display addedBy and editedBy options
-        if ($this->session->getVar("setup_UserId") && ($this->session->getVar("setup_MultiUser")))
+        if ($this->session->getVar("setup_UserId") && (WIKINDX_MULTIUSER))
         {
             if ($userBib)
             {

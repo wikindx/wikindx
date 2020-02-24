@@ -81,7 +81,7 @@ class IDEAS
         $cite = FACTORY_CITE::getInstance();
         $userObj = FACTORY_USER::getInstance();
         $pagingObject = FACTORY_PAGING::getInstance();
-        $multiUser = $this->session->getVar('setup_MultiUser');
+        $multiUser = WIKINDX_MULTIUSER;
         $ideaList = $ideaListInfo = [];
         $index = 0;
         $backupPagingTotal = $this->session->getVar('setup_PagingTotal'); // Required for normal list operations 'last multi'
@@ -766,7 +766,7 @@ class IDEAS
     {
         $cite = FACTORY_CITE::getInstance();
         $userObj = FACTORY_USER::getInstance();
-        $multiUser = $this->session->getVar('setup_MultiUser');
+        $multiUser = WIKINDX_MULTIUSER;
         if ($main)
         {
             $icons = FACTORY_LOADICONS::getInstance();

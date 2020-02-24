@@ -16,7 +16,6 @@ class CONFIGURE
     private $messages;
     private $success;
     private $session;
-    private $config;
     private $user;
     private $db;
     private $vars;
@@ -32,7 +31,6 @@ class CONFIGURE
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->user = FACTORY_USER::getInstance();
         $this->db = FACTORY_DB::getInstance();
@@ -2295,7 +2293,7 @@ class CONFIGURE
     private function fromDbToSession()
     {
         $row = $this->configDbStructure->getAllData();
-        // Remove noSort and searchFilter (they're in $this->config variables) and write the rest to session variables
+        // Remove noSort and searchFilter and write the rest to session variables
         unset($row['configNoSort']);
         unset($row['configSearchFilter']);
         if (!$this->session->writeArray($row, "config"))

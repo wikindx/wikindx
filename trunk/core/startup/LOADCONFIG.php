@@ -15,15 +15,11 @@
  */
 class LOADCONFIG
 {
-    /** object */
-    public $config;
-
     /**
      *	LOADCONFIG
      */
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->getVars();
         
         $vars = GLOBALS::getVars();
@@ -260,7 +256,7 @@ class LOADCONFIG
     }
     
     /**
-     * Load various arrays into $this->config object as well as initialize user variables in GLOBALS
+     * Load various arrays into global constans as well as initialize user variables in GLOBALS
      */
     public function loadDBConfig()
     {

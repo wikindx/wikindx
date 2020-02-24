@@ -18,7 +18,6 @@ class URLS
     private $errors;
     private $messages;
     private $success;
-    private $url;
     private $gatekeep;
     private $resourceId;
 
@@ -32,7 +31,6 @@ class URLS
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->url = FACTORY_URL::getInstance();
         $this->resourceId = $this->vars['resourceId'];
     }
     /**
@@ -115,11 +113,11 @@ class URLS
             $this->db->formatConditions(['resourcetextId' => $this->resourceId]);
             $recordset = $this->db->select('resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
             $row = $this->db->fetchRow($recordset);
-            $links = $this->url->getUrls($row['resourcetextUrls']);
+            $links = \URL\getUrls($row['resourcetextUrls']);
             $urlExists = FALSE;
             if ($row['resourcetextUrlText'])
             {
-                $names = $this->url->getUrls($row['resourcetextUrlText']);
+                $names = \URL\getUrls($row['resourcetextUrlText']);
                 $urlExists = TRUE;
             }
             else
@@ -169,10 +167,10 @@ class URLS
         $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
         $recordSet = $this->db->select(["resource_text"], ["resourcetextUrls", "resourcetextUrlText"]);
         $row = $this->db->fetchRow($recordSet);
-        $links = $this->url->getUrls($row['resourcetextUrls']);
+        $links = \URL\getUrls($row['resourcetextUrls']);
         if ($row['resourcetextUrlText'])
         {
-            $names = $this->url->getUrls($row['resourcetextUrlText']);
+            $names = \URL\getUrls($row['resourcetextUrlText']);
         }
         else
         {
@@ -217,10 +215,10 @@ class URLS
         $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
         $recordSet = $this->db->select(["resource_text"], ["resourcetextUrls", "resourcetextUrlText"]);
         $row = $this->db->fetchRow($recordSet);
-        $links = $this->url->getUrls($row['resourcetextUrls']);
+        $links = \URL\getUrls($row['resourcetextUrls']);
         if ($row['resourcetextUrlText'])
         {
-            $names = $this->url->getUrls($row['resourcetextUrlText']);
+            $names = \URL\getUrls($row['resourcetextUrlText']);
         }
         else
         {
@@ -279,10 +277,10 @@ class URLS
         $this->db->formatConditions(["resourcetextId" => $this->resourceId]);
         $recordSet = $this->db->select(["resource_text"], ["resourcetextUrls", "resourcetextUrlText"]);
         $row = $this->db->fetchRow($recordSet);
-        $links = $this->url->getUrls($row['resourcetextUrls']);
+        $links = \URL\getUrls($row['resourcetextUrls']);
         if ($row['resourcetextUrlText'])
         {
-            $names = $this->url->getUrls($row['resourcetextUrlText']);
+            $names = \URL\getUrls($row['resourcetextUrlText']);
         }
         else
         {
@@ -328,10 +326,10 @@ class URLS
         if ($this->db->numRows($recordSet))
         { // URLs already exist for this resource so need to update rather than insert
             $row = $this->db->fetchRow($recordSet);
-            $links = $this->url->getUrls($row['resourcetextUrls']);
+            $links = \URL\getUrls($row['resourcetextUrls']);
             if ($row['resourcetextUrlText'])
             {
-                $names = $this->url->getUrls($row['resourcetextUrlText']);
+                $names = \URL\getUrls($row['resourcetextUrlText']);
             }
             else
             {
@@ -374,10 +372,10 @@ class URLS
         $names = [];
         while ($row = $this->db->fetchRow($recordset))
         {
-            $links = $this->url->getUrls($row['resourcetextUrls']);
+            $links = \URL\getUrls($row['resourcetextUrls']);
             if ($row['resourcetextUrlText'])
             {
-                $names = $this->url->getUrls($row['resourcetextUrlText']);
+                $names = \URL\getUrls($row['resourcetextUrlText']);
             }
         }
         $pString = \FORM\formHeader("urls_URLS_CORE");

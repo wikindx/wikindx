@@ -28,8 +28,6 @@ class CITESTYLE
     /** object */
     private $res;
     /** object */
-    private $url;
-    /** object */
     private $session;
     /** string */
     private $setupStyle;
@@ -585,13 +583,12 @@ class CITESTYLE
         {
             return FALSE;
         }
-        $this->url = FACTORY_URL::getInstance();
-        $urls = $this->url->getUrls($this->rowSingle['resourcetextUrls']);
+        $urls = \URL\getUrls($this->rowSingle['resourcetextUrls']);
         // In $urls array, [0] index is primary URL
         $url = ($this->output == 'html') ? htmlspecialchars($urls[0]) : $urls[0];
         if ($this->output == 'html')
         {
-            $url = $this->url->reduceUrl($url, 80);
+            $url = \URL\reduceUrl($url, 80);
         }
         $this->citeFormat->formatUrl($url);
     }

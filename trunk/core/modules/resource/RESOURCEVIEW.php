@@ -31,7 +31,6 @@ class RESOURCEVIEW
     private $note;
     private $userId;
     private $nextDelete = FALSE;
-    private $url;
     private $custom;
     private $allowEdit = FALSE;
     private $multiUser = FALSE;
@@ -54,7 +53,6 @@ class RESOURCEVIEW
         $this->user = FACTORY_USER::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
-        $this->url = FACTORY_URL::getInstance();
         include_once("core/browse/BROWSECOMMON.php");
         $this->commonBib = new BROWSECOMMON();
         include_once('core/modules/resource/RESOURCEABSTRACT.php');
@@ -751,10 +749,10 @@ class RESOURCEVIEW
         {
             if ($row['resourcetextUrls'])
             {
-                $links = $this->url->getUrls($row['resourcetextUrls']);
+                $links = \URL\getUrls($row['resourcetextUrls']);
                 if ($row['resourcetextUrlText'])
                 {
-                    $names = $this->url->getUrls($row['resourcetextUrlText']);
+                    $names = \URL\getUrls($row['resourcetextUrlText']);
                 }
                 foreach ($links as $url)
                 {
@@ -763,18 +761,18 @@ class RESOURCEVIEW
                         $name = array_shift($names);
                         if ($name)
                         {
-                            $urls[] = \HTML\a('link', $this->url->reduceUrl(\HTML\nlToHtml($name)), $url, '_new');
+                            $urls[] = \HTML\a('link', \URL\reduceUrl(\HTML\nlToHtml($name)), $url, '_new');
                         }
                         else
                         {
-                            $urls[] = \HTML\a('link', $this->url->reduceUrl($url), $url, '_new');
+                            $urls[] = \HTML\a('link', \URL\reduceUrl($url), $url, '_new');
                         }
                     }
                     else
                     {
                         $urls[] = \HTML\a(
                             'link',
-                            $this->url->reduceUrl($url),
+                            \URL\reduceUrl($url),
                             $url,
                             '_new'
                         );

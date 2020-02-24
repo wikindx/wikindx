@@ -18,6 +18,7 @@ include_once("core/ajax/AJAX.php");
 include_once("core/file/FILE.php");
 include_once("core/utils/UTILS.php");
 include_once("core/locales/LOCALES.php");
+include_once("core/urls/URL.php");
 
 /**
  * FACTORY_HOUSEKEEPING
@@ -2416,42 +2417,6 @@ class FACTORY_RESOURCECOMMON
         {
             include_once("core/resources/RESOURCECOMMON.php");
             self::$instance = new RESOURCECOMMON;
-        }
-
-        return self::$instance;
-    }
-}
-/**
- * FACTORY_URL
- *
- *	Create objects for commonly used classes.
- *	Theoretically, this should save time in loading classes using include() statements and, perhaps, memory
- *	by not having multiple instances of the same object.
- *	Many WIKINDX classes have busy __construct() methods (initializing arrays etc.).  Using FACTORY ensures that
- *	this work is only done once each time the web server deals with a script -- subsequent class instantiations
- *	in the same server call return only the already constructed object.
- *
- *	e.g. To call the FACTORY SESSION object:
- *		$this->session = FACTORY_SESSION::getInstance();
- *
- * @package wikindx\core\startup
- */
-class FACTORY_URL
-{
-    /** object */
-    private static $instance;
-
-    /**
-     * Get instance
-     *
-     * @return object (self::$instance)
-     */
-    public static function getInstance()
-    {
-        if (empty(self::$instance))
-        {
-            include_once("core/urls/URL.php");
-            self::$instance = new URL;
         }
 
         return self::$instance;

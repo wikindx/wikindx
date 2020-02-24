@@ -313,11 +313,11 @@ class LOADCONFIG
         // or replace it dynamically by the protocol requested by the browser (http or https)
         if (!\UTILS\matchPrefix($this->config->WIKINDX_BASE_URL, "http://") && !\UTILS\matchPrefix($this->config->WIKINDX_BASE_URL, "https://"))
         {
-            $this->config->WIKINDX_BASE_URL = FACTORY_URL::getInstance()->getCurrentProtocole() . '://' . $this->config->WIKINDX_BASE_URL;
+            $this->config->WIKINDX_BASE_URL = \URL\getCurrentProtocole() . '://' . $this->config->WIKINDX_BASE_URL;
         }
         else
         {
-            $this->config->WIKINDX_BASE_URL = preg_replace('/^https?/u', FACTORY_URL::getInstance()->getCurrentProtocole(), $this->config->WIKINDX_BASE_URL);
+            $this->config->WIKINDX_BASE_URL = preg_replace('/^https?/u', \URL\getCurrentProtocole(), $this->config->WIKINDX_BASE_URL);
         }
 
 

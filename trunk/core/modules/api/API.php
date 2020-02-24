@@ -29,7 +29,6 @@ class API
     private $common;
     private $abstract;
     private $note;
-    private $url;
 
     public function __construct()
     {
@@ -47,7 +46,6 @@ class API
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
-        $this->url = FACTORY_URL::getInstance();
         include_once('core/modules/resource/RESOURCEABSTRACT.php');
         $this->abstract = new RESOURCEABSTRACT();
         include_once('core/modules/resource/RESOURCENOTE.php');

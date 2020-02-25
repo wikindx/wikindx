@@ -276,7 +276,6 @@ class BROWSECOMMON
     {
         if (array_key_exists('PagingStart', $this->vars))
         {
-            $this->session->setVar("mywikindx_PagingTagCloudStart", $this->vars['PagingStart']);
             $this->start = $this->vars['PagingStart'];
         }
         else

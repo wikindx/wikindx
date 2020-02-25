@@ -150,7 +150,7 @@ class PREFERENCES
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
         if (!GLOBALS::getUserVar("PagingTagCloud"))
         {
-            GLOBALS::setUserVar("PagingTagCloud", 100);
+            GLOBALS::setUserVar("PagingTagCloud", WIKINDX_PAGING_TAG_CLOUD_DEFAULT);
         }
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
         $pString .= \HTML\td(\FORM\textInput(

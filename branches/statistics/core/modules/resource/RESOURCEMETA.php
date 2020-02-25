@@ -37,7 +37,7 @@ class RESOURCEMETA
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
         $this->cite = FACTORY_CITE::getInstance();
-        $this->userId = $this->session->getVar('setup_UserId');
+        $this->userId = $this->session->getVar("setup_UserId");
     }
     /**
      * Display resource's quotes
@@ -48,7 +48,7 @@ class RESOURCEMETA
      */
     public function viewQuotes($row)
     {
-        $write = $this->session->getVar('setup_Write') ? TRUE : FALSE;
+        $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
         $this->db->formatConditions(['resourcemetadataResourceId' => $row['resourceId']]);
         $this->db->formatConditions($this->db->formatFields('resourcemetadataType') . $this->db->equal . $this->db->tidyInput('q'));
         $this->db->orderBy($this->db->tidyInputClause('resourcemetadataPageStart') . '+0', FALSE, FALSE);
@@ -84,7 +84,7 @@ class RESOURCEMETA
      */
     public function viewParaphrases($row)
     {
-        $write = $this->session->getVar('setup_Write') ? TRUE : FALSE;
+        $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
         $this->db->formatConditions(['resourcemetadataResourceId' => $row['resourceId']]);
         $this->db->formatConditions($this->db->formatFields('resourcemetadataType') . $this->db->equal . $this->db->tidyInput('p'));
         $this->db->orderBy($this->db->tidyInputClause('resourcemetadataPageStart') . '+0', FALSE, FALSE);
@@ -121,7 +121,7 @@ class RESOURCEMETA
     public function viewMusings($row)
     {
         $resourceId = $row['resourceId'];
-        $write = $this->session->getVar('setup_Write') ? TRUE : FALSE;
+        $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
         $this->db->formatConditions(['resourcemetadataResourceId' => $row['resourceId']]);
         $this->db->formatConditions($this->db->formatFields('resourcemetadataType') . $this->db->equal . $this->db->tidyInput('m'));
         $this->db->orderBy($this->db->tidyInputClause('resourcemetadataPageStart') . '+0', FALSE, FALSE);
@@ -145,11 +145,11 @@ class RESOURCEMETA
             );
         }
         $patterns = FALSE;
-        $write = $this->session->getVar('setup_Write') ? TRUE : FALSE;
+        $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
         $index = 0;
         if (array_key_exists("search", $this->vars) && $this->vars["search"] = 'highlight')
         {
-            $searchTerms = UTF8::mb_explode(",", $this->session->getVar('search_Highlight'));
+            $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_Highlight"));
             foreach ($searchTerms as $term)
             {
                 $patterns[] = "/($term)(?!\\S*\" \\S*>)/i";
@@ -232,12 +232,12 @@ class RESOURCEMETA
         $patterns = FALSE;
         $action = $type == 'quote' ? 'quoteEdit' : 'paraphraseEdit';
         $phpFile = $type == 'quote' ? 'resource_RESOURCEQUOTE_CORE' : 'resource_RESOURCEPARAPHRASE_CORE';
-        $write = $this->session->getVar('setup_Write') ? TRUE : FALSE;
+        $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
         $index = 0;
-        $thisUserId = $this->session->getVar('setup_UserId');
+        $thisUserId = $this->session->getVar("setup_UserId");
         if (array_key_exists("search", $this->vars) && $this->vars["search"] = 'highlight')
         {
-            $searchTerms = UTF8::mb_explode(",", $this->session->getVar('search_Highlight'));
+            $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_Highlight"));
             foreach ($searchTerms as $term)
             {
                 $patterns[] = "/($term)(?!\\S*\" \\S*>)/i";
@@ -287,7 +287,7 @@ class RESOURCEMETA
                 while ($rowComment = $this->db->fetchRow($recordset2))
                 {
                     // Read only access
-                    if ($this->session->getVar('setup_ReadOnly') &&
+                    if ($this->session->getVar("setup_ReadOnly") &&
                         (($rowComment['resourcemetadataPrivate'] == 'Y') || ($rowComment['resourcemetadataPrivate'] == 'G')))
                     {
                         continue;

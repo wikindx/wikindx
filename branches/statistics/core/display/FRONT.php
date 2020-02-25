@@ -51,8 +51,8 @@ class FRONT
      */
     private function init()
     {
-        $this->session->delVar('search_Highlight');
-        $this->session->delVar('list_AllIds');
+        $this->session->delVar("search_Highlight");
+        $this->session->delVar("list_AllIds");
         
         $this->db->formatConditions(['configName' => 'configDescription_' . \LOCALES\determine_locale()]);
         $input = $this->db->fetchOne($this->db->select('config', 'configText'));
@@ -69,7 +69,7 @@ class FRONT
             $replace = $qs->init(FALSE, FALSE, TRUE);
             $pString = str_replace('$QUICKSEARCH$', $replace, $pString);
         }
-        if ($lastChanges = $this->session->getVar("setup_LastChanges"))
+        if ($lastChanges = WIKINDX_LAST_CHANGES)
         {
             if ($this->getChanges($lastChanges))
             {
@@ -95,9 +95,9 @@ class FRONT
             return FALSE;
         }
         $this->db->ascDesc = $this->db->desc; // descending order
-        if ($this->session->getVar("setup_LastChangesType") == 'days')
+        if (WIKINDX_LAST_CHANGES_TYPE == 'days')
         { // Display from last $limit days
-            if (($limitResources = $this->session->getVar("setup_LastChangesDayLimit")) < 0)
+            if (($limitResources = WIKINDX_LAST_CHANGES_DAY_LIMIT) < 0)
             {
                 $limitResources = FALSE;
             }

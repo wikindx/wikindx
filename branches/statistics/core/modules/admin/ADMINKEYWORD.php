@@ -254,7 +254,7 @@ class ADMINKEYWORD
      */
     public function deleteConfirm()
     {
-        $this->session->delVar('editLock');
+        $this->session->delVar("editLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete2", " (" .
             $this->messages->text("resources", "keyword") . ")"));
         $input = array_values($this->vars['delete_KeywordId']);
@@ -274,7 +274,7 @@ class ADMINKEYWORD
      */
     public function delete()
     {
-        if ($this->session->getVar('editLock'))
+        if ($this->session->getVar("editLock"))
         {
             $this->badInput->close($this->errors->text("done", "keywordDelete"), $this, 'deleteInit');
         }
@@ -299,7 +299,7 @@ class ADMINKEYWORD
             $this->db->delete('resource_keyword');
         }
         // lock reload
-        $this->session->setVar('editLock', TRUE);
+        $this->session->setVar("editLock", TRUE);
         // Clear session
         $this->session->clearArray("edit");
         // send back to deleteDisplay with success message

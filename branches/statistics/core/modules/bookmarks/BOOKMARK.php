@@ -121,39 +121,39 @@ class BOOKMARK
             }
         }
         $this->session->setVar("bookmark_" . $id . "_name", $name);
-        if ($this->session->getVar('bookmark_View') == 'solo')
+        if ($this->session->getVar("bookmark_View") == 'solo')
         {
-            $this->session->setVar("bookmark_" . $id . "_id", $this->session->getVar('sql_LastSolo'));
+            $this->session->setVar("bookmark_" . $id . "_id", $this->session->getVar("sql_LastSolo"));
             $this->session->saveState('bookmark');
             // send back to view this resource with success message
             GLOBALS::addTplVar('content', $this->success->text("bookmark"));
             include_once("core/modules/resource/RESOURCEVIEW.php");
             $resource = new RESOURCEVIEW();
-            $resource->init($this->session->getVar('sql_LastSolo'));
+            $resource->init($this->session->getVar("sql_LastSolo"));
         }
         else
         { // multi view
-            $bookmark['sql_ListParams'] = $this->session->getVar('sql_ListParams');
-            $bookmark['sql_ListStmt'] = $this->session->getVar('sql_ListStmt');
-            $bookmark['sql_LastMulti'] = $this->session->getVar('sql_LastMulti');
-            $bookmark['sql_DisplayAttachment'] = $this->session->getVar('sql_DisplayAttachment');
-            $bookmark['sql_CountStmt'] = $this->session->getVar('sql_CountStmt');
-            $bookmark['sql_LastIdeaSearch'] = $this->session->getVar('sql_LastIdeaSearch');
-            $bookmark['sql_CountAlphaStmt'] = $this->session->getVar('sql_CountAlphaStmt');
-            $bookmark['sql_SubQueryMulti'] = $this->session->getVar('list_SubQueryMulti');
-            $bookmark['sql_SubQuery'] = $this->session->getVar('list_SubQuery');
-            preg_match("/_(.*)_CORE/u", $this->session->getVar('sql_LastMulti'), $match);
+            $bookmark['sql_ListParams'] = $this->session->getVar("sql_ListParams");
+            $bookmark['sql_ListStmt'] = $this->session->getVar("sql_ListStmt");
+            $bookmark['sql_LastMulti'] = $this->session->getVar("sql_LastMulti");
+            $bookmark['sql_DisplayAttachment'] = $this->session->getVar("sql_DisplayAttachment");
+            $bookmark['sql_CountStmt'] = $this->session->getVar("sql_CountStmt");
+            $bookmark['sql_LastIdeaSearch'] = $this->session->getVar("sql_LastIdeaSearch");
+            $bookmark['sql_CountAlphaStmt'] = $this->session->getVar("sql_CountAlphaStmt");
+            $bookmark['sql_SubQueryMulti'] = $this->session->getVar("list_SubQueryMulti");
+            $bookmark['sql_SubQuery'] = $this->session->getVar("list_SubQuery");
+            preg_match("/_(.*)_CORE/u", $this->session->getVar("sql_LastMulti"), $match);
             if ($match[1] == 'SEARCH')
             {
                 $bookmark['Highlight'] = $this->session->getVar("search_Highlight");
-                $bookmark['Patterns'] = $this->session->getVar('search_Patterns');
-                $bookmark['sql_ListParams'] = base64_encode(serialize($this->session->getVar('advancedSearch_listParams')));
+                $bookmark['Patterns'] = $this->session->getVar("search_Patterns");
+                $bookmark['sql_ListParams'] = base64_encode(serialize($this->session->getVar("advancedSearch_listParams")));
                 $listType = 'advancedSearch';
             }
             elseif ($match[1] == 'QUICKSEARCH')
             {
                 $bookmark['Highlight'] = $this->session->getVar("search_Highlight");
-                $bookmark['Patterns'] = $this->session->getVar('search_Patterns');
+                $bookmark['Patterns'] = $this->session->getVar("search_Patterns");
                 $listType = 'search';
             }
             elseif (($match[1] == 'LISTRESOURCES') || ($match[1] == 'LISTSOMERESOURCES'))
@@ -229,13 +229,13 @@ class BOOKMARK
             {
                 if (array_key_exists($i . "_id", $bookmarks))
                 {
-                    $this->session->delVar('bookmark_' . $i . '_id');
+                    $this->session->delVar("bookmark_" . $i . '_id');
                 }
                 elseif (array_key_exists($i . "_multi", $bookmarks))
                 {
-                    $this->session->delVar('bookmark_' . $i . '_multi');
+                    $this->session->delVar("bookmark_" . $i . '_multi');
                 }
-                $this->session->delVar('bookmark_' . $i . '_name');
+                $this->session->delVar("bookmark_" . $i . '_name');
             }
         }
         $this->session->saveState('bookmark');
@@ -250,35 +250,35 @@ class BOOKMARK
         $bookmark = unserialize($bookmarks[$this->vars['id'] . '_multi']);
         if (array_key_exists('sql_MetadataTxt', $bookmark))
         {
-            $this->session->setVar('sql_MetadataText', $bookmark['sql_MetadataText']);
+            $this->session->setVar("sql_MetadataText", $bookmark['sql_MetadataText']);
         }
         if (array_key_exists('Highlight', $bookmark))
         {
-            $this->session->setVar('search_Highlight', $bookmark['Highlight']);
+            $this->session->setVar("search_Highlight", $bookmark['Highlight']);
         }
         if (array_key_exists('Patterns', $bookmark))
         {
-            $this->session->setVar('search_Patterns', $bookmark['Patterns']);
+            $this->session->setVar("search_Patterns", $bookmark['Patterns']);
         }
-        $this->session->setVar('sql_LastMulti', $bookmark['sql_LastMulti']);
+        $this->session->setVar("sql_LastMulti", $bookmark['sql_LastMulti']);
         if (array_key_exists('sql_LastIdeaSearch', $bookmark))
         {
-            $this->session->setVar('sql_LastIdeaSearch', $bookmark['sql_LastIdeaSearch']);
+            $this->session->setVar("sql_LastIdeaSearch", $bookmark['sql_LastIdeaSearch']);
         }
-        $this->session->setVar('sql_CountStmt', $bookmark['sql_CountStmt']);
-        $this->session->setVar('sql_CountAlphaStmt', $bookmark['sql_CountAlphaStmt']);
-        $this->session->setVar('bookmark_MultiView', TRUE);
-        $this->session->delVar('select_DisplayAttachment');
-        $this->session->delVar('search_DisplayAttachment');
-        $this->session->setVar('sql_DisplayAttachment', $bookmark['sql_DisplayAttachment']);
-        $this->session->setVar('sql_ListParams', $bookmark['sql_ListParams']);
+        $this->session->setVar("sql_CountStmt", $bookmark['sql_CountStmt']);
+        $this->session->setVar("sql_CountAlphaStmt", $bookmark['sql_CountAlphaStmt']);
+        $this->session->setVar("bookmark_MultiView", TRUE);
+        $this->session->delVar("select_DisplayAttachment");
+        $this->session->delVar("search_DisplayAttachment");
+        $this->session->setVar("sql_DisplayAttachment", $bookmark['sql_DisplayAttachment']);
+        $this->session->setVar("sql_ListParams", $bookmark['sql_ListParams']);
         $this->session->clearArray($bookmark['listType']);
         $this->session->writeArray(unserialize(base64_decode($bookmark['listTypeArray'])), $bookmark['listType']);
-        $this->session->delVar('mywikindx_PagingStart');
-        $this->session->delVar('mywikindx_PagingStartAlpha');
-        $this->session->setVar('list_SubQueryMulti', $bookmark['sql_SubQueryMulti']);
-        $this->session->setVar('list_SubQuery', $bookmark['sql_SubQuery']);
-        $this->session->delVar('list_NextPreviousIds');
+        $this->session->delVar("mywikindx_PagingStart");
+        $this->session->delVar("mywikindx_PagingStartAlpha");
+        $this->session->setVar("list_SubQueryMulti", $bookmark['sql_SubQueryMulti']);
+        $this->session->setVar("list_SubQuery", $bookmark['sql_SubQuery']);
+        $this->session->delVar("list_NextPreviousIds");
         $navigate = FACTORY_NAVIGATE::getInstance();
         $navigate->listView();
     }

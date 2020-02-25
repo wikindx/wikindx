@@ -233,9 +233,9 @@ class DELETERESOURCE
         // exporting bibliographies etc.
         if (!$this->db->selectFirstField('database_summary', 'databasesummaryTotalResources'))
         {
-            $this->session->delVar('sql_ListStmt');
-            $this->session->delVar('sql_LastMulti');
-            $this->session->delVar('sql_LastSolo');
+            $this->session->delVar("sql_ListStmt");
+            $this->session->delVar("sql_LastMulti");
+            $this->session->delVar("sql_LastSolo");
         }
         $pString = $this->success->text("resourceDelete");
         // Lock reload.

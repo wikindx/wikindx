@@ -56,16 +56,16 @@ class RESOURCEWRITE
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->navigate = FACTORY_NAVIGATE::getInstance();
         $this->typeMaps = $this->resourceMap->getTypeMap();
-        $this->userId = $this->session->getVar('setup_UserId');
+        $this->userId = $this->session->getVar("setup_UserId");
     }
     /**
      * Start the process
      */
     public function init()
     {
-        if ($this->session->getVar('resourceFormType') == 'new')
+        if ($this->session->getVar("resourceFormType") == 'new')
         {
-            if (($this->session->getVar('setup_Superadmin') != 1) && ($this->session->getVar('setup_Quarantine')))
+            if (($this->session->getVar("setup_Superadmin") != 1) && (WIKINDX_QUARANTINE))
             {
                 $success = $this->success->text("resourceAdd") . \HTML\p($this->success->text('quarantined'));
             }
@@ -80,7 +80,7 @@ class RESOURCEWRITE
             $success = $this->success->text("resourceEdit");
             GLOBALS::setTplVar('heading', $this->messages->text('heading', 'editResource'));
         }
-        if ($this->session->getVar('resourceLock'))
+        if ($this->session->getVar("resourceLock"))
         {
             $this->badInput->close($this->errors->text("done", "resource"));
         }
@@ -98,7 +98,7 @@ class RESOURCEWRITE
             $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()));
         }
         $this->session->clearArray('resourceForm');
-        $this->session->setVar('resourceLock', TRUE);
+        $this->session->setVar("resourceLock", TRUE);;
         $this->navigate->resource($this->resourceId, $success);
     }
 
@@ -515,7 +515,7 @@ class RESOURCEWRITE
             $this->db->formatConditions(['resourcemiscId' => $this->resourceId]);
             $this->db->delete('resource_misc');
         }
-        elseif (($this->session->getVar('setup_Superadmin') != 1) && ($this->session->getVar('setup_Quarantine')))
+        elseif (($this->session->getVar("setup_Superadmin") != 1) && (WIKINDX_QUARANTINE))
         {
             $writeArray['resourcemiscQuarantine'] = 'Y';
         }
@@ -757,7 +757,7 @@ class RESOURCEWRITE
                 {
                     $writeArray['resourcecustomLong'] = $value;
                 }
-                $writeArray['resourcecustomAddUserIdCustom'] = $this->session->getVar('setup_UserId');
+                $writeArray['resourcecustomAddUserIdCustom'] = $this->session->getVar("setup_UserId");
                 $writeArray['resourcecustomCustomId'] = $id;
                 $writeArray['resourcecustomResourceId'] = $this->resourceId;
                 $this->db->insert('resource_custom', array_keys($writeArray), array_values($writeArray));
@@ -887,7 +887,7 @@ class RESOURCEWRITE
     {
         $this->session->clearArray('resourceForm');
         $this->resourceType = $this->vars['resourceType'];
-        $this->session->setVar('resourceForm_resourceType', $this->resourceType);
+        $this->session->setVar("resourceForm_resourceType", $this->resourceType);
         unset($this->vars['resourceType']);
         $input = $dates = [];
         foreach ($this->vars as $inputKey => $inputValue)
@@ -905,7 +905,7 @@ class RESOURCEWRITE
                 if (!empty($inputValue) && ($inputKey != 'resourceusertagsTagId') && ($inputKey != 'resourcekeywordKeywords'))
                 {
                     $input[$inputKey] = $inputValue;
-                    $this->session->setVar('resourceForm_' . $inputKey, implode(',', $inputValue));
+                    $this->session->setVar("resourceForm_" . $inputKey, implode(',', $inputValue));
                 }
             }
             elseif (($inputKey == 'series') && (base64_decode($inputValue) == 'IGNORE'))
@@ -917,7 +917,7 @@ class RESOURCEWRITE
                 $inputValue = trim($inputValue);
                 if ($inputValue)
                 {
-                    $this->session->setVar('resourceForm_' . $inputKey, $inputValue);
+                    $this->session->setVar("resourceForm_" . $inputKey, $inputValue);
                 }
             }
             if ($inputValue && (mb_strpos($inputKey, 'customId') === 0))

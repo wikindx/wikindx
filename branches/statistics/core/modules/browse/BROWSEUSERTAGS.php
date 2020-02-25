@@ -58,7 +58,7 @@ class BROWSEUSERTAGS
     public function getUserTags()
     {
         $this->common->userBibCondition('resourceusertagsResourceId');
-        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->leftJoin('user_tags', 'usertagsId', 'resourceusertagsTagId');
         $this->db->groupBy('usertagsId');
         $this->db->orderByCollate('usertagsTag');

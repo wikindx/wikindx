@@ -213,7 +213,7 @@ class importexportbib_MODULE
         }
         include_once(__DIR__ . DIRECTORY_SEPARATOR . "ENDNOTE.php");
         $endnote = new ENDNOTE($this);
-        $this->session->delVar('importLock');
+        $this->session->delVar("importLock");
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerEndnoteImport"));
         $this->session->clearArray("import");
         GLOBALS::addTplVar('content', $message . $endnote->displayImport());
@@ -241,7 +241,7 @@ class importexportbib_MODULE
 
             return;
         }
-        $this->session->delVar('importLock');
+        $this->session->delVar("importLock");
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerPubMedImport"));
         $pString = $message ? $message : FALSE;
         $pString .= $pubmed->displayImport();
@@ -272,7 +272,7 @@ class importexportbib_MODULE
      */
     public function initEndnoteExportB()
     {
-        $this->session->setVar('exportBasket', TRUE);
+        $this->session->setVar("exportBasket", TRUE);
         $this->initEndnoteExport();
         GLOBALS::clearTplVar('pagingList');
     }
@@ -281,7 +281,7 @@ class importexportbib_MODULE
      */
     public function initEndnoteExportL($message = FALSE)
     {
-        $this->session->delVar('exportBasket', TRUE);
+        $this->session->delVar("exportBasket", TRUE);
         GLOBALS::addTplVar('content', $message);
         $this->initEndnoteExport();
     }
@@ -304,7 +304,7 @@ class importexportbib_MODULE
      */
     public function initRtfExportB()
     {
-        $this->session->setVar('exportBasket', TRUE);
+        $this->session->setVar("exportBasket", TRUE);
         $this->initRtfExport();
         GLOBALS::clearTplVar('pagingList');
     }
@@ -313,7 +313,7 @@ class importexportbib_MODULE
      */
     public function initRtfExportL()
     {
-        $this->session->delVar('exportBasket', TRUE);
+        $this->session->delVar("exportBasket", TRUE);
         $this->initRtfExport();
     }
     /**
@@ -335,7 +335,7 @@ class importexportbib_MODULE
      */
     public function initBibtexExportB()
     {
-        $this->session->setVar('exportBasket', TRUE);
+        $this->session->setVar("exportBasket", TRUE);
         $this->initBibtexExport();
         GLOBALS::clearTplVar('pagingList');
     }
@@ -344,7 +344,7 @@ class importexportbib_MODULE
      */
     public function initBibtexExportL()
     {
-        $this->session->delVar('exportBasket', TRUE);
+        $this->session->delVar("exportBasket", TRUE);
         $this->initBibtexExport();
     }
     /**
@@ -366,7 +366,7 @@ class importexportbib_MODULE
      */
     public function initHtmlExportB()
     {
-        $this->session->setVar('exportBasket', TRUE);
+        $this->session->setVar("exportBasket", TRUE);
         $this->initHtmlExport();
         GLOBALS::clearTplVar('pagingList');
     }
@@ -375,7 +375,7 @@ class importexportbib_MODULE
      */
     public function initHtmlExportL()
     {
-        $this->session->delVar('exportBasket', TRUE);
+        $this->session->delVar("exportBasket", TRUE);
         $this->initHtmlExport();
     }
     /**
@@ -537,7 +537,7 @@ class importexportbib_MODULE
      */
     public function initRisExportB()
     {
-        $this->session->setVar('exportBasket', TRUE);
+        $this->session->setVar("exportBasket", TRUE);
         $this->initRisExport();
     }
     /**
@@ -545,7 +545,7 @@ class importexportbib_MODULE
      */
     public function initRisExportL()
     {
-        $this->session->delVar('exportBasket', TRUE);
+        $this->session->delVar("exportBasket", TRUE);
         $this->initRisExport();
     }
     /**
@@ -717,7 +717,7 @@ class importexportbib_MODULE
             }
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
 
-            if ($this->session->getVar('fileExports'))
+            if ($this->session->getVar("fileExports"))
             {
                 $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuListFiles')] = 'listFiles';
             }

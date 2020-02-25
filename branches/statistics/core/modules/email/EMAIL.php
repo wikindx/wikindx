@@ -121,7 +121,7 @@ class EMAIL
         }
         // If needed, email admin about new user
         $email = WIKINDX_EMAIL_NEW_REGISTRATIONS;
-        if ($email && !$this->session->getVar('setup_Superadmin'))
+        if ($email && !$this->session->getVar("setup_Superadmin"))
         {
             $message = "A new user has registered for" . "\n\nWIKINDX:\t\t$link\n\nUSERNAME:\t\t" .
                 trim($this->vars['username']) . "\n" . LF;
@@ -358,7 +358,7 @@ class EMAIL
     public function notify($resourceId, $newResource = FALSE)
     {
         // do nothing if admin does not allow notification or email is not turned on
-        if (!WIKINDX_MAIL_USE || !$this->session->getVar('setup_Notify'))
+        if (!WIKINDX_MAIL_USE || !WIKINDX_NOTIFY)
         {
             return TRUE;
         }
@@ -403,9 +403,9 @@ class EMAIL
         {
             $text = trim($this->vars['emailFriend_text']);
         }
-        $this->session->setVar('emailFriend_Address', $address);
-        $this->session->setVar('emailFriend_Subject', $subject);
-        $this->session->setVar('emailFriend_Text', $text);
+        $this->session->setVar("emailFriend_Address", $address);
+        $this->session->setVar("emailFriend_Subject", $subject);
+        $this->session->setVar("emailFriend_Text", $text);
         if (!$address || !$subject || !$text)
         {
             $this->badInput->close($this->errors->text('inputError', 'missing'), $this, 'emailFriendDisplay');
@@ -423,7 +423,7 @@ class EMAIL
      */
     private function emailThreshold($resourceId, $subject)
     {
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         $this->db->formatConditions(['usersId' => $userId]);
         $digestThreshold = $this->db->selectFirstField('users', 'usersNotifyDigestThreshold');
         $size = $this->grabResources($digestThreshold);
@@ -589,7 +589,7 @@ class EMAIL
     private function emailImmediate($resourceId, $newResource, $subject)
     {
         $this->earliestUserUnixTimestamp = $this->earliestNotifyUnixTimestamp = $this->greatestThreshold = FALSE;
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         $this->db->formatConditions(['usersId' => $userId]);
         $digestThreshold = $this->db->selectFirstField('users', 'usersNotifyDigestThreshold');
         // Are there any users wanting notification?

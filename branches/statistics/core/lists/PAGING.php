@@ -45,7 +45,7 @@ class PAGING
     public function getPaging()
     {
         $this->getPagingStart();
-        $this->total = $this->session->getVar('setup_PagingTotal');
+        $this->total = $this->session->getVar("setup_PagingTotal");
         $this->paging = GLOBALS::getUserVar('Paging');
         $this->maxLinks = GLOBALS::getUserVar('PagingMaxLinks');
         $this->maxLinksHalf = round($this->maxLinks / 2);
@@ -71,7 +71,7 @@ class PAGING
         
         if ($start === FALSE)
         {
-            $start = $this->session->getVar('mywikindx_PagingStart', FALSE);
+            $start = $this->session->getVar("mywikindx_PagingStart", FALSE);
         }
         
         if ($start === FALSE)
@@ -80,7 +80,7 @@ class PAGING
         }
         
         $this->start = $start;
-        $this->session->setVar('mywikindx_PagingStart', $start);
+        $this->session->setVar("mywikindx_PagingStart", $start);
     }
     /**
      * Format display information string
@@ -107,7 +107,7 @@ class PAGING
             $bib = ' (' . $this->messages->text("user", "bibliography") . ': ' .
             \HTML\nlToHtml($bibTitle) . ")";
         }
-        elseif ($this->session->getVar('setup_MultiUser'))
+        elseif (WIKINDX_MULTIUSER)
         {
             $bib = ' (' . $this->messages->text("user", "bibliography") . ': ' .
                 $this->messages->text("user", "masterBib") . ")";

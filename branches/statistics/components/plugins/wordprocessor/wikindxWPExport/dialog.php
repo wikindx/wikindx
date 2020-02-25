@@ -34,8 +34,8 @@ include_once("core/startup/WEBSERVERCONFIG.php");
 include_once("core/messages/PLUGINMESSAGES.php");
 
 $script = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
-$script .= '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/wordprocessor/wikindxWPcommon.js"></script>';
-$script .= '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/wordprocessor/' . basename(__DIR__) . '/js/wikindxWPExportdialog.js"></script>';
+$script .= '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/wordprocessor/wikindxWPcommon.js"></script>';
+$script .= '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/wordprocessor/' . basename(__DIR__) . '/js/wikindxWPExportdialog.js"></script>';
 GLOBALS::addTplVar('scripts', $script);
 
 $class = new WPExportDialog();
@@ -79,7 +79,7 @@ class WPExportDialog
     {
         $this->wpExportWriteSession();
         $hashFileName = $this->session->getVar("wp_HashFilename");
-        $title = base64_decode($this->session->getVar('wp_Title'));
+        $title = base64_decode($this->session->getVar("wp_Title"));
         // Write to files/ folder
         $fullFileName = $this->dirFilesName . DIRECTORY_SEPARATOR . $hashFileName . '.rtf';
         if ($fp = fopen("$fullFileName", "w"))
@@ -99,7 +99,7 @@ class WPExportDialog
         }
 
         // Write exported hashed filename to session
-        if ($sessVar = $this->session->getVar('wp_PaperExports'))
+        if ($sessVar = $this->session->getVar("wp_PaperExports"))
         {
             $sessArray = unserialize($sessVar);
         }
@@ -110,7 +110,7 @@ class WPExportDialog
         if (array_search($hashFileName, $sessArray) === FALSE)
         {
             $sessArray[$hashFileName] = $title . '.rtf';
-            $this->session->setVar('wp_PaperExports', serialize($sessArray));
+            $this->session->setVar("wp_PaperExports", serialize($sessArray));
         }
         // Perform some system admin
         FILE\tidyFiles();
@@ -166,7 +166,7 @@ class WPExportDialog
         }
         else
         {
-            $this->session->setVar('wp_ExportFormat', $this->vars['exportFormat']);
+            $this->session->setVar("wp_ExportFormat", $this->vars['exportFormat']);
         }
         if ($this->vars['exportFormat'] == 'noExport')
         {
@@ -174,119 +174,119 @@ class WPExportDialog
         }
         if (array_key_exists('exportStyle', $this->vars))
         {
-            $this->session->setVar('wp_ExportStyle', $this->vars['exportStyle']);
+            $this->session->setVar("wp_ExportStyle", $this->vars['exportStyle']);
         }
         if (array_key_exists('exportPaperSize', $this->vars))
         {
-            $this->session->setVar('wp_ExportPaperSize', $this->vars['exportPaperSize']);
+            $this->session->setVar("wp_ExportPaperSize", $this->vars['exportPaperSize']);
         }
         else
         {
-            $this->session->setVar('wp_ExportPaperSize', 'A4');
+            $this->session->setVar("wp_ExportPaperSize", 'A4');
         }
         if (array_key_exists('exportPaperSpace', $this->vars))
         {
-            $this->session->setVar('wp_ExportPaperSpace', $this->vars['exportPaperSpace']);
+            $this->session->setVar("wp_ExportPaperSpace", $this->vars['exportPaperSpace']);
         }
         else
         {
-            $this->session->setVar('wp_ExportPaperSpace', 'singleSpace');
+            $this->session->setVar("wp_ExportPaperSpace", 'singleSpace');
         }
         if (array_key_exists('exportSectionFtRestart', $this->vars))
         {
-            $this->session->setVar('wp_ExportSectionFtRestart', $this->vars['exportSectionFtRestart']);
+            $this->session->setVar("wp_ExportSectionFtRestart", $this->vars['exportSectionFtRestart']);
         }
         else
         {
-            $this->session->setVar('wp_ExportSectionFtRestart', FALSE); // default no restart
+            $this->session->setVar("wp_ExportSectionFtRestart", FALSE); // default no restart
         }
         if (array_key_exists('exportSpaceBib', $this->vars))
         {
-            $this->session->setVar('wp_ExportSpaceBib', $this->vars['exportSpaceBib']);
+            $this->session->setVar("wp_ExportSpaceBib", $this->vars['exportSpaceBib']);
         }
         else
         {
-            $this->session->setVar('wp_ExportSpaceBib', 'singleSpace');
+            $this->session->setVar("wp_ExportSpaceBib", 'singleSpace');
         }
         if (array_key_exists('exportIndentBib', $this->vars))
         {
-            $this->session->setVar('wp_ExportIindentBib', $this->vars['exportIndentBib']);
+            $this->session->setVar("wp_ExportIindentBib", $this->vars['exportIndentBib']);
         }
         else
         {
-            $this->session->setVar('wp_ExportIndentBib', 'none');
+            $this->session->setVar("wp_ExportIndentBib", 'none');
         }
         if (array_key_exists('exportSpaceFt', $this->vars))
         {
-            $this->session->setVar('wp_ExportSpaceFt', $this->vars['exportSpaceFt']);
+            $this->session->setVar("wp_ExportSpaceFt", $this->vars['exportSpaceFt']);
         }
         else
         {
-            $this->session->setVar('wp_ExportSpaceFt', 'singleSpace');
+            $this->session->setVar("wp_ExportSpaceFt", 'singleSpace');
         }
         if (array_key_exists('exportIndentFt', $this->vars))
         {
-            $this->session->setVar('wp_ExportIndentFt', $this->vars['exportIndentFt']);
+            $this->session->setVar("wp_ExportIndentFt", $this->vars['exportIndentFt']);
         }
         else
         {
-            $this->session->setVar('wp_ExportIndentFt', 'none');
+            $this->session->setVar("wp_ExportIndentFt", 'none');
         }
         if (array_key_exists('exportFontSizeFt', $this->vars))
         {
-            $this->session->setVar('wp_ExportFontSizeFt', $this->vars['exportFontSizeFt']);
+            $this->session->setVar("wp_ExportFontSizeFt", $this->vars['exportFontSizeFt']);
         }
         else
         {
-            $this->session->setVar('wp_ExportFontSizeFt', 1);
+            $this->session->setVar("wp_ExportFontSizeFt", 1);
         }
         if (array_key_exists('exportPageNumber', $this->vars))
         {
-            $this->session->setVar('wp_ExportPageNumber', $this->vars['exportPageNumber']);
+            $this->session->setVar("wp_ExportPageNumber", $this->vars['exportPageNumber']);
         }
         else
         {
-            $this->session->setVar('wp_ExportPageNumber', 1);
+            $this->session->setVar("wp_ExportPageNumber", 1);
         }
         if (array_key_exists('exportPageNumberAlign', $this->vars))
         {
-            $this->session->setVar('wp_ExportPageNumberAlign', $this->vars['exportPageNumberAlign']);
+            $this->session->setVar("wp_ExportPageNumberAlign", $this->vars['exportPageNumberAlign']);
         }
         else
         {
-            $this->session->setVar('wp_ExportPageNumberAlign', 0);
+            $this->session->setVar("wp_ExportPageNumberAlign", 0);
         }
         if (array_key_exists('exportIndentQuoteWords', $this->vars))
         {
-            $this->session->setVar('wp_ExportIndentQuoteWords', $this->vars['exportIndentQuoteWords']);
+            $this->session->setVar("wp_ExportIndentQuoteWords", $this->vars['exportIndentQuoteWords']);
         }
         else
         {
-            $this->session->delVar('wp_ExportIndentQuoteWords');
+            $this->session->delVar("wp_ExportIndentQuoteWords");
         }
         if (array_key_exists('exportSpaceIndentQ', $this->vars))
         {
-            $this->session->setVar('wp_ExportSpaceIndentQ', $this->vars['exportSpaceIndentQ']);
+            $this->session->setVar("wp_ExportSpaceIndentQ", $this->vars['exportSpaceIndentQ']);
         }
         else
         {
-            $this->session->setVar('wp_ExportSpaceIndentQ', 'singleSpace');
+            $this->session->setVar("wp_ExportSpaceIndentQ", 'singleSpace');
         }
         if (array_key_exists('exportIndentQuoteFontSize', $this->vars))
         {
-            $this->session->setVar('wp_ExportIndentQuoteFontSize', $this->vars['exportIndentQuoteFontSize']);
+            $this->session->setVar("wp_ExportIndentQuoteFontSize", $this->vars['exportIndentQuoteFontSize']);
         }
         else
         {
-            $this->session->setVar('wp_ExportIndentQuoteFontSize', 1);
+            $this->session->setVar("wp_ExportIndentQuoteFontSize", 1);
         }
         if (array_key_exists('exportIndentQuoteMarks', $this->vars))
         {
-            $this->session->setVar('wp_ExportIndentQuoteMarks', $this->vars['exportIndentQuoteMarks']);
+            $this->session->setVar("wp_ExportIndentQuoteMarks", $this->vars['exportIndentQuoteMarks']);
         }
         else
         {
-            $this->session->delVar('wp_ExportIndentQuoteMarks');
+            $this->session->delVar("wp_ExportIndentQuoteMarks");
         }
     }
 
@@ -301,11 +301,11 @@ class WPExportDialog
         $js = "onsubmit=\"return wordprocessorExport('$savedMessage', '$notSavedMessage');\"";
         $pString .= FORM\formHeaderVisibleAction("dialog.php", "wpExport", $js);
         $pString .= FORM\hidden("method", "save");
-        if ($hashFilename = $this->session->getVar('wp_HashFilename'))
+        if ($hashFilename = $this->session->getVar("wp_HashFilename"))
         {
             $pString .= FORM\hidden("hashFilename", $hashFilename);
         }
-        if ($id = $this->session->getVar('wp_Id'))
+        if ($id = $this->session->getVar("wp_Id"))
         {
             $pString .= FORM\hidden("id", $id);
         }

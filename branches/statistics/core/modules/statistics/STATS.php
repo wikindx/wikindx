@@ -256,7 +256,7 @@ class STATS
         if (!array_key_exists('resourceId', $this->vars) || !array_key_exists('maturityIndex', $this->vars) ||
         !is_numeric($this->vars['maturityIndex']))
         {
-            $resource->init($this->session->getVar('sql_LastSolo'));
+            $resource->init($this->session->getVar("sql_LastSolo"));
             GLOBALS::addTplVar('content', $this->errors->text("inputError", "invalid"));
 
             return;
@@ -275,7 +275,7 @@ class STATS
             'resource_misc',
             $this->db->formatFields('resourcemiscMaturityIndex') . "=" . $this->db->tidyInput($mIndex)
         );
-        $resource->init($this->session->getVar('sql_LastSolo'));
+        $resource->init($this->session->getVar("sql_LastSolo"));
         GLOBALS::addTplVar('content', $this->success->text("maturityIndex"));
     }
     /**
@@ -630,7 +630,7 @@ class STATS
         $this->totalResources = $row['databasesummaryTotalResources'];
         $string = BR . $this->messages->text("statistics", "totalResources") .
             "&nbsp;&nbsp;" . \HTML\em($this->totalResources);
-        if ($this->session->getVar('setup_MetadataAllow'))
+        if (WIKINDX_METADATA_ALLOW)
         {
             $string .= BR . $this->messages->text("statistics", "totalQuotes") .
                 "&nbsp;&nbsp;" . \HTML\em($row['databasesummaryTotalQuotes']);
@@ -724,7 +724,7 @@ class STATS
             $string .= $this->messages->text("statistics", "userResourceTotal") .
                 "&nbsp;&nbsp;" . \HTML\em($row['count'] . "&nbsp;($user)");
         }
-        if (!$this->session->getVar('setup_MetadataAllow'))
+        if (!WIKINDX_METADATA_ALLOW)
         {
             return \HTML\p($string);
         }

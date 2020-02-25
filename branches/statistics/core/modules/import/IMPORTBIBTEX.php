@@ -144,7 +144,7 @@ class IMPORTBIBTEX
             $this->gatekeep->init();
         }
         // if session variable 'importLock' is TRUE, user is simply reloading this form
-        if ($this->session->getVar('importLock'))
+        if ($this->session->getVar("importLock"))
         {
             $this->badInput->close($this->errors->text("done", "fileImport"), $this->badClass, $this->badFunction);
         }
@@ -156,7 +156,7 @@ class IMPORTBIBTEX
         list($null, $this->strings, $entries) = $this->parse->returnArrays(); // don't need preamble
         if (empty($entries))
         {
-            $this->session->setVar('importLock', TRUE);
+            $this->session->setVar("importLock", TRUE);
             $this->badInput->close($this->errors->text("import", "empty"), $this->badClass, $this->badFunction);
         }
         if ($fields = $this->findInvalidFields($entries))
@@ -184,17 +184,17 @@ class IMPORTBIBTEX
     {
         $this->gatekeep->init();
         // if session variable 'importLock' is TRUE, user is simply reloading this form
-        if ($this->session->getVar('importLock'))
+        if ($this->session->getVar("importLock"))
         {
             $this->badInput->close($this->errors->text("done", "fileImport"), $this->badClass, $this->badFunction);
         }
-        if (!is_file($this->session->getVar('import_FileNameEntries')))
+        if (!is_file($this->session->getVar("import_FileNameEntries")))
         {
             $this->badInput->close($this->errors->text("file", "read", $this->dirName . DIRECTORY_SEPARATOR .
-            $this->session->getVar('import_FileNameEntries')), $this->badClass, $this->badFunction);
+            $this->session->getVar("import_FileNameEntries")), $this->badClass, $this->badFunction);
         }
-        $this->garbageFiles[$this->session->getVar('import_FileNameEntries')] = FALSE;
-        if ($this->fileName = fopen($this->session->getVar('import_FileNameEntries'), 'r'))
+        $this->garbageFiles[$this->session->getVar("import_FileNameEntries")] = FALSE;
+        if ($this->fileName = fopen($this->session->getVar("import_FileNameEntries"), 'r'))
         {
             if (!feof($this->fileName))
             {
@@ -202,18 +202,18 @@ class IMPORTBIBTEX
             }
             fclose($this->fileName);
         }
-        if ($this->session->getVar('import_FileNameStrings'))
+        if ($this->session->getVar("import_FileNameStrings"))
         {
-            if (!is_file($this->session->getVar('import_FileNameStrings')))
+            if (!is_file($this->session->getVar("import_FileNameStrings")))
             {
                 $this->badInput->close(
-                    $this->errors->text("file", "read", $this->session->getVar('import_FileNameStrings')),
+                    $this->errors->text("file", "read", $this->session->getVar("import_FileNameStrings")),
                     $this->badClass,
                     $this->badFunction
                 );
             }
-            $this->garbageFiles[$this->session->getVar('import_FileNameStrings')] = FALSE;
-            if ($this->fileNameStrings = fopen($this->session->getVar('import_FileNameStrings'), 'r'))
+            $this->garbageFiles[$this->session->getVar("import_FileNameStrings")] = FALSE;
+            if ($this->fileNameStrings = fopen($this->session->getVar("import_FileNameStrings"), 'r'))
             {
                 if (!feof($this->fileNameStrings))
                 {
@@ -225,7 +225,7 @@ class IMPORTBIBTEX
         }
         if (empty($this->entries))
         {
-            $this->session->setVar('importLock', TRUE);
+            $this->session->setVar("importLock", TRUE);
             $this->badInput->close($this->errors->text("import", "empty"), $this->badClass, $this->badFunction);
         }
         list($error, $this->customFields, $this->unrecognisedFields) = $this->import->getUnrecognisedFields();
@@ -511,8 +511,8 @@ class IMPORTBIBTEX
                 $sql = $rCommon->getResource($this->rIds, FALSE, FALSE, FALSE, FALSE, TRUE);
                 $listCommon->display($sql, 'list');
             }
-            $this->session->delVar('sql_LastMulti');
-            $this->session->setVar('importLock', TRUE);
+            $this->session->delVar("sql_LastMulti");
+            $this->session->setVar("importLock", TRUE);
             if ($this->resourceAdded)
             {
                 include_once("core/modules/email/EMAIL.php");
@@ -654,7 +654,7 @@ class IMPORTBIBTEX
         {
             $this->tagId = FALSE;
         }
-        if ($this->session->getVar("setup_Superadmin") || $this->session->getVar("setup_ImportBib"))
+        if ($this->session->getVar("setup_Superadmin") || WIKINDX_IMPORT_BIB)
         {
             $pasteLimit = FALSE;
         }
@@ -669,7 +669,7 @@ class IMPORTBIBTEX
             unset($this->entriesLeft[$key]);
             $authors = $editors = [];
             // For a user cut 'n' pasting. Admin is unlimited.
-            if ($pasteLimit && ($this->resourceAdded >= $this->session->getVar("setup_MaxPaste")))
+            if ($pasteLimit && ($this->resourceAdded >= WIKINDX_MAX_PASTE))
             {
                 break;
             }
@@ -750,10 +750,10 @@ class IMPORTBIBTEX
             $this->writeResourcetextTable($entry);
             $this->writeResourceKeywordTable($entry);
             $this->writeResourceCustomTable($custom);
-            $this->import->writeResourcecategoryTable($this->session->getVar('import_Categories'));
+            $this->import->writeResourcecategoryTable($this->session->getVar("import_Categories"));
             $this->import->writeResourceTimestampTable();
             $this->import->writeImportrawTable($this->rejected, $this->bibtexStringId);
-            $this->import->writeUserbibliographyresourceTable($this->session->getVar('import_BibId'));
+            $this->import->writeUserbibliographyresourceTable($this->session->getVar("import_BibId"));
             $this->import->writeBibtexKey();
             $this->resourceAdded++;
             $this->resourceAddedThisRound++;
@@ -1354,7 +1354,7 @@ class IMPORTBIBTEX
         {
             //			if($this->session->getVar("import_UnrecognisedFields"))
             //				$this->vars['import_Categories'] = UTF8::mb_explode(',', $this->vars['import_Categories']);
-            if (!$this->session->setVar('import_Categories', trim(implode(',', $this->vars['import_Categories']))))
+            if (!$this->session->setVar("import_Categories", trim(implode(',', $this->vars['import_Categories']))))
             {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
@@ -1364,48 +1364,48 @@ class IMPORTBIBTEX
         {
             //			if($this->session->getVar("import_unrecognisedFields"))
             //				$this->vars['import_BibId'] = UTF8::mb_explode(',', $this->vars['import_BibId']);
-            if (!$this->session->setVar('import_BibId', trim(implode(',', $this->vars['import_BibId']))))
+            if (!$this->session->setVar("import_BibId", trim(implode(',', $this->vars['import_BibId']))))
             {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
         }
         if (isset($this->vars['import_Raw']) && $this->vars['import_Raw'])
         {
-            if (!$this->session->setVar('import_Raw', 1))
+            if (!$this->session->setVar("import_Raw", 1))
             {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
         }
-        if (!$this->session->setVar('import_KeywordSeparator', $this->vars['import_KeywordSeparator']))
+        if (!$this->session->setVar("import_KeywordSeparator", $this->vars['import_KeywordSeparator']))
         {
             $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
         }
         if (array_key_exists('import_KeywordIgnore', $this->vars))
         {
-            if (!$this->session->setVar('import_KeywordIgnore', $this->vars['import_KeywordIgnore']))
+            if (!$this->session->setVar("import_KeywordIgnore", $this->vars['import_KeywordIgnore']))
             {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
         }
         else
         {
-            $this->session->delVar('import_KeywordIgnore');
+            $this->session->delVar("import_KeywordIgnore");
         }
-        if (!$this->session->setVar('import_TitleSubtitleSeparator', $this->vars['import_TitleSubtitleSeparator']))
+        if (!$this->session->setVar("import_TitleSubtitleSeparator", $this->vars['import_TitleSubtitleSeparator']))
         {
             $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
         }
         if (isset($this->vars['import_ImportDuplicates']) && $this->vars['import_ImportDuplicates'])
         {
-            if (!$this->session->setVar('import_ImportDuplicates', 1))
+            if (!$this->session->setVar("import_ImportDuplicates", 1))
             {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
         }
         // Force to 1 => 'General' category
-        if (!$this->session->getVar('import_Categories'))
+        if (!$this->session->getVar("import_Categories"))
         {
-            if (!$this->session->setVar('import_Categories', 1))
+            if (!$this->session->setVar("import_Categories", 1))
             {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
@@ -1416,7 +1416,7 @@ class IMPORTBIBTEX
             {
                 if (!isset($_FILES['import_File']))
                 {
-                    if ($file = $this->session->getVar('import_File'))
+                    if ($file = $this->session->getVar("import_File"))
                     {
                         return $this->dirName . DIRECTORY_SEPARATOR . $file;
                     }
@@ -1436,7 +1436,7 @@ class IMPORTBIBTEX
             { // An import from a plug-in like ImportPubMed
                 $fileName = $this->importFile;
             }
-            if (!$this->session->setVar('import_File', $fileName))
+            if (!$this->session->setVar("import_File", $fileName))
             {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
@@ -1444,14 +1444,14 @@ class IMPORTBIBTEX
             {
                 if (!$tagId = $this->tag->checkExists($this->vars['import_Tag']))
                 {
-                    if (!$this->session->setVar('import_Tag', $this->vars['import_Tag']))
+                    if (!$this->session->setVar("import_Tag", $this->vars['import_Tag']))
                     {
                         $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
                     }
                 }
                 else
                 {
-                    if (!$this->session->setVar('import_TagId', $tagId))
+                    if (!$this->session->setVar("import_TagId", $tagId))
                     {
                         $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
                     }
@@ -1459,7 +1459,7 @@ class IMPORTBIBTEX
             }
             elseif (isset($this->vars['import_TagId']) && $this->vars['import_TagId'])
             {
-                if (!$this->session->setVar('import_TagId', $this->vars['import_TagId']))
+                if (!$this->session->setVar("import_TagId", $this->vars['import_TagId']))
                 {
                     $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
                 }
@@ -1475,7 +1475,7 @@ class IMPORTBIBTEX
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this->badClass, $this->badFunction);
             }
             $paste = stripslashes(trim($this->vars['import_Paste']));
-            if (!$this->session->setVar('import_Paste', base64_encode(serialize($paste))))
+            if (!$this->session->setVar("import_Paste", base64_encode(serialize($paste))))
             {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }

@@ -90,7 +90,7 @@ class ENDNOTEIMPORT
     public function process($message = FALSE)
     {
         // if session variable 'importLock' is TRUE, user is simply reloading this form
-        if ($this->session->getVar('importLock'))
+        if ($this->session->getVar("importLock"))
         {
             $this->badInput(HTML\p($this->pluginmessages->text('fileImport'), 'error'));
         }
@@ -105,7 +105,7 @@ class ENDNOTEIMPORT
         }
         if (empty($entries))
         {
-            $this->session->setVar('importLock', TRUE);
+            $this->session->setVar("importLock", TRUE);
             $this->badInput(HTML\p($this->pluginmessages->text('empty'), 'error'));
         }
         $this->version8 = $parse->version8;
@@ -124,7 +124,7 @@ class ENDNOTEIMPORT
         }
         if (empty($this->entries))
         {
-            $this->session->setVar('importLock', TRUE);
+            $this->session->setVar("importLock", TRUE);
             $this->badInput(HTML\p($this->pluginmessages->text('empty'), 'error'));
         }
         if ($fields = $this->findInvalidFields($entries))
@@ -149,17 +149,17 @@ class ENDNOTEIMPORT
     public function stage2Invalid()
     {
         // if session variable 'importLock' is TRUE, user is simply reloading this form
-        if ($this->session->getVar('importLock'))
+        if ($this->session->getVar("importLock"))
         {
             $this->badInput($this->errors->text("done", "fileImport"));
         }
-        if (!is_file($this->session->getVar('import_FileNameEntries')))
+        if (!is_file($this->session->getVar("import_FileNameEntries")))
         {
             $this->badInput($this->errors->text("file", "read", $this->dirName . DIRECTORY_SEPARATOR .
-            $this->session->getVar('import_FileNameEntries')));
+            $this->session->getVar("import_FileNameEntries")));
         }
-        $this->fileName = fopen($this->session->getVar('import_FileNameEntries'), 'r');
-        $this->garbageFiles[$this->session->getVar('import_FileNameEntries')] = FALSE;
+        $this->fileName = fopen($this->session->getVar("import_FileNameEntries"), 'r');
+        $this->garbageFiles[$this->session->getVar("import_FileNameEntries")] = FALSE;
         if (!feof($this->fileName))
         {
             $this->entries = unserialize(base64_decode(trim(fgets($this->fileName))));
@@ -175,7 +175,7 @@ class ENDNOTEIMPORT
         }
         if (empty($this->entries))
         {
-            $this->session->setVar('importLock', TRUE);
+            $this->session->setVar("importLock", TRUE);
             $this->badInput($this->errors->text("import", "empty"));
         }
         list($error, $this->customFields, $this->unrecognisedFields) = $this->common->getUnrecognisedFields();
@@ -320,8 +320,8 @@ class ENDNOTEIMPORT
                 $sql = $rCommon->getResource($this->rIds, FALSE, FALSE, FALSE, FALSE, TRUE);
                 $listCommon->display($sql, 'list');
             }
-            $this->session->delVar('sql_LastMulti');
-            $this->session->setVar('importLock', TRUE);
+            $this->session->delVar("sql_LastMulti");
+            $this->session->setVar("importLock", TRUE);
             if ($this->resourceAdded)
             {
                 include_once("core/modules/email/EMAIL.php");
@@ -525,7 +525,7 @@ class ENDNOTEIMPORT
             $this->writeResourceTextTable();
             $this->common->writeResourceTimestampTable();
             $this->writeImportRawTable();
-            $this->common->writeUserbibliographyresourceTable($this->session->getVar('import_BibId'));
+            $this->common->writeUserbibliographyresourceTable($this->session->getVar("import_BibId"));
             $this->common->writeBibtexKey();
             $this->resourceAdded++;
             $this->resourceAddedThisRound++;
@@ -846,7 +846,7 @@ class ENDNOTEIMPORT
      */
     private function writeResourceCategoryTable()
     {
-        if (!$categories = $this->session->getVar('import_Categories'))
+        if (!$categories = $this->session->getVar("import_Categories"))
         {
             $categories = 1; // force to 'General' category
         }
@@ -943,7 +943,7 @@ class ENDNOTEIMPORT
         // a multiple select box so handle as array
         if (isset($this->vars['import_Categories']) && $this->vars['import_Categories'])
         {
-            if (!$this->session->setVar('import_Categories', trim(implode(',', $this->vars['import_Categories']))))
+            if (!$this->session->setVar("import_Categories", trim(implode(',', $this->vars['import_Categories']))))
             {
                 $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
             }
@@ -951,47 +951,47 @@ class ENDNOTEIMPORT
         // bib_Ids is a multiple select box so handle as array
         if (isset($this->vars['import_BibId']) && $this->vars['import_BibId'])
         {
-            if (!$this->session->setVar('import_BibId', trim(implode(',', $this->vars['import_BibId']))))
+            if (!$this->session->setVar("import_BibId", trim(implode(',', $this->vars['import_BibId']))))
             {
                 $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
             }
         }
         if (isset($this->vars['import_Raw']) && $this->vars['import_Raw'])
         {
-            if (!$this->session->setVar('import_Raw', 1))
+            if (!$this->session->setVar("import_Raw", 1))
             {
                 $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
             }
         }
-        if (!$this->session->setVar('import_TitleSubtitleSeparator', $this->vars['import_TitleSubtitleSeparator']))
+        if (!$this->session->setVar("import_TitleSubtitleSeparator", $this->vars['import_TitleSubtitleSeparator']))
         {
             $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
         }
         if (isset($this->vars['import_ImportDuplicates']) && $this->vars['import_ImportDuplicates'])
         {
-            if (!$this->session->setVar('import_ImportDuplicates', 1))
+            if (!$this->session->setVar("import_ImportDuplicates", 1))
             {
                 $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
             }
         }
         if (isset($this->vars['import_KeywordIgnore']) && $this->vars['import_KeywordIgnore'])
         {
-            if (!$this->session->setVar('import_KeywordIgnore', 1))
+            if (!$this->session->setVar("import_KeywordIgnore", 1))
             {
                 $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
             }
         }
         // Force to 1 => 'General' group
-        if (!$this->session->getVar('import_Categories'))
+        if (!$this->session->getVar("import_Categories"))
         {
-            if (!$this->session->setVar('import_Categories', 1))
+            if (!$this->session->setVar("import_Categories", 1))
             {
                 $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
             }
         }
         if (!isset($_FILES['import_File']))
         {
-            if ($file = $this->session->getVar('import_File'))
+            if ($file = $this->session->getVar("import_File"))
             {
                 return $this->dirName . $file;
             }
@@ -1006,7 +1006,7 @@ class ENDNOTEIMPORT
         {
             $this->badInput(HTML\p($this->pluginmessages->text('upload'), 'error'));
         }
-        if (!$this->session->setVar('import_file', $_FILES['import_File']['name']))
+        if (!$this->session->setVar("import_file", $_FILES['import_File']['name']))
         {
             $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
         }
@@ -1014,14 +1014,14 @@ class ENDNOTEIMPORT
         {
             if (!$tagId = $this->tag->checkExists($this->vars['import_Tag']))
             {
-                if (!$this->session->setVar('import_Tag', $this->vars['import_Tag']))
+                if (!$this->session->setVar("import_Tag", $this->vars['import_Tag']))
                 {
                     $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
                 }
             }
             else
             {
-                if (!$this->session->setVar('import_TagId', $tagId))
+                if (!$this->session->setVar("import_TagId", $tagId))
                 {
                     $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
                 }
@@ -1029,7 +1029,7 @@ class ENDNOTEIMPORT
         }
         elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId'])
         {
-            if (!$this->session->setVar('import_TagId', $this->vars['import_TagId']))
+            if (!$this->session->setVar("import_TagId", $this->vars['import_TagId']))
             {
                 $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
             }

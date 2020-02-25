@@ -79,7 +79,8 @@ function loadStaticConfig()
     // Set base url (default if needed)
     if ($config->WIKINDX_PATH_AUTO_DETECTION)
     {
-        $config->WIKINDX_BASE_URL = $_SERVER['HTTP_HOST'];
+        // The fallback of HTTP_HOST is used for a CLI context only
+        $config->WIKINDX_BASE_URL = (PHP_SAPI !== 'cli') ? $_SERVER["HTTP_HOST"] : "localhost";
         
         // In case the code is not installed in the root folder of the vhost,
         // deduct the additional subdirectories by difference with the root folder of the vhost.

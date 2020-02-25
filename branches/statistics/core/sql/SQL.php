@@ -218,7 +218,7 @@ class SQL
 
         if ($saveSession)
         {
-            $this->session->setVar('sql_Stmt', base64_encode($querystring));
+            $this->session->setVar("sql_Stmt", base64_encode($querystring));
         }
 
         return $querystring;
@@ -2991,7 +2991,7 @@ SQLCODE;
 
         GLOBALS::incrementDbConnectionTimeElapsed($endTimer - $startTimer);
 
-        $this->session->setVar('sql_ConnectionTime', GLOBALS::getDbConnectionTimeElapsed());
+        $this->session->setVar("sql_ConnectionTime", GLOBALS::getDbConnectionTimeElapsed());
         
         $this->CheckEngineVersion();
         
@@ -3055,10 +3055,10 @@ SQLCODE;
         // Ensure this is printed first.
         if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
         {
-            if ($this->session->getVar('sql_ConnectionTime'))
+            if ($this->session->getVar("sql_ConnectionTime"))
             {
                 GLOBALS::addTplVar('logsql', '<hr><div>SQL connection time: ' . sprintf('%.3f', round($this->elapsedTime(), 3)) . ' s</div>');
-                $this->session->delVar('sql_ConnectionTime');
+                $this->session->delVar("sql_ConnectionTime");
             }
         }
         $beautified = $this->printSQLDebug($querystring, 'query');
@@ -3109,7 +3109,7 @@ SQLCODE;
 
         if ($saveSession)
         {
-            $this->session->setVar('sql_Stmt', base64_encode($querystring));
+            $this->session->setVar("sql_Stmt", base64_encode($querystring));
         }
 
         return $aRecordset;

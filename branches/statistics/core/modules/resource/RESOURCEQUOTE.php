@@ -69,7 +69,7 @@ class RESOURCEQUOTE
         $metadata['formfoot'] = \FORM\formEnd();
         GLOBALS::setTplVar('metadata', $metadata);
         unset($metadata);
-        $this->session->delVar('resourceQuoteLock');
+        $this->session->delVar("resourceQuoteLock");
     }
     /**
      * write to the database
@@ -78,7 +78,7 @@ class RESOURCEQUOTE
      */
     public function edit()
     {
-        if ($this->session->getVar('resourceQuoteLock'))
+        if ($this->session->getVar("resourceQuoteLock"))
         {
             $this->badInput->close($this->errors->text("done", "quote"));
         }
@@ -102,7 +102,7 @@ class RESOURCEQUOTE
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // lock reload
-        $this->session->setVar('resourceQuoteLock', TRUE);
+        $this->session->setVar("resourceQuoteLock", TRUE);;
         // send back to view this resource with success message
         $this->navigate->resource($this->vars['resourceId'], $message);
     }

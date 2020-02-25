@@ -179,15 +179,15 @@ class CITESTYLE
         if ($this->output == 'rtf')
         {
             // WIKINDX-specific:  Indentation of appended bibliography
-            if ($this->session->getVar('exportPaper_indentBib') == 'indentAll')
+            if ($this->session->getVar("exportPaper_indentBib") == 'indentAll')
             {
                 $bib = "\\li720\n$bib";
             }
-            elseif ($this->session->getVar('exportPaper_indentBib') == 'indentFL')
+            elseif ($this->session->getVar("exportPaper_indentBib") == 'indentFL')
             {
                 $bib = "\\fi720\n$bib";
             }
-            elseif ($this->session->getVar('exportPaper_indentBib') == 'indentNotFL')
+            elseif ($this->session->getVar("exportPaper_indentBib") == 'indentNotFL')
             {
                 $bib = "\\li720\\fi-720\n$bib";
             }
@@ -196,11 +196,11 @@ class CITESTYLE
                 $bib = "\\li1\\fi1\n$bib";
             }
             // WIKINDX-specific:  Line spacing of appended bibliography
-            if ($this->session->getVar('exportPaper_spaceBib') == 'oneHalfSpace')
+            if ($this->session->getVar("exportPaper_spaceBib") == 'oneHalfSpace')
             {
                 $bib = "\\pard\\plain \\sl360\\slmult1\n$bib";
             }
-            elseif ($this->session->getVar('exportPaper_spaceBib') == 'doubleSpace')
+            elseif ($this->session->getVar("exportPaper_spaceBib") == 'doubleSpace')
             {
                 $bib = "\\pard\\plain \\sl480\\slmult1\n$bib";
             }

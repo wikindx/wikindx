@@ -36,7 +36,7 @@ SetWikindxBasePath();
 include_once("core/startup/WEBSERVERCONFIG.php");
 
 echo '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
-echo '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/wordprocessor/wikindxWPcommon.js"></script>';
+echo '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/wordprocessor/wikindxWPcommon.js"></script>';
 $class = new WPCommon();
 
 include_once("core/messages/PLUGINMESSAGES.php");
@@ -66,11 +66,11 @@ class WPCommon
         $title = trim($this->vars['title']);
         if (!$title || !preg_match("/^[A-Za-z0-9_ ]+$/u", $title))
         {
-            $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("invalidTitle") . "</span>", base64_decode($this->session->getVar('wp_Title')));
+            $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("invalidTitle") . "</span>", base64_decode($this->session->getVar("wp_Title")));
         }
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         $hashFileName = sha1($userId . $title . $text);
-        if (array_key_exists('saveAsNewVersion', $this->vars) && ($title != base64_decode($this->session->getVar('wp_Title'))))
+        if (array_key_exists('saveAsNewVersion', $this->vars) && ($title != base64_decode($this->session->getVar("wp_Title"))))
         {
             $saveAsNewVersion = TRUE;
         }
@@ -107,14 +107,14 @@ class WPCommon
             }
             if (!fwrite($fp, $text))
             {
-                $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("saveFailure") . "</span>", base64_decode($this->session->getVar('wp_Title')));
+                $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("saveFailure") . "</span>", base64_decode($this->session->getVar("wp_Title")));
             }
 
             fclose($fp);
         }
         else
         {
-            $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("saveFailure") . "</span>", base64_decode($this->session->getVar('wp_Title')));
+            $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("saveFailure") . "</span>", base64_decode($this->session->getVar("wp_Title")));
         }
 
         // if this is a re-save, remove old hashed file from folder if it's not the same and we're not saving a new version

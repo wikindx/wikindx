@@ -49,7 +49,7 @@ class GATEKEEP
             $authorize->initLogon();
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
-        if ($this->session->getVar('setup_Write'))
+        if ($this->session->getVar("setup_Write"))
         {
             if ($globalEdit && defined('WIKINDX_GLOBAL_EDIT') && !WIKINDX_GLOBAL_EDIT)
             {

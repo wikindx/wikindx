@@ -65,7 +65,7 @@ class EDITMETADATA
      */
     public function abstractDeleteInit()
     {
-        $this->session->delVar('metadataLock');
+        $this->session->delVar("metadataLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "abstractDelete"));
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "abstractDelete");
@@ -88,7 +88,7 @@ class EDITMETADATA
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
         // lock reload
-        $this->session->setVar('metadataLock', TRUE);
+        $this->session->setVar("metadataLock", TRUE);
         $this->navigate($this->success->text("abstractDelete"));
     }
     /**
@@ -96,7 +96,7 @@ class EDITMETADATA
      */
     public function noteDeleteInit()
     {
-        $this->session->delVar('metadataLock');
+        $this->session->delVar("metadataLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "notesDelete"));
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "noteDelete");
@@ -119,7 +119,7 @@ class EDITMETADATA
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
         // lock reload
-        $this->session->setVar('metadataLock', TRUE);
+        $this->session->setVar("metadataLock", TRUE);
         $this->navigate($this->success->text("noteDelete"));
     }
     /**
@@ -127,7 +127,7 @@ class EDITMETADATA
      */
     private function abstractInit()
     {
-        $this->session->delVar('metadataLock');
+        $this->session->delVar("metadataLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "abstract"));
         // Create citation link for this type
         //		include_once("core/cite/CITE.php");
@@ -163,7 +163,7 @@ class EDITMETADATA
      */
     private function noteInit()
     {
-        $this->session->delVar('metadataLock');
+        $this->session->delVar("metadataLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "notes"));
         // Create citation link for this type
         //		include_once("core/cite/CITE.php");
@@ -204,12 +204,12 @@ class EDITMETADATA
         {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        if ($this->session->getVar('metadataLock'))
+        if ($this->session->getVar("metadataLock"))
         {
             $this->navigate($this->errors->text("done", "abstract"));
         }
         $abstract = trim($this->vars['text']);
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         if ($this->vars['sql'] == 'insert')
         {
             if (!$abstract)
@@ -260,7 +260,7 @@ class EDITMETADATA
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
         // lock reload
-        $this->session->setVar('metadataLock', TRUE);
+        $this->session->setVar("metadataLock", TRUE);
         $this->navigate($message);
     }
     /**
@@ -273,12 +273,12 @@ class EDITMETADATA
         {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        if ($this->session->getVar('metadataLock'))
+        if ($this->session->getVar("metadataLock"))
         {
             $this->navigate($this->errors->text("done", "note"));
         }
         $note = trim($this->vars['text']);
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         if ($this->vars['sql'] == 'insert')
         {
             if (!$note)
@@ -329,7 +329,7 @@ class EDITMETADATA
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
         // lock reload
-        $this->session->setVar('metadataLock', TRUE);
+        $this->session->setVar("metadataLock", TRUE);
         $this->navigate($message);
     }
     /**

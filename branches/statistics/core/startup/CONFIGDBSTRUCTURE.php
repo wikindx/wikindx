@@ -81,7 +81,6 @@ class CONFIGDBSTRUCTURE
             'configTagLowFactor',
         ];
         $arrayBoolean = [
-            'configIsTrunk',
             'configAuthGate',
             'configBypassSmartyCompile',
             'configCmsAllow',
@@ -99,6 +98,7 @@ class CONFIGDBSTRUCTURE
             'configGsAttachment',
             'configImagesAllow',
             'configImportBib',
+            'configIsTrunk',
             'configLdapUse',
             'configListLink',
             'configMailSmtpAuth',

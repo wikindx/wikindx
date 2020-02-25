@@ -53,7 +53,7 @@ class FILETOTEXT
         ini_set('display_errors', FALSE);
         if (array_key_exists('cacheCurl', $vars) && ($vars['cacheCurl'] == 'on'))
         {
-            $session->setVar('cache_Curl', TRUE);
+            $session->setVar("cache_Curl", TRUE);
             if (function_exists('curl_multi_exec'))
             {
                 $ch = [];
@@ -68,7 +68,7 @@ class FILETOTEXT
         }
         else
         {
-            $session->delVar('cache_Curl');
+            $session->delVar("cache_Curl");
             $curlExists = FALSE;
         }
         // Attempting to avoid timeouts if max execution time cannot be set. This is done on a trial and error basis.
@@ -99,12 +99,12 @@ class FILETOTEXT
             if (is_numeric($input) && is_int($input + 0))
             { // include cast to number
                 $maxCount = $input;
-                $session->setVar('cache_Limit', $input);
+                $session->setVar("cache_Limit", $input);
             }
         }
         if (!$input)
         {
-            $session->delVar('cache_Limit');
+            $session->delVar("cache_Limit");
         }
         $count = 0;
         $size = 0;
@@ -224,7 +224,7 @@ class FILETOTEXT
                 unset($cacheDirFiles[$key]);
             }
         }
-        $session->setVar('cache_Attachments', count($cacheDirFiles));
+        $session->setVar("cache_Attachments", count($cacheDirFiles));
         ini_set('display_errors', $errorDisplay);
         ini_set('memory_limit', $mem);
         ini_set('max_execution_time', $maxExecTime);

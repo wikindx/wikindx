@@ -135,7 +135,7 @@ class EXPORTCOMMON
      */
     public function writeFilenameToSession($fileName)
     {
-        if ($sessVar = $this->session->getVar('fileExports'))
+        if ($sessVar = $this->session->getVar("fileExports"))
         {
             $sessArray = unserialize($sessVar);
         }
@@ -146,7 +146,7 @@ class EXPORTCOMMON
         if (array_search($fileName, $sessArray) === FALSE)
         {
             $sessArray[] = $fileName;
-            $this->session->setVar('fileExports', serialize($sessArray));
+            $this->session->setVar("fileExports", serialize($sessArray));
         }
     }
     /*
@@ -157,16 +157,16 @@ class EXPORTCOMMON
     public function getSQL()
     {
         $stmt = FACTORY_SQLSTATEMENTS::getInstance();
-        if ($this->session->getVar('exportBasket'))
+        if ($this->session->getVar("exportBasket"))
         {
-            $tempAllIds = $this->session->getVar('list_AllIds');
-            $tempListStmt = $this->session->getVar('sql_ListStmt');
-            $this->session->setVar('list_AllIds', base64_encode($this->session->getVar('basket_List')));
+            $tempAllIds = $this->session->getVar("list_AllIds");
+            $tempListStmt = $this->session->getVar("sql_ListStmt");
+            $this->session->setVar("list_AllIds", base64_encode($this->session->getVar("basket_List")));
             include_once('core/modules/basket/BASKET.php');
             $basket = new BASKET();
             $sqlEncoded = base64_encode(serialize([$basket->returnBasketSql(FALSE, 'creator')]));
-            $this->session->setVar('list_AllIds', $tempAllIds);
-            $this->session->setVar('sql_ListStmt', $tempListStmt);
+            $this->session->setVar("list_AllIds", $tempAllIds);
+            $this->session->setVar("sql_ListStmt", $tempListStmt);
 
             return $sqlEncoded;
         }
@@ -230,7 +230,7 @@ class EXPORTCOMMON
 			foreach ($customLabels as $id => $label)
 			{
 				$key = array_shift($keys);
-				$selected = $this->session->getVar('exportMapInternal_' . $id); 
+				$selected = $this->session->getVar("exportMapInternal_" . $id); 
 				if ($selected === FALSE)
 				{
 					$selected = $key;
@@ -629,7 +629,7 @@ class EXPORTCOMMON
      */
     public function setIdeasCondition()
     {
-        if ($userId = $this->session->getVar('setup_UserId'))
+        if ($userId = $this->session->getVar("setup_UserId"))
         {
             $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
             $this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .

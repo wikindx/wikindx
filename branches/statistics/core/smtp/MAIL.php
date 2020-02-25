@@ -46,7 +46,8 @@ class MAIL
         }
         else
         {
-            $From = \HTML\stripHtml(WIKINDX_TITLE) . '@' . $_SERVER['HTTP_HOST'];
+            // The fallback of HTTP_HOST is used for a CLI context only
+            $From = \HTML\stripHtml(WIKINDX_TITLE) . '@' . (PHP_SAPI !== 'cli') ? $_SERVER["HTTP_HOST"] : "localhost";
         }
 
         $this->mail->setFrom(filter_var($From, FILTER_SANITIZE_EMAIL), WIKINDX_TITLE);

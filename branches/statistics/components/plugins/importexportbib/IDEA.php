@@ -61,7 +61,7 @@ class IDEA
     {
         $userObj = FACTORY_USER::getInstance();
         $cite = FACTORY_CITE::getInstance();
-        $multiUser = $this->session->getVar('setup_MultiUser');
+        $multiUser = WIKINDX_MULTIUSER;
         $ideaList = [];
         $index = 0;
         // now get ideas

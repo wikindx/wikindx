@@ -47,7 +47,7 @@ class QUICKSEARCH
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->parsePhrase = FACTORY_PARSEPHRASE::getInstance();
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
-        switch ($this->session->getVar('search_Order'))
+        switch ($this->session->getVar("search_Order"))
         {
             case 'title':
                 break;
@@ -60,7 +60,7 @@ class QUICKSEARCH
             case 'timestamp':
                 break;
             default:
-                $this->session->setVar('search_Order', 'creator');
+                $this->session->setVar("search_Order", "creator");
         }
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
@@ -93,8 +93,8 @@ class QUICKSEARCH
         {
             GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));
         }
-        $this->session->delVar('mywikindx_PagingStart');
-        $this->session->delVar('mywikindx_PagingStartAlpha');
+        $this->session->delVar("mywikindx_PagingStart");
+        $this->session->delVar("mywikindx_PagingStartAlpha");
         $pString = $error ? $error : FALSE;
         if (!$this->insertCitation)
         {
@@ -229,15 +229,15 @@ class QUICKSEARCH
         $this->input = $this->session->getArray("search");
         if (array_key_exists("search_Order", $this->vars) && $this->vars["search_Order"])
         {
-            if (($this->session->getVar('search_Order') != $this->vars["search_Order"]) ||
-                ($this->session->getVar('search_AscDesc') != $this->vars['search_AscDesc']))
+            if (($this->session->getVar("search_Order") != $this->vars["search_Order"]) ||
+                ($this->session->getVar("search_AscDesc") != $this->vars['search_AscDesc']))
             {
                 $reprocess = FALSE;
             }
             $this->input['order'] = $this->vars["search_Order"];
-            $this->session->setVar('search_Order', $this->input['order']);
-            $this->session->setVar('sql_LastOrder', $this->input['order']);
-            $this->session->setVar('search_AscDesc', $this->vars['search_AscDesc']);
+            $this->session->setVar("search_Order", $this->input['order']);
+            $this->session->setVar("sql_LastOrder", $this->input['order']);
+            $this->session->setVar("search_AscDesc", $this->vars['search_AscDesc']);
         }
         $this->process($reprocess);
     }
@@ -250,13 +250,13 @@ class QUICKSEARCH
     {
         if (!$reprocess)
         {
-            $this->session->delVar('list_AllIds');
-            $this->session->delVar('list_PagingAlphaLinks');
+            $this->session->delVar("list_AllIds");
+            $this->session->delVar("list_PagingAlphaLinks");
         }
-        if (!$reprocess || ($this->session->getVar('setup_PagingStyle') == 'A'))
+        if (!$reprocess || ($this->session->getVar("setup_PagingStyle") == 'A'))
         {
-            $this->session->delVar('sql_ListStmt');
-            $this->session->delVar('advancedSearch_listParams');
+            $this->session->delVar("sql_ListStmt");
+            $this->session->delVar("advancedSearch_listParams");
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));
         $this->stmt->listMethodAscDesc = 'search_AscDesc';
@@ -268,17 +268,17 @@ class QUICKSEARCH
         }
         if (!array_key_exists('order', $this->input) && !array_key_exists('Order', $this->input))
         {
-            $this->session->setVar('search_Order', 'creator');
-            $this->session->setVar('sql_LastOrder', 'creator');
-            $this->session->setVar('search_AscDesc', $this->db->asc);
+            $this->session->setVar("search_Order", 'creator');
+            $this->session->setVar("sql_LastOrder", 'creator');
+            $this->session->setVar("search_AscDesc", $this->db->asc);
         }
         else
         {
-            $this->session->setVar('sql_LastOrder', $this->input['Order']);
+            $this->session->setVar("sql_LastOrder", $this->input['Order']);
         }
         $this->input['Partial'] = TRUE;
         GLOBALS::setTplVar('resourceListSearchForm', $this->init(FALSE, TRUE, TRUE));
-        if (!$reprocess || ($this->session->getVar('setup_PagingStyle') == 'A'))
+        if (!$reprocess || ($this->session->getVar("setup_PagingStyle") == 'A'))
         {
         	$masterIds = $andIds = $notIds = [];
             $this->parseWord();
@@ -318,7 +318,7 @@ class QUICKSEARCH
 				return FALSE;
 			}
         }
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && ($this->session->getVar('setup_PagingStyle') != 'A'))
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && ($this->session->getVar("setup_PagingStyle") != 'A'))
         {
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
@@ -328,7 +328,7 @@ class QUICKSEARCH
 
             return;
         }
-        $searchTerms = UTF8::mb_explode(",", $this->session->getVar('search_Highlight'));
+        $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_Highlight"));
         $patterns = [];
         foreach ($searchTerms as $term)
         {
@@ -339,27 +339,27 @@ class QUICKSEARCH
             }
         }
         $this->common->patterns = $patterns;
-        $this->session->setVar('search_Patterns', base64_encode(serialize($patterns)));
+        $this->session->setVar("search_Patterns", base64_encode(serialize($patterns)));
         $this->common->keepHighlight = TRUE;
-        if (!$reprocess || ($this->session->getVar('setup_PagingStyle') == 'A'))
+        if (!$reprocess || ($this->session->getVar("setup_PagingStyle") == 'A'))
         {
-            $sql = $this->stmt->listList($this->session->getVar('search_Order'), FALSE, $this->subQ);
+            $sql = $this->stmt->listList($this->session->getVar("search_Order"), FALSE, $this->subQ);
         }
         else
         {
-            $sql = $this->session->getVar('sql_ListStmt');
+            $sql = $this->session->getVar("sql_ListStmt");
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
             $this->common->pagingObject = $this->pagingObject;
-            $limit = $this->db->limit($this->session->getVar('setup_Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
+            $limit = $this->db->limit($this->session->getVar("setup_Paging"), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
             $sql .= $limit;
         }
         $this->common->display($sql, 'search');
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->session->saveState(['search', 'sql', 'setup', 'bookmark', 'list']);
-        $this->session->delVar('bookmarkRead');
+        $this->session->delVar("bookmarkRead");
     }
     /**
      * Get the initial IDs from the database
@@ -449,8 +449,8 @@ class QUICKSEARCH
      */
     private function setSubQuery()
     {
-        $this->db->ascDesc = $this->session->getVar('search_AscDesc');
-        switch ($this->session->getVar('search_Order'))
+        $this->db->ascDesc = $this->session->getVar("search_AscDesc");
+        switch ($this->session->getVar("search_Order"))
         {
             case 'title':
                 $this->stmt->useBib('rId');

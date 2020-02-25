@@ -57,7 +57,7 @@ class USERTAGS
             }
             $this->db->formatConditionsOneField($conditions, 'resourceType');
         }
-        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         if ($populated)
         {
             $this->db->groupBy(['usertagsId', 'usertagsTag', 'resourceusertagsTagId'], TRUE, $this->db->count('resourceusertagsTagId') . '>0');
@@ -84,7 +84,7 @@ class USERTAGS
      */
     public function checkExists($usertag)
     {
-        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions($this->db->formatFields('usertagsTag') . $this->db->like(FALSE, $usertag, FALSE));
         $resultset = $this->db->select('user_tags', 'usertagsId');
         if ($this->db->numRows($resultset))

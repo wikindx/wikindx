@@ -56,10 +56,10 @@ class MYWIKINDX
     public function init($message = FALSE)
     {
         // Anything in the session takes precedence
-        if (($messageIn = $this->session->getVar('mywikindx_Message')) && ($itemIn = $this->session->getVar('mywikindx_Item')))
+        if (($messageIn = $this->session->getVar("mywikindx_Message")) && ($itemIn = $this->session->getVar("mywikindx_Item")))
         {
-            $this->session->delVar('mywikindx_Message');
-            $this->session->delVar('mywikindx_Item');
+            $this->session->delVar("mywikindx_Message");
+            $this->session->delVar("mywikindx_Item");
             $messageString = $messageIn;
             $item = $itemIn;
         }
@@ -268,7 +268,7 @@ class MYWIKINDX
         $languages = array_merge($languages, \LOCALES\getSystemLocales());
         
         // Don't use the session value in that case because the language could have been changed locally by the chooseLanguage plugin
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         $this->db->formatConditions(['usersId' => $userId]);
         $language = $this->db->selectFirstField("users", "usersLanguage");
         array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
@@ -317,8 +317,8 @@ class MYWIKINDX
             $user = FACTORY_USER::getInstance();
             $user->writePreferences($this->session->getVar("setup_UserId"));
         }
-        $this->session->setVar('mywikindx_Message', $this->success->text("config"));
-        $this->session->setVar('mywikindx_Item', $this->vars['selectItem']);
+        $this->session->setVar("mywikindx_Message", $this->success->text("config"));
+        $this->session->setVar("mywikindx_Item", $this->vars['selectItem']);
         // need to use header() to ensure any change in appearance is immediately picked up.
         header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init");
     }
@@ -417,7 +417,7 @@ class MYWIKINDX
                 $updateArray['usersNotifyDigestThreshold'] = 100;
             }
         }
-        $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
         $this->db->update('users', $updateArray);
         $this->session->setVar("mywikindx_Notify", $this->vars['Notify']);
         $this->init([$this->success->text("notify"), $this->vars['selectItem']]);
@@ -443,20 +443,20 @@ class MYWIKINDX
         else
         {
             $pString .= \HTML\td(\FORM\selectFBoxValue($this->messages->text("user", "groups"), "groupId", $groups, 5));
-            if (!$this->session->getVar('mywikindx_group_radio'))
+            if (!$this->session->getVar("mywikindx_group_radio"))
             {
                 $checked = TRUE;
             }
             else
             {
-                $checked = $this->session->getVar('mywikindx_group_radio') == 'create' ? TRUE : FALSE;
+                $checked = $this->session->getVar("mywikindx_group_radio") == 'create' ? TRUE : FALSE;
             }
             $radios = \HTML\p(\FORM\radioButton(FALSE, "method", "createUserGroupInit", $checked) .
                 "&nbsp;&nbsp;" . $this->messages->text("user", "createGroup"), FALSE, "left");
-            $checked = $this->session->getVar('mywikindx_group_radio') == 'edit' ? TRUE : FALSE;
+            $checked = $this->session->getVar("mywikindx_group_radio") == 'edit' ? TRUE : FALSE;
             $radios .= \HTML\p(\FORM\radioButton(FALSE, "method", "editUserGroupInit", $checked) .
                 "&nbsp;&nbsp;" . $this->messages->text("user", "editGroup"), FALSE, "left");
-            $checked = $this->session->getVar('mywikindx_group_radio') == 'delete' ? TRUE : FALSE;
+            $checked = $this->session->getVar("mywikindx_group_radio") == 'delete' ? TRUE : FALSE;
             $radios .= \HTML\p(\FORM\radioButton(FALSE, "method", "deleteUserGroupInit", $checked) .
                 "&nbsp;&nbsp;" . $this->messages->text("user", "deleteGroup"), FALSE, "left");
         }
@@ -474,11 +474,11 @@ class MYWIKINDX
     public function createUserGroupInit($error = FALSE)
     {
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $this->session->delVar('mywikindx_group_add');
+        $this->session->delVar("mywikindx_group_add");
         if (!$error)
         {
-            $this->session->delVar('mywikindx_groupTitle');
-            $this->session->delVar('mywikindx_groupDescription');
+            $this->session->delVar("mywikindx_groupTitle");
+            $this->session->delVar("mywikindx_groupDescription");
         }
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
@@ -519,7 +519,7 @@ class MYWIKINDX
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $users = $this->user->grabAll(TRUE);
-        unset($users[$this->session->getVar('setup_UserId')]);
+        unset($users[$this->session->getVar("setup_UserId")]);
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "multiples"));
         $pString .= \HTML\p(\FORM\selectFBoxValueMultiple(
             $this->messages->text("user", "groupUserAdd"),
@@ -545,7 +545,7 @@ class MYWIKINDX
         if (array_key_exists('description', $this->vars) && trim($this->vars['description']))
         {
             $description = json_decode($this->vars['description']);
-            $this->session->setVar('mywikindx_groupDescription', $description);
+            $this->session->setVar("mywikindx_groupDescription", $description);
             $fields[] = 'usergroupsDescription';
             $values[] = $description;
         }
@@ -553,13 +553,13 @@ class MYWIKINDX
         {
             $this->badInputLoad($this->errors->text("inputError", "missing"), 'userGroups');
         }
-        $this->session->setVar('mywikindx_groupTitle', $title);
+        $this->session->setVar("mywikindx_groupTitle", $title);
         if ($this->session->getVar("mywikindx_groupLock"))
         {
             $this->badInputLoad($this->errors->text("done", "group"), 'userGroups');
         }
         $this->checkUserGroupExists($title, FALSE);
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         $fields[] = 'usergroupsTitle';
         $values[] = $title;
         $fields[] = 'usergroupsAdminId';
@@ -582,8 +582,8 @@ class MYWIKINDX
             $this->db->insert('user_groups_users', ['usergroupsusersUserId', 'usergroupsusersGroupId'], [$id, $groupId]);
         }
         $this->session->setVar("mywikindx_groupLock", TRUE);
-        $this->session->delVar('mywikindx_groupDescription');
-        $this->session->delVar('mywikindx_groupTitle');
+        $this->session->delVar("mywikindx_groupDescription");
+        $this->session->delVar("mywikindx_groupTitle");
         $this->init([$this->success->text("groupAdd"), 'userGroups']);
         FACTORY_CLOSE::getInstance();
     }
@@ -595,11 +595,11 @@ class MYWIKINDX
     public function editUserGroupInit($error = FALSE)
     {
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $this->session->delVar('mywikindx_group_edit');
+        $this->session->delVar("mywikindx_group_edit");
         if (!$error)
         {
-            $this->session->delVar('mywikindx_groupTitle');
-            $this->session->delVar('mywikindx_groupDescription');
+            $this->session->delVar("mywikindx_groupTitle");
+            $this->session->delVar("mywikindx_groupDescription");
         }
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
@@ -647,7 +647,7 @@ class MYWIKINDX
                 {
                     continue;
                 }
-                if ($row['usergroupsusersUserId'] == $this->session->getVar('setup_UserId'))
+                if ($row['usergroupsusersUserId'] == $this->session->getVar("setup_UserId"))
                 {
                     continue;
                 }
@@ -688,7 +688,7 @@ class MYWIKINDX
         $temp[0] = $this->messages->text("misc", "ignore");
         foreach ($users as $key => $value)
         {
-            if ($key == $this->session->getVar('setup_UserId'))
+            if ($key == $this->session->getVar("setup_UserId"))
             {
                 continue;
             }
@@ -748,13 +748,13 @@ class MYWIKINDX
         {
             $this->badInputLoad($this->errors->text("inputError", "missing"), 'userGroups');
         }
-        $this->session->setVar('mywikindx_groupTitle', $title);
+        $this->session->setVar("mywikindx_groupTitle", $title);
         $this->checkValidUserGroup('userGroups');
         $this->checkUserGroupExists($title, $this->vars['groupId']); // Check for title duplicate
         if ($description = trim($this->vars['description']))
         {
             $description = json_decode($description);
-            $this->session->setVar('mywikindx_groupDescription', $description);
+            $this->session->setVar("mywikindx_groupDescription", $description);
             $updateArray['usergroupsDescription'] = $description;
         }
         else
@@ -800,8 +800,8 @@ class MYWIKINDX
             );
         }
         $this->session->setVar("mywikindx_groupLock", TRUE);
-        $this->session->delVar('mywikindx_groupDescription');
-        $this->session->delVar('mywikindx_groupTitle');
+        $this->session->delVar("mywikindx_groupDescription");
+        $this->session->delVar("mywikindx_groupTitle");
         $this->init([$this->success->text("groupEdit"), 'userGroups']);
         FACTORY_CLOSE::getInstance();
     }
@@ -826,7 +826,7 @@ class MYWIKINDX
         $pString .= \HTML\p($this->messages->text("user", "deleteConfirmGroup") . ":&nbsp;&nbsp;" .
             \HTML\nlToHtml($title));
         $pString .= \HTML\p($this->messages->text("user", "deleteGroup2"));
-        $this->session->delVar('mywikindx_group_delete');
+        $this->session->delVar("mywikindx_group_delete");
         $this->session->delVar("mywikindx_groupLock");
         $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
         $pString .= \FORM\formHeader(FALSE);
@@ -918,10 +918,10 @@ class MYWIKINDX
      */
     public function createUserTagInit($error = FALSE)
     {
-        $this->session->delVar('mywikindx_tag_add');
+        $this->session->delVar("mywikindx_tag_add");
         if (!$error)
         {
-            $this->session->delVar('mywikindx_tagTitle');
+            $this->session->delVar("mywikindx_tagTitle");
         }
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
@@ -969,7 +969,7 @@ class MYWIKINDX
         {
             $this->badInputLoad($this->errors->text("inputError", "missing"), 'userTags');
         }
-        $this->session->setVar('mywikindx_Title', $title);
+        $this->session->setVar("mywikindx_Title", $title);
         $userTagsObject = FACTORY_USERTAGS::getInstance();
         if ($userTagsObject->checkExists($title))
         {
@@ -978,10 +978,10 @@ class MYWIKINDX
         $fields[] = 'usertagsTag';
         $values[] = $title;
         $fields[] = 'usertagsUserId';
-        $values[] = $this->session->getVar('setup_UserId');
+        $values[] = $this->session->getVar("setup_UserId");
         $this->db->insert('user_tags', $fields, $values);
         $this->session->setVar("mywikindx_tagLock", TRUE);
-        $this->session->delVar('mywikindx_Title');
+        $this->session->delVar("mywikindx_Title");
         $this->init([$this->success->text("usertagAdd"), 'userTags']);
         FACTORY_CLOSE::getInstance();
     }
@@ -990,10 +990,10 @@ class MYWIKINDX
      */
     public function editUserTagInit($error = FALSE)
     {
-        $this->session->delVar('mywikindx_tag_edit');
+        $this->session->delVar("mywikindx_tag_edit");
         if (!$error)
         {
-            $this->session->delVar('mywikindx_tagTitle');
+            $this->session->delVar("mywikindx_tagTitle");
         }
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
@@ -1064,9 +1064,9 @@ class MYWIKINDX
         {
             $this->badInputLoad($this->errors->text("inputError", "missing"), 'userTags');
         }
-        $this->session->setVar('mywikindx_Title', $title);
+        $this->session->setVar("mywikindx_Title", $title);
         $userTagsObject = FACTORY_USERTAGS::getInstance();
-        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['usertagsId' => $tagId]);
         $recordSet = $this->db->select('user_tags', 'usertagsId');
         if (!$this->db->numRows($recordSet))
@@ -1076,7 +1076,7 @@ class MYWIKINDX
         $this->db->formatConditions(['usertagsId' => $tagId]);
         $this->db->update('user_tags', ['usertagsTag' => $title]);
         $this->session->setVar("mywikindx_tagLock", TRUE);
-        $this->session->delVar('mywikindx_Title');
+        $this->session->delVar("mywikindx_Title");
         $this->init([$this->success->text("usertagEdit"), 'userTags']);
         FACTORY_CLOSE::getInstance();
     }
@@ -1089,7 +1089,7 @@ class MYWIKINDX
         {
             $this->badInputPopup($this->errors->text("inputError", "missing"));
         }
-        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['usertagsId' => $tagId]);
         $recordSet = $this->db->select('user_tags', 'usertagsId');
         if (!$this->db->numRows($recordSet))
@@ -1106,7 +1106,7 @@ class MYWIKINDX
         $title = \HTML\strong($this->db->selectFirstField('user_tags', 'usertagsTag'));
         $pString .= \HTML\p($this->messages->text("user", "deleteConfirmUserTag") . ":&nbsp;&nbsp;" .
             \HTML\nlToHtml($title));
-        $this->session->delVar('mywikindx_tag_delete');
+        $this->session->delVar("mywikindx_tag_delete");
         $this->session->delVar("mywikindx_tagLock");
         $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
         $pString .= \FORM\formHeader(FALSE);
@@ -1131,7 +1131,7 @@ class MYWIKINDX
         {
             $this->badInputLoad($this->errors->text("inputError", "missing"), 'userTags');
         }
-        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['usertagsId' => $tagId]);
         $recordSet = $this->db->select('user_tags', 'usertagsId');
         if (!$this->db->numRows($recordSet))
@@ -1158,7 +1158,7 @@ class MYWIKINDX
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
         $groups = FALSE;
-        $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar("setup_UserId")]);
         if ($this->db->numRows($this->db->select('user_groups', ['usergroupsId', 'usergroupsTitle'])))
         {
             $groups = TRUE;
@@ -1211,7 +1211,7 @@ class MYWIKINDX
                 "myWikindx",
                 ": " . $this->messages->text("user", "createGroupBib")
             ));
-            $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar('setup_UserId')]);
+            $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar("setup_UserId")]);
             $this->db->orderBy('usergroupsTitle');
             $recordset = $this->db->select('user_groups', ['usergroupsId', 'usergroupsTitle']);
             if (!$this->db->numRows($recordset))
@@ -1238,12 +1238,12 @@ class MYWIKINDX
                 ": " . $this->messages->text("user", "createBib")
             ));
         }
-        $this->session->delVar('mywikindx_bib_add');
+        $this->session->delVar("mywikindx_bib_add");
         $this->session->delVar("mywikindx_bibLock");
         if (!$error)
         {
-            $this->session->delVar('mywikindx_bibTitle');
-            $this->session->delVar('mywikindx_bibDescription');
+            $this->session->delVar("mywikindx_bibTitle");
+            $this->session->delVar("mywikindx_bibDescription");
         }
         $pString = $error ? \HTML\p($error, "error", "center") : '';
         $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
@@ -1323,7 +1323,7 @@ class MYWIKINDX
             $description = json_decode(trim($this->vars['description']));
             if ($description)
             {
-                $this->session->setVar('mywikindx_Description', $description);
+                $this->session->setVar("mywikindx_Description", $description);
                 $fields[] = 'userbibliographyDescription';
                 $values[] = $description;
             }
@@ -1332,12 +1332,12 @@ class MYWIKINDX
         {
             $this->badInputLoad($this->errors->text("inputError", "missing"), 'userBibs');
         }
-        $this->session->setVar('mywikindx_Title', $title);
+        $this->session->setVar("mywikindx_Title", $title);
         $this->checkBibliographyExists($title);
         $fields[] = 'userbibliographyTitle';
         $values[] = $title;
         $fields[] = 'userbibliographyUserId';
-        $values[] = $this->session->getVar('setup_UserId');
+        $values[] = $this->session->getVar("setup_UserId");
         $groupIds = json_decode($this->vars['addUsers']);
         if ($groupIds[0])
         { // [0] will be '0' if not a group bibliography
@@ -1351,8 +1351,8 @@ class MYWIKINDX
         }
         $this->db->insert('user_bibliography', $fields, $values);
         $this->session->setVar("mywikindx_bibLock", TRUE);
-        $this->session->delVar('mywikindx_Description');
-        $this->session->delVar('mywikindx_Title');
+        $this->session->delVar("mywikindx_Description");
+        $this->session->delVar("mywikindx_Title");
         $this->session->setVar("setup_Bibliographies", TRUE);
         $this->init([$this->success->text("bibliographyAdd"), 'userBibs']);
         FACTORY_CLOSE::getInstance();
@@ -1363,11 +1363,11 @@ class MYWIKINDX
     public function editBibInit($error = FALSE)
     {
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $this->session->delVar('mywikindx_bib_edit');
+        $this->session->delVar("mywikindx_bib_edit");
         if (!$error)
         {
-            $this->session->delVar('mywikindx_bibTitle');
-            $this->session->delVar('mywikindx_bibDescription');
+            $this->session->delVar("mywikindx_bibTitle");
+            $this->session->delVar("mywikindx_bibDescription");
         }
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
@@ -1396,7 +1396,7 @@ class MYWIKINDX
         }
         else
         {
-            $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar('setup_UserId')]);
+            $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
             $this->db->formatConditions(['userbibliographyId' => $this->vars['bibId']]);
             $recordset = $this->db->select(
                 'user_bibliography',
@@ -1434,7 +1434,7 @@ class MYWIKINDX
             $pString .= \HTML\tableStart();
             $pString .= \HTML\trStart();
             $pString .= \FORM\hidden('groupBib', TRUE);
-            $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar('setup_UserId')]);
+            $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar("setup_UserId")]);
             $this->db->orderBy('usergroupsTitle');
             $recordset = $this->db->select('user_groups', ['usergroupsId', 'usergroupsTitle']);
             while ($row = $this->db->fetchRow($recordset))
@@ -1481,13 +1481,13 @@ class MYWIKINDX
         }
         if ($description = json_decode(trim($this->vars['description'])))
         {
-            $this->session->setVar('mywikindx_Description', $description);
+            $this->session->setVar("mywikindx_Description", $description);
             $updateArray['userbibliographyDescription'] = $description;
         }
         else
         {
             $this->db->formatConditions(['userbibliographyId' => $bibId]);
-            $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar('setup_UserId')]);
+            $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
             $this->db->updateNull('user_bibliography', 'userbibliographyDescription');
         }
         $updateArray['userbibliographyTitle'] = $title;
@@ -1495,12 +1495,12 @@ class MYWIKINDX
         { // user group bibliography
             $updateArray['userbibliographyUserGroupId'] = json_decode($this->vars['groupId']);
         }
-        $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['userbibliographyId' => $bibId]);
         $this->db->update('user_bibliography', $updateArray);
         $this->session->setVar("mywikindx_bibLock", TRUE);
-        $this->session->delVar('mywikindx_Description');
-        $this->session->delVar('mywikindx_Title');
+        $this->session->delVar("mywikindx_Description");
+        $this->session->delVar("mywikindx_Title");
         $this->init([$this->success->text("bibliographyEdit"), 'userBibs']);
         FACTORY_CLOSE::getInstance();
     }
@@ -1524,7 +1524,7 @@ class MYWIKINDX
         $title = \HTML\strong($this->db->selectFirstField('user_bibliography', 'userbibliographyTitle'));
         $pString .= \HTML\p($this->messages->text("user", "deleteConfirmBib") . ":&nbsp;&nbsp;" .
             \HTML\nlToHtml($title));
-        $this->session->delVar('mywikindx_bib_delete');
+        $this->session->delVar("mywikindx_bib_delete");
         $this->session->delVar("mywikindx_bibLock");
         $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
         $pString .= \FORM\formHeader(FALSE);
@@ -1554,16 +1554,16 @@ class MYWIKINDX
             $this->badInputLoad($this->errors->text("inputError", "missing"), 'userBibs');
         }
         $this->checkValidBibliography($bibId, 'userBibs');
-        $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['userbibliographyId' => $bibId]);
         $this->db->delete('user_bibliography');
         // Get any bibliographyIds and delete those bibliographies
         $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $bibId]);
         $this->db->delete('user_bibliography_resource');
         $this->session->setVar("mywikindx_bibLock", TRUE);
-        if ($bibId == $this->session->getVar('mywikindx_Bibliography_use'))
+        if ($bibId == $this->session->getVar("mywikindx_Bibliography_use"))
         {
-            $this->session->delVar('mywikindx_Bibliography_use');
+            $this->session->delVar("mywikindx_Bibliography_use");
         }
         $bibsU = $this->bib->getUserBibs();
         $bibsUG = $this->bib->getGroupBibs();
@@ -1582,7 +1582,7 @@ class MYWIKINDX
         $groups = ['resources' => $this->messages->text('config', 'resources'),
             'appearance' => $this->messages->text('config', 'appearance'),
         ];
-        if ($this->session->getVar('setup_UserId') != WIKINDX_RESTRICT_USERID)
+        if ($this->session->getVar("setup_UserId") != WIKINDX_RESTRICT_USERID)
         {
             if ($this->session->issetVar("mywikindx_Email") && WIKINDX_MAIL_USE)
             {
@@ -1593,7 +1593,7 @@ class MYWIKINDX
             $groups['userBibs'] = $this->messages->text('user', 'bib');
         }
         // Only for logged on users
-        if ($this->session->getVar('setup_UserId'))
+        if ($this->session->getVar("setup_UserId"))
         {
             // Add user group administration only if there is more than one user.
             $resourceId = $this->db->select('users', 'usersId');
@@ -1900,7 +1900,7 @@ class MYWIKINDX
         $pString .= \HTML\trStart();
         if (!$this->session->getVar("mywikindx_Notify"))
         {
-            $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $recordset = $this->db->select('users', ['usersNotify', 'usersNotifyAddEdit',
                 'usersNotifyThreshold', 'usersNotifyTimestamp', 'usersNotifyDigestThreshold', ]);
             $row = $this->db->fetchRow($recordset);
@@ -1944,7 +1944,7 @@ class MYWIKINDX
             $this->messages->text("user", "notifyEdit") . ":&nbsp;&nbsp;" .
             \FORM\checkbox(FALSE, "NotifyEdit", $edit));
         $array = [0 => $this->messages->text("user", "notifyImmediate"), 1 => 1, 7 => 7, 14 => 14, 28 => 28];
-        $selected = $this->session->getVar('mywikindx_NotifyThreshold');
+        $selected = $this->session->getVar("mywikindx_NotifyThreshold");
         if ($selected)
         {
             $pString .= \HTML\p(\FORM\selectedBoxValue(
@@ -1967,7 +1967,7 @@ class MYWIKINDX
         $pString .= \HTML\p(\FORM\textInput(
             $this->messages->text("user", "notifyDigestThreshold"),
             "DigestThreshold",
-            $this->session->getVar('mywikindx_NotifyDigestThreshold'),
+            $this->session->getVar("mywikindx_NotifyDigestThreshold"),
             5,
             255
         ));
@@ -1984,7 +1984,7 @@ class MYWIKINDX
     {
         $bibsArray = [];
         // Get this user's bibliographies
-        if ($this->session->getVar('mywikindx_Bibliographies'))
+        if ($this->session->getVar("mywikindx_Bibliographies"))
         {
             $bibsRaw = unserialize($this->session->getVar("mywikindx_Bibliographies"));
             foreach ($bibsRaw as $key => $value)
@@ -1993,7 +1993,7 @@ class MYWIKINDX
             }
         }
         // Get this user's user group bibliographies
-        if ($this->session->getVar('mywikindx_Groupbibliographies'))
+        if ($this->session->getVar("mywikindx_Groupbibliographies"))
         {
             $bibsRaw = unserialize($this->session->getVar("mywikindx_Groupbibliographies"));
             foreach ($bibsRaw as $key => $value)
@@ -2051,7 +2051,7 @@ class MYWIKINDX
     {
         $this->db->formatConditions(['userbibliographyId' => $bibId]);
         $adminId = $this->db->selectFirstField('user_bibliography', 'userbibliographyUserId');
-        if ($this->session->getVar('setup_UserId') != $adminId)
+        if ($this->session->getVar("setup_UserId") != $adminId)
         {
             if ($item)
             {
@@ -2099,7 +2099,7 @@ class MYWIKINDX
     {
         $this->db->formatConditions(['usergroupsId' => $this->vars['groupId']]);
         $adminId = $this->db->selectFirstField('user_groups', 'usergroupsAdminId');
-        if ($this->session->getVar('setup_UserId') != $adminId)
+        if ($this->session->getVar("setup_UserId") != $adminId)
         {
             if ($item)
             {

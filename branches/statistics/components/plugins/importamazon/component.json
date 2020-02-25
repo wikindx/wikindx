@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "importamazon",
-    "component_version": "1.11",
+    "component_version": "1.12",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Amazon Products Import",
@@ -24,5 +24,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "4698e34e94eb7de186982ce489acdcaeb09d082d8d277736de9b732ef5c1ec23"
+    "component_sha256": "992991c19ba1bedefb984488164df738e1f7c035235bba7df8510b1c8e22504a"
 }

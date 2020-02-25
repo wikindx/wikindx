@@ -68,7 +68,7 @@ class imageDialog
         if (WIKINDX_IMAGES_ALLOW)
         {
             // As user can upload images, we check again that user is registered
-            if ($this->session->getVar('setup_UserId'))
+            if ($this->session->getVar("setup_UserId"))
             {
 //
                 // This is where the system is activated.

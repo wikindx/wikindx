@@ -94,7 +94,7 @@ if (version_compare(PHP_VERSION, WIKINDX_PHP_VERSION_MIN, '<'))
     $PHPVersionMin = WIKINDX_PHP_VERSION_MIN;
     $SourceFile = __FILE__;
     $CodeLine = __LINE__ - 6;
-    $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
+    $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
 <html lang="en">
@@ -136,7 +136,7 @@ if (count($MissingExtensions) > 0)
     $EnabledExtensions = array_intersect($MandatoryExtensions, $InstalledExtensions);
     $ListExtensions = '<tr><td>' . implode('</td><td style="color:red">DISABLED</td></tr><tr><td>', $MissingExtensions) . '<td style="color:red">DISABLED</td></tr>';
     $ListExtensions .= '<tr><td>' . implode('</td><td style="color:green">ENABLED</td></tr><tr><td>', $EnabledExtensions) . '<td style="color:green">ENABLED</td></tr>';
-    $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
+    $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
 <html lang="en">
@@ -179,7 +179,7 @@ if (PHP_SAPI === 'cli')
 if (!is_file(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"])))
 {
     $AppName = WIKINDX_TITLE_DEFAULT;
-    $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
+    $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
 <html lang="en">
@@ -219,7 +219,7 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]));
 if (!class_exists("CONFIG"))
 {
     $AppName = WIKINDX_TITLE_DEFAULT;
-    $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
+    $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
 <html lang="en">
@@ -369,7 +369,6 @@ if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['S
 FACTORY_LOADCONFIG::getInstance()->loadUserVars();
 
 FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
-
 
 // Locales setting needs to know the language prefered by the user which is now in GLOBALS
 include_once("core/locales/LOCALES.php");

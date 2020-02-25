@@ -47,7 +47,7 @@ class HTMLEXPORT
      */
     public function exportOptions()
     {
-        if (!$this->session->getVar('sql_ListStmt'))
+        if (!$this->session->getVar("sql_ListStmt"))
         {
             $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
         }
@@ -74,13 +74,13 @@ class HTMLEXPORT
         {
             global $_SERVER;
             $link = WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'] . "?action=resource_RESOURCEVIEW_CORE&id=";
-            $this->session->setVar('exportHyperlink', TRUE);
+            $this->session->setVar("exportHyperlink", TRUE);
             $wikindxTitle = stripslashes(WIKINDX_TITLE);
         }
         else
         {
             $link = $wikindxTitle = FALSE;
-            $this->session->delVar('exportHyperlink');
+            $this->session->delVar("exportHyperlink");
         }
         if (!$this->common->openFile(FALSE, '.html'))
         {

@@ -43,7 +43,7 @@ class CLOSE
         $numberOfResources = $this->db->selectFirstField("database_summary", "databasesummaryTotalResources");
 
         // if this is a logged in user, display the username after the heading
-        if ($userId = $this->session->getVar('setup_UserId'))
+        if ($userId = $this->session->getVar("setup_UserId"))
         {
             $this->db->formatConditions(['usersId' => $userId]);
             $username = \HTML\nlToHtml($this->db->selectFirstField('users', 'usersUsername'));
@@ -109,8 +109,8 @@ class CLOSE
 
         // Mandatory script for Ajax and core functions
         GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/javascript/coreJavascript.js"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR) . '/progressbarjs/progressbar.min.js"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR) . '/jsonjs/json2.js"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_VENDOR . '/progressbarjs/progressbar.min.js"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_VENDOR . '/jsonjs/json2.js"></script>');
         GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/javascript/ajax.js"></script>');
 
         // MENU

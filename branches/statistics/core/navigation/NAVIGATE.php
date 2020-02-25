@@ -39,7 +39,7 @@ class NAVIGATE
     public function listView($message = FALSE)
     {
         $listCommon = FACTORY_LISTCOMMON::getInstance();
-        $queryString = $this->session->getVar('sql_LastMulti');
+        $queryString = $this->session->getVar("sql_LastMulti");
         if (!$queryString)
         { // default
             include_once("core/display/FRONT.php");
@@ -53,11 +53,11 @@ class NAVIGATE
             $listType = 'search';
             $listCommon->quickSearch = FALSE;
             $listCommon->keepHighlight = TRUE;
-            if ($this->session->getVar('sql_LastIdeaSearch'))
+            if ($this->session->getVar("sql_LastIdeaSearch"))
             {
                 $listCommon->ideasFound = TRUE;
             }
-            $listCommon->patterns = unserialize(base64_decode($this->session->getVar('search_Patterns')));
+            $listCommon->patterns = unserialize(base64_decode($this->session->getVar("search_Patterns")));
             include_once('core/modules/list/SEARCH.php');
             $s = new SEARCH();
             $s->reprocess();
@@ -70,7 +70,7 @@ class NAVIGATE
             $listType = 'search';
             $listCommon->quickSearch = TRUE;
             $listCommon->keepHighlight = TRUE;
-            $listCommon->patterns = unserialize(base64_decode($this->session->getVar('search_Patterns')));
+            $listCommon->patterns = unserialize(base64_decode($this->session->getVar("search_Patterns")));
             include_once('core/modules/list/QUICKSEARCH.php');
             $qs = new QUICKSEARCH();
             $qs->reprocess();

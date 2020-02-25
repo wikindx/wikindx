@@ -59,14 +59,14 @@ class STATISTICS
      */
     public function compile()
     {
-        if ($this->session->issetVar('lastStatisticsCompilation'))
+        if ($this->session->issetVar("lastStatisticsCompilation"))
         {
-            $lastStatisticsCompilation = $this->session->getVar('lastStatisticsCompilation');
+            $lastStatisticsCompilation = $this->session->getVar("lastStatisticsCompilation");
         }
         else
         {
             $lastStatisticsCompilation = WIKINDX_STATISTICS_COMPILED;
-            $this->session->setVar('lastStatisticsCompilation', $lastStatisticsCompilation);
+            $this->session->setVar("lastStatisticsCompilation", $lastStatisticsCompilation);
         }
         // We have to use compute date diff with db functions because we need a date free of user's locals
         $this->runCompile();
@@ -258,7 +258,7 @@ class STATISTICS
         // Delete the last date of compilation cached in session
         // and check in db if the statistics have not been compiled by another running process
         // If compiled, abort
-        $this->session->delVar('lastStatisticsCompilation');
+        $this->session->delVar("lastStatisticsCompilation");
         $lastStatisticsCompilation = WIKINDX_STATISTICS_COMPILED;
         if (!$this->db->monthDiff($lastStatisticsCompilation))
         {
@@ -269,7 +269,7 @@ class STATISTICS
         $this->db->formatConditions(['configName' => 'configStatisticsCompiled']);
         $this->db->updateTimestamp('config', ['configDatetime' => $this->db->firstDayOfCurrentMonth()]);
         $lastStatisticsCompilation = WIKINDX_STATISTICS_COMPILED;
-        $this->session->setVar('lastStatisticsCompilation', $lastStatisticsCompilation);
+        $this->session->setVar("lastStatisticsCompilation", $lastStatisticsCompilation);
         $emailStats = WIKINDX_EMAIL_STATISTICS;
         if ($emailStats && WIKINDX_MAIL_USE)
         {

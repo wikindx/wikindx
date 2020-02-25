@@ -60,7 +60,7 @@ class USER
             $username = \HTML\removeNl($this->vars['username']);
             // check for existing usernames (remove current user from search if already logged in with setup_userId)
             $this->db->formatConditions(['usersUsername' => $username]);
-            if ($userId = $this->session->getVar('setup_UserId') && !$add)
+            if ($userId = $this->session->getVar("setup_UserId") && !$add)
             {
                 $this->db->formatConditions(['usersId' => $userId], TRUE); // Not equal to
             }
@@ -76,7 +76,7 @@ class USER
         { // update
             if (!$admin)
             { // user editing own details
-                $userId = $this->session->getVar('setup_UserId');
+                $userId = $this->session->getVar("setup_UserId");
                 $cookie = FACTORY_COOKIE::getInstance();
                 if (array_key_exists('cookie', $this->vars) && $this->vars['cookie'])
                 {
@@ -254,7 +254,7 @@ class USER
             // write userId to session if not adding a new user
             if (!$add)
             {
-                $this->session->setVar('setup_UserId', $userId);
+                $this->session->setVar("setup_UserId", $userId);
             }
             // insert preferences to table
             $this->writePreferences($userId, TRUE);
@@ -357,7 +357,7 @@ class USER
      */
     public function displayUserAddEdit($row, $both = FALSE, $type = 'resource')
     {
-        if (!$this->session->getVar('setup_MultiUser'))
+        if (!WIKINDX_MULTIUSER)
         {
             if ($both)
             {
@@ -571,136 +571,19 @@ class USER
      * Can come from users or config (default values for readOnly user in which case $userId = FALSE)
      *
      * @param int $userId
-     * @param string $table
-     * @param bool $upgrade Default is FALSE
      *
      * @return bool
      */
-    public function writeSessionPreferences($userId, $table = 'users', $upgrade = FALSE)
+    public function writeSessionPreferences($userId)
     {
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
         $bib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
-/*        if ($table == 'users')
-        {
-            $basic = ["Paging", "PagingMaxLinks", "StringLimit",
-                "Language", "Style", "Template", "PagingStyle", "PagingTagCloud", "UseBibtexKey",
-                "UseWikindxKey", "DisplayBibtexLink", "DisplayCmsLink", "CmsTag", "ListLink", "TemplateMenu", ];
-            $preferences = $this->db->prependTableToField($table, $basic);
-            if ($userId)
-            {
-                $this->db->formatConditions(['usersId' => $userId]);
-            }
-            $recordset = $this->db->select($table, $preferences);
-            if (!$this->db->numRows($recordset))
-            {
-                return FALSE;
-            }
-            $row = $this->db->fetchRow($recordset);
-        }
-        else
-        { // config table
-            $table = 'config';
-            $basic = ["Paging", "PagingMaxLinks", "StringLimit", "Language", "Style", "Template", "PagingTagCloud", "ListLink"];
-            $preferences = $this->db->prependTableToField($table, $basic);
-            $row = $co->getData($preferences);
-        }
-*/        /**
-         * Check requested style plug-in has not been deleted.  If so, return first in list so that something is safely
-         * displayed when listing bibliographies.  Not required after upgrading to v4
-         */
-/*        if (!$upgrade)
-        {
-            $styles = \LOADSTYLE\loadDir();
-            if (!array_key_exists($row[$table . 'Style'], $styles))
-            {
-                $styleKeys = array_keys($styles);
-                $row['style'] = array_shift($styleKeys);
-            }
-        }
-        $table = str_replace('_', '', $table);
-        foreach ($basic as $pref)
-        {
-            if (($pref == 'PagingStyle') || ($pref == 'UseWikindxKey') || ($pref == 'UseBibtexKey')
-                 || ($pref == 'DisplayBibtexLink') || ($pref == 'DisplayCmsLink') || ($pref == 'ListLink'))
-            {
-                if (array_key_exists($table . $pref, $row))
-                {
-                    if ($row[$table . $pref] == 'N')
-                    {
-                        $this->session->delVar("setup_$pref");
-                    }
-                    elseif ($pref == 'PagingStyle')
-                    {
-                        $this->session->setVar('setup_PagingStyle', $row[$table . $pref]);
-                    }
-                    else
-                    {
-                        $this->session->setVar("setup_$pref", $row[$table . $pref]);
-                    }
-                }
-            }
-            elseif ($pref == $table . 'CmsTag')
-            {
-                if ($row[$pref])
-                {
-                    $cms = unserialize(base64_decode($row[$pref]));
-                    $this->session->setVar("setup_CmsTagStart", $cms[0]);
-                    $this->session->setVar("setup_CmsTagEnd", $cms[1]);
-                }
-                else
-                {
-                    $this->session->delVar("setup_CmsTagStart");
-                    $this->session->delVar("setup_CmsTagEnd");
-                }
-            }
-            else
-            {
-                $this->session->setVar("setup_" . $pref, $row[$table . $pref]);
-            }
-        }
-*/        // The system also requires userRegistration, notify, multiUser, maxPaste fileAttach and fileViewLoggedOnOnly etc. from
-        // WKX_config
-        $fields = $this->db->prependTableToField('config', ['UserRegistration', 'MultiUser', 'Notify',
-            'FileAttach', 'FileViewLoggedOnOnly', 'MaxPaste', 'LastChanges', 'LastChangesType', 'ImportBib',
-            'LastChangesDayLimit', 'Quarantine', 'ListLink', 'MetadataAllow', 'MetadataUserOnly', 'ImgWidthLimit', 'ImgHeightLimit', ]);
-        $row = $co->getData($fields);
-        if (array_key_exists('configUserRegistration', $row) && $row['configUserRegistration'])
-        {
-            $this->session->setVar("setup_UserRegistration", TRUE);
-        }
-        $this->session->setVar("setup_MultiUser", $row['configMultiUser']);
-        if (array_key_exists('configNotify', $row) && $row['configNotify'])
-        {
-            $this->session->setVar("setup_Notify", $row['configNotify']);
-        }
-        if (array_key_exists('configFileAttach', $row) && $row['configFileAttach'])
-        {
-            $this->session->setVar("setup_FileAttach", TRUE);
-        }
-        if (array_key_exists('configFileViewLoggedOnOnly', $row) && $row['configFileViewLoggedOnOnly'])
-        {
-            $this->session->setVar("setup_FileViewLoggedOnOnly", TRUE);
-        }
-        if (array_key_exists('configImportBib', $row) && $row['configImportBib'])
-        {
-            $this->session->setVar("setup_ImportBib", TRUE);
-        }
-        $this->session->setVar("setup_MaxPaste", $row['configMaxPaste']);
-        $this->session->setVar("setup_LastChanges", $row['configLastChanges']);
-        $this->session->setVar("setup_LastChangesDayLimit", $row['configLastChangesDayLimit']);
-        $this->session->setVar("setup_LastChangesType", $row['configLastChangesType']);
-        $this->session->setVar("setup_Quarantine", $row['configQuarantine']);
-        $this->session->setVar("setup_MetadataAllow", $row['configMetadataAllow']);
-        $this->session->setVar("setup_MetadataUserOnly", $row['configMetadataUserOnly']);
-        $this->session->setVar("config_configImgWidthLimit", $row['configImgWidthLimit']);
-        $this->session->setVar("config_configImgHeightLimit", $row['configImgHeightLimit']);
         if ($userId)
         {
             $this->session->setVar("setup_UserId", $userId);
         }
-        elseif (array_key_exists('configListLink', $row) && $row['configListLink'])
+        else
         {
-            $this->session->setVar("setup_ListLink", $row['configListLink']);
+            $this->session->setVar("setup_ListLink", WIKINDX_LIST_LINK);
         }
         $bibs = $bib->getUserBibs();
         if (empty($bibs))
@@ -901,7 +784,7 @@ class USER
     public function writePreferences($userId, $newUser = FALSE)
     {
         // Set paging_start back to 0
-        $this->session->setVar('mywikindx_PagingStart', 0);
+        $this->session->setVar("mywikindx_PagingStart", 0);
         $preferences = [
             "Paging" => WIKINDX_PAGING_DEFAULT,
             "PagingMaxLinks" => WIKINDX_PAGING_MAXLINKS_DEFAULT,
@@ -909,13 +792,13 @@ class USER
             "Language" => "auto",
             "Style" => WIKINDX_STYLE_DEFAULT,
             "Template" => WIKINDX_TEMPLATE_DEFAULT,
-            "PagingStyle" => WIKINDX_PAGINGSTYLE_DEFAULT,
+            "PagingStyle" => WIKINDX_PAGING_STYLE_DEFAULT,
             "PagingTagCloud" => WIKINDX_PAGING_TAG_CLOUD_DEFAULT,
-            "UseBibtexKey" => WIKINDX_USEBIBTEXKEY_DEFAULT,
-            "UseWikindxKey" => WIKINDX_USEWIKINDXKEY_DEFAULT,
-            "DisplayBibtexLink" => WIKINDX_DISPLAYBIBTEXLINK_DEFAULT,
-            "DisplayCmsLink" => WIKINDX_DISPLAYCMSLINK_DEFAULT,
-            "TemplateMenu" => WIKINDX_TEMPLATEMENU_DEFAULT,
+            "UseBibtexKey" => WIKINDX_USE_BIBTEX_KEY_DEFAULT,
+            "UseWikindxKey" => WIKINDX_USE_WIKINDX_KEY_DEFAULT,
+            "DisplayBibtexLink" => WIKINDX_DISPLAY_BIBTEX_LINK_DEFAULT,
+            "DisplayCmsLink" => WIKINDX_DISPLAY_CMS_LINK_DEFAULT,
+            "TemplateMenu" => WIKINDX_TEMPLATE_MENU_DEFAULT,
             "ListLink" => "N",
         ];
         foreach ($preferences as $pref => $default)
@@ -928,7 +811,7 @@ class USER
                 }
                 elseif (!GLOBALS::getUserVar('TemplateMenu'))
                 { // no level reduction
-                    $updateArray['users' . $pref] = WIKINDX_TEMPLATEMENU_DEFAULT;
+                    $updateArray['users' . $pref] = WIKINDX_TEMPLATE_MENU_DEFAULT;
                 }
                 else
                 {
@@ -962,7 +845,7 @@ class USER
      */
     public function listUserGroups()
     {
-        $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar("setup_UserId")]);
         $this->db->orderBy('usergroupsTitle');
         $recordset = $this->db->select(['user_groups'], ['usergroupsId', 'usergroupsTitle']);
         if (!$this->db->numRows($recordset))

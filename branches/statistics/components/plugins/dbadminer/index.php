@@ -82,7 +82,7 @@ class dbadminer_MODULE
             HTML\p(HTML\a(
                 "link",
                 $this->pluginmessages->text("openlink"),
-                WIKINDX_DIR_COMPONENT_PLUGINS . "/" . basename(__DIR__) . "/adminer.php",
+                WIKINDX_URL_COMPONENT_PLUGINS . "/" . basename(__DIR__) . "/adminer.php",
                 "_blank"
             ))
         );

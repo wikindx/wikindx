@@ -93,7 +93,7 @@ class SQLSTATEMENTS
         $split = preg_split('/\s*FROM\s*\(/u', $subQuery);
         $split = preg_split('/\)\s*AS\s+/u', $split[1]);
 
-        $this->session->setVar('list_SubQuery', base64_encode($split[0]));
+        $this->session->setVar("list_SubQuery", base64_encode($split[0]));
         $this->db->ascDesc = $this->db->desc;
         $this->db->orderBy($this->db->formatFields('resourcetimestampTimestamp'), FALSE, FALSE);
         $this->db->orderBy($this->db->ifClause(
@@ -164,7 +164,7 @@ class SQLSTATEMENTS
         )), 't1');
         $split = UTF8::mb_explode('(', $subQuery, 2);
         $split = UTF8::mb_explode(')', $split[1]);
-        $this->session->setVar('list_SubQuery', base64_encode($split[0]));
+        $this->session->setVar("list_SubQuery", base64_encode($split[0]));
         $this->db->ascDesc = $this->db->desc;
         $this->db->orderBy($this->db->formatFields('resourcetimestampTimestamp'), FALSE, FALSE);
         $this->db->orderBy($this->db->ifClause(
@@ -227,14 +227,14 @@ class SQLSTATEMENTS
     public function getExportSql()
     {
         $totalPossible = WIKINDX_MAX_WRITECHUNK;
-        if ($this->session->getVar('list_AllIds') == 'all')
+        if ($this->session->getVar("list_AllIds") == 'all')
         {
             $total = $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources');
         }
         else
         {
             $total = 0;
-            $tmp = base64_decode($this->session->getVar('list_AllIds', ''));
+            $tmp = base64_decode($this->session->getVar("list_AllIds", ""));
             if ($tmp !== FALSE)
             {
                 $tmp = unserialize($tmp);
@@ -244,7 +244,7 @@ class SQLSTATEMENTS
                 $total = count($tmp);
             }
         }
-        $stmt = $this->session->getVar('sql_ListStmt');
+        $stmt = $this->session->getVar("sql_ListStmt");
         // watch out for exhausting PHP memory – we divide into multiple SQL statements
         $start = 0;
         while ($start <= $total)
@@ -267,7 +267,7 @@ class SQLSTATEMENTS
      */
     public function listList($order = 'creator', $table = 'resource', $subQ = FALSE)
     {
-        if (!$this->allIds && !$this->session->getVar('list_AllIds'))
+        if (!$this->allIds && !$this->session->getVar("list_AllIds"))
         {
             return FALSE; // Perhaps browsing metadata keywords where the keyword is not attached to resources but only to ideas.
         }
@@ -313,7 +313,7 @@ class SQLSTATEMENTS
             elseif (!$this->allIds)
             {
                 $this->db->formatConditions($this->db->formatFields('resourceId') .
-                    $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar('list_AllIds'))))));
+                    $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar("list_AllIds"))))));
             }
         }
         elseif ($order == 'creator')
@@ -349,13 +349,13 @@ class SQLSTATEMENTS
             elseif (!$this->allIds)
             {
                 $this->db->formatConditions($this->db->formatFields('resourceId') .
-                    $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar('list_AllIds'))))));
+                    $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar("list_AllIds"))))));
             }
         }
         elseif (($order != 'popularityIndex') && ($order != 'downloadsIndex') && ($order != 'viewsIndex') && !$this->allIds)
         { // all other orders
             $this->db->formatConditions($this->db->formatFields('resourceId') .
-                $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar('list_AllIds'))))));
+                $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar("list_AllIds"))))));
         }
         $this->listJoins($order);
         if (($order == 'popularityIndex') || ($order == 'downloadsIndex') || ($order == 'viewsIndex'))
@@ -383,7 +383,7 @@ class SQLSTATEMENTS
         {
             $listQuery = $this->db->queryNoExecute($this->db->selectNoExecute('resource', $this->listFields));
         }
-        $this->session->setVar('sql_ListStmt', $listQuery);
+        $this->session->setVar("sql_ListStmt", $listQuery);
 
         return $listQuery . $limit;
     }
@@ -409,14 +409,14 @@ class SQLSTATEMENTS
         if (($order == 'popularityIndex') || ($order == 'downloadsIndex') || ($order == 'viewsIndex'))
         {
             $this->totalResourceSubquery = $this->db->subQuery($totalSubQuery, 't1', TRUE, TRUE);
-            $this->session->delVar('list_AllIds');
+            $this->session->delVar("list_AllIds");
         }
-        if (!$this->session->getVar('list_AllIds'))
+        if (!$this->session->getVar("list_AllIds"))
         {
             if ($this->allIds and !$this->session->getVar("mywikindx_Bibliography_use"))
             {
-                $this->session->setVar('setup_PagingTotal', $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources'));
-                $this->session->setVar('list_AllIds', 'all');
+                $this->session->setVar("setup_PagingTotal", $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources'));
+                $this->session->setVar("list_AllIds", 'all');
             }
             else
             {
@@ -429,9 +429,9 @@ class SQLSTATEMENTS
                 {
                     return FALSE;
                 }
-                $this->session->setVar('setup_PagingTotal', count($ids));
-                $this->session->setVar('list_AllIds', base64_encode(serialize($ids)));
-                $this->session->delVar('sql_CountAlphaStmt');
+                $this->session->setVar("setup_PagingTotal", count($ids));
+                $this->session->setVar("list_AllIds", base64_encode(serialize($ids)));
+                $this->session->delVar("sql_CountAlphaStmt");
             }
         }
         $this->common->pagingStyle(
@@ -445,7 +445,7 @@ class SQLSTATEMENTS
             $table,
             $subQ
         );
-        if (!$this->session->getVar('list_AllIds'))
+        if (!$this->session->getVar("list_AllIds"))
         {
             return FALSE;
         }
@@ -466,7 +466,7 @@ class SQLSTATEMENTS
     public function quicksearchSubQuery($queryString = FALSE, $totalSubQuery = FALSE, $subQ = FALSE, $type = FALSE)
     {
         $ids = [];
-        $order = $this->session->getVar('search_Order');
+        $order = $this->session->getVar("search_Order");
         if ($type != 'final')
         {
 			$resultSet = $this->db->query($totalSubQuery);
@@ -481,36 +481,36 @@ class SQLSTATEMENTS
 			switch ($type)
 			{
 				case 'or':
-					$this->session->setVar('list_AllIds', base64_encode(serialize($ids)));
+					$this->session->setVar("list_AllIds", base64_encode(serialize($ids)));
 					return TRUE;
 				case 'and':
-					if ($this->session->getVar('list_AllIds'))
+					if ($this->session->getVar("list_AllIds"))
 					{
-						$pastIds = unserialize(base64_decode($this->session->getVar('list_AllIds')));
+						$pastIds = unserialize(base64_decode($this->session->getVar("list_AllIds")));
 						$ids = array_intersect($ids, $pastIds);
 					}
-					$this->session->setVar('list_AllIds', base64_encode(serialize($ids)));
+					$this->session->setVar("list_AllIds", base64_encode(serialize($ids)));
 					return TRUE;
 				case 'not':
-					if ($this->session->getVar('list_AllIds'))
+					if ($this->session->getVar("list_AllIds"))
 					{
-						$pastIds = unserialize(base64_decode($this->session->getVar('list_AllIds')));
+						$pastIds = unserialize(base64_decode($this->session->getVar("list_AllIds")));
 						$ids = array_diff($pastIds, $ids);
 					}
-					$this->session->setVar('list_AllIds', base64_encode(serialize($ids)));
+					$this->session->setVar("list_AllIds", base64_encode(serialize($ids)));
 					return TRUE;
 				default:
 					return FALSE;
 			}
 		}
 // If we get here, $quicksearch is 'final'
-		$ids = unserialize(base64_decode($this->session->getVar('list_AllIds')));
+		$ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
 		if (is_bool($ids) || empty($ids)) // FALSE
 		{
 			return FALSE;
 		}
-		$this->session->setVar('setup_PagingTotal', count($ids));
-		$this->session->delVar('sql_CountAlphaStmt');
+		$this->session->setVar("setup_PagingTotal", count($ids));
+		$this->session->delVar("sql_CountAlphaStmt");
                 
         $this->common->pagingStyle(
             $this->countQuery,
@@ -523,7 +523,7 @@ class SQLSTATEMENTS
             'resource',
             $subQ
         );
-        if (!$this->session->getVar('list_AllIds'))
+        if (!$this->session->getVar("list_AllIds"))
         {
             return FALSE;
         }
@@ -589,7 +589,7 @@ class SQLSTATEMENTS
             $this->joins['resource_misc'] = ['resourcemiscId', 'resourcetimestampId'];
             $this->quarantine(FALSE, 'resourcemiscId', FALSE);
             $this->useBib('resourcetimestampId');
-            $this->db->ascDesc = $this->session->getVar('list_AscDesc');
+            $this->db->ascDesc = $this->session->getVar("list_AscDesc");
             $this->executeCondJoins();
             $indicesQuery = $this->db->queryNoExecute($this->db->selectNoExecute(
                 'resource_timestamp',
@@ -617,7 +617,7 @@ class SQLSTATEMENTS
             $this->db->groupBy(['resourceattachmentsResourceId', 'resourcemiscId']);
             $this->quarantine(FALSE, 'resourcemiscId', FALSE);
             $this->useBib('resourcemiscId');
-            $this->db->ascDesc = $this->session->getVar('list_AscDesc');
+            $this->db->ascDesc = $this->session->getVar("list_AscDesc");
             $this->executeCondJoins();
             $indicesQuery = $this->db->queryNoExecute($this->db->selectNoExecute(
                 'resource_misc',
@@ -646,7 +646,7 @@ class SQLSTATEMENTS
             $this->db->groupBy(['resourceattachmentsResourceId', 'resourcemiscId', 'resourcemiscAccesses', 'resourcetimestampTimestampAdd']);
             $this->quarantine(FALSE, 'resourcemiscId', FALSE);
             $this->useBib('resourcetimestampId');
-            $this->db->ascDesc = $this->session->getVar('list_AscDesc');
+            $this->db->ascDesc = $this->session->getVar("list_AscDesc");
             $this->executeCondJoins();
             $indicesQuery = $this->db->queryNoExecute($this->db->selectNoExecute(
                 'resource_timestamp',
@@ -736,11 +736,11 @@ class SQLSTATEMENTS
      */
     public function quarantine($front = FALSE, $joinId = 'resourceId', $joinMisc = TRUE)
     {
-        if (!$this->session->getVar('setup_Quarantine'))
+        if (!WIKINDX_QUARANTINE)
         {
             return '';
         }
-        if ($this->session->getVar('setup_Superadmin') && !$this->listQuarantined)
+        if ($this->session->getVar("setup_Superadmin") && !$this->listQuarantined)
         {
             return '';
         }

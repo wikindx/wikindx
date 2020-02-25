@@ -185,7 +185,7 @@ class SESSION
      */
     public function saveState($sessionKey)
     {
-        if ($userId = $this->getVar('setup_UserId'))
+        if ($userId = $this->getVar("setup_UserId"))
         {
             $db = FACTORY_DB::getInstance();
             // Get existing state

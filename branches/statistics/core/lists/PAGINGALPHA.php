@@ -62,8 +62,8 @@ class PAGINGALPHA
      */
     public function getPaging($conditions, $joins, $conditionsOneField, $table = 'resource', $subQ)
     {
-        $this->total = $this->session->getVar('setup_PagingTotal');
-        if ($links = $this->session->getVar('list_PagingAlphaLinks'))
+        $this->total = $this->session->getVar("setup_PagingTotal");
+        if ($links = $this->session->getVar("list_PagingAlphaLinks"))
         {
             $this->pagingArray = unserialize(base64_decode($links));
             $this->sizeOfPA = count($this->pagingArray);
@@ -105,7 +105,7 @@ class PAGINGALPHA
             $this->pagingArray[] = $letterArray;
         }
         $this->sizeOfPA = count($this->pagingArray);
-        $this->session->setVar('list_PagingAlphaLinks', base64_encode(serialize($this->pagingArray)));
+        $this->session->setVar("list_PagingAlphaLinks", base64_encode(serialize($this->pagingArray)));
         $this->createLinks();
     }
     /**
@@ -144,7 +144,7 @@ class PAGINGALPHA
             $bib = " (" . $this->messages->text("user", "bibliography") . ": " .
             \HTML\nlToHtml($bibTitle) . ")";
         }
-        elseif ($this->session->getVar('setup_MultiUser'))
+        elseif (WIKINDX_MULTIUSER)
         {
             $bib = " (" . $this->messages->text("user", "bibliography") . ": " .
                 $this->messages->text("user", "masterBib") . ")";
@@ -168,7 +168,7 @@ class PAGINGALPHA
         
         if ($start === FALSE)
         {
-            $start = $this->session->getVar('mywikindx_PagingStart', FALSE);
+            $start = $this->session->getVar("mywikindx_PagingStart", FALSE);
         }
         
         if ($start === FALSE)
@@ -177,7 +177,7 @@ class PAGINGALPHA
         }
         
         $this->start = $start;
-        $this->session->setVar('mywikindx_PagingStart', $start);
+        $this->session->setVar("mywikindx_PagingStart", $start);
     }
     /**
      * Links on display screen to move to more resources.

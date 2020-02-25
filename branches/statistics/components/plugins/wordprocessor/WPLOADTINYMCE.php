@@ -15,9 +15,9 @@ class WPLOADTINYMCE extends LOADTINYMCE
     public function __construct()
     {
         $session = FACTORY_SESSION::getInstance();
-        $session->setVar('tinyMCE_mode', 'wordprocessor');
-        $this->cssPath = WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . GLOBALS::getUserVar('Template') . '/tinymce.css';
-        $this->cssPopupPath = WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . GLOBALS::getUserVar('Template') . '/template.css';
+        $session->setVar("tinyMCE_mode", "wordprocessor");
+        $this->cssPath = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_TEMPLATES . '/' . GLOBALS::getUserVar('Template') . '/tinymce.css';
+        $this->cssPopupPath = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_TEMPLATES . '/' . GLOBALS::getUserVar('Template') . '/template.css';
     }
     /**
      * Load tinymce -- full configuration for the word processor
@@ -27,7 +27,7 @@ class WPLOADTINYMCE extends LOADTINYMCE
     public function loadWPTextarea()
     {
         $path = $this->path;
-        $externalPluginPath = WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/' . basename(__DIR__) . '/';
+        $externalPluginPath = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/' . basename(__DIR__) . '/';
         $exportPluginPath = $externalPluginPath . 'wikindxWPExport/editor_plugin.js';
         $savePluginPath = $externalPluginPath . 'wikindxWPSave/editor_plugin.js';
         $statsPluginPath = $externalPluginPath . 'wikindxWPStats/editor_plugin.js';

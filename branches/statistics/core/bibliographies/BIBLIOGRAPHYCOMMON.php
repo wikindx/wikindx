@@ -96,7 +96,7 @@ class BIBLIOGRAPHYCOMMON
             $row = $this->db->fetchRow($recordset);
             $bib = $row['userbibliographyTitle'];
         }
-        elseif ($this->session->getVar('setup_MultiUser'))
+        elseif (WIKINDX_MULTIUSER)
         {
             $bib = $this->messages->text("user", "masterBib");
         }
@@ -118,13 +118,13 @@ class BIBLIOGRAPHYCOMMON
      */
     public function getUserBibs()
     {
-        if (!$this->session->getVar('setup_UserId'))
+        if (!$this->session->getVar("setup_UserId"))
         {
             return [];
         }
         // Get this user's bibliographies
         $tempU = [];
-        $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions($this->db->formatFields('userbibliographyUserGroupId') . ' IS NULL');
         $this->db->orderBy('userbibliographyTitle');
         $recordset = $this->db->select('user_bibliography', ['userbibliographyId', 'userbibliographyTitle']);
@@ -142,13 +142,13 @@ class BIBLIOGRAPHYCOMMON
      */
     public function getGroupBibs()
     {
-        if (!$this->session->getVar('setup_UserId'))
+        if (!$this->session->getVar("setup_UserId"))
         {
             return [];
         }
         $tempUG = [];
         // Get group bibliographies user belongs to
-        $this->db->formatConditions(['usergroupsusersUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usergroupsusersUserId' => $this->session->getVar("setup_UserId")]);
         $subQ = $this->db->subQuery(
             $this->db->selectNoExecute('user_groups_users', 'usergroupsusersGroupId', TRUE),
             't',

@@ -20,6 +20,9 @@ Thus, plugins/visualize/index.php etc.
 
 CHANGELOG:
 
+v1.5, 2020
+1. Wikindx compatibility version 7.
+
 v1.4, 2020
 1. Add documentation.
 

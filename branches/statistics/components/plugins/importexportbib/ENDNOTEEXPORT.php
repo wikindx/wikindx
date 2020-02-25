@@ -56,11 +56,11 @@ class ENDNOTEEXPORT
     {
         if (array_key_exists('mergeStored', $this->vars))
         {
-            $this->session->setVar('exportMergeStored', $this->vars['mergeStored']);
+            $this->session->setVar("exportMergeStored", $this->vars['mergeStored']);
         }
         else
         {
-            $this->session->delVar('exportMergeStored');
+            $this->session->delVar("exportMergeStored");
         }
 // Check for any custom fields – write session first before notifying error
 		$error = FALSE;
@@ -75,7 +75,7 @@ class ENDNOTEEXPORT
 				{
 					$this->customMap[$index] = $value;
 				}
-				$this->session->setVar('exportMapInternal_' . $index, $value);
+				$this->session->setVar("exportMapInternal_" . $index, $value);
 			}
 		}
 		if ($error)
@@ -84,9 +84,9 @@ class ENDNOTEEXPORT
 		}
         // Disabled due to tabbed file bug above
         /*		if(array_key_exists('endnoteFileType', $this->vars))
-                    $this->session->setVar('exportEndnoteFileType', $this->vars['endnoteFileType']);
+                    $this->session->setVar("exportEndnoteFileType", $this->vars['endnoteFileType']);
                 else
-                    $this->session->delVar('exportEndnoteFileType');
+                    $this->session->delVar("exportEndnoteFileType");
         */
         $sql = $this->common->getSQL();
         if (!$sql)

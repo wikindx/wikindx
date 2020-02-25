@@ -158,7 +158,7 @@ class adminstyle_MODULE
             $pString .= HTML\p($message);
         }
         $pString .= FORM\formHeader("adminstyle_editDisplay");
-        $styleFile = $this->session->getVar('editStyleFile');
+        $styleFile = $this->session->getVar("editStyleFile");
         if ($styleFile)
         {
             $pString .= FORM\selectedBoxValue(FALSE, "editStyleFile", $this->styles, $styleFile, 20);
@@ -363,7 +363,7 @@ class adminstyle_MODULE
         $this->session->clearArray("footnote");
         $parseXML = FACTORY_PARSEXML::getInstance();
         $resourceTypes = array_keys($this->styleMap->types);
-        $this->session->setVar('editStyleFile', $this->vars['editStyleFile']);
+        $this->session->setVar("editStyleFile", $this->vars['editStyleFile']);
         $dir = mb_strtolower($this->vars['editStyleFile']);
         $fileName = $this->vars['editStyleFile'] . ".xml";
         if ($fh = fopen(WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $fileName, "r"))
@@ -1686,7 +1686,7 @@ class adminstyle_MODULE
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Edit")));
         }
         $pString .= FORM\formEnd();
-        AJAX\loadJavascript(WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/adminstyle/adminstyle.js');
+        AJAX\loadJavascript(WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/adminstyle/adminstyle.js');
 
         return $pString;
     }

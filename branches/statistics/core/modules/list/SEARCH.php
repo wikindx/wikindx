@@ -76,12 +76,12 @@ class SEARCH
         $this->parsePhrase = FACTORY_PARSEPHRASE::getInstance();
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->metadata = FACTORY_METADATA::getInstance();
-        if (!$this->session->getVar('search_Order'))
+        if (!$this->session->getVar("search_Order"))
         {
-            $this->session->setVar('search_Order', 'creator');
+            $this->session->setVar("search_Order", 'creator');
         }
-        $this->session->setVar('sql_LastOrder', $this->session->getVar('search_Order'));
-        switch ($this->session->getVar('search_Order'))
+        $this->session->setVar("sql_LastOrder", $this->session->getVar("search_Order"));
+        switch ($this->session->getVar("search_Order"))
         {
             case 'title':
                 break;
@@ -94,7 +94,7 @@ class SEARCH
             case 'timestamp':
                 break;
             default:
-                $this->session->setVar('search_Order', 'creator');
+                $this->session->setVar("search_Order", 'creator');
         }
         //		if(array_key_exists('action', $_GET) && ($_GET['action'] == 'curlFile'))
 //			$this->curlFile();
@@ -123,9 +123,9 @@ class SEARCH
         {
             GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));
         }
-        $this->session->delVar('mywikindx_PagingStart');
-        $this->session->delVar('mywikindx_PagingStartAlpha');
-        $this->session->setVar('advancedSearch_elementIndex', 1);
+        $this->session->delVar("mywikindx_PagingStart");
+        $this->session->delVar("mywikindx_PagingStartAlpha");
+        $this->session->setVar("advancedSearch_elementIndex", 1);
 
         $pString = '';
         $pString .= $error;
@@ -139,9 +139,9 @@ class SEARCH
         $pString .= \HTML\tableEnd();
 
         $updateJSElementIndex = FALSE;
-        if ((!$this->session->getVar('setup_MetadataAllow')))
+        if ((!WIKINDX_METADATA_ALLOW))
         {
-            if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
+            if ((WIKINDX_METADATA_USERONLY) && $this->session->getVar("setup_UserId"))
             {
                 $wordFields = ['title', 'note', 'abstract', 'quote', 'quoteComment', 'paraphrase', 'paraphraseComment', 'musing', 'idea'];
             }
@@ -154,7 +154,7 @@ class SEARCH
         {
             $wordFields = ['title', 'note', 'abstract', 'quote', 'quoteComment', 'paraphrase', 'paraphraseComment', 'musing', 'idea'];
         }
-        if ((!$this->session->getVar("setup_FileViewLoggedOnOnly") || $this->session->getVar("setup_UserId")) &&
+        if ((!WIKINDX_FILE_VIEW_LOGGEDON_ONLY || $this->session->getVar("setup_UserId")) &&
             ($this->db->tableIsEmpty('resource_attachments') == 0))
         { // 0 means table is NOT empty
             array_splice($wordFields, 3, 0, "attachments");
@@ -235,7 +235,7 @@ class SEARCH
                 $div .= \HTML\trEnd();
                 $div .= \HTML\tableEnd();
                 $pString .= \HTML\p(\HTML\div("searchElement_$i", $div));
-                $this->session->setVar('advancedSearch_elementIndex', $i);
+                $this->session->setVar("advancedSearch_elementIndex", $i);
                 $updateJSElementIndex = TRUE;
             }
             else
@@ -246,7 +246,7 @@ class SEARCH
 
         $pString .= \HTML\p(\HTML\div(
             'searchElement_addIcon',
-            $this->addRemoveIcon($this->session->getVar('advancedSearch_elementIndex'), TRUE, $updateJSElementIndex)
+            $this->addRemoveIcon($this->session->getVar("advancedSearch_elementIndex"), TRUE, $updateJSElementIndex)
         ));
         $pString .= \HTML\p($this->options());
 
@@ -630,7 +630,7 @@ class SEARCH
                     }
                     $arrayString .= implode(' ', $finalIdeas);
                 }
-                $this->session->setVar('advancedSearch_listParams', $arrayString);
+                $this->session->setVar("advancedSearch_listParams", $arrayString);
 
                 return;
             }
@@ -654,7 +654,7 @@ class SEARCH
             $arrayString .= implode(' ', $finalIdeas);
             if ($search)
             {
-                $this->session->setVar('advancedSearch_listParams', $arrayString);
+                $this->session->setVar("advancedSearch_listParams", $arrayString);
 
                 return;
             }
@@ -696,7 +696,7 @@ class SEARCH
         $this->checkAvailableFields();
         $jArray = \AJAX\decode_jString($vars['ajaxReturn']);
         $div = \HTML\p($this->wordSearch($jArray['elementIndex'], TRUE));
-        $this->session->setVar('advancedSearch_elementIndex', $jArray['elementIndex']);
+        $this->session->setVar("advancedSearch_elementIndex", $jArray['elementIndex']);
         $jsonResponseArray = [
             'innerHTML' => "$div",
         ];
@@ -874,11 +874,11 @@ class SEARCH
         if (array_key_exists("search_Order", $this->vars) && $this->vars["search_Order"])
         {
             $this->input['Order'] = $this->vars["search_Order"];
-            $this->session->setVar('search_Order', $this->input['Order']);
-            $this->session->setVar('advancedSearch_Order', $this->input['Order']);
-            $this->session->setVar('sql_LastOrder', $this->input['Order']);
-            $this->session->setVar('search_AscDesc', $this->vars['search_AscDesc']);
-            $this->session->setVar('advancedSearch_AscDesc', $this->vars['search_AscDesc']);
+            $this->session->setVar("search_Order", $this->input['Order']);
+            $this->session->setVar("advancedSearch_Order", $this->input['Order']);
+            $this->session->setVar("sql_LastOrder", $this->input['Order']);
+            $this->session->setVar("search_AscDesc", $this->vars['search_AscDesc']);
+            $this->session->setVar("advancedSearch_AscDesc", $this->vars['search_AscDesc']);
         }
         $this->process(TRUE);
     }
@@ -893,28 +893,28 @@ class SEARCH
 		{
 			if(array_key_exists('type', $this->vars) && ($this->vars['type'] == 'displayIdea'));
 			{
-				$this->session->delVar('setup_PagingTotal');
+				$this->session->delVar("setup_PagingTotal");
 			}
 		}
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));
         if (!$reprocess)
         {
-            $this->session->delVar('list_AllIds');
-            $this->session->delVar('list_PagingAlphaLinks');
+            $this->session->delVar("list_AllIds");
+            $this->session->delVar("list_PagingAlphaLinks");
         }
         if (!$reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A'))
         {
-            $this->session->delVar('sql_ListStmt');
-            $this->session->delVar('advancedSearch_listParams');
+            $this->session->delVar("sql_ListStmt");
+            $this->session->delVar("advancedSearch_listParams");
         }
-        $this->session->delVar('search_Highlight');
-        $this->session->delVar('search_HighlightIdea');
+        $this->session->delVar("search_Highlight");
+        $this->session->delVar("search_HighlightIdea");
         $this->stmt->listMethodAscDesc = 'advancedSearch_AscDesc';
         $this->stmt->listType = 'search';
         $queryString = 'action=list_SEARCH_CORE&method=reprocess';
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A'))
         {
-            $this->session->delVar('mywikindx_PagingStart');
+            $this->session->delVar("mywikindx_PagingStart");
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
@@ -1155,11 +1155,11 @@ class SEARCH
             if ($this->db->numRows($resultset))
             {
                 $this->common->ideasFound = TRUE;
-                $this->session->setVar('sql_LastIdeaSearch', "index.php?action=list_SEARCH_CORE&method=reprocess&type=displayIdeas");
+                $this->session->setVar("sql_LastIdeaSearch", "index.php?action=list_SEARCH_CORE&method=reprocess&type=displayIdeas");
             }
             else
             {
-                $this->session->delVar('sql_LastIdeaSearch');
+                $this->session->delVar("sql_LastIdeaSearch");
             }
         }
         elseif (!empty($this->ideas))
@@ -1170,9 +1170,9 @@ class SEARCH
         }
         else
         {
-            $this->session->delVar('sql_LastIdeaSearch');
+            $this->session->delVar("sql_LastIdeaSearch");
         }
-        if ($bibId = $this->session->getVar('advancedSearch_BibId'))
+        if ($bibId = $this->session->getVar("advancedSearch_BibId"))
         {
             $bibIdArray[] = $bibId;
             $this->stmt->excludeBib($bibId, 'rId');
@@ -1214,8 +1214,8 @@ class SEARCH
          *
          * Therefore, we can cascade . . .
          */
-        $this->session->delVar('search_DisplayAttachment');
-        $this->session->delVar('search_DisplayAttachmentZip');
+        $this->session->delVar("search_DisplayAttachment");
+        $this->session->delVar("search_DisplayAttachmentZip");
         if (array_search('noAttachment', $options) !== FALSE)
         {
             $attach = 'noAttachment';
@@ -1229,10 +1229,10 @@ class SEARCH
         {
             if ($order == 'attachments')
             { // displaying attachments only
-                $this->session->setVar('search_DisplayAttachment', TRUE);
+                $this->session->setVar("search_DisplayAttachment", TRUE);
                 if (array_search('zipAttachment', $options) !== FALSE)
                 {
-                    $this->session->setVar('search_DisplayAttachmentZip', TRUE);
+                    $this->session->setVar("search_DisplayAttachmentZip", TRUE);
                 }
             }
         }
@@ -1240,19 +1240,19 @@ class SEARCH
         {
             if (!array_key_exists('order', $this->input) && !array_key_exists('Order', $this->input))
             {
-                $this->session->setVar('search_Order', 'creator');
-                $this->session->setVar('sql_LastOrder', 'creator');
-                $this->session->setVar('search_AscDesc', $this->db->asc);
+                $this->session->setVar("search_Order", 'creator');
+                $this->session->setVar("sql_LastOrder", 'creator');
+                $this->session->setVar("search_AscDesc", $this->db->asc);
             }
             else
             {
-                $this->session->setVar('sql_LastOrder', $this->input['Order']);
+                $this->session->setVar("sql_LastOrder", $this->input['Order']);
             }
             // Turn on the 'add bookmark' menu item
             $this->session->setVar("bookmark_DisplayAdd", TRUE);
-            $this->session->setVar('search_Order', $order);
+            $this->session->setVar("search_Order", $order);
             $subStmt = $this->setSubQuery($attach);
-            $resourcesFound = $this->stmt->listSubQuery($this->session->getVar('search_Order'), $queryString, $subStmt, FALSE, $this->subQ);
+            $resourcesFound = $this->stmt->listSubQuery($this->session->getVar("search_Order"), $queryString, $subStmt, FALSE, $this->subQ);
             if (!$resourcesFound)
             {
                 $this->common->noResources('search');
@@ -1260,7 +1260,7 @@ class SEARCH
                 return;
             }
         }
-        $searchTerms = UTF8::mb_explode(",", $this->session->getVar('search_Highlight'));
+        $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_Highlight"));
         foreach ($searchTerms as $term)
         {
             if (trim($term))
@@ -1271,12 +1271,12 @@ class SEARCH
         }
         if (!isset($patterns))
         {
-            $this->session->setVar('search_Patterns', base64_encode(serialize([])));
+            $this->session->setVar("search_Patterns", base64_encode(serialize([])));
             $this->common->patterns = FALSE;
         }
         else
         {
-            $this->session->setVar('search_Patterns', base64_encode(serialize($patterns)));
+            $this->session->setVar("search_Patterns", base64_encode(serialize($patterns)));
             $this->common->patterns = $patterns;
         }
         $this->common->keepHighlight = TRUE;
@@ -1286,11 +1286,11 @@ class SEARCH
         }
         else
         {
-            $sql = $this->stmt->listList($this->session->getVar('search_Order'), FALSE, $this->subQ);
+            $sql = $this->stmt->listList($this->session->getVar("search_Order"), FALSE, $this->subQ);
         }
-        $this->common->display($sql, 'search');
+        $this->common->display($sql, "search");
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->session->saveState(['advancedSearch', 'sql', 'bookmark', 'list']);
     }
     /**
@@ -1302,14 +1302,14 @@ class SEARCH
         $icons = FACTORY_LOADICONS::getInstance();
         $cite = FACTORY_CITE::getInstance();
         $userObj = FACTORY_USER::getInstance();
-        $multiUser = $this->session->getVar('setup_MultiUser');
+        $multiUser = WIKINDX_MULTIUSER;
         $ideaList = [];
         $index = 0;
         // get count statement and set queryString
         $pagingObject = FACTORY_PAGING::getInstance();
         if ((!array_key_exists('PagingStart', $this->vars) || !$this->vars['PagingStart']))
         {
-            $this->session->delVar('mywikindx_PagingStart'); // might be set from last multi resource list display
+            $this->session->delVar("mywikindx_PagingStart"); // might be set from last multi resource list display
         }
         $queryString = "index.php?action=list_SEARCH_CORE&method=reprocess&type=displayIdeas";
         // Check this user is allowed to read the idea.
@@ -1323,7 +1323,7 @@ class SEARCH
         $pagingObject->sqlTotal = $countQuery;
         $pagingObject->queryString = $queryString;
         $pagingObject->getPaging();
-        $searchTerms = UTF8::mb_explode(",", $this->session->getVar('search_HighlightIdea'));
+        $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_HighlightIdea"));
         foreach ($searchTerms as $term)
         {
             if (trim($term))
@@ -1363,7 +1363,7 @@ class SEARCH
             $ideaList[$index]['metadata'] = $cite->parseCitations(\HTML\nlToHtml($data), 'html');
             ++$index;
         }
-        $this->session->setVar('sql_LastIdeaSearch', $queryString);
+        $this->session->setVar("sql_LastIdeaSearch", $queryString);
         GLOBALS::addTplVar('ideaTemplate', TRUE);
         GLOBALS::addTplVar('ideaList', $ideaList);
         $this->common->pagingStyle($countQuery, FALSE, FALSE, $queryString);
@@ -1624,7 +1624,7 @@ class SEARCH
     {
         $pString = \HTML\tableStart();
         $pString .= \HTML\trStart();
-        if ($this->session->getVar("setup_ReadOnly") && $this->session->getVar("setup_FileViewLoggedOnOnly"))
+        if ($this->session->getVar("setup_ReadOnly") && WIKINDX_FILE_VIEW_LOGGEDON_ONLY)
         {
             $options = [];
         }
@@ -1792,7 +1792,7 @@ class SEARCH
         {
             $jScript = "index.php?action=list_SEARCH_CORE&method=addElement";
             $startFunction = 'addElement';
-            $elementIndex = $this->session->getVar('advancedSearch_elementIndex');
+            $elementIndex = $this->session->getVar("advancedSearch_elementIndex");
         }
         else
         {
@@ -2408,16 +2408,16 @@ class SEARCH
      */
     private function checkAvailableFields()
     {
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         // userTags
         $this->db->formatConditions(['userTagsUserId' => $userId]);
         if (!empty($this->userTag->grabAll($this->session->getVar("mywikindx_Bibliography_use"), FALSE, TRUE)))
         {
             $this->displayUserTags = TRUE;
         }
-        if ((!$this->session->getVar('setup_MetadataAllow')))
+        if ((!WIKINDX_METADATA_ALLOW))
         {
-            if ((!$this->session->getVar('setup_MetadataUserOnly')))
+            if ((!WIKINDX_METADATA_USERONLY))
             {
                 $this->displayIdeas = $this->displayQCs = $this->displayPCs = $this->displayMusings = $this->displayMKs = FALSE;
 
@@ -2561,14 +2561,14 @@ class SEARCH
         {
             $fields['abstract'] = $this->messages->text("search", "abstract");
         }
-        if ((!$this->session->getVar("setup_FileViewLoggedOnOnly") || $this->session->getVar("setup_UserId")) &&
+        if ((!WIKINDX_FILE_VIEW_LOGGEDON_ONLY || $this->session->getVar("setup_UserId")) &&
             ($this->db->tableIsEmpty('resource_attachments') == 0))
         {
             $fields['attachments'] = $this->messages->text("search", "attachments");
         }
-        if ((!$this->session->getVar('setup_MetadataAllow')))
+        if ((!WIKINDX_METADATA_ALLOW))
         {
-            if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
+            if ((WIKINDX_METADATA_USERONLY) && $this->session->getVar("setup_UserId"))
             {
                 if ($userBib)
                 {
@@ -2599,9 +2599,9 @@ class SEARCH
         {
             $fields['quoteComment'] = $this->messages->text("search", "quoteComment");
         }
-        if ((!$this->session->getVar('setup_MetadataAllow')))
+        if ((!WIKINDX_METADATA_ALLOW))
         {
-            if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
+            if ((WIKINDX_METADATA_USERONLY) && $this->session->getVar("setup_UserId"))
             {
                 if ($userBib)
                 {
@@ -2720,7 +2720,7 @@ class SEARCH
             $fields['tag'] = $this->messages->text("search", "tag");
         }
         // If logged on and multiuser, display addedBy and editedBy options
-        if ($this->session->getVar("setup_UserId") && ($this->session->getVar("setup_MultiUser")))
+        if ($this->session->getVar("setup_UserId") && (WIKINDX_MULTIUSER))
         {
             if ($userBib)
             {
@@ -3399,7 +3399,7 @@ class SEARCH
     private function createOptionConditions($valueArray, $resourceId = FALSE)
     {
         $rId = $resourceId ? $resourceId : $this->lastUnionResourceId;
-        $options = unserialize(base64_decode($this->session->getVar('advancedSearch_Options')));
+        $options = unserialize(base64_decode($this->session->getVar("advancedSearch_Options")));
         if (array_search('withDoi', $options) !== FALSE)
         {
             $this->db->formatConditions(['resourceDoi' => ' IS NOT NULL']);
@@ -3439,7 +3439,7 @@ class SEARCH
     private function setSubQuery($attach)
     {
         $unions = $this->db->union($this->unionFragments);
-        $this->db->ascDesc = $this->session->getVar('search_AscDesc');
+        $this->db->ascDesc = $this->session->getVar("search_AscDesc");
         if ($attach == 'noAttachment')
         {
             $this->stmt->conditions[] = ['resourceattachmentsId' => ' IS NULL'];
@@ -3450,7 +3450,7 @@ class SEARCH
             $this->stmt->conditions[] = (['resourceattachmentsId' => ' IS NOT NULL']);
             $this->stmt->joins['resource_attachments'] = ['resourceattachmentsResourceId', 'rId'];
         }
-        switch ($this->session->getVar('search_Order'))
+        switch ($this->session->getVar("search_Order"))
         {
             case 'title':
                 $this->stmt->useBib('rId');
@@ -3849,8 +3849,8 @@ class SEARCH
         if (!empty($temp))
         {
             $this->session->writeArray($temp, 'advancedSearch', TRUE);
-            $this->session->setVar('search_Order', $temp['Order']);
-            $this->session->setVar('search_AscDesc', $temp['AscDesc']);
+            $this->session->setVar("search_Order", $temp['Order']);
+            $this->session->setVar("search_AscDesc", $temp['AscDesc']);
         }
     }
     /**

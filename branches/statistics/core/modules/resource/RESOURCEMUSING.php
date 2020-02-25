@@ -123,7 +123,7 @@ class RESOURCEMUSING
         // The second parameter ('musingText') to textareaInput is the textarea name
         $metadata['metadata'] = \FORM\textareaInput(FALSE, 'Text', $text, 80, 10);
         $metadata['metadataTitle'] = $this->messages->text("resources", 'musing');
-        $this->db->formatConditions(['usergroupsusersUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usergroupsusersUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->leftJoin('user_groups', 'usergroupsId', 'usergroupsusersGroupId');
         $recordset3 = $this->db->select('user_groups_users', ['usergroupsusersGroupId', 'usergroupsTitle']);
         if ($this->db->numRows($recordset3))
@@ -157,7 +157,7 @@ class RESOURCEMUSING
         }
         $metadata['form']['submit'] = \FORM\formSubmit($this->messages->text("submit", "Save"));
         $metadata['formfoot'] = \FORM\formEnd();
-        $this->session->delVar('resourceMusingLock');
+        $this->session->delVar("resourceMusingLock");
         GLOBALS::setTplVar('metadata', $metadata);
         unset($metadata);
     }
@@ -168,12 +168,12 @@ class RESOURCEMUSING
      */
     public function edit()
     {
-        if ($this->session->getVar('resourceMusingLock'))
+        if ($this->session->getVar("resourceMusingLock"))
         {
             $this->badInput->close($this->errors->text("done", "musing"));
         }
         $this->checkInput();
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         // insert
         if (!array_key_exists('resourcemetadataId', $this->vars))
         {
@@ -338,7 +338,7 @@ class RESOURCEMUSING
             $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()));
         }
         // lock reload
-        $this->session->setVar('resourceMusingLock', TRUE);
+        $this->session->setVar("resourceMusingLock", TRUE);;
         // send back to view this resource with success message
         $this->navigate->resource($this->vars['resourceId'], $message);
     }

@@ -700,7 +700,7 @@ class importamazon_MODULE
         }
         // Write WKX_resource_misc
         $fields = $values = [];
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         if ($userId)
         {
             $fields[] = "resourcemiscAddUserIdResource";

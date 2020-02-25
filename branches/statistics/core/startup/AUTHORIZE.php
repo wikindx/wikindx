@@ -58,7 +58,7 @@ class AUTHORIZE
                     else
                     {
                         // populate session with default values from config
-                        $user->writeSessionPreferences(FALSE, 'config');
+                        $user->writeSessionPreferences(FALSE);
                     }
                 }
             }
@@ -79,7 +79,7 @@ class AUTHORIZE
             // Logged-on user clicked on 'OK' when asked to confirm GDPR or privacy statement
             if ($this->vars["action"] == 'authGate')
             {
-                $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+                $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
                 $this->db->update('users', ['usersGDPR' => 'Y']);
                 // FALSE means go to front of WIKINDX
                 return FALSE;
@@ -94,12 +94,6 @@ class AUTHORIZE
             {
                 // First delete any pre-existing session in case this user has been logging on and off as different users --
                 // keep template and language etc.
-                $language = WIKINDX_LANGUAGE;
-                $template = WIKINDX_TEMPLATE;
-                $userReg = WIKINDX_USER_REGISTRATION;
-                $multiUser = WIKINDX_MULTIUSER;
-                $this->session->setVar('setup_UserRegistration', $userReg);
-                $this->session->setVar('setup_MultiUser', $multiUser);
                 $this->initLogon(); // login prompt
                 FACTORY_CLOSENOMENU::getInstance();
             }
@@ -129,7 +123,7 @@ class AUTHORIZE
                 $this->session->setVar("setup_UserId", '1'); // superAdmin always id = '1'
                 $this->session->setVar("setup_Write", TRUE);
                 $this->session->delVar("setup_ReadOnly");
-                $user->writeSessionPreferences(FALSE, 'config');
+                $user->writeSessionPreferences(FALSE);
                 // restore some session variables if stored from last logout
                 $this->restoreEnvironment();
                 return FALSE;
@@ -194,7 +188,7 @@ class AUTHORIZE
             return TRUE;
         }
         // access already granted
-        if ($this->session->getVar('setup_Write'))
+        if ($this->session->getVar("setup_Write"))
         {
             return TRUE;
         }
@@ -203,7 +197,7 @@ class AUTHORIZE
         {
             // populate session with default values from config
             //			$user = FACTORY_USER::getInstance();
-            //			$user->writeSessionPreferences(FALSE, 'config');
+            //			$user->writeSessionPreferences(FALSE);
             return TRUE;
         }
         if ((!array_key_exists('action', $this->vars) || $this->vars['action'] != 'upgradeDBLogon'))
@@ -218,7 +212,7 @@ class AUTHORIZE
                 return TRUE;
             }
         }
-        if (!$this->session->getVar("setup_Write") && !$this->session->getVar('setup_ReadOnly'))
+        if (!$this->session->getVar("setup_Write") && !$this->session->getVar("setup_ReadOnly"))
         {
             // Default == read only access.
             if (WIKINDX_READ_ONLY_ACCESS && !WIKINDX_DENY_READONLY)
@@ -226,7 +220,7 @@ class AUTHORIZE
                 $this->session->setVar("setup_ReadOnly", TRUE);
                 // populate session with default values from config
                 $user = FACTORY_USER::getInstance();
-                $user->writeSessionPreferences(FALSE, 'config');
+                $user->writeSessionPreferences(FALSE);
                 $this->checkNews();
 
                 return TRUE;
@@ -395,9 +389,9 @@ class AUTHORIZE
      */
     private function authGate()
     {
-        if ((WIKINDX_AUTHGATE_USE === TRUE) && ($this->session->getVar('setup_UserId') != 1))
+        if ((WIKINDX_AUTHGATE_USE === TRUE) && ($this->session->getVar("setup_UserId") != 1))
         {
-            $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $recordset = $this->db->select('users', 'usersGDPR');
             if ($this->db->fetchOne($recordset) == 'N')
             {
@@ -424,7 +418,7 @@ class AUTHORIZE
     private function restoreEnvironment()
     {
 // Restore the user's session state
-        $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
         $state = $this->db->selectFirstField('users', 'usersUserSession');
         if ($state)
         {
@@ -458,11 +452,11 @@ class AUTHORIZE
         $resultset = $this->db->select('news', 'newsId');
         if ($this->db->numRows($resultset))
         {
-            $this->session->setVar('setup_News', TRUE);
+            $this->session->setVar("setup_News", TRUE);
         }
         else
         {
-            $this->session->delVar('setup_News');
+            $this->session->delVar("setup_News");
         }
     }
     /**
@@ -475,7 +469,7 @@ class AUTHORIZE
         // Garbage disposal
         // remove this session's files
         $dir = WIKINDX_DIR_DATA_FILES;
-        if ($sessVar = $this->session->getVar('FileExports'))
+        if ($sessVar = $this->session->getVar("fileExports"))
         {
             $sessArray = unserialize($sessVar);
             foreach (\FILE\fileInDirToArray($dir) as $f)
@@ -487,9 +481,9 @@ class AUTHORIZE
                 $file = $dir . DIRECTORY_SEPARATOR . $f;
                 unlink($file);
             }
-            //			$this->session->delVar('fileExports');
+            //			$this->session->delVar("fileExports");
         }
-        if ($sessVar = $this->session->getVar('PaperExports'))
+        if ($sessVar = $this->session->getVar("PaperExports"))
         {
             $sessArray = unserialize($sessVar);
             foreach (\FILE\fileInDirToArray($dir) as $f)
@@ -501,7 +495,7 @@ class AUTHORIZE
                 $file = $dir . DIRECTORY_SEPARATOR . $f;
                 unlink($file);
             }
-            //			$this->session->delVar('paperExports');
+            //			$this->session->delVar("paperExports");
         }
 // Store this user's previous user settings for use below if necessary
 		$keys = ["Paging", "PagingMaxLinks", "StringLimit", "Language", "Style", "Template", "PagingTagCloud", "ListLink"];
@@ -513,7 +507,7 @@ class AUTHORIZE
 // set the default language prior to displaying the login prompt
        $user = FACTORY_USER::getInstance();
 // populate session with default values from config
-        $user->writeSessionPreferences(FALSE, 'config');
+        $user->writeSessionPreferences(FALSE);
         // remove any wikindx cookie that has been set
         $cookie = FACTORY_COOKIE::getInstance();
         $cookie->deleteCookie();
@@ -521,9 +515,9 @@ class AUTHORIZE
 // Restore this user's previous user settings (e.g. so language and appearance does not suddenly change to the default from config)
 		foreach ($keys as $key)
 		{
-			$this->session->setVar('setup_' . $key, $sessArray[$key]);
+			$this->session->setVar("setup_" . $key, $sessArray[$key]);
 		}
-		$this->session->setVar('setup_ReadOnly', TRUE);
+		$this->session->setVar("setup_ReadOnly", TRUE);
 		header("Location: index.php");
     }
     /**
@@ -535,10 +529,10 @@ class AUTHORIZE
      */
     private function failure($error = FALSE)
     {
-        if (!$error && ($sessionError = $this->session->getVar('misc_ErrorMessage')))
+        if (!$error && ($sessionError = $this->session->getVar("misc_ErrorMessage")))
         {
             $error = $sessionError;
-            $this->session->delVar('misc_ErrorMessage');
+            $this->session->delVar("misc_ErrorMessage");
         }
         // Exit back to logon prompt
         FACTORY_CLOSENOMENU::getInstance($this->initLogon($error));

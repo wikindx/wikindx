@@ -51,7 +51,7 @@ class HOUSEKEEPING
                 unset($cacheDirFiles[$key]);
             }
         }
-        $this->session->setVar('cache_Attachments', count($cacheDirFiles));
+        $this->session->setVar("cache_Attachments", count($cacheDirFiles));
         $mimeTypes = [WIKINDX_MIMETYPE_PDF, WIKINDX_MIMETYPE_DOCX, WIKINDX_MIMETYPE_DOC];
         $db->formatConditionsOneField($mimeTypes, 'resourceattachmentsFileType');
         $resultset = $db->select('resource_attachments', ['resourceattachmentsHashFilename']);
@@ -70,7 +70,7 @@ class HOUSEKEEPING
         {
             $pString = \HTML\p($messages->text("misc", "attachmentCache1"));
             $pString .= \HTML\p($messages->text("misc", "attachmentCache2", $count));
-            $lastCache = $this->session->getVar('cache_Attachments');
+            $lastCache = $this->session->getVar("cache_Attachments");
             if ($lastCache)
             {
                 $pString .= \HTML\p($messages->text("misc", "attachmentCache3", $lastCache));
@@ -79,11 +79,11 @@ class HOUSEKEEPING
             $pString .= \FORM\hidden("method", "checkCache");
             if (function_exists('curl_multi_exec'))
             {
-                if (!$this->session->getVar('cache_Attachments'))
+                if (!$this->session->getVar("cache_Attachments"))
                 { // At beginning
                     $checked = 'CHECKED';
                 }
-                elseif ($this->session->getVar('cache_Curl'))
+                elseif ($this->session->getVar("cache_Curl"))
                 {
                     $checked = 'CHECKED';
                 }
@@ -93,7 +93,7 @@ class HOUSEKEEPING
                 }
                 $pString .= \HTML\p(\FORM\checkbox($messages->text("misc", "attachmentCache4"), "cacheCurl", $checked));
             }
-            $value = $this->session->getVar('cache_Limit');
+            $value = $this->session->getVar("cache_Limit");
             $pString .= \HTML\p($messages->text("misc", "attachmentCache5", \FORM\textInput(FALSE, "cacheLimit", $value, 3)));
             $pString .= \HTML\p(\FORM\formSubmit($messages->text("submit", "Cache")) . \FORM\formEnd());
             $pString .= \HTML\p(\HTML\a("skip", $messages->text("misc", "attachmentCache6"), htmlentities("index.php?action=skipCaching")));

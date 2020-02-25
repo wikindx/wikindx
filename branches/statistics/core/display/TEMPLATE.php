@@ -116,7 +116,7 @@ class TEMPLATE
                 $this->name = WIKINDX_TEMPLATE_DEFAULT;
             }
 
-            if (!$this->session->getVar('setup_ReadOnly'))
+            if (!$this->session->getVar("setup_ReadOnly"))
             {
                 $this->session->setVar("setup_Template", $this->name);
             }
@@ -150,7 +150,7 @@ class TEMPLATE
         $this->tpl->setCompileDir($this->compileDir);
 
         // Force compilation on setup mode, or apply the current config policy
-        $this->tpl->setForceCompile($setupMode || WIKINDX_BYPASS_SMARTY_COMPILATION);
+        $this->tpl->setForceCompile($setupMode || (defined("WIKINDX_BYPASS_SMARTY_COMPILATION") ? WIKINDX_BYPASS_SMARTY_COMPILATION : WIKINDX_BYPASS_SMARTY_COMPILATION_DEFAULT));
 
         // Configure cache options of Smarty
         // We use dynamic pages so certainly don't want caching!
@@ -203,18 +203,18 @@ class TEMPLATE
         
         if (!$ignoreUserConfig && GLOBALS::getUserVar('TemplateMenu'))
         {
-            $this->session->setVar('setup_ReduceMenuLevel', GLOBALS::getUserVar('TemplateMenu'));
+            $this->session->setVar("setup_ReduceMenuLevel", GLOBALS::getUserVar('TemplateMenu'));
         }
         else
         {
-            $this->session->setVar('setup_ReduceMenuLevel', $level);
+            $this->session->setVar("setup_ReduceMenuLevel", $level);
         }
         
         // Configure pre text for menu items that were in a subSubmenu
         // Only valid for reduceMenuLevel == 1
         if ($ReduceMenuLevelPretextOption != "")
         {
-            $this->session->setVar('setup_ReduceMenuLevelPretext', $ReduceMenuLevelPretextOption);
+            $this->session->setVar("setup_ReduceMenuLevelPretext", $ReduceMenuLevelPretextOption);
         }
     }
 

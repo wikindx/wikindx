@@ -923,7 +923,7 @@ class EncodeExplorer
     public function outputHtml()
     {
         $pString = '<link rel="stylesheet" href="images.css" type="text/css">';
-        $pString .= '<script src="' . WIKINDX_BASE_URL . "/" . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR) . '/jquery/jquery.min.js"></script>';
+        $pString .= '<script src="' . WIKINDX_BASE_URL . "/" . WIKINDX_URL_COMPONENT_VENDOR . '/jquery/jquery.min.js"></script>';
         $pString .= <<<END
 <script>
 END;
@@ -997,7 +997,7 @@ $pString .= '$(document).ready(function()
                     }
                 }
 			}
-			var path = "' . str_replace("\\", "/", WIKINDX_DIR_DATA_IMAGES) . '/" + image;
+			var path = "' . WIKINDX_URL_DATA_IMAGES . '/" + image;
 
 			$("#thumb").remove();
 			$("body").append("<div id=\"thumb\"><img src=\"?thumb=" + path + "\" alt=\"Preview\"><\/div>");
@@ -1045,7 +1045,7 @@ $pString .= '$(document).ready(function()
                     }
                 }
 			}
-			var path = "' . str_replace("\\", "/", WIKINDX_DIR_DATA_IMAGES) . '/" + image;
+			var path = "' . WIKINDX_URL_DATA_IMAGES . '/" + image;
 
 			imageDialogBrowse(path, width, height);
 		});
@@ -1069,19 +1069,19 @@ END;
     . "<th class=\"changedH\">" . EncodeExplorer::makeArrow("mod") . "</th>" . LF
     . "</tr>" . LF
     . "</thead>" . LF;
-//
+        //
         // Ready to display folders and files.
-//
+        //
         $row = 1;
 
-//
+        //
         // Now the files
-//
+        //
         if ($this->files)
         {
             $pString .= '<tbody class="scrollContent">' . LF;
             
-            $path = str_replace("\\", "/", DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR);
+            $path = "/" . WIKINDX_URL_DATA_IMAGES . "/";
             $count = 0;
             foreach ($this->files as $file)
             {
@@ -1089,8 +1089,8 @@ END;
                 list($width, $height, $type, $attr) = getimagesize(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $file->getName());
 
                 // We limit the display size of images. This can be changed by the user afterwards in the textarea.
-                $widthMax = $this->session->getVar('config_configImgWidthLimit');
-                $heightMax = $this->session->getVar('config_configImgHeightLimit');
+                $widthMax = WIKINDX_IMG_WIDTH_LIMIT;
+                $heightMax = WIKINDX_IMG_HEIGHT_LIMIT;
                 if (($width > $widthMax) && ($widthMax > 0))
                 {
                     $height *= $widthMax / $width;

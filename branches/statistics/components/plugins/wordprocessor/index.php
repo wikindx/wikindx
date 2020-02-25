@@ -116,7 +116,7 @@ class wordprocessor_MODULE
         list($papers, $papersTimestamp) = $this->grabPapers();
         if ($append)
         {
-            $title = base64_decode($this->session->getVar('wp_Title'));
+            $title = base64_decode($this->session->getVar("wp_Title"));
             if (($key = array_search($title, $papers)) !== FALSE)
             {
                 unset($papers[$key]);
@@ -223,7 +223,7 @@ class wordprocessor_MODULE
         {
             $this->badInput->close($this->errors->text("file", "upload"), $this, 'importInit');
         }
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         // Check for file input
         if (!($text = @file_get_contents($_FILES['import_file']['tmp_name'])))
         {
@@ -327,7 +327,7 @@ class wordprocessor_MODULE
         }
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDelete'));
         $this->session->delVar("wp_LockDelete");
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         $pString = FORM\formHeader("wordprocessor_delete");
         foreach ($this->vars['id'] as $id)
         {
@@ -357,7 +357,7 @@ class wordprocessor_MODULE
         {
             $this->badInput->close($this->pluginmessages->text('deletedPaper'), $this, 'deleteInit');
         }
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         $ids = [];
         foreach ($this->vars as $key => $value)
         {
@@ -586,7 +586,7 @@ class wordprocessor_MODULE
         $papers = $papersTimestamp = [];
         $fields = ["pluginwordprocessorId", "pluginwordprocessorHashFilename", "pluginwordprocessorFilename",
             "pluginwordprocessorTimestamp", ];
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         $this->db->ascDesc = $this->db->desc;
         $this->db->formatConditions(['pluginwordprocessorUserId' => $userId]);
         $this->db->orderBy('pluginwordprocessorTimestamp');

@@ -48,7 +48,7 @@ class BIBTEX
      */
     public function exportOptions()
     {
-        if (!$this->session->getVar('sql_ListStmt'))
+        if (!$this->session->getVar("sql_ListStmt"))
         {
             $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
         }

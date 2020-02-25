@@ -144,7 +144,7 @@ class EDITCOLLECTION
         GLOBALS::setTplVar('help', $help->createLink('collection'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" .
             $this->messages->text("resources", "collection") . ")"));
-        $this->session->setVar('editLock', FALSE);
+        $this->session->setVar("editLock", FALSE);
         if (!array_key_exists('edit_collectionId', $this->vars) || !$this->vars['edit_collectionId'])
         {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
@@ -319,7 +319,7 @@ class EDITCOLLECTION
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $this->writeVarsToSession();
-        if ($this->session->getVar('editLock'))
+        if ($this->session->getVar("editLock"))
         {
             $this->badInput->close($this->errors->text("done", "collection"), $this, 'init');
         }
@@ -454,7 +454,7 @@ class EDITCOLLECTION
     public function editConfirm()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        if ($this->session->getVar('editLock'))
+        if ($this->session->getVar("editLock"))
         {
             $this->badInput->close($this->errors->text("done", "collection"), $this, 'init');
         }
@@ -485,7 +485,7 @@ class EDITCOLLECTION
             $this->db->update('resource_misc', ['resourcemiscCollection' => $existId]);
         }
         // lock reload
-        $this->session->setVar('editLock', TRUE);
+        $this->session->setVar("editLock", TRUE);
         // Clear session
         $this->session->clearArray("edit");
         // send back to editDisplay with success message
@@ -756,23 +756,23 @@ class EDITCOLLECTION
         $fields = \HTML\trStart();
         $entry = $creatorType . '_' . $creatorOrder . '_firstname';
         array_key_exists($entry, $this->sessionVars) ? $value = $this->sessionVars[$entry] : $value = FALSE;
-        $this->session->setVar('edit_' . $entry, $value);
+        $this->session->setVar("edit_" . $entry, $value);
         $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 30, 255));
         $entry = $creatorType . '_' . $creatorOrder . '_initials';
         array_key_exists($entry, $this->sessionVars) ? $value = $this->sessionVars[$entry] : $value = FALSE;
-        $this->session->setVar('edit_' . $entry, $value);
+        $this->session->setVar("edit_" . $entry, $value);
         $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 6, 255));
         $entry = $creatorType . '_' . $creatorOrder . '_prefix';
         array_key_exists($entry, $this->sessionVars) ? $value = $this->sessionVars[$entry] : $value = FALSE;
-        $this->session->setVar('edit_' . $entry, $value);
+        $this->session->setVar("edit_" . $entry, $value);
         $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 11, 255));
         $entry = $creatorType . '_' . $creatorOrder . '_surname';
         array_key_exists($entry, $this->sessionVars) ? $value = $this->sessionVars[$entry] : $value = FALSE;
-        $this->session->setVar('edit_' . $entry, $value);
+        $this->session->setVar("edit_" . $entry, $value);
         $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 30, 255));
         $entry = $creatorType . '_' . $creatorOrder . '_select';
         array_key_exists($entry, $this->sessionVars) ? $value = $this->sessionVars[$entry] : $value = $creatorId;
-        $this->session->setVar('edit_' . $entry, $value);
+        $this->session->setVar("edit_" . $entry, $value);
         $fields .= \HTML\td(\FORM\selectedBoxValue(FALSE, $entry, $this->creatorsArray, $value, 1));
         $fields .= \HTML\trEnd();
 

@@ -749,7 +749,7 @@ class debugtools_MODULE
         $pString .= HTML\theadEnd();
         $pString .= HTML\tbodyStart();
         
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         $db->formatConditions(['usersId' => $userId]);
         $resultSet = $db->select("users", "*");
         

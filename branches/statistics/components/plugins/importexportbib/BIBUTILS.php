@@ -85,7 +85,7 @@ class BIBUTILS
         $pString .= FORM\formMultiHeader("importexportbib_processBibutils");
         $pString .= HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= HTML\trStart();
-        if (!$selectedInput = $this->session->getVar('bibUtils_inputType'))
+        if (!$selectedInput = $this->session->getVar("bibUtils_inputType"))
         {
             $selectedInput = "bib2xml";
         }
@@ -99,7 +99,7 @@ class BIBUTILS
         $js = AJAX\jActionForm('onchange', $jsonArray);
         $pString .= HTML\td(FORM\selectedBoxValue($this->pluginmessages->text("bibutilsinputType"), "inputType", $inputTypes, $selectedInput, 9, FALSE, $js));
         $pString .= HTML\td($this->createOutputTypes());
-        if (!$selected = $this->session->getVar('bibUtils_options'))
+        if (!$selected = $this->session->getVar("bibUtils_options"))
         {
             $pString .= HTML\td(FORM\selectFBoxValueMultiple($this->pluginmessages->text("bibutilsxmlOptions"), "options", $options, 6, TRUE) .
                 BR . HTML\span($this->coremessages->text('hint', 'multiples'), 'hint'));
@@ -263,12 +263,12 @@ class BIBUTILS
         if (array_key_exists('ajaxReturn', $this->vars))
         {
             $invalidKey = $this->vars['ajaxReturn'];
-            if (array_key_exists($invalidKey, $invalid) && ($invalid[$invalidKey] == $this->session->getVar('bibUtils_outputType')))
+            if (array_key_exists($invalidKey, $invalid) && ($invalid[$invalidKey] == $this->session->getVar("bibUtils_outputType")))
             {
-                $this->session->delVar('bibUtils_outputType');
+                $this->session->delVar("bibUtils_outputType");
             }
         }
-        elseif ($selectedInput = $this->session->getVar('bibUtils_inputType'))
+        elseif ($selectedInput = $this->session->getVar("bibUtils_inputType"))
         {
             $invalidKey = $selectedInput;
         }
@@ -280,7 +280,7 @@ class BIBUTILS
         {
             unset($this->outputTypesArray[$invalid[$invalidKey]]);
         }
-        if (($selectedOutput = $this->session->getVar('bibUtils_outputType')) &&
+        if (($selectedOutput = $this->session->getVar("bibUtils_outputType")) &&
             (array_search($selectedOutput, $invalid) !== FALSE))
         {
             $return = $selectedOutput;
@@ -459,30 +459,30 @@ class BIBUTILS
             }
             if (isset($array))
             {
-                $this->session->setVar('bibUtils_options', base64_encode(serialize($array)));
+                $this->session->setVar("bibUtils_options", base64_encode(serialize($array)));
             }
             else
             {
-                $this->session->delVar('bibUtils_options');
+                $this->session->delVar("bibUtils_options");
             }
         }
         else
         {
-            $this->session->delVar('bibUtils_options');
+            $this->session->delVar("bibUtils_options");
         }
         if (!array_key_exists('inputType', $this->vars) || !$this->vars['inputType'])
         {
             $this->badInput($this->pluginmessages->text('bibutilsnoInputType'));
         }
-        $this->session->setVar('bibUtils_inputType', $this->vars['inputType']);
+        $this->session->setVar("bibUtils_inputType", $this->vars['inputType']);
         if (!array_key_exists('outputType', $this->vars) || !$this->vars['outputType'])
         {
             $this->badInput($this->pluginmessages->text('bibutilsnoOutputType'));
         }
-        $this->session->setVar('bibUtils_outputType', $this->vars['outputType']);
+        $this->session->setVar("bibUtils_outputType", $this->vars['outputType']);
         if (!array_key_exists('file', $_FILES))
         {
-            if ($file = $this->session->getVar('bibUtils_file'))
+            if ($file = $this->session->getVar("bibUtils_file"))
             {
                 return $this->filesDir . $file;
             }
@@ -493,7 +493,7 @@ class BIBUTILS
         {
             $this->badInput($this->pluginmessages->text('bibutilsnoFileInput'));
         }
-        $this->session->setVar('bibUtils_file', $fileName);
+        $this->session->setVar("bibUtils_file", $fileName);
 
         return $this->filesDir . $fileName;
     }

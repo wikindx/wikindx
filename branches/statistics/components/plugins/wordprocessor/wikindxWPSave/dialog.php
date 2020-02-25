@@ -34,8 +34,8 @@ include_once("core/startup/WEBSERVERCONFIG.php");
 include_once("core/messages/PLUGINMESSAGES.php");
 
 $script = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
-$script .= '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/wordprocessor/wikindxWPcommon.js"></script>';
-$script .= '<script src="' . WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/wordprocessor/' . basename(__DIR__) . '/js/wikindxWPSavedialog.js"></script>';
+$script .= '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/wordprocessor/wikindxWPcommon.js"></script>';
+$script .= '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/wordprocessor/' . basename(__DIR__) . '/js/wikindxWPSavedialog.js"></script>';
 GLOBALS::addTplVar('scripts', $script);
 
 $class = new WPSaveDialog();
@@ -80,11 +80,11 @@ class WPSaveDialog
         $js = "onsubmit=\"return wordprocessorSave('$savedMessage', '$notSavedMessage');\"";
         $pString .= FORM\formHeaderVisibleAction("dialog.php", "wpSave", $js);
         $pString .= FORM\hidden("method", "save");
-        if ($hashFilename = $this->session->getVar('wp_HashFilename'))
+        if ($hashFilename = $this->session->getVar("wp_HashFilename"))
         {
             $pString .= FORM\hidden("hashFilename", $hashFilename);
         }
-        if ($id = $this->session->getVar('wp_Id'))
+        if ($id = $this->session->getVar("wp_Id"))
         {
             $pString .= FORM\hidden("id", $id);
         }

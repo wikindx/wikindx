@@ -16,7 +16,6 @@ class CONFIGURE
     private $messages;
     private $success;
     private $session;
-    private $config;
     private $user;
     private $db;
     private $vars;
@@ -32,7 +31,6 @@ class CONFIGURE
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->user = FACTORY_USER::getInstance();
         $this->db = FACTORY_DB::getInstance();
@@ -55,10 +53,10 @@ class CONFIGURE
     public function init($message = FALSE)
     {
         // Anything in the session takes precedence
-        if (($messageIn = $this->session->getVar('configmessage')) && ($itemIn = $this->session->getVar('configitem')))
+        if (($messageIn = $this->session->getVar("configmessage")) && ($itemIn = $this->session->getVar("configitem")))
         {
-            $this->session->delVar('configmessage');
-            $this->session->delVar('configitem');
+            $this->session->delVar("configmessage");
+            $this->session->delVar("configitem");
             $messageString = $messageIn;
             $item = $itemIn;
         }
@@ -158,7 +156,7 @@ class CONFIGURE
      */
     public function mailTransactionReport()
     {
-        $pString = $this->session->getVar('mailTransactionLog');
+        $pString = $this->session->getVar("mailTransactionLog");
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSENOMENU::getInstance();
     }
@@ -167,7 +165,7 @@ class CONFIGURE
      */
     public function ldapTransactionReport()
     {
-        $pString = $this->session->getVar('ldapTransactionLog');
+        $pString = $this->session->getVar("ldapTransactionLog");
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSENOMENU::getInstance();
     }
@@ -221,18 +219,19 @@ class CONFIGURE
                             array_shift($this->vars[$field]);
                         }
                         // so that the select boxes display properly when returning to the DIV
-                        $this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES = [];
+                        $deactivateResourceTypes = [];
                         foreach ($this->vars[$field] as $key => $value)
                         {
-                            $this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES[$key] = $value;
+                            $deactivateResourceTypes[$key] = $value;
                         }
-                        $value = base64_encode(serialize($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES));
+                        $value = base64_encode(serialize($deactivateResourceTypes));
                     }
                     else
                     {
-                        $this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES = [];
+                        $deactivateResourceTypes = [];
                         $value = base64_encode(serialize([]));
                     }
+                    $this->session->setVar("config_deactivateResourceTypes", $value);
                 }
                 elseif ($this->configDbStructure->dbStructure[$field] == 'configBoolean')
                 {
@@ -260,10 +259,7 @@ class CONFIGURE
                 if ($field == 'configNoSort')
                 {
                     $array = [];
-                    if (isset($this->config->WIKINDX_NO_SORT))
-                    {
-                        $oldNoSort = base64_encode(serialize($this->config->WIKINDX_NO_SORT));
-                    }
+                    $oldNoSort = base64_encode(serialize(WIKINDX_NO_SORT));
                     if ($value)
                     {
                         foreach (UTF8::mb_explode(',', $value) as $word)
@@ -276,10 +272,10 @@ class CONFIGURE
                         }
                         $value = base64_encode(serialize($array));
                     }
-                    $this->config->WIKINDX_NO_SORT = $array;
                     if (isset($oldNoSort) && $oldNoSort != $value)
                     {
                         $this->updateNoSort($oldNoSort);
+                		$this->session->setVar("config_noSort", $value);
                     }
                 }
                 elseif ($field == 'configSearchFilter')
@@ -296,8 +292,8 @@ class CONFIGURE
                             }
                         }
                         $value = base64_encode(serialize($array));
+                		$this->session->setVar("config_searchFilter", $value);
                     }
-                    $this->config->WIKINDX_SEARCH_FILTER = $array;
                 }
                 elseif ($field == 'configTimezone')
                 {
@@ -422,13 +418,12 @@ class CONFIGURE
                 $this->db->formatConditions(['configName' => $field]);
                 $this->db->updateNull('config', $this->configDbStructure->dbStructure[$field]);
             }
-            $this->writeSetupSession($updateArray);
         }
         // need to use header() to ensure any change in appearance is immediately picked up.
         if ($headerRedirect)
         {
-            $this->session->setVar('configmessage', $this->success->text("config"));
-            $this->session->setVar('configitem', $this->vars['selectItem']);
+            $this->session->setVar("configmessage", $this->success->text("config"));
+            $this->session->setVar("configitem", $this->vars['selectItem']);
             header("Location: index.php?action=admin_CONFIGURE_CORE&method=init");
         }
         else
@@ -461,7 +456,7 @@ class CONFIGURE
             'debug' => $this->messages->text('config', 'debugging'),
         ];
         // Only for superadmin who is always userid = 1
-        if (!$this->session->issetVar('setup_UserId') || ($this->session->getVar('setup_UserId') == 1))
+        if (!$this->session->issetVar("setup_UserId") || ($this->session->getVar("setup_UserId") == 1))
         {
             $groups = ['super' => $this->messages->text('config', 'superAdmin')] + $groups;
         }
@@ -478,10 +473,6 @@ class CONFIGURE
      */
     private function getConfigDetails($groups, $item = FALSE)
     {
-        if (!isset($this->config->WIKINDX_SEARCH_FILTER))
-        {
-            $this->config->WIKINDX_SEARCH_FILTER = [];
-        }
         if (!$this->insert)
         {
             $this->values = $this->fromDbToSession();
@@ -886,11 +877,16 @@ class CONFIGURE
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "noSort"));
         if ($this->insert)
         {
-            $input = implode(', ', unserialize(base64_decode(WIKINDX_NO_SORT_DEFAULT))); // default at first intall
+            $input = implode(', ', unserialize(base64_decode(WIKINDX_NO_SORT_DEFAULT))); // default at first install
+        }
+        elseif ($this->session->getVar("config_noSort")) // After updating the field
+        {
+            $input = implode(', ', unserialize(base64_decode($this->session->getVar("config_noSort"))));
+            $this->session->delVar("config_noSort");
         }
         else
         {
-            $input = implode(', ', $this->config->WIKINDX_NO_SORT);
+            $input = implode(', ', WIKINDX_NO_SORT);
         }
         $pString .= \HTML\td(\HTML\p(\FORM\textareaInput(
             $this->messages->text("config", "noSort"),
@@ -904,9 +900,14 @@ class CONFIGURE
         {
             $input = implode(', ', unserialize(base64_decode(WIKINDX_SEARCH_FILTER_DEFAULT))); // default at first install
         }
+        elseif ($this->session->getVar("config_searchFilter")) // After updating the field
+        {
+            $input = implode(', ', unserialize(base64_decode($this->session->getVar("config_searchFilter"))));
+            $this->session->delVar("config_searchFilter");
+        }
         else
         {
-            $input = implode(', ', $this->config->WIKINDX_SEARCH_FILTER);
+            $input = implode(', ', WIKINDX_SEARCH_FILTER);
         }
         $pString .= \HTML\td(\HTML\p(\FORM\textareaInput(
             $this->messages->text("config", "searchFilter"),
@@ -1263,7 +1264,7 @@ class CONFIGURE
             {
                 $this->testLdap();
                 $jScript = "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=ldapTransactionReport', 80)";
-                $colour = $this->session->getVar('ldapTransactionLogStatus') == 'success' ? 'green' : 'red';
+                $colour = $this->session->getVar("ldapTransactionLogStatus") == 'success' ? 'green' : 'red';
                 $mailMessage = \HTML\p(\HTML\aBrowse($colour, '', $this->messages->text("config", "ldapTransactionReport"), $jScript));
             }
         }
@@ -1344,7 +1345,7 @@ class CONFIGURE
         array_key_exists("configAuthGateMessage", $this->values) ? $input = $this->values["configAuthGateMessage"] :
             $input = WIKINDX_AUTHGATE_MESSAGE_DEFAULT;
         $pString .= \HTML\td(\FORM\textareaInputmceNoEditor($this->messages->text("config", "authGateMessage"), "configAuthGateMessage", $input, 80));
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGateReset"), "configAuthGateReset", FALSE));
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGateReset"), "configAuthGateReset", WIKINDX_AUTHGATE_RESET_DEFAULT));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         // Extra field not in the database used for test purposes only
@@ -1373,7 +1374,7 @@ class CONFIGURE
             {
                 $this->testMail();
                 $jScript = "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=mailTransactionReport', 80)";
-                $colour = $this->session->getVar('mailTransactionLogStatus') == 'success' ? 'green' : 'red';
+                $colour = $this->session->getVar("mailTransactionLogStatus") == 'success' ? 'green' : 'red';
                 $mailMessage = \HTML\p(\HTML\aBrowse($colour, '', $this->messages->text("config", "mailTransactionReport"), $jScript));
             }
         }
@@ -1538,13 +1539,13 @@ class CONFIGURE
         $mail = new MAIL();
         if (!$mail->sendEmail($this->vars['configMailTest'], \HTML\stripHtml(WIKINDX_TITLE), $this->messages->text('config', 'mailTestSuccess'), TRUE))
         {
-            $this->session->setVar('mailTransactionLogStatus', 'failure');
+            $this->session->setVar("mailTransactionLogStatus", "failure");
         }
         else
         {
-            $this->session->setVar('mailTransactionLogStatus', 'success');
+            $this->session->setVar("mailTransactionLogStatus", "success");
         }
-        $this->session->setVar('mailTransactionLog', $mail->TransactionLog);
+        $this->session->setVar("mailTransactionLog", $mail->TransactionLog);
     }
     /** 
      * Test the ldap configuration
@@ -1559,7 +1560,7 @@ class CONFIGURE
             {
                 $error = \HTML\p(ldap_err2str(ldap_errno($ds)));
                 $this->session->setVar("ldapTransactionLog", $error);
-                $this->session->setVar('ldapTransactionLogStatus', 'failure');
+                $this->session->setVar("ldapTransactionLogStatus", "failure");
 
                 return FALSE;
             }
@@ -1573,7 +1574,7 @@ class CONFIGURE
                 ldap_get_option($ds, 0x32, $err);
                 $error .= \HTML\p($err);
                 $this->session->setVar("ldapTransactionLog", $error);
-                $this->session->setVar('ldapTransactionLogStatus', 'failure');
+                $this->session->setVar("ldapTransactionLogStatus", "failure");
 
                 return FALSE;
             }
@@ -1588,7 +1589,7 @@ class CONFIGURE
                 ldap_get_option($ds, 0x32, $err);
                 $error .= \HTML\p($err);
                 $this->session->setVar("ldapTransactionLog", $error);
-                $this->session->setVar('ldapTransactionLogStatus', 'failure');
+                $this->session->setVar("ldapTransactionLogStatus", "failure");
 
                 return FALSE;
             }
@@ -1609,14 +1610,14 @@ class CONFIGURE
             ldap_get_option($ds, 0x32, $err);
             $error .= \HTML\p($err);
             $this->session->setVar("ldapTransactionLog", $error);
-            $this->session->setVar('ldapTransactionLogStatus', 'failure');
+            $this->session->setVar("ldapTransactionLogStatus", "failure");
 
             return FALSE;
         }
         else
         { // success
-            $this->session->setVar('ldapTransactionLog', $this->messages->text('config', 'ldapTestSuccess'));
-            $this->session->setVar('ldapTransactionLogStatus', 'success');
+            $this->session->setVar("ldapTransactionLog", $this->messages->text('config', 'ldapTestSuccess'));
+            $this->session->setVar("ldapTransactionLogStatus", "success");
         }
     }
     /** 
@@ -1662,7 +1663,7 @@ class CONFIGURE
         $pString = $this->errorString;
         // need to force reload so display box of active types displays properly after DB write
         $resourceMap = FACTORY_RESOURCEMAP::getFreshInstance();
-        $typesRaw = $resourceMap->getTypes();
+        $typesRaw = $resourceMap->getTypesRaw();
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", 'deactivateResourceTypes'));
@@ -1671,9 +1672,22 @@ class CONFIGURE
             $types[$type] = $this->messages->text("resourceType", $type);
         }
         asort($types);
-        foreach ($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES as $type)
+        if ($this->session->getVar("config_deactivateResourceTypes")) // After updating the field
+        {
+            $array = unserialize(base64_decode($this->session->getVar("config_deactivateResourceTypes")));
+            $this->session->delVar("config_deactivateResourceTypes");
+        }
+        else
+        {
+        	$array = WIKINDX_DEACTIVATE_RESOURCE_TYPES;
+        }
+        foreach ($array as $type)
         {
             $deactivated[$type] = $this->messages->text("resourceType", $type);
+            if (array_key_exists($type, $types))
+            {
+            	unset($types[$type]);
+            }
         }
         $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
             $this->messages->text("config", 'activeResourceTypes'),
@@ -1927,8 +1941,8 @@ class CONFIGURE
     private function updateNoSort($oldNoSort)
     {
         $oldArray = unserialize(base64_decode($oldNoSort));
-        $arrayNewNoSort = array_diff($this->config->WIKINDX_NO_SORT, $oldArray);
-        $arrayRemoveNoSort = array_diff($oldArray, $this->config->WIKINDX_NO_SORT);
+        $arrayNewNoSort = array_diff(WIKINDX_NO_SORT, $oldArray);
+        $arrayRemoveNoSort = array_diff($oldArray, WIKINDX_NO_SORT);
         $newNSPattern = $newNSPatternBrace = FALSE;
         if (!empty($arrayNewNoSort))
         {
@@ -1977,42 +1991,6 @@ class CONFIGURE
                 $this->db->formatConditions(['resourceId' => $row['resourceId']]);
                 $this->db->update('resource', $update);
             }
-        }
-    }
-    /**
-     * When updating the configuration, some settings will have an effect on the admin's view (e.g. no. resources to show on front page) -- write them to session
-     *
-     * @param array $array
-     */
-    private function writeSetupSession($array)
-    {
-        if (array_key_exists('configLastChanges', $array))
-        {
-            $this->session->setVar('setup_LastChanges', $array['configLastChanges']);
-        }
-        if (array_key_exists('configLastChangesDayLimit', $array))
-        {
-            $this->session->setVar('setup_LastChangesDayLimit', $array['configLastChangesDayLimit']);
-        }
-        if (array_key_exists('configLastChangesType', $array))
-        {
-            $this->session->setVar('setup_LastChangesType', $array['configLastChangesType']);
-        }
-        if (array_key_exists('configMultiUser', $array))
-        {
-            $this->session->setVar('setup_MultiUser', $array['configMultiUser']);
-        }
-        if (array_key_exists('configQuarantine', $array))
-        {
-            $this->session->setVar('setup_Quarantine', $array['configQuarantine']);
-        }
-        if (array_key_exists('configMetadataAllow', $array))
-        {
-            $this->session->setVar('setup_MetadataAllow', $array['configMetadataAllow']);
-        }
-        if (array_key_exists('configMetadataUserOnly', $array))
-        {
-            $this->session->setVar('setup_MetadataUserOnly', $array['configMetadataUserOnly']);
         }
     }
     /** 
@@ -2315,7 +2293,7 @@ class CONFIGURE
     private function fromDbToSession()
     {
         $row = $this->configDbStructure->getAllData();
-        // Remove noSort and searchFilter (they're in $this->config variables) and write the rest to session variables
+        // Remove noSort and searchFilter and write the rest to session variables
         unset($row['configNoSort']);
         unset($row['configSearchFilter']);
         if (!$this->session->writeArray($row, "config"))
@@ -2331,7 +2309,7 @@ class CONFIGURE
             }
         }
         // user id is stored in session if user has already logged on.
-        if ($userId = $this->session->getVar('setup_UserId'))
+        if ($userId = $this->session->getVar("setup_UserId"))
         {
             $this->db->formatConditions(['usersId' => $userId]);
             $recordset = $this->db->select('users', ['usersUsername', 'usersPassword',

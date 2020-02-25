@@ -64,7 +64,7 @@ class chooselanguage_MODULE
 		if ($session->getVar("setup_UserId"))
 		{
 	        $db = FACTORY_DB::getInstance();
-			$db->formatConditions(['usersId' => $session->getVar('setup_UserId')]);
+			$db->formatConditions(['usersId' => $session->getVar("setup_UserId")]);
 			$db->update('users', ['usersLanguage' => $language]);
         	GLOBALS::setUserVar('Language', $language);
 	    }
@@ -88,7 +88,7 @@ class chooselanguage_MODULE
         $languages = array_merge($languages, \LOCALES\getSystemLocales());
         
         // Don't use the session value in that case because the language could have been changed localy by the chooseLanguage plugin
-        $userId = $session->getVar('setup_UserId');
+        $userId = $session->getVar("setup_UserId");
         $db->formatConditions(['usersId' => $userId]);
         $language = $db->selectFirstField("users", "usersLanguage");
         array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
@@ -104,7 +104,7 @@ class chooselanguage_MODULE
 
         if (count($languages) > 1)
         {
-            $display .= HTML\jsInlineExternal(WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/' . basename(__DIR__) . '/chooseLanguage.js');
+            $display .= HTML\jsInlineExternal(WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/' . basename(__DIR__) . '/chooseLanguage.js');
             $js = 'onchange="javascript:chooseLanguageChangeLanguage(this.value);"';
             $display .= FORM\selectedBoxValue(FALSE, "Language", $languages, $language, 1, FALSE, $js);
         }

@@ -15,6 +15,9 @@ Thus, plugins/debugtools/index.php etc.
 
 CHANGELOG:
 
+v1.3, 2020
+1. Wikindx compatibility version 7.
+
 v1.2, 2020
 1. Add documentation.
 

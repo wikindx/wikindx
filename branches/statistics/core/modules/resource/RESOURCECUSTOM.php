@@ -53,7 +53,7 @@ class RESOURCECUSTOM
     {
         $array = [];
         $index = 0;
-        if ($this->session->getVar('setup_Write'))
+        if ($this->session->getVar("setup_Write"))
         {
             $this->db->formatConditions(['resourcecustomResourceId' => $rId]);
             $subQ = $this->db->subQuery($this->db->selectNoExecute('resource_custom', 'resourcecustomCustomId'), FALSE, FALSE, TRUE);
@@ -77,7 +77,7 @@ class RESOURCECUSTOM
             'resourcecustomLong', 'resourcecustomAddUserIdCustom', 'resourcecustomEditUserIdCustom', ]);
         while ($row = $this->db->fetchRow($recordset))
         {
-            if ($this->session->getVar('setup_Write'))
+            if ($this->session->getVar("setup_Write"))
             {
                 $array[$index]['editLink'] = \HTML\a(
                     $this->icons->getClass("edit"),
@@ -126,7 +126,7 @@ class RESOURCECUSTOM
         $this->gatekeep->init();
         $this->checkInput(['id', 'size']);
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $this->session->delVar('resourceCustomLock');
+        $this->session->delVar("resourceCustomLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userEditField"));
         if ($this->vars['size'] == 'L')
         {
@@ -176,13 +176,13 @@ class RESOURCECUSTOM
      */
     public function edit()
     {
-        if ($this->session->getVar('resourceCustomLock'))
+        if ($this->session->getVar("resourceCustomLock"))
         {
             $this->badInput->close($this->errors->text("done", "custom"));
         }
         $this->gatekeep->init();
         $this->checkInput(['id', 'size', 'resourceId']);
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         // if customText is empty, delete the row
         if (!trim($this->vars['customText']))
         {
@@ -217,7 +217,7 @@ class RESOURCECUSTOM
         $email = new EMAIL($this->db);
         $email->notify($this->vars['resourceId']);
         // lock reload
-        $this->session->setVar('resourceCustomLock', TRUE);
+        $this->session->setVar("resourceCustomLock", TRUE);;
         // send back to view this resource with success message
         $this->navigate($message);
     }
@@ -229,7 +229,7 @@ class RESOURCECUSTOM
         $this->gatekeep->init();
         $this->checkInput(['id', 'resourceId']);
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $this->session->delVar('resourceCustomLock');
+        $this->session->delVar("resourceCustomLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userEditField"));
         $this->db->formatConditions(['customId' => $this->vars['id']]);
         $row = $this->db->selectFirstRow('custom', ['customLabel', 'customSize']);
@@ -269,13 +269,13 @@ class RESOURCECUSTOM
      */
     public function write()
     {
-        if ($this->session->getVar('resourceCustomLock'))
+        if ($this->session->getVar("resourceCustomLock"))
         {
             $this->badInput->close($this->errors->text("done", "custom"));
         }
         $this->gatekeep->init();
         $this->checkInput(['id', 'size', 'resourceId', 'customText']);
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         if (!trim($this->vars['customText']))
         {
             $this->badInput->close($this->errors->text("inputError", "missing"));
@@ -307,7 +307,7 @@ class RESOURCECUSTOM
         $email = new EMAIL($this->db);
         $email->notify($this->vars['resourceId']);
         // lock reload
-        $this->session->setVar('resourceCustomLock', TRUE);
+        $this->session->setVar("resourceCustomLock", TRUE);;
         // send back to view this resource with success message
         $this->navigate($this->success->text("fieldAdd"));
     }

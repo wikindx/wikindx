@@ -40,7 +40,7 @@ class BIBTEXFILE
      */
     public function init()
     {
-        if (!$this->session->getVar("setup_ImportBib"))
+        if (!WIKINDX_IMPORT_BIB)
         {
             $this->gatekeep->requireSuper = TRUE;
         }
@@ -62,7 +62,7 @@ class BIBTEXFILE
      */
     public function display($message = FALSE)
     {
-        $this->session->delVar('importLock');
+        $this->session->delVar("importLock");
         $category = FACTORY_CATEGORY::getInstance();
         $categories = $category->grabAll();
         $pString = $message;
@@ -87,8 +87,8 @@ class BIBTEXFILE
                 $temp[$key] = $value;
             }
             $tags = $temp;
-            $sessionTag = $this->session->issetVar('import_TagId') ?
-                $this->session->getVar('import_TagId') : FALSE;
+            $sessionTag = $this->session->issetVar("import_TagId") ?
+                $this->session->getVar("import_TagId") : FALSE;
             if ($sessionTag)
             {
                 $element = \FORM\selectedBoxValue(FALSE, 'import_TagId', $tags, 5);
@@ -106,7 +106,7 @@ class BIBTEXFILE
         $categoryTd = FALSE;
         if (count($categories) > 1)
         {
-            if ($sessionCategories = $this->session->getVar('import_Categories'))
+            if ($sessionCategories = $this->session->getVar("import_Categories"))
             {
                 $sCategories = UTF8::mb_explode(",", $sessionCategories);
                 $element = \FORM\selectedBoxValueMultiple($this->messages->text(

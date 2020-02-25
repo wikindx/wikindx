@@ -1345,7 +1345,7 @@ class CONFIGURE
         array_key_exists("configAuthGateMessage", $this->values) ? $input = $this->values["configAuthGateMessage"] :
             $input = WIKINDX_AUTHGATE_MESSAGE_DEFAULT;
         $pString .= \HTML\td(\FORM\textareaInputmceNoEditor($this->messages->text("config", "authGateMessage"), "configAuthGateMessage", $input, 80));
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGateReset"), "configAuthGateReset", FALSE));
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGateReset"), "configAuthGateReset", WIKINDX_AUTHGATE_RESET_DEFAULT));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         // Extra field not in the database used for test purposes only

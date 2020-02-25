@@ -792,13 +792,13 @@ class USER
             "Language" => "auto",
             "Style" => WIKINDX_STYLE_DEFAULT,
             "Template" => WIKINDX_TEMPLATE_DEFAULT,
-            "PagingStyle" => WIKINDX_PAGINGSTYLE_DEFAULT,
+            "PagingStyle" => WIKINDX_PAGING_STYLE_DEFAULT,
             "PagingTagCloud" => WIKINDX_PAGING_TAG_CLOUD_DEFAULT,
-            "UseBibtexKey" => WIKINDX_USEBIBTEXKEY_DEFAULT,
-            "UseWikindxKey" => WIKINDX_USEWIKINDXKEY_DEFAULT,
-            "DisplayBibtexLink" => WIKINDX_DISPLAYBIBTEXLINK_DEFAULT,
-            "DisplayCmsLink" => WIKINDX_DISPLAYCMSLINK_DEFAULT,
-            "TemplateMenu" => WIKINDX_TEMPLATEMENU_DEFAULT,
+            "UseBibtexKey" => WIKINDX_USE_BIBTEX_KEY_DEFAULT,
+            "UseWikindxKey" => WIKINDX_USE_WIKINDX_KEY_DEFAULT,
+            "DisplayBibtexLink" => WIKINDX_DISPLAY_BIBTEX_LINK_DEFAULT,
+            "DisplayCmsLink" => WIKINDX_DISPLAY_CMS_LINK_DEFAULT,
+            "TemplateMenu" => WIKINDX_TEMPLATE_MENU_DEFAULT,
             "ListLink" => "N",
         ];
         foreach ($preferences as $pref => $default)
@@ -811,7 +811,7 @@ class USER
                 }
                 elseif (!GLOBALS::getUserVar('TemplateMenu'))
                 { // no level reduction
-                    $updateArray['users' . $pref] = WIKINDX_TEMPLATEMENU_DEFAULT;
+                    $updateArray['users' . $pref] = WIKINDX_TEMPLATE_MENU_DEFAULT;
                 }
                 else
                 {

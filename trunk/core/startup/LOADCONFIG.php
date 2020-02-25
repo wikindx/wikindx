@@ -72,7 +72,7 @@ class LOADCONFIG
 				"DisplayBibtexLink",
 				"DisplayCmsLink",
 				"Language",
-				"Listlink",
+				"ListLink",
 				"Paging",
 				"PagingMaxLinks",
 				"PagingStyle",
@@ -94,7 +94,7 @@ class LOADCONFIG
 		{
 			$basic = [
 				"Language",
-				"Listlink",
+				"ListLink",
 				"Paging",
 				"PagingMaxLinks",
 				"PagingStyle",
@@ -116,7 +116,7 @@ class LOADCONFIG
 				{
 					$row[$rowKey] = $session->getVar("setup_" . $key);
 				}
-				elseif ($key == 'Listlink')
+				elseif ($key == 'ListLink')
 				{
 					$row[$rowKey] = FALSE;
 				}
@@ -128,7 +128,7 @@ class LOADCONFIG
         	if (array_key_exists($rowKey, $row))
         	{
 				if (($key == 'PagingStyle') || ($key == 'UseWikindxKey') || ($key == 'UseBibtexKey')
-					 || ($key == 'DisplayBibtexLink') || ($key == 'DisplayCmsLink') || ($key == 'Listlink'))
+					 || ($key == 'DisplayBibtexLink') || ($key == 'DisplayCmsLink') || ($key == 'ListLink'))
 				{
 					if (!$row[$rowKey] || ($row[$rowKey] === 'N'))
 					{

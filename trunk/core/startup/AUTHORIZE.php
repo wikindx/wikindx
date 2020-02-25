@@ -507,7 +507,7 @@ class AUTHORIZE
 // set the default language prior to displaying the login prompt
        $user = FACTORY_USER::getInstance();
 // populate session with default values from config
-        $user->writeSessionPreferences(FALSE);
+//        $user->writeSessionPreferences(FALSE);
         // remove any wikindx cookie that has been set
         $cookie = FACTORY_COOKIE::getInstance();
         $cookie->deleteCookie();

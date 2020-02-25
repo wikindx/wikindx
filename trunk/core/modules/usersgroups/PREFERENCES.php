@@ -123,14 +123,12 @@ class PREFERENCES
             $style,
             4
         ) . " " . \HTML\span('*', 'required'));
-        
-		$input = GLOBALS::getUserVar("ListLink") ? "CHECKED" : FALSE;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "ListLink"), "ListLink", $input));
+        $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trEnd();
         
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\HTML\hr(), FALSE, 4); // span 4 columns
+        $pString .= \HTML\td(\HTML\hr(), FALSE, 5); // span 5 columns
         $pString .= \HTML\trEnd();
         
         $pString .= \HTML\trStart();

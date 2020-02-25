@@ -242,8 +242,7 @@ class AUTHORIZE
         $messages = FACTORY_MESSAGES::getFreshInstance();
         GLOBALS::setTplVar('heading', $messages->text("heading", "logon"));
         $pString = $error;
-        $row = $this->configDbStructure->getData(['configMultiUser', 'configUserRegistration']);
-        if (!$row['configMultiUser'])
+        if (!WIKINDX_MULTIUSER)
         {
             $errors = FACTORY_ERRORS::getFreshInstance();
             $pString .= \HTML\p($errors->text("warning", "superadminOnly"));
@@ -267,14 +266,13 @@ class AUTHORIZE
         // Give user the option to bypass logging in simply to read.
         if (!WIKINDX_DENY_READONLY)
         {
-            $links = \HTML\a("link", $messages->text("authorize", "readOnly") .
-            BR . $forgot, $link1);
+            $links = \HTML\a("link", $messages->text("authorize", "readOnly") . BR . $forgot, $link1);
         }
         else
         {
             $links = $forgot;
         }
-        if (($row['configUserRegistration']) && ($row['configMultiUser']) && (WIKINDX_MAIL_USE))
+        if (WIKINDX_USER_REGISTRATION && WIKINDX_MULTIUSER && WIKINDX_MAIL_USE)
         {
             $links .= BR . \HTML\a("link", $messages->text("menu", "register"), $link3);
         }

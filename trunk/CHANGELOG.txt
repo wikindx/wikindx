@@ -14,7 +14,7 @@ BUG FIXES:
 8. Fix the default smtp encryption method (after a migration).
 9. Fix the default smtp backend (after a migration).
 10. Fix the type of the default value of WIKINDX_AUTHGATE_MESSAGE to a string and fix the current config.
-11. Fix accessors to config variables of array type.
+11. Fix accessors to config variables of array type (#149).
 12. Handle a warning in CLI mode about HTTP_HOST.
 
 MAINTENANCE:

@@ -191,7 +191,7 @@ class MYWIKINDX
             {
                 $this->vars[$key] = -1;
             }
-            $array[$key] = $this->vars[$key];
+            GLOBALS::setUserVar($key, $this->vars[$key]);
         }
         // All input good - write to session
 //        $this->session->writeArray($array, "setup");

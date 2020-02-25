@@ -125,7 +125,7 @@ class PREFERENCES
         ) . " " . \HTML\span('*', 'required'));
         
 		$input = GLOBALS::getUserVar("ListLink") ? "CHECKED" : FALSE;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "listlink"), "ListLink", $input));
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "ListLink"), "ListLink", $input));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trEnd();
         

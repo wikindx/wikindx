@@ -172,6 +172,7 @@ class MYWIKINDX
      */
     public function checkResourcesInput()
     {
+        // All input good - write to session
         $required = ["Paging", "PagingMaxLinks", "StringLimit", "PagingTagCloud"];
         foreach ($required as $key)
         {
@@ -193,18 +194,7 @@ class MYWIKINDX
             }
             GLOBALS::setUserVar($key, $this->vars[$key]);
         }
-        // All input good - write to session
-//        $this->session->writeArray($array, "setup");
-        if (array_key_exists("PagingStyle", $this->vars))
-        {
- //           $this->session->setVar("setup_PagingStyle", 'A');
-            GLOBALS::setUserVar("PagingStyle", 'A');
-        }
-        else
-        {
-//            $this->session->delVar("setup_PagingStyle");
-            GLOBALS::setUserVar("PagingStyle", "N");
-        }
+        GLOBALS::setUserVar("PagingStyle", $this->vars["PagingStyle"]);
         $this->session->delVar("sql_LastMulti"); // always reset in case of paging changes
         $this->session->delVar("sql_LastIdeaSearch"); // always reset in case of paging changes
         foreach (['UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key)

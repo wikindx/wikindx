@@ -2963,13 +2963,13 @@ SQLCODE;
      */
     private function open()
     {
-        $startTimer = microtime();
+        $this->sqlTimerOn();
 
         $dbpers = WIKINDX_DB_PERSISTENT;
         $dbhost = WIKINDX_DB_HOST;
         $dbname = WIKINDX_DB;
         $dbuser = WIKINDX_DB_USER;
-        $dbpwd = WIKINDX_DB_PASSWORD;
+        $dbpwd  = WIKINDX_DB_PASSWORD;
 
         $dbhost = $dbpers === TRUE ? 'p:' . $dbhost : $dbhost;
         $this->handle = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname);
@@ -2982,16 +2982,7 @@ SQLCODE;
             $this->sqlDie($errorMessage);
         }
 
-        $endTimer = microtime();
-
-        $tmp = UTF8::mb_explode(" ", $startTimer);
-        $startTimer = $tmp[0] + $tmp[1];
-        $tmp = UTF8::mb_explode(" ", $endTimer);
-        $endTimer = $tmp[0] + $tmp[1];
-
-        GLOBALS::incrementDbConnectionTimeElapsed($endTimer - $startTimer);
-
-        $this->session->setVar("sql_ConnectionTime", GLOBALS::getDbConnectionTimeElapsed());
+        $this->sqlTimerOff();
         
         $this->CheckEngineVersion();
         
@@ -3052,15 +3043,6 @@ SQLCODE;
     private function internalQuery($querystring, $bNoError, $saveSession = FALSE)
     {
         $querystring .= $this->subClause();
-        // Ensure this is printed first.
-        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
-        {
-            if ($this->session->getVar("sql_ConnectionTime"))
-            {
-                GLOBALS::addTplVar('logsql', '<hr><div>SQL connection time: ' . sprintf('%.3f', round($this->elapsedTime(), 3)) . ' s</div>');
-                $this->session->delVar("sql_ConnectionTime");
-            }
-        }
         $beautified = $this->printSQLDebug($querystring, 'query');
 
         $this->sqlTimerOn();

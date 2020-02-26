@@ -30,10 +30,6 @@ class GLOBALS
      */
     private static $WIKINDX_DB_QUERIES = 0;
     /**
-     *  The db connection time elapsed
-     */
-    private static $WIKINDX_DB_CONNECTION_TIME_CHRONO = 0;
-    /**
      *  The db queries time elapsed
      */
     private static $WIKINDX_DB_TIME_CHRONO = 0;
@@ -153,15 +149,6 @@ class GLOBALS
         return self::$WIKINDX_DB_QUERIES;
     }
     /**
-     * Increment the DB connection time elapsed
-     *
-     * @param float $appendTime
-     */
-    public static function incrementDbConnectionTimeElapsed($appendTime)
-    {
-        self::$WIKINDX_DB_CONNECTION_TIME_CHRONO += $appendTime;
-    }
-    /**
      * Increment the DB time elapsed
      *
      * @param float $appendTime
@@ -169,15 +156,6 @@ class GLOBALS
     public static function incrementDbTimeElapsed($appendTime)
     {
         self::$WIKINDX_DB_TIME_CHRONO += $appendTime;
-    }
-    /**
-     * Get the time elapsed during DB connection
-     *
-     * @return float
-     */
-    public static function getDbConnectionTimeElapsed()
-    {
-        return round(self::$WIKINDX_DB_CONNECTION_TIME_CHRONO, 5);
     }
     /**
      * Get the time elapsed during DB queries

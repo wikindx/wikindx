@@ -1825,12 +1825,13 @@ class MYWIKINDX
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $input = GLOBALS::getUserVar('PagingStyle') == 'A' ? "CHECKED" : FALSE;
-        $pString .= \HTML\td(\FORM\checkbox(
+        $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "pagingStyle"),
             "PagingStyle",
-            $input
-        ));
+            ["N" => "Numerical", "A" => "Alphabetical"],
+            GLOBALS::getUserVar('PagingStyle'),
+            2
+        );
         $input = GLOBALS::getUserVar("UseWikindxKey") ? "CHECKED" : FALSE;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "useWikindxKey"),

@@ -203,7 +203,7 @@ class MYWIKINDX
         else
         {
 //            $this->session->delVar("setup_PagingStyle");
-            GLOBALS::setUserVar("PagingStyle", FALSE);
+            GLOBALS::setUserVar("PagingStyle", "N");
         }
         $this->session->delVar("sql_LastMulti"); // always reset in case of paging changes
         $this->session->delVar("sql_LastIdeaSearch"); // always reset in case of paging changes

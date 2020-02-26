@@ -86,7 +86,6 @@ class SQL
     {
         $this->vars = GLOBALS::getVars();
         $this->errors = FACTORY_ERRORS::getInstance();
-        $this->session = FACTORY_SESSION::getInstance();
 
         $this->open();
 
@@ -204,22 +203,16 @@ class SQL
      * create the entire querystring but do not execute
      *
      * @param string $querystring
-     * @param bool $saveSession Default is FALSE
      *
      * @return string
      */
-    public function queryNoExecute($querystring, $saveSession = FALSE)
+    public function queryNoExecute($querystring)
     {
         $querystring .= $this->subClause();
 
         $this->printSQLDebug($querystring, 'queryNoExecute');
 
         $this->resetSubs();
-
-        if ($saveSession)
-        {
-            $this->session->setVar("sql_Stmt", base64_encode($querystring));
-        }
 
         return $querystring;
     }
@@ -233,7 +226,7 @@ class SQL
      */
     public function query($querystring, $saveSession = FALSE)
     {
-        return $this->internalQuery($querystring, FALSE, $querystring);
+        return $this->internalQuery($querystring, FALSE);
     }
     /**
      * Execute queries and return recordset
@@ -3036,11 +3029,10 @@ SQLCODE;
      *
      * @param string $querystring
      * @param bool $bNoError Default is FALSE
-     * @param bool $saveSession Default is FALSE
      *
      * @return mixed An array, or a boolean if there are no data to return. Only the first result set is returned
      */
-    private function internalQuery($querystring, $bNoError, $saveSession = FALSE)
+    private function internalQuery($querystring, $bNoError)
     {
         $querystring .= $this->subClause();
         $beautified = $this->printSQLDebug($querystring, 'query');
@@ -3088,11 +3080,6 @@ SQLCODE;
         GLOBALS::incrementDbQueries();
 
         $this->resetSubs();
-
-        if ($saveSession)
-        {
-            $this->session->setVar("sql_Stmt", base64_encode($querystring));
-        }
 
         return $aRecordset;
     }

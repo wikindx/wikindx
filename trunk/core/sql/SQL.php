@@ -16,7 +16,7 @@
 class SQL
 {
     /** string */
-    public $error = FALSE; // Error message returned by db drivers or Wikindx
+    public $error = ""; // Error message returned by db drivers or Wikindx
     /** integer */
     public $errno = 0; // Error code returned by db drivers
     /** string */
@@ -70,8 +70,6 @@ class SQL
     private $errors;
     /** object */
     private $handle = NULL;
-    /** array */
-    private $vars;
     /** mixed */
     private $startTimer;
     /** mixed */
@@ -84,7 +82,6 @@ class SQL
      */
     public function __construct()
     {
-        $this->vars = GLOBALS::getVars();
         $this->errors = FACTORY_ERRORS::getInstance();
 
         $this->open();
@@ -2971,8 +2968,7 @@ SQLCODE;
 
         if ($this->errno)
         {
-            $errorMessage = $this->errors->text("dbError", "open");
-            $this->sqlDie($errorMessage);
+            $this->sqlDie($this->errors->text("dbError", "open"));
         }
 
         $this->sqlTimerOff();

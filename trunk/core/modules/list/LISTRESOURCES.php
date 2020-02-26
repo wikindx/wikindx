@@ -156,8 +156,7 @@ class LISTRESOURCES
         {
             return;
         }
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A') ||
-            ($order == 'popularityIndex') || ($order == 'downloadsIndex') || ($order == 'viewsIndex'))
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A') || in_array($order, ['popularityIndex', 'downloadsIndex', 'viewsIndex']))
         {
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($order, $queryString, $subStmt);

@@ -401,8 +401,7 @@ class LISTCOMMON
         $table = 'resource',
         $subQ = FALSE
     ) {
-        if ((GLOBALS::getUserVar('PagingStyle') == 'A') &&
-            (($order == 'title') || ($order == 'creator') || ($order == 'attachments')))
+        if ((GLOBALS::getUserVar('PagingStyle') == 'A') && in_array($order, ['title', 'creator', 'attachments']))
         {
             $this->pagingObject = FACTORY_PAGINGALPHA::getInstance();
             if ($this->metadataPaging)

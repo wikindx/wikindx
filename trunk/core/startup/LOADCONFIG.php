@@ -129,7 +129,11 @@ class LOADCONFIG
         	{
 				if (in_array($key, ['PagingStyle', 'UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink']))
 				{
-					if (!$row[$rowKey] || ($row[$rowKey] === 'N'))
+					if ($key == 'PagingStyle' && $row[$rowKey] === 'N')
+					{
+						GLOBALS::setUserVar($key, "N");
+					}
+					elseif (!$row[$rowKey] || ($row[$rowKey] === 'N'))
 					{
 						GLOBALS::setUserVar($key, FALSE);
 					}
@@ -245,12 +249,9 @@ class LOADCONFIG
             $element = preg_replace($search, '', $element);
             if (mb_strpos($element, '<p>') === 0)
             {
-                return preg_replace('@<p>(.*)</p>@u', '$1', $element, 1);
+                $element = preg_replace('@<p>(.*)</p>@u', '$1', $element, 1);
             }
-            else
-            {
-                return $element;
-            }
+            return $element;
         }
     }
     

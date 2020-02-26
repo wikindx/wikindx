@@ -801,7 +801,7 @@ class USER
             "Language" => "auto",
             "Style" => WIKINDX_STYLE_DEFAULT,
             "Template" => WIKINDX_TEMPLATE_DEFAULT,
-            "PagingStyle" => WIKINDX_USER_PAGING_STYLE_DEFAULT,
+            "PagingStyle" => WIKINDX_USER_PAGING_STYLE_DEFAULT, // User config only
             "PagingTagCloud" => WIKINDX_PAGING_TAG_CLOUD_DEFAULT,
             "UseBibtexKey" => WIKINDX_USE_BIBTEX_KEY_DEFAULT,
             "UseWikindxKey" => WIKINDX_USE_WIKINDX_KEY_DEFAULT,

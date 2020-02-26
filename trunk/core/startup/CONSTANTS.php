@@ -194,7 +194,6 @@ define('WIKINDX_PHPMAILER_SMTP_ENCRYPT', ['none' => 'none', 'tls' => 'tls', 'ssl
 // Divers
 define('WIKINDX_DISPLAY_BIBTEX_LINK_DEFAULT', 'N');
 define('WIKINDX_DISPLAY_CMS_LINK_DEFAULT', 'N');
-define('WIKINDX_USER_PAGING_STYLE_DEFAULT', 'N');
 define('WIKINDX_TAG_FACTOR_MAX', 200);
 define('WIKINDX_TAG_FACTOR_MIN', 50);
 define('WIKINDX_TAG_FACTOR_STEP', 5);
@@ -203,6 +202,10 @@ define('WIKINDX_UNIX_PERMS_DEFAULT', 0777);
 define('WIKINDX_USE_BIBTEX_KEY_DEFAULT', 'N');
 define('WIKINDX_USE_WIKINDX_KEY_DEFAULT', 'N');
 define('WIKINDX_SUPERADMIN_ID', 1);
+
+
+// Divers for users config only
+define('WIKINDX_USER_PAGING_STYLE_DEFAULT', 'N');
 
 
 // RSS feed

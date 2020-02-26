@@ -120,7 +120,7 @@ class AUTHORIZE
             {
                 $user = FACTORY_USER::getInstance();
                 $this->session->clearSessionData();
-                $this->session->setVar("setup_UserId", '1'); // superAdmin always id = '1'
+                $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID); // superAdmin always id = WIKINDX_SUPERADMIN_ID
                 $this->session->setVar("setup_Write", TRUE);
                 $this->session->delVar("setup_ReadOnly");
                 $user->writeSessionPreferences(FALSE);
@@ -387,7 +387,7 @@ class AUTHORIZE
      */
     private function authGate()
     {
-        if ((WIKINDX_AUTHGATE_USE === TRUE) && ($this->session->getVar("setup_UserId") != 1))
+        if ((WIKINDX_AUTHGATE_USE === TRUE) && ($this->session->getVar("setup_UserId") != WIKINDX_SUPERADMIN_ID))
         {
             $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $recordset = $this->db->select('users', 'usersGDPR');

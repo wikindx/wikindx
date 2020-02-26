@@ -339,7 +339,7 @@ class CONFIGURE
             }
             $this->db->insert('users', $usersFieldArray, $usersValueArray);
             // set the new WKX_users.notifyTimestamp and WKX_users.timestamp to current date
-            $this->db->formatConditions(['usersId' => 1]);
+            $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
             $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => 'CURRENT_TIMESTAMP', 'usersTimestamp' => 'CURRENT_TIMESTAMP']);
             $this->user->writeSessionPreferences(1); // '1' == superAdmin
             $this->insert = FALSE;
@@ -357,7 +357,7 @@ class CONFIGURE
             {
                 $updateUserArray['usersEmail'] = $this->vars['configEmail'];
             }
-            $this->db->formatConditions(['usersId' => 1]);
+            $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
             if (array_key_exists('password', $this->vars) && ($this->vars['password'] != $this->db->selectFirstField('users', 'usersPassword')))
             {
                 $updateUserArray['usersPassword'] = crypt($this->vars['password'], UTF8::mb_strrev(time()));
@@ -380,12 +380,12 @@ class CONFIGURE
             }
             if (!empty($updateUserArray))
             {
-                $this->db->formatConditions(['usersId' => 1]);
+                $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
                 $this->db->update('users', $updateUserArray);
             }
             if (!empty($nullsUserArray))
             {
-                $this->db->formatConditions(['usersId' => 1]);
+                $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
                 $this->db->updateNull('users', $nullsUserArray);
             }
             foreach ($updateArray as $field => $value)
@@ -455,8 +455,8 @@ class CONFIGURE
             'misc' => $this->messages->text('config', 'misc'),
             'debug' => $this->messages->text('config', 'debugging'),
         ];
-        // Only for superadmin who is always userid = 1
-        if (!$this->session->issetVar("setup_UserId") || ($this->session->getVar("setup_UserId") == 1))
+        // Only for superadmin who is always userid = WIKINDX_SUPERADMIN_ID
+        if (!$this->session->issetVar("setup_UserId") || ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID))
         {
             $groups = ['super' => $this->messages->text('config', 'superAdmin')] + $groups;
         }

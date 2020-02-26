@@ -91,8 +91,8 @@ class USER
                 }
             }
             elseif ($admin == 1)
-            { // superadmin configuration - userId always 1 for superadmin
-                $userId = 1;
+            { // superadmin configuration - userId always WIKINDX_SUPERADMIN_ID for superadmin
+                $userId = WIKINDX_SUPERADMIN_ID;
             }
             elseif ($admin == 2)
             { // admin editing user
@@ -608,8 +608,17 @@ class USER
         {
             $id = $this->session->getVar("setup_UserId");
         }
-        $userArray = ["usersUsername", "usersPassword", "usersEmail", "usersFullname", "usersAdmin", "usersCookie",
-            "usersDepartment", "usersInstitution", "usersIsCreator", ];
+        $userArray = [
+            "usersUsername",
+            "usersPassword",
+            "usersEmail",
+            "usersFullname",
+            "usersAdmin",
+            "usersCookie",
+            "usersDepartment",
+            "usersInstitution",
+            "usersIsCreator",
+        ];
         for ($i = 1; $i < 4; $i++)
         {
             $userArray[] = "usersPasswordQuestion$i";
@@ -1027,7 +1036,7 @@ class USER
         }
         $row = $this->db->fetchRow($recordset);
         // only the superadmin may log on when multi user is not enabled
-        if (!WIKINDX_MULTIUSER && ($row['usersId'] != 1))
+        if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID))
         {
             return FALSE;
         }
@@ -1127,7 +1136,7 @@ class USER
             }
             $row = $this->db->fetchRow($recordset);
             // only the superadmin may log on when multi user is not enabled
-            if (!WIKINDX_MULTIUSER && ($row['usersId'] != 1))
+            if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID))
             {
                 return FALSE;
             }

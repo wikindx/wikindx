@@ -26,7 +26,7 @@ class HOUSEKEEPING
     {
         $this->session = FACTORY_SESSION::getInstance();
         $this->statistics();
-        if ($this->session->getVar("setup_UserId") == 1)
+        if ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID)
         { // superadmin logging on – caching requires the superadmin to click further
             $this->cacheAttachments($upgradeCompleted);
         }

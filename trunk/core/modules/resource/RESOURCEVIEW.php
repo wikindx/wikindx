@@ -474,9 +474,13 @@ class RESOURCEVIEW
         {
             $resourceSingle['info']['keyid'] = $this->messages->text('misc', 'bibtexKey') . ':&nbsp;' . $return;
         }
-        if ((((WIKINDX_QUARANTINE) && ($row['resourcemiscQuarantine'] == 'N')) ||
-            (!WIKINDX_QUARANTINE)) && ($return = $this->displayEmailFriendLink($row)))
-        {
+        if (
+            (
+                (WIKINDX_QUARANTINE && ($row['resourcemiscQuarantine'] == 'N'))
+                || !WIKINDX_QUARANTINE
+            )
+            && ($return = $this->displayEmailFriendLink($row))
+        ) {
             $resourceSingle['info']['email'] = $return;
         }
         $resourceSingle['info']['viewDetails'] = \HTML\aBrowse(
@@ -560,14 +564,16 @@ class RESOURCEVIEW
         {
             $resourceSingle['note'] = $return;
         }
-        if ((((WIKINDX_METADATA_ALLOW) ||
-                ((!WIKINDX_METADATA_ALLOW) &&
-                (WIKINDX_METADATA_USERONLY) &&
-                $this->session->getVar("setup_UserId"))) &&
-            ($row['resourcemiscQuarantine'] == 'N'))
-            ||
-            ($this->session->getVar("setup_Superadmin")))
-        {
+        if (
+            (
+                (
+                    WIKINDX_METADATA_ALLOW
+                    || (!WIKINDX_METADATA_ALLOW && WIKINDX_METADATA_USERONLY && $this->session->getVar("setup_UserId"))
+                )
+                && $row['resourcemiscQuarantine'] == 'N'
+            )
+            || ($this->session->getVar("setup_Superadmin"))
+        ) {
             $return = $this->meta->viewQuotes($row);
             if (!empty($return))
             {

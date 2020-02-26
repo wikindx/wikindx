@@ -127,8 +127,7 @@ class LOADCONFIG
         	$rowKey = $table . $key;
         	if (array_key_exists($rowKey, $row))
         	{
-				if (($key == 'PagingStyle') || ($key == 'UseWikindxKey') || ($key == 'UseBibtexKey')
-					 || ($key == 'DisplayBibtexLink') || ($key == 'DisplayCmsLink') || ($key == 'ListLink'))
+				if (in_array($key, ['PagingStyle', 'UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink']))
 				{
 					if (!$row[$rowKey] || ($row[$rowKey] === 'N'))
 					{

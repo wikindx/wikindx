@@ -19,8 +19,6 @@ class PASSWORD
     private $errors;
     /** object */
     private $messages;
-    /** int */
-    private $noChars;
     /** string */
     private $regexp;
     /** string */
@@ -49,7 +47,7 @@ class PASSWORD
     {
         $missing = $this->errors->text('inputError', 'missing', FALSE, FALSE);
         $misMatch = $this->errors->text('inputError', 'passwordMismatch', FALSE, FALSE);
-        $jsString = "this, " . $this->regexp . ", " . $this->noChars . ", '" . $missing . "', '" . $misMatch . "', '" . $this->invalidPassword . "'";
+        $jsString = "this, " . $this->regexp . ", " . WIKINDX_PASSWORD_SIZE . ", '" . $missing . "', '" . $misMatch . "', '" . $this->invalidPassword . "'";
         $hintArray = [
             "weak" => "password1",
             "medium" => "password2",
@@ -61,7 +59,7 @@ class PASSWORD
             $this->messages->text("hint", "hint"),
             '#',
             "",
-            $this->messages->text("hint", $hintArray[defined("WIKINDX_PASSWORD_STRENGTH") ? WIKINDX_PASSWORD_STRENGTH : WIKINDX_PASSWORD_STRENGTH_DEFAULT], $this->noChars) .
+            $this->messages->text("hint", $hintArray[defined("WIKINDX_PASSWORD_STRENGTH") ? WIKINDX_PASSWORD_STRENGTH : WIKINDX_PASSWORD_STRENGTH_DEFAULT], WIKINDX_PASSWORD_SIZE) .
             '     ' . $this->messages->text("hint", 'password4')
         );
         $formText = '';

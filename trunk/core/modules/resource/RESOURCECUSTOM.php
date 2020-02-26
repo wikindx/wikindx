@@ -217,7 +217,7 @@ class RESOURCECUSTOM
         $email = new EMAIL($this->db);
         $email->notify($this->vars['resourceId']);
         // lock reload
-        $this->session->setVar("resourceCustomLock", TRUE);;
+        $this->session->setVar("resourceCustomLock", TRUE);
         // send back to view this resource with success message
         $this->navigate($message);
     }
@@ -307,7 +307,7 @@ class RESOURCECUSTOM
         $email = new EMAIL($this->db);
         $email->notify($this->vars['resourceId']);
         // lock reload
-        $this->session->setVar("resourceCustomLock", TRUE);;
+        $this->session->setVar("resourceCustomLock", TRUE);
         // send back to view this resource with success message
         $this->navigate($this->success->text("fieldAdd"));
     }

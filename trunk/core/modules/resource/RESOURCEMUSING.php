@@ -338,7 +338,7 @@ class RESOURCEMUSING
             $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()));
         }
         // lock reload
-        $this->session->setVar("resourceMusingLock", TRUE);;
+        $this->session->setVar("resourceMusingLock", TRUE);
         // send back to view this resource with success message
         $this->navigate->resource($this->vars['resourceId'], $message);
     }

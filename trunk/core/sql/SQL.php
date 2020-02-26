@@ -61,6 +61,8 @@ class SQL
     /** array */
     public $join = [];
     /** array */
+    private $joinUpdate = [];
+    /** array */
     public $order = [];
     /** string */
     public $group = FALSE;
@@ -74,8 +76,6 @@ class SQL
     private $startTimer;
     /** mixed */
     private $endTimer;
-    /** array */
-    private $joinUpdate = [];
 
     /**
      * SQL
@@ -2905,7 +2905,7 @@ SQLCODE;
         $endTimer = $this->endTimer;
 
         // Stop the timer, if not done
-        if (empty($endTimer)) $endTimer = microtime();;
+        if (empty($endTimer)) $endTimer = microtime();
 
         $tmp = UTF8::mb_explode(" ", $startTimer);
         $startTimer = $tmp[0] + $tmp[1];

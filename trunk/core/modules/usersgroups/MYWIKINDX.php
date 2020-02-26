@@ -1831,7 +1831,7 @@ class MYWIKINDX
             ["N" => "Numerical", "A" => "Alphabetical"],
             GLOBALS::getUserVar('PagingStyle'),
             2
-        );
+        ));
         $input = GLOBALS::getUserVar("UseWikindxKey") ? "CHECKED" : FALSE;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "useWikindxKey"),

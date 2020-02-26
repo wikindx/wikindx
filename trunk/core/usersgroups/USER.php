@@ -25,7 +25,6 @@ class USER
     private $messages;
     /** object */
     private $session;
-    /** object */
 
     /**
      * USER

@@ -17,7 +17,7 @@ BUG FIXES:
 11. Fix accessors to config variables of array type (#149).
 12. Handle a warning in CLI mode about HTTP_HOST.
 13. Fix a warning of smarty when the contactEmail is empty.
-14. Fix the display of the passport size requirement.
+14. Fix the display of the password size requirement.
 
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.
@@ -31,7 +31,7 @@ MAINTENANCE:
 9. Restrict the LDAP protocol to authorized values.
 10. Relocate WIKINDX_TRUNK_VERSION option in the database and rename it WIKINDX_IS_TRUNK.
 11. Change the type of the timezone option from TEXT to Varchar.
-12. Add WIKINDX_PATH_AUTO_DETECTION option to explicitly control auto-detection of the path and base url.
+12. Add WIKINDX_PATH_AUTO_DETECTION option to config.php to explicitly control auto-detection of the path and base url.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

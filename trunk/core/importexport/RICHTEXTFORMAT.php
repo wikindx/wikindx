@@ -600,16 +600,9 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
 
             break;
             case IMAGETYPE_WBMP:
-                if (version_compare(PHP_VERSION, '5.6.12', '>='))
-                {
-                    $blipType = '\pngblip';
-                    imagepng(imagecreatefromwbmp($file), $tempFile, 9);
-                    $file = $tempFile;
-                }
-                else
-                {
-                    return $matchArray[0]; // unable to read file so return link
-                }
+                $blipType = '\pngblip';
+                imagepng(imagecreatefromwbmp($file), $tempFile, 9);
+                $file = $tempFile;
 
             break;
             case IMAGETYPE_XBM:

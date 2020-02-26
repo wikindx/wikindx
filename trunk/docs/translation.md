@@ -6,7 +6,7 @@ author:
  - Mark Grimshaw-Aagaard, <sirfragalot@users.sourceforge.net>
  - The WIKINDX Team
 lang: en
-date: 2019-12-29
+date: 2020-02-26
 stylesheet: default.css
 css: templates/default.css
 ---
@@ -17,7 +17,7 @@ This document is intended for developers and translators of WIKINDX.
 
 WIKINDX has a translation system for its graphical interface,
 bibliographic styles and plugins. It uses the PHP [Gettext] library (no
-call to PHP [Intl] library) for the display, PHP 5.6 (or higher) and the
+call to PHP [Intl] library) for the display, PHP 7.0 (or higher) and the
 tools of the [GNU Gettext suite] for the maintenance of the
 translations.
 

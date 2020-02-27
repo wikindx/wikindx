@@ -63,7 +63,7 @@ namespace UPDATE
     function logonCheckUpgradeDB($dbo, $username, $password, $dbVersion = WIKINDX_INTERNAL_VERSION)
     {
         // superAdmin is id '1'
-        $dbo->formatConditions(['usersUsername' => $username, 'usersId' => "1"]);
+        $dbo->formatConditions(['usersUsername' => $username, 'usersId' => WIKINDX_SUPERADMIN_ID]);
         $recordset = $dbo->select('users', ['usersId', 'usersPassword']);
         if ($dbo->numRows($recordset) == 1)
         {

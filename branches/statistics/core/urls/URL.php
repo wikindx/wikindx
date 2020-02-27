@@ -62,7 +62,7 @@ namespace URL
     {
         if (!$limit)
         {
-            $limit = GLOBALS::getUserVar("StringLimit");
+            $limit = \GLOBALS::getUserVar("StringLimit");
         }
         if (($limit != -1) && (($count = mb_strlen($text)) > $limit))
         {

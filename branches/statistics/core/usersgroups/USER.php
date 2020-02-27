@@ -25,7 +25,6 @@ class USER
     private $messages;
     /** object */
     private $session;
-    /** object */
 
     /**
      * USER
@@ -91,8 +90,8 @@ class USER
                 }
             }
             elseif ($admin == 1)
-            { // superadmin configuration - userId always 1 for superadmin
-                $userId = 1;
+            { // superadmin configuration - userId always WIKINDX_SUPERADMIN_ID for superadmin
+                $userId = WIKINDX_SUPERADMIN_ID;
             }
             elseif ($admin == 2)
             { // admin editing user
@@ -608,8 +607,17 @@ class USER
         {
             $id = $this->session->getVar("setup_UserId");
         }
-        $userArray = ["usersUsername", "usersPassword", "usersEmail", "usersFullname", "usersAdmin", "usersCookie",
-            "usersDepartment", "usersInstitution", "usersIsCreator", ];
+        $userArray = [
+            "usersUsername",
+            "usersPassword",
+            "usersEmail",
+            "usersFullname",
+            "usersAdmin",
+            "usersCookie",
+            "usersDepartment",
+            "usersInstitution",
+            "usersIsCreator",
+        ];
         for ($i = 1; $i < 4; $i++)
         {
             $userArray[] = "usersPasswordQuestion$i";
@@ -792,7 +800,7 @@ class USER
             "Language" => "auto",
             "Style" => WIKINDX_STYLE_DEFAULT,
             "Template" => WIKINDX_TEMPLATE_DEFAULT,
-            "PagingStyle" => WIKINDX_PAGING_STYLE_DEFAULT,
+            "PagingStyle" => WIKINDX_USER_PAGING_STYLE_DEFAULT, // User config only
             "PagingTagCloud" => WIKINDX_PAGING_TAG_CLOUD_DEFAULT,
             "UseBibtexKey" => WIKINDX_USE_BIBTEX_KEY_DEFAULT,
             "UseWikindxKey" => WIKINDX_USE_WIKINDX_KEY_DEFAULT,
@@ -1027,7 +1035,7 @@ class USER
         }
         $row = $this->db->fetchRow($recordset);
         // only the superadmin may log on when multi user is not enabled
-        if (!WIKINDX_MULTIUSER && ($row['usersId'] != 1))
+        if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID))
         {
             return FALSE;
         }
@@ -1127,7 +1135,7 @@ class USER
             }
             $row = $this->db->fetchRow($recordset);
             // only the superadmin may log on when multi user is not enabled
-            if (!WIKINDX_MULTIUSER && ($row['usersId'] != 1))
+            if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID))
             {
                 return FALSE;
             }

@@ -49,14 +49,7 @@ class BASKET
      */
     public function init()
     {
-        if ($this->session->issetVar("basket_List"))
-        {
-            $basket = unserialize($this->session->getVar("basket_List"));
-        }
-        else
-        {
-            $basket = [];
-        }
+        $basket = unserialize($this->session->getVar("basket_List", serialize([])));
         if (array_key_exists('resourceId', $this->vars))
         {
             $resourceId = $this->vars['resourceId'];
@@ -80,14 +73,7 @@ class BASKET
      */
     public function remove()
     {
-        if ($this->session->issetVar("basket_List"))
-        {
-            $basket = unserialize($this->session->getVar("basket_List"));
-        }
-        else
-        {
-            $basket = [];
-        }
+        $basket = unserialize($this->session->getVar("basket_List", serialize([])));
         $resourceId = $this->vars['resourceId'];
         if (($key = array_search($resourceId, $basket)) !== FALSE)
         {

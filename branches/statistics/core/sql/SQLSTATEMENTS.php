@@ -275,8 +275,7 @@ class SQLSTATEMENTS
         $this->db->ascDesc = $this->session->getVar($this->listMethodAscDesc);
         $np = [];
         $limit = FALSE;
-        if ((GLOBALS::getUserVar('PagingStyle') != 'A') || ((GLOBALS::getUserVar('PagingStyle') == 'A') &&
-            ($order != 'title') && ($order != 'creator') && ($order != 'attachments')))
+        if ((GLOBALS::getUserVar('PagingStyle') != 'A') || ((GLOBALS::getUserVar('PagingStyle') == 'A') && !in_array($order, ['title', 'creator', 'attachments'])))
         {
             $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->common->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         }
@@ -352,7 +351,7 @@ class SQLSTATEMENTS
                     $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar("list_AllIds"))))));
             }
         }
-        elseif (($order != 'popularityIndex') && ($order != 'downloadsIndex') && ($order != 'viewsIndex') && !$this->allIds)
+        elseif (!in_array($order, ['popularityIndex', 'downloadsIndex', 'viewsIndex']) && !$this->allIds)
         { // all other orders
             $this->db->formatConditions($this->db->formatFields('resourceId') .
                 $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar("list_AllIds"))))));
@@ -816,7 +815,7 @@ class SQLSTATEMENTS
         {
             $this->db->orderBy('resourceattachmentsFileName', TRUE, FALSE);
         }
-        elseif (($order == 'maturityIndex') || ($order == 'viewsIndex') || ($order == 'downloadsIndex') || ($order == 'popularityIndex'))
+        elseif (in_array($order, ['maturityIndex', 'viewsIndex', 'downloadsIndex', 'popularityIndex']))
         {
             if ($order == 'maturityIndex')
             {
@@ -844,9 +843,10 @@ class SQLSTATEMENTS
             }
         }
         $this->db->groupBy('resourceId');
-        if ((GLOBALS::getUserVar('PagingStyle') == 'A') && (($order == 'title') || ($order == 'creator')) ||
-            ($order == 'popularityIndex') || ($order == 'downloadsIndex') || ($order == 'viewsIndex'))
-        {
+        if (
+        	((GLOBALS::getUserVar('PagingStyle') == 'A') && (($order == 'title') || ($order == 'creator')))
+        	|| (in_array($order, ['popularityIndex', 'downloadsIndex', 'viewsIndex']))
+        ) {
             $this->db->leftJoin('resource', 'resourceId', 'rId');
         }
         //		if(($order != 'popularityIndex') && ($order != 'downloadsIndex') && ($order != 'viewsIndex'))

@@ -474,9 +474,13 @@ class RESOURCEVIEW
         {
             $resourceSingle['info']['keyid'] = $this->messages->text('misc', 'bibtexKey') . ':&nbsp;' . $return;
         }
-        if ((((WIKINDX_QUARANTINE) && ($row['resourcemiscQuarantine'] == 'N')) ||
-            (!WIKINDX_QUARANTINE)) && ($return = $this->displayEmailFriendLink($row)))
-        {
+        if (
+            (
+                (WIKINDX_QUARANTINE && ($row['resourcemiscQuarantine'] == 'N'))
+                || !WIKINDX_QUARANTINE
+            )
+            && ($return = $this->displayEmailFriendLink($row))
+        ) {
             $resourceSingle['info']['email'] = $return;
         }
         $resourceSingle['info']['viewDetails'] = \HTML\aBrowse(
@@ -560,14 +564,16 @@ class RESOURCEVIEW
         {
             $resourceSingle['note'] = $return;
         }
-        if ((((WIKINDX_METADATA_ALLOW) ||
-                ((!WIKINDX_METADATA_ALLOW) &&
-                (WIKINDX_METADATA_USERONLY) &&
-                $this->session->getVar("setup_UserId"))) &&
-            ($row['resourcemiscQuarantine'] == 'N'))
-            ||
-            ($this->session->getVar("setup_Superadmin")))
-        {
+        if (
+            (
+                (
+                    WIKINDX_METADATA_ALLOW
+                    || (!WIKINDX_METADATA_ALLOW && WIKINDX_METADATA_USERONLY && $this->session->getVar("setup_UserId"))
+                )
+                && $row['resourcemiscQuarantine'] == 'N'
+            )
+            || ($this->session->getVar("setup_Superadmin"))
+        ) {
             $return = $this->meta->viewQuotes($row);
             if (!empty($return))
             {
@@ -701,7 +707,7 @@ class RESOURCEVIEW
                         $this->icons->getClass("edit"),
                         $this->icons->getHTML("edit"),
                         'index.php?action=attachments_ATTACHMENTS_CORE' .
-                    htmlentities('&function=editInit&resourceId=' . $resourceId)
+                    	htmlentities('&function=editInit&resourceId=' . $resourceId)
                     );
             }
             else
@@ -711,7 +717,7 @@ class RESOURCEVIEW
                     $this->icons->getClass("add"),
                     $this->icons->getHTML("add"),
                     'index.php?action=attachments_ATTACHMENTS_CORE' .
-                htmlentities('&function=editInit&resourceId=' . $resourceId)
+                	htmlentities('&function=editInit&resourceId=' . $resourceId)
                 );
             }
         }
@@ -757,27 +763,9 @@ class RESOURCEVIEW
                 }
                 foreach ($links as $url)
                 {
-                    if (isset($names))
-                    {
-                        $name = array_shift($names);
-                        if ($name)
-                        {
-                            $urls[] = \HTML\a('link', \URL\reduceUrl(\HTML\nlToHtml($name)), $url, '_new');
-                        }
-                        else
-                        {
-                            $urls[] = \HTML\a('link', \URL\reduceUrl($url), $url, '_new');
-                        }
-                    }
-                    else
-                    {
-                        $urls[] = \HTML\a(
-                            'link',
-                            \URL\reduceUrl($url),
-                            $url,
-                            '_new'
-                        );
-                    }
+                	$name = isset($names) ? array_shift($names) : FALSE;
+                	$name = $name ? $name : $url;
+                    $urls[] = \HTML\a('link', \URL\reduceUrl(\HTML\nlToHtml($name)), $url, '_new');
                 }
             }
         }
@@ -838,14 +826,7 @@ class RESOURCEVIEW
         }
         if ($this->startNP === FALSE)
         {
-            if ($this->session->getVar("mywikindx_PagingStart"))
-            {
-                $start = $this->session->getVar("mywikindx_PagingStart");
-            }
-            else
-            {
-                $start = 0;
-            }
+            $start = $this->session->getVar("mywikindx_PagingStart", 0);
         }
         else
         {
@@ -866,15 +847,7 @@ class RESOURCEVIEW
             return $array;
         }
         $order = $this->session->getVar("sql_LastOrder");
-        if ((GLOBALS::getUserVar('PagingStyle') == 'A') &&
-            (($order == 'title') || ($order == 'creator') || ($order == 'attachments')))
-        {
-            $alpha = TRUE;
-        }
-        else
-        {
-            $alpha = FALSE;
-        }
+        $alpha = (GLOBALS::getUserVar('PagingStyle') == 'A') && in_array($order, ['title', 'creator', 'attachments']);
         if ($thisKey)
         {
             $array['back'] = \HTML\a(
@@ -1720,14 +1693,7 @@ class RESOURCEVIEW
         {
             $this->db->formatConditions(['resourcecreatorResourceId' => $row['resourceId']]);
             $name = $this->db->selectFirstField('resource_creator', 'resourcecreatorCreatorSurname');
-            if ($name)
-            {
-                $name = \HTML\nlToHtml($name);
-            }
-            else
-            {
-                $name = 'anon';
-            }
+            $name = $name ? \HTML\nlToHtml($name) : 'anon';
             $name = preg_replace("/\\W/u", '', $name);
             //  JDS suggestion for generating unique and consistent bibtex keys for every export.
             return $name . '.' . $row['resourceId'];

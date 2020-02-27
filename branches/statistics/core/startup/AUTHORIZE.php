@@ -120,7 +120,7 @@ class AUTHORIZE
             {
                 $user = FACTORY_USER::getInstance();
                 $this->session->clearSessionData();
-                $this->session->setVar("setup_UserId", '1'); // superAdmin always id = '1'
+                $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID); // superAdmin always id = WIKINDX_SUPERADMIN_ID
                 $this->session->setVar("setup_Write", TRUE);
                 $this->session->delVar("setup_ReadOnly");
                 $user->writeSessionPreferences(FALSE);
@@ -242,8 +242,7 @@ class AUTHORIZE
         $messages = FACTORY_MESSAGES::getFreshInstance();
         GLOBALS::setTplVar('heading', $messages->text("heading", "logon"));
         $pString = $error;
-        $row = $this->configDbStructure->getData(['configMultiUser', 'configUserRegistration']);
-        if (!$row['configMultiUser'])
+        if (!WIKINDX_MULTIUSER)
         {
             $errors = FACTORY_ERRORS::getFreshInstance();
             $pString .= \HTML\p($errors->text("warning", "superadminOnly"));
@@ -267,14 +266,13 @@ class AUTHORIZE
         // Give user the option to bypass logging in simply to read.
         if (!WIKINDX_DENY_READONLY)
         {
-            $links = \HTML\a("link", $messages->text("authorize", "readOnly") .
-            BR . $forgot, $link1);
+            $links = \HTML\a("link", $messages->text("authorize", "readOnly") . BR . $forgot, $link1);
         }
         else
         {
             $links = $forgot;
         }
-        if (($row['configUserRegistration']) && ($row['configMultiUser']) && (WIKINDX_MAIL_USE))
+        if (WIKINDX_USER_REGISTRATION && WIKINDX_MULTIUSER && WIKINDX_MAIL_USE)
         {
             $links .= BR . \HTML\a("link", $messages->text("menu", "register"), $link3);
         }
@@ -389,7 +387,7 @@ class AUTHORIZE
      */
     private function authGate()
     {
-        if ((WIKINDX_AUTHGATE_USE === TRUE) && ($this->session->getVar("setup_UserId") != 1))
+        if ((WIKINDX_AUTHGATE_USE === TRUE) && ($this->session->getVar("setup_UserId") != WIKINDX_SUPERADMIN_ID))
         {
             $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $recordset = $this->db->select('users', 'usersGDPR');
@@ -507,7 +505,7 @@ class AUTHORIZE
 // set the default language prior to displaying the login prompt
        $user = FACTORY_USER::getInstance();
 // populate session with default values from config
-        $user->writeSessionPreferences(FALSE);
+//        $user->writeSessionPreferences(FALSE);
         // remove any wikindx cookie that has been set
         $cookie = FACTORY_COOKIE::getInstance();
         $cookie->deleteCookie();

@@ -123,14 +123,12 @@ class PREFERENCES
             $style,
             4
         ) . " " . \HTML\span('*', 'required'));
-        
-		$input = GLOBALS::getUserVar("ListLink") ? "CHECKED" : FALSE;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "listlink"), "ListLink", $input));
+        $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trEnd();
         
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\HTML\hr(), FALSE, 4); // span 4 columns
+        $pString .= \HTML\td(\HTML\hr(), FALSE, 5); // span 5 columns
         $pString .= \HTML\trEnd();
         
         $pString .= \HTML\trStart();
@@ -150,7 +148,7 @@ class PREFERENCES
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
         if (!GLOBALS::getUserVar("PagingTagCloud"))
         {
-            GLOBALS::setUserVar("PagingTagCloud", 100);
+            GLOBALS::setUserVar("PagingTagCloud", WIKINDX_PAGING_TAG_CLOUD_DEFAULT);
         }
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
         $pString .= \HTML\td(\FORM\textInput(

@@ -172,6 +172,7 @@ class MYWIKINDX
      */
     public function checkResourcesInput()
     {
+        // All input good - write to session
         $required = ["Paging", "PagingMaxLinks", "StringLimit", "PagingTagCloud"];
         foreach ($required as $key)
         {
@@ -191,20 +192,9 @@ class MYWIKINDX
             {
                 $this->vars[$key] = -1;
             }
-            $array[$key] = $this->vars[$key];
+            GLOBALS::setUserVar($key, $this->vars[$key]);
         }
-        // All input good - write to session
-//        $this->session->writeArray($array, "setup");
-        if (array_key_exists("PagingStyle", $this->vars))
-        {
- //           $this->session->setVar("setup_PagingStyle", 'A');
-            GLOBALS::setUserVar("PagingStyle", 'A');
-        }
-        else
-        {
-//            $this->session->delVar("setup_PagingStyle");
-            GLOBALS::setUserVar("PagingStyle", FALSE);
-        }
+        GLOBALS::setUserVar("PagingStyle", $this->vars["PagingStyle"]);
         $this->session->delVar("sql_LastMulti"); // always reset in case of paging changes
         $this->session->delVar("sql_LastIdeaSearch"); // always reset in case of paging changes
         foreach (['UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key)
@@ -1801,7 +1791,7 @@ class MYWIKINDX
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
         if (!GLOBALS::getUserVar("PagingTagCloud"))
         {
-            GLOBALS::setUserVar("PagingTagCloud", 100);
+            GLOBALS::setUserVar("PagingTagCloud", WIKINDX_PAGING_TAG_CLOUD_DEFAULT);
         }
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
         $pString .= \HTML\td(\FORM\textInput(
@@ -1825,11 +1815,12 @@ class MYWIKINDX
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $input = GLOBALS::getUserVar('PagingStyle') == 'A' ? "CHECKED" : FALSE;
-        $pString .= \HTML\td(\FORM\checkbox(
+        $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "pagingStyle"),
             "PagingStyle",
-            $input
+            ["N" => "Numerical", "A" => "Alphabetical"],
+            GLOBALS::getUserVar('PagingStyle'),
+            2
         ));
         $input = GLOBALS::getUserVar("UseWikindxKey") ? "CHECKED" : FALSE;
         $pString .= \HTML\td(\FORM\checkbox(

@@ -16,7 +16,7 @@
 class SQL
 {
     /** string */
-    public $error = FALSE; // Error message returned by db drivers or Wikindx
+    public $error = ""; // Error message returned by db drivers or Wikindx
     /** integer */
     public $errno = 0; // Error code returned by db drivers
     /** string */
@@ -61,6 +61,8 @@ class SQL
     /** array */
     public $join = [];
     /** array */
+    private $joinUpdate = [];
+    /** array */
     public $order = [];
     /** string */
     public $group = FALSE;
@@ -70,23 +72,17 @@ class SQL
     private $errors;
     /** object */
     private $handle = NULL;
-    /** array */
-    private $vars;
     /** mixed */
     private $startTimer;
     /** mixed */
     private $endTimer;
-    /** array */
-    private $joinUpdate = [];
 
     /**
      * SQL
      */
     public function __construct()
     {
-        $this->vars = GLOBALS::getVars();
         $this->errors = FACTORY_ERRORS::getInstance();
-        $this->session = FACTORY_SESSION::getInstance();
 
         $this->open();
 
@@ -204,22 +200,16 @@ class SQL
      * create the entire querystring but do not execute
      *
      * @param string $querystring
-     * @param bool $saveSession Default is FALSE
      *
      * @return string
      */
-    public function queryNoExecute($querystring, $saveSession = FALSE)
+    public function queryNoExecute($querystring)
     {
         $querystring .= $this->subClause();
 
         $this->printSQLDebug($querystring, 'queryNoExecute');
 
         $this->resetSubs();
-
-        if ($saveSession)
-        {
-            $this->session->setVar("sql_Stmt", base64_encode($querystring));
-        }
 
         return $querystring;
     }
@@ -233,7 +223,7 @@ class SQL
      */
     public function query($querystring, $saveSession = FALSE)
     {
-        return $this->internalQuery($querystring, FALSE, $querystring);
+        return $this->internalQuery($querystring, FALSE);
     }
     /**
      * Execute queries and return recordset
@@ -2915,7 +2905,7 @@ SQLCODE;
         $endTimer = $this->endTimer;
 
         // Stop the timer, if not done
-        if (empty($endTimer)) $endTimer = microtime();;
+        if (empty($endTimer)) $endTimer = microtime();
 
         $tmp = UTF8::mb_explode(" ", $startTimer);
         $startTimer = $tmp[0] + $tmp[1];
@@ -2963,13 +2953,13 @@ SQLCODE;
      */
     private function open()
     {
-        $startTimer = microtime();
+        $this->sqlTimerOn();
 
         $dbpers = WIKINDX_DB_PERSISTENT;
         $dbhost = WIKINDX_DB_HOST;
         $dbname = WIKINDX_DB;
         $dbuser = WIKINDX_DB_USER;
-        $dbpwd = WIKINDX_DB_PASSWORD;
+        $dbpwd  = WIKINDX_DB_PASSWORD;
 
         $dbhost = $dbpers === TRUE ? 'p:' . $dbhost : $dbhost;
         $this->handle = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname);
@@ -2978,20 +2968,10 @@ SQLCODE;
 
         if ($this->errno)
         {
-            $errorMessage = $this->errors->text("dbError", "open");
-            $this->sqlDie($errorMessage);
+            $this->sqlDie($this->errors->text("dbError", "open"));
         }
 
-        $endTimer = microtime();
-
-        $tmp = UTF8::mb_explode(" ", $startTimer);
-        $startTimer = $tmp[0] + $tmp[1];
-        $tmp = UTF8::mb_explode(" ", $endTimer);
-        $endTimer = $tmp[0] + $tmp[1];
-
-        GLOBALS::incrementDbConnectionTimeElapsed($endTimer - $startTimer);
-
-        $this->session->setVar("sql_ConnectionTime", GLOBALS::getDbConnectionTimeElapsed());
+        $this->sqlTimerOff();
         
         $this->CheckEngineVersion();
         
@@ -3045,22 +3025,12 @@ SQLCODE;
      *
      * @param string $querystring
      * @param bool $bNoError Default is FALSE
-     * @param bool $saveSession Default is FALSE
      *
      * @return mixed An array, or a boolean if there are no data to return. Only the first result set is returned
      */
-    private function internalQuery($querystring, $bNoError, $saveSession = FALSE)
+    private function internalQuery($querystring, $bNoError)
     {
         $querystring .= $this->subClause();
-        // Ensure this is printed first.
-        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
-        {
-            if ($this->session->getVar("sql_ConnectionTime"))
-            {
-                GLOBALS::addTplVar('logsql', '<hr><div>SQL connection time: ' . sprintf('%.3f', round($this->elapsedTime(), 3)) . ' s</div>');
-                $this->session->delVar("sql_ConnectionTime");
-            }
-        }
         $beautified = $this->printSQLDebug($querystring, 'query');
 
         $this->sqlTimerOn();
@@ -3106,11 +3076,6 @@ SQLCODE;
         GLOBALS::incrementDbQueries();
 
         $this->resetSubs();
-
-        if ($saveSession)
-        {
-            $this->session->setVar("sql_Stmt", base64_encode($querystring));
-        }
 
         return $aRecordset;
     }

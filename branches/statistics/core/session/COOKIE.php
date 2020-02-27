@@ -16,7 +16,7 @@
 class COOKIE
 {
     /** string */
-    private $cookieName;
+    private $cookieName = "wikindx_" . WIKINDX_DB;
     /** array */
     private $cookieVars;
 
@@ -30,7 +30,6 @@ class COOKIE
         {
             $this->cookieVars = &$_COOKIE;
         }
-        $this->cookieName = "wikindx_" . WIKINDX_DB;
     }
     /**
      * Set a cookie if user requests through mywikindx 'remember me' checkbox

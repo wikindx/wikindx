@@ -266,7 +266,7 @@ class IDEAS
     {
         if (!$ideaId && (!array_key_exists('resourcemetadataId', $this->vars) || !$this->vars['resourcemetadataId']))
         {
-            $this->session->setVar("sql_LastThread", FALSE);;
+            $this->session->setVar("sql_LastThread", FALSE);
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         if (!$ideaId)
@@ -283,7 +283,7 @@ class IDEAS
         $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
         if (!$this->db->numRows($resultset))
         {
-            $this->session->setVar("sql_LastThread", FALSE);;
+            $this->session->setVar("sql_LastThread", FALSE);
             $this->badInput->close($this->errors->text("inputError", "invalid"));
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "ideaThread"));
@@ -320,7 +320,7 @@ class IDEAS
             $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
             if (!$this->db->numRows($resultset))
             {
-                $this->session->setVar("sql_LastThread", FALSE);;
+                $this->session->setVar("sql_LastThread", FALSE);
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
             $hidden .= \FORM\hidden("resourcemetadataMetadataId", $this->vars['resourcemetadataMetadataId']);
@@ -373,7 +373,7 @@ class IDEAS
             $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
             if (!$this->db->numRows($resultset))
             {
-                $this->session->setVar("sql_LastThread", FALSE);;
+                $this->session->setVar("sql_LastThread", FALSE);
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
             $hidden .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
@@ -499,7 +499,7 @@ class IDEAS
             $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
             if (!$this->db->numRows($resultset))
             {
-                $this->session->setVar("sql_LastThread", FALSE);;
+                $this->session->setVar("sql_LastThread", FALSE);
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
             $mainIdea = FALSE;
@@ -563,7 +563,7 @@ class IDEAS
             }
         }
         // lock reload
-        $this->session->setVar("ideaLock", TRUE);;
+        $this->session->setVar("ideaLock", TRUE);
         // send back to idea thread with success message
         $this->threadView($ideaId, $message);
         FACTORY_CLOSE::getInstance();
@@ -618,7 +618,7 @@ class IDEAS
             $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
             if (!$this->db->numRows($resultset))
             {
-                $this->session->setVar("sql_LastThread", FALSE);;
+                $this->session->setVar("sql_LastThread", FALSE);
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
             // if Text is empty, delete the row
@@ -650,7 +650,7 @@ class IDEAS
             }
         }
         // lock reload
-        $this->session->setVar("ideaLock", TRUE);;
+        $this->session->setVar("ideaLock", TRUE);
         // send back to idea thread with success message
         $this->threadView($returnId, $message);
         FACTORY_CLOSE::getInstance();
@@ -754,7 +754,7 @@ class IDEAS
         }
         else
         {
-            $this->session->setVar("sql_LastThread", FALSE);;
+            $this->session->setVar("sql_LastThread", FALSE);
             $this->badInput->close($this->errors->text("inputError", "invalid"));
         }
         FACTORY_CLOSE::getInstance();

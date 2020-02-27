@@ -325,8 +325,8 @@ class UPDATEDATABASE
                 $this->session->setVar("setup_StringLimit", WIKINDX_STRING_LIMIT_DEFAULT);
                 $this->session->setVar("setup_Write", TRUE);
                 $this->session->setVar("setup_Superadmin", TRUE);
-                // superadmin userId is always 1
-                $this->session->setVar("setup_UserId", 1);
+                // superadmin userId is always WIKINDX_SUPERADMIN_ID
+                $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID);
                 GLOBALS::addTplVar('content', $config->init([\HTML\p($this->installMessages->text("install"), "error", "center"), 'super']));
                 FACTORY_CLOSENOMENU::getInstance();
             }
@@ -579,7 +579,7 @@ class UPDATEDATABASE
 
         $this->updateDbSchema('5.4-end');
 
-        $this->session->setVar("setup_UserId", 1);
+        $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID);
         $user = FACTORY_USER::getInstance();
         $user->writeSessionPreferences(FALSE);
         

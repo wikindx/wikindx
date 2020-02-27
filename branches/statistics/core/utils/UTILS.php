@@ -778,24 +778,18 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
     }
     
     /*
-    * Return a (pseudo) unique string of variable length
-    *
-    * This function return a pseudo unique string for PHP 5.6 (using uniqid())
-    * and a unique string for PHP 7 and later (using random_bytes()).
+    * Return a (pseudo) unique string of variable length using random_bytes().
     *
     * @params int $length length of the returned string (Default is 16).
     * @return string
     */
-    function uuid($length = 16)
+    function uuid(int $length = 16)
     {
-        $fncrand = function_exists("random_bytes");
-        
         $str = "";
         while (strlen($str) < $length)
         {
-            $str .= $fncrand ? bin2hex(random_bytes($length)) : uniqid("");
+            $str .= bin2hex(random_bytes($length));
         }
-
         return substr($str, 0, $length);
     }
     

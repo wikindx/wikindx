@@ -157,7 +157,7 @@ class RANDOMMETADATA
     public function display($resultset, $mArray, $method)
     {
         $row = $this->db->fetchRow($resultset);
-        if (GLOBALS::getUserVar('setup_ListLink'))
+        if (GLOBALS::getUserVar('ListLink'))
         {
             $this->resourceLink = "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $row['resourceId']);
             $this->bibStyle->linkUrl = FALSE;

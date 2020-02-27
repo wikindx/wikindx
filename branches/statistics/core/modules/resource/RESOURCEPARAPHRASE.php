@@ -102,7 +102,7 @@ class RESOURCEPARAPHRASE
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // lock reload
-        $this->session->setVar("resourceParaphraseLock", TRUE);;
+        $this->session->setVar("resourceParaphraseLock", TRUE);
         // send back to view this resource with success message
         $this->navigate->resource($this->vars['resourceId'], $message);
     }

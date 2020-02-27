@@ -191,7 +191,7 @@ class CONFIGDBSTRUCTURE
             'configOriginatorEditOnly' => 'WIKINDX_ORIGINATOR_EDIT_ONLY',
             'configPaging' => 'WIKINDX_PAGING', // This is a user variables now found in GLOBALS::getUserVar()
             'configPagingMaxLinks' => 'WIKINDX_PAGING_MAXLINKS', // This is a user variables now found in GLOBALS::getUserVar()
-            'configPagingTagCloud' => 'WIKINDX_PAGING_TAG_CLOUD',
+            'configPagingTagCloud' => 'WIKINDX_PAGING_TAG_CLOUD', // This is a user variables now found in GLOBALS::getUserVar()
             'configPasswordSize' => 'WIKINDX_PASSWORD_SIZE',
             'configPasswordStrength' => 'WIKINDX_PASSWORD_STRENGTH',
             'configPrintSql' => 'WIKINDX_DEBUG_SQL',

@@ -239,9 +239,6 @@ class CLOSE
         GLOBALS::setPageEndingTime(microtime());
         $scriptExecutionTimeAfterRendering = GLOBALS::getPageElapsedTime();
 
-        // Time elapsed in db connection
-        $dbConnectionTime = GLOBALS::getDbConnectionTimeElapsed();
-
         // Time elapsed in db queries
         $dbExecutionTime = GLOBALS::getDbTimeElapsed();
 
@@ -253,7 +250,7 @@ class CLOSE
 
         // Retrieve page code after rendering and insert public timers
         $outputString = ob_get_clean();
-        $outputString = str_replace('%%DBTIMER%%', sprintf('%0.5f', $dbConnectionTime + $dbExecutionTime), $outputString);
+        $outputString = str_replace('%%DBTIMER%%', sprintf('%0.5f', $dbExecutionTime), $outputString);
         $outputString = str_replace('%%SCRTIMER%%', sprintf('%0.5f', $scriptExecutionTimeAfterRendering), $outputString);
 
         // Insert debug info only if we are on the main page
@@ -271,7 +268,6 @@ class CLOSE
                 $lineEnding = BR;
                 $debugString .= "<p style='font-family: monospace; font-size: 8pt; text-align: right;'>" . LF;
                 $debugString .= "PHP execution time: " . sprintf('%0.5f', $scriptElapsedTime) . " s$lineEnding";
-                $debugString .= "SQL connection time: " . sprintf('%0.5f', $dbConnectionTime) . " s$lineEnding";
                 $debugString .= "SQL execution time: " . sprintf('%0.5f', $dbExecutionTime) . " s$lineEnding";
                 $debugString .= "TPL rendering time: " . sprintf('%0.5f', $templateElapsedTime) . " s$lineEnding";
                 $debugString .= "Total elapsed time: " . sprintf('%0.5f', $scriptExecutionTimeAfterRendering) . " s$lineEnding";

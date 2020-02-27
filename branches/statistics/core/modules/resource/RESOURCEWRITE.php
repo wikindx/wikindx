@@ -98,7 +98,7 @@ class RESOURCEWRITE
             $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()));
         }
         $this->session->clearArray('resourceForm');
-        $this->session->setVar("resourceLock", TRUE);;
+        $this->session->setVar("resourceLock", TRUE);
         $this->navigate->resource($this->resourceId, $success);
     }
 

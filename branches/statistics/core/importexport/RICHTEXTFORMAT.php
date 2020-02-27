@@ -600,16 +600,9 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
 
             break;
             case IMAGETYPE_WBMP:
-                if (version_compare(PHP_VERSION, '5.6.12', '>='))
-                {
-                    $blipType = '\pngblip';
-                    imagepng(imagecreatefromwbmp($file), $tempFile, 9);
-                    $file = $tempFile;
-                }
-                else
-                {
-                    return $matchArray[0]; // unable to read file so return link
-                }
+                $blipType = '\pngblip';
+                imagepng(imagecreatefromwbmp($file), $tempFile, 9);
+                $file = $tempFile;
 
             break;
             case IMAGETYPE_XBM:
@@ -1722,51 +1715,4 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
             $postInText . LF .
             $postInTextFormat . $matchArray[2];
     }
-    /*
-    FUNCTIONS NOT USED
-        function setFontSize($matchArray)
-        {
-            $size = $matchArray[1];
-            $text = preg_replace("/^__WIKINDX__NEWLINEPAR__|__WIKINDX__NEWLINEPAR__$/u", '', $matchArray[2]);
-            $fontSize = $this->fontSizes[$size];
-            return "{\\fs$fontSize $text}__WIKINDX__NEWLINE__";
-        }
-        function setFontColor($matchArray)
-        {
-            $colour = $matchArray[1];
-            $text = preg_replace("/^__WIKINDX__NEWLINEPAR__|__WIKINDX__NEWLINEPAR__$/u", '', $matchArray[2]);
-            if(!array_key_exists($colour, $this->colours))
-                $colour = $this->colours['black'];
-            else
-                $colour = $this->colours[$colour];
-            return "__WIKINDX__NEWLINE__$colour" . "__WIKINDX__NEWLINE__$text";
-        }
-        function setFontFace($matchArray)
-        {
-            $face = $matchArray[1];
-            $text = preg_replace("/^__WIKINDX__NEWLINEPAR__|__WIKINDX__NEWLINEPAR__$/u", '', $matchArray[2]);
-            $fontIndex = $this->createfonttbl(trim($face));
-            return "{\\f$fontIndex $text}__WIKINDX__NEWLINE__";
-        }
-        function createIndentFirstLine($text)
-        {
-            return preg_replace_callback("/\[indent\s*=\s*l_first_line\](.*)\[\/indent\]/Uusi",
-                array($this, "setIndentFirstLine"), $text);
-        }
-        function setIndentFirstLine($matchArray)
-        {
-            $text = preg_replace("/^__WIKINDX__NEWLINEPAR__|__WIKINDX__NEWLINEPAR__$/u", '', $matchArray[1]);
-            return "\fi720\n$text\n\\par\n\fi0". LF;
-        }
-        function colourFormat($colours)
-        {
-            $colour = trim($colours[1]);
-            if(!array_key_exists($colour, $this->colours))
-                $colour = $this->colours['black'];
-            else
-                $colour = $this->colours[$colour];
-            $text = preg_replace("/^__WIKINDX__NEWLINEPAR__|__WIKINDX__NEWLINEPAR__$/u", '', $colours[2]);
-            return "__WIKINDX__NEWLINE__$colour" . "__WIKINDX__NEWLINE__$text";
-        }
-    */
 }

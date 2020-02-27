@@ -20,7 +20,7 @@
 {* Display contact email?  Usually for front page only. *}
 {* mailto() is a Smarty function that obfuscates email addresses making them difficult to lift by spiders *}
 
-{if isset($contactEmail)}
+{if isset($contactEmail) && $contactEmail != ""}
 <div class="contactBlock">Contact: {mailto address="$contactEmail" encode="javascript"}</div>
 {/if}
 {* END EMAIL CONTACT DISPLAY *}

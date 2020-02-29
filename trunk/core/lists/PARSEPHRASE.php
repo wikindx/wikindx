@@ -92,7 +92,7 @@ class PARSEPHRASE
             return \HTML\color($this->errors->text("inputError", "invalid"), 'redText');
         }
         $phrase = str_replace('"', 'WIKINDXDOUBLEQUOTEWIKINDX', $input['Word']);
-        $phrase = trim(stripslashes($phrase));
+        $phrase = preg_quote(stripslashes(trim($phrase)), '/');
         if (!$phrase || !$this->malformedString($phrase))
         {
             $this->validSearch = FALSE;
@@ -100,7 +100,7 @@ class PARSEPHRASE
             return \HTML\color($this->errors->text("inputError", "invalid"), 'redText');
         }
         // remove all punctuation (keep wildcard characters, apostrophe and dash for names such as Grimshaw-Aagaard and D'Eath)
-        $phrase = preg_replace('/[^\p{L}\p{N}\s\*\?\-\']/u', '', $phrase);
+        $phrase = preg_replace('/[^\p{L}\p{N}\s\*\?\-\'\/]/u', '', $phrase);
         $phrase = str_replace('WIKINDXDOUBLEQUOTEWIKINDX', '"', $phrase);
         if (!$phrase = $this->tidySearch($phrase))
         {
@@ -150,7 +150,7 @@ class PARSEPHRASE
     	{
     		$input = substr_replace($input, '', 0, 3);
     	}
-    	$input = preg_quote($input);
+    	$input = preg_quote($input, '/');
     	$split = preg_split('/(AND|NOT|OR)/', $input, NULL, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
     	$count = 0;
     	$singleFirst = $notFirst = FALSE;

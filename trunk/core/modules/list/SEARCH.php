@@ -1265,7 +1265,7 @@ class SEARCH
         {
             if (trim($term))
             {
-                $term = preg_quote($term);
+                $term = preg_quote($term, '/');
                 $patterns[] = "/($term)(?=[^>]*(<|$))/ui";
             }
         }

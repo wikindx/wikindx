@@ -175,7 +175,10 @@ class MENU
         $stateArray[] = $this->bibliographies = $this->session->getVar("setup_Bibliographies");
         $stateArray[] = $this->lastSolo = $this->session->getVar("sql_LastSolo");
         $stateArray[] = $this->stmt = $this->session->getVar("sql_ListStmt");
-        $stateArray[] = $this->lastMulti = $this->session->getVar("sql_LastMulti");
+        if ($this->session->getVar("sql_ListStmt")) // don't display for 0 results.
+        {
+	        $stateArray[] = $this->lastMulti = $this->session->getVar("sql_LastMulti");
+        }
         $stateArray[] = $this->lastThread = $this->session->getVar("sql_LastThread");
         $stateArray[] = $this->lastMultiMeta = $this->session->getVar("sql_LastMultiMeta");
         $stateArray[] = $this->lastIdeaSearch = $this->session->getVar("sql_LastIdeaSearch");

@@ -674,7 +674,8 @@ class RESOURCEVIEW
             }
             if ($this->multiUser)
             {
-                $downloads = '[' . $row['resourceattachmentsDownloadsPeriod'] . '/' .
+            	$monthDownloads = $row['resourceattachmentsDownloadsPeriod'] ? $row['resourceattachmentsDownloadsPeriod'] : 0;
+                $downloads = '[' . $monthDownloads . '/' .
                     $row['resourceattachmentsDownloads'] . ']';
             }
             else

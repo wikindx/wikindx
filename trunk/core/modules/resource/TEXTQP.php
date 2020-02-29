@@ -96,15 +96,15 @@ class TEXTQP
                 $private = $rowComment['resourcemetadataPrivate'];
             }
         }
-        if (isset($row) && $userId != $row['resourcemetadataAddUserId'])
+        if (isset($row) && (($userId != $row['resourcemetadataAddUserId']) && !WIKINDX_SUPERADMIN_ID))
         {
             $hidden .= \FORM\hidden("commentOnly", TRUE);
         }
-        if (!isset($row) || ($text && ($userId == $row['resourcemetadataAddUserId'])))
+        if (!isset($row) || ($text && (($userId == $row['resourcemetadataAddUserId'] || WIKINDX_SUPERADMIN_ID))))
         {
             $metadata['keyword'] = $this->displayKeywordForm($type, 'resourcemetadataId');
         }
-        if (!$text || ($text && ($userId == $row['resourcemetadataAddUserId'])))
+        if (!$text || ($text && (($userId == $row['resourcemetadataAddUserId']) || WIKINDX_SUPERADMIN_ID)))
         {
             $locations = \HTML\tableStart('left');
             $locations .= \HTML\trStart();
@@ -152,7 +152,7 @@ class TEXTQP
         }
         $hint = ($type == 'quote') ? \HTML\span($this->messages->text("hint", $type), 'hint') : FALSE;
         // The second parameter ($typeText) to textareaInput is the textarea name
-        if (!$text || ($text && ($userId == $row['resourcemetadataAddUserId'])))
+        if (!$text || ($text && (($userId == $row['resourcemetadataAddUserId']) || WIKINDX_SUPERADMIN_ID)))
         {
             $metadata['metadata'] = \FORM\textareaInput(FALSE, $typeText, $text, 80, 10) . $hint;
             $metadata['metadataTitle'] = $this->messages->text("resources", $type);
@@ -209,7 +209,7 @@ class TEXTQP
             $index = 0;
             while ($row = $this->db->fetchRow($recordset))
             {
-                if (($row['resourcemetadataPrivate'] == 'Y') && ($userId != $row['resourcemetadataAddUserId']))
+                if (($row['resourcemetadataPrivate'] == 'Y') && (($userId != $row['resourcemetadataAddUserId']) && !WIKINDX_SUPERADMIN_ID))
                 {
                     continue;
                 }

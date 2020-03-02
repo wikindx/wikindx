@@ -43,7 +43,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.2.2');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 12.0);
+define('WIKINDX_INTERNAL_VERSION', 13.0);
 /**
  * Plugin compatibility -- x.x (usually matching the major WIKINDX version) which must be changed each time plugins require an
  * upgrade to match the WIKINDX code. The plugin's $config->wikindxVersion must be equal to this value for the plugin to be compatible.

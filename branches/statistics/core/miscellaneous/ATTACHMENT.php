@@ -34,13 +34,14 @@ class ATTACHMENT
      * Make hyperlink of attachment
      *
      * @param array $row
+     * @param int $resourceId
      * @param bool $list
      * @param bool $reduce
      * @param bool $hyperlink
      *
      * @return string
      */
-    public function makeLink($row, $list = FALSE, $reduce = TRUE, $hyperlink = TRUE)
+    public function makeLink($row, $resourceId = FALSE, $list = FALSE, $reduce = TRUE, $hyperlink = TRUE)
     {
         $id = $row['resourceattachmentsId'];
         $icons = FACTORY_LOADICONS::getInstance();
@@ -51,7 +52,8 @@ class ATTACHMENT
             if (!$hyperlink)
             {
                 return "index.php?action=attachments_ATTACHMENTS_CORE" .
-                    htmlentities("&method=downloadAttachment&id=$id&filename=" . $row['resourceattachmentsHashFilename']);
+                    htmlentities("&method=downloadAttachment&id=$id&resourceId=$resourceId&filename=" . 
+                    $row['resourceattachmentsHashFilename']);
             }
             else
             {
@@ -66,7 +68,8 @@ class ATTACHMENT
                 }
 
                 return \HTML\a($icons->getClass("file"), $name, "index.php?action=attachments_ATTACHMENTS_CORE" .
-                    htmlentities("&method=downloadAttachment&id=$id&filename=" . $row['resourceattachmentsHashFilename']), "_new");
+                    htmlentities("&method=downloadAttachment&id=$id&resourceId=$resourceId&filename=" . 
+                    $row['resourceattachmentsHashFilename']), "_new");
             }
         }
         else
@@ -91,12 +94,14 @@ class ATTACHMENT
             if (!$hyperlink)
             {
                 return "index.php?action=attachments_ATTACHMENTS_CORE" .
-                    htmlentities("&method=downloadAttachment&id=$id&filename=" . $row['resourceattachmentsHashFilename']);
+                    htmlentities("&method=downloadAttachment&id=$id&resourceId=$resourceId&filename=" . 
+                    $row['resourceattachmentsHashFilename']);
             }
             else
             {
                 return \HTML\a('link', $name, "index.php?action=attachments_ATTACHMENTS_CORE" .
-                    htmlentities("&method=downloadAttachment&id=$id&filename=" . $row['resourceattachmentsHashFilename']), "_new");
+                    htmlentities("&method=downloadAttachment&id=$id&resourceId=$resourceId&filename=" . 
+                    $row['resourceattachmentsHashFilename']), "_new");
             }
         }
     }
@@ -126,24 +131,39 @@ class ATTACHMENT
         return $array;
     }
     /**
-     * Increment the accesses and downloads counter for this resource
+     * Increment the accesses and downloads counter for the attachment in the one resource
      *
      * @param int $id
+     * @param int $resourceId
      */
-    public function incrementDownloadCounter($id)
+    public function incrementDownloadCounter($id, $resourceId)
     {
-        $this->db->formatConditions(['resourceattachmentsId' => $id]);
-        $this->db->updateSingle(
-            'resource_attachments',
-            $this->db->formatFields('resourceattachmentsDownloads') . "=" .
-            $this->db->formatFields('resourceattachmentsDownloads') . "+" . $this->db->tidyInput(1)
-        );
-        $this->db->formatConditions(['resourceattachmentsId' => $id]);
-        $this->db->updateSingle(
-            'resource_attachments',
-            $this->db->formatFields('resourceattachmentsDownloadsPeriod') . "=" .
-            $this->db->formatFields('resourceattachmentsDownloadsPeriod') . "+" . $this->db->tidyInput(1)
-        );
+		$month = date('Ym');
+		$this->db->formatConditions(['statisticsattachmentdownloadsResourceId' => $resourceId]);
+		$this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => $id]);
+		$this->db->formatConditions(['statisticsattachmentdownloadsMonth' => $month]);
+// insert new month row for this attachment
+		if (!$this->db->selectFirstRow('statistics_attachment_downloads', ['statisticsattachmentdownloadsCount'])) 
+		{
+			$this->db->insert('statistics_attachment_downloads', 
+					['statisticsattachmentdownloadsResourceId',
+						'statisticsattachmentdownloadsAttachmentId', 
+						'statisticsattachmentdownloadsMonth', 
+						'statisticsattachmentdownloadsCount'], 
+					[$resourceId, 
+						$id,
+						$month, 
+						1]
+				); 
+		}
+		else
+		{
+			$this->db->formatConditions(['statisticsattachmentdownloadsResourceId' => $resourceId]);
+			$this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => $id]);
+			$this->db->formatConditions(['statisticsattachmentdownloadsMonth' => $month]);
+			$this->db->updateSingle('statistics_attachment_downloads', $this->db->formatFields('statisticsattachmentdownloadsCount') . "=" .
+				$this->db->formatFields('statisticsattachmentdownloadsCount') . "+" . $this->db->tidyInput(1));
+		}
     }
     /**
      * checkAttachmentRows

@@ -374,10 +374,23 @@ class RESOURCEVIEW
                     $resourceSingle['timestampEdit'] = $row['resourcetimestampTimestamp'];
                 }
             }
+			$month = date('Ym');
+			$this->db->formatConditions(['statisticsresourceviewsResourceId' => $this->vars['id']]);
+			$this->db->formatConditions(['statisticsresourceviewsMonth' => $month]);
+			if (!$views = $this->db->selectFirstField('statistics_resource_views', ['statisticsresourceviewsCount']))
+			{
+				$views = 1; // i.e. this view – actual field is updated later
+			}
+			$sumClause = $this->db->sum('statisticsresourceviewsCount', 'sum');
+			$this->db->formatConditions(['statisticsresourceviewsResourceId' => $this->vars['id']]);
+			if (!$totalViews = $this->db->selectFirstField('statistics_resource_views', $sumClause, FALSE, FALSE))
+			{
+				$totalViews = 1;
+			}
             $resourceSingle['accesses'] = $this->messages->text(
                 "viewResource",
                 "numAccesses",
-                $row['resourcemiscAccessesPeriod'] . '/' . $row['resourcemiscAccesses']
+                $views . '/' . $totalViews
             );
             if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId"))
             {
@@ -647,10 +660,11 @@ class RESOURCEVIEW
         $recordset = $this->db->select(
             'resource_attachments',
             ['resourceattachmentsId', 'resourceattachmentsHashFilename', 'resourceattachmentsFileName', 'resourceattachmentsDescription',
-                'resourceattachmentsPrimary', 'resourceattachmentsDownloads', 'resourceattachmentsDownloadsPeriod', 'resourceattachmentsEmbargo', ]
+                'resourceattachmentsPrimary', 'resourceattachmentsEmbargo', ]
         );
         $multiple = $this->db->numRows($recordset) > 1 ? TRUE : FALSE;
         $primary = FALSE;
+		$month = date('Ym');
         while ($row = $this->db->fetchRow($recordset))
         {
             if ($row['resourceattachmentsDescription'])
@@ -674,9 +688,28 @@ class RESOURCEVIEW
             }
             if ($this->multiUser)
             {
+<<<<<<< .mine
+				$this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => $row['resourceattachmentsId']]);
+				$this->db->formatConditions(['statisticsattachmentdownloadsMonth' => $month]);
+				if (!$views = $this->db->selectFirstField('statistics_attachment_downloads', ['statisticsattachmentdownloadsCount']))
+				{
+					$views = 0;
+				}
+				$sumClause = $this->db->sum('statisticsattachmentdownloadsCount', 'sum');
+				$this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => $row['resourceattachmentsId']]);
+				if (!$totalViews = $this->db->selectFirstField('statistics_attachment_downloads', $sumClause, FALSE, FALSE))
+				{
+					$totalViews = 0;
+				}
+                $downloads = '[' . $views . '/' . $totalViews . ']';
+||||||| .r164
+                $downloads = '[' . $row['resourceattachmentsDownloadsPeriod'] . '/' .
+                    $row['resourceattachmentsDownloads'] . ']';
+=======
             	$monthDownloads = $row['resourceattachmentsDownloadsPeriod'] ? $row['resourceattachmentsDownloadsPeriod'] : 0;
                 $downloads = '[' . $monthDownloads . '/' .
                     $row['resourceattachmentsDownloads'] . ']';
+>>>>>>> .r167
             }
             else
             {
@@ -684,11 +717,11 @@ class RESOURCEVIEW
             }
             if ($multiple && ($row['resourceattachmentsPrimary'] == 'Y'))
             {
-                $primary = $attach->makeLink($row, $multiple, TRUE, TRUE) . $readme . $downloads;
+                $primary = $attach->makeLink($row, $resourceId, $multiple, TRUE, TRUE) . $readme . $downloads;
             }
             else
             {
-                $files[] = $attach->makeLink($row, $multiple) . $readme . $downloads;
+                $files[] = $attach->makeLink($row, $resourceId, $multiple) . $readme . $downloads;
             }
         }
         if ($primary)
@@ -1720,12 +1753,27 @@ class RESOURCEVIEW
         {
             return;
         }
-        $this->db->formatConditions(['resourcemiscId' => $this->vars['id']]);
-        $this->db->updateSingle('resource_misc', $this->db->formatFields('resourcemiscAccesses') . "=" .
-            $this->db->formatFields('resourcemiscAccesses') . "+" . $this->db->tidyInput(1));
-        $this->db->formatConditions(['resourcemiscId' => $this->vars['id']]);
-        $this->db->updateSingle('resource_misc', $this->db->formatFields('resourcemiscAccessesPeriod') . "=" .
-            $this->db->formatFields('resourcemiscAccessesPeriod') . "+" . $this->db->tidyInput(1));
+        $month = date('Ym');
+        $this->db->formatConditions(['statisticsresourceviewsResourceId' => $this->vars['id']]);
+        $this->db->formatConditions(['statisticsresourceviewsMonth' => $month]);
+        if (!$this->db->selectFirstRow('statistics_resource_views', ['statisticsresourceviewsCount'])) // insert new month row for this resource
+        {
+        	$this->db->insert('statistics_resource_views', 
+					['statisticsresourceviewsResourceId', 
+						'statisticsresourceviewsMonth', 
+						'statisticsresourceviewsCount'], 
+					[$this->vars['id'], 
+						$month, 
+						1]
+				); 
+        }
+        else
+        {
+	        $this->db->formatConditions(['statisticsresourceviewsResourceId' => $this->vars['id']]);
+	        $this->db->formatConditions(['statisticsresourceviewsMonth' => $month]);
+			$this->db->updateSingle('statistics_resource_views', $this->db->formatFields('statisticsresourceviewsCount') . "=" .
+				$this->db->formatFields('statisticsresourceviewsCount') . "+" . $this->db->tidyInput(1));
+		}
         if (!is_array($viewedIds))
         {
             $viewedIds = [];

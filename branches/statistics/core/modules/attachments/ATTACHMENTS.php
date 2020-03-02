@@ -72,12 +72,13 @@ class ATTACHMENTS
         $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);
         $recordSet = $this->db->select(
             ["resource_attachments"],
-            ['resourceattachmentsHashFilename', 'resourceattachmentsFileName']
+            ['resourceattachmentsId', 'resourceattachmentsHashFilename', 'resourceattachmentsFileName']
         );
         while ($row = $this->db->fetchRow($recordSet))
         {
-            $pString .= \FORM\checkBox(FALSE, 'attachmentDelete_' . $row['resourceattachmentsHashFilename'], TRUE) .
-                '&nbsp;' . $row['resourceattachmentsFileName'] . BR;
+            $pString .= \FORM\checkBox(FALSE, 
+            	'attachmentDelete_' . $row['resourceattachmentsId'] . '_' . $row['resourceattachmentsHashFilename'], 
+            	TRUE) . '&nbsp;' . $row['resourceattachmentsFileName'] . BR;
         }
         $pString .= \HTML\p('&nbsp;' . BR . \FORM\formSubmit($this->messages->text("submit", "Confirm")));
         $pString .= \FORM\formEnd();
@@ -110,7 +111,7 @@ class ATTACHMENTS
         }
         FILE\setHeaders($type, $size, $filename, $lastmodified);
         FILE\readfile_chunked($dirName . "/" . $hash);
-        $this->attachment->incrementDownloadCounter($this->vars['id']);
+        $this->attachment->incrementDownloadCounter($this->vars['id'], $this->vars['resourceId']);
         die;
     }
     /**
@@ -355,14 +356,15 @@ class ATTACHMENTS
         $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);
         $recordSet = $this->db->select(
             ["resource_attachments"],
-            ['resourceattachmentsHashFilename', 'resourceattachmentsFileName']
+            ['resourceattachmentsId', 'resourceattachmentsHashFilename', 'resourceattachmentsFileName']
         );
         while ($row = $this->db->fetchRow($recordSet))
         {
             if (array_key_exists($row['resourceattachmentsHashFilename'], $deletes))
             {
-                $pString .= \FORM\checkBox(FALSE, 'attachmentDelete_' . $row['resourceattachmentsHashFilename'], TRUE) .
-                    '&nbsp;' . $row['resourceattachmentsFileName'] . BR;
+                $pString .= \FORM\checkBox(FALSE, 
+                	'attachmentDelete_' . $row['resourceattachmentsId'] . '_'  . $row['resourceattachmentsHashFilename'], 
+                	TRUE) . '&nbsp;' . $row['resourceattachmentsFileName'] . BR;
             }
         }
         $pString .= \HTML\p('&nbsp;' . BR . \FORM\formSubmit($this->messages->text("submit", "Confirm")));
@@ -380,7 +382,8 @@ class ATTACHMENTS
             $split = UTF8::mb_explode('_', $key);
             if ($split[0] == 'attachmentDelete')
             {
-                $deletes[] = $split[1];
+                $deletes[] = $split[2];
+                $attachmentIds[] = $split[1];
             }
         }
         // remove reference from this resource first
@@ -396,6 +399,10 @@ class ATTACHMENTS
                 @unlink(WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash);
                 @unlink(WIKINDX_DIR_CACHE_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash);
             }
+			// remove reference in statistics_attachment_downloads
+			$this->db->formatConditions(['statisticsattachmentdownloadsResourceId' => $this->resourceId]);
+			$this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => array_shift($attachmentIds)]);
+            $this->db->delete('statistics_attachment_downloads');
         }
         // send back to view this resource with success message
         $navigate = FACTORY_NAVIGATE::getInstance();

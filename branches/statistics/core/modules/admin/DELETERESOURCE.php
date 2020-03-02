@@ -224,11 +224,6 @@ class DELETERESOURCE
         $this->reallyDelete();
         $this->checkHanging();
         $this->resetSummary();
-        $tables = ['resource', 'keyword', 'creator', 'collection', 'publisher', 'statistics',
-            'resource_accessed', 'resource_category', 'resource_keyword', 'resource_misc',
-            'resource_text', 'resource_page', 'resource_metadata', 'resource_summary',
-            'resource_timestamp', 'resource_year', 'import_raw', 'bibtex_string',
-            'resource_attachments', 'resource_creator', ];
         // If we have 0 resources left, remove 'sql_stmt' etc. from session so it doesn't cause problems with
         // exporting bibliographies etc.
         if (!$this->db->selectFirstField('database_summary', 'databasesummaryTotalResources'))
@@ -317,8 +312,10 @@ class DELETERESOURCE
         $this->db->delete('import_raw');
         $this->db->formatConditionsOneField($this->idsRaw, 'resourcecustomResourceId');
         $this->db->delete('resource_custom');
-        $this->db->formatConditionsOneField($this->idsRaw, 'statisticsResourceId');
-        $this->db->delete('statistics');
+        $this->db->formatConditionsOneField($this->idsRaw, 'statisticsresourceviewsResourceId');
+        $this->db->delete('statistics_resource_views');
+        $this->db->formatConditionsOneField($this->idsRaw, 'statisticsattachmentdownloadsResourceId');
+        $this->db->delete('statistics_attachment_downloads');
         $this->deleteMetadata();
         $this->checkBibtexStringTable();
         // delete these ids from any user bibliographies

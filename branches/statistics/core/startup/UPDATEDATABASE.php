@@ -225,9 +225,14 @@ class UPDATEDATABASE
                 $this->stage11();
             }
             elseif ($dbVersion < 12.0)
-            { // upgrade v6.2.1 to 6.2.2
+            { // upgrade v6.2.1 to 6.2.2 part A
                 $this->numStages = 1;
                 $this->stage12();
+            }
+            elseif ($dbVersion < 13.0)
+            { // upgrade v6.2.1 to 6.2.2 part B
+                $this->numStages = 1;
+                $this->stage13();
             }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
@@ -787,6 +792,164 @@ class UPDATEDATABASE
         $this->updateSoftwareVersion(12);
         $this->checkStatus('stage12');
         $this->pauseExecution('stage12');
+    }
+    /**
+     * Upgrade database schema to version 13 (6.2.2)
+     */
+    private function stage13()
+    {
+        // Convert tag sizes to scale factors
+        $this->updateDbSchema('13');
+        
+        $this->transferStatistics();
+        $this->db->queryNoError("DROP TABLE IF EXISTS " . WIKINDX_DB_TABLEPREFIX . "statistics;");
+        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_misc DROP COLUMN resourcemiscAccesses");
+        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_misc DROP COLUMN resourcemiscAccessesPeriod");
+        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_attachments DROP COLUMN resourceattachmentsDownloads");
+        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_attachments DROP COLUMN resourceattachmentsDownloadsPeriod");
+        
+        $this->updateSoftwareVersion(13);
+        $this->checkStatus('stage13');
+        $this->pauseExecution('stage13');
+    }
+    /**
+     * Transfer statistics data to new tables then drop old table
+     *
+     * A fault in the previous statistics compilation means that each month's statistics needs to be backdated one month . . .
+     */
+    private function transferStatistics()
+    {
+// 1. Past statistics from statistics table
+		$resultSet = $this->db->select('statistics', ['statisticsResourceId', 'statisticsAttachmentId', 'statisticsStatistics']);
+		$insertCount = 0;
+		$insertResourceValues = [];
+		$insertAttachmentValues = [];
+		while ($row = $this->db->fetchRow($resultSet))
+		{
+			$idField = $row['statisticsAttachmentId'] ? 'statisticsattachmentdownloadsAttachmentId' : 'statisticsresourceviewsResourceId';
+			$monthField = $row['statisticsAttachmentId'] ? 'statisticsattachmentdownloadsMonth' : 'statisticsresourceviewsMonth';
+			$countField = $row['statisticsAttachmentId'] ? 'statisticsattachmentdownloadsCount' : 'statisticsresourceviewsCount';
+			$resourceId = 'statisticsattachmentdownloadsResourceId';
+			$resourceInsertFields = [$idField, $monthField, $countField];
+			$attachmentInsertFields = [$resourceId, $idField, $monthField, $countField];
+			$statsArray = unserialize(base64_decode($row['statisticsStatistics']));
+			foreach ($statsArray as $month => $count)
+			{
+				$insertValues = [];
+				$id = $row['statisticsAttachmentId'] ? $row['statisticsAttachmentId'] : $row['statisticsResourceId'];
+				$split = str_split($month, 4); // [0] == year, [1] == month
+				switch ($split[1])
+				{
+					case '01':
+						$month = --$split[0] . '12'; // Assume we don't go earlier than AD 0 . . .
+						$insertValues = [$id, $month, $count];
+						break;
+					case '02':
+						$month = $split[0] . '01';
+						$insertValues = [$id, $month, $count];
+						break;
+					case '03':
+						$month = $split[0] . '02';
+						$insertValues = [$id, $month, $count];
+						break;
+					case '04':
+						$month = $split[0] . '03';
+						$insertValues = [$id, $month, $count];
+						break;
+					case '05':
+						$month = $split[0] . '04';
+						$insertValues = [$id, $month, $count];
+						break;
+					case '06':
+						$month = $split[0] . '05';
+						$insertValues = [$id, $month, $count];
+						break;
+					case '07':
+						$month = $split[0] . '06';
+						$insertValues = [$id, $month, $count];
+						break;
+					case '08':
+						$month = $split[0] . '07';
+						$insertValues = [$id, $month, $count];
+						break;
+					case '09':
+						$month = $split[0] . '08';
+						$insertValues = [$id, $month, $count];
+						break;
+					case '10':
+						$month = $split[0] . '09';
+						$insertValues = [$id, $month, $count];
+						break;
+					case '11':
+						$month = $split[0] . '10';
+						$insertValues = [$id, $month, $count];
+						break;
+					case '12':
+						$month = $split[0] . '11';
+						$insertValues = [$id, $month, $count];
+						break;
+				}
+				if ($row['statisticsAttachmentId'])
+				{
+					if ($insertCount == 5000)
+					{
+						$this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, join($insertAttachmentValues, ', '));
+						$insertCount = 0;
+						$insertAttachmentValues = [];
+					}
+					else
+					{
+						$insertAttachmentValues[] = '(' . $row['statisticsResourceId'] . ',' . join($insertValues, ',') . ')';
+					}
+				}
+				else
+				{
+					if ($insertCount == 5000)
+					{
+						$this->db->multiInsert('statistics_resource_views', $resourceInsertFields, join($insertResourceValues, ', '));
+						$insertCount = 0;
+						$insertResourceValues = [];
+					}
+					else
+					{
+						$insertResourceValues[] = '(' . join($insertValues, ',') . ')';
+					}
+				}
+				++$insertCount;
+			}
+		}
+// 2. Current statistics for views and downloads
+		$month = date('Ym');
+		$resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod']);
+		while ($row = $this->db->fetchRow($resultSet))
+		{
+			$this->db->insert('statistics_resource_views', 
+				['statisticsresourceviewsResourceId', 
+					'statisticsresourceviewsMonth', 
+					'statisticsresourceviewsCount'],
+				[$row['resourcemiscId'],
+					$month,
+					$row['resourcemiscAccessesPeriod']]
+			);
+		}
+		$resultSet = $this->db->select('resource_attachments', 
+			['resourceattachmentsId', 
+			'resourceattachmentsResourceId', 
+			'resourceattachmentsDownloadsPeriod']
+		);
+		while ($row = $this->db->fetchRow($resultSet))
+		{
+			$this->db->insert('statistics_attachment_downloads', 
+				['statisticsattachmentdownloadsResourceId',
+					'statisticsattachmentdownloadsAttachmentId', 
+					'statisticsattachmentdownloadsMonth', 
+					'statisticsattachmentdownloadsCount'],
+				[$row['resourceattachmentsResourceId'],
+					$row['resourceattachmentsId'],
+					$month,
+					$row['resourceattachmentsDownloadsPeriod']]
+			);
+		}
     }
     /**
      * Copy non-official bibliographic styles (if they exist)

@@ -797,7 +797,6 @@ SQLCODE;
         if ($clause)
         {
             $clause = $this->subClause();
-
             $this->resetSubs();
         }
 
@@ -807,7 +806,6 @@ SQLCODE;
         }
 
         $distinct = $distinct ? 'DISTINCT' : '';
-
         return "SELECT $distinct $field FROM $table $alias $clause";
     }
     /**
@@ -1983,7 +1981,7 @@ SQLCODE;
     /**
      * Return a ratio alias of $field / number days since e.g. resource added.
      *
-     * @param string $field (e.g. 'resourcemiscAccesses', or 'resourceattachmentDownloads')
+     * @param string $field (e.g. 'statisticsresourceviewsCount', or 'statisticsattachmentdownloadsCount')
      * @param string $denominator (e.g. 'resourcetimestampTimestampAdd')
      * @param bool $alias Default is FALSE
      * @param string $aggregateFunction Default is ''. If <> '', insert an Aggregate Function of the same name of multiple $fields
@@ -2689,7 +2687,7 @@ SQLCODE;
         return " $not EXISTS ($stmt)";
     }
     /**
-     * Create a SUM() statement
+     * Create a SUM() clause
      *
      * @param string $field
      * @param string $alias Default is FALSE

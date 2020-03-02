@@ -586,7 +586,7 @@ class LISTCOMMON
             }
             else
             {
-                $files[] = $attachments->makeLink($row, TRUE, FALSE);
+                $files[] = $attachments->makeLink($row, $row['resourceattachmentsResourceId'], TRUE, FALSE);
                 $ids[] = \HTML\a($this->icons->getClass("view"), $this->icons->getHTML("view"), "index.php?action=resource_RESOURCEVIEW_CORE" .
                     htmlentities("&id=" . $row['resourceattachmentsResourceId']));
             }
@@ -730,27 +730,31 @@ class LISTCOMMON
                     $mar = 1;
                 }
                 // build inner SELECT statement
-                $dr = $this->db->dateDiffRatio('resourceattachmentsDownloads', 'resourceattachmentsTimestamp', 'downloadRatio', 'AVG', 0);
-                $this->db->groupBy('resourceattachmentsResourceId');
-                $raId = $this->db->formatFields('resourceattachmentsResourceId');
-                $innerSubQ = $this->db->selectNoExecute('resource_attachments', [$raId, $dr], FALSE, FALSE, TRUE);
+                $dr = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', 'downloadRatio', 'AVG', 0);
+        		$this->db->leftJoin('resource_attachments', 'resourceattachmentsResourceId', 'statisticsattachmentdownloadsResourceId');
+                $this->db->groupBy('statisticsattachmentdownloadsResourceId');
+                $raId = $this->db->formatFields('statisticsattachmentdownloadsResourceId');
+                $innerSubQ = $this->db->selectNoExecute('statistics_attachment_downloads', [$raId, $dr], FALSE, FALSE, TRUE);
                 $innerSubQ = $this->db->subQuery($innerSubQ, 't1');
                 // build middle SELECT statement
-                $middleSubQ = $this->db->selectNoExecuteFromSubQuery(FALSE, ['resourceattachmentsResourceId', 'downloadRatio'], $innerSubQ);
+                $middleSubQ = $this->db->selectNoExecuteFromSubQuery(FALSE, ['statisticsattachmentdownloadsResourceId', 'downloadRatio'], $innerSubQ);
                 $middleSubQ = $this->db->subQuery($middleSubQ, 't2', FALSE);
                 // build outer SELECT statement
-                $pi = $this->db->dateDiffRatio('resourcemiscAccesses', 'resourcetimestampTimestampAdd', FALSE, '', 0);
+                $pi = $this->db->dateDiffRatio('statisticsresourceviewsCount', 'resourcetimestampTimestampAdd', FALSE, '', 0);
                 $pi = $this->db->round('((' . $pi . ") / $mar) * 0.25 + ((" . $this->db->formatFields('downloadRatio') . " / $mdr) * 0.75)", 'popIndex', 2);
-                $this->db->formatConditionsOneField(array_keys($resources), 'resourcemiscId');
-                $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'resourcemiscId');
-                $this->db->leftJoinSubQuery($middleSubQ, 't2.resourceattachmentsResourceId', 'resource_misc.resourcemiscId');
-                $this->db->groupBy(['resourcemiscId', 't2.resourceattachmentsResourceId', 'resourcemiscAccesses', 'resourcetimestampTimestampAdd', 't2.downloadRatio']);
-                $resultSet = $this->db->select('resource_misc', ['resourcemiscId', $pi, 'downloadRatio', 'resourceattachmentsResourceId'], FALSE, FALSE);
+                $this->db->formatConditionsOneField(array_keys($resources), 'statisticsresourceviewsResourceId');
+                $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
+                $this->db->leftJoinSubQuery($middleSubQ, 
+                	't2.statisticsattachmentdownloadsResourceId', 'statistics_resource_views.statisticsresourceviewsResourceId');
+                $this->db->groupBy(['statisticsresourceviewsResourceId', 't2.statisticsattachmentdownloadsResourceId', 
+                	'resourcetimestampTimestampAdd', 't2.downloadRatio']);
+                $resultSet = $this->db->select('statistics_resource_views', 
+                	['statisticsresourceviewsResourceId', $pi, 'downloadRatio', 'statisticsattachmentdownloadsResourceId'], FALSE, FALSE);
                 while ($row = $this->db->fetchRow($resultSet))
                 {
-                    if ($row['resourceattachmentsResourceId'])
+                    if ($row['statisticsattachmentdownloadsResourceId'])
                     {
-                        $attachments[$row['resourcemiscId']] = TRUE;
+                        $attachments[$row['statisticsresourceviewsResourceId']] = TRUE;
                     }
                     if ($row['popIndex'])
                     {
@@ -760,7 +764,7 @@ class LISTCOMMON
                     {
                         $popIndex = 0;
                     }
-                    $resourceList[$row['resourcemiscId']]['popIndex'] = $this->messages->text("misc", "popIndex", $popIndex);
+                    $resourceList[$row['statisticsresourceviewsResourceId']]['popIndex'] = $this->messages->text("misc", "popIndex", $popIndex);
                 }
             }
             // Check if these resources have metadata and display view icons accordingly

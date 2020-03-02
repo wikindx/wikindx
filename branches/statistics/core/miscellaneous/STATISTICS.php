@@ -82,10 +82,11 @@ class STATISTICS
         {
             return self::$MaxDR;
         }
-        $dateDiffClause = $this->db->dateDiffRatio('resourceattachmentsDownloads', 'resourceattachmentsTimestamp', 'downloadRatio', 'AVG');
-        $this->db->groupBy('resourceattachmentsResourceId');
+        $dateDiffClause = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', 'downloadRatio', 'AVG');
+        $this->db->leftJoin('resource_attachments', 'resourceattachmentsResourceId', 'statisticsattachmentdownloadsResourceId');
+        $this->db->groupBy('statisticsattachmentdownloadsResourceId');
         $subQ = $this->db->subQuery(
-            $this->db->selectNoExecute('resource_attachments', $dateDiffClause, FALSE, FALSE),
+            $this->db->selectNoExecute('statistics_attachment_downloads', $dateDiffClause, FALSE, FALSE),
             't',
             TRUE,
             TRUE
@@ -111,9 +112,9 @@ class STATISTICS
         {
             return self::$MaxAR;
         }
-        $dateDiffClause = $this->db->dateDiffRatio('resourcemiscAccesses', 'resourcetimestampTimestampAdd', 'max', 'MAX');
-        $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'resourcemiscId');
-        self::$MaxAR = $this->db->selectFirstField('resource_misc', $dateDiffClause, FALSE, FALSE);
+        $dateDiffClause = $this->db->dateDiffRatio('statisticsresourceviewsCount', 'resourcetimestampTimestampAdd', 'max', 'MAX');
+        $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
+        self::$MaxAR = $this->db->selectFirstField('statistics_resource_views', $dateDiffClause, FALSE, FALSE);
         if (!self::$MaxAR)
         {
             return 1;
@@ -162,10 +163,10 @@ class STATISTICS
         {
             return self::$AR * 100;
         }
-        $dateDiffClause = $this->db->dateDiffRatio('resourcemiscAccesses', 'resourcetimestampTimestampAdd', 'accessRatio');
-        $this->db->formatConditions(['resourcemiscId' => $id]);
-        $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'resourcemiscId');
-        $thisSum = $this->db->selectFirstField('resource_misc', $dateDiffClause, FALSE, FALSE);
+        $dateDiffClause = $this->db->dateDiffRatio('statisticsresourceviewsCount', 'resourcetimestampTimestampAdd', 'accessRatio');
+        $this->db->formatConditions(['statisticsresourceResourceId' => $id]);
+        $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
+        $thisSum = $this->db->selectFirstField('statistics_resource_views', $dateDiffClause, FALSE, FALSE);
         $setSum = $this->getMaxAccessRatio();
         if ($setSum == 0)
         {
@@ -190,10 +191,10 @@ class STATISTICS
         {
             return self::$DR * 100;
         }
-        $dateDiffClause = $this->db->dateDiffRatio('resourceattachmentsDownloads', 'resourceattachmentsTimestamp', 'downloadRatio', 'AVG');
-        $this->db->formatConditions(['resourceattachmentsResourceId' => $id]);
-        $this->db->groupBy('resourceattachmentsResourceId');
-        $thisSum = $this->db->selectFirstField('resource_attachments', $dateDiffClause, FALSE, FALSE);
+        $dateDiffClause = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', 'downloadRatio', 'AVG');
+        $this->db->formatConditions(['statisticsattachmentdownloadsResourceId' => $id]);
+        $this->db->groupBy('statisticsattachmentdownloadsResourceId');
+        $thisSum = $this->db->selectFirstField('statistics_attachment_downloads', $dateDiffClause, FALSE, FALSE);
         $setSum = $this->getMaxDownloadRatio();
         if ($setSum == 0)
         {
@@ -221,13 +222,14 @@ class STATISTICS
         }
         $setSumAR = $this->getMaxAccessRatio();
         $setSumDR = $this->getMaxDownloadRatio();
-        $aClause = $this->db->dateDiffRatio('resourcemiscAccesses', 'resourcetimestampTimestampAdd', 'accessRatio');
-        $dlClause = $this->db->dateDiffRatio('resourceattachmentsDownloads', 'resourceattachmentsTimestamp', 'downloadRatio', 'AVG');
-        $this->db->formatConditions(['resourcemiscId' => $id]);
-        $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'resourcemiscId');
-        $this->db->leftJoin('resource_attachments', 'resourceattachmentsResourceId', 'resourcemiscId');
-        $this->db->groupBy(['resourcemiscAccesses', 'resourcetimestampTimestampAdd']);
-        $resultSet = $this->db->select('resource_misc', [$aClause, $dlClause], FALSE, FALSE);
+        $aClause = $this->db->dateDiffRatio('statisticsresourceviewsCount', 'resourcetimestampTimestampAdd', 'accessRatio');
+        $dlClause = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', 'downloadRatio', 'AVG');
+        $this->db->formatConditions(['statisticsresourceviewsResourceId' => $id]);
+        $this->db->leftJoin('resource_attachments', 'resourceattachmentsResourceId', 'statisticsresourceviewsResourceId');
+        $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
+        $this->db->leftJoin('statistics_attachment_downloads', 'statisticsattachmentdownloadsResourceId', 'statisticsresourceviewsResourceId');
+        $this->db->groupBy(['statisticsresourceviewsCount', 'resourcetimestampTimestampAdd']);
+        $resultSet = $this->db->select('statistics_resource_views', [$aClause, $dlClause], FALSE, FALSE);
         while ($row = $this->db->fetchRow($resultSet))
         {
             if ($setSumAR == 0)
@@ -279,6 +281,7 @@ class STATISTICS
         {
             $emailStats = FALSE;
         }
+/*
         $thisMonth = date('Ym');
         $resArray = [];
         $maxPacket = $this->db->getMaxPacket();
@@ -327,6 +330,7 @@ class STATISTICS
         while ($index < $numberOfResources);
         $this->db->update('resource_misc', ['resourcemiscAccessesPeriod' => '0']);
         $this->db->update('resource_attachments', ['resourceattachmentsDownloadsPeriod' => '0']);
+*/
         if ($emailStats)
         {
             $this->emailStats($resArray);
@@ -419,10 +423,10 @@ class STATISTICS
         {
             return self::$maxDownloads;
         }
-        $this->db->groupBy('resourceattachmentsResourceId');
+        $this->db->groupBy('statisticsattachmentdownloadsResourceId');
         $subQ = $this->db->subQuery($this->db->selectNoExecute(
-            'resource_attachments',
-            $this->db->sum('resourceattachmentsDownloads', 'sum'),
+            'statistics_attachment_downloads',
+            $this->db->sum('statisticsattachmentdownloadsCount', 'sum'),
             FALSE,
             FALSE
         ), 't', TRUE, TRUE);
@@ -444,8 +448,8 @@ class STATISTICS
         }
         else
         {
-            $resultset = $this->db->selectMax("resource_misc", 'resourcemiscAccesses');
-            self::$maxAccesses = $resultset['resourcemiscAccesses'];
+            $resultset = $this->db->selectMax("statistics_resource_views", 'statisticsresourceviewsCount');
+            self::$maxAccesses = $resultset['statisticsresourceviewsCount'];
 
             return self::$maxAccesses;
         }

@@ -688,7 +688,6 @@ class RESOURCEVIEW
             }
             if ($this->multiUser)
             {
-<<<<<<< .mine
 				$this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => $row['resourceattachmentsId']]);
 				$this->db->formatConditions(['statisticsattachmentdownloadsMonth' => $month]);
 				if (!$views = $this->db->selectFirstField('statistics_attachment_downloads', ['statisticsattachmentdownloadsCount']))
@@ -702,14 +701,6 @@ class RESOURCEVIEW
 					$totalViews = 0;
 				}
                 $downloads = '[' . $views . '/' . $totalViews . ']';
-||||||| .r164
-                $downloads = '[' . $row['resourceattachmentsDownloadsPeriod'] . '/' .
-                    $row['resourceattachmentsDownloads'] . ']';
-=======
-            	$monthDownloads = $row['resourceattachmentsDownloadsPeriod'] ? $row['resourceattachmentsDownloadsPeriod'] : 0;
-                $downloads = '[' . $monthDownloads . '/' .
-                    $row['resourceattachmentsDownloads'] . ']';
->>>>>>> .r167
             }
             else
             {

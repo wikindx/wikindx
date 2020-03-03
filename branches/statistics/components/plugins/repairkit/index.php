@@ -573,11 +573,6 @@ class repairkit_MODULE
         {
             return TRUE;
         }
-        $this->db->formatConditions(['usersChangePasswordTimestamp' => '0000-00-00 00:00:00']);
-        if ($this->db->numRows($this->db->select('users', 'usersId')))
-        {
-            return TRUE;
-        }
         $this->db->formatConditions(['userregisterTimestamp' => '0000-00-00 00:00:00']);
         if ($this->db->numRows($this->db->select('user_register', 'userregisterId')))
         {
@@ -903,18 +898,6 @@ class repairkit_MODULE
         else
         {
             $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => '']); // default is CURRENT_TIMESTAMP
-        }
-        $this->db->formatConditions($this->db->formatFields('usersChangePasswordTimestamp'));
-        $minArray = $this->db->selectMin('users', 'usersChangePasswordTimestamp');
-        $min = $minArray[0]['usersChangePasswordTimestamp'];
-        $this->db->formatConditions(['usersChangePasswordTimestamp' => '0000-00-00 00:00:00']);
-        if ($min)
-        {
-            $this->db->updateTimestamp('users', ['usersChangePasswordTimestamp' => $this->db->tidyInput($min)]);
-        }
-        else
-        {
-            $this->db->updateTimestamp('users', ['usersChangePasswordTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         // resource_timestamp
         $this->db->formatConditions($this->db->formatFields('resourcetimestampTimestampAdd'));

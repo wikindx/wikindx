@@ -206,6 +206,7 @@ define('WIKINDX_SUPERADMIN_ID', 1);
 
 // Divers for users config only
 define('WIKINDX_USER_PAGING_STYLE_DEFAULT', 'N');
+define('WIKINDX_USER_LANGUAGE_DEFAULT', 'auto');
 
 
 // RSS feed

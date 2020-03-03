@@ -793,22 +793,29 @@ class USER
     {
         // Set paging_start back to 0
         $this->session->setVar("mywikindx_PagingStart", 0);
-        $preferences = [
-            "Paging" => WIKINDX_PAGING_DEFAULT,
-            "PagingMaxLinks" => WIKINDX_PAGING_MAXLINKS_DEFAULT,
-            "StringLimit" => WIKINDX_STRING_LIMIT_DEFAULT,
-            "Language" => "auto",
-            "Style" => WIKINDX_STYLE_DEFAULT,
-            "Template" => WIKINDX_TEMPLATE_DEFAULT,
-            "PagingStyle" => WIKINDX_USER_PAGING_STYLE_DEFAULT, // User config only
-            "PagingTagCloud" => WIKINDX_PAGING_TAG_CLOUD_DEFAULT,
-            "UseBibtexKey" => WIKINDX_USE_BIBTEX_KEY_DEFAULT,
-            "UseWikindxKey" => WIKINDX_USE_WIKINDX_KEY_DEFAULT,
-            "DisplayBibtexLink" => WIKINDX_DISPLAY_BIBTEX_LINK_DEFAULT,
-            "DisplayCmsLink" => WIKINDX_DISPLAY_CMS_LINK_DEFAULT,
-            "TemplateMenu" => WIKINDX_TEMPLATE_MENU_DEFAULT,
-            "ListLink" => "N",
-        ];
+        $preferences = [];
+        
+        // Options inherited from the global config
+		$preferences["ListLink"] = WIKINDX_LIST_LINK_DEFAULT; //TODO: fix the type mismatch bool/Varchar(N)
+		$preferences["Paging"] = WIKINDX_PAGING;
+		$preferences["PagingMaxLinks"] = WIKINDX_PAGING_MAXLINKS;
+		$preferences["PagingTagCloud"] = WIKINDX_PAGING_TAG_CLOUD;
+		$preferences["StringLimit"] = WIKINDX_STRING_LIMIT;
+		$preferences["Style"] = WIKINDX_STYLE;
+		$preferences["Template"] = WIKINDX_TEMPLATE;
+		
+		// Language should be inherited but it needs a special default
+		// which allows the browser to control the preferred language first
+		$preferences["Language"] = WIKINDX_USER_LANGUAGE_DEFAULT;
+		
+        // Options unique to users
+		$preferences["DisplayBibtexLink"] = WIKINDX_DISPLAY_BIBTEX_LINK_DEFAULT;
+		$preferences["DisplayCmsLink"] = WIKINDX_DISPLAY_CMS_LINK_DEFAULT;
+		$preferences["PagingStyle"] = WIKINDX_USER_PAGING_STYLE_DEFAULT;
+		$preferences["TemplateMenu"] = WIKINDX_TEMPLATE_MENU_DEFAULT;
+		$preferences["UseBibtexKey"] = WIKINDX_USE_BIBTEX_KEY_DEFAULT;
+		$preferences["UseWikindxKey"] = WIKINDX_USE_WIKINDX_KEY_DEFAULT;
+
         foreach ($preferences as $pref => $default)
         {
 /*            if ($pref == 'TemplateMenu')

@@ -307,9 +307,6 @@ class USER
         $value[] = '2012-01-01 01:01:01';
         $this->db->insert('users', $field, $value);
         $userId = $this->db->lastAutoId();
-        // set the users.notifyTimestamp and users.timestamp to current date
-        $this->db->formatConditions(['usersId' => $userId]);
-        $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => 'CURRENT_TIMESTAMP', 'usersTimestamp' => 'CURRENT_TIMESTAMP']);
         // insert preferences to table
         $this->writePreferences($userId, TRUE);
 

@@ -585,13 +585,15 @@ class SQLSTATEMENTS
             }
             $dateDiff = $this->db->dateDiffRatio('statisticsresourceviewsCount', 'resourcetimestampTimestampAdd');
             $ratio = $this->db->round("$dateDiff / $setSum", 'index');
-            $this->joins['statistics_resource_views'] = ['statisticsresourceviewsResourceId', 'resourcetimestampId'];
+            $this->joins['statistics_resource_views'] = ['statisticsresourceviewsResourceId', 'resourcemiscId'];
+            $this->joins['resource_timestamp'] = ['resourcetimestampId', 'resourcemiscId'];
+            $this->db->groupBy(['statisticsresourceviewsResourceId', 'resourcemiscId']);
             $this->quarantine(FALSE, 'resourcemiscId', FALSE);
-            $this->useBib('resourcetimestampId');
+            $this->useBib('resourcemiscId');
             $this->db->ascDesc = $this->session->getVar("list_AscDesc");
             $this->executeCondJoins();
             $indicesQuery = $this->db->queryNoExecute($this->db->selectNoExecute(
-                'resource_timestamp',
+                'resource_misc',
                 $this->db->formatFields([['resourcemiscId' => 'rId']]) . ', ' . $ratio,
                 FALSE,
                 FALSE
@@ -603,18 +605,18 @@ class SQLSTATEMENTS
             {
                 $setSum = 0.1;
             }
-            $dateDiff = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', FALSE, 'AVG');
-            $ratio = $this->db->round("$dateDiff / $setSum");
+            $dateDiff = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', FALSE, 'AVG', FALSE);
+//            $ratio = $this->db->round("$dateDiff / $setSum");
             $case = $this->db->round($this->db->caseWhen(
                 $this->db->formatFields('resourceattachmentsResourceId'),
                 'IS NULL',
                 '0',
-                $ratio,
+                "$dateDiff / $setSum",
                 FALSE
             ), 'index');
             $this->joins['resource_attachments'] = ['resourceattachmentsResourceId', 'resourcemiscId'];
             $this->joins['statistics_attachment_downloads'] = ['statisticsattachmentdownloadsResourceId', 'resourcemiscId'];
-            $this->db->groupBy(['resourceattachmentsResourceId', 'resourcemiscId']);
+            $this->db->groupBy(['statisticsattachmentdownloadsResourceId', 'resourcemiscId']);
             $this->quarantine(FALSE, 'resourcemiscId', FALSE);
             $this->useBib('resourcemiscId');
             $this->db->ascDesc = $this->session->getVar("list_AscDesc");
@@ -636,28 +638,31 @@ class SQLSTATEMENTS
             {
                 $setSumDownload = 0.1;
             }
-            $dateDiffAccess = $this->db->dateDiffRatio('statisticsresourceviewsCount', 'resourcetimestampTimestampAdd');
-            $dateDiffDownload = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', FALSE, 'AVG');
-            $ratioAccess = "(($dateDiffAccess / $setSumAccess)" . ' * 0.5)';
-            $ratioDownload = "(($dateDiffDownload / $setSumDownload)" . ' * 1.5)';
+            $dateDiffAccess = $this->db->dateDiffRatio('statisticsresourceviewsCount', 'resourcetimestampTimestampAdd', FALSE, 'AVG', FALSE);
+            $dateDiffDownload = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', FALSE, 'AVG', FALSE);
+            $accessWeight = WIKINDX_POPULARITY_VIEWS_WEIGHT;
+            $ratioAccess = "(($dateDiffAccess / $setSumAccess)" . " * $accessWeight)";
+            $downloadWeight = WIKINDX_POPULARITY_DOWNLOADS_WEIGHT;
+            $ratioDownload = "(($dateDiffDownload / $setSumDownload)" . " * $downloadWeight)";
             $ratioSum = $this->db->round($ratioAccess . ' + ' . $ratioDownload, FALSE, 2) . ' ' . 
             	$this->db->alias . ' ' . $this->db->tidyInput('index');
-            $this->joins['statistics_resource_views'] = ['statisticsresourceviewsResourceId', 'resourcetimestampId'];
-            $this->joins['statistics_attachment_downloads'] = ['statisticsattachmentdownloadsResourceId', 'resourcetimestampId'];
+            $this->joins['resource_timestamp'] = ['resourcetimestampId', 'resourcemiscId'];
+            $this->joins['resource_attachments'] = ['resourceattachmentsResourceId', 'resourcemiscId'];
+            $this->joins['statistics_resource_views'] = ['statisticsresourceviewsResourceId', 'resourcemiscId'];
+            $this->joins['statistics_attachment_downloads'] = ['statisticsattachmentdownloadsResourceId', 'resourcemiscId'];
             $this->db->groupBy(['statisticsattachmentdownloadsResourceId', 'statisticsresourceviewsResourceId', 
             	'statisticsresourceviewsCount', 'resourcetimestampTimestampAdd']);
             $this->quarantine(FALSE, 'resourcemiscId', FALSE);
-            $this->useBib('resourcetimestampId');
+            $this->useBib('resourcemiscId');
             $this->db->ascDesc = $this->session->getVar("list_AscDesc");
             $this->executeCondJoins();
             $indicesQuery = $this->db->queryNoExecute($this->db->selectNoExecute(
-                'resource_timestamp',
+                'resource_misc',
                 $this->db->formatFields([['resourcemiscId' => 'rId']]) . ', ' . $ratioSum,
                 FALSE,
                 FALSE
             ));
         }
-
         return $indicesQuery;
     }
     /**

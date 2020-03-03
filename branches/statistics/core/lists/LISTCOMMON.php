@@ -718,54 +718,11 @@ class LISTCOMMON
             // Check if these resources have attachments and display view icons accordingly. Also, calculate the resource's popularity index
             if ($this->session->getVar("setup_UserId") || !WIKINDX_FILE_VIEW_LOGGEDON_ONLY)
             {
-                $mdr = $this->stats->getMaxDownloadRatio();
-                $mar = $this->stats->getMaxAccessRatio();
-                // avoid division by 0
-                if (!$mdr)
-                {
-                    $mdr = 1;
-                }
-                if (!$mar)
-                {
-                    $mar = 1;
-                }
-                // build inner SELECT statement
-                $dr = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', 'downloadRatio', 'AVG', 0);
-        		$this->db->leftJoin('resource_attachments', 'resourceattachmentsResourceId', 'statisticsattachmentdownloadsResourceId');
-                $this->db->groupBy('statisticsattachmentdownloadsResourceId');
-                $raId = $this->db->formatFields('statisticsattachmentdownloadsResourceId');
-                $innerSubQ = $this->db->selectNoExecute('statistics_attachment_downloads', [$raId, $dr], FALSE, FALSE, TRUE);
-                $innerSubQ = $this->db->subQuery($innerSubQ, 't1');
-                // build middle SELECT statement
-                $middleSubQ = $this->db->selectNoExecuteFromSubQuery(FALSE, ['statisticsattachmentdownloadsResourceId', 'downloadRatio'], $innerSubQ);
-                $middleSubQ = $this->db->subQuery($middleSubQ, 't2', FALSE);
-                // build outer SELECT statement
-                $pi = $this->db->dateDiffRatio('statisticsresourceviewsCount', 'resourcetimestampTimestampAdd', FALSE, '', 0);
-                $pi = $this->db->round('((' . $pi . ") / $mar) * 0.25 + ((" . $this->db->formatFields('downloadRatio') . " / $mdr) * 0.75)", 'popIndex', 2);
-                $this->db->formatConditionsOneField(array_keys($resources), 'statisticsresourceviewsResourceId');
-                $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
-                $this->db->leftJoinSubQuery($middleSubQ, 
-                	't2.statisticsattachmentdownloadsResourceId', 'statistics_resource_views.statisticsresourceviewsResourceId');
-                $this->db->groupBy(['statisticsresourceviewsResourceId', 't2.statisticsattachmentdownloadsResourceId', 
-                	'resourcetimestampTimestampAdd', 't2.downloadRatio']);
-                $resultSet = $this->db->select('statistics_resource_views', 
-                	['statisticsresourceviewsResourceId', $pi, 'downloadRatio', 'statisticsattachmentdownloadsResourceId'], FALSE, FALSE);
-                while ($row = $this->db->fetchRow($resultSet))
-                {
-                    if ($row['statisticsattachmentdownloadsResourceId'])
-                    {
-                        $attachments[$row['statisticsresourceviewsResourceId']] = TRUE;
-                    }
-                    if ($row['popIndex'])
-                    {
-                        $popIndex = $row['popIndex'] * 100;
-                    }
-                    else
-                    {
-                        $popIndex = 0;
-                    }
-                    $resourceList[$row['statisticsresourceviewsResourceId']]['popIndex'] = $this->messages->text("misc", "popIndex", $popIndex);
-                }
+				foreach ($resourceList as $resourceId => $resourceArray)
+				{
+					$popIndex = $this->stats->getPopularityIndex($resourceId);
+					$resourceList[$resourceId]['popIndex'] = $this->messages->text("misc", "popIndex", $popIndex);
+				}
             }
             // Check if these resources have metadata and display view icons accordingly
             $this->db->formatConditionsOneField(array_keys($resources), 'resourcemetadataResourceId');

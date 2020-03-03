@@ -82,16 +82,20 @@ class STATISTICS
         {
             return self::$MaxDR;
         }
-        $dateDiffClause = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', 'downloadRatio', 'AVG');
-        $this->db->leftJoin('resource_attachments', 'resourceattachmentsResourceId', 'statisticsattachmentdownloadsResourceId');
-        $this->db->groupBy('statisticsattachmentdownloadsResourceId');
+        $dateDiffClause = $this->db->dateDiffRatio('count', 'resourceattachmentsTimestamp', 'max', 'MAX');
+        $sumClause = $this->db->sum('statisticsattachmentdownloadsCount', 'count');
+        $this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => 'IS NOT NULL']);
+        $this->db->leftJoin('resource_attachments', 'resourceattachmentsId', 'statisticsattachmentdownloadsAttachmentId');
+        $this->db->groupBy('statisticsattachmentdownloadsAttachmentId');
         $subQ = $this->db->subQuery(
-            $this->db->selectNoExecute('statistics_attachment_downloads', $dateDiffClause, FALSE, FALSE),
+            $this->db->selectNoExecute('statistics_attachment_downloads', 
+            [$sumClause, $this->db->formatFields('resourceattachmentsTimestamp')], FALSE, FALSE),
             't',
             TRUE,
             TRUE
         );
-        self::$MaxDR = $this->db->selectMax(FALSE, 'downloadRatio', 'max', FALSE, $subQ)['max'];
+        $resultSet = $this->db->selectFromSubQuery(FALSE, $dateDiffClause, $subQ, FALSE, FALSE);
+        self::$MaxDR = $this->db->fetchOne($resultSet);
         if (!self::$MaxDR)
         {
             return 1;
@@ -112,9 +116,20 @@ class STATISTICS
         {
             return self::$MaxAR;
         }
-        $dateDiffClause = $this->db->dateDiffRatio('statisticsresourceviewsCount', 'resourcetimestampTimestampAdd', 'max', 'MAX');
+        $dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'max', 'MAX');
+        $sumClause = $this->db->sum('statisticsresourceviewsCount', 'count');
+        $this->db->formatConditions(['resourcetimestampTimestampAdd' => 'IS NOT NULL']);
         $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
-        self::$MaxAR = $this->db->selectFirstField('statistics_resource_views', $dateDiffClause, FALSE, FALSE);
+        $this->db->groupBy('statisticsresourceviewsResourceId');
+        $subQ = $this->db->subQuery(
+            $this->db->selectNoExecute('statistics_resource_views', 
+            [$sumClause, $this->db->formatFields('resourcetimestampTimestampAdd')], FALSE, FALSE),
+            't',
+            TRUE,
+            TRUE
+        );
+        $resultSet = $this->db->selectFromSubQuery(FALSE, $dateDiffClause, $subQ, FALSE, FALSE);
+        self::$MaxAR = $this->db->fetchOne($resultSet);
         if (!self::$MaxAR)
         {
             return 1;
@@ -141,7 +156,8 @@ class STATISTICS
         {
             $this->accessDownloadRatio($id);
         }
-        $ratio = (($this->downloadRatio * 1.5) + ($this->accessRatio * 0.5)) / 2; // Give more weight to downloads
+        $ratio = (($this->downloadRatio * WIKINDX_POPULARITY_DOWNLOADS_WEIGHT) + 
+        	($this->accessRatio * WIKINDX_POPULARITY_VIEWS_WEIGHT)) / 2; // Give more weight to downloads
         //		$maxRatio = (($this->getMaxDownloadRatio() * 1.5) + ($this->getMaxAccessRatio() * 0.5)) / 2;
         if ($ratio == 0)
         {
@@ -149,62 +165,6 @@ class STATISTICS
         }
 
         return $ratio;
-    }
-    /**
-     * Return views ratio for each resource
-     *
-     * @param int $id Resource ID
-     *
-     * @return int
-     */
-    public function getAccessRatio($id)
-    {
-        if (!$this->list && (self::$AR !== FALSE))
-        {
-            return self::$AR * 100;
-        }
-        $dateDiffClause = $this->db->dateDiffRatio('statisticsresourceviewsCount', 'resourcetimestampTimestampAdd', 'accessRatio');
-        $this->db->formatConditions(['statisticsresourceResourceId' => $id]);
-        $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
-        $thisSum = $this->db->selectFirstField('statistics_resource_views', $dateDiffClause, FALSE, FALSE);
-        $setSum = $this->getMaxAccessRatio();
-        if ($setSum == 0)
-        {
-            self::$AR = 0;
-
-            return self::$AR;
-        }
-        self::$AR = round(($thisSum / $setSum), 2);
-
-        return self::$AR * 100;
-    }
-    /**
-     * Return download ratio of attachments for each resource
-     *
-     * @param int $id Resource ID
-     *
-     * @return int
-     */
-    public function getDownloadRatio($id)
-    {
-        if (!$this->list && (self::$DR !== FALSE))
-        {
-            return self::$DR * 100;
-        }
-        $dateDiffClause = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', 'downloadRatio', 'AVG');
-        $this->db->formatConditions(['statisticsattachmentdownloadsResourceId' => $id]);
-        $this->db->groupBy('statisticsattachmentdownloadsResourceId');
-        $thisSum = $this->db->selectFirstField('statistics_attachment_downloads', $dateDiffClause, FALSE, FALSE);
-        $setSum = $this->getMaxDownloadRatio();
-        if ($setSum == 0)
-        {
-            self::$DR = 0;
-
-            return self::$DR;
-        }
-        self::$DR = round(($thisSum / $setSum), 2);
-
-        return self::$DR * 100;
     }
     /**
      * Return resource access and download ratio of attachments for one resource
@@ -215,42 +175,60 @@ class STATISTICS
     {
         if (!$this->list && (self::$AR !== FALSE) && (self::$DR !== FALSE))
         {
-            $this->accessRatio = self::$AR * 100;
-            $this->downloadRatio = self::$DR * 100;
+            $this->accessRatio = self::$AR * 50;
+            $this->downloadRatio = self::$DR * 50;
 
             return;
         }
         $setSumAR = $this->getMaxAccessRatio();
         $setSumDR = $this->getMaxDownloadRatio();
-        $aClause = $this->db->dateDiffRatio('statisticsresourceviewsCount', 'resourcetimestampTimestampAdd', 'accessRatio');
-        $dlClause = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', 'downloadRatio', 'AVG');
+        
+        $dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'accessRatio');
+        $sumClause = $this->db->sum('statisticsresourceviewsCount', 'count');
         $this->db->formatConditions(['statisticsresourceviewsResourceId' => $id]);
-        $this->db->leftJoin('resource_attachments', 'resourceattachmentsResourceId', 'statisticsresourceviewsResourceId');
         $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
-        $this->db->leftJoin('statistics_attachment_downloads', 'statisticsattachmentdownloadsResourceId', 'statisticsresourceviewsResourceId');
-        $this->db->groupBy(['statisticsresourceviewsCount', 'resourcetimestampTimestampAdd']);
-        $resultSet = $this->db->select('statistics_resource_views', [$aClause, $dlClause], FALSE, FALSE);
-        while ($row = $this->db->fetchRow($resultSet))
-        {
-            if ($setSumAR == 0)
-            {
-                self::$AR = 0;
-            }
-            else
-            {
-                self::$AR = round(($row['accessRatio'] / $setSumAR), 2);
-            }
-            if ($setSumDR == 0)
-            {
-                self::$DR = 0;
-            }
-            else
-            {
-                self::$DR = round(($row['downloadRatio'] / $setSumDR), 2);
-            }
-            $this->accessRatio = self::$AR * 100;
-            $this->downloadRatio = self::$DR * 100;
-        }
+        $subQ = $this->db->subQuery(
+            $this->db->selectNoExecute('statistics_resource_views', 
+            [$sumClause, $this->db->formatFields('resourcetimestampTimestampAdd')], FALSE, FALSE),
+            't',
+            TRUE,
+            TRUE
+        );
+        $resultSet = $this->db->selectFromSubQuery(FALSE, $dateDiffClause, $subQ, FALSE, FALSE);
+        $accessRatio = $this->db->fetchOne($resultSet);
+        
+        $dateDiffClause = $this->db->dateDiffRatio('count', 'resourceattachmentsTimestamp', 'downloadRatio');
+        $sumClause = $this->db->sum('statisticsattachmentdownloadsCount', 'count');
+        $this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => 'IS NOT NULL']);
+        $this->db->formatConditions(['statisticsattachmentdownloadsResourceId' => $id]);
+        $this->db->leftJoin('resource_attachments', 'resourceattachmentsId', 'statisticsattachmentdownloadsAttachmentId');
+        $subQ = $this->db->subQuery(
+            $this->db->selectNoExecute('statistics_attachment_downloads', 
+            [$sumClause, $this->db->formatFields('resourceattachmentsTimestamp')], FALSE, FALSE),
+            't',
+            TRUE,
+            TRUE
+        );
+        $resultSet = $this->db->selectFromSubQuery(FALSE, $dateDiffClause, $subQ, FALSE, FALSE);
+        $downloadRatio = $this->db->fetchOne($resultSet);
+		if (!$setSumAR)
+		{
+			self::$AR = 0;
+		}
+		else
+		{
+			self::$AR = round(($accessRatio / $setSumAR), 2);
+		}
+		if (!$setSumDR)
+		{
+			self::$DR = 0;
+		}
+		else
+		{
+			self::$DR = round(($downloadRatio / $setSumDR), 2);
+		}
+		$this->accessRatio = self::$AR * 50;
+		$this->downloadRatio = self::$DR * 50;
     }
     /**
      * Run the statistics compilation and manage any emailing required
@@ -410,48 +388,6 @@ class STATISTICS
                 }
                 $smtp->sendEmail($uArray['email'], $subject, $message);
             }
-        }
-    }
-    /**
-     * Return the no. attachment downloads for the resource with the greatest number of downloads
-     *
-     * @return int
-     */
-    private function getMaxDownloads()
-    {
-        if (self::$maxDownloads !== FALSE)
-        {
-            return self::$maxDownloads;
-        }
-        $this->db->groupBy('statisticsattachmentdownloadsResourceId');
-        $subQ = $this->db->subQuery($this->db->selectNoExecute(
-            'statistics_attachment_downloads',
-            $this->db->sum('statisticsattachmentdownloadsCount', 'sum'),
-            FALSE,
-            FALSE
-        ), 't', TRUE, TRUE);
-        $resultset = $this->db->selectMax(FALSE, 'sum', 'max', FALSE, $subQ);
-        self::$maxDownloads = $resultset['max'];
-
-        return self::$maxDownloads;
-    }
-    /**
-     * Return the no. views for the resource with the greatest number of views
-     *
-     * @return int
-     */
-    private function getMaxAccesses()
-    {
-        if (self::$maxAccesses !== FALSE)
-        {
-            return self::$maxAccesses;
-        }
-        else
-        {
-            $resultset = $this->db->selectMax("statistics_resource_views", 'statisticsresourceviewsCount');
-            self::$maxAccesses = $resultset['statisticsresourceviewsCount'];
-
-            return self::$maxAccesses;
         }
     }
 }

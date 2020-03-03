@@ -260,11 +260,6 @@ class USER
             // set the users.notifyTimestamp and users.timestamp to current date
             $this->db->formatConditions(['usersId' => $userId]);
             $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => 'CURRENT_TIMESTAMP', 'usersTimestamp' => 'CURRENT_TIMESTAMP']);
-            // write userId to session if not adding a new user
-            if (!$add)
-            {
-                $this->session->setVar("setup_UserId", $userId);
-            }
             // insert preferences to table
             $this->writePreferences($userId, TRUE);
         }

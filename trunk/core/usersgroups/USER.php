@@ -312,7 +312,7 @@ class USER
         $this->db->formatConditions(['usersId' => $userId]);
         $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => 'CURRENT_TIMESTAMP', 'usersTimestamp' => 'CURRENT_TIMESTAMP']);
         // insert preferences to table
-        $this->writePreferences($userId);
+        $this->writePreferences($userId, TRUE);
 
         return $userId; // success!
     }

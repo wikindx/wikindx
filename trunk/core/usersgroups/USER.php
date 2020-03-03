@@ -52,28 +52,34 @@ class USER
      *
      * @return mixed
      */
-    public function writeUser($add = TRUE, $admin = 0)
+    public function writeUser($add = TRUE, int $admin = 0)
     {
+    	$userId = $this->session->getVar("setup_UserId", 0);
+    	
         if (array_key_exists('username', $this->vars))
         {
-            $username = \HTML\removeNl($this->vars['username']);
-            // check for existing usernames (remove current user from search if already logged in with setup_userId)
-            $this->db->formatConditions(['usersUsername' => $username]);
-            if ($userId = $this->session->getVar("setup_UserId") && !$add)
-            {
-                $this->db->formatConditions(['usersId' => $userId], TRUE); // Not equal to
-            }
-            // existing user with that username found (not this user)
-            $recordset = $this->db->select('users', 'usersId');
-            if ($this->db->numRows($recordset))
-            {
-                return $this->errors->text("inputError", "userExists");
-            }
+    		$username = \HTML\removeNl($this->vars['username']);
+    		return "username field missing";
+    	}
+        if (array_key_exists('username', $this->vars))
+        {
+    		$password = \HTML\removeNl($this->vars['password']);
+    		return "password field missing";
+    	}
+    	
+        // check for existing usernames (remove current user from search if already logged in with setup_userId)
+        $this->db->formatConditions(['usersUsername' => $username]);
+		$this->db->formatConditions(['usersId' => $userId], TRUE); // Not equal to
+        // existing user with that username found (not this user)
+        $recordset = $this->db->select('users', 'usersId');
+        if ($this->db->numRows($recordset))
+        {
+            return $this->errors->text("inputError", "userExists");
         }
-        $password = \HTML\removeNl($this->vars['password']);
+        
         if (!$add)
         { // update
-            if (!$admin)
+            if ($admin == 0)
             { // user editing own details
                 $userId = $this->session->getVar("setup_UserId");
                 $cookie = FACTORY_COOKIE::getInstance();
@@ -136,6 +142,10 @@ class USER
                 {
                     $nulls[] = 'usersIsCreator';
                 }
+            }
+            else
+            {
+            	die("admin param value unknown: " . $admin);
             }
             if (isset($nulls))
             {

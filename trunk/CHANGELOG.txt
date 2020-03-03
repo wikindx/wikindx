@@ -21,6 +21,7 @@ BUG FIXES:
 15. Bug 214 (https://sourceforge.net/p/wikindx/v5bugs/214/) – allow forward slashes in searches.
 16. Ensure the superadmin can edit all quotes and paraphrases (original behaviour that seems to have dropped away).
 17. Fix user creation in LDAP context.
+18. Fix duplication of username in user creation.
 
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.

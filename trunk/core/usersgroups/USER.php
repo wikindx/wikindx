@@ -301,10 +301,6 @@ class USER
         $value[] = $info[0]['mail'][0];
         $field[] = 'usersFullname';
         $value[] = $info[0]['cn'][0];
-        $field[] = 'usersTimestamp';
-        $value[] = '2012-01-01 01:01:01';
-        $field[] = 'usersNotifyTimestamp';
-        $value[] = '2012-01-01 01:01:01';
         $this->db->insert('users', $field, $value);
         $userId = $this->db->lastAutoId();
         // insert preferences to table

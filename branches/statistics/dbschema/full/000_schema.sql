@@ -437,7 +437,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%users` (
   `usersListlink` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   `usersTemplateMenu` int(11) DEFAULT NULL,
   `usersGDPR` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
-  `usersChangePasswordTimestamp` datetime DEFAULT current_timestamp(),
   `usersBlock` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
   PRIMARY KEY (`usersId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

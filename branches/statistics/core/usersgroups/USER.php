@@ -52,28 +52,34 @@ class USER
      *
      * @return mixed
      */
-    public function writeUser($add = TRUE, $admin = 0)
+    public function writeUser($add = TRUE, int $admin = 0)
     {
+    	$userId = $this->session->getVar("setup_UserId", 0);
+    	
         if (array_key_exists('username', $this->vars))
         {
-            $username = \HTML\removeNl($this->vars['username']);
-            // check for existing usernames (remove current user from search if already logged in with setup_userId)
-            $this->db->formatConditions(['usersUsername' => $username]);
-            if ($userId = $this->session->getVar("setup_UserId") && !$add)
-            {
-                $this->db->formatConditions(['usersId' => $userId], TRUE); // Not equal to
-            }
-            // existing user with that username found (not this user)
-            $recordset = $this->db->select('users', 'usersId');
-            if ($this->db->numRows($recordset))
-            {
-                return $this->errors->text("inputError", "userExists");
-            }
+    		$username = \HTML\removeNl($this->vars['username']);
+    		return "username field missing";
+    	}
+        if (array_key_exists('username', $this->vars))
+        {
+    		$password = \HTML\removeNl($this->vars['password']);
+    		return "password field missing";
+    	}
+    	
+        // check for existing usernames (remove current user from search if already logged in with setup_userId)
+        $this->db->formatConditions(['usersUsername' => $username]);
+		$this->db->formatConditions(['usersId' => $userId], TRUE); // Not equal to
+        // existing user with that username found (not this user)
+        $recordset = $this->db->select('users', 'usersId');
+        if ($this->db->numRows($recordset))
+        {
+            return $this->errors->text("inputError", "userExists");
         }
-        $password = \HTML\removeNl($this->vars['password']);
+        
         if (!$add)
         { // update
-            if (!$admin)
+            if ($admin == 0)
             { // user editing own details
                 $userId = $this->session->getVar("setup_UserId");
                 $cookie = FACTORY_COOKIE::getInstance();
@@ -136,6 +142,10 @@ class USER
                 {
                     $nulls[] = 'usersIsCreator';
                 }
+            }
+            else
+            {
+            	die("admin param value unknown: " . $admin);
             }
             if (isset($nulls))
             {
@@ -241,20 +251,9 @@ class USER
                 $field[] = 'usersFullname';
                 $value[] = $fullname;
             }
-            $field[] = 'usersTimestamp';
-            $value[] = '2012-01-01 01:01:01';
-            $field[] = 'usersNotifyTimestamp';
-            $value[] = '2012-01-01 01:01:01';
+            
             $this->db->insert('users', $field, $value);
             $userId = $this->db->lastAutoId();
-            // set the users.notifyTimestamp and users.timestamp to current date
-            $this->db->formatConditions(['usersId' => $userId]);
-            $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => 'CURRENT_TIMESTAMP', 'usersTimestamp' => 'CURRENT_TIMESTAMP']);
-            // write userId to session if not adding a new user
-            if (!$add)
-            {
-                $this->session->setVar("setup_UserId", $userId);
-            }
             // insert preferences to table
             $this->writePreferences($userId, TRUE);
         }
@@ -302,17 +301,10 @@ class USER
         $value[] = $info[0]['mail'][0];
         $field[] = 'usersFullname';
         $value[] = $info[0]['cn'][0];
-        $field[] = 'usersTimestamp';
-        $value[] = '2012-01-01 01:01:01';
-        $field[] = 'usersNotifyTimestamp';
-        $value[] = '2012-01-01 01:01:01';
         $this->db->insert('users', $field, $value);
         $userId = $this->db->lastAutoId();
-        // set the users.notifyTimestamp and users.timestamp to current date
-        $this->db->formatConditions(['usersId' => $userId]);
-        $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => 'CURRENT_TIMESTAMP', 'usersTimestamp' => 'CURRENT_TIMESTAMP']);
         // insert preferences to table
-        $this->writePreferences($userId);
+        $this->writePreferences($userId, TRUE);
 
         return $userId; // success!
     }
@@ -793,22 +785,29 @@ class USER
     {
         // Set paging_start back to 0
         $this->session->setVar("mywikindx_PagingStart", 0);
-        $preferences = [
-            "Paging" => WIKINDX_PAGING_DEFAULT,
-            "PagingMaxLinks" => WIKINDX_PAGING_MAXLINKS_DEFAULT,
-            "StringLimit" => WIKINDX_STRING_LIMIT_DEFAULT,
-            "Language" => "auto",
-            "Style" => WIKINDX_STYLE_DEFAULT,
-            "Template" => WIKINDX_TEMPLATE_DEFAULT,
-            "PagingStyle" => WIKINDX_USER_PAGING_STYLE_DEFAULT, // User config only
-            "PagingTagCloud" => WIKINDX_PAGING_TAG_CLOUD_DEFAULT,
-            "UseBibtexKey" => WIKINDX_USE_BIBTEX_KEY_DEFAULT,
-            "UseWikindxKey" => WIKINDX_USE_WIKINDX_KEY_DEFAULT,
-            "DisplayBibtexLink" => WIKINDX_DISPLAY_BIBTEX_LINK_DEFAULT,
-            "DisplayCmsLink" => WIKINDX_DISPLAY_CMS_LINK_DEFAULT,
-            "TemplateMenu" => WIKINDX_TEMPLATE_MENU_DEFAULT,
-            "ListLink" => "N",
-        ];
+        $preferences = [];
+        
+        // Options inherited from the global config
+		$preferences["ListLink"] = WIKINDX_LIST_LINK_DEFAULT; //TODO: fix the type mismatch bool/Varchar(N)
+		$preferences["Paging"] = WIKINDX_PAGING;
+		$preferences["PagingMaxLinks"] = WIKINDX_PAGING_MAXLINKS;
+		$preferences["PagingTagCloud"] = WIKINDX_PAGING_TAG_CLOUD;
+		$preferences["StringLimit"] = WIKINDX_STRING_LIMIT;
+		$preferences["Style"] = WIKINDX_STYLE;
+		$preferences["Template"] = WIKINDX_TEMPLATE;
+		
+		// Language should be inherited but it needs a special default
+		// which allows the browser to control the preferred language first
+		$preferences["Language"] = WIKINDX_USER_LANGUAGE_DEFAULT;
+		
+        // Options unique to users
+		$preferences["DisplayBibtexLink"] = WIKINDX_DISPLAY_BIBTEX_LINK_DEFAULT;
+		$preferences["DisplayCmsLink"] = WIKINDX_DISPLAY_CMS_LINK_DEFAULT;
+		$preferences["PagingStyle"] = WIKINDX_USER_PAGING_STYLE_DEFAULT;
+		$preferences["TemplateMenu"] = WIKINDX_TEMPLATE_MENU_DEFAULT;
+		$preferences["UseBibtexKey"] = WIKINDX_USE_BIBTEX_KEY_DEFAULT;
+		$preferences["UseWikindxKey"] = WIKINDX_USE_WIKINDX_KEY_DEFAULT;
+
         foreach ($preferences as $pref => $default)
         {
 /*            if ($pref == 'TemplateMenu')

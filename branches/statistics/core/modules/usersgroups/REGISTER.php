@@ -319,13 +319,6 @@ class REGISTER
         $session = FACTORY_SESSION::getInstance();
         $user_answer = $this->vars['answer'];
         $correct_answer = $session->getVar("captcha");
-        if ($user_answer == $correct_answer)
-        {
-            return TRUE;
-        }
-        else
-        {
-            return FALSE;
-        }
+        return ($user_answer == $correct_answer);
     }
 }

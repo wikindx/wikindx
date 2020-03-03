@@ -338,10 +338,7 @@ class CONFIGURE
                 $usersFieldArray[] = 'usersIsCreator';
             }
             $this->db->insert('users', $usersFieldArray, $usersValueArray);
-            // set the new WKX_users.notifyTimestamp and WKX_users.timestamp to current date
-            $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
-            $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => 'CURRENT_TIMESTAMP', 'usersTimestamp' => 'CURRENT_TIMESTAMP']);
-            $this->user->writeSessionPreferences(1); // '1' == superAdmin
+            $this->user->writeSessionPreferences(WIKINDX_SUPERADMIN_ID); // '1' == superAdmin
             $this->insert = FALSE;
         }
         else

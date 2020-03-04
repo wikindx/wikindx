@@ -798,7 +798,6 @@ class UPDATEDATABASE
      */
     private function stage13()
     {
-        // Convert tag sizes to scale factors
         $this->updateDbSchema('13');
         
         $this->transferStatistics();

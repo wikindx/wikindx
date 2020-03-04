@@ -368,7 +368,8 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%statistics_attachment_down
   `statisticsattachmentdownloadsCount` int(11) DEFAULT 0,
   `statisticsattachmentdownloadsMonth` int(11) DEFAULT 0,
   PRIMARY KEY (`statisticsattachmentdownloadsId`),
-  KEY `statisticsattachmentdownloadsAttachmentId` (`statisticsattachmentdownloadsAttachmentId`)
+  KEY `statisticsattachmentdownloadsAttachmentId` (`statisticsattachmentdownloadsAttachmentId`),
+  KEY `statisticsattachmentdownloadsResourceId` (`statisticsattachmentdownloadsResourceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 

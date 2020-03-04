@@ -235,7 +235,7 @@ define('WIKINDX_SITEMAP_MAXSIZE', 500);
 /**
  * STATISTICS WEIGHTS
  *
- * The two values here are relative to each other and should total 2.0.
+ * The two values here are relative to each other and should total 1.0.
  */
-define('WIKINDX_POPULARITY_VIEWS_WEIGHT', 0.5);
-define('WIKINDX_POPULARITY_DOWNLOADS_WEIGHT', 1.5);
+define('WIKINDX_POPULARITY_VIEWS_WEIGHT', 0.25);
+define('WIKINDX_POPULARITY_DOWNLOADS_WEIGHT', 0.75);

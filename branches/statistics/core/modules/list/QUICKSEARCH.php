@@ -352,7 +352,7 @@ class QUICKSEARCH
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
             $this->common->pagingObject = $this->pagingObject;
-            $limit = $this->db->limit($this->session->getVar("setup_Paging"), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
+            $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
             $sql .= $limit;
         }
         $this->common->display($sql, 'search');

@@ -638,27 +638,60 @@ class SQLSTATEMENTS
             {
                 $setSumDownload = 0.1;
             }
-            $dateDiffAccess = $this->db->dateDiffRatio('statisticsresourceviewsCount', 'resourcetimestampTimestampAdd', FALSE, 'AVG', FALSE);
-            $dateDiffDownload = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', FALSE, 'AVG', FALSE);
+// Create temp table for resource views
+			$dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'accessRatio');
+			$sumClause = $this->db->sum('statisticsresourceviewsCount', 'count');
+			$this->db->formatConditions(['resourcetimestampTimestampAdd' => 'IS NOT NULL']);
+			$this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
+			$this->db->groupBy('statisticsresourceviewsResourceId');
+			$subQ = $this->db->subQuery(
+				$this->db->selectNoExecute('statistics_resource_views', 
+				[$sumClause, $this->db->formatFields('resourcetimestampTimestampAdd'), 
+					$this->db->formatFields([['statisticsresourceviewsResourceId' => 'rId']])], 
+				FALSE, FALSE),
+				't',
+				TRUE,
+				TRUE
+			);
+			$fields = $this->db->formatFields('rId') . ',' . $dateDiffClause;
+			$selectStmt = $this->db->selectNoExecuteFromSubQuery(FALSE, $fields, $subQ, FALSE, FALSE);
+            $this->db->createTempTableFromSelect('countsAR', $selectStmt);
+// Create temp table for attachment downloads
+			$dateDiffClause = $this->db->dateDiffRatio('count', 'resourceattachmentsTimestamp');
+			$dateDiffClause = $this->db->ifClause('DATEDIFF(CURRENT_DATE, `resourceattachmentsTimestamp`)', 
+				$this->db->equal . 0 . $this->db->or . ' NULL', 0, 
+				$dateDiffClause, 'downloadRatio');
+			$sumClause = $this->db->sum('statisticsattachmentdownloadsCount', 'count');
+			$this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => 'IS NOT NULL']);
+			$this->db->leftJoin('resource_attachments', 'resourceattachmentsId', 'statisticsattachmentdownloadsAttachmentId');
+			$this->db->groupBy('statisticsattachmentdownloadsResourceId');
+			$subQ = $this->db->subQuery(
+				$this->db->selectNoExecute('statistics_attachment_downloads', 
+				[$sumClause, $this->db->formatFields('resourceattachmentsTimestamp'), 
+					$this->db->formatFields([['statisticsattachmentdownloadsResourceId' => 'raId']])], 
+				FALSE, FALSE),
+				't',
+				TRUE,
+				TRUE
+			);
+			$fields = $this->db->formatFields('raId') . ',' . $dateDiffClause;
+			$selectStmt = $this->db->selectNoExecuteFromSubQuery(FALSE, $fields, $subQ, FALSE, FALSE);
+            $this->db->createTempTableFromSelect('countsDR', $selectStmt);
+
             $accessWeight = WIKINDX_POPULARITY_VIEWS_WEIGHT;
-            $ratioAccess = "(($dateDiffAccess / $setSumAccess)" . " * $accessWeight)";
+            $ratioAccess = "((" . $this->db->formatFields('accessRatio') . " / $setSumAccess)" . " * $accessWeight)";
             $downloadWeight = WIKINDX_POPULARITY_DOWNLOADS_WEIGHT;
-            $ratioDownload = "(($dateDiffDownload / $setSumDownload)" . " * $downloadWeight)";
-            $ratioSum = $this->db->round($ratioAccess . ' + ' . $ratioDownload, FALSE, 2) . ' ' . 
-            	$this->db->alias . ' ' . $this->db->tidyInput('index');
-            $this->joins['resource_timestamp'] = ['resourcetimestampId', 'resourcemiscId'];
-            $this->joins['resource_attachments'] = ['resourceattachmentsResourceId', 'resourcemiscId'];
-            $this->joins['statistics_resource_views'] = ['statisticsresourceviewsResourceId', 'resourcemiscId'];
-            $this->joins['statistics_attachment_downloads'] = ['statisticsattachmentdownloadsResourceId', 'resourcemiscId'];
-            $this->db->groupBy(['statisticsattachmentdownloadsResourceId', 'statisticsresourceviewsResourceId', 
-            	'statisticsresourceviewsCount', 'resourcetimestampTimestampAdd']);
-            $this->quarantine(FALSE, 'resourcemiscId', FALSE);
-            $this->useBib('resourcemiscId');
+            $ratioDownload = "((" . $this->db->formatFields('downloadRatio') . " / $setSumDownload)" . " * $downloadWeight)";
+            $ratioSum = $this->db->round($ratioAccess . ' + ' . $ratioDownload, 'index', 2);
+			$this->joins['countsDR'] = ['raId', 'rId'];
+
+            $this->quarantine(FALSE, 'rId', FALSE);
+            $this->useBib('rId');
             $this->db->ascDesc = $this->session->getVar("list_AscDesc");
             $this->executeCondJoins();
             $indicesQuery = $this->db->queryNoExecute($this->db->selectNoExecute(
-                'resource_misc',
-                $this->db->formatFields([['resourcemiscId' => 'rId']]) . ', ' . $ratioSum,
+                'countsAr',
+                $this->db->formatFields('rId') . ', ' . $ratioSum,
                 FALSE,
                 FALSE
             ));

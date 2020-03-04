@@ -152,7 +152,8 @@ class LISTRESOURCES
             $badInput->close($errors->text("inputError", "invalid"));
         }
         $queryString = 'action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=' . $order;
-        if ($this->lastMulti($queryString))
+// NB. Ordering by popularity index uses temporary tables which must be created for each call (so cannot use the shortcuts for lastMulti)
+        if (($order != 'popularityIndex') && $this->lastMulti($queryString))
         {
             return;
         }

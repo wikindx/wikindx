@@ -86,7 +86,7 @@ class STATISTICS
         $sumClause = $this->db->sum('statisticsattachmentdownloadsCount', 'count');
         $this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => 'IS NOT NULL']);
         $this->db->leftJoin('resource_attachments', 'resourceattachmentsId', 'statisticsattachmentdownloadsAttachmentId');
-        $this->db->groupBy('statisticsattachmentdownloadsAttachmentId');
+        $this->db->groupBy('statisticsattachmentdownloadsResourceId');
         $subQ = $this->db->subQuery(
             $this->db->selectNoExecute('statistics_attachment_downloads', 
             [$sumClause, $this->db->formatFields('resourceattachmentsTimestamp')], FALSE, FALSE),
@@ -157,7 +157,7 @@ class STATISTICS
             $this->accessDownloadRatio($id);
         }
         $ratio = (($this->downloadRatio * WIKINDX_POPULARITY_DOWNLOADS_WEIGHT) + 
-        	($this->accessRatio * WIKINDX_POPULARITY_VIEWS_WEIGHT)) / 2; // Give more weight to downloads
+        	($this->accessRatio * WIKINDX_POPULARITY_VIEWS_WEIGHT)); // Give more weight to downloads
         //		$maxRatio = (($this->getMaxDownloadRatio() * 1.5) + ($this->getMaxAccessRatio() * 0.5)) / 2;
         if ($ratio == 0)
         {
@@ -175,8 +175,8 @@ class STATISTICS
     {
         if (!$this->list && (self::$AR !== FALSE) && (self::$DR !== FALSE))
         {
-            $this->accessRatio = self::$AR * 50;
-            $this->downloadRatio = self::$DR * 50;
+            $this->accessRatio = self::$AR * 100;
+            $this->downloadRatio = self::$DR * 100;
 
             return;
         }
@@ -227,8 +227,8 @@ class STATISTICS
 		{
 			self::$DR = round(($downloadRatio / $setSumDR), 2);
 		}
-		$this->accessRatio = self::$AR * 50;
-		$this->downloadRatio = self::$DR * 50;
+		$this->accessRatio = self::$AR * 100;
+		$this->downloadRatio = self::$DR * 100;
     }
     /**
      * Run the statistics compilation and manage any emailing required

@@ -520,6 +520,18 @@ SQLCODE;
         }
     }
     /**
+     * Create a temporary table from a SELECT statement
+     *
+     * @param string $newTable
+     * @param string $selectStmt
+     */
+    public function createTempTableFromSelect($newTable, $selectStmt)
+    {
+        $newTable = WIKINDX_DB_TABLEPREFIX . $newTable;
+        $sql = ' AS (' . $selectStmt . ')';
+       	$this->queryNoResult("CREATE TEMPORARY TABLE `$newTable` $sql");
+    }
+    /**
      * return numRows from recordset
      *
      * @param array $recordset
@@ -2225,12 +2237,17 @@ SQLCODE;
      * @param string $test
      * @param string $result
      * @param string $default
+     * @param string $alias – default is FALSE
      *
      * @return string
      */
-    public function ifClause($field, $test, $result, $default)
+    public function ifClause($field, $test, $result, $default, $alias = FALSE)
     {
-        return "IF($field $test, $result, $default)";
+    	if ($alias)
+    	{
+    		$alias = ' AS ' . $this->formatFields($alias);
+    	}
+        return "IF($field $test, $result, $default)$alias";
     }
     /**
      * Create a INNER JOIN clause on a table

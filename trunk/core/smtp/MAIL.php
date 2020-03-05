@@ -57,6 +57,10 @@ class MAIL
         {
             $ReplyTo = WIKINDX_MAIL_REPLYTO;
         }
+        else
+        {
+        	$ReplyTo = WIKINDX_MAIL_REPLYTO_DEFAULT;
+        }
         
         if ($ReplyTo != "")
         {

@@ -22,6 +22,8 @@ BUG FIXES:
 16. Ensure the superadmin can edit all quotes and paraphrases (original behaviour that seems to have dropped away).
 17. Fix user creation in LDAP context.
 18. Fix duplication of username in user creation.
+19. Corrected templates – if read-only users are allowed to view attachments (see Admin|Configure), then display attachments when viewing a single resource.
+20. Ensure that ordering/listing by popularity and downloads are not available to read-only users if they are not allowed to view attachments.
 
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.
@@ -36,6 +38,8 @@ MAINTENANCE:
 10. Relocate WIKINDX_TRUNK_VERSION option in the database and rename it WIKINDX_IS_TRUNK.
 11. Change the type of the timezone option from TEXT to Varchar.
 12. Add WIKINDX_PATH_AUTO_DETECTION option to config.php to explicitly control auto-detection of the path and base url.
+13. Drop usersChangePasswordTimestamp column from the DB schema
+14. DB upgrade – transfer data from statistics, resource_misc and resource_attachments tables to new statistics_resource_views and statistics_attachment_downloads tables and drop statistics table and other relevant columns.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

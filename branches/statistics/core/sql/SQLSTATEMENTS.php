@@ -682,7 +682,7 @@ class SQLSTATEMENTS
             $ratioAccess = "((" . $this->db->formatFields('accessRatio') . " / $setSumAccess)" . " * $accessWeight)";
             $downloadWeight = WIKINDX_POPULARITY_DOWNLOADS_WEIGHT;
             $ratioDownload = "((" . $this->db->formatFields('downloadRatio') . " / $setSumDownload)" . " * $downloadWeight)";
-            $ratioSum = $this->db->round($ratioAccess . ' + ' . $ratioDownload, 'index', 2);
+            $ratioSum = $this->db->round($ratioAccess . ' + ' . $ratioDownload, 'index', 4);
 			$this->joins['countsDR'] = ['raId', 'rId'];
 
             $this->quarantine(FALSE, 'rId', FALSE);

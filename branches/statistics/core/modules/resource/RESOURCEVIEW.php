@@ -392,13 +392,13 @@ class RESOURCEVIEW
                 "numAccesses",
                 $views . '/' . $totalViews
             );
+            $this->stats->accessDownloadRatio($this->vars['id']);
             if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId"))
             {
                 // display nothing
             }
             else
             {
-                $this->stats->accessDownloadRatio($this->vars['id']);
                 if ($this->stats->downloadRatio)
                 {
                     $resourceSingle['download'] = $this->messages->text("viewResource", "download", $this->stats->downloadRatio);

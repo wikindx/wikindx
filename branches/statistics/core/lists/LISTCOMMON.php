@@ -431,18 +431,33 @@ class LISTCOMMON
     public function displayOrder($type, $reorder = FALSE)
     {
         if (($type == 'list') && !$this->browse)
-        {
-            $order = [
-                "creator" => $this->messages->text("list", "creator"),
-                "title" => $this->messages->text("list", "title"),
-                "publisher" => $this->messages->text("list", "publisher"),
-                "year" => $this->messages->text("list", "year"),
-                "timestamp" => $this->messages->text("list", "timestamp"),
-                "popularityIndex" => $this->messages->text("list", "popularity"),
-                "viewsIndex" => $this->messages->text("list", "views"),
-                "downloadsIndex" => $this->messages->text("list", "downloads"),
-                "maturityIndex" => $this->messages->text("list", "maturity"),
-            ];
+        {            
+    		if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId"))
+            {				$order = [
+					"creator" => $this->messages->text("list", "creator"),
+					"title" => $this->messages->text("list", "title"),
+					"publisher" => $this->messages->text("list", "publisher"),
+					"year" => $this->messages->text("list", "year"),
+					"timestamp" => $this->messages->text("list", "timestamp"),
+					"viewsIndex" => $this->messages->text("list", "views"),
+					"maturityIndex" => $this->messages->text("list", "maturity"),
+				];
+
+            }
+            else
+            {
+				$order = [
+					"creator" => $this->messages->text("list", "creator"),
+					"title" => $this->messages->text("list", "title"),
+					"publisher" => $this->messages->text("list", "publisher"),
+					"year" => $this->messages->text("list", "year"),
+					"timestamp" => $this->messages->text("list", "timestamp"),
+					"popularityIndex" => $this->messages->text("list", "popularity"),
+					"viewsIndex" => $this->messages->text("list", "views"),
+					"downloadsIndex" => $this->messages->text("list", "downloads"),
+					"maturityIndex" => $this->messages->text("list", "maturity"),
+				];
+			}
         }
         else
         {
@@ -720,7 +735,14 @@ class LISTCOMMON
             {
 				foreach ($resourceList as $resourceId => $resourceArray)
 				{
-					$popIndex = $this->stats->getPopularityIndex($resourceId);
+					if (array_key_exists('index', $this->rows[$resourceId])) // listing by popularity index so index already calculated from database
+					{
+						$popIndex = $this->rows[$resourceId]['index'] * 100;
+					}
+					else
+					{
+						$popIndex = $this->stats->getPopularityIndex($resourceId);
+					}
 					$resourceList[$resourceId]['popIndex'] = $this->messages->text("misc", "popIndex", $popIndex);
 				}
             }

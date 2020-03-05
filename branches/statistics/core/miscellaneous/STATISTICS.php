@@ -196,7 +196,7 @@ class STATISTICS
         );
         $resultSet = $this->db->selectFromSubQuery(FALSE, $dateDiffClause, $subQ, FALSE, FALSE);
         $accessRatio = $this->db->fetchOne($resultSet);
-        
+    
         $dateDiffClause = $this->db->dateDiffRatio('count', 'resourceattachmentsTimestamp', 'downloadRatio');
         $sumClause = $this->db->sum('statisticsattachmentdownloadsCount', 'count');
         $this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => 'IS NOT NULL']);
@@ -216,7 +216,7 @@ class STATISTICS
 			self::$AR = 0;
 		}
 		else
-		{
+		{   
 			self::$AR = round(($accessRatio / $setSumAR), 2);
 		}
 		if (!$setSumDR)

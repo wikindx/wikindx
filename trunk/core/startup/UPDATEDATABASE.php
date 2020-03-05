@@ -919,7 +919,7 @@ class UPDATEDATABASE
 					}
 					else
 					{
-						$insertResourceValues[] = '(' . implode(, ','$insertValues, ) . ')';
+						$insertResourceValues[] = '(' . implode(',', $insertValues, ) . ')';
 					}
 				}
 				++$insertCount;

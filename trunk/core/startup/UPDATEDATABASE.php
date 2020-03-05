@@ -845,57 +845,17 @@ class UPDATEDATABASE
 				$insertValues = [];
 				$id = $row['statisticsAttachmentId'] ? $row['statisticsAttachmentId'] : $row['statisticsResourceId'];
 				$split = str_split($month, 4); // [0] == year, [1] == month
-				switch ($split[1])
+				$year = intval($split[0]);
+				$month = intval($split[1]) - 1;
+				// Assume we don't go earlier than AD 0 ...
+				if ($month == 0)
 				{
-					case '01':
-						$month = --$split[0] . '12'; // Assume we don't go earlier than AD 0 . . .
-						$insertValues = [$id, $month, $count];
-						break;
-					case '02':
-						$month = $split[0] . '01';
-						$insertValues = [$id, $month, $count];
-						break;
-					case '03':
-						$month = $split[0] . '02';
-						$insertValues = [$id, $month, $count];
-						break;
-					case '04':
-						$month = $split[0] . '03';
-						$insertValues = [$id, $month, $count];
-						break;
-					case '05':
-						$month = $split[0] . '04';
-						$insertValues = [$id, $month, $count];
-						break;
-					case '06':
-						$month = $split[0] . '05';
-						$insertValues = [$id, $month, $count];
-						break;
-					case '07':
-						$month = $split[0] . '06';
-						$insertValues = [$id, $month, $count];
-						break;
-					case '08':
-						$month = $split[0] . '07';
-						$insertValues = [$id, $month, $count];
-						break;
-					case '09':
-						$month = $split[0] . '08';
-						$insertValues = [$id, $month, $count];
-						break;
-					case '10':
-						$month = $split[0] . '09';
-						$insertValues = [$id, $month, $count];
-						break;
-					case '11':
-						$month = $split[0] . '10';
-						$insertValues = [$id, $month, $count];
-						break;
-					case '12':
-						$month = $split[0] . '11';
-						$insertValues = [$id, $month, $count];
-						break;
+			        $year = --$year;
+			        $month = 12;
 				}
+				$year = strval($year);
+				$month = str_pad(strval($month), 2, "0", STR_PAD_LEFT);
+				$insertValues = [$id, $year . $month, $count];
 				if ($row['statisticsAttachmentId'])
 				{
 					if ($insertCount == 5000)

@@ -486,8 +486,7 @@ class RESOURCECOMMON
             'publisherLocation', 'publisherType', 'collectionId', 'collectionTitle', 'collectionTitleShort', 'collectionType', 'usersId', 'usersUsername',
             'usersFullname', 'resourcemiscId', 'resourcemiscCollection', 'resourcemiscPublisher', 'resourcemiscField1', 'resourcemiscField2',
             'resourcemiscField3', 'resourcemiscField4', 'resourcemiscField5', 'resourcemiscField6', 'resourcemiscTag', 'resourcemiscAddUserIdResource',
-            'resourcemiscEditUserIdResource', 'resourcemiscAccesses', 'resourcemiscMaturityIndex', 'resourcemiscPeerReviewed', 'resourcemiscQuarantine',
-            'resourcemiscAccessesPeriod', ];
+            'resourcemiscEditUserIdResource', 'resourcemiscMaturityIndex', 'resourcemiscPeerReviewed', 'resourcemiscQuarantine', ];
 
         $this->resourceFields = ['resourceId', 'resourceType', 'resourceTitle', 'resourceSubtitle', 'resourceShortTitle', 'resourceTitleSort',
             'resourceTransTitle', 'resourceTransSubtitle', 'resourceTransShortTitle', 'resourceField1', 'resourceField2', 'resourceField3', 'resourceField4',
@@ -496,8 +495,7 @@ class RESOURCECOMMON
 
         $this->resourceMiscFields = ['resourcemiscId', 'resourcemiscCollection', 'resourcemiscPublisher', 'resourcemiscField1', 'resourcemiscField2',
             'resourcemiscField3', 'resourcemiscField4', 'resourcemiscField5', 'resourcemiscField6', 'resourcemiscTag', 'resourcemiscAddUserIdResource',
-            'resourcemiscEditUserIdResource', 'resourcemiscAccesses', 'resourcemiscMaturityIndex', 'resourcemiscPeerReviewed', 'resourcemiscQuarantine',
-            'resourcemiscAccessesPeriod', ];
+            'resourcemiscEditUserIdResource', 'resourcemiscMaturityIndex', 'resourcemiscPeerReviewed', 'resourcemiscQuarantine', ];
 
         $this->textFields = ['resourcetextId', 'resourcetextNote', 'resourcetextAbstract', 'resourcetextUrls', 'resourcetextUrlText',
             'resourcetextEditUserIdNote', 'resourcetextAddUserIdNote', 'resourcetextEditUserIdAbstract', 'resourcetextAddUserIdAbstract', ];
@@ -519,7 +517,7 @@ class RESOURCECOMMON
 
         $this->userFields = ['usersId', 'usersUsername', 'usersFullname'];
 
-        $this->attachmentFields = ['resourceattachmentsId', 'resourceattachmentsDownloads', 'resourceattachmentsTimestamp',
+        $this->attachmentFields = ['resourceattachmentsId', 'resourceattachmentsTimestamp',
             'resourceattachmentsResourceId', 'resourceattachmentsFileName', 'resourceattachmentsHashFilename', ];
 
         $this->categoryFields = ['resourcecategoryId', 'resourcecategoryCategories', 'resourcecategorySubcategories'];

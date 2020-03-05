@@ -5,7 +5,7 @@
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  *}
 
-{if isset($resourceSingle.attachments) && isset($resourceSingle.attachments.title) && isset($resourceSingle.urls.title)}
+{if isset($resourceSingle.attachments) && isset($resourceSingle.attachments.title) && isset($resourceSingle.urls)}
 <table class="contentAttachments">
 <tr>
 	{if isset($resourceSingle.attachments) && isset($resourceSingle.attachments.title)}

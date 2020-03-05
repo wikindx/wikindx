@@ -520,6 +520,18 @@ SQLCODE;
         }
     }
     /**
+     * Create a temporary table from a SELECT statement
+     *
+     * @param string $newTable
+     * @param string $selectStmt
+     */
+    public function createTempTableFromSelect($newTable, $selectStmt)
+    {
+        $newTable = WIKINDX_DB_TABLEPREFIX . $newTable;
+        $sql = ' AS (' . $selectStmt . ')';
+       	$this->queryNoResult("CREATE TEMPORARY TABLE `$newTable` $sql");
+    }
+    /**
      * return numRows from recordset
      *
      * @param array $recordset
@@ -797,7 +809,6 @@ SQLCODE;
         if ($clause)
         {
             $clause = $this->subClause();
-
             $this->resetSubs();
         }
 
@@ -807,7 +818,6 @@ SQLCODE;
         }
 
         $distinct = $distinct ? 'DISTINCT' : '';
-
         return "SELECT $distinct $field FROM $table $alias $clause";
     }
     /**
@@ -1983,7 +1993,7 @@ SQLCODE;
     /**
      * Return a ratio alias of $field / number days since e.g. resource added.
      *
-     * @param string $field (e.g. 'resourcemiscAccesses', or 'resourceattachmentDownloads')
+     * @param string $field (e.g. 'statisticsresourceviewsCount', or 'statisticsattachmentdownloadsCount')
      * @param string $denominator (e.g. 'resourcetimestampTimestampAdd')
      * @param bool $alias Default is FALSE
      * @param string $aggregateFunction Default is ''. If <> '', insert an Aggregate Function of the same name of multiple $fields
@@ -2227,12 +2237,17 @@ SQLCODE;
      * @param string $test
      * @param string $result
      * @param string $default
+     * @param string $alias – default is FALSE
      *
      * @return string
      */
-    public function ifClause($field, $test, $result, $default)
+    public function ifClause($field, $test, $result, $default, $alias = FALSE)
     {
-        return "IF($field $test, $result, $default)";
+    	if ($alias)
+    	{
+    		$alias = ' AS ' . $this->formatFields($alias);
+    	}
+        return "IF($field $test, $result, $default)$alias";
     }
     /**
      * Create a INNER JOIN clause on a table
@@ -2378,8 +2393,9 @@ SQLCODE;
      * @param string $field
      * @param bool $tidy Default is TRUE. If TRUE, format fields for database type
      * @param bool $removeBraces Default is TRUE. If TRUE, remove {...} braces
+     * @param bool $returnString Default is FALSE. If TRUE, return the ORDER BY clause as a string
      */
-    public function orderBy($field, $tidy = TRUE, $removeBraces = TRUE)
+    public function orderBy($field, $tidy = TRUE, $removeBraces = TRUE, $returnString = FALSE)
     {
         if ($tidy)
         {
@@ -2390,7 +2406,10 @@ SQLCODE;
         {
             $field = $this->replace($this->replace($field, '{', '', FALSE), '}', '', FALSE);
         }
-
+		if ($returnString)
+		{
+			return ' ORDER BY ' . $field . ' ' . $this->ascDesc;
+		}
         $this->order[] = $field . ' ' . $this->ascDesc;
 
         $this->collateSet = FALSE; // reset
@@ -2689,7 +2708,7 @@ SQLCODE;
         return " $not EXISTS ($stmt)";
     }
     /**
-     * Create a SUM() statement
+     * Create a SUM() clause
      *
      * @param string $field
      * @param string $alias Default is FALSE

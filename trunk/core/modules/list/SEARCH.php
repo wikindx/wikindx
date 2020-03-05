@@ -2754,8 +2754,8 @@ class SEARCH
         {
             $this->commonBib->userBibCondition('resourcemiscId');
         }
-        $this->db->formatConditions(['resourcemiscAccesses' => 'IS NOT NULL']);
-        if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscAccesses')))
+        $this->db->formatConditions(['statisticsresourceviewsCount' => 'IS NOT NULL']);
+        if ($this->db->fetchOne($this->db->select('statistics_resource_views', 'statisticsresourceviewsCount')))
         {
             $fields['access'] = $this->messages->text("search", "access");
         }
@@ -2928,7 +2928,7 @@ class SEARCH
             'addedBy' => ['resourcemiscAddUserIdResource', 'resource_misc', 'resourcemiscId'],
             'editedBy' => ['resourcemiscEditUserIdResource', 'resource_misc', 'resourcemiscId'],
             'publicationYear' => ['resourceyearYear1', 'resource_year', 'resourceyearId'],
-            'access' => ['resourcemiscAccesses', 'resource_misc', 'resourcemiscId'],
+            'access' => ['statisticsresourceviewsCount', 'statistics_resource_views', 'statisticsresourceviewsResourceId'],
             'maturityIndex' => ['resourcemiscMaturityIndex', 'resource_misc', 'resourcemiscId'],
         ];
         // Add any used custom fields

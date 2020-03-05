@@ -181,8 +181,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_attachments` (
   `resourceattachmentsFileName` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceattachmentsFileType` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceattachmentsFileSize` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourceattachmentsDownloads` int(11) DEFAULT 0,
-  `resourceattachmentsDownloadsPeriod` int(11) DEFAULT 0,
   `resourceattachmentsPrimary` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   `resourceattachmentsTimestamp` datetime DEFAULT current_timestamp(),
   `resourceattachmentsEmbargo` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
@@ -291,8 +289,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_misc` (
   `resourcemiscTag` int(11) DEFAULT NULL,
   `resourcemiscAddUserIdResource` int(11) DEFAULT NULL,
   `resourcemiscEditUserIdResource` int(11) DEFAULT NULL,
-  `resourcemiscAccesses` int(11) DEFAULT 1,
-  `resourcemiscAccessesPeriod` int(11) DEFAULT 1,
   `resourcemiscMaturityIndex` double DEFAULT 0,
   `resourcemiscPeerReviewed` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   `resourcemiscQuarantine` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
@@ -365,14 +361,25 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_year` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%statistics` (
-  `statisticsId` int(11) NOT NULL AUTO_INCREMENT,
-  `statisticsResourceId` int(11) NOT NULL,
-  `statisticsAttachmentId` int(11) DEFAULT NULL,
-  `statisticsStatistics` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  PRIMARY KEY (`statisticsId`),
-  KEY `statisticsResourceId` (`statisticsResourceId`),
-  KEY `statisticsAttachmentId` (`statisticsAttachmentId`)
+CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%statistics_attachment_downloads` (
+  `statisticsattachmentdownloadsId` int(11) NOT NULL AUTO_INCREMENT,
+  `statisticsattachmentdownloadsResourceId` int(11) NOT NULL,
+  `statisticsattachmentdownloadsAttachmentId` int(11) NOT NULL,
+  `statisticsattachmentdownloadsCount` int(11) DEFAULT 0,
+  `statisticsattachmentdownloadsMonth` int(11) DEFAULT 0,
+  PRIMARY KEY (`statisticsattachmentdownloadsId`),
+  KEY `statisticsattachmentdownloadsAttachmentId` (`statisticsattachmentdownloadsAttachmentId`),
+  KEY `statisticsattachmentdownloadsResourceId` (`statisticsattachmentdownloadsResourceId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%statistics_resource_views` (
+  `statisticsresourceviewsId` int(11) NOT NULL AUTO_INCREMENT,
+  `statisticsresourceviewsResourceId` int(11) NOT NULL,
+  `statisticsresourceviewsCount` int(11) DEFAULT 0,
+  `statisticsresourceviewsMonth` int(11) DEFAULT 0,
+  PRIMARY KEY (`statisticsresourceviewsId`),
+  KEY `statisticsresourceviewsResourceId` (`statisticsresourceviewsResourceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 
@@ -431,7 +438,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%users` (
   `usersListlink` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   `usersTemplateMenu` int(11) DEFAULT NULL,
   `usersGDPR` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
-  `usersChangePasswordTimestamp` datetime DEFAULT current_timestamp(),
   `usersBlock` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
   PRIMARY KEY (`usersId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

@@ -597,10 +597,9 @@ class MENU
                     $messages->text("menu", "listPublisher") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=publisher',
                     $messages->text("menu", "listYear") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=year',
                     $messages->text("menu", "listTimestamp") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=timestamp',
-                    $messages->text("menu", "listPopularity") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=popularityIndex',
                     $messages->text("menu", "listViews") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=viewsIndex',
-                    $messages->text("menu", "listDownloads") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=downloadsIndex',
-                    $messages->text("menu", "listMaturity") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=maturityIndex',
+                    $messages->text("menu", "listMaturity") => 
+                    	'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=maturityIndex',
                 ],
                 'browseSub' => [
                     $messages->text("menu", "browseSub") => FALSE,
@@ -620,6 +619,13 @@ class MENU
                 ],
                 $messages->text("menu", "categoryTree") => 'index.php?action=browse_CATEGORYTREE_CORE',
             ];
+            if (!WIKINDX_FILE_VIEW_LOGGEDON_ONLY)
+            {
+            	$this->search['listSub'][$messages->text("menu", "listDownloads")] = 
+            		'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=downloadsIndex';
+            	$this->search['listSub'][$messages->text("menu", "listPopularity")] = 
+            		'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=popularityIndex';
+            }
         }
         // There is no collection, an empty menu entry can be injected.
         // We remove it before rendering.

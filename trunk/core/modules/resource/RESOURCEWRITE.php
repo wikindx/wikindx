@@ -486,7 +486,7 @@ class RESOURCEWRITE
         {
             $this->db->formatConditions(['resourcemiscId' => $this->resourceId]);
             $resultset = $this->db->select('resource_misc', ['resourcemiscTag', 'resourcemiscAddUserIdResource',
-                'resourcemiscAccesses', 'resourcemiscAccessesPeriod', 'resourcemiscMaturityIndex', 'resourcemiscQuarantine', ]);
+                'resourcemiscMaturityIndex', 'resourcemiscQuarantine', ]);
             while ($row = $this->db->fetchRow($resultset))
             {
                 if ($row['resourcemiscTag'])
@@ -496,14 +496,6 @@ class RESOURCEWRITE
                 if ($row['resourcemiscAddUserIdResource'])
                 {
                     $writeArray['resourcemiscAddUserIdResource'] = $row['resourcemiscAddUserIdResource'];
-                }
-                if ($row['resourcemiscAccesses'])
-                {
-                    $writeArray['resourcemiscAccesses'] = $row['resourcemiscAccesses'];
-                }
-                if ($row['resourcemiscAccessesPeriod'])
-                {
-                    $writeArray['resourcemiscAccessesPeriod'] = $row['resourcemiscAccessesPeriod'];
                 }
                 if ($row['resourcemiscMaturityIndex'])
                 {

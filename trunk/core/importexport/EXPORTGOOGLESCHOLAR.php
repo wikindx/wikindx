@@ -170,13 +170,13 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
             }
             if ($multiple && ($row['resourceattachmentsPrimary'] == 'Y'))
             {
-                $primary = $attach->makeLink($row, $multiple, FALSE, FALSE);
+                $primary = $attach->makeLink($row, $resourceId, $multiple, FALSE, FALSE);
 
                 break;
             }
             elseif (!$multiple)
             {
-                $primary = $attach->makeLink($row, $multiple, FALSE, FALSE);
+                $primary = $attach->makeLink($row, $resourceId, $multiple, FALSE, FALSE);
             }
         }
 

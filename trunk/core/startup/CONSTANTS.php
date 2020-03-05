@@ -43,7 +43,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.2.2');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 12.0);
+define('WIKINDX_INTERNAL_VERSION', 13.0);
 /**
  * Plugin compatibility -- x.x (usually matching the major WIKINDX version) which must be changed each time plugins require an
  * upgrade to match the WIKINDX code. The plugin's $config->wikindxVersion must be equal to this value for the plugin to be compatible.
@@ -231,3 +231,11 @@ define('WIKINDX_SITEMAP_PAGE', '/index.php?action=sitemap_SITEMAP_CORE');
  * @name WIKINDX_SITEMAP_MAXSIZE
  */
 define('WIKINDX_SITEMAP_MAXSIZE', 500);
+
+/**
+ * STATISTICS WEIGHTS
+ *
+ * The two values here are relative to each other and should total 1.0.
+ */
+define('WIKINDX_POPULARITY_VIEWS_WEIGHT', 0.25);
+define('WIKINDX_POPULARITY_DOWNLOADS_WEIGHT', 0.75);

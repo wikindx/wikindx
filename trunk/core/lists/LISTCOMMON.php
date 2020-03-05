@@ -431,18 +431,33 @@ class LISTCOMMON
     public function displayOrder($type, $reorder = FALSE)
     {
         if (($type == 'list') && !$this->browse)
-        {
-            $order = [
-                "creator" => $this->messages->text("list", "creator"),
-                "title" => $this->messages->text("list", "title"),
-                "publisher" => $this->messages->text("list", "publisher"),
-                "year" => $this->messages->text("list", "year"),
-                "timestamp" => $this->messages->text("list", "timestamp"),
-                "popularityIndex" => $this->messages->text("list", "popularity"),
-                "viewsIndex" => $this->messages->text("list", "views"),
-                "downloadsIndex" => $this->messages->text("list", "downloads"),
-                "maturityIndex" => $this->messages->text("list", "maturity"),
-            ];
+        {            
+    		if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId"))
+            {				$order = [
+					"creator" => $this->messages->text("list", "creator"),
+					"title" => $this->messages->text("list", "title"),
+					"publisher" => $this->messages->text("list", "publisher"),
+					"year" => $this->messages->text("list", "year"),
+					"timestamp" => $this->messages->text("list", "timestamp"),
+					"viewsIndex" => $this->messages->text("list", "views"),
+					"maturityIndex" => $this->messages->text("list", "maturity"),
+				];
+
+            }
+            else
+            {
+				$order = [
+					"creator" => $this->messages->text("list", "creator"),
+					"title" => $this->messages->text("list", "title"),
+					"publisher" => $this->messages->text("list", "publisher"),
+					"year" => $this->messages->text("list", "year"),
+					"timestamp" => $this->messages->text("list", "timestamp"),
+					"popularityIndex" => $this->messages->text("list", "popularity"),
+					"viewsIndex" => $this->messages->text("list", "views"),
+					"downloadsIndex" => $this->messages->text("list", "downloads"),
+					"maturityIndex" => $this->messages->text("list", "maturity"),
+				];
+			}
         }
         else
         {
@@ -586,7 +601,7 @@ class LISTCOMMON
             }
             else
             {
-                $files[] = $attachments->makeLink($row, TRUE, FALSE);
+                $files[] = $attachments->makeLink($row, $row['resourceattachmentsResourceId'], TRUE, FALSE);
                 $ids[] = \HTML\a($this->icons->getClass("view"), $this->icons->getHTML("view"), "index.php?action=resource_RESOURCEVIEW_CORE" .
                     htmlentities("&id=" . $row['resourceattachmentsResourceId']));
             }
@@ -718,50 +733,18 @@ class LISTCOMMON
             // Check if these resources have attachments and display view icons accordingly. Also, calculate the resource's popularity index
             if ($this->session->getVar("setup_UserId") || !WIKINDX_FILE_VIEW_LOGGEDON_ONLY)
             {
-                $mdr = $this->stats->getMaxDownloadRatio();
-                $mar = $this->stats->getMaxAccessRatio();
-                // avoid division by 0
-                if (!$mdr)
-                {
-                    $mdr = 1;
-                }
-                if (!$mar)
-                {
-                    $mar = 1;
-                }
-                // build inner SELECT statement
-                $dr = $this->db->dateDiffRatio('resourceattachmentsDownloads', 'resourceattachmentsTimestamp', 'downloadRatio', 'AVG', 0);
-                $this->db->groupBy('resourceattachmentsResourceId');
-                $raId = $this->db->formatFields('resourceattachmentsResourceId');
-                $innerSubQ = $this->db->selectNoExecute('resource_attachments', [$raId, $dr], FALSE, FALSE, TRUE);
-                $innerSubQ = $this->db->subQuery($innerSubQ, 't1');
-                // build middle SELECT statement
-                $middleSubQ = $this->db->selectNoExecuteFromSubQuery(FALSE, ['resourceattachmentsResourceId', 'downloadRatio'], $innerSubQ);
-                $middleSubQ = $this->db->subQuery($middleSubQ, 't2', FALSE);
-                // build outer SELECT statement
-                $pi = $this->db->dateDiffRatio('resourcemiscAccesses', 'resourcetimestampTimestampAdd', FALSE, '', 0);
-                $pi = $this->db->round('((' . $pi . ") / $mar) * 0.25 + ((" . $this->db->formatFields('downloadRatio') . " / $mdr) * 0.75)", 'popIndex', 2);
-                $this->db->formatConditionsOneField(array_keys($resources), 'resourcemiscId');
-                $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'resourcemiscId');
-                $this->db->leftJoinSubQuery($middleSubQ, 't2.resourceattachmentsResourceId', 'resource_misc.resourcemiscId');
-                $this->db->groupBy(['resourcemiscId', 't2.resourceattachmentsResourceId', 'resourcemiscAccesses', 'resourcetimestampTimestampAdd', 't2.downloadRatio']);
-                $resultSet = $this->db->select('resource_misc', ['resourcemiscId', $pi, 'downloadRatio', 'resourceattachmentsResourceId'], FALSE, FALSE);
-                while ($row = $this->db->fetchRow($resultSet))
-                {
-                    if ($row['resourceattachmentsResourceId'])
-                    {
-                        $attachments[$row['resourcemiscId']] = TRUE;
-                    }
-                    if ($row['popIndex'])
-                    {
-                        $popIndex = $row['popIndex'] * 100;
-                    }
-                    else
-                    {
-                        $popIndex = 0;
-                    }
-                    $resourceList[$row['resourcemiscId']]['popIndex'] = $this->messages->text("misc", "popIndex", $popIndex);
-                }
+				foreach ($resourceList as $resourceId => $resourceArray)
+				{
+					if (array_key_exists('index', $this->rows[$resourceId])) // listing by popularity index so index already calculated from database
+					{
+						$popIndex = $this->rows[$resourceId]['index'] * 100;
+					}
+					else
+					{
+						$popIndex = $this->stats->getPopularityIndex($resourceId);
+					}
+					$resourceList[$resourceId]['popIndex'] = $this->messages->text("misc", "popIndex", $popIndex);
+				}
             }
             // Check if these resources have metadata and display view icons accordingly
             $this->db->formatConditionsOneField(array_keys($resources), 'resourcemetadataResourceId');

@@ -649,13 +649,13 @@ class STATS
     */
     private function resourceAccesses()
     {
-        $row = $this->db->selectMax('resource_misc', 'resourcemiscAccesses');
+        $row = $this->db->selectMax('statistics_resource_views', 'statisticsresourceviewsCount');
         $string = $this->messages->text("statistics", "maxAccesses") .
-            "&nbsp;&nbsp;" . \HTML\em($row['resourcemiscAccesses']);
-        $recordset = $this->db->selectMin('resource_misc', 'resourcemiscAccesses');
+            "&nbsp;&nbsp;" . \HTML\em($row['statisticsresourceviewsCount']);
+        $recordset = $this->db->selectMin('statistics_resource_views', 'statisticsresourceviewsCount');
         $row = $this->db->fetchRow($recordset);
         $string .= BR . $this->messages->text("statistics", "minAccesses") .
-            "&nbsp;&nbsp;" . \HTML\em($row['resourcemiscAccesses']);
+            "&nbsp;&nbsp;" . \HTML\em($row['statisticsresourceviewsCount']);
 
         return \HTML\p($string);
     }

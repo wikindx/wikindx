@@ -900,26 +900,26 @@ class UPDATEDATABASE
 				{
 					if ($insertCount == 5000)
 					{
-						$this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, join($insertAttachmentValues, ', '));
+						$this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
 						$insertCount = 0;
 						$insertAttachmentValues = [];
 					}
 					else
 					{
-						$insertAttachmentValues[] = '(' . $row['statisticsResourceId'] . ',' . join($insertValues, ',') . ')';
+						$insertAttachmentValues[] = '(' . $row['statisticsResourceId'] . ',' . implode(',', $insertValues) . ')';
 					}
 				}
 				else
 				{
 					if ($insertCount == 5000)
 					{
-						$this->db->multiInsert('statistics_resource_views', $resourceInsertFields, join($insertResourceValues, ', '));
+						$this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
 						$insertCount = 0;
 						$insertResourceValues = [];
 					}
 					else
 					{
-						$insertResourceValues[] = '(' . join($insertValues, ',') . ')';
+						$insertResourceValues[] = '(' . implode(, ','$insertValues, ) . ')';
 					}
 				}
 				++$insertCount;

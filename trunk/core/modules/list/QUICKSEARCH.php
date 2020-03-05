@@ -284,23 +284,23 @@ class QUICKSEARCH
             $this->parseWord();
             $resourcesFound = FALSE;
 // Deal with OR strings first
-			$ors = join($this->db->or, $this->parsePhrase->ors); // shouldn't be necessary as there should only be one element
-			$orsFT = join(' ', $this->parsePhrase->orsFT);
+			$ors = implode($this->db->or, $this->parsePhrase->ors); // shouldn't be necessary as there should only be one element
+			$orsFT = implode(' ', $this->parsePhrase->orsFT);
 			if ($ors && $this->getInitialIds($ors, $orsFT, 'or'))
 			{
 				$resourcesFound = TRUE;
 			}
 // Deal with AND strings next
-			$ands = join($this->db->and, $this->parsePhrase->ands); // shouldn't be necessary as there should only be one element
-			$andsFT = join(' ', $this->parsePhrase->andsFT);
+			$ands = implode($this->db->and, $this->parsePhrase->ands); // shouldn't be necessary as there should only be one element
+			$andsFT = implode(' ', $this->parsePhrase->andsFT);
 			if ($ands && $this->getInitialIds($ands, $andsFT, 'and'))
 			{
 				$resourcesFound = TRUE;
 			}
 			unset($andIds);
 // Finally, deal with NOT strings. We match IDs using OR then subtract the found ids from the main ids array
-			$nots = join($this->db->or, $this->parsePhrase->nots); // shouldn't be necessary as there should only be one element
-			$notsFT = join(' ', $this->parsePhrase->notsFT);
+			$nots = implode($this->db->or, $this->parsePhrase->nots); // shouldn't be necessary as there should only be one element
+			$notsFT = implode(' ', $this->parsePhrase->notsFT);
 			if ($nots && $this->getInitialIds($nots, $notsFT, 'not'))
 			{
 				$resourcesFound = TRUE;

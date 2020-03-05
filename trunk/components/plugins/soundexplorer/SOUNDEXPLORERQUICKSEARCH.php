@@ -469,11 +469,11 @@ class SOUNDEXPLORERQUICKSEARCH
                     {
                         $creatorCondArray[] = $this->db->equal . $this->db->formatFields($cAlias);
                     }
-                    $this->db->formatConditions($masterCreatorId . join($this->db->and . $masterCreatorId, $creatorCondArray));
+                    $this->db->formatConditions($masterCreatorId . implode($this->db->and . $masterCreatorId, $creatorCondArray));
                     $creatStmt = $this->db->selectNoExecuteFromSubQuery(
                         FALSE,
                         $masterCreatorId,
-                        $this->db->from . join(', ', $creatorStmts),
+                        $this->db->from . implode(', ', $creatorStmts),
                         FALSE,
                         FALSE,
                         TRUE
@@ -503,12 +503,12 @@ class SOUNDEXPLORERQUICKSEARCH
         if (!empty($conditionArray))
         {
             $conditionJoin = $this->input['FieldMethod'] == 'OR' ? $this->db->or : $this->db->and;
-            $this->execCond[] = ('(' . join($conditionJoin, array_map([$this, 'addBrackets'], $conditionArray)) . ')');
+            $this->execCond[] = ('(' . implode($conditionJoin, array_map([$this, 'addBrackets'], $conditionArray)) . ')');
         }
         if (!empty($metaCond))
         {
             $conditionJoin = $this->input['FieldMethod'] == 'OR' ? $this->db->or : $this->db->and;
-            $this->execCond[] = ('(' . join($conditionJoin, array_map([$this, 'addBrackets'], $metaCond)) . ')');
+            $this->execCond[] = ('(' . implode($conditionJoin, array_map([$this, 'addBrackets'], $metaCond)) . ')');
         }
         $this->executeCondJoin();
     }

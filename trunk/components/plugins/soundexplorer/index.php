@@ -436,7 +436,7 @@ END;
 
         if (is_array($array))
         {
-            $waves = "['" . join("', '", $array) . "']";
+            $waves = "['" . implode("', '", $array) . "']";
             $scriptInsert .= '<script>window.onload = sePlay(' . $waves . ');</script>';
         }
 

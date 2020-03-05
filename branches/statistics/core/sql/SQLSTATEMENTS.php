@@ -275,9 +275,13 @@ class SQLSTATEMENTS
         $this->db->ascDesc = $this->session->getVar($this->listMethodAscDesc);
         $np = [];
         $limit = FALSE;
-        if ((GLOBALS::getUserVar('PagingStyle') != 'A') || ((GLOBALS::getUserVar('PagingStyle') == 'A') && !in_array($order, ['title', 'creator', 'attachments'])))
+        if ((GLOBALS::getUserVar('PagingStyle') != 'A') || ((GLOBALS::getUserVar('PagingStyle') == 'A') && 
+        	!in_array($order, ['title', 'creator', 'attachments'])))
         {
-            $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->common->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
+        	if ($order != 'popularityIndex') // limit is set in the inner statement
+        	{
+            	$limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->common->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
+            }
         }
         if ($order == 'title')
         {
@@ -444,6 +448,14 @@ class SQLSTATEMENTS
             $table,
             $subQ
         );
+        if ($order == 'popularityIndex')
+        {
+            $this->db->ascDesc = $this->session->getVar("list_AscDesc");
+        	$orderBy = $this->db->orderBy('index', TRUE, FALSE, TRUE);
+        	$limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->common->pagingObject->start, TRUE);
+        	$clause = ' ' . $orderBy . ' ' . $limit;
+        	$this->totalResourceSubquery = str_replace('W!K!NDXW!K!NDXW!K!NDX', $clause, $this->totalResourceSubquery);
+        }
         if (!$this->session->getVar("list_AllIds"))
         {
             return FALSE;
@@ -641,7 +653,7 @@ class SQLSTATEMENTS
 // Create temp table for resource views
 			$dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'accessRatio');
 			$sumClause = $this->db->sum('statisticsresourceviewsCount', 'count');
-			$this->db->formatConditions(['resourcetimestampTimestampAdd' => 'IS NOT NULL']);
+//			$this->db->formatConditions(['resourcetimestampTimestampAdd' => 'IS NOT NULL']);
 			$this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
 			$this->db->groupBy('statisticsresourceviewsResourceId');
 			$subQ = $this->db->subQuery(
@@ -695,6 +707,7 @@ class SQLSTATEMENTS
                 FALSE,
                 FALSE
             ));
+            $indicesQuery .= 'W!K!NDXW!K!NDXW!K!NDX';
         }
         return $indicesQuery;
     }

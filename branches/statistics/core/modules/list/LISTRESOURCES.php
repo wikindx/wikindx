@@ -41,7 +41,13 @@ class LISTRESOURCES
             $badInput->close($this->messages->text("misc", "noResources"));
         }
         //		$sq = $this->session->getVar("list_SubQuery");
+// Clear previous list info except AscDesc when paging
+		$ascDesc = $this->session->getVar('list_AscDesc');
         $this->session->clearArray('list');
+		if (!array_key_exists('list_AscDesc', $this->vars)) // paging
+		{
+			$this->session->setVar('list_AscDesc', $ascDesc);
+		}
         //		$this->session->setVar("list_SubQuery", $sq);
         $this->session->delVar("mywikindx_PagingStart");
         $this->session->delVar("mywikindx_PagingStartAlpha");
@@ -70,8 +76,8 @@ class LISTRESOURCES
         {
             $badInput->close($errors->text("inputError", "missing"));
         }
-        if ($method != 'reorder')
-        {
+        if (($method != 'reorder') && !$this->session->issetVar("list_AscDesc"))
+        {print 'here';
             switch ($this->session->getVar("list_Order"))
             {
                 case 'creator':

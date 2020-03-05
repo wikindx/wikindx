@@ -2393,8 +2393,9 @@ SQLCODE;
      * @param string $field
      * @param bool $tidy Default is TRUE. If TRUE, format fields for database type
      * @param bool $removeBraces Default is TRUE. If TRUE, remove {...} braces
+     * @param bool $returnString Default is FALSE. If TRUE, return the ORDER BY clause as a string
      */
-    public function orderBy($field, $tidy = TRUE, $removeBraces = TRUE)
+    public function orderBy($field, $tidy = TRUE, $removeBraces = TRUE, $returnString = FALSE)
     {
         if ($tidy)
         {
@@ -2405,7 +2406,10 @@ SQLCODE;
         {
             $field = $this->replace($this->replace($field, '{', '', FALSE), '}', '', FALSE);
         }
-
+		if ($returnString)
+		{
+			return ' ORDER BY ' . $field . ' ' . $this->ascDesc;
+		}
         $this->order[] = $field . ' ' . $this->ascDesc;
 
         $this->collateSet = FALSE; // reset

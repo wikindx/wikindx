@@ -860,24 +860,22 @@ class UPDATEDATABASE
 				{
 					$count = 0;
 				}
-			    // If the mounth is too short (year incomplete), skip the line
+				
+			    // If the month (period) is too short or long (YYYYMM format expected), skip this stat
 			    $month = trim($month . "");
-			    if (strlen($month) < 4) continue;
+			    if (strlen($month) != 6) continue;
 				
-				// Extract and format the the month as YYYYMM
-				$split = str_split($month, 4); // [0] == year, [1] == month
-				$year = intval($split[0]);
-				$month = intval($split[1] ?? "02") - 1;
-				// Assume we don't go earlier than AD 0 ...
-				if ($month == 0)
-				{
-			        $year = --$year;
-			        $month = 12;
-				}
-				$year = strval($year);
-				$month = str_pad(strval($month), 2, "0", STR_PAD_LEFT);
+				$month = intval($month);
 				
-				$insertValues = [$id, $year . $month, $count];
+				// If the month is not in the range 01..12, skip this stat
+				if ($month % 100 > 12) continue;
+				
+				// Shift of one month back
+				$month = $month - 1;
+				// Month 0 doesn't exist, so shift one year back on december
+				$month = ($month % 100 == 0) ? $month - 100 + 12 : $month;
+				
+				$insertValues = [$id, $month, $count];
 				
 				if ($row['statisticsAttachmentId'])
 				{

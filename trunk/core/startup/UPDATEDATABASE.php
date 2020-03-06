@@ -801,6 +801,7 @@ class UPDATEDATABASE
         $this->updateDbSchema('13');
         
         $this->transferStatistics();
+        
         $this->db->queryNoError("DROP TABLE IF EXISTS " . WIKINDX_DB_TABLEPREFIX . "statistics;");
         $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_misc DROP COLUMN resourcemiscAccesses");
         $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_misc DROP COLUMN resourcemiscAccessesPeriod");
@@ -815,6 +816,7 @@ class UPDATEDATABASE
        		$this->db->formatConditions(['resourceattachmentsId' => $row['resourceattachmentsId']]);
         	$this->db->updateTimestamp('resource_attachments', ['resourceattachmentsTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
+        
         $this->updateSoftwareVersion(13);
         $this->checkStatus('stage13');
         $this->pauseExecution('stage13');
@@ -826,27 +828,42 @@ class UPDATEDATABASE
      */
     private function transferStatistics()
     {
-// 1. Past statistics from statistics table
-		$resultSet = $this->db->select('statistics', ['statisticsResourceId', 'statisticsAttachmentId', 'statisticsStatistics']);
-		$insertCount = 0;
+		$resourceInsertFields = ['statisticsresourceviewsResourceId', 'statisticsresourceviewsMonth', 'statisticsresourceviewsCount'];
+		$attachmentInsertFields = ['statisticsattachmentdownloadsAttachmentId', 'statisticsattachmentdownloadsMonth', 'statisticsattachmentdownloadsCount', 'statisticsattachmentdownloadsResourceId'];
+		
+		$countTransfered = 0;
 		$insertResourceValues = [];
 		$insertAttachmentValues = [];
+		$deleteStatisticsAttachment = [];
+		$deleteStatisticsResource = [];
+		
+// 1. Past statistics from statistics table
+		$resultSet = $this->db->select('statistics', ['statisticsId', 'statisticsResourceId', 'statisticsAttachmentId', 'statisticsStatistics']);
 		while ($row = $this->db->fetchRow($resultSet))
 		{
-			$idField = $row['statisticsAttachmentId'] ? 'statisticsattachmentdownloadsAttachmentId' : 'statisticsresourceviewsResourceId';
-			$monthField = $row['statisticsAttachmentId'] ? 'statisticsattachmentdownloadsMonth' : 'statisticsresourceviewsMonth';
-			$countField = $row['statisticsAttachmentId'] ? 'statisticsattachmentdownloadsCount' : 'statisticsresourceviewsCount';
-			$resourceId = 'statisticsattachmentdownloadsResourceId';
-			$resourceInsertFields = [$idField, $monthField, $countField];
-			$attachmentInsertFields = [$resourceId, $idField, $monthField, $countField];
+			$id = $row['statisticsAttachmentId'] ? $row['statisticsAttachmentId'] : $row['statisticsResourceId'];
+			
+			if ($row['statisticsAttachmentId'])
+		        $deleteStatisticsAttachment[] = $row['statisticsId'];
+			else
+		        $deleteStatisticsResource[] = $row['statisticsId'];
+			
 			$statsArray = unserialize(base64_decode($row['statisticsStatistics']));
+			if ($statsArray === FALSE)
+			{
+			    continue;
+			}
+			
 			foreach ($statsArray as $month => $count)
 			{
-				$insertValues = [];
-				$id = $row['statisticsAttachmentId'] ? $row['statisticsAttachmentId'] : $row['statisticsResourceId'];
+			    // If the mounth is too short (year incomplete), skip the line
+			    $month = trim($month . "");
+			    if (strlen($month) < 4) continue;
+				
+				// Extract and format the the month as YYYYMM
 				$split = str_split($month, 4); // [0] == year, [1] == month
 				$year = intval($split[0]);
-				$month = intval($split[1]) - 1;
+				$month = intval($split[1] ?? "02") - 1;
 				// Assume we don't go earlier than AD 0 ...
 				if ($month == 0)
 				{
@@ -855,36 +872,82 @@ class UPDATEDATABASE
 				}
 				$year = strval($year);
 				$month = str_pad(strval($month), 2, "0", STR_PAD_LEFT);
+				
 				$insertValues = [$id, $year . $month, $count];
+				
 				if ($row['statisticsAttachmentId'])
 				{
-					if ($insertCount == 5000)
+				    $deleteStatisticsAttachment[] = $row['statisticsId'];
+				    $insertValues[] = $row['statisticsResourceId'];
+				    $insertAttachmentValues[] = '(' . implode(',', $insertValues, ) . ')';
+				    
+					if (count($insertAttachmentValues) % 1000 == 0)
 					{
 						$this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
-						$insertCount = 0;
+						$countTransfered += count($insertAttachmentValues);
 						$insertAttachmentValues = [];
-					}
-					else
-					{
-						$insertAttachmentValues[] = '(' . $row['statisticsResourceId'] . ',' . implode(',', $insertValues) . ')';
+						
+                        $this->db->formatConditionsOneField($deleteStatisticsAttachment, 'statisticsId');
+                        $this->db->delete('statistics');
+				        $deleteStatisticsAttachment = [];
 					}
 				}
 				else
 				{
-					if ($insertCount == 5000)
+				    $deleteStatisticsResource[] = $row['statisticsId'];
+				    $insertResourceValues[] = '(' . implode(',', $insertValues, ) . ')';
+				    
+					if (count($insertResourceValues) % 1000 == 0)
 					{
 						$this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
-						$insertCount = 0;
+						$countTransfered += count($insertResourceValues);
 						$insertResourceValues = [];
-					}
-					else
-					{
-						$insertResourceValues[] = '(' . implode(',', $insertValues, ) . ')';
+						
+                        $this->db->formatConditionsOneField($deleteStatisticsResource, 'statisticsId');
+                        $this->db->delete('statistics');
+				        $deleteStatisticsResource = [];
 					}
 				}
-				++$insertCount;
 			}
+			
+            // Check we have more than 6 seconds buffer before max_execution_time times out.
+            if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)) || $countTransfered >= 200000)
+            {
+                $this->session->setVar('stage3UpgradeContinueAttach', TRUE);
+                $this->checkStatus('stage13');
+                $this->stageInterruptMessage = "stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
+                $this->pauseExecution('stage13', 'stage13');
+            }
 		}
+		// Remaining past statistics
+		if (count($insertAttachmentValues) > 0)
+		{
+			$this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
+		}
+		if (count($insertResourceValues) > 0)
+		{
+			$this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
+		}
+		if (count($deleteStatisticsAttachment) > 0)
+		{
+            $this->db->formatConditionsOneField($deleteStatisticsAttachment, 'statisticsId');
+            $this->db->delete('statistics');
+		}
+		if (count($deleteStatisticsResource) > 0)
+		{
+            $this->db->formatConditionsOneField($deleteStatisticsResource, 'statisticsId');
+            $this->db->delete('statistics');
+		}
+		
+        // Check we have more than 6 seconds buffer before max_execution_time times out.
+        if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)))
+        {
+            $this->session->setVar('stage3UpgradeContinueAttach', TRUE);
+            $this->checkStatus('stage13');
+            $this->stageInterruptMessage = "stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
+            $this->pauseExecution('stage13', 'stage13');
+        }
+        
 // 2. Current statistics for views and downloads
 		$month = date('Ym');
 		$resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod']);

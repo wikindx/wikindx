@@ -948,7 +948,7 @@ class UPDATEDATABASE
             $this->pauseExecution('stage13', 'stage13');
         }
         
-// 2. Current statistics for views and downloads
+// 2. Current statistics for views
 		$month = date('Ym');
 		$insertResourceValues = [];
 		$resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod']);
@@ -977,6 +977,7 @@ class UPDATEDATABASE
 			);
 		}
 		
+// 3. Current statistics for downloads
 		$insertAttachmentValues = [];
 		$resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsDownloadsPeriod']);
 		while ($row = $this->db->fetchRow($resultSet))

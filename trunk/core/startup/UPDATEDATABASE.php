@@ -950,34 +950,59 @@ class UPDATEDATABASE
         
 // 2. Current statistics for views and downloads
 		$month = date('Ym');
+		$insertResourceValues = [];
 		$resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod']);
 		while ($row = $this->db->fetchRow($resultSet))
 		{
-			$this->db->insert('statistics_resource_views', 
+		    $insertResourceValues[] = '(' . implode(',', [$row['resourcemiscId'], $month, $row['resourcemiscAccessesPeriod']], ) . ')';
+		    
+		    if (count($insertResourceValues) % 5000 == 0)
+		    {
+    			$this->db->multiInsert('statistics_resource_views',
+    				['statisticsresourceviewsResourceId', 
+    					'statisticsresourceviewsMonth', 
+    					'statisticsresourceviewsCount'],
+    					implode(', ', $insertResourceValues)
+    			);
+    			$insertResourceValues = [];
+			}
+		}
+	    if (count($insertResourceValues) > 0)
+	    {
+			$this->db->multiInsert('statistics_resource_views',
 				['statisticsresourceviewsResourceId', 
 					'statisticsresourceviewsMonth', 
 					'statisticsresourceviewsCount'],
-				[$row['resourcemiscId'],
-					$month,
-					$row['resourcemiscAccessesPeriod']]
+					implode(', ', $insertResourceValues)
 			);
 		}
-		$resultSet = $this->db->select('resource_attachments', 
-			['resourceattachmentsId', 
-			'resourceattachmentsResourceId', 
-			'resourceattachmentsDownloadsPeriod']
-		);
+		
+		$insertAttachmentValues = [];
+		$resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsDownloadsPeriod']);
 		while ($row = $this->db->fetchRow($resultSet))
 		{
-			$this->db->insert('statistics_attachment_downloads', 
+		    $insertAttachmentValues[] = '(' . implode(',', [$row['resourceattachmentsResourceId'], $row['resourceattachmentsId'], $month, $row['resourceattachmentsDownloadsPeriod']], ) . ')';
+		    
+		    if (count($insertAttachmentValues) % 5000 == 0)
+		    {
+    		    $this->db->multiInsert('statistics_attachment_downloads',
+    				['statisticsattachmentdownloadsResourceId',
+    					'statisticsattachmentdownloadsAttachmentId', 
+    					'statisticsattachmentdownloadsMonth', 
+    					'statisticsattachmentdownloadsCount'],
+    					implode(', ', $insertAttachmentValues)
+    			);
+    			$insertAttachmentValues = [];
+			}
+		}
+	    if (count($insertAttachmentValues) > 0)
+	    {
+		    $this->db->multiInsert('statistics_attachment_downloads',
 				['statisticsattachmentdownloadsResourceId',
 					'statisticsattachmentdownloadsAttachmentId', 
 					'statisticsattachmentdownloadsMonth', 
 					'statisticsattachmentdownloadsCount'],
-				[$row['resourceattachmentsResourceId'],
-					$row['resourceattachmentsId'],
-					$month,
-					$row['resourceattachmentsDownloadsPeriod']]
+					implode(', ', $insertAttachmentValues)
 			);
 		}
     }

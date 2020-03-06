@@ -278,7 +278,7 @@ class SQLSTATEMENTS
         if ((GLOBALS::getUserVar('PagingStyle') != 'A') || ((GLOBALS::getUserVar('PagingStyle') == 'A') && 
         	!in_array($order, ['title', 'creator', 'attachments'])))
         {
-        	if ($order != 'popularityIndex') // limit is set in the inner statement
+        	if (($order != 'popularityIndex') && ($order != 'viewsIndex')) // limit is set in the inner statement
         	{
             	$limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->common->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
             }
@@ -394,6 +394,10 @@ class SQLSTATEMENTS
      * Create subquery initial order SELECT statement with minimal fields.
      * Function specific to core/modules/list/LISTRESOURCES.php (Quick List ALL operations) and core/modules/basket/BASKET.php
      *
+     * When ordering by viewsIndex or popularityIndex, each resource is guaranteed to have a vlaue for each of these fields. 
+     * This means we can use an inner SELECT to order on one of those fields and to limit the results – finer ordering on that field and 
+     * other fields is accomplished in the outer SELECT. This has a dramatic effect on speed . . .
+     *
      * @param string|FALSE $order Default is FALSE
      * @param string|FALSE $queryString Default is FALSE
      * @param string|FALSE $totalSubQuery Default is FALSE
@@ -448,14 +452,14 @@ class SQLSTATEMENTS
             $table,
             $subQ
         );
-        if ($order == 'popularityIndex')
+        if (($order == 'popularityIndex') || ($order == 'viewsIndex'))
         {
-            $this->db->ascDesc = $this->session->getVar("list_AscDesc");
-        	$orderBy = $this->db->orderBy('index', TRUE, FALSE, TRUE);
-        	$limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->common->pagingObject->start, TRUE);
-        	$clause = ' ' . $orderBy . ' ' . $limit;
-        	$this->totalResourceSubquery = str_replace('W!K!NDXW!K!NDXW!K!NDX', $clause, $this->totalResourceSubquery);
-        }
+			$this->db->ascDesc = $this->session->getVar("list_AscDesc");
+			$orderBy = $this->db->orderBy('index', TRUE, FALSE, TRUE);
+			$limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->common->pagingObject->start, TRUE);
+			$clause = ' ' . $orderBy . ' ' . $limit;
+			$this->totalResourceSubquery = str_replace('W!K!NDXW!K!NDXW!K!NDX', $clause, $this->totalResourceSubquery);
+		}
         if (!$this->session->getVar("list_AllIds"))
         {
             return FALSE;
@@ -595,21 +599,27 @@ class SQLSTATEMENTS
             {
                 $setSum = 0.1; // Avoids divide by 0 but still produces a 0 result
             }
-            $dateDiff = $this->db->dateDiffRatio('statisticsresourceviewsCount', 'resourcetimestampTimestampAdd');
-            $ratio = $this->db->round("$dateDiff / $setSum", 'index');
-            $this->joins['statistics_resource_views'] = ['statisticsresourceviewsResourceId', 'resourcemiscId'];
-            $this->joins['resource_timestamp'] = ['resourcetimestampId', 'resourcemiscId'];
-            $this->db->groupBy(['statisticsresourceviewsResourceId', 'resourcemiscId']);
-            $this->quarantine(FALSE, 'resourcemiscId', FALSE);
-            $this->useBib('resourcemiscId');
+            
+			$dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'index');
+			$sumClause = $this->db->sum('statisticsresourceviewsCount', 'count');
+			$this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
+			$this->db->groupBy('statisticsresourceviewsResourceId');
+			$subQ = $this->db->subQuery(
+				$this->db->selectNoExecute('statistics_resource_views', 
+				[$sumClause, $this->db->formatFields('resourcetimestampTimestampAdd'), 
+					$this->db->formatFields([['statisticsresourceviewsResourceId' => 'rId']])], 
+				FALSE, FALSE),
+				't',
+				TRUE,
+				TRUE
+			);
+			$fields = $this->db->formatFields('rId') . ',' . $dateDiffClause;
+            $this->quarantine(FALSE, 'rId', FALSE);
+            $this->useBib('rId');
             $this->db->ascDesc = $this->session->getVar("list_AscDesc");
-            $this->executeCondJoins();
-            $indicesQuery = $this->db->queryNoExecute($this->db->selectNoExecute(
-                'resource_misc',
-                $this->db->formatFields([['resourcemiscId' => 'rId']]) . ', ' . $ratio,
-                FALSE,
-                FALSE
-            ));
+			$indicesQuery = $this->db->selectNoExecuteFromSubQuery(FALSE, $fields, $subQ, FALSE, FALSE);
+			
+            $indicesQuery .= 'W!K!NDXW!K!NDXW!K!NDX';
         }
         elseif ($order == 'downloadsIndex')
         {
@@ -653,7 +663,6 @@ class SQLSTATEMENTS
 // Create temp table for resource views
 			$dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'accessRatio');
 			$sumClause = $this->db->sum('statisticsresourceviewsCount', 'count');
-//			$this->db->formatConditions(['resourcetimestampTimestampAdd' => 'IS NOT NULL']);
 			$this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
 			$this->db->groupBy('statisticsresourceviewsResourceId');
 			$subQ = $this->db->subQuery(

@@ -44,7 +44,7 @@ class LISTRESOURCES
 // Clear previous list info except AscDesc when paging
 		$ascDesc = $this->session->getVar('list_AscDesc');
         $this->session->clearArray('list');
-		if (!array_key_exists('list_AscDesc', $this->vars)) // paging
+		if (array_key_exists('PagingStart', $this->vars)) // paging
 		{
 			$this->session->setVar('list_AscDesc', $ascDesc);
 		}
@@ -77,7 +77,7 @@ class LISTRESOURCES
             $badInput->close($errors->text("inputError", "missing"));
         }
         if (($method != 'reorder') && !$this->session->issetVar("list_AscDesc"))
-        {print 'here';
+        {
             switch ($this->session->getVar("list_Order"))
             {
                 case 'creator':

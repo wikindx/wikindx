@@ -118,7 +118,6 @@ class STATISTICS
         }
         $dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'max', 'MAX');
         $sumClause = $this->db->sum('statisticsresourceviewsCount', 'count');
-        $this->db->formatConditions(['resourcetimestampTimestampAdd' => 'IS NOT NULL']);
         $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
         $this->db->groupBy('statisticsresourceviewsResourceId');
         $subQ = $this->db->subQuery(

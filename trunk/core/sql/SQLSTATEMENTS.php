@@ -600,7 +600,7 @@ class SQLSTATEMENTS
                 $setSum = 0.1; // Avoids divide by 0 but still produces a 0 result
             }
             
-			$dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'index');
+			$dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'index', '', 4);
 			$sumClause = $this->db->sum('statisticsresourceviewsCount', 'count');
 			$this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
 			$this->db->groupBy('statisticsresourceviewsResourceId');
@@ -618,7 +618,6 @@ class SQLSTATEMENTS
             $this->useBib('rId');
             $this->db->ascDesc = $this->session->getVar("list_AscDesc");
 			$indicesQuery = $this->db->selectNoExecuteFromSubQuery(FALSE, $fields, $subQ, FALSE, FALSE);
-			
             $indicesQuery .= 'W!K!NDXW!K!NDXW!K!NDX';
         }
         elseif ($order == 'downloadsIndex')
@@ -628,14 +627,13 @@ class SQLSTATEMENTS
                 $setSum = 0.1;
             }
             $dateDiff = $this->db->dateDiffRatio('statisticsattachmentdownloadsCount', 'resourceattachmentsTimestamp', FALSE, 'AVG', FALSE);
-//            $ratio = $this->db->round("$dateDiff / $setSum");
             $case = $this->db->round($this->db->caseWhen(
                 $this->db->formatFields('resourceattachmentsResourceId'),
                 'IS NULL',
                 '0',
                 "$dateDiff / $setSum",
                 FALSE
-            ), 'index');
+            ), 'index', 4);
             $this->joins['resource_attachments'] = ['resourceattachmentsResourceId', 'resourcemiscId'];
             $this->joins['statistics_attachment_downloads'] = ['statisticsattachmentdownloadsResourceId', 'resourcemiscId'];
             $this->db->groupBy(['statisticsattachmentdownloadsResourceId', 'resourcemiscId']);
@@ -661,7 +659,7 @@ class SQLSTATEMENTS
                 $setSumDownload = 0.1;
             }
 // Create temp table for resource views
-			$dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'accessRatio');
+			$dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'accessRatio', '', 4);
 			$sumClause = $this->db->sum('statisticsresourceviewsCount', 'count');
 			$this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
 			$this->db->groupBy('statisticsresourceviewsResourceId');
@@ -678,7 +676,7 @@ class SQLSTATEMENTS
 			$selectStmt = $this->db->selectNoExecuteFromSubQuery(FALSE, $fields, $subQ, FALSE, FALSE);
             $this->db->createTempTableFromSelect('countsAR', $selectStmt);
 // Create temp table for attachment downloads
-			$dateDiffClause = $this->db->dateDiffRatio('count', 'resourceattachmentsTimestamp');
+			$dateDiffClause = $this->db->dateDiffRatio('count', 'resourceattachmentsTimestamp', '', '', 4);
 			$dateDiffClause = $this->db->ifClause('DATEDIFF(CURRENT_DATE, `resourceattachmentsTimestamp`)', 
 				$this->db->equal . 0 . $this->db->or . ' NULL', 0, 
 				$dateDiffClause, 'downloadRatio');

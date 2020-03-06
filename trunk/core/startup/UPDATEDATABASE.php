@@ -856,6 +856,10 @@ class UPDATEDATABASE
 			
 			foreach ($statsArray as $month => $count)
 			{
+				if (!$count) // Ensure there is a valid INSERT value here. . .
+				{
+					$count = 0;
+				}
 			    // If the mounth is too short (year incomplete), skip the line
 			    $month = trim($month . "");
 			    if (strlen($month) < 4) continue;

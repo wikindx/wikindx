@@ -141,7 +141,6 @@ class MAIL
         {
             $addresses = [$addresses];
         }
-
         // To
         $ToArray = [];
         foreach ($addresses as $address)

@@ -915,7 +915,6 @@ class UPDATEDATABASE
             // Check we have more than 6 seconds buffer before max_execution_time times out.
             if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)) || $countTransfered >= 200000)
             {
-                $this->session->setVar('stage3UpgradeContinueAttach', TRUE);
                 $this->checkStatus('stage13');
                 $this->stageInterruptMessage = "stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
                 $this->pauseExecution('stage13', 'stage13');
@@ -944,7 +943,6 @@ class UPDATEDATABASE
         // Check we have more than 6 seconds buffer before max_execution_time times out.
         if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)))
         {
-            $this->session->setVar('stage3UpgradeContinueAttach', TRUE);
             $this->checkStatus('stage13');
             $this->stageInterruptMessage = "stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
             $this->pauseExecution('stage13', 'stage13');

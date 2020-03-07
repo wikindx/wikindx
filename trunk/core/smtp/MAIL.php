@@ -129,94 +129,142 @@ class MAIL
     public function sendEmail($addresses, $subject, $message, $DebugMode = FALSE)
     {
         $SendStatus = TRUE;
-        
-        // If messaging is turned off, just do nothing
-        if (!WIKINDX_MAIL_USE)
-        {
-            return $SendStatus;
-        }
-        
-        // Avoid a special case
-        if (!is_array($addresses))
-        {
-            $addresses = [$addresses];
-        }
-        // To
-        $ToArray = [];
-        foreach ($addresses as $address)
-        {
-            // Split a single or multiple addresses in RFC822 format
-            $tmpAddresses = $this->mail->parseAddresses(str_replace(';', ',', trim($address)), FALSE);
 
-            // Send one message by address
-            foreach ($tmpAddresses as $tmpAddress)
+        // If the debug mode is enabled,
+        // captures the SMTP log output...
+        if ($DebugMode === TRUE)
+        {
+            // Use only HTML because Wikindx is not usable with a CLI
+            $this->TransactionLog = '';
+            
+            // Display the current config at the top of the log
+            $this->TransactionLog .= "---[CONFIGURATION]------------------------------------------------------";
+            $this->TransactionLog .= BR.BR;
+            foreach([
+                "WIKINDX_MAIL_BACKEND",
+                "WIKINDX_MAIL_FROM",
+                "WIKINDX_MAIL_REPLYTO",
+                "WIKINDX_MAIL_RETURN_PATH",
+                "WIKINDX_MAIL_SENDMAIL_PATH",
+                "WIKINDX_MAIL_SMTP_AUTH",
+                "WIKINDX_MAIL_SMTP_ENCRYPT",
+                "WIKINDX_MAIL_SMTP_PASSWORD",
+                "WIKINDX_MAIL_SMTP_PERSIST",
+                "WIKINDX_MAIL_SMTP_PORT",
+                "WIKINDX_MAIL_SMTP_SERVER",
+                "WIKINDX_MAIL_SMTP_USERNAME",
+                "WIKINDX_MAIL_USE"
+            ] as $k)
             {
-                $ToArray[] = $tmpAddress;
+                if ($k == "WIKINDX_MAIL_SMTP_PASSWORD")
+                    $this->TransactionLog .= $k . " = " . str_repeat("*", 8) . " (hidden value for security; its length is meaningless)" . BR;
+                else
+                    $this->TransactionLog .= $k . " = " . (constant($k) !== FALSE ? constant($k) : "0") . BR;
             }
+            $this->TransactionLog .= BR;
+            $this->TransactionLog .= "---[LOG]----------------------------------------------------------------";
+            $this->TransactionLog .= BR.BR;
+            
+            ob_start();
         }
-
-        // Avoid sending a message if there are no valid address
-        if (count($ToArray) > 0)
+        
+        // If messaging is turned on
+        if (WIKINDX_MAIL_USE)
         {
-            // Message
-            $this->mail->Subject = $subject;
-            $this->mail->Body = $message;
-
-            // If the debug mode is enabled,
-            // captures the SMTP log output...
-            if ($DebugMode === TRUE)
+            // Avoid a special case
+            if (!is_array($addresses))
             {
-                // Use only HTML because Wikindx is not usable with a CLI
-                $this->mail->Debugoutput = 'html';
-                $this->mail->SMTPDebug = 3;
-                $this->TransactionLog = '';
-                ob_start();
+                $addresses = [$addresses];
             }
-
-            // Send one message by address
-            foreach ($ToArray as $To)
+            // To
+            $ToArray = [];
+            foreach ($addresses as $address)
             {
-                $this->mail->addAddress($To['address'], $To['name']);
-                $SendStatus = $this->mail->send();
-
+                // Split a single or multiple addresses in RFC822 format
+                $tmpAddresses = $this->mail->parseAddresses(str_replace(';', ',', trim($address)), FALSE);
+    
+                // Send one message by address
+                foreach ($tmpAddresses as $tmpAddress)
+                {
+                    $ToArray[] = $tmpAddress;
+                }
+            }
+    
+            // Avoid sending a message if there are no valid address
+            if (count($ToArray) > 0)
+            {
+                // Message
+                $this->mail->Subject = $subject;
+                $this->mail->Body = $message;
+    
+                // If the debug mode is enabled,
+                // captures the SMTP log output...
                 if ($DebugMode === TRUE)
                 {
-                    if ($SendStatus)
-                    {
-                        $this->TransactionLog .= "Message sent with " . WIKINDX_MAIL_BACKEND . " backend " .
-                            "to &lt;" . $To['address'] . "&gt; " . "without error.<br>\n\n";
-                    }
-                    else
-                    {
-                        $this->TransactionLog .= $this->mail->ErrorInfo . "<br>\n\n";
-                    }
+                    $this->mail->Debugoutput = 'echo';
+                    $this->mail->SMTPDebug = 3;
                 }
-
-                $this->mail->clearAddresses();
+    
+                // Send one message by address
+                foreach ($ToArray as $To)
+                {
+                    $this->mail->addAddress($To['address'], $To['name']);
+                    $SendStatus = $this->mail->send();
+    
+                    if ($DebugMode === TRUE)
+                    {
+                        echo BR . BR;
+                        if ($SendStatus)
+                        {
+                            echo "Message sent with " . WIKINDX_MAIL_BACKEND . " backend " .
+                                 "to &lt;" . $To['address'] . "&gt; " . "without error.";
+                        }
+                        else
+                        {
+                            echo $this->mail->ErrorInfo;
+                        }
+                        echo BR . BR;
+                    }
+    
+                    $this->mail->clearAddresses();
+                }
+    
+                // If the debug mode is enabled,
+                // ... and save it
+                if ($DebugMode === TRUE)
+                {
+                    $this->mail->SMTPDebug = 0;
+                }
+    
+                // Clear
+                $this->mail->clearBCCs();
+                $this->mail->Subject = '';
+                $this->mail->Body = '';
             }
-
-            // If the debug mode is enabled,
-            // ... and save it
-            if ($DebugMode === TRUE)
+            else
             {
-                $this->TransactionLog .= trim(ob_get_clean());
-                $this->mail->SMTPDebug = 0;
+                if ($DebugMode === TRUE)
+                {
+                    echo "No valid recipient address to send or addresses not RFC822 compliant." . BR;
+                }
+    
+                GLOBALS::setError("No valid recipient address to send to or addresses are not RFC822 compliant.");
+                $SendStatus = FALSE;
             }
-
-            // Clear
-            $this->mail->clearBCCs();
-            $this->mail->Subject = '';
-            $this->mail->Body = '';
         }
         else
         {
             if ($DebugMode === TRUE)
             {
-                $this->TransactionLog .= "No valid recipient address to send or addresses not RFC822 compliant.";
+                echo "The email sending function is disabled." . BR;
             }
+        }
 
-            GLOBALS::setError("No valid recipient address to send to or addresses are not RFC822 compliant.");
-            $SendStatus = FALSE;
+        // If the debug mode is enabled,
+        // ... and save it
+        if ($DebugMode === TRUE)
+        {
+            $this->TransactionLog .= trim(ob_get_clean());
         }
 
         return $SendStatus;

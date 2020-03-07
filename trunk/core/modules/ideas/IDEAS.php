@@ -92,7 +92,7 @@ class IDEAS
         if ((!array_key_exists('PagingStart', $this->vars) || !$this->vars['PagingStart']))
         {
             $this->session->delVar("mywikindx_PagingStart"); // might be set from last multi resource list display
-            $this->session->delVar("list_IdeaAllIds";
+            $this->session->delVar("list_IdeaAllIds");
         }
         if (array_key_exists('order', $this->vars))
         {

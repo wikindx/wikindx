@@ -439,7 +439,8 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%users` (
   `usersTemplateMenu` int(11) DEFAULT NULL,
   `usersGDPR` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
   `usersBlock` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
-  PRIMARY KEY (`usersId`)
+  PRIMARY KEY (`usersId`),
+  UNIQUE KEY `usersUsernameUnique` (`usersUsername`) USING HASH
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 

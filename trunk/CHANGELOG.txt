@@ -42,6 +42,7 @@ MAINTENANCE:
 13. Drop usersChangePasswordTimestamp column from the DB schema
 14. DB upgrade – transfer data from statistics, resource_misc and resource_attachments tables to new statistics_resource_views and statistics_attachment_downloads tables and drop statistics table and other relevant columns.
 15. Add a UNIQUE constraint on usersUsername column (#219).
+16. Fix the default value of users table.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

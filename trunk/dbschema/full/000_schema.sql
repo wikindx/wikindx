@@ -402,7 +402,7 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%users` (
   `usersId` int(11) NOT NULL AUTO_INCREMENT,
   `usersUsername` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `usersPassword` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `usersFullname` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `usersFullname` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `usersEmail` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
   `usersDepartment` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `usersInstitution` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,

@@ -1246,8 +1246,6 @@ class CONFIGURE
         $mailMessage = FALSE;
         if (array_key_exists("configLdapUse", $this->values) && $this->values['configLdapUse'])
         {
-            // Ensure we're working with current input values. Database has been written to at this point.
-            FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
             if (array_key_exists('configLdapTestUser', $this->vars) && $this->vars['configLdapTestUser'])
             {
                 $this->testLdap();

@@ -91,7 +91,6 @@ class UPDATEDATABASE
         {
             $this->createDbSchema();
             $this->configDefaults();
-            FACTORY_LOADCONFIG::getInstance()->loadDBConfig(); // need some values from here in subsequent stage
             $this->session->setVar("setup_Superadmin", TRUE); // required for gatekeep function in CONFIG.php
         }
         if (array_key_exists('action', $this->vars) && $this->session->getVar("setup_Superadmin") &&

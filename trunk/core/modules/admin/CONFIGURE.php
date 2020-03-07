@@ -1515,16 +1515,18 @@ class CONFIGURE
     public function mailTransactionReport()
     {
         $content = \HTML\h("Configuration test email", "", 3);
+        $content .= \FORM\formHeader("admin_CONFIGURE_CORE");
+        
+        $content .= \FORM\hidden("method", "mailTransactionReport");
         
         $content .= \HTML\p($this->messages->text("hint", "mailTest"));
         array_key_exists("configMailTest", $this->vars) ? $input = $this->vars["configMailTest"] : $input = FALSE;
         
-        $jScript = "onclick=\"coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=mailTransactionReport&amp;configMailTest=' + document.getElementById('configMailTest').value, 80)\"";
-        
         $content .= \HTML\p(
             \FORM\textInput($this->messages->text("config", "mailTest"), "configMailTest", $input, 30, 255)
-            . "&nbsp;" . \FORM\formSubmitButton($this->messages->text("submit", "Test"), "emailtest", $jScript)
+            . "&nbsp;" . \FORM\formSubmit($this->messages->text("submit", "Test"))
         );
+        $content .= \FORM\formEnd();
         
         if (array_key_exists("configMailTest", $this->vars))
         {
@@ -1540,6 +1542,7 @@ class CONFIGURE
             }
             $content .= "<pre>" . $mail->TransactionLog . "</pre>";
         }
+        
         GLOBALS::addTplVar('content', $content);
         FACTORY_CLOSENOMENU::getInstance();
     }

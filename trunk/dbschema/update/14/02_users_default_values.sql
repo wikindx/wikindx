@@ -123,8 +123,12 @@ SET usersDisplayCmsLink = 'N'
 WHERE usersDisplayCmsLink IS NULL;
 
 UPDATE %%WIKINDX_DB_TABLEPREFIX%%users
-SET usersListlink = 'N'
-WHERE usersListlink IS NULL;
+SET usersListlink =
+	CASE usersListlink
+		WHEN 'N' THEN '0'
+		WHEN 'Y' THEN '1'
+		ELSE '0'
+	END;
 
 
 ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users MODIFY COLUMN usersTemplateMenu varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL;
@@ -155,4 +159,4 @@ ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users MODIFY COLUMN usersUseBibtexKey varc
 ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users MODIFY COLUMN usersUseWikindxKey varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
 ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users MODIFY COLUMN usersDisplayBibtexLink varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
 ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users MODIFY COLUMN usersDisplayCmsLink varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users MODIFY COLUMN usersListlink varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
+ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users MODIFY COLUMN usersListlink tinyint(1) NOT NULL DEFAULT 0;

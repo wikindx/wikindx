@@ -435,7 +435,7 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%users` (
   `usersDisplayCmsLink` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
   `usersCmsTag` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `usersIsCreator` int(11) DEFAULT NULL,
-  `usersListlink` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
+  `usersListlink` tinyint(1) NOT NULL DEFAULT 0,
   `usersTemplateMenu` int(11) NOT NULL DEFAULT 0,
   `usersGDPR` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
   `usersBlock` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',

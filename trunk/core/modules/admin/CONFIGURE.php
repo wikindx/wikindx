@@ -152,15 +152,6 @@ class CONFIGURE
         FACTORY_CLOSENOMENU::getInstance();
     }
     /** 
-     * Open popup for mail transaction report
-     */
-    public function mailTransactionReport()
-    {
-        $pString = $this->session->getVar("mailTransactionLog");
-        GLOBALS::addTplVar('content', $pString);
-        FACTORY_CLOSENOMENU::getInstance();
-    }
-    /** 
      * Open popup for ldap transaction report
      */
     public function ldapTransactionReport()
@@ -1362,20 +1353,7 @@ class CONFIGURE
      */
     private function emailConfigDisplay()
     {
-        $mailMessage = FALSE;
-        if (array_key_exists("configMailUse", $this->values) && $this->values['configMailUse'])
-        {
-            // Ensure we're working with current input values. Database has been written to at this point.
-            FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
-            if (array_key_exists('configMailTest', $this->vars) && $this->vars['configMailTest'])
-            {
-                $this->testMail();
-                $jScript = "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=mailTransactionReport', 80)";
-                $colour = $this->session->getVar("mailTransactionLogStatus") == 'success' ? 'green' : 'red';
-                $mailMessage = \HTML\p(\HTML\aBrowse($colour, '', $this->messages->text("config", "mailTransactionReport"), $jScript));
-            }
-        }
-        $pString = $this->errorString . $mailMessage;
+        $pString = "";
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $input = array_key_exists("configMailUse", $this->values) && ($this->values['configMailUse']) ? "CHECKED" : WIKINDX_MAIL_USE_DEFAULT;
@@ -1519,30 +1497,51 @@ class CONFIGURE
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
+        
         // Extra field not in the database used for test purposes only
+        $jScript = "onclick=\"coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=mailTransactionReport&amp;configMailTest=' + document.getElementById('configMailTest').value, 80)\"";
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailTest"));
         array_key_exists("configMailTest", $this->vars) ? $input = $this->vars["configMailTest"] : $input = FALSE;
-        $pString .= \HTML\p(\FORM\textInput($this->messages->text("config", "mailTest"), "configMailTest", $input, 30, 255) .
-            BR . \HTML\span($hint, 'hint'));
+        $pString .= \HTML\p(
+            \FORM\textInput($this->messages->text("config", "mailTest"), "configMailTest", $input, 30, 255)
+            . "&nbsp;" . \FORM\formSubmitButton($this->messages->text("submit", "Test"), "emailtest", $jScript)
+            . BR . $hint);
 
         return $pString;
     }
     /** 
-     * Test the email configuration
+     * Open popup for mail transaction report
      */
-    private function testMail()
+    public function mailTransactionReport()
     {
-        include_once("core/smtp/MAIL.php");
-        $mail = new MAIL();
-        if (!$mail->sendEmail($this->vars['configMailTest'], \HTML\stripHtml(WIKINDX_TITLE), $this->messages->text('config', 'mailTestSuccess'), TRUE))
+        $content = \HTML\h("Configuration test email", "", 3);
+        
+        $content .= \HTML\p($this->messages->text("hint", "mailTest"));
+        array_key_exists("configMailTest", $this->vars) ? $input = $this->vars["configMailTest"] : $input = FALSE;
+        
+        $jScript = "onclick=\"coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=mailTransactionReport&amp;configMailTest=' + document.getElementById('configMailTest').value, 80)\"";
+        
+        $content .= \HTML\p(
+            \FORM\textInput($this->messages->text("config", "mailTest"), "configMailTest", $input, 30, 255)
+            . "&nbsp;" . \FORM\formSubmitButton($this->messages->text("submit", "Test"), "emailtest", $jScript)
+        );
+        
+        if (array_key_exists("configMailTest", $this->vars))
         {
-            $this->session->setVar("mailTransactionLogStatus", "failure");
+            include_once("core/smtp/MAIL.php");
+            $mail = new MAIL();
+            if (!$mail->sendEmail($this->vars['configMailTest'], \HTML\stripHtml(WIKINDX_TITLE), $this->messages->text('config', 'mailTestSuccess'), TRUE))
+            {
+                $content .= \HTML\p("The test fails", "error", "center");
+            }
+            else
+            {
+                $content .= \HTML\p("The test passed", "success", "center");
+            }
+            $content .= "<pre>" . $mail->TransactionLog . "</pre>";
         }
-        else
-        {
-            $this->session->setVar("mailTransactionLogStatus", "success");
-        }
-        $this->session->setVar("mailTransactionLog", $mail->TransactionLog);
+        GLOBALS::addTplVar('content', $content);
+        FACTORY_CLOSENOMENU::getInstance();
     }
     /** 
      * Test the ldap configuration

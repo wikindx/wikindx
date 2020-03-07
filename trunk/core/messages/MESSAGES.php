@@ -754,7 +754,7 @@ class MESSAGES
 				"mailSmtpPersist" => dgettext($domain, "Check to keep the SMTP port open for multiple calls"),
 				"mailSmtpPort" => dgettext($domain, "Default is 25"),
 				"mailSmtpAuth" => dgettext($domain, "If checked, set the username and password"),
-				"mailTest" => dgettext($domain, "Enter a valid email address here to test the mail configuration when you click on Proceed"),
+				"mailTest" => dgettext($domain, "Save the configuration by clicking on 'Proceed'. After that, enter a valid email address here to test the mail configuration when you click on 'Test'"),
 				"maxPaste" => dgettext($domain, "To disable registered users from pasting BibTeX entries, set the value to 0. Default is 10"),
 				"siteMapAllow" => dgettext($domain, "This is only required if you wish to run a Sitemap. Sitemaps are an easy way for webmasters to inform search engines about pages on their sites that are available for crawling. For details, see <a href='https://www.sitemaps.org/'>sitemaps.org</a>."),
 				"rssAllow" => dgettext($domain, "This is only required if you wish to run a RSS news feed for the latest additions to your WIKINDX. See README_RSS. If you do do not check this, WIKINDX will block RSS access and will not display any RSS icon in the Firefox location bar. If checked, to allow RSS feed users to then click on the RSS link and access WIKINDX, you must also enable read only access"),

@@ -95,9 +95,9 @@ class USER
             } elseif ($admin == 2) { // admin editing user
                 $userId = $this->vars['userId'];
                 if (array_key_exists('admin', $this->vars) && $this->vars['admin']) {
-                    $update['usersAdmin'] = 'Y';
+                    $update['usersAdmin'] = TRUE;
                 } else {
-                    $update['usersAdmin'] = 'N';
+                    $update['usersAdmin'] = FALSE;
                 }
                 if (array_key_exists('department', $this->vars) && ($dept = trim($this->vars['department']))) {
                     $update['usersDepartment'] = $dept;

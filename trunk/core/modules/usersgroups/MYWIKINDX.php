@@ -583,7 +583,7 @@ class MYWIKINDX
                 if ($row['usersFullname']) {
                     $groupUsers[$row['usergroupsusersUserId']] .= " (" . \HTML\dbToFormTidy($row['usersFullname']) . ")";
                 }
-                if ($row['usersAdmin'] == 'Y') {
+                if ($row['usersAdmin']) {
                     $groupUsers[$row['usergroupsusersUserId']] .= " ADMIN";
                 }
             }

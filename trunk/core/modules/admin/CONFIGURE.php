@@ -268,7 +268,7 @@ class CONFIGURE
             $usersFieldArray[] = 'usersEmail';
             $usersValueArray[] = $this->vars['configEmail'];
             $usersFieldArray[] = 'usersAdmin';
-            $usersValueArray[] = 'Y';
+            $usersValueArray[] = TRUE;
             if (array_key_exists('configFullname', $this->vars)) {
                 $usersFieldArray[] = 'usersFullname';
                 $usersValueArray[] = $this->vars['configFullname'];

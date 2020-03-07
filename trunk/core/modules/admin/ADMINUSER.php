@@ -463,7 +463,7 @@ class ADMINUSER
             if ($row['usersFullname']) {
                 $userName .= " (" . $row['usersFullname'] . ")";
             }
-            if ($row['usersAdmin'] == 'Y') {
+            if ($row['usersAdmin']) {
                 $userName .= " ADMIN";
             }
             $users[$row['usersId']] = \HTML\dbToFormTidy($userName);

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -41,37 +43,23 @@ class LISTADDTO
      */
     public function init()
     {
-        if (!array_key_exists('resourceSelectedTo', $this->vars))
-        {
+        if (!array_key_exists('resourceSelectedTo', $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
         $this->session->setVar("resourceSelectedTo", $this->vars['resourceSelectedTo']);
-        if ($this->vars['resourceSelectedTo'] == 1)
-        {	// add to categories
+        if ($this->vars['resourceSelectedTo'] == 1) {	// add to categories
             return $this->organizeInit();
-        }
-        elseif ($this->vars['resourceSelectedTo'] == 3)
-        {	// remove resources from user bibliography
+        } elseif ($this->vars['resourceSelectedTo'] == 3) {	// remove resources from user bibliography
             return $this->deleteFromBib();
-        }
-        elseif ($this->vars['resourceSelectedTo'] == 4)
-        {	// delete resources from WIKINDX
+        } elseif ($this->vars['resourceSelectedTo'] == 4) {	// delete resources from WIKINDX
             return $this->deleteFromWikindx();
-        }
-        elseif ($this->vars['resourceSelectedTo'] == 7)
-        {	// add to basket
+        } elseif ($this->vars['resourceSelectedTo'] == 7) {	// add to basket
             return $this->addToBasket();
-        }
-        elseif ($this->vars['resourceSelectedTo'] == 8)
-        {	// remove from basket
+        } elseif ($this->vars['resourceSelectedTo'] == 8) {	// remove from basket
             return $this->RemoveFromBasket();
-        }
-        elseif ($this->vars['resourceSelectedTo'] == 9)
-        {	// displayCOinS
+        } elseif ($this->vars['resourceSelectedTo'] == 9) {	// displayCOinS
             return $this->displayCoins();
-        }
-        else
-        {	// 0 -> add to user bibs
+        } else {	// 0 -> add to user bibs
             return $this->addToUserBibInit();
         }
     }
@@ -94,13 +82,10 @@ class LISTADDTO
         include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
         $catForm = new RESOURCECATEGORYEDIT();
 
-        if ($this->session->getVar("organize_CategoryHide"))
-        { // currently hidden so show
+        if ($this->session->getVar("organize_CategoryHide")) { // currently hidden so show
             $div = $catForm->displayCategory(TRUE);
             $this->session->setVar("organize_CategoryHide", FALSE);
-        }
-        else
-        { // currently visible so hide
+        } else { // currently visible so hide
             $div = \HTML\tableStart('generalTable');
             $div .= \HTML\trStart();
             $jScript = 'index.php?action=list_LISTADDTO_CORE&method=displayCategory';
@@ -128,13 +113,10 @@ class LISTADDTO
         include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
         $catForm = new RESOURCECATEGORYEDIT();
 
-        if ($this->session->getVar("organize_SubcategoryHide"))
-        { // currently hidden so show
+        if ($this->session->getVar("organize_SubcategoryHide")) { // currently hidden so show
             $div = $catForm->displaySubcategory(TRUE);
             $this->session->setVar("organize_SubcategoryHide", FALSE);
-        }
-        else
-        { // currently visible so hide
+        } else { // currently visible so hide
             $div = \HTML\tableStart('generalTable');
             $div .= \HTML\trStart();
             $jScript = 'index.php?action=list_LISTADDTO_CORE&method=displaySubcategory';
@@ -162,13 +144,10 @@ class LISTADDTO
         include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
         $catForm = new RESOURCECATEGORYEDIT();
 
-        if ($this->session->getVar("organize_LanguageHide"))
-        { // currently hidden so show
+        if ($this->session->getVar("organize_LanguageHide")) { // currently hidden so show
             $div = $catForm->displayLanguage(TRUE);
             $this->session->setVar("organize_LanguageHide", FALSE);
-        }
-        else
-        { // currently visible so hide
+        } else { // currently visible so hide
             $div = \HTML\tableStart();
             $div .= \HTML\trStart();
             $jScript = 'index.php?action=list_LISTADDTO_CORE&method=displayLanguage';
@@ -196,13 +175,10 @@ class LISTADDTO
         include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
         $catForm = new RESOURCECATEGORYEDIT();
 
-        if ($this->session->getVar("organize_KeywordHide"))
-        { // currently hidden so show
+        if ($this->session->getVar("organize_KeywordHide")) { // currently hidden so show
             $div = $catForm->displayKeyword(TRUE);
             $this->session->setVar("organize_KeywordHide", FALSE);
-        }
-        else
-        { // currently visible so hide
+        } else { // currently visible so hide
             $div = \HTML\tableStart('generalTable');
             $div .= \HTML\trStart();
             $jScript = 'index.php?action=list_LISTADDTO_CORE&method=displayKeyword';
@@ -230,13 +206,10 @@ class LISTADDTO
         include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
         $catForm = new RESOURCECATEGORYEDIT();
 
-        if ($this->session->getVar("organize_UsertagHide"))
-        { // currently hidden so show
+        if ($this->session->getVar("organize_UsertagHide")) { // currently hidden so show
             $div = $catForm->displayUserTags(TRUE);
             $this->session->setVar("organize_UsertagHide", FALSE);
-        }
-        else
-        { // currently visible so hide
+        } else { // currently visible so hide
             $div = \HTML\tableStart('generalTable');
             $div .= \HTML\trStart();
             $jScript = 'index.php?action=list_LISTADDTO_CORE&method=displayUsertag';
@@ -263,27 +236,22 @@ class LISTADDTO
     {
         if (!array_key_exists("languageIds", $this->vars) && !array_key_exists("categoryIds", $this->vars) &&
             !array_key_exists("subcategoryIds", $this->vars) && !array_key_exists("keywords", $this->vars) &&
-            !array_key_exists("usertags", $this->vars) && !array_key_exists("replaceExisting", $this->vars))
-        {
+            !array_key_exists("usertags", $this->vars) && !array_key_exists("replaceExisting", $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
         $resourceIds = $this->getHiddenIds();
         // Categories
         $categoryIds = array_key_exists('categoryIds', $this->vars) ? $this->vars['categoryIds'] : [];
         if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("categoryRadio", $this->vars) &&
-        ($this->vars['categoryRadio'] == 'add'))
-        {
+        ($this->vars['categoryRadio'] == 'add')) {
             // remove all old categories and subcategories from resource if adding categories
             $this->db->formatConditionsOneField($resourceIds, 'resourcecategoryResourceId');
             $this->db->delete('resource_category');
         }
         // remove categories
-        if (array_key_exists("categoryRadio", $this->vars) && $this->vars['categoryRadio'] == 'remove')
-        {
-            foreach ($categoryIds as $cId)
-            {
-                foreach ($resourceIds as $rId)
-                {
+        if (array_key_exists("categoryRadio", $this->vars) && $this->vars['categoryRadio'] == 'remove') {
+            foreach ($categoryIds as $cId) {
+                foreach ($resourceIds as $rId) {
                     $this->db->formatConditions(['resourcecategoryResourceId' => $rId]);
                     $this->db->formatConditions(['resourcecategoryCategoryId' => $cId]);
                     $this->db->delete('resource_category');
@@ -291,46 +259,37 @@ class LISTADDTO
             }
         }
         // add new categories
-        else
-        {
+        else {
             $values = [];
-            foreach ($categoryIds as $cId)
-            {
+            foreach ($categoryIds as $cId) {
                 $foundIds = [];
                 $this->db->formatConditionsOneField($resourceIds, 'resourcecategoryResourceId');
                 $this->db->formatConditions(['resourcecategoryCategoryId' => $cId]);
                 $resultSet = $this->db->select('resource_category', 'resourcecategoryResourceId');
-                while ($row = $this->db->fetchRow($resultSet))
-                {
+                while ($row = $this->db->fetchRow($resultSet)) {
                     $foundIds[] = $row['resourcecategoryResourceId'];
                 }
-                foreach (array_diff($resourceIds, $foundIds) as $rId)
-                {
+                foreach (array_diff($resourceIds, $foundIds) as $rId) {
                     $values[] = [$rId, $cId];
                 }
             }
-            if (!empty($values))
-            {
+            if (!empty($values)) {
                 $this->db->insert('resource_category', ['resourcecategoryResourceId', 'resourcecategoryCategoryId'], $values);
             }
         }
         // Subcategories
         $subcategoryIds = array_key_exists('subcategoryIds', $this->vars) ? $this->vars['subcategoryIds'] : [];
         if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("subcategoryRadio", $this->vars) &&
-        ($this->vars['subcategoryRadio'] == 'add'))
-        {
+        ($this->vars['subcategoryRadio'] == 'add')) {
             // remove all old subcategories from resource if adding subcategories
             $this->db->formatConditionsOneField($resourceIds, 'resourcecategoryResourceId');
             $this->db->formatConditionsOneField($subcategoryIds, 'resourcecategorySubcategoryId');
             $this->db->delete('resource_category');
         }
         // remove subcategories
-        if (array_key_exists("subcategoryRadio", $this->vars) && $this->vars['subcategoryRadio'] == 'remove')
-        {
-            foreach ($subcategoryIds as $cId)
-            {
-                foreach ($resourceIds as $rId)
-                {
+        if (array_key_exists("subcategoryRadio", $this->vars) && $this->vars['subcategoryRadio'] == 'remove') {
+            foreach ($subcategoryIds as $cId) {
+                foreach ($resourceIds as $rId) {
                     $this->db->formatConditions(['resourcecategoryResourceId' => $rId]);
                     $this->db->formatConditions(['resourcecategorySubcategoryId' => $cId]);
                     $this->db->delete('resource_category');
@@ -338,40 +297,32 @@ class LISTADDTO
             }
         }
         // add subcategories
-        else
-        {
+        else {
             // Find categories subcategories belong to in case category needs adding to resource_category.CategoryId
-            foreach ($subcategoryIds as $subcategoryId)
-            {
+            foreach ($subcategoryIds as $subcategoryId) {
                 $this->db->formatConditions(['subcategoryId' => $subcategoryId]);
                 $scIds[] = $this->db->selectFirstField('subcategory', 'subcategoryCategoryId');
             }
         }
         // If category of which subcategory is a member is not in table row, add it
-        if (isset($scIds))
-        {
+        if (isset($scIds)) {
             $values = [];
-            foreach ($subcategoryIds as $subcategoryId)
-            {
-                foreach (array_unique($scIds) as $cId)
-                {
+            foreach ($subcategoryIds as $subcategoryId) {
+                foreach (array_unique($scIds) as $cId) {
                     $foundIds = [];
                     $this->db->formatConditionsOneField($resourceIds, 'resourcecategoryResourceId');
                     $this->db->formatConditions(['resourcecategoryCategoryId' => $cId]);
                     $this->db->formatConditions(['resourcecategorySubcategoryId' => ' IS NOT NULL']);
                     $resultSet = $this->db->select('resource_category', 'resourcecategoryResourceId');
-                    while ($row = $this->db->fetchRow($resultSet))
-                    {
+                    while ($row = $this->db->fetchRow($resultSet)) {
                         $foundIds[] = $row['resourcecategoryResourceId'];
                     }
-                    foreach (array_diff($resourceIds, $foundIds) as $rId)
-                    {
+                    foreach (array_diff($resourceIds, $foundIds) as $rId) {
                         $values[] = [$rId, $cId, $subcategoryId];
                     }
                 }
             }
-            if (!empty($values))
-            {
+            if (!empty($values)) {
                 $this->db->insert('resource_category', ['resourcecategoryResourceId', 'resourcecategoryCategoryId',
                     'resourcecategorySubcategoryId', ], $values);
             }
@@ -379,23 +330,18 @@ class LISTADDTO
         // Languages
         $languageIds = array_key_exists('languageIds', $this->vars) ? $this->vars['languageIds'] : [];
         if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("languageRadio", $this->vars) &&
-        ($this->vars['languageRadio'] == 'add'))
-        {
+        ($this->vars['languageRadio'] == 'add')) {
             // remove all old languages from resource when adding
             $this->db->formatConditionsOneField($resourceIds, 'resourcelanguageResourceId');
             $this->db->delete('resource_language');
         }
         // remove languages
-        if (array_key_exists("languageRadio", $this->vars) && $this->vars['languageRadio'] == 'remove')
-        {
-            foreach ($languageIds as $lId)
-            {
-                if (!$lId)
-                { // IGNORE
+        if (array_key_exists("languageRadio", $this->vars) && $this->vars['languageRadio'] == 'remove') {
+            foreach ($languageIds as $lId) {
+                if (!$lId) { // IGNORE
                     continue;
                 }
-                foreach ($resourceIds as $rId)
-                {
+                foreach ($resourceIds as $rId) {
                     $this->db->formatConditions(['resourcelanguageResourceId' => $rId]);
                     $this->db->formatConditions(['resourcelanguageLanguageId' => $lId]);
                     $this->db->delete('resource_language');
@@ -403,58 +349,43 @@ class LISTADDTO
             }
         }
         // add new languages
-        else
-        {
+        else {
             $values = [];
-            foreach ($languageIds as $lId)
-            {
-                if (!$lId)
-                {
+            foreach ($languageIds as $lId) {
+                if (!$lId) {
                     continue;
                 }
                 $foundIds = [];
                 $this->db->formatConditionsOneField($resourceIds, 'resourcelanguageResourceId');
                 $this->db->formatConditions(['resourcelanguageLanguageId' => $lId]);
                 $resultSet = $this->db->select('resource_language', 'resourcelanguageResourceId');
-                while ($row = $this->db->fetchRow($resultSet))
-                {
+                while ($row = $this->db->fetchRow($resultSet)) {
                     $foundIds[] = $row['resourcelanguageResourceId'];
                 }
-                foreach (array_diff($resourceIds, $foundIds) as $rId)
-                {
+                foreach (array_diff($resourceIds, $foundIds) as $rId) {
                     $values[] = [$rId, $lId];
                 }
             }
-            if (!empty($values))
-            {
+            if (!empty($values)) {
                 $this->db->insert('resource_language', ['resourcelanguageResourceId', 'resourcelanguageLanguageId'], $values);
             }
         }
         // Keywords
         $keyword = FACTORY_KEYWORD::getInstance();
         $keywordIds = [];
-        if (array_key_exists('keywords', $this->vars) && trim($this->vars['keywords']))
-        {
+        if (array_key_exists('keywords', $this->vars) && trim($this->vars['keywords'])) {
             $keywordTexts = UTF8::mb_explode(',', trim($this->vars['keywords']));
-        }
-        else
-        {
+        } else {
             $keywordTexts = [];
         }
-        foreach ($keywordTexts as $text)
-        {
+        foreach ($keywordTexts as $text) {
             $keywordText = trim($text);
-            if ($keywordText)
-            {
-                if ($id = $keyword->checkExists($keywordText))
-                {
-                    if (array_search($id, $keywordIds) === FALSE)
-                    {
+            if ($keywordText) {
+                if ($id = $keyword->checkExists($keywordText)) {
+                    if (array_search($id, $keywordIds) === FALSE) {
                         $keywordIds[] = $id;
                     }
-                }
-                else
-                {
+                } else {
                     // given keyword doesn't exist so now write to db
                     $fields = $values = [];
                     $fields[] = "keywordKeyword";
@@ -465,19 +396,15 @@ class LISTADDTO
             }
         }
         if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("keywordRadio", $this->vars) &&
-        ($this->vars['keywordRadio'] == 'add'))
-        {
+        ($this->vars['keywordRadio'] == 'add')) {
             // remove old keywords from all selected resources when adding
             $this->db->formatConditionsOneField($resourceIds, 'resourcekeywordResourceId');
             $this->db->delete('resource_keyword');
         }
         // remove keywords
-        if (array_key_exists("keywordRadio", $this->vars) && $this->vars['keywordRadio'] == 'remove')
-        {
-            foreach ($keywordIds as $kId)
-            {
-                foreach ($resourceIds as $rId)
-                {
+        if (array_key_exists("keywordRadio", $this->vars) && $this->vars['keywordRadio'] == 'remove') {
+            foreach ($keywordIds as $kId) {
+                foreach ($resourceIds as $rId) {
                     $this->db->formatConditions(['resourcekeywordResourceId' => $rId]);
                     $this->db->formatConditions(['resourcekeywordKeywordId' => $kId]);
                     $this->db->delete('resource_keyword');
@@ -485,26 +412,21 @@ class LISTADDTO
             }
         }
         // add new keywords
-        else
-        {
+        else {
             $values = [];
-            foreach ($keywordIds as $kId)
-            {
+            foreach ($keywordIds as $kId) {
                 $foundIds = [];
                 $this->db->formatConditionsOneField($resourceIds, 'resourcekeywordResourceId');
                 $this->db->formatConditions(['resourcekeywordKeywordId' => $kId]);
                 $resultSet = $this->db->select('resource_keyword', 'resourcekeywordResourceId');
-                while ($row = $this->db->fetchRow($resultSet))
-                {
+                while ($row = $this->db->fetchRow($resultSet)) {
                     $foundIds[] = $row['resourcekeywordResourceId'];
                 }
-                foreach (array_diff($resourceIds, $foundIds) as $rId)
-                {
+                foreach (array_diff($resourceIds, $foundIds) as $rId) {
                     $values[] = [$rId, $kId];
                 }
             }
-            if (!empty($values))
-            {
+            if (!empty($values)) {
                 $this->db->insert('resource_keyword', ['resourcekeywordResourceId', 'resourcekeywordKeywordId'], $values);
             }
         }
@@ -520,28 +442,19 @@ class LISTADDTO
         // User tags
         $usertag = FACTORY_USERTAGS::getInstance();
         $usertagIds = [];
-        if (array_key_exists('userTags', $this->vars) && trim($this->vars['userTags']))
-        {
+        if (array_key_exists('userTags', $this->vars) && trim($this->vars['userTags'])) {
             $usertagTexts = UTF8::mb_explode(',', trim($this->vars['userTags']));
-        }
-        else
-        {
+        } else {
             $usertagTexts = [];
         }
-        foreach ($usertagTexts as $text)
-        {
+        foreach ($usertagTexts as $text) {
             $usertagText = trim($text);
-            if ($usertagText)
-            {
-                if ($id = $usertag->checkExists($usertagText))
-                {
-                    if (array_search($id, $usertagIds) === FALSE)
-                    {
+            if ($usertagText) {
+                if ($id = $usertag->checkExists($usertagText)) {
+                    if (array_search($id, $usertagIds) === FALSE) {
                         $usertagIds[] = $id;
                     }
-                }
-                else
-                {
+                } else {
                     // given usertag doesn't exist so now write to db
                     $fields = $values = [];
                     $fields[] = 'usertagsTag';
@@ -554,19 +467,15 @@ class LISTADDTO
             }
         }
         if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("usertagRadio", $this->vars) &&
-        ($this->vars['usertagRadio'] == 'add'))
-        {
+        ($this->vars['usertagRadio'] == 'add')) {
             // remove old usertags from all selected resources
             $this->db->formatConditionsOneField($resourceIds, 'resourceusertagsResourceId');
             $this->db->delete('resource_user_tags');
         }
         // remove usertags
-        if (array_key_exists("usertagRadio", $this->vars) && $this->vars['usertagRadio'] == 'remove')
-        {
-            foreach ($usertagIds as $uId)
-            {
-                foreach ($resourceIds as $rId)
-                {
+        if (array_key_exists("usertagRadio", $this->vars) && $this->vars['usertagRadio'] == 'remove') {
+            foreach ($usertagIds as $uId) {
+                foreach ($resourceIds as $rId) {
                     $this->db->formatConditions(['resourceusertagsResourceId' => $rId]);
                     $this->db->formatConditions(['resourceusertagsTagId' => $uId]);
                     $this->db->delete('resource_user_tags');
@@ -574,26 +483,21 @@ class LISTADDTO
             }
         }
         // add new usertags
-        else
-        {
+        else {
             $values = [];
-            foreach ($usertagIds as $uId)
-            {
+            foreach ($usertagIds as $uId) {
                 $foundIds = [];
                 $this->db->formatConditionsOneField($resourceIds, 'resourceusertagsResourceId');
                 $this->db->formatConditions(['resourceusertagsTagId' => $uId]);
                 $resultSet = $this->db->select('resource_user_tags', 'resourceusertagsResourceId');
-                while ($row = $this->db->fetchRow($resultSet))
-                {
+                while ($row = $this->db->fetchRow($resultSet)) {
                     $foundIds[] = $row['resourceusertagsResourceId'];
                 }
-                foreach (array_diff($resourceIds, $foundIds) as $rId)
-                {
+                foreach (array_diff($resourceIds, $foundIds) as $rId) {
                     $values[] = [$rId, $uId];
                 }
             }
-            if (!empty($values))
-            {
+            if (!empty($values)) {
                 $this->db->insert('resource_user_tags', ['resourceusertagsResourceId', 'resourceusertagsTagId'], $values);
             }
         }
@@ -603,16 +507,13 @@ class LISTADDTO
         $this->db->formatConditionsOneField($resourceIds, 'resourcecategoryResourceId');
         $this->db->formatConditions(['resourcecategoryCategoryId' => ' IS NOT NULL']);
         $resultSet = $this->db->select('resource_category', 'resourcecategoryResourceId');
-        while ($row = $this->db->fetchRow($resultSet))
-        {
+        while ($row = $this->db->fetchRow($resultSet)) {
             $foundIds[] = $row['resourcecategoryResourceId'];
         }
-        foreach (array_diff($resourceIds, $foundIds) as $rId)
-        {
+        foreach (array_diff($resourceIds, $foundIds) as $rId) {
             $values[] = [$rId, 1];
         }
-        if (!empty($values))
-        {
+        if (!empty($values)) {
             $this->db->insert('resource_category', ['resourcecategoryResourceId', 'resourcecategoryCategoryId'], $values);
         }
         $this->session->setVar("addToKeywordCategory", TRUE);
@@ -625,24 +526,20 @@ class LISTADDTO
      */
     public function addResourceToBib()
     {
-        if (!array_key_exists('bibId', $this->vars) || ($this->vars['bibId'] < 1))
-        {
+        if (!array_key_exists('bibId', $this->vars) || ($this->vars['bibId'] < 1)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
         $ids = $this->getHiddenIds();
         // valid user?
         $userBibs = $this->commonBib->getUserBibs();
         $groupBibs = $this->commonBib->getGroupBibs();
-        if (!array_key_exists($this->vars['bibId'], $userBibs) && !array_key_exists($this->vars['bibId'], $groupBibs))
-        {
+        if (!array_key_exists($this->vars['bibId'], $userBibs) && !array_key_exists($this->vars['bibId'], $groupBibs)) {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this->navigate, 'listView');
         }
-        foreach ($ids as $id)
-        {
+        foreach ($ids as $id) {
             $this->db->formatConditions(['userbibliographyresourceResourceId' => $id]);
             $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $this->vars['bibId']]);
-            if (!$this->db->numRows($this->db->select('user_bibliography_resource', 'userbibliographyresourceId')))
-            {
+            if (!$this->db->numRows($this->db->select('user_bibliography_resource', 'userbibliographyresourceId'))) {
                 $this->db->insert(
                     'user_bibliography_resource',
                     ['userbibliographyresourceBibliographyId', 'userbibliographyresourceResourceId'],
@@ -665,20 +562,14 @@ class LISTADDTO
         $gatekeep->requireSuper = TRUE; // only admins can delete resources
         $gatekeep->init();
         list($idFound, $string) = $this->checkIdInput();
-        if (!$idFound)
-        {
+        if (!$idFound) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-        if ($string == 'display')
-        {
+        if ($string == 'display') {
             $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
-        }
-        elseif ($string == 'all')
-        {
+        } elseif ($string == 'all') {
             $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
-        }
-        else
-        {
+        } else {
             $ids = unserialize(base64_decode($string));
         }
         $this->session->setVar("addToKeywordCategory", TRUE);
@@ -696,32 +587,24 @@ class LISTADDTO
      */
     private function checkIdInput()
     {
-        if (array_key_exists("selectWhat", $this->vars) && ($this->vars['selectWhat'] != 'checked'))
-        {
-            if ($this->vars['selectWhat'] == 'all')
-            {
+        if (array_key_exists("selectWhat", $this->vars) && ($this->vars['selectWhat'] != 'checked')) {
+            if ($this->vars['selectWhat'] == 'all') {
                 return [TRUE, 'all'];
             }
-            if ($this->vars['selectWhat'] == 'display')
-            {
+            if ($this->vars['selectWhat'] == 'display') {
                 return [TRUE, 'display'];
             }
 
             return [FALSE, FALSE];
         }
-        foreach ($this->vars as $key => $value)
-        {
-            if (mb_strstr($key, "bib_"))
-            {
+        foreach ($this->vars as $key => $value) {
+            if (mb_strstr($key, "bib_")) {
                 $string[] = mb_substr($key, 4);
             }
         }
-        if (isset($string))
-        {
+        if (isset($string)) {
             return [TRUE, base64_encode(serialize($string))];
-        }
-        else
-        {
+        } else {
             return [FALSE, FALSE];
         }
     }
@@ -734,20 +617,14 @@ class LISTADDTO
         $res = FACTORY_RESOURCECOMMON::getInstance();
         list($idFound, $string) = $this->checkIdInput();
         $ids = [];
-        if ($string == 'display')
-        {
+        if ($string == 'display') {
             $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
-        }
-        elseif ($string == 'all')
-        {
+        } elseif ($string == 'all') {
             $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
-        }
-        else
-        {
+        } else {
             $ids = unserialize(base64_decode($string)); // checked resources
         }
-        if (empty($ids))
-        {
+        if (empty($ids)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
 
             return;
@@ -755,8 +632,7 @@ class LISTADDTO
         $resultset = $res->getResource($ids);
         $creators = [];
         $this->getCreators($ids, $creators);
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             GLOBALS::addTplVar('content', $coins->export($row, $creators[$row['resourceId']]));
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "exportCoins"));
@@ -779,8 +655,7 @@ class LISTADDTO
         $resultset = $this->db->select('resource_creator', ['resourcecreatorResourceId', ['creatorSurname' => 'surname'],
             ['creatorFirstname' => 'firstname'], ['creatorInitials' => 'initials'], ['creatorPrefix' => 'prefix'],
             'creatorId', 'resourcecreatorRole', ]);
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $array = [
                 'surname' => $row['surname'],
                 'firstname' => $row['firstname'],
@@ -797,35 +672,24 @@ class LISTADDTO
     private function addToBasket()
     {
         list($idFound, $string) = $this->checkIdInput();
-        if (!$idFound)
-        {
+        if (!$idFound) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-        if ($this->session->issetVar("basket_List"))
-        {
+        if ($this->session->issetVar("basket_List")) {
             $basket = unserialize($this->session->getVar("basket_List"));
-        }
-        else
-        {
+        } else {
             $basket = [];
         }
-        if ($string == 'display')
-        {
+        if ($string == 'display') {
             $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
-        }
-        elseif ($string == 'all')
-        {
+        } elseif ($string == 'all') {
             $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
-        }
-        else
-        {
+        } else {
             $ids = unserialize(base64_decode($string));
         }
         //$this->session->delVar("basket_List");
-        foreach ($ids as $resourceId)
-        {
-            if (array_search($resourceId, $basket) === FALSE)
-            {
+        foreach ($ids as $resourceId) {
+            if (array_search($resourceId, $basket) === FALSE) {
                 $basket[] = $resourceId;
             }
         }
@@ -844,43 +708,29 @@ class LISTADDTO
     private function removeFromBasket()
     {
         list($idFound, $string) = $this->checkIdInput();
-        if (!$idFound)
-        {
+        if (!$idFound) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-        if ($this->session->issetVar("basket_List"))
-        {
+        if ($this->session->issetVar("basket_List")) {
             $basket = unserialize($this->session->getVar("basket_List"));
-        }
-        else
-        {
+        } else {
             $basket = [];
         }
-        if ($string == 'display')
-        {
+        if ($string == 'display') {
             $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
-        }
-        elseif ($string == 'all')
-        {
+        } elseif ($string == 'all') {
             $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
-        }
-        else
-        {
+        } else {
             $ids = unserialize(base64_decode($string));
         }
-        foreach ($ids as $resourceId)
-        {
-            if (($key = array_search($resourceId, $basket)) !== FALSE)
-            {
+        foreach ($ids as $resourceId) {
+            if (($key = array_search($resourceId, $basket)) !== FALSE) {
                 unset($basket[$key]);
             }
         }
-        if (empty($basket))
-        {
+        if (empty($basket)) {
             $this->session->delVar("basket_List");
-        }
-        else
-        {
+        } else {
             $this->session->setVar("basket_List", serialize($basket));
         }
         $this->session->saveState('basket');
@@ -905,13 +755,11 @@ class LISTADDTO
             'subcategoryDisplay' => $this->messages->text("resources", "subcategories"),
             'languageDisplay' => $this->messages->text("resources", "languages"),
             'keywordDisplay' => $this->messages->text("resources", "keywords"), ];
-        if (!empty($catForm->userTags))
-        {
+        if (!empty($catForm->userTags)) {
             $display['usertagDisplay'] = $this->messages->text("resources", "usertags");
         }
         list($idFound, $string) = $this->checkIdInput();
-        if (!$idFound)
-        {
+        if (!$idFound) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
         $pString .= \FORM\hidden("ids", $string);
@@ -930,49 +778,39 @@ class LISTADDTO
         $usingBib = $pString = FALSE;
         $bibs = [];
         $useBib = $this->session->getVar("mywikindx_Bibliography_use");
-        if ($useBib)
-        {
+        if ($useBib) {
             $this->db->formatConditions(['userbibliographyId' => $useBib]);
             $usingBib = $this->db->selectFirstField('user_bibliography', 'userbibliographyTitle');
         }
         $tempU = $this->commonBib->getUserBibs();
         $tempUG = $this->commonBib->getGroupBibs();
-        if (!empty($tempU))
-        {
+        if (!empty($tempU)) {
             $bibs[0] = $this->messages->text('user', 'userBibs');
-            foreach ($tempU as $key => $value)
-            {
+            foreach ($tempU as $key => $value) {
                 $bibs[$key] = $value;
             }
         }
-        if (!empty($tempUG))
-        {
+        if (!empty($tempUG)) {
             $bibs[-1] = $this->messages->text('user', 'userGroupBibs');
-            foreach ($tempUG as $key => $value)
-            {
+            foreach ($tempUG as $key => $value) {
                 $bibs[$key] = $value;
             }
         }
-        if (!empty($bibs))
-        {
+        if (!empty($bibs)) {
             $pString = \FORM\formHeader('list_LISTADDTO_CORE');
             $pString .= \FORM\hidden("method", "addResourceToBib");
             list($idFound, $string) = $this->checkIdInput();
-            if (!$idFound)
-            {
+            if (!$idFound) {
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
             }
             $pString .= \FORM\hidden("ids", $string);
             $pString .= \HTML\tableStart();
             $pString .= \HTML\trStart();
             $sessVar = $this->session->getVar("mywikindx_Bibliography_add");
-            if ($sessVar)
-            {
+            if ($sessVar) {
                 $pString .= \HTML\td(\FORM\selectedBoxValue(FALSE, "bibId", $bibs, $sessVar, 10) .
                     \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Add"))));
-            }
-            else
-            {
+            } else {
                 $pString .= \HTML\td(\FORM\selectFBoxValue(FALSE, "bibId", $bibs, 10) .
                     \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Add"))));
             }
@@ -990,24 +828,17 @@ class LISTADDTO
      */
     private function getHiddenIds()
     {
-        if (!array_key_exists("ids", $this->vars))
-        {
+        if (!array_key_exists("ids", $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-        if ($this->vars['ids'] == 'display')
-        {
+        if ($this->vars['ids'] == 'display') {
             $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
-        }
-        elseif ($this->vars['ids'] == 'all')
-        {
+        } elseif ($this->vars['ids'] == 'all') {
             $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
-        }
-        else
-        {
+        } else {
             $ids = unserialize(base64_decode($this->vars['ids']));
         }
-        if (!isset($ids))
-        {
+        if (!isset($ids)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
 
@@ -1019,32 +850,24 @@ class LISTADDTO
     private function deleteFromBib()
     {
         list($idFound, $string) = $this->checkIdInput();
-        if (!$idFound)
-        {
+        if (!$idFound) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-        if (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'display'))
-        {
+        if (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'display')) {
             $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
-        }
-        elseif (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'all'))
-        {
+        } elseif (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'all')) {
             $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
-        }
-        else
-        {
+        } else {
             $ids = unserialize(base64_decode($string));
         }
         $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $this->session->getVar("mywikindx_Bibliography_use")]);
         $this->db->formatConditionsOneField($ids, 'userbibliographyresourceResourceId');
         $this->db->delete('user_bibliography_resource');
         $bibs = $this->commonBib->getUserBibs();
-        if (empty($bibs))
-        {
+        if (empty($bibs)) {
             $bibs = $this->commonBib->getUserBibs();
         }
-        if (!empty($bibs))
-        {
+        if (!empty($bibs)) {
             $this->session->setVar("setup_Bibliographies", TRUE);
         }
         $this->session->setVar("addToKeywordCategory", TRUE);

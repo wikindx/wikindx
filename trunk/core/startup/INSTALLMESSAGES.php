@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -23,7 +25,7 @@ class INSTALLMESSAGES
      * Grab the message
      *
      * @param string $indexName
-     * @param string|FALSE $extra Optional string that replaces '###' in the array element value string. Default is FALSE
+     * @param false|string $extra Optional string that replaces '###' in the array element value string. Default is FALSE
      *
      * @return string
      */
@@ -44,8 +46,7 @@ class INSTALLMESSAGES
      */
     private function internaltext($indexName)
     {
-        if (!array_key_exists($indexName, $this->languageArray))
-        {
+        if (!array_key_exists($indexName, $this->languageArray)) {
             debug_print_backtrace();
             die("<p>Section <strong>$arrayName</strong> not found in translations.</p>");
         }

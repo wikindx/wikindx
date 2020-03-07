@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -40,7 +42,7 @@ class ADMINKEYWORD
     /**
      * editInit
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function editInit($message = FALSE)
     {
@@ -53,19 +55,17 @@ class ADMINKEYWORD
     /**
      * mergeInit
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function mergeInit($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "adminKeywords"));
         $keywords = $this->keyword->grabAll();
         $pString = \HTML\p($this->messages->text("misc", "keywordMerge"));
-        if ($message)
-        {
+        if ($message) {
             $pString .= \HTML\p($message);
         }
-        if (is_array($keywords) && !empty($keywords))
-        {
+        if (is_array($keywords) && !empty($keywords)) {
             $pString .= \FORM\formHeader('admin_ADMINKEYWORD_CORE');
             $pString .= \FORM\hidden("method", "merge");
             $pString .= \HTML\tableStart('left');
@@ -86,9 +86,7 @@ class ADMINKEYWORD
             $pString .= \HTML\trEnd();
             $pString .= \HTML\tableEnd();
             $pString .= \FORM\formEnd();
-        }
-        else
-        {
+        } else {
             $pString .= \HTML\p($this->messages->text("misc", "noKeywords"));
         }
         GLOBALS::addTplVar('content', $pString);
@@ -98,47 +96,35 @@ class ADMINKEYWORD
      */
     public function merge()
     {
-        if (!array_key_exists("keywordIds", $this->vars))
-        {
+        if (!array_key_exists("keywordIds", $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'mergeInit');
         }
-        if (!array_key_exists("keywordText", $this->vars) || !trim($this->vars['keywordText']))
-        {
+        if (!array_key_exists("keywordText", $this->vars) || !trim($this->vars['keywordText'])) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'mergeInit');
         }
-        if (array_key_exists("glossaries", $this->vars))
-        {
+        if (array_key_exists("glossaries", $this->vars)) {
             $keywordIds = unserialize(base64_decode($this->vars['keywordIds']));
-        }
-        else
-        {
+        } else {
             $keywordIds = $this->vars['keywordIds'];
         }
         $newKeyword = trim($this->vars['keywordText']);
         $newKeywordId = $this->insertKeyword($newKeyword);
-        if (($index = array_search($newKeywordId, $keywordIds)) !== FALSE)
-        {
+        if (($index = array_search($newKeywordId, $keywordIds)) !== FALSE) {
             unset($keywordIds[$index]);
         }
-        if (empty($keywordIds))
-        { // basically, we're renaming the keyword and that's all
+        if (empty($keywordIds)) { // basically, we're renaming the keyword and that's all
             $this->db->formatConditions(['keywordId' => $newKeywordId]);
             $this->db->update('keyword', ['keywordKeyword' => $newKeyword]);
-        }
-        else
-        {
+        } else {
             // Check for glossary entries
-            if (!array_key_exists("glossaries", $this->vars))
-            {
+            if (!array_key_exists("glossaries", $this->vars)) {
                 $this->db->formatConditionsOneField($keywordIds, 'keywordId');
                 $resultset = $this->db->select('keyword', ['keywordId', 'keywordKeyword', 'keywordGlossary']);
                 $glossaryString = '';
-                while ($row = $this->db->fetchRow($resultset))
-                {
+                while ($row = $this->db->fetchRow($resultset)) {
                     $glossaryString .= \HTML\p(\HTML\strong($row['keywordKeyword']) . ":&nbsp;&nbsp;" . $row['keywordGlossary']);
                 }
-                if ($glossaryString)
-                {
+                if ($glossaryString) {
                     $pString = \HTML\p($this->messages->text("resources", "glossaryMerge"));
                     $pString .= \FORM\formHeader('admin_ADMINKEYWORD_CORE');
                     $pString .= \FORM\hidden("method", "merge");
@@ -160,16 +146,12 @@ class ADMINKEYWORD
             $this->db->formatConditionsOneField($keywordIds, 'keywordId');
             $this->db->delete('keyword');
             // Add or edit glossary
-            if (array_key_exists("glossary", $this->vars))
-            {
+            if (array_key_exists("glossary", $this->vars)) {
                 $glossary = trim($this->vars['glossary']);
                 $this->db->formatConditions(['keywordId' => $newKeywordId]);
-                if ($glossary)
-                {
+                if ($glossary) {
                     $this->db->update('keyword', ['keywordGlossary' => $glossary]);
-                }
-                else
-                {
+                } else {
                     $this->db->updateNull('keyword', 'keywordGlossary');
                 }
             }
@@ -181,31 +163,22 @@ class ADMINKEYWORD
             $deleteIds = $rIds = [];
             $resultset = $this->db->select('resource_keyword', ['resourcekeywordId', 'resourcekeywordResourceId',
                 'resourcekeywordMetadataId', 'resourcekeywordKeywordId', ]);
-            while ($row = $this->db->fetchRow($resultset))
-            {
+            while ($row = $this->db->fetchRow($resultset)) {
                 if (!array_key_exists($row['resourcekeywordId'], $deleteIds) &&
                     $row['resourcekeywordResourceId'] && array_key_exists($row['resourcekeywordResourceId'], $rIds)
-                    && ($rIds[$row['resourcekeywordResourceId']] == $row['resourcekeywordKeywordId']))
-                {
+                    && ($rIds[$row['resourcekeywordResourceId']] == $row['resourcekeywordKeywordId'])) {
                     $deleteIds[] = $row['resourcekeywordId'];
-                }
-                elseif ($row['resourcekeywordResourceId'])
-                {
+                } elseif ($row['resourcekeywordResourceId']) {
                     $rIds[$row['resourcekeywordResourceId']] = $row['resourcekeywordKeywordId'];
-                }
-                elseif (!array_key_exists($row['resourcekeywordId'], $deleteIds) &&
+                } elseif (!array_key_exists($row['resourcekeywordId'], $deleteIds) &&
                     $row['resourcekeywordMetadataId'] && array_key_exists($row['resourcekeywordMetadataId'], $rIds)
-                    && ($rIds[$row['resourcekeywordMetadataId']] == $row['resourcekeywordKeywordId']))
-                {
+                    && ($rIds[$row['resourcekeywordMetadataId']] == $row['resourcekeywordKeywordId'])) {
                     $deleteIds[] = $row['resourcekeywordId'];
-                }
-                elseif ($row['resourcekeywordMetadataId'])
-                {
+                } elseif ($row['resourcekeywordMetadataId']) {
                     $rIds[$row['resourcekeywordMetadataId']] = $row['resourcekeywordKeywordId'];
                 }
             }
-            if (!empty($deleteIds))
-            {
+            if (!empty($deleteIds)) {
                 $this->db->formatConditionsOneField($deleteIds, 'resourcekeywordId');
                 $this->db->delete('resource_keyword');
             }
@@ -222,15 +195,14 @@ class ADMINKEYWORD
     /**
      * deleteInit
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function deleteInit($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete2", " (" .
             $this->messages->text("resources", "keyword") . ")"));
         $keywords = $this->keyword->grabAll();
-        if (!$keywords)
-        {
+        if (!$keywords) {
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noKeywords'));
 
             return;
@@ -274,16 +246,13 @@ class ADMINKEYWORD
      */
     public function delete()
     {
-        if ($this->session->getVar("editLock"))
-        {
+        if ($this->session->getVar("editLock")) {
             $this->badInput->close($this->errors->text("done", "keywordDelete"), $this, 'deleteInit');
         }
-        if (!array_key_exists('delete_KeywordId', $this->vars) || !$this->vars['delete_KeywordId'])
-        {
+        if (!array_key_exists('delete_KeywordId', $this->vars) || !$this->vars['delete_KeywordId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'deleteInit');
         }
-        foreach (unserialize(base64_decode($this->vars['delete_KeywordId'])) as $deleteId)
-        {
+        foreach (unserialize(base64_decode($this->vars['delete_KeywordId'])) as $deleteId) {
             // Delete old keyword
             $this->db->formatConditions(['keywordId' => $deleteId]);
             $this->db->delete('keyword');
@@ -315,8 +284,7 @@ class ADMINKEYWORD
     private function insertKeyword($keyword)
     {
         $this->keywordExists = TRUE;
-        if ($id = $this->keyword->checkExists($keyword))
-        {
+        if ($id = $this->keyword->checkExists($keyword)) {
             return $id;
         }
         $this->keywordExists = FALSE;

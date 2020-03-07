@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -40,15 +42,14 @@ class EDITCREATOR
     /**
      * check we are allowed to edit and load appropriate method
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function init($message = FALSE)
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $this->session->clearArray('edit');
         $creators = $this->creator->grabAll();
-        if (!$creators)
-        {
+        if (!$creators) {
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noCreators'));
 
             return;
@@ -76,21 +77,17 @@ class EDITCREATOR
     public function displayName($initialDisplay = FALSE)
     {
         $initials = $prefix = $firstname = $surname = $creatorId = FALSE;
-        if (!$initialDisplay)
-        {
+        if (!$initialDisplay) {
             $this->db->formatConditions(['creatorId' => $this->vars['ajaxReturn']]);
             $recordset = $this->db->select('creator', ["creatorSurname", "creatorFirstname", "creatorInitials", "creatorPrefix"]);
             $row = $this->db->fetchRow($recordset);
-            if ($row['creatorInitials'])
-            {
+            if ($row['creatorInitials']) {
                 $initials = str_replace(" ", ".", \HTML\dbToFormTidy($row['creatorInitials']) . ".");
             }
-            if ($row['creatorFirstname'])
-            {
+            if ($row['creatorFirstname']) {
                 $firstname = \HTML\dbToFormTidy($row['creatorFirstname']);
             }
-            if ($row['creatorPrefix'])
-            {
+            if ($row['creatorPrefix']) {
                 $prefix = \HTML\dbToFormTidy($row['creatorPrefix']);
             }
             $surname = \HTML\dbToFormTidy($row['creatorSurname']);
@@ -130,8 +127,7 @@ class EDITCREATOR
         ) . ' ' . \HTML\span('*', 'required'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        if ($initialDisplay)
-        {
+        if ($initialDisplay) {
             return $pString;
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $pString]));
@@ -143,55 +139,41 @@ class EDITCREATOR
     public function edit()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        if (!array_key_exists('editCreatorId', $this->vars) || !$this->vars['editCreatorId'])
-        {
+        if (!array_key_exists('editCreatorId', $this->vars) || !$this->vars['editCreatorId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         $surname = array_key_exists('surname', $this->vars) ? trim($this->vars['surname']) : FALSE;
-        if (!$surname)
-        {
+        if (!$surname) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         $firstname = trim($this->vars['firstname']);
         $initials = $this->creator->formatInitials(trim($this->vars['initials']));
         $prefix = trim($this->vars['prefix']);
         $updateArray['creatorSurname'] = $sortName = $surname;
-        if ($creatorExistId = $this->creator->checkExists($surname, $firstname, $initials, $prefix))
-        {
-            if ($creatorExistId != $this->vars['editCreatorId'])
-            {
+        if ($creatorExistId = $this->creator->checkExists($surname, $firstname, $initials, $prefix)) {
+            if ($creatorExistId != $this->vars['editCreatorId']) {
                 return $this->confirmDuplicate($creatorExistId, $sortName);
             }
         }
-        if ($firstname)
-        {
+        if ($firstname) {
             $updateArray['creatorFirstname'] = $firstname;
-        }
-        else
-        {
+        } else {
             $nulls[] = 'creatorFirstname';
         }
-        if ($initials)
-        {
+        if ($initials) {
             $updateArray['creatorInitials'] = $initials;
-        }
-        else
-        {
+        } else {
             $nulls[] = 'creatorInitials';
         }
-        if ($prefix)
-        {
+        if ($prefix) {
             $updateArray['creatorPrefix'] = $prefix;
-        }
-        else
-        {
+        } else {
             $nulls[] = 'creatorPrefix';
         }
         $this->db->formatConditions(['creatorId' => $this->vars['editCreatorId']]);
         $this->db->update('creator', $updateArray);
         // set to NULL empty firstname, prefix and initials fields
-        if (isset($nulls) && !empty($nulls))
-        {
+        if (isset($nulls) && !empty($nulls)) {
             $this->db->formatConditions(['creatorId' => $this->vars['editCreatorId']]);
             $this->db->updateNull('creator', $nulls);
         }
@@ -214,16 +196,13 @@ class EDITCREATOR
     public function editConfirm()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        if (!array_key_exists('editCreatorId', $this->vars) || !$this->vars['editCreatorId'])
-        {
+        if (!array_key_exists('editCreatorId', $this->vars) || !$this->vars['editCreatorId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        if (!array_key_exists('editCreatorExistId', $this->vars) || !$this->vars['editCreatorExistId'])
-        {
+        if (!array_key_exists('editCreatorExistId', $this->vars) || !$this->vars['editCreatorExistId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        if (!array_key_exists('editCreatorSurname', $this->vars) || !$this->vars['editCreatorSurname'])
-        {
+        if (!array_key_exists('editCreatorSurname', $this->vars) || !$this->vars['editCreatorSurname']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         $editId = $this->vars['editCreatorId'];

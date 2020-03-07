@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -16,8 +18,8 @@ class PASSWORD
     /**
      * Create and return an array of two strings for the username/password form
      *
-     * @param string|bool $username TRUE (default) if username should be part of the form
-     * @param string|bool $super FALSE (default) if this is for superadmin in the configure form
+     * @param bool|string $username TRUE (default) if username should be part of the form
+     * @param bool|string $super FALSE (default) if this is for superadmin in the configure form
      *
      * @return array Array of 2 strings: 1. form element string; 2. javascript for form header
      */
@@ -31,12 +33,12 @@ class PASSWORD
         $pwdStrengh = defined('WIKINDX_PASSWORD_STRENGTH') ? WIKINDX_PASSWORD_STRENGTH : WIKINDX_PASSWORD_STRENGTH_DEFAULT;
         
         $errorArray = [
-            "weak"   => "invalidPassword1",
+            "weak" => "invalidPassword1",
             "medium" => "invalidPassword2",
             "strong" => "invalidPassword3",
         ];
         $regexpArray = [
-            'weak'   => "/^(?=.*[a-z])(?=.*[A-Z])\\S+$/", // UPPER/lower Latin, no spaces
+            'weak' => "/^(?=.*[a-z])(?=.*[A-Z])\\S+$/", // UPPER/lower Latin, no spaces
             'medium' => "/^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])\\S+$/", // UPPER/lower Latin and numbers, no spaces
             'strong' => "/^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@#!%*?&€])\\S+$/", // UPPER/lower Latin, numbers, and special chars, no spaces
         ];
@@ -49,7 +51,7 @@ class PASSWORD
         $jsString = "this, " . $regexp . ", " . $pwdSize . ", '" . $missing . "', '" . $misMatch . "', '" . $invalidPassword . "'";
         
         $hintArray = [
-            "weak"   => "password1",
+            "weak" => "password1",
             "medium" => "password2",
             "strong" => "password3",
         ];
@@ -63,10 +65,8 @@ class PASSWORD
             '     ' . $messages->text("hint", 'password4')
         );
         $formText = '';
-        if (!$super)
-        {
-            if ($username)
-            {
+        if (!$super) {
+            if ($username) {
                 $formText .= \HTML\td(\FORM\textInput(
                     $messages->text("user", "username"),
                     "username",
@@ -89,9 +89,7 @@ class PASSWORD
                 15,
                 255
             ) . " " . \HTML\span('*', 'required'));
-        }
-        else
-        {
+        } else {
             // superadmin from Configure menu
             $formText .= \HTML\td(\FORM\textInput(
                 $messages->text("config", "superUsername"),

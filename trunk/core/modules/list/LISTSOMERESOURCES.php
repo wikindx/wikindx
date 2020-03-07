@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -37,13 +39,11 @@ class LISTSOMERESOURCES
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "list"));
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
-        if (!$this->session->getVar("list_Order"))
-        {
+        if (!$this->session->getVar("list_Order")) {
             $this->session->setVar("list_Order", "creator");
         }
         $this->session->setVar("sql_LastOrder", $this->session->getVar("list_Order"));
-        switch ($this->session->getVar("list_Order"))
-        {
+        switch ($this->session->getVar("list_Order")) {
             case 'title':
                 break;
             case 'creator':
@@ -63,106 +63,61 @@ class LISTSOMERESOURCES
      */
     public function reorder()
     {
-        if (array_key_exists('list_AscDesc', $this->vars))
-        {
+        if (array_key_exists('list_AscDesc', $this->vars)) {
             $this->session->setVar("list_AscDesc", $this->vars['list_AscDesc']);
         }
-        if (array_key_exists('list_Order', $this->vars))
-        {
+        if (array_key_exists('list_Order', $this->vars)) {
             $this->session->setVar("list_Order", $this->vars['list_Order']);
             $this->session->setVar("sql_LastOrder", $this->vars['list_Order']);
             $this->order = $this->vars['list_Order'];
         }
-        if ($this->session->getVar("list_SomeResources_catId"))
-        {
+        if ($this->session->getVar("list_SomeResources_catId")) {
             $this->vars['catId'] = $this->session->getVar("list_SomeResources_catId");
         }
-        if ($this->session->getVar("list_SomeResources_id"))
-        {
+        if ($this->session->getVar("list_SomeResources_id")) {
             $this->vars['id'] = $this->session->getVar("list_SomeResources_id");
-        }
-        elseif ($this->session->getVar("list_SomeResources_department"))
-        {
+        } elseif ($this->session->getVar("list_SomeResources_department")) {
             $this->vars['department'] = $this->session->getVar("list_SomeResources_department");
-        }
-        elseif ($this->session->getVar("list_SomeResources_institution"))
-        {
+        } elseif ($this->session->getVar("list_SomeResources_institution")) {
             $this->vars['institution'] = $this->session->getVar("list_SomeResources_institution");
         }
-        if ($this->session->getVar("list_SomeResources") == 'category')
-        {
+        if ($this->session->getVar("list_SomeResources") == 'category') {
             $this->categoryProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'subcategory')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'subcategory') {
             $this->subcategoryProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'userResource')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'userResource') {
             $this->userResourceProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'userQuote')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'userQuote') {
             $this->userQuoteProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'userParaphrase')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'userParaphrase') {
             $this->userParaphraseProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'cite')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'cite') {
             $this->citeProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'citeCreator')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'citeCreator') {
             $this->citeProcessCreator();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'type')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'type') {
             $this->typeProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'language')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'language') {
             $this->languageProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'keyword')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'keyword') {
             $this->keywordProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'metaKeyword')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'metaKeyword') {
             $this->metaKeywordProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'publisher')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'publisher') {
             $this->publisherProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'specialPublisher')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'specialPublisher') {
             $this->specialPublisherProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'collection')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'collection') {
             $this->collectionProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'creator')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'creator') {
             $this->creatorProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'year')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'year') {
             $this->yearProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'userTag')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'userTag') {
             $this->userTagProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'bibliography')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'bibliography') {
             $this->bibliographyProcess();
-        }
-        elseif ($this->session->getVar("list_SomeResources") == 'quarantine')
-        {
+        } elseif ($this->session->getVar("list_SomeResources") == 'quarantine') {
             $this->quarantineProcess();
         }
         $this->session->saveState(['search', 'sql', 'bookmark', 'list']);
@@ -172,26 +127,21 @@ class LISTSOMERESOURCES
      */
     public function citeProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = 'action=list_LISTSOMERESOURCES_CORE&method=citeProcess&id=' . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $resCommon = FACTORY_RESOURCECOMMON::getInstance();
             $this->stmt->conditions[] = $this->db->formatFields('resourceId') . ' ' . $this->db->inClause($resCommon->showCitations($this->vars["id"]));
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'cite');
@@ -205,37 +155,28 @@ class LISTSOMERESOURCES
      */
     public function citeProcessCreator()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = 'action=list_LISTSOMERESOURCES_CORE&method=citeProcessCreator&id=' . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $split = UTF8::mb_explode(',', $this->vars["id"]);
-            if (count($split) > 1)
-            {
-                foreach ($split as $id)
-                {
+            if (count($split) > 1) {
+                foreach ($split as $id) {
                     $array[] = $id;
                 }
                 $this->stmt->conditionsOneField['resourceId'] = $array;
-            }
-            else
-            {
+            } else {
                 $this->stmt->conditions[] = ['resourceId' => $this->vars['id']];
             }
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'citeCreator');
@@ -249,26 +190,21 @@ class LISTSOMERESOURCES
      */
     public function userResourceProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=userResourceProcess&id=" . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = ['resourcemiscAddUserIdResource' => $this->vars['id']];
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'userResource');
@@ -282,27 +218,22 @@ class LISTSOMERESOURCES
      */
     public function userQuoteProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=userQuoteProcess&id=" . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = '(' . $this->db->formatFields('resourcemetadataAddUserId') . '=' . $this->db->tidyInput($this->vars["id"]) .
                 $this->db->and . $this->db->formatFields('resourcemetadataType') . '=' . $this->db->tidyInput('q') . ')';
             $this->stmt->joins['resource_metadata'] = ['resourcemetadataResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'userQuote');
@@ -316,27 +247,22 @@ class LISTSOMERESOURCES
      */
     public function userParaphraseProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=userParaphraseProcess&id=" . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = '(' . $this->db->formatFields('resourcemetadataAddUserId') . '=' . $this->db->tidyInput($this->vars["id"]) .
                 $this->db->and . $this->db->formatFields('resourcemetadataType') . '=' . $this->db->tidyInput('p') . ')';
             $this->stmt->joins['resource_metadata'] = ['resourcemetadataResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'userParaphrase');
@@ -351,18 +277,15 @@ class LISTSOMERESOURCES
      */
     public function userMusingProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=userMusingProcess&id=" . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = '(' . $this->db->formatFields('resourcemetadataAddUserId') . '=' . $this->db->tidyInput($this->vars["id"]) .
                 $this->db->and . $this->db->formatFields('resourcemetadataPrivate') . '=' . $this->db->tidyInput('N') .
                 $this->db->and . $this->db->formatFields('resourcemetadataType') . '=' . $this->db->tidyInput('m') . ')';
@@ -370,9 +293,7 @@ class LISTSOMERESOURCES
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'userMusing');
@@ -386,26 +307,21 @@ class LISTSOMERESOURCES
      */
     public function languageProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=languageProcess&id=" . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = ['resourcelanguageLanguageId' => $this->vars['id']];
             $this->stmt->joins['resource_language'] = ['resourcelanguageResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'language');
@@ -419,39 +335,31 @@ class LISTSOMERESOURCES
      */
     public function keywordProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $catId = array_key_exists('catId', $this->vars) ? $this->vars["catId"] : $this->session->getVar("list_SomeResources_catId");
-        if ($catId)
-        { // From Category Tree browsing
+        if ($catId) { // From Category Tree browsing
             $this->session->setVar("list_SomeResources_catId", $catId);
             $this->stmt->conditions[] = '(' . $this->db->formatFields('resourcekeywordKeywordId') . '=' . $this->db->tidyInput($this->vars["id"]) .
                 $this->db->and . $this->db->formatFields('resourcecategoryCategoryId') . '=' . $this->db->tidyInput($catId) . ')';
             $this->stmt->joins['resource_category'] = ['resourcecategoryResourceId', 'resourceId'];
             $queryString = "action=list_LISTSOMERESOURCES_CORE&method=keywordProcess&id=" . $this->vars["id"] .
                 '&catId=' . $catId;
-        }
-        else
-        {
+        } else {
             $this->stmt->conditions[] = ['resourcekeywordKeywordId' => $this->vars['id']];
             $queryString = "action=list_LISTSOMERESOURCES_CORE&method=keywordProcess&id=" . $this->vars["id"];
         }
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->joins['resource_keyword'] = ['resourcekeywordResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'keyword');
@@ -465,8 +373,7 @@ class LISTSOMERESOURCES
      */
     public function metaKeywordProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         // check for ideas with this keyword
@@ -474,20 +381,17 @@ class LISTSOMERESOURCES
         $this->db->formatConditions(['resourcekeywordKeywordId' => $this->vars["id"]]);
         $this->db->formatConditions(['resourcekeywordMetadataId' => ' IS NOT NULL']);
         $this->db->formatConditions(['resourcemetadataType' => 'i']);
-        if ($this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId')) && $this->session->getVar("setup_UserId"))
-        {
+        if ($this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId')) && $this->session->getVar("setup_UserId")) {
             $this->common->ideasFound = TRUE;
         }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=metaKeywordProcess&id=" . $this->vars["id"];
         $this->stmt->metadataPaging = TRUE;
         $this->common->metadataKeyword = $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = $this->db->formatFields('resourcekeywordKeywordId') .
                 $this->db->equal . $this->db->tidyInput($this->vars['id']) . $this->db->and .
                 $this->db->formatFields('resourcekeywordMetadataId') . ' IS NOT NULL';
@@ -497,9 +401,7 @@ class LISTSOMERESOURCES
             $subStmt = $this->setSubQuery('resource_metadata');
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt, 'resource_metadata');
             $sql = $this->stmt->listList($this->session->getVar("list_Order"), 'resource_metadata');
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'metaKeyword');
@@ -513,26 +415,21 @@ class LISTSOMERESOURCES
      */
     public function yearProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=yearProcess&id=" . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = ['resourceyearYear1' => base64_decode($this->vars["id"])];
             $this->stmt->joins['resource_year'] = ['resourceyearId', 'resourceId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'year');
@@ -546,25 +443,20 @@ class LISTSOMERESOURCES
      */
     public function typeProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=typeProcess&id=" . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = ['resourceType' => $this->vars["id"]];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'type');
@@ -578,26 +470,21 @@ class LISTSOMERESOURCES
      */
     public function categoryProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=categoryProcess&id=" . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = ['resourcecategoryCategoryId' => $this->vars["id"]];
             $this->stmt->joins['resource_category'] = ['resourcecategoryResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'category');
@@ -611,26 +498,21 @@ class LISTSOMERESOURCES
      */
     public function userTagProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=userTagProcess&id=" . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = ['resourceusertagsTagId' => $this->vars["id"]];
             $this->stmt->joins['resource_user_tags'] = ['resourceusertagsResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'userTag');
@@ -644,26 +526,21 @@ class LISTSOMERESOURCES
      */
     public function subcategoryProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=subcategoryProcess&id=" . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = ['resourcecategorySubcategoryId' => $this->vars["id"]];
             $this->stmt->joins['resource_category'] = ['resourcecategoryResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'subcategory');
@@ -678,8 +555,7 @@ class LISTSOMERESOURCES
     public function creatorProcess()
     {
         $found = FALSE;
-        if (array_key_exists("id", $this->vars) && $this->vars["id"])
-        {
+        if (array_key_exists("id", $this->vars) && $this->vars["id"]) {
             $found = TRUE;
             $type = 'id';
             $this->session->setVar("list_SomeResources_id", $this->vars['id']);
@@ -689,25 +565,20 @@ class LISTSOMERESOURCES
             $this->db->formatConditions(['creatorId' => $this->vars["id"]]);
             $sameAsId = $this->db->selectFirstField('creator', 'creatorSameAs');
             // Is creator an alias for another author and a member of that author's group?
-            if ($sameAsId)
-            { // Group master ID found so find others in group
+            if ($sameAsId) { // Group master ID found so find others in group
                 $creatorIds = [$sameAsId];
                 $this->db->formatConditions(['creatorSameAs' => $sameAsId]);
                 $resultset = $this->db->select('creator', 'creatorId');
-                while ($row = $this->db->fetchRow($resultset))
-                {
+                while ($row = $this->db->fetchRow($resultset)) {
                     $creatorIds[] = $row['creatorId'];
                 }
                 $this->stmt->conditionsOneField['resourcecreatorCreatorId'] = $creatorIds;
             }
             // Perhaps the creator is the group master?
-            else
-            {
+            else {
                 $this->stmt->conditions[] = ['resourcecreatorCreatorId' => $this->vars["id"], 'creatorSameAs' => $this->vars["id"]];
             }
-        }
-        elseif (array_key_exists("department", $this->vars) && $this->vars["department"])
-        {
+        } elseif (array_key_exists("department", $this->vars) && $this->vars["department"]) {
             $found = TRUE;
             $type = 'department';
             $this->session->setVar("list_SomeResources_department", $this->vars['department']);
@@ -717,13 +588,10 @@ class LISTSOMERESOURCES
             $this->db->formatConditions(['usersDepartment' => base64_decode($this->vars["department"]),
                 'usersIsCreator' => 'IS NOT NULL', ]);
             $resultset = $this->db->select('users', 'usersIsCreator');
-            while ($row = $this->db->fetchRow($resultset))
-            {
+            while ($row = $this->db->fetchRow($resultset)) {
                 $this->stmt->conditions[] = ['resourcecreatorCreatorId' => $row['usersIsCreator'], 'creatorSameAs' => $row['usersIsCreator']];
             }
-        }
-        elseif (array_key_exists("institution", $this->vars) && $this->vars["institution"])
-        {
+        } elseif (array_key_exists("institution", $this->vars) && $this->vars["institution"]) {
             $found = TRUE;
             $type = 'institution';
             $this->session->setVar("list_SomeResources_institution", $this->vars['institution']);
@@ -733,34 +601,27 @@ class LISTSOMERESOURCES
             $this->db->formatConditions(['usersInstitution' => base64_decode($this->vars["institution"]),
                 'usersIsCreator' => 'IS NOT NULL', ]);
             $resultset = $this->db->select('users', 'usersIsCreator');
-            while ($row = $this->db->fetchRow($resultset))
-            {
+            while ($row = $this->db->fetchRow($resultset)) {
                 $this->stmt->conditions[] = ['resourcecreatorCreatorId' => $row['usersIsCreator'], 'creatorSameAs' => $row['usersIsCreator']];
             }
         }
-        if (!$found)
-        {
+        if (!$found) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
             $this->stmt->joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti'))
-        {
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti')) {
             $sql = base64_decode($this->session->getVar("sql_ListStmt"));
             // set back to beginning
             $sql = preg_replace('/LIMIT (\d+),/u', "LIMIT 0,", $sql);
@@ -789,27 +650,20 @@ class LISTSOMERESOURCES
      */
     public function publisherProcess($miscField1 = FALSE)
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        if ($miscField1)
-        {
+        if ($miscField1) {
             $queryString = "action=list_LISTSOMERESOURCES_CORE&method=specialPublisherProcess&id=" . $this->vars["id"];
-        }
-        else
-        {
+        } else {
             $queryString = "action=list_LISTSOMERESOURCES_CORE&method=publisherProcess&id=" . $this->vars["id"];
         }
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
-            if ($miscField1)
-            { // conference and translated publisher
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
+            if ($miscField1) { // conference and translated publisher
                 $this->session->setVar("list_SomeResources", 'specialPublisher');
                 $this->stmt->conditions[] = $this->db->formatFields('resourcemiscField1') . '=' . $this->db->tidyInput($this->vars["id"]) .
                     $this->db->and . '(' . $this->db->formatFields('resourceType') . '=' . $this->db->tidyInput('proceedings') .
@@ -817,9 +671,7 @@ class LISTSOMERESOURCES
                     $this->db->or . $this->db->formatFields('resourceType') . '=' . $this->db->tidyInput('book') .
                     $this->db->or . $this->db->formatFields('resourceType') . '=' . $this->db->tidyInput('book_article') .
                     $this->db->or . $this->db->formatFields('resourceType') . '=' . $this->db->tidyInput('book_chapter') . ')';
-            }
-            else
-            {
+            } else {
                 $this->session->setVar("list_SomeResources", 'publisher');
                 $this->stmt->conditions[] = ['resourcemiscPublisher' => $this->vars["id"]];
             }
@@ -828,9 +680,7 @@ class LISTSOMERESOURCES
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         // set the lastMulti session variable for quick return to this process.
@@ -843,26 +693,21 @@ class LISTSOMERESOURCES
      */
     public function collectionProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=collectionProcess&id=" . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = ['resourcemiscCollection' => $this->vars["id"]];
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'collection');
@@ -878,26 +723,21 @@ class LISTSOMERESOURCES
     {
         $gatekeep = FACTORY_GATEKEEP::getInstance();
         $gatekeep->init(); // No Read-only access allowed
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=bibliographyProcess&id=" . $this->vars["id"];
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = ['userbibliographyresourceBibliographyId' => $this->vars["id"]];
             $this->stmt->joins['user_bibliography_resource'] = ['userbibliographyresourceResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'bibliography');
@@ -916,21 +756,17 @@ class LISTSOMERESOURCES
         $gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "quarantine"));
         $queryString = 'action=list_LISTSOMERESOURCES_CORE&method=quarantineProcess';
-        if ($this->lastMulti($queryString))
-        {
+        if ($this->lastMulti($queryString)) {
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = ['resourcemiscQuarantine' => 'Y'];
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'quarantine');
@@ -943,8 +779,7 @@ class LISTSOMERESOURCES
      */
     private function pagingReset()
     {
-        if (!array_key_exists('PagingStart', $this->vars))
-        {
+        if (!array_key_exists('PagingStart', $this->vars)) {
             $this->session->delVar("mywikindx_PagingStart");
             $this->session->delVar("mywikindx_PagingStartAlpha");
             $this->session->delVar("list_AllIds");
@@ -978,8 +813,7 @@ class LISTSOMERESOURCES
      */
     private function lastMulti($queryString)
     {
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A'))
-        {
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A')) {
             $this->session->delVar("mywikindx_PagingStart");
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
@@ -996,26 +830,22 @@ class LISTSOMERESOURCES
      * Set the subQuery
      *
      * @param string $queryString
+     * @param mixed $table
      */
     private function setSubQuery($table = 'resource')
     {
         $this->db->ascDesc = $this->session->getVar("list_AscDesc");
-        switch ($this->session->getVar("list_Order"))
-        {
+        switch ($this->session->getVar("list_Order")) {
             case 'title':
                 $this->stmt->quarantine(FALSE, 'resourceId');
-                if ($this->session->getVar("list_SomeResources") != 'bibliography')
-                {
+                if ($this->session->getVar("list_SomeResources") != 'bibliography') {
                     $this->stmt->useBib('resourceId');
                 }
                 $this->stmt->executeCondJoins();
                 $this->db->groupBy(['rId']);
-                if (GLOBALS::getUserVar('PagingStyle') == 'A')
-                {
+                if (GLOBALS::getUserVar('PagingStyle') == 'A') {
                     return $this->db->selectNoExecute($table, ['resourceTitleSort', ['resourceId' => 'rId']], FALSE, TRUE, TRUE);
-                }
-                else
-                {
+                } else {
                     return $this->db->selectNoExecute($table, [['resourceId' => 'rId']], FALSE, TRUE, TRUE);
                 }
                     // no break
@@ -1023,8 +853,7 @@ class LISTSOMERESOURCES
                 $this->stmt->joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
                 $this->stmt->joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
                 $this->stmt->quarantine(FALSE, 'resourcecreatorResourceId');
-                if ($this->session->getVar("list_SomeResources") != 'bibliography')
-                {
+                if ($this->session->getVar("list_SomeResources") != 'bibliography') {
                     $this->stmt->useBib('resourcecreatorResourceId');
                 }
                 $this->stmt->executeCondJoins();
@@ -1035,8 +864,7 @@ class LISTSOMERESOURCES
                 $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
                 $this->stmt->joins['publisher'] = ['publisherId', 'resourcemiscPublisher'];
                 $this->stmt->quarantine(FALSE, 'resourcemiscId', FALSE);
-                if ($this->session->getVar("list_SomeResources") != 'bibliography')
-                {
+                if ($this->session->getVar("list_SomeResources") != 'bibliography') {
                     $this->stmt->useBib('resourcemiscId');
                 }
                 $this->stmt->executeCondJoins();
@@ -1046,8 +874,7 @@ class LISTSOMERESOURCES
             case 'year':
                 $this->stmt->joins['resource_year'] = ['resourceyearId', 'resourceId'];
                 $this->stmt->quarantine(FALSE, 'resourceyearId');
-                if ($this->session->getVar("list_SomeResources") != 'bibliography')
-                {
+                if ($this->session->getVar("list_SomeResources") != 'bibliography') {
                     $this->stmt->useBib('resourceyearId');
                 }
                 $this->stmt->executeCondJoins();
@@ -1057,8 +884,7 @@ class LISTSOMERESOURCES
             case 'timestamp':
                 $this->stmt->joins['resource_timestamp'] = ['resourcetimestampId', 'resourceId'];
                 $this->stmt->quarantine(FALSE, 'resourcetimestampId');
-                if ($this->session->getVar("list_SomeResources") != 'bibliography')
-                {
+                if ($this->session->getVar("list_SomeResources") != 'bibliography') {
                     $this->stmt->useBib('resourcetimestampId');
                 }
                 $this->stmt->executeCondJoins();

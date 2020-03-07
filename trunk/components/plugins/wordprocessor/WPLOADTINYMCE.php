@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -34,13 +36,10 @@ class WPLOADTINYMCE extends LOADTINYMCE
         $footnotePluginPath = $externalPluginPath . 'wikindxWPFootnote/editor_plugin.js';
         $cssPath = $this->cssPath;
         $cssPopupPath = $this->cssPopupPath;
-        if (!$this->pathLoaded)
-        {
+        if (!$this->pathLoaded) {
             $tinymcePath = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js"></script>';
             $this->pathLoaded = TRUE;
-        }
-        else
-        {
+        } else {
             $tinymcePath = '';
         }
 

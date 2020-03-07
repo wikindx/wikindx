@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -11,12 +13,10 @@
 function SetWikindxBasePath()
 {
     $wikindxBasePath = __DIR__;
-    while (!in_array(basename($wikindxBasePath), ["", "core"]))
-    {
+    while (!in_array(basename($wikindxBasePath), ["", "core"])) {
         $wikindxBasePath = dirname($wikindxBasePath);
     }
-    if (basename($wikindxBasePath) == "")
-    {
+    if (basename($wikindxBasePath) == "") {
         die("
             \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
             and WIKINDX is unable to set the installation path automatically.
@@ -65,17 +65,14 @@ class imageDialog
         $pString .= \HTML\p();
         GLOBALS::addTplVar('content', $pString);
         include_once("core/file/images.php");
-        if (WIKINDX_IMAGES_ALLOW)
-        {
+        if (WIKINDX_IMAGES_ALLOW) {
             // As user can upload images, we check again that user is registered
-            if ($this->session->getVar("setup_UserId"))
-            {
+            if ($this->session->getVar("setup_UserId")) {
 //
                 // This is where the system is activated.
                 // We check if the user wants an image and show it. If not, we show the explorer.
 //
-                if (!ImageServer::showImage())
-                {
+                if (!ImageServer::showImage()) {
                     $encodeExplorer = new EncodeExplorer();
                     $encodeExplorer->init();
                     $location = new Location();

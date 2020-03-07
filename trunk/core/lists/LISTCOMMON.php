@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -100,29 +102,23 @@ class LISTCOMMON
     public function resourcesExist()
     {
         $recordset = $this->db->select('database_summary', 'databaseSummaryTotalResources');
-        if (!$this->db->fetchOne($recordset))
-        {
+        if (!$this->db->fetchOne($recordset)) {
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noResources'));
 
             return FALSE;
         }
-        if ($useBib = $this->session->getVar("mywikindx_Bibliography_use"))
-        {
+        if ($useBib = $this->session->getVar("mywikindx_Bibliography_use")) {
             $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $useBib]);
             $this->db->formatConditions($this->db->formatFields('userbibliographyresourceResourceId') . $this->db->equal .
                 $this->db->formatFields('resourceId'));
             $resultset = $this->db->select(['resource', 'user_bibliography_resource'], 'resourceId');
-            if (!$this->db->numRows($resultset))
-            {
+            if (!$this->db->numRows($resultset)) {
                 GLOBALS::addTplVar('content', $this->messages->text('misc', 'noResourcesBib'));
 
                 return FALSE;
             }
-        }
-        else
-        {
-            if ($this->db->tableIsEmpty('resource'))
-            {
+        } else {
+            if ($this->db->tableIsEmpty('resource')) {
                 GLOBALS::addTplVar('content', $this->messages->text('misc', 'noResourcesBib'));
 
                 return FALSE;
@@ -134,7 +130,7 @@ class LISTCOMMON
     /**
      * Display a list from the lastMulti menu item
      *
-     * @param string|FALSE $listType (list, search etc)
+     * @param false|string $listType (list, search etc)
      */
     public function lastMulti($listType = FALSE)
     {
@@ -151,51 +147,41 @@ class LISTCOMMON
      * Produce a list of resources
      *
      * @param string $sql
-     * @param string|FALSE $listType Default is FALSE
+     * @param false|string $listType Default is FALSE
      *
      * @return bool
      */
     public function display($sql, $listType = FALSE)
     {
         $this->session->setVar("list_On", TRUE);
-        if (!$this->keepHighlight)
-        {
+        if (!$this->keepHighlight) {
             $this->session->delVar("search_Highlight");
         }
         $this->bibStyle->bibformat->patterns = $this->patterns;
-        if (GLOBALS::getUserVar('ListLink'))
-        {
+        if (GLOBALS::getUserVar('ListLink')) {
             $this->bibStyle->linkUrl = FALSE;
         }
-        if ($listType != 'cite')
-        {
+        if ($listType != 'cite') {
             $this->session->setVar("bookmark_View", 'multi');
         }
         // $SQL can be FALSE if browsing a keyword that is not attached to resources but only to ideas.
-        if (!$sql)
-        {
+        if (!$sql) {
             $this->noResources($listType);
 
             return TRUE;
         }
-        if (($listType == 'front') || ($listType == 'cite'))
-        {
+        if (($listType == 'front') || ($listType == 'cite')) {
             $recordset = $this->db->query($sql); // Don't mess up Last Multi by saving querystring
-            if ($listType == 'cite')
-            {
-                if (!$this->db->numRows($recordset))
-                {
+            if ($listType == 'cite') {
+                if (!$this->db->numRows($recordset)) {
                     return FALSE;
                 }
             }
-        }
-        else
-        {
+        } else {
             $recordset = $this->db->query($sql, TRUE);
         }
         // Displaying only attachments?
-        if ($this->session->getVar($listType . '_DisplayAttachment'))
-        {
+        if ($this->session->getVar($listType . '_DisplayAttachment')) {
             $this->listAttachments($recordset, $listType);
             $this->session->setVar("sql_DisplayAttachment", $listType . '_DisplayAttachment');
 
@@ -203,70 +189,54 @@ class LISTCOMMON
         }
         $this->session->delVar("sql_DisplayAttachment");
         $multiUserSwitch = (WIKINDX_MULTIUSER);
-        if ($multiUserSwitch)
-        {
+        if ($multiUserSwitch) {
             GLOBALS::addTplVar('multiUser', TRUE);
         }
         $quarantineSwitch = (WIKINDX_QUARANTINE);
         $useDateFormatMethod = method_exists($this->languageClass, "dateFormat");
         //$citeRadioButtonFirst = TRUE;
 
-        if ($this->metadataKeyword)
-        {
+        if ($this->metadataKeyword) {
             $listMetadataMethod = 'listMetadata';
-        }
-        elseif (!empty($this->metadataText))
-        {
+        } elseif (!empty($this->metadataText)) {
             $listMetadataMethod = 'listMetadataText';
-        }
-        elseif ($listType == 'cite' && !empty($this->metadataTextCite))
-        {
+        } elseif ($listType == 'cite' && !empty($this->metadataTextCite)) {
             $listMetadataMethod = 'listMetadataText';
-        }
-        else
-        {
+        } else {
             $listMetadataMethod = '';
         }
 
         $resourceList = [];
         $resources = [];
         $resIds = [];
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             // will be the case if ideas have been found through a keyword
-            if (!$row['resourceId'])
-            {
+            if (!$row['resourceId']) {
                 continue;
             }
 
             // Don't return twice the same resource
-            if (array_key_exists($row['resourceId'], $resources) !== FALSE)
-            {
+            if (array_key_exists($row['resourceId'], $resources) !== FALSE) {
                 continue;
             }
 
             $this->rows[$row['resourceId']] = $row;
 
-            if ($listMetadataMethod != '')
-            {
+            if ($listMetadataMethod != '') {
                 $mArray = $this->{$listMetadataMethod}($row['resourceId']);
-                if (!empty($mArray))
-                {
+                if (!empty($mArray)) {
                     $resourceList[$row['resourceId']]['metadata'] = $mArray;
                     unset($mArray);
                 }
             }
 
             // e.g. from the TinyMCE insert cite button of resource metadata
-            if ($listType != 'cite')
-            {
-                if ($quarantineSwitch && ($row['resourcemiscQuarantine'] == 'Y'))
-                {
+            if ($listType != 'cite') {
+                if ($quarantineSwitch && ($row['resourcemiscQuarantine'] == 'Y')) {
                     $resourceList[$row['resourceId']]['quarantine'] = $this->icons->getHTML("quarantine");
                 }
 
-                if ($multiUserSwitch)
-                {
+                if ($multiUserSwitch) {
                     $resourceList[$row['resourceId']]['user'] = $this->user->displayUserAddEdit($row);
                     $resourceList[$row['resourceId']]['maturity'] = $row['resourcemiscMaturityIndex'] ?
                         "&nbsp;" . $this->messages->text("misc", "matIndex") .
@@ -274,12 +244,9 @@ class LISTCOMMON
                         : FALSE;
                 }
 
-                if ($useDateFormatMethod)
-                {
+                if ($useDateFormatMethod) {
                     $resourceList[$row['resourceId']]['timestamp'] = \LOCALES\dateFormat($row['resourcetimestampTimestamp']);
-                }
-                else
-                {
+                } else {
                     $resourceList[$row['resourceId']]['timestamp'] = $row['resourcetimestampTimestamp'];
                 }
             }
@@ -291,16 +258,13 @@ class LISTCOMMON
             unset($row);
         }
 
-        if (count($resources) > 0)
-        {
+        if (count($resources) > 0) {
             $this->session->setVar("list_NextPreviousIds", base64_encode(serialize($resIds)));
             $this->formatResources($listType, $resourceList, $resources);
             $this->createLinks($listType, $resourceList, $resources);
 
-            if (!$this->listQuarantined && ($listType != 'cite'))
-            {
-                if ($this->pagingObject)
-                {
+            if (!$this->listQuarantined && ($listType != 'cite')) {
+                if ($this->pagingObject) {
                     $this->displayListInfo($listType, TRUE);
                 }
             }
@@ -309,9 +273,7 @@ class LISTCOMMON
             // so we renumber from zero
             GLOBALS::setTplVar('resourceList', array_values($resourceList));
             unset($resourceList);
-        }
-        else
-        {
+        } else {
             $this->noResources($listType);
         }
         $this->rows = NULL;
@@ -331,12 +293,9 @@ class LISTCOMMON
     {
         $this->session->delVar("list_AllIds");
         $this->session->delVar("list_NextPreviousIds");
-        if ($this->pagingObject && ($listType != 'cite'))
-        {
+        if ($this->pagingObject && ($listType != 'cite')) {
             $this->displayListInfo($listType, FALSE);
-        }
-        else
-        { // from SEARCH.php if only ideas are searched on
+        } else { // from SEARCH.php if only ideas are searched on
             $this->pagingObject = FACTORY_PAGINGALPHA::getInstance();
             $this->displayListInfo($listType, FALSE);
         }
@@ -352,25 +311,19 @@ class LISTCOMMON
      */
     public function displayAscDesc($type)
     {
-        if ($ascDesc = trim($this->session->getVar($type . "_AscDesc")))
-        {
-            if ($ascDesc == 'ASC')
-            {
+        if ($ascDesc = trim($this->session->getVar($type . "_AscDesc"))) {
+            if ($ascDesc == 'ASC') {
                 return \FORM\radioButton(FALSE, $type . "_AscDesc", 'ASC', TRUE) .
                     $this->messages->text("list", "ascending") .
                     BR . \FORM\radioButton(FALSE, $type . "_AscDesc", 'DESC') .
                     $this->messages->text("list", "descending");
-            }
-            else
-            {
+            } else {
                 return \FORM\radioButton(FALSE, $type . "_AscDesc", 'ASC') .
                     $this->messages->text("list", "ascending") .
                     BR . \FORM\radioButton(FALSE, $type . "_AscDesc", 'DESC', TRUE) .
                     $this->messages->text("list", "descending");
             }
-        }
-        else
-        {
+        } else {
             return \FORM\radioButton(FALSE, $type . "_AscDesc", 'ASC', TRUE) .
                 $this->messages->text("list", "ascending") .
                 BR . \FORM\radioButton(FALSE, $type . "_AscDesc", 'DESC') .
@@ -401,20 +354,16 @@ class LISTCOMMON
         $table = 'resource',
         $subQ = FALSE
     ) {
-        if ((GLOBALS::getUserVar('PagingStyle') == 'A') && in_array($order, ['title', 'creator', 'attachments']))
-        {
+        if ((GLOBALS::getUserVar('PagingStyle') == 'A') && in_array($order, ['title', 'creator', 'attachments'])) {
             $this->pagingObject = FACTORY_PAGINGALPHA::getInstance();
-            if ($this->metadataPaging)
-            {
+            if ($this->metadataPaging) {
                 $this->pagingObject->metadata = TRUE;
             }
             $this->pagingObject->listType = $listType;
             $this->pagingObject->order = $order;
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging($conditions, $joins, $conditionsOneField, $table, $subQ);
-        }
-        else
-        {
+        } else {
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
@@ -430,37 +379,31 @@ class LISTCOMMON
      */
     public function displayOrder($type, $reorder = FALSE)
     {
-        if (($type == 'list') && !$this->browse)
-        {            
-    		if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId"))
-            {				$order = [
-					"creator" => $this->messages->text("list", "creator"),
-					"title" => $this->messages->text("list", "title"),
-					"publisher" => $this->messages->text("list", "publisher"),
-					"year" => $this->messages->text("list", "year"),
-					"timestamp" => $this->messages->text("list", "timestamp"),
-					"viewsIndex" => $this->messages->text("list", "views"),
-					"maturityIndex" => $this->messages->text("list", "maturity"),
-				];
-
+        if (($type == 'list') && !$this->browse) {
+            if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId")) {
+                $order = [
+                    "creator" => $this->messages->text("list", "creator"),
+                    "title" => $this->messages->text("list", "title"),
+                    "publisher" => $this->messages->text("list", "publisher"),
+                    "year" => $this->messages->text("list", "year"),
+                    "timestamp" => $this->messages->text("list", "timestamp"),
+                    "viewsIndex" => $this->messages->text("list", "views"),
+                    "maturityIndex" => $this->messages->text("list", "maturity"),
+                ];
+            } else {
+                $order = [
+                    "creator" => $this->messages->text("list", "creator"),
+                    "title" => $this->messages->text("list", "title"),
+                    "publisher" => $this->messages->text("list", "publisher"),
+                    "year" => $this->messages->text("list", "year"),
+                    "timestamp" => $this->messages->text("list", "timestamp"),
+                    "popularityIndex" => $this->messages->text("list", "popularity"),
+                    "viewsIndex" => $this->messages->text("list", "views"),
+                    "downloadsIndex" => $this->messages->text("list", "downloads"),
+                    "maturityIndex" => $this->messages->text("list", "maturity"),
+                ];
             }
-            else
-            {
-				$order = [
-					"creator" => $this->messages->text("list", "creator"),
-					"title" => $this->messages->text("list", "title"),
-					"publisher" => $this->messages->text("list", "publisher"),
-					"year" => $this->messages->text("list", "year"),
-					"timestamp" => $this->messages->text("list", "timestamp"),
-					"popularityIndex" => $this->messages->text("list", "popularity"),
-					"viewsIndex" => $this->messages->text("list", "views"),
-					"downloadsIndex" => $this->messages->text("list", "downloads"),
-					"maturityIndex" => $this->messages->text("list", "maturity"),
-				];
-			}
-        }
-        else
-        {
+        } else {
             $order = [
                 "creator" => $this->messages->text("list", "creator"),
                 "title" => $this->messages->text("list", "title"),
@@ -469,20 +412,15 @@ class LISTCOMMON
                 "timestamp" => $this->messages->text("list", "timestamp"),
             ];
         }
-        if ($type == 'basket')
-        {
+        if ($type == 'basket') {
             $type = 'list';
         }
-        if (!$reorder)
-        {
+        if (!$reorder) {
             $size = '5';
-        }
-        else
-        {
+        } else {
             $size = '2';
         }
-        if ($selected = $this->session->getVar($type . "_Order"))
-        {
+        if ($selected = $this->session->getVar($type . "_Order")) {
             $pString = \FORM\selectedBoxValue(
                 $this->messages->text("list", "order"),
                 $type . "_Order",
@@ -490,9 +428,7 @@ class LISTCOMMON
                 $selected,
                 1
             );
-        }
-        else
-        {
+        } else {
             $pString = \FORM\selectFBoxValue(
                 $this->messages->text("list", "order"),
                 $type . "_Order",
@@ -500,12 +436,9 @@ class LISTCOMMON
                 1
             );
         }
-        if (!$reorder)
-        {
+        if (!$reorder) {
             $pString .= \HTML\p($this->displayAscDesc($type));
-        }
-        else
-        {
+        } else {
             $pString .= BR . $this->displayAscDesc($type);
         }
 
@@ -527,8 +460,7 @@ class LISTCOMMON
         $this->db->formatConditions(['resourcemetadataResourceId' => $resourceId]);
         $this->db->leftJoin('resource_metadata', 'resourcemetadataId', 'resourcekeywordMetadataId');
         $resultset = $this->db->select('resource_keyword', 'resourcemetadataText');
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $array[] = $this->cite->parseCitations(\HTML\nlToHtml($row['resourcemetadataText']), 'htmlNoBib', FALSE);
         }
 
@@ -544,31 +476,23 @@ class LISTCOMMON
     private function listMetadataText($resourceId)
     {
         $array = [];
-        if (!empty($this->metadataText))
-        { // i.e. not called from the word processor so no need for radio buttons on quotes, comments etc.
+        if (!empty($this->metadataText)) { // i.e. not called from the word processor so no need for radio buttons on quotes, comments etc.
             $cite = FALSE;
             $cycleArray = $this->metadataText;
-        }
-        else
-        {
+        } else {
             $cite = TRUE;
             $cycleArray = $this->metadataTextCite;
         }
-        foreach ($cycleArray as $sql)
-        {
+        foreach ($cycleArray as $sql) {
             $sql = str_replace('RESID', $this->db->tidyInput($resourceId), $sql);
             $resultset = $this->db->query($sql);
-            while ($row = $this->db->fetchRow($resultset))
-            {
-                if ($cite)
-                {
+            while ($row = $this->db->fetchRow($resultset)) {
+                if ($cite) {
                     $array[] = \FORM\radioButton(FALSE, 'cite', $resourceId . '_' .
                     base64_encode(\HTML\dbToTinyMCE($row['text']))) .
                     '&nbsp;' .
                     $this->resCommon->doHighlight($this->cite->parseCitations(\HTML\nlToHtml($row['text']), 'htmlNoBib', FALSE));
-                }
-                else
-                {
+                } else {
                     $array[] = $this->resCommon->doHighlight($this->cite->parseCitations(\HTML\nlToHtml($row['text']), 'htmlNoBib', FALSE));
                 }
             }
@@ -585,39 +509,31 @@ class LISTCOMMON
     private function listAttachments($recordset, $listType)
     {
         // Are only logged on users allowed to view this file and is this user logged on?
-        if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId"))
-        {
+        if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId")) {
             $this->displayListInfo($listType, FALSE);
         }
         include_once("core/miscellaneous/ATTACHMENT.php");
         $attachments = new ATTACHMENT();
         $files = [];
         $zip = $this->session->getVar($listType . '_DisplayAttachmentZip') ? TRUE : FALSE;
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if ($zip)
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if ($zip) {
                 $files[$row['resourceattachmentsFileName']] = $row['resourceattachmentsHashFilename'];
-            }
-            else
-            {
+            } else {
                 $files[] = $attachments->makeLink($row, $row['resourceattachmentsResourceId'], TRUE, FALSE);
                 $ids[] = \HTML\a($this->icons->getClass("view"), $this->icons->getHTML("view"), "index.php?action=resource_RESOURCEVIEW_CORE" .
                     htmlentities("&id=" . $row['resourceattachmentsResourceId']));
             }
         }
 
-        if (empty($files))
-        {
+        if (empty($files)) {
             $this->displayListInfo($listType, FALSE);
 
             return;
         }
-        if ($zip)
-        { // zip the files
+        if ($zip) { // zip the files
             $path = WIKINDX_DIR_DATA_ATTACHMENTS;
-            if (!$file = FILE\zip($files, $path))
-            {
+            if (!$file = FILE\zip($files, $path)) {
                 $errors = FACTORY_ERRORS::getInstance();
                 $badInput = FACTORY_BADINPUT::getInstance();
                 $badInput->close($errors->text("file", "write"));
@@ -645,8 +561,7 @@ class LISTCOMMON
 
         $creators = [];
 
-        while ($cRow = $this->db->fetchRow($resultSet))
-        {
+        while ($cRow = $this->db->fetchRow($resultSet)) {
             $creators[$cRow['resourcecreatorResourceId']][$cRow['resourcecreatorRole']][] = $cRow['creatorId'];
             $array = [
                 'surname' => $cRow['surname'],
@@ -658,25 +573,16 @@ class LISTCOMMON
             $this->bibStyle->creators[$cRow['creatorId']] = array_map([$this->bibStyle, "removeSlashes"], $array);
         }
 
-        foreach ($this->rows as $rId => $row)
-        {
-            if (empty($creators) || !array_key_exists($rId, $creators) || empty($creators[$rId]))
-            {
-                for ($index = 1; $index <= 5; $index++)
-                {
+        foreach ($this->rows as $rId => $row) {
+            if (empty($creators) || !array_key_exists($rId, $creators) || empty($creators[$rId])) {
+                for ($index = 1; $index <= 5; $index++) {
                     $row["creator$index"] = ''; // need empty fields for BIBSTYLE
                 }
-            }
-            else
-            {
-                for ($index = 1; $index <= 5; $index++)
-                {
-                    if (array_key_exists($index, $creators[$rId]))
-                    {
+            } else {
+                for ($index = 1; $index <= 5; $index++) {
+                    if (array_key_exists($index, $creators[$rId])) {
                         $row["creator$index"] = implode(',', $creators[$rId][$index]);
-                    }
-                    else
-                    {
+                    } else {
                         $row["creator$index"] = '';
                     }
                 }
@@ -714,94 +620,70 @@ class LISTCOMMON
      */
     private function createLinks($listType, &$resourceList, $resources)
     {
-        if ($listType == 'cite')
-        {
+        if ($listType == 'cite') {
             $citeRadioButtonFirst = TRUE;
-            foreach ($resourceList as $resourceId => $resourceArray)
-            {
+            foreach ($resourceList as $resourceId => $resourceArray) {
                 $resourceList[$resourceId]['links']['checkbox'] = \FORM\radioButton(FALSE, 'cite', $resourceId, $citeRadioButtonFirst);
                 $citeRadioButtonFirst = FALSE;
             }
-        }
-        else
-        {
+        } else {
             $write = $this->session->getVar("setup_Write");
             $superAdmin = $this->session->getVar("setup_Superadmin");
             $userId = $this->session->getVar("setup_UserId");
             $attachments = $musings = [];
             $edit = FALSE;
             // Check if these resources have attachments and display view icons accordingly. Also, calculate the resource's popularity index
-            if ($this->session->getVar("setup_UserId") || !WIKINDX_FILE_VIEW_LOGGEDON_ONLY)
-            {
-				foreach ($resourceList as $resourceId => $resourceArray)
-				{
-					if (array_key_exists('index', $this->rows[$resourceId])) // listing by popularity index so index already calculated from database
-					{
-						$popIndex = $this->rows[$resourceId]['index'] * 100;
-					}
-					else
-					{
-						$popIndex = $this->stats->getPopularityIndex($resourceId);
-					}
-					$resourceList[$resourceId]['popIndex'] = $this->messages->text("misc", "popIndex", $popIndex);
-				}
+            if ($this->session->getVar("setup_UserId") || !WIKINDX_FILE_VIEW_LOGGEDON_ONLY) {
+                foreach ($resourceList as $resourceId => $resourceArray) {
+                    if (array_key_exists('index', $this->rows[$resourceId])) { // listing by popularity index so index already calculated from database
+                        $popIndex = $this->rows[$resourceId]['index'] * 100;
+                    } else {
+                        $popIndex = $this->stats->getPopularityIndex($resourceId);
+                    }
+                    $resourceList[$resourceId]['popIndex'] = $this->messages->text("misc", "popIndex", $popIndex);
+                }
             }
             // Check if these resources have metadata and display view icons accordingly
             $this->db->formatConditionsOneField(array_keys($resources), 'resourcemetadataResourceId');
             $this->db->formatConditionsOneField(['q', 'p', 'm'], 'resourcemetadataType');
             $resultSet = $this->db->select('resource_metadata', ['resourcemetadataPrivate', 'resourcemetadataAddUserId',
                 'resourcemetadataResourceId', ]);
-            while ($row = $this->db->fetchRow($resultSet))
-            {
-                if (($row['resourcemetadataPrivate'] == 'N') || ($userId == $row['resourcemetadataAddUserId']))
-                {
+            while ($row = $this->db->fetchRow($resultSet)) {
+                if (($row['resourcemetadataPrivate'] == 'N') || ($userId == $row['resourcemetadataAddUserId'])) {
                     $musings[$row['resourcemetadataResourceId']] = TRUE;
                 }
             }
 
             $isHyperlinked = (GLOBALS::getUserVar('ListLink'));
 
-            foreach ($resources as $resourceId => $resourceArray)
-            {
-                if ($resourceArray['quotes'] || $resourceArray['paraphrases'] || array_key_exists($resourceId, $musings))
-                {
-                    if (array_key_exists($resourceId, $attachments))
-                    {
+            foreach ($resources as $resourceId => $resourceArray) {
+                if ($resourceArray['quotes'] || $resourceArray['paraphrases'] || array_key_exists($resourceId, $musings)) {
+                    if (array_key_exists($resourceId, $attachments)) {
                         $view = $this->icons->getHTML("viewmetaAttach");
-                    }
-                    else
-                    {
+                    } else {
                         $view = $this->icons->getHTML("viewmeta");
                     }
-                }
-                elseif (array_key_exists($resourceId, $attachments))
-                {
+                } elseif (array_key_exists($resourceId, $attachments)) {
                     $view = $this->icons->getHTML("viewAttach");
-                }
-                else
-                {
+                } else {
                     $view = $this->icons->getHTML("view");
                 }
-                if ($isHyperlinked)
-                {
+                if ($isHyperlinked) {
                     $resourceLink = "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $resourceId);
                     $resourceList[$resourceId]['resource'] =
                         \HTML\a('rLink', $resourceList[$resourceId]['resource'], $resourceLink);
                 }
-                if (($this->pagingObject && $this->session->getVar("setup_Write")) || ($listType != 'front'))
-                {
+                if (($this->pagingObject && $this->session->getVar("setup_Write")) || ($listType != 'front')) {
                     $resourceList[$resourceId]['links']['checkbox'] = \FORM\checkBox(FALSE, "bib_" . $resourceId);
                 }
 
-                if ($write && !WIKINDX_ORIGINATOR_EDIT_ONLY)
-                {
+                if ($write && !WIKINDX_ORIGINATOR_EDIT_ONLY) {
                     $resourceList[$resourceId]['links']['edit'] = \HTML\a(
                         $this->icons->getClass("edit"),
                         $this->icons->getHTML("edit"),
                         "index.php?action=resource_RESOURCEFORM_CORE&amp;type=edit" . htmlentities("&id=" . $resourceId)
                     );
-                    if (is_array($row) && $row['resourcemiscAddUserIdResource'] == $userId)
-                    {
+                    if (is_array($row) && $row['resourcemiscAddUserIdResource'] == $userId) {
                         $resourceList[$resourceId]['links']['delete'] = \HTML\a(
                             $this->icons->getClass("delete"),
                             $this->icons->getHTML("delete"),
@@ -810,9 +692,7 @@ class LISTCOMMON
                         );
                     }
                     $edit = TRUE;
-                }
-                elseif ($write && is_array($row) && ($row['resourcemiscAddUserIdResource'] == $userId))
-                {
+                } elseif ($write && is_array($row) && ($row['resourcemiscAddUserIdResource'] == $userId)) {
                     $resourceList[$resourceId]['links']['edit'] = \HTML\a(
                         $this->icons->getClass("edit"),
                         $this->icons->getHTML("edit"),
@@ -826,10 +706,8 @@ class LISTCOMMON
                     );
                     $edit = TRUE;
                 }
-                if ($superAdmin)
-                {
-                    if (!$edit)
-                    {
+                if ($superAdmin) {
+                    if (!$edit) {
                         $resourceList[$resourceId]['links']['edit'] = \HTML\a(
                             $this->icons->getClass("edit"),
                             $this->icons->getHTML("edit"),
@@ -845,8 +723,7 @@ class LISTCOMMON
                 }
                 // display CMS link if required
                 // link is actually a JavaScript call
-                if (GLOBALS::getUserVar('DisplayCmsLink') && WIKINDX_CMS_ALLOW)
-                {
+                if (GLOBALS::getUserVar('DisplayCmsLink') && WIKINDX_CMS_ALLOW) {
                     $resourceList[$resourceId]['links']['cms'] = \HTML\a(
                         'cmsLink',
                         "CMS:&nbsp;" . $resourceId,
@@ -856,8 +733,7 @@ class LISTCOMMON
                 }
                 // display bibtex link if required
                 // link is actually a JavaScript call
-                if (GLOBALS::getUserVar('DisplayBibtexLink'))
-                {
+                if (GLOBALS::getUserVar('DisplayBibtexLink')) {
                     $resourceList[$resourceId]['links']['bibtex'] = \HTML\a(
                         $this->icons->getClass("bibtex"),
                         $this->icons->getHTML("bibtex"),
@@ -886,15 +762,13 @@ class LISTCOMMON
         $gBibs = $this->commonBib->getGroupBibs();
         $bibs = array_merge($uBibs, $gBibs);
         $useBib = $this->session->getVar("mywikindx_Bibliography_use");
-        if ($useBib)
-        {
+        if ($useBib) {
             $this->db->formatConditions(['userbibliographyId' => $useBib]);
             $recordset = $this->db->select('user_bibliography', ['userbibliographyTitle', 'userbibliographyUserId']);
             $row = $this->db->fetchRow($recordset);
             $usingBib = stripslashes($row['userbibliographyTitle']);
             $bibUserId = $row['userbibliographyUserId'];
-            if (array_key_exists($useBib, $bibs))
-            {
+            if (array_key_exists($useBib, $bibs)) {
                 unset($bibs[$useBib]); // Remove the currently used one from the list
             }
         }
@@ -910,70 +784,50 @@ class LISTCOMMON
     private function displayListInfo($listType, $resourcesExist = TRUE)
     {
         list($usingBib, $bibUserId, $bibs) = $this->getUserBib();
-        if ($usingBib)
-        {
+        if ($usingBib) {
             $linksInfo['info'] = $this->pagingObject->linksInfo($usingBib);
-        }
-        else
-        {
+        } else {
             $linksInfo['info'] = $this->pagingObject->linksInfo();
         }
         $linksInfo['params'] = $this->listParams($listType);
-        if ($this->ideasFound)
-        {
-            if ($listType == 'search')
-            {
+        if ($this->ideasFound) {
+            if ($listType == 'search') {
                 $linksInfo['info'] .= '&nbsp;' . \HTML\a('link', $this->messages->text('search', 'ideasFound'), "index.php?action=list_SEARCH_CORE" .
                     htmlentities("&method=reprocess&type=displayIdeas"));
-            }
-            else
-            {
+            } else {
                 $linksInfo['info'] .= '&nbsp;' . \HTML\a('link', $this->messages->text('search', 'ideasFound'), "index.php?action=ideas_IDEAS_CORE" .
                     htmlentities("&method=" . 'keywordIdeaList') . htmlentities("&resourcekeywordKeywordId=" . $this->metadataKeyword));
             }
         }
-        if (!$resourcesExist)
-        {
+        if (!$resourcesExist) {
             GLOBALS::setTplVar('resourceListInfo', $linksInfo);
             unset($linksInfo);
 
             return;
         }
-        if (!$this->session->getVar($listType . '_DisplayAttachment'))
-        {
+        if (!$this->session->getVar($listType . '_DisplayAttachment')) {
             $linksInfo['selectformheader'] = \FORM\formHeaderName('list_LISTADDTO_CORE', 'formSortingAddingListInfo', FALSE);
             $linksInfo['selectformfooter'] = \FORM\formEnd();
             $linksInfo['select'] = $this->createAddToBox($bibUserId, $bibs, $listType);
-            if ($listType == 'list')
-            {
-                if ($this->session->getVar("list_SomeResources"))
-                {
+            if ($listType == 'list') {
+                if ($this->session->getVar("list_SomeResources")) {
                     $formHeader = 'list_LISTSOMERESOURCES_CORE';
-                }
-                else
-                {
+                } else {
                     $formHeader = 'list_LISTRESOURCES_CORE';
                 }
                 $linksInfo['reorder'] =
                     \FORM\hidden("method", "reorder") . $this->displayOrder($listType, TRUE) .
                     BR . \FORM\formSubmit($this->messages->text("submit", "Proceed"), 'Submit', "onclick=\"document.forms['formSortingAddingListInfo'].elements['action'].value='$formHeader'\"");
-            }
-            elseif ($listType == 'basket')
-            {
+            } elseif ($listType == 'basket') {
                 $linksInfo['reorder'] =
                     \FORM\hidden("method", "reorder") . $this->displayOrder('basket', TRUE) .
                     BR . \FORM\formSubmit($this->messages->text("submit", "Proceed"), 'Submit', "onclick=\"document.forms['formSortingAddingListInfo'].elements['action'].value='basket_BASKET_CORE'\"");
-            }
-            elseif ($listType == 'search')
-            {
-                if ($this->quickSearch)
-                {
+            } elseif ($listType == 'search') {
+                if ($this->quickSearch) {
                     $linksInfo['reorder'] =
                         \FORM\hidden("method", "reprocess") . $this->displayOrder($listType, TRUE) .
                         BR . \FORM\formSubmit($this->messages->text("submit", "Proceed"), 'Submit', "onclick=\"document.forms['formSortingAddingListInfo'].elements['action'].value='list_QUICKSEARCH_CORE'\"");
-                }
-                else
-                {
+                } else {
                     $linksInfo['reorder'] =
                         \FORM\hidden("method", "reprocess") . $this->displayOrder($listType, TRUE) .
                         BR . \FORM\formSubmit($this->messages->text("submit", "Proceed"), 'Submit', "onclick=\"document.forms['formSortingAddingListInfo'].elements['action'].value='list_SEARCH_CORE'\"");
@@ -982,8 +836,7 @@ class LISTCOMMON
         }
         // display CMS link if required
         // link is actually a JavaScript call
-        if (GLOBALS::getUserVar('DisplayCmsLink') && WIKINDX_CMS_ALLOW && WIKINDX_CMS_SQL)
-        {
+        if (GLOBALS::getUserVar('DisplayCmsLink') && WIKINDX_CMS_ALLOW && WIKINDX_CMS_SQL) {
             $linksInfo['cms'] = \HTML\a(
                 'cmsLink',
                 "CMS",
@@ -1000,41 +853,31 @@ class LISTCOMMON
      * @param array $bibs
      * @param string $listType
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function createAddToBox($bibUserId, $bibs, $listType)
     {
-        if ($this->session->getVar("setup_Write"))
-        {
+        if ($this->session->getVar("setup_Write")) {
             $array[1] = $this->messages->text("resources", "organize");
         }
-        if (!empty($bibs))
-        {
+        if (!empty($bibs)) {
             $array[0] = $this->messages->text("resources", "addToBib");
         }
-        if ($this->session->getVar("setup_UserId") && ($this->session->getVar("setup_UserId") == $bibUserId))
-        {
+        if ($this->session->getVar("setup_UserId") && ($this->session->getVar("setup_UserId") == $bibUserId)) {
             $array[3] = $this->messages->text('resources', 'deleteFromBib');
-        }
-        elseif ($this->session->getVar("resourceSelectedTo") == '3')
-        { // previous operation was 'deleteFromBib'
+        } elseif ($this->session->getVar("resourceSelectedTo") == '3') { // previous operation was 'deleteFromBib'
             $this->session->delVar("resourceSelectedTo");
         }
-        if ($listType == 'basket')
-        {
+        if ($listType == 'basket') {
             $array[8] = $this->messages->text('resources', 'basketRemove');
-        }
-        else
-        {
+        } else {
             $array[7] = $this->messages->text('resources', 'basketAdd');
         }
-        if ($this->session->getVar("setup_Superadmin"))
-        {
+        if ($this->session->getVar("setup_Superadmin")) {
             $array[4] = $this->messages->text('resources', 'deleteResource');
         }
         $array[9] = $this->messages->text('resources', 'exportCoins1');
-        if (!isset($array))
-        {
+        if (!isset($array)) {
             return FALSE;
         }
         $t = \HTML\tableStart('right');
@@ -1054,12 +897,9 @@ class LISTCOMMON
             $this->messages->text("resources", "selectAll") . '&nbsp;' . \FORM\radioButton(FALSE, 'selectWhat', 'all');
 
         \FORM\checkbox(FALSE, "selectWhat", FALSE);
-        if ($sessVar !== FALSE)
-        {
+        if ($sessVar !== FALSE) {
             $select = \FORM\selectedBoxValue(FALSE, "resourceSelectedTo", $array, $sessVar, 1);
-        }
-        else
-        {
+        } else {
             $select = \FORM\selectFBoxValue(FALSE, "resourceSelectedTo", $array, 1);
         }
         $t .= \HTML\td($select, FALSE, 'right');
@@ -1082,17 +922,15 @@ class LISTCOMMON
      *
      * @param string $listType
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function listParams($listType)
     {
         $strings = [];
         // Bookmarked multi view?
-        if ($this->session->getVar("bookmark_MultiView"))
-        {
+        if ($this->session->getVar("bookmark_MultiView")) {
             $strings = unserialize(base64_decode($this->session->getVar("sql_ListParams")));
-            if (!is_array($strings) && $strings)
-            { // From advanced search
+            if (!is_array($strings) && $strings) { // From advanced search
                 return \HTML\aBrowse(
                     'green',
                     '1em',
@@ -1102,157 +940,116 @@ class LISTCOMMON
                     \HTML\dbToHtmlPopupTidy(\HTML\nlToHtml($strings))
                 ) . BR;
             }
-            if (empty($strings))
-            {
+            if (empty($strings)) {
                 return FALSE;
             }
             $this->session->delVar("bookmark_MultiView");
 
             return $this->messages->text('listParams', 'listParams') . BR . implode(BR, $strings);
         }
-        if (array_key_exists('statistics', $this->vars) && ($this->vars['statistics'] == 'Type'))
-        {
+        if (array_key_exists('statistics', $this->vars) && ($this->vars['statistics'] == 'Type')) {
             $strings[] = $this->messages->text('listParams', 'type') . ':&nbsp;&nbsp;' . $this->vars['id'];
-        }
-        elseif ($id = $this->session->getVar($listType . "_Type"))
-        {
+        } elseif ($id = $this->session->getVar($listType . "_Type")) {
             $ids = UTF8::mb_explode(',', $id);
-            if (count($ids) > 1)
-            {
+            if (count($ids) > 1) {
                 $strings[] = $this->messages->text('listParams', 'type') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
-            }
-            else
-            {
+            } else {
                 $strings[] = $this->messages->text('listParams', 'type') . ':&nbsp;&nbsp;' . $this->messages->text('resourceType', $id);
             }
         }
-        if ($listType == 'select')
-        {
-            if ($id = $this->session->getVar($listType . '_Tag'))
-            {
+        if ($listType == 'select') {
+            if ($id = $this->session->getVar($listType . '_Tag')) {
                 $ids = UTF8::mb_explode(',', $id);
-                if (count($ids) > 1)
-                {
+                if (count($ids) > 1) {
                     $strings[] = $this->messages->text('listParams', 'tag') . ':&nbsp;&nbsp;' .
                         \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
-                }
-                else
-                {
+                } else {
                     $this->db->formatConditions(['tagId' => $id]);
                     $strings[] = $this->messages->text('listParams', 'tag') . ':&nbsp;&nbsp;' .
                         \HTML\nlToHtml($this->db->selectFirstField('tag', 'tagTag'));
                 }
             }
-            if ($id = $this->session->getVar($listType . "_attachment"))
-            {
+            if ($id = $this->session->getVar($listType . "_attachment")) {
                 $strings[] = $this->messages->text('listParams', 'attachment');
             }
         }
-        if (($listType == 'listCategory') || ($id = $this->session->getVar($listType . '_Category')))
-        {
-            if ($listType == 'listCategory')
-            {
+        if (($listType == 'listCategory') || ($id = $this->session->getVar($listType . '_Category'))) {
+            if ($listType == 'listCategory') {
                 $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
             }
             $cats = UTF8::mb_explode(',', $id);
-            if (count($cats) > 1)
-            {
+            if (count($cats) > 1) {
                 $strings[] = $this->messages->text('listParams', 'category') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
-            }
-            else
-            {
+            } else {
                 $this->db->formatConditions(['categoryId' => $id]);
                 $strings[] = $this->messages->text('listParams', 'category') . ':&nbsp;&nbsp;' .
                     \HTML\nlToHtml($this->db->selectFirstField('category', 'categoryCategory'));
             }
         }
-        if (($listType == 'listSubcategory') || ($id = $this->session->getVar($listType . '_Subcategory')))
-        {
-            if ($listType == 'listSubcategory')
-            {
+        if (($listType == 'listSubcategory') || ($id = $this->session->getVar($listType . '_Subcategory'))) {
+            if ($listType == 'listSubcategory') {
                 $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
             }
             $cats = UTF8::mb_explode(',', $id);
-            if (count($cats) > 1)
-            {
+            if (count($cats) > 1) {
                 $strings[] = $this->messages->text('listParams', 'subcategory') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
-            }
-            else
-            {
+            } else {
                 $this->db->formatConditions(['subcategoryId' => $id]);
                 $strings[] = $this->messages->text('listParams', 'subcategory') . ':&nbsp;&nbsp;' .
                     \HTML\nlToHtml($this->db->selectFirstField('subcategory', 'subcategorySubcategory'));
             }
         }
-        if (($listType == 'listUserTag') || ($id = $this->session->getVar($listType . '_UserTag')))
-        {
-            if ($listType == 'listUserTag')
-            {
+        if (($listType == 'listUserTag') || ($id = $this->session->getVar($listType . '_UserTag'))) {
+            if ($listType == 'listUserTag') {
                 $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
             }
             $cats = UTF8::mb_explode(',', $id);
-            if (count($cats) > 1)
-            {
+            if (count($cats) > 1) {
                 $strings[] = $this->messages->text('listParams', 'userTag') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
-            }
-            else
-            {
+            } else {
                 $this->db->formatConditions(['usertagsId' => $id]);
                 $strings[] = $this->messages->text('listParams', 'userTag') . ':&nbsp;&nbsp;' .
                     \HTML\nlToHtml($this->db->selectFirstField('user_tags', 'usertagsTag'));
             }
         }
-        if (($listType == 'listCollection') || ($id = $this->session->getVar($listType . '_Collection')))
-        {
-            if ($listType == 'listCollection')
-            {
+        if (($listType == 'listCollection') || ($id = $this->session->getVar($listType . '_Collection'))) {
+            if ($listType == 'listCollection') {
                 $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
             }
             $cats = UTF8::mb_explode(',', $id);
-            if (count($cats) > 1)
-            {
+            if (count($cats) > 1) {
                 $strings[] = $this->messages->text('listParams', 'collection') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
-            }
-            else
-            {
+            } else {
                 $this->db->formatConditions(['collectionId' => $id]);
                 $strings[] = $this->messages->text('listParams', 'collection') . ':&nbsp;&nbsp;' .
                     \HTML\nlToHtml($this->db->selectFirstField('collection', 'collectionTitle'));
             }
         }
-        if (($listType == 'listPublisher') || ($id = $this->session->getVar($listType . '_Publisher')))
-        {
-            if ($listType == 'listPublisher')
-            {
+        if (($listType == 'listPublisher') || ($id = $this->session->getVar($listType . '_Publisher'))) {
+            if ($listType == 'listPublisher') {
                 $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
             }
             $cats = UTF8::mb_explode(',', $id);
-            if (count($cats) > 1)
-            {
+            if (count($cats) > 1) {
                 $strings[] = $this->messages->text('listParams', 'publisher') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
-            }
-            else
-            {
+            } else {
                 $this->db->formatConditions(['publisherId' => $id]);
                 $recordset = $this->db->select('publisher', ['publisherName', 'publisherLocation']);
                 $row = $this->db->fetchRow($recordset);
-                if ($row['publisherLocation'])
-                {
+                if ($row['publisherLocation']) {
                     $loc = ' (' . stripslashes($row['publisherLocation']) . ')';
-                }
-                else
-                {
+                } else {
                     $loc = FALSE;
                 }
                 $publisher = stripslashes($row['publisherName']) . $loc;
@@ -1260,65 +1057,49 @@ class LISTCOMMON
                     \HTML\nlToHtml($publisher);
             }
         }
-        if (($listType == 'listKeyword') || ($id = $this->session->getVar($listType . '_Keyword')))
-        {
-            if ($listType == 'listKeyword')
-            {
+        if (($listType == 'listKeyword') || ($id = $this->session->getVar($listType . '_Keyword'))) {
+            if ($listType == 'listKeyword') {
                 $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
             }
             $ids = UTF8::mb_explode(',', $id);
-            if (count($ids) > 1)
-            {
+            if (count($ids) > 1) {
                 $strings[] = $this->messages->text('listParams', 'keyword') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
-            }
-            else
-            {
+            } else {
                 $this->db->formatConditions(['keywordId' => $id]);
                 $strings[] = $this->messages->text('listParams', 'keyword') . ':&nbsp;&nbsp;' .
                     \HTML\nlToHtml($this->db->selectFirstField('keyword', 'keywordKeyword'));
             }
         }
-        if ($id = $this->session->getVar($listType . '_Language'))
-        {
+        if ($id = $this->session->getVar($listType . '_Language')) {
             $ids = UTF8::mb_explode(',', $id);
-            if (count($ids) > 1)
-            {
+            if (count($ids) > 1) {
                 $strings[] = $this->messages->text('listParams', 'language') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
-            }
-            else
-            {
+            } else {
                 $this->db->formatConditions(['languageId' => $id]);
                 $recordset = $this->db->select('language', 'languageLanguage');
                 $strings[] = $this->messages->text('listParams', 'language') . ':&nbsp;&nbsp;' .
                     \HTML\nlToHtml($this->db->selectFirstField('language', 'languageLanguage'));
             }
         }
-        if (($listType == 'listCreator') || ($listType == 'select'))
-        {
-            if ($id = $this->session->getVar($listType . '_BibId'))
-            {
+        if (($listType == 'listCreator') || ($listType == 'select')) {
+            if ($id = $this->session->getVar($listType . '_BibId')) {
                 $this->db->formatConditions(['userbibliographyId' => $id]);
                 $strings[] = $this->messages->text('listParams', 'notInUserBib') . ':&nbsp;&nbsp;' .
                     \HTML\nlToHtml($this->db->selectFirstField('user_bibliography', 'userbibliographyTitle'));
             }
-            if (($listType == 'listCreator') || ($id = $this->session->getVar($listType . '_Creator')))
-            {
-                if ($listType == 'listCreator')
-                {
+            if (($listType == 'listCreator') || ($id = $this->session->getVar($listType . '_Creator'))) {
+                if ($listType == 'listCreator') {
                     $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
                 }
                 $ids = UTF8::mb_explode(',', $id);
-                if (count($ids) > 1)
-                {
+                if (count($ids) > 1) {
                     $strings[] = $this->messages->text('listParams', 'creator') . ':&nbsp;&nbsp;' .
                         \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
-                }
-                else
-                {
+                } else {
                     $this->db->formatConditions(['creatorId' => $id]);
                     $recordset = $this->db->select('creator', ['creatorPrefix', 'creatorSurname']);
                     $row = $this->db->fetchRow($recordset);
@@ -1329,10 +1110,8 @@ class LISTCOMMON
                 }
             }
         }
-        if ($listType == 'search')
-        {
-            if ($param = $this->session->getVar("advancedSearch_listParams"))
-            {
+        if ($listType == 'search') {
+            if ($param = $this->session->getVar("advancedSearch_listParams")) {
                 return \HTML\aBrowse(
                     'green',
                     '1em',
@@ -1341,174 +1120,113 @@ class LISTCOMMON
                     "",
                     \HTML\dbToHtmlPopupTidy(\HTML\nlToHtml($param))
                 ) . BR;
-            }
-            else
-            {
-                if ($id = $this->session->getVar($listType . '_Field'))
-                {
+            } else {
+                if ($id = $this->session->getVar($listType . '_Field')) {
                     $ids = UTF8::mb_explode(',', $id);
-                    if (count($ids) > 1)
-                    {
+                    if (count($ids) > 1) {
                         $strings[] = $this->messages->text('listParams', 'field') . ':&nbsp;&nbsp;' .
                             \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
-                    }
-                    else
-                    {
-                        if (mb_strpos($id, 'Custom_') === 0)
-                        {
+                    } else {
+                        if (mb_strpos($id, 'Custom_') === 0) {
                             $customField = UTF8::mb_explode('_', $id);
                             $this->db->formatConditions(['customId' => $customField[2]]);
                             $id = $this->db->selectFirstField('custom', 'customLabel');
-                        }
-                        else
-                        {
+                        } else {
                             $id = $this->messages->text("search", $id);
                         }
                         $strings[] = $this->messages->text('listParams', 'field') . ':&nbsp;&nbsp;' . $id;
                     }
                 }
-                if ($id = $this->session->getVar($listType . '_Word'))
-                {
-                    if ($this->session->getVar($listType . '_Partial') == 'on')
-                    {
+                if ($id = $this->session->getVar($listType . '_Word')) {
+                    if ($this->session->getVar($listType . '_Partial') == 'on') {
                         $id .= "&nbsp;(" . $this->messages->text('listParams', 'partial') . ")";
                     }
                     $strings[] = $this->messages->text('listParams', 'word') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
                 }
             }
         }
-        if ($listType == 'list')
-        {
-            if (array_key_exists('id', $this->vars))
-            {
+        if ($listType == 'list') {
+            if (array_key_exists('id', $this->vars)) {
                 $id = $this->vars['id'];
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'processAdd'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'processAdd')) {
                 $id = $this->vars['list_AddedBy'];
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'processEdit'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'processEdit')) {
                 $id = $this->vars['list_EditedBy'];
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'processGeneral'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'processGeneral')) {
                 $id = FALSE;
-            }
-            elseif (array_key_exists('department', $this->vars))
-            {
+            } elseif (array_key_exists('department', $this->vars)) {
                 $id = base64_decode($this->vars['department']);
-            }
-            elseif (array_key_exists('institution', $this->vars))
-            {
+            } elseif (array_key_exists('institution', $this->vars)) {
                 $id = base64_decode($this->vars['institution']);
             }
-            if (!$id)
-            {
+            if (!$id) {
                 $strings[] = $this->messages->text('listParams', 'listAll');
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'typeProcess'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'typeProcess')) {
                 $strings[] = $this->messages->text('listParams', 'type') . ':&nbsp;&nbsp;' . $this->messages->text('resourceType', $id);
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'creatorProcess'))
-            {
-                if (array_key_exists('department', $this->vars))
-                {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'creatorProcess')) {
+                if (array_key_exists('department', $this->vars)) {
                     $strings[] = $this->messages->text('listParams', 'department') . ':&nbsp;&nbsp;' . $id;
-                }
-                elseif (array_key_exists('institution', $this->vars))
-                {
+                } elseif (array_key_exists('institution', $this->vars)) {
                     $strings[] = $this->messages->text('listParams', 'institution') . ':&nbsp;&nbsp;' . $id;
-                }
-                else
-                {
+                } else {
                     $this->db->formatConditions(['creatorId' => $id]);
                     $id = $this->db->selectFirstField('creator', 'creatorSurname');
                     $strings[] = $this->messages->text('listParams', 'creator') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
                 }
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'citeProcessCreator'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'citeProcessCreator')) {
                 $strings[] = $this->messages->text('listParams', 'cited');
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'collectionProcess'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'collectionProcess')) {
                 $this->db->formatConditions(['collectionId' => $id]);
                 $id = $this->db->selectFirstField('collection', 'collectionTitle');
                 $strings[] = $this->messages->text('listParams', 'collection') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'publisherProcess'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'publisherProcess')) {
                 $this->db->formatConditions(['publisherId' => $id]);
                 $row = $this->db->selectFirstRow('publisher', ['publisherName', 'publisherLocation']);
-                if ($row['publisherLocation'])
-                {
+                if ($row['publisherLocation']) {
                     $id = $row['publisherName'] . '(' . $row['publisherLocation'] . ')';
-                }
-                else
-                {
+                } else {
                     $id = $row['publisherName'];
                 }
                 $strings[] = $this->messages->text('listParams', 'publisher') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'yearProcess'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'yearProcess')) {
                 $strings[] = $this->messages->text('listParams', 'year') . ':&nbsp;&nbsp;' . base64_decode($id);
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'keywordProcess'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'keywordProcess')) {
                 $this->db->formatConditions(['keywordId' => $id]);
                 $id = $this->db->selectFirstField('keyword', 'keywordKeyword');
                 $strings[] = $this->messages->text('listParams', 'keyword') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'categoryProcess'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'categoryProcess')) {
                 $this->db->formatConditions(['categoryId' => $id]);
                 $id = $this->db->selectFirstField('category', 'categoryCategory');
                 $strings[] = $this->messages->text('listParams', 'category') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'subcategoryProcess'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'subcategoryProcess')) {
                 $this->db->formatConditions(['subcategoryId' => $id]);
                 $id = $this->db->selectFirstField('subcategory', 'subcategorySubcategory');
                 $strings[] = $this->messages->text('listParams', 'subcategory') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'languageProcess'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'languageProcess')) {
                 $this->db->formatConditions(['languageId' => $id]);
                 $id = $this->db->selectFirstField('language', 'languageLanguage');
                 $strings[] = $this->messages->text('listParams', 'language') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'bibliographyProcess'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'bibliographyProcess')) {
                 $this->db->formatConditions(['userbibliographyId' => $id]);
                 $id = $this->db->selectFirstField('user_bibliography', 'userbibliographyTitle');
                 $strings[] = $this->messages->text('listParams', 'bibliography') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'processAdd'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'processAdd')) {
                 $this->db->formatConditions(['usersId' => $id]);
                 $row = $this->db->selectFirstRow('users', ['usersFullname', 'usersUsername']);
                 $id = $row['usersFullname'] ? $row['usersFullname'] : $row['usersUsername'];
                 $strings[] = $this->messages->text('listParams', 'addedBy', \HTML\nlToHtml($id));
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'processEdit'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'processEdit')) {
                 $this->db->formatConditions(['usersId' => $id]);
                 $row = $this->db->selectFirstRow('users', ['usersFullname', 'usersUsername']);
                 $id = $row['usersFullname'] ? $row['usersFullname'] : $row['usersUsername'];
                 $strings[] = $this->messages->text('listParams', 'editedBy', \HTML\nlToHtml($id));
-            }
-            elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'usertagProcess'))
-            {
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'usertagProcess')) {
                 $this->db->formatConditions(['usertagsId' => $id]);
                 $id = $this->db->selectFirstField('user_tags', 'usertagsTag');
                 $strings[] = $this->messages->text('listParams', 'userTag') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
             }
         }
-        if (empty($strings))
-        {
+        if (empty($strings)) {
             $this->session->delVar("sql_ListParams");
 
             return FALSE;

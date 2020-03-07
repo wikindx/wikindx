@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -61,13 +63,13 @@ class SQL
     /** array */
     public $join = [];
     /** array */
-    private $joinUpdate = [];
-    /** array */
     public $order = [];
     /** string */
     public $group = FALSE;
     /** string */
     public $limit = FALSE;
+    /** array */
+    private $joinUpdate = [];
     /** object */
     private $errors;
     /** object */
@@ -106,12 +108,9 @@ class SQL
     public function getStringEngineVersion()
     {
         $EngineVersion = $this->queryFetchFirstRow("SELECT version() AS EngineVersion;");
-        if (array_key_exists("EngineVersion", $EngineVersion))
-        {
+        if (array_key_exists("EngineVersion", $EngineVersion)) {
             return $EngineVersion["EngineVersion"];
-        }
-        else
-        {
+        } else {
             return "";
         }
     }
@@ -165,8 +164,7 @@ class SQL
 
         $row = $this->queryFetchFirstRow("SHOW VARIABLES LIKE 'max_allowed_packet';");
 
-        if (is_array($row))
-        {
+        if (is_array($row)) {
             $value = $row['Value'];
         }
 
@@ -182,17 +180,18 @@ class SQL
      * @see https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_allowed_packet
      *
      * @param int Packet size in bytes
+     * @param mixed $size
      */
     public function setMaxPacket($size)
     {
-    	// Must be multiples of 1024
+        // Must be multiples of 1024
         $mul = $size % 1024;
         $mul = ($mul * 1024 < $size) ? $mul + 1 : $mul;
         $size = $mul * 1024;
         
-    	// Correct size within authorized limits
-    	$size = $size < 1024 ? 1024 : $size;
-    	$size = $size > 1073741824 ? 1073741824 : $size;
+        // Correct size within authorized limits
+        $size = $size < 1024 ? 1024 : $size;
+        $size = $size > 1073741824 ? 1073741824 : $size;
         
         $this->queryNoError("SET @@global.max_allowed_packet = $size");
     }
@@ -305,12 +304,10 @@ class SQL
         $dbPrefix = WIKINDX_DB_TABLEPREFIX;
         
         $tables = $this->listTables();
-        foreach ($tables as $table)
-        {
+        foreach ($tables as $table) {
             $basicTable = preg_replace("/^" . preg_quote($dbPrefix, "/") . "/ui", '', $table);
             
-            if (strpos($basicTable, 'plugin_') === 0)
-            {
+            if (strpos($basicTable, 'plugin_') === 0) {
                 continue; // ignore plugin tables
             }
             
@@ -340,6 +337,7 @@ class SQL
      * Read a db schema formated for the Repair Kit plugin in an array
      *
      * @param string $filename Destination filename (absolute or relative)
+     * @param mixed $fileName
      *
      * @return mixed Schema formated in an array, or FALSE on error
      */
@@ -348,8 +346,7 @@ class SQL
         $dbSchema = FALSE;
         
         $data = file_get_contents($fileName);
-        if ($data !== FALSE)
-        {
+        if ($data !== FALSE) {
             $dbSchema = unserialize($data);
         }
         
@@ -396,10 +393,8 @@ class SQL
 		        AND TABLE_SCHEMA = '$db';
 		");
 
-        if ($recordset !== FALSE)
-        {
-            while ($field = $this->fetchRow($recordset))
-            {
+        if ($recordset !== FALSE) {
+            while ($field = $this->fetchRow($recordset)) {
                 $fields[] = $field['COLUMN_NAME'];
                 unset($field);
             }
@@ -435,13 +430,10 @@ class SQL
 		        AND LOWER(TABLE_NAME) LIKE CONCAT(LOWER('" . $prefix . "'), '%');
 		");
 
-        if ($recordset !== FALSE)
-        {
-            while ($table = $this->fetchRow($recordset))
-            {
+        if ($recordset !== FALSE) {
+            while ($table = $this->fetchRow($recordset)) {
                 $t = $table['TABLE_NAME'];
-                if (!$withPrefix)
-                {
+                if (!$withPrefix) {
                     $t = preg_replace("/^" . preg_quote($prefix, "/") . "/ui", '', $t);
                 }
                 $tables[] = $t;
@@ -460,8 +452,7 @@ class SQL
      */
     public function tableExists($table)
     {
-        if (is_string($table))
-        {
+        if (is_string($table)) {
             $table = WIKINDX_DB_TABLEPREFIX . $table;
             $db = WIKINDX_DB;
 
@@ -480,9 +471,7 @@ class SQL
 SQLCODE;
             // ANSI SQL
             return $this->queryFetchFirstField($sql);
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -510,12 +499,9 @@ SQLCODE;
         $newTable = WIKINDX_DB_TABLEPREFIX . $newTable;
         $sql = '(' . implode(', ', $fieldsArray) . ')';
         $sql .= 'ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci';
-        if ($tempTable)
-        {
+        if ($tempTable) {
             $this->queryNoResult("CREATE TEMPORARY TABLE `$newTable` $sql");
-        }
-        else
-        {
+        } else {
             $this->queryNoResult("CREATE TABLE `$newTable` $sql");
         }
     }
@@ -529,7 +515,7 @@ SQLCODE;
     {
         $newTable = WIKINDX_DB_TABLEPREFIX . $newTable;
         $sql = ' AS (' . $selectStmt . ')';
-       	$this->queryNoResult("CREATE TEMPORARY TABLE `$newTable` $sql");
+        $this->queryNoResult("CREATE TEMPORARY TABLE `$newTable` $sql");
     }
     /**
      * return numRows from recordset
@@ -550,13 +536,11 @@ SQLCODE;
      */
     public function goToRow(&$recordset, $rowNumber)
     {
-        if (is_array($recordset))
-        {
+        if (is_array($recordset)) {
             // Move to the first element
             reset($recordset);
 
-            for ($k = 1; $k < $rowNumber; $k++)
-            {
+            for ($k = 1; $k < $rowNumber; $k++) {
                 next($recordset);
             }
         }
@@ -570,13 +554,10 @@ SQLCODE;
      */
     public function fetchRow(&$recordset)
     {
-        if (is_array($recordset))
-        {
+        if (is_array($recordset)) {
             $row = current($recordset);
             next($recordset);
-        }
-        else
-        {
+        } else {
             $row = FALSE;
         }
 
@@ -593,13 +574,10 @@ SQLCODE;
     {
         $value = NULL;
 
-        if (is_array($recordset))
-        {
+        if (is_array($recordset)) {
             $row = current($recordset);
-            if (is_array($row))
-            {
-                foreach ($row as $v)
-                {
+            if (is_array($row)) {
+                foreach ($row as $v) {
                     $value = $v;
                 }
             }
@@ -640,12 +618,9 @@ SQLCODE;
     {
         $all = $all ? 'ALL' : '';
 
-        if (is_array($stmt))
-        {
+        if (is_array($stmt)) {
             return implode(" UNION $all ", $stmt);
-        }
-        else
-        {
+        } else {
             return " UNION $all $stmt";
         }
     }
@@ -653,7 +628,7 @@ SQLCODE;
      * Create a subquery from a SQL statement
      *
      * @param string $stmt Pre-defined SQL stmt (which may be a subquery itself)
-     * @param string|FALSE $alias Boolean table alias sometimes required for subquery SELECT statements.  Default is FALSE
+     * @param false|string $alias Boolean table alias sometimes required for subquery SELECT statements.  Default is FALSE
      * @param bool $from TRUE If FALSE, don't add the initial 'FROM'
      * @param bool $clause Default is FALSE. If TRUE, add all conditions, joins, groupBy, orderBy etc. clauses
      *
@@ -661,20 +636,17 @@ SQLCODE;
      */
     public function subQuery($stmt, $alias = FALSE, $from = TRUE, $clause = FALSE)
     {
-        if (!$stmt)
-        {
+        if (!$stmt) {
             $this->error = $this->errors->text("dbError", "subQuery");
         }
-        if ($clause)
-        {
+        if ($clause) {
             $stmt .= $this->subClause();
 
             $this->resetSubs();
         }
 
         $from = $from ? 'FROM ' : '';
-        if ($alias)
-        {
+        if ($alias) {
             $alias = ' AS ' . $this->formatTables($alias);
         }
 
@@ -688,7 +660,7 @@ SQLCODE;
      *
      * @param array $fields
      * @param string $subquery Formatted subquery string
-     * @param string|FALSE $alias Boolean table alias sometimes required for subquery SELECT statements.  Default is FALSE
+     * @param false|string $alias Boolean table alias sometimes required for subquery SELECT statements.  Default is FALSE
      * @param bool $clause Default is FALSE. If TRUE, add all conditions, joins, groupBy, orderBy etc. clauses
      * @param bool $distinct Default is FALSE
      * @param bool $tidy Format fields for SQL queries. Default is TRUE
@@ -697,20 +669,17 @@ SQLCODE;
      */
     public function subQueryFields($fields, $subquery, $alias = FALSE, $clause = FALSE, $distinct = FALSE, $tidy = TRUE)
     {
-        if ($clause)
-        {
+        if ($clause) {
             $clause = $this->subClause();
 
             $this->resetSubs();
         }
 
         $distinct = $distinct ? 'DISTINCT' : '';
-        if ($alias)
-        {
+        if ($alias) {
             $alias = ' AS ' . $this->formatTables($alias);
         }
-        if ($tidy)
-        {
+        if ($tidy) {
             $fields = $this->formatFields($fields);
         }
 
@@ -723,7 +692,7 @@ SQLCODE;
      * @param mixed $fields Array of fields or can be '*'
      * @param bool $distinct Default is FALSE
      * @param bool $tidyFields Format fields for SQL. Default is TRUE
-     * @param string|FALSE $alias Default is FALSE
+     * @param false|string $alias Default is FALSE
      * @param string $clause Default is FALSE
      *
      * @return object recordset
@@ -755,7 +724,7 @@ SQLCODE;
      * @param mixed $fields Array of fields or can be '*'
      * @param bool $distinct Default is FALSE
      * @param bool $tidyFields Format fields for SQL. Default is TRUE
-     * @param string|FALSE $alias Default is FALSE
+     * @param false|string $alias Default is FALSE
      * @param string $clause Default is FALSE
      *
      * @return mixed
@@ -774,7 +743,7 @@ SQLCODE;
      * @param bool $distinct Default is FALSE
      * @param bool $tidyFields Format fields. Default is TRUE
      * @param string $clause Default is FALSE
-     * @param string|FALSE $alias Default is FALSE
+     * @param false|string $alias Default is FALSE
      *
      * @return string
      */
@@ -782,42 +751,32 @@ SQLCODE;
     {
         $table = $this->formatTables($tables);
 
-        if ($tidyFields)
-        {
-            if (!is_array($fields) && $fields == '*')
-            {
+        if ($tidyFields) {
+            if (!is_array($fields) && $fields == '*') {
                 $field = '*';
-            }
-            else
-            {
+            } else {
                 $field = $this->formatFields($fields);
             }
-        }
-        else
-        {
-            if (is_array($fields))
-            {
+        } else {
+            if (is_array($fields)) {
                 $field = implode(', ', $fields);
-            }
-            else
-            {
+            } else {
                 $field = $fields;
             }
         }
         $this->error = $this->errors->text("dbError", "read");
 
-        if ($clause)
-        {
+        if ($clause) {
             $clause = $this->subClause();
             $this->resetSubs();
         }
 
-        if ($alias)
-        {
+        if ($alias) {
             $alias = ' AS ' . $this->formatTables($alias);
         }
 
         $distinct = $distinct ? 'DISTINCT' : '';
+
         return "SELECT $distinct $field FROM $table $alias $clause";
     }
     /**
@@ -825,7 +784,7 @@ SQLCODE;
      *
      * @param string $table
      * @param string $maxField
-     * @param string|FALSE $alias Default is FALSE
+     * @param false|string $alias Default is FALSE
      * @param array $otherFields Other fields to add to the query. Default is FALSE
      * @param string $subQuery Default is FALSE
      *
@@ -833,20 +792,15 @@ SQLCODE;
      */
     public function selectMax($table, $maxField, $alias = FALSE, $otherFields = FALSE, $subQuery = FALSE)
     {
-        if ($table)
-        {
+        if ($table) {
             $table = 'FROM ' . $this->formatTables($table);
         }
-        if (!$alias)
-        {
+        if (!$alias) {
             $alias = $this->formatFields($maxField);
-        }
-        else
-        {
+        } else {
             $alias = $this->formatFields($alias);
         }
-        if ($otherFields)
-        {
+        if ($otherFields) {
             $otherFields = ', ' . $this->formatFields($otherFields);
         }
         $this->error = $this->errors->text("dbError", "read");
@@ -958,27 +912,22 @@ SQLCODE;
     public function selectCountsNoExecute($table, $field, $otherFields = FALSE, $subQuery = FALSE, $group = TRUE, $clause = FALSE, $distinct = FALSE)
     {
         // NB NULL value rows are not gathered
-        if ($table)
-        {
+        if ($table) {
             $table = 'FROM ' . $this->formatTables($table);
         }
-        if ($subQuery && mb_strpos(ltrim($subQuery), 'FROM') !== 0)
-        {
+        if ($subQuery && mb_strpos(ltrim($subQuery), 'FROM') !== 0) {
             $subQuery = 'FROM ' . $subQuery;
         }
-        if ($otherFields)
-        {
+        if ($otherFields) {
             $otherFields = ', ' . $this->formatFields($otherFields);
         }
-        if ($group)
-        {
+        if ($group) {
             $this->groupBy($field);
             $this->group .= $otherFields;
         }
         $field = $this->formatFields($field);
         $this->error = $this->errors->text("dbError", "read");
-        if ($clause)
-        {
+        if ($clause) {
             $clause = $this->subClause();
 
             $this->resetSubs();
@@ -1018,18 +967,15 @@ SQLCODE;
      */
     public function selectCountDistinctFieldNoExecute($table, $field, $subQuery = FALSE, $clause = FALSE)
     {
-        if ($table)
-        {
+        if ($table) {
             $table = 'FROM ' . $this->formatTables($table);
         }
-        if ($subQuery && mb_strpos(ltrim($subQuery), 'FROM') !== 0)
-        {
+        if ($subQuery && mb_strpos(ltrim($subQuery), 'FROM') !== 0) {
             $subQuery = 'FROM ' . $subQuery;
         }
         $field = $this->formatFields($field);
         $this->error = $this->errors->text("dbError", "read");
-        if ($clause)
-        {
+        if ($clause) {
             $clause = $this->subClause();
 
             $this->resetSubs();
@@ -1063,8 +1009,7 @@ SQLCODE;
     {
         $field = $this->formatFields($field);
         $this->error = $this->errors->text("dbError", "read");
-        if ($clause)
-        {
+        if ($clause) {
             $clause = $this->subClause();
 
             $this->resetSubs();
@@ -1100,12 +1045,9 @@ SQLCODE;
      */
     public function selectNoExecuteWithExceptions($tables, $fields, $distinct = FALSE)
     {
-        if (!is_array($fields) && $fields == '*')
-        {
+        if (!is_array($fields) && $fields == '*') {
             $field = '*';
-        }
-        else
-        {
+        } else {
             $field = $this->formatFields($fields, TRUE);
         }
         $table = $this->formatTables($tables);
@@ -1148,25 +1090,19 @@ SQLCODE;
      */
     public function selectNoExecuteFromSubQuery($tables, $fields, $subQuery, $distinct = FALSE, $tidy = TRUE, $clause = FALSE)
     {
-        if (!is_array($fields) && $fields == '*')
-        {
+        if (!is_array($fields) && $fields == '*') {
             $field = '*';
-        }
-        else
-        {
+        } else {
             $field = $fields;
-            if ($tidy)
-            {
+            if ($tidy) {
                 $field = $this->formatFields($field);
             }
         }
-        if ($tables)
-        {
+        if ($tables) {
             $table = ', ' . $this->formatTables($tables);
         }
         $this->error = $this->errors->text("dbError", "read");
-        if ($clause)
-        {
+        if ($clause) {
             $clause = $this->subClause();
 
             $this->resetSubs();
@@ -1174,12 +1110,9 @@ SQLCODE;
 
         $distinct = $distinct ? 'DISTINCT' : '';
 
-        if ($tables)
-        {
+        if ($tables) {
             $myquery = "SELECT $distinct $field $subQuery $table $clause"; // 'FROM' is already part of subqQuery -- FROM($subQuery)
-        }
-        else
-        {
+        } else {
             $myquery = "SELECT $distinct $field $subQuery $clause";
         }
 
@@ -1197,26 +1130,19 @@ SQLCODE;
         $this->error = $this->errors->text("dbError", "write");
         $field = $this->formatFields($fields);
         $table = $this->formatTables($table);
-        if (is_array($values))
-        {
-            if (is_array($values[0]))
-            {
+        if (is_array($values)) {
+            if (is_array($values[0])) {
                 $valueArray = [];
-                foreach ($values as $element)
-                {
+                foreach ($values as $element) {
                     $valueArray[] = $this->formatValues($element);
                 }
                 $value = implode('), (', $valueArray);
                 $this->queryNoResult("INSERT INTO $table ($field) VALUES ($value);");
-            }
-            else
-            {
+            } else {
                 $value = $this->formatValues($values);
                 $this->queryNoResult("INSERT INTO $table ($field) VALUES ($value);");
             }
-        }
-        else
-        {
+        } else {
             $value = $this->tidyInput($values);
             $this->queryNoResult("INSERT INTO $table ($field) VALUES ($value);");
         }
@@ -1250,18 +1176,14 @@ SQLCODE;
         $table = $this->formatTables($table);
         $this->error = $this->errors->text("dbError", "write");
         $join = FALSE;
-        if (!empty($this->join))
-        {
+        if (!empty($this->join)) {
             $join = implode(' ', $this->join);
             $this->joinUpdate = $this->join;
             $this->join = [];
         }
-        if ($failOnError)
-        {
+        if ($failOnError) {
             $this->queryNoResult("UPDATE $table $join $set");
-        }
-        else
-        {
+        } else {
             $this->queryNoError("UPDATE $table $join $set");
         }
     }
@@ -1277,10 +1199,8 @@ SQLCODE;
      */
     public function updateTimestamp($table, $updateArray)
     {
-        foreach ($updateArray as $field => $value)
-        {
-            if (!$value)
-            {
+        foreach ($updateArray as $field => $value) {
+            if (!$value) {
                 $value = 'CURRENT_TIMESTAMP';
             }
             $fieldArray[] = "`$field` = $value";
@@ -1317,20 +1237,15 @@ SQLCODE;
         $this->error = $this->errors->text("dbError", "write");
         $join = FALSE;
 
-        if (is_array($nulls))
-        {
-            foreach ($nulls as $null)
-            {
+        if (is_array($nulls)) {
+            foreach ($nulls as $null) {
                 $sqlArray[] = "`$null` = NULL";
             }
             $set = implode(", ", $sqlArray);
-        }
-        else
-        {
+        } else {
             $set = "`$nulls` = NULL";
         }
-        if (!empty($this->join))
-        {
+        if (!empty($this->join)) {
             $join = implode(' ', $this->join);
             $this->joinUpdate = $this->join;
             $this->join = [];
@@ -1363,17 +1278,14 @@ SQLCODE;
         $setField = $this->formatFields($setField);
         $conditionField = $this->formatFields($conditionField);
         $condition = ' WHERE ' . $conditionField . $this->inClause(implode(',', array_keys($updateArray)));
-        if (is_array($extraConditions))
-        {
+        if (is_array($extraConditions)) {
             $condition .= ' AND (' . implode(' ', $extraConditions) . ')';
         }
 
         $caseArray = [];
-        foreach ($updateArray as $key => $value)
-        {
+        foreach ($updateArray as $key => $value) {
             $value = $this->formatValues($value);
-            if (mb_strlen($value) == 0)
-            {
+            if (mb_strlen($value) == 0) {
                 $value = "''";
             }
             $caseArray[] = "WHEN " . $this->formatValues($key) . " THEN " . $value;
@@ -1426,42 +1338,27 @@ SQLCODE;
      */
     public function formatFields($fields, $withExceptions = FALSE, $tidyLeft = TRUE)
     {
-        if (!is_array($fields))
-        {
-            if (count($split = UTF8::mb_explode('.', $fields)) > 1)
-            {
+        if (!is_array($fields)) {
+            if (count($split = UTF8::mb_explode('.', $fields)) > 1) {
                 return $this->formatTables($split[0]) . ".`$split[1]`";
-            }
-            else
-            {
+            } else {
                 return "`$fields`";
             }
         }
-        if (empty($fields))
-        {
+        if (empty($fields)) {
             return NULL;
         }
-        foreach ($fields as $field)
-        {
-            if (is_array($field))
-            {
-                if ($withExceptions)
-                {
+        foreach ($fields as $field) {
+            if (is_array($field)) {
+                if ($withExceptions) {
                     $array[] = $this->formatAliasWithExceptions($field, $tidyLeft);
-                }
-                else
-                {
+                } else {
                     $array[] = $this->formatAlias($field, FALSE, $tidyLeft);
                 }
-            }
-            else
-            {
-                if (count($split = UTF8::mb_explode('.', $field)) > 1)
-                {
+            } else {
+                if (count($split = UTF8::mb_explode('.', $field)) > 1) {
                     $array[] = $this->formatTables($split[0]) . ".`$split[1]`";
-                }
-                else
-                {
+                } else {
                     $array[] = "`$field`";
                 }
             }
@@ -1528,26 +1425,16 @@ SQLCODE;
      */
     public function formatTables($tables, $brackets = FALSE)
     {
-        if (!$tables)
-        {
+        if (!$tables) {
             return FALSE;
-        }
-        else
-        {
-            if (!is_array($tables))
-            {
+        } else {
+            if (!is_array($tables)) {
                 $tableListe = WIKINDX_DB_TABLEPREFIX . $tables;
-            }
-            else
-            {
-                foreach ($tables as $table)
-                {
-                    if (is_array($table))
-                    {
+            } else {
+                foreach ($tables as $table) {
+                    if (is_array($table)) {
                         $array[] = $this->formatAlias($table, TRUE);
-                    }
-                    else
-                    {
+                    } else {
                         $array[] = WIKINDX_DB_TABLEPREFIX . $table;
                     }
                 }
@@ -1571,17 +1458,13 @@ SQLCODE;
     public function whereStmt($conditions, $join = '')
     {
         $array = [];
-        if (is_array($conditions))
-        {
-            foreach ($conditions as $field => $value)
-            {
+        if (is_array($conditions)) {
+            foreach ($conditions as $field => $value) {
                 $array[] = $field . $value;
             }
 
             return 'WHERE (' . implode($join, $array) . ')';
-        }
-        else
-        {
+        } else {
             return 'WHERE (' . $conditions . ')';
         }
     }
@@ -1601,87 +1484,57 @@ SQLCODE;
      */
     public function formatConditions($condition, $notEqual = '=', $returnString = FALSE, $doubleParentheses = FALSE)
     {
-        if (!is_array($condition))
-        {
-            if ($returnString)
-            {
+        if (!is_array($condition)) {
+            if ($returnString) {
                 return $doubleParentheses ? $this->conditionSeparator . '((' . $condition . '))' : $this->conditionSeparator . '(' . $condition . ')';
-            }
-            else
-            {
+            } else {
                 $this->condition[] = $doubleParentheses ? '((' . $condition . '))' : '(' . $condition . ')';
             }
 
             return;
         }
 
-        if ($notEqual === ">")
-        {
+        if ($notEqual === ">") {
             $equal = $this->greater;
-        }
-        elseif ($notEqual === "<")
-        {
+        } elseif ($notEqual === "<") {
             $equal = $this->less;
-        }
-        elseif ($notEqual === ">=")
-        {
+        } elseif ($notEqual === ">=") {
             $equal = $this->greaterEqual;
-        }
-        elseif ($notEqual === "<=")
-        {
+        } elseif ($notEqual === "<=") {
             $equal = $this->lessEqual;
-        }
-        elseif ($notEqual === "=")
-        {
+        } elseif ($notEqual === "=") {
             $equal = $this->equal;
-        }
-        elseif ($notEqual === "!=")
-        {
+        } elseif ($notEqual === "!=") {
             $equal = $this->notEqual;
-        }
-        else
-        {
+        } else {
             $equal = $this->notEqual;
         }
 
-        foreach ($condition as $field => $value)
-        {
+        foreach ($condition as $field => $value) {
             /**
              * Check for conditions such as 'IS NULL' or 'IS NOT NULL'
              */
-            if (trim($value) === 'IS NULL' || trim($value) === 'IS NOT NULL')
-            {
+            if (trim($value) === 'IS NULL' || trim($value) === 'IS NOT NULL') {
                 $array[] = $this->formatFields($field) . $value;
-            }
-            elseif (trim($value) === 'NULL')
-            {
-                if ($equal == $this->equal)
-                {
+            } elseif (trim($value) === 'NULL') {
+                if ($equal == $this->equal) {
                     $array[] = $this->formatFields($field) . 'IS NULL';
-                }
-                else
-                {
+                } else {
                     $array[] = $this->formatFields($field) . 'IS NOT NULL';
                 }
-            }
-            else
-            {
+            } else {
                 $array[] = $this->formatFields($field) . $equal . $this->tidyInput($value);
             }
         }
 
         $conditions = '(' . implode($this->conditionSeparator, $array) . ')';
-        if ($doubleParentheses)
-        {
+        if ($doubleParentheses) {
             '(' . $conditions . ')';
         }
 
-        if ($returnString)
-        {
+        if ($returnString) {
             return $conditions;
-        }
-        else
-        {
+        } else {
             $this->condition[] = $conditions;
         }
     }
@@ -1708,47 +1561,30 @@ SQLCODE;
         $alias = FALSE,
         $returnString = FALSE
     ) {
-        if ($notEqual)
-        {
-            if ($notEqual === ">")
-            {
+        if ($notEqual) {
+            if ($notEqual === ">") {
                 $equal = $this->greater;
-            }
-            elseif ($notEqual === "<")
-            {
+            } elseif ($notEqual === "<") {
                 $equal = $this->less;
-            }
-            elseif ($notEqual === ">=")
-            {
+            } elseif ($notEqual === ">=") {
                 $equal = $this->greaterEqual;
-            }
-            elseif ($notEqual === "<=")
-            {
+            } elseif ($notEqual === "<=") {
                 $equal = $this->lessEqual;
-            }
-            elseif ($notEqual === "=")
-            {
+            } elseif ($notEqual === "=") {
                 $equal = $this->equal;
-            }
-            elseif ($notEqual === "!=")
-            {
+            } elseif ($notEqual === "!=") {
+                $equal = $this->notEqual;
+            } else {
                 $equal = $this->notEqual;
             }
-            else
-            {
-                $equal = $this->notEqual;
-            }
-        }
-        else
-        {
+        } else {
             $equal = $this->equal;
         }
 
         $field = $alias ? $this->tidyInput($field) : $this->formatFields($field);
 
         // When the condition is unique, turn it into multiple condition not to double the code.
-        if (!is_array($condition))
-        {
+        if (!is_array($condition)) {
             $condition = [$condition];
         }
 
@@ -1757,75 +1593,51 @@ SQLCODE;
 
         $array = $arrayIN = [];
 
-        if (!$tidy)
-        {
-            foreach ($condition as $value)
-            {
+        if (!$tidy) {
+            foreach ($condition as $value) {
                 $array[] = $field . $value;
             }
-        }
-        else
-        {
-            foreach ($condition as $value)
-            {
+        } else {
+            foreach ($condition as $value) {
                 /**
                  * Check for conditions such as 'IS NULL' or 'IS NOT NULL'
                  */
-                if (trim($value) === 'IS NULL' || trim($value) === 'IS NOT NULL')
-                {
+                if (trim($value) === 'IS NULL' || trim($value) === 'IS NOT NULL') {
                     $array[] = $field . $value;
-                }
-                elseif (trim($value) === 'NULL')
-                {
-                    if ($equal == $this->equal)
-                    {
+                } elseif (trim($value) === 'NULL') {
+                    if ($equal == $this->equal) {
                         $array[] = $field . 'IS NULL';
-                    }
-                    else
-                    {
+                    } else {
                         $array[] = $field . 'IS NOT NULL';
                     }
-                }
-                elseif ($opIN && $value)
-                { // If IN or NOT IN operator can be used, puts current cond. value in an separate array
+                } elseif ($opIN && $value) { // If IN or NOT IN operator can be used, puts current cond. value in an separate array
                     $arrayIN[] = $this->tidyInput($value);
-                }
-                elseif ($value)
-                {
+                } elseif ($value) {
                     $array[] = $field . $equal . $this->tidyInput($value);
                 }
             }
         }
 
         // If possible merge all cond. value with IN / NOT IN and puts this clause with others
-        if ($opIN && !empty($arrayIN))
-        {
+        if ($opIN && !empty($arrayIN)) {
             $array[] = $field . ' ' . ($equal == $this->equal ? 'IN' : 'NOT IN') . ' (' . implode(', ', $arrayIN) . ')';
         }
 
         $conditionsOneField = implode($this->or, $array);
 
-        if ($conditionsOneField != '')
-        {
+        if ($conditionsOneField != '') {
             $conditionsOneField = '(' . $conditionsOneField . ')';
-            if ($doubleParentheses)
-            {
+            if ($doubleParentheses) {
                 $conditionsOneField = '(' . $conditionsOneField . ')';
             }
 
-            if ($returnString)
-            {
+            if ($returnString) {
                 return $conditionsOneField;
-            }
-            else
-            {
+            } else {
                 $this->condition[] = $conditionsOneField;
             }
-        }
-        else
-        {
-            if ($returnString)
-            {
+        } else {
+            if ($returnString) {
                 return $conditionsOneField;
             }
         }
@@ -1839,8 +1651,7 @@ SQLCODE;
      */
     public function formatTimestamp($time = FALSE)
     {
-        if (!$time)
-        {
+        if (!$time) {
             $time = time();
         }
 
@@ -1860,12 +1671,9 @@ SQLCODE;
         $string = trim($string);
         // Check if STRING is a number and reject scientific notation
         // (used sometimes as page numbers in journals)
-        if (is_numeric($string) && strpos($string, 'e') === FALSE)
-        {
+        if (is_numeric($string) && strpos($string, 'e') === FALSE) {
             return $string;
-        }
-        else
-        {
+        } else {
             return "'" . $this->escapeString($string) . "'";
         }
     }
@@ -1882,12 +1690,9 @@ SQLCODE;
     {
         // Check if STRING is a number and reject scientific notation
         // (used sometimes as page numbers in journals)
-        if (is_numeric($string) && strpos($string, 'e') === FALSE)
-        {
+        if (is_numeric($string) && strpos($string, 'e') === FALSE) {
             return $string;
-        }
-        else
-        {
+        } else {
             return "'" . $this->escapeString($string) . "'";
         }
     }
@@ -1949,8 +1754,7 @@ SQLCODE;
 
         $recordset = $this->select('cache', $field);
 
-        if ($this->numRows($recordset) > 0)
-        {
+        if ($this->numRows($recordset) > 0) {
             $result = unserialize(base64_decode($this->fetchOne($recordset)));
         }
 
@@ -1976,15 +1780,11 @@ SQLCODE;
     public function prependTableToField($table, $fields)
     {
         $table = str_replace('_', '', $table);
-        if (is_array($fields))
-        {
-            foreach ($fields as $field)
-            {
+        if (is_array($fields)) {
+            foreach ($fields as $field) {
                 $changed[] = $table . $field;
             }
-        }
-        else
-        {
+        } else {
             $changed = $table . $fields;
         }
 
@@ -2005,39 +1805,30 @@ SQLCODE;
      */
     public function dateDiffRatio($field, $denominator, $alias = FALSE, $aggregateFunction = '', $round = 3, $otherFields = FALSE, $group = FALSE)
     {
-        if ($otherFields)
-        {
+        if ($otherFields) {
             $otherFields = ', ' . $this->formatFields($otherFields);
         }
-        if ($group)
-        {
+        if ($group) {
             $this->groupBy($field);
             $this->group .= $otherFields;
         }
 
-        if ($alias)
-        {
+        if ($alias) {
             $alias = ' AS ' . $this->formatFields($alias);
         }
         $field = $this->formatFields($field);
         $denominator = $this->formatFields($denominator);
 
-        if ($aggregateFunction != '')
-        {
+        if ($aggregateFunction != '') {
             $avgBegin = $aggregateFunction . '(';
             $avgEnd = ')';
-        }
-        else
-        {
+        } else {
             $avgBegin = '';
             $avgEnd = '';
         }
-        if (!$round)
-        {
+        if (!$round) {
             return "$avgBegin $field / DATEDIFF(CURRENT_DATE, $denominator)$avgEnd $alias";
-        }
-        else
-        {
+        } else {
             return "ROUND($avgBegin $field / DATEDIFF(CURRENT_DATE, $denominator)$avgEnd, $round)$alias";
         }
     }
@@ -2051,12 +1842,9 @@ SQLCODE;
      */
     public function monthDiff($date1, $date2 = FALSE)
     {
-        if ($date2)
-        {
+        if ($date2) {
             $date2 = "'$date2'";
-        }
-        else
-        {
+        } else {
             $date2 = 'CURRENT_TIMESTAMP';
         }
 
@@ -2093,8 +1881,7 @@ SQLCODE;
      */
     public function round($clause, $alias = FALSE, $round = 3)
     {
-        if ($alias)
-        {
+        if ($alias) {
             $alias = ' AS ' . $this->formatFields($alias);
         }
 
@@ -2122,12 +1909,10 @@ SQLCODE;
      */
     public function dateIntervalCondition($limit, $timescale = 'day', $fromTime = 'now')
     {
-        if ($fromTime == 'now')
-        {
+        if ($fromTime == 'now') {
             $fromTime = 'CURRENT_DATE';
         }
-        if ($timescale == 'day')
-        {
+        if ($timescale == 'day') {
             $timescale = 'DAY';
         }
 
@@ -2143,12 +1928,9 @@ SQLCODE;
      */
     public function concat($array, $separator = FALSE)
     {
-        if ($separator !== FALSE)
-        {
+        if ($separator !== FALSE) {
             return "CONCAT_WS('$separator', " . implode(', ', $array) . ")";
-        }
-        else
-        {
+        } else {
             return "CONCAT(" . implode(', ', $array) . ")";
         }
     }
@@ -2164,12 +1946,9 @@ SQLCODE;
     public function groupConcat($field, $separator = FALSE, $distinct = FALSE)
     {
         $distinct === TRUE ? $distinct = 'DISTINCT ' : $distinct = '';
-        if ($separator !== FALSE)
-        {
+        if ($separator !== FALSE) {
             return "GROUP_CONCAT($distinct$field SEPARATOR '$separator')";
-        }
-        else
-        {
+        } else {
             return "GROUP_CONCAT($distinct$field)";
         }
     }
@@ -2192,39 +1971,28 @@ SQLCODE;
      */
     public function caseWhen($subject, $test, $result, $default = FALSE, $tidy = TRUE, $alias = FALSE)
     {
-        if ($tidy && $default)
-        {
+        if ($tidy && $default) {
             $defaultClause = $this->formatFields($default);
-        }
-        else
-        {
+        } else {
             $defaultClause = $default;
         }
-        if ($default)
-        {
+        if ($default) {
             $default = ' ELSE (' . $defaultClause . ')';
         }
-        if ($alias)
-        {
+        if ($alias) {
             $alias = ' AS ' . $this->formatFields($alias);
         }
-        if (is_array($subject))
-        {
-            foreach ($subject as $key => $value)
-            {
+        if (is_array($subject)) {
+            foreach ($subject as $key => $value) {
                 $clauses[] = "WHEN ($key) THEN $value";
             }
             $multipleClause = implode(' ', $clauses);
             $final = "CASE $multipleClause $default END$alias";
-        }
-        elseif ($tidy)
-        {
+        } elseif ($tidy) {
             $subject = $this->formatFields($subject);
             $result = $this->formatFields($result);
             $final = "CASE WHEN ($subject $test) THEN ($result) $default END$alias";
-        }
-        else
-        {
+        } else {
             $final = "CASE WHEN ($subject $test) THEN ($result) $default END$alias";
         }
 
@@ -2243,10 +2011,10 @@ SQLCODE;
      */
     public function ifClause($field, $test, $result, $default, $alias = FALSE)
     {
-    	if ($alias)
-    	{
-    		$alias = ' AS ' . $this->formatFields($alias);
-    	}
+        if ($alias) {
+            $alias = ' AS ' . $this->formatFields($alias);
+        }
+
         return "IF($field $test, $result, $default)$alias";
     }
     /**
@@ -2292,13 +2060,10 @@ SQLCODE;
      */
     public function innerJoinGeneric($joinedMember, $left, $right = FALSE, $tidy = TRUE)
     {
-        if ($tidy && $right)
-        {
+        if ($tidy && $right) {
             $left = $this->formatFields($left);
             $right = $this->equal . $this->formatFields($right);
-        }
-        elseif ($right)
-        {
+        } elseif ($right) {
             $right = $this->equal . $right;
         }
         $this->join[] = 'INNER JOIN ' . $joinedMember . ' ON ' . $left . $right;
@@ -2348,14 +2113,12 @@ SQLCODE;
      */
     public function leftJoinCondition($table, $left, $right = FALSE, $condition = FALSE, $and = TRUE, $tidy = TRUE)
     {
-        if ($tidy && $right)
-        {
+        if ($tidy && $right) {
             $left = $this->formatFields($left);
             $right = $this->equal . $this->formatFields($right);
         }
         $and ? $and = $this->and : '';
-        if ($condition)
-        {
+        if ($condition) {
             $right = $right . $and . $condition;
         }
         $this->leftJoinGeneric($this->formatTables($table, FALSE), $left, $right, FALSE);
@@ -2373,13 +2136,10 @@ SQLCODE;
      */
     public function leftJoinGeneric($joinedMember, $left, $right = FALSE, $tidy = TRUE)
     {
-        if ($tidy && $right)
-        {
+        if ($tidy && $right) {
             $left = $this->formatFields($left);
             $right = $this->equal . $this->formatFields($right);
-        }
-        elseif ($right)
-        {
+        } elseif ($right) {
             $right = $this->equal . $right;
         }
         $this->join[] = 'LEFT JOIN ' . $joinedMember . ' ON ' . $left . $right;
@@ -2397,19 +2157,16 @@ SQLCODE;
      */
     public function orderBy($field, $tidy = TRUE, $removeBraces = TRUE, $returnString = FALSE)
     {
-        if ($tidy)
-        {
+        if ($tidy) {
             $field = $this->formatFields($field);
         }
 
-        if ($removeBraces)
-        {
+        if ($removeBraces) {
             $field = $this->replace($this->replace($field, '{', '', FALSE), '}', '', FALSE);
         }
-		if ($returnString)
-		{
-			return ' ORDER BY ' . $field . ' ' . $this->ascDesc;
-		}
+        if ($returnString) {
+            return ' ORDER BY ' . $field . ' ' . $this->ascDesc;
+        }
         $this->order[] = $field . ' ' . $this->ascDesc;
 
         $this->collateSet = FALSE; // reset
@@ -2436,8 +2193,7 @@ SQLCODE;
      */
     public function orderByCollate($field, $tidy = TRUE)
     {
-        if ($tidy)
-        {
+        if ($tidy) {
             $field = $this->formatFields($field);
         }
 
@@ -2457,15 +2213,13 @@ SQLCODE;
      */
     public function groupBy($field, $tidy = TRUE, $having = FALSE)
     {
-        if ($tidy)
-        {
+        if ($tidy) {
             $field = $this->formatFields($field);
         }
 
         $this->group = "GROUP BY $field";
 
-        if ($having)
-        {
+        if ($having) {
             $this->group .= " HAVING $having";
         }
     }
@@ -2481,17 +2235,13 @@ SQLCODE;
      */
     public function limit($limit, $offset, $return = FALSE)
     {
-        if ($limit < 1)
-        {
+        if ($limit < 1) {
             return; // if limit is set to -1, we don't want a limit
         }
         $limit = " LIMIT $offset, $limit";
-        if ($return)
-        {
+        if ($return) {
             return $limit;
-        }
-        else
-        {
+        } else {
             $this->limit = $limit;
         }
     }
@@ -2507,8 +2257,7 @@ SQLCODE;
      */
     public function replace($field, $find, $replace, $tidy = TRUE)
     {
-        if ($tidy)
-        {
+        if ($tidy) {
             $field = $this->formatFields($field);
         }
 
@@ -2524,20 +2273,17 @@ SQLCODE;
      */
     public function coalesce($fields, $alias = FALSE)
     {
-        if (is_array($fields))
-        {
+        if (is_array($fields)) {
             $coalesce = [];
 
-            foreach ($fields as $field)
-            {
+            foreach ($fields as $field) {
                 $coalesce[] = $this->formatFields($field);
             }
 
             $fields = implode(', ', $coalesce);
         }
 
-        if ($alias)
-        {
+        if ($alias) {
             $alias = ' AS ' . $this->formatFields($alias);
         }
 
@@ -2553,8 +2299,7 @@ SQLCODE;
      */
     public function upper($field, $tidy = TRUE)
     {
-        if ($tidy)
-        {
+        if ($tidy) {
             $field = $this->formatFields($field);
         }
 
@@ -2603,13 +2348,14 @@ SQLCODE;
      */
     public function fulltextSearch($field, $searchTerm, $boolean = TRUE)
     {
-    	$fields = $this->formatFields($field);
+        $fields = $this->formatFields($field);
         $type = $boolean ? 'IN BOOLEAN MODE' : 'IN NATURAL LANGUAGE MODE';
-// Need to protect double quotes
-		$searchTerm = str_replace('"', '!WIKINDXQUOTESWIKINDX!', $searchTerm);
-		$this->escapeLikeString($searchTerm);
-		$searchEscaped = str_replace('!WIKINDXQUOTESWIKINDX!', '"', $searchTerm);
-		return " MATCH($fields) AGAINST('" . $searchEscaped . "' $type)";
+        // Need to protect double quotes
+        $searchTerm = str_replace('"', '!WIKINDXQUOTESWIKINDX!', $searchTerm);
+        $this->escapeLikeString($searchTerm);
+        $searchEscaped = str_replace('!WIKINDXQUOTESWIKINDX!', '"', $searchTerm);
+
+        return " MATCH($fields) AGAINST('" . $searchEscaped . "' $type)";
     }
     /**
      * Create a COUNT() clause
@@ -2624,34 +2370,20 @@ SQLCODE;
      */
     public function count($field, $operator = FALSE, $comparison = FALSE, $distinct = FALSE, $alias = FALSE)
     {
-        if ($operator)
-        {
-            if ($operator === ">")
-            {
+        if ($operator) {
+            if ($operator === ">") {
                 $selop = $this->greater;
-            }
-            elseif ($operator === "<")
-            {
+            } elseif ($operator === "<") {
                 $selop = $this->less;
-            }
-            elseif ($operator === ">=")
-            {
+            } elseif ($operator === ">=") {
                 $selop = $this->greaterEqual;
-            }
-            elseif ($operator === "<=")
-            {
+            } elseif ($operator === "<=") {
                 $selop = $this->lessEqual;
-            }
-            elseif ($operator === '!=')
-            {
+            } elseif ($operator === '!=') {
                 $selop = $this->notEqual;
-            }
-            elseif ($operator === '=')
-            {
+            } elseif ($operator === '=') {
                 $selop = $this->equal;
-            }
-            else
-            {
+            } else {
                 $selop = $this->equal;
             }
 
@@ -2660,8 +2392,7 @@ SQLCODE;
 
         $field = $this->formatFields($field);
         $distinct = $distinct ? 'DISTINCT' : '';
-        if ($alias)
-        {
+        if ($alias) {
             $alias = ' AS ' . $this->formatFields($alias);
         }
 
@@ -2718,8 +2449,7 @@ SQLCODE;
     public function sum($field, $alias = FALSE)
     {
         $field = $this->formatFields($field);
-        if ($alias)
-        {
+        if ($alias) {
             $alias = ' AS ' . $this->formatFields($alias);
         }
 
@@ -2751,56 +2481,42 @@ SQLCODE;
         $tableJoin = 'resourceId'
     ) {
         $condition = $join = FALSE;
-        foreach ($conditions as $condition)
-        {
-            if (is_array($condition))
-            {
+        foreach ($conditions as $condition) {
+            if (is_array($condition)) {
                 $this->conditionSeparator = $this->or;
                 $conditionArray[] = $this->formatConditions($condition, '=', TRUE);
                 $this->conditionSeparator = $this->and;
-            }
-            else
-            {
+            } else {
                 $conditionArray[] = $condition; // $condition has already passed through formatConditions()
             }
         }
-        foreach ($conditionsOneField as $field => $array)
-        {
+        foreach ($conditionsOneField as $field => $array) {
             $field = $this->formatFields($field);
             $conditionOneField = [];
-            foreach ($array as $cond)
-            {
+            foreach ($array as $cond) {
                 $conditionOneField[] = $field . ' ' . $this->equal . ' ' . $this->tidyInput($cond);
             }
             $conditionArray[] = '(' . implode($this->or, $conditionOneField) . ')';
         }
-        foreach ($joins as $key => $array)
-        {
+        foreach ($joins as $key => $array) {
             $joinStmts[] = "LEFT OUTER JOIN " . $this->formatTables($key) . " ON " .
                 $this->formatFields($array[0]) . ' ' . $this->equal . ' ' . $this->formatFields($array[1]);
         }
-        if (isset($joinStmts))
-        {
+        if (isset($joinStmts)) {
             $join = implode(' ', $joinStmts);
         }
-        if ($table)
-        {
+        if ($table) {
             $table = $this->formatTables($table);
             $tableJoin = $this->formatFields($tableJoin);
             $initialJoin = "LEFT OUTER JOIN $table ON $tableJoin = `rId`";
-        }
-        else
-        {
+        } else {
             $initialJoin = FALSE;
         }
-        if (isset($conditionArray))
-        {
+        if (isset($conditionArray)) {
             $condition = $this->whereStmt(implode($this->and, $conditionArray));
         }
-        if ($subQuery)
-        {
-            if ($order == 'title')
-            {
+        if ($subQuery) {
+            if ($order == 'title') {
                 return "SELECT page, COUNT(id) AS count
 				FROM (
 					SELECT resourceId AS id ,
@@ -2815,9 +2531,7 @@ SQLCODE;
 					GROUP BY id, page
 				) AS t_page
 				GROUP BY page";
-            }
-            elseif ($order == 'attachments')
-            { // Only from advanced search
+            } elseif ($order == 'attachments') { // Only from advanced search
                 $jrTable = $this->formatTables('resource');
                 $jrField = $this->formatFields('resourceId');
                 $joinResource = "LEFT OUTER JOIN $jrTable ON $jrField = rId";
@@ -2837,9 +2551,7 @@ SQLCODE;
 					GROUP BY id, page
 				) AS t_page
 				GROUP BY page";
-            }
-            else
-            { // default is 'creator'
+            } else { // default is 'creator'
                 return "SELECT page, COUNT(id) AS count
 				FROM (
 					SELECT resourcecreatorResourceId AS id ,
@@ -2856,11 +2568,8 @@ SQLCODE;
 				) AS t_page
 				GROUP BY page";
             }
-        }
-        else
-        {
-            if ($order == 'title')
-            {
+        } else {
+            if ($order == 'title') {
                 return "SELECT page, COUNT(id) AS count
 				FROM (
 					SELECT resourceId AS id ,
@@ -2874,9 +2583,7 @@ SQLCODE;
 					GROUP BY resourceId, page
 				) AS t_page
 				GROUP BY page";
-            }
-            else
-            { // default is 'creator'
+            } else { // default is 'creator'
                 return "SELECT page, COUNT(id) AS count
 				FROM (
 					SELECT resourcecreatorResourceId AS id ,
@@ -2904,8 +2611,7 @@ SQLCODE;
     public function printSQLDebug($querystring = '', $executionType = 'SQL')
     {
         $beautified = FALSE;
-        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
-        {
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL) {
             $beautified = $this->beautify($querystring, $executionType);
             GLOBALS::addTplVar('logsql', $beautified);
         }
@@ -2924,7 +2630,9 @@ SQLCODE;
         $endTimer = $this->endTimer;
 
         // Stop the timer, if not done
-        if (empty($endTimer)) $endTimer = microtime();
+        if (empty($endTimer)) {
+            $endTimer = microtime();
+        }
 
         $tmp = UTF8::mb_explode(" ", $startTimer);
         $startTimer = $tmp[0] + $tmp[1];
@@ -2978,15 +2686,14 @@ SQLCODE;
         $dbhost = WIKINDX_DB_HOST;
         $dbname = WIKINDX_DB;
         $dbuser = WIKINDX_DB_USER;
-        $dbpwd  = WIKINDX_DB_PASSWORD;
+        $dbpwd = WIKINDX_DB_PASSWORD;
 
         $dbhost = $dbpers === TRUE ? 'p:' . $dbhost : $dbhost;
         $this->handle = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname);
 
         $this->getConnectionError();
 
-        if ($this->errno)
-        {
+        if ($this->errno) {
             $this->sqlDie($this->errors->text("dbError", "open"));
         }
 
@@ -3012,26 +2719,21 @@ SQLCODE;
      */
     private function CheckEngineVersion()
     {
-        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
-        {
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL) {
             $this->sqlTimerOn();
             $EngineVersion = $this->getStringEngineVersion();
             $this->sqlTimerOff();
             
             $EngineVersion = strtolower($EngineVersion);
             
-            if (strstr($EngineVersion, "mariadb"))
-            {
+            if (strstr($EngineVersion, "mariadb")) {
                 $VersionMin = WIKINDX_MARIADB_VERSION_MIN; // Check MariaDB version
-            }
-            else
-            {
+            } else {
                 $VersionMin = WIKINDX_MYSQL_VERSION_MIN; // Check MySql or unknow engine version
             }
             
             // If the current engine version is lower than the minimum needed
-            if (strcmp($EngineVersion, $VersionMin) < 0)
-            {
+            if (strcmp($EngineVersion, $VersionMin) < 0) {
                 $errorMessage = "In order to support UTF-8 character sets, WIKINDX requires MySQL " . WIKINDX_MYSQL_VERSION_MIN . " or greater,
                                  or MariaDB " . WIKINDX_MARIADB_VERSION_MIN . " or greater. Your MySQL version is {" . $this->getStringEngineVersion() . "}.
                                  Please upgrade MySQL or use WIKINDX v4.2.0 which supports MySQL v4.1 and above.";
@@ -3060,34 +2762,28 @@ SQLCODE;
         $recordset = mysqli_store_result($this->handle);
 
         $aRecordset = FALSE;
-        if (is_object($recordset))
-        {
-            while ($row = mysqli_fetch_assoc($recordset))
-            {
+        if (is_object($recordset)) {
+            while ($row = mysqli_fetch_assoc($recordset)) {
                 $aRecordset[] = $row;
             }
             // Never forget to free the driver result,
             // otherwith the next mysqli_multi_query() call will fail
             mysqli_free_result($recordset);
-        }
-        else
-        {
+        } else {
             $aRecordset = $execOk;
         }
 
         // Drop all subsequent results
         // If there are needed we can add a way to store them in this class
         // with a method to retrieve them as array
-        do
-        {
+        do {
         } while (mysqli_more_results($this->handle) && mysqli_next_result($this->handle));
 
         $this->sqlTimerOff();
 
         $this->printSQLDebugTime();
 
-        if (!$execOk && !$bNoError)
-        {
+        if (!$execOk && !$bNoError) {
             $this->printSQLDebug($querystring, "EXEC ERROR");
             $this->sqlDie($this->error, $beautified);
         }
@@ -3107,29 +2803,23 @@ SQLCODE;
     {
         $clause = '';
 
-        if (!empty($this->join))
-        {
+        if (!empty($this->join)) {
             $clause .= ' ' . implode(' ', $this->join);
         }
-        if (!empty($this->condition))
-        {
+        if (!empty($this->condition)) {
             $clause .= ' WHERE ' . implode($this->multiConditionSeparator, $this->condition);
         }
-        if ($this->group)
-        {
+        if ($this->group) {
             $clause .= ' ' . $this->group;
         }
-        if (!empty($this->order))
-        {
+        if (!empty($this->order)) {
             $clause .= ' ORDER BY ' . implode(', ', $this->order);
         }
-        if ($this->limit)
-        {
+        if ($this->limit) {
             $clause .= ' ' . $this->limit;
         }
 
-        if (!empty($this->joinUpdate))
-        { // To allow for restore() in case $this->join has been used in update()
+        if (!empty($this->joinUpdate)) { // To allow for restore() in case $this->join has been used in update()
             $this->join = $this->joinUpdate;
         }
 
@@ -3146,15 +2836,12 @@ SQLCODE;
     {
         $array = [];
 
-        if (!empty($values))
-        {
-            if (!is_array($values))
-            {
+        if (!empty($values)) {
+            if (!is_array($values)) {
                 $values = [$values];
             }
 
-            foreach ($values as $value)
-            {
+            foreach ($values as $value) {
                 $array[] = $this->tidyInput($value);
             }
         }
@@ -3172,8 +2859,7 @@ SQLCODE;
      */
     private function formatUpdate($array)
     {
-        foreach ($array as $field => $value)
-        {
+        foreach ($array as $field => $value) {
             $fieldArray[] = "`$field` = " . $this->tidyInput($value);
         }
 
@@ -3193,36 +2879,23 @@ SQLCODE;
         $key = key($array);
         $value = $array[$key];
 
-        if ($table)
-        {
-            if ($tidyLeft)
-            {
+        if ($table) {
+            if ($tidyLeft) {
                 return '`' . WIKINDX_DB_TABLEPREFIX . "$key` AS " . WIKINDX_DB_TABLEPREFIX . $value;
-            }
-            else
-            {
+            } else {
                 return       WIKINDX_DB_TABLEPREFIX . "$key AS " . WIKINDX_DB_TABLEPREFIX . $value;
             }
         }
-        if (count($split = UTF8::mb_explode('.', $key)) > 1)
-        {
-            if ($tidyLeft)
-            {
+        if (count($split = UTF8::mb_explode('.', $key)) > 1) {
+            if ($tidyLeft) {
                 return $this->formatTables($split[0]) . ".`$split[1]` AS $value";
-            }
-            else
-            {
+            } else {
                 return $this->formatTables($split[0]) . ".$split[1] AS $value";
             }
-        }
-        else
-        {
-            if ($tidyLeft)
-            {
+        } else {
+            if ($tidyLeft) {
                 return "`$key` AS $value";
-            }
-            else
-            {
+            } else {
                 return "$key AS $value";
             }
         }
@@ -3245,26 +2918,18 @@ SQLCODE;
          * For something like DATE_FORMAT(timestamp,'%d/%b/%Y'), we don't want backticks.
          * Add other exceptions here...
          */
-        if (preg_match("/^DATE_FORMAT/u", $key))
-        {
+        if (preg_match("/^DATE_FORMAT/u", $key)) {
             return $key . " AS $value";
         }
-        if (preg_match("/^UNIX_TIMESTAMP/u", $key))
-        {
+        if (preg_match("/^UNIX_TIMESTAMP/u", $key)) {
             return $key . " AS $value";
         }
-        if (count($split = UTF8::mb_explode('.', $key)) > 1)
-        {
+        if (count($split = UTF8::mb_explode('.', $key)) > 1) {
             return $this->formatTables($split[0]) . ".`$split[1]` AS $value";
-        }
-        else
-        {
-            if ($tidyLeft)
-            {
+        } else {
+            if ($tidyLeft) {
                 return "`$key` AS $value";
-            }
-            else
-            {
+            } else {
                 return "$key AS $value";
             }
         }
@@ -3275,8 +2940,7 @@ SQLCODE;
      */
     private function printSQLDebugTime()
     {
-        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
-        {
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL) {
             GLOBALS::addTplVar('logsql', '<hr><div>Elapsed time: ' . sprintf('%.3f', round($this->elapsedTime(), 3)) . ' s</div>');
         }
     }
@@ -3288,7 +2952,6 @@ SQLCODE;
      */
     private function sqlDie($errorMessage, $beautified = "")
     {
-        
         echo "<!DOCTYPE html>";
         echo "<html lang=\"en\">";
         echo "<head>";

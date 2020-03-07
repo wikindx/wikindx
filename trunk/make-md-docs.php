@@ -57,16 +57,13 @@ $listDocFile = [
     $dirsrc => FILE\fileInDirToArray($dirsrc),
 ];
 
-foreach ($listDocFile as $dir => $aFile)
-{
-    foreach ($aFile as $file)
-    {
+foreach ($listDocFile as $dir => $aFile) {
+    foreach ($aFile as $file) {
         $fsrc = $dir . DIRECTORY_SEPARATOR . $file;
         $fdst = $dir . DIRECTORY_SEPARATOR . basename($file, ".md") . ".htm";
         chdir($dir);
 
-        if (is_file($fsrc) && matchExtension($file, ".md"))
-        {
+        if (is_file($fsrc) && matchExtension($file, ".md")) {
             echo " - $file\n";
             exec("pandoc --verbose --self-contained --number-sections --toc --data-dir=\"$dir\" --from=markdown --to=html5 --output=\"$fdst\" \"$fsrc\"");
         }

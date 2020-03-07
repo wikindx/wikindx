@@ -10,8 +10,7 @@
  */
 
 // Handle incoming request if it's a script call
-if (TinyMCE_Compressor::getParam("js"))
-{
+if (TinyMCE_Compressor::getParam("js")) {
     // Default settings
     $tinyMCECompressor = new TinyMCE_Compressor([
         /*
@@ -73,8 +72,7 @@ class TinyMCE_Compressor
     {
         $this->settings = array_merge(self::$defaultSettings, $settings);
 
-        if (empty($this->settings["cache_dir"]))
-        {
+        if (empty($this->settings["cache_dir"])) {
             $this->settings["cache_dir"] = dirname(__FILE__);
         }
     }
@@ -103,69 +101,58 @@ class TinyMCE_Compressor
 
         // Override settings with querystring params
         $plugins = self::getParam("plugins");
-        if ($plugins)
-        {
+        if ($plugins) {
             $this->settings["plugins"] = $plugins;
         }
         $plugins = UTF8::mb_explode(',', $this->settings["plugins"]);
 
         $themes = self::getParam("themes");
-        if ($themes)
-        {
+        if ($themes) {
             $this->settings["themes"] = $themes;
         }
         $themes = UTF8::mb_explode(',', $this->settings["themes"]);
 
         $languages = self::getParam("languages");
-        if ($languages)
-        {
+        if ($languages) {
             $this->settings["languages"] = $languages;
         }
         $languages = UTF8::mb_explode(',', $this->settings["languages"]);
 
         $tagFiles = self::getParam("files");
-        if ($tagFiles)
-        {
+        if ($tagFiles) {
             $this->settings["files"] = $tagFiles;
         }
 
         $diskCache = self::getParam("diskcache");
-        if ($diskCache)
-        {
+        if ($diskCache) {
             $this->settings["disk_cache"] = ($diskCache === "true");
         }
 
         $src = self::getParam("src");
-        if ($src)
-        {
+        if ($src) {
             $this->settings["source"] = ($src === "true");
         }
 
         // Add core
         $files[] = "tiny_mce";
-        foreach ($languages as $language)
-        {
+        foreach ($languages as $language) {
             $files[] = "langs/$language";
         }
 
         // Add plugins
-        foreach ($plugins as $plugin)
-        {
+        foreach ($plugins as $plugin) {
             $files[] = "plugins/$plugin/editor_plugin";
 
-            foreach ($languages as $language)
-            {
+            foreach ($languages as $language) {
                 $files[] = "plugins/$plugin/langs/$language";
             }
         }
 
         // Add themes
-        foreach ($themes as $theme)
-        {
+        foreach ($themes as $theme) {
             $files[] = "themes/$theme/editor_template";
 
-            foreach ($languages as $language)
-            {
+            foreach ($languages as $language) {
                 $files[] = "themes/$theme/langs/$language";
             }
         }
@@ -174,20 +161,14 @@ class TinyMCE_Compressor
         $allFiles = array_merge($files, UTF8::mb_explode(',', $this->settings['files']));
 
         // Process source files
-        for ($i = 0; $i < count($allFiles); $i++)
-        {
+        for ($i = 0; $i < count($allFiles); $i++) {
             $file = $allFiles[$i];
 
-            if ($this->settings["source"] && file_exists($file . "_src.js"))
-            {
+            if ($this->settings["source"] && file_exists($file . "_src.js")) {
                 $file .= "_src.js";
-            }
-            elseif (file_exists($file . ".js"))
-            {
+            } elseif (file_exists($file . ".js")) {
                 $file .= ".js";
-            }
-            else
-            {
+            } else {
                 $file = "";
             }
 
@@ -203,8 +184,7 @@ class TinyMCE_Compressor
         $encoding = preg_match('/\b(x-gzip|gzip)\b/u', $encodings, $match) ? $match[1] : "";
 
         // Is northon antivirus header
-        if (isset($_SERVER['---------------']))
-        {
+        if (isset($_SERVER['---------------'])) {
             $encoding = "x-gzip";
         }
 
@@ -219,14 +199,12 @@ class TinyMCE_Compressor
         header("Expires: " . gmdate("D, d M Y H:i:s", time() + $expiresOffset) . " GMT");
         header("Cache-Control: public, max-age=" . $expiresOffset);
 
-        if ($supportsGzip)
-        {
+        if ($supportsGzip) {
             header("Content-Encoding: " . $encoding);
         }
 
         // Use cached file
-        if ($this->settings['disk_cache'] && file_exists($cacheFile))
-        {
+        if ($this->settings['disk_cache'] && file_exists($cacheFile)) {
             readfile($cacheFile);
 
             return;
@@ -236,10 +214,8 @@ class TinyMCE_Compressor
         $buffer = "var tinyMCEPreInit={base:'" . dirname($_SERVER["SCRIPT_NAME"]) . "',suffix:''};";
 
         // Load all tinymce script files into buffer
-        foreach ($allFiles as $file)
-        {
-            if ($file)
-            {
+        foreach ($allFiles as $file) {
+            if ($file) {
                 $fileContents = $this->getFileContents($tinymceDir . "/" . $file);
                 //				$buffer .= "\n//-FILE-$tinymceDir/$file (". mb_strlen($fileContents) . " bytes)\n";
                 $buffer .= $fileContents;
@@ -250,14 +226,12 @@ class TinyMCE_Compressor
         $buffer .= 'tinymce.each("' . implode(',', $files) . '".split(","),function(f){tinymce.ScriptLoader.markDone(tinyMCE.baseURL+"/"+f+".js");});';
 
         // Compress data
-        if ($supportsGzip)
-        {
+        if ($supportsGzip) {
             $buffer = gzencode($buffer, 9, FORCE_GZIP);
         }
 
         // Write cached file
-        if ($this->settings["disk_cache"])
-        {
+        if ($this->settings["disk_cache"]) {
             @file_put_contents($cacheFile, $buffer);
         }
 
@@ -277,34 +251,29 @@ class TinyMCE_Compressor
     {
         $settings = array_merge(self::$defaultSettings, $tagSettings);
 
-        if (empty($settings["cache_dir"]))
-        {
+        if (empty($settings["cache_dir"])) {
             $settings["cache_dir"] = dirname(__FILE__);
         }
 
         $scriptSrc = $settings["url"] . "?js=1";
 
         // Add plugins
-        if (isset($settings["plugins"]))
-        {
+        if (isset($settings["plugins"])) {
             $scriptSrc .= "&plugins=" . (is_array($settings["plugins"]) ? implode(',', $settings["plugins"]) : $settings["plugins"]);
         }
 
         // Add themes
-        if (isset($settings["themes"]))
-        {
+        if (isset($settings["themes"])) {
             $scriptSrc .= "&themes=" . (is_array($settings["themes"]) ? implode(',', $settings["themes"]) : $settings["themes"]);
         }
 
         // Add languages
-        if (isset($settings["languages"]))
-        {
+        if (isset($settings["languages"])) {
             $scriptSrc .= "&languages=" . (is_array($settings["languages"]) ? implode(',', $settings["languages"]) : $settings["languages"]);
         }
 
         // Add disk_cache
-        if (isset($settings["disk_cache"]))
-        {
+        if (isset($settings["disk_cache"])) {
             $scriptSrc .= "&diskcache=" . ($settings["disk_cache"] === TRUE ? "true" : "false");
         }
 
@@ -315,25 +284,20 @@ class TinyMCE_Compressor
          * only base filenames can be specified.  The file extension is assumed to be ".js" and the directory is
          * the TinyMCE root directory.  A typical use of this is to include a script which initiates the TinyMCE object.
          */
-        if (isset($tagSettings["files"]))
-        {
+        if (isset($tagSettings["files"])) {
             $scriptSrc .= "&files=" . (is_array($settings["files"]) ? implode(',', $settings["files"]) : $settings["files"]);
         }
 
         // Add src flag
-        if (isset($settings["source"]))
-        {
+        if (isset($settings["source"])) {
             $scriptSrc .= "&src=" . ($settings["source"] === TRUE ? "true" : "false");
         }
 
         $scriptTag = '<script src="' . htmlspecialchars($scriptSrc) . '"></script>';
 
-        if ($return)
-        {
+        if ($return) {
             return $scriptTag;
-        }
-        else
-        {
+        } else {
             echo $scriptTag;
         }
     }
@@ -348,8 +312,7 @@ class TinyMCE_Compressor
      */
     public static function getParam($name, $default = "")
     {
-        if (!isset($_GET[$name]))
-        {
+        if (!isset($_GET[$name])) {
             return $default;
         }
 
@@ -368,20 +331,17 @@ class TinyMCE_Compressor
         $multipel = 1;
 
         // Hours
-        if (mb_strpos($time, "h") > 0)
-        {
+        if (mb_strpos($time, "h") > 0) {
             $multipel = 3600;
         }
 
         // Days
-        if (mb_strpos($time, "d") > 0)
-        {
+        if (mb_strpos($time, "d") > 0) {
             $multipel = 86400;
         }
 
         // Months
-        if (mb_strpos($time, "m") > 0)
-        {
+        if (mb_strpos($time, "m") > 0) {
             $multipel = 2592000;
         }
 
@@ -401,8 +361,7 @@ class TinyMCE_Compressor
         $content = file_get_contents($file);
 
         // Remove UTF-8 BOM
-        if (mb_substr($content, 0, 3) === pack("CCC", 0xef, 0xbb, 0xbf))
-        {
+        if (mb_substr($content, 0, 3) === pack("CCC", 0xef, 0xbb, 0xbf)) {
             $content = mb_substr($content, 3);
         }
 

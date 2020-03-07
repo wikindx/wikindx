@@ -1,27 +1,29 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
 class importexportbib_CONFIG
 {
-	/** float */
+    /** float */
     public $wikindxVersion = 7;
 }
 class importexportbib_EXPORTCONFIG
 {
-	/** array */
+    /** array */
     public $menus = ['plugin1'];
-	/** int */
+    /** int */
     public $authorize = 1;
 }
 class importexportbib_IMPORTCONFIG
 {
-	/** array */
+    /** array */
     public $menus = ['plugin1'];
-	/** int */
+    /** int */
     public $authorize = 2;
     // Path to bibUtils (e.g. '/usr/bin/' for *NIX or
     // "D:/wamp/www/wikindx/bibutils/" for windows).
@@ -32,9 +34,9 @@ class importexportbib_IMPORTCONFIG
 }
 class importexportbib_BIBUTILSCONFIG
 {
-	/** array */
+    /** array */
     public $menus = ['plugin1'];
-	/** int */
+    /** int */
     public $authorize = 1;
     // Path to bibUtils (e.g. '/usr/bin/' for *NIX or
     // "D:/wamp/www/wikindx/bibutils/" for windows).

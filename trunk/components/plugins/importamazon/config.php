@@ -1,17 +1,19 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
 class importamazon_CONFIG
 {
-	/** array */
+    /** array */
     public $menus = ['res'];
-	/** int */
+    /** int */
     public $authorize = 1;
-	/** float */
+    /** float */
     public $wikindxVersion = 7;
     
     /**
@@ -30,7 +32,7 @@ class importamazon_CONFIG
      */
     public $associateTag = "";
 
-    /** 
+    /**
      * You can find the list of Product Advertising API Endpoints available at :
      * https://docs.aws.amazon.com/AWSECommerceService/latest/DG/AnatomyOfaRESTRequest.html#EndpointsandWebServices
      * If possible, We particularly advise you to choose a secure endpoint (https).

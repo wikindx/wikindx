@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -41,22 +43,18 @@ class EDITPUBLISHER
     /**
      * check we are allowed to edit and load appropriate method
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function init($message = FALSE)
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        if (array_key_exists('PublisherType', $this->vars))
-        {
+        if (array_key_exists('PublisherType', $this->vars)) {
             $publisherType = $this->vars['PublisherType'];
-        }
-        else
-        {
+        } else {
             $publisherType = FALSE;
         }
         $publishers = $this->publisher->grabAll($publisherType);
-        if (!$publishers)
-        {
+        if (!$publishers) {
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noPublishers'));
 
             return;
@@ -84,8 +82,7 @@ class EDITPUBLISHER
     public function displayPublisher($initialDisplay = FALSE)
     {
         $name = $location = $publisherId = FALSE;
-        if (!$initialDisplay)
-        {
+        if (!$initialDisplay) {
             $this->db->formatConditions(['publisherId' => $this->vars['ajaxReturn']]);
             $recordset = $this->db->select('publisher', ['publisherName', 'publisherLocation']);
             $row = $this->db->fetchRow($recordset);
@@ -106,8 +103,7 @@ class EDITPUBLISHER
         ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        if ($initialDisplay)
-        {
+        if ($initialDisplay) {
             return $pString;
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $pString]));
@@ -119,47 +115,35 @@ class EDITPUBLISHER
     public function edit()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        if (!array_key_exists('editPublisherId', $this->vars) || !$this->vars['editPublisherId'])
-        {
+        if (!array_key_exists('editPublisherId', $this->vars) || !$this->vars['editPublisherId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         $name = array_key_exists('publisherName', $this->vars) ? trim($this->vars['publisherName']) : FALSE;
         $location = array_key_exists('publisherLocation', $this->vars) ?
             trim($this->vars['publisherLocation']) : FALSE;
-        if (!$name & !$location)
-        {
+        if (!$name & !$location) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        if ($publisherExistId = $this->publisher->checkExists($name, $location))
-        {
-            if ($publisherExistId != $this->vars['editPublisherId'])
-            {
+        if ($publisherExistId = $this->publisher->checkExists($name, $location)) {
+            if ($publisherExistId != $this->vars['editPublisherId']) {
                 return $this->confirmDuplicate($publisherExistId);
             }
         }
-        if ($name)
-        {
+        if ($name) {
             $updateArray['publisherName'] = $name;
-        }
-        else
-        {
+        } else {
             $nulls[] = 'publisherName';
         }
-        if ($location)
-        {
+        if ($location) {
             $updateArray['publisherLocation'] = $location;
-        }
-        else
-        {
+        } else {
             $nulls[] = 'publisherLocation';
         }
-        if (isset($updateArray))
-        {
+        if (isset($updateArray)) {
             $this->db->formatConditions(['publisherId' => $this->vars['editPublisherId']]);
             $this->db->update('publisher', $updateArray);
         }
-        if (isset($nulls))
-        {
+        if (isset($nulls)) {
             $this->db->formatConditions(['publisherId' => $this->vars['editPublisherId']]);
             $this->db->updateNull('publisher', $nulls);
         }
@@ -175,12 +159,10 @@ class EDITPUBLISHER
     public function editConfirm()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        if (!array_key_exists('editPublisherId', $this->vars) || !$this->vars['editPublisherId'])
-        {
+        if (!array_key_exists('editPublisherId', $this->vars) || !$this->vars['editPublisherId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        if (!array_key_exists('editPublisherExistId', $this->vars) || !$this->vars['editPublisherExistId'])
-        {
+        if (!array_key_exists('editPublisherExistId', $this->vars) || !$this->vars['editPublisherExistId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         $editId = $this->vars['editPublisherId'];
@@ -200,21 +182,16 @@ class EDITPUBLISHER
             'resource_misc',
             ['resourcemiscId', 'resourcemiscPublisher', 'resourcemiscField1', 'resourceType']
         );
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $updateArray = [];
             if ((($row['resourceType'] == 'proceedings_article') || ($row['resourceType'] == 'proceedings_article'))
-                && $row['resourcemiscField1'])
-            {
+                && $row['resourcemiscField1']) {
                 $updateArray['resourcemiscField1'] = $existId;
-            }
-            elseif (($row['resourceType'] != 'proceedings_article') && ($row['resourceType'] != 'proceedings_article')
-                && $row['resourcemiscPublisher'])
-            {
+            } elseif (($row['resourceType'] != 'proceedings_article') && ($row['resourceType'] != 'proceedings_article')
+                && $row['resourcemiscPublisher']) {
                 $updateArray['resourcemiscPublisher'] = $existId;
             }
-            if (!empty($updateArray))
-            {
+            if (!empty($updateArray)) {
                 $this->db->formatConditions(['resourcemiscId' => $row['resourcemiscId']]);
                 $this->db->update('resource_misc', $updateArray);
             }

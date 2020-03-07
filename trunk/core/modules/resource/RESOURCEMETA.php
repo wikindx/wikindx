@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -59,12 +61,10 @@ class RESOURCEMETA
                 'resourcemetadataText', 'resourcemetadataAddUserId', ]
         );
         $numRows = $this->db->numRows($recordset);
-        if (!$numRows && !$write)
-        {
+        if (!$numRows && !$write) {
             return [];
         }
-        if ($write)
-        {
+        if ($write) {
             $this->quote['editLink'] = \HTML\a(
                 $this->icons->getClass("add"),
                 $this->icons->getHTML("add"),
@@ -95,12 +95,10 @@ class RESOURCEMETA
                 'resourcemetadataText', 'resourcemetadataAddUserId', ]
         );
         $numRows = $this->db->numRows($recordset);
-        if (!$numRows && !$write)
-        {
+        if (!$numRows && !$write) {
             return [];
         }
-        if ($write)
-        {
+        if ($write) {
             $this->paraphrase['editLink'] = \HTML\a(
                 $this->icons->getClass("add"),
                 $this->icons->getHTML("add"),
@@ -132,12 +130,10 @@ class RESOURCEMETA
                 'resourcemetadataText', 'resourcemetadataAddUserId', 'resourcemetadataTimestamp', ]
         );
         $numRows = $this->db->numRows($recordset);
-        if (!$numRows && !$write)
-        {
+        if (!$numRows && !$write) {
             return [];
         }
-        if ($write)
-        {
+        if ($write) {
             $this->musing['editLink'] = \HTML\a(
                 $this->icons->getClass("add"),
                 $this->icons->getHTML("add"),
@@ -147,29 +143,23 @@ class RESOURCEMETA
         $patterns = FALSE;
         $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
         $index = 0;
-        if (array_key_exists("search", $this->vars) && $this->vars["search"] = 'highlight')
-        {
+        if (array_key_exists("search", $this->vars) && $this->vars["search"] = 'highlight') {
             $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_Highlight"));
-            foreach ($searchTerms as $term)
-            {
+            foreach ($searchTerms as $term) {
                 $patterns[] = "/($term)(?!\\S*\" \\S*>)/i";
             }
         }
         $index = 0;
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (($row['resourcemetadataPrivate'] == 'Y') && ($this->userId != $row['resourcemetadataAddUserId']))
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (($row['resourcemetadataPrivate'] == 'Y') && ($this->userId != $row['resourcemetadataAddUserId'])) {
                 continue;
             }
             // If numeric, this comment may be viewed by members of user groups of which $row[$addUserId] is a member
-            elseif (is_numeric($row['resourcemetadataPrivate']))
-            {
+            elseif (is_numeric($row['resourcemetadataPrivate'])) {
                 $this->db->formatConditions(['usergroupsusersUserId' => $this->userId]);
                 $this->db->formatConditions(['usergroupsusersGroupId' => $row['resourcemetadataPrivate']]);
                 $recordset2 = $this->db->select('user_groups_users', 'usergroupsusersId');
-                if (!$this->db->numRows($recordset2))
-                {
+                if (!$this->db->numRows($recordset2)) {
                     continue;
                 }
             }
@@ -180,8 +170,7 @@ class RESOURCEMETA
             $this->db->formatConditions(['resourcekeywordMetadataId' => $row['resourcemetadataId']]);
             $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
             $recordset2 = $this->db->select('resource_keyword', ['keywordId', 'keywordKeyword', 'keywordGlossary']);
-            while ($row2 = $this->db->fetchRow($recordset2))
-            {
+            while ($row2 = $this->db->fetchRow($recordset2)) {
                 $this->musing[$index]['keywordTitle'] = $this->messages->text("resources", "keywords");
                 $this->musing[$index]['keywords'][] = \HTML\a(
                     "link",
@@ -194,8 +183,7 @@ class RESOURCEMETA
             }
             $users = $this->user->displayUserAddEdit($row['resourcemetadataAddUserId'], TRUE, 'musing');
             $this->musing[$index]['userAdd'] = $users[0];
-            if ($write && ($row['resourcemetadataAddUserId'] == $this->userId))
-            {
+            if ($write && ($row['resourcemetadataAddUserId'] == $this->userId)) {
                 $this->musing[$index]['editLink'] = \HTML\a(
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
@@ -205,8 +193,7 @@ class RESOURCEMETA
             }
             $index++;
         }
-        if (!empty($this->musing))
-        {
+        if (!empty($this->musing)) {
             $this->musing['title'] = $this->messages->text("viewResource", "musings");
         }
 
@@ -221,12 +208,9 @@ class RESOURCEMETA
      */
     private function view($resourceId, $recordset, $type)
     {
-        if ($type == 'quote')
-        {
+        if ($type == 'quote') {
             $this->quote['title'] = $this->messages->text("viewResource", "quotes");
-        }
-        else
-        { // 'paraphrase'
+        } else { // 'paraphrase'
             $this->paraphrase['title'] = $this->messages->text("viewResource", "paraphrases");
         }
         $patterns = FALSE;
@@ -235,17 +219,14 @@ class RESOURCEMETA
         $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
         $index = 0;
         $thisUserId = $this->session->getVar("setup_UserId");
-        if (array_key_exists("search", $this->vars) && $this->vars["search"] = 'highlight')
-        {
+        if (array_key_exists("search", $this->vars) && $this->vars["search"] = 'highlight') {
             $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_Highlight"));
-            foreach ($searchTerms as $term)
-            {
+            foreach ($searchTerms as $term) {
                 $patterns[] = "/($term)(?!\\S*\" \\S*>)/i";
             }
         }
         $index = 0;
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->{$type}[$index]['metaId'] = $row['resourcemetadataId'];
             $this->{$type}[$index]['details'] = $this->getDetails($row);
             $this->{$type}[$index]['commentTitle'] = $this->messages->text("resources", "comment");
@@ -254,8 +235,7 @@ class RESOURCEMETA
             $this->db->formatConditions(['resourcekeywordMetadataId' => $row['resourcemetadataId']]);
             $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
             $recordset2 = $this->db->select('resource_keyword', ['keywordId', 'keywordKeyword', 'keywordGlossary']);
-            while ($row2 = $this->db->fetchRow($recordset2))
-            {
+            while ($row2 = $this->db->fetchRow($recordset2)) {
                 $this->{$type}[$index]['keywordTitle'] = $this->messages->text("resources", "keywords");
                 $this->{$type}[$index]['keywords'][] = \HTML\a(
                     "link",
@@ -270,41 +250,31 @@ class RESOURCEMETA
             $this->{$type}[$index]['userAdd'] = $users[0];
             // check for comments
             $this->db->formatConditions(['resourcemetadataMetadataId' => $row['resourcemetadataId']]);
-            if ($type == 'quote')
-            {
+            if ($type == 'quote') {
                 $this->db->formatConditions(['resourcemetadataType' => 'qc']);
-            }
-            else
-            {
+            } else {
                 $this->db->formatConditions(['resourcemetadataType' => 'pc']);
             }
             $this->db->orderBy('resourcemetadataTimestamp', TRUE, FALSE);
             $recordset2 = $this->db->select('resource_metadata', ['resourcemetadataText', 'resourcemetadataTimestamp',
                 'resourcemetadataAddUserId', 'resourcemetadataPrivate', ]);
-            if ($this->db->numRows($recordset2))
-            {
+            if ($this->db->numRows($recordset2)) {
                 $index2 = 0;
-                while ($rowComment = $this->db->fetchRow($recordset2))
-                {
+                while ($rowComment = $this->db->fetchRow($recordset2)) {
                     // Read only access
                     if ($this->session->getVar("setup_ReadOnly") &&
-                        (($rowComment['resourcemetadataPrivate'] == 'Y') || ($rowComment['resourcemetadataPrivate'] == 'G')))
-                    {
+                        (($rowComment['resourcemetadataPrivate'] == 'Y') || ($rowComment['resourcemetadataPrivate'] == 'G'))) {
                         continue;
-                    }
-                    elseif (($rowComment['resourcemetadataPrivate'] == 'Y') &&
-                        ($thisUserId != $rowComment['resourcemetadataAddUserId']))
-                    {
+                    } elseif (($rowComment['resourcemetadataPrivate'] == 'Y') &&
+                        ($thisUserId != $rowComment['resourcemetadataAddUserId'])) {
                         continue;
                     }
                     // If 'G' or numeric, this comment may be viewed by members of user groups of which $row[$addUserId] is a member
-                    elseif (is_numeric($rowComment['resourcemetadataPrivate']))
-                    {
+                    elseif (is_numeric($rowComment['resourcemetadataPrivate'])) {
                         $this->db->formatConditions(['usergroupsusersUserId' => $this->userId]);
                         $this->db->formatConditions(['usergroupsusersGroupId' => $rowComment['resourcemetadataPrivate']]);
                         $recordset3 = $this->db->select('user_groups_users', 'usergroupsusersId');
-                        if (!$this->db->numRows($recordset3))
-                        {
+                        if (!$this->db->numRows($recordset3)) {
                             continue;
                         }
                     }
@@ -317,8 +287,7 @@ class RESOURCEMETA
                     $index2++;
                 }
             }
-            if ($write)
-            {
+            if ($write) {
                 $this->{$type}[$index]['editLink'] = \HTML\a(
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
@@ -334,38 +303,31 @@ class RESOURCEMETA
      *
      * @param array $row
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function getDetails($row)
     {
         $page_start = $row['resourcemetadataPageStart'] ? $row['resourcemetadataPageStart'] : FALSE;
         $page_end = $row['resourcemetadataPageEnd'] ? "-" . $row['resourcemetadataPageEnd'] : FALSE;
-        if ($page_start && $page_end)
-        {
+        if ($page_start && $page_end) {
             $page_start = 'pp.' . $page_start;
-        }
-        elseif ($page_start)
-        {
+        } elseif ($page_start) {
             $page_start = 'p.' . $page_start;
         }
         $page = $page_start ? $page_start . $page_end : FALSE;
-        if ($page)
-        {
+        if ($page) {
             $details[] = $page;
         }
         $paragraph = $row['resourcemetadataParagraph'] ? $row['resourcemetadataParagraph'] : FALSE;
-        if ($paragraph)
-        {
+        if ($paragraph) {
             $details[] = $this->messages->text("resources", "paragraph") . "&nbsp;" . $paragraph;
         }
         $section = $row['resourcemetadataSection'] ? $row['resourcemetadataSection'] : FALSE;
-        if ($section)
-        {
+        if ($section) {
             $details[] = $this->messages->text("resources", "section") . "&nbsp;" . $section;
         }
         $chapter = $row['resourcemetadataChapter'] ? $row['resourcemetadataChapter'] : FALSE;
-        if ($chapter)
-        {
+        if ($chapter) {
             $details[] = $this->messages->text("resources", "chapter") . "&nbsp;" . $chapter;
         }
 

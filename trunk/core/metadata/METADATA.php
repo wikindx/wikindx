@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -57,7 +59,7 @@ class METADATA
      *
      * @param int $metadataId
      *
-     * @return TRUE
+     * @return true
      */
     public function displayThread($metadataId)
     {
@@ -71,36 +73,28 @@ class METADATA
         $this->db->orderBy('resourcemetadataTimestamp', TRUE, FALSE);
         $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataTimestamp', 'resourcemetadataTimestampEdited',
             'resourcemetadataMetadataId', 'resourcemetadataText', 'resourcemetadataAddUserId', 'resourcemetadataPrivate', ]);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            if ($multiUser)
-            {
+        while ($row = $this->db->fetchRow($resultset)) {
+            if ($multiUser) {
                 list($user) = $this->user->displayUserAddEdit($row['resourcemetadataAddUserId'], FALSE, 'idea');
-                if (!$row['resourcemetadataTimestampEdited'])
-                {
+                if (!$row['resourcemetadataTimestampEdited']) {
                     $ideaList[$index]['user'] = $this->messages->text('hint', 'addedBy', $user . '&nbsp;' . $row['resourcemetadataTimestamp']);
-                }
-                else
-                {
+                } else {
                     $ideaList[$index]['user'] = $this->messages->text('hint', 'addedBy', $user . '&nbsp;' . $row['resourcemetadataTimestamp']) . ',&nbsp;' .
                     $this->messages->text('hint', 'editedBy', $user . '&nbsp;' . $row['resourcemetadataTimestampEdited']);
                 }
                 GLOBALS::addTplVar('multiUser', TRUE);
             }
             $ideaList[$index]['timestamp'] = $row['resourcemetadataTimestamp'];
-            if ($row['resourcemetadataAddUserId'] == $this->session->getVar("setup_UserId"))
-            {
+            if ($row['resourcemetadataAddUserId'] == $this->session->getVar("setup_UserId")) {
                 $ideaList[$index]['links'] = $this->createLinks($row, FALSE, TRUE, TRUE);
             }
             $ideaList[$index]['metadata'] =
                 $this->common->doHighlight($this->cite->parseCitations($row['resourcemetadataText'], 'html'));
-            if (!$index)
-            { // keywords only for main idea
+            if (!$index) { // keywords only for main idea
                 $this->db->formatConditions(['resourcekeywordMetadataId' => $row['resourcemetadataId']]);
                 $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
                 $recordset2 = $this->db->select('resource_keyword', ['keywordId', 'keywordKeyword']);
-                while ($row2 = $this->db->fetchRow($recordset2))
-                {
+                while ($row2 = $this->db->fetchRow($recordset2)) {
                     $ideaList[$index]['keywordTitle'] = $this->messages->text("resources", "keywords");
                     $ideaList[$index]['keywords'][] = \HTML\a(
                         "link",
@@ -116,8 +110,7 @@ class METADATA
             ++$index;
         }
         $return = $this->previousNextLinks($metadataId);
-        if (!empty($return))
-        {
+        if (!empty($return)) {
             GLOBALS::addTplVar('navigation', $return);
         }
         GLOBALS::addTplVar('ideaTemplate', TRUE);
@@ -130,7 +123,7 @@ class METADATA
      *
      * @param int $metadataId
      *
-     * @return TRUE
+     * @return true
      */
     public function displayIdea($metadataId)
     {
@@ -140,22 +133,17 @@ class METADATA
         $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataTimestamp', 'resourcemetadataTimestampEdited',
             'resourcemetadataMetadataId', 'resourcemetadataText', 'resourcemetadataAddUserId', 'resourcemetadataPrivate', ]);
         $row = $this->db->fetchRow($resultset);
-        if ($multiUser)
-        {
+        if ($multiUser) {
             list($user) = $this->user->displayUserAddEdit($row['resourcemetadataAddUserId'], FALSE, 'idea');
-            if (!$row['resourcemetadataTimestampEdited'])
-            {
+            if (!$row['resourcemetadataTimestampEdited']) {
                 $ideaList[0]['user'] = $this->messages->text('hint', 'addedBy', $user . '&nbsp;' . $row['resourcemetadataTimestamp']);
-            }
-            else
-            {
+            } else {
                 $ideaList[0]['user'] = $this->messages->text('hint', 'addedBy', $user . '&nbsp;' . $row['resourcemetadataTimestamp']) .
                 ',&nbsp;' . $this->messages->text('hint', 'editedBy', $user . '&nbsp;' . $row['resourcemetadataTimestampEdited']);
             }
             GLOBALS::addTplVar('multiUser', TRUE);
         }
-        if ($row['resourcemetadataAddUserId'] == $this->session->getVar("setup_UserId"))
-        {
+        if ($row['resourcemetadataAddUserId'] == $this->session->getVar("setup_UserId")) {
             $ideaList[0]['links'] = $this->createLinks($row, TRUE, TRUE, TRUE);
         }
         $ideaList[0]['metadata'] = $this->cite->parseCitations($row['resourcemetadataText'], 'html');
@@ -183,49 +171,37 @@ class METADATA
     public function createLinks($row, $view = FALSE, $edit = FALSE, $delete = FALSE)
     {
         $links = [];
-        if ($view)
-        {
+        if ($view) {
             $view = $this->icons->getHTML("viewmeta");
-            if (!$row['resourcemetadataMetadataId'])
-            { // i.e. this is the inital post in the idea thread
+            if (!$row['resourcemetadataMetadataId']) { // i.e. this is the inital post in the idea thread
                 $id = $row['resourcemetadataId'];
-            }
-            else
-            {
+            } else {
                 $id = $row['resourcemetadataMetadataId'];
             }
             $links[] = \HTML\a($this->icons->getClass("viewmeta"), $view, "index.php?action=ideas_IDEAS_CORE" .
                 htmlentities("&method=threadView&resourcemetadataId=" . $id));
         }
-        if ($edit)
-        {
+        if ($edit) {
             $edit = $this->icons->getHTML("edit");
             $id = $row['resourcemetadataId'];
             // is this the main idea?
-            if (!$row['resourcemetadataMetadataId'])
-            { // main idea
+            if (!$row['resourcemetadataMetadataId']) { // main idea
                 $links[] = \HTML\a($this->icons->getClass("edit"), $edit, "index.php?action=ideas_IDEAS_CORE" .
                     htmlentities("&method=ideaEdit&resourcemetadataId=" . $id));
-            }
-            else
-            {
+            } else {
                 $links[] = \HTML\a($this->icons->getClass("edit"), $edit, "index.php?action=ideas_IDEAS_CORE" .
                     htmlentities("&method=subIdeaForm&resourcemetadataId=" . $id) .
                     htmlentities("&resourcemetadataMetadataId=" . $row['resourcemetadataMetadataId']));
             }
         }
-        if ($delete)
-        {
+        if ($delete) {
             $delete = $this->icons->getHTML("delete");
             $id = $row['resourcemetadataId'];
             // is this the main idea?
-            if (!$row['resourcemetadataMetadataId'])
-            { // main idea
+            if (!$row['resourcemetadataMetadataId']) { // main idea
                 $links[] = \HTML\a($this->icons->getClass("delete"), $delete, "index.php?action=ideas_IDEAS_CORE" .
                     htmlentities("&method=deleteConfirm&resourcemetadataId=" . $id));
-            }
-            else
-            {
+            } else {
                 $links[] = \HTML\a($this->icons->getClass("delete"), $delete, "index.php?action=ideas_IDEAS_CORE" .
                     htmlentities("&method=delete&resourcemetadataId=" . $id) .
                     htmlentities("&resourcemetadataMetadataId=" . $row['resourcemetadataMetadataId']));
@@ -244,8 +220,7 @@ class METADATA
      */
     public function setCondition($type = FALSE, $returnString = FALSE, $readOnly = FALSE)
     {
-        if ($userId = $this->session->getVar("setup_UserId"))
-        {
+        if ($userId = $this->session->getVar("setup_UserId")) {
             $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
             $this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .
                 $this->db->formatFields('resourcemetadataPrivate'));
@@ -260,76 +235,54 @@ class METADATA
             $subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->equal . $this->db->tidyInput('N');
             $result = $this->db->tidyInput(1);
             $case3 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
-            if ($returnString)
-            {
+            if ($returnString) {
                 $returnString = $this->db->formatConditions($case1 . $this->db->or . $case2 . $this->db->or . $case3, '=', TRUE);
-            }
-            else
-            {
+            } else {
                 $this->db->formatConditions($case1 . $this->db->or . $case2 . $this->db->or . $case3);
             }
-            if ($type)
-            {
-                if ($returnString)
-                {
+            if ($type) {
+                if ($returnString) {
                     return $returnString . $this->db->and . $this->db->formatConditions(['resourcemetadataType' => $type], '=', $returnString);
-                }
-                else
-                {
+                } else {
                     $this->db->formatConditions(['resourcemetadataType' => $type]);
                 }
-            }
-            else
-            {
-                if ($returnString)
-                {
+            } else {
+                if ($returnString) {
                     return $returnString . $this->db->and . $this->db->formatConditions(['resourcemetadataType' => 'i'], '!=', $returnString);
-                }
-                else
-                {
+                } else {
                     $this->db->formatConditions(['resourcemetadataType' => 'i'], '!=');
                 }
             }
 
             return TRUE;
         }
-// else, read-only user so give access to quotes, paraphrases and public musings
-		elseif ($readOnly)
-		{
-            if ($type && ($type != 'i'))
-            {
-                if ($returnString)
-                {
-                	if (($type == 'pc') || ($type == 'qc') || ($type == 'm'))
-                	{
-                    	return $this->db->formatConditions(['resourcemetadataType' => $type]) . $this->db->and . 
-                    		$this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
-                	}
+        // else, read-only user so give access to quotes, paraphrases and public musings
+        elseif ($readOnly) {
+            if ($type && ($type != 'i')) {
+                if ($returnString) {
+                    if (($type == 'pc') || ($type == 'qc') || ($type == 'm')) {
+                        return $this->db->formatConditions(['resourcemetadataType' => $type]) . $this->db->and .
+                            $this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
+                    }
+
                     return $returnString . $this->db->and . $this->db->formatConditions(['resourcemetadataType' => $type]);
-                }
-                else
-                {
-                	if (($type == 'pc') || ($type == 'qc') || ($type == 'm'))
-                	{
-                		$this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
-                	}
+                } else {
+                    if (($type == 'pc') || ($type == 'qc') || ($type == 'm')) {
+                        $this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
+                    }
                     $this->db->formatConditions(['resourcemetadataType' => $type]);
                 }
-            }
-            else
-            {
-                if ($returnString)
-                {
+            } else {
+                if ($returnString) {
                     return $this->db->formatConditionsOnefield(['q', 'p', 'm'], 'resourcemetadataType');
-                }
-                else
-                {
+                } else {
                     $this->db->formatConditionsOneField(['i', 'qc', 'pc', 'm'], 'resourcemetadataType', '!=');
                 }
             }
+
             return TRUE;
-		}
-		
+        }
+        
 
         return FALSE;
     }
@@ -343,52 +296,39 @@ class METADATA
     private function previousNextLinks($thisId)
     {
         $array = [];
-        if (($raw = $this->session->getVar("list_IdeaAllThreadIds")) === FALSE)
-        {
+        if (($raw = $this->session->getVar("list_IdeaAllThreadIds")) === FALSE) {
             return $array;
         }
         $allIds = unserialize(base64_decode($raw));
-        if (!isset($allIds))
-        {
+        if (!isset($allIds)) {
             return $array;
         }
         $thisKey = array_search($thisId, $allIds);
-        if ($thisKey === FALSE)
-        {
+        if ($thisKey === FALSE) {
             return $array;
         }
-        if ($thisKey)
-        {
+        if ($thisKey) {
             $array['back'] = \HTML\a(
                 $this->icons->getClass("previous"),
                 $this->icons->getHTML("previous"),
                 "index.php?action=ideas_IDEAS_CORE" . htmlentities("&method=threadView&resourcemetadataId=" . $allIds[$thisKey - 1])
             );
-        }
-        else
-        {
+        } else {
             $array['back'] = FALSE;
         }
-        if ($thisKey < (count($allIds) - 1))
-        {
+        if ($thisKey < (count($allIds) - 1)) {
             $array['forward'] = \HTML\a(
                 $this->icons->getClass("next"),
                 $this->icons->getHTML("next"),
                 "index.php?action=ideas_IDEAS_CORE" . htmlentities("&method=threadView&resourcemetadataId=" . $allIds[$thisKey + 1])
             );
-        }
-        else
-        {
+        } else {
             $array['forward'] = FALSE;
         }
-        if ($this->session->getVar("setup_Superadmin"))
-        {
-            if (array_key_exists($thisKey + 1, $allIds))
-            {
+        if ($this->session->getVar("setup_Superadmin")) {
+            if (array_key_exists($thisKey + 1, $allIds)) {
                 $this->nextDelete = $allIds[$thisKey + 1];
-            }
-            elseif (array_key_exists($thisKey - 1, $allIds))
-            {
+            } elseif (array_key_exists($thisKey - 1, $allIds)) {
                 $this->nextDelete = $allIds[$thisKey - 1];
             }
         }

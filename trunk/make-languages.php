@@ -78,27 +78,22 @@ $excludedir = [
 
 echo "Create missing locales folders\n";
 
-if (!file_exists($dirsrc))
-{
+if (!file_exists($dirsrc)) {
     mkdir($dirsrc, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
 }
-if (!file_exists($dirtra))
-{
+if (!file_exists($dirtra)) {
     mkdir($dirtra, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
 }
 
-foreach ($listlocales as $locale => $localeName)
-{
+foreach ($listlocales as $locale => $localeName) {
     $dirmo = $dirtra . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . "LC_MESSAGES";
-    if (!file_exists($dirmo))
-    {
+    if (!file_exists($dirmo)) {
         echo " - MKDIR $dirmo\n";
         mkdir($dirmo, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
     }
     
     $dirpo = $dirsrc . DIRECTORY_SEPARATOR . $locale;
-    if (!file_exists($dirpo))
-    {
+    if (!file_exists($dirpo)) {
         echo " - MKDIR $dirpo\n";
         mkdir($dirpo, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
     }
@@ -113,18 +108,13 @@ $listDirDomain = [
     $dirplugins => FILE\dirInDirToArray($dirplugins),
 ];
 
-foreach ($listDirDomain as $dir => $DirDomain)
-{
-    foreach ($DirDomain as $domain)
-    {
-        if ($dir == __DIR__)
-        {
+foreach ($listDirDomain as $dir => $DirDomain) {
+    foreach ($DirDomain as $domain) {
+        if ($dir == __DIR__) {
             echo " - Core $domain domain\n";
             $packagename = strtolower($domain);
             $inputdir = $dir;
-        }
-        else
-        {
+        } else {
             echo " - Plugin $domain domain\n";
             $packagename = strtolower($domain);
             $inputdir = $dirplugins . DIRECTORY_SEPARATOR . $domain;
@@ -136,12 +126,9 @@ foreach ($listDirDomain as $dir => $DirDomain)
         
         echo "   - List all PHP files to $phpfilelist\n";
         
-        if ($dir == __DIR__)
-        {
+        if ($dir == __DIR__) {
             saveListPHPfilesInDirectory($phpfilelist, $inputdir, $excludedir);
-        }
-        else
-        {
+        } else {
             saveListPHPfilesInDirectory($phpfilelist, $inputdir);
         }
             
@@ -150,8 +137,7 @@ foreach ($listDirDomain as $dir => $DirDomain)
         $potfile = $dirsrc . DIRECTORY_SEPARATOR . $packagename . ".pot";
         exec("xgettext -L PHP --from-code=UTF-8 -c -n -w 80 --sort-by-file --keyword=local_gettext --msgid-bugs-address=$emailreport --package-name=$packagename -o \"$potfiletmp\" -f \"$phpfilelist\"");
 
-        if (file_exists($potfiletmp))
-        {
+        if (file_exists($potfiletmp)) {
             // Customizing the pot file for the project
             $potcontent = file_get_contents($potfiletmp);
 
@@ -172,33 +158,29 @@ foreach ($listDirDomain as $dir => $DirDomain)
             // Normalize the path separator to be able to perform a diff on the next update
             $potcontent = preg_replace_callback(
                 "/^#: .+:\\d+$/um",
-                function ($matches) {return mb_strtolower(str_replace("\\", "/", $matches[0]));},
+                function ($matches) {
+                    return mb_strtolower(str_replace("\\", "/", $matches[0]));
+                },
                 $potcontent
             );
 
             file_put_contents($potfiletmp, $potcontent);
 
             // Avoid merging a new pot file with translations if it doesn't change more than by its creation date
-            if (file_exists($potfile))
-            {
+            if (file_exists($potfile)) {
                 $potfilecontent = file_get_contents($potfile);
                 $potfiletmpcontent = file_get_contents($potfiletmp);
 
                 $potfilecontent = preg_replace('/"POT-Creation-Date:.+"/um', "", $potfilecontent);
                 $potfiletmpcontent = preg_replace('/"POT-Creation-Date:.+"/um', "", $potfiletmpcontent);
 
-                if ($potfilecontent == $potfiletmpcontent)
-                {
+                if ($potfilecontent == $potfiletmpcontent) {
                     unlink($potfiletmp);
-                }
-                else
-                {
+                } else {
                     unlink($potfile);
                     rename($potfiletmp, $potfile);
                 }
-            }
-            else
-            {
+            } else {
                 rename($potfiletmp, $potfile);
             }
         }
@@ -207,14 +189,11 @@ foreach ($listDirDomain as $dir => $DirDomain)
         unlink($phpfilelist);
         
         // countinue only for domains with translatable strings
-        if (file_exists($potfile))
-        {
+        if (file_exists($potfile)) {
             echo "   - Merge and compile translations:\n";
-            foreach (FILE\dirInDirToArray($dirtra) as $locale)
-            {
+            foreach (FILE\dirInDirToArray($dirtra) as $locale) {
                 // Skip folders that do not contain po files
-                if (!array_key_exists($locale, $listlocales))
-                {
+                if (!array_key_exists($locale, $listlocales)) {
                     continue;
                 }
                 
@@ -224,8 +203,7 @@ foreach ($listDirDomain as $dir => $DirDomain)
                 $pofile = $dirsrc . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $packagename . ".po";
                 $mofile = $dirtra . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . "LC_MESSAGES" . DIRECTORY_SEPARATOR . $packagename . ".mo";
                 
-                if (!file_exists($pofile))
-                {
+                if (!file_exists($pofile)) {
                     // Create a translation file and intercept the STDERR of msginit because on Windows,
                     // with a cmd or Powershell console, because msginit emits wrongly an error code 255
                     // when a file is created and this error is not catcheable.
@@ -234,8 +212,7 @@ foreach ($listDirDomain as $dir => $DirDomain)
                     abortOnError($errorcode);
                 }
                 
-                if (file_exists($pofile))
-                {
+                if (file_exists($pofile)) {
                     // Merge all translatable string changes with previous translations
                     $execoutput = [];
                     exec("msgmerge -q --previous -w 80 --sort-by-file --lang=$locale -o \"$tmpfile\" \"$pofile\" \"$potfile\"", $execoutput, $errorcode);
@@ -246,8 +223,7 @@ foreach ($listDirDomain as $dir => $DirDomain)
                     unlink($tmpfile);
                 }
                 
-                if (file_exists($pofile))
-                {
+                if (file_exists($pofile)) {
                     $pocontent = file_get_contents($pofile);
                     $pocontent = str_replace(
                         "# SOME DESCRIPTIVE TITLE.",
@@ -287,19 +263,13 @@ function recursiveListPHPfilesInDirectory($rootdir, $excludedir = NULL)
 {
     $list = [];
     
-    foreach (FILE\dirToArray($rootdir) as $p)
-    {
-        if (is_dir($rootdir . DIRECTORY_SEPARATOR . $p))
-        {
+    foreach (FILE\dirToArray($rootdir) as $p) {
+        if (is_dir($rootdir . DIRECTORY_SEPARATOR . $p)) {
             $process = TRUE;
-            if (is_array($excludedir))
-            {
-                if (count($excludedir) > 0)
-                {
-                    foreach ($excludedir as $ed)
-                    {
-                        if (mb_substr($rootdir . DIRECTORY_SEPARATOR . $p, 0, mb_strlen($ed)) == $ed)
-                        {
+            if (is_array($excludedir)) {
+                if (count($excludedir) > 0) {
+                    foreach ($excludedir as $ed) {
+                        if (mb_substr($rootdir . DIRECTORY_SEPARATOR . $p, 0, mb_strlen($ed)) == $ed) {
                             $process = FALSE;
 
                             break;
@@ -308,14 +278,11 @@ function recursiveListPHPfilesInDirectory($rootdir, $excludedir = NULL)
                 }
             }
             
-            if ($process)
-            {
+            if ($process) {
                 $tmp = recursiveListPHPfilesInDirectory($rootdir . DIRECTORY_SEPARATOR . $p, $excludedir);
                 $list = array_merge($list, $tmp);
             }
-        }
-        elseif (matchExtension($p, ".php"))
-        {
+        } elseif (matchExtension($p, ".php")) {
             $list[] = $rootdir . DIRECTORY_SEPARATOR . $p;
         }
     }
@@ -330,8 +297,7 @@ function matchExtension($filename, $ext)
 
 function abortOnError($errorcode)
 {
-    if ($errorcode != 0)
-    {
+    if ($errorcode != 0) {
         die("\n" . "The previous process exited with error code " . $errorcode . "\n");
     }
 }

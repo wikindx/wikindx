@@ -17,8 +17,7 @@ function adminer_object()
     include_once __DIR__ . "/adminer-plugin.php";
     
     // autoloader
-    foreach (glob("plugins/*.php") as $filename)
-    {
+    foreach (glob("plugins/*.php") as $filename) {
         include_once "./$filename";
     }
     

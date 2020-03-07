@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -35,6 +37,8 @@ class BOOKMARK
     }
     /**
      *Display form for adding a bookmark
+     *
+     * @param mixed $error
      */
     public function init($error = FALSE)
     {
@@ -44,26 +48,20 @@ class BOOKMARK
         $pString .= \FORM\hidden("method", "add");
         $pString .= \HTML\p(\FORM\textInput($this->messages->text("misc", "bookmarkName"), "name", FALSE, 16, 15));
         $bookmarks = $this->session->getArray("bookmark");
-        if (count($bookmarks) > 0)
-        { // no space left so display list for replacement
+        if (count($bookmarks) > 0) { // no space left so display list for replacement
             $max = TRUE;
-            for ($i = 1; $i <= 20; $i++)
-            {
-                if (!array_key_exists($i . "_name", $bookmarks))
-                {
+            for ($i = 1; $i <= 20; $i++) {
+                if (!array_key_exists($i . "_name", $bookmarks)) {
                     $max = FALSE;
 
                     break;
                 }
             }
-            if ($max)
-            {
+            if ($max) {
                 $pString .= \HTML\p($this->messages->text("misc", "bookmarkDelete"));
                 $checked = TRUE;
-                for ($i = 1; $i <= 20; $i++)
-                {
-                    if (array_key_exists($i . "_name", $bookmarks))
-                    {
+                for ($i = 1; $i <= 20; $i++) {
+                    if (array_key_exists($i . "_name", $bookmarks)) {
                         $pString .= \HTML\p(\FORM\radioButton(FALSE, "bookmark_replace", $i, $checked) .
                         "&nbsp;&nbsp;" . stripslashes($bookmarks[$i . "_name"]));
                         $checked = FALSE;
@@ -80,38 +78,27 @@ class BOOKMARK
      */
     public function add()
     {
-        if (!array_key_exists("name", $this->vars))
-        {
+        if (!array_key_exists("name", $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         $name = trim($this->vars['name']);
-        if (!$name)
-        {
+        if (!$name) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         $bookmarks = $this->session->getArray("bookmark");
         $id = 1; // default
-        if (array_key_exists('bookmark_replace', $this->vars))
-        {
+        if (array_key_exists('bookmark_replace', $this->vars)) {
             $id = $this->vars['bookmark_replace'];
             $this->session->delVar("bookmark_" . $id . "_id");
             $this->session->delVar("bookmark_" . $id . "_multi");
-        }
-        else
-        {
-            if (count($bookmarks) > 0)
-            {
-                if ($key = array_search($name, $bookmarks))
-                {
+        } else {
+            if (count($bookmarks) > 0) {
+                if ($key = array_search($name, $bookmarks)) {
                     $split = UTF8::mb_explode('_', $key);
                     $id = $split[0];
-                }
-                else
-                {
-                    for ($i = 1; $i <= 20; $i++)
-                    {
-                        if (!array_key_exists($i . "_name", $bookmarks))
-                        {
+                } else {
+                    for ($i = 1; $i <= 20; $i++) {
+                        if (!array_key_exists($i . "_name", $bookmarks)) {
                             $id = $i;
 
                             break;
@@ -121,8 +108,7 @@ class BOOKMARK
             }
         }
         $this->session->setVar("bookmark_" . $id . "_name", $name);
-        if ($this->session->getVar("bookmark_View") == 'solo')
-        {
+        if ($this->session->getVar("bookmark_View") == 'solo') {
             $this->session->setVar("bookmark_" . $id . "_id", $this->session->getVar("sql_LastSolo"));
             $this->session->saveState('bookmark');
             // send back to view this resource with success message
@@ -130,9 +116,7 @@ class BOOKMARK
             include_once("core/modules/resource/RESOURCEVIEW.php");
             $resource = new RESOURCEVIEW();
             $resource->init($this->session->getVar("sql_LastSolo"));
-        }
-        else
-        { // multi view
+        } else { // multi view
             $bookmark['sql_ListParams'] = $this->session->getVar("sql_ListParams");
             $bookmark['sql_ListStmt'] = $this->session->getVar("sql_ListStmt");
             $bookmark['sql_LastMulti'] = $this->session->getVar("sql_LastMulti");
@@ -143,25 +127,18 @@ class BOOKMARK
             $bookmark['sql_SubQueryMulti'] = $this->session->getVar("list_SubQueryMulti");
             $bookmark['sql_SubQuery'] = $this->session->getVar("list_SubQuery");
             preg_match("/_(.*)_CORE/u", $this->session->getVar("sql_LastMulti"), $match);
-            if ($match[1] == 'SEARCH')
-            {
+            if ($match[1] == 'SEARCH') {
                 $bookmark['Highlight'] = $this->session->getVar("search_Highlight");
                 $bookmark['Patterns'] = $this->session->getVar("search_Patterns");
                 $bookmark['sql_ListParams'] = base64_encode(serialize($this->session->getVar("advancedSearch_listParams")));
                 $listType = 'advancedSearch';
-            }
-            elseif ($match[1] == 'QUICKSEARCH')
-            {
+            } elseif ($match[1] == 'QUICKSEARCH') {
                 $bookmark['Highlight'] = $this->session->getVar("search_Highlight");
                 $bookmark['Patterns'] = $this->session->getVar("search_Patterns");
                 $listType = 'search';
-            }
-            elseif (($match[1] == 'LISTRESOURCES') || ($match[1] == 'LISTSOMERESOURCES'))
-            {
+            } elseif (($match[1] == 'LISTRESOURCES') || ($match[1] == 'LISTSOMERESOURCES')) {
                 $listType = 'list';
-            }
-            elseif (($match[1] == 'BASKET'))
-            {
+            } elseif (($match[1] == 'BASKET')) {
                 $listType = 'basket';
             }
             $bookmark['listType'] = $listType;
@@ -175,27 +152,24 @@ class BOOKMARK
     }
     /**
      * display bookmarks for deletion
+     *
+     * @param mixed $message
      */
     public function deleteInit($message = FALSE)
     {
         $bookmarks = $this->session->getArray("bookmark");
         $bookmarkArray = [];
         $pString = $message ? \HTML\p($message, "error", "center") : '';
-        for ($i = 1; $i <= 20; $i++)
-        {
+        for ($i = 1; $i <= 20; $i++) {
             if (array_key_exists($i . "_name", $bookmarks) &&
-                array_key_exists($i . "_id", $bookmarks))
-            {
+                array_key_exists($i . "_id", $bookmarks)) {
                 $bookmarkArray[$i] = stripslashes($bookmarks[$i . "_name"]);
-            }
-            elseif (array_key_exists($i . "_name", $bookmarks) &&
-                array_key_exists($i . "_multi", $bookmarks))
-            {
+            } elseif (array_key_exists($i . "_name", $bookmarks) &&
+                array_key_exists($i . "_multi", $bookmarks)) {
                 $bookmarkArray[$i] = stripslashes($bookmarks[$i . "_name"]);
             }
         }
-        if (empty($bookmarkArray))
-        { // none left
+        if (empty($bookmarkArray)) { // none left
             GLOBALS::addTplVar('content', $pString);
 
             return;
@@ -218,21 +192,15 @@ class BOOKMARK
      */
     public function delete()
     {
-        if (!array_key_exists("bookmark_id", $this->vars))
-        {
+        if (!array_key_exists("bookmark_id", $this->vars)) {
             $this->badInput($this->errors->text("inputError", "missing"), 'deleteInit');
         }
         $bookmarks = $this->session->getArray("bookmark");
-        for ($i = 1; $i <= 20; $i++)
-        {
-            if (array_search($i, $this->vars['bookmark_id']) !== FALSE)
-            {
-                if (array_key_exists($i . "_id", $bookmarks))
-                {
+        for ($i = 1; $i <= 20; $i++) {
+            if (array_search($i, $this->vars['bookmark_id']) !== FALSE) {
+                if (array_key_exists($i . "_id", $bookmarks)) {
                     $this->session->delVar("bookmark_" . $i . '_id');
-                }
-                elseif (array_key_exists($i . "_multi", $bookmarks))
-                {
+                } elseif (array_key_exists($i . "_multi", $bookmarks)) {
                     $this->session->delVar("bookmark_" . $i . '_multi');
                 }
                 $this->session->delVar("bookmark_" . $i . '_name');
@@ -248,21 +216,17 @@ class BOOKMARK
     {
         $bookmarks = $this->session->getArray("bookmark");
         $bookmark = unserialize($bookmarks[$this->vars['id'] . '_multi']);
-        if (array_key_exists('sql_MetadataTxt', $bookmark))
-        {
+        if (array_key_exists('sql_MetadataTxt', $bookmark)) {
             $this->session->setVar("sql_MetadataText", $bookmark['sql_MetadataText']);
         }
-        if (array_key_exists('Highlight', $bookmark))
-        {
+        if (array_key_exists('Highlight', $bookmark)) {
             $this->session->setVar("search_Highlight", $bookmark['Highlight']);
         }
-        if (array_key_exists('Patterns', $bookmark))
-        {
+        if (array_key_exists('Patterns', $bookmark)) {
             $this->session->setVar("search_Patterns", $bookmark['Patterns']);
         }
         $this->session->setVar("sql_LastMulti", $bookmark['sql_LastMulti']);
-        if (array_key_exists('sql_LastIdeaSearch', $bookmark))
-        {
+        if (array_key_exists('sql_LastIdeaSearch', $bookmark)) {
             $this->session->setVar("sql_LastIdeaSearch", $bookmark['sql_LastIdeaSearch']);
         }
         $this->session->setVar("sql_CountStmt", $bookmark['sql_CountStmt']);

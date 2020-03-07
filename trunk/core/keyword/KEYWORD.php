@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -37,18 +39,15 @@ class KEYWORD
      * @param mixed $kType FALSE (default) or metadata type or metadata array ('quote', 'paraphrase' etc). Gather only keywords attached to metadata
      * @param $typeArray FALSE (default) or limits keywords to those belonging to these types (only when table == 'resource_keyword')
      *
-     * @return array|FALSE id => keyword
+     * @return array|false id => keyword
      */
     public function grabAll($userBib = FALSE, $kType = FALSE, $typeArray = FALSE)
     {
         $subQuery = FALSE;
-        if (is_array($kType) && !empty($kType))
-        {
+        if (is_array($kType) && !empty($kType)) {
             $unions = [];
-            foreach ($kType as $mType)
-            {
-                if (($mType == 'quote') || ($mType == 'quoteComment'))
-                {
+            foreach ($kType as $mType) {
+                if (($mType == 'quote') || ($mType == 'quoteComment')) {
                     $this->db->formatConditions(['resourcekeywordMetadataId' => ' IS NOT NULL']);
                     $this->db->formatConditions(['resourcemetadataType' => 'q']);
                     $this->db->leftJoin('resource_metadata', 'resourcemetadataId', 'resourcekeywordMetadataId');
@@ -59,9 +58,7 @@ class KEYWORD
                         TRUE,
                         TRUE
                     );
-                }
-                elseif (($mType == 'paraphrase') || ($mType == 'paraphraseComment'))
-                {
+                } elseif (($mType == 'paraphrase') || ($mType == 'paraphraseComment')) {
                     $this->db->formatConditions(['resourcekeywordMetadataId' => ' IS NOT NULL']);
                     $this->db->formatConditions(['resourcemetadataType' => 'p']);
                     $this->db->leftJoin('resource_metadata', 'resourcemetadataId', 'resourcekeywordMetadataId');
@@ -72,9 +69,7 @@ class KEYWORD
                         TRUE,
                         TRUE
                     );
-                }
-                elseif ($mType == 'musing')
-                {
+                } elseif ($mType == 'musing') {
                     $this->db->formatConditions(['resourcekeywordMetadataId' => ' IS NOT NULL']);
                     $this->db->formatConditions(['resourcemetadataType' => 'm']);
                     $this->db->leftJoin('resource_metadata', 'resourcemetadataId', 'resourcekeywordMetadataId');
@@ -85,9 +80,7 @@ class KEYWORD
                         TRUE,
                         TRUE
                     );
-                }
-                elseif ($mType == 'idea')
-                {
+                } elseif ($mType == 'idea') {
                     $this->db->formatConditions(['resourcekeywordMetadataId' => ' IS NOT NULL']);
                     $this->db->formatConditions(['resourcemetadataType' => 'i']);
                     $this->db->leftJoin('resource_metadata', 'resourcemetadataId', 'resourcekeywordMetadataId');
@@ -100,122 +93,83 @@ class KEYWORD
                     );
                 }
             }
-            if (!empty($unions))
-            {
+            if (!empty($unions)) {
                 $subQuery = $this->db->subQuery($this->db->union($unions), 't');
             }
             $id = 'resourcekeywordResourceId';
-        }
-        elseif (!is_array($kType))
-        {
-            if ($kType == 'quote')
-            {
-                if (!$userBib && is_array($keywords = $this->db->readCache('cacheQuoteKeywords')))
-                {
+        } elseif (!is_array($kType)) {
+            if ($kType == 'quote') {
+                if (!$userBib && is_array($keywords = $this->db->readCache('cacheQuoteKeywords'))) {
                     return $keywords;
                 }
                 $this->db->formatConditions($this->db->formatFields('resourcekeywordQuoteId') . ' IS NOT NULL');
                 $id = 'resourceId';
-            }
-            elseif ($kType == 'paraphrase')
-            {
-                if (!$userBib && is_array($keywords = $this->db->readCache('cacheParaphraseKeywords')))
-                {
+            } elseif ($kType == 'paraphrase') {
+                if (!$userBib && is_array($keywords = $this->db->readCache('cacheParaphraseKeywords'))) {
                     return $keywords;
                 }
                 $this->db->formatConditions($this->db->formatFields('resourcekeywordParaphraseId') . ' IS NOT NULL');
                 $id = 'resourceId';
-            }
-            elseif ($kType == 'musing')
-            {
-                if (!$userBib && is_array($keywords = $this->db->readCache('cacheMusingKeywords')))
-                {
+            } elseif ($kType == 'musing') {
+                if (!$userBib && is_array($keywords = $this->db->readCache('cacheMusingKeywords'))) {
                     return $keywords;
                 }
                 $this->db->formatConditions($this->db->formatFields('resourcekeywordMusingId') . ' IS NOT NULL');
                 $id = 'resourceId';
-            }
-            elseif ($kType == 'resource')
-            {
-                if (!$userBib && !is_array($typeArray) && is_array($keywords = $this->db->readCache('cacheResourceKeywords')))
-                {
+            } elseif ($kType == 'resource') {
+                if (!$userBib && !is_array($typeArray) && is_array($keywords = $this->db->readCache('cacheResourceKeywords'))) {
                     return $keywords;
                 }
                 $this->db->formatConditions($this->db->formatFields('resourcekeywordResourceId') . ' IS NOT NULL');
                 $id = 'resourcekeywordResourceId';
-            }
-            else
-            { // all keywords
-                if (!$userBib && !is_array($typeArray) && is_array($keywords = $this->db->readCache('cacheKeywords')))
-                {
+            } else { // all keywords
+                if (!$userBib && !is_array($typeArray) && is_array($keywords = $this->db->readCache('cacheKeywords'))) {
                     return $keywords;
                 }
                 $id = 'resourcekeywordResourceId';
             }
-        }
-        else
-        { // all keywords
-            if (!$userBib && !is_array($typeArray) && is_array($keywords = $this->db->readCache('cacheKeywords')))
-            {
+        } else { // all keywords
+            if (!$userBib && !is_array($typeArray) && is_array($keywords = $this->db->readCache('cacheKeywords'))) {
                 return $keywords;
             }
             $id = 'resourcekeywordResourceId';
         }
-        if (is_array($typeArray) && !empty($typeArray) && $kType == 'resource')
-        {
+        if (is_array($typeArray) && !empty($typeArray) && $kType == 'resource') {
             $this->db->formatConditionsOneField($typeArray, 'resourceType');
         }
-        if (!is_array($kType) && $kType)
-        {
+        if (!is_array($kType) && $kType) {
             $this->db->leftJoin('resource_keyword', 'resourcekeywordKeywordId', 'keywordId');
             $this->db->leftJoin('resource', 'resourceId', 'resourcekeywordResourceId');
         }
         $this->db->orderBy('keywordKeyword');
-        if ($subQuery)
-        {
+        if ($subQuery) {
             $this->db->leftJoin('keyword', 'keywordId', 'rkId');
             $this->db->leftJoin('resource_keyword', 'resourcekeywordKeywordId', 'keywordId');
-            if ($userBib)
-            {
+            if ($userBib) {
                 $this->commonBib->userBibCondition($id);
             }
             $recordset = $this->db->selectFromSubQuery(FALSE, ['keywordId', 'keywordKeyword', 'rkId'], $subQuery);
-        }
-        else
-        {
-            if ($userBib)
-            {
+        } else {
+            if ($userBib) {
                 $this->commonBib->userBibCondition($id);
             }
             $recordset = $this->db->select('keyword', ['keywordId', 'keywordKeyword'], TRUE);
         }
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $keywords[$row['keywordId']] = \HTML\dbToFormTidy($row['keywordKeyword']);
         }
-        if (isset($keywords))
-        {
+        if (isset($keywords)) {
             // (re)create cache if listing for all types and no user bibliography
-            if (!$userBib && !is_array($typeArray) && !is_array($kType))
-            {
-                if ($kType == 'quote')
-                {
+            if (!$userBib && !is_array($typeArray) && !is_array($kType)) {
+                if ($kType == 'quote') {
                     $this->db->writeCache('cacheQuoteKeywords', $keywords);
-                }
-                elseif ($kType == 'paraphrase')
-                {
+                } elseif ($kType == 'paraphrase') {
                     $this->db->writeCache('cacheParaphraseKeywords', $keywords);
-                }
-                elseif ($kType == 'musing')
-                {
+                } elseif ($kType == 'musing') {
                     $this->db->writeCache('cacheMusingKeywords', $keywords);
-                }
-                elseif ($kType == 'resource')
-                {
+                } elseif ($kType == 'resource') {
                     $this->db->writeCache('cacheResourceKeywords', $keywords);
-                }
-                else
-                {
+                } else {
                     $this->db->writeCache('cacheKeywords', $keywords);
                 }
             }
@@ -230,14 +184,13 @@ class KEYWORD
      *
      * @param string $keyword
      *
-     * @return int|FALSE Existing keyword ID
+     * @return false|int Existing keyword ID
      */
     public function checkExists($keyword)
     {
         $this->db->formatConditions($this->db->formatFields('keywordKeyword') . $this->db->like(FALSE, $keyword, FALSE));
         $resultset = $this->db->select('keyword', 'keywordId');
-        if ($this->db->numRows($resultset))
-        {
+        if ($this->db->numRows($resultset)) {
             return $this->db->fetchOne($resultset);
         }
 
@@ -253,16 +206,13 @@ class KEYWORD
         $subStmt = $this->db->subQuery($this->db->selectNoExecute('resource_keyword', 'resourcekeywordKeywordId'), FALSE, FALSE, TRUE);
         $this->db->formatConditions($this->db->formatFields('keywordId') . $this->db->inClause($subStmt, TRUE));
         $recordset = $this->db->select('keyword', 'keywordId');
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $deleteIds[] = $row['keywordId'];
         }
-        if (empty($deleteIds))
-        {
+        if (empty($deleteIds)) {
             return; // nothing to do
         }
-        if (!empty($deleteIds))
-        {
+        if (!empty($deleteIds)) {
             $this->db->formatConditionsOneField($deleteIds, 'keywordId');
             $this->db->delete("keyword");
             // remove cache files for keywords
@@ -279,53 +229,44 @@ class KEYWORD
      *
      * @param array $inputArray
      *
-     * @return int|FALSE Array of keyword IDs
+     * @return false|int Array of keyword IDs
      */
     public function writeKeywordTable($inputArray)
     {
         $fields[] = "keywordKeyword";
         $addedKeyword = FALSE;
         $ids = $keywords = [];
-        if (array_key_exists('keywords', $inputArray))
-        {
+        if (array_key_exists('keywords', $inputArray)) {
             $keywords = UTF8::mb_explode(',', $inputArray['keywords']);
         }
-        foreach ($keywords as $keyword)
-        {
-            if (!$keyword = trim($keyword))
-            {
+        foreach ($keywords as $keyword) {
+            if (!$keyword = trim($keyword)) {
                 continue;
             }
             $values[0] = $keyword;
-            if ($id = $this->checkExists($keyword))
-            {
+            if ($id = $this->checkExists($keyword)) {
                 $ids[] = $id;
-                foreach ($fields as $field)
-                {
+                foreach ($fields as $field) {
                     $updateArray[$field] = array_shift($values);
                 }
                 $this->db->formatConditions(['keywordId' => $id]);
                 $this->db->update('keyword', $updateArray);
             }
             // given keyword doesn't exist so now write to db
-            else
-            {
+            else {
                 $this->db->insert('keyword', $fields, $values);
                 $ids[] = $this->db->lastAutoId();
                 $addedKeyword = TRUE;
             }
         }
         // merge two arrays to remove duplicate ids.
-        if (array_key_exists('keyword_ids', $inputArray) && $inputArray['keyword_ids'])
-        {
+        if (array_key_exists('keyword_ids', $inputArray) && $inputArray['keyword_ids']) {
             $ids = array_unique(array_merge($ids, UTF8::mb_explode(',', $inputArray['keyword_ids'])));
         }
-        if (empty($ids))
-        {
+        if (empty($ids)) {
             return FALSE;
         }
-        if ($addedKeyword)
-        {
+        if ($addedKeyword) {
             // remove cache files for keywords
             $this->db->deleteCache('cacheresourceKeywords');
             $this->db->deleteCache('cachemetadataKeywords');
@@ -335,8 +276,7 @@ class KEYWORD
             $this->db->deleteCache('cacheKeywords');
         }
         // In case array key 0 ('IGNORE') is there, remove it
-        if (array_search(0, $ids) === 0)
-        {
+        if (array_search(0, $ids) === 0) {
             unset($ids[0]);
         }
 

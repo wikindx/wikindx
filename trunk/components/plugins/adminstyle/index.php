@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -47,8 +49,7 @@ class adminstyle_MODULE
         include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
         $config = new adminstyle_CONFIG();
         $this->authorize = $config->authorize;
-        if ($menuInit)
-        {
+        if ($menuInit) {
             $this->makeMenu($config->menus);
 
             return; // Need do nothing more as this is simply menu initialisation.
@@ -56,8 +57,7 @@ class adminstyle_MODULE
         $this->footnotePages = FALSE;
 
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->authorize))
-        { // not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
 
@@ -86,7 +86,7 @@ class adminstyle_MODULE
     /**
      * display options for styles
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function display($message = FALSE)
     {
@@ -96,8 +96,7 @@ class adminstyle_MODULE
         $this->session->clearArray("partial");
         $this->session->clearArray("footnote");
         $pString = '';
-        if ($message)
-        {
+        if ($message) {
             $pString .= HTML\p($message);
         }
         GLOBALS::addTplVar('content', $pString);
@@ -105,7 +104,7 @@ class adminstyle_MODULE
     /**
      * Add a style - display options
      *
-     * @param string|FALSE $error
+     * @param false|string $error
      */
     public function addInit($error = FALSE)
     {
@@ -120,8 +119,7 @@ class adminstyle_MODULE
         GLOBALS::setTplVar('help', $link);
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('addStyle'));
         $pString = '';
-        if ($error)
-        {
+        if ($error) {
             $pString .= HTML\p($error, "error", "center");
         }
         $pString .= $this->displayStyleForm('add');
@@ -133,8 +131,7 @@ class adminstyle_MODULE
     public function add()
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('addStyle'));
-        if ($error = $this->validateInput('add'))
-        {
+        if ($error = $this->validateInput('add')) {
             $this->badInput->close($error, $this, 'addInit');
         }
         $this->writeFile();
@@ -147,24 +144,20 @@ class adminstyle_MODULE
     /**
      * display styles for editing
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function editInit($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('editStyle'));
         $pString = '';
-        if ($message)
-        {
+        if ($message) {
             $pString .= HTML\p($message);
         }
         $pString .= FORM\formHeader("adminstyle_editDisplay");
         $styleFile = $this->session->getVar("editStyleFile");
-        if ($styleFile)
-        {
+        if ($styleFile) {
             $pString .= FORM\selectedBoxValue(FALSE, "editStyleFile", $this->styles, $styleFile, 20);
-        }
-        else
-        {
+        } else {
             $pString .= FORM\selectFBoxValue(FALSE, "editStyleFile", $this->styles, 20);
         }
         $pString .= BR . FORM\formSubmit($this->coremessages->text("submit", "Edit"));
@@ -174,7 +167,7 @@ class adminstyle_MODULE
     /**
      * Display a style for editing
      *
-     * @param string|FALSE $error
+     * @param false|string $error
      */
     public function editDisplay($error = FALSE)
     {
@@ -182,14 +175,12 @@ class adminstyle_MODULE
         $jScript = "javascript:coreOpenPopup('index.php?action=adminstyle_help&amp;message=Help', 80)";
         $link = HTML\a($icons->getClass("help"), $icons->getHTML("help"), $jScript);
         GLOBALS::setTplVar('help', $link);
-        if (!$error)
-        {
+        if (!$error) {
             $this->loadEditSession();
         }
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('editStyle'));
         $pString = '';
-        if ($error)
-        {
+        if ($error) {
             $pString .= HTML\p($error, "error", "center");
         }
         $pString .= $this->displayStyleForm('edit');
@@ -201,8 +192,7 @@ class adminstyle_MODULE
     public function edit()
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('editStyle'));
-        if ($error = $this->validateInput('edit'))
-        {
+        if ($error = $this->validateInput('edit')) {
             $this->badInput->close($error, $this, 'editDisplay');
         }
         $dirName = WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . mb_strtolower(trim($this->vars['styleShortName']));
@@ -217,7 +207,7 @@ class adminstyle_MODULE
     /**
      * display styles for copying and making a new style
      *
-     * @param string|FALSE $error
+     * @param false|string $error
      */
     public function copyInit($error = FALSE)
     {
@@ -231,7 +221,7 @@ class adminstyle_MODULE
     /**
      * Display a style for copying
      *
-     * @param string|FALSE $error
+     * @param false|string $error
      */
     public function copyDisplay($error = FALSE)
     {
@@ -239,14 +229,12 @@ class adminstyle_MODULE
         $jScript = "javascript:coreOpenPopup('index.php?action=adminstyle_help&amp;message=Help', 80)";
         $link = HTML\a($icons->getClass("help"), $icons->getHTML("help"), $jScript);
         GLOBALS::setTplVar('help', $link);
-        if (!$error)
-        {
+        if (!$error) {
             $this->loadEditSession(TRUE);
         }
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('copyStyle'));
         $pString = '';
-        if ($error)
-        {
+        if ($error) {
             $pString .= HTML\p($error, "error", "center");
         }
         $pString .= $this->displayStyleForm('copy');
@@ -260,8 +248,7 @@ class adminstyle_MODULE
     public function copy()
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('copyStyle'));
-        if ($error = $this->validateInput('add'))
-        {
+        if ($error = $this->validateInput('add')) {
             $this->badInput->close($error, $this, 'copyDisplay');
         }
         $this->writeFile();
@@ -274,14 +261,13 @@ class adminstyle_MODULE
     /**
      * Complete the in-text citation preview fields
      *
-     * @param string|FALSE $div
+     * @param false|string $div
      */
     public function previewCite($div = FALSE)
     {
         $pString = HTML\tableStart('generalTable borderStyleSolid');
         $pString .= HTML\trStart();
-        if ($div)
-        {
+        if ($div) {
             $pString .= HTML\td('&nbsp;');
             $pString .= HTML\trEnd();
             $pString .= HTML\tableEnd();
@@ -291,8 +277,7 @@ class adminstyle_MODULE
         include_once(__DIR__ . DIRECTORY_SEPARATOR . 'previewcite.php');
         $pc = new adminstyle_previewcite();
         $string = $pc->display();
-        if ($string === FALSE)
-        {
+        if ($string === FALSE) {
             $string = $this->pluginmessages->text('previewError');
         }
         $pString .= HTML\td($string);
@@ -305,14 +290,13 @@ class adminstyle_MODULE
     /**
      * Complete the style preview fields
      *
-     * @param string|FALSE $div
+     * @param false|string $div
      */
     public function previewStyle($div = FALSE)
     {
         $pString = HTML\tableStart('generalTable borderStyleSolid');
         $pString .= HTML\trStart();
-        if ($div)
-        {
+        if ($div) {
             $pString .= HTML\td('&nbsp;');
             $pString .= HTML\trEnd();
             $pString .= HTML\tableEnd();
@@ -322,8 +306,7 @@ class adminstyle_MODULE
         include_once(__DIR__ . DIRECTORY_SEPARATOR . 'previewstyle.php');
         $ps = new adminstyle_previewstyle();
         $string = $ps->display();
-        if ($string === FALSE)
-        {
+        if ($string === FALSE) {
             $string = $this->pluginmessages->text('previewError');
         }
         $pString .= HTML\td($string);
@@ -354,6 +337,7 @@ class adminstyle_MODULE
      * Read data from style file and load it into the session
      *
      * @param bool $type
+     * @param mixed $copy
      */
     private function loadEditSession($copy = FALSE)
     {
@@ -366,8 +350,7 @@ class adminstyle_MODULE
         $this->session->setVar("editStyleFile", $this->vars['editStyleFile']);
         $dir = mb_strtolower($this->vars['editStyleFile']);
         $fileName = $this->vars['editStyleFile'] . ".xml";
-        if ($fh = fopen(WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $fileName, "r"))
-        {
+        if ($fh = fopen(WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $fileName, "r")) {
             fclose($fh);
 
             $filePath = WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $fileName;
@@ -377,70 +360,53 @@ class adminstyle_MODULE
             $footnote = $parseXML->footnote;
             $common = $parseXML->common;
             $types = $parseXML->types;
-            if (!$copy)
-            {
+            if (!$copy) {
                 $this->session->setVar("style_shortName", $this->vars['editStyleFile']);
                 $this->session->setVar("style_longName", base64_encode($info['description']));
             }
-            foreach ($citation as $key => $value)
-            {
+            foreach ($citation as $key => $value) {
                 $this->session->setVar("cite_" . $key, base64_encode(htmlspecialchars($value)));
             }
             $this->arrayToTemplate($footnote, TRUE);
-            foreach ($resourceTypes as $type)
-            {
+            foreach ($resourceTypes as $type) {
                 $type = 'footnote_' . $type;
                 $sessionKey = $type . 'Template';
-                if (!empty($this->$type))
-                {
+                if (!empty($this->$type)) {
                     $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($this->$type)));
                 }
                 unset($this->$type);
             }
-            foreach ($common as $key => $value)
-            {
+            foreach ($common as $key => $value) {
                 $this->session->setVar("style_" . $key, base64_encode(htmlspecialchars($value)));
             }
             $this->arrayToTemplate($types);
-            foreach ($resourceTypes as $type)
-            {
+            foreach ($resourceTypes as $type) {
                 $sessionKey = 'style_' . $type;
-                if (!empty($this->$type))
-                {
+                if (!empty($this->$type)) {
                     $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($this->$type)));
                 }
-                if (array_key_exists($type, $this->fallback))
-                {
+                if (array_key_exists($type, $this->fallback)) {
                     $sessionKey .= "_generic";
                     $this->session->setVar($sessionKey, base64_encode($this->fallback[$type]));
                 }
                 $partialName = 'partial_' . $type . 'Template';
-                if (isset($this->$partialName) && $this->$partialName)
-                {
+                if (isset($this->$partialName) && $this->$partialName) {
                     $this->session->setVar($partialName, base64_encode(htmlspecialchars($this->$partialName)));
                 }
                 $partialReplace = 'partial_' . $type . 'Replace';
-                if (isset($this->$partialReplace) && $this->$partialReplace)
-                {
+                if (isset($this->$partialReplace) && $this->$partialReplace) {
                     $this->session->setVar(
                         $partialReplace,
                         base64_encode(htmlspecialchars($this->$partialReplace))
                     );
-                }
-                else
-                {
+                } else {
                     $this->session->delVar($partialReplace);
                 }
             }
-        }
-        else
-        {
-            if ($copy)
-            {
+        } else {
+            if ($copy) {
                 $this->badInput->close($this->errors->text("file", "read"), $this, 'copyDisplay');
-            }
-            else
-            {
+            } else {
                 $this->badInput->close($this->errors->text("file", "read"), $this, 'editDisplay');
             }
         }
@@ -454,34 +420,26 @@ class adminstyle_MODULE
     private function arrayToTemplate($types, $footnote = FALSE)
     {
         $this->fallback = [];
-        foreach ($types as $key => $array)
-        {
+        foreach ($types as $key => $array) {
             $temp = $tempArray = $newArray = $independent = [];
             $ultimate = $preliminary = $partial = $partialReplace = FALSE;
             /**
              * The resource type which will be our array name
              */
-            if (($key == 'fallback') && !$footnote)
-            {
+            if (($key == 'fallback') && !$footnote) {
                 $this->fallback = $array;
 
                 continue;
             }
-            if ($footnote)
-            {
+            if ($footnote) {
                 $type = "footnote_" . $key;
-            }
-            else
-            {
+            } else {
                 $type = $key;
                 $this->writeSessionRewriteCreators($type, $array);
             }
-            if (is_array($array))
-            {
-                foreach ($array as $rKey => $value)
-                {
-                    if ($rKey == 'fallback')
-                    {
+            if (is_array($array)) {
+                foreach ($array as $rKey => $value) {
+                    if ($rKey == 'fallback') {
                         continue;
                     }
                     $temp[$rKey] = $value;
@@ -492,81 +450,60 @@ class adminstyle_MODULE
              */
             $alternates = [];
             $index = 0;
-            foreach ($temp as $key => $value)
-            {
-                if (!is_array($value))
-                {
-                    if ($key == 'ultimate')
-                    {
+            foreach ($temp as $key => $value) {
+                if (!is_array($value)) {
+                    if ($key == 'ultimate') {
                         $ultimate = $value;
-                    }
-                    elseif ($key == 'preliminaryText')
-                    {
+                    } elseif ($key == 'preliminaryText') {
                         $preliminary = $value;
-                    }
-                    elseif ($key == 'partial')
-                    {
+                    } elseif ($key == 'partial') {
                         $partial = $value;
-                    }
-                    elseif (($key == 'partialReplace') && $value)
-                    {
+                    } elseif (($key == 'partialReplace') && $value) {
                         $partialReplace = $value;
                     }
 
                     continue;
                 }
-                if (($key == 'independent'))
-                {
+                if (($key == 'independent')) {
                     $independent = $value;
 
                     continue;
                 }
                 $string = FALSE;
-                if (array_key_exists('alternatePreFirst', $value))
-                {
+                if (array_key_exists('alternatePreFirst', $value)) {
                     $alternates[$key]['preFirst'] = $value['alternatePreFirst'];
                 }
-                if (array_key_exists('alternatePreSecond', $value))
-                {
+                if (array_key_exists('alternatePreSecond', $value)) {
                     $alternates[$key]['preSecond'] = $value['alternatePreSecond'];
                 }
-                if (array_key_exists('alternatePostFirst', $value))
-                {
+                if (array_key_exists('alternatePostFirst', $value)) {
                     $alternates[$key]['postFirst'] = $value['alternatePostFirst'];
                 }
-                if (array_key_exists('alternatePostSecond', $value))
-                {
+                if (array_key_exists('alternatePostSecond', $value)) {
                     $alternates[$key]['postSecond'] = $value['alternatePostSecond'];
                 }
-                if (array_key_exists('pre', $value))
-                {
+                if (array_key_exists('pre', $value)) {
                     $string .= $value['pre'];
                 }
                 $string .= $key;
-                if (array_key_exists('post', $value))
-                {
+                if (array_key_exists('post', $value)) {
                     $string .= $value['post'];
                 }
-                if (array_key_exists('dependentPre', $value))
-                {
+                if (array_key_exists('dependentPre', $value)) {
                     $replace = "%" . $value['dependentPre'] . "%";
-                    if (array_key_exists('dependentPreAlternative', $value))
-                    {
+                    if (array_key_exists('dependentPreAlternative', $value)) {
                         $replace .= $value['dependentPreAlternative'] . "%";
                     }
                     $string = str_replace("__DEPENDENT_ON_PREVIOUS_FIELD__", $replace, $string);
                 }
-                if (array_key_exists('dependentPost', $value))
-                {
+                if (array_key_exists('dependentPost', $value)) {
                     $replace = "%" . $value['dependentPost'] . "%";
-                    if (array_key_exists('dependentPostAlternative', $value))
-                    {
+                    if (array_key_exists('dependentPostAlternative', $value)) {
                         $replace .= $value['dependentPostAlternative'] . "%";
                     }
                     $string = str_replace("__DEPENDENT_ON_NEXT_FIELD__", $replace, $string);
                 }
-                if (array_key_exists('singular', $value) && array_key_exists('plural', $value))
-                {
+                if (array_key_exists('singular', $value) && array_key_exists('plural', $value)) {
                     $replace = "^" . $value['singular'] . "^" . $value['plural'] . "^";
                     $string = str_replace("__SINGULAR_PLURAL__", $replace, $string);
                 }
@@ -574,86 +511,63 @@ class adminstyle_MODULE
                 $fieldNames[$key] = $index;
                 ++$index;
             }
-            if (!empty($tempArray))
-            {
-                foreach ($alternates as $field => $altArray)
-                {
+            if (!empty($tempArray)) {
+                foreach ($alternates as $field => $altArray) {
                     $alternateFound = 0;
                     if (array_key_exists('preFirst', $altArray) &&
-                        array_key_exists($altArray['preFirst'], $tempArray))
-                    {
+                        array_key_exists($altArray['preFirst'], $tempArray)) {
                         $final = '$' . $tempArray[$altArray['preFirst']] . '$';
                         unset($tempArray[$altArray['preFirst']]);
                         $alternateFound = TRUE;
-                    }
-                    else
-                    {
+                    } else {
                         $final = '$$';
                     }
                     if (array_key_exists('preSecond', $altArray) &&
-                        array_key_exists($altArray['preSecond'], $tempArray))
-                    {
+                        array_key_exists($altArray['preSecond'], $tempArray)) {
                         $final .= $tempArray[$altArray['preSecond']] . '$';
                         unset($tempArray[$altArray['preSecond']]);
                         $alternateFound = TRUE;
-                    }
-                    else
-                    {
+                    } else {
                         $final .= '$';
                     }
-                    if ($alternateFound)
-                    {
+                    if ($alternateFound) {
                         array_splice($tempArray, $fieldNames[$field] + 1, 0, $final);
                     }
                     $alternateFound = 0;
                     if (array_key_exists('postFirst', $altArray) &&
-                        array_key_exists($altArray['postFirst'], $tempArray))
-                    {
+                        array_key_exists($altArray['postFirst'], $tempArray)) {
                         $final = '#' . $tempArray[$altArray['postFirst']] . '#';
                         unset($tempArray[$altArray['postFirst']]);
                         ++$alternateFound;
-                    }
-                    else
-                    {
+                    } else {
                         $final = '##';
                     }
                     if (array_key_exists('postSecond', $altArray) &&
-                        array_key_exists($altArray['postSecond'], $tempArray))
-                    {
+                        array_key_exists($altArray['postSecond'], $tempArray)) {
                         $final .= $tempArray[$altArray['postSecond']] . '#';
                         unset($tempArray[$altArray['postSecond']]);
                         ++$alternateFound;
-                    }
-                    else
-                    {
+                    } else {
                         $final .= '#';
                     }
-                    if ($alternateFound)
-                    {
+                    if ($alternateFound) {
                         array_splice($tempArray, $fieldNames[$field] - $alternateFound, 0, $final);
                     }
                 }
                 $tempArray = array_values($tempArray); // i.e. remove named keys.
             }
-            if (!empty($independent))
-            {
+            if (!empty($independent)) {
                 $firstOfPair = FALSE;
-                foreach ($tempArray as $index => $value)
-                {
-                    if (!$firstOfPair)
-                    {
-                        if (array_key_exists($index, $independent))
-                        {
+                foreach ($tempArray as $index => $value) {
+                    if (!$firstOfPair) {
+                        if (array_key_exists($index, $independent)) {
                             $newArray[] = $independent[$index] . '|' . $value;
                             $firstOfPair = TRUE;
 
                             continue;
                         }
-                    }
-                    else
-                    {
-                        if (array_key_exists($index, $independent))
-                        {
+                    } else {
+                        if (array_key_exists($index, $independent)) {
                             $newArray[] = $value . '|' . $independent[$index];
                             $firstOfPair = FALSE;
 
@@ -662,23 +576,18 @@ class adminstyle_MODULE
                     }
                     $newArray[] = $value;
                 }
-            }
-            else
-            {
+            } else {
                 $newArray = $tempArray;
             }
             $tempString = implode('|', $newArray);
-            if ($ultimate && (mb_substr($tempString, -1, 1) != $ultimate))
-            {
+            if ($ultimate && (mb_substr($tempString, -1, 1) != $ultimate)) {
                 $tempString .= '|' . $ultimate;
             }
-            if ($preliminary)
-            {
+            if ($preliminary) {
                 $tempString = $preliminary . '|' . $tempString;
             }
             $this->$type = $tempString;
-            if (!$footnote)
-            {
+            if (!$footnote) {
                 $partialName = 'partial_' . $type . 'Template';
                 $this->$partialName = $partial;
                 $partialReplaceName = 'partial_' . $type . 'Replace';
@@ -694,35 +603,29 @@ class adminstyle_MODULE
      */
     private function writeSessionRewriteCreators($type, $array)
     {
-        foreach ($this->creators as $creatorField)
-        {
+        foreach ($this->creators as $creatorField) {
             $name = $creatorField . "_firstString";
-            if (array_key_exists($name, $array))
-            {
+            if (array_key_exists($name, $array)) {
                 $sessionKey = 'style_' . $type . "_" . $name;
                 $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($array[$name])));
             }
             $name = $creatorField . "_firstString_before";
-            if (array_key_exists($name, $array))
-            {
+            if (array_key_exists($name, $array)) {
                 $sessionKey = 'style_' . $type . "_" . $name;
                 $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($array[$name])));
             }
             $name = $creatorField . "_remainderString";
-            if (array_key_exists($name, $array))
-            {
+            if (array_key_exists($name, $array)) {
                 $sessionKey = 'style_' . $type . "_" . $name;
                 $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($array[$name])));
             }
             $name = $creatorField . "_remainderString_before";
-            if (array_key_exists($name, $array))
-            {
+            if (array_key_exists($name, $array)) {
                 $sessionKey = 'style_' . $type . "_" . $name;
                 $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($array[$name])));
             }
             $name = $creatorField . "_remainderString_each";
-            if (array_key_exists($name, $array))
-            {
+            if (array_key_exists($name, $array)) {
                 $sessionKey = 'style_' . $type . "_" . $name;
                 $this->session->setVar($sessionKey, base64_encode(htmlspecialchars($array[$name])));
             }
@@ -1198,23 +1101,17 @@ class adminstyle_MODULE
         $this->db = FACTORY_DB::getInstance();
         $languages = \LOCALES\getSystemLocales();
         $types = array_keys($this->styleMap->types);
-        if ($type == 'add')
-        {
+        if ($type == 'add') {
             $pString = FORM\formHeader("adminstyle_add");
-        }
-        elseif ($type == 'edit')
-        {
+        } elseif ($type == 'edit') {
             $pString = FORM\formHeader("adminstyle_edit");
-        }
-        else
-        { // copy
+        } else { // copy
             $pString = FORM\formHeader("adminstyle_copy");
         }
         $pString .= HTML\tableStart();
         $pString .= HTML\trStart();
         $input = stripslashes($this->session->getVar("style_shortName"));
-        if ($type == 'add')
-        {
+        if ($type == 'add') {
             $pString .= HTML\td(FORM\textInput(
                 $this->pluginmessages->text('shortName'),
                 "styleShortName",
@@ -1223,15 +1120,11 @@ class adminstyle_MODULE
                 255
             ) . " " . HTML\span('*', 'required') .
                 BR . $this->pluginmessages->text('hint_styleShortName'));
-        }
-        elseif ($type == 'edit')
-        {
+        } elseif ($type == 'edit') {
             $pString .=
                 HTML\td(FORM\hidden("editStyleFile", $this->vars['editStyleFile']) .
                 FORM\hidden("styleShortName", $input) . HTML\strong($this->vars['editStyleFile'] . ":&nbsp;&nbsp;"), 'top');
-        }
-        else
-        { // copy
+        } else { // copy
             $pString .= HTML\td(FORM\textInput(
                 $this->pluginmessages->text('shortName'),
                 "styleShortName",
@@ -1251,8 +1144,7 @@ class adminstyle_MODULE
         ) . " " . HTML\span('*', 'required'));
 
         $language = base64_decode($this->session->getVar("style_localisation"));
-        if (!$language)
-        {
+        if (!$language) {
             $language = WIKINDX_LANGUAGE_DEFAULT;
         }
         $pString .= HTML\td(FORM\selectedBoxValue(
@@ -1373,37 +1265,24 @@ class adminstyle_MODULE
         $pString .= HTML\trEnd();
         $pString .= HTML\trStart();
         $monthString = '';
-        for ($i = 1; $i <= 16; $i++)
-        {
+        for ($i = 1; $i <= 16; $i++) {
             $input = stripslashes(base64_decode($this->session->getVar("style_userMonth_$i")));
-            if ($i == 7)
-            {
+            if ($i == 7) {
                 $monthString .= BR . "$i:&nbsp;&nbsp;" .
                 FORM\textInput(FALSE, "style_userMonth_$i", $input, 15, 255);
-            }
-            elseif ($i >= 13)
-            {
-                if ($i == 13)
-                {
+            } elseif ($i >= 13) {
+                if ($i == 13) {
                     $monthString .= BR . $this->pluginmessages->text('userSeasons') . BR;
                     $s = 'Spring';
-                }
-                elseif ($i == 14)
-                {
+                } elseif ($i == 14) {
                     $s = 'Summer';
-                }
-                elseif ($i == 15)
-                {
+                } elseif ($i == 15) {
                     $s = 'Autumn';
-                }
-                elseif ($i == 16)
-                {
+                } elseif ($i == 16) {
                     $s = 'Winter';
                 }
                 $monthString .= "$s:&nbsp;&nbsp;" . FORM\textInput(FALSE, "style_userMonth_$i", $input, 15, 255);
-            }
-            else
-            {
+            } else {
                 $monthString .= "$i:&nbsp;&nbsp;" .
                 FORM\textInput(FALSE, "style_userMonth_$i", $input, 15, 255);
             }
@@ -1480,24 +1359,19 @@ class adminstyle_MODULE
         // Grab any custom fields
         $customFields = [];
         $recordset = $this->db->select('custom', ['customId', 'customLabel']);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $customFields[base64_encode('custom_' . $row['customId'])] = 'custom_' . $row['customId'] .
             '&nbsp;(' . HTML\dbToFormTidy($row['customLabel']) . ')';
         }
         // Resource types
-        foreach ($types as $key)
-        {
+        foreach ($types as $key) {
             $availableFields = [];
-            if (($key == 'genericBook') || ($key == 'genericArticle') || ($key == 'genericMisc'))
-            {
+            if (($key == 'genericBook') || ($key == 'genericArticle') || ($key == 'genericMisc')) {
                 $required = HTML\span('*', 'required');
                 $fallback = FALSE;
                 $citationString = FALSE;
                 $formElementName = FALSE;
-            }
-            else
-            {
+            } else {
                 $required = FALSE;
                 $formElementName = "style_" . $key . "_generic";
                 $input = $this->session->issetVar($formElementName) ?
@@ -1566,8 +1440,7 @@ class adminstyle_MODULE
             ) . $footnoteTemplate . $partialTemplate .
                 $rewriteCreatorString . $citationString);
             // List available fields for this type
-            foreach ($this->styleMap->$key as $value)
-            {
+            foreach ($this->styleMap->$key as $value) {
                 $availableFields[base64_encode($value)] = $value;
             }
             
@@ -1619,8 +1492,7 @@ class adminstyle_MODULE
             ];
             $toLeftImage = AJAX\jActionIcon('toLeft', 'onclick', $jsonArray);
             // If 'pages' not in field list, add for field footnotes
-            if (array_key_exists('pages', $this->styleMap->{$key}) && array_search('pages', $availableFields) === FALSE)
-            {
+            if (array_key_exists('pages', $this->styleMap->{$key}) && array_search('pages', $availableFields) === FALSE) {
                 $availableFields[base64_encode('pages')] = 'pages';
             }
             
@@ -1677,12 +1549,9 @@ class adminstyle_MODULE
             $pString .= HTML\trEnd();
             $pString .= HTML\tableEnd();
         }
-        if (($type == 'add') || ($type == 'copy'))
-        {
+        if (($type == 'add') || ($type == 'copy')) {
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Add")));
-        }
-        else
-        {
+        } else {
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Edit")));
         }
         $pString .= FORM\formEnd();
@@ -1945,21 +1814,17 @@ class adminstyle_MODULE
     private function rewriteCreators($key, $availableFields)
     {
         $heading = HTML\p(HTML\strong($this->pluginmessages->text('rewriteCreator1')), "small");
-        foreach ($this->creators as $creatorField)
-        {
-            if (!array_key_exists($creatorField, $availableFields))
-            {
+        foreach ($this->creators as $creatorField) {
+            if (!array_key_exists($creatorField, $availableFields)) {
                 continue;
             }
             $fields[$creatorField] = $availableFields[$creatorField];
         }
-        if (!isset($fields))
-        {
+        if (!isset($fields)) {
             return FALSE;
         }
         $pString = FALSE;
-        foreach ($fields as $creatorField => $value)
-        {
+        foreach ($fields as $creatorField => $value) {
             $basicField = "style_" . $key . "_" . $creatorField;
             $field = HTML\td(HTML\p(HTML\em($value), "small"), 'padding5px', FALSE, "middle");
             $formString = $basicField . "_firstString";
@@ -2010,105 +1875,82 @@ class adminstyle_MODULE
         $index = 1;
         $lastIndex = count($subjectArray) - 1;
         $alternates = [];
-        foreach ($subjectArray as $subject)
-        {
+        foreach ($subjectArray as $subject) {
             $subjectFieldIndex = $index;
             // this pair depend on the preceding field
-            if (($index > 1) && (mb_substr_count($subject, "$") == 3) && (mb_strpos($subject, "$") === 0))
-            {
+            if (($index > 1) && (mb_substr_count($subject, "$") == 3) && (mb_strpos($subject, "$") === 0)) {
                 $dollarSplit = UTF8::mb_explode("$", trim($subject));
                 $temp = [];
                 $elements = 0;
-                if ($dollarSplit[1])
-                {
+                if ($dollarSplit[1]) {
                     preg_match("/(.*)(?<!`|[a-zA-Z])($search)(?!`|[a-zA-Z])(.*)/u", $dollarSplit[1], $match);
-                    if (!empty($match))
-                    {
+                    if (!empty($match)) {
                         $newSubjectArray[$index] = $dollarSplit[1];
                         $temp[$match[2]] = 'first';
                         ++$index;
                         ++$lastIndex;
                         ++$elements;
                         $temp['position'] = 'pre';
-                    }
-                    else
-                    {
+                    } else {
                         $newSubjectArray[$index] = $subject;
                         ++$index;
                     }
                 }
-                if ($dollarSplit[2])
-                {
+                if ($dollarSplit[2]) {
                     preg_match("/(.*)(?<!`|[a-zA-Z])($search)(?!`|[a-zA-Z])(.*)/u", $dollarSplit[2], $match);
-                    if (!empty($match))
-                    {
+                    if (!empty($match)) {
                         $newSubjectArray[$index] = $dollarSplit[2];
                         $temp[$match[2]] = 'second';
                         ++$index;
                         ++$lastIndex;
                         ++$elements;
                         $temp['position'] = 'pre';
-                    }
-                    else
-                    {
+                    } else {
                         $newSubjectArray[$index] = $subject;
                         ++$index;
                     }
                 }
-                if ($elements)
-                {
+                if ($elements) {
                     $alternates[][$subjectFieldIndex - 1] = $temp;
                 }
             }
             // this pair depend on the following field
-            elseif ((mb_substr_count($subject, "#") == 3) && (mb_strpos($subject, "#") === 0))
-            {
+            elseif ((mb_substr_count($subject, "#") == 3) && (mb_strpos($subject, "#") === 0)) {
                 $hashSplit = UTF8::mb_explode("#", trim($subject));
                 $temp = [];
                 $elements = $subjectFieldIndex;
-                if ($hashSplit[1])
-                {
+                if ($hashSplit[1]) {
                     preg_match("/(.*)(?<!`|[a-zA-Z])($search)(?!`|[a-zA-Z])(.*)/u", $hashSplit[1], $match);
-                    if (!empty($match))
-                    {
+                    if (!empty($match)) {
                         $newSubjectArray[$index] = $hashSplit[1];
                         $temp[$match[2]] = 'first';
                         ++$index;
                         ++$lastIndex;
                         ++$elements;
                         $temp['position'] = 'post';
-                    }
-                    else
-                    {
+                    } else {
                         $newSubjectArray[$index] = $subject;
                         ++$index;
                     }
                 }
-                if ($hashSplit[2])
-                {
+                if ($hashSplit[2]) {
                     preg_match("/(.*)(?<!`|[a-zA-Z])($search)(?!`|[a-zA-Z])(.*)/u", $hashSplit[2], $match);
-                    if (!empty($match))
-                    {
+                    if (!empty($match)) {
                         $newSubjectArray[$index] = $hashSplit[2];
                         $temp[$match[2]] = 'second';
                         ++$index;
                         ++$lastIndex;
                         ++$elements;
                         $temp['position'] = 'post';
-                    }
-                    else
-                    {
+                    } else {
                         $newSubjectArray[$index] = $subject;
                         ++$index;
                     }
                 }
-                if ($elements > $subjectFieldIndex)
-                {
+                if ($elements > $subjectFieldIndex) {
                     $alternates[][$subjectFieldIndex + 1] = $temp;
                 }
-            }
-            else
-            {
+            } else {
                 $newSubjectArray[$index] = $subject;
                 ++$index;
             }
@@ -2120,25 +1962,22 @@ class adminstyle_MODULE
      * parse input into array
      *
      * @param string $type
-     * @param string|FALSE $subject
-     * @param string|FALSE $map
+     * @param false|string $subject
+     * @param false|string $map
      *
      * @return array
      */
     private function parseStringToArray($type, $subject, $map = FALSE)
     {
-        if (!$subject)
-        {
+        if (!$subject) {
             return [];
         }
-        if ($map)
-        {
+        if ($map) {
             $this->styleMap = $map;
         }
         $search = implode('|', $this->styleMap->$type);
         // footnotes can have pages field
-        if ($this->footnotePages && !array_key_exists('pages', $this->styleMap->$type))
-        {
+        if ($this->footnotePages && !array_key_exists('pages', $this->styleMap->$type)) {
             $search .= '|' . 'pages';
         }
         $subjectArray = UTF8::mb_explode("|", $subject);
@@ -2147,34 +1986,25 @@ class adminstyle_MODULE
         // Loop each field string
         $index = 0;
         $subjectIndex = 0;
-        foreach ($subjectArray as $subject)
-        {
+        foreach ($subjectArray as $subject) {
             ++$subjectIndex;
             $dependentPre = $dependentPost = $dependentPreAlternative =
                 $dependentPostAlternative = $singular = $plural = FALSE;
             // First grab fieldNames from the input string.
             preg_match("/(.*)(?<!`|[a-zA-Z])($search)(?!`|[a-zA-Z])(.*)/u", $subject, $array);
-            if (empty($array))
-            {
-                if (!$index)
-                {
+            if (empty($array)) {
+                if (!$index) {
                     $possiblePreliminaryText = $subject;
 
                     continue;
                 }
                 if (isset($independent) && ($subjectIndex == $sizeSubject) &&
-                    array_key_exists('independent_' . $index, $independent))
-                {
+                    array_key_exists('independent_' . $index, $independent)) {
                     $ultimate = $subject;
-                }
-                else
-                {
-                    if (isset($independent) && (count($independent) % 2))
-                    {
+                } else {
+                    if (isset($independent) && (count($independent) % 2)) {
                         $independent['independent_' . ($index - 1)] = $subject;
-                    }
-                    else
-                    {
+                    } else {
                         $independent['independent_' . $index] = $subject;
                     }
                 }
@@ -2187,202 +2017,139 @@ class adminstyle_MODULE
             $post = $array[3];
             // Anything in $pre enclosed in '%' characters is only to be printed if the resource has something in the
             // previous field -- replace with unique string for later preg_replace().
-            if (preg_match("/%(.*)%(.*)%|%(.*)%/Uu", $pre, $dependent))
-            {
+            if (preg_match("/%(.*)%(.*)%|%(.*)%/Uu", $pre, $dependent)) {
                 // if sizeof == 4, we have simply %*% with the significant character in [3].
                 // if sizeof == 3, we have %*%*% with dependent in [1] and alternative in [2].
                 $pre = str_replace($dependent[0], "__DEPENDENT_ON_PREVIOUS_FIELD__", $pre);
-                if (count($dependent) == 4)
-                {
+                if (count($dependent) == 4) {
                     $dependentPre = $dependent[3];
                     $dependentPreAlternative = '';
-                }
-                else
-                {
+                } else {
                     $dependentPre = $dependent[1];
                     $dependentPreAlternative = $dependent[2];
                 }
             }
             // Anything in $post enclosed in '%' characters is only to be printed if the resource has something in the
             // next field -- replace with unique string for later preg_replace().
-            if (preg_match("/%(.*)%(.*)%|%(.*)%/Uu", $post, $dependent))
-            {
+            if (preg_match("/%(.*)%(.*)%|%(.*)%/Uu", $post, $dependent)) {
                 $post = str_replace($dependent[0], "__DEPENDENT_ON_NEXT_FIELD__", $post);
-                if (count($dependent) == 4)
-                {
+                if (count($dependent) == 4) {
                     $dependentPost = $dependent[3];
                     $dependentPostAlternative = '';
-                }
-                else
-                {
+                } else {
                     $dependentPost = $dependent[1];
                     $dependentPostAlternative = $dependent[2];
                 }
             }
             // find singular/plural alternatives in $pre and $post and replace with unique string for later preg_replace().
-            if (preg_match("/\\^(.*)\\^(.*)\\^/Uu", $pre, $matchCarat))
-            {
+            if (preg_match("/\\^(.*)\\^(.*)\\^/Uu", $pre, $matchCarat)) {
                 $pre = str_replace($matchCarat[0], "__SINGULAR_PLURAL__", $pre);
                 $singular = $matchCarat[1];
                 $plural = $matchCarat[2];
-            }
-            elseif (preg_match("/\\^(.*)\\^(.*)\\^/Uu", $post, $matchCarat))
-            {
+            } elseif (preg_match("/\\^(.*)\\^(.*)\\^/Uu", $post, $matchCarat)) {
                 $post = str_replace($matchCarat[0], "__SINGULAR_PLURAL__", $post);
                 $singular = $matchCarat[1];
                 $plural = $matchCarat[2];
             }
             // Now dump into $final[$fieldName] stripping any backticks
-            if ($dependentPre)
-            {
+            if ($dependentPre) {
                 $final[$fieldName]['dependentPre'] = $dependentPre;
-            }
-            else
-            {
+            } else {
                 $final[$fieldName]['dependentPre'] = '';
             }
-            if ($dependentPost)
-            {
+            if ($dependentPost) {
                 $final[$fieldName]['dependentPost'] = $dependentPost;
-            }
-            else
-            {
+            } else {
                 $final[$fieldName]['dependentPost'] = '';
             }
-            if ($dependentPreAlternative)
-            {
+            if ($dependentPreAlternative) {
                 $final[$fieldName]['dependentPreAlternative'] = $dependentPreAlternative;
-            }
-            else
-            {
+            } else {
                 $final[$fieldName]['dependentPreAlternative'] = '';
             }
-            if ($dependentPostAlternative)
-            {
+            if ($dependentPostAlternative) {
                 $final[$fieldName]['dependentPostAlternative'] = $dependentPostAlternative;
-            }
-            else
-            {
+            } else {
                 $final[$fieldName]['dependentPostAlternative'] = '';
             }
-            if ($singular)
-            {
+            if ($singular) {
                 $final[$fieldName]['singular'] = $singular;
-            }
-            else
-            {
+            } else {
                 $final[$fieldName]['singular'] = '';
             }
-            if ($plural)
-            {
+            if ($plural) {
                 $final[$fieldName]['plural'] = $plural;
-            }
-            else
-            {
+            } else {
                 $final[$fieldName]['plural'] = '';
             }
             $final[$fieldName]['pre'] = $pre;
             $final[$fieldName]['post'] = $post;
             // add any alternates (which are indexed from 1 to match $subjectIndex)
-            if (array_key_exists(0, $alternates))
-            {
-                if (array_key_exists($subjectIndex, $alternates[0]))
-                {
-                    if ($alternates[0][$subjectIndex]['position'] == 'pre')
-                    {
-                        foreach ($alternates[0][$subjectIndex] as $field => $position)
-                        {
-                            if ($position == 'first')
-                            {
+            if (array_key_exists(0, $alternates)) {
+                if (array_key_exists($subjectIndex, $alternates[0])) {
+                    if ($alternates[0][$subjectIndex]['position'] == 'pre') {
+                        foreach ($alternates[0][$subjectIndex] as $field => $position) {
+                            if ($position == 'first') {
                                 $final[$fieldName]['alternatePreFirst'] = $field;
-                            }
-                            elseif ($position == 'second')
-                            {
+                            } elseif ($position == 'second') {
                                 $final[$fieldName]['alternatePreSecond'] = $field;
                             }
                         }
                         // Write empty XML fields if required
-                        if (!array_key_exists('alternatePreFirst', $final[$fieldName]))
-                        {
+                        if (!array_key_exists('alternatePreFirst', $final[$fieldName])) {
                             $final[$fieldName]['alternatePreFirst'] = '';
                         }
-                        if (!array_key_exists('alternatePreSecond', $final[$fieldName]))
-                        {
+                        if (!array_key_exists('alternatePreSecond', $final[$fieldName])) {
                             $final[$fieldName]['alternatePreSecond'] = '';
                         }
-                    }
-                    else
-                    {
-                        foreach ($alternates[0][$subjectIndex] as $field => $position)
-                        {
-                            if ($position == 'first')
-                            {
+                    } else {
+                        foreach ($alternates[0][$subjectIndex] as $field => $position) {
+                            if ($position == 'first') {
                                 $final[$fieldName]['alternatePostFirst'] = $field;
-                            }
-                            elseif ($position == 'second')
-                            {
+                            } elseif ($position == 'second') {
                                 $final[$fieldName]['alternatePostSecond'] = $field;
                             }
                         }
                         // Write empty XML fields if required
-                        if (!array_key_exists('alternatePostFirst', $final[$fieldName]))
-                        {
+                        if (!array_key_exists('alternatePostFirst', $final[$fieldName])) {
                             $final[$fieldName]['alternatePostFirst'] = '';
                         }
-                        if (!array_key_exists('alternatePostSecond', $final[$fieldName]))
-                        {
+                        if (!array_key_exists('alternatePostSecond', $final[$fieldName])) {
                             $final[$fieldName]['alternatePostSecond'] = '';
                         }
                     }
                 }
             }
-            if (array_key_exists(1, $alternates))
-            {
-                if (array_key_exists($subjectIndex, $alternates[1]))
-                {
-                    if ($alternates[1][$subjectIndex]['position'] == 'pre')
-                    {
-                        foreach ($alternates[1][$subjectIndex] as $field => $position)
-                        {
-                            if ($position == 'first')
-                            {
+            if (array_key_exists(1, $alternates)) {
+                if (array_key_exists($subjectIndex, $alternates[1])) {
+                    if ($alternates[1][$subjectIndex]['position'] == 'pre') {
+                        foreach ($alternates[1][$subjectIndex] as $field => $position) {
+                            if ($position == 'first') {
                                 $final[$fieldName]['alternatePreFirst'] = $field;
-                            }
-                            elseif ($position == 'second')
-                            {
+                            } elseif ($position == 'second') {
                                 $final[$fieldName]['alternatePreSecond'] = $field;
                             }
                         }
                         // Write empty XML fields if required
-                        if (!array_key_exists('alternatePreFirst', $final[$fieldName]))
-                        {
+                        if (!array_key_exists('alternatePreFirst', $final[$fieldName])) {
                             $final[$fieldName]['alternatePreFirst'] = '';
                         }
-                        if (!array_key_exists('alternatePreSecond', $final[$fieldName]))
-                        {
+                        if (!array_key_exists('alternatePreSecond', $final[$fieldName])) {
                             $final[$fieldName]['alternatePreSecond'] = '';
                         }
-                    }
-                    else
-                    {
-                        foreach ($alternates[1][$subjectIndex] as $field => $position)
-                        {
-                            if ($position == 'first')
-                            {
+                    } else {
+                        foreach ($alternates[1][$subjectIndex] as $field => $position) {
+                            if ($position == 'first') {
                                 $final[$fieldName]['alternatePostFirst'] = $field;
-                            }
-                            elseif ($position == 'second')
-                            {
+                            } elseif ($position == 'second') {
                                 $final[$fieldName]['alternatePostSecond'] = $field;
                             }
                         }
                         // Write empty XML fields if required
-                        if (!array_key_exists('alternatePostFirst', $final[$fieldName]))
-                        {
+                        if (!array_key_exists('alternatePostFirst', $final[$fieldName])) {
                             $final[$fieldName]['alternatePostFirst'] = '';
                         }
-                        if (!array_key_exists('alternatePostSecond', $final[$fieldName]))
-                        {
+                        if (!array_key_exists('alternatePostSecond', $final[$fieldName])) {
                             $final[$fieldName]['alternatePostSecond'] = '';
                         }
                     }
@@ -2390,75 +2157,54 @@ class adminstyle_MODULE
             }
             $index++;
         }
-        if (isset($possiblePreliminaryText))
-        {
-            if (isset($independent))
-            {
+        if (isset($possiblePreliminaryText)) {
+            if (isset($independent)) {
                 $independent = ['independent_0' => $possiblePreliminaryText] + $independent;
-            }
-            else
-            {
+            } else {
                 $final['preliminaryText'] = $possiblePreliminaryText;
             }
         }
-        if (!isset($final))
-        { // presumably no field names...
+        if (!isset($final)) { // presumably no field names...
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'display');
         }
-        if (isset($independent))
-        {
+        if (isset($independent)) {
             $size = count($independent);
             // If $size == 3 and exists 'independent_0', this is preliminaryText
             // If $size == 3 and exists 'independent_' . $index, this is ultimate
             // If $size % 2 == 0 and exists 'independent_0' and 'independent_' . $index, these are preliminaryText and ultimate
-            if (($size == 3) && array_key_exists('independent_0', $independent))
-            {
+            if (($size == 3) && array_key_exists('independent_0', $independent)) {
                 $final['preliminaryText'] = array_shift($independent);
-            }
-            elseif (($size == 3) && array_key_exists('independent_' . $index, $independent))
-            {
+            } elseif (($size == 3) && array_key_exists('independent_' . $index, $independent)) {
                 $final['ultimate'] = array_pop($independent);
-            }
-            elseif (!($size % 2) && array_key_exists('independent_0', $independent)
-            && array_key_exists('independent_' . $index, $independent))
-            {
+            } elseif (!($size % 2) && array_key_exists('independent_0', $independent)
+            && array_key_exists('independent_' . $index, $independent)) {
                 $final['preliminaryText'] = array_shift($independent);
                 $final['ultimate'] = array_pop($independent);
             }
             $size = count($independent);
             // last element of odd number is actually ultimate punctuation or first element is preliminary if exists 'independent_0'
-            if ($size % 2)
-            {
-                if (array_key_exists('independent_0', $independent))
-                {
+            if ($size % 2) {
+                if (array_key_exists('independent_0', $independent)) {
                     $final['preliminaryText'] = array_shift($independent);
-                }
-                else
-                {
+                } else {
                     $final['ultimate'] = array_pop($independent);
                 }
             }
-            if ($size == 1)
-            {
-                if (array_key_exists('independent_0', $independent))
-                {
+            if ($size == 1) {
+                if (array_key_exists('independent_0', $independent)) {
                     $final['preliminaryText'] = array_shift($independent);
                 }
-                if (array_key_exists('independent_' . $index, $independent))
-                {
+                if (array_key_exists('independent_' . $index, $independent)) {
                     $final['ultimate'] = array_shift($independent);
                 }
             }
-            if (isset($ultimate) && !array_key_exists('ultimate', $final))
-            {
+            if (isset($ultimate) && !array_key_exists('ultimate', $final)) {
                 $final['ultimate'] = $ultimate;
             }
-            if (isset($preliminaryText) && !array_key_exists('preliminaryText', $final))
-            {
+            if (isset($preliminaryText) && !array_key_exists('preliminaryText', $final)) {
                 $final['preliminaryText'] = $preliminaryText;
             }
-            if (!empty($independent))
-            {
+            if (!empty($independent)) {
                 $final['independent'] = $independent;
             }
         }
@@ -2471,7 +2217,7 @@ class adminstyle_MODULE
      * If !$fileName, this is called from add() and we create folder/filename immediately before writing to file.
      * If $fileName, this comes from edit()
      *
-     * @param string|FALSE $fileName
+     * @param false|string $fileName
      */
     private function writeFile($fileName = FALSE)
     {
@@ -2480,16 +2226,12 @@ class adminstyle_MODULE
         // Grab any custom fields
         $customFields = [];
         $recordset = $this->db->select('custom', ['customId', 'customLabel']);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $customFields['custom_' . $row['customId']] = $row['customId'];
         }
-        if (!empty($customFields))
-        {
-            foreach ($this->styleMap as $type => $typeArray)
-            {
-                foreach ($customFields as $key => $value)
-                {
+        if (!empty($customFields)) {
+            foreach ($this->styleMap as $type => $typeArray) {
+                foreach ($customFields as $key => $value) {
                     $this->styleMap->{$type}[$key] = $key;
                 }
             }
@@ -2529,10 +2271,8 @@ class adminstyle_MODULE
             "cite_followCreatorPageSplit", "cite_subsequentCreatorTemplate", "cite_replaceYear",
             "cite_titleSubtitleSeparator", "cite_formatEndnoteID", "cite_removeTitle", "cite_subsequentFields",
         ];
-        foreach ($inputArray as $input)
-        {
-            if (isset($this->vars[$input]))
-            {
+        foreach ($inputArray as $input) {
+            if (isset($this->vars[$input])) {
                 $split = UTF8::mb_explode("_", $input, 2);
                 $elementName = $split[1];
                 $fileString .= "<$elementName>" .
@@ -2540,19 +2280,16 @@ class adminstyle_MODULE
             }
         }
         // Resource types replacing citation templates
-        foreach ($types as $key)
-        {
+        foreach ($types as $key) {
             $citationStringName = "cite_" . $key . "Template";
             if (array_key_exists($citationStringName, $this->vars) &&
-            ($string = $this->vars[$citationStringName]))
-            {
+            ($string = $this->vars[$citationStringName])) {
                 $fileString .= "<" . $key . "Template>" . htmlspecialchars(stripslashes($string)) .
                 "</" . $key . "Template>" . LF;
             }
             $field = "cite_" . $key . "_notInBibliography";
             $element = $key . "_notInBibliography";
-            if (isset($this->vars[$field]))
-            {
+            if (isset($this->vars[$field])) {
                 $fileString .= "<$element>" . $this->vars[$field] . "</$element>" . LF;
             }
         }
@@ -2577,10 +2314,8 @@ class adminstyle_MODULE
             "footnote_otherCreatorSepFirstBetween", "footnote_otherCreatorSepNextBetween",
             "footnote_otherCreatorSepNextLast", "footnote_otherTwoCreatorsSep",
         ];
-        foreach ($inputArray as $input)
-        {
-            if (isset($this->vars[$input]))
-            {
+        foreach ($inputArray as $input) {
+            if (isset($this->vars[$input])) {
                 $split = UTF8::mb_explode("_", $input, 2);
                 $elementName = $split[1];
                 $fileString .= "<$elementName>" .
@@ -2589,8 +2324,7 @@ class adminstyle_MODULE
         }
         $this->footnotePages = TRUE;
         // Footnote templates for each resource type
-        foreach ($types as $key)
-        {
+        foreach ($types as $key) {
             $type = 'footnote_' . $key . 'Template';
             $name = 'footnote_' . $key;
             $input = trim(stripslashes($this->vars[$type]));
@@ -2633,10 +2367,8 @@ class adminstyle_MODULE
             "style_localisation", "style_runningTimeFormat", "style_editorSwitch", "style_editorSwitchIfYes",
             "style_pageFormat",
         ];
-        foreach ($inputArray as $input)
-        {
-            if (isset($this->vars[$input]))
-            {
+        foreach ($inputArray as $input) {
+            if (isset($this->vars[$input])) {
                 $split = UTF8::mb_explode("_", $input, 2);
                 $elementName = $split[1];
                 $fileString .= "<$elementName>" .
@@ -2645,8 +2377,7 @@ class adminstyle_MODULE
         }
         $fileString .= "</common>" . LF;
         // Resource types
-        foreach ($types as $key)
-        {
+        foreach ($types as $key) {
             $type = 'style_' . $key;
             $input = trim(stripslashes($this->vars[$type]));
             // remove newlines etc.
@@ -2655,15 +2386,11 @@ class adminstyle_MODULE
             $attributes = $this->creatorXMLAttributes($type);
             $fileString .= "<resource name=\"$key\" $attributes>";
             $fileString .= $this->arrayToXML($this->parseStringToArray($key, $input), $type);
-            if (($key != 'genericBook') && ($key != 'genericArticle') && ($key != 'genericMisc'))
-            {
+            if (($key != 'genericBook') && ($key != 'genericArticle') && ($key != 'genericMisc')) {
                 $name = $type . "_generic";
-                if (!isset($this->vars[$name]))
-                {
+                if (!isset($this->vars[$name])) {
                     $name = "genericMisc";
-                }
-                else
-                {
+                } else {
                     $name = $this->vars[$name];
                 }
                 $fileString .= "<fallbackstyle>$name</fallbackstyle>" . LF;
@@ -2677,12 +2404,9 @@ class adminstyle_MODULE
             $fileString .= "</partial>" . LF;
             $type = 'partial_' . $key . 'Replace';
             $fileString .= "<partialReplace>";
-            if (array_key_exists($type, $this->vars))
-            {
+            if (array_key_exists($type, $this->vars)) {
                 $fileString .= 1;
-            }
-            else
-            {
+            } else {
                 $fileString .= 0;
             }
             $fileString .= "</partialReplace>" . LF;
@@ -2691,25 +2415,20 @@ class adminstyle_MODULE
         }
         $fileString .= "</bibliography>" . LF;
         $fileString .= "</style>" . LF;
-        if (!$fileName)
-        { // called from add()
+        if (!$fileName) { // called from add()
             // Create folder with lowercase styleShortName
             $dirName = WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . mb_strtolower(trim($this->vars['styleShortName']));
-            if (!file_exists($dirName))
-            {
-                if (!mkdir($dirName, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
-                {
+            if (!file_exists($dirName)) {
+                if (!mkdir($dirName, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
                     $this->badInput->close($error = $this->errors->text("file", "folder"), $this, 'display');
                 }
             }
             $fileName = $dirName . DIRECTORY_SEPARATOR . mb_strtoupper(trim($this->vars['styleShortName'])) . ".xml";
         }
-        if (!$fp = fopen("$fileName", "w"))
-        {
+        if (!$fp = fopen("$fileName", "w")) {
             $this->badInput->close($this->errors->text("file", "write", ": $fileName"), $this, 'display');
         }
-        if (!fwrite($fp, UTF8::html_uentity_decode($fileString)))
-        {
+        if (!fwrite($fp, UTF8::html_uentity_decode($fileString))) {
             $this->badInput->close($this->errors->text("file", "write", ": $fileName"), $this, 'display');
         }
         fclose($fp);
@@ -2727,37 +2446,31 @@ class adminstyle_MODULE
     private function creatorXMLAttributes($type)
     {
         $attributes = FALSE;
-        foreach ($this->creators as $creatorField)
-        {
+        foreach ($this->creators as $creatorField) {
             $basic = $type . "_" . $creatorField;
             $field = $basic . "_firstString";
             $name = $creatorField . "_firstString";
-            if (array_key_exists($field, $this->vars) && trim($this->vars[$field]))
-            {
+            if (array_key_exists($field, $this->vars) && trim($this->vars[$field])) {
                 $attributes .= "$name=\"" . htmlspecialchars(stripslashes($this->vars[$field])) . "\" ";
             }
             $field = $basic . "_firstString_before";
             $name = $creatorField . "_firstString_before";
-            if (isset($this->vars[$field]))
-            {
+            if (isset($this->vars[$field])) {
                 $attributes .= "$name=\"" . htmlspecialchars(stripslashes($this->vars[$field])) . "\" ";
             }
             $field = $basic . "_remainderString";
             $name = $creatorField . "_remainderString";
-            if (array_key_exists($field, $this->vars) && trim($this->vars[$field]))
-            {
+            if (array_key_exists($field, $this->vars) && trim($this->vars[$field])) {
                 $attributes .= "$name=\"" . htmlspecialchars(stripslashes($this->vars[$field])) . "\" ";
             }
             $field = $basic . "_remainderString_before";
             $name = $creatorField . "_remainderString_before";
-            if (isset($this->vars[$field]))
-            {
+            if (isset($this->vars[$field])) {
                 $attributes .= "$name=\"" . htmlspecialchars(stripslashes($this->vars[$field])) . "\" ";
             }
             $field = $basic . "_remainderString_each";
             $name = $creatorField . "_remainderString_each";
-            if (isset($this->vars[$field]))
-            {
+            if (isset($this->vars[$field])) {
                 $attributes .= "$name=\"" . htmlspecialchars(stripslashes($this->vars[$field])) . "\" ";
             }
         }
@@ -2775,15 +2488,11 @@ class adminstyle_MODULE
     private function arrayToXML($array, $type)
     {
         $fileString = '';
-        foreach ($array as $key => $value)
-        {
+        foreach ($array as $key => $value) {
             $fileString .= "<$key>";
-            if (is_array($value))
-            {
+            if (is_array($value)) {
                 $fileString .= $this->arrayToXML($value, $type);
-            }
-            else
-            {
+            } else {
                 $fileString .= htmlspecialchars($value);
             }
             $fileString .= "</$key>" . LF;
@@ -2796,13 +2505,12 @@ class adminstyle_MODULE
      *
      * @param string $type
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function validateInput($type)
     {
         $error = FALSE;
-        if (($type == 'add') || ($type == 'edit'))
-        {
+        if (($type == 'add') || ($type == 'edit')) {
             $array = ["style_titleCapitalization", "style_primaryCreatorFirstStyle",
                 "style_primaryCreatorOtherStyle", "style_primaryCreatorInitials",
                 "style_primaryCreatorFirstName", "style_otherCreatorFirstStyle", "style_dateFormat",
@@ -2832,204 +2540,138 @@ class adminstyle_MODULE
             ];
 
             $this->writeSession($array);
-            if (!trim($this->vars['styleShortName']))
-            {
+            if (!trim($this->vars['styleShortName'])) {
                 $error = $this->errors->text("inputError", "missing", ':&nbsp' . $this->pluginmessages->text('shortName'));
-            }
-            else
-            {
+            } else {
                 $this->session->setVar("style_shortName", trim($this->vars['styleShortName']));
             }
-            if (preg_match("/\\s/u", trim($this->vars['styleShortName'])))
-            {
+            if (preg_match("/\\s/u", trim($this->vars['styleShortName']))) {
                 $error = $this->errors->text("inputError", "invalid", ':&nbsp' . $this->pluginmessages->text('shortName'));
-            }
-            elseif (!trim($this->vars['styleLongName']))
-            {
+            } elseif (!trim($this->vars['styleLongName'])) {
                 $error = $this->errors->text("inputError", "missing", ':&nbsp' . $this->pluginmessages->text('longName'));
-            }
-            elseif (!trim($this->vars['style_genericBook']))
-            {
+            } elseif (!trim($this->vars['style_genericBook'])) {
                 $error = $this->errors->text("inputError", "missing", ':&nbsp' . $this->pluginmessages->text('genericBook'));
-            }
-            elseif (!trim($this->vars['style_genericArticle']))
-            {
+            } elseif (!trim($this->vars['style_genericArticle'])) {
                 $error = $this->errors->text("inputError", "missing", ':&nbsp' . $this->pluginmessages->text('genericArticle'));
-            }
-            elseif (!trim($this->vars['style_genericMisc']))
-            {
+            } elseif (!trim($this->vars['style_genericMisc'])) {
                 $error = $this->errors->text("inputError", "missing", ':&nbsp' . $this->pluginmessages->text('genericMisc'));
             }
-            foreach ($array as $input)
-            {
-                if (!isset($this->vars[$input]))
-                {
+            foreach ($array as $input) {
+                if (!isset($this->vars[$input])) {
                     return $this->errors->text("inputError", "missing");
                 }
             }
-            if ($this->vars['cite_citationStyle'] == 1)
-            { // endnotes
+            if ($this->vars['cite_citationStyle'] == 1) { // endnotes
                 // Must also have a bibliography template for the resource if a footnote template is defined
-                if ($this->vars['cite_endnoteStyle'] == 2)
-                { // footnotes
+                if ($this->vars['cite_endnoteStyle'] == 2) { // footnotes
                     $types = array_keys($this->styleMap->types);
-                    foreach ($types as $key)
-                    {
+                    foreach ($types as $key) {
                         $type = 'footnote_' . $key . 'Template';
                         $name = 'footnote_' . $key;
                         $input = trim(stripslashes($this->vars[$type]));
-                        if ($input && !$this->vars['style_' . $key])
-                        {
+                        if ($input && !$this->vars['style_' . $key]) {
                             return $this->errors->text("inputError", "missing");
                         }
                     }
                     if (($this->vars['footnote_primaryCreatorList'] == 1) &&
                         (!trim($this->vars['footnote_primaryCreatorListLimit']) ||
-                        (!$this->vars['footnote_primaryCreatorListMore'])))
-                    {
+                        (!$this->vars['footnote_primaryCreatorListMore']))) {
                         $error = $this->errors->text("inputError", "missing");
-                    }
-                    elseif (($this->vars['footnote_primaryCreatorList'] == 1) &&
+                    } elseif (($this->vars['footnote_primaryCreatorList'] == 1) &&
                         (!is_numeric($this->vars['footnote_primaryCreatorListLimit']) ||
-                        !is_numeric($this->vars['footnote_primaryCreatorListMore'])))
-                    {
+                        !is_numeric($this->vars['footnote_primaryCreatorListMore']))) {
                         $error = $this->errors->text("inputError", "nan");
-                    }
-                    elseif (($this->vars['footnote_otherCreatorList'] == 1) &&
+                    } elseif (($this->vars['footnote_otherCreatorList'] == 1) &&
                         (!trim($this->vars['footnote_otherCreatorListLimit']) ||
-                        (!$this->vars['footnote_otherCreatorListMore'])))
-                    {
+                        (!$this->vars['footnote_otherCreatorListMore']))) {
                         $error = $this->errors->text("inputError", "missing");
-                    }
-                    elseif (($this->vars['footnote_otherCreatorList'] == 1) &&
+                    } elseif (($this->vars['footnote_otherCreatorList'] == 1) &&
                         (!is_numeric($this->vars['footnote_otherCreatorListLimit']) ||
-                        !is_numeric($this->vars['footnote_otherCreatorListMore'])))
-                    {
+                        !is_numeric($this->vars['footnote_otherCreatorListMore']))) {
                         $error = $this->errors->text("inputError", "nan");
-                    }
-                    elseif (($this->vars['footnote_otherCreatorList'] == 1) &&
+                    } elseif (($this->vars['footnote_otherCreatorList'] == 1) &&
                         (!is_numeric($this->vars['footnote_otherCreatorListLimit']) ||
-                        !is_numeric($this->vars['footnote_otherCreatorListMore'])))
-                    {
+                        !is_numeric($this->vars['footnote_otherCreatorListMore']))) {
                         $error = $this->errors->text("inputError", "nan");
-                    }
-                    elseif (($this->vars['footnote_primaryCreatorRepeat'] == 2) &&
-                        !trim($this->vars['footnote_primaryCreatorRepeatString']))
-                    {
+                    } elseif (($this->vars['footnote_primaryCreatorRepeat'] == 2) &&
+                        !trim($this->vars['footnote_primaryCreatorRepeatString'])) {
                         $error = $this->errors->text("inputError", "missing");
                     }
                 }
-                if (!trim($this->vars["cite_templateEndnoteInText"]))
-                {
+                if (!trim($this->vars["cite_templateEndnoteInText"])) {
+                    $error = $this->errors->text("inputError", "missing");
+                } elseif (!trim($this->vars["cite_templateEndnote"])) {
                     $error = $this->errors->text("inputError", "missing");
                 }
-                elseif (!trim($this->vars["cite_templateEndnote"]))
-                {
-                    $error = $this->errors->text("inputError", "missing");
-                }
-            }
-            elseif (!trim($this->vars['cite_template']))
-            {
+            } elseif (!trim($this->vars['cite_template'])) {
                 $error = $this->errors->text("inputError", "missing", 'cite_template');
             }
             // If xxx_creatorList set to 1 (limit), we must have style_xxxCreatorListMore and xxx_CreatorListLimit. The
             // latter two must be numeric.
             if (($this->vars['style_primaryCreatorList'] == 1) &&
                 (!trim($this->vars['style_primaryCreatorListLimit']) ||
-                (!$this->vars['style_primaryCreatorListMore'])))
-            {
+                (!$this->vars['style_primaryCreatorListMore']))) {
                 $error = $this->errors->text("inputError", "missing");
-            }
-            elseif (($this->vars['style_primaryCreatorList'] == 1) &&
+            } elseif (($this->vars['style_primaryCreatorList'] == 1) &&
                 (!is_numeric($this->vars['style_primaryCreatorListLimit']) ||
-                !is_numeric($this->vars['style_primaryCreatorListMore'])))
-            {
+                !is_numeric($this->vars['style_primaryCreatorListMore']))) {
                 $error = $this->errors->text("inputError", "nan");
-            }
-            elseif (($this->vars['style_otherCreatorList'] == 1) &&
+            } elseif (($this->vars['style_otherCreatorList'] == 1) &&
                 (!trim($this->vars['style_otherCreatorListLimit']) ||
-                (!$this->vars['style_otherCreatorListMore'])))
-            {
+                (!$this->vars['style_otherCreatorListMore']))) {
                 $error = $this->errors->text("inputError", "missing");
-            }
-            elseif (($this->vars['cite_creatorList'] == 1) &&
+            } elseif (($this->vars['cite_creatorList'] == 1) &&
                 (!trim($this->vars['cite_creatorListLimit']) ||
-                (!$this->vars['cite_creatorListMore'])))
-            {
+                (!$this->vars['cite_creatorListMore']))) {
                 $error = $this->errors->text("inputError", "missing");
-            }
-            elseif (($this->vars['cite_creatorList'] == 1) &&
+            } elseif (($this->vars['cite_creatorList'] == 1) &&
                 (!is_numeric($this->vars['cite_creatorListLimit']) ||
-                !is_numeric($this->vars['cite_creatorListMore'])))
-            {
+                !is_numeric($this->vars['cite_creatorListMore']))) {
                 $error = $this->errors->text("inputError", "nan");
-            }
-            elseif (($this->vars['cite_creatorListSubsequent'] == 1) &&
+            } elseif (($this->vars['cite_creatorListSubsequent'] == 1) &&
                 (!trim($this->vars['cite_creatorListSubsequentLimit']) ||
-                (!$this->vars['cite_creatorListSubsequentMore'])))
-            {
+                (!$this->vars['cite_creatorListSubsequentMore']))) {
                 $error = $this->errors->text("inputError", "missing");
-            }
-            elseif (($this->vars['cite_creatorListSubsequent'] == 1) &&
+            } elseif (($this->vars['cite_creatorListSubsequent'] == 1) &&
                 (!is_numeric($this->vars['cite_creatorListSubsequentLimit']) ||
-                !is_numeric($this->vars['cite_creatorListSubsequentMore'])))
-            {
+                !is_numeric($this->vars['cite_creatorListSubsequentMore']))) {
                 $error = $this->errors->text("inputError", "nan");
-            }
-            elseif (($this->vars['style_editorSwitch'] == 1) &&
-                !trim($this->vars['style_editorSwitchIfYes']))
-            {
+            } elseif (($this->vars['style_editorSwitch'] == 1) &&
+                !trim($this->vars['style_editorSwitchIfYes'])) {
                 $error = $this->errors->text("inputError", "missing");
-            }
-            elseif (($this->vars['style_primaryCreatorRepeat'] == 2) &&
-                !trim($this->vars['style_primaryCreatorRepeatString']))
-            {
+            } elseif (($this->vars['style_primaryCreatorRepeat'] == 2) &&
+                !trim($this->vars['style_primaryCreatorRepeatString'])) {
                 $error = $this->errors->text("inputError", "missing");
-            }
-            elseif ($this->vars['style_monthFormat'] == 2)
-            {
-                for ($i = 1; $i <= 16; $i++)
-                {
-                    if (!trim($this->vars["style_userMonth_$i"]))
-                    {
+            } elseif ($this->vars['style_monthFormat'] == 2) {
+                for ($i = 1; $i <= 16; $i++) {
+                    if (!trim($this->vars["style_userMonth_$i"])) {
                         $error = $this->errors->text("inputError", "missing");
                     }
                 }
             }
             // If style_dateMonthNoDay, style_dateMonthNoDayString must have at least 'date' in it
-            elseif ($this->vars['style_dateMonthNoDay'])
-            {
-                if (mb_strstr($this->vars['style_dateMonthNoDayString'], "date") === FALSE)
-                {
+            elseif ($this->vars['style_dateMonthNoDay']) {
+                if (mb_strstr($this->vars['style_dateMonthNoDayString'], "date") === FALSE) {
                     $error = $this->errors->text("inputError", "invalid");
                 }
             }
             if (($this->vars["cite_ambiguous"] == 2) &&
-                !trim($this->vars["cite_ambiguousTemplate"]))
-            {
+                !trim($this->vars["cite_ambiguousTemplate"])) {
                 $error = $this->errors->text("inputError", "missing");
             }
         }
-        if ($type == 'add')
-        {
-            if (preg_match("/\\s/u", trim($this->vars['styleShortName'])))
-            {
+        if ($type == 'add') {
+            if (preg_match("/\\s/u", trim($this->vars['styleShortName']))) {
                 $error = $this->errors->text("inputError", "invalid");
-            }
-            elseif (array_key_exists(mb_strtoupper(trim($this->vars['styleShortName'])), $this->styles))
-            {
+            } elseif (array_key_exists(mb_strtoupper(trim($this->vars['styleShortName'])), $this->styles)) {
                 $error = $this->errors->text("inputError", "styleExists");
             }
-        }
-        elseif ($type == 'editDisplay')
-        {
-            if (!array_key_exists('editStyleFile', $this->vars))
-            {
+        } elseif ($type == 'editDisplay') {
+            if (!array_key_exists('editStyleFile', $this->vars)) {
                 $error = $this->errors->text("inputError", "missing");
             }
         }
-        if ($error)
-        {
+        if ($error) {
             return $error;
         }
         // FALSE means validated input
@@ -3043,66 +2685,54 @@ class adminstyle_MODULE
     private function writeSession($array)
     {
         $types = array_keys($this->styleMap->types);
-        if (trim($this->vars['styleLongName']))
-        {
+        if (trim($this->vars['styleLongName'])) {
             $this->session->setVar("style_longName", base64_encode(trim(htmlspecialchars($this->vars['styleLongName']))));
         }
         // other resource types
-        foreach ($types as $key)
-        {
+        foreach ($types as $key) {
             // Footnote templates
             $array[] = 'footnote_' . $key . 'Template';
             // Partial templates
             $array[] = 'partial_' . $key . 'Template';
             $type = 'style_' . $key;
-            if (trim($this->vars[$type]))
-            {
+            if (trim($this->vars[$type])) {
                 $this->session->setVar($type, base64_encode(trim(htmlspecialchars($this->vars[$type]))));
             }
             // Rewrite creator strings
-            foreach ($this->creators as $creatorField)
-            {
+            foreach ($this->creators as $creatorField) {
                 $basic = $type . "_" . $creatorField;
                 $field = $basic . "_firstString";
-                if (array_key_exists($field, $this->vars) && trim($this->vars[$field]))
-                {
+                if (array_key_exists($field, $this->vars) && trim($this->vars[$field])) {
                     $this->session->setVar($field, base64_encode(htmlspecialchars($this->vars[$field])));
                 }
                 $field = $basic . "_firstString_before";
-                if (isset($this->vars[$field]))
-                {
+                if (isset($this->vars[$field])) {
                     $this->session->setVar($field, base64_encode($this->vars[$field]));
                 }
                 $field = $basic . "_remainderString";
-                if (array_key_exists($field, $this->vars) && trim($this->vars[$field]))
-                {
+                if (array_key_exists($field, $this->vars) && trim($this->vars[$field])) {
                     $this->session->setVar($field, base64_encode(htmlspecialchars($this->vars[$field])));
                 }
                 $field = $basic . "_remainderString_before";
-                if (isset($this->vars[$field]))
-                {
+                if (isset($this->vars[$field])) {
                     $this->session->setVar($field, base64_encode($this->vars[$field]));
                 }
                 $field = $basic . "_remainderString_each";
-                if (isset($this->vars[$field]))
-                {
+                if (isset($this->vars[$field])) {
                     $this->session->setVar($field, base64_encode($this->vars[$field]));
                 }
             }
             $field = "cite_" . $key . "_notInBibliography";
-            if (isset($this->vars[$field]))
-            {
+            if (isset($this->vars[$field])) {
                 $this->session->setVar($field, base64_encode(trim($this->vars[$field])));
             }
             $citationStringName = 'cite_' . $key . "Template";
             if (array_key_exists($citationStringName, $this->vars) &&
-            ($input = $this->vars[$citationStringName]))
-            {
+            ($input = $this->vars[$citationStringName])) {
                 $this->session->setVar($citationStringName, base64_encode(htmlspecialchars($input)));
             }
             // Fallback styles
-            if (($key != 'genericBook') && ($key != 'genericArticle') && ($key != 'genericMisc'))
-            {
+            if (($key != 'genericBook') && ($key != 'genericArticle') && ($key != 'genericMisc')) {
                 $name = $type . "_generic";
                 $this->session->setVar($name, base64_encode(trim($this->vars[$name])));
             }
@@ -3209,14 +2839,10 @@ class adminstyle_MODULE
         $array[] = "footnote_otherCreatorSepBetween";
         $array[] = "footnote_otherCreatorSepLast";
 
-        foreach ($array as $input)
-        {
-            if (isset($this->vars[$input]))
-            {
+        foreach ($array as $input) {
+            if (isset($this->vars[$input])) {
                 $this->session->setVar($input, base64_encode(htmlspecialchars($this->vars[$input])));
-            }
-            else
-            {
+            } else {
                 $this->session->delVar($input);
             }
         }

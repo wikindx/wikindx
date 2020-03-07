@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -80,8 +82,7 @@ class TEMPLATE
     {
         $this->tpl->clearCompiledTemplate();
 
-        foreach (FILE\fileInDirToArray($this->compileDir) as $ftpl)
-        {
+        foreach (FILE\fileInDirToArray($this->compileDir) as $ftpl) {
             @unlink($this->compileDir . DIRECTORY_SEPARATOR . $ftpl);
         }
     }
@@ -97,37 +98,30 @@ class TEMPLATE
         $tplArray = $this->loadDir();
         $this->name = GLOBALS::getUserVar('Template');
         // Special case: during installation there is no template sets.
-        if (!is_string($this->name) || $setupMode)
-        {
+        if (!is_string($this->name) || $setupMode) {
             $this->name = WIKINDX_TEMPLATE_DEFAULT;
         }
 
-        if (!array_key_exists($this->name, $tplArray))
-        {
+        if (!array_key_exists($this->name, $tplArray)) {
 
             // At first install of a blank database
-            if (!$this->name)
-            {
+            if (!$this->name) {
                 $this->name = WIKINDX_TEMPLATE_DEFAULT;
             }
 
-            if (!array_key_exists($this->name, $tplArray))
-            {
+            if (!array_key_exists($this->name, $tplArray)) {
                 $this->name = WIKINDX_TEMPLATE_DEFAULT;
             }
 
-            if (!$this->session->getVar("setup_ReadOnly"))
-            {
+            if (!$this->session->getVar("setup_ReadOnly")) {
                 $this->session->setVar("setup_Template", $this->name);
             }
         }
 
         // template may have been disabled by admin
-        if (!is_file(WIKINDX_DIR_COMPONENT_TEMPLATES . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR . 'component.json'))
-        {
+        if (!is_file(WIKINDX_DIR_COMPONENT_TEMPLATES . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR . 'component.json')) {
             // During the upgrade / update process the database is not always available to query the configuration
-            if (!$setupMode)
-            {
+            if (!$setupMode) {
                 $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
                 $this->name = $co->getOne('configTemplate');
             }
@@ -166,20 +160,14 @@ class TEMPLATE
         
         // Retrieve the configuration
         $configfile = $this->path . DIRECTORY_SEPARATOR . 'config.txt';
-        if (file_exists($configfile))
-        {
-            if ($fh = fopen($configfile, "r"))
-            {
+        if (file_exists($configfile)) {
+            if ($fh = fopen($configfile, "r")) {
                 $index = 1;
-                while (($line = fgets($fh)) !== FALSE)
-                {
-                    if ($index == 1)
-                    {
+                while (($line = fgets($fh)) !== FALSE) {
+                    if ($index == 1) {
                         $ReduceMenuLevelOption = $line;
                         ++$index;
-                    }
-                    elseif ($index == 2)
-                    {
+                    } elseif ($index == 2) {
                         $ReduceMenuLevelPretextOption = $line;
 
                         break;
@@ -201,19 +189,15 @@ class TEMPLATE
         $ignoreUserConfig = substr($ReduceMenuLevelOption, 1, 1);
         $ignoreUserConfig = ($ignoreUserConfig === "$");
         
-        if (!$ignoreUserConfig && GLOBALS::getUserVar('TemplateMenu'))
-        {
+        if (!$ignoreUserConfig && GLOBALS::getUserVar('TemplateMenu')) {
             $this->session->setVar("setup_ReduceMenuLevel", GLOBALS::getUserVar('TemplateMenu'));
-        }
-        else
-        {
+        } else {
             $this->session->setVar("setup_ReduceMenuLevel", $level);
         }
         
         // Configure pre text for menu items that were in a subSubmenu
         // Only valid for reduceMenuLevel == 1
-        if ($ReduceMenuLevelPretextOption != "")
-        {
+        if ($ReduceMenuLevelPretextOption != "") {
             $this->session->setVar("setup_ReduceMenuLevelPretext", $ReduceMenuLevelPretextOption);
         }
     }
@@ -227,16 +211,13 @@ class TEMPLATE
     {
         // Use an internal array to "memoize" the list of installed templates
         // This function is called multiple times while its result is almost static but expensive due to disk access.
-        if ($this->tplList === FALSE)
-        {
+        if ($this->tplList === FALSE) {
             $array = [];
             
             $componentsInstalled = \UTILS\readComponentsList();
             
-            foreach ($componentsInstalled as $cmp)
-            {
-                if ($cmp["component_type"] == "template" && $cmp["component_status"] == "enabled")
-                {
+            foreach ($componentsInstalled as $cmp) {
+                if ($cmp["component_type"] == "template" && $cmp["component_status"] == "enabled") {
                     $array[$cmp["component_id"]] = $cmp["component_name"];
                 }
             }
@@ -312,12 +293,9 @@ class TEMPLATE
     {
         $this->errors = FACTORY_ERRORS::getInstance();
 
-        if (!is_dir($dir))
-        {
-            if (!file_exists($dir))
-            {
-                if (!mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
-                {
+        if (!is_dir($dir)) {
+            if (!file_exists($dir)) {
+                if (!mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
                     echo $this->errors->text("file", "folder") . " " . $dir;
                 }
             }

@@ -1,20 +1,19 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
-
 function SetWikindxBasePath()
 {
     $wikindxBasePath = __DIR__;
-    while (!in_array(basename($wikindxBasePath), ["", "core"]))
-    {
+    while (!in_array(basename($wikindxBasePath), ["", "core"])) {
         $wikindxBasePath = dirname($wikindxBasePath);
     }
-    if (basename($wikindxBasePath) == "")
-    {
+    if (basename($wikindxBasePath) == "") {
         die("
             \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
             and WIKINDX is unable to set the installation path automatically.
@@ -139,26 +138,22 @@ function bodyCharsetTable($charsetArray, $name, $title, $diacritic)
 
     $lString = "";
     $lString .= "<tr>\n\t<td class=\"charsetHeading\" colspan=\"$numColumns\"><a name=\"$name\">$title";
-    if ($diacritic)
-    {
+    if ($diacritic) {
         $lString .= " <span style=\"color:red;\">*</span>";
     }
     $lString .= "</td>\n</tr>\n";
 
     $charPreview = $diacritic ? 'o' : '';
 
-    foreach (array_chunk($charsetArray, $numColumns) as $lineArray)
-    {
+    foreach (array_chunk($charsetArray, $numColumns) as $lineArray) {
         $lString .= "<tr>\n";
 
-        foreach ($lineArray as $char)
-        {
+        foreach ($lineArray as $char) {
             $lString .= "\t<td id=\"ul$char\" onclick=\"selectSpChar($char);\">&#$char;$charPreview</td>\n";
         }
 
         $index = count($lineArray);
-        if ($index < $numColumns)
-        {
+        if ($index < $numColumns) {
             $lString .= "\t<td class=\"emptyCell\" colspan=\"" . ($numColumns - $index) . "\">&nbsp;</td>\n";
         }
 
@@ -170,13 +165,10 @@ function bodyCharsetTable($charsetArray, $name, $title, $diacritic)
 
 include_once('sp_charTableDef.php');
 
-if (isset($_GET['ul']))
-{
+if (isset($_GET['ul'])) {
     $ul = $_GET['ul'];
     $ul = intval(str_replace('ul', '', $ul));
-}
-else
-{
+} else {
     $ul = 0;
 }
 
@@ -186,8 +178,7 @@ $id = $tableChars[$ul]['id'];
 $diac = $tableChars[$ul]['diac'];
 
 $charsetArray = [];
-for ($char = base_convert($fcp, 16, 10); $char <= base_convert($lcp, 16, 10); $char++)
-{
+for ($char = base_convert($fcp, 16, 10); $char <= base_convert($lcp, 16, 10); $char++) {
     $charsetArray[] = $char;
 }
 

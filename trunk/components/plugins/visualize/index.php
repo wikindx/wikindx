@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -54,36 +56,30 @@ class visualize_MODULE
         $this->session = FACTORY_SESSION::getInstance();
         $this->db = FACTORY_DB::getInstance();
         $this->authorize = $this->config->authorize;
-        if ($menuInit)
-        {
+        if ($menuInit) {
             $this->makeMenu($this->config->menus);
 
             return; // Need do nothing more as this is simply menu initialisation.
         }
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->authorize))
-        { // not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
         $this->vars = GLOBALS::getVars();
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('heading'));
     }
     /**
-    * This is the initial method called from the menu item.
-    *
-    * Present options
-    *
-    * @param string|FALSE $message
-    */
-    
+     * This is the initial method called from the menu item.
+     *
+     * Present options
+     *
+     * @param false|string $message
+     */
     public function init($message = FALSE)
     {
-        if ($message)
-        {
+        if ($message) {
             $pString = $message;
-        }
-        else
-        {
+        } else {
             $pString = '';
         }
         $pString .= FORM\formHeader("visualize_visualize");
@@ -102,40 +98,30 @@ class visualize_MODULE
         GLOBALS::addTplVar('content', $pString);
     }
     /**
-    * Carry out the visualization
-    */
+     * Carry out the visualization
+     */
     public function visualize()
     {
         include_once('jpgraph/jpgraph.php');
-        if (!$this->validate())
-        {
+        if (!$this->validate()) {
             $this->badInput($this->pluginmessages->text('inputMissing'));
         }
         $this->xAxisMetadata = $this->getXAxisMetadata();
         $this->getData();
-        if (array_key_exists('maxXAxis', $this->vars) && ($this->vars['maxXAxis'] > 0))
-        {
+        if (array_key_exists('maxXAxis', $this->vars) && ($this->vars['maxXAxis'] > 0)) {
             $scale = $this->vars['maxXAxis'];
-        }
-        else
-        {
+        } else {
             $scale = FALSE;
         }
-        if ($scale && (count($this->xAxis) > $scale))
-        {
-            if (!array_key_exists('start', $this->vars) || !$this->vars['start'])
-            {
+        if ($scale && (count($this->xAxis) > $scale)) {
+            if (!array_key_exists('start', $this->vars) || !$this->vars['start']) {
                 $xAxis = array_slice($this->xAxis, 0, $scale);
                 $yAxis = array_slice($this->yAxis, 0, $scale);
-            }
-            else
-            {
+            } else {
                 $xAxis = array_slice($this->xAxis, $this->vars['start'], $scale);
                 $yAxis = array_slice($this->yAxis, $this->vars['start'], $scale);
             }
-        }
-        else
-        {
+        } else {
             $xAxis = $this->xAxis;
             $yAxis = $this->yAxis;
         }
@@ -157,41 +143,30 @@ class visualize_MODULE
         $graph->xaxis->SetLabelAngle($this->xAxisMetadata[$this->vars['xAxis']]['xAxisAngle']);
         // Setup Y-axis title
         $graph->yaxis->title->Set($this->pluginmessages->text($this->vars['yAxis']));
-        if ($this->vars['plot'] == 'bar')
-        {
+        if ($this->vars['plot'] == 'bar') {
             $this->barPlot($yAxis, $graph);
-        }
-        elseif ($this->vars['plot'] == 'barLine')
-        {
+        } elseif ($this->vars['plot'] == 'barLine') {
             $this->barPlot($yAxis, $graph);
             $this->linePlot($yAxis, $graph, FALSE);
-        }
-        elseif ($this->vars['plot'] == 'scatter')
-        {
+        } elseif ($this->vars['plot'] == 'scatter') {
             $this->scatterPlot($yAxis, $graph);
-        }
-        elseif ($this->vars['plot'] == 'scatterLine')
-        {
+        } elseif ($this->vars['plot'] == 'scatterLine') {
             $this->scatterPlot($yAxis, $graph, TRUE);
-        }
-        elseif ($this->vars['plot'] == 'balloon')
-        {
+        } elseif ($this->vars['plot'] == 'balloon') {
             $this->balloonPlot($yAxis, $graph);
-        }
-        else
-        { // 'line'
+        } else { // 'line'
             $this->linePlot($yAxis, $graph);
         }
         // Add the plot to the graph
         $this->display($graph);
     }
     /**
-    * balloonCallback
-    *
-    * @param array $aVal
-    *
-    * @return array
-    */
+     * balloonCallback
+     *
+     * @param array $aVal
+     *
+     * @return array
+     */
     public function balloonCallback($aVal)
     {
         // This callback will adjust the fill color and size of
@@ -209,8 +184,7 @@ class visualize_MODULE
         // Print the size between 5 and 100
         $value = floor((($aVal / 3) / $max) * 100);
         $size = floor((($aVal / 3) / $max) * 95) + 5;
-        if (!$value)
-        {
+        if (!$value) {
             ++$value;
         }
 
@@ -218,19 +192,19 @@ class visualize_MODULE
         //		return array(floor($aVal / 3), "", $c);
     }
     /**
-    * Make the menus
-    *
-    * @param array $menuArray
-    */
+     * Make the menus
+     *
+     * @param array $menuArray
+     */
     private function makeMenu($menuArray)
     {
         $this->menus = [$menuArray[0] => [$this->pluginmessages->text('menu') => "init"]];
     }
     /**
-    * Display options for the x and y axes
-    *
-    * @return string
-    */
+     * Display options for the x and y axes
+     *
+     * @return string
+     */
     private function chooseOptions()
     {
         $yAxisTypes = $this->yAxisOptions();
@@ -277,10 +251,10 @@ class visualize_MODULE
         return $pString;
     }
     /**
-    * Choose the type of plot
-    *
-    * @return string
-    */
+     * Choose the type of plot
+     *
+     * @return string
+     */
     private function choosePlot()
     {
         $plots = [
@@ -304,11 +278,11 @@ class visualize_MODULE
         ));
     }
     /**
-    * Do a bar plot
-    *
-    * @param int $yAxis
-    * @param object $graph
-    */
+     * Do a bar plot
+     *
+     * @param int $yAxis
+     * @param object $graph
+     */
     private function barPlot($yAxis, $graph)
     {
         include_once('jpgraph/jpgraph_bar.php');
@@ -322,19 +296,18 @@ class visualize_MODULE
         $plot->SetValuePos('top');
     }
     /**
-    * Do a line plot
-    *
-    * @param int $yAxis
-    * @param object $graph
-    * @param bool $showValue
-    */
+     * Do a line plot
+     *
+     * @param int $yAxis
+     * @param object $graph
+     * @param bool $showValue
+     */
     private function linePlot($yAxis, $graph, $showValue = TRUE)
     {
         include_once('jpgraph/jpgraph_line.php');
         $plot = new LinePlot($yAxis);
         $graph->Add($plot);
-        if ($showValue)
-        {
+        if ($showValue) {
             $graph->yaxis->scale->SetGrace(5);
             $plot->value->SetFormat('%d');
             $plot->value->Show();
@@ -342,18 +315,17 @@ class visualize_MODULE
         $plot->SetColor('red');
     }
     /**
-    * Do a scatter plot
-    *
-    * @param int $yAxis
-    * @param object $graph
-    * @param bool $line
-    */
+     * Do a scatter plot
+     *
+     * @param int $yAxis
+     * @param object $graph
+     * @param bool $line
+     */
     private function scatterPlot($yAxis, $graph, $line = FALSE)
     {
         include_once('jpgraph/jpgraph_scatter.php');
         $plot = new ScatterPlot($yAxis);
-        if ($line)
-        {
+        if ($line) {
             $plot->SetLinkPoints();
         }
         $plot->mark->SetType(MARK_FILLEDCIRCLE);
@@ -361,11 +333,11 @@ class visualize_MODULE
         $graph->Add($plot);
     }
     /**
-    * Do a balloon plot
-    *
-    * @param int $yAxis
-    * @param object $graph
-    */
+     * Do a balloon plot
+     *
+     * @param int $yAxis
+     * @param object $graph
+     */
     private function balloonPlot($yAxis, $graph)
     {
         include_once('jpgraph/jpgraph_scatter.php');
@@ -381,10 +353,10 @@ class visualize_MODULE
         $graph->Add($plot);
     }
     /**
-    * Display the graph
-    *
-    * @param object $graph
-    */
+     * Display the graph
+     *
+     * @param object $graph
+     */
     private function display($graph)
     {
         $filesDir = WIKINDX_DIR_DATA_FILES;
@@ -392,8 +364,7 @@ class visualize_MODULE
         $graph->Stroke($file);
         $pString = HTML\img($file, $this->config->width, $this->config->height);
         $size = count($this->xAxis);
-        if (array_key_exists('maxXAxis', $this->vars) && ($this->vars['maxXAxis'] > 0))
-        {
+        if (array_key_exists('maxXAxis', $this->vars) && ($this->vars['maxXAxis'] > 0)) {
             $p = $this->links($size);
             $p .= FORM\formEnd();
             $pString .= \HTML\p($p);
@@ -403,17 +374,16 @@ class visualize_MODULE
         FACTORY_CLOSEPOPUP::getInstance();
     }
     /**
-    * links
-    *
-    * @param int $size
-    *
-    * @return string
-    */
+     * links
+     *
+     * @param int $size
+     *
+     * @return string
+     */
     private function links($size)
     {
         $previous = $next = FALSE;
-        if ($this->vars['maxXAxis'] == -1)
-        {
+        if ($this->vars['maxXAxis'] == -1) {
             $this->vars['maxXAxis'] = $size;
         }
         $links = htmlentities("&yAxis=" . $this->vars['yAxis']) .
@@ -421,8 +391,7 @@ class visualize_MODULE
                 htmlentities("&maxXAxis=" . $this->vars['maxXAxis']) .
                 htmlentities("&plot=" . $this->vars['plot']);
         $icons = FACTORY_LOADICONS::getInstance();
-        if (array_key_exists('start', $this->vars) && $this->vars['start'])
-        {
+        if (array_key_exists('start', $this->vars) && $this->vars['start']) {
             $previousStart = $this->vars['start'] - $this->vars['maxXAxis'];
             $nextStart = $this->vars['maxXAxis'] + $this->vars['start'];
             $previous = \HTML\a(
@@ -430,97 +399,69 @@ class visualize_MODULE
                 $icons->getHTML("previous"),
                 "index.php?action=visualize_visualize" . htmlentities("&start=" . $previousStart) . $links
             );
-            if (($this->vars['start'] + $this->vars['maxXAxis']) < $size)
-            {
+            if (($this->vars['start'] + $this->vars['maxXAxis']) < $size) {
                 $next = \HTML\a(
                     $icons->getClass("next"),
                     $icons->getHTML("next"),
                     "index.php?action=visualize_visualize" . htmlentities("&start=" . $nextStart) . $links
                 );
             }
-        }
-        elseif ($this->vars['maxXAxis'] < $size)
-        {
+        } elseif ($this->vars['maxXAxis'] < $size) {
             $next = \HTML\a(
                 $icons->getClass("next"),
                 $icons->getHTML("next"),
                 "index.php?action=visualize_visualize" . htmlentities("&start=" . $this->vars['maxXAxis']) . $links
             );
         }
-        if ($previous && $next)
-        {
+        if ($previous && $next) {
             return "$previous&nbsp;&nbsp;$next";
-        }
-        elseif ($previous)
-        {
+        } elseif ($previous) {
             return "$previous";
-        }
-        else
-        {
+        } else {
             return "$next";
         }
     }
     /**
-    * getData
-    */
+     * getData
+     */
     private function getData()
     {
-        if ($this->xAxisMetadata[$this->vars['xAxis']]['countField'])
-        {
+        if ($this->xAxisMetadata[$this->vars['xAxis']]['countField']) {
             $yAxisField = $this->xAxisMetadata[$this->vars['xAxis']]['countField'];
-        }
-        else
-        {
+        } else {
             $yAxisField = $this->vars['xAxis'];
         }
-        if ($this->xAxisMetadata[$this->vars['xAxis']]['sql'])
-        {
+        if ($this->xAxisMetadata[$this->vars['xAxis']]['sql']) {
             $recordSet = $this->db->query($this->xAxisMetadata[$this->vars['xAxis']]['sql']);
-        }
-        else
-        {
+        } else {
             $this->db->orderBy($yAxisField);
             $recordSet = $this->db->selectCount($this->xAxisMetadata[$this->vars['xAxis']]['table'], $yAxisField);
         }
-        if (!$this->db->numRows($recordSet))
-        {
+        if (!$this->db->numRows($recordSet)) {
             throw new JpGraphException($this->pluginmessages->text('noData'));
         }
-        while ($row = $this->db->fetchRow($recordSet))
-        {
-            if ($this->xAxisMetadata[$this->vars['xAxis']]['isNumeric'])
-            {
-                if (is_numeric($row[$yAxisField]))
-                {
-                    if ($this->xAxisMetadata[$this->vars['xAxis']]['messagesArray'])
-                    {
+        while ($row = $this->db->fetchRow($recordSet)) {
+            if ($this->xAxisMetadata[$this->vars['xAxis']]['isNumeric']) {
+                if (is_numeric($row[$yAxisField])) {
+                    if ($this->xAxisMetadata[$this->vars['xAxis']]['messagesArray']) {
                         $this->xAxis[] = $this->coremessages->text(
                             $this->xAxisMetadata[$this->vars['xAxis']]['messagesArray'],
                             $row[$yAxisField]
                         );
-                    }
-                    else
-                    {
+                    } else {
                         $this->xAxis[] = $row[$yAxisField];
                     }
                     $this->yAxis[] = $row['count'];
                 }
-            }
-            else
-            {
-                if ($this->xAxisMetadata[$this->vars['xAxis']]['messagesArray'])
-                {
+            } else {
+                if ($this->xAxisMetadata[$this->vars['xAxis']]['messagesArray']) {
                     $this->xAxis[] = $this->coremessages->text(
                         $this->xAxisMetadata[$this->vars['xAxis']]['messagesArray'],
                         $row[$yAxisField]
                     );
-                }
-                elseif ($this->xAxisMetadata[$this->vars['xAxis']]['labelField'])
-                {
+                } elseif ($this->xAxisMetadata[$this->vars['xAxis']]['labelField']) {
                     $this->xAxis[] = $row[$this->xAxisMetadata[$this->vars['xAxis']]['labelField']];
-                }
-                else
-                {
+                } else {
                     $this->xAxis[] = $row[$yAxisField];
                 }
                 $this->yAxis[] = $row['count'];
@@ -528,10 +469,10 @@ class visualize_MODULE
         }
     }
     /**
-    * Get tables as per the field
-    *
-    * @return array
-    */
+     * Get tables as per the field
+     *
+     * @return array
+     */
     private function getXAxisMetadata()
     {
         return [
@@ -610,10 +551,10 @@ class visualize_MODULE
         ];
     }
     /**
-    * Choose options for the Y axis
-    *
-    * @return array
-    */
+     * Choose options for the Y axis
+     *
+     * @return array
+     */
     private function yAxisOptions()
     {
         return [
@@ -621,10 +562,10 @@ class visualize_MODULE
         ];
     }
     /**
-    * Choose options for the X axis
-    *
-    * @return array
-    */
+     * Choose options for the X axis
+     *
+     * @return array
+     */
     private function xAxisOptions()
     {
         return [
@@ -637,54 +578,43 @@ class visualize_MODULE
         ];
     }
     /**
-    * Validate input and store in session
-    *
-    * @return bool
-    */
+     * Validate input and store in session
+     *
+     * @return bool
+     */
     private function validate()
     {
-        if (array_key_exists('yAxis', $this->vars) && $this->vars['yAxis'])
-        {
+        if (array_key_exists('yAxis', $this->vars) && $this->vars['yAxis']) {
             $this->session->setVar("visualize_YAxis", $this->vars['yAxis']);
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
-        if (array_key_exists('xAxis', $this->vars) && $this->vars['xAxis'])
-        {
+        if (array_key_exists('xAxis', $this->vars) && $this->vars['xAxis']) {
             $this->session->setVar("visualize_XAxis", $this->vars['xAxis']);
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
-        if (array_key_exists('plot', $this->vars) && $this->vars['plot'])
-        {
+        if (array_key_exists('plot', $this->vars) && $this->vars['plot']) {
             $this->session->setVar("visualize_Plot", $this->vars['plot']);
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
-        if (array_key_exists('maxXAxis', $this->vars) && $this->vars['maxXAxis'])
-        {
-            if (!preg_match("#^(-[0-9]{1,}|[0-9]{1,})$#", $this->vars['maxXAxis']))
-            { // need to check either '-1' or a positive integer
+        if (array_key_exists('maxXAxis', $this->vars) && $this->vars['maxXAxis']) {
+            if (!preg_match("#^(-[0-9]{1,}|[0-9]{1,})$#", $this->vars['maxXAxis'])) { // need to check either '-1' or a positive integer
                 return FALSE;
             }
             $this->session->setVar("visualize_MaxXAxis", $this->vars['maxXAxis']);
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
 
         return TRUE;
     }
     /**
-    * bad Input function
-    */
+     * bad Input function
+     *
+     * @param mixed $error
+     */
     private function badInput($error)
     {
         $pString = HTML\p($error, 'error');
@@ -699,7 +629,7 @@ class visualize_MODULE
  */
 class COLOR
 {
-	/** array */
+    /** array */
     public $sequence = [];
     /**
      * constructor fills $sequence with a list of colours as long as the $count param
@@ -711,8 +641,7 @@ class COLOR
     public function __construct($count, $s = .5, $l = .5)
     {
         $index = 1;
-        for ($h = 0; $h <= .85; $h += .85 / $count)
-        {    //.85 is pretty much in the middle of the violet spectrum
+        for ($h = 0; $h <= .85; $h += .85 / $count) {    //.85 is pretty much in the middle of the violet spectrum
             $this->sequence[$index++] = '#' . color::hexHSLtoRGB($h, $s, $l);
         }
     }
@@ -732,8 +661,7 @@ class COLOR
         $g = $l;
         $b = $l;
         $v = ($l <= 0.5) ? ($l * (1.0 + $s)) : (l + $s - l * $s);
-        if ($v > 0)
-        {
+        if ($v > 0) {
             $m;
             $sv;
             $sextant;
@@ -749,8 +677,7 @@ class COLOR
             $vsf = $v * $sv * $fract;
             $mid1 = $m + $vsf;
             $mid2 = $v - $vsf;
-            switch ($sextant)
-              {
+            switch ($sextant) {
                     case 0:
                           $r = $v;
                           $g = $mid1;

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -49,10 +51,8 @@ class CREATOR
      */
     public function grabAll($userBib = FALSE, $typeArray = FALSE, $metadata = FALSE, $group = FALSE)
     {
-        if (!$userBib && !is_array($typeArray) && !$group)
-        {
-            if (!is_array($metadata) && !$metadata && is_array($creators = $this->db->readCache('cacheResourceCreators')))
-            {
+        if (!$userBib && !is_array($typeArray) && !$group) {
+            if (!is_array($metadata) && !$metadata && is_array($creators = $this->db->readCache('cacheResourceCreators'))) {
                 return $creators;
             }
 
@@ -60,24 +60,19 @@ class CREATOR
         }
 
         $recordset = FALSE;
-        if (is_array($typeArray) && !empty($typeArray))
-        {
-            if (isset($subSubQuery))
-            {
+        if (is_array($typeArray) && !empty($typeArray)) {
+            if (isset($subSubQuery)) {
                 $this->db->formatConditionsOneField($typeArray, 'resourceType');
                 $this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'rId');
                 $this->db->leftJoin('resource', 'resourceId', 'rId');
                 $this->db->formatConditions($this->db->formatFields('creatorId') .
                     $this->db->inClause($this->db->subQueryFields('resourcecreatorCreatorId', $subSubQuery, 't', TRUE, TRUE)));
-            }
-            else
-            {
+            } else {
                 $this->db->formatConditionsOneField($typeArray, 'resourceType');
                 $this->db->formatConditions(['creatorSameAs' => ' IS NULL']);
                 $this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');
                 $this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
-                if ($userBib)
-                {
+                if ($userBib) {
                     $this->commonBib->userBibCondition('resourcecreatorResourceId');
                 }
                 $u[] = $this->db->selectNoExecute('resource', 'resourcecreatorCreatorId', TRUE, TRUE, TRUE);
@@ -85,8 +80,7 @@ class CREATOR
                 $this->db->formatConditions(['creatorSameAs' => ' IS NOT NULL']);
                 $this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');
                 $this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
-                if ($userBib)
-                {
+                if ($userBib) {
                     $this->commonBib->userBibCondition('resourcecreatorResourceId');
                 }
                 $u[] = $this->db->selectNoExecute('resource', 'creatorSameAs', TRUE, TRUE, TRUE);
@@ -104,29 +98,20 @@ class CREATOR
                 ));
             }
             $group = $userBib = FALSE;
-        }
-        elseif (is_array($metadata) && !empty($metadata))
-        {
-            foreach ($metadata as $mType)
-            {
-                if (($mType == 'quote') || ($mType == 'quoteComment'))
-                {
+        } elseif (is_array($metadata) && !empty($metadata)) {
+            foreach ($metadata as $mType) {
+                if (($mType == 'quote') || ($mType == 'quoteComment')) {
                     $unions[] = $this->db->selectNoExecute('resource_quote', [['resourcequoteResourceId' => 'rId']], TRUE);
-                }
-                elseif (($mType == 'paraphrase') || ($mType == 'paraphraseComment'))
-                {
+                } elseif (($mType == 'paraphrase') || ($mType == 'paraphraseComment')) {
                     $unions[] = $this->db->selectNoExecute('resource_paraphrase', [['resourceparaphraseResourceId' => 'rId']], TRUE);
-                }
-                elseif ($mType == 'musing')
-                {
+                } elseif ($mType == 'musing') {
                     $unions[] = $this->db->selectNoExecute('resource_musing', [['resourcemusingResourceId' => 'rId']], TRUE);
                 }
             }
             $union = $this->db->union($unions);
             $subSubQuery = $this->db->subQuery($union, 'u', TRUE, TRUE);
             $this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'rId');
-            if ($userBib)
-            {
+            if ($userBib) {
                 $this->commonBib->userBibCondition('resourcecreatorResourceId');
             }
             $subQuery = $this->db->subQueryFields('resourcecreatorCreatorId', $subSubQuery, 't', TRUE, TRUE);
@@ -139,28 +124,22 @@ class CREATOR
                 $subQuery
             ));
         }
-        if (!$recordset)
-        {
-            if ($group)
-            {
+        if (!$recordset) {
+            if ($group) {
                 $this->db->formatConditions(['creatorSameAs' => ' IS NULL']);
             }
-            if ($userBib)
-            {
+            if ($userBib) {
                 $this->db->leftJoin('resource_creator', 'resourcecreatorCreatorId', 'creatorId');
                 $this->commonBib->userBibCondition('resourcecreatorResourceId');
             }
             $this->db->orderBy('creatorSurname');
-            if (isset($subQuery))
-            {
+            if (isset($subQuery)) {
                 $recordset = $this->db->query($this->db->selectNoExecuteFromSubQuery(
                     FALSE,
                     ['creatorId', "creatorSurname", "creatorInitials", "creatorFirstname", "creatorPrefix"],
                     $subQuery
                 ));
-            }
-            else
-            {
+            } else {
                 $recordset = $this->db->select(
                     'creator',
                     ['creatorId', "creatorSurname", "creatorInitials", "creatorFirstname", "creatorPrefix"]
@@ -170,23 +149,18 @@ class CREATOR
 
         $creators = [];
 
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->formatNames($row, $creators);
         }
 
-        if (!empty($creators))
-        {
+        if (!empty($creators)) {
             // (re)create cache if getting entire list
-            if (!$userBib && !is_array($typeArray) && !$group)
-            {
+            if (!$userBib && !is_array($typeArray) && !$group) {
                 $this->db->writeCache($metadata ? 'cacheMetadataCreators' : 'cacheResourceCreators', $creators);
             }
 
             return $creators;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -206,16 +180,12 @@ class CREATOR
             ['creatorId', "creatorSurname", "creatorInitials", "creatorFirstname", "creatorPrefix"]
         );
         $creators = [];
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->formatNames($row, $creators);
         }
-        if (!empty($creators))
-        {
+        if (!empty($creators)) {
             return $creators;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -233,12 +203,9 @@ class CREATOR
         //		$subStmt = $this->db->subQuery($this->db->selectNoExecute('creator', 'creatorSameAs'), FALSE, FALSE, TRUE);
         //		$this->db->formatConditions($this->db->formatFields('creatorId') . $this->db->inClause($subStmt, TRUE));
         $subStmt = $this->db->selectNoExecute('creator', $this->db->tidyInput('1'), FALSE, FALSE, TRUE, 't1');
-        if ($notExists)
-        {
+        if ($notExists) {
             $this->db->formatConditions($this->db->existsClause($subStmt, TRUE));
-        }
-        else
-        {
+        } else {
             $this->db->formatConditions($this->db->existsClause($subStmt));
         }
         $this->db->orderBy('creatorSurname');
@@ -247,16 +214,12 @@ class CREATOR
             ['creatorId', "creatorSurname", "creatorInitials", "creatorFirstname", "creatorPrefix"]
         );
         $creators = [];
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->formatNames($row, $creators);
         }
-        if (!empty($creators))
-        {
+        if (!empty($creators)) {
             return $creators;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -276,16 +239,12 @@ class CREATOR
             ['creatorId', "creatorSurname", "creatorInitials", "creatorFirstname", "creatorPrefix"]
         );
         $creators = [];
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->formatNames($row, $creators);
         }
-        if (!empty($creators))
-        {
+        if (!empty($creators)) {
             return $creators;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -303,16 +262,12 @@ class CREATOR
             ['creatorId', "creatorSurname", "creatorInitials", "creatorFirstname", "creatorPrefix"]
         );
         $creators = [];
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->formatNames($row, $creators);
         }
-        if (!empty($creators))
-        {
+        if (!empty($creators)) {
             return $creators;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -339,12 +294,9 @@ class CREATOR
             FALSE
         ) . $this->db->equal . $this->db->tidyInput($name));
         $resultset = $this->db->select('creator', 'creatorId');
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             return FALSE;
-        }
-        else
-        {
+        } else {
             return $this->db->fetchOne($resultset);
         }
     }
@@ -360,12 +312,10 @@ class CREATOR
         $subStmt = $this->db->subQuery($this->db->selectNoExecute('resource_creator', 'resourcecreatorCreatorId'), FALSE, FALSE, TRUE);
         $this->db->formatConditions($this->db->formatFields('creatorId') . $this->db->inClause($subStmt, TRUE));
         $recordset = $this->db->select('creator', 'creatorId');
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $deleteIds[] = $row['creatorId'];
         }
-        if (empty($deleteIds))
-        {
+        if (empty($deleteIds)) {
             return; // nothing to do
         }
         $this->db->formatConditionsOneField($deleteIds, 'creatorId');
@@ -377,8 +327,7 @@ class CREATOR
         $this->db->deleteCache('cacheResourceCreators');
         $this->db->deleteCache('cacheMetadataCreators');
         // remove references to deleted creators from collection defaults. Not used when deleting creators after editing collections (rather than resources)
-        if ($collectionDefaults)
-        {
+        if ($collectionDefaults) {
             $this->collectionDefaults($deleteIds);
         }
     }
@@ -396,37 +345,30 @@ class CREATOR
         $this->gatekeep->init();
         $surname = $v['surname'];
         $firstname = $initials = $prefix = NULL;
-        if (array_key_exists('firstname', $v))
-        {
+        if (array_key_exists('firstname', $v)) {
             $firstname = $v['firstname'];
         }
-        if (array_key_exists('initials', $v))
-        {
+        if (array_key_exists('initials', $v)) {
             $initials = $v['initials'];
         }
-        if (array_key_exists('prefix', $v))
-        {
+        if (array_key_exists('prefix', $v)) {
             $prefix = $v['prefix'];
         }
         $fields[] = 'creatorSurname';
         $values[] = trim($surname);
-        if (trim($firstname))
-        {
+        if (trim($firstname)) {
             $fields[] = 'creatorFirstname';
             $values[] = trim($firstname);
         }
-        if (trim($initials))
-        {
+        if (trim($initials)) {
             $fields[] = 'creatorInitials';
             $values[] = $this->formatInitials(trim($initials));
         }
-        if (trim($prefix))
-        {
+        if (trim($prefix)) {
             $fields[] = 'creatorPrefix';
             $values[] = $this->formatInitials(trim($prefix));
         }
-        if ($id = $this->checkExists($surname, $firstname, $initials, $prefix))
-        {
+        if ($id = $this->checkExists($surname, $firstname, $initials, $prefix)) {
             return $id;
         }
         $this->db->insert('creator', $fields, $values);
@@ -452,8 +394,7 @@ class CREATOR
     {
         $initials = preg_split("/\\.\\s*/u", $raw);
         // If there's an empty array element at the end, remove it.
-        if (!$initials[count($initials) - 1])
-        {
+        if (!$initials[count($initials) - 1]) {
             array_pop($initials);
         }
 
@@ -483,11 +424,9 @@ class CREATOR
     private function collectionDefaults($deleteIds)
     {
         $recordset = $this->db->select('collection', ['collectionId', 'collectionDefault']);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $defaults = unserialize(base64_decode($row['collectionDefault']));
-            if (!is_array($defaults) || !array_key_exists('creators', $defaults) || empty(array_intersect($deleteIds, $defaults['creators'])))
-            {
+            if (!is_array($defaults) || !array_key_exists('creators', $defaults) || empty(array_intersect($deleteIds, $defaults['creators']))) {
                 continue;
             }
             $defaults['creators'] = $this->reOrderCreator($defaults['creators'], $deleteIds);
@@ -508,26 +447,21 @@ class CREATOR
     {
         $allCreators = $newCreators = [];
         $temp = $creators;
-        foreach ($temp as $key => $creatorId)
-        {
-            if (array_search($creatorId, $deleteIds) !== FALSE)
-            {
+        foreach ($temp as $key => $creatorId) {
+            if (array_search($creatorId, $deleteIds) !== FALSE) {
                 unset($creators[$key]);
             }
         }
-        foreach ($creators as $creator => $creatorId)
-        {
+        foreach ($creators as $creator => $creatorId) {
             $split = UTF8::mb_explode('_', $creator);
             $newKey = $split[0] . '_' . $split[1];
             $allCreators[$split[0]]['order'][$newKey] = $split[1];
             $allCreators[$split[0]]['creators'][$newKey]['select'] = $creatorId;
         }
-        foreach ($allCreators as $role => $array)
-        {
+        foreach ($allCreators as $role => $array) {
             $index = 0;
             asort($array['order']);
-            foreach ($array['order'] as $key => $value)
-            {
+            foreach ($array['order'] as $key => $value) {
                 $newKey = $role . '_' . $index . '_select';
                 $newCreators[$newKey] = $allCreators[$role]['creators'][$key]['select'];
                 ++$index;
@@ -544,27 +478,21 @@ class CREATOR
      */
     private function formatNames(&$row, &$creators)
     {
-        if ($row['creatorId'])
-        {
+        if ($row['creatorId']) {
             $name = '';
 
-            if ($row['creatorPrefix'])
-            {
+            if ($row['creatorPrefix']) {
                 $name .= $row['creatorPrefix'] . ' ';
             }
 
             $name .= $row['creatorSurname'];
 
-            if ($row['creatorFirstname'])
-            {
+            if ($row['creatorFirstname']) {
                 $name .= ', ' . $row['creatorFirstname'] . ' ';
-                if ($row['creatorInitials'])
-                {
+                if ($row['creatorInitials']) {
                     $name .= ' ' . str_replace(' ', '.', $row['creatorInitials']) . '.';
                 }
-            }
-            elseif ($row['creatorInitials'])
-            {
+            } elseif ($row['creatorInitials']) {
                 $name .= ', ' . str_replace(' ', '.', $row['creatorInitials']) . '.';
             }
 

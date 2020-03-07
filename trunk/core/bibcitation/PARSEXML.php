@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -37,11 +39,11 @@ class PARSEXML
     public function loadStyle($output, $export)
     {
         $setupStyle = $this->getStyle($output, $export);
-        if (!$this->loadCache($setupStyle))
-        {
+        if (!$this->loadCache($setupStyle)) {
             $this->extractEntries(WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . $setupStyle . DIRECTORY_SEPARATOR . $setupStyle . ".xml");
             $this->createCache($setupStyle);
         }
+
         return TRUE;
     }
     /**
@@ -73,20 +75,17 @@ class PARSEXML
         $styleCacheFilePath = WIKINDX_DIR_CACHE_STYLES . DIRECTORY_SEPARATOR . $style;
 
         // If the cache file is missing, abort loading
-        if (!file_exists($styleCacheFilePath))
-        {
+        if (!file_exists($styleCacheFilePath)) {
             return FALSE;
         }
         // If the cache file is expired, delete it and abort loading
-        if (filemtime($styleFilePath) >= filemtime($styleCacheFilePath))
-        {
+        if (filemtime($styleFilePath) >= filemtime($styleCacheFilePath)) {
             unlink($styleCacheFilePath);
 
             return FALSE;
         }
         // Load cache file, if readable
-        if (FALSE !== ($fh = fopen($styleCacheFilePath, "r")))
-        {
+        if (FALSE !== ($fh = fopen($styleCacheFilePath, "r"))) {
             $this->info = unserialize(fgets($fh));
             $this->citation = unserialize(fgets($fh));
             $this->footnote = unserialize(fgets($fh));
@@ -108,8 +107,7 @@ class PARSEXML
      */
     private function createCache($style)
     {
-        if (FALSE !== ($fh = fopen(WIKINDX_DIR_CACHE_STYLES . DIRECTORY_SEPARATOR . $style, "w")))
-        {
+        if (FALSE !== ($fh = fopen(WIKINDX_DIR_CACHE_STYLES . DIRECTORY_SEPARATOR . $style, "w"))) {
             // Serialize each array and write as one line to cache file
             fwrite($fh, serialize($this->info) . "\n");
             fwrite($fh, serialize($this->citation) . "\n");
@@ -132,15 +130,14 @@ class PARSEXML
     {
         $session = FACTORY_SESSION::getInstance();
         $style = NULL;
-        if ($output == 'rtf')
-        {
+        if ($output == 'rtf') {
             $style = $session->getVar($export ? "exportPaper_Style" : "wp_ExportStyle", NULL);
         }
-        if ($style == NULL)
-        {
+        if ($style == NULL) {
             $style = GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT);
         }
         $style = array_key_exists($style, \LOADSTYLE\loadDir()) ? $style : WIKINDX_STYLE_DEFAULT;
+
         return strtolower($style);
     }
     /**
@@ -154,46 +151,31 @@ class PARSEXML
      */
     private function XMLToArray($xml)
     {
-        if ($xml instanceof SimpleXMLElement)
-        {
+        if ($xml instanceof SimpleXMLElement) {
             $children = $xml->children();
             $return = NULL;
         }
-        foreach ($children as $element => $value)
-        {
-            if ($value instanceof SimpleXMLElement)
-            {
+        foreach ($children as $element => $value) {
+            if ($value instanceof SimpleXMLElement) {
                 $values = (array)$value->children();
-                if (count($values) > 0)
-                {
+                if (count($values) > 0) {
                     $return[$element] = $this->XMLToArray($value);
-                }
-                else
-                {
-                    if (!isset($return[$element]))
-                    {
+                } else {
+                    if (!isset($return[$element])) {
                         $return[$element] = (string)$value;
-                    }
-                    else
-                    {
-                        if (!is_array($return[$element]))
-                        {
+                    } else {
+                        if (!is_array($return[$element])) {
                             $return[$element] = [$return[$element], (string)$value];
-                        }
-                        else
-                        {
+                        } else {
                             $return[$element][] = (string)$value;
                         }
                     }
                 }
             }
         }
-        if (is_array($return))
-        {
+        if (is_array($return)) {
             return $return;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -204,13 +186,10 @@ class PARSEXML
      */
     private function getFootnotes($xmlString)
     {
-        foreach ($xmlString->footnote->resource as $value)
-        {
+        foreach ($xmlString->footnote->resource as $value) {
             $name = NULL;
-            foreach ($value->attributes() as $id => $v)
-            {
-                if ($id == "name")
-                {
+            foreach ($value->attributes() as $id => $v) {
+                if ($id == "name") {
                     $name = trim($v);
                 }
             }
@@ -224,24 +203,18 @@ class PARSEXML
      */
     private function getStyleTypes($xmlString)
     {
-        foreach ($xmlString->bibliography->resource as $value)
-        {
+        foreach ($xmlString->bibliography->resource as $value) {
             $name = NULL;
             $creatorRewriteArray = [];
-            foreach ($value->attributes() as $id => $v)
-            {
-                if ($id == "name")
-                {
+            foreach ($value->attributes() as $id => $v) {
+                if ($id == "name") {
                     $name = trim($v);
-                }
-                else
-                {
+                } else {
                     $creatorRewriteArray[$id] = (string)$v;
                 }
             }
             $this->types[$name] = $this->XMLToArray($value) + $creatorRewriteArray;
-            if (isset($value->fallbackstyle))
-            {
+            if (isset($value->fallbackstyle)) {
                 $this->types['fallback'][$name] = trim((string)($value->fallbackstyle));
             }
         }

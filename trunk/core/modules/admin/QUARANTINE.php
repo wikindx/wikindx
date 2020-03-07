@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -36,8 +38,7 @@ class QUARANTINE
     public function approve()
     {
         $this->gatekeep->init();
-        if (!array_key_exists('resourceId', $this->vars))
-        {
+        if (!array_key_exists('resourceId', $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $this->db->formatConditions(['resourcemiscId' => $this->vars['resourceId']]);
@@ -51,8 +52,7 @@ class QUARANTINE
     public function putInQuarantine()
     {
         $this->gatekeep->init();
-        if (!array_key_exists('resourceId', $this->vars))
-        {
+        if (!array_key_exists('resourceId', $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $this->db->formatConditions(['resourcemiscId' => $this->vars['resourceId']]);

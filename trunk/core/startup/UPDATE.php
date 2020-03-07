@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -26,27 +28,21 @@ namespace UPDATE
         // it reads the db system catalog and can't fail if the db exists
         
         // Check if 'config' table doesn't exist
-        if (!$dbo->tableExists('config'))
-        {
+        if (!$dbo->tableExists('config')) {
             return TRUE;
         }
         // Check if 'config' table has not been filled with a configuration
-        elseif ($dbo->tableIsEmpty('config'))
-        {
+        elseif ($dbo->tableIsEmpty('config')) {
             return TRUE;
         }
         // Check if the database version number is not the same as source code version number
-        elseif (\UPDATE\getDatabaseVersion($dbo) != WIKINDX_INTERNAL_VERSION)
-        {
+        elseif (\UPDATE\getDatabaseVersion($dbo) != WIKINDX_INTERNAL_VERSION) {
             return TRUE;
         }
         // Check if 'users' table has not been filled with a configuration
-        elseif ($dbo->tableIsEmpty('users'))
-        {
+        elseif ($dbo->tableIsEmpty('users')) {
             return TRUE;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -65,12 +61,10 @@ namespace UPDATE
         // superAdmin is id '1'
         $dbo->formatConditions(['usersUsername' => $username, 'usersId' => WIKINDX_SUPERADMIN_ID]);
         $recordset = $dbo->select('users', ['usersId', 'usersPassword']);
-        if ($dbo->numRows($recordset) == 1)
-        {
+        if ($dbo->numRows($recordset) == 1) {
             // verify the password
             $row = $dbo->fetchRow($recordset);
-            if (crypt($password, $row['usersPassword']) == $row['usersPassword'])
-            {
+            if (crypt($password, $row['usersPassword']) == $row['usersPassword']) {
                 return TRUE;
             }
         }
@@ -92,17 +86,14 @@ namespace UPDATE
     {
         $dbVersion = 0.0;
         $recordset = $dbo->queryNoError($dbo->selectNoExecute('database_summary', '*'));
-        if ($recordset !== FALSE)
-        {
+        if ($recordset !== FALSE) {
             $row = $dbo->fetchRow($recordset);
             // From version 6
-            if (array_key_exists('databasesummarySoftwareVersion', $row))
-            {
+            if (array_key_exists('databasesummarySoftwareVersion', $row)) {
                 $field = "databasesummarySoftwareVersion";
             }
             // Up to version 5.9.1
-            if (array_key_exists('databasesummaryDbVersion', $row))
-            {
+            if (array_key_exists('databasesummaryDbVersion', $row)) {
                 $field = "databasesummaryDbVersion";
             }
             $dbVersion = floatval($row[$field]);
@@ -126,25 +117,20 @@ namespace UPDATE
     {
         $email = WIKINDX_CONTACT_EMAIL_DEFAULT;
         $recordset = $dbo->queryNoError($dbo->selectNoExecute("config", "*"));
-        if ($recordset !== FALSE)
-        {
+        if ($recordset !== FALSE) {
             $field = "";
             $row = $dbo->fetchRow($recordset);
             // Up to version 5.3
-            if (array_key_exists("configContactEmail", $row))
-            {
+            if (array_key_exists("configContactEmail", $row)) {
                 $field = "configContactEmail";
             }
             // From version 5.4
-            if (array_key_exists("configName", $row) && array_key_exists("configVarchar", $row))
-            {
+            if (array_key_exists("configName", $row) && array_key_exists("configVarchar", $row)) {
                 $field = "configVarchar";
                 
                 // Search the recond
-                do
-                {
-                    if ($row["configName"] == "configContactEmail")
-                    {
+                do {
+                    if ($row["configName"] == "configContactEmail") {
                         break;
                     }
                 } while ($row = $dbo->fetchRow($recordset));

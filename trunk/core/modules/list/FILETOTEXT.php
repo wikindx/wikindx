@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -51,59 +53,43 @@ class FILETOTEXT
         // Turn error display off so that errors from PdfToText don't get written to screen (still written to the cache files)
         $errorDisplay = ini_get('display_errors');
         ini_set('display_errors', FALSE);
-        if (array_key_exists('cacheCurl', $vars) && ($vars['cacheCurl'] == 'on'))
-        {
+        if (array_key_exists('cacheCurl', $vars) && ($vars['cacheCurl'] == 'on')) {
             $session->setVar("cache_Curl", TRUE);
-            if (function_exists('curl_multi_exec'))
-            {
+            if (function_exists('curl_multi_exec')) {
                 $ch = [];
                 $mh = curl_multi_init();
                 $script = $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'];
                 $curlExists = TRUE;
-            }
-            else
-            {
+            } else {
                 $curlExists = FALSE;
             }
-        }
-        else
-        {
+        } else {
             $session->delVar("cache_Curl");
             $curlExists = FALSE;
         }
         // Attempting to avoid timeouts if max execution time cannot be set. This is done on a trial and error basis.
-        if (ini_get('memory_limit') == -1)
-        { // unlimited
+        if (ini_get('memory_limit') == -1) { // unlimited
             $maxCount = FALSE;
             $maxSize = FALSE;
-        }
-        elseif (ini_get('memory_limit') >= 129)
-        {
+        } elseif (ini_get('memory_limit') >= 129) {
             $maxCount = 30;
             $maxSize = 30000000; // 30MB
-        }
-        elseif (ini_get('memory_limit') >= 65)
-        {
+        } elseif (ini_get('memory_limit') >= 65) {
             $maxCount = 20;
             $maxSize = 15000000; // 15MB
-        }
-        else
-        {
+        } else {
             $maxCount = 10;
             $maxSize = 5000000; // 5MB
         }
         $input = FALSE;
-        if (array_key_exists('cacheLimit', $vars))
-        {
+        if (array_key_exists('cacheLimit', $vars)) {
             $input = trim($vars['cacheLimit']);
-            if (is_numeric($input) && is_int($input + 0))
-            { // include cast to number
+            if (is_numeric($input) && is_int($input + 0)) { // include cast to number
                 $maxCount = $input;
                 $session->setVar("cache_Limit", $input);
             }
         }
-        if (!$input)
-        {
+        if (!$input) {
             $session->delVar("cache_Limit");
         }
         $count = 0;
@@ -114,17 +100,13 @@ class FILETOTEXT
             'resource_attachments',
             ['resourceattachmentsResourceId', 'resourceattachmentsHashFilename', 'resourceattachmentsFileType', 'resourceattachmentsFileSize']
         );
-        while ($row = $db->fetchRow($resultset))
-        {
+        while ($row = $db->fetchRow($resultset)) {
             $f = $row['resourceattachmentsHashFilename'];
             $fileName = $attachDir . DIRECTORY_SEPARATOR . $f;
             $fileNameCache = $cacheDir . DIRECTORY_SEPARATOR . $f;
-            if (!file_exists($fileName) || (file_exists($fileNameCache) && filemtime($fileNameCache) > filemtime($fileName)))
-            {
+            if (!file_exists($fileName) || (file_exists($fileNameCache) && filemtime($fileNameCache) > filemtime($fileName))) {
                 continue; // already cached
-            }
-            elseif ($curlExists)
-            {
+            } elseif ($curlExists) {
                 $curlTarget = $script . '?' .
                 'action=curl_CURL_CORE' .
                 '&method=attachmentCache' .
@@ -138,44 +120,32 @@ class FILETOTEXT
                 curl_setopt($ch_x, CURLOPT_HEADER, TRUE);
                 curl_setopt($ch_x, CURLOPT_TIMEOUT, ini_get('max_execution_time'));
                 curl_multi_add_handle($mh, $ch_x);
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     file_put_contents($fileNameCache, $this->convertToText($fileName, $row['resourceattachmentsFileType']));
-                }
-                catch (Exception $e)
-                {
+                } catch (Exception $e) {
                     file_put_contents($fileNameCache, '');
                 }
             }
             ++$count;
             $size += $row['resourceattachmentsFileSize'];
-            if ($maxCount)
-            {
-                if ($count >= $maxCount)
-                {
+            if ($maxCount) {
+                if ($count >= $maxCount) {
                     break;
                 }
             }
-            if ($maxSize)
-            {
-                if ($size >= $maxSize)
-                {
+            if ($maxSize) {
+                if ($size >= $maxSize) {
                     break;
                 }
             }
         }
-        if ($curlExists)
-        {
+        if ($curlExists) {
             $running = NULL;
-            do
-            {
+            do {
                 curl_multi_exec($mh, $running);
             } while ($running);
-            foreach ($ch as $ch_x)
-            {
+            foreach ($ch as $ch_x) {
                 $return = curl_multi_getcontent($ch_x);
                 curl_multi_remove_handle($mh, $ch_x);
                 curl_close($ch_x);
@@ -183,30 +153,23 @@ class FILETOTEXT
                 // Identify the file parsed with its custom header 'resourceattachmentsHashFilename'
                 // This is mandatory because the output of PdfToText could be altered at byte level
                 $split = UTF8::mb_explode("\r\n\r\n", $return, 2);
-                if (count($split) == 2)
-                {
+                if (count($split) == 2) {
                     $headers = $split[0];
                     $body = $split[1];
 
                     // Split headers / body
                     $headers = UTF8::mb_explode("\r\n", $headers);
-                    foreach ($headers as $h)
-                    {
+                    foreach ($headers as $h) {
                         // Split each header in key / value
                         $h = UTF8::mb_explode(":", $h);
-                        if (count($split) == 2)
-                        {
+                        if (count($split) == 2) {
                             // Identify the file parsed
-                            if ($h[0] == 'resourceattachmentsHashFilename')
-                            {
+                            if ($h[0] == 'resourceattachmentsHashFilename') {
                                 $texts[trim($h[1])] = trim($body);
 
-                                try
-                                {
+                                try {
                                     file_put_contents($cacheDir . DIRECTORY_SEPARATOR . trim($h[1]), $texts[trim($h[1])]);
-                                }
-                                catch (Exception $e)
-                                {
+                                } catch (Exception $e) {
                                     file_put_contents($cacheDir . DIRECTORY_SEPARATOR . trim($h[1]), '');
                                 }
                             }
@@ -217,10 +180,8 @@ class FILETOTEXT
             curl_multi_close($mh);
         }
         $cacheDirFiles = scandir($cacheDir);
-        foreach ($cacheDirFiles as $key => $value)
-        {
-            if (strpos($value, '.') === 0)
-            {
+        foreach ($cacheDirFiles as $key => $value) {
+            if (strpos($value, '.') === 0) {
                 unset($cacheDirFiles[$key]);
             }
         }
@@ -235,59 +196,49 @@ class FILETOTEXT
     /**
      * convertToText
      *
-     * @return string|FALSE
+     * @param mixed $filename
+     * @param mixed $mimeType
+     *
+     * @return false|string
      */
     public function convertToText($filename, $mimeType)
     {
         $this->fileName = $filename;
-        if (isset($this->fileName) && !file_exists($this->fileName))
-        {
+        if (isset($this->fileName) && !file_exists($this->fileName)) {
             return FALSE;
         }
-        if (array_key_exists($this->fileName, $this->readFiles))
-        {
+        if (array_key_exists($this->fileName, $this->readFiles)) {
             return $this->readFiles[$this->fileName];
         }
-        if ($mimeType == WIKINDX_MIMETYPE_DOC)
-        {
+        if ($mimeType == WIKINDX_MIMETYPE_DOC) {
             $text = $this->readWord();
-        }
-        elseif ($mimeType == WIKINDX_MIMETYPE_DOCX)
-        {
+        } elseif ($mimeType == WIKINDX_MIMETYPE_DOCX) {
             $text = $this->read_docx();
-        }
-        elseif ($mimeType == WIKINDX_MIMETYPE_PDF)
-        {
+        } elseif ($mimeType == WIKINDX_MIMETYPE_PDF) {
             $importPDF = new PdfToText($this->fileName, PdfToText::PDFOPT_NO_HYPHENATED_WORDS);
-            if ($importPDF->Text)
-            {
+            if ($importPDF->Text) {
                 $this->readFiles[$this->fileName] = $importPDF->Text;
 
                 return $importPDF->Text;
             }
         }
-        if ($text)
-        {
+        if ($text) {
             $this->readFiles[$this->fileName] = $text;
 
             return $text;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
     /**
      * readWord
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function readWord()
     {
-        if (file_exists($this->fileName))
-        {
-            if (($fh = fopen($this->fileName, 'r')) !== FALSE)
-            {
+        if (file_exists($this->fileName)) {
+            if (($fh = fopen($this->fileName, 'r')) !== FALSE) {
                 $headers = fread($fh, 0xA00);
 
                 // 1 = (ord(n)*1) ; Document has from 0 to 255 characters
@@ -304,47 +255,38 @@ class FILETOTEXT
 
                 // Total length of text in the document
                 $textLength = ($n1 + $n2 + $n3 + $n4);
-                if ($textLength <= 0)
-                {
+                if ($textLength <= 0) {
                     return FALSE;
                 }
                 $extracted_plaintext = fread($fh, $textLength);
                 fclose($fh);
 
                 return utf8_encode($extracted_plaintext);
-            }
-            else
-            {
+            } else {
                 return FALSE;
             }
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
     /**
      * read_docx
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function read_docx()
     {
         $striped_content = '';
         $content = '';
         $zip = zip_open($this->fileName);
-        if (!$zip || is_numeric($zip))
-        {
+        if (!$zip || is_numeric($zip)) {
             return FALSE;
         }
-        while ($zip_entry = zip_read($zip))
-        {
-            if (zip_entry_open($zip, $zip_entry) == FALSE)
-            {
+        while ($zip_entry = zip_read($zip)) {
+            if (zip_entry_open($zip, $zip_entry) == FALSE) {
                 continue;
             }
-            if (zip_entry_name($zip_entry) != "word/document.xml")
-            {
+            if (zip_entry_name($zip_entry) != "word/document.xml") {
                 continue;
             }
             $content .= zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
@@ -379,12 +321,9 @@ class FILETOTEXT
      */
     private function output($echo = FALSE)
     {
-        if ($echo)
-        {
+        if ($echo) {
             echo $this->decodedtext;
-        }
-        else
-        {
+        } else {
             return $this->decodedtext;
         }
     }
@@ -396,12 +335,9 @@ class FILETOTEXT
      */
     private function setUnicode($input)
     {
-        if ($input == TRUE)
-        {
+        if ($input == TRUE) {
             $this->multibyte = 4;
-        }
-        else
-        {
+        } else {
             $this->multibyte = 2;
         }
     }
@@ -412,42 +348,33 @@ class FILETOTEXT
     private function decodePDF()
     {
         $infile = @file_get_contents($this->fileName, FILE_BINARY);
-        if (empty($infile))
-        {
+        if (empty($infile)) {
             return "";
         }
         $transformations = [];
         $texts = [];
         preg_match_all("#obj[\n|\r](.*)endobj[\n|\r]#ismuU", $infile . "endobj" . CR, $objects);
         $objects = @$objects[1];
-        for ($i = 0; $i < count($objects); $i++)
-        {
+        for ($i = 0; $i < count($objects); $i++) {
             $currentObject = $objects[$i];
             @set_time_limit();
-            if ($this->showprogress)
-            {
+            if ($this->showprogress) {
                 flush();
                 ob_flush();
             }
-            if (preg_match("#stream[\n|\r](.*)endstream[\n|\r]#ismuU", $currentObject . "endstream" . CR, $stream))
-            {
+            if (preg_match("#stream[\n|\r](.*)endstream[\n|\r]#ismuU", $currentObject . "endstream" . CR, $stream)) {
                 $stream = ltrim($stream[1]);
                 $options = $this->getObjectOptions($currentObject);
-                if (!(empty($options["Length1"]) && empty($options["Type"]) && empty($options["Subtype"])))
-                {
+                if (!(empty($options["Length1"]) && empty($options["Type"]) && empty($options["Subtype"]))) {
                     continue;
                 }
                 unset($options["Length"]);
                 $data = $this->getDecodedStream($stream, $options);
-                if (mb_strlen($data))
-                {
-                    if (preg_match_all("#BT[\n|\r](.*)ET[\n|\r]#ismuU", $data . "ET" . CR, $textContainers))
-                    {
+                if (mb_strlen($data)) {
+                    if (preg_match_all("#BT[\n|\r](.*)ET[\n|\r]#ismuU", $data . "ET" . CR, $textContainers)) {
                         $textContainers = @$textContainers[1];
                         $this->getDirtyTexts($texts, $textContainers);
-                    }
-                    else
-                    {
+                    } else {
                         $this->getCharTransformations($transformations, $data);
                     }
                 }
@@ -468,20 +395,16 @@ class FILETOTEXT
         $output = "";
         $isOdd = TRUE;
         $isComment = FALSE;
-        for ($i = 0, $codeHigh = -1; $i < mb_strlen($input) && $input[$i] != '>'; $i++)
-        {
+        for ($i = 0, $codeHigh = -1; $i < mb_strlen($input) && $input[$i] != '>'; $i++) {
             $c = $input[$i];
-            if ($isComment)
-            {
-                if ($c == '\r' || $c == '\n')
-                {
+            if ($isComment) {
+                if ($c == '\r' || $c == '\n') {
                     $isComment = FALSE;
                 }
 
                 continue;
             }
-            switch ($c)
-        {
+            switch ($c) {
             case '\0': case '\t': case '\r': case '\f': case '\n': case ' ': break;
             case '%':
                 $isComment = TRUE;
@@ -489,16 +412,12 @@ class FILETOTEXT
             break;
             default:
                 $code = hexdec($c);
-                if ($code === 0 && $c != '0')
-                {
+                if ($code === 0 && $c != '0') {
                     return "";
                 }
-                if ($isOdd)
-                {
+                if ($isOdd) {
                     $codeHigh = $code;
-                }
-                else
-                {
+                } else {
                     $output .= chr($codeHigh * 16 + $code);
                 }
                 $isOdd = !$isOdd;
@@ -506,12 +425,10 @@ class FILETOTEXT
             break;
         }
         }
-        if ($input[$i] != '>')
-        {
+        if ($input[$i] != '>') {
             return "";
         }
-        if ($isOdd)
-        {
+        if ($isOdd) {
             $output .= chr($codeHigh * 16);
         }
 
@@ -530,75 +447,56 @@ class FILETOTEXT
         $output = "";
         $isComment = FALSE;
         $ords = [];
-        for ($i = 0, $state = 0; $i < mb_strlen($input) && $input[$i] != '~'; $i++)
-        {
+        for ($i = 0, $state = 0; $i < mb_strlen($input) && $input[$i] != '~'; $i++) {
             $c = $input[$i];
-            if ($isComment)
-            {
-                if ($c == '\r' || $c == '\n')
-                {
+            if ($isComment) {
+                if ($c == '\r' || $c == '\n') {
                     $isComment = FALSE;
                 }
 
                 continue;
             }
-            if (($c == '\0') || ($c == '\t') || ($c == '\r') || ($c == '\f') || ($c == '\n') || ($c == ' '))
-            {
+            if (($c == '\0') || ($c == '\t') || ($c == '\r') || ($c == '\f') || ($c == '\n') || ($c == ' ')) {
                 continue;
             }
-            if ($c == '%')
-            {
+            if ($c == '%') {
                 $isComment = TRUE;
 
                 continue;
             }
-            if ($c == 'z' && $state === 0)
-            {
+            if ($c == 'z' && $state === 0) {
                 $output .= str_repeat(chr(0), 4);
 
                 continue;
             }
-            if ($c < '!' || $c > 'u')
-            {
+            if ($c < '!' || $c > 'u') {
                 return "";
             }
             $code = ord($input[$i]) & 0xff;
             $ords[$state++] = $code - ord('!');
-            if ($state == 5)
-            {
+            if ($state == 5) {
                 $state = 0;
-                for ($sum = 0, $j = 0; $j < 5; $j++)
-                {
+                for ($sum = 0, $j = 0; $j < 5; $j++) {
                     $sum = $sum * 85 + $ords[$j];
                 }
-                for ($j = 3; $j >= 0; $j--)
-                {
+                for ($j = 3; $j >= 0; $j--) {
                     $output .= chr($sum >> ($j * 8));
                 }
             }
         }
-        if ($state === 1)
-        {
+        if ($state === 1) {
             return "";
-        }
-        elseif ($state > 1)
-        {
-            for ($i = 0, $sum = 0; $i < $state; $i++)
-            {
+        } elseif ($state > 1) {
+            for ($i = 0, $sum = 0; $i < $state; $i++) {
                 $sum += ($ords[$i] + ($i == $state - 1)) * pow(85, 4 - $i);
             }
-            for ($i = 0; $i < $state - 1; $i++)
-            {
-                try
-                {
-                    if (FALSE == ($o = chr($sum >> ((3 - $i) * 8))))
-                    {
+            for ($i = 0; $i < $state - 1; $i++) {
+                try {
+                    if (FALSE == ($o = chr($sum >> ((3 - $i) * 8)))) {
                         throw new Exception('Error');
                     }
                     $output .= $o;
-                }
-                catch (Exception $e)
-                { /*Dont do anything*/
+                } catch (Exception $e) { /*Dont do anything*/
                 }
             }
         }
@@ -626,21 +524,16 @@ class FILETOTEXT
     private function getObjectOptions($object)
     {
         $options = [];
-        if (preg_match("#<<(.*)>>#ismuU", $object, $options))
-        {
+        if (preg_match("#<<(.*)>>#ismuU", $object, $options)) {
             $options = UTF8::mb_explode("/", $options[1]);
             @array_shift($options);
             $o = [];
-            for ($j = 0; $j < @count($options); $j++)
-            {
+            for ($j = 0; $j < @count($options); $j++) {
                 $options[$j] = preg_replace("#\\s+#u", " ", trim($options[$j]));
-                if (mb_strpos($options[$j], " ") !== FALSE)
-                {
+                if (mb_strpos($options[$j], " ") !== FALSE) {
                     $parts = UTF8::mb_explode(" ", $options[$j]);
                     $o[$parts[0]] = $parts[1];
-                }
-                else
-                {
+                } else {
                     $o[$options[$j]] = TRUE;
                 }
             }
@@ -662,31 +555,20 @@ class FILETOTEXT
     private function getDecodedStream($stream, $options)
     {
         $data = "";
-        if (empty($options["Filter"]))
-        {
+        if (empty($options["Filter"])) {
             $data = $stream;
-        }
-        else
-        {
+        } else {
             $length = !empty($options["Length"]) ? $options["Length"] : mb_strlen($stream);
             $_stream = mb_substr($stream, 0, $length);
 
-            foreach ($options as $key => $value)
-            {
-                if ($key == "ASCIIHexDecode")
-                {
+            foreach ($options as $key => $value) {
+                if ($key == "ASCIIHexDecode") {
                     $_stream = $this->decodeAsciiHex($_stream);
-                }
-                elseif ($key == "ASCII85Decode")
-                {
+                } elseif ($key == "ASCII85Decode") {
                     $_stream = $this->decodeAscii85($_stream);
-                }
-                elseif ($key == "FlateDecode")
-                {
+                } elseif ($key == "FlateDecode") {
                     $_stream = $this->decodeFlate($_stream);
-                }
-                elseif ($key == "Crypt")
-                { // TO DO
+                } elseif ($key == "Crypt") { // TO DO
                 }
             }
             $data = $_stream;
@@ -703,18 +585,12 @@ class FILETOTEXT
      */
     private function getDirtyTexts(&$texts, $textContainers)
     {
-        for ($j = 0; $j < count($textContainers); $j++)
-        {
-            if (preg_match_all("#\\[(.*)\\]\\s*TJ[\n|\r]#ismuU", $textContainers[$j], $parts))
-            {
+        for ($j = 0; $j < count($textContainers); $j++) {
+            if (preg_match_all("#\\[(.*)\\]\\s*TJ[\n|\r]#ismuU", $textContainers[$j], $parts)) {
                 $texts = array_merge($texts, [@implode('', $parts[1])]);
-            }
-            elseif (preg_match_all("#T[d|w|m|f]\\s*(\\(.*\\))\\s*Tj[\n|\r]#ismuU", $textContainers[$j], $parts))
-            {
+            } elseif (preg_match_all("#T[d|w|m|f]\\s*(\\(.*\\))\\s*Tj[\n|\r]#ismuU", $textContainers[$j], $parts)) {
                 $texts = array_merge($texts, [@implode('', $parts[1])]);
-            }
-            elseif (preg_match_all("#T[d|w|m|f]\\s*(\\[.*\\])\\s*Tj[\n|\r]#ismuU", $textContainers[$j], $parts))
-            {
+            } elseif (preg_match_all("#T[d|w|m|f]\\s*(\\[.*\\])\\s*Tj[\n|\r]#ismuU", $textContainers[$j], $parts)) {
                 $texts = array_merge($texts, [@implode('', $parts[1])]);
             }
         }
@@ -730,42 +606,32 @@ class FILETOTEXT
     {
         preg_match_all("#([0-9]+)\\s+beginbfchar(.*)endbfchar#ismuU", $stream, $chars, PREG_SET_ORDER);
         preg_match_all("#([0-9]+)\\s+beginbfrange(.*)endbfrange#ismuU", $stream, $ranges, PREG_SET_ORDER);
-        for ($j = 0; $j < count($chars); $j++)
-        {
+        for ($j = 0; $j < count($chars); $j++) {
             $count = $chars[$j][1];
             $current = UTF8::mb_explode("\n", trim($chars[$j][2]));
-            for ($k = 0; $k < $count && $k < count($current); $k++)
-            {
-                if (preg_match("#<([0-9a-f]{2,4})>\\s+<([0-9a-f]{4,512})>#uis", trim($current[$k]), $map))
-                {
+            for ($k = 0; $k < $count && $k < count($current); $k++) {
+                if (preg_match("#<([0-9a-f]{2,4})>\\s+<([0-9a-f]{4,512})>#uis", trim($current[$k]), $map)) {
                     $transformations[UTF8::mb_str_pad($map[1], 4, "0")] = $map[2];
                 }
             }
         }
-        for ($j = 0; $j < count($ranges); $j++)
-        {
+        for ($j = 0; $j < count($ranges); $j++) {
             $count = $ranges[$j][1];
             $current = UTF8::mb_explode("\n", trim($ranges[$j][2]));
-            for ($k = 0; $k < $count && $k < count($current); $k++)
-            {
-                if (preg_match("#<([0-9a-f]{4})>\\s+<([0-9a-f]{4})>\\s+<([0-9a-f]{4})>#uis", trim($current[$k]), $map))
-                {
+            for ($k = 0; $k < $count && $k < count($current); $k++) {
+                if (preg_match("#<([0-9a-f]{4})>\\s+<([0-9a-f]{4})>\\s+<([0-9a-f]{4})>#uis", trim($current[$k]), $map)) {
                     $from = hexdec($map[1]);
                     $to = hexdec($map[2]);
                     $_from = hexdec($map[3]);
-                    for ($m = $from, $n = 0; $m <= $to; $m++, $n++)
-                    {
+                    for ($m = $from, $n = 0; $m <= $to; $m++, $n++) {
                         $transformations[sprintf("%04X", $m)] = sprintf("%04X", $_from + $n);
                     }
-                }
-                elseif (preg_match("#<([0-9a-f]{4})>\\s+<([0-9a-f]{4})>\\s+\\[(.*)\\]#ismuU", trim($current[$k]), $map))
-                {
+                } elseif (preg_match("#<([0-9a-f]{4})>\\s+<([0-9a-f]{4})>\\s+\\[(.*)\\]#ismuU", trim($current[$k]), $map)) {
                     $from = hexdec($map[1]);
                     $to = hexdec($map[2]);
                     $parts = preg_split("#\\s+#u", trim($map[3]));
 
-                    for ($m = $from, $n = 0; $m <= $to && $n < count($parts); $m++, $n++)
-                    {
+                    for ($m = $from, $n = 0; $m <= $to && $n < count($parts); $m++, $n++) {
                         $transformations[sprintf("%04X", $m)] = sprintf("%04X", hexdec($parts[$n]));
                     }
                 }
@@ -784,17 +650,14 @@ class FILETOTEXT
     private function getTextUsingTransformations($texts, $transformations)
     {
         $document = "";
-        for ($i = 0; $i < count($texts); $i++)
-        {
+        for ($i = 0; $i < count($texts); $i++) {
             $isHex = FALSE;
             $isPlain = FALSE;
             $hex = "";
             $plain = "";
-            for ($j = 0; $j < mb_strlen($texts[$i]); $j++)
-            {
+            for ($j = 0; $j < mb_strlen($texts[$i]); $j++) {
                 $c = $texts[$i][$j];
-                switch ($c)
-            {
+                switch ($c) {
                 case "<":
                     $hex = "";
                     $isHex = TRUE;
@@ -803,11 +666,9 @@ class FILETOTEXT
                 break;
                 case ">":
                     $hexs = str_split($hex, $this->multibyte); // 2 or 4 (UTF8 or ISO)
-                    for ($k = 0; $k < count($hexs); $k++)
-                    {
+                    for ($k = 0; $k < count($hexs); $k++) {
                         $chex = UTF8::mb_str_pad($hexs[$k], 4, "0"); // Add tailing zero
-                        if (isset($transformations[$chex]))
-                        {
+                        if (isset($transformations[$chex])) {
                             $chex = $transformations[$chex];
                         }
                         $document .= html_entity_decode("&#x" . $chex . ";");
@@ -828,32 +689,19 @@ class FILETOTEXT
                 break;
                 case "\\":
                     $c2 = $texts[$i][$j + 1];
-                    if (in_array($c2, ["\\", "(", ")"]))
-                    {
+                    if (in_array($c2, ["\\", "(", ")"])) {
                         $plain .= $c2;
-                    }
-                    elseif ($c2 == "n")
-                    {
+                    } elseif ($c2 == "n") {
                         $plain .= '\n';
-                    }
-                    elseif ($c2 == "r")
-                    {
+                    } elseif ($c2 == "r") {
                         $plain .= '\r';
-                    }
-                    elseif ($c2 == "t")
-                    {
+                    } elseif ($c2 == "t") {
                         $plain .= '\t';
-                    }
-                    elseif ($c2 == "b")
-                    {
+                    } elseif ($c2 == "b") {
                         $plain .= '\b';
-                    }
-                    elseif ($c2 == "f")
-                    {
+                    } elseif ($c2 == "f") {
                         $plain .= '\f';
-                    }
-                    elseif ($c2 >= '0' && $c2 <= '9')
-                    {
+                    } elseif ($c2 >= '0' && $c2 <= '9') {
                         $oct = preg_replace("#[^0-9]#u", "", mb_substr($texts[$i], $j + 1, 3));
                         $j += mb_strlen($oct) - 1;
                         $plain .= html_entity_decode("&#" . octdec($oct) . ";", $this->convertquotes);
@@ -862,12 +710,9 @@ class FILETOTEXT
 
                 break;
                 default:
-                    if ($isHex)
-                    {
+                    if ($isHex) {
                         $hex .= $c;
-                    }
-                    elseif ($isPlain)
-                    {
+                    } elseif ($isPlain) {
                         $plain .= $c;
                     }
 

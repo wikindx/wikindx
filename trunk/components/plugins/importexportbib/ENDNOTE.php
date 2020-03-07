@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -41,8 +43,7 @@ class ENDNOTE
     {
         $categories = $this->category->grabAll();
         $pString = HTML\p($this->pluginmessages->text('introEndnoteImport'));
-        if (count($categories) > 1)
-        {
+        if (count($categories) > 1) {
             $pString .= HTML\p($this->pluginmessages->text('categoryPrompt'));
         }
         $pString .= FORM\formMultiHeader("importexportbib_importEndnote");
@@ -52,35 +53,26 @@ class ENDNOTE
         // Load tags
         $tags = $this->tag->grabAll();
         $tagInput = FORM\textInput($this->pluginmessages->text('tag'), "import_Tag", FALSE, 30, 255);
-        if ($tags)
-        {
+        if ($tags) {
             // add 0 => IGNORE to tags array
             $temp[0] = $this->coremessages->text("misc", "ignore");
-            foreach ($tags as $key => $value)
-            {
+            foreach ($tags as $key => $value) {
                 $temp[$key] = $value;
             }
             $tags = $temp;
             $sessionTag = $this->session->issetVar("import_TagId") ? $this->session->getVar("import_TagId") : FALSE;
-            if ($sessionTag && array_key_exists($sessionTag, $tags))
-            {
+            if ($sessionTag && array_key_exists($sessionTag, $tags)) {
                 $element = FORM\selectedBoxValue(FALSE, 'import_TagId', $tags, 5);
-            }
-            else
-            {
+            } else {
                 $element = FORM\selectFBoxValue(FALSE, 'import_TagId', $tags, 5);
             }
             $pString .= HTML\td($tagInput . '&nbsp;&nbsp;' . $element);
-        }
-        else
-        {
+        } else {
             $pString .= HTML\td($tagInput);
         }
         $categoryTd = FALSE;
-        if (count($categories) > 1)
-        {
-            if ($sessionCategories = $this->session->getVar("import_Categories"))
-            {
+        if (count($categories) > 1) {
+            if ($sessionCategories = $this->session->getVar("import_Categories")) {
                 $sCategories = UTF8::mb_explode(",", $sessionCategories);
                 $element = FORM\selectedBoxValueMultiple(
                     $this->pluginmessages->text('category'),
@@ -89,9 +81,7 @@ class ENDNOTE
                     $sCategories,
                     5
                 );
-            }
-            else
-            {
+            } else {
                 $element = FORM\selectFBoxValueMultiple(
                     $this->pluginmessages->text('category'),
                     'import_Categories',
@@ -103,8 +93,7 @@ class ENDNOTE
                 HTML\span($this->coremessages->text("hint", "multiples"), 'hint'));
             $categoryTd = TRUE;
         }
-        if ($bibs = $this->importCommon->bibliographySelect())
-        {
+        if ($bibs = $this->importCommon->bibliographySelect()) {
             $pString .= HTML\td($bibs . BR .
                 HTML\span($this->coremessages->text("hint", "multiples"), 'hint'), FALSE, "left", "bottom");
         }
@@ -148,8 +137,7 @@ class ENDNOTE
         include_once(__DIR__ . DIRECTORY_SEPARATOR . "EXPORTCOMMON.php");
         $common = new EXPORTCOMMON();
         $sql = $common->getSQL();
-        if (!$sql)
-        {
+        if (!$sql) {
             $this->parentClass->initEndnoteExport(HTML\p($this->coremessages->text("noList"), 'error'));
 
             return;
@@ -160,11 +148,10 @@ class ENDNOTE
         $pString .= HTML\trStart();
         $checked = $this->session->getVar("exportMergeStored") ? 'CHECKED' : FALSE;
         $pString .= HTML\td($this->coremessages->text('misc', "mergeStored") . FORM\checkbox(FALSE, "mergeStored", $checked));
-        if ($custom = $common->getCustomFields('endnote'))
-        {
-        	$pString .= HTML\trEnd();
-        	$pString .= HTML\trStart();
-        	$pString .= HTML\td($custom);
+        if ($custom = $common->getCustomFields('endnote')) {
+            $pString .= HTML\trEnd();
+            $pString .= HTML\trStart();
+            $pString .= HTML\td($custom);
         }
         // Disabled due to tabbed file bug above
         /*

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -40,7 +42,7 @@ class NEWS
     /**
      * display options
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function init($message = FALSE)
     {
@@ -58,8 +60,7 @@ class NEWS
         $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Add")));
         $td .= \FORM\formEnd();
         $pString .= \HTML\td($td);
-        if (!empty($news))
-        {
+        if (!empty($news)) {
             // Edit
             $td = \FORM\formHeader('news_NEWS_CORE');
             $td .= \FORM\hidden('method', 'editDisplay');
@@ -114,13 +115,11 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsAdd"));
-        if ($this->session->getVar("news_Done"))
-        {
+        if ($this->session->getVar("news_Done")) {
             $this->badInput->close($this->errors->text("done", "news"), $this, 'init');
         }
         if (!array_key_exists('title', $this->vars) || !trim($this->vars['title']) ||
-            !array_key_exists('body', $this->vars) || !trim($this->vars['body']))
-        {
+            !array_key_exists('body', $this->vars) || !trim($this->vars['body'])) {
             $this->session->setVar("news_Title", trim($this->vars['title']));
             $this->session->setVar("news_Body", trim($this->vars['body']));
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
@@ -136,12 +135,10 @@ class NEWS
         $this->session->delVar("news_Body");
         $this->session->setVar("setup_News", TRUE);
         $this->session->setVar("news_Done", TRUE);
-        if (WIKINDX_EMAIL_NEWS)
-        {
+        if (WIKINDX_EMAIL_NEWS) {
             include_once("core/modules/email/EMAIL.php");
             $emailClass = new EMAIL();
-            if (!$emailClass->news($title, $news))
-            {
+            if (!$emailClass->news($title, $news)) {
                 $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'init');
             }
         }
@@ -156,8 +153,7 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsDelete"));
-        if (!array_key_exists('newsDelete', $this->vars) || empty($this->vars['newsDelete']))
-        {
+        if (!array_key_exists('newsDelete', $this->vars) || empty($this->vars['newsDelete'])) {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
         $news = $this->grabAll();
@@ -166,8 +162,7 @@ class NEWS
         $pString = \HTML\p($this->messages->text("news", "deleteConfirm", ": $news"));
         $pString .= \FORM\formHeader('news_NEWS_CORE');
         $pString .= \FORM\hidden('method', 'delete');
-        foreach ($this->vars['newsDelete'] as $id)
-        {
+        foreach ($this->vars['newsDelete'] as $id) {
             $pString .= \FORM\hidden("newsDelete_" . $id, $id);
         }
         $pString .= BR . \FORM\formSubmit($this->messages->text("submit", "Confirm"));
@@ -182,27 +177,22 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsDelete"));
-        if ($this->session->getVar("news_Done"))
-        {
+        if ($this->session->getVar("news_Done")) {
             $this->badInput->close($this->errors->text("done", "news"), $this, 'init');
         }
-        foreach ($this->vars as $key => $value)
-        {
-            if (!preg_match("/newsDelete_(.*)/u", $key, $match))
-            {
+        foreach ($this->vars as $key => $value) {
+            if (!preg_match("/newsDelete_(.*)/u", $key, $match)) {
                 continue;
             }
             $input[] = $match[1];
         }
-        if (!isset($input))
-        {
+        if (!isset($input)) {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
         $this->db->formatConditionsOneField($input, 'newsId');
         $this->db->delete('news');
         $news = $this->grabAll();
-        if (empty($news))
-        {
+        if (empty($news)) {
             $this->session->delVar("setup_News");
         }
         $this->session->setVar("news_Done", TRUE);
@@ -217,12 +207,9 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsEdit"));
-        if (array_key_exists("editId", $this->vars))
-        {
+        if (array_key_exists("editId", $this->vars)) {
             $editId = trim($this->vars["editId"]);
-        }
-        else
-        {
+        } else {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
@@ -261,21 +248,16 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsEdit"));
-        if ($this->session->getVar("news_Done"))
-        {
+        if ($this->session->getVar("news_Done")) {
             $this->badInput->close($this->errors->text("done", "news"), $this, 'init');
         }
-        if (array_key_exists("editId", $this->vars))
-        {
+        if (array_key_exists("editId", $this->vars)) {
             $editId = trim($this->vars["editId"]);
-        }
-        else
-        {
+        } else {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
         if (!array_key_exists('title', $this->vars) || !trim($this->vars['title']) ||
-            !array_key_exists('body', $this->vars) || !trim($this->vars['body']))
-        {
+            !array_key_exists('body', $this->vars) || !trim($this->vars['body'])) {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
         $updateArray['newsTitle'] = trim($this->vars['title']);
@@ -284,12 +266,10 @@ class NEWS
         $this->db->formatConditions(['newsId' => $editId]);
         $this->db->update('news', $updateArray);
         $this->session->setVar("news_Done", TRUE);
-        if (WIKINDX_EMAIL_NEWS)
-        {
+        if (WIKINDX_EMAIL_NEWS) {
             include_once("core/modules/email/EMAIL.php");
             $emailClass = new EMAIL();
-            if (!$emailClass->news($updateArray['newsTitle'], $updateArray['newsNews']))
-            {
+            if (!$emailClass->news($updateArray['newsTitle'], $updateArray['newsNews'])) {
                 $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'init');
             }
         }
@@ -304,10 +284,8 @@ class NEWS
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "news"));
         $news = $this->grabAll();
         $pString = '';
-        if (is_array($news))
-        {
-            foreach ($news as $id => $title)
-            {
+        if (is_array($news)) {
+            foreach ($news as $id => $title) {
                 $pString .= \HTML\p(\HTML\a(
                     "link",
                     \HTML\nlToHtml($title),
@@ -315,9 +293,7 @@ class NEWS
                 ) .
                     '&nbsp;&nbsp;' . \HTML\em($this->newsTimestamp[$id]));
             }
-        }
-        else
-        {
+        } else {
             $pString .= $this->messages->text("news", "noNews");
         }
         GLOBALS::addTplVar('content', $pString);
@@ -328,23 +304,17 @@ class NEWS
     public function viewNewsItem()
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "news"));
-        if (array_key_exists("id", $this->vars))
-        {
+        if (array_key_exists("id", $this->vars)) {
             $id = trim($this->vars["id"]);
-        }
-        else
-        {
+        } else {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, "viewNews");
         }
         $this->db->formatConditions(['newsId' => $id]);
         $recordset = $this->db->select('news', ['newsTimestamp', 'newsTitle', 'newsNews']);
         $row = $this->db->fetchRow($recordset);
-        if (method_exists($this->languageClass, "dateFormat"))
-        {
+        if (method_exists($this->languageClass, "dateFormat")) {
             $date = \LOCALES\dateFormat($row['newsTimestamp']);
-        }
-        else
-        {
+        } else {
             $dateSplit = UTF8::mb_explode(' ', $row['newsTimestamp']);
             $dateSplit = UTF8::mb_explode('-', $dateSplit[0]);
             $date = date("d/M/Y", mktime(0, 0, 0, $dateSplit[1], $dateSplit[2], $dateSplit[0]));
@@ -363,20 +333,15 @@ class NEWS
         $this->db->ascDesc = $this->db->desc;
         $this->db->orderBy("newsTimestamp", TRUE, FALSE);
         $recordset = $this->db->select("news", ["newsId", "newsTitle", "newsTimestamp"]);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $news[$row['newsId']] = \HTML\dbToFormTidy($row['newsTitle']);
-            if (method_exists($this->languageClass, "dateFormat"))
-            {
+            if (method_exists($this->languageClass, "dateFormat")) {
                 $this->newsTimestamp[$row['newsId']] = \LOCALES\dateFormat($row['newsTimestamp']);
-            }
-            else
-            {
+            } else {
                 $this->newsTimestamp[$row['newsId']] = $row['newsTimestamp'];
             }
         }
-        if (isset($news))
-        {
+        if (isset($news)) {
             return $news;
         }
 

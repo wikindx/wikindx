@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -71,6 +73,71 @@ class UPDATEDATABASE
         {
             FACTORY_CLOSE::getInstance(); // die;
         }
+    }
+    /**
+     * Create the database structure with the definitions of the dbschema store
+     *
+     * @param string $pluginPath is the path to the root directory of a plugin. Default is the constant DIRECTORY_SEPARATOR for the core
+     */
+    public function createDbSchema($pluginPath = DIRECTORY_SEPARATOR)
+    {
+        // The db schema is stored in a series of SQL file in the directory /dbschema/full for the core
+        // or /plugins/<PluginDirectory>/dbschema/full
+        $dbSchemaPath =
+            WIKINDX_WIKINDX_PATH
+            . $pluginPath . WIKINDX_DIR_DB_SCHEMA
+            . DIRECTORY_SEPARATOR . 'full';
+        foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
+        {
+            $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
+            $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
+            $this->db->queryNoError($sql);
+        }
+    }
+    /**
+     * Update the database structure with the definitions of the dbschema store for a specific version
+     *
+     * @param string $wkxVersion Version number of Wikindx
+     * @param string $pluginPath is the path to the root directory of a plugin. Default is the constant DIRECTORY_SEPARATOR for the core
+     */
+    public function updateDbSchema($wkxVersion, $pluginPath = DIRECTORY_SEPARATOR)
+    {
+        // The db schema is stored in a serie of SQL file in the directory /dbschema/update/<$wkxVersion> for the core
+        // or /plugins/<PluginDirectory>/dbschema/update/<$wkxVersion>
+        $dbSchemaPath =
+            WIKINDX_WIKINDX_PATH
+            . $pluginPath . WIKINDX_DIR_DB_SCHEMA
+            . DIRECTORY_SEPARATOR . 'update'
+            . DIRECTORY_SEPARATOR . $wkxVersion;
+        if (is_dir($dbSchemaPath))
+        {
+            foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
+            {
+                $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
+                $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
+                $this->db->queryNoError($sql);
+            }
+        }
+    }
+    /**
+     * Fill new config table (>= WIKINDX v5.3) with some default configuration values
+     *
+     * NB: The config table is initialized with default values by the LOADCONFIG class that know the name and type of each option
+     */
+    public function configDefaults()
+    {
+        $this->db->insert('category', 'categoryCategory', 'General');
+        
+        $fields = [
+            'databasesummaryTotalResources',
+            'databasesummaryTotalQuotes',
+            'databasesummaryTotalParaphrases',
+            'databasesummaryTotalMusings',
+        ];
+        $values = ['0', '0', '0', '0'];
+        $this->db->insert('database_summary', $fields, $values);
+        
+        $this->updateSoftwareVersion(WIKINDX_INTERNAL_VERSION);
     }
     /**
      * We know we have a database as, if we've reached this stage, we're able to connect to it.
@@ -244,71 +311,6 @@ class UPDATEDATABASE
         return TRUE;
     }
     /**
-     * Create the database structure with the definitions of the dbschema store
-     *
-     * @param string $pluginPath is the path to the root directory of a plugin. Default is the constant DIRECTORY_SEPARATOR for the core
-     */
-    public function createDbSchema($pluginPath = DIRECTORY_SEPARATOR)
-    {
-        // The db schema is stored in a series of SQL file in the directory /dbschema/full for the core
-        // or /plugins/<PluginDirectory>/dbschema/full
-        $dbSchemaPath =
-            WIKINDX_WIKINDX_PATH
-            . $pluginPath . WIKINDX_DIR_DB_SCHEMA
-            . DIRECTORY_SEPARATOR . 'full';
-        foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
-        {
-            $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
-            $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
-            $this->db->queryNoError($sql);
-        }
-    }
-    /**
-     * Update the database structure with the definitions of the dbschema store for a specific version
-     *
-     * @param string $wkxVersion Version number of Wikindx
-     * @param string $pluginPath is the path to the root directory of a plugin. Default is the constant DIRECTORY_SEPARATOR for the core
-     */
-    public function updateDbSchema($wkxVersion, $pluginPath = DIRECTORY_SEPARATOR)
-    {
-        // The db schema is stored in a serie of SQL file in the directory /dbschema/update/<$wkxVersion> for the core
-        // or /plugins/<PluginDirectory>/dbschema/update/<$wkxVersion>
-        $dbSchemaPath =
-            WIKINDX_WIKINDX_PATH
-            . $pluginPath . WIKINDX_DIR_DB_SCHEMA
-            . DIRECTORY_SEPARATOR . 'update'
-            . DIRECTORY_SEPARATOR . $wkxVersion;
-        if (is_dir($dbSchemaPath))
-        {
-            foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
-            {
-                $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
-                $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
-                $this->db->queryNoError($sql);
-            }
-        }
-    }
-    /**
-     * Fill new config table (>= WIKINDX v5.3) with some default configuration values
-     *
-     * NB: The config table is initialized with default values by the LOADCONFIG class that know the name and type of each option
-     */
-    public function configDefaults()
-    {
-        $this->db->insert('category', 'categoryCategory', 'General');
-        
-        $fields = [
-            'databasesummaryTotalResources',
-            'databasesummaryTotalQuotes',
-            'databasesummaryTotalParaphrases',
-            'databasesummaryTotalMusings',
-        ];
-        $values = ['0', '0', '0', '0'];
-        $this->db->insert('database_summary', $fields, $values);
-        
-        $this->updateSoftwareVersion(WIKINDX_INTERNAL_VERSION);
-    }
-    /**
      * Intercept for initial configuration by admin and, if necessary, display admin configuration interface (new installation means users table is empty).
      */
     private function checkUsersTable()
@@ -361,8 +363,14 @@ class UPDATEDATABASE
     {
         $version = (string)$version;
         $version = str_replace(",", ".", $version);
-        if ($version <= 5.9) $field = "databasesummaryDbVersion";
-        if ($version >= 6.0) $field = "databasesummarySoftwareVersion";
+        if ($version <= 5.9)
+        {
+            $field = "databasesummaryDbVersion";
+        }
+        if ($version >= 6.0)
+        {
+            $field = "databasesummarySoftwareVersion";
+        }
         $this->db->update('database_summary', [$field => $version]);
     }
     /**
@@ -812,8 +820,8 @@ class UPDATEDATABASE
         $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId']);
         while ($row = $this->db->fetchRow($resultSet))
         {
-       		$this->db->formatConditions(['resourceattachmentsId' => $row['resourceattachmentsId']]);
-        	$this->db->updateTimestamp('resource_attachments', ['resourceattachmentsTimestamp' => '']); // default is CURRENT_TIMESTAMP
+            $this->db->formatConditions(['resourceattachmentsId' => $row['resourceattachmentsId']]);
+            $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         
         $this->updateSoftwareVersion(13);
@@ -823,94 +831,94 @@ class UPDATEDATABASE
     /**
      * Transfer statistics data to new tables then drop old table
      *
-     * A fault in the previous statistics compilation means that each month's statistics needs to be backdated one month . . .
+     * A fault in the previous statistics compilation means that each month's statistics needs to be backdated one month ...
      */
     private function transferStatistics()
     {
-		$resourceInsertFields = ['statisticsresourceviewsResourceId', 'statisticsresourceviewsMonth', 'statisticsresourceviewsCount'];
-		$attachmentInsertFields = ['statisticsattachmentdownloadsAttachmentId', 'statisticsattachmentdownloadsMonth', 'statisticsattachmentdownloadsCount', 'statisticsattachmentdownloadsResourceId'];
-		
-		$countTransfered = 0;
-		$insertResourceValues = [];
-		$insertAttachmentValues = [];
-		$deleteStatisticsAttachment = [];
-		$deleteStatisticsResource = [];
-		
-// 1. Past statistics from statistics table
-		$resultSet = $this->db->select('statistics', ['statisticsId', 'statisticsResourceId', 'statisticsAttachmentId', 'statisticsStatistics']);
-		while ($row = $this->db->fetchRow($resultSet))
-		{
-			$id = $row['statisticsAttachmentId'] ? $row['statisticsAttachmentId'] : $row['statisticsResourceId'];
-			
-			if ($row['statisticsAttachmentId'])
-		        $deleteStatisticsAttachment[] = $row['statisticsId'];
-			else
-		        $deleteStatisticsResource[] = $row['statisticsId'];
-			
-			$statsArray = unserialize(base64_decode($row['statisticsStatistics']));
-			if ($statsArray === FALSE)
-			{
-			    continue;
-			}
-			
-			foreach ($statsArray as $month => $count)
-			{
-				if (!$count) // Ensure there is a valid INSERT value here. . .
-				{
-					$count = 0;
-				}
-				
-			    // If the month (period) is too short or long (YYYYMM format expected), skip this stat
-			    $month = trim($month . "");
-			    if (strlen($month) != 6) continue;
-				
-				$month = intval($month);
-				
-				// If the month is not in the range 01..12, skip this stat
-				if ($month % 100 > 12) continue;
-				
-				// Shift of one month back
-				$month = $month - 1;
-				// Month 0 doesn't exist, so shift one year back on december
-				$month = ($month % 100 == 0) ? $month - 100 + 12 : $month;
-				
-				$insertValues = [$id, $month, $count];
-				
-				if ($row['statisticsAttachmentId'])
-				{
-				    $deleteStatisticsAttachment[] = $row['statisticsId'];
-				    $insertValues[] = $row['statisticsResourceId'];
-				    $insertAttachmentValues[] = '(' . implode(',', $insertValues, ) . ')';
-				    
-					if (count($insertAttachmentValues) % 1000 == 0)
-					{
-						$this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
-						$countTransfered += count($insertAttachmentValues);
-						$insertAttachmentValues = [];
-						
+    	$resourceInsertFields = ['statisticsresourceviewsResourceId', 'statisticsresourceviewsMonth', 'statisticsresourceviewsCount'];
+    	$attachmentInsertFields = ['statisticsattachmentdownloadsAttachmentId', 'statisticsattachmentdownloadsMonth', 'statisticsattachmentdownloadsCount', 'statisticsattachmentdownloadsResourceId'];
+    	
+    	$countTransfered = 0;
+    	$insertResourceValues = [];
+    	$insertAttachmentValues = [];
+    	$deleteStatisticsAttachment = [];
+    	$deleteStatisticsResource = [];
+    	
+    // 1. Past statistics from statistics table
+    	$resultSet = $this->db->select('statistics', ['statisticsId', 'statisticsResourceId', 'statisticsAttachmentId', 'statisticsStatistics']);
+    	while ($row = $this->db->fetchRow($resultSet))
+    	{
+    		$id = $row['statisticsAttachmentId'] ? $row['statisticsAttachmentId'] : $row['statisticsResourceId'];
+    		
+    		if ($row['statisticsAttachmentId'])
+    	        $deleteStatisticsAttachment[] = $row['statisticsId'];
+    		else
+    	        $deleteStatisticsResource[] = $row['statisticsId'];
+    		
+    		$statsArray = unserialize(base64_decode($row['statisticsStatistics']));
+    		if ($statsArray === FALSE)
+    		{
+    		    continue;
+    		}
+    		
+    		foreach ($statsArray as $month => $count)
+    		{
+    			if (!$count) // Ensure there is a valid INSERT value here ...
+    			{
+    				$count = 0;
+    			}
+    			
+    		    // If the month (period) is too short or long (YYYYMM format expected), skip this stat
+    		    $month = trim($month . "");
+    		    if (strlen($month) != 6) continue;
+    			
+    			$month = intval($month);
+    			
+    			// If the month is not in the range 01..12, skip this stat
+    			if ($month % 100 > 12) continue;
+    			
+    			// Shift of one month back
+    			$month = $month - 1;
+    			// Month 0 doesn't exist, so shift one year back on december
+    			$month = ($month % 100 == 0) ? $month - 100 + 12 : $month;
+    			
+    			$insertValues = [$id, $month, $count];
+    			
+    			if ($row['statisticsAttachmentId'])
+    			{
+    			    $deleteStatisticsAttachment[] = $row['statisticsId'];
+    			    $insertValues[] = $row['statisticsResourceId'];
+    			    $insertAttachmentValues[] = '(' . implode(',', $insertValues, ) . ')';
+    			    
+    				if (count($insertAttachmentValues) % 1000 == 0)
+    				{
+    					$this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
+    					$countTransfered += count($insertAttachmentValues);
+    					$insertAttachmentValues = [];
+    					
                         $this->db->formatConditionsOneField($deleteStatisticsAttachment, 'statisticsId');
                         $this->db->delete('statistics');
-				        $deleteStatisticsAttachment = [];
-					}
-				}
-				else
-				{
-				    $deleteStatisticsResource[] = $row['statisticsId'];
-				    $insertResourceValues[] = '(' . implode(',', $insertValues, ) . ')';
-				    
-					if (count($insertResourceValues) % 1000 == 0)
-					{
-						$this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
-						$countTransfered += count($insertResourceValues);
-						$insertResourceValues = [];
-						
+    			        $deleteStatisticsAttachment = [];
+    				}
+    			}
+    			else
+    			{
+    			    $deleteStatisticsResource[] = $row['statisticsId'];
+    			    $insertResourceValues[] = '(' . implode(',', $insertValues, ) . ')';
+    			    
+    				if (count($insertResourceValues) % 1000 == 0)
+    				{
+    					$this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
+    					$countTransfered += count($insertResourceValues);
+    					$insertResourceValues = [];
+    					
                         $this->db->formatConditionsOneField($deleteStatisticsResource, 'statisticsId');
                         $this->db->delete('statistics');
-				        $deleteStatisticsResource = [];
-					}
-				}
-			}
-			
+    			        $deleteStatisticsResource = [];
+    				}
+    			}
+    		}
+    		
             // Check we have more than 6 seconds buffer before max_execution_time times out.
             if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)) || $countTransfered >= 200000)
             {
@@ -918,27 +926,27 @@ class UPDATEDATABASE
                 $this->stageInterruptMessage = "stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
                 $this->pauseExecution('stage13', 'stage13');
             }
-		}
-		// Remaining past statistics
-		if (count($insertAttachmentValues) > 0)
-		{
-			$this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
-		}
-		if (count($insertResourceValues) > 0)
-		{
-			$this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
-		}
-		if (count($deleteStatisticsAttachment) > 0)
-		{
+    	}
+    	// Remaining past statistics
+    	if (count($insertAttachmentValues) > 0)
+    	{
+    		$this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
+    	}
+    	if (count($insertResourceValues) > 0)
+    	{
+    		$this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
+    	}
+    	if (count($deleteStatisticsAttachment) > 0)
+    	{
             $this->db->formatConditionsOneField($deleteStatisticsAttachment, 'statisticsId');
             $this->db->delete('statistics');
-		}
-		if (count($deleteStatisticsResource) > 0)
-		{
+    	}
+    	if (count($deleteStatisticsResource) > 0)
+    	{
             $this->db->formatConditionsOneField($deleteStatisticsResource, 'statisticsId');
             $this->db->delete('statistics');
-		}
-		
+    	}
+    	
         // Check we have more than 6 seconds buffer before max_execution_time times out.
         if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)))
         {
@@ -946,17 +954,17 @@ class UPDATEDATABASE
             $this->stageInterruptMessage = "stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
             $this->pauseExecution('stage13', 'stage13');
         }
-        
-// 2. Current statistics for views
-		$month = date('Ym');
-		$insertResourceValues = [];
-		$resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod']);
-		while ($row = $this->db->fetchRow($resultSet))
-		{
-		    $insertResourceValues[] = '(' . implode(',', [$row['resourcemiscId'], $month, $row['resourcemiscAccessesPeriod']], ) . ')';
-		    
-		    if (count($insertResourceValues) % 5000 == 0)
-		    {
+    
+    // 2. Current statistics for views
+    	$month = date('Ym');
+    	$insertResourceValues = [];
+    	$resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod']);
+    	while ($row = $this->db->fetchRow($resultSet))
+    	{
+    	    $insertResourceValues[] = '(' . implode(',', [$row['resourcemiscId'], $month, $row['resourcemiscAccessesPeriod']], ) . ')';
+    	    
+    	    if (count($insertResourceValues) % 5000 == 0)
+    	    {
     			$this->db->multiInsert('statistics_resource_views',
     				['statisticsresourceviewsResourceId', 
     					'statisticsresourceviewsMonth', 
@@ -964,27 +972,27 @@ class UPDATEDATABASE
     					implode(', ', $insertResourceValues)
     			);
     			$insertResourceValues = [];
-			}
-		}
-	    if (count($insertResourceValues) > 0)
-	    {
-			$this->db->multiInsert('statistics_resource_views',
-				['statisticsresourceviewsResourceId', 
-					'statisticsresourceviewsMonth', 
-					'statisticsresourceviewsCount'],
-					implode(', ', $insertResourceValues)
-			);
-		}
-		
-// 3. Current statistics for downloads
-		$insertAttachmentValues = [];
-		$resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsDownloadsPeriod']);
-		while ($row = $this->db->fetchRow($resultSet))
-		{
-		    $insertAttachmentValues[] = '(' . implode(',', [$row['resourceattachmentsResourceId'], $row['resourceattachmentsId'], $month, $row['resourceattachmentsDownloadsPeriod']], ) . ')';
-		    
-		    if (count($insertAttachmentValues) % 5000 == 0)
-		    {
+    		}
+    	}
+        if (count($insertResourceValues) > 0)
+        {
+    		$this->db->multiInsert('statistics_resource_views',
+    			['statisticsresourceviewsResourceId', 
+    				'statisticsresourceviewsMonth', 
+    				'statisticsresourceviewsCount'],
+    				implode(', ', $insertResourceValues)
+    		);
+    	}
+    
+    // 3. Current statistics for downloads
+    	$insertAttachmentValues = [];
+    	$resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsDownloadsPeriod']);
+    	while ($row = $this->db->fetchRow($resultSet))
+    	{
+    	    $insertAttachmentValues[] = '(' . implode(',', [$row['resourceattachmentsResourceId'], $row['resourceattachmentsId'], $month, $row['resourceattachmentsDownloadsPeriod']], ) . ')';
+    	    
+    	    if (count($insertAttachmentValues) % 5000 == 0)
+    	    {
     		    $this->db->multiInsert('statistics_attachment_downloads',
     				['statisticsattachmentdownloadsResourceId',
     					'statisticsattachmentdownloadsAttachmentId', 
@@ -993,25 +1001,25 @@ class UPDATEDATABASE
     					implode(', ', $insertAttachmentValues)
     			);
     			$insertAttachmentValues = [];
-			}
-		}
-	    if (count($insertAttachmentValues) > 0)
-	    {
-		    $this->db->multiInsert('statistics_attachment_downloads',
-				['statisticsattachmentdownloadsResourceId',
-					'statisticsattachmentdownloadsAttachmentId', 
-					'statisticsattachmentdownloadsMonth', 
-					'statisticsattachmentdownloadsCount'],
-					implode(', ', $insertAttachmentValues)
-			);
-		}
+    		}
+    	}
+        if (count($insertAttachmentValues) > 0)
+        {
+    	    $this->db->multiInsert('statistics_attachment_downloads',
+    			['statisticsattachmentdownloadsResourceId',
+    				'statisticsattachmentdownloadsAttachmentId', 
+    				'statisticsattachmentdownloadsMonth', 
+    				'statisticsattachmentdownloadsCount'],
+    				implode(', ', $insertAttachmentValues)
+    		);
+    	}
     }
     /**
      * Copy non-official bibliographic styles (if they exist)
      */
     private function copyBibContents()
     {
-    	$oldDir = 'styles' . DIRECTORY_SEPARATOR . 'bibliography';
+        $oldDir = 'styles' . DIRECTORY_SEPARATOR . 'bibliography';
         foreach (\FILE\dirInDirToArray($oldDir) as $dir)
         {
             $dirLower = mb_strtolower($dir);

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -35,15 +37,14 @@ class FORGET
     /**
      * Recovery of forgotten password stage1
      *
-     * @param string|FALSE $error
+     * @param false|string $error
      */
     public function forgetInitStage1($error = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "forget"));
         $pString = \FORM\formHeader('usersgroups_FORGET_CORE');
         $pString .= \FORM\hidden('method', 'forgetInitStage2');
-        if ($error)
-        {
+        if ($error) {
             $pString .= $error;
         }
         $pString .= \HTML\p($this->messages->text("user", "forget7"));
@@ -72,51 +73,41 @@ class FORGET
      *
      * Input may be either username or email -- if both, use username
      *
-     * @param string|FALSE $error
+     * @param false|string $error
      */
     public function forgetInitStage2($error = FALSE)
     {
         $this->badInput->closeType = 'closeNoMenu';
-        if (array_key_exists('username', $this->vars) && ($username = trim($this->vars['username'])))
-        {
+        if (array_key_exists('username', $this->vars) && ($username = trim($this->vars['username']))) {
             $this->db->formatConditions(['usersUsername' => $username]);
-        }
-        elseif (array_key_exists('email', $this->vars) && ($email = trim($this->vars['email'])))
-        {
+        } elseif (array_key_exists('email', $this->vars) && ($email = trim($this->vars['email']))) {
             $this->db->formatConditions(['usersEmail' => $email]);
-        }
-        else
-        {
+        } else {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'forgetInitStage1');
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "forget"));
         $pString = \FORM\formHeader('usersgroups_FORGET_CORE');
         $pString .= \FORM\hidden('method', 'forgetProcess');
-        if ($error)
-        {
+        if ($error) {
             $pString .= $error;
         }
         $pString .= \HTML\p($this->messages->text("user", "forget8"));
-        for ($i = 1; $i < 4; $i++)
-        {
+        for ($i = 1; $i < 4; $i++) {
             $userArray[] = "usersPasswordQuestion$i";
             $userArray[] = "usersPasswordAnswer$i";
         }
         $userArray[] = "usersUsername";
         $userArray[] = "usersEmail";
         $recordSet = $this->db->select('users', $userArray);
-        if ($this->db->numRows($recordSet) > 1)
-        {
+        if ($this->db->numRows($recordSet) > 1) {
             $this->badInput->close($this->errors->text("warning", "forget2"), $this, 'forgetInitStage1');
         }
         $row = $this->db->fetchRow($recordSet);
         $pString .= \FORM\hidden("username", $row['usersUsername']);
         $pString .= \FORM\hidden("email", $row['usersEmail']);
         $questionFound = FALSE;
-        for ($i = 1; $i < 4; $i++)
-        {
-            if (!$row["usersPasswordQuestion$i"])
-            {
+        for ($i = 1; $i < 4; $i++) {
+            if (!$row["usersPasswordQuestion$i"]) {
                 continue;
             }
             $string = $this->messages->text("user", "forget3", "&nbsp;" . $i) .
@@ -125,17 +116,13 @@ class FORGET
             $pString .= \HTML\p($string);
             $questionFound = TRUE;
         }
-        if (!$questionFound)
-        {
+        if (!$questionFound) {
             $email = WIKINDX_CONTACT_EMAIL;
-            if ($email)
-            {
+            if ($email) {
                 $email = \HTML\nlToHtml($email);
                 $email = \HTML\a("link", $email, "mailto:$email");
                 $contact = "&nbsp;($email).";
-            }
-            else
-            {
+            } else {
                 $contact = ".";
             }
             $this->badInput->close($this->errors->text("warning", "forget1", $contact));
@@ -153,38 +140,30 @@ class FORGET
         $this->badInput->closeType = 'closeNoMenu';
         $username = trim($this->vars['username']);
         $this->db->formatConditions(['usersUsername' => $username]);
-        for ($i = 1; $i < 4; $i++)
-        {
+        for ($i = 1; $i < 4; $i++) {
             $userArray[] = "usersPasswordQuestion$i";
             $userArray[] = "usersPasswordAnswer$i";
         }
         $row = $this->db->selectFirstRow('users', $userArray);
-        for ($i = 1; $i < 4; $i++)
-        {
-            if (!array_key_exists("answer$i", $this->vars))
-            {
+        for ($i = 1; $i < 4; $i++) {
+            if (!array_key_exists("answer$i", $this->vars)) {
                 continue;
             }
             $answer = sha1(mb_strtolower(trim($this->vars["answer$i"])));
-            if ($answer != $row["usersPasswordAnswer$i"])
-            {
+            if ($answer != $row["usersPasswordAnswer$i"]) {
                 $this->badInput->close($this->errors->text("inputError", "incorrect"), $this, 'forgetInitStage2');
             }
         }
         include_once("core/modules/email/EMAIL.php");
         $emailClass = new EMAIL();
         $password = time();
-        if (!$emailClass->forgetProcess($username, $password))
-        {
+        if (!$emailClass->forgetProcess($username, $password)) {
             $email = WIKINDX_CONTACT_EMAIL;
-            if ($email)
-            {
+            if ($email) {
                 $email = \HTML\nlToHtml($email);
                 $email = \HTML\a("link", $email, "mailto:$email");
                 $contact = "&nbsp;($email).";
-            }
-            else
-            {
+            } else {
                 $contact = ".";
             }
             $this->badInput->close($this->errors->text("warning", "forget3", $contact), $this, 'forgetInitStage1');
@@ -214,8 +193,7 @@ class FORGET
         $pString .= \HTML\p($this->messages->text("user", "forget5"));
         $pString .= \HTML\p($this->messages->text("user", "forget2"));
         //		print_r($this->session->getArray('mywikindx'));
-        for ($i = 1; $i < 4; $i++)
-        {
+        for ($i = 1; $i < 4; $i++) {
             $question = $this->session->issetVar("mywikindx_usersPasswordQuestion$i") ?
                 \HTML\dbToFormTidy($this->session->getVar("mywikindx_usersPasswordQuestion$i")) : FALSE;
             $answer = $this->session->issetVar("mywikindx_usersAnswer$i") ?
@@ -249,56 +227,44 @@ class FORGET
         include_once('core/modules/usersgroups/MYWIKINDX.php');
         $mywikindx = new MYWIKINDX();
         $array = ["usersPasswordQuestion1", "usersAnswer1", "usersPasswordQuestion2", "usersAnswer2", "usersPasswordQuestion3", "usersAnswer3"];
-        foreach ($array as $key)
-        {
-            if (array_key_exists($key, $this->vars) && $this->vars[$key])
-            {
-                if (($key == "usersPasswordQuestion1") || ($key == "usersPasswordQuestion2") || ($key == "usersPasswordQuestion3"))
-                {
+        foreach ($array as $key) {
+            if (array_key_exists($key, $this->vars) && $this->vars[$key]) {
+                if (($key == "usersPasswordQuestion1") || ($key == "usersPasswordQuestion2") || ($key == "usersPasswordQuestion3")) {
                     $this->session->setVar("mywikindx_" . $key, $this->vars[$key]);
                 }
             }
         }
         $inputArray = [];
-        for ($i = 1; $i < 4; $i++)
-        {
+        for ($i = 1; $i < 4; $i++) {
             $question = trim($this->vars["usersPasswordQuestion$i"]);
-            if (!$question)
-            {
+            if (!$question) {
                 $this->session->delVar("mywikindx_usersPasswordQuestion$i");
                 $this->session->delVar("mywikindx_usersAnswer$i");
             }
             $answer = trim($this->vars["usersAnswer$i"]);
-            if ($question && !$answer)
-            {
+            if ($question && !$answer) {
                 return [FALSE, $this->errors->text("inputError", "missing")];
-            }
-            elseif ($question && $answer)
-            {
+            } elseif ($question && $answer) {
                 $inputArray[$question] = sha1(mb_strtolower($answer));
             }
         }
         $index = 1;
-        foreach ($inputArray as $q => $a)
-        {
+        foreach ($inputArray as $q => $a) {
             $update["usersPasswordQuestion$index"] = $q;
             $update["usersPasswordAnswer$index"] = $a;
             $index++;
         }
-        if (isset($update))
-        { // values to update
+        if (isset($update)) { // values to update
             $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $this->db->update('users', $update);
         }
         // Set remaining fields to NULL
-        while ($index < 4)
-        {
+        while ($index < 4) {
             $nulls[] = "usersPasswordQuestion$index";
             $nulls[] = "usersPasswordAnswer$index";
             $index++;
         }
-        if (isset($nulls))
-        {
+        if (isset($nulls)) {
             $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $this->db->updateNull('users', $nulls);
         }

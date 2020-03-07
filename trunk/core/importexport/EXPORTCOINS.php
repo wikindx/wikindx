@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -42,29 +44,23 @@ class EXPORTCOINS extends EXPORTER
         $genre = $authors = $entry = $url = $doi = $abstract = FALSE;
         $this->getData($row);
         $type = $this->map->types[$row['resourceType']];
-        if ($this->map->genres[$row['resourceType']])
-        {
+        if ($this->map->genres[$row['resourceType']]) {
             $genre = "&amp;rft.genre=" . urlencode($this->map->genres[$row['resourceType']]);
         }
-        if (!empty($this->entry))
-        {
+        if (!empty($this->entry)) {
             $entry = $this->convertEntry();
         }
-        if (!empty($this->authors))
-        {
+        if (!empty($this->authors)) {
             $authors = $this->convertEntryAuthors();
         }
-        if (array_key_exists('resourcetextUrls', $row) && $row['resourcetextUrls'])
-        {
+        if (array_key_exists('resourcetextUrls', $row) && $row['resourcetextUrls']) {
             $urls = unserialize(base64_decode($row['resourcetextUrls']));
             $url = '&amp;rft_id=' . urlencode(array_shift($urls));
         }
-        if (array_key_exists('resourceDoi', $row) && $row['resourceDoi'])
-        {
+        if (array_key_exists('resourceDoi', $row) && $row['resourceDoi']) {
             $doi = '&amp;rft_id=info:doi/' . $this->uEncode($row['resourceDoi']);
         }
-        if (array_key_exists('resourcetextAbstract', $row) && $row['resourcetextAbstract'])
-        {
+        if (array_key_exists('resourcetextAbstract', $row) && $row['resourcetextAbstract']) {
             $abstract = '&amp;rft_id=info:abstract/' . $this->uEncode($row['resourcetextAbstract']);
         }
         $sid = "&amp;rfr_sid=info:sid/" . WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'];
@@ -83,8 +79,7 @@ class EXPORTCOINS extends EXPORTER
     {
         $array = [];
         array_map([$this, "uEncode"], $this->entry);
-        foreach ($this->entry as $key => $value)
-        {
+        foreach ($this->entry as $key => $value) {
             $array[] = "rft." . $key . "=" . $value;
         }
 
@@ -99,8 +94,7 @@ class EXPORTCOINS extends EXPORTER
     {
         $array = [];
         array_map([$this, "uEncode"], $this->authors);
-        foreach ($this->authors as $value)
-        {
+        foreach ($this->authors as $value) {
             $array[] = "rft.au=" . $value;
         }
 

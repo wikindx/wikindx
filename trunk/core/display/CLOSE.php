@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -43,13 +45,10 @@ class CLOSE
         $numberOfResources = $this->db->selectFirstField("database_summary", "databasesummaryTotalResources");
 
         // if this is a logged in user, display the username after the heading
-        if ($userId = $this->session->getVar("setup_UserId"))
-        {
+        if ($userId = $this->session->getVar("setup_UserId")) {
             $this->db->formatConditions(['usersId' => $userId]);
             $username = \HTML\nlToHtml($this->db->selectFirstField('users', 'usersUsername'));
-        }
-        else
-        {
+        } else {
             $username = '--';
         }
 
@@ -58,13 +57,10 @@ class CLOSE
         $styleId = strtolower(GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT));
         $styleName = array_key_exists($styleId, $styles) ? $styles[$styleId] : $styles[WIKINDX_STYLE_DEFAULT];
 
-        if ($useBib = $this->session->getVar("mywikindx_Bibliography_use"))
-        {
+        if ($useBib = $this->session->getVar("mywikindx_Bibliography_use")) {
             $this->db->formatConditions(['userbibliographyId' => $useBib]);
             $bib = \HTML\nlToHtml($this->db->selectFirstField('user_bibliography', 'userbibliographyTitle'));
-        }
-        else
-        {
+        } else {
             $bib = $this->messages->text("user", "masterBib");
         }
 
@@ -87,14 +83,11 @@ class CLOSE
 
         GLOBALS::addTplVar('tplPath', WIKINDX_BASE_URL . $tplPath);
         GLOBALS::addTplVar('lang', \LOCALES\localetoBCP47(\LOCALES\determine_locale()));
-        if (defined('WIKINDX_RSS_ALLOW'))
-        {
+        if (defined('WIKINDX_RSS_ALLOW')) {
             GLOBALS::addTplVar('displayRss', WIKINDX_RSS_ALLOW);
             GLOBALS::addTplVar('rssTitle', WIKINDX_RSS_TITLE);
             GLOBALS::addTplVar('rssFeed', WIKINDX_BASE_URL . WIKINDX_RSS_PAGE);
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('displayRss', FALSE);
         }
         // HEADERS
@@ -116,8 +109,7 @@ class CLOSE
         // MENU
         GLOBALS::addTplVar('displayMenu', $displayMenu);
         // If the menu is hidden, we can avoid to build it
-        if ($displayMenu)
-        {
+        if ($displayMenu) {
             include_once("core/navigation/MENU.php");
             $menu = new MENU();
             $menu->menus();
@@ -160,38 +152,30 @@ class CLOSE
 
         $tplKeys = array_unique($tplKeys);
         // Extract data of all template variables form the global store and give them to the template system
-        foreach ($tplKeys as $k)
-        {
+        foreach ($tplKeys as $k) {
             $tplVars = GLOBALS::getTplVar($k);
             //print_r($tplVars); print '<p>';
             $s = '';
             $t = NULL; // Type of the variable to give to the template
 
-            foreach ($tplVars as $v)
-            {
+            foreach ($tplVars as $v) {
                 // We have to assimile NULL to string because sometimes
                 // this value can be inserted unintentionally if a variable is empty.
                 // The same error happend with a mixture of string
                 // and others type but this is obviously an error
                 // and we raise an error in that case.
-                if ($t == NULL)
-                {
+                if ($t == NULL) {
                     $t = (is_string($v) || $v == NULL) ? 's' : 'm';
                 }
 
-                if ($t == ((is_string($v) || $v == NULL) ? 's' : 'm'))
-                {
-                    if ($t == 's')
-                    {
+                if ($t == ((is_string($v) || $v == NULL) ? 's' : 'm')) {
+                    if ($t == 's') {
                         // Concat all strings data
-                        if ($k == 'scripts')
-                        {
+                        if ($k == 'scripts') {
                             $v .= LF;
                         }
                         $s .= $v;
-                    }
-                    else
-                    {
+                    } else {
                         // If multiple no-string data are defined,
                         // only the last defined will be assigned
                         // In this case there should be only one,
@@ -199,17 +183,12 @@ class CLOSE
                         // to no break rendering arbitrarily
                         $s = $v;
                     }
-                }
-                else
-                {
+                } else {
                     $errorMessage = "Mixed data type in '$k' template variable";
 
-                    if (WIKINDX_DEBUG_ERRORS)
-                    {
+                    if (WIKINDX_DEBUG_ERRORS) {
                         trigger_error($errorMessage, E_USER_ERROR);
-                    }
-                    else
-                    {
+                    } else {
                         $s = $errorMessage;
                     }
 
@@ -220,12 +199,9 @@ class CLOSE
             // logsql is a specific case : this variable is injected in all template,
             // just before the body end tag when the debug sql mode is ON.
             // We don't want to provide a way to template designer to disable it.
-            if ($k != 'logsql')
-            {
+            if ($k != 'logsql') {
                 $this->template->tpl->assign($k, $s);
-            }
-            else
-            {
+            } else {
                 $debugLogSQLString = $s;
             }
 
@@ -254,17 +230,14 @@ class CLOSE
         $outputString = str_replace('%%SCRTIMER%%', sprintf('%0.5f', $scriptExecutionTimeAfterRendering), $outputString);
 
         // Insert debug info only if we are on the main page
-        if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE)
-        {
+        if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE) {
             $debugString = '';
             // Insert SQL log
-            if ((!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL) && in_array('logsql', $tplKeys))
-            {
+            if ((!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL) && in_array('logsql', $tplKeys)) {
                 $debugString .= $debugLogSQLString;
             }
             // Insert debug timers
-            if (defined('WIKINDX_DEBUG_ERRORS') && WIKINDX_DEBUG_ERRORS)
-            {
+            if (defined('WIKINDX_DEBUG_ERRORS') && WIKINDX_DEBUG_ERRORS) {
                 $lineEnding = BR;
                 $debugString .= "<p style='font-family: monospace; font-size: 8pt; text-align: right;'>" . LF;
                 $debugString .= "PHP execution time: " . sprintf('%0.5f', $scriptElapsedTime) . " s$lineEnding";
@@ -283,8 +256,7 @@ class CLOSE
         echo $outputString;
 
         // If this function have been called directly (not inherited), we must die
-        if (__CLASS__ == get_called_class())
-        {
+        if (__CLASS__ == get_called_class()) {
             die;
         }
     }
@@ -360,8 +332,7 @@ class CLOSERAW extends CLOSE
 
         echo GLOBALS::buildTplVarString('content');
 
-        if (ob_get_length() !== FALSE)
-        {
+        if (ob_get_length() !== FALSE) {
             ob_end_flush();
         }
         die; // In this we always die to not had other content by error

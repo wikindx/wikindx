@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -63,8 +65,7 @@ class TEXTQP
         $page_start = $page_end = $db_paragraph = $db_section = $db_chapter = $text = $comment = FALSE;
         $private = 'Y';
         // are we editing or adding?
-        if (array_key_exists('resourcemetadataId', $this->vars))
-        {
+        if (array_key_exists('resourcemetadataId', $this->vars)) {
             $hidden .= \FORM\hidden('resourcemetadataId', $this->vars['resourcemetadataId']);
             $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
             $row = $this->db->selectFirstRow('resource_metadata', ['resourcemetadataText', 'resourcemetadataPageStart',
@@ -73,39 +74,31 @@ class TEXTQP
             $db_paragraph = \HTML\dbToFormTidy($row['resourcemetadataParagraph']);
             $db_section = \HTML\dbToFormTidy($row['resourcemetadataSection']);
             $db_chapter = \HTML\dbToFormTidy($row['resourcemetadataChapter']);
-            if ($row['resourcemetadataPageEnd'])
-            {
+            if ($row['resourcemetadataPageEnd']) {
                 $page_end = \HTML\dbToFormTidy($row['resourcemetadataPageEnd']);
             }
-            if ($userId == $row['resourcemetadataAddUserId'])
-            {
+            if ($userId == $row['resourcemetadataAddUserId']) {
                 $text = \HTML\dbToFormTidy($row['resourcemetadataText']);
-            }
-            else
-            {
+            } else {
                 $text = \HTML\nlToHtml($row['resourcemetadataText']);
             }
             // Get user's comment
             $this->db->formatConditions(['resourcemetadataAddUserId' => $userId]);
             $this->db->formatConditions(['resourcemetadataMetadataId' => $this->vars['resourcemetadataId']]);
             $recordset = $this->db->select('resource_metadata', ['resourcemetadataText', 'resourcemetadataPrivate']);
-            if ($this->db->numRows($recordset))
-            {
+            if ($this->db->numRows($recordset)) {
                 $rowComment = $this->db->fetchRow($recordset);
                 $comment = \HTML\dbToFormTidy($rowComment['resourcemetadataText']);
                 $private = $rowComment['resourcemetadataPrivate'];
             }
         }
-        if (isset($row) && (($userId != $row['resourcemetadataAddUserId']) && !WIKINDX_SUPERADMIN_ID))
-        {
+        if (isset($row) && (($userId != $row['resourcemetadataAddUserId']) && !WIKINDX_SUPERADMIN_ID)) {
             $hidden .= \FORM\hidden("commentOnly", TRUE);
         }
-        if (!isset($row) || ($text && (($userId == $row['resourcemetadataAddUserId'] || WIKINDX_SUPERADMIN_ID))))
-        {
+        if (!isset($row) || ($text && (($userId == $row['resourcemetadataAddUserId'] || WIKINDX_SUPERADMIN_ID)))) {
             $metadata['keyword'] = $this->displayKeywordForm($type, 'resourcemetadataId');
         }
-        if (!$text || ($text && (($userId == $row['resourcemetadataAddUserId']) || WIKINDX_SUPERADMIN_ID)))
-        {
+        if (!$text || ($text && (($userId == $row['resourcemetadataAddUserId']) || WIKINDX_SUPERADMIN_ID))) {
             $locations = \HTML\tableStart('left');
             $locations .= \HTML\trStart();
             $locations .= \HTML\td($hidden . \FORM\textInput(
@@ -137,28 +130,19 @@ class TEXTQP
             $locations .= \HTML\trEnd();
             $locations .= \HTML\tableEnd();
             $metadata['locations'] = $locations;
-        }
-        elseif ($page_start && $page_end)
-        {
+        } elseif ($page_start && $page_end) {
             $page = \HTML\strong('pp.' . $page_start . '-&nbsp;' . $page_end) . "&nbsp;";
-        }
-        elseif ($page_start)
-        {
+        } elseif ($page_start) {
             $page = \HTML\strong('p.' . $page_start) . "&nbsp;";
-        }
-        else
-        {
+        } else {
             $page = FALSE;
         }
         $hint = ($type == 'quote') ? \HTML\span($this->messages->text("hint", $type), 'hint') : FALSE;
         // The second parameter ($typeText) to textareaInput is the textarea name
-        if (!$text || ($text && (($userId == $row['resourcemetadataAddUserId']) || WIKINDX_SUPERADMIN_ID)))
-        {
+        if (!$text || ($text && (($userId == $row['resourcemetadataAddUserId']) || WIKINDX_SUPERADMIN_ID))) {
             $metadata['metadata'] = \FORM\textareaInput(FALSE, $typeText, $text, 80, 10) . $hint;
             $metadata['metadataTitle'] = $this->messages->text("resources", $type);
-        }
-        else
-        {
+        } else {
             $metadata['original'] = $hidden . $page . $this->cite->parseCitations($text, 'html');
         }
         // The second parameter ($typeComment) to textareaInput is the textarea name
@@ -167,12 +151,10 @@ class TEXTQP
         $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
         $this->db->leftJoin('user_groups', 'usergroupsId', 'usergroupsusersGroupId');
         $recordset3 = $this->db->select('user_groups_users', ['usergroupsusersGroupId', 'usergroupsTitle']);
-        if ($this->db->numRows($recordset3))
-        {
+        if ($this->db->numRows($recordset3)) {
             $privateArray = ['Y' => $this->messages->text("resources", "private"),
                 'N' => $this->messages->text("resources", "public"), ];
-            while ($row = $this->db->fetchRow($recordset3))
-            {
+            while ($row = $this->db->fetchRow($recordset3)) {
                 $privateArray[$row['usergroupsusersGroupId']] =
                     $this->messages->text("resources", "availableToGroups", \HTML\dbToFormTidy($row['usergroupsTitle']));
             }
@@ -183,9 +165,7 @@ class TEXTQP
                 $private,
                 3
             );
-        }
-        else
-        {
+        } else {
             $privateArray = ['Y' => $this->messages->text("resources", "private"),
                 'N' => $this->messages->text("resources", "public"), ];
             $metadata['form']['private'] = \FORM\selectedBoxValue(
@@ -198,8 +178,7 @@ class TEXTQP
         }
         $metadata['form']['submit'] = \FORM\formSubmit($this->messages->text("submit", "Save"));
         // display other comments
-        if ($text)
-        {
+        if ($text) {
             $this->db->formatConditions(['resourcemetadataAddUserId' => $userId], TRUE);
             $this->db->formatConditions(['resourcemetadataMetadataId' => $this->vars['resourcemetadataId']]);
             $this->db->ascDesc = $this->db->desc;
@@ -207,19 +186,14 @@ class TEXTQP
             $recordset = $this->db->select('resource_metadata', ['resourcemetadataText', 'resourcemetadataPrivate',
                 'resourcemetadataAddUserId', 'resourcemetadataTimestamp', ]);
             $index = 0;
-            while ($row = $this->db->fetchRow($recordset))
-            {
-                if (($row['resourcemetadataPrivate'] == 'Y') && (($userId != $row['resourcemetadataAddUserId']) && !WIKINDX_SUPERADMIN_ID))
-                {
+            while ($row = $this->db->fetchRow($recordset)) {
+                if (($row['resourcemetadataPrivate'] == 'Y') && (($userId != $row['resourcemetadataAddUserId']) && !WIKINDX_SUPERADMIN_ID)) {
                     continue;
-                }
-                elseif (is_numeric($row['resourcemetadataPrivate']))
-                {
+                } elseif (is_numeric($row['resourcemetadataPrivate'])) {
                     $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
                     $this->db->formatConditions(['usergroupsusersGroupId' => $row['resourcemetadataPrivate']]);
                     $recordset3 = $this->db->select('user_groups_users', 'usergroupsusersId');
-                    if (!$this->db->numRows($recordset3))
-                    {
+                    if (!$this->db->numRows($recordset3)) {
                         continue;
                     }
                 }
@@ -247,36 +221,30 @@ class TEXTQP
         $keywords = $this->keyword->grabAll();
         $pString = \HTML\tableStart('left');
         $pString .= \HTML\trStart();
-        if (!empty($keywords))
-        {
+        if (!empty($keywords)) {
             // If preferences reduce long keywords, we want to transfer the original rather than the condensed version.
             // Store the base64-encoded value for retrieval in the javascript.
-            foreach ($keywords as $key => $value)
-            {
+            foreach ($keywords as $key => $value) {
                 $key = $key . '_' . base64_encode($value);
                 $keywordList[$key] = $value;
             }
-            if (array_key_exists($textId, $this->vars))
-            { // editing
+            if (array_key_exists($textId, $this->vars)) { // editing
                 $field = 'resourcekeywordMetadataId';
                 $this->db->formatConditions([$field => $this->vars[$textId]]);
                 $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
                 $this->db->orderBy('keywordKeyword');
                 $resultset = $this->db->select('resource_keyword', 'keywordKeyword');
-                while ($row = $this->db->fetchRow($resultset))
-                {
+                while ($row = $this->db->fetchRow($resultset)) {
                     $keywordArray[] = $row['keywordKeyword'];
                 }
             }
             // If this is a new metadata entry (not editing), populate textarea with resource's keywords
-            elseif (!array_key_exists('resourcemetadataId', $this->vars) && ($type != 'idea'))
-            {
+            elseif (!array_key_exists('resourcemetadataId', $this->vars) && ($type != 'idea')) {
                 $this->db->formatConditions(['resourcekeywordResourceId' => $this->vars['resourceId']]);
                 $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
                 $this->db->orderBy('keywordKeyword');
                 $resultset = $this->db->select('resource_keyword', ['resourcekeywordKeywordId', 'keywordKeyword']);
-                while ($row = $this->db->fetchRow($resultset))
-                {
+                while ($row = $this->db->fetchRow($resultset)) {
                     $keywordArray[] = $row['keywordKeyword'];
                 }
             }
@@ -303,9 +271,7 @@ class TEXTQP
                 5
             ) . BR .
                 \HTML\span($this->messages->text("hint", "keywords"), 'hint') . \HTML\p('&nbsp;'));
-        }
-        else
-        {
+        } else {
             $pString .= \HTML\td(\FORM\textareaInput(
                 $this->messages->text("resources", "keywords"),
                 "keywords",
@@ -343,10 +309,8 @@ class TEXTQP
         $summaryType = $type == 'quote' ? 'resourcesummaryQuotes' : 'resourcesummaryParaphrases';
         $userId = $this->session->getVar("setup_UserId");
         // insert
-        if (!array_key_exists('resourcemetadataId', $this->vars))
-        {
-            if (!array_key_exists($typeText, $this->vars) || !trim($this->vars[$typeText]))
-            {
+        if (!array_key_exists('resourcemetadataId', $this->vars)) {
+            if (!array_key_exists($typeText, $this->vars) || !trim($this->vars[$typeText])) {
                 return FALSE;
             }
             $addEdit = 'added';
@@ -354,45 +318,36 @@ class TEXTQP
             $values[] = $this->vars['resourceId'];
             $fields[] = 'resourcemetadataTimestamp';
             $values[] = $this->db->formatTimestamp();
-            if (array_key_exists($pageStart, $this->vars) && $this->vars[$pageStart])
-            {
+            if (array_key_exists($pageStart, $this->vars) && $this->vars[$pageStart]) {
                 $fields[] = 'resourcemetadataPageStart';
                 $values[] = trim(mb_strtolower($this->vars[$pageStart]));
-                if (array_key_exists($pageEnd, $this->vars) && $this->vars[$pageEnd])
-                {
+                if (array_key_exists($pageEnd, $this->vars) && $this->vars[$pageEnd]) {
                     $fields[] = 'resourcemetadataPageEnd';
                     $values[] = trim(mb_strtolower($this->vars[$pageEnd]));
                 }
             }
-            if (array_key_exists($paragraph, $this->vars) && $this->vars[$paragraph])
-            {
+            if (array_key_exists($paragraph, $this->vars) && $this->vars[$paragraph]) {
                 $fields[] = 'resourcemetadataParagraph';
                 $values[] = trim(mb_strtolower($this->vars[$paragraph]));
             }
-            if (array_key_exists($section, $this->vars) && $this->vars[$section])
-            {
+            if (array_key_exists($section, $this->vars) && $this->vars[$section]) {
                 $fields[] = 'resourcemetadataSection';
                 $values[] = trim(mb_strtolower($this->vars[$section]));
             }
-            if (array_key_exists($chapter, $this->vars) && $this->vars[$chapter])
-            {
+            if (array_key_exists($chapter, $this->vars) && $this->vars[$chapter]) {
                 $fields[] = 'resourcemetadataChapter';
                 $values[] = trim(mb_strtolower($this->vars[$chapter]));
             }
             $fields[] = 'resourcemetadataText';
             $values[] = trim($this->vars[$typeText]);
-            if ($userId)
-            {
+            if ($userId) {
                 $fields[] = 'resourcemetadataAddUserId';
                 $values[] = $userId;
             }
-            if ($type == 'quote')
-            {
+            if ($type == 'quote') {
                 $fields[] = 'resourcemetadataType';
                 $values[] = 'q';
-            }
-            else
-            {
+            } else {
                 $fields[] = 'resourcemetadataType';
                 $values[] = 'p';
             }
@@ -403,18 +358,15 @@ class TEXTQP
             $this->db->deleteCache('cacheMetadataPublishers');
             $this->summary(1, $summaryType);
             // Write comments table
-            if (array_key_exists($typeComment, $this->vars) && $this->vars[$typeComment])
-            {
+            if (array_key_exists($typeComment, $this->vars) && $this->vars[$typeComment]) {
                 $this->insertComment($lastAutoId, $userId, $typeComment, $type);
             }
             $this->writeKeywords($lastAutoId, 'resourcekeywordMetadataId');
         }
         // else edit/delete
-        else
-        {
+        else {
             // if quoteText is empty, delete the row
-            if (!array_key_exists('commentOnly', $this->vars) && !trim($this->vars[$typeText]))
-            {
+            if (!array_key_exists('commentOnly', $this->vars) && !trim($this->vars[$typeText])) {
                 $addEdit = 'deleted';
                 $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                 $this->db->delete('resource_metadata');
@@ -430,20 +382,16 @@ class TEXTQP
                 $this->db->deleteCache('cacheParaphraseKeywords');
                 $this->db->deleteCache('cacheMusingKeywords');
                 // Remove these cache files if no metadata left in resource
-                if (!$metadataExists)
-                {
+                if (!$metadataExists) {
                     $this->db->deleteCache('cacheMetadataCreators');
                     $this->db->deleteCache('cacheMetadataCollections');
                     $this->db->deleteCache('cacheMetadataPublishers');
                 }
-            }
-            else
-            {
+            } else {
                 $addEdit = 'edited';
                 // Quote/paraphrase _text table
                 $updateArray = [];
-                if (!array_key_exists('commentOnly', $this->vars))
-                {
+                if (!array_key_exists('commentOnly', $this->vars)) {
                     $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                     $updateArray['resourcemetadataText'] = trim($this->vars[$typeText]);
                     $updateArray['resourcemetadataTimestampEdited'] = $this->db->formatTimestamp();
@@ -452,33 +400,23 @@ class TEXTQP
                 }
                 // Comment
                 $updateArray = [];
-                if (array_key_exists($typeComment, $this->vars) && trim($this->vars[$typeComment]))
-                {
+                if (array_key_exists($typeComment, $this->vars) && trim($this->vars[$typeComment])) {
                     // Is this a new comment or are we editing an old comment?
                     $this->db->formatConditions(['resourcemetadataMetadataId' => $this->vars['resourcemetadataId']]);
                     $this->db->formatConditions(['resourcemetadataAddUserId' => $userId]);
                     $recordset = $this->db->select('resource_metadata', 'resourcemetadataMetadataId');
-                    if ($this->db->numRows($recordset))
-                    {  // edit existing comment
+                    if ($this->db->numRows($recordset)) {  // edit existing comment
                         $updateArray['resourcemetadataText'] = trim($this->vars[$typeComment]);
-                        if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N'))
-                        {
+                        if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N')) {
                             $updateArray['resourcemetadataPrivate'] = 'N';
-                        }
-                        elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private'])))
-                        {
+                        } elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private']))) {
                             $updateArray['resourcemetadataPrivate'] = $this->vars['private'];
-                        }
-                        else
-                        {
+                        } else {
                             $updateArray['resourcemetadataPrivate'] = 'Y';
                         }
-                        if ($type == 'quote')
-                        {
+                        if ($type == 'quote') {
                             $updateArray['resourcemetadataType'] = 'qc';
-                        }
-                        else
-                        {
+                        } else {
                             $updateArray['resourcemetadataType'] = 'pc';
                         }
                         $updateArray['resourcemetadataTimestamp'] = $this->db->formatTimestamp();
@@ -487,73 +425,53 @@ class TEXTQP
                         $this->db->update('resource_metadata', $updateArray);
                     }
                     // new comment
-                    else
-                    {
+                    else {
                         $this->insertComment($this->vars['resourcemetadataId'], $userId, $typeComment, $type);
                     }
                 }
                 // remove comment row
-                else
-                {
+                else {
                     $this->db->formatConditions(['resourcemetadataMetadataId' => $this->vars['resourcemetadataId']]);
                     $this->db->formatConditions(['resourcemetadataAddUserId' => $userId]);
                     $this->db->delete('resource_metadata');
                 }
-                if (!array_key_exists('commentOnly', $this->vars))
-                {
+                if (!array_key_exists('commentOnly', $this->vars)) {
                     // Quote/paraphrase main type table
                     $updateArray = $nulls = [];
                     // page number lowercased in case roman numerals input!
-                    if (array_key_exists($pageStart, $this->vars) && $this->vars[$pageStart])
-                    {
+                    if (array_key_exists($pageStart, $this->vars) && $this->vars[$pageStart]) {
                         $updateArray['resourcemetadataPageStart'] =
                             trim(mb_strtolower($this->vars[$pageStart]));
-                        if (array_key_exists($pageEnd, $this->vars) && $this->vars[$pageEnd])
-                        {
+                        if (array_key_exists($pageEnd, $this->vars) && $this->vars[$pageEnd]) {
                             $updateArray['resourcemetadataPageEnd'] =
                                 trim(mb_strtolower($this->vars[$pageEnd]));
-                        }
-                        else
-                        {
+                        } else {
                             $nulls[] = 'resourcemetadataPageEnd';
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $nulls[] = 'resourcemetadataPageStart';
                         $nulls[] = 'resourcemetadataPageEnd';
                     }
-                    if (array_key_exists($paragraph, $this->vars) && $this->vars[$paragraph])
-                    {
+                    if (array_key_exists($paragraph, $this->vars) && $this->vars[$paragraph]) {
                         $updateArray['resourcemetadataParagraph'] = trim($this->vars[$paragraph]);
-                    }
-                    else
-                    {
+                    } else {
                         $nulls[] = 'resourcemetadataParagraph';
                     }
-                    if (array_key_exists($section, $this->vars) && $this->vars[$section])
-                    {
+                    if (array_key_exists($section, $this->vars) && $this->vars[$section]) {
                         $updateArray['resourcemetadataSection'] = trim($this->vars[$section]);
-                    }
-                    else
-                    {
+                    } else {
                         $nulls[] = 'resourcemetadataSection';
                     }
-                    if (array_key_exists($chapter, $this->vars) && $this->vars[$chapter])
-                    {
+                    if (array_key_exists($chapter, $this->vars) && $this->vars[$chapter]) {
                         $updateArray['resourcemetadataChapter'] = trim($this->vars[$chapter]);
-                    }
-                    else
-                    {
+                    } else {
                         $nulls[] = 'resourcemetadataChapter';
                     }
-                    if (!empty($updateArray))
-                    {
+                    if (!empty($updateArray)) {
                         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                         $this->db->update('resource_metadata', $updateArray);
                     }
-                    if (!empty($nulls))
-                    {
+                    if (!empty($nulls)) {
                         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                         $this->db->updateNull('resource_metadata', $nulls);
                     }
@@ -562,8 +480,7 @@ class TEXTQP
         }
         include_once("core/modules/email/EMAIL.php");
         $emailClass = new EMAIL();
-        if (!$emailClass->notify($this->vars['resourceId']))
-        {
+        if (!$emailClass->notify($this->vars['resourceId'])) {
             $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()));
         }
 
@@ -580,27 +497,19 @@ class TEXTQP
     public function summary($incDec, $field)
     {
         $metadataExists = TRUE;
-        if ($field == 'resourcesummaryQuotes')
-        {
+        if ($field == 'resourcesummaryQuotes') {
             $totalsField = 'databasesummaryTotalQuotes';
-        }
-        elseif ($field == 'resourcesummaryParaphrases')
-        {
+        } elseif ($field == 'resourcesummaryParaphrases') {
             $totalsField = 'databasesummaryTotalParaphrases';
-        }
-        else
-        {
+        } else {
             $totalsField = 'databasesummaryTotalMusings';
         }
         $this->db->formatConditions(['resourcesummaryId' => $this->vars['resourceId']]);
-        if ($this->db->numRows($this->db->select('resource_summary', 'resourcesummaryId')))
-        { // update
+        if ($this->db->numRows($this->db->select('resource_summary', 'resourcesummaryId'))) { // update
             $this->db->updateSingle('resource_summary', $this->db->formatFields($field) . "=" .
             "COALESCE(" . $this->db->formatFields($field) . "+" .
             $this->db->tidyInput($incDec) . ", " . $this->db->tidyInput($incDec) . ")");
-        }
-        else
-        {  // insert
+        } else {  // insert
             $this->db->insert('resource_summary', ['resourcesummaryId', $field], [$this->vars['resourceId'], 1]);
         }
         // if a decrement leaves nothing, delete row.
@@ -610,8 +519,7 @@ class TEXTQP
             ['resourcesummaryMusings', 'resourcesummaryParaphrases', 'resourcesummaryQuotes']
         );
         $row = $this->db->fetchRow($recordset);
-        if (!$row['resourcesummaryMusings'] && !$row['resourcesummaryParaphrases'] && !$row['resourcesummaryQuotes'])
-        {
+        if (!$row['resourcesummaryMusings'] && !$row['resourcesummaryParaphrases'] && !$row['resourcesummaryQuotes']) {
             $this->db->formatConditions(['resourcesummaryId' => $this->vars['resourceId']]);
             $this->db->delete('resource_summary');
             $metadataExists = FALSE;
@@ -631,34 +539,27 @@ class TEXTQP
     public function writekeywords($rkId, $field)
     {
         $deleteCache = FALSE;
-        if ($this->vars['keywords'])
-        {
+        if ($this->vars['keywords']) {
             $kIds = $this->keyword->writeKeywordTable($this->vars);
-            if (is_array($kIds))
-            {
+            if (is_array($kIds)) {
                 // first delete existing rows then insert new ones
                 $this->db->formatConditions([$field => $rkId]);
                 $this->db->delete('resource_keyword');
-                foreach ($kIds as $kId)
-                {
+                foreach ($kIds as $kId) {
                     $this->db->insert('resource_keyword', [$field, 'resourcekeywordKeywordId'], [$rkId, $kId]);
                 }
                 $deleteCache = TRUE;
             }
-        }
-        else
-        {
+        } else {
             $this->db->formatConditions([$field => $rkId]);
             $resultset = $this->db->select('resource_keyword', $field);
-            if ($this->db->numRows($resultset))
-            {
+            if ($this->db->numRows($resultset)) {
                 $this->db->formatConditions([$field => $rkId]);
                 $this->db->delete('resource_keyword');
                 $deleteCache = TRUE;
             }
         }
-        if ($deleteCache)
-        {
+        if ($deleteCache) {
             // remove cache files for keywords
             $this->db->deleteCache('cacheResourceKeywords');
             $this->db->deleteCache('cacheMetadataKeywords');
@@ -682,35 +583,26 @@ class TEXTQP
         $fields = $values = [];
         $fields[] = 'resourcemetadataMetadataId';
         $values[] = $lastAutoId;
-        if ($userId)
-        {
+        if ($userId) {
             $fields[] = 'resourcemetadataAddUserId';
             $values[] = $userId;
         }
         $fields[] = 'resourcemetadataText';
         $values[] = trim($this->vars[$typeComment]);
-        if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N'))
-        {
+        if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N')) {
             $fields[] = 'resourcemetadataPrivate';
             $values[] = 'N';
-        }
-        elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private'])))
-        {
+        } elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private']))) {
             $fields[] = 'resourcemetadataPrivate';
             $values[] = $this->vars['private'];
-        }
-        else
-        {
+        } else {
             $fields[] = 'resourcemetadataPrivate';
             $values[] = 'Y';
         }
-        if ($type == 'quote')
-        {
+        if ($type == 'quote') {
             $fields[] = 'resourcemetadataType';
             $values[] = 'qc';
-        }
-        else
-        {
+        } else {
             $fields[] = 'resourcemetadataType';
             $values[] = 'pc';
         }

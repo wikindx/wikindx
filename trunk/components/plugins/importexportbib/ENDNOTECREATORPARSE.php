@@ -1,13 +1,15 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
 class ENDNOTECREATORPARSE
 {
-	/*
+    /*
      * Create writer arrays from endnote input
      *
      * 'author field can be:
@@ -29,27 +31,23 @@ class ENDNOTECREATORPARSE
         // split on ' and '
         $authorArray = preg_split("/\\s(and)\\s/ui", $input);
         // check if there's anything that looks like et. al
-        foreach ($authorArray as $value)
-        {
+        foreach ($authorArray as $value) {
             $appellation = $prefix = $surname = $firstname = $initials = '';
             $author = UTF8::mb_explode(",", preg_replace("/\\s{2,}/u", ' ', trim($value)));
             $size = count($author);
             // No commas therefore something like Mark Grimshaw-Aagaard, Mark Nicholas Grimshaw, M N Grimshaw, Mark N. Grimshaw
-            if ($size == 1)
-            {
+            if ($size == 1) {
                 $author = UTF8::mb_explode(" ", $value);
                 // last of array is surname (no prefix if entered correctly)
                 $surname = array_pop($author);
             }
             // Something like Grimshaw, Mark or Grimshaw, Mark Nicholas  or Grimshaw, M N or Grimshaw, Mark N.
-            elseif ($size == 2)
-            {
+            elseif ($size == 2) {
                 // first of array is surname (perhaps with prefix)
                 list($surname, $prefix) = $this->grabSurname(array_shift($author));
             }
             // If $size is > 2, we're looking at something like Bush, George W, III
-            else
-            {
+            else {
                 // last of array is 'Jr.', 'IV' etc.
                 $appellation = array_pop($author);
                 // first of array is surname (perhaps with prefix)
@@ -60,12 +58,9 @@ class ENDNOTECREATORPARSE
             $surname = $surname . ' ' . $appellation;
             $creators[] = ["firstname" => $firstname, "initials" => $initials, "surname" => $surname, "prefix" => $prefix];
         }
-        if (isset($creators))
-        {
+        if (isset($creators)) {
             return $creators;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -74,32 +69,25 @@ class ENDNOTECREATORPARSE
      *
      * @param string $remainder
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function grabFirstnameInitials($remainder)
     {
         $firstname = $initials = '';
         $array = UTF8::mb_explode(" ", $remainder);
-        foreach ($array as $value)
-        {
-            if (preg_match("/[a-zA-Z]{2,}/u", trim($value)))
-            {
+        foreach ($array as $value) {
+            if (preg_match("/[a-zA-Z]{2,}/u", trim($value))) {
                 $firstnameArray[] = trim($value);
-            }
-            else
-            {
+            } else {
                 $initialsArray[] = str_replace(".", " ", trim($value));
             }
         }
-        if (isset($initialsArray))
-        {
-            foreach ($initialsArray as $initial)
-            {
+        if (isset($initialsArray)) {
+            foreach ($initialsArray as $initial) {
                 $initials .= ' ' . trim($initial);
             }
         }
-        if (isset($firstnameArray))
-        {
+        if (isset($firstnameArray)) {
             $firstname = implode(" ", $firstnameArray);
         }
 
@@ -115,29 +103,21 @@ class ENDNOTECREATORPARSE
     private function grabSurname($input)
     {
         $surnameArray = UTF8::mb_explode(" ", $input);
-        foreach ($surnameArray as $value)
-        {
+        foreach ($surnameArray as $value) {
             $firstChar = mb_substr($value, 0, 1);
-            if ((ord($firstChar) >= 97) && (ord($firstChar) <= 122))
-            {
+            if ((ord($firstChar) >= 97) && (ord($firstChar) <= 122)) {
                 $prefix[] = $value;
-            }
-            else
-            {
+            } else {
                 $surname[] = $value;
             }
         }
-        if (!isset($surname))
-        { // assume $prefix is actually surname
+        if (!isset($surname)) { // assume $prefix is actually surname
             $surname = implode(" ", $prefix);
             unset($prefix);
-        }
-        else
-        {
+        } else {
             $surname = implode(" ", $surname);
         }
-        if (isset($prefix))
-        {
+        if (isset($prefix)) {
             $prefix = implode(" ", $prefix);
 
             return [$surname, $prefix];

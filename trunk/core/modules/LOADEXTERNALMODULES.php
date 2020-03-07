@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -23,12 +25,9 @@ class LOADEXTERNALMODULES
      */
     public function readPluginsDirectory()
     {
-        if (count(self::$moduleList) == 0)
-        {
-            foreach (\UTILS\readComponentsList() as $cmp)
-            {
-                if ($cmp["component_type"] == "plugin" && $cmp["component_status"] == "enabled")
-                {
+        if (count(self::$moduleList) == 0) {
+            foreach (\UTILS\readComponentsList() as $cmp) {
+                if ($cmp["component_type"] == "plugin" && $cmp["component_status"] == "enabled") {
                     self::$moduleList[] = $cmp["component_id"];
                 }
             }
@@ -40,19 +39,19 @@ class LOADEXTERNALMODULES
     /**
      * Check version compatiblility of a plugin
      *
+     * @param mixed $dir
+     *
      * @return bool
      */
     public function checkVersion($dir)
     {
         include_once(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . 'config.php');
         $class = $dir . "_CONFIG";
-        if (!class_exists($class))
-        {
+        if (!class_exists($class)) {
             return FALSE;
         }
         $config = new $class();
-        if (isset($config->wikindxVersion) && ($config->wikindxVersion == WIKINDX_PLUGIN_VERSION))
-        {
+        if (isset($config->wikindxVersion) && ($config->wikindxVersion == WIKINDX_PLUGIN_VERSION)) {
             return TRUE;
         }
 

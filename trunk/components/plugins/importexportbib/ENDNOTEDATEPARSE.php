@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -34,58 +36,42 @@ class ENDNOTEDATEPARSE
      *
      * @param mixed $dateField
      *
-      @return array
+     * @return array
      */
     public function init($dateField)
     {
         $day = $month = $year = FALSE;
-        if (mb_strpos($dateField, '/') !== FALSE)
-        {
+        if (mb_strpos($dateField, '/') !== FALSE) {
             $date = UTF8::mb_explode("/", $dateField);
-        }
-        else
-        {
+        } else {
             $date = UTF8::mb_explode(" ", $dateField);
         }
-        if ((count($date) == 3) && ((mb_strlen($date[0]) == 4)))
-        { // e.g. yyyy/mm/dd
+        if ((count($date) == 3) && ((mb_strlen($date[0]) == 4))) { // e.g. yyyy/mm/dd
             $year = $date[0];
-            if ($year)
-            {
+            if ($year) {
                 $month = $this->parseMonth($date[1]);
-                if ($month)
-                {
+                if ($month) {
                     $day = $this->parseDay($date[2]);
                 }
             }
-        }
-        elseif ((count($date) == 3) && ((mb_strlen($date[2]) == 4)))
-        { // dd/mm/yyyy
+        } elseif ((count($date) == 3) && ((mb_strlen($date[2]) == 4))) { // dd/mm/yyyy
             $year = $date[2];
-            if ($year)
-            {
+            if ($year) {
                 $month = $this->parseMonth($date[1]);
-                if ($month)
-                {
+                if ($month) {
                     $day = $this->parseDay($date[0]);
                 }
             }
-        }
-        elseif (count($date) == 2)
-        { // February 31 or 31 February and no year
-            if (!is_numeric($date[0]))
-            {
+        } elseif (count($date) == 2) { // February 31 or 31 February and no year
+            if (!is_numeric($date[0])) {
                 $month = $this->parseMonth($date[0]);
                 $day = $this->parseDay($date[1]);
-            }
-            else
-            {
+            } else {
                 $month = $this->parseMonth($date[1]);
                 $day = $this->parseDay($date[0]);
             }
         }
-        if ($month > 12)
-        { // i.e. format is actually yyyy/dd/mm or mm/dd/yyyy
+        if ($month > 12) { // i.e. format is actually yyyy/dd/mm or mm/dd/yyyy
             $temp = $day;
             $day = $month;
             $month = $temp;
@@ -98,16 +84,13 @@ class ENDNOTEDATEPARSE
      *
      * @param mixed $d
      *
-      @return mixed
+     * @return mixed
      */
     private function parseDay($d)
     {
-        if (preg_match("/([0-9]+)/u", $d, $matches))
-        {
+        if (preg_match("/([0-9]+)/u", $d, $matches)) {
             return (int)$matches[1];
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -116,25 +99,20 @@ class ENDNOTEDATEPARSE
      *
      * @param mixed $d
      *
-      @return mixed
+     * @return mixed
      */
     private function parseMonth($d)
     {
-        if (is_numeric($d))
-        {
+        if (is_numeric($d)) {
             return (int)$d;
         }
-        if (preg_match("/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/ui", $d, $matches))
-        {
-            if ($month = array_search(ucfirst($matches[1]), $this->constants->monthToShortName()))
-            {
+        if (preg_match("/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/ui", $d, $matches)) {
+            if ($month = array_search(ucfirst($matches[1]), $this->constants->monthToShortName())) {
                 return $month;
             }
         }
-        if (preg_match("/(january|february|march|april|may|june|july|august|september|october|november|december)/ui", $d, $matches))
-        {
-            if ($month = array_search(ucfirst($matches[1]), $this->constants->monthToLongName()))
-            {
+        if (preg_match("/(january|february|march|april|may|june|july|august|september|october|november|december)/ui", $d, $matches)) {
+            if ($month = array_search(ucfirst($matches[1]), $this->constants->monthToLongName())) {
                 return $month;
             }
         }
@@ -146,16 +124,13 @@ class ENDNOTEDATEPARSE
      *
      * @param mixed $d
      *
-      @return mixed
+     * @return mixed
      */
     private function parseYear($d)
     {
-        if (preg_match("/(\\d{4,4})/u", $d, $matches))
-        {
+        if (preg_match("/(\\d{4,4})/u", $d, $matches)) {
             return $matches[1];
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }

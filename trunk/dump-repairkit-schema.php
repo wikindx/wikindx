@@ -60,16 +60,12 @@ $dbSchema = $db->createRepairKitDbSchema();
 
 echo "Remove previous RepairKit schema\n";
 
-if (file_exists(WIKINDX_FILE_REPAIRKIT_DB_SCHEMA))
-{
+if (file_exists(WIKINDX_FILE_REPAIRKIT_DB_SCHEMA)) {
     unlink(WIKINDX_FILE_REPAIRKIT_DB_SCHEMA);
 }
 
-if ($db->writeRepairKitDbSchema($dbSchema, WIKINDX_FILE_REPAIRKIT_DB_SCHEMA))
-{
+if ($db->writeRepairKitDbSchema($dbSchema, WIKINDX_FILE_REPAIRKIT_DB_SCHEMA)) {
     echo "RepairKit Schema dump successfull\n";
-}
-else
-{
+} else {
     echo "RepairKit Schema dump failed\n";
 }

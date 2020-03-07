@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -33,12 +35,11 @@ class SUGGEST
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "resources"));
     }
     /**
-    * keywords
-    */
+     * keywords
+     */
     public function keywords()
     {
-        if (!array_key_exists('param1', $this->vars) || !$this->vars['param1'])
-        {
+        if (!array_key_exists('param1', $this->vars) || !$this->vars['param1']) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
 
@@ -48,25 +49,22 @@ class SUGGEST
         $this->db->condition[] = "keywordKeyword LIKE " . $this->db->tidyInput("$param1%");
         $resultset = $this->db->select('keyword', 'keywordKeyword');
 
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             $this->badInput->close($this->messages->text("resources", "noResult"));
         }
 
         $quoted = [];
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $quoted[] = "\"" . $row['keywordKeyword'] . "\"";
         }
         self::displayRaw($param1, $quoted);
     }
     /**
-    * authors
-    */
+     * authors
+     */
     public function authors()
     {
-        if (!array_key_exists('param1', $this->vars) || !$this->vars['param1'])
-        {
+        if (!array_key_exists('param1', $this->vars) || !$this->vars['param1']) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
 
@@ -77,25 +75,22 @@ class SUGGEST
                     " OR creatorFirstname LIKE " . $this->db->tidyInput("$param1%") . ')';
         $resultset = $this->db->select('creator', ['creatorFirstname','creatorSurname']);
 
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             $this->badInput->close($this->messages->text("resources", "noResult"));
         }
 
         $quoted = [];
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $quoted[] = "\"" . $row['creatorSurname'] . ', ' . $row['creatorFirstname'] . "\"";
         }
         self::displayRaw($param1, $quoted);
     }
     /**
-    * collections
-    */
+     * collections
+     */
     public function collections()
     {
-        if (!array_key_exists('param1', $this->vars) || !$this->vars['param1'])
-        {
+        if (!array_key_exists('param1', $this->vars) || !$this->vars['param1']) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
 
@@ -106,21 +101,22 @@ class SUGGEST
                     " OR collectionTitleShort LIKE " . $this->db->tidyInput("$param1%") . ')';
         $resultset = $this->db->select('collection', ['collectionTitle']);
 
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             $this->badInput->close($this->messages->text("resources", "noResult"));
         }
 
         $quoted = [];
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $quoted[] = "\"" . $row['collectionTitle'] . "\"";
         }
         self::displayRaw($param1, $quoted);
     }
     /**
-    * displayRaw
-    */
+     * displayRaw
+     *
+     * @param mixed $param1
+     * @param mixed $quoted
+     */
     private function displayRaw($param1, $quoted)
     {
         $body = "[\"$param1\",[";

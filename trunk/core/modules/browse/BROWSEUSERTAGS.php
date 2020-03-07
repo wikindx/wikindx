@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -39,8 +41,7 @@ class BROWSEUSERTAGS
     {
         $this->sum = $this->userTags = [];
         $this->getUserTags();
-        if (empty($this->userTags))
-        {
+        if (empty($this->userTags)) {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noUsertags"));
 
             return;
@@ -63,13 +64,14 @@ class BROWSEUSERTAGS
         $this->db->groupBy('usertagsId');
         $this->db->orderByCollate('usertagsTag');
         $recordset = $this->db->selectCounts('resource_user_tags', 'usertagsId', 'usertagsTag');
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->collate($row);
         }
     }
     /**
      * Add user tags to array and sum totals
+     *
+     * @param mixed $row
      */
     private function collate($row)
     {
@@ -89,8 +91,7 @@ class BROWSEUSERTAGS
     {
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
-        foreach ($this->userTags as $id => $name)
-        {
+        foreach ($this->userTags as $id => $name) {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .

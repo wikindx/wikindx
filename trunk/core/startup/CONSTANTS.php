@@ -1,28 +1,29 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
 
-/**
- * CONSTANTS
- *
- * VARIOUS WIKINDX constants
- *
- * @package wikindx\core\startup
- */
- 
+ /**
+  * CONSTANTS
+  *
+  * VARIOUS WIKINDX constants
+  *
+  * @package wikindx\core\startup
+  */
  include_once(__DIR__ . DIRECTORY_SEPARATOR . "CONSTANTS_CONFIG_DEFAULT.php");
 
 /**
  * CONSTANTS
  */
 define('BR', "<br>");
-define('CR',   "\r");
-define('LF',   "\n");
-define('TAB',  "\t");
+define('CR', "\r");
+define('LF', "\n");
+define('TAB', "\t");
 /**
  * WIKINDX official/public version information
  *

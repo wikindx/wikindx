@@ -1,20 +1,19 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
-
 function SetWikindxBasePath()
 {
     $wikindxBasePath = __DIR__;
-    while (!in_array(basename($wikindxBasePath), ["", "core"]))
-    {
+    while (!in_array(basename($wikindxBasePath), ["", "core"])) {
         $wikindxBasePath = dirname($wikindxBasePath);
     }
-    if (basename($wikindxBasePath) == "")
-    {
+    if (basename($wikindxBasePath) == "") {
         die("
             \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
             and WIKINDX is unable to set the installation path automatically.

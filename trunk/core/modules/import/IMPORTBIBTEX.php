@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -114,15 +116,12 @@ class IMPORTBIBTEX
         $this->importFile = FALSE;
         $this->oldTime = time();
         $this->dirName = WIKINDX_DIR_DATA_FILES;
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'paste'))
-        {
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'paste')) {
             $this->type = 'paste';
             include_once("core/modules/import/PASTEBIBTEX.php");
             $this->badClass = new PASTEBIBTEX();
             $this->badFunction = 'display';
-        }
-        elseif (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'file'))
-        {
+        } elseif (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'file')) {
             $this->type = 'file';
             include_once("core/modules/import/BIBTEXFILE.php");
             $this->badClass = new BIBTEXFILE();
@@ -139,13 +138,11 @@ class IMPORTBIBTEX
      */
     public function stage1($returnPstring = FALSE)
     {
-        if (!$this->importFile)
-        {
+        if (!$this->importFile) {
             $this->gatekeep->init();
         }
         // if session variable 'importLock' is TRUE, user is simply reloading this form
-        if ($this->session->getVar("importLock"))
-        {
+        if ($this->session->getVar("importLock")) {
             $this->badInput->close($this->errors->text("done", "fileImport"), $this->badClass, $this->badFunction);
         }
         $this->fileName = $this->gatherStage1();
@@ -154,13 +151,11 @@ class IMPORTBIBTEX
         $this->parse->extractEntries();
         $this->parse->closeBib();
         list($null, $this->strings, $entries) = $this->parse->returnArrays(); // don't need preamble
-        if (empty($entries))
-        {
+        if (empty($entries)) {
             $this->session->setVar("importLock", TRUE);
             $this->badInput->close($this->errors->text("import", "empty"), $this->badClass, $this->badFunction);
         }
-        if ($fields = $this->findInvalidFields($entries))
-        {
+        if ($fields = $this->findInvalidFields($entries)) {
             @unlink($this->fileName); // remove garbage - ignore errors
             GLOBALS::addTplVar('content', $fields);
 
@@ -171,8 +166,7 @@ class IMPORTBIBTEX
         $finalInput = $this->writeDb();
         $this->import->collectionDefaults();
         $pString = $this->cleanUp($finalInput);
-        if ($returnPstring)
-        {
+        if ($returnPstring) {
             return $pString;
         }
         GLOBALS::addTplVar('content', $pString);
@@ -184,28 +178,22 @@ class IMPORTBIBTEX
     {
         $this->gatekeep->init();
         // if session variable 'importLock' is TRUE, user is simply reloading this form
-        if ($this->session->getVar("importLock"))
-        {
+        if ($this->session->getVar("importLock")) {
             $this->badInput->close($this->errors->text("done", "fileImport"), $this->badClass, $this->badFunction);
         }
-        if (!is_file($this->session->getVar("import_FileNameEntries")))
-        {
+        if (!is_file($this->session->getVar("import_FileNameEntries"))) {
             $this->badInput->close($this->errors->text("file", "read", $this->dirName . DIRECTORY_SEPARATOR .
             $this->session->getVar("import_FileNameEntries")), $this->badClass, $this->badFunction);
         }
         $this->garbageFiles[$this->session->getVar("import_FileNameEntries")] = FALSE;
-        if ($this->fileName = fopen($this->session->getVar("import_FileNameEntries"), 'r'))
-        {
-            if (!feof($this->fileName))
-            {
+        if ($this->fileName = fopen($this->session->getVar("import_FileNameEntries"), 'r')) {
+            if (!feof($this->fileName)) {
                 $this->entries = $this->convertEntries(unserialize(base64_decode(trim(fgets($this->fileName)))));
             }
             fclose($this->fileName);
         }
-        if ($this->session->getVar("import_FileNameStrings"))
-        {
-            if (!is_file($this->session->getVar("import_FileNameStrings")))
-            {
+        if ($this->session->getVar("import_FileNameStrings")) {
+            if (!is_file($this->session->getVar("import_FileNameStrings"))) {
                 $this->badInput->close(
                     $this->errors->text("file", "read", $this->session->getVar("import_FileNameStrings")),
                     $this->badClass,
@@ -213,24 +201,20 @@ class IMPORTBIBTEX
                 );
             }
             $this->garbageFiles[$this->session->getVar("import_FileNameStrings")] = FALSE;
-            if ($this->fileNameStrings = fopen($this->session->getVar("import_FileNameStrings"), 'r'))
-            {
-                if (!feof($this->fileNameStrings))
-                {
+            if ($this->fileNameStrings = fopen($this->session->getVar("import_FileNameStrings"), 'r')) {
+                if (!feof($this->fileNameStrings)) {
                     $this->strings = $this->convertEntries(unserialize(base64_decode(trim(fgets($this->fileNameStrings)))));
                 }
 
                 fclose($this->fileNameStrings);
             }
         }
-        if (empty($this->entries))
-        {
+        if (empty($this->entries)) {
             $this->session->setVar("importLock", TRUE);
             $this->badInput->close($this->errors->text("import", "empty"), $this->badClass, $this->badFunction);
         }
         list($error, $this->customFields, $this->unrecognisedFields) = $this->import->getUnrecognisedFields();
-        if ($error)
-        {
+        if ($error) {
             $this->badInput->close($error, $this->badClass, $this->badFunction);
         }
         // NB - we need to write data to database as UTF-8 and parse all bibTeX values for laTeX code
@@ -246,20 +230,14 @@ class IMPORTBIBTEX
     public function continueImport()
     {
         // Restore session
-        if ($this->session->issetVar("import_RejectTitles"))
-        {
+        if ($this->session->issetVar("import_RejectTitles")) {
             $this->rejectTitles = unserialize(base64_decode($this->session->getVar("import_RejectTitles")));
-        }
-        else
-        {
+        } else {
             $this->rejectTitles = [];
         }
-        if ($this->session->issetVar("import_ResourceIds"))
-        {
+        if ($this->session->issetVar("import_ResourceIds")) {
             $this->rIds = unserialize(base64_decode($this->session->getVar("import_ResourceIds")));
-        }
-        else
-        {
+        } else {
             $this->rIds = [];
         }
         // Number added so far
@@ -267,20 +245,17 @@ class IMPORTBIBTEX
         // Number discarded so far
         $this->resourceDiscarded = $this->session->getVar("import_ResourceDiscarded");
         // tag ID
-        if ($this->session->issetVar("import_TagID"))
-        {
+        if ($this->session->issetVar("import_TagID")) {
             $this->tagId = $this->session->getVar("import_TagID");
         }
         // bibtexString ID
-        if ($this->session->issetVar("import_BibtexStringID"))
-        {
+        if ($this->session->issetVar("import_BibtexStringID")) {
             $this->bibtexStringId = $this->session->getVar("import_BibtexStringID");
         }
         $this->entriesLeft = $this->entries =
             unserialize(base64_decode($this->session->getVar("import_Entries")));
         $this->garbageFiles = unserialize(base64_decode($this->session->getVar("import_GarbageFiles")));
-        if ($this->session->issetVar("import_UnrecognisedFields"))
-        {
+        if ($this->session->issetVar("import_UnrecognisedFields")) {
             $this->unrecognisedFields =
                 unserialize(base64_decode($this->session->getVar("import_UnrecognisedFields")));
             $this->customFields = unserialize(base64_decode($this->session->getVar("import_CustomFields")));
@@ -300,83 +275,51 @@ class IMPORTBIBTEX
      */
     public function getType($entry)
     {
-        if ($entry['bibtexEntryType'] == 'article')
-        {
-            if ($this->day)
-            {
+        if ($entry['bibtexEntryType'] == 'article') {
+            if ($this->day) {
                 $wkType = 'newspaper_article';
-            }
-            elseif ($this->month)
-            {
+            } elseif ($this->month) {
                 $wkType = 'magazine_article';
-            }
-            else
-            { // no day or month
+            } else { // no day or month
                 $wkType = 'journal_article';
             }
-        }
-        elseif (($entry['bibtexEntryType'] == 'misc') && $this->url)
-        {
+        } elseif (($entry['bibtexEntryType'] == 'misc') && $this->url) {
             $wkType = 'web_article';
-        }
-        elseif ($entry['bibtexEntryType'] == 'misc')
-        {
+        } elseif ($entry['bibtexEntryType'] == 'misc') {
             $wkType = 'miscellaneous';
-        }
-        elseif ($entry['bibtexEntryType'] == 'book')
-        {
+        } elseif ($entry['bibtexEntryType'] == 'book') {
             $wkType = 'book';
-        }
-        elseif ($entry['bibtexEntryType'] == 'techreport')
-        {
+        } elseif ($entry['bibtexEntryType'] == 'techreport') {
             $wkType = 'report';
-        }
-        elseif ($entry['bibtexEntryType'] == 'patent')
-        {
+        } elseif ($entry['bibtexEntryType'] == 'patent') {
             $wkType = 'patent';
-        }
-        elseif ($entry['bibtexEntryType'] == 'unpublished')
-        {
+        } elseif ($entry['bibtexEntryType'] == 'unpublished') {
             $wkType = 'unpublished';
-        }
-        elseif ($entry['bibtexEntryType'] == 'mastersthesis')
-        {
+        } elseif ($entry['bibtexEntryType'] == 'mastersthesis') {
             $wkType = 'thesis';
             $this->thesisType = "masters";
-        }
-        elseif ($entry['bibtexEntryType'] == 'phdthesis')
-        {
+        } elseif ($entry['bibtexEntryType'] == 'phdthesis') {
             $wkType = 'thesis';
             $this->thesisType = "PhD";
-        }
-        elseif (($entry['bibtexEntryType'] == 'conference') ||
-            ($entry['bibtexEntryType'] == 'inproceedings'))
-        {
+        } elseif (($entry['bibtexEntryType'] == 'conference') ||
+            ($entry['bibtexEntryType'] == 'inproceedings')) {
             $wkType = 'proceedings_article';
         }
         // inbook type with a chapter field that is numeric, bibtex field 'chapter' is wikindx's title, bibtex field 'title' is wikindx collectionTitle
         elseif (($entry['bibtexEntryType'] == 'inbook') && array_key_exists('chapter', $entry) &&
-            is_numeric($entry['chapter']))
-        {
+            is_numeric($entry['chapter'])) {
             $wkType = 'book_chapter';
         }
         // incorrect bibtex but we allow it anyhow making it a wikindx book_article type
-        elseif (($entry['bibtexEntryType'] == 'inbook') && array_key_exists('chapter', $entry))
-        {
+        elseif (($entry['bibtexEntryType'] == 'inbook') && array_key_exists('chapter', $entry)) {
             $wkType = 'book_article';
-        }
-        elseif (($entry['bibtexEntryType'] == 'incollection') ||
-            ($entry['bibtexEntryType'] == 'inbook'))
-        {
+        } elseif (($entry['bibtexEntryType'] == 'incollection') ||
+            ($entry['bibtexEntryType'] == 'inbook')) {
             $wkType = 'book_article';
-        }
-        elseif (($entry['bibtexEntryType'] == 'collection') ||
-            ($entry['bibtexEntryType'] == 'proceedings'))
-        {
+        } elseif (($entry['bibtexEntryType'] == 'collection') ||
+            ($entry['bibtexEntryType'] == 'proceedings')) {
             $wkType = 'proceedings';
-        }
-        elseif (!$wkType = array_search($entry['bibtexEntryType'], $this->map->types))
-        {
+        } elseif (!$wkType = array_search($entry['bibtexEntryType'], $this->map->types)) {
             $wkType = 'miscellaneous'; // everything else
         }
 
@@ -390,68 +333,55 @@ class IMPORTBIBTEX
      */
     public function writeResourceMiscTable($entry, $wkType)
     {
-        foreach ($entry as $bibField => $bibValue)
-        {
-            if ($wkField = array_search($bibField, $this->map->{$wkType}['resource_misc']))
-            {
+        foreach ($entry as $bibField => $bibValue) {
+            if ($wkField = array_search($bibField, $this->map->{$wkType}['resource_misc'])) {
                 $fields[] = $wkField;
                 $values[] = $bibValue;
             }
         }
-        if ($this->collectionId)
-        {
+        if ($this->collectionId) {
             $fields[] = 'resourcemiscCollection';
             $values[] = $this->collectionId;
             $this->collectionId = FALSE;
         }
-        if ($this->publisherId)
-        {
+        if ($this->publisherId) {
             $fields[] = 'resourcemiscPublisher';
             $values[] = $this->publisherId;
             $this->publisherId = FALSE;
         }
-        if ($this->confPublisherId)
-        {
+        if ($this->confPublisherId) {
             $fields[] = "resourcemiscField1";
             $values[] = $this->confPublisherId;
             $this->confPublisherId = FALSE;
         }
-        if ($this->tagId)
-        {
+        if ($this->tagId) {
             $fields[] = 'resourcemiscTag';
             $values[] = $this->tagId;
         }
         if (($wkType == 'newspaper_article') || ($wkType == 'magazine_article') ||
             ($wkType == 'proceedings_article') || ($wkType == 'proceedings') ||
             ($wkType == 'journal_article') || ($wkType == 'report') ||
-            ($this->url && ($wkType == 'web_article')))
-        {
-            if ($this->startMonth)
-            {
+            ($this->url && ($wkType == 'web_article'))) {
+            if ($this->startMonth) {
                 $fields[] = 'resourcemiscField3';
                 $values[] = $this->startMonth;
             }
-            if ($this->startDay)
-            {
+            if ($this->startDay) {
                 $fields[] = 'resourcemiscField2';
                 $values[] = $this->startDay;
             }
         }
-        if (($wkType == 'proceedings_article') || ($wkType == 'proceedings') || ($wkType == 'magazine_article'))
-        {
-            if ($this->endMonth)
-            {
+        if (($wkType == 'proceedings_article') || ($wkType == 'proceedings') || ($wkType == 'magazine_article')) {
+            if ($this->endMonth) {
                 $fields[] = 'resourcemiscField6';
                 $values[] = $this->endMonth;
             }
-            if ($this->endDay)
-            {
+            if ($this->endDay) {
                 $fields[] = 'resourcemiscField5';
                 $values[] = $this->endDay;
             }
         }
-        if ((($wkType == 'book') || ($wkType == 'thesis')) && ($bibField == 'pages') && is_int($bibValue))
-        {
+        if ((($wkType == 'book') || ($wkType == 'thesis')) && ($bibField == 'pages') && is_int($bibValue)) {
             $fields[] = 'resourcemiscField6';
             $values[] = $bibValue;
         }
@@ -466,14 +396,11 @@ class IMPORTBIBTEX
      */
     public function writeResourceCustomTable($custom)
     {
-        if (empty($this->customFields))
-        {
+        if (empty($this->customFields)) {
             return;
         }
-        foreach ($this->customFields as $importKey => $id)
-        {
-            if (!array_key_exists($importKey, $custom))
-            {
+        foreach ($this->customFields as $importKey => $id) {
+            if (!array_key_exists($importKey, $custom)) {
                 continue;
             }
             $this->import->writeResourcecustomTable($custom[$importKey], $id);
@@ -492,49 +419,41 @@ class IMPORTBIBTEX
         $totalResources = $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources');
         $totalResources += $this->resourceAddedThisRound;
         $this->db->update('database_summary', ['databasesummaryTotalResources' => $totalResources]);
-        if ($finalInput)
-        {
+        if ($finalInput) {
             $rCommon = FACTORY_RESOURCECOMMON::getInstance();
             $listCommon = FACTORY_LISTCOMMON::getInstance();
             $this->deleteCaches();
             $this->import->tidyTables();
-            foreach ($this->garbageFiles as $fileName => $null)
-            {
+            foreach ($this->garbageFiles as $fileName => $null) {
                 unlink($fileName); // remove garbage - ignore errors
             }
             $pString = \HTML\p($this->success->text("bibtexImport"));
             $pString .= \HTML\p($this->messages->text("import", "added", " " . $this->resourceAdded));
             $pString .= $this->import->printDuplicates($this->resourceDiscarded, $this->rejectTitles);
             $pString .= \HTML\hr();
-            if (!empty($this->rIds) && (count($this->rIds) <= 50))
-            {
+            if (!empty($this->rIds) && (count($this->rIds) <= 50)) {
                 $sql = $rCommon->getResource($this->rIds, FALSE, FALSE, FALSE, FALSE, TRUE);
                 $listCommon->display($sql, 'list');
             }
             $this->session->delVar("sql_LastMulti");
             $this->session->setVar("importLock", TRUE);
-            if ($this->resourceAdded)
-            {
+            if ($this->resourceAdded) {
                 include_once("core/modules/email/EMAIL.php");
                 $email = new EMAIL();
                 $email->notify(FALSE, TRUE);
             }
-        }
-        else
-        {
+        } else {
             // Store temporary session variables
             // Number added
             $this->session->setVar("import_ResourceAdded", $this->resourceAdded);
             // Number of rejects
             $this->session->setVar("import_ResourceDiscarded", $this->resourceDiscarded);
             // tag ID
-            if (isset($this->tagId))
-            {
+            if (isset($this->tagId)) {
                 $this->session->setVar("import_TagID", $this->tagId);
             }
             // bibtexString ID
-            if (isset($this->bibtexStringId))
-            {
+            if (isset($this->bibtexStringId)) {
                 $this->session->setVar("import_BibtexStringID", $this->bibtexStringId);
             }
             // Resource IDs
@@ -542,22 +461,19 @@ class IMPORTBIBTEX
             // Remaining entries
             $this->session->setVar("import_Entries", base64_encode(serialize($this->entriesLeft)));
             // Rejected titles
-            if (!empty($this->rejectTitles))
-            {
+            if (!empty($this->rejectTitles)) {
                 $this->session->setVar("import_RejectTitles", base64_encode(serialize($this->rejectTitles)));
             }
             // garbage files
             $this->session->setVar("import_GarbageFiles", base64_encode(serialize($this->garbageFiles)));
             // Unrecognised field mapping
-            if (isset($this->unrecognisedFields))
-            {
+            if (isset($this->unrecognisedFields)) {
                 $this->session->setVar(
                     "import_UnrecognisedFields",
                     base64_encode(serialize($this->unrecognisedFields))
                 );
                 // Custom field mapping
-                if (isset($this->customFields))
-                {
+                if (isset($this->customFields)) {
                     $this->session->setVar("import_CustomFields", base64_encode(serialize($this->customFields)));
                 }
                 // $this->vars
@@ -591,35 +507,28 @@ class IMPORTBIBTEX
     {
         $inputTypes = [];
         $this->day = $this->month = FALSE;
-        foreach ($entries as $entry)
-        {
+        foreach ($entries as $entry) {
             list($this->url) = $this->grabHowPublished($entry);
             $this->getType($entry);
-            foreach ($entry as $field => $value)
-            {
-                if ($field == 'bibtexEntryType')
-                {
+            foreach ($entry as $field => $value) {
+                if ($field == 'bibtexEntryType') {
                     $inputTypes[] = $value;
 
                     continue;
                 }
-                if ($field == 'bibtexCitation')
-                {
+                if ($field == 'bibtexCitation') {
                     continue;
                 }
-                if (($field == 'annote') && !array_key_exists('note', $entry))
-                {
+                if (($field == 'annote') && !array_key_exists('note', $entry)) {
                     continue;
                 }
                 if ((array_search($field, $this->map->validFields) === FALSE) &&
-                    (array_search($field, $this->invalidFieldNames) === FALSE))
-                {
+                    (array_search($field, $this->invalidFieldNames) === FALSE)) {
                     $this->invalidFieldNames[] = $field;
                 }
             }
         }
-        if (!empty($this->invalidFieldNames))
-        { // prompt to map field names
+        if (!empty($this->invalidFieldNames)) { // prompt to map field names
             list($error, $string) = $this->import->promptFieldNames(
                 $entries,
                 $inputTypes,
@@ -628,12 +537,9 @@ class IMPORTBIBTEX
                 $this->strings,
                 'bibtex'
             );
-            if ($error)
-            {
+            if ($error) {
                 $this->badInput->close($error, $this->badClass, $this->badFunction);
-            }
-            else
-            {
+            } else {
                 return $string;
             }
         }
@@ -650,55 +556,43 @@ class IMPORTBIBTEX
     private function writeDb($continue = FALSE)
     {
         $tagWritten = $stringWritten = FALSE;
-        if (!$continue)
-        {
+        if (!$continue) {
             $this->tagId = FALSE;
         }
-        if ($this->session->getVar("setup_Superadmin") || WIKINDX_IMPORT_BIB)
-        {
+        if ($this->session->getVar("setup_Superadmin") || WIKINDX_IMPORT_BIB) {
             $pasteLimit = FALSE;
-        }
-        else
-        {
+        } else {
             $pasteLimit = TRUE;
         }
         $finalInput = TRUE;
         $deactivatedTypes = WIKINDX_DEACTIVATE_RESOURCE_TYPES;
-        foreach ($this->entries as $key => $entry)
-        {
+        foreach ($this->entries as $key => $entry) {
             unset($this->entriesLeft[$key]);
             $authors = $editors = [];
             // For a user cut 'n' pasting. Admin is unlimited.
-            if ($pasteLimit && ($this->resourceAdded >= WIKINDX_MAX_PASTE))
-            {
+            if ($pasteLimit && ($this->resourceAdded >= WIKINDX_MAX_PASTE)) {
                 break;
             }
             $this->keywords = $this->note = $this->abstract = $this->url = $this->month = $this->day = FALSE;
             $wkType = $this->getType($entry);
             $noSort = $title = $subtitle = FALSE;
             // inbook type with a chapter field that is numeric, bibtex field 'chapter' is wikindx's title, bibtex field 'title' is wikindx collectionTitle
-            if (($wkType == 'book_chapter') && trim($entry['chapter']))
-            {
+            if (($wkType == 'book_chapter') && trim($entry['chapter'])) {
                 $title = trim($entry['chapter']);
             }
             // This was originally bibtex @inbook, because the bibtex field chapter was nonnumeric, it's been converted to wikindx book_article.
             // bibtex field 'chapter' is wikindx's title, bibtex field 'title' is wikindx collectionTitle
-            elseif (($wkType == 'book_article') && array_key_exists('chapter', $entry) && trim($entry['chapter']))
-            {
+            elseif (($wkType == 'book_article') && array_key_exists('chapter', $entry) && trim($entry['chapter'])) {
                 list($noSort, $title, $subtitle) = $this->import->splitTitle($entry['chapter']);
-            }
-            elseif (array_key_exists('title', $entry) && trim($entry['title']))
-            {
+            } elseif (array_key_exists('title', $entry) && trim($entry['title'])) {
                 list($noSort, $title, $subtitle) = $this->import->splitTitle($entry['title']);
             }
             // ignore wikindx resource type book_chapter when checking duplicates. Ignore also deactivated types
             if ((!$title || (($wkType != 'book_chapter') && $this->import->checkDuplicates($noSort, $title, $subtitle, $wkType)))
                 ||
-                (array_search($wkType, $deactivatedTypes) !== FALSE))
-            {
+                (array_search($wkType, $deactivatedTypes) !== FALSE)) {
                 $rejectTitle = $title ? $title . "." : $title;
-                if (array_key_exists('author', $entry) && $entry['author'])
-                {
+                if (array_key_exists('author', $entry) && $entry['author']) {
                     $rejectTitle = $entry['bibtexEntryType'] . ': ' . trim($entry['author']) . " " . $rejectTitle;
                 }
                 $this->rejectTitles[] = $rejectTitle;
@@ -708,13 +602,11 @@ class IMPORTBIBTEX
                 continue;
             }
             if ((array_search('author', $this->map->{$wkType}['resource_creator'])) &&
-                array_key_exists('author', $entry) && $entry['author'])
-            {
+                array_key_exists('author', $entry) && $entry['author']) {
                 $authors = $this->parseCreator->parse($entry['author']);
             }
             if ((array_search('editor', $this->map->{$wkType}['resource_creator'])) &&
-                array_key_exists('editor', $entry) && $entry['editor'])
-            {
+                array_key_exists('editor', $entry) && $entry['editor']) {
                 $editors = $this->parseCreator->parse($entry['editor']);
             }
             // bibTeX's 'article' type can be wikindx's journal_article, magazine_article or newspaper_article.  If there is no 'month' field,
@@ -728,15 +620,12 @@ class IMPORTBIBTEX
             $this->rIds[] = $this->resourceId;
             // add any import tag and get tag auto ID.  We write it here after the resource table in case we forbid duplicates and all
             // bibtex entries are duplicates - we don't want an empty tag in the WKX_tag table.  tag auto ID is written to resource_misc
-            if (!$continue)
-            {
-                if (!$tagWritten)
-                {
+            if (!$continue) {
+                if (!$tagWritten) {
                     $this->tagId = $this->import->writeTagTable();
                     $tagWritten = TRUE;
                 }
-                if (!$stringWritten)
-                {
+                if (!$stringWritten) {
                     $this->writeBibtexStringTable();
                     $stringWritten = TRUE;
                 }
@@ -758,8 +647,7 @@ class IMPORTBIBTEX
             $this->resourceAdded++;
             $this->resourceAddedThisRound++;
             // Check we have more than 4 seconds buffer before max_execution_time times out.
-            if ((time() - $this->oldTime) >= (ini_get("max_execution_time") - 4))
-            {
+            if ((time() - $this->oldTime) >= (ini_get("max_execution_time") - 4)) {
                 $finalInput = FALSE;
 
                 break;
@@ -773,29 +661,25 @@ class IMPORTBIBTEX
      */
     private function deleteCaches()
     {
-        if ($this->deleteCacheCreators)
-        {
+        if ($this->deleteCacheCreators) {
             // remove cache files for creators
             $this->db->deleteCache('cacheResourceCreators');
             $this->db->deleteCache('cacheMetadataCreators');
         }
-        if ($this->deleteCachePublishers)
-        {
+        if ($this->deleteCachePublishers) {
             // remove cache files for publishers
             $this->db->deleteCache('cacheResourcePublishers');
             $this->db->deleteCache('cacheMetadataPublishers');
             $this->db->deleteCache('cacheConferenceOrganisers');
         }
-        if ($this->deleteCacheCollections)
-        {
+        if ($this->deleteCacheCollections) {
             // remove cache files for collections
             $this->db->deleteCache('cacheResourceCollections');
             $this->db->deleteCache('cacheMetadataCollections');
             $this->db->deleteCache('cacheResourceCollectionTitles');
             $this->db->deleteCache('cacheResourceCollectionShorts');
         }
-        if ($this->deleteCacheKeywords)
-        {
+        if ($this->deleteCacheKeywords) {
             // remove cache files for keywords
             $this->db->deleteCache('cacheResourceKeywords');
             $this->db->deleteCache('cacheMetadataKeywords');
@@ -821,73 +705,59 @@ class IMPORTBIBTEX
     {
         $rejectedEntry = FALSE;
         $custom = [];
-        foreach ($entry as $key => $value)
-        {
+        foreach ($entry as $key => $value) {
             if (($key == 'bibtexEntryType') ||
-            ($key == 'howpublished') || ($key == 'abstract') || ($key == 'keywords'))
-            {
+            ($key == 'howpublished') || ($key == 'abstract') || ($key == 'keywords')) {
                 $newEntry[$key] = $value;
 
                 continue;
             }
-            if ($key == 'bibtexCitation')
-            {
+            if ($key == 'bibtexCitation') {
                 $rejected['citation'] = trim($value);
                 $rejectedEntry = TRUE;
 
                 continue;
             }
-            if ($key == 'note')
-            { // Use 'note' in preference to 'annote'
+            if ($key == 'note') { // Use 'note' in preference to 'annote'
                 $newEntry[$key] = $value;
 
                 continue;
             }
-            if (($key == 'annote') && !array_key_exists('note', $entry))
-            { // Use 'note' in preference to 'annote'
+            if (($key == 'annote') && !array_key_exists('note', $entry)) { // Use 'note' in preference to 'annote'
                 $newEntry[$key] = $value;
 
                 continue;
             }
-            if (($key == 'month') && $this->url && ($wkType == 'web_article'))
-            {
+            if (($key == 'month') && $this->url && ($wkType == 'web_article')) {
                 continue;
             }
-            if (array_search($key, $this->map->{$wkType}['possible']) !== FALSE)
-            {
-                if (!array_key_exists($key, $newEntry) || !array_key_exists('import_Precedence', $this->vars))
-                {
+            if (array_search($key, $this->map->{$wkType}['possible']) !== FALSE) {
+                if (!array_key_exists($key, $newEntry) || !array_key_exists('import_Precedence', $this->vars)) {
                     $newEntry[$key] = $value;
                 }
             }
             // Do we map unrecognised fields?
-            if (!empty($this->unrecognisedFields) && array_search($key, $this->unrecognisedFields) !== FALSE)
-            {
+            if (!empty($this->unrecognisedFields) && array_search($key, $this->unrecognisedFields) !== FALSE) {
                 $importKey = 'import_' . $key;
                 if (array_key_exists($importKey, $this->vars) &&
-                    array_search($this->vars[$importKey], $this->map->{$wkType}['possible']) !== FALSE)
-                {
+                    array_search($this->vars[$importKey], $this->map->{$wkType}['possible']) !== FALSE) {
                     // Do unrecognised fields take precedence?
-                    if (array_key_exists('import_Precedence', $this->vars))
-                    {
+                    if (array_key_exists('import_Precedence', $this->vars)) {
                         $newEntry[$this->vars[$importKey]] = $value;
 
                         continue;
                     }
-                    if (!array_key_exists($this->vars[$importKey], $newEntry))
-                    {
+                    if (!array_key_exists($this->vars[$importKey], $newEntry)) {
                         $newEntry[$this->vars[$importKey]] = $value;
 
                         continue;
                     }
                 }
             }
-            if (array_key_exists($key, $newEntry))
-            {
+            if (array_key_exists($key, $newEntry)) {
                 continue;
             }
-            if (!empty($this->customFields) && array_key_exists($key, $this->customFields))
-            {
+            if (!empty($this->customFields) && array_key_exists($key, $this->customFields)) {
                 $custom[$key] = $value;
 
                 continue;
@@ -897,18 +767,15 @@ class IMPORTBIBTEX
             // Return any @STRING substitution in $value back to original state
             $rejectedEntry = TRUE;
             // Do @string substitutions
-            if (!empty($this->strings) && ($strKey = array_search($value, $this->strings)))
-            {
+            if (!empty($this->strings) && ($strKey = array_search($value, $this->strings))) {
                 $rejected[$key] = $strKey;
             }
             // No substitution so return quoted
-            else
-            {
+            else {
                 $rejected[$key] = "\"" . $value . "\"";
             }
         }
-        if (!$rejectedEntry)
-        {
+        if (!$rejectedEntry) {
             return [FALSE, $newEntry, $custom];
         }
 
@@ -928,8 +795,7 @@ class IMPORTBIBTEX
     private function writeResourceTable($noSort, $title, $subtitle, $entry, $wkType)
     {
         // bibTeX has no way of saying whether a thesis is a thesis or a dissertation so here we force it to 'thesis'.
-        if ($wkType == 'thesis')
-        {
+        if ($wkType == 'thesis') {
             $fields[] = 'resourceField1';
             $values[] = 'thesis';
         }
@@ -938,39 +804,32 @@ class IMPORTBIBTEX
         $fields[] = 'resourceTitle';
         $values[] = $title;
         $titleSort = $title;
-        if ($noSort)
-        {
+        if ($noSort) {
             $fields[] = 'resourceNoSort';
             $values[] = $noSort;
         }
-        if ($subtitle)
-        {
+        if ($subtitle) {
             $fields[] = 'resourceSubtitle';
             $values[] = $subtitle;
             $titleSort .= ' ' . $subtitle;
         }
         $fields[] = 'resourceTitleSort';
         $values[] = str_replace(['{', '}'], '', $titleSort);
-        if ($this->thesisType)
-        {
+        if ($this->thesisType) {
             $fields[] = 'resourceField2';
             $values[] = $this->thesisType;
             $this->thesisType = FALSE;
         }
-        if (($wkType == 'miscellaneous') && $this->howPublished)
-        {
+        if (($wkType == 'miscellaneous') && $this->howPublished) {
             $fields[] = $this->map->miscellaneous['howpublished'];
             $values[] = $this->howPublished;
         }
-        foreach ($entry as $bibField => $bibValue)
-        {
+        foreach ($entry as $bibField => $bibValue) {
             // ISBN, ISSN and URL are uppercase in BIBTEXMAP but everything in $entry is lowercase
-            if (($bibField == 'isbn') || ($bibField == 'issn') || ($bibField == 'doi'))
-            {
+            if (($bibField == 'isbn') || ($bibField == 'issn') || ($bibField == 'doi')) {
                 $bibField = mb_strtoupper($bibField);
             }
-            if ($wkField = array_search($bibField, $this->map->{$wkType}['resource']))
-            {
+            if ($wkField = array_search($bibField, $this->map->{$wkType}['resource'])) {
                 $fields[] = $wkField;
                 $values[] = $bibValue;
             }
@@ -991,10 +850,8 @@ class IMPORTBIBTEX
     {
         $index = 1;
         $creatorArray = [];
-        foreach ($authors as $array)
-        {
-            if ($cField = array_search('author', $this->map->{$wkType}['resource_creator']))
-            {
+        foreach ($authors as $array) {
+            if ($cField = array_search('author', $this->map->{$wkType}['resource_creator'])) {
                 $creatorArray[$cField][$index]['prefix'] = $array[4];
                 $creatorArray[$cField][$index]['surname'] = $array[2] . ' ' . $array[3];
                 $creatorArray[$cField][$index]['firstname'] = $array[0];
@@ -1003,10 +860,8 @@ class IMPORTBIBTEX
             }
         }
         $index = 1;
-        foreach ($editors as $array)
-        {
-            if ($cField = array_search('editor', $this->map->{$wkType}['resource_creator']))
-            {
+        foreach ($editors as $array) {
+            if ($cField = array_search('editor', $this->map->{$wkType}['resource_creator'])) {
                 $creatorArray[$cField][$index]['prefix'] = $array[4];
                 $creatorArray[$cField][$index]['surname'] = $array[2] . ' ' . $array[3];
                 $creatorArray[$cField][$index]['firstname'] = $array[0];
@@ -1014,8 +869,7 @@ class IMPORTBIBTEX
                 ++$index;
             }
         }
-        if (!empty($creatorArray))
-        {
+        if (!empty($creatorArray)) {
             $this->deleteCacheCreators = TRUE;
         }
         // NB, even if array is empty, we need to write empty row to resource_creator
@@ -1034,38 +888,27 @@ class IMPORTBIBTEX
     {
         $title = $short = FALSE;
         // inbook type with a chapter field that is numeric, bibtex field 'chapter' is wikindx's title, bibtex field 'title' is wikindx collectionTitle
-        if ($wkType == 'book_chapter')
-        {
+        if ($wkType == 'book_chapter') {
             $title = trim($entry['title']);
         }
         // This was originally bibtex @inbook, because the bibtex field chapter was nonnumeric, it's been converted to wikindx book_article.
         // bibtex field 'chapter' is wikindx's title, bibtex field 'title' is wikindx collectionTitle
-        elseif (($wkType == 'book_article') && array_key_exists('chapter', $entry))
-        {
+        elseif (($wkType == 'book_article') && array_key_exists('chapter', $entry)) {
             $title = trim($entry['title']);
-        }
-        elseif (($wkType == 'book_article') && !array_key_exists('booktitle', $entry))
-        {
+        } elseif (($wkType == 'book_article') && !array_key_exists('booktitle', $entry)) {
             return;
-        }
-        elseif (array_key_exists('booktitle', $entry))
-        {
+        } elseif (array_key_exists('booktitle', $entry)) {
             $title = trim($entry['booktitle']);
         }
-        if (!$title && !array_key_exists('journal', $entry))
-        {
+        if (!$title && !array_key_exists('journal', $entry)) {
             return;
-        }
-        elseif (!$title && array_key_exists('journal', $entry))
-        {
+        } elseif (!$title && array_key_exists('journal', $entry)) {
             $title = trim($entry['journal']);
         }
-        if (!$title)
-        {
+        if (!$title) {
             return;
         }
-        if (!empty($this->strings))
-        {
+        if (!empty($this->strings)) {
             $short = array_search($title, $this->strings);
         }
         $this->collectionId = $this->import->writeCollectionTable($title, $short, $wkType);
@@ -1080,56 +923,37 @@ class IMPORTBIBTEX
     private function writePublisherTable($entry, $wkType)
     {
         $organization = $publisherName = $publisherLocation = $conferenceLocation = FALSE;
-        if (array_key_exists('publisher', $entry))
-        {
+        if (array_key_exists('publisher', $entry)) {
             $publisherName = trim($entry['publisher']);
         }
-        if (array_key_exists('organization', $entry) && ($wkType != 'proceedings_article'))
-        {
+        if (array_key_exists('organization', $entry) && ($wkType != 'proceedings_article')) {
             $publisherName = trim($entry['organization']);
-        }
-        elseif (array_key_exists('organization', $entry))
-        {
+        } elseif (array_key_exists('organization', $entry)) {
             $organization = trim($entry['organization']);
-        }
-        elseif (array_key_exists('school', $entry))
-        {
+        } elseif (array_key_exists('school', $entry)) {
             $publisherName = trim($entry['school']);
-        }
-        elseif (array_key_exists('institution', $entry))
-        {
+        } elseif (array_key_exists('institution', $entry)) {
             $publisherName = trim($entry['institution']);
         }
-        if (!$organization && !$publisherName)
-        {
+        if (!$organization && !$publisherName) {
             return;
         }
-        if (array_key_exists('address', $entry) && ($wkType != 'proceedings_article'))
-        {
+        if (array_key_exists('address', $entry) && ($wkType != 'proceedings_article')) {
             $publisherLocation = trim($entry['address']);
-        }
-        elseif (array_key_exists('address', $entry))
-        {
+        } elseif (array_key_exists('address', $entry)) {
             $conferenceLocation = trim($entry['address']);
         }
-        if (array_key_exists('location', $entry))
-        {
-            if ($wkType == 'proceedings_article')
-            {
+        if (array_key_exists('location', $entry)) {
+            if ($wkType == 'proceedings_article') {
                 $conferenceLocation = trim($entry['location']);
-            }
-            else
-            {
+            } else {
                 $publisherLocation = trim($entry['location']);
             }
         }
-        if ($wkType == 'proceedings_article')
-        {
+        if ($wkType == 'proceedings_article') {
             $this->publisherId = $this->import->writePublisherTable($organization, $conferenceLocation, $wkType);
             $this->confPublisherId = $this->import->writePublisherTable($publisherName, $publisherLocation, $wkType);
-        }
-        else
-        {
+        } else {
             $this->publisherId = $this->import->writePublisherTable($publisherName, $publisherLocation, $wkType);
         }
         $this->deleteCachePublishers = TRUE;
@@ -1137,21 +961,18 @@ class IMPORTBIBTEX
     /**
      * writeResourceYearTable - write WKX_resource_year table
      *
-     * @param array $entry  Assoc array of one entry for import.
+     * @param array $entry Assoc array of one entry for import.
      * @param string $wkType The WIKINDX resource type for this bibtex entry
      */
     private function writeResourceYearTable($entry, $wkType)
     {
-        foreach ($entry as $bibField => $bibValue)
-        {
-            if ($wkField = array_search($bibField, $this->map->{$wkType}['resource_year']))
-            {
+        foreach ($entry as $bibField => $bibValue) {
+            if ($wkField = array_search($bibField, $this->map->{$wkType}['resource_year'])) {
                 $fields[] = $wkField;
                 $values[] = $bibValue;
             }
         }
-        if (!isset($fields))
-        {
+        if (!isset($fields)) {
             return;
         }
         $this->import->writeYearTable($fields, $values);
@@ -1164,27 +985,22 @@ class IMPORTBIBTEX
      */
     private function writeResourcePageTable($entry, $wkType)
     {
-        if (($wkType == 'book') || ($wkType == 'thesis'))
-        {
+        if (($wkType == 'book') || ($wkType == 'thesis')) {
             return; // numPages written in miscellaneous table.
         }
-        if (!array_key_exists('pages', $entry))
-        {
+        if (!array_key_exists('pages', $entry)) {
             return;
         }
         list($pageStart, $pageEnd) = $this->pages->init($entry['pages']);
-        if ($pageStart)
-        {
+        if ($pageStart) {
             $fields[] = 'resourcepagePageStart';
             $values[] = $pageStart;
         }
-        if ($pageEnd)
-        {
+        if ($pageEnd) {
             $fields[] = 'resourcepagePageEnd';
             $values[] = $pageEnd;
         }
-        if (!isset($fields))
-        {
+        if (!isset($fields)) {
             return;
         }
         $this->import->writePageTable($fields, $values);
@@ -1197,20 +1013,15 @@ class IMPORTBIBTEX
     private function writeResourcetextTable($entry)
     {
         $notes = $abstract = FALSE;
-        if (array_key_exists('note', $entry))
-        {
+        if (array_key_exists('note', $entry)) {
             $notes = $entry['note'];
-        }
-        elseif (array_key_exists('annote', $entry))
-        {
+        } elseif (array_key_exists('annote', $entry)) {
             $notes = $entry['annote'];
         }
-        if (array_key_exists('abstract', $entry))
-        {
+        if (array_key_exists('abstract', $entry)) {
             $abstract = $entry['abstract'];
         }
-        if (!$notes && !$abstract && !$this->url)
-        {
+        if (!$notes && !$abstract && !$this->url) {
             return;
         }
         $this->import->writeResourcetextTable($notes, $abstract, $this->url);
@@ -1222,50 +1033,35 @@ class IMPORTBIBTEX
      */
     private function writeResourceKeywordTable($entry)
     {
-        if (!array_key_exists('keywords', $entry))
-        {
+        if (!array_key_exists('keywords', $entry)) {
             return;
         }
-        if (!array_key_exists('import_KeywordSeparator', $this->vars))
-        {
+        if (!array_key_exists('import_KeywordSeparator', $this->vars)) {
             $separator = '1'; // default semicolon
-        }
-        else
-        {
+        } else {
             $separator = $this->vars['import_KeywordSeparator'];
         }
-        if ($separator == 0)
-        {
+        if ($separator == 0) {
             $keywords = preg_split("/,/u", trim($entry['keywords']));
-        }
-        elseif ($separator == 1)
-        {
+        } elseif ($separator == 1) {
             $keywords = preg_split("/;/u", trim($entry['keywords']));
-        }
-        elseif ($separator == 2)
-        {
+        } elseif ($separator == 2) {
             $keywords = preg_split("/;|,/u", trim($entry['keywords']));
-        }
-        else
-        {
+        } else {
             $keywords = preg_split("/ /u", trim($entry['keywords']));
         }
-        foreach ($keywords as $keyword)
-        {
+        foreach ($keywords as $keyword) {
             $keyword = \HTML\stripHtml(trim($keyword));
-            if (!$keyword)
-            {
+            if (!$keyword) {
                 continue;
             }
             $tempK[] = $keyword;
         }
-        if (!isset($tempK))
-        {
+        if (!isset($tempK)) {
             return;
         }
         $keywords = array_unique($tempK);
-        if (array_key_exists('keywords', $entry) && trim($entry['keywords']))
-        {
+        if (array_key_exists('keywords', $entry) && trim($entry['keywords'])) {
             $this->import->writeKeywordTables($keywords);
             $this->deleteCacheKeywords = TRUE;
         }
@@ -1275,11 +1071,9 @@ class IMPORTBIBTEX
      */
     private function writeBibtexStringTable()
     {
-        if (!empty($this->strings) && $this->session->getVar("import_Raw"))
-        {
+        if (!empty($this->strings) && $this->session->getVar("import_Raw")) {
             $fields[] = 'bibtexstringText';
-            foreach ($this->strings as $key => $value)
-            {
+            foreach ($this->strings as $key => $value) {
                 $raw[] = '@STRING{' . $key . '=' . $value . '}';
             }
             $values[] = base64_encode(serialize(implode("\n", $raw)));
@@ -1297,25 +1091,16 @@ class IMPORTBIBTEX
     private function grabHowPublished($entry)
     {
         $url = $howPublished = FALSE;
-        if (($entry['bibtexEntryType'] == 'misc') && array_key_exists('howpublished', $entry))
-        {
-            if (preg_match("#^\\\\url{(.*://.*)}#u", $entry['howpublished'], $match))
-            {
+        if (($entry['bibtexEntryType'] == 'misc') && array_key_exists('howpublished', $entry)) {
+            if (preg_match("#^\\\\url{(.*://.*)}#u", $entry['howpublished'], $match)) {
                 $url = $match[1];
-            }
-            else
-            {
+            } else {
                 $howPublished = $entry['howpublished'];
             }
-        }
-        elseif (array_key_exists('url', $entry))
-        {
-            if (preg_match("#^\\\\url{(.*://.*)}#u", $entry['url'], $match))
-            {
+        } elseif (array_key_exists('url', $entry)) {
+            if (preg_match("#^\\\\url{(.*://.*)}#u", $entry['url'], $match)) {
                 $url = $match[1];
-            }
-            else
-            {
+            } else {
                 $url = $entry['url'];
             }
         }
@@ -1332,8 +1117,7 @@ class IMPORTBIBTEX
     private function grabMonth($entry)
     {
         $startMonth = $startDay = $endMonth = $endDay = FALSE;
-        if (array_key_exists('month', $entry))
-        {
+        if (array_key_exists('month', $entry)) {
             list($startMonth, $startDay, $endMonth, $endDay) = $this->monthObj->init($entry['month']);
         }
 
@@ -1350,151 +1134,107 @@ class IMPORTBIBTEX
     private function gatherStage1()
     {
         // a multiple select box so handle as array
-        if (isset($this->vars['import_Categories']) && $this->vars['import_Categories'])
-        {
+        if (isset($this->vars['import_Categories']) && $this->vars['import_Categories']) {
             //			if($this->session->getVar("import_UnrecognisedFields"))
             //				$this->vars['import_Categories'] = UTF8::mb_explode(',', $this->vars['import_Categories']);
-            if (!$this->session->setVar("import_Categories", trim(implode(',', $this->vars['import_Categories']))))
-            {
+            if (!$this->session->setVar("import_Categories", trim(implode(',', $this->vars['import_Categories'])))) {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
         }
         // a multiple select box so handle as array
-        if (isset($this->vars['import_BibId']) && $this->vars['import_BibId'])
-        {
+        if (isset($this->vars['import_BibId']) && $this->vars['import_BibId']) {
             //			if($this->session->getVar("import_unrecognisedFields"))
             //				$this->vars['import_BibId'] = UTF8::mb_explode(',', $this->vars['import_BibId']);
-            if (!$this->session->setVar("import_BibId", trim(implode(',', $this->vars['import_BibId']))))
-            {
+            if (!$this->session->setVar("import_BibId", trim(implode(',', $this->vars['import_BibId'])))) {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
         }
-        if (isset($this->vars['import_Raw']) && $this->vars['import_Raw'])
-        {
-            if (!$this->session->setVar("import_Raw", 1))
-            {
+        if (isset($this->vars['import_Raw']) && $this->vars['import_Raw']) {
+            if (!$this->session->setVar("import_Raw", 1)) {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
         }
-        if (!$this->session->setVar("import_KeywordSeparator", $this->vars['import_KeywordSeparator']))
-        {
+        if (!$this->session->setVar("import_KeywordSeparator", $this->vars['import_KeywordSeparator'])) {
             $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
         }
-        if (array_key_exists('import_KeywordIgnore', $this->vars))
-        {
-            if (!$this->session->setVar("import_KeywordIgnore", $this->vars['import_KeywordIgnore']))
-            {
+        if (array_key_exists('import_KeywordIgnore', $this->vars)) {
+            if (!$this->session->setVar("import_KeywordIgnore", $this->vars['import_KeywordIgnore'])) {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
-        }
-        else
-        {
+        } else {
             $this->session->delVar("import_KeywordIgnore");
         }
-        if (!$this->session->setVar("import_TitleSubtitleSeparator", $this->vars['import_TitleSubtitleSeparator']))
-        {
+        if (!$this->session->setVar("import_TitleSubtitleSeparator", $this->vars['import_TitleSubtitleSeparator'])) {
             $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
         }
-        if (isset($this->vars['import_ImportDuplicates']) && $this->vars['import_ImportDuplicates'])
-        {
-            if (!$this->session->setVar("import_ImportDuplicates", 1))
-            {
+        if (isset($this->vars['import_ImportDuplicates']) && $this->vars['import_ImportDuplicates']) {
+            if (!$this->session->setVar("import_ImportDuplicates", 1)) {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
         }
         // Force to 1 => 'General' category
-        if (!$this->session->getVar("import_Categories"))
-        {
-            if (!$this->session->setVar("import_Categories", 1))
-            {
+        if (!$this->session->getVar("import_Categories")) {
+            if (!$this->session->setVar("import_Categories", 1)) {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
         }
-        if (($this->type == 'file') && !$this->session->getVar("import_UnrecognisedFields"))
-        {
-            if (!$this->importFile)
-            {
-                if (!isset($_FILES['import_File']))
-                {
-                    if ($file = $this->session->getVar("import_File"))
-                    {
+        if (($this->type == 'file') && !$this->session->getVar("import_UnrecognisedFields")) {
+            if (!$this->importFile) {
+                if (!isset($_FILES['import_File'])) {
+                    if ($file = $this->session->getVar("import_File")) {
                         return $this->dirName . DIRECTORY_SEPARATOR . $file;
-                    }
-                    else
-                    {
+                    } else {
                         $this->badInput->close($this->errors->text("file", "upload"), $this->badClass, $this->badFunction);
                     }
                 }
                 // Check for file input
                 $fileName = \UTILS\uuid();
-                if (!move_uploaded_file($_FILES['import_File']['tmp_name'], $this->dirName . DIRECTORY_SEPARATOR . $fileName))
-                {
+                if (!move_uploaded_file($_FILES['import_File']['tmp_name'], $this->dirName . DIRECTORY_SEPARATOR . $fileName)) {
                     $this->badInput->close($this->errors->text("file", "upload"), $this->badClass, $this->badFunction);
                 }
-            }
-            else
-            { // An import from a plug-in like ImportPubMed
+            } else { // An import from a plug-in like ImportPubMed
                 $fileName = $this->importFile;
             }
-            if (!$this->session->setVar("import_File", $fileName))
-            {
+            if (!$this->session->setVar("import_File", $fileName)) {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
-            if ($this->vars['import_Tag'])
-            {
-                if (!$tagId = $this->tag->checkExists($this->vars['import_Tag']))
-                {
-                    if (!$this->session->setVar("import_Tag", $this->vars['import_Tag']))
-                    {
+            if ($this->vars['import_Tag']) {
+                if (!$tagId = $this->tag->checkExists($this->vars['import_Tag'])) {
+                    if (!$this->session->setVar("import_Tag", $this->vars['import_Tag'])) {
+                        $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
+                    }
+                } else {
+                    if (!$this->session->setVar("import_TagId", $tagId)) {
                         $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
                     }
                 }
-                else
-                {
-                    if (!$this->session->setVar("import_TagId", $tagId))
-                    {
-                        $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
-                    }
-                }
-            }
-            elseif (isset($this->vars['import_TagId']) && $this->vars['import_TagId'])
-            {
-                if (!$this->session->setVar("import_TagId", $this->vars['import_TagId']))
-                {
+            } elseif (isset($this->vars['import_TagId']) && $this->vars['import_TagId']) {
+                if (!$this->session->setVar("import_TagId", $this->vars['import_TagId'])) {
                     $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
                 }
             }
             $this->garbageFiles[$this->dirName . DIRECTORY_SEPARATOR . $fileName] = FALSE;
 
             return $this->dirName . DIRECTORY_SEPARATOR . $fileName;
-        }
-        elseif ($this->type == 'paste')
-        {
-            if (!trim($this->vars['import_Paste']))
-            {
+        } elseif ($this->type == 'paste') {
+            if (!trim($this->vars['import_Paste'])) {
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this->badClass, $this->badFunction);
             }
             $paste = stripslashes(trim($this->vars['import_Paste']));
-            if (!$this->session->setVar("import_Paste", base64_encode(serialize($paste))))
-            {
+            if (!$this->session->setVar("import_Paste", base64_encode(serialize($paste)))) {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
             list($fileName, $fullFileName) = FILE\createFileName($this->dirName, $paste, '.bib');
-            if (!$fullFileName)
-            {
+            if (!$fullFileName) {
                 $this->badInput->close($this->errors->text("file", "write", ": $fileName"), $this->badClass, $this->badFunction);
             }
-            if ($fp = fopen("$fullFileName", "w"))
-            {
-                if (!fwrite($fp, $paste))
-                {
+            if ($fp = fopen("$fullFileName", "w")) {
+                if (!fwrite($fp, $paste)) {
                     $this->badInput->close($this->errors->text("file", "write", ": $fileName"), $this->badClass, $this->badFunction);
                 }
 
                 fclose($fp);
-            }
-            else
-            {
+            } else {
                 $this->badInput->close($this->errors->text("file", "write", ": $fileName"), $this->badClass, $this->badFunction);
             }
             $this->garbageFiles[$fullFileName] = FALSE;
@@ -1511,47 +1251,38 @@ class IMPORTBIBTEX
      */
     private function convertEntries($entries)
     {
-        foreach ($this->bibConfig->bibtexSpCh as $key => $value)
-        {
+        foreach ($this->bibConfig->bibtexSpCh as $key => $value) {
             $replaceBibtex[] = UTF8::mb_chr($key);
             $matchBibtex[] = preg_quote("/$value/u");
         }
-        foreach ($this->bibConfig->bibtexSpChOld as $key => $value)
-        {
+        foreach ($this->bibConfig->bibtexSpChOld as $key => $value) {
             $replaceBibtex[] = UTF8::mb_chr($key);
             $matchBibtex[] = preg_quote("/$value/u");
         }
-        foreach ($this->bibConfig->bibtexSpChOld2 as $key => $value)
-        {
+        foreach ($this->bibConfig->bibtexSpChOld2 as $key => $value) {
             $replaceBibtex[] = UTF8::mb_chr($key);
             $matchBibtex[] = preg_quote("/$value/u");
         }
-        foreach ($this->bibConfig->bibtexSpChLatex as $key => $value)
-        {
+        foreach ($this->bibConfig->bibtexSpChLatex as $key => $value) {
             $replaceBibtex[] = UTF8::mb_chr($key);
             $matchBibtex[] = preg_quote("/$value/u");
         }
-        foreach ($this->bibConfig->bibtexWordsTranslate as $key => $value)
-        { // NB reverse key--value
+        foreach ($this->bibConfig->bibtexWordsTranslate as $key => $value) { // NB reverse key--value
             $replaceBibtex[] = $value;
             $matchBibtex[] = preg_quote("/$key/u");
         }
-        foreach ($this->bibConfig->bibtexCodesDelete as $key => $value)
-        { // NB reverse key--value
+        foreach ($this->bibConfig->bibtexCodesDelete as $key => $value) { // NB reverse key--value
             $replaceBibtex[] = $value;
             $matchBibtex[] = preg_quote("/$key/u");
         }
         $index = 0;
-        foreach ($entries as $eKey => $array)
-        {
-            if (!is_array($array))
-            { // e.g. strings array
+        foreach ($entries as $eKey => $array) {
+            if (!is_array($array)) { // e.g. strings array
                 $temp[$eKey] = stripslashes(UTF8::smartUtf8_encode(preg_replace($matchBibtex, $replaceBibtex, $array)));
 
                 continue;
             }
-            foreach ($array as $key => $value)
-            {
+            foreach ($array as $key => $value) {
                 $temp[$index][$key] = stripslashes(UTF8::smartUtf8_encode(preg_replace($matchBibtex, $replaceBibtex, $value)));
             }
             $index++;

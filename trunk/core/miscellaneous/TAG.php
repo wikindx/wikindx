@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -28,22 +30,18 @@ class TAG
     /**
      * Get tags from tag table.
      *
-     * @return array|FALSE [id => group]
+     * @return array|false [id => group]
      */
     public function grabAll()
     {
         $this->db->orderBy('tagTag');
         $recordset = $this->db->select('tag', ['tagId', 'tagTag']);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $tags[$row['tagId']] = \HTML\dbToFormTidy($row['tagTag']);
         }
-        if (isset($tags))
-        {
+        if (isset($tags)) {
             return $tags;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -52,18 +50,15 @@ class TAG
      *
      * @param string $tag
      *
-     * @return int|FALSE
+     * @return false|int
      */
     public function checkExists($tag)
     {
         $this->db->formatConditions(['tagTag' => $tag]);
         $resultset = $this->db->select('tag', 'tagId');
-        if ($this->db->numRows($resultset))
-        {
+        if ($this->db->numRows($resultset)) {
             return $this->db->fetchOne($resultset);
-        }
-        else
-        {
+        } else {
             return FALSE; // not found
         }
     }

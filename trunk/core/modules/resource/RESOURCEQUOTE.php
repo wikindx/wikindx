@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -42,13 +44,11 @@ class RESOURCEQUOTE
         $this->badInput = FACTORY_BADINPUT::getInstance();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "quotes"));
         if (!array_key_exists('resourceId', $this->vars) || !$this->vars['resourceId'] ||
-            !array_key_exists('method', $this->vars) || !$this->vars['method'])
-        {
+            !array_key_exists('method', $this->vars) || !$this->vars['method']) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $function = $this->vars['method'];
-        if (!method_exists($this, $function))
-        {
+        if (!method_exists($this, $function)) {
             $this->navigate->resource($this->vars['resourceId'], $this->errors->text("inputError", "invalid"));
         }
     }
@@ -78,25 +78,18 @@ class RESOURCEQUOTE
      */
     public function edit()
     {
-        if ($this->session->getVar("resourceQuoteLock"))
-        {
+        if ($this->session->getVar("resourceQuoteLock")) {
             $this->badInput->close($this->errors->text("done", "quote"));
         }
         $this->checkInput();
-        if (!$addEdit = $this->textqp->edit('quote'))
-        {
+        if (!$addEdit = $this->textqp->edit('quote')) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        if ($addEdit == 'added')
-        {
+        if ($addEdit == 'added') {
             $message = $this->success->text("quoteAdd");
-        }
-        elseif ($addEdit == 'edited')
-        {
+        } elseif ($addEdit == 'edited') {
             $message = $this->success->text("quoteEdit");
-        }
-        elseif ($addEdit == 'deleted')
-        {
+        } elseif ($addEdit == 'deleted') {
             $message = $this->success->text("quoteDelete");
         }
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
@@ -113,8 +106,7 @@ class RESOURCEQUOTE
      */
     private function checkInput()
     {
-        if (!array_key_exists('resourceId', $this->vars) || !$this->vars['resourceId'])
-        {
+        if (!array_key_exists('resourceId', $this->vars) || !$this->vars['resourceId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
     }

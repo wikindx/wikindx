@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -89,8 +91,9 @@ return PhpCsFixer\Config::create()
         'trim_array_spaces' => TRUE,
         'unary_operator_spaces' => TRUE,
         'braces' => [
-            'allow_single_line_closure' => TRUE,
-            'position_after_control_structures' => 'next',
+            'allow_single_line_closure' => FALSE,
+            'position_after_anonymous_constructs' => 'same',
+            'position_after_control_structures' => 'same',
             'position_after_functions_and_oop_constructs' => 'next',
         ],
         'array_syntax' => ['syntax' => 'short'],

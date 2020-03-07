@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -59,12 +61,9 @@ class STATISTICS
      */
     public function compile()
     {
-        if ($this->session->issetVar("lastStatisticsCompilation"))
-        {
+        if ($this->session->issetVar("lastStatisticsCompilation")) {
             $lastStatisticsCompilation = $this->session->getVar("lastStatisticsCompilation");
-        }
-        else
-        {
+        } else {
             $lastStatisticsCompilation = WIKINDX_STATISTICS_COMPILED;
             $this->session->setVar("lastStatisticsCompilation", $lastStatisticsCompilation);
         }
@@ -78,8 +77,8 @@ class STATISTICS
      */
     public function getMaxDownloadRatio()
     {
-        if (self::$MaxDR !== FALSE)
-        {
+        return 1;
+        if (self::$MaxDR !== FALSE) {
             return self::$MaxDR;
         }
         $dateDiffClause = $this->db->dateDiffRatio('count', 'resourceattachmentsTimestamp', 'max', 'MAX');
@@ -88,20 +87,21 @@ class STATISTICS
         $this->db->leftJoin('resource_attachments', 'resourceattachmentsId', 'statisticsattachmentdownloadsAttachmentId');
         $this->db->groupBy('statisticsattachmentdownloadsResourceId');
         $subQ = $this->db->subQuery(
-            $this->db->selectNoExecute('statistics_attachment_downloads', 
-            [$sumClause, $this->db->formatFields('resourceattachmentsTimestamp')], FALSE, FALSE),
+            $this->db->selectNoExecute(
+                'statistics_attachment_downloads',
+                [$sumClause, $this->db->formatFields('resourceattachmentsTimestamp')],
+                FALSE,
+                FALSE
+            ),
             't',
             TRUE,
             TRUE
         );
         $resultSet = $this->db->selectFromSubQuery(FALSE, $dateDiffClause, $subQ, FALSE, FALSE);
         self::$MaxDR = $this->db->fetchOne($resultSet);
-        if (!self::$MaxDR)
-        {
+        if (!self::$MaxDR) {
             return 1;
-        }
-        else
-        {
+        } else {
             return self::$MaxDR;
         }
     }
@@ -112,8 +112,8 @@ class STATISTICS
      */
     public function getMaxAccessRatio()
     {
-        if (self::$MaxAR !== FALSE)
-        {
+        return 1;
+        if (self::$MaxAR !== FALSE) {
             return self::$MaxAR;
         }
         $dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'max', 'MAX');
@@ -121,20 +121,21 @@ class STATISTICS
         $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
         $this->db->groupBy('statisticsresourceviewsResourceId');
         $subQ = $this->db->subQuery(
-            $this->db->selectNoExecute('statistics_resource_views', 
-            [$sumClause, $this->db->formatFields('resourcetimestampTimestampAdd')], FALSE, FALSE),
+            $this->db->selectNoExecute(
+                'statistics_resource_views',
+                [$sumClause, $this->db->formatFields('resourcetimestampTimestampAdd')],
+                FALSE,
+                FALSE
+            ),
             't',
             TRUE,
             TRUE
         );
         $resultSet = $this->db->selectFromSubQuery(FALSE, $dateDiffClause, $subQ, FALSE, FALSE);
         self::$MaxAR = $this->db->fetchOne($resultSet);
-        if (!self::$MaxAR)
-        {
+        if (!self::$MaxAR) {
             return 1;
-        }
-        else
-        {
+        } else {
             return self::$MaxAR;
         }
     }
@@ -147,19 +148,16 @@ class STATISTICS
      */
     public function getPopularityIndex($id)
     {
-        if ($this->list)
-        {
+        if ($this->list) {
             $this->accessRatio = $this->downloadRatio = FALSE;
         }
-        if (!$this->accessRatio && !$this->downloadRatio)
-        {
+        if (!$this->accessRatio && !$this->downloadRatio) {
             $this->accessDownloadRatio($id);
         }
-        $ratio = (($this->downloadRatio * WIKINDX_POPULARITY_DOWNLOADS_WEIGHT) + 
-        	($this->accessRatio * WIKINDX_POPULARITY_VIEWS_WEIGHT)); // Give more weight to downloads
+        $ratio = (($this->downloadRatio * WIKINDX_POPULARITY_DOWNLOADS_WEIGHT) +
+            ($this->accessRatio * WIKINDX_POPULARITY_VIEWS_WEIGHT)); // Give more weight to downloads
         //		$maxRatio = (($this->getMaxDownloadRatio() * 1.5) + ($this->getMaxAccessRatio() * 0.5)) / 2;
-        if ($ratio == 0)
-        {
+        if ($ratio == 0) {
             return 0;
         }
 
@@ -172,8 +170,7 @@ class STATISTICS
      */
     public function accessDownloadRatio($id)
     {
-        if (!$this->list && (self::$AR !== FALSE) && (self::$DR !== FALSE))
-        {
+        if (!$this->list && (self::$AR !== FALSE) && (self::$DR !== FALSE)) {
             $this->accessRatio = self::$AR * 100;
             $this->downloadRatio = self::$DR * 100;
 
@@ -187,8 +184,12 @@ class STATISTICS
         $this->db->formatConditions(['statisticsresourceviewsResourceId' => $id]);
         $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'statisticsresourceviewsResourceId');
         $subQ = $this->db->subQuery(
-            $this->db->selectNoExecute('statistics_resource_views', 
-            [$sumClause, $this->db->formatFields('resourcetimestampTimestampAdd')], FALSE, FALSE),
+            $this->db->selectNoExecute(
+                'statistics_resource_views',
+                [$sumClause, $this->db->formatFields('resourcetimestampTimestampAdd')],
+                FALSE,
+                FALSE
+            ),
             't',
             TRUE,
             TRUE
@@ -202,32 +203,30 @@ class STATISTICS
         $this->db->formatConditions(['statisticsattachmentdownloadsResourceId' => $id]);
         $this->db->leftJoin('resource_attachments', 'resourceattachmentsId', 'statisticsattachmentdownloadsAttachmentId');
         $subQ = $this->db->subQuery(
-            $this->db->selectNoExecute('statistics_attachment_downloads', 
-            [$sumClause, $this->db->formatFields('resourceattachmentsTimestamp')], FALSE, FALSE),
+            $this->db->selectNoExecute(
+                'statistics_attachment_downloads',
+                [$sumClause, $this->db->formatFields('resourceattachmentsTimestamp')],
+                FALSE,
+                FALSE
+            ),
             't',
             TRUE,
             TRUE
         );
         $resultSet = $this->db->selectFromSubQuery(FALSE, $dateDiffClause, $subQ, FALSE, FALSE);
         $downloadRatio = $this->db->fetchOne($resultSet);
-		if (!$setSumAR)
-		{
-			self::$AR = 0;
-		}
-		else
-		{   
-			self::$AR = round(($accessRatio / $setSumAR), 2);
-		}
-		if (!$setSumDR)
-		{
-			self::$DR = 0;
-		}
-		else
-		{
-			self::$DR = round(($downloadRatio / $setSumDR), 2);
-		}
-		$this->accessRatio = self::$AR * 100;
-		$this->downloadRatio = self::$DR * 100;
+        if (!$setSumAR) {
+            self::$AR = 0;
+        } else {
+            self::$AR = round(($accessRatio / $setSumAR), 2);
+        }
+        if (!$setSumDR) {
+            self::$DR = 0;
+        } else {
+            self::$DR = round(($downloadRatio / $setSumDR), 2);
+        }
+        $this->accessRatio = self::$AR * 100;
+        $this->downloadRatio = self::$DR * 100;
     }
     /**
      * Run the statistics compilation and manage any emailing required
@@ -239,8 +238,7 @@ class STATISTICS
         // If compiled, abort
         $this->session->delVar("lastStatisticsCompilation");
         $lastStatisticsCompilation = WIKINDX_STATISTICS_COMPILED;
-        if (!$this->db->monthDiff($lastStatisticsCompilation))
-        {
+        if (!$this->db->monthDiff($lastStatisticsCompilation)) {
             return;
         }
         // Note that we run statistics compilation the first day of the current month
@@ -250,66 +248,62 @@ class STATISTICS
         $lastStatisticsCompilation = WIKINDX_STATISTICS_COMPILED;
         $this->session->setVar("lastStatisticsCompilation", $lastStatisticsCompilation);
         $emailStats = WIKINDX_EMAIL_STATISTICS;
-        if ($emailStats && WIKINDX_MAIL_USE)
-        {
+        if ($emailStats && WIKINDX_MAIL_USE) {
             $emailStats = TRUE;
-        }
-        else
-        {
+        } else {
             $emailStats = FALSE;
         }
-/*
-        $thisMonth = date('Ym');
-        $resArray = [];
-        $maxPacket = $this->db->getMaxPacket();
-// For each 1MB max_allowed_packet (1048576 bytes), the value of 10 here seems to be fine – based on trial and error – at balancing 
-// efficiency/time against memory use.
-        $maxCounts = floor(10 * ($maxPacket / 1048576));
-        $numberOfResources = $this->db->selectFirstField("database_summary", "databasesummaryTotalResources");
-        // Add all resource views and attachment downloads for this period to statistics table and gather any user details
-        // Resource statistics first
-        $index = 0;
-		$extraConditions[] = $this->db->formatConditions(['statisticsAttachmentId' => ' IS NULL'], FALSE, TRUE);
-        do
-        {
-        	$count = 0;    
-			$this->db->leftJoin('statistics', 'statisticsResourceId', 'resourcemiscId');
-			$this->db->formatConditions(['statisticsAttachmentId' => ' IS NULL']);
-			$this->db->limit($maxCounts, $index);
-			$resultset = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod',
-				'resourcemiscAccesses', 'statisticsStatistics', ]);
-			$updateArray = [];
-			while ($row = $this->db->fetchRow($resultset))
-			{
-				if ($emailStats)
-				{
-					$resArray[$row['resourcemiscId']] = ['viewsPeriod' => $row['resourcemiscAccessesPeriod'], 'viewsTotal' => $row['resourcemiscAccesses']];
-				}
-				$rowStats = $row['statisticsStatistics'];
-				if ($rowStats)
-				{
-					$stats = unserialize(base64_decode($rowStats));
-				}
-				else
-				{
-					$stats = [];
-				}
-				$stats[$thisMonth] = $row['resourcemiscAccessesPeriod'];
-				$updateArray[$row['resourcemiscId']] = base64_encode(serialize($stats));
-				++$count;
-        	}
-        	if (count($updateArray) > 0)
-        	{
-			    $this->db->multiUpdate('statistics', 'statisticsStatistics', 'statisticsResourceId', $updateArray, $extraConditions);
-			}
-        	$index += $count;
-        }
-        while ($index < $numberOfResources);
-        $this->db->update('resource_misc', ['resourcemiscAccessesPeriod' => '0']);
-        $this->db->update('resource_attachments', ['resourceattachmentsDownloadsPeriod' => '0']);
-*/
-        if ($emailStats)
-        {
+        /*
+                $thisMonth = date('Ym');
+                $resArray = [];
+                $maxPacket = $this->db->getMaxPacket();
+        // For each 1MB max_allowed_packet (1048576 bytes), the value of 10 here seems to be fine – based on trial and error – at balancing
+        // efficiency/time against memory use.
+                $maxCounts = floor(10 * ($maxPacket / 1048576));
+                $numberOfResources = $this->db->selectFirstField("database_summary", "databasesummaryTotalResources");
+                // Add all resource views and attachment downloads for this period to statistics table and gather any user details
+                // Resource statistics first
+                $index = 0;
+                $extraConditions[] = $this->db->formatConditions(['statisticsAttachmentId' => ' IS NULL'], FALSE, TRUE);
+                do
+                {
+                    $count = 0;
+                    $this->db->leftJoin('statistics', 'statisticsResourceId', 'resourcemiscId');
+                    $this->db->formatConditions(['statisticsAttachmentId' => ' IS NULL']);
+                    $this->db->limit($maxCounts, $index);
+                    $resultset = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod',
+                        'resourcemiscAccesses', 'statisticsStatistics', ]);
+                    $updateArray = [];
+                    while ($row = $this->db->fetchRow($resultset))
+                    {
+                        if ($emailStats)
+                        {
+                            $resArray[$row['resourcemiscId']] = ['viewsPeriod' => $row['resourcemiscAccessesPeriod'], 'viewsTotal' => $row['resourcemiscAccesses']];
+                        }
+                        $rowStats = $row['statisticsStatistics'];
+                        if ($rowStats)
+                        {
+                            $stats = unserialize(base64_decode($rowStats));
+                        }
+                        else
+                        {
+                            $stats = [];
+                        }
+                        $stats[$thisMonth] = $row['resourcemiscAccessesPeriod'];
+                        $updateArray[$row['resourcemiscId']] = base64_encode(serialize($stats));
+                        ++$count;
+                    }
+                    if (count($updateArray) > 0)
+                    {
+                        $this->db->multiUpdate('statistics', 'statisticsStatistics', 'statisticsResourceId', $updateArray, $extraConditions);
+                    }
+                    $index += $count;
+                }
+                while ($index < $numberOfResources);
+                $this->db->update('resource_misc', ['resourcemiscAccessesPeriod' => '0']);
+                $this->db->update('resource_attachments', ['resourceattachmentsDownloadsPeriod' => '0']);
+        */
+        if ($emailStats) {
             $this->emailStats($resArray);
         }
     }
@@ -324,8 +318,7 @@ class STATISTICS
         $bibStyle = FACTORY_BIBSTYLE::getInstance('plain');
         $usersArray = [];
         $this->list = TRUE;
-        foreach ($resArray as $rId => $rArray)
-        {
+        foreach ($resArray as $rId => $rArray) {
             $union = [];
             $this->db->formatConditions(['resourcecreatorResourceId' => $rId]);
             $union[] = $this->db->selectNoExecute('resource_creator', 'resourcecreatorCreatorId', FALSE, TRUE, TRUE);
@@ -334,10 +327,8 @@ class STATISTICS
             $union[] = $this->db->selectNoExecute('creator', 'creatorSameAs', TRUE, TRUE, TRUE);
             $this->db->formatConditions($this->db->formatFields('usersIsCreator') . $this->db->inClause($this->db->union($union)));
             $resultset = $this->db->select('users', ['usersId', 'usersFullname', 'usersEmail']);
-            while ($row = $this->db->fetchRow($resultset))
-            {
-                if (!array_key_exists($row['usersId'], $usersArray))
-                {
+            while ($row = $this->db->fetchRow($resultset)) {
+                if (!array_key_exists($row['usersId'], $usersArray)) {
                     $usersArray[$row['usersId']]['email'] = $row['usersEmail'];
                     $usersArray[$row['usersId']]['name'] = $row['usersFullname'];
                 }
@@ -345,16 +336,13 @@ class STATISTICS
                 $usersArray[$row['usersId']]['resources'][$rId] = $title;
             }
         }
-        if (!empty($usersArray))
-        {
+        if (!empty($usersArray)) {
             $smtp = FACTORY_MAIL::getInstance();
             $subject = $this->messages->text('statistics', 'emailSubject', WIKINDX_TITLE);
-            foreach ($usersArray as $uArray)
-            {
+            foreach ($usersArray as $uArray) {
                 $message = $uArray['name'] . LF . LF;
                 $message .= $this->messages->text('statistics', 'emailIntro', WIKINDX_TITLE) . LF . LF;
-                foreach ($uArray['resources'] as $rId => $title)
-                {
+                foreach ($uArray['resources'] as $rId => $title) {
                     //					$viewsIndex = $this->accessRatio($rId);
                     //					$downloadsIndex = $this->downloadRatio($rId);
                     $this->accessDownloadRatio($rId);
@@ -365,18 +353,13 @@ class STATISTICS
                         $this->messages->text('viewResource', 'viewIndex', $this->accessRatio) . ', ' .
                         $this->messages->text('viewResource', 'download', $this->downloadRatio) . ', ' .
                         $this->messages->text('viewResource', 'popIndex', $popIndex) . LF;
-                    if (array_key_exists('downloads', $resArray[$rId]))
-                    {
-                        if (count($resArray[$rId]['downloads']) == 1)
-                        { // just the one attachment
+                    if (array_key_exists('downloads', $resArray[$rId])) {
+                        if (count($resArray[$rId]['downloads']) == 1) { // just the one attachment
                             $dArray = array_shift($resArray[$rId]['downloads']);
                             $message .= TAB . $this->messages->text('statistics', 'emailDownloadsMonth', $dArray[2]) . ' ' .
                                 $this->messages->text('statistics', 'emailDownloadsTotal', $dArray[1]) . LF;
-                        }
-                        else
-                        {
-                            foreach ($resArray[$rId]['downloads'] as $dArray)
-                            {
+                        } else {
+                            foreach ($resArray[$rId]['downloads'] as $dArray) {
                                 $message .= TAB . $dArray[0] . ' -- ' .
                                     $this->messages->text('statistics', 'emailDownloadsMonth', $dArray[2]) . ' ' .
                                     $this->messages->text('statistics', 'emailDownloadsTotal', $dArray[1]) . LF;

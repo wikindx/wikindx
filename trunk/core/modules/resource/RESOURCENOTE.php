@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -47,15 +49,12 @@ class RESOURCENOTE
     {
         $note = [];
         $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
-        if (!$row['resourcetextNote'] && !$write)
-        {
+        if (!$row['resourcetextNote'] && !$write) {
             return $note;
         }
         if ($this->session->getVar("setup_Superadmin") ||
-            ($write && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId))))
-        {
-            if (!$row['resourcetextNote'])
-            {
+            ($write && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))) {
+            if (!$row['resourcetextNote']) {
                 $note['title'] = $this->messages->text("viewResource", "notes");
                 $note['editLink'] = \HTML\a(
                     $this->icons->getClass("add"),
@@ -65,9 +64,7 @@ class RESOURCENOTE
                 );
 
                 return $note;
-            }
-            elseif ($row['resourcetextNote'])
-            {
+            } elseif ($row['resourcetextNote']) {
                 $note['editLink'] = \HTML\a(
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
@@ -82,8 +79,7 @@ class RESOURCENOTE
                 );
             }
         }
-        if ($row['resourcetextNote'])
-        {
+        if ($row['resourcetextNote']) {
             $note['title'] = $this->messages->text("viewResource", "notes");
             list($note['userAdd'], $note['userEdit']) = $this->user->displayUserAddEdit($row, TRUE, 'note');
             $note['note'] =

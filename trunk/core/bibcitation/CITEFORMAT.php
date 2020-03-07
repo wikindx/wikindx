@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -102,14 +104,10 @@ class CITEFORMAT
         $this->output = $output;
         $this->bibStyle = FACTORY_BIBSTYLE::getInstance($this->output);
         $this->bibStyle->bibformat->patternHighlight = "highlight";
-        if (!$this->dir)
-        {
+        if (!$this->dir) {
             $this->dir = dirname(__FILE__) . "/";
-        }
-        else
-        {
-            if (mb_substr($this->dir, mb_strlen($this->dir) - 1, 1) != DIRECTORY_SEPARATOR)
-            {
+        } else {
+            if (mb_substr($this->dir, mb_strlen($this->dir) - 1, 1) != DIRECTORY_SEPARATOR) {
                 $this->dir .= DIRECTORY_SEPARATOR;
             }
         }
@@ -139,8 +137,7 @@ class CITEFORMAT
         $this->pageSplitDone = FALSE;
         $this->newParagraph = TRUE; // Indication of new paragraph
         $this->newSection = TRUE; // Indication of new section
-        if (isset($this->storeOriginalTemplate))
-        {
+        if (isset($this->storeOriginalTemplate)) {
             $this->template = $this->storeOriginalTemplate;
         }
         $this->patterns = ''; // not needed here but must be set for EXPORTFILTER
@@ -165,16 +162,13 @@ class CITEFORMAT
             $this->styleMap
         );
         // Ensure we have only valid fields.
-        foreach ($temp as $field => $value)
-        {
+        foreach ($temp as $field => $value) {
             if (array_key_exists($field, $this->styleMap->citationEndnoteInText) || ($field == 'independent') ||
-                ($field == 'ultimate') || ($field == 'preliminaryText'))
-            {
+                ($field == 'ultimate') || ($field == 'preliminaryText')) {
                 $this->templateEndnoteInText[$field] = $value;
             }
         }
-        if (isset($this->templateEndnoteInText))
-        {
+        if (isset($this->templateEndnoteInText)) {
             $this->parseIndependent($this->templateEndnoteInText);
         }
         $temp = $parseStyle->parseStringToArray(
@@ -183,58 +177,46 @@ class CITEFORMAT
             $this->styleMap
         );
         // Ensure we have only valid fields.
-        foreach ($temp as $field => $value)
-        {
+        foreach ($temp as $field => $value) {
             if (array_key_exists($field, $this->styleMap->citationEndnote) || ($field == 'independent') ||
-                ($field == 'ultimate') || ($field == 'preliminaryText'))
-            {
+                ($field == 'ultimate') || ($field == 'preliminaryText')) {
                 $this->templateEndnote[$field] = $value;
             }
         }
-        if (isset($this->templateEndnote))
-        {
+        if (isset($this->templateEndnote)) {
             $this->parseIndependent($this->templateEndnote);
         }
         $temp = $parseStyle->parseStringToArray('citationEndnote', trim($this->style['ibid']), $this->styleMap);
         // Ensure we have only valid fields.
-        foreach ($temp as $field => $value)
-        {
+        foreach ($temp as $field => $value) {
             if (array_key_exists($field, $this->styleMap->citationEndnote) || ($field == 'independent') ||
-                ($field == 'ultimate') || ($field == 'preliminaryText'))
-            {
+                ($field == 'ultimate') || ($field == 'preliminaryText')) {
                 $this->templateIbid[$field] = $value;
             }
         }
-        if (isset($this->templateIbid))
-        {
+        if (isset($this->templateIbid)) {
             $this->parseIndependent($this->templateIbid);
         }
         $temp = $parseStyle->parseStringToArray('citationEndnote', trim($this->style['idem']), $this->styleMap);
         // Ensure we have only valid fields.
-        foreach ($temp as $field => $value)
-        {
+        foreach ($temp as $field => $value) {
             if (array_key_exists($field, $this->styleMap->citationEndnote) || ($field == 'independent') ||
-                ($field == 'ultimate') || ($field == 'preliminaryText'))
-            {
+                ($field == 'ultimate') || ($field == 'preliminaryText')) {
                 $this->templateIdem[$field] = $value;
             }
         }
-        if (isset($this->templateIdem))
-        {
+        if (isset($this->templateIdem)) {
             $this->parseIndependent($this->templateIdem);
         }
         $temp = $parseStyle->parseStringToArray('citationEndnote', trim($this->style['opCit']), $this->styleMap);
         // Ensure we have only valid fields.
-        foreach ($temp as $field => $value)
-        {
+        foreach ($temp as $field => $value) {
             if (array_key_exists($field, $this->styleMap->citationEndnote) || ($field == 'independent') ||
-                ($field == 'ultimate') || ($field == 'preliminaryText'))
-            {
+                ($field == 'ultimate') || ($field == 'preliminaryText')) {
                 $this->templateOpCit[$field] = $value;
             }
         }
-        if (isset($this->templateOpCit))
-        {
+        if (isset($this->templateOpCit)) {
             $this->parseIndependent($this->templateOpCit);
         }
     }
@@ -247,104 +229,85 @@ class CITEFORMAT
         $parseStyle = new PARSESTYLE();
         $temp = $parseStyle->parseStringToArray('citation', trim($this->style['template']), $this->styleMap);
         // Ensure we have only valid fields.
-        foreach ($temp as $field => $value)
-        {
+        foreach ($temp as $field => $value) {
             if (array_key_exists($field, $this->styleMap->citation) || ($field == 'independent') ||
-                ($field == 'ultimate') || ($field == 'preliminaryText'))
-            {
+                ($field == 'ultimate') || ($field == 'preliminaryText')) {
                 $this->template[$field] = $value;
             }
         }
-        if (isset($this->template))
-        {
+        if (isset($this->template)) {
             $this->parseIndependent($this->template);
             $this->storeOriginalTemplate = $this->template;
         }
-        if (trim($this->style['followCreatorTemplate']))
-        {
+        if (trim($this->style['followCreatorTemplate'])) {
             $temp = $parseStyle->parseStringToArray(
                 'citation',
                 trim($this->style['followCreatorTemplate']),
                 $this->styleMap
             );
-            foreach ($temp as $field => $value)
-            {
+            foreach ($temp as $field => $value) {
                 if (array_key_exists($field, $this->styleMap->citation) || ($field == 'independent') ||
-                    ($field == 'ultimate') || ($field == 'preliminaryText'))
-                {
+                    ($field == 'ultimate') || ($field == 'preliminaryText')) {
                     $this->followCreatorTemplate[$field] = $value;
                 }
             }
             $this->parseIndependent($this->followCreatorTemplate);
         }
-        if (trim($this->style['consecutiveCreatorTemplate']))
-        {
+        if (trim($this->style['consecutiveCreatorTemplate'])) {
             $temp = $parseStyle->parseStringToArray(
                 'citation',
                 trim($this->style['consecutiveCreatorTemplate']),
                 $this->styleMap
             );
-            foreach ($temp as $field => $value)
-            {
+            foreach ($temp as $field => $value) {
                 if (array_key_exists($field, $this->styleMap->citation) || ($field == 'independent') ||
-                    ($field == 'ultimate') || ($field == 'preliminaryText'))
-                {
+                    ($field == 'ultimate') || ($field == 'preliminaryText')) {
                     $this->consecutiveCreatorTemplate[$field] = $value;
                 }
             }
             $this->parseIndependent($this->consecutiveCreatorTemplate);
         }
-        if (trim($this->style['subsequentCreatorTemplate']))
-        {
+        if (trim($this->style['subsequentCreatorTemplate'])) {
             $temp = $parseStyle->parseStringToArray(
                 'citation',
                 trim($this->style['subsequentCreatorTemplate']),
                 $this->styleMap
             );
-            foreach ($temp as $field => $value)
-            {
+            foreach ($temp as $field => $value) {
                 if (array_key_exists($field, $this->styleMap->citation) || ($field == 'independent') ||
-                    ($field == 'ultimate') || ($field == 'preliminaryText'))
-                {
+                    ($field == 'ultimate') || ($field == 'preliminaryText')) {
                     $this->subsequentCreatorTemplate[$field] = $value;
                 }
             }
             $this->parseIndependent($this->subsequentCreatorTemplate);
         }
-        if (trim($this->style['ambiguousTemplate']))
-        {
+        if (trim($this->style['ambiguousTemplate'])) {
             $temp = $parseStyle->parseStringToArray(
                 'citation',
                 trim($this->style['ambiguousTemplate']),
                 $this->styleMap
             );
             // Ensure we have only valid fields.
-            foreach ($temp as $field => $value)
-            {
+            foreach ($temp as $field => $value) {
                 if (array_key_exists($field, $this->styleMap->citation) || ($field == 'independent') ||
-                    ($field == 'ultimate') || ($field == 'preliminaryText'))
-                {
+                    ($field == 'ultimate') || ($field == 'preliminaryText')) {
                     $this->ambiguousTemplate[$field] = $value;
                 }
             }
             $this->parseIndependent($this->ambiguousTemplate);
         }
         // replacement citation templates for particular resource types
-        foreach ($this->styleMap->types as $type => $value)
-        {
+        foreach ($this->styleMap->types as $type => $value) {
             $key = $type . "Template";
-            if (array_key_exists($key, $this->style) && trim($this->style[$key]))
-            {
+            if (array_key_exists($key, $this->style) && trim($this->style[$key])) {
                 $temp = $parseStyle->parseStringToArray(
                     'citation',
                     trim($this->style[$key]),
                     $this->styleMap
                 );
-                foreach ($temp as $field => $value)
-                {
+                foreach ($temp as $field => $value) {
                     if (array_key_exists($field, $this->styleMap->citation) || ($field == 'independent') ||
-                        ($field == 'ultimate') || ($field == 'preliminaryText'))
-                    {
+                        ($field == 'ultimate') || ($field == 'preliminaryText')) {
                         $this->{$key}[$field] = $value;
                     }
                 }
@@ -359,16 +322,13 @@ class CITEFORMAT
      */
     public function parseIndependent(&$array)
     {
-        if (array_key_exists('independent', $array))
-        {
+        if (array_key_exists('independent', $array)) {
             $ind1 = $array['independent'];
-            foreach ($ind1 as $key => $value)
-            {
+            foreach ($ind1 as $key => $value) {
                 $split = UTF8::mb_explode('_', $key);
                 $ind2[$split[1]] = $value;
             }
-            if (isset($ind2))
-            {
+            if (isset($ind2)) {
                 $array['independent'] = $ind2;
             }
         }
@@ -380,17 +340,13 @@ class CITEFORMAT
      */
     public function process()
     {
-        if (!isset($this->output))
-        {
+        if (!isset($this->output)) {
             $this->output = 'html';
         }
         $this->export = new EXPORTFILTER($this, $this->output);
-        if ($this->style['citationStyle'])
-        { // Endnote style citations
+        if ($this->style['citationStyle']) { // Endnote style citations
             return $this->endnoteStyle();
-        }
-        else
-        { // In-text tyle citations
+        } else { // In-text tyle citations
             return $this->inTextStyle();
         }
     }
@@ -404,15 +360,13 @@ class CITEFORMAT
         $pString = '';
         $multiples = $textAtoms = [];
         $this->multipleCitations = FALSE;
-        foreach ($this->items as $count => $this->item)
-        {
+        foreach ($this->items as $count => $this->item) {
             $this->id = $count;
             $this->ids[$count] = $this->item['id'];
             $text = '';
             // If $this->items[$count + 1]['text'] is empty, this is the start or continuation of a multiple citation.
             // If $this->items[$count + 1]['text'] is not empty, this is the start of a new citation with 'text' preceeding the citation
-            if (array_key_exists($count + 1, $this->items) && !$this->items[$count + 1]['text'])
-            { // multiples
+            if (array_key_exists($count + 1, $this->items) && !$this->items[$count + 1]['text']) { // multiples
                 // Grab the first citation of the multiple
                 $textAtoms[] = $this->item['text'];
                 $citation = $this->map($this->templateEndnoteInText);
@@ -420,37 +374,27 @@ class CITEFORMAT
                 $this->multipleCitations = TRUE;
 
                 continue;
-            }
-            elseif ($this->multipleCitations)
-            { // last of multiple
+            } elseif ($this->multipleCitations) { // last of multiple
                 $citation = $this->map($this->templateEndnoteInText);
                 $multiples[$count] = $citation;
-            }
-            else
-            { // not multiple
+            } else { // not multiple
                 $text = $this->item['text'];
                 $citation = $this->map($this->templateEndnoteInText);
             }
             $this->multipleCitations = FALSE;
-            if (!empty($multiples))
-            {
+            if (!empty($multiples)) {
                 $textAtom = implode('', $textAtoms);
                 $citation = $this->multiple($multiples);
                 $multiples = $textAtoms = [];
                 $text .= $textAtom;
             }
-            if ($this->style['formatEndnoteInText'] == 1)
-            { // superscript
+            if ($this->style['formatEndnoteInText'] == 1) { // superscript
                 $citation = '[sup]' . $this->style['firstCharsEndnoteInText'] . $citation .
                 $this->style['lastCharsEndnoteInText'] . '[/sup]';
-            }
-            elseif ($this->style['formatEndnoteInText'] == 2)
-            { // subscript
+            } elseif ($this->style['formatEndnoteInText'] == 2) { // subscript
                 $citation = '[sub]' . $this->style['firstCharsEndnoteInText'] . $citation .
                 $this->style['lastCharsEndnoteInText'] . '[/sub]';
-            }
-            else
-            {
+            } else {
                 $citation = $this->style['firstCharsEndnoteInText'] . $citation .
                 $this->style['lastCharsEndnoteInText'];
             }
@@ -467,8 +411,7 @@ class CITEFORMAT
     public function inTextStyle()
     {
         // Create RTF stylesheet
-        if ($this->wikindx && !$this->styleSheet && ($this->output == 'rtf'))
-        {
+        if ($this->wikindx && !$this->styleSheet && ($this->output == 'rtf')) {
             include_once("core/session/SESSION.php");
             $session = new SESSION();
             $this->styleSheet = "{\\stylesheet\n
@@ -477,17 +420,13 @@ class CITEFORMAT
 {\\*\\cs1 Numbering Symbols;}\n
 {\\cs2 \\additive \\super \\sbasedon10 footnote reference;}" . LF;
             // WIKINDX-specific: RTF page numbering
-            if ($session->getVar("exportPaper_pageNumber"))
-            { // 0 == no. 1 == footer, 2 == header
+            if ($session->getVar("exportPaper_pageNumber")) { // 0 == no. 1 == footer, 2 == header
                 $this->styleSheet .= "{\\cs17 \\additive \\sbasedon10 page number;}\n}\n" . LF;
                 $this->styleSheet .= $this->rtfPageNumbers($session);
             }
-            if ($session->getVar("exportPaper_sectionFtRestart"))
-            {
+            if ($session->getVar("exportPaper_sectionFtRestart")) {
                 $this->styleSheet .= "\\ftnrestart\\aftnnar\\fet1" . LF;
-            }
-            else
-            {
+            } else {
                 $this->styleSheet .= "\\aftnnar\\fet1" . LF;
             }
         }
@@ -496,29 +435,23 @@ class CITEFORMAT
         $this->multipleCitations = FALSE;
         $this->disambiguate();
         $preText = $postText = $this->previousNameInSameSentenceId = $this->citationInSameSentence = FALSE;
-        foreach ($this->items as $count => $this->item)
-        {
+        foreach ($this->items as $count => $this->item) {
             $this->matchNameSplit = $this->matchNameSplitEtAl = $this->nameInSameSentence = FALSE;
             // If this is a single citation or the start of a multiple set, get any preText and postText
-            if (!$this->multipleCitations && array_key_exists('preText', $this->item))
-            {
+            if (!$this->multipleCitations && array_key_exists('preText', $this->item)) {
                 $preText = $this->item['preText'];
-                if (array_key_exists('postText', $this->item))
-                {
+                if (array_key_exists('postText', $this->item)) {
                     $postText = $this->item['postText'];
                 }
             }
             $usingReplacementType = FALSE;
-            if (isset($tempTemplate))
-            {
+            if (isset($tempTemplate)) {
                 $this->template = $tempTemplate;
                 unset($tempTemplate);
             }
             $this->ids[$count] = $this->item['id'];
-            if ($this->style['subsequentCreatorRange'] == 1)
-            { // paragraph
-                if ($this->newParagraph)
-                {
+            if ($this->style['subsequentCreatorRange'] == 1) { // paragraph
+                if ($this->newParagraph) {
                     $this->newParagraph = FALSE;
                 }
 
@@ -535,74 +468,56 @@ class CITEFORMAT
                     $creatorIdStrings = [];
                     $this->newParagraph = TRUE;
                 }
-            }
-            elseif (($this->output == 'rtf') && ($this->style['subsequentCreatorRange'] == 2))
-            { // section
-                if ($this->newSection)
-                {
+            } elseif (($this->output == 'rtf') && ($this->style['subsequentCreatorRange'] == 2)) { // section
+                if ($this->newSection) {
                     $this->newSection = FALSE;
                 }
-                if (mb_strpos($this->item['text'], "__WIKINDX__SECTION__") !== FALSE)
-                {
+                if (mb_strpos($this->item['text'], "__WIKINDX__SECTION__") !== FALSE) {
                     $creatorIdStrings = [];
                     $this->newSection = TRUE;
                 }
             }
             $text = '';
             $this->followCreatorTemplateUse = FALSE;
-            if (array_key_exists('ambiguousTemplate', $this->item))
-            {
-                if ($this->checkTemplateFields($this->ambiguousTemplate))
-                {
+            if (array_key_exists('ambiguousTemplate', $this->item)) {
+                if ($this->checkTemplateFields($this->ambiguousTemplate)) {
                     $tempTemplate = $this->template;
                     $this->template = $this->ambiguousTemplate;
                     // Debugging
 //$templateName = "AMBIGUOUS";
 //
                 }
-            }
-            elseif ($this->multipleCitations && array_key_exists($count, $this->creatorIds) &&
+            } elseif ($this->multipleCitations && array_key_exists($count, $this->creatorIds) &&
                 isset($this->consecutiveCreatorTemplate) && array_key_exists($count - 1, $this->creatorIds) &&
-                ($this->creatorIds[$count] == $this->creatorIds[$count - 1]))
-            {
+                ($this->creatorIds[$count] == $this->creatorIds[$count - 1])) {
                 $this->consecutiveCreatorSep[] = $count;
-                if ($this->checkTemplateFields($this->consecutiveCreatorTemplate))
-                {
+                if ($this->checkTemplateFields($this->consecutiveCreatorTemplate)) {
                     $tempTemplate = $this->template;
                     $this->template = $this->consecutiveCreatorTemplate;
                 }
             }
             // Replacement templates for particular resource types.  Need to match this template to other replacement templates by removing fields if necessary
             $type = $this->item['type'] . "Template";
-            if (isset($this->$type))
-            {
+            if (isset($this->$type)) {
                 $tempTypeTemplate = $this->$type;
                 $usingReplacementType = TRUE;
-                if (isset($tempTemplate))
-                { // i.e. $this->template has already been replaced
-                    foreach ($this->$type as $key => $value)
-                    {
-                        if (($key == 'ultimate') || ($key == 'preliminaryText'))
-                        {
+                if (isset($tempTemplate)) { // i.e. $this->template has already been replaced
+                    foreach ($this->$type as $key => $value) {
+                        if (($key == 'ultimate') || ($key == 'preliminaryText')) {
                             continue;
                         }
-                        if (!array_key_exists($key, $this->template))
-                        {
+                        if (!array_key_exists($key, $this->template)) {
                             unset($this->{$type}[$key]);
                         }
                     }
-                    if ($this->checkTemplateFields($this->$type))
-                    {
+                    if ($this->checkTemplateFields($this->$type)) {
                         $this->template = $this->$type;
                         // Debugging
 //$templateName = "$type";
 //
                     }
-                }
-                else
-                {
-                    if ($this->checkTemplateFields($this->$type))
-                    {
+                } else {
+                    if ($this->checkTemplateFields($this->$type)) {
                         $tempTemplate = $this->template;
                         $this->template = $this->$type;
                         // Debugging
@@ -614,68 +529,51 @@ class CITEFORMAT
             // Debugging
             // If $this->items[$count + 1]['text'] is empty, this is the start or continuation of a multiple citation.
             // If $this->items[$count + 1]['text'] is not empty, this is the start of a new citation with 'text' preceeding the citation
-            if (array_key_exists($count + 1, $this->items) && !$this->items[$count + 1]['text'])
-            { // multiples
+            if (array_key_exists($count + 1, $this->items) && !$this->items[$count + 1]['text']) { // multiples
                 // Grab the first citation of the multiple
                 $textAtoms[] = $this->item['text'];
                 $citation = $this->map($this->template);
                 // If $citation is empty, we want to return something so return the title
-                if (($citation == '') && array_key_exists('title', $this->item))
-                {
+                if (($citation == '') && array_key_exists('title', $this->item)) {
                     $citation = $this->item['title'];
                 }
                 $multiples[$count] = $citation;
                 $this->multipleCitations = TRUE;
 
                 continue;
-            }
-            elseif ($this->multipleCitations)
-            { // last of multiple
+            } elseif ($this->multipleCitations) { // last of multiple
                 $citation = $this->map($this->template);
                 // If $citation is empty, we want to return something so return the title
-                if (($citation == '') && array_key_exists('title', $this->item))
-                {
+                if (($citation == '') && array_key_exists('title', $this->item)) {
                     $citation = $this->item['title'];
                 }
                 $multiples[$count] = $citation;
-            }
-            else
-            { // not multiple
+            } else { // not multiple
                 $text = $this->item['text'];
                 // If single citation is in the same sentence as first creator surname, use followCreatorTemplate if specified.
                 // Don't use this if there is preText or postText in the citation.
-                if (isset($this->item['firstCreatorSurname']) && !$preText && !$postText)
-                {
+                if (isset($this->item['firstCreatorSurname']) && !$preText && !$postText) {
                     $this->sameSentence($text);
                 }
-                if (isset($this->followCreatorTemplate) && $this->nameInSameSentence)
-                {
-                    if (!$usingReplacementType)
-                    {
-                        if ($this->checkTemplateFields($this->followCreatorTemplate))
-                        {
+                if (isset($this->followCreatorTemplate) && $this->nameInSameSentence) {
+                    if (!$usingReplacementType) {
+                        if ($this->checkTemplateFields($this->followCreatorTemplate)) {
                             $tempTemplate = $this->template;
                             $this->template = $this->followCreatorTemplate;
                             // Debugging
 //$templateName = "FOLLOWCREATOR";
 //
                         }
-                    }
-                    else
-                    {
-                        foreach ($this->$type as $key => $value)
-                        {
-                            if (($key == 'ultimate') || ($key == 'preliminaryText'))
-                            {
+                    } else {
+                        foreach ($this->$type as $key => $value) {
+                            if (($key == 'ultimate') || ($key == 'preliminaryText')) {
                                 continue;
                             }
-                            if (!array_key_exists($key, $this->followCreatorTemplate))
-                            {
+                            if (!array_key_exists($key, $this->followCreatorTemplate)) {
                                 unset($this->{$type}[$key]);
                             }
                         }
-                        if ($this->checkTemplateFields($this->$type))
-                        {
+                        if ($this->checkTemplateFields($this->$type)) {
                             $this->template = $this->$type; // $tempTemplate already stored
 // Debugging
 //$templateName = "$type";
@@ -685,8 +583,7 @@ class CITEFORMAT
                     unset($split);
                 }
                 $trySubsequent = FALSE;
-                if (!empty($creatorIdStrings) && array_search($this->item['id'], $this->inTextDoneIds) !== FALSE)
-                {
+                if (!empty($creatorIdStrings) && array_search($this->item['id'], $this->inTextDoneIds) !== FALSE) {
                     $trySubsequent = TRUE;
                 }
                 // If an intervening but different work by the same creators is in $this->inTextDoneIds, we don't use the subsequent template.
@@ -712,14 +609,11 @@ class CITEFORMAT
                 //				if(!$this->matchNameSplit && !$this->nameInSameSentence &&
                 //					array_search($this->item['id'], $this->inTextDoneIds) !== FALSE)
                 //				if($trySubsequent && (array_search($this->item['id'], $this->inTextDoneIds) !== FALSE))
-                if ($trySubsequent)
-                {
+                if ($trySubsequent) {
                     if (isset($this->subsequentCreatorTemplate) &&
                         $this->checkTemplateFields($this->subsequentCreatorTemplate) &&
-                        $this->subsequentSentenceCheck())
-                    {
-                        if (!isset($tempTemplate))
-                        {
+                        $this->subsequentSentenceCheck()) {
+                        if (!isset($tempTemplate)) {
                             $tempTemplate = $this->template;
                         }
                         $this->template = $this->subsequentCreatorTemplate;
@@ -730,43 +624,34 @@ class CITEFORMAT
                 }
                 // Remove title and shortTitle fields from template if either of those fields is in same sentence as citation
                 $matchArray = [];
-                if (array_key_exists('title', $this->item))
-                {
+                if (array_key_exists('title', $this->item)) {
                     $title = preg_quote(trim($this->item['mainTitle']));
                     $matchArray[] = "(&nbsp;){1}$title|\\s{1}$title";
                 }
-                if (array_key_exists('shortTitle', $this->item))
-                {
+                if (array_key_exists('shortTitle', $this->item)) {
                     $shortTitle = preg_quote(trim($this->item['shortTitle']));
                     $matchArray[] = "(&nbsp;){1}$shortTitle|\\s{1}$shortTitle";
                 }
-                if (!empty($matchArray))
-                {
+                if (!empty($matchArray)) {
                     $match = preg_quote(implode('|', $matchArray), '/');
-                    if (preg_match("/$match/iuU", $text))
-                    {
-                        if (array_key_exists('title', $this->template))
-                        {
+                    if (preg_match("/$match/iuU", $text)) {
+                        if (array_key_exists('title', $this->template)) {
                             unset($this->template['title']);
                         }
-                        if (array_key_exists('shortTitle', $this->template))
-                        {
+                        if (array_key_exists('shortTitle', $this->template)) {
                             unset($this->template['shortTitle']);
                         }
                     }
                 }
                 $citation = $this->map($this->template);
-                if ($citation == '')
-                {
-                    if ($this->pageSplitDone === FALSE)
-                    {
+                if ($citation == '') {
+                    if ($this->pageSplitDone === FALSE) {
                         $this->matchNameSplit = FALSE;
                     }
                 }
             }
             $this->multipleCitations = FALSE;
-            if (!empty($multiples))
-            {
+            if (!empty($multiples)) {
                 $textAtom = implode('', $textAtoms);
                 $citation = $this->multiple($multiples);
                 $multiples = $textAtoms = [];
@@ -775,51 +660,38 @@ class CITEFORMAT
             // APA-style split page number(s) from main citation.  $text may be several sentences and name to search for may appear several times.  We want to use the
             // last occurrence.
             // If $this->pageSplitDone === TRUE a citation for this resource has already been added in the same sentence.
-            if ($this->pageSplitDone && ($this->pageSplitDone !== TRUE))
-            {
-                if ($this->matchNameSplitEtAl)
-                {
+            if ($this->pageSplitDone && ($this->pageSplitDone !== TRUE)) {
+                if ($this->matchNameSplitEtAl) {
                     $pattern = "/(" . preg_quote($this->matchNameSplit) . ".*" .
                     preg_quote($this->matchNameSplitEtAl) . ")/u";
-                }
-                else
-                {
+                } else {
                     $pattern = "/(" . preg_quote($this->matchNameSplit) . ")/u";
                 }
-                if ($this->suwpExport || ($this->output == 'rtf'))
-                {
+                if ($this->suwpExport || ($this->output == 'rtf')) {
                     $input = htmlspecialchars($text, ENT_QUOTES);
-                }
-                else
-                {
+                } else {
                     $input = $text;
                 }
                 $split = preg_split($pattern, $input, -1, PREG_SPLIT_DELIM_CAPTURE);
                 $lastText = array_pop($split);
                 $lastText = array_pop($split) . ' ' . $this->pageSplitDone . $lastText;
-                if (!$this->suwpExport && ($this->output != 'rtf'))
-                {
+                if (!$this->suwpExport && ($this->output != 'rtf')) {
                     $text = html_entity_decode(implode('', $split) . $lastText);
                 }
             }
-            if ($citation == '')
-            {
+            if ($citation == '') {
                 $pString .= $text;
-            }
-            else
-            {
+            } else {
                 $pString .= $text . ' ' .
                     $this->export->format($this->style['firstChars'] .
                     $preText . $citation . $postText . $this->export->format($this->style['lastChars']));
             }
             // reset
             $preText = $postText = FALSE;
-            if (array_search($this->item['id'], $this->inTextDoneIds) === FALSE)
-            {
+            if (array_search($this->item['id'], $this->inTextDoneIds) === FALSE) {
                 $this->inTextDoneIds[] = $this->item['id'];
             }
-            if (array_key_exists('creatorIds', $this->item))
-            {
+            if (array_key_exists('creatorIds', $this->item)) {
                 $creatorIdStrings[] = [$this->item['id'], $this->item['creatorIds']];
             }
             // Debugging
@@ -831,8 +703,7 @@ class CITEFORMAT
             }
             */
             // Reset temporary replcement type template
-            if (isset($this->$type))
-            {
+            if (isset($this->$type)) {
                 $this->$type = $tempTypeTemplate;
             }
         }
@@ -846,16 +717,13 @@ class CITEFORMAT
      */
     public function subsequentSentenceCheck()
     {
-        if (!array_key_exists('subsequentFields', $this->style) || !$this->style['subsequentFields'])
-        {
+        if (!array_key_exists('subsequentFields', $this->style) || !$this->style['subsequentFields']) {
             return TRUE; // Use subsequentTemplate
         }
-        if ($this->nameInSameSentence)
-        {
+        if ($this->nameInSameSentence) {
             return TRUE; // Use subsequentTemplate
         }
-        if (array_key_exists('mainTitle', $this->item))
-        {
+        if (array_key_exists('mainTitle', $this->item)) {
             $title = str_replace(['{', '}'], '', trim($this->item['mainTitle']));
             $title = preg_quote($title);
             //			$matchArray[] = "\.\s*(&nbsp;)*.*$title|\.(&nbsp;)*\s*.*$title";
@@ -865,8 +733,7 @@ class CITEFORMAT
             $matchArray[] = "$title(?!.*\\.|.*\\?|.*\\!|.*¿|.*¡)\\s*(&nbsp;)*";
             $matchArray[] = "$title(?!.*\\.|.*\\?|.*\\!|.*¿|.*¡)(&nbsp;)*\\s*";
         }
-        if (array_key_exists('shortTitle', $this->item))
-        {
+        if (array_key_exists('shortTitle', $this->item)) {
             $shortTitle = str_replace(['{', '}'], '', trim($this->item['shortTitle']));
             $shortTitle = preg_quote($shortTitle);
             //			$shortTitle = preg_quote($this->item['shortTitle']);
@@ -874,11 +741,9 @@ class CITEFORMAT
             $matchArray[] = "$shortTitle(?!.*\\.|.*\\?|.*\\!|.*¿|.*¡)\\s*(&nbsp;)*";
             $matchArray[] = "$shortTitle(?!.*\\.|.*\\?|.*\\!|.*¿|.*¡)(&nbsp;)*\\s*";
         }
-        if (!empty($matchArray))
-        {
+        if (!empty($matchArray)) {
             $match = implode('|', $matchArray);
-            if (preg_match("/$match/iuUs", $this->item['text']))
-            {
+            if (preg_match("/$match/iuUs", $this->item['text'])) {
                 return TRUE; // Use subsequentTemplate
             }
         }
@@ -894,8 +759,7 @@ class CITEFORMAT
     {
         // Is this citation in the same sentence as the previous citation and for the same resource?
         if (($this->item['id'] == $this->previousNameInSameSentenceId) &&
-            !preg_match("/^\\s*(&nbsp;)*\\.|(&nbsp;)*\\s*\\./Uu", $text))
-        {
+            !preg_match("/^\\s*(&nbsp;)*\\.|(&nbsp;)*\\s*\\./Uu", $text)) {
             $this->citationInSameSentence = $this->nameInSameSentence = $this->matchNameSplit = TRUE;
 
             return;
@@ -915,36 +779,29 @@ class CITEFORMAT
         if ((mb_substr($this->textEtAl, -1) == '.') &&
             array_key_exists(count($split) - 2, $split) &&
             (mb_substr($split[count($split) - 2], -(mb_strlen($this->textEtAl) - 1)) ==
-            preg_replace("/[.]$/u", '', $this->textEtAl)))
-        {
+            preg_replace("/[.]$/u", '', $this->textEtAl))) {
             $this->matchNameSplitEtAl = ' ' . $this->textEtAl;
             $lastSplit = $split[count($split) - 2] . ' ' . $lastSplit;
         }
         // Citation tag may immediately follow 'creatorName et al.'
-        elseif ((mb_substr($split[count($split) - 1], -(mb_strlen($this->textEtAl))) == $this->textEtAl))
-        {
+        elseif ((mb_substr($split[count($split) - 1], -(mb_strlen($this->textEtAl))) == $this->textEtAl)) {
             $this->matchNameSplitEtAl = ' ' . $this->textEtAl;
             $patternsEnd[] = '(' . $storedSurname . $this->matchNameSplitEtAl . ')$';
-        }
-        elseif (!$this->matchNameSplitEtAl)
-        {
+        } elseif (!$this->matchNameSplitEtAl) {
             $patterns[] = "(" . $storedSurname . ' ' . $this->textEtAl . ")";
         }
         $lastSplit = trim($lastSplit);
-        foreach ($this->possessiveArray as $poss)
-        {
+        foreach ($this->possessiveArray as $poss) {
             $patterns[] = $possessive1 = '(' . $storedSurname . $poss . ')';
             $patternsEnd[] = $possessive1 . '$';
         }
         $surnamePattern = FALSE;
         $sizeSurname = count($this->creatorSurnames[$this->item['id']]);
-        if ($sizeSurname > 1)
-        {
+        if ($sizeSurname > 1) {
             $surnamePattern = "(" .
                 $this->creatorSurnames[$this->item['id']][0] . ".*?" .
                 $this->creatorSurnames[$this->item['id']][--$sizeSurname];
-            foreach ($this->possessiveArray as $poss)
-            {
+            foreach ($this->possessiveArray as $poss) {
                 $patterns[] = $poss = $surnamePattern . $poss . ")";
                 $patternsEnd[] = $poss . '$';
             }
@@ -955,28 +812,21 @@ class CITEFORMAT
         $pattern = implode("|", $patterns);
         $patternsEnd[] = $storedSurname . '$';
         $patternEnd = implode("|", $patternsEnd);
-        if ($this->suwpExport || ($this->output == 'rtf'))
-        {
+        if ($this->suwpExport || ($this->output == 'rtf')) {
             $input1 = $input2 = htmlspecialchars($lastSplit, ENT_QUOTES);
-        }
-        else
-        {
+        } else {
             $input1 = $input2 = $lastSplit;
         }
         //$pattern = "(Grimshaw et al.)|(Grimshaw's)|(Grimshaw')|(Grimshaw)";
         //print_r($pattern); print '<p>';
-        if (preg_match("/\\b$pattern\\b/u", $input1, $matchName))
-        {
+        if (preg_match("/\\b$pattern\\b/u", $input1, $matchName)) {
             if (array_key_exists('followCreatorPageSplit', $this->style) &&
-            !preg_match("/$patternEnd/u", $input2))
-            {
+            !preg_match("/$patternEnd/u", $input2)) {
                 $this->matchNameSplit = $matchName[0];
             }
             $this->nameInSameSentence = TRUE;
             $this->previousNameInSameSentenceId = $this->item['id'];
-        }
-        else
-        {
+        } else {
             $this->previousNameInSameSentenceId = FALSE;
         }
     }
@@ -991,10 +841,8 @@ class CITEFORMAT
      */
     public function checkTemplateFields($template)
     {
-        foreach ($template as $key => $value)
-        {
-            if (array_key_exists($key, $this->item) || ($key == 'preliminaryText'))
-            {
+        foreach ($template as $key => $value) {
+            if (array_key_exists($key, $this->item) || ($key == 'preliminaryText')) {
                 return TRUE; // use replacement template
             }
         }
@@ -1006,20 +854,16 @@ class CITEFORMAT
      */
     public function disambiguate()
     {
-        if (!$this->style['ambiguous'])
-        { // do nothing
+        if (!$this->style['ambiguous']) { // do nothing
             return;
         }
         $ambiguousTitles = $this->yearsDisambiguated = $this->bibliographyIds = [];
-        foreach ($this->items as $count => $item)
-        {
+        foreach ($this->items as $count => $item) {
             if (($this->style['ambiguous'] == 1) &&
             array_key_exists('title', $this->template) && array_key_exists('title', $item) &&
             array_key_exists('year', $this->template) && array_key_exists('year', $item) &&
-            array_key_exists('creatorIds', $item))
-            {
-                foreach ($this->titles as $titleIndex => $title)
-                {
+            array_key_exists('creatorIds', $item)) {
+                foreach ($this->titles as $titleIndex => $title) {
                     if (($title != $item['title']) // not the same title
                     && array_key_exists($titleIndex, $this->creatorIds)
                     && ($this->creatorIds[$titleIndex] == $item['creatorIds']) // same creators
@@ -1027,8 +871,7 @@ class CITEFORMAT
                     && ($this->citationIds[$titleIndex] != $item['id']) // not the same citation ID
                     ) {
                         $identifier = str_replace(' ', '', $item['year'] . $item['creatorIds']);
-                        if (!array_key_exists($identifier, $ambiguousTitles))
-                        {
+                        if (!array_key_exists($identifier, $ambiguousTitles)) {
                             $ambiguousTitles[$identifier] = range('a', 'z'); // Start a new letter set
                         }
                         $this->bibliographyIds[$item['id']] = $identifier;
@@ -1036,28 +879,20 @@ class CITEFORMAT
                         break;
                     }
                 }
-            }
-            elseif (array_key_exists('year', $this->template) && array_key_exists('year', $item))
-            {
-                foreach ($this->years as $yearIndex => $year)
-                {
+            } elseif (array_key_exists('year', $this->template) && array_key_exists('year', $item)) {
+                foreach ($this->years as $yearIndex => $year) {
                     if (array_key_exists('creatorIds', $item)
                     && array_key_exists($yearIndex, $this->creatorIds)
                     && ($year == $item['year']) // same year
                     && ($this->creatorIds[$yearIndex] == $item['creatorIds']) // same creators
-                    && ($this->citationIds[$yearIndex] != $item['id']))
-                    { // not the same citation ID
-                        if ($this->style['ambiguous'] == 1)
-                        { // add letter after year
+                    && ($this->citationIds[$yearIndex] != $item['id'])) { // not the same citation ID
+                        if ($this->style['ambiguous'] == 1) { // add letter after year
                             $identifier = str_replace(' ', '', $year . $this->creatorIds[$yearIndex]);
-                            if (!array_key_exists($identifier, $ambiguousTitles))
-                            {
+                            if (!array_key_exists($identifier, $ambiguousTitles)) {
                                 $ambiguousTitles[$identifier] = range('a', 'z'); // Start a new letter set
                             }
                             $this->bibliographyIds[$item['id']] = $identifier;
-                        }
-                        elseif ($this->style['ambiguous'] == 2)
-                        { // add title and new template
+                        } elseif ($this->style['ambiguous'] == 2) { // add title and new template
                             $this->items[$count]['ambiguousTemplate'] = TRUE;
                         }
 
@@ -1066,20 +901,13 @@ class CITEFORMAT
                 }
             }
         }
-        foreach ($this->bibliographyIds as $id => $identifier)
-        {
-            if (!$identifier)
-            {
+        foreach ($this->bibliographyIds as $id => $identifier) {
+            if (!$identifier) {
                 continue;
-            }
-            else
-            {
-                foreach ($this->items as $count => $item)
-                {
-                    if ($item['id'] == $id)
-                    {
-                        if (!array_key_exists($id, $this->yearsDisambiguated))
-                        {
+            } else {
+                foreach ($this->items as $count => $item) {
+                    if ($item['id'] == $id) {
+                        if (!array_key_exists($id, $this->yearsDisambiguated)) {
                             $letter = array_shift($ambiguousTitles[$identifier]);
                         }
                         $this->items[$count]['year'] .= $letter;
@@ -1099,42 +927,28 @@ class CITEFORMAT
      */
     public function findAlternates($typeArray)
     {
-        foreach ($typeArray as $field => $array)
-        {
-            if (is_array($array) && array_key_exists($field, $this->item))
-            {
+        foreach ($typeArray as $field => $array) {
+            if (is_array($array) && array_key_exists($field, $this->item)) {
                 if (array_key_exists('alternatePreFirst', $array) ||
-                    array_key_exists('alternatePreSecond', $array))
-                {
-                    if (!$this->item[$field])
-                    {
-                        if (array_key_exists($array['alternatePreFirst'], $this->item))
-                        {
+                    array_key_exists('alternatePreSecond', $array)) {
+                    if (!$this->item[$field]) {
+                        if (array_key_exists($array['alternatePreFirst'], $this->item)) {
                             unset($this->item[$array['alternatePreFirst']]);
                         }
-                    }
-                    else
-                    {
-                        if (array_key_exists($array['alternatePreSecond'], $this->item))
-                        {
+                    } else {
+                        if (array_key_exists($array['alternatePreSecond'], $this->item)) {
                             unset($this->item[$array['alternatePreSecond']]);
                         }
                     }
                 }
                 if (array_key_exists('alternatePostFirst', $array) ||
-                    array_key_exists('alternatePostSecond', $array))
-                {
-                    if (!$this->item[$field])
-                    {
-                        if (array_key_exists($array['alternatePostFirst'], $this->item))
-                        {
+                    array_key_exists('alternatePostSecond', $array)) {
+                    if (!$this->item[$field]) {
+                        if (array_key_exists($array['alternatePostFirst'], $this->item)) {
                             unset($this->item[$array['alternatePostFirst']]);
                         }
-                    }
-                    else
-                    {
-                        if (array_key_exists($array['alternatePostSecond'], $this->item))
-                        {
+                    } else {
+                        if (array_key_exists($array['alternatePostSecond'], $this->item)) {
                             unset($this->item[$array['alternatePostSecond']]);
                         }
                     }
@@ -1157,8 +971,7 @@ class CITEFORMAT
         $ultimate = $preliminaryText = '';
         $previousFieldExists = $nextFieldExists = TRUE;
         $pageSplit = $nonPageFieldFound = $pageFieldFound = FALSE;
-        if (array_key_exists('independent', $template))
-        {
+        if (array_key_exists('independent', $template)) {
             $independent = $template['independent'];
         }
         /**
@@ -1167,35 +980,29 @@ class CITEFORMAT
          */
         $checkPost = array_keys($template);
         array_shift($checkPost);
-        foreach ($template as $key => $value)
-        {
-            if ($key == 'ultimate')
-            {
+        foreach ($template as $key => $value) {
+            if ($key == 'ultimate') {
                 $ultimate = $value;
 
                 continue;
             }
-            if ($key == 'preliminaryText')
-            {
+            if ($key == 'preliminaryText') {
                 $preliminaryText = $value;
 
                 continue;
             }
-            if (!array_key_exists($key, $this->item) || !$this->item[$key])
-            {
+            if (!array_key_exists($key, $this->item) || !$this->item[$key]) {
                 $index++;
                 array_shift($checkPost);
                 $previousFieldExists = FALSE;
 
                 continue;
             }
-            if ($key != 'pages')
-            {
+            if ($key != 'pages') {
                 $nonPageFieldFound = TRUE;
             }
             $checkPostShift = array_shift($checkPost);
-            if (!array_key_exists($checkPostShift, $this->item) || !$this->item[$checkPostShift])
-            {
+            if (!array_key_exists($checkPostShift, $this->item) || !$this->item[$checkPostShift]) {
                 $nextFieldExists = FALSE;
             }
             $pre = array_key_exists('pre', $value) ? $value['pre'] : '';
@@ -1204,69 +1011,52 @@ class CITEFORMAT
              * Deal with __DEPENDENT_ON_PREVIOUS_FIELD__ for characters dependent on previous field's existence and
              * __DEPENDENT_ON_NEXT_FIELD__ for characters dependent on the next field's existence
              */
-            if ($this->matchNameSplit && ($key == 'pages'))
-            { // If pages split has occurred, remove dependencies for pages.
+            if ($this->matchNameSplit && ($key == 'pages')) { // If pages split has occurred, remove dependencies for pages.
                 $pre = str_replace("__DEPENDENT_ON_PREVIOUS_FIELD__", '', $pre);
                 $post = str_replace("__DEPENDENT_ON_PREVIOUS_FIELD__", '', $post);
-            }
-            else
-            {
-                if ($previousFieldExists && array_key_exists('dependentPre', $value))
-                {
+            } else {
+                if ($previousFieldExists && array_key_exists('dependentPre', $value)) {
                     $pre = preg_replace(
                         "/__DEPENDENT_ON_PREVIOUS_FIELD__/u",
                         $value['dependentPre'],
                         $pre
                     );
-                }
-                elseif (array_key_exists('dependentPreAlternative', $value))
-                {
+                } elseif (array_key_exists('dependentPreAlternative', $value)) {
                     $pre = preg_replace(
                         "/__DEPENDENT_ON_PREVIOUS_FIELD__/u",
                         $value['dependentPreAlternative'],
                         $pre
                     );
-                }
-                else
-                {
+                } else {
                     $pre = preg_replace("/__DEPENDENT_ON_PREVIOUS_FIELD__/u", '', $pre);
                 }
-                if ($nextFieldExists && array_key_exists('dependentPost', $value))
-                {
+                if ($nextFieldExists && array_key_exists('dependentPost', $value)) {
                     $post = str_replace(
                         "__DEPENDENT_ON_NEXT_FIELD__",
                         $value['dependentPost'],
                         $post
                     );
-                }
-                elseif (array_key_exists('dependentPostAlternative', $value))
-                {
+                } elseif (array_key_exists('dependentPostAlternative', $value)) {
                     $post = preg_replace(
                         "/__DEPENDENT_ON_NEXT_FIELD__/u",
                         $value['dependentPostAlternative'],
                         $post
                     );
-                }
-                else
-                {
+                } else {
                     $post = preg_replace("/__DEPENDENT_ON_NEXT_FIELD__/u", '', $post);
                 }
             }
             /**
              * Deal with __SINGULAR_PLURAL__ for pages
              */
-            if ($key == 'pages')
-            {
+            if ($key == 'pages') {
                 $pageFieldFound = $index;
-                if (array_key_exists('pluralPagesExist', $this->item))
-                { // plural alternative for this key
+                if (array_key_exists('pluralPagesExist', $this->item)) { // plural alternative for this key
                     $pre = array_key_exists('plural', $value) ?
                         preg_replace("/__SINGULAR_PLURAL__/u", $value['plural'], $pre) : $pre;
                     $post = array_key_exists('plural', $value) ?
                         preg_replace("/__SINGULAR_PLURAL__/u", $value['plural'], $post) : $post;
-                }
-                else
-                { // singular alternative for this key
+                } else { // singular alternative for this key
                     $pre = array_key_exists('singular', $value) ?
                         preg_replace("/__SINGULAR_PLURAL__/u", $value['singular'], $pre) : $pre;
                     $post = array_key_exists('singular', $value) ?
@@ -1280,14 +1070,12 @@ class CITEFORMAT
              */
             $lastPre = mb_substr($post, -1);
             $firstItem = mb_substr($this->item[$key], 0, 1);
-            if ($firstItem === $lastPre)
-            {
+            if ($firstItem === $lastPre) {
                 $this->item[$key] = mb_substr($this->item[$key], 1);
             }
             $firstPost = mb_substr($post, 0, 1);
             $lastItem = mb_substr($this->item[$key], -1);
-            if (preg_match("/[.,;:?!]/u", $lastItem) && ($firstPost == $lastItem))
-            {
+            if (preg_match("/[.,;:?!]/u", $lastItem) && ($firstPost == $lastItem)) {
                 $post = mb_substr($post, 1); // take a guess at removing first character of $post
             }
             /**
@@ -1295,17 +1083,12 @@ class CITEFORMAT
              */
             $pre = str_replace("`", '', $pre);
             $post = str_replace("`", '', $post);
-            if ($this->item[$key])
-            {
+            if ($this->item[$key]) {
                 // Endnote style citations
-                if (($key == 'id') && $this->style['citationStyle'])
-                {
+                if (($key == 'id') && $this->style['citationStyle']) {
                     $itemArray[$index] = $this->formatCitationId($pre, $post);
-                }
-                else
-                { // in-text citations
-                    if ($this->matchNameSplit)
-                    {
+                } else { // in-text citations
+                    if ($this->matchNameSplit) {
                         $pageSplit = $index;
                     }
                     $itemArray[$index] = $pre . $this->item[$key] . $post;
@@ -1317,35 +1100,25 @@ class CITEFORMAT
         /**
          * Check for independent characters.  These (should) come in pairs.
          */
-        if (isset($independent))
-        {
+        if (isset($independent)) {
             $independentKeys = array_keys($independent);
-            while ($independent)
-            {
+            while ($independent) {
                 $preAlternative = $postAlternative = FALSE;
                 $startFound = $endFound = FALSE;
                 $pre = array_shift($independent);
                 $post = array_shift($independent);
-                if (preg_match("/%(.*)%(.*)%|%(.*)%/Uu", $pre, $dependent))
-                {
-                    if (count($dependent) == 4)
-                    {
+                if (preg_match("/%(.*)%(.*)%|%(.*)%/Uu", $pre, $dependent)) {
+                    if (count($dependent) == 4) {
                         $pre = $dependent[3];
-                    }
-                    else
-                    {
+                    } else {
                         $pre = $dependent[1];
                         $preAlternative = $dependent[2];
                     }
                 }
-                if (preg_match("/%(.*)%(.*)%|%(.*)%/Uu", $post, $dependent))
-                {
-                    if (count($dependent) == 4)
-                    {
+                if (preg_match("/%(.*)%(.*)%|%(.*)%/Uu", $post, $dependent)) {
+                    if (count($dependent) == 4) {
                         $post = $dependent[3];
-                    }
-                    else
-                    {
+                    } else {
                         $post = $dependent[1];
                         $postAlternative = $dependent[2];
                     }
@@ -1357,37 +1130,28 @@ class CITEFORMAT
                 $postAlternative = str_replace("`", '', $postAlternative);
                 $firstKey = array_shift($independentKeys);
                 $secondKey = array_shift($independentKeys);
-                for ($index = $firstKey; $index <= $secondKey; $index++)
-                {
-                    if (array_key_exists($index, $itemArray))
-                    {
+                for ($index = $firstKey; $index <= $secondKey; $index++) {
+                    if (array_key_exists($index, $itemArray)) {
                         $startFound = $index;
 
                         break;
                     }
                 }
-                for ($index = $secondKey; $index >= $firstKey; $index--)
-                {
-                    if (array_key_exists($index, $itemArray))
-                    {
+                for ($index = $secondKey; $index >= $firstKey; $index--) {
+                    if (array_key_exists($index, $itemArray)) {
                         $endFound = $index;
 
                         break;
                     }
                 }
-                if (($startFound !== FALSE) && ($endFound !== FALSE))
-                { // intervening fields found
+                if (($startFound !== FALSE) && ($endFound !== FALSE)) { // intervening fields found
                     $itemArray[$startFound] = $pre . $itemArray[$startFound];
                     $itemArray[$endFound] = $itemArray[$endFound] . $post;
-                }
-                else
-                { // intervening fields not found - do we have an alternative?
-                    if (array_key_exists($firstKey - 1, $itemArray) && $preAlternative)
-                    {
+                } else { // intervening fields not found - do we have an alternative?
+                    if (array_key_exists($firstKey - 1, $itemArray) && $preAlternative) {
                         $itemArray[$firstKey - 1] .= $preAlternative;
                     }
-                    if (array_key_exists($secondKey + 1, $itemArray) && $postAlternative)
-                    {
+                    if (array_key_exists($secondKey + 1, $itemArray) && $postAlternative) {
                         $itemArray[$secondKey + 1] = $postAlternative .
                         $itemArray[$secondKey + 1];
                     }
@@ -1396,15 +1160,13 @@ class CITEFORMAT
         }
         $this->pageSplitDone = FALSE;
         // if (($pageSplit !== FALSE) && (count($itemArray) > 1))
-        if (($pageSplit !== FALSE))
-        {
+        if (($pageSplit !== FALSE)) {
             $index = $pageSplit;
             $pageSplit = $itemArray[$pageSplit];
             unset($itemArray[$index]);
             $this->pageSplitDone = TRUE;
             // Second citation from same resource in same sentence.
-            if ($this->citationInSameSentence)
-            {
+            if ($this->citationInSameSentence) {
                 return trim($pageSplit);
             }
         }
@@ -1413,44 +1175,34 @@ class CITEFORMAT
          * if last character is punctuation (which it may be with missing fields etc.), and $ultimate is also
          * punctuation, remove last character.
          */
-        if ($ultimate)
-        {
+        if ($ultimate) {
             $last = mb_substr(trim($pString), -1);
             /**
              * Don't do ';' in case last element is URL with &gt; ...!
              */
-            if (preg_match("/^[.,:?!]/u", $ultimate) && preg_match("/[.,:?!]/u", $last))
-            {
+            if (preg_match("/^[.,:?!]/u", $ultimate) && preg_match("/[.,:?!]/u", $last)) {
                 $pString = mb_substr(trim($pString), 0, -1);
             }
         }
-        if ($this->pageSplitDone)
-        {
-            if ($pString)
-            {
+        if ($this->pageSplitDone) {
+            if ($pString) {
                 $this->pageSplitDone = trim(trim($pString) . $ultimate);
-                if (preg_match("/[.,;:?!]$/u", $this->pageSplitDone))
-                {
+                if (preg_match("/[.,;:?!]$/u", $this->pageSplitDone)) {
                     $this->pageSplitDone = mb_substr($this->pageSplitDone, 0, -1);
                 }
                 $this->pageSplitDone = $this->export->format($this->style['firstChars'] .
                     $preliminaryText . $this->hyperLink($this->pageSplitDone) .
                     $this->style['lastChars']);
-            }
-            elseif ($pageFieldFound === FALSE)
-            {
+            } elseif ($pageFieldFound === FALSE) {
                 $this->pageSplitDone = trim(trim($pageSplit) . $ultimate);
-                if (preg_match("/[.,;:?!]$/u", $this->pageSplitDone))
-                {
+                if (preg_match("/[.,;:?!]$/u", $this->pageSplitDone)) {
                     $this->pageSplitDone = mb_substr($this->pageSplitDone, 0, -1);
                 }
                 $this->pageSplitDone = $this->export->format($this->style['firstChars'] .
                     $preliminaryText . $this->hyperLink($this->pageSplitDone) .
                     $this->style['lastChars']);
                 $pageSplit = '';
-            }
-            else
-            {
+            } else {
                 $this->pageSplitDone = '';
             }
 
@@ -1469,39 +1221,29 @@ class CITEFORMAT
      */
     public function formatCitationId($pre, $post)
     {
-        if ($this->style['endnoteStyle'] == 1)
-        { // Endnotes, same ids
+        if ($this->style['endnoteStyle'] == 1) { // Endnotes, same ids
             $id = $this->endnoteSameIdsArray[$this->item['id']];
-        }
-        else
-        { // different incrementing ids (endnotes or footnotes)
+        } else { // different incrementing ids (endnotes or footnotes)
             $id = $this->id;
         }
-        if ($this->output != 'rtf')
-        {
+        if ($this->output != 'rtf') {
             return $pre . $id . $post;
         }
         // First create the RTF stylesheet if not already done
-        if (!$this->styleSheet)
-        {
+        if (!$this->styleSheet) {
             $this->styleSheet = $this->createStyleSheet();
         }
         // Now formatting for RTF output
         $preId = $this->style['firstCharsEndnoteID'];
         $postId = $this->style['lastCharsEndnoteID'];
         // Format of ID in endnotes/footnotes
-        if ($this->style['formatEndnoteID'] == 1)
-        { // superscript
+        if ($this->style['formatEndnoteID'] == 1) { // superscript
             $preIDFormat = "{\\super";
             $postIDFormat = '}';
-        }
-        elseif ($this->style['formatEndnoteID'] == 2)
-        { // subscript
+        } elseif ($this->style['formatEndnoteID'] == 2) { // subscript
             $preIDFormat = "{\\sub";
             $postIDFormat = '}';
-        }
-        else
-        {
+        } else {
             $preIDFormat = '';
             $postIDFormat = '';
         }
@@ -1510,125 +1252,82 @@ class CITEFORMAT
         // follow a specified bibliography order; in this case, they are likely not to be in incrementing order in the text.  If, in the text, endnote ids are in the order 4, 6, 1, 3, 2, 5
         // for example, they will print out in the endnotes in that order if we use RTF's default endnote formatting.  If this is the case, we need to provide fake endnotes as a
         // plain string to be appended to the final RTF output.
-        if ($this->wikindx)
-        {
+        if ($this->wikindx) {
             include_once("core/session/SESSION.php");
             $session = new SESSION();
             // WIKINDX-specific:  Indentation of appended bibliography
-            if ($session->getVar("exportPaper_indentBib") == 'indentAll')
-            {
+            if ($session->getVar("exportPaper_indentBib") == 'indentAll') {
                 $bf = "\\li720 ";
-            }
-            elseif ($session->getVar("exportPaper_indentBib") == 'indentFL')
-            {
+            } elseif ($session->getVar("exportPaper_indentBib") == 'indentFL') {
                 $bf = "\\fi720 ";
-            }
-            elseif ($session->getVar("exportPaper_indentBib") == 'indentNotFL')
-            {
+            } elseif ($session->getVar("exportPaper_indentBib") == 'indentNotFL') {
                 $bf = "\\li720\\fi-720 ";
-            }
-            else
-            {
+            } else {
                 $bf = "\\li1\\fi1 ";
             }
             // WIKINDX-specific:  Line spacing of appended bibliography
-            if ($session->getVar("exportPaper_spaceBib") == 'oneHalfSpace')
-            {
+            if ($session->getVar("exportPaper_spaceBib") == 'oneHalfSpace') {
                 $bf = "\\pard\\plain $bf\\sl360\\slmult1 ";
-            }
-            elseif ($session->getVar("exportPaper_spaceBib") == 'doubleSpace')
-            {
+            } elseif ($session->getVar("exportPaper_spaceBib") == 'doubleSpace') {
                 $bf = "\\pard\\plain $bf\\sl480\\slmult1 ";
-            }
-            else
-            {
+            } else {
                 $bf = "\\pard\\plain$bf";
             }
             // WIKINDX-specific:  Indentation of footnotes
-            if ($session->getVar("exportPaper_indentFt") == 'indentAll')
-            {
+            if ($session->getVar("exportPaper_indentFt") == 'indentAll') {
                 $ftf = "\\li720 ";
-            }
-            elseif ($session->getVar("exportPaper_indentFt") == 'indentFL')
-            {
+            } elseif ($session->getVar("exportPaper_indentFt") == 'indentFL') {
                 $ftf = "\\fi720 ";
-            }
-            elseif ($session->getVar("exportPaper_indentFt") == 'indentNotFL')
-            {
+            } elseif ($session->getVar("exportPaper_indentFt") == 'indentNotFL') {
                 $ftf = "\\li720\\fi-720 ";
-            }
-            else
-            {
+            } else {
                 $ftf = "\\li1\\fi1 ";
             }
             // WIKINDX-specific:  Line spacing of footnotes
-            if ($session->getVar("exportPaper_spaceFt") == 'oneHalfSpace')
-            {
+            if ($session->getVar("exportPaper_spaceFt") == 'oneHalfSpace') {
                 $ftf = "\\pard\\plain $ftf\\sl360\\slmult1 ";
-            }
-            elseif ($session->getVar("exportPaper_spaceFt") == 'doubleSpace')
-            {
+            } elseif ($session->getVar("exportPaper_spaceFt") == 'doubleSpace') {
                 $ftf = "\\pard\\plain $ftf\\sl480\\slmult1 ";
-            }
-            else
-            {
+            } else {
                 $ftf = "\\pard\\plain$ftf";
             }
-        }
-        else
-        {
+        } else {
             $bf = $ftf = "\\pard\\plain ";
         }
         // END WIKINDX-specific
-        if ($this->style['endnoteStyle'] == 0)
-        { // Endnotes, incrementing ids
+        if ($this->style['endnoteStyle'] == 0) { // Endnotes, incrementing ids
             $citation = "{\\cs2 $preId\\chftn $postId}$postIDFormat{__OSBIB__ENDNOTE__$id}";
             $endnoteString = "{\\footnote\\ftnalt$bf\\s2\\ql$preIDFormat" . $citation
                 . "}}__WIKINDX__NEWLINE__";
 
             return "{\\cs2 \\chftn" . $endnoteString;
-        }
-        elseif ($this->style['endnoteStyle'] == 1)
-        { // Endnotes, same ids
-            if (array_search($id, $this->rtfDoneIds) === FALSE)
-            {
+        } elseif ($this->style['endnoteStyle'] == 1) { // Endnotes, same ids
+            if (array_search($id, $this->rtfDoneIds) === FALSE) {
                 $this->rtfDoneIds[] = $id;
-                if (array_key_exists('sameIdOrderBib', $this->style))
-                { // provide fake endnotes
+                if (array_key_exists('sameIdOrderBib', $this->style)) { // provide fake endnotes
                     $citation = "$preIDFormat{\\cs2 $preId$id$postId}$postIDFormat{__OSBIB__ENDNOTE__$id}";
                     $this->endnoteStringArray[$id] = $bf . $citation;
-                    if ($this->style['formatEndnoteInText'] == 1)
-                    {
+                    if ($this->style['formatEndnoteInText'] == 1) {
                         return "{\\cs2\\super $id}__WIKINDX__NEWLINE__";
-                    }
-                    elseif ($this->style['formatEndnoteInText'] == 2)
-                    {
+                    } elseif ($this->style['formatEndnoteInText'] == 2) {
                         return "{\\cs2\\sub $id}__WIKINDX__NEWLINE__";
-                    }
-                    else
-                    {
+                    } else {
                         return "{\\cs2\\plain $id}__WIKINDX__NEWLINE__";
                     }
-                }
-                else
-                { // Not following bibliography order
+                } else { // Not following bibliography order
                     $citation = "{\\cs2 $preId$id$postId}$postIDFormat{__OSBIB__ENDNOTE__$id}";
                     $endnoteString = "{\\footnote\\ftnalt$bf\\s2\\ql$preIDFormat" . $citation .
                         "}}__WIKINDX__NEWLINE__";
 
                     return "{\\cs2 $id" . $endnoteString;
                 }
-            }
-            else
-            {
+            } else {
                 $citation = "{\\cs2 $preId$id$postId}{__OSBIB__ENDNOTE__$id}";
                 $endnoteString = "{\\footnote\\ftnalt$bf\\s2\\ql " . $citation . "}}__WIKINDX__NEWLINE__";
 
                 return "{\\cs2 $id}";
             }
-        }
-        elseif ($this->style['endnoteStyle'] == 2)
-        { // Footnotes, incrementing ids
+        } elseif ($this->style['endnoteStyle'] == 2) { // Footnotes, incrementing ids
             $citation = "{\\cs2 $preId\\chftn $postId}{__OSBIB__ENDNOTE__$id}";
             $endnoteString = "{\\footnote$ftf\\s2\\ql " . $citation . "}}__WIKINDX__NEWLINE__";
 
@@ -1648,8 +1347,7 @@ class CITEFORMAT
         // \cs19 .. \cs21 for unordered endnotes
         // \s22 for footnote text (in the body of the paper)
         // \cs22 .. \cs24 for footnotes
-        if (!$this->wikindx)
-        {
+        if (!$this->wikindx) {
             return FALSE;
         }
         include_once("core/session/SESSION.php");
@@ -1659,44 +1357,29 @@ class CITEFORMAT
 {\\*\\cs1 Bullet Symbols;}\n
 {\\*\\cs1 Numbering Symbols;}" . LF;
         // WIKINDX-specific: RTF page numbering
-        if ($session->getVar("exportPaper_pageNumber"))
-        { // 0 == no. 1 == footer, 2 == header
+        if ($session->getVar("exportPaper_pageNumber")) { // 0 == no. 1 == footer, 2 == header
             $styleSheet .= "{\\cs17 \\additive \\sbasedon10 page number;}" . LF;
         }
         // Set up RTF settings for endnotes and footnotes
-        if ($this->style['formatEndnoteInText'] == 1)
-        {
+        if ($this->style['formatEndnoteInText'] == 1) {
             $format = "\\super";
-            if ($this->style['endnoteStyle'] == 2)
-            { // footnotes
+            if ($this->style['endnoteStyle'] == 2) { // footnotes
                 $styleSheet .= "{\\cs10\\super Footnote anchor;}" . LF;
-            }
-            else
-            {
+            } else {
                 $styleSheet .= "{\\cs10\\super Endnote anchor;}" . LF;
             }
-        }
-        elseif ($this->style['formatEndnoteInText'] == 2)
-        {
+        } elseif ($this->style['formatEndnoteInText'] == 2) {
             $format = "\\sub";
-            if ($this->style['endnoteStyle'] == 2)
-            { // footnotes
+            if ($this->style['endnoteStyle'] == 2) { // footnotes
                 $styleSheet .= "{\\cs10\\sub Footnote anchor;}" . LF;
-            }
-            else
-            {
+            } else {
                 $styleSheet .= "{\\cs10\\sub Endnote anchor;}" . LF;
             }
-        }
-        else
-        {
+        } else {
             $format = "\\plain";
-            if ($this->style['endnoteStyle'] == 2)
-            { // footnotes
+            if ($this->style['endnoteStyle'] == 2) { // footnotes
                 $styleSheet .= "{\\cs10 Footnote anchor;}" . LF;
-            }
-            else
-            {
+            } else {
                 $styleSheet .= "{\\cs10 Endnote anchor;}" . LF;
             }
         }
@@ -1704,34 +1387,24 @@ class CITEFORMAT
         /fet0 produces lowercase roman numerals
         /fet1 produces arabic numerals
         */
-        if ($session->getVar("exportPaper_sectionFtRestart"))
-        {
+        if ($session->getVar("exportPaper_sectionFtRestart")) {
             $ft = "\\ftnrestart";
-        }
-        else
-        {
+        } else {
             $ft = "";
         }
-        if ($this->style['endnoteStyle'] == 0)
-        { // Incrementing endnotes
+        if ($this->style['endnoteStyle'] == 0) { // Incrementing endnotes
             $styleSheet .= "{\\s2\\ql \\sbasedon0 endnote text;}" . LF;
             $styleSheet .= "{\\cs2 \\additive $format \\sbasedon10 endnote reference;}" . LF;
             $styleSheet .= "}\n\n$ft\\aftnnar\\fet1\n" . LF;
-        }
-        elseif ($this->style['endnoteStyle'] == 1)
-        { // Endnotes, same ids
+        } elseif ($this->style['endnoteStyle'] == 1) { // Endnotes, same ids
             $styleSheet .= "{\\s2\\ql \\sbasedon0 endnote text;}" . LF;
             $styleSheet .= "{\\cs2 $format \\sbasedon10 endnote reference;}" . LF;
             $styleSheet .= "}\n\n$ft\\aftnnar\\fet1\n" . LF;
-        }
-        elseif ($this->style['endnoteStyle'] == 2)
-        { // Incrementing footnotes
+        } elseif ($this->style['endnoteStyle'] == 2) { // Incrementing footnotes
             $styleSheet .= "{\\s2\\ql \\sbasedon0 footnote text;}" . LF;
             $styleSheet .= "{\\cs2 \\additive $format \\sbasedon10 footnote reference;}" . LF;
             $styleSheet .= "}\n\n$ft\\aftnnar\\ftnbj\\fet1\n" . LF;
-        }
-        elseif (!$this->style['citationStyle'])
-        { // in-text citations
+        } elseif (!$this->style['citationStyle']) { // in-text citations
             $styleSheet .= "{\\cs2 \\additive \\super \\sbasedon10 endnote reference;}" . LF;
         }
         $styleSheet .= $this->rtfPageNumbers($session);
@@ -1743,32 +1416,23 @@ class CITEFORMAT
      *
      * @param object $session
      *
-     * @return string|FALSE
+     * @return false|string
      */
     public function rtfPageNumbers($session)
     {
         // WIKINDX-specific: Page numbering
-        if ($pn = $session->getVar("exportPaper_pageNumber"))
-        { // 0 == no, 1 == footer, 2 == header
+        if ($pn = $session->getVar("exportPaper_pageNumber")) { // 0 == no, 1 == footer, 2 == header
             $pna = $session->getVar("exportPaper_pageNumberAlign"); // 0 == centre, 1 == left, 2 == right
-            if ($pna == 1)
-            {
+            if ($pna == 1) {
                 $pna = "\\ql";
-            }
-            elseif ($pna == 2)
-            {
+            } elseif ($pna == 2) {
                 $pna = "\\qr";
-            }
-            else
-            {
+            } else {
                 $pna = "\\qc";
             }
-            if ($pn == 1)
-            {
+            if ($pn == 1) {
                 return "{\\footer $pna{\\field{\\fldinst {\\cs17  PAGE }}}{\\par }}\n" . LF;
-            }
-            else
-            {
+            } else {
                 return "{\\header $pna{\\field{\\fldinst {\\cs17  PAGE }}}{\\par }}\n" . LF;
             }
         }
@@ -1786,12 +1450,10 @@ class CITEFORMAT
     {
         // Ensure we have no preliminary punctuation left over
         $citation = trim(preg_replace("/^\\s*[.,;:]\\s*/Uu", "", $citation));
-        if (!$citation)
-        {
+        if (!$citation) {
             return $citation;
         }
-        if ($this->hyperlinkBase)
-        {
+        if ($this->hyperlinkBase) {
             $citation = \HTML\a(
                 "link",
                 $this->export->format(trim($citation)),
@@ -1814,8 +1476,7 @@ class CITEFORMAT
      */
     public function formatNames($creators, $citationId)
     {
-        if ($this->bibStyle->bibformat->citationFootnote)
-        { // footnotes
+        if ($this->bibStyle->bibformat->citationFootnote) { // footnotes
             list($pString, $creatorIds) = $this->bibStyle->bibformat->formatNames($creators, 'creator1', TRUE);
             $this->citationIds[$this->count] = $citationId;
             $this->creatorIds[$this->count] = implode(',', $creatorIds);
@@ -1838,16 +1499,13 @@ class CITEFORMAT
         $delimitNextBetween = 'creatorSepNextBetween';
         $delimitLast = 'creatorSepNextLast';
         $uppercase = 'creatorUppercase';
-        if (array_search($citationId, $this->citationIds) !== FALSE)
-        {
+        if (array_search($citationId, $this->citationIds) !== FALSE) {
             $list = 'creatorListSubsequent';
             $limit = 'creatorListSubsequentLimit';
             $moreThan = 'creatorListSubsequentMore';
             $abbreviation = 'creatorListSubsequentAbbreviation';
             $italics = 'creatorListSubsequentAbbreviationItalic';
-        }
-        else
-        {
+        } else {
             $list = 'creatorList';
             $limit = 'creatorListLimit';
             $moreThan = 'creatorListMore';
@@ -1855,32 +1513,24 @@ class CITEFORMAT
             $italics = 'creatorListAbbreviationItalic';
         }
         // cache surnames
-        foreach ($creators as $creatorIndex => $creator)
-        {
+        foreach ($creators as $creatorIndex => $creator) {
             $surnames[$creatorIndex] = $creator['surname'];
         }
         if (!$this->style['citationStyle'] && // in-text style
-            !array_key_exists($citationId, $this->creatorSurnames))
-        {
-            foreach ($creators as $creatorIndex => $creator)
-            {
+            !array_key_exists($citationId, $this->creatorSurnames)) {
+            foreach ($creators as $creatorIndex => $creator) {
                 $this->creatorSurnames[$citationId][] = $creator['surname'];
             }
         }
-        foreach ($creators as $creatorIndex => $creator)
-        {
-            if (!$this->preview)
-            {
+        foreach ($creators as $creatorIndex => $creator) {
+            if (!$this->preview) {
                 $creatorIds[] = $creator['creatorId'];
             }
-            if ($first)
-            {
+            if ($first) {
                 $nameStyle = 'creatorStyle';
                 $this->items[$this->count]['firstCreatorSurname'] = $creator['surname'];
                 $first = FALSE;
-            }
-            else
-            {
+            } else {
                 $nameStyle = 'creatorOtherStyle';
             }
             $firstName = trim($this->checkInitials(
@@ -1889,33 +1539,22 @@ class CITEFORMAT
                 $style[$firstNameInitial]
             ));
             $prefix = $creator['prefix'] ? trim($creator['prefix']) . ' ' : '';
-            if ($style[$nameStyle] == 0)
-            { // Joe Bloggs
+            if ($style[$nameStyle] == 0) { // Joe Bloggs
                 $nameString = $firstName . ' ' . $prefix . $creator['surname'];
-            }
-            elseif ($style[$nameStyle] == 1)
-            { // Bloggs, Joe
+            } elseif ($style[$nameStyle] == 1) { // Bloggs, Joe
                 $prefixDelimit = $firstName ? ', ' : '';
                 $nameString = $creator['prefix'] . ' ' . $creator['surname'] . $prefixDelimit . $firstName;
-            }
-            elseif ($style[$nameStyle] == 2)
-            { // Bloggs Joe
+            } elseif ($style[$nameStyle] == 2) { // Bloggs Joe
                 $nameString = $creator['prefix'] . ' ' . $creator['surname'] . ' ' . $firstName;
-            }
-            else
-            { // Last name only
+            } else { // Last name only
                 // Distinguish between creators of the same surname within the same citation?
                 $useInitials = FALSE;
-                if (array_key_exists('useInitials', $this->style))
-                {
-                    foreach ($surnames as $surnameIndex => $surname)
-                    {
-                        if (($creator['surname'] == $surname) && ($surnameIndex != $creatorIndex))
-                        {
+                if (array_key_exists('useInitials', $this->style)) {
+                    foreach ($surnames as $surnameIndex => $surname) {
+                        if (($creator['surname'] == $surname) && ($surnameIndex != $creatorIndex)) {
                             if ($style[$list] && $style[$limit]
                             && ($surnameIndex < $style[$moreThan])
-                            && ($creatorIndex < $style[$moreThan]))
-                            {
+                            && ($creatorIndex < $style[$moreThan])) {
                                 $useInitials = TRUE;
 
                                 break;
@@ -1923,17 +1562,13 @@ class CITEFORMAT
                         }
                     }
                 }
-                if ($useInitials)
-                {
+                if ($useInitials) {
                     $nameString = $creator['prefix'] . ' ' . $creator['surname'] . ' ' . $firstName;
-                }
-                else
-                {
+                } else {
                     $nameString = $creator['prefix'] . ' ' . $creator['surname'];
                 }
             }
-            if (isset($style[$uppercase]))
-            {
+            if (isset($style[$uppercase])) {
                 $nameString = mb_strtoupper($nameString);
             }
             $cArray[] = trim($nameString);
@@ -1942,37 +1577,25 @@ class CITEFORMAT
          * Keep only some elements in array if we've exceeded $moreThan
          */
         $etAl = FALSE;
-        if ($style[$list] && $style[$limit] && (count($cArray) > $style[$moreThan]))
-        {
+        if ($style[$list] && $style[$limit] && (count($cArray) > $style[$moreThan])) {
             array_splice($cArray, $style[$limit]);
-            if (isset($style[$italics]))
-            {
+            if (isset($style[$italics])) {
                 $etAl = "[i]" . $style[$abbreviation] . "[/i]";
-            }
-            else
-            {
+            } else {
                 $etAl = $style[$abbreviation];
             }
         }
         /**
          * add delimiters
          */
-        if (count($cArray) > 1)
-        {
-            if (count($cArray) == 2)
-            {
+        if (count($cArray) > 1) {
+            if (count($cArray) == 2) {
                 $cArray[0] .= $style[$delimitTwo];
-            }
-            else
-            {
-                for ($index = 0; $index < (count($cArray) - 2); $index++)
-                {
-                    if (!$index)
-                    {
+            } else {
+                for ($index = 0; $index < (count($cArray) - 2); $index++) {
+                    if (!$index) {
                         $cArray[$index] .= $style[$delimitFirstBetween];
-                    }
-                    else
-                    {
+                    } else {
                         $cArray[$index] .= $style[$delimitNextBetween];
                     }
                 }
@@ -1982,27 +1605,22 @@ class CITEFORMAT
         /**
          * If sizeof of $cArray > 1 or $etAl != FALSE, set this $nameType_plural to TRUE
          */
-        if ((count($cArray) > 1) || $etAl)
-        {
+        if ((count($cArray) > 1) || $etAl) {
             $pluralKey = "creator_plural";
             $this->$pluralKey = TRUE;
         }
         /**
          * Finally flatten array
          */
-        if ($etAl)
-        {
+        if ($etAl) {
             $pString = implode('', $cArray) . $etAl;
-        }
-        else
-        {
+        } else {
             $pString = implode('', $cArray);
         }
         // Cache citation IDs
         $this->citationIds[$this->count] = $citationId;
         $this->items[$this->count]['creator'] = $this->creators[$this->count] = $pString;
-        if (!$this->preview)
-        {
+        if (!$this->preview) {
             $this->creatorIds[$this->count] = implode(',', $creatorIds);
             $this->items[$this->count]['creatorIds'] = $this->creatorIds[$this->count];
         }
@@ -2028,34 +1646,23 @@ class CITEFORMAT
         /**
          * Format firstname
          */
-        if ($creator['firstname'] && !$firstNameInitial)
-        { // Full name
+        if ($creator['firstname'] && !$firstNameInitial) { // Full name
             $firstName = $creator['firstname'];
-        }
-        elseif ($creator['firstname'])
-        { // Initial only of first name.  'firstname' field may actually have several 'firstnames'
+        } elseif ($creator['firstname']) { // Initial only of first name.  'firstname' field may actually have several 'firstnames'
             $fn = UTF8::mb_explode(" ", $creator['firstname']);
             $firstTime = TRUE;
-            foreach ($fn as $name)
-            {
-                if ($firstTime)
-                {
+            foreach ($fn as $name) {
+                if ($firstTime) {
                     $firstNameInitialMake = mb_strtoupper(mb_substr(trim($name), 0, 1));
                     $firstTime = FALSE;
-                }
-                else
-                {
+                } else {
                     $initials[] = mb_strtoupper(mb_substr(trim($name), 0, 1));
                 }
             }
-            if (isset($initials))
-            {
-                if ($creator['initials'])
-                {
+            if (isset($initials)) {
+                if ($creator['initials']) {
                     $creator['initials'] = implode(" ", $initials) . ' ' . $creator['initials'];
-                }
-                else
-                {
+                } else {
                     $creator['initials'] = implode(" ", $initials);
                 }
             }
@@ -2064,18 +1671,14 @@ class CITEFORMAT
          * Initials are stored as space-delimited characters.
          * If no initials, return just the firstname or its initial in the correct format.
          */
-        if (!$creator['initials'])
-        {
-            if (isset($firstName))
-            {	// full first name only
+        if (!$creator['initials']) {
+            if (isset($firstName)) {	// full first name only
                 return $firstName;
             }
-            if (isset($firstNameInitialMake) && $initialsStyle > 1)
-            { // First name initial with no '.'
+            if (isset($firstNameInitialMake) && $initialsStyle > 1) { // First name initial with no '.'
                 return $firstNameInitialMake;
             }
-            if (isset($firstNameInitialMake))
-            { // First name initial with  '.'
+            if (isset($firstNameInitialMake)) { // First name initial with  '.'
                 return $firstNameInitialMake . '.';
             }
 
@@ -2085,31 +1688,22 @@ class CITEFORMAT
         /**
          * If firstname is initial only, prepend to array
          */
-        if (isset($firstNameInitialMake))
-        {
+        if (isset($firstNameInitialMake)) {
             array_unshift($initialsArray, $firstNameInitialMake);
         }
-        if ($initialsStyle == 0)
-        { // 'T. U. '
+        if ($initialsStyle == 0) { // 'T. U. '
             $initials = implode('. ', $initialsArray) . '.';
-        }
-        elseif ($initialsStyle == 1)
-        { // 'T.U.'
+        } elseif ($initialsStyle == 1) { // 'T.U.'
             $initials = implode('.', $initialsArray) . '.';
-        }
-        elseif ($initialsStyle == 2)
-        { // 'T U '
+        } elseif ($initialsStyle == 2) { // 'T U '
             $initials = implode(' ', $initialsArray);
-        }
-        else
-        { // 'TU '
+        } else { // 'TU '
             $initials = implode('', $initialsArray);
         }
         /**
          * If we have a full first name, prepend it to $initials.
          */
-        if (isset($firstName))
-        {
+        if (isset($firstName)) {
             return ($firstName . ' ' . $initials);
         }
 
@@ -2185,8 +1779,7 @@ class CITEFORMAT
         /**
          * If no page end, return just $start;
          */
-        if (!$end)
-        {
+        if (!$end) {
             $this->items[$this->count]['pages'] = $start;
             $this->pages[$this->count] = $this->items[$this->count]['pages'];
 
@@ -2195,8 +1788,7 @@ class CITEFORMAT
         /**
          * Pages may be in roman numeral format etc.  Return unchanged
          */
-        if (!is_numeric($start))
-        {
+        if (!is_numeric($start)) {
             $this->items[$this->count]['pages'] = $start . 'WIKINDX_NDASH' . $end;
             $this->pages[$this->count] = $this->items[$this->count]['pages'];
 
@@ -2209,62 +1801,48 @@ class CITEFORMAT
         /**
          * They've done something wrong so give them back exactly what they entered
          */
-        if (($end <= $start) || (mb_strlen($end) < mb_strlen($start)))
-        {
+        if (($end <= $start) || (mb_strlen($end) < mb_strlen($start))) {
             $this->items[$this->count]['pages'] = $start . 'WIKINDX_NDASH' . $end;
             $this->pages[$this->count] = $this->items[$this->count]['pages'];
 
             return;
-        }
-        elseif ($style['pageFormat'] == 2)
-        {
+        } elseif ($style['pageFormat'] == 2) {
             $this->items[$this->count]['pages'] = $start . 'WIKINDX_NDASH' . $end;
             $this->pages[$this->count] = $this->items[$this->count]['pages'];
 
             return;
-        }
-        else
-        {
+        } else {
             /**
              * We assume page numbers are not into the 10,000 range - if so, return the complete pages
              */
-            if (mb_strlen($start) <= 4)
-            {
+            if (mb_strlen($start) <= 4) {
                 $startArray = preg_split('//u', $start);
                 array_shift($startArray); // always an empty element at start?
                 array_pop($startArray); // always an empty array element at end?
-                if ($style['pageFormat'] == 0)
-                {
+                if ($style['pageFormat'] == 0) {
                     array_pop($startArray);
                     $endPage = mb_substr($end, -1);
                     $index = -2;
-                }
-                else
-                {
+                } else {
                     array_pop($startArray);
                     array_pop($startArray);
                     $endPage = mb_substr($end, -2);
                     $index = -3;
                 }
-                while (!empty($startArray))
-                {
+                while (!empty($startArray)) {
                     $startPop = array_pop($startArray);
                     $endSub = mb_substr($end, $index--, 1);
-                    if ($endSub == $startPop)
-                    {
+                    if ($endSub == $startPop) {
                         $this->items[$this->count]['pages'] = $start . 'WIKINDX_NDASH' . $endPage;
                         $this->pages[$this->count] = $this->items[$this->count]['pages'];
 
                         return;
                     }
-                    if ($endSub > $startPop)
-                    {
+                    if ($endSub > $startPop) {
                         $endPage = $endSub . $endPage;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 $this->items[$this->count]['pages'] = $start . 'WIKINDX_NDASH' . $end;
                 $this->pages[$this->count] = $this->items[$this->count]['pages'];
 
@@ -2288,22 +1866,16 @@ class CITEFORMAT
      */
     public function formatYear($year)
     {
-        if (!$year)
-        {
+        if (!$year) {
             $this->items[$this->count]['year'] = $this->years[$this->count] = $this->style['replaceYear'];
 
             return;
         }
-        if (!$this->style['yearFormat'])
-        { // 1998
+        if (!$this->style['yearFormat']) { // 1998
             $this->items[$this->count]['year'] = $year;
-        }
-        elseif ($this->style['yearFormat'] == 1)
-        { // '98
+        } elseif ($this->style['yearFormat'] == 1) { // '98
             $this->items[$this->count]['year'] = "'" . mb_substr($year, -2, 2);
-        }
-        elseif ($this->style['yearFormat'] == 2)
-        { // 98
+        } elseif ($this->style['yearFormat'] == 2) { // 98
             $this->items[$this->count]['year'] = mb_substr($year, -2, 2);
         }
         $this->years[$this->count] = $this->items[$this->count]['year'];
@@ -2318,27 +1890,19 @@ class CITEFORMAT
     public function multiple($multiples)
     {
         $first = TRUE;
-        foreach ($multiples as $index => $citation)
-        {
-            if ($first)
-            {
+        foreach ($multiples as $index => $citation) {
+            if ($first) {
                 $text = $citation;
                 $first = FALSE;
 
                 continue;
             }
-            if ($this->style['citationStyle'])
-            { // Endote-style citations
+            if ($this->style['citationStyle']) { // Endote-style citations
                 $separator = $this->style['consecutiveCitationEndnoteInTextSep'];
-            }
-            else
-            {
-                if (!$first && array_search($index, $this->consecutiveCreatorSep) !== FALSE)
-                {
+            } else {
+                if (!$first && array_search($index, $this->consecutiveCreatorSep) !== FALSE) {
                     $separator = $this->style['consecutiveCreatorSep'];
-                }
-                else
-                {
+                } else {
                     $separator = $this->style['consecutiveCitationSep'];
                 }
             }
@@ -2358,104 +1922,78 @@ class CITEFORMAT
     {
         $this->export = new EXPORTFILTER($this, $this->output);
         $process = $this->bibStyleProcess;
-        if (isset($this->pages))
-        {
+        if (isset($this->pages)) {
             $pages = $this->pages;
         }
-        if ($this->style['citationStyle'])
-        { // endnote-style
+        if ($this->style['citationStyle']) { // endnote-style
             // id numbers follow bibliography order for same ids
-            if (($this->style['endnoteStyle'] == 1) && array_key_exists('sameIdOrderBib', $this->style))
-            {
+            if (($this->style['endnoteStyle'] == 1) && array_key_exists('sameIdOrderBib', $this->style)) {
                 $index = 1;
-                foreach ($rows as $id => $row)
-                {
+                foreach ($rows as $id => $row) {
                     $this->endnoteCitations[$id] = $this->endnoteRemovePunc($this->bibStyle->$process($row));
                     $this->endnoteSameIdsArray[$id] = $index;
                     ++$index;
                 }
                 // WIKINDX specific - create ID numbers for footnotes in the SUWP
-                if ($this->wikindx && isset($this->footnoteOffsets) && !empty($this->footnoteOffsets))
-                {
-                    foreach ($this->footnoteOffsets as $null)
-                    {
+                if ($this->wikindx && isset($this->footnoteOffsets) && !empty($this->footnoteOffsets)) {
+                    foreach ($this->footnoteOffsets as $null) {
                         $this->footnoteOffsetIds[] = $index;
                         ++$index;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 $endnoteSameIds = 1;
-                if ($this->style['endnoteStyle'] == 1)
-                { // Endnotes, same ids
+                if ($this->style['endnoteStyle'] == 1) { // Endnotes, same ids
                     // WIKINDX specific - create ID numbers for footnotes in the SUWP
                     if ($this->wikindx && isset($this->footnoteOffsets) &&
-                        !empty($this->citeOffsets) && !empty($this->footnoteOffsets))
-                    {
+                        !empty($this->citeOffsets) && !empty($this->footnoteOffsets)) {
                         $citeOffsets = $idsDone = [];
-                        foreach ($ids as $id)
-                        {
-                            if (array_search($id, $idsDone) === FALSE)
-                            {
+                        foreach ($ids as $id) {
+                            if (array_search($id, $idsDone) === FALSE) {
                                 $idsDone[] = $id;
                                 $citeOffsets[] = array_shift($this->citeOffsets);
-                            }
-                            else
-                            { // discard this offset
+                            } else { // discard this offset
                                 array_shift($this->citeOffsets);
                             }
                         }
                     }
-                    foreach (array_unique($ids) as $id)
-                    {
-                        if (!array_key_exists($id, $this->endnoteCitations))
-                        { // don't have this one
+                    foreach (array_unique($ids) as $id) {
+                        if (!array_key_exists($id, $this->endnoteCitations)) { // don't have this one
                             $this->endnoteCitations[$id] =
                             $this->endnoteRemovePunc($this->bibStyle->$process($rows[$id]));
                         }
                         // WIKINDX specific - create ID numbers for footnotes in the SUWP
                         if ($this->wikindx && isset($this->footnoteOffsets) &&
-                            !empty($citeOffsets) && !empty($this->footnoteOffsets))
-                        {
-                            if ($this->footnoteOffsets[0][1] < $citeOffsets[0][1])
-                            {
+                            !empty($citeOffsets) && !empty($this->footnoteOffsets)) {
+                            if ($this->footnoteOffsets[0][1] < $citeOffsets[0][1]) {
                                 $this->footnoteOffsetIds[] = $endnoteSameIds;
                                 array_shift($this->footnoteOffsets);
                                 ++$endnoteSameIds;
                             }
                             array_shift($citeOffsets);
                         }
-                        if (!array_key_exists($id, $this->endnoteSameIdsArray))
-                        {
+                        if (!array_key_exists($id, $this->endnoteSameIdsArray)) {
                             $this->endnoteSameIdsArray[$id] = $endnoteSameIds;
                             ++$endnoteSameIds;
                         }
                     }
                     // WIKINDX specific - create ID numbers for footnotes in the SUWP
-                    if ($this->wikindx && isset($this->footnoteOffsets) && !empty($this->footnoteOffsets))
-                    {
-                        foreach ($this->footnoteOffsets as $null)
-                        {
+                    if ($this->wikindx && isset($this->footnoteOffsets) && !empty($this->footnoteOffsets)) {
+                        foreach ($this->footnoteOffsets as $null) {
                             $this->footnoteOffsetIds[] = $endnoteSameIds;
                             ++$endnoteSameIds;
                         }
                     }
-                }
-                else
-                {
+                } else {
                     $index = 1;
-                    foreach ($ids as $id)
-                    {
+                    foreach ($ids as $id) {
                         if (isset($pages) && array_key_exists($index, $this->pages) &&
-                        ($this->style['endnoteStyle'] == 2))
-                        { // footnotes
+                        ($this->style['endnoteStyle'] == 2)) { // footnotes
                             $this->bibStyle->bibformat->footnotePages = $this->export->format($pages[$index]);
                         }
                         $this->endnoteCitations[] =
                             $this->endnoteRemovePunc($this->bibStyle->$process($rows[$id]));
-                        if (!array_key_exists($id, $this->endnoteSameIdsArray))
-                        {
+                        if (!array_key_exists($id, $this->endnoteSameIdsArray)) {
                             $this->endnoteSameIdsArray[$id] = $endnoteSameIds;
                             ++$endnoteSameIds;
                         }
@@ -2488,12 +2026,9 @@ class CITEFORMAT
     public function processIntextBibliography($row)
     {
         $process = $this->bibStyleProcess;
-        if ($this->output == 'html')
-        {
+        if ($this->output == 'html') {
             $this->intextBibliography[] = str_replace("&nbsp;", ' ', $this->bibStyle->$process($row));
-        }
-        else
-        {
+        } else {
             $this->intextBibliography[] = $this->bibStyle->$process($row);
         }
     }
@@ -2504,21 +2039,15 @@ class CITEFORMAT
      */
     public function collateIntextBibliography()
     {
-        if ($this->rtfBibExport)
-        {
+        if ($this->rtfBibExport) {
             $pString = implode($this->export->newLine, $this->intextBibliography);
-        }
-        else
-        {
+        } else {
             $pString = $this->export->newLine . $this->export->newLine .
                 implode($this->export->newLine, $this->intextBibliography);
         }
-        if (($this->output == 'rtf') && !$this->rtfBibExport)
-        { // add a page break if not exporting to a bibliography
+        if (($this->output == 'rtf') && !$this->rtfBibExport) { // add a page break if not exporting to a bibliography
             return "\n\\page\n$pString";
-        }
-        elseif (($this->output == 'rtf'))
-        { // add a paragraph after bibliography
+        } elseif (($this->output == 'rtf')) { // add a paragraph after bibliography
             return "\n\\par $pString\n\\par" . LF;
         }
 
@@ -2534,44 +2063,32 @@ class CITEFORMAT
     public function printEndnoteBibliography($pString)
     {
         $this->endnoteProcess();
-        if ($this->output == 'html')
-        {
+        if ($this->output == 'html') {
             $pre = $post = FALSE;
             $pre .= $this->export->format($this->style['firstCharsEndnoteID']);
             $post = $this->export->format($this->style['lastCharsEndnoteID']) . $post;
             $endnotes = '';
-            foreach ($this->endnotes as $index => $string)
-            {
+            foreach ($this->endnotes as $index => $string) {
                 $endnotes .= $pre . $index . $post . $string . $this->export->newLine;
             }
             $pString .= $this->export->newLine . $this->export->newLine . $endnotes;
-        }
-        elseif ($this->output == 'rtf')
-        {
-            if (!empty($this->endnoteStringArray))
-            {
+        } elseif ($this->output == 'rtf') {
+            if (!empty($this->endnoteStringArray)) {
                 ksort($this->endnoteStringArray);
-                foreach ($this->endnoteStringArray as $index => $string)
-                {
+                foreach ($this->endnoteStringArray as $index => $string) {
                     $match = "__OSBIB__ENDNOTE__$index}";
                     $this->endnoteString .= str_replace($match, $this->endnotes[$index], $string) . "}\\par";
                 }
                 $pString .= "\\par\\par\\par\\par" . LF . $this->endnoteString;
-            }
-            else
-            {
-                foreach ($this->endnotes as $index => $string)
-                {
+            } else {
+                foreach ($this->endnotes as $index => $string) {
                     $match = "__OSBIB__ENDNOTE__$index}";
                     $pString = str_replace($match, $string . "}", $pString);
                 }
             }
-        }
-        else
-        {
+        } else {
             $endnotes = '';
-            foreach ($this->endnotes as $index => $string)
-            {
+            foreach ($this->endnotes as $index => $string) {
                 $endnotes .= $index . '. ' . $string . $this->export->newLine;
             }
             $pString .= $this->export->newLine . $this->export->newLine . $endnotes;
@@ -2589,160 +2106,113 @@ class CITEFORMAT
      */
     public function endnoteProcess()
     {
-        if (!isset($this->ids))
-        {
+        if (!isset($this->ids)) {
             return;
         }
         $endnoteSameIdsArray = array_flip($this->endnoteSameIdsArray);
         $doneIds = [];
         $citationIndex = 1;
-        foreach ($this->ids as $index => $id)
-        {
+        foreach ($this->ids as $index => $id) {
             $this->item = [];
             // We're using the same ID number for citations from the same resource
-            if ($this->style['endnoteStyle'] == 1)
-            {
-                if (array_key_exists($id, $doneIds))
-                {
+            if ($this->style['endnoteStyle'] == 1) {
+                if (array_key_exists($id, $doneIds)) {
                     continue;
-                }
-                else
-                {
+                } else {
                     $doneIds[$id] = TRUE;
                 }
                 // Use specified bibliographic order?
-                if (array_key_exists('sameIdOrderBib', $this->style))
-                {
+                if (array_key_exists('sameIdOrderBib', $this->style)) {
                     $id = array_shift($endnoteSameIdsArray);
                     $this->item['id'] = $id;
                     $this->item['citation'] = $this->endnoteCitations[$id];
-                }
-                else
-                {
+                } else {
                     $this->item['id'] = $id;
                     $this->item['citation'] = $this->endnoteCitations[$id];
-                    if (array_search($citationIndex, $this->footnoteOffsetIds) !== FALSE)
-                    {
+                    if (array_search($citationIndex, $this->footnoteOffsetIds) !== FALSE) {
                         ++$citationIndex; // index already taken by textual footnote
                     }
                 }
                 $this->endnotes[$citationIndex] = $this->export->format($this->map($this->templateEndnote), TRUE);
                 ++$citationIndex;
-            }
-            else
-            {
+            } else {
                 $tempTemplate = [];
                 $size = count($this->opCit);
                 $this->item['id'] = $this->id = $index;
-                if (array_key_exists('pluralPagesExist', $this->items[$index]))
-                {
+                if (array_key_exists('pluralPagesExist', $this->items[$index])) {
                     $this->item['pluralPagesExist'] = $this->items[$index]['pluralPagesExist'];
                 }
-                if (array_key_exists('pages', $this->items[$index]))
-                {
+                if (array_key_exists('pages', $this->items[$index])) {
                     $this->item['pages'] = $thesePages = $this->items[$index]['pages'];
                     $this->item['pages'] = $this->export->format($this->item['pages']);
-                }
-                else
-                {
+                } else {
                     $thesePages = FALSE;
                 }
                 if ($this->style['idem'] && $size && ($this->opCit[$size - 1] == $id) &&
-                    isset($lastPages) && ($thesePages == $lastPages) && !empty($this->templateIbid))
-                {
-                    if (array_key_exists('citation', $this->templateIbid))
-                    {
+                    isset($lastPages) && ($thesePages == $lastPages) && !empty($this->templateIbid)) {
+                    if (array_key_exists('citation', $this->templateIbid)) {
                         $this->item['citation'] = array_shift($this->endnoteCitations);
-                    }
-                    else
-                    {
-                        if (array_key_exists('creator', $this->templateIbid))
-                        {
+                    } else {
+                        if (array_key_exists('creator', $this->templateIbid)) {
                             $this->item['creator'] = $this->creators[$index];
                         }
-                        if (array_key_exists('year', $this->templateIbid))
-                        {
+                        if (array_key_exists('year', $this->templateIbid)) {
                             $this->item['year'] = $this->years[$index];
                         }
-                        if (array_key_exists('title', $this->templateIbid))
-                        {
+                        if (array_key_exists('title', $this->templateIbid)) {
                             $this->item['title'] = $this->titles[$index];
                         }
                         array_shift($this->endnoteCitations);
                     }
                     $tempTemplate = $this->templateEndnote;
                     $this->templateEndnote = $this->templateIbid;
-                }
-                elseif ($this->style['idem'] && $size && ($this->opCit[$size - 1] == $id) &&
-                    isset($lastPages) && ($thesePages != $lastPages) && !empty($this->templateIdem))
-                {
-                    if (array_key_exists('citation', $this->templateIdem))
-                    {
+                } elseif ($this->style['idem'] && $size && ($this->opCit[$size - 1] == $id) &&
+                    isset($lastPages) && ($thesePages != $lastPages) && !empty($this->templateIdem)) {
+                    if (array_key_exists('citation', $this->templateIdem)) {
                         $this->item['citation'] = array_shift($this->endnoteCitations);
-                    }
-                    else
-                    {
-                        if (array_key_exists('creator', $this->templateIdem))
-                        {
+                    } else {
+                        if (array_key_exists('creator', $this->templateIdem)) {
                             $this->item['creator'] = $this->creators[$index];
                         }
-                        if (array_key_exists('year', $this->templateIdem))
-                        {
+                        if (array_key_exists('year', $this->templateIdem)) {
                             $this->item['year'] = $this->years[$index];
                         }
-                        if (array_key_exists('title', $this->templateIdem))
-                        {
+                        if (array_key_exists('title', $this->templateIdem)) {
                             $this->item['title'] = $this->titles[$index];
                         }
                         array_shift($this->endnoteCitations);
                     }
                     $tempTemplate = $this->templateEndnote;
                     $this->templateEndnote = $this->templateIdem;
-                }
-                elseif ($this->style['opCit'] && $size && (array_search($id, $this->opCit) !== FALSE) &&
-                 !empty($this->templateOpCit))
-                {
-                    if (array_key_exists('citation', $this->templateOpCit))
-                    {
+                } elseif ($this->style['opCit'] && $size && (array_search($id, $this->opCit) !== FALSE) &&
+                 !empty($this->templateOpCit)) {
+                    if (array_key_exists('citation', $this->templateOpCit)) {
                         $this->item['citation'] = array_shift($this->endnoteCitations);
-                    }
-                    else
-                    {
-                        if (array_key_exists('creator', $this->templateOpCit))
-                        {
+                    } else {
+                        if (array_key_exists('creator', $this->templateOpCit)) {
                             $this->item['creator'] = $this->creators[$index];
                         }
-                        if (array_key_exists('year', $this->templateOpCit))
-                        {
+                        if (array_key_exists('year', $this->templateOpCit)) {
                             $this->item['year'] = $this->years[$index];
                         }
-                        if (array_key_exists('title', $this->templateOpCit))
-                        {
+                        if (array_key_exists('title', $this->templateOpCit)) {
                             $this->item['title'] = $this->titles[$index];
                         }
                         array_shift($this->endnoteCitations);
                     }
                     $tempTemplate = $this->templateEndnote;
                     $this->templateEndnote = $this->templateOpCit;
-                }
-                else
-                {
-                    if (array_key_exists('citation', $this->templateEndnote))
-                    {
+                } else {
+                    if (array_key_exists('citation', $this->templateEndnote)) {
                         $this->item['citation'] = array_shift($this->endnoteCitations);
-                    }
-                    else
-                    {
-                        if (array_key_exists('creator', $this->templateEndnote))
-                        {
+                    } else {
+                        if (array_key_exists('creator', $this->templateEndnote)) {
                             $this->item['creator'] = $this->creators[$index];
                         }
-                        if (array_key_exists('year', $this->templateEndnote))
-                        {
+                        if (array_key_exists('year', $this->templateEndnote)) {
                             $this->item['year'] = $this->years[$index];
                         }
-                        if (array_key_exists('title', $this->templateEndnote))
-                        {
+                        if (array_key_exists('title', $this->templateEndnote)) {
                             $this->item['title'] = $this->titles[$index];
                         }
                     }
@@ -2750,20 +2220,17 @@ class CITEFORMAT
                 $lastPages = $thesePages;
                 // If footnotes, uses 'pages' formatting from footnote template
                 if ($this->style['citationStyle'] && ($this->style['endnoteStyle'] == 2) &&
-                array_key_exists($this->items[$index]['type'], $this->bibStyle->bibformat->footnoteTypeArray))
-                {
+                array_key_exists($this->items[$index]['type'], $this->bibStyle->bibformat->footnoteTypeArray)) {
                     $type = $this->bibStyle->bibformat->footnoteTypeArray[$this->items[$index]['type']];
                     if (isset($this->bibStyle->bibformat->{$type})
                     && array_key_exists('pages', $this->bibStyle->bibformat->{$type})
-                    && array_key_exists('pages', $this->templateEndnote))
-                    {
+                    && array_key_exists('pages', $this->templateEndnote)) {
                         $this->templateEndnote['pages'] = $this->bibStyle->bibformat->{$type}['pages'];
                     }
                 }
                 $this->endnotes[$index] = $this->export->format($this->map($this->templateEndnote), TRUE);
                 $this->opCit[] = $id;
-                if (!empty($tempTemplate))
-                {
+                if (!empty($tempTemplate)) {
                     $this->templateEndnote = $tempTemplate;
                 }
             }
@@ -2778,12 +2245,9 @@ class CITEFORMAT
     {
         // Defaults
         $this->sentenceSplit = "/(?<!\\.|[ .][A-Z])\\. /u";
-        if ($this->wikindx)
-        {
+        if ($this->wikindx) {
             $this->quotationMarker = "/\".*\"|__WIKINDX__QUOTEINDENTDONE__.*__WIKINDX__QUOTEINDENTDONE__/us";
-        }
-        else
-        {
+        } else {
             $this->quotationMarker = "/\".*\"/us";
         }
         // Scan for occurrences of creator name(s) followed by 'et al.' when checking if surname(s) is in same sentence as citation.
@@ -2797,55 +2261,42 @@ class CITEFORMAT
         $this->textEtAl = 'et al.';
         $styleLoc = FALSE;
         // WIKINDX-specific.  Months depend on the localisation set in the bibliographic style file.  'et al.' depends on the user's wikindx localisation.
-        if ($this->wikindx)
-        {
+        if ($this->wikindx) {
             $styleLoc = TRUE;
             // User localisation
             $this->wikindxLanguageClass = FACTORY_CONSTANTS::getInstance();
-            if ($styleLoc)
-            {
-                if (isset($this->wikindxLanguageClass->textEtAl))
-                {
+            if ($styleLoc) {
+                if (isset($this->wikindxLanguageClass->textEtAl)) {
                     $this->textEtAl = $this->wikindxLanguageClass->textEtAl;
                 }
                 if (isset($this->wikindxLanguageClass->possessiveArray) &&
-                    is_array($this->wikindxLanguageClass->possessiveArray))
-                {
+                    is_array($this->wikindxLanguageClass->possessiveArray)) {
                     $this->possessiveArray = $this->wikindxLanguageClass->possessiveArray;
-                }
-                else
-                {
-                    if (isset($this->wikindxLanguageClass->possessive1))
-                    {
+                } else {
+                    if (isset($this->wikindxLanguageClass->possessive1)) {
                         $possessiveArray[] = $this->wikindxLanguageClass->possessive1;
                     }
-                    if (isset($this->wikindxLanguageClass->possessive2))
-                    {
+                    if (isset($this->wikindxLanguageClass->possessive2)) {
                         $possessiveArray[] = $this->wikindxLanguageClass->possessive2;
                     }
-                    if (isset($possessiveArray))
-                    {
+                    if (isset($possessiveArray)) {
                         $this->possessiveArray = $possessiveArray;
                         unset($possessiveArray);
                     }
                     // else use defaults above.
                 }
                 if (isset($this->wikindxLanguageClass->startQuotation) &&
-                    isset($this->wikindxLanguageClass->endQuotation))
-                {
+                    isset($this->wikindxLanguageClass->endQuotation)) {
                     $this->quotationMarker =
                         "/" . preg_quote($this->wikindxLanguageClass->startQuotation) . ".*" .
                         preg_quote($this->wikindxLanguageClass->endQuotation) .
                         "|__WIKINDX__QUOTEINDENTDONE__.*__WIKINDX__QUOTEINDENTDONE__/s";
                 }
-                if (isset($this->wikindxLanguageClass->abbreviations))
-                {
-                    foreach ($this->wikindxLanguageClass->abbreviations as $abbrev)
-                    {
+                if (isset($this->wikindxLanguageClass->abbreviations)) {
+                    foreach ($this->wikindxLanguageClass->abbreviations as $abbrev) {
                         $temp[] = '\s' . preg_quote($abbrev);
                     }
-                    if (isset($temp))
-                    {
+                    if (isset($temp)) {
                         $abbreviations = "(?<!" . implode('|', $temp) . "|\\.|[ .][A-Z])";
                         $this->sentenceSplit = "/$abbreviations\\. /";
                     }
@@ -2891,21 +2342,16 @@ class CITEFORMAT
     {
         $this->style = $this->bibStyle->parsexml->citation;
         $this->footnoteStyle = $this->bibStyle->parsexml->footnote;
-        if ($this->style['citationStyle'])
-        { // Endnote style citations
+        if ($this->style['citationStyle']) { // Endnote style citations
             $this->citationToArrayEndnoteStyle();
-        }
-        else
-        { // In-text style citations
+        } else { // In-text style citations
             $this->citationToArrayInTextStyle();
         }
         // If endnote-style citations, need to ensure we get endnote references with BBCode intact and not parsed by bibformat()
-        if ($this->style['citationStyle'])
-        {
+        if ($this->style['citationStyle']) {
             $this->bibStyle->bibformat->output = 'noScan';
         }
-        if ($this->style['citationStyle'] && ($this->style['endnoteStyle'] == 2))
-        { // footnotes
+        if ($this->style['citationStyle'] && ($this->style['endnoteStyle'] == 2)) { // footnotes
             $this->bibStyle->bibformat->citationFootnote = TRUE;
         }
         /**

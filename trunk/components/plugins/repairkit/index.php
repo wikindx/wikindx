@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -47,16 +49,14 @@ class repairkit_MODULE
         include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
         $config = new repairkit_CONFIG();
         $this->authorize = $config->authorize;
-        if ($menuInit)
-        { // portion of constructor used for menu initialisation
+        if ($menuInit) { // portion of constructor used for menu initialisation
             $this->makeMenu($config->menus);
 
             return; // Need do nothing more as this is simply menu initialisation.
         }
         $this->session = FACTORY_SESSION::getInstance();
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->authorize))
-        { // not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
         $this->vars = GLOBALS::getVars();
@@ -70,8 +70,7 @@ class repairkit_MODULE
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDbIntegrity'));
         $wVersion = WIKINDX_INTERNAL_VERSION;
         $dbVersion = $this->db->selectFirstField('database_summary', 'databasesummarySoftwareVersion');
-        if (floatval($dbVersion) != floatval($wVersion))
-        { // Shouldn't ever happen if UPDATEDATABASE is functioning correctly . . .
+        if (floatval($dbVersion) != floatval($wVersion)) { // Shouldn't ever happen if UPDATEDATABASE is functioning correctly . . .
             $pString = HTML\p($this->pluginmessages->text('dbIntegrityPreamble1a', $dbVersion) . '&nbsp;' . $this->pluginmessages->text('dbIntegrityPreamble1b', $wVersion));
             GLOBALS::addTplVar('content', $pString);
 
@@ -79,38 +78,30 @@ class repairkit_MODULE
         }
         $currentDbSchema = $this->db->createRepairKitDbSchema();
         $correctDbSchema = $this->db->getRepairKitDbSchema(WIKINDX_FILE_REPAIRKIT_DB_SCHEMA);
-        if ($correctDbSchema === FALSE)
-        {
+        if ($correctDbSchema === FALSE) {
             $pString = HTML\p($this->pluginmessages->text('fileReadError'), 'error');
             GLOBALS::addTplVar('content', $pString);
 
             return;
         }
-        if ($this->checkDatetime())
-        {
+        if ($this->checkDatetime()) {
             $this->dbInvalidDatetime = TRUE;
         }
-        if (($this->dbIntegrityReport($currentDbSchema, $correctDbSchema) === TRUE) && !$this->dbInvalidDatetime)
-        {
+        if (($this->dbIntegrityReport($currentDbSchema, $correctDbSchema) === TRUE) && !$this->dbInvalidDatetime) {
             $pString = HTML\p($this->pluginmessages->text('dbIntegrityPreamble2'));
             GLOBALS::addTplVar('content', $pString);
 
             return;
-        }
-        else
-        { // Structure needs fixing – can it be?
-            if (!empty($this->dbMissingTables))
-            { // Cannot be fixed
+        } else { // Structure needs fixing – can it be?
+            if (!empty($this->dbMissingTables)) { // Cannot be fixed
                 $pString = HTML\p($this->pluginmessages->text('dbIntegrityMissingTables') . BR . implode(BR, $this->dbMissingTables));
                 GLOBALS::addTplVar('content', $pString);
 
                 return;
             }
-            if (!empty($this->dbMissingFields))
-            { // Cannot be fixed
+            if (!empty($this->dbMissingFields)) { // Cannot be fixed
                 $missingFields = '';
-                foreach ($this->dbMissingFields as $table)
-                { // [0] == table, [1] == field
+                foreach ($this->dbMissingFields as $table) { // [0] == table, [1] == field
                     $missingFields .= "TABLE " . $table[0] . ": " . $table[1] . BR;
                 }
                 $pString = HTML\p($this->pluginmessages->text('dbIntegrityMissingFields') . BR . $missingFields);
@@ -124,12 +115,10 @@ class repairkit_MODULE
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "OK")));
             $pString .= FORM\formEnd();
             $pString .= HTML\hr();
-            if ($this->dbInvalidDatetime)
-            {
+            if ($this->dbInvalidDatetime) {
                 $pString .= HTML\p($this->pluginmessages->text('dbIntegrityInvalidDatetime'));
             }
-            foreach ($this->dbInconsistenciesReport as $table)
-            {
+            foreach ($this->dbInconsistenciesReport as $table) {
                 $pString .= HTML\p(implode('', $table));
             }
         }
@@ -145,58 +134,46 @@ class repairkit_MODULE
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDbIntegrity'));
         $currentDbSchema = $this->db->createRepairKitDbSchema();
         $correctDbSchema = $this->db->getRepairKitDbSchema(WIKINDX_FILE_REPAIRKIT_DB_SCHEMA);
-        if ($correctDbSchema === FALSE)
-        {
+        if ($correctDbSchema === FALSE) {
             $pString = HTML\p($this->pluginmessages->text('fileReadError'), 'error');
             GLOBALS::addTplVar('content', $pString);
 
             return;
         }
-        foreach ($correctDbSchema as $table => $tableArray)
-        {
-            if (!array_key_exists($table, $currentDbSchema))
-            {	// skip missing tables
+        foreach ($correctDbSchema as $table => $tableArray) {
+            if (!array_key_exists($table, $currentDbSchema)) {	// skip missing tables
                 continue;
             }
             $this->getDbInconsistencies($currentDbSchema, $tableArray, $table);
         }
         if (empty($this->dbTableInconsistenciesFix) && empty($this->dbFieldInconsistenciesFix) &&
-            empty($this->dbKeyInconsistenciesFix) && empty($this->dbIndexInconsistenciesFix))
-        {
+            empty($this->dbKeyInconsistenciesFix) && empty($this->dbIndexInconsistenciesFix)) {
             $pString = HTML\p($this->pluginmessages->text('dbIntegrityPreamble2')); // nothing to fix
             GLOBALS::addTplVar('content', $pString);
 
             return;
         }
-        if ($this->checkDatetime())
-        { // fix invalid datetime fields first or else the charset/collation might fail.
+        if ($this->checkDatetime()) { // fix invalid datetime fields first or else the charset/collation might fail.
             $this->fixDatetimeFields();
         }
 
         // Remove wrong indices before others field changes.
         // A length change on (var)char field can raise an error about
         // index length limits and prevent all other corrections.
-        foreach ($this->dbKeyInconsistenciesFix as $table => $fields)
-        {
-            if (array_key_exists($table, $correctDbSchema))
-            {
-                foreach ($correctDbSchema[$table]['fields'][0] as $correctField)
-                {
-                    if (array_search($correctField['Field'], $fields) !== FALSE)
-                    {
+        foreach ($this->dbKeyInconsistenciesFix as $table => $fields) {
+            if (array_key_exists($table, $correctDbSchema)) {
+                foreach ($correctDbSchema[$table]['fields'][0] as $correctField) {
+                    if (array_search($correctField['Field'], $fields) !== FALSE) {
                         $fieldName = $correctField['Field'];
-                        if (!$correctField['Key'])
-                        {
+                        if (!$correctField['Key']) {
                             $this->db->query("DROP INDEX `$fieldName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table`");
                         }
                     }
                 }
             }
         }
-        foreach ($this->dbIndexInconsistenciesFix as $table => $fields)
-        {
-            foreach ($fields as $parts)
-            {
+        foreach ($this->dbIndexInconsistenciesFix as $table => $fields) {
+            foreach ($fields as $parts) {
                 $keyName = $parts['Key_name'];
                 //				$columnName = $parts['Column_name'];
                 //				$subPart = $parts['Sub_part'] ? '(' . $parts['Sub_part'] . ')' : FALSE;
@@ -204,54 +181,35 @@ class repairkit_MODULE
                 $this->db->queryNoError("DROP INDEX `$keyName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table`");
             }
         }
-        foreach ($this->dbTableInconsistenciesFix as $index => $tables)
-        {
-            if ($index == 'collation')
-            {
-                foreach ($tables as $table)
-                {
+        foreach ($this->dbTableInconsistenciesFix as $index => $tables) {
+            if ($index == 'collation') {
+                foreach ($tables as $table) {
                     $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci");
                 }
-            }
-            elseif ($index == 'engine')
-            {
-                foreach ($tables as $table)
-                {
+            } elseif ($index == 'engine') {
+                foreach ($tables as $table) {
                     $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` ENGINE=InnoDB");
                 }
             }
         }
-        foreach ($this->dbFieldInconsistenciesFix as $table => $fields)
-        {
-            if (array_key_exists($table, $correctDbSchema))
-            {
-                foreach ($correctDbSchema[$table]['fields'][0] as $correctField)
-                {
-                    if (array_search($correctField['Field'], $fields) !== FALSE)
-                    {
+        foreach ($this->dbFieldInconsistenciesFix as $table => $fields) {
+            if (array_key_exists($table, $correctDbSchema)) {
+                foreach ($correctDbSchema[$table]['fields'][0] as $correctField) {
+                    if (array_search($correctField['Field'], $fields) !== FALSE) {
                         $fieldName = $correctField['Field'];
                         $type = $correctField['Type'];
-                        if (!$correctField['Default'])
-                        {
+                        if (!$correctField['Default']) {
                             $default = 'DEFAULT';
-                        }
-                        else
-                        {
-                            if ($type == 'datetime')
-                            {
+                        } else {
+                            if ($type == 'datetime') {
                                 $default = "DEFAULT " . $correctField['Default'];
-                            }
-                            else
-                            {
+                            } else {
                                 $default = "DEFAULT '" . $correctField['Default'] . "'";
                             }
                         }
-                        if ($correctField['Null'] == 'NO')
-                        {
+                        if ($correctField['Null'] == 'NO') {
                             $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` MODIFY COLUMN `$fieldName` $type NOT NULL");
-                        }
-                        else
-                        {
+                        } else {
                             $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` MODIFY COLUMN `$fieldName` $type $default NULL");
                         }
                     }
@@ -259,36 +217,25 @@ class repairkit_MODULE
             }
         }
         // Recreate right indices
-        foreach ($this->dbKeyInconsistenciesFix as $table => $fields)
-        {
-            if (array_key_exists($table, $correctDbSchema))
-            {
-                foreach ($correctDbSchema[$table]['fields'][0] as $correctField)
-                {
-                    if (array_search($correctField['Field'], $fields) !== FALSE)
-                    {
+        foreach ($this->dbKeyInconsistenciesFix as $table => $fields) {
+            if (array_key_exists($table, $correctDbSchema)) {
+                foreach ($correctDbSchema[$table]['fields'][0] as $correctField) {
+                    if (array_search($correctField['Field'], $fields) !== FALSE) {
                         $fieldName = $correctField['Field'];
-                        if (!$correctField['Key'])
-                        {
+                        if (!$correctField['Key']) {
                             //Don't drop indices twice
                             continue;
-                        }
-                        elseif ($correctField['Key'] == 'MUL')
-                        {
+                        } elseif ($correctField['Key'] == 'MUL') {
                             $this->db->query("CREATE INDEX `$fieldName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table` (`$fieldName`)");
-                        }
-                        elseif ($correctField['Key'] == 'PRI')
-                        { // Primary key
+                        } elseif ($correctField['Key'] == 'PRI') { // Primary key
                             $this->db->query("ALTER TABLE `" . WIKINDX_DB_TABLEPREFIX . "$table` MODIFY `$fieldName` INT(11) PRIMARY KEY AUTO_INCREMENT");
                         }
                     }
                 }
             }
         }
-        foreach ($this->dbIndexInconsistenciesFix as $table => $fields)
-        {
-            foreach ($fields as $parts)
-            {
+        foreach ($this->dbIndexInconsistenciesFix as $table => $fields) {
+            foreach ($fields as $parts) {
                 $keyName = $parts['Key_name'];
                 $columnName = $parts['Column_name'];
                 $subPart = $parts['Sub_part'] ? '(' . $parts['Sub_part'] . ')' : FALSE;
@@ -342,8 +289,7 @@ class repairkit_MODULE
      */
     public function getFixMessageAjax()
     {
-        if (array_key_exists('ajaxReturn', $this->vars))
-        {
+        if (array_key_exists('ajaxReturn', $this->vars)) {
             $message = $this->vars['ajaxReturn'];
         }
         $message .= 'Message';
@@ -364,11 +310,9 @@ class repairkit_MODULE
         $stmt = $this->db->existsClause($stmt, TRUE);
         $this->db->formatConditions($stmt);
         $resultset = $this->db->select('resource', 'resourceId');
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $this->db->insert('resource_creator', 'resourcecreatorResourceId', $row['resourceId']);
-            if (array_search($row['resourceId'], $resIds) === FALSE)
-            {
+            if (array_search($row['resourceId'], $resIds) === FALSE) {
                 ++$resources;
                 $resIds[] = $row['resourceId'];
             }
@@ -378,11 +322,9 @@ class repairkit_MODULE
         $stmt = $this->db->existsClause($stmt, TRUE);
         $this->db->formatConditions($stmt);
         $resultset = $this->db->select('resource', 'resourceId');
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $this->db->insert('resource_category', 'resourcecategoryResourceId', $row['resourceId']);
-            if (array_search($row['resourceId'], $resIds) === FALSE)
-            {
+            if (array_search($row['resourceId'], $resIds) === FALSE) {
                 ++$resources;
                 $resIds[] = $row['resourceId'];
             }
@@ -392,8 +334,7 @@ class repairkit_MODULE
         $stmt = $this->db->existsClause($stmt, TRUE);
         $this->db->formatConditions($stmt);
         $resultset = $this->db->select('resource', 'resourceId');
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $this->db->insert(
                 'resource_timestamp',
                 ['resourcetimestampId', 'resourcetimestampTimestamp', 'resourcetimestampTimestampAdd'],
@@ -402,8 +343,7 @@ class repairkit_MODULE
             // update to NOW()
             $this->db->formatConditions(['resourcetimestampId' => $row['resourceId']]);
             $this->db->updateTimestamp('resource_timestamp', ['resourcetimestampTimestamp' => 'CURRENT_TIMESTAMP', 'resourcetimestampTimestampAdd' => 'CURRENT_TIMESTAMP']);
-            if (array_search($row['resourceId'], $resIds) === FALSE)
-            {
+            if (array_search($row['resourceId'], $resIds) === FALSE) {
                 ++$resources;
                 $resIds[] = $row['resourceId'];
             }
@@ -413,11 +353,9 @@ class repairkit_MODULE
         $stmt = $this->db->existsClause($stmt, TRUE);
         $this->db->formatConditions($stmt);
         $resultset = $this->db->select('resource', 'resourceId');
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $this->db->insert('resource_misc', 'resourcemiscId', $row['resourceId']);
-            if (array_search($row['resourceId'], $resIds) === FALSE)
-            {
+            if (array_search($row['resourceId'], $resIds) === FALSE) {
                 ++$resources;
                 $resIds[] = $row['resourceId'];
             }
@@ -427,11 +365,9 @@ class repairkit_MODULE
         $stmt = $this->db->existsClause($stmt, TRUE);
         $this->db->formatConditions($stmt);
         $resultset = $this->db->select('resource', 'resourceId');
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $this->db->insert('resource_year', 'resourceyearId', $row['resourceId']);
-            if (array_search($row['resourceId'], $resIds) === FALSE)
-            {
+            if (array_search($row['resourceId'], $resIds) === FALSE) {
                 ++$resources;
                 $resIds[] = $row['resourceId'];
             }
@@ -441,11 +377,9 @@ class repairkit_MODULE
         $stmt = $this->db->existsClause($stmt, TRUE);
         $this->db->formatConditions($stmt);
         $resultset = $this->db->select('resource', 'resourceId');
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $this->db->insert('statistics', 'statisticsResourceId', $row['resourceId']);
-            if (array_search($row['resourceId'], $resIds) === FALSE)
-            {
+            if (array_search($row['resourceId'], $resIds) === FALSE) {
                 ++$resources;
                 $resIds[] = $row['resourceId'];
             }
@@ -486,15 +420,12 @@ class repairkit_MODULE
         $this->db->formatConditions(['resourcecreatorCreatorMain' => 'IS NOT NULL']);
         $resultSet1 = $this->db->select('resource_creator', ['resourcecreatorCreatorMain', 'resourcecreatorCreatorSurname']);
         $resultSet2 = $this->db->select('creator', ['creatorId', 'creatorSurname']);
-        while ($row = $this->db->fetchRow($resultSet2))
-        {
+        while ($row = $this->db->fetchRow($resultSet2)) {
             $creatorIds[$row['creatorId']] = mb_strtolower(preg_replace("/[^[:alnum:][:space:]]/u", '', $row['creatorSurname']));
         }
-        while ($row = $this->db->fetchRow($resultSet1))
-        {
+        while ($row = $this->db->fetchRow($resultSet1)) {
             $rcSurname = mb_strtolower(preg_replace("/[^[:alnum:][:space:]]/u", '', $row['resourcecreatorCreatorSurname']));
-            if ($rcSurname != $creatorIds[$row['resourcecreatorCreatorMain']])
-            {
+            if ($rcSurname != $creatorIds[$row['resourcecreatorCreatorMain']]) {
                 $this->db->formatConditions(['resourcecreatorCreatorMain' => $row['resourcecreatorCreatorMain']]);
                 $this->db->update('resource_creator', ['resourcecreatorCreatorSurname' => $creatorIds[$row['resourcecreatorCreatorMain']]]);
             }
@@ -529,53 +460,43 @@ class repairkit_MODULE
     private function checkDatetime()
     {
         $this->db->formatConditions(['resourcemetadataTimestamp' => '0000-00-00 00:00:00']);
-        if ($this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataTimestamp')))
-        {
+        if ($this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataTimestamp'))) {
             return TRUE;
         }
         $this->db->formatConditions(['resourcemetadataTimestampEdited' => '0000-00-00 00:00:00']);
-        if ($this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId')))
-        {
+        if ($this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'))) {
             return TRUE;
         }
         $this->db->formatConditions(['newsTimestamp' => '0000-00-00 00:00:00']);
-        if ($this->db->numRows($this->db->select('news', 'newsId')))
-        {
+        if ($this->db->numRows($this->db->select('news', 'newsId'))) {
             return TRUE;
         }
         $this->db->formatConditions(['resourceattachmentsTimestamp' => '0000-00-00 00:00:00']);
-        if ($this->db->numRows($this->db->select('resource_attachments', 'resourceattachmentsId')))
-        {
+        if ($this->db->numRows($this->db->select('resource_attachments', 'resourceattachmentsId'))) {
             return TRUE;
         }
         $this->db->formatConditions(['resourceattachmentsEmbargoUntil' => '0000-00-00 00:00:00']);
-        if ($this->db->numRows($this->db->select('resource_attachments', 'resourceattachmentsId')))
-        {
+        if ($this->db->numRows($this->db->select('resource_attachments', 'resourceattachmentsId'))) {
             return TRUE;
         }
         $this->db->formatConditions(['resourcetimestampTimestamp' => '0000-00-00 00:00:00']);
-        if ($this->db->numRows($this->db->select('resource_timestamp', 'resourcetimestampId')))
-        {
+        if ($this->db->numRows($this->db->select('resource_timestamp', 'resourcetimestampId'))) {
             return TRUE;
         }
         $this->db->formatConditions(['resourcetimestampTimestampAdd' => '0000-00-00 00:00:00']);
-        if ($this->db->numRows($this->db->select('resource_timestamp', 'resourcetimestampId')))
-        {
+        if ($this->db->numRows($this->db->select('resource_timestamp', 'resourcetimestampId'))) {
             return TRUE;
         }
         $this->db->formatConditions(['usersTimestamp' => '0000-00-00 00:00:00']);
-        if ($this->db->numRows($this->db->select('users', 'usersId')))
-        {
+        if ($this->db->numRows($this->db->select('users', 'usersId'))) {
             return TRUE;
         }
         $this->db->formatConditions(['usersNotifyTimestamp' => '0000-00-00 00:00:00']);
-        if ($this->db->numRows($this->db->select('users', 'usersId')))
-        {
+        if ($this->db->numRows($this->db->select('users', 'usersId'))) {
             return TRUE;
         }
         $this->db->formatConditions(['userregisterTimestamp' => '0000-00-00 00:00:00']);
-        if ($this->db->numRows($this->db->select('user_register', 'userregisterId')))
-        {
+        if ($this->db->numRows($this->db->select('user_register', 'userregisterId'))) {
             return TRUE;
         }
 
@@ -591,18 +512,15 @@ class repairkit_MODULE
      */
     private function dbIntegrityReport($currentDbSchema, $correctDbSchema)
     {
-        foreach ($correctDbSchema as $table => $tableArray)
-        {
-            if (!array_key_exists($table, $currentDbSchema))
-            {	// skip missing tables
+        foreach ($correctDbSchema as $table => $tableArray) {
+            if (!array_key_exists($table, $currentDbSchema)) {	// skip missing tables
                 $this->dbMissingTables[] = $table;
 
                 continue;
             }
             $this->getDbInconsistencies($currentDbSchema, $tableArray, $table, TRUE);
         }
-        if (!empty($this->dbMissingTables) || !empty($this->dbMissingFields) || !empty($this->dbInconsistenciesReport))
-        {
+        if (!empty($this->dbMissingTables) || !empty($this->dbMissingFields) || !empty($this->dbInconsistenciesReport)) {
             return FALSE;
         }
 
@@ -620,21 +538,16 @@ class repairkit_MODULE
      */
     private function getDbInconsistencies($currentDbSchema, $tableArray, $table, $report = FALSE)
     {
-        foreach ($tableArray['fields'] as $field => $fieldArrays)
-        {
-            foreach ($fieldArrays as $index => $fieldArray)
-            {
+        foreach ($tableArray['fields'] as $field => $fieldArrays) {
+            foreach ($fieldArrays as $index => $fieldArray) {
                 // Correct field to check
                 $fieldName = $fieldArray['Field'];
 
                 // Search the correct field in the current table fields for the checked table
                 $FieldExists = FALSE;
-                foreach ($currentDbSchema[$table]['fields'] as $cf => $cfas)
-                {
-                    foreach ($cfas as $ci => $cfa)
-                    {
-                        if ($cfa['Field'] == $fieldName)
-                        {
+                foreach ($currentDbSchema[$table]['fields'] as $cf => $cfas) {
+                    foreach ($cfas as $ci => $cfa) {
+                        if ($cfa['Field'] == $fieldName) {
                             $currentDbField = $cf;
                             $currentDbIndex = $ci;
                             $FieldExists = TRUE;
@@ -643,8 +556,7 @@ class repairkit_MODULE
                 }
 
                 // Skip checks if the field is missing and report it as missing
-                if (!$FieldExists)
-                {
+                if (!$FieldExists) {
                     $this->dbMissingFields[] = [$table, $fieldName];
 
                     continue;
@@ -652,18 +564,14 @@ class repairkit_MODULE
 
                 // Check the field type
                 $checkedType = $currentDbSchema[$table]['fields'][$currentDbField][$currentDbIndex]['Type'];
-                if ($checkedType != $fieldArray['Type'])
-                {
+                if ($checkedType != $fieldArray['Type']) {
                     $currentValue = !$checkedType ? htmlentities('<empty>') : $checkedType;
                     $correctValue = !$fieldArray['Type'] ? htmlentities('<empty>') : $fieldArray['Type'];
-                    if ($report)
-                    {
+                    if ($report) {
                         $this->dbInconsistenciesReport[$table][] =
                             "TABLE $table: " . $fieldName . "['Type'] is " . $currentValue . "."
                             . " It should be: " . $correctValue . BR;
-                    }
-                    else
-                    {
+                    } else {
                         $this->dbFieldInconsistenciesFix[$table][] = $fieldName;
                     }
                 }
@@ -675,71 +583,55 @@ class repairkit_MODULE
                 $checkedDefault = str_replace('current_timestamp()', 'CURRENT_TIMESTAMP', $checkedDefault);
                 $fieldArray['Default'] = str_replace('current_timestamp()', 'CURRENT_TIMESTAMP', $fieldArray['Default']);
 
-                if ($checkedDefault != $fieldArray['Default'])
-                {
+                if ($checkedDefault != $fieldArray['Default']) {
                     $currentValue = !$checkedDefault ? htmlentities('<empty>') : $checkedDefault;
                     $correctValue = !$fieldArray['Default'] ? htmlentities('<empty>') : $fieldArray['Default'];
-                    if ($report)
-                    {
+                    if ($report) {
                         $this->dbInconsistenciesReport[$table][] =
                             "TABLE $table: " . $fieldName . "[Default] is " . $currentValue . "."
                             . " It should be: " . $correctValue . BR;
-                    }
-                    else
-                    {
+                    } else {
                         $this->dbFieldInconsistenciesFix[$table][] = $fieldName;
                     }
                 }
 
                 // Check the field nullability
                 $checkedNull = $currentDbSchema[$table]['fields'][$currentDbField][$currentDbIndex]['Null'];
-                if ($checkedNull != $fieldArray['Null'])
-                {
+                if ($checkedNull != $fieldArray['Null']) {
                     $currentValue = !$checkedNull ? htmlentities('<empty>') : $checkedNull;
                     $correctValue = !$fieldArray['Null'] ? htmlentities('<empty>') : $fieldArray['Null'];
-                    if ($report)
-                    {
+                    if ($report) {
                         $this->dbInconsistenciesReport[$table][] =
                             "TABLE $table: " . $fieldName . "[Null] is " . $currentValue . "."
                             . " It should be: " . $correctValue . BR;
-                    }
-                    else
-                    {
+                    } else {
                         $this->dbFieldInconsistenciesFix[$table][] = $fieldName;
                     }
                 }
 
                 // Check the field key
                 $checkedKey = $currentDbSchema[$table]['fields'][$currentDbField][$currentDbIndex]['Key'];
-                if ($checkedKey != $fieldArray['Key'])
-                {
+                if ($checkedKey != $fieldArray['Key']) {
                     $currentValue = !$checkedKey ? htmlentities('<empty>') : $checkedKey;
                     $correctValue = !$fieldArray['Key'] ? htmlentities('<empty>') : $fieldArray['Key'];
-                    if ($report)
-                    {
+                    if ($report) {
                         $this->dbInconsistenciesReport[$table][] =
                             "TABLE $table: " . $fieldName . "[Key] is " . $currentValue . "."
                             . " It should be: " . $correctValue . BR;
-                    }
-                    else
-                    {
+                    } else {
                         $this->dbKeyInconsistenciesFix[$table][] = $fieldName;
                     }
                 }
             }
         }
 
-        foreach ($tableArray['schema'] as $field => $fieldArrays)
-        {
-            foreach ($fieldArrays as $index => $fieldArray)
-            {
+        foreach ($tableArray['schema'] as $field => $fieldArrays) {
+            foreach ($fieldArrays as $index => $fieldArray) {
                 // Search the correct values for the checked table
                 $checkedEngine = '';
                 $checkedCollation = '';
-                foreach ($currentDbSchema[$table]['schema'] as $cf => $cfas)
-                {
-                    foreach ($cfas as $ci => $cfa)
-                    {
+                foreach ($currentDbSchema[$table]['schema'] as $cf => $cfas) {
+                    foreach ($cfas as $ci => $cfa) {
                         $checkedEngine = $cfa['ENGINE'];
                         $checkedCollation = $cfa['TABLE_COLLATION'];
 
@@ -747,73 +639,55 @@ class repairkit_MODULE
                     }
                 }
                 // Check the engine
-                if ($checkedEngine != $fieldArray['ENGINE'])
-                {
-                    if ($report)
-                    {
+                if ($checkedEngine != $fieldArray['ENGINE']) {
+                    if ($report) {
                         $this->dbInconsistenciesReport[$table][] =
                             "TABLE $table: " . "['ENGINE'] is " . $checkedEngine . "."
                             . " It should be: " . $fieldArray['ENGINE'] . BR;
-                    }
-                    else
-                    {
+                    } else {
                         $this->dbTableInconsistenciesFix['engine'][] = $table;
                     }
                 }
                 // Check the collation
-                if ($checkedCollation != $fieldArray['TABLE_COLLATION'])
-                {
-                    if ($report)
-                    {
+                if ($checkedCollation != $fieldArray['TABLE_COLLATION']) {
+                    if ($report) {
                         $this->dbInconsistenciesReport[$table][] =
                             "TABLE $table: " . "['TABLE_COLLATION'] is " . $checkedCollation . "."
                             . " It should be: " . $fieldArray['TABLE_COLLATION'] . BR;
-                    }
-                    else
-                    {
+                    } else {
                         $this->dbTableInconsistenciesFix['collation'][] = $table;
                     }
                 }
             }
         }
-        foreach ($tableArray['indices'] as $field => $fieldArrays)
-        {
-            foreach ($fieldArrays as $index => $fieldArray)
-            {
+        foreach ($tableArray['indices'] as $field => $fieldArrays) {
+            foreach ($fieldArrays as $index => $fieldArray) {
                 $foundMatchingKeyName = FALSE;
                 $subPart = NULL;
-                if ($fieldArray === FALSE)
-                { // i.e. no indices in table in correct database structure
+                if ($fieldArray === FALSE) { // i.e. no indices in table in correct database structure
                     $correctKeyName = $correctColumnName = $correctSubPart = htmlentities('<empty>');
-                }
-                else
-                {
+                } else {
                     $correctKeyName = $fieldArray['Key_name'] ? $fieldArray['Key_name'] : htmlentities('<empty>');
                     $correctColumnName = $fieldArray['Column_name'] ? $fieldArray['Column_name'] : htmlentities('<empty>');
                     $correctSubPart = $fieldArray['Sub_part'] ? $fieldArray['Sub_part'] : htmlentities('<empty>');
-                    if ($fieldArray['Sub_part'])
-                    {
+                    if ($fieldArray['Sub_part']) {
                         $subPart = $fieldArray['Sub_part'];
                     }
                 }
-                foreach ($currentDbSchema[$table]['indices'][$field] as $currentFieldArray)
-                {
+                foreach ($currentDbSchema[$table]['indices'][$field] as $currentFieldArray) {
                     // No index in the current db and no index in the schema is OK
-                    if ($currentFieldArray === FALSE && $fieldArray === FALSE)
-                    {
+                    if ($currentFieldArray === FALSE && $fieldArray === FALSE) {
                         break;
                     }
                     // When an index is missing in current database
-                    if ($currentFieldArray === FALSE && is_array($fieldArray))
-                    {
+                    if ($currentFieldArray === FALSE && is_array($fieldArray)) {
                         $currentKeyName = $currentColumnName = $currentSubPart = htmlentities('<empty>');
                         $foundMatchingKeyName = TRUE;
 
                         break;
                     }
                     // Supernumerary index in the current database
-                    if (is_array($currentFieldArray) && $fieldArray === FALSE)
-                    {
+                    if (is_array($currentFieldArray) && $fieldArray === FALSE) {
                         $currentKeyName = $currentFieldArray['Key_name'] ? $currentFieldArray['Key_name'] : htmlentities('<empty>');
                         $currentColumnName = $currentFieldArray['Column_name'] ? $currentFieldArray['Column_name'] : htmlentities('<empty>');
                         $currentSubPart = $currentFieldArray['Sub_part'] ? $currentFieldArray['Sub_part'] : htmlentities('<empty>');
@@ -822,8 +696,7 @@ class repairkit_MODULE
                         break;
                     }
                     // Index present with an inconsistent definition
-                    if ($currentFieldArray['Key_name'] == $fieldArray['Key_name'])
-                    {
+                    if ($currentFieldArray['Key_name'] == $fieldArray['Key_name']) {
                         $currentKeyName = $currentFieldArray['Key_name'] ? $currentFieldArray['Key_name'] : htmlentities('<empty>');
                         $currentColumnName = $currentFieldArray['Column_name'] ? $currentFieldArray['Column_name'] : htmlentities('<empty>');
                         $currentSubPart = $currentFieldArray['Sub_part'] ? $currentFieldArray['Sub_part'] : htmlentities('<empty>');
@@ -836,14 +709,11 @@ class repairkit_MODULE
                     $foundMatchingKeyName
                     && (($currentKeyName != $correctKeyName) || ($currentColumnName != $correctColumnName) || ($currentSubPart != $correctSubPart))
                 ) {
-                    if ($report)
-                    {
+                    if ($report) {
                         $this->dbInconsistenciesReport[$table][] =
                             "TABLE $table: INDEX mismatch. Key_name: $currentKeyName, Column_name: $currentColumnName, Sub_part: $currentSubPart
 							 should be: Key_name: $correctKeyName, Column_name: $correctColumnName, Sub_part: $correctSubPart." . BR;
-                    }
-                    else
-                    {
+                    } else {
                         $this->dbIndexInconsistenciesFix[$table][] =
                             ['Key_name' => $correctKeyName, 'Column_name' => $correctColumnName, 'Sub_part' => $subPart];
                     }
@@ -866,12 +736,9 @@ class repairkit_MODULE
         $minArray = $this->db->selectMin('user_register', 'userregisterTimestamp');
         $min = $minArray[0]['userregisterTimestamp'];
         $this->db->formatConditions(['userregisterTimestamp' => '0000-00-00 00:00:00']);
-        if ($min)
-        {
+        if ($min) {
             $this->db->updateTimestamp('user_register', ['userregisterTimestamp' => $this->db->tidyInput($min)]);
-        }
-        else
-        {
+        } else {
             $this->db->updateTimestamp('user_register', ['userregisterTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         // users
@@ -879,24 +746,18 @@ class repairkit_MODULE
         $minArray = $this->db->selectMin('users', 'usersTimestamp');
         $min = $minArray[0]['usersTimestamp'];
         $this->db->formatConditions(['usersTimestamp' => '0000-00-00 00:00:00']);
-        if ($min)
-        {
+        if ($min) {
             $this->db->updateTimestamp('users', ['usersTimestamp' => $this->db->tidyInput($min)]);
-        }
-        else
-        {
+        } else {
             $this->db->updateTimestamp('users', ['usersTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         $this->db->formatConditions($this->db->formatFields('usersNotifyTimestamp'));
         $minArray = $this->db->selectMin('users', 'usersNotifyTimestamp');
         $min = $minArray[0]['usersNotifyTimestamp'];
         $this->db->formatConditions(['usersNotifyTimestamp' => '0000-00-00 00:00:00']);
-        if ($min)
-        {
+        if ($min) {
             $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => $this->db->tidyInput($min)]);
-        }
-        else
-        {
+        } else {
             $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         // resource_timestamp
@@ -904,24 +765,18 @@ class repairkit_MODULE
         $minArray = $this->db->selectMin('resource_timestamp', 'resourcetimestampTimestampAdd');
         $min = $minArray[0]['resourcetimestampTimestampAdd'];
         $this->db->formatConditions(['resourcetimestampTimestampAdd' => '0000-00-00 00:00:00']);
-        if ($min)
-        {
+        if ($min) {
             $this->db->updateTimestamp('resource_timestamp', ['resourcetimestampTimestampAdd' => $this->db->tidyInput($min)]);
-        }
-        else
-        {
+        } else {
             $this->db->updateTimestamp('resource_timestamp', ['resourcetimestampTimestampAdd' => '']); // default is CURRENT_TIMESTAMP
         }
         $this->db->formatConditions($this->db->formatFields('resourcetimestampTimestamp'));
         $minArray = $this->db->selectMin('resource_timestamp', 'resourcetimestampTimestamp');
         $min = $minArray[0]['resourcetimestampTimestamp'];
         $this->db->formatConditions(['resourcetimestampTimestamp' => '0000-00-00 00:00:00']);
-        if ($min)
-        {
+        if ($min) {
             $this->db->updateTimestamp('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->tidyInput($min)]);
-        }
-        else
-        {
+        } else {
             $this->db->updateTimestamp('resource_timestamp', ['resourcetimestampTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         // resource_attachments
@@ -929,24 +784,18 @@ class repairkit_MODULE
         $minArray = $this->db->selectMin('resource_attachments', 'resourceattachmentsEmbargoUntil');
         $min = $minArray[0]['resourceattachmentsEmbargoUntil'];
         $this->db->formatConditions(['resourceattachmentsEmbargoUntil' => '0000-00-00 00:00:00']);
-        if ($min)
-        {
+        if ($min) {
             $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsEmbargoUntil' => $this->db->tidyInput($min)]);
-        }
-        else
-        {
+        } else {
             $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsEmbargoUntil' => '']); // default is CURRENT_TIMESTAMP
         }
         $this->db->formatConditions($this->db->formatFields('resourceattachmentsTimestamp'));
         $minArray = $this->db->selectMin('resource_attachments', 'resourceattachmentsTimestamp');
         $min = $minArray[0]['resourceattachmentsTimestamp'];
         $this->db->formatConditions(['resourceattachmentsTimestamp' => '0000-00-00 00:00:00']);
-        if ($min)
-        {
+        if ($min) {
             $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsTimestamp' => $this->db->tidyInput($min)]);
-        }
-        else
-        {
+        } else {
             $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         // news
@@ -954,12 +803,9 @@ class repairkit_MODULE
         $minArray = $this->db->selectMin('news', 'newsTimestamp');
         $min = $minArray[0]['newsTimestamp'];
         $this->db->formatConditions(['newsTimestamp' => '0000-00-00 00:00:00']);
-        if ($min)
-        {
+        if ($min) {
             $this->db->updateTimestamp('news', ['newsTimestamp' => $this->db->tidyInput($min)]);
-        }
-        else
-        {
+        } else {
             $this->db->updateTimestamp('news', ['newsTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         // resource_metadata
@@ -967,12 +813,9 @@ class repairkit_MODULE
         $minArray = $this->db->selectMin('resource_metadata', 'resourcemetadataTimestamp');
         $min = $minArray[0]['resourcemetadataTimestamp'];
         $this->db->formatConditions(['resourcemetadataTimestamp' => '0000-00-00 00:00:00']);
-        if ($min)
-        {
+        if ($min) {
             $this->db->updateTimestamp('resource_metadata', ['resourcemetadataTimestamp' => $this->db->tidyInput($min)]);
-        }
-        else
-        {
+        } else {
             $this->db->updateTimestamp('resource_metadata', ['resourcemetadataTimestamp' => '']);
         }
         $this->db->formatConditions(['resourcemetadataTimestampEdited' => '0000-00-00 00:00:00']);

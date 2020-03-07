@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -133,8 +135,7 @@ class BIBTEXPARSE
      */
     public function openBib($file)
     {
-        if (!is_file($file))
-        {
+        if (!is_file($file)) {
             die;
         }
         $this->fid = fopen($file, 'r');
@@ -147,12 +148,9 @@ class BIBTEXPARSE
      */
     public function loadBibtexString($bibtex_string)
     {
-        if (is_string($bibtex_string))
-        {
+        if (is_string($bibtex_string)) {
             $this->bibtexString = UTF8::mb_explode(LF, $bibtex_string);
-        }
-        else
-        {
+        } else {
             $this->bibtexString = $bibtex_string;
         }
         $this->parseFile = FALSE;
@@ -177,16 +175,13 @@ class BIBTEXPARSE
     /**
      * Get a non-empty line from the bib file or from the bibtexString
      *
-     * @return string|FALSE
+     * @return false|string
      */
     public function getLine()
     {
-        if ($this->parseFile)
-        {
-            if (!feof($this->fid))
-            {
-                do
-                {
+        if ($this->parseFile) {
+            if (!feof($this->fid)) {
+                do {
                     $line = trim(fgets($this->fid));
                 } while (!feof($this->fid) && !$line);
 
@@ -194,11 +189,8 @@ class BIBTEXPARSE
             }
 
             return FALSE;
-        }
-        else
-        {
-            do
-            {
+        } else {
+            do {
                 $line = trim($this->bibtexString[$this->currentLine]);
                 $this->currentLine++;
             } while ($this->currentLine < count($this->bibtexString) && !$line);
@@ -236,12 +228,9 @@ class BIBTEXPARSE
         // handle fields like another-field = {}
         $array = preg_split("/,\\s*([-_.:,a-zA-Z0-9]+)\\s*={1}\\s*/Uu", $seg, PREG_SPLIT_DELIM_CAPTURE);
         //$array = preg_split("/,\s*(\w+)\s*={1}\s*/Uu", $seg, PREG_SPLIT_DELIM_CAPTURE);
-        if (!array_key_exists(1, $array))
-        {
+        if (!array_key_exists(1, $array)) {
             return [$array[0], FALSE];
-        }
-        else
-        {
+        } else {
             return [$array[0], $array[1]];
         }
     }
@@ -257,26 +246,22 @@ class BIBTEXPARSE
         $lg = mb_strlen($oldString);
         $lastChar = mb_substr($oldString, $lg - 1, 1);
 
-        if ($lastChar == '}' || $lastChar == ')' || $lastChar == ',')
-        {
+        if ($lastChar == '}' || $lastChar == ')' || $lastChar == ',') {
             $oldString = mb_substr($oldString, 0, $lg - 1);
         }
         // $oldString = rtrim($oldString, "}),");
         $split = preg_split('/=/u', $oldString, 2);
         $string = $split[1];
-        while ($string)
-        {
+        while ($string) {
             list($entry, $string) = $this->fieldSplit($string);
             $values[] = $entry;
         }
-        foreach ($values as $value)
-        {
+        foreach ($values as $value) {
             $pos = mb_strpos($oldString, $value);
             $oldString = UTF8::mb_substr_replace($oldString, '', $pos, mb_strlen($value));
         }
         $rev = UTF8::mb_strrev(trim($oldString));
-        if (mb_substr($rev, 0, 1) != ',')
-        {
+        if (mb_substr($rev, 0, 1) != ',') {
             $oldString .= ',';
         }
         $keys = preg_split('/=,/u', $oldString);
@@ -284,17 +269,14 @@ class BIBTEXPARSE
         // I have absolutely no idea why this array_pop is required but it is.  Seems to always be
         // an empty key at the end after the split which causes problems if not removed.
         array_pop($keys);
-        foreach ($keys as $key)
-        {
+        foreach ($keys as $key) {
             $value = trim(array_shift($values));
             $rev = UTF8::mb_strrev($value);
             // remove any dangling ',' left on final field of entry
-            if (mb_substr($rev, 0, 1) == ',')
-            {
+            if (mb_substr($rev, 0, 1) == ',') {
                 $value = rtrim($value, ',');
             }
-            if (!$value)
-            {
+            if (!$value) {
                 continue;
             }
             // 21/08/2004 G.Gardey -> expand macro
@@ -309,8 +291,7 @@ class BIBTEXPARSE
         if ((($type == 'article') || ($type == 'inproceedings')) &&
             array_key_exists('volume', $this->entries[$this->count]) &&
             array_key_exists('issue', $this->entries[$this->count]) &&
-            !array_key_exists('number', $this->entries[$this->count]))
-        {
+            !array_key_exists('number', $this->entries[$this->count])) {
             $this->entries[$this->count]['number'] = $this->entries[$this->count]['issue'];
             unset($this->entries[$this->count]['issue']);
         }
@@ -327,8 +308,7 @@ class BIBTEXPARSE
         $matches = preg_split("/@(.*)[{(](.*),/Uu", $entry, 2, PREG_SPLIT_DELIM_CAPTURE);
         $this->entries[$this->count]['bibtexEntryType'] = mb_strtolower(trim($matches[1]));
         // sometimes a bibtex entry will have no citation key
-        if (preg_match("/=/u", $matches[2]))
-        { // this is a field
+        if (preg_match("/=/u", $matches[2])) { // this is a field
             $matches = preg_split("/@(.*)\\s*[{(](.*)/Uu", $entry, 2, PREG_SPLIT_DELIM_CAPTURE);
         }
         $this->entries[$this->count]['bibtexCitation'] = $matches[2];
@@ -342,29 +322,19 @@ class BIBTEXPARSE
     public function parseEntry($entry)
     {
         $lastLine = FALSE;
-        if (preg_match("/@(.*)([{(])/Uu", preg_quote($entry), $matches))
-        {
-            if (!array_key_exists(1, $matches))
-            {
+        if (preg_match("/@(.*)([{(])/Uu", preg_quote($entry), $matches)) {
+            if (!array_key_exists(1, $matches)) {
                 return $lastLine;
             }
-            if (preg_match("/string/ui", trim($matches[1])))
-            {
+            if (preg_match("/string/ui", trim($matches[1]))) {
                 $this->strings[] = $entry;
-            }
-            elseif (preg_match("/preamble/ui", trim($matches[1])))
-            {
+            } elseif (preg_match("/preamble/ui", trim($matches[1]))) {
                 $this->preamble[] = $entry;
-            }
-            elseif (preg_match("/comment/ui", $matches[1])); // MG (31/Jan/2006) -- ignore @comment
-            else
-            {
-                if ($this->fieldExtract)
-                {
+            } elseif (preg_match("/comment/ui", $matches[1])); // MG (31/Jan/2006) -- ignore @comment
+            else {
+                if ($this->fieldExtract) {
                     $this->fullSplit($entry);
-                }
-                else
-                {
+                } else {
                     $this->entries[$this->count] = $entry;
                 }
                 $this->count++;
@@ -385,13 +355,11 @@ class BIBTEXPARSE
     {
         $StrLen = mb_strlen($string);
 
-        if ($StrLen > 0)
-        {
+        if ($StrLen > 0) {
             $firstChar = mb_substr($string, 0, 1);
             $lastChar = mb_substr($string, $StrLen - 1, 1);
 
-            if ($firstChar == '"' || ($firstChar == '{' && $lastChar == '}'))
-            {
+            if ($firstChar == '"' || ($firstChar == '{' && $lastChar == '}')) {
                 $string = mb_substr($string, 1);
                 $string = mb_substr($string, 0, -1);
             }
@@ -425,24 +393,16 @@ class BIBTEXPARSE
         $valLen = mb_strlen($val);
 
         $openquote = $bracelevel = $i = $j = 0;
-        while ($i < $valLen)
-        {
+        while ($i < $valLen) {
             $s = mb_substr($val, $i, 1);
 
-            if ($s == '"')
-            {
+            if ($s == '"') {
                 $openquote = !$openquote;
-            }
-            elseif ($s == '{')
-            {
+            } elseif ($s == '{') {
                 $bracelevel++;
-            }
-            elseif ($s == '}')
-            {
+            } elseif ($s == '}') {
                 $bracelevel--;
-            }
-            elseif ($s == '#' && !$openquote && !$bracelevel)
-            {
+            } elseif ($s == '#' && !$openquote && !$bracelevel) {
                 $strings[] = mb_substr($val, $j, $i - $j);
                 $j = $i + 1;
             }
@@ -476,24 +436,17 @@ class BIBTEXPARSE
         $openquote = 0;
         $bracelevel = 0;
         $i = 0;
-        while ($i < $valLen && ($valLen - $i >= $DelimLen))
-        {
+        while ($i < $valLen && ($valLen - $i >= $DelimLen)) {
             $s = mb_substr($val, $i, $DelimLen);
             // a '"' found at brace level 0 defines a value such as "ss{\"o}ss"
-            if ($s == '"' && !$bracelevel)
-            {
+            if ($s == '"' && !$bracelevel) {
                 $openquote = !$openquote;
-            }
-            elseif ($s == $delimitBegin)
-            {
+            } elseif ($s == $delimitBegin) {
                 $bracelevel++;
-            }
-            elseif ($s == $delimitEnd)
-            {
+            } elseif ($s == $delimitEnd) {
                 $bracelevel--;
             }
-            if ($s == $delimitEnd && !$openquote && !$bracelevel)
-            {
+            if ($s == $delimitEnd && !$openquote && !$bracelevel) {
                 return $i;
             }
 
@@ -514,26 +467,19 @@ class BIBTEXPARSE
     public function removeDelimitersAndExpand($string, $inpreamble = FALSE)
     {
         // only expand the macro if flag set, if strings defined and not in preamble
-        if (!$this->expandMacro || empty($this->strings) || $inpreamble)
-        {
+        if (!$this->expandMacro || empty($this->strings) || $inpreamble) {
             $string = $this->removeDelimiters($string);
-        }
-        else
-        {
+        } else {
             $stringlist = $this->explodeString($string);
             $string = "";
-            foreach ($stringlist as $str)
-            {
+            foreach ($stringlist as $str) {
                 // trim the string since usually # is enclosed by spaces
                 $str = trim($str);
                 // replace the string if macro is already defined
                 // strtolower is used since macros are case insensitive
-                if (isset($this->strings[mb_strtolower($str)]))
-                {
+                if (isset($this->strings[mb_strtolower($str)])) {
                     $string .= $this->strings[mb_strtolower($str)];
-                }
-                else
-                {
+                } else {
                     $string .= $this->removeDelimiters(trim($str));
                 }
             }
@@ -555,28 +501,21 @@ class BIBTEXPARSE
         $ListDelim = ['(' => ')', '{' => '}'];
         $inside = $possibleEntryStart = FALSE;
         $entry = '';
-        while ($line = $this->getLine())
-        {
-            if ($possibleEntryStart)
-            {
+        while ($line = $this->getLine()) {
+            if ($possibleEntryStart) {
                 $line = $possibleEntryStart . $line;
             }
-            if (!$inside && mb_strstr($line, $EntryDelim))
-            {
+            if (!$inside && mb_strstr($line, $EntryDelim)) {
                 // throw all characters before the '@'
                 $line = mb_strstr($line, $EntryDelim);
 
                 $IsOpenDelimNotFinded = TRUE;
-                foreach ($ListDelim as $do => $dc)
-                {
+                foreach ($ListDelim as $do => $dc) {
                     $IsOpenDelimNotFinded &= !mb_strstr($line, $do);
                 }
-                if ($IsOpenDelimNotFinded)
-                {
+                if ($IsOpenDelimNotFinded) {
                     $possibleEntryStart = $line;
-                }
-                elseif (preg_match("/$EntryDelim.*([" . preg_quote(implode('', array_keys($ListDelim))) . "])/Uu", preg_quote($line), $matches))
-                {
+                } elseif (preg_match("/$EntryDelim.*([" . preg_quote(implode('', array_keys($ListDelim))) . "])/Uu", preg_quote($line), $matches)) {
                     $inside = TRUE;
 
                     $delimitBegin = $matches[1];
@@ -586,11 +525,9 @@ class BIBTEXPARSE
                 }
             }
 
-            if ($inside)
-            {
+            if ($inside) {
                 $entry .= ' ' . $line;
-                if ($j = $this->closingDelimiter($entry, $delimitBegin, $delimitEnd))
-                {
+                if ($j = $this->closingDelimiter($entry, $delimitBegin, $delimitEnd)) {
                     // all characters after the delimiter are thrown but the remaining
                     // characters must be kept since they may start the next entry !!!
                     $lastLine = mb_substr($entry, $j + 1);
@@ -599,12 +536,9 @@ class BIBTEXPARSE
                     $entry = preg_replace('/\s\s+/u', ' ', $entry);
                     $this->parseEntry($entry);
                     $entry = mb_strstr($lastLine, $EntryDelim);
-                    if ($entry)
-                    {
+                    if ($entry) {
                         $inside = TRUE;
-                    }
-                    else
-                    {
+                    } else {
                         $inside = FALSE;
                     }
                 }
@@ -618,25 +552,21 @@ class BIBTEXPARSE
      */
     public function returnArrays()
     {
-        foreach ($this->preamble as $value)
-        {
+        foreach ($this->preamble as $value) {
             preg_match("/.*?[{(](.*)/u", $value, $matches);
             $preamble = mb_substr($matches[1], 0, -1);
             $preambles['bibtexPreamble'] = trim($this->removeDelimitersAndExpand(trim($preamble), TRUE));
         }
-        if (isset($preambles))
-        {
+        if (isset($preambles)) {
             $this->preamble = $preambles;
         }
-        if ($this->fieldExtract)
-        {
+        if ($this->fieldExtract) {
             // Next lines must take into account strings defined by previously-defined strings
             $strings = $this->strings;
             // $this->strings is initialized with strings provided by user if they exists
             // it is supposed that there are no substitutions to be made in the user strings, i.e., no #
             $this->strings = isset($this->userStrings) ? $this->userStrings : [];
-            foreach ($strings as $value)
-            {
+            foreach ($strings as $value) {
                 // changed 21/08/2004 G. Gardey
                 // 23/08/2004 Mark G. account for comments on same line as @string - count delimiters in string value
                 $value = trim($value);
@@ -649,16 +579,12 @@ class BIBTEXPARSE
         // changed 21/08/2004 G. Gardey
         // 22/08/2004 Mark Grimshaw-Aagaard - stopped useless looping.
         // removeDelimit and expandMacro have NO effect if !$this->fieldExtract
-        if ($this->removeDelimit || $this->expandMacro && $this->fieldExtract)
-        {
-            for ($i = 0; $i < count($this->entries); $i++)
-            {
-                foreach ($this->entries[$i] as $key => $value)
-                {
+        if ($this->removeDelimit || $this->expandMacro && $this->fieldExtract) {
+            for ($i = 0; $i < count($this->entries); $i++) {
+                foreach ($this->entries[$i] as $key => $value) {
                     // 02/05/2005 G. Gardey don't expand macro for bibtexCitation
                     // and bibtexEntryType
-                    if ($key != 'bibtexCitation' && $key != 'bibtexEntryType')
-                    {
+                    if ($key != 'bibtexCitation' && $key != 'bibtexEntryType') {
                         $this->entries[$i][$key] = trim($this->removeDelimitersAndExpand($this->entries[$i][$key]));
                     }
                 }

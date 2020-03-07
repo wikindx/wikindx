@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -42,13 +44,10 @@ class TYPE
     public function grabAll($userBib = FALSE, $metadata = [])
     {
         $subQuery = FALSE;
-        if (is_array($metadata) && !empty($metadata))
-        {
+        if (is_array($metadata) && !empty($metadata)) {
             $unions = [];
-            foreach ($metadata as $mType)
-            {
-                if ($mType == 'quote')
-                {
+            foreach ($metadata as $mType) {
+                if ($mType == 'quote') {
                     $this->db->formatConditions(['resourcemetadataType' => 'q']);
                     $unions[] = $this->db->selectNoExecute(
                         'resource_metadata',
@@ -57,9 +56,7 @@ class TYPE
                         TRUE,
                         TRUE
                     );
-                }
-                elseif ($mType == 'quoteComment')
-                {
+                } elseif ($mType == 'quoteComment') {
                     $this->db->formatConditions(['resourcemetadataType' => 'q']);
                     $unions[] = $this->db->selectNoExecute(
                         'resource_metadata',
@@ -68,9 +65,16 @@ class TYPE
                         TRUE,
                         TRUE
                     );
-                }
-                elseif ($mType == 'paraphrase')
-                {
+                } elseif ($mType == 'paraphrase') {
+                    $this->db->formatConditions(['resourcemetadataType' => 'p']);
+                    $unions[] = $this->db->selectNoExecute(
+                        'resource_metadata',
+                        [['resourcemetadataResourceId' => 'id']],
+                        TRUE,
+                        TRUE,
+                        TRUE
+                    );
+                } elseif ($mType == 'paraphraseComment') {
                     $this->db->formatConditions(['resourcemetadataType' => 'p']);
                     $unions[] = $this->db->selectNoExecute(
                         'resource_metadata',
@@ -80,19 +84,7 @@ class TYPE
                         TRUE
                     );
                 }
-                elseif ($mType == 'paraphraseComment')
-                {
-                    $this->db->formatConditions(['resourcemetadataType' => 'p']);
-                    $unions[] = $this->db->selectNoExecute(
-                        'resource_metadata',
-                        [['resourcemetadataResourceId' => 'id']],
-                        TRUE,
-                        TRUE,
-                        TRUE
-                    );
-                }
-                if ($mType == 'musing')
-                {
+                if ($mType == 'musing') {
                     $this->db->formatConditions(['resourcemetadataType' => 'm']);
                     $unions[] = $this->db->selectNoExecute(
                         'resource_metadata',
@@ -103,47 +95,34 @@ class TYPE
                     );
                 }
             }
-            if (!empty($unions))
-            {
+            if (!empty($unions)) {
                 $subQuery = $this->db->subQuery($this->db->union($unions), 't');
             }
         }
-        if ($userBib)
-        {
-            if ($subQuery)
-            {
+        if ($userBib) {
+            if ($subQuery) {
                 $this->commonBib->userBibCondition('id');
-            }
-            else
-            {
+            } else {
                 $this->commonBib->userBibCondition('resourceId');
             }
         }
         $this->db->groupBy('resourceType');
         $this->db->orderBy('resourceType');
-        if ($subQuery)
-        {
+        if ($subQuery) {
             $this->db->leftJoin('resource', 'resourceId', 'id');
             $recordset = $this->db->selectFromSubQuery(FALSE, 'resourceType', $subQuery);
-        }
-        else
-        {
+        } else {
             $recordset = $this->db->select('resource', 'resourceType');
         }
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (!$row['resourceType'])
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (!$row['resourceType']) {
                 continue;
             }
             $types[$row['resourceType']] = $this->messages->text("resourceType", $row['resourceType']);
         }
-        if (isset($types))
-        {
+        if (isset($types)) {
             return $types;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }

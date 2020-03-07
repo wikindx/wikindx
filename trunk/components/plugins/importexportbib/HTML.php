@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -47,8 +49,7 @@ class HTMLEXPORT
      */
     public function exportOptions()
     {
-        if (!$this->session->getVar("sql_ListStmt"))
-        {
+        if (!$this->session->getVar("sql_ListStmt")) {
             $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
         }
         $pString = FORM\formHeader("importexportbib_exportHtml");
@@ -66,45 +67,35 @@ class HTMLEXPORT
     public function processExport()
     {
         $sql = $this->common->getSQL();
-        if (!$sql)
-        {
+        if (!$sql) {
             $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
         }
-        if (array_key_exists('exportHyperlink', $this->vars))
-        {
+        if (array_key_exists('exportHyperlink', $this->vars)) {
             global $_SERVER;
             $link = WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'] . "?action=resource_RESOURCEVIEW_CORE&id=";
             $this->session->setVar("exportHyperlink", TRUE);
             $wikindxTitle = stripslashes(WIKINDX_TITLE);
-        }
-        else
-        {
+        } else {
             $link = $wikindxTitle = FALSE;
             $this->session->delVar("exportHyperlink");
         }
-        if (!$this->common->openFile(FALSE, '.html'))
-        {
+        if (!$this->common->openFile(FALSE, '.html')) {
             $this->failure($this->errors->text("file", "write", ": " . $this->common->fileName));
         }
-        if (!$this->htmlHeader())
-        {
+        if (!$this->htmlHeader()) {
             $this->failure($this->errors->text("file", "write", ": " . $this->common->fileName));
         }
         $sqlArray = unserialize(base64_decode($sql));
-        foreach ($sqlArray as $sql)
-        {
+        foreach ($sqlArray as $sql) {
             $recordset = $this->db->query($sql);
-            if (!$this->getData($recordset, $wikindxTitle, $link))
-            {
+            if (!$this->getData($recordset, $wikindxTitle, $link)) {
                 $this->failure($this->errors->text("file", "write", ": " . $this->common->fileName));
             }
         }
-        if (!$this->htmlFooter())
-        {
+        if (!$this->htmlFooter()) {
             $this->failure($this->errors->text("file", "write", ": " . $this->common->fileName));
         }
-        if ($this->common->fullFileName)
-        {
+        if ($this->common->fullFileName) {
             fclose($this->common->fp);
         }
         $pString = HTML\p($this->pluginmessages->text('exported') . ": " . $this->common->fileName, 'success');
@@ -119,12 +110,10 @@ class HTMLEXPORT
     private function getData($recordset, $wikindxTitle, $link)
     {
         $rows = [];
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $rows[$row['resourceId']] = $row;
         }
-        if (!$this->common->formatResources($rows, 'html', $wikindxTitle, $link, TRUE))
-        {
+        if (!$this->common->formatResources($rows, 'html', $wikindxTitle, $link, TRUE)) {
             return FALSE;
         }
         unset($rows);

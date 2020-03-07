@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -120,15 +122,13 @@ class RTFEXPORT
     public function process()
     {
         $this->input = $this->checkInput();
-        if (!is_array($this->input))
-        {
+        if (!is_array($this->input)) {
             $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
         }
         //$this->rtf->fontBlocks = array();
         $sql = $this->common->getSQL();
 
-        if (!$sql)
-        {
+        if (!$sql) {
             $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
         }
 
@@ -139,22 +139,19 @@ class RTFEXPORT
         $this->bodyTempFile = $this->openTempFile();
 
         $sqlArray = unserialize(base64_decode($sql));
-        foreach ($sqlArray as $sql)
-        {
+        foreach ($sqlArray as $sql) {
             $recordset = $this->db->query($sql);
             $this->getData($recordset);
         }
 
-        if (!$this->common->openFile(FALSE, '.rtf', 'a'))
-        {
+        if (!$this->common->openFile(FALSE, '.rtf', 'a')) {
             $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
         }
 
         // Headers are built after body because we have to extract
         // color and font declarations before from the body
         $header = $this->rtfHeader();
-        if (!fwrite($this->common->fp, $header))
-        {
+        if (!fwrite($this->common->fp, $header)) {
             $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
         }
 
@@ -162,13 +159,10 @@ class RTFEXPORT
         // read it by chunk and write it to the RTF file
         rewind($this->bodyTempFile);
 
-        do
-        {
+        do {
             $data = fgets($this->bodyTempFile, 1024);
-            if ($data !== FALSE)
-            {
-                if (!fwrite($this->common->fp, $data))
-                {
+            if ($data !== FALSE) {
+                if (!fwrite($this->common->fp, $data)) {
                     $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
                 }
             }
@@ -177,8 +171,7 @@ class RTFEXPORT
         $this->closeTempFile($this->bodyTempFile);
 
         $footer = $this->rtfFooter();
-        if (!fwrite($this->common->fp, $footer))
-        {
+        if (!fwrite($this->common->fp, $footer)) {
             $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
         }
 
@@ -195,99 +188,79 @@ class RTFEXPORT
      */
     private function getData($recordset)
     {
-        if (array_key_exists('link', $this->input))
-        {
+        if (array_key_exists('link', $this->input)) {
             global $_SERVER;
             $link = WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'] . "?action=resource_RESOURCEVIEW_CORE&id=";
             $this->session->setVar("exportRtf_link", TRUE);
             $wikindxTitle = stripslashes(WIKINDX_TITLE);
-        }
-        else
-        {
+        } else {
             $link = FALSE;
             $this->session->delVar("exportRtf_link");
         }
         $resourceIds = $metadataIds = [];
         $mainArray = $refArray = $abstractArray = $notesArray = [];
         $somethingToPrint = FALSE;
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (array_search($row['resourceId'], $resourceIds) === FALSE)
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (array_search($row['resourceId'], $resourceIds) === FALSE) {
                 $resourceIds[] = $row['resourceId'];
                 $mainArray[$row['resourceId']] = ''; // needed as placeholder to add other items too if reference itself is not being exported
-            }
-            else
-            {
+            } else {
                 continue;
             }
             $returnAfterBib = FALSE;
             $refArray[$row['resourceId']] = '';
-            if (array_key_exists('metadataFullCite', $this->input))
-            {
+            if (array_key_exists('metadataFullCite', $this->input)) {
                 $refArray[$row['resourceId']] .= $this->getFullCite($row['resourceId'], $row['resourceType']);
             }
-            if (array_key_exists('bibliography', $this->input))
-            {
+            if (array_key_exists('bibliography', $this->input)) {
                 $refArray[$row['resourceId']] .= $this->makeBlock('bibliography');
                 $refArray[$row['resourceId']] .= $this->rtfParagraphBlock('bibliography');
                 $ref = $this->textFormat($this->bibStyle->process($row), FALSE);
                 $refArray[$row['resourceId']] .= $this->paragraph($ref);
-                if (array_key_exists('bibliographyIsbn', $this->input) && ($row['resourceIsbn']))
-                {
+                if (array_key_exists('bibliographyIsbn', $this->input) && ($row['resourceIsbn'])) {
                     $refArray[$row['resourceId']] .= '  [' . $row['resourceIsbn'] . ']';
                 }
-                if ($link)
-                {
+                if ($link) {
                     $hyperlink = $link . $row['resourceId'];
                     $refArray[$row['resourceId']] .= '{\field{\fldinst {HYPERLINK "' . $hyperlink . '"}}{\fldrslt {\cs1\ul\cf2 [' . $wikindxTitle . ']}}}';
                 }
                 $refArray[$row['resourceId']] .= '}' . LF;
-                for ($i = 0; $i < $this->rtf->fontBlocks['bibliography']['crFollowing']; $i++)
-                {
+                for ($i = 0; $i < $this->rtf->fontBlocks['bibliography']['crFollowing']; $i++) {
                     $refArray[$row['resourceId']] .= $this->makeParagraph('bibliography') . LF;
                 }
                 $returnAfterBib = TRUE;
                 $somethingToPrint = TRUE;
             }
-            if (array_key_exists('abstract', $this->input) && $row['resourcetextAbstract'])
-            {
+            if (array_key_exists('abstract', $this->input) && $row['resourcetextAbstract']) {
                 $abstractArray[$row['resourceId']] = $this->makeBlock('abstract');
-                if ($returnAfterBib)
-                {
+                if ($returnAfterBib) {
                     $abstractArray[$row['resourceId']] .= $this->makeParagraph('bibliography') . LF;
                     $returnAfterBib = FALSE;
                 }
-                if (trim($this->input['abstractTag']))
-                {
+                if (trim($this->input['abstractTag'])) {
                     $abstractArray[$row['resourceId']] .= $this->rtfParagraphBlock('abstract');
                     $abstractArray[$row['resourceId']] .= trim($this->input['abstractTag']) . '\par }' . LF;
                 }
                 $abstractArray[$row['resourceId']] .= $this->rtfParagraphBlock('abstract');
                 $abstractArray[$row['resourceId']] .= $this->textFormat(stripslashes($row['resourcetextAbstract']), 'abstract') . '}';
-                for ($i = 0; $i < $this->rtf->fontBlocks['abstract']['crFollowing']; $i++)
-                {
+                for ($i = 0; $i < $this->rtf->fontBlocks['abstract']['crFollowing']; $i++) {
                     $abstractArray[$row['resourceId']] .= $this->makeParagraph('abstract') . LF;
                 }
                 $somethingToPrint = TRUE;
             }
-            if (array_key_exists('notes', $this->input) && $row['resourcetextNote'])
-            {
+            if (array_key_exists('notes', $this->input) && $row['resourcetextNote']) {
                 $notesArray[$row['resourceId']] = $this->makeBlock('notes');
-                if ($returnAfterBib)
-                {
+                if ($returnAfterBib) {
                     $notesArray[$row['resourceId']] .= $this->makeParagraph('bibliography') . LF;
                     $returnAfterBib = FALSE;
                 }
-                if (trim($this->input['notesTag']))
-                {
+                if (trim($this->input['notesTag'])) {
                     $notesArray[$row['resourceId']] .= $this->rtfParagraphBlock('notes');
                     $notesArray[$row['resourceId']] .= trim($this->input['notesTag']) . '\par }' . LF;
                 }
                 $notesArray[$row['resourceId']] .= $this->rtfParagraphBlock('notes');
                 $notesArray[$row['resourceId']] .= $this->textFormat(stripslashes($row['resourcetextNote']), 'notes') . '}';
-                for ($i = 0; $i < $this->rtf->fontBlocks['notes']['crFollowing']; $i++)
-                {
+                for ($i = 0; $i < $this->rtf->fontBlocks['notes']['crFollowing']; $i++) {
                     $notesArray[$row['resourceId']] .= $this->makeParagraph('notes') . LF;
                 }
                 $somethingToPrint = TRUE;
@@ -295,24 +268,20 @@ class RTFEXPORT
         }
         // resource keywords -- only printed if reference itself is printed
         $keywordArray = [];
-        if (array_key_exists('bibliography', $this->input) && array_key_exists('bibliographyKeywords', $this->input))
-        {
+        if (array_key_exists('bibliography', $this->input) && array_key_exists('bibliographyKeywords', $this->input)) {
             $this->db->formatConditionsOneField($resourceIds, 'resourcekeywordResourceId');
             $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
             $this->db->orderBy('keywordKeyword');
             $resultset = $this->db->select('resource_keyword', ['keywordKeyword', 'resourcekeywordResourceId']);
-            while ($row = $this->db->fetchRow($resultset))
-            {
+            while ($row = $this->db->fetchRow($resultset)) {
                 $keywordArray[$row['resourcekeywordResourceId']][] = stripslashes($row['keywordKeyword']);
             }
             $somethingToPrint = TRUE;
         }
         // Assemble main components before adding any metadata
-        foreach ($mainArray as $id => $null)
-        {
+        foreach ($mainArray as $id => $null) {
             $keywords = '';
-            if (array_key_exists($id, $keywordArray))
-            {
+            if (array_key_exists($id, $keywordArray)) {
                 $keywords = $this->makeParagraph('bibliography') . LF;
                 $keywords .= $this->makeBlock('bibliography');
                 $keywords .= $this->rtfParagraphBlock('bibliography');
@@ -331,19 +300,15 @@ class RTFEXPORT
         // metadata
         if (array_key_exists('musings', $this->input) ||
             array_key_exists('quotes', $this->input) ||
-            array_key_exists('paraphrases', $this->input))
-        {
-            if (array_key_exists('musings', $this->input))
-            {
+            array_key_exists('paraphrases', $this->input)) {
+            if (array_key_exists('musings', $this->input)) {
                 $metaArray[] = 'm';
                 $this->setViewConditions();
             }
-            if (array_key_exists('quotes', $this->input))
-            {
+            if (array_key_exists('quotes', $this->input)) {
                 $metaArray[] = 'q';
             }
-            if (array_key_exists('paraphrases', $this->input))
-            {
+            if (array_key_exists('paraphrases', $this->input)) {
                 $metaArray[] = 'p';
             }
             $this->db->formatConditionsOneField($resourceIds, 'resourcemetadataResourceId');
@@ -354,51 +319,35 @@ class RTFEXPORT
                 'resourcemetadataChapter', 'resourcemetadataPrivate', 'resourcemetadataAddUserId', 'resourcemetadataType', ]);
             $numElements = 0;
             $musings = $quotes = $paraphrases = $quotesMetaIds = $paraphrasesMetaIds = [];
-            while ($row = $this->db->fetchRow($recordset))
-            {
-                if (array_search($row['resourcemetadataId'], $metadataIds) === FALSE)
-                {
+            while ($row = $this->db->fetchRow($recordset)) {
+                if (array_search($row['resourcemetadataId'], $metadataIds) === FALSE) {
                     $metadataIds[] = $row['resourcemetadataId'];
-                }
-                else
-                {
+                } else {
                     continue;
                 }
                 $metaString = '';
-                if ($row['resourcemetadataType'] == 'm')
-                {
+                if ($row['resourcemetadataType'] == 'm') {
                     $metaType = 'musings';
-                }
-                elseif ($row['resourcemetadataType'] == 'q')
-                {
+                } elseif ($row['resourcemetadataType'] == 'q') {
                     $metaType = 'quotes';
-                }
-                elseif ($row['resourcemetadataType'] == 'p')
-                {
+                } elseif ($row['resourcemetadataType'] == 'p') {
                     $metaType = 'paraphrases';
                 }
                 $cite = $this->getCiteDetails($row);
-                if ($numElements)
-                {
-                    for ($i = 0; $i < $this->rtf->fontBlocks[$metaType]['crBetween']; $i++)
-                    {
+                if ($numElements) {
+                    for ($i = 0; $i < $this->rtf->fontBlocks[$metaType]['crBetween']; $i++) {
                         $metaString .= $this->makeParagraph($metaType) . LF;
                     }
                 }
                 $metaString .= $this->rtfParagraphBlock($metaType);
                 $metaString .= $cite . $this->textFormat(stripslashes($row['resourcemetadataText'])) . '\par }';
-                if ($row['resourcemetadataType'] == 'm')
-                {
+                if ($row['resourcemetadataType'] == 'm') {
                     $musings[$row['resourcemetadataResourceId']][] = $metaString;
-                }
-                elseif ($row['resourcemetadataType'] == 'q')
-                {
+                } elseif ($row['resourcemetadataType'] == 'q') {
                     $quotes[$row['resourcemetadataResourceId']][$row['resourcemetadataId']] = $metaString;
                     // matches metadataId to resourceId -- used to match metadata comments
                     $quotesMetaIds[$row['resourcemetadataId']] = $row['resourcemetadataId'];
-                }
-                elseif ($row['resourcemetadataType'] == 'p')
-                {
+                } elseif ($row['resourcemetadataType'] == 'p') {
                     $paraphrases[$row['resourcemetadataResourceId']][$row['resourcemetadataId']] = $metaString;
                     // matches metadataId to resourceId -- used to match metadata comments
                     $paraphrasesMetaIds[$row['resourcemetadataId']] = $row['resourcemetadataId'];
@@ -407,122 +356,95 @@ class RTFEXPORT
             }
             // metadata comments
             if ((array_key_exists('quotes', $this->input) || array_key_exists('paraphrases', $this->input)) &&
-                (array_key_exists('paraphrasesComments', $this->input) || array_key_exists('paraphrasesComments', $this->input)))
-            {
+                (array_key_exists('paraphrasesComments', $this->input) || array_key_exists('paraphrasesComments', $this->input))) {
                 $commentsArray = [];
                 $this->setViewConditions();
-                if (!empty($metadataIds))
-                {
+                if (!empty($metadataIds)) {
                     $this->db->formatConditionsOneField($metadataIds, 'resourcemetadataMetadataId');
                 }
                 $commentsArray = $this->getComments();
             }
-            if (!empty($quotes))
-            {
+            if (!empty($quotes)) {
                 $metaString = $this->makeBlock('quotes');
-                if ($returnAfterBib)
-                {
+                if ($returnAfterBib) {
                     $metaString .= $this->makeParagraph('bibliography') . LF;
                     $returnAfterBib = FALSE;
                 }
-                if (trim($this->input['quotesTag']))
-                {
+                if (trim($this->input['quotesTag'])) {
                     $metaString .= $this->rtfParagraphBlock('quotes');
                     $metaString .= trim($this->input['quotesTag']) . '\par }' . LF;
                 }
                 $quotesCopy = $quotes;
-                foreach ($quotesCopy as $resourceId => $array)
-                {
-                    foreach ($array as $metaId => $rawText)
-                    {
-                        if (array_key_exists($quotesMetaIds[$metaId], $commentsArray))
-                        {
+                foreach ($quotesCopy as $resourceId => $array) {
+                    foreach ($array as $metaId => $rawText) {
+                        if (array_key_exists($quotesMetaIds[$metaId], $commentsArray)) {
                             $quotes[$resourceId][$metaId] .= implode('', $commentsArray[$metaId]);
                         }
                     }
                 }
-                foreach ($quotes as $id => $text)
-                {
+                foreach ($quotes as $id => $text) {
                     $mainArray[$id] .= $metaString . implode('', $text);
-                    for ($i = 0; $i < $this->rtf->fontBlocks['quotes']['crFollowing']; $i++)
-                    {
+                    for ($i = 0; $i < $this->rtf->fontBlocks['quotes']['crFollowing']; $i++) {
                         $mainArray[$id] .= $this->makeParagraph('quotes') . LF;
                     }
                 }
                 $somethingToPrint = TRUE;
             }
-            if (!empty($paraphrases))
-            {
+            if (!empty($paraphrases)) {
                 $metaString = $this->makeBlock('paraphrases');
-                if ($returnAfterBib)
-                {
+                if ($returnAfterBib) {
                     $metaString .= $this->makeParagraph('bibliography') . LF;
                     $returnAfterBib = FALSE;
                 }
-                if (trim($this->input['paraphrasesTag']))
-                {
+                if (trim($this->input['paraphrasesTag'])) {
                     $metaString .= $this->rtfParagraphBlock('paraphrases');
                     $metaString .= trim($this->input['paraphrasesTag']) . '\par }' . LF;
                 }
                 $paraphrasesCopy = $paraphrases;
-                foreach ($paraphrasesCopy as $resourceId => $array)
-                {
-                    foreach ($array as $metaId => $rawText)
-                    {
-                        if (array_key_exists($paraphrasesMetaIds[$metaId], $commentsArray))
-                        {
+                foreach ($paraphrasesCopy as $resourceId => $array) {
+                    foreach ($array as $metaId => $rawText) {
+                        if (array_key_exists($paraphrasesMetaIds[$metaId], $commentsArray)) {
                             $paraphrases[$resourceId][$metaId] .= implode('', $commentsArray[$metaId]);
                         }
                     }
                 }
-                foreach ($paraphrases as $id => $text)
-                {
+                foreach ($paraphrases as $id => $text) {
                     $mainArray[$id] .= $metaString . implode('', $text);
-                    for ($i = 0; $i < $this->rtf->fontBlocks['paraphrases']['crFollowing']; $i++)
-                    {
+                    for ($i = 0; $i < $this->rtf->fontBlocks['paraphrases']['crFollowing']; $i++) {
                         $mainArray[$id] .= $this->makeParagraph('paraphrases') . LF;
                     }
                 }
                 $somethingToPrint = TRUE;
             }
-            if (!empty($musings))
-            {
+            if (!empty($musings)) {
                 $metaString = $this->makeBlock('musings');
-                if ($returnAfterBib)
-                {
+                if ($returnAfterBib) {
                     $metaString .= $this->makeParagraph('bibliography') . LF;
                     $returnAfterBib = FALSE;
                 }
-                if (trim($this->input['musingsTag']))
-                {
+                if (trim($this->input['musingsTag'])) {
                     $metaString .= $this->rtfParagraphBlock('musings');
                     $metaString .= trim($this->input['musingsTag']) . '\par }' . LF;
                 }
-                foreach ($musings as $id => $text)
-                {
+                foreach ($musings as $id => $text) {
                     $mainArray[$id] .= $metaString . implode('', $text);
-                    for ($i = 0; $i < $this->rtf->fontBlocks['musings']['crFollowing']; $i++)
-                    {
+                    for ($i = 0; $i < $this->rtf->fontBlocks['musings']['crFollowing']; $i++) {
                         $mainArray[$id] .= $this->makeParagraph('musings') . LF;
                     }
                 }
                 $somethingToPrint = TRUE;
             }
         }
-        if ($somethingToPrint)
-        {
-            foreach ($mainArray as $text)
-            {
+        if ($somethingToPrint) {
+            foreach ($mainArray as $text) {
                 $fullText = $this->rtf->utf8_2_rtfansicpg1252($this->removeSlashes($text));
                 // Do divider
-                if (array_key_exists('divider', $this->input) && trim($this->input['divider']))
-                {
+                if (array_key_exists('divider', $this->input) && trim($this->input['divider'])) {
                     $fullText .= $this->makeBlock('divider');
                     $fullText .= $this->rtfParagraphBlock('divider');
                     $fullText .= trim($this->input['divider']) . '\par }' . LF;
                 }
-                for ($i = 0; $i < $this->dividerCR[$this->input['dividerCR']]; $i++)
-                {
+                for ($i = 0; $i < $this->dividerCR[$this->input['dividerCR']]; $i++) {
                     $fullText .= $this->makeParagraph('divider') . LF;
                 }
                 // Cut the string in smaller pieces to isolate hexfile name from other content
@@ -530,22 +452,18 @@ class RTFEXPORT
 
                 // Write the ressource in the tempfile by chunk
                 $k = 0;
-                for ($k = 0; $k < count($tString); $k++)
-                {
+                for ($k = 0; $k < count($tString); $k++) {
                     $c = $tString[$k];
 
                     // Is an image: replace hexfile names by the content of these files
-                    if (\UTILS\matchPrefix($c, '##' . WIKINDX_URL_CACHE_FILES . '/hex'))
-                    {
+                    if (\UTILS\matchPrefix($c, '##' . WIKINDX_URL_CACHE_FILES . '/hex')) {
                         $c = str_replace('#', '', $c);
                         $this->writeImageRTF($this->bodyTempFile, str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $c));
                         @unlink($c);
                     }
                     // Not an image
-                    else
-                    {
-                        if (!fwrite($this->bodyTempFile, $c))
-                        {
+                    else {
+                        if (!fwrite($this->bodyTempFile, $c)) {
                             $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
                         }
                     }
@@ -563,19 +481,14 @@ class RTFEXPORT
     {
         $BUFFER_SIZE = 1024;
 
-        if (file_exists($imageFileName))
-        {
+        if (file_exists($imageFileName)) {
             $fdImage = fopen($imageFileName, 'rb');
 
-            if ($fdImage !== FALSE)
-            {
-                do
-                {
+            if ($fdImage !== FALSE) {
+                do {
                     $data = fgets($fdImage, $BUFFER_SIZE);
-                    if ($data !== FALSE)
-                    {
-                        if (!fwrite($fdOutputFile, $data))
-                        {
+                    if ($data !== FALSE) {
+                        if (!fwrite($fdOutputFile, $data)) {
                             $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
                         }
                     }
@@ -583,11 +496,8 @@ class RTFEXPORT
 
                 fclose($fdImage);
             }
-        }
-        else
-        {
-            if (!fwrite($fdOutputFile, $imageFileName))
-            {
+        } else {
+            if (!fwrite($fdOutputFile, $imageFileName)) {
                 $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
             }
         }
@@ -598,12 +508,9 @@ class RTFEXPORT
     private function setViewConditions()
     {
         $userId = $this->session->getVar("setup_UserId");
-        if ($this->input['metadata'])
-        { // export only this users quote/paraphrase comments and musings
+        if ($this->input['metadata']) { // export only this users quote/paraphrase comments and musings
             $this->db->formatConditions(['resourcemetadataAddUserId' => $userId]);
-        }
-        else
-        {
+        } else {
             $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
             $this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .
                 $this->db->formatFields('resourcemetadataPrivate'));
@@ -631,44 +538,35 @@ class RTFEXPORT
     private function getCiteDetails($rowT)
     {
         $citeArray = [];
-        if (array_key_exists('metadataFullCite', $this->input) && $this->fullCite)
-        {
+        if (array_key_exists('metadataFullCite', $this->input) && $this->fullCite) {
             $citeArray[] = $this->fullCite;
         }
         $page_start = $rowT['resourcemetadataPageStart'] ? "p." . $rowT['resourcemetadataPageStart'] : FALSE;
         $page_end = $rowT['resourcemetadataPageEnd'] ? "-" . $rowT['resourcemetadataPageEnd'] : FALSE;
-        if ($page_start && $page_end)
-        {
+        if ($page_start && $page_end) {
             $page_start = 'p' . $page_start;
         }
-        if ($page_start)
-        {
+        if ($page_start) {
             $citeArray[] = "$page_start$page_end";
         }
         $paragraph = $rowT['resourcemetadataParagraph'] ?
                 $this->coremessages->text("resources", "paragraph") . ' ' . $rowT['resourcemetadataParagraph'] : FALSE;
-        if ($paragraph)
-        {
+        if ($paragraph) {
             $citeArray[] = "$paragraph";
         }
         $chapter = $rowT['resourcemetadataChapter'] ?
                 $this->coremessages->text("resources", "chapter") . ' ' . stripslashes($rowT['resourcemetadataChapter']) : FALSE;
-        if ($chapter)
-        {
+        if ($chapter) {
             $citeArray[] = "$chapter";
         }
         $section = $rowT['resourcemetadataSection'] ?
                 $this->coremessages->text("resources", "section") . ' ' . stripslashes($rowT['resourcemetadataSection']) : FALSE;
-        if ($section)
-        {
+        if ($section) {
             $citeArray[] = "$section";
         }
-        if (empty($citeArray))
-        {
+        if (empty($citeArray)) {
             $cite = '-->  '; // resetting
-        }
-        else
-        {
+        } else {
             $cite = '-->  ' . implode(', ', $citeArray) . ':  ';
         }
 
@@ -686,8 +584,7 @@ class RTFEXPORT
         $this->db->orderBy('resourcemetadataTimestamp');
         $recordset = $this->db->select('resource_metadata', ['resourcemetadataText', 'resourcemetadataTimestamp',
             'resourcemetadataAddUserId', 'resourcemetadataPrivate', 'resourcemetadataMetadataId', 'resourcemetadataId', 'resourcemetadataType', ]);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $comments[$row['resourcemetadataMetadataId']][] = $this->formatComments(
                 $row['resourcemetadataType'],
                 $row['resourcemetadataAddUserId'],
@@ -711,14 +608,10 @@ class RTFEXPORT
         $pString = '';
         $tag = $type == 'qc' ? 'quotesCommentsTag' : 'paraphrasesCommentsTag';
         $user = $this->user->displayUserAddEditPlain($addUserCommentId) . LF;
-        if (trim($this->input[$tag]))
-        {
-            if ($type == 'qc')
-            {
+        if (trim($this->input[$tag])) {
+            if ($type == 'qc') {
                 $type = 'quotes';
-            }
-            else
-            {
+            } else {
                 $type = 'paraphrases';
             }
             $pString .= LF . $this->rtfParagraphBlock($type);
@@ -817,8 +710,7 @@ class RTFEXPORT
     {
         $colourTable = '{\colortbl;';
 
-        foreach ($this->rtf->colourArray as $colour)
-        {
+        foreach ($this->rtf->colourArray as $colour) {
             $colourTable .= $colour . ';';
         }
 
@@ -837,8 +729,7 @@ class RTFEXPORT
     {
         $pString = '{';
         $pString .= $this->rtf->fontBlocks[$type]['fontBlock'] . $this->rtf->fontBlocks[$type]['fontSize'];
-        if (array_key_exists('textFormat', $this->rtf->fontBlocks[$type]))
-        {
+        if (array_key_exists('textFormat', $this->rtf->fontBlocks[$type])) {
             $DefEmphase = [
                 'Italics' => '\i',
                 'Underline' => '\ul',
@@ -858,8 +749,7 @@ class RTFEXPORT
         //		$sqlSelectReplace = "SELECT ";
         //		$sqlJoinReplace = "FROM " . $this->db->formatTable('WKX_resource');
 
-        if (array_key_exists("divider", $this->input))
-        {
+        if (array_key_exists("divider", $this->input)) {
             $this->rtfFontBlock(
                 "divider",
                 $this->fonts[$this->input['dividerFont']],
@@ -882,8 +772,7 @@ class RTFEXPORT
             $this->ubiBib[$this->input['bibliographyTextFormat']]
         );
         //		}
-        if (array_key_exists("abstract", $this->input))
-        {
+        if (array_key_exists("abstract", $this->input)) {
             $this->rtfFontBlock(
                 "abstract",
                 $this->fonts[$this->input['abstractFont']],
@@ -895,8 +784,7 @@ class RTFEXPORT
                 $this->ubi[$this->input['abstractTextFormat']]
             );
         }
-        if (array_key_exists("notes", $this->input))
-        {
+        if (array_key_exists("notes", $this->input)) {
             $this->rtfFontBlock(
                 "notes",
                 $this->fonts[$this->input['notesFont']],
@@ -908,8 +796,7 @@ class RTFEXPORT
                 $this->ubi[$this->input['notesTextFormat']]
             );
         }
-        if (array_key_exists("quotes", $this->input))
-        {
+        if (array_key_exists("quotes", $this->input)) {
             $this->rtfFontBlock(
                 "quotes",
                 $this->fonts[$this->input['quotesFont']],
@@ -921,8 +808,7 @@ class RTFEXPORT
                 $this->ubi[$this->input['quotesTextFormat']]
             );
         }
-        if (array_key_exists("paraphrases", $this->input))
-        {
+        if (array_key_exists("paraphrases", $this->input)) {
             $this->rtfFontBlock(
                 "paraphrases",
                 $this->fonts[$this->input['paraphrasesFont']],
@@ -934,8 +820,7 @@ class RTFEXPORT
                 $this->ubi[$this->input['paraphrasesTextFormat']]
             );
         }
-        if (array_key_exists("musings", $this->input))
-        {
+        if (array_key_exists("musings", $this->input)) {
             $this->rtfFontBlock(
                 "musings",
                 $this->fonts[$this->input['musingsFont']],
@@ -976,12 +861,10 @@ class RTFEXPORT
         $this->rtf->fontBlocks[$type]['indentR'] = '\ri' . ($indentR * 720);
 
         $this->rtf->fontBlocks[$type]['crFollowing'] = $crFollowing;
-        if ($crBetween)
-        {
+        if ($crBetween) {
             $this->rtf->fontBlocks[$type]['crBetween'] = $crBetween;
         }
-        if ($textFormat != 'Normal')
-        {
+        if ($textFormat != 'Normal') {
             $this->rtf->fontBlocks[$type]['textFormat'] = $textFormat;
         }
     }
@@ -994,8 +877,7 @@ class RTFEXPORT
     {
         $pString = '{\fonttbl' . LF;
 
-        foreach ($this->rtf->fonttbl as $index => $font)
-        {
+        foreach ($this->rtf->fonttbl as $index => $font) {
             $pString .= '{\f' . $index . '\fcharset0 ' . $font . ';}' . LF;
         }
 
@@ -1021,7 +903,7 @@ class RTFEXPORT
      *
      * @return string
      */
-    //
+    
     private function makeParagraph($type)
     {
         return '{' . $this->rtf->fontBlocks[$type]['fontBlock'] . $this->rtf->fontBlocks[$type]['fontSize'] . '\par }';
@@ -1035,12 +917,9 @@ class RTFEXPORT
      */
     private function makeBlock($type)
     {
-        if ($type == 'divider')
-        {
+        if ($type == 'divider') {
             $pString = '\qc'; // Center
-        }
-        else
-        {
+        } else {
             $pString = '\qj'; // Justify
         }
 
@@ -1088,19 +967,13 @@ class RTFEXPORT
             'resource_creator',
             ['resourcecreatorCreatorSurname', 'resourceyearYear1', 'resourceyearYear2']
         );
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $creator = $row['resourcecreatorCreatorSurname'];
-            if ($row['resourceyearYear2'] && (($resourceType == 'book') || ($resourceType == 'book_article')))
-            {
+            if ($row['resourceyearYear2'] && (($resourceType == 'book') || ($resourceType == 'book_article'))) {
                 $year = $creator ? ' ' . $row['resourceyearYear2'] : $row['resourceyearYear2'];
-            }
-            elseif ($row['resourceyearYear1'])
-            {
+            } elseif ($row['resourceyearYear1']) {
                 $year = $creator ? ' ' . $row['resourceyearYear1'] : $row['resourceyearYear1'];
-            }
-            else
-            {
+            } else {
                 $year = '';
             }
             $this->fullCite = $creator . $year;
@@ -1121,8 +994,7 @@ class RTFEXPORT
             !array_key_exists("exportRtf_notes", $this->vars) &&
             !array_key_exists("exportRtf_quotes", $this->vars) &&
             !array_key_exists("exportRtf_paraphrases", $this->vars) &&
-            !array_key_exists("exportRtf_musings", $this->vars))
-        {
+            !array_key_exists("exportRtf_musings", $this->vars)) {
             $this->parentClass->initRtfExport($this->errors->text("inputError", "missing"));
 
             return;
@@ -1135,15 +1007,12 @@ class RTFEXPORT
      */
     private function writeSession()
     {
-        foreach ($this->vars as $key => $value)
-        {
-            if (preg_match("/^exportRtf_/u", $key))
-            {
+        foreach ($this->vars as $key => $value) {
+            if (preg_match("/^exportRtf_/u", $key)) {
                 $temp[$key] = $value;
             }
         }
-        if (isset($temp))
-        {
+        if (isset($temp)) {
             $temp['exportRtf_done'] = TRUE;
             $this->session->writeArray($temp);
         }

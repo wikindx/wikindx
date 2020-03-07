@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -55,8 +57,7 @@ class RANDOMMETADATA
         $this->db->limit(1, 0);
         $this->db->orderByRandom();
         $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataResourceId', 'resourcemetadataText']);
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             $this->badInput->close($this->messages->text("misc", "noQuotes"));
         }
         $row = $this->db->fetchRow($resultset);
@@ -74,8 +75,7 @@ class RANDOMMETADATA
         $this->db->limit(1, 0);
         $this->db->orderByRandom();
         $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataResourceId', 'resourcemetadataText']);
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             $this->badInput->close($this->messages->text("misc", "noParaphrases"));
         }
         $row = $this->db->fetchRow($resultset);
@@ -89,8 +89,7 @@ class RANDOMMETADATA
      */
     public function randomMusing()
     {
-        if ($userId = $this->session->getVar("setup_UserId"))
-        {
+        if ($userId = $this->session->getVar("setup_UserId")) {
             $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
             $this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .
                 $this->db->formatFields('resourcemetadataPrivate'));
@@ -106,17 +105,14 @@ class RANDOMMETADATA
             $result = $this->db->tidyInput(1);
             $case3 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
             $this->db->formatConditions($case1 . $this->db->or . $case2 . $this->db->or . $case3);
-        }
-        elseif ($this->session->getVar("setup_ReadOnly"))
-        {
+        } elseif ($this->session->getVar("setup_ReadOnly")) {
             $this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
         }
         $this->db->formatConditions(['resourcemetadataType' => 'm']);
         $this->db->limit(1, 0);
         $this->db->orderByRandom();
         $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataResourceId', 'resourcemetadataText']);
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             $this->badInput->close($this->messages->text("misc", "noMusings"));
         }
         $row = $this->db->fetchRow($resultset);
@@ -130,16 +126,14 @@ class RANDOMMETADATA
      */
     public function randomIdea()
     {
-        if (!$this->metadata->setCondition('i') && $this->session->getVar("setup_ReadOnly"))
-        {
+        if (!$this->metadata->setCondition('i') && $this->session->getVar("setup_ReadOnly")) {
             $this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
         }
         $this->db->formatConditions(['resourcemetadataType' => 'i']);
         $this->db->limit(1, 0);
         $this->db->orderByRandom();
         $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             $this->badInput->close($this->messages->text("misc", "noIdeas"));
         }
         $row = $this->db->fetchRow($resultset);
@@ -157,18 +151,15 @@ class RANDOMMETADATA
     public function display($resultset, $mArray, $method)
     {
         $row = $this->db->fetchRow($resultset);
-        if (GLOBALS::getUserVar('ListLink'))
-        {
+        if (GLOBALS::getUserVar('ListLink')) {
             $this->resourceLink = "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $row['resourceId']);
             $this->bibStyle->linkUrl = FALSE;
         }
-        if (($row['resourcemiscQuarantine'] == 'Y') && (WIKINDX_QUARANTINE))
-        {
+        if (($row['resourcemiscQuarantine'] == 'Y') && (WIKINDX_QUARANTINE)) {
             $resourceList[0]['quarantine'] = $this->icons->getHTML("quarantine");
         }
         $multiUser = WIKINDX_MULTIUSER;
-        if ($multiUser)
-        {
+        if ($multiUser) {
             $resourceList[0]['user'] = $this->user->displayUserAddEdit($row);
             $popularityIndex = $this->messages->text("misc", "popIndex", $this->stats->getPopularityIndex($row['resourceId']));
             $maturityIndex = $row['resourcemiscMaturityIndex'] ?
@@ -182,13 +173,10 @@ class RANDOMMETADATA
         }
         $resourceList[0]['timestamp'] = $row['resourcetimestampTimestamp'];
         $resourceList[0]['links'] = $this->createLinks($row);
-        if ($this->resourceLink)
-        {
+        if ($this->resourceLink) {
             $resourceList[0]['resource'] = \HTML\a('rLink', $this->bibStyle->process($row), $this->resourceLink) .
                 $this->coins->export($row, $this->bibStyle->coinsCreators);
-        }
-        else
-        {
+        } else {
             $resourceList[0]['resource'] = $this->bibStyle->process($row) . $this->coins->export($row, $this->bibStyle->coinsCreators);
         }
         $resourceList[0]['metadata'][] = $mArray;
@@ -213,8 +201,7 @@ class RANDOMMETADATA
         $view = $this->icons->getHTML("viewmeta");
         $links['view'] = \HTML\a($this->icons->getClass("viewmeta"), $view, "index.php?action=resource_RESOURCEVIEW_CORE" .
             htmlentities("&id=" . $row['resourceId']));
-        if ($write && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))
-        {
+        if ($write && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId))) {
             $links['edit'] = \HTML\a(
                 $this->icons->getClass("edit"),
                 $this->icons->getHTML("edit"),
@@ -222,10 +209,8 @@ class RANDOMMETADATA
             );
             $edit = TRUE;
         }
-        if ($this->session->getVar("setup_Superadmin"))
-        {
-            if (!$edit)
-            {
+        if ($this->session->getVar("setup_Superadmin")) {
+            if (!$edit) {
                 $links['edit'] = \HTML\a(
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
@@ -239,8 +224,7 @@ class RANDOMMETADATA
         }
         // display CMS link if required
         // link is actually a JavaScript call
-        if (GLOBALS::getUserVar('DisplayCmsLink'))
-        {
+        if (GLOBALS::getUserVar('DisplayCmsLink')) {
             $links['cms'] = \HTML\a(
                 'cmsLink',
                 "CMS:&nbsp;" . $row['resourceId'],
@@ -249,8 +233,7 @@ class RANDOMMETADATA
         }
         // display bibtex link if required
         // link is actually a JavaScript call
-        if (GLOBALS::getUserVar('DisplayBibtexLink'))
-        {
+        if (GLOBALS::getUserVar('DisplayBibtexLink')) {
             $links['bibtex'] = \HTML\a(
                 $this->icons->getClass("bibtex"),
                 $this->icons->getHTML("bibtex"),

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -47,15 +49,12 @@ class RESOURCEABSTRACT
     {
         $abstract = [];
         $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
-        if (!$row['resourcetextAbstract'] && !$write)
-        {
+        if (!$row['resourcetextAbstract'] && !$write) {
             return $abstract;
         }
         if ($this->session->getVar("setup_Superadmin") ||
-            ($write && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId))))
-        {
-            if (!$row['resourcetextAbstract'])
-            {
+            ($write && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))) {
+            if (!$row['resourcetextAbstract']) {
                 $abstract['title'] = $this->messages->text("resources", "abstract");
                 $abstract['editLink'] = \HTML\a(
                     $this->icons->getClass("add"),
@@ -65,9 +64,7 @@ class RESOURCEABSTRACT
                 );
 
                 return $abstract;
-            }
-            elseif ($row['resourcetextAbstract'])
-            {
+            } elseif ($row['resourcetextAbstract']) {
                 $abstract['editLink'] = \HTML\a(
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
@@ -82,8 +79,7 @@ class RESOURCEABSTRACT
                 );
             }
         }
-        if ($row['resourcetextAbstract'])
-        {
+        if ($row['resourcetextAbstract']) {
             $abstract['title'] = $this->messages->text("resources", "abstract");
             list($abstract['userAdd'], $abstract['userEdit']) = $this->user->displayUserAddEdit($row, TRUE, 'abstract');
             $abstract['abstract'] =

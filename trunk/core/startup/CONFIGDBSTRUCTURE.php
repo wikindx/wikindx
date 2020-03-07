@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -220,24 +222,19 @@ class CONFIGDBSTRUCTURE
             'configUserRegistrationModerate' => 'WIKINDX_USER_REGISTRATION_MODERATE',
         ];
 
-        foreach ($arrayVarchar as $name)
-        {
+        foreach ($arrayVarchar as $name) {
             $this->dbStructure[$name] = 'configVarchar';
         }
-        foreach ($arrayInt as $name)
-        {
+        foreach ($arrayInt as $name) {
             $this->dbStructure[$name] = 'configInt';
         }
-        foreach ($arrayBoolean as $name)
-        {
+        foreach ($arrayBoolean as $name) {
             $this->dbStructure[$name] = 'configBoolean';
         }
-        foreach ($arrayDatetime as $name)
-        {
+        foreach ($arrayDatetime as $name) {
             $this->dbStructure[$name] = 'configDatetime';
         }
-        foreach ($arrayText as $name)
-        {
+        foreach ($arrayText as $name) {
             $this->dbStructure[$name] = 'configText';
         }
     }
@@ -250,13 +247,12 @@ class CONFIGDBSTRUCTURE
      *
      * @param string $field – the table column to match the condition.
      *
-     * @return String|float|bool
+     * @return bool|float|string
      */
     public function getOne($field)
     {
         $field = (string)$field;
-        if (!array_key_exists($field, $this->dbStructure))
-        {
+        if (!array_key_exists($field, $this->dbStructure)) {
             die('Supply a configuration variable to search on');
         }
         $column = $this->dbStructure[$field];
@@ -275,19 +271,15 @@ class CONFIGDBSTRUCTURE
         $field = 'configName';
         $row = [];
         $resultSet = $this->db->select('config', '*');
-        while ($coRow = $this->db->fetchRow($resultSet))
-        {
+        while ($coRow = $this->db->fetchRow($resultSet)) {
             // NB we grab only basic configuration variables – extra rows are added e.g. by localeDescription plugin
-            if (array_key_exists($coRow[$field], $this->dbStructure))
-            {
+            if (array_key_exists($coRow[$field], $this->dbStructure)) {
                 $row[$coRow[$field]] = $this->convertVarDB2PHP($this->dbStructure[$coRow[$field]], $coRow[$this->dbStructure[$coRow[$field]]]);
                 
                 // Unserialize some options
-                if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
-                {
+                if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
                     $row[$coRow[$field]] = unserialize(base64_decode($row[$coRow[$field]]));
-                    if (!is_array($row[$coRow[$field]]))
-                    {
+                    if (!is_array($row[$coRow[$field]])) {
                         $constName = $co->configToConstant[$coRow[$field]];
                         $row[$coRow[$field]] = unserialize(base64_decode(constant($constName . "_DEFAULT")));
                     }
@@ -308,48 +300,38 @@ class CONFIGDBSTRUCTURE
     {
         $field = 'configName';
         $row = [];
-        if (!is_array($match))
-        {
+        if (!is_array($match)) {
             $match = [$match];
         }
         $this->db->formatConditionsOneField($match, $field);
         $resultSet = $this->db->select('config', '*');
-        while ($coRow = $this->db->fetchRow($resultSet))
-        {
+        while ($coRow = $this->db->fetchRow($resultSet)) {
             // NB we grab only basic configuration variables – extra rows are added e.g. by localeDescription plugin
-            if (array_key_exists($coRow[$field], $this->dbStructure))
-            {
+            if (array_key_exists($coRow[$field], $this->dbStructure)) {
                 $row[$coRow[$field]] = $this->convertVarDB2PHP($this->dbStructure[$coRow[$field]], $coRow[$this->dbStructure[$coRow[$field]]]);
                 
                 // Unserialize some options
-                if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
-                {
+                if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
                     $row[$coRow[$field]] = unserialize(base64_decode($row[$coRow[$field]]));
-                    if (!is_array($row[$coRow[$field]]))
-                    {
+                    if (!is_array($row[$coRow[$field]])) {
                         $constName = $co->configToConstant[$coRow[$field]];
                         $row[$coRow[$field]] = unserialize(base64_decode(constant($constName . "_DEFAULT")));
                     }
                 }
-            }
-            else
-            {
+            } else {
                 die("CONFIGDBSTRUCTURE->getData(): bad config option name requested: " . $coRow[$field]);
             }
         }
         
         // During and installation the config table is not initialized before this function is called,
         // so return default values in that case
-        if (count($row) == 0)
-        {
-            foreach($match as $configName)
-            {
+        if (count($row) == 0) {
+            foreach ($match as $configName) {
                 $constName = $this->configToConstant[$configName];
                 $value = constant($constName . "_DEFAULT");
                 
                 // Unserialize some options
-                if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
-                {
+                if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
                     $value = unserialize(base64_decode($value));
                 }
                 
@@ -368,14 +350,12 @@ class CONFIGDBSTRUCTURE
     public function updateOne($name, $value)
     {
         $name = (string)$name;
-        if (!array_key_exists($name, $this->dbStructure))
-        {
+        if (!array_key_exists($name, $this->dbStructure)) {
             die('Supply a configuration variable to update');
         }
         
         // Serialize some options
-        if (in_array($name, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
-        {
+        if (in_array($name, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
             $value = base64_encode(serialize($value));
         }
         
@@ -393,8 +373,7 @@ class CONFIGDBSTRUCTURE
      */
     private function convertVarDB2PHP($configType, $value)
     {
-        switch ($configType)
-        {
+        switch ($configType) {
             // Cast to integer number
             case 'configInt':
                 $value = (int)$value;
@@ -419,8 +398,7 @@ class CONFIGDBSTRUCTURE
      */
     private function convertVarPHP2DB($configType, $value)
     {
-        switch ($configType)
-        {
+        switch ($configType) {
             // Cast to integer number
             case 'configInt':
                 $value = (string)$value;

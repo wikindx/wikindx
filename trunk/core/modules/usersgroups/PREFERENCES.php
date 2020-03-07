@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -35,17 +37,15 @@ class PREFERENCES
     }    /**
      * init
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function init($message = FALSE)
     {
-    	if (!$message)
-    	{
-    		if ($message = $this->session->getVar("mywikindx_Message"))
-    		{
-    			$this->session->delVar("mywikindx_Message");
-    		}
-    	}
+        if (!$message) {
+            if ($message = $this->session->getVar("mywikindx_Message")) {
+                $this->session->delVar("mywikindx_Message");
+            }
+        }
         $pString = $message;
         include_once("core/modules/help/HELPMESSAGES.php");
         $help = new HELPMESSAGES();
@@ -71,7 +71,7 @@ class PREFERENCES
         $templates = FACTORY_TEMPLATE::getInstance()->loadDir();
         $template = GLOBALS::getUserVar("Template", WIKINDX_TEMPLATE_DEFAULT);
         array_key_exists($template, $templates) ? $template = $template : $template = WIKINDX_TEMPLATE_DEFAULT;
-    	$pString .= \HTML\td(\FORM\selectedBoxValue(
+        $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "template"),
             "Template",
             $templates,
@@ -98,8 +98,7 @@ class PREFERENCES
         array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
         
         // Retrieve the language of the user config in session if missing in the db
-        if ($language == $LanguageNeutralChoice)
-        {
+        if ($language == $LanguageNeutralChoice) {
             $language = $this->session->getVar("setup_Language", $LanguageNeutralChoice);
             array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
         }
@@ -146,8 +145,7 @@ class PREFERENCES
             GLOBALS::getUserVar("PagingMaxLinks"),
             5
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
-        if (!GLOBALS::getUserVar("PagingTagCloud"))
-        {
+        if (!GLOBALS::getUserVar("PagingTagCloud")) {
             GLOBALS::setUserVar("PagingTagCloud", WIKINDX_PAGING_TAG_CLOUD_DEFAULT);
         }
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
@@ -181,31 +179,23 @@ class PREFERENCES
     public function edit()
     {
         $required = ["Paging", "PagingMaxLinks", "StringLimit", "PagingTagCloud"];
-        foreach ($required as $key)
-        {
-            if (!is_numeric($this->vars[$key]) || !is_int($this->vars[$key] + 0))
-            { // cast to number
+        foreach ($required as $key) {
+            if (!is_numeric($this->vars[$key]) || !is_int($this->vars[$key] + 0)) { // cast to number
                 $this->badInputLoad($this->errors->text("inputError", "nan", " ($key) "));
             }
-            if (!array_key_exists($key, $this->vars) || !$this->vars[$key])
-            {
+            if (!array_key_exists($key, $this->vars) || !$this->vars[$key]) {
                 $this->badInputLoad($this->errors->text("inputError", "missing", " ($key) "));
             }
-            if (($key == 'PagingMaxLinks') && ($this->vars[$key] < 4))
-            {
+            if (($key == 'PagingMaxLinks') && ($this->vars[$key] < 4)) {
                 $this->vars[$key] = 11;
-            }
-            elseif ($this->vars[$key] < 0)
-            {
+            } elseif ($this->vars[$key] < 0) {
                 $this->vars[$key] = -1;
             }
             $array[$key] = $this->vars[$key];
         }
         $required = ["Language", "Template", "Style"];
-        foreach ($required as $value)
-        {
-            if (!array_key_exists($value, $this->vars) || !$this->vars[$value])
-            {
+        foreach ($required as $value) {
+            if (!array_key_exists($value, $this->vars) || !$this->vars[$value]) {
                 $this->badInputLoad($this->errors->text("inputError", "missing", " ($value) "));
             }
             $array[$value] = $this->vars[$value];
@@ -214,12 +204,9 @@ class PREFERENCES
         $this->session->writeArray($array, "setup");
         $this->session->delVar("sql_LastMulti"); // always reset in case of paging changes
         $this->session->delVar("sql_LastIdeaSearch"); // always reset in case of paging changes
-        if (array_key_exists("ListLink", $this->vars))
-        {
+        if (array_key_exists("ListLink", $this->vars)) {
             $this->session->setVar("setup_ListLink", TRUE);
-        }
-        else
-        {
+        } else {
             $this->session->delVar("setup_ListLink");
         }
         $this->session->setVar("mywikindx_Message", $this->success->text("config"));
@@ -228,9 +215,11 @@ class PREFERENCES
     }
     /**
      * Error handling
+     *
+     * @param mixed $error
      */
     private function badInputLoad($error)
     {
-       	$this->badInput->close($error, $this, 'init');
+        $this->badInput->close($error, $this, 'init');
     }
 }

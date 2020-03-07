@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -102,8 +104,7 @@ abstract class TINYMCETEXTEXPORT
         );
         // Sometimes, not all SPANs are caught - this removes them from the RTF until this problem can be fixed.
         $text = preg_replace("/\\s*<span.*?\\>(.*?)<\\/span>\\s*/usi", '$1', $text);
-        if (preg_match("/<span.*?\\>.*?<\\/span>/usi", $text))
-        { // deal with nested span tags
+        if (preg_match("/<span.*?\\>.*?<\\/span>/usi", $text)) { // deal with nested span tags
             $text = $this->parseSpan($text, $callbackStyle);
         }
 
@@ -122,8 +123,7 @@ abstract class TINYMCETEXTEXPORT
     {
         $text = preg_replace_callback("/\\s*<ul.*>\\s*(.*)\\s*<\\/ul>\\s*/Uusi", $callbackUnorderedList, $text);
         $text = preg_replace_callback("/\\s*<ol.*>\\s*(.*)\\s*<\\/ol>\\s*/Uusi", $callbackOrderedList, $text);
-        if (preg_match("/<ul.*?\\>.*?<\\/ul>/usi", $text))
-        { // deal with nested lists
+        if (preg_match("/<ul.*?\\>.*?<\\/ul>/usi", $text)) { // deal with nested lists
             $this->nested++;
             $text = $this->parseLists($text, $callbackUnorderedList, $callbackOrderedList);
             $this->nested--;

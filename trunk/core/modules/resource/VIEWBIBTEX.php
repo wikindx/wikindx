@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -15,9 +17,9 @@ class VIEWBIBTEX
 {
     public $vars; // public for use with importexportbib plugin
     /** array */
-	public $rawStringArray = []; // public for use with importexportbib plugin
-	public $resourceId; // public for use with importexportbib plugin
-	public $customFieldString = FALSE;
+    public $rawStringArray = []; // public for use with importexportbib plugin
+    public $resourceId; // public for use with importexportbib plugin
+    public $customFieldString = FALSE;
     private $db;
     private $errors;
     private $messages;
@@ -89,72 +91,51 @@ class VIEWBIBTEX
      */
     public function display()
     {
-        if (!array_key_exists('id', $this->vars))
-        {
+        if (!array_key_exists('id', $this->vars)) {
             $this->badInput->closeType = 'closeNoMenu';
             $this->badInput->close($this->messages->text('inputError', 'missing'));
         }
         // START set up environment
-        if (!array_key_exists('resubmit', $this->vars))
-        {
+        if (!array_key_exists('resubmit', $this->vars)) {
             // custom field mapping
-            foreach ($this->session->getArray("export") as $key => $value)
-            {
-                if (mb_strpos($key, 'Map_') == 0)
-                {
+            foreach ($this->session->getArray("export") as $key => $value) {
+                if (mb_strpos($key, 'Map_') == 0) {
                     $this->vars[$key] = $value;
                 }
             }
         }
         $metadataFields = ["Quotation", "QuotationComment", "Paraphrase", "ParaphraseComment", "Musing"];
-        foreach ($metadataFields as $field)
-        {
+        foreach ($metadataFields as $field) {
             // first time so few values in $this->vars -- check session
-            if (!array_key_exists('resubmit', $this->vars) && ($value = $this->session->getVar("export_$field")))
-            {
+            if (!array_key_exists('resubmit', $this->vars) && ($value = $this->session->getVar("export_$field"))) {
                 $this->vars[$field] = $value;
-            }
-            elseif (!array_key_exists('resubmit', $this->vars))
-            {
+            } elseif (!array_key_exists('resubmit', $this->vars)) {
                 $this->vars[$field] = '';
             }
         }
-        if (!array_key_exists('resubmit', $this->vars))
-        {
-            if ($this->session->getVar("export_MergeStored"))
-            {
+        if (!array_key_exists('resubmit', $this->vars)) {
+            if ($this->session->getVar("export_MergeStored")) {
                 $this->vars['MergeStored'] = TRUE;
             }
-            if ($this->session->getVar("export_UseOriginalCitation"))
-            {
+            if ($this->session->getVar("export_UseOriginalCitation")) {
                 $this->vars['UseOriginalCitation'] = TRUE;
             }
-            if ($this->session->getVar("export_ShortString"))
-            {
+            if ($this->session->getVar("export_ShortString")) {
                 $this->vars['ShortString'] = TRUE;
             }
-            if ($this->session->getVar("export_EncloseField"))
-            { // braces
+            if ($this->session->getVar("export_EncloseField")) { // braces
                 $this->vars['EncloseField'] = 'B';
-            }
-            else
-            { // double quotes
+            } else { // double quotes
                 $this->vars['EncloseField'] = 'Q';
             }
-            if ($this->session->getVar("export_CharacterSet"))
-            { // Latin + TeX
+            if ($this->session->getVar("export_CharacterSet")) { // Latin + TeX
                 $this->vars['CharacterSet'] = 'T';
-            }
-            else
-            { // UTF-8
+            } else { // UTF-8
                 $this->vars['CharacterSet'] = 'U';
             }
-            if ($this->session->getVar("export_KeywordSeparator"))
-            { // ;
+            if ($this->session->getVar("export_KeywordSeparator")) { // ;
                 $this->vars['KeywordSeparator'] = ';';
-            }
-            else
-            { // ,
+            } else { // ,
                 $this->vars['KeywordSeparator'] = ',';
             }
         }
@@ -190,48 +171,39 @@ class VIEWBIBTEX
             \FORM\checkbox(FALSE, "ShortString", $checked));
         $pString .= \HTML\tableStart('generalTable borderStyleSolid');
         $pString .= \HTML\trStart();
-        if ($this->session->getVar("export_EncloseField"))
-        { // TRUE == {...}
+        if ($this->session->getVar("export_EncloseField")) { // TRUE == {...}
             $string = \FORM\radioButton(FALSE, "EncloseField", "Q", FALSE) . "&nbsp;&nbsp;" .
                 $this->messages->text("misc", "bibExportQuotes");
             $string .= BR . \FORM\radioButton(FALSE, "EncloseField", "B", TRUE) . "&nbsp;&nbsp;" .
                 $this->messages->text("misc", "bibExportBraces");
             $pString .= \HTML\td($string);
-        }
-        else
-        { // FALSE == "..."
+        } else { // FALSE == "..."
             $string = \FORM\radioButton(FALSE, "EncloseField", "Q", TRUE) . "&nbsp;&nbsp;" .
                 $this->messages->text("misc", "bibExportQuotes");
             $string .= BR . \FORM\radioButton(FALSE, "EncloseField", "B", FALSE) . "&nbsp;&nbsp;" .
                 $this->messages->text("misc", "bibExportBraces");
             $pString .= \HTML\td($string);
         }
-        if ($this->session->getVar("export_CharacterSet"))
-        { // TRUE == TeX
+        if ($this->session->getVar("export_CharacterSet")) { // TRUE == TeX
             $string = \FORM\radioButton(FALSE, "CharacterSet", "U", FALSE) . "&nbsp;&nbsp;" .
                 $this->messages->text("misc", "bibExportCharacterSetUTF");
             $string .= BR . \FORM\radioButton(FALSE, "CharacterSet", "T", TRUE) . "&nbsp;&nbsp;" .
                 $this->messages->text("misc", "bibExportCharacterSetTex");
             $pString .= \HTML\td($string);
-        }
-        else
-        { // FALSE == UTF-8
+        } else { // FALSE == UTF-8
             $string = \FORM\radioButton(FALSE, "CharacterSet", "U", TRUE) . "&nbsp;&nbsp;" .
                 $this->messages->text("misc", "bibExportCharacterSetUTF");
             $string .= BR . \FORM\radioButton(FALSE, "CharacterSet", "T", FALSE) . "&nbsp;&nbsp;" .
                 $this->messages->text("misc", "bibExportCharacterSetTex");
             $pString .= \HTML\td($string);
         }
-        if ($this->session->getVar("export_KeywordSeparator"))
-        { // TRUE == ';'
+        if ($this->session->getVar("export_KeywordSeparator")) { // TRUE == ';'
             $string = \FORM\radioButton(FALSE, "KeywordSeparator", ",", FALSE) . "&nbsp;&nbsp;" .
                 $this->messages->text("misc", "bibExportKeywordSeparatorComma");
             $string .= BR . \FORM\radioButton(FALSE, "KeywordSeparator", ";", TRUE) . "&nbsp;&nbsp;" .
                 $this->messages->text("misc", "bibExportKeywordSeparatorSemicolon");
             $pString .= \HTML\td($string);
-        }
-        else
-        { // FALSE == ';'
+        } else { // FALSE == ';'
             $string = \FORM\radioButton(FALSE, "KeywordSeparator", ",", TRUE) . "&nbsp;&nbsp;" .
                 $this->messages->text("misc", "bibExportKeywordSeparatorComma");
             $string .= BR . \FORM\radioButton(FALSE, "KeywordSeparator", ";", FALSE) . "&nbsp;&nbsp;" .
@@ -240,19 +212,13 @@ class VIEWBIBTEX
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        if (!$cString)
-        {
-            if (!$this->customFieldString)
-            { // cf importexportbib plugin
+        if (!$cString) {
+            if (!$this->customFieldString) { // cf importexportbib plugin
                 $pString .= $this->getCustomFields();
-            }
-            elseif (($this->customFieldString != -1))
-            {
+            } elseif (($this->customFieldString != -1)) {
                 $pString .= $this->customFieldString;
             }
-        }
-        else
-        {
+        } else {
             $pString .= $cString; // comes from importexport bibtex plugin
         }
         // Export metadata fields?
@@ -285,115 +251,81 @@ class VIEWBIBTEX
      */
     public function writeSession()
     {
-        if (isset($this->vars['MergeStored']))
-        {
+        if (isset($this->vars['MergeStored'])) {
             $this->session->setVar("export_MergeStored", $this->vars['MergeStored']);
-        }
-        else
-        {
+        } else {
             $this->session->delVar("export_MergeStored");
         }
-        if (isset($this->vars['UseOriginalCitation']))
-        {
+        if (isset($this->vars['UseOriginalCitation'])) {
             $this->session->setVar("export_UseOriginalCitation", $this->vars['UseOriginalCitation']);
-        }
-        else
-        {
+        } else {
             $this->session->delVar("export_UseOriginalCitation");
         }
-        if (isset($this->vars['ShortString']))
-        {
+        if (isset($this->vars['ShortString'])) {
             $this->session->setVar("export_ShortString", $this->vars['ShortString']);
-        }
-        else
-        {
+        } else {
             $this->session->delVar("export_ShortString");
         }
-        if (array_key_exists('EncloseField', $this->vars) && $this->vars['EncloseField'] == 'Q')
-        {
+        if (array_key_exists('EncloseField', $this->vars) && $this->vars['EncloseField'] == 'Q') {
             $this->session->setVar("export_EncloseField", FALSE);
             $this->startField = "\"";
             $this->endField = "\"";
-        }
-        else
-        {
+        } else {
             $this->session->setVar("export_EncloseField", TRUE);
             $this->startField = "{";
             $this->endField = "}";
         }
-        if (array_key_exists('CharacterSet', $this->vars) && $this->vars['CharacterSet'] == 'U')
-        {
+        if (array_key_exists('CharacterSet', $this->vars) && $this->vars['CharacterSet'] == 'U') {
             $this->session->setVar("export_CharacterSet", FALSE);
-        }
-        else
-        {
+        } else {
             $this->session->setVar("export_CharacterSet", TRUE);
             $this->convertTex = TRUE;
         }
-        if (array_key_exists('KeywordSeparator', $this->vars) && $this->vars['KeywordSeparator'] == ',')
-        {
+        if (array_key_exists('KeywordSeparator', $this->vars) && $this->vars['KeywordSeparator'] == ',') {
             $this->session->setVar("export_KeywordSeparator", FALSE);
-        }
-        else
-        {
+        } else {
             $this->session->setVar("export_KeywordSeparator", TRUE);
             $this->keywordSeparator = ';';
         }
         $checkDuplicates = [];
         $duplicateMapping = FALSE;
-        foreach ($this->vars as $key => $value)
-        {
+        foreach ($this->vars as $key => $value) {
             $split = UTF8::mb_explode("Map_", $key); // custom fields mapping
-            if (count($split) == 2)
-            {
+            if (count($split) == 2) {
                 $value = trim($value);
-                if ($value)
-                {
+                if ($value) {
                     $this->session->setVar("export_$key", $value);
-                    if (!$duplicateMapping && (array_search(mb_strtolower($value), $checkDuplicates) !== FALSE))
-                    {
+                    if (!$duplicateMapping && (array_search(mb_strtolower($value), $checkDuplicates) !== FALSE)) {
                         $duplicateMapping = TRUE;
                     }
                     $this->customIds[$split[1]] = $value;
                     $checkDuplicates[] = mb_strtolower($value);
-                }
-                else
-                {
+                } else {
                     $this->session->delVar("export_$key");
                 }
             }
         }
         // Check for metadata input and write to session
         $metadataFields = ["Quotation", "QuotationComment", "Paraphrase", "ParaphraseComment", "Musing"];
-        foreach ($metadataFields as $field)
-        {
+        foreach ($metadataFields as $field) {
             $input = trim($this->vars[$field]);
-            if ($input)
-            {
-                if (($field == 'QuotationComment') || ($field == 'ParaphraseComment'))
-                { // may be duplicated
+            if ($input) {
+                if (($field == 'QuotationComment') || ($field == 'ParaphraseComment')) { // may be duplicated
                     $this->session->setVar("export_$field", $input);
                     $this->metadataFields[$field] = $input;
-                }
-                elseif (array_search(mb_strtolower($input), $checkDuplicates) === FALSE)
-                {
+                } elseif (array_search(mb_strtolower($input), $checkDuplicates) === FALSE) {
                     $this->session->setVar("export_$field", $input);
                     $this->metadataFields[$field] = $input;
                     $checkDuplicates[] = mb_strtolower($input);
-                }
-                else
-                {
+                } else {
                     $duplicateMapping = TRUE;
                 }
-            }
-            else
-            {
+            } else {
                 $this->session->delVar("export_$field");
             }
         }
         // if duplicate custom mapping found, fail
-        if ($duplicateMapping)
-        {
+        if ($duplicateMapping) {
             $this->badInput->close($this->errors->text("inputError", "duplicateFieldNames"));
         }
     }
@@ -404,47 +336,35 @@ class VIEWBIBTEX
      */
     public function formatRawString()
     {
-        if (!empty($this->rawString))
-        {
-            foreach ($this->titleString as $key => $value)
-            {
-                if (!array_key_exists($key, $this->rawString))
-                {
+        if (!empty($this->rawString)) {
+            foreach ($this->titleString as $key => $value) {
+                if (!array_key_exists($key, $this->rawString)) {
                     $this->rawString[$key] = $value;
                 }
             }
-            foreach ($this->rawString as $key => $value)
-            {
+            foreach ($this->rawString as $key => $value) {
                 $key = preg_replace("/[^a-zA-Z0-9]/u", '', $key);
-                if (is_numeric(mb_substr($key, 0)))
-                {
+                if (is_numeric(mb_substr($key, 0))) {
                     $key = "string$key";
                 }
                 $rawString = "@STRING" . '{' . "$key = $value" . '}';
-                if (array_search($rawString, $this->rawStringArray) === FALSE)
-                {
+                if (array_search($rawString, $this->rawStringArray) === FALSE) {
                     $this->rawStringArray[] = $rawString;
                 }
             }
 
             return TRUE;
-        }
-        elseif (!empty($this->titleString))
-        {
-            foreach ($this->titleString as $key => $value)
-            {
-                if ($this->session->getVar("export_shortString"))
-                {
+        } elseif (!empty($this->titleString)) {
+            foreach ($this->titleString as $key => $value) {
+                if ($this->session->getVar("export_shortString")) {
                     $value = $key;
                 }
                 $key = preg_replace("/[^a-zA-Z0-9]/u", '', $key);
-                if (is_numeric(mb_substr($key, 0)))
-                {
+                if (is_numeric(mb_substr($key, 0))) {
                     $key = "string$key";
                 }
                 $rawString = "@STRING" . '{' . "$key = $value" . '}';
-                if (array_search($rawString, $this->rawStringArray) === FALSE)
-                {
+                if (array_search($rawString, $this->rawStringArray) === FALSE) {
                     $this->rawStringArray[] = $rawString;
                 }
             }
@@ -460,136 +380,104 @@ class VIEWBIBTEX
      * @param mixed $resultset
      * @param mixed $fp
      *
-     * @return string|FALSE
+     * @return false|string
      */
     public function getData($resultset = FALSE, $fp = FALSE)
     {
         $pluginExport = TRUE;
-        if (!$resultset)
-        {
+        if (!$resultset) {
             $this->resourceId = $this->vars['id'];
             $resultset = $this->res->getResource($this->resourceId);
             $pluginExport = FALSE;
         }
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             $this->badInput->close($this->messages->text("resources", "noResult"));
         }
         $resourceIds = $rowTypes = $entryArray = $entryKeys = $howPublishedDone = $howPublished = $dates = $miscField1 = $miscPublishers = [];
 
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             // will be the case if ideas have been found through a keyword
-            if (!$row['resourceId'])
-            {
+            if (!$row['resourceId']) {
                 continue;
             }
-            if (array_search($row['resourceId'], $resourceIds))
-            {
+            if (array_search($row['resourceId'], $resourceIds)) {
                 continue;
             }
 
             $resourceIds[] = $row['resourceId'];
 
-            if ($pluginExport)
-            {
+            if ($pluginExport) {
                 $this->resourceId = $row['resourceId'];
             }
-            if (!$this->resourceId)
-            {
+            if (!$this->resourceId) {
                 continue;
             }
 
             $rowTypes[$this->resourceId]['resourceType'] = $row['resourceType'];
             $rowTypes[$this->resourceId]['resourceField1'] = $row['resourceField1'];
-            if ($row['resourcemiscField1'] && (($row['resourceType'] == 'proceedings_article') || ($row['resourceType'] == 'proceedings')))
-            {
+            if ($row['resourcemiscField1'] && (($row['resourceType'] == 'proceedings_article') || ($row['resourceType'] == 'proceedings'))) {
                 $miscField1[$this->resourceId]['resourcemiscField1'] = $row['resourcemiscField1'];
-            }
-            elseif ($row['resourcemiscPublisher'])
-            {
+            } elseif ($row['resourcemiscPublisher']) {
                 $miscPublishers[$this->resourceId]['resourcemiscPublisher'] = $row['resourcemiscPublisher'];
             }
-            if (array_key_exists('howpublished', $this->map->{$row['resourceType']}) && ($this->map->types[$row['resourceType']] == 'misc'))
-            {
-                if (array_key_exists($this->map->{$row['resourceType']}['howpublished'], $row))
-                {
+            if (array_key_exists('howpublished', $this->map->{$row['resourceType']}) && ($this->map->types[$row['resourceType']] == 'misc')) {
+                if (array_key_exists($this->map->{$row['resourceType']}['howpublished'], $row)) {
                     $howPublished[$this->resourceId] = $row[$this->map->{$row['resourceType']}['howpublished']];
-                }
-                else
-                {
+                } else {
                     $howPublished[$this->resourceId] = $this->map->{$row['resourceType']}['howpublished'];
                 }
             }
             $this->storedBibtexKey[$this->resourceId] = $row['resourceBibtexKey'];
             $entryArray[$this->resourceId][] = "title = " . $this->convertCharacter($this->formatTitle($row));
             // For book_chapter, 'title' is bibtex 'chapter' and 'collectionTitle' is bibtex 'title'
-            if ($row['resourceType'] == 'book_chapter')
-            {
+            if ($row['resourceType'] == 'book_chapter') {
                 $entryArray[$this->resourceId][] = "chapter = " . $this->startField . $row['resourceTitle'] . $this->endField;
             }
 
-            foreach ($this->map->{$row['resourceType']} as $table => $tableArray)
-            {
-                if (($table == 'resource_creator') || ($table == 'howpublished') || ($table == 'resource_publisher'))
-                {
+            foreach ($this->map->{$row['resourceType']} as $table => $tableArray) {
+                if (($table == 'resource_creator') || ($table == 'howpublished') || ($table == 'resource_publisher')) {
                     continue;
                 }
-                foreach ($tableArray as $wkField => $bibField)
-                {
-                    if (isset($row[$wkField]) && $row[$wkField])
-                    {
-                        if (($wkField == 'collectionTitle') && isset($row['collectionTitleShort']) && $row['collectionTitleShort'])
-                        {
+                foreach ($tableArray as $wkField => $bibField) {
+                    if (isset($row[$wkField]) && $row[$wkField]) {
+                        if (($wkField == 'collectionTitle') && isset($row['collectionTitleShort']) && $row['collectionTitleShort']) {
                             $short = $row['collectionTitleShort'];
                             $title = $row['collectionTitle'];
                             $long = preg_quote($title);
                             // preg_quote doesn't escape '/'
                             $long = "/^" . str_replace('/', '\/', $long) . "$/u";
-                            if (!array_key_exists($short, $this->titleString))
-                            {
+                            if (!array_key_exists($short, $this->titleString)) {
                                 $this->titleString[$short] = '"' . $title . '"';
                             }
                             $entryArray[$this->resourceId][] = "$bibField = " . $this->convertCharacter2($title, $short, $long);
-                        }
-                        elseif ($wkField == 'resourcetextUrls')
-                        {
+                        } elseif ($wkField == 'resourcetextUrls') {
                             $urls = unserialize(base64_decode($row[$wkField]));
                             $entryArray[$this->resourceId][] = "$bibField = " . $this->startField . array_shift($urls) . $this->endField;
-                        }
-                        else
-                        {
+                        } else {
                             $entryArray[$this->resourceId][] = "$bibField = " . $this->convertCharacter($row[$wkField]);
                         }
                     }
                 }
             }
-            if ($item = $this->pageFormat($row))
-            {
+            if ($item = $this->pageFormat($row)) {
                 $entryArray[$this->resourceId][] = "pages = " . $this->convertCharacter($item);
             }
             // Deal with month/day
             if ($row['resourcemiscField3'] && (($row['resourceType'] == 'web_article') || ($row['resourceType'] == 'web_site') ||
-                ($row['resourceType'] == 'web_encyclopedia') || ($row['resourceType'] == 'web_encyclopedia_article')))
-            {
+                ($row['resourceType'] == 'web_encyclopedia') || ($row['resourceType'] == 'web_encyclopedia_article'))) {
                 $dates[$this->resourceId]['resourcemiscField3'] = $row['resourcemiscField3'];
-                if (array_key_exists('resourcemiscField2', $row) && $row['resourcemiscField2'])
-                {
+                if (array_key_exists('resourcemiscField2', $row) && $row['resourcemiscField2']) {
                     $dates[$this->resourceId]['resourcemiscField2'] = $row['resourcemiscField2'];
                 }
-                if (array_key_exists('resourcemiscField5', $row) && $row['resourcemiscField5'])
-                {
+                if (array_key_exists('resourcemiscField5', $row) && $row['resourcemiscField5']) {
                     $dates[$this->resourceId]['resourcemiscField5'] = $row['resourcemiscField5'];
                 }
-                if (array_key_exists('resourcemiscField6', $row) && $row['resourcemiscField6'])
-                {
+                if (array_key_exists('resourcemiscField6', $row) && $row['resourcemiscField6']) {
                     $dates[$this->resourceId]['resourcemiscField6'] = $row['resourcemiscField6'];
                 }
             }
-            if ($this->session->getVar("export_MergeStored") && !empty($this->rawEntries))
-            {
-                foreach ($this->rawEntries as $key => $value)
-                {
+            if ($this->session->getVar("export_MergeStored") && !empty($this->rawEntries)) {
+                foreach ($this->rawEntries as $key => $value) {
                     $entryArray[$this->resourceId][] = $key . " = " . $value;
                 }
             }
@@ -597,8 +485,7 @@ class VIEWBIBTEX
         }
 
         // Get raw data (must be done before getting the key
-        if ($this->session->getVar("export_MergeStored"))
-        {
+        if ($this->session->getVar("export_MergeStored")) {
             $this->raw($entryArray, $resourceIds);
         }
         // Get creators
@@ -630,67 +517,54 @@ class VIEWBIBTEX
         unset($resourceIds);
 
         // Write entries to file or concatenate a string
-        if ($fp)
-        {
-            foreach ($entryArray as $rId => $array)
-            {
+        if ($fp) {
+            foreach ($entryArray as $rId => $array) {
                 $success = (FALSE !== fwrite($fp, $entryKeys[$rId] . implode(",\n\t", $array) . "\n}\n" . LF));
             }
 
             return $success;
-        }
-        else
-        {
+        } else {
             $pString = '';
 
-            foreach ($entryArray as $rId => $array)
-            {
+            foreach ($entryArray as $rId => $array) {
                 $pString .= $entryKeys[$rId] . implode(",\n\t", $array) . "\n}\n" . LF;
             }
         }
 
         unset($entryKeys);
 
-        if (!empty($pString))
-        {
+        if (!empty($pString)) {
             return $pString;
-        }
-        else
-        {
+        } else {
             return TRUE;
         }
     }
     /**
      * Check if there any custom fields in the SQL set and provide options to map these to bibtex fields
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function getCustomFields()
     {
-        if (!$this->db->numRows($this->db->select('custom', 'customId')))
-        {
+        if (!$this->db->numRows($this->db->select('custom', 'customId'))) {
             return FALSE;
         }
         $this->db->leftJoin('resource_custom', 'resourcecustomCustomId', 'customId');
         $this->db->formatConditions(['resourcecustomResourceId' => $this->resourceId]);
         $recordset = $this->db->select('custom', ['resourcecustomCustomId', 'customLabel', 'customSize', 'resourcecustomShort',
             'resourcecustomLong', 'resourcecustomAddUserIdCustom', 'resourcecustomEditUserIdCustom', ]);
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if ($row['resourcecustomCustomId'])
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if ($row['resourcecustomCustomId']) {
                 $customLabels[$row['resourcecustomCustomId']] = stripslashes($row['customLabel']);
             }
         }
-        if (!isset($customLabels) || empty($customLabels))
-        {
+        if (!isset($customLabels) || empty($customLabels)) {
             return FALSE;
         }
         $customLabels = array_unique($customLabels);
         $pString = \HTML\p(\HTML\strong($this->messages->text("misc", "customFieldMap")) .
             ' ' . $this->messages->text("misc", "customFieldMap2"));
-        foreach ($customLabels as $id => $label)
-        {
+        foreach ($customLabels as $id => $label) {
             $text = $this->session->getVar("export_Map_$id");
             $pString .= \HTML\p(\FORM\textInput($label, "Map_$id", $text));
         }
@@ -706,8 +580,7 @@ class VIEWBIBTEX
     {
         $this->writeSession();
         $pString = $this->getData();
-        if ($this->formatRawString())
-        {
+        if ($this->formatRawString()) {
             return implode(LF, $this->rawStringArray) . LF . LF . $pString;
         }
 
@@ -721,23 +594,19 @@ class VIEWBIBTEX
      */
     private function grabCustomFields(&$entryArray, $rIds)
     {
-        if (!empty($this->customIds))
-        {
+        if (!empty($this->customIds)) {
             $this->db->formatConditionsOneField(array_keys($this->customIds), 'resourcecustomCustomId');
             $this->db->formatConditionsOneField($rIds, 'resourcecustomResourceId');
             $recordSet = $this->db->select(
                 'resource_custom',
                 ['resourcecustomResourceId', 'resourcecustomCustomId', 'resourcecustomLong', 'resourcecustomShort']
             );
-            while ($row = $this->db->fetchRow($recordSet))
-            {
-                if ($row['resourcecustomShort'])
-                {
+            while ($row = $this->db->fetchRow($recordSet)) {
+                if ($row['resourcecustomShort']) {
                     $entryArray[$row['resourcecustomResourceId']][] = $this->customIds[$row['resourcecustomCustomId']] . " = " .
                         $this->convertCharacter($row['resourcecustomShort']);
                 }
-                if ($row['resourcecustomLong'])
-                {
+                if ($row['resourcecustomLong']) {
                     $entryArray[$row['resourcecustomResourceId']][] = $this->customIds[$row['resourcecustomCustomId']] . " = " .
                         $this->convertCharacter(\HTML\stripHtml($row['resourcecustomLong']));
                 }
@@ -746,13 +615,15 @@ class VIEWBIBTEX
     }
     /**
      * Grab how published field
+     *
+     * @param mixed $entryArray
+     * @param mixed $howPublishedDone
+     * @param mixed $howPublished
      */
     private function grabHowPublished(&$entryArray, &$howPublishedDone, &$howPublished)
     {
-        foreach ($howPublished as $rId => $hp)
-        {
-            if (!array_key_exists($rId, $howPublishedDone))
-            {
+        foreach ($howPublished as $rId => $hp) {
+            if (!array_key_exists($rId, $howPublishedDone)) {
                 $entryArray[$rId][] = "howpublished = " . $this->convertCharacter(ucfirst($hp));
             }
         }
@@ -772,8 +643,7 @@ class VIEWBIBTEX
             'resource_attachments',
             ['resourceattachmentsResourceId', 'resourceattachmentsHashFilename', 'resourceattachmentsFileType', 'resourceattachmentsFileName']
         );
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $array = [];
             $array[] = preg_replace('/[^\da-z]/iu', '', $this->resourceTitle) . '-' . $row['resourceattachmentsFileName'];
             $array[] = $path . $row['resourceattachmentsHashFilename'];
@@ -782,8 +652,7 @@ class VIEWBIBTEX
             $files[$row['resourceattachmentsResourceId']][] = implode(':', $array);
             unset($row);
         }
-        foreach ($files as $rId => $fileArray)
-        {
+        foreach ($files as $rId => $fileArray) {
             $entryArray[$rId][] = "file = " . $this->startField . implode(';', $fileArray) . $this->endField;
         }
     }
@@ -798,59 +667,46 @@ class VIEWBIBTEX
         $this->db->formatConditionsOneField($rIds, 'importrawId');
         $this->db->formatConditions(['importrawImportType' => 'bibtex']);
         $recordset = $this->db->select('import_raw', ['importrawId', 'importrawText', 'importrawStringId', 'importrawImportType']);
-        if (!$this->db->numRows($recordset))
-        {
+        if (!$this->db->numRows($recordset)) {
             return;
         }
         $stringIdFound = FALSE;
         $rawEntries = [];
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $rawEntries[$row['importrawId']] = unserialize(base64_decode($row['importrawText']));
-            foreach ($this->stringIdArray as $stringId)
-            {
-                if ($row['importrawStringId'] == $stringId)
-                {
+            foreach ($this->stringIdArray as $stringId) {
+                if ($row['importrawStringId'] == $stringId) {
                     $stringIdFound = TRUE;
 
                     break;
                 }
             }
-            if ($stringIdFound)
-            {
+            if ($stringIdFound) {
                 break;
             }
-            if (array_search($row['importrawStringId'], $this->stringIdArray) === FALSE)
-            {
+            if (array_search($row['importrawStringId'], $this->stringIdArray) === FALSE) {
                 $this->db->formatConditions(['bibtexstringId' => $row['importrawStringId']]);
                 $rawString = unserialize(base64_decode($this->db->selectFirstField('bibtex_string', 'bibtexstringText'))) . "\n" . LF;
-                if ($rawString)
-                {
+                if ($rawString) {
                     preg_match_all("/@STRING{(.*)}/u", $rawString, $strings);
                 }
-                foreach ($strings[1] as $string)
-                {
+                foreach ($strings[1] as $string) {
                     $split = UTF8::mb_explode("=", $string, 2);
                     $key = trim($split[0]);
-                    if (array_search($key, $this->rawString) === FALSE)
-                    {
+                    if (array_search($key, $this->rawString) === FALSE) {
                         $this->rawString[$key] = trim($split[1]);
                     }
                 }
                 $this->orderArrayByKeyLength();
-                foreach ($this->rawString as $key => $value)
-                {
-                    if (preg_match("/^[\"{](.*)[\"}]$/u", trim($value), $matches))
-                    {
+                foreach ($this->rawString as $key => $value) {
+                    if (preg_match("/^[\"{](.*)[\"}]$/u", trim($value), $matches)) {
                         $value = $matches[1];
                     }
                     $value = "/^" . preg_quote($value, "/") . "$/u";
-                    if (!array_search($value, $this->strValues))
-                    {
+                    if (!array_search($value, $this->strValues)) {
                         $this->strValues[] = $value;
                     }
-                    if (!array_search($key, $this->strKeys))
-                    {
+                    if (!array_search($key, $this->strKeys)) {
                         $this->strKeys[] = $key;
                     }
                 }
@@ -862,43 +718,31 @@ class VIEWBIBTEX
         }
         $this->strValues = array_unique($this->strValues);
         $this->strKeys = array_unique($this->strKeys);
-        foreach ($rawEntries as $rId => $rawEntry)
-        {
+        foreach ($rawEntries as $rId => $rawEntry) {
             $rawEntry = UTF8::mb_explode(LF, $rawEntry);
             array_pop($rawEntry); // always an empty array at end so get rid of it.
-            foreach ($rawEntry as $entries)
-            {
+            foreach ($rawEntry as $entries) {
                 $entry = UTF8::mb_explode("=", $entries, 2);
-                if (!trim($entry[1]))
-                {
+                if (!trim($entry[1])) {
                     continue;
                 }
-                if (trim($entry[0]) == 'citation')
-                {
+                if (trim($entry[0]) == 'citation') {
                     $this->rawCitations[$rId] = trim($entry[1]);
-                }
-                else
-                {
+                } else {
                     $key = trim($entry[0]);
                     $value = trim($entry[1]);
-                    if ($this->startField == "{")
-                    {
+                    if ($this->startField == "{") {
                         $match = "/^(\")(.*)(\")$/u";
-                        if (preg_match($match, $value, $matches))
-                        {
+                        if (preg_match($match, $value, $matches)) {
                             $value = $this->startField . $matches[2] . $this->endField;
                         }
-                    }
-                    elseif ($this->startField == "\"")
-                    {
+                    } elseif ($this->startField == "\"") {
                         $match = "/^(\\{)(.*)(\\})$/u";
-                        if (preg_match($match, $value, $matches))
-                        {
+                        if (preg_match($match, $value, $matches)) {
                             $value = $this->startField . $matches[2] . $this->endField;
                         }
                     }
-                    if (($key == 'month') && (mb_substr($value, 0, 1) == '"'))
-                    {
+                    if (($key == 'month') && (mb_substr($value, 0, 1) == '"')) {
                         $value = mb_substr($value, 1);
                         $value = mb_substr($value, 0, -1);
                     }
@@ -917,10 +761,8 @@ class VIEWBIBTEX
         // array are hexadecimal characters, this means array_shift will treat them as integer keys and will modify the array
         // keys - we don't want this!
         $index = 0;
-        foreach ($temp as $key => $value)
-        {
-            if ($index >= 2)
-            {
+        foreach ($temp as $key => $value) {
+            if ($index >= 2) {
                 $this->spCh[$key] = $value;
             }
             $index++;
@@ -942,68 +784,46 @@ class VIEWBIBTEX
      */
     private function citeFormat(&$rowTypes, &$entryKeys, $rIds)
     {
-        if ($this->session->getVar("export_UseOriginalCitation") || !GLOBALS::getUserVar("UseWikindxKey"))
-        {
-            foreach ($rIds as $rId)
-            {
+        if ($this->session->getVar("export_UseOriginalCitation") || !GLOBALS::getUserVar("UseWikindxKey")) {
+            foreach ($rIds as $rId) {
                 if (($this->session->getVar("export_UseOriginalCitation")) &&
-                    array_key_exists($rId, $this->rawCitation) && (array_search($this->rawCitation[$rId], $this->cite) === FALSE))
-                {
+                    array_key_exists($rId, $this->rawCitation) && (array_search($this->rawCitation[$rId], $this->cite) === FALSE)) {
                     $this->cite[] = trim($this->rawCitation[$rId]);
                     $cite = trim($this->rawCitation[$rId]);
-                }
-                elseif (!GLOBALS::getUserVar("UseWikindxKey"))
-                {
+                } elseif (!GLOBALS::getUserVar("UseWikindxKey")) {
                     $cite = $this->storedBibtexKey[$rId];
-                }
-                else
-                { // just in case
+                } else { // just in case
                     $cite = $rId;
                 }
                 if (($rowTypes[$rId]['resourceType'] == 'thesis') && (($rowTypes[$rId]['resourceField1'] == 'doctoral') ||
-                    ($rowTypes[$rId]['resourceField1'] == 'PhD') || ($rowTypes[$rId]['resourceField1'] == 'EdD')))
-                {
+                    ($rowTypes[$rId]['resourceField1'] == 'PhD') || ($rowTypes[$rId]['resourceField1'] == 'EdD'))) {
                     $entryKeys[$rId] = "@" . 'phdthesis' . "{" . "$cite,\n\t";
-                }
-                elseif ($rowTypes[$rId]['resourceType'] == 'thesis')
-                { // masters + unknown
+                } elseif ($rowTypes[$rId]['resourceType'] == 'thesis') { // masters + unknown
                     $entryKeys[$rId] = "@" . 'mastersthesis' . "{" . "$cite,\n\t";
-                }
-                else
-                {
+                } else {
                     $entryKeys[$rId] = "@" . $this->map->types[$rowTypes[$rId]['resourceType']] . "{" . "$cite,\n\t";
                 }
             }
         }
         // Use wikindx-generated keys
-        else
-        {
+        else {
             $this->db->formatConditionsOneField($rIds, 'resourcecreatorResourceId');
             $recordset = $this->db->select('resource_creator', ['resourcecreatorResourceId', 'resourcecreatorCreatorSurname'], TRUE);
-            while ($row = $this->db->fetchRow($recordset))
-            {
-                if (!$row['resourcecreatorCreatorSurname'])
-                {
+            while ($row = $this->db->fetchRow($recordset)) {
+                if (!$row['resourcecreatorCreatorSurname']) {
                     $cite = 'anon';
-                }
-                else
-                {
+                } else {
                     $cite = preg_replace("/\\W/u", '', $this->convertCharacter($row['resourcecreatorCreatorSurname'], 'plain'));
                 }
                 $cite .= '.' . $row['resourcecreatorResourceId'];
                 if (($rowTypes[$row['resourcecreatorResourceId']]['resourceType'] == 'thesis') &&
                     (($rowTypes[$row['resourcecreatorResourceId']]['resourceField1'] == 'doctoral') ||
                     ($rowTypes[$row['resourcecreatorResourceId']]['resourceField1'] == 'PhD') ||
-                    ($rowTypes[$row['resourcecreatorResourceId']]['resourceField1'] == 'EdD')))
-                {
+                    ($rowTypes[$row['resourcecreatorResourceId']]['resourceField1'] == 'EdD'))) {
                     $entryKeys[$row['resourcecreatorResourceId']] = "@" . 'phdthesis' . "{" . "$cite,\n\t";
-                }
-                elseif ($rowTypes[$row['resourcecreatorResourceId']]['resourceType'] == 'thesis')
-                { // masters + unknown
+                } elseif ($rowTypes[$row['resourcecreatorResourceId']]['resourceType'] == 'thesis') { // masters + unknown
                     $entryKeys[$row['resourcecreatorResourceId']] = "@" . 'mastersthesis' . "{" . "$cite,\n\t";
-                }
-                else
-                {
+                } else {
                     $entryKeys[$row['resourcecreatorResourceId']] =
                         "@" . $this->map->types[$rowTypes[$row['resourcecreatorResourceId']]['resourceType']] . "{" . "$cite,\n\t";
                 }
@@ -1022,19 +842,13 @@ class VIEWBIBTEX
     {
         $this->db->formatConditions(['resourcecreatorResourceId' => $id]);
         $recordset = $this->db->select('resource_creator', 'resourcecreatorCreatorSurname', TRUE);
-        if (!$this->db->numRows($recordset))
-        { // shouldn't happen, but just in case
+        if (!$this->db->numRows($recordset)) { // shouldn't happen, but just in case
             $cite = 'anon';
-        }
-        else
-        {
+        } else {
             $name = $this->db->fetchOne($recordset);
-            if (!$name)
-            {
+            if (!$name) {
                 $cite = 'anon';
-            }
-            else
-            {
+            } else {
                 $cite = $this->convertCharacter($name, 'plain');
                 $cite = preg_replace("/\\W/u", '', $cite);
             }
@@ -1046,7 +860,7 @@ class VIEWBIBTEX
      * convert string from raw database string fields
      *
      * @param string $string
-     * @param string|FALSE $type
+     * @param false|string $type
      *
      * @return string
      */
@@ -1055,15 +869,12 @@ class VIEWBIBTEX
         $string = html_entity_decode(stripslashes($string), ENT_QUOTES, 'UTF-8');
         $string = $this->convertStringTex($string, $type, $this->convertTex ? 'ISO-8859-1' : 'UTF8');
         // Do @string substitutions
-        if (!empty($this->strValues))
-        {
+        if (!empty($this->strValues)) {
             $replace = preg_replace($this->strValues, $this->strKeys, $string);
             // If a replacement has occurred, $replace != $c so return without quotes
-            if ($replace != $string)
-            {
+            if ($replace != $string) {
                 $replace = preg_replace("/[^a-zA-Z0-9]/u", '', $replace);
-                if (is_numeric(mb_substr($replace, 0)))
-                {
+                if (is_numeric(mb_substr($replace, 0))) {
                     $replace = "string$replace";
                 }
 
@@ -1079,7 +890,7 @@ class VIEWBIBTEX
      * @param string $string
      * @param string $replace
      * @param string $pattern
-     * @param string|FALSE $type
+     * @param false|string $type
      *
      * @return string
      */
@@ -1089,11 +900,9 @@ class VIEWBIBTEX
         // Do @string substitutions
         $replace = preg_replace($pattern, $replace, $string);
         // If a replacement has occurred, $replace != $c so return without quotes
-        if ($replace != $string)
-        {
+        if ($replace != $string) {
             $replace = preg_replace("/[^a-zA-Z0-9]/u", '', $replace);
-            if (is_numeric(mb_substr($replace, 0)))
-            {
+            if (is_numeric(mb_substr($replace, 0))) {
                 $replace = "string$replace";
             }
 
@@ -1106,7 +915,7 @@ class VIEWBIBTEX
      * convert special characters to TeX codes
      *
      * @param string $string
-     * @param string|FALSE $type
+     * @param false|string $type
      * @param string $encoding Default is 'ISO-8859-1'
      *
      * @return string
@@ -1115,32 +924,24 @@ class VIEWBIBTEX
     {
         $c = $string;
 
-        if ($encoding == 'ISO-8859-1')
-        {
-            if ($type == 'plain')
-            {
-                foreach ($this->spChPlain as $key => $value)
-                {
+        if ($encoding == 'ISO-8859-1') {
+            if ($type == 'plain') {
+                foreach ($this->spChPlain as $key => $value) {
                     $char = preg_quote(UTF8::mb_chr($key), '/');
                     $c = preg_replace("/$char/u", $value, $c);
                 }
-            }
-            else
-            {
+            } else {
                 // '\' and '$' are special cases and must be treated separately.  Former MUST be treated first!
                 $char = preg_quote("\\" . UTF8::mb_chr(0x005C), '/');	// '\'
                 $rep = "\\textbackslash";
                 $c = preg_replace("/$char/u", $rep, $c);
-                foreach ($this->spCh as $key => $value)
-                {
+                foreach ($this->spCh as $key => $value) {
                     $match[] = "/" . preg_quote(UTF8::mb_chr($key), '/') . "/u";
                     $replace[] = $value;
                 }
                 $c = preg_replace($match, $replace, $c);
             }
-        }
-        else
-        {
+        } else {
             $c = preg_replace('/"/u', '{"}', $c);
         }
 
@@ -1165,8 +966,7 @@ class VIEWBIBTEX
         $c = preg_replace($bbCode, $tex, $c);
 
         // As web browser encoding is set to UTF-8, all input in the db is stored as UTF-8 - convert back to ISO-8859-1
-        if ($encoding == 'ISO-8859-1')
-        {
+        if ($encoding == 'ISO-8859-1') {
             $c = utf8_decode($c);
         }
 
@@ -1192,27 +992,20 @@ class VIEWBIBTEX
         $this->db->orderBy('resourcecreatorOrder', TRUE, FALSE);
         $resultSet = $this->db->select('resource_creator', ['resourcecreatorResourceId', 'creatorSurname',
             'creatorFirstname', 'creatorInitials', 'creatorPrefix', 'resourcecreatorRole', ]);
-        while ($row = $this->db->fetchRow($resultSet))
-        {
-            if (!array_key_exists($row['resourcecreatorRole'], $this->map->{$rowTypes[$row['resourcecreatorResourceId']]['resourceType']}['resource_creator']))
-            {
+        while ($row = $this->db->fetchRow($resultSet)) {
+            if (!array_key_exists($row['resourcecreatorRole'], $this->map->{$rowTypes[$row['resourcecreatorResourceId']]['resourceType']}['resource_creator'])) {
                 continue;
             }
             $name = $this->formatName($row);
-            if ($name)
-            {
+            if ($name) {
                 $mapName[$row['resourcecreatorResourceId']][$row['resourcecreatorRole']][] = $name;
             }
             unset($row);
         }
-        foreach ($rIds as $rId)
-        {
-            if (array_key_exists($rId, $mapName))
-            {
-                foreach ($this->map->{$rowTypes[$rId]['resourceType']}['resource_creator'] as $wkField => $bibField)
-                {
-                    if (array_key_exists($wkField, $mapName[$rId]))
-                    {
+        foreach ($rIds as $rId) {
+            if (array_key_exists($rId, $mapName)) {
+                foreach ($this->map->{$rowTypes[$rId]['resourceType']}['resource_creator'] as $wkField => $bibField) {
+                    if (array_key_exists($wkField, $mapName[$rId])) {
                         $name = $this->convertCharacter(implode(' and ', $mapName[$rId][$wkField]));
                         $entryArray[$rId][] = $bibField . " = " . $name;
                     }
@@ -1237,8 +1030,7 @@ class VIEWBIBTEX
      */
     private function cmp($a, $b)
     {
-        if (preg_match_all("/./u", $a, $throwAway) > preg_match_all("/./u", $b, $throwAway2))
-        {
+        if (preg_match_all("/./u", $a, $throwAway) > preg_match_all("/./u", $b, $throwAway2)) {
             return 0;
         }
 
@@ -1255,44 +1047,31 @@ class VIEWBIBTEX
     {
         $surname = $firstname = $initials = '';
         // WIKINDX stores Jr., IV etc. at end of surname...
-        if ($row['creatorSurname'])
-        {
-            if ($row['creatorPrefix'])
-            {
+        if ($row['creatorSurname']) {
+            if ($row['creatorPrefix']) {
                 $surname = stripslashes($row['creatorPrefix']) . " " .
                 stripslashes($row['creatorSurname']);
-            }
-            else
-            {
+            } else {
                 $surname = stripslashes($row['creatorSurname']);
             }
         }
-        if ($row['creatorFirstname'])
-        {
+        if ($row['creatorFirstname']) {
             $firstname = stripslashes($row['creatorFirstname']);
         }
-        if ($row['creatorInitials'])
-        {
+        if ($row['creatorInitials']) {
             $initials = implode('. ', UTF8::mb_explode(' ', stripslashes($row['creatorInitials']))) . ".";
         }
-        if (preg_match("/(.*)(Sr\\.|jr\\.)/ui", $surname, $matches))
-        {
+        if (preg_match("/(.*)(Sr\\.|jr\\.)/ui", $surname, $matches)) {
             $surname = trim($matches[1]) . ", " . trim($matches[2]);
         }
-        if (preg_match("/(.*)\\s(I|II|III|IV|V|VI|VII|VIII|IX|X)$/u", $surname, $matches))
-        {
+        if (preg_match("/(.*)\\s(I|II|III|IV|V|VI|VII|VIII|IX|X)$/u", $surname, $matches)) {
             $surname = trim($matches[1]) . ", " . trim($matches[2]);
         }
-        if ($firstname && $initials)
-        {
+        if ($firstname && $initials) {
             return $surname . ", " . $firstname . ' ' . $initials;
-        }
-        elseif ($firstname)
-        {
+        } elseif ($firstname) {
             return $surname . ", " . $firstname;
-        }
-        elseif ($initials)
-        {
+        } elseif ($initials) {
             return $surname . ", " . $initials;
         }
 
@@ -1308,17 +1087,13 @@ class VIEWBIBTEX
     private function formatTitle($row)
     {
         // For book_chapter, 'title' is bibtex 'chapter' and 'collectionTitle' is bibtex 'title'
-        if ($row['resourceType'] == 'book_chapter')
-        {
+        if ($row['resourceType'] == 'book_chapter') {
             return $row['collectionTitle'];
         }
         $noSort = $row['resourceNoSort'] ? $row['resourceNoSort'] . ' ' : FALSE;
-        if ($row['resourceSubtitle'])
-        {
+        if ($row['resourceSubtitle']) {
             $string = $noSort . $row['resourceTitle'] . ": " . $row['resourceSubtitle'];
-        }
-        else
-        {
+        } else {
             $string = $noSort . $row['resourceTitle'];
         }
         $this->resourceTitle = $string;
@@ -1335,64 +1110,50 @@ class VIEWBIBTEX
      */
     private function grabPublisher(&$rowTypes, &$entryArray, &$miscField1, &$miscPublishers)
     {
-        if (!empty($miscField1))
-        {
+        if (!empty($miscField1)) {
             $this->db->formatConditionsOneField(array_keys($miscField1), 'resourcemiscid');
             $this->db->leftJoin('publisher', 'publisherId', 'resourcemiscField1');
             $resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'publisherName','publisherLocation']);
-            while ($row = $this->db->fetchRow($resultSet))
-            {
+            while ($row = $this->db->fetchRow($resultSet)) {
                 if (!array_key_exists('resource_publisher', $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}) ||
-                    empty($this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher']))
-                {
+                    empty($this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher'])) {
                     continue;
                 }
                 $publisher = $address = FALSE;
-                if (array_key_exists('publisherName', $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher']))
-                {
+                if (array_key_exists('publisherName', $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher'])) {
                     $bibtexPubField = $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher']['publisherName'];
                 }
-                if (array_key_exists('publisherLocation', $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher']))
-                {
+                if (array_key_exists('publisherLocation', $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher'])) {
                     $bibtexAddField = $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher']['publisherLocation'];
                 }
-                if ($row['publisherName'])
-                {
+                if ($row['publisherName']) {
                     $entryArray[$row['resourcemiscId']][] = "$bibtexPubField = " . $this->convertCharacter($row['publisherName']);
-                    if ($row['publisherLocation'])
-                    {
+                    if ($row['publisherLocation']) {
                         $entryArray[$row['resourcemiscId']][] = "$bibtexAddField = " . $this->convertCharacter($row['publisherLocation']);
                     }
                 }
                 unset($row);
             }
         }
-        if (!empty($miscPublishers))
-        {
+        if (!empty($miscPublishers)) {
             $this->db->formatConditionsOneField(array_keys($miscPublishers), 'resourcemiscId');
             $this->db->leftJoin('publisher', 'publisherId', 'resourcemiscPublisher');
             $resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'publisherName','publisherLocation']);
-            while ($row = $this->db->fetchRow($resultSet))
-            {
+            while ($row = $this->db->fetchRow($resultSet)) {
                 if (!array_key_exists('resource_publisher', $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}) ||
-                    empty($this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher']))
-                {
+                    empty($this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher'])) {
                     continue;
                 }
                 $publisher = $address = FALSE;
-                if (array_key_exists('publisherName', $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher']))
-                {
+                if (array_key_exists('publisherName', $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher'])) {
                     $bibtexPubField = $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher']['publisherName'];
                 }
-                if (array_key_exists('publisherLocation', $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher']))
-                {
+                if (array_key_exists('publisherLocation', $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher'])) {
                     $bibtexAddField = $this->map->{$rowTypes[$row['resourcemiscId']]['resourceType']}['resource_publisher']['publisherLocation'];
                 }
-                if ($row['publisherName'])
-                {
+                if ($row['publisherName']) {
                     $entryArray[$row['resourcemiscId']][] = "$bibtexPubField = " . $this->convertCharacter($row['publisherName']);
-                    if ($row['publisherLocation'])
-                    {
+                    if ($row['publisherLocation']) {
                         $entryArray[$row['resourcemiscId']][] = "$bibtexAddField = " . $this->convertCharacter($row['publisherLocation']);
                     }
                 }
@@ -1404,18 +1165,15 @@ class VIEWBIBTEX
      * pageFormat
      *
      * @param array $row
-     *
-     * @param string|FALSE
+     * @param false|string
      */
     private function pageFormat($row)
     {
         $page = FALSE;
-        if ($row['resourcepagePageStart'])
-        {
+        if ($row['resourcepagePageStart']) {
             $page = stripslashes($row['resourcepagePageStart']);
         }
-        if ($row['resourcepagePageEnd'])
-        {
+        if ($row['resourcepagePageEnd']) {
             $page .= '--' . stripslashes($row['resourcepagePageEnd']);
         }
 
@@ -1433,12 +1191,10 @@ class VIEWBIBTEX
         $this->db->formatConditionsOneField($rIds, 'resourcekeywordResourceId');
         $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
         $recordset = $this->db->select('resource_keyword', ['resourcekeywordResourceId', 'keywordKeyword']);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $kws[$row['resourcekeywordResourceId']][] = $row['keywordKeyword'];
         }
-        foreach ($kws as $rId => $kwArray)
-        {
+        foreach ($kws as $rId => $kwArray) {
             $entryArray[$rId][] = "keywords = " . $this->convertCharacter(implode($this->keywordSeparator, $kwArray));
         }
     }
@@ -1454,23 +1210,19 @@ class VIEWBIBTEX
     {
         $this->db->formatConditionsOneField($rIds, 'resourcetextId');
         $resultSet = $this->db->select('resource_text', ['resourcetextId', 'resourcetextNote', 'resourcetextAbstract', 'resourcetextUrls']);
-        while ($row = $this->db->fetchRow($resultSet))
-        {
+        while ($row = $this->db->fetchRow($resultSet)) {
             // Ensure first letter is capitalized
-            if ($row['resourcetextNote'])
-            {
+            if ($row['resourcetextNote']) {
                 $note = UTF8::mb_ucfirst(\HTML\stripHtml($row['resourcetextNote']));
                 $entryArray[$row['resourcetextId']][] = "note = " . $this->convertCharacter($this->parseCitation($note));
             }
-            if ($row['resourcetextAbstract'])
-            {
+            if ($row['resourcetextAbstract']) {
                 $abstract = UTF8::mb_ucfirst(\HTML\stripHtml($row['resourcetextAbstract']));
                 $entryArray[$row['resourcetextId']][] = "abstract = " . $this->convertCharacter($this->parseCitation($abstract));
             }
             if ($row['resourcetextUrls'] &&
                 (($rowTypes[$row['resourcetextId']]['resourceType'] == 'web_article') ||
-                ($rowTypes[$row['resourcetextId']]['resourceType'] == 'database')))
-            { // 'misc' types
+                ($rowTypes[$row['resourcetextId']]['resourceType'] == 'database'))) { // 'misc' types
                 // Only take the first URL for this field
                 $tmp = base64_decode($row['resourcetextUrls']);
                 $tmp = unserialize($tmp);
@@ -1491,8 +1243,7 @@ class VIEWBIBTEX
     private function parseCitation($text)
     {
         // If no citations, return doing nothing
-        if (mb_strpos(mb_strtolower($text), "[cite]") === FALSE)
-        {
+        if (mb_strpos(mb_strtolower($text), "[cite]") === FALSE) {
             return $text;
         }
         // Capture any text after last [cite]...[/cite] tag
@@ -1534,71 +1285,53 @@ class VIEWBIBTEX
         $this->db->formatConditions(['resourceId' => $id]);
         $resultset = $this->db->select('resource', ['resourceId']);
         // Presumably an invalid citation ID
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             return "INVALID CITATION";
         }
-        if ($this->session->getVar("export_UseOriginalCitation"))
-        {
+        if ($this->session->getVar("export_UseOriginalCitation")) {
             $this->db->formatConditions(['importrawId' => $id]);
             $rawEntries = unserialize(base64_decode($this->db->selectFirstField('import_raw', 'importrawText')));
-            if ($rawEntries)
-            {
+            if ($rawEntries) {
                 $rawEntries = UTF8::mb_explode(LF, $rawEntries);
                 array_pop($rawEntries); // always an empty array at end so get rid of it.
-                foreach ($rawEntries as $entries)
-                {
+                foreach ($rawEntries as $entries) {
                     $entry = UTF8::mb_explode("=", $entries, 2);
-                    if (!trim($entry[1]))
-                    {
+                    if (!trim($entry[1])) {
                         continue;
                     }
-                    if (trim($entry[0]) == 'citation')
-                    {
+                    if (trim($entry[0]) == 'citation') {
                         $citeKey = trim($entry[1]);
 
                         break;
                     }
                 }
             }
-        }
-        elseif (!GLOBALS::getUserVar("UseWikindxKey"))
-        {
+        } elseif (!GLOBALS::getUserVar("UseWikindxKey")) {
             $this->db->formatConditions(['resourceId' => $id]);
             $citeKey = $this->db->selectFirstField('resource', 'resourceBibtexKey');
         }
-        if (!$citeKey)
-        {
+        if (!$citeKey) {
             $citeKey = $this->wikindxCiteKey($id); // Use wikindx=generated keys from this point on
         }
         
         $citeKey = "WIKINDXCITEKEYSTART" . $citeKey . ".$id" . "WIKINDXCITEKEYEND";
-        if (array_key_exists('1', $idPart))
-        {
+        if (array_key_exists('1', $idPart)) {
             $pages = UTF8::mb_explode("-", $idPart[1]);
             $pageStart = $pages[0];
             $pageEnd = array_key_exists('1', $pages) ? $pages[1] : FALSE;
-            if ($pageEnd)
-            {
+            if ($pageEnd) {
                 $pages = " pp.$pageStart-$pageEnd";
-            }
-            else
-            {
+            } else {
                 $pages = " p.$pageStart";
             }
-        }
-        else
-        {
+        } else {
             $pages = FALSE;
         }
-        if (array_key_exists('1', $rawCitation))
-        {
+        if (array_key_exists('1', $rawCitation)) {
             $text = UTF8::mb_explode("`", $rawCitation[1]);
             $preText = $text[0];
             $postText = array_key_exists('1', $text) ? $text[1] : FALSE;
-        }
-        else
-        {
+        } else {
             $preText = $postText = FALSE;
         }
 
@@ -1613,41 +1346,30 @@ class VIEWBIBTEX
     private function grabDates(&$entryArray, &$dates)
     {
         // NB 3-letter month abbreviation must not be quoted
-        foreach ($dates as $rId => $dateArray)
-        {
+        foreach ($dates as $rId => $dateArray) {
             $startMonth = $this->monthArray[$dateArray['resourcemiscField3']]; // we check this array element exists above
             // if there's a day, append it
-            if (array_key_exists('resourcemiscField2', $dateArray))
-            {
+            if (array_key_exists('resourcemiscField2', $dateArray)) {
                 $startDay = $this->startField . " " . $dateArray['resourcemiscField2'] . $this->endField;
             }
             if (isset($startDay) && array_key_exists('resourcemiscField5', $dateArray) && array_key_exists('resourcemiscField6', $dateArray) &&
-                ($dateArray['resourcemiscField3'] == $dateArray['resourcemiscField6']))
-            {
+                ($dateArray['resourcemiscField3'] == $dateArray['resourcemiscField6'])) {
                 $date = $this->startField . $startMonth . "~" . $this->endField . " # "
                     . $this->startField . $dateArray['resourcemiscField2']
                     . "--" . $dateArray['resourcemiscField5'] . $this->endField;
-            }
-            elseif (isset($startDay) && array_key_exists('resourcemiscField5', $dateArray) && array_key_exists('resourcemiscField6', $dateArray))
-            {
+            } elseif (isset($startDay) && array_key_exists('resourcemiscField5', $dateArray) && array_key_exists('resourcemiscField6', $dateArray)) {
                 $date = $this->startField . $startMonth . "~" . $this->endField . " # "
                  . "~" . $this->startField . $dateArray['resourcemiscField2'] . "--" .
                 $this->endField . " # " . $this->startField . $this->monthArray[$dateArray['resourcemiscField6']]
                 . $this->endField . " # " . $this->startField . $dateArray['resourcemiscField5'] . $this->endField;
-            }
-            elseif (array_key_exists('resourcemiscField6', $dateArray))
-            {
+            } elseif (array_key_exists('resourcemiscField6', $dateArray)) {
                 $date = $this->startField . $startMonth . "~" . $this->endField . " # "
                 . $this->startField . "/" . $this->endField .
                 " # " . $this->startField . $this->monthArray[$dateArray['resourcemiscField6']] . "~" . $this->endField;
-            }
-            elseif (isset($startDay))
-            {
+            } elseif (isset($startDay)) {
                 $date = $this->startField . $startMonth . "~" . $this->endField . " # "
                 . $this->startField . $startDay . $this->endField;
-            }
-            else
-            {
+            } else {
                 $date = $this->startField . $startMonth . $this->endField;
             }
             // No double quotes for month
@@ -1663,30 +1385,24 @@ class VIEWBIBTEX
     private function grabMetadata(&$entryArray, $resourceIds)
     {
         $conditions = $conditionsC = $unions = [];
-        if (array_key_exists('Quotation', $this->metadataFields))
-        {
+        if (array_key_exists('Quotation', $this->metadataFields)) {
             $conditions[] = 'q';
         }
-        if (array_key_exists('QuotationComment', $this->metadataFields))
-        {
+        if (array_key_exists('QuotationComment', $this->metadataFields)) {
             $conditionsC[] = 'qc';
         }
-        if (array_key_exists('Paraphrase', $this->metadataFields))
-        {
+        if (array_key_exists('Paraphrase', $this->metadataFields)) {
             $conditions[] = 'p';
         }
-        if (array_key_exists('ParaphraseComment', $this->metadataFields))
-        {
+        if (array_key_exists('ParaphraseComment', $this->metadataFields)) {
             $conditionsC[] = 'pc';
         }
-        if (array_key_exists('Musing', $this->metadataFields))
-        {
+        if (array_key_exists('Musing', $this->metadataFields)) {
             $this->setPrivateCondition();
             $conditions[] = 'm';
         }
         // subquery for quotes, paraphrases and musings
-        if (!empty($conditions))
-        {
+        if (!empty($conditions)) {
             $this->db->formatConditionsOneField($resourceIds, 'resourcemetadataResourceId');
             $this->db->formatConditionsOneField($conditions, 'resourcemetadataType');
             $unions[] = $this->db->selectNoExecute(
@@ -1699,8 +1415,7 @@ class VIEWBIBTEX
             );
         }
         // subquery for comments
-        if (!empty($conditionsC))
-        {
+        if (!empty($conditionsC)) {
             $this->setPrivateCondition('t2');
             $ijCondition = $this->db->formatFields('t1.resourcemetadataId') . $this->db->equal . $this->db->formatFields('t2.resourcemetadataMetadataId')
                 . $this->db->and .
@@ -1717,8 +1432,7 @@ class VIEWBIBTEX
                 't1'
             );
         }
-        if (empty($unions))
-        {
+        if (empty($unions)) {
             return; // nothing to do
         }
         $subQ = $this->db->subQuery($this->db->union($unions), 't');
@@ -1737,57 +1451,37 @@ class VIEWBIBTEX
         $qIndex = $pIndex = $mIndex = 1;
         $rId = 0;
         $lastType = FALSE;
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (!$row['resourcemetadataResourceId'])
-            {
-                if ($row['resourcemetadataType'] == 'qc')
-                {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (!$row['resourcemetadataResourceId']) {
+                if ($row['resourcemetadataType'] == 'qc') {
                     list($field, $text) = $this->formatMetadata($row, $qIndex);
                     $commentTypes[$row['resourcemetadataId']] = $this->metadataFields['QuotationComment'];
-                }
-                elseif ($row['resourcemetadataType'] == 'pc')
-                {
+                } elseif ($row['resourcemetadataType'] == 'pc') {
                     list($field, $text) = $this->formatMetadata($row, $pIndex);
                     $commentTypes[$row['resourcemetadataId']] = $this->metadataFields['ParaphraseComment'];
                 }
                 $comments[$row['resourcemetadataId']][$row['resourcemetadataMetadataId']] = $text;
                 $cFields[$row['resourcemetadataId']] = $field;
-            }
-            else
-            {
-                if ($rId === $row['resourcemetadataResourceId'])
-                {
-                    if (($row['resourcemetadataType'] == 'q') && ($lastType == 'q'))
-                    {
+            } else {
+                if ($rId === $row['resourcemetadataResourceId']) {
+                    if (($row['resourcemetadataType'] == 'q') && ($lastType == 'q')) {
                         ++$qIndex;
-                    }
-                    elseif (($row['resourcemetadataType'] == 'p') && ($lastType == 'p'))
-                    {
+                    } elseif (($row['resourcemetadataType'] == 'p') && ($lastType == 'p')) {
                         ++$pIndex;
-                    }
-                    elseif (($row['resourcemetadataType'] == 'm') && ($lastType == 'm'))
-                    {
+                    } elseif (($row['resourcemetadataType'] == 'm') && ($lastType == 'm')) {
                         ++$mIndex;
                     }
-                }
-                else
-                {
+                } else {
                     $rId = $row['resourcemetadataResourceId'];
                     $qIndex = $pIndex = $mIndex = 1;
                 }
-                if ($row['resourcemetadataType'] == 'q')
-                {
+                if ($row['resourcemetadataType'] == 'q') {
                     list($field, $text) = $this->formatMetadata($row, $qIndex);
                     $lastType = 'q';
-                }
-                elseif ($row['resourcemetadataType'] == 'p')
-                {
+                } elseif ($row['resourcemetadataType'] == 'p') {
                     list($field, $text) = $this->formatMetadata($row, $pIndex);
                     $lastType = 'p';
-                }
-                elseif ($row['resourcemetadataType'] == 'm')
-                {
+                } elseif ($row['resourcemetadataType'] == 'm') {
                     list($field, $text) = $this->formatMetadata($row, $mIndex);
                     $lastType = 'm';
                 }
@@ -1798,10 +1492,8 @@ class VIEWBIBTEX
             unset($row);
         }
         $index = 1;
-        foreach ($comments as $mId => $textArray)
-        {
-            foreach ($textArray as $mmId => $text)
-            {
+        foreach ($comments as $mId => $textArray) {
+            foreach ($textArray as $mmId => $text) {
                 $entryArray[$mIds[$mmId]][] = $commentTypes[$mId] . '_' . $index . '_' . $mFields[$mmId] . ' = ' . $text;
                 ++$index;
             }
@@ -1817,49 +1509,31 @@ class VIEWBIBTEX
      */
     private function formatMetadata($row, $index = FALSE)
     {
-        if ($row['resourcemetadataType'] == 'q')
-        {
+        if ($row['resourcemetadataType'] == 'q') {
             $type = 'Quotation';
-        }
-        elseif ($row['resourcemetadataType'] == 'p')
-        {
+        } elseif ($row['resourcemetadataType'] == 'p') {
             $type = 'Paraphrase';
-        }
-        elseif ($row['resourcemetadataType'] == 'qc')
-        {
+        } elseif ($row['resourcemetadataType'] == 'qc') {
             $type = 'QuotationComment';
-        }
-        elseif ($row['resourcemetadataType'] == 'pc')
-        {
+        } elseif ($row['resourcemetadataType'] == 'pc') {
             $type = 'ParaphraseComment';
-        }
-        elseif ($row['resourcemetadataType'] == 'm')
-        {
+        } elseif ($row['resourcemetadataType'] == 'm') {
             $type = 'Musing';
         }
-        if ($row['resourcemetadataPageStart'])
-        {
+        if ($row['resourcemetadataPageStart']) {
             $pages = $row['resourcemetadataPageStart'];
-            if ($row['resourcemetadataPageEnd'])
-            {
+            if ($row['resourcemetadataPageEnd']) {
                 $pages = '(pp.' . $pages . '-' . $row['resourcemetadataPageEnd'] . ') ';
-            }
-            else
-            {
+            } else {
                 $pages = "(p.$pages) ";
             }
-        }
-        else
-        {
+        } else {
             $pages = FALSE;
         }
         $text = $pages . $row['resourcemetadataText'];
-        if ($index)
-        {
+        if ($index) {
             $fieldName = $this->metadataFields[$type] . "_$index";
-        }
-        else
-        {
+        } else {
             $fieldName = $this->metadataFields[$type];
         }
 
@@ -1872,12 +1546,10 @@ class VIEWBIBTEX
      */
     private function setPrivateCondition($alias = FALSE)
     {
-        if ($alias)
-        {
+        if ($alias) {
             $alias = "$alias.";
         }
-        if ($userId = $this->session->getVar("setup_UserId"))
-        {
+        if ($userId = $this->session->getVar("setup_UserId")) {
             $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
             $this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal
                 . $this->db->formatFields($alias . 'resourcemetadataPrivate'));
@@ -1893,9 +1565,7 @@ class VIEWBIBTEX
             $result = $this->db->tidyInput(1);
             $case3 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
             $this->db->formatConditions($case1 . $this->db->or . $case2 . $this->db->or . $case3);
-        }
-        else
-        {
+        } else {
             $this->db->formatConditions([$alias . 'resourcemetadataPrivate' => 'N']);
         }
     }

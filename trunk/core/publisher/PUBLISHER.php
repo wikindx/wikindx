@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -49,26 +51,20 @@ class PUBLISHER
      */
     public function grabAll($type = FALSE, $userBib = FALSE, $typeArray = FALSE)
     {
-        if (!$userBib && !$type && !is_array($typeArray))
-        {
-            if (is_array($publishers = $this->db->readCache('cacheResourcePublishers')))
-            {
+        if (!$userBib && !$type && !is_array($typeArray)) {
+            if (is_array($publishers = $this->db->readCache('cacheResourcePublishers'))) {
                 return $publishers;
             }
         }
-        if ($type)
-        {
+        if ($type) {
             $this->db->formatConditionsOneField([$type, ' IS NULL'], 'publisherType');
         }
-        if (is_array($typeArray) && !empty($typeArray))
-        {
+        if (is_array($typeArray) && !empty($typeArray)) {
             $this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceId');
-            if ($userBib)
-            {
+            if ($userBib) {
                 $this->commonBib->userBibCondition('resourcemiscId');
             }
-            foreach ($typeArray as $type)
-            {
+            foreach ($typeArray as $type) {
                 $conditions[] = $type;
             }
             $this->db->formatConditionsOneField($conditions, 'resourceType');
@@ -78,42 +74,32 @@ class PUBLISHER
             $this->db->leftJoin('publisher', 'publisherId', 'resourcemiscPublisher');
             $userBib = FALSE;
         }
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->db->leftJoin('resource_misc', 'resourcemiscPublisher', 'publisherId');
             $this->commonBib->userBibCondition('resourcemiscId');
         }
         $this->db->orderBy('publisherName');
         $this->db->orderBy('publisherLocation');
-        if (isset($subQuery))
-        {
+        if (isset($subQuery)) {
             $recordset = $this->db->query($this->db->selectNoExecuteFromSubQuery(
                 FALSE,
                 ['publisherId', 'publisherName', 'publisherLocation'],
                 $subQuery
             ));
-        }
-        else
-        {
+        } else {
             $recordset = $this->db->select('publisher', ['publisherId', 'publisherName', 'publisherLocation'], TRUE);
         }
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if ($row['publisherLocation'])
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if ($row['publisherLocation']) {
                 $publishers[$row['publisherId']] = \HTML\dbToFormTidy($row['publisherName'] .
                 ": " . $row['publisherLocation']);
-            }
-            else
-            {
+            } else {
                 $publishers[$row['publisherId']] = \HTML\dbToFormTidy($row['publisherName']);
             }
         }
-        if (isset($publishers))
-        {
+        if (isset($publishers)) {
             // (re)create cache
-            if (!$userBib && !$type && !is_array($typeArray))
-            {
+            if (!$userBib && !$type && !is_array($typeArray)) {
                 $this->db->writeCache('cacheResourcePublishers', $publishers);
             }
 
@@ -131,17 +117,14 @@ class PUBLISHER
     {
         $this->db->groupBy('publisherType');
         $recordset = $this->db->select('publisher', 'publisherType');
-        if (!$this->db->numRows($recordset))
-        {
+        if (!$this->db->numRows($recordset)) {
             return [];
         }
         // Add 'ALL' to array
         $array[$this->messages->text("menu", "browseSubPublisher")] = FALSE;
         $array[$this->messages->text("collection", 'all')] = 'index.php?action=browse_BROWSEPUBLISHER_CORE&method=init&PublisherType=0';
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (!$row['publisherType'])
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (!$row['publisherType']) {
                 continue;
             }
             $array[$this->messages->text("collection", $row['publisherType'])] =
@@ -159,17 +142,14 @@ class PUBLISHER
     {
         $this->db->groupBy('publisherType');
         $recordset = $this->db->select('publisher', 'publisherType');
-        if (!$this->db->numRows($recordset))
-        {
+        if (!$this->db->numRows($recordset)) {
             return [];
         }
         // Add 'ALL' to array
         $array[$this->messages->text("menu", "browseSubPublisher")] = FALSE;
         $array[$this->messages->text("collection", 'all')] = 'index.php?action=edit_EDITPUBLISHER_CORE&method=init&PublisherType=0';
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (!$row['publisherType'])
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (!$row['publisherType']) {
                 continue;
             }
             $array[$this->messages->text("collection", $row['publisherType'])] =
@@ -200,8 +180,7 @@ class PUBLISHER
             FALSE
         ) . $this->db->equal . $this->db->tidyInput($publisher));
         $resultset = $this->db->select('publisher', 'publisherId');
-        if ($this->db->numRows($resultset))
-        {
+        if ($this->db->numRows($resultset)) {
             return $this->db->fetchOne($resultset);
         }
 
@@ -213,20 +192,17 @@ class PUBLISHER
     public function removeHanging()
     {
         $recordset = $this->db->select('publisher', 'publisherId');
-        if (!$this->db->numRows($recordset))
-        { // nothing to delete
+        if (!$this->db->numRows($recordset)) { // nothing to delete
             return;
         }
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $publisherIds[] = $row['publisherId'];
         }
         // Grab all references to publisher IDs
         $existingPublisherIds = [];
         $this->db->formatConditions(['resourcemiscPublisher' => ' IS NOT NULL']);
         $recordset = $this->db->select('resource_misc', 'resourcemiscPublisher');
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $existingPublisherIds[] = $row['resourcemiscPublisher'];
         }
         $this->db->leftJoin('resource', 'resourceId', 'resourcemiscId');
@@ -240,13 +216,11 @@ class PUBLISHER
         $this->db->formatConditions(implode($this->db->or, $condition));
         $this->db->formatConditions(['resourcemiscField1' => ' IS NOT NULL']);
         $recordset = $this->db->select('resource_misc', 'resourcemiscField1');
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $existingPublisherIds[] = $row['resourcemiscField1'];
         }
         $existingPublisherIds = array_unique($existingPublisherIds);
-        if (empty($existingPublisherIds))
-        { // no publishers being used any more so delete all
+        if (empty($existingPublisherIds)) { // no publishers being used any more so delete all
             $this->db->delete('publisher');
             $this->db->deleteCache('cacheResourcePublishers');
             $this->db->deleteCache('cacheMetadataPublishers');
@@ -255,8 +229,7 @@ class PUBLISHER
             return;
         }
         $deleteIds = array_diff($publisherIds, $existingPublisherIds);
-        if (empty($deleteIds))
-        {
+        if (empty($deleteIds)) {
             return; // nothing to do
         }
         $this->db->formatConditionsOneField($deleteIds, 'publisherId');
@@ -280,35 +253,26 @@ class PUBLISHER
     {
         $this->gatekeep->init();
 
-        if (array_key_exists('name', $v))
-        {
+        if (array_key_exists('name', $v)) {
             $fields[] = 'publisherName';
             $values[] = trim($v['name']);
-        }
-        else
-        {
+        } else {
             array_push($errs, $this->error->text('inputError', 'missing', 'name'));
         }
-        if (array_key_exists('name', $v))
-        {
+        if (array_key_exists('name', $v)) {
             $fields[] = 'publisherType';
             $values[] = mb_strtolower(trim($v['type']));
-        }
-        else
-        {
+        } else {
             array_push($errs, $this->error->text('inputError', 'missing', 'type'));
         }
         $location = NULL;
-        if (array_key_exists('location', $v) && trim($v['location']))
-        {
+        if (array_key_exists('location', $v) && trim($v['location'])) {
             $fields[] = 'publisherLocation';
             $values[] = $location = trim($v['location']);
         }
         $id = FALSE;
-        if (empty($errs))
-        {
-            if ($id = $this->checkExists($v['name'], $location))
-            {
+        if (empty($errs)) {
+            if ($id = $this->checkExists($v['name'], $location)) {
                 $alreadyExisted = TRUE;
 
                 return $id;

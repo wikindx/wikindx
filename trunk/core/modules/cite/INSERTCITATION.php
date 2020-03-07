@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -17,25 +19,25 @@
  */
 class INSERTCITATION
 {
-	/** object */
+    /** object */
     private $db;
-	/** array */
+    /** array */
     private $vars = [];
-	/** object */
+    /** object */
     private $stmt;
-	/** object */
+    /** object */
     private $errors;
-	/** object */
+    /** object */
     private $messages;
-	/** object */
+    /** object */
     private $common;
-	/** object */
+    /** object */
     private $session;
-	/** object */
+    /** object */
     private $badInput;
-	/** object */
+    /** object */
     private $parsePhrase;
-	/** array */
+    /** array */
     private $input;
     /** bool */
     private $reprocess = FALSE;
@@ -43,12 +45,9 @@ class INSERTCITATION
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
-        if (!empty($_POST))
-        {
+        if (!empty($_POST)) {
             $this->vars = $_POST;
-        }
-        elseif (!empty($_GET))
-        {
+        } elseif (!empty($_GET)) {
             $this->vars = $_GET;
         }
         GLOBALS::setVars($this->vars, $this->vars);
@@ -66,32 +65,29 @@ class INSERTCITATION
         $this->search = new QUICKSEARCH();
         $this->search->insertCitation = TRUE;
     }
-    /** 
+    /**
      * all methods pass through here
+     *
+     * @param mixed $error
      */
     public function init($error = FALSE)
     {
         //First check, do we have resources?
-        if (!$this->db->selectFirstField('database_summary', 'databaseSummaryTotalResources'))
-        {
+        if (!$this->db->selectFirstField('database_summary', 'databaseSummaryTotalResources')) {
             $pString = $this->messages->text('misc', 'noResources');
             GLOBALS::addTplVar('content', $pString);
             FACTORY_CLOSEPOPUP::getInstance();
         }
-        if (!array_key_exists('PagingStart', $this->vars))
-        { // reset paging counter and clear session
+        if (!array_key_exists('PagingStart', $this->vars)) { // reset paging counter and clear session
             $this->session->delVar("mywikindx_PagingStart");
             $this->session->delVar("mywikindx_PagingStartAlpha");
         }
         $pString = $error ? $error : '';
         $pString .= \HTML\h($this->messages->text("heading", "addCitation"), FALSE, 3);
         $word = $this->session->issetVar("setup_CiteWord") ? $this->session->getVar("setup_CiteWord") : FALSE;
-        if (!array_key_exists('method', $this->vars))
-        {
+        if (!array_key_exists('method', $this->vars)) {
             $pString .= $this->search->init(FALSE, FALSE, TRUE, $word);
-        }
-        elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
-        {
+        } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process')) {
             $this->session->setVar("setup_BackupWord", $this->session->getVar("search_Word"));
             $this->input = $this->checkInput();
             $this->session->setVar("list_BackupAllIds", $this->session->getVar("list_AllIds"));
@@ -108,42 +104,33 @@ class INSERTCITATION
             $this->session->setVar("sql_CiteListStmt", $this->session->getVar("sql_ListStmt")); // Ready for reprocessing
             $this->session->setVar("setup_CitePagingTotal", $this->session->getVar("setup_PagingTotal")); // Ready for reprocessing
             $this->session->setVar("setup_CiteWord", $this->session->getVar("search_Word")); // Ready for reprocessing
-            if ($this->session->getVar("list_BackupAllIds"))
-            {
+            if ($this->session->getVar("list_BackupAllIds")) {
                 $this->session->setVar("list_AllIds", $this->session->getVar("list_BackupAllIds"));
             }
-            if ($this->session->getVar("sql_BackupListStmt"))
-            {
+            if ($this->session->getVar("sql_BackupListStmt")) {
                 $this->session->setVar("sql_ListStmt", $this->session->getVar("sql_BackupListStmt"));
             }
-            if ($this->session->getVar("setup_BackupPagingTotal"))
-            {
+            if ($this->session->getVar("setup_BackupPagingTotal")) {
                 $this->session->setVar("setup_PagingTotal", $this->session->getVar("setup_BackupPagingTotal"));
             }
             $this->session->setVar("search_Word", $this->session->getVar("setup_BackupWord"));
-        }
-        elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'reprocess'))
-        {
+        } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'reprocess')) {
             $this->reprocess = TRUE;
             $this->session->setVar("setup_Word", $this->session->getVar("search_CiteWord"));
             $this->input = $this->session->getArray("search");
             $pString .= $this->search->init(FALSE, FALSE, TRUE);
             $pString .= \HTML\hr();
             $pString .= $this->process();
-            if ($this->session->getVar("list_BackupAllIds"))
-            {
+            if ($this->session->getVar("list_BackupAllIds")) {
                 $this->session->setVar("list_AllIds", $this->session->getVar("list_BackupAllIds"));
             }
-            if ($this->session->getVar("sql_BackupListStmt"))
-            {
+            if ($this->session->getVar("sql_BackupListStmt")) {
                 $this->session->setVar("sql_ListStmt", $this->session->getVar("sql_BackupListStmt"));
             }
-            if ($this->session->getVar("setup_BackupPagingTotal"))
-            {
+            if ($this->session->getVar("setup_BackupPagingTotal")) {
                 $this->session->setVar("setup_PagingTotal", $this->session->getVar("setup_BackupPagingTotal"));
             }
-            if ($this->session->getVar("setup_BackupWord"))
-            {
+            if ($this->session->getVar("setup_BackupWord")) {
                 $this->session->setVar("search_Word", $this->session->getVar("setup_BackupWord"));
             }
         }
@@ -162,54 +149,47 @@ class INSERTCITATION
         $this->stmt->listType = 'search';
         $this->input['Partial'] = TRUE;
         $queryString = 'dialog.php?method=reprocess';
-        if (!$this->reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A'))
-        {
-        	$masterIds = $andIds = $notIds = [];
+        if (!$this->reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
+            $masterIds = $andIds = $notIds = [];
             $this->parseWord();
             $resourcesFound = FALSE;
-// Deal with OR strings first
-			$ors = implode($this->db->or, $this->parsePhrase->ors); // shouldn't be necessary as there should only be one element
-			$orsFT = implode(' ', $this->parsePhrase->orsFT);
-			if ($ors && $this->getInitialIds($ors, $orsFT, 'or'))
-			{
-				$resourcesFound = TRUE;
-			}
-// Deal with AND strings next
-			$ands = implode($this->db->and, $this->parsePhrase->ands); // shouldn't be necessary as there should only be one element
-			$andsFT = implode(' ', $this->parsePhrase->andsFT);
-			if ($ands && $this->getInitialIds($ands, $andsFT, 'and'))
-			{
-				$resourcesFound = TRUE;
-			}
-			unset($andIds);
-// Finally, deal with NOT strings. We match IDs using OR then subtract the found ids from the main ids array
-			$nots = implode($this->db->or, $this->parsePhrase->nots); // shouldn't be necessary as there should only be one element
-			$notsFT = implode(' ', $this->parsePhrase->notsFT);
-			if ($nots && $this->getInitialIds($nots, $notsFT, 'not'))
-			{
-				$resourcesFound = TRUE;
-			}
-			unset($notIds);
-			if (!$resourcesFound)
-			{
+            // Deal with OR strings first
+            $ors = implode($this->db->or, $this->parsePhrase->ors); // shouldn't be necessary as there should only be one element
+            $orsFT = implode(' ', $this->parsePhrase->orsFT);
+            if ($ors && $this->getInitialIds($ors, $orsFT, 'or')) {
+                $resourcesFound = TRUE;
+            }
+            // Deal with AND strings next
+            $ands = implode($this->db->and, $this->parsePhrase->ands); // shouldn't be necessary as there should only be one element
+            $andsFT = implode(' ', $this->parsePhrase->andsFT);
+            if ($ands && $this->getInitialIds($ands, $andsFT, 'and')) {
+                $resourcesFound = TRUE;
+            }
+            unset($andIds);
+            // Finally, deal with NOT strings. We match IDs using OR then subtract the found ids from the main ids array
+            $nots = implode($this->db->or, $this->parsePhrase->nots); // shouldn't be necessary as there should only be one element
+            $notsFT = implode(' ', $this->parsePhrase->notsFT);
+            if ($nots && $this->getInitialIds($nots, $notsFT, 'not')) {
+                $resourcesFound = TRUE;
+            }
+            unset($notIds);
+            if (!$resourcesFound) {
                 $this->common->noResources('search');
-				return FALSE;
-			}
-// Now finalize
-			if (!$this->stmt->quicksearchSubQuery($queryString, FALSE, $this->subQ, 'final'))
-			{
+
+                return FALSE;
+            }
+            // Now finalize
+            if (!$this->stmt->quicksearchSubQuery($queryString, FALSE, $this->subQ, 'final')) {
                 $this->common->noResources('search');
-				return FALSE;
-			}
-			$sql = $this->stmt->listList($this->session->getVar("search_Order"), FALSE, $this->subQ);
-        }
-        else
-        {
+
+                return FALSE;
+            }
+            $sql = $this->stmt->listList($this->session->getVar("search_Order"), FALSE, $this->subQ);
+        } else {
             $sql = $this->quickQuery($queryString);
         }
         $found = $this->common->display($sql, 'cite');
-        if ($found)
-        {
+        if ($found) {
             $citeFields['formheader'] = \FORM\formHeaderName('', 'citeForm');
             $citeFields['pageStart'] = $this->messages->text("cite", "pages") . "&nbsp;&nbsp;" .
                 \FORM\textInput(FALSE, 'pageStart', FALSE, 6, 5);
@@ -224,27 +204,29 @@ class INSERTCITATION
             GLOBALS::addTplVar('citeFields', $citeFields);
 
             return FALSE;
-        }
-        else
-        {
+        } else {
             return \HTML\p($this->messages->text("resources", "noResult"));
         }
     }
     /**
      * Get the initial IDs from the database
+     *
+     * @param mixed $searchArray
+     * @param mixed $searchArrayFT
+     * @param mixed $type
      */
-     private function getInitialIds($searchArray, $searchArrayFT, $type)
-     {
-		$this->search->fieldSql($searchArray, $searchArrayFT);
-		$subStmt = $this->setSubQuery();
-		$resourcesFound = $this->stmt->quicksearchSubQuery(FALSE, $subStmt, FALSE, $type);
-		if (!$resourcesFound)
-		{
-			$this->common->noResources('search');
+    private function getInitialIds($searchArray, $searchArrayFT, $type)
+    {
+        $this->search->fieldSql($searchArray, $searchArrayFT);
+        $subStmt = $this->setSubQuery();
+        $resourcesFound = $this->stmt->quicksearchSubQuery(FALSE, $subStmt, FALSE, $type);
+        if (!$resourcesFound) {
+            $this->common->noResources('search');
 
-			return FALSE;
-		}
-		return TRUE;
+            return FALSE;
+        }
+
+        return TRUE;
     }
     /**
      * Quicker querying when paging
@@ -271,8 +253,7 @@ class INSERTCITATION
     {
         $this->search->words = $this->parsePhrase->parse($this->input);
         $this->wordsFT = $this->parsePhrase->parse($this->input, FALSE, FALSE, FALSE, TRUE);
-        if ((is_array($this->search->words) && empty($this->search->words)) || !$this->parsePhrase->validSearch)
-        {
+        if ((is_array($this->search->words) && empty($this->search->words)) || !$this->parsePhrase->validSearch) {
             GLOBALS::setTplVar('resourceListSearchForm', FALSE);
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
@@ -303,32 +284,26 @@ class INSERTCITATION
     private function writeSession()
     {
         // First, write all input with 'search_' prefix to session
-        foreach ($this->vars as $key => $value)
-        {
-            if (preg_match("/^search_/u", $key))
-            {
+        foreach ($this->vars as $key => $value) {
+            if (preg_match("/^search_/u", $key)) {
                 $key = str_replace('search_', '', $key);
                 // Is this a multiple select box input?  If so, multiple choices are written to session as
                 // comma-delimited string (no spaces).
                 // Don't write any FALSE or '0' values.
-                if (is_array($value))
-                {
-                    if (!$value[0] || ($value[0] == $this->messages->text("misc", "ignore")))
-                    {
+                if (is_array($value)) {
+                    if (!$value[0] || ($value[0] == $this->messages->text("misc", "ignore"))) {
                         unset($value[0]);
                     }
                     $value = implode(",", $value);
                 }
-                if (!trim($value))
-                {
+                if (!trim($value)) {
                     continue;
                 }
                 $temp[$key] = trim($value);
             }
         }
         $this->session->clearArray("search");
-        if (!empty($temp))
-        {
+        if (!empty($temp)) {
             $this->session->writeArray($temp, 'search');
         }
     }
@@ -343,8 +318,7 @@ class INSERTCITATION
     {
         $this->writeSession();
         if ((array_key_exists("search_Word", $this->vars) && !trim($this->vars["search_Word"]))
-            || !$this->session->getVar("search_Word"))
-        {
+            || !$this->session->getVar("search_Word")) {
             $pString = $this->errors->text("inputError", "missing");
             $pString .= \HTML\h($this->messages->text("heading", "addCitation"), FALSE, 3);
             $pString .= $this->search->init(FALSE, FALSE, TRUE);

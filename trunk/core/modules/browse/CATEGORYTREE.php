@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -52,8 +54,7 @@ class CATEGORYTREE
         $pString = \HTML\tableStart('generalTable borderStyleSolid left');
         $index = 1;
         $rows = 0;
-        foreach ($this->category as $catId => $catName)
-        {
+        foreach ($this->category as $catId => $catName) {
             $tdKey = $tdSubcat = FALSE;
             $this->keywords->sum = $this->keywords->keyword = $this->subcategories->sum = $this->subcategories->subcategory = [];
             $this->getKeywords($catId);
@@ -62,28 +63,21 @@ class CATEGORYTREE
             $this->getSubcategories($catId);
             $this->scSum = $this->subcategories->sum;
             $subcategory = $this->subcategories->subcategory;
-            if (($index % 3) == 1)
-            {
+            if (($index % 3) == 1) {
                 $pString .= \HTML\trStart();
             }
             $td = \HTML\strong(\HTML\a("link", $catName, 'index.php?' .
                 htmlentities('action=list_LISTSOMERESOURCES_CORE&method=categoryProcess&id=' . $catId))) .
                 '&nbsp;[' . $this->catSum[$catId] . ']' . BR;
-            if (!empty($keyword))
-            {
+            if (!empty($keyword)) {
                 $tdKey = $this->messages->text("misc", "categoryTreeKeywords");
-                foreach ($keyword as $kwId => $kwName)
-                {
-                    if (!$kwId)
-                    {
+                foreach ($keyword as $kwId => $kwName) {
+                    if (!$kwId) {
                         continue;
                     }
-                    if (array_key_exists($kwId, $this->keywords->glossary))
-                    {
+                    if (array_key_exists($kwId, $this->keywords->glossary)) {
                         $glossary = $this->keywords->glossary[$kwId];
-                    }
-                    else
-                    {
+                    } else {
                         $glossary = "";
                     }
                     $tdKey .= BR . '&nbsp;&nbsp;&nbsp;&nbsp;' .
@@ -92,13 +86,10 @@ class CATEGORYTREE
                         '&nbsp;[' . $this->kwSum[$kwId] . ']';
                 }
             }
-            if (!empty($subcategory))
-            {
+            if (!empty($subcategory)) {
                 $tdSubcat = $this->messages->text("misc", "categoryTreeSubcategories");
-                foreach ($subcategory as $scId => $scName)
-                {
-                    if (!$scId)
-                    {
+                foreach ($subcategory as $scId => $scName) {
+                    if (!$scId) {
                         continue;
                     }
                     $tdSubcat .= BR . '&nbsp;&nbsp;&nbsp;&nbsp;' .
@@ -107,8 +98,7 @@ class CATEGORYTREE
                         '&nbsp;[' . $this->scSum[$scId] . ']';
                 }
             }
-            if ($tdKey && $tdSubcat)
-            { // two column table within TD element
+            if ($tdKey && $tdSubcat) { // two column table within TD element
                 $tdBoth = \HTML\tableStart('left');
                 $tdBoth .= \HTML\trStart();
                 $tdBoth .= \HTML\td($tdKey);
@@ -117,28 +107,21 @@ class CATEGORYTREE
                 $tdBoth .= \HTML\tableEnd();
 
                 $pString .= \HTML\td($td . $tdBoth);
-            }
-            else
-            {
+            } else {
                 $pString .= \HTML\td($td . $tdKey . $tdSubcat, 'generalTable borderStyleSolid left');
             }
-            if (!($index % 3))
-            {
+            if (!($index % 3)) {
                 $rows++;
                 $pString .= \HTML\trEnd();
             }
             $index++;
         }
         // If we are not still on the first row, add blank cells
-        if ($rows)
-        {
-            if (($index % 3) == 2)
-            { // 1 populated cell so add 2 blank cells
+        if ($rows) {
+            if (($index % 3) == 2) { // 1 populated cell so add 2 blank cells
                 $pString .= \HTML\td('&nbsp;');
                 $pString .= \HTML\td('&nbsp;');
-            }
-            elseif (!($index % 3))
-            { // 2 populated cells so add 1 blank cell
+            } elseif (!($index % 3)) { // 2 populated cells so add 1 blank cell
                 $pString .= \HTML\td("&nbsp;");
             }
         }
@@ -164,8 +147,7 @@ class CATEGORYTREE
         $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
         $this->db->orderBy('keywordKeyword');
         $recordset = $this->db->selectFromSubQuery(FALSE, ['resourcekeywordKeywordId', 'keywordKeyword', 'keywordGlossary', 'count'], $subQ);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->keywords->collate($row);
         }
     }
@@ -184,8 +166,7 @@ class CATEGORYTREE
         $this->db->groupBy(['resourcecategorySubcategoryId', 'subcategorySubcategory'], TRUE, $having);
         $this->db->orderBy('subcategorySubcategory');
         $recordset = $this->db->selectCounts('resource_category', 'resourcecategorySubcategoryId', 'subcategorySubcategory', FALSE, FALSE);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->subcategories->collate($row);
         }
     }

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -23,39 +25,29 @@ class ImageServer
     public static function showImage()
     {
         global $_IMAGES;
-        if (isset($_GET['img']))
-        {
+        if (isset($_GET['img'])) {
             $mtime = gmdate('r', filemtime($_SERVER['SCRIPT_FILENAME']));
             $etag = md5($mtime . $_SERVER['SCRIPT_FILENAME']);
 
             if ((isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $mtime)
-                || (isset($_SERVER['HTTP_IF_NONE_MATCH']) && str_replace('"', '', stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])) == $etag))
-            {
+                || (isset($_SERVER['HTTP_IF_NONE_MATCH']) && str_replace('"', '', stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])) == $etag)) {
                 header('HTTP/1.1 304 Not Modified');
 
                 return TRUE;
-            }
-            else
-            {
+            } else {
                 header('ETag: "' . $etag . '"');
                 header('Last-Modified: ' . $mtime);
                 header('Content-type: image/gif');
-                if (mb_strlen($_GET['img']) > 0 && isset($_IMAGES[$_GET['img']]))
-                {
+                if (mb_strlen($_GET['img']) > 0 && isset($_IMAGES[$_GET['img']])) {
                     echo base64_decode($_IMAGES[$_GET['img']]);
-                }
-                else
-                {
+                } else {
                     echo base64_decode($_IMAGES["unknown"]);
                 }
             }
 
             return TRUE;
-        }
-        elseif (isset($_GET['thumb']))
-        {
-            if (mb_strlen($_GET['thumb']) > 0)
-            {
+        } elseif (isset($_GET['thumb'])) {
+            if (mb_strlen($_GET['thumb']) > 0) {
                 ImageServer::showThumbnail($_GET['thumb']);
             }
 
@@ -78,8 +70,7 @@ class ImageServer
         $max_height = 200;
 
         $image = ImageServer::openImage($file);
-        if ($image == NULL)
-        {
+        if ($image == NULL) {
             return;
         }
 
@@ -91,17 +82,13 @@ class ImageServer
 
         $new_width = $max_width;
         $new_height = $max_height;
-        if (($width / $height) > ($new_width / $new_height))
-        {
+        if (($width / $height) > ($new_width / $new_height)) {
             $new_height = $new_width * ($height / $width);
-        }
-        else
-        {
+        } else {
             $new_width = $new_height * ($width / $height);
         }
 
-        if ($new_width >= $width && $new_height >= $height)
-        {
+        if ($new_width >= $width && $new_height >= $height) {
             $new_width = $width;
             $new_height = $height;
         }
@@ -124,26 +111,20 @@ class ImageServer
      */
     public static function showThumbnail($file)
     {
-        if (filemtime($file) < filemtime($_SERVER['SCRIPT_FILENAME']))
-        {
+        if (filemtime($file) < filemtime($_SERVER['SCRIPT_FILENAME'])) {
             $mtime = gmdate('r', filemtime($_SERVER['SCRIPT_FILENAME']));
-        }
-        else
-        {
+        } else {
             $mtime = gmdate('r', filemtime($file));
         }
 
         $etag = md5($mtime . $file);
 
         if ((isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $mtime)
-            || (isset($_SERVER['HTTP_IF_NONE_MATCH']) && str_replace('"', '', stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])) == $etag))
-        {
+            || (isset($_SERVER['HTTP_IF_NONE_MATCH']) && str_replace('"', '', stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])) == $etag)) {
             header('HTTP/1.1 304 Not Modified');
 
             return;
-        }
-        else
-        {
+        } else {
             header('ETag: "' . $etag . '"');
             header('Last-Modified: ' . $mtime);
             header('Content-Type: image/png');
@@ -162,8 +143,7 @@ class ImageServer
     public static function openImage($file)
     {
         $size = getimagesize($file);
-        switch ($size["mime"])
-        {
+        switch ($size["mime"]) {
             case "image/jpeg":
                 $im = imagecreatefromjpeg($file);
 
@@ -207,11 +187,9 @@ class FileManager
         global $_ERROR2;
         $this->readDir();
         $existingHashes = [];
-        foreach ($this->files as $fileName)
-        {
+        foreach ($this->files as $fileName) {
             $split = UTF8::mb_explode('_', $fileName);
-            if (count($split) > 1)
-            {
+            if (count($split) > 1) {
                 $hashExt = array_pop($split);
                 $readableName = implode('_', $split);
                 $existingHashes[$readableName] = $hashExt;
@@ -232,62 +210,48 @@ class FileManager
         $upload_file .= '_' . $hash . '.' . $extension;
         $postMax = FILE\return_bytes(ini_get('post_max_size'));
         $uploadMax = FILE\return_bytes(ini_get('upload_max_filesize'));
-        if ($postMax < $uploadMax)
-        {
+        if ($postMax < $uploadMax) {
             $maxSize = $postMax;
-        }
-        else
-        {
+        } else {
             $maxSize = $uploadMax;
         }
-        if (WIKINDX_IMAGES_MAXSIZE)
-        {
-            if ($maxSize > (WIKINDX_IMAGES_MAXSIZE * 1024 * 1024))
-            {
+        if (WIKINDX_IMAGES_MAXSIZE) {
+            if ($maxSize > (WIKINDX_IMAGES_MAXSIZE * 1024 * 1024)) {
                 $maxSize = WIKINDX_IMAGES_MAXSIZE * 1024 * 1024;
             }
         }
-        if ($userfile['size'] > $maxSize)
-        {
+        if ($userfile['size'] > $maxSize) {
             $_ERROR = "imageSize";
             $_ERROR2 = WIKINDX_IMAGES_MAXSIZE;
 
             return;
         }
-        if (array_search(mb_strtolower($extension), $extensions) === FALSE)
-        {
+        if (array_search(mb_strtolower($extension), $extensions) === FALSE) {
             $_ERROR = "uploadType";
 
             return;
         }
         $mimetypes = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif'];
-        if (($key = array_search($hash . '.' . $extension, $existingHashes)) !== FALSE)
-        {
+        if (($key = array_search($hash . '.' . $extension, $existingHashes)) !== FALSE) {
             $_ERROR = 'imageExists';
             $_ERROR2 = $key;
 
             return;
         }
-        if (array_search(mb_strtolower($mime_type), $mimetypes) === FALSE)
-        {
+        if (array_search(mb_strtolower($mime_type), $mimetypes) === FALSE) {
             $_ERROR = "uploadType";
 
             return;
         }
-        if (!$location->isWritable())
-        {
+        if (!$location->isWritable()) {
             $_ERROR = "write";
 
             return;
-        }
-        elseif (!is_uploaded_file($userfile['tmp_name']))
-        {
+        } elseif (!is_uploaded_file($userfile['tmp_name'])) {
             $_ERROR = "upload";
 
             return;
-        }
-        elseif (!@move_uploaded_file($userfile['tmp_name'], $upload_file))
-        {
+        } elseif (!@move_uploaded_file($userfile['tmp_name'], $upload_file)) {
             $_ERROR = "upload";
 
             return;
@@ -300,8 +264,7 @@ class FileManager
      */
     public function run($location)
     {
-        if (isset($_FILES['userfile']['name']) && mb_strlen($_FILES['userfile']['name']) > 0)
-        {
+        if (isset($_FILES['userfile']['name']) && mb_strlen($_FILES['userfile']['name']) > 0) {
             $this->uploadFile($location, $_FILES['userfile']);
         }
     }
@@ -313,26 +276,20 @@ class FileManager
 //
         // Reading the data of files and directories
 //
-        if (file_exists('.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR))
-        {
+        if (file_exists('.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR)) {
             $open_dir = opendir('.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR);
             $this->dirs = [];
             $this->files = [];
-            while ($object = readdir($open_dir))
-            {
-                if ($object != "." && $object != "..")
-                {
+            while ($object = readdir($open_dir)) {
+                if ($object != "." && $object != "..") {
                     $ext = FileServer::getFileExtension($object);
-                    if (($ext == 'jpeg') || ($ext == 'jpg') || ($ext == 'gif') || ($ext == 'png'))
-                    {
+                    if (($ext == 'jpeg') || ($ext == 'jpg') || ($ext == 'gif') || ($ext == 'png')) {
                         $this->files[] = $object;
                     }
                 }
             }
             closedir($open_dir);
-        }
-        else
-        {
+        } else {
             die("Unable to create ./data/images folder. You must create this folder at the top level of wikindx (the same level where the core/ folder is) and make it writeable by all.");
         }
     }
@@ -529,10 +486,8 @@ class Location
         $dir = stripslashes($dir);
         $path1 = preg_split("/[\\\\\\/]+/u", $dir);
         $path2 = [];
-        for ($i = 0; $i < count($path1); $i++)
-        {
-            if ($path1[$i] == ".." || $path1[$i] == "." || $path1[$i] == "")
-            {
+        for ($i = 0; $i < count($path1); $i++) {
+            if ($path1[$i] == ".." || $path1[$i] == "." || $path1[$i] == "") {
                 continue;
             }
             $path2[] = $path1[$i];
@@ -554,21 +509,16 @@ class Location
     public function getDir($prefix, $encoded, $html, $up)
     {
         $dir = "";
-        if ($prefix == TRUE)
-        {
+        if ($prefix == TRUE) {
             $dir .= '.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR;
         }
-        if (is_array($this->path))
-        {
-            for ($i = 0; $i < ((count($this->path) >= $up && $up > 0) ? count($this->path) - $up : count($this->path)); $i++)
-            {
+        if (is_array($this->path)) {
+            for ($i = 0; $i < ((count($this->path) >= $up && $up > 0) ? count($this->path) - $up : count($this->path)); $i++) {
                 $temp = $this->path[$i];
-                if ($encoded)
-                {
+                if ($encoded) {
                     $temp = rawurlencode($temp);
                 }
-                if ($html)
-                {
+                if ($html) {
                     $temp = htmlspecialchars($temp);
                 }
                 $dir .= $temp . "/";
@@ -620,14 +570,11 @@ class EncodeExplorer
     public static function getFilename($file)
     {
         $filenameArray = UTF8::mb_explode('_', $file->getNameHtml());
-        if (count($filenameArray) > 1)
-        {
+        if (count($filenameArray) > 1) {
             array_pop($filenameArray);
 
             return implode('_', $filenameArray) . '.' . $file->getFileExtension($file->getName());
-        }
-        else
-        {
+        } else {
             return $file->getNameHtml();
         }
     }
@@ -644,32 +591,24 @@ class EncodeExplorer
         $default_sort_as = "desc";
 
 
-        if (isset($_GET["sort_by"]))
-        {
+        if (isset($_GET["sort_by"])) {
             $this->sort_by = $_GET["sort_by"];
-        }
-        else
-        {
+        } else {
             $this->sort_by = $default_sort_by;
         }
 
-        if (isset($_GET["sort_as"]))
-        {
+        if (isset($_GET["sort_as"])) {
             $this->sort_as = $_GET["sort_as"];
-        }
-        else
-        {
+        } else {
             $this->sort_as = $default_sort_as;
         }
 
 
-        if (in_array($this->sort_by, ["name", "size", "mod"]) === FALSE)
-        {
+        if (in_array($this->sort_by, ["name", "size", "mod"]) === FALSE) {
             $this->sort_by = $default_sort_by;
         }
 
-        if (in_array($this->sort_as, ["asc", "desc", "mod"]) === FALSE)
-        {
+        if (in_array($this->sort_as, ["asc", "desc", "mod"]) === FALSE) {
             $this->sort_as = $default_sort_as;
         }
     }
@@ -682,25 +621,19 @@ class EncodeExplorer
         //
         // Reading the data of files and directories
         //
-        if (file_exists('.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR))
-        {
+        if (file_exists('.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR)) {
             $open_dir = opendir('.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR);
             $this->dirs = [];
             $this->files = [];
-            while ($object = readdir($open_dir))
-            {
-                if ($object != "." && $object != "..")
-                {
-                    if (in_array(FileServer::getFileExtension($object), ['jpeg', 'jpg', 'gif', 'png']) === TRUE)
-                    {
+            while ($object = readdir($open_dir)) {
+                if ($object != "." && $object != "..") {
+                    if (in_array(FileServer::getFileExtension($object), ['jpeg', 'jpg', 'gif', 'png']) === TRUE) {
                         $this->files[] = new FileServer($object, $this->location);
                     }
                 }
             }
             closedir($open_dir);
-        }
-        else
-        {
+        } else {
             die("Unable to create ./data/images folder. You must create this folder at the top level of wikindx (the same level where the core/ folder is) and make it writeable by all.");
         }
     }
@@ -709,20 +642,16 @@ class EncodeExplorer
      */
     public function sort()
     {
-        if (is_array($this->files))
-        {
+        if (is_array($this->files)) {
             usort($this->files, "EncodeExplorer::cmp_" . $this->sort_by);
-            if ($this->sort_as == "desc")
-            {
+            if ($this->sort_as == "desc") {
                 $this->files = array_reverse($this->files);
             }
         }
 
-        if (is_array($this->dirs))
-        {
+        if (is_array($this->dirs)) {
             usort($this->dirs, "EncodeExplorer::cmp_name");
-            if ($this->sort_by == "name" && $this->sort_as == "desc")
-            {
+            if ($this->sort_by == "name" && $this->sort_as == "desc") {
                 $this->dirs = array_reverse($this->dirs);
             }
         }
@@ -736,27 +665,19 @@ class EncodeExplorer
      */
     public function makeArrow($sort_by)
     {
-        if ($this->sort_by == $sort_by && $this->sort_as == "asc")
-        {
+        if ($this->sort_by == $sort_by && $this->sort_as == "asc") {
             $sort_as = "desc";
-        }
-        else
-        {
+        } else {
             $sort_as = "asc";
         }
 
         $img = "arrows.jpg";
 
-        if ($sort_by == "name")
-        {
+        if ($sort_by == "name") {
             $text = $this->messages->text('tinymce', "fileName");
-        }
-        elseif ($sort_by == "size")
-        {
+        } elseif ($sort_by == "size") {
             $text = $this->messages->text('tinymce', "size");
-        }
-        elseif ($sort_by == "mod")
-        {
+        } elseif ($sort_by == "mod") {
             $text = $this->messages->text('tinymce', "lastUpdated");
         }
 
@@ -778,13 +699,11 @@ class EncodeExplorer
 
         $link .= "lang=en&amp;";
 
-        if ($sort_by != NULL && mb_strlen($sort_by) > 0)
-        {
+        if ($sort_by != NULL && mb_strlen($sort_by) > 0) {
             $link .= "sort_by=" . $sort_by . "&amp;";
         }
 
-        if ($sort_as != NULL && mb_strlen($sort_as) > 0)
-        {
+        if ($sort_as != NULL && mb_strlen($sort_as) > 0) {
             $link .= "sort_as=" . $sort_as . "&amp;";
         }
 
@@ -803,20 +722,13 @@ class EncodeExplorer
     {
         $l = mb_strtolower($l);
 
-        if (($l == 'jpeg') || ($l == 'jpg'))
-        {
+        if (($l == 'jpeg') || ($l == 'jpg')) {
             $img = 'img/jpeg.png';
-        }
-        elseif ($l == 'gif')
-        {
+        } elseif ($l == 'gif') {
             $img = 'img/gif.png';
-        }
-        elseif ($l == 'png')
-        {
+        } elseif ($l == 'png') {
             $img = 'img/png.png';
-        }
-        else
-        {
+        } else {
             $img = $l;
         }
 
@@ -886,28 +798,21 @@ class EncodeExplorer
         global $_ERROR2;
         $this->location = $location;
         // Create folder if ! exists
-        if (!file_exists(WIKINDX_DIR_DATA_IMAGES))
-        {
-            if (!mkdir(WIKINDX_DIR_DATA_IMAGES, WIKINDX_UNIX_PERMS_DEFAULT))
-            {
+        if (!file_exists(WIKINDX_DIR_DATA_IMAGES)) {
+            if (!mkdir(WIKINDX_DIR_DATA_IMAGES, WIKINDX_UNIX_PERMS_DEFAULT)) {
                 die("Unable to create ./data/images folder. You must create this folder at the top level of wikindx (the same level where the core/ folder is) and make it writeable by all.");
             }
         }
         $this->readDir();
         $this->sort();
-        if ($delete)
-        {
+        if ($delete) {
             return $this->files;
         }
         $pString = '';
-        if (isset($_ERROR) && $_ERROR)
-        {
-            if (isset($_ERROR2) && $_ERROR2)
-            {
+        if (isset($_ERROR) && $_ERROR) {
+            if (isset($_ERROR2) && $_ERROR2) {
                 $pString = $this->errors->text('file', $_ERROR, $_ERROR2);
-            }
-            else
-            {
+            } else {
                 $pString = $this->errors->text('file', $_ERROR);
             }
         }
@@ -1077,28 +982,24 @@ END;
         //
         // Now the files
         //
-        if ($this->files)
-        {
+        if ($this->files) {
             $pString .= '<tbody class="scrollContent">' . LF;
             
             $path = "/" . WIKINDX_URL_DATA_IMAGES . "/";
             $count = 0;
-            foreach ($this->files as $file)
-            {
+            foreach ($this->files as $file) {
                 $filename = EncodeExplorer::getFilename($file);
                 list($width, $height, $type, $attr) = getimagesize(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $file->getName());
 
                 // We limit the display size of images. This can be changed by the user afterwards in the textarea.
                 $widthMax = WIKINDX_IMG_WIDTH_LIMIT;
                 $heightMax = WIKINDX_IMG_HEIGHT_LIMIT;
-                if (($width > $widthMax) && ($widthMax > 0))
-                {
+                if (($width > $widthMax) && ($widthMax > 0)) {
                     $height *= $widthMax / $width;
                     $height = floor($height);
                     $width = $widthMax;
                 }
-                if (($height > $heightMax) && ($heightMax > 0))
-                {
+                if (($height > $heightMax) && ($heightMax > 0)) {
                     $width *= $heightMax / $height;
                     $width = floor($width);
                     $height = $heightMax;
@@ -1111,8 +1012,7 @@ END;
                 // For some reason, only width is accepted here. But, adding width automatically proportionately sets height when the image is inserted
                 $pString .= '<a href="' . $path . $file->getNameEncoded() . '?width=' . $width . '&amp;height=' . $height . '"';
                 $pString .= ' class="item file';
-                if ($file->isValidForThumb())
-                {
+                if ($file->isValidForThumb()) {
                     $pString .= ' thumb';
                 }
                 $pString .= '">';

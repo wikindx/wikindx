@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -43,19 +45,16 @@ class RESOURCEFORMAJAX
     {
         if (!array_key_exists('resourcecreator', $this->typeMaps[$this->vars['ajaxReturn']]) ||
             !$this->typeMaps[$this->vars['ajaxReturn']]['resourcecreator'] ||
-            !array_key_exists('ajaxReturn', $this->vars) || !$this->vars['ajaxReturn'])
-        {
+            !array_key_exists('ajaxReturn', $this->vars) || !$this->vars['ajaxReturn']) {
             $div = \HTML\div('creatorsOuter', '&nbsp;');
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$div"]));
             FACTORY_CLOSERAW::getInstance(); // die;
         }
         $creatorCells = FALSE;
-        foreach ($this->typeMaps[$this->vars['ajaxReturn']]['resourcecreator'] as $key => $creatorMsg)
-        {
+        foreach ($this->typeMaps[$this->vars['ajaxReturn']]['resourcecreator'] as $key => $creatorMsg) {
             $creatorCells .= $this->resourceForm->blankCreatorCell($key, $creatorMsg);
         }
-        if ($creatorCells)
-        {
+        if ($creatorCells) {
             $div = \HTML\div('creatorsOuter', \HTML\tableStart('borderStyleSolid') . $creatorCells . \HTML\tableEnd());
         }
         $jsonResponseArray = [
@@ -65,15 +64,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'creatorsOuter',
             'targetState' => 'visible',
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -83,27 +79,21 @@ class RESOURCEFORMAJAX
      */
     public function addCreatorField()
     {
-        if ($fields = $this->creatorFields())
-        {
+        if ($fields = $this->creatorFields()) {
             $div = \HTML\div($this->vars['creatorType'] . '_Inner', \HTML\tableStart('borderStyleSolid') .
                 $fields . \HTML\tableEnd());
-        }
-        else
-        {
+        } else {
             $div = \HTML\div($this->vars['creatorType'] . '_Inner', '&nbsp;');
         }
         $jsonResponseArray = [
             'innerHTML' => "$div",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -113,27 +103,21 @@ class RESOURCEFORMAJAX
      */
     public function removeCreatorField()
     {
-        if ($fields = $this->creatorFields())
-        {
+        if ($fields = $this->creatorFields()) {
             $div = \HTML\div($this->vars['creatorType'] . '_Inner', \HTML\tableStart('borderStyleSolid') .
                 $fields . \HTML\tableEnd());
-        }
-        else
-        {
+        } else {
             $div = \HTML\div($this->vars['creatorType'] . '_Inner', '&nbsp;');
         }
         $jsonResponseArray = [
             'innerHTML' => "$div",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -144,8 +128,7 @@ class RESOURCEFORMAJAX
     public function fillCreators()
     {
         $this->resourceForm->setResourceType($this->vars['resourceType']);
-        if (array_key_exists('fromCollection', $this->vars))
-        {
+        if (array_key_exists('fromCollection', $this->vars)) {
             $this->resourceForm->collectionFill = $this->vars['ajaxReturn'];
             $this->resourceForm->getCollectionDefaults();
             $this->vars['ajaxReturn'] = $this->vars['resourceType'];
@@ -158,8 +141,7 @@ class RESOURCEFORMAJAX
     public function fillPublisher()
     {
         $this->resourceForm->setResourceType($this->vars['resourceType']);
-        if (array_key_exists('fromCollection', $this->vars))
-        {
+        if (array_key_exists('fromCollection', $this->vars)) {
             $this->resourceForm->collectionFill = $this->vars['ajaxReturn'];
             $this->resourceForm->getCollectionDefaults();
         }
@@ -171,15 +153,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'publisherOuter',
             'targetState' => "visible",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -190,8 +169,7 @@ class RESOURCEFORMAJAX
     public function fillOrganizer()
     {
         $this->resourceForm->setResourceType($this->vars['resourceType']);
-        if (array_key_exists('fromCollection', $this->vars))
-        {
+        if (array_key_exists('fromCollection', $this->vars)) {
             $this->resourceForm->collectionFill = $this->vars['ajaxReturn'];
             $this->resourceForm->getCollectionDefaults();
         }
@@ -203,15 +181,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'organizerOuter',
             'targetState' => "visible",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -222,12 +197,9 @@ class RESOURCEFORMAJAX
     public function initPublisher()
     {
         $this->resourceForm->setResourceType($this->vars['ajaxReturn']);
-        if (array_key_exists('publisher', $this->typeMaps[$this->vars['ajaxReturn']]['optional']))
-        {
+        if (array_key_exists('publisher', $this->typeMaps[$this->vars['ajaxReturn']]['optional'])) {
             $visibility = 'visible';
-        }
-        else
-        {
+        } else {
             $visibility = 'hidden';
         }
         $div = $this->resourceForm->optionalCells('publisher');
@@ -238,15 +210,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'publisherOuter',
             'targetState' => "$visibility",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -257,13 +226,10 @@ class RESOURCEFORMAJAX
     public function fillSeries()
     {
         $this->resourceForm->setResourceType($this->vars['resourceType']);
-        if (array_key_exists('fromCollection', $this->vars))
-        {
+        if (array_key_exists('fromCollection', $this->vars)) {
             $this->resourceForm->collectionFill = $this->vars['ajaxReturn'];
             $this->resourceForm->getCollectionDefaults();
-        }
-        else
-        {
+        } else {
             $this->resourceForm->seriesFill = $this->vars['ajaxReturn'];
         }
         $div = $this->resourceForm->optionalCells('series');
@@ -274,15 +240,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'seriesOuter',
             'targetState' => "visible",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -293,12 +256,9 @@ class RESOURCEFORMAJAX
     public function initSeries()
     {
         $this->resourceForm->setResourceType($this->vars['ajaxReturn']);
-        if (array_key_exists('series', $this->typeMaps[$this->vars['ajaxReturn']]['optional']))
-        {
+        if (array_key_exists('series', $this->typeMaps[$this->vars['ajaxReturn']]['optional'])) {
             $visibility = 'visible';
-        }
-        else
-        {
+        } else {
             $visibility = 'hidden';
         }
         $div = $this->resourceForm->optionalCells('series');
@@ -309,15 +269,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'seriesOuter',
             'targetState' => "$visibility",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -337,15 +294,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'organizerOuter',
             'targetState' => "visible",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -356,12 +310,9 @@ class RESOURCEFORMAJAX
     public function initCollection()
     {
         $this->resourceForm->setResourceType($this->vars['ajaxReturn']);
-        if (array_key_exists('collection', $this->typeMaps[$this->vars['ajaxReturn']]['optional']))
-        {
+        if (array_key_exists('collection', $this->typeMaps[$this->vars['ajaxReturn']]['optional'])) {
             $visibility = 'visible';
-        }
-        else
-        {
+        } else {
             $visibility = 'hidden';
         }
         $div = $this->resourceForm->optionalCells('collection');
@@ -372,15 +323,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'organizerOuter',
             'targetState' => "$visibility",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -391,8 +339,7 @@ class RESOURCEFORMAJAX
     public function fillConference()
     {
         $this->resourceForm->setResourceType($this->vars['resourceType']);
-        if (array_key_exists('fromCollection', $this->vars))
-        {
+        if (array_key_exists('fromCollection', $this->vars)) {
             $this->resourceForm->collectionFill = $this->vars['ajaxReturn'];
             $this->resourceForm->getCollectionDefaults();
         }
@@ -404,15 +351,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'conferenceOuter',
             'targetState' => "visible",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -423,12 +367,9 @@ class RESOURCEFORMAJAX
     public function initConference()
     {
         $this->resourceForm->setResourceType($this->vars['ajaxReturn']);
-        if (array_key_exists('conference', $this->typeMaps[$this->vars['ajaxReturn']]['optional']))
-        {
+        if (array_key_exists('conference', $this->typeMaps[$this->vars['ajaxReturn']]['optional'])) {
             $visibility = 'visible';
-        }
-        else
-        {
+        } else {
             $visibility = 'hidden';
         }
         $div = $this->resourceForm->optionalCells('conference');
@@ -439,15 +380,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'conferenceOuter',
             'targetState' => "$visibility",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -458,8 +396,7 @@ class RESOURCEFORMAJAX
     public function fillIsbn()
     {
         $this->resourceForm->setResourceType($this->vars['resourceType']);
-        if (array_key_exists('fromCollection', $this->vars))
-        {
+        if (array_key_exists('fromCollection', $this->vars)) {
             $this->resourceForm->collectionFill = $this->vars['ajaxReturn'];
             $this->resourceForm->getCollectionDefaults();
         }
@@ -471,15 +408,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'isbnOuter',
             'targetState' => "visible",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -490,8 +424,7 @@ class RESOURCEFORMAJAX
     public function fillDoi()
     {
         $this->resourceForm->setResourceType($this->vars['resourceType']);
-        if (array_key_exists('fromCollection', $this->vars))
-        {
+        if (array_key_exists('fromCollection', $this->vars)) {
             $this->resourceForm->collectionFill = $this->vars['ajaxReturn'];
             $this->resourceForm->getCollectionDefaults();
         }
@@ -503,15 +436,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'doiOuter',
             'targetState' => "visible",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -522,13 +452,10 @@ class RESOURCEFORMAJAX
     public function fillTrans()
     {
         $this->resourceForm->setResourceType($this->vars['resourceType']);
-        if (array_key_exists('fromCollection', $this->vars))
-        {
+        if (array_key_exists('fromCollection', $this->vars)) {
             $this->resourceForm->collectionFill = $this->vars['ajaxReturn'];
             $this->resourceForm->getCollectionDefaults();
-        }
-        else
-        {
+        } else {
             $this->resourceForm->translationFill = $this->vars['ajaxReturn'];
         }
         $div = $this->resourceForm->optionalCells('translation');
@@ -539,15 +466,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'translationOuter',
             'targetState' => "visible",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -558,12 +482,9 @@ class RESOURCEFORMAJAX
     public function initTranslation()
     {
         $this->resourceForm->setResourceType($this->vars['ajaxReturn']);
-        if (array_key_exists('translation', $this->typeMaps[$this->vars['ajaxReturn']]['optional']))
-        {
+        if (array_key_exists('translation', $this->typeMaps[$this->vars['ajaxReturn']]['optional'])) {
             $visibility = 'visible';
-        }
-        else
-        {
+        } else {
             $visibility = 'hidden';
         }
         $div = $this->resourceForm->optionalCells('translation');
@@ -574,15 +495,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'translationOuter',
             'targetState' => "$visibility",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -593,8 +511,7 @@ class RESOURCEFORMAJAX
     public function fillMiscellaneous()
     {
         $this->resourceForm->setResourceType($this->vars['resourceType']);
-        if (array_key_exists('fromCollection', $this->vars))
-        {
+        if (array_key_exists('fromCollection', $this->vars)) {
             $this->resourceForm->collectionFill = $this->vars['ajaxReturn'];
             $this->resourceForm->getCollectionDefaults();
         }
@@ -606,15 +523,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'miscellaneousOuter',
             'targetState' => "visible",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -625,12 +539,9 @@ class RESOURCEFORMAJAX
     public function initMiscellaneous()
     {
         $this->resourceForm->setResourceType($this->vars['ajaxReturn']);
-        if (array_key_exists('miscellaneous', $this->typeMaps[$this->vars['ajaxReturn']]['optional']))
-        {
+        if (array_key_exists('miscellaneous', $this->typeMaps[$this->vars['ajaxReturn']]['optional'])) {
             $visibility = 'visible';
-        }
-        else
-        {
+        } else {
             $visibility = 'hidden';
         }
         $div = $this->resourceForm->optionalCells('miscellaneous');
@@ -641,15 +552,12 @@ class RESOURCEFORMAJAX
             'targetDiv' => 'miscellaneousOuter',
             'targetState' => "$visibility",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -662,12 +570,10 @@ class RESOURCEFORMAJAX
         $this->category = FACTORY_CATEGORY::getInstance();
         // if no ajaxReturn, quietly exit
         $div = \HTML\td(\HTML\div('subcategory', "&nbsp;")); // default
-        if (array_key_exists('ajaxReturn', $this->vars))
-        {
+        if (array_key_exists('ajaxReturn', $this->vars)) {
             $this->subcategories = $this->category->grabSubAll(TRUE, FALSE, UTF8::mb_explode(',', $this->vars['ajaxReturn']));
             $this->grabPreviouslySelected('ajaxReturn2');
-            if (is_array($this->subcategories))
-            {
+            if (is_array($this->subcategories)) {
                 $div = $this->resourceForm->subcategoryBox($this->subcategories);
             }
         }
@@ -685,8 +591,7 @@ class RESOURCEFORMAJAX
 
         $error = !((($id = array_search('resourceTitle', $jArray1)) !== FALSE) && (trim($jArray2[$id])));
 
-        if ($error)
-        {
+        if ($error) {
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=validateError';
             $div = $this->errors->text('inputError', 'missing');
             $jsonResponseArray = [
@@ -696,9 +601,7 @@ class RESOURCEFORMAJAX
                 'startFunction' => 'validateError',
                 'targetDiv' => 'validateOuter',
             ];
-        }
-        else
-        {
+        } else {
             $div = 'SUCCESS';
             $jScript = 'index.php?action=resource_RESOURCEWRITE_CORE';
             $jsonResponseArray = [
@@ -729,7 +632,7 @@ class RESOURCEFORMAJAX
     /**
      * Cycle creator fields and make label row
      *
-     * @return array|FALSE
+     * @return array|false
      */
     private function creatorFields()
     {
@@ -744,11 +647,9 @@ class RESOURCEFORMAJAX
      */
     private function grabPreviouslySelected($qsElement)
     {
-        if (array_key_exists($qsElement, $this->vars))
-        {
+        if (array_key_exists($qsElement, $this->vars)) {
             $this->previousSelect = UTF8::mb_explode(',', $this->vars[$qsElement]);
-            if (($index = array_search(0, $this->previousSelect)) !== FALSE)
-            {
+            if (($index = array_search(0, $this->previousSelect)) !== FALSE) {
                 unset($this->previousSelect[$index]); // remove 'IGNORE' selected
             }
         }

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -64,12 +66,10 @@ class BROWSECOMMON
      */
     public function userBibCondition($field, $bibInfo = TRUE)
     {
-        if ($bibInfo)
-        {
+        if ($bibInfo) {
             $this->bibInfo = \HTML\nlToHtml($this->commonBib->displayBib());
         }
-        if ($useBib = $this->session->getVar("mywikindx_Bibliography_use"))
-        {
+        if ($useBib = $this->session->getVar("mywikindx_Bibliography_use")) {
             $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $useBib]);
             $this->db->leftJoin('user_bibliography_resource', 'userbibliographyresourceResourceId', $field);
         }
@@ -86,12 +86,10 @@ class BROWSECOMMON
     public function colourText($lowestSum, $highestSum, $frequency)
     {
         $highestSum = $highestSum == 0 ? $frequency : $highestSum;
-        if ($frequency == $lowestSum)
-        {
+        if ($frequency == $lowestSum) {
             return "#" . $this->lowColour;
         }
-        if ($frequency == $highestSum)
-        {
+        if ($frequency == $highestSum) {
             return "#" . $this->highColour;
         }
         $ratio = $frequency / $highestSum;
@@ -151,8 +149,7 @@ class BROWSECOMMON
     public function paging($inputArray)
     {
         $this->setPaging();
-        if ($this->paging <= 0)
-        { // unlimited
+        if ($this->paging <= 0) { // unlimited
             return $inputArray;
         }
         $this->total = count($inputArray);
@@ -161,8 +158,7 @@ class BROWSECOMMON
         $values = array_values($inputArray);
         $keySlice = array_slice($keys, $this->start, $this->paging);
         $valueSlice = array_slice($values, $this->start, $this->paging);
-        foreach ($keySlice as $key)
-        {
+        foreach ($keySlice as $key) {
             $finalArray[$key] = array_shift($valueSlice);
         }
 
@@ -175,22 +171,19 @@ class BROWSECOMMON
      */
     public function pagingLinks($queryString)
     {
-        if (($this->paging <= 0) || ($this->total <= $this->paging))
-        {
+        if (($this->paging <= 0) || ($this->total <= $this->paging)) {
             return FALSE;
         }
         $end = $advanced = 0;
         $index = $maxLinks = 1;
         $advance = $this->start;
-        while ($advance >= (($this->maxLinksHalf * $this->paging) - $this->paging))
-        {
+        while ($advance >= (($this->maxLinksHalf * $this->paging) - $this->paging)) {
             $end += $this->paging;
             $index += $this->paging;
             $advance -= $this->paging;
             $advanced++;
         }
-        if ($advanced)
-        {
+        if ($advanced) {
             $links[] = \HTML\a(
                 "page",
                 $this->messages->text("resources", "pagingStart"),
@@ -198,45 +191,34 @@ class BROWSECOMMON
             );
             $maxLinks++;
         }
-        while ($index <= $this->total)
-        {
-            if ($maxLinks++ >= $this->maxLinks)
-            {
+        while ($index <= $this->total) {
+            if ($maxLinks++ >= $this->maxLinks) {
                 break;
             }
             $end += $this->paging;
-            if ($end > $this->total)
-            {
+            if ($end > $this->total) {
                 $end = $this->total;
             }
             $start = $index - 1;
             $link = htmlentities($queryString . "&PagingStart=$start");
             $name = $index . " - " . $end;
-            if ($this->start == $start)
-            {
+            if ($this->start == $start) {
                 $links[] = $name;
-            }
-            else
-            {
+            } else {
                 $links[] = \HTML\a("page", $name, "index.php?" . $link);
             }
             $index += $this->paging;
         }
-        if ($end < $this->total)
-        {
-            if ($this->start && count($links) == 1)
-            {
+        if ($end < $this->total) {
+            if ($this->start && count($links) == 1) {
                 $links = [\HTML\a(
                     "page",
                     $this->messages->text("resources", "pagingStart"),
                     "index.php?" . htmlentities($queryString . "&PagingStart=0")
                 )];
-            }
-            elseif (count($links) > 1)
-            {
+            } elseif (count($links) > 1) {
                 $start = $this->total - ($this->total % $this->paging);
-                if ($start == $this->total)
-                {
+                if ($start == $this->total) {
                     $start = $this->total - $this->paging;
                 }
                 $links[] = \HTML\a(
@@ -254,13 +236,11 @@ class BROWSECOMMON
      */
     public function linksInfo()
     {
-        if ($this->paging <= 0)
-        { // unlimited
+        if ($this->paging <= 0) { // unlimited
             return FALSE;
         }
         $displayEnd = $this->start + $this->paging;
-        if (($this->paging <= 0) || ($displayEnd > $this->total))
-        {
+        if (($this->paging <= 0) || ($displayEnd > $this->total)) {
             $displayEnd = $this->total;
         }
         $displayStart = $this->start + 1;
@@ -274,12 +254,9 @@ class BROWSECOMMON
      */
     private function setPaging()
     {
-        if (array_key_exists('PagingStart', $this->vars))
-        {
+        if (array_key_exists('PagingStart', $this->vars)) {
             $this->start = $this->vars['PagingStart'];
-        }
-        else
-        {
+        } else {
             $this->start = 0;
         }
         $this->paging = GLOBALS::getUserVar("PagingTagCloud");

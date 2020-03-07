@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -36,18 +38,16 @@ class LISTRESOURCES
         $this->user = FACTORY_USER::getInstance();
         $badInput = FACTORY_BADINPUT::getInstance();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "list"));
-        if (!$this->common->resourcesExist())
-        {
+        if (!$this->common->resourcesExist()) {
             $badInput->close($this->messages->text("misc", "noResources"));
         }
         //		$sq = $this->session->getVar("list_SubQuery");
-// Clear previous list info except AscDesc when paging
-		$ascDesc = $this->session->getVar('list_AscDesc');
+        // Clear previous list info except AscDesc when paging
+        $ascDesc = $this->session->getVar('list_AscDesc');
         $this->session->clearArray('list');
-		if (array_key_exists('PagingStart', $this->vars)) // paging
-		{
-			$this->session->setVar('list_AscDesc', $ascDesc);
-		}
+        if (array_key_exists('PagingStart', $this->vars)) { // paging
+            $this->session->setVar('list_AscDesc', $ascDesc);
+        }
         //		$this->session->setVar("list_SubQuery", $sq);
         $this->session->delVar("mywikindx_PagingStart");
         $this->session->delVar("mywikindx_PagingStartAlpha");
@@ -55,65 +55,66 @@ class LISTRESOURCES
         GLOBALS::setTplVar('resourceListInfo', $linksInfo);
         unset($linksInfo);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "list"));
-        if (!$method)
-        {
-            if (!array_key_exists('method', $this->vars))
-            {
+        if (!$method) {
+            if (!array_key_exists('method', $this->vars)) {
                 $badInput->close($errors->text("inputError", "missing"));
             }
-            if (array_key_exists('list_Order', $this->vars))
-            {
+            if (array_key_exists('list_Order', $this->vars)) {
                 $this->session->setVar("list_Order", $this->vars['list_Order']);
-            }
-            elseif (!array_key_exists('type', $this->vars) || ($this->vars['type'] != 'lastMulti'))
-            {
+            } elseif (!array_key_exists('type', $this->vars) || ($this->vars['type'] != 'lastMulti')) {
                 $badInput->close($errors->text("inputError", "missing"));
             }
             $method = $this->vars['method'];
         }
         $this->session->setVar("sql_LastOrder", $this->session->getVar("list_Order"));
-        if (!method_exists($this, $method))
-        {
+        if (!method_exists($this, $method)) {
             $badInput->close($errors->text("inputError", "missing"));
         }
-        if (($method != 'reorder') && !$this->session->issetVar("list_AscDesc"))
-        {
-            switch ($this->session->getVar("list_Order"))
-            {
+        if (($method != 'reorder') && !$this->session->issetVar("list_AscDesc")) {
+            switch ($this->session->getVar("list_Order")) {
                 case 'creator':
-                	$this->session->setVar("list_AscDesc", $this->db->asc);
-				break;
+                    $this->session->setVar("list_AscDesc", $this->db->asc);
+
+                break;
                 case 'title':
-                	$this->session->setVar("list_AscDesc", $this->db->asc);
-				break;
+                    $this->session->setVar("list_AscDesc", $this->db->asc);
+
+                break;
                 case 'publisher':
-                	$this->session->setVar("list_AscDesc", $this->db->asc);
-				break;
+                    $this->session->setVar("list_AscDesc", $this->db->asc);
+
+                break;
                 case 'year':
-                	$this->session->setVar("list_AscDesc", $this->db->desc);
-				break;
+                    $this->session->setVar("list_AscDesc", $this->db->desc);
+
+                break;
                 case 'timestamp':
-                	$this->session->setVar("list_AscDesc", $this->db->desc);
-				break;
+                    $this->session->setVar("list_AscDesc", $this->db->desc);
+
+                break;
                 case 'viewsIndex':
-                	$this->session->setVar("list_AscDesc", $this->db->desc);
-				break;
+                    $this->session->setVar("list_AscDesc", $this->db->desc);
+
+                break;
                 case 'popularityIndex':
-                	$this->session->setVar("list_AscDesc", $this->db->desc);
-				break;
+                    $this->session->setVar("list_AscDesc", $this->db->desc);
+
+                break;
                 case 'downloadsIndex':
-                	$this->session->setVar("list_AscDesc", $this->db->desc);
-				break;
+                    $this->session->setVar("list_AscDesc", $this->db->desc);
+
+                break;
                 case 'maturityIndex':
-                	$this->session->setVar("list_AscDesc", $this->db->desc);
-				break;
+                    $this->session->setVar("list_AscDesc", $this->db->desc);
+
+                break;
                 default:
-                	$this->session->setVar("list_AscDesc", $this->db->asc);
-				break;
+                    $this->session->setVar("list_AscDesc", $this->db->asc);
+
+                break;
             }
         }
-        if (!$this->session->getVar("list_Order"))
-        {
+        if (!$this->session->getVar("list_Order")) {
             $this->session->setVar("list_Order", "creator");
         }
         $this->stmt->allIds = TRUE;
@@ -124,13 +125,11 @@ class LISTRESOURCES
      */
     public function reorder()
     {
-        if (array_key_exists("list_Order", $this->vars) && $this->vars["list_Order"])
-        {
+        if (array_key_exists("list_Order", $this->vars) && $this->vars["list_Order"]) {
             $this->session->setVar("search_Order", $this->vars["list_Order"]);
             $this->session->setVar("sql_LastOrder", $this->vars["list_Order"]);
         }
-        if (array_key_exists('list_AscDesc', $this->vars))
-        {
+        if (array_key_exists('list_AscDesc', $this->vars)) {
             $this->session->setVar("list_AscDesc", $this->vars['list_AscDesc']);
         }
         $this->processGeneral();
@@ -142,8 +141,7 @@ class LISTRESOURCES
     {
         // April 2013: For some reason I haven't figured out yet, this method and all its time/processing overhead is called twice.  This little routine stops that.
         // Still wrong Aug. 2018 . . .
-        if ($this->count)
-        {
+        if ($this->count) {
             return;
         }
         ++$this->count;
@@ -151,30 +149,24 @@ class LISTRESOURCES
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
         $orders = ['creator', 'title', 'publisher', 'year', 'timestamp', 'popularityIndex', 'viewsIndex', 'downloadsIndex', 'maturityIndex'];
         $order = $this->session->getVar("list_Order");
-        if (array_search($order, $orders) === FALSE)
-        {
+        if (array_search($order, $orders) === FALSE) {
             $errors = FACTORY_ERRORS::getInstance();
             $badInput = FACTORY_BADINPUT::getInstance();
             $badInput->close($errors->text("inputError", "invalid"));
         }
         $queryString = 'action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=' . $order;
-// NB. Ordering by popularity index uses temporary tables which must be created for each call (so cannot use the shortcuts for lastMulti)
-        if (($order != 'popularityIndex') && $this->lastMulti($queryString))
-        {
+        // NB. Ordering by popularity index uses temporary tables which must be created for each call (so cannot use the shortcuts for lastMulti)
+        if (($order != 'popularityIndex') && $this->lastMulti($queryString)) {
             return;
         }
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A') || in_array($order, ['popularityIndex', 'downloadsIndex', 'viewsIndex']))
-        {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A') || in_array($order, ['popularityIndex', 'downloadsIndex', 'viewsIndex'])) {
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($order, $queryString, $subStmt);
             $sql = $this->stmt->listList($order);
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
-        if (!$sql)
-        {
+        if (!$sql) {
             $errors = FACTORY_ERRORS::getInstance();
             $badInput = FACTORY_BADINPUT::getInstance();
             $badInput->close($errors->text("inputError", "invalid"));
@@ -204,12 +196,11 @@ class LISTRESOURCES
      *
      * @param string $queryString
      *
-     * @return boolean
+     * @return bool
      */
     private function lastMulti($queryString)
     {
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A'))
-        {
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A')) {
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
@@ -227,18 +218,14 @@ class LISTRESOURCES
     private function setSubQuery()
     {
         $this->db->ascDesc = $this->session->getVar("list_AscDesc");
-        switch ($this->session->getVar("list_Order"))
-        {
+        switch ($this->session->getVar("list_Order")) {
             case 'title':
                 $this->stmt->quarantine(FALSE, 'resourceId');
                 $this->stmt->useBib('resourceId');
                 $this->stmt->executeCondJoins();
-                if (GLOBALS::getUserVar('PagingStyle') == 'A')
-                {
+                if (GLOBALS::getUserVar('PagingStyle') == 'A') {
                     return $this->db->selectNoExecute('resource', ['resourceTitleSort', ['resourceId' => 'rId']], FALSE, TRUE, TRUE);
-                }
-                else
-                {
+                } else {
                     return $this->db->selectNoExecute('resource', [['resourceId' => 'rId']], FALSE, TRUE, TRUE);
                 }
                     // no break

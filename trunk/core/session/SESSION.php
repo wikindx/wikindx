@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -20,8 +22,7 @@ class SESSION
      */
     public function __construct()
     {
-        if (!isset($_SESSION))
-        {
+        if (!isset($_SESSION)) {
             $_SESSION = [];
         }
         ksort($_SESSION, SORT_LOCALE_STRING);
@@ -36,8 +37,7 @@ class SESSION
      */
     public function setVar($key, $value)
     {
-        if (!isset($key) || !isset($value))
-        {
+        if (!isset($key) || !isset($value)) {
             return FALSE;
         }
         $_SESSION[$key] = $value;
@@ -54,12 +54,9 @@ class SESSION
      */
     public function getVar($key, $defaultValue = FALSE)
     {
-        if (isset($_SESSION[$key]))
-        {
+        if (isset($_SESSION[$key])) {
             return $_SESSION[$key];
-        }
-        else
-        {
+        } else {
             return $defaultValue;
         }
     }
@@ -104,10 +101,8 @@ class SESSION
         $array = [];
         $prefix .= '_';
         $prefixLength = mb_strlen($prefix);
-        foreach ($_SESSION as $key => $value)
-        {
-            if (mb_substr($key, 0, $prefixLength) == $prefix)
-            {
+        foreach ($_SESSION as $key => $value) {
+            if (mb_substr($key, 0, $prefixLength) == $prefix) {
                 $key = mb_substr($key, $prefixLength, mb_strlen($key) - $prefixLength);
                 $array[$key] = $value;
             }
@@ -126,18 +121,14 @@ class SESSION
      */
     public function writeArray($array, $prefix = '', $keepZero = FALSE)
     {
-        if ($prefix != '')
-        {
+        if ($prefix != '') {
             $prefix .= '_';
         }
-        foreach ($array as $key => $value)
-        {
-            if (!$keepZero && !$value)
-            {
+        foreach ($array as $key => $value) {
+            if (!$keepZero && !$value) {
                 $value = FALSE;
             }
-            if (!$this->setVar($prefix . $key, $value))
-            {
+            if (!$this->setVar($prefix . $key, $value)) {
                 return FALSE;
             }
         }
@@ -153,10 +144,8 @@ class SESSION
     {
         $prefix .= '_';
         $prefixLength = mb_strlen($prefix);
-        foreach ($_SESSION as $key => $value)
-        {
-            if (mb_substr($key, 0, $prefixLength) == $prefix)
-            {
+        foreach ($_SESSION as $key => $value) {
+            if (mb_substr($key, 0, $prefixLength) == $prefix) {
                 $this->delVar($key);
             }
         }
@@ -168,10 +157,8 @@ class SESSION
     {
         $prefix = "setup_";
         $prefixLength = mb_strlen($prefix);
-        foreach ($_SESSION as $key => $value)
-        {
-            if (mb_substr($key, 0, $prefixLength) != $prefix)
-            {
+        foreach ($_SESSION as $key => $value) {
+            if (mb_substr($key, 0, $prefixLength) != $prefix) {
                 $this->delVar($key);
             }
         }
@@ -185,68 +172,52 @@ class SESSION
      */
     public function saveState($sessionKey)
     {
-        if ($userId = $this->getVar("setup_UserId"))
-        {
+        if ($userId = $this->getVar("setup_UserId")) {
             $db = FACTORY_DB::getInstance();
             // Get existing state
             $db->formatConditions(['usersId' => $userId]);
             $stateIn = $db->selectFirstField('users', 'usersUserSession');
-            if ($stateIn)
-            {
+            if ($stateIn) {
                 $sessionData = unserialize(base64_decode($stateIn));
-            }
-            else
-            {
+            } else {
                 $sessionData = [];
             }
             // Sync current state
-            if (!is_array($sessionKey))
-            {
+            if (!is_array($sessionKey)) {
                 $sessionKeyList = [$sessionKey];
-            }
-            else
-            {
+            } else {
                 $sessionKeyList = $sessionKey;
             }
             // At upgrade time, there are no session in db
             $stateOut = '';
-            foreach ($sessionKeyList as $sessionKey)
-            {
+            foreach ($sessionKeyList as $sessionKey) {
                 $value = $this->getArray($sessionKey);
                 //if($sessionKey = 'list')
                 //	print "$sessionKey: "; print_r($value); print '<p>';
-                if (count($value) > 0)
-                {
+                if (count($value) > 0) {
                     $sessionData[$sessionKey] = base64_encode(serialize($value));
-                }
-                else
-                {
+                } else {
                     unset($sessionData[$sessionKey]);
                 }
             }
             $stateOut = base64_encode(serialize($sessionData));
             // Save current state, if changed
-            if ($stateIn != $stateOut)
-            {
+            if ($stateIn != $stateOut) {
                 // $stateOut can be large . . . Check MySQL max packet length and try to set (possible if DB not shared) otherwise, do not write stateOut to database.
                 // See: https://stackoverflow.com/questions/5688403/how-to-check-and-set-max-allowed-packet-mysql-variable
                 // Third param of $db->update() bypasses any errors in the sql UPDATE so we continue regardless of whether the state can be saved or not.
                 $oldMaxPacket = $db->getMaxPacket();
                 $size = strlen($stateOut);
-                if ($size >= ($oldMaxPacket - 1024))
-                {
+                if ($size >= ($oldMaxPacket - 1024)) {
                     $size += 5 * 1024; // must be multiples of 1024 – give it some headroom
                     $db->setMaxPacket($size);
                     $newMaxPacket = $db->getMaxPacket();
-                    if ($newMaxPacket > $oldMaxPacket)
-                    { // i.e. successfully set
+                    if ($newMaxPacket > $oldMaxPacket) { // i.e. successfully set
                         $db->formatConditions(['usersId' => $userId]);
                         $db->update('users', ['usersUserSession' => $stateOut], FALSE); // else, do not update . . .
                         $db->setMaxPacket($oldMaxPacket);
                     }
-                }
-                else
-                {
+                } else {
                     $db->formatConditions(['usersId' => $userId]);
                     $db->update('users', ['usersUserSession' => $stateOut], FALSE);
                 }

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -43,7 +45,7 @@ class EDITCOLLECTION
     /**
      * check we are allowed to edit and load collection select box
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function init($message = FALSE)
     {
@@ -55,17 +57,14 @@ class EDITCOLLECTION
         $this->session->clearArray('edit');
         $this->db->groupBy('collectionType');
         $recordset = $this->db->select('collection', 'collectionType');
-        if (!$this->db->numRows($recordset))
-        {
+        if (!$this->db->numRows($recordset)) {
             $pString = \HTML\p("&nbsp;") . $this->messages->text("misc", "noCollections");
             GLOBALS::addTplVar('content', $pString);
         }
         // Add 'ALL' to array
         $collections[0] = $this->messages->text("collection", 'all');
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (!$row['collectionType'])
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (!$row['collectionType']) {
                 continue;
             }
             $collections[$row['collectionType']] = $this->messages->text("collection", $row['collectionType']);
@@ -97,8 +96,7 @@ class EDITCOLLECTION
         $collectionType = $this->vars['edit_collectionType'];
         include_once("core/collection/COLLECTIONMAP.php");
         $this->map = new COLLECTIONMAP();
-        if ($collectionType)
-        {
+        if ($collectionType) {
             $this->db->formatConditions(['collectionType' => $collectionType]);
         }
         $this->db->formatConditions($this->db->formatFields('collectionId'), ' IS NOT NULL');
@@ -110,8 +108,7 @@ class EDITCOLLECTION
             'collectionId',
             ['resourcemiscCollection', 'collectionTitle', 'collectionTitleShort']
         );
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $short = $row['collectionTitleShort'] ?
                 " [" . $row['collectionTitleShort'] . ']' : FALSE;
             $title = $row['collectionTitle'] . $short;
@@ -134,7 +131,7 @@ class EDITCOLLECTION
     /**
      * Display interface to edit collection
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function editDisplayCollection($message = FALSE)
     {
@@ -145,23 +142,18 @@ class EDITCOLLECTION
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" .
             $this->messages->text("resources", "collection") . ")"));
         $this->session->setVar("editLock", FALSE);
-        if (!array_key_exists('edit_collectionId', $this->vars) || !$this->vars['edit_collectionId'])
-        {
+        if (!array_key_exists('edit_collectionId', $this->vars) || !$this->vars['edit_collectionId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        if (!array_key_exists('title', $this->vars) || !$this->vars['title'])
-        { // coming back here after mis-edit without title
+        if (!array_key_exists('title', $this->vars) || !$this->vars['title']) { // coming back here after mis-edit without title
             $this->db->formatConditions(['collectionId' => $this->vars['edit_collectionId']]);
             $recordset = $this->db->select('collection', 'collectionTitle');
             $row = $this->db->fetchRow($recordset);
             $title = $row['collectionTitle'];
         }
-        if (array_key_exists('shortTitle', $this->vars) && $this->vars['shortTitle'])
-        {
+        if (array_key_exists('shortTitle', $this->vars) && $this->vars['shortTitle']) {
             $short = $this->vars['shortTitle'];
-        }
-        else
-        {
+        } else {
             $short = FALSE;
         }
         include_once("core/collection/COLLECTIONDEFAULTMAP.php");
@@ -171,22 +163,18 @@ class EDITCOLLECTION
         $pString .= \FORM\formHeader('edit_EDITCOLLECTION_CORE');
         $pString .= \FORM\hidden("method", "edit");
         $pString .= \FORM\hidden("edit_collectionId", $this->vars['edit_collectionId']);
-        if (empty($this->sessionVars))
-        {
+        if (empty($this->sessionVars)) {
             $this->db->formatConditions(['collectionId' => $this->vars['edit_collectionId']]);
             $recordset = $this->db->select('collection', ['collectionTitle', 'collectionTitleShort', 'collectionType', 'collectionDefault']);
             $row = $this->db->fetchRow($recordset);
-            if ($row['collectionDefault'])
-            {
+            if ($row['collectionDefault']) {
                 $this->defaults = unserialize(base64_decode($row['collectionDefault']));
             }
             $title = \HTML\dbToTinyMCE($row['collectionTitle']);
             $titleShort = \HTML\dbToFormTidy($row['collectionTitleShort']);
             $pString .= \FORM\hidden("edit_collectionType", $row['collectionType']);
             $collectionType = $row['collectionType'];
-        }
-        else
-        { // after a mis-edit
+        } else { // after a mis-edit
             $this->defaults = $this->sessionVars;
             $title = $this->defaults['collectionTitle'];
             $titleShort = $this->defaults['collectionTitleShort'];
@@ -213,44 +201,25 @@ class EDITCOLLECTION
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString = \HTML\p($pString);
-        if ($collectionType == 'book')
-        {
+        if ($collectionType == 'book') {
             $pString .= $this->bookDefaults();
-        }
-        elseif ($collectionType == 'journal')
-        {
+        } elseif ($collectionType == 'journal') {
             $pString .= $this->journalDefaults();
-        }
-        elseif ($collectionType == 'proceedings')
-        {
+        } elseif ($collectionType == 'proceedings') {
             $pString .= $this->proceedingsDefaults();
-        }
-        elseif ($collectionType == 'newspaper')
-        {
+        } elseif ($collectionType == 'newspaper') {
             $pString .= $this->newspaperDefaults();
-        }
-        elseif ($collectionType == 'magazine')
-        {
+        } elseif ($collectionType == 'magazine') {
             $pString .= $this->magazineDefaults();
-        }
-        elseif ($collectionType == 'web')
-        {
+        } elseif ($collectionType == 'web') {
             $pString .= $this->webDefaults();
-        }
-        elseif ($collectionType == 'thesis')
-        {
+        } elseif ($collectionType == 'thesis') {
             $pString .= $this->thesisDefaults();
-        }
-        elseif ($collectionType == 'music')
-        {
+        } elseif ($collectionType == 'music') {
             $pString .= $this->musicDefaults();
-        }
-        elseif ($collectionType == 'manuscript')
-        {
+        } elseif ($collectionType == 'manuscript') {
             $pString .= $this->manuscriptDefaults();
-        }
-        elseif ($collectionType == 'miscellaneous')
-        {
+        } elseif ($collectionType == 'miscellaneous') {
             $pString .= $this->miscellaneousDefaults();
         }
         $pString .= \FORM\formSubmit($this->messages->text("submit", "Edit")) . \FORM\formEnd();
@@ -265,17 +234,15 @@ class EDITCOLLECTION
      * @param mixed $addRemove
      * @param mixed $inputArray
      *
-     * @return string|FALSE
+     * @return false|string
      */
     public function doAddRemoveCreator($type, $addRemove, $inputArray)
     {
         $this->writeSessionCreators($inputArray);
         $this->getCreators();
         $fields = $label = '';
-        for ($index = 0; $index < $inputArray['index']; $index++)
-        {
-            if ($index == 0)
-            {
+        for ($index = 0; $index < $inputArray['index']; $index++) {
+            if ($index == 0) {
                 $label = $this->makeCreatorName();
             }
             $entry = $type . '_' . $index . '_firstname';
@@ -293,22 +260,16 @@ class EDITCOLLECTION
             $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, \HTML\dbToFormTidy($text), 30, 255));
             $entry = $type . '_' . $index . '_select';
             $selected = array_key_exists($entry, $inputArray['creatorFields']) ? $inputArray['creatorFields'][$entry] : FALSE;
-            if ($selected)
-            {
+            if ($selected) {
                 $fields .= \HTML\td(\FORM\selectedBoxValue(FALSE, $entry, $this->creatorsArray, $selected, 1));
-            }
-            else
-            {
+            } else {
                 $fields .= \HTML\td(\FORM\selectFBoxValue(FALSE, $entry, $this->creatorsArray, 1));
             }
             $fields .= \HTML\trEnd();
         }
-        if (!$label)
-        {
+        if (!$label) {
             return FALSE;
-        }
-        else
-        {
+        } else {
             return \HTML\tableStart() . $label . $fields . \HTML\tableEnd();
         }
     }
@@ -319,21 +280,17 @@ class EDITCOLLECTION
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $this->writeVarsToSession();
-        if ($this->session->getVar("editLock"))
-        {
+        if ($this->session->getVar("editLock")) {
             $this->badInput->close($this->errors->text("done", "collection"), $this, 'init');
         }
-        if (!array_key_exists('edit_collectionId', $this->vars) || !$this->vars['edit_collectionId'])
-        {
+        if (!array_key_exists('edit_collectionId', $this->vars) || !$this->vars['edit_collectionId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        if (!array_key_exists('edit_collectionType', $this->vars))
-        { // can be NULL
+        if (!array_key_exists('edit_collectionType', $this->vars)) { // can be NULL
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         $title = array_key_exists('edit_collectionTitle', $this->vars) ? trim($this->vars['edit_collectionTitle']) : FALSE;
-        if (!$title)
-        {
+        if (!$title) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'editDisplayCollection');
         }
         include_once("core/collection/COLLECTIONDEFAULTMAP.php");
@@ -341,8 +298,7 @@ class EDITCOLLECTION
         $this->db->formatConditions(['collectionId' => $this->vars['edit_collectionId']]);
         $recordset = $this->db->select('collection', ['collectionType', 'collectionDefault']);
         $row = $this->db->fetchRow($recordset);
-        if ($row['collectionDefault'])
-        {
+        if ($row['collectionDefault']) {
             $this->defaults = unserialize(base64_decode($row['collectionDefault']));
         }
         $updateArray = $temp = $miscArray = $yearArray = $resourceArray = [];
@@ -350,81 +306,59 @@ class EDITCOLLECTION
         $temp['creators'] = $this->editCreators();
         $titleShort = array_key_exists('edit_collectionTitleShort', $this->vars) ?
             trim($this->vars['edit_collectionTitleShort']) : FALSE;
-        if ($collectionExistId = $this->collection->checkExists($this->vars['edit_collectionId'], $title, $titleShort, $this->vars['edit_collectionType']))
-        {
-            if ($collectionExistId != $this->vars['edit_collectionId'])
-            {
+        if ($collectionExistId = $this->collection->checkExists($this->vars['edit_collectionId'], $title, $titleShort, $this->vars['edit_collectionType'])) {
+            if ($collectionExistId != $this->vars['edit_collectionId']) {
                 return $this->confirmDuplicate($collectionExistId, $title, $titleShort);
             }
         }
         $updateArray['collectionTitle'] = $title;
-        if ($titleShort)
-        {
+        if ($titleShort) {
             $updateArray['collectionTitleShort'] = $titleShort;
-        }
-        else
-        {
+        } else {
             $this->db->formatConditions(['collectionId' => $this->vars['edit_collectionId']]);
             $this->db->updateNull('collection', 'collectionTitleshort');
         }
         // first, check publishers
-        if ($row['collectionType'] == 'book')
-        {
+        if ($row['collectionType'] == 'book') {
             $miscArray['resourcemiscPublisher'] = $temp['resourcemiscPublisher'] =
                 $this->editPublisherDetails('edit_publisherName', 'edit_publisherLocation', 'book', 'edit_resourcemiscPublisher');
             $miscArray['resourcemiscField1'] = $temp['resourcemiscField1'] =
                 $this->editPublisherDetails('edit_transPublisherName', 'edit_transPublisherLocation', 'book', 'edit_resourcemiscField1');
-        }
-        elseif ($row['collectionType'] == 'proceedings')
-        {
+        } elseif ($row['collectionType'] == 'proceedings') {
             $miscArray['resourcemiscField1'] = $temp['resourcemiscField1'] =
                 $this->editPublisherDetails('edit_conferenceOrganiser', 'edit_conferenceOrganiserLocation', 'conference', 'edit_resourcemiscField1');
         }
-        foreach ($this->vars as $key => $value)
-        {
+        foreach ($this->vars as $key => $value) {
             if (($key == 'edit_collectionId') || ($key == 'edit_collectionTitle') || ($key == 'edit_collectionTitleShort')
                 || ($key == 'edit_collectionType') || ($key == 'action') || ($key == 'method') || ($key == 'submit')
-                || (mb_strpos($key, 'Creator') === 0))
-            {
+                || (mb_strpos($key, 'Creator') === 0)) {
                 continue;
             }
             $var = trim($value);
-            if ($var)
-            {
+            if ($var) {
                 $split = UTF8::mb_explode('_', $key);
                 $temp[$split[1]] = $var;
-                if (mb_strpos($split[1], 'resourcemisc') === 0)
-                {
+                if (mb_strpos($split[1], 'resourcemisc') === 0) {
                     $miscArray[$split[1]] = $var;
-                }
-                elseif (mb_strpos($split[1], 'resourceyear') === 0)
-                {
+                } elseif (mb_strpos($split[1], 'resourceyear') === 0) {
                     $yearArray[$split[1]] = $var;
-                }
-                elseif (mb_strpos($split[1], 'resource') === 0)
-                {
+                } elseif (mb_strpos($split[1], 'resource') === 0) {
                     $resourceArray[$split[1]] = $var;
                 }
             }
         }
-        if (!array_key_exists('edit_resourcemiscPeerReviewed', $this->vars))
-        {
+        if (!array_key_exists('edit_resourcemiscPeerReviewed', $this->vars)) {
             $miscArray['resourcemiscPeerReviewed'] = $temp['resourcemiscPeerReviewed'] = 'N';
-        }
-        else
-        {
+        } else {
             $miscArray['resourcemiscPeerReviewed'] = $temp['resourcemiscPeerReviewed'] = 'Y';
         }
-        if (!empty($miscArray))
-        {
+        if (!empty($miscArray)) {
             $this->updateMiscTable($miscArray);
         }
-        if (!empty($yearArray))
-        {
+        if (!empty($yearArray)) {
             $this->updateYearTable($yearArray);
         }
-        if (!empty($resourceArray))
-        {
+        if (!empty($resourceArray)) {
             $this->updateResourceTable($resourceArray);
         }
         // Finally, create default value and write fields in collection table
@@ -435,10 +369,8 @@ class EDITCOLLECTION
         $this->db->deleteCache('cacheMetadataCollections');
         $this->db->deleteCache('cacheResourceCollectionTitles');
         $this->db->deleteCache('cacheResourceCollectionShorts');
-        foreach ($temp as $key => $value)
-        {
-            if (is_array($value) || $value)
-            {
+        foreach ($temp as $key => $value) {
+            if (is_array($value) || $value) {
                 $collectionDefaults[$key] = $value;
             }
         }
@@ -454,16 +386,13 @@ class EDITCOLLECTION
     public function editConfirm()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        if ($this->session->getVar("editLock"))
-        {
+        if ($this->session->getVar("editLock")) {
             $this->badInput->close($this->errors->text("done", "collection"), $this, 'init');
         }
-        if (!array_key_exists('edit_collectionId', $this->vars) || !$this->vars['edit_collectionId'])
-        {
+        if (!array_key_exists('edit_collectionId', $this->vars) || !$this->vars['edit_collectionId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        if (!array_key_exists('edit_collectionExistId', $this->vars) || !$this->vars['edit_collectionExistId'])
-        {
+        if (!array_key_exists('edit_collectionExistId', $this->vars) || !$this->vars['edit_collectionExistId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         $editId = $this->vars['edit_collectionId'];
@@ -479,8 +408,7 @@ class EDITCOLLECTION
         // Select all resources referencing this old collection and replace reference with existing collection
         $this->db->formatConditions(['resourcemiscCollection' => $editId]);
         $recordset = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscCollection']);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->db->formatConditions(['resourcemiscId' => $row['resourcemiscId']]);
             $this->db->update('resource_misc', ['resourcemiscCollection' => $existId]);
         }
@@ -514,8 +442,7 @@ class EDITCOLLECTION
         $tab .= \HTML\tableEnd();
         $pString .= \HTML\p($tab);
         $pString .= \HTML\hr();
-        if ($creators = $this->creatorFields('book'))
-        {
+        if ($creators = $this->creatorFields('book')) {
             $tab = \HTML\tableStart();
             $tab .= $creators;
             $tab .= \HTML\tableEnd();
@@ -579,8 +506,7 @@ class EDITCOLLECTION
         $tab .= \HTML\tableEnd();
         $pString .= \HTML\p($tab);
         $pString .= \HTML\hr();
-        if ($creators = $this->creatorFields('proceedings'))
-        {
+        if ($creators = $this->creatorFields('proceedings')) {
             $tab = \HTML\tableStart();
             $tab .= $creators;
             $tab .= \HTML\tableEnd();
@@ -662,8 +588,7 @@ class EDITCOLLECTION
         $tab .= \HTML\tableEnd();
         $pString = \HTML\p($tab);
         $pString .= \HTML\hr();
-        if ($creators = $this->creatorFields('web'))
-        {
+        if ($creators = $this->creatorFields('web')) {
             $tab = \HTML\tableStart();
             $tab .= $creators;
             $tab .= \HTML\tableEnd();
@@ -708,28 +633,23 @@ class EDITCOLLECTION
      */
     private function creatorFields($type, $addRemove = FALSE)
     {
-        if (!$this->getCreators())
-        {
+        if (!$this->getCreators()) {
             return FALSE;
         }
         $label = $this->makeCreatorName();
-        foreach ($this->defaultMap->{$type}['resource_creator'] as $creatorRole => $creatorLabel)
-        {
+        foreach ($this->defaultMap->{$type}['resource_creator'] as $creatorRole => $creatorLabel) {
             ${$creatorRole} = $this->getCreatorRoles($creatorRole);
         }
         $creatorFields = '';
-        foreach ($this->defaultMap->{$type}['resource_creator'] as $creatorRole => $creatorLabel)
-        {
-            if (empty(${$creatorRole}))
-            {
+        foreach ($this->defaultMap->{$type}['resource_creator'] as $creatorRole => $creatorLabel) {
+            if (empty(${$creatorRole})) {
                 $creatorFields .= \HTML\tableStart('generalTable borderStyleSolid') .
                     $this->addRemoveCreators('Creator' . $creatorRole, $creatorLabel, FALSE, 0) . \HTML\tableEnd();
 
                 continue;
             }
             $fields = '';
-            foreach (${$creatorRole} as $creatorId => $creatorOrder)
-            {
+            foreach (${$creatorRole} as $creatorId => $creatorOrder) {
                 $fields .= $this->creatorField($creatorOrder, 'Creator' . $creatorRole, $creatorId);
             }
             $fields = \HTML\tableStart() . $label . $fields . \HTML\tableEnd();
@@ -787,51 +707,39 @@ class EDITCOLLECTION
      */
     private function getCreatorRoles($creatorRole)
     {
-        if (!empty($this->sessionVars))
-        { // back here after a mis-edit so pull any select
+        if (!empty($this->sessionVars)) { // back here after a mis-edit so pull any select
             $surnames = [];
-            foreach ($this->sessionVars as $key => $value)
-            {
-                if (mb_strpos($key, 'Creator') === 0)
-                {
+            foreach ($this->sessionVars as $key => $value) {
+                if (mb_strpos($key, 'Creator') === 0) {
                     $split = UTF8::mb_explode('_', $key);
-                    if ($split[2] == 'surname')
-                    {
+                    if ($split[2] == 'surname') {
                         trim($value) ? $surnames[$split[0] . '_' . $split[1] . '_select'] = TRUE : $surnames[$split[0] . '_' . $split[1] . '_select'] = FALSE;
                     }
-                    if ($split[2] != 'select')
-                    {
+                    if ($split[2] != 'select') {
                         continue;
                     }
-                    if ($value)
-                    {
+                    if ($value) {
                         $this->defaults['creators'][$key] = $value;
                     }
                 }
             }
-            foreach ($surnames as $key => $value)
-            {
-                if (($value !== FALSE) && !array_key_exists($key, $this->defaults['creators']))
-                {
+            foreach ($surnames as $key => $value) {
+                if (($value !== FALSE) && !array_key_exists($key, $this->defaults['creators'])) {
                     $this->defaults['creators'][$key] = 0;
                 }
             }
         }
-        if (!array_key_exists('creators', $this->defaults))
-        {
+        if (!array_key_exists('creators', $this->defaults)) {
             return [];
         }
-        foreach ($this->defaults['creators'] as $creator => $creatorId)
-        {
+        foreach ($this->defaults['creators'] as $creator => $creatorId) {
             $split = UTF8::mb_explode('_', $creator);
             $role = str_replace('Creator', '', $split[0]);
-            if ($role == $creatorRole)
-            {
+            if ($role == $creatorRole) {
                 ${$creatorRole}[$creatorId] = $split[1];
             }
         }
-        if (isset(${$creatorRole}))
-        {
+        if (isset(${$creatorRole})) {
             asort(${$creatorRole});
 
             return ${$creatorRole};
@@ -849,14 +757,11 @@ class EDITCOLLECTION
         $creatorObj = FACTORY_CREATOR::getInstance();
         $temp = $creatorObj->grabAll();
         $creatorsArray[0] = $this->messages->text("misc", "ignore");
-        if (is_array($temp))
-        {
+        if (is_array($temp)) {
             $this->creatorsArray = $creatorsArray + $temp;
 
             return TRUE;
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -1043,16 +948,11 @@ class EDITCOLLECTION
     {
         $td = \HTML\em($this->messages->text("resources", "translatedFrom"));
         $title = $this->defaultFormElementValue('resourceTransTitle');
-        if ($title && ($noSort = $this->defaultFormElementValue('resourceTransNoSort')))
-        {
+        if ($title && ($noSort = $this->defaultFormElementValue('resourceTransNoSort'))) {
             $select = $noSort . ' ' . $title;
-        }
-        elseif ($title)
-        {
+        } elseif ($title) {
             $select = $title;
-        }
-        else
-        {
+        } else {
             $select = FALSE;
         }
         $td .= \HTML\p(\FORM\textInput(
@@ -1099,21 +999,16 @@ class EDITCOLLECTION
             40
         ));
         $temp = $publisher->grabAll('conference');
-        if (is_array($temp))
-        {
+        if (is_array($temp)) {
             $pub = $this->messages->text("resources", "organiser");
             $pubs[0] = $this->messages->text("misc", "ignore");
-            foreach ($temp as $key => $value)
-            {
+            foreach ($temp as $key => $value) {
                 $pubs[$key] = preg_replace("/{(.*)}/Uu", "$1", $value);
             }
             $select = $this->defaultFormElementValue('resourcemiscField1');
-            if ($select)
-            {
+            if ($select) {
                 $td .= \HTML\p(\FORM\selectedBoxValue($pub, 'edit_resourcemiscField1', $pubs, $select, 1));
-            }
-            else
-            {
+            } else {
                 $td .= \HTML\p(\FORM\selectFBoxValue($pub, 'edit_resourcemiscField1', $pubs, 1));
             }
         }
@@ -1157,6 +1052,8 @@ class EDITCOLLECTION
     /**
      * General publisher details
      *
+     * @param mixed $type
+     *
      * @return string
      */
     private function pub($type = FALSE)
@@ -1175,21 +1072,16 @@ class EDITCOLLECTION
             40
         ));
         $temp = $publisher->grabAll($type);
-        if (is_array($temp))
-        {
+        if (is_array($temp)) {
             $pub = $this->messages->text("resources", "publisher");
             $pubs[0] = $this->messages->text("misc", "ignore");
-            foreach ($temp as $key => $value)
-            {
+            foreach ($temp as $key => $value) {
                 $pubs[$key] = preg_replace("/{(.*)}/Uu", "$1", $value);
             }
             $select = $this->defaultFormElementValue('resourcemiscPublisher');
-            if ($select)
-            {
+            if ($select) {
                 $td .= \HTML\p(\FORM\selectedBoxValue($pub, 'edit_resourcemiscPublisher', $pubs, $select, 1));
-            }
-            else
-            {
+            } else {
                 $td .= \HTML\p(\FORM\selectFBoxValue($pub, 'edit_resourcemiscPublisher', $pubs, 1));
             }
         }
@@ -1364,21 +1256,16 @@ class EDITCOLLECTION
             40
         ));
         $temp = $publisher->grabAll();
-        if (!empty($temp))
-        {
+        if (!empty($temp)) {
             $pub = $this->messages->text("resources", "publisher");
             $pubs[0] = $this->messages->text("misc", "ignore");
-            foreach ($temp as $key => $value)
-            {
+            foreach ($temp as $key => $value) {
                 $pubs[$key] = $value;
             }
             $select = $this->defaultFormElementValue('resourcemiscField1');
-            if ($select)
-            {
+            if ($select) {
                 $td .= \HTML\p(\FORM\selectedBoxValue($pub, 'edit_resourcemiscField1', $pubs, $select, 1));
-            }
-            else
-            {
+            } else {
                 $td .= \HTML\p(\FORM\selectFBoxValue($pub, 'edit_resourcemiscField1', $pubs, 1));
             }
         }
@@ -1396,16 +1283,13 @@ class EDITCOLLECTION
      *
      * @param array $field
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function defaultFormElementValue($field)
     {
-        if (array_key_exists($field, $this->defaults))
-        {
+        if (array_key_exists($field, $this->defaults)) {
             return \HTML\dbToFormTidy($this->defaults[$field]);
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -1417,30 +1301,23 @@ class EDITCOLLECTION
     private function updateResourceTable($resourceArray)
     {
         $defaults = $nulls = $update = [];
-        foreach ($this->defaultMap->{$this->vars['edit_collectionType']}['resource'] as $key => $value)
-        {
+        foreach ($this->defaultMap->{$this->vars['edit_collectionType']}['resource'] as $key => $value) {
             $defaults[] = 'resource' . $key;
         }
         $nulls = array_diff($defaults, array_keys($resourceArray));
-        foreach ($resourceArray as $key => $value)
-        {
-            if ($value)
-            {
+        foreach ($resourceArray as $key => $value) {
+            if ($value) {
                 $update[$key] = $value;
-            }
-            elseif (array_search($key, $nulls) === FALSE)
-            {
+            } elseif (array_search($key, $nulls) === FALSE) {
                 $nulls[] = $key;
             }
         }
-        if (!empty($update))
-        {
+        if (!empty($update)) {
             $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
             $this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceId');
             $this->db->update('resource', $update);
         }
-        if (!empty($nulls))
-        {
+        if (!empty($nulls)) {
             $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
             $this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceId');
             $this->db->updateNull('resource', $nulls);
@@ -1454,29 +1331,22 @@ class EDITCOLLECTION
     private function updateMiscTable($miscArray)
     {
         $defaults = $nulls = $update = [];
-        foreach ($this->defaultMap->{$this->vars['edit_collectionType']}['resource_misc'] as $key => $value)
-        {
+        foreach ($this->defaultMap->{$this->vars['edit_collectionType']}['resource_misc'] as $key => $value) {
             $defaults[] = 'resourcemisc' . $key;
         }
         $nulls = array_diff($defaults, array_keys($miscArray));
-        foreach ($miscArray as $key => $value)
-        {
-            if ($value)
-            {
+        foreach ($miscArray as $key => $value) {
+            if ($value) {
                 $update[$key] = $value;
-            }
-            elseif (array_search($key, $nulls) === FALSE)
-            {
+            } elseif (array_search($key, $nulls) === FALSE) {
                 $nulls[] = $key;
             }
         }
-        if (!empty($update))
-        {
+        if (!empty($update)) {
             $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
             $this->db->update('resource_misc', $update);
         }
-        if (!empty($nulls))
-        {
+        if (!empty($nulls)) {
             $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
             $this->db->updateNull('resource_misc', $nulls);
         }
@@ -1489,30 +1359,23 @@ class EDITCOLLECTION
     private function updateYearTable($yearArray)
     {
         $defaults = $nulls = $update = [];
-        foreach ($this->defaultMap->{$this->vars['edit_collectionType']}['resource_year'] as $key => $value)
-        {
+        foreach ($this->defaultMap->{$this->vars['edit_collectionType']}['resource_year'] as $key => $value) {
             $defaults[] = 'resourceyear' . $key;
         }
         $nulls = array_diff($defaults, array_keys($yearArray));
-        foreach ($yearArray as $key => $value)
-        {
-            if ($value)
-            {
+        foreach ($yearArray as $key => $value) {
+            if ($value) {
                 $update[$key] = $value;
-            }
-            elseif (array_search($key, $nulls) === FALSE)
-            {
+            } elseif (array_search($key, $nulls) === FALSE) {
                 $nulls[] = $key;
             }
         }
-        if (!empty($update))
-        {
+        if (!empty($update)) {
             $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
             $this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceyearId');
             $this->db->update('resource_year', $update);
         }
-        if (!empty($nulls))
-        {
+        if (!empty($nulls)) {
             $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
             $this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceyearId');
             $this->db->updateNull('resource_year', $nulls);
@@ -1534,41 +1397,27 @@ class EDITCOLLECTION
     private function editCreators()
     {
         $creators = [];
-        foreach ($this->sessionVars as $key => $value)
-        {
-            if (mb_strpos($key, 'Creator') === 0)
-            {
+        foreach ($this->sessionVars as $key => $value) {
+            if (mb_strpos($key, 'Creator') === 0) {
                 $split = UTF8::mb_explode('_', $key);
                 $role = str_replace('Creator', '', $split[0]);
-                if ($split[2] == 'firstname')
-                {
+                if ($split[2] == 'firstname') {
                     $creators[$role][$split[1]]['firstname'] = trim($value) ? trim($value) : FALSE;
-                }
-                elseif ($split[2] == 'initials')
-                {
+                } elseif ($split[2] == 'initials') {
                     $creators[$role][$split[1]]['initials'] = trim($value) ? trim($value) : FALSE;
-                }
-                elseif ($split[2] == 'prefix')
-                {
+                } elseif ($split[2] == 'prefix') {
                     $creators[$role][$split[1]]['prefix'] = trim($value) ? trim($value) : FALSE;
-                }
-                elseif ($split[2] == 'surname')
-                {
+                } elseif ($split[2] == 'surname') {
                     $creators[$role][$split[1]]['surname'] = trim($value) ? trim($value) : FALSE;
-                }
-                elseif ($split[2] == 'select')
-                {
+                } elseif ($split[2] == 'select') {
                     $creators[$role][$split[1]]['select'] = $value ? $value : FALSE;
                 }
             }
         }
         //  Ensure firstname, initials, prefix are FALSE if there is no surname
-        foreach ($creators as $role => $creatorArray)
-        {
-            foreach ($creatorArray as $order => $creator)
-            {
-                if (!$creator['surname'])
-                {
+        foreach ($creators as $role => $creatorArray) {
+            foreach ($creatorArray as $order => $creator) {
+                if (!$creator['surname']) {
                     $creators[$role][$order]['initials'] = FALSE;
                     $creators[$role][$order]['firstname'] = FALSE;
                     $creators[$role][$order]['prefix'] = FALSE;
@@ -1594,12 +1443,9 @@ class EDITCOLLECTION
         $creatorDefaults = [];
         $creatorObj = FACTORY_CREATOR::getInstance();
         // Write new creators to creators table and store new creatorId
-        foreach ($creators as $role => $creatorArray)
-        {
-            foreach ($creatorArray as $order => $creator)
-            {
-                if ($creator['surname'])
-                { // entry in surname takes precedence
+        foreach ($creators as $role => $creatorArray) {
+            foreach ($creatorArray as $order => $creator) {
+                if ($creator['surname']) { // entry in surname takes precedence
                     $writeArray = [];
                     unset($creator['select']);
                     $initials = $creatorObj->formatInitials($creator['initials']);
@@ -1609,19 +1455,15 @@ class EDITCOLLECTION
                         $initials,
                         $creator['prefix']
                     );
-                    if (!$creatorId)
-                    { // new creator
+                    if (!$creatorId) { // new creator
                         $writeArray['creatorSurname'] = $creator['surname'];
-                        if ($creator['firstname'])
-                        {
+                        if ($creator['firstname']) {
                             $writeArray['creatorFirstname'] = $creator['firstname'];
                         }
-                        if ($creator['prefix'])
-                        {
+                        if ($creator['prefix']) {
                             $writeArray['creatorPrefix'] = $creator['prefix'];
                         }
-                        if ($initials)
-                        {
+                        if ($initials) {
                             $writeArray['creatorInitials'] = $initials;
                         }
                         $this->db->insert('creator', array_keys($writeArray), array_values($writeArray));
@@ -1635,8 +1477,7 @@ class EDITCOLLECTION
         $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
         $this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourcemiscId');
         $resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcecreatorCreatorMain', 'resourcecreatorCreatorSurname'], TRUE);
-        while ($row = $this->db->fetchRow($resultSet))
-        {
+        while ($row = $this->db->fetchRow($resultSet)) {
             // Delete all entries in resource_creator for this resourceId where resourcecreatorRole != 1
             $this->db->formatConditions(['resourcecreatorResourceId' => $row['resourcemiscId']]);
             $this->db->formatConditions(['resourcecreatorRole' => '1'], TRUE);
@@ -1646,10 +1487,8 @@ class EDITCOLLECTION
             // remove all punctuation (keep apostrophe and dash for names such as Grimshaw-Aagaard and D'Eath)
             $writeArray['resourcecreatorCreatorSurname'] =
                 mb_strtolower(preg_replace('/[^\p{L}\p{N}\s\-\']/u', '', $row['resourcecreatorCreatorSurname']));
-            foreach ($creators as $role => $creatorArray)
-            {
-                foreach ($creatorArray as $order => $creator)
-                {
+            foreach ($creators as $role => $creatorArray) {
+                foreach ($creatorArray as $order => $creator) {
                     $writeArray['resourcecreatorCreatorId'] = $creator['select'];
                     $writeArray['resourcecreatorOrder'] = $order + 1;
                     $writeArray['resourcecreatorRole'] = $role;
@@ -1661,8 +1500,7 @@ class EDITCOLLECTION
             // Check if there are creators listed in resource_creator for these resources
             $this->db->formatConditions(['resourcecreatorResourceId' => $row['resourcemiscId']]);
             $resultSet2 = $this->db->select('resource_creator', 'resourcecreatorId');
-            if (!$this->db->numRows($resultSet2))
-            { // need blank row for list operations
+            if (!$this->db->numRows($resultSet2)) { // need blank row for list operations
                 $this->db->insert('resource_creator', ['resourcecreatorResourceId'], [$row['resourcemiscId']]);
             }
         }
@@ -1687,27 +1525,19 @@ class EDITCOLLECTION
     {
         $pubObject = FACTORY_PUBLISHER::getInstance();
         $returnValue = FALSE;
-        if (array_key_exists($name, $this->vars) && trim($this->vars[$name]))
-        {
+        if (array_key_exists($name, $this->vars) && trim($this->vars[$name])) {
             $name = trim($this->vars[$name]);
-            if (array_key_exists($location, $this->vars))
-            {
+            if (array_key_exists($location, $this->vars)) {
                 $location = trim($this->vars[$location]);
-            }
-            else
-            {
+            } else {
                 $location = '';
             }
-            if ($publisherExistsId = $pubObject->checkExists($name, $location))
-            {
+            if ($publisherExistsId = $pubObject->checkExists($name, $location)) {
                 $this->vars[$id] = $returnValue = $publisherExistsId;
-            }
-            else
-            { // need to write new publisher to publisher table
+            } else { // need to write new publisher to publisher table
                 $fields[] = 'publisherName';
                 $values[] = $name;
-                if ($location)
-                {
+                if ($location) {
                     $fields[] = 'publisherLocation';
                     $values[] = $location;
                 }
@@ -1716,9 +1546,7 @@ class EDITCOLLECTION
                 $this->db->insert('publisher', $fields, $values);
                 $this->vars[$id] = $returnValue = $this->db->lastAutoId();
             }
-        }
-        elseif (array_key_exists($id, $this->vars) && ($this->vars[$id] == 0))
-        { // i.e. 'IGNORE'
+        } elseif (array_key_exists($id, $this->vars) && ($this->vars[$id] == 0)) { // i.e. 'IGNORE'
             unset($this->vars[$id]);
             $returnValue = FALSE;
         }
@@ -1762,25 +1590,19 @@ class EDITCOLLECTION
     private function writeSessionCreators($array)
     {
         $temp = $this->session->getArray('edit');
-        if (!empty($array['creatorFields']))
-        {
+        if (!empty($array['creatorFields'])) {
             // $array['creatorFields'] does not store fields set to IGNORE or blank so, if creator fields don't exist, remove them from the session.
-            foreach ($temp as $key => $value)
-            {
-                if (!array_key_exists($key, $array['creatorFields']) && (mb_strpos($key, 'Creator') === 0))
-                {
+            foreach ($temp as $key => $value) {
+                if (!array_key_exists($key, $array['creatorFields']) && (mb_strpos($key, 'Creator') === 0)) {
                     $this->session->delVar("edit_$key");
                 }
             }
             $this->session->writeArray($array['creatorFields'], 'edit');
         }
         // else remove all creator fields
-        else
-        {
-            foreach ($temp as $key => $value)
-            {
-                if (mb_strpos($key, 'Creator') === 0)
-                {
+        else {
+            foreach ($temp as $key => $value) {
+                if (mb_strpos($key, 'Creator') === 0) {
                     $this->session->delVar("edit_$key");
                 }
             }
@@ -1794,12 +1616,9 @@ class EDITCOLLECTION
     {
         $this->session->clearArray('edit');
         $allCreators = [];
-        foreach ($this->vars as $key => $value)
-        {
-            if (mb_strpos($key, 'edit_') === 0)
-            {
-                if ($key == 'edit_resourcemiscPeerReviewed')
-                {
+        foreach ($this->vars as $key => $value) {
+            if (mb_strpos($key, 'edit_') === 0) {
+                if ($key == 'edit_resourcemiscPeerReviewed') {
                     $this->sessionVars[str_replace('edit_', '', $key)] = 'Y';
 
                     continue;
@@ -1807,53 +1626,37 @@ class EDITCOLLECTION
                 $this->sessionVars[str_replace('edit_', '', $key)] = $value;
             }
             // Write creator session data and ensure each creator in each role is correctly ordered
-            elseif (mb_strpos($key, 'Creator') === 0)
-            {
+            elseif (mb_strpos($key, 'Creator') === 0) {
                 $split = UTF8::mb_explode('_', $key);
                 $newKey = $split[0] . '_' . $split[1];
                 $allCreators[$split[0]]['order'][$newKey] = $split[1];
-                if ($split[2] == 'initials')
-                {
+                if ($split[2] == 'initials') {
                     $allCreators[$split[0]]['creators'][$newKey]['initials'] = $value;
-                }
-                elseif ($split[2] == 'prefix')
-                {
+                } elseif ($split[2] == 'prefix') {
                     $allCreators[$split[0]]['creators'][$newKey]['prefix'] = $value;
-                }
-                elseif ($split[2] == 'firstname')
-                {
+                } elseif ($split[2] == 'firstname') {
                     $allCreators[$split[0]]['creators'][$newKey]['firstname'] = $value;
-                }
-                elseif ($split[2] == 'surname')
-                {
+                } elseif ($split[2] == 'surname') {
                     $allCreators[$split[0]]['creators'][$newKey]['surname'] = $value;
-                }
-                elseif ($split[2] == 'select')
-                {
+                } elseif ($split[2] == 'select') {
                     $allCreators[$split[0]]['creators'][$newKey]['select'] = $value;
                 }
             }
         }
-        if (!empty($allCreators))
-        {
+        if (!empty($allCreators)) {
             $temp = $allCreators;
-            foreach ($temp as $role => $array)
-            { // remove empty creators lacking _select or _surname
-                foreach ($array['creators'] as $key => $array2)
-                {
-                    if (!trim($array2['surname']) && !$array2['select'])
-                    {
+            foreach ($temp as $role => $array) { // remove empty creators lacking _select or _surname
+                foreach ($array['creators'] as $key => $array2) {
+                    if (!trim($array2['surname']) && !$array2['select']) {
                         unset($allCreators[$role]['creators'][$key]);
                         unset($allCreators[$role]['order'][$key]);
                     }
                 }
             }
-            foreach ($allCreators as $role => $array)
-            {
+            foreach ($allCreators as $role => $array) {
                 $index = 0;
                 asort($array['order']);
-                foreach ($array['order'] as $key => $value)
-                {
+                foreach ($array['order'] as $key => $value) {
                     $newKey = $role . '_' . $index;
                     $sessionKey = $newKey . '_initials';
                     $this->sessionVars[$sessionKey] = $allCreators[$role]['creators'][$key]['initials'];

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -56,8 +58,24 @@ class GLOBALS
      */
     public function __construct()
     {
-        if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL)
-        {
+        if (!$count) { // Ensure there is a valid INSERT value here ...
+            $count = 0;
+        }
+                
+        // If the month (period) is too short or long (YYYYMM format expected), skip this stat
+        $month = trim($month . "");
+        if (strlen($month) != 6) {
+            continue;
+        }
+                
+        $month = intval($month);
+                
+        // If the month is not in the range 01..12, skip this stat
+        if ($month % 100 > 12) {
+            continue;
+        }
+                
+        if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL) {
             $this->setPageStartingTime(microtime());
         }
     }
@@ -71,12 +89,10 @@ class GLOBALS
      */
     public static function setVars($cleanInput, $dirtyInput)
     {
-        if (empty(self::$vars))
-        {
+        if (empty(self::$vars)) {
             self::$vars = $cleanInput;
         }
-        if (empty(self::$dirtyVars))
-        {
+        if (empty(self::$dirtyVars)) {
             self::$dirtyVars = $dirtyInput;
         }
     }
@@ -106,22 +122,23 @@ class GLOBALS
      */
     public static function setUserVar($key, $value)
     {
-    	self::$userVars[$key] = $value;
+        self::$userVars[$key] = $value;
     }
     /**
      * Get a user variable
      *
      * @param $default Default return value if set value does not exist.
+     * @param mixed $key
      *
      * @return string
      */
     public static function getUserVar($key, $default = FALSE)
     {
-    	if (!array_key_exists($key, self::$userVars))
-    	{
-    		return $default;
-    	}
-    	return self::$userVars[$key];
+        if (!array_key_exists($key, self::$userVars)) {
+            return $default;
+        }
+
+        return self::$userVars[$key];
     }
     /**
      * Get user variable array
@@ -130,7 +147,7 @@ class GLOBALS
      */
     public static function getUserVarsArray()
     {
-    	return self::$userVars;
+        return self::$userVars;
     }
     /**
      * Increment the DB query counter
@@ -229,12 +246,9 @@ class GLOBALS
      */
     public static function getTplVar($variableName)
     {
-        if (self::tplVarExists($variableName))
-        {
+        if (self::tplVarExists($variableName)) {
             return self::$WIKINDX_TEMPLATE_VARIABLE_STORE[$variableName];
-        }
-        else
-        {
+        } else {
             return [];
         }
     }
@@ -255,8 +269,7 @@ class GLOBALS
     public static function setPageStartingTime($pageStartingTime)
     {
         // Don't launch again start timer if we include this file twice
-        if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL)
-        {
+        if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL) {
             self::$WIKINDX_PAGE_STARTING_TIME_CHRONO = $pageStartingTime;
         }
     }

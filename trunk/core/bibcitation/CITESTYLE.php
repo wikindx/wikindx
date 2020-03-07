@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -76,8 +78,7 @@ class CITESTYLE
         $this->init();
         // Turn on hyperlinking for html output of the citation references within the text.
         // The unique resource ID in the database is appended to this string.  The default in $this->citeFormat is FALSE meaning no hyperlinking.
-        if ($citeLink)
-        {
+        if ($citeLink) {
             $this->citeFormat->hyperlinkBase = "index.php?action=resource_RESOURCEVIEW_CORE&id=";
         }
         // Capture any text after last [cite]...[/cite] tag
@@ -85,32 +86,25 @@ class CITESTYLE
         $this->tailText = UTF8::mb_strrev($explode[0]);
         $text = UTF8::mb_strrev("]etic/[" . $explode[1]);
         preg_match_all("/(.*)\\s*\\[cite\\](.*)\\[\\/cite\\]/Uuis", $text, $match);
-        foreach ($match[1] as $value)
-        {
-            if (($this->output == 'html') || ($this->output == 'htmlNoBib'))
-            { // WIKINDX metadata stored in db with <br>
+        foreach ($match[1] as $value) {
+            if (($this->output == 'html') || ($this->output == 'htmlNoBib')) { // WIKINDX metadata stored in db with <br>
                 $this->matches[1][] = $value;
-            }
-            else
-            {
+            } else {
                 // Wikindx v4 runs in HTML 4.01 but TinyMCE was configured for XHTML in v3.8.
                 // For the precaution, treating the two notations which can be mixed after migrating to v4.
                 $this->matches[1][] = rtrim(str_ireplace(['<br />', '<br/>', '<br>'], '', $value));
             }
         }
         $this->citeFormat->count = 0;
-        foreach ($match[2] as $index => $value)
-        {
+        foreach ($match[2] as $index => $value) {
             // Wikindx v4 runs in HTML 4.01 but TinyMCE was configured for XHTML in v3.8.
             // For the precaution, treating the two notations which can be mixed after migrating to v4.
-            if ($id = $this->parseCiteTag($index, str_ireplace(['<br />', '<br/>', '<br>'], '', $value)))
-            {
+            if ($id = $this->parseCiteTag($index, str_ireplace(['<br />', '<br/>', '<br>'], '', $value))) {
                 $this->citeIds[] = $id;
             }
         }
         // If empty($this->citeIds), there are no citations to scan for (or user has entered invalid IDs) so return $text unchanged.
-        if (empty($this->citeIds))
-        {
+        if (empty($this->citeIds)) {
             return $text;
         }
         // Get appended bibliographies.  $bibliography is a multiple array of raw bibliographic data from the database suitable for passing to BIBFORMAT.php.
@@ -134,8 +128,7 @@ class CITESTYLE
         $this->row = [];
         $this->citeFormat->count = 0;
         $citeIndex = 0;
-        while (!empty($this->matches[1]))
-        {
+        while (!empty($this->matches[1])) {
             $this->citeFormat->item = []; // must be reset each time.
             $id = $this->citeIds[$citeIndex];
             ++$citeIndex;
@@ -145,8 +138,7 @@ class CITESTYLE
             //			$this->createPages(array_shift($this->pageStart), array_shift($this->pageEnd));
             $this->createPrePostText(array_shift($this->preText), array_shift($this->postText));
             // For each element of $bibliography, process title, creator names etc.
-            if (array_key_exists($id, $bibliography))
-            {
+            if (array_key_exists($id, $bibliography)) {
                 $this->process($bibliography[$id], $id);
             }
             // $this->rowSingle is set in $this->process().  'type' is the type of resource (book, journal article etc.).  In WIKINDX, this is part of the row returned by SQL:  you may
@@ -160,52 +152,36 @@ class CITESTYLE
         // bibTeX ordinals such as 5$^{th}$
         $pString = preg_replace_callback("/(\\d+)\\$\\^\\{(.*)\\}\\$/u", [$this, "ordinals"], $pString);
         // Endnote-style citations so add the endnotes bibliography
-        if ($this->citeFormat->style['citationStyle'])
-        {
+        if ($this->citeFormat->style['citationStyle']) {
             // Turn off hyperlinking for the appended bibliography
             $this->citeFormat->hyperlinkBase = FALSE;
             $pString = $this->citeFormat->printEndnoteBibliography($pString);
-            if ($this->citeFormat->style['endnoteStyle'] != 2)
-            { // Not footnotes.
+            if ($this->citeFormat->style['endnoteStyle'] != 2) { // Not footnotes.
                 return $pString;
             }
         }
-        if ($this->output == 'htmlNoBib')
-        {
+        if ($this->output == 'htmlNoBib') {
             return $pString;
         }
         // In-text citations and footnotes - output the appended bibliography
         $bib = $this->printBibliography($bibliography);
-        if ($this->output == 'rtf')
-        {
+        if ($this->output == 'rtf') {
             // WIKINDX-specific:  Indentation of appended bibliography
-            if ($this->session->getVar("exportPaper_indentBib") == 'indentAll')
-            {
+            if ($this->session->getVar("exportPaper_indentBib") == 'indentAll') {
                 $bib = "\\li720\n$bib";
-            }
-            elseif ($this->session->getVar("exportPaper_indentBib") == 'indentFL')
-            {
+            } elseif ($this->session->getVar("exportPaper_indentBib") == 'indentFL') {
                 $bib = "\\fi720\n$bib";
-            }
-            elseif ($this->session->getVar("exportPaper_indentBib") == 'indentNotFL')
-            {
+            } elseif ($this->session->getVar("exportPaper_indentBib") == 'indentNotFL') {
                 $bib = "\\li720\\fi-720\n$bib";
-            }
-            else
-            {
+            } else {
                 $bib = "\\li1\\fi1\n$bib";
             }
             // WIKINDX-specific:  Line spacing of appended bibliography
-            if ($this->session->getVar("exportPaper_spaceBib") == 'oneHalfSpace')
-            {
+            if ($this->session->getVar("exportPaper_spaceBib") == 'oneHalfSpace') {
                 $bib = "\\pard\\plain \\sl360\\slmult1\n$bib";
-            }
-            elseif ($this->session->getVar("exportPaper_spaceBib") == 'doubleSpace')
-            {
+            } elseif ($this->session->getVar("exportPaper_spaceBib") == 'doubleSpace') {
                 $bib = "\\pard\\plain \\sl480\\slmult1\n$bib";
-            }
-            else
-            {
+            } else {
                 $bib = "\\pard\\plain $bib";
             }
             $bib = "\\par\n\n$bib";
@@ -226,13 +202,11 @@ class CITESTYLE
      */
     public function bibliographyProcess()
     {
-        foreach (array_unique($this->citeIds) as $id)
-        {
+        foreach (array_unique($this->citeIds) as $id) {
             $ids[] = $id;
         }
         // 1st order
-        if ($this->citeFormat->style['order1desc'])
-        { // descending (default 0 = ascending)
+        if ($this->citeFormat->style['order1desc']) { // descending (default 0 = ascending)
             $this->db->ascDesc = $this->db->desc;
         }
         $orderYear = $this->db->caseWhen(
@@ -252,58 +226,40 @@ class CITESTYLE
             $this->db->formatFields('creatorSurname'),
             $this->db->formatFields('resourceTitleSort')
         );
-        if ($this->citeFormat->style['order1'] == 1)
-        { // publication year
+        if ($this->citeFormat->style['order1'] == 1) { // publication year
             $order1 = $orderYear;
-        }
-        elseif ($this->citeFormat->style['order1'] == 2)
-        { // title
+        } elseif ($this->citeFormat->style['order1'] == 2) { // title
             $order1 = $orderTitle;
-        }
-        else
-        { // default: by creator
+        } else { // default: by creator
             $order1 = $orderCreator;
         }
         // 2nd order
-        if ($this->citeFormat->style['order2desc'])
-        { // descending (default 0 = ascending)
+        if ($this->citeFormat->style['order2desc']) { // descending (default 0 = ascending)
             $this->db->ascDesc = $this->db->desc;
         }
-        if ($this->citeFormat->style['order2'] == 1)
-        { // publication year
+        if ($this->citeFormat->style['order2'] == 1) { // publication year
             $order2 = $orderYear;
-        }
-        elseif ($this->citeFormat->style['order2'] == 2)
-        { // title
+        } elseif ($this->citeFormat->style['order2'] == 2) { // title
             $order2 = $orderTitle;
-        }
-        else
-        { // default: by creator
+        } else { // default: by creator
             $order2 = $orderCreator;
         }
         // 3rd order
-        if ($this->citeFormat->style['order3desc'])
-        { // descending (default 0 = ascending)
+        if ($this->citeFormat->style['order3desc']) { // descending (default 0 = ascending)
             $this->db->ascDesc = $this->db->desc;
         }
-        if ($this->citeFormat->style['order3'] == 1)
-        { // publication year
+        if ($this->citeFormat->style['order3'] == 1) { // publication year
             $order3 = $orderYear;
-        }
-        elseif ($this->citeFormat->style['order3'] == 2)
-        { // title
+        } elseif ($this->citeFormat->style['order3'] == 2) { // title
             $order3 = $orderTitle;
-        }
-        else
-        { // default: by creator
+        } else { // default: by creator
             $order3 = $orderCreator;
         }
         $this->db->conditionSeparator = $this->db->or;
         $this->db->formatConditionsOneField($ids, 'resourceId');
         $this->db->conditionSeparator = $this->db->and; // reset
         $resultset = $this->res->getResource(FALSE, $order1, $order2, $order3);
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $row = array_map([$this, "removeSlashes"], $row);
             // collect multiple array for passing to $this->citeFormat->processEndnoteBibliography.  Must be keyed by unique resource identifier.
             $rows[$row['resourceId']] = $row;
@@ -323,29 +279,22 @@ class CITESTYLE
      */
     public function printBibliography($bibliography)
     {
-        foreach ($bibliography as $row)
-        {
+        foreach ($bibliography as $row) {
             // Do not add if cited resource type shouldn't be in the appended bibliography
-            if (array_key_exists($row['resourceType'] . "_notInBibliography", $this->citeFormat->style))
-            {
+            if (array_key_exists($row['resourceType'] . "_notInBibliography", $this->citeFormat->style)) {
                 continue;
             }
             // If we're disambiguating citations by adding a letter after the year, we need to insert the yearLetter into $row before formatting the bibliography.
             if (isset($this->citeFormat->yearsDisambiguated) && $this->citeFormat->style['ambiguous'] &&
-                array_key_exists($row['resourceId'], $this->citeFormat->yearsDisambiguated))
-            {
+                array_key_exists($row['resourceId'], $this->citeFormat->yearsDisambiguated)) {
                 // For WIKINDX, if type == book or book article and there exists both 'year1' and 'year2' in $row (entered as
                 // publication year and reprint year respectively), need to make sure we have the later publication year
                 $yearField = 'resourceyearYear1';
-                if (($row['resourceType'] == 'book') || ($row['resourceType'] == 'book_article'))
-                {
+                if (($row['resourceType'] == 'book') || ($row['resourceType'] == 'book_article')) {
                     $year2 = $row['resourceyearYear2'];
-                    if ($year2 && !$row['resourceyearYear1'])
-                    {
+                    if ($year2 && !$row['resourceyearYear1']) {
                         $yearField = 'resourceyearYear2';
-                    }
-                    elseif ($year2 && $row['resourceyearYear1'])
-                    {
+                    } elseif ($year2 && $row['resourceyearYear1']) {
                         $yearField = 'resourceyearYear2';
                     }
                 }
@@ -376,16 +325,12 @@ class CITESTYLE
         $id = $idPart[0];
         $this->db->formatConditions(['resourceId' => $id]);
         $resultset = $this->db->select('resource', 'resourceId');
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             // For an invalid citation ID, deal with any text that precedes it by either prepending to the next cite tag capture or prepending to $this->tailText.
-            if (array_key_exists($matchIndex + 1, $this->matches[1]))
-            {
+            if (array_key_exists($matchIndex + 1, $this->matches[1])) {
                 $this->matches[1][$matchIndex + 1] =
                 $this->matches[1][$matchIndex] . $this->matches[1][$matchIndex + 1];
-            }
-            else
-            {
+            } else {
                 $this->tailText = $this->matches[1][$matchIndex] . $this->tailText;
             }
             // Ensure we don't pass this invalid ID in the citation engine.
@@ -394,25 +339,19 @@ class CITESTYLE
             return FALSE;
         }
         ++$this->citeFormat->count;
-        if (array_key_exists('1', $idPart))
-        {
+        if (array_key_exists('1', $idPart)) {
             $pages = UTF8::mb_explode("-", $idPart[1]);
             $pageStart = $pages[0];
             $pageEnd = array_key_exists('1', $pages) ? $pages[1] : FALSE;
-        }
-        else
-        {
+        } else {
             $pageStart = $pageEnd = FALSE;
         }
         $this->citeFormat->formatPages($pageStart, $pageEnd);
-        if (array_key_exists('1', $rawCitation))
-        {
+        if (array_key_exists('1', $rawCitation)) {
             $text = UTF8::mb_explode("`", $rawCitation[1]);
             $this->preText[] = $text[0];
             $this->postText[] = array_key_exists('1', $text) ? $text[1] : FALSE;
-        }
-        else
-        {
+        } else {
             $this->preText[] = $this->postText[] = FALSE;
         }
 
@@ -431,16 +370,12 @@ class CITESTYLE
         // For WIKINDX, if type == book or book article and there exists both 'year1' and 'year2' in $row (entered as
         // publication year and reprint year respectively), then switch these around as 'year1' is
         // entered in the style template as 'originalPublicationYear' and 'year2' should be 'publicationYear'.
-        if (($row['resourceType'] == 'book') || ($row['resourceType'] == 'book_article'))
-        {
+        if (($row['resourceType'] == 'book') || ($row['resourceType'] == 'book_article')) {
             $year2 = $row['resourceyearYear2'];
-            if ($year2 && !$row['resourceyearYear1'])
-            {
+            if ($year2 && !$row['resourceyearYear1']) {
                 $row['resourceyearYear1'] = $year2;
                 unset($row['resourceyearYear2']);
-            }
-            elseif ($year2 && $row['resourceyearYear1'])
-            {
+            } elseif ($year2 && $row['resourceyearYear1']) {
                 $row['resourceyearYear2'] = $row['resourceyearYear1'];
                 $row['resourceyearYear1'] = $year2;
             }
@@ -454,8 +389,7 @@ class CITESTYLE
         // URL of resource
         $this->createUrl();
         // Publication year of resource.  If no publication year, we create a dummy key entry so that CITEFORMAT can provide a replacement string if required by the style.
-        if (!array_key_exists('resourceyearYear1', $this->rowSingle))
-        {
+        if (!array_key_exists('resourceyearYear1', $this->rowSingle)) {
             $this->rowSingle['resourceyearYear1'] = FALSE;
         }
         $this->citeFormat->formatYear($this->rowSingle['resourceyearYear1']);
@@ -469,16 +403,11 @@ class CITESTYLE
      */
     public function ordinals($matches)
     {
-        if ($this->output == 'html')
-        {
+        if ($this->output == 'html') {
             return $matches[1] . "<sup>" . $matches[2] . "</sup>";
-        }
-        elseif ($this->output == 'rtf')
-        {
+        } elseif ($this->output == 'rtf') {
             return $matches[1] . "{{\\up5 " . $matches[2] . "}}";
-        }
-        else
-        {
+        } else {
             return $matches[1] . $matches[2];
         }
     }
@@ -488,15 +417,13 @@ class CITESTYLE
     public function createTitle()
     {
         $pString = $this->rowSingle['resourceNoSort'] . ' ' . $this->rowSingle['resourceTitle'];
-        if ($this->rowSingle['resourceSubtitle'])
-        {
+        if ($this->rowSingle['resourceSubtitle']) {
             $pString .= $this->citeFormat->style['titleSubtitleSeparator'] .
             $this->rowSingle['resourceSubtitle'];
         }
         // anything enclosed in {...} is to be left as is
         $this->citeFormat->formatTitle($pString, "{", "}");
-        if ($this->rowSingle['resourceShortTitle'])
-        {
+        if ($this->rowSingle['resourceShortTitle']) {
             // anything enclosed in {...} is to be left as is
             $this->citeFormat->formatShortTitle($this->rowSingle['resourceShortTitle'], "{", "}");
         }
@@ -509,8 +436,7 @@ class CITESTYLE
      */
     public function createPrePostText($preText, $postText)
     {
-        if (!$preText && !$postText)
-        { // empty field
+        if (!$preText && !$postText) { // empty field
             return;
         }
         $this->citeFormat->formatPrePostText($preText, $postText);
@@ -531,24 +457,18 @@ class CITESTYLE
         $this->db->orderBy('resourcecreatorRole', TRUE, FALSE);
         $this->db->orderBy('resourcecreatorOrder', TRUE, FALSE);
         $resultSet = $this->db->select('resource_creator', ['resourcecreatorCreatorId', 'resourcecreatorRole']);
-        while ($row = $this->db->fetchRow($resultSet))
-        {
+        while ($row = $this->db->fetchRow($resultSet)) {
             $creators[$row['resourcecreatorRole']][] = $row['resourcecreatorCreatorId'];
         }
-        if (empty($creators))
-        {
+        if (empty($creators)) {
             return FALSE;
         }
-        if (array_key_exists(1, $creators))
-        { // edited book?
+        if (array_key_exists(1, $creators)) { // edited book?
             $nameIds = $creators[1];
-        }
-        else
-        {
+        } else {
             $nameIds = $creators[2];
         }
-        foreach ($nameIds as $nameId)
-        {
+        foreach ($nameIds as $nameId) {
             $ids[] = $nameId;
         }
         $this->db->conditionSeparator = $this->db->or;
@@ -558,16 +478,13 @@ class CITESTYLE
             ['creatorFirstname' => 'firstname'],
             ['creatorInitials' => 'initials'], ['creatorPrefix' => 'prefix'], 'creatorId', ]);
         // Reorder $row so that creator order is correct and not that returned by SQL
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $rowSql[$row['creatorId']] = array_map([$this, "removeSlashes"], $row);
         }
-        if (!isset($rowSql))
-        {
+        if (!isset($rowSql)) {
             return FALSE;
         }
-        foreach ($nameIds as $id)
-        {
+        foreach ($nameIds as $id) {
             $rowTemp[] = $rowSql[$id];
         }
         $this->citeFormat->formatNames($rowTemp, $citationId);
@@ -579,15 +496,13 @@ class CITESTYLE
      */
     public function createUrl()
     {
-        if (!$this->rowSingle['resourcetextUrls'])
-        {
+        if (!$this->rowSingle['resourcetextUrls']) {
             return FALSE;
         }
         $urls = \URL\getUrls($this->rowSingle['resourcetextUrls']);
         // In $urls array, [0] index is primary URL
         $url = ($this->output == 'html') ? htmlspecialchars($urls[0]) : $urls[0];
-        if ($this->output == 'html')
-        {
+        if ($this->output == 'html') {
             $url = \URL\reduceUrl($url, 80);
         }
         $this->citeFormat->formatUrl($url);
@@ -601,12 +516,9 @@ class CITESTYLE
      */
     public function removeSlashes($element)
     {
-        if ($this->output == 'rtf')
-        {
+        if ($this->output == 'rtf') {
             return str_replace('\\', '\\\\', stripslashes($element));
-        }
-        else
-        {
+        } else {
             return stripslashes($element);
         }
     }
@@ -619,16 +531,11 @@ class CITESTYLE
         $this->pageStart = $this->pageEnd = $this->preText = $this->postText = $this->citeIds = [];
         $this->citeFormat->wikindx = TRUE;
         // Get the bibliographic style.  These session variables are set in WIKINDX's BIBSTYLE.php - other systems will need similar code to load an XML style file.
-        if ($this->rtfBibExport)
-        {
+        if ($this->rtfBibExport) {
             $this->setupStyle = $this->session->getVar("exportRtf_Style");
-        }
-        elseif ($this->output == 'rtf')
-        {
+        } elseif ($this->output == 'rtf') {
             $this->setupStyle = $this->session->getVar("exportPaper_Style");
-        }
-        else
-        {
+        } else {
             $this->setupStyle = GLOBALS::getUserVar("Style");
         }
         // Initialize citeFormat properties

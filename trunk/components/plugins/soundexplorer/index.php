@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -36,8 +38,7 @@ class soundexplorer_MODULE
     {
         $this->session = FACTORY_SESSION::getInstance();
         // only available for logged in users
-        if ($this->session->getVar("setup_ReadOnly"))
-        {
+        if ($this->session->getVar("setup_ReadOnly")) {
             return;
         }
         $this->db = FACTORY_DB::getInstance();
@@ -51,17 +52,14 @@ class soundexplorer_MODULE
         $config = new soundexplorer_CONFIG();
         $this->authorize = $config->authorize;
         $this->scripts[] = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/' . basename(__DIR__) . '/soundExplorer.js';
-        if (!array_key_exists('action', $this->vars) || (array_key_exists('action', $this->vars) && ($this->vars['action'] != 'soundexplorer_seConfigure')))
-        {
+        if (!array_key_exists('action', $this->vars) || (array_key_exists('action', $this->vars) && ($this->vars['action'] != 'soundexplorer_seConfigure'))) {
             GLOBALS::setTplVar($config->container, $this->display());
         }
-        if ($menuInit)
-        { // portion of constructor used for menu initialisation
+        if ($menuInit) { // portion of constructor used for menu initialisation
             return; // Need do nothing more as this is simply menu initialisation.
         }
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->authorize))
-        { // not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
     }
@@ -79,15 +77,11 @@ class soundexplorer_MODULE
     public function seToggle()
     {
         $pString = $this->seConfigureDisplay();
-        if (array_key_exists('seToggle', $this->vars))
-        {
-            if ($this->vars['seToggle'] == 'on')
-            {
+        if (array_key_exists('seToggle', $this->vars)) {
+            if ($this->vars['seToggle'] == 'on') {
                 $color = 'green';
                 $sessionPluginState = TRUE;
-            }
-            elseif ($this->vars['seToggle'] == 'off')
-            {
+            } elseif ($this->vars['seToggle'] == 'off') {
                 $color = 'red';
                 $sessionPluginState = FALSE;
             }
@@ -115,8 +109,7 @@ END;
     {
         include_once(__DIR__ . DIRECTORY_SEPARATOR . "SOUNDEXPLORERQUICKSEARCH.php");
         $qs = new SOUNDEXPLORERQUICKSEARCH();
-        if (!$this->vars['ajaxReturn'])
-        { // i.e. key is 0 so we want a new search
+        if (!$this->vars['ajaxReturn']) { // i.e. key is 0 so we want a new search
             // temp store plugin status (on/off) and plugin database status
             $status = $this->session->getVar("seplugin_On");
             $dbStatus = $this->session->getVar("seplugin_DatabaseCreated");
@@ -126,18 +119,14 @@ END;
             $this->session->setVar("seplugin_DatabaseCreated", $dbStatus);
             $this->session->setVar("seplugin_FoundResources", $foundResources);
             $pString = $qs->display();
-        }
-        else
-        {
+        } else {
             $this->db->formatConditions(['pluginsoundexplorerId' => $this->vars['ajaxReturn']]);
             $resultset = $this->db->select('plugin_soundexplorer', ['pluginsoundexplorerLabel', 'pluginsoundexplorerArray']);
-            while ($row = $this->db->fetchRow($resultset))
-            {
+            while ($row = $this->db->fetchRow($resultset)) {
                 $this->session->setVar("seplugin_Label", $row['pluginsoundexplorerLabel']);
                 $array = unserialize(base64_decode($row['pluginsoundexplorerArray']));
             }
-            foreach ($array as $key => $value)
-            {
+            foreach ($array as $key => $value) {
                 $this->session->setVar("seplugin_" . $key, $value);
             }
             $pString = $qs->display($this->vars['ajaxReturn']);
@@ -151,8 +140,7 @@ END;
      */
     public function seStoreSearch()
     {
-        if (array_key_exists('seplugin_SearchDelete', $this->vars))
-        {
+        if (array_key_exists('seplugin_SearchDelete', $this->vars)) {
             $this->seDeleteSearch();
             // temp store plugin status (on/off) and plugin database status
             $status = $this->session->getVar("seplugin_On");
@@ -162,27 +150,19 @@ END;
             $this->session->setVar("seplugin_DatabaseCreated", $dbStatus);
             $pString = $this->seConfigureDisplay();
             $pString .= HTML\p($this->pluginmessages->text('seDeleteSuccess'), 'success');
-        }
-        else
-        {
+        } else {
             include_once(__DIR__ . DIRECTORY_SEPARATOR . "SOUNDEXPLORERQUICKSEARCH.php");
             $qs = new SOUNDEXPLORERQUICKSEARCH();
             $error = $qs->checkInput();
-            if (!$error)
-            {
-                if (array_key_exists('sepluginId', $this->vars))
-                {
+            if (!$error) {
+                if (array_key_exists('sepluginId', $this->vars)) {
                     $this->seUpdateSearch();
-                }
-                else
-                {
+                } else {
                     $this->seInsertSearch();
                 }
                 $pString = $this->seConfigureDisplay();
                 $pString .= HTML\p($this->pluginmessages->text('seStoreSuccess'), 'success');
-            }
-            else
-            {
+            } else {
                 $pString = $this->seConfigureDisplay();
                 $pString .= $error;
             }
@@ -198,13 +178,11 @@ END;
         // NB: Windows MySQL lowercases any table name
         // To be sure, it is necessary to lowercase all table elements
         $tables = $this->db->listTables(FALSE);
-        foreach ($tables as $k => $v)
-        {
+        foreach ($tables as $k => $v) {
             $tables[$k] = mb_strtolower($v);
         }
 
-        if (array_search('plugin_soundexplorer', $tables) === FALSE)
-        {
+        if (array_search('plugin_soundexplorer', $tables) === FALSE) {
             $this->db->queryNoError("
                 CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer` (
                     `pluginsoundexplorerId` int(11) NOT NULL AUTO_INCREMENT,
@@ -224,21 +202,15 @@ END;
     private function display()
     {
         $display = '';
-        if ($this->session->getVar("seplugin_On"))
-        {
+        if ($this->session->getVar("seplugin_On")) {
             $seColor = 'green';
-        }
-        else
-        {
+        } else {
             $seColor = 'red';
         }
         $return = $this->soundList();
-        if (is_array($return))
-        {
+        if (is_array($return)) {
             $this->scriptIncludes($return);
-        }
-        else
-        {
+        } else {
             $this->scriptIncludes();
         }
         $js = "onClick=\"coreOpenPopup('index.php?action=soundexplorer_seConfigure', 90); return false\"";
@@ -270,8 +242,7 @@ END;
             include_once(__DIR__ . DIRECTORY_SEPARATOR . "SOUNDEXPLORERQUICKSEARCH.php");
             $qs = new SOUNDEXPLORERQUICKSEARCH();
             $return = $qs->process();
-            if (is_array($return))
-            {
+            if (is_array($return)) {
                 return $return;
             }
         }
@@ -288,12 +259,9 @@ END;
         AJAX\loadJavascript();
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('se'));
         $pString = HTML\p($this->pluginmessages->text('seExplain'));
-        if ($this->session->getVar("seplugin_On"))
-        {
+        if ($this->session->getVar("seplugin_On")) {
             $selected = 'on';
-        }
-        else
-        {
+        } else {
             $selected = 'off';
         }
         $selectArray = ['on' => $this->pluginmessages->text('seOn'), 'off' => $this->pluginmessages->text('seOff')];
@@ -304,8 +272,7 @@ END;
         $td .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
         $td .= FORM\formEnd();
         $pString .= HTML\td($td);
-        if ($this->session->getVar("seplugin_FoundResources"))
-        {
+        if ($this->session->getVar("seplugin_FoundResources")) {
             $pString .= HTML\td('&nbsp;');
             $rc = FACTORY_RESOURCECOMMON::getInstance();
             $bibStyle = FACTORY_BIBSTYLE::getInstance();
@@ -315,20 +282,15 @@ END;
             $pString .= HTML\td(HTML\strong(str_replace(' ', '&nbsp;', $this->pluginmessages->text("seMatchedSearches"))));
             $pString .= HTML\td('&nbsp;');
             $pString .= HTML\trEnd();
-            foreach (unserialize(base64_decode($this->session->getVar("seplugin_FoundResources"))) as $label => $ids)
-            {
+            foreach (unserialize(base64_decode($this->session->getVar("seplugin_FoundResources"))) as $label => $ids) {
                 $thisLabelPrinted = FALSE;
                 $resultset = $rc->getResource($ids);
-                while ($row = $this->db->fetchRow($resultset))
-                {
+                while ($row = $this->db->fetchRow($resultset)) {
                     $pString .= HTML\trStart();
-                    if (!$thisLabelPrinted)
-                    {
+                    if (!$thisLabelPrinted) {
                         $pString .= HTML\td(HTML\em($label));
                         $thisLabelPrinted = TRUE;
-                    }
-                    else
-                    {
+                    } else {
                         $pString .= HTML\td('&nbsp;');
                     }
                     $pString .= HTML\td($bibStyle->process($row));
@@ -344,12 +306,10 @@ END;
         $this->db->formatConditions(['pluginsoundexplorerUserId' => $this->session->getVar("setup_UserId")]);
         $resultset = $this->db->select('plugin_soundexplorer', ['pluginsoundexplorerId', 'pluginsoundexplorerLabel']);
         $searches = [0 => $this->pluginmessages->text('seNewSearch')];
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $searches[$row['pluginsoundexplorerId']] = $row['pluginsoundexplorerLabel'];
         }
-        if (sizeof($searches) > 1)
-        { // i.e. stored searches exist
+        if (sizeof($searches) > 1) { // i.e. stored searches exist
             $jScript = 'index.php?action=soundexplorer_sepluginSearchTarget';
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
@@ -362,9 +322,7 @@ END;
             $pString .= FORM\formEnd();
             $pString .= HTML\hr();
             $pString .= HTML\div('sepluginSearchTarget', '&nbsp;');
-        }
-        else
-        { // i.e. no stored searches
+        } else { // i.e. no stored searches
             include_once(__DIR__ . DIRECTORY_SEPARATOR . "SOUNDEXPLORERQUICKSEARCH.php");
             $qs = new SOUNDEXPLORERQUICKSEARCH();
             $pString .= HTML\div('sepluginSearchTarget', $qs->display());
@@ -409,10 +367,8 @@ END;
      */
     private function seArrayToDatabase()
     {
-        foreach ($this->session->getArray('seplugin') as $key => $value)
-        {
-            if (($key == 'On') || ($key == 'Label') || ($key == 'DatabaseCreated'))
-            {
+        foreach ($this->session->getArray('seplugin') as $key => $value) {
+            if (($key == 'On') || ($key == 'Label') || ($key == 'DatabaseCreated')) {
                 continue;
             }
             $array[$key] = $value;
@@ -423,19 +379,17 @@ END;
     /**
      * scriptIncludes
      *
-     * @param array|FALSE $array
+     * @param array|false $array
      */
     private function scriptIncludes($array = FALSE)
     {
         $scriptInsert = '';
 
-        foreach ($this->scripts as $script)
-        {
+        foreach ($this->scripts as $script) {
             $scriptInsert .= '<script src="' . $script . '"></script>';
         }
 
-        if (is_array($array))
-        {
+        if (is_array($array)) {
             $waves = "['" . implode("', '", $array) . "']";
             $scriptInsert .= '<script>window.onload = sePlay(' . $waves . ');</script>';
         }

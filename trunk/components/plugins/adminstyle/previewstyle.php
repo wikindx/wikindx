@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -41,10 +43,8 @@ class adminstyle_previewstyle
         $fallbackString = str_replace(['__WIKINDX__LESSTHAN__', '__WIKINDX__GREATERTHAN__'], ['&lt;', '&gt;'], $fallbackString);
         $style = json_decode(base64_decode($this->vars['style']), TRUE);
         $rewriteCreator = json_decode(base64_decode($this->vars['rewriteCreator']), TRUE);
-        if (is_array($style))
-        {
-            foreach ($style as $key => $value)
-            {
+        if (is_array($style)) {
+            foreach ($style as $key => $value) {
                 // Convert javascript unicode e.g. %u2014 to HTML entities
                 $value = preg_replace(
                     "/%u(\\d+)/u",
@@ -58,27 +58,22 @@ class adminstyle_previewstyle
                 $this->bibformat->style[str_replace("style_", "", $key)] = $value;
             }
             
-            if (!$templateString && !$fallbackString)
-            {
+            if (!$templateString && !$fallbackString) {
                 return FALSE;
             }
-            if (!$templateString)
-            { // Use fallback style template instead
+            if (!$templateString) { // Use fallback style template instead
                 $templateString = $fallbackString;
             }
             $templateArray = $adminstyle->parseStringToArray($type, $templateString, $map, TRUE);
-            if (!$templateArray)
-            {
+            if (!$templateArray) {
                 return FALSE;
             }
             $typeTemplateSet = $type . 'TemplateSet';
             $this->bibformat->$typeTemplateSet = TRUE;
             $this->bibformat->loadArrays();
-            if (array_key_exists('independent', $templateArray))
-            {
+            if (array_key_exists('independent', $templateArray)) {
                 $temp = $templateArray['independent'];
-                foreach ($temp as $key => $value)
-                {
+                foreach ($temp as $key => $value) {
                     $split = UTF8::mb_explode("_", $key);
                     $independent[$split[1]] = $value;
                 }
@@ -87,90 +82,74 @@ class adminstyle_previewstyle
             $this->bibformat->$type = $templateArray;
             $this->loadArrays($type);
             $fields = [];
-            if (array_key_exists('ajaxReturn', $this->vars))
-            {
+            if (array_key_exists('ajaxReturn', $this->vars)) {
                 $split = UTF8::mb_explode(',', base64_decode($this->vars['ajaxReturn']));
-                foreach ($split as $field)
-                {
+                foreach ($split as $field) {
                     $fields[] = base64_decode($field);
                 }
-                foreach ($this->row as $key => $value)
-                {
-                    if (($key == 'noSort') || ($key == 'title') || ($key == 'subtitle'))
-                    {
+                foreach ($this->row as $key => $value) {
+                    if (($key == 'noSort') || ($key == 'title') || ($key == 'subtitle')) {
                         $tempArray[$key] = $value;
 
                         continue;
                     }
                     // Date
                     elseif ((($key == 'resourcemiscField2') || ($key == 'resourcemiscField3') || ($key == 'resourcemiscField5') ||
-                        ($key == 'resourcemiscField6')) && (array_search('date', $fields) !== FALSE))
-                    {
+                        ($key == 'resourcemiscField6')) && (array_search('date', $fields) !== FALSE)) {
                         $tempArray[$key] = $value;
 
                         continue;
                     }
                     // Running time
                     elseif ((($key == 'resourcemiscField1') || ($key == 'resourcemiscField4')) &&
-                        (array_search('runningTime', $fields) !== FALSE))
-                    {
+                        (array_search('runningTime', $fields) !== FALSE)) {
                         $tempArray[$key] = $value;
 
                         continue;
                     }
                     // Pages
-                    elseif ((($key == 'pageStart') || ($key == 'pageEnd')) && (array_search('pages', $fields) !== FALSE))
-                    {
+                    elseif ((($key == 'pageStart') || ($key == 'pageEnd')) && (array_search('pages', $fields) !== FALSE)) {
                         $tempArray[$key] = $value;
 
                         continue;
                     }
                     // DOI
-                    elseif (($key == 'doi') && (array_search('DOI', $fields) !== FALSE))
-                    {
+                    elseif (($key == 'doi') && (array_search('DOI', $fields) !== FALSE)) {
                         $tempArray[$key] = $value;
 
                         continue;
                     }
                     // URL
-                    elseif (($key == 'url') && (array_search('URL', $fields) !== FALSE))
-                    {
+                    elseif (($key == 'url') && (array_search('URL', $fields) !== FALSE)) {
                         $tempArray[$key] = $value;
 
                         continue;
                     }
                     // ISSN
-                    elseif (($key == 'resourceIsbn') && (array_search('ISSN', $fields) !== FALSE))
-                    {
+                    elseif (($key == 'resourceIsbn') && (array_search('ISSN', $fields) !== FALSE)) {
                         $tempArray[$key] = $value;
 
                         continue;
                     }
-                    if (!array_key_exists($key, $this->bibformat->styleMap->{$type}))
-                    {
+                    if (!array_key_exists($key, $this->bibformat->styleMap->{$type})) {
                         continue;
                     }
-                    if (array_search($this->bibformat->styleMap->{$type}[$key], $fields) !== FALSE)
-                    {
+                    if (array_search($this->bibformat->styleMap->{$type}[$key], $fields) !== FALSE) {
                         $tempArray[$key] = $value;
                     }
                 }
-                if (($type == 'book') || ($type == 'book_article'))
-                {
+                if (($type == 'book') || ($type == 'book_article')) {
                     $tempArray['transNoSort'] = $this->row['transNoSort'];
                     $tempArray['transSubtitle'] = $this->row['transSubtitle'];
                 }
-                if (($type == 'book') || ($type == 'thesis'))
-                {
+                if (($type == 'book') || ($type == 'thesis')) {
                     $tempArray['resourcemiscField6'] = $this->row['numPages'];
                 }
-                if (($type == 'book_article') || ($type == 'book_chapter'))
-                {
+                if (($type == 'book_article') || ($type == 'book_chapter')) {
                     $tempArray['resourceField6'] = $this->row['numPages'];
                 }
                 $this->row = $tempArray;
-                foreach ($rewriteCreator as $key => $value)
-                {
+                foreach ($rewriteCreator as $key => $value) {
                     $value = str_replace(
                         ['__WIKINDX__SPACE__', '__WIKINDX__LESSTHAN__', '__WIKINDX__GREATERTHAN__'],
                         [' ', '<', '>'],
@@ -178,11 +157,8 @@ class adminstyle_previewstyle
                     );
                     $this->bibformat->{$type}[$key] = $value;
                 }
-            }
-            else
-            {
-                foreach ($rewriteCreator as $key => $value)
-                {
+            } else {
+                foreach ($rewriteCreator as $key => $value) {
                     $value = str_replace(
                         ['__WIKINDX__SPACE__', '__WIKINDX__LESSTHAN__', '__WIKINDX__GREATERTHAN__'],
                         [' ', '&lt;', '&gt;'],
@@ -194,9 +170,7 @@ class adminstyle_previewstyle
             $pString = $this->process($type, $fields);
 
             return $pString;
-        }
-        else
-        {
+        } else {
             return "Preview impossible.";
         }
     }
@@ -213,14 +187,10 @@ class adminstyle_previewstyle
         // For WIKINDX, if type == book, book_chapter or book article and there exists both 'year1' and 'year2' in $row (entered as
         // publication year and reprint year respectively), then switch these around as 'year1' is
         // entered in the style template as 'originalPublicationYear' and 'year2' should be 'publicationYear'.
-        if (($type == 'book') || ($type == 'book_chapter') || ($type == 'book_article'))
-        {
-            if (array_key_exists('resourceyearYear2', $this->row))
-            {
+        if (($type == 'book') || ($type == 'book_chapter') || ($type == 'book_article')) {
+            if (array_key_exists('resourceyearYear2', $this->row)) {
                 $year2 = stripslashes($this->row['resourceyearYear2']);
-            }
-            else
-            {
+            } else {
                 $year2 = FALSE;
             }
             /*
@@ -230,8 +200,7 @@ class adminstyle_previewstyle
                 unset($this->row['resourceyearYear2']);
             }
             */
-            if ($year2 && array_key_exists('resourceyearYear1', $this->row))
-            {
+            if ($year2 && array_key_exists('resourceyearYear1', $this->row)) {
                 $this->row['resourceyearYear2'] = stripslashes($this->row['resourceyearYear1']);
                 $this->row['resourceyearYear1'] = $year2;
             }
@@ -240,13 +209,10 @@ class adminstyle_previewstyle
         // Return $type is the OSBib resource type ($this->book, $this->web_article etc.) as used in STYLEMAP
         $type = $this->bibformat->type;
         // Various types of creator
-        for ($index = 1; $index <= 5; $index++)
-        {
+        for ($index = 1; $index <= 5; $index++) {
             $nameType = 'creator' . $index;
-            if (array_key_exists($nameType, $this->bibformat->styleMap->$type))
-            {
-                if (empty($fields) || (array_search($this->bibformat->styleMap->{$type}[$nameType], $fields) !== FALSE))
-                {
+            if (array_key_exists($nameType, $this->bibformat->styleMap->$type)) {
+                if (empty($fields) || (array_search($this->bibformat->styleMap->{$type}[$nameType], $fields) !== FALSE)) {
                     $this->bibformat->formatNames($this->$nameType, $nameType);
                 }
             }
@@ -254,36 +220,30 @@ class adminstyle_previewstyle
         // The title of the resource
         $this->createTitle();
         // edition
-        if ($editionKey = array_search('edition', $this->bibformat->styleMap->$type))
-        {
+        if ($editionKey = array_search('edition', $this->bibformat->styleMap->$type)) {
             $this->createEdition($editionKey);
         }
         // pageStart and pageEnd
         $this->pages = FALSE; // indicates not yet created pages for articles
-        if (array_key_exists('pages', $this->bibformat->styleMap->$type))
-        {
+        if (array_key_exists('pages', $this->bibformat->styleMap->$type)) {
             $this->createPages();
         }
         // Date
-        if (array_key_exists('date', $this->bibformat->styleMap->$type))
-        {
+        if (array_key_exists('date', $this->bibformat->styleMap->$type)) {
             $this->createDate($type);
         }
         // runningTime for film/broadcast
-        if (array_key_exists('runningTime', $this->bibformat->styleMap->$type))
-        {
+        if (array_key_exists('runningTime', $this->bibformat->styleMap->$type)) {
             $this->createRunningTime();
         }
         // web_article URL
         if (array_key_exists('URL', $this->bibformat->styleMap->$type) &&
-            ($itemElement = $this->createUrl()))
-        {
+            ($itemElement = $this->createUrl())) {
             $this->bibformat->addItem($itemElement, 'URL', FALSE);
         }
         // DOI
         if (array_key_exists('DOI', $this->bibformat->styleMap->$type) &&
-            ($itemElement = $this->createDoi()))
-        {
+            ($itemElement = $this->createDoi())) {
             $this->bibformat->addItem($itemElement, 'DOI', FALSE);
         }
         // the rest...  All other database resource fields that do not require special formatting/conversion.
@@ -317,20 +277,17 @@ class adminstyle_previewstyle
     {
         $pString = stripslashes($this->row['noSort']) . ' ' .
             stripslashes($this->row['title']);
-        if ($this->row['subtitle'])
-        {
+        if ($this->row['subtitle']) {
             $pString .= $this->bibformat->style['titleSubtitleSeparator'] .
             stripslashes($this->row['subtitle']);
         }
         // anything enclosed in {...} is to be left as is
         $this->bibformat->formatTitle($pString, "{", "}");
         // Title of the original work from which a translation has been made.
-        if (array_key_exists('transTitle', $this->row))
-        {
+        if (array_key_exists('transTitle', $this->row)) {
             $pString = stripslashes($this->row['transNoSort']) . ' ' .
                 stripslashes($this->row['transTitle']);
-            if ($this->row['transSubtitle'])
-            {
+            if ($this->row['transSubtitle']) {
                 $pString .= $this->bibformat->style['titleSubtitleSeparator'] .
                 stripslashes($this->row['transSubtitle']);
             }
@@ -345,8 +302,7 @@ class adminstyle_previewstyle
      */
     public function createUrl()
     {
-        if (!array_key_exists('url', $this->row))
-        {
+        if (!array_key_exists('url', $this->row)) {
             return FALSE;
         }
         $url = htmlspecialchars(stripslashes($this->row['url']));
@@ -361,8 +317,7 @@ class adminstyle_previewstyle
      */
     public function createDoi()
     {
-        if (!array_key_exists('doi', $this->row))
-        {
+        if (!array_key_exists('doi', $this->row)) {
             return FALSE;
         }
         $doi = htmlspecialchars(stripslashes($this->row['doi']));
@@ -387,21 +342,16 @@ class adminstyle_previewstyle
         unset($this->row['resourcemiscField6']);
         $startDay = ($startDay == 0) ? FALSE : $startDay;
         $startMonth = ($startMonth == 0) ? FALSE : $startMonth;
-        if (!$startMonth)
-        {
+        if (!$startMonth) {
             return;
         }
         $endDay = ($endDay == 0) ? FALSE : $endDay;
         $endMonth = ($endMonth == 0) ? FALSE : $endMonth;
         if (($type == 'web_article') || ($type == 'web_encyclopedia') ||
-            ($type == 'web_site') || ($type == 'web_encyclopedia_article'))
-        {
-            if ($endDay && !$endMonth)
-            {
+            ($type == 'web_site') || ($type == 'web_encyclopedia_article')) {
+            if ($endDay && !$endMonth) {
                 $endDay == FALSE;
-            }
-            elseif ($endMonth)
-            {
+            } elseif ($endMonth) {
                 $this->bibformat->formatDate($endDay, $endMonth, FALSE, FALSE, TRUE);
                 $endDay = $endMonth = FALSE;
             }
@@ -417,23 +367,22 @@ class adminstyle_previewstyle
             stripslashes($this->row['resourcemiscField1']) : FALSE;
         $hours = array_key_exists('resourcemiscField4', $this->row) ?
             stripslashes($this->row['resourcemiscField4']) : FALSE;
-        if (!$hours && !$minutes)
-        {
+        if (!$hours && !$minutes) {
             return;
         }
-        if (!$hours)
-        {
+        if (!$hours) {
             $hours = 0;
         }
         $this->bibformat->formatRunningTime($minutes, $hours);
     }
     /**
      * Create the edition number
+     *
+     * @param mixed $editionKey
      */
     public function createEdition($editionKey)
     {
-        if (!array_key_exists($editionKey, $this->row) || !$this->row[$editionKey])
-        {
+        if (!array_key_exists($editionKey, $this->row) || !$this->row[$editionKey]) {
             return FALSE;
         }
         $edition = stripslashes($this->row[$editionKey]);
@@ -445,8 +394,7 @@ class adminstyle_previewstyle
     public function createPages()
     {
         // empty field or page format already done
-        if (!array_key_exists('pageStart', $this->row) || !$this->row['pageStart'] || $this->pages)
-        {
+        if (!array_key_exists('pageStart', $this->row) || !$this->row['pageStart'] || $this->pages) {
             $this->pages = TRUE;
 
             return;
@@ -600,20 +548,15 @@ class adminstyle_previewstyle
         $this->creator4 = $translators;
         $this->creator5 = $seriesEditors;
         // For various types, override default settings above
-        if ($type == 'genericMisc')
-        {
+        if ($type == 'genericMisc') {
             $this->row['resourceField2'] = 'software';
             $this->row['subtitle'] = '';
             $this->row['publisherName'] = 'Kalahari Soft';
-        }
-        elseif ($type == 'book_chapter')
-        {
+        } elseif ($type == 'book_chapter') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = '8';
-        }
-        elseif ($type == 'magazine_article')
-        {
+        } elseif ($type == 'magazine_article') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = '{OSS} Between the Sheets';
@@ -623,38 +566,26 @@ class adminstyle_previewstyle
             $this->row['resourceField4'] = 'Winter';
             $this->row['resourcemiscField5'] = '27'; // end day
             $this->row['resourcemiscField6'] = '8'; // end month
-        }
-        elseif ($type == 'journal_article')
-        {
+        } elseif ($type == 'journal_article') {
             $this->row['resourceField1'] = '23'; // volume number
             $this->row['resourcemiscField6'] = '9'; // end month
-        }
-        elseif ($type == 'newspaper_article')
-        {
+        } elseif ($type == 'newspaper_article') {
             $this->row['resourceField1'] = 'G2'; // section
             $this->row['resourceField2'] = 'Gabarone';
             $this->row['collectionTitle'] = 'TseTswana Times';
             $this->row['collectionTitleShort'] = 'TsTimes';
-        }
-        elseif ($type == 'proceedings')
-        {
+        } elseif ($type == 'proceedings') {
             $this->row['publisherName'] = 'International Association of Open Source Software';
             $this->row['publisherLocation'] = 'Serowe';
             $this->row['resourcemiscField5'] = '3'; // end day
             $this->row['resourcemiscField6'] = '9'; // end month
-        }
-        elseif ($type == 'conference_paper')
-        {
+        } elseif ($type == 'conference_paper') {
             $this->row['publisherName'] = 'International Association of Open Source Software';
             $this->row['publisherLocation'] = 'Serowe';
-        }
-        elseif ($type == 'conference_poster')
-        {
+        } elseif ($type == 'conference_poster') {
             $this->row['publisherName'] = 'International Association of Open Source Software';
             $this->row['publisherLocation'] = 'Serowe';
-        }
-        elseif ($type == 'proceedings_article')
-        {
+        } elseif ($type == 'proceedings_article') {
             $this->row['publisherName'] = 'International Association of Open Source Software';
             $this->row['publisherLocation'] = 'Serowe';
             $this->row['resourceField4'] = '12'; // volume No.
@@ -662,9 +593,7 @@ class adminstyle_previewstyle
             $this->row['resourcemiscField6'] = '9'; // end month
             $this->row['collectionTitle'] = '7th. International OSS Conference';
             $this->row['collectionTitleShort'] = '7_IntOSS';
-        }
-        elseif ($type == 'thesis')
-        {
+        } elseif ($type == 'thesis') {
             $this->row['resourceField1'] = 'PhD';
             $this->row['resourceField2'] = 'thesis';
             $this->row['resourceField5'] = 'Pie in the Sky'; // Dept.
@@ -672,20 +601,14 @@ class adminstyle_previewstyle
             $this->row['publisherLocation'] = 'Laputia';
             $this->creator1 = [$authors[0]];
             $this->creator2 = [$editors[0]];
-        }
-        elseif ($type == 'brochure')
-        {
+        } elseif ($type == 'brochure') {
             $this->creator1 = $company;
-        }
-        elseif (($type == 'web_article') || ($type == 'web_encyclopedia') ||
-            ($type == 'web_site') || ($type == 'web_encyclopedia_article'))
-        {
+        } elseif (($type == 'web_article') || ($type == 'web_encyclopedia') ||
+            ($type == 'web_site') || ($type == 'web_encyclopedia_article')) {
             $this->row['resourceField1'] = '23';
             $this->row['resourcemiscField5'] = '27'; // publication day
             $this->row['resourcemiscField6'] = '8'; // publication month
-        }
-        elseif ($type == 'film')
-        {
+        } elseif ($type == 'film') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'Kill Will Vol. 3';
@@ -694,9 +617,7 @@ class adminstyle_previewstyle
             $this->row['resourceField1'] = 'USA';
             $this->row['resourcemiscField1'] = '59'; // minutes
             $this->row['resourcemiscField4'] = '5'; // hours
-        }
-        elseif ($type == 'broadcast')
-        {
+        } elseif ($type == 'broadcast') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'We put people on TV and humiliate them';
@@ -704,9 +625,7 @@ class adminstyle_previewstyle
             $this->row['publisherLocation'] = 'USA';
             $this->row['resourcemiscField1'] = '45'; // minutes
             $this->row['resourcemiscField4'] = ''; // hours
-        }
-        elseif ($type == 'music_album')
-        {
+        } elseif ($type == 'music_album') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = 'Canon & Gigue';
             $this->row['title'] = 'Pachelbel';
@@ -714,9 +633,7 @@ class adminstyle_previewstyle
             $this->row['publisherName'] = 'Archiv';
             $this->row['resourceField2'] = 'CD'; // medium
             $this->row['resourceyearYear1'] = '1982-1983';
-        }
-        elseif ($type == 'music_track')
-        {
+        } elseif ($type == 'music_track') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'Dazed and Confused';
@@ -726,9 +643,7 @@ class adminstyle_previewstyle
             $this->row['publisherName'] = 'Atlantic';
             $this->row['resourceField2'] = 'CD'; // medium
             $this->row['resourceyearYear1'] = '1994';
-        }
-        elseif ($type == 'music_score')
-        {
+        } elseif ($type == 'music_score') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'Sonata in A Minor';
@@ -736,9 +651,7 @@ class adminstyle_previewstyle
             $this->row['publisherName'] = 'Alfred Publishing';
             $this->row['publisherLocation'] = 'New York';
             $this->row['resourceyearYear1'] = '1994';
-        }
-        elseif ($type == 'artwork')
-        {
+        } elseif ($type == 'artwork') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'Art? What Art?';
@@ -746,16 +659,12 @@ class adminstyle_previewstyle
             $this->row['publisherLocation'] = 'New York';
             $this->row['resourceField2'] = 'Movement in protoplasma';
             $this->creator1 = $artists;
-        }
-        elseif ($type == 'software')
-        {
+        } elseif ($type == 'software') {
             $this->row['resourceField2'] = 'PHP source code'; // type
             $this->row['resourceField4'] = '1.3'; // version
             $this->row['publisherName'] = 'Kalahari Soft';
             $this->row['publisherLocation'] = 'Maun';
-        }
-        elseif ($type == 'audiovisual')
-        {
+        } elseif ($type == 'audiovisual') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'Whispering Sands';
@@ -765,42 +674,32 @@ class adminstyle_previewstyle
             $this->row['publisherName'] = 'Ephemera';
             $this->row['publisherLocation'] = 'Maun';
             $this->creator1 = $artists;
-        }
-        elseif ($type == 'database')
-        {
+        } elseif ($type == 'database') {
             $this->row['noSort'] = 'The';
             $this->row['subtitle'] = 'Sotware Listings';
             $this->row['title'] = 'Blue Pages';
             $this->row['publisherName'] = 'Kalahari Soft';
             $this->row['publisherLocation'] = 'Maun';
-        }
-        elseif ($type == 'government_report')
-        {
+        } elseif ($type == 'government_report') {
             $this->row['noSort'] = 'The';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'State of Things to Come';
             $this->row['resourceField1'] = 'Prognostications'; // section
             $this->row['resourceField2'] = 'Pie in the Sky'; // department
             $this->row['publisherName'] = 'United Nations';
-        }
-        elseif ($type == 'hearing')
-        {
+        } elseif ($type == 'hearing') {
             $this->row['resourceField1'] = 'Committee on Unworldly Activities'; // committee
             $this->row['resourceField2'] = 'United Nations'; // legislative body
             $this->row['resourceField3'] = 'Summer'; //session
             $this->row['resourceField4'] = '113'; // document number
             $this->row['resourcemiscField4'] = '27'; // no. of volumes
-        }
-        elseif ($type == 'statute')
-        {
+        } elseif ($type == 'statute') {
             $this->row['resourceField1'] = '101.43a'; // public law no.
             $this->row['resourceField2'] = 'Lex Hammurabi'; // code
             $this->row['resourceField3'] = 'Autumn'; //session
             $this->row['resourceField4'] = '34-A'; // section
             $this->row['resourceyearYear1'] = '1563 BC';
-        }
-        elseif ($type == 'legal_ruling')
-        {
+        } elseif ($type == 'legal_ruling') {
             $this->row['noSort'] = 'The';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'People v. George';
@@ -808,18 +707,14 @@ class adminstyle_previewstyle
             $this->row['resourceField2'] = 'Appellate Decision'; // type
             $this->row['publisherName'] = 'Legal Pulp';
             $this->row['publisherLocation'] = 'Gabarone';
-        }
-        elseif ($type == 'case')
-        {
+        } elseif ($type == 'case') {
             $this->row['noSort'] = 'The';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'People v. George';
             $this->row['resourceField1'] = 'Public Law'; // reporter
             $this->row['resourceField4'] = 'XIV'; // reporter volume
             $this->row['publisherName'] = 'Supreme Court';
-        }
-        elseif ($type == 'bill')
-        {
+        } elseif ($type == 'bill') {
             $this->row['noSort'] = 'The';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'People v. George';
@@ -828,9 +723,7 @@ class adminstyle_previewstyle
             $this->row['resourceField4'] = 'Spring'; // session
             $this->row['publisherName'] = 'United Nations';
             $this->row['publisherLocation'] = 'New York';
-        }
-        elseif ($type == 'patent')
-        {
+        } elseif ($type == 'patent') {
             $this->row['resourceField1'] = 'Journal of Patents'; // publishedSource
             $this->row['resourceField3'] = '289763[e].x-233'; // application no.
             $this->row['resourceField4'] = 'bibliographic software'; // type
@@ -841,44 +734,32 @@ class adminstyle_previewstyle
             $this->row['resourceField9'] = 'not awarded'; // legal status
             $this->row['publisherName'] = 'Lawyers Inc.'; // assignee
             $this->row['publisherLocation'] = 'New Zealand';
-        }
-        elseif ($type == 'personal')
-        {
+        } elseif ($type == 'personal') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'Save up to 80% on Microsoft Products!';
             $this->row['resourceField2'] = 'email'; // type
-        }
-        elseif ($type == 'unpublished')
-        {
+        } elseif ($type == 'unpublished') {
             $this->row['resourceField2'] = 'manuscript'; // type
             $this->row['publisherName'] = 'University of Bums on Seats';
             $this->row['publisherLocation'] = 'Laputia';
-        }
-        elseif ($type == 'classical')
-        {
+        } elseif ($type == 'classical') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'Sed quis custodiet ipsos custodes?';
             $this->row['resourceField4'] = 'Codex XIX'; // volume
             $this->row['resourceyearYear1'] = '114 BC'; // volume
-        }
-        elseif ($type == 'manuscript')
-        {
+        } elseif ($type == 'manuscript') {
             $this->row['resourceField2'] = 'manuscript'; // type
             $this->row['publisherName'] = 'University of Bums on Seats';
             $this->row['publisherLocation'] = 'Laputia';
-        }
-        elseif ($type == 'map')
-        {
+        } elseif ($type == 'map') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'Mappa Mundi';
             $this->row['resourceField1'] = 'Maps of the World'; // series title
             $this->row['resourceField2'] = 'isomorphic projection'; // type
-        }
-        elseif ($type == 'chart')
-        {
+        } elseif ($type == 'chart') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'Incidence of Sniffles in the New York Area';
@@ -890,18 +771,14 @@ class adminstyle_previewstyle
             $this->row['resourceField6'] = '11'; // number
             $this->row['publisherName'] = 'University of Bums on Seats';
             $this->row['publisherLocation'] = 'Laputia';
-        }
-        elseif ($type == 'miscellaneous')
-        {
+        } elseif ($type == 'miscellaneous') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'Making Sunlight from Cucumbers';
             $this->row['resourceField2'] = 'thin air'; // medium
             $this->row['publisherName'] = 'University of Bums on Seats';
             $this->row['publisherLocation'] = 'Laputia';
-        }
-        elseif ($type == 'miscellaneous_section')
-        {
+        } elseif ($type == 'miscellaneous_section') {
             $this->row['noSort'] = '';
             $this->row['subtitle'] = '';
             $this->row['title'] = 'Making Sunlight from Cucumbers';

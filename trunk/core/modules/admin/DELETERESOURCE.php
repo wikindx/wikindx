@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -47,19 +49,16 @@ class DELETERESOURCE
     /**
      * check we are allowed to delete and load appropriate method
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function init($message = FALSE)
     {
         $this->gatekeep->requireSuper = FALSE; // only admins can delete resources if set to TRUE
         $this->gatekeep->init();
-        if (array_key_exists('function', $this->vars))
-        {
+        if (array_key_exists('function', $this->vars)) {
             $function = $this->vars['function'];
             $this->{$function}();
-        }
-        else
-        {
+        } else {
             $this->display();
         }
     }
@@ -68,57 +67,44 @@ class DELETERESOURCE
      */
     public function deleteResourceConfirm()
     {
-        if (!$this->validateInput())
-        {
+        if (!$this->validateInput()) {
             $this->display($this->errors->text("inputError", "missing"));
             FACTORY_CLOSE::getInstance();
         }
-        if ($this->deleteType == 'tag')
-        {
+        if ($this->deleteType == 'tag') {
             $this->vars['resource_id'] = $this->collectResourceFromTag();
         }
         $res = FACTORY_RESOURCECOMMON::getInstance();
-        if (is_array($this->vars['resource_id']))
-        {
+        if (is_array($this->vars['resource_id'])) {
             $maxSize = ini_get('max_input_vars');
             $size = 0;
-            foreach ($this->vars as $var)
-            {
-                if (is_array($var))
-                {
+            foreach ($this->vars as $var) {
+                if (is_array($var)) {
                     $size += count($var);
-                }
-                else
-                {
+                } else {
                     ++$size;
                 }
             }
-            if ($size >= $maxSize)
-            {
+            if ($size >= $maxSize) {
                 $this->display($this->errors->text("inputError", "maxInputVars", "$maxSize"));
                 FACTORY_CLOSE::getInstance();
             }
             $this->db->formatConditionsOneField($this->vars['resource_id'], 'resourceId');
-        }
-        else
-        {
+        } else {
             $this->db->formatConditions(['resourceId' => $this->vars['resource_id']]);
         }
         $recordset = $res->getResource(FALSE, $this->db->formatFields('creatorSurname'));
-        if (!$numDeletes = $this->db->numRows($recordset))
-        {
+        if (!$numDeletes = $this->db->numRows($recordset)) {
             $this->display($this->messages->text("resources", "noResult"));
             FACTORY_CLOSE::getInstance();
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete"));
         // Rather than print 100s or 1000s of resources, we limit display to <= 50
-        if ($numDeletes <= 50)
-        {
+        if ($numDeletes <= 50) {
             $resourceList = [];
             $bibStyle = FACTORY_BIBSTYLE::getInstance();
             $bibStyle->output = 'html';
-            while ($row = $this->db->fetchRow($recordset))
-            {
+            while ($row = $this->db->fetchRow($recordset)) {
                 $resourceList[]['resource'] = $bibStyle->process($row);
             }
             // Templates expect list ordered from 0, so we renumber from zero
@@ -127,36 +113,27 @@ class DELETERESOURCE
             GLOBALS::addTplVar('submit', \FORM\formSubmit($this->messages->text("submit", "Delete")) . \FORM\formEnd());
             unset($resourceList, $rL);
             $pString = '';
-        }
-        else
-        {
+        } else {
             $pString = $this->messages->text("misc", "confirmDelete", " " . $numDeletes . " ");
         }
         $pString .= \FORM\formHeader('admin_DELETERESOURCE_CORE');
         $pString .= \FORM\hidden('function', 'process');
-        if ($this->navigate)
-        {
+        if ($this->navigate) {
             $pString .= \FORM\hidden('navigate', $this->navigate);
         }
-        if ($this->nextResourceId)
-        {
+        if ($this->nextResourceId) {
             $pString .= \FORM\hidden('nextResourceId', $this->nextResourceId);
         }
-        if (is_array($this->vars['resource_id']))
-        {
+        if (is_array($this->vars['resource_id'])) {
             $pString .= \FORM\hidden("resource_id", implode(",", $this->vars['resource_id']));
-        }
-        else
-        {
+        } else {
             $pString .= \FORM\hidden("resource_id", $this->vars['resource_id']);
         }
-        if (array_key_exists('nextDelete', $this->vars))
-        {
+        if (array_key_exists('nextDelete', $this->vars)) {
             $pString .= \FORM\hidden("nextDelete", $this->vars['nextDelete']);
         }
         $pString .= BR . "&nbsp;" . BR;
-        if ($numDeletes > 50)
-        {
+        if ($numDeletes > 50) {
             $pString .= \FORM\formSubmit($this->messages->text("submit", "Delete")) . \FORM\formEnd();
         }
         $this->session->setVar("deleteResourceLock", FALSE);
@@ -165,13 +142,12 @@ class DELETERESOURCE
     /**
      * display select box of resources to delete
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     private function display($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete"));
-        if (!$this->resources = $this->grabAll())
-        {
+        if (!$this->resources = $this->grabAll()) {
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noResources'));
 
             return;
@@ -187,12 +163,10 @@ class DELETERESOURCE
         $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(FALSE, "resource_id", $this->resources, 20, 80) .
             BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint') . BR .
             BR . \FORM\formSubmit($this->messages->text("submit", "Confirm")));
-        if (is_array($tags))
-        {
+        if (is_array($tags)) {
             // add 0 => IGNORE to tags array
             $temp[0] = $this->messages->text("misc", "ignore");
-            foreach ($tags as $key => $value)
-            {
+            foreach ($tags as $key => $value) {
                 $temp[$key] = $value;
             }
             $tags = $temp;
@@ -210,13 +184,11 @@ class DELETERESOURCE
     private function process()
     {
         // redeleting an already deleted resource?
-        if ($this->session->getVar("deleteResourceLock"))
-        {
+        if ($this->session->getVar("deleteResourceLock")) {
             $this->display($this->errors->text('done', 'resource'));
             FACTORY_CLOSE::getInstance();
         }
-        if (!$this->validateInput())
-        {
+        if (!$this->validateInput()) {
             $this->display($this->errors->text("inputError", "missing"));
             FACTORY_CLOSE::getInstance();
         }
@@ -226,8 +198,7 @@ class DELETERESOURCE
         $this->resetSummary();
         // If we have 0 resources left, remove 'sql_stmt' etc. from session so it doesn't cause problems with
         // exporting bibliographies etc.
-        if (!$this->db->selectFirstField('database_summary', 'databasesummaryTotalResources'))
-        {
+        if (!$this->db->selectFirstField('database_summary', 'databasesummaryTotalResources')) {
             $this->session->delVar("sql_ListStmt");
             $this->session->delVar("sql_LastMulti");
             $this->session->delVar("sql_LastSolo");
@@ -236,23 +207,16 @@ class DELETERESOURCE
         // Lock reload.
         $this->session->setVar("deleteResourceLock", TRUE);
         // Which page do we return to?
-        if ($this->navigate == 'nextResource')
-        { // next single view
+        if ($this->navigate == 'nextResource') { // next single view
             $navigate = FACTORY_NAVIGATE::getInstance();
             $navigate->resource($this->nextResourceId, $pString);
-        }
-        elseif ($this->navigate == 'list')
-        { // previous multi list
+        } elseif ($this->navigate == 'list') { // previous multi list
             $navigate = FACTORY_NAVIGATE::getInstance();
             $navigate->listView($pString);
-        }
-        elseif ($this->navigate == 'front')
-        { // Return to home page
+        } elseif ($this->navigate == 'front') { // Return to home page
             include_once("core/display/FRONT.php");
             $front = new FRONT($pString); // __construct() runs on autopilot
-        }
-        else
-        {
+        } else {
             $this->display($pString); // return to multiple resource delete page -- $this->navigate == FALSE
         }
         FACTORY_CLOSE::getInstance();
@@ -266,22 +230,17 @@ class DELETERESOURCE
         $this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceId');
         $recordset = $this->db->select('resource', ['resourcemiscPublisher', 'resourcemiscCollection',
             'resourcemiscTag', 'resourceId', 'resourceType', 'resourcemiscField1', ]);
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if ($row['resourcemiscPublisher'])
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if ($row['resourcemiscPublisher']) {
                 $this->checkPublishers[$row['resourcemiscPublisher']] = FALSE;
             }
-            if (($row['resourceType'] == 'proceedings_article') && $row['resourcemiscField1'])
-            {
+            if (($row['resourceType'] == 'proceedings_article') && $row['resourcemiscField1']) {
                 $this->checkConfPublishers[$row['resourcemiscField1']] = FALSE;
             }
-            if ($row['resourcemiscCollection'])
-            {
+            if ($row['resourcemiscCollection']) {
                 $this->checkCollections[$row['resourcemiscCollection']] = FALSE;
             }
-            if ($row['resourcemiscTag'])
-            {
+            if ($row['resourcemiscTag']) {
                 $this->checkTags[$row['resourcemiscTag']] = FALSE;
             }
         }
@@ -327,21 +286,17 @@ class DELETERESOURCE
             'resource_attachments',
             ['resourceattachmentsId', 'resourceattachmentsHashFilename']
         );
-        while ($row = $this->db->fetchRow($recordSet))
-        {
+        while ($row = $this->db->fetchRow($recordSet)) {
             $hashes[$row['resourceattachmentsId']] = $row['resourceattachmentsHashFilename'];
         }
-        if (isset($hashes))
-        {
-            foreach ($hashes as $id => $hash)
-            {
+        if (isset($hashes)) {
+            foreach ($hashes as $id => $hash) {
                 $this->db->formatConditions(['resourceattachmentsId' => $id]);
                 $this->db->delete('resource_attachments');
                 // Is file used by other resources?  If not, unlink it
                 $this->db->formatConditions(['resourceattachmentsHashFilename' => $hash]);
                 $recordSet = $this->db->select('resource_attachments', 'resourceattachmentsHashFilename');
-                if (!$this->db->numRows($recordSet))
-                { // Unlink it
+                if (!$this->db->numRows($recordSet)) { // Unlink it
                     @unlink(WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash);
                 }
             }
@@ -366,7 +321,7 @@ class DELETERESOURCE
     }
     /**
      * checkHanging
-     * 
+     *
      * check that delete of resources hasn't left any resource-less creators, keywords, publisher, collections etc.
      * If so, delete them.
      */
@@ -376,20 +331,16 @@ class DELETERESOURCE
         $keyword = FACTORY_KEYWORD::getInstance();
         $publisher = FACTORY_PUBLISHER::getInstance();
         // Collections -- must be done first as they might contain publishers and creators
-        if (!empty($this->checkCollections))
-        {
+        if (!empty($this->checkCollections)) {
             $removeCollections = $this->checkCollections;
-            foreach ($this->checkCollections as $collectionId => $null)
-            {
+            foreach ($this->checkCollections as $collectionId => $null) {
                 $this->db->formatConditions(['resourcemiscCollection' => $collectionId]);
                 $recordset = $this->db->select('resource_misc', 'resourcemiscCollection');
-                if ($this->db->numRows($recordset))
-                {
+                if ($this->db->numRows($recordset)) {
                     unset($removeCollections[$collectionId]);
                 }
             }
-            if (!empty($removeCollections))
-            {
+            if (!empty($removeCollections)) {
                 $this->db->formatConditionsOneField(array_keys($removeCollections), 'collectionId');
                 $this->db->delete('collection');
                 $this->db->deleteCache('cacheResourceCollections');
@@ -405,11 +356,9 @@ class DELETERESOURCE
         // Publishers
         $publisher->removeHanging();
         // Tags
-        foreach ($this->checkTags as $tagId => $void)
-        {
+        foreach ($this->checkTags as $tagId => $void) {
             $this->db->formatConditions(['resourcemiscTag' => $tagId]);
-            if (!$this->db->selectFirstField('resource_misc', 'resourcemiscTag'))
-            {
+            if (!$this->db->selectFirstField('resource_misc', 'resourcemiscTag')) {
                 $this->db->formatConditions(['tagId' => $tagId]);
                 $this->db->delete('tag');
             }
@@ -422,27 +371,22 @@ class DELETERESOURCE
     {
         $recordset = $this->db->select('import_raw', ['importrawId', 'importrawStringId']);
         // Delete all from `bibtex_string`
-        if (!$this->db->numRows($recordset))
-        {
+        if (!$this->db->numRows($recordset)) {
             $this->db->delete('bibtex_string');
 
             return;
         }
         $rawStringIds = [];
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (!$row['importrawStringId'])
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (!$row['importrawStringId']) {
                 continue;
             }
             $rawStringIds[] = $row['importrawStringId'];
         }
-        if (empty($rawStringIds))
-        {
+        if (empty($rawStringIds)) {
             return;
         }
-        foreach (array_unique($rawStringIds) as $id)
-        {
+        foreach (array_unique($rawStringIds) as $id) {
             $deleteIds['bibtexstringId'] = $id;
         }
         $this->db->formatConditions($deleteIds, TRUE); // not equal to...
@@ -455,24 +399,18 @@ class DELETERESOURCE
      */
     private function validateInput()
     {
-        if (array_key_exists('navigate', $this->vars))
-        {
+        if (array_key_exists('navigate', $this->vars)) {
             $this->navigate = $this->vars['navigate'];
         }
-        if (array_key_exists('nextResourceId', $this->vars))
-        {
+        if (array_key_exists('nextResourceId', $this->vars)) {
             $this->nextResourceId = $this->vars['nextResourceId'];
         }
-        if (!empty($this->resourceIds))
-        {
+        if (!empty($this->resourceIds)) {
             $this->vars = array_merge($this->vars, $this->resourceIds);
         }
-        if (array_key_exists('bibtex_tagId', $this->vars))
-        {
-            foreach ($this->vars['bibtex_tagId'] as $tag)
-            {
-                if ($tag)
-                {
+        if (array_key_exists('bibtex_tagId', $this->vars)) {
+            foreach ($this->vars['bibtex_tagId'] as $tag) {
+                if ($tag) {
                     $this->deleteType = 'tag';
 
                     return TRUE;
@@ -491,15 +429,13 @@ class DELETERESOURCE
         // First get meta data ids for deleting from resource_keyword
         $this->db->formatConditionsOneField($this->idsRaw, 'resourcemetadataResourceId');
         $recordset = $this->db->select('resource_metadata', 'resourcemetadataId');
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $ids[] = $row['resourcemetadataId'];
         }
         // Delete meta data parent row
         $this->db->formatConditionsOneField($this->idsRaw, 'resourcemetadataResourceId');
         $this->db->delete('resource_metadata');
-        if (empty($ids))
-        {
+        if (empty($ids)) {
             return;
         }
         // Delete any quote or paraphrase comments
@@ -527,15 +463,12 @@ class DELETERESOURCE
         $this->db->orderBy('year');
         $this->db->orderBy('resourceTitleSort', TRUE, FALSE);
         $recordset = $this->db->select('resource', implode(',', $fields), FALSE, FALSE);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $final = [];
-            if ($row['creatorSurname'])
-            {
+            if ($row['creatorSurname']) {
                 $final[] = $row['creatorSurname'];
             }
-            if ($row['year'])
-            {
+            if ($row['year']) {
                 $final[] = '(' . $row['year'] . ')';
             }
             $final[] = $row['resourceTitleSort'];
@@ -554,13 +487,11 @@ class DELETERESOURCE
     {
         $this->db->formatConditionsOneField($this->vars['bibtex_tagId'], 'resourcemiscTag');
         $recordset = $this->db->select('resource_misc', 'resourcemiscId');
-        if (!$this->db->numRows($recordset))
-        {
+        if (!$this->db->numRows($recordset)) {
             $this->display($this->messages->text("resources", "noResult"));
             FACTORY_CLOSE::getInstance();
         }
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $ids[] = $row['resourcemiscId'];
         }
 

@@ -54,34 +54,26 @@ class MySQL_Backup
 
     public function Execute($task = MSB_STRING, $fname = '', $compress = FALSE)
     {
-        if (!($sql = $this->_Retrieve()))
-        {
+        if (!($sql = $this->_Retrieve())) {
             return FALSE;
         }
 
-        if ($task == MSB_SAVE)
-        {
-            if (empty($fname))
-            {
+        if ($task == MSB_SAVE) {
+            if (empty($fname)) {
                 $fname = $this->backup_dir . DIRECTORY_SEPARATOR;
                 $fname .= date($this->fname_format);
                 $fname .= ($compress ? '.sql.gz' : '.sql');
             }
 
             return $this->_SaveToFile($fname, $sql, $compress);
-        }
-        elseif ($task == MSB_DOWNLOAD)
-        {
-            if (empty($fname))
-            {
+        } elseif ($task == MSB_DOWNLOAD) {
+            if (empty($fname)) {
                 $fname = date($this->fname_format);
                 $fname .= ($compress ? '.sql.gz' : '.sql');
             }
 
             return $this->_DownloadFile($fname, $sql, $compress);
-        }
-        else
-        {
+        } else {
             return $sql;
         }
     }
@@ -103,20 +95,16 @@ class MySQL_Backup
         $value = [];
         $tables = $this->db->listTables(TRUE);
 
-        foreach ($tables as $table)
-        {
-            if (empty($this->tables) || in_array($table, $this->tables))
-            {
+        foreach ($tables as $table) {
+            if (empty($this->tables) || in_array($table, $this->tables)) {
                 // Process only tables of Wikindx
-                if (substr($table, 0, strlen($this->prefix)) == $this->prefix)
-                {
+                if (substr($table, 0, strlen($this->prefix)) == $this->prefix) {
                     $value[] = $table;
                 }
             }
         }
 
-        if (!count($value))
-        {
+        if (!count($value)) {
             $this->error = 'No tables found in database.';
             $this->errno = $this->db->errno;
 
@@ -131,15 +119,13 @@ class MySQL_Backup
     {
         $value = '';
 
-        if ($this->comments)
-        {
+        if ($this->comments) {
             $value .= '#' . "\n";
             $value .= '# Table structure for table `' . $table . '`' . "\n";
             $value .= '#' . "\n\n";
         }
 
-        if ($this->drop_tables)
-        {
+        if ($this->drop_tables) {
             $value .= 'DROP TABLE IF EXISTS `' . $table . '`;' . "\n";
         }
 
@@ -149,8 +135,7 @@ class MySQL_Backup
         $sql = "SHOW CREATE TABLE `$table`;";
 
         // Try to generate the CREATE script
-        if (!($result = $this->_Query($sql)))
-        {
+        if (!($result = $this->_Query($sql))) {
             return FALSE;
         }
 
@@ -158,10 +143,8 @@ class MySQL_Backup
         $value .= str_replace("\n", "\n", stripslashes($row['Create Table'])) . ';';
         $value .= "\n" . "\n";
 
-        if (!$this->struct_only)
-        {
-            if ($this->comments)
-            {
+        if (!$this->struct_only) {
+            if ($this->comments) {
                 $value .= '#' . "\n";
                 $value .= '# Dumping data for table `' . $table . '`' . "\n";
                 $value .= '#' . "\n\n";
@@ -187,36 +170,26 @@ class MySQL_Backup
         // Select all rows of the table
         $sql = $this->db->selectNoExecute(preg_replace("/$prefix/ui", '', $table), '*') . ";\n";
 
-        if (($result = $this->db->query($sql)))
-        {
+        if (($result = $this->db->query($sql))) {
             $row = $this->db->fetchRow($result);
 
-            if (is_array($row))
-            {
+            if (is_array($row)) {
                 $fields = [];
-                foreach ($row as $field => $data)
-                {
+                foreach ($row as $field => $data) {
                     $fields[] = "`" . $field . "`";
                 }
 
                 $listOfFields = '(' . implode(',', $fields) . ')';
                 $listValues = '';
 
-                do
-                {
+                do {
                     $array = [];
-                    foreach ($row as $field => $data)
-                    {
-                        if (!$data && (array_search($field, $nulls) !== FALSE))
-                        {
+                    foreach ($row as $field => $data) {
+                        if (!$data && (array_search($field, $nulls) !== FALSE)) {
                             $array[] = 'NULL';
-                        }
-                        elseif (ctype_digit($data))
-                        {
+                        } elseif (ctype_digit($data)) {
                             $array[] = $data;
-                        }
-                        else
-                        {
+                        } else {
                             $array[] = "'" . $this->db->escapeString($data) . "'";
                         }
                     }
@@ -241,8 +214,7 @@ class MySQL_Backup
     {
         $value = '';
 
-        if ($this->comments)
-        {
+        if ($this->comments) {
             $value .= '#' . "\n";
             $value .= '# Database dump' . "\n";
             $value .= '# Created by MySQL_Backup class, ver. ' . MSB_VERSION . "\n";
@@ -257,13 +229,11 @@ class MySQL_Backup
             $value .= '#' . "\n\n\n";
         }
 
-        if (!($tables = $this->_GetTables()))
-        {
+        if (!($tables = $this->_GetTables())) {
             return FALSE;
         }
 
-        foreach ($tables as $table)
-        {
+        foreach ($tables as $table) {
             // For ANSI behavior (MySQL, PG at least)
             // We must always use TABLE_SCHEMA in the WHERE clause
             // and the raw value of TABLE_SCHEMA otherwise MySQL scans
@@ -278,16 +248,13 @@ class MySQL_Backup
             $result = $this->_Query($sql);
 
             $nulls = [];
-            while ($row = $this->db->fetchRow($result))
-            {
-                if ($row['IS_NULLABLE'] == 'YES')
-                {
+            while ($row = $this->db->fetchRow($result)) {
+                if ($row['IS_NULLABLE'] == 'YES') {
                     $nulls[] = $row['COLUMN_NAME'];
                 }
             }
 
-            if (!($table_dump = $this->_DumpTable($table, $nulls)))
-            {
+            if (!($table_dump = $this->_DumpTable($table, $nulls))) {
                 $this->error = $this->db->error;
                 $this->errno = $this->db->errno;
 
@@ -303,31 +270,22 @@ class MySQL_Backup
 
     public function _SaveToFile($fname, $sql, $compress)
     {
-        if ($compress)
-        {
-            if (!($zf = gzopen($fname, 'w9')))
-            {
+        if ($compress) {
+            if (!($zf = gzopen($fname, 'w9'))) {
                 $e = error_get_last();
                 $this->error = $e['message'];
                 $this->errno = $e['type'];
 
                 return FALSE;
-            }
-            else
-            {
+            } else {
                 gzwrite($zf, $sql);
                 gzclose($zf);
             }
-        }
-        else
-        {
-            if ($f = fopen($fname, 'w'))
-            {
+        } else {
+            if ($f = fopen($fname, 'w')) {
                 fwrite($f, $sql);
                 fclose($f);
-            }
-            else
-            {
+            } else {
                 $e = error_get_last();
                 $this->error = $e['message'];
                 $this->errno = $e['type'];

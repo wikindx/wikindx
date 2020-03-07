@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -52,16 +54,14 @@ class backupmysql_MODULE
         $this->config = new backupmysql_CONFIG();
         $this->session = FACTORY_SESSION::getInstance();
         $this->authorize = $this->config->authorize;
-        if ($menuInit)
-        {
+        if ($menuInit) {
             $this->makeMenu($this->config->menus);
 
             return; // Need do nothing more as this is simply menu initialisation.
         }
 
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->authorize))
-        { // not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
 
@@ -77,15 +77,14 @@ class backupmysql_MODULE
     }
     /**
      * display
+     *
+     * @param mixed $message
      */
     public function display($message = FALSE)
     {
-        if ($message)
-        {
+        if ($message) {
             $pString = $message;
-        }
-        else
-        {
+        } else {
             $pString = '';
         }
         $pString .= HTML\tableStart('generalTable borderStyleSolid');
@@ -95,18 +94,15 @@ class backupmysql_MODULE
         $td .= FORM\formEnd();
         $pString .= HTML\td($td);
         $files = $this->listFiles();
-        if (!empty($files))
-        {
+        if (!empty($files)) {
             $td = '';
-            foreach ($files as $fileName => $tStamp)
-            {
+            foreach ($files as $fileName => $tStamp) {
                 $td .= HTML\a("link", $fileName, "index.php?action=backupmysql_downloadFile" .
                 htmlentities("&filename=" . $fileName), "_blank") . BR . LF;
             }
             $pString .= HTML\td($td);
         }
-        if (!empty($files))
-        {
+        if (!empty($files)) {
             $td = HTML\td($this->deleteList(array_keys($files)));
             $pString .= HTML\td($td);
         }
@@ -122,16 +118,13 @@ class backupmysql_MODULE
         $dirName = self::DUMP_DIRECTORY;
         $filename = $this->vars['filename'];
         $filepath = $dirName . DIRECTORY_SEPARATOR . $filename;
-        if (file_exists($filepath))
-        {
+        if (file_exists($filepath)) {
             $type = 'application/x-sql+gzip';
             $size = filesize($filepath);
             $lastmodified = date(DateTime::RFC1123, filemtime($filepath));
             FILE\setHeaders($type, $size, $filename, $lastmodified);
             FILE\readfile_chunked($filepath);
-        }
-        else
-        {
+        } else {
             $this->badInput->closeType = 'closePopup';
             $this->badInput->close($this->errors->text("file", "missing"));
         }
@@ -142,14 +135,12 @@ class backupmysql_MODULE
      */
     public function delete()
     {
-        if (!array_key_exists('files', $this->vars))
-        {
+        if (!array_key_exists('files', $this->vars)) {
             $this->display($this->errors->text("inputError", "missing"));
 
             return;
         }
-        foreach ($this->vars['files'] as $file)
-        {
+        foreach ($this->vars['files'] as $file) {
             @unlink(self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $file);
         }
         $this->display(HTML\p($this->pluginmessages->text("deleted"), 'success'));
@@ -167,8 +158,7 @@ class backupmysql_MODULE
         ini_set('memory_limit', '-1');
         
         // Check the cache directory is writable
-        if (!is_writable(self::DUMP_DIRECTORY))
-        {
+        if (!is_writable(self::DUMP_DIRECTORY)) {
             $this->display(HTML\p($this->pluginmessages->text('noWrite', mb_substr(sprintf('%o', fileperms(self::DUMP_DIRECTORY)), -4)), 'error'));
 
             return;
@@ -203,12 +193,9 @@ class backupmysql_MODULE
         //Use GZip compression if using 'MSB_SAVE' or 'MSB_DOWNLOAD'?
         $use_gzip = TRUE;
 
-        if (!$backup_obj->Execute($task, $filename, $use_gzip))
-        {
+        if (!$backup_obj->Execute($task, $filename, $use_gzip)) {
             $output = HTML\p($backup_obj->error, 'error');
-        }
-        else
-        {
+        } else {
             $output = HTML\p('Operation Completed Successfully At: <strong>' . date('g:i:s A') . '</strong><em> ( Local Server Time )</em>', 'success');
         }
         $this->display($output);
@@ -234,8 +221,7 @@ class backupmysql_MODULE
      */
     private function deleteList($files)
     {
-        foreach ($files as $file)
-        {
+        foreach ($files as $file) {
             $fileArray[$file] = $file;
         }
         $td = FORM\formHeader("backupmysql_delete");
@@ -255,8 +241,7 @@ class backupmysql_MODULE
     {
         $fileArray = [];
         
-        foreach (\FILE\fileInDirToArray(self::DUMP_DIRECTORY) as $file)
-        {
+        foreach (\FILE\fileInDirToArray(self::DUMP_DIRECTORY) as $file) {
             $fileArray[$file] = filemtime(self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $file);
         }
 

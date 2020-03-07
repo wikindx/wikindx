@@ -1,20 +1,19 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
-
 function SetWikindxBasePath()
 {
     $wikindxBasePath = __DIR__;
-    while (!in_array(basename($wikindxBasePath), ["", "components"]))
-    {
+    while (!in_array(basename($wikindxBasePath), ["", "components"])) {
         $wikindxBasePath = dirname($wikindxBasePath);
     }
-    if (basename($wikindxBasePath) == "")
-    {
+    if (basename($wikindxBasePath) == "") {
         die("
             \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
             and WIKINDX is unable to set the installation path automatically.
@@ -54,15 +53,12 @@ class WPSaveDialog
 
         $this->session = FACTORY_SESSION::getInstance();
         $this->vars = GLOBALS::getVars();
-        if (array_key_exists('method', $this->vars) && ($this->vars['method'] = 'save'))
-        {
+        if (array_key_exists('method', $this->vars) && ($this->vars['method'] = 'save')) {
             include_once(__DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "WPCOMMON.php");
             $common = new WPCOMMON();
             $common->save();
             FACTORY_CLOSEPOPUP::getInstance();
-        }
-        else
-        {
+        } else {
             $this->saveDialogue();
         }
     }
@@ -80,21 +76,16 @@ class WPSaveDialog
         $js = "onsubmit=\"return wordprocessorSave('$savedMessage', '$notSavedMessage');\"";
         $pString .= FORM\formHeaderVisibleAction("dialog.php", "wpSave", $js);
         $pString .= FORM\hidden("method", "save");
-        if ($hashFilename = $this->session->getVar("wp_HashFilename"))
-        {
+        if ($hashFilename = $this->session->getVar("wp_HashFilename")) {
             $pString .= FORM\hidden("hashFilename", $hashFilename);
         }
-        if ($id = $this->session->getVar("wp_Id"))
-        {
+        if ($id = $this->session->getVar("wp_Id")) {
             $pString .= FORM\hidden("id", $id);
         }
         $pString .= "<input type=\"hidden\" id=\"hdnpaperText\" name=\"hdnpaperText\" value=\"\">";
-        if ($this->session->getVar("wp_Title"))
-        {
+        if ($this->session->getVar("wp_Title")) {
             $title = base64_decode($this->session->getVar("wp_Title"));
-        }
-        else
-        {
+        } else {
             $title = '';
         }
         //		$export = $this->session->getVar("wp_ExportAndSave") ? TRUE : FALSE;

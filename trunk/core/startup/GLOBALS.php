@@ -58,23 +58,6 @@ class GLOBALS
      */
     public function __construct()
     {
-        if (!$count) { // Ensure there is a valid INSERT value here ...
-            $count = 0;
-        }
-                
-        // If the month (period) is too short or long (YYYYMM format expected), skip this stat
-        $month = trim($month . "");
-        if (strlen($month) != 6) {
-            continue;
-        }
-                
-        $month = intval($month);
-                
-        // If the month is not in the range 01..12, skip this stat
-        if ($month % 100 > 12) {
-            continue;
-        }
-                
         if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL) {
             $this->setPageStartingTime(microtime());
         }

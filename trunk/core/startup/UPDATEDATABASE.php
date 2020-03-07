@@ -834,7 +834,7 @@ class UPDATEDATABASE
         $this->pauseExecution('stage13');
     }
     /**
-     * Upgrade database schema to version 12 (6.2.2)
+     * Upgrade database schema to version 14 (6.2.2)
      */
     private function stage14()
     {

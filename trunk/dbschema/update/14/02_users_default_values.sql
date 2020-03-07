@@ -8,6 +8,6 @@
 
 UPDATE %%WIKINDX_DB_TABLEPREFIX%%users
 SET usersTemplateMenu = 0
-WHEN usersTemplateMenu Is NULL;
+WHERE usersTemplateMenu IS NULL;
 
 ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users MODIFY COLUMN `usersTemplateMenu` int(11) NOT NULL DEFAULT 0;

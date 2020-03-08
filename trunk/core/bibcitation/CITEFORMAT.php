@@ -730,16 +730,16 @@ class CITEFORMAT
             //			$matchArray[] = "\.{1}.*\s*(&nbsp;)*$title|\.{1}.*(&nbsp;)*\s*$title";
             //			$matchArray[] = "__WIKINDX__NEWLINEPAR____WIKINDX__NEWLINEPAR__.*\s*(&nbsp;)*$title";
             //			$matchArray[] = "(__WIKINDX__NEWLINEPAR____WIKINDX__NEWLINEPAR__).*(&nbsp;)*\s*$title";
-            $matchArray[] = "$title(?!.*\\.|.*\\?|.*\\!|.*¿|.*¡)\\s*(&nbsp;)*";
-            $matchArray[] = "$title(?!.*\\.|.*\\?|.*\\!|.*¿|.*¡)(&nbsp;)*\\s*";
+            $matchArray[] = "$title(?!.*\\.|.*\\?|.*\\!|.*Â¿|.*Â¡)\\s*(&nbsp;)*";
+            $matchArray[] = "$title(?!.*\\.|.*\\?|.*\\!|.*Â¿|.*Â¡)(&nbsp;)*\\s*";
         }
         if (array_key_exists('shortTitle', $this->item)) {
             $shortTitle = str_replace(['{', '}'], '', trim($this->item['shortTitle']));
             $shortTitle = preg_quote($shortTitle);
             //			$shortTitle = preg_quote($this->item['shortTitle']);
             //			$matchArray[] = "\..*\s*(&nbsp;)*.*$shortTitle|\..*(&nbsp;)*\s*.*$shortTitle";
-            $matchArray[] = "$shortTitle(?!.*\\.|.*\\?|.*\\!|.*¿|.*¡)\\s*(&nbsp;)*";
-            $matchArray[] = "$shortTitle(?!.*\\.|.*\\?|.*\\!|.*¿|.*¡)(&nbsp;)*\\s*";
+            $matchArray[] = "$shortTitle(?!.*\\.|.*\\?|.*\\!|.*Â¿|.*Â¡)\\s*(&nbsp;)*";
+            $matchArray[] = "$shortTitle(?!.*\\.|.*\\?|.*\\!|.*Â¿|.*Â¡)(&nbsp;)*\\s*";
         }
         if (!empty($matchArray)) {
             $match = implode('|', $matchArray);

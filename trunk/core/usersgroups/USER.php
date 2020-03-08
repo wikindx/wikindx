@@ -652,7 +652,7 @@ class USER
         $preferences = [];
         
         // Options inherited from the global config
-        $preferences["ListLink"] = WIKINDX_LIST_LINK_DEFAULT; //TODO: fix the type mismatch bool/Varchar(N)
+        $preferences["ListLink"] = WIKINDX_LIST_LINK;
         $preferences["Paging"] = WIKINDX_PAGING;
         $preferences["PagingMaxLinks"] = WIKINDX_PAGING_MAXLINKS;
         $preferences["PagingTagCloud"] = WIKINDX_PAGING_TAG_CLOUD;

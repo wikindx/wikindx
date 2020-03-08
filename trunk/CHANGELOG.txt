@@ -26,6 +26,7 @@ BUG FIXES:
 20. Ensure that ordering/listing by popularity and downloads are not available to read-only users if they are not allowed to view attachments.
 21. Fix the default value of usersTemplateMenu (#217).
 22. Fix the type mismatch bool/Varchar(N) of WIKINDX_LIST_LINK (#216).
+23. Fix type mismatch in users options (#218).
 
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.

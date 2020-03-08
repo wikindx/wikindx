@@ -118,15 +118,7 @@ class LOADCONFIG
         foreach ($basic as $key) {
             $rowKey = $table . $key;
             if (array_key_exists($rowKey, $row)) {
-                if (in_array($key, ['PagingStyle', 'UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'])) {
-                    if ($key == 'PagingStyle' && $row[$rowKey] === 'N') {
-                        GLOBALS::setUserVar($key, "N");
-                    } elseif (!$row[$rowKey] || ($row[$rowKey] === 'N')) {
-                        GLOBALS::setUserVar($key, FALSE);
-                    } else {
-                        GLOBALS::setUserVar($key, $row[$rowKey]);
-                    }
-                } elseif ($key == 'CmsTag') {
+                if ($key == 'CmsTag') {
                     if (!$row[$rowKey]) {
                         GLOBALS::setUserVar('CmsTagStart', FALSE);
                         GLOBALS::setUserVar('CmsTagEnd', FALSE);

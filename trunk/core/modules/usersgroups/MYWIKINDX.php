@@ -178,13 +178,9 @@ class MYWIKINDX
         $this->session->delVar("sql_LastMulti"); // always reset in case of paging changes
         $this->session->delVar("sql_LastIdeaSearch"); // always reset in case of paging changes
         foreach (['UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key) {
-            if (array_key_exists($key, $this->vars)) {
-                //				$this->session->setVar("setup_" . $key, TRUE);
-                GLOBALS::setUserVar($key, TRUE);
-            } else {
-                //				$this->session->delVar("setup_" . $key);
-                GLOBALS::setUserVar($key, FALSE);
-            }
+            // $this->session->setVar("setup_" . $key, TRUE);
+            // $this->session->delVar("setup_" . $key);
+            GLOBALS::setUserVar($key, array_key_exists($key, $this->vars));
         }
     }
     /**

@@ -571,61 +571,6 @@ function tinyMceCheckContentLength(strEditorId, intMaxLength) {
 
     var contentContainer = editorInstance.getBody();
     if (contentContainer == null || contentContainer == undefined) { alert('NO CONTENT CONTAINER'); }
-// March 2013 -- v4.2.x increases the size of the title and subtitle fields so this is no longer needed
-return;
-    var strContent       = contentContainer.innerHTML;
-    var intContentLength = strContent.length;
-    var intCharCount     = stripHtmlTags(strContent).length;
-
-    if (intContentLength <= intMaxLength) {
-        // The user has not passed the maximum amount of content in the editor...
-
-        // Save away the current contents in case they have typed too much and we have to
-        // revert back to this state.
-        tinyMceBuffers   [strEditorId] = strContent;
-        tinyMceCharCounts[strEditorId] = intCharCount;
-
-    } else {
-        // The user has put more than the maximum amount of content in the editor...
-        // We must now revert back to the last good contents that we had for the editor,
-        // or else whatever fits if we never had anything saved from there.
-        var bm = editorInstance.selection.getBookmark(); // Stores a bookmark of the current selection
-        editorInstance.setContent((tinyMceBuffers[strEditorId]) ? tinyMceBuffers[strEditorId] : strContent.substring(0, intMaxLength - 10));
-        var intDelta = intCharCount - tinyMceCharCounts[strEditorId];
-        if (bm['start'] && bm['start'] > intDelta) {
-            bm['start'] -= intDelta;
-            bm['end']   =  bm['start'];
-        }
-        editorInstance.selection.moveToBookmark(bm); // Restore the selection bookmark
-
-        alert('You have exceeded the maximum size for this text, including formatting, and we have undone your last change.');
-    }
-}
-
-function searchArray(array)
-{
-	if (!Array.prototype.indexOf)
-	{
-	  Array.prototype.indexOf = function(elt /*, from*/)
-	  {
-		var len = this.length >>> 0;
-
-		var from = Number(arguments[1]) || 0;
-		from = (from < 0)
-			 ? Math.ceil(from)
-			 : Math.floor(from);
-		if (from < 0)
-		  from += len;
-
-		for (; from < len; from++)
-		{
-		  if (from in this &&
-			  this[from] === elt)
-			return from;
-		}
-		return -1;
-	  };
-	}
 }
 </script>
 END;

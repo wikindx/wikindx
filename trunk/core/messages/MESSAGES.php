@@ -233,7 +233,7 @@ class MESSAGES
 				"mailFrom" => dgettext($domain, "From address"),
 				"mailReplyTo" => dgettext($domain, "Reply-to address"),
 				"mailBackend" => dgettext($domain, "Mail backend"),
-				"mailReturnPath" => dgettext($domain, "Return path"),
+				"mailReturnPath" => dgettext($domain, "Sendmail return path"),
 				"mailSmPath" => dgettext($domain, "Sendmail path"),
 				"mailSmtpServer" => dgettext($domain, "SMTP server"),
 				"mailSmtpPort" => dgettext($domain, "SMTP port"),

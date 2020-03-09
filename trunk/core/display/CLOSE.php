@@ -123,7 +123,7 @@ class CLOSE
         // because someone can use them at an other place of his custom template
         GLOBALS::addTplVar("footerInfo", $footer);
         GLOBALS::addTplVar('wkx_link', WIKINDX_URL);
-        GLOBALS::addTplVar('wkx_title', 'WIKINDX');
+        GLOBALS::addTplVar('wkx_appname', 'WIKINDX');
         GLOBALS::addTplVar('wkx_mimetype_rss', WIKINDX_MIMETYPE_RSS);
 
         // Get the time elapsed before template rendering

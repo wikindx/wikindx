@@ -115,13 +115,13 @@ class MAIL
      *
      * @return bool (TRUE on success, FALSE on failure)
      */
-    public function sendEmail($addresses, $subject, $message, $DebugMode = FALSE)
+    public function sendEmail($addresses, $subject, $message, bool $DebugMode = FALSE)
     {
         $SendStatus = TRUE;
 
         // If the debug mode is enabled,
         // captures the SMTP log output...
-        if ($DebugMode === TRUE) {
+        if ($DebugMode) {
             // Use only HTML because Wikindx is not usable with a CLI
             $this->TransactionLog = '';
             
@@ -182,7 +182,7 @@ class MAIL
     
                 // If the debug mode is enabled,
                 // captures the SMTP log output...
-                if ($DebugMode === TRUE) {
+                if ($DebugMode) {
                     $this->mail->Debugoutput = 'echo';
                     $this->mail->SMTPDebug = 3;
                 }
@@ -192,7 +192,7 @@ class MAIL
                     $this->mail->addAddress($To['address'], $To['name']);
                     $SendStatus = $this->mail->send();
     
-                    if ($DebugMode === TRUE) {
+                    if ($DebugMode) {
                         echo BR . BR;
                         if ($SendStatus) {
                             echo "Message sent with " . WIKINDX_MAIL_BACKEND . " backend " .
@@ -208,7 +208,7 @@ class MAIL
     
                 // If the debug mode is enabled,
                 // ... and save it
-                if ($DebugMode === TRUE) {
+                if ($DebugMode) {
                     $this->mail->SMTPDebug = 0;
                 }
     
@@ -217,7 +217,7 @@ class MAIL
                 $this->mail->Subject = '';
                 $this->mail->Body = '';
             } else {
-                if ($DebugMode === TRUE) {
+                if ($DebugMode) {
                     echo "No valid recipient address to send or addresses not RFC822 compliant." . BR;
                 }
     
@@ -225,14 +225,14 @@ class MAIL
                 $SendStatus = FALSE;
             }
         } else {
-            if ($DebugMode === TRUE) {
+            if ($DebugMode) {
                 echo "The email sending function is disabled." . BR;
             }
         }
 
         // If the debug mode is enabled,
         // ... and save it
-        if ($DebugMode === TRUE) {
+        if ($DebugMode) {
             $this->TransactionLog .= trim(ob_get_clean());
         }
 

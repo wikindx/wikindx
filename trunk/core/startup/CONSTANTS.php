@@ -45,7 +45,15 @@ define('WIKINDX_PUBLIC_VERSION', '6.2.2');
  * @name WIKINDX_INTERNAL_VERSION
  */
 define('WIKINDX_INTERNAL_VERSION', 14.0);
-
+/**
+ * WIKINDX minimum internal version upgradable
+ *
+ * The syntax is the same as for WIKINDX_INTERNAL_VERSION.
+ *
+ * A database with a lower version number cannot be upgraded.
+ *
+ * @name WIKINDX_INTERNAL_VERSION_UPGRADE_MIN
+ */
 define('WIKINDX_INTERNAL_VERSION_UPGRADE_MIN', 5.1);
 /**
  * Plugin compatibility -- x.x (usually matching the major WIKINDX version) which must be changed each time plugins require an

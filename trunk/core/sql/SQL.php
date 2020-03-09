@@ -129,7 +129,7 @@ class SQL
      *
      * @param string $SqlMode
      */
-    public function enableSqlMode($SqlMode)
+    public function enableSqlMode(string $SqlMode)
     {
         $this->queryNoResult("SET @@sql_mode = CONCAT(@@sql_mode, '," . $this->escapeString($SqlMode) . "');");
     }
@@ -139,7 +139,7 @@ class SQL
      *
      * @param string $SqlMode
      */
-    public function disableSqlMode($SqlMode)
+    public function disableSqlMode(string $SqlMode)
     {
         $this->queryNoResult("SET sql_mode = (SELECT REPLACE(@@sql_mode, '" . $this->escapeString($SqlMode) . "', ''));");
     }
@@ -149,7 +149,7 @@ class SQL
      *
      * @param string $SqlMode
      */
-    public function setSqlMode($SqlMode)
+    public function setSqlMode(string $SqlMode)
     {
         $this->queryNoResult("SET sql_mode = '" . $this->escapeString($SqlMode) . "';");
     }
@@ -179,10 +179,9 @@ class SQL
      *
      * @see https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_allowed_packet
      *
-     * @param int Packet size in bytes
-     * @param mixed $size
+     * @param int $size Packet size in bytes
      */
-    public function setMaxPacket($size)
+    public function setMaxPacket(int $size)
     {
         // Must be multiples of 1024
         $mul = $size % 1024;
@@ -202,7 +201,7 @@ class SQL
      *
      * @return string
      */
-    public function queryNoExecute($querystring)
+    public function queryNoExecute(string $querystring)
     {
         $querystring .= $this->subClause();
 
@@ -220,7 +219,7 @@ class SQL
      *
      * @return mixed An array, or a boolean if there are no data to return. Only the first result set is returned
      */
-    public function query($querystring, $saveSession = FALSE)
+    public function query(string $querystring, bool $saveSession = FALSE)
     {
         return $this->internalQuery($querystring, FALSE);
     }
@@ -233,7 +232,7 @@ class SQL
      *
      * @return mixed An array, or a boolean if there are no data to return. Only the first result set is returned
      */
-    public function queryNoError($querystring)
+    public function queryNoError(string $querystring)
     {
         return $this->internalQuery($querystring, TRUE);
     }
@@ -245,7 +244,7 @@ class SQL
      *
      * @return bool
      */
-    public function queryNoResult($querystring, $saveSession = FALSE)
+    public function queryNoResult(string $querystring, bool $saveSession = FALSE)
     {
         return ($this->query($querystring, $saveSession) !== FALSE);
     }
@@ -257,7 +256,7 @@ class SQL
      *
      * @return array
      */
-    public function queryFetchFirstRow($querystring, $saveSession = FALSE)
+    public function queryFetchFirstRow(string $querystring, bool $saveSession = FALSE)
     {
         $recordset = $this->query($querystring, $saveSession);
 
@@ -271,7 +270,7 @@ class SQL
      *
      * @return mixed
      */
-    public function queryFetchFirstField($querystring, $saveSession = FALSE)
+    public function queryFetchFirstField(string $querystring, bool $saveSession = FALSE)
     {
         $recordset = $this->query($querystring, $saveSession);
 
@@ -300,12 +299,9 @@ class SQL
     {
         $schema = [];
         
-        $dbname = WIKINDX_DB;
-        $dbPrefix = WIKINDX_DB_TABLEPREFIX;
-        
         $tables = $this->listTables();
         foreach ($tables as $table) {
-            $basicTable = preg_replace("/^" . preg_quote($dbPrefix, "/") . "/ui", '', $table);
+            $basicTable = preg_replace("/^" . preg_quote(WIKINDX_DB_TABLEPREFIX, "/") . "/ui", '', $table);
             
             if (strpos($basicTable, 'plugin_') === 0) {
                 continue; // ignore plugin tables
@@ -317,16 +313,19 @@ class SQL
             $schema[$basicTable]['fields'][] = $result;
             
             // Extract tables schema
-            $result = $this->query(
-                "SELECT * FROM `INFORMATION_SCHEMA`.`TABLES`
-    			WHERE TABLE_NAME LIKE '$table'
-    			AND TABLE_SCHEMA LIKE '$dbname'"
-            );
+            $result = $this->query("
+                SELECT *
+                FROM INFORMATION_SCHEMA.TABLES
+    			WHERE
+		        	TABLE_TYPE = 'BASE TABLE'
+	    			AND TABLE_SCHEMA LIKE '" . WIKINDX_DB . "'
+	    			AND LOWER(TABLE_NAME) LIKE LOWER('$table')
+            ");
             $result = (array)$result;
             $schema[$basicTable]['schema'][] = $result;
             
             // Extract indices schema
-            $result = $this->query("SHOW INDEX FROM `$table` FROM `$dbname`");
+            $result = $this->query("SHOW INDEX FROM $table FROM " . WIKINDX_DB);
             $result = (array)$result;
             $schema[$basicTable]['indices'][] = $result;
         }
@@ -336,16 +335,15 @@ class SQL
     /**
      * Read a db schema formated for the Repair Kit plugin in an array
      *
-     * @param string $filename Destination filename (absolute or relative)
-     * @param mixed $fileName
+     * @param string $fileName Destination filename (absolute or relative)
      *
      * @return mixed Schema formated in an array, or FALSE on error
      */
-    public function getRepairKitDbSchema($fileName)
+    public function getRepairKitDbSchema(string $filename)
     {
         $dbSchema = FALSE;
         
-        $data = file_get_contents($fileName);
+        $data = file_get_contents($filename);
         if ($data !== FALSE) {
             $dbSchema = unserialize($data);
         }
@@ -360,7 +358,7 @@ class SQL
      *
      * @return bool TRUE on success, FALSE on error
      */
-    public function writeRepairKitDbSchema($dbSchema, $filename)
+    public function writeRepairKitDbSchema(array $dbSchema, string $filename)
     {
         return (file_put_contents($filename, serialize($dbSchema)) !== FALSE);
     }
@@ -369,17 +367,14 @@ class SQL
      *
      * @see SQL::listFields()
      *
-     * @param string $table
+     * @param string $table Name of a table (without prefix)
      *
      * @return array
      */
-    public function listFields($table)
+    public function listFields(string $table)
     {
         $fields = [];
-
-        $db = WIKINDX_DB;
-        $table = WIKINDX_DB_TABLEPREFIX . $table;
-
+        
         // For ANSI behavior (MySQL, PG at least)
         // We must always use TABLE_SCHEMA in the WHERE clause
         // and the raw value of TABLE_SCHEMA otherwise MySQL scans
@@ -389,8 +384,8 @@ class SQL
 		    SELECT COLUMN_NAME
 		    FROM INFORMATION_SCHEMA.COLUMNS
 		    WHERE
-		        TABLE_NAME = '$table'
-		        AND TABLE_SCHEMA = '$db';
+		        TABLE_SCHEMA = '" . WIKINDX_DB . "'
+		        AND LOWER(TABLE_NAME) = LOWER('" . WIKINDX_DB_TABLEPREFIX . $table . "');
 		");
 
         if ($recordset !== FALSE) {
@@ -409,12 +404,9 @@ class SQL
      *
      * @return array
      */
-    public function listTables($withPrefix = TRUE)
+    public function listTables(bool $withPrefix = TRUE)
     {
         $tables = [];
-
-        $db = WIKINDX_DB;
-        $prefix = WIKINDX_DB_TABLEPREFIX;
 
         // For ANSI behavior (MySQL, PG at least)
         // We must always use TABLE_SCHEMA in the WHERE clause
@@ -426,15 +418,15 @@ class SQL
 		    FROM INFORMATION_SCHEMA.TABLES
 		    WHERE
 		        TABLE_TYPE = 'BASE TABLE'
-		        AND TABLE_SCHEMA = '$db'
-		        AND LOWER(TABLE_NAME) LIKE CONCAT(LOWER('" . $prefix . "'), '%');
+		        AND TABLE_SCHEMA = '" . WIKINDX_DB . "'
+		        AND LOWER(TABLE_NAME) LIKE CONCAT(LOWER('" . WIKINDX_DB_TABLEPREFIX . "'), '%');
 		");
 
         if ($recordset !== FALSE) {
             while ($table = $this->fetchRow($recordset)) {
                 $t = $table['TABLE_NAME'];
                 if (!$withPrefix) {
-                    $t = preg_replace("/^" . preg_quote($prefix, "/") . "/ui", '', $t);
+                    $t = preg_replace("/^" . preg_quote(WIKINDX_DB_TABLEPREFIX, "/") . "/ui", '', $t);
                 }
                 $tables[] = $t;
                 unset($table);
@@ -450,30 +442,22 @@ class SQL
      *
      * @return array
      */
-    public function tableExists($table)
+    public function tableExists(string $table)
     {
-        if (is_string($table)) {
-            $table = WIKINDX_DB_TABLEPREFIX . $table;
-            $db = WIKINDX_DB;
-
-            // We must always use TABLE_SCHEMA in the WHERE clause
-            // and the raw value of TABLE_SCHEMA otherwise MySQL scans
-            // the disk for db names and slow down the server
-            // https://dev.mysql.com/doc/refman/5.7/en/information-schema-optimization.html
-            $sql = <<<SQLCODE
-				SELECT EXISTS(
-					SELECT 1 FROM INFORMATION_SCHEMA.TABLES
-					WHERE
-						TABLE_TYPE = 'BASE TABLE'
-						AND TABLE_SCHEMA = '$db'
-						AND LOWER(TABLE_NAME) = LOWER('$table')
-				);
-SQLCODE;
-            // ANSI SQL
-            return $this->queryFetchFirstField($sql);
-        } else {
-            return FALSE;
-        }
+        // We must always use TABLE_SCHEMA in the WHERE clause
+        // and the raw value of TABLE_SCHEMA otherwise MySQL scans
+        // the disk for db names and slow down the server
+        // https://dev.mysql.com/doc/refman/5.7/en/information-schema-optimization.html
+        return $this->queryFetchFirstField("
+			SELECT EXISTS(
+				SELECT 1
+				FROM INFORMATION_SCHEMA.TABLES
+				WHERE
+					TABLE_TYPE = 'BASE TABLE'
+					AND TABLE_SCHEMA = '" . WIKINDX_DB . "'
+					AND LOWER(TABLE_NAME) = LOWER('" . WIKINDX_DB_TABLEPREFIX . $table . "')
+			);
+		");
     }
 
     /**
@@ -483,7 +467,7 @@ SQLCODE;
      *
      * @return bool
      */
-    public function tableIsEmpty($table)
+    public function tableIsEmpty(string $table)
     {
         return $this->queryFetchFirstField('SELECT NOT EXISTS(SELECT 1 FROM ' . $this->formatTables($table) . ') AS IsEmpty;'); // ANSI SQL
     }
@@ -494,7 +478,7 @@ SQLCODE;
      * @param array $fieldsArray
      * @param bool $tempTable
      */
-    public function createTable($newTable, $fieldsArray, $tempTable = FALSE)
+    public function createTable(string $newTable, array $fieldsArray, bool $tempTable = FALSE)
     {
         $newTable = WIKINDX_DB_TABLEPREFIX . $newTable;
         $sql = '(' . implode(', ', $fieldsArray) . ')';
@@ -511,7 +495,7 @@ SQLCODE;
      * @param string $newTable
      * @param string $selectStmt
      */
-    public function createTempTableFromSelect($newTable, $selectStmt)
+    public function createTempTableFromSelect(string $newTable, string $selectStmt)
     {
         $newTable = WIKINDX_DB_TABLEPREFIX . $newTable;
         $sql = ' AS (' . $selectStmt . ')';
@@ -534,7 +518,7 @@ SQLCODE;
      * @param array $recordset
      * @param int $rowNumber
      */
-    public function goToRow(&$recordset, $rowNumber)
+    public function goToRow(&$recordset, int $rowNumber)
     {
         if (is_array($recordset)) {
             // Move to the first element
@@ -592,17 +576,20 @@ SQLCODE;
      *
      * @return array
      */
-    public function getFieldsProperties($table)
+    public function getFieldsProperties(string $table)
     {
-        $db = WIKINDX_DB;
-        $table = WIKINDX_DB_TABLEPREFIX . $table;
-
         // For ANSI behavior (MySQL, PG at least)
         // We must always use TABLE_SCHEMA in the WHERE clause
         // and the raw value of TABLE_SCHEMA otherwise MySQL scans
         // the disk for db names and slow down the server
         // https://dev.mysql.com/doc/refman/5.7/en/information-schema-optimization.html
-        $recordset = $this->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '$table' AND TABLE_SCHEMA = '$db';");
+        $recordset = $this->query("
+        	SELECT *
+        	FROM INFORMATION_SCHEMA.COLUMNS
+        	WHERE
+	        	TABLE_SCHEMA = '" . WIKINDX_DB . "'
+	        	AND LOWER(TABLE_NAME) = LOWER('" . WIKINDX_DB_TABLEPREFIX . $table . "');
+        ");
 
         return $recordset;
     }
@@ -614,7 +601,7 @@ SQLCODE;
      *
      * @return string
      */
-    public function union($stmt, $all = FALSE)
+    public function union($stmt, bool $all = FALSE)
     {
         $all = $all ? 'ALL' : '';
 
@@ -634,7 +621,7 @@ SQLCODE;
      *
      * @return string
      */
-    public function subQuery($stmt, $alias = FALSE, $from = TRUE, $clause = FALSE)
+    public function subQuery($stmt, $alias = FALSE, bool $from = TRUE, bool $clause = FALSE)
     {
         if (!$stmt) {
             $this->error = $this->errors->text("dbError", "subQuery");
@@ -667,7 +654,7 @@ SQLCODE;
      *
      * @return string
      */
-    public function subQueryFields($fields, $subquery, $alias = FALSE, $clause = FALSE, $distinct = FALSE, $tidy = TRUE)
+    public function subQueryFields($fields, $subquery, $alias = FALSE, bool $clause = FALSE, bool $distinct = FALSE, bool $tidy = TRUE)
     {
         if ($clause) {
             $clause = $this->subClause();
@@ -1482,7 +1469,7 @@ SQLCODE;
      *
      * @return string Optional return
      */
-    public function formatConditions($condition, $notEqual = '=', $returnString = FALSE, $doubleParentheses = FALSE)
+    public function formatConditions($condition, $notEqual = '=', bool $returnString = FALSE, bool $doubleParentheses = FALSE)
     {
         if (!is_array($condition)) {
             if ($returnString) {

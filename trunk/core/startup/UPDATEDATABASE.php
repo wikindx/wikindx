@@ -221,8 +221,9 @@ class UPDATEDATABASE
         
         if ($dbVersion < WIKINDX_INTERNAL_VERSION)
         {
-            // As WIKINDX v5.3 (DB version 5.4) transfers config.php variables to the database, config.php must be writeable before we can proceed
-            if ($dbVersion < 5.4)
+            // As WIKINDX v5.3, v5.9 and v6.2.2 (DB version 12.0) transfers config.php variables to the database, config.php must be writeable before we can proceed
+            // Previously, each of these versions modified the configuration, but since they are backward compatible, only the last one is kept.
+            if ($dbVersion < 12.0)
             {
                 $this->checkConfigFile(); // dies if not writeable or file does not exist.
             }
@@ -394,7 +395,12 @@ class UPDATEDATABASE
      */
     private function checkConfigFile()
     {
-        $message = HTML\p("Part of the upgrade process for a WIKINDX that is younger than v5.3 is the transfer of many settings in config.php to the database (from where they can be configured via the Admin|Configure menu). In order to accomplish this, config.php must be writeable by the web server user and the upgrade will not proceed until this is the case. Equally, some settings are removed from config.php where the WIKINDX is 5.3 and older but younger than 5.9 Once the upgrade has completed, you can then return the file permissions on config.php to read only.");
+        $message = HTML\p("
+        	Part of the upgrade process for a WIKINDX that is younger than v6.2.2 is the transfer of many settings in config.php to the database (from where they can be configured via the Admin|Configure menu).
+        	In order to accomplish this, config.php must be writeable by the web server user and the upgrade will not proceed until this is the case.
+        	Equally, some settings are removed from config.php where the WIKINDX is 5.3 and older but younger than 6.2.2.
+        	Once the upgrade has completed, you can then return the file permissions on config.php to read only.
+        ");
         if (!file_exists('config.php'))
         {
             die("Fatal error: config.php does not exist.");

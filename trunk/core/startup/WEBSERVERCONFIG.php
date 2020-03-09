@@ -90,7 +90,6 @@ date_default_timezone_set(@date_default_timezone_get());
 
 // Check PHP minimum version and above.
 if (version_compare(PHP_VERSION, WIKINDX_PHP_VERSION_MIN, '<')) {
-    $AppName = WIKINDX_TITLE_DEFAULT;
     $PHPVersion = PHP_VERSION;
     $PHPVersionMin = WIKINDX_PHP_VERSION_MIN;
     $SourceFile = __FILE__;
@@ -100,7 +99,7 @@ if (version_compare(PHP_VERSION, WIKINDX_PHP_VERSION_MIN, '<')) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>$AppName</title>
+	<title>WIKINDX</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="$styledir/template.css" type="text/css">
 	<link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
@@ -109,7 +108,7 @@ if (version_compare(PHP_VERSION, WIKINDX_PHP_VERSION_MIN, '<')) {
 
 <h1>Configuration error: PHP outdated</h1>
 
-<p>$AppName requires PHP <strong>$PHPVersionMin</strong> or greater.  Your PHP version is <em>$PHPVersion</em>.</p>
+<p>WIKINDX requires PHP <strong>$PHPVersionMin</strong> or greater.  Your PHP version is <em>$PHPVersion</em>.</p>
 
 <p>You can disable this check in file $SourceFile at line $CodeLine for migration purposes,
    but it is definitely not recommended for good functionality of all parts of
@@ -132,7 +131,6 @@ $InstalledExtensions = get_loaded_extensions();
 $MissingExtensions = array_diff($MandatoryExtensions, $InstalledExtensions);
 
 if (count($MissingExtensions) > 0) {
-    $AppName = WIKINDX_TITLE_DEFAULT;
     $EnabledExtensions = array_intersect($MandatoryExtensions, $InstalledExtensions);
     $ListExtensions = '<tr><td>' . implode('</td><td style="color:red">DISABLED</td></tr><tr><td>', $MissingExtensions) . '<td style="color:red">DISABLED</td></tr>';
     $ListExtensions .= '<tr><td>' . implode('</td><td style="color:green">ENABLED</td></tr><tr><td>', $EnabledExtensions) . '<td style="color:green">ENABLED</td></tr>';
@@ -141,7 +139,7 @@ if (count($MissingExtensions) > 0) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>$AppName</title>
+	<title>WIKINDX</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="$styledir/template.css" type="text/css">
 	<link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
@@ -150,7 +148,7 @@ if (count($MissingExtensions) > 0) {
 
 <h1>Configuration error: missing PHP extensions</h1>
 
-<p>$AppName requires the following PHP extensions to work properly :</p>
+<p>WIKINDX requires the following PHP extensions to work properly :</p>
 
 <table style="border: 1px solid black; width:33%">
 <tr style="border: 1px solid black;">
@@ -171,18 +169,17 @@ EOM;
 
 // Check PHP execution environnement (CLI isn't supported)
 if (PHP_SAPI === 'cli') {
-    die(WIKINDX_TITLE_DEFAULT . " doesn't support CLI execution.");
+    die("WIKINDX doesn't support CLI execution.");
 }
 
 // Check for presence of config.php
 if (!is_file(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]))) {
-    $AppName = WIKINDX_TITLE_DEFAULT;
     $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>$AppName</title>
+	<title>WIKINDX</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="$styledir/template.css" type="text/css">
 	<link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
@@ -194,7 +191,7 @@ if (!is_file(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"])))
 <p><em>config.php</em> file is missing. If this is a new installation,
 copy <em>config.php.dist</em> to <em>config.php</em> and edit that file
 to ensure the MySQL access protocols match
-those you have specified for the $AppName database.</p>
+those you have specified for the WIKINDX database.</p>
 
 <p>Ensure also that the
 <em>components/languages</em>,
@@ -215,13 +212,12 @@ EOM;
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]));
 
 if (!class_exists("CONFIG")) {
-    $AppName = WIKINDX_TITLE_DEFAULT;
     $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>$AppName</title>
+	<title>WIKINDX</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="$styledir/template.css" type="text/css">
 	<link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
@@ -233,7 +229,7 @@ if (!class_exists("CONFIG")) {
 <p><strong>CONFIG</strong> class is missing in <em>config.php</em> file. If this is a new installation,
 copy <em>config.php.dist</em> to <em>config.php</em> and edit that file
 to ensure the MySQL access protocols match
-those you have specified for the $AppName database.</p>
+those you have specified for the WIKINDX database.</p>
 
 <p>Ensure also that the
 <em>components/languages</em>,

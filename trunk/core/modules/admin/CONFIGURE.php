@@ -313,7 +313,7 @@ class CONFIGURE
                 $this->db->updateNull('users', $nullsUserArray);
             }
             foreach ($updateArray as $field => $value) {
-                if ($field == 'configPrintSql') { // debugging configuration – see header() below
+                if ($field == 'configDebugSql') { // debugging configuration – see header() below
                     $headerRedirect = TRUE;
                 }
                 if ($value === FALSE) {
@@ -645,8 +645,8 @@ class CONFIGURE
         $input = array_key_exists("configErrorReport", $this->values) && ($this->values['configErrorReport']) ? "CHECKED" : WIKINDX_DEBUG_ERRORS_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "errorReport"), "configErrorReport", $input));
         
-        $input = array_key_exists("configPrintSql", $this->values) && ($this->values['configPrintSql']) ? "CHECKED" : WIKINDX_DEBUG_SQL_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "sqlStatements"), "configPrintSql", $input));
+        $input = array_key_exists("configDebugSql", $this->values) && ($this->values['configDebugSql']) ? "CHECKED" : WIKINDX_DEBUG_SQL_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "sqlStatements"), "configDebugSql", $input));
         
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "isTrunk"));
         $input = array_key_exists("configIsTrunk", $this->values) && ($this->values['configIsTrunk']) ? "CHECKED" : WIKINDX_IS_TRUNK_DEFAULT;
@@ -1687,7 +1687,7 @@ class CONFIGURE
                     "configBypassSmartyCompile",
                     "configErrorReport",
                     "configIsTrunk",
-                    "configPrintSql",
+                    "configDebugSql",
                 ];
 
                 break;
@@ -1900,7 +1900,7 @@ class CONFIGURE
                     "configNotify",
                     "configNotify",
                     "configOriginatorEditOnly",
-                    "configPrintSql",
+                    "configDebugSql",
                     "configQuarantine",
                     "configReadOnlyAccess",
                     "configRssAllow",

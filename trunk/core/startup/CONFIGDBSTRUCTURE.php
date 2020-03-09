@@ -111,7 +111,7 @@ class CONFIGDBSTRUCTURE
             'configMultiUser',
             'configNotify',
             'configOriginatorEditOnly',
-            'configPrintSql',
+            'configDebugSql',
             'configQuarantine',
             'configReadOnlyAccess',
             'configRssAllow',
@@ -196,7 +196,7 @@ class CONFIGDBSTRUCTURE
             'configPagingTagCloud' => 'WIKINDX_PAGING_TAG_CLOUD', // This is a user variables now found in GLOBALS::getUserVar()
             'configPasswordSize' => 'WIKINDX_PASSWORD_SIZE',
             'configPasswordStrength' => 'WIKINDX_PASSWORD_STRENGTH',
-            'configPrintSql' => 'WIKINDX_DEBUG_SQL',
+            'configDebugSql' => 'WIKINDX_DEBUG_SQL',
             'configQuarantine' => 'WIKINDX_QUARANTINE',
             'configReadOnlyAccess' => 'WIKINDX_READ_ONLY_ACCESS',
             'configRestrictUserId' => 'WIKINDX_RESTRICT_USERID',

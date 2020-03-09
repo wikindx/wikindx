@@ -213,7 +213,7 @@ INSERT INTO `wkx_config` (`configId`, `configName`, `configInt`, `configVarchar`
 (74, 'configImagesAllow', NULL, NULL, NULL, NULL, NULL),
 (75, 'configImagesMaxSize', 5, NULL, NULL, NULL, NULL),
 (76, 'configErrorReport', NULL, NULL, NULL, 1, NULL),
-(78, 'configPrintSql', NULL, NULL, NULL, 1, NULL),
+(78, 'configDebugSql', NULL, NULL, NULL, 1, NULL),
 (80, 'configBypassSmartyCompile', NULL, NULL, NULL, 0, NULL),
 (81, 'configDisplayStatistics', NULL, NULL, NULL, NULL, NULL),
 (82, 'configDisplayUserStatistics', NULL, NULL, NULL, NULL, NULL),

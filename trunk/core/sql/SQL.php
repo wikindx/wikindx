@@ -103,7 +103,7 @@ class SQL
     /**
      * Get database engine version as string
      *
-     * @return string
+     * @return string MySQL/mariaDB version number (e.g. 10.1.41-MariaDB-0+deb9u1)
      */
     public function getStringEngineVersion()
     {
@@ -594,7 +594,7 @@ class SQL
         return $recordset;
     }
     /**
-     * Create a UNION sub query -- MySQL 4.1 and above.
+     * Create a UNION sub query
      *
      * @param mixed $stmt string or array select statement(s) to be unionized
      * @param bool $all Default FALSE.  Set to TRUE to have 'UNION ALL'
@@ -2708,22 +2708,26 @@ class SQL
     {
         if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL) {
             $this->sqlTimerOn();
-            $EngineVersion = $this->getStringEngineVersion();
+            $EngineVersionRaw = $this->getStringEngineVersion();
             $this->sqlTimerOff();
             
-            $EngineVersion = strtolower($EngineVersion);
+            $EngineVersion = strtolower($EngineVersionRaw);
             
             if (strstr($EngineVersion, "mariadb")) {
+                $EngineName = "MariaDB";
                 $VersionMin = WIKINDX_MARIADB_VERSION_MIN; // Check MariaDB version
             } else {
+                $EngineName = "MySQL";
                 $VersionMin = WIKINDX_MYSQL_VERSION_MIN; // Check MySql or unknow engine version
             }
             
             // If the current engine version is lower than the minimum needed
             if (strcmp($EngineVersion, $VersionMin) < 0) {
-                $errorMessage = "In order to support UTF-8 character sets, WIKINDX requires MySQL " . WIKINDX_MYSQL_VERSION_MIN . " or greater,
-                                 or MariaDB " . WIKINDX_MARIADB_VERSION_MIN . " or greater. Your MySQL version is {" . $this->getStringEngineVersion() . "}.
-                                 Please upgrade MySQL or use WIKINDX v4.2.0 which supports MySQL v4.1 and above.";
+                $errorMessage = "
+                	WIKINDX requires " . $EngineName . " " . $VersionMin . ".
+                	Your version is " . $EngineVersionRaw . ".
+                	Please upgrade your db engine.
+                ";
                 GLOBALS::addTplVar('logsql', "<p style='font-weight:bold;color:red;'>" . $errorMessage . "</p>");
             }
         }

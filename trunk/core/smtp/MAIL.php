@@ -247,19 +247,4 @@ class MAIL
     {
         return WIKINDX_BASE_URL;
     }
-    /**
-     * Get SCRIPT_NAME if redirect is in force
-     *
-     * @return string
-     */
-    private function scriptName()
-    {
-        if (array_key_exists('REDIRECT_URI', $_SERVER)) {
-            $script = preg_replace("/.*index\\.php/u", '/index.php', $_SERVER['SCRIPT_NAME']);
-        } else {
-            $script = $_SERVER['SCRIPT_NAME'];
-        }
-
-        return $script;
-    }
 }

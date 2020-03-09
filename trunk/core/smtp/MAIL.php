@@ -238,13 +238,4 @@ class MAIL
 
         return $SendStatus;
     }
-    /**
-     * Get scriptPath
-     *
-     * @return string
-     */
-    public function scriptPath()
-    {
-        return WIKINDX_BASE_URL;
-    }
 }

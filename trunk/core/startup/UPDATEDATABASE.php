@@ -196,14 +196,25 @@ class UPDATEDATABASE
         }
         $dbVersion = \UPDATE\getDatabaseVersion($this->db);
 
-        // Check the minimum version upgradable
-        if ($dbVersion < 5.1)
+        // Check the minimum db version upgradable
+        if ($dbVersion < WIKINDX_INTERNAL_VERSION_UPGRADE_MIN)
         {
             GLOBALS::addTplVar("content", "
                 Your WIKINDX database version is $dbVersion. WIKINDX requires that you first upgrade
-                to WIKINDX v5.1 or later before attempting to upgrade to the latest version.
+                to WIKINDX v" . WIKINDX_INTERNAL_VERSION_UPGRADE_MIN . " or later before attempting to upgrade to the latest version.
                 v6.0.8 is recommended as a transition version if you need yet PHP 5.6 support.
                 v6.1.0 is recommended as a transition version if you don't need PHP 5.6 support (PHP 7.0 minimum).
+            ");
+            FACTORY_CLOSENOMENU::getInstance(); // die
+        }
+
+        // Check the maximum db version upgradable
+        if ($dbVersion > WIKINDX_INTERNAL_VERSION)
+        {
+            GLOBALS::addTplVar("content", "
+                Your WIKINDX database version is $dbVersion.
+                This version of the application (" . WIKINDX_PUBLIC_VERSION . ") is not compatible with a version of the database greater than " WIKINDX_INTERNAL_VERSION ".
+                Please upgrade the application or restore a previous database.
             ");
             FACTORY_CLOSENOMENU::getInstance(); // die
         }

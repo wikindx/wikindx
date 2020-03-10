@@ -213,7 +213,7 @@ class UPDATEDATABASE
         {
             GLOBALS::addTplVar("content", "
                 Your WIKINDX database version is $dbVersion.
-                This version of the application (" . WIKINDX_PUBLIC_VERSION . ") is not compatible with a version of the database greater than " WIKINDX_INTERNAL_VERSION ".
+                This version of the application (" . WIKINDX_PUBLIC_VERSION . ") is not compatible with a version of the database greater than " . WIKINDX_INTERNAL_VERSION  . ".
                 Please upgrade the application or restore a previous database.
             ");
             FACTORY_CLOSENOMENU::getInstance(); // die

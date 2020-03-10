@@ -264,7 +264,7 @@ class USER
     {
         // First delete any pre-existing session
         $this->session->clearSessionData();
-        if ($row['usersAdmin'] == 'Y') {
+        if ($row['usersAdmin']) {
             $this->session->setVar("setup_Superadmin", TRUE);
         }
         $this->session->setVar("setup_UserId", $row['usersId']);

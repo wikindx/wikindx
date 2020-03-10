@@ -121,6 +121,7 @@ class CONFIGDBSTRUCTURE
         'configCmsSql' => 'WIKINDX_CMS_SQL',
         'configContactEmail' => 'WIKINDX_CONTACT_EMAIL',
         'configDeactivateResourceTypes' => 'WIKINDX_DEACTIVATE_RESOURCE_TYPES',
+        'configDebugSql' => 'WIKINDX_DEBUG_SQL',
         'configDenyReadOnly' => 'WIKINDX_DENY_READONLY',
         'configDescription' => 'WIKINDX_DESCRIPTION',
         'configDisplayStatistics' => 'WIKINDX_DISPLAY_STATISTICS',
@@ -176,7 +177,6 @@ class CONFIGDBSTRUCTURE
         'configPagingTagCloud' => 'WIKINDX_PAGING_TAG_CLOUD', // This is a user variables now found in GLOBALS::getUserVar()
         'configPasswordSize' => 'WIKINDX_PASSWORD_SIZE',
         'configPasswordStrength' => 'WIKINDX_PASSWORD_STRENGTH',
-        'configDebugSql' => 'WIKINDX_DEBUG_SQL',
         'configQuarantine' => 'WIKINDX_QUARANTINE',
         'configReadOnlyAccess' => 'WIKINDX_READ_ONLY_ACCESS',
         'configRestrictUserId' => 'WIKINDX_RESTRICT_USERID',

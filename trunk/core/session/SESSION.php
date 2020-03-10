@@ -192,8 +192,6 @@ class SESSION
             $stateOut = '';
             foreach ($sessionKeyList as $sessionKey) {
                 $value = $this->getArray($sessionKey);
-                //if($sessionKey = 'list')
-                //	print "$sessionKey: "; print_r($value); print '<p>';
                 if (count($value) > 0) {
                     $sessionData[$sessionKey] = base64_encode(serialize($value));
                 } else {

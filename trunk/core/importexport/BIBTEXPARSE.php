@@ -48,75 +48,9 @@
  */
 class BIBTEXPARSE
 {
+
     /**
      * BIBTEXPARSE
-     *
-     * For a quick command-line test (php -f PARSEENTRIES.php) after installation, uncomment these lines:
-     *
-     * Parse a file
-     *	$parse = NEW PARSEENTRIES();
-     * $parse->expandMacro = TRUE;
-     * //	$array = array("RMP" =>"Rev., Mod. Phys.");
-     * //	$parse->loadStringMacro($array);
-     * //	$parse->removeDelimit = FALSE;
-     * //	$parse->fieldExtract = FALSE;
-     *	$parse->openBib("bib.bib");
-     *	$parse->extractEntries();
-     *	$parse->closeBib();
-     *	list($preamble, $strings, $entries, $undefinedStrings) = $parse->returnArrays();
-     *	print_r($preamble);
-     *	print "\n";
-     *	print_r($strings);
-     *	print "\n";
-     *	print_r($entries);
-     *	print "\n\n";
-     *
-     *
-     * // Parse a bibtex PHP string
-     *	$bibtex_data = <<<END
-     *
-     * \@STRING{three = "THREE"}
-     * \@STRING{two = "TWO"}
-     * \@string{JRNL23 = {NatLA 23 } # " " # two # " " # three}
-     *
-     * \@article{klitzing.1,
-     *	author = "v. Klitzing and Dorda and Pepper",
-     *	title = "New method for high mark@sirfragalot.com accuracy determination of fine structure constant based on quantized hall resistance",
-     *	volume = "45",
-     *	journal = {Journal of } # JRNL23,
-     *	pages = "494",
-     *              citeulike-article-id = {12222
-     *    }
-     *               ,
-     *               ignoreMe = {blah}, }
-     *
-     * \@article
-     *{
-     *klitzing.2,
-     *	author = "Klaus von Klitzing",
-     *	title = "The Quantized Hall Effect",
-     *	volume = "58",
-     *	journal = two,
-     *	pages = "519",
-     *}
-     *
-     *END;
-     *
-     *	$parse = NEW PARSEENTRIES();
-     *	$parse->expandMacro = TRUE;
-     * //	$parse->removeDelimit = FALSE;
-     * //	$parse->fieldExtract = FALSE;
-     *	$array = array("RMP" =>"Rev., Mod. Phys.");
-     *	$parse->loadStringMacro($array);
-     *	$parse->loadBibtexString($bibtex_data);
-     *	$parse->extractEntries();
-     *	list($preamble, $strings, $entries, $undefinedStrings) = $parse->returnArrays();
-     *	print_r($preamble);
-     *	print "\n";
-     *	print_r($strings);
-     *	print "\n";
-     *	print_r($entries);
-     *	print "\n\n";
      */
     public function __construct()
     {

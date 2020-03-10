@@ -818,7 +818,6 @@ class CITEFORMAT
             $input1 = $input2 = $lastSplit;
         }
         //$pattern = "(Grimshaw et al.)|(Grimshaw's)|(Grimshaw')|(Grimshaw)";
-        //print_r($pattern); print '<p>';
         if (preg_match("/\\b$pattern\\b/u", $input1, $matchName)) {
             if (array_key_exists('followCreatorPageSplit', $this->style) &&
             !preg_match("/$patternEnd/u", $input2)) {

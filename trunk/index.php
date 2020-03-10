@@ -41,7 +41,6 @@ if (array_key_exists('method', $vars) && ($vars['method'] == 'RSS')) {
 $session = FACTORY_SESSION::getInstance();
 $session->setVar("bookmark_DisplayAdd", FALSE);
 $session->delVar("bookmark_MultiView");
-//print_r($_SESSION);
 /**
  * If we get here, we're cleared to proceed.  If there is no $vars['action'], send users to the front of wikindx,
  * otherwise load the requested module.

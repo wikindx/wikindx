@@ -154,7 +154,6 @@ class CLOSE
         // Extract data of all template variables form the global store and give them to the template system
         foreach ($tplKeys as $k) {
             $tplVars = GLOBALS::getTplVar($k);
-            //print_r($tplVars); print '<p>';
             $s = '';
             $t = NULL; // Type of the variable to give to the template
 

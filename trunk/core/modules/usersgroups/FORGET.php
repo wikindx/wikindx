@@ -30,8 +30,6 @@ class FORGET
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-
-
         $this->badInput = FACTORY_BADINPUT::getInstance();
     }
     /**
@@ -192,7 +190,6 @@ class FORGET
         $pString = \HTML\p($this->messages->text("user", "forget1"));
         $pString .= \HTML\p($this->messages->text("user", "forget5"));
         $pString .= \HTML\p($this->messages->text("user", "forget2"));
-        //		print_r($this->session->getArray('mywikindx'));
         for ($i = 1; $i < 4; $i++) {
             $question = $this->session->issetVar("mywikindx_usersPasswordQuestion$i") ?
                 \HTML\dbToFormTidy($this->session->getVar("mywikindx_usersPasswordQuestion$i")) : FALSE;

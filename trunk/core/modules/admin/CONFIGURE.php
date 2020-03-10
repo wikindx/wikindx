@@ -1273,7 +1273,7 @@ class CONFIGURE
      */
     private function emailConfigDisplay()
     {
-        $pString = "";
+        $pString = $this->errorString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $input = array_key_exists("configMailUse", $this->values) && ($this->values['configMailUse']) ? "CHECKED" : WIKINDX_MAIL_USE_DEFAULT;

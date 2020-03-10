@@ -18,8 +18,6 @@ class KEYWORD
     /** object */
     private $db;
     /** object */
-    private $messages;
-    /** object */
     private $commonBib;
 
     /**
@@ -28,8 +26,6 @@ class KEYWORD
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
-
-        $this->messages = FACTORY_MESSAGES::getInstance();
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
     }
     /**
@@ -289,17 +285,8 @@ class KEYWORD
      */
     public function transferArrows()
     {
-        $jsonArray = [];
-        $jsonArray[] = [
-            'startFunction' => 'selectKeyword',
-        ];
-        $toRightImage = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
-        $jsonArray = [];
-        $jsonArray[] = [
-            'startFunction' => 'discardKeyword',
-        ];
-        $toLeftImage = \AJAX\jActionIcon('toLeft', 'onclick', $jsonArray);
-
+        $toRightImage = \AJAX\jActionIcon('toRight', 'onclick', ['startFunction' => 'selectKeyword']);
+        $toLeftImage  = \AJAX\jActionIcon('toLeft',  'onclick', ['startFunction' => 'discardKeyword']);
         return [$toRightImage, $toLeftImage];
     }
 }

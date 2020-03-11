@@ -41,7 +41,7 @@ class CONFIGDBSTRUCTURE
     public function getOne(string $field)
     {
         if (!array_key_exists($field, WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
-            die('Supply a configuration variable to search on');
+            die('CONFIGDBSTRUCTURE->getOne(): bad config option name requested:' . $field);
         }
         $column = WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field];
         $this->db->formatConditions(['configName' => $field]);
@@ -86,11 +86,18 @@ class CONFIGDBSTRUCTURE
      */
     public function getData($match)
     {
-        $field = 'configName';
-        $row = [];
         if (!is_array($match)) {
             $match = [$match];
         }
+        
+        foreach ($match as $configName) {
+	        if (!array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS_NAME)) {
+	            die('CONFIGDBSTRUCTURE->getData(): bad config option name requested:' . $configName);
+	        }
+        }
+        
+        $field = 'configName';
+        $row = [];
         $this->db->formatConditionsOneField($match, $field);
         $resultSet = $this->db->select('config', '*');
         while ($coRow = $this->db->fetchRow($resultSet)) {
@@ -106,8 +113,6 @@ class CONFIGDBSTRUCTURE
                         $row[$coRow[$field]] = unserialize(base64_decode(constant($constName . "_DEFAULT")));
                     }
                 }
-            } else {
-                die("CONFIGDBSTRUCTURE->getData(): bad config option name requested: " . $coRow[$field]);
             }
         }
         
@@ -138,7 +143,7 @@ class CONFIGDBSTRUCTURE
     public function updateOne(string $name, $value)
     {
         if (!array_key_exists($name, WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
-            die('Supply a configuration variable to update');
+            die('CONFIGDBSTRUCTURE->updateOne(): bad config option name updated:' . $name);
         }
         
         // Serialize some options

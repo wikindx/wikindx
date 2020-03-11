@@ -343,9 +343,9 @@ if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['S
  *	Initialize the system
  *  The dynamic part of the config is loaded (db).
  */
-FACTORY_LOADCONFIG::getInstance()->loadUserVars();
-
 FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
+
+FACTORY_LOADCONFIG::getInstance()->loadUserVars();
 
 // Locales setting needs to know the language prefered by the user which is now in GLOBALS
 include_once("core/locales/LOCALES.php");

@@ -55,10 +55,10 @@ class CONFIGURE
     {
         // Anything in the session takes precedence
         if (($messageIn = $this->session->getVar("configmessage")) && ($itemIn = $this->session->getVar("configitem"))) {
-            $this->session->delVar("configmessage");
-            $this->session->delVar("configitem");
             $messageString = $messageIn;
             $item = $itemIn;
+        	$this->session->delVar("configmessage");
+        	$this->session->delVar("configitem");
         } elseif (is_array($message)) {
             $messageString = $message[0];
             $item = $message[1];
@@ -124,7 +124,10 @@ class CONFIGURE
     public function displayFrontDescription()
     {
         $this->values = $this->fromDbToSession();
-        $pString = $this->tinymce->loadMinimalTextarea(['configDescription'], TRUE);
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "configure"));
+        $pString = $this->session->getVar("configmessage");
+        $this->session->delVar("configmessage");
+        $pString .= $this->tinymce->loadMinimalTextarea(['configDescription'], TRUE);
         $pString .= \FORM\formHeader("admin_CONFIGURE_CORE", "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden("method", "writeDb");
         $pString .= \FORM\hidden("selectItem", 'frontDescription');
@@ -1644,6 +1647,7 @@ class CONFIGURE
                 $array = [
                     "configDescription",
                 ];
+            	$this->session->setVar("configmessage", $this->success->text("config"));
 
                 break;
             case 'resources': // resources page configuration

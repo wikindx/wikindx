@@ -687,10 +687,10 @@ class CONFIGURE
             "configUserRegistrationModerate",
             $input
         ) . BR . \HTML\span($hint, 'hint'));
-        $input = array_key_exists("usersEmailNewRegistrations", $this->values) ? $this->values["usersEmailNewRegistrations"] : WIKINDX_EMAIL_NEW_REGISTRATIONS_DEFAULT;
+        $input = array_key_exists("configEmailNewRegistrations", $this->values) ? $this->values["configEmailNewRegistrations"] : WIKINDX_EMAIL_NEW_REGISTRATIONS_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "emailNewRegistrations"),
-            "usersEmailNewRegistrations",
+            "configEmailNewRegistrations",
             $input,
             30
         ) . BR . \HTML\span($hint, 'hint'));
@@ -1702,7 +1702,7 @@ class CONFIGURE
                     "configDenyReadOnly",
                     "configDisplayStatistics",
                     "configDisplayUserStatistics",
-                    "usersEmailNewRegistrations",
+                    "configEmailNewRegistrations",
                     "configGlobalEdit",
                     "configImportBib",
                     "configMetadataAllow",

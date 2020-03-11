@@ -673,24 +673,7 @@ class USER
         $preferences["UseWikindxKey"] = WIKINDX_USE_WIKINDX_KEY_DEFAULT;
 
         foreach ($preferences as $pref => $default) {
-            /*            if ($pref == 'TemplateMenu')
-                        {
-                            if ($newUser)
-                            {
-                                $updateArray['users' . $pref] = $default;
-                            }
-                            elseif (!GLOBALS::getUserVar('TemplateMenu'))
-                            { // no level reduction
-                                $updateArray['users' . $pref] = WIKINDX_TEMPLATE_MENU_DEFAULT;
-                            }
-                            else
-                            {
-                                $updateArray['users' . $pref] = GLOBALS::getUserVar('TemplateMenu');
-                            }
-
-                            continue;
-                        }
-            */            if ($newUser) {
+            if ($newUser) {
                 $updateArray['users' . $pref] = $default;
             } elseif ($value = GLOBALS::getUserVar($pref)) {
                 $updateArray['users' . $pref] = $value;

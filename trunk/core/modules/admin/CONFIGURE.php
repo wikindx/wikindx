@@ -265,7 +265,7 @@ class CONFIGURE
             $usersFieldArray = $usersValueArray = [];
             // if inserting after initial install, write superadmin's preferences to users table and create user session
             $usersFieldArray[] = 'usersUsername';
-            $usersValueArray[] = $this->vars['configUsername'];
+            $usersValueArray[] = $this->vars['usersUsername'];
             $usersFieldArray[] = 'usersPassword';
             $usersValueArray[] = crypt($this->vars['password'], UTF8::mb_strrev(time()));
             $usersFieldArray[] = 'usersEmail';
@@ -276,8 +276,8 @@ class CONFIGURE
                 $usersFieldArray[] = 'usersFullname';
                 $usersValueArray[] = $this->vars['configFullname'];
             }
-            if (array_key_exists('configIsCreator', $this->vars) && $this->vars['configIsCreator']) {
-                $usersValueArray[] = $this->vars['configIsCreator'];
+            if (array_key_exists('usersIsCreator', $this->vars) && $this->vars['usersIsCreator']) {
+                $usersValueArray[] = $this->vars['usersIsCreator'];
                 $usersFieldArray[] = 'usersIsCreator';
             }
             $this->db->insert('users', $usersFieldArray, $usersValueArray);
@@ -287,8 +287,8 @@ class CONFIGURE
             $updateUserArray = $nullsUserArray = [];
             $configFields = $this->configDbStructure->getAllData();
             // Write user table first if updating superadmin information
-            if (array_key_exists('configUsername', $this->vars)) {
-                $updateUserArray['usersUsername'] = $this->vars['configUsername'];
+            if (array_key_exists('usersUsername', $this->vars)) {
+                $updateUserArray['usersUsername'] = $this->vars['usersUsername'];
             }
             if (array_key_exists('configEmail', $this->vars)) {
                 $updateUserArray['usersEmail'] = $this->vars['configEmail'];
@@ -300,11 +300,15 @@ class CONFIGURE
             if (array_key_exists('configFullname', $this->vars)) {
                 $updateUserArray['usersFullname'] = $this->vars['configFullname'];
             }
-            if (array_key_exists('configIsCreator', $this->vars) && $this->vars['configIsCreator']) {
-                $updateUserArray['usersIsCreator'] = $this->vars['configIsCreator'];
-            } else {
-                $nullsUserArray[] = 'usersIsCreator';
+            if (array_key_exists('usersIsCreator', $this->vars) && $this->vars['usersIsCreator']) {
+            //die($this->vars['usersIsCreator']);
+            //error_log(print_r($this->vars['usersIsCreator'], true));
+                if ($this->vars['usersIsCreator'] != "0")
+                    $updateUserArray['usersIsCreator'] = $this->vars['usersIsCreator'];
+                else
+                    $nullsUserArray[] = 'usersIsCreator';
             }
+            //die("AAAAAAAA");
             if (!empty($updateUserArray)) {
                 $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
                 $this->db->update('users', $updateUserArray);
@@ -433,7 +437,7 @@ class CONFIGURE
         $pString = '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/admin/configure.js"></script>';
         if ($item == 'super') {
             $password = FACTORY_PASSWORD::getInstance();
-            $input = array_key_exists("configUsername", $this->values) ? $this->values["configUsername"] : FALSE;
+            $input = array_key_exists("usersUsername", $this->values) ? $this->values["usersUsername"] : FALSE;
             list($formText, $jsString) = $password->createElements($input, TRUE);
             $pString .= \FORM\formHeader("admin_CONFIGURE_CORE", 'onsubmit="selectAll();return checkForm(' . $jsString . ');"');
         } else {
@@ -614,10 +618,10 @@ class CONFIGURE
         if (is_array($creators)) {
             // add 0 => IGNORE to creators array
             $creators = [0 => $this->messages->text("misc", "ignore")] + $creators;
-            $input = array_key_exists("configIsCreator", $this->values) ? $this->values["configIsCreator"] : FALSE;
+            $input = array_key_exists("usersIsCreator", $this->values) ? $this->values["usersIsCreator"] : FALSE;
             $pString .= \HTML\td(\FORM\selectedBoxValue(
                 $this->messages->text("user", "isCreator"),
-                "configIsCreator",
+                "usersIsCreator",
                 $creators,
                 $input,
                 1
@@ -1921,10 +1925,10 @@ class CONFIGURE
         } else {
             $this->session->delVar("config_configFullname");
         }
-        if (array_key_exists('configIsCreator', $this->vars)) {
-            $array['configIsCreator'] = trim($this->vars['configIsCreator']);
+        if (array_key_exists('usersIsCreator', $this->vars)) {
+            $array['usersIsCreator'] = trim($this->vars['usersIsCreator']);
         } else {
-            $this->session->delVar("config_configIsCreator");
+            $this->session->delVar("config_usersIsCreator");
         }
         if (array_key_exists('configEmail', $this->vars)) {
             $array['configEmail'] = trim($this->vars['configEmail']);
@@ -1966,14 +1970,14 @@ class CONFIGURE
             "configTagLowColour",
             "configTemplate",
             "configTimezone",
-            "configUsername",
+            "usersUsername",
             "password",
             "passwordConfirm",
         ];
         foreach ($required as $value) {
             if (array_key_exists($value, $this->vars)) {
                 $input = trim($this->vars[$value]);
-                if ($value == 'configUsername') {
+                if ($value == 'usersUsername') {
                     if (array_search(mb_strtolower($input), ['sa', 'admin', 'super', 'superadmin'])) {
                         $this->badInputLoad($this->errors->text("inputError", 'badUsername', " ($value) "), $this->vars['selectItem']);
                     }
@@ -2120,11 +2124,11 @@ class CONFIGURE
             $recordset = $this->db->select('users', ['usersUsername', 'usersPassword',
                 'usersFullname', 'usersEmail', 'usersAdmin', 'usersIsCreator', ]);
             $rowT = $this->db->fetchRow($recordset);
-            $row['configUsername'] = $rowT['usersUsername'];
+            $row['usersUsername'] = $rowT['usersUsername'];
             $row['password'] = $row['passwordConfirm'] = $rowT['usersPassword'];
             $row['configFullname'] = $rowT['usersFullname'];
             $row['configEmail'] = $rowT['usersEmail'];
-            $row['configIsCreator'] = $rowT['usersIsCreator'];
+            $row['usersIsCreator'] = $rowT['usersIsCreator'];
         }
         // 'lastChanges' can be 0 so may not exist if called from the session
         if (!array_key_exists('configLastChanges', $row) || !$row['configLastChanges']) {

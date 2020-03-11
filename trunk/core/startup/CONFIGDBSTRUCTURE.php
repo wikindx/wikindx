@@ -17,190 +17,6 @@
  */
 class CONFIGDBSTRUCTURE
 {
-    /** array */
-    public $dbStructure = [
-		'configAuthGate' => 'configBoolean',
-		'configAuthGateMessage' => 'configVarchar',
-		'configBypassSmartyCompile' => 'configBoolean',
-		'configCmsAllow' => 'configBoolean',
-		'configCmsBibstyle' => 'configVarchar',
-		'configCmsDbPassword' => 'configVarchar',
-		'configCmsDbUser' => 'configVarchar',
-		'configCmsSql' => 'configBoolean',
-		'configContactEmail' => 'configVarchar',
-		'configDeactivateResourceTypes' => 'configText',
-		'configDebugSql' => 'configBoolean',
-		'configDenyReadOnly' => 'configBoolean',
-		'configDescription' => 'configText',
-		'configDisplayStatistics' => 'configBoolean',
-		'configDisplayUserStatistics' => 'configBoolean',
-		'configEmailNewRegistrations' => 'configVarchar',
-		'configEmailNews' => 'configBoolean',
-		'configEmailStatistics' => 'configBoolean',
-		'configErrorReport' => 'configBoolean',
-		'configFileAttach' => 'configBoolean',
-		'configFileDeleteSeconds' => 'configInt',
-		'configFileViewLoggedOnOnly' => 'configBoolean',
-		'configGlobalEdit' => 'configBoolean',
-		'configGsAllow' => 'configBoolean',
-		'configGsAttachment' => 'configBoolean',
-		'configImagesAllow' => 'configBoolean',
-		'configImagesMaxSize' => 'configInt',
-		'configImgHeightLimit' => 'configInt',
-		'configImgWidthLimit' => 'configInt',
-		'configImportBib' => 'configBoolean',
-		'configIsTrunk' => 'configBoolean',
-		'configLanguage' => 'configVarchar',
-		'configLastChanges' => 'configInt',
-		'configLastChangesDayLimit' => 'configInt',
-		'configLastChangesType' => 'configVarchar',
-		'configLdapDn' => 'configVarchar',
-		'configLdapPort' => 'configInt',
-		'configLdapProtocolVersion' => 'configInt',
-		'configLdapServer' => 'configVarchar',
-		'configLdapUse' => 'configBoolean',
-		'configListLink' => 'configBoolean',
-		'configMailBackend' => 'configVarchar',
-		'configMailFrom' => 'configVarchar',
-		'configMailReplyTo' => 'configVarchar',
-		'configMailReturnPath' => 'configVarchar',
-		'configMailSmPath' => 'configVarchar',
-		'configMailSmtpAuth' => 'configBoolean',
-		'configMailSmtpEncrypt' => 'configVarchar',
-		'configMailSmtpPassword' => 'configVarchar',
-		'configMailSmtpPersist' => 'configBoolean',
-		'configMailSmtpPort' => 'configInt',
-		'configMailSmtpServer' => 'configVarchar',
-		'configMailSmtpUsername' => 'configVarchar',
-		'configMailUse' => 'configBoolean',
-		'configMaxPaste' => 'configInt',
-		'configMetadataAllow' => 'configBoolean',
-		'configMetadataUserOnly' => 'configBoolean',
-		'configMultiUser' => 'configBoolean',
-		'configNoSort' => 'configText',
-		'configNotify' => 'configBoolean',
-		'configOriginatorEditOnly' => 'configBoolean',
-		'configPaging' => 'configInt',
-		'configPagingMaxLinks' => 'configInt',
-		'configPagingTagCloud' => 'configInt',
-		'configPasswordSize' => 'configInt',
-		'configPasswordStrength' => 'configVarchar',
-		'configQuarantine' => 'configBoolean',
-		'configReadOnlyAccess' => 'configBoolean',
-		'configRestrictUserId' => 'configInt',
-		'configRssAllow' => 'configBoolean',
-		'configRssBibstyle' => 'configVarchar',
-		'configRssDescription' => 'configVarchar',
-		'configRssDisplay' => 'configBoolean',
-		'configRssLimit' => 'configInt',
-		'configRssTitle' => 'configVarchar',
-		'configSearchFilter' => 'configText',
-		'configSiteMapAllow' => 'configBoolean',
-		'configStatisticsCompiled' => 'configDatetime',
-		'configStringLimit' => 'configInt',
-		'configStyle' => 'configVarchar',
-		'configTagHighColour' => 'configVarchar',
-		'configTagHighFactor' => 'configInt',
-		'configTagLowColour' => 'configVarchar',
-		'configTagLowFactor' => 'configInt',
-		'configTemplate' => 'configVarchar',
-		'configTimezone' => 'configVarchar',
-		'configTitle' => 'configVarchar',
-		'configUserRegistration' => 'configBoolean',
-		'configUserRegistrationModerate' => 'configBoolean',
-	];
-    /** array */
-    public $configToConstant = [
-        'configAuthGate' => 'WIKINDX_AUTHGATE_USE',
-        'configAuthGateMessage' => 'WIKINDX_AUTHGATE_MESSAGE',
-        'configBypassSmartyCompile' => 'WIKINDX_BYPASS_SMARTY_COMPILATION',
-        'configCmsAllow' => 'WIKINDX_CMS_ALLOW',
-        'configCmsBibstyle' => 'WIKINDX_CMS_BIBSTYLE',
-        'configCmsDbPassword' => 'WIKINDX_CMS_DB_PASSWORD',
-        'configCmsDbUser' => 'WIKINDX_CMS_DB_USER',
-        'configCmsSql' => 'WIKINDX_CMS_SQL',
-        'configContactEmail' => 'WIKINDX_CONTACT_EMAIL',
-        'configDeactivateResourceTypes' => 'WIKINDX_DEACTIVATE_RESOURCE_TYPES',
-        'configDebugSql' => 'WIKINDX_DEBUG_SQL',
-        'configDenyReadOnly' => 'WIKINDX_DENY_READONLY',
-        'configDescription' => 'WIKINDX_DESCRIPTION',
-        'configDisplayStatistics' => 'WIKINDX_DISPLAY_STATISTICS',
-        'configDisplayUserStatistics' => 'WIKINDX_DISPLAY_USER_STATISTICS',
-        'configEmailNewRegistrations' => 'WIKINDX_EMAIL_NEW_REGISTRATIONS',
-        'configEmailNews' => 'WIKINDX_EMAIL_NEWS',
-        'configEmailStatistics' => 'WIKINDX_EMAIL_STATISTICS',
-        'configErrorReport' => 'WIKINDX_DEBUG_ERRORS',
-        'configFileAttach' => 'WIKINDX_FILE_ATTACH',
-        'configFileDeleteSeconds' => 'WIKINDX_FILE_DELETE_SECONDS',
-        'configFileViewLoggedOnOnly' => 'WIKINDX_FILE_VIEW_LOGGEDON_ONLY',
-        'configGlobalEdit' => 'WIKINDX_GLOBAL_EDIT',
-        'configGsAllow' => 'WIKINDX_GS_ALLOW',
-        'configGsAttachment' => 'WIKINDX_GS_ATTACHMENT',
-        'configImagesAllow' => 'WIKINDX_IMAGES_ALLOW',
-        'configImagesMaxSize' => 'WIKINDX_IMAGES_MAXSIZE',
-        'configImgHeightLimit' => 'WIKINDX_IMG_HEIGHT_LIMIT',
-        'configImgWidthLimit' => 'WIKINDX_IMG_WIDTH_LIMIT',
-        'configImportBib' => 'WIKINDX_IMPORT_BIB',
-        'configIsTrunk' => 'WIKINDX_IS_TRUNK',
-        'configLanguage' => 'WIKINDX_LANGUAGE', // These is also a user variable needed for the logon page where the defaults are required.
-        'configLastChanges' => 'WIKINDX_LAST_CHANGES',
-        'configLastChangesDayLimit' => 'WIKINDX_LAST_CHANGES_DAY_LIMIT',
-        'configLastChangesType' => 'WIKINDX_LAST_CHANGES_TYPE',
-        'configLdapDn' => 'WIKINDX_LDAP_DN',
-        'configLdapPort' => 'WIKINDX_LDAP_PORT',
-        'configLdapProtocolVersion' => 'WIKINDX_LDAP_PROTOCOL_VERSION',
-        'configLdapServer' => 'WIKINDX_LDAP_SERVER',
-        'configLdapUse' => 'WIKINDX_LDAP_USE',
-        'configListLink' => 'WIKINDX_LIST_LINK',
-        'configMailBackend' => 'WIKINDX_MAIL_BACKEND',
-        'configMailFrom' => 'WIKINDX_MAIL_FROM',
-        'configMailReplyTo' => 'WIKINDX_MAIL_REPLYTO',
-        'configMailReturnPath' => 'WIKINDX_MAIL_RETURN_PATH',
-        'configMailSmPath' => 'WIKINDX_MAIL_SENDMAIL_PATH',
-        'configMailSmtpAuth' => 'WIKINDX_MAIL_SMTP_AUTH',
-        'configMailSmtpEncrypt' => 'WIKINDX_MAIL_SMTP_ENCRYPT',
-        'configMailSmtpPassword' => 'WIKINDX_MAIL_SMTP_PASSWORD',
-        'configMailSmtpPersist' => 'WIKINDX_MAIL_SMTP_PERSIST',
-        'configMailSmtpPort' => 'WIKINDX_MAIL_SMTP_PORT',
-        'configMailSmtpServer' => 'WIKINDX_MAIL_SMTP_SERVER',
-        'configMailSmtpUsername' => 'WIKINDX_MAIL_SMTP_USERNAME',
-        'configMailUse' => 'WIKINDX_MAIL_USE',
-        'configMaxPaste' => 'WIKINDX_MAX_PASTE',
-        'configMetadataAllow' => 'WIKINDX_METADATA_ALLOW',
-        'configMetadataUserOnly' => 'WIKINDX_METADATA_USERONLY',
-        'configMultiUser' => 'WIKINDX_MULTIUSER',
-        'configNoSort' => 'WIKINDX_NO_SORT',
-        'configNotify' => 'WIKINDX_NOTIFY',
-        'configOriginatorEditOnly' => 'WIKINDX_ORIGINATOR_EDIT_ONLY',
-        'configPaging' => 'WIKINDX_PAGING', // This is a user variables now found in GLOBALS::getUserVar()
-        'configPagingMaxLinks' => 'WIKINDX_PAGING_MAXLINKS', // This is a user variables now found in GLOBALS::getUserVar()
-        'configPagingTagCloud' => 'WIKINDX_PAGING_TAG_CLOUD', // This is a user variables now found in GLOBALS::getUserVar()
-        'configPasswordSize' => 'WIKINDX_PASSWORD_SIZE',
-        'configPasswordStrength' => 'WIKINDX_PASSWORD_STRENGTH',
-        'configQuarantine' => 'WIKINDX_QUARANTINE',
-        'configReadOnlyAccess' => 'WIKINDX_READ_ONLY_ACCESS',
-        'configRestrictUserId' => 'WIKINDX_RESTRICT_USERID',
-        'configRssAllow' => 'WIKINDX_RSS_ALLOW',
-        'configRssBibstyle' => 'WIKINDX_RSS_BIBSTYLE',
-        'configRssDescription' => 'WIKINDX_RSS_DESCRIPTION',
-        'configRssDisplay' => 'WIKINDX_RSS_DISPLAY',
-        'configRssLimit' => 'WIKINDX_RSS_LIMIT',
-        'configRssTitle' => 'WIKINDX_RSS_TITLE',
-        'configSearchFilter' => 'WIKINDX_SEARCH_FILTER',
-        'configSiteMapAllow' => 'WIKINDX_SITEMAP_ALLOW',
-        'configStatisticsCompiled' => 'WIKINDX_STATISTICS_COMPILED',
-        'configStringLimit' => 'WIKINDX_STRING_LIMIT', // This is a user variables now found in GLOBALS::getUserVar()
-        'configStyle' => 'WIKINDX_STYLE', // This is a user variables now found in GLOBALS::getUserVar()
-        'configTagHighColour' => 'WIKINDX_TAG_HIGH_COLOUR',
-        'configTagHighFactor' => 'WIKINDX_TAG_HIGH_FACTOR',
-        'configTagLowColour' => 'WIKINDX_TAG_LOW_COLOUR',
-        'configTagLowFactor' => 'WIKINDX_TAG_LOW_FACTOR',
-        'configTemplate' => 'WIKINDX_TEMPLATE', // These is also a user variable needed for the logon page where the defaults are required.
-        'configTimezone' => 'WIKINDX_TIMEZONE',
-        'configTitle' => 'WIKINDX_TITLE',
-        'configUserRegistration' => 'WIKINDX_USER_REGISTRATION',
-        'configUserRegistrationModerate' => 'WIKINDX_USER_REGISTRATION_MODERATE',
-    ];
     /** object */
     private $db;
 
@@ -214,7 +30,7 @@ class CONFIGDBSTRUCTURE
     /**
      * Get and return one value from the config table.
      *
-     * Requested value must be a configName value that is in $this->dbStructure. For other values, use standard $db functions.
+     * Requested value must be a configName value that is in WIKINDX_LIST_CONFIG_OPTIONS_TYPE. For other values, use standard $db functions.
      *
      * Result is returned as a number if the value is stored in configInt columns else the return result is a string or a boolean
      *
@@ -222,13 +38,12 @@ class CONFIGDBSTRUCTURE
      *
      * @return bool|float|string
      */
-    public function getOne($field)
+    public function getOne(string $field)
     {
-        $field = (string)$field;
-        if (!array_key_exists($field, $this->dbStructure)) {
+        if (!array_key_exists($field, WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
             die('Supply a configuration variable to search on');
         }
-        $column = $this->dbStructure[$field];
+        $column = WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field];
         $this->db->formatConditions(['configName' => $field]);
         $value = $this->db->fetchOne($this->db->select('config', $column));
 
@@ -246,14 +61,14 @@ class CONFIGDBSTRUCTURE
         $resultSet = $this->db->select('config', '*');
         while ($coRow = $this->db->fetchRow($resultSet)) {
             // NB we grab only basic configuration variables – extra rows are added e.g. by localeDescription plugin
-            if (array_key_exists($coRow[$field], $this->dbStructure)) {
-                $row[$coRow[$field]] = $this->convertVarDB2PHP($this->dbStructure[$coRow[$field]], $coRow[$this->dbStructure[$coRow[$field]]]);
+            if (array_key_exists($coRow[$field], WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
+                $row[$coRow[$field]] = $this->convertVarDB2PHP(WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$coRow[$field]], $coRow[WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$coRow[$field]]]);
                 
                 // Unserialize some options
                 if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
                     $row[$coRow[$field]] = unserialize(base64_decode($row[$coRow[$field]]));
                     if (!is_array($row[$coRow[$field]])) {
-                        $constName = $co->configToConstant[$coRow[$field]];
+                        $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$coRow[$field]];
                         $row[$coRow[$field]] = unserialize(base64_decode(constant($constName . "_DEFAULT")));
                     }
                 }
@@ -280,14 +95,14 @@ class CONFIGDBSTRUCTURE
         $resultSet = $this->db->select('config', '*');
         while ($coRow = $this->db->fetchRow($resultSet)) {
             // NB we grab only basic configuration variables – extra rows are added e.g. by localeDescription plugin
-            if (array_key_exists($coRow[$field], $this->dbStructure)) {
-                $row[$coRow[$field]] = $this->convertVarDB2PHP($this->dbStructure[$coRow[$field]], $coRow[$this->dbStructure[$coRow[$field]]]);
+            if (array_key_exists($coRow[$field], WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
+                $row[$coRow[$field]] = $this->convertVarDB2PHP(WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$coRow[$field]], $coRow[WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$coRow[$field]]]);
                 
                 // Unserialize some options
                 if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
                     $row[$coRow[$field]] = unserialize(base64_decode($row[$coRow[$field]]));
                     if (!is_array($row[$coRow[$field]])) {
-                        $constName = $co->configToConstant[$coRow[$field]];
+                        $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$coRow[$field]];
                         $row[$coRow[$field]] = unserialize(base64_decode(constant($constName . "_DEFAULT")));
                     }
                 }
@@ -300,7 +115,7 @@ class CONFIGDBSTRUCTURE
         // so return default values in that case
         if (count($row) == 0) {
             foreach ($match as $configName) {
-                $constName = $this->configToConstant[$configName];
+                $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];
                 $value = constant($constName . "_DEFAULT");
                 
                 // Unserialize some options
@@ -320,10 +135,9 @@ class CONFIGDBSTRUCTURE
      * @param string $name in the 'configName' column (i.e. which configuration variable to update)
      * @param mixed $value to set
      */
-    public function updateOne($name, $value)
+    public function updateOne(string $name, $value)
     {
-        $name = (string)$name;
-        if (!array_key_exists($name, $this->dbStructure)) {
+        if (!array_key_exists($name, WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
             die('Supply a configuration variable to update');
         }
         
@@ -332,9 +146,9 @@ class CONFIGDBSTRUCTURE
             $value = base64_encode(serialize($value));
         }
         
-        $value = $this->convertVarPHP2DB($this->dbStructure[$name], $value);
+        $value = $this->convertVarPHP2DB(WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$name], $value);
         $this->db->formatConditions(['configName' => $name]);
-        $this->db->update('config', [$this->dbStructure[$name] => $value]);
+        $this->db->update('config', [WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$name] => $value]);
     }
     /**
      * Convert a value from Wikindx database format to PHP format
@@ -344,7 +158,7 @@ class CONFIGDBSTRUCTURE
      *
      * @return mixed The value converted
      */
-    private function convertVarDB2PHP($configType, $value)
+    private function convertVarDB2PHP(string $configType, $value)
     {
         switch ($configType) {
             // Cast to integer number
@@ -369,7 +183,7 @@ class CONFIGDBSTRUCTURE
      *
      * @return mixed The value converted
      */
-    private function convertVarPHP2DB($configType, $value)
+    private function convertVarPHP2DB(string $configType, $value)
     {
         switch ($configType) {
             // Cast to integer number

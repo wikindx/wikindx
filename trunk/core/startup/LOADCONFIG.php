@@ -148,7 +148,7 @@ class LOADCONFIG
         // Load the configuration from the db and destroy unused config options
         $resultSet = $db->select('config', '*');
         while ($row = $db->fetchRow($resultSet)) {
-            if (array_key_exists($row['configName'], $co->configToConstant)) {
+            if (array_key_exists($row['configName'], WIKINDX_LIST_CONFIG_OPTIONS_NAME)) {
                 // Load
                 $tmp_config[$row['configName']] = [
                     "configBoolean" => $row['configBoolean'],
@@ -166,14 +166,14 @@ class LOADCONFIG
         
         // If an option is missing in the db create it
         // and use its default value
-        foreach ($co->configToConstant as $configName => $unused) {
+        foreach (WIKINDX_LIST_CONFIG_OPTIONS_NAME as $configName => $unused) {
             if (!array_key_exists($configName, $tmp_config)) {
                 // Retrieve the default value
-                $constName = $co->configToConstant[$configName];
-                if (!array_key_exists($configName, $co->dbStructure)) {
+                $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];
+                if (!array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
                     die("The type of $configName option is not defined.");
                 }
-                $configType = $co->dbStructure[$configName];
+                $configType = WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$configName];
                 if (!defined($constName . "_DEFAULT")) {
                     die("A default constant value for $constName option is missing (" . $constName . "_DEFAULT expected).");
                 }
@@ -199,8 +199,8 @@ class LOADCONFIG
         
         // Cast the value retrieved from the db and create a constant config member for each global option
         foreach ($tmp_config as $configName => $configValues) {
-            $constName = $co->configToConstant[$configName];
-            $configType = $co->dbStructure[$configName];
+            $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];
+            $configType = WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$configName];
             $value = $configValues[$configType];
             
             if ($configType == 'configBoolean') {

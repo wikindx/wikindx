@@ -205,7 +205,7 @@ class CONFIGURE
                         $value = base64_encode(serialize([]));
                     }
                     $this->session->setVar("config_deactivateResourceTypes", $value);
-                } elseif ($this->configDbStructure->dbStructure[$field] == 'configBoolean') {
+                } elseif (WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field] == 'configBoolean') {
                     if (!array_key_exists($field, $this->vars)) { // checkboxes not checked
                         $value = FALSE;
                     } else {
@@ -326,15 +326,15 @@ class CONFIGURE
                 }
                 // create database row if it doesn't exist
                 if (array_key_exists($field, $configFields) === FALSE) {
-                    $this->db->insert('config', ['configName', $this->configDbStructure->dbStructure[$field]], [$field, $value]);
+                    $this->db->insert('config', ['configName', WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field]], [$field, $value]);
                 } else {
                     $this->db->formatConditions(['configName' => $field]);
-                    $this->db->update('config', [$this->configDbStructure->dbStructure[$field] => $value]);
+                    $this->db->update('config', [WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field] => $value]);
                 }
             }
             foreach ($nulls as $field) {
                 $this->db->formatConditions(['configName' => $field]);
-                $this->db->updateNull('config', $this->configDbStructure->dbStructure[$field]);
+                $this->db->updateNull('config', WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field]);
             }
         }
         // need to use header() to ensure any change in appearance is immediately picked up.
@@ -1862,7 +1862,7 @@ class CONFIGURE
         }
         $array = $required = [];
         // Store in session first and remove unrequired session variables
-        foreach ($this->configDbStructure->dbStructure as $key => $type) {
+        foreach (WIKINDX_LIST_CONFIG_OPTIONS_TYPE as $key => $type) {
             if (array_key_exists($key, $this->vars)) {
                 if (($key == 'configLastChanges') || ($key == 'configPaging') || ($key == 'configStringLimit') || ($key == 'configPagingTagCloud')) {
                     if ($this->vars[$key] < 0) {
@@ -2112,7 +2112,7 @@ class CONFIGURE
         }
         // deal with checkboxes
         foreach ($row as $field => $value) {
-            if (($this->configDbStructure->dbStructure[$field] == 'configBoolean') && !$value) {
+            if ((WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field] == 'configBoolean') && !$value) {
                 unset($row[$field]);
             }
         }

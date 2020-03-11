@@ -209,7 +209,7 @@ class UPDATEDATABASE
         }
 
         // Check the maximum db version upgradable
-        if ($dbVersion > WIKINDX_INTERNAL_VERSION)
+        if ($dbVersion >= WIKINDX_INTERNAL_VERSION)
         {
             GLOBALS::addTplVar("content", "
                 Your WIKINDX database version is $dbVersion.

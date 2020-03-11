@@ -56,26 +56,7 @@ class CONFIGDBSTRUCTURE
      */
     public function getAllData()
     {
-        $field = 'configName';
-        $row = [];
-        $resultSet = $this->db->select('config', '*');
-        while ($coRow = $this->db->fetchRow($resultSet)) {
-            // NB we grab only basic configuration variables – extra rows are added e.g. by localeDescription plugin
-            if (array_key_exists($coRow[$field], WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
-                $row[$coRow[$field]] = $this->convertVarDB2PHP(WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$coRow[$field]], $coRow[WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$coRow[$field]]]);
-                
-                // Unserialize some options
-                if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
-                    $row[$coRow[$field]] = unserialize(base64_decode($row[$coRow[$field]]));
-                    if (!is_array($row[$coRow[$field]])) {
-                        $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$coRow[$field]];
-                        $row[$coRow[$field]] = unserialize(base64_decode(constant($constName . "_DEFAULT")));
-                    }
-                }
-            }
-        }
-
-        return $row;
+        return $this->getData(array_keys(WIKINDX_LIST_CONFIG_OPTIONS_NAME));
     }
     /**
      * Get data from the config table for specific variables and return an array of ($field => 'value')
@@ -96,23 +77,28 @@ class CONFIGDBSTRUCTURE
 	        }
         }
         
-        $field = 'configName';
         $row = [];
-        $this->db->formatConditionsOneField($match, $field);
+        $this->db->formatConditionsOneField($match, 'configName');
         $resultSet = $this->db->select('config', '*');
         while ($coRow = $this->db->fetchRow($resultSet)) {
             // NB we grab only basic configuration variables – extra rows are added e.g. by localeDescription plugin
-            if (array_key_exists($coRow[$field], WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
-                $row[$coRow[$field]] = $this->convertVarDB2PHP(WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$coRow[$field]], $coRow[WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$coRow[$field]]]);
+            $configName = $coRow['configName'];
+            
+            // Retrieving known options only
+            if (array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
+            	$constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];
+            	$configType = WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$configName];
+            	$configValue = $this->convertVarDB2PHP($configType, $coRow[$configType]);
                 
-                // Unserialize some options
-                if (in_array($coRow[$field], ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
-                    $row[$coRow[$field]] = unserialize(base64_decode($row[$coRow[$field]]));
-                    if (!is_array($row[$coRow[$field]])) {
-                        $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$coRow[$field]];
-                        $row[$coRow[$field]] = unserialize(base64_decode(constant($constName . "_DEFAULT")));
+                // Unserialize the value for some options
+                if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
+                    $configValue = unserialize(base64_decode($configValue));
+                    if (!is_array($configValue)) {
+                        $configValue = unserialize(base64_decode(constant($constName . "_DEFAULT")));
                     }
                 }
+                
+                $row[$configName] = $configValue;
             }
         }
         

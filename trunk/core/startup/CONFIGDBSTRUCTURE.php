@@ -118,7 +118,7 @@ class CONFIGDBSTRUCTURE
         
         // During and installation the config table is not initialized before this function is called,
         // so return default values in that case
-        if (count($row) == 0) {
+        if (count($row) < count($match)) {
             foreach ($match as $configName) {
                 $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];
                 $value = constant($constName . "_DEFAULT");

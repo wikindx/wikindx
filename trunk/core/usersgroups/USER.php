@@ -674,12 +674,16 @@ class USER
 
         foreach ($preferences as $pref => $default) {
             if ($newUser) {
-                $updateArray['users' . $pref] = $default;
+                $value = $default;
             } elseif ($value = GLOBALS::getUserVar($pref)) {
-                $updateArray['users' . $pref] = $value;
+                // Value already assigned in the condition
             } else {
-                $updateArray['users' . $pref] = $default;
+                $value = $default;
             }
+            
+            // Grr! PHP doesn't cast FALSE to "0" but the empty string
+        	$value = is_bool($value) ? var_export($value, true) : $value;
+            $updateArray['users' . $pref] = $value;
         }
         $this->db->formatConditions(['usersId' => $userId]);
         $this->db->update('users', $updateArray);

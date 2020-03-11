@@ -269,12 +269,12 @@ class CONFIGURE
             $usersFieldArray[] = 'usersPassword';
             $usersValueArray[] = crypt($this->vars['password'], UTF8::mb_strrev(time()));
             $usersFieldArray[] = 'usersEmail';
-            $usersValueArray[] = $this->vars['configEmail'];
+            $usersValueArray[] = $this->vars['usersEmail'];
             $usersFieldArray[] = 'usersAdmin';
             $usersValueArray[] = TRUE;
-            if (array_key_exists('configFullname', $this->vars)) {
+            if (array_key_exists('usersFullname', $this->vars)) {
                 $usersFieldArray[] = 'usersFullname';
-                $usersValueArray[] = $this->vars['configFullname'];
+                $usersValueArray[] = $this->vars['usersFullname'];
             }
             if (array_key_exists('usersIsCreator', $this->vars) && $this->vars['usersIsCreator']) {
                 $usersValueArray[] = $this->vars['usersIsCreator'];
@@ -290,18 +290,18 @@ class CONFIGURE
             if (array_key_exists('usersUsername', $this->vars)) {
                 $updateUserArray['usersUsername'] = $this->vars['usersUsername'];
             }
-            if (array_key_exists('configEmail', $this->vars)) {
-                $updateUserArray['usersEmail'] = $this->vars['configEmail'];
+            if (array_key_exists('usersEmail', $this->vars)) {
+                $updateUserArray['usersEmail'] = $this->vars['usersEmail'];
             }
             $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
             if (array_key_exists('password', $this->vars) && ($this->vars['password'] != $this->db->selectFirstField('users', 'usersPassword'))) {
                 $updateUserArray['usersPassword'] = crypt($this->vars['password'], UTF8::mb_strrev(time()));
             }
-            if (array_key_exists('configFullname', $this->vars)) {
-                $updateUserArray['usersFullname'] = $this->vars['configFullname'];
+            if (array_key_exists('usersFullname', $this->vars)) {
+                $updateUserArray['usersFullname'] = $this->vars['usersFullname'];
             }
             if (array_key_exists('usersIsCreator', $this->vars) && $this->vars['usersIsCreator']) {
-            //die($this->vars['usersIsCreator']);
+            die($this->vars['usersIsCreator']);
             //error_log(print_r($this->vars['usersIsCreator'], true));
                 if ($this->vars['usersIsCreator'] != "0")
                     $updateUserArray['usersIsCreator'] = $this->vars['usersIsCreator'];
@@ -598,17 +598,17 @@ class CONFIGURE
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $input = array_key_exists("configEmail", $this->values) ? $this->values["configEmail"] : FALSE;
+        $input = array_key_exists("usersEmail", $this->values) ? $this->values["usersEmail"] : FALSE;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("user", "email"),
-            "configEmail",
+            "usersEmail",
             $input,
             30
         ) . " " . \HTML\span('*', 'required'));
-        $input = array_key_exists("configFullname", $this->values) ? $this->values["configFullname"] : FALSE;
+        $input = array_key_exists("usersFullname", $this->values) ? $this->values["usersFullname"] : FALSE;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("user", "fullname"),
-            "configFullname",
+            "usersFullname",
             $input,
             30
         ));
@@ -687,10 +687,10 @@ class CONFIGURE
             "configUserRegistrationModerate",
             $input
         ) . BR . \HTML\span($hint, 'hint'));
-        $input = array_key_exists("configEmailNewRegistrations", $this->values) ? $this->values["configEmailNewRegistrations"] : WIKINDX_EMAIL_NEW_REGISTRATIONS_DEFAULT;
+        $input = array_key_exists("usersEmailNewRegistrations", $this->values) ? $this->values["usersEmailNewRegistrations"] : WIKINDX_EMAIL_NEW_REGISTRATIONS_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "emailNewRegistrations"),
-            "configEmailNewRegistrations",
+            "usersEmailNewRegistrations",
             $input,
             30
         ) . BR . \HTML\span($hint, 'hint'));
@@ -1415,10 +1415,10 @@ class CONFIGURE
         $pString .= \HTML\trStart();
         $input = array_key_exists("configNotify", $this->values) && ($this->values['configNotify']) ? "CHECKED" : WIKINDX_NOTIFY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "notify"), "configNotify", $input));
-        $input = array_key_exists("configEmailStatistics", $this->values) && ($this->values['configEmailStatistics']) ? "CHECKED" : WIKINDX_EMAIL_STATISTICS_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "statistics"), "configEmailStatistics", $input));
-        $input = array_key_exists("configEmailNews", $this->values) && ($this->values['configEmailNews']) ? "CHECKED" : WIKINDX_EMAIL_NEWS_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "emailNews"), "configEmailNews", $input));
+        $input = array_key_exists("usersEmailStatistics", $this->values) && ($this->values['usersEmailStatistics']) ? "CHECKED" : WIKINDX_EMAIL_STATISTICS_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "statistics"), "usersEmailStatistics", $input));
+        $input = array_key_exists("usersEmailNews", $this->values) && ($this->values['usersEmailNews']) ? "CHECKED" : WIKINDX_EMAIL_NEWS_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "emailNews"), "usersEmailNews", $input));
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -1702,7 +1702,7 @@ class CONFIGURE
                     "configDenyReadOnly",
                     "configDisplayStatistics",
                     "configDisplayUserStatistics",
-                    "configEmailNewRegistrations",
+                    "usersEmailNewRegistrations",
                     "configGlobalEdit",
                     "configImportBib",
                     "configMetadataAllow",
@@ -1732,8 +1732,8 @@ class CONFIGURE
                 break;
             case 'email': // email configuration
                 $array = [
-                    "configEmailNews",
-                    "configEmailStatistics",
+                    "usersEmailNews",
+                    "usersEmailStatistics",
                     "configMailBackend",
                     "configMailFrom",
                     "configMailReplyTo",
@@ -1882,10 +1882,10 @@ class CONFIGURE
                     "configDenyReadOnly",
                     "configDisplayStatistics",
                     "configDisplayUserStatistics",
-                    "configEmailnews",
-                    "configEmailNews",
-                    "configEmailStatistics",
-                    "configEmailStatistics",
+                    "usersEmailnews",
+                    "usersEmailNews",
+                    "usersEmailStatistics",
+                    "usersEmailStatistics",
                     "configErrorReport",
                     "configFileAttach",
                     "configFileViewLoggedOnOnly",
@@ -1920,20 +1920,20 @@ class CONFIGURE
                 $this->session->delVar("setup_" . str_replace('config', 'setup', $key));
             }
         }
-        if (array_key_exists('configFullname', $this->vars)) {
-            $array['configFullname'] = trim($this->vars['configFullname']);
+        if (array_key_exists('usersFullname', $this->vars)) {
+            $array['usersFullname'] = trim($this->vars['usersFullname']);
         } else {
-            $this->session->delVar("config_configFullname");
+            $this->session->delVar("config_usersFullname");
         }
         if (array_key_exists('usersIsCreator', $this->vars)) {
             $array['usersIsCreator'] = trim($this->vars['usersIsCreator']);
         } else {
             $this->session->delVar("config_usersIsCreator");
         }
-        if (array_key_exists('configEmail', $this->vars)) {
-            $array['configEmail'] = trim($this->vars['configEmail']);
+        if (array_key_exists('usersEmail', $this->vars)) {
+            $array['usersEmail'] = trim($this->vars['usersEmail']);
         } else {
-            $this->session->delVar("config_configEmail");
+            $this->session->delVar("config_usersEmail");
         }
         if (!empty($array)) {
             $this->session->writeArray($array, "config");
@@ -1962,7 +1962,7 @@ class CONFIGURE
         }
         // strings that are required
         $required = [
-            "configEmail",
+            "usersEmail",
             "configLanguage",
             "configLastChangesType",
             "configStyle",
@@ -2126,8 +2126,8 @@ class CONFIGURE
             $rowT = $this->db->fetchRow($recordset);
             $row['usersUsername'] = $rowT['usersUsername'];
             $row['password'] = $row['passwordConfirm'] = $rowT['usersPassword'];
-            $row['configFullname'] = $rowT['usersFullname'];
-            $row['configEmail'] = $rowT['usersEmail'];
+            $row['usersFullname'] = $rowT['usersFullname'];
+            $row['usersEmail'] = $rowT['usersEmail'];
             $row['usersIsCreator'] = $rowT['usersIsCreator'];
         }
         // 'lastChanges' can be 0 so may not exist if called from the session

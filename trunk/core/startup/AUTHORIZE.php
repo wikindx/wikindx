@@ -23,8 +23,6 @@ class AUTHORIZE
     private $session;
     /** array */
     private $vars;
-    /** object */
-    private $configDbStructure;
 
     /**
      *	AUTHORIZE
@@ -34,25 +32,21 @@ class AUTHORIZE
         $this->session = FACTORY_SESSION::getInstance();
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->configDbStructure = FACTORY_CONFIGDBSTRUCTURE::getInstance();
         if (!GLOBALS::getUserVar("Language")) {
             $fields = $this->db->listFields('config');
-            // set the default language prior to displaying the login prompt
-            if (in_array('language', $fields) !== FALSE) { // perhaps this is a first install or upgrade to >= v4 (v3 has config.language not config.configLanguage)
-                GLOBALS::setUserVar('Language', "auto");
-            } elseif (array_search('configLanguage', $fields) !== FALSE) {
-                if ($this->db->numRows($this->db->select('config', '*')) == 1) { // Prior to v5.3
-                    GLOBALS::setUserVar('Language', "auto");
-                } else { // post v5.3
-                    $user = FACTORY_USER::getInstance();
-                    $row = $this->configDbStructure->getData('configLanguage');
-                    if (empty($row)) { // perhaps this is a first install
-                        GLOBALS::setUserVar('Language', "auto");
-                    } else {
-                        // populate session with default values from config
-                        $user->writeSessionPreferences(FALSE);
-                    }
-                }
+            // Set the default language prior to displaying the login prompt.
+            // Perhaps this is a first install or upgrade (missing config table)
+            if (count($fields) == 0) {
+            	$user = FACTORY_USER::getInstance();
+            	$user->writeSessionPreferences(FALSE);
+            // Prior to v5.3
+            } elseif (in_array('configLanguage', $fields) !== FALSE) {
+            	GLOBALS::setUserVar('Language', WIKINDX_USER_LANGUAGE_DEFAULT);
+            // From v5.3
+            } else {
+            	$configDbStructure = FACTORY_CONFIGDBSTRUCTURE::getInstance();
+            	$cnf = $configDbStructure->getData('configLanguage');
+            	GLOBALS::setUserVar('Language', $cnf['configLanguage']);
             }
         }
     }

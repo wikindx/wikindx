@@ -299,8 +299,6 @@ class CONFIGURE
             }
             if (array_key_exists('configFullname', $this->vars)) {
                 $updateUserArray['usersFullname'] = $this->vars['configFullname'];
-            } else {
-                $nullsUserArray[] = 'usersFullname';
             }
             if (array_key_exists('configIsCreator', $this->vars) && $this->vars['configIsCreator']) {
                 $updateUserArray['usersIsCreator'] = $this->vars['configIsCreator'];

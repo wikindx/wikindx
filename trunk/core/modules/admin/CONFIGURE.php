@@ -1415,8 +1415,8 @@ class CONFIGURE
         $pString .= \HTML\trStart();
         $input = array_key_exists("configNotify", $this->values) && ($this->values['configNotify']) ? "CHECKED" : WIKINDX_NOTIFY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "notify"), "configNotify", $input));
-        $input = array_key_exists("usersEmailStatistics", $this->values) && ($this->values['usersEmailStatistics']) ? "CHECKED" : WIKINDX_EMAIL_STATISTICS_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "statistics"), "usersEmailStatistics", $input));
+        $input = array_key_exists("configEmailStatistics", $this->values) && ($this->values['configEmailStatistics']) ? "CHECKED" : WIKINDX_EMAIL_STATISTICS_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "statistics"), "configEmailStatistics", $input));
         $input = array_key_exists("configEmailNews", $this->values) && ($this->values['configEmailNews']) ? "CHECKED" : WIKINDX_EMAIL_NEWS_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "emailNews"), "configEmailNews", $input));
         $pString .= \HTML\td('&nbsp;');
@@ -1733,7 +1733,7 @@ class CONFIGURE
             case 'email': // email configuration
                 $array = [
                     "configEmailNews",
-                    "usersEmailStatistics",
+                    "configEmailStatistics",
                     "configMailBackend",
                     "configMailFrom",
                     "configMailReplyTo",
@@ -1883,8 +1883,7 @@ class CONFIGURE
                     "configDisplayStatistics",
                     "configDisplayUserStatistics",
                     "configEmailNews",
-                    "usersEmailStatistics",
-                    "usersEmailStatistics",
+                    "configEmailStatistics",
                     "configErrorReport",
                     "configFileAttach",
                     "configFileViewLoggedOnOnly",

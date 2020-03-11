@@ -300,15 +300,12 @@ class CONFIGURE
             if (array_key_exists('usersFullname', $this->vars)) {
                 $updateUserArray['usersFullname'] = $this->vars['usersFullname'];
             }
-            if (array_key_exists('usersIsCreator', $this->vars) && $this->vars['usersIsCreator']) {
-            //die($this->vars['usersIsCreator']);
-            //error_log(print_r($this->vars['usersIsCreator'], true));
+            if (array_key_exists('usersIsCreator', $this->vars)) {
                 if ($this->vars['usersIsCreator'] != "0")
                     $updateUserArray['usersIsCreator'] = $this->vars['usersIsCreator'];
                 else
                     $nullsUserArray[] = 'usersIsCreator';
             }
-            //die("AAAAAAAA");
             if (!empty($updateUserArray)) {
                 $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
                 $this->db->update('users', $updateUserArray);

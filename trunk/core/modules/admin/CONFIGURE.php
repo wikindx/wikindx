@@ -1691,9 +1691,9 @@ class CONFIGURE
             case 'debug': // debugging configuration
                 $array = [
                     "configBypassSmartyCompile",
+                    "configDebugSql",
                     "configErrorReport",
                     "configIsTrunk",
-                    "configDebugSql",
                 ];
 
                 break;
@@ -1738,7 +1738,6 @@ class CONFIGURE
                     "configMailFrom",
                     "configMailReplyTo",
                     "configMailReturnPath",
-                    "configMailUse",
                     "configMailSmPath",
                     "configMailSmtpAuth",
                     "configMailSmtpEncrypt",
@@ -1747,6 +1746,7 @@ class CONFIGURE
                     "configMailSmtpPort",
                     "configMailSmtpServer",
                     "configMailSmtpUsername",
+                    "configMailUse",
                     "configNotify",
                 ];
 
@@ -1879,6 +1879,7 @@ class CONFIGURE
                     "configBypassSmartyCompile",
                     "configCmsAllow",
                     "configCmsSql",
+                    "configDebugSql",
                     "configDenyReadOnly",
                     "configDisplayStatistics",
                     "configDisplayUserStatistics",
@@ -1904,7 +1905,6 @@ class CONFIGURE
                     "configNotify",
                     "configNotify",
                     "configOriginatorEditOnly",
-                    "configDebugSql",
                     "configQuarantine",
                     "configReadOnlyAccess",
                     "configRssAllow",

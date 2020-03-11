@@ -301,7 +301,7 @@ class CONFIGURE
                 $updateUserArray['usersFullname'] = $this->vars['usersFullname'];
             }
             if (array_key_exists('usersIsCreator', $this->vars) && $this->vars['usersIsCreator']) {
-            die($this->vars['usersIsCreator']);
+            //die($this->vars['usersIsCreator']);
             //error_log(print_r($this->vars['usersIsCreator'], true));
                 if ($this->vars['usersIsCreator'] != "0")
                     $updateUserArray['usersIsCreator'] = $this->vars['usersIsCreator'];
@@ -1417,8 +1417,8 @@ class CONFIGURE
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "notify"), "configNotify", $input));
         $input = array_key_exists("usersEmailStatistics", $this->values) && ($this->values['usersEmailStatistics']) ? "CHECKED" : WIKINDX_EMAIL_STATISTICS_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "statistics"), "usersEmailStatistics", $input));
-        $input = array_key_exists("usersEmailNews", $this->values) && ($this->values['usersEmailNews']) ? "CHECKED" : WIKINDX_EMAIL_NEWS_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "emailNews"), "usersEmailNews", $input));
+        $input = array_key_exists("configEmailNews", $this->values) && ($this->values['configEmailNews']) ? "CHECKED" : WIKINDX_EMAIL_NEWS_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "emailNews"), "configEmailNews", $input));
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -1732,7 +1732,7 @@ class CONFIGURE
                 break;
             case 'email': // email configuration
                 $array = [
-                    "usersEmailNews",
+                    "configEmailNews",
                     "usersEmailStatistics",
                     "configMailBackend",
                     "configMailFrom",
@@ -1882,8 +1882,7 @@ class CONFIGURE
                     "configDenyReadOnly",
                     "configDisplayStatistics",
                     "configDisplayUserStatistics",
-                    "usersEmailnews",
-                    "usersEmailNews",
+                    "configEmailNews",
                     "usersEmailStatistics",
                     "usersEmailStatistics",
                     "configErrorReport",

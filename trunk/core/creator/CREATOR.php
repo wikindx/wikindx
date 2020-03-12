@@ -498,7 +498,7 @@ class CREATOR
 			
 			$name = \HTML\dbToFormTidy($name);
 			// Collapse all whitespaces in one space
-			$name = preg_replace("/\s+/u", " ", trim($name));
+			$name = preg_replace("/\\s+/u", " ", trim($name));
             $creators[$row['creatorId']] = $name;
         }
     }

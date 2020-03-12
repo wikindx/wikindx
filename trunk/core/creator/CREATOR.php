@@ -495,8 +495,11 @@ class CREATOR
             } elseif ($row['creatorInitials']) {
                 $name .= ', ' . str_replace(' ', '.', $row['creatorInitials']) . '.';
             }
-
-            $creators[$row['creatorId']] = \HTML\dbToFormTidy($name);
+			
+			$name = \HTML\dbToFormTidy($name);
+			// Collapse all whitespaces in one space
+			$name = preg_replace("/\s+/u", " ", trim($name));
+            $creators[$row['creatorId']] = $name;
         }
     }
 }

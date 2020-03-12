@@ -1957,7 +1957,6 @@ class CONFIGURE
         }
         // strings that are required
         $required = [
-            "usersEmail",
             "configLanguage",
             "configLastChangesType",
             "configStyle",
@@ -1965,9 +1964,10 @@ class CONFIGURE
             "configTagLowColour",
             "configTemplate",
             "configTimezone",
-            "usersUsername",
             "password",
             "passwordConfirm",
+            "usersEmail",
+            "usersUsername",
         ];
         foreach ($required as $value) {
             if (array_key_exists($value, $this->vars)) {

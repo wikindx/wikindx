@@ -293,7 +293,6 @@ class CONFIGURE
             if (array_key_exists('usersEmail', $this->vars)) {
                 $updateUserArray['usersEmail'] = $this->vars['usersEmail'];
             }
-            $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
             if (array_key_exists('password', $this->vars) && ($this->vars['password'] != $this->db->selectFirstField('users', 'usersPassword'))) {
                 $updateUserArray['usersPassword'] = crypt($this->vars['password'], UTF8::mb_strrev(time()));
             }

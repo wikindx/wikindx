@@ -65,53 +65,53 @@ class LOADCONFIG
     {
         $session = FACTORY_SESSION::getInstance();
         $db = FACTORY_DB::getInstance();
-        if ($session->getVar("setup_UserId")) { // logged on user so setup from users table
-            $basic = [
-                "CmsTag",
-                "DisplayBibtexLink",
-                "DisplayCmsLink",
-                "Language",
-                "ListLink",
-                "Paging",
-                "PagingMaxLinks",
-                "PagingStyle",
-                "PagingTagCloud",
-                "StringLimit",
-                "Style",
-                "Template",
-                "TemplateMenu",
-                "UseBibtexKey",
-                "UseWikindxKey",
-            ];
+        $basic = [
+            "CmsTag",
+            "DisplayBibtexLink",
+            "DisplayCmsLink",
+            "Language",
+            "ListLink",
+            "Paging",
+            "PagingMaxLinks",
+            "PagingStyle",
+            "PagingTagCloud",
+            "StringLimit",
+            "Style",
+            "Template",
+            "TemplateMenu",
+            "UseBibtexKey",
+            "UseWikindxKey",
+        ];
+        if ($session->getVar("setup_UserId") && FALSE) { // logged on user so setup from users table
             $table = 'users';
             $preferences = $db->prependTableToField($table, $basic);
             $db->formatConditions([$table . 'Id' => $session->getVar("setup_UserId")]);
             $resultSet = $db->select($table, $preferences);
             $row = $db->fetchRow($resultSet);
         } else { // read only user – read default settings from config table
-            $basic = [
-                "Language",
-                "ListLink",
-                "Paging",
-                "PagingMaxLinks",
-                "PagingStyle",
-                "PagingTagCloud",
-                "StringLimit",
-                "Style",
-                "Template",
-                "TemplateMenu",
-            ];
-            $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
             $table = 'config';
-            $preferences = $db->prependTableToField($table, $basic);
-            $row = $co->getData($preferences);
-            // read only user – load session variable where it exists and overwrite default config setting set above.
-            foreach ($basic as $key) {
+            $row = [];
+            foreach ($basic as $key)
+            {
                 $rowKey = $table . $key;
                 if ($session->issetVar("setup_" . $key)) {
                     $row[$rowKey] = $session->getVar("setup_" . $key);
-                } elseif ($key == 'ListLink') {
-                    $row[$rowKey] = FALSE;
+                // Options inherited from the global config
+                } elseif (array_key_exists($rowKey, WIKINDX_LIST_CONFIG_OPTIONS_NAME)) {
+                    $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$rowKey];
+                    $row[$rowKey] = constant($constName);
+                } else {
+                    // Language should be inherited but it needs a special default
+                    // which allows the browser to control the preferred language first
+                    $row[$rowKey] = WIKINDX_USER_LANGUAGE_DEFAULT;
+                    
+                    // Options unique to users
+                    $row[$rowKey] = WIKINDX_DISPLAY_BIBTEX_LINK_DEFAULT;
+                    $row[$rowKey] = WIKINDX_DISPLAY_CMS_LINK_DEFAULT;
+                    $row[$rowKey] = WIKINDX_USER_PAGING_STYLE_DEFAULT;
+                    $row[$rowKey] = WIKINDX_TEMPLATE_MENU_DEFAULT;
+                    $row[$rowKey] = WIKINDX_USE_BIBTEX_KEY_DEFAULT;
+                    $row[$rowKey] = WIKINDX_USE_WIKINDX_KEY_DEFAULT;
                 }
             }
         }

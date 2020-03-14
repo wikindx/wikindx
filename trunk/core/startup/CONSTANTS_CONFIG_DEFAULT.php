@@ -44,7 +44,7 @@ define('WIKINDX_LAST_CHANGES_TYPE_DEFAULT', 'number');
 
 
 // Resource lists
-define('WIKINDX_LIST_LINK_DEFAULT', FALSE);
+define('WIKINDX_LIST_LINK_DEFAULT', 0);
 define('WIKINDX_NO_SORT_DEFAULT', base64_encode(serialize(['an', 'a', 'the', 'der', 'die', 'das', 'ein', 'eine', 'einer', 'eines', 'le', 'la', 'las', 'il', 'les', 'une', 'un', 'una', 'uno', 'lo', 'los', 'i', 'gli', 'de', 'het', 'um', 'uma', 'o', 'os', 'as', 'den', 'det', 'en', 'et', ])));
 define('WIKINDX_PAGING_DEFAULT', 20);
 define('WIKINDX_PAGING_MAXLINKS_DEFAULT', 11);

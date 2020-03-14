@@ -58,32 +58,38 @@ class USER
     {
         $userId = $this->session->getVar("setup_UserId", 0);
         
-        if (array_key_exists('username', $this->vars)) {
-            $username = \HTML\removeNl($this->vars['username']);
-
+        if ($add && !array_key_exists('username', $this->vars)) {
             return "username field missing";
         }
-        if (array_key_exists('username', $this->vars)) {
-            $password = \HTML\removeNl($this->vars['password']);
-
+        elseif ($add) {
+            $username = \HTML\removeNl($this->vars['username']);
+        }
+        if (!array_key_exists('password', $this->vars)) {
             return "password field missing";
         }
-        
+        else {
+            $password = \HTML\removeNl($this->vars['password']);
+        }
         // check for existing usernames (remove current user from search if already logged in with setup_userId)
-        $this->db->formatConditions(['usersUsername' => $username]);
-        $this->db->formatConditions(['usersId' => $userId], TRUE); // Not equal to
-        // existing user with that username found (not this user)
-        $recordset = $this->db->select('users', 'usersId');
-        if ($this->db->numRows($recordset)) {
-            return $this->errors->text("inputError", "userExists");
+        if ($add)
+        {
+			$this->db->formatConditions(['usersUsername' => $username]);
+			$this->db->formatConditions(['usersId' => $userId], TRUE); // Not equal to
+			// existing user with that username found (not this user)
+			$recordset = $this->db->select('users', 'usersId');
+			if ($this->db->numRows($recordset)) {
+				return $this->errors->text("inputError", "userExists");
+        	}
         }
         
         if (!$add) { // update
             if ($admin == 0) { // user editing own details
                 $userId = $this->session->getVar("setup_UserId");
+				$this->db->formatConditions(['usersId' => $userId]);
+				$username = $this->db->fetchOne($this->db->select('users', 'usersUsername'));
                 $cookie = FACTORY_COOKIE::getInstance();
                 if (array_key_exists('cookie', $this->vars) && $this->vars['cookie']) {
-                    $cookie->storeCookie($this->vars['uname']);
+                    $cookie->storeCookie($username);
                     $update['usersCookie'] = 'Y';
                 } else {
                     // remove any wikindx cookie that has been set
@@ -95,9 +101,9 @@ class USER
             } elseif ($admin == 2) { // admin editing user
                 $userId = $this->vars['userId'];
                 if (array_key_exists('admin', $this->vars) && $this->vars['admin']) {
-                    $update['usersAdmin'] = TRUE;
+                    $update['usersAdmin'] = 1;
                 } else {
-                    $update['usersAdmin'] = FALSE;
+                    $update['usersAdmin'] = 0;
                 }
                 if (array_key_exists('department', $this->vars) && ($dept = trim($this->vars['department']))) {
                     $update['usersDepartment'] = $dept;
@@ -166,15 +172,15 @@ class USER
                 $field[] = 'usersEmail';
                 $value[] = $this->vars['email'];
             }
-            if ($admin == 1) { // if == 0, default db field value is 'N'
+            if ($admin == 1) { // if == 0, default db field value is 0
                 $field[] = 'usersAdmin';
-                $value[] = 'Y';
+                $value[] = 1;
                 $field[] = 'usersFullname';
                 $value[] = 'superAdmin';
             } elseif ($admin == 2) { // admin editing a user
                 if (array_key_exists('admin', $this->vars) && $this->vars['admin']) {
                     $field[] = 'usersAdmin';
-                    $value[] = 'Y';
+                    $value[] = 1;
                 }
                 if (array_key_exists('department', $this->vars) && ($dept = trim($this->vars['department']))) {
                     $field[] = 'usersDepartment';
@@ -264,7 +270,8 @@ class USER
     {
         // First delete any pre-existing session
         $this->session->clearSessionData();
-        if ($row['usersAdmin']) {
+        if ($row['usersAdmin']) 
+        {
             $this->session->setVar("setup_Superadmin", TRUE);
         }
         $this->session->setVar("setup_UserId", $row['usersId']);
@@ -461,9 +468,10 @@ class USER
         $bib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         if ($userId) {
             $this->session->setVar("setup_UserId", $userId);
-        } else {
-            $this->session->setVar("setup_ListLink", WIKINDX_LIST_LINK);
-        }
+        } 
+//        else {
+ //           $this->session->setVar("setup_ListLink", WIKINDX_LIST_LINK);
+ //       }
         $bibs = $bib->getUserBibs();
         if (empty($bibs)) {
             $bibs = $bib->getGroupBibs();
@@ -504,13 +512,21 @@ class USER
         foreach ($userArray as $key) {
             $varName = "mywikindx_" . str_replace('users', '', $key);
 
-            if (($key == 'admin') || ($key == 'cookie')) {
+            if ($key == 'cookie') {
                 if ($row[$key] == 'Y') {
                     $this->session->setVar($varName, TRUE);
                 } else {
                     $this->session->delVar($varName);
                 }
-            } elseif ($row[$key]) {
+            }
+            elseif ($key == 'admin') {
+                if ($row[$key] == 1) {
+                    $this->session->setVar($varName, TRUE);
+                } else {
+                    $this->session->delVar($varName);
+                }
+            } 
+            elseif ($row[$key]) {
                 $this->session->setVar($varName, $row[$key]);
             }
         }
@@ -534,7 +550,7 @@ class USER
         $pString = \FORM\formHeader($form, 'onsubmit="return checkForm(' . $jsString . ');"');
         $pString .= \FORM\hidden('method', $hidden);
         $sessVar = \HTML\dbToFormTidy($this->session->getVar("mywikindx_Username"));
-        $pString .= \FORM\hidden("uname", $sessVar);
+        $pString .= \FORM\hidden("username", $sessVar);
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td(\HTML\strong($this->messages->text("user", "username")) . ":&nbsp;&nbsp;$sessVar" .
@@ -626,7 +642,7 @@ class USER
                     1
                 ));
             }
-            $sessVar = $this->session->getVar("mywikindx_Admin") == 'Y' ? 'CHECKED' : FALSE;
+            $sessVar = $this->session->getVar("mywikindx_Admin") == 1 ? 'CHECKED' : FALSE;
             $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "admin"), "admin", $sessVar));
         } else {
             $sessVar = $this->session->getVar("mywikindx_Cookie") == 'Y' ? 'CHECKED' : FALSE;
@@ -650,27 +666,50 @@ class USER
         // Set paging_start back to 0
         $this->session->setVar("mywikindx_PagingStart", 0);
         $preferences = [];
-        
         // Options inherited from the global config
-        $preferences["ListLink"] = WIKINDX_LIST_LINK;
+        if (WIKINDX_LIST_LINK) {
+	        $preferences["ListLink"] = 1;
+	    }
+	    else {
+	        $preferences["ListLink"] = 0;
+	    }
         $preferences["Paging"] = WIKINDX_PAGING;
         $preferences["PagingMaxLinks"] = WIKINDX_PAGING_MAXLINKS;
         $preferences["PagingTagCloud"] = WIKINDX_PAGING_TAG_CLOUD;
         $preferences["StringLimit"] = WIKINDX_STRING_LIMIT;
         $preferences["Style"] = WIKINDX_STYLE;
         $preferences["Template"] = WIKINDX_TEMPLATE;
-        
         // Language should be inherited but it needs a special default
         // which allows the browser to control the preferred language first
         $preferences["Language"] = WIKINDX_USER_LANGUAGE_DEFAULT;
         
         // Options unique to users
-        $preferences["DisplayBibtexLink"] = WIKINDX_DISPLAY_BIBTEX_LINK_DEFAULT;
-        $preferences["DisplayCmsLink"] = WIKINDX_DISPLAY_CMS_LINK_DEFAULT;
+        if (WIKINDX_DISPLAY_BIBTEX_LINK_DEFAULT) {
+	        $preferences["DisplayBibtexLink"] = 1;
+	    }
+	    else {
+	        $preferences["DisplayBibtexLink"] = 0;
+	    }
+        if (WIKINDX_DISPLAY_CMS_LINK_DEFAULT) {
+	        $preferences["DisplayCmsLink"] = 1;
+	    }
+	    else {
+	        $preferences["DisplayCmsLink"] = 0;
+	    }
         $preferences["PagingStyle"] = WIKINDX_USER_PAGING_STYLE_DEFAULT;
         $preferences["TemplateMenu"] = WIKINDX_TEMPLATE_MENU_DEFAULT;
-        $preferences["UseBibtexKey"] = WIKINDX_USE_BIBTEX_KEY_DEFAULT;
-        $preferences["UseWikindxKey"] = WIKINDX_USE_WIKINDX_KEY_DEFAULT;
+        if (WIKINDX_USE_BIBTEX_KEY_DEFAULT) {
+	        $preferences["UseBibtexKey"] = 1;
+	    }
+	    else {
+	        $preferences["UseBibtexKey"] = 0;
+	    }
+        if (WIKINDX_USE_WIKINDX_KEY_DEFAULT) {
+	        $preferences["UseWikindxKey"] = 1;
+	    }
+	    else {
+	        $preferences["UseWikindxKey"] = 0;
+	    }
 
         foreach ($preferences as $pref => $default) {
             if ($newUser) {
@@ -751,7 +790,7 @@ class USER
                 if ($row['usersFullname']) {
                     $userName .= " (" . $row['usersFullname'] . ")";
                 }
-                if ($row['usersAdmin'] == 'Y') {
+                if ($row['usersAdmin'] == 1) {
                     $userName .= " ADMIN";
                 }
             }

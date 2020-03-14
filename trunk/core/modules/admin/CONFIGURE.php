@@ -93,12 +93,12 @@ class CONFIGURE
                 $pString .= \HTML\td(\FORM\selectedBoxValue($this->messages->text(
                     'config',
                     'options'
-                ), 'configMenu', $configGroups, $item, 14, FALSE, $js));
+                ), 'configMenu', $configGroups, $item, sizeof($configGroups), FALSE, $js));
             } else {
                 $pString .= \HTML\td(\FORM\selectFBoxValue($this->messages->text(
                     'config',
                     'options'
-                ), 'configMenu', $configGroups, 14, FALSE, $js));
+                ), 'configMenu', $configGroups, sizeof($configGroups), FALSE, $js));
             }
             $pString .= \HTML\td(\HTML\div('configDiv', $this->getConfigDetails($configGroups, $item)), 'left top width80percent');
         } else {

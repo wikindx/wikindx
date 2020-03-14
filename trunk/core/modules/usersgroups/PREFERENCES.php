@@ -162,7 +162,7 @@ class PREFERENCES
             GLOBALS::getUserVar("StringLimit"),
             5
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
-        $input = $this->session->getVar("setup_ListLink") ? "CHECKED" : FALSE;
+        $input = GLOBALS::getUserVar('ListLink') ? "CHECKED" : FALSE;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "ListLink"), "ListLink", $input));
         $pString .= \HTML\trEnd();
         
@@ -204,11 +204,6 @@ class PREFERENCES
         $this->session->writeArray($array, "setup");
         $this->session->delVar("sql_LastMulti"); // always reset in case of paging changes
         $this->session->delVar("sql_LastIdeaSearch"); // always reset in case of paging changes
-        if (array_key_exists("ListLink", $this->vars)) {
-            $this->session->setVar("setup_ListLink", TRUE);
-        } else {
-            $this->session->delVar("setup_ListLink");
-        }
         $this->session->setVar("mywikindx_Message", $this->success->text("config"));
         // need to use header() to ensure any change in appearance is immediately picked up.
         header("Location: index.php?action=usersgroups_PREFERENCES_CORE&method=init");

@@ -143,6 +143,7 @@ class LOADCONFIG
     {
         $db = FACTORY_DB::getInstance();
         $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
+//var_dump($co->configToConstant); print '<p>';
         $tmp_config = [];
         
         // Load the configuration from the db and destroy unused config options
@@ -158,6 +159,8 @@ class LOADCONFIG
                     "configVarchar" => $row['configVarchar'],
                 ];
             } else {
+            var_dump($co); print BR;
+print 'Deleting: ' . $row['configName'] . '<p>';
                 // destroy
                 $db->formatConditions(['configName' => $row['configName']]);
                 $db->delete('config');
@@ -168,6 +171,7 @@ class LOADCONFIG
         // and use its default value
         foreach (WIKINDX_LIST_CONFIG_OPTIONS_NAME as $configName => $unused) {
             if (!array_key_exists($configName, $tmp_config)) {
+print 'Inserting: ' . $configName . BR;
                 // Retrieve the default value
                 $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];
                 if (!array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
@@ -202,7 +206,6 @@ class LOADCONFIG
             $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];
             $configType = WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$configName];
             $value = $configValues[$configType];
-            
             if ($configType == 'configBoolean') {
                 $value = $value == 1 ? TRUE : FALSE; // Cast to bool
             } elseif ($configType == 'configDatetime') {

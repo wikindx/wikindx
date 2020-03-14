@@ -28,6 +28,7 @@ BUG FIXES:
 22. Fix the type mismatch bool/Varchar(N) of WIKINDX_LIST_LINK (#216).
 23. Fix type mismatch in users options (#218).
 24. Fix utf8 encoding of two characters that triggers errors during the manual building.
+25. Fix some errors in user administration/preferences.
 
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.

@@ -69,7 +69,7 @@ class PASSWORD
             if ($username) {
                 $formText .= \HTML\td(\FORM\textInput(
                     $messages->text("user", "username"),
-                    "usersUsername",
+                    "username",
                     FALSE,
                     20,
                     255
@@ -93,7 +93,7 @@ class PASSWORD
             // superadmin from Configure menu
             $formText .= \HTML\td(\FORM\textInput(
                 $messages->text("config", "superUsername"),
-                "usersUsername",
+                "username",
                 $username,
                 20
             ) . " " . \HTML\span('*', 'required'));

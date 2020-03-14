@@ -380,7 +380,7 @@ class LISTCOMMON
     public function displayOrder($type, $reorder = FALSE)
     {
         if (($type == 'list') && !$this->browse) {
-            if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId")) {
+//            if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId")) {
                 $order = [
                     "creator" => $this->messages->text("list", "creator"),
                     "title" => $this->messages->text("list", "title"),
@@ -390,7 +390,7 @@ class LISTCOMMON
                     "viewsIndex" => $this->messages->text("list", "views"),
                     "maturityIndex" => $this->messages->text("list", "maturity"),
                 ];
-            } else {
+/*            } else {
                 $order = [
                     "creator" => $this->messages->text("list", "creator"),
                     "title" => $this->messages->text("list", "title"),
@@ -403,7 +403,8 @@ class LISTCOMMON
                     "maturityIndex" => $this->messages->text("list", "maturity"),
                 ];
             }
-        } else {
+*/        } 
+		  else {
             $order = [
                 "creator" => $this->messages->text("list", "creator"),
                 "title" => $this->messages->text("list", "title"),
@@ -633,7 +634,7 @@ class LISTCOMMON
             $attachments = $musings = [];
             $edit = FALSE;
             // Check if these resources have attachments and display view icons accordingly. Also, calculate the resource's popularity index
-            if ($this->session->getVar("setup_UserId") || !WIKINDX_FILE_VIEW_LOGGEDON_ONLY) {
+ /*           if ($this->session->getVar("setup_UserId") || !WIKINDX_FILE_VIEW_LOGGEDON_ONLY) {
                 foreach ($resourceList as $resourceId => $resourceArray) {
                     if (array_key_exists('index', $this->rows[$resourceId])) { // listing by popularity index so index already calculated from database
                         $popIndex = $this->rows[$resourceId]['index'] * 100;
@@ -643,7 +644,7 @@ class LISTCOMMON
                     $resourceList[$resourceId]['popIndex'] = $this->messages->text("misc", "popIndex", $popIndex);
                 }
             }
-            // Check if these resources have metadata and display view icons accordingly
+*/            // Check if these resources have metadata and display view icons accordingly
             $this->db->formatConditionsOneField(array_keys($resources), 'resourcemetadataResourceId');
             $this->db->formatConditionsOneField(['q', 'p', 'm'], 'resourcemetadataType');
             $resultSet = $this->db->select('resource_metadata', ['resourcemetadataPrivate', 'resourcemetadataAddUserId',

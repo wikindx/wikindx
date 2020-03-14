@@ -47,6 +47,7 @@ MAINTENANCE:
 14. DB upgrade – transfer data from statistics, resource_misc and resource_attachments tables to new statistics_resource_views and statistics_attachment_downloads tables and drop statistics table and other relevant columns.
 15. Add a UNIQUE constraint on usersUsername column (#219).
 16. Fix the default value of users table.
+17. Disable display of views index, popularity index and downloads index in single resource views and resource lists and disable ability to order by these in Quick list all... operations. On large databases, the compilation of the indices takes too long. At a later stage such indices will be available in the Statistics menu.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

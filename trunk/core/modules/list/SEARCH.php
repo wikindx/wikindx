@@ -2123,11 +2123,13 @@ class SEARCH
             $this->commonBib->userBibCondition('resourcetextId');
         }
         $this->db->formatConditions(['resourcetextNote' => 'IS NOT NULL']);
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         $resultSet = $this->db->select('resource_text', 'resourcetextId');
         if ($this->db->fetchOne($resultSet)) {
             $fields['note'] = $this->messages->text("search", "note");
         }
         $this->db->formatConditions(['resourcetextAbstract' => 'IS NOT NULL']);
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         $resultSet = $this->db->select('resource_text', 'resourcetextId');
         if ($this->db->fetchOne($resultSet)) {
             $fields['abstract'] = $this->messages->text("search", "abstract");
@@ -2142,6 +2144,7 @@ class SEARCH
                     $this->commonBib->userBibCondition('resourcemetadataResourceId');
                 }
                 $this->db->formatConditions(['resourcemetadataType' => 'q']);
+        		$this->db->limit(1, 0); // Keep memory usage down for large databases
                 $resultSet = $this->db->select('resource_metadata', 'resourcemetadataId');
                 if ($this->db->fetchOne($resultSet)) {
                     $fields['quote'] = $this->messages->text("search", "quote");
@@ -2152,6 +2155,7 @@ class SEARCH
                 $this->commonBib->userBibCondition('resourcemetadataResourceId');
             }
             $this->db->formatConditions(['resourcemetadataType' => 'q']);
+       		$this->db->limit(1, 0); // Keep memory usage down for large databases
             $resultSet = $this->db->select('resource_metadata', 'resourcemetadataId');
             if ($this->db->fetchOne($resultSet)) {
                 $fields['quote'] = $this->messages->text("search", "quote");
@@ -2166,6 +2170,7 @@ class SEARCH
                     $this->commonBib->userBibCondition('resourcemetadataResourceId');
                 }
                 $this->db->formatConditions(['resourcemetadataType' => 'p']);
+        		$this->db->limit(1, 0); // Keep memory usage down for large databases
                 $resultSet = $this->db->select('resource_metadata', 'resourcemetadataId');
                 if ($this->db->fetchOne($resultSet)) {
                     $fields['paraphrase'] = $this->messages->text("search", "paraphrase");
@@ -2176,6 +2181,7 @@ class SEARCH
                 $this->commonBib->userBibCondition('resourcemetadataResourceId');
             }
             $this->db->formatConditions(['resourcemetadataType' => 'p']);
+        	$this->db->limit(1, 0); // Keep memory usage down for large databases
             $resultSet = $this->db->select('resource_metadata', 'resourcemetadataId');
             if ($this->db->fetchOne($resultSet)) {
                 $fields['paraphrase'] = $this->messages->text("search", "paraphrase");
@@ -2204,18 +2210,21 @@ class SEARCH
         if ($userBib) {
             $this->commonBib->userBibCondition('resourcecreatorId');
         }
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->select('resource_creator', 'resourcecreatorId'))) {
             $fields['creator'] = $this->messages->text("search", "creator");
         }
         if ($userBib) {
             $this->commonBib->userBibCondition('resourcemiscPublisher');
         }
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscPublisher'))) {
             $fields['publisher'] = $this->messages->text("search", "publisher");
         }
         if ($userBib) {
             $this->commonBib->userBibCondition('resourcemiscCollection');
         }
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscCollection'))) {
             $fields['collection'] = $this->messages->text("search", "collection");
         }
@@ -2225,6 +2234,7 @@ class SEARCH
             $this->commonBib->userBibCondition('resourcecategoryResourceId');
         }
         $this->db->formatConditions(['resourcecategorySubcategoryId' => 'IS NOT NULL']);
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->select('resource_category', 'resourcecategorySubcategoryId'))) {
             $fields['subcategory'] = $this->messages->text("search", "subcategory");
         }
@@ -2232,6 +2242,7 @@ class SEARCH
             $this->commonBib->userBibCondition('resourcekeywordResourceId');
         }
         $this->db->formatConditions(['resourcekeywordResourceId' => 'IS NOT NULL']);
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->select('resource_keyword', 'resourcekeywordId'))) {
             $fields['keyword'] = $this->messages->text("search", "keyword");
         }
@@ -2244,9 +2255,11 @@ class SEARCH
         if ($userBib) {
             $this->commonBib->userBibCondition('resourcelanguageResourceId');
         }
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->select('resource_language', 'resourcelanguageId'))) {
             $fields['language'] = $this->messages->text("search", "language");
         }
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->selectCount('tag', 'tagId'))) {
             $fields['tag'] = $this->messages->text("search", "tag");
         }
@@ -2256,6 +2269,7 @@ class SEARCH
                 $this->commonBib->userBibCondition('resourcemiscId');
             }
             $this->db->formatConditions(['resourcemiscAddUserIdResource' => 'IS NOT NULL']);
+        	$this->db->limit(1, 0); // Keep memory usage down for large databases
             if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscAddUserIdResource'))) {
                 $fields['addedBy'] = $this->messages->text("search", "addedBy");
             }
@@ -2263,6 +2277,7 @@ class SEARCH
                 $this->commonBib->userBibCondition('resourcemiscId');
             }
             $this->db->formatConditions(['resourcemiscEditUserIdResource' => 'IS NOT NULL']);
+        	$this->db->limit(1, 0); // Keep memory usage down for large databases
             if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscEditUserIdResource'))) {
                 $fields['editedBy'] = $this->messages->text("search", "editedBy");
             }
@@ -2271,6 +2286,7 @@ class SEARCH
             $this->commonBib->userBibCondition('resourceyearId');
         }
         $this->db->formatConditions(['resourceyearYear1' => 'IS NOT NULL']);
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->select('resource_year', 'resourceyearYear1'))) {
             $fields['publicationYear'] = $this->messages->text("search", "publicationYear");
         }
@@ -2278,12 +2294,14 @@ class SEARCH
             $this->commonBib->userBibCondition('resourcemiscId');
         }
         $this->db->formatConditions(['statisticsresourceviewsCount' => 'IS NOT NULL']);
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->select('statistics_resource_views', 'statisticsresourceviewsCount'))) {
             $fields['access'] = $this->messages->text("search", "access");
         }
         if ($userBib) {
             $this->commonBib->userBibCondition('resourcemiscId');
         }
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscMaturityIndex'))) {
             $fields['maturityIndex'] = $this->messages->text("search", "maturityIndex");
         }

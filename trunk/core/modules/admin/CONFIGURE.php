@@ -402,9 +402,9 @@ class CONFIGURE
             'debug' => $this->messages->text('config', 'debugging'),
         ];
         // Only for superadmin who is always userid = WIKINDX_SUPERADMIN_ID
-        if (!$this->session->issetVar("setup_UserId") || ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID)) {
-            $groups = ['super' => $this->messages->text('config', 'superAdmin')] + $groups;
-        }
+//        if (!$this->session->issetVar("setup_UserId") || ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID)) {
+//            $groups = ['super' => $this->messages->text('config', 'superAdmin')] + $groups;
+//        }
 
         return $groups;
     }

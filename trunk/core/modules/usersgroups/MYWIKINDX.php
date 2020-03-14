@@ -120,6 +120,12 @@ class MYWIKINDX
      */
     public function userConfigEdit()
     {
+    	if ($this->session->getVar('setup_UserId' == WIKINDX_SUPERADMIN_ID))
+    	{
+			if (!trim($this->vars['username']) || !trim($this->vars['username'])) {
+				$this->badInputLoad($this->errors->text("inputError", "missing"), 'user');
+			}
+        }
         if (!trim($this->vars['password']) || !trim($this->vars['passwordConfirm'])) {
             $this->badInputLoad($this->errors->text("inputError", "missing"), 'user');
         }
@@ -1481,8 +1487,14 @@ class MYWIKINDX
         }
         if ($item == 'user') {
             $password = FACTORY_PASSWORD::getInstance();
-            $input = $this->session->getVar("setup_Username");
-            list($formText, $jsString) = $password->createElements(FALSE);
+            if ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID)
+            {
+    	        list($formText, $jsString) = $password->createElements($this->userName, TRUE);
+    	    }
+    	    else
+    	    {
+    	        list($formText, $jsString) = $password->createElements(FALSE);
+    	    }
             $pString = \FORM\formHeader("usersgroups_MYWIKINDX_CORE", 'onsubmit="return checkForm(' . $jsString . ');"');
         } elseif (($item == 'userGroups')) {
             $pString = \FORM\formHeader(FALSE);

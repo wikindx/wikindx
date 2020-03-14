@@ -57,11 +57,12 @@ class USER
     public function writeUser($add = TRUE, int $admin = 0)
     {
         $userId = $this->session->getVar("setup_UserId", 0);
+        $username = FALSE;
         
-        if ($add && !array_key_exists('username', $this->vars)) {
+        if (($add || ($userId == WIKINDX_SUPERADMIN_ID)) && !array_key_exists('username', $this->vars)) {
             return "username field missing";
         }
-        elseif ($add) {
+        elseif ($add || ($userId == WIKINDX_SUPERADMIN_ID)) {
             $username = \HTML\removeNl($this->vars['username']);
         }
         if (!array_key_exists('password', $this->vars)) {
@@ -84,9 +85,6 @@ class USER
         
         if (!$add) { // update
             if ($admin == 0) { // user editing own details
-                $userId = $this->session->getVar("setup_UserId");
-				$this->db->formatConditions(['usersId' => $userId]);
-				$username = $this->db->fetchOne($this->db->select('users', 'usersUsername'));
                 $cookie = FACTORY_COOKIE::getInstance();
                 if (array_key_exists('cookie', $this->vars) && $this->vars['cookie']) {
                     $cookie->storeCookie($username);
@@ -158,6 +156,9 @@ class USER
                 $update['usersUsername'] = $username;
             } else {
                 $update['usersEmail'] = $this->vars['email'];
+            }
+            if ($username) {
+            	$update['usersUsername'] = $username;
             }
             $this->db->formatConditions(['usersId' => $userId]);
             $this->db->update('users', $update);

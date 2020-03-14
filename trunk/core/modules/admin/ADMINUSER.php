@@ -563,12 +563,9 @@ class ADMINUSER
     private function grabUsers()
     {
         $this->users = $this->user->grabAll(TRUE);
-        // don't allow this user to operate on self or superadmin (id == WIKINDX_SUPERADMIN_ID)
+        // don't allow non-superAdmin admins to operate on superadmin (id == WIKINDX_SUPERADMIN_ID)
         $this->selfId = $this->session->getVar("setup_UserId");
-        if (array_key_exists($this->selfId, $this->users)) {
-            unset($this->users[$this->selfId]);
-        }
-        if (array_key_exists(WIKINDX_SUPERADMIN_ID, $this->users)) {
+        if (array_key_exists(WIKINDX_SUPERADMIN_ID, $this->users) && ($this->selfId != WIKINDX_SUPERADMIN_ID)) {
             unset($this->users[WIKINDX_SUPERADMIN_ID]);
         }
     }

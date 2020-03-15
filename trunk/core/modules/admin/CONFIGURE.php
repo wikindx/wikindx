@@ -401,10 +401,6 @@ class CONFIGURE
             'misc' => $this->messages->text('config', 'misc'),
             'debug' => $this->messages->text('config', 'debugging'),
         ];
-        // Only for superadmin who is always userid = WIKINDX_SUPERADMIN_ID
-//        if (!$this->session->issetVar("setup_UserId") || ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID)) {
-//            $groups = ['super' => $this->messages->text('config', 'superAdmin')] + $groups;
-//        }
 
         return $groups;
     }
@@ -442,10 +438,6 @@ class CONFIGURE
         $pString .= \FORM\hidden("method", "writeDb");
         $pString .= \FORM\hidden("selectItem", $item);
         switch ($item) {
-            case 'super': // super admin configuration
-                $pString .= $this->superConfigDisplay($formText);
-
-                break;
             case 'front': // front page configuration
                 $pString .= $this->frontConfigDisplay();
 
@@ -569,60 +561,6 @@ class CONFIGURE
             $this->messages->text("config", "description"),
             "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=displayFrontDescription" . "', 90)"
         ));
-        $pString .= \HTML\trEnd();
-        $pString .= \HTML\tableEnd();
-
-        return $pString;
-    }
-    /**
-     * Display super config options
-     *
-     * @param mixed $formText
-     *
-     * @return string
-     */
-    private function superConfigDisplay($formText)
-    {
-        $pString = $this->errorString;
-        $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
-        $pString .= \HTML\trStart();
-        $pString .= $formText;
-        $pString .= \HTML\trEnd();
-        $pString .= \HTML\trStart();
-        $pString .= \HTML\td('&nbsp;');
-        $pString .= \HTML\td('&nbsp;');
-        $pString .= \HTML\td('&nbsp;');
-        $pString .= \HTML\trEnd();
-        $pString .= \HTML\trStart();
-        $input = array_key_exists("usersEmail", $this->values) ? $this->values["usersEmail"] : FALSE;
-        $pString .= \HTML\td(\FORM\textInput(
-            $this->messages->text("user", "email"),
-            "usersEmail",
-            $input,
-            30
-        ) . " " . \HTML\span('*', 'required'));
-        $input = array_key_exists("usersFullname", $this->values) ? $this->values["usersFullname"] : FALSE;
-        $pString .= \HTML\td(\FORM\textInput(
-            $this->messages->text("user", "fullname"),
-            "usersFullname",
-            $input,
-            30
-        ));
-        // User is creator
-        $creator = FACTORY_CREATOR::getInstance();
-        $creators = $creator->grabAll(FALSE, FALSE, FALSE, TRUE);
-        if (is_array($creators)) {
-            // add 0 => IGNORE to creators array
-            $creators = [0 => $this->messages->text("misc", "ignore")] + $creators;
-            $input = array_key_exists("usersIsCreator", $this->values) ? $this->values["usersIsCreator"] : FALSE;
-            $pString .= \HTML\td(\FORM\selectedBoxValue(
-                $this->messages->text("user", "isCreator"),
-                "usersIsCreator",
-                $creators,
-                $input,
-                1
-            ));
-        }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 

@@ -25,7 +25,6 @@ class PASSWORD
      */
     public function createElements($username = TRUE, $super = FALSE)
     {
-        $db = FACTORY_DB::getInstance();
         $errors = FACTORY_ERRORS::getInstance();
         $messages = FACTORY_MESSAGES::getInstance();
         

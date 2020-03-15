@@ -188,9 +188,11 @@ class SOUNDEXPLORERQUICKSEARCH
     private function searchFields()
     {
         $fields = ["title" => $this->coremessages->text("search", "title")];
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->selectCount('resource_creator', 'resourcecreatorId'))) {
             $fields['creator'] = $this->coremessages->text("search", "creator");
         }
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->selectCount('resource_text', 'resourcetextId'))) {
             $fields['note'] = $this->coremessages->text("search", "note");
         }
@@ -198,14 +200,17 @@ class SOUNDEXPLORERQUICKSEARCH
             $fields['abstract'] = $this->coremessages->text("search", "abstract");
         }
         $this->db->formatConditions(['resourcemetadataType' => 'q']);
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->selectCount('resource_metadata', 'resourcemetadataId'))) {
             $fields['quote'] = $this->coremessages->text("search", "quote");
         }
         $this->db->formatConditions(['resourcemetadataType' => 'p']);
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->selectCount('resource_metadata', 'resourcemetadataId'))) {
             $fields['paraphrase'] = $this->coremessages->text("search", "paraphrase");
         }
         $this->db->formatConditions(['resourcemetadataType' => 'm']);
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         if ($this->db->fetchOne($this->db->selectCount('resource_metadata', 'resourcemetadataId'))) {
             $fields['musing'] = $this->coremessages->text("search", "musing");
         }

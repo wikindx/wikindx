@@ -335,11 +335,11 @@ class UPDATEDATABASE
     {
         if ($this->db->tableIsEmpty('users'))
         {
-            include_once("core/modules/admin/CONFIGURE.php");
-            $config = new CONFIGURE(TRUE);
+            include_once("core/modules/usersgroups/SUPERADMIN.php");
+            $config = new SUPERADMIN(TRUE);
             // force super initialization in CONFIGURE
             $config->insert = TRUE;
-            if (isset($this->vars['action']) && $this->vars['action'] == 'admin_CONFIGURE_CORE')
+            if (isset($this->vars['action']) && $this->vars['action'] == 'usersgroups_SUPERADMIN_CORE')
             {
                 GLOBALS::addTplVar('content', $config->writeDb());
             }
@@ -1797,9 +1797,9 @@ END;
         $pString = \HTML\p(\HTML\strong($this->installMessages->text("upgradeDBHeading")));
 
         $vars = GLOBALS::getVars();
-        $vars['username'] = isset($vars['username']) ? $vars['username'] : '';
+        $vars['usersUsername'] = isset($vars['usersUsername']) ? $vars['usersUsername'] : '';
         $vars['password'] = isset($vars['password']) ? $vars['password'] : '';
-        if (\UPDATE\logonCheckUpgradeDB($this->db, $vars['username'], $vars['password'], $currentdbVersion))
+        if (\UPDATE\logonCheckUpgradeDB($this->db, $vars['usersUsername'], $vars['password'], $currentdbVersion))
         {
             $this->session->clearSessionData();
             $this->session->setVar("setup_Superadmin", TRUE);
@@ -1827,7 +1827,7 @@ END;
             $pString .= \HTML\tableStart('left width50percent');
             $pString .= \HTML\trStart();
             $pString .= \HTML\td($this->messages->text("user", "username") . ":&nbsp;&nbsp;");
-            $pString .= \HTML\td(\FORM\textInput(FALSE, "username"));
+            $pString .= \HTML\td(\FORM\textInput(FALSE, "usersUsername"));
             $pString .= \HTML\trEnd();
             $pString .= \HTML\trStart();
             $pString .= \HTML\td($this->messages->text("user", "password") . ":&nbsp;&nbsp;");

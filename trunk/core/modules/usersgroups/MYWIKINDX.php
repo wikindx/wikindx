@@ -120,6 +120,9 @@ class MYWIKINDX
      */
     public function userConfigEdit()
     {
+        // Reinject the username after a change otherwise the value is taken from the db before the change
+        $this->usersUsername = $this->vars['usersUsername'];
+        
     	if ($this->session->getVar('setup_UserId' == WIKINDX_SUPERADMIN_ID))
     	{
 			if (!trim($this->vars['usersUsername']) || !trim($this->vars['usersUsername'])) {

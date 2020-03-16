@@ -262,57 +262,9 @@ class CONFIGURE
         }
         $headerRedirect = FALSE;
         if ($this->insert) {
-            $usersFieldArray = $usersValueArray = [];
-            // if inserting after initial install, write superadmin's preferences to users table and create user session
-            $usersFieldArray[] = 'usersUsername';
-            $usersValueArray[] = $this->vars['usersUsername'];
-            $usersFieldArray[] = 'usersPassword';
-            $usersValueArray[] = crypt($this->vars['password'], UTF8::mb_strrev(time()));
-            $usersFieldArray[] = 'usersEmail';
-            $usersValueArray[] = $this->vars['usersEmail'];
-            $usersFieldArray[] = 'usersAdmin';
-            $usersValueArray[] = TRUE;
-            if (array_key_exists('usersFullname', $this->vars)) {
-                $usersFieldArray[] = 'usersFullname';
-                $usersValueArray[] = $this->vars['usersFullname'];
-            }
-            if (array_key_exists('usersIsCreator', $this->vars) && $this->vars['usersIsCreator']) {
-                $usersValueArray[] = $this->vars['usersIsCreator'];
-                $usersFieldArray[] = 'usersIsCreator';
-            }
-            $this->db->insert('users', $usersFieldArray, $usersValueArray);
-            $this->user->writeSessionPreferences(WIKINDX_SUPERADMIN_ID); // '1' == superAdmin
             $this->insert = FALSE;
         } else {
-            $updateUserArray = $nullsUserArray = [];
             $configFields = $this->configDbStructure->getAllData();
-            // Write user table first if updating superadmin information
-            if (array_key_exists('usersUsername', $this->vars)) {
-                $updateUserArray['usersUsername'] = $this->vars['usersUsername'];
-            }
-            if (array_key_exists('usersEmail', $this->vars)) {
-                $updateUserArray['usersEmail'] = $this->vars['usersEmail'];
-            }
-            if (array_key_exists('password', $this->vars) && ($this->vars['password'] != $this->db->selectFirstField('users', 'usersPassword'))) {
-                $updateUserArray['usersPassword'] = crypt($this->vars['password'], UTF8::mb_strrev(time()));
-            }
-            if (array_key_exists('usersFullname', $this->vars)) {
-                $updateUserArray['usersFullname'] = $this->vars['usersFullname'];
-            }
-            if (array_key_exists('usersIsCreator', $this->vars)) {
-                if ($this->vars['usersIsCreator'] != "0")
-                    $updateUserArray['usersIsCreator'] = $this->vars['usersIsCreator'];
-                else
-                    $nullsUserArray[] = 'usersIsCreator';
-            }
-            if (!empty($updateUserArray)) {
-                $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
-                $this->db->update('users', $updateUserArray);
-            }
-            if (!empty($nullsUserArray)) {
-                $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID]);
-                $this->db->updateNull('users', $nullsUserArray);
-            }
             foreach ($updateArray as $field => $value) {
                 if ($field == 'configDebugSql') { // debugging configuration – see header() below
                     $headerRedirect = TRUE;
@@ -427,14 +379,7 @@ class CONFIGURE
             }
         }
         $pString = '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/admin/configure.js"></script>';
-        if ($item == 'super') {
-            $password = FACTORY_PASSWORD::getInstance();
-            $input = array_key_exists("usersUsername", $this->values) ? $this->values["usersUsername"] : FALSE;
-            list($formText, $jsString) = $password->createElements($input, TRUE);
-            $pString .= \FORM\formHeader("admin_CONFIGURE_CORE", 'onsubmit="selectAll();return checkForm(' . $jsString . ');"');
-        } else {
-            $pString .= \FORM\formHeader("admin_CONFIGURE_CORE", "onsubmit=\"selectAll();return true;\"");
-        }
+        $pString .= \FORM\formHeader("admin_CONFIGURE_CORE", "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden("method", "writeDb");
         $pString .= \FORM\hidden("selectItem", $item);
         switch ($item) {
@@ -1567,9 +1512,6 @@ class CONFIGURE
     private function getPossibleVars()
     {
         switch ($this->vars['selectItem']) {
-            case 'super': // super admin configuration
-                $array = []; // keep empty as superadmin fields treated separately
-                break;
             case 'front': // front page configuration
                 $array = [
                     "configContactEmail",
@@ -1852,21 +1794,6 @@ class CONFIGURE
                 $this->session->delVar("setup_" . str_replace('config', 'setup', $key));
             }
         }
-        if (array_key_exists('usersFullname', $this->vars)) {
-            $array['usersFullname'] = trim($this->vars['usersFullname']);
-        } else {
-            $this->session->delVar("config_usersFullname");
-        }
-        if (array_key_exists('usersIsCreator', $this->vars)) {
-            $array['usersIsCreator'] = trim($this->vars['usersIsCreator']);
-        } else {
-            $this->session->delVar("config_usersIsCreator");
-        }
-        if (array_key_exists('usersEmail', $this->vars)) {
-            $array['usersEmail'] = trim($this->vars['usersEmail']);
-        } else {
-            $this->session->delVar("config_usersEmail");
-        }
         if (!empty($array)) {
             $this->session->writeArray($array, "config");
         }
@@ -1901,24 +1828,13 @@ class CONFIGURE
             "configTagLowColour",
             "configTemplate",
             "configTimezone",
-            "password",
-            "passwordConfirm",
-            "usersEmail",
-            "usersUsername",
         ];
         foreach ($required as $value) {
             if (array_key_exists($value, $this->vars)) {
                 $input = trim($this->vars[$value]);
-                if ($value == 'usersUsername') {
-                    if (array_search(mb_strtolower($input), ['sa', 'admin', 'super', 'superadmin'])) {
-                        $this->badInputLoad($this->errors->text("inputError", 'badUsername', " ($value) "), $this->vars['selectItem']);
-                    }
+                if (!$input) {
+                    $this->badInputLoad($this->errors->text("inputError", 'missing', " ($value) "), $this->vars['selectItem']);
                 }
-            } else {
-                continue;
-            }
-            if (!$input) {
-                $this->badInputLoad($this->errors->text("inputError", 'missing', " ($value) "), $this->vars['selectItem']);
             }
         }
         if (array_key_exists('password', $this->vars) && ($this->vars['password'] != $this->vars['passwordConfirm'])) {
@@ -2049,18 +1965,6 @@ class CONFIGURE
             if ((WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field] == 'configBoolean') && !$value) {
                 unset($row[$field]);
             }
-        }
-        // user id is stored in session if user has already logged on.
-        if ($userId = $this->session->getVar("setup_UserId")) {
-            $this->db->formatConditions(['usersId' => $userId]);
-            $recordset = $this->db->select('users', ['usersUsername', 'usersPassword',
-                'usersFullname', 'usersEmail', 'usersAdmin', 'usersIsCreator', ]);
-            $rowT = $this->db->fetchRow($recordset);
-            $row['usersUsername'] = $rowT['usersUsername'];
-            $row['password'] = $row['passwordConfirm'] = $rowT['usersPassword'];
-            $row['usersFullname'] = $rowT['usersFullname'];
-            $row['usersEmail'] = $rowT['usersEmail'];
-            $row['usersIsCreator'] = $rowT['usersIsCreator'];
         }
         // 'lastChanges' can be 0 so may not exist if called from the session
         if (!array_key_exists('configLastChanges', $row) || !$row['configLastChanges']) {

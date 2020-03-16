@@ -48,7 +48,7 @@ class FORGET
         $pString .= \HTML\p($this->messages->text("user", "forget7"));
         $string = \FORM\textInput(
             $this->messages->text("user", "username"),
-            "username",
+            "usersUsername",
             FALSE,
             50,
             255
@@ -76,8 +76,8 @@ class FORGET
     public function forgetInitStage2($error = FALSE)
     {
         $this->badInput->closeType = 'closeNoMenu';
-        if (array_key_exists('username', $this->vars) && ($username = trim($this->vars['username']))) {
-            $this->db->formatConditions(['usersUsername' => $username]);
+        if (array_key_exists('usersUsername', $this->vars) && ($usersUsername = trim($this->vars['usersUsername']))) {
+            $this->db->formatConditions(['usersUsername' => $usersUsername]);
         } elseif (array_key_exists('email', $this->vars) && ($email = trim($this->vars['email']))) {
             $this->db->formatConditions(['usersEmail' => $email]);
         } else {
@@ -101,7 +101,7 @@ class FORGET
             $this->badInput->close($this->errors->text("warning", "forget2"), $this, 'forgetInitStage1');
         }
         $row = $this->db->fetchRow($recordSet);
-        $pString .= \FORM\hidden("username", $row['usersUsername']);
+        $pString .= \FORM\hidden("usersUsername", $row['usersUsername']);
         $pString .= \FORM\hidden("email", $row['usersEmail']);
         $questionFound = FALSE;
         for ($i = 1; $i < 4; $i++) {
@@ -136,8 +136,8 @@ class FORGET
     public function forgetProcess()
     {
         $this->badInput->closeType = 'closeNoMenu';
-        $username = trim($this->vars['username']);
-        $this->db->formatConditions(['usersUsername' => $username]);
+        $usersUsername = trim($this->vars['usersUsername']);
+        $this->db->formatConditions(['usersUsername' => $usersUsername]);
         for ($i = 1; $i < 4; $i++) {
             $userArray[] = "usersPasswordQuestion$i";
             $userArray[] = "usersPasswordAnswer$i";
@@ -155,7 +155,7 @@ class FORGET
         include_once("core/modules/email/EMAIL.php");
         $emailClass = new EMAIL();
         $password = time();
-        if (!$emailClass->forgetProcess($username, $password)) {
+        if (!$emailClass->forgetProcess($usersUsername, $password)) {
             $email = WIKINDX_CONTACT_EMAIL;
             if ($email) {
                 $email = \HTML\nlToHtml($email);
@@ -171,7 +171,7 @@ class FORGET
         // and then the update code below will fail.  This is judged to be the lesser of two evils.
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "forget"));
         $cryptPassword = crypt($password, UTF8::mb_strrev(time()));
-        $this->db->formatConditions(['usersUsername' => $username]);
+        $this->db->formatConditions(['usersUsername' => $usersUsername]);
         $this->db->updateSingle('users', $this->db->formatFields('usersPassword') . $this->db->equal .
             $this->db->tidyInput($cryptPassword));
         $pString = $this->messages->text("user", "forget10");

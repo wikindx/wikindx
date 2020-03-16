@@ -459,14 +459,14 @@ class ADMINUSER
         }
         $recordset = $this->db->select('users', ["usersId", "usersUsername", "usersFullname", "usersAdmin"], TRUE);
         while ($row = $this->db->fetchRow($recordset)) {
-            $userName = $row['usersUsername'];
+            $usersUsername = $row['usersUsername'];
             if ($row['usersFullname']) {
-                $userName .= " (" . $row['usersFullname'] . ")";
+                $usersUsername .= " (" . $row['usersFullname'] . ")";
             }
             if ($row['usersAdmin']) {
-                $userName .= " ADMIN";
+                $usersUsername .= " ADMIN";
             }
-            $users[$row['usersId']] = \HTML\dbToFormTidy($userName);
+            $users[$row['usersId']] = \HTML\dbToFormTidy($usersUsername);
         }
 
         return $users;

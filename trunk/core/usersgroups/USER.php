@@ -46,7 +46,7 @@ class USER
      * If $admin = 1, this is the initial configuration/reconfiguration and we need to insert superadmin details into the database.
      * If $admin = 2, this is an admin editing or adding a user.
      * a) the user may not change the username from this screen.
-     * When adding a user, we need to check there is not already $username (caseless) in the database.
+     * When adding a user, we need to check there is not already $usersUsername (caseless) in the database.
      * NB - returns FALSE in case of success, an error message in case of failure.
      *
      * @param bool $add Default is TRUE
@@ -57,13 +57,13 @@ class USER
     public function writeUser($add = TRUE, int $admin = 0)
     {
         $userId = $this->session->getVar("setup_UserId", 0);
-        $username = FALSE;
+        $usersUsername = FALSE;
         
-        if (($add || ($userId == WIKINDX_SUPERADMIN_ID)) && !array_key_exists('username', $this->vars)) {
+        if (($add || ($userId == WIKINDX_SUPERADMIN_ID)) && !array_key_exists('usersUsername', $this->vars)) {
             return "username field missing";
         }
         elseif ($add || ($userId == WIKINDX_SUPERADMIN_ID)) {
-            $username = \HTML\removeNl($this->vars['username']);
+            $usersUsername = \HTML\removeNl($this->vars['usersUsername']);
         }
         if (!array_key_exists('password', $this->vars)) {
             return "password field missing";
@@ -71,12 +71,12 @@ class USER
         else {
             $password = \HTML\removeNl($this->vars['password']);
         }
-        // check for existing usernames (remove current user from search if already logged in with setup_userId)
+        // check for existing usersUsername (remove current user from search if already logged in with setup_userId)
         if ($add)
         {
-			$this->db->formatConditions(['usersUsername' => $username]);
+			$this->db->formatConditions(['usersUsername' => $usersUsername]);
 			$this->db->formatConditions(['usersId' => $userId], TRUE); // Not equal to
-			// existing user with that username found (not this user)
+			// existing user with that usersUsername found (not this user)
 			$recordset = $this->db->select('users', 'usersId');
 			if ($this->db->numRows($recordset)) {
 				return $this->errors->text("inputError", "userExists");
@@ -87,7 +87,7 @@ class USER
             if ($admin == 0) { // user editing own details
                 $cookie = FACTORY_COOKIE::getInstance();
                 if (array_key_exists('cookie', $this->vars) && $this->vars['cookie']) {
-                    $cookie->storeCookie($username);
+                    $cookie->storeCookie($usersUsername);
                     $update['usersCookie'] = 'Y';
                 } else {
                     // remove any wikindx cookie that has been set
@@ -153,19 +153,19 @@ class USER
                 $this->db->updateNull('users', 'usersFullname');
             }
             if ($admin == 1) { // superadmin configuration
-                $update['usersUsername'] = $username;
+                $update['usersUsername'] = $usersUsername;
             } else {
                 $update['usersEmail'] = $this->vars['email'];
             }
-            if ($username) {
-            	$update['usersUsername'] = $username;
+            if ($usersUsername) {
+            	$update['usersUsername'] = $usersUsername;
             }
             $this->db->formatConditions(['usersId' => $userId]);
             $this->db->update('users', $update);
         } else { // insert new user
             $password = crypt($password, UTF8::mb_strrev(time()));
             $field[] = 'usersUsername';
-            $value[] = $username;
+            $value[] = $usersUsername;
             $field[] = 'usersPassword';
             $value[] = $password;
             if (array_key_exists('email', $this->vars) &&
@@ -221,17 +221,17 @@ class USER
      *
      * Decide if this is standard WIKINDX logon or LDAP logon
      *
-     * @param string $username
+     * @param string $usersUsername
      * @param string $pwdInput
      *
      * @return bool
      */
-    public function checkPassword($username, $pwdInput)
+    public function checkPassword($usersUsername, $pwdInput)
     {
         if (WIKINDX_LDAP_USE !== FALSE) {
-            return $this->ldapCheckPassword($username, $pwdInput);
+            return $this->ldapCheckPassword($usersUsername, $pwdInput);
         } else {
-            return $this->wikindxCheckPassword($username, $pwdInput);
+            return $this->wikindxCheckPassword($usersUsername, $pwdInput);
         }
     }
     /**
@@ -240,14 +240,14 @@ class USER
      * We don't store the LDAP password just 'LDAP' to indicate a LDAP user
      *
      * @param array $info ldap info
-     * @param string $username username
+     * @param string $usersUsername Username
      *
      * @return int
      */
-    public function writeLdapUser($info, $username)
+    public function writeLdapUser($info, $usersUsername)
     {
         $field[] = 'usersUsername';
-        $value[] = $username;
+        $value[] = $usersUsername;
         $field[] = 'usersPassword';
         $value[] = 'LDAP';
         $field[] = 'usersEmail';
@@ -265,9 +265,9 @@ class USER
      * set up user environment on first logon
      *
      * @param array $row
-     * @param string $username Default is FALSE
+     * @param string $usersUsername Default is FALSE
      */
-    public function environment($row, $username = FALSE)
+    public function environment($row, $usersUsername = FALSE)
     {
         // First delete any pre-existing session
         $this->session->clearSessionData();
@@ -283,10 +283,10 @@ class USER
         $this->messages = FACTORY_MESSAGES::getFreshInstance();
         $this->errors = FACTORY_ERRORS::getFreshInstance();
         //		$this->bib->grabBibliographies();
-        // If $username, we are logging in without using a cookie.  Check if we require a cookie to be set.
+        // If $usersUsername, we are logging in without using a cookie.  Check if we require a cookie to be set.
         if (array_key_exists('usersCookie', $row) && ($row['usersCookie'] == 'Y')) {
             $cookie = FACTORY_COOKIE::getInstance();
-            $cookie->storeCookie($username);
+            $cookie->storeCookie($usersUsername);
         }
     }
     /**
@@ -441,19 +441,19 @@ class USER
      */
     public function displayUserAddEditPlain($addId)
     {
-        $userName = "";
+        $usersUsername = "";
         if ($addId) {
             $this->db->formatConditions(['usersId' => $addId]);
             $recordset = $this->db->select('users', ['usersUsername', 'usersFullname']);
             $row2 = $this->db->fetchRow($recordset);
             if ($row2['usersFullname']) {
-                $userName = $row2['usersFullname'];
+                $usersUsername = $row2['usersFullname'];
             } elseif ($row2['usersUsername']) {
-                $userName = $row2['usersUsername'];
+                $usersUsername = $row2['usersUsername'];
             }
         }
 
-        return $userName;
+        return $usersUsername;
     }
     /**
      * Store user preferences in the session setup_ array
@@ -551,7 +551,7 @@ class USER
         $pString = \FORM\formHeader($form, 'onsubmit="return checkForm(' . $jsString . ');"');
         $pString .= \FORM\hidden('method', $hidden);
         $sessVar = \HTML\dbToFormTidy($this->session->getVar("mywikindx_Username"));
-        $pString .= \FORM\hidden("username", $sessVar);
+        $pString .= \FORM\hidden("usersUsername", $sessVar);
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td(\HTML\strong($this->messages->text("user", "username")) . ":&nbsp;&nbsp;$sessVar" .
@@ -785,18 +785,18 @@ class USER
         }
 
         while ($row = $this->db->fetchRow($recordset)) {
-            $userName = $row['usersUsername'];
+            $usersUsername = $row['usersUsername'];
 
             if ($full) {
                 if ($row['usersFullname']) {
-                    $userName .= " (" . $row['usersFullname'] . ")";
+                    $usersUsername .= " (" . $row['usersFullname'] . ")";
                 }
                 if ($row['usersAdmin'] == 1) {
-                    $userName .= " ADMIN";
+                    $usersUsername .= " ADMIN";
                 }
             }
 
-            $users[$row['usersId']] = \HTML\dbToFormTidy($userName);
+            $users[$row['usersId']] = \HTML\dbToFormTidy($usersUsername);
         }
         if (isset($users)) {
             return $users;
@@ -876,15 +876,15 @@ class USER
      * Return FALSE for password not found or password doesn't match.
      * Superadmin is always id = 1
      *
-     * @param string $username
+     * @param string $usersUsername
      * @param string $pwdInput
      *
      * @return bool
      */
-    private function wikindxCheckPassword($username, $pwdInput)
+    private function wikindxCheckPassword($usersUsername, $pwdInput)
     {
         $fields = $this->db->prependTableToField('users', ["Id", "Password", "Admin", "Cookie", "Block"]);
-        $this->db->formatConditions(['usersUsername' => $username]);
+        $this->db->formatConditions(['usersUsername' => $usersUsername]);
         $recordset = $this->db->select('users', $fields);
         if (!$this->db->numRows($recordset)) {
             return FALSE;
@@ -902,7 +902,7 @@ class USER
             return FALSE;
         }
         // Logged in, now set up environment
-        $this->environment($row, $username);
+        $this->environment($row, $usersUsername);
 
         return TRUE;
     }
@@ -932,12 +932,12 @@ class USER
      *
      * LDAP functions adapted from work by Fabrice Boyrie
      *
-     * @param string $username
+     * @param string $usersUsername
      * @param string $pwdInput
      *
      * @return bool
      */
-    private function ldapCheckPassword($username, $pwdInput)
+    private function ldapCheckPassword($usersUsername, $pwdInput)
     {
         if (($ds = ldap_connect(WIKINDX_LDAP_SERVER, WIKINDX_LDAP_PORT)) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapConnect"));
@@ -950,7 +950,7 @@ class USER
 
             return FALSE;
         }
-        $sr = @ldap_search($ds, WIKINDX_LDAP_DN, '(uid=' . $username . ')');
+        $sr = @ldap_search($ds, WIKINDX_LDAP_DN, '(uid=' . $usersUsername . ')');
         $info = @ldap_get_entries($ds, $sr);
         if ($info['count'] > 1) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapTooManyUsers"));
@@ -960,7 +960,7 @@ class USER
         if ($info['count'] == 1) {
             $ldaprdn = $info[0]['dn'];
         } else {
-            $ldaprdn = "cn=" . $username . "," . WIKINDX_LDAP_DN;
+            $ldaprdn = "cn=" . $usersUsername . "," . WIKINDX_LDAP_DN;
         }
         // Connexion au serveur LDAP
         $ldappass = $pwdInput;
@@ -968,12 +968,12 @@ class USER
         if ($ldapbind) {
             // L'utilisateur est authentifié
             $fields = $this->db->prependTableToField('users', ["Id", "Password", "Admin", "Cookie", "Block"]);
-            $this->db->formatConditions(['usersUsername' => $username]);
+            $this->db->formatConditions(['usersUsername' => $usersUsername]);
             $this->db->formatConditions(['usersPassword' => 'LDAP']);
             $recordset = $this->db->select('users', $fields);
             if (!$this->db->numRows($recordset)) {
                 // L'utilisateur n'existe pas on le crée
-                $userId = $this->writeLDAPUser($info[0], $username);
+                $userId = $this->writeLDAPUser($info[0], $usersUsername);
                 $this->db->formatConditions(['usersId' => $userId]);
                 $recordset = $this->db->select('users', $fields);
             }
@@ -987,7 +987,7 @@ class USER
                 return FALSE;
             }
             // Logged in, now set up environment
-            $this->environment($row, $username);
+            $this->environment($row, $usersUsername);
 
             return TRUE; // this is our ultimate goal
         } else {

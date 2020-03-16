@@ -88,8 +88,8 @@ class AUTHORIZE
             // User supplying username and password to logon to WIKINDX.
             // $auth->logonCheck() dies after printing logon screen if bad comparison.
             elseif (($this->vars["action"] == 'logon') &&
-                array_key_exists("password", $this->vars) && array_key_exists("username", $this->vars)) {
-                $this->logonCheck($this->vars['username'], $this->vars['password']);
+                array_key_exists("password", $this->vars) && array_key_exists("usersUsername", $this->vars)) {
+                $this->logonCheck($this->vars['usersUsername'], $this->vars['password']);
                 // tidy up old files
                 FILE\tidyFiles();
                 // FALSE means go to front of WIKINDX
@@ -307,7 +307,7 @@ class AUTHORIZE
         $pString .= \HTML\tableStart('left width50percent');
         $pString .= \HTML\trStart();
         $pString .= \HTML\td($messages->text("user", "username") . ":&nbsp;&nbsp;");
-        $pString .= \HTML\td(\FORM\textInput(FALSE, "username"));
+        $pString .= \HTML\td(\FORM\textInput(FALSE, "usersUsername"));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td($messages->text("user", "password") . ":&nbsp;&nbsp;");

@@ -102,10 +102,10 @@ class EMAIL
         $subject = "WIKINDX Registration Confirmation";
         if ($passwordShow) {
             $message = $this->messages->text("user", "emailText2") . "\n\nWIKINDX:\t\t" . WIKINDX_BASE_URL . "\n\nUSERNAME:\t\t" .
-                trim($this->vars['username']) . "\n\nPASSWORD:\t\t" . trim($this->vars['password']) . "\n" . LF;
+                trim($this->vars['usersUsername']) . "\n\nPASSWORD:\t\t" . trim($this->vars['password']) . "\n" . LF;
         } else {
             $message = $this->messages->text("user", "emailText2") . "\n\nWIKINDX:\t\t" . WIKINDX_BASE_URL . "\n\nUSERNAME:\t\t" .
-                trim($this->vars['username']) . "\n" . LF;
+                trim($this->vars['usersUsername']) . "\n" . LF;
         }
         if (!$this->smtp->sendEmail($email, $subject, $message)) {
             return FALSE;
@@ -114,7 +114,7 @@ class EMAIL
         $email = WIKINDX_EMAIL_NEW_REGISTRATIONS;
         if ($email && !$this->session->getVar("setup_Superadmin")) {
             $message = "A new user has registered for" . "\n\nWIKINDX:\t\t" . WIKINDX_BASE_URL . "\n\nUSERNAME:\t\t" .
-                trim($this->vars['username']) . "\n" . LF;
+                trim($this->vars['usersUsername']) . "\n" . LF;
             if ($this->vars['fullname']) {
                 $message .= "FULLNAME:\t\t" . trim($this->vars['fullname']) . "\n" . LF;
             }
@@ -255,12 +255,12 @@ class EMAIL
     /**
      * Emailing username::password to forgetful user
      *
-     * @param mixed $username
+     * @param mixed $usersUsername
      * @param mixed $password
      *
      * @return bool
      */
-    public function forgetProcess($username, $password)
+    public function forgetProcess($usersUsername, $password)
     {
         // do nothing if email is not turned on
         if (!WIKINDX_MAIL_USE) {
@@ -273,7 +273,7 @@ class EMAIL
         $message .= LF . LF;
         $message .= $this->title . ":" . str_repeat(TAB, 4) . WIKINDX_BASE_URL;
         $message .= LF . LF;
-        $message .= "USERNAME:" . str_repeat(TAB, 4) . $username;
+        $message .= "USERNAME:" . str_repeat(TAB, 4) . $usersUsername;
         $message .= LF . LF;
         $message .= "TEMPORARY PASSWORD:" . str_repeat(TAB, 2) . $password;
         $message .= LF . LF;

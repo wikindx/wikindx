@@ -23,7 +23,7 @@ class MYWIKINDX
     private $bib;
     private $badInput;
     private $errorString = FALSE;
-    private $userName = FALSE;
+    private $usersUsername = FALSE;
     private $userNameDisplay = FALSE;
 
     public function __construct()
@@ -44,7 +44,7 @@ class MYWIKINDX
                 die($this->errors->text("dbError", "read"));
             }
             $row = $this->db->fetchRow($recordset);
-            $this->userName = $row['usersUsername'];
+            $this->usersUsername = $row['usersUsername'];
             $this->userNameDisplay = ': ' . $row['usersUsername'];
         }
     }
@@ -122,7 +122,7 @@ class MYWIKINDX
     {
     	if ($this->session->getVar('setup_UserId' == WIKINDX_SUPERADMIN_ID))
     	{
-			if (!trim($this->vars['username']) || !trim($this->vars['username'])) {
+			if (!trim($this->vars['usersUsername']) || !trim($this->vars['usersUsername'])) {
 				$this->badInputLoad($this->errors->text("inputError", "missing"), 'user');
 			}
         }
@@ -1489,7 +1489,7 @@ class MYWIKINDX
             $password = FACTORY_PASSWORD::getInstance();
             if ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID)
             {
-    	        list($formText, $jsString) = $password->createElements($this->userName, TRUE);
+    	        list($formText, $jsString) = $password->createElements($this->usersUsername, TRUE);
     	    }
     	    else
     	    {
@@ -1588,7 +1588,7 @@ class MYWIKINDX
         $row = $this->db->fetchRow($recordset);
         $pString = $this->errorString;
         $pString .= \FORM\hidden("method", "userConfigEdit");
-        $pString .= \FORM\hidden("uname", $this->userName);
+        $pString .= \FORM\hidden("uname", $this->usersUsername);
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
         $pString .= $formText;

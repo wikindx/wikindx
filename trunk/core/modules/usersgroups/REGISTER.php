@@ -167,7 +167,7 @@ class REGISTER
     public function registerUserAdd()
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
-        if (!trim($this->vars['username']) || !trim($this->vars['password']) ||
+        if (!trim($this->vars['usersUsername']) || !trim($this->vars['password']) ||
             !trim($this->vars['passwordConfirm']) || !$this->vars['email'] || !$this->vars['hashKey']) {
             $this->badInput->close($this->errors->text('inputError', 'missing'), $this, 'registerConfirm');
         }
@@ -185,7 +185,7 @@ class REGISTER
         $this->db->formatConditions(['userregisterId' => $this->vars['id']]);
         $this->db->delete('user_register');
         // grab id and write initial session details to grant write access
-        $this->db->formatConditions(['usersUsername' => $this->vars['username']]);
+        $this->db->formatConditions(['usersUsername' => $this->vars['usersUsername']]);
         $userId = $this->db->selectFirstField('users', 'usersId');
         $this->session->setVar("setup_UserId", $userId);
         $this->session->setVar("setup_Write", TRUE);

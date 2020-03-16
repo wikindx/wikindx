@@ -47,9 +47,9 @@ class CLOSE
         // if this is a logged in user, display the username after the heading
         if ($userId = $this->session->getVar("setup_UserId")) {
             $this->db->formatConditions(['usersId' => $userId]);
-            $username = \HTML\nlToHtml($this->db->selectFirstField('users', 'usersUsername'));
+            $usersUsername = \HTML\nlToHtml($this->db->selectFirstField('users', 'usersUsername'));
         } else {
-            $username = '--';
+            $usersUsername = '--';
         }
 
         // During setup, there are no default style configured in session
@@ -66,7 +66,7 @@ class CLOSE
 
         $footer['wikindxVersion'] = WIKINDX_PUBLIC_VERSION . "&nbsp;&copy;" . WIKINDX_COPYRIGHT_YEAR;
         $footer['numResources'] = $this->messages->text("footer", "resources") . "&nbsp;" . $numberOfResources;
-        $footer['username'] = $this->messages->text("user", "username") . ":&nbsp;" . $username;
+        $footer['username'] = $this->messages->text("user", "username") . ":&nbsp;" . $usersUsername;
         $footer['bibliography'] = $this->messages->text("footer", "bib") . "&nbsp;" . $bib;
         $footer['style'] = $this->messages->text("footer", "style") . "&nbsp;" . $styleName;
         $footer['numQueries'] = $this->messages->text("footer", "queries") . "&nbsp;" . GLOBALS::getDbQueries();

@@ -2754,6 +2754,9 @@ class SQL
 
         $aRecordset = FALSE;
         if (is_object($recordset)) {
+            /*foreach (range(0, mysqli_num_fields($recordset) - 1) as $k) {
+                var_dump(mysqli_fetch_field_direct($recordset, $k));
+            }*/
             while ($row = mysqli_fetch_assoc($recordset)) {
                 $aRecordset[] = $row;
             }

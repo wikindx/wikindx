@@ -142,8 +142,6 @@ class LOADCONFIG
     public function loadDBConfig()
     {
         $db = FACTORY_DB::getInstance();
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-//var_dump($co->configToConstant); print '<p>';
         $tmp_config = [];
         
         // Load the configuration from the db and destroy unused config options
@@ -159,8 +157,6 @@ class LOADCONFIG
                     "configVarchar" => $row['configVarchar'],
                 ];
             } else {
-            var_dump($co); print BR;
-print 'Deleting: ' . $row['configName'] . '<p>';
                 // destroy
                 $db->formatConditions(['configName' => $row['configName']]);
                 $db->delete('config');
@@ -171,7 +167,6 @@ print 'Deleting: ' . $row['configName'] . '<p>';
         // and use its default value
         foreach (WIKINDX_LIST_CONFIG_OPTIONS_NAME as $configName => $unused) {
             if (!array_key_exists($configName, $tmp_config)) {
-print 'Inserting: ' . $configName . BR;
                 // Retrieve the default value
                 $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];
                 if (!array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {

@@ -540,7 +540,6 @@ class UPDATEDATABASE
         
         // Load a separate config class that containts original constant names
         $tmpconfig = new CONFIG();
-        
         // fv = Name of the field where the option value is stored
         // fn = Name of the field where the option name is stored
         // dv = Default value of the option
@@ -996,7 +995,15 @@ class UPDATEDATABASE
     	$resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod']);
     	while ($row = $this->db->fetchRow($resultSet))
     	{
-    	    $insertResourceValues[] = '(' . implode(',', [$row['resourcemiscId'], $month, $row['resourcemiscAccessesPeriod']], ) . ')';
+			if (!$row['resourcemiscAccessesPeriod']) // Ensure there is a valid INSERT value here ...
+			{
+				$count = 1;
+			}
+			else 
+			{
+				$count = $row['resourcemiscAccessesPeriod'];
+			}
+    	    $insertResourceValues[] = '(' . implode(',', [$row['resourcemiscId'], $month, $count], ) . ')';
     	    
     	    if (count($insertResourceValues) % 5000 == 0)
     	    {
@@ -1024,7 +1031,15 @@ class UPDATEDATABASE
     	$resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsDownloadsPeriod']);
     	while ($row = $this->db->fetchRow($resultSet))
     	{
-    	    $insertAttachmentValues[] = '(' . implode(',', [$row['resourceattachmentsResourceId'], $row['resourceattachmentsId'], $month, $row['resourceattachmentsDownloadsPeriod']], ) . ')';
+			if (!$row['resourceattachmentsDownloadsPeriod']) // Ensure there is a valid INSERT value here ...
+			{
+				$count = 1;
+			}
+			else 
+			{
+				$count = $row['resourceattachmentsDownloadsPeriod'];
+			}
+    	    $insertAttachmentValues[] = '(' . implode(',', [$row['resourceattachmentsResourceId'], $row['resourceattachmentsId'], $month, $count], ) . ')';
     	    
     	    if (count($insertAttachmentValues) % 5000 == 0)
     	    {

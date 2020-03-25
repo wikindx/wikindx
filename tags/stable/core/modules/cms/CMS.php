@@ -15,6 +15,7 @@ class CMS
     private $vars;
     private $errors;
     private $messages;
+    private $session;
     private $badInput;
 
     // Constructor
@@ -316,23 +317,24 @@ class CMS
         {
             die('Missing or incorrect queryString');
         }
+        $session = FACTORY_SESSION::getInstance();
         $db = FACTORY_DB::getInstance();
         $config = FACTORY_CONFIG::getInstance();
         if (array_key_exists('bibStyle', $_GET))
         {
-            GLOBALS::setUserVar('Style', $_GET['bibStyle']);
+            $session->setVar('setup_Style', $_GET['bibStyle']);
         }
         else
         {
-            GLOBALS::setUserVar('Style', $config->WIKINDX_CMS_BIBSTYLE);
+            $session->setVar('setup_Style', $config->WIKINDX_CMS_BIBSTYLE);
         }
         if (array_key_exists('language', $_GET))
         {
-            GLOBALS::setUserVar('Language', \LOCALES\determine_locale($_GET['language']));
+            $session->setVar('setup_Language', \LOCALES\determine_locale($_GET['language']));
         }
         else
         {
-            GLOBALS::setUserVar('Language', \LOCALES\determine_locale());
+            $session->setVar('setup_Language', \LOCALES\determine_locale());
         }
         $res = FACTORY_RESOURCECOMMON::getInstance();
         $bibStyle = FACTORY_BIBSTYLE::getInstance();
@@ -674,22 +676,23 @@ class CMS
     public function parseText()
     {
         // Set bibliographic style
+        $session = FACTORY_SESSION::getInstance();
         $config = FACTORY_CONFIG::getInstance();
         if (array_key_exists('bibStyle', $_GET))
         {
-            GLOBALS::setUserVar('Style', $_GET['bibStyle']);
+            $session->setVar('setup_Style', $_GET['bibStyle']);
         }
         else
         {
-            GLOBALS::setUserVar('Style', $config->WIKINDX_CMS_BIBSTYLE);
+            $session->setVar('setup_Style', $config->WIKINDX_CMS_BIBSTYLE);
         }
         if (array_key_exists('language', $_GET))
         {
-            GLOBALS::setUserVar('Language', \LOCALES\determine_locale($_GET['language']));
+            $session->setVar('setup_Language', \LOCALES\determine_locale($_GET['language']));
         }
         else
         {
-            GLOBALS::setUserVar('Language', \LOCALES\determine_locale());
+            $session->setVar('setup_Language', \LOCALES\determine_locale());
         }
         $cite = FACTORY_CITE::getInstance();
         if (array_key_exists('wikindxLink', $_GET) && $_GET['wikindxLink'] == 1)
@@ -813,7 +816,7 @@ class CMS
         $pString .= \FORM\hidden('method', 'display');
         $pString .= \FORM\hidden('type', 'generateCmsTag');
         $pString .= \FORM\hidden('id', $this->vars['id']);
-        $session = GLOBALS::getUserVar('cmsTagStart');
+        $session = $this->session->getVar('setup_cmsTagStart');
 
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
@@ -851,7 +854,7 @@ class CMS
             $session,
             20
         ));
-        $session = GLOBALS::getUserVar('cmsTagEnd');
+        $session = $this->session->getVar('setup_cmsTagEnd');
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text('cms', 'cmsTagEnd'),
             'cmsTagEnd',
@@ -933,12 +936,12 @@ class CMS
     private function checkInput()
     {
         $cmsTagChanged = FALSE;
-        if (GLOBALS::getUserVar('cmsTagStart') != $this->vars['cmsTagStart'])
+        if ($this->session->getVar('setup_cmsTagStart') != $this->vars['cmsTagStart'])
         {
             $cmsTagChanged = TRUE;
             $this->session->setVar('setup_cmsTagStart', $this->vars['cmsTagStart']);
         }
-        if (GLOBALS::getUserVar('cmsTagEnd') != $this->vars['cmsTagEnd'])
+        if ($this->session->getVar('setup_cmsTagEnd') != $this->vars['cmsTagEnd'])
         {
             $cmsTagChanged = TRUE;
             $this->session->setVar('setup_cmsTagEnd', $this->vars['cmsTagEnd']);

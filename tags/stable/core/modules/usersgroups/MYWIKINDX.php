@@ -196,31 +196,56 @@ class MYWIKINDX
             $array[$key] = $this->vars[$key];
         }
         // All input good - write to session
-//        $this->session->writeArray($array, "setup");
+        $this->session->writeArray($array, "setup");
         if (array_key_exists("PagingStyle", $this->vars))
         {
- //           $this->session->setVar("setup_PagingStyle", 'A');
-            GLOBALS::setUserVar("PagingStyle", 'A');
+            $this->session->setVar("setup_PagingStyle", 'A');
         }
         else
         {
-//            $this->session->delVar("setup_PagingStyle");
-            GLOBALS::setUserVar("PagingStyle", FALSE);
+            $this->session->delVar("setup_PagingStyle");
         }
         $this->session->delVar("sql_LastMulti"); // always reset in case of paging changes
         $this->session->delVar("sql_LastIdeaSearch"); // always reset in case of paging changes
-        foreach (['UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key)
+        if (array_key_exists("UseWikindxKey", $this->vars))
         {
-			if (array_key_exists($key, $this->vars))
-			{
-//				$this->session->setVar("setup_" . $key, TRUE);
-				GLOBALS::setUserVar($key, TRUE);
-			}
-			else
-			{
-//				$this->session->delVar("setup_" . $key);
-				GLOBALS::setUserVar($key, FALSE);
-			}
+            $this->session->setVar("setup_UseWikindxKey", TRUE);
+        }
+        else
+        {
+            $this->session->delVar("setup_UseWikindxKey");
+        }
+        if (array_key_exists("UseBibtexKey", $this->vars))
+        {
+            $this->session->setVar("setup_UseBibtexKey", TRUE);
+        }
+        else
+        {
+            $this->session->delVar("setup_UseBibtexKey");
+        }
+        if (array_key_exists("DisplayBibtexLink", $this->vars))
+        {
+            $this->session->setVar("setup_DisplayBibtexLink", TRUE);
+        }
+        else
+        {
+            $this->session->delVar("setup_DisplayBibtexLink");
+        }
+        if (array_key_exists("DisplayCmsLink", $this->vars))
+        {
+            $this->session->setVar("setup_DisplayCmsLink", TRUE);
+        }
+        else
+        {
+            $this->session->delVar("setup_DisplayCmsLink");
+        }
+        if (array_key_exists("ListLink", $this->vars))
+        {
+            $this->session->setVar("setup_ListLink", TRUE);
+        }
+        else
+        {
+            $this->session->delVar("setup_ListLink");
         }
     }
     /**
@@ -239,7 +264,7 @@ class MYWIKINDX
         // Display the global template but change the default selection of the list to the default template when no template is defined or a template not enabled is defined,
         // this avoid a crash when this option is written without value selected.
         $templates = FACTORY_TEMPLATE::getInstance()->loadDir();
-        $template = GLOBALS::getUserVar("Template", WIKINDX_TEMPLATE_DEFAULT);
+        $template = $this->session->getVar("setup_Template", WIKINDX_TEMPLATE_DEFAULT);
         array_key_exists($template, $templates) ? $template = $template : $template = WIKINDX_TEMPLATE_DEFAULT;
         $subTd .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "template"),
@@ -256,7 +281,7 @@ class MYWIKINDX
             $this->messages->text("config", "templateMenu"),
             "TemplateMenu",
             $menus,
-            GLOBALS::getUserVar('TemplateMenu'),
+            $this->session->getVar("setup_TemplateMenu"),
             3
         )
              . " " . \HTML\span('*', 'required'));
@@ -269,7 +294,7 @@ class MYWIKINDX
         $languages[$LanguageNeutralChoice] = "Auto";
         $languages = array_merge($languages, \LOCALES\getSystemLocales());
         
-        // Don't use the session value in that case because the language could have been changed locally by the chooseLanguage plugin
+        // Don't use the session value in that case because the language could have been changed localy by the chooseLanguage plugin
         $userId = $this->session->getVar('setup_UserId');
         $this->db->formatConditions(['usersId' => $userId]);
         $language = $this->db->selectFirstField("users", "usersLanguage");
@@ -292,7 +317,7 @@ class MYWIKINDX
         // Display the user style but change the default selection of the list to the default style when no style is defined or a style not enabled is defined,
         // this avoid a crash when this option is written without value selected.
         $styles = \LOADSTYLE\loadDir();
-        $style = GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT);
+        $style = $this->session->getVar("setup_Style", WIKINDX_STYLE_DEFAULT);
         array_key_exists($style, $styles) ? $style = $style : $style = WIKINDX_STYLE_DEFAULT;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "style"),
@@ -329,17 +354,16 @@ class MYWIKINDX
      */
     public function checkAppearanceInput()
     {
-        $required = ["Language", "Template", "TemplateMenu", "Style"];
-        foreach ($required as $key)
+        $required = ["Language", "Template", "Style"];
+        foreach ($required as $value)
         {
-            if (!array_key_exists($key, $this->vars) || (!$this->vars[$key] && ($key != 'TemplateMenu')))
+            if (!array_key_exists($value, $this->vars) || !$this->vars[$value])
             {
-                $this->badInputLoad($this->errors->text("inputError", "missing", " ($key) "), 'appearance');
+                $this->badInputLoad($this->errors->text("inputError", "missing", " ($value) "), 'appearance');
             }
-            GLOBALS::setUserVar($key, $this->vars[$key]);
- //           $array[$value] = $this->vars[$value];
+            $array[$value] = $this->vars[$value];
         }
-/*        if (!array_key_exists("TemplateMenu", $this->vars))
+        if (!array_key_exists("TemplateMenu", $this->vars))
         {
             $this->badInputLoad($this->errors->text("inputError", "missing", " (TemplateMenu) "), 'appearance');
         }
@@ -347,9 +371,8 @@ class MYWIKINDX
         {
             $array['TemplateMenu'] = $this->vars['TemplateMenu'];
         }
-*/        // All input good - write to session
-//        $this->session->writeArray($array, "setup");
-
+        // All input good - write to session
+        $this->session->writeArray($array, "setup");
     }
     /**
      * Edit forgotten password details
@@ -1791,32 +1814,32 @@ class MYWIKINDX
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "paging"),
             "Paging",
-            GLOBALS::getUserVar('Paging'),
+            $this->session->getVar("setup_Paging"),
             5
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingMaxLinks"));
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "maxPaging"),
             "PagingMaxLinks",
-            GLOBALS::getUserVar('PagingMaxLinks'),
+            $this->session->getVar("setup_PagingMaxLinks"),
             5
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
-        if (!GLOBALS::getUserVar("PagingTagCloud"))
+        if (!$this->session->getVar("setup_PagingTagCloud"))
         {
-            GLOBALS::setUserVar("PagingTagCloud", 100);
+            $this->session->setVar("setup_PagingTagCloud", 100);
         }
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "pagingTagCloud"),
             "PagingTagCloud",
-            GLOBALS::getUserVar("PagingTagCloud"),
+            $this->session->getVar("setup_PagingTagCloud"),
             5
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "stringLimit"),
             "StringLimit",
-            GLOBALS::getUserVar("StringLimit"),
+            $this->session->getVar("setup_StringLimit"),
             5
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
@@ -1827,19 +1850,19 @@ class MYWIKINDX
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $input = GLOBALS::getUserVar('PagingStyle') == 'A' ? "CHECKED" : FALSE;
+        $input = $this->session->getVar("setup_PagingStyle") == 'A' ? "CHECKED" : FALSE;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "pagingStyle"),
             "PagingStyle",
             $input
         ));
-        $input = GLOBALS::getUserVar("UseWikindxKey") ? "CHECKED" : FALSE;
+        $input = $this->session->getVar("setup_UseWikindxKey") ? "CHECKED" : FALSE;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "useWikindxKey"),
             "UseWikindxKey",
             $input
         ));
-        $input = GLOBALS::getUserVar("UseBibtexKey") ? "CHECKED" : FALSE;
+        $input = $this->session->getVar("setup_UseBibtexKey") ? "CHECKED" : FALSE;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "useBibtexKey"),
             "UseBibtexKey",
@@ -1854,19 +1877,19 @@ class MYWIKINDX
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $input = GLOBALS::getUserVar('DisplayBibtexLink') ? "CHECKED" : FALSE;
+        $input = $this->session->getVar("setup_DisplayBibtexLink") ? "CHECKED" : FALSE;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "displayBibtexLink"),
             "DisplayBibtexLink",
             $input
         ));
-        $input = GLOBALS::getUserVar('DisplayCmsLink') ? "CHECKED" : FALSE;
+        $input = $this->session->getVar("setup_DisplayCmsLink") ? "CHECKED" : FALSE;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "displayCmsLink"),
             "DisplayCmsLink",
             $input
         ));
-        $input = GLOBALS::getUserVar('ListLink') ? "CHECKED" : FALSE;
+        $input = $this->session->getVar("setup_ListLink") ? "CHECKED" : FALSE;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "ListLink"), "ListLink", $input));
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();

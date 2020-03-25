@@ -150,7 +150,7 @@ class INSERTCITATION
                 $this->session->setVar('search_Word', $this->session->getVar('setup_BackupWord'));
             }
         }
-        $this->session->saveState(['search', 'sql', 'list']);
+        $this->session->saveState(['search', 'sql', 'setup', 'list']);
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSEPOPUP::getInstance();
     }
@@ -165,46 +165,19 @@ class INSERTCITATION
         $this->stmt->listType = 'search';
         $this->input['Partial'] = TRUE;
         $queryString = 'dialog.php?method=reprocess';
-        if (!$this->reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!$this->reprocess || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
-        	$masterIds = $andIds = $notIds = [];
             $this->parseWord();
-            $resourcesFound = FALSE;
-// Deal with OR strings first
-			$ors = join($this->db->or, $this->parsePhrase->ors); // shouldn't be necessary as there should only be one element
-			$orsFT = join(' ', $this->parsePhrase->orsFT);
-			if ($ors && $this->getInitialIds($ors, $orsFT, 'or'))
-			{
-				$resourcesFound = TRUE;
-			}
-// Deal with AND strings next
-			$ands = join($this->db->and, $this->parsePhrase->ands); // shouldn't be necessary as there should only be one element
-			$andsFT = join(' ', $this->parsePhrase->andsFT);
-			if ($ands && $this->getInitialIds($ands, $andsFT, 'and'))
-			{
-				$resourcesFound = TRUE;
-			}
-			unset($andIds);
-// Finally, deal with NOT strings. We match IDs using OR then subtract the found ids from the main ids array
-			$nots = join($this->db->or, $this->parsePhrase->nots); // shouldn't be necessary as there should only be one element
-			$notsFT = join(' ', $this->parsePhrase->notsFT);
-			if ($nots && $this->getInitialIds($nots, $notsFT, 'not'))
-			{
-				$resourcesFound = TRUE;
-			}
-			unset($notIds);
-			if (!$resourcesFound)
-			{
+            $this->search->fieldSql();
+            $subStmt = $this->setSubQuery();
+            $resourcesFound = $this->stmt->listSubQuery('creator', $queryString, $subStmt, FALSE, $this->subQ);
+            if (!$resourcesFound)
+            {
                 $this->common->noResources('search');
-				return FALSE;
-			}
-// Now finalize
-			if (!$this->stmt->quicksearchSubQuery($queryString, FALSE, $this->subQ, 'final'))
-			{
-                $this->common->noResources('search');
-				return FALSE;
-			}
-			$sql = $this->stmt->listList($this->session->getVar('search_Order'), FALSE, $this->subQ);
+
+                return;
+            }
+            $sql = $this->stmt->listList('creator', FALSE, $this->subQ);
         }
         else
         {
@@ -234,22 +207,6 @@ class INSERTCITATION
         }
     }
     /**
-     * Get the initial IDs from the database
-     */
-     private function getInitialIds($searchArray, $searchArrayFT, $type)
-     {
-		$this->search->fieldSql($searchArray, $searchArrayFT);
-		$subStmt = $this->setSubQuery();
-		$resourcesFound = $this->stmt->quicksearchSubQuery(FALSE, $subStmt, FALSE, $type);
-		if (!$resourcesFound)
-		{
-			$this->common->noResources('search');
-
-			return FALSE;
-		}
-		return TRUE;
-    }
-    /**
      * Quicker querying when paging
      *
      * @param string $queryString
@@ -264,7 +221,7 @@ class INSERTCITATION
         $this->pagingObject->queryString = $queryString;
         $this->pagingObject->getPaging();
         $this->common->pagingObject = $this->pagingObject;
-        $sql .= $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
+        $sql .= $this->db->limit($this->session->getVar('setup_Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         return $sql;
     }
     /**
@@ -273,12 +230,11 @@ class INSERTCITATION
     private function parseWord()
     {
         $this->search->words = $this->parsePhrase->parse($this->input);
-        $this->wordsFT = $this->parsePhrase->parse($this->input, FALSE, FALSE, FALSE, TRUE);
-        if ((is_array($this->search->words) && empty($this->search->words)) || !$this->parsePhrase->validSearch)
+        if (!$this->search->words)
         {
-            GLOBALS::setTplVar('resourceListSearchForm', FALSE);
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
+        $this->search->words = str_replace('!WIKINDXFIELDWIKINDX!', $this->db->formatFields('concatText'), $this->search->words);
     }
     /**
      * create the subquery
@@ -290,11 +246,11 @@ class INSERTCITATION
         $this->db->ascDesc = $this->session->getVar('search_AscDesc');
         $this->stmt->quarantine(FALSE, 'rId');
         $this->stmt->useBib('rId');
-//        $this->stmt->conditions[] = $this->search->words;
+        $this->stmt->conditions[] = $this->search->words;
         $this->stmt->joins['resource_creator'] = ['resourcecreatorResourceId', 'rId'];
         $this->stmt->joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
         $this->stmt->executeCondJoins();
-        $this->db->groupBy(['rId', 'creatorSurname']);
+        $this->db->groupBy(['rId', 'resourcecreatorCreatorSurname']);
         $this->subQ = $this->db->subQuery($this->search->unions, 'u', FALSE);
         $subQuery = $this->db->from . ' ' . $this->subQ;
 

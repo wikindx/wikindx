@@ -145,7 +145,7 @@ class LISTCOMMON
         $this->session->delVar('list_NextPreviousIds');
         $sql = $this->session->getVar('sql_ListStmt');
         // set back to beginning
-        $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
+        $limit = $this->db->limit($this->session->getVar('setup_Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         $this->display($sql . $limit, $listType);
         $this->session->saveState(['list', 'sql', 'bookmark']);
         $this->session->setVar('list_SubQuery', $this->session->getVar('list_SubQueryMulti'));
@@ -166,7 +166,7 @@ class LISTCOMMON
             $this->session->delVar('search_Highlight');
         }
         $this->bibStyle->bibformat->patterns = $this->patterns;
-        if (GLOBALS::getUserVar('ListLink'))
+        if ($this->session->getVar('setup_ListLink'))
         {
             $this->bibStyle->linkUrl = FALSE;
         }
@@ -404,7 +404,7 @@ class LISTCOMMON
         $table = 'resource',
         $subQ = FALSE
     ) {
-        if ((GLOBALS::getUserVar('PagingStyle') == 'A') &&
+        if (($this->session->getVar('setup_PagingStyle') == 'A') &&
             (($order == 'title') || ($order == 'creator') || ($order == 'attachments')))
         {
             $this->pagingObject = FACTORY_PAGINGALPHA::getInstance();
@@ -780,7 +780,7 @@ class LISTCOMMON
                 }
             }
 
-            $isHyperlinked = (GLOBALS::getUserVar('ListLink'));
+            $isHyperlinked = ($this->session->getVar('setup_ListLink'));
 
             foreach ($resources as $resourceId => $resourceArray)
             {
@@ -866,7 +866,7 @@ class LISTCOMMON
                 }
                 // display CMS link if required
                 // link is actually a JavaScript call
-                if (GLOBALS::getUserVar('DisplayCmsLink') && $this->config->WIKINDX_CMS_ALLOW)
+                if ($this->session->getVar('setup_DisplayCmsLink') && $this->config->WIKINDX_CMS_ALLOW)
                 {
                     $resourceList[$resourceId]['links']['cms'] = \HTML\a(
                         'cmsLink',
@@ -877,7 +877,7 @@ class LISTCOMMON
                 }
                 // display bibtex link if required
                 // link is actually a JavaScript call
-                if (GLOBALS::getUserVar('DisplayBibtexLink'))
+                if ($this->session->getVar('setup_DisplayBibtexLink'))
                 {
                     $resourceList[$resourceId]['links']['bibtex'] = \HTML\a(
                         $this->icons->getClass("bibtex"),
@@ -1003,7 +1003,7 @@ class LISTCOMMON
         }
         // display CMS link if required
         // link is actually a JavaScript call
-        if (GLOBALS::getUserVar('DisplayCmsLink') && $this->config->WIKINDX_CMS_ALLOW && $this->config->WIKINDX_CMS_SQL)
+        if ($this->session->getVar('setup_DisplayCmsLink') && $this->config->WIKINDX_CMS_ALLOW && $this->config->WIKINDX_CMS_SQL)
         {
             $linksInfo['cms'] = \HTML\a(
                 'cmsLink',
@@ -1062,7 +1062,7 @@ class LISTCOMMON
         $t .= \HTML\trStart('right');
         $sessVar = $this->session->getVar("resourceSelectedTo");
         /*
-        if (GLOBALS::getUserVar('PagingStyle') == 'A')
+        if ($this->session->getVar('setup_PagingStyle') == 'A')
             $radios = $this->messages->text("resources", "selectCheck") . '&nbsp;' . \FORM\radioButton(FALSE, 'selectWhat', 'checked') .
             BR .
             $this->messages->text("resources", "selectDisplay") . '&nbsp;' . \FORM\radioButton(FALSE, 'selectWhat', 'display', TRUE);

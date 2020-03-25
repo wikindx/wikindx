@@ -156,7 +156,7 @@ class LISTRESOURCES
         {
             return;
         }
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A') ||
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A') ||
             ($order == 'popularityIndex') || ($order == 'downloadsIndex') || ($order == 'viewsIndex'))
         {
             $subStmt = $this->setSubQuery();
@@ -175,7 +175,7 @@ class LISTRESOURCES
         }
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar('sql_LastMulti', $queryString);
-        $this->session->saveState(['search', 'sql', 'bookmark', 'list']);
+        $this->session->saveState(['search', 'sql', 'setup', 'bookmark', 'list']);
         $this->common->display($sql, 'list');
     }
     /**
@@ -190,7 +190,7 @@ class LISTRESOURCES
         $this->pagingObject->queryString = $queryString;
         $this->pagingObject->getPaging();
         $this->common->pagingObject = $this->pagingObject;
-        $sql .= $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
+        $sql .= $this->db->limit($this->session->getVar('setup_Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         return $sql;
     }
     /**
@@ -202,7 +202,7 @@ class LISTRESOURCES
      */
     private function lastMulti($queryString)
     {
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A'))
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && ($this->session->getVar('setup_PagingStyle') != 'A'))
         {
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
@@ -227,7 +227,7 @@ class LISTRESOURCES
                 $this->stmt->quarantine(FALSE, 'resourceId');
                 $this->stmt->useBib('resourceId');
                 $this->stmt->executeCondJoins();
-                if (GLOBALS::getUserVar('PagingStyle') == 'A')
+                if ($this->session->getVar('setup_PagingStyle') == 'A')
                 {
                     return $this->db->selectNoExecute('resource', ['resourceTitleSort', ['resourceId' => 'rId']], FALSE, TRUE, TRUE);
                 }

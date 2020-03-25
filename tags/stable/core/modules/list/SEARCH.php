@@ -904,7 +904,7 @@ class SEARCH
             $this->session->delVar('list_AllIds');
             $this->session->delVar('list_PagingAlphaLinks');
         }
-        if (!$reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!$reprocess || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->session->delVar('sql_ListStmt');
             $this->session->delVar('advancedSearch_listParams');
@@ -914,7 +914,7 @@ class SEARCH
         $this->stmt->listMethodAscDesc = 'advancedSearch_AscDesc';
         $this->stmt->listType = 'search';
         $queryString = 'action=list_SEARCH_CORE&method=reprocess';
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A'))
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && ($this->session->getVar('setup_PagingStyle') != 'A'))
         {
             $this->session->delVar('mywikindx_PagingStart');
             $this->pagingObject = FACTORY_PAGING::getInstance();
@@ -1293,7 +1293,7 @@ class SEARCH
         $this->common->display($sql, 'search');
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar('sql_LastMulti', $queryString);
-        $this->session->saveState(['advancedSearch', 'sql', 'bookmark', 'list']);
+        $this->session->saveState(['advancedSearch', 'sql', 'bookmark', 'list', 'setup']);
     }
     /**
      * Search ideas for search words and display
@@ -1337,7 +1337,7 @@ class SEARCH
         // Check this user is allowed to read the idea.
         $this->metadata->setCondition('i');
         $this->db->formatConditions(implode($this->db->or, $conditions));
-        $this->db->limit(GLOBALS::getUserVar('Paging'), $pagingObject->start);
+        $this->db->limit($this->session->getVar('setup_Paging'), $pagingObject->start);
         $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataTimestamp', 'resourcemetadataTimestampEdited',
             'resourcemetadataMetadataId', 'resourcemetadataText', 'resourcemetadataAddUserId', 'resourcemetadataPrivate', ]);
         if (!$this->db->numRows($resultset))

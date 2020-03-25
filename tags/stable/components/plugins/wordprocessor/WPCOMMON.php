@@ -10,34 +10,23 @@
  * WP common functions
  */
 
-function SetWikindxBasePath()
-{
-    $wikindxBasePath = __DIR__;
-    while (!in_array(basename($wikindxBasePath), ["", "components"]))
-    {
-        $wikindxBasePath = dirname($wikindxBasePath);
-    }
-    if (basename($wikindxBasePath) == "")
-    {
-        die("
-            \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
-            and WIKINDX is unable to set the installation path automatically.
-            You should set \$WIKINDX_WIKINDX_PATH in config.php.
-        ");
-    }
-    chdir(dirname($wikindxBasePath));
-}
-
-SetWikindxBasePath();
-
 /**
  * Import initial configuration and initialize the web server
  */
 include_once("core/startup/WEBSERVERCONFIG.php");
 
-echo '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
-echo '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/wordprocessor/wikindxWPcommon.js"></script>';
-$class = new WPCommon();
+
+//session_start();
+if (isset($_SESSION))
+{
+    echo '<script src="' . $this->config->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
+    echo '<script src="../wikindxWPcommon.js"></script>';
+    $class = new WPCommon();
+}
+else
+{
+    echo 'Session error';
+}
 
 include_once("core/messages/PLUGINMESSAGES.php");
 

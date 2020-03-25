@@ -56,7 +56,7 @@ class URL
     {
         if (!$limit)
         {
-            $limit = GLOBALS::getUserVar("StringLimit");
+            $limit = $this->session->getVar("setup_StringLimit");
         }
         if (($limit != -1) && (($count = mb_strlen($text)) > $limit))
         {
@@ -66,6 +66,19 @@ class URL
         }
 
         return $text;
+    }
+
+    /**
+     * Return the base url of the current website seen by the visitor
+     *
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+        $hostName = str_replace(["\\", "//"], ["/", "/"], $_SERVER['PHP_SELF']);
+        $hostName = $_SERVER['HTTP_HOST'] . str_replace('/index.php', '', $hostName);
+
+        return $this->getCurrentProtocole() . '://' . $hostName;
     }
 
     /**

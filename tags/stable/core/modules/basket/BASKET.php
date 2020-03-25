@@ -135,7 +135,7 @@ class BASKET
         {
             return;
         }
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->session->delVar('list_PagingAlphaLinks');
             $this->session->delVar('list_AllIds');
@@ -223,7 +223,7 @@ class BASKET
     private function quickQuery($queryString)
     {
         $sql = $this->session->getVar('sql_ListStmt');
-        $sql .= $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
+        $sql .= $this->db->limit($this->session->getVar('setup_Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         return $sql;
     }
     /**
@@ -235,7 +235,7 @@ class BASKET
      */
     private function lastMulti($queryString)
     {
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A'))
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && ($this->session->getVar('setup_PagingStyle') != 'A'))
         {
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
@@ -269,7 +269,7 @@ class BASKET
                 $this->stmt->useBib('resourceId');
                 $this->stmt->conditionsOneField['resourceId'] = $ids;
                 $this->stmt->executeCondJoins();
-                if (GLOBALS::getUserVar('PagingStyle') == 'A')
+                if ($this->session->getVar('setup_PagingStyle') == 'A')
                 {
                     return $this->db->selectNoExecute('resource', ['resourceTitleSort', ['resourceId' => 'rId']], FALSE, TRUE, TRUE);
                 }

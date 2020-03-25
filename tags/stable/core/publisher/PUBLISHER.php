@@ -44,14 +44,19 @@ class PUBLISHER
      * @param string $type Default is FALSE
      * @param int $userBib Default is FALSE
      * @param array $typeArray Default is FALSE
+     * @param bool $metadata Default is FALSE
      *
      * @return mixed FALSE|array of publishers
      */
-    public function grabAll($type = FALSE, $userBib = FALSE, $typeArray = FALSE)
+    public function grabAll($type = FALSE, $userBib = FALSE, $typeArray = FALSE, $metadata = FALSE)
     {
         if (!$userBib && !$type && !is_array($typeArray))
         {
-            if (is_array($publishers = $this->db->readCache('cacheResourcePublishers')))
+            if ($metadata && is_array($publishers = $this->db->readCache('cacheMetadataPublishers')))
+            {
+                return $publishers;
+            }
+            elseif (!$metadata && is_array($publishers = $this->db->readCache('cacheResourcePublishers')))
             {
                 return $publishers;
             }
@@ -77,6 +82,65 @@ class PUBLISHER
             $this->db->formatConditions(['publisherId' => ' IS NOT NULL']);
             $this->db->leftJoin('publisher', 'publisherId', 'resourcemiscPublisher');
             $userBib = FALSE;
+        }
+        // NB. $metadata is true only in UPDATEDATABASE::recreate40Cache() which is a function that deals with databases before 5.1. From that
+        // point, the resource_metadata table replaces resource_quote, resource_paraphrase etc.
+        if ($metadata)
+        {
+            $ids = $conditionIds = [];
+            // quotes
+            $this->db->leftJoin('resource_misc', 'resourcequoteResourceId', 'resourcemiscId');
+            $this->db->formatConditions(['resourcemiscPublisher' => ' IS NOT NULL']);
+            $recordset = $this->db->select('resource_quote', 'resourcemiscPublisher', TRUE);
+            while ($row = $this->db->fetchRow($recordset))
+            {
+                foreach (UTF8::mb_explode(',', $row['resourcemiscPublisher']) as $id)
+                {
+                    if (array_search($id, $ids) === FALSE)
+                    {
+                        $ids[] = $id;
+                        $conditionIds[] = $this->db->formatFields('publisherId') . $this->db->equal . $this->db->tidyInput($id);
+                    }
+                }
+            }
+            // paraphrases
+            $this->db->leftJoin('resource_misc', 'resourceparaphraseResourceId', 'resourcemiscId');
+            $this->db->formatConditions(['resourcemiscPublisher' => ' IS NOT NULL']);
+            $recordset = $this->db->select('resource_paraphrase', 'resourcemiscPublisher', TRUE);
+            while ($row = $this->db->fetchRow($recordset))
+            {
+                foreach (UTF8::mb_explode(',', $row['resourcemiscPublisher']) as $id)
+                {
+                    if (array_search($id, $ids) === FALSE)
+                    {
+                        $ids[] = $id;
+                        $conditionIds[] = $this->db->formatFields('publisherId') . $this->db->equal . $this->db->tidyInput($id);
+                    }
+                }
+            }
+            // musings
+            $this->db->leftJoin('resource_misc', 'resourcemusingResourceId', 'resourcemiscId');
+            $this->db->formatConditions(['resourcemiscPublisher' => ' IS NOT NULL']);
+            $recordset = $this->db->select('resource_musing', 'resourcemiscPublisher', TRUE);
+            while ($row = $this->db->fetchRow($recordset))
+            {
+                foreach (UTF8::mb_explode(',', $row['resourcemiscPublisher']) as $id)
+                {
+                    if (array_search($id, $ids) === FALSE)
+                    {
+                        $ids[] = $id;
+                        $conditionIds[] = $this->db->formatFields('publisherId') . $this->db->equal . $this->db->tidyInput($id);
+                    }
+                }
+            }
+            if (!empty($conditionIds))
+            {
+                $this->db->formatConditions(implode($this->db->or, $conditionIds));
+            }
+            else
+            {
+                return FALSE;
+            }
         }
         if ($userBib)
         {
@@ -114,7 +178,14 @@ class PUBLISHER
             // (re)create cache
             if (!$userBib && !$type && !is_array($typeArray))
             {
-                $this->db->writeCache('cacheResourcePublishers', $publishers);
+                if ($metadata)
+                {
+                    $this->db->writeCache('cacheMetadataPublishers', $publishers);
+                }
+                else
+                {
+                    $this->db->writeCache('cacheResourcePublishers', $publishers);
+                }
             }
 
             return $publishers;

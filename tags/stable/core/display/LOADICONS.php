@@ -30,7 +30,7 @@ class LOADICONS
     public function __construct($singleiconbasename = "")
     {
         $session = FACTORY_SESSION::getInstance();
-        if (!$this->templateDir = GLOBALS::getUserVar('Template'))
+        if (!$this->templateDir = $session->getVar("setup_Template"))
         {
             $this->templateDir = WIKINDX_TEMPLATE_DEFAULT;
         }

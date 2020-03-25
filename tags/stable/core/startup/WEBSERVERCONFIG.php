@@ -274,11 +274,10 @@ foreach (\FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_PLUGINS) as $dir)
     }
 }
 
-// Check folders permissions
-\UTILS\checkFoldersPerms();
-
 // Create a cached components list
 \UTILS\refreshComponentsListCache();
+
+
 
 // Bufferize output
 ob_start();
@@ -288,22 +287,57 @@ include_once("core/startup/GLOBALS.php");
 
 // Set up the FACTORY objects of commonly used classes and start the timer.
 include_once("core/startup/FACTORY.php");
+include_once("core/startup/ENVIRONMENT.php");
 
 // Init user config object
-//$config = FACTORY_CONFIG::getInstance(); // not needed here (and interferes with upgrade of v3.8 database because v3 config.php is not a class)
+//$config = FACTORY_CONFIG::getInstance(); // not needed here (and interferes with upgrade of v3.8 database because v3 config.php is not a class
 
 /**
  *	Initialize the system
  *	As ENVIRONMENT starts the session, we must check for 'remember me' cookie requests from MYWIKINDX.php prior to
  *	setting the session.
- *  The static part of the config is loaded.
  */
-FACTORY_LOADCONFIG::getInstance();
+$env = new ENVIRONMENT();
+
+$vars = GLOBALS::getVars();
+if (!empty($vars) && array_key_exists('cookie', $vars) && $vars['cookie'] &&
+    array_key_exists('uname', $vars) && trim($vars['uname']))
+{
+    // set the cookie if requested
+    $cookie = FACTORY_COOKIE::getInstance();
+    $cookie->storeCookie($vars['uname']);
+    unset($cookie);
+}
+// start the session
+$env->startSession();
+
+
+// Set the current working directory -- useful for ensuring TinyMCE plug-ins can find the wikindx base path for include() commands.
+// Not all OSs allow getcwd() or sometimes the wikindx installation is in a directory that is not searchable.
+if (!$wikindxBasePath = dirname(__FILE__))
+{
+    //			$session->setVar('wikindxBasePath', $session->getVar('wikindxBasePath', dirname(__FILE__)));
+    if (!isset($env->config->WIKINDX_WIKINDX_PATH) || !$env->config->WIKINDX_WIKINDX_PATH)
+    {
+        die("WIKINDX is unable to set the installation path automatically.  You should set \$WIKINDX_WIKINDX_PATH in config.php");
+    }
+    $path = $env->config->WIKINDX_WIKINDX_PATH;
+    // test path is correct
+    if (!is_file($path . '/core/startup/LOADCONFIG.php'))
+    {
+        die("\$WIKINDX_WIKINDX_PATH in config.php is set incorrectly");
+    }
+    else
+    {
+        $wikindxBasePath = $path;
+    }
+}
+$remove = preg_quote(DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'startup', '/');
+$_SESSION['wikindxBasePath'] = preg_replace('/' . $remove . '$/', '', $wikindxBasePath);
 
 // Load auth object but diff. login after upgrade stage
 // Upgrade will request login to superadmin if needed
 $authorize = FACTORY_AUTHORIZE::getInstance();
-
 // Attempt an upgrade only if we are on the main script
 if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE)
 {
@@ -318,22 +352,15 @@ if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['S
         $upgradeCompleted = $update->upgradeCompleted;
         unset($update);
     }
+    unset($env);
 }
 
-/**
- *	Initialize the system
- *  The dynamic part of the config is loaded (db).
- */
-FACTORY_LOADCONFIG::getInstance()->loadUserVars();
 
-FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
+FACTORY_LOADCONFIG::getInstance()->load();
 
-
-// Locales setting needs to know the language prefered by the user which is now in GLOBALS
+// Locales setting need to know the language prefered by the user session
 include_once("core/locales/LOCALES.php");
 \LOCALES\load_locales();
-
-$vars = GLOBALS::getVars();
 
 if (array_key_exists('action', $vars) && ($vars['action'] == 'continueExecution'))
 {

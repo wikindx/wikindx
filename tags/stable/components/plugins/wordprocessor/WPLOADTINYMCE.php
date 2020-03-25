@@ -17,8 +17,8 @@ class WPLOADTINYMCE extends LOADTINYMCE
         $session = FACTORY_SESSION::getInstance();
         $this->config = FACTORY_CONFIG::getInstance();
         $session->setVar('tinyMCE_mode', 'wordprocessor');
-        $this->cssPath = $this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . GLOBALS::getUserVar('Template') . '/tinymce.css';
-        $this->cssPopupPath = $this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . GLOBALS::getUserVar('Template') . '/template.css';
+        $this->cssPath = $this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . $session->getVar('setup_Template') . '/tinymce.css';
+        $this->cssPopupPath = $this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . $session->getVar('setup_Template') . '/template.css';
     }
     /**
      * Load tinymce -- full configuration for the word processor

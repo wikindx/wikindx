@@ -632,7 +632,7 @@ class CITESTYLE
         }
         else
         {
-            $this->setupStyle = GLOBALS::getUserVar("Style");
+            $this->setupStyle = $this->session->getVar("setup_Style");
         }
         // Initialize citeFormat properties
         $this->citeFormat->output = $this->output;

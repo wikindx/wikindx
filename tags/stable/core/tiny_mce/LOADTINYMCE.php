@@ -33,7 +33,7 @@ class LOADTINYMCE
         $this->config = FACTORY_CONFIG::getInstance();
         // Allows e.g. plugins to set different modes:  word processor plugin has a 'wordProcessor' mode.
         $session->setVar('tinyMCE_mode', 'standard');
-        $this->cssPath = $this->cssPopupPath = $this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . GLOBALS::getUserVar('Template') . '/template.css';
+        $this->cssPath = $this->cssPopupPath = $this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . $session->getVar('setup_Template') . '/template.css';
     }
     /**
      * Load tiny_mce using compressor script

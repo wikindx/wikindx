@@ -58,8 +58,8 @@ class CLOSE
 
         // During setup, there are no default style configured in session
         // So, we take the default style
-        $styleId = strtolower(GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT));
-        $styleName = array_key_exists($styleId, $styles) ? $styles[$styleId] : $styles[WIKINDX_STYLE_DEFAULT];
+        $styleid = strtolower($this->session->getVar("setup_Style", WIKINDX_STYLE_DEFAULT));
+        $styleName = array_key_exists($styleid, $styles) ? $styles[$styleid] : $styles[WIKINDX_STYLE_DEFAULT];
 
         if ($useBib = $this->session->getVar("mywikindx_Bibliography_use"))
         {

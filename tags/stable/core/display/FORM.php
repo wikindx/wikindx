@@ -950,7 +950,7 @@ namespace FORM
     {
         $config = \FACTORY_CONFIG::getInstance();
         // On setup, WIKINDX_STRINGLIMIT is not yet defined
-        $userStringLimit = \GLOBALS::getUserVar('StringLimit', WIKINDX_STRINGLIMIT_DEFAULT);
+        $userStringLimit = property_exists($config, "WIKINDX_STRINGLIMIT") ? $config->WIKINDX_STRINGLIMIT : WIKINDX_STRINGLIMIT_DEFAULT;
         $limit = $override ? $override : $userStringLimit;
         $text = str_replace("&nbsp;", " ", $text);
         $count = mb_strlen($text);

@@ -581,7 +581,7 @@ class USER
     {
         $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
         $bib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
-/*        if ($table == 'users')
+        if ($table == 'users')
         {
             $basic = ["Paging", "PagingMaxLinks", "StringLimit",
                 "Language", "Style", "Template", "PagingStyle", "PagingTagCloud", "UseBibtexKey",
@@ -605,11 +605,11 @@ class USER
             $preferences = $this->db->prependTableToField($table, $basic);
             $row = $co->getData($preferences);
         }
-*/        /**
+        /**
          * Check requested style plug-in has not been deleted.  If so, return first in list so that something is safely
          * displayed when listing bibliographies.  Not required after upgrading to v4
          */
-/*        if (!$upgrade)
+        if (!$upgrade)
         {
             $styles = \LOADSTYLE\loadDir();
             if (!array_key_exists($row[$table . 'Style'], $styles))
@@ -659,7 +659,7 @@ class USER
                 $this->session->setVar("setup_" . $pref, $row[$table . $pref]);
             }
         }
-*/        // The system also requires userRegistration, notify, multiUser, maxPaste fileAttach and fileViewLoggedOnOnly etc. from
+        // The system also requires userRegistration, notify, multiUser, maxPaste fileAttach and fileViewLoggedOnOnly etc. from
         // WKX_config
         $fields = $this->db->prependTableToField('config', ['UserRegistration', 'MultiUser', 'Notify',
             'FileAttach', 'FileViewLoggedOnOnly', 'MaxPaste', 'LastChanges', 'LastChangesType', 'ImportBib',
@@ -921,30 +921,30 @@ class USER
         ];
         foreach ($preferences as $pref => $default)
         {
-/*            if ($pref == 'TemplateMenu')
+            if ($pref == 'TemplateMenu')
             {
                 if ($newUser)
                 {
                     $updateArray['users' . $pref] = $default;
                 }
-                elseif (!GLOBALS::getUserVar('TemplateMenu'))
+                elseif (!$this->session->getVar('setup_TemplateMenu'))
                 { // no level reduction
                     $updateArray['users' . $pref] = WIKINDX_TEMPLATEMENU_DEFAULT;
                 }
                 else
                 {
-                    $updateArray['users' . $pref] = GLOBALS::getUserVar('TemplateMenu');
+                    $updateArray['users' . $pref] = $this->session->getVar("setup_" . $pref);
                 }
 
                 continue;
             }
-*/            if ($newUser)
+            if ($newUser)
             {
                 $updateArray['users' . $pref] = $default;
             }
-            elseif ($value = GLOBALS::getUserVar($pref))
+            elseif ($this->session->issetVar("setup_" . $pref))
             {
-                $updateArray['users' . $pref] = $value;
+                $updateArray['users' . $pref] = $this->session->getVar("setup_" . $pref);
             }
             else
             {

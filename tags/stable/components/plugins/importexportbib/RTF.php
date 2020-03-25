@@ -255,7 +255,7 @@ class RTF
                 $this->coremessages->text("config", "style"),
                 "exportRtf_style",
                 $this->styles,
-                GLOBALS::getUserVar("Style"),
+                $this->session->getVar("setup_Style"),
                 4
             ));
         }
@@ -265,7 +265,7 @@ class RTF
         if (count($sessionVars) > 1)
         { // by default, array has a single 'style' key (see above)
             $this->session->clearArray("exportRtf");
-            $this->session->setVar('exportRtf_style', GLOBALS::getUserVar("Style"));
+            $this->session->setVar('exportRtf_style', $this->session->getVar("setup_Style"));
             $reset =
                 FORM\formHeader("importexportbib_initRtfExport") .
                 FORM\formSubmit($this->coremessages->text("submit", "Reset")) .

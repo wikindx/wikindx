@@ -943,7 +943,7 @@ class VIEWBIBTEX
      */
     private function citeFormat(&$rowTypes, &$entryKeys, $rIds)
     {
-        if ($this->session->getVar("export_UseOriginalCitation") || !GLOBALS::getUserVar("UseWikindxKey"))
+        if ($this->session->getVar("export_UseOriginalCitation") || !$this->session->getVar("setup_UseWikindxKey"))
         {
             foreach ($rIds as $rId)
             {
@@ -953,7 +953,7 @@ class VIEWBIBTEX
                     $this->cite[] = trim($this->rawCitation[$rId]);
                     $cite = trim($this->rawCitation[$rId]);
                 }
-                elseif (!GLOBALS::getUserVar("UseWikindxKey"))
+                elseif (!$this->session->getVar("setup_UseWikindxKey"))
                 {
                     $cite = $this->storedBibtexKey[$rId];
                 }
@@ -1563,7 +1563,7 @@ class VIEWBIBTEX
                 }
             }
         }
-        elseif (!GLOBALS::getUserVar("UseWikindxKey"))
+        elseif (!$this->session->getVar("setup_UseWikindxKey"))
         {
             $this->db->formatConditions(['resourceId' => $id]);
             $citeKey = $this->db->selectFirstField('resource', 'resourceBibtexKey');

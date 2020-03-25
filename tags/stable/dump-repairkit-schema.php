@@ -47,6 +47,7 @@ include_once("core/startup/GLOBALS.php");
 
 // Set up the FACTORY objects of commonly used classes and start the timer.
 include_once("core/startup/FACTORY.php");
+include_once("core/startup/ENVIRONMENT.php");
 
 $config = FACTORY_CONFIG::getInstance();
 $db = FACTORY_DB::getInstance();

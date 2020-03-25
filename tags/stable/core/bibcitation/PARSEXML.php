@@ -138,7 +138,7 @@ class PARSEXML
         }
         if ($style == NULL)
         {
-            $style = GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT);
+            $style = $session->getVar("setup_Style", WIKINDX_STYLE_DEFAULT);
         }
         $style = array_key_exists($style, \LOADSTYLE\loadDir()) ? $style : WIKINDX_STYLE_DEFAULT;
         return strtolower($style);

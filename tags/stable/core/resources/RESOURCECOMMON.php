@@ -85,7 +85,7 @@ class RESOURCECOMMON
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
-		$this->resourceMap = FACTORY_RESOURCEMAP::getInstance();
+        $this->resourceMap = FACTORY_RESOURCEMAP::getInstance();
         include_once("core/browse/BROWSECOMMON.php");
         $this->commonBrowse = new BROWSECOMMON();
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
@@ -152,14 +152,17 @@ class RESOURCECOMMON
      */
     public function showCitations($resourceId, $countOnly = FALSE)
     {
-        $search = "[cite]$resourceId";
-        // Abstract and note and metadata
+        $search = "\\[cite\\]$resourceId";
+        // Abstract and note
+        $this->commonBrowse->userBibCondition('resourcetextId');
+        $this->db->formatConditions($this->db->formatFields('resourcetextAbstract') . $this->db->like('%', $search, '%') .
+            $this->db->or . $this->db->formatFields('resourcetextNote') . $this->db->like('%', $search, '%'));
+        $this->db->formatConditions(['resourcetextId' => $resourceId], TRUE);
+        $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_text', [['resourcetextId' => 'rId']]));
+        // metadata
         $this->commonBrowse->userBibCondition('resourcemetadataResourceId');
-        $this->db->leftJoin('resource_text', 'resourcetextId', 'resourcemetadataResourceId');
-    	$matchAgainst[] = $this->db->fulltextSearch(['resourcetextAbstract'], $search);
-    	$matchAgainst[] = $this->db->fulltextSearch(['resourcetextNote'], $search);
-    	$matchAgainst[] = $this->db->fulltextSearch(['resourcemetadataText'], $search);
-    	$this->db->formatConditions(join(' ' . $this->db->or . ' ', $matchAgainst));
+        $this->db->formatConditions($this->db->formatFields('resourcemetadataText') . $this->db->like('%', $search, '%'));
+        $this->db->formatConditions(['resourcemetadataResourceId' => $resourceId], TRUE);
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute(
             'resource_metadata',
             [['resourcemetadataResourceId' => 'rId']]

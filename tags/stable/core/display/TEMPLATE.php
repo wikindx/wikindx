@@ -99,7 +99,7 @@ class TEMPLATE
 
         $this->session = FACTORY_SESSION::getInstance();
         $tplArray = $this->loadDir();
-        $this->name = GLOBALS::getUserVar('Template');
+        $this->name = $this->session->getVar("setup_Template");
         // Special case: during installation there is no template sets.
         if (!is_string($this->name) || $setupMode)
         {
@@ -209,9 +209,9 @@ class TEMPLATE
         $ignoreUserConfig = substr($ReduceMenuLevelOption, 1, 1);
         $ignoreUserConfig = ($ignoreUserConfig === "$");
         
-        if (!$ignoreUserConfig && GLOBALS::getUserVar('TemplateMenu'))
+        if (!$ignoreUserConfig && $this->session->issetVar('setup_TemplateMenu'))
         {
-            $this->session->setVar('setup_ReduceMenuLevel', GLOBALS::getUserVar('TemplateMenu'));
+            $this->session->setVar('setup_ReduceMenuLevel', $this->session->getVar('setup_TemplateMenu'));
         }
         else
         {

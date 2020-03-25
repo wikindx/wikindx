@@ -275,14 +275,14 @@ class SQLSTATEMENTS
         $this->db->ascDesc = $this->session->getVar($this->listMethodAscDesc);
         $np = [];
         $limit = FALSE;
-        if ((GLOBALS::getUserVar('PagingStyle') != 'A') || ((GLOBALS::getUserVar('PagingStyle') == 'A') &&
+        if (($this->session->getVar('setup_PagingStyle') != 'A') || (($this->session->getVar('setup_PagingStyle') == 'A') &&
             ($order != 'title') && ($order != 'creator') && ($order != 'attachments')))
         {
-            $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->common->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
+            $limit = $this->db->limit($this->session->getVar('setup_Paging'), $this->common->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         }
         if ($order == 'title')
         {
-            if (GLOBALS::getUserVar('PagingStyle') == 'A')
+            if ($this->session->getVar('setup_PagingStyle') == 'A')
             {
                 $this->quickListAll = TRUE;
                 $this->pagingAlphaCondition($order);
@@ -318,7 +318,7 @@ class SQLSTATEMENTS
         }
         elseif ($order == 'creator')
         {
-            if (GLOBALS::getUserVar('PagingStyle') == 'A')
+            if ($this->session->getVar('setup_PagingStyle') == 'A')
             {
                 $this->quickListAll = TRUE;
                 $this->pagingAlphaCondition($order);
@@ -844,7 +844,7 @@ class SQLSTATEMENTS
             }
         }
         $this->db->groupBy('resourceId');
-        if ((GLOBALS::getUserVar('PagingStyle') == 'A') && (($order == 'title') || ($order == 'creator')) ||
+        if (($this->session->getVar('setup_PagingStyle') == 'A') && (($order == 'title') || ($order == 'creator')) ||
             ($order == 'popularityIndex') || ($order == 'downloadsIndex') || ($order == 'viewsIndex'))
         {
             $this->db->leftJoin('resource', 'resourceId', 'rId');
@@ -883,7 +883,7 @@ class SQLSTATEMENTS
      */
     private function pagingAlphaCondition($order)
     {
-        if ((GLOBALS::getUserVar('PagingStyle') != 'A') || empty($this->common->pagingObject->pagingArray))
+        if (($this->session->getVar('setup_PagingStyle') != 'A') || empty($this->common->pagingObject->pagingArray))
         {
             return;
         }

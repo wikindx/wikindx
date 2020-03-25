@@ -62,14 +62,30 @@ namespace UPDATE
      */
     function logonCheckUpgradeDB($dbo, $username, $password, $dbVersion = WIKINDX_INTERNAL_VERSION)
     {
+        if ($dbVersion < 4.0)
+        {
+            // pre v4.0
+            $idField = 'id';
+            $usernameField = 'username';
+            $passwordField = 'password';
+        }
+        else
+        {
+            // From v4.0
+            $idField = 'usersId';
+            $usernameField = 'usersUsername';
+            $passwordField = 'usersPassword';
+        }
+        $fields = [$idField, $passwordField];
+        
         // superAdmin is id '1'
-        $dbo->formatConditions(['usersUsername' => $username, 'usersId' => "1"]);
-        $recordset = $dbo->select('users', ['usersId', 'usersPassword']);
+        $dbo->formatConditions([$usernameField => $username, $idField => "1"]);
+        $recordset = $dbo->select('users', $fields);
         if ($dbo->numRows($recordset) == 1)
         {
             // verify the password
             $row = $dbo->fetchRow($recordset);
-            if (crypt($password, $row['usersPassword']) == $row['usersPassword'])
+            if (crypt($password, $row[$passwordField]) == $row[$passwordField])
             {
                 return TRUE;
             }
@@ -105,6 +121,11 @@ namespace UPDATE
             {
                 $field = "databasesummaryDbVersion";
             }
+            // Up to version 3.8.1
+            if (array_key_exists('dbVersion', $row))
+            {
+                $field = "dbVersion";
+            }
             $dbVersion = floatval($row[$field]);
             unset($row);
         }
@@ -130,6 +151,11 @@ namespace UPDATE
         {
             $field = "";
             $row = $dbo->fetchRow($recordset);
+            // Up to version 3.8.1
+            if (array_key_exists("contactEmail", $row))
+            {
+                $field = "contactEmail";
+            }
             // Up to version 5.3
             if (array_key_exists("configContactEmail", $row))
             {

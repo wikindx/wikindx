@@ -156,7 +156,15 @@ class FACTORY_CONFIG
         if (empty(self::$instance))
         {
             include_once("config.php");
-            self::$instance = new CONFIG;
+            // Needed for upgrade of v3.8 database because v3.8.x config.php is not a class
+            if (!class_exists('CONFIG'))
+            {
+                die('You are attempting an upgrade of a v3.8.x WIKINDX. Before proceeding, you must first create a new config.php file following the new structure in config.php.dist');
+            }
+            else
+            {
+                self::$instance = new CONFIG;
+            }
             // Set print debug SQL
             // This parameter must always be available at early stage
             //			if (!property_exists(self::$instance, 'WIKINDX_PRINT_SQL'))

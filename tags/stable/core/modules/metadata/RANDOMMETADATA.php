@@ -159,7 +159,7 @@ class RANDOMMETADATA
     public function display($resultset, $mArray, $method)
     {
         $row = $this->db->fetchRow($resultset);
-        if (GLOBALS::getUserVar('setup_ListLink'))
+        if ($this->session->getVar('setup_ListLink'))
         {
             $this->resourceLink = "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $row['resourceId']);
             $this->bibStyle->linkUrl = FALSE;
@@ -241,7 +241,7 @@ class RANDOMMETADATA
         }
         // display CMS link if required
         // link is actually a JavaScript call
-        if (GLOBALS::getUserVar('DisplayCmsLink'))
+        if ($this->session->getVar('setup_DisplayCmsLink'))
         {
             $links['cms'] = \HTML\a(
                 'cmsLink',
@@ -251,7 +251,7 @@ class RANDOMMETADATA
         }
         // display bibtex link if required
         // link is actually a JavaScript call
-        if (GLOBALS::getUserVar('DisplayBibtexLink'))
+        if ($this->session->getVar('setup_DisplayBibtexLink'))
         {
             $links['bibtex'] = \HTML\a(
                 $this->icons->getClass("bibtex"),

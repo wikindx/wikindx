@@ -193,7 +193,6 @@ class QUICKSEARCH
     	$matchAgainst = $this->db->fulltextSearch('resourcemetadataText', $orsFT);
     	$this->metadata->setCondition(FALSE, FALSE, TRUE);
     	$this->db->formatConditions($matchAgainst);
-    	$this->db->formatConditions(['resourcemetadataResourceId' => 'IS NOT NULL']);
     	$unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_metadata', [['resourcemetadataResourceId' => 'rId']]));
 // usertagsTag
     	$this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'usertagsTag', $ors));

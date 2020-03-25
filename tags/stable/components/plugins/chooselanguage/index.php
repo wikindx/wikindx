@@ -60,18 +60,7 @@ class chooselanguage_MODULE
         array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
         
         $session = FACTORY_SESSION::getInstance();
-// Write the language to the database for a logged in user or to session for read only user.
-		if ($session->getVar("setup_UserId"))
-		{
-	        $db = FACTORY_DB::getInstance();
-			$db->formatConditions(['usersId' => $session->getVar('setup_UserId')]);
-			$db->update('users', ['usersLanguage' => $language]);
-        	GLOBALS::setUserVar('Language', $language);
-	    }
-	    else
-	    {
-	        $session->setVar("setup_Language", $language);
-        }
+        $session->setVar("setup_Language", $language);
         header("Location: index.php");
     }
     /**
@@ -80,7 +69,7 @@ class chooselanguage_MODULE
     private function display()
     {
         $session = FACTORY_SESSION::getInstance();
-        $config = FACTORY_CONFIG::getInstance();
+        $this->config = FACTORY_CONFIG::getInstance();
         $db = FACTORY_DB::getInstance();
         
         // For the graphical interface, add the "auto" value that allows to say that the language is chosen by the browser.
@@ -105,7 +94,7 @@ class chooselanguage_MODULE
 
         if (count($languages) > 1)
         {
-            $display .= HTML\jsInlineExternal($config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/' . basename(__DIR__) . '/chooseLanguage.js');
+            $display .= HTML\jsInlineExternal($this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/' . basename(__DIR__) . '/chooseLanguage.js');
             $js = 'onchange="javascript:chooseLanguageChangeLanguage(this.value);"';
             $display .= FORM\selectedBoxValue(FALSE, "Language", $languages, $language, 1, FALSE, $js);
         }

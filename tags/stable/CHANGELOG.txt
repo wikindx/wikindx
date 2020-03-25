@@ -1,24 +1,5 @@
 RELEASES:
 
-v6.2.X
-Focus: Minor bug fixes
-
-BUG FIXES:
-1. Fix SQL errors on insert citation.
-2. Fix SQL errors on listing citing resources when viewing a single resource.
-3. Fix display of user bibliography details when viewing a single resource.
-4. Fix SQL error in QUICKSEARCH resulting from a NULL id.
-5. Fix an error of version check in the repairKit.
-
-MAINTENANCE:
-1. Remove the upgrade code before version 5.1.
-
----:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
----:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
----:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
----:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
-
-
 v6.2.1
 Focus: Minor bug fixes.
 
@@ -37,9 +18,9 @@ BUGS:
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 
-
 v6.2.0
 Focus: maintenance.
+
 
 NB: THIS VERSION IS A MAINTENANCE VERSION ONLY TO FACILITATE THE TRANSITION
 FROM WIKINDX V5 TO V6. THIS VERSION REMOVE THE UPGRADE SUPPORT OF V3.8
@@ -145,9 +126,6 @@ BUGS:
 12. Add a cache directory for common files.
 13. Fix RTF export of images (#206).
 14. Fix a letter case issue stopping the plugin working on some systems.
-
-MAINTENANCE:
-1. Better way of setting WIKINDX_WIKINDX_PATH, wikindxBasePath, and WIKINDX_BASE_URL.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

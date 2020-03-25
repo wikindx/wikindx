@@ -5,26 +5,19 @@
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
-
-function SetWikindxBasePath()
+session_start();
+if (isset($_SESSION) && array_key_exists('wikindxBasePath', $_SESSION) && $_SESSION['wikindxBasePath'])
 {
-    $wikindxBasePath = __DIR__;
-    while (!in_array(basename($wikindxBasePath), ["", "components"]))
-    {
-        $wikindxBasePath = dirname($wikindxBasePath);
-    }
-    if (basename($wikindxBasePath) == "")
-    {
-        die("
-            \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
-            and WIKINDX is unable to set the installation path automatically.
-            You should set \$WIKINDX_WIKINDX_PATH in config.php.
-        ");
-    }
-    chdir(dirname($wikindxBasePath));
+    chdir($_SESSION['wikindxBasePath']); // tinyMCE changes the phpbasepath
 }
-
-SetWikindxBasePath();
+else
+{
+    $oldPath = dirname(__FILE__);
+    $split = preg_split('/' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/u', $oldPath);
+    array_splice($split, -3); // get back to trunk
+    $newPath = implode(DIRECTORY_SEPARATOR, $split);
+    chdir($newPath);
+}
 
 /**
  * Import initial configuration and initialize the web server

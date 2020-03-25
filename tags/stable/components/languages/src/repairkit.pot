@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: repairkit\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-02-20 03:08+0100\n"
+"POT-Creation-Date: 2020-01-25 18:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,52 +25,60 @@ msgid "Repair kit..."
 msgstr ""
 
 #: components/plugins/repairkit/repairkitmessages.php:26
-msgid "Missing rows"
+msgid "Fix chars"
 msgstr ""
 
 #: components/plugins/repairkit/repairkitmessages.php:27
-msgid "Fix totals"
+msgid "Missing rows"
 msgstr ""
 
 #: components/plugins/repairkit/repairkitmessages.php:28
-msgid "Dump DB schema"
+msgid "Fix totals"
 msgstr ""
 
 #: components/plugins/repairkit/repairkitmessages.php:29
-msgid "DB integrity"
+msgid "Dump DB schema"
 msgstr ""
 
 #: components/plugins/repairkit/repairkitmessages.php:30
+msgid "DB integrity"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:31
 msgid "Fix creators"
 msgstr ""
 
 #. *
 #. * Headings
 #.
-#: components/plugins/repairkit/repairkitmessages.php:34
-msgid "Missing Rows"
-msgstr ""
-
 #: components/plugins/repairkit/repairkitmessages.php:35
-msgid "Fix Totals"
+msgid "Fix Chars"
 msgstr ""
 
 #: components/plugins/repairkit/repairkitmessages.php:36
-msgid "Dump Database Schema"
+msgid "Missing Rows"
 msgstr ""
 
 #: components/plugins/repairkit/repairkitmessages.php:37
-msgid "Database Integrity"
+msgid "Fix Totals"
 msgstr ""
 
 #: components/plugins/repairkit/repairkitmessages.php:38
+msgid "Dump Database Schema"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:39
+msgid "Database Integrity"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:40
 msgid "Fix Creators"
 msgstr ""
 
 #. *
 #. * Text
 #.
-#: components/plugins/repairkit/repairkitmessages.php:42
+#: components/plugins/repairkit/repairkitmessages.php:44
 msgid ""
 "Depending on the size of your database, this operation can be memory "
 "intensive.  The\n"
@@ -79,11 +87,25 @@ msgid ""
 "\t\t\t\ttry again."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:45
+#: components/plugins/repairkit/repairkitmessages.php:47
 msgid "It is assumed you have backed up your database."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:46
+#: components/plugins/repairkit/repairkitmessages.php:48
+msgid ""
+"When upgrading WIKINDX from v3.8.2 to v4.x, not all UTF-8-encoded database\n"
+"\t\t\t\tfields are properly dealt with and you may see characters similar to "
+"'ã¼' or 'ã¶' etc.\n"
+"\t\t\t\tin the WIKINDX. Additionally, as WIKINDX is a system that can accept "
+"input from many different\n"
+"\t\t\t\tsources, character encoding can be corrupted right from the start. "
+"This plugin will attempt to correct such anomalies.  These\n"
+"\t\t\t\toperations are irreversible so ensure that you have backed up your "
+"database. You will get an opportunity to confirm the fixing of data\n"
+"\t\t\t\twhen you click on Submit."
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:54
 msgid ""
 "Sometimes rows required in other tables are not created when new resources "
 "are added and this\n"
@@ -92,31 +114,31 @@ msgid ""
 "\t\t\tdefault (usually NULL) data."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:49
+#: components/plugins/repairkit/repairkitmessages.php:57
 msgid ""
 "Fix totals of resources, quotes, paraphrases and musings in the "
 "database_summary table."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:50
+#: components/plugins/repairkit/repairkitmessages.php:58
 msgid "Fix various errors regarding creators."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:51
+#: components/plugins/repairkit/repairkitmessages.php:59
 msgid ""
 "Before checking the database integrity, you should ensure that your database "
 "(currently version ###)"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:52
+#: components/plugins/repairkit/repairkitmessages.php:60
 msgid "matches the WIKINDX version (currently version ###)."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:53
+#: components/plugins/repairkit/repairkitmessages.php:61
 msgid "The database structure is correct and there is nothing to fix."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:54
+#: components/plugins/repairkit/repairkitmessages.php:62
 msgid ""
 "The database structure differs to the final release database structure for "
 "version ### (see report below). This could be because you have been updating "
@@ -129,35 +151,77 @@ msgid ""
 "database before proceeding."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:55
+#: components/plugins/repairkit/repairkitmessages.php:63
 msgid "Successfully fixed. ###"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:56
+#: components/plugins/repairkit/repairkitmessages.php:64
 msgid ": ### resources fixed."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:57
+#: components/plugins/repairkit/repairkitmessages.php:65
+msgid "Light UTF-8 fix"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:66
+msgid "Tough UTF-8 fix"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:67
+msgid ""
+"Encode non-UTF-8 characters as UTF-8. This will fix most UTF-8 problems and "
+"should be the fix you try first."
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:68
+msgid ""
+"Encode non-UTF-8 characters as UTF-8. If the light fix does not work, you "
+"should try this as a last resort."
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:69
+msgid ""
+"The following items show the possibly fixed text that you can now write to "
+"the database."
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:70
+msgid "Nothing found to fix."
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:71
+msgid "Fix all"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:72
+msgid "Fix selected"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:73
+msgid "Fix not selected"
+msgstr ""
+
+#: components/plugins/repairkit/repairkitmessages.php:74
 msgid "Invalid or missing input"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:58
+#: components/plugins/repairkit/repairkitmessages.php:75
 msgid "Unable to write to file."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:59
+#: components/plugins/repairkit/repairkitmessages.php:76
 msgid "Unable to read file."
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:60
+#: components/plugins/repairkit/repairkitmessages.php:77
 msgid "The database is missing the following tables and cannot be fixed:"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:61
+#: components/plugins/repairkit/repairkitmessages.php:78
 msgid "The database is missing the following fields and cannot be fixed:"
 msgstr ""
 
-#: components/plugins/repairkit/repairkitmessages.php:62
+#: components/plugins/repairkit/repairkitmessages.php:79
 msgid ""
 "There are invalid datetime field values ('0000-00-00 00:00:00') that must be "
 "fixed."

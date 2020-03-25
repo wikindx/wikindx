@@ -869,7 +869,7 @@ class RESOURCEVIEW
             return $array;
         }
         $order = $this->session->getVar('sql_LastOrder');
-        if ((GLOBALS::getUserVar('PagingStyle') == 'A') &&
+        if (($this->session->getVar('setup_PagingStyle') == 'A') &&
             (($order == 'title') || ($order == 'creator') || ($order == 'attachments')))
         {
             $alpha = TRUE;
@@ -906,7 +906,7 @@ class RESOURCEVIEW
                 "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $allIds[$thisKey + 1])
             );
         }
-        elseif (($start + GLOBALS::getUserVar('Paging') < $this->session->getVar('setup_PagingTotal')) && !$alpha)
+        elseif (($start + $this->session->getVar('setup_Paging') < $this->session->getVar('setup_PagingTotal')) && !$alpha)
         {
             $array['forward'] = \HTML\a(
                 $this->icons->getClass("next"),
@@ -950,12 +950,12 @@ class RESOURCEVIEW
             if ($returnId == 'forward')
             {
                 $this->session->setVar('mywikindx_PagingStart', $this->session->getVar('mywikindx_PagingStart') +
-                    GLOBALS::getUserVar('Paging'));
+                    $this->session->getVar('setup_Paging'));
             }
             else
             {
                 $this->session->setVar('mywikindx_PagingStart', $this->session->getVar('mywikindx_PagingStart') -
-                    GLOBALS::getUserVar('Paging'));
+                    $this->session->getVar('setup_Paging'));
             }
         }
         else
@@ -963,7 +963,7 @@ class RESOURCEVIEW
             $this->session->setVar('mywikindx_PagingStart', count($allIds));
         }
         $start = $this->session->getVar('mywikindx_PagingStart');
-        $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $start, TRUE); // "LIMIT $limitStart, $limit";
+        $limit = $this->db->limit($this->session->getVar('setup_Paging'), $start, TRUE); // "LIMIT $limitStart, $limit";
         $query = $querySession . $limit;
         $resultset = $this->db->query($query);
         while ($row = $this->db->fetchRow($resultset))
@@ -1046,7 +1046,7 @@ class RESOURCEVIEW
         }
         // display CMS link if required
         // link is actually a JavaScript call
-        if (GLOBALS::getUserVar('DisplayCmsLink') && $this->config->WIKINDX_CMS_ALLOW)
+        if ($this->session->getVar('setup_DisplayCmsLink') && $this->config->WIKINDX_CMS_ALLOW)
         {
             $links['cms'] = \HTML\a(
                 'cmsLink',
@@ -1057,7 +1057,7 @@ class RESOURCEVIEW
         }
         // display bibtex link if required
         // link is actually a JavaScript call
-        if (GLOBALS::getUserVar('DisplayBibtexLink'))
+        if ($this->session->getVar('setup_DisplayBibtexLink'))
         {
             $links['bibtex'] = \HTML\a(
                 $this->icons->getClass("bibtex"),
@@ -1605,7 +1605,7 @@ class RESOURCEVIEW
      */
     private function displayBibliographies($row)
     {
-        if (!$this->session->getVar("setup_UserId"))
+        if ($this->session->getVar("setup_ReadOnly"))
         {
             return;
         }
@@ -1694,7 +1694,7 @@ class RESOURCEVIEW
      */
     private function displayKey($row)
     {
-        if (GLOBALS::getUserVar("UseBibtexKey"))
+        if ($this->session->getVar("setup_UseBibtexKey"))
         {
             $this->db->formatConditions(['importrawId' => $row['resourceId']]);
             $this->db->formatConditions(['importrawImportType' => 'bibtex']);
@@ -1720,7 +1720,7 @@ class RESOURCEVIEW
             }
         }
         // Not using bibtexKey
-        if (GLOBALS::getUserVar("UseWikindxKey"))
+        if ($this->session->getVar("setup_UseWikindxKey"))
         {
             $this->db->formatConditions(['resourcecreatorResourceId' => $row['resourceId']]);
             $name = $this->db->selectFirstField('resource_creator', 'resourcecreatorCreatorSurname');

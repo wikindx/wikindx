@@ -330,6 +330,7 @@ namespace LOCALES
     function load_locales()
     {
         $locale = determine_locale();
+        
         // Some systems need the LANG or LANGUAGE environment variables
         // to be configured before calling setlocale()
         $locale_env = $locale . ".UTF-8";
@@ -357,19 +358,42 @@ namespace LOCALES
             }
         }
         
-        // Try to load a MO catalog only if there is one
         if (
-            in_array($locale, $enabledLanguages)
-            || in_array(mb_substr($locale, 0, strpos($locale, "@")), $enabledLanguages)
-            || in_array(mb_substr($locale, 0, strpos($locale, "_")), $enabledLanguages))
+            !in_array($locale, $enabledLanguages)
+            && !in_array(mb_substr($locale, 0, strpos($locale, "@")), $enabledLanguages)
+            && !in_array(mb_substr($locale, 0, strpos($locale, "_")), $enabledLanguages))
         {
-            // WARNING: NEVER move this directory one level up on down because a bug under windows prevents the loading of mo files in that case.
-            // It's crazy, but many hours lost are waiting for you if you go in that direction!
-            $dirlocales = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", WIKINDX_DIR_COMPONENT_LANGUAGES]));
+            return;
+        }
+        
+        // WARNING: NEVER move this directory one level up on down because a bug under windows prevents the loading of mo files in that case.
+        // It's crazy, but many hours lost are waiting for you if you go in that direction!
+        $dirlocales = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", WIKINDX_DIR_COMPONENT_LANGUAGES]));
+        
+        // List all available domains for the requested locale
+        $files = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES"]));
+        
+        $loading = FALSE;
+        foreach ($files as $dir => $file)
+        {
+            if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo")
+            {
+                $domain = mb_strtolower(mb_substr($file, 0, mb_strlen($file) - mb_strlen(".mo")));
+                bindtextdomain($domain, $dirlocales);
+                bind_textdomain_codeset($domain, WIKINDX_CHARSET);
+                $loading = TRUE;
+            }
+        }
+        
+        // If the previous locale contains a script variant (e.g. uz_UZ@cyrillic) and no MO files have being loaded,
+        // try without the script suffix
+        if (!$loading && strpos($locale, "@") !== FALSE)
+        {
+            $locale = mb_substr($locale, 0, strpos($locale, "@"));
             
             // List all available domains for the requested locale
             $files = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES"]));
-            $loading = FALSE;
+            
             foreach ($files as $dir => $file)
             {
                 if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo")
@@ -380,50 +404,27 @@ namespace LOCALES
                     $loading = TRUE;
                 }
             }
+        }
+        
+        // If the previous locale contains a state suffix (e.g. en_GB) and no MO files have being loaded, try without suffix
+        if (!$loading && strpos($locale, "_") !== FALSE)
+        {
+            $locale = mb_substr($locale, 0, strpos($locale, "_"));
             
-            // If the previous locale contains a script variant (e.g. uz_UZ@cyrillic) and no MO files have being loaded,
-            // try without the script suffix
-            if (!$loading && strpos($locale, "@") !== FALSE)
-            {
-                $locale = mb_substr($locale, 0, strpos($locale, "@"));
-                
-                // List all available domains for the requested locale
-                $files = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES"]));
-                
-                foreach ($files as $dir => $file)
-                {
-                    if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo")
-                    {
-                        $domain = mb_strtolower(mb_substr($file, 0, mb_strlen($file) - mb_strlen(".mo")));
-                        bindtextdomain($domain, $dirlocales);
-                        bind_textdomain_codeset($domain, WIKINDX_CHARSET);
-                        $loading = TRUE;
-                    }
-                }
-            }
+            // List all available domains for the requested locale
+            $files = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES"]));
             
-            // If the previous locale contains a state suffix (e.g. en_GB) and no MO files have being loaded, try without suffix
-            if (!$loading && strpos($locale, "_") !== FALSE)
+            foreach ($files as $dir => $file)
             {
-                $locale = mb_substr($locale, 0, strpos($locale, "_"));
-                // List all available domains for the requested locale
-                $files = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES"]));
-                
-                foreach ($files as $dir => $file)
+                if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo")
                 {
-                    if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo")
-                    {
-                        $domain = mb_strtolower(mb_substr($file, 0, mb_strlen($file) - mb_strlen(".mo")));
-                        bindtextdomain($domain, $dirlocales);
-                        bind_textdomain_codeset($domain, WIKINDX_CHARSET);
-                    }
+                    $domain = mb_strtolower(mb_substr($file, 0, mb_strlen($file) - mb_strlen(".mo")));
+                    bindtextdomain($domain, $dirlocales);
+                    bind_textdomain_codeset($domain, WIKINDX_CHARSET);
                 }
             }
         }
         
-        // This function call must always be present even if no catalog has been loaded before
-        // to force the binding to take into account the current state otherwise it uses the state
-        // of the previous execution on macOS, sometimes.
         textdomain(WIKINDX_LANGUAGE_DOMAIN_DEFAULT);
     }
     /**
@@ -448,7 +449,7 @@ namespace LOCALES
         
         // 2. The preferred language of the user ("auto" disappears in filtering to make room for browser language)
         $session = \FACTORY_SESSION::getInstance();
-        $langPriorityStack[] = \GLOBALS::getUserVar("Language", "auto");
+        $langPriorityStack[] = $session->getVar("setup_Language", "auto");
         
         // 3. The preferred language of the user's browser
         if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]))
@@ -475,6 +476,7 @@ namespace LOCALES
         {
             $locales[$v] = strtolower(str_replace("-", "_", $v));
         }
+        
         // Of all the languages of the stack only keeps those that are actually available.
         $langPriorityStack = array_intersect($langPriorityStack, $locales);
         

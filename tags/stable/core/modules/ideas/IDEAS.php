@@ -178,7 +178,7 @@ class IDEAS
         {
             $this->db->orderBy('resourcemetadataTimestamp', TRUE, FALSE);
         }
-        $this->db->limit(GLOBALS::getUserVar('Paging'), $pagingObject->start);
+        $this->db->limit($this->session->getVar('setup_Paging'), $pagingObject->start);
         $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataTimestamp', 'resourcemetadataTimestampEdited',
             'resourcemetadataMetadataId', 'resourcemetadataText', 'resourcemetadataAddUserId', 'resourcemetadataPrivate', ]);
         $threadIds = [];

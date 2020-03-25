@@ -101,10 +101,6 @@ class CHOOSEBIB
         {
             $bibId = $this->vars['ajaxReturn'];
         }
-        if (!$bibId && array_key_exists('BibId', $this->vars))
-        {
-        	$bibId = $this->vars['BibId'];
-        }
         if (($bibId === FALSE) || ($bibId <= 0))
         {
             $pString = \HTML\p($this->messages->text("user", "masterBib"));
@@ -149,14 +145,8 @@ class CHOOSEBIB
             }
             $pString .= \HTML\p($text);
         }
-        if (array_key_exists('BibId', $this->vars))
-        {
-        	GLOBALS::addTplVar('content', $pString);
-        }
-        else
-        {
-	        return $pString;
-	    }
+
+        return $pString;
     }
     /**
      * Set a bibliography for browsing

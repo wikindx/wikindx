@@ -22,10 +22,6 @@ class GLOBALS
     /** array */
     private static $dirtyVars = [];
     /**
-     * user variables are stored here
-     */
-    private static $userVars = [];
-    /**
      *  The db queries counter
      */
     private static $WIKINDX_DB_QUERIES = 0;
@@ -101,40 +97,6 @@ class GLOBALS
     public static function getDirtyVars()
     {
         return self::$dirtyVars;
-    }
-    /**
-     * Set a user variable
-     *
-     * @param string $key
-     * @param mixed $value
-     */
-    public static function setUserVar($key, $value)
-    {
-    	self::$userVars[$key] = $value;
-    }
-    /**
-     * Get a user variable
-     *
-     * @param $default Default return value if set value does not exist.
-     *
-     * @return string
-     */
-    public static function getUserVar($key, $default = FALSE)
-    {
-    	if (!array_key_exists($key, self::$userVars))
-    	{
-    		return $default;
-    	}
-    	return self::$userVars[$key];
-    }
-    /**
-     * Get user variable array
-     *
-     * @return array
-     */
-    public static function getUserVarsArray()
-    {
-    	return self::$userVars;
     }
     /**
      * Increment the DB query counter

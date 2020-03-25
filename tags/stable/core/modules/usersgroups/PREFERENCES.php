@@ -71,7 +71,7 @@ class PREFERENCES
         // Display the global template but change the default selection of the list to the default template when no template is defined or a template not enabled is defined,
         // this avoid a crash when this option is written without value selected.
         $templates = FACTORY_TEMPLATE::getInstance()->loadDir();
-        $template = GLOBALS::getUserVar("Template", WIKINDX_TEMPLATE_DEFAULT);
+        $template = $this->session->getVar("setup_Template", WIKINDX_TEMPLATE_DEFAULT);
         array_key_exists($template, $templates) ? $template = $template : $template = WIKINDX_TEMPLATE_DEFAULT;
     	$pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "template"),
@@ -96,7 +96,11 @@ class PREFERENCES
         $LanguageNeutralChoice = "auto";
         $languages[$LanguageNeutralChoice] = "Auto";
         $languages = array_merge($languages, \LOCALES\getSystemLocales());
-        $language = GLOBALS::getUserVar('Language', WIKINDX_LANGUAGE_DEFAULT);
+        
+        // Don't use the session value in that case because the language could have been changed localy by the chooseLanguage plugin
+        $userId = $this->session->getVar('setup_UserId');
+        $this->db->formatConditions(['usersId' => $userId]);
+        $language = $this->db->selectFirstField("users", "usersLanguage");
         array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
         
         // Retrieve the language of the user config in session if missing in the db
@@ -116,7 +120,7 @@ class PREFERENCES
         // Display the user style but change the default selection of the list to the default style when no style is defined or a style not enabled is defined,
         // this avoid a crash when this option is written without value selected.
         $styles = \LOADSTYLE\loadDir();
-        $style = GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT);
+        $style = $this->session->getVar("setup_Style", WIKINDX_STYLE_DEFAULT);
         array_key_exists($style, $styles) ? $style = $style : $style = WIKINDX_STYLE_DEFAULT;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "style"),
@@ -126,13 +130,11 @@ class PREFERENCES
             4
         ) . " " . \HTML\span('*', 'required'));
         
-		$input = GLOBALS::getUserVar("ListLink") ? "CHECKED" : FALSE;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "listlink"), "ListLink", $input));
-        $pString .= \HTML\trEnd();
+        $pString .= \HTML\td('&nbsp;'); // blank 5th column
         $pString .= \HTML\trEnd();
         
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\HTML\hr(), FALSE, 4); // span 4 columns
+        $pString .= \HTML\td(\HTML\hr(), FALSE, 5); // span 5 columns
         $pString .= \HTML\trEnd();
         
         $pString .= \HTML\trStart();
@@ -140,32 +142,32 @@ class PREFERENCES
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "paging"),
             "Paging",
-            GLOBALS::getUserVar("Paging"),
+            $this->session->getVar("setup_Paging"),
             5
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingMaxLinks"));
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "maxPaging"),
             "PagingMaxLinks",
-            GLOBALS::getUserVar("PagingMaxLinks"),
+            $this->session->getVar("setup_PagingMaxLinks"),
             5
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
-        if (!GLOBALS::getUserVar("PagingTagCloud"))
+        if (!$this->session->getVar("setup_PagingTagCloud"))
         {
-            GLOBALS::setUserVar("PagingTagCloud", 100);
+            $this->session->setVar("setup_PagingTagCloud", 100);
         }
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "pagingTagCloud"),
             "PagingTagCloud",
-            GLOBALS::getUserVar("PagingTagCloud"),
+            $this->session->getVar("setup_PagingTagCloud"),
             5
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "stringLimit"),
             "StringLimit",
-            GLOBALS::getUserVar("StringLimit"),
+            $this->session->getVar("setup_StringLimit"),
             5
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
         $input = $this->session->getVar("setup_ListLink") ? "CHECKED" : FALSE;
@@ -213,6 +215,14 @@ class PREFERENCES
                 $this->badInputLoad($this->errors->text("inputError", "missing", " ($value) "));
             }
             $array[$value] = $this->vars[$value];
+        }
+        if (!array_key_exists("TemplateMenu", $this->vars))
+        {
+            $this->badInputLoad($this->errors->text("inputError", "missing", " (TemplateMenu) "));
+        }
+        else
+        {
+            $array['TemplateMenu'] = $this->vars['TemplateMenu'];
         }
         // All input good - write to session
         $this->session->writeArray($array, "setup");

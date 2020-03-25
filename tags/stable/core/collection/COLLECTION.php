@@ -39,14 +39,19 @@ class COLLECTION
      * @param string $type Default is FALSE
      * @param bool $userBib Default is FALSE
      * @param mixed $typeArray Default is FALSE
+     * @param bool $metadata Default is FALSE
      *
      * @return mixed
      */
-    public function grabAll($type = FALSE, $userBib = FALSE, $typeArray = FALSE)
+    public function grabAll($type = FALSE, $userBib = FALSE, $typeArray = FALSE, $metadata = FALSE)
     {
         if (!$userBib && !$type && !is_array($typeArray))
         {
-            if (is_array($collections = $this->db->readCache('cacheResourceCollections')))
+            if ($metadata && is_array($collections = $this->db->readCache('cacheMetadataCollections')))
+            {
+                return $collections;
+            }
+            elseif (!$metadata && is_array($collections = $this->db->readCache('cacheResourceCollections')))
             {
                 return $collections;
             }
@@ -74,6 +79,65 @@ class COLLECTION
             $this->db->formatConditions(['collectionId' => ' IS NOT NULL']);
             $this->db->leftJoin('collection', 'collectionId', 'resourcemiscCollection');
             $userBib = FALSE;
+        }
+        // NB. $metadata is true only in UPDATEDATABASE::recreate40Cache() which is a function that deals with databases before 5.1. From that
+        // point, the resource_metadata table replaces resource_quote, resource_paraphrase etc.
+        if ($metadata)
+        {
+            $ids = $conditionIds = [];
+            // quotes
+            $this->db->leftJoin('resource_misc', 'resourcequoteResourceId', 'resourcemiscId');
+            $this->db->formatConditions(['resourcemiscCollection' => ' IS NOT NULL']);
+            $recordset = $this->db->select('resource_quote', 'resourcemiscCollection', TRUE);
+            while ($row = $this->db->fetchRow($recordset))
+            {
+                foreach (UTF8::mb_explode(',', $row['resourcemiscCollection']) as $id)
+                {
+                    if (array_search($id, $ids) === FALSE)
+                    {
+                        $ids[] = $id;
+                        $conditionIds[] = $this->db->formatFields('collectionId') . $this->db->equal . $this->db->tidyInput($id);
+                    }
+                }
+            }
+            // paraphrases
+            $this->db->leftJoin('resource_misc', 'resourceparaphraseResourceId', 'resourcemiscId');
+            $this->db->formatConditions(['resourcemiscCollection' => ' IS NOT NULL']);
+            $recordset = $this->db->select('resource_paraphrase', 'resourcemiscCollection', TRUE);
+            while ($row = $this->db->fetchRow($recordset))
+            {
+                foreach (UTF8::mb_explode(',', $row['resourcemiscCollection']) as $id)
+                {
+                    if (array_search($id, $ids) === FALSE)
+                    {
+                        $ids[] = $id;
+                        $conditionIds[] = $this->db->formatFields('collectionId') . $this->db->equal . $this->db->tidyInput($id);
+                    }
+                }
+            }
+            // musing
+            $this->db->leftJoin('resource_misc', 'resourcemusingResourceId', 'resourcemiscId');
+            $this->db->formatConditions(['resourcemiscCollection' => ' IS NOT NULL']);
+            $recordset = $this->db->select('resource_musing', 'resourcemiscCollection', TRUE);
+            while ($row = $this->db->fetchRow($recordset))
+            {
+                foreach (UTF8::mb_explode(',', $row['resourcemiscCollection']) as $id)
+                {
+                    if (array_search($id, $ids) === FALSE)
+                    {
+                        $ids[] = $id;
+                        $conditionIds[] = $this->db->formatFields('collectionId') . $this->db->equal . $this->db->tidyInput($id);
+                    }
+                }
+            }
+            if (!empty($conditionIds))
+            {
+                $this->db->formatConditions(implode($this->db->or, $conditionIds));
+            }
+            else
+            {
+                return FALSE;
+            }
         }
         if ($userBib)
         {
@@ -113,7 +177,14 @@ class COLLECTION
             // (re)create cache
             if (!$userBib && !$type && !is_array($typeArray))
             {
-                $this->db->writeCache('cacheMetadataCollections', $collections);
+                if ($metadata)
+                {
+                    $this->db->writeCache('cacheMetadataCollections', $collections);
+                }
+                else
+                {
+                    $this->db->writeCache('cacheResourceCollections', $collections);
+                }
             }
 
             return $collections;

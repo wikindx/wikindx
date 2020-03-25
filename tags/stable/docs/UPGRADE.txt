@@ -16,24 +16,6 @@ you can update a second time to a more recent version:
  - v6.0.8 which supports PHP 5.6 minimum.
  - v6.1.0 which supports PHP 7.0 minimum.
 
->>>>>>> A note on UTF-8 characters <<<<<<<
-Databases used since v5.1 might exhibit errors in the conversion to UTF-8 
-characters that came in with v5.1. The repairkit plugin attempts to fix these 
-issues but, because the UTF-8 correction code was removed in this plugin from 
-v6.2.1, databases that have been upgraded since before 5.1 but have not had 
-their UTF-8 repaired with the plugin, should follow this procedure:
-1. Download and install WIKINDX 6.0.8 or 6.1.0 according to your PHP version.
-2. Run WIKINDX and follow the database upgrade.
-3. Install the repairkit plugin for the relevant wikindx version and run the 
-plugin’s ‘Fix chars’ code.
-4. If you do not have PHP 7.0 or greater, you cannot go further than using 
-WIKINDX v6.0.8. If you have PHP 7.0 or greater, then you can now safely download 
-and install the highest version of WIKINDX available.
-
-The above results from a code clean-out and the understanding that there are 
-very few (if any) current users of WIKINDX with pre-v5.1 database.
->>>>>>> <<<<<<<
-
 If you are upgrading a previous installation of WIKINDX 5.x to 6.x,
 simply overwrite the existing installation. Optionally, you can install
 the software files in a different folder but see steps 7–9 below

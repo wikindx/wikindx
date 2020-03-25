@@ -51,7 +51,11 @@ class CREATOR
     {
         if (!$userBib && !is_array($typeArray) && !$group)
         {
-            if (!is_array($metadata) && !$metadata && is_array($creators = $this->db->readCache('cacheResourceCreators')))
+            if (!is_array($metadata) && $metadata && is_array($creators = $this->db->readCache('cacheMetadataCreators')))
+            {
+                return $creators;
+            }
+            elseif (!is_array($metadata) && !$metadata && is_array($creators = $this->db->readCache('cacheResourceCreators')))
             {
                 return $creators;
             }
@@ -104,6 +108,30 @@ class CREATOR
                 ));
             }
             $group = $userBib = FALSE;
+        }
+        // NB. $metadata is TRUE only in UPDATEDATABASE::recreate40Cache() which is a function that deals with databases before 5.1. From that
+        // point, the resource_metadata table replaces resource_quote, resource_paraphrase etc.
+        elseif (!is_array($metadata) && $metadata)
+        {
+            $unions[] = $this->db->selectNoExecute('resource_quote', [['resourcequoteResourceId' => 'rId']], TRUE);
+            $unions[] = $this->db->selectNoExecute('resource_paraphrase', [['resourceparaphraseResourceId' => 'rId']], TRUE);
+            $unions[] = $this->db->selectNoExecute('resource_musing', [['resourcemusingResourceId' => 'rId']], TRUE);
+            $union = $this->db->union($unions);
+            $subSubQuery = $this->db->subQuery($union, 'u', TRUE, TRUE);
+            $this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'rId');
+            if ($userBib)
+            {
+                $this->commonBib->userBibCondition('resourcecreatorResourceId');
+            }
+            $subQuery = $this->db->subQueryFields('resourcecreatorCreatorId', $subSubQuery, 't', TRUE, TRUE);
+            $this->db->formatConditions($this->db->formatFields('creatorId') . $this->db->equal .
+                $this->db->formatFields('resourcecreatorCreatorId'));
+            $this->db->orderBy('creatorSurname');
+            $recordset = $this->db->query($this->db->selectNoExecuteFromSubQuery(
+                'creator',
+                ['creatorId', "creatorSurname", "creatorInitials", "creatorFirstname", "creatorPrefix"],
+                $subQuery
+            ));
         }
         elseif (is_array($metadata) && !empty($metadata))
         {

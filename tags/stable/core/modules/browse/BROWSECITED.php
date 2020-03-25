@@ -67,27 +67,24 @@ class BROWSECITED
      */
     private function getCitations()
     {
-        $search = '[cite]';
+        $search = $this->db->like('%', '\\[cite\\]', '%');
         // Abstract
         $this->common->userBibCondition('resourcetextId');
-    	$matchAgainst = $this->db->fulltextSearch(['resourcetextAbstract'], $search);
-        $this->db->formatConditions($matchAgainst);
+        $this->db->formatConditions($this->db->formatFields('resourcetextAbstract') . $search);
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute(
             'resource_text',
             [['resourcetextId' => 'rId'], ['resourcetextAbstract' => 'text']]
         ));
         //Note
         $this->common->userBibCondition('resourcetextId');
-    	$matchAgainst = $this->db->fulltextSearch(['resourcetextNote'], $search);
-        $this->db->formatConditions($matchAgainst);
+        $this->db->formatConditions($this->db->formatFields('resourcetextNote') . $search);
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute(
             'resource_text',
             [['resourcetextId' => 'rId'], ['resourcetextNote' => 'text']]
         ));
         // metadata
         $this->common->userBibCondition('resourcemetadataResourceId');
-    	$matchAgainst = $this->db->fulltextSearch(['resourcemetadataText'], $search);
-        $this->db->formatConditions($matchAgainst);
+        $this->db->formatConditions($this->db->formatFields('resourcemetadataText') . $search);
         if ($this->session->getVar('setup_Write'))
         {
             $this->db->formatConditionsOneField(['q', 'p', 'qc', 'pc', 'm', 'i'], 'resourcemetadataType');

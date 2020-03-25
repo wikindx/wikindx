@@ -165,7 +165,7 @@ class LISTSOMERESOURCES
         {
             $this->quarantineProcess();
         }
-        $this->session->saveState(['search', 'sql', 'bookmark', 'list']);
+        $this->session->saveState(['search', 'sql', 'setup', 'bookmark', 'list']);
     }
     /**
      * citeProcess - display resources citing this one
@@ -182,7 +182,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $resCommon = FACTORY_RESOURCECOMMON::getInstance();
             $this->stmt->conditions[] = $this->db->formatFields('resourceId') . ' ' . $this->db->inClause($resCommon->showCitations($this->vars["id"]));
@@ -215,7 +215,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $split = UTF8::mb_explode(',', $this->vars["id"]);
             if (count($split) > 1)
@@ -259,7 +259,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = ['resourcemiscAddUserIdResource' => $this->vars['id']];
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
@@ -292,7 +292,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = '(' . $this->db->formatFields('resourcemetadataAddUserId') . '=' . $this->db->tidyInput($this->vars["id"]) .
                 $this->db->and . $this->db->formatFields('resourcemetadataType') . '=' . $this->db->tidyInput('q') . ')';
@@ -326,7 +326,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = '(' . $this->db->formatFields('resourcemetadataAddUserId') . '=' . $this->db->tidyInput($this->vars["id"]) .
                 $this->db->and . $this->db->formatFields('resourcemetadataType') . '=' . $this->db->tidyInput('p') . ')';
@@ -361,7 +361,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = '(' . $this->db->formatFields('resourcemetadataAddUserId') . '=' . $this->db->tidyInput($this->vars["id"]) .
                 $this->db->and . $this->db->formatFields('resourcemetadataPrivate') . '=' . $this->db->tidyInput('N') .
@@ -396,7 +396,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = ['resourcelanguageLanguageId' => $this->vars['id']];
             $this->stmt->joins['resource_language'] = ['resourcelanguageResourceId', 'resourceId'];
@@ -443,7 +443,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->joins['resource_keyword'] = ['resourcekeywordResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
@@ -486,7 +486,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = $this->db->formatFields('resourcekeywordKeywordId') .
                 $this->db->equal . $this->db->tidyInput($this->vars['id']) . $this->db->and .
@@ -523,7 +523,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = ['resourceyearYear1' => base64_decode($this->vars["id"])];
             $this->stmt->joins['resource_year'] = ['resourceyearId', 'resourceId'];
@@ -556,7 +556,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = ['resourceType' => $this->vars["id"]];
             $subStmt = $this->setSubQuery();
@@ -588,7 +588,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = ['resourcecategoryCategoryId' => $this->vars["id"]];
             $this->stmt->joins['resource_category'] = ['resourcecategoryResourceId', 'resourceId'];
@@ -621,7 +621,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = ['resourceusertagsTagId' => $this->vars["id"]];
             $this->stmt->joins['resource_user_tags'] = ['resourceusertagsResourceId', 'resourceId'];
@@ -654,7 +654,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = ['resourcecategorySubcategoryId' => $this->vars["id"]];
             $this->stmt->joins['resource_category'] = ['resourcecategoryResourceId', 'resourceId'];
@@ -747,7 +747,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
             $this->stmt->joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
@@ -806,7 +806,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             if ($miscField1)
             { // conference and translated publisher
@@ -853,7 +853,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = ['resourcemiscCollection' => $this->vars["id"]];
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
@@ -888,7 +888,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = ['userbibliographyresourceBibliographyId' => $this->vars["id"]];
             $this->stmt->joins['user_bibliography_resource'] = ['userbibliographyresourceResourceId', 'resourceId'];
@@ -921,7 +921,7 @@ class LISTSOMERESOURCES
             return;
         }
         $this->pagingReset();
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
         {
             $this->stmt->conditions[] = ['resourcemiscQuarantine' => 'Y'];
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
@@ -966,7 +966,7 @@ class LISTSOMERESOURCES
         $this->pagingObject->queryString = $queryString;
         $this->pagingObject->getPaging();
         $this->common->pagingObject = $this->pagingObject;
-        $sql .= $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
+        $sql .= $this->db->limit($this->session->getVar('setup_Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         return $sql;
     }
     /**
@@ -978,7 +978,7 @@ class LISTSOMERESOURCES
      */
     private function lastMulti($queryString)
     {
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A'))
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && ($this->session->getVar('setup_PagingStyle') != 'A'))
         {
             $this->session->delVar('mywikindx_PagingStart');
             $this->pagingObject = FACTORY_PAGING::getInstance();
@@ -1010,7 +1010,7 @@ class LISTSOMERESOURCES
                 }
                 $this->stmt->executeCondJoins();
                 $this->db->groupBy(['rId']);
-                if (GLOBALS::getUserVar('PagingStyle') == 'A')
+                if ($this->session->getVar('setup_PagingStyle') == 'A')
                 {
                     return $this->db->selectNoExecute($table, ['resourceTitleSort', ['resourceId' => 'rId']], FALSE, TRUE, TRUE);
                 }

@@ -21,6 +21,8 @@ class AUTHORIZE
     private $session;
     /** object */
     private $config;
+    /** object */
+    private $loadConfig;
     /** array */
     private $vars;
     /** object */
@@ -35,20 +37,21 @@ class AUTHORIZE
         $this->config = FACTORY_CONFIG::getInstance();
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
+        $this->loadConfig = FACTORY_LOADCONFIG::getInstance();
         $this->configDbStructure = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        if (!GLOBALS::getUserVar("Language"))
+        if (!$this->session->getVar("setup_Language"))
         {
             $fields = $this->db->listFields('config');
             // set the default language prior to displaying the login prompt
             if (in_array('language', $fields) !== FALSE)
             { // perhaps this is a first install or upgrade to >= v4 (v3 has config.language not config.configLanguage)
-            	GLOBALS::setUserVar('Language', "auto");
+                $this->session->setVar('setup_Language', "auto");
             }
             elseif (array_search('configLanguage', $fields) !== FALSE)
             {
                 if ($this->db->numRows($this->db->select('config', '*')) == 1)
                 { // Prior to v5.3
-                    GLOBALS::setUserVar('Language', "auto");
+                    $this->session->setVar('setup_Language', "auto");
                 }
                 else
                 { // post v5.3
@@ -56,7 +59,7 @@ class AUTHORIZE
                     $row = $this->configDbStructure->getData('configLanguage');
                     if (empty($row))
                     { // perhaps this is a first install
-                        GLOBALS::setUserVar('Language', "auto");
+                        $this->session->setVar('setup_Language', "auto");
                     }
                     else
                     {
@@ -76,7 +79,7 @@ class AUTHORIZE
      */
     public function gatekeep()
     {
-        FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
+        $this->loadConfig->load();
         if (array_key_exists("action", $this->vars))
         {
             // Logged-on user clicked on 'OK' when asked to confirm GDPR or privacy statement
@@ -87,10 +90,10 @@ class AUTHORIZE
                 // FALSE means go to front of WIKINDX
                 return FALSE;
             }
-            // User requesting readOnly access - clear previous sessions
-            if ($this->vars["action"] == 'readOnly')
+            // logging out
+            if ($this->vars["action"] == 'logout')
             {
-                $this->readOnly();
+                $this->logout();
             }
             // User logging in from readOnly mode
             elseif ($this->vars["action"] == 'initLogon')
@@ -101,6 +104,8 @@ class AUTHORIZE
                 $template = $this->config->WIKINDX_TEMPLATE;
                 $userReg = $this->config->WIKINDX_USERREGISTRATION;
                 $multiUser = $this->config->WIKINDX_MULTIUSER;
+                $this->session->setVar('setup_Language', $language);
+                $this->session->setVar('setup_Template', $template);
                 $this->session->setVar('setup_UserRegistration', $userReg);
                 $this->session->setVar('setup_MultiUser', $multiUser);
                 $this->initLogon(); // login prompt
@@ -135,6 +140,29 @@ class AUTHORIZE
                 $user->writeSessionPreferences(FALSE, 'config');
                 // restore some session variables if stored from last logout
                 $this->restoreEnvironment();
+                //				$this->loadConfig->load();
+                return FALSE;
+            }
+            // User requesting readOnly access - clear previous sessions
+            elseif ($this->vars["action"] == 'readOnly')
+            {
+                if ($this->config->WIKINDX_DENY_READONLY)
+                {
+                    $this->initLogon(); // login prompt
+                    FACTORY_CLOSENOMENU::getInstance();
+                }
+                // First delete any pre-existing session in case this user has been logging on and off as different users
+                // session array 'setup' is deleted at logout()
+                $this->session->destroy();
+                $this->session->setVar("setup_ReadOnly", TRUE);
+                // tidy up old files
+                FILE\tidyFiles();
+                // populate session with default values from config
+                $user = FACTORY_USER::getInstance();
+                $user->writeSessionPreferences(FALSE, 'config');
+                $this->clearEmbargoes();
+                $this->checkNews();
+                // FALSE means go to front of WIKINDX
                 return FALSE;
             }
             // User registration
@@ -211,6 +239,7 @@ class AUTHORIZE
         }
         if ((!array_key_exists('action', $this->vars) || $this->vars['action'] != 'upgradeDBLogon'))
         {
+            //			$this->loadConfig->load();
             $cookie = FACTORY_COOKIE::getInstance();
             // grabCookie() returns TRUE if valid cookie - otherwise, proceed to manual logon
             if ($cookie->grabCookie())
@@ -390,7 +419,7 @@ class AUTHORIZE
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \FORM\formEnd();
-        $this->session->destroy();
+
         return $pString;
     }
     /**
@@ -426,7 +455,6 @@ class AUTHORIZE
      */
     private function restoreEnvironment()
     {
-// Restore the user's session state
         $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
         $state = $this->db->selectFirstField('users', 'usersUserSession');
         if ($state)
@@ -441,17 +469,11 @@ class AUTHORIZE
                 }
                 foreach ($array as $subKey => $value)
                 {
-// A hang-over from when sessions were switched over to GLOBALS . . . We don't want ReadOnly set when this is a logged-in user
-					if ($subKey != 'ReadOnly')
-					{
-	                    $this->session->setVar($key . '_' . $subKey, $value);
-	                }
+                    $this->session->setVar($key . '_' . $subKey, $value);
                 }
             }
         }
         $this->checkNews();
-// A bit of a hack but it forces the language and display to what the logged on user wants.
-        header("Location: index.php");
     }
     /**
      * Check for any news items in the database
@@ -473,7 +495,7 @@ class AUTHORIZE
      *
      * Various bits of garbage disposal, session is destroyed, cookie is deleted and user is presented with logon prompt
      */
-    private function readOnly()
+    private function logout()
     {
         // Garbage disposal
         // remove this session's files
@@ -506,28 +528,35 @@ class AUTHORIZE
             }
             //			$this->session->delVar('paperExports');
         }
-// Store this user's previous user settings for use below if necessary
-		$keys = ["Paging", "PagingMaxLinks", "StringLimit", "Language", "Style", "Template", "PagingTagCloud", "ListLink"];
-		foreach ($keys as $key)
-		{
-			$sessArray[$key] = GLOBALS::getUserVar($key);
-		}
         $this->session->destroy();
-// set the default language prior to displaying the login prompt
-       $user = FACTORY_USER::getInstance();
-// populate session with default values from config
-        $user->writeSessionPreferences(FALSE, 'config');
+        // set the default language prior to displaying the login prompt
+        $row = $this->configDbStructure->getData('configLanguage');
+        if (empty($row))
+        { // perhaps this is a first install or upgrade to >= v4 (v3 has config.language not config.configLanguage)
+            $this->session->setVar('setup_Language', "auto");
+        }
+        else
+        {
+            $user = FACTORY_USER::getInstance();
+            // populate session with default values from config
+            $user->writeSessionPreferences(FALSE, 'config');
+        }
         // remove any wikindx cookie that has been set
         $cookie = FACTORY_COOKIE::getInstance();
         $cookie->deleteCookie();
-// send back to front page
-// Restore this user's previous user settings (e.g. so language and appearance does not suddenly change to the default from config)
-		foreach ($keys as $key)
-		{
-			$this->session->setVar('setup_' . $key, $sessArray[$key]);
-		}
-		$this->session->setVar('setup_ReadOnly', TRUE);
-		header("Location: index.php");
+        if ($this->config->WIKINDX_DENY_READONLY)
+        {
+            $this->initLogon(); // login prompt
+            FACTORY_CLOSENOMENU::getInstance();
+        }
+        else
+        { // send back to front page
+            $this->session->setVar('setup_ReadOnly', TRUE);
+            include_once("core/display/FRONT.php");
+            $front = new FRONT('');
+            unset($front);
+            FACTORY_CLOSE::getInstance();
+        }
     }
     /**
      * failure

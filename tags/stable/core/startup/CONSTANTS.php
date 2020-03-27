@@ -39,7 +39,7 @@ define('WIKINDX_NAME', 'WIKINDX');
  *
  * @name WIKINDX_PUBLIC_VERSION
  */
-define('WIKINDX_PUBLIC_VERSION', '6.2.1');
+define('WIKINDX_PUBLIC_VERSION', '6.2.2');
 /**
  * WIKINDX internal version information
  *

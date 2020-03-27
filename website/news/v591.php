@@ -1,4 +1,17 @@
 <h2>SVN migration</h2>
+<div class="hDetails">March, 2020</div>
+
+<h2>Wikindx v6.2.2 Released</h2>
+<div class="hDetails">February, 2020</div>
+<h3>CHANGELOG</h3>
+<p><strong>Focus: Minor bug fixes.</strong></p>
+
+<h3>BUGS:</h3>
+<ul>
+    <li>Remove a forgotten var_dump() that breaks the output.</li>
+</ul>
+
+
 <div class="hDetails">February, 2020</div>
 
 <p>For reasons of maintenance of the source code we have archived the sources up to version 6.2.1 in a read-only repository at: <a href="https://sourceforge.net/p/wikindxold/svn/">https://sourceforge.net/p/wikindxold/svn/</a></p>

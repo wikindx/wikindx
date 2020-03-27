@@ -1,0 +1,1048 @@
+# Wikindx's Translation ressource: Français.
+# For copyright see the component.json file
+# This file is distributed under the same license as the adminstyle package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: adminstyle\n"
+"Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
+"POT-Creation-Date: 2020-01-25 18:48+0100\n"
+"PO-Revision-Date: 2019-09-27 01:50+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. *
+#. * Menu items
+#.
+#: components/plugins/adminstyle/adminstylemessages.php:25
+msgid "Styles..."
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:26
+msgid "Create Style"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:27
+msgid "Copy Style"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:28
+msgid "Edit Style"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:29
+msgid "Short Name"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:30
+msgid "Long Name"
+msgstr ""
+
+#. *
+#. * General
+#.
+#: components/plugins/adminstyle/adminstylemessages.php:34
+msgid "Successfully edited style"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:35
+msgid "Successfully added style"
+msgstr ""
+
+#. *
+#. * Styles
+#.
+#: components/plugins/adminstyle/adminstylemessages.php:39
+msgid "Primary creator delimiters"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:40
+msgid "Other creator delimiters"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:41
+msgid "If only two creators"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:42
+msgid "between"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:43
+msgid "before last"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:44
+msgid "Between first two creators"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:45
+msgid "Between following creators"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:46
+msgid "Primary creator style"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:47
+msgid "Other creator styles"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:48
+msgid "First"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:49
+msgid "Others"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:50
+msgid "Initials"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:51
+msgid "First name"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:52
+msgid "Full"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:53
+msgid "Initial"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:54
+msgid "Primary creator list abbreviation"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:55
+msgid "Other creator list abbreviation"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:56
+msgid "Full list"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:57
+msgid "Limit list"
+msgstr ""
+
+#. translators: The next 3 surround form text boxes: "If xx or more creators, list the first xx and abbreviate with xx".  For example: "If 4 or more creators, list the first 1 and abbreviate with ,et. al"
+#: components/plugins/adminstyle/adminstylemessages.php:59
+msgid "If"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:60
+msgid "or more creators, list the first"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:61
+msgid "and abbreviate with"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:62
+msgid "Title capitalization"
+msgstr ""
+
+#. Title as entered with no changes to capitalization
+#: components/plugins/adminstyle/adminstylemessages.php:64
+msgid "As entered"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:65
+msgid "Available fields:"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:66
+msgid "Available fields (Bibliography)"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:67
+msgid "Available fields (Footnote)"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:68
+msgid "Disable fields"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:69
+msgid "RESET"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:70
+msgid "Edition format"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:71
+msgid "Month format"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:72
+msgid "Date format"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:73
+msgid "Day format"
+msgstr ""
+
+#. Add a leading zero to day if less than 10.
+#: components/plugins/adminstyle/adminstylemessages.php:75
+msgid "Add leading zero"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:76
+msgid "Page format"
+msgstr ""
+
+#. Length of film, broadcast etc.
+#: components/plugins/adminstyle/adminstylemessages.php:78
+msgid "Running time format"
+msgstr ""
+
+#. When displaying a book that has no author but has an editor, do we put the editor in the position occupied by the author?
+#: components/plugins/adminstyle/adminstylemessages.php:80
+msgid "Editor switch"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:81
+msgid "For books with no author but an editor, put editor in author position"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:82
+msgid "Yes"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:83
+msgid "No"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:84
+msgid "If 'Yes', replace editor field in style definitions with"
+msgstr ""
+
+#. Uppercase creator names?
+#: components/plugins/adminstyle/adminstylemessages.php:86
+msgid "Uppercase all names"
+msgstr ""
+
+#. For repeated creator names in next bibliographic item
+#: components/plugins/adminstyle/adminstylemessages.php:88
+msgid "For works immediately following by the same creators"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:89
+msgid "Print the creator list"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:90
+msgid "Do not print the creator list"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:91
+msgid "Replace creator list with text below"
+msgstr ""
+
+#. Fallback formatting style when a specific resource type has none defined
+#: components/plugins/adminstyle/adminstylemessages.php:93
+msgid "Fallback style"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:94
+msgid "Bibliography Formatting"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:95
+msgid "Italics"
+msgstr ""
+
+#. For user specific month naming
+#: components/plugins/adminstyle/adminstylemessages.php:97
+msgid "Use month names defined below"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:98
+msgid ""
+"User-defined month names (all fields must be completed if selected above)"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:99
+msgid ""
+"User-defined seasons (all fields must be completed if month format above is "
+"set to user-defined)"
+msgstr ""
+
+#. Date ranges for e.g. conferences
+#: components/plugins/adminstyle/adminstylemessages.php:101
+msgid "Date range"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:102
+msgid "Delimiter between start and end dates if day and month given"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:103
+msgid "Delimiter between start and end dates if month only given"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:104
+msgid "If start and end months are equal"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:105
+msgid "Print both months"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:106
+msgid "Print start month only"
+msgstr ""
+
+#. Different puncutation may be required if a month is given with no day.
+#: components/plugins/adminstyle/adminstylemessages.php:108
+msgid "If a date has a month but no day"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:109
+msgid "Use style definition unchanged"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:110
+msgid "Replace date field in template with:"
+msgstr ""
+
+#. Don't translate 'date'
+#: components/plugins/adminstyle/adminstylemessages.php:112
+msgid "(Use 'date' as the field)"
+msgstr ""
+
+#. Which language localization to use for ordinals and months.
+#: components/plugins/adminstyle/adminstylemessages.php:114
+msgid "Localization"
+msgstr ""
+
+#. Re-write creator(s) portion of templates to handle styles such as DIN 1505.
+#: components/plugins/adminstyle/adminstylemessages.php:116
+msgid "Split creator lists and add strings"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:117
+msgid "Add string to first name in list"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:118
+msgid "Add string to remaining names"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:119
+msgid "Before name:"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:120
+msgid "To each name:"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:121
+msgid "Bibliography template"
+msgstr ""
+
+#. Don't translate 'pages'
+#: components/plugins/adminstyle/adminstylemessages.php:123
+msgid "(Footnote template may also use 'pages')"
+msgstr ""
+
+#. Some general help for using templates displayed in the Admin|Style page
+#: components/plugins/adminstyle/adminstylemessages.php:125
+msgid ""
+"1. The three generic bibliography templates are required and will be used if "
+"a displayed resource has no bibliographic template."
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:126
+msgid ""
+"2. The footnote templates are only required for those styles that use "
+"footnotes for citations.  In all cases, the complete bibliography ('works "
+"cited') for footnote styles, as well as for endnote and in-text styles, uses "
+"the bibliography template."
+msgstr ""
+
+#. Don't translate 'citation'
+#: components/plugins/adminstyle/adminstylemessages.php:128
+msgid ""
+"3. For footnote citations, the 'citation' field above refers to the footnote "
+"template or, if that does not exist, to the bibliography template or, if that "
+"does not exist, to the fallback style."
+msgstr ""
+
+#. Don't translate 'pages'
+#: components/plugins/adminstyle/adminstylemessages.php:130
+msgid ""
+"4. The 'pages' field in the bibliography template refers to the complete "
+"article page range; in the footnote template, it refers to the specific "
+"citation page(s)."
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:131
+msgid ""
+"5. If you define a footnote template for a resource you must also define the "
+"bibliography template for that resource."
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:132
+msgid ""
+"6. If a resource is missing the first field in the bibliography template you "
+"may replace that field with the fields in the partial template (this allows a "
+"reordering of the initial fields)."
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:133
+msgid ""
+"7. In the bibliography template for Book Chapter, the field 'title' refers to "
+"the chapter number."
+msgstr ""
+
+#. For template previewing, allow the use to preview by turning various fields on and off.
+#: components/plugins/adminstyle/adminstylemessages.php:135
+msgid "Preview with the following fields"
+msgstr ""
+
+#. Characters separating title and subtitle
+#: components/plugins/adminstyle/adminstylemessages.php:137
+msgid "Title/subtitle separator"
+msgstr ""
+
+#. See "templateHelp6" above
+#: components/plugins/adminstyle/adminstylemessages.php:139
+msgid "Partial template"
+msgstr ""
+
+#. Use the partial template to replace all of the bibliography template.
+#: components/plugins/adminstyle/adminstylemessages.php:141
+msgid "Replace all of original template with partial template"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:142
+msgid "Generic book-type"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:143
+msgid "Generic article-type"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:144
+msgid "Generic miscellaneous"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:145
+msgid "Preview bibliography"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:146
+msgid "Preview in-text citation"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:147
+msgid "Preview footnote"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:148
+msgid "ERROR"
+msgstr ""
+
+#. *
+#. * Citation
+#.
+#. The displayed hyperlink next to the textarea form input
+#: components/plugins/adminstyle/adminstylemessages.php:153
+msgid "Cite"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:154
+msgid "Citation Formatting"
+msgstr ""
+
+#. In-text citation style as opposed to endnote style citations.
+#: components/plugins/adminstyle/adminstylemessages.php:156
+msgid "In-text style"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:157
+msgid "Endnote style"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:158
+msgid "Footnote creators"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:159
+msgid "Creator list abbreviation"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:160
+msgid "Creator list abbreviation (subsequent appearances)"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:161
+msgid "Creator delimiters"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:162
+msgid "Creator style"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:163
+msgid "Last name only"
+msgstr ""
+
+#. 'Last name only' is a choice in a select box and should not be translated
+#: components/plugins/adminstyle/adminstylemessages.php:165
+msgid ""
+"If 'Last name only', use initials to differentiate between creators with the "
+"same surname"
+msgstr ""
+
+#. For consecutive citations by the same creator(s)
+#: components/plugins/adminstyle/adminstylemessages.php:167
+msgid ""
+"For consecutive citations by the same creator(s) use the following template:"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:168
+msgid "and separate citations with:"
+msgstr ""
+
+#. The template is something like '(author|, year)' that the user is asked to enter
+#: components/plugins/adminstyle/adminstylemessages.php:170
+msgid "Template"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:171
+msgid "Separate consecutive citations with"
+msgstr ""
+
+#. Formatting of years
+#: components/plugins/adminstyle/adminstylemessages.php:173
+msgid "Year format"
+msgstr ""
+
+#. Normal, superscript or subscript of citation
+#: components/plugins/adminstyle/adminstylemessages.php:175
+msgid "Normal text"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:176
+msgid "Superscript"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:177
+msgid "Subscript"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:178
+msgid "Parentheses or other characters enclosing the citation"
+msgstr ""
+
+#. Ambiguous citations
+#: components/plugins/adminstyle/adminstylemessages.php:180
+msgid "Ambiguous citations"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:181
+msgid "Use the following template"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:182
+msgid "Add a letter after the year"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:183
+msgid "Leave citation unchanged"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:184
+msgid ""
+"Use template below if a single citation is in the same sentence as the first "
+"creator's surname"
+msgstr ""
+
+#. This follows on from sentence above....  Split the pages from the main citation placing the main citation immediately after the creator names in the text and the pages immediately following the quote.  e.g. if the citation is in the form: Grimshaw states:  "WIKINDX is wonderful" [cite]123:25[/cite], the result will be Grimshaw (2005) states:  "WIKINDX is wonderful" (p.25) rather than Grimshaw states:  "WIKINDX is wonderful" (2005, p.25).
+#: components/plugins/adminstyle/adminstylemessages.php:186
+msgid ""
+"and split the citation placing the main citation after the creator names and "
+"the page number after the quote:"
+msgstr ""
+
+#. For endnote-style citations
+#: components/plugins/adminstyle/adminstylemessages.php:188
+msgid "Format like bibliography"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:189
+msgid "Format like in-text citations"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:190
+msgid ""
+"Replace consecutive citations for the same resource and the same page with "
+"this template"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:191
+msgid ""
+"Replace consecutive citations for the same resource but a different page with "
+"this template"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:192
+msgid "Replace previously cited resources with this template"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:193
+msgid "Format of the citation in the text"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:194
+msgid "Format of the citation in the endnotes"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:195
+msgid "Endnote/Footnote"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:196
+msgid "Endnotes: incrementing"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:197
+msgid "Endnotes: same ID for same resource"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:198
+msgid "Footnotes: incrementing"
+msgstr ""
+
+#. Ordering of the appended bibliography for in-text citations and endnote-style citations using the same id number for each cited resource
+#: components/plugins/adminstyle/adminstylemessages.php:200
+msgid "Bibliography ordering"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:201
+msgid ""
+"(For in-text citations, endnote-style citations using the same ID number and "
+"bibliographies appended to papers using footnotes.)"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:202
+msgid "Use this order for endnote-style citations using the same ID number:"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:203
+msgid "1st. sort by"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:204
+msgid "2nd. sort by"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:205
+msgid "3rd. sort by"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:206
+msgid "Ascending"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:207
+msgid "Descending"
+msgstr ""
+
+#. For a particular resource type (personal communication for example), replace the in-text citation template with another template
+#: components/plugins/adminstyle/adminstylemessages.php:209
+msgid "For in-text citations, replace the citation template with this template"
+msgstr ""
+
+#. Text preceeding and following citations e.g. (see Grimshaw 1999; Boulanger 2004 for example): 'see' is preText and 'for example' is postText
+#: components/plugins/adminstyle/adminstylemessages.php:211
+msgid "Preliminary text"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:212
+msgid "Following text"
+msgstr ""
+
+#. Formatting of the id number in the endnotes for endnote-style citations
+#: components/plugins/adminstyle/adminstylemessages.php:214
+msgid "Parentheses or other characters enclosing the ID number"
+msgstr ""
+
+#. For subsequent citations from the same resource
+#: components/plugins/adminstyle/adminstylemessages.php:216
+msgid ""
+"For subsequent citations from the same resource use the following template:"
+msgstr ""
+
+#. This follows on from the text in 'subsequentCreator'
+#: components/plugins/adminstyle/adminstylemessages.php:218
+msgid ""
+"only if the sentence containing the citation has the creator surname, title "
+"or shortTitle in it:"
+msgstr ""
+
+#. If no year for in-text citations, replace year field
+#: components/plugins/adminstyle/adminstylemessages.php:220
+msgid "If no year, replace year field with the following"
+msgstr ""
+
+#. When compiling the appended bibliography for in-text citations, certain resources (e.g. APA personal communication) are not added.
+#: components/plugins/adminstyle/adminstylemessages.php:222
+msgid "Do not add to the bibliography when cited:"
+msgstr ""
+
+#. When using endnote-style citations and defining templates using fields such as 'creator', 'pages', 'year' or 'title'.  Don't translate 'creator', 'pages' or 'citation'.
+#: components/plugins/adminstyle/adminstylemessages.php:224
+msgid ""
+"Fields are formatted as defined in in-text citation formatting above unless "
+"using footnotes in which case the 'creator' field is defined below and the "
+"'pages' field format is defined in the footnote template in the bibliography "
+"section. If the 'citation' field is used, it should be by itself and it "
+"refers to the bibliographic/footnote templates below."
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:225
+msgid "Footnote template"
+msgstr ""
+
+#. Set the range of text within which the subsequent creator template (for in-text citations) is used
+#: components/plugins/adminstyle/adminstylemessages.php:227
+msgid "Range within which subsequent citations are searched for"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:228
+msgid "Entire text"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:229
+msgid "Paragraph"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:230
+msgid "Section"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:231
+msgid ""
+"Remove title and shortTitle fields from the citation if either of those "
+"fields is in the same sentence:"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:232
+msgid "First Creator"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:233
+msgid "Title"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:234
+msgid "Publication Year"
+msgstr ""
+
+#. *
+#. * Hints
+#.
+#: components/plugins/adminstyle/adminstylemessages.php:238
+msgid "(No spaces)"
+msgstr ""
+
+#: components/plugins/adminstyle/adminstylemessages.php:239
+msgid "(Fields are case-sensitive)"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:25
+msgid ""
+"If you have WIKINDX admin rights, you can create and edit bibliographic "
+"styles for on-the-fly formatting when displaying or exporting bibliographic "
+"lists."
+msgstr ""
+
+#. translators: #linkSfWikindx# unchanged. This pattern is replaced by a link
+#: components/plugins/adminstyle/help.php:28
+msgid ""
+"These styles are stored as XML files each within its own directory in the "
+"styles/ directory. This directory <strong>must</strong> be writeable by "
+"everyone or at least the web server user (usually user 'nobody'). "
+"Additionally, when editing an existing style, the XML style file within its "
+"named directory in the styles/ directory <strong>must also</strong> be "
+"writeable by everyone or the web server user. As new bibliographic styles are "
+"created, the WIKINDX team will make these available on the #linkSfWikindx# "
+"downloads site as plug-ins. Once you have a downloaded file, simply unzip the "
+"contents to the styles/ directory."
+msgstr ""
+
+#. translators: #linkSfWikindx# unchanged. This pattern is replaced by a link
+#: components/plugins/adminstyle/help.php:31
+msgid ""
+"If you develop new styles yourself, you are strongly encouraged to contact "
+"the WIKINDX developers at #linkSfWikindx# to make them available to other "
+"users."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:32
+msgid ""
+"You can create a new style based on an existing one by copying the existing "
+"style. To remove a style from the list available to your users, disable that "
+"style in the Admin|Components menu."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:33
+msgid ""
+"Please note, to edit a style, you should do it from the same browser window "
+"as you use to view a bibliographic list.  This is because, in order to save "
+"processing the style definition file each time you list a bibliography, "
+"WIKINDX will check to see if the style definition file has been edited and "
+"therefore needs reprocessing. This information is stored in a PHP session "
+"variable; each browser window has its own separate set of session variables "
+"with no cross-interrogation available. If you edit the style definition file "
+"from another browser window then you are unlikely to see changes when you "
+"refresh your bibliographic list."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:37
+msgid ""
+"Each style has a set of options that define the heading style of titles, how "
+"to display numbers and dates etc. and then a separate style definition for "
+"each resource type that WIKINDX handles. The 'Short Name' is used by WIKINDX "
+"as both the folder and file name and for this reason should not only be a "
+"unique name within styles/, but should also have no spaces or any other "
+"characters that may cause confusion with your operating system (i.e. "
+"alphanumeric characters only). The 'Long Name' is the description of the "
+"style that is displayed to WIKINDX users."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:38
+msgid ""
+"The 'Editor switch' requires special attention. Some bibliographic styles "
+"require that for books and book chapters, where there exists an editor but no "
+"author, the position occupied by the author is taken by the editor. If you "
+"select 'Yes' here, you should then supply a replacement editor field. Please "
+"note that if the switch occurs, the editor(s) formatting will be inherited "
+"from the global settings you supplied for the author. See the examples below."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:39
+msgid ""
+"The three 'generic style' definitions are required and are used to display "
+"any resource type for which there does not yet exist a style definition. This "
+"allows you to build up your style definitions bit by bit.  Furthermore, some "
+"bibliographic styles provide no formatting guidelines for particular types of "
+"resource in which case the generic styles will provide some formatting for "
+"those resources according to the general guidelines for that bibliographic "
+"style. Each resource for which there is no style definition will fall back to "
+"the chosen generic style. The generic styles try their best but if formatting "
+"is strange for a particular resource type then you should explicitly define a "
+"style definition for that type."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:40
+msgid ""
+"Each style definition has a range of available fields listed to the right of "
+"each input box. These fields are <strong>case-sensitive</strong> and need not "
+"all be used. However, with some of the more esoteric styles, the more "
+"database fields that have been populated for each resource in the WIKINDX, "
+"the more likely it is that the formatting will be correct."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:44
+msgid "SYNTAX"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:45
+msgid ""
+"The style definition syntax uses a number of rules and special characters:"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:47
+msgid "The character '|' separates fields from one another."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:48
+msgid ""
+"If a field does not exist or is blank in the database, none of the definition "
+"for that field is printed."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:49
+msgid ""
+"<strong>Field names are case-sensitive</strong>&nbsp;and need not all be used."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:50
+msgid ""
+"Within a field, you can add any punctuation characters or phrases you like "
+"before and after the field name."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:51
+msgid ""
+"Any word that you wish to be printed and that is the same (even a partial "
+"word) as a field name should be enclosed in backticks '`'."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:52
+msgid ""
+"For creator lists (editors, revisers, directors etc.) and pages, alternative "
+"singular and plural text can be specified with '^' (e.g. |^p.^pp.^pages| "
+"would print the field 'pages' preceded by 'pp.' if there were multiple pages "
+"or 'p.' if not)."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:53
+msgid ""
+"BBCode <code>[u]..[/u]</code>, <code>[i]..[/i]</code>, <code>[b]..[/b]</"
+"code>, <code>[sup]..[/sup]</code> and <code>[sub]..[/sub]</code> can be used "
+"to specify underline, italics, bold, superscript and subscript."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:54
+msgid ""
+"The character '%' enclosing any text or punctuation <em>before</em> the field "
+"name states that that text or those characters will only be printed if the "
+"<em>preceeding</em> field exists or is not blank in the database. The "
+"character <code>'%'</code> enclosing any text or punctuation <em>after</em> "
+"the field name states that that text or those characters will only be printed "
+"if the <em>following</em> field exists or is not blank in the database. It is "
+"optional to have a second pair in which case the construct should be read "
+"<code>'if target field exists, then print this, else, if target field does "
+"not exist, print that'</code>.  For example, <code>'%: %'</code> will print "
+"<code>': '</code> if the target field exists else nothing if it doesn't while "
+"<code>'%: %. %'</code> will print <code>': '</code> if the target field "
+"exists else <code>'. '</code> if it does not."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:55
+msgid ""
+"Characters in fields that do not include a field name should be paired with "
+"another set and together enclose a group of fields. If these special fields "
+"are not paired unintended results may occur. These are intended to be used "
+"for enclosing groups of fields in brackets where <em>at least</em> one of the "
+"enclosed fields exists or is not blank in the database."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:56
+msgid ""
+"<p>The above two rules can combine to aid in defining particularly complex "
+"bibliographic styles (see examples below). The pair </p>\n"
+"\t\t<p><code>|%, %. %|xxxxx|xxxxx|%: %; %|</code></p>\n"
+"\t\t<p>states that if at least one of the intervening fields exists, then the "
+"comma and colon will be printed; if an intervening field does not exist, then "
+"the full stop will be printed <em>only</em> if the <em>preceeding</em> field "
+"exists (else nothing will be printed) and the semicolon will be printed "
+"<em>only</em> if the <em>following</em> field exists (else nothing will be "
+"printed).</p>"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:59
+msgid ""
+"If the final set of characters in the style definition is '|.' for example, "
+"the '.' is taken as the ultimate punctuation printed at the very end."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:60
+msgid ""
+"<p>Fields can be printed or not dependent upon the existence of preceding or "
+"subsequent fields. For example,</p>\n"
+"\t\t<p><code>creator. |$shortTitle. $title. $|publicationYear.</code></p>\n"
+"\t\t<p>would print the shortTitle field if the creator were populated "
+"otherwise it prints the title field.</p>\n"
+"\t\t<p><code>creator. |title. |#ISBN. ##|edition.</code></p>\n"
+"\t\t<p>prints the ISBN field if edition exists otherwise it prints nothing.</"
+"p>"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:65
+msgid "Newlines may be added with the special string NEWLINE."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:68
+msgid ""
+"Tip: In most cases, you will find it easiest to attach punctuation and "
+"spacing at the end of the preceding field rather than at the start of the "
+"following field. This is especially the case with finite punctuation such as "
+"full stops."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:72
+msgid "EXAMPLES"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:74
+#: components/plugins/adminstyle/help.php:90
+#: components/plugins/adminstyle/help.php:99
+#: components/plugins/adminstyle/help.php:106
+msgid "<em>might produce:</em>"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:76
+msgid ""
+"<em>and, if there were no publisher location or edition entered for that "
+"resource and only one page number given, it would produce:</em>"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:82
+msgid "<em>might produce:</em></code>"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:84
+msgid ""
+"<em>and, if there were no publisher location or publication year entered for "
+"that resource, it would produce:</em><br>"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:92
+msgid ""
+"<em>and, if there were no author entered for that resource and the "
+"replacement editor field were 'editor ^ed.^eds.^ ', it would produce:</em>"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:97
+msgid ""
+"Consider the following (IEEE-type) generic style definition and what it does "
+"with a resource type lacking certain fields:"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:101
+msgid ""
+"<em>and, when applied to a resource type with editor and edition fields:</em>"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:104
+msgid ""
+"Clearly there is a problem here, notably at the end of the resource title. "
+"The solution is to use rule no. 10 above:"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:108
+msgid "<em>and:</em>"
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:110
+msgid "Bibliographic styles requiring this complexity are few and far between."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:114
+msgid ""
+"If the value entered for the edition of a resource contains non-numeric "
+"characters, then, despite having set the global setting for the edition "
+"format to ordinal (3rd. etc.), no conversion will take place."
+msgstr ""
+
+#: components/plugins/adminstyle/help.php:115
+msgid ""
+"The formatting of the names, edition and page numbers and the capitalization "
+"of the title depends on the global settings provided for your bibliographic "
+"style."
+msgstr ""

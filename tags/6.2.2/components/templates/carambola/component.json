@@ -1,0 +1,33 @@
+{
+    "component_type": "template",
+    "component_id": "carambola",
+    "component_version": "1.2",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Carambola",
+    "component_description": "A colorful theme (horizontal menu)",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_authors": [
+        {
+            "author_name": "Rui Alão",
+            "author_role": "Developer",
+            "author_copyright": "2013",
+            "author_website": "https://ruialao.blogspot.com/"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2012-2013, 2016-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2012, 2016-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "24473866c4c7b6406665498f766ed0b4a03f28d1a5b6ef7dc5423f050cf7b117"
+}

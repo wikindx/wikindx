@@ -1,0 +1,18 @@
+{
+    "component_type": "language",
+    "component_id": "it",
+    "component_version": "1.6",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Italian",
+    "component_description": "Traduzione italiana",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_authors": [
+        {
+            "author_name": "Fabrizio Tallarita",
+            "author_role": "Translator",
+            "author_copyright": "2017"
+        }
+    ],
+    "component_sha256": "4da08a6ce9ff58751de78ef938d7f7b29d6056468bc9eeeebe9c2e290f75f35f"
+}

@@ -25,8 +25,11 @@ You will need to download and install the appropriate binaries from the bibutils
 ************************************************************************
 CHANGELOG:
 
-v1.15, 2020
+v1.16, 2020
 1. Wikindx compatibility version 7.
+
+v1.15, 2020
+1. Remove a forgotten var_dump() that breaks the output.
 
 v1.14, 2020
 1. When exporting Endnote XML, custom fields can now be exported.

@@ -1,9 +1,7 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
- *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
- *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -34,7 +32,8 @@ class userwritecategory_MODULE
      */
     public function __construct($menuInit = FALSE)
     {
-        if (FACTORY_SESSION::getInstance()->getVar("setup_Superadmin")) {
+        if (FACTORY_SESSION::getInstance()->getVar("setup_Superadmin"))
+        {
             return;
         }
         include_once("core" . DIRECTORY_SEPARATOR . "messages" . DIRECTORY_SEPARATOR . "PLUGINMESSAGES.php");
@@ -43,13 +42,15 @@ class userwritecategory_MODULE
         $config = new userwritecategory_CONFIG();
         include_once("core" . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'ADMINCATEGORIES.php');
         $this->authorize = $config->authorize;
-        if ($menuInit) { // portion of constructor used for menu initialisation
+        if ($menuInit)
+        { // portion of constructor used for menu initialisation
             $this->makeMenu($config->menus);
 
             return; // Need do nothing more as this is simply menu initialisation.
         }
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->authorize))
+        { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
         $this->acObject = new ADMINCATEGORIES();

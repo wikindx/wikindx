@@ -22,8 +22,6 @@ Thus, plugins/chooselanguage/index.php etc.
 
 CHANGELOG:
 
-v1.8, 2020
-1. Wikindx compatibility version 7.
 
 v1.7, 2020
 1. Fix a letter case issue stopping the plugin working on some systems.
@@ -31,7 +29,6 @@ v1.7, 2020
 v1.6, 2020
 1. Fix heredoc syntax.
 2. Fix some errors on the refreshing of the language.
-3. Write the language to the database if the user is logged on.
 
 v1.5, 2020
 1. Add documentation.
@@ -53,4 +50,4 @@ v1.0, 2015
 1. Initial release.
 
 --
-Mark Grimshaw-Aagaard 2015–2020.
+Mark Grimshaw-Aagaard 2015.

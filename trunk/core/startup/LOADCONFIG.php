@@ -142,12 +142,13 @@ class LOADCONFIG
     public function loadDBConfig()
     {
         $db = FACTORY_DB::getInstance();
+ //       $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
         $tmp_config = [];
         
         // Load the configuration from the db and destroy unused config options
         $resultSet = $db->select('config', '*');
         while ($row = $db->fetchRow($resultSet)) {
-            if (array_key_exists($row['configName'], WIKINDX_LIST_CONFIG_OPTIONS_NAME)) {
+            if (array_key_exists($row['configName'], WIKINDX_LIST_CONFIG_OPTIONS_NAME) !== FALSE) {
                 // Load
                 $tmp_config[$row['configName']] = [
                     "configBoolean" => $row['configBoolean'],
@@ -162,14 +163,13 @@ class LOADCONFIG
                 $db->delete('config');
             }
         }
-        
         // If an option is missing in the db create it
         // and use its default value
         foreach (WIKINDX_LIST_CONFIG_OPTIONS_NAME as $configName => $unused) {
-            if (!array_key_exists($configName, $tmp_config)) {
+            if (array_key_exists($configName, $tmp_config) === FALSE) {
                 // Retrieve the default value
                 $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];
-                if (!array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
+                if (array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS_TYPE) === FALSE) {
                     die("The type of $configName option is not defined.");
                 }
                 $configType = WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$configName];
@@ -195,7 +195,6 @@ class LOADCONFIG
                 $tmp_config[$configName][$configType] = constant($constName . "_DEFAULT");
             }
         }
-        
         // Cast the value retrieved from the db and create a constant config member for each global option
         foreach ($tmp_config as $configName => $configValues) {
             $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];

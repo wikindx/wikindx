@@ -17,9 +17,6 @@ Thus, plugins/userwritecategory/index.php etc.
 
 CHANGELOG:
 
-v1.10, 2020
-1. Wikindx compatibility version 7.
-
 v1.9, 2020
 1. Add documentation.
 

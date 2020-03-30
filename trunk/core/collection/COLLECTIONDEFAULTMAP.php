@@ -59,7 +59,7 @@ class COLLECTIONDEFAULTMAP
                 'Field3' => 'seriesNumber',
                 'Field4' => 'bookVolumeNumber',
                 'TransTitle' => 'title',
-                'TransSubtitle' => 'subtitle',
+                'TransSubtitle' => 'subTitle',
                 'TransShortTitle' => 'shortTitle',
                 'TransNoSort' => FALSE,
                 'Isbn' => 'isbn',

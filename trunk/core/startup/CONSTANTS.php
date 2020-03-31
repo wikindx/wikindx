@@ -34,7 +34,7 @@ define('TAB', "\t");
  *
  * @name WIKINDX_PUBLIC_VERSION
  */
-define('WIKINDX_PUBLIC_VERSION', '6.2.2');
+define('WIKINDX_PUBLIC_VERSION', '6.3.0');
 /**
  * WIKINDX internal version information
  *

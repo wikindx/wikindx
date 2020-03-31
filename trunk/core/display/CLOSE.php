@@ -245,8 +245,10 @@ class CLOSE
                 $debugString .= "Total elapsed time: " . sprintf('%0.5f', $scriptExecutionTimeAfterRendering) . " s$lineEnding";
                 $debugString .= "Peak memory usage: " . sprintf('%0.4f', memory_get_peak_usage() / 1048576) . " MB$lineEnding";
                 $debugString .= "Memory at close: " . sprintf('%0.4f', memory_get_usage() / 1048576) . " MB";
-                $debugString .= "\n</p>\n</body>";
+                $debugString .= "\n</p>\n";
             }
+
+            $debugString .= "</body>";
 
             $outputString = str_replace('</body>', $debugString, $outputString);
         }

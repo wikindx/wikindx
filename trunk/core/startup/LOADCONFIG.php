@@ -148,7 +148,7 @@ class LOADCONFIG
         // Load the configuration from the db and destroy unused config options
         $resultSet = $db->select('config', '*');
         while ($row = $db->fetchRow($resultSet)) {
-            if (array_key_exists($row['configName'], WIKINDX_LIST_CONFIG_OPTIONS_NAME) !== FALSE) {
+            if (array_key_exists($row['configName'], WIKINDX_LIST_CONFIG_OPTIONS_NAME)) {
                 // Load
                 $tmp_config[$row['configName']] = [
                     "configBoolean" => $row['configBoolean'],

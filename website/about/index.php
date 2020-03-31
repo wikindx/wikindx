@@ -3,13 +3,13 @@
 designed either for single use (on a variety of operating systems)
 or multi-user collaborative use across the internet.</p>
 
-<p>The WIKINDX Virtual Research Environment v5 is brought to you by the following:</p>
+<p>The WIKINDX Virtual Research Environment v6 is brought to you by the following:</p>
 <ul>
-	<li>Mark Grimshaw-Aagaard: [ADMINSTRATOR/LEAD PROGRAMMER] (UK/New Zealand/Denmark)</li>
+	<li>Mark Grimshaw-Aagaard: [CREATOR/PROGRAMMER] (UK/New Zealand/Denmark)</li>
+    <li>Stéphane Aulery: [SENIOR PROGRAMMER] (France)</li>
 
 	<li>Programming contributors:
     	<ul>
-    		<li>Stéphane Aulery: (France) ~ Senior programmer</li>
     		<li>Simon Côté-Lapointe: (Université de Montréal, Québec)</li>
     		<li>Jean-Saul Gendron: (Université Laval, Québec)</li>
     	</ul>
@@ -58,4 +58,4 @@ or multi-user collaborative use across the internet.</p>
 
 <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the <a class="link" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="">Creative Commons Attribution-Non Commercial-ShareAlike 4.0 License</a> for more details.</p>
 
-<p>The WIKINDX Team ~ Copyright (C) 2019</p>
+<p>The WIKINDX Team ~ Copyright (C) 2020</p>

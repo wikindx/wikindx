@@ -142,7 +142,6 @@ class LOADCONFIG
     public function loadDBConfig()
     {
         $db = FACTORY_DB::getInstance();
- //       $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
         $tmp_config = [];
         
         // Load the configuration from the db and destroy unused config options
@@ -157,11 +156,11 @@ class LOADCONFIG
                     "configText" => $row['configText'],
                     "configVarchar" => $row['configVarchar'],
                 ];
-            } else {
+            }/* else {
                 // destroy
                 $db->formatConditions(['configName' => $row['configName']]);
                 $db->delete('config');
-            }
+            }*/
         }
         // If an option is missing in the db create it
         // and use its default value

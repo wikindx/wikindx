@@ -71,6 +71,12 @@ define('WIKINDX_PLUGIN_VERSION', 7);
  */
 define('WIKINDX_PHP_VERSION_MIN', '7.0.0');
 /**
+ * Maximum required PHP version
+ *
+ * @name WIKINDX_PHP_VERSION_MAX
+ */
+define('WIKINDX_PHP_VERSION_MAX', '7.4.99');
+/**
  * Minimum required PHP version
  *
  * @name WIKINDX_MYSQL_VERSION_MIN

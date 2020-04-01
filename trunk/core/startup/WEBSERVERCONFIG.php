@@ -49,15 +49,13 @@ ini_set('display_errors', TRUE);
  * Fix default charset of PHP interpret, PHP libs and protocols
  */
 
-// GLOBAL config for PHP, cascaded for some libs
+// Default charset
 ini_set('default_charset', WIKINDX_CHARSET);
+ini_set('mbstring.encoding_translation', WIKINDX_CHARSET);
+ini_set('mbstring.detect_order', WIKINDX_CHARSET);
 
 // HTTP charset (HTTP specification doesn't permit to declare Content-type separetly)
 header('Content-type: ' . WIKINDX_HTTP_CONTENT_TYPE_DEFAULT . '; charset=' . WIKINDX_CHARSET);
-
-// mbstring lib
-ini_set('mbstring.encoding_translation', WIKINDX_CHARSET);
-ini_set('mbstring.detect_order', WIKINDX_CHARSET);
 
 // make sure that Session output is XHTML conform ('&amp;' instead of '&')
 ini_set('arg_separator.output', '&amp;');

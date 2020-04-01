@@ -113,14 +113,15 @@ class DELETEIMAGES
         $files = $encodeExplorer->run($location, TRUE);
         foreach ($files as $file) {
             $stmts = [];
-            $this->db->formatConditions($this->db->formatFields('resourcemetadataText') . $this->db->like('%', $file->getName(), '%'));
+            $fileName = rawurlencode($file->getName());
+            $this->db->formatConditions($this->db->formatFields('resourcemetadataText') . $this->db->like('%', $fileName, '%'));
             $stmts[] = $this->db->selectNoExecute('resource_metadata', [['resourcemetadataId' => 'id']], TRUE, TRUE, TRUE);
-            $this->db->formatConditions($this->db->formatFields('resourcetextAbstract') . $this->db->like('%', $file->getName(), '%'));
+            $this->db->formatConditions($this->db->formatFields('resourcetextAbstract') . $this->db->like('%', $fileName, '%'));
             $stmts[] = $this->db->selectNoExecute('resource_text', [['resourcetextId' => 'id']], TRUE, TRUE, TRUE);
-            $this->db->formatConditions($this->db->formatFields('resourcetextNote') . $this->db->like('%', $file->getName(), '%'));
+            $this->db->formatConditions($this->db->formatFields('resourcetextNote') . $this->db->like('%', $fileName, '%'));
             $stmts[] = $this->db->selectNoExecute('resource_text', [['resourcetextId' => 'id']], TRUE, TRUE, TRUE);
             $this->db->formatConditions(['configName' => 'configDescription']);
-            $this->db->formatConditions($this->db->formatFields('configText') . $this->db->like('%', $file->getName(), '%'));
+            $this->db->formatConditions($this->db->formatFields('configText') . $this->db->like('%', $fileName, '%'));
             $stmts[] = $this->db->selectNoExecute('config', [['configId' => 'id']], TRUE, TRUE, TRUE);
             $resultSet = $this->db->query($this->db->union($stmts));
             if ($this->db->numRows($resultSet)) {

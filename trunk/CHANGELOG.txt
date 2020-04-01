@@ -1,10 +1,11 @@
 RELEASES:
 
-v6.2.3
+v6.3.0
 Focus: Minor bug fixes.
 
 BUG FIXES:
 1. Missing message (https://sourceforge.net/p/wikindx/v5bugs/224/).
+2. Admin|Images – fix a bug that causes images to be displayed as NOT used in metadata when they are.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

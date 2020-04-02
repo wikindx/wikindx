@@ -82,7 +82,7 @@ class LOADCONFIG
             "UseBibtexKey",
             "UseWikindxKey",
         ];
-        if ($session->getVar("setup_UserId") && FALSE) { // logged on user so setup from users table
+        if ($session->getVar("setup_UserId", 0) > 0) { // logged on user so setup from users table
             $table = 'users';
             $preferences = $db->prependTableToField($table, $basic);
             $db->formatConditions([$table . 'Id' => $session->getVar("setup_UserId")]);

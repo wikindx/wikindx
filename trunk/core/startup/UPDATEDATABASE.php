@@ -120,26 +120,6 @@ class UPDATEDATABASE
         }
     }
     /**
-     * Fill new config table (>= WIKINDX v5.3) with some default configuration values
-     *
-     * NB: The config table is initialized with default values by the LOADCONFIG class that know the name and type of each option
-     */
-    public function configDefaults()
-    {
-        $this->db->insert('category', 'categoryCategory', 'General');
-        
-        $fields = [
-            'databasesummaryTotalResources',
-            'databasesummaryTotalQuotes',
-            'databasesummaryTotalParaphrases',
-            'databasesummaryTotalMusings',
-        ];
-        $values = ['0', '0', '0', '0'];
-        $this->db->insert('database_summary', $fields, $values);
-        
-        $this->updateSoftwareVersion(WIKINDX_INTERNAL_VERSION);
-    }
-    /**
      * We know we have a database as, if we've reached this stage, we're able to connect to it.
      *
      * Here,
@@ -157,7 +137,8 @@ class UPDATEDATABASE
         if (!$this->db->tableExists('config'))
         {
             $this->createDbSchema();
-            $this->configDefaults();
+            // NB: The config table is initialized with default values by the LOADCONFIG class that know the name and type of each option
+            $this->updateSoftwareVersion(WIKINDX_INTERNAL_VERSION);
             $this->session->setVar("setup_Superadmin", TRUE); // required for gatekeep function in CONFIG.php
         }
         if (array_key_exists('action', $this->vars) && $this->session->getVar("setup_Superadmin") &&

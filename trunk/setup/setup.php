@@ -107,7 +107,6 @@ namespace SETUP
         
         return TRUE;
     }
-    
     /**
      * Check if the current Wikindx data (db and files) need an upgrade
      *
@@ -117,23 +116,19 @@ namespace SETUP
      */
     function needUpdate($dbo)
     {
-        // NB: tableConfigExists must be the first operation because
+        // NB: existsTableDatabaseVersion must be the first operation because
         // it reads the db system catalog and can't fail if the db exists
         
-        // Check if 'config' table doesn't exist
-        if (!$dbo->tableExists('config')) {
-            return TRUE;
-        }
-        // Check if 'config' table has not been filled with a configuration
-        elseif ($dbo->tableIsEmpty('config')) {
+        // Check if 'database_summary' table doesn't exist
+        if (!existsTableDatabaseVersion($dbo)) {
             return TRUE;
         }
         // Check if the database version number is not the same as source code version number
-        elseif (\UPDATE\getDatabaseVersion($dbo) != WIKINDX_INTERNAL_VERSION) {
+        elseif (getDatabaseVersion($dbo) != WIKINDX_INTERNAL_VERSION) {
             return TRUE;
         }
-        // Check if 'users' table has not been filled with a configuration
-        elseif ($dbo->tableIsEmpty('users')) {
+        // Check if 'users' table has not been filled with the superadmin account
+        elseif (!existsSuperadminAccount($dbo)) {
             return TRUE;
         } else {
             return FALSE;
@@ -141,29 +136,17 @@ namespace SETUP
     }
     
     /**
-     * Initial logon to the system when upgrading the database.
+     * Check if 'database_summary' table that stores the version number of the db schema exists
+     *
+     * This function is used only during the upgrade process.
      *
      * @param object $dbo An SQL object
-     * @param string $username
-     * @param string $password
-     * @param float $dbVersion default = WIKINDX_INTERNAL_VERSION
      *
-     * @return bool TRUE if able to authenticate
+     * @return bool
      */
-    function logonCheckUpgradeDB($dbo, $username, $password, $dbVersion = WIKINDX_INTERNAL_VERSION)
+    function existsTableDatabaseVersion($dbo)
     {
-        // superAdmin is id '1'
-        $dbo->formatConditions(['usersUsername' => $username, 'usersId' => WIKINDX_SUPERADMIN_ID]);
-        $recordset = $dbo->select('users', ['usersId', 'usersPassword']);
-        if ($dbo->numRows($recordset) == 1) {
-            // verify the password
-            $row = $dbo->fetchRow($recordset);
-            if (crypt($password, $row['usersPassword']) == $row['usersPassword']) {
-                return TRUE;
-            }
-        }
-
-        return FALSE;
+        return $dbo->tableExists('database_summary');
     }
     
     /**
@@ -195,6 +178,22 @@ namespace SETUP
         }
 
         return $dbVersion;
+    }
+    
+    /**
+     * Check if 'users' table has not been filled with the superadmin account
+     *
+     * This function is used only during the upgrade process.
+     *
+     * @param object $dbo An SQL object
+     *
+     * @return bool
+     */
+    function existsSuperadminAccount($dbo)
+    {
+        $dbo->formatConditionsOneField(WIKINDX_SUPERADMIN_ID, 'usersId');
+        $recordset = $dbo->queryNoError($dbo->selectNoExecute('users', '*'));
+        return ($recordset !== FALSE);
     }
     
     /**
@@ -234,5 +233,31 @@ namespace SETUP
         }
 
         return $email;
+    }
+    
+    /**
+     * Initial logon to the system when upgrading the database.
+     *
+     * @param object $dbo An SQL object
+     * @param string $username
+     * @param string $password
+     * @param float $dbVersion default = WIKINDX_INTERNAL_VERSION
+     *
+     * @return bool TRUE if able to authenticate
+     */
+    function logonCheckUpgradeDB($dbo, $username, $password, $dbVersion = WIKINDX_INTERNAL_VERSION)
+    {
+        // superAdmin is id '1'
+        $dbo->formatConditions(['usersUsername' => $username, 'usersId' => WIKINDX_SUPERADMIN_ID]);
+        $recordset = $dbo->select('users', ['usersId', 'usersPassword']);
+        if ($dbo->numRows($recordset) == 1) {
+            // verify the password
+            $row = $dbo->fetchRow($recordset);
+            if (crypt($password, $row['usersPassword']) == $row['usersPassword']) {
+                return TRUE;
+            }
+        }
+
+        return FALSE;
     }
 }

@@ -97,8 +97,8 @@ class LOADCONFIG
                 if ($session->issetVar("setup_" . $key)) {
                     $row[$rowKey] = $session->getVar("setup_" . $key);
                 // Options inherited from the global config
-                } elseif (array_key_exists($rowKey, WIKINDX_LIST_CONFIG_OPTIONS_NAME)) {
-                    $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$rowKey];
+                } elseif (array_key_exists($rowKey, WIKINDX_LIST_CONFIG_OPTIONS)) {
+                    $constName = WIKINDX_LIST_CONFIG_OPTIONS[$rowKey]["constname"];
                     $row[$rowKey] = constant($constName);
                 } else {
                     // Language should be inherited but it needs a special default
@@ -147,7 +147,7 @@ class LOADCONFIG
         // Load the configuration from the db and destroy unused config options
         $resultSet = $db->select('config', '*');
         while ($row = $db->fetchRow($resultSet)) {
-            if (array_key_exists($row['configName'], WIKINDX_LIST_CONFIG_OPTIONS_NAME)) {
+            if (array_key_exists($row['configName'], WIKINDX_LIST_CONFIG_OPTIONS)) {
                 // Load
                 $tmp_config[$row['configName']] = [
                     "configBoolean" => $row['configBoolean'],
@@ -164,14 +164,11 @@ class LOADCONFIG
         }
         // If an option is missing in the db create it
         // and use its default value
-        foreach (WIKINDX_LIST_CONFIG_OPTIONS_NAME as $configName => $unused) {
+        foreach (WIKINDX_LIST_CONFIG_OPTIONS as $configName => $unused) {
             if (array_key_exists($configName, $tmp_config) === FALSE) {
                 // Retrieve the default value
-                $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];
-                if (array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS_TYPE) === FALSE) {
-                    die("The type of $configName option is not defined.");
-                }
-                $configType = WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$configName];
+                $constName = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["constname"];
+                $configType = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["type"];
                 if (!defined($constName . "_DEFAULT")) {
                     die("A default constant value for $constName option is missing (" . $constName . "_DEFAULT expected).");
                 }
@@ -196,8 +193,8 @@ class LOADCONFIG
         }
         // Cast the value retrieved from the db and create a constant config member for each global option
         foreach ($tmp_config as $configName => $configValues) {
-            $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];
-            $configType = WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$configName];
+            $constName = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["constname"];
+            $configType = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["type"];
             $value = $configValues[$configType];
             if ($configType == 'configBoolean') {
                 $value = $value == 1 ? TRUE : FALSE; // Cast to bool

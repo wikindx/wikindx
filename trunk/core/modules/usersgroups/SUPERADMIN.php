@@ -205,7 +205,7 @@ class SUPERADMIN
                         $value = base64_encode(serialize([]));
                     }
                     $this->session->setVar("config_deactivateResourceTypes", $value);
-                } elseif (WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field] == 'configBoolean') {
+                } elseif (WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"] == 'configBoolean') {
                     if (!array_key_exists($field, $this->vars)) { // checkboxes not checked
                         $value = FALSE;
                     } else {
@@ -324,15 +324,15 @@ class SUPERADMIN
                 }
                 // create database row if it doesn't exist
                 if (array_key_exists($field, $configFields) === FALSE) {
-                    $this->db->insert('config', ['configName', WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field]], [$field, $value]);
+                    $this->db->insert('config', ['configName', WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"]], [$field, $value]);
                 } else {
                     $this->db->formatConditions(['configName' => $field]);
-                    $this->db->update('config', [WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field] => $value]);
+                    $this->db->update('config', [WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"] => $value]);
                 }
             }
             foreach ($nulls as $field) {
                 $this->db->formatConditions(['configName' => $field]);
-                $this->db->updateNull('config', WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field]);
+                $this->db->updateNull('config', WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"]);
             }
         }
         // need to use header() to ensure any change in appearance is immediately picked up.
@@ -1860,7 +1860,7 @@ class SUPERADMIN
         }
         $array = $required = [];
         // Store in session first and remove unrequired session variables
-        foreach (WIKINDX_LIST_CONFIG_OPTIONS_TYPE as $key => $type) {
+        foreach (WIKINDX_LIST_CONFIG_OPTIONS as $key => $unused) {
             if (array_key_exists($key, $this->vars)) {
                 if (($key == 'configLastChanges') || ($key == 'configPaging') || ($key == 'configStringLimit') || ($key == 'configPagingTagCloud')) {
                     if ($this->vars[$key] < 0) {
@@ -2108,7 +2108,7 @@ class SUPERADMIN
         }
         // deal with checkboxes
         foreach ($row as $field => $value) {
-            if ((WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field] == 'configBoolean') && !$value) {
+            if ((WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"] == 'configBoolean') && !$value) {
                 unset($row[$field]);
             }
         }

@@ -30,7 +30,7 @@ class CONFIGDBSTRUCTURE
     /**
      * Get and return one value from the config table.
      *
-     * Requested value must be a configName value that is in WIKINDX_LIST_CONFIG_OPTIONS_TYPE. For other values, use standard $db functions.
+     * Requested value must be a configName value that is in WIKINDX_LIST_CONFIG_OPTIONS. For other values, use standard $db functions.
      *
      * Result is returned as a number if the value is stored in configInt columns else the return result is a string or a boolean
      *
@@ -40,10 +40,10 @@ class CONFIGDBSTRUCTURE
      */
     public function getOne(string $field)
     {
-        if (!array_key_exists($field, WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
+        if (!array_key_exists($field, WIKINDX_LIST_CONFIG_OPTIONS)) {
             die('CONFIGDBSTRUCTURE->getOne(): bad config option name requested:' . $field);
         }
-        $column = WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$field];
+        $column = WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"];
         $this->db->formatConditions(['configName' => $field]);
         $value = $this->db->fetchOne($this->db->select('config', $column));
 
@@ -56,7 +56,7 @@ class CONFIGDBSTRUCTURE
      */
     public function getAllData()
     {
-        return $this->getData(array_keys(WIKINDX_LIST_CONFIG_OPTIONS_NAME));
+        return $this->getData(array_keys(WIKINDX_LIST_CONFIG_OPTIONS));
     }
     /**
      * Get data from the config table for specific variables and return an array of ($field => 'value')
@@ -72,7 +72,7 @@ class CONFIGDBSTRUCTURE
         }
         
         foreach ($match as $configName) {
-	        if (!array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS_NAME)) {
+	        if (!array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS)) {
 	            die('CONFIGDBSTRUCTURE->getData(): bad config option name requested:' . $configName);
 	        }
         }
@@ -85,9 +85,9 @@ class CONFIGDBSTRUCTURE
             $configName = $coRow['configName'];
             
             // Retrieving known options only
-            if (array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
-            	$constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];
-            	$configType = WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$configName];
+            if (array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS)) {
+            	$constName = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["constname"];
+            	$configType = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["type"];
             	$configValue = $this->convertVarDB2PHP($configType, $coRow[$configType]);
                 
                 // Unserialize the value for some options
@@ -106,7 +106,7 @@ class CONFIGDBSTRUCTURE
         // so return default values in that case
         if (count($row) < count($match)) {
             foreach ($match as $configName) {
-                $constName = WIKINDX_LIST_CONFIG_OPTIONS_NAME[$configName];
+                $constName = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["constname"];
                 $value = constant($constName . "_DEFAULT");
                 
                 // Unserialize some options
@@ -128,7 +128,7 @@ class CONFIGDBSTRUCTURE
      */
     public function updateOne(string $name, $value)
     {
-        if (!array_key_exists($name, WIKINDX_LIST_CONFIG_OPTIONS_TYPE)) {
+        if (!array_key_exists($name, WIKINDX_LIST_CONFIG_OPTIONS)) {
             die('CONFIGDBSTRUCTURE->updateOne(): bad config option name updated:' . $name);
         }
         
@@ -137,9 +137,9 @@ class CONFIGDBSTRUCTURE
             $value = base64_encode(serialize($value));
         }
         
-        $value = $this->convertVarPHP2DB(WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$name], $value);
+        $value = $this->convertVarPHP2DB(WIKINDX_LIST_CONFIG_OPTIONS[$name]["type"], $value);
         $this->db->formatConditions(['configName' => $name]);
-        $this->db->update('config', [WIKINDX_LIST_CONFIG_OPTIONS_TYPE[$name] => $value]);
+        $this->db->update('config', [WIKINDX_LIST_CONFIG_OPTIONS[$name]["type"] => $value]);
     }
     /**
      * Convert a value from Wikindx database format to PHP format

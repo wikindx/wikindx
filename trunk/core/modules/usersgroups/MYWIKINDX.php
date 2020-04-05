@@ -154,10 +154,26 @@ class MYWIKINDX
     {
         // checkInput writes the session
         $this->checkResourcesInput();
-        // If this is a logged on user, write preferences to WKX_user_preferences
-        if ($this->session->getVar("setup_UserId")) {
-            $user = FACTORY_USER::getInstance();
-            $user->writePreferences($this->session->getVar("setup_UserId"));
+        // If this is a logged on user, write preferences to user table
+        if ($this->session->getVar("setup_UserId"))
+        {
+			foreach (["Paging", "PagingMaxLinks", "StringLimit", "PagingTagCloud", "PagingStyle"] as $key)
+			{
+				$updateArray['users' . $key] = $this->vars[$key];
+				GLOBALS::setUserVar($key, $this->vars[$key]);
+			}
+        	foreach (['UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key)
+        	{
+        		$value = 0;
+        		if (array_key_exists($key, $this->vars)) {
+        			$value = 1;
+        		}
+        		GLOBALS::setUserVar($key, $value);
+        		$value = is_bool($value) ? var_export($value, true) : $value;
+				$updateArray['users' . $key] = $value;
+        	}
+			$this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
+			$this->db->update('users', $updateArray);
         }
         $this->init([$this->success->text("config"), $this->vars['selectItem']]);
         FACTORY_CLOSE::getInstance();
@@ -181,16 +197,9 @@ class MYWIKINDX
             } elseif ($this->vars[$key] < 0) {
                 $this->vars[$key] = -1;
             }
-            GLOBALS::setUserVar($key, $this->vars[$key]);
         }
-        GLOBALS::setUserVar("PagingStyle", $this->vars["PagingStyle"]);
         $this->session->delVar("sql_LastMulti"); // always reset in case of paging changes
         $this->session->delVar("sql_LastIdeaSearch"); // always reset in case of paging changes
-        foreach (['UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key) {
-            // $this->session->setVar("setup_" . $key, TRUE);
-            // $this->session->delVar("setup_" . $key);
-            GLOBALS::setUserVar($key, array_key_exists($key, $this->vars));
-        }
     }
     /**
      * Display appearance config options

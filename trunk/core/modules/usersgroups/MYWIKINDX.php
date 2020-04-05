@@ -238,17 +238,19 @@ class MYWIKINDX
         $languages[$LanguageNeutralChoice] = "Auto";
         $languages = array_merge($languages, \LOCALES\getSystemLocales());
         
-        // Don't use the session value in that case because the language could have been changed locally by the chooseLanguage plugin
-        $userId = $this->session->getVar("setup_UserId");
-        $this->db->formatConditions(['usersId' => $userId]);
-        $language = $this->db->selectFirstField("users", "usersLanguage");
-        array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
-        
-        // Retrieve the language of the user config in session if missing in the db
-        if ($language == $LanguageNeutralChoice) {
-            $language = $this->session->getVar("setup_Language", $LanguageNeutralChoice);
-            array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
-        }
+        // The chooseLanguage plugin will write to the database for a logged-in user else it will use setup_Language
+        $userId = $this->session->getVar('setup_UserId');
+        if ($userId)
+        {
+	        $this->db->formatConditions(['usersId' => $userId]);
+	        $language = $this->db->selectFirstField("users", "usersLanguage");
+	        array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
+		}
+		else // i.e. read-only so use a session
+		{
+	        $language = $this->session->getVar("setup_Language", $LanguageNeutralChoice);
+	        array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
+	    }
         
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "language"),

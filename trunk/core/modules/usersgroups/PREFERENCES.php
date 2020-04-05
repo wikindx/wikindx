@@ -96,13 +96,6 @@ class PREFERENCES
         $languages = array_merge($languages, \LOCALES\getSystemLocales());
         $language = GLOBALS::getUserVar('Language', WIKINDX_LANGUAGE_DEFAULT);
         array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
-        
-        // Retrieve the language of the user config in session if missing in the db
-        if ($language == $LanguageNeutralChoice) {
-            $language = $this->session->getVar("setup_Language", $LanguageNeutralChoice);
-            array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
-        }
-        
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "language"),
             "Language",

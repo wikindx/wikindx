@@ -100,9 +100,13 @@ class MAIL
     public function __destruct()
     {
         // We have to close the SMTP connection just before the object is destroyed
-        // because we have enabled KeepAlive mode for SMTP
+        // because we have enabled KeepAlive mode for SMTP.
+        // The debug output of this operation is trashed because the object will be unused
+        // and we should prevent any indesirable printing.
         if (WIKINDX_MAIL_USE && WIKINDX_MAIL_BACKEND == 'smtp' && WIKINDX_MAIL_SMTP_PERSIST) {
+            ob_start();
             $this->mail->smtpClose();
+            ob_get_clean();
         }
     }
     /**
@@ -144,7 +148,7 @@ class MAIL
                 "WIKINDX_MAIL_USE",
             ] as $k) {
                 if ($k == "WIKINDX_MAIL_SMTP_PASSWORD") {
-                    $this->TransactionLog .= $k . " = " . str_repeat("*", 8) . " (hidden value for security; its length is meaningless)" . BR;
+                    $this->TransactionLog .= $k . " = [credentials hidden]" . BR;
                 } else {
                     $this->TransactionLog .= $k . " = " . (constant($k) !== FALSE ? constant($k) : "0") . BR;
                 }

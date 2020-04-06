@@ -159,6 +159,7 @@ class QUICKSEARCH
      */
     public function fieldSql($ors, $orsFT)
     {
+    	$orsFT = str_replace("'", "''", $orsFT);
         foreach (['resourcecustomShort', 'resourcecustomLong'] as $field) {
             $field = $this->db->formatFields($field);
         }

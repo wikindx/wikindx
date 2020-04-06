@@ -897,7 +897,7 @@ class SEARCH
         if (!empty($this->ideas) && !empty($this->unionFragments)) {
             // Check this user is allowed to read the idea.
             foreach ($this->ideas as $valueArray) {
-                $matchAgainst = $this->db->fulltextSearch($valueArray['Field'], $valueArray['String']);
+                $matchAgainst = $this->db->fulltextSearch($valueArray['Field'], str_replace("'", "''", $valueArray['String']));
                 $conditions[] = $matchAgainst;
             }
             $this->metadata->setCondition('i');
@@ -1026,7 +1026,7 @@ class SEARCH
         // Check this user is allowed to read the idea.
         $this->metadata->setCondition('i');
         foreach ($this->ideas as $valueArray) {
-            $conditions[] = $this->db->fulltextSearch($valueArray['Field'], $valueArray['String']);
+            $conditions[] = $this->db->fulltextSearch($valueArray['Field'], str_replace("'", "''", $valueArray['String']));
         }
         $this->db->formatConditions(implode($this->db->or, $conditions));
         $countQuery = $this->db->selectCountDistinctField('resource_metadata', 'resourcemetadataId');
@@ -2619,7 +2619,7 @@ class SEARCH
             ($valueArray['OriginalField'] == 'abstract') ||
             ($valueArray['Field'] == 'resourcecustomLong') ||
             ($valueArray['Field'] == 'resourcemetadataText'))) {
-            $matchAgainst = $this->db->fulltextSearch($valueArray['Field'], $valueArray['String']);
+            $matchAgainst = $this->db->fulltextSearch($valueArray['Field'], str_replace("'", "''", $valueArray['String']));
             $this->db->formatConditions($matchAgainst);
         } else {
             $this->db->formatConditions($valueArray['String']);

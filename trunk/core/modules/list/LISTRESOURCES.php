@@ -117,7 +117,10 @@ class LISTRESOURCES
         if (!$this->session->getVar("list_Order")) {
             $this->session->setVar("list_Order", "creator");
         }
-        $this->stmt->allIds = TRUE;
+        // if browsing on the master bib, setting allIds = TRUE makes the execution marginally quicker for large databases.
+        if (!$this->session->getVar("mywikindx_Bibliography_use")) {
+	        $this->stmt->allIds = TRUE;
+		}
         $this->{$method}();
     }
     /**

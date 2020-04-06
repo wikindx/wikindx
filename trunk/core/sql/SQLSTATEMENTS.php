@@ -355,7 +355,7 @@ class SQLSTATEMENTS
     }
     /**
      * Create subquery initial order SELECT statement with minimal fields.
-     * Function specific to core/modules/list/LISTRESOURCES.php (Quick List ALL operations) and core/modules/basket/BASKET.php
+     * Function specific to core/modules/list/LISTRESOURCES.php (Quick List ALL operations), LISTSOMERESOURCES, and core/modules/basket/BASKET.php
      *
      * When ordering by viewsIndex or popularityIndex, each resource is guaranteed to have a vlaue for each of these fields.
      * This means we can use an inner SELECT to order on one of those fields and to limit the results – finer ordering on that field and

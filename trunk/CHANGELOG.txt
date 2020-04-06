@@ -7,6 +7,7 @@ BUG FIXES:
 1. Missing message (https://sourceforge.net/p/wikindx/v5bugs/224/).
 2. Admin|Images – fix a bug that causes images (with spaces in their names) to be displayed as NOT used in metadata when they are.
 3. Fix the setting of language/locale once and for all . . .
+4. Ensure the selected bibliography is taken account of when doing a Quick list all...
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

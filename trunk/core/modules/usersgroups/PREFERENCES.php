@@ -194,12 +194,7 @@ class PREFERENCES
             $array[$value] = $this->vars[$value];
         }
         // Checkbox
-        if (!array_key_exists('ListLink', $this->vars)) {
-        	$array['ListLink'] = FALSE;
-        	}
-        else {
-        	$array['ListLink'] = TRUE;
-	        }
+        $array['ListLink'] = array_key_exists('ListLink', $this->vars);
         // All input good - write to session
         $this->session->writeArray($array, "setup");
         $this->session->delVar("sql_LastMulti"); // always reset in case of paging changes

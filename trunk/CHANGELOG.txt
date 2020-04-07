@@ -1,22 +1,6 @@
 RELEASES:
 
 v6.3.0
-Focus: Minor bug fixes.
-
-BUG FIXES:
-1. Missing message (https://sourceforge.net/p/wikindx/v5bugs/224/).
-2. Admin|Images – fix a bug that causes images (with spaces in their names) to be displayed as NOT used in metadata when they are.
-3. Fix the setting of language/locale once and for all . . .
-4. Ensure the selected bibliography is taken account of when doing a Quick list all...
-5. Fix a potential SQL error with the use of single quotes in the search field of QUICKSEARCH and Advanced Search.
-
----:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
----:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
----:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
----:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
-
-
-v6.2.2
 Focus: Minor bug fixes and maintenance.
 
 BUG FIXES:
@@ -46,6 +30,11 @@ BUG FIXES:
 24. Fix utf8 encoding of two characters that triggers errors during the manual building.
 25. Fix some errors in user administration/preferences.
 26. Plugged some memory leaks particularly virulent for large databases.
+27. Missing message (https://sourceforge.net/p/wikindx/v5bugs/224/).
+28. Admin|Images – fix a bug that causes images (with spaces in their names) to be displayed as NOT used in metadata when they are.
+29. Fix the setting of language/locale once and for all . . .
+30. Ensure the selected bibliography is taken account of when doing a Quick list all...
+31. Fix a potential SQL error with the use of single quotes in the search field of QUICKSEARCH and Advanced Search.
 
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.
@@ -69,6 +58,17 @@ MAINTENANCE:
 19. Remove superAdmin user configuration from Admin|Configure interface. superAdmin details can be edited from My Wikindx and from Admin|Users|Edit.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+
+
+v6.2.2
+Focus: Minor bug fixes.
+
+BUGS:
+1. Remove a forgotten var_dump() that breaks the output.
+
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

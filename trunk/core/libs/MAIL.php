@@ -168,7 +168,7 @@ class MAIL
             $ToArray = [];
             foreach ($addresses as $address) {
                 // Split a single or multiple addresses in RFC822 format
-                $tmpAddresses = $this->mail->parseAddresses(str_replace(';', ',', trim($address)), FALSE);
+                $tmpAddresses = $this->mail->parseAddresses(preg_replace('/;/u', ',', trim($address)), FALSE);
     
                 // Send one message by address
                 foreach ($tmpAddresses as $tmpAddress) {

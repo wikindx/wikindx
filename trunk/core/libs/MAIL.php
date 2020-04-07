@@ -40,6 +40,10 @@ class MAIL
 
         $this->mail = new PHPMailer();
 
+        // Debuging mode
+        $this->mail->Debugoutput = 'echo';
+        $this->mail->SMTPDebug = 3;
+
         // From (work because it's globaly defined)
         if (filter_var(WIKINDX_MAIL_FROM, FILTER_VALIDATE_EMAIL) !== FALSE) {
             $From = WIKINDX_MAIL_FROM;
@@ -115,50 +119,44 @@ class MAIL
      * @param string|string[] $addresses Either array of addresses or a single address (which might be ,|; delimited string of addresses)
      * @param string $subject the email subject
      * @param string $message the email message
-     * @param bool $DebugMode enable the interception of the SMTP transaction log. Default is FALSE
      *
      * @return bool (TRUE on success, FALSE on failure)
      */
-    public function sendEmail($addresses, $subject, $message, bool $DebugMode = FALSE)
+    public function sendEmail($addresses, $subject, $message)
     {
         $SendStatus = TRUE;
-
-        // If the debug mode is enabled,
-        // captures the SMTP log output...
-        if ($DebugMode) {
-            // Use only HTML because Wikindx is not usable with a CLI
-            $this->TransactionLog = '';
-            
-            // Display the current config at the top of the log
-            $this->TransactionLog .= "---[CONFIGURATION]------------------------------------------------------";
-            $this->TransactionLog .= BR . BR;
-            foreach ([
-                "WIKINDX_MAIL_BACKEND",
-                "WIKINDX_MAIL_FROM",
-                "WIKINDX_MAIL_REPLYTO",
-                "WIKINDX_MAIL_RETURN_PATH",
-                "WIKINDX_MAIL_SENDMAIL_PATH",
-                "WIKINDX_MAIL_SMTP_AUTH",
-                "WIKINDX_MAIL_SMTP_ENCRYPT",
-                "WIKINDX_MAIL_SMTP_PASSWORD",
-                "WIKINDX_MAIL_SMTP_PERSIST",
-                "WIKINDX_MAIL_SMTP_PORT",
-                "WIKINDX_MAIL_SMTP_SERVER",
-                "WIKINDX_MAIL_SMTP_USERNAME",
-                "WIKINDX_MAIL_USE",
-            ] as $k) {
-                if ($k == "WIKINDX_MAIL_SMTP_PASSWORD") {
-                    $this->TransactionLog .= $k . " = [credentials hidden]" . BR;
-                } else {
-                    $this->TransactionLog .= $k . " = " . (constant($k) !== FALSE ? constant($k) : "0") . BR;
-                }
+        
+        // Don't use HTML for a display in pre or CLI context
+        // Display the current config at the top of the log
+        $this->TransactionLog  = "";
+        $this->TransactionLog .= "---[CONFIGURATION]------------------------------------------------------";
+        $this->TransactionLog .= LF . LF;
+        foreach ([
+            "WIKINDX_MAIL_BACKEND",
+            "WIKINDX_MAIL_FROM",
+            "WIKINDX_MAIL_REPLYTO",
+            "WIKINDX_MAIL_RETURN_PATH",
+            "WIKINDX_MAIL_SENDMAIL_PATH",
+            "WIKINDX_MAIL_SMTP_AUTH",
+            "WIKINDX_MAIL_SMTP_ENCRYPT",
+            "WIKINDX_MAIL_SMTP_PASSWORD",
+            "WIKINDX_MAIL_SMTP_PERSIST",
+            "WIKINDX_MAIL_SMTP_PORT",
+            "WIKINDX_MAIL_SMTP_SERVER",
+            "WIKINDX_MAIL_SMTP_USERNAME",
+            "WIKINDX_MAIL_USE",
+        ] as $k) {
+            if ($k == "WIKINDX_MAIL_SMTP_PASSWORD") {
+                $this->TransactionLog .= $k . " = [credentials hidden]" . LF;
+            } else {
+                $this->TransactionLog .= $k . " = " . (constant($k) !== FALSE ? constant($k) : "0") . LF;
             }
-            $this->TransactionLog .= BR;
-            $this->TransactionLog .= "---[LOG]----------------------------------------------------------------";
-            $this->TransactionLog .= BR . BR;
-            
-            ob_start();
         }
+        $this->TransactionLog .= LF;
+        $this->TransactionLog .= "---[LOG]----------------------------------------------------------------";
+        $this->TransactionLog .= LF . LF;
+        
+        ob_start();
         
         // If messaging is turned on
         if (WIKINDX_MAIL_USE) {
@@ -184,36 +182,21 @@ class MAIL
                 $this->mail->Subject = $subject;
                 $this->mail->Body = $message;
     
-                // If the debug mode is enabled,
-                // captures the SMTP log output...
-                if ($DebugMode) {
-                    $this->mail->Debugoutput = 'echo';
-                    $this->mail->SMTPDebug = 3;
-                }
-    
                 // Send one message by address
                 foreach ($ToArray as $To) {
                     $this->mail->addAddress($To['address'], $To['name']);
                     $SendStatus = $this->mail->send();
     
-                    if ($DebugMode) {
-                        echo BR . BR;
-                        if ($SendStatus) {
-                            echo "Message sent with " . WIKINDX_MAIL_BACKEND . " backend " .
-                                 "to &lt;" . $To['address'] . "&gt; " . "without error.";
-                        } else {
-                            echo $this->mail->ErrorInfo;
-                        }
-                        echo BR . BR;
+                    echo LF . LF;
+                    if ($SendStatus) {
+                        echo "Message sent with " . WIKINDX_MAIL_BACKEND . " backend " .
+                             "to &lt;" . $To['address'] . "&gt; " . "without error.";
+                    } else {
+                        echo $this->mail->ErrorInfo;
                     }
+                    echo LF . LF;
     
                     $this->mail->clearAddresses();
-                }
-    
-                // If the debug mode is enabled,
-                // ... and save it
-                if ($DebugMode) {
-                    $this->mail->SMTPDebug = 0;
                 }
     
                 // Clear
@@ -221,24 +204,17 @@ class MAIL
                 $this->mail->Subject = '';
                 $this->mail->Body = '';
             } else {
-                if ($DebugMode) {
-                    echo "No valid recipient address to send or addresses not RFC822 compliant." . BR;
-                }
+                $errmsg = "No valid recipient address to send or addresses not RFC822 compliant.";
+                echo $errmsg . LF;
     
-                GLOBALS::setError("No valid recipient address to send to or addresses are not RFC822 compliant.");
+                GLOBALS::setError($errmsg);
                 $SendStatus = FALSE;
             }
         } else {
-            if ($DebugMode) {
-                echo "The email sending function is disabled." . BR;
-            }
+            echo "The email sending function is disabled." . LF;
         }
 
-        // If the debug mode is enabled,
-        // ... and save it
-        if ($DebugMode) {
-            $this->TransactionLog .= trim(ob_get_clean());
-        }
+        $this->TransactionLog .= trim(ob_get_clean());
 
         return $SendStatus;
     }

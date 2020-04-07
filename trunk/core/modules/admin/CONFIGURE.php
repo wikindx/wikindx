@@ -320,7 +320,7 @@ class CONFIGURE
         if (array_key_exists("configMailTest", $this->vars)) {
             include_once("core/libs/MAIL.php");
             $mail = new MAIL();
-            if (!$mail->sendEmail($this->vars['configMailTest'], \HTML\stripHtml(WIKINDX_TITLE), $this->messages->text('config', 'mailTestSuccess'), TRUE)) {
+            if (!$mail->sendEmail($this->vars['configMailTest'], \HTML\stripHtml(WIKINDX_TITLE), $this->messages->text('config', 'mailTestSuccess'))) {
                 $content .= \HTML\p("The test fails", "error", "center");
             } else {
                 $content .= \HTML\p("The test passed", "success", "center");

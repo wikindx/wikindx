@@ -2355,7 +2355,7 @@ class FACTORY_MAIL
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/smtp/MAIL.php");
+            include_once("core/libs/MAIL.php");
             self::$instance = new MAIL;
         }
 

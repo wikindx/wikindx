@@ -15,7 +15,7 @@ use PHPMailer\PHPMailer\PHPMailer;
  *
  * Common email functions. Updated 2016 to use PhpMailer classes
  *
- * @package wikindx\core\smtp
+ * @package wikindx\core\libs\MAIL
  */
 class MAIL
 {

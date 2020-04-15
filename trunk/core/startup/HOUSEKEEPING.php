@@ -110,6 +110,6 @@ class HOUSEKEEPING
     private function statistics()
     {
         $stats = FACTORY_STATISTICS::getInstance();
-        $stats->compile();
+        $stats->runCompile();
     }
 }

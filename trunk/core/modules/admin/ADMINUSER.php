@@ -501,7 +501,7 @@ class ADMINUSER
     private function validateInput($type)
     {
         if ($type == 'adminAdd') {
-            if (!trim($this->vars['username']) || !trim($this->vars['password']) ||
+            if (!trim($this->vars['usersUsername']) || !trim($this->vars['password']) ||
                 !trim($this->vars['passwordConfirm']) || !trim($this->vars['email'])) {
                 return FALSE;
             }
@@ -509,7 +509,7 @@ class ADMINUSER
                 return FALSE;
             }
         } elseif ($type == 'userAdd') {
-            if (!trim($this->vars['username']) || !trim($this->vars['password']) ||
+            if (!trim($this->vars['usersUsername']) || !trim($this->vars['password']) ||
                 !trim($this->vars['passwordConfirm']) || !$this->vars['email'] || !$this->vars['hashKey']) {
                 return FALSE;
             }

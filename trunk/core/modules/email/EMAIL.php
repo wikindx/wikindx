@@ -385,100 +385,99 @@ class EMAIL
         $userId = $this->session->getVar("setup_UserId");
         $this->db->formatConditions(['usersId' => $userId]);
         $digestThreshold = $this->db->selectFirstField('users', 'usersNotifyDigestThreshold');
-        $size = $this->grabResources($digestThreshold);
-        if (!$size && empty($this->allAddedIds) && empty($this->allEditedIds)) {
+        $this->grabResources($digestThreshold);
+        if (empty($this->allAddedIds) && empty($this->allEditedIds)) {
             return TRUE; // nothing to do
         }
-        foreach ($this->usersThreshold as $userId => $userArray) {
+        foreach ($this->usersThreshold as $userId => $userArray) 
+        {
             if (!$userArray['email']) { // This should only happen if superadmin has not entered email
                 continue;
             }
-            if (!$size) {
-                $message = $this->messages->text("user", "notifyMass4") . "\n\n\n" . LF; // reset each time
-                $notifyArray = []; // reset each time
+			$message = $this->messages->text("user", "notifyMass4") . "\n\n\n" . LF; // reset each time
+			$notifyArray = []; // reset each time
 // User wants notification only on new resources
-                if (!empty($this->allAddedIds) && ($userArray['notifyAddEdit'] == 'N')) {
-                    $notifyArray = $this->grabTitlesThreshold($userArray, $this->allAddedIds);
-                }
-                // User wants notification only on edited resources
-                elseif (!empty($this->allEditedIds) && ($userArray['notifyAddEdit'] == 'E')) {
-                    $notifyArray = $this->grabTitlesThreshold($userArray, $this->allEditedIds);
-                }
-                if (empty($notifyArray) && $userArray['notify'] == 'A') { // notify on all resources
-                    // NB, if resource has not been edited, editedTimestamp is same as addedTimestamp
-                    $notifyArray = $this->grabTitlesThreshold($userArray, $this->allEditedIds);
-                }
-                // notify on resources in a user's bibliography
-                elseif (($userArray['notify'] == 'M')) {
-                    if (empty($notifyArray) && !empty($this->allEditedIds)) {
-                        $newArray = $this->allEditedIds;
-                    } elseif (!empty($notifyArray)) {
-                        $newArray = $notifyArray;
-                    } else {
-                        continue;
-                    }
-                    $remainIds = [];
-                    $this->db->formatConditions(['userbibliographyId' => $userId]);
-                    $this->db->formatConditions(['userbibliographyresourceResourceId' => $resourceId]);
-                    $this->db->leftJoin('user_bibliography_resource', 'userbibliographyresourceBibliographyId', 'userbibliographyId');
-                    $recordset = $this->db->select('user_bibliography', 'userbibliographyId');
-                    if (!$this->db->numRows($recordset)) { // This resource not in user's bibliography
-                        continue;
-                    }
-                    while ($row = $this->db->fetchRow($recordset)) {
-                        $bibs = UTF8::mb_explode(',', $row['bibliography']);
-                        foreach ($newArray as $id => $field) {
-                            if (array_search($id, $bibs) !== FALSE) {
-                                $remainIds[$id] = $field;
-                            }
-                        }
-                    }
-                    if (empty($notifyArray)) { // $field is not a formatted title but is unixTimestamp from $this->allEditedIds
-                        $notifyArray = $this->grabTitlesThreshold($userArray, $remainIds);
-                    } else {
-                        $notifyArray = $remainIds;
-                    }
-                }
-                // notify if user is a creator of this resource and resourceId is not FALSE (e.g. notify from a mass bibliography import)
-                elseif ($resourceId && ($userArray['notify'] == 'C')) {
-                    if (empty($notifyArray) && !empty($this->allEditedIds)) {
-                        $newArray = $this->allEditedIds;
-                    } elseif (!empty($notifyArray)) {
-                        $newArray = $notifyArray;
-                    } else {
-                        continue;
-                    }
-                    $remainIds = [];
-                    $this->db->formatConditions(['resourcecreatorResourceId' => $resourceId]);
-                    $this->db->leftJoin(
-                        'creator',
-                        $this->db->formatFields('creatorSameAs'),
-                        $this->db->tidyInput($userArray['creatorId']),
-                        FALSE
-                    );
-                    $recordset = $this->db->select('resource_creator', 'resourcecreatorResourceId', TRUE);
-                    if (!$this->db->numRows($recordset)) { // This resource not in user's bibliography
-                        continue;
-                    }
-                    while ($row = $this->db->fetchRow($recordset)) {
-                        foreach ($newArray as $id => $field) {
-                            if ($id = $row['resourcecreatorResourceId']) {
-                                $remainIds[$id] = $field;
-                            }
-                        }
-                    }
-                    if (empty($notifyArray)) { // $field is not a formatted title but is unixTimestamp from $this->allEditedIds
-                        $notifyArray = $this->grabTitlesThreshold($userArray, $remainIds);
-                    } else {
-                        $notifyArray = $remainIds;
-                    }
-                }
-                if (empty($notifyArray)) {
-                    continue;
-                }
-                // If more than xxx added resources, simply grab the number of added resources
-                $size = count($notifyArray);
-            }
+			if (!empty($this->allAddedIds) && ($userArray['notifyAddEdit'] == 'N')) {
+				$notifyArray = $this->grabTitlesThreshold($userArray, $this->allAddedIds);
+			}
+			// User wants notification only on edited resources
+			elseif (!empty($this->allEditedIds) && ($userArray['notifyAddEdit'] == 'E')) {
+				$notifyArray = $this->grabTitlesThreshold($userArray, $this->allEditedIds);
+			}
+			if (empty($notifyArray) && $userArray['notify'] == 'A') { // notify on all resources
+				// NB, if resource has not been edited, editedTimestamp is same as addedTimestamp
+				$notifyArray = $this->grabTitlesThreshold($userArray, $this->allEditedIds);
+			}
+			// notify on resources in a user's bibliography
+			elseif (($userArray['notify'] == 'M')) {
+				if (empty($notifyArray) && !empty($this->allEditedIds)) {
+					$newArray = $this->allEditedIds;
+				} elseif (!empty($notifyArray)) {
+					$newArray = $notifyArray;
+				} else {
+					continue;
+				}
+				$remainIds = [];
+				$this->db->formatConditions(['userbibliographyId' => $userId]);
+				$this->db->formatConditions(['userbibliographyresourceResourceId' => $resourceId]);
+				$this->db->leftJoin('user_bibliography_resource', 'userbibliographyresourceBibliographyId', 'userbibliographyId');
+				$recordset = $this->db->select('user_bibliography', 'userbibliographyId');
+				if (!$this->db->numRows($recordset)) { // This resource not in user's bibliography
+					continue;
+				}
+				while ($row = $this->db->fetchRow($recordset)) {
+					$bibs = UTF8::mb_explode(',', $row['bibliography']);
+					foreach ($newArray as $id => $field) {
+						if (array_search($id, $bibs) !== FALSE) {
+							$remainIds[$id] = $field;
+						}
+					}
+				}
+				if (empty($notifyArray)) { // $field is not a formatted title but is unixTimestamp from $this->allEditedIds
+					$notifyArray = $this->grabTitlesThreshold($userArray, $remainIds);
+				} else {
+					$notifyArray = $remainIds;
+				}
+			}
+			// notify if user is a creator of this resource and resourceId is not FALSE (e.g. notify from a mass bibliography import)
+			elseif ($resourceId && ($userArray['notify'] == 'C')) {
+				if (empty($notifyArray) && !empty($this->allEditedIds)) {
+					$newArray = $this->allEditedIds;
+				} elseif (!empty($notifyArray)) {
+					$newArray = $notifyArray;
+				} else {
+					continue;
+				}
+				$remainIds = [];
+				$this->db->formatConditions(['resourcecreatorResourceId' => $resourceId]);
+				$this->db->leftJoin(
+					'creator',
+					$this->db->formatFields('creatorSameAs'),
+					$this->db->tidyInput($userArray['creatorId']),
+					FALSE
+				);
+				$recordset = $this->db->select('resource_creator', 'resourcecreatorResourceId', TRUE);
+				if (!$this->db->numRows($recordset)) { // This resource not in user's bibliography
+					continue;
+				}
+				while ($row = $this->db->fetchRow($recordset)) {
+					foreach ($newArray as $id => $field) {
+						if ($id = $row['resourcecreatorResourceId']) {
+							$remainIds[$id] = $field;
+						}
+					}
+				}
+				if (empty($notifyArray)) { // $field is not a formatted title but is unixTimestamp from $this->allEditedIds
+					$notifyArray = $this->grabTitlesThreshold($userArray, $remainIds);
+				} else {
+					$notifyArray = $remainIds;
+				}
+			}
+			if (empty($notifyArray)) {
+				continue;
+			}
+			// If more than xxx added resources, simply grab the number of added resources
+			$size = count($notifyArray);
             if ($size > $digestThreshold) {
                 $message = $this->messages->text("user", "notifyMass3", $size);
             } else {

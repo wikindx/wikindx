@@ -225,6 +225,7 @@ class HELP
 <li>Menu level: To use the screen space efficiently, WIKINDX makes use of multi-level menus.  These can, however, be difficult to use so you can opt to reduce the number of menu levels. In some cases, the template designer will mandate a certain number of menu levels in which case, attempting to change the number of menu levels for that template will make no difference.</li>
 <li>User groups: In a multi-user WIKINDX, registered users can define user groups.  Potentially private information, such as comments on quotations or resource musings, can then be assigned to be viewed only by members of a user group.  Additionally, user groups may collaborate in building a user group bibliography.</li>
 <li>User bibliographies: These are drawn from the WIKINDX Master Bibliography and may be personal or managed by a user group. Operations on a user bibliography (such as removing resources from it) have no effect on the WIKINDX Master Bibliography.</li>
+<li>Email notification: Receive emails notifying of additions of resources or edits to them. The days figure is a threshold – requirements to notify by email are triggered only when resources are added or edited so that a threshold of 7 days, for example, does not necessarily mean that the notification will be sent immediately following the passing of the threshold, only that the notification will be sent the next time a resource is added or edited.</li>
 </ul>"),
 
 "preferences" => dgettext($domain, "<h3>Preferences</h3>")

@@ -35,6 +35,9 @@ BUG FIXES:
 29. Fix the setting of language/locale once and for all . . .
 30. Ensure the selected bibliography is taken account of when doing a Quick list all...
 31. Fix a potential SQL error with the use of single quotes in the search field of QUICKSEARCH and Advanced Search.
+32. Fix some housekeeping statistics generated at the start of each month.
+33. Some fixes to user notifications regarding resources added/edited.
+34. Ensure specific emails (news and resource notifications) are properly decoded for UTF-8.
 
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.

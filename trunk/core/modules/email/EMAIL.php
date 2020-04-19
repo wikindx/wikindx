@@ -312,7 +312,7 @@ class EMAIL
             return TRUE;
         }
 
-        return ($this->smtp->sendEmail(array_unique($addresses), $subject, utf8_decode($message)));
+        return ($this->smtp->sendEmail(array_unique($addresses), $subject, $message));
     }
     /**
      * Notify users of resource additions and edits
@@ -486,7 +486,7 @@ class EMAIL
                 }
                 $message .= implode("\n" . LF, $notifyArray);
             }
-            if (!$this->smtp->sendEmail($userArray['email'], $subject, utf8_decode($message))) {
+            if (!$this->smtp->sendEmail($userArray['email'], $subject, $message)) {
                 return FALSE;
             }
             // set this user's users.notifyTimestamp to current date
@@ -605,7 +605,7 @@ class EMAIL
             return TRUE;
         }
 
-        return $this->smtp->sendEmail($addresses, $subject, utf8_decode($message));
+        return $this->smtp->sendEmail($addresses, $subject, $message);
     }
     /**
      * grab titles from main list only if user threshold has been passed and resources have been added/edited since the user's last notification

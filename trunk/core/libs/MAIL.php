@@ -67,6 +67,7 @@ class MAIL
         
         // ContentType (work because it's globaly defined)
         $this->mail->ContentType = WIKINDX_MIMETYPE_TXT . ';charset=' . WIKINDX_CHARSET;
+        $this->mail->CharSet = WIKINDX_CHARSET;
 
         if (WIKINDX_MAIL_BACKEND == 'smtp') {
             $this->mail->isSMTP();

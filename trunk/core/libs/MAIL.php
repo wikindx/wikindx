@@ -65,8 +65,7 @@ class MAIL
             $this->mail->addReplyTo(filter_var($ReplyTo, FILTER_SANITIZE_EMAIL), WIKINDX_TITLE);
         }
         
-        // ContentType (work because it's globaly defined)
-        $this->mail->ContentType = WIKINDX_MIMETYPE_TXT . ';charset=' . WIKINDX_CHARSET;
+        $this->mail->ContentType = WIKINDX_MIMETYPE_TXT;
         $this->mail->CharSet = WIKINDX_CHARSET;
 
         if (WIKINDX_MAIL_BACKEND == 'smtp') {

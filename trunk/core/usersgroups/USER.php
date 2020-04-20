@@ -129,20 +129,23 @@ class USER
                 $this->db->formatConditions(['usersId' => $userId]);
                 $this->db->updateNull('users', $nulls);
             }
-            $this->db->formatConditions(['usersId' => $userId]);
-            $recordset = $this->db->select('users', 'usersPassword');
-            // The encrypted password is displayed on the browser screen.  Need to check if it's unchanged as we don't
-            // want to encrypt the encrypted password!
-            if ($this->db->numRows($recordset)) {
-                $this->pwdInputEncrypted = FALSE;
-                $pwd = $this->db->fetchOne($recordset);
-                if ($password != $pwd) {
-                    $password = crypt($password, UTF8::mb_strrev(time()));
-                } else {
-                    $this->pwdInputEncrypted = TRUE;
-                }
+            if (array_key_exists('bypassPasswordCheck', $this->vars) === FALSE)
+            {
+				$this->db->formatConditions(['usersId' => $userId]);
+				$recordset = $this->db->select('users', 'usersPassword');
+				// The encrypted password is displayed on the browser screen.  Need to check if it's unchanged as we don't
+				// want to encrypt the encrypted password!
+				if ($this->db->numRows($recordset)) {
+					$this->pwdInputEncrypted = FALSE;
+					$pwd = $this->db->fetchOne($recordset);
+					if ($password != $pwd) {
+						$password = crypt($password, UTF8::mb_strrev(time()));
+					} else {
+						$this->pwdInputEncrypted = TRUE;
+					}
+				}
+				$update['usersPassword'] = $password;
             }
-            $update['usersPassword'] = $password;
             if (array_key_exists('fullname', $this->vars) &&
                 $fullname = $this->db->tidyInput(\HTML\removeNl($this->vars['fullname']))) {
                 $update['usersFullname'] = \HTML\removeNl($this->vars['fullname']);
@@ -651,6 +654,7 @@ class USER
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
+        $pString .= \HTML\p(\FORM\checkbox($this->messages->text("user", "bypassPasswordCheck"), "bypassPasswordCheck"));
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Edit")), FALSE, "left");
         $pString .= \FORM\formEnd();
 

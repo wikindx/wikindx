@@ -1,7 +1,7 @@
 RELEASES:
 
 v6.3.0
-Focus: Minor bug fixes and maintenance.
+Focus: Minor bug fixes and feature enhancements and maintenance.
 
 BUG FIXES:
 1. Fix SQL errors on insert citation.
@@ -59,6 +59,9 @@ MAINTENANCE:
 17. Disable display of views index, popularity index and downloads index in single resource views and resource lists and disable ability to order by these in Quick list all... operations. On large databases, the compilation of the indices takes too long. At a later stage such indices will be available in the Statistics menu.
 18. Update of PHPMailer to 6.1.5 version.
 19. Remove superAdmin user configuration from Admin|Configure interface. superAdmin details can be edited from My Wikindx and from Admin|Users|Edit.
+
+FEATURE ENHANCEMENTS:
+1. When the admin edits a user, a checkbox allows for the bypassing of the password integrity check, removing the need to enter the password again.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

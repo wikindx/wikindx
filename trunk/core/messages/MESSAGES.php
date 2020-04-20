@@ -1517,6 +1517,7 @@ class MESSAGES
 				"userGroupBibs" => dgettext($domain, "___GROUP BIBLIOGRAPHIES___"),
 				"numResources" => dgettext($domain, "Number of resources"),
 				"admin" => dgettext($domain, "Administrator"),
+				"bypassPasswordCheck" => dgettext($domain, "Bypass the password check"),
 /// user_notification Email notification of resource additions/edits etc.
 				"notification" => dgettext($domain, "Email notification"),
 				"notifyNone" => dgettext($domain, "Never"),

@@ -543,7 +543,7 @@ class ADMINUSER
             if (!$this->userId) {
                 return FALSE;
             }
-        } elseif ($type == 'edit') {
+        } elseif (($type == 'edit') && (array_key_exists('bypassPasswordCheck', $this->vars) === FALSE)) {
             if (!trim($this->vars['password']) || !trim($this->vars['email']) || !trim($this->vars['userId'])) {
                 return FALSE;
             }

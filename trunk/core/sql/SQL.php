@@ -1456,6 +1456,18 @@ class SQL
         }
     }
     /**
+     * Create a MIN() statement
+     *
+     * @param string $field formatted field name
+     * @param string $alias formatted alias
+     *
+     * @return string
+     */
+    public function minStmt($field, $alias)
+    {
+        return $this->formatAlias(['MIN(' . $field . ')' => $alias], FALSE, FALSE);
+    }
+    /**
      * Set up the SQL conditions for the next query.
      *
      * Conditions should be set before almost every SQL query. After the query is executed, the conditions are deleted automatically.
@@ -1804,7 +1816,7 @@ class SQL
             $alias = ' AS ' . $this->formatFields($alias);
         }
         $field = $this->formatFields($field);
-        $denominator = $this->formatFields($denominator);
+       	$denominator = $this->formatFields($denominator);
 
         if ($aggregateFunction != '') {
             $avgBegin = $aggregateFunction . '(';

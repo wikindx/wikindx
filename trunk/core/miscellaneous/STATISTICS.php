@@ -70,7 +70,7 @@ class STATISTICS
         if (self::$MaxDR !== FALSE) {
             return self::$MaxDR;
         }
-        $dateDiffClause = $this->db->dateDiffRatio('count', 'resourceattachmentsTimestamp', 'max', 'MAX');
+        $dateDiffClause = $this->db->dateDiffRatio('count', 'min', 'max', 'MAX');
         $sumClause = $this->db->sum('statisticsattachmentdownloadsCount', 'count');
         $this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => 'IS NOT NULL']);
         $this->db->leftJoin('resource_attachments', 'resourceattachmentsId', 'statisticsattachmentdownloadsAttachmentId');
@@ -78,7 +78,7 @@ class STATISTICS
         $subQ = $this->db->subQuery(
             $this->db->selectNoExecute(
                 'statistics_attachment_downloads',
-                [$sumClause, $this->db->formatFields('resourceattachmentsTimestamp')],
+                [$sumClause, $this->db->minStmt($this->db->formatFields('resourceattachmentsTimestamp'), $this->db->formatFields('min'))],
                 FALSE,
                 FALSE
             ),
@@ -167,7 +167,6 @@ class STATISTICS
         }
         $setSumAR = $this->getMaxAccessRatio();
         $setSumDR = $this->getMaxDownloadRatio();
-        
         $dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'accessRatio');
         $sumClause = $this->db->sum('statisticsresourceviewsCount', 'count');
         $this->db->formatConditions(['statisticsresourceviewsResourceId' => $id]);
@@ -186,7 +185,7 @@ class STATISTICS
         $resultSet = $this->db->selectFromSubQuery(FALSE, $dateDiffClause, $subQ, FALSE, FALSE);
         $accessRatio = $this->db->fetchOne($resultSet);
     
-        $dateDiffClause = $this->db->dateDiffRatio('count', 'resourceattachmentsTimestamp', 'downloadRatio');
+        $dateDiffClause = $this->db->dateDiffRatio('count', 'min', 'downloadRatio', '', 3, FALSE, FALSE, 'min');
         $sumClause = $this->db->sum('statisticsattachmentdownloadsCount', 'count');
         $this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => 'IS NOT NULL']);
         $this->db->formatConditions(['statisticsattachmentdownloadsResourceId' => $id]);
@@ -194,7 +193,7 @@ class STATISTICS
         $subQ = $this->db->subQuery(
             $this->db->selectNoExecute(
                 'statistics_attachment_downloads',
-                [$sumClause, $this->db->formatFields('resourceattachmentsTimestamp')],
+                [$sumClause, $this->db->minStmt($this->db->formatFields('resourceattachmentsTimestamp'), $this->db->formatFields('min'))],
                 FALSE,
                 FALSE
             ),
@@ -244,7 +243,7 @@ class STATISTICS
     {
         $res = FACTORY_RESOURCECOMMON::getInstance();
         $bibStyle = FACTORY_BIBSTYLE::getInstance('plain');
-        $usersArray = $resArray = $union = [];
+        $usersArray = $resArray = [];
         $this->list = TRUE;
 // get statistics for the last month
         $month = date('Ym');
@@ -254,19 +253,46 @@ class STATISTICS
 		$month = ($month % 100 == 0) ? $month - 100 + 12 : $month;
         $this->db->formatConditions(['statisticsresourceviewsMonth' => $month]);
         $this->db->formatConditions(['statisticsresourceviewsCount' => ' IS NOT NULL']);
-        $resultset = $this->db->select('statistics_resource_views', ['statisticsresourceviewsResourceId', 'statisticsresourceviewsCount', ]);
+        $resultset = $this->db->select('statistics_resource_views', ['statisticsresourceviewsResourceId', 'statisticsresourceviewsCount']);
 		while ($row = $this->db->fetchRow($resultset))
 		{
-			$resArray[$row['statisticsresourceviewsResourceId']] = $row['statisticsresourceviewsCount'];
+			$resArray[$row['statisticsresourceviewsResourceId']]['monthViews'] = $row['statisticsresourceviewsCount'];
+			$resIds[] = $row['statisticsresourceviewsResourceId'];
 		}
-		$resKeys = array_keys($resArray);
-		$this->db->formatConditionsOneField($resKeys, 'resourcecreatorResourceId');
-		$union[] = $this->db->selectNoExecute('resource_creator', 'resourcecreatorCreatorId', FALSE, TRUE, TRUE);
-		$this->db->formatConditionsOneField($resKeys, 'resourcecreatorResourceId');
+        $this->db->formatConditions(['statisticsattachmentdownloadsMonth' => $month]);
+        $this->db->formatConditions(['statisticsattachmentdownloadsCount' => ' IS NOT NULL']);
+		$this->db->leftJoin('resource_attachments', 'resourceattachmentsId', 'statisticsattachmentdownloadsAttachmentId');
+        $resultset = $this->db->select('statistics_attachment_downloads', 
+        	['statisticsattachmentdownloadsResourceId', 'statisticsattachmentdownloadsAttachmentId', 'statisticsattachmentdownloadsCount', 
+        	'resourceattachmentsFileName']);
+		while ($row = $this->db->fetchRow($resultset))
+		{
+			$resArray[$row['statisticsattachmentdownloadsResourceId']]['monthDownloads'][$row['statisticsattachmentdownloadsAttachmentId']] = 
+				$row['statisticsattachmentdownloadsCount'];
+			$resArray[$row['statisticsattachmentdownloadsResourceId']]['filename'][$row['statisticsattachmentdownloadsAttachmentId']] = 
+				$row['resourceattachmentsFileName'];
+		}
+		$this->db->formatConditionsOneField($resIds, 'resourcecreatorResourceId');
+		$this->db->formatConditions('resourcecreatorCreatorId', 'IS NOT NULL');
+		$resultset = $this->db->select('resource_creator', ['resourcecreatorCreatorId', 'resourcecreatorResourceId']);
+		while ($row = $this->db->fetchRow($resultset)) 
+		{
+			$creatorIds[$row['resourcecreatorResourceId']] = $row['resourcecreatorCreatorId'];
+		}
+		$this->db->formatConditionsOneField($resIds, 'resourcecreatorResourceId');
+		$this->db->formatConditions('creatorSameAs', 'IS NOT NULL');
 		$this->db->leftJoin('resource_creator', 'resourcecreatorCreatorId', 'creatorId');
-		$union[] = $this->db->selectNoExecute('creator', 'creatorSameAs', TRUE, TRUE, TRUE);
-		$this->db->formatConditions($this->db->formatFields('usersIsCreator') . $this->db->inClause($this->db->union($union)));
-		$resultset = $this->db->select('users', ['usersId', 'usersFullname', 'usersEmail']);
+		$resultset = $this->db->select('creator', ['creatorSameAs', 'resourcecreatorResourceId']);
+		while ($row = $this->db->fetchRow($resultset)) 
+		{
+			$creatorIds[$row['resourcecreatorResourceId']] = $row['creatorSameAs'];
+		}
+		if(!isset($creatorIds))
+		{
+			return;
+		}
+		$this->db->formatConditionsOneField(array_unique($creatorIds), 'usersIsCreator');
+		$resultset = $this->db->select('users', ['usersId', 'usersFullname', 'usersEmail', 'usersIsCreator']);
 		while ($row = $this->db->fetchRow($resultset)) 
 		{
 			if (!array_key_exists($row['usersId'], $usersArray)) 
@@ -274,8 +300,15 @@ class STATISTICS
 				$usersArray[$row['usersId']]['email'] = $row['usersEmail'];
 				$usersArray[$row['usersId']]['name'] = $row['usersFullname'];
 			}
-			$title = $bibStyle->process($this->db->fetchRow($res->getResource($rId)), TRUE);
-			$usersArray[$row['usersId']]['resources'][$rId] = $title;
+			foreach ($creatorIds as $rId => $uId)
+			{
+				if ($row['usersIsCreator'] == $uId)
+				{
+					$resource = $res->getResource($rId);
+					$title = $bibStyle->process($this->db->fetchRow($resource), TRUE);
+					$usersArray[$row['usersId']]['resources'][$rId] = $title;
+				}
+			}
 		}
         if (!empty($usersArray)) 
         {
@@ -287,30 +320,27 @@ class STATISTICS
                 $message .= $this->messages->text('statistics', 'emailIntro', WIKINDX_TITLE) . LF . LF;
                 foreach ($uArray['resources'] as $rId => $title) 
                 {
-                    $this->accessDownloadRatio($rId);
+                	$this->db->formatConditions(['statisticsresourceviewsResourceId' => $rId]);
+                	$sum = $this->db->selectFirstField('statistics_resource_views', $this->db->sum('statisticsresourceviewsCount', 'count'), 
+                		FALSE, FALSE);
                     $popIndex = $this->getPopularityIndex($rId);
                     $message .= $title . LF;
-                    $message .= TAB . $this->messages->text('statistics', 'emailViewsMonth', $month) . ' ' .
-                        $this->messages->text('statistics', 'emailViewsTotal', $resArray[$rId]) . ', ' .
+                    $message .= TAB . $this->messages->text('statistics', 'emailViewsMonth', $resArray[$rId]['monthViews']) . ' ' .
+                        $this->messages->text('statistics', 'emailViewsTotal', $sum) . ', ' .
                         $this->messages->text('viewResource', 'viewIndex', $this->accessRatio) . ', ' .
                         $this->messages->text('viewResource', 'download', $this->downloadRatio) . ', ' .
                         $this->messages->text('viewResource', 'popIndex', $popIndex) . LF;
-                    if (array_key_exists('downloads', $resArray[$rId])) 
+                    if (array_key_exists('monthDownloads', $resArray[$rId])) 
                     {
-                        if (count($resArray[$rId]['downloads']) == 1) 
-                        { // just the one attachment
-                            $dArray = array_shift($resArray[$rId]['downloads']);
-                            $message .= TAB . $this->messages->text('statistics', 'emailDownloadsMonth', $dArray[2]) . ' ' .
-                                $this->messages->text('statistics', 'emailDownloadsTotal', $dArray[1]) . LF;
-                        } 
-                        else 
+                        foreach ($resArray[$rId]['monthDownloads'] as $id => $count) 
                         {
-                            foreach ($resArray[$rId]['downloads'] as $dArray) 
-                            {
-                                $message .= TAB . $dArray[0] . ' -- ' .
-                                    $this->messages->text('statistics', 'emailDownloadsMonth', $dArray[2]) . ' ' .
-                                    $this->messages->text('statistics', 'emailDownloadsTotal', $dArray[1]) . LF;
-                            }
+							$this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => $id]);
+							$sum = $this->db->selectFirstField('statistics_attachment_downloads', 
+								$this->db->sum('statisticsattachmentdownloadsCount', 'count'), 
+								FALSE, FALSE);
+                        	$name = $resArray[$rId]['filename'][$id];
+	                        $message .= TAB . $name . ': ' . $this->messages->text('statistics', 'emailDownloadsMonth', $count) . ' ' .
+    	                        $this->messages->text('statistics', 'emailDownloadsTotal', $sum) . LF;
                         }
                     }
                     $message .= LF;

@@ -66,7 +66,6 @@ class STATISTICS
      */
     public function getMaxDownloadRatio()
     {
-        //return 1;
         if (self::$MaxDR !== FALSE) {
             return self::$MaxDR;
         }
@@ -101,7 +100,6 @@ class STATISTICS
      */
     public function getMaxAccessRatio()
     {
-        //return 1;
         if (self::$MaxAR !== FALSE) {
             return self::$MaxAR;
         }

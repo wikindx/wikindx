@@ -718,9 +718,9 @@ class STATS
     {
         if (!is_array($row)) {
             return $this->messages->text("user", "unknown");
-        } elseif (array_key_exists('usersFullname', $row)) {
+        } elseif ($row['usersFullname']) {
             return $row['usersFullname'];
-        } elseif (array_key_exists('usersUsername', $row)) {
+        } elseif ($row['usersUsername']) {
             return $row['usersUsername'];
         } else {
             return $this->messages->text("user", "unknown");

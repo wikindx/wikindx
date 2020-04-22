@@ -1122,6 +1122,7 @@ class MESSAGES
 				"pluginsMenus" => dgettext($domain, "Menu Location"),
 				"pluginsContainers" => dgettext($domain, "Container Location"),
 				"pluginConfig" => dgettext($domain, "Plugin Config.php File"),
+				"pluginConfigHelp" => dgettext($domain, "There are two variables common to all plugins: \$wikindxVersion and \$authorize. In-line plugins additionally have the \$container variable while menu plugins have the \$menus plugin. Normally, you should not change \$wikindxVersion and changing it might cause the plugin to stop working. \$authorize is one of: 0 (public readonly access); 1 (login required); or 2 (admin only). \$menus is an array with at least one of: 'wikindx'; 'res'; 'search'; text'; 'admin'; 'plugin1'; 'plugin2'; or 'plugin3' (if you wish the plugin to appear in several menus, list them in the array separated by commas). The 'admin' menu is only available when logged in as admin. The 'text' menu will only show if there are metadata (quotes etc.) and the three 'pluginX' menus only show if they are populated. \$container should be one of: 'inline1'; 'inline2'; 'inline3'; or 'inline4' and their placement depends on the display template."),
 				"pluginCommands" => dgettext($domain, "Plugin Commands"),
 				"stylesNewMenu" => dgettext($domain, "New styles"),
 				"stylesUpdateMenu" => dgettext($domain, "Styles requiring updates"),

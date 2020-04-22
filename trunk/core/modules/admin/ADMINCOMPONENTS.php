@@ -1106,6 +1106,7 @@ class ADMINCOMPONENTS
                 $string .= fgets($fh);
             }
             fclose($fh);
+            $pString .= \HTML\p($this->messages->text('misc', 'pluginConfigHelp'));
             $pString .= \FORM\textareaInput($this->messages->text('misc', 'pluginConfig'), 'configConfig', $string, 100, 8);
         }
 
@@ -1144,6 +1145,7 @@ class ADMINCOMPONENTS
                 $string .= fgets($fh);
             }
             fclose($fh);
+            $pString .= \HTML\p($this->messages->text('misc', 'pluginConfigHelp'));
             $pString .= \FORM\textareaInput($this->messages->text('misc', 'pluginConfig'), 'configConfig', $string, 100, 8);
         }
 

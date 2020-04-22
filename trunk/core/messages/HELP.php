@@ -291,7 +291,7 @@ class HELP
 <li>" . dgettext($domain, "'admin' is only available when logged in as admin, 'text' will only show if there are metadata (quotes etc.), and the three 'pluginX' menu trees only show if they are populated.") . "</li>
 <li>"
 // translators: do not edit words prefaced with '$'
- . dgettext($domain, "\$authorize should be one of the following numerals:") . "
+ . dgettext($domain, "\$authorize should be one of the following:") . "
     <ul>
         <li>unknown " . dgettext($domain, "(always unauthorised, menu item not displayed)") . "</li>
         <li>0 " . dgettext($domain, "(menu item displayed for all users, logged in or not)") . "</li>
@@ -308,12 +308,12 @@ class HELP
 class adminstyle_CONFIG {
     public \$menus = array('plugin1');
     public \$authorize = 2;
-	public $wikindxVersion = 5.8;
+	public \$wikindxVersion = 5.8;
 }
 </pre>
 </p>"
 
-. dgettext($domain, "<p>Inline plugins return output that is displayed in one of four containers that can optionally be positioned in any of the template .tpl files.  To change the position of a container, you will need to edit the appropriate .tpl file.</p>")
+. dgettext($domain, "<p>Inline plugins return output that is displayed in one of four containers that can be positioned anywhere in any of the template .tpl files.  To change the position of a container, you will need to edit the appropriate .tpl file.</p>")
 
 . dgettext($domain, "<p>At least one template, one bibliographic style and one language must remain enabled. WIKINDX expects that the English language pack is available on the server (i.e. that you do not physically remove it from the wikindx/languages/ folder) whether it has been disabled or not.  This is because the English language pack is used to supply any messages that might be missing from other language packs.</p>"),
 		);

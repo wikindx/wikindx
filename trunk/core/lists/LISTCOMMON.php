@@ -633,15 +633,10 @@ class LISTCOMMON
             $userId = $this->session->getVar("setup_UserId");
             $attachments = $musings = [];
             $edit = FALSE;
-            // Check if these resources have attachments and display view icons accordingly. Also, calculate the resource's popularity index
- /*           if ($this->session->getVar("setup_UserId") || !WIKINDX_FILE_VIEW_LOGGEDON_ONLY) {
+// Disabled temporarily for some later dates when statistics can be calculated in the database code.
+/*            if ($this->session->getVar("setup_UserId") && ($this->session->getVar("list_Order") == 'popularityIndex')) {
                 foreach ($resourceList as $resourceId => $resourceArray) {
-                    if (array_key_exists('index', $this->rows[$resourceId])) { // listing by popularity index so index already calculated from database
-                        $popIndex = $this->rows[$resourceId]['index'] * 100;
-                    } else {
-                        $popIndex = $this->stats->getPopularityIndex($resourceId);
-                    }
-                    $resourceList[$resourceId]['popIndex'] = $this->messages->text("misc", "popIndex", $popIndex);
+                    $resourceList[$resourceId]['popIndex'] = $this->messages->text("misc", "popIndex", $this->stats->getPopularityIndex($resourceId));
                 }
             }
 */            // Check if these resources have metadata and display view icons accordingly

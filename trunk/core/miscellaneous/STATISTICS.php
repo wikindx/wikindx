@@ -154,17 +154,29 @@ class STATISTICS
      * Return resource access and download ratio of attachments for one resource
      *
      * @param int $id Resource ID
+     * @param bool $arOnly = FALSE
      */
-    public function accessDownloadRatio($id)
+    public function accessDownloadRatio($id, $arOnly = FALSE)
     {
         if (!$this->list && (self::$AR !== FALSE) && (self::$DR !== FALSE)) {
             $this->accessRatio = self::$AR * 100;
             $this->downloadRatio = self::$DR * 100;
-
             return;
         }
-        $setSumAR = $this->getMaxAccessRatio();
-        $setSumDR = $this->getMaxDownloadRatio();
+        if (!$arOnly)
+        {
+        	$this->getDownloadRatio($id);
+	    }
+	    $this->getAccessRatio($id);
+    }
+    /**
+     * Get a resource's access ratio
+     *
+     * @param int $id Resource ID
+     */
+    private function getAccessRatio($id)
+    {
+    	$setSumAR = $this->getMaxAccessRatio();
         $dateDiffClause = $this->db->dateDiffRatio('count', 'resourcetimestampTimestampAdd', 'accessRatio');
         $sumClause = $this->db->sum('statisticsresourceviewsCount', 'count');
         $this->db->formatConditions(['statisticsresourceviewsResourceId' => $id]);
@@ -182,7 +194,21 @@ class STATISTICS
         );
         $resultSet = $this->db->selectFromSubQuery(FALSE, $dateDiffClause, $subQ, FALSE, FALSE);
         $accessRatio = $this->db->fetchOne($resultSet);
-    
+        if (!$setSumAR) {
+            self::$AR = 0;
+        } else {
+            self::$AR = round(($accessRatio / $setSumAR), 2);
+        }
+        $this->accessRatio = self::$AR * 100;
+    }
+    /**
+     * Get a resource's download ratio
+     *
+     * @param int $id Resource ID
+     */
+    private function getDownloadRatio($id)
+    {    
+        $setSumDR = $this->getMaxDownloadRatio();
         $dateDiffClause = $this->db->dateDiffRatio('count', 'min', 'downloadRatio', '', 3, FALSE, FALSE, 'min');
         $sumClause = $this->db->sum('statisticsattachmentdownloadsCount', 'count');
         $this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => 'IS NOT NULL']);
@@ -201,17 +227,11 @@ class STATISTICS
         );
         $resultSet = $this->db->selectFromSubQuery(FALSE, $dateDiffClause, $subQ, FALSE, FALSE);
         $downloadRatio = $this->db->fetchOne($resultSet);
-        if (!$setSumAR) {
-            self::$AR = 0;
-        } else {
-            self::$AR = round(($accessRatio / $setSumAR), 2);
-        }
         if (!$setSumDR) {
             self::$DR = 0;
         } else {
             self::$DR = round(($downloadRatio / $setSumDR), 2);
         }
-        $this->accessRatio = self::$AR * 100;
         $this->downloadRatio = self::$DR * 100;
     }
     /**

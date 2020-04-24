@@ -344,6 +344,12 @@ class MENU
                 $messages->text("menu", "statisticsPublishers") => 'index.php?action=statistics_STATS_CORE&method=publishers',
                 $messages->text("menu", "statisticsCollections") => 'index.php?action=statistics_STATS_CORE&method=collections',
                 $messages->text("menu", "statisticsUsers") => 'index.php?action=statistics_STATS_CORE&method=users',
+// Disabled temporarily for some later dates when statistics can be calculated in the database code.
+/*                $messages->text("menu", "listDownloads") => 
+                	'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=downloadsIndex',
+                $messages->text("menu", "listPopularity") =>
+                    'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=popularityIndex',
+*/
             ];
         } elseif (WIKINDX_DISPLAY_STATISTICS) {
             $this->wikindx['statisticsSub'] = [
@@ -358,6 +364,13 @@ class MENU
             ];
             if (WIKINDX_DISPLAY_USER_STATISTICS) {
                 $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsUsers")] = 'index.php?action=statistics_STATS_CORE&method=users';
+// Disabled temporarily for some later dates when statistics can be calculated in the database code.
+/*
+                $this->wikindx['statisticsSub'][$messages->text("menu", "listDownloads")] =
+                    'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=downloadsIndex';
+                $this->wikindx['statisticsSub'][$messages->text("menu", "listPopularity")] =
+                    'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=popularityIndex';
+*/
             }
         } elseif ((defined("WIKINDX_MULTIUSER") ? WIKINDX_MULTIUSER : WIKINDX_MULTIUSER_DEFAULT) && (defined("WIKINDX_USER_REGISTRATION") ? WIKINDX_USER_REGISTRATION : WIKINDX_USER_REGISTRATION_DEFAULT) && !$this->userId) {
             $this->wikindx[$messages->text("menu", "statistics")] = 'index.php?action=statistics_STATS_CORE&method=totals';
@@ -534,13 +547,13 @@ class MENU
                 ],
                 $messages->text("menu", "categoryTree") => 'index.php?action=browse_CATEGORYTREE_CORE',
             ];
-            if (!WIKINDX_FILE_VIEW_LOGGEDON_ONLY) {
+/*            if (!WIKINDX_FILE_VIEW_LOGGEDON_ONLY) {
                 $this->search['listSub'][$messages->text("menu", "listDownloads")] =
                     'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=downloadsIndex';
                 $this->search['listSub'][$messages->text("menu", "listPopularity")] =
                     'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=popularityIndex';
             }
-        }
+*/        }
         // There is no collection, an empty menu entry can be injected.
         // We remove it before rendering.
         foreach ($this->search['browseSub'] as $k => $v) {

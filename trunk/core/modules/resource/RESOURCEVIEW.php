@@ -332,7 +332,7 @@ class RESOURCEVIEW
                 "numAccesses",
                 $views . '/' . $totalViews
             );
-//            $this->stats->accessDownloadRatio($this->vars['id']);
+            $this->stats->accessDownloadRatio($this->vars['id']);
             if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId")) {
                 // display nothing
             } else {
@@ -340,8 +340,8 @@ class RESOURCEVIEW
                     $resourceSingle['download'] = $this->messages->text("viewResource", "download", $this->stats->downloadRatio);
                 }
             }
-//            $viewIndex = $this->messages->text("viewResource", "viewIndex", $this->stats->accessRatio);
-//            $popularityIndex = $this->messages->text("viewResource", "popIndex", $this->stats->getPopularityIndex($this->vars['id']));
+            $viewIndex = $this->messages->text("viewResource", "viewIndex", $this->stats->accessRatio);
+            $popularityIndex = $this->messages->text("viewResource", "popIndex", $this->stats->getPopularityIndex($this->vars['id']));
             if ($this->session->getVar("setup_Superadmin")) {
                 $maturityIndex = \FORM\formHeader('statistics_STATS_CORE');
                 $maturityIndex .= \FORM\hidden("method", 'setMaturityIndex');
@@ -365,8 +365,8 @@ class RESOURCEVIEW
                     :
                     FALSE;
             }
-//            $resourceSingle['popIndex'] = $popularityIndex;
-//            $resourceSingle['viewIndex'] = $viewIndex;
+            $resourceSingle['popIndex'] = $popularityIndex;
+            $resourceSingle['viewIndex'] = $viewIndex;
             $resourceSingle['maturity'] = $maturityIndex;
             GLOBALS::addTplVar('multiUser', TRUE);
         }

@@ -48,6 +48,7 @@ class QUICKSEARCH
         $this->keyword = FACTORY_KEYWORD::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->parsePhrase = FACTORY_PARSEPHRASE::getInstance();
+    	$this->parsePhrase->quickSearch = TRUE;
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         switch ($this->session->getVar("search_Order")) {
             case 'title':
@@ -157,52 +158,56 @@ class QUICKSEARCH
      * @param mixed $ors
      * @param mixed $orsFT
      */
-    public function fieldSql($ors, $orsFT)
+    public function fieldSql($search, $searchFT)
     {
-    	$orsFT = str_replace("'", "''", $orsFT);
+    	if ((strpos($searchFT, '-') !== FALSE) && (substr($searchFT, -1) === '*'))
+    	{
+    		$searchFT = '"' . substr_replace($searchFT, '"', strlen($searchFT)-1);
+    	}
+    	$searchFT = str_replace("'", "''", $searchFT);
         foreach (['resourcecustomShort', 'resourcecustomLong'] as $field) {
             $field = $this->db->formatFields($field);
         }
         // title
         $field = $this->db->concat([$this->db->formatFields('resourceNoSort'), $this->db->formatFields('resourceTitleSort')], ' ');
-        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', $field, $ors));
+        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', $field, $search));
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource', [['resourceId' => 'rId']]));
         // creatorSurname
-        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'creatorSurname', $ors));
+        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'creatorSurname', $search));
         $this->db->formatConditions(['resourcecreatorResourceId' => ' IS NOT NULL ']);
         $this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_creator', [['resourcecreatorResourceId' => 'rId']]));
         // keywordKeyword
-        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'keywordKeyword', $ors));
+        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'keywordKeyword', $search));
         $this->db->formatConditions(['resourcekeywordResourceId' => ' IS NOT NULL ']);
         $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_keyword', [['resourcekeywordResourceId' => 'rId']]));
         // resourcemetadataText
-        $matchAgainst = $this->db->fulltextSearch('resourcemetadataText', $orsFT);
+        $matchAgainst = $this->db->fulltextSearch('resourcemetadataText', $searchFT);
         $this->metadata->setCondition(FALSE, FALSE, TRUE);
         $this->db->formatConditions($matchAgainst);
         $this->db->formatConditions(['resourcemetadataResourceId' => 'IS NOT NULL']);
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_metadata', [['resourcemetadataResourceId' => 'rId']]));
         // usertagsTag
-        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'usertagsTag', $ors));
+        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'usertagsTag', $search));
         $result = $this->db->formatFields('usertagsUserId') . $this->db->equal . '1';
         $userCond = $this->db->caseWhen('usertagsId', 'IS NOT NULL', $result, FALSE, FALSE);
         $this->db->formatConditions($userCond);
         $this->db->leftJoin('user_tags', 'resourceusertagsTagId', 'usertagsId');
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_user_tags', [['resourceusertagsResourceId' => 'rId']]));
         // resourcecustomShort
-        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'resourcecustomShort', $ors));
+        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'resourcecustomShort', $search));
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_custom', [['resourcecustomResourceId' => 'rId']]));
         // resourcecustomLong
-        $matchAgainst = $this->db->fulltextSearch('resourcecustomLong', $orsFT);
+        $matchAgainst = $this->db->fulltextSearch('resourcecustomLong', $searchFT);
         $this->db->formatConditions($matchAgainst);
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_custom', [['resourcecustomResourceId' => 'rId']]));
         // resourcetextAbstract
-        $matchAgainst = $this->db->fulltextSearch('resourcetextAbstract', $orsFT);
+        $matchAgainst = $this->db->fulltextSearch('resourcetextAbstract', $searchFT);
         $this->db->formatConditions($matchAgainst);
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_text', [['resourcetextId' => 'rId']]));
         // resourcetextNote
-        $matchAgainst = $this->db->fulltextSearch('resourcetextNote', $orsFT);
+        $matchAgainst = $this->db->fulltextSearch('resourcetextNote', $searchFT);
         $this->db->formatConditions($matchAgainst);
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_text', [['resourcetextId' => 'rId']]));
 
@@ -259,33 +264,37 @@ class QUICKSEARCH
         $this->input['Partial'] = TRUE;
         GLOBALS::setTplVar('resourceListSearchForm', $this->init(FALSE, TRUE, TRUE));
         if (!$reprocess || ($this->session->getVar("setup_PagingStyle") == 'A')) {
-            $masterIds = $andIds = $notIds = [];
             $this->parseWord();
             $resourcesFound = FALSE;
             // Deal with OR strings first
-            $ors = implode($this->db->or, $this->parsePhrase->ors); // shouldn't be necessary as there should only be one element
+            $ors = implode($this->db->or, $this->parsePhrase->ors);
             $orsFT = implode(' ', $this->parsePhrase->orsFT);
             if ($ors && $this->getInitialIds($ors, $orsFT, 'or')) {
                 $resourcesFound = TRUE;
             }
             // Deal with AND strings next
-            $ands = implode($this->db->and, $this->parsePhrase->ands); // shouldn't be necessary as there should only be one element
-            $andsFT = implode(' ', $this->parsePhrase->andsFT);
-            if ($ands && $this->getInitialIds($ands, $andsFT, 'and')) {
-                $resourcesFound = TRUE;
+            foreach ($this->parsePhrase->ands as $and) // we use array_intersect . . .
+            {
+            	if ($this->getInitialIds($and, array_shift($this->parsePhrase->andsFT), 'and')) {
+                	$resourcesFound = TRUE;
+            	}
             }
-            unset($andIds);
             // Finally, deal with NOT strings. We match IDs using OR then subtract the found ids from the main ids array
-            $nots = implode($this->db->or, $this->parsePhrase->nots); // shouldn't be necessary as there should only be one element
+            // If there are no ANDs or ORs, we must first get all existing resource ids
+            $nots = implode($this->db->or, $this->parsePhrase->nots);
             $notsFT = implode(' ', $this->parsePhrase->notsFT);
+            if (empty($this->parsePhrase->ands) && empty($this->parsePhrase->ors))
+			{
+ 				$resultSet = $this->db->select('resource', 'resourceId');
+ 				while ($row = $this->db->fetchRow($resultSet))
+ 				{
+ 					$allIds[] = $row['resourceId'];
+ 				}
+ 				$this->session->setVar("list_AllIds", base64_encode(serialize($allIds)));
+ 				unset($allIds);
+            }
             if ($nots && $this->getInitialIds($nots, $notsFT, 'not')) {
                 $resourcesFound = TRUE;
-            }
-            unset($notIds);
-            if (!$resourcesFound) {
-                $this->common->noResources('search');
-
-                return FALSE;
             }
             // Now finalize
             if (!$this->stmt->quicksearchSubQuery($queryString, FALSE, $this->subQ, 'final')) {
@@ -338,17 +347,11 @@ class QUICKSEARCH
      * @param mixed $searchArrayFT
      * @param mixed $type
      */
-    private function getInitialIds($searchArray, $searchArrayFT, $type)
+    private function getInitialIds($search, $searchFT, $type)
     {
-        $this->fieldSql($searchArray, $searchArrayFT);
+        $this->fieldSql($search, $searchFT);
         $subStmt = $this->setSubQuery();
         $resourcesFound = $this->stmt->quicksearchSubQuery(FALSE, $subStmt, FALSE, $type);
-        if (!$resourcesFound) {
-            $this->common->noResources('search');
-
-            return FALSE;
-        }
-
         return TRUE;
     }
     /**

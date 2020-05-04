@@ -808,7 +808,7 @@ class MESSAGES
 				"noSort" => dgettext($domain, "When ordering resources by title, ignore the following list of case-insensitive words if they are the first word of the title. Comma-separated list"),
 				"searchFilter" => dgettext($domain, "When searching resources or metadata, ignore the following list of case-insensitive words if they are not part of an exact phrase. Comma-separated list"),
 /// hint_wordLogic Optional control words and formatting to use with search strings.  Don't change uppercase.
-				"wordLogic" => dgettext($domain, "You can use combinations of: AND, OR, NOT and 'exact phrase' as well as the wildcards '?' and '*'."),
+				"wordLogic" => dgettext($domain, "You can use combinations of: AND, OR, NOT and ''exact phrase'' as well as the wildcards '?' and '*'."),
 /// hint_deleteConfirmBib When deleting a user bibliography, assurance that doing so does not delete any resources
 				"deleteConfirmBib" => dgettext($domain, "(this does not delete resources)"),
 				"password1" => dgettext($domain, "Password must contain at least ### characters and be a mix of UPPER/lowercase. Spaces are not allowed."),

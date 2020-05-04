@@ -19,6 +19,8 @@ class PARSEPHRASE
     public $idea = FALSE;
     /** boolean */
     public $validSearch = TRUE;
+    /** boolean */
+    public $quickSearch = FALSE;
     /** array */
     public $ors = [];
     /** array */
@@ -195,7 +197,14 @@ class PARSEPHRASE
                         $frag = str_replace('?', '', $frag);
                         $frag = str_replace('*', '', $frag);
                         if ($partial) {
-                            $frag .= '*';
+                        	if(strpos($frag, '-') !== FALSE) // '-' needs quoting.
+                        	{
+                        		$frag = '"' . $frag . '"';
+                        	}
+                        	else
+                        	{
+	                            $frag .= '*';
+	                        }
                         }
                     }
                     if (strpos(strrev($frag), '"') === 0) {
@@ -422,7 +431,7 @@ class PARSEPHRASE
                     if (!$multipleORs && !empty($this->ors)) {
                         $this->ands[] = array_pop($this->ors);
                     }
-                    $this->nots[] = str_replace(' NOT ', ' ', $condition);
+                	$this->nots[] = str_replace(' NOT ', ' ', $condition);
                 } elseif (strpos($condition, ' AND ') !== FALSE) {
                     $this->ands[] = str_replace(' AND ', ' ', $condition);
                 } elseif ($count) { // AND
@@ -439,7 +448,6 @@ class PARSEPHRASE
             }
             ++$count;
         }
-
         return implode(' ', $stringArray);
     }
     /**

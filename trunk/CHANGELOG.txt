@@ -38,6 +38,7 @@ BUG FIXES:
 32. Fix some housekeeping statistics generated at the start of each month.
 33. Some fixes to user notifications regarding resources added/edited.
 34. Ensure specific emails (news and resource notifications) are properly decoded for UTF-8.
+35. Fix quicksearch bug (https://sourceforge.net/p/wikindx/v5bugs/226/).
 
 MAINTENANCE:
 1. Remove the upgrade code before version 5.1.

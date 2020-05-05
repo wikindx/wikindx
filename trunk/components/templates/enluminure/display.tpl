@@ -27,6 +27,7 @@
 	
 	{* Change this path and file name *}
 	<link rel="stylesheet" href="{$tplPath}/template.css" type="text/css">
+	<link rel="stylesheet" href="components/templates/override.css" type="text/css">
 	<link rel="shortcut icon" type="image/x-icon" href="{$tplPath}/images/favicon.ico">
 
 	{if $displayRss == true}

@@ -63,6 +63,9 @@ MAINTENANCE:
 
 FEATURE ENHANCEMENTS:
 1. When the admin edits a user, a checkbox allows for the bypassing of the password integrity check, removing the need to enter the password again.
+2. Added the option to override CSS styles. This is linked to in components/template/xxxx/display.tpl and allows the overriding of any CSS in the templates' own .css files. Custom template designers should add:
+<link rel="stylesheet" href="components/templates/override.css" type="text/css">
+in display.tpl following the template.css link and create a components/templates/override.css.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

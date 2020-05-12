@@ -117,7 +117,7 @@ class IDEAS
             $this->db->formatConditions(['resourcekeywordMetadataId' => ' IS NOT NULL']);
             $this->db->formatConditions(['resourcemetadataType' => 'i']);
             $queryString = "index.php?action=ideas_IDEAS_CORE" .
-                htmlentities("&method=" . 'keywordIdeaList') . "&resourcekeywordKeywordId=" . $this->vars['resourcekeywordKeywordId'];
+                "&method=" . 'keywordIdeaList' . "&resourcekeywordKeywordId=" . $this->vars['resourcekeywordKeywordId'];
         } else {
             $queryString = "index.php?action=ideas_IDEAS_CORE" . "&method=" . 'ideaList';
         }
@@ -285,8 +285,8 @@ class IDEAS
             $idea['keyword'] = $this->textqp->displayKeywordForm('idea', 'resourcemetadataMetadataId');
             $icons = FACTORY_LOADICONS::getInstance();
             $add = $icons->getHTML("add");
-            $idea['add'] = \HTML\a($icons->getClass("add"), $add, "index.php?action=ideas_IDEAS_CORE" . htmlentities("&method=" . 'subIdeaForm') .
-                htmlentities("&resourcemetadataId=" . $this->vars['resourcemetadataMetadataId']));
+            $idea['add'] = \HTML\a($icons->getClass("add"), $add, "index.php?action=ideas_IDEAS_CORE" . "&method=" . 'subIdeaForm' .
+                "&resourcemetadataId=" . $this->vars['resourcemetadataMetadataId']);
         } else {
             $idea['keyword'] = $this->textqp->displayKeywordForm('idea', 'resourcemetadataId');
         }
@@ -338,8 +338,8 @@ class IDEAS
             $private = $row['resourcemetadataPrivate'];
             $icons = FACTORY_LOADICONS::getInstance();
             $add = $icons->getHTML("add");
-            $idea['add'] = \HTML\a($icons->getClass("add"), $add, "index.php?action=ideas_IDEAS_CORE" . htmlentities("&method=" . 'subIdeaForm') .
-                htmlentities("&resourcemetadataId=" . $this->vars['resourcemetadataId']));
+            $idea['add'] = \HTML\a($icons->getClass("add"), $add, "index.php?action=ideas_IDEAS_CORE" . "&method=" . 'subIdeaForm' .
+                "&resourcemetadataId=" . $this->vars['resourcemetadataId']);
         } else {
             $private = 'Y';
         }
@@ -674,7 +674,7 @@ class IDEAS
             $icons = FACTORY_LOADICONS::getInstance();
             $view = $icons->getHTML("viewmeta");
             $this->ideas[$index]['links'][] = \HTML\a($icons->getClass("viewmeta"), $view, "index.php?action=ideas_IDEAS_CORE" .
-                htmlentities("&method=threadView&resourcemetadataId=" . $metadataId));
+                "&method=threadView&resourcemetadataId=" . $metadataId);
             $this->db->formatConditions(['resourcemetadataId' => $metadataId]);
         } else {
             $this->db->formatConditions(['resourcemetadataMetadataId' => $metadataId]);

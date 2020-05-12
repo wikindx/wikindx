@@ -19,6 +19,9 @@ Adminer website: https://www.adminer.org/
 
 CHANGELOG:
 
+v1.7, 2020
+1. Update adminer to 4.7.7 (https://github.com/vrana/adminer/releases/tag/v4.7.7).
+
 v1.6, 2020
 1. Wikindx compatibility version 7.
 

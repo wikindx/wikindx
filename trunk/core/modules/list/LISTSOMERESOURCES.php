@@ -376,15 +376,26 @@ class LISTSOMERESOURCES
         if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        // check for ideas with this keyword
-        $this->db->leftJoin('resource_keyword', 'resourcekeywordMetadataId', 'resourcemetadataId');
-        $this->db->formatConditions(['resourcekeywordKeywordId' => $this->vars["id"]]);
-        $this->db->formatConditions(['resourcekeywordMetadataId' => ' IS NOT NULL']);
-        $this->db->formatConditions(['resourcemetadataType' => 'i']);
-        if ($this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId')) && $this->session->getVar("setup_UserId")) {
-            $this->common->ideasFound = TRUE;
+        $typeArray = ['all', 'quotes', 'paraphrases', 'musings', 'ideas', 'notIdeas'];
+        if (!array_key_exists("type", $this->vars) || !$this->vars["type"] || (array_search($this->vars['type'], $typeArray) === FALSE)) {
+            $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        $queryString = "action=list_LISTSOMERESOURCES_CORE&method=metaKeywordProcess&id=" . $this->vars["id"];
+        else {
+        	$type = $this->vars['type'];
+        }
+        if (($type == 'all') || ($type == 'ideas'))
+        {
+			// check for ideas with this keyword
+			$this->setPrivateConditions();
+			$this->db->leftJoin('resource_keyword', 'resourcekeywordMetadataId', 'resourcemetadataId');
+			$this->db->formatConditions(['resourcekeywordKeywordId' => $this->vars["id"]]);
+			$this->db->formatConditions(['resourcekeywordMetadataId' => ' IS NOT NULL']);
+			$this->db->formatConditions(['resourcemetadataType' => 'i']);
+			if ($this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId')) && $this->session->getVar("setup_UserId")) {
+				$this->common->ideasFound = TRUE;
+			}
+		}
+        $queryString = "action=list_LISTSOMERESOURCES_CORE&method=metaKeywordProcess&type=" . $type . "&id=" . $this->vars["id"];
         $this->stmt->metadataPaging = TRUE;
         $this->common->metadataKeyword = $this->vars["id"];
         if ($this->lastMulti($queryString)) {
@@ -398,6 +409,21 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = $this->db->formatFields('resourceId') . ' IS NOT NULL';
             $this->stmt->joins['resource'] = ['resourceId', 'resourcemetadataResourceId'];
             $this->stmt->joins['resource_keyword'] = ['resourcekeywordMetadataId', 'resourcemetadataId'];
+            if (($type == 'all') || ($type == 'musings') || ($type == 'notIdeas')) {
+	        	$this->setPrivateConditions();
+				if ($type == 'musings') {
+					$this->db->formatConditions(['resourcemetadataType' => 'm']);
+				}
+				else {
+	            	$this->db->formatConditions(['resourcemetadataType' => 'i'], TRUE);
+            	}
+            }
+            else if ($type == 'quotes') {
+            	$this->db->formatConditions(['resourcemetadataType' => 'q']);
+            }
+            else if ($type == 'paraphrases') {
+            	$this->db->formatConditions(['resourcemetadataType' => 'p']);
+            }
             $subStmt = $this->setSubQuery('resource_metadata');
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt, 'resource_metadata');
             $sql = $this->stmt->listList($this->session->getVar("list_Order"), 'resource_metadata');
@@ -410,6 +436,31 @@ class LISTSOMERESOURCES
         $this->session->setVar("sql_LastMulti", $queryString);
         $this->common->display($sql, 'list');
     }
+    /**
+    * Set private conditions for ideas and musings
+    */
+    private function setPrivateConditions()
+    {
+		if ($this->session->getVar("setup_ReadOnly")) {
+			$this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
+		} elseif ($userId = $this->session->getVar("setup_UserId")) {
+			$this->db->formatConditions(['usergroupsusersUserId' => $userId]);
+			$this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .
+				$this->db->formatFields('resourcemetadataPrivate'));
+			$subSql = $this->db->selectNoExecute('user_groups_users', 'usergroupsusersId', FALSE, TRUE, TRUE);
+			$subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->notEqual . $this->db->tidyInput('N')
+				. $this->db->and .
+				$this->db->formatFields('resourcemetadataPrivate') . $this->db->notEqual . $this->db->tidyInput('Y');
+			$case1 = $this->db->caseWhen($subject, FALSE, $subSql, FALSE, FALSE);
+			$subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->equal . $this->db->tidyInput('Y');
+			$result = $this->db->formatFields('resourcemetadataAddUserId') . $this->db->equal . $this->db->tidyInput($userId);
+			$case2 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
+			$subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->equal . $this->db->tidyInput('N');
+			$result = $this->db->tidyInput(1);
+			$case3 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
+			$this->db->formatConditions($case1 . $this->db->or . $case2 . $this->db->or . $case3);
+		}
+	}
     /**
      * yearProcess - display resources in this publication year
      */

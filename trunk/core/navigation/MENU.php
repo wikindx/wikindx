@@ -576,11 +576,21 @@ class MENU
             ],
             $messages->text("menu", "addIdea") => 'index.php?action=ideas_IDEAS_CORE&method=ideaEdit',
             $messages->text("menu", "listIdeas") => 'index.php?action=ideas_IDEAS_CORE&method=ideaList',
-            $messages->text("menu", "browseKeyword") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1',
+            'browseKeywordSub' => [
+                $messages->text("menu", "browseKeywordSub") => FALSE,
+                $messages->text("menu", "browseKeywordAll") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=all',
+                $messages->text("menu", "browseKeywordQuotes") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=quotes',
+                $messages->text("menu", "browseKeywordParaphrases") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=paraphrases',
+                $messages->text("menu", "browseKeywordMusings") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=musings',
+                $messages->text("menu", "browseKeywordIdeas") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=ideas',
+                $messages->text("menu", "browseKeywordNotIdeas") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=notIdeas',
+            ],
         ];
         if (!$this->ideasExist) {
             unset($this->text[$messages->text("menu", "listIdeas")]);
             unset($this->text['randomSub'][$messages->text("menu", "randomIdeas")]);
+            unset($this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordIdeas")]);
+            unset($this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordNotIdeas")]);
         }
         // readOnly user
         if (!$this->write) {

@@ -15,6 +15,9 @@ Thus, plugins/debugtools/index.php etc.
 
 CHANGELOG:
 
+v1.4, 2020
+1. Fix an error printing arrays.
+
 v1.3, 2020
 1. Wikindx compatibility version 7.
 

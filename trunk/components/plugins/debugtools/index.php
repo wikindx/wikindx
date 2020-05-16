@@ -609,15 +609,13 @@ class debugtools_MODULE
                     break;
                 }
             }
-            
             // Try to decode and keep the result only if it's a real array
             if (is_string($tmpValue)) {
                 $tmp = $this->dumpEncodedData2Text($tmpValue);
                 if (mb_substr($tmp, 0, strlen("Array")) == "Array") {
                     $tmpValue = "<pre>" . $tmp . "</pre>";
                 }
-            }
-            
+            }           
             if (in_array($tmpName, ["configMailSmtpPassword", "configCmsDbPassword"])) {
                 $tmpValue = str_repeat("*", strlen($tmpValue)) . ' ' . $this->pluginmessages->text("security");
             }
@@ -768,14 +766,14 @@ class debugtools_MODULE
                 }
             }
         }
-        
+       
         // If the input string become an array or an object make it human-readable
         if (is_object($tmp)) {
             $tmp = print_r($tmp, TRUE);
         } elseif (is_array($tmp)) {
             // When it's an array, try to decode recursively its values like we did for the input array
             foreach ($tmp as $k => $v) {
-                if (is_string($v) || is_array($v)) {
+                if (is_array($v)) {
                     $tmp1 = $this->dumpEncodedData2Text($v);
                     $tmp[$k] = $tmp1;
                 } elseif (is_object($tmp)) {

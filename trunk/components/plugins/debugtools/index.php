@@ -91,7 +91,7 @@ class debugtools_MODULE
         ];
         
         foreach ($SQLkeyWords as $keyWord) {
-            if (strpos($Text, $keyWord) !== FALSE) {
+            if (stripos($Text, $keyWord) !== FALSE) {
                 return TRUE;
             }
         }
@@ -146,13 +146,11 @@ class debugtools_MODULE
         $pString .= HTML\tbodyStart();
         
         foreach ($tmpSession as $k => $v) {
-            $vd = FALSE;
-            
-            if (is_array($v) || is_object($v)) {
+            if (is_array($v) || is_object($v))
+            {
                 $v = print_r($v, TRUE);
-            } elseif (is_string($v)) {
-                $vd = $this->dumpEncodedData2Text($v);
             }
+            $vd = $this->dumpEncodedData2Text($v);
             
             $deleteLink = HTML\a(
                 "link",
@@ -160,7 +158,7 @@ class debugtools_MODULE
                 "index.php?action=debugtools_deleteSessionVariable" . htmlentities("&variable=" . $k)
             );
             
-            if (isset($v) && $vd && $v == $vd) {
+            if ($v == $vd) {
                 $pString .= HTML\trStart("alternate" . (1 + $i % 2));
                 $pString .= HTML\td($deleteLink, "middle padding5px");
                 $pString .= HTML\td($k, "middle padding5px");
@@ -172,7 +170,7 @@ class debugtools_MODULE
                 }
                 $pString .= HTML\trEnd();
             } else {
-                if (isset($v)) {
+                // Display raw data
                     $pString .= HTML\trStart("alternate" . (1 + $i % 2));
                     $pString .= HTML\td($deleteLink, "middle padding5px");
                     $pString .= HTML\td($k, "middle padding5px");
@@ -180,11 +178,11 @@ class debugtools_MODULE
                     if ($this->isSQLStatement($v)) {
                         $pString .= HTML\td(FORM\textareaInput("", "", $v, 100, 10), "middle padding5px");
                     } else {
-                        $pString .= HTML\td("<pre>" . $v . "</pre>", "middle padding5px");
+                        $pString .= HTML\td("<pre>" . print_r($v, TRUE) . "</pre>", "middle padding5px");
                     }
                     $pString .= HTML\trEnd();
-                }
-                if ($vd) {
+
+                // Display format data
                     $pString .= HTML\trStart("alternate" . (1 + $i % 2));
                     $pString .= HTML\td("&nbsp;", "middle padding5px");
                     $pString .= HTML\td("&nbsp;", "middle padding5px");
@@ -195,7 +193,6 @@ class debugtools_MODULE
                         $pString .= HTML\td("<pre>" . $vd . "</pre>", "middle padding5px");
                     }
                     $pString .= HTML\trEnd();
-                }
             }
             
             $i++;
@@ -297,17 +294,7 @@ class debugtools_MODULE
             $pString .= HTML\tbodyStart();
             
             foreach ($constants as $key => $value) {
-                if ($category == "user") {
-                    $tmp = $value;
-                        
-                    // We know that when a Wikindx constant is base64 encoded these is because a constant can't embeded a raw array
-                    if (is_string($value) || is_array($value)) {
-                        $tmp = $this->dumpEncodedData2Text($value);
-                        if (mb_substr($tmp, 0, strlen("Array")) == "Array") {
-                            $value = "<pre>" . $tmp . "</pre>";
-                        }
-                    }
-                }
+                $value = "<pre>" . $this->dumpEncodedData2Text($value) . "</pre>";
                     
                 $pString .= HTML\trStart("alternate" . (1 + $i % 2));
                 $pString .= HTML\td($key, "middle padding5px");
@@ -536,14 +523,8 @@ class debugtools_MODULE
         
         foreach ($envConfig as $k => $v) {
             $pString .= HTML\trStart("alternate" . (1 + $i % 2));
-            $pString .= HTML\td($k, "middle padding5px");
-                
-            if (is_array($v)) {
-                $pString .= HTML\td("<pre>" . $this->dumpEncodedData2Text($v) . "</pre>", "middle padding5px");
-            } else {
-                $pString .= HTML\td($v, "middle padding5px");
-            }
-                
+            $pString .= HTML\td($k, "middle padding5px");    
+            $pString .= HTML\td("<pre>" . $this->dumpEncodedData2Text($v) . "</pre>", "middle padding5px");
             $pString .= HTML\trEnd();
             
             $i++;
@@ -609,16 +590,12 @@ class debugtools_MODULE
                     break;
                 }
             }
-            // Try to decode and keep the result only if it's a real array
-            if (is_string($tmpValue)) {
-                $tmp = $this->dumpEncodedData2Text($tmpValue);
-                if (mb_substr($tmp, 0, strlen("Array")) == "Array") {
-                    $tmpValue = "<pre>" . $tmp . "</pre>";
-                }
-            }           
+
+            $tmpValue = $this->dumpEncodedData2Text($tmpValue);
             if (in_array($tmpName, ["configMailSmtpPassword", "configCmsDbPassword"])) {
                 $tmpValue = str_repeat("*", strlen($tmpValue)) . ' ' . $this->pluginmessages->text("security");
             }
+            $tmpValue = "<pre>" . $tmpValue . "</pre>";
             
             $pString .= HTML\td($tmpId, "middle padding5px");
             $pString .= HTML\td($tmpName, "middle padding5px");
@@ -672,17 +649,13 @@ class debugtools_MODULE
         
         while ($row = $db->fetchRow($resultSet)) {
             foreach ($row as $k => $v) {
-                // Try to decode and keep the result only if it's a real array
-                if (is_string($v)) {
-                    $tmp = $this->dumpEncodedData2Text($v);
-                    if (mb_substr($tmp, 0, strlen("Array")) == "Array") {
-                        $v = "<pre>" . $tmp . "</pre>";
-                    }
-                }
+                $v = $this->dumpEncodedData2Text($v);
                 
                 if ($k == "usersPassword") {
                     $v = str_repeat("*", strlen($v)) . ' ' . $this->pluginmessages->text("security");
                 }
+
+                $v = "<pre>" . $v . "</pre>";
                 
                 $pString .= HTML\trStart("alternate" . (1 + $i % 2));
                 $pString .= HTML\td($k, "middle padding5px");
@@ -723,7 +696,7 @@ class debugtools_MODULE
         $this->menus[$menuArray[0]]['debugtoolspluginSub'][$this->pluginmessages->text('menuSession')] = "displaySession";
     }
     /**
-     * Try to decode an object or an array serialized and encoded in base64
+     * Decode an object or an array serialized and encoded in base64, and other data type
      *
      * Return a human-readable string representing $encodedData. If the decoding fails $encodedData is returned.
      *
@@ -733,57 +706,66 @@ class debugtools_MODULE
      */
     private function dumpEncodedData2Text($encodedData)
     {
+        $array_base64_pattern  = "/^YTo[A-Za-z0-9+\/=]+/u";
+        $object_base64_pattern = "/^Tzo[A-Za-z0-9+\/=]+/u";
+        $array_serialized_pattern  = '/^a:\d+:{.+/u';
+        $object_serialized_pattern = '/^O:\d+:".+/u';
+
         $tmp = $encodedData;
-        
-        // Try to unserialize the input string
-        $tmp1 = @unserialize($tmp);
-        if ($tmp1 !== FALSE) {
-            if (is_string($tmp1) && mb_check_encoding($tmp1, 'UTF-8')) {
-                $tmp = $tmp1;
-            } elseif (!is_string($tmp1)) {
-                $tmp = $tmp1;
-            }
-        }
-        
-        // Try to decode the input string
-        if (is_string($tmp)) {
-            $tmp1 = @base64_decode($tmp);
-            if ($tmp1 !== FALSE) {
-                if (mb_check_encoding($tmp1, 'UTF-8')) {
-                    $tmp = $tmp1;
+
+        switch (gettype($tmp))
+        {
+            case "boolean":
+                return $tmp ? "TRUE" : "FALSE";
+            break;
+            case "integer":
+                return print_r($tmp, TRUE);
+            break;
+            case "double":
+                return print_r($tmp, TRUE);
+            break;
+            case "string":
+                if (preg_match($array_base64_pattern, $tmp) > 0 || preg_match($object_base64_pattern, $tmp) > 0)
+                {
+                    $tmp1 = @base64_decode($tmp);
+                    if ($tmp1 !== FALSE) {
+                        $tmp = $tmp1;
+                    }
                 }
-            }
-        }
-        
-        // Try to unserialize the input string a second time in case the serialized string was embeded in a base64 encoded string
-        if (is_string($tmp)) {
-            $tmp1 = @unserialize($tmp);
-            if ($tmp1 !== FALSE) {
-                if (is_string($tmp1) && mb_check_encoding($tmp1, 'UTF-8')) {
-                    $tmp = $tmp1;
-                } elseif (!is_string($tmp1)) {
-                    $tmp = $tmp1;
+                if (preg_match($array_serialized_pattern, $tmp) > 0 || preg_match($object_serialized_pattern, $tmp) > 0)
+                {
+                    $tmp1 = @unserialize($tmp);
+                    if ($tmp1 !== FALSE) {
+                        $tmp = $this->dumpEncodedData2Text($tmp1);
+                    }
                 }
-            }
-        }
-       
-        // If the input string become an array or an object make it human-readable
-        if (is_object($tmp)) {
-            $tmp = print_r($tmp, TRUE);
-        } elseif (is_array($tmp)) {
-            // When it's an array, try to decode recursively its values like we did for the input array
-            foreach ($tmp as $k => $v) {
-                if (is_array($v)) {
-                    $tmp1 = $this->dumpEncodedData2Text($v);
-                    $tmp[$k] = $tmp1;
-                } elseif (is_object($tmp)) {
-                    $tmp[$k] = print_r($v, TRUE);
+                return $tmp;
+            break;
+            case "array":
+                // When it's an array, try to decode recursively its values
+                foreach ($tmp as $k => $v) {
+                    $tmp[$k] = $this->dumpEncodedData2Text($v);
                 }
-            }
-            
-            $tmp = print_r($tmp, TRUE);
+                return print_r($tmp, TRUE);
+            break;
+            case "object":
+                return print_r($tmp, TRUE);
+            break;
+            case "resource":
+                return print_r($tmp, TRUE) . " resource";
+            break;
+            case "resource(closed)":
+                return print_r($tmp, TRUE) . " resource(closed)";
+            break;
+            case "NULL":
+                return "NULL";
+            break;
+            case "unknown type":
+                return $tmp;
+                break;
+            default:
+                return $tmp;
+            break;
         }
-        
-        return $tmp;
     }
 }

@@ -661,7 +661,7 @@ class RESOURCEWRITE
             }
         }
         $this->writeBibtexKey();
-        // timestamp, statistics and summary tables
+        // timestamp and summary tables
         $writeArray = [];
         if ($this->edit) {
             $this->db->formatConditions(['resourcetimestampId' => $this->resourceId]);
@@ -676,7 +676,6 @@ class RESOURCEWRITE
             $writeArray['resourcetimestampTimestamp'] = $this->db->formatTimestamp();
             $writeArray['resourcetimestampTimestampAdd'] = $this->db->formatTimestamp();
             $this->db->insert('resource_timestamp', array_keys($writeArray), array_values($writeArray));
-            $this->db->insert('statistics', ['statisticsResourceId'], [$this->resourceId]);
         }
         // If there is a new collection
         if ($newCollection && ($this->collectionMap->collectionTypes[$this->resourceType] != 'thesis')) {

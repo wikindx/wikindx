@@ -635,7 +635,6 @@ class importamazon_MODULE
         $fields[] = 'resourcetimestampTimestampAdd';
         $values[] = $this->db->formatTimestamp();
         $this->db->insert('resource_timestamp', $fields, $values);
-        $this->db->insert('statistics', ['statisticsResourceId'], [$this->resourceAutoId]);
     }
     /**
      * trimString

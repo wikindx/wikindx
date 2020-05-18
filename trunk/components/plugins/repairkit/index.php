@@ -378,7 +378,6 @@ class repairkit_MODULE
         $this->db->formatConditions($stmt);
         $resultset = $this->db->select('resource', 'resourceId');
         while ($row = $this->db->fetchRow($resultset)) {
-            $this->db->insert('statistics', 'statisticsResourceId', $row['resourceId']);
             if (array_search($row['resourceId'], $resIds) === FALSE) {
                 ++$resources;
                 $resIds[] = $row['resourceId'];

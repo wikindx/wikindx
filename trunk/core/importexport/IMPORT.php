@@ -480,7 +480,6 @@ class IMPORT
                 'resourcetimestampTimestampAdd', ],
             [$this->resourceId, $this->db->formatTimestamp(), $this->db->formatTimestamp()]
         );
-        $this->db->insert('statistics', ['statisticsResourceId'], [$this->resourceId]);
     }
     /**
      * Wite resource_page table

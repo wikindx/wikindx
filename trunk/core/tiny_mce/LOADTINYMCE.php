@@ -479,7 +479,7 @@ tinyMCE.init({
         paste_text_sticky: true,
 
         // Theme options
-        theme_advanced_buttons1 : "pastetext,|,bold,italic,underline,removeformat,code,|,sub,sup,|,wikindxSpecialChars,",
+        theme_advanced_buttons1 : "paste,|,bold,italic,underline,removeformat,code,|,sub,sup,|,wikindxSpecialChars,",
         theme_advanced_buttons2 : "",
         theme_advanced_buttons3 : "",
         theme_advanced_buttons4 : "",

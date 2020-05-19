@@ -475,9 +475,11 @@ tinyMCE.init({
         remove_linebreaks : true,
         forced_root_block:  false,
         plugins : "paste,wikindxSpecialChars",
+        paste_text_sticky_default: true,
+        paste_text_sticky: true,
 
         // Theme options
-        theme_advanced_buttons1 : "paste,pastetext,pasteword,|,bold,italic,underline,removeformat,code,|,sub,sup,|,wikindxSpecialChars,",
+        theme_advanced_buttons1 : "pastetext,|,bold,italic,underline,removeformat,code,|,sub,sup,|,wikindxSpecialChars,",
         theme_advanced_buttons2 : "",
         theme_advanced_buttons3 : "",
         theme_advanced_buttons4 : "",
@@ -562,8 +564,6 @@ function tinyMceEventHandler(e){
     }
     return true;
 }
-// Strips all html tags from a given string, leaving only plain text
-function stripHtmlTags(strContent) { return strContent.replace(/(<([^>]+)>)/ig, ""); }
 
 function tinyMceCheckContentLength(strEditorId, intMaxLength) {
     var editorInstance   = tinyMCE.get(strEditorId);

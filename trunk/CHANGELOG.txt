@@ -69,6 +69,7 @@ FEATURE ENHANCEMENTS:
 <link rel="stylesheet" href="components/templates/override.css" type="text/css">
 in display.tpl following the template.css link and create a components/templates/override.css in which the global CSS is placed.
 3. In the Metadata menu, keyword browsing can now be fine-tuned according to metadata type.
+4. When adding/editing a resource, ensure the title and subtitle textareas are locked to plain text. This stops the insertion of HTML code and images etc.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

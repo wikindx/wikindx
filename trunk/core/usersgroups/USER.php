@@ -231,7 +231,7 @@ class USER
      */
     public function checkPassword($usersUsername, $pwdInput)
     {
-        if (WIKINDX_LDAP_USE !== FALSE) {
+        if (WIKINDX_LDAP_USE !== FALSE && in_array("ldap", get_loaded_extensions())) {
             return $this->ldapCheckPassword($usersUsername, $pwdInput);
         } else {
             return $this->wikindxCheckPassword($usersUsername, $pwdInput);

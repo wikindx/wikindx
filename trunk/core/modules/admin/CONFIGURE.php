@@ -1154,7 +1154,7 @@ class CONFIGURE
             $pString .= \HTML\p(\FORM\passwordInput($this->messages->text("config", "ldapTestPassword"), "configLdapTestPassword", $input, 30, 255) .
                 BR . \HTML\span($hint, 'hint'));
         } else {
-            $pString .= "Put here a message about the LDAP extension that is disabled.";
+            $pString .= \HTML\p($this->messages->text("hint", "ldapExtDisabled"), 'redText');
         }
 
         return $pString;

@@ -943,6 +943,9 @@ class USER
      */
     private function ldapCheckPassword($usersUsername, $pwdInput)
     {
+        if (!in_array("ldap", get_loaded_extensions())) {
+            return FALSE;
+        }
         if (($ds = ldap_connect(WIKINDX_LDAP_SERVER, WIKINDX_LDAP_PORT)) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapConnect"));
 

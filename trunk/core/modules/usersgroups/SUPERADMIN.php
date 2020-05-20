@@ -1438,6 +1438,9 @@ class SUPERADMIN
      */
     private function testLdap()
     {
+        if (!in_array("ldap", get_loaded_extensions())) {
+            return FALSE;
+        }
         if (($ds = @ldap_connect(WIKINDX_LDAP_SERVER, WIKINDX_LDAP_PORT)) === FALSE) {
             if (ldap_errno($ds)) {
                 $error = \HTML\p(ldap_err2str(ldap_errno($ds)));

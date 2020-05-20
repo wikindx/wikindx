@@ -70,6 +70,7 @@ FEATURE ENHANCEMENTS:
 in display.tpl following the template.css link and create a components/templates/override.css in which the global CSS is placed.
 3. In the Metadata menu, keyword browsing can now be fine-tuned according to metadata type.
 4. When adding/editing a resource, ensure the title and subtitle textareas are locked to plain text. This stops the insertion of HTML code and images etc.
+5. Add a guard to disable the LDAP auth when the PHP LDAP extension is not enabled.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
@@ -185,7 +186,7 @@ BUGS:
 33. Prevent a 404 HTTP error about favicon.ico when a template is not used.
 
 FEATURE ENHANCEMENTS:
-1. Implement FULLTEXT searches on some database fields. In QUICKSEARCH and ADVANCED SEARCH, certain fields (abstract, notes, long custom, 
+1. Implement FULLTEXT searches on some database fields. In QUICKSEARCH and ADVANCED SEARCH, certain fields (abstract, notes, long custom,
 and metadata such as quotes, comments etc.) are searched on with MySQL's BOOLEAN FULLTEXT methods. This gives a significant speed gain.
 2. Always display a trace and die when a SQL query fails otherwise a debug is very hard when the debug mode is not on or during an upgrade/installation.
 3. Add an option to enable/disable the SiteMap.
@@ -259,7 +260,7 @@ v6.0.4
 Focus: Minor bug fixes.
 
 BUGS:
-1. If QUICKSEARCH is called by the special string $QUICKSEARCH$ on the front page, the help icon is already in use – don't 
+1. If QUICKSEARCH is called by the special string $QUICKSEARCH$ on the front page, the help icon is already in use – don't
 override it with search help.
 2. Fix the character case of all style options in db.
 3. Fix the style options to lowercase to avoid empty formatting of resources when a session has a bad character style after a migration from a pre-5.9.1 version or a non-installed style.
@@ -296,7 +297,7 @@ BUGS:
 1. Fix the return value of displayUserAddEditPlain().
 2. Add some missing messages.
 3. Fix missing variable configIsCreator in Configure.
-4. When listing resources containing resources with multiple creators, the number of resources returned as per the paging value was 
+4. When listing resources containing resources with multiple creators, the number of resources returned as per the paging value was
 incorrect. An erroneous GROUP BY statement has been corrected.
 5. Ensure read only users have access to some configuration options (Wikindx|Preferences menu).
 6. Correct a syntax error preventing code execution under PHP 5.6 and 7.0.
@@ -318,7 +319,7 @@ v6.0.1
 Focus: Minor bug fixes and maintenance.
 
 BUGS:
-1. Fix bug #202 (https://sourceforge.net/p/wikindx/v5bugs/202/) – unable to read temporary config.php when editing 
+1. Fix bug #202 (https://sourceforge.net/p/wikindx/v5bugs/202/) – unable to read temporary config.php when editing
 plugin configurations – and ensure the temporary file has a secure name (and do this for all temporary files throughout WIKINDX).
 2. Fix JS includes of the word processor.
 

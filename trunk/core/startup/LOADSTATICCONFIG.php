@@ -19,10 +19,14 @@ loadStaticConfig();
 
 /**
  * Load configuration from config.php
+ * 
+ * @return array Array of error messages
  */
 function loadStaticConfig()
 {
-    $config = new CONFIG();
+    $errors = [];
+
+    $config = new \CONFIG();
     
     $dieMsgMissing = 'Missing configuration variable in config.php: ';
     
@@ -205,16 +209,21 @@ function loadStaticConfig()
     }
     
     // Redefine all PHP config as constant for making them pervasive for the whole application
-    define("WIKINDX_DB_HOST", $config->WIKINDX_DB_HOST);
-    define("WIKINDX_DB", $config->WIKINDX_DB);
-    define("WIKINDX_DB_USER", $config->WIKINDX_DB_USER);
-    define("WIKINDX_DB_PASSWORD", $config->WIKINDX_DB_PASSWORD);
-    define("WIKINDX_DB_TABLEPREFIX", $config->WIKINDX_DB_TABLEPREFIX);
-    define("WIKINDX_DB_PERSISTENT", $config->WIKINDX_DB_PERSISTENT);
-    define("WIKINDX_PATH_AUTO_DETECTION", $config->WIKINDX_PATH_AUTO_DETECTION);
-    define("WIKINDX_BASE_URL", $config->WIKINDX_BASE_URL);
-    define("WIKINDX_WIKINDX_PATH", $config->WIKINDX_WIKINDX_PATH);
-    define("WIKINDX_MEMORY_LIMIT", $config->WIKINDX_MEMORY_LIMIT);
-    define("WIKINDX_MAX_EXECUTION_TIMEOUT", $config->WIKINDX_MAX_EXECUTION_TIMEOUT);
-    define("WIKINDX_MAX_WRITECHUNK", $config->WIKINDX_MAX_WRITECHUNK);
+    foreach ([
+        "WIKINDX_DB_HOST",
+        "WIKINDX_DB",
+        "WIKINDX_DB_USER",
+        "WIKINDX_DB_PASSWORD",
+        "WIKINDX_DB_TABLEPREFIX",
+        "WIKINDX_DB_PERSISTENT",
+        "WIKINDX_PATH_AUTO_DETECTION",
+        "WIKINDX_BASE_URL",
+        "WIKINDX_WIKINDX_PATH",
+        "WIKINDX_MEMORY_LIMIT",
+        "WIKINDX_MAX_EXECUTION_TIMEOUT",
+        "WIKINDX_MAX_WRITECHUNK",
+    ] as $unused => $option)
+    {
+        if (!defined($option) && property_exists($config, $option)) define($option, $config->{$option});
+    }
 }

@@ -81,15 +81,40 @@ class SQL
 
     /**
      * SQL
+     *
+     * @param bool $autoConnect Allow or prevent this class to open a connection during instantiation (TRUE by default) 
      */
-    public function __construct()
+    public function __construct($autoConnect = TRUE)
     {
         $this->errors = FACTORY_ERRORS::getInstance();
-
-        $this->open();
+        
+        if ($autoConnect) {
+            $this->open();
+        }
 
         $this->conditionSeparator = $this->multiConditionSeparator = $this->and;
         $this->ascDesc = $this->asc;
+    }
+    /**
+     * Test connection to a MySQL/MaraDB server
+     *
+     * @param string $dbhost Hostname/IP of the server and it's port (optional, eg. hostname:3306)
+     * @param string $dbname Name of the database
+     * @param string $dbuser Login
+     * @param string $dbpwd Password
+     * @param bool $dbpers Open a persistent connection if TRUE
+     * @return array Array of one entry where the key is a boolean and the value an error message.
+     */
+    function testConnection($dbhost, $dbname, $dbuser, $dbpwd, $dbpers)
+    {
+        $dbhost = $dbpers === TRUE ? 'p:' . $dbhost : $dbhost;
+        $h = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname);
+        if (mysqli_connect_errno() == 0) {
+            mysqli_close($h);
+            return [TRUE, ""];
+        } else {
+            return [FALSE, mysqli_connect_error()];
+        }
     }
     /**
      * Get database engine version as number

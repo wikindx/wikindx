@@ -75,6 +75,8 @@ if (!array_key_exists("setup-in-progress", $_SESSION))
 
     // Test if an install or an upgrade is needed
     if (\SETUP\needInstall()) {
+        $_SESSION["setup-title"] = WIKINDX_TITLE_DEFAULT . " Install";
+
         $_SESSION["setup-steps"][] = "step_install_start";
         $_SESSION["setup-steps"][] = "step_php_min_version";
         $_SESSION["setup-steps"][] = "step_php_max_version";
@@ -87,6 +89,8 @@ if (!array_key_exists("setup-in-progress", $_SESSION))
         $_SESSION["setup-steps"][] = "step_create_superadmin";
         $_SESSION["setup-steps"][] = "step_install_end";
     } elseif(\SETUP\needUpgrade()) {
+        $_SESSION["setup-title"] = WIKINDX_TITLE_DEFAULT . " Upgrade";
+
         $_SESSION["setup-steps"][] = "step_upgrade_start";
         $_SESSION["setup-steps"][] = "step_login_superadmin";
         if (!\SETUP\isConfigUptodate()) {
@@ -98,7 +102,9 @@ if (!array_key_exists("setup-in-progress", $_SESSION))
         }
         $_SESSION["setup-steps"][] = "step_upgrade_end";
     } else {
-        die("ERROR");
+        $_SESSION["setup-title"] = WIKINDX_TITLE_DEFAULT . " Error";
+
+        $_SESSION["setup-steps"][] = "step_unknown_error";
     }
     
     // Do database upgrade check
@@ -110,16 +116,11 @@ if (!array_key_exists("setup-in-progress", $_SESSION))
         unset($update);
     }*/
     
-    if (count($_SESSION["setup-steps"]) == 0) {
-        $_SESSION["setup-steps"][] = "step_install_end";
-    }
-    
     // Key of the first step
-    $_SESSION["setup-current_step"] = 0;
+    $_SESSION["setup-current-step"] = 0;
     
     $_SESSION["setup-in-progress"] = TRUE;
-    $_SESSION["setup-title"] = WIKINDX_TITLE_DEFAULT . " Setup";
-    $_SESSION["setup-nav"] = "Step " . ($_SESSION["setup-current_step"] + 1) . "/" . count($_SESSION["setup-steps"]);
+    $_SESSION["setup-nav"] = "Step " . ($_SESSION["setup-current-step"] + 1) . "/" . count($_SESSION["setup-steps"]);
 }
 
 
@@ -132,9 +133,9 @@ $screen = "";
 
 if (
     array_key_exists("setup-steps", $_SESSION) &&
-    array_key_exists("setup-current_step", $_SESSION)
+    array_key_exists("setup-current-step", $_SESSION)
 ) {
-    $step_function = $_SESSION["setup-steps"][$_SESSION["setup-current_step"]];
+    $step_function = $_SESSION["setup-steps"][$_SESSION["setup-current-step"]];
     $screen = call_user_func("\SETUP\\STEPS\\" . $step_function);
 }
 
@@ -163,3 +164,10 @@ echo "</pre>\n";
 
 include_once(__DIR__ . "/footer.php");
 
+if ($_SESSION["setup-current-step"] == count($_SESSION["setup-steps"]) - 1) {
+    unset($_SESSION["setup-in-progress"]);
+    unset($_SESSION["setup-steps"]);
+    unset($_SESSION["setup-current-step"]);
+    unset($_SESSION["setup-title"]); 
+    unset($_SESSION["setup-nav"]); 
+}

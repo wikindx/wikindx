@@ -140,7 +140,7 @@ namespace SETUP
             // Check if an option is missing
             foreach ($optionsDefinition as $option => $def)
             {
-                echo $option . "\n";
+                //echo $option . "\n";
                 if (!property_exists($config, $option))
                 {
                     return FALSE;
@@ -194,26 +194,33 @@ namespace SETUP
     function needInstall()
     {
         if (!\SETUP\isPhpVersionMinCompatible()) {
+            echo "I1";
             return TRUE;
         }
         if (!\SETUP\isPhpVersionMaxCompatible()) {
+            echo "I2";
             return TRUE;
         }
         if (!\SETUP\areMandatoryPhpExtensionsAvailable()) {
+            echo "I3";
             return TRUE;
         }
         if (!\SETUP\isConfigSet()) {
+            echo "I4";
             return TRUE;
         }
         if (!\SETUP\isConfigValid()) {
+            echo "I5";
             return TRUE;
         }
         if (!\SETUP\isDBConnectionCorrectlyConfigured()) {
+            echo "I6";
             return TRUE;
         }
         
         $dbo = new \SQL();
         if (!\SETUP\isDBEngineVersionMinCompatible($dbo)) {
+            echo "I7";
             return TRUE;
         }
 
@@ -222,10 +229,12 @@ namespace SETUP
         
         // Check if 'database_summary' table doesn't exist
         if (!existsTableDatabaseVersion($dbo)) {
+            echo "I8";
             return TRUE;
         }
         // Check if 'users' table has not been filled with the superadmin account
         if (!existsSuperadminAccount($dbo)) {
+            echo "I9";
             return TRUE;
         }
         return FALSE;
@@ -236,14 +245,19 @@ namespace SETUP
      *
      * @return bool
      */
-    function needUpdate()
+    function needUpgrade()
     {
         if (!\SETUP\isConfigUptodate()) {
+            echo "U1";
             return TRUE;
         }
         // Check if the database version number is not the same as source code version number
         $dbo = new \SQL();
-        return !\SETUP\isDatabaseVersionUptodate($dbo);
+        if (!\SETUP\isDatabaseVersionUptodate($dbo)) {
+            echo "U2";
+            return TRUE;
+        }
+        return FALSE;
     }
     
     /**

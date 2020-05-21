@@ -123,9 +123,9 @@ class SQL
         $h = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname);
         if (mysqli_connect_errno() == 0) {
             mysqli_close($h);
-            return [TRUE, ""];
+            return [TRUE => ""];
         } else {
-            return [FALSE, mysqli_connect_error()];
+            return [FALSE => mysqli_connect_error()];
         }
     }
     /**

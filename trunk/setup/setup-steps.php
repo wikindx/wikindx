@@ -15,6 +15,23 @@
  */
 namespace SETUP\STEPS
 {
+    function step_unknown_error()
+    {
+        $output = "";
+        
+        $output .= "<h2>Unknown Error</h2>";
+        $output .= __FUNCTION__;
+
+        $output .= "
+            <p>An unknown error has occurred. It appears that the current installation is already installed and up to date.</p>
+            <p>If you have directly consulted this page you can return to the main page with this <a href='..'>link</a>.</p>
+            <p>If you were automatically redirected to this page, there could be a detection error or an incorrect configuration.</p>
+            <p>To avoid being blocked in a loop you will not be automatically redirected to the home page.</p>
+        ";
+        
+        return $output;
+    }
+
     function step_install_start()
     {
         $output = "";

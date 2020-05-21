@@ -22,3 +22,4 @@
 <body>
 <h1><?php echo htmlspecialchars($_SESSION["setup-title"], ENT_HTML5) ?></h1>
 <nav><?php echo htmlspecialchars($_SESSION["setup-nav"], ENT_HTML5) ?></nav>
+

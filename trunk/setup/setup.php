@@ -15,6 +15,21 @@
  */
 namespace SETUP
 {
+    $optionsDefinition = [
+        "WIKINDX_BASE_URL" => [],
+        "WIKINDX_DB" => [],
+        "WIKINDX_DB_HOST" => [],
+        "WIKINDX_DB_PASSWORD" => [],
+        "WIKINDX_DB_PERSISTENT" => [],
+        "WIKINDX_DB_TABLEPREFIX" => [],
+        "WIKINDX_DB_USER" => [],
+        "WIKINDX_MAX_EXECUTION_TIMEOUT" => [],
+        "WIKINDX_MAX_WRITECHUNK" => [],
+        "WIKINDX_MEMORY_LIMIT" => [],
+        "WIKINDX_PATH_AUTO_DETECTION" => [],
+        "WIKINDX_WIKINDX_PATH" => [],
+    ];
+
     /**
      * Check if the minimum PHP version is compatible
      */
@@ -46,9 +61,19 @@ namespace SETUP
     /**
      * Check if the minimum MariaDB/MySQL engine version is compatible
      */
-    function isDBEngineVersionMinCompatible()
+    function isDBEngineVersionMinCompatible($dbo)
     {
-        return TRUE;
+        $EngineVersionRaw = $dbo->getStringEngineVersion();
+        $EngineVersion = strtolower($EngineVersionRaw);
+
+        if (strstr($EngineVersion, "mariadb")) {
+            $VersionMin = WIKINDX_MARIADB_VERSION_MIN; // Check MariaDB version
+        } else {
+            $VersionMin = WIKINDX_MYSQL_VERSION_MIN; // Check MySql or unknow engine version
+        }
+     
+        // If the current engine version is lower than the minimum needed
+        return (strcmp($EngineVersion, $VersionMin) >= 0);
     }
     
     /**
@@ -87,6 +112,7 @@ namespace SETUP
             // Check if an option is missing
             foreach ($optionsDefinition as $option => $def)
             {
+                echo $option . "\n";
                 if (!property_exists($config, $option))
                 {
                     return FALSE;
@@ -107,6 +133,72 @@ namespace SETUP
         
         return TRUE;
     }
+    function isDBConnectionCorrectlyConfigured()
+    {
+        $configfile = __DIR__ . "/../config.php";
+        include_once($configfile);
+        $config = new \CONFIG();
+
+        $dbpers = $config->WIKINDX_DB_PERSISTENT;
+        $dbhost = $config->WIKINDX_DB_HOST;  
+        $dbname = $config->WIKINDX_DB;
+        $dbuser = $config->WIKINDX_DB_USER;
+        $dbpwd = $config->WIKINDX_DB_PASSWORD;
+
+        $dbhost = $dbpers === TRUE ? 'p:' . $dbhost : $dbhost;
+        $h = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname);
+
+        if (mysqli_connect_errno())
+        {
+            return FALSE;
+        } else {
+            mysqli_close($h);
+            return TRUE;
+        }
+    }
+    /**
+     * Check if the current Wikindx data (db and files) need an upgrade
+     *
+     * @param object $dbo An SQL object
+     *
+     * @return bool
+     */
+    function needInstall()
+    {
+        if (!\SETUP\isPhpVersionMinCompatible()) {
+            return TRUE;
+        }
+        if (!\SETUP\isPhpVersionMaxCompatible()) {
+            return TRUE;
+        }
+        if (!\SETUP\areMandatoryPhpExtensionsAvailable()) {
+            return TRUE;
+        }
+        if (!\SETUP\isConfigSet()) {
+            return TRUE;
+        }
+        if (!\SETUP\isDBConnectionCorrectlyConfigured()) {
+            return TRUE;
+        }
+
+        $dbo = \FACTORY_DB::getInstance();
+        if (!\SETUP\isDBEngineVersionMinCompatible($dbo)) {
+            return TRUE;
+        }
+
+        // NB: existsTableDatabaseVersion must be the first operation because
+        // it reads the db system catalog and can't fail if the db exists
+        
+        // Check if 'database_summary' table doesn't exist
+        if (!existsTableDatabaseVersion($dbo)) {
+            return TRUE;
+        }
+        // Check if 'users' table has not been filled with the superadmin account
+        if (!existsSuperadminAccount($dbo)) {
+            return TRUE;
+        }
+        return FALSE;
+    }
     /**
      * Check if the current Wikindx data (db and files) need an upgrade
      *
@@ -116,23 +208,8 @@ namespace SETUP
      */
     function needUpdate($dbo)
     {
-        // NB: existsTableDatabaseVersion must be the first operation because
-        // it reads the db system catalog and can't fail if the db exists
-        
-        // Check if 'database_summary' table doesn't exist
-        if (!existsTableDatabaseVersion($dbo)) {
-            return TRUE;
-        }
         // Check if the database version number is not the same as source code version number
-        elseif (getDatabaseVersion($dbo) != WIKINDX_INTERNAL_VERSION) {
-            return TRUE;
-        }
-        // Check if 'users' table has not been filled with the superadmin account
-        elseif (!existsSuperadminAccount($dbo)) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
+        return (getDatabaseVersion($dbo) != WIKINDX_INTERNAL_VERSION);
     }
     
     /**
@@ -261,3 +338,4 @@ namespace SETUP
         return FALSE;
     }
 }
+

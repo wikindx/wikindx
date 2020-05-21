@@ -167,3 +167,4 @@ unset($session);
  *	prints the HTTP header, body, menus, footer, flushes the print buffer, closes the database and exits the script.
  */
 FACTORY_CLOSE::getInstance();
+

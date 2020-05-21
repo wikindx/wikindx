@@ -24,6 +24,8 @@
 include_once(__DIR__ . "/../core/startup/CONSTANTS.php");
 include_once(__DIR__ . "/../core/startup/CONSTANTS_CONFIG_DEFAULT.php");
 include_once(__DIR__ . "/../core/utils/UTILS.php");
+include_once(__DIR__ . "/../core/startup/GLOBALS.php");
+include_once(__DIR__ . "/../core/startup/FACTORY.php");
 include_once(__DIR__ . "/setup.php");
 include_once(__DIR__ . "/setup-steps.php");
 
@@ -60,21 +62,6 @@ if (PHP_SAPI === 'cli') {
 /// SETUP/UPGARDE CONFIGURATION
 ///////////////////////////////////////////////////////////////////////////////
 
-$optionsDefinition = [
-    "WIKINDX_BASE_URL" => [],
-    "WIKINDX_DB" => [],
-    "WIKINDX_DB_HOST" => [],
-    "WIKINDX_DB_PASSWORD" => [],
-    "WIKINDX_DB_PERSISTENT" => [],
-    "WIKINDX_DB_TABLEPREFIX" => [],
-    "WIKINDX_DB_USER" => [],
-    "WIKINDX_MAX_EXECUTION_TIMEOUT" => [],
-    "WIKINDX_MAX_WRITECHUNK" => [],
-    "WIKINDX_MEMORY_LIMIT" => [],
-    "WIKINDX_PATH_AUTO_DETECTION" => [],
-    "WIKINDX_WIKINDX_PATH" => [],
-];
-
 unset($_SESSION["setup-in-progress"]);
 
 // If the session variable setup-in-progress is not set,
@@ -82,16 +69,35 @@ unset($_SESSION["setup-in-progress"]);
 if (!array_key_exists("setup-in-progress", $_SESSION))
 {
     $_SESSION["setup-steps"] = [];
+
+    if (\SETUP\needInstall()) {
+        $_SESSION["setup-steps"][] = "step_install_start";
+        if (!\SETUP\isPhpVersionMinCompatible()) {
+            $_SESSION["setup-steps"][] = "step_php_min_version";
+            $missingPrerequisites = TRUE;
+        }
+        if (!\SETUP\isPhpVersionMaxCompatible()) {
+            $_SESSION["setup-steps"][] = "step_php_max_version";
+            $missingPrerequisites = TRUE;
+        }
+        if (!\SETUP\areMandatoryPhpExtensionsAvailable()) {
+            $_SESSION["setup-steps"][] = "step_php_mandatory_extensions";
+        }
+        if (!\SETUP\isConfigSet()) {
+            $_SESSION["setup-steps"][] = "step_install_config";
+            $_SESSION["setup-steps"][] = "step_db_min_version";
+        } else {
+
+        }
+        $_SESSION["setup-steps"][] = "step_create_database";
+        $_SESSION["setup-steps"][] = "step_create_superadmin";
+        $_SESSION["setup-steps"][] = "step_install_end";
+    } else {
+        $_SESSION["setup-steps"][] = "step_upgrade_start";
+        $_SESSION["setup-steps"][] = "step_login_superadmin";
+        $_SESSION["setup-steps"][] = "step_upgrade_end";
+    }
     
-    if (!\SETUP\isPhpVersionMinCompatible()) {
-        $_SESSION["setup-steps"][] = "step_php_min_version";
-    }
-    if (!\SETUP\isPhpVersionMaxCompatible()) {
-        $_SESSION["setup-steps"][] = "step_php_max_version";
-    }
-    if (!\SETUP\areMandatoryPhpExtensionsAvailable()) {
-        $_SESSION["setup-steps"][] = "step_php_mandatory_extensions";
-    }
     if (!\SETUP\isConfigSet()) {
         $_SESSION["setup-steps"][] = "step_install_config";
         $_SESSION["setup-steps"][] = "step_db_min_version";
@@ -103,15 +109,15 @@ if (!array_key_exists("setup-in-progress", $_SESSION))
             $_SESSION["setup-steps"][] = "step_db_min_version";
         }
     }
-    
-    $_SESSION["setup-steps"][] = "step_install_start";
-    $_SESSION["setup-steps"][] = "step_create_database";
-    $_SESSION["setup-steps"][] = "step_create_superadmin";
-    $_SESSION["setup-steps"][] = "step_install_end";
-    
-    $_SESSION["setup-steps"][] = "step_upgrade_start";
-    $_SESSION["setup-steps"][] = "step_login_superadmin";
-    $_SESSION["setup-steps"][] = "step_upgrade_end";
+
+    if ($missingPrerequisites) {
+        array_unshift($_SESSION["setup-steps"], "step_requirements_start");
+        array_push($_SESSION["setup-steps"], "step_requirements_end");
+    } else {
+        $_SESSION["setup-steps"][] = "step_upgrade_start";
+        $_SESSION["setup-steps"][] = "step_login_superadmin";
+        $_SESSION["setup-steps"][] = "step_upgrade_end";
+    }
     
     // Do database upgrade check
     /*if (\SETUP\needUpdate(FACTORY_DB::getInstance())) {
@@ -138,7 +144,7 @@ if (!array_key_exists("setup-in-progress", $_SESSION))
 /// SETUP/UPGARDE EXECUTION
 ///////////////////////////////////////////////////////////////////////////////
 
-// Execution the current step
+// Execute the current step
 // and display it's output
 $screen = "";
 
@@ -174,3 +180,4 @@ echo print_r($_SESSION, TRUE);
 echo "</pre>\n";
 
 include_once(__DIR__ . "/footer.php");
+

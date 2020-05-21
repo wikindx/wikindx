@@ -38,6 +38,29 @@ namespace SETUP\STEPS
         $output = "";
         
         $output .= __FUNCTION__;
+
+        if (\SETUP\isDBEngineVersionMinCompatible($dbo)) {
+            $output .= "<p>Your database engine is compatible with WIKINDX.</p>";
+        } else {
+            $EngineVersionRaw = $dbo->getStringEngineVersion();
+            $EngineVersion = strtolower($EngineVersionRaw);
+
+            if (strstr($EngineVersion, "mariadb")) {
+                $EngineName = "MariaDB";
+                $VersionMin = WIKINDX_MARIADB_VERSION_MIN; // Check MariaDB version
+            } else {
+                $EngineName = "MySQL";
+                $VersionMin = WIKINDX_MYSQL_VERSION_MIN; // Check MySql or unknow engine version
+            }
+            
+            $output .= "
+                <p>Your database engine is not compatible with WIKINDX.
+                WIKINDX requires {$EngineName} {$VersionMin}.
+                Your version is {$EngineVersionRaw}.
+                Please upgrade your db engine and continue.
+                </p>
+            ";
+        }
         
         return $output;
     }
@@ -123,3 +146,4 @@ namespace SETUP\STEPS
         return $output;
     }
 }
+

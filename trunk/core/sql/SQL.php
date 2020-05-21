@@ -21,6 +21,22 @@ class SQL
     public $error = ""; // Error message returned by db drivers or Wikindx
     /** integer */
     public $errno = 0; // Error code returned by db drivers
+
+    private function getErrorMsg($key)
+    {
+        $catalog = [
+            "open" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "Unable to open ### database."),
+            "write" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "Unable to write to database."),
+            "read" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "Unable to read database."),
+            "config" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "Missing Configuration Parameter in config.php."),
+            "fileOpen" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "Unable to open update/createMySQL.txt."),
+            "updateMySQL" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "Unable to update database with update/updateMySQL.txt."),
+            "dbSpecified" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "No RDBMS type selected in config.php."),
+            "subQuery" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "Missing subQuery statement."),
+        ];
+        return array_key_exists($key, $catalog) ? $catalog[$key] : "";
+    }
+
     /** string */
     public $conditionSeparator;
     /** string */
@@ -71,8 +87,6 @@ class SQL
     /** array */
     private $joinUpdate = [];
     /** object */
-    private $errors;
-    /** object */
     private $handle = NULL;
     /** mixed */
     private $startTimer;
@@ -86,8 +100,6 @@ class SQL
      */
     public function __construct($autoConnect = TRUE)
     {
-        $this->errors = FACTORY_ERRORS::getInstance();
-        
         if ($autoConnect) {
             $this->open();
         }
@@ -649,7 +661,7 @@ class SQL
     public function subQuery($stmt, $alias = FALSE, bool $from = TRUE, bool $clause = FALSE)
     {
         if (!$stmt) {
-            $this->error = $this->errors->text("dbError", "subQuery");
+            $this->error = $this->getErrorMsg("subQuery");
         }
         if ($clause) {
             $stmt .= $this->subClause();
@@ -776,7 +788,7 @@ class SQL
                 $field = $fields;
             }
         }
-        $this->error = $this->errors->text("dbError", "read");
+        $this->error = $this->getErrorMsg("read");
 
         if ($clause) {
             $clause = $this->subClause();
@@ -815,7 +827,7 @@ class SQL
         if ($otherFields) {
             $otherFields = ', ' . $this->formatFields($otherFields);
         }
-        $this->error = $this->errors->text("dbError", "read");
+        $this->error = $this->getErrorMsg("read");
 
         return $this->queryFetchFirstRow('SELECT MAX(' . $this->formatFields($maxField) . ") AS $alias $otherFields $table $subQuery");
     }
@@ -830,7 +842,7 @@ class SQL
     public function selectMin($table, $minField)
     {
         $table = $this->formatTables($table);
-        $this->error = $this->errors->text("dbError", "read");
+        $this->error = $this->getErrorMsg("read");
 
         return $this->query('SELECT MIN(' . $this->formatFields($minField) . ") AS $minField FROM $table");
     }
@@ -846,7 +858,7 @@ class SQL
     {
         $table = $this->formatTables($table);
         $field = $this->formatFields($field);
-        $this->error = $this->errors->text("dbError", "read");
+        $this->error = $this->getErrorMsg("read");
 
         return $this->queryFetchFirstField("SELECT FROM_UNIXTIME(AVG(UNIX_TIMESTAMP($field))) AS $field FROM $table");
     }
@@ -865,7 +877,7 @@ class SQL
         $table = $this->formatTables($table);
         $this->groupBy($field);
         $field = $this->formatFields($field);
-        $this->error = $this->errors->text("dbError", "read");
+        $this->error = $this->getErrorMsg("read");
 
         return $this->query("SELECT COUNT(*) AS count, $field FROM $table");
     }
@@ -887,7 +899,7 @@ class SQL
         $field = $this->formatFields($field);
         $this->ascDesc = $this->desc;
         $this->orderBy('count', FALSE, FALSE);
-        $this->error = $this->errors->text("dbError", "read");
+        $this->error = $this->getErrorMsg("read");
 
         return $this->query("SELECT COUNT(*) AS count, $field FROM $table");
     }
@@ -938,7 +950,7 @@ class SQL
             $this->group .= $otherFields;
         }
         $field = $this->formatFields($field);
-        $this->error = $this->errors->text("dbError", "read");
+        $this->error = $this->getErrorMsg("read");
         if ($clause) {
             $clause = $this->subClause();
 
@@ -986,7 +998,7 @@ class SQL
             $subQuery = 'FROM ' . $subQuery;
         }
         $field = $this->formatFields($field);
-        $this->error = $this->errors->text("dbError", "read");
+        $this->error = $this->getErrorMsg("read");
         if ($clause) {
             $clause = $this->subClause();
 
@@ -1020,7 +1032,7 @@ class SQL
     public function selectCountFromSubqueryNoExecute($field, $subQuery, $clause = FALSE)
     {
         $field = $this->formatFields($field);
-        $this->error = $this->errors->text("dbError", "read");
+        $this->error = $this->getErrorMsg("read");
         if ($clause) {
             $clause = $this->subClause();
 
@@ -1063,7 +1075,7 @@ class SQL
             $field = $this->formatFields($fields, TRUE);
         }
         $table = $this->formatTables($tables);
-        $this->error = $this->errors->text("dbError", "read");
+        $this->error = $this->getErrorMsg("read");
         $distinct = $distinct ? 'DISTINCT' : '';
 
         return "SELECT $distinct $field FROM $table";
@@ -1113,7 +1125,7 @@ class SQL
         if ($tables) {
             $table = ', ' . $this->formatTables($tables);
         }
-        $this->error = $this->errors->text("dbError", "read");
+        $this->error = $this->getErrorMsg("read");
         if ($clause) {
             $clause = $this->subClause();
 
@@ -1139,7 +1151,7 @@ class SQL
      */
     public function insert($table, $fields, $values)
     {
-        $this->error = $this->errors->text("dbError", "write");
+        $this->error = $this->getErrorMsg("write");
         $field = $this->formatFields($fields);
         $table = $this->formatTables($table);
         if (is_array($values)) {
@@ -1170,7 +1182,7 @@ class SQL
     {
         $field = $this->formatFields($fields);
         $table = $this->formatTables($table);
-        $this->error = $this->errors->text("dbError", "write");
+        $this->error = $this->getErrorMsg("write");
         $this->queryNoResult("INSERT INTO $table ($field) VALUES $values");
     }
     /**
@@ -1186,7 +1198,7 @@ class SQL
     {
         $set = $this->formatUpdate($updateArray);
         $table = $this->formatTables($table);
-        $this->error = $this->errors->text("dbError", "write");
+        $this->error = $this->getErrorMsg("write");
         $join = FALSE;
         if (!empty($this->join)) {
             $join = implode(' ', $this->join);
@@ -1220,7 +1232,7 @@ class SQL
         $set = "SET " . implode(", ", $fieldArray);
 
         $table = $this->formatTables($table);
-        $this->error = $this->errors->text("dbError", "write");
+        $this->error = $this->getErrorMsg("write");
         $this->queryNoResult("UPDATE $table $set");
     }
     /**
@@ -1232,7 +1244,7 @@ class SQL
     public function updateSingle($table, $set)
     {
         $table = $this->formatTables($table);
-        $this->error = $this->errors->text("dbError", "write");
+        $this->error = $this->getErrorMsg("write");
         $this->queryNoResult("UPDATE $table SET $set");
     }
     /**
@@ -1246,7 +1258,7 @@ class SQL
     public function updateNull($table, $nulls)
     {
         $table = $this->formatTables($table);
-        $this->error = $this->errors->text("dbError", "write");
+        $this->error = $this->getErrorMsg("write");
         $join = FALSE;
 
         if (is_array($nulls)) {
@@ -1321,7 +1333,7 @@ class SQL
     public function delete($table)
     {
         $table = $this->formatTables($table);
-        $this->error = $this->errors->text("dbError", "write");
+        $this->error = $this->getErrorMsg("write");
         $this->queryNoResult("DELETE FROM $table");
     }
     /**
@@ -2718,7 +2730,7 @@ class SQL
         $this->getConnectionError();
 
         if ($this->errno) {
-            $this->sqlDie($this->errors->text("dbError", "open"));
+            $this->sqlDie($this->getErrorMsg("open"));
         }
 
         $this->sqlTimerOff();

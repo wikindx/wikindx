@@ -26,6 +26,7 @@ include_once(__DIR__ . "/../core/startup/CONSTANTS_CONFIG_DEFAULT.php");
 include_once(__DIR__ . "/../core/utils/UTILS.php");
 include_once(__DIR__ . "/../core/startup/GLOBALS.php");
 include_once(__DIR__ . "/../core/startup/FACTORY.php");
+include_once(__DIR__ . "/../core/sql/SQL.php");
 include_once(__DIR__ . "/setup.php");
 include_once(__DIR__ . "/setup-steps.php");
 

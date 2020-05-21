@@ -181,7 +181,7 @@ namespace SETUP
             return TRUE;
         }
 
-        $dbo = \FACTORY_DB::getInstance();
+        $dbo = new \SQL();
         if (!\SETUP\isDBEngineVersionMinCompatible($dbo)) {
             return TRUE;
         }

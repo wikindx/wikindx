@@ -2712,17 +2712,20 @@ class SQL
     /**
      * Open SQL database
      *
-     * @return bool
+     * @param string $dbhost Hostname/IP of the server and it's port (optional, eg. hostname:3306)
+     * @param string $dbname Name of the database
+     * @param string $dbuser Login
+     * @param string $dbpwd Password
+     * @param bool $dbpers Open a persistent connection if TRUE
      */
-    private function open()
-    {
+    public function open(
+        $dbhost = WIKINDX_DB_HOST,
+        $dbname = WIKINDX_DB,
+        $dbuser = WIKINDX_DB_USER,
+        $dbpwd = WIKINDX_DB_PASSWORD,
+        $dbpers = WIKINDX_DB_PERSISTENT
+    ) {
         $this->sqlTimerOn();
-
-        $dbpers = WIKINDX_DB_PERSISTENT;
-        $dbhost = WIKINDX_DB_HOST;
-        $dbname = WIKINDX_DB;
-        $dbuser = WIKINDX_DB_USER;
-        $dbpwd = WIKINDX_DB_PASSWORD;
 
         $dbhost = $dbpers === TRUE ? 'p:' . $dbhost : $dbhost;
         $this->handle = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname);
@@ -2734,8 +2737,6 @@ class SQL
         }
 
         $this->sqlTimerOff();
-        
-        $this->CheckEngineVersion();
         
         // Set for UTF8 client, results, connection
         $this->queryNoResult("SET NAMES utf8mb4 COLLATE 'utf8mb4_unicode_520_ci';");

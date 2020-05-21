@@ -32,6 +32,8 @@ namespace SETUP
 
     /**
      * Check if the minimum PHP version is compatible
+     *
+     * @return bool
      */
     function isPhpVersionMinCompatible()
     {
@@ -40,6 +42,8 @@ namespace SETUP
     
     /**
      * Check if the maximum PHP version is compatible
+     *
+     * @return bool
      */
     function isPhpVersionMaxCompatible()
     {
@@ -48,6 +52,8 @@ namespace SETUP
     
     /**
      * Check if all mandatory PHP extensions are available
+     *
+     * @return bool
      */
     function areMandatoryPhpExtensionsAvailable()
     {
@@ -60,6 +66,8 @@ namespace SETUP
     
     /**
      * Check if the minimum MariaDB/MySQL engine version is compatible
+     *
+     * @return bool
      */
     function isDBEngineVersionMinCompatible($dbo)
     {
@@ -79,6 +87,7 @@ namespace SETUP
     /**
      * Check if the Config class is available
      *
+     * @return bool
      */
     function isConfigSet()
     {
@@ -93,12 +102,31 @@ namespace SETUP
             return FALSE;
         }
     }
+
+    /**
+     * Check if the Configuration class is up to date (has all it's members)
+     *
+     * This function checks the existence of all members of the class and not their validity.
+     *
+     * @return bool
+     */
+    function isConfigValid()
+    {
+        if (isConfigSet())
+        {
+            include_once(__DIR__ . "/../core/startup/LOADSTATICCONFIG.php");
+            return (count(\loadStaticConfig()) == 0);
+        }
+        
+        return FALSE;
+    }
     
     /**
      * Check if the Configuration class is up to date (has all it's members)
      *
      * This function checks the existence of all members of the class and not their validity.
      *
+     * @return bool
      */
     function isConfigUptodate()
     {
@@ -133,6 +161,12 @@ namespace SETUP
         
         return TRUE;
     }
+
+    /**
+     * Check if a database connection can be established
+     *
+     * @return bool
+     */
     function isDBConnectionCorrectlyConfigured()
     {
         $configfile = __DIR__ . "/../config.php";
@@ -143,23 +177,17 @@ namespace SETUP
         $dbhost = $config->WIKINDX_DB_HOST;  
         $dbname = $config->WIKINDX_DB;
         $dbuser = $config->WIKINDX_DB_USER;
-        $dbpwd = $config->WIKINDX_DB_PASSWORD;
+        $dbpwd  = $config->WIKINDX_DB_PASSWORD;
 
-        $dbhost = $dbpers === TRUE ? 'p:' . $dbhost : $dbhost;
-        $h = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname);
-
-        if (mysqli_connect_errno())
-        {
-            return FALSE;
-        } else {
-            mysqli_close($h);
-            return TRUE;
+        $dbo = new \SQL(FALSE);
+        $res = $dbo->testConnection($dbhost, $dbname, $dbuser, $dbpwd, $dbpers);
+        foreach($res as $key => $unused) {
+            return $key;
         }
     }
+
     /**
      * Check if the current Wikindx data (db and files) need an upgrade
-     *
-     * @param object $dbo An SQL object
      *
      * @return bool
      */
@@ -177,10 +205,13 @@ namespace SETUP
         if (!\SETUP\isConfigSet()) {
             return TRUE;
         }
+        if (!\SETUP\isConfigValid()) {
+            return TRUE;
+        }
         if (!\SETUP\isDBConnectionCorrectlyConfigured()) {
             return TRUE;
         }
-
+        
         $dbo = new \SQL();
         if (!\SETUP\isDBEngineVersionMinCompatible($dbo)) {
             return TRUE;
@@ -199,17 +230,20 @@ namespace SETUP
         }
         return FALSE;
     }
+
     /**
      * Check if the current Wikindx data (db and files) need an upgrade
      *
-     * @param object $dbo An SQL object
-     *
      * @return bool
      */
-    function needUpdate($dbo)
+    function needUpdate()
     {
+        if (!\SETUP\isConfigUptodate()) {
+            return TRUE;
+        }
         // Check if the database version number is not the same as source code version number
-        return (getDatabaseVersion($dbo) != WIKINDX_INTERNAL_VERSION);
+        $dbo = new \SQL();
+        return !\SETUP\isDatabaseVersionUptodate($dbo);
     }
     
     /**
@@ -226,6 +260,20 @@ namespace SETUP
         return $dbo->tableExists('database_summary');
     }
     
+    /**
+     * Check if 'database_summary' table that stores the version number of the db schema exists
+     *
+     * This function is used only during the upgrade process.
+     *
+     * @param object $dbo An SQL object
+     *
+     * @return bool
+     */
+    function isDatabaseVersionUptodate($dbo)
+    {
+        return (getDatabaseVersion($dbo) == WIKINDX_INTERNAL_VERSION);
+    }
+
     /**
      * Return the version number stored in the database, depending on the software version
      *

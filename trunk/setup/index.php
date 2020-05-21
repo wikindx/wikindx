@@ -27,6 +27,8 @@ include_once(__DIR__ . "/../core/utils/UTILS.php");
 include_once(__DIR__ . "/../core/startup/GLOBALS.php");
 include_once(__DIR__ . "/../core/startup/FACTORY.php");
 include_once(__DIR__ . "/../core/sql/SQL.php");
+include_once(__DIR__ . "/../core/urls/URL.php");
+include_once(__DIR__ . "/../core/utf8/UTF8.php");
 include_once(__DIR__ . "/setup.php");
 include_once(__DIR__ . "/setup-steps.php");
 
@@ -71,53 +73,32 @@ if (!array_key_exists("setup-in-progress", $_SESSION))
 {
     $_SESSION["setup-steps"] = [];
 
+    // Test if an install or an upgrade is needed
     if (\SETUP\needInstall()) {
         $_SESSION["setup-steps"][] = "step_install_start";
-        if (!\SETUP\isPhpVersionMinCompatible()) {
-            $_SESSION["setup-steps"][] = "step_php_min_version";
-            $missingPrerequisites = TRUE;
-        }
-        if (!\SETUP\isPhpVersionMaxCompatible()) {
-            $_SESSION["setup-steps"][] = "step_php_max_version";
-            $missingPrerequisites = TRUE;
-        }
-        if (!\SETUP\areMandatoryPhpExtensionsAvailable()) {
-            $_SESSION["setup-steps"][] = "step_php_mandatory_extensions";
-        }
-        if (!\SETUP\isConfigSet()) {
-            $_SESSION["setup-steps"][] = "step_install_config";
-            $_SESSION["setup-steps"][] = "step_db_min_version";
-        } else {
-
-        }
+        $_SESSION["setup-steps"][] = "step_php_min_version";
+        $_SESSION["setup-steps"][] = "step_php_max_version";
+        $_SESSION["setup-steps"][] = "step_php_mandatory_extensions";
+        $_SESSION["setup-steps"][] = "step_install_config";
+        $_SESSION["setup-steps"][] = "step_validate_config";
+        $_SESSION["setup-steps"][] = "step_validate_db_connection";
+        $_SESSION["setup-steps"][] = "step_db_min_version";
         $_SESSION["setup-steps"][] = "step_create_database";
         $_SESSION["setup-steps"][] = "step_create_superadmin";
         $_SESSION["setup-steps"][] = "step_install_end";
-    } else {
+    } elseif(\SETUP\needUpgrade()) {
         $_SESSION["setup-steps"][] = "step_upgrade_start";
         $_SESSION["setup-steps"][] = "step_login_superadmin";
-        $_SESSION["setup-steps"][] = "step_upgrade_end";
-    }
-    
-    if (!\SETUP\isConfigSet()) {
-        $_SESSION["setup-steps"][] = "step_install_config";
-        $_SESSION["setup-steps"][] = "step_db_min_version";
-    } else {
         if (!\SETUP\isConfigUptodate()) {
             $_SESSION["setup-steps"][] = "step_upgrade_config";
         }
-        if (!\SETUP\isDBEngineVersionMinCompatible()) {
-            $_SESSION["setup-steps"][] = "step_db_min_version";
+        $dbo = new \SQL();
+        if (!\SETUP\isDatabaseVersionUptodate($dbo)) {
+            //$_SESSION["setup-steps"][] = "step_upgrade_config";
         }
-    }
-
-    if ($missingPrerequisites) {
-        array_unshift($_SESSION["setup-steps"], "step_requirements_start");
-        array_push($_SESSION["setup-steps"], "step_requirements_end");
-    } else {
-        $_SESSION["setup-steps"][] = "step_upgrade_start";
-        $_SESSION["setup-steps"][] = "step_login_superadmin";
         $_SESSION["setup-steps"][] = "step_upgrade_end";
+    } else {
+        die("ERROR");
     }
     
     // Do database upgrade check

@@ -33,7 +33,8 @@ function loadStaticConfig()
     if (!property_exists($config, 'WIKINDX_PATH_AUTO_DETECTION')) {
         $config->WIKINDX_PATH_AUTO_DETECTION = WIKINDX_PATH_AUTO_DETECTION_DEFAULT;
     } elseif (!is_bool($config->WIKINDX_PATH_AUTO_DETECTION)) {
-        die('WIKINDX_PATH_AUTO_DETECTION must be a valid boolean value');
+        $errors[] = 'WIKINDX_PATH_AUTO_DETECTION must be a valid boolean value (switch to ' . WIKINDX_PATH_AUTO_DETECTION_DEFAULT . ' by default)';
+        $config->WIKINDX_PATH_AUTO_DETECTION = TRUE;
     }
     
     // Set the current working directory -- useful for ensuring TinyMCE plug-ins can find the wikindx base path for include() commands.
@@ -44,7 +45,8 @@ function loadStaticConfig()
         if (property_exists($config, 'WIKINDX_WIKINDX_PATH') && is_string($config->WIKINDX_WIKINDX_PATH)) {
             $config->WIKINDX_WIKINDX_PATH = realpath(trim($config->WIKINDX_WIKINDX_PATH));
         } else {
-            die('WIKINDX_WIKINDX_PATH must be a valid absolute path');
+            $errors[] = 'WIKINDX_WIKINDX_PATH must be a valid absolute path (switch to "" by default)';
+            $config->WIKINDX_WIKINDX_PATH = "";
         }
     }
     
@@ -55,16 +57,16 @@ function loadStaticConfig()
     // Test path is correct
     if (!is_file($config->WIKINDX_WIKINDX_PATH . '/core/startup/' . basename(__FILE__))) {
         if ($config->WIKINDX_PATH_AUTO_DETECTION) {
-            die("
+            $errors[] = "
                 WIKINDX is unable to set the installation path automatically.
-                You should set \$WIKINDX_PATH_AUTO_DETECTION to FALSE
-                and \$WIKINDX_WIKINDX_PATH in config.php.
-            ");
+                You should set {$WIKINDX_PATH_AUTO_DETECTION} to FALSE
+                and {$WIKINDX_WIKINDX_PATH} in config.php.
+            ";
         } else {
-            die("
-                The path \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly.
+            $errors[] = "
+                The path {$WIKINDX_WIKINDX_PATH} in config.php is set incorrectly.
                 You should set it to a right value.
-            ");
+            ";
         }
     }
 
@@ -85,7 +87,8 @@ function loadStaticConfig()
         }
     } else {
         if (!property_exists($config, 'WIKINDX_BASE_URL') || !is_string($config->WIKINDX_BASE_URL)) {
-            die('WIKINDX_BASE_URL must be a valid URL');
+            $errors[] = 'WIKINDX_BASE_URL must be a valid URL (switch to "" by default)';
+            $config->WIKINDX_BASE_URL = "";
         }
     }
     
@@ -106,37 +109,45 @@ function loadStaticConfig()
 
     // Set database hostname
     if (!property_exists($config, 'WIKINDX_DB_HOST')) {
-        die($dieMsgMissing . 'WIKINDX_DB_HOST');
+        $errors[] = $dieMsgMissing . 'WIKINDX_DB_HOST';
+        $config->WIKINDX_DB_HOST = "localhost";
     } elseif (!is_string($config->WIKINDX_DB_HOST)) {
-        die('WIKINDX_DB_HOST must be a string.');
+        $errors[] = 'WIKINDX_DB_HOST must be a string.';
+        $config->WIKINDX_DB_HOST = "localhost";
     }
 
     // Set database name
     if (!property_exists($config, 'WIKINDX_DB')) {
-        die($dieMsgMissing . 'WIKINDX_DB');
+        $errors[] = $dieMsgMissing . 'WIKINDX_DB';
+        $config->WIKINDX_DB = "";
     } elseif (!is_string($config->WIKINDX_DB)) {
-        die('WIKINDX_DB must be a string.');
+        $errors[] = 'WIKINDX_DB must be a string.';
+        $config->WIKINDX_DB = "";
     }
 
     // Set database user
     if (!property_exists($config, 'WIKINDX_DB_USER')) {
-        die($dieMsgMissing . 'WIKINDX_DB_USER');
+        $errors[] = $dieMsgMissing . 'WIKINDX_DB_USER';
+        $config->WIKINDX_DB_USER = "";
     } elseif (!is_string($config->WIKINDX_DB_USER)) {
-        die('WIKINDX_DB_USER must be a string.');
+        $errors[] = 'WIKINDX_DB_USER must be a string.';
+        $config->WIKINDX_DB_USER = "";
     }
 
     // Set database user password
     if (!property_exists($config, 'WIKINDX_DB_PASSWORD')) {
-        die($dieMsgMissing . 'WIKINDX_DB_PASSWORD');
+        $errors[] = $dieMsgMissing . 'WIKINDX_DB_PASSWORD';
+        $config->WIKINDX_DB_PASSWORD = "";
     } elseif (!is_string($config->WIKINDX_DB_PASSWORD)) {
-        die('WIKINDX_DB_PASSWORD must be a string.');
+        $errors[] = 'WIKINDX_DB_PASSWORD must be a string.';
+        $config->WIKINDX_DB_PASSWORD = "";
     }
 
     // Set database table prefix
     if (!property_exists($config, 'WIKINDX_DB_TABLEPREFIX')) {
-        die($dieMsgMissing . 'WIKINDX_DB_TABLEPREFIX');
+        $errors[] = $dieMsgMissing . 'WIKINDX_DB_TABLEPREFIX';
     } elseif (!is_string($config->WIKINDX_DB_TABLEPREFIX)) {
-        die('WIKINDX_DB_TABLEPREFIX must be a string.');
+        $errors[] = 'WIKINDX_DB_TABLEPREFIX must be a string.';
     }
     // Use always a lowercase prefix to prevent problem with case sensitive database
     $config->WIKINDX_DB_TABLEPREFIX = mb_strtolower($config->WIKINDX_DB_TABLEPREFIX);
@@ -145,7 +156,7 @@ function loadStaticConfig()
     if ($config->WIKINDX_DB_TABLEPREFIX != WIKINDX_DB_TABLEPREFIX_DEFAULT) {
         if (defined('WIKINDX_DEBUG_ERRORS') && WIKINDX_DEBUG_ERRORS) {
             trigger_error(
-                "\$WIKINDX_DB_TABLEPREFIX configuration option is deprecated since version 5.9.1
+                "{$WIKINDX_DB_TABLEPREFIX} configuration option is deprecated since version 5.9.1
     			and will be removed in the next release. People who have changed the prefix should
     			rename the tables with the default prefix (" . WIKINDX_DB_TABLEPREFIX_DEFAULT . ")
     			and correct their configuration. It will no longer be possible to install two WIKINDXs
@@ -157,9 +168,11 @@ function loadStaticConfig()
 
     // Set database persistent mode
     if (!property_exists($config, 'WIKINDX_DB_PERSISTENT')) {
-        die($dieMsgMissing . 'WIKINDX_DB_PERSISTENT');
+        $errors[] = $dieMsgMissing . 'WIKINDX_DB_PERSISTENT';
+        $config->WIKINDX_DB_PERSISTENT = FALSE;
     } elseif (!is_bool($config->WIKINDX_DB_PERSISTENT)) {
-        die('WIKINDX_DB_PERSISTENT must be a boolean (TRUE / FALSE).');
+        $errors[] = 'WIKINDX_DB_PERSISTENT must be a boolean (TRUE / FALSE).';
+        $config->WIKINDX_DB_PERSISTENT = FALSE;
     }
 
     // Attempt to set the memory the script uses -- does not work in safe mode
@@ -167,10 +180,12 @@ function loadStaticConfig()
         $config->WIKINDX_MEMORY_LIMIT = WIKINDX_MEMORY_LIMIT_DEFAULT;
     } elseif (is_string($config->WIKINDX_MEMORY_LIMIT)) {
         if (preg_match('/^\d+[KMG]?$/u', $config->WIKINDX_MEMORY_LIMIT) === FALSE) {
-            die('Syntax Error in WIKINDX_MEMORY_LIMIT. See https://secure.php.net/manual/fr/faq.using.php#faq.using.shorthandbytes');
+            $errors[] = 'Syntax Error in WIKINDX_MEMORY_LIMIT. See https://secure.php.net/manual/fr/faq.using.php#faq.using.shorthandbytes';
+            $config->WIKINDX_MEMORY_LIMIT = WIKINDX_MEMORY_LIMIT_DEFAULT;
         } elseif (is_int($config->WIKINDX_MEMORY_LIMIT)) {
             if ($config->WIKINDX_MEMORY_LIMIT < -1) {
-                die('WIKINDX_MEMORY_LIMIT must be a positive integer.');
+                $errors[] = 'WIKINDX_MEMORY_LIMIT must be a positive integer.';
+                $config->WIKINDX_MEMORY_LIMIT = WIKINDX_MEMORY_LIMIT_DEFAULT;
             }
         }
     }
@@ -181,13 +196,16 @@ function loadStaticConfig()
         $config->WIKINDX_MAX_EXECUTION_TIMEOUT = WIKINDX_MAX_EXECUTION_TIMEOUT_DEFAULT;
     } elseif (is_string($config->WIKINDX_MAX_EXECUTION_TIMEOUT)) { // v4 config.php required quotes around value
         if (!$config->WIKINDX_MAX_EXECUTION_TIMEOUT = intval($config->WIKINDX_MAX_EXECUTION_TIMEOUT)) {
-            die('WIKINDX_MAX_EXECUTION_TIMEOUT must be a positive integer (or FALSE for default configuration of PHP).');
+            $errors[] = 'WIKINDX_MAX_EXECUTION_TIMEOUT must be a positive integer (or FALSE for default configuration of PHP).';
+            $config->WIKINDX_MAX_EXECUTION_TIMEOUT = WIKINDX_MAX_EXECUTION_TIMEOUT_DEFAULT;
         }
     } elseif (!is_int($config->WIKINDX_MAX_EXECUTION_TIMEOUT)) {
         if ($config->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE) {
-            die('WIKINDX_MAX_EXECUTION_TIMEOUT must be a positive integer (or FALSE for default configuration of PHP).');
+            $errors[] = 'WIKINDX_MAX_EXECUTION_TIMEOUT must be a positive integer (or FALSE for default configuration of PHP).';
+            $config->WIKINDX_MAX_EXECUTION_TIMEOUT = WIKINDX_MAX_EXECUTION_TIMEOUT_DEFAULT;
         } elseif ($config->WIKINDX_MAX_EXECUTION_TIMEOUT < 0) {
-            die('WIKINDX_MAX_EXECUTION_TIMEOUT must be a positive integer (or FALSE for default configuration of PHP).');
+            $errors[] = 'WIKINDX_MAX_EXECUTION_TIMEOUT must be a positive integer (or FALSE for default configuration of PHP).';
+            $config->WIKINDX_MAX_EXECUTION_TIMEOUT = WIKINDX_MAX_EXECUTION_TIMEOUT_DEFAULT;
         }
     }
     // Configure it only if explicitely defined
@@ -200,12 +218,12 @@ function loadStaticConfig()
         $config->WIKINDX_MAX_WRITECHUNK = WIKINDX_MAX_WRITECHUNK_DEFAULT;
     } elseif (!is_int($config->WIKINDX_MAX_WRITECHUNK)) {
         if ($config->WIKINDX_MAX_WRITECHUNK !== FALSE) {
-            die('WIKINDX_MAX_WRITECHUNK must be a positive integer (or FALSE for default configuration).');
-        } else {
-            $config->WIKINDX_MAX_WRITECHUNK = WIKINDX_MAX_WRITECHUNK_DEFAULT;
+            $errors[] = 'WIKINDX_MAX_WRITECHUNK must be a positive integer (or FALSE for default configuration).';
         }
+        $config->WIKINDX_MAX_WRITECHUNK = WIKINDX_MAX_WRITECHUNK_DEFAULT;
     } elseif ($config->WIKINDX_MAX_WRITECHUNK < 1) {
-        die('WIKINDX_MAX_WRITECHUNK must be a positive integer (or FALSE for default configuration).');
+        $errors[] = 'WIKINDX_MAX_WRITECHUNK must be a positive integer (or FALSE for default configuration).';
+        $config->WIKINDX_MAX_WRITECHUNK = WIKINDX_MAX_WRITECHUNK_DEFAULT;
     }
     
     // Redefine all PHP config as constant for making them pervasive for the whole application
@@ -226,4 +244,6 @@ function loadStaticConfig()
     {
         if (!defined($option) && property_exists($config, $option)) define($option, $config->{$option});
     }
+
+    return $errors;
 }

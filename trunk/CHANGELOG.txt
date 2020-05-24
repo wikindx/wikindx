@@ -54,7 +54,7 @@ MAINTENANCE:
 10. Relocate WIKINDX_TRUNK_VERSION option in the database and rename it WIKINDX_IS_TRUNK.
 11. Change the type of the timezone option from TEXT to Varchar.
 12. Add WIKINDX_PATH_AUTO_DETECTION option to config.php to explicitly control auto-detection of the path and base url.
-13. Drop usersChangePasswordTimestamp column from the DB schema
+13. Drop usersChangePasswordTimestamp column from the DB schema.
 14. DB upgrade – transfer data from statistics, resource_misc and resource_attachments tables to new statistics_resource_views and statistics_attachment_downloads tables and drop statistics table and other relevant columns.
 15. Add a UNIQUE constraint on usersUsername column (#219).
 16. Fix the default value of users table.

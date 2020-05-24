@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: backupmysql\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-01-25 18:48+0100\n"
+"POT-Creation-Date: 2020-05-24 21:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,21 +17,21 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: components/plugins/backupmysql/backupmysqlmessages.php:18
-#: components/plugins/backupmysql/backupmysqlmessages.php:19
+#: components/plugins/backupmysql/backupmysqlmessages.php:20
+#: components/plugins/backupmysql/backupmysqlmessages.php:21
 msgid "Backup Database"
 msgstr ""
 
-#: components/plugins/backupmysql/backupmysqlmessages.php:20
+#: components/plugins/backupmysql/backupmysqlmessages.php:22
 msgid "Backup"
 msgstr ""
 
-#: components/plugins/backupmysql/backupmysqlmessages.php:21
+#: components/plugins/backupmysql/backupmysqlmessages.php:23
 msgid ""
 "cache/plugins/backupmysql/ is not writeable by the web server user.  It "
 "currently has the permissions: ###"
 msgstr ""
 
-#: components/plugins/backupmysql/backupmysqlmessages.php:22
+#: components/plugins/backupmysql/backupmysqlmessages.php:24
 msgid "Files deleted"
 msgstr ""

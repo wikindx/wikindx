@@ -277,6 +277,10 @@ class STATISTICS
 			$resArray[$row['statisticsresourceviewsResourceId']]['monthViews'] = $row['statisticsresourceviewsCount'];
 			$resIds[] = $row['statisticsresourceviewsResourceId'];
 		}
+		if(!isset($resIds))
+		{
+			return;
+		}
         $this->db->formatConditions(['statisticsattachmentdownloadsMonth' => $month]);
         $this->db->formatConditions(['statisticsattachmentdownloadsCount' => ' IS NOT NULL']);
 		$this->db->leftJoin('resource_attachments', 'resourceattachmentsId', 'statisticsattachmentdownloadsAttachmentId');

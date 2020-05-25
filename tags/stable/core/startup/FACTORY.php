@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -18,6 +20,7 @@ include_once("core/ajax/AJAX.php");
 include_once("core/file/FILE.php");
 include_once("core/utils/UTILS.php");
 include_once("core/locales/LOCALES.php");
+include_once("core/urls/URL.php");
 
 /**
  * FACTORY_HOUSEKEEPING
@@ -48,8 +51,7 @@ class FACTORY_HOUSEKEEPING
      */
     public static function getInstance($upgradeCompleted = FALSE)
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/startup/HOUSEKEEPING.php");
             self::$instance = new HOUSEKEEPING($upgradeCompleted);
         }
@@ -84,8 +86,7 @@ class FACTORY_PASSWORD
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/password/PASSWORD.php");
             self::$instance = new PASSWORD;
         }
@@ -122,58 +123,6 @@ class FACTORY_CONFIGDBSTRUCTURE
     {
         include_once("core/startup/CONFIGDBSTRUCTURE.php");
         self::$instance = new CONFIGDBSTRUCTURE;
-
-        return self::$instance;
-    }
-}
-/**
- * FACTORY_CONFIG
- *
- *	Create objects for commonly used classes.
- *	Theoretically, this should save time in loading classes using include() statements and, perhaps, memory
- *	by not having multiple instances of the same object.
- *	Many WIKINDX classes have busy __construct() methods (initializing arrays etc.).  Using FACTORY ensures that
- *	this work is only done once each time the web server deals with a script -- subsequent class instantiations
- *	in the same server call return only the already constructed object.
- *
- *	e.g. To call the FACTORY SESSION object:
- *		$this->session = FACTORY_SESSION::getInstance();
- *
- * @package wikindx\core\startup
- */
-class FACTORY_CONFIG
-{
-    /** object */
-    private static $instance;
-
-    /**
-     * Get instance
-     *
-     * @return object (self::$instance)
-     */
-    public static function getInstance()
-    {
-        if (empty(self::$instance))
-        {
-            include_once("config.php");
-            // Needed for upgrade of v3.8 database because v3.8.x config.php is not a class
-            if (!class_exists('CONFIG'))
-            {
-                die('You are attempting an upgrade of a v3.8.x WIKINDX. Before proceeding, you must first create a new config.php file following the new structure in config.php.dist');
-            }
-            else
-            {
-                self::$instance = new CONFIG;
-            }
-            // Set print debug SQL
-            // This parameter must always be available at early stage
-            //			if (!property_exists(self::$instance, 'WIKINDX_PRINT_SQL'))
-            //				self::$instance->WIKINDX_PRINT_SQL = WIKINDX_PRINT_SQL_DEFAULT;
-            if (!property_exists(self::$instance, 'WIKINDX_DEBUG_SQL'))
-            {
-                self::$instance->WIKINDX_DEBUG_SQL = WIKINDX_DEBUG_SQL_DEFAULT;
-            }
-        }
 
         return self::$instance;
     }
@@ -238,8 +187,7 @@ class FACTORY_SESSION
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/session/SESSION.php");
             self::$instance = new SESSION;
         }
@@ -274,8 +222,7 @@ class FACTORY_COOKIE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/session/COOKIE.php");
             self::$instance = new COOKIE();
         }
@@ -310,8 +257,7 @@ class FACTORY_AUTHORIZE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/startup/AUTHORIZE.php");
             self::$instance = new AUTHORIZE;
         }
@@ -349,8 +295,7 @@ class FACTORY_MESSAGES
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/messages/MESSAGES.php");
             self::$instance = new MESSAGES();
         }
@@ -401,8 +346,7 @@ class FACTORY_ERRORS
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/messages/ERRORS.php");
             self::$instance = new ERRORS;
         }
@@ -451,8 +395,7 @@ class FACTORY_SUCCESS
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/messages/SUCCESS.php");
             self::$instance = new SUCCESS;
         }
@@ -517,8 +460,7 @@ class FACTORY_CONSTANTS
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/messages/CONSTANTS.php");
             self::$instance = new CONSTANTS;
         }
@@ -553,8 +495,7 @@ class FACTORY_HELP
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/messages/HELP.php");
             self::$instance = new HELP;
         }
@@ -603,8 +544,7 @@ class FACTORY_DB
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/sql/SQL.php");
             self::$instance = new SQL;
         }
@@ -639,8 +579,7 @@ class FACTORY_SQLSTATEMENTS
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/sql/SQLSTATEMENTS.php");
             self::$instance = new SQLSTATEMENTS;
         }
@@ -675,8 +614,7 @@ class FACTORY_TEMPLATE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/display/TEMPLATE.php");
             self::$instance = new TEMPLATE;
         }
@@ -711,8 +649,7 @@ class FACTORY_USER
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/usersgroups/USER.php");
             self::$instance = new USER;
         }
@@ -747,8 +684,7 @@ class FACTORY_CLOSE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSERAW::$instance))
-        {
+        if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSERAW::$instance)) {
             include_once("core/display/CLOSE.php");
             self::$instance = new CLOSE;
         }
@@ -783,8 +719,7 @@ class FACTORY_FRONT
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/display/FRONT.php");
             self::$instance = new FRONT;
         }
@@ -819,8 +754,7 @@ class FACTORY_QUARANTINE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/modules/admin/QUARANTINE.php");
             self::$instance = new QUARANTINE;
         }
@@ -855,8 +789,7 @@ class FACTORY_CLOSENOMENU
      */
     public static function getInstance()
     {
-        if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSE::$instance) && empty(FACTORY_CLOSERAW::$instance))
-        {
+        if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSE::$instance) && empty(FACTORY_CLOSERAW::$instance)) {
             include_once("core/display/CLOSE.php");
             self::$instance = new CLOSENOMENU;
         }
@@ -891,8 +824,7 @@ class FACTORY_CLOSEPOPUP
      */
     public static function getInstance()
     {
-        if (empty(self::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSE::$instance) && empty(FACTORY_CLOSERAW::$instance))
-        {
+        if (empty(self::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSE::$instance) && empty(FACTORY_CLOSERAW::$instance)) {
             include_once("core/display/CLOSE.php");
             self::$instance = new CLOSEPOPUP;
         }
@@ -927,8 +859,7 @@ class FACTORY_CLOSERAW
      */
     public static function getInstance()
     {
-        if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSE::$instance))
-        {
+        if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSE::$instance)) {
             include_once("core/display/CLOSE.php");
             self::$instance = new CLOSERAW;
         }
@@ -963,8 +894,7 @@ class FACTORY_STATISTICS
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/miscellaneous/STATISTICS.php");
             self::$instance = new STATISTICS;
         }
@@ -999,8 +929,7 @@ class FACTORY_LOADICONS
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/display/LOADICONS.php");
             self::$instance = new LOADICONS;
         }
@@ -1035,8 +964,7 @@ class FACTORY_EXPORTCOINS
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/importexport/EXPORTCOINS.php");
             self::$instance = new EXPORTCOINS;
         }
@@ -1071,8 +999,7 @@ class FACTORY_EXPORTGOOGLESCHOLAR
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/importexport/EXPORTGOOGLESCHOLAR.php");
             self::$instance = new EXPORTGOOGLESCHOLAR;
         }
@@ -1107,8 +1034,7 @@ class FACTORY_BIBTEXPARSE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/importexport/BIBTEXPARSE.php");
             self::$instance = new BIBTEXPARSE;
         }
@@ -1145,8 +1071,7 @@ class FACTORY_RICHTEXTFORMAT
      */
     public static function getInstance($imgMagickPath = FALSE)
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/importexport/RICHTEXTFORMAT.php");
             self::$instance = new RICHTEXTFORMAT($imgMagickPath);
         }
@@ -1181,8 +1106,7 @@ class FACTORY_COINSMAP
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/importexport/COINSMAP.php");
             self::$instance = new COINSMAP;
         }
@@ -1217,8 +1141,7 @@ class FACTORY_BIBTEXCONFIG
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/importexport/BIBTEXCONFIG.php");
             self::$instance = new BIBTEXCONFIG;
         }
@@ -1253,8 +1176,7 @@ class FACTORY_BIBTEXMAP
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/importexport/BIBTEXMAP.php");
             self::$instance = new BIBTEXMAP;
         }
@@ -1289,8 +1211,7 @@ class FACTORY_BIBTEXCREATORPARSE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/importexport/BIBTEXCREATORPARSE.php");
             self::$instance = new BIBTEXCREATORPARSE;
         }
@@ -1325,8 +1246,7 @@ class FACTORY_BIBTEXMONTHPARSE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/importexport/BIBTEXMONTHPARSE.php");
             self::$instance = new BIBTEXMONTHPARSE;
         }
@@ -1361,8 +1281,7 @@ class FACTORY_BIBTEXPAGEPARSE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/importexport/BIBTEXPAGEPARSE.php");
             self::$instance = new BIBTEXPAGEPARSE;
         }
@@ -1397,8 +1316,7 @@ class FACTORY_EXPORTBIBTEX
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/importexport/EXPORTBIBTEX.php");
             self::$instance = new EXPORTBIBTEX;
         }
@@ -1433,8 +1351,7 @@ class FACTORY_PARSEXML
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/bibcitation/PARSEXML.php");
             self::$instance = new PARSEXML;
         }
@@ -1469,8 +1386,7 @@ class FACTORY_STYLEMAP
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/bibcitation/STYLEMAP.php");
             self::$instance = new STYLEMAP;
         }
@@ -1505,8 +1421,7 @@ class FACTORY_BROWSECOMMON
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/browse/BROWSECOMMON.php");
             self::$instance = new BROWSECOMMON;
         }
@@ -1543,8 +1458,7 @@ class FACTORY_BIBSTYLE
      */
     public static function getInstance($output = 'html')
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/bibcitation/BIBSTYLE.php");
             self::$instance = new BIBSTYLE($output);
         }
@@ -1581,8 +1495,7 @@ class FACTORY_BIBFORMAT
      */
     public static function getInstance($output = 'html')
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/bibcitation/BIBFORMAT.php");
             self::$instance = new BIBFORMAT($output);
         }
@@ -1619,8 +1532,7 @@ class FACTORY_CITE
      */
     public static function getInstance($output = 'html')
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/bibcitation/CITE.php");
             self::$instance = new CITE($output);
         }
@@ -1657,8 +1569,7 @@ class FACTORY_CITESTYLE
      */
     public static function getInstance($output = 'html')
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/bibcitation/CITESTYLE.php");
             self::$instance = new CITESTYLE($output);
         }
@@ -1693,8 +1604,7 @@ class FACTORY_EXPORTFILTER
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/bibcitation/EXPORTFILTER.php");
             self::$instance = new EXPORTFILTER;
         }
@@ -1731,8 +1641,7 @@ class FACTORY_CITEFORMAT
      */
     public static function getInstance($output = 'html')
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/bibcitation/CITEFORMAT.php");
             self::$instance = new CITEFORMAT($output);
         }
@@ -1767,8 +1676,7 @@ class FACTORY_LISTCOMMON
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/lists/LISTCOMMON.php");
             self::$instance = new LISTCOMMON;
         }
@@ -1803,8 +1711,7 @@ class FACTORY_METADATA
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/metadata/METADATA.php");
             self::$instance = new METADATA;
         }
@@ -1839,8 +1746,7 @@ class FACTORY_TYPE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/type/TYPE.php");
             self::$instance = new TYPE;
         }
@@ -1875,8 +1781,7 @@ class FACTORY_CATEGORY
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/category/CATEGORY.php");
             self::$instance = new CATEGORY;
         }
@@ -1911,8 +1816,7 @@ class FACTORY_TAG
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/miscellaneous/TAG.php");
             self::$instance = new TAG;
         }
@@ -1947,8 +1851,7 @@ class FACTORY_USERTAGS
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/usersgroups/USERTAGS.php");
             self::$instance = new USERTAGS;
         }
@@ -1983,8 +1886,7 @@ class FACTORY_KEYWORD
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/keyword/KEYWORD.php");
             self::$instance = new KEYWORD;
         }
@@ -2032,8 +1934,7 @@ class FACTORY_RESOURCEMAP
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/resources/RESOURCEMAP.php");
             self::$instance = new RESOURCEMAP;
         }
@@ -2068,8 +1969,7 @@ class FACTORY_CREATOR
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/creator/CREATOR.php");
             self::$instance = new CREATOR;
         }
@@ -2104,8 +2004,7 @@ class FACTORY_PUBLISHER
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/publisher/PUBLISHER.php");
             self::$instance = new PUBLISHER;
         }
@@ -2140,8 +2039,7 @@ class FACTORY_PUBLISHERMAP
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/publisher/PUBLISHERMAP.php");
             self::$instance = new PUBLISHERMAP;
         }
@@ -2176,8 +2074,7 @@ class FACTORY_COLLECTION
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/collection/COLLECTION.php");
             self::$instance = new COLLECTION;
         }
@@ -2212,8 +2109,7 @@ class FACTORY_COLLECTIONMAP
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/collection/COLLECTIONMAP.php");
             self::$instance = new COLLECTIONMAP;
         }
@@ -2248,8 +2144,7 @@ class FACTORY_MENU
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/navigation/MENU.php");
             self::$instance = new MENU;
         }
@@ -2284,8 +2179,7 @@ class FACTORY_BADINPUT
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/navigation/BADINPUT.php");
             self::$instance = new BADINPUT;
         }
@@ -2320,8 +2214,7 @@ class FACTORY_NAVIGATE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/navigation/NAVIGATE.php");
             self::$instance = new NAVIGATE;
         }
@@ -2356,8 +2249,7 @@ class FACTORY_BIBLIOGRAPHYCOMMON
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/bibliographies/BIBLIOGRAPHYCOMMON.php");
             self::$instance = new BIBLIOGRAPHYCOMMON;
         }
@@ -2392,8 +2284,7 @@ class FACTORY_GATEKEEP
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/miscellaneous/GATEKEEP.php");
             self::$instance = new GATEKEEP;
         }
@@ -2428,46 +2319,9 @@ class FACTORY_RESOURCECOMMON
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/resources/RESOURCECOMMON.php");
             self::$instance = new RESOURCECOMMON;
-        }
-
-        return self::$instance;
-    }
-}
-/**
- * FACTORY_URL
- *
- *	Create objects for commonly used classes.
- *	Theoretically, this should save time in loading classes using include() statements and, perhaps, memory
- *	by not having multiple instances of the same object.
- *	Many WIKINDX classes have busy __construct() methods (initializing arrays etc.).  Using FACTORY ensures that
- *	this work is only done once each time the web server deals with a script -- subsequent class instantiations
- *	in the same server call return only the already constructed object.
- *
- *	e.g. To call the FACTORY SESSION object:
- *		$this->session = FACTORY_SESSION::getInstance();
- *
- * @package wikindx\core\startup
- */
-class FACTORY_URL
-{
-    /** object */
-    private static $instance;
-
-    /**
-     * Get instance
-     *
-     * @return object (self::$instance)
-     */
-    public static function getInstance()
-    {
-        if (empty(self::$instance))
-        {
-            include_once("core/urls/URL.php");
-            self::$instance = new URL;
         }
 
         return self::$instance;
@@ -2500,9 +2354,8 @@ class FACTORY_MAIL
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
-            include_once("core/smtp/MAIL.php");
+        if (empty(self::$instance)) {
+            include_once("core/libs/MAIL.php");
             self::$instance = new MAIL;
         }
 
@@ -2536,8 +2389,7 @@ class FACTORY_PAGING
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/lists/PAGING.php");
             self::$instance = new PAGING;
         }
@@ -2572,8 +2424,7 @@ class FACTORY_PAGINGALPHA
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/lists/PAGINGALPHA.php");
             self::$instance = new PAGINGALPHA;
         }
@@ -2608,8 +2459,7 @@ class FACTORY_PARSESTYLE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/bibcitation/PARSESTYLE.php");
             self::$instance = new PARSESTYLE;
         }
@@ -2644,8 +2494,7 @@ class FACTORY_IMPORT
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/importexport/IMPORT.php");
             self::$instance = new IMPORT;
         }
@@ -2680,8 +2529,7 @@ class FACTORY_EXPORTER
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/importexport/EXPORTER.php");
             self::$instance = new EXPORTER;
         }
@@ -2716,8 +2564,7 @@ class FACTORY_LOADTINYMCE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/tiny_mce/LOADTINYMCE.php");
             self::$instance = new LOADTINYMCE;
         }
@@ -2752,8 +2599,7 @@ class FACTORY_PARSEPHRASE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/lists/PARSEPHRASE.php");
             self::$instance = new PARSEPHRASE;
         }
@@ -2788,8 +2634,7 @@ class FACTORY_ATTACHMENT
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/miscellaneous/ATTACHMENT.php");
             self::$instance = new ATTACHMENT;
         }
@@ -2824,8 +2669,7 @@ class FACTORY_DATE
      */
     public static function getInstance()
     {
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             include_once("core/miscellaneous/DATE.php");
             self::$instance = new DATE;
         }

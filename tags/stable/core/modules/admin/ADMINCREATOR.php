@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -19,7 +21,6 @@ class ADMINCREATOR
     private $messages;
     private $success;
     private $session;
-    private $config;
     private $creator;
     private $gatekeep;
     private $badInput;
@@ -34,7 +35,6 @@ class ADMINCREATOR
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
         $this->creator = FACTORY_CREATOR::getInstance();
 
@@ -46,15 +46,14 @@ class ADMINCREATOR
     /**
      * display options for creator merging
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function mergeInit($message = FALSE)
     {
         $creators = $this->creator->grabAll();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "mergeCreators"));
         $pString = $message;
-        if (is_array($creators) && !empty($creators))
-        {
+        if (is_array($creators) && !empty($creators)) {
             $pString .= \HTML\p($this->messages->text("misc", "creatorMerge"));
             $pString .= \FORM\formHeader('admin_ADMINCREATOR_CORE');
             $pString .= \FORM\hidden("method", "mergeProcess");
@@ -71,8 +70,7 @@ class ADMINCREATOR
             $pString .= \HTML\trStart();
             // add 0 => IGNORE to creators array
             $temp[0] = $this->messages->text("misc", "ignore");
-            foreach ($creators as $key => $value)
-            {
+            foreach ($creators as $key => $value) {
                 $temp[$key] = $value;
             }
             $creators = $temp;
@@ -121,9 +119,7 @@ class ADMINCREATOR
             $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
             $pString .= \FORM\formEnd();
             GLOBALS::addTplVar('content', $pString);
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noCreators'));
         }
     }
@@ -138,11 +134,9 @@ class ADMINCREATOR
         $this->db->formatConditions(['creatorId' => $this->newCreatorId]);
         $row = $this->db->fetchRow($this->db->select('creator', ['creatorSurname', 'creatorFirstname', 'creatorInitials']));
         $this->newName = $row['creatorSurname'];
-        foreach ($creatorIds as $oldId)
-        {
+        foreach ($creatorIds as $oldId) {
             // Remove old creators
-            if ($oldId != $this->newCreatorId)
-            {
+            if ($oldId != $this->newCreatorId) {
                 $this->db->formatConditions(['creatorId' => $oldId]);
                 $this->db->delete('creator');
             }
@@ -161,8 +155,7 @@ class ADMINCREATOR
      */
     public function insertCreator()
     {
-        if ($this->vars['creatorIdsOutput'])
-        {
+        if ($this->vars['creatorIdsOutput']) {
             return $this->vars['creatorIdsOutput'];
         }
 
@@ -172,31 +165,27 @@ class ADMINCREATOR
     /**
      * display options for creator grouping
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function groupInit($message = FALSE)
     {
-        \AJAX\loadJavascript([$this->config->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
+        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
         $potentialMasters = $this->creator->grabGroupAvailableMasters();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "groupCreators"));
         $pString = $message;
-        if (is_array($potentialMasters) && !empty($potentialMasters))
-        {
+        if (is_array($potentialMasters) && !empty($potentialMasters)) {
             $potentialMembers = $this->creator->grabGroupAvailableMembers();
-            if (!is_array($potentialMembers))
-            {
+            if (!is_array($potentialMembers)) {
                 $potentialMembers = $this->creator->grabGroupAvailableMembers(TRUE);
             }
-            foreach ($potentialMasters as $id => $name)
-            { // array_shift() breaks ids!
+            foreach ($potentialMasters as $id => $name) { // array_shift() breaks ids!
                 break;
             }
             reset($potentialMasters);
             $existingMembers = $this->creator->grabGroupMembers($id);
             // add 0 => IGNORE to potentialMembers array
             $temp[0] = $this->messages->text("misc", "ignore");
-            foreach ($potentialMembers as $key => $value)
-            {
+            foreach ($potentialMembers as $key => $value) {
                 $temp[$key] = $value;
             }
             $potentialMembers = $temp;
@@ -214,8 +203,7 @@ class ADMINCREATOR
                 'targetDiv' => 'creatorIds',
             ];
             $js = \AJAX\jActionForm('onclick', $jsonArray);
-            if (!is_array($existingMembers))
-            {
+            if (!is_array($existingMembers)) {
                 $td = \HTML\div('creatorIds', \FORM\selectFBoxValueMultiple(
                     \HTML\strong($this->messages->text("misc", "creatorGroupMember")),
                     "creatorIds",
@@ -225,9 +213,7 @@ class ADMINCREATOR
                     $js
                 ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint') .
                     \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed"))));
-            }
-            else
-            {
+            } else {
                 $existingMembers = array_keys($existingMembers);
                 $td = \HTML\div('creatorIds', \FORM\selectedBoxValueMultiple(
                     \HTML\strong($this->messages->text("misc", "creatorGroupMember")),
@@ -252,9 +238,7 @@ class ADMINCREATOR
             $pString .= \HTML\tableEnd();
             $pString .= \FORM\formEnd();
             GLOBALS::addTplVar('content', $pString);
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noCreators'));
         }
     }
@@ -264,21 +248,18 @@ class ADMINCREATOR
     public function groupDiv()
     {
         $potentialMembers = $this->creator->grabGroupAvailableMembers();
-        if (!is_array($potentialMembers))
-        {
+        if (!is_array($potentialMembers)) {
             $potentialMembers = $this->creator->grabGroupAvailableMembers(TRUE);
         }
         $existingMembers = $this->creator->grabGroupMembers($this->vars['ajaxReturn']);
         // add 0 => IGNORE to potentialMembers array
         $temp[0] = $this->messages->text("misc", "ignore");
-        foreach ($potentialMembers as $key => $value)
-        {
+        foreach ($potentialMembers as $key => $value) {
             $temp[$key] = $value;
         }
         $potentialMembers = $temp;
         unset($temp);
-        if (!is_array($existingMembers))
-        {
+        if (!is_array($existingMembers)) {
             unset($potentialMembers[$this->vars['ajaxReturn']]);
             $div = \HTML\div('creatorIdsOutput', \FORM\selectFBoxValueMultiple(
                 \HTML\strong($this->messages->text("misc", "creatorGroupMember")),
@@ -288,9 +269,7 @@ class ADMINCREATOR
             ) . BR .
                 \HTML\span($this->messages->text("hint", "multiples"), 'hint') .
                 \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed"))));
-        }
-        else
-        {
+        } else {
             unset($potentialMembers[$this->vars['ajaxReturn']]);
             $existingMembers = array_keys($existingMembers);
             $div = \HTML\div('creatorIdsOutput', \FORM\selectedBoxValueMultiple(
@@ -314,8 +293,7 @@ class ADMINCREATOR
         $this->validateInput('group');
         $creatorIds = $this->vars['creatorIds'];
         $targetCreatorId = $this->vars['creatorMaster'];
-        if (($index = array_search($targetCreatorId, $creatorIds)) !== FALSE)
-        {
+        if (($index = array_search($targetCreatorId, $creatorIds)) !== FALSE) {
             unset($creatorIds[$index]);
         }
         // First, remove references to this creator as group master
@@ -329,18 +307,16 @@ class ADMINCREATOR
     /**
      * display options for creator ungrouping
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function ungroupInit($message = FALSE)
     {
-        \AJAX\loadJavascript([$this->config->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
+        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
         $mastersCopy = $masters = $this->creator->grabGroupMasters();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "ungroupCreators"));
         $pString = $message;
-        if (is_array($masters) && !empty($masters))
-        {
-            foreach ($mastersCopy as $id => $name)
-            {
+        if (is_array($masters) && !empty($masters)) {
+            foreach ($mastersCopy as $id => $name) {
                 $initialMasterId = $id;
 
                 break;
@@ -378,9 +354,7 @@ class ADMINCREATOR
             $pString .= \HTML\tableEnd();
             $pString .= \FORM\formEnd();
             GLOBALS::addTplVar('content', $pString);
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', $pString);
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noGroupMasterCreators'));
         }
@@ -408,8 +382,7 @@ class ADMINCREATOR
     {
         $this->validateInput('ungroup');
         $creatorIds = $this->vars['creatorIds'];
-        foreach ($creatorIds as $oldId)
-        {
+        foreach ($creatorIds as $oldId) {
             $this->db->formatConditionsOneField($creatorIds, 'creatorId');
             $this->db->updateNull('creator', 'creatorSameAs');
         }
@@ -440,49 +413,34 @@ class ADMINCREATOR
      */
     private function validateInput($process)
     {
-        if ($process == 'merge')
-        {
+        if ($process == 'merge') {
             if (!array_key_exists("creatorIds", $this->vars) || empty($this->vars['creatorIds'])
-                 || (count($this->vars['creatorIds']) == 1))
-            {
+                 || (count($this->vars['creatorIds']) == 1)) {
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'mergeInit');
             }
-            if (!array_key_exists("creatorIdsOutput", $this->vars) || empty($this->vars['creatorIdsOutput']))
-            {
-                if (!array_key_exists("surname", $this->vars) || !trim($this->vars['surname']))
-                {
+            if (!array_key_exists("creatorIdsOutput", $this->vars) || empty($this->vars['creatorIdsOutput'])) {
+                if (!array_key_exists("surname", $this->vars) || !trim($this->vars['surname'])) {
                     $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'mergeInit');
                 }
-            }
-            elseif ((!array_key_exists("surname", $this->vars) || !trim($this->vars['surname'])) &&
-                (count($this->vars['creatorIds']) == 1) && $this->vars['creatorIds'][0] == $this->vars['creatorIdsOutput'])
-            {
+            } elseif ((!array_key_exists("surname", $this->vars) || !trim($this->vars['surname'])) &&
+                (count($this->vars['creatorIds']) == 1) && $this->vars['creatorIds'][0] == $this->vars['creatorIdsOutput']) {
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'mergeInit');
             }
-        }
-        elseif ($process == 'group')
-        {
-            if (!array_key_exists("creatorIds", $this->vars) || empty($this->vars['creatorIds']))
-            {
+        } elseif ($process == 'group') {
+            if (!array_key_exists("creatorIds", $this->vars) || empty($this->vars['creatorIds'])) {
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'groupInit');
             }
-            if (!array_key_exists("creatorMaster", $this->vars))
-            {
+            if (!array_key_exists("creatorMaster", $this->vars)) {
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'groupInit');
             }
-            if ((count($this->vars['creatorIds']) == 1) && $this->vars['creatorIds'][0] == $this->vars['creatorMaster'])
-            {
+            if ((count($this->vars['creatorIds']) == 1) && $this->vars['creatorIds'][0] == $this->vars['creatorMaster']) {
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'groupInit');
             }
-            if ((count($this->vars['creatorIds']) == 1) && $this->vars['creatorIds'][0] == 0)
-            {
+            if ((count($this->vars['creatorIds']) == 1) && $this->vars['creatorIds'][0] == 0) {
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'groupInit');
             }
-        }
-        elseif ($process == 'ungroup')
-        {
-            if (!array_key_exists("creatorIds", $this->vars) || empty($this->vars['creatorIds']))
-            {
+        } elseif ($process == 'ungroup') {
+            if (!array_key_exists("creatorIds", $this->vars) || empty($this->vars['creatorIds'])) {
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'ungroupInit');
             }
         }

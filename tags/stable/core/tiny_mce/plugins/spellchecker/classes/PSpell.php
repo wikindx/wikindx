@@ -22,10 +22,8 @@ class PSpell extends SpellChecker
         $plink = $this->_getPLink($lang);
 
         $outWords = [];
-        foreach ($words as $word)
-        {
-            if (!pspell_check($plink, trim($word)))
-            {
+        foreach ($words as $word) {
+            if (!pspell_check($plink, trim($word))) {
                 $outWords[] = utf8_encode($word);
             }
         }
@@ -45,8 +43,7 @@ class PSpell extends SpellChecker
     {
         $words = pspell_suggest($this->_getPLink($lang), $word);
 
-        for ($i = 0; $i < count($words); $i++)
-        {
+        for ($i = 0; $i < count($words); $i++) {
             $words[$i] = utf8_encode($words[$i]);
         }
 
@@ -61,8 +58,7 @@ class PSpell extends SpellChecker
     public function &_getPLink($lang)
     {
         // Check for native PSpell support
-        if (!function_exists("pspell_new"))
-        {
+        if (!function_exists("pspell_new")) {
             $this->throwError("PSpell support not found in PHP installation.");
         }
 
@@ -87,8 +83,7 @@ class PSpell extends SpellChecker
                     $plink = pspell_new_config($pspell_config);
                 }*/
 
-        if (!$plink)
-        {
+        if (!$plink) {
             $this->throwError("No PSpell link found opened.");
         }
 

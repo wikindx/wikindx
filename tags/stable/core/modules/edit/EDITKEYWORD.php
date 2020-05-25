@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -39,16 +41,15 @@ class EDITKEYWORD
             $this->messages->text("resources", "keyword") . ")"));
     }
     /**
-    * check we are allowed to edit and load appropriate method
-    *
-    * @param string|FALSE $message
-    */
+     * check we are allowed to edit and load appropriate method
+     *
+     * @param false|string $message
+     */
     public function init($message = FALSE)
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $keywords = $this->keyword->grabAll();
-        if (!$keywords)
-        {
+        if (!$keywords) {
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noKeywords'));
 
             return;
@@ -81,15 +82,14 @@ class EDITKEYWORD
         GLOBALS::addTplVar('content', $pString);
     }
     /**
-    * Display interface to edit keyword
-    *
-    * @param bool $initialDisplay
-    */
+     * Display interface to edit keyword
+     *
+     * @param bool $initialDisplay
+     */
     public function displayKeyword($initialDisplay = FALSE)
     {
         $keyword = $keywordId = FALSE;
-        if (!$initialDisplay)
-        {
+        if (!$initialDisplay) {
             $this->db->formatConditions(['keywordId' => $this->vars['ajaxReturn']]);
             $recordset = $this->db->select('keyword', 'keywordKeyword');
             $row = $this->db->fetchRow($recordset);
@@ -104,32 +104,27 @@ class EDITKEYWORD
             30,
             255
         );
-        if ($initialDisplay)
-        {
+        if ($initialDisplay) {
             return $pString;
         }
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$pString"]));
         }
         FACTORY_CLOSERAW::getInstance();
     }
     /**
-    * Display the gloassary textarea
-    *
-    * @param bool $initialDisplay
-    */
+     * Display the gloassary textarea
+     *
+     * @param bool $initialDisplay
+     */
     public function displayGlossary($initialDisplay = FALSE)
     {
-        if ($initialDisplay)
-        {
+        if ($initialDisplay) {
             return \FORM\textareaInput(FALSE, "text", FALSE, 50, 10);
         }
         $this->db->formatConditions(['keywordId' => $this->vars['ajaxReturn']]);
@@ -137,15 +132,12 @@ class EDITKEYWORD
         $row = $this->db->fetchRow($recordset);
         $glossary = \HTML\dbToFormTidy($row['keywordGlossary']);
         $pString = \FORM\textareaInput(FALSE, "text", $glossary, 50, 10);
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $pString]));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -155,31 +147,24 @@ class EDITKEYWORD
      */
     public function edit()
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
-        if (!array_key_exists('editKeywordId', $this->vars) || !$this->vars['editKeywordId'])
-        {
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
+        if (!array_key_exists('editKeywordId', $this->vars) || !$this->vars['editKeywordId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         $keyword = array_key_exists('keyword', $this->vars) ? trim($this->vars['keyword']) : FALSE;
-        if (!$keyword)
-        {
+        if (!$keyword) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        if ($keywordExistId = $this->keyword->checkExists($keyword))
-        {
-            if ($keywordExistId != $this->vars['editKeywordId'])
-            {
+        if ($keywordExistId = $this->keyword->checkExists($keyword)) {
+            if ($keywordExistId != $this->vars['editKeywordId']) {
                 return $this->confirmDuplicate($keywordExistId, $keyword);
             }
         }
         $updateArray['keywordKeyword'] = $keyword;
         $glossary = trim($this->vars['text']);
-        if ($glossary)
-        {
+        if ($glossary) {
             $updateArray['keywordGlossary'] = $glossary;
-        }
-        else
-        {
+        } else {
             $this->db->formatConditions(['keywordId' => $this->vars['editKeywordId']]);
             $this->db->updateNull('keyword', 'keywordGlossary');
         }
@@ -200,13 +185,11 @@ class EDITKEYWORD
      */
     public function editConfirm()
     {
-        $this->gatekeep->init(TRUE); // write access requiring config.php's WIKINDX_GLOBAL_EDIT to be TRUE
-        if (!array_key_exists('editKeywordId', $this->vars) || !$this->vars['editKeywordId'])
-        {
+        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
+        if (!array_key_exists('editKeywordId', $this->vars) || !$this->vars['editKeywordId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        if (!array_key_exists('editKeywordExistId', $this->vars) || !$this->vars['editKeywordExistId'])
-        {
+        if (!array_key_exists('editKeywordExistId', $this->vars) || !$this->vars['editKeywordExistId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         $editId = $this->vars['editKeywordId'];

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -26,12 +28,10 @@ namespace AJAX
     function loadJavascript($scripts = FALSE)
     {
         $pString = '';
-        if (!is_array($scripts))
-        {
+        if (!is_array($scripts)) {
             $scripts = [$scripts];
         }
-        foreach ($scripts as $script)
-        {
+        foreach ($scripts as $script) {
             $pString .= \HTML\jsInlineExternal($script);
         }
         \GLOBALS::addTplVar('content', $pString);
@@ -48,8 +48,7 @@ namespace AJAX
     function jActionForm($action, $jsonArray, $return = FALSE)
     {
         $json = \AJAX\encode_jArray($jsonArray, TRUE);
-        if ($return)
-        {
+        if ($return) {
             $return = 'return';
         }
 
@@ -67,8 +66,7 @@ namespace AJAX
      */
     function jActionIcon($icon, $action, $jsonArray, $return = FALSE)
     {
-        if ($return)
-        {
+        if ($return) {
             $return = "return";
         }
         $icons = \FACTORY_LOADICONS::getInstance($icon);
@@ -86,15 +84,14 @@ namespace AJAX
      */
     function encode_jArray($jsonArray, $quote = FALSE)
     {
-        if ($quote)
-        {
-            array_walk_recursive($jsonArray, function (&$value) { $value = addslashes($value); });
+        if ($quote) {
+            array_walk_recursive($jsonArray, function (&$value) {
+                $value = addslashes($value);
+            });
             $json = json_encode($jsonArray);
             \AJAX\_json_error('encode');
             $json = htmlspecialchars($json, ENT_QUOTES);
-        }
-        else
-        {
+        } else {
             $json = json_encode($jsonArray);
             \AJAX\_json_error('encode');
         }
@@ -123,8 +120,7 @@ namespace AJAX
      */
     function _json_error($type)
     {
-        if (json_last_error() != JSON_ERROR_NONE)
-        {
+        if (json_last_error() != JSON_ERROR_NONE) {
             \GLOBALS::addTplVar('content', 'JSON ' . $type . ' error - ' . json_last_error_msg() . ': ');
         }
     }

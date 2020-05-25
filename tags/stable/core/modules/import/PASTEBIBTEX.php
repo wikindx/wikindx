@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -39,65 +41,55 @@ class PASTEBIBTEX
     public function init()
     {
         $this->gatekeep->init();
-        if (array_key_exists('function', $this->vars))
-        {
+        if (array_key_exists('function', $this->vars)) {
             $function = $this->vars['function'];
             $this->{$function}();
-        }
-        else
-        {
+        } else {
             $this->display();
         }
     }
     /**
      * Display form for pasting bibtex
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function display($message = FALSE)
     {
-        if (!$message)
-        {
-            $this->session->delVar('import_Paste');
+        if (!$message) {
+            $this->session->delVar("import_Paste");
         }
         include_once("core/modules/help/HELPMESSAGES.php");
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('pasteBibtex'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexImport"));
-        $this->session->delVar('importLock');
+        $this->session->delVar("importLock");
         $category = FACTORY_CATEGORY::getInstance();
         $categories = $category->grabAll();
         $pString = $message;
-        if (count($categories) > 1)
-        {
+        if (count($categories) > 1) {
             $pString .= \HTML\p($this->messages->text("import", "categoryPrompt"));
         }
         $pString .= \FORM\formHeader("import_IMPORTBIBTEX_CORE");
         $pString .= \FORM\hidden('method', 'stage1');
         $pString .= \FORM\hidden('type', 'paste');
-        if (!$this->session->getVar("setup_Superadmin"))
-        { // Admin can paste unlimited entries
+        if (!$this->session->getVar("setup_Superadmin")) { // Admin can paste unlimited entries
             $pString .= \HTML\p($this->messages->text(
                 "import",
                 "pasteBibtex",
-                ' ' . $this->session->getVar('setup_MaxPaste') . " "
+                ' ' . WIKINDX_MAX_PASTE . " "
             ));
         }
         $pString .= \HTML\tableStart('borderSpacingMedium');
         $pString .= \HTML\trStart();
         $categoryTd = FALSE;
-        if (count($categories) > 1)
-        {
-            if ($sessionCategories = $this->session->getVar('import_Categories'))
-            {
+        if (count($categories) > 1) {
+            if ($sessionCategories = $this->session->getVar("import_Categories")) {
                 $sCategories = UTF8::mb_explode(",", $sessionCategories);
                 $element = \FORM\selectedBoxValueMultiple($this->messages->text(
                     "import",
                     "category"
                 ), 'import_Categories', $categories, $sCategories, 5);
-            }
-            else
-            {
+            } else {
                 $element = \FORM\selectFBoxValueMultiple($this->messages->text(
                     "import",
                     "category"
@@ -107,15 +99,14 @@ class PASTEBIBTEX
                 \HTML\span($this->messages->text("hint", "multiples"), 'hint'));
             $categoryTd = TRUE;
         }
-        if ($bibs = $this->import->bibliographySelect())
-        {
+        if ($bibs = $this->import->bibliographySelect()) {
             $pString .= \HTML\td($bibs . BR .
                 \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'left bottom');
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $paste = $this->session->issetVar('import_Paste') ?
-            unserialize(base64_decode($this->session->getVar('import_Paste'))) : FALSE;
+        $paste = $this->session->issetVar("import_Paste") ?
+            unserialize(base64_decode($this->session->getVar("import_Paste"))) : FALSE;
         $pString .= \HTML\td(BR . "&nbsp;" . BR . \FORM\textareaInput(
             FALSE,
             "import_Paste",

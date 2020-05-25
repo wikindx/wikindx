@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -25,8 +27,6 @@ class FRONT
     private $listCommon;
     /** string */
     private $externalMessage;
-    /** object */
-    private $configDbStructure;
 
     /**
      * FRONT
@@ -41,7 +41,6 @@ class FRONT
         $this->session = FACTORY_SESSION::getInstance();
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
         $this->listCommon = FACTORY_LISTCOMMON::getInstance();
-        $this->configDbStructure = FACTORY_CONFIGDBSTRUCTURE::getInstance();
         $this->listCommon->navigate = 'front';
         GLOBALS::setTplVar('heading', ''); // blank
         include_once("core/modules/help/HELPMESSAGES.php");
@@ -54,79 +53,52 @@ class FRONT
      */
     private function init()
     {
-        $this->session->delVar('search_Highlight');
-        $this->session->delVar('list_AllIds');
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        $row = $this->configDbStructure->getData(['configDescription', 'configContactEmail']);
-        $field = 'configDescription_' . \LOCALES\determine_locale();
-        $this->db->formatConditions(['configName' => $field]);
+        $this->session->delVar("search_Highlight");
+        $this->session->delVar("list_AllIds");
+        
+        $this->db->formatConditions(['configName' => 'configDescription_' . \LOCALES\determine_locale()]);
         $input = $this->db->fetchOne($this->db->select('config', 'configText'));
-        if ($input)
-        {
-            $row[$field] = $input;
-        }
-        // Check if the row exists because at the installation, 'config' table is empty.
-        if (!empty($row))
-        {
-            if (array_key_exists($field, $row) === FALSE)
-            {
-                $field = 'configDescription';
-            }
-            $pString = \HTML\dbToHtmlTidy($row[$field]);
-        }
-        else
-        {
-            $pString = '';
-        }
+        
+        $pString = WIKINDX_DESCRIPTION;
+        $pString = $input ? $input : WIKINDX_DESCRIPTION;
+        $pString = \HTML\nlToHtml($pString);
 
         // Do we want the quick search form to be displayed?
-        if (mb_substr_count($pString, '$QUICKSEARCH$'))
-        {
+        if (mb_substr_count($pString, '$QUICKSEARCH$')) {
             include_once('core/modules/list/QUICKSEARCH.php');
             $qs = new QUICKSEARCH();
             $replace = $qs->init(FALSE, FALSE, TRUE);
             $pString = str_replace('$QUICKSEARCH$', $replace, $pString);
         }
-        if ($lastChanges = $this->session->getVar("setup_LastChanges"))
-        {
-            if ($this->getChanges($lastChanges))
-            {
+        if ($lastChanges = WIKINDX_LAST_CHANGES) {
+            if ($this->getChanges($lastChanges)) {
                 $pString .= \HTML\p(\HTML\h($this->messages->text("resources", "lastChanges"), FALSE, 4));
             }
         }
         $pString .= $this->externalMessage;
         GLOBALS::addTplVar('content', $pString);
-        if ($row['configContactEmail'])
-        {
-            $email = \HTML\dbToHtmlTidy($row['configContactEmail']);
-            GLOBALS::setTplVar('contactEmail', $email);
-        }
+        GLOBALS::setTplVar('contactEmail', WIKINDX_CONTACT_EMAIL);
     }
     /**
      * Get recently added/edited resources
      *
      * @param int $limit
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function getChanges($limit)
     {
         // If no resources, return FALSE
-        if ($this->db->tableIsEmpty('resource'))
-        {
+        if ($this->db->tableIsEmpty('resource')) {
             return FALSE;
         }
         $this->db->ascDesc = $this->db->desc; // descending order
-        if ($this->session->getVar("setup_LastChangesType") == 'days')
-        { // Display from last $limit days
-            if (($limitResources = $this->session->getVar("setup_LastChangesDayLimit")) < 0)
-            {
+        if (WIKINDX_LAST_CHANGES_TYPE == 'days') { // Display from last $limit days
+            if (($limitResources = WIKINDX_LAST_CHANGES_DAY_LIMIT) < 0) {
                 $limitResources = FALSE;
             }
             $sql = $this->stmt->frontSetDays($limit, $limitResources);
-        }
-        else
-        { // Display set number
+        } else { // Display set number
             $sql = $this->stmt->frontSetNumber($limit);
         }
 

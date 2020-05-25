@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -38,43 +40,29 @@ class BADINPUT
      */
     public function close($error, &$object = FALSE, $method = FALSE)
     {
-        if (is_array($error))
-        {
+        if (is_array($error)) {
             $errors = $error;
-        }
-        else
-        {
+        } else {
             $errors = [$error];
         }
-        foreach ($errors as $error)
-        {
-            if ($object)
-            {
-                if (is_array($method))
-                {
+        foreach ($errors as $error) {
+            if ($object) {
+                if (is_array($method)) {
                     $methodName = array_shift($method);
                     $error = [$error];
-                    while ($method)
-                    {
+                    while ($method) {
                         $error[] = array_shift($method);
                     }
-                }
-                else
-                {
+                } else {
                     $methodName = $method;
                 }
-                if (!$methodName)
-                {
+                if (!$methodName) {
                     echo "Object defined but no method defined for object in BADINPUT";
                     die;
-                }
-                else
-                {
+                } else {
                     $object->{$methodName}($error);
                 }
-            }
-            else
-            {
+            } else {
                 GLOBALS::addTplVar('content', $error);
             }
         }
@@ -85,8 +73,7 @@ class BADINPUT
      */
     private function loadClose()
     {
-        switch (mb_strtolower($this->closeType))
-        {
+        switch (mb_strtolower($this->closeType)) {
             case 'close':
                 FACTORY_CLOSE::getInstance();
 

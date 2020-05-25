@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -12,7 +14,7 @@
 require_once("core/importexport/EXPORTER.php");
 
 /**
- * Make WIKINDX resources available to Google Scholar (see config.php)
+ * Make WIKINDX resources available to Google Scholar
  *
  * @package wikindx\core\importexport
  */
@@ -24,8 +26,6 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
     protected $map;
     /** object */
     private $session;
-    /** object */
-    private $config;
     /** boolean */
     private $noGs = FALSE;
 
@@ -35,7 +35,6 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         include_once("core/importexport/GOOGLESCHOLARMAP.php");
         $this->map = new GOOGLESCHOLARMAP();
@@ -53,30 +52,24 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
         $this->entry = $this->authors = [];
         $entry = FALSE;
         global $_SERVER;
-        if ($attach = $this->attachedFiles($row['resourceId']))
-        {
-            $entry .= '<meta name="citation_pdf_url" content="' . $this->config->WIKINDX_BASE_URL . '/' . $attach . '">';
+        if ($attach = $this->attachedFiles($row['resourceId'])) {
+            $entry .= '<meta name="citation_pdf_url" content="' . WIKINDX_BASE_URL . '/' . $attach . '">';
         }
-        if ($this->noGs)
-        {
+        if ($this->noGs) {
             return FALSE;
         }
         $this->creators = $creators;
         $this->getData($row);
-        if (!empty($this->entry))
-        {
+        if (!empty($this->entry)) {
             $entry .= $this->convertEntry();
         }
-        if (!empty($this->authors))
-        {
+        if (!empty($this->authors)) {
             $entry .= $this->convertEntryAuthors();
         }
-        if ($publisher = $this->publisher($row))
-        {
+        if ($publisher = $this->publisher($row)) {
             $entry .= '<meta name="citation_publisher" content="' . $this->uEncode($publisher) . '">';
         }
-        if (array_key_exists('resourceDoi', $row) && $row['resourceDoi'])
-        {
+        if (array_key_exists('resourceDoi', $row) && $row['resourceDoi']) {
             $entry .= '<meta name="citation_doi" content="' . $this->uEncode(str_replace('doi:', '', $row['resourceDoi'])) . '">';
         }
         $entry .= $this->keywords($row);
@@ -93,10 +86,8 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
     protected function convertEntry()
     {
         $array = [];
-        foreach ($this->entry as $key => $value)
-        {
-            if ($key == 'date')
-            {
+        foreach ($this->entry as $key => $value) {
+            if ($key == 'date') {
                 $array[] = '<meta name="citation_publication_date" content="' . str_replace('-', '/', $value) . '">';
 
                 continue;
@@ -114,8 +105,7 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
     protected function convertEntryAuthors()
     {
         $array = [];
-        foreach ($this->authors as $value)
-        {
+        foreach ($this->authors as $value) {
             $array[] = '<meta name="citation_author" content="' . $this->uEncode($value) . '">';
         }
 
@@ -137,13 +127,12 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
      *
      * @param int $resourceId
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function attachedFiles($resourceId)
     {
         // Are only logged on users allowed to view this file?
-        if ($this->session->getVar("setup_FileViewLoggedOnOnly"))
-        {
+        if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY) {
             return FALSE;
         }
         $attach = FACTORY_ATTACHMENT::getInstance();
@@ -154,10 +143,8 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
             ['resourceattachmentsId', 'resourceattachmentsHashFilename', 'resourceattachmentsFileName',
                 'resourceattachmentsPrimary', 'resourceattachmentsEmbargo', ]
         );
-        if (!$this->db->numRows($recordset))
-        {
-            if ($this->config->WIKINDX_GS_ATTACHMENT)
-            {
+        if (!$this->db->numRows($recordset)) {
+            if (WIKINDX_GS_ATTACHMENT) {
                 $this->noGs = TRUE;
             }
 
@@ -165,21 +152,16 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
         }
         $multiple = $this->db->numRows($recordset) > 1 ? TRUE : FALSE;
         $primary = FALSE;
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (!$this->session->getVar("setup_Superadmin") && ($row['resourceattachmentsEmbargo'] == 'Y'))
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (!$this->session->getVar("setup_Superadmin") && ($row['resourceattachmentsEmbargo'] == 'Y')) {
                 continue;
             }
-            if ($multiple && ($row['resourceattachmentsPrimary'] == 'Y'))
-            {
-                $primary = $attach->makeLink($row, $multiple, FALSE, FALSE);
+            if ($multiple && ($row['resourceattachmentsPrimary'] == 'Y')) {
+                $primary = $attach->makeLink($row, $resourceId, $multiple, FALSE, FALSE);
 
                 break;
-            }
-            elseif (!$multiple)
-            {
-                $primary = $attach->makeLink($row, $multiple, FALSE, FALSE);
+            } elseif (!$multiple) {
+                $primary = $attach->makeLink($row, $resourceId, $multiple, FALSE, FALSE);
             }
         }
 
@@ -190,12 +172,11 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
      *
      * @param array $row
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function publisher($row)
     {
-        if (!$row['publisherName'] && !$row['publisherLocation'])
-        {
+        if (!$row['publisherName'] && !$row['publisherLocation']) {
             return FALSE;
         }
 
@@ -207,7 +188,7 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
      *
      * @param array $row
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function keywords($row)
     {
@@ -216,12 +197,10 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
         $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
         $this->db->orderBy('keywordKeyword');
         $resultset = $this->db->select('resource_keyword', ['resourcekeywordKeywordId', 'keywordKeyword']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $array[] = '<meta name="citation_keyword" content="' . $this->uEncode($row['keywordKeyword']) . '">';
         }
-        if (!isset($array))
-        {
+        if (!isset($array)) {
             return FALSE;
         }
 
@@ -232,7 +211,7 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
      *
      * @param array $row
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function languages($row)
     {
@@ -241,12 +220,10 @@ class EXPORTGOOGLESCHOLAR extends EXPORTER
         $this->db->leftJoin('language', 'languageId', 'resourcelanguageLanguageId');
         $this->db->orderBy('languageLanguage');
         $resultset = $this->db->select('resource_language', ['resourcelanguageLanguageId', 'languageLanguage']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $array[] = '<meta name="citation_language" content="' . $this->uEncode($row['languageLanguage']) . '">';
         }
-        if (!isset($array))
-        {
+        if (!isset($array)) {
             return FALSE;
         }
 

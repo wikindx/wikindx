@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -41,19 +43,15 @@ class EDITMETADATA
      */
     public function init()
     {
-        if (!array_key_exists('type', $this->vars) || !array_key_exists('id', $this->vars))
-        {
+        if (!array_key_exists('type', $this->vars) || !array_key_exists('id', $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         if (($this->vars['type'] == 'abstractInit') || ($this->vars['type'] == 'noteInit') ||
             ($this->vars['type'] == 'noteDeleteInit') || ($this->vars['type'] == 'abstractDeleteInit') ||
             ($this->vars['type'] == 'noteDelete') || ($this->vars['type'] == 'abstractDelete') ||
-            ($this->vars['type'] == 'abstractEdit') || ($this->vars['type'] == 'noteEdit'))
-        {
+            ($this->vars['type'] == 'abstractEdit') || ($this->vars['type'] == 'noteEdit')) {
             $this->gatekeep->init();
-        }
-        else
-        {
+        } else {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         // proceed
@@ -65,7 +63,7 @@ class EDITMETADATA
      */
     public function abstractDeleteInit()
     {
-        $this->session->delVar('metadataLock');
+        $this->session->delVar("metadataLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "abstractDelete"));
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "abstractDelete");
@@ -88,7 +86,7 @@ class EDITMETADATA
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
         // lock reload
-        $this->session->setVar('metadataLock', TRUE);
+        $this->session->setVar("metadataLock", TRUE);
         $this->navigate($this->success->text("abstractDelete"));
     }
     /**
@@ -96,7 +94,7 @@ class EDITMETADATA
      */
     public function noteDeleteInit()
     {
-        $this->session->delVar('metadataLock');
+        $this->session->delVar("metadataLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "notesDelete"));
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "noteDelete");
@@ -119,7 +117,7 @@ class EDITMETADATA
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
         // lock reload
-        $this->session->setVar('metadataLock', TRUE);
+        $this->session->setVar("metadataLock", TRUE);
         $this->navigate($this->success->text("noteDelete"));
     }
     /**
@@ -127,7 +125,7 @@ class EDITMETADATA
      */
     private function abstractInit()
     {
-        $this->session->delVar('metadataLock');
+        $this->session->delVar("metadataLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "abstract"));
         // Create citation link for this type
         //		include_once("core/cite/CITE.php");
@@ -139,12 +137,9 @@ class EDITMETADATA
         $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
         $recordset = $this->db->select('resource_text', 'resourcetextAbstract');
         $row = $this->db->fetchRow($recordset);
-        if (!$this->db->numRows($recordset))
-        {
+        if (!$this->db->numRows($recordset)) {
             $pString .= \FORM\hidden('sql', 'insert');
-        }
-        else
-        {
+        } else {
             $pString .= \FORM\hidden('sql', 'update');
         }
         $pString .= \FORM\textareaInput(
@@ -163,7 +158,7 @@ class EDITMETADATA
      */
     private function noteInit()
     {
-        $this->session->delVar('metadataLock');
+        $this->session->delVar("metadataLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "notes"));
         // Create citation link for this type
         //		include_once("core/cite/CITE.php");
@@ -175,12 +170,9 @@ class EDITMETADATA
         $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
         $recordset = $this->db->select('resource_text', 'resourcetextNote');
         $row = $this->db->fetchRow($recordset);
-        if (!$this->db->numRows($recordset))
-        {
+        if (!$this->db->numRows($recordset)) {
             $pString .= \FORM\hidden('sql', 'insert');
-        }
-        else
-        {
+        } else {
             $pString .= \FORM\hidden('sql', 'update');
         }
         $pString .= \FORM\textareaInput(
@@ -200,20 +192,16 @@ class EDITMETADATA
     private function abstractEdit()
     {
         if (!array_key_exists('type', $this->vars) || !array_key_exists('id', $this->vars) ||
-            !array_key_exists('sql', $this->vars))
-        {
+            !array_key_exists('sql', $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        if ($this->session->getVar('metadataLock'))
-        {
+        if ($this->session->getVar("metadataLock")) {
             $this->navigate($this->errors->text("done", "abstract"));
         }
         $abstract = trim($this->vars['text']);
-        $userId = $this->session->getVar('setup_UserId');
-        if ($this->vars['sql'] == 'insert')
-        {
-            if (!$abstract)
-            {
+        $userId = $this->session->getVar("setup_UserId");
+        if ($this->vars['sql'] == 'insert') {
+            if (!$abstract) {
                 $this->navigate($this->errors->text("inputError", "missing"));
             }
             $message = $this->success->text("abstractAdd");
@@ -221,34 +209,26 @@ class EDITMETADATA
             $values[] = $this->vars['id'];
             $fields[] = "resourcetextAbstract";
             $values[] = $abstract;
-            if ($userId)
-            {
+            if ($userId) {
                 $fields[] = "resourcetextAddUserIdAbstract";
                 $values[] = $userId;
             }
             $this->db->insert('resource_text', $fields, $values);
-        }
-        else
-        { // update
+        } else { // update
             $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
             // if abstractText is empty, set fields to null
-            if (!$abstract)
-            {
+            if (!$abstract) {
                 $message = $this->success->text("abstractDelete");
                 $this->db->updateNull('resource_text', ['resourcetextAbstract', 'resourcetextAddUserIdAbstract',
                     'resourcetextEditUserIdAbstract', ]);
                 $this->checkDeleteRow();
-            }
-            else
-            {
+            } else {
                 $message = $this->success->text("abstractEdit");
-                if (!$this->db->selectFirstField('resource_text', 'resourcetextAddUserIdAbstract') && $userId)
-                {
+                if (!$this->db->selectFirstField('resource_text', 'resourcetextAddUserIdAbstract') && $userId) {
                     $updateArray["resourcetextAddUserIdAbstract"] = $userId;
                 }
                 $updateArray["resourcetextAbstract"] = $abstract;
-                if ($userId)
-                {
+                if ($userId) {
                     $updateArray["resourcetextEditUserIdAbstract"] = $userId;
                 }
                 $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
@@ -260,7 +240,7 @@ class EDITMETADATA
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
         // lock reload
-        $this->session->setVar('metadataLock', TRUE);
+        $this->session->setVar("metadataLock", TRUE);
         $this->navigate($message);
     }
     /**
@@ -269,20 +249,16 @@ class EDITMETADATA
     private function noteEdit()
     {
         if (!array_key_exists('type', $this->vars) || !array_key_exists('id', $this->vars) ||
-            !array_key_exists('sql', $this->vars))
-        {
+            !array_key_exists('sql', $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        if ($this->session->getVar('metadataLock'))
-        {
+        if ($this->session->getVar("metadataLock")) {
             $this->navigate($this->errors->text("done", "note"));
         }
         $note = trim($this->vars['text']);
-        $userId = $this->session->getVar('setup_UserId');
-        if ($this->vars['sql'] == 'insert')
-        {
-            if (!$note)
-            {
+        $userId = $this->session->getVar("setup_UserId");
+        if ($this->vars['sql'] == 'insert') {
+            if (!$note) {
                 $this->navigate($this->errors->text("inputError", "missing"));
             }
             $message = $this->success->text("noteAdd");
@@ -290,34 +266,26 @@ class EDITMETADATA
             $values[] = $this->vars['id'];
             $fields[] = "resourcetextNote";
             $values[] = $note;
-            if ($userId)
-            {
+            if ($userId) {
                 $fields[] = "resourcetextAddUserIdNote";
                 $values[] = $userId;
             }
             $this->db->insert('resource_text', $fields, $values);
-        }
-        else
-        { // update
+        } else { // update
             $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
-            if (!$this->db->selectFirstField('resource_text', 'resourcetextAddUserIdNote') && $userId)
-            {
+            if (!$this->db->selectFirstField('resource_text', 'resourcetextAddUserIdNote') && $userId) {
                 $updateArray["resourcetextAddUserIdNote"] = $userId;
             }
             // if noteText is empty, set fields to null
-            if (!$note)
-            {
+            if (!$note) {
                 $message = $this->success->text("noteDelete");
                 $this->db->updateNull('resource_text', ['resourcetextNote', 'resourcetextAddUserIdNote',
                     'resourcetextEditUserIdNote', ]);
                 $this->checkDeleteRow();
-            }
-            else
-            {
+            } else {
                 $message = $this->success->text("noteEdit");
                 $updateArray["resourcetextNote"] = $note;
-                if ($userId)
-                {
+                if ($userId) {
                     $updateArray["resourcetextEditUserIdNote"] = $userId;
                 }
                 $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
@@ -329,7 +297,7 @@ class EDITMETADATA
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
         // lock reload
-        $this->session->setVar('metadataLock', TRUE);
+        $this->session->setVar("metadataLock", TRUE);
         $this->navigate($message);
     }
     /**
@@ -341,8 +309,7 @@ class EDITMETADATA
         $recordset = $this->db->select('resource_text', ['resourcetextAbstract', 'resourcetextNote',
             'resourcetextUrls', ]);
         $row = $this->db->fetchRow($recordset);
-        if (!$row['resourcetextAbstract'] && !$row['resourcetextNote'] && !$row['resourcetextUrls'])
-        {
+        if (!$row['resourcetextAbstract'] && !$row['resourcetextNote'] && !$row['resourcetextUrls']) {
             $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
             $this->db->delete('resource_text');
         }

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -19,7 +21,6 @@ class STATS
     private $session;
     private $resourceMap;
     private $languageClass;
-    private $config;
     private $indexes = [];
     private $sum = [];
     private $totalResources;
@@ -39,85 +40,62 @@ class STATS
         $this->session = FACTORY_SESSION::getInstance();
         $this->resourceMap = FACTORY_RESOURCEMAP::getInstance();
         $this->languageClass = FACTORY_CONSTANTS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $type = '';
-        if ($this->vars['method'] == 'totals')
-        {
+        if ($this->vars['method'] == 'totals') {
             $type = $this->messages->text("menu", "statisticsTotals");
-        }
-        elseif ($this->vars['method'] == 'users')
-        {
+        } elseif ($this->vars['method'] == 'users') {
             $type = $this->messages->text("menu", "statisticsUsers");
-        }
-        elseif ($this->vars['method'] == 'keywords')
-        {
+        } elseif ($this->vars['method'] == 'keywords') {
             $type = $this->messages->text("menu", "statisticsKeywords");
-        }
-        elseif ($this->vars['method'] == 'years')
-        {
+        } elseif ($this->vars['method'] == 'years') {
             $type = $this->messages->text("menu", "statisticsYears");
-        }
-        elseif ($this->vars['method'] == 'allCreators')
-        {
+        } elseif ($this->vars['method'] == 'allCreators') {
             $type = $this->messages->text("menu", "statisticsAllCreators");
-        }
-        elseif ($this->vars['method'] == 'mainCreators')
-        {
+        } elseif ($this->vars['method'] == 'mainCreators') {
             $type = $this->messages->text("menu", "statisticsMainCreators");
-        }
-        elseif ($this->vars['method'] == 'publishers')
-        {
+        } elseif ($this->vars['method'] == 'publishers') {
             $type = $this->messages->text("menu", "statisticsPublishers");
-        }
-        elseif ($this->vars['method'] == 'collections')
-        {
+        } elseif ($this->vars['method'] == 'collections') {
             $type = $this->messages->text("menu", "statisticsCollections");
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "statistics") . ' - ' . $type);
     }
     /**
-    * Totals
-    */
+     * Totals
+     */
     public function totals()
     {
         $pString = $this->getTotals();
         $pString .= $this->resourceAccesses();
         $pString .= $this->resourceDates();
-        if ($this->session->getVar("setup_Write"))
-        {
+        if ($this->session->getVar("setup_Write")) {
             $pString .= $this->userData();
         }
         $pString .= $this->resourceTypes();
         GLOBALS::addTplVar('content', $pString);
     }
     /**
-    * Users stats
-    */
+     * Users stats
+     */
     public function users()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_USER_STATISTICS)
-        {
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_USER_STATISTICS) {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
             return $authorize->initLogon();
         }
         $icons = FACTORY_LOADICONS::getInstance();
         list($users, $resources, $quotes, $paraphrases, $musings) = $this->getUsers();
-        if (empty($users))
-        {
+        if (empty($users)) {
             GLOBALS::addTplVar('content', $this->messages->text("statistics", "noUserStats"));
 
             return;
         }
-        if (!array_key_exists('function', $this->vars))
-        {
+        if (!array_key_exists('function', $this->vars)) {
             arsort($resources);
             $sort = $resources;
-        }
-        else
-        {
-            switch ($this->vars['function'])
-            {
+        } else {
+            switch ($this->vars['function']) {
                 case 'resBottom':
                         arsort($resources);
                         $sort = $resources;
@@ -220,8 +198,7 @@ class STATS
         $pString .= \HTML\td(\HTML\strong($this->messages->text("statistics", "userMusings")) .
             '&nbsp;' . $toTop . '&nbsp;' . $toBottom);
         $pString .= \HTML\trEnd();
-        foreach ($sort as $userId => $null)
-        {
+        foreach ($sort as $userId => $null) {
             $pString .= \HTML\trStart();
             $name = $users[$userId]['usersFullname'] ? $users[$userId]['usersFullname'] : $users[$userId]['usersUsername'];
             $pString .= \HTML\td(\HTML\strong($name));
@@ -247,8 +224,8 @@ class STATS
         GLOBALS::addTplVar('content', $pString);
     }
     /**
-    * Set the maturity index for a resource
-    */
+     * Set the maturity index for a resource
+     */
     public function setMaturityIndex()
     {
         include_once("core/modules/resource/RESOURCEVIEW.php");
@@ -256,20 +233,16 @@ class STATS
         $gatekeep = FACTORY_GATEKEEP::getInstance();
         $gatekeep->init();
         if (!array_key_exists('resourceId', $this->vars) || !array_key_exists('maturityIndex', $this->vars) ||
-        !is_numeric($this->vars['maturityIndex']))
-        {
-            $resource->init($this->session->getVar('sql_LastSolo'));
+        !is_numeric($this->vars['maturityIndex'])) {
+            $resource->init($this->session->getVar("sql_LastSolo"));
             GLOBALS::addTplVar('content', $this->errors->text("inputError", "invalid"));
 
             return;
         }
         $mIndex = round(trim($this->vars['maturityIndex']), 1);
-        if ($mIndex > 10)
-        {
+        if ($mIndex > 10) {
             $mIndex = 10;
-        }
-        elseif ($mIndex < 0)
-        {
+        } elseif ($mIndex < 0) {
             $mIndex = 0;
         }
         $this->db->formatConditions(['resourcemiscId' => $this->vars['resourceId']]);
@@ -277,7 +250,7 @@ class STATS
             'resource_misc',
             $this->db->formatFields('resourcemiscMaturityIndex') . "=" . $this->db->tidyInput($mIndex)
         );
-        $resource->init($this->session->getVar('sql_LastSolo'));
+        $resource->init($this->session->getVar("sql_LastSolo"));
         GLOBALS::addTplVar('content', $this->success->text("maturityIndex"));
     }
     /**
@@ -285,8 +258,7 @@ class STATS
      */
     public function keywords()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_STATISTICS)
-        {
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS) {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
             return $authorize->initLogon();
@@ -301,14 +273,11 @@ class STATS
         arsort($this->sum);
         $pString = HTML\tableStart('generalTable borderStyleSolid');
         $maxNo = FALSE;
-        foreach ($this->sum as $id => $value)
-        {
-            if (!$value)
-            {
+        foreach ($this->sum as $id => $value) {
+            if (!$value) {
                 continue;
             }
-            if (!$maxNo)
-            {
+            if (!$maxNo) {
                 $maxNo = $value; // first in row ordered DESC
             }
             $pString .= \HTML\trStart();
@@ -329,8 +298,7 @@ class STATS
      */
     public function years()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_STATISTICS)
-        {
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS) {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
             return $authorize->initLogon();
@@ -345,14 +313,11 @@ class STATS
         $pString = HTML\tableStart('generalTable borderStyleSolid');
         arsort($this->sum);
         $maxNo = FALSE;
-        foreach ($this->sum as $id => $value)
-        {
-            if (!$value)
-            {
+        foreach ($this->sum as $id => $value) {
+            if (!$value) {
                 continue;
             }
-            if (!$maxNo)
-            {
+            if (!$maxNo) {
                 $maxNo = $value; // first in row ordered DESC
             }
             $pString .= \HTML\trStart();
@@ -373,8 +338,7 @@ class STATS
      */
     public function allCreators()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_STATISTICS)
-        {
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS) {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
             return $authorize->initLogon();
@@ -389,19 +353,15 @@ class STATS
         arsort($this->sum);
         $pString = HTML\tableStart('generalTable borderStyleSolid');
         $maxNo = FALSE;
-        foreach ($this->sum as $id => $value)
-        {
-            if (!$value)
-            {
+        foreach ($this->sum as $id => $value) {
+            if (!$value) {
                 continue;
             }
-            if (!$maxNo)
-            {
+            if (!$maxNo) {
                 $maxNo = $value; // first in row ordered DESC
             }
             $name = $this->indexes[$id];
-            if (array_key_exists($id, $this->initials))
-            {
+            if (array_key_exists($id, $this->initials)) {
                 $name .= $this->initials[$id];
             }
             $pString .= \HTML\trStart();
@@ -422,8 +382,7 @@ class STATS
      */
     public function mainCreators()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_STATISTICS)
-        {
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS) {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
             return $authorize->initLogon();
@@ -438,19 +397,15 @@ class STATS
         arsort($this->sum);
         $pString = HTML\tableStart('generalTable borderStyleSolid');
         $maxNo = FALSE;
-        foreach ($this->sum as $id => $value)
-        {
-            if (!$value)
-            {
+        foreach ($this->sum as $id => $value) {
+            if (!$value) {
                 continue;
             }
-            if (!$maxNo)
-            {
+            if (!$maxNo) {
                 $maxNo = $value; // first in row ordered DESC
             }
             $name = $this->indexes[$id];
-            if (array_key_exists($id, $this->initials))
-            {
+            if (array_key_exists($id, $this->initials)) {
                 $name .= $this->initials[$id];
             }
             $pString .= \HTML\trStart();
@@ -471,8 +426,7 @@ class STATS
      */
     public function collections()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_STATISTICS)
-        {
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS) {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
             return $authorize->initLogon();
@@ -487,14 +441,11 @@ class STATS
         arsort($this->sum);
         $pString = HTML\tableStart('generalTable borderStyleSolid');
         $maxNo = FALSE;
-        foreach ($this->sum as $id => $value)
-        {
-            if (!$value)
-            {
+        foreach ($this->sum as $id => $value) {
+            if (!$value) {
                 continue;
             }
-            if (!$maxNo)
-            {
+            if (!$maxNo) {
                 $maxNo = $value; // first in row ordered DESC
             }
             $pString .= \HTML\trStart();
@@ -515,8 +466,7 @@ class STATS
      */
     public function publishers()
     {
-        if (!$this->session->getVar("setup_Write") && !$this->config->WIKINDX_DISPLAY_STATISTICS)
-        {
+        if (!$this->session->getVar("setup_Write") && !WIKINDX_DISPLAY_STATISTICS) {
             $authorize = FACTORY_AUTHORIZE::getInstance();
 
             return $authorize->initLogon();
@@ -531,24 +481,18 @@ class STATS
         arsort($this->sum);
         $pString = HTML\tableStart('generalTable borderStyleSolid');
         $maxNo = FALSE;
-        foreach ($this->sum as $id => $value)
-        {
-            if (!$value)
-            {
+        foreach ($this->sum as $id => $value) {
+            if (!$value) {
                 continue;
             }
-            if (!$maxNo)
-            {
+            if (!$maxNo) {
                 $maxNo = $value; // first in row ordered DESC
             }
             $pString .= \HTML\trStart();
-            if (array_key_exists($id, $this->miscField1))
-            {
+            if (array_key_exists($id, $this->miscField1)) {
                 $pString .= \HTML\td(\HTML\a('link', $this->indexes[$id], 'index.php?' .
                 htmlentities('action=list_LISTSOMERESOURCES_CORE&method=specialPublisherProcess&id=' . $id)));
-            }
-            else
-            {
+            } else {
                 $pString .= \HTML\td(\HTML\a('link', $this->indexes[$id], 'index.php?' .
                 htmlentities('action=list_LISTSOMERESOURCES_CORE&method=publisherProcess&id=' . $id)));
             }
@@ -559,60 +503,51 @@ class STATS
         GLOBALS::addTplVar('content', $pString);
     }
     /**
-    * Get users' data
-    *
-    * @return array key is usersId in both arrays
-    */
+     * Get users' data
+     *
+     * @return array key is usersId in both arrays
+     */
     private function getUsers()
     {
         $users = $resources = $quotes = $paraphrases = $musings = [];
         $recordset = $this->db->select('users', ['usersId', 'usersUsername', 'usersFullname']);
-        while ($rowUsers = $this->db->fetchRow($recordset))
-        {
+        while ($rowUsers = $this->db->fetchRow($recordset)) {
             $users[$rowUsers['usersId']]['usersUsername'] = $rowUsers['usersUsername'];
             $users[$rowUsers['usersId']]['usersFullname'] = $rowUsers['usersFullname'];
             $this->db->formatConditions(['resourcemiscAddUserIdResource' => $rowUsers['usersId']]);
             $recRes = $this->db->selectCounts('resource_misc', 'resourcemiscAddUserIdResource');
-            while ($rowRes = $this->db->fetchRow($recRes))
-            {
+            while ($rowRes = $this->db->fetchRow($recRes)) {
                 $resources[$rowUsers['usersId']] = $rowRes['count'];
             }
             $this->db->formatConditions(['resourcemetadataAddUserId' => $rowUsers['usersId']]);
             $this->db->formatConditions(['resourcemetadataType' => 'q']);
             $recQuo = $this->db->selectCounts('resource_metadata', 'resourcemetadataAddUserId');
-            while ($rowQuo = $this->db->fetchRow($recQuo))
-            {
+            while ($rowQuo = $this->db->fetchRow($recQuo)) {
                 $quotes[$rowUsers['usersId']] = $rowQuo['count'];
             }
             $this->db->formatConditions(['resourcemetadataAddUserId' => $rowUsers['usersId']]);
             $this->db->formatConditions(['resourcemetadataType' => 'p']);
             $recPar = $this->db->selectCounts('resource_metadata', 'resourcemetadataAddUserId');
-            while ($rowPar = $this->db->fetchRow($recPar))
-            {
+            while ($rowPar = $this->db->fetchRow($recPar)) {
                 $paraphrases[$rowUsers['usersId']] = $rowPar['count'];
             }
             $this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
             $this->db->formatConditions(['resourcemetadataAddUserId' => $rowUsers['usersId']]);
             $this->db->formatConditions(['resourcemetadataType' => 'm']);
             $recMus = $this->db->selectCounts('resource_metadata', 'resourcemetadataAddUserId');
-            while ($rowMus = $this->db->fetchRow($recMus))
-            {
+            while ($rowMus = $this->db->fetchRow($recMus)) {
                 $musings[$rowUsers['usersId']] = $rowMus['count'];
             }
-            if (!array_key_exists($rowUsers['usersId'], $resources))
-            {
+            if (!array_key_exists($rowUsers['usersId'], $resources)) {
                 $resources[$rowUsers['usersId']] = 0;
             }
-            if (!array_key_exists($rowUsers['usersId'], $quotes))
-            {
+            if (!array_key_exists($rowUsers['usersId'], $quotes)) {
                 $quotes[$rowUsers['usersId']] = 0;
             }
-            if (!array_key_exists($rowUsers['usersId'], $paraphrases))
-            {
+            if (!array_key_exists($rowUsers['usersId'], $paraphrases)) {
                 $paraphrases[$rowUsers['usersId']] = 0;
             }
-            if (!array_key_exists($rowUsers['usersId'], $musings))
-            {
+            if (!array_key_exists($rowUsers['usersId'], $musings)) {
                 $musings[$rowUsers['usersId']] = 0;
             }
         }
@@ -620,10 +555,10 @@ class STATS
         return [$users, $resources, $quotes, $paraphrases, $musings];
     }
     /**
-    * getTotals
-    *
-    * @return string
-    */
+     * getTotals
+     *
+     * @return string
+     */
     private function getTotals()
     {
         $recordset = $this->db->select('database_summary', ['databasesummaryTotalResources',
@@ -632,8 +567,7 @@ class STATS
         $this->totalResources = $row['databasesummaryTotalResources'];
         $string = BR . $this->messages->text("statistics", "totalResources") .
             "&nbsp;&nbsp;" . \HTML\em($this->totalResources);
-        if ($this->session->getVar('setup_MetadataAllow'))
-        {
+        if (WIKINDX_METADATA_ALLOW) {
             $string .= BR . $this->messages->text("statistics", "totalQuotes") .
                 "&nbsp;&nbsp;" . \HTML\em($row['databasesummaryTotalQuotes']);
             $string .= BR . $this->messages->text("statistics", "totalParaphrases") .
@@ -645,55 +579,48 @@ class STATS
         return \HTML\p($string);
     }
     /**
-    * resourceAccesses
-    *
-    * @return string
-    */
+     * resourceAccesses
+     *
+     * @return string
+     */
     private function resourceAccesses()
     {
-        $row = $this->db->selectMax('resource_misc', 'resourcemiscAccesses');
+        $row = $this->db->selectMax('statistics_resource_views', 'statisticsresourceviewsCount');
         $string = $this->messages->text("statistics", "maxAccesses") .
-            "&nbsp;&nbsp;" . \HTML\em($row['resourcemiscAccesses']);
-        $recordset = $this->db->selectMin('resource_misc', 'resourcemiscAccesses');
+            "&nbsp;&nbsp;" . \HTML\em($row['statisticsresourceviewsCount']);
+        $recordset = $this->db->selectMin('statistics_resource_views', 'statisticsresourceviewsCount');
         $row = $this->db->fetchRow($recordset);
         $string .= BR . $this->messages->text("statistics", "minAccesses") .
-            "&nbsp;&nbsp;" . \HTML\em($row['resourcemiscAccesses']);
+            "&nbsp;&nbsp;" . \HTML\em($row['statisticsresourceviewsCount']);
 
         return \HTML\p($string);
     }
     /**
-    * resourceDates
-    *
-    * @return string
-    */
+     * resourceDates
+     *
+     * @return string
+     */
     private function resourceDates()
     {
         $recordset = $this->db->selectMin('resource_timestamp', 'resourcetimestampTimestampAdd');
         $row = $this->db->fetchRow($recordset);
-        if (method_exists($this->languageClass, "dateFormat"))
-        {
+        if (method_exists($this->languageClass, "dateFormat")) {
             $string = $this->messages->text("statistics", "firstAdded") .
             "&nbsp;&nbsp;" . \HTML\em(\LOCALES\dateFormat($row['resourcetimestampTimestampAdd']));
-        }
-        else
-        {
+        } else {
             $string = $this->messages->text("statistics", "firstAdded") .
             "&nbsp;&nbsp;" . \HTML\em($row['resourcetimestampTimestampAdd']);
         }
         $row = $this->db->selectMax('resource_timestamp', 'resourcetimestampTimestampAdd');
-        if (method_exists($this->languageClass, "dateFormat"))
-        {
+        if (method_exists($this->languageClass, "dateFormat")) {
             $string .= BR . $this->messages->text("statistics", "lastAdded") .
             "&nbsp;&nbsp;" . \HTML\em(\LOCALES\dateFormat($row['resourcetimestampTimestampAdd']));
-        }
-        else
-        {
+        } else {
             $string .= BR . $this->messages->text("statistics", "lastAdded") .
                 "&nbsp;&nbsp;" . \HTML\em($row['resourcetimestampTimestampAdd']);
         }
         $average = $this->db->selectAverageDate('resource_timestamp', 'resourcetimestampTimestampAdd');
-        if (method_exists($this->languageClass, "dateFormat"))
-        {
+        if (method_exists($this->languageClass, "dateFormat")) {
             $average = \LOCALES\dateFormat($average);
         }
         $string .= BR . $this->messages->text("statistics", "meanAddedResource") .
@@ -702,10 +629,10 @@ class STATS
         return \HTML\p($string);
     }
     /**
-    * userData
-    *
-    * @return string
-    */
+     * userData
+     *
+     * @return string
+     */
     private function userData()
     {
         $string = "";
@@ -716,8 +643,7 @@ class STATS
             ['resourcemiscAddUserIdResource', 'usersUsername', 'usersFullname']
         );
         $row = $this->db->fetchRow($recordset);
-        if (is_array($row))
-        {
+        if (is_array($row)) {
             $user = \HTML\a(
                 'link',
                 $this->getUsername($row),
@@ -726,8 +652,7 @@ class STATS
             $string .= $this->messages->text("statistics", "userResourceTotal") .
                 "&nbsp;&nbsp;" . \HTML\em($row['count'] . "&nbsp;($user)");
         }
-        if (!$this->session->getVar('setup_MetadataAllow'))
-        {
+        if (!WIKINDX_METADATA_ALLOW) {
             return \HTML\p($string);
         }
         // Quotes
@@ -735,8 +660,7 @@ class STATS
         $this->db->formatConditions(['resourcemetadataType' => 'q']);
         $recordset = $this->db->selectCountMax('resource_metadata', ['resourcemetadataAddUserId', 'usersUsername', 'usersFullname']);
         $row = $this->db->fetchRow($recordset);
-        if (is_array($row))
-        {
+        if (is_array($row)) {
             $user = \HTML\a(
                 'link',
                 $this->getUsername($row),
@@ -753,8 +677,7 @@ class STATS
             ['resourcemetadataAddUserId', 'usersUsername', 'usersFullname']
         );
         $row = $this->db->fetchRow($recordset);
-        if (is_array($row))
-        {
+        if (is_array($row)) {
             $user = \HTML\a(
                 'link',
                 $this->getUsername($row),
@@ -772,8 +695,7 @@ class STATS
             ['resourcemetadataAddUserId', 'usersUsername', 'usersFullname']
         );
         $row = $this->db->fetchRow($recordset);
-        if (is_array($row))
-        {
+        if (is_array($row)) {
             $user = \HTML\a(
                 'link',
                 $this->getUsername($row),
@@ -786,34 +708,29 @@ class STATS
         return \HTML\p($string);
     }
     /**
-    * getUsername
-    *
-    * @return string
-    */
+     * getUsername
+     *
+     * @param mixed $row
+     *
+     * @return string
+     */
     private function getUsername(&$row)
     {
-        if (!is_array($row))
-        {
+        if (!is_array($row)) {
             return $this->messages->text("user", "unknown");
-        }
-        elseif (array_key_exists('usersFullname', $row))
-        {
+        } elseif ($row['usersFullname']) {
             return $row['usersFullname'];
-        }
-        elseif (array_key_exists('usersUsername', $row))
-        {
+        } elseif ($row['usersUsername']) {
             return $row['usersUsername'];
-        }
-        else
-        {
+        } else {
             return $this->messages->text("user", "unknown");
         }
     }
     /**
-    * resourceTypes
-    *
-    * @return string
-    */
+     * resourceTypes
+     *
+     * @return string
+     */
     private function resourceTypes()
     {
         $pString = \HTML\strong($this->messages->text("statistics", "resourceTypes"));
@@ -822,10 +739,8 @@ class STATS
         $this->db->orderBy('count', TRUE, FALSE);
         $recordset = $this->db->selectCounts('resource', 'resourceType');
         $maxNo = FALSE;
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (!$maxNo)
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (!$maxNo) {
                 $maxNo = $row['count']; // first in row ordered DESC
             }
             $pString .= \HTML\trStart();
@@ -847,8 +762,8 @@ class STATS
         return $pString;
     }
     /**
-    * Get publishers from db
-    */
+     * Get publishers from db
+     */
     private function getPublishers()
     {
         include_once("core/browse/BROWSECOMMON.php");
@@ -881,48 +796,40 @@ class STATS
             ['resourceType', 'publisherName', 'publisherLocation', 'special'],
             $subQ
         );
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (array_key_exists($row['publisherId'], $this->indexes))
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (array_key_exists($row['publisherId'], $this->indexes)) {
                 continue;
             }
             $this->collateP($row, FALSE);
         }
     }
     /**
-    * Add publishers to array and sum totals
-    *
-    * @param array $row
-    */
+     * Add publishers to array and sum totals
+     *
+     * @param array $row
+     */
     private function collateP($row)
     {
         $this->sum[$row['publisherId']] = $row['count'];
         if (array_key_exists('publisherName', $row) && array_key_exists('publisherLocation', $row)
-            && $row['publisherName'] && $row['publisherLocation'])
-        {
+            && $row['publisherName'] && $row['publisherLocation']) {
             $this->indexes[$row['publisherId']] = stripslashes($row['publisherName']) .
             '&nbsp;(' . stripslashes($row['publisherLocation']) . ')';
-        }
-        elseif (array_key_exists('publisherLocation', $row) && $row['publisherLocation'])
-        {
+        } elseif (array_key_exists('publisherLocation', $row) && $row['publisherLocation']) {
             $this->indexes[$row['publisherId']] = '(' . stripslashes($row['publisherLocation']) . ')';
-        }
-        else
-        {
+        } else {
             $this->indexes[$row['publisherId']] = preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['publisherName']));
         }
         // For proceedings_article and proceedings, publisher is stored in miscField1 while for books, transPublisher stored in miscField1.
         if ((($row['resourceType'] == 'proceedings_article') || ($row['resourceType'] == 'proceedings')
          || ($row['resourceType'] == 'book') || ($row['resourceType'] == 'book_article') || ($row['resourceType'] == 'book_chapter'))
-        && ($row['special'] == 'Y'))
-        {
+        && ($row['special'] == 'Y')) {
             $this->miscField1[$row['publisherId']] = TRUE;
         }
     }
     /**
-    * Get collections from db
-    */
+     * Get collections from db
+     */
     private function getCollections()
     {
         include_once("core/browse/BROWSECOMMON.php");
@@ -937,24 +844,21 @@ class STATS
             'collectionId',
             ['resourcemiscCollection', 'collectionType', 'collectionTitle', 'collectionTitleShort']
         );
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (array_key_exists($row['resourcemiscCollection'], $this->indexes))
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (array_key_exists($row['resourcemiscCollection'], $this->indexes)) {
                 continue;
             }
-            if (!$row['collectionType'])
-            {
+            if (!$row['collectionType']) {
                 continue;
             }
             $this->collateColl($row);
         }
     }
     /**
-    * Add collections to array and sum totals
-    *
-    * @param array $row
-    */
+     * Add collections to array and sum totals
+     *
+     * @param array $row
+     */
     private function collateColl($row)
     {
         $this->sum[$row['resourcemiscCollection']] = $row['count'];
@@ -963,18 +867,17 @@ class STATS
         $this->indexes[$row['resourcemiscCollection']] = preg_replace("/{(.*)}/Uu", "$1", \HTML\dbToFormTidy($title));
     }
     /**
-    * Get creators from db with occurrences in resources
-    *
-    * @param mixed $main
-    */
+     * Get creators from db with occurrences in resources
+     *
+     * @param mixed $main
+     */
     private function getCreators($main)
     {
         include_once("core/browse/BROWSECOMMON.php");
         $common = new BROWSECOMMON();
         $common->userBibCondition('resourcecreatorResourceId');
         $this->db->formatConditions(['resourcecreatorCreatorId' => ' IS NOT NULL']);
-        if ($main)
-        { // get only main creators
+        if ($main) { // get only main creators
             $this->db->formatConditions(['resourcecreatorRole' => '1']);
         }
         $subSql = $this->db->selectNoExecute('resource_creator', ['resourcecreatorResourceId', 'resourcecreatorCreatorId'], TRUE, TRUE, TRUE);
@@ -985,16 +888,12 @@ class STATS
         $this->db->orderBy('creatorSurname');
         $recordset = $this->db->selectCounts(FALSE, 'resourcecreatorCreatorId', ['creatorPrefix', 'creatorSurname',
             'creatorSameAs', 'creatorInitials', 'creatorFirstname', ], $this->db->subQuery($subSql, 'rc', FALSE), FALSE);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->collateC($row);
         }
-        if (!empty($this->sameAs))
-        {
-            foreach ($this->sameAs as $id => $sameAsId)
-            {
-                if (!array_key_exists($sameAsId, $this->indexes))
-                {
+        if (!empty($this->sameAs)) {
+            foreach ($this->sameAs as $id => $sameAsId) {
+                if (!array_key_exists($sameAsId, $this->indexes)) {
                     $this->db->formatConditions(['creatorId' => $sameAsId]);
                     $row = $this->db->selectFirstRow('creator', ['creatorPrefix', 'creatorSurname']);
                     $surname = preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorSurname']));
@@ -1005,56 +904,45 @@ class STATS
                 }
                 $this->sum[$sameAsId] += $this->sum[$id];
             }
-            foreach ($this->sameAs as $id => $sameAsId)
-            {
+            foreach ($this->sameAs as $id => $sameAsId) {
                 $this->sum[$id] = $this->sum[$sameAsId];
             }
         }
     }
     /**
-    * Add creators to array and sum totals
-    *
-    * @param array $row
-    */
+     * Add creators to array and sum totals
+     *
+     * @param array $row
+     */
     private function collateC($row)
     {
-        if (!trim($row['creatorSurname']))
-        {
+        if (!trim($row['creatorSurname'])) {
             return;
         }
         $surname = preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorSurname']));
         $prefix = preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorPrefix']));
-        if (!array_key_exists($prefix . $surname, $this->collectedSurnames))
-        {
+        if (!array_key_exists($prefix . $surname, $this->collectedSurnames)) {
             $this->collectedSurnames[$prefix . $surname] = 1;
-        }
-        else
-        {
+        } else {
             $this->collectedSurnames[$prefix . $surname]++;
         }
-        if ($row['creatorFirstname'] || $row['creatorInitials'])
-        {
+        if ($row['creatorFirstname'] || $row['creatorInitials']) {
             $firstname = FALSE;
-            if ($row['creatorFirstname'])
-            {
+            if ($row['creatorFirstname']) {
                 $split = preg_split('/(?<!^)(?!$)/u', preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorFirstname'])));
                 $firstname = $split[0] . '.';
             }
-            if ($row['creatorInitials'])
-            {
+            if ($row['creatorInitials']) {
                 $this->initials[$row['resourcecreatorCreatorId']] = ', ' . $firstname .
                     str_replace(' ', '.', preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorInitials']))) . '.';
-            }
-            else
-            {
+            } else {
                 $this->initials[$row['resourcecreatorCreatorId']] = ', ' . $firstname;
             }
         }
         $this->indexes[$row['resourcecreatorCreatorId']] = $surname;
         $this->prefix[$row['resourcecreatorCreatorId']] = $prefix;
         $this->sum[$row['resourcecreatorCreatorId']] = $row['count'];
-        if ($row['creatorSameAs'])
-        {
+        if ($row['creatorSameAs']) {
             $this->sameAs[$row['resourcecreatorCreatorId']] = $row['creatorSameAs'];
         }
     }
@@ -1072,8 +960,7 @@ class STATS
         $this->db->groupBy('resourcekeywordKeywordId');
         $this->db->orderBy('keywordKeyword');
         $recordset = $this->db->selectCounts('resource_keyword', 'resourcekeywordKeywordId', ['keywordKeyword', 'keywordGlossary']);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->collateK($row);
         }
     }
@@ -1084,30 +971,25 @@ class STATS
      */
     private function collateK($row)
     {
-        if (!array_key_exists($row['resourcekeywordKeywordId'], $this->indexes))
-        {
+        if (!array_key_exists($row['resourcekeywordKeywordId'], $this->indexes)) {
             $this->indexes[$row['resourcekeywordKeywordId']] = preg_replace(
                 "/{(.*)}/Uu",
                 "$1",
-                \HTML\dbToHtmlTidy($row['keywordKeyword'])
+                \HTML\nlToHtml($row['keywordKeyword'])
             );
-            if ($row['keywordGlossary'])
-            {
+            if ($row['keywordGlossary']) {
                 $this->glossary[$row['resourcekeywordKeywordId']] = \HTML\dbToHtmlPopupTidy($row['keywordGlossary']);
             }
         }
-        if (!array_key_exists($row['resourcekeywordKeywordId'], $this->sum))
-        {
+        if (!array_key_exists($row['resourcekeywordKeywordId'], $this->sum)) {
             $this->sum[$row['resourcekeywordKeywordId']] = $row['count'];
-        }
-        else
-        {
+        } else {
             $this->sum[$row['resourcekeywordKeywordId']] += $row['count'];
         }
     }
     /**
-    * Get years from db
-    */
+     * Get years from db
+     */
     private function getYears()
     {
         include_once("core/browse/BROWSECOMMON.php");
@@ -1116,23 +998,21 @@ class STATS
         $this->db->leftJoin('resource', 'resourceId', 'resourceyearId');
         $this->db->orderBy('resourceyearYear1');
         $recordset = $this->db->selectCounts('resource_year', 'resourceyearYear1');
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->collateY($row);
         }
     }
     /**
-    * Add years to array and sum totals
-    *
-    * @param array $row
-    */
+     * Add years to array and sum totals
+     *
+     * @param array $row
+     */
     private function collateY($row)
     {
-        if (!$row['resourceyearYear1'])
-        {
+        if (!$row['resourceyearYear1']) {
             return;
         }
-        $this->indexes[$row['resourceyearYear1']] = \HTML\dbToHtmlTidy($row['resourceyearYear1']);
+        $this->indexes[$row['resourceyearYear1']] = \HTML\nlToHtml($row['resourceyearYear1']);
         $this->sum[$row['resourceyearYear1']] = $row['count'];
     }
     /**

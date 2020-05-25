@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: localedescription\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-01-25 18:48+0100\n"
+"POT-Creation-Date: 2020-05-24 21:55+0200\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
@@ -20,15 +20,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: components/plugins/localedescription/localedescriptionmessages.php:18
+#: components/plugins/localedescription/localedescriptionmessages.php:20
 msgid "Localize Front Page"
 msgstr ""
 
-#: components/plugins/localedescription/localedescriptionmessages.php:19
+#: components/plugins/localedescription/localedescriptionmessages.php:21
 msgid "Localize Front Page Description"
 msgstr ""
 
-#: components/plugins/localedescription/localedescriptionmessages.php:20
+#: components/plugins/localedescription/localedescriptionmessages.php:22
 msgid ""
 "Here, you can set an alternate front page description for each localization "
 "language you have installed.\n"
@@ -39,28 +39,28 @@ msgid ""
 "\t\t\t\t\t\t language for which there is no alternate front page description."
 msgstr ""
 
-#: components/plugins/localedescription/localedescriptionmessages.php:24
+#: components/plugins/localedescription/localedescriptionmessages.php:26
 msgid ""
 "If you empty the description and submit, you are removing the database field."
 msgstr ""
 
-#: components/plugins/localedescription/localedescriptionmessages.php:25
+#: components/plugins/localedescription/localedescriptionmessages.php:27
 msgid "Choose localization"
 msgstr ""
 
-#: components/plugins/localedescription/localedescriptionmessages.php:26
+#: components/plugins/localedescription/localedescriptionmessages.php:28
 msgid "Original Admin|Configure description"
 msgstr ""
 
-#: components/plugins/localedescription/localedescriptionmessages.php:27
+#: components/plugins/localedescription/localedescriptionmessages.php:29
 msgid "Missing language"
 msgstr "Langue manquante"
 
-#: components/plugins/localedescription/localedescriptionmessages.php:28
+#: components/plugins/localedescription/localedescriptionmessages.php:30
 msgid "Successfully edited ###"
 msgstr ""
 
-#: components/plugins/localedescription/localedescriptionmessages.php:29
+#: components/plugins/localedescription/localedescriptionmessages.php:31
 msgid ""
 "Only English is available on this WIKINDX – set the front page description "
 "via the Admin|Configure interface"

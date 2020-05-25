@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -36,8 +38,7 @@ class BROWSELANGUAGE
     {
         $this->sum = [];
         $this->getLanguages();
-        if (empty($this->languages))
-        {
+        if (empty($this->languages)) {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noLanguages"));
 
             return;
@@ -67,8 +68,7 @@ class BROWSELANGUAGE
         $this->db->leftJoin('language', 'languageId', 'resourcelanguageLanguageId');
         $this->db->orderBy('languageLanguage');
         $recordset = $this->db->selectFromSubQuery(FALSE, ['languageId', 'languageLanguage', 'count'], $subQ);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->collate($row);
         }
     }
@@ -80,7 +80,7 @@ class BROWSELANGUAGE
         $this->languages[$row['languageId']] = preg_replace(
             "/{(.*)}/Uu",
             "$1",
-            \HTML\dbToHtmlTidy($row['languageLanguage'])
+            \HTML\nlToHtml($row['languageLanguage'])
         );
         $this->sum[$row['languageId']] = $row['count'];
     }
@@ -93,8 +93,7 @@ class BROWSELANGUAGE
     {
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
-        foreach ($this->languages as $id => $name)
-        {
+        foreach ($this->languages as $id => $name) {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .

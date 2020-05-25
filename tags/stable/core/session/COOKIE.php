@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -16,7 +18,7 @@
 class COOKIE
 {
     /** string */
-    private $cookieName;
+    private $cookieName = "wikindx_" . WIKINDX_DB;
     /** array */
     private $cookieVars;
 
@@ -26,12 +28,9 @@ class COOKIE
     public function __construct()
     {
         // whatever array cookie variables are in, we grab 'em.
-        if (isset($_COOKIE))
-        {
+        if (isset($_COOKIE)) {
             $this->cookieVars = &$_COOKIE;
         }
-        $config = FACTORY_CONFIG::getInstance();
-        $this->cookieName = "wikindx_" . $config->WIKINDX_DB;
     }
     /**
      * Set a cookie if user requests through mywikindx 'remember me' checkbox
@@ -63,28 +62,24 @@ class COOKIE
      */
     public function grabCookie()
     {
-        if (!array_key_exists($this->cookieName, $this->cookieVars))
-        {
+        if (!array_key_exists($this->cookieName, $this->cookieVars)) {
             return FALSE; // no cookie set
         }
 
         $cookieArray = unserialize(base64_decode($this->cookieVars[$this->cookieName]));
 
-        if (!array_key_exists('username', $cookieArray))
-        {
+        if (!array_key_exists('username', $cookieArray)) {
             return FALSE; // invalid cookie
         }
 
-        if (!$cookieArray['username'])
-        {
+        if (!$cookieArray['username']) {
             return FALSE; // invalid cookie
         }
 
         // Cookie set so check for valid username
         $db = FACTORY_DB::getInstance();
         $recordSet = $db->select('users', ['usersUsername', 'usersId', 'usersAdmin'], ['usersUsername' => $cookieArray['username']]);
-        if (!$db->numRows($recordSet))
-        {
+        if (!$db->numRows($recordSet)) {
             return FALSE;
         }
 

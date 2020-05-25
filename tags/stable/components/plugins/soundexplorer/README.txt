@@ -23,6 +23,9 @@ Thus, plugins/soundexplorer/index.php etc.
 
 CHANGELOG:
 
+v2.4, 2020
+1. Wikindx compatibility version 7.
+
 v2.3, 2020
 1. Add documentation.
 

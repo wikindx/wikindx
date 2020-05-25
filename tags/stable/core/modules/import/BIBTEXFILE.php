@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -40,34 +42,29 @@ class BIBTEXFILE
      */
     public function init()
     {
-        if (!$this->session->getVar("setup_ImportBib"))
-        {
+        if (!WIKINDX_IMPORT_BIB) {
             $this->gatekeep->requireSuper = TRUE;
         }
         $this->gatekeep->init();
-        if (array_key_exists('function', $this->vars))
-        {
+        if (array_key_exists('function', $this->vars)) {
             $function = $this->vars['function'];
             $this->{$function}();
-        }
-        else
-        {
+        } else {
             $this->display();
         }
     }
     /**
      * Display form for pasting bibtex
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function display($message = FALSE)
     {
-        $this->session->delVar('importLock');
+        $this->session->delVar("importLock");
         $category = FACTORY_CATEGORY::getInstance();
         $categories = $category->grabAll();
         $pString = $message;
-        if (count($categories) > 1)
-        {
+        if (count($categories) > 1) {
             $pString .= \HTML\p($this->messages->text("import", "categoryPrompt"));
         }
         $pString .= \FORM\formMultiHeader("import_IMPORTBIBTEX_CORE");
@@ -78,44 +75,33 @@ class BIBTEXFILE
         // Load tags
         $tags = $this->tag->grabAll();
         $tagInput = \FORM\textInput($this->messages->text("import", "tag"), "import_Tag", FALSE, 30, 255);
-        if ($tags)
-        {
+        if ($tags) {
             // add 0 => IGNORE to tags array
             $temp[0] = $this->messages->text("misc", "ignore");
-            foreach ($tags as $key => $value)
-            {
+            foreach ($tags as $key => $value) {
                 $temp[$key] = $value;
             }
             $tags = $temp;
-            $sessionTag = $this->session->issetVar('import_TagId') ?
-                $this->session->getVar('import_TagId') : FALSE;
-            if ($sessionTag)
-            {
+            $sessionTag = $this->session->issetVar("import_TagId") ?
+                $this->session->getVar("import_TagId") : FALSE;
+            if ($sessionTag) {
                 $element = \FORM\selectedBoxValue(FALSE, 'import_TagId', $tags, 5);
-            }
-            else
-            {
+            } else {
                 $element = \FORM\selectFBoxValue(FALSE, 'import_TagId', $tags, 5);
             }
             $pString .= \HTML\td($tagInput . '&nbsp;&nbsp;' . $element);
-        }
-        else
-        {
+        } else {
             $pString .= \HTML\td($tagInput);
         }
         $categoryTd = FALSE;
-        if (count($categories) > 1)
-        {
-            if ($sessionCategories = $this->session->getVar('import_Categories'))
-            {
+        if (count($categories) > 1) {
+            if ($sessionCategories = $this->session->getVar("import_Categories")) {
                 $sCategories = UTF8::mb_explode(",", $sessionCategories);
                 $element = \FORM\selectedBoxValueMultiple($this->messages->text(
                     "import",
                     "category"
                 ), 'import_Categories', $categories, $sCategories, 5);
-            }
-            else
-            {
+            } else {
                 $element = \FORM\selectFBoxValueMultiple($this->messages->text(
                     "import",
                     "category"
@@ -125,8 +111,7 @@ class BIBTEXFILE
                 \HTML\span($this->messages->text("hint", "multiples"), 'hint'));
             $categoryTd = TRUE;
         }
-        if ($bibs = $this->import->bibliographySelect())
-        {
+        if ($bibs = $this->import->bibliographySelect()) {
             $pString .= \HTML\td($bibs . BR .
                 \HTML\span($this->messages->text("hint", "multiples"), 'hint'), FALSE, "left", "bottom");
         }
@@ -137,8 +122,7 @@ class BIBTEXFILE
         ), FALSE, "left", "bottom");
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        if ($categoryTd)
-        {
+        if ($categoryTd) {
             $pString .= \HTML\td("&nbsp;");
         }
         $pString .= \HTML\trEnd();

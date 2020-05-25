@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -27,26 +29,20 @@ class EDITCOLLECTIONAJAX
      */
     public function addCreatorField()
     {
-        if ($fields = $this->creatorFields('add'))
-        {
+        if ($fields = $this->creatorFields('add')) {
             $div = \HTML\div($this->vars['creatorType'] . '_Inner', \HTML\tableStart('borderStyleSolid') . $fields . \HTML\tableEnd());
-        }
-        else
-        {
+        } else {
             $div = \HTML\div($this->vars['creatorType'] . '_Inner', '&nbsp;');
         }
         $jsonResponseArray = [
             'innerHTML' => "$div",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -56,27 +52,21 @@ class EDITCOLLECTIONAJAX
      */
     public function removeCreatorField()
     {
-        if ($fields = $this->creatorFields('remove'))
-        {
+        if ($fields = $this->creatorFields('remove')) {
             $div = \HTML\div($this->vars['creatorType'] . '_Inner', \HTML\tableStart('borderStyleSolid') .
                 $fields . \HTML\tableEnd());
-        }
-        else
-        {
+        } else {
             $div = \HTML\div($this->vars['creatorType'] . '_Inner', '&nbsp;');
         }
         $jsonResponseArray = [
             'innerHTML' => "$div",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -86,7 +76,7 @@ class EDITCOLLECTIONAJAX
      *
      * @param mixed $addRemove
      *
-     * @return string|FALSE
+     * @return false|string
      */
     private function creatorFields($addRemove)
     {

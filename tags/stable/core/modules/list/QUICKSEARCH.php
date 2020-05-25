@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -41,14 +43,14 @@ class QUICKSEARCH
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->common = FACTORY_LISTCOMMON::getInstance();
-	    $this->metadata = FACTORY_METADATA::getInstance();
+        $this->metadata = FACTORY_METADATA::getInstance();
         $this->common->quickSearch = TRUE;
         $this->keyword = FACTORY_KEYWORD::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->parsePhrase = FACTORY_PARSEPHRASE::getInstance();
+    	$this->parsePhrase->quickSearch = TRUE;
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
-        switch ($this->session->getVar('search_Order'))
-        {
+        switch ($this->session->getVar("search_Order")) {
             case 'title':
                 break;
             case 'creator':
@@ -60,7 +62,7 @@ class QUICKSEARCH
             case 'timestamp':
                 break;
             default:
-                $this->session->setVar('search_Order', 'creator');
+                $this->session->setVar("search_Order", "creator");
         }
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
@@ -78,45 +80,35 @@ class QUICKSEARCH
     public function init($error = FALSE, $tableBorder = FALSE, $returnString = FALSE, $word = FALSE)
     {
         ///First check, do we have resources?
-        if (!$this->common->resourcesExist())
-        {
+        if (!$this->common->resourcesExist()) {
             return;
         }
-// If QUICKSEARCH is called by the special string $QUICKSEARCH$ on the front page, there is already a help icon being used.
-        if (!GLOBALS::getTplVar('help'))
-        {
-	        include_once("core/modules/help/HELPMESSAGES.php");
-    	    $help = new HELPMESSAGES();
-        	GLOBALS::setTplVar('help', $help->createLink('search'));
+        // If QUICKSEARCH is called by the special string $QUICKSEARCH$ on the front page, there is already a help icon being used.
+        if (!GLOBALS::getTplVar('help')) {
+            include_once("core/modules/help/HELPMESSAGES.php");
+            $help = new HELPMESSAGES();
+            GLOBALS::setTplVar('help', $help->createLink('search'));
         }
-        if (!$returnString)
-        {
+        if (!$returnString) {
             GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));
         }
-        $this->session->delVar('mywikindx_PagingStart');
-        $this->session->delVar('mywikindx_PagingStartAlpha');
+        $this->session->delVar("mywikindx_PagingStart");
+        $this->session->delVar("mywikindx_PagingStartAlpha");
         $pString = $error ? $error : FALSE;
-        if (!$this->insertCitation)
-        {
+        if (!$this->insertCitation) {
             $pString .= \FORM\formHeader("list_QUICKSEARCH_CORE");
-        }
-        else
-        {
+        } else {
             $pString .= \FORM\formHeaderVisibleAction("dialog.php", "searchInsertCitation");
         }
         $pString .= \FORM\hidden("method", "process");
-        if ($tableBorder)
-        {
+        if ($tableBorder) {
             $pString .= \HTML\tableStart('generalTable borderStyleSolid');
-        }
-        else
-        {
+        } else {
             $pString .= \HTML\tableStart('width50percent');
         }
         $pString .= \HTML\trStart();
         $this->radioButtons = FALSE;
-        if (!$word)
-        {
+        if (!$word) {
             $word = $this->session->issetVar("search_Word") ?
                 htmlspecialchars(stripslashes($this->session->getVar("search_Word")), ENT_QUOTES | ENT_HTML5) : FALSE;
         }
@@ -128,17 +120,14 @@ class QUICKSEARCH
             "",
             $this->messages->text("hint", "wordLogic")
         ), 'hint') . BR;
-        if (!$this->insertCitation)
-        {
+        if (!$this->insertCitation) {
             $pString .= \HTML\td(\FORM\textInput(
                 $this->messages->text("search", "word"),
                 "search_Word",
                 $word,
                 40
             ) . $hint . \FORM\formSubmit($this->messages->text("submit", "Search")), $tableBorder ? 'padding4px' : '');
-        }
-        else
-        {
+        } else {
             $pString .= \HTML\td(\FORM\textInput(
                 $this->messages->text("search", "word"),
                 "search_Word",
@@ -149,12 +138,9 @@ class QUICKSEARCH
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \FORM\formEnd();
-        if ($returnString)
-        {
+        if ($returnString) {
             return $pString; // cf FRONT.php or process() below.
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', $pString);
         }
     }
@@ -168,56 +154,64 @@ class QUICKSEARCH
     }
     /**
      * create the unions
+     *
+     * @param mixed $ors
+     * @param mixed $orsFT
      */
-    public function fieldSql($ors, $orsFT)
+    public function fieldSql($search, $searchFT)
     {
-    	foreach (['resourcecustomShort', 'resourcecustomLong'] as $field)
+    	if ((strpos($searchFT, '-') !== FALSE) && (substr($searchFT, -1) === '*'))
     	{
-    		$field = $this->db->formatFields($field);
+    		$searchFT = '"' . substr_replace($searchFT, '"', strlen($searchFT)-1);
     	}
-// title
-    	$field = $this->db->concat([$this->db->formatFields('resourceNoSort'), $this->db->formatFields('resourceTitleSort')], ' ');
-    	$this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', $field, $ors));
-    	$unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource', [['resourceId' => 'rId']]));
-// creatorSurname
-    	$this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'creatorSurname', $ors));
-    	$this->db->formatConditions(['resourcecreatorResourceId' => ' IS NOT NULL ']);
+    	$searchFT = str_replace("'", "''", $searchFT);
+        foreach (['resourcecustomShort', 'resourcecustomLong'] as $field) {
+            $field = $this->db->formatFields($field);
+        }
+        // title
+        $field = $this->db->concat([$this->db->formatFields('resourceNoSort'), $this->db->formatFields('resourceTitleSort')], ' ');
+        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', $field, $search));
+        $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource', [['resourceId' => 'rId']]));
+        // creatorSurname
+        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'creatorSurname', $search));
+        $this->db->formatConditions(['resourcecreatorResourceId' => ' IS NOT NULL ']);
         $this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
-    	$unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_creator', [['resourcecreatorResourceId' => 'rId']]));
-// keywordKeyword
-    	$this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'keywordKeyword', $ors));
-    	$this->db->formatConditions(['resourcekeywordResourceId' => ' IS NOT NULL ']);
+        $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_creator', [['resourcecreatorResourceId' => 'rId']]));
+        // keywordKeyword
+        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'keywordKeyword', $search));
+        $this->db->formatConditions(['resourcekeywordResourceId' => ' IS NOT NULL ']);
         $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
-    	$unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_keyword', [['resourcekeywordResourceId' => 'rId']]));
-// resourcemetadataText
-    	$matchAgainst = $this->db->fulltextSearch('resourcemetadataText', $orsFT);
-    	$this->metadata->setCondition(FALSE, FALSE, TRUE);
-    	$this->db->formatConditions($matchAgainst);
-    	$unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_metadata', [['resourcemetadataResourceId' => 'rId']]));
-// usertagsTag
-    	$this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'usertagsTag', $ors));
+        $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_keyword', [['resourcekeywordResourceId' => 'rId']]));
+        // resourcemetadataText
+        $matchAgainst = $this->db->fulltextSearch('resourcemetadataText', $searchFT);
+        $this->metadata->setCondition(FALSE, FALSE, TRUE);
+        $this->db->formatConditions($matchAgainst);
+        $this->db->formatConditions(['resourcemetadataResourceId' => 'IS NOT NULL']);
+        $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_metadata', [['resourcemetadataResourceId' => 'rId']]));
+        // usertagsTag
+        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'usertagsTag', $search));
         $result = $this->db->formatFields('usertagsUserId') . $this->db->equal . '1';
         $userCond = $this->db->caseWhen('usertagsId', 'IS NOT NULL', $result, FALSE, FALSE);
-    	$this->db->formatConditions($userCond);
+        $this->db->formatConditions($userCond);
         $this->db->leftJoin('user_tags', 'resourceusertagsTagId', 'usertagsId');
-    	$unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_user_tags', [['resourceusertagsResourceId' => 'rId']]));
-// resourcecustomShort
-    	$this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'resourcecustomShort', $ors));
-    	$unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_custom', [['resourcecustomResourceId' => 'rId']]));
-// resourcecustomLong
-    	$matchAgainst = $this->db->fulltextSearch('resourcecustomLong', $orsFT);
-    	$this->db->formatConditions($matchAgainst);
-    	$unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_custom', [['resourcecustomResourceId' => 'rId']]));
-// resourcetextAbstract
-    	$matchAgainst = $this->db->fulltextSearch('resourcetextAbstract', $orsFT);
-    	$this->db->formatConditions($matchAgainst);
-    	$unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_text', [['resourcetextId' => 'rId']]));
-// resourcetextNote
-    	$matchAgainst = $this->db->fulltextSearch('resourcetextNote', $orsFT);
-    	$this->db->formatConditions($matchAgainst);
-    	$unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_text', [['resourcetextId' => 'rId']]));
+        $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_user_tags', [['resourceusertagsResourceId' => 'rId']]));
+        // resourcecustomShort
+        $this->db->formatConditions(str_replace('!WIKINDXFIELDWIKINDX!', 'resourcecustomShort', $search));
+        $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_custom', [['resourcecustomResourceId' => 'rId']]));
+        // resourcecustomLong
+        $matchAgainst = $this->db->fulltextSearch('resourcecustomLong', $searchFT);
+        $this->db->formatConditions($matchAgainst);
+        $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_custom', [['resourcecustomResourceId' => 'rId']]));
+        // resourcetextAbstract
+        $matchAgainst = $this->db->fulltextSearch('resourcetextAbstract', $searchFT);
+        $this->db->formatConditions($matchAgainst);
+        $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_text', [['resourcetextId' => 'rId']]));
+        // resourcetextNote
+        $matchAgainst = $this->db->fulltextSearch('resourcetextNote', $searchFT);
+        $this->db->formatConditions($matchAgainst);
+        $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource_text', [['resourcetextId' => 'rId']]));
 
-    	$this->unions = $this->db->union($unions);
+        $this->unions = $this->db->union($unions);
     }
     /**
      * For re-ordering or paging
@@ -226,17 +220,15 @@ class QUICKSEARCH
     {
         $reprocess = TRUE;
         $this->input = $this->session->getArray("search");
-        if (array_key_exists("search_Order", $this->vars) && $this->vars["search_Order"])
-        {
-            if (($this->session->getVar('search_Order') != $this->vars["search_Order"]) ||
-                ($this->session->getVar('search_AscDesc') != $this->vars['search_AscDesc']))
-            {
+        if (array_key_exists("search_Order", $this->vars) && $this->vars["search_Order"]) {
+            if (($this->session->getVar("search_Order") != $this->vars["search_Order"]) ||
+                ($this->session->getVar("search_AscDesc") != $this->vars['search_AscDesc'])) {
                 $reprocess = FALSE;
             }
             $this->input['order'] = $this->vars["search_Order"];
-            $this->session->setVar('search_Order', $this->input['order']);
-            $this->session->setVar('sql_LastOrder', $this->input['order']);
-            $this->session->setVar('search_AscDesc', $this->vars['search_AscDesc']);
+            $this->session->setVar("search_Order", $this->input['order']);
+            $this->session->setVar("sql_LastOrder", $this->input['order']);
+            $this->session->setVar("search_AscDesc", $this->vars['search_AscDesc']);
         }
         $this->process($reprocess);
     }
@@ -247,78 +239,71 @@ class QUICKSEARCH
      */
     public function process($reprocess = FALSE)
     {
-        if (!$reprocess)
-        {
-            $this->session->delVar('list_AllIds');
-            $this->session->delVar('list_PagingAlphaLinks');
+        if (!$reprocess) {
+            $this->session->delVar("list_AllIds");
+            $this->session->delVar("list_PagingAlphaLinks");
         }
-        if (!$reprocess || ($this->session->getVar('setup_PagingStyle') == 'A'))
-        {
-            $this->session->delVar('sql_ListStmt');
-            $this->session->delVar('advancedSearch_listParams');
+        if (!$reprocess || ($this->session->getVar("setup_PagingStyle") == 'A')) {
+            $this->session->delVar("sql_ListStmt");
+            $this->session->delVar("advancedSearch_listParams");
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));
         $this->stmt->listMethodAscDesc = 'search_AscDesc';
         $this->stmt->listType = 'search';
         $queryString = 'action=list_QUICKSEARCH_CORE&method=reprocess';
-        if (empty($this->input))
-        {
+        if (empty($this->input)) {
             $this->input = $this->checkInput();
         }
-        if (!array_key_exists('order', $this->input) && !array_key_exists('Order', $this->input))
-        {
-            $this->session->setVar('search_Order', 'creator');
-            $this->session->setVar('sql_LastOrder', 'creator');
-            $this->session->setVar('search_AscDesc', $this->db->asc);
-        }
-        else
-        {
-            $this->session->setVar('sql_LastOrder', $this->input['Order']);
+        if (!array_key_exists('order', $this->input) && !array_key_exists('Order', $this->input)) {
+            $this->session->setVar("search_Order", 'creator');
+            $this->session->setVar("sql_LastOrder", 'creator');
+            $this->session->setVar("search_AscDesc", $this->db->asc);
+        } else {
+            $this->session->setVar("sql_LastOrder", $this->input['Order']);
         }
         $this->input['Partial'] = TRUE;
         GLOBALS::setTplVar('resourceListSearchForm', $this->init(FALSE, TRUE, TRUE));
-        if (!$reprocess || ($this->session->getVar('setup_PagingStyle') == 'A'))
-        {
-        	$masterIds = $andIds = $notIds = [];
+        if (!$reprocess || ($this->session->getVar("setup_PagingStyle") == 'A')) {
             $this->parseWord();
             $resourcesFound = FALSE;
-// Deal with OR strings first
-			$ors = join($this->db->or, $this->parsePhrase->ors); // shouldn't be necessary as there should only be one element
-			$orsFT = join(' ', $this->parsePhrase->orsFT);
-			if ($ors && $this->getInitialIds($ors, $orsFT, 'or'))
+            // Deal with OR strings first
+            $ors = implode($this->db->or, $this->parsePhrase->ors);
+            $orsFT = implode(' ', $this->parsePhrase->orsFT);
+            if ($ors && $this->getInitialIds($ors, $orsFT, 'or')) {
+                $resourcesFound = TRUE;
+            }
+            // Deal with AND strings next
+            foreach ($this->parsePhrase->ands as $and) // we use array_intersect . . .
+            {
+            	if ($this->getInitialIds($and, array_shift($this->parsePhrase->andsFT), 'and')) {
+                	$resourcesFound = TRUE;
+            	}
+            }
+            // Finally, deal with NOT strings. We match IDs using OR then subtract the found ids from the main ids array
+            // If there are no ANDs or ORs, we must first get all existing resource ids
+            $nots = implode($this->db->or, $this->parsePhrase->nots);
+            $notsFT = implode(' ', $this->parsePhrase->notsFT);
+            if (empty($this->parsePhrase->ands) && empty($this->parsePhrase->ors))
 			{
-				$resourcesFound = TRUE;
-			}
-// Deal with AND strings next
-			$ands = join($this->db->and, $this->parsePhrase->ands); // shouldn't be necessary as there should only be one element
-			$andsFT = join(' ', $this->parsePhrase->andsFT);
-			if ($ands && $this->getInitialIds($ands, $andsFT, 'and'))
-			{
-				$resourcesFound = TRUE;
-			}
-			unset($andIds);
-// Finally, deal with NOT strings. We match IDs using OR then subtract the found ids from the main ids array
-			$nots = join($this->db->or, $this->parsePhrase->nots); // shouldn't be necessary as there should only be one element
-			$notsFT = join(' ', $this->parsePhrase->notsFT);
-			if ($nots && $this->getInitialIds($nots, $notsFT, 'not'))
-			{
-				$resourcesFound = TRUE;
-			}
-			unset($notIds);
-			if (!$resourcesFound)
-			{
+ 				$resultSet = $this->db->select('resource', 'resourceId');
+ 				while ($row = $this->db->fetchRow($resultSet))
+ 				{
+ 					$allIds[] = $row['resourceId'];
+ 				}
+ 				$this->session->setVar("list_AllIds", base64_encode(serialize($allIds)));
+ 				unset($allIds);
+            }
+            if ($nots && $this->getInitialIds($nots, $notsFT, 'not')) {
+                $resourcesFound = TRUE;
+            }
+            // Now finalize
+            if (!$this->stmt->quicksearchSubQuery($queryString, FALSE, $this->subQ, 'final')) {
                 $this->common->noResources('search');
-				return FALSE;
-			}
-// Now finalize
-			if (!$this->stmt->quicksearchSubQuery($queryString, FALSE, $this->subQ, 'final'))
-			{
-                $this->common->noResources('search');
-				return FALSE;
-			}
+
+                return FALSE;
+            }
         }
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && ($this->session->getVar('setup_PagingStyle') != 'A'))
-        {
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && ($this->session->getVar("setup_PagingStyle") != 'A')) {
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
@@ -327,54 +312,47 @@ class QUICKSEARCH
 
             return;
         }
-        $searchTerms = UTF8::mb_explode(",", $this->session->getVar('search_Highlight'));
+        $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_Highlight"));
         $patterns = [];
-        foreach ($searchTerms as $term)
-        {
-            if (trim($term))
-            {
-                $term = preg_quote($term);
+        foreach ($searchTerms as $term) {
+            if (trim($term)) {
+                $term = preg_quote($term, '/');
                 $patterns[] = "/($term)(?=[^>]*(<|$))/ui";
             }
         }
         $this->common->patterns = $patterns;
-        $this->session->setVar('search_Patterns', base64_encode(serialize($patterns)));
+        $this->session->setVar("search_Patterns", base64_encode(serialize($patterns)));
         $this->common->keepHighlight = TRUE;
-        if (!$reprocess || ($this->session->getVar('setup_PagingStyle') == 'A'))
-        {
-            $sql = $this->stmt->listList($this->session->getVar('search_Order'), FALSE, $this->subQ);
-        }
-        else
-        {
-            $sql = $this->session->getVar('sql_ListStmt');
+        if (!$reprocess || ($this->session->getVar("setup_PagingStyle") == 'A')) {
+            $sql = $this->stmt->listList($this->session->getVar("search_Order"), FALSE, $this->subQ);
+        } else {
+            $sql = $this->session->getVar("sql_ListStmt");
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
             $this->common->pagingObject = $this->pagingObject;
-            $limit = $this->db->limit($this->session->getVar('setup_Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
+            $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
             $sql .= $limit;
         }
         $this->common->display($sql, 'search');
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         $this->session->saveState(['search', 'sql', 'setup', 'bookmark', 'list']);
-        $this->session->delVar('bookmarkRead');
+        $this->session->delVar("bookmarkRead");
     }
     /**
      * Get the initial IDs from the database
+     *
+     * @param mixed $searchArray
+     * @param mixed $searchArrayFT
+     * @param mixed $type
      */
-     private function getInitialIds($searchArray, $searchArrayFT, $type)
-     {
-		$this->fieldSql($searchArray, $searchArrayFT);
-		$subStmt = $this->setSubQuery();
-		$resourcesFound = $this->stmt->quicksearchSubQuery(FALSE, $subStmt, FALSE, $type);
-		if (!$resourcesFound)
-		{
-			$this->common->noResources('search');
-
-			return FALSE;
-		}
-		return TRUE;
+    private function getInitialIds($search, $searchFT, $type)
+    {
+        $this->fieldSql($search, $searchFT);
+        $subStmt = $this->setSubQuery();
+        $resourcesFound = $this->stmt->quicksearchSubQuery(FALSE, $subStmt, FALSE, $type);
+        return TRUE;
     }
     /**
      * parse the search word(s)
@@ -383,8 +361,7 @@ class QUICKSEARCH
     {
         $this->words = $this->parsePhrase->parse($this->input);
         $this->wordsFT = $this->parsePhrase->parse($this->input, FALSE, FALSE, FALSE, TRUE);
-        if ((is_array($this->words) && empty($this->words)) || !$this->parsePhrase->validSearch)
-        {
+        if ((is_array($this->words) && empty($this->words)) || !$this->parsePhrase->validSearch) {
             GLOBALS::setTplVar('resourceListSearchForm', FALSE);
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
@@ -395,32 +372,26 @@ class QUICKSEARCH
     private function writeSession()
     {
         // First, write all input with 'search_' prefix to session
-        foreach ($this->vars as $key => $value)
-        {
-            if (preg_match("/^search_/u", $key))
-            {
+        foreach ($this->vars as $key => $value) {
+            if (preg_match("/^search_/u", $key)) {
                 $key = str_replace('search_', '', $key);
                 // Is this a multiple select box input?  If so, multiple choices are written to session as
                 // comma-delimited string (no spaces).
                 // Don't write any FALSE or '0' values.
-                if (is_array($value))
-                {
-                    if (!$value[0] || ($value[0] == $this->messages->text("misc", "ignore")))
-                    {
+                if (is_array($value)) {
+                    if (!$value[0] || ($value[0] == $this->messages->text("misc", "ignore"))) {
                         unset($value[0]);
                     }
                     $value = implode(",", $value);
                 }
-                if (!trim($value))
-                {
+                if (!trim($value)) {
                     continue;
                 }
                 $temp[$key] = trim($value);
             }
         }
         $this->session->clearArray("search");
-        if (!empty($temp))
-        {
+        if (!empty($temp)) {
             $this->session->writeArray($temp, 'search');
         }
     }
@@ -435,8 +406,7 @@ class QUICKSEARCH
     {
         $this->writeSession();
         if ((array_key_exists("search_Word", $this->vars) && !trim($this->vars["search_Word"]))
-        || !$this->session->getVar("search_Word"))
-        {
+        || !$this->session->getVar("search_Word")) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
 
@@ -444,13 +414,11 @@ class QUICKSEARCH
     }
     /**
      * Set the subQuery
-     *
      */
     private function setSubQuery()
     {
-        $this->db->ascDesc = $this->session->getVar('search_AscDesc');
-        switch ($this->session->getVar('search_Order'))
-        {
+        $this->db->ascDesc = $this->session->getVar("search_AscDesc");
+        switch ($this->session->getVar("search_Order")) {
             case 'title':
                 $this->stmt->useBib('rId');
                 $this->stmt->quarantine(FALSE, 'rId');

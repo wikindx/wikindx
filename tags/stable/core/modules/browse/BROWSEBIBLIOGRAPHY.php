@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -42,8 +44,7 @@ class BROWSEBIBLIOGRAPHY
         $this->gatekeep->init(); // No Read-only access allowed
         $this->sum = $this->bibs = [];
         $this->getBibliographies();
-        if (empty($this->bibs))
-        {
+        if (empty($this->bibs)) {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noBibliographies"));
 
             return;
@@ -61,27 +62,27 @@ class BROWSEBIBLIOGRAPHY
     public function getBibliographies()
     {
         $array = $this->commonBib->getUserBibs();
-        foreach ($array as $id => $title)
-        {
+        foreach ($array as $id => $title) {
             $this->collate($id, $title);
         }
         $array = $this->commonBib->getGroupBibs();
-        foreach ($array as $id => $title)
-        {
+        foreach ($array as $id => $title) {
             $this->collate($id, $title);
         }
     }
     /**
      * Add bibliographies to array and sum totals
+     *
+     * @param mixed $id
+     * @param mixed $title
      */
     private function collate($id, $title)
     {
         $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $id]);
         $recordset = $this->db->selectCountDistinctField('user_bibliography_resource', 'userbibliographyresourceId');
         $count = $this->db->fetchOne($recordset);
-        if ($count)
-        {
-            $this->bibs[$id] = preg_replace("/{(.*)}/Uu", "$1", \HTML\dbToHtmlTidy($title));
+        if ($count) {
+            $this->bibs[$id] = preg_replace("/{(.*)}/Uu", "$1", \HTML\nlToHtml($title));
             $this->sum[$id] = $count;
         }
     }
@@ -94,8 +95,7 @@ class BROWSEBIBLIOGRAPHY
     {
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
-        foreach ($this->bibs as $id => $name)
-        {
+        foreach ($this->bibs as $id => $name) {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -42,18 +44,15 @@ class BROWSECITED
     {
         $this->sum = $this->surname = $this->prefix = $this->citedResourceIds = $this->citeIds = $this->citeList = [];
         $this->getCitations();
-        if (empty($this->citedResourceIds))
-        {
+        if (empty($this->citedResourceIds)) {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noCitations"));
 
             return;
         }
         $this->getCreators();
         $this->surname = $this->common->paging($this->surname);
-        foreach ($this->surname as $id => $surname)
-        {
-            if (!empty($this->prefix) && array_key_exists($id, $this->prefix))
-            {
+        foreach ($this->surname as $id => $surname) {
+            if (!empty($this->prefix) && array_key_exists($id, $this->prefix)) {
                 $this->surname[$id] = $this->prefix[$id] . ' ' . $surname;
             }
         }
@@ -67,30 +66,30 @@ class BROWSECITED
      */
     private function getCitations()
     {
-        $search = $this->db->like('%', '\\[cite\\]', '%');
+        $search = '[cite]';
         // Abstract
         $this->common->userBibCondition('resourcetextId');
-        $this->db->formatConditions($this->db->formatFields('resourcetextAbstract') . $search);
+        $matchAgainst = $this->db->fulltextSearch(['resourcetextAbstract'], $search);
+        $this->db->formatConditions($matchAgainst);
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute(
             'resource_text',
             [['resourcetextId' => 'rId'], ['resourcetextAbstract' => 'text']]
         ));
         //Note
         $this->common->userBibCondition('resourcetextId');
-        $this->db->formatConditions($this->db->formatFields('resourcetextNote') . $search);
+        $matchAgainst = $this->db->fulltextSearch(['resourcetextNote'], $search);
+        $this->db->formatConditions($matchAgainst);
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute(
             'resource_text',
             [['resourcetextId' => 'rId'], ['resourcetextNote' => 'text']]
         ));
         // metadata
         $this->common->userBibCondition('resourcemetadataResourceId');
-        $this->db->formatConditions($this->db->formatFields('resourcemetadataText') . $search);
-        if ($this->session->getVar('setup_Write'))
-        {
+        $matchAgainst = $this->db->fulltextSearch(['resourcemetadataText'], $search);
+        $this->db->formatConditions($matchAgainst);
+        if ($this->session->getVar("setup_Write")) {
             $this->db->formatConditionsOneField(['q', 'p', 'qc', 'pc', 'm', 'i'], 'resourcemetadataType');
-        }
-        else
-        {
+        } else {
             $this->db->formatConditionsOneField(['q', 'p'], 'resourcemetadataType');
         }
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute(
@@ -102,30 +101,21 @@ class BROWSECITED
             ['rId', 'text'],
             $this->db->subQuery($this->db->union($unions), 'u')
         ));
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $ids = [];
             preg_match_all('/\[cite\](\d+)/u', $row['text'], $match);
-            foreach ($match[1] as $id)
-            {
-                if (!array_key_exists($id, $this->citeIds))
-                {
+            foreach ($match[1] as $id) {
+                if (!array_key_exists($id, $this->citeIds)) {
+                    $this->citeIds[$id][] = $row['rId'];
+                } elseif (array_search($row['rId'], $this->citeIds[$id]) === FALSE) {
                     $this->citeIds[$id][] = $row['rId'];
                 }
-                elseif (array_search($row['rId'], $this->citeIds[$id]) === FALSE)
-                {
-                    $this->citeIds[$id][] = $row['rId'];
-                }
-                if (array_search($id, $ids) !== FALSE)
-                { // already cited in this resource
+                if (array_search($id, $ids) !== FALSE) { // already cited in this resource
                     continue;
                 }
-                if (!array_key_exists($id, $this->citedResourceIds))
-                {
+                if (!array_key_exists($id, $this->citedResourceIds)) {
                     $this->citedResourceIds[$id] = 1;
-                }
-                else
-                {
+                } else {
                     $this->citedResourceIds[$id]++;
                 }
                 $ids[] = $id;
@@ -143,8 +133,7 @@ class BROWSECITED
         sort($sum);
         $highestSum = $sum[count($sum) - 1];
         $lowestSum = $sum[0];
-        foreach ($this->surname as $id => $name)
-        {
+        foreach ($this->surname as $id => $name) {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $citeIds = implode(',', array_unique($this->citeList[$id]));
@@ -173,25 +162,23 @@ class BROWSECITED
             ['resourcecreatorResourceId', 'creatorId', 'creatorPrefix', 'creatorSurname'],
             TRUE
         );
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->collate($row);
         }
     }
     /**
      * Add creators to array and sum totals
+     *
+     * @param mixed $row
      */
     private function collate($row)
     {
         $this->surname[$row['creatorId']] = preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorSurname']));
         $this->prefix[$row['creatorId']] = preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorPrefix']));
-        if (array_key_exists($row['creatorId'], $this->citeList))
-        {
+        if (array_key_exists($row['creatorId'], $this->citeList)) {
             $this->citeList[$row['creatorId']] =
             array_merge($this->citeList[$row['creatorId']], $this->citeIds[$row['resourcecreatorResourceId']]);
-        }
-        else
-        {
+        } else {
             $this->citeList[$row['creatorId']] = $this->citeIds[$row['resourcecreatorResourceId']];
         }
         $this->citeList[$row['creatorId']] = array_unique($this->citeList[$row['creatorId']]);

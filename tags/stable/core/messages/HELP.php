@@ -30,13 +30,11 @@
 *****/
 class HELP
 {
-    private $config;
     private $session;
     private $languageArray = [];
 
 	public function __construct()
 	{
-		$this->config = FACTORY_CONFIG::getInstance();
 		$this->session = FACTORY_SESSION::getInstance();
 	    $this->languageArray = $this->loadArrays();
 	}
@@ -227,6 +225,7 @@ class HELP
 <li>Menu level: To use the screen space efficiently, WIKINDX makes use of multi-level menus.  These can, however, be difficult to use so you can opt to reduce the number of menu levels. In some cases, the template designer will mandate a certain number of menu levels in which case, attempting to change the number of menu levels for that template will make no difference.</li>
 <li>User groups: In a multi-user WIKINDX, registered users can define user groups.  Potentially private information, such as comments on quotations or resource musings, can then be assigned to be viewed only by members of a user group.  Additionally, user groups may collaborate in building a user group bibliography.</li>
 <li>User bibliographies: These are drawn from the WIKINDX Master Bibliography and may be personal or managed by a user group. Operations on a user bibliography (such as removing resources from it) have no effect on the WIKINDX Master Bibliography.</li>
+<li>Email notification: Receive emails notifying of additions of resources or edits to them. The days figure is a threshold – requirements to notify by email are triggered only when resources are added or edited so that a threshold of 7 days, for example, does not necessarily mean that the notification will be sent immediately following the passing of the threshold, only that the notification will be sent the next time a resource is added or edited.</li>
 </ul>"),
 
 "preferences" => dgettext($domain, "<h3>Preferences</h3>")
@@ -292,7 +291,7 @@ class HELP
 <li>" . dgettext($domain, "'admin' is only available when logged in as admin, 'text' will only show if there are metadata (quotes etc.), and the three 'pluginX' menu trees only show if they are populated.") . "</li>
 <li>"
 // translators: do not edit words prefaced with '$'
- . dgettext($domain, "\$authorize should be one of the following numerals:") . "
+ . dgettext($domain, "\$authorize should be one of the following:") . "
     <ul>
         <li>unknown " . dgettext($domain, "(always unauthorised, menu item not displayed)") . "</li>
         <li>0 " . dgettext($domain, "(menu item displayed for all users, logged in or not)") . "</li>
@@ -309,23 +308,19 @@ class HELP
 class adminstyle_CONFIG {
     public \$menus = array('plugin1');
     public \$authorize = 2;
-	public $wikindxVersion = 5.8;
+	public \$wikindxVersion = 5.8;
 }
 </pre>
 </p>"
 
-. dgettext($domain, "<p>Inline plugins return output that is displayed in one of four containers that can optionally be positioned in any of the template .tpl files.  To change the position of a container, you will need to edit the appropriate .tpl file.</p>")
+. dgettext($domain, "<p>Inline plugins return output that is displayed in one of four containers that can be positioned anywhere in any of the template .tpl files.  To change the position of a container, you will need to edit the appropriate .tpl file.</p>")
 
 . dgettext($domain, "<p>At least one template, one bibliographic style and one language must remain enabled. WIKINDX expects that the English language pack is available on the server (i.e. that you do not physically remove it from the wikindx/languages/ folder) whether it has been disabled or not.  This is because the English language pack is used to supply any messages that might be missing from other language packs.</p>"),
 		);
 		
+		$search = implode(", ", defined('WIKINDX_SEARCH_FILTER') ? WIKINDX_SEARCH_FILTER : unserialize(base64_decode(WIKINDX_SEARCH_FILTER_DEFAULT)));
 		
-		if(!isset($this->config->WIKINDX_SEARCHFILTER)) // i.e. at first install of a blank database
-			$search = "an, a, the, and, to";
-		else
-			$search = implode(", ", $this->config->WIKINDX_SEARCHFILTER);
-		
-		$pasteBibtex = $this->session->getVar("setup_MaxPaste");
+		$pasteBibtex = defined("WIKINDX_MAX_PASTE") ? WIKINDX_MAX_PASTE : WIKINDX_MAX_PASTE_DEFAULT;
 		
 		$tempArray = array();
 		foreach($tmpLanguageArray as $k => $v)

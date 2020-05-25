@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -34,68 +36,57 @@ class NAVIGATE
     /**
      * Navigate back to a list view
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function listView($message = FALSE)
     {
         $listCommon = FACTORY_LISTCOMMON::getInstance();
-        $queryString = $this->session->getVar('sql_LastMulti');
-        if (!$queryString)
-        { // default
+        $queryString = $this->session->getVar("sql_LastMulti");
+        if (!$queryString) { // default
             include_once("core/display/FRONT.php");
             $front = new FRONT($message); // __construct() runs on autopilot
             FACTORY_CLOSE::getInstance();
         }
         preg_match("/_(.*)_CORE/u", $queryString, $match);
-        if ($match[1] == 'SEARCH')
-        {
+        if ($match[1] == 'SEARCH') {
             GLOBALS::addTplVar('content', $message);
             $listType = 'search';
             $listCommon->quickSearch = FALSE;
             $listCommon->keepHighlight = TRUE;
-            if ($this->session->getVar('sql_LastIdeaSearch'))
-            {
+            if ($this->session->getVar("sql_LastIdeaSearch")) {
                 $listCommon->ideasFound = TRUE;
             }
-            $listCommon->patterns = unserialize(base64_decode($this->session->getVar('search_Patterns')));
+            $listCommon->patterns = unserialize(base64_decode($this->session->getVar("search_Patterns")));
             include_once('core/modules/list/SEARCH.php');
             $s = new SEARCH();
             $s->reprocess();
 
             return;
-        }
-        elseif ($match[1] == 'QUICKSEARCH')
-        {
+        } elseif ($match[1] == 'QUICKSEARCH') {
             GLOBALS::addTplVar('content', $message);
             $listType = 'search';
             $listCommon->quickSearch = TRUE;
             $listCommon->keepHighlight = TRUE;
-            $listCommon->patterns = unserialize(base64_decode($this->session->getVar('search_Patterns')));
+            $listCommon->patterns = unserialize(base64_decode($this->session->getVar("search_Patterns")));
             include_once('core/modules/list/QUICKSEARCH.php');
             $qs = new QUICKSEARCH();
             $qs->reprocess();
 
             return;
-        }
-        elseif ($match[1] == 'LISTRESOURCES')
-        {
+        } elseif ($match[1] == 'LISTRESOURCES') {
             GLOBALS::addTplVar('content', $message);
             include_once('core/modules/list/LISTRESOURCES.php');
             $list = new LISTRESOURCES('reorder');
 
             return;
-        }
-        elseif ($match[1] == 'LISTSOMERESOURCES')
-        {
+        } elseif ($match[1] == 'LISTSOMERESOURCES') {
             GLOBALS::addTplVar('content', $message);
             include_once('core/modules/list/LISTSOMERESOURCES.php');
             $list = new LISTSOMERESOURCES();
             $list->reorder();
 
             return;
-        }
-        elseif ($match[1] == 'BASKET')
-        {
+        } elseif ($match[1] == 'BASKET') {
             GLOBALS::addTplVar('content', $message);
             include_once('core/modules/basket/BASKET.php');
             $basket = new BASKET();
@@ -103,9 +94,7 @@ class NAVIGATE
             FACTORY_CLOSE::getInstance();
 
             return;
-        }
-        else
-        { // default
+        } else { // default
             include_once("core/display/FRONT.php");
             $front = new FRONT($message); // __construct() runs on autopilot
             FACTORY_CLOSE::getInstance();

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -51,8 +53,7 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '')
-        {
+        if ($data == '') {
             $data = "&nbsp;";
         }
 
@@ -98,8 +99,7 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '')
-        {
+        if ($data == '') {
             $data = '&nbsp;';
         }
 
@@ -122,8 +122,7 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '')
-        {
+        if ($data == '') {
             $data = '&nbsp;';
         }
 
@@ -155,8 +154,7 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '')
-        {
+        if ($data == '') {
             $data = '&nbsp;';
         }
 
@@ -174,8 +172,7 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '')
-        {
+        if ($data == '') {
             $data = '&nbsp;';
         }
 
@@ -193,8 +190,7 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '')
-        {
+        if ($data == '') {
             $data = '&nbsp;';
         }
 
@@ -255,12 +251,9 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '')
-        {
+        if ($data == '') {
             return '';
-        }
-        else
-        {
+        } else {
             return '<span' . \HTML\_inlineHtmlAttribute('class', $class) . '>' . $data . '</span>';
         }
     }
@@ -276,12 +269,9 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '')
-        {
+        if ($data == '') {
             return '';
-        }
-        else
-        {
+        } else {
             return '<strong' . \HTML\_inlineHtmlAttribute('class', $class) . '>' . $data . '</strong>';
         }
     }
@@ -297,12 +287,9 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '')
-        {
+        if ($data == '') {
             return '';
-        }
-        else
-        {
+        } else {
             return '<em' . \HTML\_inlineHtmlAttribute('class', $class) . '>' . $data . '</em>';
         }
     }
@@ -443,12 +430,9 @@ namespace HTML
     function tableCaption($caption = '', $class = '')
     {
         $caption = trim($caption);
-        if ($caption == '')
-        {
+        if ($caption == '') {
             return '';
-        }
-        else
-        {
+        } else {
             return '<caption' . \HTML\_inlineHtmlAttribute('class', $class) . '>' . $caption . '</caption>' . LF;
         }
     }
@@ -569,8 +553,7 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '')
-        {
+        if ($data == '') {
             $data = '&nbsp;';
         }
 
@@ -616,8 +599,7 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '')
-        {
+        if ($data == '') {
             $data = '&nbsp;';
         }
 
@@ -638,12 +620,9 @@ namespace HTML
     {
         $function = trim($function);
 
-        if ($function == '')
-        {
+        if ($function == '') {
             return '';
-        }
-        else
-        {
+        } else {
             return '<script'
                 . \HTML\_inlineHtmlAttribute('type', 'text/javascript')
                 . '>' . LF . $function . LF . '</script>';
@@ -660,12 +639,9 @@ namespace HTML
     {
         $src = trim($src);
 
-        if ($src == '')
-        {
+        if ($src == '') {
             return '';
-        }
-        else
-        {
+        } else {
             return '<script'
                 . \HTML\_inlineHtmlAttribute('type', 'text/javascript')
                 . \HTML\_inlineHtmlAttribute('src', $src)
@@ -683,20 +659,16 @@ namespace HTML
      * Used for display back from DB table
      *
      * @param string $string
-     * @param bool $updatev4 Default is FALSE
      *
      * @return string
      */
-    function nlToHtml($string, $updatev4 = FALSE)
+    function nlToHtml($string)
     {
         $string = preg_replace("/(\015?\012){2,}/u", BR . BR, $string);
-        if ($updatev4)
-        {
-            $string = preg_replace("/(\015?\012){1,}/u", BR, $string);
-        }
         $string = preg_replace("/(\\\\r?\\\\n){2,}/u", BR . BR, $string);
+        $string = preg_replace("/(\\\\r?\\\\n){1,}/u", BR . LF, $string);
 
-        return preg_replace("/(\\\\r?\\\\n){1,}/u", BR . LF, $string);
+        return $string;
     }
     /**
      * replace HTML newlines and carriage returns with appropriate ANSI code.
@@ -731,17 +703,6 @@ namespace HTML
         return preg_replace("/\r|\n/u", " ", $string);
     }
     /**
-     * Format text grabbed from database for printing to browser. Don't use the form elements.
-     *
-     * @param string $string
-     *
-     * @return string
-     */
-    function dbToHtmlTidy($string)
-    {
-        return \HTML\nlToHtml($string);
-    }
-    /**
      * Format text grabbed from database for printing to form elements.
      *
      * @param string $string
@@ -751,12 +712,9 @@ namespace HTML
      */
     function dbToFormTidy($string, $stripHtml = FALSE)
     {
-        if ($stripHtml)
-        {
+        if ($stripHtml) {
             return \HTML\stripHtml($string);
-        }
-        else
-        {
+        } else {
             return htmlspecialchars($string, ENT_QUOTES | ENT_HTML5);
         }
     }

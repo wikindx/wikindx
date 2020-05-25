@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -39,8 +41,7 @@ class BROWSEUSERTAGS
     {
         $this->sum = $this->userTags = [];
         $this->getUserTags();
-        if (empty($this->userTags))
-        {
+        if (empty($this->userTags)) {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noUsertags"));
 
             return;
@@ -58,25 +59,26 @@ class BROWSEUSERTAGS
     public function getUserTags()
     {
         $this->common->userBibCondition('resourceusertagsResourceId');
-        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->leftJoin('user_tags', 'usertagsId', 'resourceusertagsTagId');
         $this->db->groupBy('usertagsId');
         $this->db->orderByCollate('usertagsTag');
         $recordset = $this->db->selectCounts('resource_user_tags', 'usertagsId', 'usertagsTag');
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->collate($row);
         }
     }
     /**
      * Add user tags to array and sum totals
+     *
+     * @param mixed $row
      */
     private function collate($row)
     {
         $this->userTags[$row['usertagsId']] = preg_replace(
             "/{(.*)}/Uu",
             "$1",
-            \HTML\dbToHtmlTidy($row['usertagsTag'])
+            \HTML\nlToHtml($row['usertagsTag'])
         );
         $this->sum[$row['usertagsId']] = $row['count'];
     }
@@ -89,8 +91,7 @@ class BROWSEUSERTAGS
     {
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
-        foreach ($this->userTags as $id => $name)
-        {
+        foreach ($this->userTags as $id => $name) {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .

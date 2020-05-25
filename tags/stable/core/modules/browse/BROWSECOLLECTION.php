@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -38,17 +40,14 @@ class BROWSECOLLECTION
     {
         $this->db->groupBy('collectionType');
         $recordset = $this->db->select('collection', 'collectionType');
-        if (!$this->db->numRows($recordset))
-        {
+        if (!$this->db->numRows($recordset)) {
             $pString = \HTML\p("&nbsp;") . $this->messages->text("misc", "noCollections");
             GLOBALS::addTplVar('content', $pString);
         }
         // Add 'ALL' to array
         $collections[0] = $this->messages->text("collection", 'all');
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (!$row['collectionType'])
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (!$row['collectionType']) {
                 continue;
             }
             $collections[$row['collectionType']] = $this->messages->text("collection", $row['collectionType']);
@@ -70,19 +69,15 @@ class BROWSECOLLECTION
      */
     public function display()
     {
-        if (array_key_exists('collectionType', $this->vars))
-        {
+        if (array_key_exists('collectionType', $this->vars)) {
             $collectionType = $this->vars['collectionType'];
-        }
-        else
-        {
+        } else {
             $collectionType = "";
         }
         $queryString = 'action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=' . $collectionType;
         $this->sum = $this->collection = [];
         $this->getCollections($collectionType);
-        if (empty($this->collections))
-        {
+        if (empty($this->collections)) {
             $pString = \HTML\p("&nbsp;") . $this->messages->text("misc", "noCollections");
             GLOBALS::addTplVar('content', $pString);
         }
@@ -104,8 +99,7 @@ class BROWSECOLLECTION
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
         $links = [];
-        foreach ($this->collections as $id => $name)
-        {
+        foreach ($this->collections as $id => $name) {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .
@@ -117,12 +111,13 @@ class BROWSECOLLECTION
     }
     /**
      * Get collections from db
+     *
+     * @param mixed $collectionType
      */
     private function getCollections($collectionType)
     {
         $this->common->userBibCondition('resourcemiscId');
-        if ($collectionType)
-        {
+        if ($collectionType) {
             $this->db->formatConditions(['collectionType' => $collectionType]);
         }
         $this->db->formatConditions(['collectionId' => ' IS NOT NULL']);
@@ -135,14 +130,11 @@ class BROWSECOLLECTION
             ['resourcemiscCollection', 'collectionType', 'collectionTitle',
                 'collectionTitleShort', ]
         );
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (array_key_exists($row['resourcemiscCollection'], $this->collections))
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (array_key_exists($row['resourcemiscCollection'], $this->collections)) {
                 continue;
             }
-            if (!$row['collectionType'])
-            {
+            if (!$row['collectionType']) {
                 continue;
             }
             $this->collate($row);
@@ -150,6 +142,8 @@ class BROWSECOLLECTION
     }
     /**
      *Add collections to array and sum totals
+     *
+     * @param mixed $row
      */
     private function collate($row)
     {
@@ -157,13 +151,10 @@ class BROWSECOLLECTION
         $short = $row['collectionTitleShort'] ? " [" . $row['collectionTitleShort'] . ']' : FALSE;
         $title = $row['collectionTitle'] . $short;
         $thisType = $this->messages->text("collection", $row['collectionType']);
-        if ($thisType)
-        {
+        if ($thisType) {
             $this->collections[$row['resourcemiscCollection']] =
-                preg_replace("/{(.*)}/Uu", "$1", \HTML\dbToHtmlTidy($title . " [$thisType]"));
-        }
-        else
-        {
+                preg_replace("/{(.*)}/Uu", "$1", \HTML\nlToHtml($title . " [$thisType]"));
+        } else {
             $this->collections[$row['resourcemiscCollection']] = preg_replace("/{(.*)}/Uu", "$1", \HTML\dbToFormTidy($title));
         }
     }

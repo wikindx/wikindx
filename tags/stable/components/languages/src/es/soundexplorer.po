@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: soundexplorer\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-01-25 18:48+0100\n"
+"POT-Creation-Date: 2020-05-24 21:55+0200\n"
 "PO-Revision-Date: 2019-09-27 01:50+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -19,11 +19,11 @@ msgstr ""
 #. *
 #. * Menu items
 #.
-#: components/plugins/soundexplorer/soundexplorermessages.php:25
+#: components/plugins/soundexplorer/soundexplorermessages.php:27
 msgid "Sound Explorer"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:26
+#: components/plugins/soundexplorer/soundexplorermessages.php:28
 msgid ""
 "Sound Explorer will store searches then, at any time in the future, play a "
 "sound if a resource matching\n"
@@ -40,62 +40,62 @@ msgid ""
 "browsers. Other browsers are untested."
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:33
+#: components/plugins/soundexplorer/soundexplorermessages.php:35
 msgid "Sound Explorer On"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:34
+#: components/plugins/soundexplorer/soundexplorermessages.php:36
 msgid "Sound Explorer Off"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:35
+#: components/plugins/soundexplorer/soundexplorermessages.php:37
 msgid "Search Label"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:36
+#: components/plugins/soundexplorer/soundexplorermessages.php:38
 msgid "Sound"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:37
+#: components/plugins/soundexplorer/soundexplorermessages.php:39
 msgid "Status"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:38
+#: components/plugins/soundexplorer/soundexplorermessages.php:40
 msgid "Enabled"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:39
+#: components/plugins/soundexplorer/soundexplorermessages.php:41
 msgid "Disabled"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:40
+#: components/plugins/soundexplorer/soundexplorermessages.php:42
 msgid "New search"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:41
+#: components/plugins/soundexplorer/soundexplorermessages.php:43
 msgid "Delete"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:42
+#: components/plugins/soundexplorer/soundexplorermessages.php:44
 msgid "Notes"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:43
+#: components/plugins/soundexplorer/soundexplorermessages.php:45
 msgid "Matched searches for current list"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:44
+#: components/plugins/soundexplorer/soundexplorermessages.php:46
 msgid "Sound Explorer successfully configured"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:45
+#: components/plugins/soundexplorer/soundexplorermessages.php:47
 msgid "Store the Sound Explorer search"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:46
+#: components/plugins/soundexplorer/soundexplorermessages.php:48
 msgid "Sound Explorer search successfully stored"
 msgstr ""
 
-#: components/plugins/soundexplorer/soundexplorermessages.php:47
+#: components/plugins/soundexplorer/soundexplorermessages.php:49
 msgid "Sound Explorer search successfully deleted"
 msgstr ""

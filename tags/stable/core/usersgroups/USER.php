@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -25,7 +27,6 @@ class USER
     private $messages;
     /** object */
     private $session;
-    /** object */
 
     /**
      * USER
@@ -45,7 +46,7 @@ class USER
      * If $admin = 1, this is the initial configuration/reconfiguration and we need to insert superadmin details into the database.
      * If $admin = 2, this is an admin editing or adding a user.
      * a) the user may not change the username from this screen.
-     * When adding a user, we need to check there is not already $username (caseless) in the database.
+     * When adding a user, we need to check there is not already $usersUsername (caseless) in the database.
      * NB - returns FALSE in case of success, an error message in case of failure.
      *
      * @param bool $add Default is TRUE
@@ -53,209 +54,165 @@ class USER
      *
      * @return mixed
      */
-    public function writeUser($add = TRUE, $admin = 0)
+    public function writeUser($add = TRUE, int $admin = 0)
     {
-        if (array_key_exists('username', $this->vars))
-        {
-            $username = \HTML\removeNl($this->vars['username']);
-            // check for existing usernames (remove current user from search if already logged in with setup_userId)
-            $this->db->formatConditions(['usersUsername' => $username]);
-            if ($userId = $this->session->getVar('setup_UserId') && !$add)
-            {
-                $this->db->formatConditions(['usersId' => $userId], TRUE); // Not equal to
-            }
-            // existing user with that username found (not this user)
-            $recordset = $this->db->select('users', 'usersId');
-            if ($this->db->numRows($recordset))
-            {
-                return $this->errors->text("inputError", "userExists");
-            }
+        $userId = $this->session->getVar("setup_UserId", 0);
+        $usersUsername = FALSE;
+        
+        if (($add || ($userId == WIKINDX_SUPERADMIN_ID)) && !array_key_exists('usersUsername', $this->vars)) {
+            return "username field missing";
         }
-        $password = \HTML\removeNl($this->vars['password']);
-        if (!$add)
-        { // update
-            if (!$admin)
-            { // user editing own details
-                $userId = $this->session->getVar('setup_UserId');
+        elseif ($add || ($userId == WIKINDX_SUPERADMIN_ID)) {
+            $usersUsername = \HTML\removeNl($this->vars['usersUsername']);
+        }
+        if (!array_key_exists('password', $this->vars)) {
+            return "password field missing";
+        }
+        else {
+            $password = \HTML\removeNl($this->vars['password']);
+        }
+        // check for existing usersUsername (remove current user from search if already logged in with setup_userId)
+        if ($add)
+        {
+			$this->db->formatConditions(['usersUsername' => $usersUsername]);
+			$this->db->formatConditions(['usersId' => $userId], TRUE); // Not equal to
+			// existing user with that usersUsername found (not this user)
+			$recordset = $this->db->select('users', 'usersId');
+			if ($this->db->numRows($recordset)) {
+				return $this->errors->text("inputError", "userExists");
+        	}
+        }
+        
+        if (!$add) { // update
+            if ($admin == 0) { // user editing own details
                 $cookie = FACTORY_COOKIE::getInstance();
-                if (array_key_exists('cookie', $this->vars) && $this->vars['cookie'])
-                {
-                    $cookie->storeCookie($this->vars['uname']);
+                if (array_key_exists('cookie', $this->vars) && $this->vars['cookie']) {
+                    $cookie->storeCookie($usersUsername);
                     $update['usersCookie'] = 'Y';
-                }
-                else
-                {
+                } else {
                     // remove any wikindx cookie that has been set
                     $cookie->deleteCookie();
                     $update['usersCookie'] = 'N';
                 }
-            }
-            elseif ($admin == 1)
-            { // superadmin configuration - userId always 1 for superadmin
-                $userId = 1;
-            }
-            elseif ($admin == 2)
-            { // admin editing user
+            } elseif ($admin == 1) { // superadmin configuration - userId always WIKINDX_SUPERADMIN_ID for superadmin
+                $userId = WIKINDX_SUPERADMIN_ID;
+            } elseif ($admin == 2) { // admin editing user
                 $userId = $this->vars['userId'];
-                if (array_key_exists('admin', $this->vars) && $this->vars['admin'])
-                {
-                    $update['usersAdmin'] = 'Y';
+                if (array_key_exists('admin', $this->vars) && $this->vars['admin']) {
+                    $update['usersAdmin'] = 1;
+                } else {
+                    $update['usersAdmin'] = 0;
                 }
-                else
-                {
-                    $update['usersAdmin'] = 'N';
-                }
-                if (array_key_exists('department', $this->vars) && ($dept = trim($this->vars['department'])))
-                {
+                if (array_key_exists('department', $this->vars) && ($dept = trim($this->vars['department']))) {
                     $update['usersDepartment'] = $dept;
-                }
-                elseif (array_key_exists('departmentId', $this->vars) && ($dept = $this->vars['departmentId']))
-                {
+                } elseif (array_key_exists('departmentId', $this->vars) && ($dept = $this->vars['departmentId'])) {
                     $update['usersDepartment'] = $dept;
-                }
-                else
-                {
+                } else {
                     $nulls[] = 'usersDepartment';
                 }
-                if (array_key_exists('institution', $this->vars) && ($inst = trim($this->vars['institution'])))
-                {
+                if (array_key_exists('institution', $this->vars) && ($inst = trim($this->vars['institution']))) {
                     $update['usersInstitution'] = $inst;
-                }
-                elseif (array_key_exists('institutionId', $this->vars) && ($inst = $this->vars['institutionId']))
-                {
+                } elseif (array_key_exists('institutionId', $this->vars) && ($inst = $this->vars['institutionId'])) {
                     $update['usersInstitution'] = $inst;
-                }
-                else
-                {
+                } else {
                     $nulls[] = 'usersInstitution';
                 }
-                if (array_key_exists('creatorId', $this->vars) && $this->vars['creatorId'])
-                {
+                if (array_key_exists('creatorId', $this->vars) && $this->vars['creatorId']) {
                     $update['usersIsCreator'] = $this->vars['creatorId'];
-                }
-                else
-                {
+                } else {
                     $nulls[] = 'usersIsCreator';
                 }
+            } else {
+                die("admin param value unknown: " . $admin);
             }
-            if (isset($nulls))
-            {
+            if (isset($nulls)) {
                 $this->db->formatConditions(['usersId' => $userId]);
                 $this->db->updateNull('users', $nulls);
             }
-            $this->db->formatConditions(['usersId' => $userId]);
-            $recordset = $this->db->select('users', 'usersPassword');
-            // The encrypted password is displayed on the browser screen.  Need to check if it's unchanged as we don't
-            // want to encrypt the encrypted password!
-            if ($this->db->numRows($recordset))
+            if (array_key_exists('bypassPasswordCheck', $this->vars) === FALSE)
             {
-                $this->pwdInputEncrypted = FALSE;
-                $pwd = $this->db->fetchOne($recordset);
-                if ($password != $pwd)
-                {
-                    $password = crypt($password, UTF8::mb_strrev(time()));
-                }
-                else
-                {
-                    $this->pwdInputEncrypted = TRUE;
-                }
+				$this->db->formatConditions(['usersId' => $userId]);
+				$recordset = $this->db->select('users', 'usersPassword');
+				// The encrypted password is displayed on the browser screen.  Need to check if it's unchanged as we don't
+				// want to encrypt the encrypted password!
+				if ($this->db->numRows($recordset)) {
+					$this->pwdInputEncrypted = FALSE;
+					$pwd = $this->db->fetchOne($recordset);
+					if ($password != $pwd) {
+						$password = crypt($password, UTF8::mb_strrev(time()));
+					} else {
+						$this->pwdInputEncrypted = TRUE;
+					}
+				}
+				$update['usersPassword'] = $password;
             }
-            $update['usersPassword'] = $password;
             if (array_key_exists('fullname', $this->vars) &&
-                $fullname = $this->db->tidyInput(\HTML\removeNl($this->vars['fullname'])))
-            {
+                $fullname = $this->db->tidyInput(\HTML\removeNl($this->vars['fullname']))) {
                 $update['usersFullname'] = \HTML\removeNl($this->vars['fullname']);
             }
             // Ensure it's set to NULL
-            else
-            {
+            else {
                 $this->db->formatConditions(['usersId' => $userId]);
                 $this->db->updateNull('users', 'usersFullname');
             }
-            if ($admin == 1)
-            { // superadmin configuration
-                $update['usersUsername'] = $username;
-            }
-            else
-            {
+            if ($admin == 1) { // superadmin configuration
+                $update['usersUsername'] = $usersUsername;
+            } else {
                 $update['usersEmail'] = $this->vars['email'];
+            }
+            if ($usersUsername) {
+            	$update['usersUsername'] = $usersUsername;
             }
             $this->db->formatConditions(['usersId' => $userId]);
             $this->db->update('users', $update);
-        }
-        else
-        { // insert new user
+        } else { // insert new user
             $password = crypt($password, UTF8::mb_strrev(time()));
             $field[] = 'usersUsername';
-            $value[] = $username;
+            $value[] = $usersUsername;
             $field[] = 'usersPassword';
             $value[] = $password;
             if (array_key_exists('email', $this->vars) &&
-                $fullname = \HTML\removeNl($this->vars['email']))
-            {
+                $fullname = \HTML\removeNl($this->vars['email'])) {
                 $field[] = 'usersEmail';
                 $value[] = $this->vars['email'];
             }
-            if ($admin == 1)
-            { // if == 0, default db field value is 'N'
+            if ($admin == 1) { // if == 0, default db field value is 0
                 $field[] = 'usersAdmin';
-                $value[] = 'Y';
+                $value[] = 1;
                 $field[] = 'usersFullname';
                 $value[] = 'superAdmin';
-            }
-            elseif ($admin == 2)
-            { // admin editing a user
-                if (array_key_exists('admin', $this->vars) && $this->vars['admin'])
-                {
+            } elseif ($admin == 2) { // admin editing a user
+                if (array_key_exists('admin', $this->vars) && $this->vars['admin']) {
                     $field[] = 'usersAdmin';
-                    $value[] = 'Y';
+                    $value[] = 1;
                 }
-                if (array_key_exists('department', $this->vars) && ($dept = trim($this->vars['department'])))
-                {
+                if (array_key_exists('department', $this->vars) && ($dept = trim($this->vars['department']))) {
+                    $field[] = 'usersDepartment';
+                    $value[] = $dept;
+                } elseif (array_key_exists('departmentId', $this->vars) && ($dept = $this->vars['departmentId'])) {
                     $field[] = 'usersDepartment';
                     $value[] = $dept;
                 }
-                elseif (array_key_exists('departmentId', $this->vars) && ($dept = $this->vars['departmentId']))
-                {
-                    $field[] = 'usersDepartment';
-                    $value[] = $dept;
-                }
-                if (array_key_exists('institution', $this->vars) && ($inst = trim($this->vars['institution'])))
-                {
+                if (array_key_exists('institution', $this->vars) && ($inst = trim($this->vars['institution']))) {
+                    $field[] = 'usersInstitution';
+                    $value[] = $inst;
+                } elseif (array_key_exists('institutionId', $this->vars) && ($inst = $this->vars['institutionId'])) {
                     $field[] = 'usersInstitution';
                     $value[] = $inst;
                 }
-                elseif (array_key_exists('institutionId', $this->vars) && ($inst = $this->vars['institutionId']))
-                {
-                    $field[] = 'usersInstitution';
-                    $value[] = $inst;
-                }
-                if (array_key_exists('creatorId', $this->vars) && $this->vars['creatorId'])
-                {
+                if (array_key_exists('creatorId', $this->vars) && $this->vars['creatorId']) {
                     $field[] = 'usersIsCreator';
                     $value[] = $this->vars['creatorId'];
                 }
             }
             if (array_key_exists('fullname', $this->vars) &&
-                $fullname = \HTML\removeNl($this->vars['fullname']))
-            {
+                $fullname = \HTML\removeNl($this->vars['fullname'])) {
                 $field[] = 'usersFullname';
                 $value[] = $fullname;
             }
-            $field[] = 'usersTimestamp';
-            $value[] = '2012-01-01 01:01:01';
-            $field[] = 'usersNotifyTimestamp';
-            $value[] = '2012-01-01 01:01:01';
+            
             $this->db->insert('users', $field, $value);
             $userId = $this->db->lastAutoId();
-            // set the users.notifyTimestamp and users.timestamp to current date
-            $this->db->formatConditions(['usersId' => $userId]);
-            $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => 'CURRENT_TIMESTAMP', 'usersTimestamp' => 'CURRENT_TIMESTAMP']);
-            // write userId to session if not adding a new user
-            if (!$add)
-            {
-                $this->session->setVar('setup_UserId', $userId);
-            }
             // insert preferences to table
             $this->writePreferences($userId, TRUE);
         }
@@ -267,21 +224,17 @@ class USER
      *
      * Decide if this is standard WIKINDX logon or LDAP logon
      *
-     * @param string $username
+     * @param string $usersUsername
      * @param string $pwdInput
      *
      * @return bool
      */
-    public function checkPassword($username, $pwdInput)
+    public function checkPassword($usersUsername, $pwdInput)
     {
-        $config = FACTORY_CONFIG::getInstance();
-        if ($config->WIKINDX_LDAP_USE !== FALSE)
-        {
-            return $this->ldapCheckPassword($config, $username, $pwdInput);
-        }
-        else
-        {
-            return $this->wikindxCheckPassword($config, $username, $pwdInput);
+        if (WIKINDX_LDAP_USE !== FALSE && in_array("ldap", get_loaded_extensions())) {
+            return $this->ldapCheckPassword($usersUsername, $pwdInput);
+        } else {
+            return $this->wikindxCheckPassword($usersUsername, $pwdInput);
         }
     }
     /**
@@ -290,31 +243,24 @@ class USER
      * We don't store the LDAP password just 'LDAP' to indicate a LDAP user
      *
      * @param array $info ldap info
-     * @param string $username username
+     * @param string $usersUsername Username
      *
      * @return int
      */
-    public function writeLdapUser($info, $username)
+    public function writeLdapUser($info, $usersUsername)
     {
         $field[] = 'usersUsername';
-        $value[] = $username;
+        $value[] = $usersUsername;
         $field[] = 'usersPassword';
         $value[] = 'LDAP';
         $field[] = 'usersEmail';
         $value[] = $info[0]['mail'][0];
         $field[] = 'usersFullname';
         $value[] = $info[0]['cn'][0];
-        $field[] = 'usersTimestamp';
-        $value[] = '2012-01-01 01:01:01';
-        $field[] = 'usersNotifyTimestamp';
-        $value[] = '2012-01-01 01:01:01';
         $this->db->insert('users', $field, $value);
         $userId = $this->db->lastAutoId();
-        // set the users.notifyTimestamp and users.timestamp to current date
-        $this->db->formatConditions(['usersId' => $userId]);
-        $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => 'CURRENT_TIMESTAMP', 'usersTimestamp' => 'CURRENT_TIMESTAMP']);
         // insert preferences to table
-        $this->writePreferences($userId);
+        $this->writePreferences($userId, TRUE);
 
         return $userId; // success!
     }
@@ -322,13 +268,13 @@ class USER
      * set up user environment on first logon
      *
      * @param array $row
-     * @param string $username Default is FALSE
+     * @param string $usersUsername Default is FALSE
      */
-    public function environment($row, $username = FALSE)
+    public function environment($row, $usersUsername = FALSE)
     {
         // First delete any pre-existing session
         $this->session->clearSessionData();
-        if ($row['usersAdmin'] == 'Y')
+        if ($row['usersAdmin']) 
         {
             $this->session->setVar("setup_Superadmin", TRUE);
         }
@@ -340,11 +286,10 @@ class USER
         $this->messages = FACTORY_MESSAGES::getFreshInstance();
         $this->errors = FACTORY_ERRORS::getFreshInstance();
         //		$this->bib->grabBibliographies();
-        // If $username, we are logging in without using a cookie.  Check if we require a cookie to be set.
-        if (array_key_exists('usersCookie', $row) && ($row['usersCookie'] == 'Y'))
-        {
+        // If $usersUsername, we are logging in without using a cookie.  Check if we require a cookie to be set.
+        if (array_key_exists('usersCookie', $row) && ($row['usersCookie'] == 'Y')) {
             $cookie = FACTORY_COOKIE::getInstance();
-            $cookie->storeCookie($username);
+            $cookie->storeCookie($usersUsername);
         }
     }
     /**
@@ -358,138 +303,89 @@ class USER
      */
     public function displayUserAddEdit($row, $both = FALSE, $type = 'resource')
     {
-        if (!$this->session->getVar('setup_MultiUser'))
-        {
-            if ($both)
-            {
+        if (!WIKINDX_MULTIUSER) {
+            if ($both) {
                 return ["", FALSE];
-            }
-            else
-            {
+            } else {
                 return FALSE;
             }
         }
-        if ($type == 'resource')
-        {
+        if ($type == 'resource') {
             $add = $row['resourcemiscAddUserIdResource'];
             $edit = $row['resourcemiscEditUserIdResource'];
-        }
-        elseif ($type == 'abstract')
-        {
+        } elseif ($type == 'abstract') {
             $add = $row['resourcetextAddUserIdAbstract'];
             $edit = $row['resourcetextEditUserIdAbstract'];
-        }
-        elseif ($type == 'note')
-        {
+        } elseif ($type == 'note') {
             $add = $row['resourcetextAddUserIdNote'];
             $edit = $row['resourcetextEditUserIdNote'];
-        }
-        elseif ($type == 'custom')
-        {
+        } elseif ($type == 'custom') {
             $add = $row['resourcecustomAddUserIdCustom'];
             $edit = $row['resourcecustomEditUserIdCustom'];
-        }
-        elseif (($type == 'musing') || ($type == 'quote') || ($type == 'paraphrase') || ($type == 'comment') || ($type == 'idea'))
-        {
+        } elseif (($type == 'musing') || ($type == 'quote') || ($type == 'paraphrase') || ($type == 'comment') || ($type == 'idea')) {
             // NB in this case, $row is not an array but the user ID
             $this->db->formatConditions(['usersId' => $row]);
             $resultset = $this->db->select('users', ['usersUsername', 'usersFullname']);
-            if (!$this->db->numRows($resultset))
-            {
-                if ($both)
-                {
+            if (!$this->db->numRows($resultset)) {
+                if ($both) {
                     return [$this->messages->text("user", "unknown"), FALSE];
-                }
-                else
-                {
+                } else {
                     return FALSE;
                 }
             }
             $row = $this->db->fetchRow($resultset);
-            if ($row['usersFullname'])
-            {
-                if ($type == 'idea')
-                {
+            if ($row['usersFullname']) {
+                if ($type == 'idea') {
                     $user = stripslashes($row['usersFullname']);
-                }
-                else
-                {
+                } else {
                     $user = $this->messages->text("hint", "addedBy", stripslashes($row['usersFullname']));
                 }
-            }
-            elseif ($row['usersUsername'])
-            {
-                if ($type == 'idea')
-                {
+            } elseif ($row['usersUsername']) {
+                if ($type == 'idea') {
                     $user = stripslashes($row['usersUsername']);
-                }
-                else
-                {
+                } else {
                     $user = $this->messages->text("hint", "addedBy", stripslashes($row['usersUsername']));
                 }
-            }
-            else
-            {
-                if ($type == 'idea')
-                {
+            } else {
+                if ($type == 'idea') {
                     $user = $this->messages->text("user", "unknown");
-                }
-                else
-                {
+                } else {
                     $user = $this->messages->text("hint", "addedBy", $this->messages->text("user", "unknown"));
                 }
             }
 
             return [$user, FALSE];
         }
-        if ($edit)
-        {
-            if (is_array($row) && array_key_exists('usersFullname', $row) && $row['usersFullname'])
-            {
+        if ($edit) {
+            if (is_array($row) && array_key_exists('usersFullname', $row) && $row['usersFullname']) {
                 $userEdit = $this->messages->text("hint", "editedBy", stripslashes($row['usersFullname']));
-            }
-            elseif (is_array($row) && array_key_exists('usersUsername', $row) && $row['usersUsername'])
-            {
+            } elseif (is_array($row) && array_key_exists('usersUsername', $row) && $row['usersUsername']) {
                 $userEdit = $this->messages->text("hint", "editedBy", stripslashes($row['usersUsername']));
-            }
-            else
-            {
+            } else {
                 $userEdit = $this->messages->text("hint", "editedBy", $this->messages->text("user", "unknown"));
             }
-            if (!$both)
-            {
+            if (!$both) {
                 return $userEdit;
             }
             $this->db->formatConditions(['usersId' => $add]);
             $resultset = $this->db->select('users', ['usersUsername', 'usersFullname']);
             $row = $this->db->fetchRow($resultset);
-            if (is_array($row) && array_key_exists('usersFullname', $row) && $row['usersFullname'])
-            {
+            if (is_array($row) && array_key_exists('usersFullname', $row) && $row['usersFullname']) {
                 $userAdd = $this->messages->text("hint", "addedBy", stripslashes($row['usersFullname']));
-            }
-            elseif (is_array($row) && array_key_exists('usersUsername', $row) && $row['usersUsername'])
-            {
+            } elseif (is_array($row) && array_key_exists('usersUsername', $row) && $row['usersUsername']) {
                 $userAdd = $this->messages->text("hint", "addedBy", stripslashes($row['usersUsername']));
-            }
-            else
-            {
+            } else {
                 $userAdd = $this->messages->text("hint", "addedBy", $this->messages->text("user", "unknown"));
             }
 
             return [$userAdd, $userEdit];
         }
-        if ($add)
-        {
-            if (is_array($row) && array_key_exists('usersFullname', $row) && $row['usersFullname'])
-            {
+        if ($add) {
+            if (is_array($row) && array_key_exists('usersFullname', $row) && $row['usersFullname']) {
                 $userAdd = $this->messages->text("hint", "addedBy", stripslashes($row['usersFullname']));
-            }
-            elseif (is_array($row) && array_key_exists('usersUsername', $row) && $row['usersUsername'])
-            {
+            } elseif (is_array($row) && array_key_exists('usersUsername', $row) && $row['usersUsername']) {
                 $userAdd = $this->messages->text("hint", "addedBy", stripslashes($row['usersUsername']));
-            }
-            else
-            {
+            } else {
                 $userAdd = $this->messages->text("hint", "addedBy", $this->messages->text("user", "unknown"));
             }
             /*			if(!$both) // usually for list views where we display only either added by or edited by
@@ -530,8 +426,7 @@ class USER
                         else
                             $userEdit = $this->messages->text("hint", "editedBy", $this->messages->text("user", "unknown"));
             */
-            if (!$both)
-            {
+            if (!$both) {
                 return $userAdd;
             }
 
@@ -549,22 +444,19 @@ class USER
      */
     public function displayUserAddEditPlain($addId)
     {
-        $userName = "";
-        if ($addId)
-        {
+        $usersUsername = "";
+        if ($addId) {
             $this->db->formatConditions(['usersId' => $addId]);
             $recordset = $this->db->select('users', ['usersUsername', 'usersFullname']);
             $row2 = $this->db->fetchRow($recordset);
-            if ($row2['usersFullname'])
-            {
-                $userName = $row2['usersFullname'];
-            }
-            elseif ($row2['usersUsername'])
-            {
-                $userName = $row2['usersUsername'];
+            if ($row2['usersFullname']) {
+                $usersUsername = $row2['usersFullname'];
+            } elseif ($row2['usersUsername']) {
+                $usersUsername = $row2['usersUsername'];
             }
         }
-        return $userName;
+
+        return $usersUsername;
     }
     /**
      * Store user preferences in the session setup_ array
@@ -572,144 +464,23 @@ class USER
      * Can come from users or config (default values for readOnly user in which case $userId = FALSE)
      *
      * @param int $userId
-     * @param string $table
-     * @param bool $upgrade Default is FALSE
      *
      * @return bool
      */
-    public function writeSessionPreferences($userId, $table = 'users', $upgrade = FALSE)
+    public function writeSessionPreferences($userId)
     {
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
         $bib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
-        if ($table == 'users')
-        {
-            $basic = ["Paging", "PagingMaxLinks", "StringLimit",
-                "Language", "Style", "Template", "PagingStyle", "PagingTagCloud", "UseBibtexKey",
-                "UseWikindxKey", "DisplayBibtexLink", "DisplayCmsLink", "CmsTag", "ListLink", "TemplateMenu", ];
-            $preferences = $this->db->prependTableToField($table, $basic);
-            if ($userId)
-            {
-                $this->db->formatConditions(['usersId' => $userId]);
-            }
-            $recordset = $this->db->select($table, $preferences);
-            if (!$this->db->numRows($recordset))
-            {
-                return FALSE;
-            }
-            $row = $this->db->fetchRow($recordset);
-        }
-        else
-        { // config table
-            $table = 'config';
-            $basic = ["Paging", "PagingMaxLinks", "StringLimit", "Language", "Style", "Template", "PagingTagCloud", "ListLink"];
-            $preferences = $this->db->prependTableToField($table, $basic);
-            $row = $co->getData($preferences);
-        }
-        /**
-         * Check requested style plug-in has not been deleted.  If so, return first in list so that something is safely
-         * displayed when listing bibliographies.  Not required after upgrading to v4
-         */
-        if (!$upgrade)
-        {
-            $styles = \LOADSTYLE\loadDir();
-            if (!array_key_exists($row[$table . 'Style'], $styles))
-            {
-                $styleKeys = array_keys($styles);
-                $row['style'] = array_shift($styleKeys);
-            }
-        }
-        $table = str_replace('_', '', $table);
-        foreach ($basic as $pref)
-        {
-            if (($pref == 'PagingStyle') || ($pref == 'UseWikindxKey') || ($pref == 'UseBibtexKey')
-                 || ($pref == 'DisplayBibtexLink') || ($pref == 'DisplayCmsLink') || ($pref == 'ListLink'))
-            {
-                if (array_key_exists($table . $pref, $row))
-                {
-                    if ($row[$table . $pref] == 'N')
-                    {
-                        $this->session->delVar("setup_$pref");
-                    }
-                    elseif ($pref == 'PagingStyle')
-                    {
-                        $this->session->setVar('setup_PagingStyle', $row[$table . $pref]);
-                    }
-                    else
-                    {
-                        $this->session->setVar("setup_$pref", $row[$table . $pref]);
-                    }
-                }
-            }
-            elseif ($pref == $table . 'CmsTag')
-            {
-                if ($row[$pref])
-                {
-                    $cms = unserialize(base64_decode($row[$pref]));
-                    $this->session->setVar("setup_CmsTagStart", $cms[0]);
-                    $this->session->setVar("setup_CmsTagEnd", $cms[1]);
-                }
-                else
-                {
-                    $this->session->delVar("setup_CmsTagStart");
-                    $this->session->delVar("setup_CmsTagEnd");
-                }
-            }
-            else
-            {
-                $this->session->setVar("setup_" . $pref, $row[$table . $pref]);
-            }
-        }
-        // The system also requires userRegistration, notify, multiUser, maxPaste fileAttach and fileViewLoggedOnOnly etc. from
-        // WKX_config
-        $fields = $this->db->prependTableToField('config', ['UserRegistration', 'MultiUser', 'Notify',
-            'FileAttach', 'FileViewLoggedOnOnly', 'MaxPaste', 'LastChanges', 'LastChangesType', 'ImportBib',
-            'LastChangesDayLimit', 'Quarantine', 'ListLink', 'MetadataAllow', 'MetadataUserOnly', 'ImgWidthLimit', 'ImgHeightLimit', ]);
-        $row = $co->getData($fields);
-        if (array_key_exists('configUserRegistration', $row) && $row['configUserRegistration'])
-        {
-            $this->session->setVar("setup_UserRegistration", TRUE);
-        }
-        $this->session->setVar("setup_MultiUser", $row['configMultiUser']);
-        if (array_key_exists('configNotify', $row) && $row['configNotify'])
-        {
-            $this->session->setVar("setup_Notify", $row['configNotify']);
-        }
-        if (array_key_exists('configFileAttach', $row) && $row['configFileAttach'])
-        {
-            $this->session->setVar("setup_FileAttach", TRUE);
-        }
-        if (array_key_exists('configFileViewLoggedOnOnly', $row) && $row['configFileViewLoggedOnOnly'])
-        {
-            $this->session->setVar("setup_FileViewLoggedOnOnly", TRUE);
-        }
-        if (array_key_exists('configImportBib', $row) && $row['configImportBib'])
-        {
-            $this->session->setVar("setup_ImportBib", TRUE);
-        }
-        $this->session->setVar("setup_MaxPaste", $row['configMaxPaste']);
-        $this->session->setVar("setup_LastChanges", $row['configLastChanges']);
-        $this->session->setVar("setup_LastChangesDayLimit", $row['configLastChangesDayLimit']);
-        $this->session->setVar("setup_LastChangesType", $row['configLastChangesType']);
-        $this->session->setVar("setup_Quarantine", $row['configQuarantine']);
-        $this->session->setVar("setup_MetadataAllow", $row['configMetadataAllow']);
-        $this->session->setVar("setup_MetadataUserOnly", $row['configMetadataUserOnly']);
-        $this->session->setVar("config_configImgWidthLimit", $row['configImgWidthLimit']);
-        $this->session->setVar("config_configImgHeightLimit", $row['configImgHeightLimit']);
-        if ($userId)
-        {
+        if ($userId) {
             $this->session->setVar("setup_UserId", $userId);
-        }
-        elseif (array_key_exists('configListLink', $row) && $row['configListLink'])
-        {
-            $this->session->setVar("setup_ListLink", $row['configListLink']);
-        }
+        } 
+//        else {
+ //           $this->session->setVar("setup_ListLink", WIKINDX_LIST_LINK);
+ //       }
         $bibs = $bib->getUserBibs();
-        if (empty($bibs))
-        {
+        if (empty($bibs)) {
             $bibs = $bib->getGroupBibs();
         }
-        if (!empty($bibs))
-        {
+        if (!empty($bibs)) {
             $this->session->setVar("setup_Bibliographies", TRUE);
         }
 
@@ -722,36 +493,44 @@ class USER
      */
     public function loadSession($id = FALSE)
     {
-        if (!$id)
-        {
+        if (!$id) {
             $id = $this->session->getVar("setup_UserId");
         }
-        $userArray = ["usersUsername", "usersPassword", "usersEmail", "usersFullname", "usersAdmin", "usersCookie",
-            "usersDepartment", "usersInstitution", "usersIsCreator", ];
-        for ($i = 1; $i < 4; $i++)
-        {
+        $userArray = [
+            "usersUsername",
+            "usersPassword",
+            "usersEmail",
+            "usersFullname",
+            "usersAdmin",
+            "usersCookie",
+            "usersDepartment",
+            "usersInstitution",
+            "usersIsCreator",
+        ];
+        for ($i = 1; $i < 4; $i++) {
             $userArray[] = "usersPasswordQuestion$i";
         }
         $this->db->formatConditions(['usersId' => $id]);
         $recordset = $this->db->select('users', $userArray);
         $row = $this->db->fetchRow($recordset);
-        foreach ($userArray as $key)
-        {
+        foreach ($userArray as $key) {
             $varName = "mywikindx_" . str_replace('users', '', $key);
 
-            if (($key == 'admin') || ($key == 'cookie'))
-            {
-                if ($row[$key] == 'Y')
-                {
+            if ($key == 'cookie') {
+                if ($row[$key] == 'Y') {
                     $this->session->setVar($varName, TRUE);
-                }
-                else
-                {
+                } else {
                     $this->session->delVar($varName);
                 }
             }
-            elseif ($row[$key])
-            {
+            elseif ($key == 'admin') {
+                if ($row[$key] == 1) {
+                    $this->session->setVar($varName, TRUE);
+                } else {
+                    $this->session->delVar($varName);
+                }
+            } 
+            elseif ($row[$key]) {
                 $this->session->setVar($varName, $row[$key]);
             }
         }
@@ -775,7 +554,7 @@ class USER
         $pString = \FORM\formHeader($form, 'onsubmit="return checkForm(' . $jsString . ');"');
         $pString .= \FORM\hidden('method', $hidden);
         $sessVar = \HTML\dbToFormTidy($this->session->getVar("mywikindx_Username"));
-        $pString .= \FORM\hidden("uname", $sessVar);
+        $pString .= \FORM\hidden("usersUsername", $sessVar);
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td(\HTML\strong($this->messages->text("user", "username")) . ":&nbsp;&nbsp;$sessVar" .
@@ -794,8 +573,7 @@ class USER
             20,
             255
         ));
-        if ($admin)
-        {
+        if ($admin) {
             $pString .= \HTML\trEnd();
             $pString .= \HTML\tableEnd();
             $pString .= \FORM\hidden("userId", $admin);
@@ -806,21 +584,17 @@ class USER
             $td = \FORM\textInput($this->messages->text("user", "department"), "department", FALSE, 30, 255);
             $resultset = $this->db->select('users', 'usersDepartment', TRUE);
             $initial = FALSE;
-            while ($row = $this->db->fetchRow($resultset))
-            {
+            while ($row = $this->db->fetchRow($resultset)) {
                 $department = \HTML\dbToFormTidy($row['usersDepartment']);
-                if (!$department)
-                {
+                if (!$department) {
                     continue;
                 }
                 $departments[$department] = $department;
             }
-            if (isset($departments))
-            {
+            if (isset($departments)) {
                 // add 0 => IGNORE to departments array
                 $temp[0] = $this->messages->text("misc", "ignore");
-                foreach ($departments as $key => $value)
-                {
+                foreach ($departments as $key => $value) {
                     $temp[$key] = $value;
                 }
                 $departments = $temp;
@@ -833,21 +607,17 @@ class USER
             $td = \FORM\textInput($this->messages->text("user", "institution"), "institution", FALSE, 30, 255);
             $resultset = $this->db->select('users', 'usersInstitution', TRUE);
             $initial = FALSE;
-            while ($row = $this->db->fetchRow($resultset))
-            {
+            while ($row = $this->db->fetchRow($resultset)) {
                 $institution = \HTML\dbToFormTidy($row['usersInstitution']);
-                if (!$institution)
-                {
+                if (!$institution) {
                     continue;
                 }
                 $institutions[$institution] = $institution;
             }
-            if (isset($institutions))
-            {
+            if (isset($institutions)) {
                 // add 0 => IGNORE to insitutions array
                 $temp[0] = $this->messages->text("misc", "ignore");
-                foreach ($institutions as $key => $value)
-                {
+                foreach ($institutions as $key => $value) {
                     $temp[$key] = $value;
                 }
                 $institutions = $temp;
@@ -859,12 +629,10 @@ class USER
             // User is creator
             $creator = FACTORY_CREATOR::getInstance();
             $creators = $creator->grabAll(FALSE, FALSE, FALSE, TRUE);
-            if (is_array($creators))
-            {
+            if (is_array($creators)) {
                 // add 0 => IGNORE to creators array
                 $temp[0] = $this->messages->text("misc", "ignore");
-                foreach ($creators as $key => $value)
-                {
+                foreach ($creators as $key => $value) {
                     $temp[$key] = $value;
                 }
                 $creators = $temp;
@@ -878,16 +646,15 @@ class USER
                     1
                 ));
             }
-            $sessVar = $this->session->getVar("mywikindx_Admin") == 'Y' ? 'CHECKED' : FALSE;
+            $sessVar = $this->session->getVar("mywikindx_Admin") == 1 ? 'CHECKED' : FALSE;
             $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "admin"), "admin", $sessVar));
-        }
-        else
-        {
+        } else {
             $sessVar = $this->session->getVar("mywikindx_Cookie") == 'Y' ? 'CHECKED' : FALSE;
             $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "cookie"), "cookie", $sessVar));
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
+        $pString .= \HTML\p(\FORM\checkbox($this->messages->text("user", "bypassPasswordCheck"), "bypassPasswordCheck"));
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Edit")), FALSE, "left");
         $pString .= \FORM\formEnd();
 
@@ -902,54 +669,65 @@ class USER
     public function writePreferences($userId, $newUser = FALSE)
     {
         // Set paging_start back to 0
-        $this->session->setVar('mywikindx_PagingStart', 0);
-        $preferences = [
-            "Paging" => WIKINDX_PAGING_DEFAULT,
-            "PagingMaxLinks" => WIKINDX_PAGING_MAXLINKS_DEFAULT,
-            "StringLimit" => WIKINDX_STRINGLIMIT_DEFAULT,
-            "Language" => "auto",
-            "Style" => WIKINDX_STYLE_DEFAULT,
-            "Template" => WIKINDX_TEMPLATE_DEFAULT,
-            "PagingStyle" => WIKINDX_PAGINGSTYLE_DEFAULT,
-            "PagingTagCloud" => WIKINDX_PAGINGTAGCLOUD_DEFAULT,
-            "UseBibtexKey" => WIKINDX_USEBIBTEXKEY_DEFAULT,
-            "UseWikindxKey" => WIKINDX_USEWIKINDXKEY_DEFAULT,
-            "DisplayBibtexLink" => WIKINDX_DISPLAYBIBTEXLINK_DEFAULT,
-            "DisplayCmsLink" => WIKINDX_DISPLAYCMSLINK_DEFAULT,
-            "TemplateMenu" => WIKINDX_TEMPLATEMENU_DEFAULT,
-            "ListLink" => "N",
-        ];
-        foreach ($preferences as $pref => $default)
-        {
-            if ($pref == 'TemplateMenu')
-            {
-                if ($newUser)
-                {
-                    $updateArray['users' . $pref] = $default;
-                }
-                elseif (!$this->session->getVar('setup_TemplateMenu'))
-                { // no level reduction
-                    $updateArray['users' . $pref] = WIKINDX_TEMPLATEMENU_DEFAULT;
-                }
-                else
-                {
-                    $updateArray['users' . $pref] = $this->session->getVar("setup_" . $pref);
-                }
+        $this->session->setVar("mywikindx_PagingStart", 0);
+        $preferences = [];
+        // Options inherited from the global config
+        if (WIKINDX_LIST_LINK) {
+	        $preferences["ListLink"] = 1;
+	    }
+	    else {
+	        $preferences["ListLink"] = 0;
+	    }
+        $preferences["Paging"] = WIKINDX_PAGING;
+        $preferences["PagingMaxLinks"] = WIKINDX_PAGING_MAXLINKS;
+        $preferences["PagingTagCloud"] = WIKINDX_PAGING_TAG_CLOUD;
+        $preferences["StringLimit"] = WIKINDX_STRING_LIMIT;
+        $preferences["Style"] = WIKINDX_STYLE;
+        $preferences["Template"] = WIKINDX_TEMPLATE;
+        // Language should be inherited but it needs a special default
+        // which allows the browser to control the preferred language first
+        $preferences["Language"] = WIKINDX_USER_LANGUAGE_DEFAULT;
+        
+        // Options unique to users
+        if (WIKINDX_DISPLAY_BIBTEX_LINK_DEFAULT) {
+	        $preferences["DisplayBibtexLink"] = 1;
+	    }
+	    else {
+	        $preferences["DisplayBibtexLink"] = 0;
+	    }
+        if (WIKINDX_DISPLAY_CMS_LINK_DEFAULT) {
+	        $preferences["DisplayCmsLink"] = 1;
+	    }
+	    else {
+	        $preferences["DisplayCmsLink"] = 0;
+	    }
+        $preferences["PagingStyle"] = WIKINDX_USER_PAGING_STYLE_DEFAULT;
+        $preferences["TemplateMenu"] = WIKINDX_TEMPLATE_MENU_DEFAULT;
+        if (WIKINDX_USE_BIBTEX_KEY_DEFAULT) {
+	        $preferences["UseBibtexKey"] = 1;
+	    }
+	    else {
+	        $preferences["UseBibtexKey"] = 0;
+	    }
+        if (WIKINDX_USE_WIKINDX_KEY_DEFAULT) {
+	        $preferences["UseWikindxKey"] = 1;
+	    }
+	    else {
+	        $preferences["UseWikindxKey"] = 0;
+	    }
 
-                continue;
+        foreach ($preferences as $pref => $default) {
+            if ($newUser) {
+                $value = $default;
+            } elseif ($value = GLOBALS::getUserVar($pref)) {
+                // Value already assigned in the condition
+            } else {
+                $value = $default;
             }
-            if ($newUser)
-            {
-                $updateArray['users' . $pref] = $default;
-            }
-            elseif ($this->session->issetVar("setup_" . $pref))
-            {
-                $updateArray['users' . $pref] = $this->session->getVar("setup_" . $pref);
-            }
-            else
-            {
-                $updateArray['users' . $pref] = $default;
-            }
+            
+            // Grr! PHP doesn't cast FALSE to "0" but the empty string
+        	$value = is_bool($value) ? var_export($value, true) : $value;
+            $updateArray['users' . $pref] = $value;
         }
         $this->db->formatConditions(['usersId' => $userId]);
         $this->db->update('users', $updateArray);
@@ -963,17 +741,13 @@ class USER
      */
     public function listUserGroups()
     {
-        $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar('setup_UserId')]);
+        $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar("setup_UserId")]);
         $this->db->orderBy('usergroupsTitle');
         $recordset = $this->db->select(['user_groups'], ['usergroupsId', 'usergroupsTitle']);
-        if (!$this->db->numRows($recordset))
-        {
+        if (!$this->db->numRows($recordset)) {
             return FALSE;
-        }
-        else
-        {
-            while ($row = $this->db->fetchRow($recordset))
-            {
+        } else {
+            while ($row = $this->db->fetchRow($recordset)) {
                 $groups[$row['usergroupsId']] = $row['usergroupsTitle'];
             }
 
@@ -993,8 +767,7 @@ class USER
      */
     public function grabAll($full = FALSE, $useBib = FALSE, $addEdit = 'add')
     {
-        if ($useBib)
-        {
+        if ($useBib) {
             $field = $addEdit == 'add' ? 'resourcemiscAddUserIdResource' : 'resourcemiscEditUserIdResource';
             $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $useBib]);
             $this->db->leftJoin('resource_misc', 'resourcemiscId', 'userbibliographyresourceResourceId');
@@ -1003,48 +776,35 @@ class USER
         }
         $this->db->orderBy('usersUsername');
 
-        if ($full)
-        {
+        if ($full) {
             $listOfFields = ["usersId", "usersUsername", "usersFullname", "usersAdmin"];
-        }
-        else
-        {
+        } else {
             $listOfFields = ["usersId", "usersUsername"];
         }
 
-        if ($useBib)
-        {
+        if ($useBib) {
             $recordset = $this->db->selectFromSubQuery('users', $listOfFields, $sq);
-        }
-        else
-        {
+        } else {
             $recordset = $this->db->select('users', $listOfFields, TRUE);
         }
 
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            $userName = $row['usersUsername'];
+        while ($row = $this->db->fetchRow($recordset)) {
+            $usersUsername = $row['usersUsername'];
 
-            if ($full)
-            {
-                if ($row['usersFullname'])
-                {
-                    $userName .= " (" . $row['usersFullname'] . ")";
+            if ($full) {
+                if ($row['usersFullname']) {
+                    $usersUsername .= " (" . $row['usersFullname'] . ")";
                 }
-                if ($row['usersAdmin'] == 'Y')
-                {
-                    $userName .= " ADMIN";
+                if ($row['usersAdmin'] == 1) {
+                    $usersUsername .= " ADMIN";
                 }
             }
 
-            $users[$row['usersId']] = \HTML\dbToFormTidy($userName);
+            $users[$row['usersId']] = \HTML\dbToFormTidy($usersUsername);
         }
-        if (isset($users))
-        {
+        if (isset($users)) {
             return $users;
-        }
-        else
-        {
+        } else {
             return FALSE; // shouldn't ever happen but just in case...
         }
     }
@@ -1071,26 +831,19 @@ class USER
         // 0 -- do nothing except set to public
         // 1 -- transfer to superadmin and set to public
         // 2 -- delete
-        if (!array_key_exists('userMetadata', $this->vars))
-        {
+        if (!array_key_exists('userMetadata', $this->vars)) {
             return TRUE;
         }
-        if (!$this->vars['userMetadata'])
-        { // update comments etc. to public
+        if (!$this->vars['userMetadata']) { // update comments etc. to public
             $updateArray = ['resourcemetadataPrivate' => 'N'];
             $this->db->formatConditionsOneField($input, 'resourcemetadataAddUserId');
             $this->db->update('resource_metadata', $updateArray);
-        }
-        elseif ($this->vars['userMetadata'] == 1)
-        { // to superadmin and set to public
+        } elseif ($this->vars['userMetadata'] == 1) { // to superadmin and set to public
             $updateArray = ['resourcemetadataAddUserId' => 1, 'resourcemetadataPrivate' => 'N'];
             $this->db->formatConditionsOneField($input, 'resourcemetadataAddUserId');
             $this->db->update('resource_metadata', $updateArray);
-        }
-        elseif ($this->vars['userMetadata'] == 2)
-        { // delete
-            foreach ($input as $userId)
-            {
+        } elseif ($this->vars['userMetadata'] == 2) { // delete
+            foreach ($input as $userId) {
                 $this->db->formatConditions(['resourcemetadataAddUserId' => $userId]);
                 $this->db->delete('resource_metadata');
             }
@@ -1107,12 +860,10 @@ class USER
             $subStmt = $this->db->subQuery($this->db->selectNoExecute('resource_metadata', 'resourcemetadataId'), FALSE, FALSE, TRUE);
             $this->db->formatConditions($this->db->formatFields('resourcekeywordMetadataId') . $this->db->inClause($subStmt, TRUE));
             $recordset = $this->db->select('resource_keyword', 'resourcekeywordMetadataId');
-            while ($row = $this->db->fetchRow($recordset))
-            {
+            while ($row = $this->db->fetchRow($recordset)) {
                 $deleteIds[] = $row['resourcekeywordMetadataId'];
             }
-            if (empty($deleteIds))
-            {
+            if (empty($deleteIds)) {
                 return TRUE; // nothing to do
             }
             $this->db->formatConditionsOneField($deleteIds, 'resourcekeywordMetadataId');
@@ -1129,38 +880,33 @@ class USER
      * Return FALSE for password not found or password doesn't match.
      * Superadmin is always id = 1
      *
-     * @param object $config
-     * @param string $username
+     * @param string $usersUsername
      * @param string $pwdInput
      *
      * @return bool
      */
-    private function wikindxCheckPassword($config, $username, $pwdInput)
+    private function wikindxCheckPassword($usersUsername, $pwdInput)
     {
         $fields = $this->db->prependTableToField('users', ["Id", "Password", "Admin", "Cookie", "Block"]);
-        $this->db->formatConditions(['usersUsername' => $username]);
+        $this->db->formatConditions(['usersUsername' => $usersUsername]);
         $recordset = $this->db->select('users', $fields);
-        if (!$this->db->numRows($recordset))
-        {
+        if (!$this->db->numRows($recordset)) {
             return FALSE;
         }
         $row = $this->db->fetchRow($recordset);
         // only the superadmin may log on when multi user is not enabled
-        if (!$config->WIKINDX_MULTIUSER && ($row['usersId'] != 1))
-        {
+        if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID)) {
             return FALSE;
         }
-        if (crypt($pwdInput, $row['usersPassword']) != $row['usersPassword'])
-        {
+        if (crypt($pwdInput, $row['usersPassword']) != $row['usersPassword']) {
             return FALSE;
         }
         // Logged in, check user is not blocked
-        if (!$this->checkBlock($row))
-        {
+        if (!$this->checkBlock($row)) {
             return FALSE;
         }
         // Logged in, now set up environment
-        $this->environment($row, $username);
+        $this->environment($row, $usersUsername);
 
         return TRUE;
     }
@@ -1173,8 +919,7 @@ class USER
      */
     private function checkBlock($row)
     {
-        if ($row['usersBlock'] == 'Y')
-        {
+        if ($row['usersBlock'] == 'Y') {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("warning", "blocked"));
 
             return FALSE;
@@ -1191,79 +936,68 @@ class USER
      *
      * LDAP functions adapted from work by Fabrice Boyrie
      *
-     * @param object $config
-     * @param string $username
+     * @param string $usersUsername
      * @param string $pwdInput
      *
      * @return bool
      */
-    private function ldapCheckPassword($config, $username, $pwdInput)
+    private function ldapCheckPassword($usersUsername, $pwdInput)
     {
-        if (($ds = ldap_connect($config->WIKINDX_LDAP_SERVER, $config->WIKINDX_LDAP_PORT)) === FALSE)
-        {
+        if (!in_array("ldap", get_loaded_extensions())) {
+            return FALSE;
+        }
+        if (($ds = ldap_connect(WIKINDX_LDAP_SERVER, WIKINDX_LDAP_PORT)) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapConnect"));
 
             return FALSE;
         }
-        ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, $config->WIKINDX_LDAP_PROTOCOL_VERSION);
-        if (($ldapbind = @ldap_bind($ds)) === FALSE)
-        {
+        ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, WIKINDX_LDAP_PROTOCOL_VERSION);
+        if (($ldapbind = @ldap_bind($ds)) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapBind"));
 
             return FALSE;
         }
-        $sr = @ldap_search($ds, $config->WIKINDX_LDAP_DN, '(uid=' . $username . ')');
+        $sr = @ldap_search($ds, WIKINDX_LDAP_DN, '(uid=' . $usersUsername . ')');
         $info = @ldap_get_entries($ds, $sr);
-        if ($info['count'] > 1)
-        {
+        if ($info['count'] > 1) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapTooManyUsers"));
 
             return FALSE;
         }
-        if ($info['count'] == 1)
-        {
+        if ($info['count'] == 1) {
             $ldaprdn = $info[0]['dn'];
-        }
-        else
-        {
-            $ldaprdn = "cn=" . $username . "," . $config->WIKINDX_LDAP_DN;
+        } else {
+            $ldaprdn = "cn=" . $usersUsername . "," . WIKINDX_LDAP_DN;
         }
         // Connexion au serveur LDAP
         $ldappass = $pwdInput;
         $ldapbind = @ldap_bind($ds, $ldaprdn, $ldappass);
-        if ($ldapbind)
-        {
+        if ($ldapbind) {
             // L'utilisateur est authentifié
-            $config = FACTORY_CONFIG::getInstance();
             $fields = $this->db->prependTableToField('users', ["Id", "Password", "Admin", "Cookie", "Block"]);
-            $this->db->formatConditions(['usersUsername' => $username]);
+            $this->db->formatConditions(['usersUsername' => $usersUsername]);
             $this->db->formatConditions(['usersPassword' => 'LDAP']);
             $recordset = $this->db->select('users', $fields);
-            if (!$this->db->numRows($recordset))
-            {
+            if (!$this->db->numRows($recordset)) {
                 // L'utilisateur n'existe pas on le crée
-                $userId = $this->writeLDAPUser($info[0], $username);
+                $userId = $this->writeLDAPUser($info[0], $usersUsername);
                 $this->db->formatConditions(['usersId' => $userId]);
                 $recordset = $this->db->select('users', $fields);
             }
             $row = $this->db->fetchRow($recordset);
             // only the superadmin may log on when multi user is not enabled
-            if (!$config->WIKINDX_MULTIUSER && ($row['usersId'] != 1))
-            {
+            if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID)) {
                 return FALSE;
             }
             // Logged in, check user is not blocked
-            if (!$this->checkBlock($row))
-            {
+            if (!$this->checkBlock($row)) {
                 return FALSE;
             }
             // Logged in, now set up environment
-            $this->environment($row, $username);
+            $this->environment($row, $usersUsername);
 
             return TRUE; // this is our ultimate goal
-        }
-        else
-        {
+        } else {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapBind"));
 
             return FALSE;

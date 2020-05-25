@@ -1,24 +1,29 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
+function SetWikindxBasePath()
+{
+    $wikindxBasePath = __DIR__;
+    while (!in_array(basename($wikindxBasePath), ["", "core"])) {
+        $wikindxBasePath = dirname($wikindxBasePath);
+    }
+    if (basename($wikindxBasePath) == "") {
+        die("
+            \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
+            and WIKINDX is unable to set the installation path automatically.
+            You should set \$WIKINDX_WIKINDX_PATH in config.php.
+        ");
+    }
+    chdir(dirname($wikindxBasePath));
+}
 
-session_start();
-if (isset($_SESSION) && array_key_exists('wikindxBasePath', $_SESSION) && $_SESSION['wikindxBasePath'])
-{
-    chdir($_SESSION['wikindxBasePath']); // tinyMCE changes the phpbasepath
-}
-else
-{
-    $oldPath = dirname(__FILE__);
-    $split = preg_split('/' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/u', $oldPath);
-    array_splice($split, -4); // get back to trunk
-    $newPath = implode(DIRECTORY_SEPARATOR, $split);
-    chdir($newPath);
-}
+SetWikindxBasePath();
 
 /**
  * Import initial configuration and initialize the web server
@@ -83,7 +88,7 @@ include_once("core/startup/WEBSERVERCONFIG.php");
 		padding : 0 10px 0 0;
 	}
 	</style>
-        <script src="<?php echo FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . "/" . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_VENDOR); ?>/jquery/jquery.min.js"></script>
+        <script src="<?php echo WIKINDX_BASE_URL . "/" . WIKINDX_URL_COMPONENT_VENDOR; ?>/jquery/jquery.min.js"></script>
 	<script language="JavaScript" type="text/javascript">
         // SET CURSOR POSITION
         $.fn.setCursorPosition = function(pos) {
@@ -133,26 +138,22 @@ function bodyCharsetTable($charsetArray, $name, $title, $diacritic)
 
     $lString = "";
     $lString .= "<tr>\n\t<td class=\"charsetHeading\" colspan=\"$numColumns\"><a name=\"$name\">$title";
-    if ($diacritic)
-    {
+    if ($diacritic) {
         $lString .= " <span style=\"color:red;\">*</span>";
     }
     $lString .= "</td>\n</tr>\n";
 
     $charPreview = $diacritic ? 'o' : '';
 
-    foreach (array_chunk($charsetArray, $numColumns) as $lineArray)
-    {
+    foreach (array_chunk($charsetArray, $numColumns) as $lineArray) {
         $lString .= "<tr>\n";
 
-        foreach ($lineArray as $char)
-        {
+        foreach ($lineArray as $char) {
             $lString .= "\t<td id=\"ul$char\" onclick=\"selectSpChar($char);\">&#$char;$charPreview</td>\n";
         }
 
         $index = count($lineArray);
-        if ($index < $numColumns)
-        {
+        if ($index < $numColumns) {
             $lString .= "\t<td class=\"emptyCell\" colspan=\"" . ($numColumns - $index) . "\">&nbsp;</td>\n";
         }
 
@@ -164,13 +165,10 @@ function bodyCharsetTable($charsetArray, $name, $title, $diacritic)
 
 include_once('sp_charTableDef.php');
 
-if (isset($_GET['ul']))
-{
+if (isset($_GET['ul'])) {
     $ul = $_GET['ul'];
     $ul = intval(str_replace('ul', '', $ul));
-}
-else
-{
+} else {
     $ul = 0;
 }
 
@@ -180,8 +178,7 @@ $id = $tableChars[$ul]['id'];
 $diac = $tableChars[$ul]['diac'];
 
 $charsetArray = [];
-for ($char = base_convert($fcp, 16, 10); $char <= base_convert($lcp, 16, 10); $char++)
-{
+for ($char = base_convert($fcp, 16, 10); $char <= base_convert($lcp, 16, 10); $char++) {
     $charsetArray[] = $char;
 }
 

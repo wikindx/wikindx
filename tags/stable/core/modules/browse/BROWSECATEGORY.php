@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -63,31 +65,30 @@ class BROWSECATEGORY
         $this->db->leftJoin('category', 'categoryId', 'resourcecategoryCategoryId');
         $this->db->orderBy('categoryCategory');
         $recordset = $this->db->selectFromSubQuery(FALSE, ['categoryId', 'categoryCategory', 'count'], $subQ);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $this->collate($row);
         }
         // Place 'General' first
-        if (array_key_exists(1, $this->category))
-        {
+        if (array_key_exists(1, $this->category)) {
             $general[1] = $this->category[1];
             unset($this->category[1]);
         }
-        foreach ($this->category as $id => $category)
-        {
+        foreach ($this->category as $id => $category) {
             $general[$id] = $category;
         }
         $this->category = $general;
     }
     /**
      * Add categories to array and sum totals
+     *
+     * @param mixed $row
      */
     private function collate($row)
     {
         $this->category[$row['categoryId']] = preg_replace(
             "/{(.*)}/Uu",
             "$1",
-            \HTML\dbToHtmlTidy($row['categoryCategory'])
+            \HTML\nlToHtml($row['categoryCategory'])
         );
         $this->sum[$row['categoryId']] = $row['count'];
     }
@@ -100,8 +101,7 @@ class BROWSECATEGORY
     {
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
-        foreach ($this->category as $id => $name)
-        {
+        foreach ($this->category as $id => $name) {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .

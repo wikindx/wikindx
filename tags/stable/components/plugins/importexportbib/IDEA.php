@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -61,30 +63,24 @@ class IDEA
     {
         $userObj = FACTORY_USER::getInstance();
         $cite = FACTORY_CITE::getInstance();
-        $multiUser = $this->session->getVar('setup_MultiUser');
+        $multiUser = WIKINDX_MULTIUSER;
         $ideaList = [];
         $index = 0;
         // now get ideas
         // Check this user is allowed to read the idea.
         $this->db->formatConditions(['resourcemetadataMetadataId' => ' IS NULL']);
-        if (!$this->common->setIdeasCondition())
-        {
+        if (!$this->common->setIdeasCondition()) {
             $this->failure(HTML\p($this->pluginmessages->text("noIdeas"), 'error'));
         }
         $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataTimestamp', 'resourcemetadataTimestampEdited',
             'resourcemetadataMetadataId', 'resourcemetadataText', 'resourcemetadataAddUserId', 'resourcemetadataPrivate', ]);
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $ideaList[$index]['metadata'] = $cite->parseCitations($row['resourcemetadataText'], 'html');
-            if ($multiUser)
-            {
+            if ($multiUser) {
                 list($user) = $userObj->displayUserAddEdit($row['resourcemetadataAddUserId'], FALSE, 'idea');
-                if ($row['resourcemetadataTimestampEdited'] == '0000-00-00 00:00:00')
-                {
+                if ($row['resourcemetadataTimestampEdited'] == '0000-00-00 00:00:00') {
                     $ideaList[$index]['user'] = '&nbsp;' . $this->coremessages->text('hint', 'addedBy', $user . '&nbsp;' . $row['resourcemetadataTimestamp']);
-                }
-                else
-                {
+                } else {
                     $ideaList[$index]['user'] = '&nbsp;' . $this->coremessages->text('hint', 'addedBy', $user . '&nbsp;' . $row['resourcemetadataTimestamp']) .
                     ',&nbsp;' . $this->coremessages->text('hint', 'editedBy', $user . '&nbsp;' . $row['resourcemetadataTimestampEdited']);
                 }
@@ -92,8 +88,7 @@ class IDEA
             $ideaList[$index]['links'] = ['&nbsp;' . \FORM\checkbox(FALSE, 'checkbox_' . $row['resourcemetadataId'], FALSE)];
             ++$index;
         }
-        if (!$index)
-        {
+        if (!$index) {
             $this->failure(HTML\p($this->pluginmessages->text("noIdeas"), 'error'));
         }
         $ideaList[--$index]['links'][] .= \FORM\formEnd();

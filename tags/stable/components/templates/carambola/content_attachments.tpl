@@ -6,7 +6,7 @@
  *}
 
 <!-- begin content_attachments.tpl -->
-{if isset($resourceSingle.attachments) && isset($resourceSingle.attachments.title) && isset($resourceSingle.urls.title)}
+{if isset($resourceSingle.attachments) && isset($resourceSingle.attachments.title) && isset($resourceSingle.urls)}
 <div class="contentAttachments">
 	{if isset($resourceSingle.attachments) && isset($resourceSingle.attachments.title)}
 	<div class="small">

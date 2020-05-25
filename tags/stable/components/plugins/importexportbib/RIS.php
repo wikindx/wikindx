@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -47,26 +49,21 @@ class RIS
     public function process()
     {
         $sql = $this->common->getSQL();
-        if (!$sql)
-        {
+        if (!$sql) {
             $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
         }
-        if (!$this->common->openFile(FALSE, '.ris'))
-        {
+        if (!$this->common->openFile(FALSE, '.ris')) {
             $this->failure($this->errors->text("file", "write", ": " . $this->common->fileName));
         }
         $sqlArray = unserialize(base64_decode($sql));
 
-        foreach ($sqlArray as $sql)
-        {
+        foreach ($sqlArray as $sql) {
             $recordset = $this->db->query($sql);
-            if (!$this->getData($recordset))
-            {
+            if (!$this->getData($recordset)) {
                 $this->failure($this->errors->text("file", "write", ": " . $this->common->fileName));
             }
         }
-        if ($this->common->fullFileName)
-        {
+        if ($this->common->fullFileName) {
             fclose($this->common->fp);
         }
         $pString = HTML\p($this->pluginmessages->text('exported') . ": " . $this->common->fileName, 'success');
@@ -83,25 +80,19 @@ class RIS
     private function getData($recordset)
     {
         $resourceIds = $entryArray = $rowTypes = [];
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (!$row['resourceId'])
-            { // not sure why, but sometimes $row is empty.
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (!$row['resourceId']) { // not sure why, but sometimes $row is empty.
                 continue;
             }
-            if (array_search($row['resourceId'], $resourceIds) === FALSE)
-            {
+            if (array_search($row['resourceId'], $resourceIds) === FALSE) {
                 $resourceIds[] = $row['resourceId'];
-            }
-            else
-            {
+            } else {
                 continue;
             }
             $rowTypes[$row['resourceId']]['resourceType'] = $row['resourceType'];
             // Do we need to switch `year1` (publicationYear) and `year2` (reprintYear)?
             if ((($row['resourceType'] == 'book') || ($row['resourceType'] == 'book_article'))
-                && $row['resourceyearYear1'] && $row['resourceyearYear2'])
-            {
+                && $row['resourceyearYear1'] && $row['resourceyearYear2']) {
                 $row['resourceyearYear1'] = $row['resourceyearYear2'];
             }
             // else, always use `year2` in preference to `year1` except for web_article, database,
@@ -110,48 +101,35 @@ class RIS
             ($row['resourceType'] != 'web_site') && ($row['resourceType'] != 'web_encyclopedia') &&
             ($row['resourceType'] != 'web_encyclopedia_article') &&
             ($row['resourceType'] != 'proceedings_article') && ($row['resourceType'] != 'proceedings') &&
-            ($row['resourceType'] != 'database'))
-            {
+            ($row['resourceType'] != 'database')) {
                 $row['resourceyearYear1'] = $row['resourceyearYear2'];
                 unset($row['resourceyearYear2']);
             }
             $entryArray[$row['resourceId']][] = 'TY  - ' . $this->map->types[$row['resourceType']];
             $entryArray[$row['resourceId']][] = 'T1  - ' . $this->common->titleFormat($row);
-            foreach ($this->map->{$row['resourceType']} as $table => $tableArray)
-            {
-                if ($table == 'resource_creator')
-                {
+            foreach ($this->map->{$row['resourceType']} as $table => $tableArray) {
+                if ($table == 'resource_creator') {
                     continue;
                 }
-                foreach ($tableArray as $wkField => $risField)
-                {
+                foreach ($tableArray as $wkField => $risField) {
                     $wkField = str_replace('_', '', $table) . ucfirst($wkField);
-                    if (array_key_exists($wkField, $row) && $row[$wkField])
-                    {
+                    if (array_key_exists($wkField, $row) && $row[$wkField]) {
                         // asterisk (character 42) is not allowed in the author, keywords, or periodical name fields - replace with '#'
-                        if ($risField == 'JF')
-                        {
+                        if ($risField == 'JF') {
                             $entryArray[$row['resourceId']][] = $risField . '  - ' . preg_replace("/\\*/u", "#", stripslashes($row[$wkField]));
-                        }
-                        elseif (($risField == 'UR') && (($row['resourceType'] == 'web_article') ||
+                        } elseif (($risField == 'UR') && (($row['resourceType'] == 'web_article') ||
                             ($row['resourceType'] == 'web_site') || ($row['resourceType'] == 'web_encyclopedia') ||
                             ($row['resourceType'] == 'web_encyclopedia_article') ||
                             ($row['resourceType'] == 'database')) &&
-                            ($item = $this->webFormat($row)))
-                        {
+                            ($item = $this->webFormat($row))) {
                             $entryArray[$row['resourceId']][] = $item;
-                        }
-                        else
-                        {
-                            if ($risField == 'UR')
-                            {
+                        } else {
+                            if ($risField == 'UR') {
                                 $tmp = base64_decode($row['resourcetextUrls']);
                                 $tmp = unserialize($tmp);
                                 $tmp = array_values($tmp);
                                 $tmp = implode(';', $tmp);
-                            }
-                            else
-                            {
+                            } else {
                                 $tmp = stripslashes($row[$wkField]);
                             }
 
@@ -160,25 +138,20 @@ class RIS
                     }
                 }
             }
-            if ($item = $this->year1Format($row))
-            {
+            if ($item = $this->year1Format($row)) {
                 $entryArray[$row['resourceId']][] = 'PY  - ' . $item;
             }
             if (isset($row['resourceyearYear2']) && $row['resourceyearYear2'] && (($row['resourceType'] == 'proceedings') ||
-                ($row['resourceType'] == 'proceedings_article')) && ($item = $this->year2Format($row)))
-            {
+                ($row['resourceType'] == 'proceedings_article')) && ($item = $this->year2Format($row))) {
                 $entryArray[$row['resourceId']][] = $item;
             }
             if ($row['resourcemiscField4'] && (($row['resourceType'] == 'film') || ($row['resourceType'] == 'broadcast'))
-                && ($item = $this->timeFormat($row)))
-            {
+                && ($item = $this->timeFormat($row))) {
                 $entryArray[$row['resourceId']][] = $item;
             }
             // RefMan doesn't like pages on some types
-            if (($row['resourceType'] != 'hearing') && ($row['resourceType'] != 'unpublished'))
-            {
-                if ($item = $this->common->pageFormat($row, 'ris'))
-                {
+            if (($row['resourceType'] != 'hearing') && ($row['resourceType'] != 'unpublished')) {
+                if ($item = $this->common->pageFormat($row, 'ris')) {
                     $entryArray[$row['resourceId']][] = $item;
                 }
             }
@@ -190,12 +163,9 @@ class RIS
         // Get keywords
         $this->grabKeywords($entryArray, $resourceIds);
         // Write entries to file
-        foreach ($entryArray as $array)
-        {
-            if ($this->common->fp)
-            {
-                if (!fwrite($this->common->fp, implode(CR, $array) . CR . "ER  - " . CR . CR))
-                {
+        foreach ($entryArray as $array) {
+            if ($this->common->fp) {
+                if (!fwrite($this->common->fp, implode(CR, $array) . CR . "ER  - " . CR . CR)) {
                     return FALSE;
                 }
             }
@@ -221,24 +191,19 @@ class RIS
         $this->db->orderBy('resourcecreatorOrder', TRUE, FALSE);
         $resultSet = $this->db->select('resource_creator', ['resourcecreatorResourceId', 'creatorSurname',
             'creatorFirstname', 'creatorInitials', 'creatorPrefix', 'resourcecreatorRole', ]);
-        while ($row = $this->db->fetchRow($resultSet))
-        {
+        while ($row = $this->db->fetchRow($resultSet)) {
             $wndxField = 'creator' . $row['resourcecreatorRole'];
-            if (!array_key_exists($wndxField, $this->map->{$rowTypes[$row['resourcecreatorResourceId']]['resourceType']}['resource_creator']))
-            {
+            if (!array_key_exists($wndxField, $this->map->{$rowTypes[$row['resourcecreatorResourceId']]['resourceType']}['resource_creator'])) {
                 continue;
             }
             $risField = $this->map->{$rowTypes[$row['resourcecreatorResourceId']]['resourceType']}['resource_creator'][$wndxField];
             $name = $this->common->formatName($row, 'ris');
-            if ($name)
-            {
+            if ($name) {
                 $mapName[$row['resourcecreatorResourceId']][] = $risField . '  - ' . preg_replace("/\\*/u", "#", $name);
             }
         }
-        foreach ($rIds as $rId)
-        {
-            if (array_key_exists($rId, $mapName))
-            {
+        foreach ($rIds as $rId) {
+            if (array_key_exists($rId, $mapName)) {
                 $entryArray[$rId][] = implode(CR, $mapName[$rId]);
             }
         }
@@ -258,16 +223,13 @@ class RIS
         $tmp = array_values($tmp);
         $tmp = implode(';', $tmp);
         $url = "L2  - " . $tmp;
-        if (array_key_exists('resourceyearYear2', $row) && $row['resourceyearYear2'])
-        {
+        if (array_key_exists('resourceyearYear2', $row) && $row['resourceyearYear2']) {
             $year = stripslashes($row['resourceyearYear2']);
         }
-        if ($row['resourcemiscField3'])
-        {
+        if ($row['resourcemiscField3']) {
             $month = $row['resourcemiscField3'] < 10 ? '0' . $row['resourcemiscField3'] : $row['resourcemiscField3'];
         }
-        if ($row['resourcemiscField2'])
-        {
+        if ($row['resourcemiscField2']) {
             $day = $row['resourcemiscField2'] < 10 ? '0' . $row['resourcemiscField2'] : $row['resourcemiscField2'];
         }
 
@@ -284,12 +246,10 @@ class RIS
     {
         $year = $month = $day = FALSE;
         $year = stripslashes($row['resourceyearYear2']);
-        if ($row['resourcemiscField3'])
-        {
+        if ($row['resourcemiscField3']) {
             $month = $row['resourcemiscField3'] < 10 ? '0' . $row['resourcemiscField3'] : $row['resourcemiscField3'];
         }
-        if ($row['resourcemiscField2'])
-        {
+        if ($row['resourcemiscField2']) {
             $day = $row['resourcemiscField2'] < 10 ? '0' . $row['resourcemiscField2'] : $row['resourcemiscField2'];
         }
 
@@ -305,21 +265,17 @@ class RIS
     private function year1Format($row)
     {
         $year = $month = $day = FALSE;
-        if ($row['resourceyearYear1'])
-        {
+        if ($row['resourceyearYear1']) {
             $year = stripslashes($row['resourceyearYear1']);
         }
         if (($row['resourceType'] != 'web_article') && ($row['resourceType'] != 'web_site') &&
         ($row['resourceType'] != 'web_encyclopedia') &&
         ($row['resourceType'] != 'web_encyclopedia_article') && ($row['resourceType'] != 'proceedings_article') &&
-            ($row['resourceType'] != 'proceedings') && ($row['resourceType'] != 'database'))
-        {
-            if ($row['resourcemiscField3'])
-            {
+            ($row['resourceType'] != 'proceedings') && ($row['resourceType'] != 'database')) {
+            if ($row['resourcemiscField3']) {
                 $month = $row['resourcemiscField3'] < 10 ? '0' . $row['resourcemiscField3'] : $row['resourcemiscField3'];
             }
-            if ($row['resourcemiscField2'])
-            {
+            if ($row['resourcemiscField2']) {
                 $day = $row['resourcemiscField2'] < 10 ? '0' . $row['resourcemiscField2'] : $row['resourcemiscField2'];
             }
         }
@@ -337,8 +293,7 @@ class RIS
     {
         $hours = $minutes = FALSE;
         $hours = stripslashes($row['resourcemiscField4']);
-        if ($row['resourcemiscField1'])
-        {
+        if ($row['resourcemiscField1']) {
             $minutes = $row['resourcemiscField1'] < 10 ? '0' . $row['resourcemiscField1'] : $row['resourcemiscField1'];
         }
 
@@ -354,14 +309,11 @@ class RIS
     {
         $this->db->formatConditionsOneField($rIds, 'resourcetextId');
         $resultSet = $this->db->select('resource_text', ['resourcetextId', 'resourcetextNote', 'resourcetextAbstract']);
-        while ($row = $this->db->fetchRow($resultSet))
-        {
-            if ($row['resourcetextNote'])
-            {
+        while ($row = $this->db->fetchRow($resultSet)) {
+            if ($row['resourcetextNote']) {
                 $entryArray[$row['resourcetextId']][] = 'N1  - ' . $this->common->grabNote($row, 'ris');
             }
-            if ($row['resourcetextAbstract'])
-            {
+            if ($row['resourcetextAbstract']) {
                 $entryArray[$row['resourcetextId']][] = 'N2  - ' . $this->common->grabAbstract($row, 'ris');
             }
         }
@@ -378,12 +330,10 @@ class RIS
         $this->db->formatConditionsOneField($rIds, 'resourcekeywordResourceId');
         $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
         $recordset = $this->db->select('resource_keyword', ['resourcekeywordResourceId', 'keywordKeyword']);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $kws[$row['resourcekeywordResourceId']][] = 'KW  - ' . preg_replace("/\\*/u", "#", $row['keywordKeyword']);
         }
-        foreach ($kws as $rId => $kwArray)
-        {
+        foreach ($kws as $rId => $kwArray) {
             $entryArray[$rId][] = implode(CR, $kwArray);
         }
     }

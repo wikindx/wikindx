@@ -1,7 +1,7 @@
 {
     "component_type": "vendor",
     "component_id": "phpmailer",
-    "component_version": "6.1.3",
+    "component_version": "6.1.5",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "PHPMailer",
@@ -12,7 +12,7 @@
         {
             "author_name": "Marcus Bointon",
             "author_role": "Maintainer, developer",
-            "author_copyright": "2012-2019",
+            "author_copyright": "2012-2020",
             "author_email": "marcus@synchromedia.co.uk",
             "author_website": "https://marcus.bointon.com"
         },
@@ -52,5 +52,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "e97bdaae9634200a6a9a2874959cb155821a1a72029661efebb9540ed9acdd70"
+    "component_sha256": "5e34e7df42ccf5bb48b5d6a33f5079b77935a33b89eb3c2c48478e84d98a0f13"
 }

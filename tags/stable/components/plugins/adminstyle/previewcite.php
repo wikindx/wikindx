@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -46,8 +48,7 @@ class adminstyle_previewcite
         $cite = json_decode(base64_decode($this->vars['cite']), TRUE);
         // Load the test data
         $this->getData();
-        if ($this->loadCiteformat($cite) !== TRUE)
-        {
+        if ($this->loadCiteformat($cite) !== TRUE) {
             return FALSE;
         }
 
@@ -63,13 +64,11 @@ class adminstyle_previewcite
     private function loadCiteformat($cite)
     {
         $this->citeformat->wikindx = TRUE;
-        if (!$cite['cite_template'])
-        {
+        if (!$cite['cite_template']) {
             return FALSE;
         }
         $this->citeformat->loadArrays();
-        foreach ($cite as $key => $value)
-        {
+        foreach ($cite as $key => $value) {
             // Convert javascript unicode e.g. %u2014 to HTML entities
             $value = preg_replace(
                 "/%u(\\d+)/u",
@@ -93,15 +92,13 @@ class adminstyle_previewcite
     private function createTitleCite()
     {
         $pString = stripslashes($this->rowSingle['title']);
-        if (isset($this->rowSingle['subtitle']))
-        {
+        if (isset($this->rowSingle['subtitle'])) {
             $pString .= $this->citeformat->style['titleSubtitleSeparator'] .
             stripslashes($this->rowSingle['subtitle']);
         }
         // anything enclosed in {...} is to be left as is
         $this->citeformat->formatTitle($pString, "{", "}");
-        if ($this->rowSingle['shortTitle'])
-        {
+        if ($this->rowSingle['shortTitle']) {
             // anything enclosed in {...} is to be left as is
             $this->citeformat->formatShortTitle($this->rowSingle['shortTitle'], "{", "}");
         }
@@ -125,22 +122,18 @@ class adminstyle_previewcite
         $this->tailText = UTF8::mb_strrev($explode[0]);
         $text = UTF8::mb_strrev("]etic/[" . $explode[1]);
         preg_match_all("/(.*)\\s*\\[cite\\](.*)\\[\\/cite\\]/Uis", $text, $match);
-        foreach ($match[1] as $value)
-        {
+        foreach ($match[1] as $value) {
             $this->matches[1][] = $value;
         }
         $this->citeformat->count = 0;
-        foreach ($match[2] as $index => $value)
-        {
+        foreach ($match[2] as $index => $value) {
             ++$this->citeformat->count;
-            if ($id = $this->parseCiteTag($index, $value))
-            {
+            if ($id = $this->parseCiteTag($index, $value)) {
                 $this->citeIds[] = $id;
             }
         }
         // If empty($this->citeIds), there are no citations to scan for (or user has entered invalid IDs) so return $text unchanged.
-        if (empty($this->citeIds))
-        {
+        if (empty($this->citeIds)) {
             return $text;
         }
         /*
@@ -161,8 +154,7 @@ class adminstyle_previewcite
         */
         $this->citeformat->count = 0;
         $citeIndex = 0;
-        while (!empty($this->matches[1]))
-        {
+        while (!empty($this->matches[1])) {
             $this->citeformat->item = []; // must be reset each time.
             $id = $this->citeIds[$citeIndex];
             ++$citeIndex;
@@ -171,8 +163,7 @@ class adminstyle_previewcite
             $this->citeformat->items[$this->citeformat->count]['id'] = $id;
             //			$this->createPrePostText(array_shift($this->preText), array_shift($this->postText));
             // For each element of $bibliography, process title, creator names etc.
-            if (array_key_exists($id, $this->row))
-            {
+            if (array_key_exists($id, $this->row)) {
                 $this->processCitations($this->row[$id], $id);
             }
             // $this->rowSingle is set in $this->processCitations().
@@ -204,25 +195,19 @@ class adminstyle_previewcite
         $rawCitation = UTF8::mb_explode("|", $tag);
         $idPart = UTF8::mb_explode(":", $rawCitation[0]);
         $id = $idPart[0];
-        if (array_key_exists('1', $idPart))
-        {
+        if (array_key_exists('1', $idPart)) {
             $pages = UTF8::mb_explode("-", $idPart[1]);
             $pageStart = $pages[0];
             $pageEnd = array_key_exists('1', $pages) ? $pages[1] : FALSE;
-        }
-        else
-        {
+        } else {
             $pageStart = $pageEnd = FALSE;
         }
         $this->citeformat->formatPages($pageStart, $pageEnd);
-        if (array_key_exists('1', $rawCitation))
-        {
+        if (array_key_exists('1', $rawCitation)) {
             $text = UTF8::mb_explode("`", $rawCitation[1]);
             $this->preText[] = $text[0];
             $this->postText[] = array_key_exists('1', $text) ? $text[1] : FALSE;
-        }
-        else
-        {
+        } else {
             $this->preText[] = $this->postText[] = FALSE;
         }
 
@@ -242,8 +227,7 @@ class adminstyle_previewcite
         // The title of the resource
         $this->createTitleCite();
         // Publication year of resource.  If no publication year, we create a dummy key entry so that CITEFORMAT can provide a replacement string if required by the style.
-        if (!array_key_exists('year1', $this->rowSingle))
-        {
+        if (!array_key_exists('year1', $this->rowSingle)) {
             $this->rowSingle['year1'] = FALSE;
         }
         $this->citeformat->formatYear(stripslashes($this->rowSingle['year1']));

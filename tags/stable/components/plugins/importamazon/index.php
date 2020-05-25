@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -58,8 +60,7 @@ class importamazon_MODULE
         include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
         $this->config = new importamazon_CONFIG();
         $this->authorize = $this->config->authorize;
-        if ($menuInit)
-        { // portion of constructor used for menu initialisation
+        if ($menuInit) { // portion of constructor used for menu initialisation
             $this->makeMenu($this->config->menus);
 
             return; // need do nothing more.
@@ -67,8 +68,7 @@ class importamazon_MODULE
         $this->session = FACTORY_SESSION::getInstance();
 
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->authorize))
-        { // not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
 
@@ -92,43 +92,31 @@ class importamazon_MODULE
     /**
      * display options for conversions
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      * @param bool $hidden
      */
     public function display($message = FALSE, $hidden = FALSE)
     {
-        if (!$this->config->accessKey || ($this->config->accessKey == ''))
-        {
+        if (!$this->config->accessKey || ($this->config->accessKey == '')) {
             GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text('noAccessKey')));
-        }
-        elseif (!$this->config->secretAccessKey || ($this->config->secretAccessKey == ''))
-        {
+        } elseif (!$this->config->secretAccessKey || ($this->config->secretAccessKey == '')) {
             GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text('noSecretAccessKey')));
-        }
-        else
-        {
-            if ($message)
-            {
+        } else {
+            if ($message) {
                 $pString = $message;
-            }
-            else
-            {
+            } else {
                 $pString = '';
             }
             $pString .= FORM\formHeader("importamazon_input");
             $pString .= HTML\p($this->pluginmessages->text('region'));
-            if ($hidden)
-            {
+            if ($hidden) {
                 $pString .= $hidden;
             }
-            if ($hidden && array_key_exists('url', $this->vars))
-            {
+            if ($hidden && array_key_exists('url', $this->vars)) {
                 $pString .= BR . BR .
                     HTML\p(FORM\textInput($this->pluginmessages->text("url"), "url", $this->vars['url'], 100) .
                     BR . HTML\span($this->pluginmessages->text('urlHint'), 'hint'));
-            }
-            else
-            {
+            } else {
                 $pString .= HTML\p(FORM\textInput($this->pluginmessages->text("url"), "url", FALSE, 100) .
                     BR . HTML\span($this->pluginmessages->text('urlHint'), 'hint'));
             }
@@ -142,31 +130,25 @@ class importamazon_MODULE
      */
     public function input()
     {
-        if (!$url = trim($this->vars['url']))
-        {
+        if (!$url = trim($this->vars['url'])) {
             $this->badInput->close(HTML\p($this->pluginmessages->text('noInput'), 'error', 'center'), $this, 'display');
         }
         $amazonUrl = $isbn = FALSE;
-        if (preg_match('/\d{5,}[A-Z]?/u', $url, $matches))
-        {
+        if (preg_match('/\d{5,}[A-Z]?/u', $url, $matches)) {
             $isbn = $matches[0];
         }
         $components = UTF8::mb_explode('/', $url);
-        foreach ($components as $component)
-        {
-            if (mb_strpos($component, 'www.') === 0)
-            {
+        foreach ($components as $component) {
+            if (mb_strpos($component, 'www.') === 0) {
                 $amazonUrl = mb_substr($component, 4);
 
                 break;
             }
         }
-        if (!$amazonUrl)
-        {
+        if (!$amazonUrl) {
             $this->badInput->close(HTML\p($this->pluginmessages->text('invalidURL1'), 'error', 'center'), $this, 'display');
         }
-        if (!$isbn)
-        {
+        if (!$isbn) {
             $this->badInput->close(HTML\p($this->pluginmessages->text('invalidURL2'), 'error', 'center'), $this, 'display');
         }
         $this->convertAmazonSource($isbn);
@@ -195,24 +177,18 @@ class importamazon_MODULE
     {
         $noSort = $subTitle = FALSE;
         $title = str_replace(['{', '}'], '', $input['title']);
-        if (array_key_exists('subtitle', $input))
-        {
+        if (array_key_exists('subtitle', $input)) {
             $subTitle = str_replace(['{', '}'], '', $input['subtitle']);
             $this->db->formatConditions($this->db->replace($this->db->replace('resourceSubtitle', '{', ''), '}', '', FALSE) .
                 $this->db->like(FALSE, $subTitle, FALSE));
-        }
-        else
-        {
+        } else {
             $this->db->formatConditions(['resourceSubtitle' => ' IS NULL']);
         }
-        if (array_key_exists('noSort', $input))
-        {
+        if (array_key_exists('noSort', $input)) {
             $noSort = str_replace(['{', '}'], '', $input['noSort']);
             $this->db->formatConditions($this->db->replace($this->db->replace('resourceNoSort', '{', ''), '}', '', FALSE) .
                 $this->db->like(FALSE, $noSort, FALSE));
-        }
-        else
-        {
+        } else {
             $this->db->formatConditions(['resourceNoSort' => ' IS NULL']);
         }
         $this->db->formatConditions(['resourceType' => 'book']);
@@ -222,8 +198,7 @@ class importamazon_MODULE
             $this->db->replace($this->db->replace('resourceTitle', '{', ''), '}', '', FALSE) . ', ' .
             $this->db->replace($this->db->replace('resourceSubtitle', '{', ''), '}', '', FALSE) . ', ' .
             $this->db->replace($this->db->replace('resourceNoSort', '{', ''), '}', '', FALSE), TRUE, FALSE);
-        if ($this->db->numRows($resultset))
-        {
+        if ($this->db->numRows($resultset)) {
             $res = FACTORY_RESOURCECOMMON::getInstance();
             $bibStyle = FACTORY_BIBSTYLE::getInstance();
             $pString = HTML\p($this->pluginmessages->text('resourceExists'), 'error', 'center');
@@ -252,14 +227,12 @@ class importamazon_MODULE
         $values[] = $input['title'];
         $fields[] = "resourceTitleSort";
         $values[] = $input['resourceTitleSort'];
-        if (array_key_exists('noSort', $input))
-        {
+        if (array_key_exists('noSort', $input)) {
             $fields[] = "resourceNoSort";
             $values[] = $input['noSort'];
         }
         // subtitle
-        if (array_key_exists('subtitle', $input))
-        {
+        if (array_key_exists('subtitle', $input)) {
             $fields[] = "resourceSubtitle";
             $values[] = $input['subtitle'];
         }
@@ -280,26 +253,20 @@ class importamazon_MODULE
     {
         $surname = $von = $firstname = FALSE;
         $author = UTF8::mb_explode(" ", $input);
-        if (count($author) == 1)
-        {
+        if (count($author) == 1) {
             $surname = $author[0];
-        }
-        else
-        {
+        } else {
             $tempFirst = [];
             $case = $this->getStringCase($author[0]);
-            while ((($case == "upper") || ($case == "none")) && (count($author) > 0))
-            {
+            while ((($case == "upper") || ($case == "none")) && (count($author) > 0)) {
                 $tempFirst[] = array_shift($author);
-                if (!empty($author))
-                {
+                if (!empty($author)) {
                     $case = $this->getStringCase($author[0]);
                 }
             }
 
             list($von, $surname) = $this->getVonLast($author);
-            if ($surname == "")
-            {
+            if ($surname == "") {
                 $surname = array_pop($tempFirst);
             }
             $firstname = implode(" ", $tempFirst);
@@ -320,50 +287,37 @@ class importamazon_MODULE
         $tempVon = [];
         $count = 0;
         $bVon = FALSE;
-        foreach ($author as $part)
-        {
+        foreach ($author as $part) {
             $case = $this->getStringCase($part);
-            if ($count == 0)
-            {
-                if ($case == "lower")
-                {
+            if ($count == 0) {
+                if ($case == "lower") {
                     $bVon = TRUE;
-                    if ($case == "none")
-                    {
+                    if ($case == "none") {
                         $count--;
                     }
                 }
             }
 
-            if ($bVon)
-            {
+            if ($bVon) {
                 $tempVon[] = $part;
-            }
-            else
-            {
+            } else {
                 $surname = $surname . " " . $part;
             }
 
             $count++;
         }
 
-        if (count($tempVon) > 0)
-        {
+        if (count($tempVon) > 0) {
             //find the first lowercase von starting from the end
-            for ($i = (count($tempVon) - 1); $i > 0; $i--)
-            {
-                if ($this->getStringCase($tempVon[$i]) == "lower")
-                {
+            for ($i = (count($tempVon) - 1); $i > 0; $i--) {
+                if ($this->getStringCase($tempVon[$i]) == "lower") {
                     break;
-                }
-                else
-                {
+                } else {
                     $surname = array_pop($tempVon) . " " . $surname;
                 }
             }
 
-            if ($surname == "")
-            { // von part was all lower chars, the last entry is surname
+            if ($surname == "") { // von part was all lower chars, the last entry is surname
                 $surname = array_pop($tempVon);
             }
 
@@ -387,27 +341,18 @@ class importamazon_MODULE
     {
         $caseChar = "";
         $string = preg_replace("/\\d/u", "", $string);
-        if (preg_match("/\\w/u", $string, $caseChar))
-        {
-            if (is_array($caseChar))
-            {
+        if (preg_match("/\\w/u", $string, $caseChar)) {
+            if (is_array($caseChar)) {
                 $caseChar = $caseChar[0];
             }
-            if (preg_match("/[a-z]/u", $caseChar))
-            {
+            if (preg_match("/[a-z]/u", $caseChar)) {
                 return "lower";
-            }
-            elseif (preg_match("/[A-Z]/u", $caseChar))
-            {
+            } elseif (preg_match("/[A-Z]/u", $caseChar)) {
                 return "upper";
-            }
-            else
-            {
+            } else {
                 return "none";
             }
-        }
-        else
-        {
+        } else {
             return "none";
         }
     }
@@ -415,28 +360,24 @@ class importamazon_MODULE
      * Write WKX_creator
      *
      * @param array $string
+     * @param mixed $author
      */
     private function writeCreatorTable($author)
     {
-        if ($author['surname'])
-        {
+        if ($author['surname']) {
             $fields[] = "creatorSurname";
             $values[] = $this->trimString($author['surname']);
         }
-        if ($author['firstname'])
-        {
+        if ($author['firstname']) {
             $fields[] = "creatorFirstname";
             $values[] = $this->trimString($author['firstname']);
         }
-        if ($author['prefix'])
-        {
+        if ($author['prefix']) {
             $fields[] = "creatorPrefix";
             $values[] = $this->trimString($author['prefix']);
         }
-        if (isset($fields))
-        {
-            if ($id = $this->creator->checkExists($author['surname'], $author['firstname'], '', $author['prefix']))
-            {
+        if (isset($fields)) {
+            if ($id = $this->creator->checkExists($author['surname'], $author['firstname'], '', $author['prefix'])) {
                 $this->creatorIds[] = $id;
 
                 return;
@@ -452,10 +393,8 @@ class importamazon_MODULE
     {
         $mainSurname = FALSE;
         $order = 1;
-        foreach ($this->creatorIds as $creatorId)
-        {
-            if (!$mainSurname)
-            {
+        foreach ($this->creatorIds as $creatorId) {
+            if (!$mainSurname) {
                 $this->db->formatConditions(['creatorId' => $creatorId]);
                 $mainSurname = $this->db->selectFirstField('creator', 'creatorSurname');
                 $mainId = $creatorId;
@@ -481,8 +420,7 @@ class importamazon_MODULE
     {
         // Check publisher doesn't already exist
         $publisher = FACTORY_PUBLISHER::getInstance();
-        if ($publisherId = $publisher->checkExists($name, ''))
-        {
+        if ($publisherId = $publisher->checkExists($name, '')) {
             return $publisherId;
         }
         //  Doesn't exist, so write
@@ -505,8 +443,7 @@ class importamazon_MODULE
         $bibConfig->bibtex();
         $bibtexKeys = [];
         $recordset = $this->db->select('resource', 'resourceBibtexKey');
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $bibtexKeys[] = $row['resourceBibtexKey'];
         }
         $letters = range('a', 'z');
@@ -514,12 +451,9 @@ class importamazon_MODULE
         $this->db->formatConditions(['resourceyearId' => $this->resourceAutoId]);
         $recordset = $this->db->select(['resource_year'], 'resourceyearYear1');
         $row = $this->db->fetchRow($recordset);
-        if ($row['resourceyearYear1'])
-        {
+        if ($row['resourceyearYear1']) {
             $year = $row['resourceyearYear1'];
-        }
-        else
-        {
+        } else {
             $year = FALSE;
         }
         $this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorMain');
@@ -531,26 +465,20 @@ class importamazon_MODULE
         $recordset = $this->db->select(['resource_creator'], ['creatorSurname', 'creatorPrefix']);
         $row = $this->db->fetchRow($recordset);
         $keyMade = FALSE;
-        if ((!is_array($row) || !array_key_exists('creatorSurname', $row) || !$row['creatorSurname']))
-        { // anonymous
+        if ((!is_array($row) || !array_key_exists('creatorSurname', $row) || !$row['creatorSurname'])) { // anonymous
             $base = 'anon' . $year;
-        }
-        else
-        {
+        } else {
             $prefix = '';
-            if ($row['creatorPrefix'])
-            {
+            if ($row['creatorPrefix']) {
                 $prefix = utf8_decode($row['creatorPrefix']);
-                foreach ($bibConfig->bibtexSpChPlain as $key => $value)
-                {
+                foreach ($bibConfig->bibtexSpChPlain as $key => $value) {
                     $char = preg_quote(UTF8::mb_chr($key), '/');
                     $prefix = preg_replace("/$char/u", "$value", $prefix);
                 }
                 $prefix = preg_replace("/\\W/u", '', $prefix);
             }
             $surname = utf8_decode($row['creatorSurname']);
-            foreach ($bibConfig->bibtexSpChPlain as $key => $value)
-            {
+            foreach ($bibConfig->bibtexSpChPlain as $key => $value) {
                 $char = preg_quote(UTF8::mb_chr($key), '/');
                 $surname = preg_replace("/$char/u", "$value", $surname);
             }
@@ -558,18 +486,15 @@ class importamazon_MODULE
             $base = $prefix . $surname . $year;
         }
         $bibtexKey = $base;
-        for ($i = 0; $i < $sizeof; $i++)
-        {
-            if (array_search($bibtexKey, $bibtexKeys) === FALSE)
-            {
+        for ($i = 0; $i < $sizeof; $i++) {
+            if (array_search($bibtexKey, $bibtexKeys) === FALSE) {
                 $keyMade = TRUE;
 
                 break;
             }
             $bibtexKey = $base . $letters[$i];
         }
-        if (!$keyMade)
-        {
+        if (!$keyMade) {
             $bibtexKey = $base . '.' . $this->resourceAutoId; // last resort
         }
         $this->db->formatConditions(['resourceId' => $this->resourceAutoId]);
@@ -605,42 +530,31 @@ class importamazon_MODULE
         $noSortFound = FALSE;
         // Disable warning about HTTP error because Amazon uses it with ordinary error messages
         $content = file_get_contents($URL, FALSE, stream_context_create(['http' => ['ignore_errors' => TRUE]]));
-        if ($content === FALSE)
-        {
+        if ($content === FALSE) {
             $content = '';
         }
 
         // resource type -- must be book
-        if (preg_match_all('/<ProductGroup>\s*(.*)\s*<\/ProductGroup>/iuU', $content, $matches))
-        {
-            if ($matches[1][0] != 'Book')
-            {
+        if (preg_match_all('/<ProductGroup>\s*(.*)\s*<\/ProductGroup>/iuU', $content, $matches)) {
+            if ($matches[1][0] != 'Book') {
                 $this->badInput->close(HTML\p($this->pluginmessages->text('notBook'), 'error', 'center'), $this, 'display');
             }
         }
-        if (preg_match_all('/<Title>\s*(.*)\s*<\/Title>/iuU', $content, $matches))
-        {
+        if (preg_match_all('/<Title>\s*(.*)\s*<\/Title>/iuU', $content, $matches)) {
             $title = UTF8::mb_explode(".", $matches[1][0], 2);
             $title = $this->trimString($title[0]);
             $titleArray = UTF8::mb_explode(":", $title, 2);
-            if (array_key_exists(1, $titleArray))
-            {
+            if (array_key_exists(1, $titleArray)) {
                 $array['subtitle'] = $this->trimString($titleArray[1]);
             }
             $array['title'] = $title = $resourceTitleSort = $this->trimString($titleArray[0]);
-            $config = FACTORY_CONFIG::getInstance();
-            foreach ($config->WIKINDX_NOSORT as $pattern)
-            {
-                if (preg_match("/^($pattern)\\s(.*)|^\\{($pattern)\\s(.*)/ui", $array['title'], $matches))
-                {
-                    if (array_key_exists(3, $matches))
-                    { // found second set of matches
+            foreach (WIKINDX_NO_SORT as $pattern) {
+                if (preg_match("/^($pattern)\\s(.*)|^\\{($pattern)\\s(.*)/ui", $array['title'], $matches)) {
+                    if (array_key_exists(3, $matches)) { // found second set of matches
                         $resourceTitleSort = $this->trimString($matches[4]);
                         $array['title'] = '{' . $resourceTitleSort;
                         $array['noSort'] = $this->trimString($matches[3]);
-                    }
-                    else
-                    {
+                    } else {
                         $array['title'] = $resourceTitleSort = $this->trimString($matches[2]);
                         $array['noSort'] = $this->trimString($matches[1]);
                     }
@@ -648,50 +562,40 @@ class importamazon_MODULE
                     break;
                 }
             }
-            if (array_key_exists('subtitle', $array) && $array['subtitle'])
-            {
+            if (array_key_exists('subtitle', $array) && $array['subtitle']) {
                 $resourceTitleSort .= ' ' . $array['subtitle'];
             }
             $array['resourceTitleSort'] = str_replace(['{', '}'], '', \HTML\stripHtml($resourceTitleSort));
             // If $this->vars['requestUrl'] == $request, we have already checked for duplication and so are proceeding to input regardless
-            if (!array_key_exists('requestUrl', $this->vars) || ($this->vars['requestUrl'] != $URL))
-            {
+            if (!array_key_exists('requestUrl', $this->vars) || ($this->vars['requestUrl'] != $URL)) {
                 $this->checkDuplication($array);
             }
             $this->writeResourceTable($array, $isbn);
         }
-        if (!$this->resourceAutoId)
-        {
+        if (!$this->resourceAutoId) {
             $this->badInput->close(HTML\p($this->pluginmessages->text('failure', $content), 'error', 'center'), $this, 'display');
         }
-        if (preg_match_all('/<Author>\s*(.*)\s*<\/Author>/iuU', $content, $matches))
-        {
+        if (preg_match_all('/<Author>\s*(.*)\s*<\/Author>/iuU', $content, $matches)) {
             $matches = $matches[1];
-            foreach ($matches as $author)
-            {
+            foreach ($matches as $author) {
                 $authors = $this->parseAuthor($author);
                 $this->writeCreatorTable($authors);
             }
-            if (!empty($this->creatorIds))
-            {
+            if (!empty($this->creatorIds)) {
                 $this->writeResourceCreatorTable();
                 // remove cache files for creators
                 $this->db->deleteCache('cacheResourceCreators');
                 $this->db->deleteCache('cacheMetadataCreators');
             }
         }
-        if (preg_match_all('/<Publisher>\s*(.*)\s*<\/Publisher>/iuU', $content, $matches))
-        {
-            if ($matches[1][0])
-            {
+        if (preg_match_all('/<Publisher>\s*(.*)\s*<\/Publisher>/iuU', $content, $matches)) {
+            if ($matches[1][0]) {
                 $publisherId = $this->writePublisherTable($this->trimString($matches[1][0]));
             }
         }
         $fields = $values = [];
-        if (preg_match_all('/<PublicationDate>\s*(\d{4,}).*<\/PublicationDate>/iuU', $content, $matches))
-        {
-            if ($matches[1][0])
-            {
+        if (preg_match_all('/<PublicationDate>\s*(\d{4,}).*<\/PublicationDate>/iuU', $content, $matches)) {
+            if ($matches[1][0]) {
                 $fields[] = 'resourceyearYear1';
                 $values[] = $matches[1][0];
                 $fields[] = "resourceyearId";
@@ -701,14 +605,12 @@ class importamazon_MODULE
         }
         // Write WKX_resource_misc
         $fields = $values = [];
-        $userId = $this->session->getVar('setup_UserId');
-        if ($userId)
-        {
+        $userId = $this->session->getVar("setup_UserId");
+        if ($userId) {
             $fields[] = "resourcemiscAddUserIdResource";
             $values[] = $userId;
         }
-        if (isset($publisherId))
-        {
+        if (isset($publisherId)) {
             $fields[] = "resourcemiscPublisher";
             $values[] = $publisherId;
         }
@@ -733,7 +635,6 @@ class importamazon_MODULE
         $fields[] = 'resourcetimestampTimestampAdd';
         $values[] = $this->db->formatTimestamp();
         $this->db->insert('resource_timestamp', $fields, $values);
-        $this->db->insert('statistics', ['statisticsResourceId'], [$this->resourceAutoId]);
     }
     /**
      * trimString
@@ -767,18 +668,17 @@ class importamazon_MODULE
 
         // Build the request
         $request = [];
-        foreach ($ServiceParams as $key => $value)
-        {
+        foreach ($ServiceParams as $key => $value) {
             $key = rawurlencode($key);
             $value = rawurlencode($value);
             $request[] = $key . "=" . $value;
         }
 
         $RESTString =
-		    "GET" . LF .
-		    $url['host'] . LF .
-		    $url['path'] . LF .
-		    implode("&", $request);
+            "GET" . LF .
+            $url['host'] . LF .
+            $url['path'] . LF .
+            implode("&", $request);
 
         $request[] = "Signature=" . urlencode(base64_encode(hash_hmac('sha256', $RESTString, $secretKey, TRUE)));
 

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -39,8 +41,7 @@ class BROWSESUBCATEGORY
     {
         $this->sum = $this->subcategory = [];
         $this->getSubcategories();
-        if (empty($this->subcategory))
-        {
+        if (empty($this->subcategory)) {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noSubcategories"));
 
             return;
@@ -68,28 +69,27 @@ class BROWSESUBCATEGORY
             'resourcecategorySubcategoryId',
             ['subcategorySubcategory', 'subcategoryCategoryId', 'categoryId', 'categoryCategory']
         );
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if ($row['resourcecategorySubcategoryId'])
-            {
-                $this->categories[$row['resourcecategorySubcategoryId']] = \HTML\dbToHtmlTidy($row['categoryCategory']);
+        while ($row = $this->db->fetchRow($recordset)) {
+            if ($row['resourcecategorySubcategoryId']) {
+                $this->categories[$row['resourcecategorySubcategoryId']] = \HTML\nlToHtml($row['categoryCategory']);
             }
             $this->collate($row);
         }
     }
     /**
      * Add categories to array and sum totals
+     *
+     * @param mixed $row
      */
     public function collate($row)
     {
-        if (!$row['subcategorySubcategory'])
-        {
+        if (!$row['subcategorySubcategory']) {
             return;
         }
         $this->subcategory[$row['resourcecategorySubcategoryId']] = preg_replace(
             "/{(.*)}/Uu",
             "$1",
-            \HTML\dbToHtmlTidy($row['subcategorySubcategory'])
+            \HTML\nlToHtml($row['subcategorySubcategory'])
         );
         $this->sum[$row['resourcecategorySubcategoryId']] = $row['count'];
     }
@@ -102,8 +102,7 @@ class BROWSESUBCATEGORY
     {
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
-        foreach ($this->subcategory as $id => $name)
-        {
+        foreach ($this->subcategory as $id => $name) {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -22,13 +24,13 @@ class GLOBALS
     /** array */
     private static $dirtyVars = [];
     /**
+     * user variables are stored here
+     */
+    private static $userVars = [];
+    /**
      *  The db queries counter
      */
     private static $WIKINDX_DB_QUERIES = 0;
-    /**
-     *  The db connection time elapsed
-     */
-    private static $WIKINDX_DB_CONNECTION_TIME_CHRONO = 0;
     /**
      *  The db queries time elapsed
      */
@@ -56,8 +58,7 @@ class GLOBALS
      */
     public function __construct()
     {
-        if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL)
-        {
+        if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL) {
             $this->setPageStartingTime(microtime());
         }
     }
@@ -71,12 +72,10 @@ class GLOBALS
      */
     public static function setVars($cleanInput, $dirtyInput)
     {
-        if (empty(self::$vars))
-        {
+        if (empty(self::$vars)) {
             self::$vars = $cleanInput;
         }
-        if (empty(self::$dirtyVars))
-        {
+        if (empty(self::$dirtyVars)) {
             self::$dirtyVars = $dirtyInput;
         }
     }
@@ -99,6 +98,41 @@ class GLOBALS
         return self::$dirtyVars;
     }
     /**
+     * Set a user variable
+     *
+     * @param string $key
+     * @param mixed $value
+     */
+    public static function setUserVar($key, $value)
+    {
+        self::$userVars[$key] = $value;
+    }
+    /**
+     * Get a user variable
+     *
+     * @param $default Default return value if set value does not exist.
+     * @param mixed $key
+     *
+     * @return string
+     */
+    public static function getUserVar($key, $default = FALSE)
+    {
+        if (!array_key_exists($key, self::$userVars)) {
+            return $default;
+        }
+
+        return self::$userVars[$key];
+    }
+    /**
+     * Get user variable array
+     *
+     * @return array
+     */
+    public static function getUserVarsArray()
+    {
+        return self::$userVars;
+    }
+    /**
      * Increment the DB query counter
      */
     public static function incrementDbQueries()
@@ -115,15 +149,6 @@ class GLOBALS
         return self::$WIKINDX_DB_QUERIES;
     }
     /**
-     * Increment the DB connection time elapsed
-     *
-     * @param float $appendTime
-     */
-    public static function incrementDbConnectionTimeElapsed($appendTime)
-    {
-        self::$WIKINDX_DB_CONNECTION_TIME_CHRONO += $appendTime;
-    }
-    /**
      * Increment the DB time elapsed
      *
      * @param float $appendTime
@@ -131,15 +156,6 @@ class GLOBALS
     public static function incrementDbTimeElapsed($appendTime)
     {
         self::$WIKINDX_DB_TIME_CHRONO += $appendTime;
-    }
-    /**
-     * Get the time elapsed during DB connection
-     *
-     * @return float
-     */
-    public static function getDbConnectionTimeElapsed()
-    {
-        return round(self::$WIKINDX_DB_CONNECTION_TIME_CHRONO, 5);
     }
     /**
      * Get the time elapsed during DB queries
@@ -213,12 +229,9 @@ class GLOBALS
      */
     public static function getTplVar($variableName)
     {
-        if (self::tplVarExists($variableName))
-        {
+        if (self::tplVarExists($variableName)) {
             return self::$WIKINDX_TEMPLATE_VARIABLE_STORE[$variableName];
-        }
-        else
-        {
+        } else {
             return [];
         }
     }
@@ -239,8 +252,7 @@ class GLOBALS
     public static function setPageStartingTime($pageStartingTime)
     {
         // Don't launch again start timer if we include this file twice
-        if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL)
-        {
+        if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL) {
             self::$WIKINDX_PAGE_STARTING_TIME_CHRONO = $pageStartingTime;
         }
     }

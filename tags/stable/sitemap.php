@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -26,8 +28,7 @@ include_once("core/startup/CONSTANTS.php");
 
 function preserve_qs()
 {
-    if (empty($_SERVER['QUERY_STRING']) && mb_strpos($_SERVER['REQUEST_URI'], '?') === FALSE)
-    {
+    if (empty($_SERVER['QUERY_STRING']) && mb_strpos($_SERVER['REQUEST_URI'], '?') === FALSE) {
         return '';
     }
 

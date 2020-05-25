@@ -17,6 +17,9 @@ Thus, plugins/adminstyle/index.php etc.
 
 CHANGELOG:
 
+v1.13, 2020
+1. Wikindx compatibility version 7.
+
 v1.12, 2020
 1. Add documentation.
 

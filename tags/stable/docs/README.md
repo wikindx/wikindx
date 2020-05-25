@@ -14,7 +14,7 @@ css: templates/default.css
 
 I originally started developing this as a means to help organise my PhD
 research  by catalogueing  bibliographic notations,  references, quotes
-and thoughts on a computer via a  program that was not tied to a single
+and thoughts on a computer via a program that was not tied to a single
 operating system (like similar and expensively commercial software) and
 that could be accessed from anywhere on the web (unlike other systems).
 Additionally, I wanted a quick way to search, for example, for all
@@ -51,7 +51,7 @@ Wikindx is a web application written in PHP tested on:
 Support is provided through SourceForge's project tracking tools: [forum],
 [bug tracker], [mailing list].
 
-The developpement style is [Trunk-Based], but sometimes an important
+The development style is [Trunk-Based], but sometimes an important
 development is the subject of an ephemeral branch.
 
 The version system is not a branch system with long term support for
@@ -89,7 +89,7 @@ Wikindx comes with "default" template, "fr" language, "APA" style and
 main vendor components pre-installed. No plugins are pre-installed.
 
 All components are available on [SourceForge File] section for a manual
-instllation or via the component update system embeded in Wikindx.
+installation or via the component update system embeded in Wikindx.
 
 Each official extension is released with a new version of the
 application and only for the last version.

@@ -1,24 +1,29 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
+function SetWikindxBasePath()
+{
+    $wikindxBasePath = __DIR__;
+    while (!in_array(basename($wikindxBasePath), ["", "core"])) {
+        $wikindxBasePath = dirname($wikindxBasePath);
+    }
+    if (basename($wikindxBasePath) == "") {
+        die("
+            \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
+            and WIKINDX is unable to set the installation path automatically.
+            You should set \$WIKINDX_WIKINDX_PATH in config.php.
+        ");
+    }
+    chdir(dirname($wikindxBasePath));
+}
 
-session_start();
-if (isset($_SESSION) && array_key_exists('wikindxBasePath', $_SESSION) && $_SESSION['wikindxBasePath'])
-{
-    chdir($_SESSION['wikindxBasePath']); // tinyMCE changes the phpbasepath
-}
-else
-{
-    $oldPath = dirname(__FILE__);
-    $split = preg_split('/' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/u', $oldPath);
-    array_splice($split, -4); // get back to trunk
-    $newPath = implode(DIRECTORY_SEPARATOR, $split);
-    chdir($newPath);
-}
+SetWikindxBasePath();
 
 /**
  * Import initial configuration and initialize the web server
@@ -40,7 +45,7 @@ include_once("core/startup/WEBSERVERCONFIG.php");
 	}
 	</style>
 
-	<script src="<?php echo FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL; ?>/core/tiny_mce/tiny_mce_popup.js"></script>
+	<script src="<?php echo WIKINDX_BASE_URL; ?>/core/tiny_mce/tiny_mce_popup.js"></script>
 	<script>
 	tinyMCEPopup.requireLangPack();
 
@@ -78,8 +83,7 @@ include_once('sp_charTableDef.php');
 
 ?><option value="sp_char.php?ul=0">Select a character set:</option><?php
 
-foreach ($tableChars as $anchorNumber => $listDef)
-{
+foreach ($tableChars as $anchorNumber => $listDef) {
     ?><option value="sp_char.php?ul=<?php echo('ul' . $anchorNumber); ?>"><?php echo($listDef['id']); ?></option><?php
 }
 

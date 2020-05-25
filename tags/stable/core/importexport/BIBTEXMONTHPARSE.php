@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -40,30 +42,20 @@ class BIBTEXMONTHPARSE
         $constants = FACTORY_CONSTANTS::getFreshInstance(TRUE);
         $startMonth = $this->startDay = $endMonth = $this->endDay = FALSE;
         $date = UTF8::mb_explode(' ', $monthField); // ' # ' has been replaced by ' ' in PARSEBIBTEX.php
-        foreach ($date as $field)
-        {
+        foreach ($date as $field) {
             $field = ucfirst(mb_strtolower(trim($field)));
-            if ($month = array_search($field, $constants->monthToLongName()))
-            {
-                if (!$startMonth)
-                {
+            if ($month = array_search($field, $constants->monthToLongName())) {
+                if (!$startMonth) {
                     $startMonth = $month;
-                }
-                else
-                {
+                } else {
                     $endMonth = $month;
                 }
 
                 continue;
-            }
-            elseif ($month = array_search($field, $constants->monthToShortName()))
-            {
-                if (!$startMonth)
-                {
+            } elseif ($month = array_search($field, $constants->monthToShortName())) {
+                if (!$startMonth) {
                     $startMonth = $month;
-                }
-                else
-                {
+                } else {
                     $endMonth = $month;
                 }
 
@@ -71,8 +63,7 @@ class BIBTEXMONTHPARSE
             }
             $this->parseDay($field);
         }
-        if ($this->endDay && !$endMonth)
-        {
+        if ($this->endDay && !$endMonth) {
             $endMonth = $startMonth;
         }
 
@@ -86,25 +77,17 @@ class BIBTEXMONTHPARSE
     private function parseDay($dayField)
     {
         preg_match("/([0-9]+).*([0-9]+)|([0-9]+)/u", $dayField, $array);
-        if (array_key_exists(3, $array))
-        {
-            if (!$this->startDay)
-            {
+        if (array_key_exists(3, $array)) {
+            if (!$this->startDay) {
                 $this->startDay = $array[3];
-            }
-            elseif (!$this->endDay)
-            {
+            } elseif (!$this->endDay) {
                 $this->endDay = $array[3];
             }
-        }
-        else
-        {
-            if (array_key_exists(1, $array))
-            {
+        } else {
+            if (array_key_exists(1, $array)) {
                 $this->startDay = $array[1];
             }
-            if (array_key_exists(2, $array))
-            {
+            if (array_key_exists(2, $array)) {
                 $this->endDay = $array[2];
             }
         }

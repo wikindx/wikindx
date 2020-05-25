@@ -50,6 +50,7 @@ class chooselanguage_MODULE
     public function resetLanguage()
     {
         $vars = GLOBALS::getVars();
+	    $session = FACTORY_SESSION::getInstance();
         if (array_key_exists('language', $vars))
         {
             $language = $vars['language'];
@@ -59,8 +60,17 @@ class chooselanguage_MODULE
         $languages = array_merge($languages, \LOCALES\getSystemLocales());
         array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
         
-        $session = FACTORY_SESSION::getInstance();
-        $session->setVar("setup_Language", $language);
+        $userId = $session->getVar('setup_UserId');
+	    if ($userId)
+	    {
+        	$db = FACTORY_DB::getInstance();
+	    	$db->formatConditions(['usersId' => $userId]);
+	    	$db->update('users', ['usersLanguage' => $language]);
+	    }
+	    else // read-only user
+	    {
+	        $session->setVar("setup_Language", $language);
+	    }
         header("Location: index.php");
     }
     /**
@@ -69,7 +79,7 @@ class chooselanguage_MODULE
     private function display()
     {
         $session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
+        $this->config = FACTORY_LOADCONFIG::getInstance();
         $db = FACTORY_DB::getInstance();
         
         // For the graphical interface, add the "auto" value that allows to say that the language is chosen by the browser.
@@ -77,24 +87,24 @@ class chooselanguage_MODULE
         $languages[$LanguageNeutralChoice] = "Auto";
         $languages = array_merge($languages, \LOCALES\getSystemLocales());
         
-        // Don't use the session value in that case because the language could have been changed localy by the chooseLanguage plugin
         $userId = $session->getVar('setup_UserId');
-        $db->formatConditions(['usersId' => $userId]);
-        $language = $db->selectFirstField("users", "usersLanguage");
-        array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
-        
-        // Retrieve the language of the user config in session if missing in the db
-        if ($language == $LanguageNeutralChoice)
+        if ($userId)
         {
-            $language = $session->getVar("setup_Language", $LanguageNeutralChoice);
-            array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
-        }
+	        $db->formatConditions(['usersId' => $userId]);
+	        $language = $db->selectFirstField("users", "usersLanguage");
+	        array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
+		}
+		else // i.e. read-only so use a session
+		{
+	        $language = $session->getVar("setup_Language", $LanguageNeutralChoice);
+	        array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
+	    }
         
         $display = "";
 
         if (count($languages) > 1)
         {
-            $display .= HTML\jsInlineExternal($this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/' . basename(__DIR__) . '/chooseLanguage.js');
+            $display .= HTML\jsInlineExternal(WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/' . basename(__DIR__) . '/chooseLanguage.js');
             $js = 'onchange="javascript:chooseLanguageChangeLanguage(this.value);"';
             $display .= FORM\selectedBoxValue(FALSE, "Language", $languages, $language, 1, FALSE, $js);
         }

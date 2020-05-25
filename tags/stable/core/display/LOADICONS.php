@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -30,8 +32,7 @@ class LOADICONS
     public function __construct($singleiconbasename = "")
     {
         $session = FACTORY_SESSION::getInstance();
-        if (!$this->templateDir = $session->getVar("setup_Template"))
-        {
+        if (!$this->templateDir = GLOBALS::getUserVar('Template')) {
             $this->templateDir = WIKINDX_TEMPLATE_DEFAULT;
         }
         
@@ -48,17 +49,13 @@ class LOADICONS
      */
     public function setupIcons($singleiconbasename = "")
     {
-        if ($this->setupDone)
-        {
+        if ($this->setupDone) {
             return;
         }
         
-        if ($singleiconbasename != "")
-        {
+        if ($singleiconbasename != "") {
             $basenames = [$singleiconbasename => "misc"];
-        }
-        else
-        {
+        } else {
             $basenames = [
                 "add" => "misc",
                 "basketAdd" => "resources",
@@ -86,8 +83,7 @@ class LOADICONS
         }
 
         $messages = FACTORY_MESSAGES::getInstance();
-        foreach ($basenames as $basename => $msgkey)
-        {
+        foreach ($basenames as $basename => $msgkey) {
             $this->storeIconInfo($basename, $messages->text($msgkey, $basename));
         }
     }
@@ -129,12 +125,9 @@ class LOADICONS
     public function getIconForAFileExtension($file)
     {
         // Extension of a MIME/type
-        if (array_key_exists('extension', pathinfo(strtolower($file))))
-        {
+        if (array_key_exists('extension', pathinfo(strtolower($file)))) {
             $basename = "file_extension_" . pathinfo(strtolower($file))['extension'];
-        }
-        else
-        {
+        } else {
             $basename = "file";
         }
         $iconfb = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_TEMPLATE_DEFAULT, "file.png"]);
@@ -142,8 +135,7 @@ class LOADICONS
         
         // Disable a useless warning if the default file is missing
         $size = @getimagesize($icon);
-        if ($size === FALSE)
-        {
+        if ($size === FALSE) {
             $size[0] = "16";
             $size[1] = "16";
         }
@@ -164,21 +156,17 @@ class LOADICONS
 
         $icon = $this->getIconRealFileName($basename, "");
 
-        if ($icon != "")
-        {
+        if ($icon != "") {
             // get image size data
             $size = @getimagesize($icon);
-            if ($size === FALSE)
-            {
+            if ($size === FALSE) {
                 $size[0] = "16";
                 $size[1] = "16";
             }
 
             $this->icons[$basename]["html"] = \HTML\img(str_replace("\\", "/", $icon), $size[0], $size[1], $title);
             $this->icons[$basename]["class"] = "imgLink";
-        }
-        else
-        {
+        } else {
             $this->icons[$basename]["html"] = $title;
             $this->icons[$basename]["class"] = "link";
         }
@@ -202,8 +190,7 @@ class LOADICONS
         
         $tplSearch = [];
         // Don't test the default template twice
-        if ($this->templateDir != WIKINDX_TEMPLATE_DEFAULT)
-        {
+        if ($this->templateDir != WIKINDX_TEMPLATE_DEFAULT) {
             $tplSearch[] = $this->templateDir;
         }
         // Sometimes a directory may have been removed but that component is still in the session or database preferences
@@ -211,15 +198,11 @@ class LOADICONS
         $tplSearch[] = WIKINDX_TEMPLATE_DEFAULT;
         
         // Search the best icon
-        foreach ($tplSearch as $tpl)
-        {
-            foreach (["png", "jpg", "svg"] as $ext)
-            {
+        foreach ($tplSearch as $tpl) {
+            foreach (["png", "jpg", "svg"] as $ext) {
                 $tmp = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_TEMPLATES, $tpl, "icons", $basename . "." . $ext]);
-                if (file_exists($tmp))
-                {
-                    if (is_file($tmp))
-                    {
+                if (file_exists($tmp)) {
+                    if (is_file($tmp)) {
                         $filename = $tmp;
 
                         break;

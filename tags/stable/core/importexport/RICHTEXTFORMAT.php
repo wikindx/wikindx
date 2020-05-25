@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -90,27 +92,18 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         $text = '{\rtf1\ansi\ansicpg1252' . LF . LF;
         // 'letter' is default size for RTF -- presumably, 'legal' has the default width of 'letter'
         // The tables always go beyond the paper width so we set each table width to 96% of standard
-        if ($this->paperSize == 'letter')
-        {
+        if ($this->paperSize == 'letter') {
             $this->tableWidth = floor(8748 * 0.96);
-        }
-        elseif ($this->paperSize == 'A4')
-        {
+        } elseif ($this->paperSize == 'A4') {
             $text .= '\paperw11909\paperh16834' . LF . LF;
             $this->tableWidth = floor(8417 * 0.96);
-        }
-        elseif ($this->paperSize == 'A5')
-        {
+        } elseif ($this->paperSize == 'A5') {
             $text .= '\paperw8395\paperh11909' . LF . LF;
             $this->tableWidth = floor(4903 * 0.96);
-        }
-        elseif ($this->paperSize == 'legal')
-        {
+        } elseif ($this->paperSize == 'legal') {
             $text .= '\paperh20160' . LF . LF;
             $this->tableWidth = floor(8748 * 0.96);
-        }
-        elseif ($this->paperSize == 'executive')
-        {
+        } elseif ($this->paperSize == 'executive') {
             $text .= '\paperw10440\paperh15120' . LF . LF;
             $this->tableWidth = floor(6948 * 0.96);
         }
@@ -164,34 +157,23 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
                 $text = preg_replace($patterns, '', $text);
         */
         // indent long quotations
-        if (array_key_exists('exportIndentQuoteWords', $this->vars))
-        {
+        if (array_key_exists('exportIndentQuoteWords', $this->vars)) {
             $quoteIndentWords = $this->vars['exportIndentQuoteWords'];
-            if (is_numeric($quoteIndentWords))
-            {
+            if (is_numeric($quoteIndentWords)) {
                 settype($quoteIndentWords, "integer");
-                if (array_key_exists('exportIndentQuoteFontSize', $this->vars))
-                {
+                if (array_key_exists('exportIndentQuoteFontSize', $this->vars)) {
                     $indentQuoteFontSize = $this->vars['exportIndentQuoteFontSize'];
-                }
-                else
-                {
+                } else {
                     $indentQuoteFontSize = 8; // font size 16 in RTF
                 }
-                if (($sizeKey = array_search($indentQuoteFontSize * 2, $this->fontSizes)) !== FALSE)
-                {
+                if (($sizeKey = array_search($indentQuoteFontSize * 2, $this->fontSizes)) !== FALSE) {
                     $this->quoteFontSize = $this->fontSizes[$sizeKey];
-                }
-                else
-                {
+                } else {
                     $this->quoteFontSize = $this->fontSizes['large']; // font size 9/18
                 }
-                if (array_key_exists('exportIndentQuoteMarks', $this->vars))
-                {
+                if (array_key_exists('exportIndentQuoteMarks', $this->vars)) {
                     $indentQuoteMarks = TRUE;
-                }
-                else
-                {
+                } else {
                     $indentQuoteMarks = FALSE;
                 }
                 $text = $this->indentQuotations($text, $quoteIndentWords, $indentQuoteFontSize, $indentQuoteMarks);
@@ -223,17 +205,13 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         // when user is cut 'n' pasting, superfluous codes are sometimes inserted so remove them
         $text = preg_replace("/[ ]*<span.*[>]+(.*)<\\/span[>]+[ ]*/Uusi", "$1", $text);
         // Deal with footnotes
-        if (array_key_exists('exportFontSizeFt', $this->vars))
-        {
+        if (array_key_exists('exportFontSizeFt', $this->vars)) {
             $fontSizeFt = $this->vars['exportFontSizeFt'];
-        }
-        else
-        {
+        } else {
             $fontSizeFt = 8; // font size 16 in RTF
         }
         $text = $this->parseFootnotes($text, $this->footnoteOffsetIds, $fontSizeFt);
-        if ($this->footnoteText)
-        {
+        if ($this->footnoteText) {
             $text .= $this->footnoteText;
         }
         $text = str_replace('__WIKINDX__ENDNOTE__START__', '', $text);
@@ -244,12 +222,10 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         // sometimes, with footnote/endnote styles, __WIKINDX__ gets left behind.  Temp. FIX.
         $text = str_replace("__WIKINDX__\\par\\qj __", "", $text);
 
-        if (count($this->fonttbl) > 0)
-        {
+        if (count($this->fonttbl) > 0) {
             $this->fontBlock = '{\fonttbl' . LF;
 
-            foreach ($this->fonttbl as $index => $font)
-            {
+            foreach ($this->fonttbl as $index => $font) {
                 $this->fontBlock .= '{\f' . $index . '\fcharset0 ' . $font . ';}' . LF;
             }
 
@@ -257,8 +233,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         }
 
         $this->colourTable = '{\colortbl;';
-        foreach ($this->colourArray as $colour)
-        {
+        foreach ($this->colourArray as $colour) {
             $this->colourTable .= $colour . ';';
         }
         $this->colourTable .= '}' . LF . LF;
@@ -270,20 +245,17 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
 
         // Insert images
         // Cut the string in smaller pieces to isolate hexfile name from other content
-        $tString = preg_split('/(##' . preg_quote(str_replace("\\", "/", WIKINDX_DIR_CACHE_FILES), "/") . '\/hex[0-9a-zA-Z]+\.txt##)/u', $text, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $tString = preg_split('/(##' . preg_quote(WIKINDX_URL_CACHE_FILES, "/") . '\/hex[0-9a-zA-Z]+\.txt##)/u', $text, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
         // Write the ressource in the tempfile by chunk
         $k = 0;
-        for ($k = 0; $k < count($tString); $k++)
-        {
+        for ($k = 0; $k < count($tString); $k++) {
             $c = $tString[$k];
 
             // Is an image: replace hexfile names by the content of these files
-            if (\UTILS\matchPrefix($c, '##' . str_replace("\\", "/", WIKINDX_DIR_CACHE_FILES) . '/hex'))
-            {
+            if (\UTILS\matchPrefix($c, '##' . WIKINDX_URL_CACHE_FILES . '/hex')) {
                 $c = str_replace('#', '', $c);
-                if (file_exists($c))
-                {
+                if (file_exists($c)) {
                     $c = file_get_contents(str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $c));
                     @unlink($c);
                 }
@@ -304,8 +276,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
     public function formatText($text, $protectCurlyBracket = TRUE)
     {
         // Deal with potential RTF control characters first
-        if ($protectCurlyBracket)
-        {
+        if ($protectCurlyBracket) {
             // For RTF, escaping special characters
             // used to build control words is recommended in hexa
             $text = str_replace("\\", "\\'5C", $text);
@@ -405,18 +376,15 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         // Use lowercase to prevent a double entry for a font in the table
         $font = mb_strtolower($font);
 
-        foreach ($this->fonttbl as $index => $name)
-        {
-            if ($name == $font)
-            {
+        foreach ($this->fonttbl as $index => $name) {
+            if ($name == $font) {
                 $fontIndex = $index;
 
                 break;
             }
         }
 
-        if ($fontIndex == -1)
-        {
+        if ($fontIndex == -1) {
             $this->fonttbl[$this->fontIndex] = $font;
             $fontIndex = $this->fontIndex;
             ++$this->fontIndex;
@@ -433,57 +401,40 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
      */
     public function imageCallback($matchArray)
     {
-        if (preg_match("/src=['\"](.*)['\"]/Uusi", $matchArray[0], $array))
-        {
+        if (preg_match("/src=['\"](.*)['\"]/Uusi", $matchArray[0], $array)) {
             $file = $array[1];
-        }
-        elseif (array_key_exists(1, $matchArray))
-        {
+        } elseif (array_key_exists(1, $matchArray)) {
             $file = $matchArray[1];
-        }
-        else
-        {
+        } else {
             return $matchArray[0]; // unable to read file so return link
         }
 
         // If this image is not local, test if it's a remote image
-        if (!file_exists($file))
-        {
-            if (!$this->URL_exists($file))
-            {
+        if (!file_exists($file)) {
+            if (!$this->URL_exists($file)) {
                 return $file;
-            }
-            else
-            {
+            } else {
                 // Download the file from the web to a temp file
                 $dlTempFile = 'files/dl' . \UTILS\uuid() . '.img';
 
-                if (ini_get('allow_url_fopen') == "1")
-                {
+                if (ini_get('allow_url_fopen') == "1") {
                     $fddl = fopen($file, 'rb');
-                    if ($fddl !== FALSE)
-                    {
-                        if (file_put_contents($dlTempFile, $fddl) !== FALSE)
-                        {
+                    if ($fddl !== FALSE) {
+                        if (file_put_contents($dlTempFile, $fddl) !== FALSE) {
                             fclose($fddl);
                             $file = $dlTempFile;
-                        }
-                        else
-                        {
+                        } else {
                             fclose($fddl);
                             @unlink($dlTempFile);
 
                             return $file;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         return $file;
                     }
                 }
                 // Use curl as a fallback if allow_url_fopen is disabled
-                elseif (extension_loaded('curl'))
-                {
+                elseif (extension_loaded('curl')) {
                     $fp = fopen($dlTempFile, 'wb');
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $file);
@@ -494,23 +445,18 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
                     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
                     curl_setopt($ch, CURLOPT_FILE, $fp);
 
-                    if (curl_exec($ch) !== FALSE)
-                    {
+                    if (curl_exec($ch) !== FALSE) {
                         curl_close($ch);
                         fclose($fp);
                         $file = $dlTempFile;
-                    }
-                    else
-                    {
+                    } else {
                         curl_close($ch);
                         fclose($fp);
                         @unlink($dlTempFile);
 
                         return $file;
                     }
-                }
-                else
-                {
+                } else {
                     return $file;
                 }
             }
@@ -529,42 +475,32 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         list($width, $height, $type) = getimagesize($file);
 
         // Convert dimensions from pixels to twips (RTF base unit: px = 96/inch and twips = 1440/inch => 1 px = 15 twips = 1440 / 96 twips)
-        if ($editH)
-        {
+        if ($editH) {
             $editH *= 15;
         }
-        if ($editW)
-        {
+        if ($editW) {
             $editW *= 15;
         }
         $width *= 15;
         $height *= 15;
 
         // Compute the missing expected dimensions in proportion with the real dimensions
-        if ($editH === FALSE && $editW === FALSE)
-        {
+        if ($editH === FALSE && $editW === FALSE) {
             $editW = $width;
             $editH = $height;
-        }
-        elseif ($editW !== FALSE)
-        {
+        } elseif ($editW !== FALSE) {
             $editH = $height * ($editW * 100 / $width) / 100;
-        }
-        elseif ($editH !== FALSE)
-        {
+        } elseif ($editH !== FALSE) {
             $editW = $width * ($editH * 100 / $height) / 100;
         }
 
         // \picwgoal and \pichgoal are long integer (16 bit) with a precision maximum of 32767,
         // so RTF processor will permit a larger image.
         // We recompute the initial image dimensions to not exceed that
-        if ($width >= $height && $width > 32767)
-        {
+        if ($width >= $height && $width > 32767) {
             $height = $height * 32767 / $width;
             $width = 32767;
-        }
-        elseif ($height > $width && $height > 32767)
-        {
+        } elseif ($height > $width && $height > 32767) {
             $width = $width * 32767 / $height;
             $height = 32767;
         }
@@ -574,11 +510,10 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         // Indicate the scale factor used for rendering the image with the desired size from the initial fixed size
         $blipScale = '\picscalex' . floor($editW * 100 / $width) . '\picscaley' . floor($editH * 100 / $height);
 
-        $tempFile = str_replace("\\", "/", WIKINDX_DIR_CACHE_FILES) . '/bin' . \UTILS\uuid() . '.png';
-        $hexfile = str_replace("\\", "/", WIKINDX_DIR_CACHE_FILES) . '/hex' . \UTILS\uuid() . '.txt';
+        $tempFile = WIKINDX_URL_CACHE_FILES . '/bin' . \UTILS\uuid() . '.png';
+        $hexfile = WIKINDX_URL_CACHE_FILES . '/hex' . \UTILS\uuid() . '.txt';
 
-        switch ($type)
-        {
+        switch ($type) {
             case IMAGETYPE_GIF:
                 $blipType = '\pngblip';
                 imagepng(imagecreatefromgif($file), $tempFile, 9);
@@ -600,16 +535,9 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
 
             break;
             case IMAGETYPE_WBMP:
-                if (version_compare(PHP_VERSION, '5.6.12', '>='))
-                {
-                    $blipType = '\pngblip';
-                    imagepng(imagecreatefromwbmp($file), $tempFile, 9);
-                    $file = $tempFile;
-                }
-                else
-                {
-                    return $matchArray[0]; // unable to read file so return link
-                }
+                $blipType = '\pngblip';
+                imagepng(imagecreatefromwbmp($file), $tempFile, 9);
+                $file = $tempFile;
 
             break;
             case IMAGETYPE_XBM:
@@ -626,8 +554,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         @unlink($tempFile);
 
         // Erase the tempfile of the image downloaded form the web
-        if (preg_match("/" . preg_quote(str_replace("\\", "/", WIKINDX_DIR_CACHE_FILES), "/") . "\\/dl.+\\.img/Uusi", $file, $array) == 1)
-        {
+        if (preg_match("/" . preg_quote(WIKINDX_URL_CACHE_FILES, "/") . "\\/dl.+\\.img/Uusi", $file, $array) == 1) {
             @unlink($file);
         }
 
@@ -662,48 +589,34 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         $justify = $pixelsR = $pixelsL = $indentL = $indentR = FALSE;
         $justify = trim($param);
         // Although it works in OO.org, for Word, justification needs to be outside {...} and therefore not mixed up with bold, italics etc.  so deal with it last.
-        if ($justify)
-        {
-            if (!array_key_exists($justify, $this->justify))
-            {
+        if ($justify) {
+            if (!array_key_exists($justify, $this->justify)) {
                 $justify = $this->justify['justify'];
-            }
-            else
-            {
+            } else {
                 $justify = $this->justify[$justify];
             }
             $text = $justify . LF . $text . LF;
         }
-        if ($pixelsL)
-        {
-            if (!array_key_exists($pixelsL, $this->indentL))
-            {
+        if ($pixelsL) {
+            if (!array_key_exists($pixelsL, $this->indentL)) {
                 $indentL = $this->indentL[40];
-            }
-            else
-            {
+            } else {
                 $indentL = $this->indentL[$pixelsL];
             }
         }
-        if ($pixelsR)
-        {
-            if (!array_key_exists($pixelsR, $this->indentR))
-            {
+        if ($pixelsR) {
+            if (!array_key_exists($pixelsR, $this->indentR)) {
                 $indentR = $this->indentR[40];
-            }
-            else
-            {
+            } else {
                 $indentR = $this->indentR[$pixelsR];
             }
         }
 
         // If a text is aligned or indented it have to be enclaused in a paragraph
-        if ($indentL || $indentR || $justify)
-        {
+        if ($indentL || $indentR || $justify) {
             $text = $text . LF . '\par' . LF;
         }
-        if ($indentL || $indentR)
-        {
+        if ($indentL || $indentR) {
             $text = $indentL . $indentR . $text . '\li0\ri0' . LF;
         }
 
@@ -728,8 +641,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         $string = preg_split('//u', $string);
 
         // 1. For each UTF8 character
-        foreach ($string as $c)
-        {
+        foreach ($string as $c) {
             // 2. Take it's unicode code point
             $ucodepoint = UTF8::mb_ord($c);
 
@@ -745,8 +657,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
             // with RTF specific sequences for others characters.
             //
             // NB: Assume \ansi\asincpg1252 RTF headers.
-            if ($ucodepoint < 128)
-            {
+            if ($ucodepoint < 128) {
                 // 4a. Escape ASCII control characters, except text flow control characters
                 if (
                     $ucodepoint > 0 // 0x00
@@ -759,20 +670,16 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
                     $s .= "\\'" . mb_strtoupper(mb_substr('0' . dechex($ucodepoint), -2, 2));
                 }
                 // 4b. Drop NUL characters
-                elseif ($ucodepoint == 0)
-                {
+                elseif ($ucodepoint == 0) {
                     // Do nothing remove it
                     // This character is not expected at this point...
                     // and break the RTF output of some Office Suite
                 }
                 // 4c. Use this character as is
-                else
-                {
+                else {
                     $s .= $c;
                 }
-            }
-            else
-            {
+            } else {
                 // 5. Otherwise, replace it by it's decimal code point prefixed by \u
                 // and followed immediately by equivalent character(s) in ANSI representation if possible.
                 // We will not issue the nearest representation in ascii
@@ -786,8 +693,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
                 // the code points cannot be represented beyond 32766 and must be replaced by its two's complement
                 // in decimal with it's sign (if negative).
                 // https://en.wikipedia.org/wiki/Two's_complement
-                if ($ucodepoint > 32767)
-                {
+                if ($ucodepoint > 32767) {
                     $ucodepoint = $ucodepoint - 65536;
                 }
                 $s .= $ucodepoint;
@@ -847,28 +753,17 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
     protected function callbackOrderedList($matchArray)
     {
         // NB quick fix that might produce problems if list text itself includes the list type
-        if (strstr($matchArray[0], 'lower-greek') !== FALSE)
-        {
+        if (strstr($matchArray[0], 'lower-greek') !== FALSE) {
             $levelnfc = 60;
-        }
-        elseif (strstr($matchArray[0], 'lower-alpha') !== FALSE)
-        {
+        } elseif (strstr($matchArray[0], 'lower-alpha') !== FALSE) {
             $levelnfc = 4;
-        }
-        elseif (strstr($matchArray[0], 'upper-alpha') !== FALSE)
-        {
+        } elseif (strstr($matchArray[0], 'upper-alpha') !== FALSE) {
             $levelnfc = 3;
-        }
-        elseif (strstr($matchArray[0], 'lower-roman') !== FALSE)
-        {
+        } elseif (strstr($matchArray[0], 'lower-roman') !== FALSE) {
             $levelnfc = 2;
-        }
-        elseif (strstr($matchArray[0], 'upper-roman') !== FALSE)
-        {
+        } elseif (strstr($matchArray[0], 'upper-roman') !== FALSE) {
             $levelnfc = 1;
-        }
-        else
-        {
+        } else {
             $levelnfc = 0;
         }
         $this->createListTablesArabic($levelnfc);
@@ -906,12 +801,9 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
      */
     protected function styleCallback($match)
     {
-        if ($this->spanParse)
-        {
+        if ($this->spanParse) {
             $text = $match[2];
-        }
-        else
-        {
+        } else {
             $text = trim($match[3]);
         }
         $newText = $this->style($match[1], $text);
@@ -924,30 +816,20 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
     private function init()
     {
         // Line spacing of main paper body
-        if ($this->session->getVar('wp_ExportPaperSpace') == 'oneHalfSpace')
-        {
+        if ($this->session->getVar("wp_ExportPaperSpace") == 'oneHalfSpace') {
             $this->lineSpacing = '\sl360\slmult1';
-        }
-        elseif ($this->session->getVar('wp_ExportPaperSpace') == 'doubleSpace')
-        {
+        } elseif ($this->session->getVar("wp_ExportPaperSpace") == 'doubleSpace') {
             $this->lineSpacing = '\sl480\slmult1';
-        }
-        else
-        {
+        } else {
             $this->lineSpacing = '';
         }
-        $this->paperSize = $this->session->getVar('wp_ExportPaperSize');
+        $this->paperSize = $this->session->getVar("wp_ExportPaperSize");
         // Line spacing of indented quotations
-        if ($this->session->getVar('wp_ExportSpaceIndentQ') == 'oneHalfSpace')
-        {
+        if ($this->session->getVar("wp_ExportSpaceIndentQ") == 'oneHalfSpace') {
             $this->lineSpacingIndentQ = '\sl360\slmult1';
-        }
-        elseif ($this->session->getVar('wp_ExportSpaceIndentQ') == 'doubleSpace')
-        {
+        } elseif ($this->session->getVar("wp_ExportSpaceIndentQ") == 'doubleSpace') {
             $this->lineSpacingIndentQ = '\sl480\slmult1';
-        }
-        else
-        {
+        } else {
             $this->lineSpacingIndentQ = '\sl240\slmult1'; // singlepublic $paperSize = FALSE;
         }
 
@@ -1107,37 +989,28 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         preg_match_all("/\\s*<tr.*>\\s*(.*)\\s*\\<\\/tr>\\s*/Uusi", $text, $matches);
         // Count no. table cells in each row
         $output = '';
-        foreach ($matches[1] as $data)
-        {
+        foreach ($matches[1] as $data) {
             $cellString = '\intbl' . LF . ' ';
             $rowString = $row;
             $numCells = preg_match_all("/\\s*<td(.*)>\\s*(.*)\\s*\\<\\/td>\\s*/Uusi", $data, $cells);
-            if (empty($cells))
-            {
+            if (empty($cells)) {
                 return $output;
             }
             $cellText = $cells[2];
             $cellStyle = $cells[1];
             $width = $baseWidth = floor($tableWidth / $numCells);
             $cellNumber = 1;
-            foreach ($cellText as $cellData)
-            {
-                if ($cellNumber != $numCells)
-                {
+            foreach ($cellText as $cellData) {
+                if ($cellNumber != $numCells) {
                     $rowString .= $cell . '\cellx' . $width . '__WIKINDX__NEWLINE__';
-                }
-                else
-                {
+                } else {
                     $rowString .= $finalCell;
                 }
                 $cellData = preg_replace("/^__WIKINDX__NEWLINEPAR__|__WIKINDX__NEWLINEPAR__$/u", '', $cellData);
-                if (preg_match("/style\\s*=\\s*\"(.*?)\"/usi", array_shift($cellStyle), $styleMatch))
-                {
+                if (preg_match("/style\\s*=\\s*\"(.*?)\"/usi", array_shift($cellStyle), $styleMatch)) {
                     $this->tableStyle = TRUE;
                     $cellData = $this->style($styleMatch[1], $cellData);
-                }
-                else
-                {
+                } else {
                     $cellData .= '\cell';
                     $this->tableStyle = FALSE;
                 }
@@ -1175,15 +1048,13 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
      */
     private function URL_exists($url)
     {
-        if (ini_get('allow_url_fopen') == "1")
-        {
+        if (ini_get('allow_url_fopen') == "1") {
             $header = @get_headers($url);
 
             return stripos($header[0], "200 OK") ? TRUE : FALSE;
         }
         // Use curl as a fallback if allow_url_fopen is disabled
-        elseif (extension_loaded('curl'))
-        {
+        elseif (extension_loaded('curl')) {
             $ch = curl_init($url);
 
             curl_setopt($ch, CURLOPT_HEADER, TRUE);    // we want headers
@@ -1195,9 +1066,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
             curl_close($ch);
 
             return ($httpcode >= 200 && $httpcode < 300);
-        }
-        else
-        {
+        } else {
             return FALSE;
         }
     }
@@ -1215,11 +1084,9 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
     {
         $i = fopen($binfile, "rb");
         $o = fopen($hexfile, "wb");
-        do
-        {
+        do {
             $d = fgets($i, 1024);
-            if ($d !== FALSE)
-            {
+            if ($d !== FALSE) {
                 fwrite($o, bin2hex($d));
             }
         } while ($d !== FALSE);
@@ -1243,12 +1110,9 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         $colour = '\red' . $rgbArray['red'];
         $colour .= '\green' . $rgbArray['green'];
         $colour .= '\blue' . $rgbArray['blue'];
-        if (($index = array_search($colour, $this->colourArray)) !== FALSE)
-        {
+        if (($index = array_search($colour, $this->colourArray)) !== FALSE) {
             $index++;
-        }
-        else
-        {
+        } else {
             $this->colourArray[] = $colour;
             $index = count($this->colourArray);
         }
@@ -1266,161 +1130,111 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
     private function style($styleString, $text)
     {
         $text = str_replace(' ', 'WIKINDX_SPACE', $text);
-        if ($this->isIE)
-        {
+        if ($this->isIE) {
             $params = UTF8::mb_explode('&nbsp;', $styleString);
-        }
-        else
-        {
+        } else {
             $params = UTF8::mb_explode(';', $styleString);
         }
         $justify = $indentL = $indentR = FALSE;
         $slashCellAdded = FALSE;
-        foreach ($params as $param)
-        {
-            if (!$param)
-            {
+        foreach ($params as $param) {
+            if (!$param) {
                 continue;
             }
-            if ($this->isIE)
-            {
+            if ($this->isIE) {
                 $splitParam = UTF8::mb_explode('=', $param);
-            }
-            else
-            {
+            } else {
                 $splitParam = UTF8::mb_explode(':', $param);
             }
-            if (!array_key_exists(1, $splitParam))
-            { // not recognised - usually result of pasting from Office etc.
+            if (!array_key_exists(1, $splitParam)) { // not recognised - usually result of pasting from Office etc.
                 continue;
             }
             $param0 = mb_strtolower(trim($splitParam[0]));
             $param1 = trim(str_replace('"', '', $splitParam[1]));
-            if (($param0 == 'font-weight') && ($param1 == 'bold'))
-            {
+            if (($param0 == 'font-weight') && ($param1 == 'bold')) {
                 $text = "{\\b\n$text}";
-            }
-            elseif (($param0 == 'font-weight') && ($param1 == 'normal'))
-            {
+            } elseif (($param0 == 'font-weight') && ($param1 == 'normal')) {
                 $text = "{$text}";
-            }
-            elseif (($param0 == 'text-decoration') && ($param1 == 'underline'))
-            {
+            } elseif (($param0 == 'text-decoration') && ($param1 == 'underline')) {
                 $text = "{\\ul $text}";
-            }
-            elseif (($param0 == 'font-style') && ($param1 == 'italic'))
-            {
+            } elseif (($param0 == 'font-style') && ($param1 == 'italic')) {
                 $text = "{\\i\n$text}";
-            }
-            elseif ($param0 == 'color')
-            {
+            } elseif ($param0 == 'color') {
                 $colour = $this->convertColour($param1);
                 $text = '__WIKINDX__NEWLINE__{' . "$colour" . "__WIKINDX__NEWLINE__$text}";
-            }
-            elseif ($param0 == 'font-family')
-            {
+            } elseif ($param0 == 'font-family') {
                 $fontIndex = $this->createfonttbl($param1);
                 $text = "{\\f$fontIndex $text}__WIKINDX__NEWLINE__";
-            }
-            elseif ($param0 == 'face')
-            {
+            } elseif ($param0 == 'face') {
                 $fontIndex = $this->createfonttbl($param1);
                 $text = "{\\f$fontIndex $text}__WIKINDX__NEWLINE__";
-            }
-            elseif ($param0 == 'font-size')
-            {
+            } elseif ($param0 == 'font-size') {
                 $fontSize = -1;
 
                 // Use a predefined font size
-                if (array_key_exists($param1, $this->fontSizes))
-                {
+                if (array_key_exists($param1, $this->fontSizes)) {
                     $fontSize = $this->fontSizes[$param1];
-                }
-                else
-                {
+                } else {
                     // Or a font size with a unit
 
                     // Try with points
                     $param1 = trim(str_replace('pt', '', $param1));
-                    if (is_numeric($param1))
-                    {
+                    if (is_numeric($param1)) {
                         $fontSize = floor(floatval($param1) * 2);
                     }
 
                     // Try again with pixels
-                    if ($fontSize == -1)
-                    {
+                    if ($fontSize == -1) {
                         // 1 pt = 1,5 px => 1 half-point = 0,75 px
                         $param1 = trim(str_replace('px', '', $param1));
-                        if (is_numeric($param1))
-                        {
+                        if (is_numeric($param1)) {
                             $fontSize = floor(floatval($param1) * 3 / 4);
                         }
                     }
                 }
 
                 // Use a font size only if this will not imply a text hidden by mistake
-                if ($fontSize > 0)
-                {
+                if ($fontSize > 0) {
                     $text = "{\\fs$fontSize $text}__WIKINDX__NEWLINE__";
                 }
-            }
-            elseif ($param0 == 'text-align')
-            {
+            } elseif ($param0 == 'text-align') {
                 $justify = $param1;
-            }
-            elseif ($param0 == 'margin-left')
-            {
-                if (preg_match("/(\\d+)/u", $param1, $array))
-                {
+            } elseif ($param0 == 'margin-left') {
+                if (preg_match("/(\\d+)/u", $param1, $array)) {
                     $indentL = '\li' . $array[1] * 18;
                 }
-            }
-            elseif ($param0 == 'margin-right')
-            {
-                if (preg_match("/(\\d+)/u", $param1, $array))
-                {
+            } elseif ($param0 == 'margin-right') {
+                if (preg_match("/(\\d+)/u", $param1, $array)) {
                     $indentR = '\ri' . $array[1] * 18;
                 }
             }
         }
         // Although it works in OO.org, for Word, justification needs to be outside {...} and therefore not mixed up with bold, italics etc.  so deal with it last.
-        if ($justify)
-        {
-            if (!array_key_exists($justify, $this->justify))
-            {
+        if ($justify) {
+            if (!array_key_exists($justify, $this->justify)) {
                 $justify = $this->justify['justify'];
-            }
-            else
-            {
+            } else {
                 $justify = $this->justify[$justify];
             }
-            if ($this->tableStyle)
-            {
+            if ($this->tableStyle) {
                 $text = '{' . $justify . LF . $text . ' \cell}' . LF;
                 $slashCellAdded = TRUE;
-            }
-            else
-            {
+            } else {
                 $text = $justify . LF . $text . LF;
             }
         }
-        if ($this->tableStyle && !$slashCellAdded)
-        {
+        if ($this->tableStyle && !$slashCellAdded) {
             $text .= '\cell';
         }
 
         // If a text is aligned or indented it have to be enclaused in a paragraph
-        if ($indentL || $indentR || $justify)
-        {
+        if ($indentL || $indentR || $justify) {
             $text = LF . '{' . $text . '\par}' . LF . LF;
         }
-        if ($indentL || $indentR)
-        {
+        if ($indentL || $indentR) {
             $text = $indentL . $indentR . $text . '\li0\ri0' . LF;
         }
-        if ($indentL || $indentR || $justify)
-        {
+        if ($indentL || $indentR || $justify) {
             $text = '\par' . $text;
         }
 
@@ -1444,21 +1258,15 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         $this->keepQuoteMarks = $keepQuoteMarks;
         // Get quotation marks for this localization
         $wikindxLanguageClass = FACTORY_CONSTANTS::getInstance();
-        if (isset($wikindxLanguageClass->startQuotation) && $wikindxLanguageClass->startQuotation)
-        {
+        if (isset($wikindxLanguageClass->startQuotation) && $wikindxLanguageClass->startQuotation) {
             $qms = preg_quote($wikindxLanguageClass->startQuotation);
-        }
-        else
-        {
+        } else {
             $qms = '"';
         }
         $this->qms = $qms;
-        if (isset($wikindxLanguageClass->endQuotation) && $wikindxLanguageClass->endQuotation)
-        {
+        if (isset($wikindxLanguageClass->endQuotation) && $wikindxLanguageClass->endQuotation) {
             $qme = preg_quote($wikindxLanguageClass->endQuotation);
-        }
-        else
-        {
+        } else {
             $qme = '"';
         }
         $this->qme = $qme;
@@ -1484,27 +1292,21 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         // [8] => punctuation immediately following citation
 
         // No indentation if this is part of a footnote...
-        if (mb_strpos($matchArray[4], '[/footnote]'))
-        {
+        if (mb_strpos($matchArray[4], '[/footnote]')) {
             return $matchArray[0];
         }
         // are there quotes within the quote?
-        if (mb_strpos($matchArray[4], $this->qme))
-        {
+        if (mb_strpos($matchArray[4], $this->qme)) {
             $split = UTF8::mb_explode($this->qme, $matchArray[4]);
             $lastElement = array_pop($split);
             $matchArray[4] = $lastElement;
             $matchArray[2] .= $matchArray[3] . implode($this->qme, $split);
         }
-        if (UTF8::mb_str_word_count($matchArray[2]) >= $this->quoteNumWords)
-        {
-            if (trim($matchArray[6]))
-            { // intervening text
+        if (UTF8::mb_str_word_count($matchArray[2]) >= $this->quoteNumWords) {
+            if (trim($matchArray[6])) { // intervening text
                 $trail = trim($matchArray[6]) . $matchArray[7] . $matchArray[8];
                 $removeSpace = '';
-            }
-            else
-            {
+            } else {
                 $trail = $matchArray[6] . $matchArray[7] . trim($matchArray[8]);
                 $removeSpace = '__WIKINDX__QUOTEINDENTREMOVESPACE__';
             }
@@ -1517,41 +1319,26 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
                 $trail . $removeSpace;
             $codaC = $matchArray[4] . $matchArray[5] .
                 "__WIKINDX__NEWLINEPAR__}__WIKINDX__NEWLINEPAR__" . $trail . $removeSpace;
-            if ($this->keepQuoteMarks)
-            {
-                if ($matchArray[4] == ' ')
-                {
-                    if (trim($matchArray[6]))
-                    { // intervening text
+            if ($this->keepQuoteMarks) {
+                if ($matchArray[4] == ' ') {
+                    if (trim($matchArray[6])) { // intervening text
                         return $start . $this->qms . $matchArray[2] . $this->qme . $codaC;
-                    }
-                    else
-                    {
+                    } else {
                         return $start . $this->qms . $matchArray[2] . $this->qme . $codaA;
                     }
-                }
-                else
-                { // intervening text
+                } else { // intervening text
                     return $start . $this->qms . $matchArray[2] . $this->qme . $codaB;
                 }
-            }
-            else
-            {
-                if ($matchArray[4] == ' ')
-                {
-                    if (trim($matchArray[6]))
-                    { // intervening text
+            } else {
+                if ($matchArray[4] == ' ') {
+                    if (trim($matchArray[6])) { // intervening text
                         return $start . '__WIKINDX__QUOTEINDENTDONE__' . $matchArray[2] .
                         '__WIKINDX__QUOTEINDENTDONE__' . $codaC;
-                    }
-                    else
-                    {
+                    } else {
                         return $start . '__WIKINDX__QUOTEINDENTDONE__' . $matchArray[2] .
                         '__WIKINDX__QUOTEINDENTDONE__' . $codaA;
                     }
-                }
-                else
-                { // intervening text
+                } else { // intervening text
                     return $start . '__WIKINDX__QUOTEINDENTDONE__' . $matchArray[2] .
                     '__WIKINDX__QUOTEINDENTDONE__' . $codaB;
                 }
@@ -1571,16 +1358,12 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
      */
     private function parseFootnotes($text, $footnoteOffsetIds, $fontSize)
     {
-        if (($sizeKey = array_search($fontSize * 2, $this->fontSizes)) !== FALSE)
-        {
+        if (($sizeKey = array_search($fontSize * 2, $this->fontSizes)) !== FALSE) {
             $this->fontSizeFt = $this->fontSizes[$sizeKey];
-        }
-        else
-        {
+        } else {
             $this->fontSizeFt = $this->fontSizes['large']; // font size 9/18
         }
-        if (!empty($footnoteOffsetIds))
-        { // endnotes same IDs and there are existing cite tags being used
+        if (!empty($footnoteOffsetIds)) { // endnotes same IDs and there are existing cite tags being used
             $this->footnoteOffsetIds = $footnoteOffsetIds;
         }
 
@@ -1601,96 +1384,64 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
     {
         $text = $matchArray[1];
         $id = '\chftn';
-        if (!$this->styleArray['citationStyle'])
-        { // in-text citations so footnotes here really are footnotes
+        if (!$this->styleArray['citationStyle']) { // in-text citations so footnotes here really are footnotes
             $ft = '\footnote';
-        }
-        else
-        { // endnotes and footnotes
-            if (!$this->styleArray['endnoteStyle'])
-            { // endnotes incrementing
+        } else { // endnotes and footnotes
+            if (!$this->styleArray['endnoteStyle']) { // endnotes incrementing
                 $ft = '\footnote\ftnalt';
-            }
-            elseif ($this->styleArray['endnoteStyle'] == 1)
-            { // endnotes same IDs
+            } elseif ($this->styleArray['endnoteStyle'] == 1) { // endnotes same IDs
                 $ft = '\footnote\ftnalt';
                 $id = array_shift($this->footnoteOffsetIds);
-            }
-            else
-            {	// '2' == footnotes incrementing
+            } else {	// '2' == footnotes incrementing
                 $ft = '\footnote';
             }
         }
         $preInText = $this->styleArray['firstCharsEndnoteInText'];
         $postInText = $this->styleArray['lastCharsEndnoteInText'];
         $preId = $this->styleArray['firstCharsEndnoteID'];
-        if ($postInText && preg_match("/[.,:;?!]\\us*/", $matchArray[2]))
-        {
+        if ($postInText && preg_match("/[.,:;?!]\\us*/", $matchArray[2])) {
             $matchArray[2] = '';
         }
         $postId = $this->styleArray['lastCharsEndnoteID'];
-        if ($this->styleArray['formatEndnoteInText'] == 1)
-        { // superscript
+        if ($this->styleArray['formatEndnoteInText'] == 1) { // superscript
             $preInTextFormat = '{\super';
             $postInTextFormat = '}';
-        }
-        elseif ($this->styleArray['formatEndnoteInText'] == 2)
-        { // subscript
+        } elseif ($this->styleArray['formatEndnoteInText'] == 2) { // subscript
             $preInTextFormat = '{\sub';
             $postInTextFormat = '}';
-        }
-        else
-        {
+        } else {
             $preInTextFormat = '';
             $postInTextFormat = '';
         }
-        if ($this->styleArray['formatEndnoteID'] == 1)
-        { // superscript
+        if ($this->styleArray['formatEndnoteID'] == 1) { // superscript
             $preIDFormat = '{\super';
             $postIDFormat = '}';
-        }
-        elseif ($this->styleArray['formatEndnoteID'] == 2)
-        { // subscript
+        } elseif ($this->styleArray['formatEndnoteID'] == 2) { // subscript
             $preIDFormat = '{\sub';
             $postIDFormat = '}';
-        }
-        else
-        {
+        } else {
             $preIDFormat = '';
             $postIDFormat = '';
         }
-        if ($this->session->getVar('wp_ExportIndentFt') == 'indentAll')
-        {
+        if ($this->session->getVar("wp_ExportIndentFt") == 'indentAll') {
             $ftf = '\li720 ';
-        }
-        elseif ($this->session->getVar('wp_ExportIndentFt') == 'indentFL')
-        {
+        } elseif ($this->session->getVar("wp_ExportIndentFt") == 'indentFL') {
             $ftf = '\fi720 ';
-        }
-        elseif ($this->session->getVar('wp_ExportIndentFt') == 'indentNotFL')
-        {
+        } elseif ($this->session->getVar("wp_ExportIndentFt") == 'indentNotFL') {
             $ftf = '\li720\fi-720 ';
-        }
-        else
-        {
+        } else {
             $ftf = '\li1\fi1 ';
         }
         $ftf .= '\fs' . $this->fontSizeFt;
-        if ($this->session->getVar('wp_ExportSpaceFt') == 'oneHalfSpace')
-        {
+        if ($this->session->getVar("wp_ExportSpaceFt") == 'oneHalfSpace') {
             $ftf = '\pard\plain ' . $ftf . '\sl360\slmult1 ';
-        }
-        elseif ($this->session->getVar('wp_ExportSpaceFt') == 'doubleSpace')
-        {
+        } elseif ($this->session->getVar("wp_ExportSpaceFt") == 'doubleSpace') {
             $ftf = '\pard\plain ' . $ftf . '\sl480\slmult1 ';
-        }
-        else
-        {
+        } else {
             $ftf = '\pard\plain' . $ftf;
         }
         if (($this->styleArray['endnoteStyle'] == 1)
-             && array_key_exists('sameIdOrderBib', $this->styleArray))
-        { // endnotes same IDs, bibliography order
+             && array_key_exists('sameIdOrderBib', $this->styleArray)) { // endnotes same IDs, bibliography order
             $this->footnoteText .=
                 $ftf .
                 '\qj' .
@@ -1722,51 +1473,4 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
             $postInText . LF .
             $postInTextFormat . $matchArray[2];
     }
-    /*
-    FUNCTIONS NOT USED
-        function setFontSize($matchArray)
-        {
-            $size = $matchArray[1];
-            $text = preg_replace("/^__WIKINDX__NEWLINEPAR__|__WIKINDX__NEWLINEPAR__$/u", '', $matchArray[2]);
-            $fontSize = $this->fontSizes[$size];
-            return "{\\fs$fontSize $text}__WIKINDX__NEWLINE__";
-        }
-        function setFontColor($matchArray)
-        {
-            $colour = $matchArray[1];
-            $text = preg_replace("/^__WIKINDX__NEWLINEPAR__|__WIKINDX__NEWLINEPAR__$/u", '', $matchArray[2]);
-            if(!array_key_exists($colour, $this->colours))
-                $colour = $this->colours['black'];
-            else
-                $colour = $this->colours[$colour];
-            return "__WIKINDX__NEWLINE__$colour" . "__WIKINDX__NEWLINE__$text";
-        }
-        function setFontFace($matchArray)
-        {
-            $face = $matchArray[1];
-            $text = preg_replace("/^__WIKINDX__NEWLINEPAR__|__WIKINDX__NEWLINEPAR__$/u", '', $matchArray[2]);
-            $fontIndex = $this->createfonttbl(trim($face));
-            return "{\\f$fontIndex $text}__WIKINDX__NEWLINE__";
-        }
-        function createIndentFirstLine($text)
-        {
-            return preg_replace_callback("/\[indent\s*=\s*l_first_line\](.*)\[\/indent\]/Uusi",
-                array($this, "setIndentFirstLine"), $text);
-        }
-        function setIndentFirstLine($matchArray)
-        {
-            $text = preg_replace("/^__WIKINDX__NEWLINEPAR__|__WIKINDX__NEWLINEPAR__$/u", '', $matchArray[1]);
-            return "\fi720\n$text\n\\par\n\fi0". LF;
-        }
-        function colourFormat($colours)
-        {
-            $colour = trim($colours[1]);
-            if(!array_key_exists($colour, $this->colours))
-                $colour = $this->colours['black'];
-            else
-                $colour = $this->colours[$colour];
-            $text = preg_replace("/^__WIKINDX__NEWLINEPAR__|__WIKINDX__NEWLINEPAR__$/u", '', $colours[2]);
-            return "__WIKINDX__NEWLINE__$colour" . "__WIKINDX__NEWLINE__$text";
-        }
-    */
 }

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -52,18 +54,14 @@ class LISTSHOWHIDE
         // if no ajaxReturn, quietly exit
         $div = \HTML\div('type', \HTML\td("&nbsp;")); // default
         $this->type = $this->vars['type'];
-        if (!array_key_exists('ajaxReturn', $this->vars))
-        { // i.e. we mean all metadata types
+        if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all metadata types
             $this->checkMetadataExists();
             $this->types = $this->typeObj->grabAll(TRUE, $this->metadataTypeArray);
-        }
-        else
-        {
+        } else {
             $this->types = $this->typeObj->grabAll(TRUE, UTF8::mb_explode(',', $this->vars['ajaxReturn']));
         }
         $this->grabPreviouslySelected('ajaxReturn2');
-        if (is_array($this->types))
-        {
+        if (is_array($this->types)) {
             $div = \HTML\div('type', \HTML\td($this->makeFormMultiple($this->types, 'type', 'Type')));
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $div]));
@@ -76,16 +74,13 @@ class LISTSHOWHIDE
     {
         $this->category = FACTORY_CATEGORY::getInstance();
         $this->type = $this->vars['type'];
-        if (!array_key_exists('ajaxReturn', $this->vars))
-        { // i.e. we mean all resource types
+        if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
             $this->categories = $this->category->grabAll(
                 $this->session->getVar("mywikindx_Bibliography_use"),
                 TRUE,
                 array_keys($this->typeObj->grabAll())
             );
-        }
-        else
-        {
+        } else {
             $this->categories = $this->category->grabAll(
                 $this->session->getVar("mywikindx_Bibliography_use"),
                 TRUE,
@@ -94,18 +89,14 @@ class LISTSHOWHIDE
         }
         $this->grabPreviouslySelected('ajaxReturn2');
         $this->makeRadioButtons('CategoryMethod');
-        if (is_array($this->categories))
-        {
+        if (is_array($this->categories)) {
             $categoryTable = \HTML\tableStart('generalTable');
             $categoryTable .= \HTML\trStart();
             $selectedCategories = [];
-            if ($selected = $this->session->getVar($this->type . "_Category"))
-            {
+            if ($selected = $this->session->getVar($this->type . "_Category")) {
                 $selected = UTF8::mb_explode(',', $selected);
-                foreach ($selected as $key)
-                {
-                    if (!array_key_exists($key, $this->categories))
-                    {
+                foreach ($selected as $key) {
+                    if (!array_key_exists($key, $this->categories)) {
                         continue;
                     }
                     $selectedCategories[$key] = $this->categories[$key];
@@ -131,8 +122,7 @@ class LISTSHOWHIDE
         $div = \HTML\td(\HTML\div('language', "&nbsp;")); // default
         $this->type = $this->vars['type'];
         $db = FACTORY_DB::getInstance();
-        if (array_key_exists('ajaxReturn', $this->vars))
-        { // i.e. we mean specific resource types
+        if (array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean specific resource types
             $db->leftJoin('resource', 'resourceId', 'resourcelanguageResourceId');
             $db->formatConditionsOneField(UTF8::mb_explode(',', $this->vars['ajaxReturn']), 'resourceType');
         }
@@ -140,13 +130,11 @@ class LISTSHOWHIDE
         $db->orderBy('languageLanguage');
         $db->leftJoin('language', 'languageId', 'resourcelanguageLanguageId');
         $resultset = $db->select('resource_language', ['resourcelanguageLanguageId', 'languageLanguage'], TRUE);
-        while ($row = $db->fetchRow($resultset))
-        {
+        while ($row = $db->fetchRow($resultset)) {
             $languages[$row['resourcelanguageLanguageId']] = $row['languageLanguage'];
         }
         $this->makeRadioButtons('LanguageMethod', FALSE);
-        if (!empty($languages))
-        {
+        if (!empty($languages)) {
             $div = \HTML\td(\HTML\div('language', $this->makeFormMultiple($languages, 'language', 'Language')));
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $div]));
@@ -159,30 +147,21 @@ class LISTSHOWHIDE
     {
         $this->keyword = FACTORY_KEYWORD::getInstance();
         $this->type = $this->vars['type'];
-        if (array_key_exists('metadata', $this->vars))
-        {
-            if (!array_key_exists('ajaxReturn', $this->vars))
-            { // i.e. we mean all metadata types
+        if (array_key_exists('metadata', $this->vars)) {
+            if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all metadata types
                 $this->checkMetadataExists();
                 $this->keywords = $this->keyword->grabAll(TRUE, $this->metadataTypeArray);
-            }
-            else
-            {
+            } else {
                 $this->keywords = $this->keyword->grabAll(TRUE, UTF8::mb_explode(',', $this->vars['ajaxReturn']));
             }
-        }
-        else
-        {
-            if (!array_key_exists('ajaxReturn', $this->vars))
-            { // i.e. we mean all resource types
+        } else {
+            if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
                 $this->keywords = $this->keyword->grabAll(
                     $this->session->getVar("mywikindx_Bibliography_use"),
                     'resource',
                     array_keys($this->typeObj->grabAll())
                 );
-            }
-            else
-            {
+            } else {
                 $this->keywords = $this->keyword->grabAll(
                     $this->session->getVar("mywikindx_Bibliography_use"),
                     'resource',
@@ -192,18 +171,14 @@ class LISTSHOWHIDE
         }
         $this->grabPreviouslySelected('ajaxReturn2');
         $this->makeRadioButtons('KeywordMethod');
-        if (is_array($this->keywords))
-        {
+        if (is_array($this->keywords)) {
             $keywordTable = \HTML\tableStart('generalTable');
             $keywordTable .= \HTML\trStart();
             $selectedKeywords = [];
-            if ($selected = $this->session->getVar($this->type . "Keyword"))
-            {
+            if ($selected = $this->session->getVar($this->type . "Keyword")) {
                 $selected = UTF8::mb_explode(',', $selected);
-                foreach ($selected as $key)
-                {
-                    if (array_key_exists($key, $this->keywords))
-                    {
+                foreach ($selected as $key) {
+                    if (array_key_exists($key, $this->keywords)) {
                         $selectedKeywords[$key] = $this->keywords[$key];
                     }
                 }
@@ -215,9 +190,7 @@ class LISTSHOWHIDE
             list($toRightImage, $toLeftImage) = $this->keyword->transferArrows();
             $keywordTable .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'left width5pencent');
             $keywordTable .= \HTML\td($this->makeFormMultiple($selectedKeywords, "keyword", 'Keyword', TRUE), 'left width20percent');
-        }
-        else
-        {
+        } else {
             $keywordTable = \HTML\tableStart();
             $keywordTable .= \HTML\trStart();
             $keywordTable .= \HTML\td("&nbsp;"); // default
@@ -234,17 +207,14 @@ class LISTSHOWHIDE
     {
         $this->category = FACTORY_CATEGORY::getInstance();
         $this->type = $this->vars['type'];
-        if (!array_key_exists('ajaxReturn', $this->vars))
-        { // i.e. we mean all resource types
+        if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
             $categories = $this->category->grabAll(
                 $this->session->getVar("mywikindx_Bibliography_use"),
                 TRUE,
                 array_keys($this->typeObj->grabAll()),
                 FALSE
             );
-        }
-        else
-        {
+        } else {
             $categories = $this->category->grabAll(
                 $this->session->getVar("mywikindx_Bibliography_use"),
                 TRUE,
@@ -258,20 +228,16 @@ class LISTSHOWHIDE
             array_keys($categories),
             TRUE
         );
-        if ($this->subcategories)
-        {
+        if ($this->subcategories) {
             $this->grabPreviouslySelected('ajaxReturn2');
             $this->makeRadioButtons('SubcategoryMethod');
             $subcatTable = \HTML\tableStart('generalTable');
             $subcatTable .= \HTML\trStart();
             $selectedSubcats = [];
-            if ($selected = $this->session->getVar("search_Subcategory"))
-            {
+            if ($selected = $this->session->getVar("search_Subcategory")) {
                 $selected = UTF8::mb_explode(',', $selected);
-                foreach ($selected as $key)
-                {
-                    if (!array_key_exists($key, $this->subcategories))
-                    {
+                foreach ($selected as $key) {
+                    if (!array_key_exists($key, $this->subcategories)) {
                         continue;
                     }
                     $selectedSubcats[$key] = $this->subcategories[$key];
@@ -285,9 +251,7 @@ class LISTSHOWHIDE
             list($toRightImage, $toLeftImage) = $this->category->transferArrowsSubcat();
             $subcatTable .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'left width5percent');
             $subcatTable .= \HTML\td($this->makeFormMultiple($selectedSubcats, "subcategory", "Subcategory", TRUE), 'left width18percent');
-        }
-        else
-        {
+        } else {
             $subcatTable = \HTML\tableStart();
             $subcatTable .= \HTML\trStart();
             $subcatTable .= \HTML\td("&nbsp;");
@@ -307,8 +271,7 @@ class LISTSHOWHIDE
     public function initSubcategoriesDependent($matchCategoryIds)
     {
         $div = \HTML\div('subcategory', \HTML\td("&nbsp;")); // default
-        if (empty($matchCategoryIds))
-        {
+        if (empty($matchCategoryIds)) {
             return ['subcategory', $div];
         }
         $this->type = $this->vars['type'];
@@ -318,8 +281,7 @@ class LISTSHOWHIDE
             $matchCategoryIds,
             TRUE
         );
-        if (is_array($this->subcategories))
-        {
+        if (is_array($this->subcategories)) {
             $div = \HTML\div(
                 'subcategory',
                 \HTML\td($this->makeFormMultiple($this->subcategories, 'subcategory', 'Subcategory'))
@@ -335,29 +297,20 @@ class LISTSHOWHIDE
     {
         $this->creator = FACTORY_CREATOR::getInstance();
         $this->type = $this->vars['type'];
-        if (array_key_exists('metadata', $this->vars))
-        {
-            if (!array_key_exists('ajaxReturn', $this->vars))
-            { // i.e. we mean all metadata types
+        if (array_key_exists('metadata', $this->vars)) {
+            if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all metadata types
                 $this->checkMetadataExists();
                 $this->creators = $this->creator->grabAll(TRUE, FALSE, $this->metadataTypeArray);
-            }
-            else
-            {
+            } else {
                 $this->creators = $this->creator->grabAll(TRUE, FALSE, UTF8::mb_explode(',', $this->vars['ajaxReturn']));
             }
-        }
-        else
-        {
-            if (!array_key_exists('ajaxReturn', $this->vars))
-            { // i.e. we mean all resource types
+        } else {
+            if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
                 $this->creators = $this->creator->grabAll(
                     $this->session->getVar("mywikindx_Bibliography_use"),
                     array_keys($this->typeObj->grabAll())
                 );
-            }
-            else
-            {
+            } else {
                 $this->creators = $this->creator->grabAll(
                     $this->session->getVar("mywikindx_Bibliography_use"),
                     UTF8::mb_explode(',', $this->vars['ajaxReturn']),
@@ -368,18 +321,14 @@ class LISTSHOWHIDE
         }
         $this->grabPreviouslySelected('ajaxReturn2');
         $this->makeRadioButtons('CreatorMethod');
-        if (is_array($this->creators))
-        {
+        if (is_array($this->creators)) {
             $creatorTable = \HTML\tableStart('generalTable');
             $creatorTable .= \HTML\trStart();
             $selectedCreators = [];
-            if ($selected = $this->session->getVar($this->type . "_Creator"))
-            {
+            if ($selected = $this->session->getVar($this->type . "_Creator")) {
                 $selected = UTF8::mb_explode(',', $selected);
-                foreach ($selected as $key)
-                {
-                    if (!array_key_exists($key, $this->creators))
-                    {
+                foreach ($selected as $key) {
+                    if (!array_key_exists($key, $this->creators)) {
                         continue;
                     }
                     $selectedCreators[$key] = $this->creators[$key];
@@ -392,9 +341,7 @@ class LISTSHOWHIDE
             $creatorTable .= \HTML\td($this->makeFormMultiple($selectedCreators, "creator", "Creator", TRUE), 'left width20percent');
             $creatorTable .= \HTML\trEnd();
             $creatorTable .= \HTML\tableEnd();
-        }
-        else
-        {
+        } else {
             $creatorTable = \HTML\tableStart();
             $creatorTable .= \HTML\trStart();
             $creatorTable .= \HTML\td("&nbsp;"); // default
@@ -409,16 +356,13 @@ class LISTSHOWHIDE
     {
         $this->publisher = FACTORY_PUBLISHER::getInstance();
         $this->type = $this->vars['type'];
-        if (!array_key_exists('ajaxReturn', $this->vars))
-        { // i.e. we mean all resource types
+        if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
             $this->publishers = $this->publisher->grabAll(
                 FALSE,
                 $this->session->getVar("mywikindx_Bibliography_use"),
                 array_keys($this->typeObj->grabAll())
             );
-        }
-        else
-        {
+        } else {
             $this->publishers = $this->publisher->grabAll(
                 FALSE,
                 $this->session->getVar("mywikindx_Bibliography_use"),
@@ -426,18 +370,14 @@ class LISTSHOWHIDE
             );
         }
         $this->grabPreviouslySelected('ajaxReturn2');
-        if (is_array($this->publishers))
-        {
+        if (is_array($this->publishers)) {
             $publisherTable = \HTML\tableStart('generalTable');
             $publisherTable .= \HTML\trStart();
             $selectedPublishers = [];
-            if ($selected = $this->session->getVar($this->type . "_Publisher"))
-            {
+            if ($selected = $this->session->getVar($this->type . "_Publisher")) {
                 $selected = UTF8::mb_explode(',', $selected);
-                foreach ($selected as $key)
-                {
-                    if (!array_key_exists($key, $this->publishers))
-                    {
+                foreach ($selected as $key) {
+                    if (!array_key_exists($key, $this->publishers)) {
                         continue;
                     }
                     $selectedPublishers[$key] = $this->publishers[$key];
@@ -450,9 +390,7 @@ class LISTSHOWHIDE
             $publisherTable .= \HTML\td($this->makeFormMultiple($selectedPublishers, "publisher", "Publisher", TRUE), 'left width20percent');
             $publisherTable .= \HTML\trEnd();
             $publisherTable .= \HTML\tableEnd();
-        }
-        else
-        {
+        } else {
             $publisherTable = \HTML\tableStart();
             $publisherTable .= \HTML\trStart();
             $publisherTable .= \HTML\td("&nbsp;"); // default
@@ -467,16 +405,13 @@ class LISTSHOWHIDE
     {
         $this->collection = FACTORY_COLLECTION::getInstance();
         $this->type = $this->vars['type'];
-        if (!array_key_exists('ajaxReturn', $this->vars))
-        { // i.e. we mean all resource types
+        if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
             $this->collections = $this->collection->grabAll(
                 FALSE,
                 $this->session->getVar("mywikindx_Bibliography_use"),
                 array_keys($this->typeObj->grabAll())
             );
-        }
-        else
-        {
+        } else {
             $this->collections = $this->collection->grabAll(
                 FALSE,
                 $this->session->getVar("mywikindx_Bibliography_use"),
@@ -484,18 +419,14 @@ class LISTSHOWHIDE
             );
         }
         $this->grabPreviouslySelected('ajaxReturn2');
-        if (is_array($this->collections))
-        {
+        if (is_array($this->collections)) {
             $collectionTable = \HTML\tableStart('generalTable');
             $collectionTable .= \HTML\trStart();
             $selectedCollections = [];
-            if ($selected = $this->session->getVar($this->type . "_Collection"))
-            {
+            if ($selected = $this->session->getVar($this->type . "_Collection")) {
                 $selected = UTF8::mb_explode(',', $selected);
-                foreach ($selected as $key)
-                {
-                    if (!array_key_exists($key, $this->collections))
-                    {
+                foreach ($selected as $key) {
+                    if (!array_key_exists($key, $this->collections)) {
                         continue;
                     }
                     $selectedCollections[$key] = $this->collections[$key];
@@ -508,9 +439,7 @@ class LISTSHOWHIDE
             $collectionTable .= \HTML\td($this->makeFormMultiple($selectedCollections, "collection", "Collection", TRUE), 'left width30percent');
             $collectionTable .= \HTML\trEnd();
             $collectionTable .= \HTML\tableEnd();
-        }
-        else
-        {
+        } else {
             $collectionTable = \HTML\tableStart();
             $collectionTable .= \HTML\trStart();
             $collectionTable .= \HTML\td("&nbsp;"); // default
@@ -522,16 +451,13 @@ class LISTSHOWHIDE
         // if no ajaxReturn, quietly exit
         $div = \HTML\div('collection', \HTML\td("&nbsp;")); // default
         $this->type = $this->vars['type'];
-        if (!array_key_exists('ajaxReturn', $this->vars))
-        { // i.e. we mean all resource types
+        if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
             $this->collections = $this->collection->grabAll(
                 FALSE,
                 $this->session->getVar("mywikindx_Bibliography_use"),
                 array_keys($this->typeObj->grabAll())
             );
-        }
-        else
-        {
+        } else {
             $this->collections = $this->collection->grabAll(
                 FALSE,
                 $this->session->getVar("mywikindx_Bibliography_use"),
@@ -539,8 +465,7 @@ class LISTSHOWHIDE
             );
         }
         $this->grabPreviouslySelected('ajaxReturn2');
-        if (is_array($this->collections))
-        {
+        if (is_array($this->collections)) {
             $div = \HTML\div('collection', \HTML\td($this->makeFormMultiple(
                 $this->collections,
                 'collection',
@@ -557,16 +482,13 @@ class LISTSHOWHIDE
     {
         $this->userTag = FACTORY_USERTAGS::getInstance();
         $this->type = $this->vars['type'];
-        if (!array_key_exists('ajaxReturn', $this->vars))
-        { // i.e. we mean all resource types
+        if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
             $this->userTags = $this->userTag->grabAll(
                 $this->session->getVar("mywikindx_Bibliography_use"),
                 array_keys($this->typeObj->grabAll()),
                 TRUE
             );
-        }
-        else
-        {
+        } else {
             $this->userTags = $this->userTag->grabAll(
                 $this->session->getVar("mywikindx_Bibliography_use"),
                 UTF8::mb_explode(',', $this->vars['ajaxReturn']),
@@ -575,18 +497,14 @@ class LISTSHOWHIDE
         }
         $this->grabPreviouslySelected('ajaxReturn2');
         $this->makeRadioButtons('UserTagMethod');
-        if (!empty($this->userTags))
-        {
+        if (!empty($this->userTags)) {
             $utTable = \HTML\tableStart('generalTable');
             $utTable .= \HTML\trStart();
             $selectedUTs = [];
-            if ($selected = $this->session->getVar($this->type . "_UserTag"))
-            {
+            if ($selected = $this->session->getVar($this->type . "_UserTag")) {
                 $selected = UTF8::mb_explode(',', $selected);
-                foreach ($selected as $key)
-                {
-                    if (!array_key_exists($key, $this->userTags))
-                    {
+                foreach ($selected as $key) {
+                    if (!array_key_exists($key, $this->userTags)) {
                         continue;
                     }
                     $selectedUTs[$key] = $this->userTags[$key];
@@ -600,9 +518,7 @@ class LISTSHOWHIDE
             list($toRightImage, $toLeftImage) = $this->userTag->transferArrows();
             $utTable .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), FALSE, 'left width5percent');
             $utTable .= \HTML\td($this->makeFormMultiple($selectedUTs, "userTag", 'UserTag', TRUE), 'left width20percent');
-        }
-        else
-        {
+        } else {
             $utTable = \HTML\tableStart();
             $utTable .= \HTML\trStart();
             $utTable .= \HTML\td("&nbsp;"); // default
@@ -626,20 +542,15 @@ class LISTSHOWHIDE
     private function makeFormMultiple($array, $message, $box, $noIgnore = FALSE, $noRadio = FALSE)
     {
         // add 0 => IGNORE to $array
-        if (!$noIgnore)
-        {
+        if (!$noIgnore) {
             $temp[0] = $this->messages->text("misc", "ignore");
             $temp += $array;
-        }
-        else
-        {
+        } else {
             $temp = $array;
         }
         $this->previousSelect = array_intersect($this->previousSelect, array_keys($temp));
-        if ($this->type == 'search')
-        {
-            if (!empty($this->previousSelect))
-            {
+        if ($this->type == 'search') {
+            if (!empty($this->previousSelect)) {
                 $pString = \FORM\selectedBoxValueMultiple(
                     $this->messages->text("search", $message),
                     "search_" . $box,
@@ -647,16 +558,11 @@ class LISTSHOWHIDE
                     $this->previousSelect,
                     "5"
                 );
-            }
-            else
-            {
+            } else {
                 $pString = \FORM\selectFBoxValueMultiple($this->messages->text("search", $message), "search_" . $box, $temp, "5");
             }
-        }
-        else
-        {
-            if (!empty($this->previousSelect))
-            {
+        } else {
+            if (!empty($this->previousSelect)) {
                 $pString = \FORM\selectedBoxValueMultiple(
                     $this->messages->text("select", $message),
                     "select_" . $box,
@@ -664,15 +570,12 @@ class LISTSHOWHIDE
                     $this->previousSelect,
                     "5"
                 );
-            }
-            else
-            {
+            } else {
                 $pString = \FORM\selectFBoxValueMultiple($this->messages->text("select", $message), "select_" . $box, $temp, "5");
             }
         }
         $pString .= BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint');
-        if ($this->radioButtons && !$noRadio)
-        {
+        if ($this->radioButtons && !$noRadio) {
             $pString .= BR . $this->radioButtons . BR;
         }
 
@@ -687,13 +590,10 @@ class LISTSHOWHIDE
     private function makeRadioButtons($method, $andDefault = TRUE)
     {
         $type = $this->type . '_' . $method;
-        if ($andDefault)
-        {
+        if ($andDefault) {
             $pString = \HTML\span(\FORM\radioButton(FALSE, $type, 'OR') . " OR", "small") . BR;
             $pString .= \HTML\span(\FORM\radioButton(FALSE, $type, 'AND', TRUE) . " AND", "small");
-        }
-        else
-        {
+        } else {
             $pString = \HTML\span(\FORM\radioButton(FALSE, $type, 'OR', TRUE) . " OR", "small") . BR;
             $pString .= \HTML\span(\FORM\radioButton(FALSE, $type, 'AND') . " AND", "small");
         }
@@ -706,11 +606,9 @@ class LISTSHOWHIDE
      */
     private function grabPreviouslySelected($qsElement)
     {
-        if (array_key_exists($qsElement, $this->vars))
-        {
+        if (array_key_exists($qsElement, $this->vars)) {
             $this->previousSelect = UTF8::mb_explode(',', $this->vars[$qsElement]);
-            if (($index = array_search(0, $this->previousSelect)) !== FALSE)
-            {
+            if (($index = array_search(0, $this->previousSelect)) !== FALSE) {
                 unset($this->previousSelect[$index]); // remove 'IGNORE' selected
             }
         }
@@ -727,36 +625,31 @@ class LISTSHOWHIDE
         $commonBib->userBibCondition('resourcemetadataResourceId');
         $db->formatConditions(['resourcemetadataType' => 'q']);
         $recordset = $db->select('resource_metadata', 'resourcemetadataId');
-        if (!$db->numRows($recordset))
-        {
+        if (!$db->numRows($recordset)) {
             unset($this->metadataTypeArray['quote']);
         }
         $commonBib->userBibCondition('resourcemetadataResourceId');
         $db->formatConditions(['resourcemetadataType' => 'p']);
         $recordset = $db->select('resource_metadata', 'resourcemetadataId');
-        if (!$db->numRows($recordset))
-        {
+        if (!$db->numRows($recordset)) {
             unset($this->metadataTypeArray['paraphrase']);
         }
         $commonBib->userBibCondition('resourcemetadataResourceId');
         $db->formatConditions(['resourcemetadataType' => 'm']);
         $recordset = $db->select('resource_metadata', 'resourcemetadataId');
-        if (!$db->numRows($recordset))
-        {
+        if (!$db->numRows($recordset)) {
             unset($this->metadataTypeArray['musing']);
         }
         $commonBib->userBibCondition('resourcemetadataResourceId');
         $db->formatConditions(['resourcemetadataType' => 'qc']);
         $recordset = $db->select('resource_metadata', 'resourcemetadataId');
-        if (!$db->numRows($recordset))
-        {
+        if (!$db->numRows($recordset)) {
             unset($this->metadataTypeArray['quoteComment']);
         }
         $commonBib->userBibCondition('resourcemetadataResourceId');
         $db->formatConditions(['resourcemetadataType' => 'pc']);
         $recordset = $db->select('resource_metadata', 'resourcemetadataId');
-        if (!$db->numRows($recordset))
-        {
+        if (!$db->numRows($recordset)) {
             unset($this->metadataTypeArray['paraphraseComment']);
         }
 

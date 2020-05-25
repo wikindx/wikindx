@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -19,8 +21,6 @@ class UPDATEDATABASE
     public $upgradeCompleted = FALSE;
     /** object */
     private $session;
-    /** object */
-    private $config;
     /** object */
     private $db;
     /** array */
@@ -44,12 +44,12 @@ class UPDATEDATABASE
      */
     public function __construct()
     {
-        // Turn on error reporting:
-        error_reporting(E_ALL);
-        ini_set('display_errors', 'On');
+        // Turn on error reporting
+        // Since this class is instancied only when a db upgrade
+        // is needed we don't need to switch off at the end.
+        ini_set('display_errors', TRUE);
 
         $this->db = FACTORY_DB::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
 
         $this->messages = FACTORY_MESSAGES::getInstance();
@@ -59,8 +59,6 @@ class UPDATEDATABASE
         $this->vars = GLOBALS::getVars();
         $this->oldTime = time();
 
-        // Before upgrade process, clear all template cache
-        $this->config->WIKINDX_BYPASS_SMARTYCOMPILE = TRUE;
         // Use the default template
         $this->session->setVar("setup_Template", WIKINDX_TEMPLATE_DEFAULT);
         // need to do this so the correct cache folder is set for the smarty cacheDir
@@ -68,13 +66,57 @@ class UPDATEDATABASE
         FACTORY_TEMPLATE::getInstance()->clearAllCache();
 
         $this->checkDatabase();
-
-        // Restore defaut error reporting level
+        
         $this->session->clearSessionData();
 
         if (GLOBALS::tplVarExists('content'))
         {
             FACTORY_CLOSE::getInstance(); // die;
+        }
+    }
+    /**
+     * Create the database structure with the definitions of the dbschema store
+     *
+     * @param string $pluginPath is the path to the root directory of a plugin. Default is the constant DIRECTORY_SEPARATOR for the core
+     */
+    public function createDbSchema($pluginPath = DIRECTORY_SEPARATOR)
+    {
+        // The db schema is stored in a series of SQL file in the directory /dbschema/full for the core
+        // or /plugins/<PluginDirectory>/dbschema/full
+        $dbSchemaPath =
+            WIKINDX_WIKINDX_PATH
+            . $pluginPath . WIKINDX_DIR_DB_SCHEMA
+            . DIRECTORY_SEPARATOR . 'full';
+        foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
+        {
+            $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
+            $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
+            $this->db->queryNoError($sql);
+        }
+    }
+    /**
+     * Update the database structure with the definitions of the dbschema store for a specific version
+     *
+     * @param string $wkxVersion Version number of Wikindx
+     * @param string $pluginPath is the path to the root directory of a plugin. Default is the constant DIRECTORY_SEPARATOR for the core
+     */
+    public function updateDbSchema($wkxVersion, $pluginPath = DIRECTORY_SEPARATOR)
+    {
+        // The db schema is stored in a serie of SQL file in the directory /dbschema/update/<$wkxVersion> for the core
+        // or /plugins/<PluginDirectory>/dbschema/update/<$wkxVersion>
+        $dbSchemaPath =
+            WIKINDX_WIKINDX_PATH
+            . $pluginPath . WIKINDX_DIR_DB_SCHEMA
+            . DIRECTORY_SEPARATOR . 'update'
+            . DIRECTORY_SEPARATOR . $wkxVersion;
+        if (is_dir($dbSchemaPath))
+        {
+            foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
+            {
+                $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
+                $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', WIKINDX_DB_TABLEPREFIX, $sql);
+                $this->db->queryNoError($sql);
+            }
         }
     }
     /**
@@ -95,10 +137,11 @@ class UPDATEDATABASE
         if (!$this->db->tableExists('config'))
         {
             $this->createDbSchema();
-            $this->configDefaults();
+            // NB: The config table is initialized with default values by the LOADCONFIG class that know the name and type of each option
+            $this->updateSoftwareVersion(WIKINDX_INTERNAL_VERSION);
             $this->session->setVar("setup_Superadmin", TRUE); // required for gatekeep function in CONFIG.php
         }
-        if (array_key_exists('action', $this->vars) && $this->session->getVar('setup_Superadmin') &&
+        if (array_key_exists('action', $this->vars) && $this->session->getVar("setup_Superadmin") &&
             (($this->vars['action'] == 'continueExecution') || ($this->vars['action'] == 'upgradeDB')))
         {
             $confirm = TRUE;
@@ -134,23 +177,35 @@ class UPDATEDATABASE
         }
         $dbVersion = \UPDATE\getDatabaseVersion($this->db);
 
-        // WIKINDX 4 cleared out a lot of database upgrade code....
-        if ($dbVersion < 5.1)
+        // Check the minimum db version upgradable
+        if ($dbVersion < WIKINDX_INTERNAL_VERSION_UPGRADE_MIN)
         {
             GLOBALS::addTplVar("content", "
                 Your WIKINDX database version is $dbVersion. WIKINDX requires that you first upgrade
-                to WIKINDX v5.1 or later before attempting to upgrade to the latest version.
+                to WIKINDX v" . WIKINDX_INTERNAL_VERSION_UPGRADE_MIN . " or later before attempting to upgrade to the latest version.
                 v6.0.8 is recommended as a transition version if you need yet PHP 5.6 support.
                 v6.1.0 is recommended as a transition version if you don't need PHP 5.6 support (PHP 7.0 minimum).
+            ");
+            FACTORY_CLOSENOMENU::getInstance(); // die
+        }
+
+        // Check the maximum db version upgradable
+        // Don't check for equality because that prevents the creation of the superadmin account
+        if ($dbVersion > WIKINDX_INTERNAL_VERSION)
+        {
+            GLOBALS::addTplVar("content", "
+                Your WIKINDX database version is $dbVersion.
+                This version of the application (" . WIKINDX_PUBLIC_VERSION . ") is not compatible with a version of the database greater than " . WIKINDX_INTERNAL_VERSION  . ".
+                Please upgrade the application or restore a previous database.
             ");
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
         
         if ($dbVersion < WIKINDX_INTERNAL_VERSION)
         {
-            // v3.8 and beyond
-            // As WIKINDX v5.3 (DB version 5.4) transfers config.php variables to the database, config.php must be writeable before we can proceed
-            if ($dbVersion < 5.4)
+            // As WIKINDX v5.3, v5.9 and v6.2.2 (DB version 12.0) transfers config.php variables to the database, config.php must be writeable before we can proceed
+            // Previously, each of these versions modified the configuration, but since they are backward compatible, only the last one is kept.
+            if ($dbVersion < 12.0)
             {
                 $this->checkConfigFile(); // dies if not writeable or file does not exist.
             }
@@ -164,55 +219,40 @@ class UPDATEDATABASE
             // Disable temporarily all SQL mode to update old databases
             $this->db->setSqlMode('');
 
-            if ($dbVersion < 4.0)
-            {      // upgrade v3.8.2 to v4.1
-                $this->numStages = 16;
-                $this->upgrade41();
-            }
-            elseif ($dbVersion < 4.2)
-            { // upgrade v4.1 to v4.2
-                $this->numStages = 1;
-                $this->stage4_2__1();
-            }
-            elseif ($dbVersion < 5.1)
-            { // upgrade v4.2 to v5.1
-                $this->numStages = 1;
-                $this->stage5_1__1();
-            }
-            elseif ($dbVersion < 5.2)
+            if ($dbVersion < 5.2)
             { // upgrade v5.1 to 5.2.2
                 $this->numStages = 1;
-                $this->stage5_2__1();
+                $this->stage5_2();
             }
             elseif ($dbVersion < 5.4)
             { // upgrade v5.2.2 to 5.4
                 $this->numStages = 1;
-                $this->stage5_4__1();
+                $this->stage5_4();
             }
             elseif ($dbVersion < 5.5)
             { // upgrade v5.4 to 5.5
                 $this->numStages = 1;
-                $this->stage5_5__1();
+                $this->stage5_5();
             }
             elseif ($dbVersion < 5.6)
             { // upgrade v5.5 to 5.6
                 $this->numStages = 1;
-                $this->stage5_6__1();
+                $this->stage5_6();
             }
             elseif ($dbVersion < 5.7)
             { // upgrade v5.6 to 5.7
                 $this->numStages = 1;
-                $this->stage5_7__1();
+                $this->stage5_7();
             }
             elseif ($dbVersion < 5.8)
             { // upgrade v5.7 to 5.8
                 $this->numStages = 1;
-                $this->stage5_8__1();
+                $this->stage5_8();
             }
             elseif ($dbVersion < 5.9)
             { // upgrade v5.8 to 5.9
                 $this->numStages = 1;
-                $this->stage5_9__1();
+                $this->stage5_9();
             }
             elseif ($dbVersion < 6.0)
             { // upgrade v5.9 to 6
@@ -244,81 +284,30 @@ class UPDATEDATABASE
                 $this->numStages = 1;
                 $this->stage11();
             }
+            elseif ($dbVersion < 12.0)
+            { // upgrade v6.2.1 to 6.2.2 part A
+                $this->numStages = 1;
+                $this->stage12();
+            }
+            elseif ($dbVersion < 13.0)
+            { // upgrade v6.2.1 to 6.2.2 part B
+                $this->numStages = 1;
+                $this->stage13();
+            }
+            elseif ($dbVersion < 14.0)
+            { // upgrade v6.2.1 to 6.2.2 part C
+                $this->numStages = 1;
+                $this->stage14();
+            }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
             // Refresh the locales list
             \LOCALES\refreshSystemLocalesCache(TRUE);
             $this->updateSoftwareVersion(WIKINDX_INTERNAL_VERSION);
-            $this->session->delVar('upgrade_function');
             $this->upgradeCompleted = TRUE;
         }
 
         return TRUE;
-    }
-    /**
-     * Create the database structure with the definitions of the dbschema store
-     *
-     * @param string $pluginPath is the path to the root directory of a plugin. Default is the constant DIRECTORY_SEPARATOR for the core
-     */
-    public function createDbSchema($pluginPath = DIRECTORY_SEPARATOR)
-    {
-        // The db schema is stored in a series of SQL file in the directory /dbschema/full for the core
-        // or /plugins/<PluginDirectory>/dbschema/full
-        $dbSchemaPath =
-            $this->session->getVar('wikindxBasePath')
-            . $pluginPath . WIKINDX_DIR_DB_SCHEMA
-            . DIRECTORY_SEPARATOR . 'full';
-        foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
-        {
-            $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
-            $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', $this->config->WIKINDX_DB_TABLEPREFIX, $sql);
-            $this->db->queryNoError($sql);
-        }
-    }
-    /**
-     * Update the database structure with the definitions of the dbschema store for a specific version
-     *
-     * @param string $wkxVersion Version number of Wikindx
-     * @param string $pluginPath is the path to the root directory of a plugin. Default is the constant DIRECTORY_SEPARATOR for the core
-     */
-    public function updateDbSchema($wkxVersion, $pluginPath = DIRECTORY_SEPARATOR)
-    {
-        // The db schema is stored in a serie of SQL file in the directory /dbschema/update/<$wkxVersion> for the core
-        // or /plugins/<PluginDirectory>/dbschema/update/<$wkxVersion>
-        $dbSchemaPath =
-            $this->session->getVar('wikindxBasePath')
-            . $pluginPath . WIKINDX_DIR_DB_SCHEMA
-            . DIRECTORY_SEPARATOR . 'update'
-            . DIRECTORY_SEPARATOR . $wkxVersion;
-        if (is_dir($dbSchemaPath))
-        {
-            foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
-            {
-                $sql = file_get_contents($dbSchemaPath . DIRECTORY_SEPARATOR . $sqlfile);
-                $sql = str_replace('%%WIKINDX_DB_TABLEPREFIX%%', $this->config->WIKINDX_DB_TABLEPREFIX, $sql);
-                $this->db->queryNoError($sql);
-            }
-        }
-    }
-    /**
-     * Fill new config table (>= WIKINDX v5.3) with some default configuration values
-     *
-     * NB: The config table is initialized with default values by the LOADCONFIG class that know the name and type of each option
-     */
-    public function configDefaults()
-    {
-        $this->db->insert('category', 'categoryCategory', 'General');
-        
-        $fields = [
-            'databasesummaryTotalResources',
-            'databasesummaryTotalQuotes',
-            'databasesummaryTotalParaphrases',
-            'databasesummaryTotalMusings',
-        ];
-        $values = ['0', '0', '0', '0'];
-        $this->db->insert('database_summary', $fields, $values);
-        
-        $this->updateSoftwareVersion(WIKINDX_INTERNAL_VERSION);
     }
     /**
      * Intercept for initial configuration by admin and, if necessary, display admin configuration interface (new installation means users table is empty).
@@ -327,22 +316,22 @@ class UPDATEDATABASE
     {
         if ($this->db->tableIsEmpty('users'))
         {
-            include_once("core/modules/admin/CONFIGURE.php");
-            $config = new CONFIGURE(TRUE);
+            include_once("core/modules/usersgroups/SUPERADMIN.php");
+            $config = new SUPERADMIN(TRUE);
             // force super initialization in CONFIGURE
             $config->insert = TRUE;
-            if (isset($this->vars['action']) && $this->vars['action'] == 'admin_CONFIGURE_CORE')
+            if (isset($this->vars['action']) && $this->vars['action'] == 'usersgroups_SUPERADMIN_CORE')
             {
                 GLOBALS::addTplVar('content', $config->writeDb());
             }
             else
             {
                 // write preliminary stringLimit, write and superadmin to session and display super configuration screen
-                $this->session->setVar("setup_StringLimit", 40);
+                $this->session->setVar("setup_StringLimit", WIKINDX_STRING_LIMIT_DEFAULT);
                 $this->session->setVar("setup_Write", TRUE);
                 $this->session->setVar("setup_Superadmin", TRUE);
-                // superadmin userId is always 1
-                $this->session->setVar("setup_UserId", 1);
+                // superadmin userId is always WIKINDX_SUPERADMIN_ID
+                $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID);
                 GLOBALS::addTplVar('content', $config->init([\HTML\p($this->installMessages->text("install"), "error", "center"), 'super']));
                 FACTORY_CLOSENOMENU::getInstance();
             }
@@ -373,9 +362,14 @@ class UPDATEDATABASE
     {
         $version = (string)$version;
         $version = str_replace(",", ".", $version);
-        if ($version <= 3.8) $field = "dbVersion";
-        if ($version <= 5.9) $field = "databasesummaryDbVersion";
-        if ($version >= 6.0) $field = "databasesummarySoftwareVersion";
+        if ($version <= 5.9)
+        {
+            $field = "databasesummaryDbVersion";
+        }
+        if ($version >= 6.0)
+        {
+            $field = "databasesummarySoftwareVersion";
+        }
         $this->db->update('database_summary', [$field => $version]);
     }
     /**
@@ -383,7 +377,12 @@ class UPDATEDATABASE
      */
     private function checkConfigFile()
     {
-        $message = HTML\p("Part of the upgrade process for a WIKINDX that is younger than v5.3 is the transfer of many settings in config.php to the database (from where they can be configured via the Admin|Configure menu). In order to accomplish this, config.php must be writeable by the web server user and the upgrade will not proceed until this is the case. Equally, some settings are removed from config.php where the WIKINDX is 5.3 and older but younger than 5.9 Once the upgrade has completed, you can then return the file permissions on config.php to read only.");
+        $message = HTML\p("
+        	Part of the upgrade process for a WIKINDX that is younger than v6.2.2 is the transfer of many settings in config.php to the database (from where they can be configured via the Admin|Configure menu).
+        	In order to accomplish this, config.php must be writeable by the web server user and the upgrade will not proceed until this is the case.
+        	Equally, some settings are removed from config.php where the WIKINDX is 5.3 and older but younger than 6.2.2.
+        	Once the upgrade has completed, you can then return the file permissions on config.php to read only.
+        ");
         if (!file_exists('config.php'))
         {
             die("Fatal error: config.php does not exist.");
@@ -396,1486 +395,29 @@ class UPDATEDATABASE
         }
     }
     /**
-     * Upgrade database to v4.1.
-     * Start with stage1();
-     */
-    private function upgrade41()
-    {
-        if (array_key_exists('action', $this->vars) && ($this->vars['action'] == 'continueExecution'))
-        {
-            $function = $this->session->getVar('upgrade_function');
-            $this->{$function}();
-
-            return;
-        }
-        $this->stage4_1__1();
-    }
-    /**
-     * Stage 1
-     */
-    private function stage4_1__1()
-    {
-        $this->session->delVar('stage3UpgradeContinueView');
-        $this->session->delVar('stage3UpgradeContinueAttach');
-
-        $this->updateDbSchema('4.1.1');
-
-        $value = base64_encode(serialize([
-            'an', 'a', 'the', 'der', 'die', 'das',
-            'ein', 'eine', 'einer', 'eines', 'le', 'la', 'las',
-            'il', 'les', 'une', 'un', 'una', 'uno', 'lo', 'los',
-            'i', 'gli', 'de', 'het', 'um', 'uma', 'o', 'os', 'as',
-        ]));
-        $this->db->update('config', ['noSort' => $value]);
-
-        $value = base64_encode(serialize(['an', 'a', 'the', 'and', 'to']));
-        $this->db->update('config', ['searchFilter' => $value]);
-
-        $this->upgrade40Nulls();
-
-        $this->checkStatus('stage4_1__1');
-        $this->pauseExecution('stage4_1__1', 'stage4_1__2');
-    }
-    /**
-     * Stage 2
-     */
-    private function stage4_1__2()
-    {
-        $this->updateDbSchema('4.1.2');
-
-        // v3.3 corrected additional backslashes that had crept in but forgot to deal with the resource_note table
-        $resultset = $this->db->select('resource_note', ['id', 'text']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $update = [];
-            $update['text'] = stripslashes(stripslashes($row['text']));
-            $this->db->formatConditions(['id' => $row['id']]);
-            $this->db->update('resource_note', $update);
-        }
-        unset($update);
-
-
-        // Transfer resource_note and resource_abstract fields to it
-        $ids = [];
-        // Transfer URLs (now stores multiple URLs so base_64 encode and serialize before storing)
-        $recordSet = $this->db->select('resource', ['id', 'url']);
-        while ($row = $this->db->fetchRow($recordSet))
-        {
-            if ($row['url'])
-            {
-                $fields = ['id', 'urls'];
-                $values = [$row['id'], base64_encode(serialize([$row['url']]))];
-                $this->db->insert('resource_text', $fields, $values);
-                $ids[$row['id']] = FALSE;
-            }
-        }
-        // Transfer notes
-        $recordSet = $this->db->select('resource_note', ['id', 'text', 'editUserIdNote', 'addUserIdNote']);
-        while ($row = $this->db->fetchRow($recordSet))
-        {
-            if ($row['text'] && array_key_exists($row['id'], $ids))
-            { // update row
-                $updateArray = ['note' => UTF8::smartUtf8_decode(\HTML\nlToHtml($row['text'], TRUE))];
-                if ($row['editUserIdNote'])
-                {
-                    $updateArray['editUserIdNote'] = $row['editUserIdNote'];
-                }
-                if ($row['addUserIdNote'])
-                {
-                    $updateArray['addUserIdNote'] = $row['addUserIdNote'];
-                }
-                $this->db->formatConditions(['id' => $row['id']]);
-                $this->db->update('resource_text', $updateArray);
-            }
-            elseif ($row['text'])
-            { // insert
-                $fields = ['id', 'note'];
-                $values = [$row['id'], UTF8::smartUtf8_decode(\HTML\nlToHtml($row['text'], TRUE))];
-                if ($row['editUserIdNote'])
-                {
-                    $fields[] = 'editUserIdNote';
-                    $values[] = $row['editUserIdNote'];
-                }
-                if ($row['addUserIdNote'])
-                {
-                    $fields[] = 'addUserIdNote';
-                    $values[] = $row['addUserIdNote'];
-                }
-                $this->db->insert('resource_text', $fields, $values);
-                $ids[$row['id']] = FALSE;
-            }
-        }
-        // Transfer abstracts
-        $recordSet = $this->db->select('resource_abstract', ['id', 'abstract', 'editUserIdAbstract', 'addUserIdAbstract']);
-        while ($row = $this->db->fetchRow($recordSet))
-        {
-            if ($row['abstract'] && array_key_exists($row['id'], $ids))
-            { // update row
-                $updateArray = ['abstract' => UTF8::smartUtf8_decode(\HTML\nlToHtml($row['abstract'], TRUE))];
-                if ($row['editUserIdAbstract'])
-                {
-                    $updateArray['editUserIdAbstract'] = $row['editUserIdAbstract'];
-                }
-                if ($row['addUserIdAbstract'])
-                {
-                    $updateArray['addUserIdAbstract'] = $row['addUserIdAbstract'];
-                }
-                $this->db->formatConditions(['id' => $row['id']]);
-                $this->db->update('resource_text', $updateArray);
-            }
-            elseif ($row['abstract'])
-            { // insert
-                $fields = ['id', 'abstract'];
-                $values = [$row['id'], UTF8::smartUtf8_decode(\HTML\nlToHtml($row['abstract'], TRUE))];
-                if ($row['editUserIdAbstract'])
-                {
-                    $fields[] = 'editUserIdAbstract';
-                    $values[] = $row['editUserIdAbstract'];
-                }
-                if ($row['addUserIdAbstract'])
-                {
-                    $fields[] = 'addUserIdAbstract';
-                    $values[] = $row['addUserIdAbstract'];
-                }
-                $this->db->insert('resource_text', $fields, $values);
-            }
-        }
-
-        $this->checkStatus('stage4_1__2');
-        $this->pauseExecution('stage4_1__2', 'stage4_1__3');
-    }
-    /**
-     * Stage 3
-     */
-    private function stage4_1__3()
-    {
-        $this->updateDbSchema('4.1.3');
-
-        // Transfer attachments fields to resource_attachments.
-//
-        // Delete attachment rows if attachments don't exist.
-
-        // Add resource view and attachment download data to statistics table
-        // First insert statistics rows by averaging out total resource views over months resource has been available.
-        // If we've paused execution, ensure we only select those that have not yet been done.
-        $this->db->formatConditions(['attachmentId' => ' IS NULL']);
-        $subStmt = $this->db->subQuery($this->db->selectNoExecute('statistics', 'resourceId'), FALSE, FALSE, TRUE);
-        $this->db->formatConditions($this->db->formatFields('resource_misc.id') . $this->db->inClause($subStmt, TRUE));
-        $recordset = $this->db->query('SELECT `' .
-            $this->config->WIKINDX_DB_TABLEPREFIX . "resource_misc`.`id` AS `id`,
-			`accesses`,
-			`timestampAdd`,
-			date_format(`timestampAdd`, '%Y%m') AS `date`,
-			period_diff(date_format(CURRENT_TIMESTAMP, '%Y%m'), date_format(`timestampAdd`, '%Y%m')) AS `months` FROM `" .
-            $this->config->WIKINDX_DB_TABLEPREFIX . 'resource_misc` LEFT JOIN `' .
-            $this->config->WIKINDX_DB_TABLEPREFIX . 'resource_timestamp` ON `' .
-                $this->config->WIKINDX_DB_TABLEPREFIX . 'resource_timestamp`.`id` = `' .
-                $this->config->WIKINDX_DB_TABLEPREFIX . 'resource_misc`.`id`');
-        $count = 0;
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            $array = [];
-            $year = mb_substr($row['date'], 0, 4);
-            $month = mb_substr($row['date'], 4, 2);
-            if (!$row['months'])
-            {
-                $array[$row['date']] = $row['accesses'];
-            }
-            else
-            {
-                $average = ceil($row['accesses'] / $row['months']);
-                for ($i = 0; $i < $row['months']; $i++)
-                {
-                    $addYears = floor($i / 12);
-                    $addMonths = $i % 12;
-                    $monthPart = $month + $addMonths;
-                    if ($monthPart > 12)
-                    {
-                        ++$addYears;
-                        $monthPart = $monthPart - 12;
-                    }
-                    $monthPart = $monthPart < 10 ? '0' . $monthPart : (string)$monthPart;
-                    $yearPart = $year + $addYears;
-                    $date = (string)$yearPart . $monthPart;
-                    $array[$date] = $average;
-                }
-            }
-            $this->db->insert(
-                'statistics',
-                ['resourceId', 'statistics'],
-                [$row['id'], base64_encode(serialize($array))]
-            );
-            $this->db->formatConditions(['id' => $row['id']]);
-            $this->db->update('resource_misc', ['accessesPeriod' => $average]);
-            $count++;
-            // Check we have more than 3 seconds buffer before max_execution_time times out.
-            if ((time() - $this->oldTime) >= (ini_get("max_execution_time") - 3))
-            {
-                $this->session->setVar('stage3UpgradeContinueView', TRUE);
-                $this->checkStatus('stage4_1__3');
-                $this->stageInterruptMessage = "stage3 continuing: $count view statistics created this pass.&nbsp;&nbsp;";
-                $this->pauseExecution('stage4_1__3', 'stage4_1__3');
-            }
-        }
-        if (!$this->session->getVar('stage3UpgradeContinueAttach') && array_key_exists('WIKINDX_ATTACHMENTS_DIR', $this->config))
-        { // First time through and no continue execution
-            $dirName = $this->config->WIKINDX_ATTACHMENTS_DIR;
-            $recordSet = $this->db->select('resource_attachments', ['id', 'hashFilename']);
-            $deletes = [];
-            while ($row = $this->db->fetchRow($recordSet))
-            {
-                if (!file_exists("$dirName/" . $row['hashFilename']))
-                {
-                    $deletes[] = $row['id'];
-                }
-            }
-            if (!empty($deletes))
-            { // discard these entries as there is no attachment
-                $this->db->formatConditionsOneField($deletes, 'id');
-                $this->db->delete('resource_attachments');
-            }
-            $this->db->leftJoin('resource_timestamp', 'resource_timestamp.id', 'resource_misc.id');
-            $recordset = $this->db->select('resource_misc', [['resource_misc.id' => 'id'], 'attachDownloads', 'timestampAdd',]);
-            while ($row = $this->db->fetchRow($recordset))
-            {
-                $this->db->formatConditions(['resourceId' => $row['id']]);
-                $this->db->update('resource_attachments', ['downloads' => $row['attachDownloads'], 'timestamp' => $row['timestampAdd']]);
-            }
-        }
-        // Insert statistics rows by averaging out total attachment downloads over months attachment has been available
-        // If we've paused execution, ensure we only select those that have not yet been done.
-        $this->db->formatConditions(['attachmentId' => ' IS NOT NULL']);
-        $subStmt = $this->db->subQuery($this->db->selectNoExecute('statistics', 'resourceId'), FALSE, FALSE, TRUE);
-        $this->db->formatConditions($this->db->formatFields('resourceId') . $this->db->inClause($subStmt, TRUE));
-        $recordset = $this->db->query("SELECT `id`,
-			`resourceId`,
-			`downloads`,
-			`timestamp`,
-			date_format(`timestamp`, '%Y%m') AS `date`,
-			period_diff(date_format(CURRENT_TIMESTAMP, '%Y%m'), date_format(`timestamp`, '%Y%m')) AS `months` FROM `" .
-            $this->config->WIKINDX_DB_TABLEPREFIX . 'resource_attachments`');
-        $count = 0;
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            $array = [];
-            $year = mb_substr($row['date'], 0, 4);
-            $month = mb_substr($row['date'], 4, 2);
-            if (!$row['months'])
-            {
-                $array[$row['date']] = $row['downloads'];
-            }
-            else
-            {
-                $average = ceil($row['downloads'] / $row['months']);
-                for ($i = 0; $i < $row['months']; $i++)
-                {
-                    $addYears = floor($i / 12);
-                    $addMonths = $i % 12;
-                    $monthPart = $month + $addMonths;
-                    if ($monthPart > 12)
-                    {
-                        ++$addYears;
-                        $monthPart = $monthPart - 12;
-                    }
-                    $monthPart = $monthPart < 10 ? '0' . $monthPart : (string)$monthPart;
-                    $yearPart = $year + $addYears;
-                    $date = (string)$yearPart . $monthPart;
-                    $array[$date] = $average;
-                }
-            }
-            $this->db->insert(
-                'statistics',
-                ['resourceId', 'attachmentId', 'statistics'],
-                [$row['resourceId'], $row['id'], base64_encode(serialize($array))]
-            );
-            $this->db->formatConditions(['id' => $row['id']]);
-            $this->db->update('resource_attachments', ['downloadsPeriod' => $average]);
-            $count++;
-            // Check we have more than 3 seconds buffer before max_execution_time times out.
-            if ((time() - $this->oldTime) >= (ini_get("max_execution_time") - 3))
-            {
-                $this->session->setVar('stage3UpgradeContinueAttach', TRUE);
-                $this->checkStatus('stage4_1__3');
-                $this->stageInterruptMessage = "stage3 continuing: $count attachment statistics created this pass.&nbsp;&nbsp;";
-                $this->pauseExecution('stage4_1__3', 'stage4_1__3');
-            }
-        }
-
-        $this->checkStatus('stage4_1__3');
-        $this->pauseExecution('stage4_1__3', 'stage4_1__4');
-    }
-    /**
-     * stage 4
-     */
-    private function stage4_1__4()
-    {
-        // Set for Latin1
-        $this->db->query('SET NAMES latin1');
-        $this->db->query('SET CHARACTER SET latin1');
-
-        // Pre v4.0 versions have a bug whereby creators may be duplicated in the database -- find these and fix.
-        $resultset = $this->db->query("
-		    SELECT `a`.`id` AS `aId`, `b`.`id` AS `bId`
-			FROM `" . $this->config->WIKINDX_DB_TABLEPREFIX . "creator` AS a
-			INNER JOIN `" . $this->config->WIKINDX_DB_TABLEPREFIX . "creator` AS b
-			ON  (`a`.`firstname` = `b`.`firstname` OR (`a`.`firstname` IS NULL AND `b`.`firstname` IS NULL))
-			AND (`a`.`initials`  = `b`.`initials`  OR (`a`.`initials` IS NULL  AND `b`.`initials` IS NULL))
-			AND (`a`.`prefix`    = `b`.`prefix`    OR (`a`.`prefix` IS NULL    AND `b`.`prefix` IS NULL))
-			AND `a`.`surname`    = `b`.`surname`
-			AND `a`.`id` != `b`.`id`
-			");
-        $dupCreators = $delCreators = [];
-        $count = 0;
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            if (array_search($row['aId'], $delCreators) !== FALSE)
-            {
-                continue;
-            }
-            if (array_search($row['aId'], $dupCreators) === FALSE)
-            {
-                $dupCreators[$row['aId']] = $row['bId'];
-                $resultset2 = $this->db->query(
-                    "
-				    SELECT `id`, `creator1`, `creator2`, `creator3`, `creator4`, `creator5`
-					FROM `" . $this->config->WIKINDX_DB_TABLEPREFIX . "resource_creator`
-					WHERE
-					   FIND_IN_SET('" . $row['bId'] . "', `creator1`)
-					OR FIND_IN_SET('" . $row['bId'] . "', `creator2`)
-					OR FIND_IN_SET('" . $row['bId'] . "', `creator3`)
-					OR FIND_IN_SET('" . $row['bId'] . "', `creator4`)
-					OR FIND_IN_SET('" . $row['bId'] . "', `creator5`)"
-                );
-                while ($row2 = $this->db->fetchRow($resultset2))
-                {
-                    $updateArray = [];
-                    foreach (['creator1', 'creator2', 'creator3', 'creator4', 'creator5'] as $creator)
-                    {
-                        // remove bId creator id and replace with aId if aId not already in set
-                        if ($row2[$creator])
-                        {
-                            $oldArray = UTF8::mb_explode(",", $row2[$creator]);
-                            // If $row['aId'] already in db field, simply remove $row['bId']
-                            if ((array_search($row['aId'], $oldArray) !== FALSE) &&
-                                (($editIndex = array_search($row['bId'], $oldArray)) !== FALSE))
-                            {
-                                unset($oldArray[$editIndex]);
-                                $updateArray[$creator] = implode(",", $oldArray);
-                            }
-                            // else, if this creator field has $row['bId'] in it, replace it with $row['aId']
-                            elseif (($editIndex = array_search($row['bId'], $oldArray)) !== FALSE)
-                            {
-                                $oldArray[$editIndex] = $row['aId'];
-                                $updateArray[$creator] = implode(",", $oldArray);
-                            }
-                        }
-                    }
-                    if (!empty($updateArray))
-                    {
-                        $this->db->formatConditions(['id' => $row2['id']]);
-                        $this->db->update('resource_creator', $updateArray);
-                    }
-                }
-                if (array_search($row['bId'], $delCreators) === FALSE)
-                {
-                    ++$count;
-                    $delCreators[] = $row['bId'];
-                    // delete bId
-                    $this->db->formatConditions(['id' => $row['bId']]);
-                    $this->db->delete('creator');
-                }
-            }
-            // Check we have more than 3 seconds buffer before max_execution_time times out.
-            if ((time() - $this->oldTime) >= (ini_get("max_execution_time") - 3))
-            {
-                $this->checkStatus('stage4_1__4');
-                $this->stageInterruptMessage = "stage4 continuing: $count duplicate creators corrected this pass.&nbsp;&nbsp;";
-                $this->pauseExecution('stage4_1__4', 'stage4_1__4');
-            }
-        }
-
-        $this->checkStatus('stage4_1__4');
-        $this->pauseExecution('stage4_1__4', 'stage4_1__5');
-    }
-    /**
-     * stage 5
-     */
-    private function stage4_1__5()
-    {
-        // Set for Latin1
-        $this->db->query('SET NAMES latin1');
-        $this->db->query('SET CHARACTER SET latin1');
-
-        // Remove duplicate collections
-        $resultset = $this->db->query("
-		    SELECT `a`.`id` AS `aId`, `b`.`id` AS `bId`
-			FROM `" . $this->config->WIKINDX_DB_TABLEPREFIX . "collection` AS a
-			INNER JOIN `" . $this->config->WIKINDX_DB_TABLEPREFIX . "collection` AS b
-			ON  (`a`.`collectionTitle`      = `b`.`collectionTitle`)
-			AND (`a`.`collectionTitleShort` = `b`.`collectionTitleShort` OR (`a`.`collectionTitleShort` IS NULL AND `b`.`collectionTitleShort` IS NULL))
-			AND (`a`.`collectionType`       = `b`.`collectionType`)
-			AND `a`.`id` != `b`.`id`
-			");
-        $dupCollections = $delCollections = [];
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            if (array_search($row['aId'], $delCollections) === FALSE)
-            {
-                $dupCollections[$row['aId']][] = $row['bId'];
-                $delCollections[] = $row['bId'];
-            }
-        }
-        $updateArray = [];
-        foreach ($dupCollections as $aId => $bIds)
-        {
-            foreach ($bIds as $bId)
-            {
-                $resultset2 = $this->db->query("
-				    SELECT `id`, `collection`
-					FROM `" . $this->config->WIKINDX_DB_TABLEPREFIX . "resource_misc`
-					WHERE `collection` = '" . $bId . "'");
-                while ($row2 = $this->db->fetchRow($resultset2))
-                {
-                    // remove bId collection id and replace with aId
-                    if ($row2['collection'] && ($row2['collection'] == $bId))
-                    { // duplicate check?
-                        $updateArray[$bId] = $aId;
-                    }
-                }
-            }
-            // Check we have more than 5 seconds buffer before max_execution_time times out.
-            if ((time() - $this->oldTime) >= (ini_get("max_execution_time") - 5))
-            {
-                // Do updates so far
-                $this->db->multiUpdate('resource_misc', 'collection', 'collection', $updateArray);
-                // delete bIds thus far
-                $this->db->formatConditionsOneField($delCollections, 'id');
-                $this->db->delete('collection');
-                $count = count($delCollections);
-                $this->checkStatus('stage4_1__5');
-                $this->stageInterruptMessage = "stage5 continuing: $count duplicate collections corrected this pass.&nbsp;&nbsp;";
-                $this->pauseExecution('stage4_1__5', 'stage4_1__5');
-            }
-        }
-        $this->db->multiUpdate('resource_misc', 'collection', 'collection', $updateArray);
-        $this->db->formatConditionsOneField($delCollections, 'id');
-        $this->db->delete('collection');
-
-        $this->checkStatus('stage4_1__5');
-        $this->pauseExecution('stage4_1__5', 'stage4_1__6');
-    }
-    /**
-     * stage 6
-     */
-    private function stage4_1__6()
-    {
-        // Rename fields in tables for v4.0 upgrade
-        $this->updateDbSchema('4.1.6');
-
-        $this->upgrade40charToBin();
-        $this->checkStatus('stage4_1__6');
-        $this->pauseExecution('stage4_1__6', 'stage4_1__7');
-    }
-    /**
-     * stage 7
-     */
-    private function stage4_1__7()
-    {
-        $this->updateDbSchema('4.1.7');
-
-        $this->upgrade40Tables();
-
-        $this->checkStatus('stage4_1__7');
-        $this->pauseExecution('stage4_1__7', 'stage4_1__8');
-    }
-    /**
-     * stage 8
-     */
-    private function stage4_1__8()
-    {
-        /**
-         * Rewrite resource_creator tables
-         *
-         * In v4, we no longer use MySQL's FIND_IN_SET and therefore no longer want comma-delimited field values such as creator1, creator2 etc. in
-         * the resource_creator table.  Write a new resource_creator table that has a row comprising:
-         * resourceId references resource table), creatorId (references creator table), role (creator1, creator2 etc.) and order (1,2, 3 etc.
-         * for first author, second author, third author etc.)
-         * resourcecreatorCreatorMain is the creatorId that is the main creator for that resource used when ordering lists.
-         */
-        $this->updateDbSchema('4.1.8');
-
-        $creatorFields = [
-            'resourcecreatorCreator1',
-            'resourcecreatorCreator2',
-            'resourcecreatorCreator3',
-            'resourcecreatorCreator4',
-            'resourcecreatorCreator5',
-        ];
-
-        $this->db->formatConditions(['creatorSurname' => ' IS NOT NULL']);
-        $recordSetCreator = $this->db->select('creator', ['creatorId', 'creatorSurname']);
-
-        $recordSet = $this->db->select(
-            'resource_creator',
-            ['resourcecreatorId',
-                'resourcecreatorCreator1',
-                'resourcecreatorCreator2',
-                'resourcecreatorCreator3',
-                'resourcecreatorCreator4',
-                'resourcecreatorCreator5',
-            ]
-        );
-        while ($row = $this->db->fetchRow($recordSet))
-        {
-            $creatorMain = FALSE;
-            foreach ($creatorFields as $creatorField)
-            {
-                if (!$row[$creatorField])
-                {
-                    continue;
-                }
-
-                $order = 1;
-
-                $creatorIds = UTF8::mb_explode(',', $row[$creatorField]);
-
-                foreach ($creatorIds as $creatorId)
-                {
-                    $fields = [];
-                    $values = [];
-
-                    $fields[] = 'resourcecreatorResourceId';
-                    $values[] = $row['resourcecreatorId'];
-
-                    $fields[] = 'resourcecreatorCreatorId';
-                    $values[] = $creatorId;
-
-                    $fields[] = 'resourcecreatorOrder';
-                    $values[] = $order;
-
-                    if ($creatorField != 'resourcecreatorId')
-                    {
-                        $fields[] = 'resourcecreatorRole';
-                        $values[] = mb_substr($creatorField, -1);
-
-                        if (!$creatorMain)
-                        {
-                            $creatorMain = $creatorId;
-                        }
-
-                        $fields[] = 'resourcecreatorCreatorMain';
-                        $values[] = $creatorMain;
-                    }
-
-                    $this->db->goToRow($recordSetCreator, 1);
-                    while ($rowCreator = $this->db->fetchRow($recordSetCreator))
-                    {
-                        if ($rowCreator['creatorId'] == $creatorMain)
-                        {
-                            $fields[] = 'resourcecreatorCreatorSurname';
-                            $values[] = $rowCreator['creatorSurname'];
-
-                            break;
-                        }
-                    }
-
-                    $this->db->insert('temp_resource_creator', $fields, $values);
-                    ++$order;
-                }
-            }
-        }
-        // Select, and insert into temp_resource_creator, those resourceIds without a creator
-        $this->db->formatConditions($this->db->formatFields('resourceId') . ' NOT IN ' .
-            $this->db->subQuery($this->db->selectNoExecute('resource_creator', 'resourcecreatorId'), FALSE, FALSE));
-        $recordSet = $this->db->select('resource', 'resourceId');
-
-        while ($row = $this->db->fetchRow($recordSet))
-        {
-            $fields = $values = [];
-            $fields[] = 'resourcecreatorResourceId';
-            $values[] = $row['resourceId'];
-            $this->db->insert('temp_resource_creator', $fields, $values);
-        }
-
-        $this->checkStatus('stage4_1__8');
-        $this->pauseExecution('stage4_1__8', 'stage4_1__9');
-    }
-    /**
-     * stage 9
-     */
-    private function stage4_1__9()
-    {
-        // Rewrite resource_summary
-        // Fix quote, paraphrase, musing counts per resource.
-        $ids = [];
-        // quotes
-        $this->db->groupBy('resourcequoteResourceId');
-        $resultset = $this->db->query('SELECT `resourcequoteResourceId`, COUNT(`resourcequoteResourceId`) AS `count` FROM ' .
-            $this->config->WIKINDX_DB_TABLEPREFIX . 'resource_quote');
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $ids[$row['resourcequoteResourceId']]['resourcesummaryQuotes'] = $row['count'];
-        }
-        // paraphrases
-        $this->db->groupBy('resourceparaphraseResourceId');
-        $resultset = $this->db->query('SELECT `resourceparaphraseResourceId`, COUNT(`resourceparaphraseResourceId`) AS `count` FROM ' .
-            $this->config->WIKINDX_DB_TABLEPREFIX . 'resource_paraphrase');
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $ids[$row['resourceparaphraseResourceId']]['resourcesummaryParaphrases'] = $row['count'];
-        }
-        // musings
-        $this->db->groupBy('resourcemusingResourceId');
-        $resultset = $this->db->query('SELECT `resourcemusingResourceId`, COUNT(`resourcemusingResourceId`) AS `count` FROM ' .
-            $this->config->WIKINDX_DB_TABLEPREFIX . 'resource_musing');
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $ids[$row['resourcemusingResourceId']]['resourcesummaryMusings'] = $row['count'];
-        }
-        foreach ($ids as $id => $fieldArray)
-        {
-            $update = $nulls = [];
-            foreach ($fieldArray as $field => $count)
-            {
-                $update[$field] = $count;
-            }
-            if (!array_key_exists('resourcesummaryQuotes', $fieldArray))
-            {
-                $nulls[] = 'resourcesummaryQuotes';
-            }
-            if (!array_key_exists('resourcesummaryParaphrases', $fieldArray))
-            {
-                $nulls[] = 'resourcesummaryParaphrases';
-            }
-            if (!array_key_exists('resourcesummaryMusings', $fieldArray))
-            {
-                $nulls[] = 'resourcesummaryMusings';
-            }
-
-            $this->db->formatConditions(['resourcesummaryId' => $id]);
-            $this->db->update('resource_summary', $update);
-            if (!empty($nulls))
-            {
-                $this->db->formatConditions(['resourcesummaryId' => $id]);
-                $this->db->updateNull('resource_summary', $nulls);
-            }
-        }
-
-        $this->checkStatus('stage4_1__9');
-        $this->pauseExecution('stage4_1__9', 'stage4_1__10');
-    }
-    /**
-     * stage 10
-     */
-    private function stage4_1__10()
-    {
-        $this->updateDbSchema('4.1.10');
-
-        // Rewrite resource_keyword table
-        $this->db->formatConditions($this->db->formatFields('resourcekeywordKeywords') . ' IS NOT NULL');
-        $recordSet = $this->db->select('resource_keyword', ['resourcekeywordId', 'resourcekeywordKeywords']);
-        while ($row = $this->db->fetchRow($recordSet))
-        {
-            foreach (UTF8::mb_explode(',', $row['resourcekeywordKeywords']) as $kId)
-            {
-                $this->db->insert(
-                    'temp_resource_keyword',
-                    ['resourcekeywordResourceId', 'resourcekeywordKeywordId'],
-                    [$row['resourcekeywordId'], $kId]
-                );
-            }
-        }
-        $this->db->formatConditions($this->db->formatFields('resourcequoteKeywords') . ' IS NOT NULL');
-        $recordSet = $this->db->select('resource_quote', ['resourcequoteId', 'resourcequoteKeywords']);
-        while ($row = $this->db->fetchRow($recordSet))
-        {
-            foreach (UTF8::mb_explode(',', $row['resourcequoteKeywords']) as $kId)
-            {
-                $this->db->insert(
-                    'temp_resource_keyword',
-                    ['resourcekeywordQuoteId', 'resourcekeywordKeywordId'],
-                    [$row['resourcequoteId'], $kId]
-                );
-            }
-        }
-        $this->db->formatConditions($this->db->formatFields('resourceparaphraseKeywords') . ' IS NOT NULL');
-        $recordSet = $this->db->select('resource_paraphrase', ['resourceparaphraseId', 'resourceparaphraseKeywords']);
-        while ($row = $this->db->fetchRow($recordSet))
-        {
-            foreach (UTF8::mb_explode(',', $row['resourceparaphraseKeywords']) as $kId)
-            {
-                $this->db->insert(
-                    'temp_resource_keyword',
-                    ['resourcekeywordParaphraseId', 'resourcekeywordKeywordId'],
-                    [$row['resourceparaphraseId'], $kId]
-                );
-            }
-        }
-        $this->db->formatConditions($this->db->formatFields('resourcemusingKeywords') . ' IS NOT NULL');
-        $recordSet = $this->db->select('resource_musing', ['resourcemusingId', 'resourcemusingKeywords']);
-        while ($row = $this->db->fetchRow($recordSet))
-        {
-            foreach (UTF8::mb_explode(',', $row['resourcemusingKeywords']) as $kId)
-            {
-                $this->db->insert(
-                    'temp_resource_keyword',
-                    ['resourcekeywordMusingId', 'resourcekeywordKeywordId'],
-                    [$row['resourcemusingId'], $kId]
-                );
-            }
-        }
-
-        $this->checkStatus('stage4_1__10');
-        $this->pauseExecution('stage4_1__10', 'stage4_1__11');
-    }
-    /**
-     * stage 11
-     */
-    private function stage4_1__11()
-    {
-        $this->updateDbSchema('4.1.11');
-
-        // Rewrite resource_category table
-        $recordSet = $this->db->select('resource_category', ['resourcecategoryId', 'resourcecategoryCategories']);
-        while ($row = $this->db->fetchRow($recordSet))
-        {
-            foreach (UTF8::mb_explode(',', $row['resourcecategoryCategories']) as $cId)
-            {
-                $this->db->insert(
-                    'temp_resource_category',
-                    ['resourcecategoryResourceId', 'resourcecategoryCategoryId'],
-                    [$row['resourcecategoryId'], $cId]
-                );
-            }
-        }
-
-        $this->checkStatus('stage4_1__11');
-        $this->pauseExecution('stage4_1__11', 'stage4_1__12');
-    }
-    /**
-     * stage 12
-     */
-    private function stage4_1__12()
-    {
-        $this->updateDbSchema('4.1.12');
-
-        // Rewrite bibliographies groups
-        $recordSet = $this->db->select('user_bibliography', '*');
-        while ($row = $this->db->fetchRow($recordSet))
-        {
-            if ($row['userbibliographyBibliography'])
-            {
-                foreach (UTF8::mb_explode(',', $row['userbibliographyBibliography']) as $rId)
-                {
-                    $this->db->insert(
-                        'user_bibliography_resource',
-                        ['userbibliographyresourceBibliographyId', 'userbibliographyresourceResourceId'],
-                        [$row['userbibliographyId'], $rId]
-                    );
-                }
-            }
-        }
-        $recordSet = $this->db->select('user_groups', ['usergroupsId', 'usergroupsUserIds', 'usergroupsBibliographyIds']);
-        while ($row = $this->db->fetchRow($recordSet))
-        {
-            foreach (UTF8::mb_explode(',', $row['usergroupsUserIds']) as $uId)
-            {
-                $this->db->insert(
-                    'user_groups_users',
-                    ['usergroupsusersGroupId', 'usergroupsusersUserId'],
-                    [$row['usergroupsId'], $uId]
-                );
-            }
-        }
-
-        $this->checkStatus('stage4_1__12');
-        $this->pauseExecution('stage4_1__12', 'stage4_1__13');
-    }
-    /**
-     * stage 13
-     *
-     * convert bbcode to html for use with tinymce and correct transTitle errors
-     */
-    private function stage4_1__13()
-    {
-        include_once("core/display/BBCODE.php");
-        $string = $this->db->selectFirstField('config', 'configDescription');
-        $string = BBCODE::bbCodeToHtml($string);
-        $this->db->update('config', ['configDescription' => $string]);
-        // correct transTitle errors
-        $resultset = $this->db->select('resource', ['resourceId', 'resourceTransTitle', 'resourceTransSubtitle']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $nulls = [];
-            if (($row['resourceTransTitle'] == '') || ($row['resourceTransTitle'] == '(no title)'))
-            {
-                $nulls[] = 'resourceTransTitle';
-            }
-            if ($row['resourceTransSubtitle'] == '')
-            {
-                $nulls[] = 'resourceTransSubtitle';
-            }
-            if (!empty($nulls))
-            {
-                $this->db->formatConditions(['resourceId' => $row['resourceId']]);
-                $this->db->updateNull('resource', $nulls);
-            }
-        }
-        // titles and subtitles
-        $this->db->formatConditions($this->db->formatFields('resourceTitle') . $this->db->like('%', '[', '%') .
-            $this->db->or . $this->db->formatFields('resourceSubtitle') . $this->db->like('%', '[', '%'));
-        $resultset = $this->db->select('resource', ['resourceId', 'resourceTitle', 'resourceSubtitle',
-            'resourceTransTitle', 'resourceTransSubtitle', ]);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $updateArray = [];
-            if ($row['resourceTitle'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['resourceTitle']);
-                $updateArray['resourceTitle'] = $string;
-            }
-            if ($row['resourceSubtitle'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['resourceSubtitle']);
-                $updateArray['resourceSubtitle'] = $string;
-            }
-            if ($row['resourceTransTitle'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['resourceTransTitle']);
-                $updateArray['resourceTransTitle'] = $string;
-            }
-            if ($row['resourceTransSubtitle'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['resourceTransSubtitle']);
-                $updateArray['resourceTransSubtitle'] = $string;
-            }
-            if (!empty($updateArray))
-            {
-                $this->db->formatConditions(['resourceId' => $row['resourceId']]);
-                $this->db->update('resource', $updateArray);
-            }
-        }
-        // Collection titles
-        $this->db->formatConditions($this->db->formatFields('collectionTitle') . $this->db->like('%', '[', '%'));
-        $resultset = $this->db->select('collection', ['collectionId', 'collectionTitle']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $updateArray = [];
-            if ($row['collectionTitle'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['collectionTitle']);
-                $updateArray['collectionTitle'] = $string;
-            }
-            if (!empty($updateArray))
-            {
-                $this->db->formatConditions(['collectionId' => $row['collectionId']]);
-                $this->db->update('collection', $updateArray);
-            }
-        }
-        // notes and abstracts
-        $this->db->formatConditions($this->db->formatFields('resourcetextNote') . $this->db->like('%', '[', '%') .
-            $this->db->or . $this->db->formatFields('resourcetextAbstract') . $this->db->like('%', '[', '%'));
-        $resultset = $this->db->select('resource_text', ['resourcetextId', 'resourcetextNote', 'resourcetextAbstract']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $updateArray = [];
-            if ($row['resourcetextNote'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['resourcetextNote']);
-                $updateArray['resourcetextNote'] = $string;
-            }
-            if ($row['resourcetextAbstract'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['resourcetextAbstract']);
-                $updateArray['resourcetextAbstract'] = $string;
-            }
-            if (!empty($updateArray))
-            {
-                $this->db->formatConditions(['resourcetextId' => $row['resourcetextId']]);
-                $this->db->update('resource_text', $updateArray);
-            }
-        }
-        // Custom large fields -- don't filter results because all fields need newlines converting to HTML
-        //		$this->db->formatConditions($this->db->formatFields('resourcecustomLong') . $this->db->like('%', '[', '%'));
-        $resultset = $this->db->select('resource_custom', ['resourcecustomId', 'resourcecustomLong']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $updateArray = [];
-            if ($row['resourcecustomLong'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['resourcecustomLong']);
-                $updateArray['resourcecustomLong'] = \HTML\nlToHtml($string, TRUE);
-            }
-            if (!empty($updateArray))
-            {
-                $this->db->formatConditions(['resourcecustomId' => $row['resourcecustomId']]);
-                $this->db->update('resource_custom', $updateArray);
-            }
-        }
-        // User bibliography
-        //		$this->db->formatConditions($this->db->formatFields('userbibliographyDescription') . $this->db->like('%', '[', '%'));
-        $resultset = $this->db->select('user_bibliography', ['userbibliographyId', 'userbibliographyDescription']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $updateArray = [];
-            if ($row['userbibliographyDescription'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['userbibliographyDescription']);
-                $updateArray['userbibliographyDescription'] = \HTML\nlToHtml($string, TRUE);
-            }
-            if (!empty($updateArray))
-            {
-                $this->db->formatConditions(['userbibliographyId' => $row['userbibliographyId']]);
-                $this->db->update('user_bibliography', $updateArray);
-            }
-        }
-        // News
-        //		$this->db->formatConditions($this->db->formatFields('newsNews') . $this->db->like('%', '[', '%'));
-        $resultset = $this->db->select('news', ['newsId', 'newsNews']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $updateArray = [];
-            if ($row['newsNews'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['newsNews']);
-                $updateArray['newsNews'] = \HTML\nlToHtml($string, TRUE);
-            }
-            if (!empty($updateArray))
-            {
-                $this->db->formatConditions(['newsId' => $row['newsId']]);
-                $this->db->update('news', $updateArray);
-            }
-        }
-        // Musings
-        //		$this->db->formatConditions($this->db->formatFields('resourcemusingtextText') . $this->db->like('%', '[', '%'));
-        $resultset = $this->db->select('resource_musing_text', ['resourcemusingtextId', 'resourcemusingtextText']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $updateArray = [];
-            if ($row['resourcemusingtextText'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['resourcemusingtextText']);
-                $updateArray['resourcemusingtextText'] = \HTML\nlToHtml($string, TRUE);
-            }
-            if (!empty($updateArray))
-            {
-                $this->db->formatConditions(['resourcemusingtextId' => $row['resourcemusingtextId']]);
-                $this->db->update('resource_musing_text', $updateArray);
-            }
-        }
-        // Quotes
-        //		$this->db->formatConditions($this->db->formatFields('resourcequotetextText') . $this->db->like('%', '[', '%'));
-        $resultset = $this->db->select('resource_quote_text', ['resourcequotetextId', 'resourcequotetextText']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $updateArray = [];
-            if ($row['resourcequotetextText'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['resourcequotetextText']);
-                $updateArray['resourcequotetextText'] = \HTML\nlToHtml($string, TRUE);
-            }
-            if (!empty($updateArray))
-            {
-                $this->db->formatConditions(['resourcequotetextId' => $row['resourcequotetextId']]);
-                $this->db->update('resource_quote_text', $updateArray);
-            }
-        }
-        // Quote comments
-        //		$this->db->formatConditions($this->db->formatFields('resourcequotecommentComment') . $this->db->like('%', '[', '%'));
-        $resultset = $this->db->select('resource_quote_comment', ['resourcequotecommentId', 'resourcequotecommentComment']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $updateArray = [];
-            if ($row['resourcequotecommentComment'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['resourcequotecommentComment']);
-                $updateArray['resourcequotecommentComment'] = \HTML\nlToHtml($string, TRUE);
-            }
-            if (!empty($updateArray))
-            {
-                $this->db->formatConditions(['resourcequotecommentId' => $row['resourcequotecommentId']]);
-                $this->db->update('resource_quote_comment', $updateArray);
-            }
-        }
-        // Paraphrases
-        //		$this->db->formatConditions($this->db->formatFields('resourceparaphrasetextText') . $this->db->like('%', '[', '%'));
-        $resultset = $this->db->select('resource_paraphrase_text', ['resourceparaphrasetextId', 'resourceparaphrasetextText']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $updateArray = [];
-            if ($row['resourceparaphrasetextText'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['resourceparaphrasetextText']);
-                $updateArray['resourceparaphrasetextText'] = \HTML\nlToHtml($string, TRUE);
-            }
-            if (!empty($updateArray))
-            {
-                $this->db->formatConditions(['resourceparaphrasetextId' => $row['resourceparaphrasetextId']]);
-                $this->db->update('resource_paraphrase_text', $updateArray);
-            }
-        }
-        // Paraphrase comments
-        //		$this->db->formatConditions($this->db->formatFields('resourceparaphrasecommentComment') . $this->db->like('%', '[', '%'));
-        $resultset = $this->db->select('resource_paraphrase_comment', ['resourceparaphrasecommentId', 'resourceparaphrasecommentComment']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $updateArray = [];
-            if ($row['resourceparaphrasecommentComment'])
-            {
-                $string = BBCODE::bbCodeToHtml($row['resourceparaphrasecommentComment']);
-                $updateArray['resourceparaphrasecommentComment'] = \HTML\nlToHtml($string, TRUE);
-            }
-            if (!empty($updateArray))
-            {
-                $this->db->formatConditions(['resourceparaphrasecommentId' => $row['resourceparaphrasecommentId']]);
-                $this->db->update('resource_paraphrase_comment', $updateArray);
-            }
-        }
-
-        $this->checkStatus('stage4_1__13');
-        $this->pauseExecution('stage4_1__13', 'stage4_1__14');
-    }
-    /**
-     * stage 14
-     */
-    private function stage4_1__14()
-    {
-        $this->addMissingRows();
-        // Session setup required in penultimate stage Рremoved for v5.3 upgrade
-        //		$this->session->setVar("setup_UserId", 1);
-        //		$user = FACTORY_USER::getInstance();
-        //		$user->writeSessionPreferences(FALSE, 'config', TRUE);
-        $this->checkStatus('stage4_1__14');
-        $this->pauseExecution('stage4_1__14', 'stage4_1__15');
-    }
-    /**
-     * stage 15
-     */
-    private function stage4_1__15()
-    {
-        $this->updateDbSchema('4.1.15');
-
-        // Create a new column on the resource table that holds the title-subtitle without {}, ' or " in order to facilitate fast sorting
-        $resultset = $this->db->query('SELECT ' . $this->db->replace($this->db->replace($this->db->replace($this->db->replace(
-            'resourceTitle',
-            '{',
-            ''
-        ), '}', '', FALSE), '"', '', FALSE), '\\\'', '', FALSE) . " AS 't', " .
-            $this->db->replace($this->db->replace($this->db->replace($this->db->replace(
-                'resourceSubtitle',
-                '{',
-                ''
-            ), '}', '', FALSE), '"', '', FALSE), '\\\'', '', FALSE) . " AS 's', `resourceId` FROM " .
-            $this->config->WIKINDX_DB_TABLEPREFIX . 'resource');
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $title = '';
-            if ($row['s'])
-            {
-                $title = $row['t'] . ' ' . $row['s'];
-            }
-            else
-            {
-                $title = $row['t'];
-            }
-            $this->db->formatConditions(['resourceId' => $row['resourceId']]);
-            $this->db->update('resource', ['resourceTitleSort' => $title]);
-        }
-
-        //		$this->recreate40Cache();
-        ini_set('memory_limit', $this->config->WIKINDX_MEMORY_LIMIT);
-        if (array_key_exists('fixUTF8', $this->vars))
-        {
-            $this->fixUTF8();
-        }
-        $this->updateSoftwareVersion(4.1);
-        $this->checkStatus('stage4_1__15');
-        $this->pauseExecution('stage4_1__15');
-    }
-    /**
-     * Upgrade 4.1 to 4.2 -- Stage 1
-     */
-    private function stage4_2__1()
-    {
-        $this->updateDbSchema('4.2.1');
-
-        // v4.x code before 4.2 incorrectly named statistics field
-        $fields = $this->db->listFields('statistics');
-        if (array_search('statistics', $fields) !== FALSE)
-        {
-            $this->db->query('ALTER TABLE `' . $this->config->WIKINDX_DB_TABLEPREFIX . 'statistics` CHANGE `statistics` `statisticsStatistics` TEXT DEFAULT NULL');
-        }
-        $this->updateSoftwareVersion(4.2);
-        $this->checkStatus('stage4_2__1');
-        $this->pauseExecution('stage4_2__1');
-    }
-    /**
-     * Upgrade 4.2 to 5.1 -- Stage 1
-     *
-     * Transfer all metadata tables to new unified resource_metadata table
-     */
-    private function stage5_1__1()
-    {
-        $this->updateDbSchema('5.1.1-begin');
-
-        $maxPacket = $this->db->getMaxPacket();
-        // For each 1MB max_allowed_packet (1048576 bytes), 600 updates in one go seems fine as a value for $maxCounts (based on trial and error)
-        $maxCounts = floor(600 * ($maxPacket / 1048576));
-        // Transfer quotes
-        $updateArray = [];
-        $count = 0;
-        $insertArray = [];
-        $countI = 0;
-        $fields_c[] = 'resourcemetadataMetadataId';
-        $fields_c[] = 'resourcemetadataText';
-        $fields_c[] = 'resourcemetadataAddUserId';
-        $fields_c[] = 'resourcemetadataTimestamp';
-        $fields_c[] = 'resourcemetadataPrivate';
-        $fields_c[] = 'resourcemetadataType';
-        $this->db->leftJoin('resource_quote_text', 'resourcequotetextId', 'resourcequoteId');
-        $resultset = $this->db->select('resource_quote', ['resourcequoteId', 'resourcequoteResourceId', 'resourcequotePageStart', 'resourcequotePageEnd',
-            'resourcequoteParagraph', 'resourcequoteSection', 'resourcequoteChapter', 'resourcequotetextText', 'resourcequotetextAddUserIdQuote', ]);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            ++$count;
-            $fields = [];
-            $values = [];
-            $fields[] = 'resourcemetadataResourceId';
-            $values[] = $row['resourcequoteResourceId'];
-            if ($row['resourcequotePageStart'])
-            {
-                $fields[] = 'resourcemetadataPageStart';
-                $values[] = $row['resourcequotePageStart'];
-            }
-            if ($row['resourcequotePageEnd'])
-            {
-                $fields[] = 'resourcemetadataPageEnd';
-                $values[] = $row['resourcequotePageEnd'];
-            }
-            if ($row['resourcequoteParagraph'])
-            {
-                $fields[] = 'resourcemetadataParagraph';
-                $values[] = $row['resourcequoteParagraph'];
-            }
-            if ($row['resourcequoteSection'])
-            {
-                $fields[] = 'resourcemetadataSection';
-                $values[] = $row['resourcequoteSection'];
-            }
-            if ($row['resourcequoteChapter'])
-            {
-                $fields[] = 'resourcemetadataChapter';
-                $values[] = $row['resourcequoteChapter'];
-            }
-            $fields[] = 'resourcemetadataType';
-            $values[] = 'q';
-            $fields[] = 'resourcemetadataText';
-            $values[] = $row['resourcequotetextText'];
-            $fields[] = 'resourcemetadataAddUserId';
-            $values[] = $row['resourcequotetextAddUserIdQuote'];
-            $this->db->insert('resource_metadata', $fields, $values);
-            $id = $this->db->lastAutoID();
-            $updateArray[$row['resourcequoteId']] = $id;
-            if ($count >= $maxCounts)
-            {
-                $this->db->multiUpdate('resource_keyword', 'resourcekeywordMetadataId', 'resourcekeywordQuoteId', $updateArray);
-                $updateArray = [];
-                $count = 0;
-            }
-            // insert quote comments
-            $this->db->formatConditions(['resourcequotecommentQuoteId' => $row['resourcequoteId']]);
-            $resultset1 = $this->db->select(
-                'resource_quote_comment',
-                ['resourcequotecommentComment', 'resourcequotecommentAddUserIdQuote', 'resourcequotecommentTimestamp', 'resourcequotecommentPrivate']
-            );
-            while ($row1 = $this->db->fetchRow($resultset1))
-            {
-                ++$countI;
-                $values_c = [];
-                $values_c[] = $this->db->tidyInput($id);
-                $values_c[] = $this->db->tidyInput($row1['resourcequotecommentComment']);
-                $values_c[] = $this->db->tidyInput($row1['resourcequotecommentAddUserIdQuote']);
-                $values_c[] = $this->db->tidyInput($row1['resourcequotecommentTimestamp']);
-                $values_c[] = $this->db->tidyInput($row1['resourcequotecommentPrivate']);
-                $values_c[] = $this->db->tidyInput('qc');
-                $insertArray[] = '(' . implode(',', $values_c) . ')';
-            }
-            if ($countI >= $maxCounts)
-            {
-                $this->db->multiInsert('resource_metadata', $fields_c, implode(',', $insertArray));
-                $insertArray = [];
-                $countI = 0;
-            }
-        }
-        if (!empty($insertArray))
-        { // do the remainder
-            $this->db->multiInsert('resource_metadata', $fields_c, implode(',', $insertArray));
-        }
-        if (!empty($updateArray))
-        { // do the remainder
-            $this->db->multiUpdate('resource_keyword', 'resourcekeywordMetadataId', 'resourcekeywordQuoteId', $updateArray);
-        }
-        $updateArray = [];
-        $count = 0;
-        $insertArray = [];
-        $countI = 0;
-        // Transfer paraphrases
-        $this->db->leftJoin('resource_paraphrase_text', 'resourceparaphrasetextId', 'resourceparaphraseId');
-        $resultset = $this->db->select('resource_paraphrase', ['resourceparaphraseId', 'resourceparaphraseResourceId', 'resourceparaphrasePageStart',
-            'resourceparaphrasePageEnd', 'resourceparaphraseParagraph', 'resourceparaphraseSection', 'resourceparaphraseChapter',
-            'resourceparaphrasetextText', 'resourceparaphrasetextAddUserIdParaphrase', ]);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            ++$count;
-            $fields = [];
-            $values = [];
-            $fields[] = 'resourcemetadataResourceId';
-            $values[] = $row['resourceparaphraseResourceId'];
-            if ($row['resourceparaphrasePageStart'])
-            {
-                $fields[] = 'resourcemetadataPageStart';
-                $values[] = $row['resourceparaphrasePageStart'];
-            }
-            if ($row['resourceparaphrasePageEnd'])
-            {
-                $fields[] = 'resourcemetadataPageEnd';
-                $values[] = $row['resourceparaphrasePageEnd'];
-            }
-            if ($row['resourceparaphraseParagraph'])
-            {
-                $fields[] = 'resourcemetadataParagraph';
-                $values[] = $row['resourceparaphraseParagraph'];
-            }
-            if ($row['resourceparaphraseSection'])
-            {
-                $fields[] = 'resourcemetadataSection';
-                $values[] = $row['resourceparaphraseSection'];
-            }
-            if ($row['resourceparaphraseChapter'])
-            {
-                $fields[] = 'resourcemetadataChapter';
-                $values[] = $row['resourceparaphraseChapter'];
-            }
-            $fields[] = 'resourcemetadataType';
-            $values[] = 'p';
-            $fields[] = 'resourcemetadataText';
-            $values[] = $row['resourceparaphrasetextText'];
-            $fields[] = 'resourcemetadataAddUserId';
-            $values[] = $row['resourceparaphrasetextAddUserIdParaphrase'];
-            $this->db->insert('resource_metadata', $fields, $values);
-            $id = $this->db->lastAutoID();
-            $updateArray[$row['resourceparaphraseId']] = $id;
-            if ($count >= $maxCounts)
-            {
-                $this->db->multiUpdate('resource_keyword', 'resourcekeywordMetadataId', 'resourcekeywordParaphraseId', $updateArray);
-                $updateArray = [];
-                $count = 0;
-            }
-            // insert paraphrase comments
-            $this->db->formatConditions(['resourceparaphrasecommentParaphraseId' => $row['resourceparaphraseId']]);
-            $resultset1 = $this->db->select('resource_paraphrase_comment', ['resourceparaphrasecommentComment',
-                'resourceparaphrasecommentAddUserIdParaphrase', 'resourceparaphrasecommentTimestamp', 'resourceparaphrasecommentPrivate', ]);
-            while ($row1 = $this->db->fetchRow($resultset1))
-            {
-                ++$countI;
-                $values_c = [];
-                $values_c[] = $this->db->tidyInput($id);
-                $values_c[] = $this->db->tidyInput($row1['resourceparaphrasecommentComment']);
-                $values_c[] = $this->db->tidyInput($row1['resourceparaphrasecommentAddUserIdParaphrase']);
-                $values_c[] = $this->db->tidyInput($row1['resourceparaphrasecommentTimestamp']);
-                $values_c[] = $this->db->tidyInput($row1['resourceparaphrasecommentPrivate']);
-                $values_c[] = $this->db->tidyInput('pc');
-                $insertArray[] = '(' . implode(',', $values_c) . ')';
-            }
-            if ($countI >= $maxCounts)
-            {
-                $this->db->multiInsert('resource_metadata', $fields_c, implode(',', $insertArray));
-                $insertArray = [];
-                $countI = 0;
-            }
-        }
-        if (!empty($insertArray))
-        { // do the remainder
-            $this->db->multiInsert('resource_metadata', $fields_c, implode(',', $insertArray));
-        }
-        if (!empty($updateArray))
-        { // do the remainder
-            $this->db->multiUpdate('resource_keyword', 'resourcekeywordMetadataId', 'resourcekeywordParaphraseId', $updateArray);
-        }
-        // Transfer musings
-        $updateArray = [];
-        $count = 0;
-        $resultset = $this->db->select('resource_musing', '*');
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            ++$count;
-            $fields = [];
-            $values = [];
-            $fields[] = 'resourcemetadataResourceId';
-            $values[] = $row['resourcemusingResourceId'];
-            if ($row['resourcemusingPageStart'])
-            {
-                $fields[] = 'resourcemetadataPageStart';
-                $values[] = $row['resourcemusingPageStart'];
-            }
-            if ($row['resourcemusingPageEnd'])
-            {
-                $fields[] = 'resourcemetadataPageEnd';
-                $values[] = $row['resourcemusingPageEnd'];
-            }
-            if ($row['resourcemusingParagraph'])
-            {
-                $fields[] = 'resourcemetadataParagraph';
-                $values[] = $row['resourcemusingParagraph'];
-            }
-            if ($row['resourcemusingSection'])
-            {
-                $fields[] = 'resourcemetadataSection';
-                $values[] = $row['resourcemusingSection'];
-            }
-            if ($row['resourcemusingChapter'])
-            {
-                $fields[] = 'resourcemetadataChapter';
-                $values[] = $row['resourcemusingChapter'];
-            }
-            $fields[] = 'resourcemetadataType';
-            $values[] = 'm';
-            $this->db->formatConditions(['resourcemusingtextId' => $row['resourcemusingId']]);
-            $row1 = $this->db->selectFirstRow(
-                'resource_musing_text',
-                ['resourcemusingtextText', 'resourcemusingtextAddUserIdMusing', 'resourcemusingtextTimestamp', 'resourcemusingtextPrivate']
-            );
-            $fields[] = 'resourcemetadataText';
-            $values[] = $row1['resourcemusingtextText'];
-            $fields[] = 'resourcemetadataAddUserId';
-            $values[] = $row1['resourcemusingtextAddUserIdMusing'];
-            $fields[] = 'resourcemetadataTimestamp';
-            $values[] = $row1['resourcemusingtextTimestamp'];
-            $fields[] = 'resourcemetadataPrivate';
-            $values[] = $row1['resourcemusingtextPrivate'];
-            $this->db->insert('resource_metadata', $fields, $values);
-            $id = $this->db->lastAutoID();
-            $updateArray[$row['resourcemusingId']] = $id;
-            if ($count >= $maxCounts)
-            {
-                $this->db->multiUpdate('resource_keyword', 'resourcekeywordMetadataId', 'resourcekeywordMusingId', $updateArray);
-                $updateArray = [];
-                $count = 0;
-            }
-        }
-        if (!empty($updateArray))
-        { // do the remainder
-            $this->db->multiUpdate('resource_keyword', 'resourcekeywordMetadataId', 'resourcekeywordMusingId', $updateArray);
-        }
-        /**
-         * Do some corrections
-         */
-        // Correct incorrect database summary figures for metadata
-        $this->db->formatConditions(['resourcekeywordKeywordId' => ' IS NULL']);
-        $this->db->delete('resource_keyword');
-        $mIds = [];
-        $resultSet = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataText']);
-        while ($row = $this->db->fetchRow($resultSet))
-        {
-            if (!$row['resourcemetadataText'])
-            {
-                $mIds[] = $row['resourcemetadataId'];
-            }
-        }
-        if (!empty($mIds))
-        {
-            $this->db->formatConditionsOneField($mIds, 'resourcemetadataId');
-            $this->db->delete('resource_metadata');
-            $this->db->formatConditions(['resourcemetadataType' => 'q']);
-            $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-            $this->db->update('database_summary', ['databasesummaryTotalQuotes' => $num]);
-            $this->db->formatConditions(['resourcemetadataType' => 'p']);
-            $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-            $this->db->update('database_summary', ['databasesummaryTotalParaphrases' => $num]);
-            $this->db->formatConditions(['resourcemetadataType' => 'm']);
-            $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-            $this->db->update('database_summary', ['databasesummaryTotalMusings' => $num]);
-        }
-        // Correct empty year column error
-        $this->db->formatConditions(['resourceyearYear2' => ' IS NOT NULL']);
-        $this->db->formatConditions(['resourceyearYear2' => '']);
-        $resultSet = $this->db->select('resource_year', ['resourceyearId']);
-        while ($row = $this->db->fetchRow($resultSet))
-        {
-            $yIds[] = $row['resourceyearId'];
-        }
-        if (!empty($yIds))
-        {
-            $this->db->formatConditionsOneField($yIds, 'resourceyearId');
-            $this->db->updateNull('resource_year', ['resourceyearYear2']);
-        }
-        $yIds = [];
-        $this->db->formatConditions(['resourceyearYear3' => ' IS NOT NULL']);
-        $this->db->formatConditions(['resourceyearYear3' => '']);
-        $resultSet = $this->db->select('resource_year', ['resourceyearId']);
-        while ($row = $this->db->fetchRow($resultSet))
-        {
-            $yIds[] = $row['resourceyearId'];
-        }
-        if (!empty($yIds))
-        {
-            $this->db->formatConditionsOneField($yIds, 'resourceyearId');
-            $this->db->updateNull('resource_year', ['resourceyearYear2']);
-        }
-        // Correct inclusion of HTML in resource::resourceTitleSort and remove all symbols
-        $updateArray = [];
-        $count = 0;
-        $resultSet = $this->db->select('resource', ['resourceId', 'resourceTitleSort']);
-        while ($row = $this->db->fetchRow($resultSet))
-        {
-            $count++;
-            $string = \HTML\stripHtml($row['resourceTitleSort']);
-            // remove all punctuation (keep apostrophe and dash for names such as Grimshaw-Aagaard and D'Eath)
-            $updateArray[$row['resourceId']] = preg_replace('/[^\p{L}\p{N}\s\-\']/u', '', $string . "");
-            if ($count >= $maxCounts)
-            {
-                $this->db->multiUpdate('resource', 'resourceTitleSort', 'resourceId', $updateArray);
-                $updateArray = [];
-                $count = 0;
-            }
-        }
-        // Sessionstate fields for all users should be set to NULL as they may contain (SQL) code that relates to old formats and structures
-        $this->db->updateNull('users', 'usersUserSession');
-        // set collectionDefault column in the collections table
-        $this->collectionDefaults();
-        // Strip bbCode from users table
-        $this->stripBBCode($maxCounts);
-        // Alter resourcecreator::creatorSurname field to allow for more accurate ordering
-        $this->alterCreatorSurname($maxCounts);
-
-        $this->updateDbSchema('5.1.1-end');
-        
-        $this->updateSoftwareVersion(5.1);
-        $this->checkStatus('stage5_1__1');
-        $this->pauseExecution('stage5_1__1');
-    }
-    /**
      * Upgrade database schema to version 5.2
      * Use MySQL utf8 encode and collation utf8_unicode_520_ci
      * Lowercase all table names
      * Use InnoDB for all tables
      */
-    private function stage5_2__1()
+    private function stage5_2()
     {
         $this->updateDbSchema('5.2');
         
         $this->updateSoftwareVersion(5.2);
-        $this->checkStatus('stage5_2__1');
-        $this->pauseExecution('stage5_2__1');
+        $this->checkStatus('stage5_2');
+        $this->pauseExecution('stage5_2');
     }
     /**
      * Upgrade database schema to version 5.4.
      * Reconfiguration of config table and shifting many variables to it from config.php
      */
-    private function stage5_4__1()
+    private function stage5_4()
     {
-        $this->writeConfigFile5_4(); // dies if not possible
-        $pf = $this->config->WIKINDX_DB_TABLEPREFIX;
+        // NB: At this location a migration of the config.php configuration file was necessary
+        // but subsequent migrations without changing the name of the variables concerned made it useless.
+        // The deleted code can be recovered in SVN at revision 116, in core/startup/UPDATEDATABASE.php file,
+        // function writeConfigFile5_4().
 
         $this->updateDbSchema('5.4-begin');
 
@@ -1900,7 +442,7 @@ class UPDATEDATABASE
             // Paramters no longer used
             if (
                 ($key == 'configErrorReport') ||
-                ($key == 'configPrintSql')
+                ($key == 'configDebugSql')
             ) {
                 continue;
             }
@@ -1976,404 +518,143 @@ class UPDATEDATABASE
                 $this->db->insert('configtemp', ['configName', 'configDatetime'], [$key, $value]);
             }
         }
+        
+        // Load a separate config class that containts original constant names
+        $tmpconfig = new CONFIG();
+        // fv = Name of the field where the option value is stored
+        // fn = Name of the field where the option name is stored
+        // dv = Default value of the option
+        // NB The name of the constants used for the default values could change in the future
+        //    but the name of option must remain the same because the next upgrade stage assume
+        //    them unchanged and the name of properties in the config class are the original name.
+        $cnfFields = [
+            ["fv" => "configBoolean", "fn" => "configBypassSmartyCompile",    "cn" => "WIKINDX_BYPASS_SMARTYCOMPILE",      "dv" => WIKINDX_BYPASS_SMARTY_COMPILATION_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configCmsAllow",               "cn" => "WIKINDX_CMS_ALLOW",                 "dv" => WIKINDX_CMS_ALLOW_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configCmsSql",                 "cn" => "WIKINDX_CMS_SQL",                   "dv" => WIKINDX_CMS_SQL_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configDisplayStatistics",      "cn" => "WIKINDX_DISPLAY_STATISTICS",        "dv" => WIKINDX_DISPLAY_STATISTICS_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configDisplayUserStatistics",  "cn" => "WIKINDX_DISPLAY_USER_STATISTICS",   "dv" => WIKINDX_DISPLAY_USER_STATISTICS_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configErrorReport",            "cn" => "WIKINDX_DEBUG_ERRORS",              "dv" => WIKINDX_DEBUG_ERRORS_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configGsAllow",                "cn" => "WIKINDX_GS_ALLOW",                  "dv" => WIKINDX_GS_ALLOW_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configGsAttachment",           "cn" => "WIKINDX_GS_ATTACHMENT",             "dv" => WIKINDX_GS_ATTACHMENT_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configImagesAllow",            "cn" => "WIKINDX_IMAGES_ALLOW",              "dv" => WIKINDX_IMAGES_ALLOW_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configMailServer",             "cn" => "WIKINDX_MAIL_SERVER",               "dv" => WIKINDX_MAIL_USE_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configMailSmtpAuth",           "cn" => "WIKINDX_MAIL_SMTPAUTH",             "dv" => WIKINDX_MAIL_SMTP_AUTH_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configMailSmtpPersist",        "cn" => "WIKINDX_MAIL_SMTPPERSIST",          "dv" => WIKINDX_MAIL_SMTP_PERSIST_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configDebugSql",               "cn" => "WIKINDX_DEBUG_SQL",                 "dv" => WIKINDX_DEBUG_SQL_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configRssAllow",               "cn" => "WIKINDX_RSS_ALLOW",                 "dv" => WIKINDX_RSS_ALLOW_DEFAULT],
+            ["fv" => "configBoolean", "fn" => "configRssDisplay",             "cn" => "WIKINDX_RSS_DISPLAY",               "dv" => WIKINDX_RSS_DISPLAY_DEFAULT],
+            ["fv" => "configFloat",   "fn" => "configTagHighSize",            "cn" => "WIKINDX_TAG_HIGH_SIZE",             "dv" => WIKINDX_TAG_HIGH_SIZE_DEFAULT],
+            ["fv" => "configFloat",   "fn" => "configTagLowSize",             "cn" => "WIKINDX_TAG_LOW_SIZE",              "dv" => WIKINDX_TAG_LOW_SIZE_DEFAULT],
+            ["fv" => "configInt",     "fn" => "configImagesMaxSize",          "cn" => "WIKINDX_IMAGES_MAXSIZE",            "dv" => WIKINDX_IMAGES_MAXSIZE_DEFAULT],
+            ["fv" => "configInt",     "fn" => "configMailSmtpPort",           "cn" => "WIKINDX_MAIL_SMTPPORT",             "dv" => WIKINDX_MAIL_SMTP_PORT_DEFAULT],
+            ["fv" => "configInt",     "fn" => "configRestrictUserId",         "cn" => "WIKINDX_RESTRICT_USERID",           "dv" => WIKINDX_RESTRICT_USERID_DEFAULT],
+            ["fv" => "configInt",     "fn" => "configRssLimit",               "cn" => "WIKINDX_RSS_LIMIT",                 "dv" => WIKINDX_RSS_LIMIT_DEFAULT],
+            ["fv" => "configText",    "fn" => "configDeactivateResourceTypes","cn" => "WIKINDX_DEACTIVATE_RESOURCE_TYPES", "dv" => WIKINDX_DEACTIVATE_RESOURCE_TYPES_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configTimezone",               "cn" => "WIKINDX_TIMEZONE",                  "dv" => WIKINDX_TIMEZONE_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configCmsBibstyle",            "cn" => "WIKINDX_CMS_BIBSTYLE",              "dv" => WIKINDX_CMS_BIBSTYLE_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configCmsDbPassword",          "cn" => "WIKINDX_CMS_DB_PASSWORD",           "dv" => WIKINDX_CMS_DB_PASSWORD_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configCmsDbUser",              "cn" => "WIKINDX_CMS_DB_USER",               "dv" => WIKINDX_CMS_DB_USER_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configMailBackend",            "cn" => "WIKINDX_MAIL_BACKEND",              "dv" => WIKINDX_MAIL_BACKEND_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configMailFrom",               "cn" => "WIKINDX_MAIL_FROM",                 "dv" => WIKINDX_MAIL_FROM_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configMailReplyTo",            "cn" => "WIKINDX_MAIL_REPLYTO",              "dv" => WIKINDX_MAIL_REPLYTO_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configMailReturnPath",         "cn" => "WIKINDX_MAIL_RETURN_PATH",          "dv" => WIKINDX_MAIL_RETURN_PATH_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configMailSmPath",             "cn" => "WIKINDX_MAIL_SMPATH",               "dv" => WIKINDX_MAIL_SENDMAIL_PATH_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configMailSmtpEncrypt",        "cn" => "WIKINDX_MAIL_SMTPENCRYPT",          "dv" => WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configMailSmtpPassword",       "cn" => "WIKINDX_MAIL_SMTPPASSWORD",         "dv" => WIKINDX_MAIL_SMTP_PASSWORD_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configMailSmtpServer",         "cn" => "WIKINDX_MAIL_SMTPSERVER",           "dv" => WIKINDX_MAIL_SMTPSERVER],
+            ["fv" => "configVarchar", "fn" => "configMailSmtpUsername",       "cn" => "WIKINDX_MAIL_SMTPUSERNAME",         "dv" => WIKINDX_MAIL_SMTP_USERNAME_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configRssBibstyle",            "cn" => "WIKINDX_RSS_BIBSTYLE",              "dv" => WIKINDX_RSS_BIBSTYLE_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configRssDescription",         "cn" => "WIKINDX_RSS_DESCRIPTION",           "dv" => WIKINDX_RSS_DESCRIPTION_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configRssTitle",               "cn" => "WIKINDX_RSS_TITLE",                 "dv" => WIKINDX_RSS_TITLE_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configTagHighColour",          "cn" => "WIKINDX_TAG_HIGH_COLOUR",           "dv" => WIKINDX_TAG_HIGH_COLOUR_DEFAULT],
+            ["fv" => "configVarchar", "fn" => "configTagLowColour",           "cn" => "WIKINDX_TAG_LOW_COLOUR",            "dv" => WIKINDX_TAG_LOW_COLOUR_DEFAULT],
+        ];
+        
         // Now copy across selected config.php variables
-        if (isset($this->config->WIKINDX_TIMEZONE) && $this->config->WIKINDX_TIMEZONE)
-        {
-            $this->db->insert('configtemp', ['configName', 'configText'], ['configTimezone', $this->config->WIKINDX_TIMEZONE]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configText'], ['configTimezone', WIKINDX_TIMEZONE_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_RESTRICT_USERID) && $this->config->WIKINDX_RESTRICT_USERID)
-        {
-            $this->db->insert('configtemp', ['configName', 'configInt'], ['configRestrictUserId', $this->config->WIKINDX_RESTRICT_USERID]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configInt'], ['configRestrictUserId', WIKINDX_RESTRICT_USERID_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES) &&
-            is_array($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES) && !empty($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES))
-        {
-            $this->db->insert('configtemp', ['configName', 'configText'], ['configDeactivateResourceTypes',
-                base64_encode(serialize($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES)), ]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configText'], ['configDeactivateResourceTypes', base64_encode(serialize([]))]);
-        }
-        if (isset($this->config->WIKINDX_RSS_ALLOW) && $this->config->WIKINDX_RSS_ALLOW)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configRssAllow', $this->config->WIKINDX_RSS_ALLOW]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configRssAllow', WIKINDX_RSS_ALLOW_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_RSS_BIBSTYLE) && $this->config->WIKINDX_RSS_BIBSTYLE)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssBibstyle', $this->config->WIKINDX_RSS_BIBSTYLE]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssBibstyle', WIKINDX_RSS_BIBSTYLE_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_RSS_LIMIT) && $this->config->WIKINDX_RSS_LIMIT)
-        {
-            $this->db->insert('configtemp', ['configName', 'configInt'], ['configRssLimit', $this->config->WIKINDX_RSS_LIMIT]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configInt'], ['configRssLimit', WIKINDX_RSS_LIMIT_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_RSS_DISPLAY) && $this->config->WIKINDX_RSS_DISPLAY)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configRssDisplay', $this->config->WIKINDX_RSS_DISPLAY]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configRssDisplay', WIKINDX_RSS_DISPLAY_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_RSS_TITLE) && $this->config->WIKINDX_RSS_TITLE)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssTitle', $this->config->WIKINDX_RSS_TITLE]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssTitle', WIKINDX_RSS_TITLE_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_RSS_DESCRIPTION) && $this->config->WIKINDX_RSS_DESCRIPTION)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssDescription', $this->config->WIKINDX_RSS_DESCRIPTION]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configRssDescription', WIKINDX_RSS_DESCRIPTION_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_MAIL_SERVER) && $this->config->WIKINDX_MAIL_SERVER)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailServer', $this->config->WIKINDX_MAIL_SERVER]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailServer', WIKINDX_MAIL_SERVER_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_MAIL_FROM) && $this->config->WIKINDX_MAIL_FROM)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailFrom', $this->config->WIKINDX_MAIL_FROM]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailFrom', WIKINDX_MAIL_FROM_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_MAIL_REPLYTO) && $this->config->WIKINDX_MAIL_REPLYTO)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailReplyTo', $this->config->WIKINDX_MAIL_REPLYTO]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailReplyTo', WIKINDX_MAIL_REPLYTO_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_MAIL_RETURN_PATH) && $this->config->WIKINDX_MAIL_RETURN_PATH)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailReturnPath', $this->config->WIKINDX_MAIL_RETURN_PATH]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailReturnPath', WIKINDX_MAIL_RETURN_PATH_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_MAIL_BACKEND) && $this->config->WIKINDX_MAIL_BACKEND)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailBackend', $this->config->WIKINDX_MAIL_BACKEND]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailBackend', WIKINDX_MAIL_BACKEND_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_MAIL_SMPATH) && $this->config->WIKINDX_MAIL_SMPATH)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmPath', $this->config->WIKINDX_MAIL_SMPATH]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmPath', WIKINDX_MAIL_SMPATH_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_MAIL_SMTPSERVER) && $this->config->WIKINDX_MAIL_SMTPSERVER)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpServer', $this->config->WIKINDX_MAIL_SMTPSERVER]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpServer', WIKINDX_MAIL_SMTPSERVER_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_MAIL_SMTPPORT) && $this->config->WIKINDX_MAIL_SMTPPORT)
-        {
-            $this->db->insert('configtemp', ['configName', 'configInt'], ['configMailSmtpPort', $this->config->WIKINDX_MAIL_SMTPPORT]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configInt'], ['configMailSmtpPort', WIKINDX_MAIL_SMTPPORT_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_MAIL_SMTPENCRYPT) && $this->config->WIKINDX_MAIL_SMTPENCRYPT)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpEncrypt', $this->config->WIKINDX_MAIL_SMTPENCRYPT]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpEncrypt', WIKINDX_MAIL_SMTPENCRYPT_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_MAIL_SMTPPERSIST) && $this->config->WIKINDX_MAIL_SMTPPERSIST)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpPersist', $this->config->WIKINDX_MAIL_SMTPPERSIST]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpPersist', WIKINDX_MAIL_SMTPPERSIST_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_MAIL_SMTPAUTH) && $this->config->WIKINDX_MAIL_SMTPAUTH)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpAuth', $this->config->WIKINDX_MAIL_SMTPAUTH]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configMailSmtpAuth', WIKINDX_MAIL_SMTPAUTH_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_MAIL_SMTPUSERNAME) && $this->config->WIKINDX_MAIL_SMTPUSERNAME)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpUsername', $this->config->WIKINDX_MAIL_SMTPUSERNAME]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpUsername', WIKINDX_MAIL_SMTPUSERNAME_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_MAIL_SMTPPASSWORD) && $this->config->WIKINDX_MAIL_SMTPPASSWORD)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpPassword', $this->config->WIKINDX_MAIL_SMTPPASSWORD]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configMailSmtpPassword', WIKINDX_MAIL_SMTPPASSWORD_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_GS_ALLOW) && $this->config->WIKINDX_GS_ALLOW)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configGsAllow', $this->config->WIKINDX_GS_ALLOW]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configGsAllow', WIKINDX_GS_ALLOW_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_GS_ATTACHMENT) && $this->config->WIKINDX_GS_ATTACHMENT)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configGsAttachment', $this->config->WIKINDX_GS_ATTACHMENT]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configGsAttachment', WIKINDX_GS_ATTACHMENT_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_CMS_ALLOW) && $this->config->WIKINDX_CMS_ALLOW)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configCmsAllow', $this->config->WIKINDX_CMS_ALLOW]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configCmsAllow', WIKINDX_CMS_ALLOW_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_CMS_BIBSTYLE) && $this->config->WIKINDX_CMS_BIBSTYLE)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsBibstyle', $this->config->WIKINDX_CMS_BIBSTYLE]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsBibstyle', WIKINDX_CMS_BIBSTYLE_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_CMS_SQL) && $this->config->WIKINDX_CMS_SQL)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configCmsSql', $this->config->WIKINDX_CMS_SQL]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configCmsSql', WIKINDX_CMS_SQL_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_CMS_DB_USER) && $this->config->WIKINDX_CMS_DB_USER)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsDbUser', $this->config->WIKINDX_CMS_DB_USER]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsDbUser', WIKINDX_CMS_DB_USER_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_CMS_DB_PASSWORD) && $this->config->WIKINDX_CMS_DB_PASSWORD)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsDbPassword', $this->config->WIKINDX_CMS_DB_PASSWORD]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configCmsDbPassword', WIKINDX_CMS_DB_PASSWORD_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_TAG_LOW_COLOUR) && $this->config->WIKINDX_TAG_LOW_COLOUR)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configTagLowColour', $this->config->WIKINDX_TAG_LOW_COLOUR]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configTagLowColour', WIKINDX_TAG_LOW_COLOUR_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_TAG_HIGH_COLOUR) && $this->config->WIKINDX_TAG_HIGH_COLOUR)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configTagHighColour', $this->config->WIKINDX_TAG_HIGH_COLOUR]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configTagHighColour', WIKINDX_TAG_HIGH_COLOUR_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_TAG_LOW_SIZE) && $this->config->WIKINDX_TAG_LOW_SIZE)
-        {
-            $this->db->insert('configtemp', ['configName', 'configFloat'], ['configTagLowSize', $this->config->WIKINDX_TAG_LOW_SIZE]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configFloat'], ['configTagLowSize', WIKINDX_TAG_LOW_SIZE_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_TAG_HIGH_SIZE) && $this->config->WIKINDX_TAG_HIGH_SIZE)
-        {
-            $this->db->insert('configtemp', ['configName', 'configFloat'], ['configTagHighSize', $this->config->WIKINDX_TAG_HIGH_SIZE]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configFloat'], ['configTagHighSize', WIKINDX_TAG_HIGH_SIZE_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_IMAGES_ALLOW) && $this->config->WIKINDX_IMAGES_ALLOW)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configImagesAllow', $this->config->WIKINDX_IMAGES_ALLOW]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configImagesAllow', WIKINDX_IMAGES_ALLOW_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_IMAGES_MAXSIZE) && $this->config->WIKINDX_IMAGES_MAXSIZE)
-        {
-            $this->db->insert('configtemp', ['configName', 'configInt'], ['configImagesMaxSize', $this->config->WIKINDX_IMAGES_MAXSIZE]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configInt'], ['configImagesMaxSize', WIKINDX_IMAGES_MAXSIZE_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_DEBUG_ERRORS) && $this->config->WIKINDX_DEBUG_ERRORS)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configErrorReport', $this->config->WIKINDX_DEBUG_ERRORS]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configErrorReport', WIKINDX_DEBUG_ERRORS_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_DEBUG_EMAIL) && $this->config->WIKINDX_DEBUG_EMAIL)
-        {
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configDebugEmail', $this->config->WIKINDX_DEBUG_EMAIL]);
-        }
-        else
-        { // NB database name change for this field!
-            $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configDebugEmail', WIKINDX_DEBUG_EMAIL_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_DEBUG_SQL) && $this->config->WIKINDX_DEBUG_SQL)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configPrintSql', $this->config->WIKINDX_DEBUG_SQL]);
-        }
-        else
-        { // NB database name change for this field!
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configPrintSql', WIKINDX_DEBUG_SQL_DEFAULT]);
-        }
-        // Add extra fields
-        $this->db->insert('configtemp', ['configName', 'configVarchar'], ['configSqlErrorOutput', 'printSql']);
-        if (isset($this->config->WIKINDX_BYPASS_SMARTYCOMPILE) && $this->config->WIKINDX_BYPASS_SMARTYCOMPILE)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configBypassSmartyCompile',
-                $this->config->WIKINDX_BYPASS_SMARTYCOMPILE, ]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configBypassSmartyCompile', WIKINDX_BYPASS_SMARTYCOMPILE_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_DISPLAY_STATISTICS) && $this->config->WIKINDX_DISPLAY_STATISTICS)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configDisplayStatistics', $this->config->WIKINDX_DISPLAY_STATISTICS]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configDisplayStatistics', WIKINDX_DISPLAY_STATISTICS_DEFAULT]);
-        }
-        if (isset($this->config->WIKINDX_DISPLAY_USER_STATISTICS) && $this->config->WIKINDX_DISPLAY_USER_STATISTICS)
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configDisplayUserStatistics', $this->config->WIKINDX_DISPLAY_USER_STATISTICS]);
-        }
-        else
-        {
-            $this->db->insert('configtemp', ['configName', 'configBoolean'], ['configDisplayUserStatistics', WIKINDX_DISPLAY_USER_STATISTICS_DEFAULT]);
+        foreach ($cnfFields as $cnfField)
+        {
+            $value = $cnfField["dv"];
+            if (
+                property_exists($tmpconfig, $cnfField["cn"])
+                && isset($tmpconfig->{$cnfField["cn"]})
+                && $tmpconfig->{$cnfField["cn"]}
+            ) {
+                if ($cnfField["fn"] == "configDeactivateResourceTypes" && is_array($tmpconfig->{$cnfField["cn"]}) && !empty($tmpconfig->{$cnfField["cn"]}))
+                {
+                    $value = base64_encode(serialize($tmpconfig->{$cnfField["cn"]}));
+                }
+                else
+                {
+                    $value = $tmpconfig->{$cnfField["cn"]};
+                }
+            }
+            
+            $this->db->insert('configtemp', ['configName', $cnfField["fv"]], [$cnfField["fn"], $value]);
         }
 
         $this->updateDbSchema('5.4-end');
 
-        $this->session->setVar("setup_UserId", 1);
+        $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID);
         $user = FACTORY_USER::getInstance();
-        $user->writeSessionPreferences(FALSE, 'config', TRUE);
+        $user->writeSessionPreferences(FALSE);
         
         $this->updateSoftwareVersion(5.4);
-        $this->checkStatus('stage5_4__1');
-        $this->pauseExecution('stage5_4__1');
+        $this->checkStatus('stage5_4');
+        $this->pauseExecution('stage5_4');
     }
     /**
      * Upgrade database schema to version 5.5.
      * Addition of new fields to users table for auth security and GDPR
      */
-    private function stage5_5__1()
+    private function stage5_5()
     {
         $this->updateDbSchema('5.5');
         $this->updatePluginTables();
         
         $this->updateSoftwareVersion(5.5);
-        $this->checkStatus('stage5_5__1');
-        $this->pauseExecution('stage5_5__1');
+        $this->checkStatus('stage5_5');
+        $this->pauseExecution('stage5_5');
     }
     /**
      * Upgrade database schema to version 5.6.
      * Convert the database to utf8 charset and utf8_unicode_ci collation
      */
-    private function stage5_6__1()
+    private function stage5_6()
     {
         $this->updateDbSchema('5.6');
         
         $this->updateSoftwareVersion(5.6);
-        $this->checkStatus('stage5_6__1');
-        $this->pauseExecution('stage5_6__1');
+        $this->checkStatus('stage5_6');
+        $this->pauseExecution('stage5_6');
     }
     /**
      * Upgrade database schema to version 5.7.
      * Convert the database to utf8mb4 charset and utf8mb4_unicode_520_ci collation
      * Fix resource_metadata.resourcemetadataPrivate size to 1 character
      */
-    private function stage5_7__1()
+    private function stage5_7()
     {
         $this->correctIndices();
         $this->updateDbSchema('5.7');
         $this->correctDatetimeFields();
         
         $this->updateSoftwareVersion(5.7);
-        $this->checkStatus('stage5_7__1');
-        $this->pauseExecution('stage5_7__1');
+        $this->checkStatus('stage5_7');
+        $this->pauseExecution('stage5_7');
     }
     /**
      * Upgrade database schema to version 5.8. There are no changes to DB structure so no call to updateDbSchema('5.8').
      * Check resource totals are correct
      * Check creator correlations are correct
      */
-    private function stage5_8__1()
+    private function stage5_8()
     {
         $this->correctTotals();
         $this->correctCreators();
         
         $this->updateSoftwareVersion(5.8);
-        $this->checkStatus('stage5_8__1');
-        $this->pauseExecution('stage5_8__1');
+        $this->checkStatus('stage5_8');
+        $this->pauseExecution('stage5_8');
     }
     /**
      * Upgrade database schema to version 5.9
@@ -2382,7 +663,7 @@ class UPDATEDATABASE
      * Change configuration
      * Update images links
      */
-    private function stage5_9__1()
+    private function stage5_9()
     {
         // Copy files in various old directories to their new directories
         // Order is important – ned to know if files or attachments returns FALSE
@@ -2406,15 +687,20 @@ class UPDATEDATABASE
         {
             $this->checkDatabase($return);
         }
-        $this->writeConfigFile5_9(); // dies if not possible
+        
+        // NB: At this location a migration of the config.php configuration file was necessary
+        // but subsequent migrations without changing the name of the variables concerned made it useless.
+        // The deleted code can be recovered in SVN at revision 116, in core/startup/UPDATEDATABASE.php file,
+        // function writeConfigFile5_9().
+        
         $this->updateDbSchema('5.9');
         $this->updateImageLinks();
         
         $this->updateSoftwareVersion(5.9);
         
         echo $this->installMessages->text("upgradeDBv5.9");
-        $this->checkStatus('stage5_9__1');
-        $this->pauseExecution('stage5_9__1');
+        $this->checkStatus('stage5_9');
+        $this->pauseExecution('stage5_9');
     }
     /**
      * Upgrade database schema to version 6
@@ -2492,7 +778,7 @@ class UPDATEDATABASE
         $this->pauseExecution('stage10');
     }
     /**
-     * Upgrade database schema to version 10 (6.2.1)
+     * Upgrade database schema to version 11 (6.2.1)
      */
     private function stage11()
     {
@@ -2504,11 +790,267 @@ class UPDATEDATABASE
         $this->pauseExecution('stage11');
     }
     /**
+     * Upgrade database schema to version 12 (6.2.2)
+     */
+    private function stage12()
+    {
+        // Convert tag sizes to scale factors
+        $this->updateDbSchema('12');
+        
+        $this->writeConfigFile6_2_2(); // dies if not possible
+        
+        $this->updateSoftwareVersion(12);
+        $this->checkStatus('stage12');
+        $this->pauseExecution('stage12');
+    }
+    /**
+     * Upgrade database schema to version 13 (6.2.2)
+     */
+    private function stage13()
+    {
+        $this->updateDbSchema('13');
+        
+        $this->transferStatistics();
+        
+        $this->db->queryNoError("DROP TABLE IF EXISTS " . WIKINDX_DB_TABLEPREFIX . "statistics;");
+        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_misc DROP COLUMN resourcemiscAccesses");
+        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_misc DROP COLUMN resourcemiscAccessesPeriod");
+        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_attachments DROP COLUMN resourceattachmentsDownloads");
+        $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "resource_attachments DROP COLUMN resourceattachmentsDownloadsPeriod");
+        
+        // For a period mid-2018 to mid-2019, resourceattachmentsTimestamp was not written – set these NULL values to current timestamp
+        $this->db->formatConditions(['resourceattachmentsTimestamp' => 'IS NULL']);
+        $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId']);
+        while ($row = $this->db->fetchRow($resultSet))
+        {
+            $this->db->formatConditions(['resourceattachmentsId' => $row['resourceattachmentsId']]);
+            $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsTimestamp' => '']); // default is CURRENT_TIMESTAMP
+        }
+        
+        $this->updateSoftwareVersion(13);
+        $this->checkStatus('stage13');
+        $this->pauseExecution('stage13');
+    }
+    /**
+     * Upgrade database schema to version 14 (6.2.2)
+     */
+    private function stage14()
+    {
+        // Convert tag sizes to scale factors
+        $this->updateDbSchema('14');
+        
+        $this->updateSoftwareVersion(14);
+        $this->checkStatus('stage14');
+        $this->pauseExecution('stage14');
+    }
+    /**
+     * Transfer statistics data to new tables then drop old table
+     *
+     * A fault in the previous statistics compilation means that each month's statistics needs to be backdated one month ...
+     */
+    private function transferStatistics()
+    {
+    	$resourceInsertFields = ['statisticsresourceviewsResourceId', 'statisticsresourceviewsMonth', 'statisticsresourceviewsCount'];
+    	$attachmentInsertFields = ['statisticsattachmentdownloadsAttachmentId', 'statisticsattachmentdownloadsMonth', 'statisticsattachmentdownloadsCount', 'statisticsattachmentdownloadsResourceId'];
+    	
+    	$countTransfered = 0;
+    	$insertResourceValues = [];
+    	$insertAttachmentValues = [];
+    	$deleteStatisticsAttachment = [];
+    	$deleteStatisticsResource = [];
+    	
+    // 1. Past statistics from statistics table
+    	$resultSet = $this->db->select('statistics', ['statisticsId', 'statisticsResourceId', 'statisticsAttachmentId', 'statisticsStatistics']);
+    	while ($row = $this->db->fetchRow($resultSet))
+    	{
+    		$id = $row['statisticsAttachmentId'] ? $row['statisticsAttachmentId'] : $row['statisticsResourceId'];
+    		
+    		if ($row['statisticsAttachmentId'])
+    	        $deleteStatisticsAttachment[] = $row['statisticsId'];
+    		else
+    	        $deleteStatisticsResource[] = $row['statisticsId'];
+    		
+    		$statsArray = unserialize(base64_decode($row['statisticsStatistics']));
+    		if ($statsArray === FALSE)
+    		{
+    		    continue;
+    		}
+    		
+    		foreach ($statsArray as $month => $count)
+    		{
+    			if (!$count) // Ensure there is a valid INSERT value here ...
+    			{
+    				$count = 0;
+    			}
+    			
+    		    // If the month (period) is too short or long (YYYYMM format expected), skip this stat
+    		    $month = trim($month . "");
+    		    if (strlen($month) != 6) continue;
+    			
+    			$month = intval($month);
+    			
+    			// If the month is not in the range 01..12, skip this stat
+    			if ($month % 100 > 12) continue;
+    			
+    			// Shift of one month back
+    			$month = $month - 1;
+    			// Month 0 doesn't exist, so shift one year back on december
+    			$month = ($month % 100 == 0) ? $month - 100 + 12 : $month;
+    			
+    			$insertValues = [$id, $month, $count];
+    			
+    			if ($row['statisticsAttachmentId'])
+    			{
+    			    $deleteStatisticsAttachment[] = $row['statisticsId'];
+    			    $insertValues[] = $row['statisticsResourceId'];
+    			    $insertAttachmentValues[] = '(' . implode(',', $insertValues, ) . ')';
+    			    
+    				if (count($insertAttachmentValues) % 1000 == 0)
+    				{
+    					$this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
+    					$countTransfered += count($insertAttachmentValues);
+    					$insertAttachmentValues = [];
+    					
+                        $this->db->formatConditionsOneField($deleteStatisticsAttachment, 'statisticsId');
+                        $this->db->delete('statistics');
+    			        $deleteStatisticsAttachment = [];
+    				}
+    			}
+    			else
+    			{
+    			    $deleteStatisticsResource[] = $row['statisticsId'];
+    			    $insertResourceValues[] = '(' . implode(',', $insertValues, ) . ')';
+    			    
+    				if (count($insertResourceValues) % 1000 == 0)
+    				{
+    					$this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
+    					$countTransfered += count($insertResourceValues);
+    					$insertResourceValues = [];
+    					
+                        $this->db->formatConditionsOneField($deleteStatisticsResource, 'statisticsId');
+                        $this->db->delete('statistics');
+    			        $deleteStatisticsResource = [];
+    				}
+    			}
+    		}
+    		
+            // Check we have more than 6 seconds buffer before max_execution_time times out.
+            if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)) || $countTransfered >= 200000)
+            {
+                $this->checkStatus('stage13');
+                $this->stageInterruptMessage = "stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
+                $this->pauseExecution('stage13', 'stage13');
+            }
+    	}
+    	// Remaining past statistics
+    	if (count($insertAttachmentValues) > 0)
+    	{
+    		$this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
+    	}
+    	if (count($insertResourceValues) > 0)
+    	{
+    		$this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
+    	}
+    	if (count($deleteStatisticsAttachment) > 0)
+    	{
+            $this->db->formatConditionsOneField($deleteStatisticsAttachment, 'statisticsId');
+            $this->db->delete('statistics');
+    	}
+    	if (count($deleteStatisticsResource) > 0)
+    	{
+            $this->db->formatConditionsOneField($deleteStatisticsResource, 'statisticsId');
+            $this->db->delete('statistics');
+    	}
+    	
+        // Check we have more than 6 seconds buffer before max_execution_time times out.
+        if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)))
+        {
+            $this->checkStatus('stage13');
+            $this->stageInterruptMessage = "stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
+            $this->pauseExecution('stage13', 'stage13');
+        }
+    
+    // 2. Current statistics for views
+    	$month = date('Ym');
+    	$insertResourceValues = [];
+    	$resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod']);
+    	while ($row = $this->db->fetchRow($resultSet))
+    	{
+			if (!$row['resourcemiscAccessesPeriod']) // Ensure there is a valid INSERT value here ...
+			{
+				$count = 1;
+			}
+			else 
+			{
+				$count = $row['resourcemiscAccessesPeriod'];
+			}
+    	    $insertResourceValues[] = '(' . implode(',', [$row['resourcemiscId'], $month, $count], ) . ')';
+    	    
+    	    if (count($insertResourceValues) % 5000 == 0)
+    	    {
+    			$this->db->multiInsert('statistics_resource_views',
+    				['statisticsresourceviewsResourceId', 
+    					'statisticsresourceviewsMonth', 
+    					'statisticsresourceviewsCount'],
+    					implode(', ', $insertResourceValues)
+    			);
+    			$insertResourceValues = [];
+    		}
+    	}
+        if (count($insertResourceValues) > 0)
+        {
+    		$this->db->multiInsert('statistics_resource_views',
+    			['statisticsresourceviewsResourceId', 
+    				'statisticsresourceviewsMonth', 
+    				'statisticsresourceviewsCount'],
+    				implode(', ', $insertResourceValues)
+    		);
+    	}
+    
+    // 3. Current statistics for downloads
+    	$insertAttachmentValues = [];
+    	$resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsDownloadsPeriod']);
+    	while ($row = $this->db->fetchRow($resultSet))
+    	{
+			if (!$row['resourceattachmentsDownloadsPeriod']) // Ensure there is a valid INSERT value here ...
+			{
+				$count = 1;
+			}
+			else 
+			{
+				$count = $row['resourceattachmentsDownloadsPeriod'];
+			}
+    	    $insertAttachmentValues[] = '(' . implode(',', [$row['resourceattachmentsResourceId'], $row['resourceattachmentsId'], $month, $count], ) . ')';
+    	    
+    	    if (count($insertAttachmentValues) % 5000 == 0)
+    	    {
+    		    $this->db->multiInsert('statistics_attachment_downloads',
+    				['statisticsattachmentdownloadsResourceId',
+    					'statisticsattachmentdownloadsAttachmentId', 
+    					'statisticsattachmentdownloadsMonth', 
+    					'statisticsattachmentdownloadsCount'],
+    					implode(', ', $insertAttachmentValues)
+    			);
+    			$insertAttachmentValues = [];
+    		}
+    	}
+        if (count($insertAttachmentValues) > 0)
+        {
+    	    $this->db->multiInsert('statistics_attachment_downloads',
+    			['statisticsattachmentdownloadsResourceId',
+    				'statisticsattachmentdownloadsAttachmentId', 
+    				'statisticsattachmentdownloadsMonth', 
+    				'statisticsattachmentdownloadsCount'],
+    				implode(', ', $insertAttachmentValues)
+    		);
+    	}
+    }
+    /**
      * Copy non-official bibliographic styles (if they exist)
      */
     private function copyBibContents()
     {
-    	$oldDir = 'styles' . DIRECTORY_SEPARATOR . 'bibliography';
+        $oldDir = 'styles' . DIRECTORY_SEPARATOR . 'bibliography';
         foreach (\FILE\dirInDirToArray($oldDir) as $dir)
         {
             $dirLower = mb_strtolower($dir);
@@ -2581,11 +1123,11 @@ class UPDATEDATABASE
             $file = $newDir . DIRECTORY_SEPARATOR . $file;
             
             $doc = file_get_contents($file);
-            $doc = str_replace('<img src="images/', '<img src="' . str_replace("\\", "/", WIKINDX_DIR_DATA_IMAGES) . '/', $doc);
+            $doc = str_replace('<img src="images/', '<img src="' . WIKINDX_URL_DATA_IMAGES . '/', $doc);
         
             // Fix in 6.0.6 a previous error during the migration of images links in papers introduced in 5.9
             // The folder separator must be / and not \ otherwise the image display is broken
-            $doc = str_replace('<img src="' . WIKINDX_DIR_DATA . '\\', '<img src="' . WIKINDX_DIR_DATA . '/', $doc);
+            $doc = str_replace('<img src="' . WIKINDX_DIR_DATA . '\\', '<img src="' . WIKINDX_URL_DATA . '/', $doc);
             
             if (!file_put_contents($file, $doc))
             {
@@ -2606,7 +1148,7 @@ class UPDATEDATABASE
         while ($row = $this->db->fetchRow($resultset))
         {
             $text = $row['resourcemetadataText'];
-            $text = str_replace('<img src="images/', '<img src="' . str_replace("\\", "/", WIKINDX_DIR_DATA_IMAGES) . '/', $text);
+            $text = str_replace('<img src="images/', '<img src="' . WIKINDX_URL_DATA_IMAGES . '/', $text);
             $this->db->formatConditions(['resourcemetadataId' => $row['resourcemetadataId']]);
             $this->db->update('resource_metadata', ['resourcemetadataText' => $text]);
         }
@@ -2690,7 +1232,7 @@ class UPDATEDATABASE
     private function correctCreators()
     {
         $max_execution_time = ini_get("max_execution_time");
-        $stage5_8__1_correctCreators_resourcecreatorId = $this->session->getVar('stage5_8__1_correctCreators_resourcecreatorId', -1);
+        $stage5_8_correctCreators_resourcecreatorId = $this->session->getVar("stage5_8_correctCreators_resourcecreatorId", -1);
         $creatorIds = [];
         $updateArray = [];
         $count = 0;
@@ -2703,11 +1245,11 @@ class UPDATEDATABASE
             $creatorIds[$row['creatorId']] = mb_strtolower(preg_replace("/[^[:alnum:][:space:]]/u", '', $row['creatorSurname']));
         }
         
-        if ($stage5_8__1_correctCreators_resourcecreatorId != -1)
+        if ($stage5_8_correctCreators_resourcecreatorId != -1)
         {
             while ($row = $this->db->fetchRow($resultSet1))
             {
-                if ($row['resourcecreatorId'] == $stage5_8__1_correctCreators_resourcecreatorId)
+                if ($row['resourcecreatorId'] == $stage5_8_correctCreators_resourcecreatorId)
                 {
                     break;
                 }
@@ -2740,11 +1282,11 @@ class UPDATEDATABASE
      */
     private function correctIndices()
     {
-        $db = $this->config->WIKINDX_DB;
+        $db = WIKINDX_DB;
         foreach (['category', 'collection', 'config', 'creator', 'keyword', 'publisher', 'resource', 'resource_creator',
             'resource_metadata', 'resource_year', 'user_bibliography', ] as $table)
         {
-            $table = $this->config->WIKINDX_DB_TABLEPREFIX . $table;
+            $table = WIKINDX_DB_TABLEPREFIX . $table;
             $resultSet = $this->db->query("SHOW INDEX FROM `$table` FROM `$db`");
             while ($row = $this->db->fetchRow($resultSet))
             {
@@ -2847,18 +1389,6 @@ class UPDATEDATABASE
         {
             $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
-        $this->db->formatConditions($this->db->formatFields('usersChangePasswordTimestamp'));
-        $minArray = $this->db->selectMin('users', 'usersChangePasswordTimestamp');
-        $min = $minArray[0]['usersChangePasswordTimestamp'];
-        $this->db->formatConditions(['usersChangePasswordTimestamp' => '0000-00-00 00:00:00']);
-        if ($min)
-        {
-            $this->db->updateTimestamp('users', ['usersChangePasswordTimestamp' => $this->db->tidyInput($min)]);
-        }
-        else
-        {
-            $this->db->updateTimestamp('users', ['usersChangePasswordTimestamp' => '']); // default is CURRENT_TIMESTAMP
-        }
         // resource_timestamp
         $this->db->formatConditions($this->db->formatFields('resourcetimestampTimestampAdd'));
         $minArray = $this->db->selectMin('resource_timestamp', 'resourcetimestampTimestampAdd');
@@ -2939,10 +1469,13 @@ class UPDATEDATABASE
         $this->db->updateNull('resource_metadata', 'resourcemetadataTimestampEdited'); // default is NULL
     }
     /**
-     * Write new config.php with upgrade to >= WIKINDX v5.3
+     * Write new config.php with upgrade to >= WIKINDX v6.2.1
      */
-    private function writeConfigFile5_4()
+    private function writeConfigFile6_2_2()
     {
+        // Load a separate config class that containts original constant names
+        $tmpconfig = new CONFIG();
+        
         $string = <<<END
 <?php
 /**********************************************************************************
@@ -2988,266 +1521,26 @@ class CONFIG
 // where 'xxxx' is the non-standard socket.
 
 END;
-        $string .= 'public $WIKINDX_DB_HOST = "' . $this->config->WIKINDX_DB_HOST . '";' . "\n";
+        $string .= 'public $WIKINDX_DB_HOST = "' . $tmpconfig->WIKINDX_DB_HOST . '";' . "\n";
         $string .= '// name of the database which these scripts interface with (case-sensitive):' . "\n" .
-                   'public $WIKINDX_DB = "' . $this->config->WIKINDX_DB . '";' . "\n";
+                   'public $WIKINDX_DB = "' . $tmpconfig->WIKINDX_DB . '";' . "\n";
         $string .= '// username and password required to connect to and open the database' . "\n" .
                    '// (it is strongly recommended that you change these default values):' . "\n" .
-                   'public $WIKINDX_DB_USER = "' . $this->config->WIKINDX_DB_USER . '";' . "\n" .
-                   'public $WIKINDX_DB_PASSWORD = "' . $this->config->WIKINDX_DB_PASSWORD . '";' . "\n";
-        $string .= '// If using WIKINDX on a shared database, set the WIKINDX table prefix here (lowercase only)' . "\n" .
-                   '// (do not change after running WIKINDX and creating the tables!):' . "\n" .
-                   'public $WIKINDX_DB_TABLEPREFIX = "' . $this->config->WIKINDX_DB_TABLEPREFIX . '";' . "\n";
-        $string .= '// WIKINDX uses MySQL persistent connections by default.' . "\n" .
-                   '// Some hosting services are not configured for this: if you have problems' . "\n" .
-                   "// connecting to your MySQL server and/or receive error messages about 'too many connections'," . "\n" .
-                   '// set $WIKINDX_DB_PERSISTENT to FALSE' . "\n";
-        if ($this->config->WIKINDX_DB_PERSISTENT === TRUE)
-        {
-            $string .= 'public $WIKINDX_DB_PERSISTENT = TRUE;' . "\n";
-        }
-        else
-        {
-            $string .= 'public $WIKINDX_DB_PERSISTENT = FALSE;' . "\n";
-        }
-        $string .= <<<END
-/*****
-* END DATABASE CONFIGURATION
-*****/
-
-/**********************************************************************************/
-
-/*****
-* START PATHS CONFIGURATION
-*****/
-// You must define the base URL for the WIKINDX installation.
-// You have to indicate protocol HTTP / HTTPS and remove the terminal /.
-// e.g. if wikindx's index.php file is in /wikindx/ under the httpd/ (or similar)
-// folder on the www.myserver.com, then set the variable
-// to http://www.myserver.com/wikindx
-
-END;
-        // We set it because we know best ;)
-        $this->config->WIKINDX_BASE_URL = FACTORY_URL::getInstance()->getBaseUrl();
-        $string .= 'public $WIKINDX_BASE_URL = "' . $this->config->WIKINDX_BASE_URL . '";' . "\n";
-
-        $string .= <<<END
-// The TinyMCE editor needs the WIKINDX server installation path.
-// WIKINDX tries to get this through getcwd() but this is not always possible.
-// In this case, you will receive an error message and WIKINDX will die and you should then set that path here.
-// The path should be the full path from the root folder to your wikindx folder with no trailing '/'.
-// On Apple OSX running XAMPP, for example, the case-sensitive path is:
-// '/Applications/XAMPP/xamppfiles/htdocs/wikindx'.
-// The script will continue to die until it has a valid installation path.
-// If you get no error message and WIKINDX runs fine, then you can leave this value as FALSE.
-
-END;
-        if (property_exists($this->config, 'WIKINDX_WIKINDX_PATH') && ($this->config->WIKINDX_WIKINDX_PATH !== FALSE))
-        {
-            $string .= 'public $WIKINDX_WIKINDX_PATH = "' . $this->config->WIKINDX_WIKINDX_PATH . '";' . "\n";
-        }
-        else
-        {
-            $string .= 'public $WIKINDX_WIKINDX_PATH = FALSE;' . "\n";
-        }
-        $string .= <<<END
-// Alternate locations for storing attachments and exported files.
-// If these are FALSE, the default locations at the top level of wikindx/ will be used.
-// It is the administrator's responsibility to ensure that these directories are web-server user readable and writeable.
-// There should be no trailing '\\' or '/'.
-// For example, for a windows system, WIKINDX_ATTACHMENTS_DIR might be "D:\\attachments"
-// For example, for a *NIX system, WIKINDX_FILE_PATH might be "files"
-
-END;
-        if (property_exists($this->config, 'WIKINDX_ATTACHMENTS_PATH') && (WIKINDX_DIR_DATA_ATTACHMENTS !== FALSE))
-        {
-            $string .= 'public $WIKINDX_ATTACHMENTS_PATH = "' . WIKINDX_DIR_DATA_ATTACHMENTS . '";' . "\n";
-        }
-        else
-        {
-            $string .= 'public $WIKINDX_ATTACHMENTS_PATH = FALSE;' . "\n";
-        }
-        if (property_exists($this->config, 'WIKINDX_FILE_PATH') && (WIKINDX_DIR_DATA_FILES !== FALSE))
-        {
-            $string .= 'public $WIKINDX_FILE_PATH = "' . WIKINDX_DIR_DATA_FILES . '";' . "\n";
-        }
-        else
-        {
-            $string .= 'public $WIKINDX_FILE_PATH = FALSE;' . "\n";
-        }
-        $string .= <<<END
-/*****
-* END PATH CONFIGURATION
-*****/
-
-/**********************************************************************************/
-
-/*****
-* START PHP MEMORY AND EXECUTION CONFIGURATION
-*****/
-// WIKINDX usually runs with the standard PHP memory_limit of 32MB.
-// With some PHP configurations, however, this is not enough -- a mysterious blank page is often the result.
-// If you are unable to update php.ini's memory_limit yourself, WIKINDX_MEMORY_LIMIT may be set (an integer such as 64 or 128 followed by 'M').
-// Despite the PHP manual stating that this may not be set outside of php.ini, it seems to work most of the time.
-// It is not, however, guaranteed to do so and editing php.ini is the preferred method particularly if your PHP is in 'safe' mode.
-// Use double quotes around the value.
-
-END;
-        if (property_exists($this->config, 'WIKINDX_MEMORY_LIMIT') && ($this->config->WIKINDX_MEMORY_LIMIT !== FALSE))
-        {
-            $string .= 'public $WIKINDX_MEMORY_LIMIT = "' . $this->config->WIKINDX_MEMORY_LIMIT . '";' . "\n";
-        }
-        else
-        {
-            $string .= 'public $WIKINDX_MEMORY_LIMIT = FALSE;' . "\n";
-        }
-        $string .= <<<END
-// WIKINDX should run fine with the PHP standard execution timeouts (typically 30 seconds) but,
-// in some cases such as database upgrading of a large database on a slow server, you will need to increase the timeout figure.
-// If this is FALSE, the value set in php.ini is used.
-// Despite the PHP manual stating that this may not be set outside of php.ini, it seems to work most of the time.
-// It is not, however, guaranteed to do so and editing php.ini is the preferred method particularly if your PHP is in 'safe' mode.
-// The value is in seconds.
-// Do NOT use quotes around the value.
-
-END;
-        if (property_exists($this->config, 'WIKINDX_MAX_EXECUTION_TIMEOUT') && ($this->config->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE))
-        {
-            $string .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = ' . $this->config->WIKINDX_MAX_EXECUTION_TIMEOUT . ';' . "\n";
-        }
-        else
-        {
-            $string .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = FALSE;' . "\n";
-        }
-        $string .= <<<END
-// WIKINDX_MAX_WRITECHUNK concerns how many resources are exported and written to file in one go.
-// If your WIKINDX contains several thousands of resources and you wish to export them all (e.g. to bibTeX or Endnote),
-// then you may run into memory problems which will manifest as either
-// a blank page when you attempt to export or an error report (if you have error reporting turned on).
-// WIKINDX_MAX_WRITECHUNK breaks down the SQL querying of resources and subsequent writing of resources to file into manageable chunks.
-// As a rough guide, with a WIKINDX_MEMORY_LIMIT of 32M, WIKINDX_MAX_WRITECHUNK of 700 should work fine and with 64M, 1500 works fine.
-// If WIKINDX_MAX_WRITECHUNK is FALSE, the chunk is set to 10,000.
-// This can be a tricky figure to set as setting the figure too low increases SQL and PHP execution times significantly.
-// Do NOT use quotes around the value.
-
-END;
-        if (property_exists($this->config, 'WIKINDX_MAX_WRITECHUNK') && ($this->config->WIKINDX_MAX_WRITECHUNK !== FALSE))
-        {
-            $string .= 'public $WIKINDX_MAX_WRITECHUNK = ' . $this->config->WIKINDX_MAX_WRITECHUNK . ';' . "\n";
-        }
-        else
-        {
-            $string .= 'public $WIKINDX_MAX_WRITECHUNK = FALSE;' . "\n";
-        }
-        $string .= <<<END
-/*****
-* END PHP MEMORY AND EXECUTION CONFIGURATION
-*****/
-}
-END;
-        $string .= "\n" . '?>';
-
-
-        // Save the old config file before writing it
-        // Something could go wrong and configuration lost otherwise
-        $cf = 'config.php';
-        $bf = WIKINDX_DIR_DATA_FILES . DIRECTORY_SEPARATOR . $cf . '.' . date('YmdHis');
-        if (copy($cf, $bf))
-        {
-            if (is_writable($cf))
-            {
-                if (file_put_contents($cf, $string) === FALSE)
-                {
-                    die("Fatal error: an error occurred when writing to $cf");
-                }
-            }
-            else
-            {
-                die("Fatal error: $cf is not writable");
-            }
-        }
-        else
-        {
-            die("Fatal error: could not backup $cf to $bf");
-        }
-    }
-    /**
-     * Write new config.php with upgrade to >= WIKINDX v5.9
-     */
-    private function writeConfigFile5_9()
-    {
-        $string = <<<END
-<?php
-/**********************************************************************************
- WIKINDX : Bibliographic Management system.
- @link http://wikindx.sourceforge.net/ The WIKINDX SourceForge project
- @author The WIKINDX Team
- @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
-**********************************************************************************/
-/**
-*
-* WIKINDX CONFIGURATION FILE
-*
-* NB. BEFORE YOU MAKE CHANGES TO THIS FILE, BACK IT UP!
-* NB. BEFORE YOU MAKE CHANGES TO THIS FILE, BACK IT UP!
-* NB. BEFORE YOU MAKE CHANGES TO THIS FILE, BACK IT UP!
-*
-* If you make changes, backup the edited file as future upgrades of WIKINDX might overwrite this file - no questions asked!
-*/
-
-/**********************************************************************************/
-
-class CONFIG
-{
-/*****
-* START DATABASE CONFIGURATION
-*****/
-// NB:
-// wikindx supports only MySQL with mysqli PHP driver (WIKINDX_DB_TYPE parameter is deprecated).
-//
-// The database and permissions for accessing it must be created using your RDBMS client. Wikindx
-// will NOT do this for you.  If unsure how to do this, contact your server admin. After you have
-// set up an empty database with the correct permissions (GRANT ALL), the first running of Wikindx
-// will create the necessary database tables.
-//
-// WIKINDX uses caching in the database _cache table for lists of creators, keywords etc.  If you have a large
-// database, you may get SQL errors as WIKINDX attempts to write these cache data.  You will need to increase
-// max allowed packet in my.cnf and restart the MySQL server.
-//
-// Host on which the relational db management system (i.e. the MySQL server) is running (usually localhost if
-// the web files are on the same server as the RDBMS although some web hosting services may specify something like
-// localhost:/tmp/mysql5.sock)
-// If your DB server is on a non-standard socket (i.e. not port 3306), then you should set something like localhost:xxxx
-// where 'xxxx' is the non-standard socket.
-
-END;
-        $string .= 'public $WIKINDX_DB_HOST = "' . $this->config->WIKINDX_DB_HOST . '";' . "\n";
-        $string .= '// name of the database which these scripts interface with (case-sensitive):' . "\n" .
-                   'public $WIKINDX_DB = "' . $this->config->WIKINDX_DB . '";' . "\n";
-        $string .= '// username and password required to connect to and open the database' . "\n" .
-                   '// (it is strongly recommended that you change these default values):' . "\n" .
-                   'public $WIKINDX_DB_USER = "' . $this->config->WIKINDX_DB_USER . '";' . "\n" .
-                   'public $WIKINDX_DB_PASSWORD = "' . $this->config->WIKINDX_DB_PASSWORD . '";' . "\n";
+                   'public $WIKINDX_DB_USER = "' . $tmpconfig->WIKINDX_DB_USER . '";' . "\n" .
+                   'public $WIKINDX_DB_PASSWORD = "' . $tmpconfig->WIKINDX_DB_PASSWORD . '";' . "\n";
         $string .= '// If using WIKINDX on a shared database, set the WIKINDX table prefix here (lowercase only)' . "\n" .
                    '// (do not change after running WIKINDX and creating the tables!).' . "\n" .
                    '// This option is deprecated since version 5.9.1 and will be removed in the next release.' . "\n" .
                    '// People who have changed the prefix should rename the tables with the default prefix (wkx_)' . "\n" .
                    '// and correct their configuration. It will no longer be possible to install two WIKINDXs' . "\n" .
                    '// in the same database. If you are in this rare case contact us.' . "\n" .
-                   'public $WIKINDX_DB_TABLEPREFIX = "' . $this->config->WIKINDX_DB_TABLEPREFIX . '";' . "\n";
+                   'public $WIKINDX_DB_TABLEPREFIX = "' . $tmpconfig->WIKINDX_DB_TABLEPREFIX . '";' . "\n";
         $string .= '// WIKINDX uses MySQL persistent connections by default.' . "\n" .
                    '// Some hosting services are not configured for this: if you have problems' . "\n" .
                    "// connecting to your MySQL server and/or receive error messages about 'too many connections'," . "\n" .
-                   '// set $WIKINDX_DB_PERSISTENT to FALSE' . "\n";
+                   '// set $WIKINDX_DB_PERSISTENT to FALSE and wikindx will try to compute it' . "\n";
         '// see https://www.php.net/manual/en/mysqli.persistconns.php' . "\n";
-        if ($this->config->WIKINDX_DB_PERSISTENT === TRUE)
-        {
-            $string .= 'public $WIKINDX_DB_PERSISTENT = TRUE;' . "\n";
-        }
-        else
-        {
-            $string .= 'public $WIKINDX_DB_PERSISTENT = FALSE;' . "\n";
-        }
+        $string .= 'public $WIKINDX_DB_PERSISTENT = ' . ($tmpconfig->WIKINDX_DB_PERSISTENT ? "TRUE" : "FALSE") . ';' . "\n";
         $string .= <<<END
 /*****
 * END DATABASE CONFIGURATION
@@ -3258,31 +1551,40 @@ END;
 /*****
 * START PATHS CONFIGURATION
 *****/
-// You must define the base URL for the WIKINDX installation.
+// The auto-detection of the path installation and the base url is an experimental feature
+// which you can disable by changing this parameter to FALSE.
+// If you deactivate auto-detection you must fill in the options WIKINDX_BASE_URL and WIKINDX_WIKINDX_PATH.
+// If you don't define this option, auto-detection is enabled by default.
+
+END;
+        $string .= 'public $WIKINDX_PATH_AUTO_DETECTION = TRUE;' . "\n";
+
+        $string .= <<<END
+// If option auto-detection is disabled you must define the base URL for the WIKINDX installation.
 // You have to indicate protocol HTTP / HTTPS and remove the terminal /.
 // e.g. if wikindx's index.php file is in /wikindx/ under the httpd/ (or similar)
 // folder on the www.myserver.com, then set the variable
 // to http://www.myserver.com/wikindx
+// Otherwise, leave as "".
 
 END;
-        // We set it because we know best ;)
-        $this->config->WIKINDX_BASE_URL = FACTORY_URL::getInstance()->getBaseUrl();
-        $string .= 'public $WIKINDX_BASE_URL = "' . $this->config->WIKINDX_BASE_URL . '";' . "\n";
+        $string .= 'public $WIKINDX_BASE_URL = "' . $tmpconfig->WIKINDX_BASE_URL . '";' . "\n";
 
         $string .= <<<END
-// The TinyMCE editor needs the WIKINDX server installation path.
+// If option auto-detection is disabled you must define the WIKINDX server installation path
+// for plugins and dialogs.
 // WIKINDX tries to get this through getcwd() but this is not always possible.
 // In this case, you will receive an error message and WIKINDX will die and you should then set that path here.
 // The path should be the full path from the root folder to your wikindx folder with no trailing '/'.
-// On Apple OSX running XAMPP, for example, the case-sensitive path is:
+// On Apple OSX running XAMPP, for example, the case-sensitive path is: 
 // '/Applications/XAMPP/xamppfiles/htdocs/wikindx'.
 // The script will continue to die until it has a valid installation path.
-// If you get no error message and WIKINDX runs fine, then you can leave this value as FALSE.
+// Otherwise, leave as "".
 
 END;
-        if (property_exists($this->config, 'WIKINDX_WIKINDX_PATH') && ($this->config->WIKINDX_WIKINDX_PATH !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_WIKINDX_PATH') && ($tmpconfig->WIKINDX_WIKINDX_PATH !== FALSE))
         {
-            $string .= 'public $WIKINDX_WIKINDX_PATH = "' . $this->config->WIKINDX_WIKINDX_PATH . '";' . "\n";
+            $string .= 'public $WIKINDX_WIKINDX_PATH = "' . $tmpconfig->WIKINDX_WIKINDX_PATH . '";' . "\n";
         }
         else
         {
@@ -3306,9 +1608,9 @@ END;
 // Use double quotes around the value.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_MEMORY_LIMIT') && ($this->config->WIKINDX_MEMORY_LIMIT !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_MEMORY_LIMIT') && ($tmpconfig->WIKINDX_MEMORY_LIMIT !== FALSE))
         {
-            $string .= 'public $WIKINDX_MEMORY_LIMIT = "' . $this->config->WIKINDX_MEMORY_LIMIT . '";' . "\n";
+            $string .= 'public $WIKINDX_MEMORY_LIMIT = "' . $tmpconfig->WIKINDX_MEMORY_LIMIT . '";' . "\n";
         }
         else
         {
@@ -3324,9 +1626,9 @@ END;
 // Do NOT use quotes around the value.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_MAX_EXECUTION_TIMEOUT') && ($this->config->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_MAX_EXECUTION_TIMEOUT') && ($tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE))
         {
-            $string .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = ' . $this->config->WIKINDX_MAX_EXECUTION_TIMEOUT . ';' . "\n";
+            $string .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = ' . $tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT . ';' . "\n";
         }
         else
         {
@@ -3344,28 +1646,13 @@ END;
 // Do NOT use quotes around the value.
 
 END;
-        if (property_exists($this->config, 'WIKINDX_MAX_WRITECHUNK') && ($this->config->WIKINDX_MAX_WRITECHUNK !== FALSE))
+        if (property_exists($tmpconfig, 'WIKINDX_MAX_WRITECHUNK') && ($tmpconfig->WIKINDX_MAX_WRITECHUNK !== FALSE))
         {
-            $string .= 'public $WIKINDX_MAX_WRITECHUNK = ' . $this->config->WIKINDX_MAX_WRITECHUNK . ';' . "\n";
+            $string .= 'public $WIKINDX_MAX_WRITECHUNK = ' . $tmpconfig->WIKINDX_MAX_WRITECHUNK . ';' . "\n";
         }
         else
         {
             $string .= 'public $WIKINDX_MAX_WRITECHUNK = FALSE;' . "\n";
-        }
-        $string .= <<<END
-// WIKINDX_TRUNK_VERSION boolean activates experimental features of the trunk version, development tools,
-// and changes the link of the update server to use the components of this version in perpetual development.
-// DO NOT ACTIVATE THIS OPTION IF YOU ARE NOT A CORE DEVELOPER. If you need to debug your installation,
-// you will find suitable options in the administration screen.
-
-END;
-        if (property_exists($this->config, 'WIKINDX_TRUNK_VERSION') && ($this->config->WIKINDX_TRUNK_VERSION === TRUE))
-        {
-            $string .= 'public $WIKINDX_TRUNK_VERSION = TRUE;' . "\n";
-        }
-        else
-        {
-            $string .= 'public $WIKINDX_TRUNK_VERSION = FALSE;' . "\n";
         }
         $string .= <<<END
 /*****
@@ -3411,13 +1698,13 @@ END;
         {
             $tables[$k] = mb_strtolower($v);
         }
-        // If there is an existing papers table (from wikindx v3.8.x), copy fields across and drop table
+        // If there is an existing papers table, copy fields across and drop table
         if (array_search('papers', $tables) !== FALSE)
         {
             if (array_search('plugin_wordprocessor', $tables) === FALSE)
             {
                 $this->db->queryNoError("
-					CREATE TABLE `" . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor` (
+					CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor` (
 						`pluginwordprocessorId` int(11) NOT NULL AUTO_INCREMENT,
 						`pluginwordprocessorHashFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
 						`pluginwordprocessorFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -3443,368 +1730,32 @@ END;
                 $values[] = $row['papersTimestamp'];
                 $this->db->insert('plugin_wordprocessor', $fields, $values);
             }
-            $this->db->queryNoError("DROP TABLE IF EXISTS " . $this->config->WIKINDX_DB_TABLEPREFIX . "papers;");
+            $this->db->queryNoError("DROP TABLE IF EXISTS " . WIKINDX_DB_TABLEPREFIX . "papers;");
         }
         elseif (array_search('plugin_wordprocessor', $tables) !== FALSE)
         {
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor ENGINE=InnoDB;");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorHashFilename` varchar(1020) DEFAULT NULL;");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorFilename` varchar(1020) DEFAULT NULL;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor ENGINE=InnoDB;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorHashFilename` varchar(1020) DEFAULT NULL;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor MODIFY COLUMN `pluginwordprocessorFilename` varchar(1020) DEFAULT NULL;");
         }
         if (array_search('plugin_soundexplorer', $tables) !== FALSE)
         {
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer RENAME `" . $this->config->WIKINDX_DB_TABLEPREFIX . "4fc387ba1ae34ac28e6dee712679d7b5`");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "4fc387ba1ae34ac28e6dee712679d7b5 RENAME `" . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer`");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer ENGINE=InnoDB;");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerLabel` varchar(1020) DEFAULT NOT NULL;");
-            $this->db->queryNoError("ALTER TABLE " . $this->config->WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerArray` text DEFAULT NOT NULL;");
-        }
-    }
-    /**
-     * Alter resourcecreator::creatorSurname field to allow for more accurate ordering
-     *
-     * @param int $maxCounts
-     */
-    private function alterCreatorSurname($maxCounts)
-    {
-        $count = 0;
-        $updateArray = [];
-        $this->db->formatConditions($this->db->formatFields('resourcecreatorCreatorSurname') . ' IS NOT NULL');
-        $this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorMain');
-        $resultset = $this->db->select('resource_creator', ['creatorSurname', 'resourcecreatorId']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $count++;
-            // remove all punctuation (keep apostrophe and dash for names such as Grimshaw-Aagaard and D'Eath)
-            $updateArray[$row['resourcecreatorId']] = mb_strtolower(preg_replace('/[^\p{L}\p{N}\s\-\']/u', '', $row['creatorSurname']));
-
-            if ($count >= $maxCounts)
-            {
-                $this->db->multiUpdate('resource_creator', 'resourcecreatorCreatorSurname', 'resourcecreatorId', $updateArray);
-                $updateArray = [];
-                $count = 0;
-            }
-        }
-    }
-    /**
-     * Strip BBCode from users table
-     *
-     * @param int $maxCounts
-     */
-    private function stripBBCode($maxCounts)
-    {
-        include_once("core/display/BBCODE.php");
-        $fields = ['usersFullname', 'usersDepartment', 'usersInstitution'];
-        foreach ($fields as $field)
-        {
-            $count = 0;
-            $updateArray = [];
-            $this->db->formatConditions($this->db->formatFields($field) . ' IS NOT NULL');
-            $this->db->formatConditions($this->db->formatFields($field) . $this->db->like('%', '\\[', '%'));
-            $resultset = $this->db->select('users', ['usersId', $field]);
-            while ($row = $this->db->fetchRow($resultset))
-            {
-                $count++;
-                $updateArray[$row['usersId']] = BBCODE::stripBBCode($row[$field]);
-
-                if ($count >= $maxCounts)
-                {
-                    $this->db->multiUpdate('users', 'usersId', $field, $updateArray);
-                    $updateArray = [];
-                    $count = 0;
-                }
-            }
-        }
-    }
-    /**
-     * Set collectionDefault column in the collections table
-     */
-    private function collectionDefaults()
-    {
-        include_once("core/collection/COLLECTIONDEFAULTMAP.php");
-        $defaultMap = new COLLECTIONDEFAULTMAP();
-        $typesArray = array_unique(array_values($defaultMap->collectionTypes));
-        $collectionArray = [];
-        $maxPacket = $this->db->getMaxPacket();
-        // For each 1MB max_allowed_packet (1048576 bytes), 600 updates in one go seems fine as a value for $maxCounts (based on trial and error)
-        $maxCounts = floor(600 * ($maxPacket / 1048576));
-        foreach ($typesArray as $type)
-        {
-            $fieldNames = [];
-            foreach ($defaultMap->{$type} as $typeKey => $typeKeyArray)
-            {
-                $typeKey = str_replace('_', '', $typeKey);
-                if (($typeKey == 'resource') && !empty($typeKeyArray))
-                {
-                    $this->db->leftJoin('resource', 'resourceId', 'resourcemiscId');
-                    foreach ($typeKeyArray as $key => $value)
-                    {
-                        $fieldName = $typeKey . $key;
-                        $fieldNames[] = $fieldName;
-                    }
-                }
-                elseif (($typeKey == 'resourcemisc') && !empty($typeKeyArray))
-                {
-                    foreach ($typeKeyArray as $key => $value)
-                    {
-                        $fieldName = $typeKey . $key;
-                        $fieldNames[] = $fieldName;
-                    }
-                }
-                elseif (($typeKey == 'resourceyear') && !empty($typeKeyArray))
-                {
-                    $this->db->leftJoin('resource_year', 'resourceyearId', 'resourcemiscId');
-                    foreach ($typeKeyArray as $key => $value)
-                    {
-                        $fieldName = $typeKey . $key;
-                        $fieldNames[] = $fieldName;
-                    }
-                }
-            }
-            if (empty($fieldNames))
-            {
-                continue;
-            }
-            $fieldNames[] = 'collectionId';
-            $fieldNames[] = 'resourcemiscId';
-            $this->db->formatConditions(['resourcemiscCollection' => ' IS NOT NULL']);
-            $this->db->formatConditions(['collectionType' => $type]);
-            $this->db->leftJoin('collection', 'collectionId', 'resourcemiscCollection');
-            $resultset = $this->db->select('resource_misc', $fieldNames, TRUE);
-            while ($row = $this->db->fetchRow($resultset))
-            {
-                foreach ($fieldNames as $fieldName)
-                {
-                    if (($fieldName == 'collectionId') || ($fieldName == 'resourcemiscId'))
-                    {
-                        continue;
-                    }
-                    if (
-                        !array_key_exists($row['collectionId'], $collectionArray)
-                        ||
-                        (
-                            array_key_exists($row['collectionId'], $collectionArray)
-                            && (!array_key_exists($fieldName, $collectionArray[$row['collectionId']]))
-                        )
-                    ) {
-                        if ($row[$fieldName])
-                        {
-                            $collectionArray[$row['collectionId']][$fieldName] = $row[$fieldName];
-                        }
-                    }
-                }
-                if (array_key_exists('resource_creator', $defaultMap->{$type}) && !empty($defaultMap->{$type}['resource_creator']))
-                {
-                    $creators = [];
-                    $roles = array_keys($defaultMap->{$type}['resource_creator']);
-                    $this->db->formatConditions(['resourcecreatorResourceId' => $row['resourcemiscId']]);
-                    $this->db->formatConditionsOneField($roles, 'resourcecreatorRole');
-                    $this->db->orderBy('resourcecreatorOrder', TRUE, FALSE);
-                    $resultsetC = $this->db->select('resource_creator', ['resourcecreatorCreatorId', 'resourcecreatorRole', 'resourcecreatorOrder']);
-                    while ($rowC = $this->db->fetchRow($resultsetC))
-                    {
-                        $order = $rowC['resourcecreatorOrder'] - 1;
-                        $creators['Creator' . $rowC['resourcecreatorRole'] . '_' . $order . '_select'] = $rowC['resourcecreatorCreatorId'];
-                    }
-                    if (!empty($creators))
-                    {
-                        $collectionArray[$row['collectionId']]['creators'] = $creators;
-                    }
-                }
-            }
-            if (!empty($collectionArray))
-            {
-                $count = 0;
-                $updateArray = [];
-                foreach ($collectionArray as $collectionId => $array)
-                {
-                    ++$count;
-                    $updateArray[$collectionId] = base64_encode(serialize($array));
-                    if ($count >= $maxCounts)
-                    {
-                        $this->db->multiUpdate('collection', 'collectiondefault', 'collectionId', $updateArray);
-                        $updateArray = [];
-                        $count = 0;
-                    }
-                }
-                if (!empty($updateArray))
-                { // do the remainder
-                    $this->db->multiUpdate('collection', 'collectiondefault', 'collectionId', $updateArray);
-                }
-            }
-        }
-    }
-    /**
-     * Fix bad UTF8
-     */
-    private function fixUTF8()
-    {
-        include_once("core/utf8/encoding.php");
-
-        // The following only have timestamps, numeric values or preset values such as 'N', 'Y' etc.
-        $tableFilter = [
-            'cache',
-            'database_summary',
-            'resource_category',
-            'resource_keyword',
-            'resource_language',
-            'resource_misc',
-            'resource_summary',
-            'resource_timestamp',
-            'statistics',
-            'user_bibliography_resource',
-            'user_groups_users',
-        ];
-        $textFieldFilter = ['char', 'longtext', 'mediumtext', 'text', 'tinytext', 'varchar'];
-
-        $tables = $this->db->listTables(FALSE);
-        $tables = array_intersect($tables, $tableFilter);
-        foreach ($tables as $table)
-        {
-            $selectedFields = [];
-
-            $convType = 'lightFixutf8';
-            // Need to select text fields for conversion
-            $fInfo = $this->db->getFieldsProperties($table);
-            foreach ($fInfo as $val)
-            {
-                if (in_array($val['DATA_TYPE'], $textFieldFilter))
-                {
-                    $selectedFields[] = $val['COLUMN_NAME'];
-                }
-            }
-
-            // Never convert the password of users
-            if ($table == 'users')
-            {
-                $selectedFields = array_diff($selectedFields, ['usersPassword']);
-            }
-
-            if (count($selectedFields) > 0)
-            {
-                $resultset = $this->db->select($table, $selectedFields);
-                while ($row = $this->db->fetchRow($resultset))
-                {
-                    $id = str_replace('_', '', $table) . 'Id';
-                    $updateArray = [];
-                    foreach ($row as $field => $value)
-                    {
-                        if (!$value || is_numeric($value))
-                        {
-                            continue;
-                        }
-                        $value = stripslashes($value);
-                        $original = $value;
-                        if ($convType == 'lightFixutf8')
-                        {
-                            $value = Encoding::toUTF8($value);
-                            if ($original != $value)
-                            {
-                                $updateArray[$field] = $value;
-                            }
-                        }
-                        elseif ($convType == 'toughFixutf8')
-                        {
-                            $value = Encoding::fixUTF8($value);
-                            if ($original != $value)
-                            {
-                                $updateArray[$field] = $value;
-                            }
-                        }
-                    }
-                    if (empty($updateArray))
-                    {
-                        continue;
-                    }
-                    if (($table != 'config'))
-                    {
-                        $this->db->formatConditions([$id => $row[$id]]);
-                    }
-                    $this->db->update($table, $updateArray);
-                }
-            }
-        }
-        $this->db->updateNull('cache', 'cacheResourceCreators');
-        $this->db->updateNull('cache', 'cacheMetadataCreators');
-        $this->db->updateNull('cache', 'cacheKeywords');
-        $this->db->updateNull('cache', 'cacheResourceKeywords');
-        $this->db->updateNull('cache', 'cacheMetadataKeywords');
-        $this->db->updateNull('cache', 'cacheQuoteKeywords');
-        $this->db->updateNull('cache', 'cacheParaphraseKeywords');
-        $this->db->updateNull('cache', 'cacheMusingKeywords');
-        $this->db->updateNull('cache', 'cacheResourcePublishers');
-        $this->db->updateNull('cache', 'cacheMetadataPublishers');
-        $this->db->updateNull('cache', 'cacheConferenceOrganisers');
-        $this->db->updateNull('cache', 'cacheResourceCollections');
-        $this->db->updateNull('cache', 'cacheMetadataCollections');
-        $this->db->updateNull('cache', 'cacheResourceCollectionTitles');
-        $this->db->updateNull('cache', 'cacheResourceCollectionShorts');
-    }
-    /**
-     * To get total counts right in list operations, certain tables, having their ID columns the same as resource.resourceId,
-     * must have the same number of rows as the resource table.
-     */
-    private function addMissingRows()
-    {
-        // resource_year
-        $resultset = $this->db->query('SELECT `resourceId` FROM `' . $this->config->WIKINDX_DB_TABLEPREFIX . 'resource`
-			WHERE `resourceId` NOT IN (SELECT `resourceyearId`
-			FROM `' . $this->config->WIKINDX_DB_TABLEPREFIX . 'resource_year`)');
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $this->db->insert('resource_year', 'resourceyearId', $row['resourceId']);
-        }
-        // resource_misc
-        $resultset = $this->db->query('SELECT `resourceId` FROM `' . $this->config->WIKINDX_DB_TABLEPREFIX . 'resource`
-			WHERE `resourceId` NOT IN (SELECT `resourcemiscId`
-			FROM `' . $this->config->WIKINDX_DB_TABLEPREFIX . 'resource_misc`)');
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $this->db->insert('resource_misc', 'resourcemiscId', $row['resourceId']);
-        }
-        // resource_timestamp
-        $resultset = $this->db->query('SELECT `resourceId` FROM `' . $this->config->WIKINDX_DB_TABLEPREFIX . 'resource`
-			WHERE `resourceId` NOT IN (SELECT `resourcetimestampId`
-			FROM `' . $this->config->WIKINDX_DB_TABLEPREFIX . 'resource_timestamp`)');
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            $this->db->insert('resource_timestamp', 'resourcetimestampId', $row['resourceId']);
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer RENAME `" . WIKINDX_DB_TABLEPREFIX . "4fc387ba1ae34ac28e6dee712679d7b5`");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "4fc387ba1ae34ac28e6dee712679d7b5 RENAME `" . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer`");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer ENGINE=InnoDB;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerLabel` varchar(1020) DEFAULT NOT NULL;");
+            $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerArray` text DEFAULT NOT NULL;");
         }
     }
     /**
      * If required to pause execution, store current position and any $tableArray arrays in session and present continuation form to user
      *
      * @param string $finished
-     * @param string $function Default is ""
-     * @param string $table Default is FALSE
      */
-    private function pauseExecution($finished, $function = "", $table = FALSE)
+    private function pauseExecution($finished)
     {
-        // Store data
-
-        if ($function != "")
-        {
-            $this->session->setVar('upgrade_function', $function);
-        }
-        if ($table)
-        {
-            $this->session->setVar('upgrade_table', $table);
-        }
-        $tables = $this->db->listTables(TRUE);
-        foreach ($tables as $table)
-        {
-            $table .= 'Array';
-            if (isset($this->{$table}))
-            {
-                $tableArrays[$table] = $this->{$table};
-            }
-        }
-        if (isset($tableArrays))
-        {
-            $this->session->setVar('upgrade_tableArrays', base64_encode(serialize($tableArrays)));
-        }
         // Print form and die
         //		$pString = "php.ini's max_execution time (" . ini_get("max_execution_time") . " seconds) was about
         //			to be exceeded.  Please click on the button to continue the upgrade.&nbsp;&nbsp;Do <strong>not</strong> click
@@ -3822,11 +1773,6 @@ END;
 			until each script has finished.");
         }
         $pString .= \FORM\formHeader('continueExecution');
-        if ($function == 'stage4_1__15')
-        {
-            $pString .= \HTML\p($this->installMessages->text("upgradeFixUTF8-1"));
-            $pString .= \HTML\p($this->installMessages->text("upgradeFixUTF8-2") . '&nbsp;&nbsp;' . \FORM\checkBox(FALSE, 'fixUTF8'));
-        }
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Continue")) . \FORM\formEnd());
         $this->close($pString);
     }
@@ -3835,295 +1781,7 @@ END;
      */
     private function continueExecution()
     {
-        $function = $this->session->getVar('upgrade_function');
-        $tableArrays = $this->session->getVar('upgrade_tableArrays');
-        if ($tableArrays)
-        {
-            $tableArrays = unserialize(base64_decode($tableArrays));
-            foreach ($tableArrays as $table => $array)
-            {
-                $this->{$table} = $array;
-            }
-        }
-        $table = $this->session->getVar('upgrade_table');
-        $this->session->clearArray('upgrade');
-        if ($function == 'upgrade40charToBin')
-        {
-            if ($table)
-            {
-                $this->upgrade40charToBin($table);
-            }
-            else
-            {
-                $this->upgrade40charToBin();
-            }
-            $this->upgrade40Nulls();
-            $this->upgrade40Tables();
-        }
-        elseif ($function == 'upgrade40Tables')
-        {
-            if ($table)
-            {
-                $this->upgrade40Tables($table);
-            }
-            else
-            {
-                $this->upgrade40Tables();
-            }
-        }
-    }
-    /**
-     * Update VARCHARS to account for increased size of UTF8 fields (3* space required) and then temp and change char types to binary types on some tables
-     *
-     * @param string $table Default is FALSE
-     */
-    private function upgrade40charToBin($table = FALSE)
-    {
-        $tables = $this->db->listTables(FALSE);
-        foreach ($tables as $basicTable)
-        {
-            $change = $varchar = [];
-            $table = "`" . $this->config->WIKINDX_DB_TABLEPREFIX . $basicTable . "`";
-            $fields = [];
-            $idField = "null";
-            $recordset = $this->db->query("SHOW COLUMNS FROM $table");
-            while ($row = $this->db->fetchRow($recordset))
-            {
-                if (($row['Type'] == 'varchar(10)') || $row['Type'] == 'varchar(30)')
-                {
-                    $fields[] = $row['Field'];
-                    $varchar[] = '`' . $row['Field'] . '` `' . $row['Field'] . '` varchar(255)';
-                }
-                elseif ($row['Type'] == 'varchar(255)')
-                {
-                    $fields[] = $row['Field'];
-                }
-                elseif ($row['Type'] == 'mediumtext')
-                {
-                    $fields[] = $row['Field'];
-                    $varchar[] = '`' . $row['Field'] . '` `' . $row['Field'] . '` text';
-                }
-                elseif ($row['Type'] == 'text')
-                {
-                    $fields[] = $row['Field'];
-                }
-                
-                if ($row['Type'] == 'int(11)' && $row['Extra'] == 'auto_increment')
-                {
-                    $idField = $row['Field'];
-                }
-            }
-            if (!empty($fields))
-            {
-                $this->upgrade40CheckForValidUtf8($basicTable, $fields, $idField);
-            }
-            // reset database conditions, join etc (upgrade40CheckForValidUtf8) may not have executed SQL query but condition still set
-            $this->db->resetSubs();
-            if (!empty($varchar))
-            {
-                foreach ($varchar as $new)
-                {
-                    $change[] = ' CHANGE ' . $new;
-                }
-                $this->db->query('ALTER TABLE ' . $table . implode(',', $change));
-            }
-        }
-        $tables = ['resource_attachments', 'category', 'collection', 'config', 'creator',
-            'custom', 'keyword', 'news', 'papers', 'publisher', 'resource',
-            'resource_custom', 'resource_musing', 'resource_musing_text', 'resource_text', 'resource_page',
-            'resource_paraphrase', 'resource_paraphrase_comment', 'resource_paraphrase_text',
-            'resource_quote', 'resource_quote_comment', 'resource_quote_text', 'resource_year', 'tag',
-            'users', 'user_bibliography', 'user_groups', 'user_register',
-            'user_tags', 'resource_user_tags', 'subcategory', 'statistics', ];
-        foreach ($tables as $basicTable)
-        {
-            $change = $varchar = [];
-            $table = '`' . $this->config->WIKINDX_DB_TABLEPREFIX . "$basicTable`";
-            $recordset = $this->db->query("SHOW COLUMNS FROM $table");
-            while ($row = $this->db->fetchRow($recordset))
-            {
-                if (($row['Type'] == 'varchar(255)'))
-                {
-                    $varchar[] = '`' . $row['Field'] . '` `' . $row['Field'] . '` varbinary(255)';
-                }
-                elseif ($row['Type'] == 'text')
-                {
-                    $varchar[] = '`' . $row['Field'] . '` `' . $row['Field'] . '` blob';
-                }
-            }
-            if (!empty($varchar))
-            {
-                foreach ($varchar as $new)
-                {
-                    $change[] = ' CHANGE ' . $new;
-                }
-            }
-            $this->db->query('ALTER TABLE ' . $table . implode(',', $change));
-        }
-    }
-    /**
-     * Check for valid UTF-8.
-     *
-     * If invalid code found, store value in array for updating to database after UTF8 upgrade
-     *
-     * @param string $basicTable
-     * @param array $fields
-     * @param string $idField
-     */
-    private function upgrade40CheckForValidUtf8($basicTable, $fields, $idField = "null")
-    {
-        if (($basicTable == 'cache') || ($basicTable == 'database_summary') ||
-            ($basicTable == 'resource_keyword') || ($basicTable == 'resource_category') ||
-            ($basicTable == 'resource_creator')
-        ) {
-            return;
-        }
-        $resultset = $this->db->select($basicTable, $fields);
-        $tableArray = $basicTable . 'Array';
-        $this->{$tableArray}["idField"] = $idField;
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            foreach ($fields as $field)
-            {
-                if (($basicTable != 'config') && ($field == $idField))
-                {
-                    continue;
-                }
-                $encoding = mb_detect_encoding($row[$field]);
-                if (($encoding != 'ASCII') && ($encoding != 'UTF-8'))
-                {
-                    if (!$encoding)
-                    { // no idea what this is, so store for re-writing after upgrade later
-                        $value = $row[$field];
-                    }
-                    else
-                    {
-                        if (!$value = iconv($encoding, 'utf-8', $row[$field]))
-                        {
-                            $value = $row[$field];
-                        }
-                    }
-                    if ($idField == 'null')
-                    {
-                        $this->{$tableArray}[][$field] = $value;
-                    }
-                    else
-                    {
-                        $this->{$tableArray}[$row[$idField]][$field] = $value;
-                    }
-                }
-            }
-        }
-    }
-    /**
-     * Remove user's sessions and caches
-     */
-    private function upgrade40Nulls()
-    {
-        // Remove any existing user session
-        $this->db->updateNull('users', 'userSession');
-        // Remove cache fields so that v4's UTF8 handling and ordering of creators, keywords etc. is handled properly
-        $this->db->updateNull('cache', 'resourceCreators');
-        $this->db->updateNull('cache', 'metadataCreators');
-        $this->db->updateNull('cache', 'resourceKeywords');
-        $this->db->updateNull('cache', 'metadataKeywords');
-        $this->db->updateNull('cache', 'quoteKeywords');
-        $this->db->updateNull('cache', 'paraphraseKeywords');
-        $this->db->updateNull('cache', 'musingKeywords');
-        $this->db->updateNull('cache', 'resourcePublishers');
-        $this->db->updateNull('cache', 'metadataPublishers');
-        $this->db->updateNull('cache', 'conferenceOrganisers');
-        $this->db->updateNull('cache', 'resourceCollections');
-        $this->db->updateNull('cache', 'metadataCollections');
-        $this->db->updateNull('cache', 'resourceCollectionTitles');
-        $this->db->updateNull('cache', 'resourceCollectionShorts');
-    }
-    /**
-     * recreate the 4.0 cache
-     */
-    private function recreate40Cache()
-    {
-        $keyword = FACTORY_KEYWORD::getInstance();
-        $creator = FACTORY_CREATOR::getInstance();
-        $publisher = FACTORY_PUBLISHER::getInstance();
-        $collection = FACTORY_COLLECTION::getInstance();
-        $creator->grabAll();
-        $creator->grabAll(FALSE, FALSE, TRUE);  // creators in resources with metadata
-        $keyword->grabAll(); // default resource_keyword table
-        $keyword->grabAll(FALSE, 'resource');
-        $keyword->grabAll(FALSE, 'quote');
-        $keyword->grabAll(FALSE, 'paraphrase');
-        $keyword->grabAll(FALSE, 'musing');
-        $publisher->grabAll();
-        $publisher->grabAll(FALSE, FALSE, FALSE, TRUE); // publishers in resources with metadata
-        $collection->grabAll();
-        $collection->grabAll(FALSE, FALSE, FALSE, TRUE); // collections in resources with metadata
-    }
-    /**
-     * Upgrade tables to UTF-8 then reverse field type change for some tables from binary back to var
-     *
-     * @param string $tableContinue Default is FALSE
-     */
-    private function upgrade40Tables($tableContinue = FALSE)
-    {
-        $tables = $this->db->listTables(TRUE);
-        foreach ($tables as $table)
-        {
-            $this->db->query('ALTER TABLE `' . $table . '` CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci');
-        }
-        $tables = [
-            'resource_attachments', 'category', 'collection', 'config', 'creator',
-            'custom', 'keyword', 'news', 'papers', 'publisher', 'resource',
-            'resource_custom', 'resource_musing', 'resource_musing_text', 'resource_text', 'resource_page',
-            'resource_paraphrase', 'resource_paraphrase_comment', 'resource_paraphrase_text',
-            'resource_quote', 'resource_quote_comment', 'resource_quote_text', 'resource_year', 'tag', 'statistics',
-            'users', 'user_bibliography', 'user_groups', 'user_register', 'user_tags', 'resource_user_tags', 'subcategory',
-        ];
-        foreach ($tables as $basicTable)
-        {
-            $change = $varchar = [];
-            $table = '`' . $this->config->WIKINDX_DB_TABLEPREFIX . "$basicTable`";
-            $recordset = $this->db->query("SHOW COLUMNS FROM $table");
-            while ($row = $this->db->fetchRow($recordset))
-            {
-                if (($row['Type'] == 'varbinary(255)'))
-                {
-                    $varchar[] = '`' . $row['Field'] . '` `' . $row['Field'] . '` varchar(255)';
-                }
-                elseif ($row['Type'] == 'blob')
-                {
-                    $varchar[] = '`' . $row['Field'] . '` `' . $row['Field'] . '` text';
-                }
-            }
-            if (!empty($varchar))
-            {
-                foreach ($varchar as $new)
-                {
-                    $change[] = ' CHANGE ' . $new;
-                }
-            }
-            $this->db->query('ALTER TABLE ' . $table . implode(',', $change));
-            $tableArray = $basicTable . 'Array';
-            if (isset($this->{$tableArray}))
-            {
-                foreach ($this->{$tableArray} as $id => $array)
-                {
-                    $updateArray = [];
-                    if ($this->{$tableArray}["idField"] != 'null')
-                    {
-                        $this->db->formatConditions([$this->{$tableArray}["idField"] => $id]);
-                    }
-                    foreach ($array as $key => $basicTable)
-                    {
-                        $updateArray[$key] = $basicTable;
-                    }
-                    if (!empty($updateArray))
-                    {
-                        $this->db->update($basicTable, $updateArray);
-                    }
-                }
-            }
-        }
+        // Nothing to do
     }
     /**
      * Only the superadmin may update the database -- ask for login
@@ -4135,9 +1793,9 @@ END;
         $pString = \HTML\p(\HTML\strong($this->installMessages->text("upgradeDBHeading")));
 
         $vars = GLOBALS::getVars();
-        $vars['username'] = isset($vars['username']) ? $vars['username'] : '';
+        $vars['usersUsername'] = isset($vars['usersUsername']) ? $vars['usersUsername'] : '';
         $vars['password'] = isset($vars['password']) ? $vars['password'] : '';
-        if (\UPDATE\logonCheckUpgradeDB($this->db, $vars['username'], $vars['password'], $currentdbVersion))
+        if (\UPDATE\logonCheckUpgradeDB($this->db, $vars['usersUsername'], $vars['password'], $currentdbVersion))
         {
             $this->session->clearSessionData();
             $this->session->setVar("setup_Superadmin", TRUE);
@@ -4165,7 +1823,7 @@ END;
             $pString .= \HTML\tableStart('left width50percent');
             $pString .= \HTML\trStart();
             $pString .= \HTML\td($this->messages->text("user", "username") . ":&nbsp;&nbsp;");
-            $pString .= \HTML\td(\FORM\textInput(FALSE, "username"));
+            $pString .= \HTML\td(\FORM\textInput(FALSE, "usersUsername"));
             $pString .= \HTML\trEnd();
             $pString .= \HTML\trStart();
             $pString .= \HTML\td($this->messages->text("user", "password") . ":&nbsp;&nbsp;");
@@ -4187,7 +1845,7 @@ END;
      */
     private function close($pString)
     {
-        $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
+        $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
         $string = <<<END
 <!DOCTYPE html>
 <html>

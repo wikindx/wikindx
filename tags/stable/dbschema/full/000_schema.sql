@@ -181,8 +181,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_attachments` (
   `resourceattachmentsFileName` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceattachmentsFileType` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceattachmentsFileSize` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourceattachmentsDownloads` int(11) DEFAULT 0,
-  `resourceattachmentsDownloadsPeriod` int(11) DEFAULT 0,
   `resourceattachmentsPrimary` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   `resourceattachmentsTimestamp` datetime DEFAULT current_timestamp(),
   `resourceattachmentsEmbargo` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
@@ -291,8 +289,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_misc` (
   `resourcemiscTag` int(11) DEFAULT NULL,
   `resourcemiscAddUserIdResource` int(11) DEFAULT NULL,
   `resourcemiscEditUserIdResource` int(11) DEFAULT NULL,
-  `resourcemiscAccesses` int(11) DEFAULT 1,
-  `resourcemiscAccessesPeriod` int(11) DEFAULT 1,
   `resourcemiscMaturityIndex` double DEFAULT 0,
   `resourcemiscPeerReviewed` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   `resourcemiscQuarantine` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
@@ -365,14 +361,25 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%resource_year` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%statistics` (
-  `statisticsId` int(11) NOT NULL AUTO_INCREMENT,
-  `statisticsResourceId` int(11) NOT NULL,
-  `statisticsAttachmentId` int(11) DEFAULT NULL,
-  `statisticsStatistics` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  PRIMARY KEY (`statisticsId`),
-  KEY `statisticsResourceId` (`statisticsResourceId`),
-  KEY `statisticsAttachmentId` (`statisticsAttachmentId`)
+CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%statistics_attachment_downloads` (
+  `statisticsattachmentdownloadsId` int(11) NOT NULL AUTO_INCREMENT,
+  `statisticsattachmentdownloadsResourceId` int(11) NOT NULL,
+  `statisticsattachmentdownloadsAttachmentId` int(11) NOT NULL,
+  `statisticsattachmentdownloadsCount` int(11) DEFAULT 0,
+  `statisticsattachmentdownloadsMonth` int(11) DEFAULT 0,
+  PRIMARY KEY (`statisticsattachmentdownloadsId`),
+  KEY `statisticsattachmentdownloadsAttachmentId` (`statisticsattachmentdownloadsAttachmentId`),
+  KEY `statisticsattachmentdownloadsResourceId` (`statisticsattachmentdownloadsResourceId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%statistics_resource_views` (
+  `statisticsresourceviewsId` int(11) NOT NULL AUTO_INCREMENT,
+  `statisticsresourceviewsResourceId` int(11) NOT NULL,
+  `statisticsresourceviewsCount` int(11) DEFAULT 0,
+  `statisticsresourceviewsMonth` int(11) DEFAULT 0,
+  PRIMARY KEY (`statisticsresourceviewsId`),
+  KEY `statisticsresourceviewsResourceId` (`statisticsresourceviewsResourceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 
@@ -393,47 +400,47 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%tag` (
 
 CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%users` (
   `usersId` int(11) NOT NULL AUTO_INCREMENT,
-  `usersUsername` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `usersUsername` varchar(188) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `usersPassword` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `usersFullname` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `usersEmail` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `usersFullname` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `usersEmail` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
   `usersDepartment` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `usersInstitution` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `usersTimestamp` datetime DEFAULT current_timestamp(),
-  `usersAdmin` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
+  `usersTimestamp` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `usersAdmin` tinyint(1) NOT NULL DEFAULT 0,
   `usersCookie` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
-  `usersPaging` int(11) DEFAULT 20,
-  `usersPagingMaxLinks` int(11) DEFAULT 11,
-  `usersPagingStyle` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
-  `usersStringLimit` int(11) DEFAULT 40,
-  `usersLanguage` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT 'auto',
-  `usersStyle` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT 'apa',
-  `usersTemplate` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT 'default',
-  `usersNotify` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
-  `usersNotifyAddEdit` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'A',
-  `usersNotifyThreshold` int(2) DEFAULT 0,
-  `usersNotifyTimestamp` datetime DEFAULT current_timestamp(),
-  `usersNotifyDigestThreshold` int(11) DEFAULT 100,
-  `usersPagingTagCloud` int(11) DEFAULT 100,
-  `usersPasswordQuestion1` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `usersPasswordAnswer1` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `usersPasswordQuestion2` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `usersPasswordAnswer2` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `usersPasswordQuestion3` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `usersPasswordAnswer3` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `usersUserSession` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `usersUseBibtexKey` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
-  `usersUseWikindxKey` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
-  `usersDisplayBibtexLink` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
-  `usersDisplayCmsLink` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
+  `usersPaging` int(11) NOT NULL DEFAULT 20,
+  `usersPagingMaxLinks` int(11) NOT NULL DEFAULT 11,
+  `usersPagingStyle` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
+  `usersStringLimit` int(11) NOT NULL DEFAULT 40,
+  `usersLanguage` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'auto',
+  `usersStyle` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'apa',
+  `usersTemplate` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'default',
+  `usersNotify` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
+  `usersNotifyAddEdit` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'A',
+  `usersNotifyThreshold` int(2) NOT NULL DEFAULT 0,
+  `usersNotifyTimestamp` datetime NOT NULL DEFAULT current_timestamp(),
+  `usersNotifyDigestThreshold` int(11) NOT NULL DEFAULT 100,
+  `usersPagingTagCloud` int(11) NOT NULL DEFAULT 100,
+  `usersPasswordQuestion1` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `usersPasswordAnswer1` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `usersPasswordQuestion2` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `usersPasswordAnswer2` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `usersPasswordQuestion3` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `usersPasswordAnswer3` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `usersUserSession` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL DEFAULT '',
+  `usersUseBibtexKey` tinyint(1) NOT NULL DEFAULT 0,
+  `usersUseWikindxKey` tinyint(1) NOT NULL DEFAULT 0,
+  `usersDisplayBibtexLink` tinyint(1) NOT NULL DEFAULT 0,
+  `usersDisplayCmsLink` tinyint(1) NOT NULL DEFAULT 0,
   `usersCmsTag` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `usersIsCreator` int(11) DEFAULT NULL,
-  `usersListlink` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
-  `usersTemplateMenu` int(11) DEFAULT NULL,
+  `usersListlink` tinyint(1) NOT NULL DEFAULT 0,
+  `usersTemplateMenu` int(11) NOT NULL DEFAULT 0,
   `usersGDPR` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
-  `usersChangePasswordTimestamp` datetime DEFAULT current_timestamp(),
   `usersBlock` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
-  PRIMARY KEY (`usersId`)
+  PRIMARY KEY (`usersId`),
+  UNIQUE KEY `usersUsernameUnique` (`usersUsername`) USING HASH
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 

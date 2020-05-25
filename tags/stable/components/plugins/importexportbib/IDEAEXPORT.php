@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -17,7 +19,6 @@ class IDEAEXPORT
     private $pluginmessages;
     private $errors;
     private $session;
-    private $config;
     private $coremessages;
     private $cite;
     private $bibStyle;
@@ -50,7 +51,6 @@ class IDEAEXPORT
         include_once("core/messages/PLUGINMESSAGES.php");
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->cite = FACTORY_CITE::getInstance('rtf');
@@ -122,23 +122,18 @@ class IDEAEXPORT
         // The body will be written in memory by a PHP stream
         $this->bodyTempFile = $this->openTempFile();
         $this->db->formatConditions(['resourcemetadataMetadataId' => ' IS NULL']); //main ideas only
-        if (!$this->common->setIdeasCondition())
-        {
+        if (!$this->common->setIdeasCondition()) {
             $this->failure(HTML\p($this->pluginmessages->text("noIdeas"), 'error'));
         }
-        if (array_key_exists('selectIdea', $this->vars) && ($this->vars['selectIdea'] == 2))
-        {
+        if (array_key_exists('selectIdea', $this->vars) && ($this->vars['selectIdea'] == 2)) {
             $ids = [];
-            foreach ($this->vars as $key => $var)
-            {
+            foreach ($this->vars as $key => $var) {
                 $split = explode('checkbox_', $key);
-                if (count($split) == 2)
-                {
+                if (count($split) == 2) {
                     $ids[] = $split[1];
                 }
             }
-            if (!empty($ids))
-            { // else, default to all ideas
+            if (!empty($ids)) { // else, default to all ideas
                 $this->db->formatConditionsOneField($ids, 'resourcemetadataId');
             }
         }
@@ -146,35 +141,29 @@ class IDEAEXPORT
             'resourcemetadataTimestampEdited',
             'resourcemetadataMetadataId', 'resourcemetadataText', 'resourcemetadataAddUserId', 'resourcemetadataPrivate', ]);
         $this->getData($resultset);
-        if (!$this->common->openFile(FALSE, '.rtf', 'a'))
-        {
+        if (!$this->common->openFile(FALSE, '.rtf', 'a')) {
             $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
         }
         // Headers are built after body because we have to extract
         // color and font declarations before from the body
         $header = $this->rtfHeader();
-        if (!fwrite($this->common->fp, $header))
-        {
+        if (!fwrite($this->common->fp, $header)) {
             $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
         }
         // Go to the head of the body stream,
         // read it by chunk and write it to the RTF file
         rewind($this->bodyTempFile);
-        do
-        {
+        do {
             $data = fgets($this->bodyTempFile, 1024);
-            if ($data !== FALSE)
-            {
-                if (!fwrite($this->common->fp, $data))
-                {
+            if ($data !== FALSE) {
+                if (!fwrite($this->common->fp, $data)) {
                     $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
                 }
             }
         } while ($data !== FALSE);
         $this->closeTempFile($this->bodyTempFile);
         $footer = $this->rtfFooter();
-        if (!fwrite($this->common->fp, $footer))
-        {
+        if (!fwrite($this->common->fp, $footer)) {
             $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
         }
         $this->common->closeFile();
@@ -190,20 +179,15 @@ class IDEAEXPORT
     private function getData($recordset)
     {
         $mainArray = [];
-        $multiUser = $this->session->getVar('setup_MultiUser');
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        $multiUser = WIKINDX_MULTIUSER;
+        while ($row = $this->db->fetchRow($recordset)) {
             $string = $this->textFormat($row['resourcemetadataText']);
-            if ($multiUser)
-            {
+            if ($multiUser) {
                 $string .= "__WIKINDX__NEWLINEPAR__";
                 list($user) = $this->userObj->displayUserAddEdit($row['resourcemetadataAddUserId'], FALSE, 'idea');
-                if ($row['resourcemetadataTimestampEdited'] == '0000-00-00 00:00:00')
-                {
+                if ($row['resourcemetadataTimestampEdited'] == '0000-00-00 00:00:00') {
                     $string .= $this->coremessages->text('hint', 'addedBy', $user . ' ' . $row['resourcemetadataTimestamp']);
-                }
-                else
-                {
+                } else {
                     $string .= $this->coremessages->text('hint', 'addedBy', $user . ' ' . $row['resourcemetadataTimestamp']) .
                     ', ' . $this->coremessages->text('hint', 'editedBy', $user . ' ' . $row['resourcemetadataTimestampEdited']);
                 }
@@ -211,36 +195,30 @@ class IDEAEXPORT
             }
             $mainArray[] = $string;
         }
-        foreach ($mainArray as $text)
-        {
+        foreach ($mainArray as $text) {
             $fullText = $this->rtf->utf8_2_rtfansicpg1252($this->removeSlashes($text));
             // Do divider
             $fullText .= $this->makeBlock('divider');
             $fullText .= $this->rtfParagraphBlock('divider');
             $fullText .= '\par__________________________________________' . '\par }' . LF;
-            for ($i = 0; $i < $this->dividerCR[3]; $i++)
-            {
+            for ($i = 0; $i < $this->dividerCR[3]; $i++) {
                 $fullText .= $this->makeParagraph('divider') . LF;
             }
             // Cut the string in smaller pieces to isolate hexfile name for other content
-            $tString = preg_split('/(##' . preg_quote(str_replace("\\", "/", WIKINDX_DIR_CACHE_FILES), "/") . '\/hex[0-9a-zA-Z]+\.txt##)/u', $fullText, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+            $tString = preg_split('/(##' . preg_quote(WIKINDX_URL_CACHE_FILES, "/") . '\/hex[0-9a-zA-Z]+\.txt##)/u', $fullText, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
             // Write the ressource in the tempfile by chunk
             $k = 0;
-            for ($k = 0; $k < count($tString); $k++)
-            {
+            for ($k = 0; $k < count($tString); $k++) {
                 $c = $tString[$k];
                 // Is an image: replace hexfile names by the content of these files
-                if (\UTILS\matchPrefix($c, '##' . str_replace("\\", "/", WIKINDX_DIR_CACHE_FILES) . '/hex'))
-                {
+                if (\UTILS\matchPrefix($c, '##' . WIKINDX_URL_CACHE_FILES . '/hex')) {
                     $c = str_replace('#', '', $c);
                     $this->writeImageRTF($this->bodyTempFile, str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $c));
                     @unlink($c);
                 }
                 // Not an image
-                else
-                {
-                    if (!fwrite($this->bodyTempFile, $c))
-                    {
+                else {
+                    if (!fwrite($this->bodyTempFile, $c)) {
                         $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
                     }
                 }
@@ -257,19 +235,14 @@ class IDEAEXPORT
     {
         $BUFFER_SIZE = 1024;
 
-        if (file_exists($imageFileName))
-        {
+        if (file_exists($imageFileName)) {
             $fdImage = fopen($imageFileName, 'rb');
 
-            if ($fdImage !== FALSE)
-            {
-                do
-                {
+            if ($fdImage !== FALSE) {
+                do {
                     $data = fgets($fdImage, $BUFFER_SIZE);
-                    if ($data !== FALSE)
-                    {
-                        if (!fwrite($fdOutputFile, $data))
-                        {
+                    if ($data !== FALSE) {
+                        if (!fwrite($fdOutputFile, $data)) {
                             $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
                         }
                     }
@@ -277,11 +250,8 @@ class IDEAEXPORT
 
                 fclose($fdImage);
             }
-        }
-        else
-        {
-            if (!fwrite($fdOutputFile, $imageFileName))
-            {
+        } else {
+            if (!fwrite($fdOutputFile, $imageFileName)) {
                 $this->failure($this->errors->text('file', 'write', ': ' . $this->common->fileName));
             }
         }
@@ -374,8 +344,7 @@ class IDEAEXPORT
     {
         $colourTable = '{\colortbl;';
 
-        foreach ($this->rtf->colourArray as $colour)
-        {
+        foreach ($this->rtf->colourArray as $colour) {
             $colourTable .= $colour . ';';
         }
 
@@ -394,8 +363,7 @@ class IDEAEXPORT
     {
         $pString = '{';
         $pString .= $this->rtf->fontBlocks[$type]['fontBlock'] . $this->rtf->fontBlocks[$type]['fontSize'];
-        if (array_key_exists('textFormat', $this->rtf->fontBlocks[$type]))
-        {
+        if (array_key_exists('textFormat', $this->rtf->fontBlocks[$type])) {
             $DefEmphase = [
                 'Italics' => '\i',
                 'Underline' => '\ul',
@@ -416,8 +384,7 @@ class IDEAEXPORT
     {
         $pString = '{\fonttbl' . LF;
 
-        foreach ($this->rtf->fonttbl as $index => $font)
-        {
+        foreach ($this->rtf->fonttbl as $index => $font) {
             $pString .= '{\f' . $index . '\fcharset0 ' . $font . ';}' . LF;
         }
 
@@ -456,12 +423,9 @@ class IDEAEXPORT
      */
     private function makeBlock($type)
     {
-        if ($type == 'divider')
-        {
+        if ($type == 'divider') {
             $pString = '\qc'; // Center
-        }
-        else
-        {
+        } else {
             $pString = '\qj'; // Justify
         }
 
@@ -514,12 +478,10 @@ class IDEAEXPORT
         $this->rtf->fontBlocks[$type]['indentR'] = '\ri' . ($indentR * 720);
 
         $this->rtf->fontBlocks[$type]['crFollowing'] = $crFollowing;
-        if ($crBetween)
-        {
+        if ($crBetween) {
             $this->rtf->fontBlocks[$type]['crBetween'] = $crBetween;
         }
-        if ($textFormat != 'Normal')
-        {
+        if ($textFormat != 'Normal') {
             $this->rtf->fontBlocks[$type]['textFormat'] = $textFormat;
         }
     }

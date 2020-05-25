@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -44,18 +46,13 @@ namespace LOCALES
 //
         // For the first option, set $dateFormat = 1; otherwise set $dateFormat = 2;
         $dateFormat = 2;
-        if ($dateFormat == 1)
-        {
+        if ($dateFormat == 1) {
             $format = "%c"; // e.g. Tue Feb 5 00:45:10 2009 for February 5, 2009 at 12:45:10 AM
             $timestamp = strftime($format, $unixTime);
-        }
-        elseif ($dateFormat == 2)
-        {
+        } elseif ($dateFormat == 2) {
             $format = "%x %X"; // e.g. 02/05/09 03:59:16 for February 5, 2009 15:59:16
             $timestamp = date($format, $unixTime);
-        }
-        else
-        {
+        } else {
             // Keep the timestamp unformated
         }
 
@@ -86,33 +83,28 @@ namespace LOCALES
         refreshSystemLocalesCache();
         
         $path_languages_localized = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE_LANGUAGES, "locales_system.json"]);
-        if (!file_exists($path_languages_localized))
-        {
+        if (!file_exists($path_languages_localized)) {
             echo "<p>The <strong>$path_languages_localized</strong> file doesn't exist.</p>" . $msgfallback;
 
             return $fallbackLocList;
         }
         
         $content_languages_localized = file_get_contents($path_languages_localized);
-        if ($content_languages_localized === FALSE)
-        {
+        if ($content_languages_localized === FALSE) {
             echo "<p>Reading the <strong>$path_languages_localized</strong> file returned an error.</p>" . $msgfallback;
 
             return $fallbackLocList;
         }
         
         $LocList = @json_decode($content_languages_localized, TRUE);
-        if (json_last_error() != JSON_ERROR_NONE)
-        {
+        if (json_last_error() != JSON_ERROR_NONE) {
             echo "<p>Parsing the <strong>$path_languages_localized</strong> file returned an error:</p><p>" . json_last_error_msg() . ".</p>" . $msgfallback;
 
             return $fallbackLocList;
         }
         
-        if ($display_code_only)
-        {
-            foreach ($LocList as $k => $v)
-            {
+        if ($display_code_only) {
+            foreach ($LocList as $k => $v) {
                 $LocList[$k] = $k;
             }
         }
@@ -133,8 +125,7 @@ namespace LOCALES
     {
         $path_locales_sys = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE_LANGUAGES, "locales_system.json"]);
         
-        if ($force || !file_exists($path_locales_sys))
-        {
+        if ($force || !file_exists($path_locales_sys)) {
             file_put_contents($path_locales_sys, json_encode(checkSystemLocales(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         }
     }
@@ -150,10 +141,8 @@ namespace LOCALES
     {
         $LocList = [];
         
-        foreach (getAllLocales() as $code => $name)
-        {
-            if (setlocale(LC_ALL, getLocaleGettextAliases($code)) !== FALSE)
-            {
+        foreach (getAllLocales() as $code => $name) {
+            if (setlocale(LC_ALL, getLocaleGettextAliases($code)) !== FALSE) {
                 $LocList[$code] = $name;
             }
         }
@@ -197,15 +186,13 @@ namespace LOCALES
             "sr_RS" => ["sr_Cyrl_RS"], // For Windows
         ];
         
-        if (array_key_exists($locale, $SpecialLocales))
-        {
+        if (array_key_exists($locale, $SpecialLocales)) {
             $mainLocales = array_merge($mainLocales, $SpecialLocales[$locale]);
         }
         
         $alias = [];
         
-        foreach ($mainLocales as $code)
-        {
+        foreach ($mainLocales as $code) {
             $alias[] = $code . ".utf8";
             $alias[] = $code . ".UTF8";
             $alias[] = $code . ".utf-8";
@@ -242,43 +229,35 @@ namespace LOCALES
         
         $path_languages_localized = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_LANGUAGES, "src", "languages.json"]);
         
-        if (!file_exists($path_languages_localized))
-        {
+        if (!file_exists($path_languages_localized)) {
             echo "<p>The <strong>$path_languages_localized</strong> file doesn't exist.</p>" . $msgfallback;
 
             return $fallbackLocList;
         }
         
         $content_languages_localized = file_get_contents($path_languages_localized);
-        if ($content_languages_localized === FALSE)
-        {
+        if ($content_languages_localized === FALSE) {
             echo "<p>Reading the <strong>$path_languages_localized</strong> file returned an error.</p>" . $msgfallback;
 
             return $fallbackLocList;
         }
         
         $LocCode = @json_decode($content_languages_localized, TRUE);
-        if (json_last_error() != JSON_ERROR_NONE)
-        {
+        if (json_last_error() != JSON_ERROR_NONE) {
             echo "<p>Parsing the <strong>$path_languages_localized</strong> file returned an error:</p><p>" . json_last_error_msg() . ".</p>" . $msgfallback;
 
             return $fallbackLocList;
         }
         
         $LocList = [];
-        if ($display_code_only)
-        {
-            foreach ($LocCode as $k => $v)
-            {
+        if ($display_code_only) {
+            foreach ($LocCode as $k => $v) {
                 $LocList[$v] = $v;
             }
-        }
-        else
-        {
+        } else {
             $locNames = getAllLocales();
             
-            foreach ($LocCode as $v)
-            {
+            foreach ($LocCode as $v) {
                 $LocList[$v] = codeISO639a1toName($v);
             }
         }
@@ -302,19 +281,14 @@ namespace LOCALES
         $locNames = getAllLocales();
         
         // Search an exact match
-        if (array_key_exists($codeISO, $locNames))
-        {
+        if (array_key_exists($codeISO, $locNames)) {
             return $locNames[$codeISO];
-        }
-        else
-        {
+        } else {
             // Search a match only with the language code
             $lcode = $codeISO . "_";
             
-            foreach ($locNames as $k => $lang)
-            {
-                if (mb_substr($k, 0, mb_strlen($lcode)) == $lcode)
-                {
+            foreach ($locNames as $k => $lang) {
+                if (mb_substr($k, 0, mb_strlen($lcode)) == $lcode) {
                     // Keep only the name of the language in that case
                     return preg_replace("#\\s*\\(.+\\)\\s*#u", "", $lang);
                 }
@@ -330,7 +304,6 @@ namespace LOCALES
     function load_locales()
     {
         $locale = determine_locale();
-        
         // Some systems need the LANG or LANGUAGE environment variables
         // to be configured before calling setlocale()
         $locale_env = $locale . ".UTF-8";
@@ -350,81 +323,70 @@ namespace LOCALES
         $enabledLanguages = [];
         $componentsInstalled = \UTILS\readComponentsList();
         
-        foreach ($componentsInstalled as $cmp)
-        {
-            if ($cmp["component_type"] == "language" && $cmp["component_status"] == "enabled")
-            {
+        foreach ($componentsInstalled as $cmp) {
+            if ($cmp["component_type"] == "language" && $cmp["component_status"] == "enabled") {
                 $enabledLanguages[] = $cmp["component_id"];
             }
         }
         
+        // Try to load a MO catalog only if there is one
         if (
-            !in_array($locale, $enabledLanguages)
-            && !in_array(mb_substr($locale, 0, strpos($locale, "@")), $enabledLanguages)
-            && !in_array(mb_substr($locale, 0, strpos($locale, "_")), $enabledLanguages))
-        {
-            return;
-        }
-        
-        // WARNING: NEVER move this directory one level up on down because a bug under windows prevents the loading of mo files in that case.
-        // It's crazy, but many hours lost are waiting for you if you go in that direction!
-        $dirlocales = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", WIKINDX_DIR_COMPONENT_LANGUAGES]));
-        
-        // List all available domains for the requested locale
-        $files = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES"]));
-        
-        $loading = FALSE;
-        foreach ($files as $dir => $file)
-        {
-            if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo")
-            {
-                $domain = mb_strtolower(mb_substr($file, 0, mb_strlen($file) - mb_strlen(".mo")));
-                bindtextdomain($domain, $dirlocales);
-                bind_textdomain_codeset($domain, WIKINDX_CHARSET);
-                $loading = TRUE;
-            }
-        }
-        
-        // If the previous locale contains a script variant (e.g. uz_UZ@cyrillic) and no MO files have being loaded,
-        // try without the script suffix
-        if (!$loading && strpos($locale, "@") !== FALSE)
-        {
-            $locale = mb_substr($locale, 0, strpos($locale, "@"));
+            in_array($locale, $enabledLanguages)
+            || in_array(mb_substr($locale, 0, strpos($locale, "@")), $enabledLanguages)
+            || in_array(mb_substr($locale, 0, strpos($locale, "_")), $enabledLanguages)) {
+            // WARNING: NEVER move this directory one level up on down because a bug under windows prevents the loading of mo files in that case.
+            // It's crazy, but many hours lost are waiting for you if you go in that direction!
+            $dirlocales = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", WIKINDX_DIR_COMPONENT_LANGUAGES]));
             
             // List all available domains for the requested locale
             $files = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES"]));
-            
-            foreach ($files as $dir => $file)
-            {
-                if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo")
-                {
+            $loading = FALSE;
+            foreach ($files as $dir => $file) {
+                if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo") {
                     $domain = mb_strtolower(mb_substr($file, 0, mb_strlen($file) - mb_strlen(".mo")));
                     bindtextdomain($domain, $dirlocales);
                     bind_textdomain_codeset($domain, WIKINDX_CHARSET);
                     $loading = TRUE;
                 }
             }
-        }
-        
-        // If the previous locale contains a state suffix (e.g. en_GB) and no MO files have being loaded, try without suffix
-        if (!$loading && strpos($locale, "_") !== FALSE)
-        {
-            $locale = mb_substr($locale, 0, strpos($locale, "_"));
             
-            // List all available domains for the requested locale
-            $files = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES"]));
+            // If the previous locale contains a script variant (e.g. uz_UZ@cyrillic) and no MO files have being loaded,
+            // try without the script suffix
+            if (!$loading && strpos($locale, "@") !== FALSE) {
+                $locale = mb_substr($locale, 0, strpos($locale, "@"));
+                
+                // List all available domains for the requested locale
+                $files = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES"]));
+                
+                foreach ($files as $dir => $file) {
+                    if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo") {
+                        $domain = mb_strtolower(mb_substr($file, 0, mb_strlen($file) - mb_strlen(".mo")));
+                        bindtextdomain($domain, $dirlocales);
+                        bind_textdomain_codeset($domain, WIKINDX_CHARSET);
+                        $loading = TRUE;
+                    }
+                }
+            }
             
-            foreach ($files as $dir => $file)
-            {
-                if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo")
-                {
-                    $domain = mb_strtolower(mb_substr($file, 0, mb_strlen($file) - mb_strlen(".mo")));
-                    bindtextdomain($domain, $dirlocales);
-                    bind_textdomain_codeset($domain, WIKINDX_CHARSET);
+            // If the previous locale contains a state suffix (e.g. en_GB) and no MO files have being loaded, try without suffix
+            if (!$loading && strpos($locale, "_") !== FALSE) {
+                $locale = mb_substr($locale, 0, strpos($locale, "_"));
+                // List all available domains for the requested locale
+                $files = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES"]));
+                
+                foreach ($files as $dir => $file) {
+                    if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo") {
+                        $domain = mb_strtolower(mb_substr($file, 0, mb_strlen($file) - mb_strlen(".mo")));
+                        bindtextdomain($domain, $dirlocales);
+                        bind_textdomain_codeset($domain, WIKINDX_CHARSET);
+                    }
                 }
             }
         }
         
+        // This function call must always be present even if no catalog has been loaded before
+        // to force the binding to take into account the current state otherwise it uses the state
+        // of the previous execution on macOS, sometimes.
         textdomain(WIKINDX_LANGUAGE_DOMAIN_DEFAULT);
     }
     /**
@@ -449,15 +411,16 @@ namespace LOCALES
         
         // 2. The preferred language of the user ("auto" disappears in filtering to make room for browser language)
         $session = \FACTORY_SESSION::getInstance();
-        $langPriorityStack[] = $session->getVar("setup_Language", "auto");
+        $langPriorityStack[] = \GLOBALS::getUserVar("Language", "auto");
         
         // 3. The preferred language of the user's browser
-        if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]))
-        {
+        if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
             $langs = explode(",", $_SERVER["HTTP_ACCEPT_LANGUAGE"]);
             
             // Remove the priority number after ";" and use the locale syntax for the country extension
-            array_walk($langs, function (&$lang) { $lang = strtr(strtok($lang, ";"), ["-" => "_"]); });
+            array_walk($langs, function (&$lang) {
+                $lang = strtr(strtok($lang, ";"), ["-" => "_"]);
+            });
             
             $langPriorityStack = array_merge($langPriorityStack, $langs);
         }
@@ -466,29 +429,23 @@ namespace LOCALES
         $langPriorityStack[] = WIKINDX_LANGUAGE_DEFAULT;
         
         // Normalize because browsers don't send a normalised code
-        foreach ($langPriorityStack as $k => $v)
-        {
+        foreach ($langPriorityStack as $k => $v) {
             $langPriorityStack[$k] = strtolower(str_replace("-", "_", $v));
         }
         
         $locales = [];
-        foreach (array_keys(getSystemLocales()) as $k => $v)
-        {
+        foreach (array_keys(getSystemLocales()) as $k => $v) {
             $locales[$v] = strtolower(str_replace("-", "_", $v));
         }
-        
         // Of all the languages of the stack only keeps those that are actually available.
         $langPriorityStack = array_intersect($langPriorityStack, $locales);
         
         // Extract the top priority language
         // NB. The index is not always 0 because the array is not reordered after filtering.
         assert(count($langPriorityStack) > 0);
-        foreach ($langPriorityStack as $lang_lowercase)
-        {
-            foreach ($locales as $lang => $v)
-            {
-                if ($v == $lang_lowercase)
-                {
+        foreach ($langPriorityStack as $lang_lowercase) {
+            foreach ($locales as $lang => $v) {
+                if ($v == $lang_lowercase) {
                     return $lang;
                 }
             }
@@ -862,10 +819,8 @@ namespace LOCALES
             "zu_ZA" => "IsiZulu (iNingizimu Afrika)",
         ];
         
-        if ($display_code_only)
-        {
-            foreach ($LocList as $k => $v)
-            {
+        if ($display_code_only) {
+            foreach ($LocList as $k => $v) {
                 $LocList[$k] = $k;
             }
         }

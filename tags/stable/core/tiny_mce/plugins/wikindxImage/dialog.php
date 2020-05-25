@@ -1,34 +1,41 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
 
 // Portions of this code (for browsing images on the server) taken and adapted from Encode Explorer: http://encode-explorer.siineiolekala.net/
 
-session_start();
-if (isset($_SESSION) && array_key_exists('wikindxBasePath', $_SESSION) && $_SESSION['wikindxBasePath'])
+function SetWikindxBasePath()
 {
-    chdir($_SESSION['wikindxBasePath']); // tinyMCE changes the phpbasepath
+    $wikindxBasePath = __DIR__;
+    while (!in_array(basename($wikindxBasePath), ["", "core"])) {
+        $wikindxBasePath = dirname($wikindxBasePath);
+    }
+    if (basename($wikindxBasePath) == "") {
+        die("
+            \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
+            and WIKINDX is unable to set the installation path automatically.
+            You should set \$WIKINDX_WIKINDX_PATH in config.php.
+        ");
+    }
+    chdir(dirname($wikindxBasePath));
 }
-else
-{
-    $oldPath = dirname(__FILE__);
-    $split = preg_split('/' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/u', $oldPath);
-    array_splice($split, -4); // get back to trunk
-    $newPath = implode(DIRECTORY_SEPARATOR, $split);
-    chdir($newPath);
-}
+
+SetWikindxBasePath();
+
 
 /**
  * Import initial configuration and initialize the web server
  */
 include_once("core/startup/WEBSERVERCONFIG.php");
 
-$script = '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
-$script .= '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/tiny_mce/plugins/' . basename(__DIR__) . '/js/wikindxImagedialog.js"></script>';
+$script = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
+$script .= '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/plugins/' . basename(__DIR__) . '/js/wikindxImagedialog.js"></script>';
 GLOBALS::addTplVar('scripts', $script);
 
 $class = new imageDialog();
@@ -37,11 +44,9 @@ class imageDialog
 {
     private $messages;
     private $session;
-    private $config;
 
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->imageDialogueRun();
@@ -59,19 +64,15 @@ class imageDialog
         $pString .= \HTML\hr();
         $pString .= \HTML\p();
         GLOBALS::addTplVar('content', $pString);
-        $configDbStructure = FACTORY_CONFIGDBSTRUCTURE::getInstance();
         include_once("core/file/images.php");
-        if ($configDbStructure->getOne('configImagesAllow'))
-        {
+        if (WIKINDX_IMAGES_ALLOW) {
             // As user can upload images, we check again that user is registered
-            if ($this->session->getVar('setup_UserId'))
-            {
+            if ($this->session->getVar("setup_UserId")) {
 //
                 // This is where the system is activated.
                 // We check if the user wants an image and show it. If not, we show the explorer.
 //
-                if (!ImageServer::showImage())
-                {
+                if (!ImageServer::showImage()) {
                     $encodeExplorer = new EncodeExplorer();
                     $encodeExplorer->init();
                     $location = new Location();

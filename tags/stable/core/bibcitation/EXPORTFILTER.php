@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @copyright Andrea Rossato
  * @copyright Mark Grimshaw-Aagaard <sirfragalot@users.sourceforge.net>
@@ -35,16 +37,11 @@ class EXPORTFILTER
         $this->format = $output;
         // New line (used in CITEFORMAT::endnoteProcess)
         // Also, bibliographic/footnote templates may have the special string 'NEWLINE'
-        if ($this->format == 'rtf')
-        {
+        if ($this->format == 'rtf') {
             $this->newLine = "\\par\\qj ";
-        }
-        elseif ($this->format == 'html')
-        { // 'html'
+        } elseif ($this->format == 'html') { // 'html'
             $this->newLine = BR;
-        }
-        else
-        {
+        } else {
             $this->newLine = "" . LF;
         }
     }
@@ -58,30 +55,24 @@ class EXPORTFILTER
      */
     public function format($data, $htmlDone = FALSE)
     {
-        if (!$data)
-        {
+        if (!$data) {
             return $data;
         }
-        if ($this->format == 'html')
-        {
+        if ($this->format == 'html') {
             /**
              * Scan for search patterns and highlight accordingly
              */
             /**
              * Temporarily replace any URL - works for just one URL in the output string.
              */
-            if (preg_match("/(<a.*>.*<\\/a>)/ui", $data, $match))
-            {
+            if (preg_match("/(<a.*>.*<\\/a>)/ui", $data, $match)) {
                 $url = preg_quote($match[1], '/');
                 $data = preg_replace("/$url/u", "OSBIB__URL__OSBIB", $data);
-            }
-            else
-            {
+            } else {
                 $url = FALSE;
             }
             $data = str_replace("\"", "&quot;", $data);
-            if (!$htmlDone)
-            {
+            if (!$htmlDone) {
                 //				$data = str_replace("<", "&lt;", $data);
 //				$data = str_replace(">", "&gt;", $data);
 //				$data = preg_replace("/&(?![a-zA-Z0-9#]+?;)/u", "&amp;", $data);
@@ -95,23 +86,19 @@ class EXPORTFILTER
             $data = preg_replace("/\\[sub\\](.*?)\\[\\/sub\\]/uis", "<sub>$1</sub>", $data);
             $data = preg_replace("/\\[u\\](.*?)\\[\\/u\\]/uis", "<span style=\"text-decoration: underline;\">$1</span>", $data);
             // Recover any URL
-            if ($url)
-            {
+            if ($url) {
                 $data = str_replace("OSBIB__URL__OSBIB", $match[1], $data);
             }
             $data = str_replace("WIKINDX_NDASH", "&ndash;", $data);
             $data = str_replace("NEWLINE", $this->newLine, $data);
-            if ($this->bibformat->patterns)
-            {
+            if ($this->bibformat->patterns) {
                 $data = preg_replace($this->bibformat->patterns, \HTML\span("$1", "highlight"), $data);
                 //				$data = preg_replace($this->bibformat->patterns,
 //					"W!I!K!I!N!D!X!$1W!I!K!I!N!D!X!", $data);
 //				$data = preg_replace("/W!I!K!I!N!D!X!(.*)W!I!K!I!N!D!X!/Uu",
 //					"<span class=\"" . $this->bibformat->patternHighlight . "\">$1</span>", $data);
             }
-        }
-        elseif ($this->format == 'rtf')
-        {
+        } elseif ($this->format == 'rtf') {
             $data = preg_replace("/&#(.*?);/u", "\\u$1", $data);
             $data = preg_replace("/\\[b\\](.*?)\\[\\/b\\]/uis", "{{\\b $1}}", $data);
             $data = preg_replace("/\\[i\\](.*?)\\[\\/i\\]/uis", "{{\\i $1}}", $data);
@@ -124,8 +111,7 @@ class EXPORTFILTER
         /**
          * OpenOffice-1.x.
          */
-        elseif ($this->format == 'sxw')
-        {
+        elseif ($this->format == 'sxw') {
             $data = UTF8::decodeUtf8($data);
             $data = str_replace("\"", "&quot;", $data);
             $data = str_replace("<", "&lt;", $data);
@@ -142,8 +128,7 @@ class EXPORTFILTER
         /**
          * 'noScan' means do nothing (leave BBCodes intact)
          */
-        elseif ($this->format == 'noScan')
-        {
+        elseif ($this->format == 'noScan') {
             $data = str_replace("WIKINDX_NDASH", "-", $data);
             $data = str_replace("NEWLINE", $this->newLine, $data);
 
@@ -152,8 +137,7 @@ class EXPORTFILTER
         /**
          * StripBBCode for 'plain'.
          */
-        else
-        {
+        else {
             $data = preg_replace("/\\[.*\\]|\\[\\/.*\\]/Uu", "", $data);
             $data = str_replace("WIKINDX_NDASH", "-", $data);
             $data = str_replace("NEWLINE", $this->newLine, $data);

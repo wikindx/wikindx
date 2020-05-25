@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -30,10 +32,9 @@ class LOADTINYMCE
     public function __construct()
     {
         $session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         // Allows e.g. plugins to set different modes:  word processor plugin has a 'wordProcessor' mode.
-        $session->setVar('tinyMCE_mode', 'standard');
-        $this->cssPath = $this->cssPopupPath = $this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . $session->getVar('setup_Template') . '/template.css';
+        $session->setVar("tinyMCE_mode", "standard");
+        $this->cssPath = $this->cssPopupPath = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_TEMPLATES . '/' . GLOBALS::getUserVar('Template') . '/template.css';
     }
     /**
      * Load tiny_mce using compressor script
@@ -143,13 +144,10 @@ END;
         $cssPopupPath = $this->cssPopupPath;
         $tinymcePath = $this->getIncludeTinyMceLib();
 
-        if (!empty($elements))
-        {
+        if (!empty($elements)) {
             $mode = 'mode : "exact"';
             $ids = 'elements : "' . implode(',', $elements) . '"';
-        }
-        else
-        {
+        } else {
             $mode = 'mode : "textareas"';
             $ids = 'elements : ""';
         }
@@ -278,23 +276,17 @@ END;
         $cssPopupPath = $this->cssPopupPath;
         $tinymcePath = $this->getIncludeTinyMceLib();
 
-        if (!empty($elements))
-        {
+        if (!empty($elements)) {
             $mode = 'mode : "exact"';
             $ids = 'elements : "' . implode(',', $elements) . '"';
-        }
-        else
-        {
+        } else {
             $mode = 'mode : "textareas"';
             $ids = 'elements : ""';
         }
-        if ($configurePage)
-        {
+        if ($configurePage) {
             $plugins = 'plugins : "paste,wikindxTable,wikindxLink,wikindxSpecialChars,wikindxImage,table,wikindxContextMenu"';
             $buttons2 = 'theme_advanced_buttons2 : "wikindxTable,delete_table,delete_col,delete_row,col_before,col_after,row_before,row_after,"';
-        }
-        else
-        {
+        } else {
             $plugins = 'plugins : "paste,wikindxSpecialChars"';
             $buttons2 = 'theme_advanced_buttons2 : ""';
         }
@@ -405,13 +397,10 @@ END;
         $cssPopupPath = $this->cssPopupPath;
         $tinymcePath = $this->getIncludeTinyMceLib();
 
-        if (!empty($elements))
-        {
+        if (!empty($elements)) {
             $mode = 'mode : "exact"';
             $ids = 'elements : "' . implode(',', $elements) . '"';
-        }
-        else
-        {
+        } else {
             $mode = 'mode : "textareas"';
             $ids = 'elements : ""';
         }
@@ -464,8 +453,7 @@ END;
         $tinymcePath = $this->getIncludeTinyMceLib();
 
         $ids = implode(',', $elements);
-        foreach ($elements as $id)
-        {
+        foreach ($elements as $id) {
             $countIdsArray[] = "'$id'";
             $countSizesArray[] = '255';
         }
@@ -487,9 +475,11 @@ tinyMCE.init({
         remove_linebreaks : true,
         forced_root_block:  false,
         plugins : "paste,wikindxSpecialChars",
+        paste_text_sticky_default: true,
+        paste_text_sticky: true,
 
         // Theme options
-        theme_advanced_buttons1 : "paste,pastetext,pasteword,|,bold,italic,underline,removeformat,code,|,sub,sup,|,wikindxSpecialChars,",
+        theme_advanced_buttons1 : "paste,|,bold,italic,underline,removeformat,code,|,sub,sup,|,wikindxSpecialChars,",
         theme_advanced_buttons2 : "",
         theme_advanced_buttons3 : "",
         theme_advanced_buttons4 : "",
@@ -574,8 +564,6 @@ function tinyMceEventHandler(e){
     }
     return true;
 }
-// Strips all html tags from a given string, leaving only plain text
-function stripHtmlTags(strContent) { return strContent.replace(/(<([^>]+)>)/ig, ""); }
 
 function tinyMceCheckContentLength(strEditorId, intMaxLength) {
     var editorInstance   = tinyMCE.get(strEditorId);
@@ -583,61 +571,6 @@ function tinyMceCheckContentLength(strEditorId, intMaxLength) {
 
     var contentContainer = editorInstance.getBody();
     if (contentContainer == null || contentContainer == undefined) { alert('NO CONTENT CONTAINER'); }
-// March 2013 -- v4.2.x increases the size of the title and subtitle fields so this is no longer needed
-return;
-    var strContent       = contentContainer.innerHTML;
-    var intContentLength = strContent.length;
-    var intCharCount     = stripHtmlTags(strContent).length;
-
-    if (intContentLength <= intMaxLength) {
-        // The user has not passed the maximum amount of content in the editor...
-
-        // Save away the current contents in case they have typed too much and we have to
-        // revert back to this state.
-        tinyMceBuffers   [strEditorId] = strContent;
-        tinyMceCharCounts[strEditorId] = intCharCount;
-
-    } else {
-        // The user has put more than the maximum amount of content in the editor...
-        // We must now revert back to the last good contents that we had for the editor,
-        // or else whatever fits if we never had anything saved from there.
-        var bm = editorInstance.selection.getBookmark(); // Stores a bookmark of the current selection
-        editorInstance.setContent((tinyMceBuffers[strEditorId]) ? tinyMceBuffers[strEditorId] : strContent.substring(0, intMaxLength - 10));
-        var intDelta = intCharCount - tinyMceCharCounts[strEditorId];
-        if (bm['start'] && bm['start'] > intDelta) {
-            bm['start'] -= intDelta;
-            bm['end']   =  bm['start'];
-        }
-        editorInstance.selection.moveToBookmark(bm); // Restore the selection bookmark
-
-        alert('You have exceeded the maximum size for this text, including formatting, and we have undone your last change.');
-    }
-}
-
-function searchArray(array)
-{
-	if (!Array.prototype.indexOf)
-	{
-	  Array.prototype.indexOf = function(elt /*, from*/)
-	  {
-		var len = this.length >>> 0;
-
-		var from = Number(arguments[1]) || 0;
-		from = (from < 0)
-			 ? Math.ceil(from)
-			 : Math.floor(from);
-		if (from < 0)
-		  from += len;
-
-		for (; from < len; from++)
-		{
-		  if (from in this &&
-			  this[from] === elt)
-			return from;
-		}
-		return -1;
-	  };
-	}
 }
 </script>
 END;
@@ -651,19 +584,13 @@ END;
      */
     protected function getIncludeTinyMceLib($compressorLib = FALSE)
     {
-        if ($this->pathLoaded)
-        {
+        if ($this->pathLoaded) {
             $includeLib = '';
-        }
-        else
-        {
-            if (!$compressorLib)
-            {
-                $includeLib = '<script src="' . $this->config->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js"></script>';
-            }
-            else
-            {
-                $includeLib = '<script src="' . $this->config->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_gzip.js"></script>';
+        } else {
+            if (!$compressorLib) {
+                $includeLib = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js"></script>';
+            } else {
+                $includeLib = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_gzip.js"></script>';
             }
             $this->pathLoaded = TRUE;
         }

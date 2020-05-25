@@ -525,6 +525,10 @@ function checkPassword(str, regexp)
 */
 function checkForm(form, regexp, noChars, missing, misMatch, invalidPassword)
 {
+	if(form.bypassPasswordCheck.checked != false)
+	{
+		return true;
+	}
 	if(form.username != undefined && form.username.value == "")
 	{
 		alert(missing);

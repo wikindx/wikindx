@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -40,41 +42,34 @@ class DELETEIMAGES
     /**
      * check we are allowed to delete and load appropriate method
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function init($message = FALSE)
     {
         $this->gatekeep->requireSuper = TRUE; // only admins can delete images if set to TRUE
         $this->gatekeep->init();
-        if (array_key_exists('function', $this->vars))
-        {
+        if (array_key_exists('function', $this->vars)) {
             $function = $this->vars['function'];
             $this->{$function}();
-        }
-        else
-        {
+        } else {
             $this->display();
         }
     }
     /**
      * display select box of images to delete
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     private function display($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "adminImages"));
         $pString = $message ? $message : FALSE;
-        if (!$this->grabImages())
-        {
+        if (!$this->grabImages()) {
             $pString .= $this->messages->text("misc", "noImages");
-        }
-        else
-        {
+        } else {
             $pString .= \HTML\tableStart();
             $pString .= \HTML\trStart();
-            if (!empty($this->usedImages))
-            {
+            if (!empty($this->usedImages)) {
                 $td = \FORM\formHeader('admin_DELETEIMAGES_CORE');
                 $td .= \FORM\hidden('function', 'process');
                 $size = $this->numUsedImages > 20 ? 20 : $this->numUsedImages;
@@ -84,8 +79,7 @@ class DELETEIMAGES
                 $td .= \FORM\formEnd();
                 $pString .= \HTML\td($td);
             }
-            if (!empty($this->unusedImages))
-            {
+            if (!empty($this->unusedImages)) {
                 $td = \FORM\formHeader('admin_DELETEIMAGES_CORE');
                 $td .= \FORM\hidden('function', 'process');
                 $size = $this->numUnusedImages > 20 ? 20 : $this->numUnusedImages;
@@ -117,26 +111,23 @@ class DELETEIMAGES
         $fileManager = new FileManager();
         $fileManager->run($location);
         $files = $encodeExplorer->run($location, TRUE);
-        foreach ($files as $file)
-        {
+        foreach ($files as $file) {
             $stmts = [];
-            $this->db->formatConditions($this->db->formatFields('resourcemetadataText') . $this->db->like('%', $file->getName(), '%'));
+            $fileName = rawurlencode($file->getName());
+            $this->db->formatConditions($this->db->formatFields('resourcemetadataText') . $this->db->like('%', $fileName, '%'));
             $stmts[] = $this->db->selectNoExecute('resource_metadata', [['resourcemetadataId' => 'id']], TRUE, TRUE, TRUE);
-            $this->db->formatConditions($this->db->formatFields('resourcetextAbstract') . $this->db->like('%', $file->getName(), '%'));
+            $this->db->formatConditions($this->db->formatFields('resourcetextAbstract') . $this->db->like('%', $fileName, '%'));
             $stmts[] = $this->db->selectNoExecute('resource_text', [['resourcetextId' => 'id']], TRUE, TRUE, TRUE);
-            $this->db->formatConditions($this->db->formatFields('resourcetextNote') . $this->db->like('%', $file->getName(), '%'));
+            $this->db->formatConditions($this->db->formatFields('resourcetextNote') . $this->db->like('%', $fileName, '%'));
             $stmts[] = $this->db->selectNoExecute('resource_text', [['resourcetextId' => 'id']], TRUE, TRUE, TRUE);
             $this->db->formatConditions(['configName' => 'configDescription']);
-            $this->db->formatConditions($this->db->formatFields('configText') . $this->db->like('%', $file->getName(), '%'));
+            $this->db->formatConditions($this->db->formatFields('configText') . $this->db->like('%', $fileName, '%'));
             $stmts[] = $this->db->selectNoExecute('config', [['configId' => 'id']], TRUE, TRUE, TRUE);
             $resultSet = $this->db->query($this->db->union($stmts));
-            if ($this->db->numRows($resultSet))
-            {
+            if ($this->db->numRows($resultSet)) {
                 $this->usedImages[$file->getName()] = EncodeExplorer::getFilename($file) . ' (' . \FILE\formatSize($file->getSize()) . ')';
                 ++$this->numUsedImages;
-            }
-            else
-            {
+            } else {
                 $this->unusedImages[$file->getName()] = EncodeExplorer::getFilename($file) . ' (' . \FILE\formatSize($file->getSize()) . ')';
                 ++$this->numUnusedImages;
             }
@@ -149,13 +140,11 @@ class DELETEIMAGES
     */
     private function process()
     {
-        if (!$this->validateInput())
-        {
+        if (!$this->validateInput()) {
             $this->display($this->errors->text("inputError", "missing"));
             FACTORY_CLOSE::getInstance();
         }
-        foreach ($this->vars['image_ids'] as $image)
-        {
+        foreach ($this->vars['image_ids'] as $image) {
             @unlink(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $image);
         }
         $pString = $this->success->text("imageDelete");

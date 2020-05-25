@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -35,13 +37,14 @@ class CHOOSEBIB
     }
     /**
      * List user's bibliographies with options to use one of them or the WIKINDX master bibliography when listing, searching etc.
+     *
+     * @param mixed $message
      */
     public function init($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibs"));
         $bibsArray = $this->common->getBibsArray();
-        if (empty($bibsArray))
-        {
+        if (empty($bibsArray)) {
             GLOBALS::addTplVar('content', \HTML\p($this->messages->text("misc", "noBibliographies")));
 
             return;
@@ -58,20 +61,16 @@ class CHOOSEBIB
             'targetDiv' => 'div',
         ];
         $js = \AJAX\jActionForm('onchange', $jsonArray);
-        $selected = $this->session->getVar('mywikindx_Bibliography_use');
+        $selected = $this->session->getVar("mywikindx_Bibliography_use");
         $size = count($bibsArray);
-        if ($size > 20)
-        {
+        if ($size > 20) {
             $size = 10;
         }
         $pString .= \HTML\tableStart('');
         $pString .= \HTML\trStart();
-        if ($selected)
-        {
+        if ($selected) {
             $pString .= \HTML\td(\FORM\selectedBoxValue(FALSE, "BibId", $bibsArray, $selected, $size, FALSE, $js));
-        }
-        else
-        {
+        } else {
             $pString .= \HTML\td(\FORM\selectFBoxValue(FALSE, "BibId", $bibsArray, $size, FALSE, $js));
         }
         $pString .= \HTML\td(\HTML\div('div', $this->displayBib($selected)), 'left top width80percent');
@@ -93,20 +92,21 @@ class CHOOSEBIB
     /**
      * Display bibliography details and owner's details
      *
+     * @param mixed $bibId
+     *
      * @return string
      */
     public function displayBib($bibId = FALSE)
     {
-        if (array_key_exists('ajaxReturn', $this->vars))
-        {
+        if (array_key_exists('ajaxReturn', $this->vars)) {
             $bibId = $this->vars['ajaxReturn'];
         }
-        if (($bibId === FALSE) || ($bibId <= 0))
-        {
-            $pString = \HTML\p($this->messages->text("user", "masterBib"));
+        if (!$bibId && array_key_exists('BibId', $this->vars)) {
+            $bibId = $this->vars['BibId'];
         }
-        else
-        {
+        if (($bibId === FALSE) || ($bibId <= 0)) {
+            $pString = \HTML\p($this->messages->text("user", "masterBib"));
+        } else {
             $this->db->leftJoin(
                 'user_bibliography_resource',
                 $this->db->formatFields('userbibliographyresourceBibliographyId'),
@@ -122,31 +122,32 @@ class CHOOSEBIB
             );
             $row = $this->db->fetchRow($recordset);
             $text = \HTML\strong($this->messages->text("user", "username") . ":&nbsp;&nbsp;") .
-                \HTML\dbToHtmlTidy($row['usersUsername']) . BR;
+                \HTML\nlToHtml($row['usersUsername']) . BR;
             $text .= \HTML\strong($this->messages->text("user", "fullname") . ":&nbsp;&nbsp;") .
-                \HTML\dbToHtmlTidy($row['usersFullname']);
+                \HTML\nlToHtml($row['usersFullname']);
             $pString = \HTML\p($text);
             $text = '';
-            if ($row['count'])
-            {
+            if ($row['count']) {
                 $text .= \HTML\strong($this->messages->text("user", "numResources") . ":&nbsp;&nbsp;") .
                     $row['count'] . BR;
             }
             $text .= \HTML\strong($this->messages->text("user", "bibTitle") . ":&nbsp;&nbsp;") .
-                \HTML\dbToHtmlTidy($row['userbibliographyTitle']) . BR;
+                \HTML\nlToHtml($row['userbibliographyTitle']) . BR;
             $text .= \HTML\strong($this->messages->text("user", "bibDescription") . ":&nbsp;&nbsp;") .
-                \HTML\dbToHtmlTidy($row['userbibliographyDescription']);
-            if ($row['userbibliographyUserGroupId'])
-            { // a group bibliography
+                \HTML\nlToHtml($row['userbibliographyDescription']);
+            if ($row['userbibliographyUserGroupId']) { // a group bibliography
                 $this->db->formatConditions(['usergroupsId' => $row['userbibliographyUserGroupId']]);
                 $userGroup = $this->db->selectFirstField('user_groups', 'usergroupsTitle');
                 $text .= BR . \HTML\strong($this->messages->text("user", "group") . ":&nbsp;&nbsp;") .
-                    \HTML\dbToHtmlTidy($userGroup);
+                    \HTML\nlToHtml($userGroup);
             }
             $pString .= \HTML\p($text);
         }
-
-        return $pString;
+        if (array_key_exists('BibId', $this->vars)) {
+            GLOBALS::addTplVar('content', $pString);
+        } else {
+            return $pString;
+        }
     }
     /**
      * Set a bibliography for browsing
@@ -155,22 +156,17 @@ class CHOOSEBIB
     {
         // bibId of 0 == master bibliography
         // bibId of < 0 == a label
-        if (!array_key_exists('BibId', $this->vars) || !$this->vars['BibId'])
-        {
-            $this->session->delVar('mywikindx_Bibliography_use');
-        }
-        elseif (array_key_exists('BibId', $this->vars) && ($this->vars['BibId'] < 0))
-        {
+        if (!array_key_exists('BibId', $this->vars) || !$this->vars['BibId']) {
+            $this->session->delVar("mywikindx_Bibliography_use");
+        } elseif (array_key_exists('BibId', $this->vars) && ($this->vars['BibId'] < 0)) {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
+        } else {
+            $this->session->setVar("mywikindx_Bibliography_use", $this->vars['BibId']);
         }
-        else
-        {
-            $this->session->setVar('mywikindx_Bibliography_use', $this->vars['BibId']);
-        }
-        $this->session->delVar('mywikindx_Bibliography_add');
-        $this->session->delVar('mywikindx_PagingStart');
-        $this->session->delVar('mywikindx_PagingStartAlpha');
-        $this->session->delVar('sql_LastMulti');
+        $this->session->delVar("mywikindx_Bibliography_add");
+        $this->session->delVar("mywikindx_PagingStart");
+        $this->session->delVar("mywikindx_PagingStartAlpha");
+        $this->session->delVar("sql_LastMulti");
         $this->init($this->success->text("bibliographySet"));
     }
 }

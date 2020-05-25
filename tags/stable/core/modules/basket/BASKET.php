@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -28,8 +30,7 @@ class BASKET
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
-        switch ($this->session->getVar('list_Order'))
-        {
+        switch ($this->session->getVar("list_Order")) {
             case 'title':
                 break;
             case 'creator':
@@ -41,7 +42,7 @@ class BASKET
             case 'timestamp':
                 break;
             default:
-                $this->session->setVar('list_Order', 'creator');
+                $this->session->setVar("list_Order", 'creator');
         }
     }
     /**
@@ -49,30 +50,21 @@ class BASKET
      */
     public function init()
     {
-        if ($this->session->issetVar('basket_List'))
-        {
-            $basket = unserialize($this->session->getVar('basket_List'));
-        }
-        else
-        {
-            $basket = [];
-        }
-        if (array_key_exists('resourceId', $this->vars))
-        {
+        $basket = unserialize($this->session->getVar("basket_List", serialize([])));
+        if (array_key_exists('resourceId', $this->vars)) {
             $resourceId = $this->vars['resourceId'];
-            if (array_search($resourceId, $basket) === FALSE)
-            {
+            if (array_search($resourceId, $basket) === FALSE) {
                 $basket[] = $resourceId;
             }
         }
         // Ensure array is unique
         array_unique($basket);
-        $this->session->setVar('basket_List', serialize($basket));
+        $this->session->setVar("basket_List", serialize($basket));
         $this->session->saveState('basket');
         // send back to view this resource with success message
         include_once("core/modules/resource/RESOURCEVIEW.php");
         $resource = new RESOURCEVIEW();
-        $resource->init($this->session->getVar('sql_LastSolo'));
+        $resource->init($this->session->getVar("sql_LastSolo"));
         GLOBALS::addTplVar('content', $this->success->text("basketAdd"));
     }
     /**
@@ -80,25 +72,17 @@ class BASKET
      */
     public function remove()
     {
-        if ($this->session->issetVar('basket_List'))
-        {
-            $basket = unserialize($this->session->getVar('basket_List'));
-        }
-        else
-        {
-            $basket = [];
-        }
+        $basket = unserialize($this->session->getVar("basket_List", serialize([])));
         $resourceId = $this->vars['resourceId'];
-        if (($key = array_search($resourceId, $basket)) !== FALSE)
-        {
+        if (($key = array_search($resourceId, $basket)) !== FALSE) {
             unset($basket[$key]);
         }
-        $this->session->setVar('basket_List', serialize($basket));
+        $this->session->setVar("basket_List", serialize($basket));
         $this->session->saveState('basket');
         // send back to view this resource with success message
         include_once("core/modules/resource/RESOURCEVIEW.php");
         $resource = new RESOURCEVIEW();
-        $resource->init($this->session->getVar('sql_LastSolo'));
+        $resource->init($this->session->getVar("sql_LastSolo"));
         GLOBALS::addTplVar('content', $this->success->text("basketRemove"));
     }
     /**
@@ -106,7 +90,7 @@ class BASKET
      */
     public function reorder()
     {
-        $this->session->setVar('list_AscDesc', $this->vars['list_AscDesc']);
+        $this->session->setVar("list_AscDesc", $this->vars['list_AscDesc']);
         $this->view();
     }
     /**
@@ -117,43 +101,37 @@ class BASKET
         $sql = FALSE;
         $this->common = FACTORY_LISTCOMMON::getInstance();
         $queryString = 'action=basket_BASKET_CORE&method=view';
-        $bl = unserialize($this->session->getVar('basket_List'));
+        $bl = unserialize($this->session->getVar("basket_List"));
         $sizeOfbl = is_array($bl) ? count($bl) : 0;
-        $this->session->setVar('setup_PagingTotal', $sizeOfbl);
+        $this->session->setVar("setup_PagingTotal", $sizeOfbl);
         $this->pagingObject = FACTORY_PAGING::getInstance();
         $this->pagingObject->queryString = $queryString;
         $this->pagingObject->getPaging();
         $this->common->pagingObject = $this->pagingObject;
         GLOBALS::setTplVar('heading', $this->messages->text('heading', 'basket'));
-        if (array_key_exists('list_Order', $this->vars))
-        {
-            $this->session->setVar('list_Order', $this->vars['list_Order']);
+        if (array_key_exists('list_Order', $this->vars)) {
+            $this->session->setVar("list_Order", $this->vars['list_Order']);
         }
-        $this->session->delVar('mywikindx_PagingStart');
-        $this->session->delVar('mywikindx_PagingStartAlpha');
-        if ($this->lastMulti($queryString))
-        {
+        $this->session->delVar("mywikindx_PagingStart");
+        $this->session->delVar("mywikindx_PagingStartAlpha");
+        if ($this->lastMulti($queryString)) {
             return;
         }
-        if (!array_key_exists('PagingStart', $this->vars) || ($this->session->getVar('setup_PagingStyle') == 'A'))
-        {
-            $this->session->delVar('list_PagingAlphaLinks');
-            $this->session->delVar('list_AllIds');
-            $this->session->setVar('list_AllIds', base64_encode($this->session->getVar('basket_List')));
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
+            $this->session->delVar("list_PagingAlphaLinks");
+            $this->session->delVar("list_AllIds");
+            $this->session->setVar("list_AllIds", base64_encode($this->session->getVar("basket_List")));
             $sql = $this->returnBasketSql($queryString);
-        }
-        else
-        {
+        } else {
             $sql = $this->quickQuery($queryString);
         }
-        if (!$sql)
-        {
+        if (!$sql) {
             $errors = FACTORY_ERRORS::getInstance();
             $badInput = FACTORY_BADINPUT::getInstance();
             $badInput->close($errors->text("inputError", "invalid"));
         }
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
+        $this->session->setVar("sql_LastMulti", $queryString);
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
         $this->session->saveState(['list', 'basket', 'bookmark']);
@@ -163,32 +141,31 @@ class BASKET
      * Get basket SQL statement.
      * Given as a separate fuction because it is also used when exporting the basket to various formats with the importExport plugin
      *
-     * @param string|FALSE $queryString Default FALSE
+     * @param false|string $queryString Default FALSE
      * @param bool $order Default FALSE
      *
      * @return string
      */
     public function returnBasketSql($queryString = FALSE, $order = FALSE)
     {
-        if (!$order)
-        {
-            $order = $this->session->getVar('list_Order');
+        if (!$order) {
+            $order = $this->session->getVar("list_Order");
         }
-        $subStmt = $this->setSubQuery(unserialize($this->session->getVar('basket_List')));
+        $subStmt = $this->setSubQuery(unserialize($this->session->getVar("basket_List")));
         $this->stmt->listSubQuery($order, $queryString, $subStmt);
 
-        return $this->stmt->listList($this->session->getVar('list_Order'));
+        return $this->stmt->listList($this->session->getVar("list_Order"));
     }
     /**
      * Delete the basket
+     *
      * @param bool $confirm Default FALSE
      *
      * @return string
      */
     public function delete($confirm = FALSE)
     {
-        if ($confirm)
-        {
+        if ($confirm) {
             $this->session->clearArray('basket');
             include_once("core/front/FRONT.php");
             $obj = new FRONT($this->db);
@@ -222,8 +199,8 @@ class BASKET
      */
     private function quickQuery($queryString)
     {
-        $sql = $this->session->getVar('sql_ListStmt');
-        $sql .= $this->db->limit($this->session->getVar('setup_Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
+        $sql = $this->session->getVar("sql_ListStmt");
+        $sql .= $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         return $sql;
     }
     /**
@@ -235,8 +212,7 @@ class BASKET
      */
     private function lastMulti($queryString)
     {
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && ($this->session->getVar('setup_PagingStyle') != 'A'))
-        {
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A')) {
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
@@ -248,7 +224,7 @@ class BASKET
 
         return FALSE;
     }
-    /** 
+    /**
      * Set the subQuery
      *
      * @param mixed $ids
@@ -257,24 +233,19 @@ class BASKET
      */
     private function setSubQuery($ids)
     {
-        if (!$this->session->getVar('list_Order'))
-        {
-            $this->session->setVar('list_Order', 'creator');
+        if (!$this->session->getVar("list_Order")) {
+            $this->session->setVar("list_Order", "creator");
         }
-        $this->db->ascDesc = $this->session->getVar('list_AscDesc');
-        switch ($this->session->getVar('list_Order'))
-        {
+        $this->db->ascDesc = $this->session->getVar("list_AscDesc");
+        switch ($this->session->getVar("list_Order")) {
             case 'title':
                 $this->stmt->quarantine(FALSE, 'resourceId');
                 $this->stmt->useBib('resourceId');
                 $this->stmt->conditionsOneField['resourceId'] = $ids;
                 $this->stmt->executeCondJoins();
-                if ($this->session->getVar('setup_PagingStyle') == 'A')
-                {
+                if (GLOBALS::getUserVar('PagingStyle') == 'A') {
                     return $this->db->selectNoExecute('resource', ['resourceTitleSort', ['resourceId' => 'rId']], FALSE, TRUE, TRUE);
-                }
-                else
-                {
+                } else {
                     return $this->db->selectNoExecute('resource', [['resourceId' => 'rId']], FALSE, TRUE, TRUE);
                 }
                     // no break

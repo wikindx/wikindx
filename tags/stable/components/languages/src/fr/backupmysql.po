@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: backupmysql\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-01-25 18:48+0100\n"
+"POT-Creation-Date: 2020-05-24 21:54+0200\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
@@ -20,16 +20,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: components/plugins/backupmysql/backupmysqlmessages.php:18
-#: components/plugins/backupmysql/backupmysqlmessages.php:19
+#: components/plugins/backupmysql/backupmysqlmessages.php:20
+#: components/plugins/backupmysql/backupmysqlmessages.php:21
 msgid "Backup Database"
 msgstr "Sauvegarde de la base de données"
 
-#: components/plugins/backupmysql/backupmysqlmessages.php:20
+#: components/plugins/backupmysql/backupmysqlmessages.php:22
 msgid "Backup"
 msgstr "Sauvegarde"
 
-#: components/plugins/backupmysql/backupmysqlmessages.php:21
+#: components/plugins/backupmysql/backupmysqlmessages.php:23
 #, fuzzy
 #| msgid ""
 #| "plugins/backupMysql/dumps/ is not writeable by the web server user.  It "
@@ -41,6 +41,6 @@ msgstr ""
 "Le serveur web n'a pas d'autorisation d'écriture sur plugins/backupMysql/"
 "dumps/. Les permissions actuels sont : ###."
 
-#: components/plugins/backupmysql/backupmysqlmessages.php:22
+#: components/plugins/backupmysql/backupmysqlmessages.php:24
 msgid "Files deleted"
 msgstr "Fichiers supprimés"

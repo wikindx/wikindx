@@ -24,6 +24,9 @@ Papers can be imported from earlier versions by using the 'Import paper' functio
 
 CHANGELOG:
 
+v1.11, 2020
+1. Wikindx compatibility version 7.
+
 v1.10, 2020
 1. Fix RTF export of images.
 2. Fix a call to RESOURCEMAP.php.

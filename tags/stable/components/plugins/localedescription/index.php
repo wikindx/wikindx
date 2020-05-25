@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -41,16 +43,14 @@ class localedescription_MODULE
         $this->config = new localedescription_CONFIG();
         $this->authorize = $this->config->authorize;
         $this->session = FACTORY_SESSION::getInstance();
-        if ($menuInit)
-        { // portion of constructor used for menu initialisation
+        if ($menuInit) { // portion of constructor used for menu initialisation
             $this->makeMenu($this->config->menus);
 
             return; // need do nothing more.
         }
 
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->authorize))
-        { // not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
 
@@ -70,19 +70,15 @@ class localedescription_MODULE
      */
     public function display($message = FALSE)
     {
-        if ($message)
-        {
+        if ($message) {
             $pString = $message;
-        }
-        else
-        {
+        } else {
             $pString = '';
         }
         $pString .= FORM\formHeader("localedescription_edit");
         $pString .= HTML\p($this->pluginmessages->text("text1"));
         $languages = \LOCALES\getSystemLocales();
-        if ((count($languages) == 1) && array_key_exists(WIKINDX_LANGUAGE_DEFAULT, $languages))
-        {
+        if ((count($languages) == 1) && array_key_exists(WIKINDX_LANGUAGE_DEFAULT, $languages)) {
             GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text("onlyEnglish"), "error", "center"));
             FACTORY_CLOSE::getInstance();
         }
@@ -105,19 +101,16 @@ class localedescription_MODULE
     {
         $db = FACTORY_DB::getInstance();
         $vars = GLOBALS::getVars();
-        $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        if (!array_key_exists('language', $vars))
-        {
+        if (!array_key_exists('language', $vars)) {
             $this->display(HTML\p($this->pluginmessages->text("missingLanguage"), "error", "center"));
             FACTORY_CLOSE::getInstance();
         }
         $field = 'configDescription_' . $vars['language'];
         $db->formatConditions(['configName' => $field]);
-        if ($input = $db->fetchOne($db->select('config', 'configText')))
-        {
-            $input = HTML\dbToFormTidy($input);
+        if ($input = $db->fetchOne($db->select('config', 'configText'))) {
+            $input = HTML\nlToHtml($input);
         }
-        $original = HTML\dbToHtmlTidy($co->getOne('configDescription'));
+        $original = HTML\nlToHtml(WIKINDX_DESCRIPTION);
         $pString = HTML\p(HTML\strong($this->pluginmessages->text('original')));
         $pString .= HTML\p($original);
         $pString .= HTML\hr();
@@ -142,10 +135,8 @@ class localedescription_MODULE
         $db->formatConditions(['configName' => $field]);
         $resultSet = $db->select('config', '*');
         $exists = $db->numRows($resultSet);
-        if (!array_key_exists('description', $vars) || !trim($vars['description']))
-        { // delete row if it exists in table
-            if ($exists)
-            {
+        if (!array_key_exists('description', $vars) || !trim($vars['description'])) { // delete row if it exists in table
+            if ($exists) {
                 $db->formatConditions(['configName' => $field]);
                 $db->delete('config');
             }
@@ -153,13 +144,10 @@ class localedescription_MODULE
             FACTORY_CLOSE::getInstance();
         }
         // something to write
-        if ($exists)
-        {
+        if ($exists) {
             $db->formatConditions(['configName' => $field]);
             $db->update('config', ['configText' => trim($vars['description'])]);
-        }
-        else
-        {
+        } else {
             $db->insert('config', ['configName', 'configText'], [$field, trim($vars['description'])]);
         }
         $this->display(HTML\p($this->pluginmessages->text("success", $vars['language']), "success", "center"));

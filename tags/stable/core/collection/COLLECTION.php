@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -39,38 +41,27 @@ class COLLECTION
      * @param string $type Default is FALSE
      * @param bool $userBib Default is FALSE
      * @param mixed $typeArray Default is FALSE
-     * @param bool $metadata Default is FALSE
      *
      * @return mixed
      */
-    public function grabAll($type = FALSE, $userBib = FALSE, $typeArray = FALSE, $metadata = FALSE)
+    public function grabAll($type = FALSE, $userBib = FALSE, $typeArray = FALSE)
     {
-        if (!$userBib && !$type && !is_array($typeArray))
-        {
-            if ($metadata && is_array($collections = $this->db->readCache('cacheMetadataCollections')))
-            {
-                return $collections;
-            }
-            elseif (!$metadata && is_array($collections = $this->db->readCache('cacheResourceCollections')))
-            {
+        if (!$userBib && !$type && !is_array($typeArray)) {
+            if (is_array($collections = $this->db->readCache('cacheResourceCollections'))) {
                 return $collections;
             }
         }
         unset($collections);
-        if ($type)
-        {
+        if ($type) {
             $this->db->formatConditions(['collectionType' => $type]);
         }
         $thisType = $type;
-        if (is_array($typeArray) && !empty($typeArray))
-        {
+        if (is_array($typeArray) && !empty($typeArray)) {
             $this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceId');
-            if ($userBib)
-            {
+            if ($userBib) {
                 $this->commonBib->userBibCondition('resourcemiscId');
             }
-            foreach ($typeArray as $type)
-            {
+            foreach ($typeArray as $type) {
                 $conditions[] = $type;
             }
             $this->db->formatConditionsOneField($conditions, 'resourceType');
@@ -80,111 +71,37 @@ class COLLECTION
             $this->db->leftJoin('collection', 'collectionId', 'resourcemiscCollection');
             $userBib = FALSE;
         }
-        // NB. $metadata is true only in UPDATEDATABASE::recreate40Cache() which is a function that deals with databases before 5.1. From that
-        // point, the resource_metadata table replaces resource_quote, resource_paraphrase etc.
-        if ($metadata)
-        {
-            $ids = $conditionIds = [];
-            // quotes
-            $this->db->leftJoin('resource_misc', 'resourcequoteResourceId', 'resourcemiscId');
-            $this->db->formatConditions(['resourcemiscCollection' => ' IS NOT NULL']);
-            $recordset = $this->db->select('resource_quote', 'resourcemiscCollection', TRUE);
-            while ($row = $this->db->fetchRow($recordset))
-            {
-                foreach (UTF8::mb_explode(',', $row['resourcemiscCollection']) as $id)
-                {
-                    if (array_search($id, $ids) === FALSE)
-                    {
-                        $ids[] = $id;
-                        $conditionIds[] = $this->db->formatFields('collectionId') . $this->db->equal . $this->db->tidyInput($id);
-                    }
-                }
-            }
-            // paraphrases
-            $this->db->leftJoin('resource_misc', 'resourceparaphraseResourceId', 'resourcemiscId');
-            $this->db->formatConditions(['resourcemiscCollection' => ' IS NOT NULL']);
-            $recordset = $this->db->select('resource_paraphrase', 'resourcemiscCollection', TRUE);
-            while ($row = $this->db->fetchRow($recordset))
-            {
-                foreach (UTF8::mb_explode(',', $row['resourcemiscCollection']) as $id)
-                {
-                    if (array_search($id, $ids) === FALSE)
-                    {
-                        $ids[] = $id;
-                        $conditionIds[] = $this->db->formatFields('collectionId') . $this->db->equal . $this->db->tidyInput($id);
-                    }
-                }
-            }
-            // musing
-            $this->db->leftJoin('resource_misc', 'resourcemusingResourceId', 'resourcemiscId');
-            $this->db->formatConditions(['resourcemiscCollection' => ' IS NOT NULL']);
-            $recordset = $this->db->select('resource_musing', 'resourcemiscCollection', TRUE);
-            while ($row = $this->db->fetchRow($recordset))
-            {
-                foreach (UTF8::mb_explode(',', $row['resourcemiscCollection']) as $id)
-                {
-                    if (array_search($id, $ids) === FALSE)
-                    {
-                        $ids[] = $id;
-                        $conditionIds[] = $this->db->formatFields('collectionId') . $this->db->equal . $this->db->tidyInput($id);
-                    }
-                }
-            }
-            if (!empty($conditionIds))
-            {
-                $this->db->formatConditions(implode($this->db->or, $conditionIds));
-            }
-            else
-            {
-                return FALSE;
-            }
-        }
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->db->leftJoin('resource_misc', 'resourcemiscCollection', 'collectionId');
             $this->commonBib->userBibCondition('resourcemiscId');
         }
         $this->db->orderBy('collectionTitle');
-        if (isset($subQuery))
-        {
+        if (isset($subQuery)) {
             $recordset = $this->db->query($this->db->selectNoExecuteFromSubQuery(
                 FALSE,
                 ['collectionId', 'collectionType', 'collectionTitle', 'collectionTitleShort'],
                 $subQuery
             ));
-        }
-        else
-        {
+        } else {
             $recordset = $this->db->select(
                 'collection',
                 ['collectionId', 'collectionType', 'collectionTitle', 'collectionTitleShort'],
                 TRUE
             );
         }
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $short = $row['collectionTitleShort'] ?
                 " [" . $row['collectionTitleShort'] . ']' : FALSE;
             $title = $row['collectionTitle'] . $short;
-            if (!$type)
-            {
+            if (!$type) {
                 $thisType = $row['collectionType'];
             }
             $collections[$row['collectionId']] = \HTML\dbToFormTidy($title, TRUE);
         }
-        if (isset($collections))
-        {
+        if (isset($collections)) {
             // (re)create cache
-            if (!$userBib && !$type && !is_array($typeArray))
-            {
-                if ($metadata)
-                {
-                    $this->db->writeCache('cacheMetadataCollections', $collections);
-                }
-                else
-                {
-                    $this->db->writeCache('cacheResourceCollections', $collections);
-                }
+            if (!$userBib && !$type && !is_array($typeArray)) {
+                $this->db->writeCache('cacheMetadataCollections', $collections);
             }
 
             return $collections;
@@ -201,17 +118,14 @@ class COLLECTION
     {
         $this->db->groupBy('collectionType');
         $recordset = $this->db->select('collection', 'collectionType');
-        if (!$this->db->numRows($recordset))
-        {
+        if (!$this->db->numRows($recordset)) {
             return [];
         }
         // Add 'ALL' to array
         $array[$this->messages->text("menu", "browseSubCollection")] = FALSE;
         $array[$this->messages->text("collection", 'all')] = 'index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=0';
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (!$row['collectionType'])
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (!$row['collectionType']) {
                 continue;
             }
             $array[$this->messages->text("collection", $row['collectionType'])] =
@@ -229,18 +143,15 @@ class COLLECTION
     {
         $this->db->groupBy('collectionType');
         $recordset = $this->db->select('collection', 'collectionType');
-        if (!$this->db->numRows($recordset))
-        {
+        if (!$this->db->numRows($recordset)) {
             return [];
         }
         // Add 'ALL' to array
         $array[$this->messages->text("menu", "editSubCollection")] = FALSE;
         $array[$this->messages->text("collection", 'all')] =
             'index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&edit_collectionType=0';
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if (!$row['collectionType'])
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if (!$row['collectionType']) {
                 continue;
             }
             $array[$this->messages->text("collection", $row['collectionType'])] =
@@ -262,8 +173,7 @@ class COLLECTION
      */
     public function checkExists($id = FALSE, $title, $titleShort, $type)
     {
-        if ($id && !$type)
-        {
+        if ($id && !$type) {
             $this->db->formatConditions(['collectionId' => $id]);
             $type = $this->db->selectFirstField('collection', 'collectionType');
         }
@@ -280,10 +190,8 @@ class COLLECTION
         //		if($id)
         //			$this->db->formatConditions(array('collectionId' => $id));
         $resultset = $this->db->select('collection', 'collectionId');
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            if ($id && ($row['collectionId'] == $id))
-            { // the collection being edited
+        while ($row = $this->db->fetchRow($resultset)) {
+            if ($id && ($row['collectionId'] == $id)) { // the collection being edited
                 continue;
             }
 
@@ -302,16 +210,13 @@ class COLLECTION
         $subStmt = $this->db->subQuery($this->db->selectNoExecute('resource_misc', 'resourcemiscCollection'), FALSE, FALSE, TRUE);
         $this->db->formatConditions($this->db->formatFields('collectionId') . $this->db->inClause($subStmt, TRUE));
         $recordset = $this->db->select('collection', 'collectionId');
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $deleteIds[] = $row['collectionId'];
         }
-        if (empty($deleteIds))
-        {
+        if (empty($deleteIds)) {
             return; // nothing to do
         }
-        if (!empty($deleteIds))
-        {
+        if (!empty($deleteIds)) {
             $this->db->formatConditionsOneField($deleteIds, 'collectionId');
             $this->db->delete("collection");
             // remove cache files for collections

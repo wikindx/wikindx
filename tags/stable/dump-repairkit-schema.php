@@ -37,6 +37,9 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL-C license and that you accept its terms.
 */
 
+// Include the config file and check if the CONFIG class is in place
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
+
 include_once("core/startup/CONSTANTS.php");
 include_once("core/file/FILE.php");
 include_once("core/locales/LOCALES.php");
@@ -49,23 +52,21 @@ include_once("core/startup/GLOBALS.php");
 include_once("core/startup/FACTORY.php");
 include_once("core/startup/ENVIRONMENT.php");
 
-$config = FACTORY_CONFIG::getInstance();
+// Initialize the static config read from config.php file
+include_once("core/startup/LOADSTATICCONFIG.php");
+
 $db = FACTORY_DB::getInstance();
 
 $dbSchema = $db->createRepairKitDbSchema();
 
 echo "Remove previous RepairKit schema\n";
 
-if (file_exists(WIKINDX_FILE_REPAIRKIT_DB_SCHEMA))
-{
+if (file_exists(WIKINDX_FILE_REPAIRKIT_DB_SCHEMA)) {
     unlink(WIKINDX_FILE_REPAIRKIT_DB_SCHEMA);
 }
 
-if ($db->writeRepairKitDbSchema($dbSchema, WIKINDX_FILE_REPAIRKIT_DB_SCHEMA))
-{
+if ($db->writeRepairKitDbSchema($dbSchema, WIKINDX_FILE_REPAIRKIT_DB_SCHEMA)) {
     echo "RepairKit Schema dump successfull\n";
-}
-else
-{
+} else {
     echo "RepairKit Schema dump failed\n";
 }

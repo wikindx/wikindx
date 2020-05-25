@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -16,7 +18,6 @@ class CONFIGURE
     private $messages;
     private $success;
     private $session;
-    private $config;
     private $user;
     private $db;
     private $vars;
@@ -32,7 +33,6 @@ class CONFIGURE
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->user = FACTORY_USER::getInstance();
         $this->db = FACTORY_DB::getInstance();
@@ -42,39 +42,32 @@ class CONFIGURE
         $this->tinymce = FACTORY_LOADTINYMCE::getInstance();
         $this->configDbStructure = FACTORY_CONFIGDBSTRUCTURE::getInstance();
         $this->gatekeep->requireSuper = TRUE;
-        if (!$initial)
-        {
+        if (!$initial) {
             $this->gatekeep->init();
         }
     }
-    /** 
+    /**
      * init
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function init($message = FALSE)
     {
         // Anything in the session takes precedence
-        if (($messageIn = $this->session->getVar('configmessage')) && ($itemIn = $this->session->getVar('configitem')))
-        {
-            $this->session->delVar('configmessage');
-            $this->session->delVar('configitem');
+        if (($messageIn = $this->session->getVar("configmessage")) && ($itemIn = $this->session->getVar("configitem"))) {
             $messageString = $messageIn;
             $item = $itemIn;
-        }
-        elseif (is_array($message))
-        {
+        	$this->session->delVar("configmessage");
+        	$this->session->delVar("configitem");
+        } elseif (is_array($message)) {
             $messageString = $message[0];
             $item = $message[1];
-        }
-        else
-        {
+        } else {
             $messageString = $message;
             $item = FALSE;
         }
         $configGroups = $this->getConfigGroups();
-        if (empty($configGroups))
-        {
+        if (empty($configGroups)) {
             return FALSE;
         }
         $this->errorString = $messageString;
@@ -82,8 +75,7 @@ class CONFIGURE
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('configure'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "configure"));
-        if (!$this->insert)
-        {
+        if (!$this->insert) {
             $jsonArray = [];
             $jScript = 'index.php?action=admin_CONFIGURE_CORE&method=initConfigDiv';
             $jsonArray[] = [
@@ -96,26 +88,20 @@ class CONFIGURE
         }
         $pString = \HTML\tableStart('');
         $pString .= \HTML\trStart();
-        if (!$this->insert)
-        {
-            if ($item)
-            {
+        if (!$this->insert) {
+            if ($item) {
                 $pString .= \HTML\td(\FORM\selectedBoxValue($this->messages->text(
                     'config',
                     'options'
-                ), 'configMenu', $configGroups, $item, 14, FALSE, $js));
-            }
-            else
-            {
+                ), 'configMenu', $configGroups, $item, sizeof($configGroups), FALSE, $js));
+            } else {
                 $pString .= \HTML\td(\FORM\selectFBoxValue($this->messages->text(
                     'config',
                     'options'
-                ), 'configMenu', $configGroups, 14, FALSE, $js));
+                ), 'configMenu', $configGroups, sizeof($configGroups), FALSE, $js));
             }
             $pString .= \HTML\td(\HTML\div('configDiv', $this->getConfigDetails($configGroups, $item)), 'left top width80percent');
-        }
-        else
-        {
+        } else {
             $pString .= \HTML\td($this->getConfigDetails($configGroups, $item));
         }
         $pString .= \HTML\trEnd();
@@ -132,13 +118,16 @@ class CONFIGURE
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $div]));
         FACTORY_CLOSERAW::getInstance();
     }
-    /** 
+    /**
      * Display front page description in a pop up
      */
     public function displayFrontDescription()
     {
         $this->values = $this->fromDbToSession();
-        $pString = $this->tinymce->loadMinimalTextarea(['configDescription'], TRUE);
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "configure"));
+        $pString = $this->session->getVar("configmessage");
+        $this->session->delVar("configmessage");
+        $pString .= $this->tinymce->loadMinimalTextarea(['configDescription'], TRUE);
         $pString .= \FORM\formHeader("admin_CONFIGURE_CORE", "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden("method", "writeDb");
         $pString .= \FORM\hidden("selectItem", 'frontDescription');
@@ -153,21 +142,12 @@ class CONFIGURE
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSENOMENU::getInstance();
     }
-    /** 
-     * Open popup for mail transaction report
-     */
-    public function mailTransactionReport()
-    {
-        $pString = $this->session->getVar('mailTransactionLog');
-        GLOBALS::addTplVar('content', $pString);
-        FACTORY_CLOSENOMENU::getInstance();
-    }
-    /** 
+    /**
      * Open popup for ldap transaction report
      */
     public function ldapTransactionReport()
     {
-        $pString = $this->session->getVar('ldapTransactionLog');
+        $pString = $this->session->getVar("ldapTransactionLog");
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSENOMENU::getInstance();
     }
@@ -191,254 +171,167 @@ class CONFIGURE
 
         return [$toRightImage, $toLeftImage];
     }
-    /** 
+    /**
      * write values to database table
      */
     public function writeDb()
     {
         $this->checkInput();
         // If we get here, we're cleared to write to the database.  This user is always id = 1
-        if (!$this->insert)
-        {
+        if (!$this->insert) {
             $updateArray = $nulls = [];
             $possibleVars = $this->getPossibleVars();
-            foreach ($possibleVars as $field)
-            {
-                if ($field == 'configDeactivateResourceTypes')
-                {
-                    if (array_key_exists('configDeactivateResourceTypes', $this->vars))
-                    {
+            foreach ($possibleVars as $field) {
+                if ($field == 'configDeactivateResourceTypes') {
+                    if (array_key_exists('configDeactivateResourceTypes', $this->vars)) {
                         // Ensure we always have at least one resource . . .
                         $resourceMap = FACTORY_RESOURCEMAP::getInstance();
                         $typesRaw = $resourceMap->getTypesRaw();
-                        foreach ($typesRaw as $type)
-                        {
+                        foreach ($typesRaw as $type) {
                             $types[$type] = $this->messages->text("resourceType", $type);
                         }
                         $sizeDefault = count($types);
-                        if ($sizeDefault == count($this->vars[$field]))
-                        {
+                        if ($sizeDefault == count($this->vars[$field])) {
                             array_shift($this->vars[$field]);
                         }
                         // so that the select boxes display properly when returning to the DIV
-                        $this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES = [];
-                        foreach ($this->vars[$field] as $key => $value)
-                        {
-                            $this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES[$key] = $value;
+                        $deactivateResourceTypes = [];
+                        foreach ($this->vars[$field] as $key => $value) {
+                            $deactivateResourceTypes[$key] = $value;
                         }
-                        $value = base64_encode(serialize($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES));
-                    }
-                    else
-                    {
-                        $this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES = [];
+                        $value = base64_encode(serialize($deactivateResourceTypes));
+                    } else {
+                        $deactivateResourceTypes = [];
                         $value = base64_encode(serialize([]));
                     }
-                }
-                elseif ($this->configDbStructure->dbStructure[$field] == 'configBoolean')
-                {
-                    if (!array_key_exists($field, $this->vars))
-                    { // checkboxes not checked
+                    $this->session->setVar("config_deactivateResourceTypes", $value);
+                } elseif (WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"] == 'configBoolean') {
+                    if (!array_key_exists($field, $this->vars)) { // checkboxes not checked
                         $value = FALSE;
-                    }
-                    else
-                    {
+                    } else {
                         $value = TRUE;
                     }
-                }
-                elseif ($field != 'configDescription')
-                {
+                } elseif ($field != 'configDescription') {
                     $value = \HTML\removeNl($this->vars[$field]);
-                }
-                elseif (($field == 'configDescription') && array_key_exists($field, $this->vars))
-                {
+                } elseif (($field == 'configDescription') && array_key_exists($field, $this->vars)) {
                     $value = trim($this->vars[$field]);
                 }
-                if (($field == "configTagLowColour") || ($field == "configTagHighColour"))
-                {
+                if (($field == "configTagLowColour") || ($field == "configTagHighColour")) {
                     $value = str_replace('#', '', $this->vars[$field]);
                 }
-                if ($field == 'configNoSort')
-                {
+                if ($field == 'configNoSort') {
                     $array = [];
-                    if (isset($this->config->WIKINDX_NOSORT))
-                    {
-                        $oldNoSort = base64_encode(serialize($this->config->WIKINDX_NOSORT));
-                    }
-                    if ($value)
-                    {
-                        foreach (UTF8::mb_explode(',', $value) as $word)
-                        {
+                    $oldNoSort = base64_encode(serialize(WIKINDX_NO_SORT));
+                    if ($value) {
+                        foreach (UTF8::mb_explode(',', $value) as $word) {
                             $word = mb_strtolower(stripslashes(trim($word)));
-                            if ($word && array_search($word, $array) === FALSE)
-                            {
+                            if ($word && array_search($word, $array) === FALSE) {
                                 $array[] = $word;
                             }
                         }
                         $value = base64_encode(serialize($array));
                     }
-                    $this->config->WIKINDX_NOSORT = $array;
-                    if (isset($oldNoSort) && $oldNoSort != $value)
-                    {
+                    if (isset($oldNoSort) && $oldNoSort != $value) {
                         $this->updateNoSort($oldNoSort);
+                        $this->session->setVar("config_noSort", $value);
                     }
-                }
-                elseif ($field == 'configSearchFilter')
-                {
+                } elseif ($field == 'configSearchFilter') {
                     $array = [];
-                    if ($value)
-                    {
-                        foreach (UTF8::mb_explode(',', $value) as $word)
-                        {
+                    if ($value) {
+                        foreach (UTF8::mb_explode(',', $value) as $word) {
                             $word = mb_strtolower(stripslashes(trim($word)));
-                            if ($word && array_search($word, $array) === FALSE)
-                            {
+                            if ($word && array_search($word, $array) === FALSE) {
                                 $array[] = $word;
                             }
                         }
                         $value = base64_encode(serialize($array));
+                        $this->session->setVar("config_searchFilter", $value);
                     }
-                    $this->config->WIKINDX_SEARCHFILTER = $array;
-                }
-                elseif ($field == 'configTimezone')
-                {
+                } elseif ($field == 'configTimezone') {
                     $timezones = DateTimeZone::listIdentifiers();
                     $value = $timezones[$value];
-                }
-                elseif ($field == 'configLastChangesType')
-                {
+                } elseif ($field == 'configLastChangesType') {
                     $value = $this->vars['configLastChangesType'] == 1 ? 'number' : 'days'; // 2 == 'days'
                 }
-                if ($value || ($value === 0) || ($value === FALSE))
-                {
+                if ($value || ($value === 0) || ($value === FALSE)) {
                     $updateArray[$field] = $value;
-                }
-                else
-                {
+                } else {
                     $nulls[] = $field;
                 }
             }
         }
         $headerRedirect = FALSE;
-        if ($this->insert)
-        {
-            $usersFieldArray = $usersValueArray = [];
-            // if inserting after initial install, write superadmin's preferences to users table and create user session
-            $usersFieldArray[] = 'usersUsername';
-            $usersValueArray[] = $this->vars['configUsername'];
-            $usersFieldArray[] = 'usersPassword';
-            $usersValueArray[] = crypt($this->vars['password'], UTF8::mb_strrev(time()));
-            $usersFieldArray[] = 'usersEmail';
-            $usersValueArray[] = $this->vars['configEmail'];
-            $usersFieldArray[] = 'usersAdmin';
-            $usersValueArray[] = 'Y';
-            if (array_key_exists('configFullname', $this->vars))
-            {
-                $usersFieldArray[] = 'usersFullname';
-                $usersValueArray[] = $this->vars['configFullname'];
-            }
-            if (array_key_exists('configIsCreator', $this->vars) && $this->vars['configIsCreator'])
-            {
-                $usersValueArray[] = $this->vars['configIsCreator'];
-                $usersFieldArray[] = 'usersIsCreator';
-            }
-            $this->db->insert('users', $usersFieldArray, $usersValueArray);
-            // set the new WKX_users.notifyTimestamp and WKX_users.timestamp to current date
-            $this->db->formatConditions(['usersId' => 1]);
-            $this->db->updateTimestamp('users', ['usersNotifyTimestamp' => 'CURRENT_TIMESTAMP', 'usersTimestamp' => 'CURRENT_TIMESTAMP']);
-            $this->user->writeSessionPreferences(1); // '1' == superAdmin
+        if ($this->insert) {
             $this->insert = FALSE;
-        }
-        else
-        {
-            $updateUserArray = $nullsUserArray = [];
+        } else {
             $configFields = $this->configDbStructure->getAllData();
-            // Write user table first if updating superadmin information
-            if (array_key_exists('configUsername', $this->vars))
-            {
-                $updateUserArray['usersUsername'] = $this->vars['configUsername'];
-            }
-            if (array_key_exists('configEmail', $this->vars))
-            {
-                $updateUserArray['usersEmail'] = $this->vars['configEmail'];
-            }
-            $this->db->formatConditions(['usersId' => 1]);
-            if (array_key_exists('password', $this->vars) && ($this->vars['password'] != $this->db->selectFirstField('users', 'usersPassword')))
-            {
-                $updateUserArray['usersPassword'] = crypt($this->vars['password'], UTF8::mb_strrev(time()));
-            }
-            if (array_key_exists('configFullname', $this->vars))
-            {
-                $updateUserArray['usersFullname'] = $this->vars['configFullname'];
-            }
-            else
-            {
-                $nullsUserArray[] = 'usersFullname';
-            }
-            if (array_key_exists('configIsCreator', $this->vars) && $this->vars['configIsCreator'])
-            {
-                $updateUserArray['usersIsCreator'] = $this->vars['configIsCreator'];
-            }
-            else
-            {
-                $nullsUserArray[] = 'usersIsCreator';
-            }
-            if (!empty($updateUserArray))
-            {
-                $this->db->formatConditions(['usersId' => 1]);
-                $this->db->update('users', $updateUserArray);
-            }
-            if (!empty($nullsUserArray))
-            {
-                $this->db->formatConditions(['usersId' => 1]);
-                $this->db->updateNull('users', $nullsUserArray);
-            }
-            foreach ($updateArray as $field => $value)
-            {
-                if ($field == 'configPrintSql')
-                { // debugging configuration – see header() below
+            foreach ($updateArray as $field => $value) {
+                if ($field == 'configDebugSql') { // debugging configuration – see header() below
                     $headerRedirect = TRUE;
                 }
-                if ($value === FALSE)
-                {
+                if ($value === FALSE) {
                     $value = 0;
-                }
-                elseif ($value === TRUE)
-                {
+                } elseif ($value === TRUE) {
                     $value = 1;
                 }
                 // create database row if it doesn't exist
-                if (array_key_exists($field, $configFields) === FALSE)
-                {
-                    $this->db->insert('config', ['configName', $this->configDbStructure->dbStructure[$field]], [$field, $value]);
-                }
-                else
-                {
+                if (array_key_exists($field, $configFields) === FALSE) {
+                    $this->db->insert('config', ['configName', WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"]], [$field, $value]);
+                } else {
                     $this->db->formatConditions(['configName' => $field]);
-                    $this->db->update('config', [$this->configDbStructure->dbStructure[$field] => $value]);
+                    $this->db->update('config', [WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"] => $value]);
                 }
             }
-            foreach ($nulls as $field)
-            {
+            foreach ($nulls as $field) {
                 $this->db->formatConditions(['configName' => $field]);
-                $this->db->updateNull('config', $this->configDbStructure->dbStructure[$field]);
+                $this->db->updateNull('config', WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"]);
             }
-            $this->writeSetupSession($updateArray);
         }
         // need to use header() to ensure any change in appearance is immediately picked up.
-        if ($headerRedirect)
-        {
-            $this->session->setVar('configmessage', $this->success->text("config"));
-            $this->session->setVar('configitem', $this->vars['selectItem']);
+        if ($headerRedirect) {
+            $this->session->setVar("configmessage", $this->success->text("config"));
+            $this->session->setVar("configitem", $this->vars['selectItem']);
             header("Location: index.php?action=admin_CONFIGURE_CORE&method=init");
-        }
-        else
-        {
+        } else {
             $this->init([$this->success->text("config"), $this->vars['selectItem']]);
         }
         // After a change of configuration, reset the template cache
         FACTORY_TEMPLATE::getInstance()->clearAllCache();
     }
-    /** 
+    /**
+     * Open popup for mail transaction report
+     */
+    public function mailTransactionReport()
+    {
+        $content = \HTML\h("Configuration test email", "", 3);
+        $content .= \FORM\formHeader("admin_CONFIGURE_CORE");
+        
+        $content .= \FORM\hidden("method", "mailTransactionReport");
+        
+        $content .= \HTML\p($this->messages->text("hint", "mailTest"));
+        array_key_exists("configMailTest", $this->vars) ? $input = $this->vars["configMailTest"] : $input = FALSE;
+        
+        $content .= \HTML\p(
+            \FORM\textInput($this->messages->text("config", "mailTest"), "configMailTest", $input, 30, 255)
+            . "&nbsp;" . \FORM\formSubmit($this->messages->text("submit", "Test"))
+        );
+        $content .= \FORM\formEnd();
+        
+        if (array_key_exists("configMailTest", $this->vars)) {
+            include_once("core/libs/MAIL.php");
+            $mail = new MAIL();
+            if (!$mail->sendEmail($this->vars['configMailTest'], \HTML\stripHtml(WIKINDX_TITLE), $this->messages->text('config', 'mailTestSuccess'))) {
+                $content .= \HTML\p("The test fails", "error", "center");
+            } else {
+                $content .= \HTML\p("The test passed", "success", "center");
+            }
+            $content .= "<pre>" . $mail->TransactionLog . "</pre>";
+        }
+        
+        GLOBALS::addTplVar('content', $content);
+        FACTORY_CLOSENOMENU::getInstance();
+    }
+    /**
      * create array of config menu items
      *
      * @return array
@@ -460,11 +353,6 @@ class CONFIGURE
             'misc' => $this->messages->text('config', 'misc'),
             'debug' => $this->messages->text('config', 'debugging'),
         ];
-        // Only for superadmin who is always userid = 1
-        if (!$this->session->issetVar('setup_UserId') || ($this->session->getVar('setup_UserId') == 1))
-        {
-            $groups = ['super' => $this->messages->text('config', 'superAdmin')] + $groups;
-        }
 
         return $groups;
     }
@@ -478,49 +366,23 @@ class CONFIGURE
      */
     private function getConfigDetails($groups, $item = FALSE)
     {
-        if (!isset($this->config->WIKINDX_SEARCHFILTER))
-        {
-            $this->config->WIKINDX_SEARCHFILTER = [];
-        }
-        if (!$this->insert)
-        {
+        if (!$this->insert) {
             $this->values = $this->fromDbToSession();
-        }
-        else
-        { // initial install
+        } else { // initial install
             $this->values = $this->session->getArray("config");
         }
-        if (array_key_exists('ajaxReturn', $this->vars))
-        {
+        if (array_key_exists('ajaxReturn', $this->vars)) {
             $item = $this->vars['ajaxReturn'];
-        }
-        elseif (!$item)
-        { // grab the first of the list
-            foreach ($groups as $item => $null)
-            {
+        } elseif (!$item) { // grab the first of the list
+            foreach ($groups as $item => $null) {
                 break;
             }
         }
-        $pString = '<script type="text/javascript" src="' . $this->config->WIKINDX_BASE_URL . '/core/modules/admin/configure.js"></script>';
-        if ($item == 'super')
-        {
-            $password = FACTORY_PASSWORD::getInstance();
-            $input = array_key_exists("configUsername", $this->values) ? $this->values["configUsername"] : FALSE;
-            list($formText, $jsString) = $password->createElements($input, TRUE);
-            $pString .= \FORM\formHeader("admin_CONFIGURE_CORE", 'onsubmit="selectAll();return checkForm(' . $jsString . ');"');
-        }
-        else
-        {
-            $pString .= \FORM\formHeader("admin_CONFIGURE_CORE", "onsubmit=\"selectAll();return true;\"");
-        }
+        $pString = '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/admin/configure.js"></script>';
+        $pString .= \FORM\formHeader("admin_CONFIGURE_CORE", "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden("method", "writeDb");
         $pString .= \FORM\hidden("selectItem", $item);
-        switch ($item)
-        {
-            case 'super': // super admin configuration
-                $pString .= $this->superConfigDisplay($formText);
-
-                break;
+        switch ($item) {
             case 'front': // front page configuration
                 $pString .= $this->frontConfigDisplay();
 
@@ -587,7 +449,7 @@ class CONFIGURE
 
         return $pString;
     }
-    /** 
+    /**
      * Display front page options
      *
      * @return string
@@ -597,12 +459,9 @@ class CONFIGURE
         $pString = $this->errorString;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
-        if (array_key_exists("configLastChangesType", $this->values) && ($this->values["configLastChangesType"] == 'number'))
-        { // set number
+        if (array_key_exists("configLastChangesType", $this->values) && ($this->values["configLastChangesType"] == 'number')) { // set number
             $input = 1;
-        }
-        else
-        { // Set no. days
+        } else { // Set no. days
             $input = 2;
         }
         $array = [
@@ -618,12 +477,12 @@ class CONFIGURE
             2,
             80
         ) . BR;
-        array_key_exists("configLastChanges", $this->values) ? $input = $this->values["configLastChanges"] : $input = WIKINDX_LASTCHANGES_DEFAULT;
+        array_key_exists("configLastChanges", $this->values) ? $input = $this->values["configLastChanges"] : $input = WIKINDX_LAST_CHANGES_DEFAULT;
         $td .= \FORM\textInput(FALSE, "configLastChanges", $input, 10, 10) . \HTML\span('*', 'required') . BR .
             \HTML\span($hint, 'hint');
         $pString .= \HTML\td($td);
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "lastChangesDayLimit"));
-        array_key_exists("configLastChangesDayLimit", $this->values) ? $input = $this->values["configLastChangesDayLimit"] : $input = WIKINDX_LASTCHANGESDAYLIMIT_DEFAULT;
+        array_key_exists("configLastChangesDayLimit", $this->values) ? $input = $this->values["configLastChangesDayLimit"] : $input = WIKINDX_LAST_CHANGES_DAY_LIMIT_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "lastChanges4"),
             "configLastChangesDayLimit",
@@ -652,62 +511,7 @@ class CONFIGURE
 
         return $pString;
     }
-    /** 
-     * Display super config options
-     *
-     * @param mixed $formText
-     *
-     * @return string
-     */
-    private function superConfigDisplay($formText)
-    {
-        $pString = $this->errorString;
-        $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
-        $pString .= \HTML\trStart();
-        $pString .= $formText;
-        $pString .= \HTML\trEnd();
-        $pString .= \HTML\trStart();
-        $pString .= \HTML\td('&nbsp;');
-        $pString .= \HTML\td('&nbsp;');
-        $pString .= \HTML\td('&nbsp;');
-        $pString .= \HTML\trEnd();
-        $pString .= \HTML\trStart();
-        $input = array_key_exists("configEmail", $this->values) ? $this->values["configEmail"] : FALSE;
-        $pString .= \HTML\td(\FORM\textInput(
-            $this->messages->text("user", "email"),
-            "configEmail",
-            $input,
-            30
-        ) . " " . \HTML\span('*', 'required'));
-        $input = array_key_exists("configFullname", $this->values) ? $this->values["configFullname"] : FALSE;
-        $pString .= \HTML\td(\FORM\textInput(
-            $this->messages->text("user", "fullname"),
-            "configFullname",
-            $input,
-            30
-        ));
-        // User is creator
-        $creator = FACTORY_CREATOR::getInstance();
-        $creators = $creator->grabAll(FALSE, FALSE, FALSE, TRUE);
-        if (is_array($creators))
-        {
-            // add 0 => IGNORE to creators array
-            $creators = [0 => $this->messages->text("misc", "ignore")] + $creators;
-        	$input = array_key_exists("configIsCreator", $this->values) ? $this->values["configIsCreator"] : FALSE;
-            $pString .= \HTML\td(\FORM\selectedBoxValue(
-                $this->messages->text("user", "isCreator"),
-                "configIsCreator",
-                $creators,
-                $input,
-                1
-            ));
-        }
-        $pString .= \HTML\trEnd();
-        $pString .= \HTML\tableEnd();
-
-        return $pString;
-    }
-    /** 
+    /**
      * Display debugging config options
      *
      * @return string
@@ -719,29 +523,25 @@ class CONFIGURE
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "forceSmartyCompile"));
-        $input = array_key_exists("configBypassSmartyCompile", $this->values) && ($this->values['configBypassSmartyCompile']) ? "CHECKED" : WIKINDX_BYPASS_SMARTYCOMPILE_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "forceSmartyCompile"), "configBypassSmartyCompile", $input)
-            . BR . \HTML\span($hint, 'hint'));
+        $input = array_key_exists("configBypassSmartyCompile", $this->values) && ($this->values['configBypassSmartyCompile']) ? "CHECKED" : WIKINDX_BYPASS_SMARTY_COMPILATION_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "forceSmartyCompile"), "configBypassSmartyCompile", $input) . BR . \HTML\span($hint, 'hint'));
+        
         $input = array_key_exists("configErrorReport", $this->values) && ($this->values['configErrorReport']) ? "CHECKED" : WIKINDX_DEBUG_ERRORS_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "errorReport"), "configErrorReport", $input));
-        $input = array_key_exists("configPrintSql", $this->values) && ($this->values['configPrintSql']) ? "CHECKED" : WIKINDX_DEBUG_SQL_DEFAULT;
-        $td = \FORM\checkbox($this->messages->text("config", "sqlStatements"), "configPrintSql", $input);
-        $td .= BR . BR;
-        $input = array_key_exists("configSqlErrorOutput", $this->values) && ($this->values['configSqlErrorOutput']) ?
-            $this->values['configSqlErrorOutput'] : WIKINDX_DEBUG_SQLERROROUTPUT_DEFAULT;
-        $options = ['printSql' => $this->messages->text("config", "printSql"), 'emailSql' => $this->messages->text("config", "emailSql1")];
-        $td .= \FORM\selectedBoxValue(FALSE, "configSqlErrorOutput", $options, $input, 2);
-        $td .= BR . BR;
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailServerRequired"));
-        $input = array_key_exists("configDebugEmail", $this->values) ? $this->values["configDebugEmail"] : WIKINDX_DEBUG_EMAIL_DEFAULT;
-        $td .= \FORM\textInput($this->messages->text("config", "emailSql2"), "configDebugEmail", $input, 30) . BR . \HTML\span($hint, 'hint');
-        $pString .= \HTML\td($td);
+        
+        $input = array_key_exists("configDebugSql", $this->values) && ($this->values['configDebugSql']) ? "CHECKED" : WIKINDX_DEBUG_SQL_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "sqlStatements"), "configDebugSql", $input));
+        
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "isTrunk"));
+        $input = array_key_exists("configIsTrunk", $this->values) && ($this->values['configIsTrunk']) ? "CHECKED" : WIKINDX_IS_TRUNK_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "isTrunk"), "configIsTrunk", $input) . BR . \HTML\span($hint, 'hint'));
+        
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
         return $pString;
     }
-    /** 
+    /**
      * Display user config options
      *
      * @return string
@@ -754,19 +554,19 @@ class CONFIGURE
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailServerRequired"));
         $input = array_key_exists("configMultiUser", $this->values) && ($this->values['configMultiUser']) ? "CHECKED" : WIKINDX_MULTIUSER_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "multiUser"), "configMultiUser", $input));
-        $input = array_key_exists("configUserRegistration", $this->values) && ($this->values['configUserRegistration']) ? "CHECKED" : WIKINDX_USERREGISTRATION_DEFAULT;
+        $input = array_key_exists("configUserRegistration", $this->values) && ($this->values['configUserRegistration']) ? "CHECKED" : WIKINDX_USER_REGISTRATION_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "userRegistration"),
             "configUserRegistration",
             $input
         ) . BR . \HTML\span($hint, 'hint'));
-        $input = array_key_exists("configUserRegistrationModerate", $this->values) && ($this->values['configUserRegistrationModerate']) ? "CHECKED" : WIKINDX_USERREGISTRATIONMODERATE_DEFAULT;
+        $input = array_key_exists("configUserRegistrationModerate", $this->values) && ($this->values['configUserRegistrationModerate']) ? "CHECKED" : WIKINDX_USER_REGISTRATION_MODERATE_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "registrationModerate"),
             "configUserRegistrationModerate",
             $input
         ) . BR . \HTML\span($hint, 'hint'));
-        $input = array_key_exists("configEmailNewRegistrations", $this->values) ? $this->values["configEmailNewRegistrations"] : WIKINDX_EMAIL_NEWREGISTRATIONS_DEFAULT;
+        $input = array_key_exists("configEmailNewRegistrations", $this->values) ? $this->values["configEmailNewRegistrations"] : WIKINDX_EMAIL_NEW_REGISTRATIONS_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "emailNewRegistrations"),
             "configEmailNewRegistrations",
@@ -783,16 +583,13 @@ class CONFIGURE
         $pString .= \HTML\trStart();
         $input = array_key_exists("configDenyReadOnly", $this->values) && ($this->values['configDenyReadOnly']) ? "CHECKED" : WIKINDX_DENY_READONLY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "denyReadOnly"), "configDenyReadOnly", $input));
-        if ($this->insert)
-        {
+        if ($this->insert) {
             $input = "CHECKED"; // NB checked by default
-        }
-        else
-        {
+        } else {
             $input = array_key_exists("configReadOnlyAccess", $this->values) && ($this->values['configReadOnlyAccess']) ? "CHECKED" : FALSE;
         }
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "readOnlyAccess"), "configReadOnlyAccess", $input));
-        $input = array_key_exists("configOriginatorEditOnly", $this->values) && ($this->values['configOriginatorEditOnly']) ? "CHECKED" : WIKINDX_ORIGINATOR_EDITONLY_DEFAULT;
+        $input = array_key_exists("configOriginatorEditOnly", $this->values) && ($this->values['configOriginatorEditOnly']) ? "CHECKED" : WIKINDX_ORIGINATOR_EDIT_ONLY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "originatorEditOnly"), "configOriginatorEditOnly", $input));
         $input = array_key_exists("configGlobalEdit", $this->values) && ($this->values['configGlobalEdit']) ? "CHECKED" : WIKINDX_GLOBAL_EDIT_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "globalEdit"), "configGlobalEdit", $input));
@@ -804,18 +601,15 @@ class CONFIGURE
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $input = array_key_exists("configImportBib", $this->values) && ($this->values['configImportBib']) ? "CHECKED" : WIKINDX_IMPORTBIB_DEFAULT;
+        $input = array_key_exists("configImportBib", $this->values) && ($this->values['configImportBib']) ? "CHECKED" : WIKINDX_IMPORT_BIB_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "importBib"),
             "configImportBib",
             $input
         ));
-        if ($this->insert)
-        {
+        if ($this->insert) {
             $input = "CHECKED"; // NB checked by default
-        }
-        else
-        {
+        } else {
             $input = array_key_exists("configMetadataAllow", $this->values) && ($this->values['configMetadataAllow']) ? "CHECKED" : FALSE;
         }
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "metadataAllow"), "configMetadataAllow", $input));
@@ -846,7 +640,7 @@ class CONFIGURE
 
         return $pString;
     }
-    /** 
+    /**
      * Display resource list config options
      *
      * @return string
@@ -870,7 +664,7 @@ class CONFIGURE
             10
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingTagCloud"));
-        array_key_exists("configPagingTagCloud", $this->values) ? $input = $this->values["configPagingTagCloud"] : $input = WIKINDX_PAGINGTAGCLOUD_DEFAULT;
+        array_key_exists("configPagingTagCloud", $this->values) ? $input = $this->values["configPagingTagCloud"] : $input = WIKINDX_PAGING_TAG_CLOUD_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "pagingTagCloud"),
             "configPagingTagCloud",
@@ -885,16 +679,16 @@ class CONFIGURE
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $input = array_key_exists("configListLink", $this->values) && ($this->values['configListLink']) ? "CHECKED" : WIKINDX_LISTLINK_DEFAULT;
+        $input = array_key_exists("configListLink", $this->values) && ($this->values['configListLink']) ? "CHECKED" : WIKINDX_LIST_LINK_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "ListLink"), "configListLink", $input));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "noSort"));
-        if ($this->insert)
-        {
-            $input = implode(', ', unserialize(base64_decode(WIKINDX_NOSORT_DEFAULT))); // default at first intall
-        }
-        else
-        {
-            $input = implode(', ', $this->config->WIKINDX_NOSORT);
+        if ($this->insert) {
+            $input = implode(', ', unserialize(base64_decode(WIKINDX_NO_SORT_DEFAULT))); // default at first install
+        } elseif ($this->session->getVar("config_noSort")) { // After updating the field
+            $input = implode(', ', unserialize(base64_decode($this->session->getVar("config_noSort"))));
+            $this->session->delVar("config_noSort");
+        } else {
+            $input = implode(', ', WIKINDX_NO_SORT);
         }
         $pString .= \HTML\td(\HTML\p(\FORM\textareaInput(
             $this->messages->text("config", "noSort"),
@@ -904,13 +698,13 @@ class CONFIGURE
             7
         ) . BR . \HTML\span($hint, 'hint')));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "searchFilter"));
-        if ($this->insert)
-        {
-            $input = implode(', ', unserialize(base64_decode(WIKINDX_SEARCHFILTER_DEFAULT))); // default at first install
-        }
-        else
-        {
-            $input = implode(', ', $this->config->WIKINDX_SEARCHFILTER);
+        if ($this->insert) {
+            $input = implode(', ', unserialize(base64_decode(WIKINDX_SEARCH_FILTER_DEFAULT))); // default at first install
+        } elseif ($this->session->getVar("config_searchFilter")) { // After updating the field
+            $input = implode(', ', unserialize(base64_decode($this->session->getVar("config_searchFilter"))));
+            $this->session->delVar("config_searchFilter");
+        } else {
+            $input = implode(', ', WIKINDX_SEARCH_FILTER);
         }
         $pString .= \HTML\td(\HTML\p(\FORM\textareaInput(
             $this->messages->text("config", "searchFilter"),
@@ -925,7 +719,7 @@ class CONFIGURE
 
         return $pString;
     }
-    /** 
+    /**
      * Display visual display config options
      *
      * @return string
@@ -936,10 +730,10 @@ class CONFIGURE
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "title"));
-        array_key_exists("configTitle", $this->values) ? $input = $this->values["configTitle"] : $input = WIKINDX_NAME;
+        array_key_exists("configTitle", $this->values) ? $input = $this->values["configTitle"] : $input = WIKINDX_TITLE_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput($this->messages->text("config", "title"), "configTitle", $input, 30) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "stringLimit"));
-        array_key_exists("configStringLimit", $this->values) ? $input = $this->values["configStringLimit"] : $input = WIKINDX_STRINGLIMIT_DEFAULT;
+        array_key_exists("configStringLimit", $this->values) ? $input = $this->values["configStringLimit"] : $input = WIKINDX_STRING_LIMIT_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "stringLimit"),
             "configStringLimit",
@@ -948,7 +742,7 @@ class CONFIGURE
             10
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "imgWidthLimit"));
-        array_key_exists("configImgWidthLimit", $this->values) ? $input = $this->values["configImgWidthLimit"] : $input = WIKINDX_IMG_WIDTHLIMIT_DEFAULT;
+        array_key_exists("configImgWidthLimit", $this->values) ? $input = $this->values["configImgWidthLimit"] : $input = WIKINDX_IMG_WIDTH_LIMIT_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "imgWidthLimit"),
             "configImgWidthLimit",
@@ -957,7 +751,7 @@ class CONFIGURE
             10
         ) . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "imgHeightLimit"));
-        array_key_exists("configImgHeightLimit", $this->values) ? $input = $this->values["configImgHeightLimit"] : $input = WIKINDX_IMG_HEIGHTLIMIT_DEFAULT;
+        array_key_exists("configImgHeightLimit", $this->values) ? $input = $this->values["configImgHeightLimit"] : $input = WIKINDX_IMG_HEIGHT_LIMIT_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "imgHeightLimit"),
             "configImgHeightLimit",
@@ -1072,8 +866,7 @@ class CONFIGURE
         
         // Scale factors of the tags cloud
         $tagfactors = [];
-        foreach(range(WIKINDX_TAG_FACTOR_MIN, WIKINDX_TAG_FACTOR_MAX, WIKINDX_TAG_FACTOR_STEP) as $v)
-        {
+        foreach (range(WIKINDX_TAG_FACTOR_MIN, WIKINDX_TAG_FACTOR_MAX, WIKINDX_TAG_FACTOR_STEP) as $v) {
             $tagfactors[$v] = $v;
         }
         
@@ -1100,7 +893,7 @@ class CONFIGURE
 
         return $pString;
     }
-    /** 
+    /**
      * Display RSS config options
      *
      * @return string
@@ -1170,7 +963,7 @@ class CONFIGURE
 
         return $pString;
     }
-    /** 
+    /**
      * Display CMS config options
      *
      * @return string
@@ -1228,7 +1021,7 @@ class CONFIGURE
 
         return $pString;
     }
-    /** 
+    /**
      * Display Google Scholar config options
      *
      * @return string
@@ -1251,30 +1044,30 @@ class CONFIGURE
 
         return $pString;
     }
-    /** 
+    /**
      * Display user authentication config options
      *
      * @return string
      */
     private function authenticationConfigDisplay()
     {
+        $isLdapExtAvailable = in_array("ldap", get_loaded_extensions());
         $mailMessage = FALSE;
-        if (array_key_exists("configLdapUse", $this->values) && $this->values['configLdapUse'])
-        {
-            $config = FACTORY_LOADCONFIG::getInstance(); // Ensure we're working with current input values. Database has been written to at this point.
-            $config->load();
-            if (array_key_exists('configLdapTestUser', $this->vars) && $this->vars['configLdapTestUser'])
-            {
-                $this->testLdap();
-                $jScript = "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=ldapTransactionReport', 80)";
-                $colour = $this->session->getVar('ldapTransactionLogStatus') == 'success' ? 'green' : 'red';
-                $mailMessage = \HTML\p(\HTML\aBrowse($colour, '', $this->messages->text("config", "ldapTransactionReport"), $jScript));
+
+        if ($isLdapExtAvailable) {
+            if (array_key_exists("configLdapUse", $this->values) && $this->values['configLdapUse']) {
+                if (array_key_exists('configLdapTestUser', $this->vars) && $this->vars['configLdapTestUser']) {
+                    $this->testLdap();
+                    $jScript = "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=ldapTransactionReport', 80)";
+                    $colour = $this->session->getVar("ldapTransactionLogStatus") == 'success' ? 'green' : 'red';
+                    $mailMessage = \HTML\p(\HTML\aBrowse($colour, '', $this->messages->text("config", "ldapTransactionReport"), $jScript));
+                }
             }
         }
         $pString = $this->errorString . $mailMessage;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
-        array_key_exists("configPasswordSize", $this->values) ? $input = $this->values["configPasswordSize"] : $input = WIKINDX_PASSWORDSIZE_DEFAULT;
+        array_key_exists("configPasswordSize", $this->values) ? $input = $this->values["configPasswordSize"] : $input = WIKINDX_PASSWORD_SIZE_DEFAULT;
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "passwordSize"));
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "passwordSize"),
@@ -1290,7 +1083,7 @@ class CONFIGURE
             'strong' => $this->messages->text("config", "passwordStrong"),
         ];
         array_key_exists("configPasswordStrength", $this->values) ? $input = $this->values["configPasswordStrength"] :
-            $input = WIKINDX_PASSWORDSTRENGTH_DEFAULT;
+            $input = WIKINDX_PASSWORD_STRENGTH_DEFAULT;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "passwordStrength"),
             "configPasswordStrength",
@@ -1306,12 +1099,12 @@ class CONFIGURE
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "ldapUse"), "configLdapUse", $input));
         array_key_exists("configLdapProtocolVersion", $this->values) ? $input = $this->values["configLdapProtocolVersion"] :
             $input = WIKINDX_LDAP_PROTOCOL_VERSION_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "ldapProtocolVersion"),
             "configLdapProtocolVersion",
+            WIKINDX_LDAP_PROTOCOLE_VERSIONS,
             $input,
-            3,
-            3
+            1
         ));
         array_key_exists("configLdapServer", $this->values) ? $input = $this->values["configLdapServer"] : $input = WIKINDX_LDAP_SERVER_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
@@ -1348,44 +1141,36 @@ class CONFIGURE
         array_key_exists("configAuthGateMessage", $this->values) ? $input = $this->values["configAuthGateMessage"] :
             $input = WIKINDX_AUTHGATE_MESSAGE_DEFAULT;
         $pString .= \HTML\td(\FORM\textareaInputmceNoEditor($this->messages->text("config", "authGateMessage"), "configAuthGateMessage", $input, 80));
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGateReset"), "configAuthGateReset", FALSE));
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGateReset"), "configAuthGateReset", WIKINDX_AUTHGATE_RESET_DEFAULT));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
+
+        if ($isLdapExtAvailable) {
         // Extra field not in the database used for test purposes only
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapTest"));
-        array_key_exists("configLdapTestUser", $this->vars) ? $input = $this->vars["configLdapTestUser"] : $input = FALSE;
-        $pString .= \HTML\p(\FORM\textInput($this->messages->text("config", "ldapTestUsername"), "configLdapTestUser", $input, 30, 255));
-        array_key_exists("configLdapTestPassword", $this->vars) ? $input = $this->vars["configLdapTestPassword"] : $input = FALSE;
-        $pString .= \HTML\p(\FORM\passwordInput($this->messages->text("config", "ldapTestPassword"), "configLdapTestPassword", $input, 30, 255) .
-            BR . \HTML\span($hint, 'hint'));
+            $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapTest"));
+                array_key_exists("configLdapTestUser", $this->vars) ? $input = $this->vars["configLdapTestUser"] : $input = FALSE;
+            $pString .= \HTML\p(\FORM\textInput($this->messages->text("config", "ldapTestUsername"), "configLdapTestUser", $input, 30, 255));
+                array_key_exists("configLdapTestPassword", $this->vars) ? $input = $this->vars["configLdapTestPassword"] : $input = FALSE;
+            $pString .= \HTML\p(\FORM\passwordInput($this->messages->text("config", "ldapTestPassword"), "configLdapTestPassword", $input, 30, 255) .
+                BR . \HTML\span($hint, 'hint'));
+        } else {
+            $pString .= \HTML\p($this->messages->text("hint", "ldapExtDisabled"), 'redText');
+        }
 
         return $pString;
     }
-    /** 
+    /**
      * Display email config options
      *
      * @return string
      */
     private function emailConfigDisplay()
     {
-        $mailMessage = FALSE;
-        if (array_key_exists("configMailServer", $this->values) && $this->values['configMailServer'])
-        {
-            $config = FACTORY_LOADCONFIG::getInstance(); // Ensure we're working with current input values. Database has been written to at this point.
-            $config->load();
-            if (array_key_exists('configMailTest', $this->vars) && $this->vars['configMailTest'])
-            {
-                $this->testMail();
-                $jScript = "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=mailTransactionReport', 80)";
-                $colour = $this->session->getVar('mailTransactionLogStatus') == 'success' ? 'green' : 'red';
-                $mailMessage = \HTML\p(\HTML\aBrowse($colour, '', $this->messages->text("config", "mailTransactionReport"), $jScript));
-            }
-        }
-        $pString = $this->errorString . $mailMessage;
+        $pString = $this->errorString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
-        $input = array_key_exists("configMailServer", $this->values) && ($this->values['configMailServer']) ? "CHECKED" : WIKINDX_MAIL_SERVER_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "mailServer"), "configMailServer", $input));
+        $input = array_key_exists("configMailUse", $this->values) && ($this->values['configMailUse']) ? "CHECKED" : WIKINDX_MAIL_USE_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "mailServer"), "configMailUse", $input));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailFrom"));
         array_key_exists("configMailFrom", $this->values) ? $input = $this->values["configMailFrom"] : $input = WIKINDX_MAIL_FROM_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
@@ -1413,14 +1198,13 @@ class CONFIGURE
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $array = ['mail' => 'PHP Mail', 'smtp' => 'SMTP', 'sendmail' => 'Sendmail'];
         array_key_exists("configMailBackend", $this->values) ? $input = $this->values["configMailBackend"] : $input = WIKINDX_MAIL_BACKEND_DEFAULT;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "mailBackend"),
             "configMailBackend",
-            $array,
+            WIKINDX_PHPMAILER_BACKENDS,
             $input,
-            3
+            count(WIKINDX_PHPMAILER_BACKENDS)
         ) . " " . \HTML\span('*', 'required'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailReturnPath"));
         array_key_exists("configMailReturnPath", $this->values) ? $input = $this->values["configMailReturnPath"] : $input = WIKINDX_MAIL_RETURN_PATH_DEFAULT;
@@ -1432,7 +1216,7 @@ class CONFIGURE
             255
         ) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailSmPath"));
-        array_key_exists("configMailSmPath", $this->values) ? $input = $this->values["configMailSmPath"] : $input = WIKINDX_MAIL_SMPATH_DEFAULT;
+        array_key_exists("configMailSmPath", $this->values) ? $input = $this->values["configMailSmPath"] : $input = WIKINDX_MAIL_SENDMAIL_PATH_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "mailSmPath"),
             "configMailSmPath",
@@ -1450,7 +1234,7 @@ class CONFIGURE
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailSmtpServer"));
-        array_key_exists("configMailSmtpServer", $this->values) ? $input = $this->values["configMailSmtpServer"] : $input = WIKINDX_MAIL_SMTPSERVER_DEFAULT;
+        array_key_exists("configMailSmtpServer", $this->values) ? $input = $this->values["configMailSmtpServer"] : $input = WIKINDX_MAIL_SMTP_SERVER_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "mailSmtpServer"),
             "configMailSmtpServer",
@@ -1458,7 +1242,7 @@ class CONFIGURE
             30,
             255
         ) . BR . \HTML\span($hint, 'hint'));
-        array_key_exists("configMailSmtpPort", $this->values) ? $input = $this->values["configMailSmtpPort"] : $input = WIKINDX_MAIL_SMTPPORT_DEFAULT;
+        array_key_exists("configMailSmtpPort", $this->values) ? $input = $this->values["configMailSmtpPort"] : $input = WIKINDX_MAIL_SMTP_PORT_DEFAULT;
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailSmtpPort"));
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "mailSmtpPort"),
@@ -1467,21 +1251,17 @@ class CONFIGURE
             10,
             10
         ) . BR . \HTML\span($hint, 'hint'));
-        $array = ['none' => 'none', 'tls' => 'tls', 'ssl' => 'ssl'];
-        array_key_exists("configMailSmtpEncrypt", $this->values) ? $input = $this->values["configMailSmtpEncrypt"] : $input = 'none';
-        if (!$input)
-        {
-            $input = 'none';
-        }
+        array_key_exists("configMailSmtpEncrypt", $this->values) ? $input = $this->values["configMailSmtpEncrypt"] : $input = WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT;
+        $input = (!$input) ? WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT : $input;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "mailSmtpEncrypt"),
             "configMailSmtpEncrypt",
-            $array,
+            WIKINDX_PHPMAILER_SMTP_ENCRYPT,
             $input,
-            3
+            count(WIKINDX_PHPMAILER_SMTP_ENCRYPT)
         ));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailSmtpPersist"));
-        $input = array_key_exists("configMailSmtpPersist", $this->values) && ($this->values['configMailSmtpPersist']) ? "CHECKED" : WIKINDX_MAIL_SMTPPERSIST_DEFAULT;
+        $input = array_key_exists("configMailSmtpPersist", $this->values) && ($this->values['configMailSmtpPersist']) ? "CHECKED" : WIKINDX_MAIL_SMTP_PERSIST_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "mailSmtpPersist"), "configMailSmtpPersist", $input) .
         BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
@@ -1493,10 +1273,10 @@ class CONFIGURE
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailSmtpAuth"));
-        $input = array_key_exists("configMailSmtpAuth", $this->values) && ($this->values['configMailSmtpAuth']) ? "CHECKED" : WIKINDX_MAIL_SMTPAUTH_DEFAULT;
+        $input = array_key_exists("configMailSmtpAuth", $this->values) && ($this->values['configMailSmtpAuth']) ? "CHECKED" : WIKINDX_MAIL_SMTP_AUTH_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "mailSmtpAuth"), "configMailSmtpAuth", $input) .
             BR . \HTML\span($hint, 'hint'));
-        array_key_exists("configMailSmtpUsername", $this->values) ? $input = $this->values["configMailSmtpUsername"] : $input = WIKINDX_MAIL_SMTPUSERNAME_DEFAULT;
+        array_key_exists("configMailSmtpUsername", $this->values) ? $input = $this->values["configMailSmtpUsername"] : $input = WIKINDX_MAIL_SMTP_USERNAME_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "mailSmtpUsername"),
             "configMailSmtpUsername",
@@ -1504,7 +1284,7 @@ class CONFIGURE
             30,
             255
         ) . " " . \HTML\span('*', 'required'));
-        array_key_exists("configMailSmtpPassword", $this->values) ? $input = $this->values["configMailSmtpPassword"] : $input = WIKINDX_MAIL_SMTPPASSWORD_DEFAULT;
+        array_key_exists("configMailSmtpPassword", $this->values) ? $input = $this->values["configMailSmtpPassword"] : $input = WIKINDX_MAIL_SMTP_PASSWORD_DEFAULT;
         $pString .= \HTML\td(\FORM\passwordInput(
             $this->messages->text("config", "mailSmtpPassword"),
             "configMailSmtpPassword",
@@ -1530,106 +1310,84 @@ class CONFIGURE
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
+        
         // Extra field not in the database used for test purposes only
+        $jScript = "onclick=\"coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=mailTransactionReport&amp;configMailTest=' + document.getElementById('configMailTest').value, 80)\"";
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailTest"));
         array_key_exists("configMailTest", $this->vars) ? $input = $this->vars["configMailTest"] : $input = FALSE;
-        $pString .= \HTML\p(\FORM\textInput($this->messages->text("config", "mailTest"), "configMailTest", $input, 30, 255) .
-            BR . \HTML\span($hint, 'hint'));
+        $pString .= \HTML\p(
+            \FORM\textInput($this->messages->text("config", "mailTest"), "configMailTest", $input, 30, 255)
+            . "&nbsp;" . \FORM\formSubmitButton($this->messages->text("submit", "Test"), "emailtest", $jScript)
+            . BR . $hint
+        );
 
         return $pString;
     }
-    /** 
-     * Test the email configuration
-     */
-    private function testMail()
-    {
-        include_once("core/smtp/MAIL.php");
-        $mail = new MAIL();
-        if (!$mail->sendEmail($this->vars['configMailTest'], \HTML\stripHtml($this->config->WIKINDX_TITLE), $this->messages->text('config', 'mailTestSuccess'), TRUE))
-        {
-            $this->session->setVar('mailTransactionLogStatus', 'failure');
-        }
-        else
-        {
-            $this->session->setVar('mailTransactionLogStatus', 'success');
-        }
-        $this->session->setVar('mailTransactionLog', $mail->TransactionLog);
-    }
-    /** 
+    /**
      * Test the ldap configuration
      *
      * @return bool
      */
     private function testLdap()
     {
-        $config = FACTORY_CONFIG::getInstance();
-        if (($ds = @ldap_connect($config->WIKINDX_LDAP_SERVER, $config->WIKINDX_LDAP_PORT)) === FALSE)
-        {
-            if (ldap_errno($ds))
-            {
+        if (!in_array("ldap", get_loaded_extensions())) {
+            return FALSE;
+        }
+        if (($ds = @ldap_connect(WIKINDX_LDAP_SERVER, WIKINDX_LDAP_PORT)) === FALSE) {
+            if (ldap_errno($ds)) {
                 $error = \HTML\p(ldap_err2str(ldap_errno($ds)));
                 $this->session->setVar("ldapTransactionLog", $error);
-                $this->session->setVar('ldapTransactionLogStatus', 'failure');
+                $this->session->setVar("ldapTransactionLogStatus", "failure");
 
                 return FALSE;
             }
         }
-        @ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, $config->WIKINDX_LDAP_PROTOCOL_VERSION);
-        if (($ldapbind = @ldap_bind($ds)) === FALSE)
-        {
-            if (ldap_errno($ds))
-            {
+        @ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, WIKINDX_LDAP_PROTOCOL_VERSION);
+        if (($ldapbind = @ldap_bind($ds)) === FALSE) {
+            if (ldap_errno($ds)) {
                 $error = \HTML\p(ldap_err2str(ldap_errno($ds)));
                 ldap_get_option($ds, 0x32, $err);
                 $error .= \HTML\p($err);
                 $this->session->setVar("ldapTransactionLog", $error);
-                $this->session->setVar('ldapTransactionLogStatus', 'failure');
+                $this->session->setVar("ldapTransactionLogStatus", "failure");
 
                 return FALSE;
             }
         }
-        $sr = @ldap_search($ds, $config->WIKINDX_LDAP_DN, '(uid=' . $this->vars['configLdapTestUser'] . ')');
+        $sr = @ldap_search($ds, WIKINDX_LDAP_DN, '(uid=' . $this->vars['configLdapTestUser'] . ')');
         $info = @ldap_get_entries($ds, $sr);
-        if ($info['count'] > 1)
-        {
-            if (ldap_errno($ds))
-            {
+        if ($info['count'] > 1) {
+            if (ldap_errno($ds)) {
                 $error = \HTML\p(ldap_err2str(ldap_errno($ds)));
                 ldap_get_option($ds, 0x32, $err);
                 $error .= \HTML\p($err);
                 $this->session->setVar("ldapTransactionLog", $error);
-                $this->session->setVar('ldapTransactionLogStatus', 'failure');
+                $this->session->setVar("ldapTransactionLogStatus", "failure");
 
                 return FALSE;
             }
         }
-        if ($info['count'] == 1)
-        {
+        if ($info['count'] == 1) {
             $ldaprdn = $info[0]['dn'];
-        }
-        else
-        {
-            $ldaprdn = "cn=" . $this->vars['configLdapTestUser'] . "," . $config->WIKINDX_LDAP_DN;
+        } else {
+            $ldaprdn = "cn=" . $this->vars['configLdapTestUser'] . "," . WIKINDX_LDAP_DN;
         }
         // Connexion au serveur LDAP
         $ldapbind = @ldap_bind($ds, $ldaprdn, $this->vars['configLdapTestPassword']);
-        if (ldap_errno($ds))
-        {
+        if (ldap_errno($ds)) {
             $error = \HTML\p(ldap_err2str(ldap_errno($ds)));
             ldap_get_option($ds, 0x32, $err);
             $error .= \HTML\p($err);
             $this->session->setVar("ldapTransactionLog", $error);
-            $this->session->setVar('ldapTransactionLogStatus', 'failure');
+            $this->session->setVar("ldapTransactionLogStatus", "failure");
 
             return FALSE;
-        }
-        else
-        { // success
-            $this->session->setVar('ldapTransactionLog', $this->messages->text('config', 'ldapTestSuccess'));
-            $this->session->setVar('ldapTransactionLogStatus', 'success');
+        } else { // success
+            $this->session->setVar("ldapTransactionLog", $this->messages->text('config', 'ldapTestSuccess'));
+            $this->session->setVar("ldapTransactionLogStatus", "success");
         }
     }
-    /** 
+    /**
      * Display file/attachment config options
      *
      * @return string
@@ -1640,7 +1398,7 @@ class CONFIGURE
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "deleteSeconds"));
-        array_key_exists("configFileDeleteSeconds", $this->values) ? $input = $this->values["configFileDeleteSeconds"] : $input = WIKINDX_FILE_DELETESECONDS_DEFAULT;
+        array_key_exists("configFileDeleteSeconds", $this->values) ? $input = $this->values["configFileDeleteSeconds"] : $input = WIKINDX_FILE_DELETE_SECONDS_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "deleteSeconds"),
             "configFileDeleteSeconds",
@@ -1650,7 +1408,7 @@ class CONFIGURE
         ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
         $input = array_key_exists("configFileAttach", $this->values) && ($this->values['configFileAttach']) ? "CHECKED" : WIKINDX_FILE_ATTACH_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "fileAttach"), "configFileAttach", $input));
-        $input = array_key_exists("configFileViewLoggedOnOnly", $this->values) && ($this->values['configFileViewLoggedOnOnly']) ? "CHECKED" : WIKINDX_FILE_VIEWLOGGEDONONLY_DEFAULT;
+        $input = array_key_exists("configFileViewLoggedOnOnly", $this->values) && ($this->values['configFileViewLoggedOnOnly']) ? "CHECKED" : WIKINDX_FILE_VIEW_LOGGEDON_ONLY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "fileViewLoggedOnOnly"),
             "configFileViewLoggedOnOnly",
@@ -1661,7 +1419,7 @@ class CONFIGURE
 
         return $pString;
     }
-    /** 
+    /**
      * Display resources config options
      *
      * @return string
@@ -1672,18 +1430,25 @@ class CONFIGURE
         $pString = $this->errorString;
         // need to force reload so display box of active types displays properly after DB write
         $resourceMap = FACTORY_RESOURCEMAP::getFreshInstance();
-        $typesRaw = $resourceMap->getTypes();
+        $typesRaw = $resourceMap->getTypesRaw();
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", 'deactivateResourceTypes'));
-        foreach ($typesRaw as $type)
-        {
+        foreach ($typesRaw as $type) {
             $types[$type] = $this->messages->text("resourceType", $type);
         }
         asort($types);
-        foreach ($this->config->WIKINDX_DEACTIVATE_RESOURCE_TYPES as $type)
-        {
+        if ($this->session->getVar("config_deactivateResourceTypes")) { // After updating the field
+            $array = unserialize(base64_decode($this->session->getVar("config_deactivateResourceTypes")));
+            $this->session->delVar("config_deactivateResourceTypes");
+        } else {
+            $array = WIKINDX_DEACTIVATE_RESOURCE_TYPES;
+        }
+        foreach ($array as $type) {
             $deactivated[$type] = $this->messages->text("resourceType", $type);
+            if (array_key_exists($type, $types)) {
+                unset($types[$type]);
+            }
         }
         $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
             $this->messages->text("config", 'activeResourceTypes'),
@@ -1706,7 +1471,7 @@ class CONFIGURE
 
         return $pString;
     }
-    /** 
+    /**
      * Display misc config options
      *
      * @return string
@@ -1728,7 +1493,7 @@ class CONFIGURE
             BR . \HTML\span($hint, 'hint'));
         
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "restrictUserId"));
-        array_key_exists("configRestrictUserId", $this->values) ? $input = $this->values["configRestrictUserId"] : 0;
+        array_key_exists("configRestrictUserId", $this->values) ? $input = $this->values["configRestrictUserId"] : WIKINDX_RESTRICT_USERID_DEFAULT;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "restrictUserId"),
             "configRestrictUserId",
@@ -1738,7 +1503,7 @@ class CONFIGURE
         ) . BR . \HTML\span($hint, 'hint'));
         
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "maxPaste"));
-        $input = array_key_exists("configMaxPaste", $this->values) ? $this->values["configMaxPaste"] : WIKINDX_MAXPASTE_DEFAULT;
+        $input = array_key_exists("configMaxPaste", $this->values) ? $this->values["configMaxPaste"] : WIKINDX_MAX_PASTE_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text('config', 'maxPaste'),
             "configMaxPaste",
@@ -1751,18 +1516,14 @@ class CONFIGURE
 
         return $pString;
     }
-    /** 
+    /**
      * Get possible input vars on form submission
      *
      * @return array
      */
     private function getPossibleVars()
     {
-        switch ($this->vars['selectItem'])
-        {
-            case 'super': // super admin configuration
-                $array = []; // keep empty as superadmin fields treated separately
-                break;
+        switch ($this->vars['selectItem']) {
             case 'front': // front page configuration
                 $array = [
                     "configContactEmail",
@@ -1776,6 +1537,7 @@ class CONFIGURE
                 $array = [
                     "configDescription",
                 ];
+            	$this->session->setVar("configmessage", $this->success->text("config"));
 
                 break;
             case 'resources': // resources page configuration
@@ -1817,10 +1579,9 @@ class CONFIGURE
             case 'debug': // debugging configuration
                 $array = [
                     "configBypassSmartyCompile",
-                    "configDebugEmail",
+                    "configDebugSql",
                     "configErrorReport",
-                    "configPrintSql",
-                    "configSqlErrorOutput",
+                    "configIsTrunk",
                 ];
 
                 break;
@@ -1865,7 +1626,6 @@ class CONFIGURE
                     "configMailFrom",
                     "configMailReplyTo",
                     "configMailReturnPath",
-                    "configMailServer",
                     "configMailSmPath",
                     "configMailSmtpAuth",
                     "configMailSmtpEncrypt",
@@ -1874,6 +1634,7 @@ class CONFIGURE
                     "configMailSmtpPort",
                     "configMailSmtpServer",
                     "configMailSmtpUsername",
+                    "configMailUse",
                     "configNotify",
                 ];
 
@@ -1938,13 +1699,11 @@ class CONFIGURE
     private function updateNoSort($oldNoSort)
     {
         $oldArray = unserialize(base64_decode($oldNoSort));
-        $arrayNewNoSort = array_diff($this->config->WIKINDX_NOSORT, $oldArray);
-        $arrayRemoveNoSort = array_diff($oldArray, $this->config->WIKINDX_NOSORT);
+        $arrayNewNoSort = array_diff(WIKINDX_NO_SORT, $oldArray);
+        $arrayRemoveNoSort = array_diff($oldArray, WIKINDX_NO_SORT);
         $newNSPattern = $newNSPatternBrace = FALSE;
-        if (!empty($arrayNewNoSort))
-        {
-            foreach ($arrayNewNoSort as $word)
-            {
+        if (!empty($arrayNewNoSort)) {
+            foreach ($arrayNewNoSort as $word) {
                 $array[] = "^($word)\\s(.*)";
                 $arrayBrace[] = "^\\{($word)\\s(.*)";
             }
@@ -1952,119 +1711,67 @@ class CONFIGURE
             $newNSPatternBrace = implode('|', $arrayBrace);
         }
         $resultset = $this->db->select('resource', ['resourceId', 'resourceTitle', 'resourceSubtitle', 'resourceNoSort', 'resourceTitleSort']);
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $update = [];
-            if ($newNSPattern && preg_match("/$newNSPattern/ui", $row['resourceTitle'], $matches))
-            {
+            if ($newNSPattern && preg_match("/$newNSPattern/ui", $row['resourceTitle'], $matches)) {
                 $update['resourceTitle'] = $resourceTitleSort = array_pop($matches);
                 $update['resourceNoSort'] = array_pop($matches);
-                if ($row['resourceSubtitle'])
-                {
+                if ($row['resourceSubtitle']) {
                     $resourceTitleSort .= ' ' . $row['resourceSubtitle'];
                 }
                 $update['resourceTitleSort'] = str_replace(['{', '}'], '', $resourceTitleSort);
-            }
-            elseif ($newNSPatternBrace && preg_match("/$newNSPatternBrace/ui", $row['resourceTitle'], $matches))
-            {
+            } elseif ($newNSPatternBrace && preg_match("/$newNSPatternBrace/ui", $row['resourceTitle'], $matches)) {
                 $resourceTitleSort = array_pop($matches);
                 $update['resourceTitle'] = '{' . $resourceTitleSort;
                 $update['resourceNoSort'] = array_pop($matches);
-                if ($row['resourceSubtitle'])
-                {
+                if ($row['resourceSubtitle']) {
                     $resourceTitleSort .= ' ' . $row['resourceSubtitle'];
                 }
                 $update['resourceTitleSort'] = str_replace(['{', '}'], '', $resourceTitleSort);
-            }
-            elseif (array_search(mb_strtolower($row['resourceNoSort']), $arrayRemoveNoSort) !== FALSE)
-            {
+            } elseif (array_search(mb_strtolower($row['resourceNoSort']), $arrayRemoveNoSort) !== FALSE) {
                 $update['resourceTitle'] = $row['resourceNoSort'] . ' ' . $row['resourceTitle'];
                 $update['resourceTitleSort'] = $row['resourceNoSort'] . ' ' . $row['resourceTitleSort'];
                 $this->db->formatConditions(['resourceId' => $row['resourceId']]);
                 $this->db->updateNull('resource', ['resourceNoSort']);
             }
-            if (!empty($update))
-            {
+            if (!empty($update)) {
                 $this->db->formatConditions(['resourceId' => $row['resourceId']]);
                 $this->db->update('resource', $update);
             }
         }
     }
     /**
-     * When updating the configuration, some settings will have an effect on the admin's view (e.g. no. resources to show on front page) -- write them to session
-     *
-     * @param array $array
-     */
-    private function writeSetupSession($array)
-    {
-        if (array_key_exists('configLastChanges', $array))
-        {
-            $this->session->setVar('setup_LastChanges', $array['configLastChanges']);
-        }
-        if (array_key_exists('configLastChangesDayLimit', $array))
-        {
-            $this->session->setVar('setup_LastChangesDayLimit', $array['configLastChangesDayLimit']);
-        }
-        if (array_key_exists('configLastChangesType', $array))
-        {
-            $this->session->setVar('setup_LastChangesType', $array['configLastChangesType']);
-        }
-        if (array_key_exists('configMultiUser', $array))
-        {
-            $this->session->setVar('setup_MultiUser', $array['configMultiUser']);
-        }
-        if (array_key_exists('configQuarantine', $array))
-        {
-            $this->session->setVar('setup_Quarantine', $array['configQuarantine']);
-        }
-        if (array_key_exists('configMetadataAllow', $array))
-        {
-            $this->session->setVar('setup_MetadataAllow', $array['configMetadataAllow']);
-        }
-        if (array_key_exists('configMetadataUserOnly', $array))
-        {
-            $this->session->setVar('setup_MetadataUserOnly', $array['configMetadataUserOnly']);
-        }
-    }
-    /** 
      * Check input
      */
     private function checkInput()
     {
         // Check for special fields and carry out actions as necessary
         // 1. configAuthGateReset – reset all 'usersAuthGate' fields back to 'N'
-        if (array_key_exists('configAuthGateReset', $this->vars) && $this->vars['configAuthGateReset'])
-        {
+        if (array_key_exists('configAuthGateReset', $this->vars) && $this->vars['configAuthGateReset']) {
             $this->db->update('users', ['usersGDPR' => 'N']);
         }
         $array = $required = [];
         // Store in session first and remove unrequired session variables
-        foreach ($this->configDbStructure->dbStructure as $key => $type)
-        {
-            if (array_key_exists($key, $this->vars))
-            {
-                if (($key == 'configLastChanges') || ($key == 'configPaging') || ($key == 'configStringLimit') || ($key == 'configPagingTagCloud'))
-                {
-                    if ($this->vars[$key] < 0)
-                    {
+        foreach (WIKINDX_LIST_CONFIG_OPTIONS as $key => $unused) {
+            if (array_key_exists($key, $this->vars)) {
+                if (($key == 'configLastChanges') || ($key == 'configPaging') || ($key == 'configStringLimit') || ($key == 'configPagingTagCloud')) {
+                    if ($this->vars[$key] < 0) {
                         $this->vars[$key] = -1;
                     }
                 }
                 $array[$key] = $this->vars[$key];
-            }
-            elseif (
+            } elseif (
                 // checkboxes
                 in_array($key, [
                     "configAuthGate",
                     "configBypassSmartyCompile",
                     "configCmsAllow",
                     "configCmsSql",
+                    "configDebugSql",
                     "configDenyReadOnly",
                     "configDisplayStatistics",
                     "configDisplayUserStatistics",
-                    "configEmailnews",
                     "configEmailNews",
-                    "configEmailStatistics",
                     "configEmailStatistics",
                     "configErrorReport",
                     "configFileAttach",
@@ -2074,18 +1781,18 @@ class CONFIGURE
                     "configGsAttachment",
                     "configImagesAllow",
                     "configImportBib",
+                    "configIsTrunk",
                     "configLdapUse",
                     "configListLink",
-                    "configMailServer",
                     "configMailSmtpAuth",
                     "configMailSmtpPersist",
+                    "configMailUse",
                     "configMetadataAllow",
                     "configMetadataUserOnly",
                     "configMultiUser",
                     "configNotify",
                     "configNotify",
                     "configOriginatorEditOnly",
-                    "configPrintSql",
                     "configQuarantine",
                     "configReadOnlyAccess",
                     "configRssAllow",
@@ -2099,61 +1806,33 @@ class CONFIGURE
                 $this->session->delVar("setup_" . str_replace('config', 'setup', $key));
             }
         }
-        if (array_key_exists('configFullname', $this->vars))
-        {
-            $array['configFullname'] = trim($this->vars['configFullname']);
-        }
-        else
-        {
-            $this->session->delVar("config_configFullname");
-        }
-        if (array_key_exists('configIsCreator', $this->vars))
-        {
-            $array['configIsCreator'] = trim($this->vars['configIsCreator']);
-        }
-        else
-        {
-            $this->session->delVar("config_configIsCreator");
-        }
-        if (array_key_exists('configEmail', $this->vars))
-        {
-            $array['configEmail'] = trim($this->vars['configEmail']);
-        }
-        else
-        {
-            $this->session->delVar("config_configEmail");
-        }
-        if (!empty($array))
-        {
+        if (!empty($array)) {
             $this->session->writeArray($array, "config");
         }
         $requireDefault = [
-            "configFileDeleteSeconds" => WIKINDX_FILE_DELETESECONDS_DEFAULT,
+            "configFileDeleteSeconds" => WIKINDX_FILE_DELETE_SECONDS_DEFAULT,
             "configImagesMaxSize" => WIKINDX_IMAGES_MAXSIZE_DEFAULT,
-            "configImgHeightLimit" => WIKINDX_IMG_HEIGHTLIMIT_DEFAULT,
-            "configImgWidthLimit" => WIKINDX_IMG_WIDTHLIMIT_DEFAULT,
-            "configLastChanges" => WIKINDX_LASTCHANGES_DEFAULT,
-            "configLastChangesDayLimit" => WIKINDX_LASTCHANGESDAYLIMIT_DEFAULT,
-            "configMaxPaste" => WIKINDX_MAXPASTE_DEFAULT,
+            "configImgHeightLimit" => WIKINDX_IMG_HEIGHT_LIMIT_DEFAULT,
+            "configImgWidthLimit" => WIKINDX_IMG_WIDTH_LIMIT_DEFAULT,
+            "configLastChanges" => WIKINDX_LAST_CHANGES_DEFAULT,
+            "configLastChangesDayLimit" => WIKINDX_LAST_CHANGES_DAY_LIMIT_DEFAULT,
+            "configMaxPaste" => WIKINDX_MAX_PASTE_DEFAULT,
             "configPaging" => WIKINDX_PAGING_DEFAULT,
             "configPagingMaxLinks" => WIKINDX_PAGING_MAXLINKS_DEFAULT,
-            "configPagingTagCloud" => WIKINDX_PAGINGTAGCLOUD_DEFAULT,
-            "configPasswordSize" => WIKINDX_PASSWORDSIZE_DEFAULT,
-            "configStringLimit" => WIKINDX_STRINGLIMIT_DEFAULT,
+            "configPagingTagCloud" => WIKINDX_PAGING_TAG_CLOUD_DEFAULT,
+            "configPasswordSize" => WIKINDX_PASSWORD_SIZE_DEFAULT,
+            "configStringLimit" => WIKINDX_STRING_LIMIT_DEFAULT,
             "configTagHighFactor" => WIKINDX_TAG_HIGH_FACTOR_DEFAULT,
             "configTagLowFactor" => WIKINDX_TAG_LOW_FACTOR_DEFAULT,
             "configTitle" => WIKINDX_TITLE_DEFAULT,
         ];
-        foreach ($requireDefault as $value => $default)
-        {
-            if (array_key_exists($value, $this->vars) && !$this->vars[$value])
-            {
+        foreach ($requireDefault as $value => $default) {
+            if (array_key_exists($value, $this->vars) && !$this->vars[$value]) {
                 $this->vars[$value] = $default;
             }
         }
         // strings that are required
         $required = [
-            "configEmail",
             "configLanguage",
             "configLastChangesType",
             "configStyle",
@@ -2161,34 +1840,16 @@ class CONFIGURE
             "configTagLowColour",
             "configTemplate",
             "configTimezone",
-            "configUsername",
-            "password",
-            "passwordConfirm",
         ];
-        foreach ($required as $value)
-        {
-            if (array_key_exists($value, $this->vars))
-            {
+        foreach ($required as $value) {
+            if (array_key_exists($value, $this->vars)) {
                 $input = trim($this->vars[$value]);
-                if ($value == 'configUsername')
-                {
-                    if (array_search(mb_strtolower($input), ['sa', 'admin', 'super', 'superadmin']))
-                    {
-                        $this->badInputLoad($this->errors->text("inputError", 'badUsername', " ($value) "), $this->vars['selectItem']);
-                    }
+                if (!$input) {
+                    $this->badInputLoad($this->errors->text("inputError", 'missing', " ($value) "), $this->vars['selectItem']);
                 }
             }
-            else
-            {
-                continue;
-            }
-            if (!$input)
-            {
-                $this->badInputLoad($this->errors->text("inputError", 'missing', " ($value) "), $this->vars['selectItem']);
-            }
         }
-        if (array_key_exists('password', $this->vars) && ($this->vars['password'] != $this->vars['passwordConfirm']))
-        {
+        if (array_key_exists('password', $this->vars) && ($this->vars['password'] != $this->vars['passwordConfirm'])) {
             $this->badInputLoad($this->errors->text("inputError", 'passwordMismatch'), $this->vars['selectItem']);
         }
         $isInt = [
@@ -2219,7 +1880,9 @@ class CONFIGURE
             "configImagesMaxSize",
             "configImgHeightLimit",
             "configImgWidthLimit",
+            "configLdapPort",
             "configLowSize",
+            "configMailSmtpPort",
             "configMaxPaste",
             "configPagingMaxLinks",
             "configPasswordSize",
@@ -2227,39 +1890,29 @@ class CONFIGURE
             "configRssLimit",
             "configTagHighFactor",
         ];
-        foreach ($isInt as $value)
-        {
-            if (array_key_exists($value, $this->vars))
-            {
+        foreach ($isInt as $value) {
+            if (array_key_exists($value, $this->vars)) {
                 $input = trim($this->vars[$value]);
-            }
-            else
-            {
+            } else {
                 continue;
             }
-            if (($value == "configTagLowColour") || ($value == "configTagHighColour"))
-            {
+            if (($value == "configTagLowColour") || ($value == "configTagHighColour")) {
                 $input = hexdec($input);
             }
             // some values cannot be less than 0
-            if ((array_search($value, $notNegative) !== FALSE) && ((int)$input < 0))
-            {
+            if ((array_search($value, $notNegative) !== FALSE) && ((int)$input < 0)) {
                 $this->badInputLoad($this->errors->text("inputError", 'invalid', " ($value) "), $this->vars['selectItem']);
             }
             // these can be blank, otherwise must be an int
-            if (($value == 'configRestrictUserId') || ($value == 'configImagesMaxSize') || ($value == 'configMailSmtpPort'))
-            {
-                if ($input == '')
-                {
+            if (($value == 'configRestrictUserId') || ($value == 'configImagesMaxSize') || ($value == 'configMailSmtpPort')) {
+                if ($input == '') {
                     continue;
                 }
-                if (!is_numeric($input) || !is_int($input + 0))
-                { // cast to number
+                if (!is_numeric($input) || !is_int($input + 0)) { // cast to number
                     $this->badInputLoad($this->errors->text("inputError", 'notInt', " ($value) "), $this->vars['selectItem']);
                 }
             }
-            if (!is_numeric($input) || !is_int($input + 0))
-            { // cast to number
+            if (!is_numeric($input) || !is_int($input + 0)) { // cast to number
                 $this->badInputLoad($this->errors->text("inputError", 'notInt', " ($value) "), $this->vars['selectItem']);
             }
         }
@@ -2267,30 +1920,21 @@ class CONFIGURE
         $this->dependencies('configRssAllow', ['configRssBibstyle', 'configRssTitle', 'configRssDescription', 'configRssLimit']);
         $this->dependencies('configCmsAllow', ['configCmsBibstyle']);
         $this->dependencies('configCmsSql', ['configCmsDbUser', 'configCmsDbPassword']);
-        $this->dependencies('configMailServer', ['configMailBackend']);
+        $this->dependencies('configMailUse', ['configMailBackend']);
         $this->dependencies('configLdapUse', ['configLdapServer', 'configLdapPort', 'configLdapProtocolVersion', 'configLdapDn']);
         $this->dependencies('configAuthGate', ['configAuthGateMessage']);
-        $this->dependencies('configPrintSql', ['configSqlErrorOutput']);
-        if (array_key_exists('configMailServer', $this->vars) && ($this->vars['configMailBackend'] == 'sendmail'))
-        {
-            $this->dependencies('configMailServer', ['configMailSmPath']);
-        }
-        elseif (array_key_exists('configMailServer', $this->vars) && ($this->vars['configMailBackend'] == 'smtp'))
-        {
-            $this->dependencies('configMailServer', ['configMailSmtpServer', 'configMailSmtpPort', 'configMailSmtpEncrypt']);
+        if (array_key_exists('configMailUse', $this->vars) && ($this->vars['configMailBackend'] == 'sendmail')) {
+            $this->dependencies('configMailUse', ['configMailSmPath']);
+        } elseif (array_key_exists('configMailUse', $this->vars) && ($this->vars['configMailBackend'] == 'smtp')) {
+            $this->dependencies('configMailUse', ['configMailSmtpServer', 'configMailSmtpPort', 'configMailSmtpEncrypt']);
             $this->dependencies('configMailSmtpAuth', ['configMailSmtpUsername', 'configMailSmtpPassword']);
         }
-        if (array_key_exists('configPrintSql', $this->vars) && ($this->vars['configSqlErrorOutput'] == 'emailSql'))
-        {
-            $this->dependencies('configPrintSql', ['configDebugEmail']);
-        }
-        // Check size of password is no less than 6 chars
-        if (array_key_exists('configPasswordSize', $this->vars) && ($this->vars['configPasswordSize'] < 6))
-        {
-            $this->vars['configPasswordSize'] = 6;
+        // Check size of password is no less than N chars
+        if (array_key_exists('configPasswordSize', $this->vars) && ($this->vars['configPasswordSize'] < WIKINDX_PASSWORD_SIZE_DEFAULT)) {
+            $this->vars['configPasswordSize'] = WIKINDX_PASSWORD_SIZE_DEFAULT;
         }
     }
-    /** 
+    /**
      * Check field dependencies – parent is checkbox, childArray of textboxes or selectboxes
      *
      * @param string $parent
@@ -2298,20 +1942,14 @@ class CONFIGURE
      */
     private function dependencies($parent, $childArray)
     {
-        if (array_key_exists($parent, $this->vars))
-        {
-            foreach ($childArray as $value)
-            {
-                if (array_key_exists($value, $this->vars))
-                {
+        if (array_key_exists($parent, $this->vars)) {
+            foreach ($childArray as $value) {
+                if (array_key_exists($value, $this->vars)) {
                     $input = trim($this->vars[$value]);
-                }
-                else
-                {
+                } else {
                     $this->badInputLoad($this->errors->text("inputError", 'missing', " ($value) "), $this->vars['selectItem']);
                 }
-                if (!$input)
-                {
+                if (!$input) {
                     $this->badInputLoad($this->errors->text("inputError", 'missing', " ($value) "), $this->vars['selectItem']);
                 }
             }
@@ -2328,49 +1966,32 @@ class CONFIGURE
     private function fromDbToSession()
     {
         $row = $this->configDbStructure->getAllData();
-        // Remove noSort and searchFilter (they're in $this->config variables) and write the rest to session variables
+        // Remove noSort and searchFilter and write the rest to session variables
         unset($row['configNoSort']);
         unset($row['configSearchFilter']);
-        if (!$this->session->writeArray($row, "config"))
-        {
+        if (!$this->session->writeArray($row, "config")) {
             echo $this->errors->text("sessionError", "write");
         }
         // deal with checkboxes
-        foreach ($row as $field => $value)
-        {
-            if (($this->configDbStructure->dbStructure[$field] == 'configBoolean') && !$value)
-            {
+        foreach ($row as $field => $value) {
+            if ((WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"] == 'configBoolean') && !$value) {
                 unset($row[$field]);
             }
         }
-        // user id is stored in session if user has already logged on.
-        if ($userId = $this->session->getVar('setup_UserId'))
-        {
-            $this->db->formatConditions(['usersId' => $userId]);
-            $recordset = $this->db->select('users', ['usersUsername', 'usersPassword',
-                'usersFullname', 'usersEmail', 'usersAdmin', 'usersIsCreator', ]);
-            $rowT = $this->db->fetchRow($recordset);
-            $row['configUsername'] = $rowT['usersUsername'];
-            $row['password'] = $row['passwordConfirm'] = $rowT['usersPassword'];
-            $row['configFullname'] = $rowT['usersFullname'];
-            $row['configEmail'] = $rowT['usersEmail'];
-            $row['configIsCreator'] = $rowT['usersIsCreator'];
-        }
         // 'lastChanges' can be 0 so may not exist if called from the session
-        if (!array_key_exists('configLastChanges', $row) || !$row['configLastChanges'])
-        {
+        if (!array_key_exists('configLastChanges', $row) || !$row['configLastChanges']) {
             $row['configLastChanges'] = 0;
         }
         // 'lastChangesDayLimit' can be 0 so may not exist if called from the session
-        if (!array_key_exists('configLastChangesDayLimit', $row) || !$row['configLastChangesDayLimit'])
-        {
+        if (!array_key_exists('configLastChangesDayLimit', $row) || !$row['configLastChangesDayLimit']) {
             $row['configLastChangesDayLimit'] = 0;
         }
         // tidy up the $row elements for presentation to the browser.
         $tidy = [];
-        foreach ($row as $key => $value)
-        {
-            $tidy[$key] = \HTML\dbToFormTidy($value);
+        foreach ($row as $key => $value) {
+            if (!is_array($value)) {
+                $tidy[$key] = \HTML\dbToFormTidy($value);
+            }
         }
 
         return $tidy;
@@ -2383,16 +2004,12 @@ class CONFIGURE
      */
     private function badInputLoad($error, $item = FALSE)
     {
-        if ($this->insert)
-        { // new install
+        if ($this->insert) { // new install
             $this->badInput->closeType = 'closeNoMenu';
         }
-        if ($item)
-        {
+        if ($item) {
             $this->badInput->close($error, $this, ['init', $item]);
-        }
-        else
-        {
+        } else {
             $this->badInput->close($error, $this, 'init');
         }
     }

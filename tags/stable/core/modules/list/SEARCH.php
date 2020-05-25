@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -19,7 +21,6 @@ class SEARCH
     private $errors;
     private $messages;
     private $common;
-    private $config;
     private $session;
     private $keyword;
     private $type;
@@ -70,7 +71,6 @@ class SEARCH
         $this->creator = FACTORY_CREATOR::getInstance();
         $this->publisher = FACTORY_PUBLISHER::getInstance();
         $this->collection = FACTORY_COLLECTION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->user = FACTORY_USER::getInstance();
         include_once("core/miscellaneous/TAG.php");
         $this->tag = new TAG();
@@ -78,13 +78,11 @@ class SEARCH
         $this->parsePhrase = FACTORY_PARSEPHRASE::getInstance();
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->metadata = FACTORY_METADATA::getInstance();
-        if (!$this->session->getVar('search_Order'))
-        {
-            $this->session->setVar('search_Order', 'creator');
+        if (!$this->session->getVar("search_Order")) {
+            $this->session->setVar("search_Order", 'creator');
         }
-        $this->session->setVar('sql_LastOrder', $this->session->getVar('search_Order'));
-        switch ($this->session->getVar('search_Order'))
-        {
+        $this->session->setVar("sql_LastOrder", $this->session->getVar("search_Order"));
+        switch ($this->session->getVar("search_Order")) {
             case 'title':
                 break;
             case 'creator':
@@ -96,7 +94,7 @@ class SEARCH
             case 'timestamp':
                 break;
             default:
-                $this->session->setVar('search_Order', 'creator');
+                $this->session->setVar("search_Order", 'creator');
         }
         //		if(array_key_exists('action', $_GET) && ($_GET['action'] == 'curlFile'))
 //			$this->curlFile();
@@ -105,15 +103,14 @@ class SEARCH
      * display form options
      *
      * @param mixed $error
-     * @param string|FALSE $returnString
+     * @param false|string $returnString
      *
      * @return string
      */
     public function init($error = FALSE, $returnString = FALSE)
     {
         ///First check, do we have resources?
-        if (!$this->common->resourcesExist())
-        {
+        if (!$this->common->resourcesExist()) {
             return;
         }
         $this->input = $this->session->getArray('advancedSearch');
@@ -121,13 +118,12 @@ class SEARCH
         include_once("core/modules/help/HELPMESSAGES.php");
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('search'));
-        if (!$returnString)
-        {
+        if (!$returnString) {
             GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));
         }
-        $this->session->delVar('mywikindx_PagingStart');
-        $this->session->delVar('mywikindx_PagingStartAlpha');
-        $this->session->setVar('advancedSearch_elementIndex', 1);
+        $this->session->delVar("mywikindx_PagingStart");
+        $this->session->delVar("mywikindx_PagingStartAlpha");
+        $this->session->setVar("advancedSearch_elementIndex", 1);
 
         $pString = '';
         $pString .= $error;
@@ -141,55 +137,39 @@ class SEARCH
         $pString .= \HTML\tableEnd();
 
         $updateJSElementIndex = FALSE;
-        if ((!$this->session->getVar('setup_MetadataAllow')))
-        {
-            if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
-            {
+        if ((!WIKINDX_METADATA_ALLOW)) {
+            if ((WIKINDX_METADATA_USERONLY) && $this->session->getVar("setup_UserId")) {
                 $wordFields = ['title', 'note', 'abstract', 'quote', 'quoteComment', 'paraphrase', 'paraphraseComment', 'musing', 'idea'];
-            }
-            else
-            {
+            } else {
                 $wordFields = ['title', 'note', 'abstract'];
             }
-        }
-        else
-        {
+        } else {
             $wordFields = ['title', 'note', 'abstract', 'quote', 'quoteComment', 'paraphrase', 'paraphraseComment', 'musing', 'idea'];
         }
-        if ((!$this->session->getVar("setup_FileViewLoggedOnOnly") || $this->session->getVar("setup_UserId")) &&
-            ($this->db->tableIsEmpty('resource_attachments') == 0))
-        { // 0 means table is NOT empty
+        if ((!WIKINDX_FILE_VIEW_LOGGEDON_ONLY || $this->session->getVar("setup_UserId")) &&
+            ($this->db->tableIsEmpty('resource_attachments') == 0)) { // 0 means table is NOT empty
             array_splice($wordFields, 3, 0, "attachments");
         }
         $subQ = $this->db->subQuery($this->db->selectNoExecute('resource_custom', 'resourcecustomCustomId'), FALSE, FALSE, TRUE);
         $this->db->formatConditions($this->db->formatFields('customId') . $this->db->inClause($subQ));
         $recordset = $this->db->select('custom', ['customId', 'customLabel', 'customSize']);
 
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if ($row['customSize'] == 'S')
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if ($row['customSize'] == 'S') {
                 $wordFields[] = 'Custom_S_' . $row['customId'];
-            }
-            else
-            {
+            } else {
                 $wordFields[] = 'Custom_L_' . $row['customId'];
             }
         }
 
         // A possibility to add up to 50 search fields should be enough...
-        for ($i = 2; $i < 51; $i++)
-        {
-            if (array_key_exists("Field_$i", $this->input))
-            {
+        for ($i = 2; $i < 51; $i++) {
+            if (array_key_exists("Field_$i", $this->input)) {
                 $noWords = FALSE;
 
-                foreach ($wordFields as $value)
-                {
-                    if ($value == $this->input["Field_$i"])
-                    {
-                        if (!array_key_exists("Word_$i", $this->input))
-                        {
+                foreach ($wordFields as $value) {
+                    if ($value == $this->input["Field_$i"]) {
+                        if (!array_key_exists("Word_$i", $this->input)) {
                             $noWords = TRUE;
                         }
 
@@ -197,23 +177,19 @@ class SEARCH
                     }
                 }
 
-                if ($noWords)
-                {
+                if ($noWords) {
                     $pString .= \HTML\div("searchElement_$i", '');
 
                     continue;
                 }
 
                 if (in_array($this->input["Field_$i"], ['type', 'category', 'subcategory', 'creator', 'keyword', 'metaKeyword', 'userTag', 'language', 'publisher', 'collection', 'tag', 'addedBy', 'editedBy'])
-                    && !array_key_exists("Select_$i", $this->input))
-                {
+                    && !array_key_exists("Select_$i", $this->input)) {
                     $pString .= \HTML\div("searchElement_$i", '');
 
                     continue;
-                }
-                elseif (in_array($this->input["Field_$i"], ['publicationYear', 'access', 'maturityIndex'])
-                    && !array_key_exists("Value1_$i", $this->input))
-                {
+                } elseif (in_array($this->input["Field_$i"], ['publicationYear', 'access', 'maturityIndex'])
+                    && !array_key_exists("Value1_$i", $this->input)) {
                     $pString .= \HTML\div("searchElement_$i", '');
 
                     continue;
@@ -222,12 +198,9 @@ class SEARCH
                 $div = \HTML\tableStart();
                 $div .= \HTML\trStart();
                 $div .= \HTML\td($this->addRemoveIcon($i, FALSE)); // add remove element icon
-                if ($this->input["Field_$i"] == 'idea')
-                {
+                if ($this->input["Field_$i"] == 'idea') {
                     $buttons = \HTML\span('OR', 'small') . \FORM\hidden("advancedSearch_Button1_$i", 'OR');
-                }
-                else
-                {
+                } else {
                     $buttons = $this->makeRadioButtons1("advancedSearch_Button1_$i");
                 }
                 $div .= \HTML\td(\HTML\div("searchElementButtons_$i", $buttons), 'left width5percent');
@@ -237,34 +210,29 @@ class SEARCH
                 $div .= \HTML\trEnd();
                 $div .= \HTML\tableEnd();
                 $pString .= \HTML\p(\HTML\div("searchElement_$i", $div));
-                $this->session->setVar('advancedSearch_elementIndex', $i);
+                $this->session->setVar("advancedSearch_elementIndex", $i);
                 $updateJSElementIndex = TRUE;
-            }
-            else
-            {
+            } else {
                 $pString .= \HTML\div("searchElement_$i", '');
             }
         }
 
         $pString .= \HTML\p(\HTML\div(
             'searchElement_addIcon',
-            $this->addRemoveIcon($this->session->getVar('advancedSearch_elementIndex'), TRUE, $updateJSElementIndex)
+            $this->addRemoveIcon($this->session->getVar("advancedSearch_elementIndex"), TRUE, $updateJSElementIndex)
         ));
         $pString .= \HTML\p($this->options());
 
         $pString .= \FORM\formEnd();
 
-        if ($returnString)
-        {
+        if ($returnString) {
             return $pString; // cf FRONT.php or process() below.
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', $pString);
         }
 
         // Load at end because .js initialization needs various DIVs to be in the page before they are made invisible
-        \AJAX\loadJavascript($this->config->WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js');
+        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js');
     }
     /**
      * Reset the form and clear the session
@@ -286,78 +254,58 @@ class SEARCH
     public function test($search = FALSE, $input = [], $bibIdArray = [], $optionsArray = [])
     {
         $testArray = $bibIdArray = $optionsArray = $array = $tempIdeas = $ideas = [];
-        if ($search)
-        { // Doing an actual search rather than test
+        if ($search) { // Doing an actual search rather than test
             $longSpace = '    ';
             $shortSpace = '  ';
             $newLine = CR . LF;
             $array = $input;
-            foreach ($input as $key1 => $inputArray)
-            {
-                foreach ($inputArray as $key2 => $value)
-                {
-                    if ($key2 == 'OriginalField')
-                    {
+            foreach ($input as $key1 => $inputArray) {
+                foreach ($inputArray as $key2 => $value) {
+                    if ($key2 == 'OriginalField') {
                         $array[$key1]['Field'] = $value;
-                    }
-                    elseif ($key2 == 'Select')
-                    {
+                    } elseif ($key2 == 'Select') {
                         $array[$key1]['Select'] = implode(',', $value);
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             $longSpace = '&nbsp;&nbsp;&nbsp;&nbsp;';
             $shortSpace = '&nbsp;&nbsp;';
             $newLine = BR;
             $vars = GLOBALS::getVars();
             $jArray = \AJAX\decode_jString($vars['ajaxReturn']);
-            if (array_key_exists('advancedSearch_BibId', $jArray['elementFields']))
-            {
+            if (array_key_exists('advancedSearch_BibId', $jArray['elementFields'])) {
                 $bibIdArray = UTF8::mb_explode(',', $jArray['elementFields']['advancedSearch_BibId']);
                 $optionsArray = UTF8::mb_explode(',', $jArray['elementFields']['advancedSearch_Options']);
             }
             unset($jArray['elementFields']['advancedSearch_BibId']);
             unset($jArray['elementFields']['advancedSearch_Options']);
-            foreach ($jArray['elementFields'] as $key => $value)
-            {
+            foreach ($jArray['elementFields'] as $key => $value) {
                 $split = UTF8::mb_explode('_', $key);
                 $array[$split[2]][$split[1]] = $value;
             }
         }
         $arrayString = \HTML\em($this->messages->text("search", "naturalLanguage")) . $newLine;
         $temp = $bibIdArray;
-        foreach ($temp as $key => $value)
-        {
-            if (!trim($value))
-            {
+        foreach ($temp as $key => $value) {
+            if (!trim($value)) {
                 unset($bibIdArray[$key]);
             }
         }
         $temp = $optionsArray;
-        foreach ($temp as $key => $value)
-        {
-            if (!trim($value))
-            {
+        foreach ($temp as $key => $value) {
+            if (!trim($value)) {
                 unset($optionsArray[$key]);
             }
         }
         $tempArray = $array;
-        foreach ($array as $key1 => $value1)
-        {
-            foreach ($value1 as $key2 => $value2)
-            {
-                if (($key2 == 'Field') && ($value2 == 'idea'))
-                {
+        foreach ($array as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                if (($key2 == 'Field') && ($value2 == 'idea')) {
                     $this->parsePhrase->idea = TRUE;
-                    if (($word = $this->parsePhrase->parse($value1, TRUE)) && array_key_exists('Word', $array[$key1]))
-                    {
+                    if (($word = $this->parsePhrase->parse($value1, TRUE)) && array_key_exists('Word', $array[$key1])) {
                         $tempIdeas[$key1]['String'] = $word;
-                    }
-                    else
-                    {
+                    } else {
                         unset($tempArray[$key1]);
 
                         continue;
@@ -371,60 +319,37 @@ class SEARCH
         $this->parsePhrase->idea = FALSE;
         $array = $tempArray;
         $ideas = $tempIdeas;
-        foreach ($tempIdeas as $key => $value)
-        {
+        foreach ($tempIdeas as $key => $value) {
             $ideas[$key] = '(' . str_replace('!WIKINDXFIELDWIKINDX!', \HTML\color($value['Field'], 'greenText'), $value['String']) . ')';
         }
-        foreach ($array as $key1 => $value1)
-        {
-            foreach ($value1 as $key2 => $value2)
-            {
-                if ($key2 == 'Word')
-                {
-                    if ($word = $this->parsePhrase->parse($value1, TRUE))
-                    {
+        foreach ($array as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                if ($key2 == 'Word') {
+                    if ($word = $this->parsePhrase->parse($value1, TRUE)) {
                         $testArray[$key1]['String'] = $word;
                     }
-                }
-                elseif ($key2 == 'Select')
-                {
+                } elseif ($key2 == 'Select') {
                     $testArray[$key1]['Select'] = UTF8::mb_explode(',', $value2);
-                }
-                elseif ($key2 == 'Field')
-                {
+                } elseif ($key2 == 'Field') {
                     $split = UTF8::mb_explode('_', $value2);
-                    if (count($split) == 3)
-                    {
-                        if (mb_strpos($split[0], 'Custom') !== FALSE)
-                        {
+                    if (count($split) == 3) {
+                        if (mb_strpos($split[0], 'Custom') !== FALSE) {
                             $this->db->formatConditions(['customId' => $split[2]]);
                             $customName = $this->db->selectFirstField('custom', 'customLabel');
-                            $testArray[$key1]['Field'] = \HTML\dbToHtmlTidy($customName);
+                            $testArray[$key1]['Field'] = \HTML\nlToHtml($customName);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $testArray[$key1]['Field'] = $value2;
                     }
-                }
-                elseif ($key2 == 'Button1')
-                {
+                } elseif ($key2 == 'Button1') {
                     $testArray[$key1]['Button1'] = $value2;
-                }
-                elseif ($key2 == 'Button2')
-                {
+                } elseif ($key2 == 'Button2') {
                     $testArray[$key1]['Button2'] = $value2;
-                }
-                elseif ($key2 == 'Comparison')
-                {
+                } elseif ($key2 == 'Comparison') {
                     $testArray[$key1]['Comparison'] = $value2;
-                }
-                elseif ($key2 == 'Value1')
-                {
+                } elseif ($key2 == 'Value1') {
                     $testArray[$key1]['Value1'] = trim($value2);
-                }
-                elseif ($key2 == 'Value2')
-                {
+                } elseif ($key2 == 'Value2') {
                     $testArray[$key1]['Value2'] = trim($value2);
                 }
             }
@@ -435,253 +360,176 @@ class SEARCH
             !array_key_exists('Comparison', $testArray[$key1])
             ) {
             unset($testArray[$key1]);
-        }
-        elseif (!empty($testArray) && array_key_exists('Comparison', $testArray[$key1]))
-        {
-            if ($testArray[$key1]['Comparison'] == 6)
-            { // i.e. <...<
-                if (!array_key_exists('Value2', $testArray[$key1]))
-                {
+        } elseif (!empty($testArray) && array_key_exists('Comparison', $testArray[$key1])) {
+            if ($testArray[$key1]['Comparison'] == 6) { // i.e. <...<
+                if (!array_key_exists('Value2', $testArray[$key1])) {
+                    unset($testArray[$key1]);
+                } elseif (!is_numeric($testArray[$key1]['Value1']) || !is_numeric($testArray[$key1]['Value2'])) {
+                    unset($testArray[$key1]);
+                } elseif (!$testArray[$key1]['Value1'] || !$testArray[$key1]['Value2']) {
+                    unset($testArray[$key1]);
+                } elseif ($testArray[$key1]['Value1'] >= $testArray[$key1]['Value2']) {
                     unset($testArray[$key1]);
                 }
-                elseif (!is_numeric($testArray[$key1]['Value1']) || !is_numeric($testArray[$key1]['Value2']))
-                {
-                    unset($testArray[$key1]);
-                }
-                elseif (!$testArray[$key1]['Value1'] || !$testArray[$key1]['Value2'])
-                {
-                    unset($testArray[$key1]);
-                }
-                elseif ($testArray[$key1]['Value1'] >= $testArray[$key1]['Value2'])
-                {
-                    unset($testArray[$key1]);
-                }
-            }
-            elseif (!array_key_exists('Value1', $testArray[$key1]) || !$testArray[$key1]['Value1'] || !is_numeric($testArray[$key1]['Value1']))
-            {
+            } elseif (!array_key_exists('Value1', $testArray[$key1]) || !$testArray[$key1]['Value1'] || !is_numeric($testArray[$key1]['Value1'])) {
                 unset($testArray[$key1]);
             }
         }
         $temp = $buttons = $final = [];
-        foreach ($testArray as $index => $value)
-        {
-            if (array_key_exists('Field', $value) && (count($value) == 1))
-            {
+        foreach ($testArray as $index => $value) {
+            if (array_key_exists('Field', $value) && (count($value) == 1)) {
                 continue;
             }
-            if (array_key_exists('String', $value))
-            {
+            if (array_key_exists('String', $value)) {
                 $temp[$index] = '(' . str_replace('!WIKINDXFIELDWIKINDX!', \HTML\color($value['Field'], 'greenText'), $value['String']) . ')';
-            }
-            elseif (array_key_exists('Select', $value))
-            {
-                if (!array_key_exists('Button2', $value))
-                { // e.g. publisher, collection etc. where each resource can have only one
+            } elseif (array_key_exists('Select', $value)) {
+                if (!array_key_exists('Button2', $value)) { // e.g. publisher, collection etc. where each resource can have only one
                     $value['Button2'] = 'OR';
                 }
-                if (array_key_exists(0, $value['Select']) && !$value['Select'][0])
-                {
+                if (array_key_exists(0, $value['Select']) && !$value['Select'][0]) {
                     unset($value['Select'][0]);
                 }
-                if (empty($value['Select']))
-                {
+                if (empty($value['Select'])) {
                     continue;
                 }
                 $this->formatElement($value);
                 $value['Select'] = array_map([$this, "colorID"], $value['Select']);
                 $sizeof = count($value['Select']);
-                if ($sizeof > 1)
-                {
-                    if ($value['Button2'] == 'OR')
-                    {
+                if ($sizeof > 1) {
+                    if ($value['Button2'] == 'OR') {
                         $temp[$index] = '(' . \HTML\color($value['Field'], 'greenText') .
                             ' IS ' . implode(' ' . $value['Button2'] . ' ', $value['Select']) . ')';
-                    }
-                    else
-                    { // AND
+                    } else { // AND
                         $temp[$index] = '(' . \HTML\color($value['Field'], 'greenText') .
                             ' INCLUDES ' . implode(' ' . $value['Button2'] . ' ', $value['Select']) . ')';
                     }
-                }
-                else
-                {
-                    if ($shift = array_shift($value['Select']))
-                    {
+                } else {
+                    if ($shift = array_shift($value['Select'])) {
                         $temp[$index] = '(' . \HTML\color($value['Field'], 'greenText') . ' IS ' . $shift . ')';
                     }
                 }
-            }
-            elseif (array_key_exists('Comparison', $value))
-            {
-                if (!array_key_exists('Value1', $value))
-                {
+            } elseif (array_key_exists('Comparison', $value)) {
+                if (!array_key_exists('Value1', $value)) {
                     continue;
                 }
-                if ($value['Comparison'] == 0)
-                {
+                if ($value['Comparison'] == 0) {
                     $temp[$index] = '(' . \HTML\color($value['Field'], 'greenText') . ' IS EQUAL TO ' .
                         \HTML\color($value['Value1'], 'redText') . ')';
-                }
-                elseif ($value['Comparison'] == 1)
-                {
+                } elseif ($value['Comparison'] == 1) {
                     $temp[$index] = '(' . \HTML\color($value['Field'], 'greenText') . ' IS NOT EQUAL TO ' .
                         \HTML\color($value['Value1'], 'redText') . ')';
-                }
-                elseif ($value['Comparison'] == 2)
-                {
+                } elseif ($value['Comparison'] == 2) {
                     $temp[$index] = '(' . \HTML\color($value['Field'], 'greenText') . ' IS LESS THAN ' .
                         \HTML\color($value['Value1'], 'redText') . ')';
-                }
-                elseif ($value['Comparison'] == 3)
-                {
+                } elseif ($value['Comparison'] == 3) {
                     $temp[$index] = '(' . \HTML\color($value['Field'], 'greenText') . ' IS GREATER THAN ' .
                         \HTML\color($value['Value1'], 'redText') . ')';
                 }
-                if ($value['Comparison'] == 4)
-                {
+                if ($value['Comparison'] == 4) {
                     $temp[$index] = '(' . \HTML\color($value['Field'], 'greenText') . ' IS LESS THAN OR EQUAL TO ' .
                         \HTML\color($value['Value1'], 'redText') . ')';
-                }
-                elseif ($value['Comparison'] == 5)
-                {
+                } elseif ($value['Comparison'] == 5) {
                     $temp[$index] = '(' . \HTML\color($value['Field'], 'greenText') . ' IS GREATER THAN OR EQUAL TO ' .
                         \HTML\color($value['Value1'], 'redText') . ')';
-                }
-                elseif ($value['Comparison'] == 6)
-                {
-                    if (!array_key_exists('Value2', $value))
-                    {
+                } elseif ($value['Comparison'] == 6) {
+                    if (!array_key_exists('Value2', $value)) {
                         continue;
                     }
                     $temp[$index] = '(' . \HTML\color($value['Field'], 'greenText') . ' IS MORE THAN ' .
                         \HTML\color($value['Value1'], 'redText') . ' AND LESS THAN ' .
                         \HTML\color($value['Value2'], 'redText') . ')';
                 }
-            }
-            else
-            {
+            } else {
                 continue;
             }
             $buttons[$index] = array_key_exists('Button1', $value) ? $value['Button1'] : NULL;
         }
         $error = TRUE;
-        if (!empty($temp))
-        {
+        if (!empty($temp)) {
             ksort($temp);
             ksort($buttons);
             // Each time an element begins with 'OR', close and begin new parentheses and use newlines if it is not the first element
             $count = 0;
-            foreach ($buttons as $index => $button)
-            {
-                if (!$count)
-                { // First element
+            foreach ($buttons as $index => $button) {
+                if (!$count) { // First element
                     $final[$index] = '(' . $newLine . $longSpace . array_shift($temp);
-                }
-                elseif ($button == 'OR')
-                {
+                } elseif ($button == 'OR') {
                     $final[$index] = $newLine . ')' . $newLine . 'OR' . $newLine . '(' . $newLine .
                     $longSpace . array_shift($temp);
-                }
-                elseif ($button == 'AND')
-                {
+                } elseif ($button == 'AND') {
                     $final[$index] = $newLine . $shortSpace . 'AND' . $newLine . $longSpace . array_shift($temp);
-                }
-                elseif ($button == 'NOT')
-                {
+                } elseif ($button == 'NOT') {
                     $final[$index] = $newLine . $shortSpace . 'NOT' . $newLine . $longSpace . array_shift($temp);
                 }
                 $count++;
             }
             $final[$index] .= $newLine . ')';
             // Now add any bibliography etc. options
-            foreach ($optionsArray as $value)
-            {
-                if (($value == 'ignore') || ($value == 'displayOnlyAttachment') || ($value == 'zipAttachment'))
-                {
+            foreach ($optionsArray as $value) {
+                if (($value == 'ignore') || ($value == 'displayOnlyAttachment') || ($value == 'zipAttachment')) {
                     continue;
                 }
                 $final[++$index] = $newLine . 'AND ' . \HTML\color($value, 'greenText');
             }
-            foreach ($bibIdArray as $value)
-            {
-                if (!$value)
-                {
+            foreach ($bibIdArray as $value) {
+                if (!$value) {
                     continue;
                 }
                 $this->db->formatConditions(['userbibliographyId' => $value]);
                 $row = $this->db->selectFirstRow('user_bibliography', 'userbibliographyTitle');
                 $final[++$index] = $newLine . 'AND NOT IN ' .
-                    \HTML\color(\HTML\dbToHtmlTidy($row['userbibliographyTitle']), 'greenText') . ' bibliography';
+                    \HTML\color(\HTML\nlToHtml($row['userbibliographyTitle']), 'greenText') . ' bibliography';
             }
             $arrayString .= implode(' ', $final);
-            if ($search)
-            {
-                if (!empty($ideas))
-                {
-                    if (!empty($final))
-                    {
+            if ($search) {
+                if (!empty($ideas)) {
+                    if (!empty($final)) {
                         $or = $newLine . 'OR';
-                    }
-                    else
-                    {
+                    } else {
                         $or = FALSE;
                     }
-                    while ($ideas)
-                    {
+                    while ($ideas) {
                         $finalIdeas[] = $or . $newLine . ' (' . $newLine . $longSpace . array_shift($ideas) . $newLine . ')';
                     }
                     $arrayString .= implode(' ', $finalIdeas);
                 }
-                $this->session->setVar('advancedSearch_listParams', $arrayString);
+                $this->session->setVar("advancedSearch_listParams", $arrayString);
 
                 return;
             }
             $div = \HTML\p($arrayString);
             $error = FALSE;
         }
-        if (!empty($ideas))
-        {
-            if (!empty($final))
-            {
+        if (!empty($ideas)) {
+            if (!empty($final)) {
                 $or = $newLine . 'OR';
-            }
-            else
-            {
+            } else {
                 $or = FALSE;
             }
-            while ($ideas)
-            {
+            while ($ideas) {
                 $finalIdeas[] = $or . $newLine . ' (' . $newLine . $longSpace . array_shift($ideas) . $newLine . ')';
             }
             $arrayString .= implode(' ', $finalIdeas);
-            if ($search)
-            {
-                $this->session->setVar('advancedSearch_listParams', $arrayString);
+            if ($search) {
+                $this->session->setVar("advancedSearch_listParams", $arrayString);
 
                 return;
             }
             $div = \HTML\p($arrayString);
             $error = FALSE;
         }
-        if ($error && !empty($this->attachmentSearches))
-        {
+        if ($error && !empty($this->attachmentSearches)) {
             return;
-        }
-        elseif ($error)
-        {
+        } elseif ($error) {
             $this->testError();
         }
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
-            if (!isset($div))
-            {
+        } else {
+            if (!isset($div)) {
                 $div = '';
             }
             $jsonResponseArray = ['innerHTML' => "$div"];
@@ -698,19 +546,16 @@ class SEARCH
         $this->checkAvailableFields();
         $jArray = \AJAX\decode_jString($vars['ajaxReturn']);
         $div = \HTML\p($this->wordSearch($jArray['elementIndex'], TRUE));
-        $this->session->setVar('advancedSearch_elementIndex', $jArray['elementIndex']);
+        $this->session->setVar("advancedSearch_elementIndex", $jArray['elementIndex']);
         $jsonResponseArray = [
             'innerHTML' => "$div",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -735,15 +580,12 @@ class SEARCH
         $jsonResponseArray = [
             'innerHTML' => $div,
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -756,26 +598,20 @@ class SEARCH
         $vars = GLOBALS::getVars();
         $jArray = \AJAX\decode_jString($vars['ajaxReturn']);
         $index = $jArray['elementIndex'];
-        if ($jArray['execute'] === FALSE)
-        { // set to TRUE in searchSelect.js addComparisonValue() if option 6 of select box is selected
+        if ($jArray['execute'] === FALSE) { // set to TRUE in searchSelect.js addComparisonValue() if option 6 of select box is selected
             $div = ' ';
-        }
-        else
-        {
+        } else {
             $div = \FORM\textInput(FALSE, "advancedSearch_Value2_$index");
         }
         $jsonResponseArray = [
             'innerHTML' => "$div",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -813,32 +649,25 @@ class SEARCH
     {
         $vars = GLOBALS::getVars();
         $jArray = \AJAX\decode_jString($vars['ajaxReturn']);
-        if ($jArray['elementIndex'] == 1)
-        {
+        if ($jArray['elementIndex'] == 1) {
             FACTORY_CLOSERAW::getInstance();
             die;
         }
         $i = $jArray['elementIndex'];
-        if ($jArray['field'] == 'idea')
-        {
+        if ($jArray['field'] == 'idea') {
             $div = \HTML\span('OR', 'small') . \FORM\hidden("advancedSearch_Button1_$i", 'OR');
-        }
-        else
-        {
+        } else {
             $div = $this->makeRadioButtons1("advancedSearch_Button1_$i");
         }
         $jsonResponseArray = [
             'innerHTML' => "$div",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -854,15 +683,12 @@ class SEARCH
         $jsonResponseArray = [
             'innerHTML' => "$div",
         ];
-        if (is_array(error_get_last()))
-        {
+        if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        }
-        else
-        {
+        } else {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         }
         FACTORY_CLOSERAW::getInstance();
@@ -873,14 +699,13 @@ class SEARCH
     public function reprocess()
     {
         $this->input = $this->session->getArray("advancedSearch");
-        if (array_key_exists("search_Order", $this->vars) && $this->vars["search_Order"])
-        {
+        if (array_key_exists("search_Order", $this->vars) && $this->vars["search_Order"]) {
             $this->input['Order'] = $this->vars["search_Order"];
-            $this->session->setVar('search_Order', $this->input['Order']);
-            $this->session->setVar('advancedSearch_Order', $this->input['Order']);
-            $this->session->setVar('sql_LastOrder', $this->input['Order']);
-            $this->session->setVar('search_AscDesc', $this->vars['search_AscDesc']);
-            $this->session->setVar('advancedSearch_AscDesc', $this->vars['search_AscDesc']);
+            $this->session->setVar("search_Order", $this->input['Order']);
+            $this->session->setVar("advancedSearch_Order", $this->input['Order']);
+            $this->session->setVar("sql_LastOrder", $this->input['Order']);
+            $this->session->setVar("search_AscDesc", $this->vars['search_AscDesc']);
+            $this->session->setVar("advancedSearch_AscDesc", $this->vars['search_AscDesc']);
         }
         $this->process(TRUE);
     }
@@ -891,32 +716,27 @@ class SEARCH
      */
     public function process($reprocess = FALSE)
     {
-        if(!array_key_exists('PagingStart', $this->vars))
-		{
-			if(array_key_exists('type', $this->vars) && ($this->vars['type'] == 'displayIdea'));
-			{
-				$this->session->delVar('setup_PagingTotal');
-			}
-		}
+        if (!array_key_exists('PagingStart', $this->vars)) {
+            if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'displayIdea'));
+            
+            $this->session->delVar("setup_PagingTotal");
+        }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));
-        if (!$reprocess)
-        {
-            $this->session->delVar('list_AllIds');
-            $this->session->delVar('list_PagingAlphaLinks');
+        if (!$reprocess) {
+            $this->session->delVar("list_AllIds");
+            $this->session->delVar("list_PagingAlphaLinks");
         }
-        if (!$reprocess || ($this->session->getVar('setup_PagingStyle') == 'A'))
-        {
-            $this->session->delVar('sql_ListStmt');
-            $this->session->delVar('advancedSearch_listParams');
+        if (!$reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
+            $this->session->delVar("sql_ListStmt");
+            $this->session->delVar("advancedSearch_listParams");
         }
-        $this->session->delVar('search_Highlight');
-        $this->session->delVar('search_HighlightIdea');
+        $this->session->delVar("search_Highlight");
+        $this->session->delVar("search_HighlightIdea");
         $this->stmt->listMethodAscDesc = 'advancedSearch_AscDesc';
         $this->stmt->listType = 'search';
         $queryString = 'action=list_SEARCH_CORE&method=reprocess';
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && ($this->session->getVar('setup_PagingStyle') != 'A'))
-        {
-            $this->session->delVar('mywikindx_PagingStart');
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A')) {
+            $this->session->delVar("mywikindx_PagingStart");
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
@@ -925,36 +745,29 @@ class SEARCH
 
             return;
         }
-        if (!$reprocess)
-        {
+        if (!$reprocess) {
             $this->checkInput();
         }
         $this->populateDbFields();
         $array1 = $array2 = [];
         $options = unserialize(base64_decode($this->input['Options']));
-        foreach ($this->input as $key => $value)
-        {
+        foreach ($this->input as $key => $value) {
             $split = UTF8::mb_explode('_', $key);
-            if (count($split) != 2)
-            {
+            if (count($split) != 2) {
                 continue;
             }
-            if ($split[0] == 'Field')
-            {
-                if (($value == 'attachments'))
-                {
+            if ($split[0] == 'Field') {
+                if (($value == 'attachments')) {
                     $field = 'Word_' . $split[1];
                     $this->attachmentSearches[$split[1]]['Word'] = $this->input[$field];
                     $this->attachmentSearches[$split[1]]['Field'] = 'attachment';
                     $this->attachmentSearches[$split[1]]['OriginalField'] = 'attachment';
                     $field = 'Partial_' . $split[1];
-                    if (array_key_exists($field, $this->input))
-                    {
+                    if (array_key_exists($field, $this->input)) {
                         $this->attachmentSearches[$split[1]]['Partial'] = $this->input[$field];
                     }
                     $field = 'Button1_' . $split[1];
-                    if (array_key_exists($field, $this->input))
-                    {
+                    if (array_key_exists($field, $this->input)) {
                         $this->attachmentSearches[$split[1]]['Button'] = $this->attachmentSearches[$split[1]]['Button1'] = $this->input[$field];
                     }
 
@@ -962,112 +775,73 @@ class SEARCH
                 }
                 $array1[$split[1]]['Field'] = $this->dbFields[$value][0];
                 $array1[$split[1]]['OriginalField'] = $value;
-                if (mb_strpos($value, 'Custom_') === 0)
-                {
+                if (mb_strpos($value, 'Custom_') === 0) {
                     $array1[$split[1]]['Custom'] = TRUE;
                 }
-            }
-            else
-            {
+            } else {
                 $array1[$split[1]][$split[0]] = $value;
             }
         }
-        foreach ($this->attachmentSearches as $key => $value)
-        {
-            if (array_key_exists($key, $array1))
-            {
+        foreach ($this->attachmentSearches as $key => $value) {
+            if (array_key_exists($key, $array1)) {
                 unset($array1[$key]);
             }
         }
         // do attachment searches
-        if (!empty($this->attachmentSearches) && (array_search('noAttachment', $options) === FALSE))
-        {
+        if (!empty($this->attachmentSearches) && (array_search('noAttachment', $options) === FALSE)) {
             list($this->matchIds, $this->excludeIds) = $this->searchAttachments();
         }
-        foreach ($array1 as $key1 => $value1)
-        {
-            foreach ($value1 as $key2 => $value2)
-            {
-                if ($key2 == 'Word')
-                {
+        foreach ($array1 as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                if ($key2 == 'Word') {
                     // some words (cf admin|configure menu) are filtered so this function may return FALSE if there is nothing to search on
-                    if ($array2[$key1]['OriginalField'] == 'idea')
-                    {
+                    if ($array2[$key1]['OriginalField'] == 'idea') {
                         $this->parsePhrase->idea = TRUE;
-                    }
-                    else
-                    {
+                    } else {
                         $this->parsePhrase->idea = FALSE;
                     }
-// Check for FULLTEXT search fields
-                    if ($this->parsePhrase->idea 
-                    	|| 
-                    	($value1['OriginalField'] == 'note') 
-                    	|| 
-                    	($value1['OriginalField'] == 'abstract')
-                    	||
-                    	($value1['Field'] == 'resourcecustomLong') 
-                    	||
-                    	($value1['Field'] == 'resourcemetadataText') 
-                    )
-                    {
-						if (($word = $this->parsePhrase->parse($value1, FALSE, FALSE, FALSE, TRUE)) && $this->parsePhrase->validSearch)
-						{
-							$array2[$key1]['String'] = $word;
-						}
-						else
-						{
-							$this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
-						}
-                    }
-                    elseif (($word = $this->parsePhrase->parse($value1)) && $this->parsePhrase->validSearch)
-                    {
+                    // Check for FULLTEXT search fields
+                    if ($this->parsePhrase->idea
+                        ||
+                        ($value1['OriginalField'] == 'note')
+                        ||
+                        ($value1['OriginalField'] == 'abstract')
+                        ||
+                        ($value1['Field'] == 'resourcecustomLong')
+                        ||
+                        ($value1['Field'] == 'resourcemetadataText')
+                    ) {
+                        if (($word = $this->parsePhrase->parse($value1, FALSE, FALSE, FALSE, TRUE)) && $this->parsePhrase->validSearch) {
+                            $array2[$key1]['String'] = $word;
+                        } else {
+                            $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
+                        }
+                    } elseif (($word = $this->parsePhrase->parse($value1)) && $this->parsePhrase->validSearch) {
                         $array2[$key1]['String'] = $word;
-                    }
-                    else
-                    {
+                    } else {
                         $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
                     }
                     $array2[$key1]['Word'] = $value2;
-                }
-                elseif ($key2 == 'Select')
-                {
+                } elseif ($key2 == 'Select') {
                     $array2[$key1]['Select'] = unserialize(base64_decode($value2));
-                }
-                elseif ($key2 == 'OriginalField')
-                {
+                } elseif ($key2 == 'OriginalField') {
                     $array2[$key1]['OriginalField'] = $value2;
-                }
-                elseif ($key2 == 'Field')
-                {
+                } elseif ($key2 == 'Field') {
                     $array2[$key1]['Field'] = $value2;
-                    if ((mb_strpos($value2, 'Custom') !== FALSE) && (!array_key_exists($value2, $this->dbFields)))
-                    {
+                    if ((mb_strpos($value2, 'Custom') !== FALSE) && (!array_key_exists($value2, $this->dbFields))) {
                         $this->dbFields[$value2] = ['resourcecustomCustomId', 'resource_custom', 'resourcecustomResourceId'];
                     }
-                }
-                elseif ($key2 == 'Button1')
-                {
+                } elseif ($key2 == 'Button1') {
                     $array2[$key1]['Button1'] = $value2;
-                }
-                elseif ($key2 == 'Button2')
-                {
+                } elseif ($key2 == 'Button2') {
                     $array2[$key1]['Button2'] = $value2;
-                }
-                elseif ($key2 == 'Comparison')
-                {
+                } elseif ($key2 == 'Comparison') {
                     $array2[$key1]['Comparison'] = $value2;
-                }
-                elseif ($key2 == 'Value1')
-                {
+                } elseif ($key2 == 'Value1') {
                     $array2[$key1]['Value1'] = trim($value2);
-                }
-                elseif ($key2 == 'Value2')
-                {
+                } elseif ($key2 == 'Value2') {
                     $array2[$key1]['Value2'] = trim($value2);
-                }
-                elseif ($key2 == 'Custom')
-                {
+                } elseif ($key2 == 'Custom') {
                     $array2[$key1]['Custom'] = $value2;
                 }
             }
@@ -1076,135 +850,90 @@ class SEARCH
                 !array_key_exists('Comparison', $array2[$key1])
                 ) {
                 unset($array2[$key1]);
-            }
-            elseif (array_key_exists('Comparison', $array2[$key1]))
-            {
-                if ($array2[$key1]['Comparison'] == 6)
-                { // i.e. <...<
-                    if (!array_key_exists('Value2', $array2[$key1]))
-                    {
+            } elseif (array_key_exists('Comparison', $array2[$key1])) {
+                if ($array2[$key1]['Comparison'] == 6) { // i.e. <...<
+                    if (!array_key_exists('Value2', $array2[$key1])) {
+                        unset($array2[$key1]);
+                    } elseif (!is_numeric($array2[$key1]['Value1']) || !is_numeric($array2[$key1]['Value2'])) {
+                        unset($array2[$key1]);
+                    } elseif (!$array2[$key1]['Value1'] || !$array2[$key1]['Value2']) {
+                        unset($array2[$key1]);
+                    } elseif ($array2[$key1]['Value1'] >= $array2[$key1]['Value2']) {
                         unset($array2[$key1]);
                     }
-                    elseif (!is_numeric($array2[$key1]['Value1']) || !is_numeric($array2[$key1]['Value2']))
-                    {
-                        unset($array2[$key1]);
-                    }
-                    elseif (!$array2[$key1]['Value1'] || !$array2[$key1]['Value2'])
-                    {
-                        unset($array2[$key1]);
-                    }
-                    elseif ($array2[$key1]['Value1'] >= $array2[$key1]['Value2'])
-                    {
-                        unset($array2[$key1]);
-                    }
-                }
-                elseif (!$array2[$key1]['Value1'] || !is_numeric($array2[$key1]['Value1']))
-                {
+                } elseif (!$array2[$key1]['Value1'] || !is_numeric($array2[$key1]['Value1'])) {
                     unset($array2[$key1]);
                 }
             }
         }
-        if (empty($array2) && empty($this->attachmentSearches))
-        {
+        if (empty($array2) && empty($this->attachmentSearches)) {
             GLOBALS::setTplVar('resourceListSearchForm', FALSE);
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
-        foreach ($array2 as $key3 => $value3)
-        {
-// not for FULTTEXT fields
-			if (($value3['Field'] != 'resourcetextNote') && ($value3['Field'] != 'resourcetextAbstract'))
-			{
-				if (array_key_exists('String', $value3))
-				{
-					if ($value3['Field'] == 'resourceTitleSort')
-					{
-						$replace = $this->db->concat([$this->db->formatFields('resourceNoSort'), $this->db->formatFields($value3['Field'])], ' ');
-					}
-					else
-					{
-						$replace = $this->db->formatFields($value3['Field']);
-					}
-					$value3['String'] = str_replace('!WIKINDXFIELDWIKINDX!', $replace, $value3['String']);
-					$array2[$key3] = $value3;
-				}
-			}
+        foreach ($array2 as $key3 => $value3) {
+            // not for FULTTEXT fields
+            if (($value3['Field'] != 'resourcetextNote') && ($value3['Field'] != 'resourcetextAbstract')) {
+                if (array_key_exists('String', $value3)) {
+                    if ($value3['Field'] == 'resourceTitleSort') {
+                        $replace = $this->db->concat([$this->db->formatFields('resourceNoSort'), $this->db->formatFields($value3['Field'])], ' ');
+                    } else {
+                        $replace = $this->db->formatFields($value3['Field']);
+                    }
+                    $value3['String'] = str_replace('!WIKINDXFIELDWIKINDX!', $replace, $value3['String']);
+                    $array2[$key3] = $value3;
+                }
+            }
         }
-        if ($this->createSqlFragments($array2))
-        {
+        if ($this->createSqlFragments($array2)) {
             $sqlDummy = FALSE;
-        }
-        else
-        { // create a dummy SQL query that will return no results in listcommon->display()
+        } else { // create a dummy SQL query that will return no results in listcommon->display()
             $this->db->formatConditions(['resourceId' => 'IS NULL']);
             $this->db->leftJoin('resource', 'resourceId', 'resourcemiscId');
             $sqlDummy = $this->db->queryNoExecute($this->db->selectNoExecute('resource_misc', ['resourceId', 'resourcemiscId']));
         }
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'displayIdeas'))
-        { // from existing list, clicked on 'Ideas have been found'
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'displayIdeas')) { // from existing list, clicked on 'Ideas have been found'
             $this->unionFragments = [];
         }
-        if (!empty($this->ideas) && !empty($this->unionFragments))
-        {
+        if (!empty($this->ideas) && !empty($this->unionFragments)) {
             // Check this user is allowed to read the idea.
-            foreach ($this->ideas as $valueArray)
-            {
-				$matchAgainst = $this->db->fulltextSearch($valueArray['Field'], $valueArray['String']);
+            foreach ($this->ideas as $valueArray) {
+                $matchAgainst = $this->db->fulltextSearch($valueArray['Field'], str_replace("'", "''", $valueArray['String']));
                 $conditions[] = $matchAgainst;
             }
             $this->metadata->setCondition('i');
             $this->db->formatConditions(implode($this->db->or, $conditions));
             $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
-            if ($this->db->numRows($resultset))
-            {
+            if ($this->db->numRows($resultset)) {
                 $this->common->ideasFound = TRUE;
-                $this->session->setVar('sql_LastIdeaSearch', "index.php?action=list_SEARCH_CORE&method=reprocess&type=displayIdeas");
+                $this->session->setVar("sql_LastIdeaSearch", "index.php?action=list_SEARCH_CORE&method=reprocess&type=displayIdeas");
+            } else {
+                $this->session->delVar("sql_LastIdeaSearch");
             }
-            else
-            {
-                $this->session->delVar('sql_LastIdeaSearch');
-            }
-        }
-        elseif (!empty($this->ideas))
-        {
+        } elseif (!empty($this->ideas)) {
             $this->searchIdeas();
 
             return;
+        } else {
+            $this->session->delVar("sql_LastIdeaSearch");
         }
-        else
-        {
-            $this->session->delVar('sql_LastIdeaSearch');
-        }
-        if ($bibId = $this->session->getVar('advancedSearch_BibId'))
-        {
+        if ($bibId = $this->session->getVar("advancedSearch_BibId")) {
             $bibIdArray[] = $bibId;
             $this->stmt->excludeBib($bibId, 'rId');
-        }
-        else
-        {
+        } else {
             $bibIdArray = [];
         }
-        foreach ($this->attachmentSearches as $key1 => $value1)
-        {
-            foreach ($value1 as $key2 => $value2)
-            {
-                if ($key2 == 'Word')
-                {
+        foreach ($this->attachmentSearches as $key1 => $value1) {
+            foreach ($value1 as $key2 => $value2) {
+                if ($key2 == 'Word') {
                     $array2[$key1]['Word'] = $value2;
-                }
-                elseif ($key2 == 'OriginalField')
-                {
+                } elseif ($key2 == 'OriginalField') {
                     $array2[$key1]['OriginalField'] = $value2;
-                }
-                elseif ($key2 == 'Field')
-                {
+                } elseif ($key2 == 'Field') {
                     $array2[$key1]['Field'] = $value2;
-                    if ((mb_strpos($value2, 'Custom') !== FALSE) && (!array_key_exists($value2, $this->dbFields)))
-                    {
+                    if ((mb_strpos($value2, 'Custom') !== FALSE) && (!array_key_exists($value2, $this->dbFields))) {
                         $this->dbFields[$value2] = ['resourcecustomCustomId', 'resource_custom', 'resourcecustomResourceId'];
                     }
-                }
-                elseif ($key2 == 'Button1')
-                {
+                } elseif ($key2 == 'Button1') {
                     $array2[$key1]['Button1'] = $value2;
                 }
             }
@@ -1216,84 +945,65 @@ class SEARCH
          *
          * Therefore, we can cascade . . .
          */
-        $this->session->delVar('search_DisplayAttachment');
-        $this->session->delVar('search_DisplayAttachmentZip');
-        if (array_search('noAttachment', $options) !== FALSE)
-        {
+        $this->session->delVar("search_DisplayAttachment");
+        $this->session->delVar("search_DisplayAttachmentZip");
+        if (array_search('noAttachment', $options) !== FALSE) {
             $attach = 'noAttachment';
-        }
-        elseif (array_search('withAttachment', $options) !== FALSE)
-        {
+        } elseif (array_search('withAttachment', $options) !== FALSE) {
             $attach = 'withAttachment';
         }
         $order = (array_search('displayOnlyAttachment', $options) !== FALSE) ? 'attachments' : $this->input['Order'];
-        if ($attach)
-        {
-            if ($order == 'attachments')
-            { // displaying attachments only
-                $this->session->setVar('search_DisplayAttachment', TRUE);
-                if (array_search('zipAttachment', $options) !== FALSE)
-                {
-                    $this->session->setVar('search_DisplayAttachmentZip', TRUE);
+        if ($attach) {
+            if ($order == 'attachments') { // displaying attachments only
+                $this->session->setVar("search_DisplayAttachment", TRUE);
+                if (array_search('zipAttachment', $options) !== FALSE) {
+                    $this->session->setVar("search_DisplayAttachmentZip", TRUE);
                 }
             }
         }
-        if (!$sqlDummy)
-        {
-            if (!array_key_exists('order', $this->input) && !array_key_exists('Order', $this->input))
-            {
-                $this->session->setVar('search_Order', 'creator');
-                $this->session->setVar('sql_LastOrder', 'creator');
-                $this->session->setVar('search_AscDesc', $this->db->asc);
-            }
-            else
-            {
-                $this->session->setVar('sql_LastOrder', $this->input['Order']);
+        if (!$sqlDummy) {
+            if (!array_key_exists('order', $this->input) && !array_key_exists('Order', $this->input)) {
+                $this->session->setVar("search_Order", 'creator');
+                $this->session->setVar("sql_LastOrder", 'creator');
+                $this->session->setVar("search_AscDesc", $this->db->asc);
+            } else {
+                $this->session->setVar("sql_LastOrder", $this->input['Order']);
             }
             // Turn on the 'add bookmark' menu item
             $this->session->setVar("bookmark_DisplayAdd", TRUE);
-            $this->session->setVar('search_Order', $order);
+            $this->session->setVar("search_Order", $order);
             $subStmt = $this->setSubQuery($attach);
-            $resourcesFound = $this->stmt->listSubQuery($this->session->getVar('search_Order'), $queryString, $subStmt, FALSE, $this->subQ);
-            if (!$resourcesFound)
-            {
+            $resourcesFound = $this->stmt->listSubQuery($this->session->getVar("search_Order"), $queryString, $subStmt, FALSE, $this->subQ);
+            if (!$resourcesFound) {
                 $this->common->noResources('search');
 
                 return;
             }
         }
-        $searchTerms = UTF8::mb_explode(",", $this->session->getVar('search_Highlight'));
-        foreach ($searchTerms as $term)
-        {
-            if (trim($term))
-            {
-                $term = preg_quote($term);
+        $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_Highlight"));
+        foreach ($searchTerms as $term) {
+            if (trim($term)) {
+                $term = preg_quote($term, '/');
                 $patterns[] = "/($term)(?=[^>]*(<|$))/ui";
             }
         }
-        if (!isset($patterns))
-        {
-            $this->session->setVar('search_Patterns', base64_encode(serialize([])));
+        if (!isset($patterns)) {
+            $this->session->setVar("search_Patterns", base64_encode(serialize([])));
             $this->common->patterns = FALSE;
-        }
-        else
-        {
-            $this->session->setVar('search_Patterns', base64_encode(serialize($patterns)));
+        } else {
+            $this->session->setVar("search_Patterns", base64_encode(serialize($patterns)));
             $this->common->patterns = $patterns;
         }
         $this->common->keepHighlight = TRUE;
-        if ($sqlDummy)
-        {
+        if ($sqlDummy) {
             $sql = $sqlDummy;
+        } else {
+            $sql = $this->stmt->listList($this->session->getVar("search_Order"), FALSE, $this->subQ);
         }
-        else
-        {
-            $sql = $this->stmt->listList($this->session->getVar('search_Order'), FALSE, $this->subQ);
-        }
-        $this->common->display($sql, 'search');
+        $this->common->display($sql, "search");
         // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar('sql_LastMulti', $queryString);
-        $this->session->saveState(['advancedSearch', 'sql', 'bookmark', 'list', 'setup']);
+        $this->session->setVar("sql_LastMulti", $queryString);
+        $this->session->saveState(['advancedSearch', 'sql', 'bookmark', 'list']);
     }
     /**
      * Search ideas for search words and display
@@ -1304,32 +1014,28 @@ class SEARCH
         $icons = FACTORY_LOADICONS::getInstance();
         $cite = FACTORY_CITE::getInstance();
         $userObj = FACTORY_USER::getInstance();
-        $multiUser = $this->session->getVar('setup_MultiUser');
+        $multiUser = WIKINDX_MULTIUSER;
         $ideaList = [];
         $index = 0;
         // get count statement and set queryString
         $pagingObject = FACTORY_PAGING::getInstance();
-        if ((!array_key_exists('PagingStart', $this->vars) || !$this->vars['PagingStart']))
-        {
-            $this->session->delVar('mywikindx_PagingStart'); // might be set from last multi resource list display
+        if ((!array_key_exists('PagingStart', $this->vars) || !$this->vars['PagingStart'])) {
+            $this->session->delVar("mywikindx_PagingStart"); // might be set from last multi resource list display
         }
         $queryString = "index.php?action=list_SEARCH_CORE&method=reprocess&type=displayIdeas";
         // Check this user is allowed to read the idea.
         $this->metadata->setCondition('i');
-        foreach ($this->ideas as $valueArray)
-        {
-			$conditions[] = $this->db->fulltextSearch($valueArray['Field'], $valueArray['String']);
+        foreach ($this->ideas as $valueArray) {
+            $conditions[] = $this->db->fulltextSearch($valueArray['Field'], str_replace("'", "''", $valueArray['String']));
         }
         $this->db->formatConditions(implode($this->db->or, $conditions));
         $countQuery = $this->db->selectCountDistinctField('resource_metadata', 'resourcemetadataId');
         $pagingObject->sqlTotal = $countQuery;
         $pagingObject->queryString = $queryString;
         $pagingObject->getPaging();
-        $searchTerms = UTF8::mb_explode(",", $this->session->getVar('search_HighlightIdea'));
-        foreach ($searchTerms as $term)
-        {
-            if (trim($term))
-            {
+        $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_HighlightIdea"));
+        foreach ($searchTerms as $term) {
+            if (trim($term)) {
                 $patterns[] = "/($term)(?=[^>]*(<|$))/ui";
             }
         }
@@ -1337,24 +1043,18 @@ class SEARCH
         // Check this user is allowed to read the idea.
         $this->metadata->setCondition('i');
         $this->db->formatConditions(implode($this->db->or, $conditions));
-        $this->db->limit($this->session->getVar('setup_Paging'), $pagingObject->start);
+        $this->db->limit(GLOBALS::getUserVar('Paging'), $pagingObject->start);
         $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataTimestamp', 'resourcemetadataTimestampEdited',
             'resourcemetadataMetadataId', 'resourcemetadataText', 'resourcemetadataAddUserId', 'resourcemetadataPrivate', ]);
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             $this->badInput->close($this->messages->text("select", "noIdeas"));
         }
-        while ($row = $this->db->fetchRow($resultset))
-        {
-            if ($multiUser)
-            {
+        while ($row = $this->db->fetchRow($resultset)) {
+            if ($multiUser) {
                 list($user) = $userObj->displayUserAddEdit($row['resourcemetadataAddUserId'], FALSE, 'idea');
-                if (!$row['resourcemetadataTimestampEdited'])
-                {
+                if (!$row['resourcemetadataTimestampEdited']) {
                     $ideaList[$index]['user'] = $this->messages->text('hint', 'addedBy', $user . '&nbsp;' . $row['resourcemetadataTimestamp']);
-                }
-                else
-                {
+                } else {
                     $ideaList[$index]['user'] = $this->messages->text('hint', 'addedBy', $user . '&nbsp;' . $row['resourcemetadataTimestamp']) .
                     ',&nbsp;' . $this->messages->text('hint', 'editedBy', $user . '&nbsp;' . $row['resourcemetadataTimestampEdited']);
                 }
@@ -1362,10 +1062,10 @@ class SEARCH
             }
             $ideaList[$index]['links'] = $this->metadata->createLinks($row, TRUE);
             $data = preg_replace($patterns, \HTML\span("$1", "highlight"), $row['resourcemetadataText']);
-            $ideaList[$index]['metadata'] = $cite->parseCitations(\HTML\dbToHtmlTidy($data), 'html');
+            $ideaList[$index]['metadata'] = $cite->parseCitations(\HTML\nlToHtml($data), 'html');
             ++$index;
         }
-        $this->session->setVar('sql_LastIdeaSearch', $queryString);
+        $this->session->setVar("sql_LastIdeaSearch", $queryString);
         GLOBALS::addTplVar('ideaTemplate', TRUE);
         GLOBALS::addTplVar('ideaList', $ideaList);
         $this->common->pagingStyle($countQuery, FALSE, FALSE, $queryString);
@@ -1391,24 +1091,19 @@ class SEARCH
     {
         $pString = \HTML\tableStart();
         $pString .= \HTML\trStart();
-        if ($remove)
-        {
+        if ($remove) {
             $pString .= \HTML\td($this->addRemoveIcon($index, FALSE)); // add remove element icon
         }
         // Add radio buttons
-        if ($index > 1)
-        {
+        if ($index > 1) {
             $buttons = $this->makeRadioButtons1("advancedSearch_Button1_$index");
             $pString .= \HTML\td(\HTML\div("searchElementButtons_$index", $buttons), 'left width5percent');
         }
         $fields = $this->searchFields($index);
         $pString .= \HTML\td($fields, 'left width15percent');
-        if (($index == 1) && array_key_exists("Field_1", $this->input))
-        {
+        if (($index == 1) && array_key_exists("Field_1", $this->input)) {
             $pString .= \HTML\td(\HTML\div("searchElementContainer_1", $this->createDivs($this->input["Field_1"], 1)));
-        }
-        else
-        {
+        } else {
             $pString .= \HTML\td(\HTML\div("searchElementContainer_$index", $this->wordDiv($index)));
         }
         $pString .= \HTML\trEnd();
@@ -1425,21 +1120,17 @@ class SEARCH
      */
     private function makeRadioButtons1($type)
     {
-        if ($this->session->getVar($type) == 'AND')
-        {
+        if ($this->session->getVar($type) == 'AND') {
             $pString = \HTML\span(\FORM\radioButton(FALSE, $type, 'OR') . " OR", "small") . BR;
             $pString .= \HTML\span(\FORM\radioButton(FALSE, $type, 'AND', TRUE) . " AND", "small") . BR;
             $pString .= \HTML\span(\FORM\radioButton(FALSE, $type, 'NOT') . " NOT", "small");
-        }
-        elseif ($this->session->getVar($type) == 'NOT')
-        {
+        } elseif ($this->session->getVar($type) == 'NOT') {
             $pString = \HTML\span(\FORM\radioButton(FALSE, $type, 'OR') . " OR", "small") . BR;
             $pString .= \HTML\span(\FORM\radioButton(FALSE, $type, 'AND') . " AND", "small") . BR;
             $pString .= \HTML\span(\FORM\radioButton(FALSE, $type, 'NOT', TRUE) . " NOT", "small");
         }
         // Default
-        else
-        {
+        else {
             $pString = \HTML\span(\FORM\radioButton(FALSE, $type, 'OR', TRUE) . " OR", "small") . BR;
             $pString .= \HTML\span(\FORM\radioButton(FALSE, $type, 'AND') . " AND", "small") . BR;
             $pString .= \HTML\span(\FORM\radioButton(FALSE, $type, 'NOT') . " NOT", "small");
@@ -1456,14 +1147,12 @@ class SEARCH
      */
     private function makeRadioButtons2($type)
     {
-        if ($this->session->getVar($type) == 'AND')
-        {
+        if ($this->session->getVar($type) == 'AND') {
             $pString = \HTML\span(\FORM\radioButton(FALSE, $type, 'OR') . " OR", "small") . BR;
             $pString .= \HTML\span(\FORM\radioButton(FALSE, $type, 'AND', TRUE) . " AND", "small");
         }
         // Default
-        else
-        {
+        else {
             $pString = \HTML\span(\FORM\radioButton(FALSE, $type, 'OR', TRUE) . " OR", "small") . BR;
             $pString .= \HTML\span(\FORM\radioButton(FALSE, $type, 'AND') . " AND", "small");
         }
@@ -1513,77 +1202,46 @@ class SEARCH
      */
     private function formatElement(&$value)
     {
-        if ($value['Field'] == 'creator')
-        {
-            foreach ($value['Select'] as $select)
-            {
+        if ($value['Field'] == 'creator') {
+            foreach ($value['Select'] as $select) {
                 $temp[] = $this->formatCreators($select);
             }
-        }
-        elseif ($value['Field'] == 'publisher')
-        {
-            foreach ($value['Select'] as $select)
-            {
+        } elseif ($value['Field'] == 'publisher') {
+            foreach ($value['Select'] as $select) {
                 $temp[] = $this->formatPublishers($select);
             }
-        }
-        elseif ($value['Field'] == 'collection')
-        {
-            foreach ($value['Select'] as $select)
-            {
+        } elseif ($value['Field'] == 'collection') {
+            foreach ($value['Select'] as $select) {
                 $temp[] = $this->formatCollections($select);
             }
-        }
-        elseif ($value['Field'] == 'type')
-        {
+        } elseif ($value['Field'] == 'type') {
             return;
-        }
-        elseif ($value['Field'] == 'subcategory')
-        {
-            foreach ($value['Select'] as $select)
-            {
+        } elseif ($value['Field'] == 'subcategory') {
+            foreach ($value['Select'] as $select) {
                 $temp[] = $this->formatSubcategories($select);
             }
-        }
-        elseif ($value['Field'] == 'category')
-        {
-            foreach ($value['Select'] as $select)
-            {
+        } elseif ($value['Field'] == 'category') {
+            foreach ($value['Select'] as $select) {
                 $temp[] = $this->formatCategories($select);
             }
-        }
-        elseif (($value['Field'] == 'keyword') or ($value['Field'] == 'metaKeyword'))
-        {
-            foreach ($value['Select'] as $select)
-            {
+        } elseif (($value['Field'] == 'keyword') or ($value['Field'] == 'metaKeyword')) {
+            foreach ($value['Select'] as $select) {
                 $temp[] = $this->formatKeywords($select);
             }
-        }
-        elseif ($value['Field'] == 'userTag')
-        {
-            foreach ($value['Select'] as $select)
-            {
+        } elseif ($value['Field'] == 'userTag') {
+            foreach ($value['Select'] as $select) {
                 $temp[] = $this->formatUsertags($select);
             }
-        }
-        elseif ($value['Field'] == 'language')
-        {
-            foreach ($value['Select'] as $select)
-            {
+        } elseif ($value['Field'] == 'language') {
+            foreach ($value['Select'] as $select) {
                 $temp[] = $this->formatLanguages($select);
             }
-        }
-        elseif ($value['Field'] == 'tag')
-        {
-            foreach ($value['Select'] as $select)
-            {
+        } elseif ($value['Field'] == 'tag') {
+            foreach ($value['Select'] as $select) {
                 $temp[] = $this->formatTags($select);
             }
-        }
-        elseif (($value['Field'] == 'addedBy') or ($value['Field'] == 'editedBy'))
-        {
-            foreach ($value['Select'] as $select)
-            {
+        } elseif (($value['Field'] == 'addedBy') or ($value['Field'] == 'editedBy')) {
+            foreach ($value['Select'] as $select) {
                 $temp[] = $this->formatUsernames($select);
             }
         }
@@ -1610,8 +1268,7 @@ class SEARCH
      */
     private function colorID($element)
     {
-        if (!trim($element))
-        {
+        if (!trim($element)) {
             return '';
         }
 
@@ -1626,16 +1283,11 @@ class SEARCH
     {
         $pString = \HTML\tableStart();
         $pString .= \HTML\trStart();
-        if ($this->session->getVar("setup_ReadOnly") && $this->session->getVar("setup_FileViewLoggedOnOnly"))
-        {
+        if ($this->session->getVar("setup_ReadOnly") && WIKINDX_FILE_VIEW_LOGGEDON_ONLY) {
             $options = [];
-        }
-        elseif ($this->db->tableIsEmpty('resource_attachments') == 1)
-        {
+        } elseif ($this->db->tableIsEmpty('resource_attachments') == 1) {
             $options = [];
-        }
-        else
-        {
+        } else {
             $options = [
                 'ignore' => $this->messages->text("misc", "ignore"),
                 'noAttachment' => $this->messages->text('select', 'noAttachment'),
@@ -1644,8 +1296,7 @@ class SEARCH
                 'zipAttachment' => $this->messages->text('select', 'displayAttachmentZip'),
             ];
         }
-        if (empty($options))
-        {
+        if (empty($options)) {
             $options['ignore'] = $this->messages->text("misc", "ignore");
         }
         $options['withUrl'] = $this->messages->text('select', 'url');
@@ -1655,15 +1306,12 @@ class SEARCH
             'startFunction' => "attachmentOptions",
         ];
         $js = \AJAX\jActionForm('onchange', $jsonArray);
-        if ($selected = $this->session->getVar("advancedSearch_Options"))
-        {
+        if ($selected = $this->session->getVar("advancedSearch_Options")) {
             $selected = unserialize(base64_decode($selected));
-            if (($key = array_search('ignore', $selected)) !== FALSE)
-            {
+            if (($key = array_search('ignore', $selected)) !== FALSE) {
                 unset($selected[$key]);
             }
-            if (!empty($selected))
-            {
+            if (!empty($selected)) {
                 $selectBox = \FORM\selectedBoxValueMultiple(
                     $this->messages->text('select', 'option'),
                     "advancedSearch_Options",
@@ -1673,9 +1321,7 @@ class SEARCH
                     FALSE,
                     $js
                 );
-            }
-            else
-            {
+            } else {
                 $selectBox = \FORM\selectFBoxValueMultiple(
                     $this->messages->text('select', 'option'),
                     "advancedSearch_Options",
@@ -1685,9 +1331,7 @@ class SEARCH
                     $js
                 );
             }
-        }
-        else
-        {
+        } else {
             $selectBox = \FORM\selectFBoxValueMultiple(
                 $this->messages->text('select', 'option'),
                 "advancedSearch_Options",
@@ -1711,23 +1355,19 @@ class SEARCH
     private function userBibs()
     {
         $bibs = $this->commonBib->getUserBibs() + $this->commonBib->getGroupBibs();
-        if ($userBib = $this->session->getVar("mywikindx_Bibliography_use"))
-        {
+        if ($userBib = $this->session->getVar("mywikindx_Bibliography_use")) {
             unset($bibs[$userBib]);
         }
-        if (empty($bibs))
-        {
+        if (empty($bibs)) {
             return "&nbsp;";
         }
         // add 0 => IGNORE to $array
         $temp[0] = $this->messages->text("misc", "ignore");
-        foreach ($bibs as $key => $value)
-        {
+        foreach ($bibs as $key => $value) {
             $temp[$key] = $value;
         }
         $selected = $this->session->getVar("advancedSearch_BibId");
-        if ($selected && array_key_exists($selected, $temp))
-        {
+        if ($selected && array_key_exists($selected, $temp)) {
             $pString = \FORM\selectedBoxValue(
                 $this->messages->text("select", "notInUserBib"),
                 "advancedSearch_BibId",
@@ -1735,9 +1375,7 @@ class SEARCH
                 $selected,
                 5
             );
-        }
-        else
-        {
+        } else {
             $pString = \FORM\selectFBoxValue($this->messages->text("select", "notInUserBib"), "advancedSearch_BibId", $temp, 5);
         }
 
@@ -1790,14 +1428,11 @@ class SEARCH
     private function addRemoveIcon($index, $add = TRUE, $updateJSElementIndex = FALSE)
     {
         $jsonArray = [];
-        if ($add)
-        {
+        if ($add) {
             $jScript = "index.php?action=list_SEARCH_CORE&method=addElement";
             $startFunction = 'addElement';
-            $elementIndex = $this->session->getVar('advancedSearch_elementIndex');
-        }
-        else
-        {
+            $elementIndex = $this->session->getVar("advancedSearch_elementIndex");
+        } else {
             $jScript = "index.php?action=list_SEARCH_CORE&method=removeElement";
             $startFunction = 'removeElement';
             $elementIndex = $index;
@@ -1808,12 +1443,9 @@ class SEARCH
             'elementIndex' => "$elementIndex",
             'updateJSElementIndex' => "$updateJSElementIndex",
         ];
-        if ($add)
-        {
+        if ($add) {
             return \AJAX\jActionIcon('add', 'onclick', $jsonArray);
-        }
-        else
-        {
+        } else {
             return \AJAX\jActionIcon('remove', 'onclick', $jsonArray);
         }
     }
@@ -1828,38 +1460,27 @@ class SEARCH
      */
     private function makeSelectBox(&$array, $type, $index)
     {
-        if (array_key_exists("Select_$index", $this->input))
-        {
+        if (array_key_exists("Select_$index", $this->input)) {
             $selected = [];
             $temp = unserialize(base64_decode($this->input["Select_$index"]));
-            foreach ($temp as $value)
-            {
-                if (!array_key_exists($value, $array))
-                { // could be the case bibliography used for browsing has changed
+            foreach ($temp as $value) {
+                if (!array_key_exists($value, $array)) { // could be the case bibliography used for browsing has changed
                     continue;
                 }
                 $selected[$value] = $array[$value];
                 unset($array[$value]);
             }
-            if (!empty($selected))
-            {
+            if (!empty($selected)) {
                 $selectBox = \FORM\selectFBoxValueMultiple(FALSE, "advancedSearch_Select_$index", $selected, 5);
-            }
-            else
-            {
+            } else {
                 $selectBox = \FORM\selectFBoxValueMultiple(FALSE, "advancedSearch_Select_$index", [], 5);
             }
-        }
-        else
-        {
+        } else {
             $selectBox = \FORM\selectFBoxValueMultiple(FALSE, "advancedSearch_Select_$index", [], 5);
         }
-        if (($type == 'type') || ($type == 'publisher') || ($type == 'collection') || ($type == 'tag') || ($type == 'addedBy') || ($type == 'editedBy'))
-        {
+        if (($type == 'type') || ($type == 'publisher') || ($type == 'collection') || ($type == 'tag') || ($type == 'addedBy') || ($type == 'editedBy')) {
             $buttons = \HTML\span('&nbsp;OR', 'small') . \FORM\hidden("advancedSearch_Button2_$index", 'OR');
-        }
-        else
-        {
+        } else {
             $buttons = $this->makeRadioButtons2("advancedSearch_Button2_$index");
         }
         $pString = \HTML\tableStart();
@@ -1886,8 +1507,7 @@ class SEARCH
     {
         $types = $this->type->grabAll($this->session->getVar("mywikindx_Bibliography_use"), TRUE);
         $selectBox = $this->makeSelectBox($types, 'type', $index);
-        if (is_array($types))
-        {
+        if (is_array($types)) {
             natcasesort($types);
         }
         $pString = \HTML\tableStart();
@@ -1917,8 +1537,7 @@ class SEARCH
     {
         $categories = $this->category->grabAll($this->session->getVar("mywikindx_Bibliography_use"), TRUE);
         $selectBox = $this->makeSelectBox($categories, 'category', $index);
-        if (is_array($categories))
-        {
+        if (is_array($categories)) {
             natcasesort($categories);
         }
         $pString = \HTML\tableStart();
@@ -1948,8 +1567,7 @@ class SEARCH
     {
         $subcategories = $this->category->grabSubAll(TRUE, $this->session->getVar("mywikindx_Bibliography_use"), FALSE, TRUE);
         $selectBox = $this->makeSelectBox($subcategories, 'subcategory', $index);
-        if (is_array($subcategories))
-        {
+        if (is_array($subcategories)) {
             natcasesort($subcategories);
         }
         $pString = \HTML\tableStart();
@@ -1979,8 +1597,7 @@ class SEARCH
     {
         $creators = $this->creator->grabAll($this->session->getVar("mywikindx_Bibliography_use"));
         $selectBox = $this->makeSelectBox($creators, 'creator', $index);
-        if (is_array($creators))
-        {
+        if (is_array($creators)) {
             natcasesort($creators);
         }
         $pString = \HTML\tableStart();
@@ -2010,8 +1627,7 @@ class SEARCH
     {
         $keywords = $this->keyword->grabAll($this->session->getVar("mywikindx_Bibliography_use"), 'resource');
         $selectBox = $this->makeSelectBox($keywords, 'keyword', $index);
-        if (is_array($keywords))
-        {
+        if (is_array($keywords)) {
             natcasesort($keywords);
         }
         $pString = \HTML\tableStart();
@@ -2041,8 +1657,7 @@ class SEARCH
     {
         $metakeywords = $this->keyword->grabAll(TRUE, ['quote', 'paraphrase', 'quoteComment', 'paraphraseComment', 'musing', 'idea']);
         $selectBox = $this->makeSelectBox($metakeywords, 'metaKeyword', $index);
-        if (is_array($metakeywords))
-        {
+        if (is_array($metakeywords)) {
             natcasesort($metakeywords);
         }
         $pString = \HTML\tableStart();
@@ -2072,8 +1687,7 @@ class SEARCH
     {
         $this->grabLanguages();
         $selectBox = $this->makeSelectBox($this->languages, 'language', $index);
-        if (is_array($this->languages))
-        {
+        if (is_array($this->languages)) {
             natcasesort($this->languages);
         }
         $pString = \HTML\tableStart();
@@ -2103,8 +1717,7 @@ class SEARCH
     {
         $publishers = $this->publisher->grabAll(FALSE, $this->session->getVar("mywikindx_Bibliography_use"));
         $selectBox = $this->makeSelectBox($publishers, 'publisher', $index);
-        if (is_array($publishers))
-        {
+        if (is_array($publishers)) {
             natcasesort($publishers);
         }
         $pString = \HTML\tableStart();
@@ -2134,8 +1747,7 @@ class SEARCH
     {
         $collections = $this->collection->grabAll(FALSE, $this->session->getVar("mywikindx_Bibliography_use"));
         $selectBox = $this->makeSelectBox($collections, 'collection', $index);
-        if (is_array($collections))
-        {
+        if (is_array($collections)) {
             natcasesort($collections);
         }
         $pString = \HTML\tableStart();
@@ -2165,8 +1777,7 @@ class SEARCH
     {
         $userTags = $this->userTag->grabAll($this->session->getVar("mywikindx_Bibliography_use"), FALSE, TRUE);
         $selectBox = $this->makeSelectBox($userTags, 'userTag', $index);
-        if (is_array($userTags))
-        {
+        if (is_array($userTags)) {
             natcasesort($userTags);
         }
         $pString = \HTML\tableStart();
@@ -2196,8 +1807,7 @@ class SEARCH
     {
         $tags = $this->tag->grabAll();
         $selectBox = $this->makeSelectBox($tags, 'tag', $index);
-        if (is_array($tags))
-        {
+        if (is_array($tags)) {
             natcasesort($tags);
         }
         $pString = \HTML\tableStart();
@@ -2227,8 +1837,7 @@ class SEARCH
     {
         $users = $this->grabUsers('add');
         $selectBox = $this->makeSelectBox($users, 'addedBy', $index);
-        if (is_array($users))
-        {
+        if (is_array($users)) {
             natcasesort($users);
         }
         $pString = \HTML\tableStart();
@@ -2258,8 +1867,7 @@ class SEARCH
     {
         $users = $this->grabUsers('edit');
         $selectBox = $this->makeSelectBox($users, 'editedBy', $index);
-        if (is_array($users))
-        {
+        if (is_array($users)) {
             natcasesort($users);
         }
         $pString = \HTML\tableStart();
@@ -2299,33 +1907,24 @@ class SEARCH
         $js = \AJAX\jActionForm('onclick', $jsonArray);
         $pString = \HTML\tableStart();
         $pString .= \HTML\trStart();
-        if (array_key_exists("Comparison_$index", $this->input))
-        {
+        if (array_key_exists("Comparison_$index", $this->input)) {
             $selectBox = \FORM\selectedBoxValue(FALSE, "advancedSearch_Comparison_$index", $comps, $this->input["Comparison_$index"], 7, FALSE, $js);
-        }
-        else
-        {
+        } else {
             $selectBox = \FORM\selectFBoxValue(FALSE, "advancedSearch_Comparison_$index", $comps, 7, FALSE, $js);
         }
         $pString .= \HTML\td($selectBox, 'left width10percent');
-        if (array_key_exists("Value1_$index", $this->input))
-        {
+        if (array_key_exists("Value1_$index", $this->input)) {
             $textInput = \FORM\textInput(FALSE, "advancedSearch_Value1_$index", $this->input["Value1_$index"]);
-        }
-        else
-        {
+        } else {
             $textInput = \FORM\textInput(FALSE, "advancedSearch_Value1_$index");
         }
         $pString .= \HTML\td($textInput, 'left width10percent');
-        if (array_key_exists("Value2_$index", $this->input))
-        {
+        if (array_key_exists("Value2_$index", $this->input)) {
             $pString .= \HTML\td(\HTML\div(
                 "value2Container_$index",
                 \FORM\textInput(FALSE, "advancedSearch_Value2_$index", $this->input["Value2_$index"])
             ), 'left width10percent');
-        }
-        else
-        {
+        } else {
             $pString .= \HTML\td(\HTML\div("value2Container_$index", ' '), 'left width10percent'); // needed for '<...<'
         }
         $pString .= \HTML\td('&nbsp;', 'width100percent'); // Filler to ensure buttons are flush against select box
@@ -2340,15 +1939,13 @@ class SEARCH
     private function grabLanguages()
     {
         $userBib = $this->session->getVar("mywikindx_Bibliography_use");
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourceLanguageResourceId');
         }
         $this->db->orderBy('languageLanguage');
         $this->db->leftJoin('language', 'languageId', 'resourcelanguageLanguageId');
         $resultset = $this->db->select('resource_language', ['resourcelanguageLanguageId', 'languageLanguage'], TRUE);
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $this->languages[$row['resourcelanguageLanguageId']] = $row['languageLanguage'];
         }
     }
@@ -2410,17 +2007,14 @@ class SEARCH
      */
     private function checkAvailableFields()
     {
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         // userTags
         $this->db->formatConditions(['userTagsUserId' => $userId]);
-        if (!empty($this->userTag->grabAll($this->session->getVar("mywikindx_Bibliography_use"), FALSE, TRUE)))
-        {
+        if (!empty($this->userTag->grabAll($this->session->getVar("mywikindx_Bibliography_use"), FALSE, TRUE))) {
             $this->displayUserTags = TRUE;
         }
-        if ((!$this->session->getVar('setup_MetadataAllow')))
-        {
-            if ((!$this->session->getVar('setup_MetadataUserOnly')))
-            {
+        if ((!WIKINDX_METADATA_ALLOW)) {
+            if ((!WIKINDX_METADATA_USERONLY)) {
                 $this->displayIdeas = $this->displayQCs = $this->displayPCs = $this->displayMusings = $this->displayMKs = FALSE;
 
                 return;
@@ -2428,110 +2022,88 @@ class SEARCH
         }
         $userBib = $this->session->getVar("mywikindx_Bibliography_use");
         // for everything here, the user must be logged on
-        if (!$userId)
-        {
+        if (!$userId) {
             return;
         }
         // ideas (which are independent of resources). setCondition() returns FALSE if user is not logged on. ReadOnly users never see musings, ideas, or comments.
-        if (!$this->metadata->setCondition('i'))
-        {
+        if (!$this->metadata->setCondition('i')) {
             return;
         }
         $resultSet = $this->db->selectCount('resource_metadata', 'resourcemetadataId');
-        if ($this->db->fetchOne($resultSet))
-        {
+        if ($this->db->fetchOne($resultSet)) {
             $this->displayIdeas = TRUE;
         }
         // quote comments
-        if (!$this->metadata->setCondition('qc'))
-        {
+        if (!$this->metadata->setCondition('qc')) {
             return;
         }
         $subQ = $this->db->subQuery($this->db->selectNoExecute('resource_metadata', 'resourcemetadataMetadataId'), FALSE, FALSE, TRUE);
         $this->db->formatConditions($this->db->formatFields('resourcemetadataId') . $this->db->inClause($subQ));
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourcemetadataResourceId');
         }
         $resultSet = $this->db->selectCount('resource_metadata', 'resourcemetadataId');
-        if ($this->db->fetchOne($resultSet))
-        {
+        if ($this->db->fetchOne($resultSet)) {
             $this->displayQCs = TRUE;
         }
         // paraphrase comments
-        if (!$this->metadata->setCondition('pc'))
-        {
+        if (!$this->metadata->setCondition('pc')) {
             return;
         }
         $subQ = $this->db->subQuery($this->db->selectNoExecute('resource_metadata', 'resourcemetadataMetadataId'), FALSE, FALSE, TRUE);
         $this->db->formatConditions($this->db->formatFields('resourcemetadataId') . $this->db->inClause($subQ));
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourcemetadataResourceId');
         }
         $resultSet = $this->db->selectCount('resource_metadata', 'resourcemetadataId');
-        if ($this->db->fetchOne($resultSet))
-        {
+        if ($this->db->fetchOne($resultSet)) {
             $this->displayPCs = TRUE;
         }
         // musings
-        if (!$this->metadata->setCondition('m'))
-        {
+        if (!$this->metadata->setCondition('m')) {
             return;
         }
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourcemetadataResourceId');
         }
         $resultSet = $this->db->selectCount('resource_metadata', 'resourcemetadataId');
-        if ($this->db->fetchOne($resultSet))
-        {
+        if ($this->db->fetchOne($resultSet)) {
             $this->displayMusings = TRUE;
         }
         // metadatakeywords (user restrictions if ideas and musings)
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourcekeywordResourceId');
         }
         $this->db->formatConditions(['resourcekeywordMetadataId' => 'IS NOT NULL']);
         $resultSet = $this->db->selectCount('resource_keyword', 'resourcekeywordMetadataId');
-        if ($this->db->fetchOne($resultSet))
-        {
+        if ($this->db->fetchOne($resultSet)) {
             $this->displayMKs = TRUE;
         }
-        if (!$this->displayMKs)
-        {
-            if (!$this->metadata->setCondition('m'))
-            {
+        if (!$this->displayMKs) {
+            if (!$this->metadata->setCondition('m')) {
                 return;
             }
             $subQ = $this->db->subQuery($this->db->selectNoExecute('resource_keyword', 'resourcekeywordMetadataId'), FALSE, FALSE, TRUE);
             $this->db->formatConditions($this->db->formatFields('resourcemetadataId') . $this->db->inClause($subQ));
-            if ($userBib)
-            {
+            if ($userBib) {
                 $this->commonBib->userBibCondition('resourcemetadataResourceId');
             }
             $resultSet = $this->db->selectCount('resource_metadata', 'resourcemetadataId');
-            if ($this->db->fetchOne($resultSet))
-            {
+            if ($this->db->fetchOne($resultSet)) {
                 $this->displayMKs = TRUE;
             }
         }
-        if (!$this->displayMKs)
-        {
-            if (!$this->metadata->setCondition('i'))
-            {
+        if (!$this->displayMKs) {
+            if (!$this->metadata->setCondition('i')) {
                 return;
             }
             $subQ = $this->db->subQuery($this->db->selectNoExecute('resource_keyword', 'resourcekeywordMetadataId'), FALSE, FALSE, TRUE);
             $this->db->formatConditions($this->db->formatFields('resourcemetadataId') . $this->db->inClause($subQ));
-            if ($userBib)
-            {
+            if ($userBib) {
                 $this->commonBib->userBibCondition('resourcemetadataResourceId');
             }
             $resultSet = $this->db->selectCount('resource_metadata', 'resourcemetadataId');
-            if ($this->db->fetchOne($resultSet))
-            {
+            if ($this->db->fetchOne($resultSet)) {
                 $this->displayMKs = TRUE;
             }
         }
@@ -2547,226 +2119,192 @@ class SEARCH
     {
         $userBib = $this->session->getVar("mywikindx_Bibliography_use");
         $fields = ["title" => $this->messages->text("search", "title")];
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourcetextId');
         }
         $this->db->formatConditions(['resourcetextNote' => 'IS NOT NULL']);
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         $resultSet = $this->db->select('resource_text', 'resourcetextId');
-        if ($this->db->fetchOne($resultSet))
-        {
+        if ($this->db->fetchOne($resultSet)) {
             $fields['note'] = $this->messages->text("search", "note");
         }
         $this->db->formatConditions(['resourcetextAbstract' => 'IS NOT NULL']);
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
         $resultSet = $this->db->select('resource_text', 'resourcetextId');
-        if ($this->db->fetchOne($resultSet))
-        {
+        if ($this->db->fetchOne($resultSet)) {
             $fields['abstract'] = $this->messages->text("search", "abstract");
         }
-        if ((!$this->session->getVar("setup_FileViewLoggedOnOnly") || $this->session->getVar("setup_UserId")) &&
-            ($this->db->tableIsEmpty('resource_attachments') == 0))
-        {
+        if ((!WIKINDX_FILE_VIEW_LOGGEDON_ONLY || $this->session->getVar("setup_UserId")) &&
+            ($this->db->tableIsEmpty('resource_attachments') == 0)) {
             $fields['attachments'] = $this->messages->text("search", "attachments");
         }
-        if ((!$this->session->getVar('setup_MetadataAllow')))
-        {
-            if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
-            {
-                if ($userBib)
-                {
+        if ((!WIKINDX_METADATA_ALLOW)) {
+            if ((WIKINDX_METADATA_USERONLY) && $this->session->getVar("setup_UserId")) {
+                if ($userBib) {
                     $this->commonBib->userBibCondition('resourcemetadataResourceId');
                 }
                 $this->db->formatConditions(['resourcemetadataType' => 'q']);
+        		$this->db->limit(1, 0); // Keep memory usage down for large databases
                 $resultSet = $this->db->select('resource_metadata', 'resourcemetadataId');
-                if ($this->db->fetchOne($resultSet))
-                {
+                if ($this->db->fetchOne($resultSet)) {
                     $fields['quote'] = $this->messages->text("search", "quote");
                 }
             }
-        }
-        else
-        {
-            if ($userBib)
-            {
+        } else {
+            if ($userBib) {
                 $this->commonBib->userBibCondition('resourcemetadataResourceId');
             }
             $this->db->formatConditions(['resourcemetadataType' => 'q']);
+       		$this->db->limit(1, 0); // Keep memory usage down for large databases
             $resultSet = $this->db->select('resource_metadata', 'resourcemetadataId');
-            if ($this->db->fetchOne($resultSet))
-            {
+            if ($this->db->fetchOne($resultSet)) {
                 $fields['quote'] = $this->messages->text("search", "quote");
             }
         }
-        if ($this->displayQCs)
-        {
+        if ($this->displayQCs) {
             $fields['quoteComment'] = $this->messages->text("search", "quoteComment");
         }
-        if ((!$this->session->getVar('setup_MetadataAllow')))
-        {
-            if (($this->session->getVar('setup_MetadataUserOnly')) && $this->session->getVar('setup_UserId'))
-            {
-                if ($userBib)
-                {
+        if ((!WIKINDX_METADATA_ALLOW)) {
+            if ((WIKINDX_METADATA_USERONLY) && $this->session->getVar("setup_UserId")) {
+                if ($userBib) {
                     $this->commonBib->userBibCondition('resourcemetadataResourceId');
                 }
                 $this->db->formatConditions(['resourcemetadataType' => 'p']);
+        		$this->db->limit(1, 0); // Keep memory usage down for large databases
                 $resultSet = $this->db->select('resource_metadata', 'resourcemetadataId');
-                if ($this->db->fetchOne($resultSet))
-                {
+                if ($this->db->fetchOne($resultSet)) {
                     $fields['paraphrase'] = $this->messages->text("search", "paraphrase");
                 }
             }
-        }
-        else
-        {
-            if ($userBib)
-            {
+        } else {
+            if ($userBib) {
                 $this->commonBib->userBibCondition('resourcemetadataResourceId');
             }
             $this->db->formatConditions(['resourcemetadataType' => 'p']);
+        	$this->db->limit(1, 0); // Keep memory usage down for large databases
             $resultSet = $this->db->select('resource_metadata', 'resourcemetadataId');
-            if ($this->db->fetchOne($resultSet))
-            {
+            if ($this->db->fetchOne($resultSet)) {
                 $fields['paraphrase'] = $this->messages->text("search", "paraphrase");
             }
         }
-        if ($this->displayPCs)
-        {
+        if ($this->displayPCs) {
             $fields['paraphraseComment'] = $this->messages->text("search", "paraphraseComment");
         }
-        if ($this->displayMusings)
-        {
+        if ($this->displayMusings) {
             $fields['musing'] = $this->messages->text("search", "musing");
         }
-        if ($this->displayIdeas)
-        {
+        if ($this->displayIdeas) {
             $fields['idea'] = $this->messages->text("search", "idea");
         }
         // Add any used custom fields
         $subQ = $this->db->subQuery($this->db->selectNoExecute('resource_custom', 'resourcecustomCustomId'), FALSE, FALSE, TRUE);
         $this->db->formatConditions($this->db->formatFields('customId') . $this->db->inClause($subQ));
         $recordset = $this->db->select('custom', ['customId', 'customLabel', 'customSize']);
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if ($row['customSize'] == 'S')
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if ($row['customSize'] == 'S') {
                 $fields['Custom_S_' . $row['customId']] = \HTML\dbToFormTidy($row['customLabel']);
-            }
-            else
-            {
+            } else {
                 $fields['Custom_L_' . $row['customId']] = \HTML\dbToFormTidy($row['customLabel']);
             }
         }
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourcecreatorId');
         }
-        if ($this->db->fetchOne($this->db->select('resource_creator', 'resourcecreatorId')))
-        {
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
+        if ($this->db->fetchOne($this->db->select('resource_creator', 'resourcecreatorId'))) {
             $fields['creator'] = $this->messages->text("search", "creator");
         }
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourcemiscPublisher');
         }
-        if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscPublisher')))
-        {
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
+        if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscPublisher'))) {
             $fields['publisher'] = $this->messages->text("search", "publisher");
         }
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourcemiscCollection');
         }
-        if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscCollection')))
-        {
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
+        if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscCollection'))) {
             $fields['collection'] = $this->messages->text("search", "collection");
         }
         $fields['type'] = $this->messages->text("search", "type");
         $fields['category'] = $this->messages->text("search", "category"); // All resources always belong to at least one category
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourcecategoryResourceId');
         }
         $this->db->formatConditions(['resourcecategorySubcategoryId' => 'IS NOT NULL']);
-        if ($this->db->fetchOne($this->db->select('resource_category', 'resourcecategorySubcategoryId')))
-        {
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
+        if ($this->db->fetchOne($this->db->select('resource_category', 'resourcecategorySubcategoryId'))) {
             $fields['subcategory'] = $this->messages->text("search", "subcategory");
         }
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourcekeywordResourceId');
         }
         $this->db->formatConditions(['resourcekeywordResourceId' => 'IS NOT NULL']);
-        if ($this->db->fetchOne($this->db->select('resource_keyword', 'resourcekeywordId')))
-        {
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
+        if ($this->db->fetchOne($this->db->select('resource_keyword', 'resourcekeywordId'))) {
             $fields['keyword'] = $this->messages->text("search", "keyword");
         }
-        if ($this->displayMKs)
-        {
+        if ($this->displayMKs) {
             $fields['metaKeyword'] = $this->messages->text("search", "metaKeyword");
         }
-        if ($this->displayUserTags)
-        {
+        if ($this->displayUserTags) {
             $fields['userTag'] = $this->messages->text("search", "usertag");
         }
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourcelanguageResourceId');
         }
-        if ($this->db->fetchOne($this->db->select('resource_language', 'resourcelanguageId')))
-        {
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
+        if ($this->db->fetchOne($this->db->select('resource_language', 'resourcelanguageId'))) {
             $fields['language'] = $this->messages->text("search", "language");
         }
-        if ($this->db->fetchOne($this->db->selectCount('tag', 'tagId')))
-        {
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
+        if ($this->db->fetchOne($this->db->selectCount('tag', 'tagId'))) {
             $fields['tag'] = $this->messages->text("search", "tag");
         }
         // If logged on and multiuser, display addedBy and editedBy options
-        if ($this->session->getVar("setup_UserId") && ($this->session->getVar("setup_MultiUser")))
-        {
-            if ($userBib)
-            {
+        if ($this->session->getVar("setup_UserId") && (WIKINDX_MULTIUSER)) {
+            if ($userBib) {
                 $this->commonBib->userBibCondition('resourcemiscId');
             }
             $this->db->formatConditions(['resourcemiscAddUserIdResource' => 'IS NOT NULL']);
-            if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscAddUserIdResource')))
-            {
+        	$this->db->limit(1, 0); // Keep memory usage down for large databases
+            if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscAddUserIdResource'))) {
                 $fields['addedBy'] = $this->messages->text("search", "addedBy");
             }
-            if ($userBib)
-            {
+            if ($userBib) {
                 $this->commonBib->userBibCondition('resourcemiscId');
             }
             $this->db->formatConditions(['resourcemiscEditUserIdResource' => 'IS NOT NULL']);
-            if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscEditUserIdResource')))
-            {
+        	$this->db->limit(1, 0); // Keep memory usage down for large databases
+            if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscEditUserIdResource'))) {
                 $fields['editedBy'] = $this->messages->text("search", "editedBy");
             }
         }
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourceyearId');
         }
         $this->db->formatConditions(['resourceyearYear1' => 'IS NOT NULL']);
-        if ($this->db->fetchOne($this->db->select('resource_year', 'resourceyearYear1')))
-        {
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
+        if ($this->db->fetchOne($this->db->select('resource_year', 'resourceyearYear1'))) {
             $fields['publicationYear'] = $this->messages->text("search", "publicationYear");
         }
-        if ($userBib)
-        {
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourcemiscId');
         }
-        $this->db->formatConditions(['resourcemiscAccesses' => 'IS NOT NULL']);
-        if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscAccesses')))
-        {
+// Temporarily remove searching on resource views as the resultant SQL is complicated by the need to do a SUM().
+/*        $this->db->formatConditions(['statisticsresourceviewsCount' => 'IS NOT NULL']);
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
+        if ($this->db->fetchOne($this->db->select('statistics_resource_views', 'statisticsresourceviewsCount'))) {
             $fields['access'] = $this->messages->text("search", "access");
         }
-        if ($userBib)
-        {
+*/
+        if ($userBib) {
             $this->commonBib->userBibCondition('resourcemiscId');
         }
-        if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscMaturityIndex')))
-        {
+        $this->db->limit(1, 0); // Keep memory usage down for large databases
+        if ($this->db->fetchOne($this->db->select('resource_misc', 'resourcemiscMaturityIndex'))) {
             $fields['maturityIndex'] = $this->messages->text("search", "maturityIndex");
         }
         $jsonArray = [];
@@ -2780,8 +2318,7 @@ class SEARCH
             'targetDiv' => "$targetDiv",
             'elementIndex' => "$index",
         ];
-        if ($index > 1)
-        {
+        if ($index > 1) {
             $jScript = "index.php?action=list_SEARCH_CORE&method=switchButtons";
             $triggerField = 'advancedSearch_Field_' . $index;
             $targetDiv = 'searchElementButtons_' . $index;
@@ -2794,8 +2331,7 @@ class SEARCH
             ];
         }
         $js = \AJAX\jActionForm('onchange', $jsonArray);
-        if (array_key_exists("Field_$index", $this->input))
-        {
+        if (array_key_exists("Field_$index", $this->input)) {
             return \FORM\selectedBoxValue(
                 $this->messages->text("search", "searchSelect"),
                 "advancedSearch_Field_$index",
@@ -2805,9 +2341,7 @@ class SEARCH
                 FALSE,
                 $js
             );
-        }
-        else
-        {
+        } else {
             return \FORM\selectFBoxValue($this->messages->text("search", "searchSelect"), "advancedSearch_Field_$index", $fields, 5, FALSE, $js);
         }
     }
@@ -2821,8 +2355,7 @@ class SEARCH
      */
     private function createDivs($field, $index)
     {
-        switch ($field)
-        {
+        switch ($field) {
             case 'title':
             case 'note':
             case 'abstract':
@@ -2930,24 +2463,20 @@ class SEARCH
             'addedBy' => ['resourcemiscAddUserIdResource', 'resource_misc', 'resourcemiscId'],
             'editedBy' => ['resourcemiscEditUserIdResource', 'resource_misc', 'resourcemiscId'],
             'publicationYear' => ['resourceyearYear1', 'resource_year', 'resourceyearId'],
-            'access' => ['resourcemiscAccesses', 'resource_misc', 'resourcemiscId'],
+            'access' => ['statisticsresourceviewsCount', 'statistics_resource_views', 'statisticsresourceviewsResourceId'],
             'maturityIndex' => ['resourcemiscMaturityIndex', 'resource_misc', 'resourcemiscId'],
         ];
         // Add any used custom fields
         $subQ = $this->db->subQuery($this->db->selectNoExecute('resource_custom', 'resourcecustomCustomId'), FALSE, FALSE, TRUE);
         $this->db->formatConditions($this->db->formatFields('customId') . $this->db->inClause($subQ));
         $recordset = $this->db->select('custom', ['customId', 'customLabel', 'customSize']);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $fieldPrefix = $row['customSize'] == 'S' ? 'S' : 'L';
-            if ($fieldPrefix == 'S')
-            {
-            	$this->dbFields['Custom_' . $fieldPrefix . '_' . $row['customId']] =
+            if ($fieldPrefix == 'S') {
+                $this->dbFields['Custom_' . $fieldPrefix . '_' . $row['customId']] =
                     ['resourcecustomShort', 'resource_custom', 'resourcecustomResourceId', $row['customId']];
-            }
-            else
-            {
-            	$this->dbFields['Custom_' . $fieldPrefix . '_' . $row['customId']] =
+            } else {
+                $this->dbFields['Custom_' . $fieldPrefix . '_' . $row['customId']] =
                     ['resourcecustomLong', 'resource_custom', 'resourcecustomResourceId', $row['customId']];
             }
         }
@@ -2964,35 +2493,25 @@ class SEARCH
         ksort($array);
         $index = 0;
         $excludedIds = [];
-        foreach ($array as $key => $valueArray)
-        {
-            if (($valueArray['OriginalField'] != 'idea') && array_key_exists('Button1', $valueArray) && !$index)
-            {
+        foreach ($array as $key => $valueArray) {
+            if (($valueArray['OriginalField'] != 'idea') && array_key_exists('Button1', $valueArray) && !$index) {
                 unset($valueArray['Button1']); // i.e. 'idea' was the first field searched on so there should be no button
             }
-            if (array_key_exists('String', $valueArray) && ($valueArray['OriginalField'] == 'idea'))
-            {
+            if (array_key_exists('String', $valueArray) && ($valueArray['OriginalField'] == 'idea')) {
                 $this->ideas[$key] = $valueArray;
 
                 continue;
-            }
-            elseif (array_key_exists('String', $valueArray))
-            {
+            } elseif (array_key_exists('String', $valueArray)) {
                 // 'String' already with field and formatted for SQL
                 $this->createStringCondition($key, $valueArray);
-            }
-            elseif (array_key_exists('Select', $valueArray))
-            {
+            } elseif (array_key_exists('Select', $valueArray)) {
                 // 'Select' from a select box
                 $this->createSelectCondition($key, $valueArray);
-            }
-            elseif (array_key_exists('Comparison', $valueArray))
-            {
+            } elseif (array_key_exists('Comparison', $valueArray)) {
                 // 'Comparison' of a value or two values
                 $this->createComparisonCondition($key, $valueArray);
             }
-            if (!$this->validSearch)
-            {
+            if (!$this->validSearch) {
                 unset($this->unionFragments[$key]);
             }
             $this->validSearch = TRUE;
@@ -3014,18 +2533,13 @@ class SEARCH
         }
         $this->matchIds = $temp;
         */
-        if (!empty($this->unionFragments) && !empty($this->excludeIds))
-        {
+        if (!empty($this->unionFragments) && !empty($this->excludeIds)) {
             $index = 0;
-            foreach ($this->unionFragments as $key => $uf)
-            {
+            foreach ($this->unionFragments as $key => $uf) {
                 // append excluded resourceId conditions for attachment searches to unionFragments elements
-                foreach ($this->excludeIds as $array)
-                {
-                    foreach ($array as $id)
-                    {
-                        if (array_search($id, $excludedIds) !== FALSE)
-                        {
+                foreach ($this->excludeIds as $array) {
+                    foreach ($array as $id) {
+                        if (array_search($id, $excludedIds) !== FALSE) {
                             continue;
                         }
                         $condition = $this->db->and . $this->db->formatConditions([$this->unionResourceIds[$index] => $id], TRUE, TRUE);
@@ -3038,29 +2552,20 @@ class SEARCH
             }
         }
         $matchSearches = [];
-        foreach ($this->matchIds as $key1 => $array)
-        {
-            if (empty($array))
-            {
+        foreach ($this->matchIds as $key1 => $array) {
+            if (empty($array)) {
                 continue;
             }
-            if (!array_key_exists('Button', $this->attachmentSearches[$key1]) || ($this->attachmentSearches[$key1]['Button'] == 'OR'))
-            {
+            if (!array_key_exists('Button', $this->attachmentSearches[$key1]) || ($this->attachmentSearches[$key1]['Button'] == 'OR')) {
                 $this->db->formatConditionsOneField($array, 'resourceId');
                 $matchSearches[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource', [['resourceId' => 'rId']]));
-            }
-            elseif ($this->attachmentSearches[$key1]['Button'] == 'AND')
-            {
-                if (empty($this->unionFragments))
-                {
+            } elseif ($this->attachmentSearches[$key1]['Button'] == 'AND') {
+                if (empty($this->unionFragments)) {
                     $this->db->formatConditionsOneField($array, 'resourceId');
                     $matchSearches[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource', [['resourceId' => 'rId']]));
-                }
-                else
-                {
+                } else {
                     $index = 0;
-                    foreach ($this->unionFragments as $key2 => $uf)
-                    {
+                    foreach ($this->unionFragments as $key2 => $uf) {
                         $condition = $this->db->and . $this->db->formatConditionsOneField(
                             $array,
                             $this->unionResourceIds[$index],
@@ -3075,19 +2580,15 @@ class SEARCH
                         ++$index;
                     }
                 }
-            }
-            elseif ($this->attachmentSearches[$key1]['Button'] == 'NOT')
-            {
+            } elseif ($this->attachmentSearches[$key1]['Button'] == 'NOT') {
                 $this->db->formatConditionsOneField($array, 'resourceId');
                 $matchSearches[] = $this->db->queryNoExecute($this->db->selectNoExecute('resource', [['resourceId' => 'rId']]));
             }
         }
-        foreach ($matchSearches as $search)
-        {
+        foreach ($matchSearches as $search) {
             $this->unionFragments[] = $search;
         }
-        if (!empty($this->unionFragments))
-        {
+        if (!empty($this->unionFragments)) {
             $this->stmt->unions = $this->db->union($this->unionFragments);
 
             return TRUE;
@@ -3104,40 +2605,31 @@ class SEARCH
     private function createStringCondition($key, $valueArray)
     {
         $commentSubQ = FALSE;
-        if (array_key_exists('Custom', $valueArray))
-        {
-			$this->db->formatConditions(['resourcecustomCustomId' => $this->dbFields[$valueArray['OriginalField']][3]]);
-        }
-        elseif (($valueArray['OriginalField'] == 'quote') || ($valueArray['OriginalField'] == 'paraphrase'))
-        {
+        if (array_key_exists('Custom', $valueArray)) {
+            $this->db->formatConditions(['resourcecustomCustomId' => $this->dbFields[$valueArray['OriginalField']][3]]);
+        } elseif (($valueArray['OriginalField'] == 'quote') || ($valueArray['OriginalField'] == 'paraphrase')) {
             $this->db->formatConditions(['resourcemetadataType' => $this->dbFields[$valueArray['OriginalField']][3]]);
-        }
-        elseif (($valueArray['OriginalField'] == 'musing') || ($valueArray['OriginalField'] == 'quoteComment') ||
-            ($valueArray['OriginalField'] == 'paraphraseComment'))
-        {
-            if (!$this->metadata->setCondition($this->dbFields[$valueArray['OriginalField']][3]))
-            {
+        } elseif (($valueArray['OriginalField'] == 'musing') || ($valueArray['OriginalField'] == 'quoteComment') ||
+            ($valueArray['OriginalField'] == 'paraphraseComment')) {
+            if (!$this->metadata->setCondition($this->dbFields[$valueArray['OriginalField']][3])) {
                 $this->validSearch = FALSE;
             }
         }
-// check for FULLTEXT fields
-		if ($this->validSearch && 
-			(($valueArray['OriginalField'] == 'note') || 
-			($valueArray['OriginalField'] == 'abstract') || 
-			($valueArray['Field'] == 'resourcecustomLong') || 
-			($valueArray['Field'] == 'resourcemetadataText')))
-		{
-			$matchAgainst = $this->db->fulltextSearch($valueArray['Field'], $valueArray['String']);
-			$this->db->formatConditions($matchAgainst);
-		}
-        else
-        {
-	        $this->db->formatConditions($valueArray['String']);
-	    }
-        if ($this->validSearch && (($valueArray['OriginalField'] == 'quoteComment') || ($valueArray['OriginalField'] == 'paraphraseComment')))
-        {
+        // check for FULLTEXT fields
+        if ($this->validSearch &&
+            (($valueArray['OriginalField'] == 'note') ||
+            ($valueArray['OriginalField'] == 'abstract') ||
+            ($valueArray['Field'] == 'resourcecustomLong') ||
+            ($valueArray['Field'] == 'resourcemetadataText'))) {
+            $matchAgainst = $this->db->fulltextSearch($valueArray['Field'], str_replace("'", "''", $valueArray['String']));
+            $this->db->formatConditions($matchAgainst);
+        } else {
+            $this->db->formatConditions($valueArray['String']);
+        }
+        if ($this->validSearch && (($valueArray['OriginalField'] == 'quoteComment') || ($valueArray['OriginalField'] == 'paraphraseComment'))) {
             $subQ = $this->db->queryNoExecute($this->db->selectNoExecute(
-                $this->dbFields[$valueArray['OriginalField']][1], 'resourcemetadataMetadataId'
+                $this->dbFields[$valueArray['OriginalField']][1],
+                'resourcemetadataMetadataId'
             ));
             $this->db->formatConditions($this->db->formatFields('resourcemetadataId') . $this->db->inClause($subQ));
             $this->createOptionConditions($valueArray, 'resourcemetadataResourceId');
@@ -3146,16 +2638,12 @@ class SEARCH
                 [[$this->dbFields[$valueArray['OriginalField']][2] => 'rId']]
             ));
         }
-        if (!array_key_exists('Button1', $valueArray) or ($valueArray['Button1'] == 'OR'))
-        { // Start a new unionFragments element
+        if (!array_key_exists('Button1', $valueArray) or ($valueArray['Button1'] == 'OR')) { // Start a new unionFragments element
             $this->unionResourceIds[] = $this->lastUnionResourceId = $this->dbFields[$valueArray['OriginalField']][2];
             // must let query be created in order to clear any conditions -- then, if necessary, we can remove from the unionFragments array
-            if ($commentSubQ)
-            {
+            if ($commentSubQ) {
                 $this->unionFragments[$key] = $commentSubQ;
-            }
-            else
-            {
+            } else {
                 $this->createOptionConditions($valueArray);
                 $this->unionFragments[$key] = $this->db->queryNoExecute($this->db->selectNoExecute(
                     $this->dbFields[$valueArray['OriginalField']][1],
@@ -3164,34 +2652,24 @@ class SEARCH
             }
         }
         // Button1 == 'AND' or 'NOT' so use inClause() as a condition rather than union() and append to previous unionFragments array element
-        elseif (($valueArray['Button1'] == 'AND') || ($valueArray['Button1'] == 'NOT'))
-        {
+        elseif (($valueArray['Button1'] == 'AND') || ($valueArray['Button1'] == 'NOT')) {
             $subQ = $this->db->queryNoExecute($this->db->selectNoExecute(
                 $this->dbFields[$valueArray['OriginalField']][1],
                 $this->dbFields[$valueArray['OriginalField']][2]
             ));
             $lastUFKey = key(array_slice($this->unionFragments, -1, 1, TRUE));
-            if ($commentSubQ)
-            {
-                if ($valueArray['Button1'] == 'AND')
-                {
+            if ($commentSubQ) {
+                if ($valueArray['Button1'] == 'AND') {
                     $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) .
                         $this->db->inClause($commentSubQ), FALSE, TRUE);
-                }
-                else
-                {
+                } else {
                     $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) .
                         $this->db->inClause($commentSubQ, TRUE), FALSE, TRUE);
                 }
-            }
-            else
-            {
-                if ($valueArray['Button1'] == 'AND')
-                {
+            } else {
+                if ($valueArray['Button1'] == 'AND') {
                     $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . $this->db->inClause($subQ), FALSE, TRUE);
-                }
-                else
-                {
+                } else {
                     $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . $this->db->inClause($subQ, TRUE), FALSE, TRUE);
                 }
             }
@@ -3209,24 +2687,18 @@ class SEARCH
     {
         $commentMK = FALSE;
         // 'metaKeyword' => array('resourcekeywordKeywordId', 'resource_keyword', 'resourcemetadataResourceId'),
-        if ($valueArray['OriginalField'] == 'metaKeyword')
-        {
-            if ($valueArray['Button2'] == 'OR')
-            {
+        if ($valueArray['OriginalField'] == 'metaKeyword') {
+            if ($valueArray['Button2'] == 'OR') {
                 $this->db->formatConditionsOneField($valueArray['Select'], $this->dbFields[$valueArray['OriginalField']][0]);
-            }
-            else
-            {
-                foreach ($valueArray['Select'] as $select)
-                {
+            } else {
+                foreach ($valueArray['Select'] as $select) {
                     $this->db->formatConditions([$this->dbFields[$valueArray['OriginalField']][0] => $select]);
                     $subQArray[] = $this->db->queryNoExecute($this->db->selectNoExecute(
                         $this->dbFields[$valueArray['OriginalField']][1],
                         'resourcekeywordMetadataId'
                     ));
                 }
-                foreach ($subQArray as $subQ)
-                {
+                foreach ($subQArray as $subQ) {
                     $this->db->formatConditions($this->db->formatFields('resourcekeywordMetadataId') . $this->db->inClause($subQ));
                 }
             }
@@ -3241,40 +2713,29 @@ class SEARCH
                 'resource_metadata',
                 [[$this->dbFields[$valueArray['OriginalField']][2] => 'rId']]
             ));
-        }
-        else
-        {
-            if ($valueArray['Button2'] == 'OR')
-            {
+        } else {
+            if ($valueArray['Button2'] == 'OR') {
                 $this->db->formatConditionsOneField($valueArray['Select'], $this->dbFields[$valueArray['OriginalField']][0], FALSE, TRUE, TRUE);
-            }
-            else
-            {
-                foreach ($valueArray['Select'] as $select)
-                {
+            } else {
+                foreach ($valueArray['Select'] as $select) {
                     $this->db->formatConditions([$this->dbFields[$valueArray['OriginalField']][0] => $select]);
                     $subQArray[] = $this->db->queryNoExecute($this->db->selectNoExecute(
                         $this->dbFields[$valueArray['OriginalField']][1],
                         $this->dbFields[$valueArray['OriginalField']][2]
                     ));
                 }
-                foreach ($subQArray as $subQ)
-                {
+                foreach ($subQArray as $subQ) {
                     $fcArray[] = $this->db->formatFields($this->dbFields[$valueArray['OriginalField']][2]) . $this->db->inClause($subQ);
                 }
                 $this->db->formatConditions(implode(' ' . $this->db->and . ' ', $fcArray));
             }
         }
-        if (!array_key_exists('Button1', $valueArray) or ($valueArray['Button1'] == 'OR'))
-        { // Start a new unionFragments element
+        if (!array_key_exists('Button1', $valueArray) or ($valueArray['Button1'] == 'OR')) { // Start a new unionFragments element
             $this->unionResourceIds[] = $this->lastUnionResourceId = $this->dbFields[$valueArray['OriginalField']][2];
             // must let query be created in order to clear any conditions -- then, if necessary, we can remove from the unionFragments array
-            if ($commentMK)
-            {
+            if ($commentMK) {
                 $this->unionFragments[$key] = $commentMK;
-            }
-            else
-            {
+            } else {
                 $this->createOptionConditions($valueArray);
                 $this->unionFragments[$key] = $this->db->queryNoExecute($this->db->selectNoExecute(
                     $this->dbFields[$valueArray['OriginalField']][1],
@@ -3283,10 +2744,8 @@ class SEARCH
             }
         }
         // Button1 == 'AND' or 'NOT' so use inClause() as a condition rather than union() and append to previous unionFragments array element
-        elseif (($valueArray['Button1'] == 'AND') || ($valueArray['Button1'] == 'NOT'))
-        {
-            if ($valueArray['Button1'] == 'NOT')
-            {
+        elseif (($valueArray['Button1'] == 'AND') || ($valueArray['Button1'] == 'NOT')) {
+            if ($valueArray['Button1'] == 'NOT') {
                 $this->db->formatConditions([$this->dbFields[$valueArray['OriginalField']][2] => 'IS NOT NULL']);
             }
             $subQ = $this->db->queryNoExecute($this->db->selectNoExecute(
@@ -3294,27 +2753,18 @@ class SEARCH
                 $this->dbFields[$valueArray['OriginalField']][2]
             ));
             $lastUFKey = key(array_slice($this->unionFragments, -1, 1, TRUE));
-            if ($commentMK)
-            {
-                if ($valueArray['Button1'] == 'AND')
-                {
+            if ($commentMK) {
+                if ($valueArray['Button1'] == 'AND') {
                     $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) .
                         $this->db->inClause($commentMK), FALSE, TRUE);
-                }
-                else
-                {
+                } else {
                     $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) .
                         $this->db->inClause($commentMK, TRUE), FALSE, TRUE);
                 }
-            }
-            else
-            {
-                if ($valueArray['Button1'] == 'AND')
-                {
+            } else {
+                if ($valueArray['Button1'] == 'AND') {
                     $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . $this->db->inClause($subQ), FALSE, TRUE);
-                }
-                else
-                {
+                } else {
                     $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . $this->db->inClause($subQ, TRUE), FALSE, TRUE);
                 }
             }
@@ -3329,8 +2779,7 @@ class SEARCH
      */
     private function createComparisonCondition($key, $valueArray)
     {
-        switch ($valueArray['Comparison'])
-        {
+        switch ($valueArray['Comparison']) {
             case 0: // '='
                 $this->db->formatConditions([$this->dbFields[$valueArray['OriginalField']][0] => $valueArray['Value1']], '=');
 
@@ -3363,8 +2812,7 @@ class SEARCH
             default: // shouldn't ever get here
                 break;
         }
-        if (!array_key_exists('Button1', $valueArray) or ($valueArray['Button1'] == 'OR'))
-        { // Start a new unionFragments element
+        if (!array_key_exists('Button1', $valueArray) or ($valueArray['Button1'] == 'OR')) { // Start a new unionFragments element
             $this->unionResourceIds[] = $this->lastUnionResourceId = $this->dbFields[$valueArray['OriginalField']][2];
             $this->createOptionConditions($valueArray);
             // must let query be created in order to clear any conditions -- then, if necessary, we can remove from the unionFragments array
@@ -3374,19 +2822,15 @@ class SEARCH
             ));
         }
         // Button1 == 'AND' or 'NOT' so use inClause() as a condition rather than union() and append to previous unionFragments array element
-        elseif (($valueArray['Button1'] == 'AND') || ($valueArray['Button1'] == 'NOT'))
-        {
+        elseif (($valueArray['Button1'] == 'AND') || ($valueArray['Button1'] == 'NOT')) {
             $subQ = $this->db->queryNoExecute($this->db->selectNoExecute(
                 $this->dbFields[$valueArray['OriginalField']][1],
                 $this->dbFields[$valueArray['OriginalField']][2]
             ));
             $lastUFKey = key(array_slice($this->unionFragments, -1, 1, TRUE));
-            if ($valueArray['Button1'] == 'AND')
-            {
+            if ($valueArray['Button1'] == 'AND') {
                 $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . $this->db->inClause($subQ), FALSE, TRUE);
-            }
-            else
-            {
+            } else {
                 $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . $this->db->inClause($subQ, TRUE), FALSE, TRUE);
             }
             $this->unionFragments[$lastUFKey] .= $fc;
@@ -3401,34 +2845,28 @@ class SEARCH
     private function createOptionConditions($valueArray, $resourceId = FALSE)
     {
         $rId = $resourceId ? $resourceId : $this->lastUnionResourceId;
-        $options = unserialize(base64_decode($this->session->getVar('advancedSearch_Options')));
-        if (array_search('withDoi', $options) !== FALSE)
-        {
+        $options = unserialize(base64_decode($this->session->getVar("advancedSearch_Options")));
+        if (array_search('withDoi', $options) !== FALSE) {
             $this->db->formatConditions(['resourceDoi' => ' IS NOT NULL']);
             if ((!array_key_exists('Button1', $valueArray) or ($valueArray['Button1'] == 'OR'))
-                && ($valueArray['OriginalField'] != 'title') && ($valueArray['OriginalField'] != 'type'))
-            {
+                && ($valueArray['OriginalField'] != 'title') && ($valueArray['OriginalField'] != 'type')) {
                 $this->db->leftJoin('resource', 'resourceId', $rId);
             }
         }
-        if (array_search('peerReviewed', $options) !== FALSE)
-        {
+        if (array_search('peerReviewed', $options) !== FALSE) {
             $this->db->formatConditions(['resourcemiscPeerReviewed' => 'Y']);
             if ((!array_key_exists('Button1', $valueArray) or ($valueArray['Button1'] == 'OR'))
                 && ($valueArray['OriginalField'] != 'addedBy')
                 && ($valueArray['OriginalField'] != 'editedBy')
                 && ($valueArray['OriginalField'] != 'access')
-                && ($valueArray['OriginalField'] != 'maturityIndex'))
-            {
+                && ($valueArray['OriginalField'] != 'maturityIndex')) {
                 $this->db->leftJoin('resource_misc', 'resourcemiscId', $rId);
             }
         }
-        if (array_search('withUrl', $options) !== FALSE)
-        {
+        if (array_search('withUrl', $options) !== FALSE) {
             $this->db->formatConditions(['resourcetextUrls' => ' IS NOT NULL']);
             if ((!array_key_exists('Button1', $valueArray) or ($valueArray['Button1'] == 'OR'))
-                && ($valueArray['OriginalField'] != 'note') && ($valueArray['OriginalField'] != 'abstract'))
-            {
+                && ($valueArray['OriginalField'] != 'note') && ($valueArray['OriginalField'] != 'abstract')) {
                 $this->db->leftJoin('resource_text', 'resourcetextId', $rId);
             }
         }
@@ -3441,19 +2879,15 @@ class SEARCH
     private function setSubQuery($attach)
     {
         $unions = $this->db->union($this->unionFragments);
-        $this->db->ascDesc = $this->session->getVar('search_AscDesc');
-        if ($attach == 'noAttachment')
-        {
+        $this->db->ascDesc = $this->session->getVar("search_AscDesc");
+        if ($attach == 'noAttachment') {
             $this->stmt->conditions[] = ['resourceattachmentsId' => ' IS NULL'];
             $this->stmt->joins['resource_attachments'] = ['resourceattachmentsResourceId', 'rId'];
-        }
-        elseif ($attach == 'withAttachment')
-        {
+        } elseif ($attach == 'withAttachment') {
             $this->stmt->conditions[] = (['resourceattachmentsId' => ' IS NOT NULL']);
             $this->stmt->joins['resource_attachments'] = ['resourceattachmentsResourceId', 'rId'];
         }
-        switch ($this->session->getVar('search_Order'))
-        {
+        switch ($this->session->getVar("search_Order")) {
             case 'title':
                 $this->stmt->useBib('rId');
                 $this->stmt->quarantine(FALSE, 'rId');
@@ -3528,30 +2962,22 @@ class SEARCH
         include_once("core/modules/list/FILETOTEXT.php");
         $ftt = new FILETOTEXT();
         $excludeIds = $matchIds = [];
-        foreach ($this->attachmentSearches as $key => $array)
-        {
+        foreach ($this->attachmentSearches as $key => $array) {
             $searchArray[$key] = $this->parsePhrase->parse($array, FALSE, TRUE, TRUE);
-            if (array_key_exists('Partial', $array))
-            {
+            if (array_key_exists('Partial', $array)) {
                 $searchArray[$key]['Partial'] = 'on';
             }
         }
-        foreach ($searchArray as $key => $arrays)
-        {
-            foreach ($arrays as $wordKey => $wordArray)
-            {
-                if (is_array($wordArray))
-                {
+        foreach ($searchArray as $key => $arrays) {
+            foreach ($arrays as $wordKey => $wordArray) {
+                if (is_array($wordArray)) {
                     $types[$key][$wordKey] = array_shift($wordArray);
                     $phrases[$key][$wordKey] = array_shift($wordArray);
                 }
             }
-            if (array_key_exists('Partial', $arrays))
-            {
+            if (array_key_exists('Partial', $arrays)) {
                 $this->partials[$key] = TRUE;
-            }
-            else
-            {
+            } else {
                 $this->partials[$key] = FALSE;
             }
         }
@@ -3564,147 +2990,109 @@ class SEARCH
             ['resourceattachmentsResourceId', 'resourceattachmentsHashFilename', 'resourceattachmentsFileType', 'resourceattachmentsFileSize']
         );
         $attachments = $texts = [];
-        while ($row = $this->db->fetchRow($resultset))
-        {
+        while ($row = $this->db->fetchRow($resultset)) {
             $fileName = $attachDir . DIRECTORY_SEPARATOR . $row['resourceattachmentsHashFilename'];
             $fileNameCache = $cacheDir . DIRECTORY_SEPARATOR . $row['resourceattachmentsHashFilename'];
-            if (!file_exists($fileName))
-            {
+            if (!file_exists($fileName)) {
                 continue;
             }
             $attachments[] = $row;
             // all attachments should be cached but check anyway
-            if (file_exists($fileNameCache) && filemtime($fileNameCache) > filemtime($fileName))
-            {
+            if (file_exists($fileNameCache) && filemtime($fileNameCache) > filemtime($fileName)) {
                 $texts[$row['resourceattachmentsHashFilename']] = file_get_contents($fileNameCache);
             }
         }
-        foreach ($attachments as $row)
-        {
+        foreach ($attachments as $row) {
             // NB Converting files to text takes time -- searches below are fast.
-            if (!array_key_exists($row['resourceattachmentsHashFilename'], $texts) || $texts[$row['resourceattachmentsHashFilename']] == '')
-            {
+            if (!array_key_exists($row['resourceattachmentsHashFilename'], $texts) || $texts[$row['resourceattachmentsHashFilename']] == '') {
                 continue;
             }
             // For each search, we search on NOT and EXACTNOT first. If the search is true, then there is no need to do the other searches.
-            foreach ($types as $key1 => $typeArray)
-            {
-                foreach ($typeArray as $key2 => $type)
-                {
+            foreach ($types as $key1 => $typeArray) {
+                foreach ($typeArray as $key2 => $type) {
                     if (($type == 'NOT') || ($type == 'exactNOT') ||
-                        (array_key_exists('Button', $this->attachmentSearches[$key1]) && ($this->attachmentSearches[$key1]['Button'] == 'NOT')))
-                    {
+                        (array_key_exists('Button', $this->attachmentSearches[$key1]) && ($this->attachmentSearches[$key1]['Button'] == 'NOT'))) {
                         $phrase = $phrases[$key1][$key2];
-                        if ($this->partials[$key1])
-                        {
+                        if ($this->partials[$key1]) {
                             // Escape the user input only for EXACT phrases
                             // and unescape the jokers used by the advanced search syntax
                             // 0 or more (lazy) - asterisk (*)
                             // 1 character - question mark (?)
-                            if ($type == 'exactNOT')
-                            {
+                            if ($type == 'exactNOT') {
                                 $pattern = UTF8::mb_explode("*", $phrase);
-                                foreach ($pattern as $k1 => $p1)
-                                {
+                                foreach ($pattern as $k1 => $p1) {
                                     $p1 = UTF8::mb_explode("?", $p1);
 
-                                    foreach ($p1 as $k2 => $p2)
-                                    {
+                                    foreach ($p1 as $k2 => $p2) {
                                         $p2 = preg_quote($p2, '/');
                                     }
                                     $pattern[$k1] = implode(".?", $p1);
                                 }
                                 $pattern = implode(".*", $pattern);
-                            }
-                            else
-                            {
+                            } else {
                                 $pattern = preg_replace(["/\\*/", "/\\?/"], [".*", "."], $phrase);
                             }
-                            if (preg_match("/$pattern/iu", $texts[$row['resourceattachmentsHashFilename']]) === 1)
-                            {
+                            if (preg_match("/$pattern/iu", $texts[$row['resourceattachmentsHashFilename']]) === 1) {
                                 $excludeIds[$key1][] = $row['resourceattachmentsResourceId'];
                             }
-                        }
-                        else
-                        {
+                        } else {
                             // Escape the user input
-                            if ($type == 'exactNOT')
-                            {
+                            if ($type == 'exactNOT') {
                                 $pattern = preg_quote($phrase, '/');
-                            }
-                            else
-                            {
+                            } else {
                                 $pattern = preg_replace(["/\\*/", "/\\?/"], [".*", "."], $phrase);
                             }
-                            if (preg_match("/\\b$pattern\\b/iu", $texts[$row['resourceattachmentsHashFilename']]) === 1)
-                            {
+                            if (preg_match("/\\b$pattern\\b/iu", $texts[$row['resourceattachmentsHashFilename']]) === 1) {
                                 $excludeIds[$key1][] = $row['resourceattachmentsResourceId'];
                             }
                         }
                     }
                 }
-                foreach ($typeArray as $key2 => $type)
-                { // for now, we ignore AND and OR etc. and their position. If a match is found, break the loop
-                    if (($type == 'NOT') || ($type == 'exactNOT'))
-                    {
+                foreach ($typeArray as $key2 => $type) { // for now, we ignore AND and OR etc. and their position. If a match is found, break the loop
+                    if (($type == 'NOT') || ($type == 'exactNOT')) {
                         continue;
                     }
                     $phrase = $phrases[$key1][$key2];
-                    if ($this->partials[$key1])
-                    {
+                    if ($this->partials[$key1]) {
                         // Escape the user input only for EXACT phrases
                         // and unescape the jokers used by the advanced search syntax
                         // 0 or more (lazy) - asterisk (*)
                         // 1 character - question mark (?)
-                        if (($type == 'exactAND') || ($type == 'exactOR'))
-                        {
+                        if (($type == 'exactAND') || ($type == 'exactOR')) {
                             $pattern = UTF8::mb_explode("*", $phrase);
-                            foreach ($pattern as $k1 => $p1)
-                            {
+                            foreach ($pattern as $k1 => $p1) {
                                 $p1 = UTF8::mb_explode("?", $p1);
 
-                                foreach ($p1 as $k2 => $p2)
-                                {
+                                foreach ($p1 as $k2 => $p2) {
                                     $p2 = preg_quote($p2, '/');
                                 }
                                 $pattern[$k1] = implode(".?", $p1);
                             }
                             $pattern = implode(".*", $pattern);
-                        }
-                        else
-                        {
+                        } else {
                             $pattern = preg_replace(["/\\*/", "/\\?/"], [".*", "."], $phrase);
                         }
-                        if (preg_match("/$pattern/iu", $texts[$row['resourceattachmentsHashFilename']]) === 1)
-                        {
+                        if (preg_match("/$pattern/iu", $texts[$row['resourceattachmentsHashFilename']]) === 1) {
                             $matchIds[$key1][] = $row['resourceattachmentsResourceId'];
                         }
-                    }
-                    else
-                    {
+                    } else {
                         // Escape the user input if EXACT phrase
-                        if (($type == 'exactAND') || ($type == 'exactOR'))
-                        {
+                        if (($type == 'exactAND') || ($type == 'exactOR')) {
                             $pattern = preg_quote($phrase, '/');
-                        }
-                        else
-                        { // use as wildcards
+                        } else { // use as wildcards
                             $pattern = preg_replace(["/\\*/", "/\\?/"], [".*", "."], $phrase);
                         }
-                        if (preg_match("/\\b$pattern\\b/iu", $texts[$row['resourceattachmentsHashFilename']]) === 1)
-                        {
+                        if (preg_match("/\\b$pattern\\b/iu", $texts[$row['resourceattachmentsHashFilename']]) === 1) {
                             $matchIds[$key1][] = $row['resourceattachmentsResourceId'];
                         }
                     }
                 }
             }
         }
-        foreach ($matchIds as $key => $array)
-        {
+        foreach ($matchIds as $key => $array) {
             $matchIds[$key] = array_unique($array);
         }
-        foreach ($excludeIds as $key => $array)
-        {
+        foreach ($excludeIds as $key => $array) {
             $excludeIds[$key] = array_unique($array);
         }
         // Remove duplicates
@@ -3712,26 +3100,19 @@ class SEARCH
         $excludeIds = $this->removeArrayDuplicates($excludeIds);
         // An ID in $excludeIds cannot be anywhere in $matchIds
         $excludes = [];
-        if (!empty($matchIds) && !empty($excludeIds))
-        {
-            foreach ($excludeIds as $array)
-            {
-                foreach ($array as $id)
-                {
+        if (!empty($matchIds) && !empty($excludeIds)) {
+            foreach ($excludeIds as $array) {
+                foreach ($array as $id) {
                     $excludes[] = $id;
                 }
             }
             $excludes = array_unique($excludes);
             $temp = $matchIds;
-            foreach ($temp as $key1 => $array)
-            {
-                foreach ($array as $id)
-                {
-                    if (($key2 = array_search($id, $excludes)) !== FALSE)
-                    {
+            foreach ($temp as $key1 => $array) {
+                foreach ($array as $id) {
+                    if (($key2 = array_search($id, $excludes)) !== FALSE) {
                         unset($matchIds[$key1][$key2]);
-                        if (empty($matchIds[$key1]))
-                        {
+                        if (empty($matchIds[$key1])) {
                             unset($matchIds[$key1]);
                         }
                     }
@@ -3752,20 +3133,14 @@ class SEARCH
     {
         $temp1 = $input;
         $temp2 = [];
-        foreach ($temp1 as $key1 => $array)
-        {
-            foreach ($array as $key2 => $id)
-            {
-                if (array_search($id, $temp2) !== FALSE)
-                {
+        foreach ($temp1 as $key1 => $array) {
+            foreach ($array as $key2 => $id) {
+                if (array_search($id, $temp2) !== FALSE) {
                     unset($input[$key1][$key2]);
-                    if (empty($input[$key1]))
-                    {
+                    if (empty($input[$key1])) {
                         unset($input[$key1]);
                     }
-                }
-                else
-                {
+                } else {
                     $temp2[] = $id;
                 }
             }
@@ -3779,80 +3154,56 @@ class SEARCH
     private function writeSession()
     {
         // First, write all input with 'advancedSearch_' prefix to session
-        foreach ($this->vars as $key => $value)
-        {
-            if (preg_match("/^advancedSearch_Word_/u", $key))
-            {
-                if (!trim($value))
-                {
+        foreach ($this->vars as $key => $value) {
+            if (preg_match("/^advancedSearch_Word_/u", $key)) {
+                if (!trim($value)) {
                     continue;
                 }
                 $key = str_replace('advancedSearch_', '', $key);
                 $temp[$key] = trim($value);
-            }
-            elseif (preg_match("/^advancedSearch_Field_/u", $key))
-            {
+            } elseif (preg_match("/^advancedSearch_Field_/u", $key)) {
                 $key = str_replace('advancedSearch_', '', $key);
                 $temp[$key] = $value;
-            }
-            elseif (preg_match("/^advancedSearch_Select_/u", $key))
-            {
+            } elseif (preg_match("/^advancedSearch_Select_/u", $key)) {
                 $key = str_replace('advancedSearch_', '', $key);
                 $temp[$key] = base64_encode(serialize($value));
-            }
-            elseif (preg_match("/^advancedSearch_Comparison_/u", $key))
-            {
+            } elseif (preg_match("/^advancedSearch_Comparison_/u", $key)) {
                 $key = str_replace('advancedSearch_', '', $key);
                 $temp[$key] = $value;
-            }
-            elseif (preg_match("/^advancedSearch_Value1_/u", $key))
-            {
+            } elseif (preg_match("/^advancedSearch_Value1_/u", $key)) {
                 $key = str_replace('advancedSearch_', '', $key);
                 $temp[$key] = $value;
-            }
-            elseif (preg_match("/^advancedSearch_Value2_/u", $key))
-            {
+            } elseif (preg_match("/^advancedSearch_Value2_/u", $key)) {
                 $key = str_replace('advancedSearch_', '', $key);
                 $temp[$key] = $value;
-            }
-            elseif (preg_match("/^advancedSearch_Button1_/u", $key))
-            {
+            } elseif (preg_match("/^advancedSearch_Button1_/u", $key)) {
                 $key = str_replace('advancedSearch_', '', $key);
                 $temp[$key] = $value;
-            }
-            elseif (preg_match("/^advancedSearch_Button2_/u", $key))
-            {
+            } elseif (preg_match("/^advancedSearch_Button2_/u", $key)) {
                 $key = str_replace('advancedSearch_', '', $key);
                 $temp[$key] = $value;
-            }
-            elseif (preg_match("/^advancedSearch_Partial_/u", $key))
-            {
+            } elseif (preg_match("/^advancedSearch_Partial_/u", $key)) {
                 $key = str_replace('advancedSearch_', '', $key);
                 $temp[$key] = $value;
             }
         }
-        if (array_key_exists('advancedSearch_BibId', $this->vars) && $this->vars['advancedSearch_BibId'])
-        {
+        if (array_key_exists('advancedSearch_BibId', $this->vars) && $this->vars['advancedSearch_BibId']) {
             $temp['BibId'] = $this->vars['advancedSearch_BibId'];
         }
-        if (array_key_exists('advancedSearch_Options', $this->vars))
-        {
+        if (array_key_exists('advancedSearch_Options', $this->vars)) {
             $temp['Options'] = base64_encode(serialize($this->vars['advancedSearch_Options']));
         }
-        if (array_key_exists('advancedSearch_Order', $this->vars) && $this->vars['advancedSearch_Order'])
-        {
+        if (array_key_exists('advancedSearch_Order', $this->vars) && $this->vars['advancedSearch_Order']) {
             $temp['Order'] = $this->vars['advancedSearch_Order'];
         }
-        if (array_key_exists('advancedSearch_AscDesc', $this->vars) && $this->vars['advancedSearch_AscDesc'])
-        {
+        if (array_key_exists('advancedSearch_AscDesc', $this->vars) && $this->vars['advancedSearch_AscDesc']) {
             $temp['AscDesc'] = $this->vars['advancedSearch_AscDesc'];
         }
         $this->session->clearArray("advancedSearch");
-        if (!empty($temp))
-        {
+        if (!empty($temp)) {
             $this->session->writeArray($temp, 'advancedSearch', TRUE);
-            $this->session->setVar('search_Order', $temp['Order']);
-            $this->session->setVar('search_AscDesc', $temp['AscDesc']);
+            $this->session->setVar("search_Order", $temp['Order']);
+            $this->session->setVar("search_AscDesc", $temp['AscDesc']);
         }
     }
     /**
@@ -3864,50 +3215,33 @@ class SEARCH
     {
         $this->writeSession();
         $this->input = $this->session->getArray("advancedSearch");
-        for ($i = 1; $i <= 50; $i++)
-        {
-            if (!array_key_exists("Field_$i", $this->input))
-            {
+        for ($i = 1; $i <= 50; $i++) {
+            if (!array_key_exists("Field_$i", $this->input)) {
                 continue;
             }
-            if (array_key_exists("Comparison_$i", $this->input) && ($i == 1))
-            {
-                if ($this->input["Comparison_$i"] == 6)
-                { // '<...<'
+            if (array_key_exists("Comparison_$i", $this->input) && ($i == 1)) {
+                if ($this->input["Comparison_$i"] == 6) { // '<...<'
                     if (array_key_exists("Value1_$i", $this->input) && trim($this->input["Value1_$i"])
-                        && array_key_exists("Value2_$i", $this->input) && trim($this->input["Value2_$i"]))
-                    {
+                        && array_key_exists("Value2_$i", $this->input) && trim($this->input["Value2_$i"])) {
                         continue;
-                    }
-                    else
-                    {
+                    } else {
                         $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
                     }
-                }
-                else
-                {
-                    if (array_key_exists("Value1_$i", $this->input) && trim($this->input["Value1_$i"]))
-                    {
+                } else {
+                    if (array_key_exists("Value1_$i", $this->input) && trim($this->input["Value1_$i"])) {
                         continue;
-                    }
-                    else
-                    {
+                    } else {
                         $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
                     }
                 }
 
                 continue;
             }
-            if (array_key_exists("Word_$i", $this->input) && trim($this->input["Word_$i"]))
-            {
+            if (array_key_exists("Word_$i", $this->input) && trim($this->input["Word_$i"])) {
                 continue;
-            }
-            elseif (array_key_exists("Select_$i", $this->input) && trim($this->input["Select_$i"]))
-            {
+            } elseif (array_key_exists("Select_$i", $this->input) && trim($this->input["Select_$i"])) {
                 continue;
-            }
-            elseif ($i == 1)
-            {
+            } elseif ($i == 1) {
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
             }
         }
@@ -3925,28 +3259,21 @@ class SEARCH
     {
         $this->db->formatConditions(['creatorId' => $id]);
         $row = $this->db->selectFirstRow('creator', ["creatorSurname", "creatorInitials", "creatorFirstname", "creatorPrefix"]);
-        if ($row['creatorPrefix'])
-        {
+        if ($row['creatorPrefix']) {
             $name = $row['creatorPrefix'] . ' ' . $row['creatorSurname'];
-        }
-        else
-        {
+        } else {
             $name = $row['creatorSurname'];
         }
-        if ($row['creatorFirstname'])
-        {
+        if ($row['creatorFirstname']) {
             $name .= ', ' . $row['creatorFirstname'] . ' ';
-            if ($row['creatorInitials'])
-            {
+            if ($row['creatorInitials']) {
                 $name .= ' ' . str_replace(' ', '.', $row['creatorInitials']) . '.';
             }
-        }
-        elseif ($row['creatorInitials'])
-        {
+        } elseif ($row['creatorInitials']) {
             $name .= ', ' . str_replace(' ', '.', $row['creatorInitials']) . '.';
         }
 
-        return \HTML\dbToHtmlTidy(trim($name));
+        return \HTML\nlToHtml(trim($name));
     }
     /**
      * Format publishers returned from database
@@ -3959,14 +3286,11 @@ class SEARCH
     {
         $this->db->formatConditions(['publisherId' => $id]);
         $row = $this->db->selectFirstRow('publisher', ["publisherName", "publisherLocation"]);
-        if ($row['publisherLocation'])
-        {
-            return \HTML\dbToHtmlTidy($row['publisherName'] .
+        if ($row['publisherLocation']) {
+            return \HTML\nlToHtml($row['publisherName'] .
             ": " . $row['publisherLocation']);
-        }
-        else
-        {
-            return \HTML\dbToHtmlTidy($row['publisherName']);
+        } else {
+            return \HTML\nlToHtml($row['publisherName']);
         }
     }
     /**
@@ -3981,7 +3305,7 @@ class SEARCH
         $this->db->formatConditions(['collectionId' => $id]);
         $row = $this->db->selectFirstRow('collection', ["collectionTitle"]);
 
-        return \HTML\dbToHtmlTidy($row['collectionTitle']);
+        return \HTML\nlToHtml($row['collectionTitle']);
     }
     /**
      * Format subcategories returned from database
@@ -3995,7 +3319,7 @@ class SEARCH
         $this->db->formatConditions(['subcategoryId' => $id]);
         $row = $this->db->selectFirstRow('subcategory', ["subcategorySubcategory"]);
 
-        return \HTML\dbToHtmlTidy($row['subcategorySubcategory']);
+        return \HTML\nlToHtml($row['subcategorySubcategory']);
     }
     /**
      * Format categories returned from database
@@ -4009,7 +3333,7 @@ class SEARCH
         $this->db->formatConditions(['categoryId' => $id]);
         $row = $this->db->selectFirstRow('category', ["categoryCategory"]);
 
-        return \HTML\dbToHtmlTidy($row['categoryCategory']);
+        return \HTML\nlToHtml($row['categoryCategory']);
     }
     /**
      * Format keywords returned from database
@@ -4023,7 +3347,7 @@ class SEARCH
         $this->db->formatConditions(['keywordId' => $id]);
         $row = $this->db->selectFirstRow('keyword', ["keywordKeyword"]);
 
-        return \HTML\dbToHtmlTidy($row['keywordKeyword']);
+        return \HTML\nlToHtml($row['keywordKeyword']);
     }
     /**
      * Format usertags returned from database
@@ -4037,7 +3361,7 @@ class SEARCH
         $this->db->formatConditions(['usertagsId' => $id]);
         $row = $this->db->selectFirstRow('user_tags', ["usertagsTag"]);
 
-        return \HTML\dbToHtmlTidy($row['usertagsTag']);
+        return \HTML\nlToHtml($row['usertagsTag']);
     }
     /**
      * Format languages returned from database
@@ -4051,7 +3375,7 @@ class SEARCH
         $this->db->formatConditions(['languageId' => $id]);
         $row = $this->db->selectFirstRow('language', ["languageLanguage"]);
 
-        return \HTML\dbToHtmlTidy($row['languageLanguage']);
+        return \HTML\nlToHtml($row['languageLanguage']);
     }
     /**
      * Format tags returned from database
@@ -4065,7 +3389,7 @@ class SEARCH
         $this->db->formatConditions(['tagId' => $id]);
         $row = $this->db->selectFirstRow('tag', ["tagTag"]);
 
-        return \HTML\dbToHtmlTidy($row['tagTag']);
+        return \HTML\nlToHtml($row['tagTag']);
     }
     /**
      * Format usernames returned from database
@@ -4078,14 +3402,11 @@ class SEARCH
     {
         $this->db->formatConditions(['usersId' => $id]);
         $row = $this->db->selectFirstRow('users', ["usersUsername", "usersFullname"]);
-        if ($row['usersFullname'])
-        {
-            return \HTML\dbToHtmlTidy($row['usersUsername'] .
+        if ($row['usersFullname']) {
+            return \HTML\nlToHtml($row['usersUsername'] .
             ' [' . $row['usersFullname'] . ']');
-        }
-        else
-        {
-            return \HTML\dbToHtmlTidy($row['usersUsername']);
+        } else {
+            return \HTML\nlToHtml($row['usersUsername']);
         }
     }
 }

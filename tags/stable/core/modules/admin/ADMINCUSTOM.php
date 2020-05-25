@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -30,7 +32,6 @@ class ADMINCUSTOM
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
 
 
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
@@ -42,7 +43,7 @@ class ADMINCUSTOM
     /**
      * display options
      *
-     * @param string|FALSE $message
+     * @param false|string $message
      */
     public function init($message = FALSE)
     {
@@ -55,8 +56,7 @@ class ADMINCUSTOM
         $td .= \FORM\hidden("method", "addCustom");
         $array = ["small" => $this->messages->text("custom", "small"),
             "large" => $this->messages->text("custom", "large"), ];
-        if (!$size = $this->session->getVar("custom_size"))
-        {
+        if (!$size = $this->session->getVar("custom_size")) {
             $size = "small";
         }
         $td .= \FORM\selectedBoxValue(
@@ -77,17 +77,14 @@ class ADMINCUSTOM
         $td .= \FORM\formEnd();
         $pString .= \HTML\td($td);
         $recordset = $this->db->select('custom', ['customId', 'customLabel']);
-        while ($row = $this->db->fetchRow($recordset))
-        {
+        while ($row = $this->db->fetchRow($recordset)) {
             $customs[$row['customId']] = \HTML\dbToFormTidy($row['customLabel']);
         }
-        if (isset($customs))
-        {
+        if (isset($customs)) {
             // Edit
             // If preferences reduce long custom labels, we want to transfer the original rather than the condensed version.
             // Store the base64-encoded value for retrieval in the javascript.
-            foreach ($customs as $key => $value)
-            {
+            foreach ($customs as $key => $value) {
                 $key = $key . '_' . base64_encode($value);
                 $fields[$key] = $value;
             }
@@ -120,7 +117,7 @@ class ADMINCUSTOM
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        \AJAX\loadJavascript([$this->config->WIKINDX_BASE_URL . '/core/modules/admin/customEdit.js']);
+        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/admin/customEdit.js']);
         GLOBALS::addTplVar('content', $pString);
     }
     /**
@@ -128,18 +125,14 @@ class ADMINCUSTOM
      */
     public function addCustom()
     {
-        if (!$this->validateInput('add'))
-        {
+        if (!$this->validateInput('add')) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         $fields = ["customLabel", "customSize"];
         $values[] = trim($this->label);
-        if ($this->size == 'large')
-        {
+        if ($this->size == 'large') {
             $values[] = 'L';
-        }
-        else
-        {
+        } else {
             $values[] = 'S';
         }
         $this->db->insert('custom', $fields, $values);
@@ -152,8 +145,7 @@ class ADMINCUSTOM
      */
     public function editCustom()
     {
-        if (!$this->validateInput('edit'))
-        {
+        if (!$this->validateInput('edit')) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         $this->db->formatConditions(['customId' => $this->vars['customEditId']]);
@@ -167,25 +159,22 @@ class ADMINCUSTOM
      */
     public function deleteConfirm()
     {
-        if (!$this->validateInput('delete'))
-        {
+        if (!$this->validateInput('delete')) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "adminCustom"));
         $pString = \HTML\p(\HTML\strong($this->messages->text("custom", "warning")));
         $pString .= \FORM\formHeader('admin_ADMINCUSTOM_CORE');
         $pString .= \FORM\hidden('method', 'deleteCustom');
-        foreach ($this->vars['customIds'] as $id)
-        {
+        foreach ($this->vars['customIds'] as $id) {
             $pString .= \FORM\hidden("delete_" . $id, $id);
             $ids[] = $this->db->tidyInput($id);
         }
         $this->db->formatConditions($this->db->formatFields('customId') . $this->db->equal .
             implode($this->db->or . $this->db->formatFields('customId') . $this->db->equal, $ids));
         $recordset = $this->db->select('custom', 'customLabel');
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            $fieldValues[] = "'" . \HTML\dbToHtmlTidy($row['customLabel']) . "'";
+        while ($row = $this->db->fetchRow($recordset)) {
+            $fieldValues[] = "'" . \HTML\nlToHtml($row['customLabel']) . "'";
         }
         $pString .= \HTML\p($this->messages->text("custom", "deleteConfirm", ": " . implode(", ", $fieldValues)));
         $pString .= BR . \FORM\formSubmit($this->messages->text("submit", "Confirm"));
@@ -197,8 +186,7 @@ class ADMINCUSTOM
      */
     public function deleteCustom()
     {
-        if (!$ids = $this->validateInput('deleteConfirm'))
-        {
+        if (!$ids = $this->validateInput('deleteConfirm')) {
             $this->badInput($this->errors->text("inputError", "invalid"), 'init');
         }
         // $ids is an array of field IDs
@@ -234,58 +222,42 @@ class ADMINCUSTOM
      *
      * @param string $type
      *
-     * @return int|bool
+     * @return bool|int
      */
     private function validateInput($type)
     {
-        if ($type == 'add')
-        {
+        if ($type == 'add') {
             // Write to session
             $this->size = isset($this->vars['custom_size']) ? $this->vars['custom_size'] : FALSE;
             $this->label = isset($this->vars['custom_label']) ? trim($this->vars['custom_label']) : FALSE;
             $this->session->setVar("custom_size", $this->size);
             $this->session->setVar("custom_label", $this->label);
-            if (!$this->size)
-            {
+            if (!$this->size) {
                 return FALSE;
             }
-            if (!$this->label)
-            {
+            if (!$this->label) {
                 return FALSE;
             }
-        }
-        elseif ($type == 'edit')
-        {
+        } elseif ($type == 'edit') {
             $this->label = isset($this->vars['customEdit']) ? trim($this->vars['customEdit']) : FALSE;
-            if (!array_key_exists('customEditId', $this->vars) || !$this->label)
-            {
+            if (!array_key_exists('customEditId', $this->vars) || !$this->label) {
                 return FALSE;
             }
-        }
-        elseif ($type == 'delete')
-        {
-            if (!array_key_exists('customIds', $this->vars) || empty($this->vars['customIds']))
-            {
+        } elseif ($type == 'delete') {
+            if (!array_key_exists('customIds', $this->vars) || empty($this->vars['customIds'])) {
                 return FALSE;
             }
-        }
-        elseif ($type == 'deleteConfirm')
-        {
+        } elseif ($type == 'deleteConfirm') {
             $ids = [];
-            foreach ($this->vars as $key => $value)
-            {
-                if (!preg_match("/delete_/u", $key))
-                {
+            foreach ($this->vars as $key => $value) {
+                if (!preg_match("/delete_/u", $key)) {
                     continue;
                 }
                 $ids[] = $value;
             }
-            if (empty($ids))
-            {
+            if (empty($ids)) {
                 return FALSE;
-            }
-            else
-            {
+            } else {
                 return $ids;
             }
         }

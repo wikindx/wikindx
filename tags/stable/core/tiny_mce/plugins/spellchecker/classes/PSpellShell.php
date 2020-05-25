@@ -21,19 +21,15 @@ class PSpellShell extends SpellChecker
     {
         $cmd = $this->_getCMD($lang);
 
-        if ($fh = fopen($this->_tmpfile, "w"))
-        {
+        if ($fh = fopen($this->_tmpfile, "w")) {
             fwrite($fh, "!\n");
 
-            foreach ($words as $key => $value)
-            {
+            foreach ($words as $key => $value) {
                 fwrite($fh, "^" . $value . "\n");
             }
 
             fclose($fh);
-        }
-        else
-        {
+        } else {
             $this->throwError("PSpell support was not found.");
         }
 
@@ -43,20 +39,17 @@ class PSpellShell extends SpellChecker
         $returnData = [];
         $dataArr = preg_split("/[\r\n]/u", $data, -1, PREG_SPLIT_NO_EMPTY);
 
-        foreach ($dataArr as $dstr)
-        {
+        foreach ($dataArr as $dstr) {
             $matches = [];
 
             // Skip this line.
-            if (mb_substr($dstr, 0, 1) == '@')
-            {
+            if (mb_substr($dstr, 0, 1) == '@') {
                 continue;
             }
 
             preg_match("/(\\&|#) ([^ ]+) .*/ui", $dstr, $matches);
 
-            if (!empty($matches[2]))
-            {
+            if (!empty($matches[2])) {
                 $returnData[] = utf8_encode(trim($matches[2]));
             }
         }
@@ -76,23 +69,17 @@ class PSpellShell extends SpellChecker
     {
         $cmd = $this->_getCMD($lang);
 
-        if (function_exists("mb_convert_encoding"))
-        {
+        if (function_exists("mb_convert_encoding")) {
             $word = mb_convert_encoding($word, "ISO-8859-1", mb_detect_encoding($word, "UTF-8"));
-        }
-        else
-        {
+        } else {
             $word = utf8_encode($word);
         }
 
-        if ($fh = fopen($this->_tmpfile, "w"))
-        {
+        if ($fh = fopen($this->_tmpfile, "w")) {
             fwrite($fh, "!\n");
             fwrite($fh, "^$word\n");
             fclose($fh);
-        }
-        else
-        {
+        } else {
             $this->throwError("Error opening tmp file.");
         }
 
@@ -102,24 +89,20 @@ class PSpellShell extends SpellChecker
         $returnData = [];
         $dataArr = preg_split("/\n/u", $data, -1, PREG_SPLIT_NO_EMPTY);
 
-        foreach ($dataArr as $dstr)
-        {
+        foreach ($dataArr as $dstr) {
             $matches = [];
 
             // Skip this line.
-            if (mb_substr($dstr, 0, 1) == '@')
-            {
+            if (mb_substr($dstr, 0, 1) == '@') {
                 continue;
             }
 
             preg_match("/\\&[^:]+:(.*)/ui", $dstr, $matches);
 
-            if (!empty($matches[1]))
-            {
+            if (!empty($matches[1])) {
                 $words = array_slice(UTF8::mb_explode(',', $matches[1]), 0, 10);
 
-                for ($i = 0; $i < count($words); $i++)
-                {
+                for ($i = 0; $i < count($words); $i++) {
                     $words[$i] = trim($words[$i]);
                 }
 
@@ -138,8 +121,7 @@ class PSpellShell extends SpellChecker
         $lang = preg_replace("/[^-_a-z]/u", "", mb_strtolower($lang));
         $bin = $this->_config['PSpellShell.aspell'];
 
-        if (preg_match("#win#ui", php_uname()))
-        {
+        if (preg_match("#win#ui", php_uname())) {
             return "$bin -a --lang=$lang --encoding=utf-8 -H < $file 2>&1";
         }
 

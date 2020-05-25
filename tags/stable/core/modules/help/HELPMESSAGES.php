@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -38,12 +40,9 @@ class HELPMESSAGES
      */
     public function init()
     {
-        if (array_key_exists('message', $this->vars) && $this->vars['message'])
-        {
+        if (array_key_exists('message', $this->vars) && $this->vars['message']) {
             GLOBALS::addTplVar('content', $this->help->text($this->vars['message']) . \HTML\p(\FORM\closePopup($this->messages->text("misc", "closePopup"))));
-        }
-        else
-        {
+        } else {
             $this->badInput->closeType = 'closePopup';
             $this->badInput->close($this->errors->text('inputError', 'missing'));
         }
@@ -51,6 +50,8 @@ class HELPMESSAGES
     }
     /**
      * Create a popup link for a Htlp message
+     *
+     * @param mixed $message
      *
      * @return string HTML link tag
      */

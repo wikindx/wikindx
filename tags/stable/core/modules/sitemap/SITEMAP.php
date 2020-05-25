@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -27,31 +29,27 @@ class SITEMAP
     // Constructor
     public function init()
     {
-        $config = FACTORY_CONFIG::getInstance();
         $db = FACTORY_DB::getInstance();
-        if (!$config->WIKINDX_SITEMAP_ALLOW)
-        {
+        if (!WIKINDX_SITEMAP_ALLOW) {
             header('HTTP/1.0 403 Forbidden');
             die("Access forbidden: this feature is disabled.");
         }
 
-        $baseURL = FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL;
+        $baseURL = WIKINDX_BASE_URL;
 
         // set up language
-        $messages = FACTORY_MESSAGES::getInstance($config->WIKINDX_RSS_LANGUAGE);
+        $messages = FACTORY_MESSAGES::getInstance(WIKINDX_LANGUAGE);
 
         // Get newspage flag: N = 0 = OFF, N > 0 = ON
         $newspage = isset($_GET['newspage']) ? $_GET['newspage'] : 0;
-        if (!is_numeric($newspage))
-        {
+        if (!is_numeric($newspage)) {
             $newspage = 0;
         }
         $newspage = intval($newspage);
 
         // Get resourcepage flag: N is a page number or 0 if we don't want to see a specific resource page
         $resourcepage = isset($_GET['resourcepage']) ? $_GET['resourcepage'] : 0;
-        if (!is_numeric($resourcepage))
-        {
+        if (!is_numeric($resourcepage)) {
             $resourcepage = 0;
         }
         $resourcepage = intval($resourcepage);
@@ -71,7 +69,7 @@ class SITEMAP
         // List of resources of the website
         $rsResource = $db->query("
         	SELECT `resourcetimestampId`, `resourcetimestampTimestamp`
-        	FROM `" . $config->WIKINDX_DB_TABLEPREFIX . "resource_timestamp`
+        	FROM `" . WIKINDX_DB_TABLEPREFIX . "resource_timestamp`
         	ORDER BY `resourcetimestampTimestamp` DESC, `resourcetimestampTimestampAdd` DESC, `resourcetimestampId` DESC
         ");
 
@@ -80,7 +78,7 @@ class SITEMAP
         // List of news of the website
         $rsNews = $db->query("
         	SELECT `newsId`, `newsTimestamp`
-        	FROM `" . $config->WIKINDX_DB_TABLEPREFIX . "news`
+        	FROM `" . WIKINDX_DB_TABLEPREFIX . "news`
         	ORDER BY `newsTimestamp` DESC, `newsId` DESC
         ");
 
@@ -88,22 +86,18 @@ class SITEMAP
 
         // If no information are available, return anly the XML header
         // Otherwise return a sitemapindex or a specific sitemap according to the sitemap flags in parameters
-        if ($nbResource + $nbNews > 0)
-        {
+        if ($nbResource + $nbNews > 0) {
 
             // Return an index of Sitemaps if no flags have been through
-            if ($resourcepage == 0 && $newspage == 0)
-            {
+            if ($resourcepage == 0 && $newspage == 0) {
                 $output .= '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
                 // Add sitemaps for resources if any
-                if ($nbResource > 0)
-                {
+                if ($nbResource > 0) {
                     $nbResourcePage = 0;
 
                     // Add one page if there are a rest for the euclidean division of the total number of url
-                    if ($nbResource % WIKINDX_SITEMAP_MAXSIZE > 0)
-                    {
+                    if ($nbResource % WIKINDX_SITEMAP_MAXSIZE > 0) {
                         $nbResourcePage = 1;
                         $numResults = $nbResource - ($nbResource % WIKINDX_SITEMAP_MAXSIZE);
                     }
@@ -111,8 +105,7 @@ class SITEMAP
                     // Add one page for each block of WIKINDX_SITEMAP_MAXSIZE urls
                     $nbResourcePage += $nbResource / WIKINDX_SITEMAP_MAXSIZE;
 
-                    for ($p = 1; $p <= $nbResourcePage; $p++)
-                    {
+                    for ($p = 1; $p <= $nbResourcePage; $p++) {
                         // Get the first resource of the block for its date of modification
                         $firstUrl = $this->firstResourcePageEntry($p);
                         $db->goToRow($rsResource, $firstUrl);
@@ -126,8 +119,7 @@ class SITEMAP
                 }
 
                 // Add a sitemap for news if any
-                if ($nbNews > 0)
-                {
+                if ($nbNews > 0) {
                     // Get the first news for its date of modification
                     $news = $db->fetchRow($rsNews);
 
@@ -141,12 +133,10 @@ class SITEMAP
             }
 
             // Return a sitemap of website news if newspage flag is on
-            elseif ($newspage > 0)
-            {
+            elseif ($newspage > 0) {
                 $output .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
-                while ($news = $db->fetchRow($rsNews))
-                {
+                while ($news = $db->fetchRow($rsNews)) {
                     $output .= '<url>';
                     $output .= '<loc>' . $baseURL . '/index.php?action=news_NEWS_CORE&amp;method=viewNewsItem&amp;id=' . $news['newsId'] . '</loc>';
                     $output .= '<lastmod>' . date('c', strtotime($news['newsTimestamp'])) . '</lastmod>';
@@ -158,8 +148,7 @@ class SITEMAP
             }
 
             // Return a sitemap according to its resource page number
-            elseif ($resourcepage > 0)
-            {
+            elseif ($resourcepage > 0) {
                 $output .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
                 $firstUrl = $this->firstResourcePageEntry($resourcepage);
@@ -169,12 +158,10 @@ class SITEMAP
                 $db->goToRow($rsResource, $firstUrl);
                 $r = $firstUrl - 1;
 
-                while ($resource = $db->fetchRow($rsResource))
-                {
+                while ($resource = $db->fetchRow($rsResource)) {
                     $r++;
 
-                    if ($r > $lastUrl)
-                    {
+                    if ($r > $lastUrl) {
                         break;
                     }
 
@@ -198,12 +185,12 @@ class SITEMAP
      * Function to query the database and return formatted entries
      *
      * @param object $db
-     * @param int $WIKINDX_RSS_LIMIT
-     * @param string $WIKINDX_RSS_BIBSTYLE
+     * @param int $limit
+     * @param string $bibstyle
      *
      * @return array ($numResults, $item)
      */
-    private function queryDb($db, $WIKINDX_RSS_LIMIT, $WIKINDX_RSS_BIBSTYLE)
+    private function queryDb($db, $limit, $bibstyle)
     {
         $listFields = ['resourceId', 'creatorSurname', 'resourceType', 'resourceTitle', 'resourceSubtitle', 'resourceShortTitle',
             'resourceTransTitle', 'resourceTransSubtitle', 'resourceTransShortTitle', 'resourceField1', 'resourceField2', 'resourceField3',
@@ -216,14 +203,13 @@ class SITEMAP
             'publisherLocation', 'publisherType', 'collectionId', 'collectionTitle', 'collectionTitleShort', 'collectionType', 'usersId', 'usersUsername',
             'usersFullname', 'resourcemiscId', 'resourcemiscCollection', 'resourcemiscPublisher', 'resourcemiscField1', 'resourcemiscField2',
             'resourcemiscField3', 'resourcemiscField4', 'resourcemiscField5', 'resourcemiscField6', 'resourcemiscTag', 'resourcemiscAddUserIdResource',
-            'resourcemiscEditUserIdResource', 'resourcemiscAccesses', 'resourcemiscMaturityIndex', 'resourcemiscPeerReviewed', 'resourcemiscQuarantine',
-            'resourcemiscAccessesPeriod', ];
+            'resourcemiscEditUserIdResource', 'resourcemiscMaturityIndex', 'resourcemiscPeerReviewed', 'resourcemiscQuarantine', ];
         $messages = FACTORY_MESSAGES::getInstance();
         $session = FACTORY_SESSION::getInstance();
-        $session->setVar('setup_Style', $WIKINDX_RSS_BIBSTYLE);
+        $session->setVar("setup_Style", $bibstyle);
         $bibStyle = FACTORY_BIBSTYLE::getInstance();
         $db->ascDesc = $db->desc;
-        $db->limit($WIKINDX_RSS_LIMIT, 0);
+        $db->limit($limit, 0);
         $db->groupBy(['resourcetimestampId', 'resourcetimestampTimestamp']);
         $db->orderBy('resourcetimestampTimestamp', TRUE, FALSE);
         $subQuery = $db->subQuery($db->queryNoExecute($db->selectNoExecute(
@@ -266,14 +252,10 @@ class SITEMAP
             'resourcemiscEditUserIdResource',
             'resourcemiscAddUserIdResource'
         ), FALSE);
-        foreach ($listFields as $field)
-        {
-            if ($field == 'resourcetimestampId')
-            {
+        foreach ($listFields as $field) {
+            if ($field == 'resourcetimestampId') {
                 $listFields[] = 't2.' . $field;
-            }
-            else
-            {
+            } else {
                 $listFields[] = $field;
             }
         }
@@ -289,12 +271,10 @@ class SITEMAP
         $numResults = $db->numRows($resultSet);
         $x = 0;
         $item = [];
-        while ($list_results = $db->fetchRow($resultSet))
-        {
+        while ($list_results = $db->fetchRow($resultSet)) {
             /** construct a hierarchial array for the item node */
             $item['title'][$x] = $messages->text('resourceType', $list_results['resourceType']) . ': ';
-            if ($list_results['resourceNoSort'])
-            {
+            if ($list_results['resourceNoSort']) {
                 $item['title'][$x] .= $list_results['resourceNoSort'] . ' ';
             }
             $item['title'][$x] .= $list_results['resourceTitle'];

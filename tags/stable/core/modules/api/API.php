@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -15,7 +17,6 @@ class API
 {
     private $db;
     private $vars;
-    private $config;
     private $icons;
     private $stmt;
     private $errors;
@@ -30,13 +31,11 @@ class API
     private $common;
     private $abstract;
     private $note;
-    private $url;
 
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -49,7 +48,6 @@ class API
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
-        $this->url = FACTORY_URL::getInstance();
         include_once('core/modules/resource/RESOURCEABSTRACT.php');
         $this->abstract = new RESOURCEABSTRACT();
         include_once('core/modules/resource/RESOURCENOTE.php');
@@ -63,15 +61,13 @@ class API
      */
     public function fetchId()
     {
-        if (!array_key_exists('bibtexKey', $this->vars) || !$this->vars['bibtexKey'])
-        {
+        if (!array_key_exists('bibtexKey', $this->vars) || !$this->vars['bibtexKey']) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
 
         $this->db->formatConditions(['resourceBibtexKey' => $this->vars['bibtexKey']]);
         $resultset = $this->db->select('resource', ['resourceId']);
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             $this->badInput->close($this->messages->text("resources", "noResult"));
         }
         $row = $this->db->fetchRow($resultset);
@@ -84,16 +80,14 @@ class API
      */
     public function getBibtex()
     {
-        if (!array_key_exists('id', $this->vars) || !$this->vars['id'])
-        {
+        if (!array_key_exists('id', $this->vars) || !$this->vars['id']) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
 
         $this->stmt->listJoin();
         $this->db->formatConditions(['resourceId' => $this->vars['id']]);
         $resultset = $this->db->select('resource', $this->stmt->listFields());
-        if (!$this->db->numRows($resultset))
-        {
+        if (!$this->db->numRows($resultset)) {
             $this->badInput->close($this->messages->text("resources", "noResult"));
         }
         $row = $this->db->fetchRow($resultset);
@@ -106,6 +100,9 @@ class API
     }
     /**
      * createBibtexRow
+     *
+     * @param mixed $varname
+     * @param mixed $val
      *
      * @return string
      */

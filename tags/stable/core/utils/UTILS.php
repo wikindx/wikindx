@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -61,16 +63,11 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
         
         // Compute the locale for an environment variable
         // Warning: this value is not necessarily the same as the one recognized by setlocale()
-        if (array_intersect($system, ["cygwin", "mingw", "msys", "windows"]))
-        { // Windows
+        if (array_intersect($system, ["cygwin", "mingw", "msys", "windows"])) { // Windows
             return "windows";
-        }
-        elseif (array_intersect($system, ["darwin"]))
-        { // OSX
+        } elseif (array_intersect($system, ["darwin"])) { // OSX
             return "mac";
-        }
-        else
-        { // Others OS
+        } else { // Others OS
             return $system;
         }
     }
@@ -123,14 +120,11 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
         $ComponentsList = \FILE\read_json_file($path_components_list);
         $ComponentsListStatus = \FILE\read_json_file($path_components_list_status);
             
-        foreach ($ComponentsList as $ki => $ci)
-        {
+        foreach ($ComponentsList as $ki => $ci) {
             // Search installed components with a cached status
             $isStatusDefined = FALSE;
-            foreach ($ComponentsListStatus as $kr => $cr)
-            {
-                if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"])
-                {
+            foreach ($ComponentsListStatus as $kr => $cr) {
+                if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"]) {
                     $ComponentsList[$ki]["component_status"] = $cr["component_status"];
                     $isStatusDefined = TRUE;
 
@@ -138,8 +132,7 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
                 }
             }
             // Search installed components without a cached status
-            if (!$isStatusDefined)
-            {
+            if (!$isStatusDefined) {
                 $ComponentsList[$ki]["component_status"] = "disabled";
             }
         }
@@ -163,24 +156,18 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
         $path_components_list = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "components.json"]);
         $path_components_list_status = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA, "components.json"]);
         
-        if (file_exists($path_components_list_status))
-        {
+        if (file_exists($path_components_list_status)) {
             $ComponentsListStatus = \FILE\read_json_file($path_components_list_status);
-        }
-        else
-        {
+        } else {
             $ComponentsListStatus = [];
         }
         
         // Merge components status
-        foreach ($ComponentsList as $ki => $ci)
-        {
+        foreach ($ComponentsList as $ki => $ci) {
             // Update status of components with a previous cached status
             $isStatusDefined = FALSE;
-            foreach ($ComponentsListStatus as $kr => $cr)
-            {
-                if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"])
-                {
+            foreach ($ComponentsListStatus as $kr => $cr) {
+                if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"]) {
                     $ComponentsListStatus[$kr]["component_status"] = $ci["component_status"];
                     $isStatusDefined = TRUE;
 
@@ -188,8 +175,7 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
                 }
             }
             // Create a status for components without a previous cached status
-            if (!$isStatusDefined)
-            {
+            if (!$isStatusDefined) {
                 $ComponentsListStatus[] = [
                     "component_type" => $ci["component_type"],
                     "component_id" => $ci["component_id"],
@@ -217,22 +203,17 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
         
         $cachedComponentsListStatusExists = file_exists($path_components_list_status);
         
-        if ($force || !file_exists($path_components_list) || !$cachedComponentsListStatusExists)
-        {
+        if ($force || !file_exists($path_components_list) || !$cachedComponentsListStatusExists) {
             $ComponentsList = checkComponentsList();
             
-            if ($cachedComponentsListStatusExists)
-            {
+            if ($cachedComponentsListStatusExists) {
                 $ComponentsListStatus = \FILE\read_json_file($path_components_list_status);
                     
-                foreach ($ComponentsList as $ki => $ci)
-                {
+                foreach ($ComponentsList as $ki => $ci) {
                     // Search installed components with a cached status
                     $isStatusDefined = FALSE;
-                    foreach ($ComponentsListStatus as $kr => $cr)
-                    {
-                        if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"])
-                        {
+                    foreach ($ComponentsListStatus as $kr => $cr) {
+                        if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"]) {
                             $ComponentsList[$ki]["component_status"] = $cr["component_status"];
                             $isStatusDefined = TRUE;
             
@@ -240,8 +221,7 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
                         }
                     }
                     // Search installed components without a cached status
-                    if (!$isStatusDefined)
-                    {
+                    if (!$isStatusDefined) {
                         $ComponentsList[$ki]["component_status"] = "disabled";
                     }
                 }
@@ -271,19 +251,14 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
             WIKINDX_DIR_COMPONENT_VENDOR => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_VENDOR),
         ];
         
-        foreach ($componentPath as $rootpath => $paths)
-        {
-            foreach ($paths as $path)
-            {
+        foreach ($componentPath as $rootpath => $paths) {
+            foreach ($paths as $path) {
                 $componentDirPath = $rootpath . DIRECTORY_SEPARATOR . $path;
                 $component_integrity = checkComponentIntegrity($componentDirPath);
                 
-                if ($component_integrity > 8 || $component_integrity == 0)
-                {
+                if ($component_integrity > 8 || $component_integrity == 0) {
                     $componentMetadata = \FILE\read_json_file($componentDirPath . DIRECTORY_SEPARATOR . 'component.json');
-                }
-                else
-                {
+                } else {
                     $legal_types = [
                         WIKINDX_DIR_COMPONENT_LANGUAGES => "language",
                         WIKINDX_DIR_COMPONENT_PLUGINS => "plugin",
@@ -307,18 +282,15 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
                 $componentMetadata["component_integrity"] = $component_integrity;
                 
                 // The built-in components are exception. There must always be active for the software to work.
-                if ($componentMetadata["component_builtin"] == "true")
-                {
+                if ($componentMetadata["component_builtin"] == "true") {
                     $componentMetadata["component_status"] = "enabled";
                 }
                 // vendor components are alway enabled because their are required by the core
-                elseif ($componentMetadata["component_type"] == "vendor")
-                {
+                elseif ($componentMetadata["component_type"] == "vendor") {
                     $componentMetadata["component_status"] = "enabled";
                 }
                 // All components are disabled by default to minimize errors and unwanted code execution
-                else
-                {
+                else {
                     $componentMetadata["component_status"] = "disabled";
                 }
                 $componentlist[] = $componentMetadata;
@@ -368,216 +340,153 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
     function checkComponentIntegrity($componentDirPath)
     {
         $componentMetadata = \FILE\read_json_file($componentDirPath . DIRECTORY_SEPARATOR . 'component.json');
-        if ($componentMetadata !== NULL)
-        {
+        if ($componentMetadata !== NULL) {
             // Check mandatory metadata
             $mandatory_properties = ["component_type", "component_id", "component_builtin", "component_updatable", "component_name"];
-            foreach ($mandatory_properties as $k)
-            {
-                if (!array_key_exists($k, $componentMetadata))
-                {
+            foreach ($mandatory_properties as $k) {
+                if (!array_key_exists($k, $componentMetadata)) {
                     return 2;
                 }
             }
             
             // Check the component id (1)
             $basedir = basename($componentDirPath);
-            if ($componentMetadata["component_id"] != $basedir)
-            {
+            if ($componentMetadata["component_id"] != $basedir) {
                 return 3;
             }
             
             // Check the component id (2)
-            if ($componentMetadata["component_id"] != mb_strtolower($componentMetadata["component_id"]) || $basedir != mb_strtolower($basedir))
-            {
+            if ($componentMetadata["component_id"] != mb_strtolower($componentMetadata["component_id"]) || $basedir != mb_strtolower($basedir)) {
                 return 4;
             }
             
             // Check the component type
             $legal_types = ["language", "plugin", "style", "template", "vendor"];
-            if (!in_array($componentMetadata["component_type"], $legal_types))
-            {
+            if (!in_array($componentMetadata["component_type"], $legal_types)) {
                 return 5;
             }
             
             // Check if the component type is right directory for the component directory
             $componentRootName = dirname($componentDirPath);
-            if ($componentMetadata["component_type"] == "language" && $componentRootName != WIKINDX_DIR_COMPONENT_LANGUAGES)
-            {
+            if ($componentMetadata["component_type"] == "language" && $componentRootName != WIKINDX_DIR_COMPONENT_LANGUAGES) {
                 return 6;
-            }
-            elseif ($componentMetadata["component_type"] == "plugin" && $componentRootName != WIKINDX_DIR_COMPONENT_PLUGINS)
-            {
+            } elseif ($componentMetadata["component_type"] == "plugin" && $componentRootName != WIKINDX_DIR_COMPONENT_PLUGINS) {
                 return 6;
-            }
-            elseif ($componentMetadata["component_type"] == "style" && $componentRootName != WIKINDX_DIR_COMPONENT_STYLES)
-            {
+            } elseif ($componentMetadata["component_type"] == "style" && $componentRootName != WIKINDX_DIR_COMPONENT_STYLES) {
                 return 6;
-            }
-            elseif ($componentMetadata["component_type"] == "template" && $componentRootName != WIKINDX_DIR_COMPONENT_TEMPLATES)
-            {
+            } elseif ($componentMetadata["component_type"] == "template" && $componentRootName != WIKINDX_DIR_COMPONENT_TEMPLATES) {
                 return 6;
-            }
-            elseif ($componentMetadata["component_type"] == "vendor" && $componentRootName != WIKINDX_DIR_COMPONENT_VENDOR)
-            {
+            } elseif ($componentMetadata["component_type"] == "vendor" && $componentRootName != WIKINDX_DIR_COMPONENT_VENDOR) {
                 return 6;
             }
             
             // Check the component_builtin property
-            if (!in_array($componentMetadata["component_builtin"], ["false", "true"]))
-            {
+            if (!in_array($componentMetadata["component_builtin"], ["false", "true"])) {
                 return 7;
             }
             
             // Check the component_updatable property
-            if (!in_array($componentMetadata["component_updatable"], ["false", "true"]))
-            {
+            if (!in_array($componentMetadata["component_updatable"], ["false", "true"])) {
                 return 8;
             }
             
             // Check the files specific to a language component
             // SRC is not a standard language component and is used only by translators and developers
-            if ($componentMetadata["component_type"] == "language" && basename($componentDirPath) != "src")
-            {
+            if ($componentMetadata["component_type"] == "language" && basename($componentDirPath) != "src") {
                 $lcmsgdir = $componentDirPath . DIRECTORY_SEPARATOR . "LC_MESSAGES";
-                if (!file_exists($lcmsgdir))
-                {
+                if (!file_exists($lcmsgdir)) {
                     return 9;
-                }
-                elseif (!is_readable($lcmsgdir))
-                {
+                } elseif (!is_readable($lcmsgdir)) {
                     return 10;
-                }
-                elseif (!is_dir($lcmsgdir))
-                {
+                } elseif (!is_dir($lcmsgdir)) {
                     return 11;
                 }
                 
                 $numMoFiles = 0;
-                foreach (\FILE\fileInDirToArray($lcmsgdir) as $file)
-                {
-                    if (\UTILS\matchSuffix($file, ".mo"))
-                    {
+                foreach (\FILE\fileInDirToArray($lcmsgdir) as $file) {
+                    if (\UTILS\matchSuffix($file, ".mo")) {
                         $numMoFiles++;
 
                         break;
                     }
                 }
-                if ($numMoFiles == 0)
-                {
+                if ($numMoFiles == 0) {
                     return 12;
                 }
             }
             
             // Check the files specific to a plugin component
-            if ($componentMetadata["component_type"] == "plugin")
-            {
+            if ($componentMetadata["component_type"] == "plugin") {
                 $configfile = $componentDirPath . DIRECTORY_SEPARATOR . 'config.php';
-                if (!file_exists($configfile))
-                {
+                if (!file_exists($configfile)) {
                     return 13;
-                }
-                elseif (!is_readable($configfile))
-                {
+                } elseif (!is_readable($configfile)) {
                     return 14;
-                }
-                elseif (!is_file($configfile))
-                {
+                } elseif (!is_file($configfile)) {
                     return 15;
                 }
                 
                 $indexfile = $componentDirPath . DIRECTORY_SEPARATOR . 'index.php';
-                if (!file_exists($indexfile))
-                {
+                if (!file_exists($indexfile)) {
                     return 16;
-                }
-                elseif (!is_readable($indexfile))
-                {
+                } elseif (!is_readable($indexfile)) {
                     return 17;
-                }
-                elseif (!is_file($indexfile))
-                {
+                } elseif (!is_file($indexfile)) {
                     return 18;
                 }
                 
                 $plugintypefile = $componentDirPath . DIRECTORY_SEPARATOR . 'plugintype.txt';
-                if (!file_exists($plugintypefile))
-                {
+                if (!file_exists($plugintypefile)) {
                     return 28;
-                }
-                elseif (!is_readable($plugintypefile))
-                {
+                } elseif (!is_readable($plugintypefile)) {
                     return 29;
-                }
-                elseif (!is_file($plugintypefile))
-                {
+                } elseif (!is_file($plugintypefile)) {
                     return 30;
                 }
                 
                 include_once("core/modules/LOADEXTERNALMODULES.php");
                 $loadmodules = new \LOADEXTERNALMODULES();
-                if (!$loadmodules->checkVersion($componentMetadata["component_id"]))
-                {
+                if (!$loadmodules->checkVersion($componentMetadata["component_id"])) {
                     return 25;
                 }
             }
             
             // Check the files specific to a style component
-            if ($componentMetadata["component_type"] == "style")
-            {
+            if ($componentMetadata["component_type"] == "style") {
                 $xmlstylefile = $componentDirPath . DIRECTORY_SEPARATOR . $componentMetadata["component_id"] . '.xml';
-                if (!file_exists($xmlstylefile))
-                {
+                if (!file_exists($xmlstylefile)) {
                     return 19;
-                }
-                elseif (!is_readable($xmlstylefile))
-                {
+                } elseif (!is_readable($xmlstylefile)) {
                     return 20;
-                }
-                elseif (!is_file($xmlstylefile))
-                {
+                } elseif (!is_file($xmlstylefile)) {
                     return 21;
-                }
-                else
-                {
+                } else {
                     $arrayStyleInfo = \LOADSTYLE\loadStyleInfo($xmlstylefile);
                     
-                    if ($arrayStyleInfo['osbibversion'] !== \LOADSTYLE\OSBIB_VERSION)
-                    {
+                    if ($arrayStyleInfo['osbibversion'] !== \LOADSTYLE\OSBIB_VERSION) {
                         return 25;
-                    }
-                    elseif ($arrayStyleInfo['name'] === NULL)
-                    {
+                    } elseif ($arrayStyleInfo['name'] === NULL) {
                         return 26;
-                    }
-                    elseif ($arrayStyleInfo['description'] === NULL)
-                    {
+                    } elseif ($arrayStyleInfo['description'] === NULL) {
                         return 27;
                     }
                 }
             }
             
             // Check the files specific to a template component
-            if ($componentMetadata["component_type"] == "template")
-            {
+            if ($componentMetadata["component_type"] == "template") {
                 $displayfile = $componentDirPath . DIRECTORY_SEPARATOR . 'display.tpl';
-                if (!file_exists($displayfile))
-                {
+                if (!file_exists($displayfile)) {
                     return 22;
-                }
-                elseif (!is_readable($displayfile))
-                {
+                } elseif (!is_readable($displayfile)) {
                     return 23;
-                }
-                elseif (!is_file($displayfile))
-                {
+                } elseif (!is_file($displayfile)) {
                     return 24;
                 }
             }
             
             // Check the files specific to a vendor component
-            if ($componentMetadata["component_type"] == "vendor")
-            {
+            if ($componentMetadata["component_type"] == "vendor") {
                 // Nothing more required for this type
             }
             
@@ -649,16 +558,11 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
      */
     function array_key_first($array)
     {
-        if (is_array($array) || !empty($array))
-        {
-            if (function_exists('\array_key_first'))
-            {
+        if (is_array($array) || !empty($array)) {
+            if (function_exists('\array_key_first')) {
                 return array_key_first($array);
-            }
-            else
-            {
-                foreach ($array as $k => $v)
-                {
+            } else {
+                foreach ($array as $k => $v) {
                     return $k;
                 }
             }
@@ -680,14 +584,10 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
      */
     function array_key_last($array)
     {
-        if (is_array($array) || !empty($array))
-        {
-            if (function_exists('\array_key_last'))
-            {
+        if (is_array($array) || !empty($array)) {
+            if (function_exists('\array_key_last')) {
                 return array_key_last($array);
-            }
-            else
-            {
+            } else {
                 return array_keys($array)[count($array) - 1];
             }
         }
@@ -710,8 +610,7 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
     function hash_path($path, $algo = WIKINDX_PACKAGE_HASH_ALGO)
     {
         // just sha1_file for regular files
-        if (!is_dir($path))
-        {
+        if (!is_dir($path)) {
             return hash_file($algo, $path);
         }
         
@@ -720,12 +619,10 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
         //$dir = dir($path);
         // loop through the directory, recusively building an array
         // of all the hashes contained within
-        foreach (\FILE\dirToArray($path) as $file)
-        {
+        foreach (\FILE\dirToArray($path) as $file) {
             //while (FALSE !== ($file = $dir->read()))
             // make sure we don't use . or ..
-            if (!in_array($file, ['.', '..']))
-            {
+            if (!in_array($file, ['.', '..'])) {
                 // get the hash of this path and add it to our array
                 $hashes[] = hash_path($path . DIRECTORY_SEPARATOR . $file);
             }
@@ -769,8 +666,7 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
         fclose($fp);
         
         // On error remove the file
-        if ($ccode === FALSE)
-        {
+        if ($ccode === FALSE) {
             @unlink($file);
         }
         
@@ -778,24 +674,82 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
     }
     
     /*
-    * Return a (pseudo) unique string of variable length
-    *
-    * This function return a pseudo unique string for PHP 5.6 (using uniqid())
-    * and a unique string for PHP 7 and later (using random_bytes()).
+    * Return a (pseudo) unique string of variable length using random_bytes().
     *
     * @params int $length length of the returned string (Default is 16).
     * @return string
     */
-    function uuid($length = 16)
+    function uuid(int $length = 16)
     {
-        $fncrand = function_exists("random_bytes");
-        
         $str = "";
-        while (strlen($str) < $length)
-        {
-            $str .= $fncrand ? bin2hex(random_bytes($length)) : uniqid("");
+        while (strlen($str) < $length) {
+            $str .= bin2hex(random_bytes($length));
         }
 
         return substr($str, 0, $length);
+    }
+    
+    /**
+     * Check the permissions of various folders and files which must be writable
+     */
+    function checkFoldersPerms()
+    {
+        // No verification on Windows which does not have an Unix permissions system
+        // because IIS would be the only one to use the native permissions of this system
+        // and it is not officially supported
+        if (\UTILS\OSName() == "windows") {
+            return;
+        }
+        
+        $aErrorPerms = [];
+        
+        $folderstocheck = [
+            WIKINDX_DIR_DATA => \FILE\dirInDirToArray(WIKINDX_DIR_DATA),
+            WIKINDX_DIR_CACHE => \FILE\dirInDirToArray(WIKINDX_DIR_CACHE),
+            
+            WIKINDX_DIR_COMPONENT_LANGUAGES => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_LANGUAGES),
+            WIKINDX_DIR_COMPONENT_PLUGINS => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_PLUGINS),
+            WIKINDX_DIR_COMPONENT_STYLES => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_STYLES),
+            WIKINDX_DIR_COMPONENT_TEMPLATES => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_TEMPLATES),
+            WIKINDX_DIR_COMPONENT_VENDOR => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_VENDOR),
+        ];
+        
+        foreach ($folderstocheck as $root => $paths) {
+            foreach ($paths as $path) {
+                $dir = $root . DIRECTORY_SEPARATOR . $path;
+                
+                if (!is_readable($dir)) {
+                    $aErrorPerms[$dir] = "r";
+                }
+                if (!is_writable($dir)) {
+                    if (array_key_exists($dir, $aErrorPerms)) {
+                        $aErrorPerms[$dir] .= "w";
+                    } else {
+                        $aErrorPerms[$dir] = "w";
+                    }
+                }
+            }
+        }
+        
+        if (count($aErrorPerms) > 0) {
+            $string = "<table>";
+            $string .= "<tr>";
+            $string .= "<th>Folder</th>";
+            $string .= "<th>Current Unix perms</th>";
+            $string .= "<th>Missing perms</th>";
+            $string .= "</tr>";
+            foreach ($aErrorPerms as $name => $perm) {
+                $string .= "<tr>";
+                $string .= "<td>" . $name . "</td>";
+                $string .= "<td>" . substr(sprintf('%o', fileperms($name)), -4) . "</td>";
+                $string .= "<td>" . $perm . "</td>";
+                $string .= "</tr>";
+            }
+            $string .= "</table>";
+            
+            die("WIKINDX will not function correctly if various folders and files within them are not writeable for the web server user.
+            The following folders, shown with their current Unix permissions, should be made readable and writeable (along with their contents) for 
+            the web server user. The web server user can be the owner and/or the group of those folders. So you have to modify, the owner, the group and the permission bits according to the particular configuration of your web server, PHP and file transfer software. You may also be required to add the execution bit in certain cases. The same rights apply to files in these folders, but this script does not check them for performance reasons. See the chmod, web server and PHP manuals, and docs/INSTALL.txt for details.<p><p>r = readable; w = writable ; x = executable</p>" . $string);
+        }
     }
 }

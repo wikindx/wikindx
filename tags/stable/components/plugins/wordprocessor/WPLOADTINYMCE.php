@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -15,10 +17,9 @@ class WPLOADTINYMCE extends LOADTINYMCE
     public function __construct()
     {
         $session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
-        $session->setVar('tinyMCE_mode', 'wordprocessor');
-        $this->cssPath = $this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . $session->getVar('setup_Template') . '/tinymce.css';
-        $this->cssPopupPath = $this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . '/' . $session->getVar('setup_Template') . '/template.css';
+        $session->setVar("tinyMCE_mode", "wordprocessor");
+        $this->cssPath = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_TEMPLATES . '/' . GLOBALS::getUserVar('Template') . '/tinymce.css';
+        $this->cssPopupPath = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_TEMPLATES . '/' . GLOBALS::getUserVar('Template') . '/template.css';
     }
     /**
      * Load tinymce -- full configuration for the word processor
@@ -28,20 +29,17 @@ class WPLOADTINYMCE extends LOADTINYMCE
     public function loadWPTextarea()
     {
         $path = $this->path;
-        $externalPluginPath = $this->config->WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/' . basename(__DIR__) . '/';
+        $externalPluginPath = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/' . basename(__DIR__) . '/';
         $exportPluginPath = $externalPluginPath . 'wikindxWPExport/editor_plugin.js';
         $savePluginPath = $externalPluginPath . 'wikindxWPSave/editor_plugin.js';
         $statsPluginPath = $externalPluginPath . 'wikindxWPStats/editor_plugin.js';
         $footnotePluginPath = $externalPluginPath . 'wikindxWPFootnote/editor_plugin.js';
         $cssPath = $this->cssPath;
         $cssPopupPath = $this->cssPopupPath;
-        if (!$this->pathLoaded)
-        {
-            $tinymcePath = '<script src="' . $this->config->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js"></script>';
+        if (!$this->pathLoaded) {
+            $tinymcePath = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js"></script>';
             $this->pathLoaded = TRUE;
-        }
-        else
-        {
+        } else {
             $tinymcePath = '';
         }
 

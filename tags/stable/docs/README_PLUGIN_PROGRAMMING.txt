@@ -249,7 +249,7 @@ public $menus;
 * 2. a menu of one submenu or more.
 *
 * Top level menu labels are: "wikindx", "res", "search", "text", "admin", "plugin1", "plugin2", "plugin3".
-* "admin" is only available when logged in as admin, "text" will only show if there is metadata (quotes etc.) 
+* "admin" is only available when logged in as admin, "text" will only show if there are metadata (quotes etc.) 
 * and the three 'pluginX' menu trees only show if they are populated.  
 * Typically, you will insert a submenu into one of the pluginX menus.
 *

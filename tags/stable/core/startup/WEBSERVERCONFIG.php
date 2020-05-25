@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -34,25 +36,26 @@ include_once("core/startup/CONSTANTS.php");
  * After that, error reporting is reconfigured
  * by core/startup/LOADCONFIG.php (first called in AUTHORIZE) with user config.
  * This prevent to hide tricky errors.
+ *
+ * PHP 8 will make E_ALL the default error level,
+ * in preparation for its support we also make this level the default
  */
-error_reporting(WIKINDX_PHP_ERROR_REPORTING_DEFAULT);
-ini_set('display_startup_errors', 'On');
-ini_set('display_errors', WIKINDX_PHP_DISPLAY_ERRORS_DEFAULT);
-ini_set('html_errors', 'On');
+error_reporting(E_ALL);
+ini_set('display_startup_errors', TRUE);
+ini_set('html_errors', (PHP_SAPI !== 'cli'));
+ini_set('display_errors', TRUE);
 
 /**
  * Fix default charset of PHP interpret, PHP libs and protocols
  */
 
-// GLOBAL config for PHP, cascaded for some libs
+// Default charset
 ini_set('default_charset', WIKINDX_CHARSET);
+ini_set('mbstring.encoding_translation', WIKINDX_CHARSET);
+ini_set('mbstring.detect_order', WIKINDX_CHARSET);
 
 // HTTP charset (HTTP specification doesn't permit to declare Content-type separetly)
 header('Content-type: ' . WIKINDX_HTTP_CONTENT_TYPE_DEFAULT . '; charset=' . WIKINDX_CHARSET);
-
-// mbstring lib
-ini_set('mbstring.encoding_translation', WIKINDX_CHARSET);
-ini_set('mbstring.detect_order', WIKINDX_CHARSET);
 
 // make sure that Session output is XHTML conform ('&amp;' instead of '&')
 ini_set('arg_separator.output', '&amp;');
@@ -77,27 +80,24 @@ ini_set('cgi.check_shebang_line', 'Off');
 //ini_set('session.use_strict_mode', 'On');
 
 
-// Configure a default timezone if empty
-if (date_default_timezone_get() == '')
-{
-    date_default_timezone_set(WIKINDX_TIMEZONE_DEFAULT);
-}
+
+// Set the time zone to whatever the default is to avoid 500 errors
+// Will default to UTC if it's not set properly in php.ini
+date_default_timezone_set(@date_default_timezone_get());
 
 
 // Check PHP minimum version and above.
-if (version_compare(PHP_VERSION, WIKINDX_PHP_VERSION_MIN, '<'))
-{
-    $AppName = WIKINDX_NAME;
+if (version_compare(PHP_VERSION, WIKINDX_PHP_VERSION_MIN, '<')) {
     $PHPVersion = PHP_VERSION;
     $PHPVersionMin = WIKINDX_PHP_VERSION_MIN;
     $SourceFile = __FILE__;
     $CodeLine = __LINE__ - 6;
-    $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
+    $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>$AppName</title>
+	<title>WIKINDX</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="$styledir/template.css" type="text/css">
 	<link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
@@ -106,7 +106,7 @@ if (version_compare(PHP_VERSION, WIKINDX_PHP_VERSION_MIN, '<'))
 
 <h1>Configuration error: PHP outdated</h1>
 
-<p>$AppName requires PHP <strong>$PHPVersionMin</strong> or greater.  Your PHP version is <em>$PHPVersion</em>.</p>
+<p>WIKINDX requires PHP <strong>$PHPVersionMin</strong> or greater.  Your PHP version is <em>$PHPVersion</em>.</p>
 
 <p>You can disable this check in file $SourceFile at line $CodeLine for migration purposes,
    but it is definitely not recommended for good functionality of all parts of
@@ -128,18 +128,16 @@ $MandatoryExtensions = \UTILS\listCoreMandatoryPHPExtensions();
 $InstalledExtensions = get_loaded_extensions();
 $MissingExtensions = array_diff($MandatoryExtensions, $InstalledExtensions);
 
-if (count($MissingExtensions) > 0)
-{
-    $AppName = WIKINDX_NAME;
+if (count($MissingExtensions) > 0) {
     $EnabledExtensions = array_intersect($MandatoryExtensions, $InstalledExtensions);
     $ListExtensions = '<tr><td>' . implode('</td><td style="color:red">DISABLED</td></tr><tr><td>', $MissingExtensions) . '<td style="color:red">DISABLED</td></tr>';
     $ListExtensions .= '<tr><td>' . implode('</td><td style="color:green">ENABLED</td></tr><tr><td>', $EnabledExtensions) . '<td style="color:green">ENABLED</td></tr>';
-    $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
+    $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>$AppName</title>
+	<title>WIKINDX</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="$styledir/template.css" type="text/css">
 	<link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
@@ -148,7 +146,7 @@ if (count($MissingExtensions) > 0)
 
 <h1>Configuration error: missing PHP extensions</h1>
 
-<p>$AppName requires the following PHP extensions to work properly :</p>
+<p>WIKINDX requires the following PHP extensions to work properly :</p>
 
 <table style="border: 1px solid black; width:33%">
 <tr style="border: 1px solid black;">
@@ -168,21 +166,18 @@ EOM;
 }
 
 // Check PHP execution environnement (CLI isn't supported)
-if (PHP_SAPI === 'cli')
-{
-    die(WIKINDX_NAME . " doesn't support CLI execution.");
+if (PHP_SAPI === 'cli') {
+    die("WIKINDX doesn't support CLI execution.");
 }
 
 // Check for presence of config.php
-if (!is_file('config.php'))
-{
-    $AppName = WIKINDX_NAME;
-    $styledir = str_replace("\\", "/", WIKINDX_DIR_COMPONENT_TEMPLATES) . "/" . WIKINDX_TEMPLATE_DEFAULT;
+if (!is_file(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]))) {
+    $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>$AppName</title>
+	<title>WIKINDX</title>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="$styledir/template.css" type="text/css">
 	<link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
@@ -194,7 +189,45 @@ if (!is_file('config.php'))
 <p><em>config.php</em> file is missing. If this is a new installation,
 copy <em>config.php.dist</em> to <em>config.php</em> and edit that file
 to ensure the MySQL access protocols match
-those you have specified for the $AppName database.</p>
+those you have specified for the WIKINDX database.</p>
+
+<p>Ensure also that the
+<em>components/languages</em>,
+<em>components/plugins</em>,
+<em>components/styles</em>,
+<em>components/templates</em>,
+and <em>components/vendor</em>
+folders and all they contain are writable by the web server user (usually <em>nobody</em> or <em>www-data</em> account).</p>
+
+<p>After that, refresh this page (with F5) or <a href="index.php">follow this link</a>.</p>
+
+</body>
+EOM;
+    die($msg);
+}
+
+// Include the config file and check if the CONFIG class is in place
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]));
+
+if (!class_exists("CONFIG")) {
+    $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
+    $msg = <<<EOM
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>WIKINDX</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="$styledir/template.css" type="text/css">
+	<link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
+</head>
+<body>
+
+<h1>Configuration error: <strong>CONFIG</strong> class missing in <em>config.php</em> file</h1>
+
+<p><strong>CONFIG</strong> class is missing in <em>config.php</em> file. If this is a new installation,
+copy <em>config.php.dist</em> to <em>config.php</em> and edit that file
+to ensure the MySQL access protocols match
+those you have specified for the WIKINDX database.</p>
 
 <p>Ensure also that the
 <em>components/languages</em>,
@@ -212,39 +245,30 @@ EOM;
 }
 
 // Create components directories
-foreach ([WIKINDX_DIR_COMPONENT_LANGUAGES, WIKINDX_DIR_COMPONENT_PLUGINS, WIKINDX_DIR_COMPONENT_STYLES, WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_DIR_COMPONENT_VENDOR] as $dir)
-{
-    if (!file_exists($dir))
-    {
+foreach ([WIKINDX_DIR_COMPONENT_LANGUAGES, WIKINDX_DIR_COMPONENT_PLUGINS, WIKINDX_DIR_COMPONENT_STYLES, WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_DIR_COMPONENT_VENDOR] as $dir) {
+    if (!file_exists($dir)) {
         // Continue without error, a procedure checks the permissions further.
-        if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
-        {
+        if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
             echo "<div>Directory <strong>" . $dir . "</strong> has not been created. Check permissions.</div>\n";
         }
     }
 }
 
 // Create data directories
-foreach ([WIKINDX_DIR_DATA, WIKINDX_DIR_DATA_ATTACHMENTS, WIKINDX_DIR_DATA_FILES, WIKINDX_DIR_DATA_IMAGES, WIKINDX_DIR_DATA_PLUGINS] as $dir)
-{
-    if (!file_exists($dir))
-    {
+foreach ([WIKINDX_DIR_DATA, WIKINDX_DIR_DATA_ATTACHMENTS, WIKINDX_DIR_DATA_FILES, WIKINDX_DIR_DATA_IMAGES, WIKINDX_DIR_DATA_PLUGINS] as $dir) {
+    if (!file_exists($dir)) {
         // Continue without error, a procedure checks the permissions further.
-        if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
-        {
+        if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
             echo "<div>Directory <strong>" . $dir . "</strong> has not been created. Check permissions.</div>\n";
         }
     }
 }
 
 // Create cache directories
-foreach ([WIKINDX_DIR_CACHE, WIKINDX_DIR_CACHE_FILES, WIKINDX_DIR_CACHE_ATTACHMENTS, WIKINDX_DIR_CACHE_LANGUAGES, WIKINDX_DIR_CACHE_PLUGINS, WIKINDX_DIR_CACHE_STYLES, WIKINDX_DIR_CACHE_TEMPLATES] as $dir)
-{
-    if (!file_exists($dir))
-    {
+foreach ([WIKINDX_DIR_CACHE, WIKINDX_DIR_CACHE_FILES, WIKINDX_DIR_CACHE_ATTACHMENTS, WIKINDX_DIR_CACHE_LANGUAGES, WIKINDX_DIR_CACHE_PLUGINS, WIKINDX_DIR_CACHE_STYLES, WIKINDX_DIR_CACHE_TEMPLATES] as $dir) {
+    if (!file_exists($dir)) {
         // Continue without error, a procedure checks the permissions further.
-        if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
-        {
+        if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
             echo "<div>Directory <strong>" . $dir . "</strong> has not been created. Check permissions.</div>\n";
         }
     }
@@ -252,32 +276,28 @@ foreach ([WIKINDX_DIR_CACHE, WIKINDX_DIR_CACHE_FILES, WIKINDX_DIR_CACHE_ATTACHME
 
 // Create data and cache directories of plugins
 include_once("core/file/FILE.php");
-foreach (\FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_PLUGINS) as $dir)
-{
+foreach (\FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_PLUGINS) as $dir) {
     $plugencachedir = WIKINDX_DIR_CACHE_PLUGINS . DIRECTORY_SEPARATOR . basename($dir);
-    if (!file_exists($plugencachedir))
-    {
+    if (!file_exists($plugencachedir)) {
         // Continue without error, a procedure checks the permissions further.
-        if (!@mkdir($plugencachedir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
-        {
+        if (!@mkdir($plugencachedir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
             echo "<div>Directory <strong>" . $plugencachedir . "</strong> has not been created. Check permissions.</div>\n";
         }
     }
     $plugendatadir = WIKINDX_DIR_DATA_PLUGINS . DIRECTORY_SEPARATOR . basename($dir);
-    if (!file_exists($plugendatadir))
-    {
+    if (!file_exists($plugendatadir)) {
         // Continue without error, a procedure checks the permissions further.
-        if (!@mkdir($plugendatadir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
-        {
+        if (!@mkdir($plugendatadir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
             echo "<div>Directory <strong>" . $plugendatadir . "</strong> has not been created. Check permissions.</div>\n";
         }
     }
 }
 
+// Check folders permissions
+\UTILS\checkFoldersPerms();
+
 // Create a cached components list
 \UTILS\refreshComponentsListCache();
-
-
 
 // Bufferize output
 ob_start();
@@ -287,82 +307,50 @@ include_once("core/startup/GLOBALS.php");
 
 // Set up the FACTORY objects of commonly used classes and start the timer.
 include_once("core/startup/FACTORY.php");
-include_once("core/startup/ENVIRONMENT.php");
 
-// Init user config object
-//$config = FACTORY_CONFIG::getInstance(); // not needed here (and interferes with upgrade of v3.8 database because v3 config.php is not a class
+// Initialize the static config read from config.php file
+include_once("core/startup/LOADSTATICCONFIG.php");
 
 /**
  *	Initialize the system
  *	As ENVIRONMENT starts the session, we must check for 'remember me' cookie requests from MYWIKINDX.php prior to
  *	setting the session.
+ *  The static part of the config is loaded.
  */
-$env = new ENVIRONMENT();
-
-$vars = GLOBALS::getVars();
-if (!empty($vars) && array_key_exists('cookie', $vars) && $vars['cookie'] &&
-    array_key_exists('uname', $vars) && trim($vars['uname']))
-{
-    // set the cookie if requested
-    $cookie = FACTORY_COOKIE::getInstance();
-    $cookie->storeCookie($vars['uname']);
-    unset($cookie);
-}
-// start the session
-$env->startSession();
-
-
-// Set the current working directory -- useful for ensuring TinyMCE plug-ins can find the wikindx base path for include() commands.
-// Not all OSs allow getcwd() or sometimes the wikindx installation is in a directory that is not searchable.
-if (!$wikindxBasePath = dirname(__FILE__))
-{
-    //			$session->setVar('wikindxBasePath', $session->getVar('wikindxBasePath', dirname(__FILE__)));
-    if (!isset($env->config->WIKINDX_WIKINDX_PATH) || !$env->config->WIKINDX_WIKINDX_PATH)
-    {
-        die("WIKINDX is unable to set the installation path automatically.  You should set \$WIKINDX_WIKINDX_PATH in config.php");
-    }
-    $path = $env->config->WIKINDX_WIKINDX_PATH;
-    // test path is correct
-    if (!is_file($path . '/core/startup/LOADCONFIG.php'))
-    {
-        die("\$WIKINDX_WIKINDX_PATH in config.php is set incorrectly");
-    }
-    else
-    {
-        $wikindxBasePath = $path;
-    }
-}
-$remove = preg_quote(DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'startup', '/');
-$_SESSION['wikindxBasePath'] = preg_replace('/' . $remove . '$/', '', $wikindxBasePath);
+FACTORY_LOADCONFIG::getInstance();
 
 // Load auth object but diff. login after upgrade stage
 // Upgrade will request login to superadmin if needed
 $authorize = FACTORY_AUTHORIZE::getInstance();
+
 // Attempt an upgrade only if we are on the main script
-if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE)
-{
+if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE) {
     include_once("core/startup/UPDATE.php");
 
     // Do database upgrade check
-    if (\UPDATE\needUpdate(FACTORY_DB::getInstance()))
-    {
+    if (\UPDATE\needUpdate(FACTORY_DB::getInstance())) {
         // Upgrade database
         include_once("core/startup/UPDATEDATABASE.php");
         $update = new UPDATEDATABASE(); // __construct() runs on autopilot
         $upgradeCompleted = $update->upgradeCompleted;
         unset($update);
     }
-    unset($env);
 }
 
+/**
+ *	Initialize the system
+ *  The dynamic part of the config is loaded (db).
+ */
+FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
 
-FACTORY_LOADCONFIG::getInstance()->load();
+FACTORY_LOADCONFIG::getInstance()->loadUserVars();
 
-// Locales setting need to know the language prefered by the user session
+// Locales setting needs to know the language prefered by the user which is now in GLOBALS
 include_once("core/locales/LOCALES.php");
 \LOCALES\load_locales();
 
-if (array_key_exists('action', $vars) && ($vars['action'] == 'continueExecution'))
-{
+$vars = GLOBALS::getVars();
+
+if (array_key_exists('action', $vars) && ($vars['action'] == 'continueExecution')) {
     unset($vars['action']);
 }

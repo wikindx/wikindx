@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -20,7 +22,6 @@ class RESOURCEABSTRACT
     private $user;
     private $icons;
     private $common;
-    private $config;
     private $cite;
     private $userId;
 
@@ -34,9 +35,8 @@ class RESOURCEABSTRACT
         $this->user = FACTORY_USER::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->cite = FACTORY_CITE::getInstance();
-        $this->userId = $this->session->getVar('setup_UserId');
+        $this->userId = $this->session->getVar("setup_UserId");
     }
     /**
      * Display resource's abstract
@@ -48,16 +48,13 @@ class RESOURCEABSTRACT
     public function view($row)
     {
         $abstract = [];
-        $write = $this->session->getVar('setup_Write') ? TRUE : FALSE;
-        if (!$row['resourcetextAbstract'] && !$write)
-        {
+        $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
+        if (!$row['resourcetextAbstract'] && !$write) {
             return $abstract;
         }
         if ($this->session->getVar("setup_Superadmin") ||
-            ($write && (!$this->config->WIKINDX_ORIGINATOR_EDITONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId))))
-        {
-            if (!$row['resourcetextAbstract'])
-            {
+            ($write && (!WIKINDX_ORIGINATOR_EDIT_ONLY || ($row['resourcemiscAddUserIdResource'] == $this->userId)))) {
+            if (!$row['resourcetextAbstract']) {
                 $abstract['title'] = $this->messages->text("resources", "abstract");
                 $abstract['editLink'] = \HTML\a(
                     $this->icons->getClass("add"),
@@ -67,9 +64,7 @@ class RESOURCEABSTRACT
                 );
 
                 return $abstract;
-            }
-            elseif ($row['resourcetextAbstract'])
-            {
+            } elseif ($row['resourcetextAbstract']) {
                 $abstract['editLink'] = \HTML\a(
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
@@ -84,12 +79,11 @@ class RESOURCEABSTRACT
                 );
             }
         }
-        if ($row['resourcetextAbstract'])
-        {
+        if ($row['resourcetextAbstract']) {
             $abstract['title'] = $this->messages->text("resources", "abstract");
             list($abstract['userAdd'], $abstract['userEdit']) = $this->user->displayUserAddEdit($row, TRUE, 'abstract');
             $abstract['abstract'] =
-                $this->cite->parseCitations($this->common->doHighlight(\HTML\dbToHtmlTidy($row['resourcetextAbstract'])), 'html');
+                $this->cite->parseCitations($this->common->doHighlight(\HTML\nlToHtml($row['resourcetextAbstract'])), 'html');
         }
 
         return $abstract;

@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -53,21 +55,19 @@ class RESOURCECUSTOM
     {
         $array = [];
         $index = 0;
-        if ($this->session->getVar('setup_Write'))
-        {
+        if ($this->session->getVar("setup_Write")) {
             $this->db->formatConditions(['resourcecustomResourceId' => $rId]);
             $subQ = $this->db->subQuery($this->db->selectNoExecute('resource_custom', 'resourcecustomCustomId'), FALSE, FALSE, TRUE);
             $this->db->formatConditions($this->db->formatFields('customId') . $this->db->inClause($subQ, TRUE));
             $recordset = $this->db->select('custom', ['customId', 'customLabel']);
-            while ($row = $this->db->fetchRow($recordset))
-            {
+            while ($row = $this->db->fetchRow($recordset)) {
                 $array[$index]['editLink'] = \HTML\a(
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
                     "index.php?action=resource_RESOURCECUSTOM_CORE" . htmlentities("&method=writeInit&id=" . $row['customId'] .
                     '&resourceId=' . $rId)
                 );
-                $array[$index]['title'] = \HTML\dbToHtmlTidy($row['customLabel']);
+                $array[$index]['title'] = \HTML\nlToHtml($row['customLabel']);
                 ++$index;
             }
         }
@@ -75,10 +75,8 @@ class RESOURCECUSTOM
         $this->db->formatConditions(['resourcecustomResourceId' => $rId]);
         $recordset = $this->db->select('custom', ['resourcecustomId', 'customLabel', 'customSize', 'resourcecustomShort',
             'resourcecustomLong', 'resourcecustomAddUserIdCustom', 'resourcecustomEditUserIdCustom', ]);
-        while ($row = $this->db->fetchRow($recordset))
-        {
-            if ($this->session->getVar('setup_Write'))
-            {
+        while ($row = $this->db->fetchRow($recordset)) {
+            if ($this->session->getVar("setup_Write")) {
                 $array[$index]['editLink'] = \HTML\a(
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
@@ -87,32 +85,26 @@ class RESOURCECUSTOM
                 );
             }
             $text = FALSE;
-            if ($row['resourcecustomShort'])
-            {
+            if ($row['resourcecustomShort']) {
                 $text = trim($row['resourcecustomShort']);
             }
-            if ($row['resourcecustomLong'])
-            {
+            if ($row['resourcecustomLong']) {
                 $text = $this->cite->parseCitations(trim($row['resourcecustomLong']), 'html');
             }
-            if (!$text)
-            {
+            if (!$text) {
                 continue;
             }
-            $array[$index]['text'] = $this->common->doHighlight(\HTML\dbToHtmlTidy($text));
-            if ($row['resourcecustomEditUserIdCustom'])
-            {
+            $array[$index]['text'] = $this->common->doHighlight(\HTML\nlToHtml($text));
+            if ($row['resourcecustomEditUserIdCustom']) {
                 $this->db->formatConditions(['usersId' => $row['resourcecustomEditUserIdCustom']]);
-            }
-            else
-            {
+            } else {
                 $this->db->formatConditions(['usersId' => $row['resourcecustomAddUserIdCustom']]);
             }
             $user = $this->db->selectFirstRow('users', ['usersUsername', 'usersFullname']);
             $user['resourcecustomAddUserIdCustom'] = $row['resourcecustomAddUserIdCustom'];
             $user['resourcecustomEditUserIdCustom'] = $row['resourcecustomEditUserIdCustom'];
             list($array[$index]['userAdd'], $array[$index]['userEdit']) = $this->user->displayUserAddEdit($user, TRUE, 'custom');
-            $array[$index]['title'] = \HTML\dbToHtmlTidy($row['customLabel']);
+            $array[$index]['title'] = \HTML\nlToHtml($row['customLabel']);
             ++$index;
         }
 
@@ -126,14 +118,11 @@ class RESOURCECUSTOM
         $this->gatekeep->init();
         $this->checkInput(['id', 'size']);
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $this->session->delVar('resourceCustomLock');
+        $this->session->delVar("resourceCustomLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userEditField"));
-        if ($this->vars['size'] == 'L')
-        {
+        if ($this->vars['size'] == 'L') {
             $fieldName = 'resourcecustomLong';
-        }
-        else
-        {
+        } else {
             $fieldName = 'resourcecustomShort';
         }
         $this->db->leftJoin('custom', 'customId', 'resourcecustomCustomId');
@@ -147,20 +136,17 @@ class RESOURCECUSTOM
         $pString .= \FORM\hidden("size", $this->vars['size']);
         $pString .= $tinymce->loadMetadataTextarea();
         // The second parameter ('customText') to textareaInput is the textarea name
-        if ($this->vars['size'] == 'L')
-        {
+        if ($this->vars['size'] == 'L') {
             $pString .= \FORM\textareaInput(
-                \HTML\strong(\HTML\dbToHtmlTidy($row['customLabel'])),
+                \HTML\strong(\HTML\nlToHtml($row['customLabel'])),
                 "customText",
                 \HTML\dbToFormTidy($row[$fieldName]),
                 80,
                 10
             );
-        }
-        else
-        {
+        } else {
             $pString .= \FORM\textInput(
-                \HTML\strong(\HTML\dbToHtmlTidy($row['customLabel'])),
+                \HTML\strong(\HTML\nlToHtml($row['customLabel'])),
                 'customText',
                 \HTML\dbToFormTidy($row[$fieldName]),
                 80,
@@ -176,34 +162,26 @@ class RESOURCECUSTOM
      */
     public function edit()
     {
-        if ($this->session->getVar('resourceCustomLock'))
-        {
+        if ($this->session->getVar("resourceCustomLock")) {
             $this->badInput->close($this->errors->text("done", "custom"));
         }
         $this->gatekeep->init();
         $this->checkInput(['id', 'size', 'resourceId']);
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         // if customText is empty, delete the row
-        if (!trim($this->vars['customText']))
-        {
+        if (!trim($this->vars['customText'])) {
             $message = $this->success->text("fieldDelete");
             $this->db->formatConditions(['resourcecustomId' => $this->vars['id']]);
             $this->db->delete('resource_custom');
-        }
-        else
-        {
+        } else {
             $message = $this->success->text("fieldEdit");
-            if ($this->vars['size'] == 'S')
-            {
+            if ($this->vars['size'] == 'S') {
                 $field = 'resourcecustomShort';
-            }
-            else
-            {
+            } else {
                 $field = 'resourcecustomLong';
             }
             $updateArray[$field] = trim($this->vars['customText']);
-            if ($userId)
-            {
+            if ($userId) {
                 $updateArray["resourcecustomEditUserIdCustom"] = $userId;
             }
             $this->db->formatConditions(['resourcecustomId' => $this->vars['id']]);
@@ -217,7 +195,7 @@ class RESOURCECUSTOM
         $email = new EMAIL($this->db);
         $email->notify($this->vars['resourceId']);
         // lock reload
-        $this->session->setVar('resourceCustomLock', TRUE);
+        $this->session->setVar("resourceCustomLock", TRUE);
         // send back to view this resource with success message
         $this->navigate($message);
     }
@@ -229,7 +207,7 @@ class RESOURCECUSTOM
         $this->gatekeep->init();
         $this->checkInput(['id', 'resourceId']);
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $this->session->delVar('resourceCustomLock');
+        $this->session->delVar("resourceCustomLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userEditField"));
         $this->db->formatConditions(['customId' => $this->vars['id']]);
         $row = $this->db->selectFirstRow('custom', ['customLabel', 'customSize']);
@@ -240,20 +218,17 @@ class RESOURCECUSTOM
         $pString .= \FORM\hidden("size", $row['customSize']);
         $pString .= $tinymce->loadMetadataTextarea();
         // The second parameter ('customText') to textareaInput is the textarea name
-        if ($row['customSize'] == 'L')
-        {
+        if ($row['customSize'] == 'L') {
             $pString .= \FORM\textareaInput(
-                \HTML\strong(\HTML\dbToHtmlTidy($row['customLabel'])),
+                \HTML\strong(\HTML\nlToHtml($row['customLabel'])),
                 "customText",
                 FALSE,
                 80,
                 10
             );
-        }
-        else
-        {
+        } else {
             $pString .= \FORM\textInput(
-                \HTML\strong(\HTML\dbToHtmlTidy($row['customLabel'])),
+                \HTML\strong(\HTML\nlToHtml($row['customLabel'])),
                 'customText',
                 FALSE,
                 80,
@@ -269,30 +244,22 @@ class RESOURCECUSTOM
      */
     public function write()
     {
-        if ($this->session->getVar('resourceCustomLock'))
-        {
+        if ($this->session->getVar("resourceCustomLock")) {
             $this->badInput->close($this->errors->text("done", "custom"));
         }
         $this->gatekeep->init();
         $this->checkInput(['id', 'size', 'resourceId', 'customText']);
-        $userId = $this->session->getVar('setup_UserId');
-        if (!trim($this->vars['customText']))
-        {
+        $userId = $this->session->getVar("setup_UserId");
+        if (!trim($this->vars['customText'])) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
-        else
-        {
-            if ($this->vars['size'] == 'S')
-            {
+        } else {
+            if ($this->vars['size'] == 'S') {
                 $field = 'resourcecustomShort';
-            }
-            else
-            {
+            } else {
                 $field = 'resourcecustomLong';
             }
             $array[$field] = trim($this->vars['customText']);
-            if ($userId)
-            {
+            if ($userId) {
                 $array["resourcecustomAddUserIdCustom"] = $userId;
             }
             $array['resourcecustomCustomId'] = $this->vars['id'];
@@ -307,7 +274,7 @@ class RESOURCECUSTOM
         $email = new EMAIL($this->db);
         $email->notify($this->vars['resourceId']);
         // lock reload
-        $this->session->setVar('resourceCustomLock', TRUE);
+        $this->session->setVar("resourceCustomLock", TRUE);
         // send back to view this resource with success message
         $this->navigate($this->success->text("fieldAdd"));
     }
@@ -318,10 +285,8 @@ class RESOURCECUSTOM
      */
     public function checkInput($array)
     {
-        foreach ($array as $item)
-        {
-            if (!array_key_exists($item, $this->vars) || !$this->vars[$item])
-            {
+        foreach ($array as $item) {
+            if (!array_key_exists($item, $this->vars) || !$this->vars[$item]) {
                 $this->badInput->close($this->errors->text("inputError", "missing"));
             }
         }

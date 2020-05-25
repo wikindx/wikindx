@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -19,14 +21,8 @@ class AUTHORIZE
     private $db;
     /** object */
     private $session;
-    /** object */
-    private $config;
-    /** object */
-    private $loadConfig;
     /** array */
     private $vars;
-    /** object */
-    private $configDbStructure;
 
     /**
      *	AUTHORIZE
@@ -34,39 +30,23 @@ class AUTHORIZE
     public function __construct()
     {
         $this->session = FACTORY_SESSION::getInstance();
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->loadConfig = FACTORY_LOADCONFIG::getInstance();
-        $this->configDbStructure = FACTORY_CONFIGDBSTRUCTURE::getInstance();
-        if (!$this->session->getVar("setup_Language"))
-        {
+        if (!GLOBALS::getUserVar("Language")) {
             $fields = $this->db->listFields('config');
-            // set the default language prior to displaying the login prompt
-            if (in_array('language', $fields) !== FALSE)
-            { // perhaps this is a first install or upgrade to >= v4 (v3 has config.language not config.configLanguage)
-                $this->session->setVar('setup_Language', "auto");
-            }
-            elseif (array_search('configLanguage', $fields) !== FALSE)
-            {
-                if ($this->db->numRows($this->db->select('config', '*')) == 1)
-                { // Prior to v5.3
-                    $this->session->setVar('setup_Language', "auto");
-                }
-                else
-                { // post v5.3
-                    $user = FACTORY_USER::getInstance();
-                    $row = $this->configDbStructure->getData('configLanguage');
-                    if (empty($row))
-                    { // perhaps this is a first install
-                        $this->session->setVar('setup_Language', "auto");
-                    }
-                    else
-                    {
-                        // populate session with default values from config
-                        $user->writeSessionPreferences(FALSE, 'config');
-                    }
-                }
+            // Set the default language prior to displaying the login prompt.
+            // Perhaps this is a first install or upgrade (missing config table)
+            if (count($fields) == 0) {
+            	$user = FACTORY_USER::getInstance();
+            	$user->writeSessionPreferences(FALSE);
+            // Prior to v5.3
+            } elseif (in_array('configLanguage', $fields) !== FALSE) {
+            	GLOBALS::setUserVar('Language', WIKINDX_USER_LANGUAGE_DEFAULT);
+            // From v5.3
+            } else {
+            	$configDbStructure = FACTORY_CONFIGDBSTRUCTURE::getInstance();
+            	$cnf = $configDbStructure->getData('configLanguage');
+            	GLOBALS::setUserVar('Language', $cnf['configLanguage']);
             }
         }
     }
@@ -79,186 +59,123 @@ class AUTHORIZE
      */
     public function gatekeep()
     {
-        $this->loadConfig->load();
-        if (array_key_exists("action", $this->vars))
-        {
+// loadDBConfig() is called in WEBSERVERCONFIG before this. It SHOULD be the case that this call here is not required
+//        FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
+        if (array_key_exists("action", $this->vars)) {
             // Logged-on user clicked on 'OK' when asked to confirm GDPR or privacy statement
-            if ($this->vars["action"] == 'authGate')
-            {
-                $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+            if ($this->vars["action"] == 'authGate') {
+                $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
                 $this->db->update('users', ['usersGDPR' => 'Y']);
                 // FALSE means go to front of WIKINDX
                 return FALSE;
             }
-            // logging out
-            if ($this->vars["action"] == 'logout')
-            {
-                $this->logout();
+            // User requesting readOnly access - clear previous sessions
+            if ($this->vars["action"] == 'readOnly') {
+                $this->readOnly();
             }
             // User logging in from readOnly mode
-            elseif ($this->vars["action"] == 'initLogon')
-            {
+            elseif ($this->vars["action"] == 'initLogon') {
                 // First delete any pre-existing session in case this user has been logging on and off as different users --
                 // keep template and language etc.
-                $language = $this->config->WIKINDX_LANGUAGE;
-                $template = $this->config->WIKINDX_TEMPLATE;
-                $userReg = $this->config->WIKINDX_USERREGISTRATION;
-                $multiUser = $this->config->WIKINDX_MULTIUSER;
-                $this->session->setVar('setup_Language', $language);
-                $this->session->setVar('setup_Template', $template);
-                $this->session->setVar('setup_UserRegistration', $userReg);
-                $this->session->setVar('setup_MultiUser', $multiUser);
                 $this->initLogon(); // login prompt
                 FACTORY_CLOSENOMENU::getInstance();
             }
             if (array_key_exists('method', $this->vars) &&
             (($this->vars["method"] == 'forgetInitStage1') ||
             ($this->vars["method"] == 'forgetInitStage2') ||
-            ($this->vars["method"] == 'forgetProcess')))
-            {
+            ($this->vars["method"] == 'forgetProcess'))) {
                 return TRUE;
             }
             // User supplying username and password to logon to WIKINDX.
             // $auth->logonCheck() dies after printing logon screen if bad comparison.
             elseif (($this->vars["action"] == 'logon') &&
-                array_key_exists("password", $this->vars) && array_key_exists("username", $this->vars))
-            {
-                $this->logonCheck($this->vars['username'], $this->vars['password']);
+                array_key_exists("password", $this->vars) && array_key_exists("usersUsername", $this->vars)) {
+                $this->logonCheck($this->vars['usersUsername'], $this->vars['password']);
                 // tidy up old files
                 FILE\tidyFiles();
                 // FALSE means go to front of WIKINDX
                 return FALSE;
             }
             // superAdmin already logged in after upgrade so just set up the environment
-            elseif ($this->vars["action"] == 'upgradeDB')
-            {
+            elseif ($this->vars["action"] == 'upgradeDB') {
                 $user = FACTORY_USER::getInstance();
                 $this->session->clearSessionData();
-                $this->session->setVar("setup_UserId", '1'); // superAdmin always id = '1'
+                $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID); // superAdmin always id = WIKINDX_SUPERADMIN_ID
                 $this->session->setVar("setup_Write", TRUE);
                 $this->session->delVar("setup_ReadOnly");
-                $user->writeSessionPreferences(FALSE, 'config');
+                $user->writeSessionPreferences(FALSE);
                 // restore some session variables if stored from last logout
                 $this->restoreEnvironment();
-                //				$this->loadConfig->load();
-                return FALSE;
-            }
-            // User requesting readOnly access - clear previous sessions
-            elseif ($this->vars["action"] == 'readOnly')
-            {
-                if ($this->config->WIKINDX_DENY_READONLY)
-                {
-                    $this->initLogon(); // login prompt
-                    FACTORY_CLOSENOMENU::getInstance();
-                }
-                // First delete any pre-existing session in case this user has been logging on and off as different users
-                // session array 'setup' is deleted at logout()
-                $this->session->destroy();
-                $this->session->setVar("setup_ReadOnly", TRUE);
-                // tidy up old files
-                FILE\tidyFiles();
-                // populate session with default values from config
-                $user = FACTORY_USER::getInstance();
-                $user->writeSessionPreferences(FALSE, 'config');
-                $this->clearEmbargoes();
-                $this->checkNews();
-                // FALSE means go to front of WIKINDX
+
                 return FALSE;
             }
             // User registration
-            elseif ($this->config->WIKINDX_MULTIUSER && $this->config->WIKINDX_USERREGISTRATION && ($this->config->WIKINDX_MAIL_SERVER))
-            {
+            elseif (WIKINDX_MULTIUSER && WIKINDX_USER_REGISTRATION && (WIKINDX_MAIL_USE)) {
                 include_once("core/modules/usersgroups/REGISTER.php");
                 $obj = new REGISTER();
-                if ($this->vars["action"] == 'initRegisterUser')
-                {
+                if ($this->vars["action"] == 'initRegisterUser') {
                     $obj->initRegister();
-                    if (!$this->session->getVar("setup_ReadOnly"))
-                    {
+                    if (!$this->session->getVar("setup_ReadOnly")) {
                         FACTORY_CLOSENOMENU::getInstance();
-                    }
-                    else
-                    {
+                    } else {
                         FACTORY_CLOSE::getInstance();
                     }
-                }
-                elseif (array_key_exists('method', $this->vars) && $this->vars["method"] == 'registerConfirm')
-                {
+                } elseif (array_key_exists('method', $this->vars) && $this->vars["method"] == 'registerConfirm') {
                     GLOBALS::addTplVar('content', $obj->registerConfirm());
-                    if (!$this->session->getVar("setup_ReadOnly"))
-                    {
+                    if (!$this->session->getVar("setup_ReadOnly")) {
                         FACTORY_CLOSENOMENU::getInstance();
-                    }
-                    else
-                    {
+                    } else {
                         FACTORY_CLOSE::getInstance();
                     }
-                }
-                elseif (array_key_exists('method', $this->vars) && $this->vars["method"] == 'registerUser')
-                {
+                } elseif (array_key_exists('method', $this->vars) && $this->vars["method"] == 'registerUser') {
                     $obj->registerUser();
-                    if (!$this->session->getVar("setup_ReadOnly"))
-                    {
+                    if (!$this->session->getVar("setup_ReadOnly")) {
                         FACTORY_CLOSENOMENU::getInstance();
-                    }
-                    else
-                    {
+                    } else {
                         FACTORY_CLOSE::getInstance();
                     }
-                }
-                elseif (array_key_exists('method', $this->vars) && $this->vars["method"] == 'registerUserAdd')
-                {
+                } elseif (array_key_exists('method', $this->vars) && $this->vars["method"] == 'registerUserAdd') {
                     GLOBALS::addTplVar('content', $obj->registerUserAdd());
                     FACTORY_CLOSE::getInstance();
-                }
-                elseif (array_key_exists('method', $this->vars) && $this->vars["method"] == 'registerRequest')
-                {
+                } elseif (array_key_exists('method', $this->vars) && $this->vars["method"] == 'registerRequest') {
                     GLOBALS::addTplVar('content', $obj->registerRequest());
                     FACTORY_CLOSE::getInstance();
                 }
             }
         }
-        if (isset($this->vars["method"]) && ($this->vars['method'] == 'RSS') && !$this->config->WIKINDX_DENY_READONLY)
-        {
+        if (isset($this->vars["method"]) && ($this->vars['method'] == 'RSS') && !WIKINDX_DENY_READONLY) {
             $this->session->setVar("setup_ReadOnly", TRUE);
 
             return TRUE;
         }
         // access already granted
-        if ($this->session->getVar('setup_Write'))
-        {
+        if ($this->session->getVar("setup_Write")) {
             return TRUE;
         }
         // access already granted
-        if ($this->session->getVar("setup_ReadOnly"))
-        {
+        if ($this->session->getVar("setup_ReadOnly")) {
             // populate session with default values from config
             //			$user = FACTORY_USER::getInstance();
-            //			$user->writeSessionPreferences(FALSE, 'config');
+            //			$user->writeSessionPreferences(FALSE);
             return TRUE;
         }
-        if ((!array_key_exists('action', $this->vars) || $this->vars['action'] != 'upgradeDBLogon'))
-        {
-            //			$this->loadConfig->load();
+        if ((!array_key_exists('action', $this->vars) || $this->vars['action'] != 'upgradeDBLogon')) {
             $cookie = FACTORY_COOKIE::getInstance();
             // grabCookie() returns TRUE if valid cookie - otherwise, proceed to manual logon
-            if ($cookie->grabCookie())
-            {
+            if ($cookie->grabCookie()) {
                 // Success - so restore some session variables if stored from last logout
                 $this->restoreEnvironment();
 
                 return TRUE;
             }
         }
-        if (!$this->session->getVar("setup_Write") && !$this->session->getVar('setup_ReadOnly'))
-        {
+        if (!$this->session->getVar("setup_Write") && !$this->session->getVar("setup_ReadOnly")) {
             // Default == read only access.
-            if ($this->config->WIKINDX_READONLYACCESS && !$this->config->WIKINDX_DENY_READONLY)
-            {
+            if (WIKINDX_READ_ONLY_ACCESS && !WIKINDX_DENY_READONLY) {
                 $this->session->setVar("setup_ReadOnly", TRUE);
                 // populate session with default values from config
                 $user = FACTORY_USER::getInstance();
-                $user->writeSessionPreferences(FALSE, 'config');
+                $user->writeSessionPreferences(FALSE);
                 $this->checkNews();
 
                 return TRUE;
@@ -280,9 +197,7 @@ class AUTHORIZE
         $messages = FACTORY_MESSAGES::getFreshInstance();
         GLOBALS::setTplVar('heading', $messages->text("heading", "logon"));
         $pString = $error;
-        $row = $this->configDbStructure->getData(['configMultiUser', 'configUserRegistration']);
-        if (!$row['configMultiUser'])
-        {
+        if (!WIKINDX_MULTIUSER) {
             $errors = FACTORY_ERRORS::getFreshInstance();
             $pString .= \HTML\p($errors->text("warning", "superadminOnly"));
         }
@@ -294,26 +209,20 @@ class AUTHORIZE
         /**
          * For a test user (see index.php)
          */
-        if ($this->config->WIKINDX_RESTRICT_USERID != WIKINDX_RESTRICT_USERID_DEFAULT)
-        {
+        if (WIKINDX_RESTRICT_USERID != WIKINDX_RESTRICT_USERID_DEFAULT) {
             $pString .= \HTML\p("For test drive purposes, " .
                 \HTML\strong($messages->text("user", "username") . ":&nbsp;&nbsp;") . "wikindx, " .
                 \HTML\strong($messages->text("user", "password") . ":&nbsp;&nbsp;") . "wikindx");
         }
-        $forgot = $this->config->WIKINDX_MAIL_SERVER ? \HTML\a("link", $messages->text("user", "forget6"), $link2) : FALSE;
+        $forgot = WIKINDX_MAIL_USE ? \HTML\a("link", $messages->text("user", "forget6"), $link2) : FALSE;
         $pString .= $this->printLogonTable();
         // Give user the option to bypass logging in simply to read.
-        if (!$this->config->WIKINDX_DENY_READONLY)
-        {
-            $links = \HTML\a("link", $messages->text("authorize", "readOnly") .
-            BR . $forgot, $link1);
-        }
-        else
-        {
+        if (!WIKINDX_DENY_READONLY) {
+            $links = \HTML\a("link", $messages->text("authorize", "readOnly") . BR . $forgot, $link1);
+        } else {
             $links = $forgot;
         }
-        if (($row['configUserRegistration']) && ($row['configMultiUser']) && ($this->config->WIKINDX_MAIL_SERVER))
-        {
+        if (WIKINDX_USER_REGISTRATION && WIKINDX_MULTIUSER && WIKINDX_MAIL_USE) {
             $links .= BR . \HTML\a("link", $messages->text("menu", "register"), $link3);
         }
         $pString .= \HTML\p($links, FALSE, 'right');
@@ -332,8 +241,7 @@ class AUTHORIZE
     {
         $user = FACTORY_USER::getInstance();
         // If checkPassword is successful, it also sets up some session variables to allow access without reauthentication.
-        if (!$user->checkPassword($username, $password))
-        {
+        if (!$user->checkPassword($username, $password)) {
             $this->failure();
         }
         // Success - so restore some session variables if stored from last logout
@@ -363,30 +271,23 @@ class AUTHORIZE
     {
         $isAuthorised = FALSE;
 
-        switch ($pluginAuthLevelRequested)
-        {
+        switch ($pluginAuthLevelRequested) {
             case 0:
                 $isAuthorised = TRUE;
 
             break;
             case 1:
-                if ($this->session->getVar("setup_Write"))
-                {
+                if ($this->session->getVar("setup_Write")) {
                     $isAuthorised = TRUE;
-                }
-                elseif ($promptForLogin == TRUE)
-                {
+                } elseif ($promptForLogin == TRUE) {
                     $this->initLogon();
                 }
 
             break;
             case 2:
-                if ($this->session->getVar("setup_Superadmin"))
-                {
+                if ($this->session->getVar("setup_Superadmin")) {
                     $isAuthorised = TRUE;
-                }
-                elseif ($promptForLogin == TRUE)
-                {
+                } elseif ($promptForLogin == TRUE) {
                     $this->initLogon();
                 }
 
@@ -407,7 +308,7 @@ class AUTHORIZE
         $pString .= \HTML\tableStart('left width50percent');
         $pString .= \HTML\trStart();
         $pString .= \HTML\td($messages->text("user", "username") . ":&nbsp;&nbsp;");
-        $pString .= \HTML\td(\FORM\textInput(FALSE, "username"));
+        $pString .= \HTML\td(\FORM\textInput(FALSE, "usersUsername"));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td($messages->text("user", "password") . ":&nbsp;&nbsp;");
@@ -419,6 +320,7 @@ class AUTHORIZE
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \FORM\formEnd();
+        $this->session->destroy();
 
         return $pString;
     }
@@ -427,13 +329,11 @@ class AUTHORIZE
      */
     private function authGate()
     {
-        if (($this->config->WIKINDX_AUTHGATE_USE === TRUE) && ($this->session->getVar('setup_UserId') != 1))
-        {
-            $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+        if ((WIKINDX_AUTHGATE_USE === TRUE) && ($this->session->getVar("setup_UserId") != WIKINDX_SUPERADMIN_ID)) {
+            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $recordset = $this->db->select('users', 'usersGDPR');
-            if ($this->db->fetchOne($recordset) == 'N')
-            {
-                $pString = \HTML\p($this->config->WIKINDX_AUTHGATE_MESSAGE);
+            if ($this->db->fetchOne($recordset) == 'N') {
+                $pString = \HTML\p(WIKINDX_AUTHGATE_MESSAGE);
                 $pString .= \FORM\formHeader("authGate");
                 $pString .= \HTML\td(\FORM\formSubmit($this->messages->text("submit", "OK")));
                 $pString .= \FORM\formEnd();
@@ -455,25 +355,27 @@ class AUTHORIZE
      */
     private function restoreEnvironment()
     {
-        $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+        // Restore the user's session state
+        $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
         $state = $this->db->selectFirstField('users', 'usersUserSession');
-        if ($state)
-        {
+        if ($state) {
             $sessionData = unserialize(base64_decode($state));
-            foreach ($sessionData as $key => $array)
-            {
+            foreach ($sessionData as $key => $array) {
                 $array = unserialize(base64_decode($array));
-                if (!is_array($array))
-                {
+                if (!is_array($array)) {
                     continue;
                 }
-                foreach ($array as $subKey => $value)
-                {
-                    $this->session->setVar($key . '_' . $subKey, $value);
+                foreach ($array as $subKey => $value) {
+                    // A hang-over from when sessions were switched over to GLOBALS . . . We don't want ReadOnly set when this is a logged-in user
+                    if ($subKey != 'ReadOnly') {
+                        $this->session->setVar($key . '_' . $subKey, $value);
+                    }
                 }
             }
         }
         $this->checkNews();
+        // A bit of a hack but it forces the language and display to what the logged on user wants.
+        header("Location: index.php");
     }
     /**
      * Check for any news items in the database
@@ -481,13 +383,10 @@ class AUTHORIZE
     private function checkNews()
     {
         $resultset = $this->db->select('news', 'newsId');
-        if ($this->db->numRows($resultset))
-        {
-            $this->session->setVar('setup_News', TRUE);
-        }
-        else
-        {
-            $this->session->delVar('setup_News');
+        if ($this->db->numRows($resultset)) {
+            $this->session->setVar("setup_News", TRUE);
+        } else {
+            $this->session->delVar("setup_News");
         }
     }
     /**
@@ -495,68 +394,53 @@ class AUTHORIZE
      *
      * Various bits of garbage disposal, session is destroyed, cookie is deleted and user is presented with logon prompt
      */
-    private function logout()
+    private function readOnly()
     {
         // Garbage disposal
         // remove this session's files
         $dir = WIKINDX_DIR_DATA_FILES;
-        if ($sessVar = $this->session->getVar('FileExports'))
-        {
+        if ($sessVar = $this->session->getVar("fileExports")) {
             $sessArray = unserialize($sessVar);
-            foreach (\FILE\fileInDirToArray($dir) as $f)
-            {
-                if (array_search($f, $sessArray) === FALSE)
-                {
+            foreach (\FILE\fileInDirToArray($dir) as $f) {
+                if (array_search($f, $sessArray) === FALSE) {
                     continue;
                 }
                 $file = $dir . DIRECTORY_SEPARATOR . $f;
                 unlink($file);
             }
-            //			$this->session->delVar('fileExports');
+            //			$this->session->delVar("fileExports");
         }
-        if ($sessVar = $this->session->getVar('PaperExports'))
-        {
+        if ($sessVar = $this->session->getVar("PaperExports")) {
             $sessArray = unserialize($sessVar);
-            foreach (\FILE\fileInDirToArray($dir) as $f)
-            {
-                if (!array_key_exists($f, $sessArray))
-                {
+            foreach (\FILE\fileInDirToArray($dir) as $f) {
+                if (!array_key_exists($f, $sessArray)) {
                     continue;
                 }
                 $file = $dir . DIRECTORY_SEPARATOR . $f;
                 unlink($file);
             }
-            //			$this->session->delVar('paperExports');
+            //			$this->session->delVar("paperExports");
+        }
+        // Store this user's previous user settings for use below if necessary
+        $keys = ["Paging", "PagingMaxLinks", "StringLimit", "Language", "Style", "Template", "PagingTagCloud", "ListLink"];
+        foreach ($keys as $key) {
+            $sessArray[$key] = GLOBALS::getUserVar($key);
         }
         $this->session->destroy();
         // set the default language prior to displaying the login prompt
-        $row = $this->configDbStructure->getData('configLanguage');
-        if (empty($row))
-        { // perhaps this is a first install or upgrade to >= v4 (v3 has config.language not config.configLanguage)
-            $this->session->setVar('setup_Language', "auto");
-        }
-        else
-        {
-            $user = FACTORY_USER::getInstance();
-            // populate session with default values from config
-            $user->writeSessionPreferences(FALSE, 'config');
-        }
+        $user = FACTORY_USER::getInstance();
+        // populate session with default values from config
+//        $user->writeSessionPreferences(FALSE);
         // remove any wikindx cookie that has been set
         $cookie = FACTORY_COOKIE::getInstance();
         $cookie->deleteCookie();
-        if ($this->config->WIKINDX_DENY_READONLY)
-        {
-            $this->initLogon(); // login prompt
-            FACTORY_CLOSENOMENU::getInstance();
+        // send back to front page
+        // Restore this user's previous user settings (e.g. so language and appearance does not suddenly change to the default from config)
+        foreach ($keys as $key) {
+            $this->session->setVar("setup_" . $key, $sessArray[$key]);
         }
-        else
-        { // send back to front page
-            $this->session->setVar('setup_ReadOnly', TRUE);
-            include_once("core/display/FRONT.php");
-            $front = new FRONT('');
-            unset($front);
-            FACTORY_CLOSE::getInstance();
-        }
+        $this->session->setVar("setup_ReadOnly", TRUE);
+        header("Location: index.php");
     }
     /**
      * failure
@@ -567,10 +451,9 @@ class AUTHORIZE
      */
     private function failure($error = FALSE)
     {
-        if (!$error && ($sessionError = $this->session->getVar('misc_ErrorMessage')))
-        {
+        if (!$error && ($sessionError = $this->session->getVar("misc_ErrorMessage"))) {
             $error = $sessionError;
-            $this->session->delVar('misc_ErrorMessage');
+            $this->session->delVar("misc_ErrorMessage");
         }
         // Exit back to logon prompt
         FACTORY_CLOSENOMENU::getInstance($this->initLogon($error));

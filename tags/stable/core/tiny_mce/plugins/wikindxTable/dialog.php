@@ -1,31 +1,37 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
-session_start();
-if (isset($_SESSION) && array_key_exists('wikindxBasePath', $_SESSION) && $_SESSION['wikindxBasePath'])
+function SetWikindxBasePath()
 {
-    chdir($_SESSION['wikindxBasePath']); // tinyMCE changes the phpbasepath
+    $wikindxBasePath = __DIR__;
+    while (!in_array(basename($wikindxBasePath), ["", "core"])) {
+        $wikindxBasePath = dirname($wikindxBasePath);
+    }
+    if (basename($wikindxBasePath) == "") {
+        die("
+            \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
+            and WIKINDX is unable to set the installation path automatically.
+            You should set \$WIKINDX_WIKINDX_PATH in config.php.
+        ");
+    }
+    chdir(dirname($wikindxBasePath));
 }
-else
-{
-    $oldPath = dirname(__FILE__);
-    $split = preg_split('/' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/u', $oldPath);
-    array_splice($split, -4); // get back to trunk
-    $newPath = implode(DIRECTORY_SEPARATOR, $split);
-    chdir($newPath);
-}
+
+SetWikindxBasePath();
 
 /**
  * Import initial configuration and initialize the web server
  */
 include_once("core/startup/WEBSERVERCONFIG.php");
 
-$script = '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
-$script .= '<script src="' . FACTORY_CONFIG::getInstance()->WIKINDX_BASE_URL . '/core/tiny_mce/plugins/' . basename(__DIR__) . '/js/wikindxTabledialog.js"></script>';
+$script = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
+$script .= '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/plugins/' . basename(__DIR__) . '/js/wikindxTabledialog.js"></script>';
 GLOBALS::addTplVar('scripts', $script);
 
 $class = new WPTableDialog();
@@ -33,14 +39,10 @@ $class = new WPTableDialog();
 class WPTableDialog
 {
     private $messages;
-    private $config;
 
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
-
         $this->messages = FACTORY_MESSAGES::getInstance();
-
         $this->tableDialogue();
     }
 

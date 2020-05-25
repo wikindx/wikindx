@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
  */
@@ -9,24 +11,32 @@
 /**
  * WP common functions
  */
+function SetWikindxBasePath()
+{
+    $wikindxBasePath = __DIR__;
+    while (!in_array(basename($wikindxBasePath), ["", "components"])) {
+        $wikindxBasePath = dirname($wikindxBasePath);
+    }
+    if (basename($wikindxBasePath) == "") {
+        die("
+            \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
+            and WIKINDX is unable to set the installation path automatically.
+            You should set \$WIKINDX_WIKINDX_PATH in config.php.
+        ");
+    }
+    chdir(dirname($wikindxBasePath));
+}
+
+SetWikindxBasePath();
 
 /**
  * Import initial configuration and initialize the web server
  */
 include_once("core/startup/WEBSERVERCONFIG.php");
 
-
-//session_start();
-if (isset($_SESSION))
-{
-    echo '<script src="' . $this->config->WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
-    echo '<script src="../wikindxWPcommon.js"></script>';
-    $class = new WPCommon();
-}
-else
-{
-    echo 'Session error';
-}
+echo '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js"></script>';
+echo '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/wordprocessor/wikindxWPcommon.js"></script>';
+$class = new WPCommon();
 
 include_once("core/messages/PLUGINMESSAGES.php");
 
@@ -40,7 +50,6 @@ class WPCommon
 
     public function __construct()
     {
-        $this->config = FACTORY_CONFIG::getInstance();
         $this->pluginmessages = new PLUGINMESSAGES('wordprocessor', 'wordprocessorMessages');
         $this->session = FACTORY_SESSION::getInstance();
         $this->vars = GLOBALS::getVars();
@@ -54,19 +63,16 @@ class WPCommon
         $saveAsNewVersion = FALSE;
         $text = $this->vars['hdnpaperText'];
         $title = trim($this->vars['title']);
-        if (!$title || !preg_match("/^[A-Za-z0-9_ ]+$/u", $title))
-        {
-            $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("invalidTitle") . "</span>", base64_decode($this->session->getVar('wp_Title')));
+        if (!$title || !preg_match("/^[A-Za-z0-9_ ]+$/u", $title)) {
+            $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("invalidTitle") . "</span>", base64_decode($this->session->getVar("wp_Title")));
         }
-        $userId = $this->session->getVar('setup_UserId');
+        $userId = $this->session->getVar("setup_UserId");
         $hashFileName = sha1($userId . $title . $text);
-        if (array_key_exists('saveAsNewVersion', $this->vars) && ($title != base64_decode($this->session->getVar('wp_Title'))))
-        {
+        if (array_key_exists('saveAsNewVersion', $this->vars) && ($title != base64_decode($this->session->getVar("wp_Title")))) {
             $saveAsNewVersion = TRUE;
         }
         // inserting
-        if (!array_key_exists('id', $this->vars) || $saveAsNewVersion)
-        {
+        if (!array_key_exists('id', $this->vars) || $saveAsNewVersion) {
             $fields[] = 'pluginwordprocessorHashFilename';
             $values[] = $hashFileName;
             $fields[] = 'pluginwordprocessorUserId';
@@ -79,8 +85,7 @@ class WPCommon
             $databaseId = $this->db->lastAutoId();
         }
         // updating
-        else
-        {
+        else {
             $updateArray['pluginwordprocessorHashFilename'] = $hashFileName;
             $updateArray['pluginwordprocessorFilename'] = $title;
             $updateArray['pluginwordprocessorTimestamp'] = $this->db->formatTimestamp();
@@ -89,30 +94,24 @@ class WPCommon
             $this->db->update('plugin_wordprocessor', $updateArray);
         }
         $fullFileName = $this->papersDir . DIRECTORY_SEPARATOR . $hashFileName;
-        if ($fp = fopen("$fullFileName", "w"))
-        {
-            if (!$text)
-            {
+        if ($fp = fopen("$fullFileName", "w")) {
+            if (!$text) {
                 $text = ' '; // fputs won't write empty string.
             }
-            if (!fwrite($fp, $text))
-            {
-                $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("saveFailure") . "</span>", base64_decode($this->session->getVar('wp_Title')));
+            if (!fwrite($fp, $text)) {
+                $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("saveFailure") . "</span>", base64_decode($this->session->getVar("wp_Title")));
             }
 
             fclose($fp);
-        }
-        else
-        {
-            $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("saveFailure") . "</span>", base64_decode($this->session->getVar('wp_Title')));
+        } else {
+            $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("saveFailure") . "</span>", base64_decode($this->session->getVar("wp_Title")));
         }
 
         // if this is a re-save, remove old hashed file from folder if it's not the same and we're not saving a new version
         if (array_key_exists('hashFilename', $this->vars) &&
             ($this->vars['hashFilename'] != $hashFileName) &&
             file_exists($this->papersDir . DIRECTORY_SEPARATOR . $this->vars['hashFilename']) &&
-            !$saveAsNewVersion)
-        {
+            !$saveAsNewVersion) {
             unlink($this->papersDir . DIRECTORY_SEPARATOR . $this->vars['hashFilename']);
         }
         $this->session->setVar("wp_HashFilename", $hashFileName);
@@ -123,6 +122,9 @@ class WPCommon
     }
     /**
      * Bomb out
+     *
+     * @param mixed $message
+     * @param mixed $title
      */
     public function failure($message, $title)
     {

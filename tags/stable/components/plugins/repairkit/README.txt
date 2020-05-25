@@ -47,6 +47,13 @@ BUGS AND LIMITATIONS
 
 CHANGELOG:
 
+v1.8.5, 2020
+1. Wikindx compatibility version 7.
+
+v1.8.4, 2020
+1. Fix an error of version check.
+2. Remove the code that fix UTF-8 encoding since the default encoding is now UTF-8.
+
 v1.8.3, 2020
 1. Add documentation.
 

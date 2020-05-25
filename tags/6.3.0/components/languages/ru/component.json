@@ -1,0 +1,19 @@
+{
+    "component_type": "language",
+    "component_id": "ru",
+    "component_version": "1.6",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Russian",
+    "component_description": "Русский перевод",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_authors": [
+        {
+            "author_name": "Billy Bob",
+            "author_role": "Translator",
+            "author_copyright": "2017",
+            "author_email": "simple4all@users.sourceforge.com"
+        }
+    ],
+    "component_sha256": "887ecb16fb6cb8e953a8a719240362a289a636faa9dd7c19c3d7bcfaee7d8ea6"
+}

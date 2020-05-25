@@ -1,0 +1,24 @@
+
+/**
+* alternate colours and font sizes for <td>resources</td> in a bibliographic list
+*/
+.alternate1,
+.alternate2,
+.alternate3,
+.alternate4
+{
+ font-size: 0.9em;
+}
+
+.alternate1 {
+ background: #99ccff;
+}
+.alternate2 {
+ background: #ead9be;
+}
+.alternate3 {
+ background: #ccccff;
+}
+.alternate4 {
+ background: #ccffff;
+}

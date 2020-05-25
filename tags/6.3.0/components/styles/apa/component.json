@@ -1,0 +1,21 @@
+{
+    "component_type": "style",
+    "component_id": "apa",
+    "component_version": "1.1",
+    "component_builtin": "true",
+    "component_updatable": "true",
+    "component_name": "APA",
+    "component_description": "American Psychological Association (APA) (installed by default). APA is an author/date based style. This means emphasis is placed on the author and the date of a piece of work to uniquely identify it.",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_website": "https://apastyle.apa.org",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Compiler",
+            "author_copyright": "2005, 2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        }
+    ],
+    "component_sha256": "2ea87668b00c80751c3f08645803d52922bf2333cbb280ae8f40108b53dc2a28"
+}

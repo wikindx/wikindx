@@ -1,0 +1,28 @@
+{
+    "component_type": "plugin",
+    "component_id": "importamazon",
+    "component_version": "1.12",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Amazon Products Import",
+    "component_description": "Import a resource from Amazon using Amazon's web services (imports only books). You must have a personal Amazon developer account to query the web service.",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_website": "https://docs.aws.amazon.com/AWSECommerceService/latest/DG/CHAP_OperationListAlphabetical.html",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2009-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2016-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "3b60a9d6053317f2ced36ca09fad53ed1abf5fd84ea762f938f548a720b22007"
+}

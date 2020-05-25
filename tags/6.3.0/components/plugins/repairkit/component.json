@@ -1,0 +1,27 @@
+{
+    "component_type": "plugin",
+    "component_id": "repairkit",
+    "component_version": "1.8.5",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Repair Kit",
+    "component_description": "Attempt to fix to a number of errors that can occur over time in the database. For developers, testers, or difficult situations when a db schema is corrupted.",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2013, 2016-2017, 2019-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2016-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "04564b90d661a1c5a7fa011466ecf8f6c58d77df3e392174c82847bbaf5e6777"
+}

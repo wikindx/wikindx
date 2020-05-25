@@ -1,0 +1,27 @@
+{
+    "component_type": "plugin",
+    "component_id": "userwritecategory",
+    "component_version": "1.9",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Categories Administration for Users",
+    "component_description": "User administration of categories.",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2012-2016, 2019-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2016-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "912a6a51a3574c58c34622a1b0d685b9d93313303ae8679eb39b678484c4f0a5"
+}

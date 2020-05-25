@@ -903,7 +903,7 @@ class UPDATEDATABASE
     			{
     			    $deleteStatisticsAttachment[] = $row['statisticsId'];
     			    $insertValues[] = $row['statisticsResourceId'];
-    			    $insertAttachmentValues[] = '(' . implode(',', $insertValues, ) . ')';
+    			    $insertAttachmentValues[] = '(' . implode(',', $insertValues) . ')';
     			    
     				if (count($insertAttachmentValues) % 1000 == 0)
     				{
@@ -919,7 +919,7 @@ class UPDATEDATABASE
     			else
     			{
     			    $deleteStatisticsResource[] = $row['statisticsId'];
-    			    $insertResourceValues[] = '(' . implode(',', $insertValues, ) . ')';
+    			    $insertResourceValues[] = '(' . implode(',', $insertValues) . ')';
     			    
     				if (count($insertResourceValues) % 1000 == 0)
     				{
@@ -984,7 +984,7 @@ class UPDATEDATABASE
 			{
 				$count = $row['resourcemiscAccessesPeriod'];
 			}
-    	    $insertResourceValues[] = '(' . implode(',', [$row['resourcemiscId'], $month, $count], ) . ')';
+    	    $insertResourceValues[] = '(' . implode(',', [$row['resourcemiscId'], $month, $count]) . ')';
     	    
     	    if (count($insertResourceValues) % 5000 == 0)
     	    {
@@ -1020,7 +1020,7 @@ class UPDATEDATABASE
 			{
 				$count = $row['resourceattachmentsDownloadsPeriod'];
 			}
-    	    $insertAttachmentValues[] = '(' . implode(',', [$row['resourceattachmentsResourceId'], $row['resourceattachmentsId'], $month, $count], ) . ')';
+    	    $insertAttachmentValues[] = '(' . implode(',', [$row['resourceattachmentsResourceId'], $row['resourceattachmentsId'], $month, $count]) . ')';
     	    
     	    if (count($insertAttachmentValues) % 5000 == 0)
     	    {

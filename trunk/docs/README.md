@@ -279,7 +279,7 @@ components.json file is created in the data folder.
 
 The file in cache folder, listing all components installed, is an array
 of object in [JSON] format. Each object is the content of a
-component.json file with additionnal fields. Original component.json
+component.json file with additional fields. Original component.json
 fields remain inchanged.
 
 Field                 Type    O Description
@@ -302,7 +302,7 @@ also a components.json, listing all components released with the current
 core.
 
 As the previous file, it is an array of object in [JSON] format. Each
-object is the content of a component.json file with additionnal fields,
+object is the content of a component.json file with additional fields,
 but different. Original component.json fields remain inchanged.
 
 Field                 Type    O Description
@@ -352,7 +352,7 @@ Example of a single component.json file for the smarty vendor component:
 ~~~~
 
 
-Example of a data/component.json file:
+Example of a data/components.json file:
 
 ~~~~
 [
@@ -380,7 +380,7 @@ Example of a data/component.json file:
 ~~~~
 
 
-Example of a cache/component.json file extract:
+Example of a cache/components.json file extract:
 
 ~~~~
 [

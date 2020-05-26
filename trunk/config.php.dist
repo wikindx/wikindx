@@ -42,7 +42,7 @@ class CONFIG
 // where 'xxxx' is the non-standard socket.
 public $WIKINDX_DB_HOST = "localhost";
 // name of the database which these scripts interface with:
-public $WIKINDX_DB = "wikindx5";
+public $WIKINDX_DB = "wikindx6";
 // username and password required to connect to and open the database 
 // (it is strongly recommended that you change these default values):
 public $WIKINDX_DB_USER = "wikindx";

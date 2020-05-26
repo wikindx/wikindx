@@ -4,7 +4,8 @@ v6.3.1
 Focus: Quick bug fix.
 
 BUG FIXES:
-1. 
+1. Fix an error in v6.3.0 upgrade relating to components.json and an incorrect UPDATEDATABASE.php.
+2. Upgrade plugins to wikindx plugin version 8.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

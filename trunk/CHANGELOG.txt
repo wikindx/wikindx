@@ -6,6 +6,7 @@ Focus: Quick bug fix.
 BUG FIXES:
 1. Fix an error in v6.3.0 upgrade relating to components.json and an incorrect UPDATEDATABASE.php.
 2. Upgrade plugins to wikindx plugin version 8.
+3. Attempt to deal with a memory leak when caching large PDF files on attachment uploads.
 
 SECURITY:
 1. Update PHPMailer to 6.1.6 (CVE-2020-13625).

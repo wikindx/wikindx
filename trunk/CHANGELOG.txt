@@ -7,6 +7,7 @@ BUG FIXES:
 1. Fix an error in v6.3.0 upgrade relating to components.json and an incorrect UPDATEDATABASE.php.
 2. Upgrade plugins to wikindx plugin version 8.
 3. Attempt to deal with a memory leak when caching large PDF files on attachment uploads.
+4. As an exception to guarantee access in the event of a misconfiguration or an offline server, if the LDAP authentication of the Super Admin account fails, a second will be attempted with the native method.
 
 SECURITY:
 1. Update PHPMailer to 6.1.6 (CVE-2020-13625).

@@ -232,7 +232,11 @@ class USER
     public function checkPassword($usersUsername, $pwdInput)
     {
         if (WIKINDX_LDAP_USE !== FALSE && in_array("ldap", get_loaded_extensions())) {
-            return $this->ldapCheckPassword($usersUsername, $pwdInput);
+            if ($this->ldapCheckPassword($usersUsername, $pwdInput)) {
+                return TRUE;
+            } else {
+                return $this->wikindxCheckPassword($usersUsername, $pwdInput, TRUE);
+            }
         } else {
             return $this->wikindxCheckPassword($usersUsername, $pwdInput);
         }
@@ -882,13 +886,18 @@ class USER
      *
      * @param string $usersUsername
      * @param string $pwdInput
+     * @param bool $bSuperAdmin If TRUE, restrict verification to superadmin account
      *
      * @return bool
      */
-    private function wikindxCheckPassword($usersUsername, $pwdInput)
+    private function wikindxCheckPassword($usersUsername, $pwdInput, $bSuperAdmin = FALSE)
     {
         $fields = $this->db->prependTableToField('users', ["Id", "Password", "Admin", "Cookie", "Block"]);
-        $this->db->formatConditions(['usersUsername' => $usersUsername]);
+        
+        $cond = ['usersUsername' => $usersUsername];
+        if ($bSuperAdmin) $cond["usersId"] = WIKINDX_SUPERADMIN_ID;
+        
+        $this->db->formatConditions($cond);
         $recordset = $this->db->select('users', $fields);
         if (!$this->db->numRows($recordset)) {
             return FALSE;

@@ -1096,7 +1096,10 @@ class CONFIGURE
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $input = array_key_exists("configLdapUse", $this->values) && ($this->values['configLdapUse']) ? "CHECKED" : WIKINDX_LDAP_USE_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "ldapUse"), "configLdapUse", $input));
+        $pString .= \HTML\td(
+            \FORM\checkbox($this->messages->text("config", "ldapUse"), "configLdapUse", $input)
+            .  BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapUse")))
+        );
         array_key_exists("configLdapProtocolVersion", $this->values) ? $input = $this->values["configLdapProtocolVersion"] :
             $input = WIKINDX_LDAP_PROTOCOL_VERSION_DEFAULT;
         $pString .= \HTML\td(\FORM\selectedBoxValue(

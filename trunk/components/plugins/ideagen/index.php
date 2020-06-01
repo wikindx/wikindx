@@ -31,7 +31,6 @@ class ideagen_MODULE
     
     private $pluginmessages;
     private $coremessages;
-    private $errors;
     private $config;
     private $vars;
     private $db;
@@ -45,6 +44,8 @@ class ideagen_MODULE
     private $paraphrasessExist;
     private $musingsExist;
     private $ideasExist;
+    private $storedId = FALSE;
+    private $lastId;
     
 
     /**
@@ -57,7 +58,6 @@ class ideagen_MODULE
         include_once("core/messages/PLUGINMESSAGES.php");
         $this->pluginmessages = new PLUGINMESSAGES('ideagen', 'ideagenMessages');
         $this->coremessages = FACTORY_MESSAGES::getInstance();
-        $this->errors = FACTORY_ERRORS::getInstance();
         include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
         $this->config = new ideagen_CONFIG();
         $this->authorize = $this->config->authorize;
@@ -70,7 +70,13 @@ class ideagen_MODULE
         if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
-        
+        GLOBALS::setTplVar('heading', $this->pluginmessages->text('heading'));
+        $this->metadata = FACTORY_METADATA::getInstance();
+        $this->db = FACTORY_DB::getInstance();
+		if (!$this->checkMetadata()) {
+        	GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text('noMetadata'), 'error'));
+			FACTORY_CLOSE::getInstance(); // die
+		}
     	$this->quotesExist = $this->paraphrasesExist = $this->musingsExist = $this->ideasExist = TRUE;
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
@@ -78,10 +84,7 @@ class ideagen_MODULE
         $this->cite = FACTORY_CITE::getInstance();
         $this->bibStyle = FACTORY_BIBSTYLE::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
-        $this->metadata = FACTORY_METADATA::getInstance();
-        $this->db = FACTORY_DB::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text('heading'));
     }
     /**
      * This is the initial method called from the menu item
@@ -120,6 +123,13 @@ class ideagen_MODULE
         $pString .= HTML\tableStart('generalTable');
         for ($count = 0; $count < 2; $count++) {
         	$return[] = $this->selectFunction();
+    		if ($this->storedId && ($this->storedId == $this->lastId)) { // Is this metadata the same as the last one?
+    			array_pop($return);
+    			--$count; // Force another iteration . . .
+    		}
+    		else {
+    			$this->storedId = $this->lastId;
+    		}
         }
         $count = 0;
         foreach ($return as $string)
@@ -227,6 +237,7 @@ class ideagen_MODULE
             return FALSE;
         }
         $row = $this->db->fetchRow($resultset);
+        $this->lastId = $row['resourcemetadataId'];
         return $this->getQPMString($row, HTML\strong($this->pluginmessages->text('quote')));
     }
     /**
@@ -243,6 +254,7 @@ class ideagen_MODULE
             return FALSE;
         }
         $row = $this->db->fetchRow($resultset);
+        $this->lastId = $row['resourcemetadataId'];
         return $this->getQPMString($row, HTML\strong($this->pluginmessages->text('paraphrase')));
     }
     /**
@@ -278,6 +290,7 @@ class ideagen_MODULE
             return FALSE;
         }
         $row = $this->db->fetchRow($resultset);
+        $this->lastId = $row['resourcemetadataId'];
         return $this->getQPMString($row, HTML\strong($this->pluginmessages->text('musing')));
     }
     /**
@@ -315,6 +328,7 @@ class ideagen_MODULE
             return FALSE;
         }
         $row = $this->db->fetchRow($resultset);
+        $this->lastId = $row['resourcemetadataId'];
         $text = $this->cite->parseCitations($row['resourcemetadataText'], 'html');
     	$td = HTML\trStart();
     	$td .= HTML\td(HTML\strong($this->pluginmessages->text('idea')));
@@ -324,6 +338,19 @@ class ideagen_MODULE
         $td .= HTML\trEnd();
         return $td;
     }
+    /**
+    * Check there are at least three items of metadata from which to select
+    */
+	private function checkMetadata()
+	{
+		$this->metadata->setCondition(FALSE, FALSE, TRUE);
+		$this->db->limit(3, 0);
+		$resultSet = $this->db->select('resource_metadata', 'resourcemetadataId');
+		if ($this->db->numRows($resultSet) < 3) {
+			return FALSE;
+		}
+		return TRUE;
+	}
     /**
      * Make the menus
      *

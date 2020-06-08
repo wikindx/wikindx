@@ -41,7 +41,9 @@ class ideagen_MODULE
     private $metadata;
     private $icons;
     private $quotesExist;
-    private $paraphrasessExist;
+    private $quoteCommentsExist;
+    private $paraphrasesExist;
+    private $paraphraseCommentsExist;
     private $musingsExist;
     private $ideasExist;
     private $storedId = FALSE;
@@ -77,7 +79,8 @@ class ideagen_MODULE
         	GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text('noMetadata'), 'error'));
 			FACTORY_CLOSE::getInstance(); // die
 		}
-    	$this->quotesExist = $this->paraphrasesExist = $this->musingsExist = $this->ideasExist = TRUE;
+    	$this->quotesExist = $this->quoteCommentsExist = $this->paraphrasesExist = $this->paraphraseCommentsExist = 
+    		$this->musingsExist = $this->ideasExist = TRUE;
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
         $this->session->delVar("list_IdeaAllThreadIds");
@@ -203,12 +206,18 @@ class ideagen_MODULE
     */
     private function selectFunction()
     {
-    	$metadataArray = ['randomQuote', 'randomParaphrase', 'randomMusing', 'randomIdea'];
+    	$metadataArray = ['randomQuote', 'randomQuoteComment', 'randomParaphrase', 'randomParaphraseComment', 'randomMusing', 'randomIdea'];
     	if (!$this->quotesExist) {
     		unset($metadataArray[array_search('randomQuote', $metadataArray)]);
     	}
+    	if (!$this->quoteCommentsExist) {
+    		unset($metadataArray[array_search('randomQuoteComment', $metadataArray)]);
+    	}
     	if (!$this->paraphrasesExist) {
     		unset($metadataArray[array_search('randomParaphrase', $metadataArray)]);
+    	}
+    	if (!$this->paraphraseCommentsExist) {
+    		unset($metadataArray[array_search('randomParaphraseComment', $metadataArray)]);
     	}
     	if (!$this->musingsExist) {
     		unset($metadataArray[array_search('randomMusing', $metadataArray)]);
@@ -241,6 +250,24 @@ class ideagen_MODULE
         return $this->getQPMString($row, HTML\strong($this->pluginmessages->text('quote')));
     }
     /**
+     * Select a random quote comment ID for viewing
+     */
+    private function randomQuoteComment()
+    {
+        $this->db->formatConditions(['resourcemetadataType' => 'qc']);
+        $this->db->limit(1, 0);
+        $this->db->orderByRandom();
+        $resultset = $this->db->select('resource_metadata', 
+        	['resourcemetadataId', 'resourcemetadataMetadataId', 'resourcemetadataResourceId', 'resourcemetadataText']);
+        if (!$this->db->numRows($resultset)) {
+        	$this->quotesExist = FALSE;
+            return FALSE;
+        }
+        $row = $this->db->fetchRow($resultset);
+        $this->lastId = $row['resourcemetadataId'];
+        return $this->getQPMString($row, HTML\strong($this->pluginmessages->text('quoteComment')));
+    }
+    /**
      * Select a random paraphrase ID for viewing
      */
     private function randomParaphrase()
@@ -256,6 +283,24 @@ class ideagen_MODULE
         $row = $this->db->fetchRow($resultset);
         $this->lastId = $row['resourcemetadataId'];
         return $this->getQPMString($row, HTML\strong($this->pluginmessages->text('paraphrase')));
+    }
+    /**
+     * Select a random paraphrase comment ID for viewing
+     */
+    private function randomParaphraseComment()
+    {
+        $this->db->formatConditions(['resourcemetadataType' => 'pc']);
+        $this->db->limit(1, 0);
+        $this->db->orderByRandom();
+        $resultset = $this->db->select('resource_metadata', 
+        	['resourcemetadataId', 'resourcemetadataMetadataId', 'resourcemetadataResourceId', 'resourcemetadataText']);
+        if (!$this->db->numRows($resultset)) {
+        	$this->paraphrasesExist = FALSE;
+            return FALSE;
+        }
+        $row = $this->db->fetchRow($resultset);
+        $this->lastId = $row['resourcemetadataId'];
+        return $this->getQPMString($row, HTML\strong($this->pluginmessages->text('paraphraseComment')));
     }
     /**
      * Select a random musing ID for viewing
@@ -298,7 +343,13 @@ class ideagen_MODULE
     */
     private function getQPMString($row, $label)
     {
-        $resourceId = $row['resourcemetadataResourceId'];
+    	if (!$row['resourcemetadataResourceId']) {// i.e. quote or paraphrase comment
+    		$this->db->formatConditions(['resourcemetadataId' => $row['resourcemetadataMetadataId']]);
+        	$resourceId = $this->db->selectFirstField('resource_metadata', 'resourcemetadataResourceId');
+    	}
+    	else {
+	        $resourceId = $row['resourcemetadataResourceId'];
+	    }
         $text = $this->cite->parseCitations($row['resourcemetadataText'], 'html');
         $resultset = $this->common->getResource($resourceId);
         $row = $this->db->fetchRow($resultset);

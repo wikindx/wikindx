@@ -27,6 +27,8 @@ class ideagenMessages
             "musing" => dgettext($domain, "Musing"),
             "paraphrase" => dgettext($domain, "Paraphrase"),
             "quote" => dgettext($domain, "Quote"),
+            "paraphraseComment" => dgettext($domain, "Paraphrase Comment"),
+            "quoteComment" => dgettext($domain, "Quote Comment"),
             "addIdea" => dgettext($domain, "Add a new idea"),
             "noMetadata" => dgettext($domain, "In order to work, Idea Generator needs at least 3 items of metadata available to you."),
         ];

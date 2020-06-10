@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ideagen\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-06-01 13:44+0200\n"
+"POT-Creation-Date: 2020-06-11 01:09+0200\n"
 "PO-Revision-Date: 2020-06-01 13:44+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -61,10 +61,18 @@ msgid "Quote"
 msgstr ""
 
 #: components/plugins/ideagen/ideagenmessages.php:30
-msgid "Add a new idea"
+msgid "Paraphrase Comment"
 msgstr ""
 
 #: components/plugins/ideagen/ideagenmessages.php:31
+msgid "Quote Comment"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:32
+msgid "Add a new idea"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:33
 msgid ""
 "In order to work, Idea Generator needs at least 3 items of metadata available "
 "to you."

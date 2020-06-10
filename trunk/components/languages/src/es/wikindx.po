@@ -8727,9 +8727,6 @@ msgstr ""
 msgid "Admin action successful. ###"
 msgstr ""
 
-#~ msgid "Upgrade the Database"
-#~ msgstr "Actualizar la base de datos"
-
 #~ msgid ""
 #~ "You are not logged on as the superAdmin: please ask that person ### to "
 #~ "carry out the upgrade through their web browser."
@@ -8807,6 +8804,9 @@ msgstr ""
 
 #~ msgid "My Bibliographies"
 #~ msgstr "Mis bibliografías"
+
+#~ msgid "Upgrade the Database"
+#~ msgstr "Actualizar la base de datos"
 
 #, fuzzy
 #~| msgid "My Wikindx"

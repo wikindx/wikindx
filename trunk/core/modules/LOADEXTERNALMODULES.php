@@ -47,12 +47,11 @@ class LOADEXTERNALMODULES
     {
         include_once(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . 'config.php');
         $class = $dir . "_CONFIG";
-        if (!class_exists($class)) {
-            return FALSE;
-        }
-        $config = new $class();
-        if (isset($config->wikindxVersion) && ($config->wikindxVersion == WIKINDX_PLUGIN_VERSION)) {
-            return TRUE;
+        if (class_exists($class)) {
+            $config = new $class();
+            if (property_exists("wikindxVersion", $config) && ($config->wikindxVersion == WIKINDX_PLUGIN_VERSION)) {
+                return TRUE;
+            }
         }
 
         return FALSE;

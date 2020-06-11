@@ -1,0 +1,27 @@
+{
+    "component_type": "plugin",
+    "component_id": "ideagen",
+    "component_version": "1.0",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Idea Generator",
+    "component_description": "Idea Generator randomly selects and displays two items of metadata (quotes, paraphrases, musings, or ideas) in the hope that the new juxtaposition might lead to serendipity.",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "f8bd376f3b601a061f7c6bdd41a5612edcf0f61388ac4fbe8d0aae80dfcea892"
+}

@@ -1,0 +1,27 @@
+{
+    "component_type": "plugin",
+    "component_id": "chooselanguage",
+    "component_version": "1.8",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Choose Language",
+    "component_description": "Display a drop-down menu on all pages to choose the language of the interface. This is useful if your website is hosted on the web and on public access.",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2005-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2016-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "5ba6fc62e22ecb91877b21d8cea80ac63b7e447d0065a521e56bf7e8bd28a1fa"
+}

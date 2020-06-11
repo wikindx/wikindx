@@ -1,0 +1,20 @@
+{
+    "component_type": "language",
+    "component_id": "de",
+    "component_version": "1.6",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "German",
+    "component_description": "Deutsch Sprachanpassun",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_authors": [
+        {
+            "author_name": "Stephan Matthiesen",
+            "author_role": "Translator",
+            "author_copyright": "2013",
+            "author_email": "info@stephan-matthiesen.de",
+            "author_website": "https://www.stephan-matthiesen.de/en/about-me.html"
+        }
+    ],
+    "component_sha256": "dc5a587e599fbedee78c0c534fb9610652bbcfdaf86e9cf9390843c1e2ba9faa"
+}

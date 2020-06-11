@@ -1,0 +1,184 @@
+                           --o INSTALL o--
+
+    ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+
+/////////////////////////////////////////////////////////////////////////////
+For upgrading from a previous installation of WIKINDX, read docs/UPGRADE.txt.
+/////////////////////////////////////////////////////////////////////////////
+
+Simple installation instructions (help for WIKINDX use is included in
+the system and is accessed through the web browser).
+
+REQUIREMENTS:
+
+1/ You must have the ability to create a database and grant permissions
+(GRANT ALL) on a MySQL server.
+
+2/ Read/Write access to your web server's documents folder.
+
+3/ (It is assumed you have a working MySQL database server and
+PHP-enabled web server.)
+
+4/ Any operating system capable of running the above.
+
+5/ Windows users wishing to run WIKINDX as a single user on a desktop
+machine, may be interested in the XAMPP or WTServer servers which are a
+one-step install of Apache/PHP/MySQL. Instructions can be found at
+https://wikindx.sourceforge.io/.
+
+NB:
+
+1/ WIKINDX will neither create the database nor grant appropriate
+permissions (GRANT ALL) - you must do this manually and save a copy of
+config.php.dist as config.php and edit it with the MySQL access data.
+PHPMyAdmin users (for Windows users, this utility for managing MySQL
+databases comes with the server) can find instructions for this at
+https://wikindx.sourceforge.io/.
+
+2/ Some PHP distributions (notably on Linux Mandriva) come without PHP
+extensions that are standard on other distributions. Importantly, the
+GD, mbstring, and XML extensions must be enabled on Mandriva (and
+possibly other Linux distributions).
+
+3/ The CURL PHP extension is not mandatory in WIKINDX but is used in
+some circumstances. For example, from v5.9.1, components such as plugins
+and languages can be managed from the Admin|Components interface if CURL
+is installed – without CURL, components must be installed manually by
+downloading them from the Sourceforge server. It's not recommend to
+disable CURL and manage components by hand.
+
+4/ The standard PHP/Apache installation has a memory_limit of 3
+Megabytes configured in php.ini. In most cases, this is sufficient to
+run WIKINDX. However, there are some instances (PHP/Apache installations
+with particular configurations or extras, for example) where this memory
+limit may need to be increased. An indication of this is typically an
+unexpected blank page following a WIKINDX operation or, if error
+reporting is turned on, an error message detailing a lack of memory. If
+either of these symptoms occur, increase php.ini's memory_limit in steps
+of 4 Megabytes until it is working again.
+
+5/ If your database is over 1500 resources and you expect to export
+(with the importexport plugin) lists of resources of at least this
+length, then you should set public $WIKINDX_MEMORY_LIMIT = "64M"; in
+config.php in order to avoid memory allocation errors.
+
+ ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+
+INSTALLATION:
+
+1/ Unzip WIKINDX into a new folder on your web server -- it will create
+a wikindx/ folder.
+
+2/ Create a new MySQL database (e.g. 'wikindx5') and GRANT ALL
+permissions on it to your wikindx user.
+
+3/ Copy wikindx/config.php.dist to wikindx/config.php and edit the
+latter (a lot of configuration options are accessible via the web
+browser interface once installation is complete but, as a minimum, you
+will need to set the MySQL database access protocols).
+
+4/ Ensure that
+'cache/',
+'data/',
+'components/languages/',
+'components/plugins/',
+'components/templates/',
+'components/styles/',
+'components/vendor/'
+
+and the files and folders within these folders are readable and writable
+(and in some case execution for PHP) by the web server user (usually
+'nobody', 'www-data', or 'daemon').
+
+So you have to modify, the owner, the group and the permission bits
+according to the particular configuration of your web server, PHP and
+file transfer software.  You may also be required to add the execution
+bit in certain cases. The same rights apply to files in these folders.
+See the chmod, web server and PHP manuals for details.
+
+If you are running WIKINDX locally on Windows (using something like
+XAMPP), you can skip this step as the folders will be writable by
+default.
+
+IIS has not been tested and uses the Windows permissions model.  No
+control is done in this case.
+
+The following commands should give a good result in the general case
+where the webserver user should be "user" or "group" (760, 670 or 770
+should work):
+
+  cd my_website_root_folder
+  chown -R user:group *
+  chmod -R 770 *
+
+As a last resort you can use the 777 mode but it is a major security
+flaw.  You don't have to get to this end if the owners are set up
+correctly.
+
+When your web site code is a clone of the SVN repository (not
+recommended) the owner of the root SVN folder, .svn folders, and all
+files and folders under .svn need to be readable, writable and
+executable (7).
+
+Wikindx create folders with 777 permissions so that it works in all
+cases, notably the installation of the core and components, for managing
+caches and data. You can correct it later if you want the best possible
+security.
+
+WARNING: if you started to install without taking into account the
+persmissions you may find yourself blocked with a blank page because of
+the template system which creates incomplete cached files. Each time you
+configure permissions, delete all the files and folders found under the
+cache/templates/tree.
+
+5/ If you want an embeded spell checker, you need to enable enchant
+extension in your php.ini or .htaccess file. See your webserver manual.
+
+6/ Finally, run v6 through your web browser (http://<server>/wikindx)
+and follow the instructions there to complete the installation.
+
+7/ Have fun!
+
+ ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+
+NOTE:
+
+1/ The data/files/ directory is used for the temporary storage of RTF,
+RIS, Endnote, BibTeX and other files for the user to download. The
+scripts within WIKINDX will mark these files for deletion after so many
+seconds have passed since their last modification (you can configure
+this through the web browser) . This doesn't necessarily mean that they
+will be immediately deleted: they will be deleted the next time someone
+exports a file.
+
+2/ Language packs are available as separate downloads from the
+sourceforge site.  They act like plug-ins so simply extract them (with
+their directory structure) to the components/languages/ directory to
+make them instantly available. v3.x language packs can be converted with
+the localization plugin and any missing messages will be replaced with
+the default English. v4.x language packs will work with v5 but will be
+missing messages that will instead be displayed in English.
+
+3/ Bibliographic style packs are available as separate downloads from
+the sourceforge site. They act like plug-ins so simply extract them
+(with their directory structure) to the components/styles/ directory to
+make them instantly available. NB - to be able to edit them, ensure the
+XML files are writeable by the web server user.
+
+4/ Other plug-in modules, extending the functionality of WIKINDX, are
+available from the sourceforge site. Unzip these with their directory
+structure to components/plugins/. v3.x plug-ins will not work with
+WIKINDX v5.  To allow plug-ins to be administered from within WIKINDX,
+ensure that each plugin's config.php and index.php are writeable by the
+web server user.
+
+5/ There is an optional RSS feed and WIKINDX content may be accessed via
+Content Management Systems such as Moodle, WordPress, etc. See
+docs/README_RSS and docs/README_CMS for details.
+
+    ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+
+-- 
+Mark Grimshaw-Aagaard
+The WIKINDX Team 2020
+sirfragalot@users.sourceforge.net

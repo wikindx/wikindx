@@ -1,0 +1,174 @@
+<?php
+/**
+ * WIKINDX : Bibliographic Management system.
+ *
+ * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
+ * @author The WIKINDX Team
+ * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
+ */
+
+/**
+ * CONSTANTS_CONFIG_DEFAULT
+ *
+ * Declare the default values of global config options.
+ *
+ * @package wikindx\core\startup
+ */
+
+
+// Database
+define('WIKINDX_DB_DEFAULT', 'wikindx5');
+define('WIKINDX_DB_HOST_DEFAULT', 'localhost');
+define('WIKINDX_DB_PASSWORD_DEFAULT', 'wikindx');
+/** @see https://www.php.net/manual/en/mysqli.persistconns.php */
+define('WIKINDX_DB_PERSISTENT_DEFAULT', TRUE);
+define('WIKINDX_DB_TABLEPREFIX_DEFAULT', 'wkx_');
+define('WIKINDX_DB_USER_DEFAULT', 'wikindx');
+
+
+// System
+define('WIKINDX_BASE_URL_DEFAULT', FALSE);
+define('WIKINDX_MAX_EXECUTION_TIMEOUT_DEFAULT', FALSE);
+define('WIKINDX_MAX_WRITECHUNK_DEFAULT', 10000);
+define('WIKINDX_MEMORY_LIMIT_DEFAULT', '32M');
+define('WIKINDX_PATH_AUTO_DETECTION_DEFAULT', TRUE);
+
+
+// Front page
+define('WIKINDX_CONTACT_EMAIL_DEFAULT', '');
+define('WIKINDX_DESCRIPTION_DEFAULT', 'My Wikindx');
+define('WIKINDX_LAST_CHANGES_DAY_LIMIT_DEFAULT', 10);
+define('WIKINDX_LAST_CHANGES_DEFAULT', 10);
+define('WIKINDX_LAST_CHANGES_TYPE_DEFAULT', 'number');
+
+
+// Resource lists
+define('WIKINDX_LIST_LINK_DEFAULT', 0);
+define('WIKINDX_NO_SORT_DEFAULT', base64_encode(serialize(['an', 'a', 'the', 'der', 'die', 'das', 'ein', 'eine', 'einer', 'eines', 'le', 'la', 'las', 'il', 'les', 'une', 'un', 'una', 'uno', 'lo', 'los', 'i', 'gli', 'de', 'het', 'um', 'uma', 'o', 'os', 'as', 'den', 'det', 'en', 'et', ])));
+define('WIKINDX_PAGING_DEFAULT', 20);
+define('WIKINDX_PAGING_MAXLINKS_DEFAULT', 11);
+define('WIKINDX_PAGING_TAG_CLOUD_DEFAULT', 100);
+define('WIKINDX_SEARCH_FILTER_DEFAULT', base64_encode(serialize(['an', 'a', 'the', 'and', 'to'])));
+
+
+// Display
+define('WIKINDX_IMAGES_ALLOW_DEFAULT', FALSE);
+define('WIKINDX_IMAGES_MAXSIZE_DEFAULT', 5);
+define('WIKINDX_IMG_HEIGHT_LIMIT_DEFAULT', 400);
+define('WIKINDX_IMG_WIDTH_LIMIT_DEFAULT', 400);
+/** Default language */
+define('WIKINDX_LANGUAGE_DEFAULT', 'en_GB');
+define('WIKINDX_STRING_LIMIT_DEFAULT', 40);
+define('WIKINDX_STYLE_DEFAULT', 'apa');
+define('WIKINDX_TAG_HIGH_COLOUR_DEFAULT', 'ff0000');
+define('WIKINDX_TAG_HIGH_FACTOR_DEFAULT', 200);
+define('WIKINDX_TAG_LOW_COLOUR_DEFAULT', 'a0a0a0');
+define('WIKINDX_TAG_LOW_FACTOR_DEFAULT', 100);
+define('WIKINDX_TEMPLATE_DEFAULT', 'default');
+/** Default time zone (GMT) */
+define('WIKINDX_TIMEZONE_DEFAULT', 'UTC');
+define('WIKINDX_TITLE_DEFAULT', 'WIKINDX');
+
+
+// References
+define('WIKINDX_DEACTIVATE_RESOURCE_TYPES_DEFAULT', base64_encode(serialize([])));
+
+
+// Users
+define('WIKINDX_DENY_READONLY_DEFAULT', FALSE);
+define('WIKINDX_DISPLAY_STATISTICS_DEFAULT', FALSE);
+define('WIKINDX_DISPLAY_USER_STATISTICS_DEFAULT', FALSE);
+define('WIKINDX_EMAIL_NEW_REGISTRATIONS_DEFAULT', '');
+define('WIKINDX_GLOBAL_EDIT_DEFAULT', FALSE);
+define('WIKINDX_IMPORT_BIB_DEFAULT', FALSE);
+define('WIKINDX_METADATA_ALLOW_DEFAULT', TRUE);
+define('WIKINDX_METADATA_USERONLY_DEFAULT', FALSE);
+define('WIKINDX_MULTIUSER_DEFAULT', FALSE);
+define('WIKINDX_ORIGINATOR_EDIT_ONLY_DEFAULT', FALSE);
+define('WIKINDX_QUARANTINE_DEFAULT', FALSE);
+define('WIKINDX_READ_ONLY_ACCESS_DEFAULT', TRUE);
+define('WIKINDX_USER_REGISTRATION_DEFAULT', FALSE);
+define('WIKINDX_USER_REGISTRATION_MODERATE_DEFAULT', FALSE);
+
+
+// Auth
+define('WIKINDX_AUTHGATE_MESSAGE_DEFAULT', '');
+define('WIKINDX_AUTHGATE_RESET_DEFAULT', FALSE);
+define('WIKINDX_AUTHGATE_USE_DEFAULT', FALSE);
+define('WIKINDX_LDAP_DN_DEFAULT', '');
+define('WIKINDX_LDAP_PORT_DEFAULT', 389);
+define('WIKINDX_LDAP_PROTOCOL_VERSION_DEFAULT', 3);
+define('WIKINDX_LDAP_SERVER_DEFAULT', 'localhost');
+define('WIKINDX_LDAP_USE_DEFAULT', FALSE);
+define('WIKINDX_PASSWORD_SIZE_DEFAULT', 6);
+define('WIKINDX_PASSWORD_STRENGTH_DEFAULT', 'strong');
+
+
+// Mail system
+define('WIKINDX_EMAIL_NEWS_DEFAULT', FALSE);
+define('WIKINDX_EMAIL_STATISTICS_DEFAULT', FALSE);
+define('WIKINDX_MAIL_BACKEND_DEFAULT', 'sendmail');
+define('WIKINDX_MAIL_FROM_DEFAULT', '');
+define('WIKINDX_MAIL_REPLYTO_DEFAULT', 'noreply@noreply.org');
+define('WIKINDX_MAIL_RETURN_PATH_DEFAULT', '');
+define('WIKINDX_MAIL_SENDMAIL_PATH_DEFAULT', '/usr/sbin/sendmail');
+define('WIKINDX_MAIL_SMTP_AUTH_DEFAULT', FALSE);
+define('WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT', 'none');
+define('WIKINDX_MAIL_SMTP_PASSWORD_DEFAULT', '');
+define('WIKINDX_MAIL_SMTP_PERSIST_DEFAULT', FALSE);
+define('WIKINDX_MAIL_SMTP_PORT_DEFAULT', '25');
+define('WIKINDX_MAIL_SMTP_SERVER_DEFAULT', 'localhost');
+define('WIKINDX_MAIL_SMTP_USERNAME_DEFAULT', '');
+define('WIKINDX_MAIL_USE_DEFAULT', FALSE);
+define('WIKINDX_NOTIFY_DEFAULT', FALSE);
+
+
+// Files
+define('WIKINDX_FILE_DELETE_SECONDS_DEFAULT', 3600);
+define('WIKINDX_FILE_ATTACH_DEFAULT', FALSE);
+define('WIKINDX_FILE_VIEW_LOGGEDON_ONLY_DEFAULT', FALSE);
+
+
+// RSS feed
+define('WIKINDX_RSS_ALLOW_DEFAULT', FALSE);
+define('WIKINDX_RSS_BIBSTYLE_DEFAULT', WIKINDX_STYLE_DEFAULT);
+define('WIKINDX_RSS_DESCRIPTION_DEFAULT', WIKINDX_DESCRIPTION_DEFAULT);
+define('WIKINDX_RSS_DISPLAY_DEFAULT', FALSE);
+define('WIKINDX_RSS_LIMIT_DEFAULT', 10);
+define('WIKINDX_RSS_TITLE_DEFAULT', WIKINDX_TITLE_DEFAULT);
+
+
+// CMS API
+define('WIKINDX_CMS_ALLOW_DEFAULT', FALSE);
+define('WIKINDX_CMS_BIBSTYLE_DEFAULT', WIKINDX_STYLE_DEFAULT);
+define('WIKINDX_CMS_DB_PASSWORD_DEFAULT', '');
+define('WIKINDX_CMS_DB_USER_DEFAULT', '');
+define('WIKINDX_CMS_SQL_DEFAULT', FALSE);
+
+
+// Google Scholar
+define('WIKINDX_GS_ALLOW_DEFAULT', FALSE);
+define('WIKINDX_GS_ATTACHMENT_DEFAULT', FALSE);
+
+
+// Divers
+define('WIKINDX_SITEMAP_ALLOW_DEFAULT', FALSE);
+define('WIKINDX_RESTRICT_USERID_DEFAULT', 0);
+define('WIKINDX_MAX_PASTE_DEFAULT', 10);
+
+
+// Debugging
+/**
+ * Default values of config.php file
+ * We keep here to check them at load time
+ * NB: PHP 7 only can define a constant array
+ */
+define('WIKINDX_BYPASS_SMARTY_COMPILATION_DEFAULT', FALSE);
+define('WIKINDX_DEBUG_ERRORS_DEFAULT', FALSE);
+define('WIKINDX_DEBUG_SQL_DEFAULT', FALSE);
+define('WIKINDX_IS_TRUNK_DEFAULT', FALSE);
+
+
+// Others
+define('WIKINDX_STATISTICS_COMPILED_DEFAULT', '2018-01-01 01:01:01');

@@ -1,0 +1,56 @@
+{
+    "component_type": "vendor",
+    "component_id": "phpmailer",
+    "component_version": "6.1.6",
+    "component_builtin": "true",
+    "component_updatable": "true",
+    "component_name": "PHPMailer",
+    "component_description": "A full-featured email creation and transfer class for PHP.",
+    "component_licence": "LGPL 2.1",
+    "component_website": "https://github.com/PHPMailer/PHPMailer",
+    "component_authors": [
+        {
+            "author_name": "Marcus Bointon",
+            "author_role": "Maintainer, developer",
+            "author_copyright": "2012-2020",
+            "author_email": "marcus@synchromedia.co.uk",
+            "author_website": "https://marcus.bointon.com"
+        },
+        {
+            "author_name": "Jim Jagielski",
+            "author_role": "Ex-maintainer",
+            "author_copyright": "2010-2012",
+            "author_email": "jim@jaguNET.com",
+            "author_website": "http://jimjag.com/"
+        },
+        {
+            "author_name": "Andy Prevost",
+            "author_role": "Ex-maintainer",
+            "author_copyright": "2004-2009",
+            "author_email": "codeworxtech@users.sourceforge.net",
+            "author_website": "https://sourceforge.net/u/codeworxtech/profile/"
+        },
+        {
+            "author_name": "Brent R. Matzelle",
+            "author_role": "Founder",
+            "author_copyright": "2001-2003",
+            "author_email": "bmatzelle@users.sourceforge.net",
+            "author_website": "https://github.com/bmatzelle"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Packager",
+            "author_copyright": "2019-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Packager",
+            "author_copyright": "2019-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "62f23eb9d5abf6d28c30839038efa2be81a8e92d2cc20c5e00f6c54502caa105"
+}

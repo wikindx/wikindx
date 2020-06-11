@@ -1,0 +1,33 @@
+{
+    "component_type": "template",
+    "component_id": "piaf",
+    "component_version": "1.3",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "PIAF",
+    "component_description": "Theme of the Portail International Archivistique Francophone (PIAF) (horizontal menu)",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_authors": [
+        {
+            "author_name": "Portail International Archivistique Francophone",
+            "author_role": "Developer",
+            "author_copyright": "2014",
+            "author_website": "http://www.piaf-archives.org"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2012-2013, 2016-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2016-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "4956d64f877a8cc670732b33372d2c14ee1a33ded8e66b1fa0f3cebabcf9a7cb"
+}

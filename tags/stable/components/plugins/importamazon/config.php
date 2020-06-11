@@ -14,7 +14,7 @@ class importamazon_CONFIG
     /** int */
     public $authorize = 1;
     /** float */
-    public $wikindxVersion = 7;
+    public $wikindxVersion = 8;
     
     /**
      * NB: you have to get an ACCESS KEY that MATCHES the END POINT's REGION you want

@@ -467,7 +467,6 @@ class ATTACHMENTS
                 $values[] = $this->vars['fileDescription'];
             }
             $this->db->insert('resource_attachments', $fields, $values);
-            echo 'here';
         }
 
         return TRUE;

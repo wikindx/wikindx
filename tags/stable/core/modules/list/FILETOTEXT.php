@@ -209,6 +209,7 @@ class FILETOTEXT
         } elseif ($mimeType == WIKINDX_MIMETYPE_DOCX) {
             $text = $this->read_docx();
         } elseif ($mimeType == WIKINDX_MIMETYPE_PDF) {
+        	ini_set('memory_limit', '-1'); // PDF objects can be large – memory is reset at the next script
             $importPDF = new PdfToText($this->fileName, PdfToText::PDFOPT_NO_HYPHENATED_WORDS);
             if ($importPDF->Text) {
                 $this->readFiles[$this->fileName] = $importPDF->Text;

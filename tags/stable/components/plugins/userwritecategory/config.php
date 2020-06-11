@@ -14,5 +14,5 @@ class userwritecategory_CONFIG
     /** int */
     public $authorize = 1;
     /** float */
-    public $wikindxVersion = 7;
+    public $wikindxVersion = 8;
 }

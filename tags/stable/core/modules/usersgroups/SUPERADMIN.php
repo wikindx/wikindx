@@ -1168,14 +1168,18 @@ class SUPERADMIN
      */
     private function authenticationConfigDisplay()
     {
+        $isLdapExtAvailable = in_array("ldap", get_loaded_extensions());
         $mailMessage = FALSE;
-        if (array_key_exists("configLdapUse", $this->values) && $this->values['configLdapUse']) {
-            if (array_key_exists('configLdapTestUser', $this->vars) && $this->vars['configLdapTestUser']) {
-                $this->testLdap();
-                $jScript = "javascript:coreOpenPopup('index.php?action=usersgroups_SUPERADMIN_CORE&amp;method=ldapTransactionReport', 80)";
-                $colour = $this->session->getVar("ldapTransactionLogStatus") == 'success' ? 'green' : 'red';
-                $mailMessage = \HTML\p(\HTML\aBrowse($colour, '', $this->messages->text("config", "ldapTransactionReport"), $jScript));
-            }
+
+        if ($isLdapExtAvailable) {
+	        if (array_key_exists("configLdapUse", $this->values) && $this->values['configLdapUse']) {
+	            if (array_key_exists('configLdapTestUser', $this->vars) && $this->vars['configLdapTestUser']) {
+	                $this->testLdap();
+	                $jScript = "javascript:coreOpenPopup('index.php?action=usersgroups_SUPERADMIN_CORE&amp;method=ldapTransactionReport', 80)";
+	                $colour = $this->session->getVar("ldapTransactionLogStatus") == 'success' ? 'green' : 'red';
+	                $mailMessage = \HTML\p(\HTML\aBrowse($colour, '', $this->messages->text("config", "ldapTransactionReport"), $jScript));
+	            }
+	        }
         }
         $pString = $this->errorString . $mailMessage;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
@@ -1209,7 +1213,10 @@ class SUPERADMIN
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $input = array_key_exists("configLdapUse", $this->values) && ($this->values['configLdapUse']) ? "CHECKED" : WIKINDX_LDAP_USE_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "ldapUse"), "configLdapUse", $input));
+        $pString .= \HTML\td(
+            \FORM\checkbox($this->messages->text("config", "ldapUse"), "configLdapUse", $input)
+            .  BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapUse")))
+        );
         array_key_exists("configLdapProtocolVersion", $this->values) ? $input = $this->values["configLdapProtocolVersion"] :
             $input = WIKINDX_LDAP_PROTOCOL_VERSION_DEFAULT;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
@@ -1257,13 +1264,18 @@ class SUPERADMIN
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGateReset"), "configAuthGateReset", WIKINDX_AUTHGATE_RESET_DEFAULT));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
+
+        if ($isLdapExtAvailable) {
         // Extra field not in the database used for test purposes only
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapTest"));
-        array_key_exists("configLdapTestUser", $this->vars) ? $input = $this->vars["configLdapTestUser"] : $input = FALSE;
-        $pString .= \HTML\p(\FORM\textInput($this->messages->text("config", "ldapTestUsername"), "configLdapTestUser", $input, 30, 255));
-        array_key_exists("configLdapTestPassword", $this->vars) ? $input = $this->vars["configLdapTestPassword"] : $input = FALSE;
-        $pString .= \HTML\p(\FORM\passwordInput($this->messages->text("config", "ldapTestPassword"), "configLdapTestPassword", $input, 30, 255) .
-            BR . \HTML\span($hint, 'hint'));
+	        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapTest"));
+	        array_key_exists("configLdapTestUser", $this->vars) ? $input = $this->vars["configLdapTestUser"] : $input = FALSE;
+	        $pString .= \HTML\p(\FORM\textInput($this->messages->text("config", "ldapTestUsername"), "configLdapTestUser", $input, 30, 255));
+	        array_key_exists("configLdapTestPassword", $this->vars) ? $input = $this->vars["configLdapTestPassword"] : $input = FALSE;
+	        $pString .= \HTML\p(\FORM\passwordInput($this->messages->text("config", "ldapTestPassword"), "configLdapTestPassword", $input, 30, 255) .
+	            BR . \HTML\span($hint, 'hint'));
+        } else {
+            $pString .= \HTML\p($this->messages->text("hint", "ldapExtDisabled"), 'redText');
+        }
 
         return $pString;
     }

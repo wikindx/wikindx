@@ -232,7 +232,11 @@ class USER
     public function checkPassword($usersUsername, $pwdInput)
     {
         if (WIKINDX_LDAP_USE !== FALSE && in_array("ldap", get_loaded_extensions())) {
-            return $this->ldapCheckPassword($usersUsername, $pwdInput);
+            if ($this->ldapCheckPassword($usersUsername, $pwdInput)) {
+                return TRUE;
+            } else {
+                return $this->wikindxCheckPassword($usersUsername, $pwdInput, TRUE);
+            }
         } else {
             return $this->wikindxCheckPassword($usersUsername, $pwdInput);
         }
@@ -882,13 +886,18 @@ class USER
      *
      * @param string $usersUsername
      * @param string $pwdInput
+     * @param bool $bSuperAdmin If TRUE, restrict verification to superadmin account
      *
      * @return bool
      */
-    private function wikindxCheckPassword($usersUsername, $pwdInput)
+    private function wikindxCheckPassword($usersUsername, $pwdInput, $bSuperAdmin = FALSE)
     {
         $fields = $this->db->prependTableToField('users', ["Id", "Password", "Admin", "Cookie", "Block"]);
-        $this->db->formatConditions(['usersUsername' => $usersUsername]);
+        
+        $cond = ['usersUsername' => $usersUsername];
+        if ($bSuperAdmin) $cond["usersId"] = WIKINDX_SUPERADMIN_ID;
+        
+        $this->db->formatConditions($cond);
         $recordset = $this->db->select('users', $fields);
         if (!$this->db->numRows($recordset)) {
             return FALSE;
@@ -943,22 +952,42 @@ class USER
      */
     private function ldapCheckPassword($usersUsername, $pwdInput)
     {
+        // WARNING ----------------------------------------------
+        // The empty password is never allowed because the ldap_bind() function allows unconditional access in this case.
+        // See parameter bind_password of ldap_bind()
+        // cf. https://www.php.net/manual/en/function.ldap-bind.php
+        // cf. https://tools.ietf.org/html/rfc2251#section-4.2.2 
+        if ($pwdInput == "") {
+            return FALSE;
+        }
         if (!in_array("ldap", get_loaded_extensions())) {
             return FALSE;
         }
-        if (($ds = ldap_connect(WIKINDX_LDAP_SERVER, WIKINDX_LDAP_PORT)) === FALSE) {
+        if (($ds = @ldap_connect(WIKINDX_LDAP_SERVER, WIKINDX_LDAP_PORT)) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapConnect"));
 
             return FALSE;
         }
-        ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, WIKINDX_LDAP_PROTOCOL_VERSION);
+        if (@ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, WIKINDX_LDAP_PROTOCOL_VERSION) === FALSE) {
+            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSetOption"));
+
+            return FALSE;
+        }
         if (($ldapbind = @ldap_bind($ds)) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapBind"));
 
             return FALSE;
         }
-        $sr = @ldap_search($ds, WIKINDX_LDAP_DN, '(uid=' . $usersUsername . ')');
-        $info = @ldap_get_entries($ds, $sr);
+        if (($sr = @ldap_search($ds, WIKINDX_LDAP_DN, '(uid=' . $usersUsername . ')')) === FALSE) {
+            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSearch"));
+
+            return FALSE;
+        }
+        if (($info = @ldap_get_entries($ds, $sr)) === FALSE) {
+            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapGetEntries"));
+
+            return FALSE;
+        }
         if ($info['count'] > 1) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapTooManyUsers"));
 
@@ -969,38 +998,37 @@ class USER
         } else {
             $ldaprdn = "cn=" . $usersUsername . "," . WIKINDX_LDAP_DN;
         }
-        // Connexion au serveur LDAP
+        // Check the connection with the user credentials
         $ldappass = $pwdInput;
-        $ldapbind = @ldap_bind($ds, $ldaprdn, $ldappass);
-        if ($ldapbind) {
-            // L'utilisateur est authentifié
-            $fields = $this->db->prependTableToField('users', ["Id", "Password", "Admin", "Cookie", "Block"]);
-            $this->db->formatConditions(['usersUsername' => $usersUsername]);
-            $this->db->formatConditions(['usersPassword' => 'LDAP']);
-            $recordset = $this->db->select('users', $fields);
-            if (!$this->db->numRows($recordset)) {
-                // L'utilisateur n'existe pas on le crée
-                $userId = $this->writeLDAPUser($info[0], $usersUsername);
-                $this->db->formatConditions(['usersId' => $userId]);
-                $recordset = $this->db->select('users', $fields);
-            }
-            $row = $this->db->fetchRow($recordset);
-            // only the superadmin may log on when multi user is not enabled
-            if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID)) {
-                return FALSE;
-            }
-            // Logged in, check user is not blocked
-            if (!$this->checkBlock($row)) {
-                return FALSE;
-            }
-            // Logged in, now set up environment
-            $this->environment($row, $usersUsername);
-
-            return TRUE; // this is our ultimate goal
-        } else {
+        if (($ldapbind = @ldap_bind($ds, $ldaprdn, $ldappass)) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapBind"));
 
             return FALSE;
         }
+        
+        // The user is authenticated
+        $fields = $this->db->prependTableToField('users', ["Id", "Password", "Admin", "Cookie", "Block"]);
+        $this->db->formatConditions(['usersUsername' => $usersUsername]);
+        $this->db->formatConditions(['usersPassword' => 'LDAP']);
+        $recordset = $this->db->select('users', $fields);
+        if (!$this->db->numRows($recordset)) {
+            // Create the missing user
+            $userId = $this->writeLDAPUser($info[0], $usersUsername);
+            $this->db->formatConditions(['usersId' => $userId]);
+            $recordset = $this->db->select('users', $fields);
+        }
+        $row = $this->db->fetchRow($recordset);
+        // only the superadmin may log on when multi user is not enabled
+        if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID)) {
+            return FALSE;
+        }
+        // Logged in, check user is not blocked
+        if (!$this->checkBlock($row)) {
+            return FALSE;
+        }
+        // Logged in, now set up environment
+        $this->environment($row, $usersUsername);
+
+        return TRUE; // this is our ultimate goal
     }
 }

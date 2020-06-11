@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-05-29 18:00+0200\n"
+"POT-Creation-Date: 2020-06-11 03:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2227,191 +2227,203 @@ msgid "Cannot connect to LDAP server. Too many users on that login"
 msgstr ""
 
 #: core/messages/errors.php:142
+msgid "Error while setting LDAP options"
+msgstr ""
+
+#: core/messages/errors.php:143
 msgid "Cannot connect to LDAP server. Unable to bind"
 msgstr ""
 
-#: core/messages/errors.php:146
-msgid "Unable to write to file ###"
+#: core/messages/errors.php:144
+msgid "Error while searching the LDAP catalog"
 msgstr ""
 
-#: core/messages/errors.php:147
-msgid "You must first list or select resources"
-msgstr ""
-
-#: core/messages/errors.php:148
-msgid "Unable to read directory or file ###"
+#: core/messages/errors.php:145
+msgid "Error reading LDAP entries"
 msgstr ""
 
 #: core/messages/errors.php:149
-msgid "You have not yet exported any files"
+msgid "Unable to write to file ###"
 msgstr ""
 
 #: core/messages/errors.php:150
-msgid "File upload error"
+msgid "You must first list or select resources"
 msgstr ""
 
 #: core/messages/errors.php:151
-msgid "Unable to create directory"
+msgid "Unable to read directory or file ###"
 msgstr ""
 
 #: core/messages/errors.php:152
+msgid "You have not yet exported any files"
+msgstr ""
+
+#: core/messages/errors.php:153
+msgid "File upload error"
+msgstr ""
+
+#: core/messages/errors.php:154
+msgid "Unable to create directory"
+msgstr ""
+
+#: core/messages/errors.php:155
 msgid "You may not map more than one unknown field to the same WIKINDX field"
 msgstr ""
 
 #. / file_fileSize Don't translate 'post_max_size', 'upload_max_filesize' and 'php.ini'
-#: core/messages/errors.php:154
+#: core/messages/errors.php:157
 msgid ""
 "Attachment exceeds maximum post_max_size or upload_max_filesize in php.ini (> "
 "### bytes)"
 msgstr ""
 
-#: core/messages/errors.php:155
+#: core/messages/errors.php:158
 msgid "Attachment already exists for this resource"
 msgstr ""
 
-#: core/messages/errors.php:156
+#: core/messages/errors.php:159
 msgid "File not found"
 msgstr ""
 
-#: core/messages/errors.php:157
+#: core/messages/errors.php:160
 msgid "Image already exists as ###"
 msgstr ""
 
-#: core/messages/errors.php:158
+#: core/messages/errors.php:161
 msgid "File type not allowed (only JPEG, GIF and PNG)"
 msgstr ""
 
-#: core/messages/errors.php:159
+#: core/messages/errors.php:162
 msgid "Image above maximum allowed size of ###MB"
 msgstr ""
 
-#: core/messages/errors.php:163
+#: core/messages/errors.php:166
 msgid "You have already created/edited/deleted that resource"
 msgstr ""
 
-#: core/messages/errors.php:164
+#: core/messages/errors.php:167
 msgid "You have already created/edited/deleted that note"
 msgstr ""
 
-#: core/messages/errors.php:165
+#: core/messages/errors.php:168
 msgid "You have already created/edited/deleted that quote"
 msgstr ""
 
-#: core/messages/errors.php:166
+#: core/messages/errors.php:169
 msgid "You have already created/edited/deleted that paraphrase"
 msgstr ""
 
-#: core/messages/errors.php:167
+#: core/messages/errors.php:170
 msgid "You have already created/edited/deleted that musing"
 msgstr ""
 
-#: core/messages/errors.php:168
+#: core/messages/errors.php:171
 msgid "You have already created/edited/deleted that idea"
 msgstr ""
 
-#: core/messages/errors.php:169
+#: core/messages/errors.php:172
 msgid "You have already created/edited/deleted that abstract"
 msgstr ""
 
-#: core/messages/errors.php:170
+#: core/messages/errors.php:173
 msgid "You have already created/edited/deleted that creator"
 msgstr ""
 
-#: core/messages/errors.php:171
+#: core/messages/errors.php:174
 msgid "You have already created/edited/deleted that publisher"
 msgstr ""
 
-#: core/messages/errors.php:172
+#: core/messages/errors.php:175
 msgid "You have already created/edited/deleted that collection"
 msgstr ""
 
-#: core/messages/errors.php:173
+#: core/messages/errors.php:176
 msgid "You have already imported that file"
 msgstr ""
 
-#: core/messages/errors.php:174
+#: core/messages/errors.php:177
 msgid "You have already edited that keyword"
 msgstr ""
 
-#: core/messages/errors.php:175
+#: core/messages/errors.php:178
 msgid "You have already deleted that keyword"
 msgstr ""
 
-#: core/messages/errors.php:176
+#: core/messages/errors.php:179
 msgid "You have already registered"
 msgstr ""
 
-#: core/messages/errors.php:177
+#: core/messages/errors.php:180
 msgid "You have already created/edited/deleted that bibliography"
 msgstr ""
 
-#: core/messages/errors.php:178
+#: core/messages/errors.php:181
 msgid "You have already edited/deleted that custom field"
 msgstr ""
 
-#: core/messages/errors.php:179
+#: core/messages/errors.php:182
 msgid "You have already attached that file"
 msgstr ""
 
-#: core/messages/errors.php:180
+#: core/messages/errors.php:183
 msgid "You have already deleted those files"
 msgstr ""
 
-#: core/messages/errors.php:181
+#: core/messages/errors.php:184
 msgid "You have already created/edited/deleted that user group"
 msgstr ""
 
-#: core/messages/errors.php:182
+#: core/messages/errors.php:185
 msgid "You have already added that URL"
 msgstr ""
 
-#: core/messages/errors.php:183
+#: core/messages/errors.php:186
 msgid "You have already created/edited/deleted that user tag"
 msgstr ""
 
-#: core/messages/errors.php:184
+#: core/messages/errors.php:187
 msgid "You have already created/edited/deleted that news item"
 msgstr ""
 
 #. / warning_resourceExists When inputting a new resource
-#: core/messages/errors.php:189
+#: core/messages/errors.php:192
 msgid "At least one resource of that type with that title already exists"
 msgstr ""
 
 #. / warning_superadminOnly WIKINDX not in multi user mode - this is displayed at the logon screen
-#: core/messages/errors.php:191
+#: core/messages/errors.php:194
 msgid "Multi user has not been enabled - only the superadmin may log on"
 msgstr ""
 
 #. / warning_creatorExists When editing a creator, the new one may be the same as an existing one.
-#: core/messages/errors.php:193
+#: core/messages/errors.php:196
 msgid "A creator of that name already exists in the database"
 msgstr ""
 
 #. / warning_publisherExists When editing a publisher, the new one may be the same as an existing one.
-#: core/messages/errors.php:195
+#: core/messages/errors.php:198
 msgid "A publisher of that name and location already exists in the database"
 msgstr ""
 
 #. / warning_collectionExists When editing a collection, the new one may be the same as an existing one.
-#: core/messages/errors.php:197
+#: core/messages/errors.php:200
 msgid "A collection with those details already exists in the database"
 msgstr ""
 
 #. / warning_keywordExists When editing a keyword, the new one may be the same as an existing one.
-#: core/messages/errors.php:199
+#: core/messages/errors.php:202
 msgid "A keyword of that name already exists in the database"
 msgstr ""
 
 #. / warning_forget1 For the forgotten password system: '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:201
+#: core/messages/errors.php:204
 msgid ""
 "Unfortunately you have not stored any question/answer pairs or you have "
 "entered your details incorrectly so WIKINDX is unable to help you.  Please "
 "contact the WIKINDX administrator ###"
 msgstr ""
 
-#: core/messages/errors.php:202
+#: core/messages/errors.php:205
 msgid ""
 "There is more than one user with that email address so WIKINDX is unable to "
 "help you. Please contact the WIKINDX administrator for further help or enter "
@@ -2419,67 +2431,67 @@ msgid ""
 msgstr ""
 
 #. / warning_forget3 Don't translate 'SMTP'.  In this case, '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:204
+#: core/messages/errors.php:207
 msgid ""
 "WIKINDX is unable to email you because the SMTP server does not appear to be "
 "available.  Please contact the WIKINDX administrator ###"
 msgstr ""
 
-#: core/messages/errors.php:205
+#: core/messages/errors.php:208
 msgid "Resource has been quarantined until an ADMIN approves it"
 msgstr ""
 
-#: core/messages/errors.php:206
+#: core/messages/errors.php:209
 msgid "Incompatible plugins: ###"
 msgstr ""
 
-#: core/messages/errors.php:207
+#: core/messages/errors.php:210
 msgid "If you delete the main idea, the entire thread will be deleted"
 msgstr ""
 
-#: core/messages/errors.php:208
+#: core/messages/errors.php:211
 msgid ""
 "The administrator of this wikindx has denied you access. Please contact the "
 "administrator for further details."
 msgstr ""
 
-#: core/messages/errors.php:212
+#: core/messages/errors.php:215
 msgid "No valid entries found in the file"
 msgstr ""
 
 #. / components_adminFailed This is used as preamble text. e.g. Admin action failed: No file selected.
-#: core/messages/errors.php:217
+#: core/messages/errors.php:220
 msgid "Admin action failed: ###"
 msgstr ""
 
-#: core/messages/errors.php:218
+#: core/messages/errors.php:221
 msgid ""
 "An error occurred while downloading the component list from the update "
 "server. Please try again later."
 msgstr ""
 
-#: core/messages/errors.php:219
+#: core/messages/errors.php:222
 msgid ""
 "An error occurred while parsing the component list from the update server. "
 "Please check for updates again."
 msgstr ""
 
-#: core/messages/errors.php:220
+#: core/messages/errors.php:223
 msgid "Unknown component."
 msgstr ""
 
-#: core/messages/errors.php:221
+#: core/messages/errors.php:224
 msgid ""
 "Two or more inline plugins have been assigned the same container: ###. The "
 "configuration has not been updated."
 msgstr ""
 
-#: core/messages/errors.php:222
+#: core/messages/errors.php:225
 msgid ""
 "The value of $container is invalid. The configuration has not been updated."
 msgstr ""
 
-#: core/messages/errors.php:223
+#: core/messages/errors.php:226
 msgid "The value of $menus is invalid. The configuration has not been updated."
 msgstr ""
 

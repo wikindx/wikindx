@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-05-29 18:00+0200\n"
+"POT-Creation-Date: 2020-06-11 03:47+0200\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -2237,40 +2237,52 @@ msgid "Cannot connect to LDAP server. Too many users on that login"
 msgstr ""
 
 #: core/messages/errors.php:142
+msgid "Error while setting LDAP options"
+msgstr ""
+
+#: core/messages/errors.php:143
 msgid "Cannot connect to LDAP server. Unable to bind"
 msgstr ""
 
-#: core/messages/errors.php:146
+#: core/messages/errors.php:144
+msgid "Error while searching the LDAP catalog"
+msgstr ""
+
+#: core/messages/errors.php:145
+msgid "Error reading LDAP entries"
+msgstr ""
+
+#: core/messages/errors.php:149
 msgid "Unable to write to file ###"
 msgstr "Невозможно записать в файл ###"
 
-#: core/messages/errors.php:147
+#: core/messages/errors.php:150
 msgid "You must first list or select resources"
 msgstr "Вначале Вы должны сформировать список или выбрать источники"
 
-#: core/messages/errors.php:148
+#: core/messages/errors.php:151
 msgid "Unable to read directory or file ###"
 msgstr "Невозможно прочитать файл или директорию ###"
 
-#: core/messages/errors.php:149
+#: core/messages/errors.php:152
 msgid "You have not yet exported any files"
 msgstr "Вы еще не экспортировали файлы"
 
-#: core/messages/errors.php:150
+#: core/messages/errors.php:153
 msgid "File upload error"
 msgstr "Ошибка закачки файла"
 
-#: core/messages/errors.php:151
+#: core/messages/errors.php:154
 msgid "Unable to create directory"
 msgstr "Невозможно создать директорию"
 
-#: core/messages/errors.php:152
+#: core/messages/errors.php:155
 msgid "You may not map more than one unknown field to the same WIKINDX field"
 msgstr ""
 "Вы не можете привязать более одного неизвестного поля к тому же полю WIKINDX"
 
 #. / file_fileSize Don't translate 'post_max_size', 'upload_max_filesize' and 'php.ini'
-#: core/messages/errors.php:154
+#: core/messages/errors.php:157
 msgid ""
 "Attachment exceeds maximum post_max_size or upload_max_filesize in php.ini (> "
 "### bytes)"
@@ -2278,149 +2290,149 @@ msgstr ""
 "Вложение превышает максимальный размер post_max_size или upload_max_filesize "
 "в php.ini (> ### bytes)"
 
-#: core/messages/errors.php:155
+#: core/messages/errors.php:158
 msgid "Attachment already exists for this resource"
 msgstr "Для источника уже существет вложение"
 
-#: core/messages/errors.php:156
+#: core/messages/errors.php:159
 msgid "File not found"
 msgstr "Файл не найден"
 
-#: core/messages/errors.php:157
+#: core/messages/errors.php:160
 msgid "Image already exists as ###"
 msgstr ""
 
-#: core/messages/errors.php:158
+#: core/messages/errors.php:161
 msgid "File type not allowed (only JPEG, GIF and PNG)"
 msgstr ""
 
-#: core/messages/errors.php:159
+#: core/messages/errors.php:162
 msgid "Image above maximum allowed size of ###MB"
 msgstr ""
 
-#: core/messages/errors.php:163
+#: core/messages/errors.php:166
 msgid "You have already created/edited/deleted that resource"
 msgstr "Вы уже создали/отредактировали/удалили этот источник"
 
-#: core/messages/errors.php:164
+#: core/messages/errors.php:167
 msgid "You have already created/edited/deleted that note"
 msgstr "Вы уже создали/отредактировали/удалили эту заметку"
 
-#: core/messages/errors.php:165
+#: core/messages/errors.php:168
 msgid "You have already created/edited/deleted that quote"
 msgstr "Вы уже создали/отредактировали/удалили эту цитату"
 
-#: core/messages/errors.php:166
+#: core/messages/errors.php:169
 msgid "You have already created/edited/deleted that paraphrase"
 msgstr "Вы уже создали/отредактировали/удалили этот пересказ"
 
-#: core/messages/errors.php:167
+#: core/messages/errors.php:170
 msgid "You have already created/edited/deleted that musing"
 msgstr "Вы уже создали/отредактировали/удалили это размышление"
 
-#: core/messages/errors.php:168
+#: core/messages/errors.php:171
 msgid "You have already created/edited/deleted that idea"
 msgstr ""
 
-#: core/messages/errors.php:169
+#: core/messages/errors.php:172
 msgid "You have already created/edited/deleted that abstract"
 msgstr "Вы уже создали/отредактировали/удалили этот реферат"
 
-#: core/messages/errors.php:170
+#: core/messages/errors.php:173
 msgid "You have already created/edited/deleted that creator"
 msgstr "Вы уже создали/отредактировали/удалили этого автора"
 
-#: core/messages/errors.php:171
+#: core/messages/errors.php:174
 msgid "You have already created/edited/deleted that publisher"
 msgstr "Вы уже создали/отредактировали/удалили этого издателя"
 
-#: core/messages/errors.php:172
+#: core/messages/errors.php:175
 msgid "You have already created/edited/deleted that collection"
 msgstr "Вы уже создали/отредактировали/удалили эту коллекцию"
 
-#: core/messages/errors.php:173
+#: core/messages/errors.php:176
 msgid "You have already imported that file"
 msgstr "Вы уже импортировали этот файл"
 
-#: core/messages/errors.php:174
+#: core/messages/errors.php:177
 msgid "You have already edited that keyword"
 msgstr "Вы уже  отредактировали это ключевое слово"
 
-#: core/messages/errors.php:175
+#: core/messages/errors.php:178
 msgid "You have already deleted that keyword"
 msgstr "Вы уже удалили это ключевое слово"
 
-#: core/messages/errors.php:176
+#: core/messages/errors.php:179
 msgid "You have already registered"
 msgstr "Вы уже зарегистрированы"
 
-#: core/messages/errors.php:177
+#: core/messages/errors.php:180
 msgid "You have already created/edited/deleted that bibliography"
 msgstr "Вы уже создали/отредактировали/удалили эту библиографию"
 
-#: core/messages/errors.php:178
+#: core/messages/errors.php:181
 msgid "You have already edited/deleted that custom field"
 msgstr "Вы уже создали/отредактировали/удалили это дополнительное поле"
 
-#: core/messages/errors.php:179
+#: core/messages/errors.php:182
 msgid "You have already attached that file"
 msgstr "Вы уже прикрепили этот файл"
 
-#: core/messages/errors.php:180
+#: core/messages/errors.php:183
 msgid "You have already deleted those files"
 msgstr "Вы уже удалили эти файлы"
 
-#: core/messages/errors.php:181
+#: core/messages/errors.php:184
 msgid "You have already created/edited/deleted that user group"
 msgstr "Вы уже создали/отредактировали/удалили эту пользовательскую группу"
 
-#: core/messages/errors.php:182
+#: core/messages/errors.php:185
 msgid "You have already added that URL"
 msgstr "Вы уже добавили этот URL"
 
-#: core/messages/errors.php:183
+#: core/messages/errors.php:186
 msgid "You have already created/edited/deleted that user tag"
 msgstr "Вы уже создали/отредактировали/удалили этот пользовательский тег"
 
-#: core/messages/errors.php:184
+#: core/messages/errors.php:187
 msgid "You have already created/edited/deleted that news item"
 msgstr "Вы уже создали/отредактировали/удалили эту новость"
 
 #. / warning_resourceExists When inputting a new resource
-#: core/messages/errors.php:189
+#: core/messages/errors.php:192
 msgid "At least one resource of that type with that title already exists"
 msgstr ""
 "По крайней мере, один источник этого типа с этим названием уже существует"
 
 #. / warning_superadminOnly WIKINDX not in multi user mode - this is displayed at the logon screen
-#: core/messages/errors.php:191
+#: core/messages/errors.php:194
 msgid "Multi user has not been enabled - only the superadmin may log on"
 msgstr ""
 "Многопользовательский режим не включен - только главный администратор может "
 "войти в систему"
 
 #. / warning_creatorExists When editing a creator, the new one may be the same as an existing one.
-#: core/messages/errors.php:193
+#: core/messages/errors.php:196
 msgid "A creator of that name already exists in the database"
 msgstr "Автор с этим именем уже существует в БД"
 
 #. / warning_publisherExists When editing a publisher, the new one may be the same as an existing one.
-#: core/messages/errors.php:195
+#: core/messages/errors.php:198
 msgid "A publisher of that name and location already exists in the database"
 msgstr "Издатель с этим именем уже существует в БД"
 
 #. / warning_collectionExists When editing a collection, the new one may be the same as an existing one.
-#: core/messages/errors.php:197
+#: core/messages/errors.php:200
 msgid "A collection with those details already exists in the database"
 msgstr "Коллекция с этими данными уже существует в БД"
 
 #. / warning_keywordExists When editing a keyword, the new one may be the same as an existing one.
-#: core/messages/errors.php:199
+#: core/messages/errors.php:202
 msgid "A keyword of that name already exists in the database"
 msgstr "Ключевое слово с этим именем уже существует в БД"
 
 #. / warning_forget1 For the forgotten password system: '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:201
+#: core/messages/errors.php:204
 msgid ""
 "Unfortunately you have not stored any question/answer pairs or you have "
 "entered your details incorrectly so WIKINDX is unable to help you.  Please "
@@ -2430,7 +2442,7 @@ msgstr ""
 "их неправильно, WIKINDX не в состоянии помочь Вам. Пожалуйста, обратитесь к "
 "администратору ### WIKINDX"
 
-#: core/messages/errors.php:202
+#: core/messages/errors.php:205
 msgid ""
 "There is more than one user with that email address so WIKINDX is unable to "
 "help you. Please contact the WIKINDX administrator for further help or enter "
@@ -2441,7 +2453,7 @@ msgstr ""
 "WIKINDX для получения дополнительной помощи или введите свое имя пользователя."
 
 #. / warning_forget3 Don't translate 'SMTP'.  In this case, '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:204
+#: core/messages/errors.php:207
 msgid ""
 "WIKINDX is unable to email you because the SMTP server does not appear to be "
 "available.  Please contact the WIKINDX administrator ###"
@@ -2449,50 +2461,50 @@ msgstr ""
 "WIKINDX не может отправить Вам почту, потому что сервер SMTP недоступен. "
 "Пожалуйста, обратитесь к администратору ### WIKINDX"
 
-#: core/messages/errors.php:205
+#: core/messages/errors.php:208
 msgid "Resource has been quarantined until an ADMIN approves it"
 msgstr "Источник будет в  карантине, пока администратор не одобрит его"
 
-#: core/messages/errors.php:206
+#: core/messages/errors.php:209
 msgid "Incompatible plugins: ###"
 msgstr ""
 
-#: core/messages/errors.php:207
+#: core/messages/errors.php:210
 msgid "If you delete the main idea, the entire thread will be deleted"
 msgstr ""
 
-#: core/messages/errors.php:208
+#: core/messages/errors.php:211
 msgid ""
 "The administrator of this wikindx has denied you access. Please contact the "
 "administrator for further details."
 msgstr ""
 
-#: core/messages/errors.php:212
+#: core/messages/errors.php:215
 msgid "No valid entries found in the file"
 msgstr ""
 
 #. / components_adminFailed This is used as preamble text. e.g. Admin action failed: No file selected.
-#: core/messages/errors.php:217
+#: core/messages/errors.php:220
 msgid "Admin action failed: ###"
 msgstr ""
 
-#: core/messages/errors.php:218
+#: core/messages/errors.php:221
 msgid ""
 "An error occurred while downloading the component list from the update "
 "server. Please try again later."
 msgstr ""
 
-#: core/messages/errors.php:219
+#: core/messages/errors.php:222
 msgid ""
 "An error occurred while parsing the component list from the update server. "
 "Please check for updates again."
 msgstr ""
 
-#: core/messages/errors.php:220
+#: core/messages/errors.php:223
 msgid "Unknown component."
 msgstr ""
 
-#: core/messages/errors.php:221
+#: core/messages/errors.php:224
 #, fuzzy
 #| msgid "Two or more inline plugins have been assigned the same container: ###"
 msgid ""
@@ -2501,12 +2513,12 @@ msgid ""
 msgstr ""
 "Два или более встроенных плагина были назначены в один и тот же контейнер: ###"
 
-#: core/messages/errors.php:222
+#: core/messages/errors.php:225
 msgid ""
 "The value of $container is invalid. The configuration has not been updated."
 msgstr ""
 
-#: core/messages/errors.php:223
+#: core/messages/errors.php:226
 msgid "The value of $menus is invalid. The configuration has not been updated."
 msgstr ""
 
@@ -8820,48 +8832,38 @@ msgstr "Плагин успешно настроен"
 msgid "Admin action successful. ###"
 msgstr ""
 
-#~ msgid "Enabled Languages"
-#~ msgstr "Активированные языки"
+#~ msgid "Upgrade the database"
+#~ msgstr "Обновить БД"
 
-#, fuzzy
-#~| msgid "My Wikindx"
-#~ msgid "My Wikindxx"
-#~ msgstr "Мой Wikindx"
+#~ msgid "My Bibliographies"
+#~ msgstr "Мои Библиографии"
 
-#~ msgid ""
-#~ "Depending on what the sources were for your resources, you may have broken "
-#~ "UTF-8 characters.  If you opt not to fix such instances now and discover "
-#~ "after the upgrade that you do have broken UTF-8 characters, you can either "
-#~ "run the upgrade again, reloading the original database, and check the "
-#~ "checkbox here or you can download and run the repairkit plugin (which "
-#~ "gives more control over what is fixed)."
-#~ msgstr ""
-#~ "В зависимости от того, какие значения были у ваших источников, у Вас могут "
-#~ "быть неверно отображаемые UTF-8 символы. Если это так, тогда Вы можете "
-#~ "либо запустить обновление еще раз и установите флажок здесь или загрузите "
-#~ "и запустить Repairkit-плагин (который дает гораздо больший контроль над "
-#~ "исправлением неверных значений)."
+#~ msgid "Upgrade the Database"
+#~ msgstr "Обновить БД"
 
 #~ msgid ""
-#~ "You are not logged on as the superAdmin: please ask that person ### to "
-#~ "carry out the upgrade through their web browser."
+#~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
+#~ "you are strongly advised not to run it on a production server -- if you "
+#~ "wish to test it, either create a new database or make a copy of your "
+#~ "existing WIKINDX database and point config.php at it. Wait until all bugs "
+#~ "have been dealt with, and the final release version provided, before using "
+#~ "the WIKINDX code on a production server.</font> <p>To report bugs etc., go "
+#~ "to: https://sourceforge.net/p/wikindx/v5bugs/</strong></p> WIKINDX has "
+#~ "detected that this is the first time a new version is being run and that "
+#~ "the database requires upgrading. This upgrading is automatic but only the "
+#~ "WIKINDX superAdmin may carry it out.<p> You are <strong>strongly advised</"
+#~ "strong> to <strong>back up your old database</strong> first. If you do not "
+#~ "do this and you experience the memory errors detailed below when upgrading "
+#~ "your only copy of the database, then you will have irrevocably corrupted "
+#~ "the database: <em>caveat upgrader</em><p>"
 #~ msgstr ""
-#~ "Вы не вошли в систему как главный администратор: попросите этого человека "
-#~ "### выполнить обновление через свой веб-браузер."
-
-#~ msgid ""
-#~ "Before being able to use WIKINDX, you must configure it. The minimum "
-#~ "initially required are username, password and email. From the Admin menu, "
-#~ "after configuration, you can add and edit other settings."
-#~ msgstr ""
-#~ "Перед тем как начать использовать WIKINDX, Вы должны его настроить. "
-#~ "Минимальная настройка включает ввод имени пользователя, пароль и почтовый "
-#~ "ящик. Из меню Управления, после настройки, Вы можете добавлять категории, "
-#~ "подкатегории, языки, дополнительные типы записей (все они могут быть "
-#~ "привязаны к конкретному источнику) и системных пользователей."
-
-#~ msgid "Fix UTF8:"
-#~ msgstr "Починить UTF8:"
+#~ "WIKINDX обнаружил, что это первый запуск новой версии. Ваша база данных "
+#~ "требует модернизации. Это обновление произойдет автоматически, но только "
+#~ "главный администратор может его выполнить. <p><strong>Настоятельно "
+#~ "рекомендуется создать резервную копию вашей старой базы данных</strong> в "
+#~ "первую очередь. Если вы не сделаете этого, тогда в случае ошибки памяти "
+#~ "(подробно ниже) при обновлении, Вы безвозвратно потеряете свои данные: "
+#~ "<em>нюансы обновления</em><p>"
 
 #~ msgid ""
 #~ "The upgrade process may take some time depending upon a number of factors. "
@@ -8927,35 +8929,45 @@ msgstr ""
 #~ "wikindx4/attachments/ -- процесс обновления удалит ссылки на вложения если "
 #~ "в базе данных вложений файлы не существуют в новом месте."
 
+#~ msgid "Fix UTF8:"
+#~ msgstr "Починить UTF8:"
+
 #~ msgid ""
-#~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
-#~ "you are strongly advised not to run it on a production server -- if you "
-#~ "wish to test it, either create a new database or make a copy of your "
-#~ "existing WIKINDX database and point config.php at it. Wait until all bugs "
-#~ "have been dealt with, and the final release version provided, before using "
-#~ "the WIKINDX code on a production server.</font> <p>To report bugs etc., go "
-#~ "to: https://sourceforge.net/p/wikindx/v5bugs/</strong></p> WIKINDX has "
-#~ "detected that this is the first time a new version is being run and that "
-#~ "the database requires upgrading. This upgrading is automatic but only the "
-#~ "WIKINDX superAdmin may carry it out.<p> You are <strong>strongly advised</"
-#~ "strong> to <strong>back up your old database</strong> first. If you do not "
-#~ "do this and you experience the memory errors detailed below when upgrading "
-#~ "your only copy of the database, then you will have irrevocably corrupted "
-#~ "the database: <em>caveat upgrader</em><p>"
+#~ "Before being able to use WIKINDX, you must configure it. The minimum "
+#~ "initially required are username, password and email. From the Admin menu, "
+#~ "after configuration, you can add and edit other settings."
 #~ msgstr ""
-#~ "WIKINDX обнаружил, что это первый запуск новой версии. Ваша база данных "
-#~ "требует модернизации. Это обновление произойдет автоматически, но только "
-#~ "главный администратор может его выполнить. <p><strong>Настоятельно "
-#~ "рекомендуется создать резервную копию вашей старой базы данных</strong> в "
-#~ "первую очередь. Если вы не сделаете этого, тогда в случае ошибки памяти "
-#~ "(подробно ниже) при обновлении, Вы безвозвратно потеряете свои данные: "
-#~ "<em>нюансы обновления</em><p>"
+#~ "Перед тем как начать использовать WIKINDX, Вы должны его настроить. "
+#~ "Минимальная настройка включает ввод имени пользователя, пароль и почтовый "
+#~ "ящик. Из меню Управления, после настройки, Вы можете добавлять категории, "
+#~ "подкатегории, языки, дополнительные типы записей (все они могут быть "
+#~ "привязаны к конкретному источнику) и системных пользователей."
 
-#~ msgid "Upgrade the Database"
-#~ msgstr "Обновить БД"
+#~ msgid ""
+#~ "You are not logged on as the superAdmin: please ask that person ### to "
+#~ "carry out the upgrade through their web browser."
+#~ msgstr ""
+#~ "Вы не вошли в систему как главный администратор: попросите этого человека "
+#~ "### выполнить обновление через свой веб-браузер."
 
-#~ msgid "My Bibliographies"
-#~ msgstr "Мои Библиографии"
+#~ msgid ""
+#~ "Depending on what the sources were for your resources, you may have broken "
+#~ "UTF-8 characters.  If you opt not to fix such instances now and discover "
+#~ "after the upgrade that you do have broken UTF-8 characters, you can either "
+#~ "run the upgrade again, reloading the original database, and check the "
+#~ "checkbox here or you can download and run the repairkit plugin (which "
+#~ "gives more control over what is fixed)."
+#~ msgstr ""
+#~ "В зависимости от того, какие значения были у ваших источников, у Вас могут "
+#~ "быть неверно отображаемые UTF-8 символы. Если это так, тогда Вы можете "
+#~ "либо запустить обновление еще раз и установите флажок здесь или загрузите "
+#~ "и запустить Repairkit-плагин (который дает гораздо больший контроль над "
+#~ "исправлением неверных значений)."
 
-#~ msgid "Upgrade the database"
-#~ msgstr "Обновить БД"
+#~ msgid "Enabled Languages"
+#~ msgstr "Активированные языки"
+
+#, fuzzy
+#~| msgid "My Wikindx"
+#~ msgid "My Wikindxx"
+#~ msgstr "Мой Wikindx"

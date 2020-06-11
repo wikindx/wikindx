@@ -27,7 +27,12 @@ class LOADEXTERNALMODULES
     {
         if (count(self::$moduleList) == 0) {
             foreach (\UTILS\readComponentsList() as $cmp) {
-                if ($cmp["component_type"] == "plugin" && $cmp["component_status"] == "enabled") {
+                // Load only:
+                if (
+                       $cmp["component_type"] == "plugin" // Components of plugin type
+                    && $cmp["component_status"] == "enabled" // Enabled components
+                    && $cmp["component_integrity"] == 0 // Sane components
+                ) {
                     self::$moduleList[] = $cmp["component_id"];
                 }
             }

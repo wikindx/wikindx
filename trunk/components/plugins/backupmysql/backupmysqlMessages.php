@@ -22,6 +22,9 @@ class backupmysqlMessages
             "backup" => dgettext($domain, "Backup"),
             "noWrite" => dgettext($domain, "cache/plugins/backupmysql/ is not writeable by the web server user.  It currently has the permissions: ###"),
             "deleted" => dgettext($domain, "Files deleted"),
+            "newFileName" => dgettext($domain, "New file name"),
+            "rename" => dgettext($domain, "Rename file"),
+            "renamed" => dgettext($domain, "File successfully renamed"),
         ];
     }
 }

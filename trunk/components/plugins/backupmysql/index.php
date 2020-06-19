@@ -101,13 +101,8 @@ class backupmysql_MODULE
         	$icons = FACTORY_LOADICONS::getInstance();
             $td = '';
             foreach ($files as $fileName => $tStamp) {
-				$editLink = '&nbsp;' . \HTML\a(
-					$icons->getClass("edit"),
-					$icons->getHTML("edit"),
-					"javascript:coreOpenPopup('index.php?action=backupmysql_renameInit" .
-					"&amp;file=" . base64_encode($fileName) . "', 90)");
                 $td .= HTML\a("link", $fileName, "index.php?action=backupmysql_downloadFile" .
-                htmlentities("&filename=" . $fileName), "_blank") . $editLink . BR . LF;
+                htmlentities("&filename=" . $fileName), "_blank") . BR . LF;
             }
             $pString .= HTML\td($td);
         }
@@ -179,12 +174,14 @@ class backupmysql_MODULE
             $file = $this->vars['ajaxReturn'];
             $this->session->setVar('backupmysql_oldFileName', $this->vars['ajaxReturn']);
         }
+        $hint = \HTML\aBrowse('green', '', $this->coremessages->text("hint", "hint"), '#', "", 
+        	htmlentities($this->pluginmessages->text("invalidChars")));
         $pString = \FORM\textInput($this->pluginmessages->text("newFileName") . \HTML\span('*', 'required'),
             'newFileName',
             $file,
             30,
             255
-        ) . '.sql.gz';
+        ) . '.sql.gz' . BR . LF . $hint;
         $pString .= \HTML\p(\FORM\formSubmit($this->pluginmessages->text("rename")));
         if ($initialDisplay) {
             return $pString;
@@ -231,6 +228,10 @@ class backupmysql_MODULE
 // Sanitize filename
     	$file = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $this->vars['newFileName']);
     	$file = mb_ereg_replace("([\.]{2,})", '', $file);
+    	if (!$file) {
+            $this->display($this->errors->text("inputError", "invalid"));
+            return;
+    	}
         $newFileName = self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $file . '.sql.gz';
         if (!rename($oldFileName, $newFileName)) {
             $this->display(HTML\p($this->errors->text("file", "write", $newFileName)));

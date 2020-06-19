@@ -25,6 +25,7 @@ class backupmysqlMessages
             "newFileName" => dgettext($domain, "New file name"),
             "rename" => dgettext($domain, "Rename file"),
             "renamed" => dgettext($domain, "File successfully renamed"),
+            "invalidChars" => dgettext($domain, "Invalid characters will be removed: #%&{}\\<>*?/$!'\":@+`|="),
         ];
     }
 }

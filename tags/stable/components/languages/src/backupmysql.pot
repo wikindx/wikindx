@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: backupmysql\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-05-24 21:54+0200\n"
+"POT-Creation-Date: 2020-06-20 12:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,4 +34,20 @@ msgstr ""
 
 #: components/plugins/backupmysql/backupmysqlmessages.php:24
 msgid "Files deleted"
+msgstr ""
+
+#: components/plugins/backupmysql/backupmysqlmessages.php:25
+msgid "New file name"
+msgstr ""
+
+#: components/plugins/backupmysql/backupmysqlmessages.php:26
+msgid "Rename file"
+msgstr ""
+
+#: components/plugins/backupmysql/backupmysqlmessages.php:27
+msgid "File successfully renamed"
+msgstr ""
+
+#: components/plugins/backupmysql/backupmysqlmessages.php:28
+msgid "Invalid characters will be removed: #%&{}\\<>*?/$!'\":@+`|="
 msgstr ""

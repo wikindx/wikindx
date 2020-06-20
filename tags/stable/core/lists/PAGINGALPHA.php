@@ -72,7 +72,7 @@ class PAGINGALPHA
 
             return;
         }
-        $viewMax = $this->session->getVar('setup_Paging');
+        $viewMax = GLOBALS::getUserVar('Paging');
         if ($viewMax <= 0) {
             $viewMax = 20; // a cludge
         }

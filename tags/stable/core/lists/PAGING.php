@@ -48,8 +48,8 @@ class PAGING
     {
         $this->getPagingStart();
         $this->total = $this->session->getVar("setup_PagingTotal");
-        $this->paging = $this->session->getVar('setup_Paging');
-        $this->maxLinks = $this->session->getVar('setup_PagingMaxLinks');
+        $this->paging = GLOBALS::getUserVar('Paging');
+        $this->maxLinks = GLOBALS::getUserVar('PagingMaxLinks');
         $this->maxLinksHalf = round($this->maxLinks / 2);
         // Has the paging limit been overriden in user preferences for this selection?
         if ($this->paging == -1) {

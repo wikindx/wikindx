@@ -1,7 +1,7 @@
 {
     "component_type": "language",
     "component_id": "de",
-    "component_version": "1.6",
+    "component_version": "160",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "German",
@@ -16,5 +16,5 @@
             "author_website": "https://www.stephan-matthiesen.de/en/about-me.html"
         }
     ],
-    "component_sha256": "dc5a587e599fbedee78c0c534fb9610652bbcfdaf86e9cf9390843c1e2ba9faa"
+    "component_sha256": "82916dfa4fd6d0d968e9d5f20969e1899f1cff31e12a62aba642ffdca654276f"
 }

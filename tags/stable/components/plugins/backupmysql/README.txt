@@ -41,6 +41,10 @@ http://www.phpclasses.org/package/2779-PHP-Backup-MySQL-databases-to-files-with-
 
 CHANGELOG:
 
+v1.9, 2020
+1. Stored databases can now be renamed.
+2. Wikindx compatibility version 8.
+
 v1.8, 2020
 1. Wikindx compatibility version 7.
 

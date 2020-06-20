@@ -61,7 +61,6 @@ class repairkit_MODULE
         }
         $this->vars = GLOBALS::getVars();
         $this->db = FACTORY_DB::getInstance();
-        include_once("core/utf8/encoding.php");
     }
     /**
      * dbIntegrityInit
@@ -70,7 +69,7 @@ class repairkit_MODULE
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDbIntegrity'));
         $wVersion = WIKINDX_INTERNAL_VERSION;
-        $dbVersion = $this->db->selectFirstField('database_summary', 'databasesummaryDbVersion');
+        $dbVersion = $this->db->selectFirstField('database_summary', 'databasesummarySoftwareVersion');
         if (floatval($dbVersion) != floatval($wVersion)) { // Shouldn't ever happen if UPDATEDATABASE is functioning correctly . . .
             $pString = HTML\p($this->pluginmessages->text('dbIntegrityPreamble1a', $dbVersion) . '&nbsp;' . $this->pluginmessages->text('dbIntegrityPreamble1b', $wVersion));
             GLOBALS::addTplVar('content', $pString);
@@ -262,19 +261,6 @@ class repairkit_MODULE
         return;
     }
     /**
-     * fixcharsInit
-     */
-    public function fixcharsInit()
-    {
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingFixchars'));
-        $pString = HTML\p($this->pluginmessages->text('preamble1'));
-        $pString .= HTML\p($this->pluginmessages->text('preamble2'));
-        GLOBALS::addTplVar('content', $pString);
-        $this->fixcharsDisplay();
-
-        return;
-    }
-    /**
      * missingrowsInit
      */
     public function missingrowsInit()
@@ -310,115 +296,6 @@ class repairkit_MODULE
         $div = HTML\div('divMess', HTML\color($this->pluginmessages->text($message), 'redText'));
         GLOBALS::addTplVar('content', AJAX\encode_jArray(['innerHTML' => $div]));
         FACTORY_CLOSERAW::getInstance();
-    }
-    /**
-     * Fix the characters
-     */
-    public function fixchars()
-    {
-        $this->errorsOn();
-        if (array_key_exists('confirm', $this->vars) && array_key_exists('convType', $this->vars) &&
-            (($this->vars['confirm'] == 'all') || ($this->vars['confirm'] == 'selected') ||
-            ($this->vars['confirm'] == 'notSelected')))
-        { // actually fix
-            $this->fixcharsConfirm();
-        }
-        elseif (array_key_exists('convType', $this->vars) &&
-            (($this->vars['convType'] == 'lightFixutf8') || ($this->vars['convType'] == 'toughFixutf8')))
-        {
-            $this->fixcharsParse(); // first run through to find problems
-            $this->errorsOff();
-        }
-        else
-        { // failure
-            $errors = FACTORY_ERRORS::getInstance();
-            GLOBALS::addTplVar('content', HTML\p($errors->text('inputError', 'missing')));
-            $this->errorsOff();
-            $this->fixcharsInit();
-            FACTORY_CLOSE::getInstance();
-        }
-    }
-    /**
-     * Fix selected problem characters
-     */
-    public function fixcharsConfirm()
-    {
-        if ($this->vars['confirm'] == 'all')
-        {
-            $this->fixcharsParse(TRUE);
-        }
-        elseif ($this->vars['confirm'] == 'selected')
-        {
-            $count = 0;
-            foreach ($this->vars as $key => $input)
-            {
-                if (mb_strpos($key, 'confirm_') === 0)
-                {
-                    $array = unserialize(base64_decode(str_replace('confirm_', '', $key)));
-                    $table = array_shift($array);
-                    $tableId = str_replace('_', '', $table) . 'Id';
-                    $id = array_shift($array);
-                    $field = array_shift($array);
-                    $value = array_shift($array);
-                    if (($table != 'config'))
-                    {
-                        $this->db->formatConditions([$tableId => $id]);
-                    }
-                    $this->db->update($table, [$field => $value]);
-                    ++$count;
-                }
-            }
-            if (!$count)
-            {
-                GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text('invalidInput'), 'error', 'center'));
-                $this->errorsOff();
-                $this->fixcharsInit();
-
-                return;
-            }
-        }
-        elseif ($this->vars['confirm'] == 'notSelected')
-        {
-            $count = 0;
-            $invalids = [];
-            foreach ($this->vars as $key => $input)
-            {
-                if (mb_strpos($key, 'confirm_') === 0)
-                {
-                    $array = str_replace('confirm_', '', $key);
-                    $invalids[] = $array;
-                    ++$count;
-                }
-            }
-            if (!$count)
-            {
-                GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text('invalidInput'), 'error', 'center'));
-                $this->errorsOff();
-                $this->fixcharsInit();
-
-                return;
-            }
-            $this->fixcharsParse(TRUE, $invalids);
-        }
-        // Delete caches so they can be recreated
-        $this->db->updateNull('cache', 'cacheResourceCreators');
-        $this->db->updateNull('cache', 'cacheMetadataCreators');
-        $this->db->updateNull('cache', 'cacheKeywords');
-        $this->db->updateNull('cache', 'cacheResourceKeywords');
-        $this->db->updateNull('cache', 'cacheMetadataKeywords');
-        $this->db->updateNull('cache', 'cacheQuoteKeywords');
-        $this->db->updateNull('cache', 'cacheParaphraseKeywords');
-        $this->db->updateNull('cache', 'cacheMusingKeywords');
-        $this->db->updateNull('cache', 'cacheResourcePublishers');
-        $this->db->updateNull('cache', 'cacheMetadataPublishers');
-        $this->db->updateNull('cache', 'cacheConferenceOrganisers');
-        $this->db->updateNull('cache', 'cacheResourceCollections');
-        $this->db->updateNull('cache', 'cacheMetadataCollections');
-        $this->db->updateNull('cache', 'cacheResourceCollectionTitles');
-        $this->db->updateNull('cache', 'cacheResourceCollectionShorts');
-        GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text('success'), 'success', 'center'));
-        $this->errorsOff();
-        $this->fixcharsInit();
     }
     /**
      * Find and fix missing rows
@@ -506,7 +383,6 @@ class repairkit_MODULE
                 $resIds[] = $row['resourceId'];
             }
         }
-        $this->errorsOff();
         $string = $this->pluginmessages->text('missingRowsCount', $resources);
         GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text('success', $string), 'success', 'center'));
         $this->missingrowsInit();
@@ -528,7 +404,6 @@ class repairkit_MODULE
         $this->db->formatConditions(['resourcemetadataType' => 'm']);
         $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
         $this->db->update('database_summary', ['databasesummaryTotalMusings' => $num]);
-        $this->errorsOff();
         $string = $this->pluginmessages->text('success');
         GLOBALS::addTplVar('content', HTML\p($string, 'success', 'center'));
         $this->totalsInit();
@@ -554,7 +429,6 @@ class repairkit_MODULE
                 $this->db->update('resource_creator', ['resourcecreatorCreatorSurname' => $creatorIds[$row['resourcecreatorCreatorMain']]]);
             }
         }
-        $this->errorsOff();
         $string = $this->pluginmessages->text('success');
         GLOBALS::addTplVar('content', HTML\p($string, 'success', 'center'));
         $this->creatorsInit();
@@ -572,7 +446,6 @@ class repairkit_MODULE
             ],
             ],
         ];
-        $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuFixchars')] = "fixcharsInit";
         $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuMissingrows')] = "missingrowsInit";
         $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuTotals')] = "totalsInit";
         $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuCreators')] = "creatorsInit";
@@ -948,41 +821,6 @@ class repairkit_MODULE
         $this->db->updateNull('resource_metadata', 'resourcemetadataTimestampEdited'); // default is NULL
     }
     /**
-     * fixcharsDisplay
-     */
-    private function fixcharsDisplay()
-    {
-        $pString = HTML\p($this->pluginmessages->text('fixutf8Preamble1'));
-        $pString .= FORM\formHeader("repairkit_fixchars");
-        $pString .= HTML\tableStart();
-        $pString .= HTML\trStart();
-        $jsonArray = [];
-        $jScript = 'index.php?action=repairkit_getFixMessageAjax';
-        $jsonArray[] = [
-            'startFunction' => 'triggerFromSelect',
-            'script' => "$jScript",
-            'triggerField' => 'convType',
-            'targetDiv' => 'divMess',
-        ];
-        $js = AJAX\jActionForm('onclick', $jsonArray);
-        $pString .= HTML\td(FORM\selectFBoxValue(
-            FALSE,
-            'convType',
-            ['lightFixutf8' => $this->pluginmessages->text('lightFixutf8'),
-                'toughFixutf8' => $this->pluginmessages->text('toughFixutf8'), ],
-            2,
-            FALSE,
-            $js
-        ));
-        $pString .= HTML\td(HTML\div('divMess', HTML\color($this->pluginmessages->text('lightFixutf8Message'), 'redText')));
-        $pString .= HTML\trEnd();
-        $pString .= HTML\tableEnd();
-        $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
-        $pString .= FORM\formEnd();
-        AJAX\loadJavascript();
-        GLOBALS::addTplVar('content', $pString);
-    }
-    /**
      * missingrowsDisplay
      */
     private function missingrowsDisplay()
@@ -1016,222 +854,10 @@ class repairkit_MODULE
         GLOBALS::addTplVar('content', $pString);
     }
     /**
-     * find problem characters
-     *
-     * @param bool $fix
-     * @param array $invalids
-     */
-    private function fixcharsParse($fix = FALSE, $invalids = [])
-    {
-        // Save memory limit configuration
-        $memory_limit = ini_get('memory_limit');
-        // Use an unlimited memmory temporarily,
-        // because the recordset can be really huge
-        // Doesn't always work
-        ini_set('memory_limit', '-1');
-        if (!$fix)
-        {
-            $fixFound = FALSE;
-            $init_pString = FORM\formHeader("repairkit_fixcharsConfirm");
-            $init_pString .= FORM\hidden('convType', $this->vars['convType']);
-            $init_pString .= HTML\p($this->pluginmessages->text('fixutf8Preamble2'));
-            $init_pString .= HTML\p(FORM\selectFBoxValue(
-                FALSE,
-                'confirm',
-                ['all' => $this->pluginmessages->text('fixUtf8All'),
-                    'selected' => $this->pluginmessages->text('fixUtf8Selected'),
-                    'notSelected' => $this->pluginmessages->text('fixUtf8NotSelected'), ],
-                3
-            ));
-            $init_pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Confirm")));
-            $init_pString .= HTML\tableStart('generalTable borderStyleSolid');
-        }
-        $convType = $this->vars['convType'];
-
-        // The following only have timestamps, numeric values or preset values such as 'N', 'Y' etc.
-        $tableFilter = [
-            'cache',
-            'database_summary',
-            'resource_category',
-            'resource_keyword',
-            'resource_language',
-            'resource_misc',
-            'resource_summary',
-            'resource_timestamp',
-            'statistics',
-            'user_bibliography_resource',
-            'user_groups_users',
-        ];
-        $textFieldFilter = ['char', 'longtext', 'mediumtext', 'text', 'tinytext', 'varchar'];
-
-        $tables = $this->db->listTables(FALSE);
-        $tables = array_intersect($tables, $tableFilter);
-        foreach ($tables as $table)
-        {
-            $selectedFields = [];
-
-            // Need to select text fields for conversion
-            $fInfo = $this->db->getFieldsProperties($table);
-            foreach ($fInfo as $val)
-            {
-                if (in_array($val['DATA_TYPE'], $textFieldFilter))
-                {
-                    $selectedFields[] = $val['COLUMN_NAME'];
-                }
-            }
-
-            // Never convert the password of users
-            if ($table == 'users')
-            {
-                $selectedFields = array_diff($selectedFields, ['usersPassword']);
-            }
-
-            if (count($selectedFields) > 0)
-            {
-                $resultset = $this->db->select($table, '*');
-                while ($row = $this->db->fetchRow($resultset))
-                {
-                    $id = str_replace('_', '', $table) . 'Id';
-                    foreach ($row as $field => $value)
-                    {
-                        if (!$value || is_numeric($value))
-                        {
-                            continue;
-                        }
-                        $updateArray = [];
-                        $value = stripslashes($value);
-                        $original = $value;
-                        if ($convType == 'lightFixutf8')
-                        {
-                            $value = Encoding::toUTF8($value);
-                            if ($original != $value)
-                            {
-                                $updateArray[$field] = $value;
-                                if (!$fix)
-                                {
-                                    if (!$fixFound)
-                                    {
-                                        GLOBALS::addTplVar('content', $init_pString);
-                                        $fixFound = TRUE;
-                                    }
-                                    if (($table == 'config'))
-                                    {
-                                        $key = base64_encode(serialize([$table, NULL, $field, $value]));
-                                    }
-                                    // $fixes[base64_encode(serialize(array($table, null, $field, $value)))] = $value;
-                                    else
-                                    {
-                                        $key = base64_encode(serialize([$table, $row[$id], $field, $value]));
-                                    }
-                                    // $fixes[base64_encode(serialize(array($table, $row[$id], $field, $value)))] = $value;
-                                    $pString = HTML\trStart();
-                                    $pString .= HTML\td(FORM\checkbox(FALSE, 'confirm_' . $key), 'padding2px');
-                                    $pString .= HTML\td($value, 'padding2px');
-                                    $pString .= HTML\trEnd();
-                                    GLOBALS::addTplVar('content', $pString);
-                                }
-                            }
-                        }
-                        elseif ($convType == 'toughFixutf8')
-                        {
-                            $value = Encoding::fixUTF8($value);
-                            if ($original != $value)
-                            {
-                                $updateArray[$field] = $value;
-                                if (!$fix)
-                                {
-                                    if (!$fixFound)
-                                    {
-                                        GLOBALS::addTplVar('content', $init_pString);
-                                        $fixFound = TRUE;
-                                    }
-                                    if (($table == 'config'))
-                                    {
-                                        $key = base64_encode(serialize([$table, NULL, $field, $value]));
-                                    }
-                                    // $fixes[base64_encode(serialize(array($table, null, $field, $value)))] = $value;
-                                    else
-                                    {
-                                        $key = base64_encode(serialize([$table, $row[$id], $field, $value]));
-                                    }
-                                    // $fixes[base64_encode(serialize(array($table, $row[$id], $field, $value)))] = $value;
-                                    $pString = HTML\trStart();
-                                    $pString .= HTML\td(FORM\checkbox(FALSE, 'confirm_' . $key), 'padding2px');
-                                    $pString .= HTML\td($value, 'padding2px');
-                                    $pString .= HTML\trEnd();
-                                    GLOBALS::addTplVar('content', $pString);
-                                }
-                            }
-                        }
-                        unset($pString);
-                        if ($fix && !empty($updateArray))
-                        {
-                            if (($table == 'config'))
-                            {
-                                $check = base64_encode(serialize([$table, NULL, $field, $value]));
-                            }
-                            else
-                            {
-                                $check = base64_encode(serialize([$table, $row[$id], $field, $value]));
-                            }
-                            if (array_search($check, $invalids) === FALSE)
-                            {
-                                if (($table != 'config'))
-                                {
-                                    $this->db->formatConditions([$id => $row[$id]]);
-                                }
-                                $this->db->update($table, $updateArray);
-                            }
-                            else
-                            {
-                                echo 'NOT INVALID<br>';
-                            }
-                            unset($updateArray);
-                        }
-                    }
-                }
-            }
-        }
-        if (!$fix)
-        {
-            GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingFixchars'));
-            if (!$fixFound)
-            {
-                GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text('fixUtf8NotFound'), 'success', 'center'));
-                $this->fixcharsInit();
-            }
-            else
-            {
-                /*
-                foreach($fixes as $key => $value)
-                {
-                    $pString = HTML\trStart();
-                    $pString .= HTML\td(FORM\checkbox(FALSE, 'confirm_' . $key), 'padding2px');
-                    $pString .= HTML\td($value, 'padding2px');
-                    $pString .= HTML\trEnd();
-                    GLOBALS::addTplVar('content', $pString);
-                }
-                */
-                $pString = HTML\tableEnd();
-                $pString .= FORM\formEnd();
-                GLOBALS::addTplVar('content', $pString);
-            }
-        }
-        // Restore memory limit configuration
-        ini_set('memory_limit', $memory_limit);
-    }
-    /**
      * Turn error reporting on
      */
     private function errorsOn()
     {
         ini_set('display_errors', TRUE);
-    }
-    /**
-     * Restore defaut error reporting level
-     */
-    private function errorsOff()
-    {
-        FACTORY_LOADCONFIG::getInstance()->configureErrorReporting();
     }
 }

@@ -536,7 +536,7 @@ class CITESTYLE
         } elseif ($this->output == 'rtf') {
             $this->setupStyle = $this->session->getVar("exportPaper_Style");
         } else {
-            $this->setupStyle = $this->session->getVar("setup_Style");
+            $this->setupStyle = GLOBALS::getUserVar("Style");
         }
         // Initialize citeFormat properties
         $this->citeFormat->output = $this->output;

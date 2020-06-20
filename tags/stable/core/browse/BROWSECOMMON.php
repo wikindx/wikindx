@@ -259,8 +259,8 @@ class BROWSECOMMON
         } else {
             $this->start = 0;
         }
-        $this->paging = $this->session->getVar("setup_PagingTagCloud");
-        $this->maxLinks = $this->session->getVar('setup_PagingMaxLinks');
+        $this->paging = GLOBALS::getUserVar("PagingTagCloud");
+        $this->maxLinks = GLOBALS::getUserVar('PagingMaxLinks');
         $this->maxLinksHalf = round($this->maxLinks / 2);
     }
 }

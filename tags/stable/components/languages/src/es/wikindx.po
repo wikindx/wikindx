@@ -8739,9 +8739,6 @@ msgstr ""
 msgid "Admin action successful. ###"
 msgstr ""
 
-#~ msgid "Upgrade the database"
-#~ msgstr "Actualizar la base de datos"
-
 #~ msgid ""
 #~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
 #~ "you are strongly advised not to run it on a production server -- if you "
@@ -8775,7 +8772,7 @@ msgstr ""
 #~ "upgrade process from the <strong>beginning</strong>:<br> a) Reload your "
 #~ "backed-up v.3.8.2 or v.4.x database or database tables (you have backed up "
 #~ "haven't you?);<br> b) Increase PHP memory as per the instructions above "
-#~ "(after upgrading, you can set it back to the default 32M);<br> c) Restart "
+#~ "(after upgrading, you can set it back to the default 64M);<br> c) Restart "
 #~ "the upgrade process.<p> The upgrade comprises several stages for a v3.8 "
 #~ "database (a v4 database is upgraded in one step): as a very rough guide "
 #~ "(and depending upon the speed of your server), the longest stages will "
@@ -8819,6 +8816,9 @@ msgstr ""
 #~ msgstr ""
 #~ "No está conectado como superadministrador: contacte con esta persona### "
 #~ "para iniciar la actualización desde su navegador."
+
+#~ msgid "Upgrade the database"
+#~ msgstr "Actualizar la base de datos"
 
 #, fuzzy
 #~| msgid "My Wikindx"

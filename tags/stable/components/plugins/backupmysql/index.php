@@ -38,6 +38,7 @@ class backupmysql_MODULE
     private $config;
     private $session;
     private $vars;
+    private $badInput;
 
     /**
      * Constructor
@@ -54,6 +55,7 @@ class backupmysql_MODULE
         $this->config = new backupmysql_CONFIG();
         $this->session = FACTORY_SESSION::getInstance();
         $this->authorize = $this->config->authorize;
+        $this->badInput = FACTORY_BADINPUT::getInstance();
         if ($menuInit) {
             $this->makeMenu($this->config->menus);
 
@@ -82,9 +84,10 @@ class backupmysql_MODULE
      */
     public function display($message = FALSE)
     {
-        if ($message) {
+    	if ($message) {
             $pString = $message;
-        } else {
+        }
+        else {
             $pString = '';
         }
         $pString .= HTML\tableStart('generalTable borderStyleSolid');
@@ -95,6 +98,7 @@ class backupmysql_MODULE
         $pString .= HTML\td($td);
         $files = $this->listFiles();
         if (!empty($files)) {
+        	$icons = FACTORY_LOADICONS::getInstance();
             $td = '';
             foreach ($files as $fileName => $tStamp) {
                 $td .= HTML\a("link", $fileName, "index.php?action=backupmysql_downloadFile" .
@@ -108,6 +112,9 @@ class backupmysql_MODULE
         }
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
+        if (!empty($files)) {
+        	$pString .= $this->renameInit($files);
+        }
         GLOBALS::addTplVar('content', $pString);
     }
     /**
@@ -131,13 +138,117 @@ class backupmysql_MODULE
         die;
     }
     /**
+    * Form for renaming file
+    */
+    private function renameInit($files)
+    {
+        foreach ($files as $file => $null) {
+            $fileArray[str_replace('.sql.gz', '', $file)] = $file;
+        }
+    	$pString = \FORM\formHeader('backupmysql_rename');
+        $pString .= \HTML\tableStart('generalTable borderStyleSolid');
+        $pString .= \HTML\trStart();
+        $pString .= \HTML\td(\FORM\selectFBoxValue($this->pluginmessages->text("rename"), "renameFiles", $fileArray, 10));
+        $pString .= \FORM\formEnd();
+        $pString .= \HTML\td($this->transferArrow());
+        $td = \HTML\tableStart();
+        $td .= \HTML\trStart();
+        $td .= \HTML\td(\HTML\div('fileDiv', $this->displayFile(TRUE)));
+        $td .= \HTML\trEnd();
+        $td .= \HTML\tableEnd();
+        $pString .= \HTML\td($td);
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\tableEnd();
+        \AJAX\loadJavascript();
+        return $pString;
+    }
+    /**
+     * Display interface to edit filename
+     *
+     * @param bool $initialDisplay
+     */
+    public function displayFile($initialDisplay = FALSE)
+    {
+    	$file = '';
+        if (!$initialDisplay) {
+            $file = $this->vars['ajaxReturn'];
+            $this->session->setVar('backupmysql_oldFileName', $this->vars['ajaxReturn']);
+        }
+        $hint = \HTML\aBrowse('green', '', $this->coremessages->text("hint", "hint"), '#', "", 
+        	htmlentities($this->pluginmessages->text("invalidChars")));
+        $pString = \FORM\textInput($this->pluginmessages->text("newFileName") . \HTML\span('*', 'required'),
+            'newFileName',
+            $file,
+            30,
+            255
+        ) . '.sql.gz' . BR . LF . $hint;
+        $pString .= \HTML\p(\FORM\formSubmit($this->pluginmessages->text("rename")));
+        if ($initialDisplay) {
+            return $pString;
+        }
+        if (is_array(error_get_last())) {
+            // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
+            $error = error_get_last();
+            $error = $error['message'];
+            GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
+        } else {
+            GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$pString"]));
+        }
+        FACTORY_CLOSERAW::getInstance();
+    }
+    /**
+     * transferArrow
+     *
+     * @return string
+     */
+    private function transferArrow()
+    {
+        $jScript = 'index.php?action=backupmysql_displayFile';
+        $jsonArray[] = [
+            'startFunction' => 'triggerFromSelect',
+            'script' => "$jScript",
+            'triggerField' => 'renameFiles',
+            'targetDiv' => 'fileDiv',
+        ];
+        $image = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
+        return $image;
+    }
+    /**
+    * Rename a file
+    */
+    public function rename()
+    {
+    	if (!array_key_exists('newFileName', $this->vars) 
+    		|| !$this->vars['newFileName'] || !$this->session->getVar('backupmysql_oldFileName')) {
+            $this->display($this->errors->text("inputError", "invalid"));
+            return;
+        }
+        $oldFileName = self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $this->session->getVar('backupmysql_oldFileName') . '.sql.gz';
+    	$this->session->delVar('backupmysql_oldFileName');
+// Sanitize filename
+    	$file = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $this->vars['newFileName']);
+    	$file = mb_ereg_replace("([\.]{2,})", '', $file);
+    	if (!$file) {
+            $this->display($this->errors->text("inputError", "invalid"));
+            return;
+    	}
+        $newFileName = self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $file . '.sql.gz';
+        if (!rename($oldFileName, $newFileName)) {
+            $this->display(HTML\p($this->errors->text("file", "write", $newFileName)));
+            return;
+        }
+        else {
+	        $this->display(HTML\p($this->pluginmessages->text("renamed"), 'success'));
+	        return;
+	    }
+    }
+    /**
      * Delete chosen files
      */
     public function delete()
     {
         if (!array_key_exists('files', $this->vars)) {
             $this->display($this->errors->text("inputError", "missing"));
-
             return;
         }
         foreach ($this->vars['files'] as $file) {

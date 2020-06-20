@@ -100,13 +100,13 @@ public $WIKINDX_WIKINDX_PATH = "";
 /*****
 * START PHP MEMORY AND EXECUTION CONFIGURATION
 *****/
-// WIKINDX usually runs with the standard PHP memory_limit of 32MB.
+// WIKINDX usually runs with the standard PHP memory_limit of 64MB.
 // With some PHP configurations, however, this is not enough -- a mysterious blank page is often the result.
 // If you are unable to update php.ini's memory_limit yourself, WIKINDX_MEMORY_LIMIT may be set (an integer such as 64 or 128 followed by 'M').
 // Despite the PHP manual stating that this may not be set outside of php.ini, it seems to work most of the time.
 // It is not, however, guaranteed to do so and editing php.ini is the preferred method particularly if your PHP is in 'safe' mode.
 // Use double quotes around the value.
-public $WIKINDX_MEMORY_LIMIT = "32M";
+public $WIKINDX_MEMORY_LIMIT = "64M";
 // WIKINDX should run fine with the PHP standard execution timeouts (typically 30 seconds) but, 
 // in some cases such as database upgrading of a large database on a slow server, you will need to increase the timeout figure.
 // If this is FALSE, the value set in php.ini is used.
@@ -120,7 +120,7 @@ public $WIKINDX_MAX_EXECUTION_TIMEOUT = FALSE;
 // then you may run into memory problems which will manifest as either 
 // a blank page when you attempt to export or an error report (if you have error reporting turned on). 
 // WIKINDX_MAX_WRITECHUNK breaks down the SQL querying of resources and subsequent writing of resources to file into manageable chunks.
-// As a rough guide, with a WIKINDX_MEMORY_LIMIT of 32M, WIKINDX_MAX_WRITECHUNK of 700 should work fine and with 64M, 1500 works fine.
+// As a rough guide, with a WIKINDX_MEMORY_LIMIT of 64M, WIKINDX_MAX_WRITECHUNK of 700 should work fine and with 64M, 1500 works fine.
 // If WIKINDX_MAX_WRITECHUNK is FALSE, the chunk is set to 10,000.
 // This can be a tricky figure to set as setting the figure too low increases SQL and PHP execution times significantly.
 // Do NOT use quotes around the value.

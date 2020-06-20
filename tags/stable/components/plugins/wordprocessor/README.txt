@@ -24,6 +24,9 @@ Papers can be imported from earlier versions by using the 'Import paper' functio
 
 CHANGELOG:
 
+v1.12, 2020
+1. Minor debugging for paper saving and exporting.
+
 v1.11, 2020
 1. Wikindx compatibility version 7.
 

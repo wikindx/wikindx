@@ -1,7 +1,7 @@
 {
     "component_type": "vendor",
     "component_id": "jsonjs",
-    "component_version": "2017-06-12",
+    "component_version": "160",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "json2.js library",
@@ -30,5 +30,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "bba9b785919cc4e40ef60920f6f56b68a242bb151d84426d993d077211d2248d"
+    "component_sha256": "3b0faf30ee6e8efd4dec93155764dfdb8d26dedd254a0fb0436fc8330308c377"
 }

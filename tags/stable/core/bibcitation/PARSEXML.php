@@ -134,7 +134,7 @@ class PARSEXML
             $style = $session->getVar($export ? "exportPaper_Style" : "wp_ExportStyle", NULL);
         }
         if ($style == NULL) {
-            $style = $session->getVar("setup_Style", WIKINDX_STYLE_DEFAULT);
+            $style = GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT);
         }
         $style = array_key_exists($style, \LOADSTYLE\loadDir()) ? $style : WIKINDX_STYLE_DEFAULT;
 

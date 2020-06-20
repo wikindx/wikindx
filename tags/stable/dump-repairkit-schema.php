@@ -50,7 +50,6 @@ include_once("core/startup/GLOBALS.php");
 
 // Set up the FACTORY objects of commonly used classes and start the timer.
 include_once("core/startup/FACTORY.php");
-include_once("core/startup/ENVIRONMENT.php");
 
 // Initialize the static config read from config.php file
 include_once("core/startup/LOADSTATICCONFIG.php");

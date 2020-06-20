@@ -643,7 +643,7 @@ namespace FILE
                     // THIS IS A TEMPORARY FIX FOR THE 5.9.1 MIGRATION
                     if (in_array(basename($filename), ["config.php", "plugintype.txt"]) && dirname(dirname($filename)) == ".") {
                         if (file_exists($DestinationFolder . DIRECTORY_SEPARATOR . $filename)) {
-                            continue;
+                            // continue;
                         }
                     }
                     
@@ -741,7 +741,7 @@ namespace FILE
                 // THIS IS A TEMPORARY FIX FOR THE 5.9.1 MIGRATION
                 if (in_array(basename($file), ["config.php", "plugintype.txt"]) && dirname(dirname($file)) == ".") {
                     if (file_exists($DestinationFolder . DIRECTORY_SEPARATOR . $file)) {
-                        continue;
+                        //continue;
                     }
                 }
                 

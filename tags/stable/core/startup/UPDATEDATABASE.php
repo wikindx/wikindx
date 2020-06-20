@@ -801,6 +801,7 @@ class UPDATEDATABASE
         
         $this->updateSoftwareVersion(12);
         $this->checkStatus('stage12');
+        $this->stageInterruptMessage = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
         $this->pauseExecution('stage12');
     }
     /**
@@ -938,7 +939,8 @@ class UPDATEDATABASE
             if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)) || $countTransfered >= 200000)
             {
                 $this->checkStatus('stage13');
-                $this->stageInterruptMessage = "stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
+                $this->stageInterruptMessage = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
+                $this->stageInterruptMessage .= "<br>stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
                 $this->pauseExecution('stage13', 'stage13');
             }
     	}
@@ -966,7 +968,8 @@ class UPDATEDATABASE
         if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)))
         {
             $this->checkStatus('stage13');
-            $this->stageInterruptMessage = "stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
+            $this->stageInterruptMessage = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
+            $this->stageInterruptMessage .= "<br>stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
             $this->pauseExecution('stage13', 'stage13');
         }
     
@@ -1600,7 +1603,7 @@ END;
 /*****
 * START PHP MEMORY AND EXECUTION CONFIGURATION
 *****/
-// WIKINDX usually runs with the standard PHP memory_limit of 32MB.
+// WIKINDX usually runs with the standard PHP memory_limit of 64MB.
 // With some PHP configurations, however, this is not enough -- a mysterious blank page is often the result.
 // If you are unable to update php.ini's memory_limit yourself, WIKINDX_MEMORY_LIMIT may be set (an integer such as 64 or 128 followed by 'M').
 // Despite the PHP manual stating that this may not be set outside of php.ini, it seems to work most of the time.
@@ -1640,7 +1643,7 @@ END;
 // then you may run into memory problems which will manifest as either
 // a blank page when you attempt to export or an error report (if you have error reporting turned on).
 // WIKINDX_MAX_WRITECHUNK breaks down the SQL querying of resources and subsequent writing of resources to file into manageable chunks.
-// As a rough guide, with a WIKINDX_MEMORY_LIMIT of 32M, WIKINDX_MAX_WRITECHUNK of 700 should work fine and with 64M, 1500 works fine.
+// As a rough guide, with a WIKINDX_MEMORY_LIMIT of 64MB, WIKINDX_MAX_WRITECHUNK of 700 should work fine and with 64M, 1500 works fine.
 // If WIKINDX_MAX_WRITECHUNK is FALSE, the chunk is set to 10,000.
 // This can be a tricky figure to set as setting the figure too low increases SQL and PHP execution times significantly.
 // Do NOT use quotes around the value.

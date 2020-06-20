@@ -801,6 +801,7 @@ class UPDATEDATABASE
         
         $this->updateSoftwareVersion(12);
         $this->checkStatus('stage12');
+        $this->stageInterruptMessage = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
         $this->pauseExecution('stage12');
     }
     /**
@@ -938,7 +939,8 @@ class UPDATEDATABASE
             if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)) || $countTransfered >= 200000)
             {
                 $this->checkStatus('stage13');
-                $this->stageInterruptMessage = "stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
+                $this->stageInterruptMessage = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
+                $this->stageInterruptMessage .= "<br>stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
                 $this->pauseExecution('stage13', 'stage13');
             }
     	}
@@ -966,7 +968,8 @@ class UPDATEDATABASE
         if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)))
         {
             $this->checkStatus('stage13');
-            $this->stageInterruptMessage = "stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
+            $this->stageInterruptMessage = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
+            $this->stageInterruptMessage .= "<br>stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
             $this->pauseExecution('stage13', 'stage13');
         }
     

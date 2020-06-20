@@ -1,7 +1,7 @@
 {
     "component_type": "language",
     "component_id": "fr",
-    "component_version": "1.6",
+    "component_version": "160",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "French",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "94c9bf179060143d46ed018da0f1f432418a41582e4e41af1b55e26f8642ea36"
+    "component_sha256": "b729b05d6bdee14b43a811dfea607b29109ad0a4f4f8b4a3246af76fca882601"
 }

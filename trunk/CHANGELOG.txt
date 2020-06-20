@@ -11,7 +11,10 @@ BUG FIXES:
 5. Prevent the loading of broken plugins.
 6. Force to refresh the components.json files on upgrade.
 7. Catch more errors of LDAP auth.
-8. Changes the operation of the component version number so as not to mislead users.
+
+MAINTENANCE:
+1. Changes the operation of the component version number so as not to mislead users.
+2. Increase memory prerequisite to 64MB.
 
 SECURITY:
 1. Update PHPMailer to 6.1.6 (CVE-2020-13625).

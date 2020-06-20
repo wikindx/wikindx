@@ -3,6 +3,9 @@ RELEASES:
 v6.3.2
 Focus: Maintenance.
 
+BUG FIXES:
+1. Fix an error that prevent the upgrade of components.
+
 MAINTENANCE:
 1. Changes the operation of the component version number so as not to mislead users.
 2. Increase memory prerequisite to 64MB.

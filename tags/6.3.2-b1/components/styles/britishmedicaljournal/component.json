@@ -1,0 +1,21 @@
+{
+    "component_type": "style",
+    "component_id": "britishmedicaljournal",
+    "component_version": "160",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "BMJ",
+    "component_description": "British Medical Journal (BMJ)",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_website": "https://www.bmj.com/about-bmj/resources-authors/house-style",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Compiler",
+            "author_copyright": "2005, 2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        }
+    ],
+    "component_sha256": "d56ea7effccb986313502f98dac1022d660e555b410c1c79e52c355f733552cc"
+}

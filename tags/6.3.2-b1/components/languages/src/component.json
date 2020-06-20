@@ -1,0 +1,27 @@
+{
+    "component_type": "language",
+    "component_id": "src",
+    "component_version": "160",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Gettext sources",
+    "component_description": "Gettext Sources Files (PO/POT)",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2019-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2019-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "ab6e9ce90e77eaa8a9749de8ed9aa12d2d1dfee6d71857aa83063674ee7a84f9"
+}

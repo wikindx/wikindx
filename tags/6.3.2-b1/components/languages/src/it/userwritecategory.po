@@ -1,0 +1,30 @@
+# Wikindx's Translation ressource: Italiano.
+# For copyright see the component.json file
+# This file is distributed under the same license as the userwritecategory package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: userwritecategory\n"
+"Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
+"POT-Creation-Date: 2020-01-25 18:48+0100\n"
+"PO-Revision-Date: 2019-09-27 01:50+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. translators: Menu items
+#: components/plugins/userwritecategory/userwritecategorymessages.php:23
+msgid "Administer Categories..."
+msgstr ""
+
+#: components/plugins/userwritecategory/userwritecategorymessages.php:24
+msgid "Categories"
+msgstr ""
+
+#: components/plugins/userwritecategory/userwritecategorymessages.php:25
+msgid "Subcategories"
+msgstr ""

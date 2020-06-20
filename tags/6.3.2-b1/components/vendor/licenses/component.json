@@ -1,0 +1,28 @@
+{
+    "component_type": "vendor",
+    "component_id": "licenses",
+    "component_version": "160",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Licenses texts",
+    "component_description": "This package contains a copy of each license used by Wikindx or third-party software on which it depends.",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_website": "https://wikindx.sourceforge.io/",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Packager",
+            "author_copyright": "2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Packager",
+            "author_copyright": "2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "58ec91ad95278528e4dec3ae4c3fb4804ec17a33f43e5d2f3f158be331cda909"
+}

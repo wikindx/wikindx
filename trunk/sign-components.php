@@ -82,20 +82,41 @@ foreach ($componentlist as $k => $cmp) {
     
     $pkgmetadata = $dircmpdst . DIRECTORY_SEPARATOR . "component.json";
     $componentMetadata = \FILE\read_json_file($pkgmetadata);
+    
+    $old_version = $componentMetadata["component_version"] ?? "";
+    $old_hash = $componentMetadata["component_" . WIKINDX_PACKAGE_HASH_ALGO] ?? "";
+    
     unset($componentMetadata["component_" . WIKINDX_PACKAGE_HASH_ALGO]);
     unset($componentMetadata["component_integrity"]);
     unset($componentMetadata["component_status"]);
+    unset($componentMetadata["component_version"]);
+    
     \FILE\write_json_file($pkgmetadata, $componentMetadata);
     
     // Hashing
-    $hashcmp = \UTILS\hash_path($dircmpdst);
-    echo " - hash: " . $hashcmp . "\n";
+    $new_hash = \UTILS\hash_path($dircmpdst);
+    echo " - hash: " . $new_hash . "\n";
     
     // Signature
     $componentMetadata = $cmp;
-    $componentMetadata["component_" . WIKINDX_PACKAGE_HASH_ALGO] = $hashcmp;
     unset($componentMetadata["component_integrity"]);
     unset($componentMetadata["component_status"]);
+    
+    $componentMetadata["component_" . WIKINDX_PACKAGE_HASH_ALGO] = $new_hash;
+    
+    if ($new_hash == $old_hash || $old_hash == "" || $old_version == "")
+    {
+        // The version number is the number of days elapsed since the launch of the system of components (v6 on 2020-01-12)
+        $datetime1 = new DateTime("2020-01-12");
+        $datetime2 = new DateTime("");
+        $interval = $datetime1->diff($datetime2);
+        $componentMetadata["component_version"] = $interval->format('%a');
+    }
+    else
+    {
+        $componentMetadata["component_version"] = $old_version;
+    }
+    //$componentMetadata["component_version"] = date("Ymd");
     \FILE\write_json_file($dircmpsrc . DIRECTORY_SEPARATOR . "component.json", $componentMetadata);
     
     echo " - signing [OK]\n";

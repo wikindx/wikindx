@@ -6,12 +6,14 @@
  *
  * @author The WIKINDX Team
  * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
+ *
+ * Disabled v6.3.1 as SetWikindxBasePath() is defined in various dialog.php files for this plugin.
  */
 
 /**
  * WP common functions
  */
-function SetWikindxBasePath()
+function SetWikindxBasePathDisabled()
 {
     $wikindxBasePath = __DIR__;
     while (!in_array(basename($wikindxBasePath), ["", "components"])) {

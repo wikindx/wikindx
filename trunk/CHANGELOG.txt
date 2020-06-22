@@ -10,6 +10,7 @@ MAINTENANCE:
 1. Changes the operation of the component version number so as not to mislead users.
 2. Increase memory prerequisite to 64MB.
 3. Add a notice about memory comsumption of upgrade stage 13.
+4. Remove the transition code from the component configuration update.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

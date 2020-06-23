@@ -639,6 +639,14 @@ namespace FILE
                         }
                     }
                     
+                    // Don't restore config.php and "plugintype.txt files of plugins if they already exist
+                    // THIS IS A TEMPORARY FIX FOR THE 5.9.1 MIGRATION
+                    if (in_array(basename($filename), ["config.php", "plugintype.txt"]) && dirname(dirname($filename)) == ".") {
+                        if (file_exists($DestinationFolder . DIRECTORY_SEPARATOR . $filename)) {
+                            // continue;
+                        }
+                    }
+                    
                     // Restore the file
                     if ($fp_src !== FALSE) {
                         $fp_dst = fopen($DestinationFolder . DIRECTORY_SEPARATOR . $filename, "wb");
@@ -726,6 +734,14 @@ namespace FILE
                         if (!mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
                             $success = FALSE;
                         }
+                    }
+                }
+                
+                // Don't restore config.php and "plugintype.txt files of plugins if they already exist
+                // THIS IS A TEMPORARY FIX FOR THE 5.9.1 MIGRATION
+                if (in_array(basename($file), ["config.php", "plugintype.txt"]) && dirname(dirname($file)) == ".") {
+                    if (file_exists($DestinationFolder . DIRECTORY_SEPARATOR . $file)) {
+                        //continue;
                     }
                 }
                 

@@ -19,6 +19,9 @@ Adminer website: https://www.adminer.org/
 
 CHANGELOG:
 
+2020-06-24 : SEC : prevent direct access to subparts of adminer. Only the index.php
+                   and adminer.php scripts can be called and it includes others.
+
 v1.7, 2020
 1. Update adminer to 4.7.7 (https://github.com/vrana/adminer/releases/tag/v4.7.7).
 

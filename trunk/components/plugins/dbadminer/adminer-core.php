@@ -1,4 +1,5 @@
 <?php
+
 /** Adminer - Compact database management
 * @link https://www.adminer.org/
 * @author Jakub Vrana, https://www.vrana.cz/
@@ -6,7 +7,14 @@
 * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
 * @license https://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2 (one or other)
 * @version 4.7.7
-*/error_reporting(6135);$Zc=!preg_match('~^(unsafe_raw)?$~',ini_get("filter.default"));if($Zc||ini_get("filter.default_flags")){foreach(array('_GET','_POST','_COOKIE','_SERVER')as$X){$Li=filter_input_array(constant("INPUT$X"),FILTER_UNSAFE_RAW);if($Li)$$X=$Li;}}if(function_exists("mb_internal_encoding"))mb_internal_encoding("8bit");function
+*/
+
+if (!defined('WIKINDX_ADMINER_CALLER')) {
+    header("HTTP/1.1 403 Forbidden");
+    die("Access forbidden.");
+}
+
+error_reporting(6135);$Zc=!preg_match('~^(unsafe_raw)?$~',ini_get("filter.default"));if($Zc||ini_get("filter.default_flags")){foreach(array('_GET','_POST','_COOKIE','_SERVER')as$X){$Li=filter_input_array(constant("INPUT$X"),FILTER_UNSAFE_RAW);if($Li)$$X=$Li;}}if(function_exists("mb_internal_encoding"))mb_internal_encoding("8bit");function
 connection(){global$h;return$h;}function
 adminer(){global$b;return$b;}function
 version(){global$ia;return$ia;}function

@@ -1,5 +1,4 @@
 <?php
-
 /** Adminer customization allowing usage of plugins
  * @see https://www.adminer.org/plugins/#use
  *
@@ -7,6 +6,12 @@
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  * @license https://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2 (one or other)
  */
+
+if (!defined('WIKINDX_ADMINER_CALLER')) {
+    header("HTTP/1.1 403 Forbidden");
+    die("Access forbidden.");
+}
+
 class AdminerPlugin extends Adminer
 {
     /** @access protected */

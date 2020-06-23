@@ -6,6 +6,12 @@
  * @author Pavel Kutáč, http://www.kutac.cz/
  * 
  */
+
+if (!defined('WIKINDX_ADMINER_CALLER')) {
+    header("HTTP/1.1 403 Forbidden");
+    die("Access forbidden.");
+}
+
 class FillLoginForm {  
   private $system;  
   private $server;

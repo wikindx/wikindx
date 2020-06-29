@@ -13,6 +13,7 @@ MAINTENANCE:
 2. Increase memory prerequisite to 64MB.
 3. Add a notice about memory comsumption of upgrade stage 13.
 4. Add compatibility functions for higher versions of PHP (polyfill-php.php).
+5. Update jQuery from v3.3.1 to v3.5.1.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

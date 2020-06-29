@@ -32,7 +32,7 @@ and referred to in $jsonArray['startFunction'].
 1. Include the AJAX files in the HTML output of your page with the form.
 
    $ajax = FACTORY_AJAX::getInstance();
-   $ajax->loadJavascript('core/modules/list/searchSelect.js');
+   $ajax->loadJavascript('core/modules/list/searchSelect.js?ver=' . WIKINDX_PUBLIC_VERSION);
 
 In this case, searchSelect.js is the javascript for Quick Search -- you 
 will include your own javascript file. loadJavascript() can also take   

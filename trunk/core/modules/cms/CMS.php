@@ -85,7 +85,7 @@ class CMS
         );
         $pString .= \HTML\td(implode("&nbsp;&nbsp;&nbsp;", $links), 'width50percent');
         if (array_key_exists('type', $this->vars)) {
-            \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js']);
+            \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js?ver=' . WIKINDX_PUBLIC_VERSION]);
             if ($this->vars['type'] == 'categories') {
                 $category = FACTORY_CATEGORY::getInstance();
                 $raw = $category->grabAll();

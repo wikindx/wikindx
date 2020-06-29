@@ -91,7 +91,7 @@ include_once("core/startup/WEBSERVERCONFIG.php");
 		padding : 0 10px 0 0;
 	}
 	</style>
-        <script src="<?php echo WIKINDX_BASE_URL . "/" . WIKINDX_URL_COMPONENT_VENDOR; ?>/jquery/jquery.min.js"></script>
+        <script src="<?php echo WIKINDX_BASE_URL . "/" . WIKINDX_URL_COMPONENT_VENDOR; ?>/jquery/jquery.min.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>
 	<script language="JavaScript" type="text/javascript">
         // SET CURSOR POSITION
         $.fn.setCursorPosition = function(pos) {

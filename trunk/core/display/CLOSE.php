@@ -101,10 +101,10 @@ class CLOSE
         GLOBALS::addTplVar('headTitle', $title);
 
         // Mandatory script for Ajax and core functions
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/javascript/coreJavascript.js"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_VENDOR . '/progressbarjs/progressbar.min.js"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_VENDOR . '/jsonjs/json2.js"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/javascript/ajax.js"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/javascript/coreJavascript.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_VENDOR . '/progressbarjs/progressbar.min.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_VENDOR . '/jsonjs/json2.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/javascript/ajax.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
 
         // MENU
         GLOBALS::addTplVar('displayMenu', $displayMenu);

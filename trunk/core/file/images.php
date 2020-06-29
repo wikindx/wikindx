@@ -827,8 +827,8 @@ class EncodeExplorer
      */
     public function outputHtml()
     {
-        $pString = '<link rel="stylesheet" href="images.css" type="text/css">';
-        $pString .= '<script src="' . WIKINDX_BASE_URL . "/" . WIKINDX_URL_COMPONENT_VENDOR . '/jquery/jquery.min.js"></script>';
+        $pString = '<link rel="stylesheet" href="images.css?ver=' . WIKINDX_PUBLIC_VERSION . '" type="text/css">';
+        $pString .= '<script src="' . WIKINDX_BASE_URL . "/" . WIKINDX_URL_COMPONENT_VENDOR . '/jquery/jquery.min.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= <<<END
 <script>
 END;

@@ -48,7 +48,7 @@ include_once("core/startup/WEBSERVERCONFIG.php");
 	}
 	</style>
 
-	<script src="<?php echo WIKINDX_BASE_URL; ?>/core/tiny_mce/tiny_mce_popup.js"></script>
+	<script src="<?php echo WIKINDX_BASE_URL; ?>/core/tiny_mce/tiny_mce_popup.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>
 	<script>
 	tinyMCEPopup.requireLangPack();
 

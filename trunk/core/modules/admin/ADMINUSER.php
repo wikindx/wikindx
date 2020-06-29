@@ -251,7 +251,7 @@ class ADMINUSER
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userBlock"));
         $pString = '<script type="text/javascript" src="' . \WIKINDX_BASE_URL .
-            '/core/modules/admin/adminUser.js"></script>';
+            '/core/modules/admin/adminUser.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= $error ? \HTML\p($error, "error", "center") : '';
         $this->grabUsers();
         if (empty($this->users)) {

@@ -1,7 +1,7 @@
 RELEASES:
 
 v6.3.2
-Focus: Maintenance nd minor feature enhancement.
+Focus: Maintenance and minor feature enhancement.
 
 BUG FIXES:
 1. Fix an error that prevent the upgrade of components.

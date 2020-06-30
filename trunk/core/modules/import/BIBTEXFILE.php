@@ -128,6 +128,8 @@ class BIBTEXFILE
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \HTML\tableStart('generalTable borderSpacingMedium');
+        $pString .= \HTML\td($this->messages->text("import", "quarantine") . "&nbsp;&nbsp;" .
+        	\FORM\checkbox(FALSE, "import_Quarantine"));
         $pString .= \HTML\td($this->messages->text("import", "importDuplicates") . "&nbsp;&nbsp;" .
             \FORM\checkbox(FALSE, 'import_ImportDuplicates'));
         $td = $this->messages->text("import", "storeRawBibtex");

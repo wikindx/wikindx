@@ -1,12 +1,13 @@
 RELEASES:
 
 v6.3.2
-Focus: Maintenance.
+Focus: Maintenance nd minor feature enhancement.
 
 BUG FIXES:
 1. Fix an error that prevent the upgrade of components.
 2. Fix some notices when a resource without creator is displayed.
 3. Fix the BCP 47 code of to_TO locale.
+4. Temporary fix to legacy issue (to be fixed permanently on next database upgrade) – disabled resource types can be stored incorrectly leading to errors when disabling the types from Admin|Configure.
 
 MAINTENANCE:
 1. Changes the operation of the component version number so as not to mislead users.
@@ -15,6 +16,9 @@ MAINTENANCE:
 4. Add compatibility functions for higher versions of PHP (polyfill-php.php).
 5. Update jQuery from v3.3.1 to v3.5.1.
 6. Force browsers to reload JS and CSS files when a new version is installed.
+
+FEATURE ENHANCEMENTS:
+1. Add possibility to quarantine resources on import.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

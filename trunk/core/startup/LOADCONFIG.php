@@ -213,6 +213,14 @@ class LOADCONFIG
             // Unserialize some options
             if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
                 $value = unserialize(base64_decode($value));
+                if ($configName == 'configDeactivateResourceTypes') { // at some point in the past, incorrect values have crept in – remove them
+                	foreach ($value as $key => $index) {
+                		if (!is_numeric($index)) {
+                			$tempValue[$key] = $index;
+                		}
+                	}
+                	$value = $tempValue;
+                }
                 if (!is_array($value)) {
                     $value = unserialize(base64_decode(constant($constName . "_DEFAULT")));
                 }

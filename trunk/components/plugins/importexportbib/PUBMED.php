@@ -180,6 +180,9 @@ class PUBMED
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
         $pString .= HTML\tableStart('generalTable borderStyleSolid');
+        $checked = $this->session->issetVar("import_Quarantine") ? TRUE : FALSE;
+        $pString .= \HTML\td($this->coremessages->text("import", "quarantine") . "&nbsp;&nbsp;" .
+        	\FORM\checkbox(FALSE, "import_Quarantine"));
         $checked = $this->session->issetVar("import_ImportDuplicates") ? TRUE : FALSE;
         $pString .= HTML\td($this->coremessages->text("import", "importDuplicates") . "&nbsp;&nbsp;" .
             FORM\checkbox(FALSE, 'import_ImportDuplicates'), $checked);

@@ -25,6 +25,9 @@ You will need to download and install the appropriate binaries from the bibutils
 ************************************************************************
 CHANGELOG:
 
+v1.17, 2020
+1. Add possibility to quarantine resources on import.
+
 v1.16, 2020
 1. Wikindx compatibility version 7.
 

@@ -1172,6 +1172,11 @@ class IMPORTBIBTEX
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
         }
+        if (isset($this->vars['import_Quarantine']) && $this->vars['import_Quarantine']) {
+            if (!$this->session->setVar("import_Quarantine", 1)) {
+                $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
+            }
+        }
         // Force to 1 => 'General' category
         if (!$this->session->getVar("import_Categories")) {
             if (!$this->session->setVar("import_Categories", 1)) {

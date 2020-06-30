@@ -342,6 +342,10 @@ class IMPORT
             $fields[] = 'resourcemiscQuarantine';
             $values[] = 'Y';
         }
+        elseif ($this->session->getVar("import_Quarantine")) {
+            $fields[] = 'resourcemiscQuarantine';
+            $values[] = 'Y';
+        }
         $this->db->insert('resource_misc', $fields, $values);
     }
     /**

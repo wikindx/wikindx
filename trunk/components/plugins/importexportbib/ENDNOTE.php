@@ -110,8 +110,11 @@ class ENDNOTE
         $pString .= HTML\tableEnd();
         $pString .= HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= HTML\trStart();
+        $checked = $this->session->issetVar("import_Quarantine") ? TRUE : FALSE;
+        $td = \HTML\p($this->coremessages->text("import", "quarantine") . "&nbsp;&nbsp;" .
+        	\FORM\checkbox(FALSE, "import_Quarantine"));
         $checked = $this->session->getVar("import_ImportDuplicates") ? TRUE : FALSE;
-        $td = HTML\p($this->pluginmessages->text('importDuplicates') . "&nbsp;&nbsp;" .
+        $td .= HTML\p($this->pluginmessages->text('importDuplicates') . "&nbsp;&nbsp;" .
             FORM\checkbox(FALSE, 'import_ImportDuplicates'), $checked);
         $checked = $this->session->getVar("import_KeywordIgnore") ? TRUE : FALSE;
         $td .= HTML\p($this->pluginmessages->text('importKeywordIgnore') . "&nbsp;&nbsp;" .

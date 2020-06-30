@@ -1464,6 +1464,7 @@ class MESSAGES
 /// import_executionTimeExceeded With large imports that would go over php.ini's max_execution time, WIKINDX splits the imports into chunks
 				"executionTimeExceeded" => dgettext($domain, "'max_execution_time' (### seconds) in php.ini was about to be exceeded.  WIKINDX is importing the bibliography in chunks."),
 				"addedChunk" => dgettext($domain, "No. resources added this chunk: ###"),
+				"quarantine" => dgettext($domain, "Quarantine from public view"),
 			),
 /// user_ Users in a multi user WIKINDX
 		    "user" => array(

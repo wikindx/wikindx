@@ -59,6 +59,7 @@ class AUTHORIZE
      */
     public function gatekeep()
     {
+    
 // loadDBConfig() is called in WEBSERVERCONFIG before this. It SHOULD be the case that this call here is not required
 //        FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
         if (array_key_exists("action", $this->vars)) {

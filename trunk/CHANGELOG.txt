@@ -8,6 +8,7 @@ BUG FIXES:
 2. Fix some notices when a resource without creator is displayed.
 3. Fix the BCP 47 code of to_TO locale.
 4. Temporary fix to legacy issue (to be fixed permanently on next database upgrade) – disabled resource types can be stored incorrectly leading to errors when disabling the types from Admin|Configure.
+5. Fix mismatch between search results in numerical and alphabetical mode.
 
 MAINTENANCE:
 1. Changes the operation of the component version number so as not to mislead users.

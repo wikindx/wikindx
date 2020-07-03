@@ -320,7 +320,8 @@ class SQLSTATEMENTS
                         TRUE
                     ), 't1', TRUE, TRUE);
                 }
-            } elseif (!$this->allIds) {
+            } 
+            elseif (!$this->allIds) {
                 $this->db->formatConditions($this->db->formatFields('resourceId') .
                     $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar("list_AllIds"))))));
             }
@@ -329,6 +330,62 @@ class SQLSTATEMENTS
                 $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar("list_AllIds"))))));
         }
         $this->listJoins($order);
+        if (($order == 'popularityIndex') || ($order == 'downloadsIndex') || ($order == 'viewsIndex')) {
+            $this->listFields[] = 'index';
+            $listQuery = $this->db->queryNoExecute($this->db->selectNoExecuteFromSubQuery(
+                FALSE,
+                $this->db->formatFields($this->listFields),
+                $this->totalResourceSubquery,
+                FALSE,
+                FALSE
+            ));
+        } elseif ($totalSubQuery) {
+            $listQuery = $this->db->queryNoExecute($this->db->selectNoExecuteFromSubQuery(
+                FALSE,
+                $this->db->formatFields($this->listFields),
+                $totalSubQuery,
+                FALSE,
+                FALSE
+            ));
+        } else {
+            $listQuery = $this->db->queryNoExecute($this->db->selectNoExecute('resource', $this->listFields));
+        }
+        $this->session->setVar("sql_ListStmt", $listQuery);
+
+        return $listQuery . $limit;
+    }
+    /**
+     * Create LIST statement for QUICKSEARCH
+     *
+     * @param string $order Default is 'creator'
+     * @param string $table Default is 'resource'
+     * @param false|string $subQ Default is FALSE
+     *
+     * @return mixed SQL statement ready to be executed. FALSE if there is no statement to be formed
+     */
+    public function listListQS($order = 'creator', $table = 'resource', $subQ = FALSE)
+    {
+    	$this->listJoins = [];
+        if (!$this->allIds && !$this->session->getVar("list_AllIds")) {
+            return FALSE; // Perhaps browsing metadata keywords where the keyword is not attached to resources but only to ideas.
+        }
+        $totalSubQuery = FALSE;
+        $this->db->ascDesc = $this->session->getVar($this->listMethodAscDesc);
+        $np = [];
+        $limit = FALSE;
+        if ((GLOBALS::getUserVar('PagingStyle') != 'A') || ((GLOBALS::getUserVar('PagingStyle') == 'A') &&
+            !in_array($order, ['title', 'creator', 'attachments']))) {
+            if (($order != 'popularityIndex') && ($order != 'viewsIndex')) { // limit is set in the inner statement
+                $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->common->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
+            }
+        }
+        else {
+			$this->pagingAlphaCondition($order);
+			$this->executeCondJoins();
+        }
+        $this->db->formatConditions($this->db->formatFields('resourceId') .
+                $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar("list_AllIds"))))));
+        $this->listJoins($order, TRUE);
         if (($order == 'popularityIndex') || ($order == 'downloadsIndex') || ($order == 'viewsIndex')) {
             $this->listFields[] = 'index';
             $listQuery = $this->db->queryNoExecute($this->db->selectNoExecuteFromSubQuery(
@@ -485,7 +542,8 @@ class SQLSTATEMENTS
             $this->joins,
             $this->conditionsOneField,
             'resource',
-            $subQ
+            $subQ, 
+            TRUE
         );
         if (!$this->session->getVar("list_AllIds")) {
             return FALSE;
@@ -757,9 +815,9 @@ class SQLSTATEMENTS
      * Create table joins, orders, groups and fields for outer select statement
      *
      * @param string order
-     * @param mixed $order
+     * @param boolean $QS. Default is FALSE
      */
-    private function listJoins($order)
+    private function listJoins($order, $QS = FALSE)
     {
         $this->db->ascDesc = $this->session->getVar($this->listMethodAscDesc);
         if ($order == 'title') {
@@ -824,16 +882,22 @@ class SQLSTATEMENTS
             }
         }
         $this->db->groupBy('resourceId');
-        if (
-            ((GLOBALS::getUserVar('PagingStyle') == 'A') && (($order == 'title') || ($order == 'creator')))
-            || (in_array($order, ['popularityIndex', 'downloadsIndex', 'viewsIndex']))
-        ) {
-            $this->db->leftJoin('resource', 'resourceId', 'rId');
+        if (!$QS) {
+        	if ((GLOBALS::getUserVar('PagingStyle') == 'A') && (($order == 'creator') || ($order == 'title'))) {
+        		$this->db->leftJoin('resource', 'resourceId', 'rId');
+        	}
+        	$this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');
+        	$this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
         }
-        //		if(($order != 'popularityIndex') && ($order != 'downloadsIndex') && ($order != 'viewsIndex'))
+        else if ($QS && (GLOBALS::getUserVar('PagingStyle') != 'A')) {
+        	$this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');
+        	$this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
+        }
+        else if ($QS && ($order != 'creator') && ($order != 'title')) {
+        	$this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');
+        	$this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
+        }
         $this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceId');
-        $this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');
-        $this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
         $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'resourceId');
         $this->db->leftJoin('resource_year', 'resourceyearId', 'resourceId');
         $this->db->leftJoin('resource_text', 'resourcetextId', 'resourceId');
@@ -887,7 +951,7 @@ class SQLSTATEMENTS
             }
             foreach ($this->common->pagingObject->pagingArray[$this->common->pagingObject->start] as $letter) {
                 if (($letter == '#') && !$this->quickListAll) {
-                    $conditions[] = $this->db->formatFields('c.resourcecreatorCreatorSurname') . ' IS NULL ';
+                    $conditions[] = $this->db->formatFields('resourcecreatorCreatorSurname') . ' IS NULL ';
                 } elseif ($letter == '#') {
                     $conditions[] = $this->db->formatFields('resourcecreatorCreatorSurname') . ' IS NULL ';
                 } elseif (($letter == '??') && !$this->quickListAll) {

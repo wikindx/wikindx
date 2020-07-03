@@ -243,7 +243,7 @@ class QUICKSEARCH
             $this->session->delVar("list_AllIds");
             $this->session->delVar("list_PagingAlphaLinks");
         }
-        if (!$reprocess || ($this->session->getVar("setup_PagingStyle") == 'A')) {
+        if (!$reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->session->delVar("sql_ListStmt");
             $this->session->delVar("advancedSearch_listParams");
         }
@@ -263,7 +263,7 @@ class QUICKSEARCH
         }
         $this->input['Partial'] = TRUE;
         GLOBALS::setTplVar('resourceListSearchForm', $this->init(FALSE, TRUE, TRUE));
-        if (!$reprocess || ($this->session->getVar("setup_PagingStyle") == 'A')) {
+        if (!$reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->parseWord();
             $resourcesFound = FALSE;
             // Deal with OR strings first
@@ -303,7 +303,7 @@ class QUICKSEARCH
                 return FALSE;
             }
         }
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && ($this->session->getVar("setup_PagingStyle") != 'A')) {
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A')) {
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
@@ -323,8 +323,11 @@ class QUICKSEARCH
         $this->common->patterns = $patterns;
         $this->session->setVar("search_Patterns", base64_encode(serialize($patterns)));
         $this->common->keepHighlight = TRUE;
-        if (!$reprocess || ($this->session->getVar("setup_PagingStyle") == 'A')) {
-            $sql = $this->stmt->listList($this->session->getVar("search_Order"), FALSE, $this->subQ);
+        if (!$reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
+        	$this->stmt->joins = [];
+        	$this->stmt->joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
+            $this->stmt->joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
+            $sql = $this->stmt->listListQS($this->session->getVar("search_Order"), FALSE, $this->subQ);
         } else {
             $sql = $this->session->getVar("sql_ListStmt");
             $this->pagingObject = FACTORY_PAGING::getInstance();
@@ -343,15 +346,15 @@ class QUICKSEARCH
     /**
      * Get the initial IDs from the database
      *
-     * @param mixed $searchArray
-     * @param mixed $searchArrayFT
+     * @param mixed $search
+     * @param mixed $searchFT
      * @param mixed $type
      */
     private function getInitialIds($search, $searchFT, $type)
     {
         $this->fieldSql($search, $searchFT);
         $subStmt = $this->setSubQuery();
-        $resourcesFound = $this->stmt->quicksearchSubQuery(FALSE, $subStmt, FALSE, $type);
+        $this->stmt->quicksearchSubQuery(FALSE, $subStmt, FALSE, $type);
         return TRUE;
     }
     /**
@@ -438,7 +441,6 @@ class QUICKSEARCH
                 $this->db->groupBy(['rId']);
                 $this->subQ = $this->db->subQuery($this->unions, 'u', FALSE);
                 $subQuery = $this->db->from . ' ' . $this->subQ;
-
                 return $this->db->selectNoExecuteFromSubQuery(FALSE, ['rId'], $subQuery, FALSE, TRUE, TRUE);
             case 'publisher':
                 $this->stmt->useBib('rId');

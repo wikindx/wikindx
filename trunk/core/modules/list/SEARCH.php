@@ -717,9 +717,9 @@ class SEARCH
     public function process($reprocess = FALSE)
     {
         if (!array_key_exists('PagingStart', $this->vars)) {
-            if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'displayIdea'));
-            
-            $this->session->delVar("setup_PagingTotal");
+            if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'displayIdea')) {
+	            $this->session->delVar("setup_PagingTotal");
+	        }
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));
         if (!$reprocess) {

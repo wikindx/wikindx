@@ -1165,7 +1165,7 @@ namespace LOCALES
             "tk_TM" => "tk",
             "tl_PH" => "tl",
             "tn_ZA" => "tn",
-            "to_TO" => "Lea fakatonga (Tonga)",
+            "to_TO" => "to",
             "tpi_PG" => "to",
             "tr_CY" => "tr",
             "tr_TR" => "tr",

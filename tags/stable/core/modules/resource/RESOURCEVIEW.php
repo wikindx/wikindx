@@ -164,23 +164,27 @@ class RESOURCEVIEW
                     $this->db->formatConditions(['creatorId' => $cId]);
                     $resultset = $this->db->select('creator', ['creatorPrefix', 'creatorSurname', 'creatorFirstname', 'creatorInitials']);
                     $cRow = $this->db->fetchRow($resultset);
-                    if ($cRow['creatorFirstname']) {
-                        $cArray[] = $cRow['creatorFirstname'];
-                    }
-                    if ($cRow['creatorInitials']) {
-                        $cArray[] = $cRow['creatorInitials'];
-                    }
-                    if ($cRow['creatorPrefix']) {
-                        $cArray[] = $cRow['creatorPrefix'];
-                    }
-                    if ($cRow['creatorSurname']) {
-                        $cArray[] = $cRow['creatorSurname'];
-                    }
-                    if (!empty($cArray)) {
-                        $roleArray[] = implode(' ', $cArray);
+                    if (is_array($cRow))
+                    {
+                        if ($cRow['creatorFirstname']) {
+                            $cArray[] = $cRow['creatorFirstname'];
+                        }
+                        if ($cRow['creatorInitials']) {
+                            $cArray[] = $cRow['creatorInitials'];
+                        }
+                        if ($cRow['creatorPrefix']) {
+                            $cArray[] = $cRow['creatorPrefix'];
+                        }
+                        if ($cRow['creatorSurname']) {
+                            $cArray[] = $cRow['creatorSurname'];
+                        }
+                        if (count($cArray) > 0)
+                        {
+                            $roleArray[] = implode(' ', $cArray);
+                        }
                     }
                 }
-                if (!empty($roleArray)) {
+                if (count($roleArray) > 0) {
                     $creators[$styleMap->{$row['resourceType']}['creator' . $cRole]] = implode(', ', $roleArray);
                 }
             }

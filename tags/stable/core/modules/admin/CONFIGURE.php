@@ -378,7 +378,7 @@ class CONFIGURE
                 break;
             }
         }
-        $pString = '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/admin/configure.js"></script>';
+        $pString = '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/admin/configure.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= \FORM\formHeader("admin_CONFIGURE_CORE", "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden("method", "writeDb");
         $pString .= \FORM\hidden("selectItem", $item);

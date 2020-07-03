@@ -9,6 +9,9 @@
  * The class FillLoginForm is also overloaded because the original plugin is unfinished (only GET request).
  * cf. https://github.com/arxeiss/Adminer-FillLoginForm/blob/master/fill-login-form.php
  */
+
+define('WIKINDX_ADMINER_CALLER', 1);
+
 function adminer_object()
 {
     include __DIR__ . "/../../../config.php";

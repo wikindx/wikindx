@@ -51,7 +51,7 @@ class soundexplorer_MODULE
         include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
         $config = new soundexplorer_CONFIG();
         $this->authorize = $config->authorize;
-        $this->scripts[] = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/' . basename(__DIR__) . '/soundExplorer.js';
+        $this->scripts[] = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/' . basename(__DIR__) . '/soundExplorer.js?ver=' . WIKINDX_PUBLIC_VERSION;
         if (!array_key_exists('action', $this->vars) || (array_key_exists('action', $this->vars) && ($this->vars['action'] != 'soundexplorer_seConfigure'))) {
             GLOBALS::setTplVar($config->container, $this->display());
         }

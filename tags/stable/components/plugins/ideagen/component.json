@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "ideagen",
-    "component_version": "160",
+    "component_version": "173",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Idea Generator",

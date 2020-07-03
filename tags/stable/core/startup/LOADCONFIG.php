@@ -137,7 +137,7 @@ class LOADCONFIG
     }
     
     /**
-     * Load various arrays into global constans as well as initialize user variables in GLOBALS
+     * Load various arrays into global constants as well as initialize user variables in GLOBALS
      */
     public function loadDBConfig()
     {
@@ -213,6 +213,16 @@ class LOADCONFIG
             // Unserialize some options
             if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
                 $value = unserialize(base64_decode($value));
+                // at some point in the past, incorrect values have crept in – remove them
+                if ($configName == 'configDeactivateResourceTypes') {
+                	$tempValue = "";
+                	foreach ($value as $key => $index) {
+                		if (!is_numeric($index)) {
+                			$tempValue[$key] = $index;
+                		}
+                	}
+                	$value = $tempValue;
+                }
                 if (!is_array($value)) {
                     $value = unserialize(base64_decode(constant($constName . "_DEFAULT")));
                 }

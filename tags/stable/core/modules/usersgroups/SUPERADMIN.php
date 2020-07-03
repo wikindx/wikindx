@@ -430,7 +430,7 @@ class SUPERADMIN
                 break;
             }
         }
-        $pString = '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/admin/configure.js"></script>';
+        $pString = '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/admin/configure.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         if ($item == 'super') {
             $password = FACTORY_PASSWORD::getInstance();
             $input = array_key_exists("usersUsername", $this->values) ? $this->values["usersUsername"] : FALSE;

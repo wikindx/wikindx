@@ -61,8 +61,9 @@ class PAGINGALPHA
      * @param bool $conditionsOneField
      * @param string $table
      * @param string $subQ Optional SQL subquery for input to COUNT operations - default is FALSE
+     * @param bool $QS From QUICKSEARCH or not - default is FALSE
      */
-    public function getPaging($conditions, $joins, $conditionsOneField, $table = 'resource', $subQ)
+    public function getPaging($conditions, $joins, $conditionsOneField, $table = 'resource', $subQ, $QS = FALSE)
     {
         $this->total = $this->session->getVar("setup_PagingTotal");
         if ($links = $this->session->getVar("list_PagingAlphaLinks")) {
@@ -76,7 +77,15 @@ class PAGINGALPHA
         if ($viewMax <= 0) {
             $viewMax = 20; // a cludge
         }
-        $stmt = $this->db->countAlpha($this->order, $subQ, $conditions, $joins, $conditionsOneField, $table);
+        if ($QS) {
+        	$conditions[] = $this->db->formatConditionsOneField(unserialize(base64_decode($this->session->getVar("list_AllIds"))), 
+        	'resourceId', '=', TRUE, FALSE, FALSE, TRUE);
+        	$joins = [];
+            $joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
+            $joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
+            $subQ = FALSE;
+        }
+	    $stmt = $this->db->countAlpha($this->order, $subQ, $conditions, $joins, $conditionsOneField, $table);
         $resultSet = $this->db->query($stmt);
         $total = 0;
         $letterArray = [];

@@ -842,6 +842,11 @@ class ENDNOTEIMPORT
         if (!$this->session->setVar("import_TitleSubtitleSeparator", $this->vars['import_TitleSubtitleSeparator'])) {
             $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
         }
+        if (isset($this->vars['import_Quarantine']) && $this->vars['import_Quarantine']) {
+            if (!$this->session->setVar("import_Quarantine", 1)) {
+                $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
+            }
+        }
         if (isset($this->vars['import_ImportDuplicates']) && $this->vars['import_ImportDuplicates']) {
             if (!$this->session->setVar("import_ImportDuplicates", 1)) {
                 $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));

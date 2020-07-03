@@ -102,7 +102,7 @@ class MYWIKINDX
         $pString .= \HTML\td(\HTML\div('configDiv', $this->getConfigDetails($configGroups, $item)), 'left top width80percent');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
+        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         GLOBALS::addTplVar('content', $pString);
     }
     /**
@@ -445,7 +445,7 @@ class MYWIKINDX
         ));
         $this->session->delVar("mywikindx_groupLock");
         $pString = $error ? \HTML\p($error, "error", "center") : '';
-        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
+        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= \FORM\formHeader(FALSE);
         $pString .= \FORM\hidden("method", "createUserGroup");
         $pString .= $tinymce->loadBasicTextarea();
@@ -564,7 +564,7 @@ class MYWIKINDX
         $this->checkValidUserGroup();
         $groupUsers = [];
         $pString = $error ? \HTML\p($error, "error", "center") : '';
-        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
+        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= \FORM\formHeader(FALSE);
         $pString .= \FORM\hidden("method", "editUserGroup");
         $pString .= \FORM\hidden("groupId", $this->vars['groupId']);
@@ -754,7 +754,7 @@ class MYWIKINDX
         $pString .= \HTML\p($this->messages->text("user", "deleteGroup2"));
         $this->session->delVar("mywikindx_group_delete");
         $this->session->delVar("mywikindx_groupLock");
-        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
+        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= \FORM\formHeader(FALSE);
         $pString .= \FORM\hidden("method", "deleteUserGroup");
         $pString .= \FORM\hidden("groupId", $this->vars['groupId']);
@@ -851,7 +851,7 @@ class MYWIKINDX
         ));
         $this->session->delVar("mywikindx_tagLock");
         $pString = $error ? \HTML\p($error, "error", "center") : '';
-        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
+        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= \FORM\formHeader(FALSE);
         $pString .= \FORM\hidden("method", "createUserTag");
         $pString .= \HTML\tableStart();
@@ -924,7 +924,7 @@ class MYWIKINDX
             $this->badInputPopup($this->errors->text("inputError", "missing"));
         }
         $pString = $error ? \HTML\p($error, "error", "center") : '';
-        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
+        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= \FORM\formHeader(FALSE);
         $pString .= \FORM\hidden("method", "editUserTag");
         $pString .= \FORM\hidden("tagId", $this->vars['tagId']);
@@ -1018,7 +1018,7 @@ class MYWIKINDX
             \HTML\nlToHtml($title));
         $this->session->delVar("mywikindx_tag_delete");
         $this->session->delVar("mywikindx_tagLock");
-        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
+        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= \FORM\formHeader(FALSE);
         $pString .= \FORM\hidden("method", "deleteUserTag");
         $pString .= \FORM\hidden("tagId", $this->vars['tagId']);
@@ -1145,7 +1145,7 @@ class MYWIKINDX
             $this->session->delVar("mywikindx_bibDescription");
         }
         $pString = $error ? \HTML\p($error, "error", "center") : '';
-        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
+        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= \FORM\formHeader(FALSE);
         if ($groupBib) {
             $pString .= \FORM\hidden("method", "createGroupBib");
@@ -1273,7 +1273,7 @@ class MYWIKINDX
         $this->checkValidBibliography($this->vars['bibId']);
         $groupUsers = [];
         $pString = $error ? \HTML\p($error, "error", "center") : '';
-        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
+        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= \FORM\formHeader(FALSE);
         $pString .= \FORM\hidden("method", "editBib");
         $pString .= \FORM\hidden("bibId", $this->vars['bibId']);
@@ -1406,7 +1406,7 @@ class MYWIKINDX
             \HTML\nlToHtml($title));
         $this->session->delVar("mywikindx_bib_delete");
         $this->session->delVar("mywikindx_bibLock");
-        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js"></script>';
+        $pString .= '<script type="text/javascript" src="' . WIKINDX_BASE_URL . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= \FORM\formHeader(FALSE);
         $pString .= \FORM\hidden("method", "deleteBib");
         $pString .= \FORM\hidden("bibId", $bibId);

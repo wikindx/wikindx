@@ -587,6 +587,8 @@ class PARSEPHRASE
      */
     private function splitSpaces($phrase)
     {
+// remove multiple spaces
+    	$phrase = preg_replace('!\s+!', ' ', $phrase);
         return UTF8::mb_explode(' ', $phrase);
     }
     /**

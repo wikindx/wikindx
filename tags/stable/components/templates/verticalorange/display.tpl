@@ -26,9 +26,9 @@
 	{$gsMetaTags}
 	
 	{* Change this path and file name *}
-	<link rel="stylesheet" href="{$tplPath}/template.css" type="text/css">
-	<link rel="stylesheet" href="components/templates/override.css" type="text/css">
-	<link rel="shortcut icon" type="image/x-icon" href="{$tplPath}/images/favicon.ico">
+	<link rel="stylesheet" href="{$tplPath}/template.css?ver={$smarty.const.WIKINDX_PUBLIC_VERSION}" type="text/css">
+	<link rel="stylesheet" href="components/templates/override.css?ver={$smarty.const.WIKINDX_PUBLIC_VERSION}" type="text/css">
+	<link rel="shortcut icon" type="image/x-icon" href="{$tplPath}/images/favicon.ico?ver={$smarty.const.WIKINDX_PUBLIC_VERSION}">
 
 	{if $displayRss == true}
 	<link rel="alternate" type="{$wkx_mimetype_rss}" title="{$rssTitle}" href="{$rssFeed}">

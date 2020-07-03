@@ -121,6 +121,8 @@ class PASTEBIBTEX
 
         $pString .= \HTML\tableStart('borderSpacingMedium');
         $pString .= \HTML\trStart();
+        $pString .= \HTML\td($this->messages->text("import", "quarantine") . "&nbsp;&nbsp;" .
+        	\FORM\checkbox(FALSE, "import_Quarantine"));
         $pString .= \HTML\td($this->messages->text("import", "importDuplicates") . "&nbsp;&nbsp;" .
             \FORM\checkbox(FALSE, 'import_ImportDuplicates'));
         $td = $this->messages->text("import", "storeRawBibtex");

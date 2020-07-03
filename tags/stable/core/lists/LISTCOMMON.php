@@ -342,6 +342,7 @@ class LISTCOMMON
      * @param bool $conditionsOneField
      * @param string $table default is 'resource'
      * @param string $subQ Optional SQL subquery for input to COUNT operations - default is FALSE
+     * @param bool $QS From QUICKSEARCH or not - default is FALSE
      */
     public function pagingStyle(
         $sql,
@@ -352,7 +353,8 @@ class LISTCOMMON
         $joins = FALSE,
         $conditionsOneField = FALSE,
         $table = 'resource',
-        $subQ = FALSE
+        $subQ = FALSE, 
+        $QS = FALSE
     ) {
         if ((GLOBALS::getUserVar('PagingStyle') == 'A') && in_array($order, ['title', 'creator', 'attachments'])) {
             $this->pagingObject = FACTORY_PAGINGALPHA::getInstance();
@@ -362,7 +364,7 @@ class LISTCOMMON
             $this->pagingObject->listType = $listType;
             $this->pagingObject->order = $order;
             $this->pagingObject->queryString = $queryString;
-            $this->pagingObject->getPaging($conditions, $joins, $conditionsOneField, $table, $subQ);
+            $this->pagingObject->getPaging($conditions, $joins, $conditionsOneField, $table, $subQ, $QS);
         } else {
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
@@ -387,7 +389,6 @@ class LISTCOMMON
                     "publisher" => $this->messages->text("list", "publisher"),
                     "year" => $this->messages->text("list", "year"),
                     "timestamp" => $this->messages->text("list", "timestamp"),
-                    "viewsIndex" => $this->messages->text("list", "views"),
                     "maturityIndex" => $this->messages->text("list", "maturity"),
                 ];
 /*            } else {

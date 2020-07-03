@@ -1,0 +1,21 @@
+{
+    "component_type": "style",
+    "component_id": "harvard",
+    "component_version": "173",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Harvard",
+    "component_description": "Harvard Style. Harvard is very similar to APA. Where APA is primarily used in the USA, Harvard referencing is widely used in the UK and Australia and is encouraged for use with the humanities.",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_website": "https://library.aru.ac.uk/referencing/harvard.htm",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Compiler",
+            "author_copyright": "2005, 2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        }
+    ],
+    "component_sha256": "c92b4ac5329a3d989b4f426c18bf712b70427880857218eb4d452bc827b957ae"
+}

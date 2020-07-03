@@ -1,0 +1,528 @@
+body {
+ width:96%;
+ margin: auto;
+ padding: 0;
+ font-family: arial, helvetica, serif;
+ font-size: 0.9em;
+ background: url("images/paper.jpg");
+}
+
+body > table {
+ width:100%;
+}
+
+table {
+ width:100%;
+ margin: 0;
+ border-collapse:collapse;
+ border-spacing:0px;
+ border-width:1px;
+ border-style:none;
+ text-align:left;
+}
+
+td {
+ vertical-align:top;
+}
+
+img {
+ border:0;
+}
+
+
+
+/**
+* .menuTable: the table containing the drop-down menus
+*/
+.menuTable {
+ margin: 0;
+ padding: 0;
+ margin-bottom:1em;
+ border-bottom: #F90 3px groove;
+}
+
+/* Drop-down menus */
+
+#nav {
+ font-size: 0.9em;
+}
+
+#nav, #nav ul { /* all lists */
+ padding: 0;
+ margin: 0;
+ list-style: none; /* no bullets */
+}
+
+#nav > li, #nav > li:hover ul {
+ border-top: 1px solid #F90;
+}
+
+#nav li:hover {
+ background-color: #F90;
+ color: #FFF;
+}
+
+#nav li { /* all list items */
+ position: relative;
+ z-index: 31;
+ float: left;
+ width: 9em; /* width needed or else Opera goes nuts */
+ background-color: #FC9;
+ color: #000;
+ text-decoration: none;
+ font-weight: bold;
+ border-bottom: 1px solid #F90;
+ padding-top:3px;
+ padding-bottom:3px;
+}
+
+
+/* First the layout and (un-)hiding stuff */
+
+/* second-and-above-level lists, i.e. first level of vertical dropdown menus */
+#nav li ul {
+ position: absolute;
+ z-index: 31;
+ left: -999em; /* get off the screen */
+}
+
+/* third-and-above-level lists */
+#nav li ul ul {
+ margin-left: 8.96em; /* move to the side, prevent gap in ie */
+ margin-top: -1.5em; /* of its parent */
+ z-index: 31;
+}
+
+#nav li ul {
+ margin-top: 1.5px; /* of its parent */
+}
+
+/* have submenus of submenus of hovered items not shown initially */
+#nav li:hover ul ul,
+#nav li:hover ul ul ul {
+ left: -999em;
+}
+
+/* but show lists nested under hovered list items */
+#nav li:hover ul,
+#nav li li:hover ul,
+#nav li li li:hover ul {
+ left: auto;
+}
+
+
+
+/* Now the colors and stuff ... */
+#nav li a { /* li content that is clickable */
+ display: block;
+ padding: 0 0.5em;
+ color: #000;
+ text-decoration: none;
+ font-weight: bold;
+ cursor: pointer;
+}
+#nav li a:hover { /* li content that is clickable, hovered */
+ color: #FFF;
+ background-color: #F90;
+ cursor: pointer;
+}
+
+
+
+/* Inline custom plugins */
+.inline1 {}
+
+.inline2 {}
+
+.inline3, .inline4 {
+ margin:0;
+ padding:0;
+ text-align:left;
+}
+
+
+/* Footer information: footer information at end of script */
+.footerInfo {
+ margin:0;
+ padding:0;
+ margin-bottom:0.5em;
+ border-top: #F90 3px groove;
+ text-align:right;
+ font-size: 0.6em;
+ color: gray;
+}
+
+.helplink {
+ text-align:right;
+}
+
+.contactBlock {
+ text-align:right;
+}
+
+
+/** HYPERLINKS
+*/
+/* normal links and paging links */
+a.link:visited, a.link:link, a.link:active, a.page:visited, a.page:link, a.page:active {
+ text-decoration: none;
+ color: blue;
+ background: transparent;
+}
+a.link:hover, a.page:hover {
+ text-decoration: none;
+ background: #F90;
+ color: #FFF;
+ border: none;
+}
+
+/* resource links for resource URLs */
+a.rLink:visited, a.rLink:link, a.rLink:active {
+ text-decoration: none;
+ background: transparent;
+ color: black;
+}
+a.rLink:hover {
+ text-decoration: none;
+ background: #F90;
+ color: #FFF;
+ border: none;
+}
+
+/* image links */
+a.imgLink:visited, a.imgLink:link, a.imgLink:active {
+ text-decoration: none;
+ background: transparent;
+}
+a.imgLink:hover {
+ text-decoration: none;
+ background: transparent;
+}
+
+/* hyperlinking for browsing creators, collections, publishers, categories and keywords (tag clouds). Colour and size are defined in-line so should not appear here */
+a.browseLink:visited, a.browseLink:link, a.browseLink:active{
+ text-decoration: none;
+ background: transparent;
+}
+a.browseLink:hover{
+ background: transparent;
+}
+
+/* The enclosing paragraph for the browsing above. */
+.browseParagraph{
+ background: #FFF8E2;
+ color: black;
+}
+
+/* When viewing lists of resources, display a hyperlink to a pop-up window to generate a CMS (Content Management System) 'replacement tag' for each resource */
+a.cmsLink:visited, a.cmsLink:link, a.cmsLink:active{
+ text-decoration: none;
+ color: #729179;
+ font-size: 0.7em;
+ background: transparent;
+}
+a.cmsLink:hover{
+ background: transparent;
+ font-size: 0.7em;
+ color: #729179;
+}
+
+/**
+* FORM class
+*/
+.formElements{
+}
+/**
+* TABLES
+*/
+
+/**
+* .mainTable: the table containing the main content of WIKINDX
+*/
+.mainTable {
+ margin: 0;
+ margin-bottom:0.5em;
+ border-collapse:collapse;
+ border-spacing:0px;
+}
+
+.mainTable td {
+ padding: 0px;
+ border: 0px;
+}
+
+/**
+* .pluginTopTable: the table containing any plug-in output that is printed above the mainTable of WIKINDX
+*/
+.pluginTopTable {
+ border: #F90 3px groove;
+ margin: 0;
+ padding: 0;
+}
+
+/**
+* .pluginBottomTable: the table containing any plug-in output that is printed below the mainTable of WIKINDX
+*/
+.pluginBottomTable {
+ border: #F90 3px groove;
+ margin: 0;
+ padding: 0;
+}
+
+/**
+* .styleTable: the table containing administration of bibliographic styles
+*/
+.styleTable {
+ border: #F90 1px groove;
+ margin: 0;
+ padding: 0;
+}
+
+/**
+* .generalTable: general purpose table
+*/
+.generalTable {
+ border: #F90 1px groove;
+ margin: 0;
+ padding: 0;
+}
+
+.contentRessource td {
+	
+}
+
+.contentAttachments,
+.contentCustom,
+.contentAbstract,
+.contentNote,
+.contentQuotes,
+.contentParaphrases,
+.contentMusings {
+ border-top:1px solid #000;
+ margin:0.66em 0;
+}
+
+
+
+/**
+* redefine HTML headings - see /core/display/HTML.php
+*/
+
+/**
+* Headings
+*/
+h1, h2, h3, h4 {
+ color: #F90;
+ margin: 0 0 0.5em 0;
+}
+
+.pageHeading {
+ vertical-align:top;
+}
+
+h1 {
+ height:38px;
+ margin:0.5em 0 1em 0;
+ padding:0;
+ 
+}
+
+.logo {
+ text-align:right;
+ vertical-align:middle;
+ padding:0.5em 0 1em 0;
+}
+
+/**
+* Display of system messages
+*/
+
+/**
+* .error: <p>error messages</p>
+*/
+.error {
+ background: #C96D63;
+ color: #FFF;
+}
+
+/**
+* .success: <p>success messages</p>
+*/
+.success {
+ background: #729179;
+ color: #FFF;
+}
+
+/**
+* .small: small text
+*/
+.small, .hint {
+ font-size: 0.8em;
+ vertical-align: bottom;
+}
+
+/**
+* .hint: text hints given to provide further information usually on form input. Often used in conjunction
+* with .small and usually the class of <span>....</span>
+*/
+.hint {
+ color: gray;
+}
+
+/**
+* .highlight: highlight <span>search terms</span> in text
+*/
+.highlight {
+ background: yellow;
+}
+
+/**
+* .required: highlighting for <span>required</span> form input elements.
+*/
+.required {
+ color: #C96D63;
+}
+
+/**
+* alternate colours and font sizes for <td>resources</td> in a bibliographic list
+*/
+.alternate1,
+.alternate2,
+.alternate3,
+.alternate4
+{
+ font-size: 0.9em;
+}
+
+.alternate1 {
+ background: #f8e8cc;
+}
+.alternate2 {
+ background: #ead9be;
+}
+.alternate3 {
+ background: #f7defb;
+}
+.alternate4 {
+ background: #e1eef3;
+}
+
+
+/*
+ * paging characters for resource lists
+ */
+.contentPaging{
+ font-size: 0.75em;
+ text-align:center;
+ margin-bottom:1em;
+}
+
+/*
+ * bold, italics, smallcaps for bbcode
+ */
+.bold {
+ font-weight: bold;
+}
+.italics {
+ font-style: italic;
+}
+.smallcaps {
+ font-variant: small-caps;
+}
+
+/**
+* mouse cursor classes
+*/
+.cursorPointer {
+ cursor: pointer;
+}
+
+/**
+* Static styles used by the core of wikindx
+* These classes have a correspondence 1 to 1 with old inlined style code for HTML4.
+* You can modify their effects, but you may have trouble understanding the significance
+* of the effects as they are closely linked to the logic of the PHP code.
+* -- Stéphane Aulery, 11 june 2016
+*/
+.left { text-align:left; }
+.center { text-align:center; }
+.right { text-align:right; }
+.top { vertical-align:top; }
+.middle { vertical-align:middle; }
+.bottom { vertical-align:bottom; }
+.u { text-decoration: underline; }
+.blackText { color: black; }
+.greenText { color: green; }
+.redText { color: red; }
+.borderStyleSolid { border-style:solid; }
+/**
+* For particular emphasis of a table cell. Used in the resource form to emphasize the creator entry table
+* It might be: .borderStyleEmphasis { border-style:solid; border-color: #ff0000;  border-width: 2px;}
+*/
+.borderStyleEmphasis { border-style:solid; }
+.borderStyleNone { border-style:none; }
+.borderSpacingNone { border-spacing:0px; }
+.borderSpacingSmall { border-spacing:4px; }
+.borderSpacingMedium { border-spacing:10px; }
+.borderSpacingHigh { border-spacing:15px; }
+.borderPaddingNone { border-spacing:0px; }
+.padding2px { padding:2px; }
+.padding3px { padding:3px; }
+.padding4px { padding:4px; }
+.padding5px { padding:5px; }
+.floatLeft { float:left; }
+.floatRight { float:right; }
+
+.width1percent { width:1%; }
+.width5percent { width:5%; }
+.width10percent { width:10%; }
+.width15percent { width:15%; }
+.width18percent { width:18%; }
+.width20percent { width:20%; }
+.width25percent { width:25%; }
+.width30percent { width:30%; }
+.width33percent { width:33%; }
+.width35percent { width:35%; }
+.width40percent { width:40%; }
+.width45percent { width:45%; }
+.width50percent { width:50%; }
+.width55percent { width:55%; }
+.width60percent { width:60%; }
+.width66percent { width:66%; }
+.width65percent { width:65%; }
+.width70percent { width:70%; }
+.width75percent { width:75%; }
+.width80percent { width:80%; }
+.width85percent { width:85%; }
+.width90percent { width:90%; }
+.width95percent { width:95%; }
+.width100percent{ width:100%;}
+
+/**
+* End of : Static styles used by the core of wikindx
+*/
+
+/**
+* START multiple file upload styles
+*
+* Adapted from https://code-boxx.com/simple-drag-and-drop-file-upload/
+*/
+.attachmentBorder {
+ border: #F90 1px groove;
+}
+#uploader {
+	height: 200px; 
+	background: transparent;
+	padding: 10px;
+	border-width: 1px;
+	border-style: solid;
+}
+#uploader.highlight {
+	background: #7FFF00;
+}
+#uploader.disabled {
+	background: #aaa;
+}
+/**
+* END multiple file upload styles
+*/

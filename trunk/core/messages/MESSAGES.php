@@ -602,6 +602,7 @@ class MESSAGES
 				"journal" => dgettext($domain, "Journal"),
 				"book" => dgettext($domain, "Book"),
 				"newspaper" => dgettext($domain, "Newspaper"),
+				"shortNewspaper" => dgettext($domain, "Short title"),
 				"proceedings" => dgettext($domain, "Proceedings"),
 				"encyclopedia" => dgettext($domain, "Encyclopedia"),
 				"encyclopediaShort" => dgettext($domain, "Short title"),

@@ -1,6 +1,6 @@
 [
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_sha256": "35270fe6b9fffea740612c42b80867f658d4059103b61a57c81cee8628514031",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_description": "Deutsch Sprachanpassun",
@@ -21,13 +21,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_language_de.zip",
-                "package_sha256": "0a477504f966e586a4fd6d3b6cb15d33f884328b3735795009cb9a0daad344c4",
-                "package_size": 46276
+                "package_sha256": "5fb694be5dc10223171bd2f89a9f875e84b4ad4298b53383ec520fbc157913c7",
+                "package_size": 46277
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Spanish",
         "component_description": "Traducción al español",
@@ -46,13 +46,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_language_es.zip",
-                "package_sha256": "eae5422d5f1df568121a810d069500768b9e1d1a4ce06e48dfb8878170f699a1",
-                "package_size": 32627
+                "package_sha256": "21085d6bd29b11b00af52d084c135801aef06b824a3c4971497edcf5137bc562",
+                "package_size": 32628
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_sha256": "95743e99cbaeab0e5cab4505dc853fe9c596a2f465a2cf945a7b1926708e962a",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "French",
@@ -80,14 +80,14 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_language_fr.zip",
-                "package_sha256": "f588770a267a4740315408b2f83a17aabfde1d51d0d8f995a0b4d656d584e9c0",
-                "package_size": 51338
+                "package_sha256": "fd395e4e8394f6902f8f18883a75bda3b354a349c99ebc1a0490c503864647ad",
+                "package_size": 51337
             }
         ]
     },
     {
-        "component_version": "160",
         "component_sha256": "172d4ca91e406b61ed2a84a51ce590b1a0c6ddc856d0c6b117083951e9a2475f",
+        "component_version": "175",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Italian",
         "component_description": "Traduzione italiana",
@@ -105,13 +105,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_language_it.zip",
-                "package_sha256": "fcdc61b04af4fee01800d6de572c2b16ec09ee4569a33f81b5a82b35455dcbec",
-                "package_size": 43421
+                "package_sha256": "b35888b5d2e5c23714964cb5ad1c219940b9110c8ac457145e5bb28acec639c4",
+                "package_size": 43420
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_sha256": "80629bae853a2bf14d48fb9299e7e769fd4a4600cae71049f7c931ef31e4921e",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Russian",
@@ -131,13 +131,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_language_ru.zip",
-                "package_sha256": "e831c98ec53947b0995f567a5bb3e474bd1fca897be5f887a9b98494f0662a38",
-                "package_size": 41794
+                "package_sha256": "c053053a8916fee07603359dded87f117f80401f522fff3cff555c19c83aa041",
+                "package_size": 41793
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_sha256": "4a4ee8eadbe9d6ca6dc08f8a3f17740797162e5d53b2335381a0f07ef992de3b",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_description": "Gettext Sources Files (PO/POT)",
@@ -165,13 +165,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_language_src.zip",
-                "package_sha256": "d3e93ac2ce7a86ea291eaa3ddbf1f82756b42dec4789db57c25b534f0e35fbec",
-                "package_size": 501856
+                "package_sha256": "252b9bb27f2a378f200f0e1864fc0d313907ff53537dd81385cc14e980cf663b",
+                "package_size": 501855
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_sha256": "321783a0778858295ff0330dc1b7336f02c13160615950a83db31ce76ef4f731",
         "component_name": "Admin Styles",
         "component_licence": "CC-BY-NC-SA 4.0",
@@ -199,13 +199,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_adminstyle.zip",
-                "package_sha256": "f7ca64b696ac67a4807073b889372ee4d09a7b02b6a22ee1393b8b88bf70aab6",
-                "package_size": 45648
+                "package_sha256": "fa15e8831c936d2d81afc4fa229a969769a46618918cdde05750c540a6459a2d",
+                "package_size": 45647
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "MySQL Backup",
         "component_description": "MySQL backup database tools. This tool is limited by the maximum execution time of a web page of your hosting service. It can not replace an appropriate backup tool for large databases like mysqldump. This plugin can be a security vulnerability for a public site. Use with caution.",
@@ -233,13 +233,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_backupmysql.zip",
-                "package_sha256": "e43c93ba97412b994787325753687d18fcb2831b140d08b96f5fd6854d7c516c",
-                "package_size": 9806
+                "package_sha256": "c817bc7fb32c82881bc52201dc9a228e23e5003b9652bc984924ac64e981cff8",
+                "package_size": 9807
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Choose Language",
         "component_description": "Display a drop-down menu on all pages to choose the language of the interface. This is useful if your website is hosted on the web and on public access.",
@@ -267,13 +267,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_chooselanguage.zip",
-                "package_sha256": "fac0c6803115c5b6ec0a083d2eba3575bd07c3f4fc8dee9eb43a6fb4868be6e2",
-                "package_size": 3872
+                "package_sha256": "a5ba5af123a3daaf26c68fbdb2b71ab37b0cd8b672d6c826917f9aa07eb159bf",
+                "package_size": 3873
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "DB Adminer",
         "component_description": "Embedded version of the database manager Adminer, with a selection of tested plugins. This plugin can be a security vulnerability for a public site. Use with caution.",
@@ -302,13 +302,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_dbadminer.zip",
-                "package_sha256": "a0083dd1c178ac5ce67d5b4618d77927d3f90cd94af452c3a7822dd387253bf8",
+                "package_sha256": "9649ffa7e7d75380552da78732e9137f61d699732097d98b456cdaf879208ee0",
                 "package_size": 321366
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "4fdca2b4a7fab0971a1ac4bc51bb23965c13df97649af87bb4409004680cb2ae",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Debug Tools",
@@ -336,7 +336,7 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_debugtools.zip",
-                "package_sha256": "6e7b11c2be62b963f31621a706e4679e8f78f81217bfac31a6d81511608a763b",
+                "package_sha256": "742cd18ba3cf620067bf265ad8e39b1932e935faf598b5d91fb2533d7f8aa074",
                 "package_size": 6759
             }
         ]
@@ -346,7 +346,7 @@
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Idea Generator",
         "component_description": "Idea Generator randomly selects and displays two items of metadata (quotes, paraphrases, musings, or ideas) in the hope that the new juxtaposition might lead to serendipity.",
-        "component_sha256": "e9402b80a5fd8bfd1d2a40496bad47f06af87c055afd24b9d48ec1ee9d2e3478",
+        "component_sha256": "a5a58545d5fc0c6df3c6b89168a8184d155f7982dbb7b35998afc5c5b2eb2a63",
         "component_builtin": "false",
         "component_id": "ideagen",
         "component_type": "plugin",
@@ -370,14 +370,14 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_ideagen.zip",
-                "package_sha256": "74c5c369a635e85a21a4a5f4825f6889db2f01befb738c8e2436a50747d05542",
-                "package_size": 6153
+                "package_sha256": "f0eea3f8afcd0d6f6489800a3864132972ee87649ce11e838901a4e9177d8323",
+                "package_size": 6155
             }
         ]
     },
     {
         "component_sha256": "04716977ff87a1f0bbce07f2fc3b344cc10de354d2f8b66fd2eaf503d9536a30",
-        "component_version": "173",
+        "component_version": "175",
         "component_name": "Amazon Products Import",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_description": "Import a resource from Amazon using Amazon's web services (imports only books). You must have a personal Amazon developer account to query the web service.",
@@ -405,13 +405,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_importamazon.zip",
-                "package_sha256": "48cb4446db5a81794d3b556ae90ba0ca6a3484801c93ee85aa15ce85f91701bb",
-                "package_size": 10223
+                "package_sha256": "f6b60764689071cfaf99b24fb7ded7172896f9e31003885a6e4f2da29eea5230",
+                "package_size": 10224
             }
         ]
     },
     {
-        "component_version": "170",
+        "component_version": "175",
         "component_name": "Bibliography Import/Export",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_description": "Import and export bibliographies in various formats (Bibtex, EndNote, HTML, PubMed, RIS, RTF).",
@@ -445,13 +445,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_importexportbib.zip",
-                "package_sha256": "5b3fbd8b48d1c84be1f1d0223dce729f93534607fd32f0f9042a9b8a66e37381",
+                "package_sha256": "fd3d655db746b0b80730fd1cf649219233b5dd1df1755d7ebad5d312f2dcdd89",
                 "package_size": 78289
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "8ec33a64ce599f57fe06960f96950610831a9b4de0505c0ad4956d435c584729",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_description": "Customize the description on the home page in various languages.",
@@ -479,13 +479,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_localedescription.zip",
-                "package_sha256": "297595c4fecffa768e0982b619f09f948a6dbe4ea6d9358fb24c072117f32150",
+                "package_sha256": "fcdce92804b6f16cd139afed62a31b3817fae8a58dc09187d90ba30d1bac58d9",
                 "package_size": 4628
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "5058643cc8a8d6c8760f1a45f241dff32026d72af8d8d7801ff01cc7d324d05a",
         "component_description": "Attempt to fix to a number of errors that can occur over time in the database. For developers, testers, or difficult situations when a db schema is corrupted.",
         "component_licence": "CC-BY-NC-SA 4.0",
@@ -513,13 +513,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_repairkit.zip",
-                "package_sha256": "aae39372969982ad0a9651d3c33c8e4f480be7145060d47d8d0e16286f0cfbec",
+                "package_sha256": "15a7da11ac1ec4ed20ce420088c9cbeb1cfdfe0448c81d35fb90fcb403e97ec1",
                 "package_size": 10777
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_sha256": "91af9697c7c79237b3953b10d7be6fd415f8ec44cda3974ef8c1f0a323b6b660",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_description": "Experimental plugin that plays sounds at certain Wikindx events.",
@@ -547,13 +547,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_soundexplorer.zip",
-                "package_sha256": "5078835536c22dc6a281c17adc75f33804899103e8dd42bd61892e910e87a8cf",
+                "package_sha256": "8f29a8df96aaea063bb5de4d109c213408fac0b9cef7e074ec44d028920b0c9e",
                 "package_size": 13336
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Categories Administration for Users",
         "component_description": "User administration of categories.",
@@ -581,14 +581,14 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_userwritecategory.zip",
-                "package_sha256": "c6744a89a68f7876180d86a042e27ea4b8eedfc7637909230e301e70e5fcf738",
+                "package_sha256": "ea324e8ca3ab641fc0e12af7e5437a5f8d77b09c61defef9cd428d778310ad7c",
                 "package_size": 3616
             }
         ]
     },
     {
         "component_sha256": "06645b9ff03eca4f3f60f730e1e3dfb468757604a63ffde5c2870aae0db8c697",
-        "component_version": "160",
+        "component_version": "175",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_description": "Create various graphical visualizations from WIKINDX data with the JpGraph PHP library.",
         "component_name": "Visualize",
@@ -615,13 +615,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_visualize.zip",
-                "package_sha256": "aecb1562a8a61ef7ced869377ea6af28184bd920f46de4c6f5d286b7cf6adaf5",
+                "package_sha256": "f1f923c221cea6999974c190d37928ee4e602906911f76b50c21de66b80b5ce7",
                 "package_size": 3777094
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_sha256": "43bec100f2c2061ea9dbc752be15ca3ed73195d6ad9d1748ee4507939d6494d9",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_description": "Logged in users can use a WYSIWYG word processor for the writing of articles.",
@@ -649,13 +649,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_plugin_wordprocessor.zip",
-                "package_sha256": "392666b25458233b53f6646e89b221f84e8b7404f00ba949859d1bff3729883b",
+                "package_sha256": "1c780dbd8e9e17cb295805a84961214a38f7bfe72d4eb6349e4f3e2d49b03bbd",
                 "package_size": 44545
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "398b183f58cb2f46059c86db0e70a3c677f3c9b2b3fe2b7a1cad54c332e5e2a8",
         "component_name": "ABNT",
         "component_description": "Associação Brasileira de Normas Técnicas (ABNT)",
@@ -676,13 +676,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_style_abnt.zip",
-                "package_sha256": "22d462fcdbfeffcba5b45bcd83293a3a3b5cc0c28d4624d5e55a5befe67998aa",
+                "package_sha256": "926cc190bafcf49529e582586d1e8c18eb813f4a11e5065ac1e21c9040d4795a",
                 "package_size": 4643
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "8a63dd31b2580dce04d01ca15a174a1a0d2b79c74d505db3ea8168d8d97b5458",
         "component_name": "APA",
         "component_description": "American Psychological Association (APA) (installed by default). APA is an author/date based style. This means emphasis is placed on the author and the date of a piece of work to uniquely identify it.",
@@ -704,13 +704,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_style_apa.zip",
-                "package_sha256": "572ef63d141f907bfdf5942477c4fe01aad4ec71c61ab5fdbfd340ab2e42bdf3",
-                "package_size": 5582
+                "package_sha256": "3a032f1e436aedcea1551eb654e46596b1f5dbaa75e3d4527184ee8bab9e5bf8",
+                "package_size": 5581
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_name": "BMJ",
         "component_description": "British Medical Journal (BMJ)",
         "component_licence": "CC-BY-NC-SA 4.0",
@@ -732,13 +732,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_style_britishmedicaljournal.zip",
-                "package_sha256": "896b9e51944458169292e2e97e558704fcc263ad891d7f64ac0ad9d41ae55f5b",
+                "package_sha256": "d7187790fe336f822b1af3e6d9d2047886db9b96d6a156373e553b9fa4a90e97",
                 "package_size": 4897
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "87607bbf06695bf9325d8eede88b3fc03a1aafa8e490971effb3f56df1711e6d",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "CFB",
@@ -767,13 +767,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_style_cfb.zip",
-                "package_sha256": "f311bae144e0faaffc15d2bf8ee707abb635de44566d6150fa757ab9b0c62b7d",
+                "package_sha256": "beeae4ab0a07cdc4678970d42f2bdc602b1407a4d4f407a54f76fc62c73b5c2d",
                 "package_size": 5249
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "93a93e77c22e28c4556bb80c76624c21d60a7263f3712f5d924d5848145f68c3",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Chicago",
@@ -795,13 +795,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_style_chicago.zip",
-                "package_sha256": "22d1f33705b6b53c741cad0077c0b6a5df7222319d3fecb7d14c029c48ab62ed",
+                "package_sha256": "19b053f27e53cad6fecc8501246326f4ef4ddb301df262e0b0e7faf2b5cb7763",
                 "package_size": 5414
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Harvard",
         "component_description": "Harvard Style. Harvard is very similar to APA. Where APA is primarily used in the USA, Harvard referencing is widely used in the UK and Australia and is encouraged for use with the humanities.",
@@ -823,13 +823,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_style_harvard.zip",
-                "package_sha256": "e86f8a6c54b28bb3d7f5726e786c88651b2be2f3807a3144f4e93858bd5b267a",
+                "package_sha256": "43278e052bf3ca8f61372d5791188fc2a6adab1ef08f90f475f57ad5ffa4052c",
                 "package_size": 4933
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "IEEE",
         "component_description": "Institute of Electrical and Electronics Engineers (IEEE), a widely accepted format for writing research papers, commonly used in technical fields, particularly in computer science.",
@@ -856,13 +856,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_style_ieee.zip",
-                "package_sha256": "09bf1095cf194f532f65bb8dc0f954325a9686d5e5435696bf5d29919d97846c",
+                "package_sha256": "3f16a31f3259acbb03920341ad7f6eef6ebe89a8fd0c6460eb9079471f739e55",
                 "package_size": 4214
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "MLA",
         "component_description": "Modern Language Association (MLA). MLA is most often applied by the arts and humanities, particularly in the USA. It is arguably the most well used of all of the citation styles.",
@@ -884,13 +884,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_style_mla.zip",
-                "package_sha256": "fdb3bb3cf6b2993523665633927a0c9fe71a803c737880a56a72c4258fe1c32d",
+                "package_sha256": "9abf128555ea9e7245d0e8ca4a2e5cbd6c66eb3fec5b083466aad8554fd7edf9",
                 "package_size": 4988
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "2579545b488145f6adb4f4dfb4c863482047b8eb048f0a42594cccc23053bdd2",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Turabian",
@@ -912,13 +912,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_style_turabian.zip",
-                "package_sha256": "d794ffa37eaa4276ea5954c3cbf29b71c63f6043a808640087d54c677fefb683",
+                "package_sha256": "5f62fb98ba2ec4a1c45d0de2ee957591fa4957d2aa133a56ce6b583ceedac5b8",
                 "package_size": 5459
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "6afd082101c7d247f10c00314ac1d493710fb919b30d374ad57764e2a5b0af79",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Wikindx",
@@ -940,13 +940,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_style_wikindx.zip",
-                "package_sha256": "cf4acbf6cc2e053749ab43932498fc47a9a77480b31f3476d04d967d356fb372",
+                "package_sha256": "07087c03ebe401cb96a704b939d97af7184746a08b11208d178c888846c000ab",
                 "package_size": 5829
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_sha256": "55fd49232925a6a59a824d5ecdeefb43ebcb998f5d29908be434a9f8c2e115a4",
         "component_description": "A green basic theme that talks about mosses (horizontal menu)",
         "component_name": "Bryophyta",
@@ -974,13 +974,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_template_bryophyta.zip",
-                "package_sha256": "411705579319ef56e427f949a8c44a1d49a0559f6f6fa4cea81609ca6f453f5c",
-                "package_size": 58010
+                "package_sha256": "4d4d8d6ad03511d05ee216fe0b429c9fffd53dfb8872c5484091a7507d4b4e3d",
+                "package_size": 58011
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_sha256": "2e2589175b18cc65a54d5aa71e9ff177ae1db389cc1d9e548fc98b6323255ea3",
         "component_description": "A colorful theme (horizontal menu)",
         "component_licence": "CC-BY-NC-SA 4.0",
@@ -1014,13 +1014,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_template_carambola.zip",
-                "package_sha256": "424db6fd446ff41cb3ecdc998eb64bbf856c3f166d12375917e2573ae6d4a5b1",
-                "package_size": 74064
+                "package_sha256": "284abadb4b28d8f63d0339511d653a357e6c969aa8a88be18231e198c2d868c2",
+                "package_size": 74066
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Default",
         "component_description": "Wikindx default theme (installed by default, horizontal menu)",
@@ -1048,13 +1048,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_template_default.zip",
-                "package_sha256": "79ec0ebd7f44689cae4648c35a2a4ca6192806b77188a2c9817ebfc657d987e2",
-                "package_size": 154393
+                "package_sha256": "919d464b6239c8c5476f1a43a82aa02f6f01e7c29e9fa0ec8fc8916837a7593a",
+                "package_size": 154392
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_sha256": "22e4c413bf25c04c46a99a5ce00b48aef43b5b613b21e05d965ad96b6ae027d7",
         "component_description": "A theme around the medieval manuscript Liber Floridus (vertical menu)",
         "component_licence": "CC-BY-NC-SA 4.0",
@@ -1082,13 +1082,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_template_enluminure.zip",
-                "package_sha256": "781a0f04bbed691f37d3bdc02bc2a340a0a6a22af349790b3c7cc4c8e51e8dc7",
-                "package_size": 415868
+                "package_sha256": "0433ca160cae4a7b136fda709e706b13f0312f201b7cfe6e0ccec925da190482",
+                "package_size": 415869
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "PIAF",
         "component_description": "Theme of the Portail International Archivistique Francophone (PIAF) (horizontal menu)",
@@ -1122,14 +1122,14 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_template_piaf.zip",
-                "package_sha256": "bda47c3b05adc390dda7615060aa2dd884da296e1b093edf32c00fc9f5afcc13",
+                "package_sha256": "909d8be5480d554b02cbe80f36433b391c0bf8beca9e4909d5f77a7d513c89c2",
                 "package_size": 88670
             }
         ]
     },
     {
         "component_sha256": "0d276b5851ecad60cb68043406ac9bc67d0f13b0889148cf1623ead17fe63d49",
-        "component_version": "160",
+        "component_version": "175",
         "component_description": "A blue basic theme (horizontal menu)",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Simple Blue",
@@ -1156,13 +1156,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_template_simpleblue.zip",
-                "package_sha256": "da8d660f7b92367466059db0b3b79f90bd05bcda245a607a060f41a6275e4aec",
-                "package_size": 59145
+                "package_sha256": "f653fb5f90dd328339f5a6857044888b7dba8d5aa609b781303ebb5ea4ed5d26",
+                "package_size": 59146
             }
         ]
     },
     {
-        "component_version": "160",
+        "component_version": "175",
         "component_description": "An orange basic theme (vertical menu)",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Vertical Orange",
@@ -1190,14 +1190,14 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_template_verticalorange.zip",
-                "package_sha256": "6099382c0617e060f9eede16f9ce5b46e840a7e44eb99f00a5bddc2a6d7ef54e",
+                "package_sha256": "5920fee3db1703c3216dee82b4736460e56340f27eb00bf2acc9087a33ff7f16",
                 "package_size": 60338
             }
         ]
     },
     {
         "component_sha256": "128ed7c048f97120750a22053325698b6f785e527be8fb750cfdcf916a727e02",
-        "component_version": "173",
+        "component_version": "175",
         "component_licence": "MIT License",
         "component_website": "https://jquery.com/",
         "component_name": "jQuery JS library",
@@ -1230,13 +1230,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_vendor_jquery.zip",
-                "package_sha256": "4f40deedf3ae0e35a8037122104d0ded03cbb931ab5fbd2ef16eb9972c13e281",
+                "package_sha256": "e4c9f422e634878a26e8ababe34660ec3c52acb0cf3eadac552065aa32ceaf07",
                 "package_size": 31720
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "3b0faf30ee6e8efd4dec93155764dfdb8d26dedd254a0fb0436fc8330308c377",
         "component_description": "JSON library in JavaScript.",
         "component_licence": "Public Domain",
@@ -1271,13 +1271,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_vendor_jsonjs.zip",
-                "package_sha256": "57281389e5064a43a86e9eefdde0c406171f55bdf81504b60a6cc6c98c7f1385",
+                "package_sha256": "aa4eb8c4b21bb7d31033b60d964abb257603bc6f56a3c737a9e4f404cee9c7ea",
                 "package_size": 6263
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "58ec91ad95278528e4dec3ae4c3fb4804ec17a33f43e5d2f3f158be331cda909",
         "component_licence": "CC-BY-NC-SA 4.0",
         "component_name": "Licenses texts",
@@ -1306,13 +1306,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_vendor_licenses.zip",
-                "package_sha256": "718f64fa60a43a742260056b716e0f3f069284768a6b96ee2dc7d47a7065c9df",
+                "package_sha256": "91ea8a33f601fbfb5ed3944a94e8156625c05168954e9a3aaa688899b7bbf7c2",
                 "package_size": 34722
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "5e1ac8f70e270c05437830b2ffca89382df35cdf2db94dc213878479b14c1a1b",
         "component_licence": "LGPL 2.1",
         "component_name": "PdfToText",
@@ -1348,13 +1348,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_vendor_pdftotext.zip",
-                "package_sha256": "186d2df97159bcaab964996318843b67cbc319cd6f3519767019b6c905ff50fd",
+                "package_sha256": "6528f8bd4f68ee8cd6eaf42dff3d937674bda1840bea1524f1acf79c171388df",
                 "package_size": 158659
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "62fc17bcdc6ecf5af428df3985c23ef7fdbebacd8b08084066023bf8c219fab6",
         "component_description": "A full-featured email creation and transfer class for PHP.",
         "component_licence": "LGPL 2.1",
@@ -1411,13 +1411,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_vendor_phpmailer.zip",
-                "package_sha256": "7220c776f270930f7fc5dde7c3a1f7d7a4518f0db70be86986f9e332005c8255",
-                "package_size": 54523
+                "package_sha256": "eee5446186cf013a17bd340916a197e99fb7821071a1fa66012c36091671696c",
+                "package_size": 54524
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_licence": "MIT License",
         "component_name": "ProgressBar.js library",
         "component_description": "Responsive and slick progress bars with animated SVG paths.",
@@ -1452,13 +1452,13 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_vendor_progressbarjs.zip",
-                "package_sha256": "3669136d41c282d869be508c07b1c545ef9be7da01071c8f8d1306e37f296613",
-                "package_size": 9288
+                "package_sha256": "cf90c66291f16f85254306e655eb0bf35a5f8080799fe917a170aae8b180eb9d",
+                "package_size": 9287
             }
         ]
     },
     {
-        "component_version": "173",
+        "component_version": "175",
         "component_sha256": "9a27d21134d17f95ac617c18f91a94c3b3cbe3364f1da8bd08528cfbdb7822a5",
         "component_licence": "LGPL 3.0",
         "component_name": "PHP Template Engine Smarty",
@@ -1492,7 +1492,7 @@
         "component_packages": [
             {
                 "package_location": "https://sourceforge.net/projects/wikindx/files/archives/6.3.2/components/wikindx_6.3.2_vendor_smarty.zip",
-                "package_sha256": "5d056b70dceba2f92aca1ffb19a3ddf29a2eb7562c28f2e4bd20f419f2c2519d",
+                "package_sha256": "ea086cd59ed94342d9470a0bcb09873132de39c0468e6faa45b74d318cfa1f46",
                 "package_size": 295200
             }
         ]

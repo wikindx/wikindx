@@ -1,7 +1,7 @@
 {
     "component_type": "vendor",
     "component_id": "jquery",
-    "component_version": "173",
+    "component_version": "175",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "jQuery JS library",

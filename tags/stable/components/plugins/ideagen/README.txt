@@ -23,6 +23,9 @@ Thus, components/plugins/ideagen/index.php etc.
 
 CHANGELOG:
 
+v1.1, 2020
+1. Some debugging to ensure metadata are returned at each generation.
+
 v1.0, 2020
 1. Initial release June 2020.
 

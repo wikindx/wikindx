@@ -21,7 +21,7 @@ class ideagenMessages
             "heading" => dgettext($domain, "Idea Generator"),
             "generate" => dgettext($domain, "Generate"),
             "generateAgain" => dgettext($domain, "Generate again"),
-            "description" => dgettext($domain, "Idea Generator randomly selects and displays two items of metadata (quotes, paraphrases, musings, or ideas) in the hope that the chance juxtaposition might be serendipitous."),
+            "description" => dgettext($domain, "Idea Generator randomly selects and displays two items of metadata (quotes, paraphrases, musings, or ideas) in the hope that the chance juxtaposition might be serendipitous. The greater the number of metadata, the greater the variety of juxtaposition."),
             "newIdea" => dgettext($domain, "Create new idea"),
             "idea" => dgettext($domain, "Idea"),
             "musing" => dgettext($domain, "Musing"),

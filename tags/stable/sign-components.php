@@ -116,7 +116,6 @@ foreach ($componentlist as $k => $cmp) {
     {
         $componentMetadata["component_version"] = $old_version;
     }
-    //$componentMetadata["component_version"] = date("Ymd");
     \FILE\write_json_file($dircmpsrc . DIRECTORY_SEPARATOR . "component.json", $componentMetadata);
     
     echo " - signing [OK]\n";

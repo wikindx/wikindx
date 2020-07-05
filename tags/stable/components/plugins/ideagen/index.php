@@ -47,7 +47,7 @@ class ideagen_MODULE
     private $musingsExist;
     private $ideasExist;
     private $storedId = FALSE;
-    private $lastId;
+    private $lastId = FALSE;
     
 
     /**
@@ -124,16 +124,17 @@ class ideagen_MODULE
         $pString .= HTML\p(FORM\formSubmit($this->pluginmessages->text('generateAgain')));
         $pString .= FORM\formEnd();
         $pString .= HTML\tableStart('generalTable');
-        for ($count = 0; $count < 2; $count++) {
+        while (($returnSF = $this->selectFunction()) === FALSE) { // try again
+    		$this->selectFunction();
+    	}
+        $return[] = $returnSF;
+    	$this->storedId = $this->lastId;
+        do {
         	$return[] = $this->selectFunction();
-    		if ($this->storedId && ($this->storedId == $this->lastId)) { // Is this metadata the same as the last one?
-    			array_pop($return);
-    			--$count; // Force another iteration . . .
+    		if ($this->storedId === $this->lastId) { // Is this metadataId the same as the last one?
+    			array_pop($return); // Force another iteration . . .
     		}
-    		else {
-    			$this->storedId = $this->lastId;
-    		}
-        }
+        } while (sizeof($return) < 2);
         $count = 0;
         foreach ($return as $string)
         {
@@ -227,9 +228,6 @@ class ideagen_MODULE
     	}
     	$function = $metadataArray[array_rand($metadataArray, 1)];
     	$return = $this->{$function}();
-    	if ($return === FALSE) { // try again
-    		$this->selectFunction();
-    	}
     	return $return;
     }
     /**
@@ -260,7 +258,7 @@ class ideagen_MODULE
         $resultset = $this->db->select('resource_metadata', 
         	['resourcemetadataId', 'resourcemetadataMetadataId', 'resourcemetadataResourceId', 'resourcemetadataText']);
         if (!$this->db->numRows($resultset)) {
-        	$this->quotesExist = FALSE;
+        	$this->quoteCommentsExist = FALSE;
             return FALSE;
         }
         $row = $this->db->fetchRow($resultset);
@@ -295,7 +293,7 @@ class ideagen_MODULE
         $resultset = $this->db->select('resource_metadata', 
         	['resourcemetadataId', 'resourcemetadataMetadataId', 'resourcemetadataResourceId', 'resourcemetadataText']);
         if (!$this->db->numRows($resultset)) {
-        	$this->paraphrasesExist = FALSE;
+        	$this->paraphraseCommentsExist = FALSE;
             return FALSE;
         }
         $row = $this->db->fetchRow($resultset);

@@ -4,8 +4,6 @@
 
 <p><strong>Maintenance and minor feature enhancement.</strong></p>
 
-<p><strong>Caution</strong>: this is a beta version which may still contain some bugs. We provide it for testing before a public release.</p>
-
 <h3>BUGS:</h3>
 
 <ul>

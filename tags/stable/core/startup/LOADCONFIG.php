@@ -215,7 +215,7 @@ class LOADCONFIG
                 $value = unserialize(base64_decode($value));
                 // at some point in the past, incorrect values have crept in – remove them
                 if ($configName == 'configDeactivateResourceTypes') {
-                	$tempValue = "";
+                	$tempValue = [];
                 	foreach ($value as $key => $index) {
                 		if (!is_numeric($index)) {
                 			$tempValue[$key] = $index;

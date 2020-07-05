@@ -10,6 +10,7 @@ BUG FIXES:
 4. Temporary fix to legacy issue (to be fixed permanently on next database upgrade) – disabled resource types can be stored incorrectly leading to errors when disabling the types from Admin|Configure.
 5. Fix mismatch between search results in numerical and alphabetical mode.
 6. Add missing message about 'shortNewspaper'.
+7. Fix display of deactivated resource types in Admin|Configure.
 
 MAINTENANCE:
 1. Changes the operation of the component version number so as not to mislead users.

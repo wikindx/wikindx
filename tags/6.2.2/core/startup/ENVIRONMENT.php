@@ -190,6 +190,9 @@ class ENVIRONMENT
                 );
             }
         }
+        
+        // Force WIKINDX_DB_TABLEPREFIX to always be WIKINDX_DB_TABLEPREFIX_DEFAULT (wkx_) after v6.3.3
+        $this->config->WIKINDX_DB_TABLEPREFIX = WIKINDX_DB_TABLEPREFIX_DEFAULT;
 
         // Set database persistent mode
         if (!property_exists($this->config, 'WIKINDX_DB_PERSISTENT'))

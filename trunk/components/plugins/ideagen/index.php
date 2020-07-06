@@ -349,6 +349,7 @@ class ideagen_MODULE
 	        $resourceId = $row['resourcemetadataResourceId'];
 	    }
         $text = $this->cite->parseCitations($row['resourcemetadataText'], 'html');
+        $text = HTML\tableStart("generalTable") . HTML\trStart() . HTML\td($text) . HTML\trEnd(). HTML\tableEnd();
         $resultset = $this->common->getResource($resourceId);
         $row = $this->db->fetchRow($resultset);
     	$resource = $this->bibStyle->process($row);
@@ -379,6 +380,7 @@ class ideagen_MODULE
         $row = $this->db->fetchRow($resultset);
         $this->lastId = $row['resourcemetadataId'];
         $text = $this->cite->parseCitations($row['resourcemetadataText'], 'html');
+        $text = HTML\tableStart("generalTable") . HTML\trStart() . HTML\td($text) . HTML\trEnd(). HTML\tableEnd();
     	$td = HTML\trStart();
     	$td .= HTML\td(HTML\strong($this->pluginmessages->text('idea')));
         $td .= HTML\td($text);

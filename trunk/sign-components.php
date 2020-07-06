@@ -104,7 +104,7 @@ foreach ($componentlist as $k => $cmp) {
     
     $componentMetadata["component_" . WIKINDX_PACKAGE_HASH_ALGO] = $new_hash;
     
-    if ($new_hash == $old_hash || $old_hash == "" || $old_version == "")
+    if ($new_hash != $old_hash || $old_hash == "" || $old_version == "")
     {
         // The version number is the number of days elapsed since the launch of the system of components (v6 on 2020-01-12)
         $datetime1 = new DateTime("2020-01-12");

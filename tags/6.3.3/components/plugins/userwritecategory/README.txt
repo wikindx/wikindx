@@ -1,0 +1,49 @@
+********************************************************************************
+**                              userwritecategory                             **
+**                               WIKINDX module                               **
+********************************************************************************
+
+
+NB. this module is compatible with WIKINDX v5 and up.  Results may be unexpected if used with a lower version.
+
+User administration of categories - non-admin users can add/edit/delete categories (they must be logged in). 
+
+The module registers itself in the 'Edit' menu.
+
+Unzip this file (with any directory structure) into plugins/userwritecategory/.
+Thus, plugins/userwritecategory/index.php etc.
+
+********************************************************************************
+
+CHANGELOG:
+
+v1.9, 2020
+1. Add documentation.
+
+v1.8, 2020
+1. Relicencing under CC-BY-NC-SA 4.0 terms.
+
+v.1.7
+1. If user is an admin, categories and subcategories can already be edited so remove this plugin from the menu system.
+2. Adaptation for Wikindx 5.9.1.
+
+v1.6
+1. Plugin now uses core WIKINDX code and so is simply a gateway to that.
+
+v1.5
+1. Plugin now compatible with WIKINDX v5.x
+
+v1.4
+1. Plugin compatible only with WIKINDX v4.2.x
+
+v1.3 
+1. Authorization bug fix.
+
+v1.2
+1. Updated for WIKINDX v4
+
+v1.1
+1. Added $this->authorize to control display of menu item for users with at least write access.
+
+--
+Mark Grimshaw-Aagaard 2019.

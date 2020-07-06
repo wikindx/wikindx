@@ -1,0 +1,21 @@
+{
+    "component_type": "style",
+    "component_id": "wikindx",
+    "component_version": "175",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Wikindx",
+    "component_description": "Wikindx Style",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_website": "https://wikindx.sourceforge.io/",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Compiler",
+            "author_copyright": "2005, 2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        }
+    ],
+    "component_sha256": "6afd082101c7d247f10c00314ac1d493710fb919b30d374ad57764e2a5b0af79"
+}

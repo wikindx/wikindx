@@ -1,0 +1,27 @@
+{
+    "component_type": "template",
+    "component_id": "enluminure",
+    "component_version": "175",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Enluminure",
+    "component_description": "A theme around the medieval manuscript Liber Floridus (vertical menu)",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2012-2013, 2016-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2012, 2014, 2016-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "22e4c413bf25c04c46a99a5ce00b48aef43b5b613b21e05d965ad96b6ae027d7"
+}

@@ -1,0 +1,28 @@
+{
+    "component_type": "plugin",
+    "component_id": "dbadminer",
+    "component_version": "175",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "DB Adminer",
+    "component_description": "Embedded version of the database manager Adminer, with a selection of tested plugins. This plugin can be a security vulnerability for a public site. Use with caution.",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_website": "https://www.adminer.org/",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2019-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2019-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "ba320023a446cfd00c7c4cf08289c24975ba02ccc055094d9d1b254b9ac28493"
+}

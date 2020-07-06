@@ -1,0 +1,101 @@
+# Wikindx's Translation ressource: Italiano.
+# For copyright see the component.json file
+# This file is distributed under the same license as the soundexplorer package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: soundexplorer\n"
+"Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
+"POT-Creation-Date: 2020-05-24 21:55+0200\n"
+"PO-Revision-Date: 2019-09-27 01:50+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. *
+#. * Menu items
+#.
+#: components/plugins/soundexplorer/soundexplorermessages.php:27
+msgid "Sound Explorer"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:28
+msgid ""
+"Sound Explorer will store searches then, at any time in the future, play a "
+"sound if a resource matching\n"
+"\t\t\t\ta past search is found in a current list operation. This works on the "
+"principle of a serendipitous conjunction of past searches\n"
+"\t\t\t\twith a current search result, hopefully allowing you to make new "
+"creative connections by prodding at the boundaries of your\n"
+"\t\t\t\tcurrent conceptual space.  But it is also useful in a multi-user\n"
+"\t\t\t\tWIKINDX where it functions like a 'tripwire' signal -- the sound will "
+"play if a new resource or metadata has been added by another\n"
+"\t\t\t\tuser that matches a stored search (if the resource is being displayed "
+"in a list). It is currently an experimental\n"
+"\t\t\t\tprototype and has been tested in the Firefox, Safari, and Chrome web "
+"browsers. Other browsers are untested."
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:35
+msgid "Sound Explorer On"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:36
+msgid "Sound Explorer Off"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:37
+msgid "Search Label"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:38
+msgid "Sound"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:39
+msgid "Status"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:40
+msgid "Enabled"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:41
+msgid "Disabled"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:42
+msgid "New search"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:43
+msgid "Delete"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:44
+msgid "Notes"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:45
+msgid "Matched searches for current list"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:46
+msgid "Sound Explorer successfully configured"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:47
+msgid "Store the Sound Explorer search"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:48
+msgid "Sound Explorer search successfully stored"
+msgstr ""
+
+#: components/plugins/soundexplorer/soundexplorermessages.php:49
+msgid "Sound Explorer search successfully deleted"
+msgstr ""

@@ -1,0 +1,33 @@
+{
+    "component_type": "vendor",
+    "component_id": "smarty",
+    "component_version": "175",
+    "component_builtin": "true",
+    "component_updatable": "true",
+    "component_name": "PHP Template Engine Smarty",
+    "component_description": "Smarty is a template engine for PHP, facilitating the separation of presentation (HTML/CSS) from application logic.",
+    "component_licence": "LGPL 3.0",
+    "component_website": "https://www.smarty.net/",
+    "component_authors": [
+        {
+            "author_name": "New Digital Group, Inc.",
+            "author_role": "Developers",
+            "author_copyright": "2002-2020"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Packager",
+            "author_copyright": "2012-2016",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Packager",
+            "author_copyright": "2017-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "9a27d21134d17f95ac617c18f91a94c3b3cbe3364f1da8bd08528cfbdb7822a5"
+}

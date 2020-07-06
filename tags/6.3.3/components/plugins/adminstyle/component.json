@@ -1,0 +1,27 @@
+{
+    "component_type": "plugin",
+    "component_id": "adminstyle",
+    "component_version": "175",
+    "component_builtin": "false",
+    "component_updatable": "true",
+    "component_name": "Admin Styles",
+    "component_description": "Create, edit and share with WIKINDX users your bibliographic and citation styles.",
+    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2013-2014, 2016-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2016-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_sha256": "321783a0778858295ff0330dc1b7336f02c13160615950a83db31ce76ef4f731"
+}

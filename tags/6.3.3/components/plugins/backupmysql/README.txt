@@ -1,0 +1,75 @@
+********************************************************************************
+**                           MySQL backup database                            **
+**                               WIKINDX module                               **
+********************************************************************************
+
+
+NB. this module is compatible with WIKINDX v5 and up.
+Results may be unexpected if used with a lower version.
+
+Backup MySQL database
+
+The module registers itself in the 'Admin' menu.
+
+Dumps are gzipped and placed in plugins/backupmysql/dumps/ which must be
+writeable by the web server user.
+
+Unzip this file (with any directory structure) into plugins/backupmysql/.
+Thus, plugins/backupmysql/index.php etc.
+
+THIS TOOL DUMPS ONLY MYSQL DATABASE IN A VERY LIMITED WAY.
+IT IS LIMITED TO TABLES, THEIR DATAS, AND THEIR INDEX.
+IT DOES NOT INCLUDE FOREIGN KEYS, VIEWS, AMD OTHER TYPES
+OF OBJECTS IN A DATABASE. IT IS ONLY PROVIDED AS A HELP
+TO MEET THE SPECIFIC NEEDS OF WIKINDX 5.
+
+IF YOU NEED TO SAVE AN ENTIRE DATABASE BETTER AND MORE COMPLETELY,
+USE ONE OF THESE SOFTWARE:
+
+ - mysqldump (need a command line access, essential for big db):
+   https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html
+ - phpMyAdmin (often provided by your provider): https://www.phpmyadmin.net/
+ - Adminer (single file installable): https://www.adminer.org/
+
+If YOU INTALL BY YOURSELF phpMyAdmin OR Adminer, REMEMBER TO SECURE ACCESS
+WITH AN HTTP auth, HTTPS, AND AN IP RESTRICTION IF POSSIBLE.
+
+Uses code adapted from:
+http://www.phpclasses.org/package/2779-PHP-Backup-MySQL-databases-to-files-with-SQL-commands.html
+
+********************************************************************************
+
+CHANGELOG:
+
+v1.9, 2020
+1. Stored databases can now be renamed.
+2. Wikindx compatibility version 8.
+
+v1.8, 2020
+1. Wikindx compatibility version 7.
+
+v1.7, 2020
+1. Add documentation.
+
+v1.6, 2020
+1. Relicencing under CC-BY-NC-SA 4.0 terms.
+
+v1.5 ~ 2019
+1. Adaptation for Wikindx 5.9.1.
+
+v1.4 ~ 10th Decemper 2018
+1. Dump only wikindx tables if the database is shared with an other software
+2. Support of PostgreSQL and SQLite database engines removed (not supported by the core)
+
+v1.3
+1. First support of PostgreSQL and SQLite database engines (Warning: highly experimental)
+
+v1.2
+1. Plugin now compatible with WIKINDX v5.x
+2. Added list and delete functions
+
+v1.1 ~ 14th April 2013
+1. Initial release
+
+--
+Mark Grimshaw-Aagaard 2013-2018.

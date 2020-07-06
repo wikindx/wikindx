@@ -1,0 +1,13 @@
+/*
+* CSS for TinyMCE WYSIWYG editor
+*/
+body {
+	font-family: 	arial, helvetica, serif;
+	font-size:		0.9em;
+	background-color:		#FFF;
+}
+
+/* textarea for TinyMCE editor */
+body.mceContentBody {
+    background: #FFFFFF;
+}

@@ -643,7 +643,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         // 1. For each UTF8 character
         foreach ($string as $c) {
             // 2. Take it's unicode code point
-            $ucodepoint = UTF8::mb_ord($c);
+            $ucodepoint = mb_ord($c);
 
             // 3. If it's code point maps to ASCII not extended charset
 

@@ -57,7 +57,7 @@ ini_set('display_errors', TRUE);
 // Default charset
 ini_set('default_charset', WIKINDX_CHARSET);
 ini_set('mbstring.encoding_translation', WIKINDX_CHARSET);
-ini_set('mbstring.detect_order', WIKINDX_CHARSET);
+ini_set('mbstring.detect_order', WIKINDX_CHARSET . ",ISO-8859-15,ISO-8859-1,ASCII");
 
 // HTTP charset (HTTP specification doesn't permit to declare Content-type separetly)
 header('Content-type: ' . WIKINDX_HTTP_CONTENT_TYPE_DEFAULT . '; charset=' . WIKINDX_CHARSET);

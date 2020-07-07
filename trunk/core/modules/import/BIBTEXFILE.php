@@ -67,6 +67,7 @@ class BIBTEXFILE
         if (count($categories) > 1) {
             $pString .= \HTML\p($this->messages->text("import", "categoryPrompt"));
         }
+        $pString .= \HTML\p($this->messages->text("import", "limitation"));
         $pString .= \FORM\formMultiHeader("import_IMPORTBIBTEX_CORE");
         $pString .= \FORM\hidden('method', 'stage1');
         $pString .= \FORM\hidden('type', 'file');

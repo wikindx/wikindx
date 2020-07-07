@@ -1466,6 +1466,7 @@ class MESSAGES
 				"executionTimeExceeded" => dgettext($domain, "'max_execution_time' (### seconds) in php.ini was about to be exceeded.  WIKINDX is importing the bibliography in chunks."),
 				"addedChunk" => dgettext($domain, "No. resources added this chunk: ###"),
 				"quarantine" => dgettext($domain, "Quarantine from public view"),
+				"limitation" => dgettext($domain, "Limitation: this function only accepts files encoded in UTF-8, ISO-8859-15, ISO-8859-1, or ASCII. If the file uses another encoding, re-encode it beforehand with a tool such as iconv or your text editor."),
 			),
 /// user_ Users in a multi user WIKINDX
 		    "user" => array(

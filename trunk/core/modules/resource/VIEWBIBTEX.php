@@ -965,9 +965,9 @@ class VIEWBIBTEX
 
         $c = preg_replace($html, $tex, $c);
 
-        // As web browser encoding is set to UTF-8, all input in the db is stored as UTF-8 - convert back to ISO-8859-1
-        if ($encoding == 'ISO-8859-1') {
-            $c = utf8_decode($c);
+        // As wikindx default encoding is set to UTF-8, convert back to the encoding requested
+        if ($encoding != 'UTF-8') {
+            $c = mb_convert_encoding($c, $encoding, WIKINDX_CHARSET);
         }
 
         return $c;

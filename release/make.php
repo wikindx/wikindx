@@ -58,7 +58,7 @@ include_once(DIRSRC_TRUNK . "/core/startup/CONSTANTS.php");
 include_once(DIRSRC_TRUNK . "/core/file/FILE.php");
 include_once(DIRSRC_TRUNK . "/core/utils/UTILS.php");
 
-$VersionsAvailable = \FILE\dirInDirToArray(DIRSRC_TAGS);
+$VersionsAvailable[] = WIKINDX_PUBLIC_VERSION;
 $VersionsAvailable[] = 'trunk';
 
 
@@ -89,7 +89,7 @@ switch ($VersionPackaged)
         define('DIR_DST_CMP', DIR_DST_PKG . DIRECTORY_SEPARATOR . 'components');
     break;
     default:
-        define('DIR_SRC', DIRSRC_TAGS . DIRECTORY_SEPARATOR . $VersionPackaged);
+        define('DIR_SRC', DIRSRC_TRUNK);
         define('DIR_DST', DIRPKG_ROOT . DIRECTORY_SEPARATOR . $VersionPackaged);
         define('DIR_DST_SRC', DIR_DST . DIRECTORY_SEPARATOR . 'wikindx');
         define('DIR_DST_PKG', DIR_DST . DIRECTORY_SEPARATOR . 'package');

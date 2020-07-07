@@ -9,12 +9,8 @@ ensure the maturity of the code. This step is part of the development.
 As the development is Trunk-based, the release is also based on trunk
 for simplicity.
 
-Publishing a minor correction version from a versioned branch is more
-complicated and will not be explained in this first version of the
-checklist.
-
 X.Y.Z is the number of the released version defined by the constant
-WIKINDX_PUBLIC_VERSION. trunk or stable is not a valid name.
+WIKINDX_PUBLIC_VERSION. trunk is not a valid name.
 
 I. Code preparation and checks
 
@@ -116,8 +112,7 @@ and compile the MO files for Gettext.
     server.  Don't forget to switch $WIKINDX_TRUNK_VERSION = TRUE;
 
 24. When the components are ready commit them to SVN and don't change
-    them anymore because their signature must be definitively fixed in
-    the tagged version.
+    them anymore because their signature must be definitively fixed.
 
 
 II. Website preparation
@@ -149,39 +144,9 @@ one to modify SVN.
 
    $ svn status
 
-3. Merge the trunk branch to the stable branch on your working copy.
-   Resolve conflicts (Should not happen if the stable branch has not been
-   touched since the last release). Commit with the following message:
-   Merge trunk to stable (Release X.Y.Z).
-
-   NB: There are unresolved conflicts in very old commits. Unless they
-   are resolved, it is preferable to merge the interval of missing
-   revisions to the stable branch. Except in special cases, you have to
-   go from the revision of the last publication (to be found in SVN
-   History) to the current revision (HEAD).
-
-   $ cd root_dir_of_svn_working_copy
-   $ svn merge -r XXXX:HEAD trunk tags/stable --force --verbose
-   [
-      ...fix a conflict...
-      $ svn resolve --accept working
-   ]
-   $ svn commit
-
-4. Create the tag tags/X.Y.Z from the trunk branch with the message:
-   Release tag X.Y.Z
-
-   $ svn copy https://svn.code.sf.net/p/wikindx/svn/trunk \
-              https://svn.code.sf.net/p/wikindx/svn/tags/X.Y.Z \
-              -m "Release tag X.Y.Z"
-
-5. Update your working copy to retrieve the new tag.
-
-   $ svn update
-
-6. Add an entry for the release in the SVN History section of the
+3. Add an entry for the release in the SVN History section of the
    README.txt file at the root of the repository. The revision number
-   indicated is the revision of the tag of the release.
+   indicated is the revision of the last commit included in the release.
 
 At this point the version is officially released in SVN and should no
 longer be changed so that the packaged code is identical.  If a last
@@ -191,18 +156,20 @@ and start again at step I.
 
 If the correction is very fast (a few tens of minutes) you can keep the
 same version number because no one will have had the opportunity to
-install from SVN. In this case, replace step III.4 by a merge of the
-trunk to tags/X.Y.Z and fix the revision number of step III.6.
+install from SVN.
 
 If the correction takes too long then it is necessary to abandon the
 publication of the current release, to increment the version number and
 to make a new complete release. In the SVN history replace the Release
-Date of this version with the mention "unreleased" and destroy its SVN
-tag. To have absolute safety of the published code you should only use
-this method.
+Date of this version with the mention "unreleased". To have absolute safety
+of the published code you should only use this method.
 
 
 IV. Public Release
+
+*. In case you need to release and old version, use svn checkout xxx before
+   switching on the last commit of this release. Don't forget to switch again
+   to HEAD after the release!
 
 1. cd in the release directory and execute the packaging script make.php
    from the CLI. Answer questions from the script (version=X.Y.Z and

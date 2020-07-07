@@ -12,8 +12,6 @@ database, while the STABLE branch has been debugged and validated.
 
 - Main wikindx sources are in folders:
 
-     - tags/         archives the past releases
-     - tags/stable/  contains the last stable release (recommended for production)
      - trunk/        contains the development sources
      - branches/     contains temporary code derived from trunk for development
 
@@ -47,11 +45,11 @@ each release in docs/ folder.
 
  ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 
- SVN History
+SVN History
 
 This repository archives wikindx sources from version 6.2.1 at revision 3959.
 
-The previous versions can be viewed at:
+The previous versions can be viewed in trunk folder at:
 
 https://sourceforge.net/p/wikindxold/svn/HEAD/tree/
 

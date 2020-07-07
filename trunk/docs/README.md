@@ -69,13 +69,12 @@ tarball version available in the [SourceForge File] section, especially
 if your wikindx is hosted on the web.
 
 If you prefer an installation from a source management client, __we
-strongly recommand__ that you use the __stable__ branch on a
+strongly recommand__ that you use one of the __point release__ described
+in the README.txt file at the root of SVN with the __trunk__ branch on a
 __production__ server.
 
 The __trunk__ branch (for developers and testers) can be broken at any
-(and for a long) time and damage your database, while the __stable__
-branch has been debugged and validated.  __stable__ contains the same
-code as the __latest version__ delivered.
+(and for a long) time and damage your database.
 
 
 ## Components compatibility

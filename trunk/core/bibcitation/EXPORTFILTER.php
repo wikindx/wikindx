@@ -109,23 +109,6 @@ class EXPORTFILTER
             $data = str_replace("NEWLINE", $this->newLine, $data);
         }
         /**
-         * OpenOffice-1.x.
-         */
-        elseif ($this->format == 'sxw') {
-            $data = UTF8::decodeUtf8($data);
-            $data = str_replace("\"", "&quot;", $data);
-            $data = str_replace("<", "&lt;", $data);
-            $data = str_replace(">", "&gt;", $data);
-            $data = preg_replace("/&(?![a-zA-Z0-9#]+?;)/u", "&amp;", $data);
-            $data = preg_replace("/\\[b\\](.*?)\\[\\/b\\]/uis", "<text:span text:style-name=\"textbf\">$1</text:span>", $data);
-            $data = preg_replace("/\\[i\\](.*?)\\[\\/i\\]/uis", "<text:span text:style-name=\"emph\">$1</text:span>", $data);
-            $data = preg_replace("/\\[sup\\](.*?)\\[\\/sup\\]/uis", "<text:span text:style-name=\"superscript\">$1</text:span>", $data);
-            $data = preg_replace("/\\[sub\\](.*?)\\[\\/sub\\]/uis", "<text:span text:style-name=\"subscript\">$1</text:span>", $data);
-            $data = preg_replace("/\\[u\\](.*?)\\[\\/u\\]/uis", "<text:span text:style-name=\"underline\">$1</text:span>", $data);
-            $data = "<text:p text:style-name=\"Text body\">" . $data . "</text:p>" . LF;
-            $data = str_replace("WIKINDX_NDASH", "-", $data);
-        }
-        /**
          * 'noScan' means do nothing (leave BBCodes intact)
          */
         elseif ($this->format == 'noScan') {

@@ -1250,6 +1250,9 @@ class IMPORTBIBTEX
     /**
      * convertEntries - convert any laTeX code and convert to UTF-8 ready for storing in the database
      *
+     * This function try to guess the original encoding relaying on mb_detect_encoding()
+     * but this function is really a poor tool for this task.
+     *
      * @param array $entries - multidimensional array of entries
      *
      * @return array multidimensional array of converted entries.
@@ -1282,15 +1285,26 @@ class IMPORTBIBTEX
         }
         $index = 0;
         foreach ($entries as $eKey => $array) {
-            if (!is_array($array)) { // e.g. strings array
-                $temp[$eKey] = stripslashes(UTF8::smartUtf8_encode(preg_replace($matchBibtex, $replaceBibtex, $array)));
-
-                continue;
+            if (!is_array($array)) {
+                // e.g. strings array
+                $from_encoding = mb_detect_encoding($array);
+                if ($from_encoding != WIKINDX_CHARSET)
+                {
+                    $array = mb_convert_encoding($array, WIKINDX_CHARSET, $from_encoding);
+                }
+                $temp[$eKey] = stripslashes(preg_replace($matchBibtex, $replaceBibtex, $array));
+            } else {
+                // An array of strings
+                foreach ($array as $key => $value) {
+                    $from_encoding = mb_detect_encoding($value);
+                    if ($from_encoding != WIKINDX_CHARSET)
+                    {
+                        $value = mb_convert_encoding($value, WIKINDX_CHARSET, $from_encoding);
+                    }
+                    $temp[$index][$key] = stripslashes(preg_replace($matchBibtex, $replaceBibtex, $value));
+                }
+                $index++;
             }
-            foreach ($array as $key => $value) {
-                $temp[$index][$key] = stripslashes(UTF8::smartUtf8_encode(preg_replace($matchBibtex, $replaceBibtex, $value)));
-            }
-            $index++;
         }
 
         return $temp;

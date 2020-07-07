@@ -945,8 +945,8 @@ class VIEWBIBTEX
             $c = preg_replace('/"/u', '{"}', $c);
         }
 
-        // Convert some BBCode and any citeKeys to TeX and strip the rest
-        $bbCode = [
+        // Convert some HTML and any citeKeys to TeX and strip the rest
+        $html = [
             '/<strong>(.*?)<\/strong>/usi',
             '/<span style="text-decoration: underline;">(.*?)<\/span>/usi',
             '/<em>(.*?)<\/em>/usi',
@@ -963,7 +963,7 @@ class VIEWBIBTEX
             '\\cite{\\1}',
         ];
 
-        $c = preg_replace($bbCode, $tex, $c);
+        $c = preg_replace($html, $tex, $c);
 
         // As web browser encoding is set to UTF-8, all input in the db is stored as UTF-8 - convert back to ISO-8859-1
         if ($encoding == 'ISO-8859-1') {

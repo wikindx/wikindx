@@ -3,6 +3,9 @@ RELEASES:
 v6.4.0
 Focus: ???.
 
+BUG FIXES:
+1. Fix PHP polyfills for PHP < 7.2.
+
 MAINTENANCE:
 1. Force WIKINDX_DB_TABLEPREFIX to always be equal to WIKINDX_DB_TABLEPREFIX_DEFAULT (wkx_) - ticket #195.
 

@@ -146,33 +146,7 @@ class UTF8
 
         return $str; // $str is UTF-8
     }
-    /**
-     * Decode UTF-8 ONLY if the input has been UTF-8-encoded.
-     *
-     * Adapted from 'nospam' in the user contributions at:
-     * http://www.php.net/manual/en/function.utf8-decode.php
-     *
-     * @param string $inStr
-     *
-     * @return string
-     */
-    public static function smartUtf8_decode($inStr)
-    {
-        // Replace ? with a unique string
-        $newStr = str_replace("?", "w0i0k0i0n0d0x", $inStr);
-        // Try the utf8_decode
-        $newStr = self::decodeUtf8($newStr);
-        // if it contains ? marks
-        if (strpos($newStr, "?") !== FALSE) {
-            // Something went wrong, set newStr to the original string.
-            $newStr = $inStr;
-        } else {
-            // If not then all is well, put the ?-marks back where is belongs
-            $newStr = str_replace("w0i0k0i0n0d0x", "?", $newStr);
-        }
-
-        return $newStr;
-    }
+    
     /**
      * UTF-8 encoding - PROPERLY decode UTF-8 as PHP's utf8_decode can't hack it.
      *

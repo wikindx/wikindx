@@ -546,56 +546,6 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
     }
     
     /**
-     * Gets the first key of an array
-     *
-     * Get the first key of the given array without affecting the internal array pointer.
-     *
-     * This function emulates the built-in eponymous function for PHP before version 7.3.
-     *
-     * @param array $array
-     *
-     * @return mixed Returns the first key of array if the array is not empty; NULL otherwise.
-     */
-    function array_key_first($array)
-    {
-        if (is_array($array) || !empty($array)) {
-            if (function_exists('\array_key_first')) {
-                return array_key_first($array);
-            } else {
-                foreach ($array as $k => $v) {
-                    return $k;
-                }
-            }
-        }
-
-        return NULL;
-    }
-    
-    /**
-     * Gets the last key of an array
-     *
-     * Get the last key of the given array without affecting the internal array pointer.
-     *
-     * This function emulates the built-in eponymous function for PHP before version 7.3.
-     *
-     * @param array $array
-     *
-     * @return mixed Returns the last key of array if the array is not empty; NULL otherwise.
-     */
-    function array_key_last($array)
-    {
-        if (is_array($array) || !empty($array)) {
-            if (function_exists('\array_key_last')) {
-                return array_key_last($array);
-            } else {
-                return array_keys($array)[count($array) - 1];
-            }
-        }
-
-        return NULL;
-    }
-    
-    /**
      * Generates a hash of a file or directory at the given path with the specified algo.
      * If the path is to a single file, it uses sha1_file. Otherwise, it
      * recursively loops through all files in a directory to generate the hash.

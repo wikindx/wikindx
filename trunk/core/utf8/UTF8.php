@@ -147,6 +147,8 @@ class UTF8
     }
 
     /**
+     * count UTF-8 words in a string
+     *
      * This simple utf-8 word count function (it only counts)
      * is a bit faster then the one with preg_match_all
      * about 10x slower then the built-in str_word_count
@@ -155,14 +157,6 @@ class UTF8
      * just put them into the [brackets] like [^\p{L}\p{N}\'\-]
      * If the pattern contains utf-8, utf8_encode() the pattern,
      * as it is expected to be valid utf-8 (using the u modifier).
-     *
-     * @param mixed $str
-     * @param mixed $format
-     * @param mixed $charlist
-     */
-
-    /**
-     * count UTF-8 words in a string
      *
      * @see https://www.php.net/manual/en/function.str-word-count.php
      *

@@ -1257,19 +1257,19 @@ class IMPORTBIBTEX
     private function convertEntries($entries)
     {
         foreach ($this->bibConfig->bibtexSpCh as $key => $value) {
-            $replaceBibtex[] = UTF8::mb_chr($key);
+            $replaceBibtex[] = mb_chr($key);
             $matchBibtex[] = preg_quote("/$value/u");
         }
         foreach ($this->bibConfig->bibtexSpChOld as $key => $value) {
-            $replaceBibtex[] = UTF8::mb_chr($key);
+            $replaceBibtex[] = mb_chr($key);
             $matchBibtex[] = preg_quote("/$value/u");
         }
         foreach ($this->bibConfig->bibtexSpChOld2 as $key => $value) {
-            $replaceBibtex[] = UTF8::mb_chr($key);
+            $replaceBibtex[] = mb_chr($key);
             $matchBibtex[] = preg_quote("/$value/u");
         }
         foreach ($this->bibConfig->bibtexSpChLatex as $key => $value) {
-            $replaceBibtex[] = UTF8::mb_chr($key);
+            $replaceBibtex[] = mb_chr($key);
             $matchBibtex[] = preg_quote("/$value/u");
         }
         foreach ($this->bibConfig->bibtexWordsTranslate as $key => $value) { // NB reverse key--value

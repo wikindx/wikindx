@@ -350,41 +350,6 @@ class UTF8
     }
 
     /**
-     * Simulate chr() for multibytes strings
-     *
-     * @param string $dec
-     *
-     * @return string
-     */
-    public static function mb_chr($dec)
-    {
-        if (function_exists("mb_chr")) {
-            $utf = mb_chr($dec);
-        } else {
-            if ($dec < 0x80) {
-                $utf = chr($dec);
-            } elseif ($dec < 0x0800) {
-                $utf = chr(0xC0 + ($dec >> 6));
-                $utf .= chr(0x80 + ($dec & 0x3f));
-            } elseif ($dec < 0x010000) {
-                $utf = chr(0xE0 + ($dec >> 12));
-                $utf .= chr(0x80 + (($dec >> 6) & 0x3f));
-                $utf .= chr(0x80 + ($dec & 0x3f));
-            } elseif ($dec < 0x200000) {
-                $utf = chr(0xF0 + ($dec >> 18));
-                $utf .= chr(0x80 + (($dec >> 12) & 0x3f));
-                $utf .= chr(0x80 + (($dec >> 6) & 0x3f));
-                $utf .= chr(0x80 + ($dec & 0x3f));
-            } else {
-                // UTF-8 character size can't use more than 4 bytes!
-                $utf = '';
-            }
-        }
-
-        return $utf;
-    }
-
-    /**
      * Simulate explode() for multibytes strings (as documented for PHP 7.0)
      *
      * @param string $delimiter

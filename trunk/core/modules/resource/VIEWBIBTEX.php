@@ -927,16 +927,16 @@ class VIEWBIBTEX
         if ($encoding == 'ISO-8859-1') {
             if ($type == 'plain') {
                 foreach ($this->spChPlain as $key => $value) {
-                    $char = preg_quote(UTF8::mb_chr($key), '/');
+                    $char = preg_quote(mb_chr($key), '/');
                     $c = preg_replace("/$char/u", $value, $c);
                 }
             } else {
                 // '\' and '$' are special cases and must be treated separately.  Former MUST be treated first!
-                $char = preg_quote("\\" . UTF8::mb_chr(0x005C), '/');	// '\'
+                $char = preg_quote("\\" . mb_chr(0x005C), '/');	// '\'
                 $rep = "\\textbackslash";
                 $c = preg_replace("/$char/u", $rep, $c);
                 foreach ($this->spCh as $key => $value) {
-                    $match[] = "/" . preg_quote(UTF8::mb_chr($key), '/') . "/u";
+                    $match[] = "/" . preg_quote(mb_chr($key), '/') . "/u";
                     $replace[] = $value;
                 }
                 $c = preg_replace($match, $replace, $c);

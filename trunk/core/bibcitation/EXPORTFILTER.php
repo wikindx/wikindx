@@ -49,11 +49,10 @@ class EXPORTFILTER
      * Format for HTML or RTF/plain?
      *
      * @param string $data Input string
-     * @param bool $htmlDone Default FALSE (deprecated)
      *
      * @return string
      */
-    public function format($data, $htmlDone = FALSE)
+    public function format($data)
     {
         if (!$data) {
             return $data;
@@ -72,14 +71,9 @@ class EXPORTFILTER
                 $url = FALSE;
             }
             $data = str_replace("\"", "&quot;", $data);
-            if (!$htmlDone) {
-                //				$data = str_replace("<", "&lt;", $data);
-//				$data = str_replace(">", "&gt;", $data);
-//				$data = preg_replace("/&(?![a-zA-Z0-9#]+?;)/u", "&amp;", $data);
-            }
             // This double replace stops stops the search term 'ass' being used to replace the 'ass' in 'class'
-            //			$data = $this->bibformat->patterns ?
-            //				preg_replace($this->bibformat->patterns, "<span class=\"" . $this->bibformat->patternHighlight . "\">$1</span>", $data) : $data;
+            // $data = $this->bibformat->patterns ?
+            // preg_replace($this->bibformat->patterns, "<span class=\"" . $this->bibformat->patternHighlight . "\">$1</span>", $data) : $data;
             $data = preg_replace("/\\[b\\](.*?)\\[\\/b\\]/uis", "<strong>$1</strong>", $data);
             $data = preg_replace("/\\[i\\](.*?)\\[\\/i\\]/uis", "<em>$1</em>", $data);
             $data = preg_replace("/\\[sup\\](.*?)\\[\\/sup\\]/uis", "<sup>$1</sup>", $data);
@@ -93,10 +87,10 @@ class EXPORTFILTER
             $data = str_replace("NEWLINE", $this->newLine, $data);
             if ($this->bibformat->patterns) {
                 $data = preg_replace($this->bibformat->patterns, \HTML\span("$1", "highlight"), $data);
-                //				$data = preg_replace($this->bibformat->patterns,
-//					"W!I!K!I!N!D!X!$1W!I!K!I!N!D!X!", $data);
-//				$data = preg_replace("/W!I!K!I!N!D!X!(.*)W!I!K!I!N!D!X!/Uu",
-//					"<span class=\"" . $this->bibformat->patternHighlight . "\">$1</span>", $data);
+                // $data = preg_replace($this->bibformat->patterns,
+                // "W!I!K!I!N!D!X!$1W!I!K!I!N!D!X!", $data);
+                // $data = preg_replace("/W!I!K!I!N!D!X!(.*)W!I!K!I!N!D!X!/Uu",
+                // "<span class=\"" . $this->bibformat->patternHighlight . "\">$1</span>", $data);
             }
         } elseif ($this->format == 'rtf') {
             $data = preg_replace("/&#(.*?);/u", "\\u$1", $data);

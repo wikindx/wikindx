@@ -254,7 +254,7 @@ class ADMINCOMPONENTS
             $h .= HTML\td(HTML\aName($type, "&nbsp;") . $type . " " . HTML\a("link", "&uarr;", "#topnav"), "smallcaps alternate3 middle center padding5px", "6");
             $h .= HTML\trEnd();
             $h .= HTML\trStart();
-            $h .= HTML\th($this->messages->text("components", "description"), "alternate2 padding5px width50percent");
+            $h .= HTML\th($this->messages->text("components", "description"), "alternate2 padding5px width40percent");
             $h .= HTML\th($this->messages->text("components", "credits"), "alternate2 padding5px");
             $h .= HTML\th($this->messages->text("components", "version"), "alternate2 padding5px");
             $h .= HTML\th($this->messages->text("components", "licence"), "alternate2 padding5px");
@@ -326,11 +326,11 @@ class ADMINCOMPONENTS
                 
             $h .= HTML\tdStart("padding5px");
             $h .= $this->messages->text("components", "installed");
-            $h .= array_key_exists("component_version", $cmp) && $cmp["component_version"] != "" ? $cmp["component_version"] : "none";
+            $h .= array_key_exists("component_version", $cmp) && $cmp["component_version"] != "" ? $cmp["component_version"] : "--";
             $h .= array_key_exists($hashkeyid, $cmp) && $cmp[$hashkeyid] != "" ? " <span title=\"" . WIKINDX_PACKAGE_HASH_ALGO . " hash: " . $cmp[$hashkeyid] . "\">&#x1f511;</span>" : "";
             $h .= "<br>";
             $h .= $this->messages->text("components", "latest");
-            $h .= array_key_exists("component_version_latest", $cmp) && $cmp["component_version_latest"] != "" ? $cmp["component_version_latest"] : "none";
+            $h .= array_key_exists("component_version_latest", $cmp) && $cmp["component_version_latest"] != "" ? $cmp["component_version_latest"] : "--";
             $h .= array_key_exists($lasthashkeyid, $cmp) && $cmp[$lasthashkeyid] != "" ? " <span title=\"" . WIKINDX_PACKAGE_HASH_ALGO . " hash: " . $cmp[$lasthashkeyid] . "\">&#x1f511;</span>" : "";
             $h .= HTML\tdEnd();
                 

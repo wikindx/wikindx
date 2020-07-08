@@ -35,46 +35,41 @@ I. Code preparation and checks
 4. Check the internal version number in WIKINDX_INTERNAL_VERSION.
    Increment it by one (and one only) if a core upgrade is needed.
 
-4. Check that WIKINDX_PLUGIN_VERSION and $wikindxVersion in plugins have
+5. Check that WIKINDX_PLUGIN_VERSION and $wikindxVersion in plugins have
    the same value.
 
-5. Check that the core upgrade stage for this version is complete and
+6. Check that the core upgrade stage for this version is complete and
    functional: database, constants, variables, files, folders, messages,
    version numbers.
 
-6. Check that the plugins upgrade for this version is complete and
+7. Check that the plugins upgrade for this version is complete and
    functional: database, constants, variables, files, folders, messages,
    version numbers.
 
-7. Check if a code change has changed compatibility. Update
+8. Check if a code change has changed compatibility. Update
    WIKINDX_PHP_VERSION_MIN, WIKINDX_MYSQL_VERSION_MIN, and
    WIKINDX_MARIADB_VERSION_MIN.
 
-8. Check if a code change has changed PHP extensions compatibility.
+9. Check if a code change has changed PHP extensions compatibility.
    Update \UTILS\listCoreMandatoryPHPExtensions() and
    \UTILS\listCoreOptionalPHPExtensions() functions.
 
-9. Update "PHP & MySQL versions", "PHP extensions",
+10. Update "PHP & MySQL versions", "PHP extensions",
    and "Browser compatibility" sections in docs/README.md.
 
-10. Update browser compatibility in docs/README.md.
+11. Update browser compatibility in docs/README.md.
 
-11. Check that the changelog of the core is complete.
+12. Check that the changelog of the core is complete.
 
-12. Check that the changelog of each component is complete.
+13. Check that the changelog of each component is complete.
 
-13. Update WIKINDX_COPYRIGHT_YEAR.
+14. Update WIKINDX_COPYRIGHT_YEAR.
 
-14. Update the phpdoc fields @author, @copyright and @version of each
+15. Update the phpdoc fields @author, @copyright and @version of each
     file modified during the developement.
 
-15. Update component.json file of components and check their integrity
+16. Update component.json file of components and check their integrity
     in the admin components panel.
-
-16. Format the php code with the PHP-CS-Fixer formater.
-
-    $ cd trunk
-    $ php ../tools/php-cs-fixer.phar fix --config php-fmt-dev.php
 
 17. Update the db schema of the Repair Kit.
 
@@ -90,7 +85,7 @@ I. Code preparation and checks
     $ php make-languages.php
 
 19. On the translation deadline, copy the PO files from Transifex to SVN
-and compile the MO files for Gettext.
+    and compile the MO files for Gettext.
 
     $ php make-languages.php
 

@@ -8,7 +8,6 @@ BUG FIXES:
 
 MAINTENANCE:
 1. Force WIKINDX_DB_TABLEPREFIX to always be equal to WIKINDX_DB_TABLEPREFIX_DEFAULT (wkx_) - ticket #195.
-2. Add a note about the file encoding limitation of the BibTex import.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

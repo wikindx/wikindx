@@ -927,16 +927,16 @@ class VIEWBIBTEX
         if ($encoding == 'ISO-8859-1') {
             if ($type == 'plain') {
                 foreach ($this->spChPlain as $key => $value) {
-                    $char = preg_quote(mb_chr($key), '/');
+                    $char = preg_quote(UTF8::mb_chr($key), '/');
                     $c = preg_replace("/$char/u", $value, $c);
                 }
             } else {
                 // '\' and '$' are special cases and must be treated separately.  Former MUST be treated first!
-                $char = preg_quote("\\" . mb_chr(0x005C), '/');	// '\'
+                $char = preg_quote("\\" . UTF8::mb_chr(0x005C), '/');	// '\'
                 $rep = "\\textbackslash";
                 $c = preg_replace("/$char/u", $rep, $c);
                 foreach ($this->spCh as $key => $value) {
-                    $match[] = "/" . preg_quote(mb_chr($key), '/') . "/u";
+                    $match[] = "/" . preg_quote(UTF8::mb_chr($key), '/') . "/u";
                     $replace[] = $value;
                 }
                 $c = preg_replace($match, $replace, $c);
@@ -945,8 +945,8 @@ class VIEWBIBTEX
             $c = preg_replace('/"/u', '{"}', $c);
         }
 
-        // Convert some HTML and any citeKeys to TeX and strip the rest
-        $html = [
+        // Convert some BBCode and any citeKeys to TeX and strip the rest
+        $bbCode = [
             '/<strong>(.*?)<\/strong>/usi',
             '/<span style="text-decoration: underline;">(.*?)<\/span>/usi',
             '/<em>(.*?)<\/em>/usi',
@@ -963,11 +963,11 @@ class VIEWBIBTEX
             '\\cite{\\1}',
         ];
 
-        $c = preg_replace($html, $tex, $c);
+        $c = preg_replace($bbCode, $tex, $c);
 
-        // As wikindx default encoding is set to UTF-8, convert back to the encoding requested
-        if ($encoding != 'UTF-8') {
-            $c = mb_convert_encoding($c, $encoding, WIKINDX_CHARSET);
+        // As web browser encoding is set to UTF-8, all input in the db is stored as UTF-8 - convert back to ISO-8859-1
+        if ($encoding == 'ISO-8859-1') {
+            $c = utf8_decode($c);
         }
 
         return $c;

@@ -1118,13 +1118,13 @@ class RESOURCEWRITE
             if ($row['creatorPrefix']) {
                 $prefix = utf8_decode($row['creatorPrefix']);
                 foreach ($config->bibtexSpChPlain as $key => $value) {
-                    $prefix = preg_replace("/" . mb_chr($key) . "/u", $value, $prefix);
+                    $prefix = preg_replace("/" . UTF8::mb_chr($key) . "/u", $value, $prefix);
                 }
                 $prefix = preg_replace("/\\W/u", '', $prefix);
             }
             $surname = utf8_decode($row['creatorSurname']);
             foreach ($config->bibtexSpChPlain as $key => $value) {
-                $surname = preg_replace("/" . mb_chr($key) . "/u", $value, $surname);
+                $surname = preg_replace("/" . UTF8::mb_chr($key) . "/u", $value, $surname);
             }
             $surname = preg_replace("/\\W/u", '', $surname);
             $base = $prefix . $surname . $year;

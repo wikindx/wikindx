@@ -702,14 +702,14 @@ class IMPORT
             if ($row['creatorPrefix']) {
                 $prefix = utf8_decode($row['creatorPrefix']);
                 foreach ($this->bibConfig->bibtexSpChPlain as $key => $value) {
-                    $char = preg_quote(mb_chr($key), '/');
+                    $char = preg_quote(UTF8::mb_chr($key), '/');
                     $prefix = preg_replace("/$char/u", $value, $prefix);
                 }
                 $prefix = preg_replace("/\\W/u", '', $prefix);
             }
             $surname = utf8_decode($row['creatorSurname']);
             foreach ($this->bibConfig->bibtexSpChPlain as $key => $value) {
-                $char = preg_quote(mb_chr($key), '/');
+                $char = preg_quote(UTF8::mb_chr($key), '/');
                 $surname = preg_replace("/$char/u", $value, $surname);
             }
             $surname = preg_replace("/\\W/u", '', $surname);

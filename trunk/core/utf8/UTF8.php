@@ -16,6 +16,261 @@
 class UTF8
 {
     /**
+     * Encode a string in UTF-8 if not already UTF-8
+     *
+     * Tools for validing a UTF-8 string is well formed.
+     * The Original Code is Mozilla Communicator client code.
+     * The Initial Developer of the Original Code is
+     * Netscape Communications Corporation.
+     * Portions created by the Initial Developer are Copyright (C) 1998
+     * the Initial Developer. All Rights Reserved.
+     * Ported to PHP by Henri Sivonen (http://hsivonen.iki.fi)
+     * Slight modifications to fit with phputf8 library by Harry Fuecks (hfuecks gmail com)
+     *
+     * Tests a string as to whether it's valid UTF-8 and supported by the
+     * Unicode standard
+     *
+     * @see http://lxr.mozilla.org/seamonkey/source/intl/uconv/src/nsUTF8ToUnicode.cpp
+     * @see http://lxr.mozilla.org/seamonkey/source/intl/uconv/src/nsUnicodeToUTF8.cpp
+     * @see http://hsivonen.iki.fi/php-utf8/
+     * @see utf8_compliant
+     *
+     * @author <hsivonen@iki.fi>
+     *
+     * @param string $str UTF-8 encoded string
+     *
+     * @return string
+     */
+    public static function smartUtf8_encode($str)
+    {
+        $mState = 0;     // cached expected number of octets after the current octet
+                     // until the beginning of the next UTF8 character sequence
+    $mUcs4 = 0;     // cached Unicode character
+    $mBytes = 1;     // cached expected number of octets in the current sequence
+
+    $len = strlen($str);
+
+        for ($i = 0; $i < $len; $i++) {
+            $in = ord($str[$i]);
+            if ($mState == 0) {
+                // When mState is zero we expect either a US-ASCII character or a
+                // multi-octet sequence.
+                if (0 == (0x80 & ($in))) {
+                    // US-ASCII, pass straight through.
+                    $mBytes = 1;
+                } elseif (0xC0 == (0xE0 & ($in))) {
+                    // First octet of 2 octet sequence
+                    $mUcs4 = ($in);
+                    $mUcs4 = ($mUcs4 & 0x1F) << 6;
+                    $mState = 1;
+                    $mBytes = 2;
+                } elseif (0xE0 == (0xF0 & ($in))) {
+                    // First octet of 3 octet sequence
+                    $mUcs4 = ($in);
+                    $mUcs4 = ($mUcs4 & 0x0F) << 12;
+                    $mState = 2;
+                    $mBytes = 3;
+                } elseif (0xF0 == (0xF8 & ($in))) {
+                    // First octet of 4 octet sequence
+                    $mUcs4 = ($in);
+                    $mUcs4 = ($mUcs4 & 0x07) << 18;
+                    $mState = 3;
+                    $mBytes = 4;
+                } elseif (0xF8 == (0xFC & ($in))) {
+                    /* First octet of 5 octet sequence.
+                    *
+                    * This is illegal because the encoded codepoint must be either
+                    * (a) not the shortest form or
+                    * (b) outside the Unicode range of 0-0x10FFFF.
+                    * Rather than trying to resynchronize, we will carry on until the end
+                    * of the sequence and let the later error handling code catch it.
+                    */
+                    $mUcs4 = ($in);
+                    $mUcs4 = ($mUcs4 & 0x03) << 24;
+                    $mState = 4;
+                    $mBytes = 5;
+                } elseif (0xFC == (0xFE & ($in))) {
+                    // First octet of 6 octet sequence, see comments for 5 octet sequence.
+                    $mUcs4 = ($in);
+                    $mUcs4 = ($mUcs4 & 1) << 30;
+                    $mState = 5;
+                    $mBytes = 6;
+                } else {
+                    /* Current octet is neither in the US-ASCII range nor a legal first
+                    * octet of a multi-octet sequence.
+                     */
+                    return utf8_encode($str);
+                }
+            } else {
+                // When mState is non-zero, we expect a continuation of the multi-octet
+                // sequence
+                if (0x80 == (0xC0 & ($in))) {
+                    // Legal continuation.
+                    $shift = ($mState - 1) * 6;
+                    $tmp = $in;
+                    $tmp = ($tmp & 0x0000003F) << $shift;
+                    $mUcs4 |= $tmp;
+                    /**
+                     * End of the multi-octet sequence. mUcs4 now contains the final
+                     * Unicode codepoint to be output
+                     */
+                    if (0 == --$mState) {
+                        /*
+                         * Check for illegal sequences and codepoints.
+                         */
+                        // From Unicode 3.1, non-shortest form is illegal
+                        if (((2 == $mBytes) && ($mUcs4 < 0x0080)) ||
+                        ((3 == $mBytes) && ($mUcs4 < 0x0800)) ||
+                        ((4 == $mBytes) && ($mUcs4 < 0x10000)) ||
+                        (4 < $mBytes) ||
+                        // From Unicode 3.2, surrogate characters are illegal
+                        (($mUcs4 & 0xFFFFF800) == 0xD800) ||
+                        // Codepoints outside the Unicode range are illegal
+                        ($mUcs4 > 0x10FFFF)) {
+                            return utf8_encode($str);
+                        }
+                        //initialize UTF8 cache
+                        $mState = 0;
+                        $mUcs4 = 0;
+                        $mBytes = 1;
+                    }
+                } else {
+                    /**
+                     *((0xC0 & (*in) != 0x80) && (mState != 0))
+                     * Incomplete multi-octet sequence.
+                     */
+                    return utf8_encode($str);
+                }
+            }
+        }
+
+        return $str; // $str is UTF-8
+    }
+    /**
+     * Decode UTF-8 ONLY if the input has been UTF-8-encoded.
+     *
+     * Adapted from 'nospam' in the user contributions at:
+     * http://www.php.net/manual/en/function.utf8-decode.php
+     *
+     * @param string $inStr
+     *
+     * @return string
+     */
+    public static function smartUtf8_decode($inStr)
+    {
+        // Replace ? with a unique string
+        $newStr = str_replace("?", "w0i0k0i0n0d0x", $inStr);
+        // Try the utf8_decode
+        $newStr = self::decodeUtf8($newStr);
+        // if it contains ? marks
+        if (strpos($newStr, "?") !== FALSE) {
+            // Something went wrong, set newStr to the original string.
+            $newStr = $inStr;
+        } else {
+            // If not then all is well, put the ?-marks back where is belongs
+            $newStr = str_replace("w0i0k0i0n0d0x", "?", $newStr);
+        }
+
+        return $newStr;
+    }
+    /**
+     * UTF-8 encoding - PROPERLY decode UTF-8 as PHP's utf8_decode can't hack it.
+     *
+     * Freely borrowed from morris_hirsch at http://www.php.net/manual/en/function.utf8-decode.php
+     * bytes bits representation
+     * 1  7  0bbbbbbb
+     * 2  11  110bbbbb 10bbbbbb
+     * 3  16  1110bbbb 10bbbbbb 10bbbbbb
+     * 4  21  11110bbb 10bbbbbb 10bbbbbb 10bbbbbb
+     * Each b represents a bit that can be used to store character data.
+     *
+     * input CANNOT have single byte upper half extended ascii codes
+     *
+     * @param string $utf8_string
+     *
+     * @return string
+     */
+    public static function decodeUtf8($utf8_string)
+    {
+        $out = "";
+        $ns = strlen($utf8_string);
+        for ($nn = 0; $nn < $ns; $nn++) {
+            $ch = $utf8_string[$nn];
+            $ii = ord($ch);
+
+            //1 7 0bbbbbbb (127)
+
+            if ($ii < 128) {
+                $out .= $ch;
+            }
+
+            //2 11 110bbbbb 10bbbbbb (2047)
+
+            elseif ($ii >> 5 == 6) {
+                $b1 = ($ii & 31);
+
+                $nn++;
+                $ch = $utf8_string[$nn];
+                $ii = ord($ch);
+                $b2 = ($ii & 63);
+
+                $ii = ($b1 * 64) + $b2;
+
+                $ent = sprintf("&#%d;", $ii);
+                $out .= $ent;
+            }
+
+            //3 16 1110bbbb 10bbbbbb 10bbbbbb
+
+            elseif ($ii >> 4 == 14) {
+                $b1 = ($ii & 31);
+
+                $nn++;
+                $ch = $utf8_string[$nn];
+                $ii = ord($ch);
+                $b2 = ($ii & 63);
+
+                $nn++;
+                $ch = $utf8_string[$nn];
+                $ii = ord($ch);
+                $b3 = ($ii & 63);
+
+                $ii = ((($b1 * 64) + $b2) * 64) + $b3;
+
+                $ent = sprintf("&#%d;", $ii);
+                $out .= $ent;
+            }
+
+            //4 21 11110bbb 10bbbbbb 10bbbbbb 10bbbbbb
+
+            elseif ($ii >> 3 == 30) {
+                $b1 = ($ii & 31);
+
+                $nn++;
+                $ch = $utf8_string[$nn];
+                $ii = ord($ch);
+                $b2 = ($ii & 63);
+
+                $nn++;
+                $ch = $utf8_string[$nn];
+                $ii = ord($ch);
+                $b3 = ($ii & 63);
+
+                $nn++;
+                $ch = $utf8_string[$nn];
+                $ii = ord($ch);
+                $b4 = ($ii & 63);
+
+                $ii = ((((($b1 * 64) + $b2) * 64) + $b3) * 64) + $b4;
+
+                $ent = sprintf("&#%d;", $ii);
+                $out .= $ent;
+            }
+        }
+
+        return $out;
+    }
+    /**
      * Encode UTF-8 from unicode characters
      *
      * @param string $str
@@ -50,8 +305,6 @@ class UTF8
     }
 
     /**
-     * count UTF-8 words in a string
-     *
      * This simple utf-8 word count function (it only counts)
      * is a bit faster then the one with preg_match_all
      * about 10x slower then the built-in str_word_count
@@ -60,6 +313,14 @@ class UTF8
      * just put them into the [brackets] like [^\p{L}\p{N}\'\-]
      * If the pattern contains utf-8, utf8_encode() the pattern,
      * as it is expected to be valid utf-8 (using the u modifier).
+     *
+     * @param mixed $str
+     * @param mixed $format
+     * @param mixed $charlist
+     */
+
+    /**
+     * count UTF-8 words in a string
      *
      * @see https://www.php.net/manual/en/function.str-word-count.php
      *
@@ -86,6 +347,41 @@ class UTF8
         } else {
             return 0;
         }
+    }
+
+    /**
+     * Simulate chr() for multibytes strings
+     *
+     * @param string $dec
+     *
+     * @return string
+     */
+    public static function mb_chr($dec)
+    {
+        if (function_exists("mb_chr")) {
+            $utf = mb_chr($dec);
+        } else {
+            if ($dec < 0x80) {
+                $utf = chr($dec);
+            } elseif ($dec < 0x0800) {
+                $utf = chr(0xC0 + ($dec >> 6));
+                $utf .= chr(0x80 + ($dec & 0x3f));
+            } elseif ($dec < 0x010000) {
+                $utf = chr(0xE0 + ($dec >> 12));
+                $utf .= chr(0x80 + (($dec >> 6) & 0x3f));
+                $utf .= chr(0x80 + ($dec & 0x3f));
+            } elseif ($dec < 0x200000) {
+                $utf = chr(0xF0 + ($dec >> 18));
+                $utf .= chr(0x80 + (($dec >> 12) & 0x3f));
+                $utf .= chr(0x80 + (($dec >> 6) & 0x3f));
+                $utf .= chr(0x80 + ($dec & 0x3f));
+            } else {
+                // UTF-8 character size can't use more than 4 bytes!
+                $utf = '';
+            }
+        }
+
+        return $utf;
     }
 
     /**
@@ -230,7 +526,54 @@ class UTF8
 
         return (is_null($length) === TRUE) ? substr_replace($string, $replacement, $start) : substr_replace($string, $replacement, $start, $length);
     }
-    
+
+    /**
+     * Simulate ord() for UTF8 strings (not arbitrary multibytes strings)
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function mb_ord($string)
+    {
+        if (function_exists("mb_ord")) {
+            if ($string != "") {
+                $utf = mb_ord($string);
+            } else {
+                $utf = 0;
+            }
+        } else {
+            $offset = 0;
+            while ($offset >= 0) {
+                $code = ord(substr($string, $offset, 1));
+                if ($code >= 128) {        //otherwise 0xxxxxxx
+                    if ($code < 224) {
+                        $bytesnumber = 2;
+                    }                //110xxxxx
+                    elseif ($code < 240) {
+                        $bytesnumber = 3;
+                    }        //1110xxxx
+                    elseif ($code < 248) {
+                        $bytesnumber = 4;
+                    }    //11110xxx
+                    $codetemp = $code - 192 - ($bytesnumber > 2 ? 32 : 0) - ($bytesnumber > 3 ? 16 : 0);
+                    for ($i = 2; $i <= $bytesnumber; $i++) {
+                        $offset++;
+                        $code2 = ord(substr($string, $offset, 1)) - 128;        //10xxxxxx
+                        $codetemp = $codetemp * 64 + $code2;
+                    }
+                    $code = $codetemp;
+                }
+                $offset += 1;
+                if ($offset >= strlen($string)) {
+                    $offset = -1;
+                }
+            }
+            $utf = $code;
+        }
+
+        return $utf;
+    }
     /**
      * convert an integer to its chr() representation
      *

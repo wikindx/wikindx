@@ -2132,7 +2132,7 @@ class CITEFORMAT
                         ++$citationIndex; // index already taken by textual footnote
                     }
                 }
-                $this->endnotes[$citationIndex] = $this->export->format($this->map($this->templateEndnote));
+                $this->endnotes[$citationIndex] = $this->export->format($this->map($this->templateEndnote), TRUE);
                 ++$citationIndex;
             } else {
                 $tempTemplate = [];
@@ -2227,7 +2227,7 @@ class CITEFORMAT
                         $this->templateEndnote['pages'] = $this->bibStyle->bibformat->{$type}['pages'];
                     }
                 }
-                $this->endnotes[$index] = $this->export->format($this->map($this->templateEndnote));
+                $this->endnotes[$index] = $this->export->format($this->map($this->templateEndnote), TRUE);
                 $this->opCit[] = $id;
                 if (!empty($tempTemplate)) {
                     $this->templateEndnote = $tempTemplate;

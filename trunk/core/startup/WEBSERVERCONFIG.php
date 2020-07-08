@@ -30,11 +30,6 @@
  */
 include_once("core/startup/CONSTANTS.php");
 
-/**
- * Add compatibility functions for higher versions of PHP.
- */
-include_once("core/libs/polyfill-php.php");
-
 
 /**
  * On startup, reports all errors.

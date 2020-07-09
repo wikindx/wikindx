@@ -178,7 +178,6 @@ echo "Clear source code\n";
 \FILE\recurse_rmdir(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'sessionData');
 
 // Delete temporary files
-\FILE\rmfile(DIR_DST_SRC . DIRECTORY_SEPARATOR . '.php_cs.cache');
 \FILE\rmfile(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'config copy.php');
 \FILE\rmfile(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'config.php');
 

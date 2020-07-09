@@ -1,7 +1,7 @@
 {
     "component_type": "language",
     "component_id": "es",
-    "component_version": "175",
+    "component_version": "179",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Spanish",
@@ -14,5 +14,5 @@
             "author_copyright": "2017"
         }
     ],
-    "component_sha256": "a3bd24181724593d09f3b2bd6baedd404856fa1dad0ce8771c03af7783cf3089"
+    "component_sha256": "69ae7ced1164155d7959023882db6027a711e70e3c4b5a35e89196ac36acf462"
 }

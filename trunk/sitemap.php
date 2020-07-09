@@ -37,8 +37,7 @@ function preserve_qs()
 
 // This code had moved to core/modules/sitemap/SITEMAP.php
 // to use the current module loading scheme.
-// Keep this page only to not break external links
-// LkpPo, 20180802
+// Keep this page only to not break external links (20180802)
 // HTTP/1.0 301 Moved Permanently
 header('Location: ' . WIKINDX_SITEMAP_PAGE . preserve_qs(), TRUE, 301);
 

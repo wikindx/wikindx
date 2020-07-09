@@ -1,7 +1,7 @@
 {
     "component_type": "language",
     "component_id": "ru",
-    "component_version": "175",
+    "component_version": "179",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Russian",
@@ -15,5 +15,5 @@
             "author_email": "simple4all@users.sourceforge.com"
         }
     ],
-    "component_sha256": "80629bae853a2bf14d48fb9299e7e769fd4a4600cae71049f7c931ef31e4921e"
+    "component_sha256": "ce458cb097342a434521cbd36625c49651358a0152b53d6f836a006c635a445d"
 }

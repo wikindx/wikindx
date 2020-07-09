@@ -94,7 +94,6 @@ class CLOSE
         GLOBALS::addTplVar('displayHeader', $displayHeader);
 
         // Check if this parameter exists because throws an error at install stage
-        // TODO (lkppo): loading process could be changed to load configuration separately of AUTHORIZE class
         $title = \HTML\nlToHtml(defined('WIKINDX_TITLE') ? WIKINDX_TITLE : WIKINDX_TITLE_DEFAULT);
 
         GLOBALS::addTplVar('title', \HTML\stripHtml($title)); // Admins can add HTML formatting in the configure interface.

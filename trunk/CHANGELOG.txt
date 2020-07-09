@@ -1,7 +1,7 @@
 RELEASES:
 
-vX.Y.Z
-Focus: ???.
+v6.3.4
+Focus: Quick bug fix.
 
 BUG FIXES:
 1. Fix for PHP < 7.2.

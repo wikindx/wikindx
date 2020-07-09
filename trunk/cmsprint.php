@@ -26,7 +26,7 @@ function preserve_qs()
     return '&' . $_SERVER['QUERY_STRING'];
 }
 
-// This code had moved to core/modules/sitemap/SITEMAP.php
+// This code had moved to core/modules/cms/CMS.php
 // to use the current module loading scheme.
 // Keep this page only to not break external links (20180802)
 // HTTP/1.0 301 Moved Permanently

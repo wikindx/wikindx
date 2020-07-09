@@ -213,7 +213,7 @@ class AUTHORIZE
         if (WIKINDX_RESTRICT_USERID != WIKINDX_RESTRICT_USERID_DEFAULT) {
             $pString .= \HTML\p("For test drive purposes, " .
                 \HTML\strong($messages->text("user", "username") . ":&nbsp;&nbsp;") . "wikindx, " .
-                \HTML\strong($messages->text("user", "password") . ":&nbsp;&nbsp;") . "wikindx");
+                \HTML\strong($messages->text("user", "password") . ":&nbsp;&nbsp;") . "Wikindx");
         }
         $forgot = WIKINDX_MAIL_USE ? \HTML\a("link", $messages->text("user", "forget6"), $link2) : FALSE;
         $pString .= $this->printLogonTable();

@@ -216,6 +216,7 @@ class FILETOTEXT
 
                 return $importPDF->Text;
             }
+            $text = FALSE;
         }
         if ($text) {
             $this->readFiles[$this->fileName] = $text;

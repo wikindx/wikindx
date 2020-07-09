@@ -15,7 +15,6 @@
       </source>
       <!--Optional:-->
       <ignore hidden="true" symlinks="true">
-		<path>.php_cs.cache</path>
 		<path>cache</path>
 		<path>cmsprint.php</path>
 		<path>components</path>
@@ -37,8 +36,6 @@
 		<path>make-languages.php</path>
 		<path>make-md-docs.php</path>
 		<path>phpdoc.xml</path>
-		<path>php-fmt-dev.php</path>
-		<path>rss.php</path>
 		<path>sign-components.php</path>
       </ignore>
       <!--Optional:-->

@@ -16,7 +16,7 @@
  * its adminuser custom configuration.
  *
  * This have to be included at the top of each independant script
- * (index.php, rss.php, plugins, dialogs, etc).
+ * (index.php, plugins, dialogs, etc).
  *
  * We intend to provide correct default values for anything
  * that is not very interesting for the end user.

@@ -12,7 +12,7 @@ class wordprocessor_CONFIG
     /** array */
     public $menus = ['plugin1'];
     /** int */
-    public $authorize = 2;
+    public $authorize = 1;
     /** float */
     public $wikindxVersion = 8;
 }

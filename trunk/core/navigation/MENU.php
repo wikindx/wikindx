@@ -738,7 +738,7 @@ class MENU
             if (($class->authorize == 2) && !$this->superAdmin) {
                 continue; // don't write to menu
             }
-            if (($class->authorize == 1) && (!$this->superAdmin || !$this->write)) {
+            if (($class->authorize == 1) && !$this->write) {
                 continue; // don't write to menu
             }
             // Check we have valid menu plugins, if so, insert into menu

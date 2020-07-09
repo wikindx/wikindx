@@ -4,10 +4,8 @@ author:
  - Stéphane Aulery, <lkppo@users.sourceforge.net>
  - Mark Grimshaw-Aagaard, <sirfragalot@users.sourceforge.net>
  - The WIKINDX Team
-date: 2020-02-10
+date: 2020-07-09
 lang: en
-stylesheet: default.css
-css: templates/default.css
 ---
 
 # Preamble (Mark Grimshaw-Aagaard)
@@ -104,7 +102,8 @@ of Wikindx.
 
 Wikindx         [PHP]             [MySQL]  [MariaDB]
 --------------- ----------------- -------- ---------
-6.1.0 and later >= 7.0 and <= 7.4 >= 5.7.5 >= 10.2
+Later           >= 7.2 and <= 7.4 >= 5.7.5 >= 10.2
+6.1.0 to 6.3.3  >= 7.0 and <= 7.4 >= 5.7.5 >= 10.2
 5.7.2 to 6.0.8  >= 5.6 and <= 7.3 >= 5.7.5 >= 10.2
 5.7.0 to 5.7.1  >= 5.6 and <= 7.2 >= 5.7.5 >= 10.2
 5.3.1 to 5.3.2  >= 5.5 and <= 7.1 >= 5.7.5 >= 10.2

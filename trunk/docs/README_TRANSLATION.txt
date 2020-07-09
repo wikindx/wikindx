@@ -1,14 +1,12 @@
 ---
-title : WIKINDX's Translation Guide (DRAFT)
+title : WIKINDX's Translation Guide
 subtitle: Internationalisation (i18n) and Localisation (l10n)
 author:
  - Stéphane Aulery, <lkppo@users.sourceforge.net>
  - Mark Grimshaw-Aagaard, <sirfragalot@users.sourceforge.net>
  - The WIKINDX Team
 lang: en
-date: 2020-02-26
-stylesheet: default.css
-css: templates/default.css
+date: 2020-07-09
 ---
 
 # Introduction
@@ -109,13 +107,9 @@ The latest version of the translations is online on [Transifex], a
 translation project management system. Before your first contribution,
 register for free on this portal.
 
-![WIKINDX Project on Transifex](./img/transifex/dashboard.png)
-
 Then go to the [languages section][TransifexLanguages] of the WIKINDX
 project.  Choose the language of translation, for example, [French
 (fr)][TransifexFr].
-
-![Languages page on Transifex](./img/transifex/languages.png)
 
 The code in parenthesis is called a locale. It denotes a language (ll)
 (without national preference) or a language and a country (ll_CC) or a
@@ -136,8 +130,6 @@ core. The other files are the plugin translations (one file per plugin).
 Translate __wikindx.pot__ first, because it benefits the largest number
 of users.
 
-![Domains/Resources of a language on Transifex](./img/transifex/domains.png)
-
 Click on a catalog, a popup opens. You can see the number of messages to
 translate, to review, or that are already translated.
 
@@ -153,8 +145,6 @@ messages uploaded by other users are overwritten. For the same reason,
 when working with others, it is not a good idea to keep a file outside
 of Transifex for a long time (several days or weeks).
 
-![Domains of a language on Transifex](./img/transifex/file_dialog.png)
-
 Click on the __Translate__ button. Now, you are in the translation
 screen.
 
@@ -168,8 +158,6 @@ to specify the context.
 
 __On the right__ there are translation suggestion tools, a translation
 history and so on.
-
-![Translation interface on Transifex](./img/transifex/translation.png)
 
 Translate the strings one by one. You can also mark them when you have
 proofread them. As long as a message is not translated, its English

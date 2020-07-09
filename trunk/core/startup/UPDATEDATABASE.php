@@ -1533,10 +1533,6 @@ END;
                    'public $WIKINDX_DB_PASSWORD = "' . $tmpconfig->WIKINDX_DB_PASSWORD . '";' . "\n";
         $string .= '// If using WIKINDX on a shared database, set the WIKINDX table prefix here (lowercase only)' . "\n" .
                    '// (do not change after running WIKINDX and creating the tables!).' . "\n" .
-                   '// This option is deprecated since version 5.9.1 and will be removed in the next release.' . "\n" .
-                   '// People who have changed the prefix should rename the tables with the default prefix (wkx_)' . "\n" .
-                   '// and correct their configuration. It will no longer be possible to install two WIKINDXs' . "\n" .
-                   '// in the same database. If you are in this rare case contact us.' . "\n" .
                    'public $WIKINDX_DB_TABLEPREFIX = "' . $tmpconfig->WIKINDX_DB_TABLEPREFIX . '";' . "\n";
         $string .= '// WIKINDX uses MySQL persistent connections by default.' . "\n" .
                    '// Some hosting services are not configured for this: if you have problems' . "\n" .

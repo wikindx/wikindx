@@ -49,10 +49,6 @@ public $WIKINDX_DB_USER = "wikindx";
 public $WIKINDX_DB_PASSWORD = "wikindx";
 // If using WIKINDX on a shared database, set the WIKINDX table prefix here (lowercase only)
 // (do NOT change after running WIKINDX and creating the tables!).
-// This option is deprecated since version 5.9.1 and will be removed in the next release.
-// People who have changed the prefix should rename the tables with the default prefix (wkx_)
-// and correct their configuration. It will no longer be possible to install two WIKINDXs
-// in the same database. If you are in this rare case contact us.
 public $WIKINDX_DB_TABLEPREFIX = "wkx_";
 // WIKINDX uses MySQL persistent connections by default.
 // Some hosting services are not configured for this: if you have problems 

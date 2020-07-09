@@ -151,20 +151,6 @@ function loadStaticConfig()
     }
     // Use always a lowercase prefix to prevent problem with case sensitive database
     $config->WIKINDX_DB_TABLEPREFIX = mb_strtolower($config->WIKINDX_DB_TABLEPREFIX);
-    
-    // This option is deprecated from version 5.9.1
-    if ($config->WIKINDX_DB_TABLEPREFIX != WIKINDX_DB_TABLEPREFIX_DEFAULT) {
-        if (defined('WIKINDX_DEBUG_ERRORS') && WIKINDX_DEBUG_ERRORS) {
-            trigger_error(
-                "{$WIKINDX_DB_TABLEPREFIX} configuration option is deprecated since version 5.9.1
-    			and will be removed in the next release. People who have changed the prefix should
-    			rename the tables with the default prefix (" . WIKINDX_DB_TABLEPREFIX_DEFAULT . ")
-    			and correct their configuration. It will no longer be possible to install two WIKINDXs
-    			in the same database. If you are in this rare case contact us.",
-                E_USER_DEPRECATED
-            );
-        }
-    }
 
     // Set database persistent mode
     if (!property_exists($config, 'WIKINDX_DB_PERSISTENT')) {

@@ -34,7 +34,6 @@
 		<path>dump-repairkit-schema.php</path>
 		<path>index.php</path>
 		<path>make-languages.php</path>
-		<path>make-md-docs.php</path>
 		<path>phpdoc.xml</path>
 		<path>sign-components.php</path>
       </ignore>

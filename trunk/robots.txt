@@ -13,9 +13,7 @@ Disallow: /config.php
 Disallow: /config.php.dist
 Disallow: /dump-repairkit-schema.php
 Disallow: /make-languages.php
-Disallow: /make-md-docs.php
 Disallow: /phpdoc.xml
-Disallow: /php-fmt-dev.php
 Disallow: /README.txt
 Disallow: /sign-components.php
 # Sitemap

@@ -14,8 +14,8 @@
 * @version 1
 *
 * @author The WIKINDX Team
-* @copyright 2019 Mark Grimshaw-Aagaard <sirfragalot@users.sourceforge.net>
-* @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
+* @copyright 2019 Stéphane Aulery <lkppo@users.sourceforge.net>
+* @license https://www.isc.org/licenses/ ISC License
 */
 
 // Config the JSON MIME/Type

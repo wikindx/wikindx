@@ -16,17 +16,17 @@ parameter is empty or missing, the 'about' page is displayed.
 The flexbox CSS box model is used to always display the footer at the bottom,
 build the horizontal menu and resize the screenshots without JavaScript.
 
-The minimum PHP version required is 5.3.0.
+The minimum PHP version required is 7.0.
 
 The minimal browser versions are indicated on caniuse.com website [2].
 
-This little website CMS is licensed under the terms of CeCILL-C license [1].
+This little website CMS is licensed under the terms of ISC License [1].
 
-                                               -- 2017.09.15, S. Aulery
+                                               -- 2020.07.10, S. Aulery
 
 -----------------------------------------------------------------------
 
-[1] https://cecill.info/licences/Licence_CeCILL-C_V1-en.html
+[1] https://cvsweb.openbsd.org/src/share/misc/license.template?rev=HEAD
 [2] https://caniuse.com/#feat=flexbox
 
 -----------------------------------------------------------------------

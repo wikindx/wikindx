@@ -52,10 +52,23 @@ or multi-user collaborative use across the internet.</p>
 
 <p>Thanks to <a class="link" href="http://www.sourceforge.net" target="_blank" title="">Sourceforge</a> for hosting the project.</p>
 
-<p>This program is free software; you can redistribute it and/or modify it under the terms of the Creative Commons Attribution-Non Commercial-ShareAlike 4.0 License.</p>
+<p>This program is free software; you can redistribute it and/or modify it under the terms of the <a href="https://www.isc.org/licenses/">ISC License</a>.</p>
 
-<p>If you do redistribute or modify the program, you must retain the copyright information and WIKINDX contact details as found in each file.</p>
+<pre>
+ISC License
 
-<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the <a class="link" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="">Creative Commons Attribution-Non Commercial-ShareAlike 4.0 License</a> for more details.</p>
+Copyright (c) 2003-2020, WIKINDX Team
 
-<p>The WIKINDX Team ~ Copyright (C) 2020</p>
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+</pre>
+

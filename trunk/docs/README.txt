@@ -92,7 +92,7 @@ Each official extension is released with a new version of the
 application and only for the last version.
 
 For reasons of immaturity of the system of components it is recommended
-to contribute to the official developpement team so that the components
+to contribute to the official development team so that the components
 are always compatible with the latest version. If you create your own
 components it is not guaranteed that they will work on a later version
 of Wikindx.

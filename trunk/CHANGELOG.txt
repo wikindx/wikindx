@@ -7,6 +7,7 @@ Focus: Minor bug fixes.
 BUG FIXES:
 1. For the wikindx testdrive, update the password of user 'wikindx'.
 2. Ensure menu plugins display in the menu system where $authorize in the plugin's config.php is set to 1.
+3. Fix an SQL error for non-admin registered users using QUICKSEARCH and alphabetical listing.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

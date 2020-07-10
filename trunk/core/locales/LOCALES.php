@@ -604,7 +604,7 @@ namespace LOCALES
             "eu_FR" => "Euskara (Frantzia)",
             "fa_IR" => "فارسی (ایران)",
             "ff_SN" => "Pulaar (Senegaal)",
-            "fi_FI" => "Suomi (Suomi)",
+            "fi_FI" => "Finnish (Finland)",
             "fil_PH" => "Filipino (Pilipinas)",
             "fo_FO" => "Føroyskt (Føroyar)",
             "fr_BE" => "Français (Belgique)",

@@ -1,12 +1,12 @@
 {
     "component_type": "plugin",
     "component_id": "importexportbib",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Bibliography Import/Export",
     "component_description": "Import and export bibliographies in various formats (Bibtex, EndNote, HTML, PubMed, RIS, RTF).",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Brian Cade",
@@ -29,5 +29,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "f9e90e3d6429569e3a1ee9aa70dcb8ab19e1c20e31cf133a0c717d395dacbb85"
+    "component_sha256": "c6a50b931e98a1bb13dda78a210ce867177bf24f7250e94da7063c16819d1950"
 }

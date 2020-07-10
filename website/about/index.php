@@ -52,12 +52,12 @@ or multi-user collaborative use across the internet.</p>
 
 <p>Thanks to <a class="link" href="http://www.sourceforge.net" target="_blank" title="">Sourceforge</a> for hosting the project.</p>
 
-<p>This program is free software; you can redistribute it and/or modify it under the terms of the <a href="https://www.isc.org/licenses/">ISC License</a>.</p>
+<p>This program is Free Software distributed under the terms of the <a href="https://www.isc.org/licenses/">ISC License</a>.</p>
 
 <pre>
 ISC License
 
-Copyright (c) 2003-2020, WIKINDX Team
+Copyright (c) 2003-<?php echo date("Y"); ?>, WIKINDX Team
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above

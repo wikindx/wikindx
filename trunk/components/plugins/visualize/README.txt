@@ -20,6 +20,8 @@ Thus, plugins/visualize/index.php etc.
 
 CHANGELOG:
 
+2020-07-11 : CHG : relicencing under ISC License terms.
+
 v1.5, 2020
 1. Wikindx compatibility version 7.
 
@@ -35,6 +37,3 @@ v1.2 ~ October 2019
 
 v1.1 ~ October 2019
 1.  Initial release
-
---
-Mark Grimshaw-Aagaard 2019.

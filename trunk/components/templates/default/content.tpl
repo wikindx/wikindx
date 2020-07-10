@@ -2,7 +2,7 @@
  * WIKINDX : Bibliographic Management system.
  * @link https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
  * @author The WIKINDX Team
- * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
+ * @license https://www.isc.org/licenses/ ISC License
  *}
 
 <!-- begin content template -->
@@ -10,7 +10,7 @@
  * WIKINDX : Bibliographic Management system.
  * @link https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
  * @author The WIKINDX Team
- * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
+ * @license https://www.isc.org/licenses/ ISC License
  *}
 
 {* Don't edit these assign settings *}

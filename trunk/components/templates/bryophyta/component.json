@@ -1,12 +1,12 @@
 {
     "component_type": "template",
     "component_id": "bryophyta",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Bryophyta",
     "component_description": "A green basic theme that talks about mosses (horizontal menu)",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "55fd49232925a6a59a824d5ecdeefb43ebcb998f5d29908be434a9f8c2e115a4"
+    "component_sha256": "cae0c67a0d9950e16b93d9c11e4f0ffc675cfc63b6c488ffb082d62386eed57a"
 }

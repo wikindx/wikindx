@@ -1,12 +1,12 @@
 {
     "component_type": "template",
     "component_id": "carambola",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Carambola",
     "component_description": "A colorful theme (horizontal menu)",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Rui Alão",
@@ -29,5 +29,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "2e2589175b18cc65a54d5aa71e9ff177ae1db389cc1d9e548fc98b6323255ea3"
+    "component_sha256": "5b566dec2512f5c523e96ac9da9ccc3f6506b7a4c3c14a5990346ef73bc0f129"
 }

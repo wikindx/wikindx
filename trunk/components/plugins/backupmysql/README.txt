@@ -41,6 +41,8 @@ http://www.phpclasses.org/package/2779-PHP-Backup-MySQL-databases-to-files-with-
 
 CHANGELOG:
 
+2020-07-11 : CHG : relicencing under ISC License terms.
+
 v1.9, 2020
 1. Stored databases can now be renamed.
 2. Wikindx compatibility version 8.
@@ -70,6 +72,3 @@ v1.2
 
 v1.1 ~ 14th April 2013
 1. Initial release
-
---
-Mark Grimshaw-Aagaard 2013-2018.

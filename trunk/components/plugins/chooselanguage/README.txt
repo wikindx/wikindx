@@ -22,6 +22,8 @@ Thus, plugins/chooselanguage/index.php etc.
 
 CHANGELOG:
 
+2020-07-11 : CHG : relicencing under ISC License terms.
+
 
 v1.7, 2020
 1. Fix a letter case issue stopping the plugin working on some systems.
@@ -48,6 +50,3 @@ v1.1
 
 v1.0, 2015
 1. Initial release.
-
---
-Mark Grimshaw-Aagaard 2015.

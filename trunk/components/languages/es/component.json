@@ -1,12 +1,12 @@
 {
     "component_type": "language",
     "component_id": "es",
-    "component_version": "179",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Spanish",
     "component_description": "Traducción al español",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Anonymous",
@@ -14,5 +14,5 @@
             "author_copyright": "2017"
         }
     ],
-    "component_sha256": "69ae7ced1164155d7959023882db6027a711e70e3c4b5a35e89196ac36acf462"
+    "component_sha256": "5d284912a91229a9809d6efbe781d7a03687b91d8ad515d5d5388604c48e882e"
 }

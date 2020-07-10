@@ -1,12 +1,12 @@
 {
     "component_type": "plugin",
     "component_id": "soundexplorer",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Sound Explorer",
     "component_description": "Experimental plugin that plays sounds at certain Wikindx events.",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "91af9697c7c79237b3953b10d7be6fd415f8ec44cda3974ef8c1f0a323b6b660"
+    "component_sha256": "1ef4e7b2b55208a208184ce23005287ce97b52f82c4bbe1bd1f8e8ccff8e7984"
 }

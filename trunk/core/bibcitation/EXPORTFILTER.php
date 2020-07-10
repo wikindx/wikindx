@@ -7,7 +7,7 @@
  * @author The WIKINDX Team
  * @copyright Andrea Rossato
  * @copyright Mark Grimshaw-Aagaard <sirfragalot@users.sourceforge.net>
- * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
+ * @license https://www.isc.org/licenses/ ISC License
  */
 
 /**

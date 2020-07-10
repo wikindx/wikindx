@@ -1,12 +1,12 @@
 {
     "component_type": "style",
     "component_id": "ieee",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "IEEE",
     "component_description": "Institute of Electrical and Electronics Engineers (IEEE), a widely accepted format for writing research papers, commonly used in technical fields, particularly in computer science.",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_website": "https://en.wikipedia.org/wiki/IEEE_style",
     "component_authors": [
         {
@@ -22,5 +22,5 @@
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         }
     ],
-    "component_sha256": "d7d14a58968d360a711d8ecef835fd6049b3b876d199eee870a25798a241832d"
+    "component_sha256": "de1d9887440f0b32bbd4ba5f89fa3cff0c81ca184a12df722d1ff4f90c5929b7"
 }

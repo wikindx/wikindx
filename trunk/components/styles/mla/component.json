@@ -1,12 +1,12 @@
 {
     "component_type": "style",
     "component_id": "mla",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "MLA",
     "component_description": "Modern Language Association (MLA). MLA is most often applied by the arts and humanities, particularly in the USA. It is arguably the most well used of all of the citation styles.",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_website": "https://style.mla.org/",
     "component_authors": [
         {
@@ -17,5 +17,5 @@
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         }
     ],
-    "component_sha256": "b8ec66cf32e6ba65c40e19b90fcce1f780ba6a331781b0c587faff1371230b41"
+    "component_sha256": "ffa016801161d8a081eaa209ff7777f7ee635cb83b3a3461019680118c6be07f"
 }

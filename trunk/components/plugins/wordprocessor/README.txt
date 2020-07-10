@@ -24,6 +24,8 @@ Papers can be imported from earlier versions by using the 'Import paper' functio
 
 CHANGELOG:
 
+2020-07-11 : CHG : relicencing under ISC License terms.
+
 v1.12, 2020
 1. Minor debugging for paper saving and exporting.
 
@@ -61,6 +63,3 @@ v1.3
 
 v1.2
 1. Added a check on startup for deleted wikindx users -- if found, delete entries from db table and papers/ folder.
-
---
-Mark Grimshaw-Aagaard 2017-2019.

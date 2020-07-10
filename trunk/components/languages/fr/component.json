@@ -1,12 +1,12 @@
 {
     "component_type": "language",
     "component_id": "fr",
-    "component_version": "179",
+    "component_version": "181",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "French",
     "component_description": "Traduction française",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Simon Côté-Lapointe",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "2152b0fac32c6851d22a84bfbcbf85433bce93428fa08fa898aa5d4160301b8e"
+    "component_sha256": "ddf4fbd99d8db5fc95e059c3e97a1924524fdf9848fa07623bb0616229bb0b2d"
 }

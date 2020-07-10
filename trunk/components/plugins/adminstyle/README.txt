@@ -17,6 +17,8 @@ Thus, plugins/adminstyle/index.php etc.
 
 CHANGELOG:
 
+2020-07-11 : CHG : relicencing under ISC License terms.
+
 v1.13, 2020
 1. Wikindx compatibility version 7.
 
@@ -70,6 +72,3 @@ v1.1
 
 v1.0
 1. Initial release.
-
---
-Mark Grimshaw-Aagaard 2019.

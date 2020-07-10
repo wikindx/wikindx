@@ -1,12 +1,12 @@
 {
     "component_type": "template",
     "component_id": "verticalorange",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Vertical Orange",
     "component_description": "An orange basic theme (vertical menu)",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "c56b50c92e95d99e54db4ace4669f8e5c822bf91c9481187b10c0befb8b2bf00"
+    "component_sha256": "df7b0b5f80e9a8515535bb6802b0be3b22d605038d0db7498a95631ffec77d12"
 }

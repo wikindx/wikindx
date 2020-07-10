@@ -1,12 +1,12 @@
 {
     "component_type": "plugin",
     "component_id": "userwritecategory",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Categories Administration for Users",
     "component_description": "User administration of categories.",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "c809c122f4f1540cfeb4d8b62d2f45953ed126411d1b81f55afc27a0b69eb0e3"
+    "component_sha256": "b6a4fb67c34fc66b0a316d43461cead4e3cea8132a7bcee6c192b4d2b0fc74c1"
 }

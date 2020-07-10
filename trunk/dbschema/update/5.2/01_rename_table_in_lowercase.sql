@@ -2,7 +2,7 @@
 -- WIKINDX : Bibliographic Management system.
 -- @link https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
 -- @author The WIKINDX Team
--- @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
+-- @license https://www.isc.org/licenses/ ISC License
 -- 
 -- Change the name of all tables to lower case (workaround for mySQL engine on case sensitive files systems)
 -- Be careful to keep the quotes as they are for the renaming to work : no quotes for the initial name, with quotes for the target name

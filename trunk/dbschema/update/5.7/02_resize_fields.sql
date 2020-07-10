@@ -2,7 +2,7 @@
 -- WIKINDX : Bibliographic Management system.
 -- @link https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
 -- @author The WIKINDX Team
--- @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
+-- @license https://www.isc.org/licenses/ ISC License
 -- 
 -- Resize all CHAR,` varchar, and` text fields to handle` text encoded with utf8mb4
 -- New size = old size x 4

@@ -2,7 +2,7 @@
 -- WIKINDX : Bibliographic Management system.
 -- @link https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
 -- @author The WIKINDX Team
--- @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
+-- @license https://www.isc.org/licenses/ ISC License
 -- 
 -- The old method of creation (XML schema) doesn't support ON UPDATE clause
 -- This script fixes db that have been create after 5.2.2

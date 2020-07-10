@@ -1,12 +1,12 @@
 {
     "component_type": "plugin",
     "component_id": "importamazon",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Amazon Products Import",
     "component_description": "Import a resource from Amazon using Amazon's web services (imports only books). You must have a personal Amazon developer account to query the web service.",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_website": "https://docs.aws.amazon.com/AWSECommerceService/latest/DG/CHAP_OperationListAlphabetical.html",
     "component_authors": [
         {
@@ -24,5 +24,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "04716977ff87a1f0bbce07f2fc3b344cc10de354d2f8b66fd2eaf503d9536a30"
+    "component_sha256": "993d30642abfc192c014c87aab8c2b1592441fe4d6a09511cee6dede5d4e9b87"
 }

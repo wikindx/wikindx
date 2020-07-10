@@ -5,7 +5,7 @@
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
  *
  * @author The WIKINDX Team
- * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
+ * @license https://www.isc.org/licenses/ ISC License
  */
 
 /**
@@ -64,7 +64,7 @@ class CLOSE
             $bib = $this->messages->text("user", "masterBib");
         }
 
-        $footer['wikindxVersion'] = WIKINDX_PUBLIC_VERSION . "&nbsp;&copy;" . WIKINDX_COPYRIGHT_YEAR;
+        $footer['wikindxVersion'] = WIKINDX_PUBLIC_VERSION;
         $footer['numResources'] = $this->messages->text("footer", "resources") . "&nbsp;" . $numberOfResources;
         $footer['username'] = $this->messages->text("user", "username") . ":&nbsp;" . $usersUsername;
         $footer['bibliography'] = $this->messages->text("footer", "bib") . "&nbsp;" . $bib;

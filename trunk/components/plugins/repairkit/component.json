@@ -1,12 +1,12 @@
 {
     "component_type": "plugin",
     "component_id": "repairkit",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Repair Kit",
     "component_description": "Attempt to fix to a number of errors that can occur over time in the database. For developers, testers, or difficult situations when a db schema is corrupted.",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "5058643cc8a8d6c8760f1a45f241dff32026d72af8d8d7801ff01cc7d324d05a"
+    "component_sha256": "93c7ace9e437a87936fd4747080fd7aaae05558ffe011afc3aaff85be2ff40b9"
 }

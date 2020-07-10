@@ -1,12 +1,12 @@
 {
     "component_type": "plugin",
     "component_id": "localedescription",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Localized Front Page",
     "component_description": "Customize the description on the home page in various languages.",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "8ec33a64ce599f57fe06960f96950610831a9b4de0505c0ad4956d435c584729"
+    "component_sha256": "2f51b20b0904cfa9e6b98d909fe7c75cc442b914eb734637642109dde8c78fb5"
 }

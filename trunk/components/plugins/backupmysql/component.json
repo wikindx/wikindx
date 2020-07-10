@@ -1,12 +1,12 @@
 {
     "component_type": "plugin",
     "component_id": "backupmysql",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "MySQL Backup",
     "component_description": "MySQL backup database tools. This tool is limited by the maximum execution time of a web page of your hosting service. It can not replace an appropriate backup tool for large databases like mysqldump. This plugin can be a security vulnerability for a public site. Use with caution.",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "d9226a690a588b930c66fa3f0df1e6266afc47d3060decef3ee163a39c716374"
+    "component_sha256": "40e41cfa19a00fb6fc2dd98136cc8c44b74e8aba98fe93f4ef0bc7942b8f8c95"
 }

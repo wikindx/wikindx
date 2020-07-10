@@ -1,12 +1,12 @@
 {
     "component_type": "plugin",
     "component_id": "visualize",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Visualize",
     "component_description": "Create various graphical visualizations from WIKINDX data with the JpGraph PHP library.",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "06645b9ff03eca4f3f60f730e1e3dfb468757604a63ffde5c2870aae0db8c697"
+    "component_sha256": "9366e9d73744c389a39f45efb13f15791e3a90d8f9e4ad86201e827a9f95592a"
 }

@@ -25,6 +25,8 @@ You will need to download and install the appropriate binaries from the bibutils
 ************************************************************************
 CHANGELOG:
 
+2020-07-11 : CHG : relicencing under ISC License terms.
+
 v1.17, 2020
 1. Add possibility to quarantine resources on import.
 
@@ -86,8 +88,6 @@ Bug fixes to permissions
 v1.0, 2016
 Initial release.
 
---
-Mark Grimshaw-Aagaard 2016
 
 ***********************************
 ***********************************

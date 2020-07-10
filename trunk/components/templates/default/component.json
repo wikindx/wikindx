@@ -1,12 +1,12 @@
 {
     "component_type": "template",
     "component_id": "default",
-    "component_version": "176",
+    "component_version": "181",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "Default",
     "component_description": "Wikindx default theme (installed by default, horizontal menu)",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "a42ad8038a95d11bf87389bd4bb27598a9ead324a3f7b0c8b71a08091f4dc72b"
+    "component_sha256": "407a1fc800cfec3fa60cedaf1fc3ca5c9909223c170cf8118d5c2bafbefea497"
 }

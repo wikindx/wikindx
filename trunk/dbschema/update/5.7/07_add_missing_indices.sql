@@ -2,7 +2,7 @@
 -- WIKINDX : Bibliographic Management system.
 -- @link https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
 -- @author The WIKINDX Team
--- @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
+-- @license https://www.isc.org/licenses/ ISC License
 -- 
 -- Add missing indices and correct some indices (varchar indices needing a prefix to ensure the index is not oversize).
 -- Indices that ahve their prefix changed are dropped in UPDATEDATABASE:correctIndices()

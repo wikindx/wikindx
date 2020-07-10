@@ -1,12 +1,12 @@
 {
     "component_type": "template",
     "component_id": "enluminure",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Enluminure",
     "component_description": "A theme around the medieval manuscript Liber Floridus (vertical menu)",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "22e4c413bf25c04c46a99a5ce00b48aef43b5b613b21e05d965ad96b6ae027d7"
+    "component_sha256": "3fef11f7aca03ae1535df9a92ba94d0fdd3651ec56797155812e8e1f1b37f552"
 }

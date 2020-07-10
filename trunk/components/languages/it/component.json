@@ -1,12 +1,12 @@
 {
     "component_type": "language",
     "component_id": "it",
-    "component_version": "179",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Italian",
     "component_description": "Traduzione italiana",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Fabrizio Tallarita",
@@ -14,5 +14,5 @@
             "author_copyright": "2017"
         }
     ],
-    "component_sha256": "34380494b0a1c7222f714cc5c4633242776a0b539a5c1880e27d184045a0d56e"
+    "component_sha256": "0820d5dab3233149bed84ebd60bcba00e1c88f28fb577efd728e7ee8f6ded081"
 }

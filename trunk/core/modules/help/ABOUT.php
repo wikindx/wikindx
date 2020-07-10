@@ -5,7 +5,7 @@
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
  *
  * @author The WIKINDX Team
- * @license https://creativecommons.org/licenses/by-nc-sa/4.0/ CC-BY-NC-SA 4.0
+ * @license https://www.isc.org/licenses/ ISC License
  */
 
 /**
@@ -32,10 +32,10 @@ class ABOUT
             "_blank"
         );
         $linkSf = \HTML\a("link", "Sourceforge", "https://sourceforge.net", "_blank");
-        $gnuLink = \HTML\a(
+        $licenseLink = \HTML\a(
             "link",
-            "Creative Commons Attribution-Non Commercial-ShareAlike 4.0 License",
-            "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+            "ISC License",
+            "https://www.isc.org/licenses/",
             "_blank"
         );
         $tinyMceLink = \HTML\a("link", "TinyMCE", "https://www.tiny.cloud", "_blank");
@@ -75,14 +75,8 @@ class ABOUT
         $pString .= \HTML\p("All updates, bug reports, forums, news etc. can be found at the $linkSfWikindx");
         $pString .= \HTML\p("Thanks to $linkSf for hosting the project.");
         $pString .= \HTML\hr();
-        $pString .= \HTML\p("This program is free software; you can redistribute it and/or modify it
-			under the terms of the Creative Commons Attribution-Non Commercial-ShareAlike 2.0 License.");
-        $pString .= \HTML\p("If you do redistribute or modify the program, you must retain the copyright
-		information and WIKINDX contact details as found in each file.");
-        $pString .= \HTML\p("This program is distributed in the hope that it will be useful, but WITHOUT
-		ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-		See the $gnuLink for more details.");
-        $pString .= \HTML\p("The WIKINDX Team ~ Copyright (C) " . WIKINDX_COPYRIGHT_YEAR, FALSE, 'right');
+        $pString .= \HTML\p("This program is Free Software distributed under the terms of the $licenseLink.");
+        $pString .= \HTML\p("Copyright &copy; 2003-" . date("Y") . " WIKINDX Team.");
         GLOBALS::addTplVar('content', $pString);
     }
 }

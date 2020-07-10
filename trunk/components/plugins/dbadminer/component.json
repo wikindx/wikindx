@@ -1,12 +1,12 @@
 {
     "component_type": "plugin",
     "component_id": "dbadminer",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "DB Adminer",
     "component_description": "Embedded version of the database manager Adminer, with a selection of tested plugins. This plugin can be a security vulnerability for a public site. Use with caution.",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_website": "https://www.adminer.org/",
     "component_authors": [
         {
@@ -24,5 +24,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "ba320023a446cfd00c7c4cf08289c24975ba02ccc055094d9d1b254b9ac28493"
+    "component_sha256": "9adbbc7a45a7771eeb876842b98d85d52164782a5243177761fbdf8cbe59be7f"
 }

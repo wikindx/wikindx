@@ -1,12 +1,12 @@
 {
     "component_type": "plugin",
     "component_id": "debugtools",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Debug Tools",
     "component_description": "Some tools for debugging Wikindx. For developers, testers, or difficult situations when a bug arises.",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "4fdca2b4a7fab0971a1ac4bc51bb23965c13df97649af87bb4409004680cb2ae"
+    "component_sha256": "0effeb126dbf5218137b91dc3d2d941012ccaf27cf3bcad57f06869bb85ee8c8"
 }

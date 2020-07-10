@@ -1,12 +1,12 @@
 {
     "component_type": "template",
     "component_id": "simpleblue",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Simple Blue",
     "component_description": "A blue basic theme (horizontal menu)",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC License",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "0d276b5851ecad60cb68043406ac9bc67d0f13b0889148cf1623ead17fe63d49"
+    "component_sha256": "f914ac6b96e858b06d1bcec56ad2df9d82b9da62a465908fd3e1d307e7ab100f"
 }

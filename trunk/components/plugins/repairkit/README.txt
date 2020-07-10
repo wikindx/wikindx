@@ -47,6 +47,8 @@ BUGS AND LIMITATIONS
 
 CHANGELOG:
 
+2020-07-11 : CHG : relicencing under ISC License terms.
+
 v1.8.5, 2020
 1. Wikindx compatibility version 7.
 
@@ -97,6 +99,3 @@ v1.2
 
 v1.1
 1. Initial release
-
---
-Mark Grimshaw-Aagaard 2019.

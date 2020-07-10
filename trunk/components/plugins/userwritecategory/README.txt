@@ -17,6 +17,8 @@ Thus, plugins/userwritecategory/index.php etc.
 
 CHANGELOG:
 
+2020-07-11 : CHG : relicencing under ISC License terms.
+
 v1.9, 2020
 1. Add documentation.
 
@@ -44,6 +46,3 @@ v1.2
 
 v1.1
 1. Added $this->authorize to control display of menu item for users with at least write access.
-
---
-Mark Grimshaw-Aagaard 2019.

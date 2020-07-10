@@ -15,6 +15,8 @@ Thus, plugins/debugtools/index.php etc.
 
 CHANGELOG:
 
+2020-07-11 : CHG : relicencing under ISC License terms.
+
 v1.4, 2020
 1. Fix an error printing arrays.
 
@@ -29,6 +31,3 @@ v1.1, 2020
 
 v1.0, 2019
 1. Initial release.
-
---
-Stéphane Aulery 2019.

@@ -29,6 +29,8 @@ http://wolfgang.plaschg.net/bibwiki/
 
 CHANGELOG:
 
+2020-07-11 : CHG : relicencing under ISC License terms.
+
 v1.12, 2020
 1. Wikindx compatibility version 7.
 
@@ -67,6 +69,3 @@ v1.2 ~ 24th February 2012
 
 v1.1 ~ 4th November 2009
 1. As per Amazon.com requirements, the module now requires and uses both sets of keys from Amazon Web Services.
-
---
-Mark Grimshaw-Aagaard 2017.

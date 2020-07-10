@@ -19,6 +19,7 @@ Adminer website: https://www.adminer.org/
 
 CHANGELOG:
 
+2020-07-11 : CHG : relicencing under ISC License terms.
 2020-06-24 : SEC : prevent direct access to subparts of adminer. Only the index.php
                    and adminer.php scripts can be called and it includes others.
 
@@ -45,6 +46,3 @@ v1.1, 2019
 
 v1.0, 2019
 1. Initial release.
-
---
-Stéphane Aulery 2019

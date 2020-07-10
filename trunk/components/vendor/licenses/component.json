@@ -1,12 +1,12 @@
 {
     "component_type": "vendor",
     "component_id": "licenses",
-    "component_version": "175",
+    "component_version": "181",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Licenses texts",
     "component_description": "This package contains a copy of each license used by Wikindx or third-party software on which it depends.",
-    "component_licence": "CC-BY-NC-SA 4.0",
+    "component_licence": "ISC",
     "component_website": "https://wikindx.sourceforge.io/",
     "component_authors": [
         {
@@ -24,5 +24,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "58ec91ad95278528e4dec3ae4c3fb4804ec17a33f43e5d2f3f158be331cda909"
+    "component_sha256": "df7db68e906f9cbb9f75ead03eb568c67e5a68284c5edda7738e5f43390ce447"
 }

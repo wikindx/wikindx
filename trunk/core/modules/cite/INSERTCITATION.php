@@ -37,8 +37,6 @@ class INSERTCITATION
     private $badInput;
     /** object */
     private $parsePhrase;
-    /** array */
-    private $input;
     /** bool */
     private $reprocess = FALSE;
     
@@ -84,55 +82,22 @@ class INSERTCITATION
         }
         $pString = $error ? $error : '';
         $pString .= \HTML\h($this->messages->text("heading", "addCitation"), FALSE, 3);
-        $word = $this->session->issetVar("setup_CiteWord") ? $this->session->getVar("setup_CiteWord") : FALSE;
         if (!array_key_exists('method', $this->vars)) {
-            $pString .= $this->search->init(FALSE, FALSE, TRUE, $word);
-        } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process')) {
-            $this->session->setVar("setup_BackupWord", $this->session->getVar("search_Word"));
-            $this->input = $this->checkInput();
-            $this->session->setVar("list_BackupAllIds", $this->session->getVar("list_AllIds"));
+            $pString .= $this->search->init(FALSE, FALSE, TRUE, $this->session->getVar("search_Word"));
             $this->session->delVar("list_AllIds");
-            $this->session->setVar("sql_BackupListStmt", $this->session->getVar("sql_ListStmt"));
-            $this->session->delVar("sql_ListStmt");
-            $this->session->setVar("setup_BackupPagingTotal", $this->session->getVar("setup_PagingTotal"));
-            $this->session->delVar("setup_PagingTotal");
-            $this->session->setVar("list_BackupPagingAlphaLinks", $this->session->getVar("list_PagingAlphaLinks"));
             $this->session->delVar("list_PagingAlphaLinks");
-            $pString .= $this->search->init(FALSE, FALSE, TRUE);
+        }
+        else {
+			if ($this->vars['method'] == 'reprocess') {
+				$this->reprocess = TRUE;
+        		$this->search->input = $this->session->getArray("search");
+			}
+			else {
+	        	$this->search->input = $this->checkInput();
+	        }
+            $pString .= $this->search->init(FALSE, FALSE, TRUE, $this->session->getVar("search_Word"));
             $pString .= \HTML\hr();
             $pString .= $this->process();
-            $this->session->setVar("sql_CiteListStmt", $this->session->getVar("sql_ListStmt")); // Ready for reprocessing
-            $this->session->setVar("setup_CitePagingTotal", $this->session->getVar("setup_PagingTotal")); // Ready for reprocessing
-            $this->session->setVar("setup_CiteWord", $this->session->getVar("search_Word")); // Ready for reprocessing
-            if ($this->session->getVar("list_BackupAllIds")) {
-                $this->session->setVar("list_AllIds", $this->session->getVar("list_BackupAllIds"));
-            }
-            if ($this->session->getVar("sql_BackupListStmt")) {
-                $this->session->setVar("sql_ListStmt", $this->session->getVar("sql_BackupListStmt"));
-            }
-            if ($this->session->getVar("setup_BackupPagingTotal")) {
-                $this->session->setVar("setup_PagingTotal", $this->session->getVar("setup_BackupPagingTotal"));
-            }
-            $this->session->setVar("search_Word", $this->session->getVar("setup_BackupWord"));
-        } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'reprocess')) {
-            $this->reprocess = TRUE;
-            $this->session->setVar("setup_Word", $this->session->getVar("search_CiteWord"));
-            $this->input = $this->session->getArray("search");
-            $pString .= $this->search->init(FALSE, FALSE, TRUE);
-            $pString .= \HTML\hr();
-            $pString .= $this->process();
-            if ($this->session->getVar("list_BackupAllIds")) {
-                $this->session->setVar("list_AllIds", $this->session->getVar("list_BackupAllIds"));
-            }
-            if ($this->session->getVar("sql_BackupListStmt")) {
-                $this->session->setVar("sql_ListStmt", $this->session->getVar("sql_BackupListStmt"));
-            }
-            if ($this->session->getVar("setup_BackupPagingTotal")) {
-                $this->session->setVar("setup_PagingTotal", $this->session->getVar("setup_BackupPagingTotal"));
-            }
-            if ($this->session->getVar("setup_BackupWord")) {
-                $this->session->setVar("search_Word", $this->session->getVar("setup_BackupWord"));
-            }
         }
         $this->session->saveState(['search', 'sql', 'list']);
         GLOBALS::addTplVar('content', $pString);
@@ -147,47 +112,12 @@ class INSERTCITATION
     {
         $this->stmt->listMethodAscDesc = 'search_AscDesc';
         $this->stmt->listType = 'search';
-        $this->input['Partial'] = TRUE;
+        $this->search->input['Partial'] = TRUE;
         $queryString = 'dialog.php?method=reprocess';
-        if (!$this->reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
-            $masterIds = $andIds = $notIds = [];
-            $this->parseWord();
-            $resourcesFound = FALSE;
-            // Deal with OR strings first
-            $ors = implode($this->db->or, $this->parsePhrase->ors); // shouldn't be necessary as there should only be one element
-            $orsFT = implode(' ', $this->parsePhrase->orsFT);
-            if ($ors && $this->getInitialIds($ors, $orsFT, 'or')) {
-                $resourcesFound = TRUE;
-            }
-            // Deal with AND strings next
-            $ands = implode($this->db->and, $this->parsePhrase->ands); // shouldn't be necessary as there should only be one element
-            $andsFT = implode(' ', $this->parsePhrase->andsFT);
-            if ($ands && $this->getInitialIds($ands, $andsFT, 'and')) {
-                $resourcesFound = TRUE;
-            }
-            unset($andIds);
-            // Finally, deal with NOT strings. We match IDs using OR then subtract the found ids from the main ids array
-            $nots = implode($this->db->or, $this->parsePhrase->nots); // shouldn't be necessary as there should only be one element
-            $notsFT = implode(' ', $this->parsePhrase->notsFT);
-            if ($nots && $this->getInitialIds($nots, $notsFT, 'not')) {
-                $resourcesFound = TRUE;
-            }
-            unset($notIds);
-            if (!$resourcesFound) {
-                $this->common->noResources('search');
-
-                return FALSE;
-            }
-            // Now finalize
-            if (!$this->stmt->quicksearchSubQuery($queryString, FALSE, $this->subQ, 'final')) {
-                $this->common->noResources('search');
-
-                return FALSE;
-            }
-            $sql = $this->stmt->listList($this->session->getVar("search_Order"), FALSE, $this->subQ);
-        } else {
-            $sql = $this->quickQuery($queryString);
+        if (!$this->search->getIds($this->reprocess, $queryString)) {
+        	return FALSE;
         }
+        $sql = $this->search->getFinalSql($this->reprocess, $queryString);
         $found = $this->common->display($sql, 'cite');
         if ($found) {
             $citeFields['formheader'] = \FORM\formHeaderName('', 'citeForm');
@@ -207,76 +137,6 @@ class INSERTCITATION
         } else {
             return \HTML\p($this->messages->text("resources", "noResult"));
         }
-    }
-    /**
-     * Get the initial IDs from the database
-     *
-     * @param mixed $searchArray
-     * @param mixed $searchArrayFT
-     * @param mixed $type
-     */
-    private function getInitialIds($searchArray, $searchArrayFT, $type)
-    {
-        $this->search->fieldSql($searchArray, $searchArrayFT);
-        $subStmt = $this->setSubQuery();
-        $resourcesFound = $this->stmt->quicksearchSubQuery(FALSE, $subStmt, FALSE, $type);
-        if (!$resourcesFound) {
-            $this->common->noResources('search');
-
-            return FALSE;
-        }
-
-        return TRUE;
-    }
-    /**
-     * Quicker querying when paging
-     *
-     * @param string $queryString
-     *
-     * @return string
-     */
-    private function quickQuery($queryString)
-    {
-        $sql = $this->session->getVar("sql_CiteListStmt");
-        $this->session->setVar("setup_PagingTotal", $this->session->getVar("setup_CitePagingTotal"));
-        $this->pagingObject = FACTORY_PAGING::getInstance();
-        $this->pagingObject->queryString = $queryString;
-        $this->pagingObject->getPaging();
-        $this->common->pagingObject = $this->pagingObject;
-        $sql .= $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
-        return $sql;
-    }
-    /**
-     * parse the search word(s)
-     */
-    private function parseWord()
-    {
-        $this->search->words = $this->parsePhrase->parse($this->input);
-        $this->wordsFT = $this->parsePhrase->parse($this->input, FALSE, FALSE, FALSE, TRUE);
-        if ((is_array($this->search->words) && empty($this->search->words)) || !$this->parsePhrase->validSearch) {
-            GLOBALS::setTplVar('resourceListSearchForm', FALSE);
-            $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
-        }
-    }
-    /**
-     * create the subquery
-     *
-     * @return string
-     */
-    private function setSubQuery()
-    {
-        $this->db->ascDesc = $this->session->getVar("search_AscDesc");
-        $this->stmt->quarantine(FALSE, 'rId');
-        $this->stmt->useBib('rId');
-//        $this->stmt->conditions[] = $this->search->words;
-        $this->stmt->joins['resource_creator'] = ['resourcecreatorResourceId', 'rId'];
-        $this->stmt->joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
-        $this->stmt->executeCondJoins();
-        $this->db->groupBy(['rId', 'creatorSurname']);
-        $this->subQ = $this->db->subQuery($this->search->unions, 'u', FALSE);
-        $subQuery = $this->db->from . ' ' . $this->subQ;
-
-        return $this->db->selectNoExecuteFromSubQuery(FALSE, ['rId'], $subQuery, FALSE, TRUE, TRUE);
     }
     /**
      * write input to session

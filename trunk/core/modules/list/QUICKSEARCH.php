@@ -16,7 +16,6 @@
 class QUICKSEARCH
 {
     public $words = '';
-    public $wordsFT = '';
     public $unions = [];
     public $insertCitation = FALSE; // TRUE if being called from INSERTCITATION
     private $db;
@@ -28,7 +27,7 @@ class QUICKSEARCH
     private $metadata;
     private $session;
     private $keyword;
-    private $input = [];
+    public $input = [];
     private $badInput;
     private $parsePhrase;
     private $commonBib;
@@ -263,46 +262,10 @@ class QUICKSEARCH
         }
         $this->input['Partial'] = TRUE;
         GLOBALS::setTplVar('resourceListSearchForm', $this->init(FALSE, TRUE, TRUE));
-        if (!$reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
-            $this->parseWord();
-            $resourcesFound = FALSE;
-            // Deal with OR strings first
-            $ors = implode($this->db->or, $this->parsePhrase->ors);
-            $orsFT = implode(' ', $this->parsePhrase->orsFT);
-            if ($ors && $this->getInitialIds($ors, $orsFT, 'or')) {
-                $resourcesFound = TRUE;
-            }
-            // Deal with AND strings next
-            foreach ($this->parsePhrase->ands as $and) // we use array_intersect . . .
-            {
-            	if ($this->getInitialIds($and, array_shift($this->parsePhrase->andsFT), 'and')) {
-                	$resourcesFound = TRUE;
-            	}
-            }
-            // Finally, deal with NOT strings. We match IDs using OR then subtract the found ids from the main ids array
-            // If there are no ANDs or ORs, we must first get all existing resource ids
-            $nots = implode($this->db->or, $this->parsePhrase->nots);
-            $notsFT = implode(' ', $this->parsePhrase->notsFT);
-            if (empty($this->parsePhrase->ands) && empty($this->parsePhrase->ors))
-			{
- 				$resultSet = $this->db->select('resource', 'resourceId');
- 				while ($row = $this->db->fetchRow($resultSet))
- 				{
- 					$allIds[] = $row['resourceId'];
- 				}
- 				$this->session->setVar("list_AllIds", base64_encode(serialize($allIds)));
- 				unset($allIds);
-            }
-            if ($nots && $this->getInitialIds($nots, $notsFT, 'not')) {
-                $resourcesFound = TRUE;
-            }
-            // Now finalize
-            if (!$this->stmt->quicksearchSubQuery($queryString, FALSE, $this->subQ, 'final')) {
-                $this->common->noResources('search');
-
-                return FALSE;
-            }
+        if (!$this->getIds($reprocess, $queryString)) {
+        	return FALSE;
         }
+
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A')) {
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
@@ -323,6 +286,68 @@ class QUICKSEARCH
         $this->common->patterns = $patterns;
         $this->session->setVar("search_Patterns", base64_encode(serialize($patterns)));
         $this->common->keepHighlight = TRUE;
+        $sql = $this->getFinalSql($reprocess, $queryString);
+        $this->common->display($sql, 'search');
+        // set the lastMulti session variable for quick return to this process.
+        $this->session->setVar("sql_LastMulti", $queryString);
+        $this->session->saveState(['search', 'sql', 'setup', 'bookmark', 'list']);
+        $this->session->delVar("bookmarkRead");
+    }
+    /**
+     * Get the list of resource ids
+     *
+     * @param bool $reprocess
+     * @param string $queryString
+     */
+    public function getIds($reprocess, $queryString)
+    {
+    	if (!$reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
+            $this->parseWord();
+            // Deal with OR strings first
+            $ors = implode($this->db->or, $this->parsePhrase->ors);
+            $orsFT = implode(' ', $this->parsePhrase->orsFT);
+            if ($ors) {
+	            $this->getInitialIds($ors, $orsFT, 'or');
+	        }
+            // Deal with AND strings next
+            foreach ($this->parsePhrase->ands as $and) // we use array_intersect . . .
+            {
+            	$this->getInitialIds($and, array_shift($this->parsePhrase->andsFT), 'and');
+            }
+            // Finally, deal with NOT strings. We match IDs using OR then subtract the found ids from the main ids array
+            // If there are no ANDs or ORs, we must first get all existing resource ids
+            $nots = implode($this->db->or, $this->parsePhrase->nots);
+            $notsFT = implode(' ', $this->parsePhrase->notsFT);
+            if (empty($this->parsePhrase->ands) && empty($this->parsePhrase->ors))
+			{
+ 				$resultSet = $this->db->select('resource', 'resourceId');
+ 				while ($row = $this->db->fetchRow($resultSet))
+ 				{
+ 					$allIds[] = $row['resourceId'];
+ 				}
+ 				$this->session->setVar("list_AllIds", base64_encode(serialize($allIds)));
+ 				unset($allIds);
+            }
+            if ($nots) {
+            	$this->getInitialIds($nots, $notsFT, 'not');
+            }
+            // Now finalize
+            if (!$this->stmt->quicksearchSubQuery($queryString, FALSE, $this->subQ, 'final')) {
+                $this->common->noResources('search');
+
+                return FALSE;
+            }
+        }
+        return TRUE;
+    }
+    /**
+     * Get the final SQL statement to send to $this->common->display or back to INSERTCITATION
+     *
+     * @param bool $reprocess
+     * @param string $queryString
+     */
+    public function getFinalSql($reprocess, $queryString)
+    {
         if (!$reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
         	$this->stmt->joins = [];
         	$this->stmt->joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
@@ -337,11 +362,7 @@ class QUICKSEARCH
             $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
             $sql .= $limit;
         }
-        $this->common->display($sql, 'search');
-        // set the lastMulti session variable for quick return to this process.
-        $this->session->setVar("sql_LastMulti", $queryString);
-        $this->session->saveState(['search', 'sql', 'setup', 'bookmark', 'list']);
-        $this->session->delVar("bookmarkRead");
+        return $sql;
     }
     /**
      * Get the initial IDs from the database
@@ -363,7 +384,7 @@ class QUICKSEARCH
     private function parseWord()
     {
         $this->words = $this->parsePhrase->parse($this->input);
-        $this->wordsFT = $this->parsePhrase->parse($this->input, FALSE, FALSE, FALSE, TRUE);
+        $this->parsePhrase->parse($this->input, FALSE, FALSE, FALSE, TRUE);
         if ((is_array($this->words) && empty($this->words)) || !$this->parsePhrase->validSearch) {
             GLOBALS::setTplVar('resourceListSearchForm', FALSE);
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
@@ -420,6 +441,12 @@ class QUICKSEARCH
      */
     private function setSubQuery()
     {
+    	if (!$this->session->getVar("search_Order")) { // from INSERTCITE
+    		$this->session->setVar("search_Order", 'creator');
+    	}
+    	if (!$this->session->getVar("search_AscDesc")) { // from INSERTCITE
+    		$this->session->setVar("search_AscDesc", $this->db->asc);
+    	}
         $this->db->ascDesc = $this->session->getVar("search_AscDesc");
         switch ($this->session->getVar("search_Order")) {
             case 'title':

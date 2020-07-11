@@ -2,12 +2,13 @@ RELEASES:
 
 
 v6.3.5
-Focus: Minor bug fixes.
+Focus: Minor bug fixes and maintenance.
 
 BUG FIXES:
 1. For the wikindx testdrive, update the password of user 'wikindx'.
 2. Ensure menu plugins display in the menu system where $authorize in the plugin's config.php is set to 1.
 3. Fix an SQL error for non-admin registered users using QUICKSEARCH and alphabetical listing.
+4. Corrected incorrect paging when inserting a citation into metadata.
 
 MAINTENANCE:
 1. Switch the project to ISC License.

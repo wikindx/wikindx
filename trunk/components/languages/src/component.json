@@ -1,7 +1,7 @@
 {
     "component_type": "language",
     "component_id": "src",
-    "component_version": "181",
+    "component_version": "184",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Gettext sources",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "59f985611b793035b2bd966e3c0005bced741846d08c48028b78d41bcf02b706"
+    "component_sha256": "279c10b50cc41c832dfe5b3bb99098dfaaf105ce22407451c03ac99f17979f63"
 }

@@ -428,16 +428,26 @@ class ATTACHMENTS
         }
         // Convert to text and store in the cache directory if of PDF, DOC or DOCX type
         $fileNameCache = WIKINDX_DIR_CACHE_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash;
-        if ((($type == WIKINDX_MIMETYPE_PDF) || ($type == WIKINDX_MIMETYPE_DOCX) || ($type == WIKINDX_MIMETYPE_DOC))
-            && !file_exists($fileNameCache)) {
-            $fileName = WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash;
-            include_once("core/modules/list/FILETOTEXT.php");
-            $ftt = new FILETOTEXT();
-            @file_put_contents($fileNameCache, $ftt->convertToText($fileName, $type)); // we do not halt on failure
-        }
-        if (($type == WIKINDX_MIMETYPE_TXT) && !file_exists($fileNameCache)) { // copy plain/txt to cache folder
-            $fileName = WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash;
-            @file_put_contents($fileNameCache, $fileName); // we do not halt on failure
+        if (!file_exists($fileNameCache))
+        {
+	        switch ($type)
+	        {
+	        	case WIKINDX_MIMETYPE_PDF:
+	        	case WIKINDX_MIMETYPE_DOCX:
+	        	case WIKINDX_MIMETYPE_DOC:
+		            $fileName = WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash;
+		            include_once("core/modules/list/FILETOTEXT.php");
+		            $ftt = new FILETOTEXT();
+		            @file_put_contents($fileNameCache, $ftt->convertToText($fileName, $type)); // we do not halt on failure
+	        	break;
+	        	case WIKINDX_MIMETYPE_TXT:
+		            $fileName = WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash;
+		            @file_put_contents($fileNameCache, $fileName); // we do not halt on failure
+	        	break;
+	        	default:
+	        		// Type not handled
+	        	break;
+	        }
         }
         $this->db->formatConditions(["resourceattachmentsHashFilename" => $hash]);
         $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);

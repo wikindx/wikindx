@@ -534,14 +534,13 @@ class LISTCOMMON
             return;
         }
         if ($zip) { // zip the files
-            $path = WIKINDX_DIR_DATA_ATTACHMENTS;
-            if (!$file = FILE\zip($files, $path)) {
+            if (!$zipfile = FILE\zip($files, WIKINDX_DIR_DATA_ATTACHMENTS))
+            {
                 $errors = FACTORY_ERRORS::getInstance();
                 $badInput = FACTORY_BADINPUT::getInstance();
                 $badInput->close($errors->text("file", "write"));
             }
-            $path = WIKINDX_DIR_DATA_FILES;
-            $link[] = \HTML\a("link", 'ZIP', $file, "_blank");
+            $link[] = \HTML\a("link", 'ZIP', str_replace(DIRECTORY_SEPARATOR, "/", $zipfile), "_blank");
             GLOBALS::addTplVar('fileList', $link);
 
             return;

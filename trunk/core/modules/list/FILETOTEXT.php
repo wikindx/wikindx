@@ -88,7 +88,7 @@ class FILETOTEXT
         }
         $count = 0;
         $size = 0;
-        $mimeTypes = [WIKINDX_MIMETYPE_PDF, WIKINDX_MIMETYPE_DOCX, WIKINDX_MIMETYPE_DOC];
+        $mimeTypes = [WIKINDX_MIMETYPE_PDF, WIKINDX_MIMETYPE_DOCX, WIKINDX_MIMETYPE_DOC, WIKINDX_MIMETYPE_TXT];
         $db->formatConditionsOneField($mimeTypes, 'resourceattachmentsFileType');
         $resultset = $db->select(
             'resource_attachments',
@@ -204,7 +204,9 @@ class FILETOTEXT
         if (array_key_exists($this->fileName, $this->readFiles)) {
             return $this->readFiles[$this->fileName];
         }
-        if ($mimeType == WIKINDX_MIMETYPE_DOC) {
+        if ($mimeType == WIKINDX_MIMETYPE_TXT) {
+            $text = $this->readText();
+        } elseif ($mimeType == WIKINDX_MIMETYPE_DOC) {
             $text = $this->readWord();
         } elseif ($mimeType == WIKINDX_MIMETYPE_DOCX) {
             $text = $this->read_docx();
@@ -222,6 +224,23 @@ class FILETOTEXT
             $this->readFiles[$this->fileName] = $text;
 
             return $text;
+        } else {
+            return FALSE;
+        }
+    }
+    /**
+     * readText
+     *
+     * @return false|string
+     */
+    private function readText()
+    {
+        if (file_exists($this->fileName)) {
+            if (($text = file_get_contents($this->fileName)) !== FALSE) {
+                return $text;
+            } else {
+                return FALSE;
+            }
         } else {
             return FALSE;
         }

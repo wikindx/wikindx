@@ -435,6 +435,10 @@ class ATTACHMENTS
             $ftt = new FILETOTEXT();
             @file_put_contents($fileNameCache, $ftt->convertToText($fileName, $type)); // we do not halt on failure
         }
+        if (($type == WIKINDX_MIMETYPE_TXT) && !file_exists($fileNameCache)) { // copy plain/txt to cache folder
+            $fileName = WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash;
+            @file_put_contents($fileNameCache, $fileName); // we do not halt on failure
+        }
         $this->db->formatConditions(["resourceattachmentsHashFilename" => $hash]);
         $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);
         $recordSet = $this->db->select('resource_attachments', 'resourceattachmentsId');

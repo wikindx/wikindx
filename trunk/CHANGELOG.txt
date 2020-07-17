@@ -1,7 +1,12 @@
 RELEASES:
 
 vX.Y.Z
-Focus: xxx.
+Focus: Minor bug fixes and maintenance.
+
+BUG FIXES:
+1. When adding a plain/txt attachment to a resource, ensure it is copied to the cache directory so it can be searched from Advanced search.
+2. In Advanced search, correct a path when zipping attachments.
+3. Minor correction APA style for unpublished works.
 
 MAINTENANCE:
 1. Update PHPMailer to 6.1.7.

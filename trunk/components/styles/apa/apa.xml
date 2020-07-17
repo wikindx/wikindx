@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <style xml:lang="en">
-<info><name>APA</name>
+<info><name>apa</name>
 <description>American Psychological Association (APA)</description>
 <language>English</language>
 <osbibVersion>3.2</osbibVersion>
@@ -195,7 +195,7 @@
 <dateMonthNoDay>0</dateMonthNoDay>
 <dateMonthNoDayString></dateMonthNoDayString>
 <dayFormat>0</dayFormat>
-<localisation>en</localisation>
+<localisation>en_GB</localisation>
 <runningTimeFormat>1</runningTimeFormat>
 <editorSwitch>1</editorSwitch>
 <editorSwitchIfYes>editor (^Ed.^Eds^). </editorSwitchIfYes>
@@ -2834,7 +2834,7 @@
 <singular></singular>
 <plural></plural>
 <pre></pre>
-<post>.</post>
+<post>. </post>
 </author>
 <resourceyearYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>

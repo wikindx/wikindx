@@ -541,7 +541,7 @@ class LISTCOMMON
                 $badInput->close($errors->text("file", "write"));
             }
             $path = WIKINDX_DIR_DATA_FILES;
-            $link[] = \HTML\a("link", 'ZIP', $path . DIRECTORY_SEPARATOR . $file, "_blank");
+            $link[] = \HTML\a("link", 'ZIP', $file, "_blank");
             GLOBALS::addTplVar('fileList', $link);
 
             return;

@@ -2983,7 +2983,7 @@ class SEARCH
         }
         $attachDir = WIKINDX_DIR_DATA_ATTACHMENTS;
         $cacheDir = WIKINDX_DIR_CACHE_ATTACHMENTS;
-        $mimeTypes = [WIKINDX_MIMETYPE_PDF, WIKINDX_MIMETYPE_DOCX, WIKINDX_MIMETYPE_DOC];
+        $mimeTypes = [WIKINDX_MIMETYPE_PDF, WIKINDX_MIMETYPE_DOCX, WIKINDX_MIMETYPE_DOC, WIKINDX_MIMETYPE_TXT];
         $this->db->formatConditionsOneField($mimeTypes, 'resourceattachmentsFileType');
         $resultset = $this->db->select(
             'resource_attachments',

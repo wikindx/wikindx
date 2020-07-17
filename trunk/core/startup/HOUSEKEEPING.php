@@ -51,7 +51,7 @@ class HOUSEKEEPING
             }
         }
         $this->session->setVar("cache_Attachments", count($cacheDirFiles));
-        $mimeTypes = [WIKINDX_MIMETYPE_PDF, WIKINDX_MIMETYPE_DOCX, WIKINDX_MIMETYPE_DOC];
+        $mimeTypes = [WIKINDX_MIMETYPE_PDF, WIKINDX_MIMETYPE_DOCX, WIKINDX_MIMETYPE_DOC, WIKINDX_MIMETYPE_TXT];
         $db->formatConditionsOneField($mimeTypes, 'resourceattachmentsFileType');
         $resultset = $db->select('resource_attachments', ['resourceattachmentsHashFilename']);
         while ($row = $db->fetchRow($resultset)) {

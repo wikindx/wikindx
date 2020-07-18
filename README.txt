@@ -8,6 +8,8 @@ RECOMMAND that you use the STABLE branch on a PRODUCTION server.
 The TRUNK branch can be broken at any (and for a long) time and damage your
 database, while the STABLE branch has been debugged and validated.
 
+https://github.com/wikindx/wikindx is a mirror of the SVN repository.
+
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 
 - Main wikindx sources are in folders:

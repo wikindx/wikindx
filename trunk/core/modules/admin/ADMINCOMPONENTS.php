@@ -11,7 +11,7 @@
 /**
  *	ADMINCOMPONENTS class.
  *
- *	Administration of components including plugins, bibliography styles, languages, and templates.
+ *	Administration of components including plugins, bibliography styles and templates.
  */
 class ADMINCOMPONENTS
 {
@@ -80,10 +80,9 @@ class ADMINCOMPONENTS
      */
     public function init($message = FALSE)
     {
-        $stringByType = ["language" => "", "plugin" => "", "style" => "", "template" => "", "vendor" => ""];
-        $coutByType = ["language" => 0, "plugin" => 0, "style" => 0, "template" => 0, "vendor" => 0];
+        $stringByType = ["plugin" => "", "style" => "", "template" => "", "vendor" => ""];
+        $coutByType = ["plugin" => 0, "style" => 0, "template" => 0, "vendor" => 0];
         $rootPathByType = [
-            'language' => WIKINDX_DIR_COMPONENT_LANGUAGES,
             'plugin' => WIKINDX_DIR_COMPONENT_PLUGINS,
             'style' => WIKINDX_DIR_COMPONENT_STYLES,
             'template' => WIKINDX_DIR_COMPONENT_TEMPLATES,
@@ -558,7 +557,6 @@ class ADMINCOMPONENTS
                 $componentsRelease = \FILE\read_json_file($this->serverComponentsListPath);
                 
                 $rootPathByType = [
-                    'language' => WIKINDX_DIR_COMPONENT_LANGUAGES,
                     'plugin' => WIKINDX_DIR_COMPONENT_PLUGINS,
                     'style' => WIKINDX_DIR_COMPONENT_STYLES,
                     'template' => WIKINDX_DIR_COMPONENT_TEMPLATES,
@@ -635,7 +633,6 @@ class ADMINCOMPONENTS
     public function installByUpload()
     {
         $rootPathByType = [
-            'language' => WIKINDX_DIR_COMPONENT_LANGUAGES,
             'plugin' => WIKINDX_DIR_COMPONENT_PLUGINS,
             'style' => WIKINDX_DIR_COMPONENT_STYLES,
             'template' => WIKINDX_DIR_COMPONENT_TEMPLATES,
@@ -742,7 +739,6 @@ class ADMINCOMPONENTS
                 $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'vendorUninstallError'));
             } else {
                 $rootPathByType = [
-                    'language' => WIKINDX_DIR_COMPONENT_LANGUAGES,
                     'plugin' => WIKINDX_DIR_COMPONENT_PLUGINS,
                     'style' => WIKINDX_DIR_COMPONENT_STYLES,
                     'template' => WIKINDX_DIR_COMPONENT_TEMPLATES,
@@ -773,7 +769,6 @@ class ADMINCOMPONENTS
     public function readMe()
     {
         $rootPathByType = [
-            'language' => WIKINDX_DIR_COMPONENT_LANGUAGES,
             'plugin' => WIKINDX_DIR_COMPONENT_PLUGINS,
             'style' => WIKINDX_DIR_COMPONENT_STYLES,
             'template' => WIKINDX_DIR_COMPONENT_TEMPLATES,

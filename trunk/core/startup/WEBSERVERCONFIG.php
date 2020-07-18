@@ -245,7 +245,7 @@ EOM;
 }
 
 // Create components directories
-foreach ([WIKINDX_DIR_COMPONENT_LANGUAGES, WIKINDX_DIR_COMPONENT_PLUGINS, WIKINDX_DIR_COMPONENT_STYLES, WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_DIR_COMPONENT_VENDOR] as $dir) {
+foreach ([WIKINDX_DIR_COMPONENT_PLUGINS, WIKINDX_DIR_COMPONENT_STYLES, WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_DIR_COMPONENT_VENDOR] as $dir) {
     if (!file_exists($dir)) {
         // Continue without error, a procedure checks the permissions further.
         if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {

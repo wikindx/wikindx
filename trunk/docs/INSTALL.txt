@@ -42,7 +42,7 @@ possibly other Linux distributions).
 
 3/ The CURL PHP extension is not mandatory in WIKINDX but is used in
 some circumstances. For example, from v5.9.1, components such as plugins
-and languages can be managed from the Admin|Components interface if CURL
+and styles can be managed from the Admin|Components interface if CURL
 is installed – without CURL, components must be installed manually by
 downloading them from the Sourceforge server. It's not recommend to
 disable CURL and manage components by hand.
@@ -80,7 +80,6 @@ will need to set the MySQL database access protocols).
 4/ Ensure that
 'cache/',
 'data/',
-'components/languages/',
 'components/plugins/',
 'components/templates/',
 'components/styles/',
@@ -151,13 +150,7 @@ this through the web browser) . This doesn't necessarily mean that they
 will be immediately deleted: they will be deleted the next time someone
 exports a file.
 
-2/ Language packs are available as separate downloads from the
-sourceforge site.  They act like plug-ins so simply extract them (with
-their directory structure) to the components/languages/ directory to
-make them instantly available. v3.x language packs can be converted with
-the localization plugin and any missing messages will be replaced with
-the default English. v4.x language packs will work with v5 but will be
-missing messages that will instead be displayed in English.
+2/ Since v6.3.6 language packs are builtin.
 
 3/ Bibliographic style packs are available as separate downloads from
 the sourceforge site. They act like plug-ins so simply extract them
@@ -178,7 +171,7 @@ docs/README_RSS and docs/README_CMS for details.
 
     ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 
--- 
+--
 Mark Grimshaw-Aagaard
 The WIKINDX Team 2020
 sirfragalot@users.sourceforge.net

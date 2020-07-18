@@ -227,7 +227,7 @@ namespace LOCALES
         $fallbackLocList = [$defaultlang => WIKINDX_LANGUAGE_NAME_DEFAULT];
         $msgfallback = "<p>As long as this error will not be corrected, only the <strong>" . $fallbackLocList[$defaultlang] . " (" . WIKINDX_LANGUAGE_DEFAULT . ")</strong> language will be available.</p>";
         
-        $path_languages_localized = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_LANGUAGES, "src", "languages.json"]);
+        $path_languages_localized = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CORE, "src", "languages.json"]);
         
         if (!file_exists($path_languages_localized)) {
             echo "<p>The <strong>$path_languages_localized</strong> file doesn't exist.</p>" . $msgfallback;

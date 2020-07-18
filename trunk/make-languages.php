@@ -41,7 +41,6 @@ $excludedir = [
     implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_DATA]), // Data directory
     implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_DB_SCHEMA]), // Data directory
     implode(DIRECTORY_SEPARATOR, [__DIR__, "docs"]), // Data directory
-    implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_COMPONENT_LANGUAGES]), // component directory
     implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_COMPONENT_STYLES]), // component directory
     implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_COMPONENT_TEMPLATES]), // component directory
     implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_COMPONENT_VENDOR]), // Third party lib

@@ -244,7 +244,6 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
     {
         $componentlist = [];
         $componentPath = [
-            WIKINDX_DIR_COMPONENT_LANGUAGES => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_LANGUAGES),
             WIKINDX_DIR_COMPONENT_PLUGINS => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_PLUGINS),
             WIKINDX_DIR_COMPONENT_STYLES => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_STYLES),
             WIKINDX_DIR_COMPONENT_TEMPLATES => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_TEMPLATES),
@@ -260,7 +259,6 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
                     $componentMetadata = \FILE\read_json_file($componentDirPath . DIRECTORY_SEPARATOR . 'component.json');
                 } else {
                     $legal_types = [
-                        WIKINDX_DIR_COMPONENT_LANGUAGES => "language",
                         WIKINDX_DIR_COMPONENT_PLUGINS => "plugin",
                         WIKINDX_DIR_COMPONENT_STYLES => "style",
                         WIKINDX_DIR_COMPONENT_TEMPLATES => "template",
@@ -310,7 +308,6 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
     function createComponentMetadataFile($component_type, $component_id)
     {
         $legal_types = [
-            "language" => WIKINDX_DIR_COMPONENT_LANGUAGES,
             "plugin" => WIKINDX_DIR_COMPONENT_PLUGINS,
             "style" => WIKINDX_DIR_COMPONENT_STYLES,
             "template" => WIKINDX_DIR_COMPONENT_TEMPLATES,
@@ -368,9 +365,7 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
             
             // Check if the component type is right directory for the component directory
             $componentRootName = dirname($componentDirPath);
-            if ($componentMetadata["component_type"] == "language" && $componentRootName != WIKINDX_DIR_COMPONENT_LANGUAGES) {
-                return 6;
-            } elseif ($componentMetadata["component_type"] == "plugin" && $componentRootName != WIKINDX_DIR_COMPONENT_PLUGINS) {
+            if ($componentMetadata["component_type"] == "plugin" && $componentRootName != WIKINDX_DIR_COMPONENT_PLUGINS) {
                 return 6;
             } elseif ($componentMetadata["component_type"] == "style" && $componentRootName != WIKINDX_DIR_COMPONENT_STYLES) {
                 return 6;
@@ -657,7 +652,6 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
             WIKINDX_DIR_DATA => \FILE\dirInDirToArray(WIKINDX_DIR_DATA),
             WIKINDX_DIR_CACHE => \FILE\dirInDirToArray(WIKINDX_DIR_CACHE),
             
-            WIKINDX_DIR_COMPONENT_LANGUAGES => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_LANGUAGES),
             WIKINDX_DIR_COMPONENT_PLUGINS => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_PLUGINS),
             WIKINDX_DIR_COMPONENT_STYLES => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_STYLES),
             WIKINDX_DIR_COMPONENT_TEMPLATES => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_TEMPLATES),

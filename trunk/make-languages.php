@@ -33,8 +33,6 @@ unset($listlocales[WIKINDX_LANGUAGE_DEFAULT]);
 
 $dirroot = __DIR__;
 $dirplugins = implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_COMPONENT_PLUGINS]);
-$dirsrc = implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_COMPONENT_LANGUAGES, "src"]);
-$dirtra = implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_COMPONENT_LANGUAGES]);
 $execoutput = [];
 $errorcode = 0;
 $emailreport = "sirfragalot@users.sourceforge.net";
@@ -55,31 +53,6 @@ $excludedir = [
 /// MAIN
 ///////////////////////////////////////////////////////////////////////
 
-
-echo "Create missing locales folders\n";
-
-if (!file_exists($dirsrc)) {
-    mkdir($dirsrc, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
-}
-if (!file_exists($dirtra)) {
-    mkdir($dirtra, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
-}
-
-foreach ($listlocales as $locale => $localeName) {
-    $dirmo = $dirtra . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . "LC_MESSAGES";
-    if (!file_exists($dirmo)) {
-        echo " - MKDIR $dirmo\n";
-        mkdir($dirmo, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
-    }
-    
-    $dirpo = $dirsrc . DIRECTORY_SEPARATOR . $locale;
-    if (!file_exists($dirpo)) {
-        echo " - MKDIR $dirpo\n";
-        mkdir($dirpo, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
-    }
-}
-
-
 echo "\n";
 echo "Updating plugin tranlations\n";
 
@@ -90,15 +63,44 @@ $listDirDomain = [
 
 foreach ($listDirDomain as $dir => $DirDomain) {
     foreach ($DirDomain as $domain) {
+        $packagename = mb_strtolower($domain);
+
         if ($dir == __DIR__) {
             echo " - Core $domain domain\n";
-            $packagename = strtolower($domain);
             $inputdir = $dir;
+            $dirsrc = implode(DIRECTORY_SEPARATOR, [$inputdir, WIKINDX_DIR_CORE_LANGUAGES, "src"]);
+            $dirtra = implode(DIRECTORY_SEPARATOR, [$inputdir, WIKINDX_DIR_CORE_LANGUAGES]);
+
         } else {
             echo " - Plugin $domain domain\n";
-            $packagename = strtolower($domain);
             $inputdir = $dirplugins . DIRECTORY_SEPARATOR . $domain;
+            $dirsrc = implode(DIRECTORY_SEPARATOR, [$inputdir, "languages", "src"]);
+            $dirtra = implode(DIRECTORY_SEPARATOR, [$inputdir, "languages"]);
         }
+        
+        echo "Create missing locales folders\n";
+
+        if (!file_exists($dirsrc)) {
+            mkdir($dirsrc, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
+        }
+        if (!file_exists($dirtra)) {
+            mkdir($dirtra, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
+        }
+        
+        foreach ($listlocales as $locale => $localeName) {
+            $dirmo = $dirtra . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . "LC_MESSAGES";
+            if (!file_exists($dirmo)) {
+                echo " - MKDIR $dirmo\n";
+                mkdir($dirmo, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
+            }
+            
+            $dirpo = $dirsrc . DIRECTORY_SEPARATOR . $locale;
+            if (!file_exists($dirpo)) {
+                echo " - MKDIR $dirpo\n";
+                mkdir($dirpo, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
+            }
+        }
+
         
         $phpfilelist = $dirsrc . DIRECTORY_SEPARATOR . $packagename . ".lst";
         $potfile = $dirsrc . DIRECTORY_SEPARATOR . $packagename . ".pot";
@@ -115,114 +117,36 @@ foreach ($listDirDomain as $dir => $DirDomain) {
         // Create missing templates for each domain
         echo "   - Extract all translatable strings in file " . $potfile . "\n";
         $potfile = $dirsrc . DIRECTORY_SEPARATOR . $packagename . ".pot";
-        exec("xgettext -L PHP --from-code=UTF-8 -c -n -w 80 --sort-by-file --keyword=local_gettext --msgid-bugs-address=$emailreport --package-name=$packagename -o \"$potfiletmp\" -f \"$phpfilelist\"");
+        extractPotFile($potfiletmp, $phpfilelist, $packagename, $emailreport);
+        unlink($phpfilelist);
 
-        if (file_exists($potfiletmp)) {
-            // Customizing the pot file for the project
-            $potcontent = file_get_contents($potfiletmp);
-
-            // Change the charset for UTF-8
-            $potcontent = str_replace(
-                "Content-Type: text/plain; charset=CHARSET",
-                "Content-Type: text/plain; charset=UTF-8",
-                $potcontent
-            );
-
-            // Remove the absolute path of source files to be able to perform a diff on the next update
-            $potcontent = str_replace(
-                "#: " . __DIR__ . DIRECTORY_SEPARATOR,
-                "#: ",
-                $potcontent
-            );
-
-            // Normalize the path separator to be able to perform a diff on the next update
-            $potcontent = preg_replace_callback(
-                "/^#: .+:\\d+$/um",
-                function ($matches) {
-                    return mb_strtolower(str_replace("\\", "/", $matches[0]));
-                },
-                $potcontent
-            );
-
-            file_put_contents($potfiletmp, $potcontent);
-
-            // Avoid merging a new pot file with translations if it doesn't change more than by its creation date
-            if (file_exists($potfile)) {
-                $potfilecontent = file_get_contents($potfile);
-                $potfiletmpcontent = file_get_contents($potfiletmp);
-
-                $potfilecontent = preg_replace('/"POT-Creation-Date:.+"/um', "", $potfilecontent);
-                $potfiletmpcontent = preg_replace('/"POT-Creation-Date:.+"/um', "", $potfiletmpcontent);
-
-                if ($potfilecontent == $potfiletmpcontent) {
-                    unlink($potfiletmp);
-                } else {
-                    unlink($potfile);
-                    rename($potfiletmp, $potfile);
-                }
-            } else {
-                rename($potfiletmp, $potfile);
+        // When the best file is the new, overwrite the previous with the new file
+        if ($potfiletmp == bestPotFile($potfile, $potfiletmp)) {
+            rename($potfiletmp, $potfile);
+        } else {
+            if (file_exists($potfiletmp)) {
+                unlink($potfiletmp);
             }
         }
         
-        // Cleaning
-        unlink($phpfilelist);
-        
         // countinue only for domains with translatable strings
-        if (file_exists($potfile)) {
-            echo "   - Merge and compile translations:\n";
-            foreach (FILE\dirInDirToArray($dirtra) as $locale) {
-                // Skip folders that do not contain po files
-                if (!array_key_exists($locale, $listlocales)) {
-                    continue;
-                }
-                
-                echo "     - " . $locale . " : ";
-                
-                $tmpfile = $dirsrc . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $packagename . ".po.tmp";
-                $pofile = $dirsrc . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $packagename . ".po";
-                $mofile = $dirtra . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . "LC_MESSAGES" . DIRECTORY_SEPARATOR . $packagename . ".mo";
-                
-                if (!file_exists($pofile)) {
-                    // Create a translation file and intercept the STDERR of msginit because on Windows,
-                    // with a cmd or Powershell console, because msginit emits wrongly an error code 255
-                    // when a file is created and this error is not catcheable.
-                    $execoutput = [];
-                    exec("msginit --no-translator --locale=$locale.UTF-8 -i \"$potfile\" -o \"$pofile\" 2>&1", $execoutput, $errorcode);
-                    abortOnError($errorcode);
-                }
-                
-                if (file_exists($pofile)) {
-                    // Merge all translatable string changes with previous translations
-                    $execoutput = [];
-                    exec("msgmerge -q --previous -w 80 --sort-by-file --lang=$locale -o \"$tmpfile\" \"$pofile\" \"$potfile\"", $execoutput, $errorcode);
-                    abortOnError($errorcode, $errorcode);
-                    copy($tmpfile, $pofile);
-                    
-                    // Cleaning
-                    unlink($tmpfile);
-                }
-                
-                if (file_exists($pofile)) {
-                    $pocontent = file_get_contents($pofile);
-                    $pocontent = str_replace(
-                        "# SOME DESCRIPTIVE TITLE.",
-                        "# Wikindx's Translation ressource: " . $listlocales[$locale] . ".",
-                        $pocontent
-                    );
-                    $pocontent = str_replace(
-                        "# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER",
-                        "# For copyright see the component.json file",
-                        $pocontent
-                    );
-                    file_put_contents($pofile, $pocontent);
-                }
-                
-                // Compile gettext catalog
-                $execoutput = [];
-                exec("msgfmt -v -o \"$mofile\" \"$pofile\"", $execoutput, $errorcode);
-                abortOnError($errorcode, $errorcode);
+        echo "   - Merge and compile translations:\n";
+        foreach (FILE\dirInDirToArray($dirtra) as $locale) {
+            // Skip folders that do not contain po files
+            if (!array_key_exists($locale, $listlocales)) {
+                continue;
             }
+                
+            echo "     - " . $locale . ": ";
+                
+            $tmpfile = $dirsrc . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $packagename . ".po.tmp";
+            $pofile = $dirsrc . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . $packagename . ".po";
+            $mofile = $dirtra . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . "LC_MESSAGES" . DIRECTORY_SEPARATOR . $packagename . ".mo";
+                
+            initPoFile($potfile, $pofile, $locale);
+            mergePoFile($pofile, $potfile, $tmpfile, $locale);
+            if (file_exists($tmpfile)) rename($tmpfile, $pofile);
+            compileMoFile($pofile, $mofile);
         }
         
         echo "\n";
@@ -233,6 +157,129 @@ foreach ($listDirDomain as $dir => $DirDomain) {
 ///////////////////////////////////////////////////////////////////////
 /// Library
 ///////////////////////////////////////////////////////////////////////
+
+// Return the name of the POT to keep
+// 
+// The new POT file if it has significative changes, otherwise the old
+function bestPotFile($potFileOld, $potFileNew)
+{
+    // Avoid merging a new pot file with translations if it doesn't change more than by its creation date
+    if (file_exists($potFileOld) && file_exists($potFileNew)) {
+        $potfilecontentold = file_get_contents($potFileOld);
+        $potfilecontentnew = file_get_contents($potFileNew);
+
+        $potfilecontentold = preg_replace('/"POT-Creation-Date:.+"/um', "", $potfilecontentold);
+        $potfilecontentnew = preg_replace('/"POT-Creation-Date:.+"/um', "", $potfilecontentnew);
+
+        if ($potfilecontentold == $potfilecontentnew)
+            return $potFileOld;
+        else
+            return $potFileNew;
+    } elseif (file_exists($potFileOld)) {
+        return $potFileOld;
+    } elseif (file_exists($potFileNew)) {
+        return $potFileNew;
+    } else {
+        return "";
+    }
+}
+
+// Extract reference string to translate in a gettext POT file
+function extractPotFile($potFile, $aFileList, $packagename, $emailreport)
+{
+    exec("xgettext -L PHP --from-code=UTF-8 -c -n -w 80 --sort-by-file --keyword=local_gettext --msgid-bugs-address=$emailreport --package-name=$packagename -o \"$potFile\" -f \"$aFileList\"");
+
+    if (file_exists($potFile)) {
+        // Customizing the pot file for the project
+        $potcontent = file_get_contents($potFile);
+
+        // Change the charset for UTF-8
+        $potcontent = str_replace(
+            "Content-Type: text/plain; charset=CHARSET",
+            "Content-Type: text/plain; charset=UTF-8",
+            $potcontent
+        );
+
+        // Remove the absolute path of source files to be able to perform a diff on the next update
+        $potcontent = str_replace(
+            "#: " . __DIR__ . DIRECTORY_SEPARATOR,
+            "#: ",
+            $potcontent
+        );
+
+        // Normalize the path separator to be able to perform a diff on the next update
+        $potcontent = preg_replace_callback(
+            "/^#: .+:\\d+$/um",
+            function ($matches) {
+                return mb_strtolower(str_replace("\\", "/", $matches[0]));
+            },
+            $potcontent
+        );
+
+        file_put_contents($potFile, $potcontent);
+    }
+}
+
+// Init a gettext translation file from a pot template
+function initPoFile($potFile, $poFile, $locale)
+{
+    if (!file_exists($potFile) || file_exists($poFile)) {
+        return;
+    }
+
+    // Create a translation file and intercept the STDERR of msginit because on Windows,
+    // with a cmd or Powershell console, because msginit emits wrongly an error code 255
+    // when a file is created and this error is not catcheable.
+    $errorcode = 0;
+    $execoutput = [];
+    exec("msginit --no-translator --locale=$locale.UTF-8 -i \"$potFile\" -o \"$poFile\" 2>&1", $execoutput, $errorcode);
+    abortOnError($errorcode);    
+}
+
+// Merge the 1st and 2d po file to 3rd po file
+// 1st po file must be the previous po file
+function mergePoFile($poFile1, $poFile2, $poFile3, $locale)
+{
+    if (!file_exists($poFile1) || !file_exists($poFile2)) {
+        return;
+    }
+
+    // Merge all translatable string changes with previous translations
+    $errorcode = 0;
+    $execoutput = [];
+    exec("msgmerge -q --previous -w 80 --sort-by-file --lang=$locale -o \"$poFile3\" \"$poFile1\" \"$poFile2\"", $execoutput, $errorcode);
+    abortOnError($errorcode, $errorcode);
+
+    if (file_exists($poFile3)) {
+        $listlocales = \LOCALES\getAllLanguages();
+
+        $pocontent = file_get_contents($poFile3);
+        $pocontent = str_replace(
+            "# SOME DESCRIPTIVE TITLE.",
+            "# Wikindx's Translation ressource: " . $listlocales[$locale] . ".",
+            $pocontent
+        );
+        $pocontent = str_replace(
+            "# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER",
+            "# For copyright see the component.json file",
+            $pocontent
+        );
+        file_put_contents($poFile3, $pocontent);
+    }
+}
+
+// Compile a PO gettext catalog to binary format (MO file)
+function compileMoFile($poFile, $moFile)
+{
+    if (!file_exists($poFile)) {
+        return;
+    }
+
+    $errorcode = 0;
+    $execoutput = [];
+    exec("msgfmt -v -o \"$moFile\" \"$poFile\"", $execoutput, $errorcode);
+    abortOnError($errorcode, $errorcode);
+}
 
 function saveListPHPfilesInDirectory($filelist, $searchdir, $excludedir = [])
 {

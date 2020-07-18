@@ -1,0 +1,105 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the visualize package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: visualize\n"
+"Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
+"POT-Creation-Date: 2020-07-18 02:48+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: components/plugins/visualize/visualizemessages.php:20
+#: components/plugins/visualize/visualizemessages.php:21
+#: components/plugins/visualize/visualizemessages.php:22
+#: components/plugins/visualize/visualizemessages.php:43
+msgid "Visualize"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:23
+msgid "No data in the database of selected type."
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:24
+msgid "Y axis"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:25
+msgid "X axis"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:26
+msgid "Maximum no. items on the X axis"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:27
+msgid "-1 is unlimited"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:28
+msgid "No. resources"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:29
+msgid "Resource type"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:30
+msgid "Publication year"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:31
+msgid "Keyword"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:32
+msgid "Category"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:33
+msgid "Journal"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:34
+msgid "Proceedings"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:35
+msgid "Missing input"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:36
+msgid "Type of plot"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:37
+msgid "Line plot"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:38
+msgid "Bar plot"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:39
+msgid "Combined bar/line plot"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:40
+msgid "Scatter plot"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:41
+msgid "Scatter plot with line"
+msgstr ""
+
+#: components/plugins/visualize/visualizemessages.php:42
+msgid "Balloon plot"
+msgstr ""

@@ -316,74 +316,64 @@ namespace LOCALES
         // The locale folder and component id are always in lowercase
         $locale = mb_strtolower($locale);
         
-        // Get the list of enabled languages
-        // and load the gettext catalog of the locale requested
-        // only if a language is enabled for it
+        // Get the list of enabled plugins
+        // and load their gettext catalog of the locale requested
         // NB: This can be without effect if the catalogs were already loaded for the current PHP process
-        $enabledLanguages = [];
+        $enabledPlugins = [];
         $componentsInstalled = \UTILS\readComponentsList();
         
         foreach ($componentsInstalled as $cmp) {
-            if ($cmp["component_type"] == "language" && $cmp["component_status"] == "enabled") {
-                $enabledLanguages[] = $cmp["component_id"];
+            if ($cmp["component_type"] == "plugin" && $cmp["component_status"] == "enabled") {
+                $enabledPlugins[] = $cmp["component_id"];
             }
         }
         
-        // Try to load a MO catalog only if there is one
-        if (
-            in_array($locale, $enabledLanguages)
-            || in_array(mb_substr($locale, 0, strpos($locale, "@")), $enabledLanguages)
-            || in_array(mb_substr($locale, 0, strpos($locale, "_")), $enabledLanguages)) {
-            // WARNING: NEVER move this directory one level up on down because a bug under windows prevents the loading of mo files in that case.
-            // It's crazy, but many hours lost are waiting for you if you go in that direction!
-            $dirlocales = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", WIKINDX_DIR_COMPONENT_LANGUAGES]));
-            
-            // List all available domains for the requested locale
-            $files = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES"]));
-            $loading = FALSE;
-            foreach ($files as $dir => $file) {
-                if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo") {
-                    $domain = mb_strtolower(mb_substr($file, 0, mb_strlen($file) - mb_strlen(".mo")));
-                    bindtextdomain($domain, $dirlocales);
-                    bind_textdomain_codeset($domain, WIKINDX_CHARSET);
-                    $loading = TRUE;
+        // Try to load a MO catalog only if there is one for one of the derived locale of the requested locale
+        $locale_variant = $locale; // ll[_CC][@variant] (unchanged)
+        $locale_country = strpos($locale, "@") !== FALSE ? mb_substr($locale, 0, strpos($locale, "@")) : $locale; // ll[_CC]
+        $locale_language = strpos($locale, "_") !== FALSE ? mb_substr($locale, 0, strpos($locale, "_")) : $locale; // ll
+        $locales = array_unique([$locale_variant, $locale_country, $locale_language]);
+
+        $loading[WIKINDX_LANGUAGE_DOMAIN_DEFAULT] = TRUE;
+        foreach ($enabledPlugins as $domain)
+        {
+            $loading[$domain] = TRUE;
+        }
+
+        foreach ($locales as $locale)
+        {
+            // Load the core translations
+            if ($loading[WIKINDX_LANGUAGE_DOMAIN_DEFAULT])
+            {
+                $dirlocales = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", WIKINDX_DIR_CORE_LANGUAGES]));
+                $moFileName = WIKINDX_LANGUAGE_DOMAIN_DEFAULT . ".mo";
+                $moFilePath = implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES", $moFileName]);
+                if (file_exists($moFilePath)) {
+                    bindtextdomain(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, $dirlocales);
+                    bind_textdomain_codeset(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, WIKINDX_CHARSET);
+                    // If a loading success don't try to load on the next pass
+                    $loading[WIKINDX_LANGUAGE_DOMAIN_DEFAULT] = FALSE;
                 }
             }
-            
-            // If the previous locale contains a script variant (e.g. uz_UZ@cyrillic) and no MO files have being loaded,
-            // try without the script suffix
-            if (!$loading && strpos($locale, "@") !== FALSE) {
-                $locale = mb_substr($locale, 0, strpos($locale, "@"));
-                
-                // List all available domains for the requested locale
-                $files = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES"]));
-                
-                foreach ($files as $dir => $file) {
-                    if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo") {
-                        $domain = mb_strtolower(mb_substr($file, 0, mb_strlen($file) - mb_strlen(".mo")));
+
+            // Load the plugin translations
+            foreach ($enabledPlugins as $domain)
+            {
+                if ($loading[$domain])
+                {
+                    $dirlocales = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", WIKINDX_DIR_COMPONENT_PLUGINS, $domain, "languages"]));
+                    $moFileName = $domain . ".mo";
+                    $moFilePath = implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES", $moFileName]);
+                    if (file_exists($moFilePath)) {
                         bindtextdomain($domain, $dirlocales);
                         bind_textdomain_codeset($domain, WIKINDX_CHARSET);
-                        $loading = TRUE;
-                    }
-                }
-            }
-            
-            // If the previous locale contains a state suffix (e.g. en_GB) and no MO files have being loaded, try without suffix
-            if (!$loading && strpos($locale, "_") !== FALSE) {
-                $locale = mb_substr($locale, 0, strpos($locale, "_"));
-                // List all available domains for the requested locale
-                $files = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES"]));
-                
-                foreach ($files as $dir => $file) {
-                    if (mb_strtolower(mb_substr($file, -mb_strlen(".mo"))) == ".mo") {
-                        $domain = mb_strtolower(mb_substr($file, 0, mb_strlen($file) - mb_strlen(".mo")));
-                        bindtextdomain($domain, $dirlocales);
-                        bind_textdomain_codeset($domain, WIKINDX_CHARSET);
+                        // If a loading success don't try to load on the next pass
+                        $loading[$domain] = FALSE;
                     }
                 }
             }
         }
-        
+
         // This function call must always be present even if no catalog has been loaded before
         // to force the binding to take into account the current state otherwise it uses the state
         // of the previous execution on macOS, sometimes.

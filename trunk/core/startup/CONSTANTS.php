@@ -113,6 +113,9 @@ define('WIKINDX_COMPONENTS_UPDATE_SERVER', 'https://wikindx.sourceforge.io/downl
  */
 define('WIKINDX_PACKAGE_HASH_ALGO', 'sha256');
 
+// List of core directories
+define('WIKINDX_DIR_CORE', 'core');
+define('WIKINDX_DIR_CORE_LANGUAGES', WIKINDX_DIR_CORE . DIRECTORY_SEPARATOR . 'languages');
 
 // List of components directories
 define('WIKINDX_DIR_COMPONENT', 'components');

@@ -1,0 +1,80 @@
+# French translations for ideagen package.
+# Copyright (C) 2020 THE ideagen'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the ideagen package.
+# Automatically generated, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ideagen\n"
+"Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
+"POT-Creation-Date: 2020-07-18 02:48+0200\n"
+"PO-Revision-Date: 2020-06-01 13:44+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: components/plugins/ideagen/ideagenmessages.php:20
+msgid "IdeaGen"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:21
+msgid "Idea Generator"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:22
+msgid "Generate"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:23
+msgid "Generate again"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:24
+msgid ""
+"Idea Generator randomly selects and displays two items of metadata (quotes, "
+"paraphrases, musings, or ideas) in the hope that the chance juxtaposition "
+"might be serendipitous. The greater the number of metadata, the greater the "
+"variety of juxtaposition."
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:25
+msgid "Create new idea"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:26
+msgid "Idea"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:27
+msgid "Musing"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:28
+msgid "Paraphrase"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:29
+msgid "Quote"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:30
+msgid "Paraphrase Comment"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:31
+msgid "Quote Comment"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:32
+msgid "Add a new idea"
+msgstr ""
+
+#: components/plugins/ideagen/ideagenmessages.php:33
+msgid ""
+"In order to work, Idea Generator needs at least 3 items of metadata available "
+"to you."
+msgstr ""

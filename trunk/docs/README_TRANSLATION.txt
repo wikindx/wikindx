@@ -6,7 +6,7 @@ author:
  - Mark Grimshaw-Aagaard, <sirfragalot@users.sourceforge.net>
  - The WIKINDX Team
 lang: en
-date: 2020-07-09
+date: 2020-07-18
 ---
 
 # Introduction
@@ -200,13 +200,13 @@ described in the comment of the message). You can, though, change their position
 in a translated message if there is only one in a message, or if they
 have an index like `%1$s`, `%2$s`.
 
-Currently, the messages have not been written with regard to translating them 
-in a language that is written from right to left or fully repositioning the 
+Currently, the messages have not been written with regard to translating them
+in a language that is written from right to left or fully repositioning the
 placeholders.
 
 Unless there are special instructions in the comments you can change the rest
 of the message including typography for a better layout. You also have the
-capabilities of UTF-8 so do not use an [HTML entity] – rather input the 
+capabilities of UTF-8 so do not use an [HTML entity] – rather input the
 character directly.
 
 When you have finished translating the domains, report it so that it is
@@ -223,11 +223,9 @@ of translators of your languages as indicated on this page of the
 You have completed the translation and you want to test the result in
 the software.
 
-Install the language component __Gettext sources__ from the Admin component panel.
-
-In the `components/languages/src directory` of your WIKINDX installation, add the __locale
-code__ for the new language to the __languages.json__ file. The
-character case must be the same than in the __getAllLocales()__ function
+In the `core/languages/src directory` of your WIKINDX installation, add
+the __locale code__ for the new language to the __languages.json__ file.
+The character case must be the same than in the __getAllLocales()__ function
 of __core/locales/LOCALES.php__ file. For example, if adding the __sl__
 code for Slovenian.
 
@@ -265,34 +263,35 @@ $ php make-languages.php
 ~~~~
 
 If all goes well, this script will create a subdirectory named after the
-code of the locales enabled (in lowercase) in the components/languages
+code of the locales enabled (in lowercase) in the core/languages
 directory, and a second subdirectory named after the code of the locales
 enabled (in lowercase) in the `components/languages/src` directory.
 
-The first subdirectories (components/languages/<ll_CC>) also contain
+It does the same thing in `components/plugin/<id>/languages/src` folder
+of each plugin. `<id>` id the id / root folder name of a plugin. Following
+description about the core translation works the same way for plugins.
+
+The first subdirectories (core/languages/<ll_CC>) also contain
 an LC_MESSAGES subdirectory that contains Gettext catalogs compiled in a
 binary format (__MO__ file).
 
-The second subdirectories (components/languages/src/<ll_CC>) contain
+The second subdirectories (core/languages/src/<ll_CC>) contain
 Gettext catalogs in a text source format (__PO__ file).
 
 Example of languages tree:
 
 ~~~~
-components/languages
+core/languages
  |_ de
- |  |_ component.json
  |  |_ LC_MESSAGES
  |     |_ wikindx.mo
  |     |_ ..
  |_ ..
  |_ sl
- |  |_ component.json
  |  |_ LC_MESSAGES
  |     |_ wikindx.mo
  |     |_ ..
  |_ src
-    |_ component.json
     |_ languages.json
     |_ wikindx.pot
     |_ ..
@@ -305,17 +304,13 @@ components/languages
 ~~~~
 
 On transifex, download each catalog of your language and copy them into
-that `components/languages/src/<ll_CC>` subdirectory.
+that `core/languages/src/<ll_CC>` subdirectory.
 
 Execute again the __make-languages.php__ script.
 
 This time, the script extracts the translations from your __PO__ files
-and turns them into __MO__ files. These are in a more suitable format and 
+and turns them into __MO__ files. These are in a more suitable format and
 the only one recognized by Gettext when running WIKINDX.
-
-Copy the component.json of an other language in the folder of the new
-language and change its fields accordingly. After that go to the components
-admin panel for refreshing the cached component list.
 
 Finally, you can choose your language in WIKINDX to see your translation
 into action.  (Sometimes it is also necessary to restart the web server
@@ -324,11 +319,14 @@ for this to take effect.)
 ## Packaging and distribution
 
 If you have translated on transifex, your contribution will be
-distributed with the next version of the core. If you have translated a
-PO file directly and want your work to be distributed, contact the
-developers. In any event, let us know your names and surnames or your
-nickname, your email and / or website, the license (to be discussed if
-it is different from that of the core) for the credits.
+distributed with the next version of the core/plugins. If you have
+translated a PO file directly and want your work to be distributed,
+contact the developers. In any event, let us know your names and
+surnames or your nickname, your email and / or website, the license (to
+be discussed if it is different from that of the core) for the credits.
+
+For non official plugins, you have to send your translations to its
+developper.
 
 
 # Internationalisation (i18n)

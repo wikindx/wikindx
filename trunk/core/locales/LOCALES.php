@@ -206,68 +206,6 @@ namespace LOCALES
     }
     
     /**
-     * Return the list of translated languages defined in /languages/src/languages.json
-     *
-     * Each entry of the returned array is locale code (format: ll_CC@variant) as key
-     * and its name as value [format: language (Country, Variant)].
-     *
-     * ll is a mandatory language code
-     * CC is an optional country code
-     * variant is an optional script, money or collation code
-     *
-     * If the source file is not readeable only the reference language is listed.
-     *
-     * @param bool $display_code_only Display the code of the locale instead of its localized name (optional, FALSE by default)
-     *
-     * @return array
-     */
-    function getAllLanguages($display_code_only = FALSE)
-    {
-        $defaultlang = mb_substr(WIKINDX_LANGUAGE_DEFAULT, 0, strpos(WIKINDX_LANGUAGE_DEFAULT, "_"));
-        $fallbackLocList = [$defaultlang => WIKINDX_LANGUAGE_NAME_DEFAULT];
-        $msgfallback = "<p>As long as this error will not be corrected, only the <strong>" . $fallbackLocList[$defaultlang] . " (" . WIKINDX_LANGUAGE_DEFAULT . ")</strong> language will be available.</p>";
-        
-        $path_languages_localized = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CORE, "src", "languages.json"]);
-        
-        if (!file_exists($path_languages_localized)) {
-            echo "<p>The <strong>$path_languages_localized</strong> file doesn't exist.</p>" . $msgfallback;
-
-            return $fallbackLocList;
-        }
-        
-        $content_languages_localized = file_get_contents($path_languages_localized);
-        if ($content_languages_localized === FALSE) {
-            echo "<p>Reading the <strong>$path_languages_localized</strong> file returned an error.</p>" . $msgfallback;
-
-            return $fallbackLocList;
-        }
-        
-        $LocCode = @json_decode($content_languages_localized, TRUE);
-        if (json_last_error() != JSON_ERROR_NONE) {
-            echo "<p>Parsing the <strong>$path_languages_localized</strong> file returned an error:</p><p>" . json_last_error_msg() . ".</p>" . $msgfallback;
-
-            return $fallbackLocList;
-        }
-        
-        $LocList = [];
-        if ($display_code_only) {
-            foreach ($LocCode as $k => $v) {
-                $LocList[$v] = $v;
-            }
-        } else {
-            $locNames = getAllLocales();
-            
-            foreach ($LocCode as $v) {
-                $LocList[$v] = codeISO639a1toName($v);
-            }
-        }
-        
-        asort($LocList);
-        
-        return $LocList;
-    }
-    
-    /**
      * Return the name of a language defined by its locale code or its ISO 639-1 (alpha-2) code.
      *
      * @see https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes

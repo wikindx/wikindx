@@ -25,12 +25,6 @@ include_once("core/locales/LOCALES.php");
 /// Configuration
 ///////////////////////////////////////////////////////////////////////
 
-$listlocales = \LOCALES\getAllLanguages();
-
-// Never generate a catalog for the source language
-unset($listlocales["en"]);
-unset($listlocales[WIKINDX_LANGUAGE_DEFAULT]);
-
 $dirroot = __DIR__;
 $dirplugins = implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_COMPONENT_PLUGINS]);
 $execoutput = [];
@@ -86,21 +80,6 @@ foreach ($listDirDomain as $dir => $DirDomain) {
             mkdir($dirtra, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
         }
         
-        foreach ($listlocales as $locale => $localeName) {
-            $dirmo = $dirtra . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . "LC_MESSAGES";
-            if (!file_exists($dirmo)) {
-                echo " - MKDIR $dirmo\n";
-                mkdir($dirmo, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
-            }
-            
-            $dirpo = $dirsrc . DIRECTORY_SEPARATOR . $locale;
-            if (!file_exists($dirpo)) {
-                echo " - MKDIR $dirpo\n";
-                mkdir($dirpo, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
-            }
-        }
-
-        
         $phpfilelist = $dirsrc . DIRECTORY_SEPARATOR . $packagename . ".lst";
         $potfile = $dirsrc . DIRECTORY_SEPARATOR . $packagename . ".pot";
         $potfiletmp = $dirsrc . DIRECTORY_SEPARATOR . $packagename . ".pot.tmp";
@@ -132,8 +111,19 @@ foreach ($listDirDomain as $dir => $DirDomain) {
         echo "   - Merge and compile translations:\n";
         foreach (FILE\dirInDirToArray($dirtra) as $locale) {
             // Skip folders that do not contain po files
-            if (!array_key_exists($locale, $listlocales)) {
+            if (!checkLocaleCode($locale)) {
                 continue;
+            }
+            
+            $dirmo = $dirtra . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . "LC_MESSAGES";
+            if (!file_exists($dirmo)) {
+                echo " - MKDIR $dirmo\n";
+                mkdir($dirmo, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
+            }
+            $dirpo = $dirsrc . DIRECTORY_SEPARATOR . $locale;
+            if (!file_exists($dirpo)) {
+                echo " - MKDIR $dirpo\n";
+                mkdir($dirpo, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
             }
                 
             echo "     - " . $locale . ": ";
@@ -157,6 +147,30 @@ foreach ($listDirDomain as $dir => $DirDomain) {
 /// Library
 ///////////////////////////////////////////////////////////////////////
 
+function checkLocaleCode($locale)
+{
+    $LocList = \LOCALES\getAllLocales($display_code_only = FALSE);
+    
+    // Never generate a catalog for the source language
+    unset($LocList["en"]);
+    unset($LocList[WIKINDX_LANGUAGE_DEFAULT]);
+    
+    foreach ($LocList as $code => $name)
+    {
+        $locale_variant = $code; // ll[_CC][@variant] (unchanged)
+        $locale_country = strpos($code, "@") !== FALSE ? mb_substr($code, 0, strpos($code, "@")) : $code; // ll[_CC]
+        $locale_language = strpos($code, "_") !== FALSE ? mb_substr($code, 0, strpos($code, "_")) : $code; // ll
+        
+        if (
+            mb_strtolower($locale_variant) == mb_strtolower($locale) ||
+            mb_strtolower($locale_country) == mb_strtolower($locale) ||
+            mb_strtolower($locale_language) == mb_strtolower($locale)
+        ){
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
 // Return the name of the POT to keep
 // 
 // The new POT file if it has significative changes, otherwise the old
@@ -250,12 +264,10 @@ function mergePoFile($poFile1, $poFile2, $poFile3, $locale)
     abortOnError($errorcode, $errorcode);
 
     if (file_exists($poFile3)) {
-        $listlocales = \LOCALES\getAllLanguages();
-
         $pocontent = file_get_contents($poFile3);
         $pocontent = str_replace(
             "# SOME DESCRIPTIVE TITLE.",
-            "# Wikindx's Translation ressource: " . $listlocales[$locale] . ".",
+            "# Wikindx's Translation ressource: " . \LOCALES\codeISO639a1toName($locale) . ".",
             $pocontent
         );
         $pocontent = str_replace(

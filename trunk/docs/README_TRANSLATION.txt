@@ -223,36 +223,16 @@ of translators of your languages as indicated on this page of the
 You have completed the translation and you want to test the result in
 the software.
 
-In the `core/languages/src directory` of your WIKINDX installation, add
-the __locale code__ for the new language to the __languages.json__ file.
-The character case must be the same than in the __getAllLocales()__ function
-of __core/locales/LOCALES.php__ file. For example, if adding the __sl__
-code for Slovenian.
+In the `core/languages` directory of your WIKINDX installation, create
+a folder named with the __locale code__ for the new language in lowercase
+(each plugin has also its own folders). The _locale code__ have to be taken
+from the __getAllLocales()__ function of __core/locales/LOCALES.php__
+file. For example, create a __sl__ code for Slovenian. Do the same thing
+for each plugin if you have a file for it.
 
-__languages.json__ before:
-
-~~~~
-[
-    "de",
-    "es",
-    "fr",
-    "it",
-    "ru"
-]
-~~~~
-
-__languages.json__ after:
-
-~~~~
-[
-    "de",
-    "es",
-    "fr",
-    "it",
-    "ru",
-    "sl"
-]
-~~~~
+Unless your language needs to be specified as a variant of a language that
+already exists use the language part of the code only. If in doubt,
+ask the core developers.
 
 Open a console, `chdir` to the WIKINDX installation directory and run the
 __make-languages.php__ script.
@@ -292,7 +272,6 @@ core/languages
  |     |_ wikindx.mo
  |     |_ ..
  |_ src
-    |_ languages.json
     |_ wikindx.pot
     |_ ..
     |_ de

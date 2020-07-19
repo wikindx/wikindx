@@ -240,7 +240,13 @@ class ADMINCOMPONENTS
             }
         }
         
-        
+        // Ignore installed language components (this type have been removed in 6.3.6)
+        // TODO: remove this code after two or three releases
+        foreach ($componentslistMerged as $k => $cmp) {
+            if ($cmp["component_type"] == "language") {
+                unset($componentslistMerged[$k]);
+            }
+        }
         
         foreach ($componentslistMerged as $k => $cmp) {
             $sortArray[] = $cmp["component_name"];

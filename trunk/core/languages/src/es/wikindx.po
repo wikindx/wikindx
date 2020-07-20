@@ -8744,11 +8744,6 @@ msgstr ""
 msgid "Admin action successful. ###"
 msgstr ""
 
-#, fuzzy
-#~| msgid "My Wikindx"
-#~ msgid "My Wikindxx"
-#~ msgstr "Mi Wikindx"
-
 #~ msgid ""
 #~ "The upgrade process may take some time depending upon a number of factors. "
 #~ "If your database is large or your server is slow, it is advised to "
@@ -8823,6 +8818,11 @@ msgstr ""
 
 #~ msgid "My Bibliographies"
 #~ msgstr "Mis bibliografías"
+
+#, fuzzy
+#~| msgid "My Wikindx"
+#~ msgid "My Wikindxx"
+#~ msgstr "Mi Wikindx"
 
 #~ msgid ""
 #~ "Before being able to use WIKINDX, you must configure it. The minimum "

@@ -64,7 +64,7 @@ class adminstyle_MODULE
         /**
          * THE OSBIB Version number
          */
-        $this->osbibVersion = \LOADSTYLE\OSBIB_VERSION;
+        $this->osbibVersion = WIKINDX_COMPONENTS_COMPATIBLE_VERSION["style"];
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();

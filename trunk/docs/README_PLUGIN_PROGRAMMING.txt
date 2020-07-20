@@ -26,14 +26,14 @@ To get your plugins working, a few conditions are required:
    interface rather than having to edit the files directly).
    
  * config.php should have the public variable $wikindxVersion.  e.g.  public
-   $wikindxVersion = 5.8; From WIKINDX 5.8, compatible plugins are required to
+   $wikindxVersion = 8; From WIKINDX 5.8, compatible plugins are required to
    explicitly state their compatibility with the constant
-   WIKINDX_PLUGIN_VERSION. This is a value that matches the major version
-   equivalent of WIKINDX_PUBLIC_VERSION (e.g. if WIKINDX_PUBLIC_VERSION is
-   5.8.3, then WIKINDX_PLUGIN_VERSION should be 5.8).  In the plugin's
-   config.php, set $wikindxVersion to match WIKINDX_PLUGIN_VERSION in order to
-   state compatibility. Incompatible plugins will not load. They will still be
-   present and editable in the Admin|Components interface.
+   WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"]. This is a value that matches
+   an internal core version that could be validate for more than one public version.
+   In the plugin's config.php, set $wikindxVersion to match
+   WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"] in order to state compatibility.
+   Incompatible plugins will not load. They will still be present
+   and editable in the Admin|Components interface.
 
 The plugin directory may optionally have a file called description.txt  
 which may be used as a README providing instructions and credits. The   

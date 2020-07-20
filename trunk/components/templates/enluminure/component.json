@@ -1,7 +1,7 @@
 {
     "component_type": "template",
     "component_id": "enluminure",
-    "component_version": "181",
+    "component_version": "191",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Enluminure",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "3fef11f7aca03ae1535df9a92ba94d0fdd3651ec56797155812e8e1f1b37f552"
+    "component_sha256": "b27e3b0d4fbe8fe3aa5e9907460b5abf116a4c540e221c46be31d35972c16f99"
 }

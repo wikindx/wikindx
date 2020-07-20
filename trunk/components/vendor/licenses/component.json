@@ -1,7 +1,7 @@
 {
     "component_type": "vendor",
     "component_id": "licenses",
-    "component_version": "181",
+    "component_version": "191",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Licenses texts",
@@ -24,5 +24,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "6d7232b47d505d8bdbfa2082dcfc3096a531ed5a00525a09dc58cd02f18cbe34"
+    "component_sha256": "b7454562d8685dbb04504fd8608a651bcbb29738fade4431aa1ece1cdc4dd99e"
 }

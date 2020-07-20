@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "userwritecategory",
-    "component_version": "181",
+    "component_version": "191",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Categories Administration for Users",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "b6a4fb67c34fc66b0a316d43461cead4e3cea8132a7bcee6c192b4d2b0fc74c1"
+    "component_sha256": "7063b81d8a3d34a43e1166f11b1e9da731a47a4404f5cb7f58fa7f990782a43e"
 }

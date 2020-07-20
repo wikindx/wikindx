@@ -88,7 +88,7 @@ class HELP
 	private function loadArrays()
 	{
 	    $domain = WIKINDX_LANGUAGE_DOMAIN_DEFAULT;
-	    $wikindxVersion = WIKINDX_PLUGIN_VERSION;
+	    $wikindxVersion = WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"];
 	    
         $tmpLanguageArray = array(
 /// search_ Here, and elsewhere, do not edit #search# or similar words enclosed with '#', or words prefaced with '$'.
@@ -253,7 +253,7 @@ class HELP
 "plugins" => dgettext($domain, "<h3>Components</h3>")
 . dgettext($domain, "<p>Components are extras that are not part of the core WIKINDX download and can be plugins, templates, languages, or bibliographic styles. Plugins extend the functionality of WIKINDX beyond its core purpose and can be one of two types:  in-line plugins, where the output of the plugin is displayed in the body of WIKINDX; or menu plugins, where the plugins are accessed via the menus.</p>")
 // translators: do not edit words prefaced with '$'
-. dgettext($domain, "<p>Some plugins might not be compatible with this version of WIKINDX, and so they will not be visible to users, because \$wikindxVersion in the plugin's config.php is not equal to WIKINDX_PLUGIN_VERSION which is currently <strong>$wikindxVersion</strong>. Incompatible plugins will be still be listed in the 'Enabled plugins' select box. Update these plugins in order to use them. <font color='red'>If you manually update \$wikindxVersion in a plugin's config.php, the plugin is not guaranteed to work and, depending on the plugin, might corrupt your WIKINDX database.</font></p>")
+. dgettext($domain, "<p>Some plugins might not be compatible with this version of WIKINDX, and so they will not be visible to users, because \$wikindxVersion in the plugin's config.php is not equal to WIKINDX_COMPONENTS_COMPATIBLE_VERSION[\"plugin\"] which is currently <strong>$wikindxVersion</strong>. Incompatible plugins will be still be listed in the 'Enabled plugins' select box. Update these plugins in order to use them. <font color='red'>If you manually update \$wikindxVersion in a plugin's config.php, the plugin is not guaranteed to work and, depending on the plugin, might corrupt your WIKINDX database.</font></p>")
 
 . dgettext($domain, "<p>When checking the update status of plugins, styles, templates, and languages, only those that are enabled will be queried. Two update checks occur:</p>")
 
@@ -325,7 +325,7 @@ class adminstyle_CONFIG {
 		$tempArray = array();
 		foreach($tmpLanguageArray as $k => $v)
 		{
-		    $string = preg_replace("/" . preg_quote("#currentWikindxVersion#", "/") . "/", WIKINDX_PLUGIN_VERSION, $v);
+		    $string = preg_replace("/" . preg_quote("#currentWikindxVersion#", "/") . "/", WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"], $v);
 		    $string = preg_replace("/" . preg_quote("#pasteBibtex#", "/") . "/", $pasteBibtex, $string);
 		    $string = preg_replace("/" . preg_quote("#search#", "/") . "/", $search, $string);
 		    $tempArray[$k] = $string;

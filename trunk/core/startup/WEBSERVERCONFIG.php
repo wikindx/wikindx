@@ -329,7 +329,7 @@ if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['S
 
     // Do database upgrade check
     if (\UPDATE\needUpdate(FACTORY_DB::getInstance())) {
-        // Force the update of the components.json files in case WIKINDX_PLUGIN_VERSION change
+        // Force the update of the components.json files in case WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"] change
         \UTILS\refreshComponentsListCache(TRUE);
         // Upgrade database
         include_once("core/startup/UPDATEDATABASE.php");

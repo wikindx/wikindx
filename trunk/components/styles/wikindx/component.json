@@ -1,7 +1,7 @@
 {
     "component_type": "style",
     "component_id": "wikindx",
-    "component_version": "181",
+    "component_version": "191",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Wikindx",
@@ -17,5 +17,5 @@
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         }
     ],
-    "component_sha256": "db98deb1c4f94ce753e3027abf805c719f9f8f26330574ddf4b938a2193fa0e0"
+    "component_sha256": "fab05b91335e6ff4a4c41794fbb4e7475c33602502853c265071e6317429b99b"
 }

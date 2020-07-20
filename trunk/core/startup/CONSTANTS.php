@@ -34,7 +34,7 @@ define('TAB', "\t");
  *
  * @name WIKINDX_PUBLIC_VERSION
  */
-define('WIKINDX_PUBLIC_VERSION', '6.3.5');
+define('WIKINDX_PUBLIC_VERSION', '6.3.6');
 /**
  * WIKINDX internal version information
  *
@@ -56,14 +56,22 @@ define('WIKINDX_INTERNAL_VERSION', 14.0);
  */
 define('WIKINDX_INTERNAL_VERSION_UPGRADE_MIN', 5.1);
 /**
- * Plugin compatibility -- x.x (usually matching the major WIKINDX version) which must be changed each time plugins require an
- * upgrade to match the WIKINDX code. The plugin's $config->wikindxVersion must be equal to this value for the plugin to be compatible.
+ * Components compatibility
  *
- * The check occurs in LOADEXTERNALMODULES.php
+ * This array is used by LOADEXTERNALMODULES class
+ * and \UTILS\checkComponentIntegrity() to check components compatibility with the core.
  *
- * @name WIKINDX_PLUGIN_VERSION
+ * Each type of component has its own compatibility version
+ * because they do not have the same lifecycle.
+ *
+ * @name WIKINDX_COMPONENTS_COMPATIBLE_VERSION
  */
-define('WIKINDX_PLUGIN_VERSION', 8);
+define('WIKINDX_COMPONENTS_COMPATIBLE_VERSION', [
+    'plugin'    => 8, // Must be an integer
+    'style'     => 4, // Must be an integer
+    'template'  => 1, // Must be an integer
+    'vendor'    => WIKINDX_PUBLIC_VERSION, // Identical to the public version because this type of component is very closely linked to a version of the core
+]);
 /**
  * Minimum required PHP version
  *

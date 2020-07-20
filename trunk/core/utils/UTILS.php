@@ -458,7 +458,7 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
                 } else {
                     $arrayStyleInfo = \LOADSTYLE\loadStyleInfo($xmlstylefile);
                     
-                    if ($arrayStyleInfo['osbibversion'] !== \LOADSTYLE\OSBIB_VERSION) {
+                    if (intval($arrayStyleInfo['osbibversion']) !== WIKINDX_COMPONENTS_COMPATIBLE_VERSION[$componentMetadata["component_type"]]) {
                         return 25;
                     } elseif ($arrayStyleInfo['name'] === NULL) {
                         return 26;
@@ -471,12 +471,21 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
             // Check the files specific to a template component
             if ($componentMetadata["component_type"] == "template") {
                 $displayfile = $componentDirPath . DIRECTORY_SEPARATOR . 'display.tpl';
+                $compatible_versionfile = $componentDirPath . DIRECTORY_SEPARATOR . 'compatible_version';
                 if (!file_exists($displayfile)) {
                     return 22;
                 } elseif (!is_readable($displayfile)) {
                     return 23;
                 } elseif (!is_file($displayfile)) {
                     return 24;
+                } else if (!file_exists($compatible_versionfile)) {
+                    return 31;
+                } elseif (!is_readable($compatible_versionfile)) {
+                    return 32;
+                } elseif (!is_file($compatible_versionfile)) {
+                    return 33;
+                } elseif (intval(file_get_contents($compatible_versionfile)) !== WIKINDX_COMPONENTS_COMPATIBLE_VERSION[$componentMetadata["component_type"]]) {
+                    return 25;
                 }
             }
             
@@ -535,6 +544,9 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
             28 => "The plugintype.txt file is missing.",
             29 => "The plugintype.txt file is not readable.",
             30 => "plugintype.txt is not a file.",
+            31 => "The compatible_version file is missing.",
+            32 => "The compatible_version file is not readable.",
+            33 => "compatible_version is not a file.",
         ];
 
         return array_key_exists($error_code, $msg) ? $msg[$error_code] : "Unknow";

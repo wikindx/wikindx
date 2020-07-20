@@ -1,6 +1,6 @@
 RELEASES:
 
-vX.Y.Z
+v6.3.6
 Focus: Minor bug fixes and maintenance.
 
 BUG FIXES:
@@ -10,6 +10,7 @@ BUG FIXES:
 
 MAINTENANCE:
 1. Update PHPMailer to 6.1.7.
+2. Add a component compatible version for each type of component.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

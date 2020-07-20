@@ -19,18 +19,12 @@ namespace LOADSTYLE
  * LOADSTYLE
  */
 const ROOT_DIR = WIKINDX_DIR_COMPONENT_STYLES;
-/**
- * OSBIB version information
- *
- * @name OSBIB_VERSION
- */
-const OSBIB_VERSION = "3.2";
     /**
      * Read ROOT_DIR directory for XML style files and return an associative array. Each XML file should
      * be within its own folder within ROOT_DIR.  This folder name should match the first part of the XML file name e.g.
      * apa/apa.xml or chicago/chicago.xml.
      *
-     * CONSTANTS.php stores OSBIB_VERSION -- the osbibVersion field of the style XML file must equal this.
+     * CONSTANTS.php stores WIKINDX_COMPONENTS_COMPATIBLE_VERSION["style"] -- the osbibVersion field of the style XML file must equal this.
      *
      * @param $all bool If TRUE, force the loading of all styles
      *
@@ -72,7 +66,7 @@ const OSBIB_VERSION = "3.2";
      *       <name>IDSTYLE</name>
      *       <description>Identifier of my custom bibliographic Style (IDSTYLE)</description>
      *       <language>English</language>
-     *       <osbibVersion>3.2</osbibVersion>
+     *       <osbibVersion>4</osbibVersion>
      *    </info>
      *    [...]
      * </style>

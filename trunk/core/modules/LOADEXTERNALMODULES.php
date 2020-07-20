@@ -54,7 +54,7 @@ class LOADEXTERNALMODULES
         $class = $dir . "_CONFIG";
         if (class_exists($class)) {
             $config = new $class();
-            if (property_exists($config, "wikindxVersion") && ($config->wikindxVersion == WIKINDX_PLUGIN_VERSION)) {
+            if (property_exists($config, "wikindxVersion") && ($config->wikindxVersion == WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"])) {
                 return TRUE;
             }
         }

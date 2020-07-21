@@ -923,7 +923,7 @@ class SUPERADMIN
             4
         ) . " " . \HTML\span('*', 'required'));
         
-        $pString .= \HTML\td($this->messages->text("config", "missingXml"));
+        $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td('&nbsp;');

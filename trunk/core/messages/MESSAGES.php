@@ -287,7 +287,6 @@ class MESSAGES
 				"templateMenu2" => dgettext($domain, "Reduce by one level"),
 				"templateMenu3" => dgettext($domain, "Reduce by two levels"),
 				"style" => dgettext($domain, "Bibliographic style"),
-				"missingXml" => dgettext($domain, "If you have languages and styles that are in your WIKINDX installation folders but they do not show here, then they are not compatible with this version of WIKINDX.  Go to the WIKINDX Sourceforge download page (https://sourceforge.net/projects/wikindx/files/pluginsxxx/), download the latest localization and adminstyle plug-ins and use them to update your files."),
 				"stringLimit" => dgettext($domain, "Limit no. characters in select box text"),
 				"userRegistration" => dgettext($domain, "Allow user registration"),
 /// config_registrationModerate Request emails be sent to the admin to approve or deny user registration requests

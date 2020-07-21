@@ -1,6 +1,6 @@
 RELEASES:
 
-vX.Y.Z
+v6.3.7
 Focus: Minor bug fixes and feature enhancements.
 
 BUG FIXES:

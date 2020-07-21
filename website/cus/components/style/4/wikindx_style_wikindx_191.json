@@ -1,0 +1,28 @@
+{
+    "component_version": "191",
+    "component_licence": "ISC License",
+    "component_name": "Wikindx",
+    "component_description": "Wikindx Style",
+    "component_sha256": "fab05b91335e6ff4a4c41794fbb4e7475c33602502853c265071e6317429b99b",
+    "component_builtin": "false",
+    "component_website": "https://wikindx.sourceforge.io/",
+    "component_type": "style",
+    "component_updatable": "true",
+    "component_id": "wikindx",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Compiler",
+            "author_copyright": "2005, 2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/style/4/wikindx_style_wikindx_191.zip",
+            "package_sha256": "873dd0f530d9221775c10453826a943a41d3917fac5647a2b83390a3bf360402",
+            "package_size": 5823
+        }
+    ]
+}

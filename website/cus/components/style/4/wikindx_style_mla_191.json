@@ -1,0 +1,28 @@
+{
+    "component_version": "191",
+    "component_licence": "ISC License",
+    "component_name": "MLA",
+    "component_description": "Modern Language Association (MLA). MLA is most often applied by the arts and humanities, particularly in the USA. It is arguably the most well used of all of the citation styles.",
+    "component_sha256": "d3cf8f7312f2602fd784e72b69dcfae1c59047782aeef5e1c7291466c8664c04",
+    "component_builtin": "false",
+    "component_website": "https://style.mla.org/",
+    "component_id": "mla",
+    "component_type": "style",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Compiler",
+            "author_copyright": "2005, 2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/style/4/wikindx_style_mla_191.zip",
+            "package_sha256": "d1d6a52288419ec6960f2e9399d614cd9b980d470c30eddaf05e297f7ef9bc2d",
+            "package_size": 4977
+        }
+    ]
+}

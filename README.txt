@@ -57,6 +57,7 @@ https://sourceforge.net/p/wikindxold/svn/HEAD/tree/
 
  Version    Release Date   Revision
  ---------  ------------   --------
+  6.3.6      2020-07-21         525
   6.3.5      2020-07-14         503
   6.3.4      2020-07-09         480
   6.3.3      2020-07-06         447

@@ -1,0 +1,28 @@
+{
+    "component_version": "191",
+    "component_name": "Chicago",
+    "component_description": "Chicago Style. Turabian and Chicago are two separate styles but are very similar, just like Harvard and APA. These are widely used for history and economics.",
+    "component_licence": "ISC License",
+    "component_id": "chicago",
+    "component_sha256": "d2873e149fb0c89f62623a7b1bd834e2429d4de84d2e5edae595b8a80ad27f62",
+    "component_builtin": "false",
+    "component_website": "https://www.chicagomanualofstyle.org/home.html",
+    "component_type": "style",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Compiler",
+            "author_copyright": "2005, 2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/style/4/wikindx_style_chicago_191.zip",
+            "package_sha256": "136e4aa12653a3a6689f0742f9c514d1bc20a7768adf0888cc2366f3c2ef6866",
+            "package_size": 5403
+        }
+    ]
+}

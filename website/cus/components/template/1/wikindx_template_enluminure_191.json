@@ -1,0 +1,34 @@
+{
+    "component_version": "191",
+    "component_description": "A theme around the medieval manuscript Liber Floridus (vertical menu)",
+    "component_name": "Enluminure",
+    "component_licence": "ISC License",
+    "component_sha256": "b27e3b0d4fbe8fe3aa5e9907460b5abf116a4c540e221c46be31d35972c16f99",
+    "component_id": "enluminure",
+    "component_builtin": "false",
+    "component_type": "template",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2012-2013, 2016-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2012, 2014, 2016-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/template/1/wikindx_template_enluminure_191.zip",
+            "package_sha256": "35e3b17fd23a640ae8107735c89bf74c0f775ba0ef8b45d52f594f1ffaa1a24b",
+            "package_size": 415525
+        }
+    ]
+}

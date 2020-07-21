@@ -1,0 +1,40 @@
+{
+    "component_version": "191",
+    "component_licence": "ISC License",
+    "component_name": "PIAF",
+    "component_description": "Theme of the Portail International Archivistique Francophone (PIAF) (horizontal menu)",
+    "component_sha256": "e5b34de7fe3434db3c0ca5785807ec10fc6002c4a70245b011026df142e52978",
+    "component_builtin": "false",
+    "component_id": "piaf",
+    "component_type": "template",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Portail International Archivistique Francophone",
+            "author_role": "Developer",
+            "author_copyright": "2014",
+            "author_website": "http://www.piaf-archives.org"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2012-2013, 2016-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2016-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/template/1/wikindx_template_piaf_191.zip",
+            "package_sha256": "d2d3b15ae2dce02d6899e3778711f6200658ed3c28a05aaeb2308fd22154b44a",
+            "package_size": 88275
+        }
+    ]
+}

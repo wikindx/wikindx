@@ -368,25 +368,7 @@ class TEXTQP
             // if quoteText is empty, delete the row
             if (!array_key_exists('commentOnly', $this->vars) && !trim($this->vars[$typeText])) {
                 $addEdit = 'deleted';
-                $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
-                $this->db->delete('resource_metadata');
-                $this->db->formatConditions(['resourcemetadataMetadataId' => $this->vars['resourcemetadataId']]);
-                $this->db->delete('resource_metadata');
-                $this->db->formatConditions(['resourcekeywordMetadataId' => $this->vars['resourcemetadataId']]);
-                $this->db->delete('resource_keyword');
-                $metadataExists = $this->summary(-1, $summaryType);
-                // remove cache files for keywords
-                $this->db->deleteCache('cacheResourceKeywords');
-                $this->db->deleteCache('cacheMetadataKeywords');
-                $this->db->deleteCache('cacheQuoteKeywords');
-                $this->db->deleteCache('cacheParaphraseKeywords');
-                $this->db->deleteCache('cacheMusingKeywords');
-                // Remove these cache files if no metadata left in resource
-                if (!$metadataExists) {
-                    $this->db->deleteCache('cacheMetadataCreators');
-                    $this->db->deleteCache('cacheMetadataCollections');
-                    $this->db->deleteCache('cacheMetadataPublishers');
-                }
+                $this->delete($summaryType);
             } else {
                 $addEdit = 'edited';
                 // Quote/paraphrase _text table
@@ -485,6 +467,33 @@ class TEXTQP
         }
 
         return $addEdit;
+    }
+    /**
+     * Delete the quote or paraphrase and all peripheral data
+     *
+     * @param string
+     */
+    public function delete($summaryType)
+    {
+		$this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
+		$this->db->delete('resource_metadata');
+		$this->db->formatConditions(['resourcemetadataMetadataId' => $this->vars['resourcemetadataId']]);
+		$this->db->delete('resource_metadata');
+		$this->db->formatConditions(['resourcekeywordMetadataId' => $this->vars['resourcemetadataId']]);
+		$this->db->delete('resource_keyword');
+		$metadataExists = $this->summary(-1, $summaryType);
+		// remove cache files for keywords
+		$this->db->deleteCache('cacheResourceKeywords');
+		$this->db->deleteCache('cacheMetadataKeywords');
+		$this->db->deleteCache('cacheQuoteKeywords');
+		$this->db->deleteCache('cacheParaphraseKeywords');
+		$this->db->deleteCache('cacheMusingKeywords');
+		// Remove these cache files if no metadata left in resource
+		if (!$metadataExists) {
+			$this->db->deleteCache('cacheMetadataCreators');
+			$this->db->deleteCache('cacheMetadataCollections');
+			$this->db->deleteCache('cacheMetadataPublishers');
+		}
     }
     /**
      * update or insert resource_summary

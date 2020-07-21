@@ -295,6 +295,45 @@ class RESOURCEMUSING
         $this->navigate->resource($this->vars['resourceId'], $message);
     }
     /**
+     * Ask for confirmation for musing to be deleted
+     */
+    public function deleteInit()
+    {
+        $this->session->delVar("resourceMusingLock");
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "musingDelete"));
+        $pString = \FORM\formHeader('resource_RESOURCEMUSING_CORE');
+        $pString .= \FORM\hidden("method", 'delete');
+        $pString .= \FORM\hidden("resourceId", $this->vars['resourceId']);
+        $pString .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Confirm")));
+        $pString .= \FORM\formEnd();
+        GLOBALS::addTplVar('content', $pString);
+    }
+    /**
+     * Delete the musing and all peripheral data
+     *
+     */
+    public function delete()
+    {
+        if ($this->session->getVar("resourceMusingLock")) {
+            $this->badInput->close($this->errors->text("done", "musing"));
+        }
+    	if (!array_key_exists('resourcemetadataId', $this->vars)) {
+    		$this->badInput->close($this->errors->text("inputError", "missing"));
+    	}
+		$this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
+		$this->db->delete('resource_metadata');
+		$this->db->formatConditions(['resourcekeywordMetadataId' => $this->vars['resourcemetadataId']]);
+		$this->db->delete('resource_keyword');
+		$this->textqp->summary(-1, 'resourcesummaryMusings');
+        $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
+        $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
+        // lock reload
+        $this->session->setVar("resourceMusingLock", TRUE);
+        // send back to view this resource with success message
+        $this->navigate->resource($this->vars['resourceId'], $this->success->text("musingDelete"));
+    }
+    /**
      * Check we have appropriate input.  Page and comment are optional
      */
     private function checkInput()

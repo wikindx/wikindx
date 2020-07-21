@@ -130,7 +130,7 @@ class LOADICONS
         } else {
             $basename = "file";
         }
-        $iconfb = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_TEMPLATE_DEFAULT, "file.png"]);
+        $iconfb = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_TEMPLATE_DEFAULT, 'icons', "file.png"]);
         $icon = $this->getIconRealFileName($basename, $iconfb);
         
         // Disable a useless warning if the default file is missing
@@ -187,7 +187,6 @@ class LOADICONS
     private function getIconRealFileName($basename, $filenameFallback = "")
     {
         $filename = $filenameFallback;
-        
         $tplSearch = [];
         // Don't test the default template twice
         if ($this->templateDir != WIKINDX_TEMPLATE_DEFAULT) {
@@ -210,7 +209,6 @@ class LOADICONS
                 }
             }
         }
-        
         return $filename;
     }
 }

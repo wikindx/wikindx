@@ -100,6 +100,42 @@ class RESOURCEPARAPHRASE
         $this->navigate->resource($this->vars['resourceId'], $message);
     }
     /**
+     * Ask for confirmation for paraphrase to be deleted
+     */
+    public function deleteInit()
+    {
+        $this->session->delVar("resourceParaphraseLock");
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "paraphraseDelete"));
+        $pString = \FORM\formHeader('resource_RESOURCEPARAPHRASE_CORE');
+        $pString .= \FORM\hidden("method", 'delete');
+        $pString .= \FORM\hidden("resourceId", $this->vars['resourceId']);
+        $pString .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
+        $pString .= \FORM\hidden("summaryType", 'resourcesummaryParaphrases');
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Confirm")));
+        $pString .= \FORM\formEnd();
+        GLOBALS::addTplVar('content', $pString);
+    }
+    /**
+     * Delete the musing and all peripheral data
+     *
+     */
+    public function delete()
+    {
+        if ($this->session->getVar("resourceParaphraseLock")) {
+            $this->badInput->close($this->errors->text("done", "paraphrase"));
+        }
+    	if (!array_key_exists('resourcemetadataId', $this->vars) || !array_key_exists('summaryType', $this->vars)) {
+    		$this->badInput->close($this->errors->text("inputError", "missing"));
+    	}
+        $this->textqp->delete($this->vars['summaryType']);
+        $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
+        $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
+        // lock reload
+        $this->session->setVar("resourceParaphraseLock", TRUE);
+        // send back to view this resource with success message
+        $this->navigate->resource($this->vars['resourceId'], $this->success->text("paraphraseDelete"));
+    }
+    /**
      * Check we have appropriate input.
      *
      * Page and comment are optional

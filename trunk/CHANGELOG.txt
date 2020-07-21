@@ -1,5 +1,20 @@
 RELEASES:
 
+vX.Y.Z
+Focus: Minor bug fixes and feature enhancements.
+
+BUG FIXES:
+1. Correct a path for a file icon.
+
+FEATURE ENHANCEMENTS:
+1. Added delete icons to individual quotes, paraphrases, and musings when viewing a resource.
+
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+
+
 v6.3.6
 Focus: Minor bug fixes and maintenance.
 

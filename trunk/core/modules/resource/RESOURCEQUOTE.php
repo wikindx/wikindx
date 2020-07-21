@@ -100,6 +100,42 @@ class RESOURCEQUOTE
         $this->navigate->resource($this->vars['resourceId'], $message);
     }
     /**
+     * Ask for confirmation for quote to be deleted
+     */
+    public function deleteInit()
+    {
+        $this->session->delVar("resourceQuoteLock");
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "quoteDelete"));
+        $pString = \FORM\formHeader('resource_RESOURCEQUOTE_CORE');
+        $pString .= \FORM\hidden("method", 'delete');
+        $pString .= \FORM\hidden("resourceId", $this->vars['resourceId']);
+        $pString .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
+        $pString .= \FORM\hidden("summaryType", 'resourcesummaryQuotes');
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Confirm")));
+        $pString .= \FORM\formEnd();
+        GLOBALS::addTplVar('content', $pString);
+    }
+    /**
+     * Delete the quote and all peripheral data
+     *
+     */
+    public function delete()
+    {
+        if ($this->session->getVar("resourceQuoteLock")) {
+            $this->badInput->close($this->errors->text("done", "quote"));
+        }
+    	if (!array_key_exists('resourcemetadataId', $this->vars) || !array_key_exists('summaryType', $this->vars)) {
+    		$this->badInput->close($this->errors->text("inputError", "missing"));
+    	}
+        $this->textqp->delete($this->vars['summaryType']);
+        $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
+        $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
+        // lock reload
+        $this->session->setVar("resourceQuoteLock", TRUE);
+        // send back to view this resource with success message
+        $this->navigate->resource($this->vars['resourceId'], $this->success->text("quoteDelete"));
+    }
+    /**
      * Check we have appropriate input.
      *
      * Page and comment are optional

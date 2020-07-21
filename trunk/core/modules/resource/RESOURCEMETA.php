@@ -190,6 +190,13 @@ class RESOURCEMETA
                     "index.php?action=resource_RESOURCEMUSING_CORE&method=musingEdit" . htmlentities("&resourceId=" . $resourceId .
                 '&resourcemetadataId=' . $row['resourcemetadataId'])
                 );
+                
+                $this->musing[$index]['editLink'] .= '&nbsp;' .  \HTML\a(
+                    $this->icons->getClass("delete"),
+                    $this->icons->getHTML("delete"),
+                    "index.php?action=resource_RESOURCEMUSING_CORE&method=deleteInit" .
+                htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $row['resourcemetadataId'])
+                );
             }
             $index++;
         }
@@ -216,6 +223,7 @@ class RESOURCEMETA
         $patterns = FALSE;
         $action = $type == 'quote' ? 'quoteEdit' : 'paraphraseEdit';
         $phpFile = $type == 'quote' ? 'resource_RESOURCEQUOTE_CORE' : 'resource_RESOURCEPARAPHRASE_CORE';
+        $summaryType = $type == 'quote' ? 'resourcesummaryQuotes' : 'resourcesummaryParaphrases';
         $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
         $index = 0;
         $thisUserId = $this->session->getVar("setup_UserId");
@@ -293,6 +301,13 @@ class RESOURCEMETA
                     $this->icons->getHTML("edit"),
                     "index.php?action=$phpFile&method=$action" .
                 htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $row['resourcemetadataId'])
+                );
+                
+                $this->{$type}[$index]['editLink'] .= '&nbsp;' .  \HTML\a(
+                    $this->icons->getClass("delete"),
+                    $this->icons->getHTML("delete"),
+                    "index.php?action=$phpFile&method=deleteInit" .
+                htmlentities("&resourceId=" . $resourceId . "&resourcemetadataId=" . $row['resourcemetadataId'] . '&summaryType=' . $summaryType)
                 );
             }
             $index++;

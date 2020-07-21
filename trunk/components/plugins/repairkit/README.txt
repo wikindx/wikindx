@@ -29,15 +29,12 @@ fixes the issue.
 
 The module registers itself in the 'admin' menu.
 
-Unzip this file (with any directory structure) into plugins/repairkit/.
-Thus, plugins/repairkit/index.php etc.
-
 ********************************************************************************
 
 BUGS AND LIMITATIONS
 
 - Dropping a PRIMARY index from an autoincremented field fails because the
-  autoincrement property must be removed before the index, but but the heuristic
+  autoincrement property must be removed before the index, but the heuristic
   is not fine enough to manage this case which can be considered rare.
 
 - The previous error also implies that any field definition error which requires
@@ -46,6 +43,9 @@ BUGS AND LIMITATIONS
 ********************************************************************************
 
 CHANGELOG:
+
+v192 2020
+1. Removed statistics tables in Missing Rows.
 
 2020-07-11 : CHG : relicencing under ISC License terms.
 

@@ -372,17 +372,6 @@ class repairkit_MODULE
                 $resIds[] = $row['resourceId'];
             }
         }
-        $this->db->formatConditions($this->db->formatFields('statisticsResourceId') . $this->db->equal . $this->db->formatFields('resourceId'));
-        $stmt = $this->db->selectNoExecute('statistics', '*', FALSE, TRUE, TRUE);
-        $stmt = $this->db->existsClause($stmt, TRUE);
-        $this->db->formatConditions($stmt);
-        $resultset = $this->db->select('resource', 'resourceId');
-        while ($row = $this->db->fetchRow($resultset)) {
-            if (array_search($row['resourceId'], $resIds) === FALSE) {
-                ++$resources;
-                $resIds[] = $row['resourceId'];
-            }
-        }
         $string = $this->pluginmessages->text('missingRowsCount', $resources);
         GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text('success', $string), 'success', 'center'));
         $this->missingrowsInit();
@@ -423,6 +412,9 @@ class repairkit_MODULE
             $creatorIds[$row['creatorId']] = mb_strtolower(preg_replace("/[^[:alnum:][:space:]]/u", '', $row['creatorSurname']));
         }
         while ($row = $this->db->fetchRow($resultSet1)) {
+        	if (!array_key_exists($row['resourcecreatorCreatorMain'], $creatorIds)) {
+        		continue;
+        	}
             $rcSurname = mb_strtolower(preg_replace("/[^[:alnum:][:space:]]/u", '', $row['resourcecreatorCreatorSurname']));
             if ($rcSurname != $creatorIds[$row['resourcecreatorCreatorMain']]) {
                 $this->db->formatConditions(['resourcecreatorCreatorMain' => $row['resourcecreatorCreatorMain']]);

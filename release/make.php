@@ -67,16 +67,58 @@ switch ($VersionPackaged)
     case 'trunk' :
         define('DIR_SRC', DIRSRC_TRUNK);
         define('DIR_DST', DIRPKG_ROOT . DIRECTORY_SEPARATOR . $VersionPackaged);
-        define('DIR_DST_SRC', DIR_DST . DIRECTORY_SEPARATOR . 'wikindx');
-        define('DIR_DST_PKG', DIR_DST . DIRECTORY_SEPARATOR . 'package');
-        define('DIR_DST_CMP', DIR_DST_PKG . DIRECTORY_SEPARATOR . 'components');
+        define('DIR_DST_SRC', DIR_DST . DIRECTORY_SEPARATOR . 'source');
+        define('DIR_DST_PKG', DIR_DST . DIRECTORY_SEPARATOR . 'files');
+        define('DIR_DST_COR', DIR_DST_PKG . DIRECTORY_SEPARATOR . $VersionPackaged);
+        define('DIR_DST_COR_ARC', DIR_DST_PKG . DIRECTORY_SEPARATOR . 'archives' . DIRECTORY_SEPARATOR . $VersionPackaged);
+        define('DIR_DST_CMP', DIR_DST_PKG . DIRECTORY_SEPARATOR . $VersionPackaged . DIRECTORY_SEPARATOR . 'components');
+        define('DIR_DST_CMP_ARC', [
+            'plugin' => DIR_DST_PKG . DIRECTORY_SEPARATOR . 'archives' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'plugin' . DIRECTORY_SEPARATOR . 'trunk',
+            'style' => DIR_DST_PKG . DIRECTORY_SEPARATOR . 'archives' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . 'trunk',
+            'template' => DIR_DST_PKG . DIRECTORY_SEPARATOR . 'archives' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'trunk',
+            'vendor' => DIR_DST_PKG . DIRECTORY_SEPARATOR . 'archives' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'trunk',
+        ]);
+        define('DIR_DST_COR_CUS',  DIR_DST . DIRECTORY_SEPARATOR . 'cus' . DIRECTORY_SEPARATOR . 'core');
+        define('DIR_DST_CMP_CUS', [
+            'plugin' => DIR_DST . DIRECTORY_SEPARATOR . 'cus' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'plugin' . DIRECTORY_SEPARATOR . 'trunk',
+            'style' => DIR_DST . DIRECTORY_SEPARATOR . 'cus' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . 'trunk',
+            'template' => DIR_DST . DIRECTORY_SEPARATOR . 'cus' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . 'trunk',
+            'vendor' => DIR_DST . DIRECTORY_SEPARATOR . 'cus' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'trunk',
+        ]);
+        define('DIR_URL_CMP', [
+            'plugin' => SF_RELEASE_SERVER . "/components/plugin/trunk",
+            'style' => SF_RELEASE_SERVER . "/components/style/trunk",
+            'template' => SF_RELEASE_SERVER . "/components/template/trunk",
+            'vendor' => SF_RELEASE_SERVER . "/components/vendor/trunk",
+        ]);
     break;
     default:
         define('DIR_SRC', DIRSRC_TRUNK);
         define('DIR_DST', DIRPKG_ROOT . DIRECTORY_SEPARATOR . $VersionPackaged);
-        define('DIR_DST_SRC', DIR_DST . DIRECTORY_SEPARATOR . 'wikindx');
-        define('DIR_DST_PKG', DIR_DST . DIRECTORY_SEPARATOR . 'package');
-        define('DIR_DST_CMP', DIR_DST_PKG . DIRECTORY_SEPARATOR . 'components');
+        define('DIR_DST_SRC', DIR_DST . DIRECTORY_SEPARATOR . 'source');
+        define('DIR_DST_PKG', DIR_DST . DIRECTORY_SEPARATOR . 'files');
+        define('DIR_DST_COR', DIR_DST_PKG . DIRECTORY_SEPARATOR . $VersionPackaged);
+        define('DIR_DST_COR_ARC', DIR_DST_PKG . DIRECTORY_SEPARATOR . 'archives' . DIRECTORY_SEPARATOR . $VersionPackaged);
+        define('DIR_DST_CMP', DIR_DST_PKG . DIRECTORY_SEPARATOR . $VersionPackaged . DIRECTORY_SEPARATOR . 'components');
+        define('DIR_DST_CMP_ARC', [
+            'plugin' => DIR_DST_PKG . DIRECTORY_SEPARATOR . 'archives' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'plugin' . DIRECTORY_SEPARATOR . WIKINDX_COMPONENTS_COMPATIBLE_VERSION['plugin'],
+            'style' => DIR_DST_PKG . DIRECTORY_SEPARATOR . 'archives' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . WIKINDX_COMPONENTS_COMPATIBLE_VERSION['style'],
+            'template' => DIR_DST_PKG . DIRECTORY_SEPARATOR . 'archives' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . WIKINDX_COMPONENTS_COMPATIBLE_VERSION['template'],
+            'vendor' => DIR_DST_PKG . DIRECTORY_SEPARATOR . 'archives' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . WIKINDX_COMPONENTS_COMPATIBLE_VERSION['vendor'],
+        ]);
+        define('DIR_DST_COR_CUS',  DIR_DST . DIRECTORY_SEPARATOR . 'cus' . DIRECTORY_SEPARATOR . 'core');
+        define('DIR_DST_CMP_CUS', [
+            'plugin' => DIR_DST . DIRECTORY_SEPARATOR . 'cus' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'plugin' . DIRECTORY_SEPARATOR . WIKINDX_COMPONENTS_COMPATIBLE_VERSION['plugin'],
+            'style' => DIR_DST . DIRECTORY_SEPARATOR . 'cus' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'style' . DIRECTORY_SEPARATOR . WIKINDX_COMPONENTS_COMPATIBLE_VERSION['style'],
+            'template' => DIR_DST . DIRECTORY_SEPARATOR . 'cus' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR . WIKINDX_COMPONENTS_COMPATIBLE_VERSION['template'],
+            'vendor' => DIR_DST . DIRECTORY_SEPARATOR . 'cus' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . WIKINDX_COMPONENTS_COMPATIBLE_VERSION['vendor'],
+        ]);
+        define('DIR_URL_CMP', [
+            'plugin' => SF_RELEASE_SERVER . "/components/plugin/" . WIKINDX_COMPONENTS_COMPATIBLE_VERSION['plugin'],
+            'style' => SF_RELEASE_SERVER . "/components/style/" . WIKINDX_COMPONENTS_COMPATIBLE_VERSION['style'],
+            'template' => SF_RELEASE_SERVER . "/components/template/" . WIKINDX_COMPONENTS_COMPATIBLE_VERSION['template'],
+            'vendor' => SF_RELEASE_SERVER . "/components/vendor/" . WIKINDX_COMPONENTS_COMPATIBLE_VERSION['vendor'],
+        ]);
     break;
 }
 
@@ -106,9 +148,30 @@ echo "\n";
 echo "MKDIR " . DIR_DST_PKG . "\n";
 mkdir(DIR_DST_PKG);
 echo "\n";
-echo "MKDIR " . DIR_DST_CMP . "\n";
-mkdir(DIR_DST_CMP);
+echo "MKDIR " . DIR_DST_COR . "\n";
+mkdir(DIR_DST_COR, 0777, TRUE);
 echo "\n";
+echo "MKDIR " . DIR_DST_COR_ARC . "\n";
+mkdir(DIR_DST_COR_ARC, 0777, TRUE);
+echo "\n";
+echo "MKDIR " . DIR_DST_CMP . "\n";
+mkdir(DIR_DST_CMP, 0777, TRUE);
+echo "\n";
+foreach (DIR_DST_CMP_ARC as $type => $path)
+{
+    echo "MKDIR " . $path . "\n";
+    mkdir($path, 0777, TRUE);
+    echo "\n";
+}
+echo "MKDIR " . DIR_DST_COR_CUS . "\n";
+mkdir(DIR_DST_COR_CUS, 0777, TRUE);
+echo "\n";
+foreach (DIR_DST_CMP_CUS as $type => $path)
+{
+    echo "MKDIR " . $path . "\n";
+    mkdir($path, 0777, TRUE);
+    echo "\n";
+}
 
 echo "Replicate source code of $VersionPackaged\n";
 \FILE\recurse_dir_copy(DIR_SRC, DIR_DST_SRC);
@@ -133,7 +196,8 @@ if ($ManualRebuildingFlag) build_manual(DIR_DST_SRC, 'WIKINDX Documentation ' . 
 
 foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
 {                
-    $pkgarch = \FILE\createComponentPackage(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'manual', DIR_DST_PKG, $pkg, $archformat);
+    $pkgarch = \FILE\createComponentPackage(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'manual', DIR_DST_COR_ARC, $pkg, $archformat);
+    copy($pkgarch, DIR_DST_COR . DIRECTORY_SEPARATOR . basename($pkgarch));
     echo " - $archformat arch: " . $pkgarch . "\n";
     
     $pkghash = \UTILS\hash_path($pkgarch, WIKINDX_PACKAGE_HASH_ALGO);
@@ -240,7 +304,7 @@ foreach ($componentPath as $rootpath => $paths)
         {
             if ($componentConfig["component_updatable"] == "true")
             {
-                $pkg = APP_PKG_PREFIX . "_" . $componentConfig["component_type"] . "_" . $componentConfig["component_id"];
+                $pkg = APP_NAME . "_" . $componentConfig["component_type"] . "_" . $componentConfig["component_id"] . "_" . $componentConfig["component_version"];
                 echo "Package " . $pkg . "\n";
                 
                 $readmecmp .= str_repeat("-", MAX_LINE_LENGHT) . "\n";
@@ -289,20 +353,21 @@ foreach ($componentPath as $rootpath => $paths)
                 //foreach (["ZIP"] as $archformat)
                 foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
                 {                
-                    $pkgarch = \FILE\createComponentPackage($componentDir, DIR_DST_CMP, $pkg, $archformat);
+                    $pkgarch = \FILE\createComponentPackage($componentDir, DIR_DST_CMP_ARC[$componentConfig["component_type"]], $pkg, $archformat);
+                    copy($pkgarch, DIR_DST_CMP . DIRECTORY_SEPARATOR . basename($pkgarch));
                     echo " - $archformat arch: " . $pkgarch . "\n";
                     
                     $pkghash = \UTILS\hash_path($pkgarch, WIKINDX_PACKAGE_HASH_ALGO);
                     echo " - $archformat hash: " . $pkghash . "\n";
     				
-					$signatures .= WIKINDX_PACKAGE_HASH_ALGO . ";" . $pkghash . ";" . basename($pkgarch) . "\n";
+					//$signatures .= WIKINDX_PACKAGE_HASH_ALGO . ";" . $pkghash . ";" . basename($pkgarch) . "\n";
                     
                     // The update server use only the ZIP format because the decompression of .tar.gz and .tar.bz2 is broken on macOS
                     // BZIP2 and GZ are kept for manual update
                     if ($archformat == "ZIP")
                     {
 	                    $PkgList[] = [
-	                    	"package_location" => SF_RELEASE_SERVER . "/" . $VersionPackaged . "/components/" . basename($pkgarch),
+	                    	"package_location" => DIR_URL_CMP[$componentConfig["component_type"]] . "/" . basename($pkgarch),
 	                    	"package_" . WIKINDX_PACKAGE_HASH_ALGO => $pkghash, "package_size" => filesize($pkgarch)
 	                    ];
                     }
@@ -313,6 +378,13 @@ foreach ($componentPath as $rootpath => $paths)
                 
                 $componentConfig["component_packages"] = $PkgList;
                 $componentlist[] = $componentConfig;
+                
+                // Create the config file of the component for the update server
+                echo " - " . DIR_DST_CMP_CUS[$componentConfig["component_type"]] . DIRECTORY_SEPARATOR . $pkg . ".json" . "\n";
+                file_put_contents(
+                    DIR_DST_CMP_CUS[$componentConfig["component_type"]] . DIRECTORY_SEPARATOR . $pkg . ".json",
+                    json_encode($componentConfig, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                );
             }
             // Clear files for the core build that follows
             if ($componentConfig["component_builtin"] == "false")
@@ -340,8 +412,11 @@ file_put_contents(DIR_DST_CMP . DIRECTORY_SEPARATOR . "README.txt", $readmecmp);
 
 
 echo "\n";
-echo "Build component packages list for the update server\n";
-file_put_contents(DIR_DST_CMP . DIRECTORY_SEPARATOR . "components.json", json_encode($componentlist, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+echo "Save a list of component compatible version of the core for the update server\n";
+if ($VersionPackaged == "trunk")
+    file_put_contents(DIR_DST_COR_CUS . DIRECTORY_SEPARATOR . $VersionPackaged . ".json", json_encode(["plugin" => "trunk","style" => "trunk","template" => "trunk","vendor" => "trunk",], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+else
+    file_put_contents(DIR_DST_COR_CUS . DIRECTORY_SEPARATOR . $VersionPackaged . ".json", json_encode(WIKINDX_COMPONENTS_COMPATIBLE_VERSION, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 
 
 echo "\n";
@@ -351,7 +426,8 @@ echo "Package " . $pkg . "\n";
 
 foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
 {                
-    $pkgarch = \FILE\createComponentPackage(DIR_DST_SRC, DIR_DST_PKG, $pkg, $archformat);
+    $pkgarch = \FILE\createComponentPackage(DIR_DST_SRC, DIR_DST_COR_ARC, $pkg, $archformat);
+    copy($pkgarch, DIR_DST_COR . DIRECTORY_SEPARATOR . basename($pkgarch));
     echo " - $archformat arch: " . $pkgarch . "\n";
     
     $pkghash = \UTILS\hash_path($pkgarch, WIKINDX_PACKAGE_HASH_ALGO);
@@ -384,10 +460,12 @@ $readmeglobal .= "--\n";
 $readmeglobal .= "The WIKINDX Team " . date("Y") . "\n";
 $readmeglobal .= "sirfragalot@users.sourceforge.net\n";
 
-file_put_contents(DIR_DST_PKG . DIRECTORY_SEPARATOR . "README.txt", $readmeglobal);
+file_put_contents(DIR_DST_COR_ARC . DIRECTORY_SEPARATOR . "README.txt", $readmeglobal);
+file_put_contents(DIR_DST_COR . DIRECTORY_SEPARATOR . "README.txt", $readmeglobal);
 
 echo "Signatures file\n";
-file_put_contents(DIR_DST_PKG . DIRECTORY_SEPARATOR . APP_NAME . "_" . $VersionPackaged . "_signatures.txt", $signatures);
+file_put_contents(DIR_DST_COR_ARC . DIRECTORY_SEPARATOR . APP_NAME . "_" . $VersionPackaged . "_signatures.txt", $signatures);
+file_put_contents(DIR_DST_COR . DIRECTORY_SEPARATOR . APP_NAME . "_" . $VersionPackaged . "_signatures.txt", $signatures);
 
 
 ///////////////////////////////////////////////////////////////////////

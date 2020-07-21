@@ -102,11 +102,18 @@ I. Code preparation and checks
 22. When the components are up to date, build their packages from the
     trunk with the release script release/make.php.
 
-23. Upload them in the /home/pfs/project/wikindx/archives/trunk
-    directory of the SourceForge Wikindx Project FTP and try the update
-    server.  Don't forget to switch $WIKINDX_TRUNK_VERSION = TRUE;
+23. Upload the content of release/trunk/files in the
+    /home/pfs/project/wikindx/ directory of the SourceForge Wikindx
+    Project FTP.
 
-24. When the components are ready commit them to SVN and don't change
+24. Upload the content of release/trunk/cus in the
+    /home/project-web/wikindx/htdocs/cus directory of the SourceForge
+    Wikindx Project FTP.
+
+25. Try the update server.
+    Don't forget to switch $WIKINDX_TRUNK_VERSION = TRUE;
+
+26. When the components are ready commit them to SVN and don't change
     them anymore because their signature must be definitively fixed.
 
 
@@ -173,41 +180,32 @@ IV. Public Release
    $ cd release
    $ php make.php
 
-2. Create a X.Y.Z directory in the archives directory of the SourceForge
-   Wikindx Project FTP. E.g. /home/pfs/project/wikindx/archives/X.Y.Z
+   The layout created by this scripit matchs exactly the layout of FTP.
 
-3. Upload to archives/X.Y.Z FTP directories all files and folders created
-   in the X.Y.Z/package directory by the packaging script make.php.
+2. Without overwriting files already online, upload the content of
+    release/X.Y.Z/files in the /home/pfs/project/wikindx/ directory
+    of the SourceForge Wikindx Project FTP.
 
-4. Create a X.Y.Z directory in the downloads directory of the
-   SourceForge Wikindx Website FTP.
-   E.g. /home/project-web/wikindx/htdocs/downloads/X.Y.Z
+3. Without overwriting files already online, upload the content of
+    release/X.Y.Z/cus in the /home/project-web/wikindx/htdocs/cus directory
+    of the SourceForge Wikindx Project FTP.
 
-5. Upload to the new FTP directory the X.Y.Z/package/components/components.json
-   file for the component update server.
-   E.g. /home/project-web/wikindx/htdocs/downloads/X.Y.Z/components.json
-
-6. Update the WIKINDX TEST DRIVE website and check if nothing bad append before
+4. Update the WIKINDX TEST DRIVE website and check if nothing bad append before
    publishing to directories that are not archives. If things go wrong, correct
    and redo the release from the begining.
 
-7. Create a X.Y.Z directory in the root directory of the SourceForge
-   Wikindx Project FTP. E.g. /home/pfs/project/wikindx/X.Y.Z
+5. Remove all files and folders of the current_release FTP directory
+   of the SourceForge Wikindx Project FTP and upload the content of
+   release/X.Y.Z/files/X.Y.Z instead.
 
-8. Remove all files and folders of the current_release FTP directory
-   of the SourceForge Wikindx Project FTP.
-
-9. Upload to X.Y.Z and current_release FTP directories all files and folders
-   created in the X.Y.Z/package directory by the packaging script make.php.
-
-10. On the Files section of the Wikindx SourceForge pages, go in
-    directory X.Y.Z, display details of the wikindx_x.y.z.zip file, select
+6. On the Files section of the Wikindx SourceForge pages, go in
+    directory X.Y.Z, display details of the wikindx_x.y.z.tar.bz2 file, select
     it as the default download for all systems (Link: Select all) and save.
 
-11. If an old A.B.C version should no longer be highlighted, remove its A.B.C
+7. If an old A.B.C version should no longer be highlighted, remove its A.B.C
     folder of the SourceForge Wikindx Project FTP. The automatic update for
-    the A.B.C version will continue to work because it uses the copy of the
-    archives/A.B.C folder, which has not been deleted.
+    the A.B.C version will continue to work because it uses the copies of the
+    archives/ folders, which have not been deleted.
 
 
 V. Announce

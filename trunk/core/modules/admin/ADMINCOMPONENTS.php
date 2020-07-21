@@ -62,7 +62,7 @@ class ADMINCOMPONENTS
     public function checkUpdatesOnline($message = FALSE)
     {
         if (WIKINDX_IS_TRUNK) {
-            $upd_srv_link = "https://sourceforge.net/projects/wikindx/files/archives/trunk/components/components.json";
+            $upd_srv_link = WIKINDX_COMPONENTS_UPDATE_SERVER . "?version=" . "trunk";
         } else {
             $upd_srv_link = WIKINDX_COMPONENTS_UPDATE_SERVER . "?version=" . WIKINDX_PUBLIC_VERSION;
         }

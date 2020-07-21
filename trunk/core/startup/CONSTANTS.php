@@ -113,7 +113,7 @@ define('WIKINDX_URL', 'https://wikindx.sourceforge.io');
  *
  * @name WIKINDX_COMPONENTS_UPDATE_SERVER
  */
-define('WIKINDX_COMPONENTS_UPDATE_SERVER', 'https://wikindx.sourceforge.io/downloads/components_server.php');
+define('WIKINDX_COMPONENTS_UPDATE_SERVER', 'https://wikindx.sourceforge.io/cus/index.php');
 /**
  * Algo used for hashing the packages released by the project
  *

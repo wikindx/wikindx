@@ -1,0 +1,41 @@
+{
+    "component_version": "175",
+    "component_licence": "MIT License",
+    "component_name": "ProgressBar.js library",
+    "component_description": "Responsive and slick progress bars with animated SVG paths.",
+    "component_sha256": "b051d99e16d64b71afbe598fa783dad40e990931fc85c9b246966a0a460b9110",
+    "component_website": "https://kimmobrunfeldt.github.io/progressbar.js/",
+    "component_id": "progressbarjs",
+    "component_builtin": "true",
+    "component_updatable": "true",
+    "component_type": "vendor",
+    "component_authors": [
+        {
+            "author_name": "Kimmo Brunfeldt",
+            "author_role": "Developer",
+            "author_copyright": "2014-2020",
+            "author_website": "https://kimmobrunfeldt.github.io/"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Packager",
+            "author_copyright": "2014-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Packager",
+            "author_copyright": "2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/6.3.7/wikindx_vendor_progressbarjs_175.zip",
+            "package_sha256": "a98f84689b2d61354dd0542794e249ed5676dcb7bde7aa0cdd57277d91e9a070",
+            "package_size": 9287
+        }
+    ]
+}

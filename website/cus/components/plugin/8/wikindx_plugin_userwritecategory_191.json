@@ -27,7 +27,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_userwritecategory_191.zip",
-            "package_sha256": "6d1bbdab8f1ede57037e65f72b52095f3340fef5ea94325c6c85c457622b3953",
+            "package_sha256": "9cb7d79269fc8c98bd44b742561c7055f4c659e300f88d3e374ce6d85589b61b",
             "package_size": 10241
         }
     ]

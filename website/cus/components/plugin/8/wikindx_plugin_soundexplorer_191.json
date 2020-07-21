@@ -27,7 +27,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_soundexplorer_191.zip",
-            "package_sha256": "b27f6e1d874ec1878f36841a46ef6958dd709756775e96139fa22a91b5164602",
+            "package_sha256": "9dd67cca59cd3ba226ee74023fe223b93328c5143e333d226b3fe15d9cf40d82",
             "package_size": 23680
         }
     ]

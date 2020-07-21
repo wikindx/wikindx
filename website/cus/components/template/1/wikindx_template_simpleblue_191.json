@@ -27,7 +27,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/template/1/wikindx_template_simpleblue_191.zip",
-            "package_sha256": "b8ff4478115e6eff5acf91b9427ffdba79eae2f5a374ba5fcdb30c6e55ba03cd",
+            "package_sha256": "4360d4e8b976507f7a09c872119355a37e5df2f076d04de540d8741acd6df462",
             "package_size": 58757
         }
     ]

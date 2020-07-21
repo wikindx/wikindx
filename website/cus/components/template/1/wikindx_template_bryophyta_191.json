@@ -27,7 +27,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/template/1/wikindx_template_bryophyta_191.zip",
-            "package_sha256": "475703d5c330e4370530d791ad3d937c5bd44b027c5f0d732eae610498614144",
+            "package_sha256": "e1815e53852b76f6f687a8d4e8ed854b1f497b1316775cf6aecd6a7783a5b0b1",
             "package_size": 57622
         }
     ]

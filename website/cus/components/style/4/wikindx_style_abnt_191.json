@@ -20,7 +20,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/style/4/wikindx_style_abnt_191.zip",
-            "package_sha256": "bf80d080ce6964b0906ed0a636ea8b03780e665018a5134539dd297eb013fa0e",
+            "package_sha256": "484b07cd1570cd4e672aaf73e5c0f50c1750dc6acb670f26d1583ca40cbde9b0",
             "package_size": 4635
         }
     ]

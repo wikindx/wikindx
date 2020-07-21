@@ -33,7 +33,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_importexportbib_191.zip",
-            "package_sha256": "0531cd51e27970b0449fba943a96bef6c7721071fb454ebdc5be6810ccb95f8a",
+            "package_sha256": "cf3bd24b94fcdfa37e4c9b9efa8889bf738d3d18441ba7961633492843d2499c",
             "package_size": 101862
         }
     ]

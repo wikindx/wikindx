@@ -27,7 +27,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_debugtools_191.zip",
-            "package_sha256": "e1ac13e87a7dbbf43ee961a7c3712e8af75e28fc3d3219cf67277cd960e6ec10",
+            "package_sha256": "23bc7cdc11251fb2e8a7d60537e22f0477145490f2eb8375dc6996783bb12b7b",
             "package_size": 17760
         }
     ]

@@ -33,7 +33,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/template/1/wikindx_template_carambola_191.zip",
-            "package_sha256": "25c93f3777bbfb23ba5497d6d797fe048a1c08061ebdb0969a585f87dd35019e",
+            "package_sha256": "65cedb4635a354109e5985b0270e7f5a60ef290c7443209c291be7727b84cf26",
             "package_size": 73681
         }
     ]

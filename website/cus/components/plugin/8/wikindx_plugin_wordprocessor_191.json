@@ -27,7 +27,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_wordprocessor_191.zip",
-            "package_sha256": "bf258c75751c5525a9caa84a80cefa54ec0daed8d74c71dd1ece5124622435e9",
+            "package_sha256": "3898d9a7a743448aca013856a3026cb62267732adaa5c06a6c4f84852038c826",
             "package_size": 65395
         }
     ]

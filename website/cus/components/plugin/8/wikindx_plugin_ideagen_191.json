@@ -27,7 +27,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_ideagen_191.zip",
-            "package_sha256": "99c96c8fadf2e166f817e95ca1b0596db139dfc6e2ee9b36243475950925ac73",
+            "package_sha256": "bcd1668d4bb8a1ba00828bd152a38f667e2159e996a337146aa8f4ce8e202b7c",
             "package_size": 13749
         }
     ]

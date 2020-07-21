@@ -27,7 +27,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/template/1/wikindx_template_verticalorange_191.zip",
-            "package_sha256": "4237a8ae61b421a5f974684b1024702ff2108260a9a45e06795f1f5646e215e9",
+            "package_sha256": "6910261fde10008db5914a92522744f4cf5ce1fe1b623be01a1df9f610df3448",
             "package_size": 60001
         }
     ]

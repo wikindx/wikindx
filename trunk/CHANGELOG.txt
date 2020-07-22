@@ -8,6 +8,7 @@ BUG FIXES:
 2. Tidied up display of MyWikindx.
 3. Fix a duplicate declaration of default value for db users.usersFullname field.
 4. Update the repairkit schema.
+5. Prevent a crash when the database is empty and the userId is known by the session.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

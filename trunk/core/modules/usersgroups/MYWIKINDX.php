@@ -420,6 +420,11 @@ class MYWIKINDX
         $pString .= \HTML\td($radios);
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
+        $pString .= \HTML\p(\FORM\formSubmitButton(
+                $this->messages->text("submit", "Proceed"),
+                FALSE,
+                'onclick="return getMywikindxInputGroups();"'
+            ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -828,6 +833,11 @@ class MYWIKINDX
         $pString .= \HTML\td($radios);
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
+        $pString .= \HTML\p(\FORM\formSubmitButton(
+		   $this->messages->text("submit", "Proceed"),
+		   FALSE,
+		   'onclick="return getMywikindxInputTags();"'
+    	));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -1094,9 +1104,14 @@ class MYWIKINDX
         $pString .= \HTML\td($radios);
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
+
+		$pString .= \HTML\p(\FORM\formSubmitButton(
+			$this->messages->text("submit", "Proceed"),
+			FALSE,
+			'onclick="return getMywikindxInputBibs();"'
+		));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-
         return $pString;
     }
     /**
@@ -1463,11 +1478,11 @@ class MYWIKINDX
                 $groups['forget'] = $this->messages->text('config', 'forget');
             }
             $groups['notification'] = $this->messages->text('config', 'notification');
-            $groups['userTags'] = $this->messages->text("user", "userTags");
-            $groups['userBibs'] = $this->messages->text('user', 'bib');
         }
         // Only for logged on users
         if ($this->session->getVar("setup_UserId")) {
+            $groups['userTags'] = $this->messages->text("user", "userTags");
+            $groups['userBibs'] = $this->messages->text('user', 'bib');
             // Add user group administration only if there is more than one user.
             $resourceId = $this->db->select('users', 'usersId');
             if ($this->db->numRows($resourceId) > 1) {
@@ -1529,22 +1544,27 @@ class MYWIKINDX
         switch ($item) {
             case 'user': // user configuration
                 $pString .= $this->userConfigDisplay($formText);
+                $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
 
                 break;
             case 'resources': // resources display configuration
                 $pString .= $this->resourcesConfigDisplay();
+                $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
 
                 break;
             case 'appearance': // appearance configuration
                 $pString .= $this->appearanceConfigDisplay();
+                $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
 
                 break;
             case 'forget': // forgotten password configuration
                 $pString .= $this->forgetConfigDisplay();
+                $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
 
                 break;
             case 'notification': // email notification configuration
                 $pString .= $this->notificationConfigDisplay();
+                $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
 
                 break;
             case 'userGroups': // user groups configuration
@@ -1563,27 +1583,6 @@ class MYWIKINDX
                 $pString .= '';
 
                 break;
-        }
-        if ($item == 'userGroups') {
-            $pString .= \HTML\p(\FORM\formSubmitButton(
-                $this->messages->text("submit", "Proceed"),
-                FALSE,
-                'onclick="return getMywikindxInputGroups();"'
-            ));
-        } elseif ($item == 'userTags') {
-            $pString .= \HTML\p(\FORM\formSubmitButton(
-                $this->messages->text("submit", "Proceed"),
-                FALSE,
-                'onclick="return getMywikindxInputTags();"'
-            ));
-        } elseif ($item == 'userBibs') {
-            $pString .= \HTML\p(\FORM\formSubmitButton(
-                $this->messages->text("submit", "Proceed"),
-                FALSE,
-                'onclick="return getMywikindxInputBibs();"'
-            ));
-        } else {
-            $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
         }
         $pString .= \FORM\formEnd();
 

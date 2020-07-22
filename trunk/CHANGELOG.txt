@@ -5,6 +5,7 @@ Focus: Minor bug fixes
 
 BUG FIXES:
 1. For the special restricted user, ensure they cannot change their user details (inc. password) in MyWikindx.
+2. Tidied up display of MyWikindx.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

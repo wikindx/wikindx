@@ -1473,7 +1473,10 @@ class MYWIKINDX
             if ($this->db->numRows($resourceId) > 1) {
                 $groups['userGroups'] = $this->messages->text("user", "groups");
             }
-            $user = ['user' => $this->messages->text('user', 'user')];
+            $user = [];
+            if ($this->session->getVar("setup_UserId") != WIKINDX_RESTRICT_USERID) {
+	            $user = ['user' => $this->messages->text('user', 'user')];
+            }
             $groups = $user + $groups;
         }
 

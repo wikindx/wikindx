@@ -471,16 +471,18 @@ class USER
      */
     public function writeSessionPreferences($userId)
     {
-        $bib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         if ($userId) {
             $this->session->setVar("setup_UserId", $userId);
-        } 
-        $bibs = $bib->getUserBibs();
-        if (empty($bibs)) {
-            $bibs = $bib->getGroupBibs();
-        }
-        if (!empty($bibs)) {
-            $this->session->setVar("setup_Bibliographies", TRUE);
+            $bib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
+            $bibs = $bib->getUserBibs();
+            if (empty($bibs)) {
+                $bibs = $bib->getGroupBibs();
+            }
+            if (!empty($bibs)) {
+                $this->session->setVar("setup_Bibliographies", TRUE);
+            }
+        } else {
+            $this->session->setVar("setup_Bibliographies", FALSE);
         }
     }
     /**

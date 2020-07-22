@@ -1,6 +1,6 @@
 RELEASES:
 
-v6.3.7
+v6.3.8
 Focus: Minor bug fixes
 
 BUG FIXES:

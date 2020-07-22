@@ -196,7 +196,7 @@ important than those of the core:
 The  client  accesses  the  database via  a  standard  (graphical)  web
 browser. Wikindx  makes use of the tinyMCE editor  (v2.0.4) and this
 could limit the web browsers that can be used. A migration project to
-CKEditor is underway to address these limitations.
+TinyMCE 5 is underway to address these limitations.
 
 Generally, though, if you use the following, you should be OK:
 
@@ -498,7 +498,6 @@ for their work:
  * [SmartyMenu], menu plugin for Smarty ([LGPL 2.1])
  * [PdfToText], PHP library to extract data from a PDF ([LGPL 3.0])
  * [PHPMailer], PHP email sending library ([LGPL 2.1])
- * [CKEditor], JavaScript WYSIWYG HTML Editor ([LGPL 2.1])
  * [json2.js], JSON in JavaScript (Public Domain)
  * [jpGraph], Graph creating library ([QPL 1.0])
  * [progressbar.js], ProgressBar.js ([MIT])
@@ -538,7 +537,6 @@ for their work:
 [SmartyMenu]: <http://www.phpinsider.com/php/code/SmartyMenu>
 [PdfToText]: <https://github.com/christian-vigh-phpclasses/PdfToText>
 [PHPMailer]: <https://github.com/PHPMailer/PHPMailer>
-[CKEditor]: <https://ckeditor.com/>
 [json2.js]: <https://github.com/douglascrockford/JSON-js>
 [JSON]: <https://www.json.org/json-en.html>
 [jpGraph]: <https://jpgraph.net/>

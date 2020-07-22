@@ -299,6 +299,11 @@ class UPDATEDATABASE
                 $this->numStages = 1;
                 $this->stage14();
             }
+            elseif ($dbVersion < 15.0)
+            { // upgrade v6.2.2 to 6.3.8
+                $this->numStages = 1;
+                $this->stage15();
+            }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
             // Refresh the locales list
@@ -843,6 +848,18 @@ class UPDATEDATABASE
         $this->updateSoftwareVersion(14);
         $this->checkStatus('stage14');
         $this->pauseExecution('stage14');
+    }
+    /**
+     * Upgrade database schema to version 15 (6.3.8)
+     */
+    private function stage15()
+    {
+        // Convert tag sizes to scale factors
+        $this->updateDbSchema('15');
+        
+        $this->updateSoftwareVersion(15);
+        $this->checkStatus('stage15');
+        $this->pauseExecution('stage15');
     }
     /**
      * Transfer statistics data to new tables then drop old table

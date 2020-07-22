@@ -34,7 +34,7 @@ define('TAB', "\t");
  *
  * @name WIKINDX_PUBLIC_VERSION
  */
-define('WIKINDX_PUBLIC_VERSION', '6.3.7');
+define('WIKINDX_PUBLIC_VERSION', '6.3.8');
 /**
  * WIKINDX internal version information
  *
@@ -44,7 +44,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.3.7');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 14.0);
+define('WIKINDX_INTERNAL_VERSION', 15.0);
 /**
  * WIKINDX minimum internal version upgradable
  *

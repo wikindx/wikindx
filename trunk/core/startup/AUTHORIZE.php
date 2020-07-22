@@ -155,9 +155,6 @@ class AUTHORIZE
         }
         // access already granted
         if ($this->session->getVar("setup_ReadOnly")) {
-            // populate session with default values from config
-            //			$user = FACTORY_USER::getInstance();
-            //			$user->writeSessionPreferences(FALSE);
             return TRUE;
         }
         if ((!array_key_exists('action', $this->vars) || $this->vars['action'] != 'upgradeDBLogon')) {
@@ -430,8 +427,6 @@ class AUTHORIZE
         $this->session->destroy();
         // set the default language prior to displaying the login prompt
         $user = FACTORY_USER::getInstance();
-        // populate session with default values from config
-//        $user->writeSessionPreferences(FALSE);
         // remove any wikindx cookie that has been set
         $cookie = FACTORY_COOKIE::getInstance();
         $cookie->deleteCookie();

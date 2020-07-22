@@ -468,8 +468,6 @@ class USER
      * Can come from users or config (default values for readOnly user in which case $userId = FALSE)
      *
      * @param int $userId
-     *
-     * @return bool
      */
     public function writeSessionPreferences($userId)
     {
@@ -484,8 +482,6 @@ class USER
         if (!empty($bibs)) {
             $this->session->setVar("setup_Bibliographies", TRUE);
         }
-
-        return TRUE;
     }
     /**
      * Load user details into session mywikindx_ array

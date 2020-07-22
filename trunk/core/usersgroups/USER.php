@@ -477,9 +477,6 @@ class USER
         if ($userId) {
             $this->session->setVar("setup_UserId", $userId);
         } 
-//        else {
- //           $this->session->setVar("setup_ListLink", WIKINDX_LIST_LINK);
- //       }
         $bibs = $bib->getUserBibs();
         if (empty($bibs)) {
             $bibs = $bib->getGroupBibs();

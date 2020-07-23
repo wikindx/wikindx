@@ -71,6 +71,8 @@ class LISTCOMMON
     private $languageClass;
     /** array */
     private $rows = [];
+    /** array */
+    public $attachmentHashnames = [];
 
 
     /**
@@ -180,9 +182,14 @@ class LISTCOMMON
         } else {
             $recordset = $this->db->query($sql, TRUE);
         }
+        if ($recordset === FALSE) {
+            $this->noResources($listType);
+
+            return TRUE;
+        }
         // Displaying only attachments?
         if ($this->session->getVar($listType . '_DisplayAttachment')) {
-            $this->listAttachments($recordset, $listType);
+            $this->listAttachments($listType);
             $this->session->setVar("sql_DisplayAttachment", $listType . '_DisplayAttachment');
 
             return;
@@ -505,10 +512,9 @@ class LISTCOMMON
     /**
      * list only attachments
      *
-     * @param object $recordset
      * @param string $listType
      */
-    private function listAttachments($recordset, $listType)
+    private function listAttachments($listType)
     {
         // Are only logged on users allowed to view this file and is this user logged on?
         if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId")) {
@@ -518,6 +524,9 @@ class LISTCOMMON
         $attachments = new ATTACHMENT();
         $files = [];
         $zip = $this->session->getVar($listType . '_DisplayAttachmentZip') ? TRUE : FALSE;
+        $this->db->formatConditionsOneField($this->attachmentHashnames, 'resourceattachmentsId');
+        $recordset = $this->db->select('resource_attachments', ['resourceattachmentsFileName', 'resourceattachmentsHashFilename', 
+        	'resourceattachmentsId', 'resourceattachmentsResourceId']);
         while ($row = $this->db->fetchRow($recordset)) {
             if ($zip) {
                 $files[$row['resourceattachmentsFileName']] = $row['resourceattachmentsHashFilename'];

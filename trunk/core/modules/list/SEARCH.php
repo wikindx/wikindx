@@ -2987,7 +2987,8 @@ class SEARCH
         $this->db->formatConditionsOneField($mimeTypes, 'resourceattachmentsFileType');
         $resultset = $this->db->select(
             'resource_attachments',
-            ['resourceattachmentsResourceId', 'resourceattachmentsHashFilename', 'resourceattachmentsFileType', 'resourceattachmentsFileSize']
+            ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsHashFilename', 
+            	'resourceattachmentsFileType', 'resourceattachmentsFileSize']
         );
         $attachments = $texts = [];
         while ($row = $this->db->fetchRow($resultset)) {
@@ -3074,6 +3075,7 @@ class SEARCH
                         }
                         if (preg_match("/$pattern/iu", $texts[$row['resourceattachmentsHashFilename']]) === 1) {
                             $matchIds[$key1][] = $row['resourceattachmentsResourceId'];
+                            $this->common->attachmentHashnames[] = $row['resourceattachmentsId'];
                         }
                     } else {
                         // Escape the user input if EXACT phrase
@@ -3084,6 +3086,7 @@ class SEARCH
                         }
                         if (preg_match("/\\b$pattern\\b/iu", $texts[$row['resourceattachmentsHashFilename']]) === 1) {
                             $matchIds[$key1][] = $row['resourceattachmentsResourceId'];
+                            $this->common->attachmentHashnames[] = $row['resourceattachmentsId'];
                         }
                     }
                 }
@@ -3119,7 +3122,6 @@ class SEARCH
                 }
             }
         }
-
         return [$matchIds, $excludeIds, $this->partials];
     }
     /**

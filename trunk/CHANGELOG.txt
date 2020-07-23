@@ -9,6 +9,8 @@ BUG FIXES:
 3. Fix a duplicate declaration of default value for db users.usersFullname field.
 4. Update the repairkit schema.
 5. Prevent a crash when the database is empty and the userId is known by the session.
+6. Prevent a crash with a negative result when full-text searching attachments (Advanced search).
+7. When full-text searching attachments (Advanced search), ensure all attachments with the search term are presented for each resource.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

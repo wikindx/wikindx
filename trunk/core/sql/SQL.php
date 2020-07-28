@@ -2716,18 +2716,15 @@ class SQL
      * @param string $dbname Name of the database
      * @param string $dbuser Login
      * @param string $dbpwd Password
-     * @param bool $dbpers Open a persistent connection if TRUE
      */
     public function open(
         $dbhost = WIKINDX_DB_HOST,
         $dbname = WIKINDX_DB,
         $dbuser = WIKINDX_DB_USER,
-        $dbpwd = WIKINDX_DB_PASSWORD,
-        $dbpers = WIKINDX_DB_PERSISTENT
+        $dbpwd  = WIKINDX_DB_PASSWORD
     ) {
         $this->sqlTimerOn();
-
-        $dbhost = $dbpers === TRUE ? 'p:' . $dbhost : $dbhost;
+        
         $this->handle = mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname);
 
         $this->getConnectionError();

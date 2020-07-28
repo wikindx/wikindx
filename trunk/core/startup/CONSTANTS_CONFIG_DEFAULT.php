@@ -21,8 +21,6 @@
 define('WIKINDX_DB_DEFAULT', 'wikindx5');
 define('WIKINDX_DB_HOST_DEFAULT', 'localhost');
 define('WIKINDX_DB_PASSWORD_DEFAULT', 'wikindx');
-/** @see https://www.php.net/manual/en/mysqli.persistconns.php */
-define('WIKINDX_DB_PERSISTENT_DEFAULT', TRUE);
 define('WIKINDX_DB_TABLEPREFIX_DEFAULT', 'wkx_');
 define('WIKINDX_DB_USER_DEFAULT', 'wikindx');
 

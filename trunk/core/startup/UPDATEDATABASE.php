@@ -304,6 +304,11 @@ class UPDATEDATABASE
                 $this->numStages = 1;
                 $this->stage15();
             }
+            elseif ($dbVersion < 16.0)
+            { // upgrade v6.3.8 to 6.3.8
+                $this->numStages = 1;
+                $this->stage16();
+            }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
             // Refresh the locales list
@@ -802,8 +807,6 @@ class UPDATEDATABASE
         // Convert tag sizes to scale factors
         $this->updateDbSchema('12');
         
-        $this->writeConfigFile6_2_2(); // dies if not possible
-        
         $this->updateSoftwareVersion(12);
         $this->checkStatus('stage12');
         $this->stageInterruptMessage = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
@@ -860,6 +863,17 @@ class UPDATEDATABASE
         $this->updateSoftwareVersion(15);
         $this->checkStatus('stage15');
         $this->pauseExecution('stage15');
+    }
+    /**
+     * Upgrade database schema to version 16 (6.3.8)
+     */
+    private function stage16()
+    {
+        $this->writeConfigFile6_3_8(); // dies if not possible
+        
+        $this->updateSoftwareVersion(16);
+        $this->checkStatus('stage16');
+        $this->pauseExecution('stage16');
     }
     /**
      * Transfer statistics data to new tables then drop old table
@@ -1489,9 +1503,9 @@ class UPDATEDATABASE
         $this->db->updateNull('resource_metadata', 'resourcemetadataTimestampEdited'); // default is NULL
     }
     /**
-     * Write new config.php with upgrade to >= WIKINDX v6.2.1
+     * Write new config.php with upgrade to >= WIKINDX v6.3.8
      */
-    private function writeConfigFile6_2_2()
+    private function writeConfigFile6_3_8()
     {
         // Load a separate config class that containts original constant names
         $tmpconfig = new CONFIG();
@@ -1551,12 +1565,6 @@ END;
         $string .= '// If using WIKINDX on a shared database, set the WIKINDX table prefix here (lowercase only)' . "\n" .
                    '// (do not change after running WIKINDX and creating the tables!).' . "\n" .
                    'public $WIKINDX_DB_TABLEPREFIX = "' . $tmpconfig->WIKINDX_DB_TABLEPREFIX . '";' . "\n";
-        $string .= '// WIKINDX uses MySQL persistent connections by default.' . "\n" .
-                   '// Some hosting services are not configured for this: if you have problems' . "\n" .
-                   "// connecting to your MySQL server and/or receive error messages about 'too many connections'," . "\n" .
-                   '// set $WIKINDX_DB_PERSISTENT to FALSE and wikindx will try to compute it' . "\n";
-        '// see https://www.php.net/manual/en/mysqli.persistconns.php' . "\n";
-        $string .= 'public $WIKINDX_DB_PERSISTENT = ' . ($tmpconfig->WIKINDX_DB_PERSISTENT ? "TRUE" : "FALSE") . ';' . "\n";
         $string .= <<<END
 /*****
 * END DATABASE CONFIGURATION

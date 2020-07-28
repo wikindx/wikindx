@@ -152,15 +152,6 @@ function loadStaticConfig()
     // Use always a lowercase prefix to prevent problem with case sensitive database
     $config->WIKINDX_DB_TABLEPREFIX = mb_strtolower($config->WIKINDX_DB_TABLEPREFIX);
 
-    // Set database persistent mode
-    if (!property_exists($config, 'WIKINDX_DB_PERSISTENT')) {
-        $errors[] = $dieMsgMissing . 'WIKINDX_DB_PERSISTENT';
-        $config->WIKINDX_DB_PERSISTENT = FALSE;
-    } elseif (!is_bool($config->WIKINDX_DB_PERSISTENT)) {
-        $errors[] = 'WIKINDX_DB_PERSISTENT must be a boolean (TRUE / FALSE).';
-        $config->WIKINDX_DB_PERSISTENT = FALSE;
-    }
-
     // Attempt to set the memory the script uses -- does not work in safe mode
     if (!property_exists($config, 'WIKINDX_MEMORY_LIMIT')) {
         $config->WIKINDX_MEMORY_LIMIT = WIKINDX_MEMORY_LIMIT_DEFAULT;
@@ -219,7 +210,6 @@ function loadStaticConfig()
         "WIKINDX_DB_USER",
         "WIKINDX_DB_PASSWORD",
         "WIKINDX_DB_TABLEPREFIX",
-        "WIKINDX_DB_PERSISTENT",
         "WIKINDX_PATH_AUTO_DETECTION",
         "WIKINDX_BASE_URL",
         "WIKINDX_WIKINDX_PATH",

@@ -50,12 +50,11 @@ public $WIKINDX_DB_PASSWORD = "wikindx";
 // If using WIKINDX on a shared database, set the WIKINDX table prefix here (lowercase only)
 // (do NOT change after running WIKINDX and creating the tables!).
 public $WIKINDX_DB_TABLEPREFIX = "wkx_";
-// WIKINDX uses MySQL persistent connections by default.
-// Some hosting services are not configured for this: if you have problems 
-// connecting to your MySQL server and/or receive error messages about 'too many connections', 
-// set $WIKINDX_DB_PERSISTENT to FALSE
+// Some hosting services are not configured for MySQL persistent connections and there are 
+// other issues associated with such connections. If you set $WIKINDX_DB_PERSISTENT = TRUE 
+// and receive error messages about 'too many connections' or similar, then set it back to FALSE.
 // see https://www.php.net/manual/en/mysqli.persistconns.php
-public $WIKINDX_DB_PERSISTENT = TRUE;
+public $WIKINDX_DB_PERSISTENT = FALSE;
 /*****
 * END DATABASE CONFIGURATION
 *****/

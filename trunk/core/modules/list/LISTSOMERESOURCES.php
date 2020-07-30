@@ -24,6 +24,7 @@ class LISTSOMERESOURCES
     private $session;
     private $badInput;
     private $order = 'creator';
+    private $params;
 
     public function __construct()
     {
@@ -57,12 +58,15 @@ class LISTSOMERESOURCES
             default:
                 $this->session->setVar("list_Order", "creator");
         }
+        $this->params = $this->session->getVar("sql_ListParams"); // temporarily store list parameters for use if reordering
+        $this->session->delVar("sql_ListParams");
     }
     /**
      * With a reorder list request, which type of process do we want?
      */
     public function reorder()
     {
+    	$this->session->setVar("sql_ListParams", $this->params);
         if (array_key_exists('list_AscDesc', $this->vars)) {
             $this->session->setVar("list_AscDesc", $this->vars['list_AscDesc']);
         }
@@ -376,7 +380,7 @@ class LISTSOMERESOURCES
         if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        $typeArray = ['all', 'quotes', 'paraphrases', 'musings', 'ideas', 'notIdeas'];
+        $typeArray = ['all', 'quotes', 'paraphrases', 'musings', 'ideas', 'notIdeas', 'lastMulti'];
         if (!array_key_exists("type", $this->vars) || !$this->vars["type"] || (array_search($this->vars['type'], $typeArray) === FALSE)) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }

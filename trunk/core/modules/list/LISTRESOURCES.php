@@ -24,6 +24,7 @@ class LISTRESOURCES
     private $commonBib;
     private $user;
     private $count = 0;
+    private $params;
 
     public function __construct($method = FALSE)
     {
@@ -121,6 +122,8 @@ class LISTRESOURCES
         if (!$this->session->getVar("mywikindx_Bibliography_use")) {
 	        $this->stmt->allIds = TRUE;
 		}
+        $this->params = $this->session->getVar("sql_ListParams"); // temporarily store list parameters for use if reordering
+        $this->session->delVar("sql_ListParams");
         $this->{$method}();
     }
     /**
@@ -128,6 +131,7 @@ class LISTRESOURCES
      */
     public function reorder()
     {
+    	$this->session->setVar("sql_ListParams", $this->params);
         if (array_key_exists("list_Order", $this->vars) && $this->vars["list_Order"]) {
             $this->session->setVar("search_Order", $this->vars["list_Order"]);
             $this->session->setVar("sql_LastOrder", $this->vars["list_Order"]);

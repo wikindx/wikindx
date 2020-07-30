@@ -11,6 +11,8 @@ BUG FIXES:
 5. Prevent a crash when the database is empty and the userId is known by the session.
 6. Prevent a crash with a negative result when full-text searching attachments (Advanced search).
 7. When full-text searching attachments (Advanced search), ensure all attachments with the search term are presented for each resource.
+8. When browsing resources or listing some by various parameters, ensure the list parameters are maintained through reordering operations.
+9. Fix a missing input message when the last multi list is Metadata:Keyword.
 
 MAINTENANCE:
 1. Remove the MySql persistent connection option (WIKINDX_DB_PERSISTENT). Experienced users who know how to use this tricky option can still use the host's 'p:' syntax.

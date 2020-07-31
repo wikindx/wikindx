@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 24, 2020 at 02:21 PM
+-- Generation Time: Jul 31, 2020 at 12:09 PM
 -- Server version: 10.1.37-MariaDB
 -- PHP Version: 7.3.1
 
@@ -173,7 +173,7 @@ INSERT INTO `wkx_config` (`configId`, `configName`, `configInt`, `configVarchar`
 (29, 'configSearchFilter', NULL, NULL, 'YTo1OntpOjA7czoyOiJhbiI7aToxO3M6MToiYSI7aToyO3M6MzoidGhlIjtpOjM7czozOiJhbmQiO2k6NDtzOjI6InRvIjt9', NULL, NULL),
 (30, 'configListlink', NULL, NULL, NULL, NULL, NULL),
 (31, 'configEmailStatistics', NULL, NULL, NULL, NULL, NULL),
-(32, 'configStatisticsCompiled', NULL, NULL, NULL, NULL, '2020-05-01 00:00:00'),
+(32, 'configStatisticsCompiled', NULL, NULL, NULL, NULL, '2020-07-01 00:00:00'),
 (33, 'configMetadataAllow', NULL, NULL, NULL, 1, NULL),
 (34, 'configMetadataUserOnly', NULL, NULL, NULL, NULL, NULL),
 (35, 'configDenyReadOnly', NULL, NULL, NULL, NULL, NULL),
@@ -332,7 +332,7 @@ CREATE TABLE `wkx_database_summary` (
 --
 
 INSERT INTO `wkx_database_summary` (`databasesummaryTotalResources`, `databasesummaryTotalQuotes`, `databasesummaryTotalParaphrases`, `databasesummaryTotalMusings`, `databasesummarySoftwareVersion`) VALUES
-(83, 8, 4, 4, '14');
+(83, 8, 4, 4, '16');
 
 -- --------------------------------------------------------
 
@@ -7730,7 +7730,7 @@ CREATE TABLE `wkx_users` (
   `usersId` int(11) NOT NULL,
   `usersUsername` varchar(188) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `usersPassword` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `usersFullname` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `usersFullname` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `usersEmail` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
   `usersTimestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `usersAdmin` tinyint(1) NOT NULL DEFAULT '0',
@@ -7774,9 +7774,9 @@ CREATE TABLE `wkx_users` (
 --
 
 INSERT INTO `wkx_users` (`usersId`, `usersUsername`, `usersPassword`, `usersFullname`, `usersEmail`, `usersTimestamp`, `usersAdmin`, `usersCookie`, `usersPaging`, `usersPagingMaxLinks`, `usersPagingStyle`, `usersStringLimit`, `usersLanguage`, `usersStyle`, `usersTemplate`, `usersNotify`, `usersNotifyAddEdit`, `usersNotifyThreshold`, `usersNotifyTimestamp`, `usersPagingTagCloud`, `usersPasswordQuestion1`, `usersPasswordAnswer1`, `usersPasswordQuestion2`, `usersPasswordAnswer2`, `usersPasswordQuestion3`, `usersPasswordAnswer3`, `usersUserSession`, `usersUseBibtexKey`, `usersUseWikindxKey`, `usersDisplayBibtexLink`, `usersDisplayCmsLink`, `usersCmsTag`, `usersIsCreator`, `usersListlink`, `usersDepartment`, `usersTemplateMenu`, `usersInstitution`, `usersNotifyDigestThreshold`, `usersGDPR`, `usersBlock`) VALUES
-(1, 'super', '36066C6rn7.oA', NULL, '', '2010-10-10 11:32:52', 1, 'N', 15, 11, 'N', 40, 'en_GB', 'apa', 'bryophyta', 'N', 'A', 0, '2010-10-10 11:32:52', 100, '', '', '', '', '', '', 'YToxOntzOjEyOiJRdWVyeVN0cmluZ3MiO3M6MTExMjoiWVRveE1EcDdhVG93TzNNNk56azZJaTkzYVd0cGJtUjROUzkzYVd0cGJtUjRMM1J5ZFc1ckwybHVaR1Y0TG5Cb2NEOWhZM1JwYjI0OWRYTmxjbk5uY205MWNITmZUVmxYU1V0SlRrUllYME5QVWtVbWJXVjBhRzlrUFdsdWFYUWlPMms2TVR0ek9qWTNPaUl2ZDJscmFXNWtlRFV2ZDJscmFXNWtlQzkwY25WdWF5OXBibVJsZUM1d2FIQS9ZV04wYVc5dVBYVnpaWEp6WjNKdmRYQnpYMDFaVjBsTFNVNUVXRjlEVDFKRklqdHBPakk3Y3pvMk56b2lMM2RwYTJsdVpIZzFMM2RwYTJsdVpIZ3ZkSEoxYm1zdmFXNWtaWGd1Y0dod1AyRmpkR2x2YmoxMWMyVnljMmR5YjNWd2MxOU5XVmRKUzBsT1JGaGZRMDlTUlNJN2FUb3pPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzBPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzFPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzJPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzNPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzRPM002TnpRNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5WW1GemEyVjBYMEpCVTB0RlZGOURUMUpGSm5KbGMyOTFjbU5sU1dROU5UYzBJanRwT2prN2N6bzNORG9pTDNkcGEybHVaSGcxTDNkcGEybHVaSGd2ZEhKMWJtc3ZhVzVrWlhndWNHaHdQMkZqZEdsdmJqMXlaWE52ZFhKalpWOVNSVk5QVlZKRFJWWkpSVmRmUTA5U1JTWnBaRDAxTnpRaU8zMD0iO30=', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N'),
-(2, 'user1', '76Rgfb2tSgYHA', NULL, 'blah@blah.com', '2010-12-27 07:51:07', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:07', 100, '', '', '', '', '', '', NULL, 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N'),
-(3, 'user2', '29pVL2tfNr34E', NULL, 'blah@blah.com', '2010-12-27 07:51:32', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:32', 100, '', '', '', '', '', '', NULL, 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N');
+(1, 'super', '36066C6rn7.oA', '', '', '2020-07-31 12:08:44', 1, 'N', 15, 11, 'N', 40, 'en_GB', 'apa', 'bryophyta', 'N', 'A', 0, '2010-10-10 11:32:52', 100, '', '', '', '', '', '', 'YToxOntzOjEyOiJRdWVyeVN0cmluZ3MiO3M6MTExMjoiWVRveE1EcDdhVG93TzNNNk56azZJaTkzYVd0cGJtUjROUzkzYVd0cGJtUjRMM1J5ZFc1ckwybHVaR1Y0TG5Cb2NEOWhZM1JwYjI0OWRYTmxjbk5uY205MWNITmZUVmxYU1V0SlRrUllYME5QVWtVbWJXVjBhRzlrUFdsdWFYUWlPMms2TVR0ek9qWTNPaUl2ZDJscmFXNWtlRFV2ZDJscmFXNWtlQzkwY25WdWF5OXBibVJsZUM1d2FIQS9ZV04wYVc5dVBYVnpaWEp6WjNKdmRYQnpYMDFaVjBsTFNVNUVXRjlEVDFKRklqdHBPakk3Y3pvMk56b2lMM2RwYTJsdVpIZzFMM2RwYTJsdVpIZ3ZkSEoxYm1zdmFXNWtaWGd1Y0dod1AyRmpkR2x2YmoxMWMyVnljMmR5YjNWd2MxOU5XVmRKUzBsT1JGaGZRMDlTUlNJN2FUb3pPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzBPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzFPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzJPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzNPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzRPM002TnpRNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5WW1GemEyVjBYMEpCVTB0RlZGOURUMUpGSm5KbGMyOTFjbU5sU1dROU5UYzBJanRwT2prN2N6bzNORG9pTDNkcGEybHVaSGcxTDNkcGEybHVaSGd2ZEhKMWJtc3ZhVzVrWlhndWNHaHdQMkZqZEdsdmJqMXlaWE52ZFhKalpWOVNSVk5QVlZKRFJWWkpSVmRmUTA5U1JTWnBaRDAxTnpRaU8zMD0iO30=', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N'),
+(2, 'user1', '76Rgfb2tSgYHA', '', 'blah@blah.com', '2020-07-31 12:08:44', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:07', 100, '', '', '', '', '', '', NULL, 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N'),
+(3, 'user2', '29pVL2tfNr34E', '', 'blah@blah.com', '2020-07-31 12:08:44', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:32', 100, '', '', '', '', '', '', NULL, 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N');
 
 -- --------------------------------------------------------
 

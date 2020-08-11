@@ -402,11 +402,11 @@ class PARSEPHRASE
             }
         }
         if (!$this->idea) {
-            $storedHighlight = UTF8::mb_explode(',', $this->session->getVar("search_Highlight"));
+            $storedHighlight = array_filter(UTF8::mb_explode(',', $this->session->getVar("search_Highlight")));
             $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
             $this->session->setVar("search_Highlight", implode(",", $searchHighlight));
         } else {
-            $storedHighlight = UTF8::mb_explode(',', $this->session->getVar("search_HighlightIdea"));
+            $storedHighlight = array_filter(UTF8::mb_explode(',', $this->session->getVar("search_HighlightIdea")));
             $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
             $this->session->setVar("search_HighlightIdea", implode(",", $searchHighlight));
         }

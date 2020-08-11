@@ -1086,7 +1086,7 @@ class MESSAGES
 				"keywordImport2" => dgettext($domain, "Semicolons"),
 				"keywordImport3" => dgettext($domain, "Commas or Semicolons"),
 				"keywordImport4" => dgettext($domain, "SPACES"),
-				"keywordIgnore" => dgettext($domain, "Ignore keywords:"),
+				"keywordIgnore" => dgettext($domain, "Ignore keywords"),
 /// misc_titleSubtitleSeparator When importing bibtex and endnote bibliographies, split title and subtitle on specified characters
 				"titleSubtitleSeparator" => dgettext($domain, "Split the title and subtitle in the source bibliography on the first occurrence of"),
 				"titleSubtitleSeparator1" => dgettext($domain, "NO SPLIT"),

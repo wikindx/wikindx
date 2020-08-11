@@ -2329,7 +2329,7 @@ class adminstyle_MODULE
             $name = 'footnote_' . $key;
             $input = trim(stripslashes($this->vars[$type]));
             // remove newlines etc.
-            $input = preg_replace("/\r|\n|\015|\012/u", "", $input);
+            $input = preg_replace("/\R/u", "", $input);
             $fileString .= "<resource name=\"$key\">";
             $fileString .= $this->arrayToXML($this->parseStringToArray($key, $input), $name, TRUE);
             $fileString .= "</resource>" . LF;
@@ -2381,7 +2381,7 @@ class adminstyle_MODULE
             $type = 'style_' . $key;
             $input = trim(stripslashes($this->vars[$type]));
             // remove newlines etc.
-            $input = preg_replace("/\r|\n|\015|\012/u", "", $input);
+            $input = preg_replace("/\R/u", "", $input);
             // Rewrite creator strings
             $attributes = $this->creatorXMLAttributes($type);
             $fileString .= "<resource name=\"$key\" $attributes>";
@@ -2400,7 +2400,7 @@ class adminstyle_MODULE
             $type = 'partial_' . $key . 'Template';
             $input = stripslashes($this->vars[$type]);
             // remove newlines etc.
-            $fileString .= preg_replace("/\r|\n|\015|\012/u", "", $input);
+            $fileString .= preg_replace("/\R/u", "", $input);
             $fileString .= "</partial>" . LF;
             $type = 'partial_' . $key . 'Replace';
             $fileString .= "<partialReplace>";

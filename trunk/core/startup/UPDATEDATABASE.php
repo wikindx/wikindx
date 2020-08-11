@@ -1718,7 +1718,7 @@ END;
 *****/
 }
 END;
-        $string .= "\n" . '?>';
+        $string .= "\n";
 
 
         // Save the old config file before writing it

@@ -60,7 +60,7 @@ const ROOT_DIR = WIKINDX_DIR_COMPONENT_STYLES;
      *
      * This function is closed to a determined tree node as showed below:
      *
-     * <?xml version="1.0" encoding="utf-8"?>
+     * <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
      * <style xml:lang="en">
      *    <info>
      *       <name>IDSTYLE</name>

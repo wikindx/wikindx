@@ -1,7 +1,7 @@
 {
     "component_type": "style",
     "component_id": "britishmedicaljournal",
-    "component_version": "191",
+    "component_version": "213",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "BMJ",
@@ -17,5 +17,5 @@
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         }
     ],
-    "component_sha256": "2393b3335d53442d38087ea80d79cac13de70a4398a69113178d134970fb64a7"
+    "component_sha256": "1fac30f6239661c30ec0251ddbe9e8f861d2a157d7b826507562523297e6590f"
 }

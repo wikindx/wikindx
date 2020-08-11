@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <style xml:lang="en">
-<info>
-<name>IEEE</name>
+<info><name>IEEE</name>
 <description>Institute of Electrical and Electronics Engineers (IEEE)</description>
 <language>English</language>
 <osbibVersion>4</osbibVersion>
 </info>
-<citation>
-<creatorStyle>3</creatorStyle>
+<citation><creatorStyle>3</creatorStyle>
 <creatorOtherStyle>3</creatorOtherStyle>
 <creatorInitials>0</creatorInitials>
 <creatorFirstName>1</creatorFirstName>
@@ -64,8 +62,7 @@
 <titleSubtitleSeparator>: </titleSubtitleSeparator>
 <formatEndnoteID>0</formatEndnoteID>
 </citation>
-<footnote>
-<primaryCreatorFirstStyle>0</primaryCreatorFirstStyle>
+<footnote><primaryCreatorFirstStyle>0</primaryCreatorFirstStyle>
 <primaryCreatorOtherStyle>0</primaryCreatorOtherStyle>
 <primaryCreatorList>0</primaryCreatorList>
 <primaryCreatorFirstName>0</primaryCreatorFirstName>
@@ -136,9 +133,7 @@
 <resource name="miscellaneous"></resource>
 <resource name="miscellaneous_section"></resource>
 </footnote>
-<bibliography>
-<common>
-<titleCapitalization>0</titleCapitalization>
+<bibliography><common><titleCapitalization>0</titleCapitalization>
 <monthFormat>2</monthFormat>
 <editionFormat>2</editionFormat>
 <dateFormat>1</dateFormat>
@@ -197,9 +192,7 @@
 <editorSwitchIfYes>editor, ^Ed^Eds^.</editorSwitchIfYes>
 <pageFormat>2</pageFormat>
 </common>
-<resource name="genericBook" >
-<creator>
-<dependentPre></dependentPre>
+<resource name="genericBook" ><creator><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -208,8 +201,7 @@
 <pre></pre>
 <post>, </post>
 </creator>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>. </dependentPostAlternative>
@@ -218,8 +210,7 @@
 <pre>[i]</pre>
 <post>[/i]__DEPENDENT_ON_NEXT_FIELD__</post>
 </title>
-<editor>
-<dependentPre></dependentPre>
+<editor><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -228,8 +219,7 @@
 <pre></pre>
 <post>, __SINGULAR_PLURAL__. </post>
 </editor>
-<publisherLocation>
-<dependentPre></dependentPre>
+<publisherLocation><dependentPre></dependentPre>
 <dependentPost>: </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>, </dependentPostAlternative>
@@ -238,8 +228,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </publisherLocation>
-<publisherName>
-<dependentPre></dependentPre>
+<publisherName><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -248,8 +237,7 @@
 <pre></pre>
 <post>, </post>
 </publisherName>
-<publicationYear>
-<dependentPre></dependentPre>
+<publicationYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -262,9 +250,7 @@
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="genericArticle" >
-<creator>
-<dependentPre></dependentPre>
+<resource name="genericArticle" ><creator><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -273,8 +259,7 @@
 <pre></pre>
 <post>, </post>
 </creator>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -283,8 +268,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<collection>
-<dependentPre></dependentPre>
+<collection><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -293,8 +277,7 @@
 <pre>[i]</pre>
 <post>[/i], </post>
 </collection>
-<editor>
-<dependentPre></dependentPre>
+<editor><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -303,8 +286,7 @@
 <pre></pre>
 <post>, __SINGULAR_PLURAL__., </post>
 </editor>
-<pages>
-<dependentPre></dependentPre>
+<pages><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -313,8 +295,7 @@
 <pre>__SINGULAR_PLURAL__</pre>
 <post>, </post>
 </pages>
-<publisherLocation>
-<dependentPre></dependentPre>
+<publisherLocation><dependentPre></dependentPre>
 <dependentPost>: </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>, </dependentPostAlternative>
@@ -323,8 +304,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </publisherLocation>
-<publisherName>
-<dependentPre></dependentPre>
+<publisherName><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -333,8 +313,7 @@
 <pre></pre>
 <post>, </post>
 </publisherName>
-<publicationYear>
-<dependentPre></dependentPre>
+<publicationYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -347,9 +326,7 @@
 <partial>[i]title[/i].  </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="genericMisc" >
-<creator>
-<dependentPre></dependentPre>
+<resource name="genericMisc" ><creator><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -358,8 +335,7 @@
 <pre></pre>
 <post>, </post>
 </creator>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -368,8 +344,7 @@
 <pre>[i]</pre>
 <post>[/i], </post>
 </title>
-<type>
-<dependentPre></dependentPre>
+<type><dependentPre></dependentPre>
 <dependentPost> </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>, </dependentPostAlternative>
@@ -378,8 +353,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </type>
-<ID>
-<dependentPre></dependentPre>
+<ID><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -388,8 +362,7 @@
 <pre></pre>
 <post>, </post>
 </ID>
-<publisherLocation>
-<dependentPre></dependentPre>
+<publisherLocation><dependentPre></dependentPre>
 <dependentPost>: </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>, </dependentPostAlternative>
@@ -398,8 +371,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </publisherLocation>
-<publisherName>
-<dependentPre></dependentPre>
+<publisherName><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -408,8 +380,7 @@
 <pre></pre>
 <post>, </post>
 </publisherName>
-<publicationYear>
-<dependentPre></dependentPre>
+<publicationYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -422,9 +393,7 @@
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="book" >
-<author>
-<dependentPre></dependentPre>
+<resource name="book" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -433,8 +402,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -443,8 +411,7 @@
 <pre>[i]</pre>
 <post>[/i]</post>
 </title>
-<edition>
-<dependentPre></dependentPre>
+<edition><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -453,8 +420,7 @@
 <pre></pre>
 <post> ed., </post>
 </edition>
-<seriesTitle>
-<dependentPre></dependentPre>
+<seriesTitle><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -463,8 +429,7 @@
 <pre>ser. </pre>
 <post>, </post>
 </seriesTitle>
-<editor>
-<dependentPre></dependentPre>
+<editor><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -473,8 +438,7 @@
 <pre></pre>
 <post>, __SINGULAR_PLURAL__.</post>
 </editor>
-<publisherLocation>
-<dependentPre></dependentPre>
+<publisherLocation><dependentPre></dependentPre>
 <dependentPost>: </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>, </dependentPostAlternative>
@@ -483,8 +447,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </publisherLocation>
-<publisherName>
-<dependentPre></dependentPre>
+<publisherName><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -493,8 +456,7 @@
 <pre></pre>
 <post>, </post>
 </publisherName>
-<publicationYear>
-<dependentPre></dependentPre>
+<publicationYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -503,8 +465,7 @@
 <pre></pre>
 <post>, </post>
 </publicationYear>
-<volumeNumber>
-<dependentPre></dependentPre>
+<volumeNumber><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -518,9 +479,7 @@
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="book_article" >
-<author>
-<dependentPre></dependentPre>
+<resource name="book_article" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -529,8 +488,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -539,8 +497,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<book>
-<dependentPre></dependentPre>
+<book><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -549,8 +506,7 @@
 <pre>in [i]</pre>
 <post>[/i]</post>
 </book>
-<edition>
-<dependentPre></dependentPre>
+<edition><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -559,8 +515,7 @@
 <pre></pre>
 <post> ed., </post>
 </edition>
-<seriesTitle>
-<dependentPre></dependentPre>
+<seriesTitle><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -569,8 +524,7 @@
 <pre>ser. </pre>
 <post>, </post>
 </seriesTitle>
-<editor>
-<dependentPre></dependentPre>
+<editor><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -579,8 +533,7 @@
 <pre></pre>
 <post>, __SINGULAR_PLURAL__.</post>
 </editor>
-<publisherLocation>
-<dependentPre></dependentPre>
+<publisherLocation><dependentPre></dependentPre>
 <dependentPost>: </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>, </dependentPostAlternative>
@@ -589,8 +542,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </publisherLocation>
-<publisherName>
-<dependentPre></dependentPre>
+<publisherName><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -599,8 +551,7 @@
 <pre></pre>
 <post>, </post>
 </publisherName>
-<publicationYear>
-<dependentPre></dependentPre>
+<publicationYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -609,8 +560,7 @@
 <pre></pre>
 <post>, </post>
 </publicationYear>
-<volumeNumber>
-<dependentPre></dependentPre>
+<volumeNumber><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -619,8 +569,7 @@
 <pre>vol. </pre>
 <post>, </post>
 </volumeNumber>
-<pages>
-<dependentPre></dependentPre>
+<pages><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -634,9 +583,7 @@
 <partial>title. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="book_chapter" >
-<author>
-<dependentPre></dependentPre>
+<resource name="book_chapter" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -645,8 +592,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -655,8 +601,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<book>
-<dependentPre></dependentPre>
+<book><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -665,8 +610,7 @@
 <pre>in [i]</pre>
 <post>[/i]</post>
 </book>
-<edition>
-<dependentPre></dependentPre>
+<edition><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -675,8 +619,7 @@
 <pre></pre>
 <post> ed., </post>
 </edition>
-<seriesTitle>
-<dependentPre></dependentPre>
+<seriesTitle><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -685,8 +628,7 @@
 <pre>ser. </pre>
 <post>, </post>
 </seriesTitle>
-<editor>
-<dependentPre></dependentPre>
+<editor><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -695,8 +637,7 @@
 <pre></pre>
 <post>, __SINGULAR_PLURAL__.</post>
 </editor>
-<publisherLocation>
-<dependentPre></dependentPre>
+<publisherLocation><dependentPre></dependentPre>
 <dependentPost>: </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>, </dependentPostAlternative>
@@ -705,8 +646,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </publisherLocation>
-<publisherName>
-<dependentPre></dependentPre>
+<publisherName><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -715,8 +655,7 @@
 <pre></pre>
 <post>, </post>
 </publisherName>
-<publicationYear>
-<dependentPre></dependentPre>
+<publicationYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -725,8 +664,7 @@
 <pre></pre>
 <post>, </post>
 </publicationYear>
-<volumeNumber>
-<dependentPre></dependentPre>
+<volumeNumber><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -735,8 +673,7 @@
 <pre>vol. </pre>
 <post>, </post>
 </volumeNumber>
-<pages>
-<dependentPre></dependentPre>
+<pages><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -750,9 +687,7 @@
 <partial>title. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="journal_article" >
-<author>
-<dependentPre></dependentPre>
+<resource name="journal_article" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -761,8 +696,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -771,8 +705,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<journal>
-<dependentPre></dependentPre>
+<journal><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -781,8 +714,7 @@
 <pre>[i]</pre>
 <post>[/i], </post>
 </journal>
-<volume>
-<dependentPre></dependentPre>
+<volume><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -791,8 +723,7 @@
 <pre>vol. </pre>
 <post>, </post>
 </volume>
-<issue>
-<dependentPre></dependentPre>
+<issue><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -801,8 +732,7 @@
 <pre>iss. </pre>
 <post>, </post>
 </issue>
-<pages>
-<dependentPre></dependentPre>
+<pages><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -811,8 +741,7 @@
 <pre>__SINGULAR_PLURAL__</pre>
 <post>, </post>
 </pages>
-<issueDate>
-<dependentPre></dependentPre>
+<issueDate><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -821,8 +750,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </issueDate>
-<publicationYear>
-<dependentPre></dependentPre>
+<publicationYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -836,9 +764,7 @@
 <partial>title. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="newspaper_article" >
-<author>
-<dependentPre></dependentPre>
+<resource name="newspaper_article" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -847,8 +773,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -857,8 +782,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<newspaper>
-<dependentPre></dependentPre>
+<newspaper><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -867,8 +791,7 @@
 <pre>[i]</pre>
 <post>[/i], </post>
 </newspaper>
-<city>
-<dependentPre></dependentPre>
+<city><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -877,8 +800,7 @@
 <pre></pre>
 <post>, </post>
 </city>
-<section>
-<dependentPre></dependentPre>
+<section><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -887,8 +809,7 @@
 <pre>sec. </pre>
 <post>, </post>
 </section>
-<pages>
-<dependentPre></dependentPre>
+<pages><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -897,8 +818,7 @@
 <pre>__SINGULAR_PLURAL__</pre>
 <post>, </post>
 </pages>
-<issueDate>
-<dependentPre></dependentPre>
+<issueDate><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -907,8 +827,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </issueDate>
-<issueYear>
-<dependentPre></dependentPre>
+<issueYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -922,9 +841,7 @@
 <partial>title. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="magazine_article" >
-<author>
-<dependentPre></dependentPre>
+<resource name="magazine_article" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -933,8 +850,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -943,8 +859,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<magazine>
-<dependentPre></dependentPre>
+<magazine><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -953,8 +868,7 @@
 <pre>[i]</pre>
 <post>[/i], </post>
 </magazine>
-<edition>
-<dependentPre></dependentPre>
+<edition><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -963,8 +877,7 @@
 <pre></pre>
 <post> ed., </post>
 </edition>
-<volume>
-<dependentPre></dependentPre>
+<volume><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -973,8 +886,7 @@
 <pre>vol. </pre>
 <post>, </post>
 </volume>
-<number>
-<dependentPre></dependentPre>
+<number><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -983,8 +895,7 @@
 <pre>no. </pre>
 <post>, </post>
 </number>
-<pages>
-<dependentPre></dependentPre>
+<pages><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -993,8 +904,7 @@
 <pre>__SINGULAR_PLURAL__</pre>
 <post>, </post>
 </pages>
-<issueDate>
-<dependentPre></dependentPre>
+<issueDate><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1003,8 +913,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </issueDate>
-<issueYear>
-<dependentPre></dependentPre>
+<issueYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1018,9 +927,7 @@
 <partial>title. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="proceedings" >
-<editor>
-<dependentPre></dependentPre>
+<resource name="proceedings" ><editor><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1029,8 +936,7 @@
 <pre></pre>
 <post>, __SINGULAR_PLURAL__., </post>
 </editor>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1039,8 +945,7 @@
 <pre>[i]</pre>
 <post>[/i], </post>
 </title>
-<publicationYear>
-<dependentPre></dependentPre>
+<publicationYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1049,8 +954,7 @@
 <pre></pre>
 <post>, </post>
 </publicationYear>
-<conferenceOrganiser>
-<dependentPre></dependentPre>
+<conferenceOrganiser><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1059,8 +963,7 @@
 <pre></pre>
 <post>, </post>
 </conferenceOrganiser>
-<conferenceLocation>
-<dependentPre></dependentPre>
+<conferenceLocation><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1069,8 +972,7 @@
 <pre></pre>
 <post>, </post>
 </conferenceLocation>
-<conferenceDate>
-<dependentPre></dependentPre>
+<conferenceDate><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1079,8 +981,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </conferenceDate>
-<conferenceYear>
-<dependentPre></dependentPre>
+<conferenceYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1094,9 +995,7 @@
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="conference_paper" >
-<author>
-<dependentPre></dependentPre>
+<resource name="conference_paper" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1105,8 +1004,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1115,8 +1013,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<conference>
-<dependentPre></dependentPre>
+<conference><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1125,8 +1022,7 @@
 <pre></pre>
 <post>: </post>
 </conference>
-<conferenceLocation>
-<dependentPre></dependentPre>
+<conferenceLocation><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1135,8 +1031,7 @@
 <pre></pre>
 <post>, </post>
 </conferenceLocation>
-<conferenceDate>
-<dependentPre></dependentPre>
+<conferenceDate><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1145,8 +1040,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </conferenceDate>
-<conferenceYear>
-<dependentPre></dependentPre>
+<conferenceYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1160,9 +1054,7 @@
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="conference_poster" >
-<author>
-<dependentPre></dependentPre>
+<resource name="conference_poster" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1171,8 +1063,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1181,8 +1072,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<conference>
-<dependentPre></dependentPre>
+<conference><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1191,8 +1081,7 @@
 <pre></pre>
 <post>: </post>
 </conference>
-<conferenceLocation>
-<dependentPre></dependentPre>
+<conferenceLocation><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1201,8 +1090,7 @@
 <pre></pre>
 <post>, </post>
 </conferenceLocation>
-<conferenceDate>
-<dependentPre></dependentPre>
+<conferenceDate><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1211,8 +1099,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </conferenceDate>
-<conferenceYear>
-<dependentPre></dependentPre>
+<conferenceYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1226,9 +1113,7 @@
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="proceedings_article" >
-<author>
-<dependentPre></dependentPre>
+<resource name="proceedings_article" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1237,8 +1122,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1247,8 +1131,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<conference>
-<dependentPre></dependentPre>
+<conference><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1257,8 +1140,7 @@
 <pre>in [i]Proc. </pre>
 <post>[/i], </post>
 </conference>
-<seriesTitle>
-<dependentPre></dependentPre>
+<seriesTitle><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1267,8 +1149,7 @@
 <pre>ser. </pre>
 <post>, </post>
 </seriesTitle>
-<editor>
-<dependentPre></dependentPre>
+<editor><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1277,8 +1158,7 @@
 <pre></pre>
 <post>, __SINGULAR_PLURAL__., </post>
 </editor>
-<volumeNumber>
-<dependentPre></dependentPre>
+<volumeNumber><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1287,8 +1167,7 @@
 <pre>vol. </pre>
 <post>, </post>
 </volumeNumber>
-<conferenceLocation>
-<dependentPre></dependentPre>
+<conferenceLocation><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1297,8 +1176,7 @@
 <pre></pre>
 <post>, </post>
 </conferenceLocation>
-<conferenceDate>
-<dependentPre></dependentPre>
+<conferenceDate><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1307,8 +1185,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </conferenceDate>
-<conferenceYear>
-<dependentPre></dependentPre>
+<conferenceYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1317,8 +1194,7 @@
 <pre></pre>
 <post>, </post>
 </conferenceYear>
-<pages>
-<dependentPre></dependentPre>
+<pages><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1332,9 +1208,7 @@
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="thesis" >
-<author>
-<dependentPre></dependentPre>
+<resource name="thesis" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1343,8 +1217,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1353,8 +1226,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<type>
-<dependentPre></dependentPre>
+<type><dependentPre></dependentPre>
 <dependentPost> </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>, </dependentPostAlternative>
@@ -1363,8 +1235,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </type>
-<label>
-<dependentPre></dependentPre>
+<label><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1373,8 +1244,7 @@
 <pre></pre>
 <post>, </post>
 </label>
-<institution>
-<dependentPre></dependentPre>
+<institution><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1383,8 +1253,7 @@
 <pre></pre>
 <post>, </post>
 </institution>
-<institutionLocation>
-<dependentPre></dependentPre>
+<institutionLocation><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1393,8 +1262,7 @@
 <pre></pre>
 <post>, </post>
 </institutionLocation>
-<awardYear>
-<dependentPre></dependentPre>
+<awardYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1408,9 +1276,7 @@
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="web_site" >
-<author>
-<dependentPre></dependentPre>
+<resource name="web_site" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1419,8 +1285,7 @@
 <pre></pre>
 <post>. </post>
 </author>
-<accessYear>
-<dependentPre></dependentPre>
+<accessYear><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1429,8 +1294,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </accessYear>
-<accessDate>
-<dependentPre></dependentPre>
+<accessDate><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1439,8 +1303,7 @@
 <pre></pre>
 <post></post>
 </accessDate>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1449,8 +1312,7 @@
 <pre> </pre>
 <post></post>
 </title>
-<URL>
-<dependentPre></dependentPre>
+<URL><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1463,9 +1325,7 @@
 <partial>title. |(|accessYear%, %%|accessDate|)|. [Online]. Available: URL</partial>
 <partialReplace>1</partialReplace>
 </resource>
-<resource name="web_article" >
-<author>
-<dependentPre></dependentPre>
+<resource name="web_article" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1474,8 +1334,7 @@
 <pre></pre>
 <post>. </post>
 </author>
-<accessYear>
-<dependentPre></dependentPre>
+<accessYear><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1484,8 +1343,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </accessYear>
-<accessDate>
-<dependentPre></dependentPre>
+<accessDate><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1494,8 +1352,7 @@
 <pre></pre>
 <post></post>
 </accessDate>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1504,8 +1361,7 @@
 <pre> </pre>
 <post></post>
 </title>
-<URL>
-<dependentPre></dependentPre>
+<URL><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1518,9 +1374,7 @@
 <partial>title. |(|accessYear%, %%|accessDate|)|. [Online]. Available: URL</partial>
 <partialReplace>1</partialReplace>
 </resource>
-<resource name="web_encyclopedia" >
-<author>
-<dependentPre></dependentPre>
+<resource name="web_encyclopedia" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1529,8 +1383,7 @@
 <pre></pre>
 <post>. </post>
 </author>
-<accessYear>
-<dependentPre></dependentPre>
+<accessYear><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1539,8 +1392,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </accessYear>
-<accessDate>
-<dependentPre></dependentPre>
+<accessDate><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1549,8 +1401,7 @@
 <pre></pre>
 <post></post>
 </accessDate>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1559,8 +1410,7 @@
 <pre> </pre>
 <post></post>
 </title>
-<URL>
-<dependentPre></dependentPre>
+<URL><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1573,9 +1423,7 @@
 <partial>title. |(|accessYear%, %%|accessDate|)|. [Online]. Available: </partial>
 <partialReplace>1</partialReplace>
 </resource>
-<resource name="web_encyclopedia_article" >
-<author>
-<dependentPre></dependentPre>
+<resource name="web_encyclopedia_article" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1584,8 +1432,7 @@
 <pre></pre>
 <post>. </post>
 </author>
-<accessYear>
-<dependentPre></dependentPre>
+<accessYear><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1594,8 +1441,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </accessYear>
-<accessDate>
-<dependentPre></dependentPre>
+<accessDate><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1604,8 +1450,7 @@
 <pre></pre>
 <post></post>
 </accessDate>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1614,8 +1459,7 @@
 <pre> </pre>
 <post></post>
 </title>
-<URL>
-<dependentPre></dependentPre>
+<URL><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1628,39 +1472,31 @@
 <partial>title. |(|accessYear%, %%|accessDate|)|. [Online]. Available: URL</partial>
 <partialReplace>1</partialReplace>
 </resource>
-<resource name="film" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="film" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i] [Film]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="broadcast" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="broadcast" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="music_album" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="music_album" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="music_track" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="music_track" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>title. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="music_score" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="music_score" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="artwork" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="artwork" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="software" >
-<author>
-<dependentPre></dependentPre>
+<resource name="software" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1669,8 +1505,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1679,8 +1514,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<version>
-<dependentPre></dependentPre>
+<version><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1689,8 +1523,7 @@
 <pre>ver. </pre>
 <post>, </post>
 </version>
-<type>
-<dependentPre></dependentPre>
+<type><dependentPre></dependentPre>
 <dependentPost> </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>, </dependentPostAlternative>
@@ -1699,8 +1532,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </type>
-<ID>
-<dependentPre></dependentPre>
+<ID><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1709,8 +1541,7 @@
 <pre></pre>
 <post>, </post>
 </ID>
-<publisherLocation>
-<dependentPre></dependentPre>
+<publisherLocation><dependentPre></dependentPre>
 <dependentPost>: </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>, </dependentPostAlternative>
@@ -1719,8 +1550,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </publisherLocation>
-<publisherName>
-<dependentPre></dependentPre>
+<publisherName><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1729,8 +1559,7 @@
 <pre></pre>
 <post>, </post>
 </publisherName>
-<publicationYear>
-<dependentPre></dependentPre>
+<publicationYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1744,14 +1573,11 @@
 <partial>title. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="audiovisual" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="audiovisual" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>title. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="database" >
-<author>
-<dependentPre></dependentPre>
+<resource name="database" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1760,8 +1586,7 @@
 <pre></pre>
 <post>. </post>
 </author>
-<accessYear>
-<dependentPre></dependentPre>
+<accessYear><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1770,8 +1595,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </accessYear>
-<accessDate>
-<dependentPre></dependentPre>
+<accessDate><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1780,8 +1604,7 @@
 <pre></pre>
 <post></post>
 </accessDate>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1790,8 +1613,7 @@
 <pre> </pre>
 <post></post>
 </title>
-<URL>
-<dependentPre></dependentPre>
+<URL><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1804,14 +1626,11 @@
 <partial>title. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="government_report" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="government_report" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="report" >
-<author>
-<dependentPre></dependentPre>
+<resource name="report" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1820,8 +1639,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1830,8 +1648,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<institution>
-<dependentPre></dependentPre>
+<institution><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1840,8 +1657,7 @@
 <pre></pre>
 <post>, </post>
 </institution>
-<institutionLocation>
-<dependentPre></dependentPre>
+<institutionLocation><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1850,8 +1666,7 @@
 <pre></pre>
 <post>, </post>
 </institutionLocation>
-<type>
-<dependentPre></dependentPre>
+<type><dependentPre></dependentPre>
 <dependentPost> </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>, </dependentPostAlternative>
@@ -1860,8 +1675,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </type>
-<number>
-<dependentPre></dependentPre>
+<number><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1870,8 +1684,7 @@
 <pre></pre>
 <post>, </post>
 </number>
-<reportDate>
-<dependentPre></dependentPre>
+<reportDate><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1880,8 +1693,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </reportDate>
-<reportYear>
-<dependentPre></dependentPre>
+<reportYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1895,39 +1707,31 @@
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="hearing" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="hearing" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="statute" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="statute" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="brochure" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="brochure" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial></partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="legal_ruling" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="legal_ruling" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="case" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="case" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="bill" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="bill" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="patent" >
-<inventor>
-<dependentPre></dependentPre>
+<resource name="patent" ><inventor><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1936,8 +1740,7 @@
 <pre></pre>
 <post>, </post>
 </inventor>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1946,8 +1749,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<assigneeLocation>
-<dependentPre></dependentPre>
+<assigneeLocation><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1956,8 +1758,7 @@
 <pre></pre>
 <post> </post>
 </assigneeLocation>
-<patentNumber>
-<dependentPre></dependentPre>
+<patentNumber><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1966,8 +1767,7 @@
 <pre>Patent </pre>
 <post>, </post>
 </patentNumber>
-<issueDate>
-<dependentPre></dependentPre>
+<issueDate><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1976,8 +1776,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </issueDate>
-<issueYear>
-<dependentPre></dependentPre>
+<issueYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -1991,9 +1790,7 @@
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="personal" >
-<author>
-<dependentPre></dependentPre>
+<resource name="personal" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2002,8 +1799,7 @@
 <pre></pre>
 <post>, private communication, </post>
 </author>
-<date>
-<dependentPre></dependentPre>
+<date><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2017,9 +1813,7 @@
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="unpublished" >
-<author>
-<dependentPre></dependentPre>
+<resource name="unpublished" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2028,8 +1822,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2038,8 +1831,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<type>
-<dependentPre></dependentPre>
+<type><dependentPre></dependentPre>
 <dependentPost> </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>, </dependentPostAlternative>
@@ -2048,8 +1840,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </type>
-<ID>
-<dependentPre></dependentPre>
+<ID><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2058,8 +1849,7 @@
 <pre></pre>
 <post>, </post>
 </ID>
-<institution>
-<dependentPre></dependentPre>
+<institution><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2068,8 +1858,7 @@
 <pre></pre>
 <post>, </post>
 </institution>
-<institutionLocation>
-<dependentPre></dependentPre>
+<institutionLocation><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2083,14 +1872,11 @@
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="classical" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="classical" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="manuscript" >
-<author>
-<dependentPre></dependentPre>
+<resource name="manuscript" ><author><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2099,8 +1885,7 @@
 <pre></pre>
 <post>, </post>
 </author>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2109,8 +1894,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<issueDate>
-<dependentPre></dependentPre>
+<issueDate><dependentPre></dependentPre>
 <dependentPost>, </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2119,8 +1903,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </issueDate>
-<issueYear>
-<dependentPre></dependentPre>
+<issueYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2134,19 +1917,15 @@
 <partial>[i]title[/i]. Unpublished manuscript </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="map" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="map" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="chart" >
-<fallbackstyle>genericMisc</fallbackstyle>
+<resource name="chart" ><fallbackstyle>genericMisc</fallbackstyle>
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="miscellaneous" >
-<creator>
-<dependentPre></dependentPre>
+<resource name="miscellaneous" ><creator><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2155,8 +1934,7 @@
 <pre></pre>
 <post>, </post>
 </creator>
-<title>
-<dependentPre></dependentPre>
+<title><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2165,8 +1943,7 @@
 <pre>&quot;</pre>
 <post>,&quot; </post>
 </title>
-<medium>
-<dependentPre></dependentPre>
+<medium><dependentPre></dependentPre>
 <dependentPost> </dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative>, </dependentPostAlternative>
@@ -2175,8 +1952,7 @@
 <pre></pre>
 <post>__DEPENDENT_ON_NEXT_FIELD__</post>
 </medium>
-<ID>
-<dependentPre></dependentPre>
+<ID><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2185,8 +1961,7 @@
 <pre></pre>
 <post>, </post>
 </ID>
-<publisherName>
-<dependentPre></dependentPre>
+<publisherName><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2195,8 +1970,7 @@
 <pre></pre>
 <post>, </post>
 </publisherName>
-<publisherLocation>
-<dependentPre></dependentPre>
+<publisherLocation><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2205,8 +1979,7 @@
 <pre></pre>
 <post>, </post>
 </publisherLocation>
-<publicationYear>
-<dependentPre></dependentPre>
+<publicationYear><dependentPre></dependentPre>
 <dependentPost></dependentPost>
 <dependentPreAlternative></dependentPreAlternative>
 <dependentPostAlternative></dependentPostAlternative>
@@ -2220,8 +1993,7 @@
 <partial>[i]title[/i]. </partial>
 <partialReplace>0</partialReplace>
 </resource>
-<resource name="miscellaneous_section" >
-<fallbackstyle>genericArticle</fallbackstyle>
+<resource name="miscellaneous_section" ><fallbackstyle>genericArticle</fallbackstyle>
 <partial>title. </partial>
 <partialReplace>0</partialReplace>
 </resource>

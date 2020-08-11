@@ -11,7 +11,7 @@ BUG FIXES:
 5. Prevent a crash when the database is empty and the userId is known by the session.
 6. Prevent a crash with a negative result when full-text searching attachments (Advanced search).
 7. When full-text searching attachments (Advanced search), ensure all attachments with the search term are presented for each resource.
-8. When browsing resources or listing some by various parameters, ensure the list parameters are maintained through reordering operations.
+8. When browsing resources or listing some by various parameters, ensure the displayed list parameters are maintained through reordering operations.
 9. Fix a missing input message when the last multi list is Metadata:Keyword.
 10. Fix for web server crash with pasted images: https://sourceforge.net/p/wikindx/v5bugs/239/
 

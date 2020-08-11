@@ -225,7 +225,7 @@ class SQLSTATEMENTS
             $total = $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources');
         } else {
             $total = 0;
-            $tmp = base64_decode($this->session->getVar("list_AllIds", ""));
+            $tmp = base64_decode($this->session->getVar("list_AllIds"));
             if ($tmp !== FALSE) {
                 $tmp = unserialize($tmp);
             }
@@ -448,6 +448,7 @@ class SQLSTATEMENTS
                 if (empty($ids)) {
                     return FALSE;
                 }
+                $ids = array_filter($ids); // array_filter() to ensure no null ids
                 $this->session->setVar("setup_PagingTotal", count($ids));
                 $this->session->setVar("list_AllIds", base64_encode(serialize($ids)));
                 $this->session->delVar("sql_CountAlphaStmt");
@@ -500,6 +501,7 @@ class SQLSTATEMENTS
             if (empty($ids)) {
                 return FALSE;
             }
+            $ids = array_filter($ids); // array_filter() to ensure no null ids
             switch ($type) {
                 case 'or':
                     $this->session->setVar("list_AllIds", base64_encode(serialize($ids)));

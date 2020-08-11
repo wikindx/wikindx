@@ -92,11 +92,11 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%custom` (
 
 
 CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%database_summary` (
-  `databasesummaryTotalResources` int(11) NOT NULL,
-  `databasesummaryTotalQuotes` int(11) DEFAULT NULL,
-  `databasesummaryTotalParaphrases` int(11) DEFAULT NULL,
-  `databasesummaryTotalMusings` int(11) DEFAULT NULL,
-  `databasesummarySoftwareVersion` varchar(16) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
+  `databasesummaryTotalResources` int(11) DEFAULT 0,
+  `databasesummaryTotalQuotes` int(11) DEFAULT 0,
+  `databasesummaryTotalParaphrases` int(11) DEFAULT 0,
+  `databasesummaryTotalMusings` int(11) DEFAULT 0,
+  `databasesummarySoftwareVersion` varchar(16) COLLATE utf8mb4_unicode_520_ci DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 

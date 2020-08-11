@@ -152,15 +152,16 @@ class RESOURCECOMMON
         // Abstract and note and metadata
         $this->commonBrowse->userBibCondition('resourcemetadataResourceId');
         $this->db->leftJoin('resource_text', 'resourcetextId', 'resourcemetadataResourceId');
-        $matchAgainst[] = $this->db->fulltextSearch(['resourcetextAbstract'], $search);
-        $matchAgainst[] = $this->db->fulltextSearch(['resourcetextNote'], $search);
-        $matchAgainst[] = $this->db->fulltextSearch(['resourcemetadataText'], $search);
+        $matchAgainst[] = $this->db->formatFields('resourcetextAbstract') . ' ' . $this->db->like('%', $search, '%');
+        $matchAgainst[] = $this->db->formatFields('resourcetextNote') . ' ' . $this->db->like('%', $search, '%');
+        $matchAgainst[] = $this->db->formatFields('resourcemetadataText') . ' ' . $this->db->like('%', $search, '%');
         $this->db->formatConditions(join(' ' . $this->db->or . ' ', $matchAgainst));
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute(
             'resource_metadata',
             [['resourcemetadataResourceId' => 'rId']]
         ));
         if ($countOnly) {
+        	$this->db->formatConditions(['rId' => $resourceId], TRUE);
             $resultSet = $this->db->query($this->db->selectNoExecuteFromSubQuery(
                 FALSE,
                 'rId',

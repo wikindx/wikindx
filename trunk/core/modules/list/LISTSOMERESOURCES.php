@@ -141,7 +141,8 @@ class LISTSOMERESOURCES
         $this->pagingReset();
         if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $resCommon = FACTORY_RESOURCECOMMON::getInstance();
-            $this->stmt->conditions[] = $this->db->formatFields('resourceId') . ' ' . $this->db->inClause($resCommon->showCitations($this->vars["id"]));
+            $this->stmt->conditions[] = $this->db->formatFields('resourceId') . ' ' .
+            	$this->db->inClause($resCommon->showCitations($this->vars["id"]));
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));

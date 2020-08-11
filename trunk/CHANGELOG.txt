@@ -15,6 +15,7 @@ BUG FIXES:
 9. Fix a missing input message when the last multi list is Metadata:Keyword.
 10. Fix for web server crash with pasted images: https://sourceforge.net/p/wikindx/v5bugs/239/
 11. Guard against null resource IDs in the total list when executing some searches.
+12. Correct 'Resources citing this' link when viewing a single resource.
 
 MAINTENANCE:
 1. Remove the MySql persistent connection option (WIKINDX_DB_PERSISTENT). Experienced users who know how to use this tricky option can still use the host's 'p:' syntax.

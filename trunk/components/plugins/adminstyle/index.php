@@ -2237,7 +2237,7 @@ class adminstyle_MODULE
             }
         }
         // Start XML
-        $fileString = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" . LF;
+        $fileString = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" . LF;
         $fileString .= "<style xml:lang=\"en\">" . LF;
         // Main style information
         $fileString .= "<info>";

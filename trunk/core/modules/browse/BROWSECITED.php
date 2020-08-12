@@ -57,7 +57,13 @@ class BROWSECITED
             }
         }
         $this->common->linksInfo();
-        $pString = \HTML\pBrowse($this->process(), "center");
+        $pString = $this->process();
+        if (!$pString) {
+        	GLOBALS::addTplVar('content', $this->messages->text("misc", "noCitations")); // only resources without creators could be cited.
+        	
+        	return;
+        }
+        $pString = \HTML\pBrowse($pString, "center");
         $this->common->pagingLinks('action=browse_BROWSECITED_CORE');
         GLOBALS::addTplVar('content', $pString);
     }
@@ -129,6 +135,9 @@ class BROWSECITED
      */
     private function process()
     {
+    	if (empty($this->sum)) {  		
+			return FALSE;
+		}
         $sum = $this->sum;
         sort($sum);
         $highestSum = $sum[count($sum) - 1];
@@ -141,7 +150,6 @@ class BROWSECITED
                 htmlentities('action=list_LISTSOMERESOURCES_CORE&method=citeProcessCreator&id=' . $citeIds)) .
                 "&nbsp;[" . $this->sum[$id] . "]";
         }
-
         return implode("&nbsp; ", $links);
     }
     /**

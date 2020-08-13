@@ -16,47 +16,19 @@
 namespace LOCALES
 {
     /**
-     * Format dates and times for localization (e.g. when viewing lists of resources in a multi-user wikindx 'Last edited by: xxx <date/time>)
+     * Format dates and times for localization
      *
-     * TODO: this function is extracted from the CONSTANTS.php file used for localisation.
-     * The date format does not depend on the language but rather on the uses of each country and the time zone.
-     * That's why this function has been isolated. However, operation is still not correct for the time zone.
-     * The comments were kept intact for later correction.
+     * Use it for displaying data to the user, not formatting data for the db
      *
-     * @param string $timestamp comes in from the database in the format 'YYYY-MM-DD HH:MM:SS' e.g. 2013-01-31 15:54:55
+     * @param string $datetime comes in from the database in the format 'YYYY-MM-DD HH:MM:SS' e.g. 2013-01-31 15:54:55
      *
      * @return string
      */
-    function dateFormat($timestamp)
+    function dateFormat($datetime)
     {
-        // If you're happy with $timestamp's current format, all you need to do is uncomment this line:
-        //		return $timestamp;
-        // Otherwise. . .
-        $unixTime = strtotime($timestamp);
-        // You have two choices for setting the time.  The first attempts to translate day and month names but will not
-        // work if the chosen locale is not available on your system.
-        // See
-        // http://www.php.net/manual/en/function.setlocale.php
-        // and
-        // http://www.php.net/manual/en/function.strftime.php
-//
-        // The second is locale independent
-        // See:
-        // http://www.php.net/manual/en/function.date.php
-//
-        // For the first option, set $dateFormat = 1; otherwise set $dateFormat = 2;
-        $dateFormat = 2;
-        if ($dateFormat == 1) {
-            $format = "%c"; // e.g. Tue Feb 5 00:45:10 2009 for February 5, 2009 at 12:45:10 AM
-            $timestamp = strftime($format, $unixTime);
-        } elseif ($dateFormat == 2) {
-            $format = "%x %X"; // e.g. 02/05/09 03:59:16 for February 5, 2009 15:59:16
-            $timestamp = date($format, $unixTime);
-        } else {
-            // Keep the timestamp unformated
-        }
-
-        return $timestamp;
+    	// NB: "%c" is not the same as "%x %X" when the locale is not set correctly
+    	// We want the numeric format, not literary format
+        return date("%x %X", strtotime($timestamp));
     }
 
     /**

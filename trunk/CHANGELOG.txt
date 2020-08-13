@@ -18,6 +18,7 @@ BUG FIXES:
 12. Correct 'Resources citing this' link when viewing a single resource.
 13. When browsing cited creators, ensure cited resources without creators do not cause an error.
 14. Ensure there is no option to add bookmarks when viewing the front page.
+15. When deleting resources from within a list (i.e. using the select box to delete set resources), ensure that the new display of the list has the corrected number of resources and the correct paging links. Equally, if all resources in the list are deleted, return to the FRONT page.
 
 MAINTENANCE:
 1. Remove the MySql persistent connection option (WIKINDX_DB_PERSISTENT). Experienced users who know how to use this tricky option can still use the host's 'p:' syntax.

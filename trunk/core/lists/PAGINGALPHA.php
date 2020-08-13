@@ -66,8 +66,7 @@ class PAGINGALPHA
     public function getPaging($conditions, $joins, $conditionsOneField, $table = 'resource', $subQ, $QS = FALSE)
     {
         $this->total = $this->session->getVar("setup_PagingTotal");
-        if ($links = $this->session->getVar("list_PagingAlphaLinks")) {
-            $this->pagingArray = unserialize(base64_decode($links));
+        if ($this->pagingArray = $this->session->getVar("list_PagingAlphaLinks")) {
             $this->sizeOfPA = count($this->pagingArray);
             $this->createLinks();
 
@@ -110,7 +109,7 @@ class PAGINGALPHA
             $this->pagingArray[] = $letterArray;
         }
         $this->sizeOfPA = count($this->pagingArray);
-        $this->session->setVar("list_PagingAlphaLinks", base64_encode(serialize($this->pagingArray)));
+        $this->session->setVar("list_PagingAlphaLinks", $this->pagingArray);
         $this->createLinks();
     }
     /**

@@ -64,8 +64,10 @@ class DELETERESOURCE
     }
     /**
      * Ask for confirmation of delete resource
+     * 
+     * @param bool $deleteWithinList default FALSE
      */
-    public function deleteResourceConfirm()
+    public function deleteResourceConfirm($deleteWithinList = FALSE)
     {
         if (!$this->validateInput()) {
             $this->display($this->errors->text("inputError", "missing"));
@@ -118,6 +120,7 @@ class DELETERESOURCE
         }
         $pString .= \FORM\formHeader('admin_DELETERESOURCE_CORE');
         $pString .= \FORM\hidden('function', 'process');
+        $pString .= \FORM\hidden('deleteWithinList', $deleteWithinList);
         if ($this->navigate) {
             $pString .= \FORM\hidden('navigate', $this->navigate);
         }
@@ -206,8 +209,16 @@ class DELETERESOURCE
         $pString = $this->success->text("resourceDelete");
         // Lock reload.
         $this->session->setVar("deleteResourceLock", TRUE);
+        if ($this->vars['deleteWithinList']) { // i.e. from the organize list select box – need to recalculate list total we return to.
+        	$this->session->setVar("setup_PagingTotal", $this->session->getVar("setup_PagingTotal") - count($this->idsRaw));
+        	$this->session->delVar("list_PagingAlphaLinks");
+        }
         // Which page do we return to?
-        if ($this->navigate == 'nextResource') { // next single view
+        if ($this->session->getVar("setup_PagingTotal") == 0) {
+            include_once("core/display/FRONT.php");
+            $front = new FRONT($pString); // __construct() runs on autopilot
+        }
+        elseif ($this->navigate == 'nextResource') { // next single view
             $navigate = FACTORY_NAVIGATE::getInstance();
             $navigate->resource($this->nextResourceId, $pString);
         } elseif ($this->navigate == 'list') { // previous multi list

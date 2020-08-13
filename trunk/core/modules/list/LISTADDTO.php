@@ -578,7 +578,7 @@ class LISTADDTO
         $deleteResource->resourceIds['resource_id'] = $ids;
         $deleteResource->navigate = 'list';
 
-        return $deleteResource->deleteResourceConfirm();
+        return $deleteResource->deleteResourceConfirm(TRUE);
     }
     /**
      * Check for proper resource ID input and produce hidden fields

@@ -98,7 +98,6 @@ class BIBUTILS
             $pString .= HTML\td(FORM\selectFBoxValueMultiple($this->pluginmessages->text("bibutilsxmlOptions"), "options", $options, 6, TRUE) .
                 BR . HTML\span($this->coremessages->text('hint', 'multiples'), 'hint'));
         } else {
-            $selected = unserialize(base64_decode($selected));
             $pString .= HTML\td(FORM\selectedBoxValueMultiple($this->pluginmessages->text("bibutilsxmlOptions"), "options", $options, $selected, 6, TRUE) .
                 BR . HTML\span($this->coremessages->text('hint', 'multiples'), 'hint'));
         }
@@ -389,7 +388,7 @@ class BIBUTILS
                 $array[] = $key;
             }
             if (isset($array)) {
-                $this->session->setVar("bibUtils_options", base64_encode(serialize($array)));
+                $this->session->setVar("bibUtils_options", $array);
             } else {
                 $this->session->delVar("bibUtils_options");
             }

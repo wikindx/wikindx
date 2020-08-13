@@ -284,7 +284,7 @@ class QUICKSEARCH
             }
         }
         $this->common->patterns = $patterns;
-        $this->session->setVar("search_Patterns", base64_encode(serialize($patterns)));
+        $this->session->setVar("search_Patterns", $patterns);
         $this->common->keepHighlight = TRUE;
         $sql = $this->getFinalSql($reprocess, $queryString);
         $this->common->display($sql, 'search');

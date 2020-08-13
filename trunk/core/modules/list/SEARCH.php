@@ -988,10 +988,10 @@ class SEARCH
             }
         }
         if (!isset($patterns)) {
-            $this->session->setVar("search_Patterns", base64_encode(serialize([])));
+            $this->session->setVar("search_Patterns", []);
             $this->common->patterns = FALSE;
         } else {
-            $this->session->setVar("search_Patterns", base64_encode(serialize($patterns)));
+            $this->session->setVar("search_Patterns", $patterns);
             $this->common->patterns = $patterns;
         }
         $this->common->keepHighlight = TRUE;

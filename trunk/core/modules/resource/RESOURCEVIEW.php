@@ -723,7 +723,7 @@ class RESOURCEVIEW
         $allIds = $this->session->getVar("list_NextPreviousIds");
         $thisKey = array_search($thisId, $allIds);
         if ($thisKey === FALSE) {
-            return $array;
+            return [];
         }
         $order = $this->session->getVar("sql_LastOrder");
         $alpha = (GLOBALS::getUserVar('PagingStyle') == 'A') && in_array($order, ['title', 'creator', 'attachments']);

@@ -325,7 +325,7 @@ class QUICKSEARCH
  				{
  					$allIds[] = $row['resourceId'];
  				}
- 				$this->session->setVar("list_AllIds", base64_encode(serialize($allIds)));
+ 				$this->session->setVar("list_AllIds", $allIds);
  				unset($allIds);
             }
             if ($nots) {

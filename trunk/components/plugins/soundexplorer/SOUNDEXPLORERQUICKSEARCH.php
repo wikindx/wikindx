@@ -517,7 +517,7 @@ class SOUNDEXPLORERQUICKSEARCH
             return FALSE;
         }
         $this->fieldSql();
-        $this->db->formatConditionsOneField(unserialize(base64_decode($this->session->getVar("list_AllIds"))), 'resourceId');
+        $this->db->formatConditionsOneField($this->session->getVar("list_AllIds"), 'resourceId');
         $resultset = $this->db->select('resource', 'resourceId');
         $found = FALSE;
         while ($row = $this->db->fetchRow($resultset)) {

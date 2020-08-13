@@ -78,7 +78,7 @@ class PAGINGALPHA
             $viewMax = 20; // a cludge
         }
         if ($QS) {
-        	$conditions[] = $this->db->formatConditionsOneField(unserialize(base64_decode($this->session->getVar("list_AllIds"))), 
+        	$conditions[] = $this->db->formatConditionsOneField($this->session->getVar("list_AllIds"), 
         	'resourceId', '=', TRUE, FALSE, FALSE, TRUE);
         	$joins = [];
             $joins['resource_misc'] = ['resourcemiscId', 'resourceId'];

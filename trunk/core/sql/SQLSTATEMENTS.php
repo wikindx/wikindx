@@ -221,17 +221,10 @@ class SQLSTATEMENTS
     public function getExportSql()
     {
         $totalPossible = WIKINDX_MAX_WRITECHUNK;
-        if ($this->session->getVar("list_AllIds") == 'all') {
+        if (!is_array($this->session->getVar("list_AllIds")) && ($this->session->getVar("list_AllIds") == 'all')) {
             $total = $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources');
         } else {
-            $total = 0;
-            $tmp = base64_decode($this->session->getVar("list_AllIds"));
-            if ($tmp !== FALSE) {
-                $tmp = unserialize($tmp);
-            }
-            if ($tmp !== FALSE) {
-                $total = count($tmp);
-            }
+            $total = count($this->session->getVar("list_AllIds"));
         }
         $stmt = $this->session->getVar("sql_ListStmt");
         // watch out for exhausting PHP memory – we divide into multiple SQL statements
@@ -294,7 +287,7 @@ class SQLSTATEMENTS
                 }
             } elseif (!$this->allIds) {
                 $this->db->formatConditions($this->db->formatFields('resourceId') .
-                    $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar("list_AllIds"))))));
+                    $this->db->inClause(implode(',', $this->session->getVar("list_AllIds"))));
             }
         } elseif ($order == 'creator') {
             if (GLOBALS::getUserVar('PagingStyle') == 'A') {
@@ -323,11 +316,11 @@ class SQLSTATEMENTS
             } 
             elseif (!$this->allIds) {
                 $this->db->formatConditions($this->db->formatFields('resourceId') .
-                    $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar("list_AllIds"))))));
+                    $this->db->inClause(implode(',', $this->session->getVar("list_AllIds"))));
             }
         } elseif (!in_array($order, ['popularityIndex', 'downloadsIndex', 'viewsIndex']) && !$this->allIds) { // all other orders
             $this->db->formatConditions($this->db->formatFields('resourceId') .
-                $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar("list_AllIds"))))));
+                $this->db->inClause(implode(',', $this->session->getVar("list_AllIds"))));
         }
         $this->listJoins($order);
         if (($order == 'popularityIndex') || ($order == 'downloadsIndex') || ($order == 'viewsIndex')) {
@@ -384,7 +377,7 @@ class SQLSTATEMENTS
 			$this->executeCondJoins();
         }
         $this->db->formatConditions($this->db->formatFields('resourceId') .
-                $this->db->inClause(implode(',', unserialize(base64_decode($this->session->getVar("list_AllIds"))))));
+                $this->db->inClause(implode(',', $this->session->getVar("list_AllIds"))));
         $this->listJoins($order, TRUE);
         if (($order == 'popularityIndex') || ($order == 'downloadsIndex') || ($order == 'viewsIndex')) {
             $this->listFields[] = 'index';
@@ -450,7 +443,7 @@ class SQLSTATEMENTS
                 }
                 $ids = array_filter($ids); // array_filter() to ensure no null ids
                 $this->session->setVar("setup_PagingTotal", count($ids));
-                $this->session->setVar("list_AllIds", base64_encode(serialize($ids)));
+                $this->session->setVar("list_AllIds", $ids);
                 $this->session->delVar("sql_CountAlphaStmt");
             }
         }
@@ -504,23 +497,23 @@ class SQLSTATEMENTS
             $ids = array_filter($ids); // array_filter() to ensure no null ids
             switch ($type) {
                 case 'or':
-                    $this->session->setVar("list_AllIds", base64_encode(serialize($ids)));
+                    $this->session->setVar("list_AllIds", $ids);
 
                     return TRUE;
                 case 'and':
                     if ($this->session->getVar("list_AllIds")) {
-                        $pastIds = unserialize(base64_decode($this->session->getVar("list_AllIds")));
+                        $pastIds = $this->session->getVar("list_AllIds");
                         $ids = array_intersect($ids, $pastIds);
                     }
-                    $this->session->setVar("list_AllIds", base64_encode(serialize($ids)));
+                    $this->session->setVar("list_AllIds", $ids);
 
                     return TRUE;
                 case 'not':
                     if ($this->session->getVar("list_AllIds")) {
-                        $pastIds = unserialize(base64_decode($this->session->getVar("list_AllIds")));
+                        $pastIds = $this->session->getVar("list_AllIds");
                         $ids = array_diff($pastIds, $ids);
                     }
-                    $this->session->setVar("list_AllIds", base64_encode(serialize($ids)));
+                    $this->session->setVar("list_AllIds", $ids);
 
                     return TRUE;
                 default:
@@ -528,7 +521,7 @@ class SQLSTATEMENTS
             }
         }
         // If we get here, $quicksearch is 'final'
-        $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
+        $ids = $this->session->getVar("list_AllIds");
         if (is_bool($ids) || empty($ids)) { // FALSE
             return FALSE;
         }

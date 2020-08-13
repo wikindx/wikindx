@@ -565,12 +565,12 @@ class LISTADDTO
         if (!$idFound) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-        if ($string == 'display') {
+        if (!is_array($string) && ($string == 'display')) {
             $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
-        } elseif ($string == 'all') {
-            $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
+        } elseif (!is_array($string) && ($string == 'all')) {
+            $ids = $this->session->getVar("list_AllIds");
         } else {
-            $ids = unserialize(base64_decode($string));
+            $ids = $string;
         }
         $this->session->setVar("addToKeywordCategory", TRUE);
         include_once("core/modules/admin/DELETERESOURCE.php");
@@ -603,7 +603,7 @@ class LISTADDTO
             }
         }
         if (isset($string)) {
-            return [TRUE, base64_encode(serialize($string))];
+            return [TRUE, $string];
         } else {
             return [FALSE, FALSE];
         }
@@ -617,12 +617,12 @@ class LISTADDTO
         $res = FACTORY_RESOURCECOMMON::getInstance();
         list($idFound, $string) = $this->checkIdInput();
         $ids = [];
-        if ($string == 'display') {
+        if (!is_array($string) && ($string == 'display')) {
             $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
-        } elseif ($string == 'all') {
-            $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
+        } elseif (!is_array($string) && ($string == 'all')) {
+            $ids = $this->session->getVar("list_AllIds");
         } else {
-            $ids = unserialize(base64_decode($string)); // checked resources
+            $ids = $string; // checked resources
         }
         if (empty($ids)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
@@ -680,12 +680,12 @@ class LISTADDTO
         } else {
             $basket = [];
         }
-        if ($string == 'display') {
+        if (!is_array($string) && ($string == 'display')) {
             $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
-        } elseif ($string == 'all') {
-            $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
+        } elseif (!is_array($string) && ($string == 'all')) {
+            $ids = $this->session->getVar("list_AllIds");
         } else {
-            $ids = unserialize(base64_decode($string));
+            $ids = $string;
         }
         //$this->session->delVar("basket_List");
         foreach ($ids as $resourceId) {
@@ -716,12 +716,12 @@ class LISTADDTO
         } else {
             $basket = [];
         }
-        if ($string == 'display') {
+        if (!is_array($string) && ($string == 'display')) {
             $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
-        } elseif ($string == 'all') {
-            $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
+        } elseif (!is_array($string) && ($string == 'all')) {
+            $ids = $this->session->getVar("list_AllIds");
         } else {
-            $ids = unserialize(base64_decode($string));
+            $ids = $string;
         }
         foreach ($ids as $resourceId) {
             if (($key = array_search($resourceId, $basket)) !== FALSE) {
@@ -834,7 +834,7 @@ class LISTADDTO
         if ($this->vars['ids'] == 'display') {
             $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
         } elseif ($this->vars['ids'] == 'all') {
-            $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
+            $ids = $this->session->getVar("list_AllIds");
         } else {
             $ids = unserialize(base64_decode($this->vars['ids']));
         }
@@ -856,9 +856,9 @@ class LISTADDTO
         if (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'display')) {
             $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
         } elseif (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'all')) {
-            $ids = unserialize(base64_decode($this->session->getVar("list_AllIds")));
+            $ids = $this->session->getVar("list_AllIds");
         } else {
-            $ids = unserialize(base64_decode($string));
+            $ids = $string;
         }
         $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $this->session->getVar("mywikindx_Bibliography_use")]);
         $this->db->formatConditionsOneField($ids, 'userbibliographyresourceResourceId');

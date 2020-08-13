@@ -482,8 +482,7 @@ namespace FILE
         $fileArray = [];
 
         if ($fileExports) {
-            $sessArray = unserialize($fileExports);
-            $files = array_intersect($sessArray, fileInDirToArray(WIKINDX_DIR_DATA_FILES));
+            $files = array_intersect($fileExports, fileInDirToArray(WIKINDX_DIR_DATA_FILES));
 
             foreach ($files as $file) {
                 $fileArray[$file] = filemtime(WIKINDX_DIR_DATA_FILES . DIRECTORY_SEPARATOR . $file);
@@ -520,18 +519,17 @@ namespace FILE
 
             // Remove reference to these files in session
             $session = \FACTORY_SESSION::getInstance();
-            if (($sessVar = $session->getVar("fileExports")) && !empty($fileDeleteArray)) {
-                $sessArray = unserialize($sessVar);
+            if (($sessArray = $session->getVar("fileExports")) && !empty($fileDeleteArray)) {
                 foreach ($fileDeleteArray as $f) {
                     unset($sessArray[array_search($f, $sessArray)]);
                 }
                 if (!empty($sessArray)) {
-                    $session->setVar("fileExports", serialize($sessArray));
+                    $session->setVar("fileExports", $sessArray);
                 } else {
                     $session->delVar("fileExports");
                 }
             } elseif (!empty($fileKeepArray)) {
-                $session->setVar("fileExports", serialize($fileKeepArray));
+                $session->setVar("fileExports", $fileKeepArray);
             }
         }
     }

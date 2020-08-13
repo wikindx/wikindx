@@ -397,8 +397,7 @@ class AUTHORIZE
         // Garbage disposal
         // remove this session's files
         $dir = WIKINDX_DIR_DATA_FILES;
-        if ($sessVar = $this->session->getVar("fileExports")) {
-            $sessArray = unserialize($sessVar);
+        if ($sessArray = $this->session->getVar("fileExports")) {
             foreach (\FILE\fileInDirToArray($dir) as $f) {
                 if (array_search($f, $sessArray) === FALSE) {
                     continue;
@@ -408,8 +407,7 @@ class AUTHORIZE
             }
             //			$this->session->delVar("fileExports");
         }
-        if ($sessVar = $this->session->getVar("PaperExports")) {
-            $sessArray = unserialize($sessVar);
+        if ($sessArray = $this->session->getVar("wp_PaperExports")) {
             foreach (\FILE\fileInDirToArray($dir) as $f) {
                 if (!array_key_exists($f, $sessArray)) {
                     continue;

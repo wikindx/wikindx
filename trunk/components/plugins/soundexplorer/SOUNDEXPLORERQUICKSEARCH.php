@@ -141,7 +141,7 @@ class SOUNDEXPLORERQUICKSEARCH
             }
         }
         if (!empty($this->foundResources)) {
-            $session->setVar("seplugin_FoundResources", base64_encode(serialize($this->foundResources)));
+            $session->setVar("seplugin_FoundResources", $this->foundResources);
         } else {
             $session->delVar("seplugin_FoundResources");
         }

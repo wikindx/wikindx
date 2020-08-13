@@ -282,7 +282,7 @@ END;
             $pString .= HTML\td(HTML\strong(str_replace(' ', '&nbsp;', $this->pluginmessages->text("seMatchedSearches"))));
             $pString .= HTML\td('&nbsp;');
             $pString .= HTML\trEnd();
-            foreach (unserialize(base64_decode($this->session->getVar("seplugin_FoundResources"))) as $label => $ids) {
+            foreach ($this->session->getVar("seplugin_FoundResources") as $label => $ids) {
                 $thisLabelPrinted = FALSE;
                 $resultset = $rc->getResource($ids);
                 while ($row = $this->db->fetchRow($resultset)) {

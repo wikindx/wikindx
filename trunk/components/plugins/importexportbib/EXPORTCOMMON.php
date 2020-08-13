@@ -123,13 +123,13 @@ class EXPORTCOMMON
     public function writeFilenameToSession($fileName)
     {
         if ($sessVar = $this->session->getVar("fileExports")) {
-            $sessArray = unserialize($sessVar);
+            $sessArray = $sessVar;
         } else {
             $sessArray = [];
         }
         if (array_search($fileName, $sessArray) === FALSE) {
             $sessArray[] = $fileName;
-            $this->session->setVar("fileExports", serialize($sessArray));
+            $this->session->setVar("fileExports", $sessArray);
         }
     }
     /*

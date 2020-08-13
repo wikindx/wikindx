@@ -95,13 +95,13 @@ class WPExportDialog
 
         // Write exported hashed filename to session
         if ($sessVar = $this->session->getVar("wp_PaperExports")) {
-            $sessArray = unserialize($sessVar);
+            $sessArray = $sessVar;
         } else {
             $sessArray = [];
         }
         if (array_search($hashFileName, $sessArray) === FALSE) {
             $sessArray[$hashFileName] = $title . '.rtf';
-            $this->session->setVar("wp_PaperExports", serialize($sessArray));
+            $this->session->setVar("wp_PaperExports", $sessArray);
         }
         // Perform some system admin
         FILE\tidyFiles();

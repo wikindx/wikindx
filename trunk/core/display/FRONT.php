@@ -47,6 +47,7 @@ class FRONT
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('front'));
         $this->init();
+		$this->session->setVar("bookmark_DisplayAdd", FALSE);
     }
     /**
      * Display front page information.  If $noMenu, display WIKINDX submenu links

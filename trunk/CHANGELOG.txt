@@ -17,6 +17,7 @@ BUG FIXES:
 11. Guard against null resource IDs in the total list when executing some searches.
 12. Correct 'Resources citing this' link when viewing a single resource.
 13. When browsing cited creators, ensure cited resources without creators do not cause an error.
+14. Ensure there is no option to add bookmarks when viewing the front page.
 
 MAINTENANCE:
 1. Remove the MySql persistent connection option (WIKINDX_DB_PERSISTENT). Experienced users who know how to use this tricky option can still use the host's 'p:' syntax.

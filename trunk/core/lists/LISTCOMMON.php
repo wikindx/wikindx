@@ -266,7 +266,7 @@ class LISTCOMMON
         }
 
         if (count($resources) > 0) {
-            $this->session->setVar("list_NextPreviousIds", base64_encode(serialize($resIds)));
+            $this->session->setVar("list_NextPreviousIds", $resIds);
             $this->formatResources($listType, $resourceList, $resources);
             $this->createLinks($listType, $resourceList, $resources);
 

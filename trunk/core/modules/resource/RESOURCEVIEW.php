@@ -709,22 +709,18 @@ class RESOURCEVIEW
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'random')) {
             return $this->nextRandomLink($thisId);
         }
-        $array = [];
         if (!$this->execNP) {
-            return $array;
+            return [];
         }
         if ($this->startNP === FALSE) {
             $start = $this->session->getVar("mywikindx_PagingStart", 0);
         } else {
             $start = $this->startNP;
         }
-        if (($raw = $this->session->getVar("list_NextPreviousIds")) === FALSE) {
-            return $array;
+        if (empty($this->session->getVar("list_NextPreviousIds"))) {
+            return [];
         }
-        $allIds = unserialize(base64_decode($raw));
-        if (!isset($allIds)) {
-            return $array;
-        }
+        $allIds = $this->session->getVar("list_NextPreviousIds");
         $thisKey = array_search($thisId, $allIds);
         if ($thisKey === FALSE) {
             return $array;
@@ -783,7 +779,7 @@ class RESOURCEVIEW
      */
     private function setPreviousNext($querySession, $returnId = FALSE, $reload = FALSE, $thisId = FALSE)
     {
-        $allIds = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
+        $allIds = $this->session->getVar("list_NextPreviousIds");
         if ($this->session->getVar("mywikindx_PagingStart")) {
             if ($returnId == 'forward') {
                 $this->session->setVar("mywikindx_PagingStart", $this->session->getVar("mywikindx_PagingStart") +
@@ -807,7 +803,7 @@ class RESOURCEVIEW
             }
         }
         if (isset($totalIds)) {
-            $this->session->setVar("list_NextPreviousIds", base64_encode(serialize($totalIds)));
+            $this->session->setVar("list_NextPreviousIds", $totalIds);
         }
         if (isset($totalIds) && ($returnId == 'forward')) { // moving forwards
             return [$start, $totalIds[0]];

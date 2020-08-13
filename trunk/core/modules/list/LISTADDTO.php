@@ -566,7 +566,7 @@ class LISTADDTO
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
         if (!is_array($string) && ($string == 'display')) {
-            $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
+            $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif (!is_array($string) && ($string == 'all')) {
             $ids = $this->session->getVar("list_AllIds");
         } else {
@@ -618,7 +618,7 @@ class LISTADDTO
         list($idFound, $string) = $this->checkIdInput();
         $ids = [];
         if (!is_array($string) && ($string == 'display')) {
-            $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
+            $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif (!is_array($string) && ($string == 'all')) {
             $ids = $this->session->getVar("list_AllIds");
         } else {
@@ -681,7 +681,7 @@ class LISTADDTO
             $basket = [];
         }
         if (!is_array($string) && ($string == 'display')) {
-            $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
+            $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif (!is_array($string) && ($string == 'all')) {
             $ids = $this->session->getVar("list_AllIds");
         } else {
@@ -717,7 +717,7 @@ class LISTADDTO
             $basket = [];
         }
         if (!is_array($string) && ($string == 'display')) {
-            $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
+            $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif (!is_array($string) && ($string == 'all')) {
             $ids = $this->session->getVar("list_AllIds");
         } else {
@@ -832,7 +832,7 @@ class LISTADDTO
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
         if ($this->vars['ids'] == 'display') {
-            $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
+            $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif ($this->vars['ids'] == 'all') {
             $ids = $this->session->getVar("list_AllIds");
         } else {
@@ -854,7 +854,7 @@ class LISTADDTO
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
         if (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'display')) {
-            $ids = unserialize(base64_decode($this->session->getVar("list_NextPreviousIds")));
+            $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'all')) {
             $ids = $this->session->getVar("list_AllIds");
         } else {

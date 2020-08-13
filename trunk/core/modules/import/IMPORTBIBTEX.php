@@ -231,12 +231,12 @@ class IMPORTBIBTEX
     {
         // Restore session
         if ($this->session->issetVar("import_RejectTitles")) {
-            $this->rejectTitles = unserialize(base64_decode($this->session->getVar("import_RejectTitles")));
+            $this->rejectTitles = $this->session->getVar("import_RejectTitles");
         } else {
             $this->rejectTitles = [];
         }
         if ($this->session->issetVar("import_ResourceIds")) {
-            $this->rIds = unserialize(base64_decode($this->session->getVar("import_ResourceIds")));
+            $this->rIds = $this->session->getVar("import_ResourceIds");
         } else {
             $this->rIds = [];
         }
@@ -252,14 +252,12 @@ class IMPORTBIBTEX
         if ($this->session->issetVar("import_BibtexStringID")) {
             $this->bibtexStringId = $this->session->getVar("import_BibtexStringID");
         }
-        $this->entriesLeft = $this->entries =
-            unserialize(base64_decode($this->session->getVar("import_Entries")));
-        $this->garbageFiles = unserialize(base64_decode($this->session->getVar("import_GarbageFiles")));
+        $this->entriesLeft = $this->entries = $this->session->getVar("import_Entries");
+        $this->garbageFiles = $this->session->getVar("import_GarbageFiles");
         if ($this->session->issetVar("import_UnrecognisedFields")) {
-            $this->unrecognisedFields =
-                unserialize(base64_decode($this->session->getVar("import_UnrecognisedFields")));
-            $this->customFields = unserialize(base64_decode($this->session->getVar("import_CustomFields")));
-            $this->vars = unserialize(base64_decode($this->session->getVar("import_ThisVars")));
+            $this->unrecognisedFields = $this->session->getVar("import_UnrecognisedFields");
+            $this->customFields = $this->session->getVar("import_CustomFields");
+            $this->vars = $this->session->getVar("import_ThisVars");
         }
         $finalInput = $this->writeDb(TRUE);
         $pString = $this->errorMessage ? $this->errorMessage : '';
@@ -457,27 +455,24 @@ class IMPORTBIBTEX
                 $this->session->setVar("import_BibtexStringID", $this->bibtexStringId);
             }
             // Resource IDs
-            $this->session->setVar("import_ResourceIds", base64_encode(serialize($this->rIds)));
+            $this->session->setVar("import_ResourceIds", $this->rIds);
             // Remaining entries
-            $this->session->setVar("import_Entries", base64_encode(serialize($this->entriesLeft)));
+            $this->session->setVar("import_Entries", $this->entriesLeft);
             // Rejected titles
             if (!empty($this->rejectTitles)) {
-                $this->session->setVar("import_RejectTitles", base64_encode(serialize($this->rejectTitles)));
+                $this->session->setVar("import_RejectTitles", $this->rejectTitles);
             }
             // garbage files
-            $this->session->setVar("import_GarbageFiles", base64_encode(serialize($this->garbageFiles)));
+            $this->session->setVar("import_GarbageFiles", $this->garbageFiles);
             // Unrecognised field mapping
             if (isset($this->unrecognisedFields)) {
-                $this->session->setVar(
-                    "import_UnrecognisedFields",
-                    base64_encode(serialize($this->unrecognisedFields))
-                );
+                $this->session->setVar("import_UnrecognisedFields", $this->unrecognisedFields);
                 // Custom field mapping
                 if (isset($this->customFields)) {
-                    $this->session->setVar("import_CustomFields", base64_encode(serialize($this->customFields)));
+                    $this->session->setVar("import_CustomFields", $this->customFields);
                 }
                 // $this->vars
-                $this->session->setVar("import_ThisVars", base64_encode(serialize($this->vars)));
+                $this->session->setVar("import_ThisVars", $this->vars);
             }
             $remainder = count($this->entriesLeft);
             $pString = \HTML\p($this->messages->text(
@@ -737,7 +732,8 @@ class IMPORTBIBTEX
                 }
             }
             // Do we map unrecognised fields?
-            if (!empty($this->unrecognisedFields) && array_search($key, $this->unrecognisedFields) !== FALSE) {
+            if (is_array($this->unrecognisedFields) && !empty($this->unrecognisedFields) 
+            	&& array_search($key, $this->unrecognisedFields) !== FALSE) {
                 $importKey = 'import_' . $key;
                 if (array_key_exists($importKey, $this->vars) &&
                     array_search($this->vars[$importKey], $this->map->{$wkType}['possible']) !== FALSE) {
@@ -1036,7 +1032,7 @@ class IMPORTBIBTEX
         if (!array_key_exists('keywords', $entry)) {
             return;
         }
-        if (!array_key_exists('import_KeywordSeparator', $this->vars)) {
+        if (is_array($this->vars) && !array_key_exists('import_KeywordSeparator', $this->vars)) {
             $separator = '1'; // default semicolon
         } else {
             $separator = $this->vars['import_KeywordSeparator'];
@@ -1226,7 +1222,7 @@ class IMPORTBIBTEX
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this->badClass, $this->badFunction);
             }
             $paste = stripslashes(trim($this->vars['import_Paste']));
-            if (!$this->session->setVar("import_Paste", base64_encode(serialize($paste)))) {
+            if (!$this->session->setVar("import_Paste", $paste)) {
                 $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
             }
             list($fileName, $fullFileName) = FILE\createFileName($this->dirName, $paste, '.bib');

@@ -20,6 +20,7 @@ BUG FIXES:
 
 MAINTENANCE:
 1. Remove the MySql persistent connection option (WIKINDX_DB_PERSISTENT). Experienced users who know how to use this tricky option can still use the host's 'p:' syntax.
+2. Remove unnecessary serialize/base64 combinations when dealing with session arrays.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

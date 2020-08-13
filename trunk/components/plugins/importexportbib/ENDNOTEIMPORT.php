@@ -157,7 +157,7 @@ class ENDNOTEIMPORT
         }
         fclose($this->fileName);
         if ($this->session->issetVar("import_Rejects")) {
-            $this->rejects = unserialize(base64_decode($this->session->getVar("import_Rejects")));
+            $this->rejects = $this->session->getVar("import_Rejects");
         } else {
             $this->rejects = [];
         }
@@ -183,12 +183,12 @@ class ENDNOTEIMPORT
     {
         // Restore session
         if ($this->session->issetVar("import_RejectTitles")) {
-            $this->rejectTitles = unserialize(base64_decode($this->session->getVar("import_RejectTitles")));
+            $this->rejectTitles = $this->session->getVar("import_RejectTitles");
         } else {
             $this->rejectTitles = [];
         }
         if ($this->session->issetVar("import_ResourceIds")) {
-            $this->rIds = unserialize(base64_decode($this->session->getVar("import_ResourceIds")));
+            $this->rIds = $this->session->getVar("import_ResourceIds");
         } else {
             $this->rIds = [];
         }
@@ -200,13 +200,12 @@ class ENDNOTEIMPORT
         if ($this->session->issetVar("import_TagID")) {
             $this->tagId = $this->session->getVar("import_TagID");
         }
-        $this->entriesLeft = $this->entries =
-            unserialize(base64_decode($this->session->getVar("import_Entries")));
-        $this->garbageFiles = unserialize(base64_decode($this->session->getVar("import_GarbageFiles")));
+        $this->entriesLeft = $this->entries = $this->session->getVar("import_Entries");
+        $this->garbageFiles = $this->session->getVar("import_GarbageFiles");
         if ($this->session->issetVar("import_UnrecognisedFields")) {
-            $this->unrecognisedFields = unserialize(base64_decode($this->session->getVar("import_UnrecognisedFields")));
-            $this->customFields = unserialize(base64_decode($this->session->getVar("import_CustomFields")));
-            $this->vars = unserialize(base64_decode($this->session->getVar("import_ThisVars")));
+            $this->unrecognisedFields = $this->session->getVar("import_UnrecognisedFields");
+            $this->customFields = $this->session->getVar("import_CustomFields");
+            $this->vars = $this->session->getVar("import_ThisVars");
         }
         $finalInput = $this->writeDb(TRUE);
         $pString = $this->errorMessage ? $this->errorMessage : '';
@@ -236,7 +235,7 @@ class ENDNOTEIMPORT
             }
         }
         if (!empty($this->rejects)) {
-            $this->session->setVar("import_Rejects", base64_encode(serialize($this->rejects)));
+            $this->session->setVar("import_Rejects", $this->rejects);
         }
         if (!empty($this->invalidFieldNames)) { // prompt to map field names
             list($error, $string) = $this->common->promptFieldNames(
@@ -307,24 +306,24 @@ class ENDNOTEIMPORT
                 $this->session->setVar("import_BibtexStringID", $this->bibtexStringId);
             }
             // Resource IDs
-            $this->session->setVar("import_ResourceIds", base64_encode(serialize($this->rIds)));
+            $this->session->setVar("import_ResourceIds", $this->rIds);
             // Remaining entries
-            $this->session->setVar("import_Entries", base64_encode(serialize($this->entriesLeft)));
+            $this->session->setVar("import_Entries", $this->entriesLeft);
             // Rejected titles
             if (!empty($this->rejectTitles)) {
-                $this->session->setVar("import_RejectTitles", base64_encode(serialize($this->rejectTitles)));
+                $this->session->setVar("import_RejectTitles", $this->rejectTitles);
             }
             // garbage files
-            $this->session->setVar("import_GarbageFiles", base64_encode(serialize($this->garbageFiles)));
+            $this->session->setVar("import_GarbageFiles", $this->garbageFiles);
             // Unrecognised field mapping
             if (isset($this->unrecognisedFields)) {
-                $this->session->setVar("import_UnrecognisedFields", base64_encode(serialize($this->unrecognisedFields)));
+                $this->session->setVar("import_UnrecognisedFields", $this->unrecognisedFields);
                 // Custom field mapping
                 if (isset($this->customFields)) {
-                    $this->session->setVar("import_CustomFields", base64_encode(serialize($this->customFields)));
+                    $this->session->setVar("import_CustomFields", $this->customFields);
                 }
                 // $this->vars
-                $this->session->setVar("import_ThisVars", base64_encode(serialize($this->vars)));
+                $this->session->setVar("import_ThisVars", $this->vars);
             }
             $remainder = count($this->entriesLeft);
             $pString = HTML\p($this->coremessages->text(
@@ -431,7 +430,9 @@ class ENDNOTEIMPORT
             }
             $this->publisherId = $this->collectionId = FALSE;
             $this->grabDate($this->entry['type']);
-            $custom = $this->reject($key);
+            if(array_key_exists($key, $this->rejects)) {
+	            $custom = $this->reject($key);
+	        }
             $this->resourceId = $this->writeResourceTable($noSort, $title, $subtitle);
             // add any import tag and get tag auto ID.  We write it here after the resource table in case we forbid duplicates and all
             // endnote entries are duplicates - we don't want an empty tag in the WKX_tag table.

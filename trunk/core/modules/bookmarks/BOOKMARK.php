@@ -130,7 +130,7 @@ class BOOKMARK
             if ($match[1] == 'SEARCH') {
                 $bookmark['Highlight'] = $this->session->getVar("search_Highlight");
                 $bookmark['Patterns'] = $this->session->getVar("search_Patterns");
-                $bookmark['sql_ListParams'] = base64_encode(serialize($this->session->getVar("advancedSearch_listParams")));
+                $bookmark['sql_ListParams'] = $this->session->getVar("advancedSearch_listParams");
                 $listType = 'advancedSearch';
             } elseif ($match[1] == 'QUICKSEARCH') {
                 $bookmark['Highlight'] = $this->session->getVar("search_Highlight");

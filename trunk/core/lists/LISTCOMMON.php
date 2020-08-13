@@ -934,7 +934,7 @@ class LISTCOMMON
         $strings = [];
         // Bookmarked multi view?
         if ($this->session->getVar("bookmark_MultiView")) {
-            $strings = unserialize(base64_decode($this->session->getVar("sql_ListParams")));
+            $strings = $this->session->getVar("sql_ListParams");
             if (!is_array($strings) && $strings) { // From advanced search
                 return \HTML\aBrowse(
                     'green',
@@ -953,7 +953,7 @@ class LISTCOMMON
             return $this->messages->text('listParams', 'listParams') . BR . implode(BR, $strings);
         }
         if (($listType != 'search') && $this->session->getVar("sql_ListParams")) {
-        	$strings = unserialize(base64_decode($this->session->getVar("sql_ListParams")));
+        	$strings = $this->session->getVar("sql_ListParams");
             if (is_array($strings) && $strings) {
 	        	return $this->messages->text('listParams', 'listParams') . BR . implode(BR, $strings);
 	        }
@@ -1242,7 +1242,7 @@ class LISTCOMMON
 
             return FALSE;
         }
-        $this->session->setVar("sql_ListParams", base64_encode(serialize($strings)));
+        $this->session->setVar("sql_ListParams", $strings);
         return $this->messages->text('listParams', 'listParams') . BR . implode(BR, $strings);
     }
 }

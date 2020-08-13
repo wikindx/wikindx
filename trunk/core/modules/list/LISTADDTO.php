@@ -676,7 +676,7 @@ class LISTADDTO
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
         if ($this->session->issetVar("basket_List")) {
-            $basket = unserialize($this->session->getVar("basket_List"));
+            $basket = $this->session->getVar("basket_List");
         } else {
             $basket = [];
         }
@@ -687,7 +687,6 @@ class LISTADDTO
         } else {
             $ids = $string;
         }
-        //$this->session->delVar("basket_List");
         foreach ($ids as $resourceId) {
             if (array_search($resourceId, $basket) === FALSE) {
                 $basket[] = $resourceId;
@@ -695,7 +694,7 @@ class LISTADDTO
         }
         // Ensure array is unique
         array_unique($basket);
-        $this->session->setVar("basket_List", serialize($basket));
+        $this->session->setVar("basket_List", $basket);
         $this->session->saveState('basket');
         $this->session->setVar("addToKeywordCategory", TRUE);
         $success = FACTORY_SUCCESS::getInstance();
@@ -712,7 +711,7 @@ class LISTADDTO
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
         if ($this->session->issetVar("basket_List")) {
-            $basket = unserialize($this->session->getVar("basket_List"));
+            $basket = $this->session->getVar("basket_List");
         } else {
             $basket = [];
         }
@@ -731,7 +730,7 @@ class LISTADDTO
         if (empty($basket)) {
             $this->session->delVar("basket_List");
         } else {
-            $this->session->setVar("basket_List", serialize($basket));
+            $this->session->setVar("basket_List", $basket);
         }
         $this->session->saveState('basket');
         $this->session->setVar("addToKeywordCategory", TRUE);

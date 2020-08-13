@@ -608,7 +608,7 @@ class MENU
         if ($this->lastMulti) {
             $this->res[$messages->text("menu", "lastMulti")] = 'index.php?' . $this->lastMulti . '&type=lastMulti';
         }
-        $basket = unserialize($this->basketList);
+        $basket = $this->basketList;
         if ($this->basketList && !empty($basket)) {
             $this->res['basketSub'] = [
                 $messages->text("menu", "basketSub") => FALSE,

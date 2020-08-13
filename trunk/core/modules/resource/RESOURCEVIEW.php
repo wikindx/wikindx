@@ -1402,7 +1402,7 @@ class RESOURCEVIEW
     private function displayBasket($row)
     {
         if ($this->session->issetVar("basket_List")) {
-            $basket = unserialize($this->session->getVar("basket_List"));
+            $basket = $this->session->getVar("basket_List");
             if (array_search($row['resourceId'], $basket) !== FALSE) {
                 return \HTML\a(
                     $this->icons->getClass("remove"),

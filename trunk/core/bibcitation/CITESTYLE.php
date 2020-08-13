@@ -327,10 +327,10 @@ class CITESTYLE
         $resultset = $this->db->select('resource', 'resourceId');
         if (!$this->db->numRows($resultset)) {
             // For an invalid citation ID, deal with any text that precedes it by either prepending to the next cite tag capture or prepending to $this->tailText.
-            if (array_key_exists($matchIndex + 1, $this->matches[1])) {
+            if (array_key_exists($matchIndex + 1, $this->matches[1]) && array_key_exists($matchIndex, $this->matches[1])) {
                 $this->matches[1][$matchIndex + 1] =
                 $this->matches[1][$matchIndex] . $this->matches[1][$matchIndex + 1];
-            } else {
+            } elseif (array_key_exists($matchIndex, $this->matches[1])) {
                 $this->tailText = $this->matches[1][$matchIndex] . $this->tailText;
             }
             // Ensure we don't pass this invalid ID in the citation engine.

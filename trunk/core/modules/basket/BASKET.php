@@ -50,7 +50,7 @@ class BASKET
      */
     public function init()
     {
-        $basket = unserialize($this->session->getVar("basket_List", serialize([])));
+        $basket = $this->session->getVar("basket_List", []);
         if (array_key_exists('resourceId', $this->vars)) {
             $resourceId = $this->vars['resourceId'];
             if (array_search($resourceId, $basket) === FALSE) {
@@ -59,7 +59,7 @@ class BASKET
         }
         // Ensure array is unique
         array_unique($basket);
-        $this->session->setVar("basket_List", serialize($basket));
+        $this->session->setVar("basket_List", $basket);
         $this->session->saveState('basket');
         // send back to view this resource with success message
         include_once("core/modules/resource/RESOURCEVIEW.php");
@@ -72,12 +72,12 @@ class BASKET
      */
     public function remove()
     {
-        $basket = unserialize($this->session->getVar("basket_List", serialize([])));
+        $basket = $this->session->getVar("basket_List", []);
         $resourceId = $this->vars['resourceId'];
         if (($key = array_search($resourceId, $basket)) !== FALSE) {
             unset($basket[$key]);
         }
-        $this->session->setVar("basket_List", serialize($basket));
+        $this->session->setVar("basket_List", $basket);
         $this->session->saveState('basket');
         // send back to view this resource with success message
         include_once("core/modules/resource/RESOURCEVIEW.php");
@@ -101,7 +101,7 @@ class BASKET
         $sql = FALSE;
         $this->common = FACTORY_LISTCOMMON::getInstance();
         $queryString = 'action=basket_BASKET_CORE&method=view';
-        $bl = unserialize($this->session->getVar("basket_List"));
+        $bl = $this->session->getVar("basket_List");
         $sizeOfbl = is_array($bl) ? count($bl) : 0;
         $this->session->setVar("setup_PagingTotal", $sizeOfbl);
         $this->pagingObject = FACTORY_PAGING::getInstance();
@@ -120,7 +120,7 @@ class BASKET
         if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->session->delVar("list_PagingAlphaLinks");
             $this->session->delVar("list_AllIds");
-            $this->session->setVar("list_AllIds", base64_encode($this->session->getVar("basket_List")));
+            $this->session->setVar("list_AllIds", $this->session->getVar("basket_List"));
             $sql = $this->returnBasketSql($queryString);
         } else {
             $sql = $this->quickQuery($queryString);
@@ -151,7 +151,7 @@ class BASKET
         if (!$order) {
             $order = $this->session->getVar("list_Order");
         }
-        $subStmt = $this->setSubQuery(unserialize($this->session->getVar("basket_List")));
+        $subStmt = $this->setSubQuery($this->session->getVar("basket_List"));
         $this->stmt->listSubQuery($order, $queryString, $subStmt);
 
         return $this->stmt->listList($this->session->getVar("list_Order"));

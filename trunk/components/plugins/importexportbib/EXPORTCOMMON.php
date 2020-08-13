@@ -143,7 +143,7 @@ class EXPORTCOMMON
         if ($this->session->getVar("exportBasket")) {
             $tempAllIds = $this->session->getVar("list_AllIds");
             $tempListStmt = $this->session->getVar("sql_ListStmt");
-            $this->session->setVar("list_AllIds", base64_encode($this->session->getVar("basket_List")));
+            $this->session->setVar("list_AllIds", $this->session->getVar("basket_List"));
             include_once('core/modules/basket/BASKET.php');
             $basket = new BASKET();
             $sqlEncoded = base64_encode(serialize([$basket->returnBasketSql(FALSE, 'creator')]));

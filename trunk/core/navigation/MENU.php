@@ -405,6 +405,7 @@ class MENU
                     $collEditSub,
                     $pubEditSub,
                     $messages->text("menu", "keyword") => 'index.php?action=edit_EDITKEYWORD_CORE',
+                    $messages->text("menu", "keywordGroup") => 'index.php?action=edit_EDITKEYWORDGROUP_CORE',
                 ],
                 'bookmarkSub' => [
                     $messages->text("menu", "bookmarkSub") => FALSE,
@@ -499,6 +500,7 @@ class MENU
                     $pubBrowseSub,
                     $messages->text("menu", "browseYear") => 'index.php?action=browse_BROWSEYEAR_CORE',
                     $messages->text("menu", "browseKeyword") => 'index.php?action=browse_BROWSEKEYWORD_CORE',
+                    $messages->text("menu", "browseKeywordGroup") => 'index.php?action=browse_KEYWORDGROUP_CORE',
                     $messages->text("menu", "browseCategory") => 'index.php?action=browse_BROWSECATEGORY_CORE',
                     $messages->text("menu", "browseSubcategory") => 'index.php?action=browse_BROWSESUBCATEGORY_CORE',
                     $messages->text("menu", "browseLanguage") => 'index.php?action=browse_BROWSELANGUAGE_CORE',
@@ -538,6 +540,7 @@ class MENU
                     $pubBrowseSub,
                     $messages->text("menu", "browseYear") => 'index.php?action=browse_BROWSEYEAR_CORE',
                     $messages->text("menu", "browseKeyword") => 'index.php?action=browse_BROWSEKEYWORD_CORE',
+                    $messages->text("menu", "browseKeywordGroup") => 'index.php?action=browse_KEYWORDGROUP_CORE',
                     $messages->text("menu", "browseCategory") => 'index.php?action=browse_BROWSECATEGORY_CORE',
                     $messages->text("menu", "browseSubcategory") => 'index.php?action=browse_BROWSESUBCATEGORY_CORE',
                     $messages->text("menu", "browseLanguage") => 'index.php?action=browse_BROWSELANGUAGE_CORE',
@@ -547,13 +550,7 @@ class MENU
                 ],
                 $messages->text("menu", "categoryTree") => 'index.php?action=browse_CATEGORYTREE_CORE',
             ];
-/*            if (!WIKINDX_FILE_VIEW_LOGGEDON_ONLY) {
-                $this->search['listSub'][$messages->text("menu", "listDownloads")] =
-                    'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=downloadsIndex';
-                $this->search['listSub'][$messages->text("menu", "listPopularity")] =
-                    'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=popularityIndex';
-            }
-*/        }
+        }
         // There is no collection, an empty menu entry can be injected.
         // We remove it before rendering.
         foreach ($this->search['browseSub'] as $k => $v) {

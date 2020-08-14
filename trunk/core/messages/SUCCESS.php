@@ -169,13 +169,14 @@ class SUCCESS
 				"creatorGroup" => dgettext($domain, "Successfully grouped creators"),
 				"creatorUngroup" => dgettext($domain, "Successfully removed creators from group"),
 				"registerRequest" => dgettext($domain, "Your registration request has been emailed to the WIKINDX administrator and you should receive an emailed response soon"),
-				"registerRequestManage" => dgettext($domain, "Successfully managed registration requests."),
+				"registerRequestManage" => dgettext($domain, "Successfully managed registration requests"),
 /// quarantineApprove_ ADMIN has approved a quarantined resource
 				"quarantineApprove" => dgettext($domain, "Successfully approved resource"),
 				"quarantined" => dgettext($domain, "Resource has been quarantined from public view until approved by an administrator"),
 				"plugins" => dgettext($domain, "Successfully configured plugins"),
 				"componentSuccess" => dgettext($domain, "Admin action successful. ###"),
 				"componentUpToDate" =>"The list is up-to-date.",
+				"keywordGroupNew" => dgettext($domain, "Successfully added the keyword group"),
 			),
 		);
 	}

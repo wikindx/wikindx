@@ -324,6 +324,11 @@ class UPDATEDATABASE
                 $this->numStages = 1;
                 $this->stage19();
             }
+            elseif ($dbVersion < 20.0)
+            { // upgrade v6.3.8 to 6.3.8
+                $this->numStages = 1;
+                $this->stage20();
+            }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
             // Refresh the locales list
@@ -919,12 +924,24 @@ class UPDATEDATABASE
      */
     private function stage19()
     {
-        // Convert tag sizes to scale factors
+        // Following change to storage of session arrays, reset the session state variable to NULL
         $this->updateDbSchema('19');
         
         $this->updateSoftwareVersion(19);
         $this->checkStatus('stage19');
         $this->pauseExecution('stage19');
+    }
+    /**
+     * Upgrade database schema to version 20 (6.3.8)
+     */
+    private function stage20()
+    {
+        // Create new keyword groups tables
+        $this->updateDbSchema('20');
+        
+        $this->updateSoftwareVersion(20);
+        $this->checkStatus('stage20');
+        $this->pauseExecution('stage20');
     }
     /**
      * Transfer statistics data to new tables then drop old table

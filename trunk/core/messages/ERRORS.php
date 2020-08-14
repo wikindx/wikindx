@@ -185,6 +185,7 @@ class ERRORS
 				"urlAdd" => dgettext($domain, "You have already added that URL"),
 				"userTag" => dgettext($domain, "You have already created/edited/deleted that user tag"),
 				"news" => dgettext($domain, "You have already created/edited/deleted that news item"),
+				"keywordGroup" => dgettext($domain, "You have already created/edited/deleted that keyword group"),
 			),
 /// warning_ Warning type messages
 			"warning" => array(

@@ -603,7 +603,7 @@ class LISTADDTO
             }
         }
         if (isset($string)) {
-            return [TRUE, $string];
+            return [TRUE, base64_encode(serialize($string))];
         } else {
             return [FALSE, FALSE];
         }
@@ -840,7 +840,6 @@ class LISTADDTO
         if (!isset($ids)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-
         return $ids;
     }
     /**

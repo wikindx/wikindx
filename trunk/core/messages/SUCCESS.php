@@ -176,7 +176,7 @@ class SUCCESS
 				"plugins" => dgettext($domain, "Successfully configured plugins"),
 				"componentSuccess" => dgettext($domain, "Admin action successful. ###"),
 				"componentUpToDate" =>"The list is up-to-date.",
-				"keywordGroupNew" => dgettext($domain, "Successfully added the keyword group"),
+				"keywordGroupNew" => dgettext($domain, "Successfully added keyword group"),
 			),
 		);
 	}

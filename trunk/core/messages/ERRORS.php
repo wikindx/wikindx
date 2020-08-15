@@ -144,6 +144,7 @@ class ERRORS
 				"ldapSearch" => dgettext($domain, "Error while searching the LDAP catalog"),
 				"ldapGetEntries" => dgettext($domain, "Error reading LDAP entries"),
 				"notRegistered"  => dgettext($domain, "You must be a registered user to access this"),
+				"tooFewKeywordGroups" => dgettext($domain, "A keyword group requires at least two keywords in it"),
 			),
 /// file_ File operations (import/export)
 			"file" => array(

@@ -413,7 +413,9 @@ class LISTSOMERESOURCES
 		while ($row = $this->db->fetchRow($recordset)) {
             $keywordIds[] = $row['userkgkeywordsKeywordId'];
         }
-
+		if (!isset($keywordIds)) {
+			return;
+		}
 // Get keywords in this keyword group
     	$this->stmt->conditionsOneField['resourcekeywordKeywordId'] = $keywordIds;
     	$queryString = "action=list_LISTSOMERESOURCES_CORE&method=keywordGroupProcess&id=" . $this->vars["id"];

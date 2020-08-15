@@ -193,7 +193,7 @@ class KEYWORD
         return FALSE; // not found
     }
     /**
-     * Remove resource-less keywords from keyword list
+     * Remove resource-less keywords from keyword list and keyword groups having the keyword
      */
     public function removeHanging()
     {
@@ -205,9 +205,6 @@ class KEYWORD
         while ($row = $this->db->fetchRow($recordset)) {
             $deleteIds[] = $row['keywordId'];
         }
-        if (empty($deleteIds)) {
-            return; // nothing to do
-        }
         if (!empty($deleteIds)) {
             $this->db->formatConditionsOneField($deleteIds, 'keywordId');
             $this->db->delete("keyword");
@@ -218,6 +215,34 @@ class KEYWORD
             $this->db->deleteCache('cacheParaphraseKeywords');
             $this->db->deleteCache('cacheMusingKeywords');
             $this->db->deleteCache('cacheKeywords');
+        }
+// Deal with keyword groups. A KG must have at least two keywords or it should be deleted.
+        $deleteIds = [];
+		$subQ = $this->db->selectNoExecute('resource_keyword', 'resourcekeywordKeywordId');
+		$this->db->formatConditions('userkgkeywordsKeywordId' . $this->db->inClause($subQ, TRUE));
+		$recordset = $this->db->select('user_kg_keywords', 'userkgkeywordsKeywordId');
+		while ($row = $this->db->fetchRow($recordset)) {
+            $deleteIds[] = $row['userkgkeywordsKeywordId'];
+        }
+        if (!empty($deleteIds)) {
+            $this->db->formatConditionsOneField($deleteIds, 'userkgkeywordsKeywordId');
+            $this->db->delete('user_kg_keywords');
+        }
+        $deleteIds = [];
+        $this->db->groupBy('userkgkeywordsKeywordGroupId');
+        $recordset = $this->db->selectCounts('user_kg_keywords', 'userkgkeywordsKeywordId', ['userkgkeywordsKeywordGroupId'], FALSE, FALSE);
+		while ($row = $this->db->fetchRow($recordset)) {
+			if ($row['count'] < 2) {
+	            $deleteIds[] = $row['userkgkeywordsKeywordGroupId'];
+	        }
+        }
+        if (!empty($deleteIds)) {
+            $this->db->formatConditionsOneField($deleteIds, 'userkgusergroupsKeywordGroupId');
+            $this->db->delete('user_kg_usergroups');
+            $this->db->formatConditionsOneField($deleteIds, 'userkgkeywordsKeywordGroupId');
+            $this->db->delete('user_kg_keywords');
+            $this->db->formatConditionsOneField($deleteIds, 'userkeywordgroupsId');
+            $this->db->delete('user_keywordgroups');
         }
     }
     /**

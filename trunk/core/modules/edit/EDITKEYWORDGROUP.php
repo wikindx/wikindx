@@ -41,6 +41,9 @@ class EDITKEYWORDGROUP
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->user = FACTORY_USER::getInstance();
 
+        include_once("core/modules/help/HELPMESSAGES.php");
+        $help = new HELPMESSAGES();
+        GLOBALS::setTplVar('help', $help->createLink('keywordGroups'));
         GLOBALS::setTplVar('heading', $this->messages->text("resources", "keywordGroup"));
         $this->userId = $this->session->getVar('setup_UserId');
     }
@@ -273,6 +276,10 @@ class EDITKEYWORDGROUP
     	}
     	if (!array_key_exists('SelectedKeyword', $this->vars) || empty($this->vars['SelectedKeyword'])) {
     		$this->init($this->errors->text('inputError', 'missing'));
+    		return FALSE;
+    	}
+    	if (count($this->vars['SelectedKeyword']) < 2) {
+    		$this->init($this->errors->text('inputError', 'tooFewKeywordGroups'));
     		return FALSE;
     	}
         $resultset = $this->db->select('user_keywordgroups', ['userkeywordgroupsName']);

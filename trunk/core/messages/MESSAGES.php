@@ -1232,6 +1232,8 @@ class MESSAGES
 				"type" => dgettext($domain, "Selected Types"),
 				"availableKeyword" => dgettext($domain, "Keywords"),
 				"keyword" => dgettext($domain, "Selected Keywords"),
+				"availableUserGroup" => dgettext($domain, "Available User Groups"),
+				"userGroup" => dgettext($domain, "Selected User Groups"),
 				"availableMetaKeyword" => dgettext($domain, "Metadata Keywords"),
 				"metaKeyword" => dgettext($domain, "Selected Metadata Keywords"),
 				"availableUserTag" => dgettext($domain, "User Tags"),

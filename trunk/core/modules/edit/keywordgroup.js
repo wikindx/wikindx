@@ -20,11 +20,26 @@ function discardKeyword()
 	coreSelectToSelect('AvailableKeyword', 'SelectedKeyword');
 }
 /**
+* Transfer an option from the main user groups selectbox to the selected user groups selectbox
+*/
+function selectUserGroup()
+{
+	coreSelectToSelect('SelectedUserGroup', 'AvailableUserGroup');
+}
+/**
+* Transfer an option from the selected user groups selectbox to the main user groups selectbox
+*/
+function discardUserGroup()
+{
+	coreSelectToSelect('AvailableUserGroup', 'SelectedUserGroup');
+}
+/**
 * On submit, select all options in the new selected keyword box -- this allows PHP to pick up those options.  Extra options for select resources
 */
 function selectAllNew()
 {
 	selectAllProcess('SelectedKeyword');
+	selectAllProcess('SelectedUserGroup');
 }
 /**
 * Select selected options

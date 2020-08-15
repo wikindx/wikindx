@@ -329,6 +329,11 @@ class UPDATEDATABASE
                 $this->numStages = 1;
                 $this->stage20();
             }
+            elseif ($dbVersion < 21.0)
+            { // upgrade v6.3.8 to 6.3.8
+                $this->numStages = 1;
+                $this->stage21();
+            }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
             // Refresh the locales list
@@ -942,6 +947,18 @@ class UPDATEDATABASE
         $this->updateSoftwareVersion(20);
         $this->checkStatus('stage20');
         $this->pauseExecution('stage20');
+    }
+    /**
+     * Upgrade database schema to version 21 (6.3.8)
+     */
+    private function stage21()
+    {
+        // Correct default value in user_kg_usergroups
+        $this->updateDbSchema('21');
+        
+        $this->updateSoftwareVersion(21);
+        $this->checkStatus('stage21');
+        $this->pauseExecution('stage21');
     }
     /**
      * Transfer statistics data to new tables then drop old table

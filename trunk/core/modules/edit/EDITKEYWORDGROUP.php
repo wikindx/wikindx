@@ -20,11 +20,13 @@ class EDITKEYWORDGROUP
     private $success;
     private $session;
     private $keyword;
+    private $user;
     private $gatekeep;
     private $badInput;
     private $userId;
     private $kgs = [];
     private $keywords;
+    private $userGroups;
 
     public function __construct()
     {
@@ -37,6 +39,7 @@ class EDITKEYWORDGROUP
         $this->keyword = FACTORY_KEYWORD::getInstance();
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
+        $this->user = FACTORY_USER::getInstance();
 
         GLOBALS::setTplVar('heading', $this->messages->text("resources", "keywordGroup"));
         $this->userId = $this->session->getVar('setup_UserId');
@@ -78,20 +81,22 @@ class EDITKEYWORDGROUP
      */
     private function displayNewForm()
     {
+    	$blank = '';
         $pString = \FORM\formHeader('edit_EDITKEYWORDGROUP_CORE', "onsubmit=\"selectAllNew();return true;\"");
         $pString .= \FORM\hidden("method", "new");
         $pString .= \HTML\tableStart('generalTable');
         $pString .= \HTML\trStart();
         $pString .= \HTML\td($this->displayNewKg());
-        $pString .= \HTML\trEnd();
-        $pString .= \HTML\trStart();
-        $pString .= \HTML\td('&nbsp;');
-        $pString .= \HTML\trEnd();
-        $pString .= \HTML\trStart();
+        if ($this->userGroups = $this->user->listUserGroups()) {
+			$pString .= \HTML\td($this->displayUserGroups());
+			$blank .= \HTML\td('&nbsp;');
+		}print_r($this->userGroups);
         $pString .= \HTML\td($this->displayKeywords());
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td(\FORM\formSubmit($this->messages->text("submit", "Add")));
+        $blank .= \HTML\td('&nbsp;');
+        $pString .= $blank;
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \FORM\formEnd();
@@ -138,14 +143,15 @@ class EDITKEYWORDGROUP
         $pString = \HTML\tableStart();
         $pString .= \HTML\trStart();
         $textBox =  \FORM\textInput(
-            $this->messages->text('resources', 'keywordGroupNew') . ' ' . \HTML\span('*', 'required'),
+            $this->messages->text('resources', 'keywordGroupNew') . \HTML\span('*', 'required'),
             'KeywordGroup',
             FALSE,
             30,
             255
         );
-		$pString .= \HTML\td($textBox);
-        $pString .= \HTML\td($this->messages->text('resources', 'kgDescription') . BR . \HTML\div('descriptionDiv', $this->displayDescription(TRUE)));
+        $description = \HTML\div('descriptionDiv', $this->displayDescription(TRUE));
+		$pString .= \HTML\td($textBox . \HTML\p($description));
+        $pString .= \HTML\td();
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         return $pString;
@@ -194,7 +200,7 @@ class EDITKEYWORDGROUP
     public function displayDescription($initialDisplay = FALSE)
     {
         if ($initialDisplay) {
-            return \FORM\textareaInput(FALSE, "Description", FALSE, 50, 5);
+            return \FORM\textareaInput($this->messages->text('resources', 'kgDescription'), "Description", FALSE, 50, 5);
         }
         $this->db->formatConditions(['kgId' => $this->vars['ajaxReturn']]);
         $recordset = $this->db->select('keyword', 'keywordGlossary');
@@ -216,7 +222,9 @@ class EDITKEYWORDGROUP
      */
     public function new()
     {
-    	$this->validateNewInput();
+    	if (!$this->validateNewInput()) {
+    		return;
+    	}
 // All OK to write if we get here . . .
 		$fields[] = 'userkeywordgroupsName';
 		$values[] = trim($this->vars['KeywordGroup']);
@@ -236,6 +244,22 @@ class EDITKEYWORDGROUP
 			$values[] = $id;
         	$this->db->insert('user_kg_keywords', $fields, $values);
 		}
+		if(!array_key_exists('SelectedUserGroup', $this->vars)) { // User Group can be NULL
+				$fields = $values = [];
+				$fields[] = 'userkgusergroupsKeywordGroupId';
+				$values[] = $autoId;
+				$this->db->insert('user_kg_usergroups', $fields, $values);
+		}
+		else {
+			foreach ($this->vars['SelectedUserGroup'] as $id) {
+				$fields = $values = [];
+				$fields[] = 'userkgusergroupsKeywordGroupId';
+				$values[] = $autoId;
+				$fields[] = 'userkgusergroupsUserGroupId';
+				$values[] = $id;
+				$this->db->insert('user_kg_usergroups', $fields, $values);
+			}
+		}
         $this->init($this->success->text('keywordGroupNew'));
     }
     /**
@@ -245,19 +269,20 @@ class EDITKEYWORDGROUP
     {
     	if (!array_key_exists('KeywordGroup', $this->vars) || !trim($this->vars['KeywordGroup'])) {
     		$this->init($this->errors->text('inputError', 'missing'));
-    		return;
+    		return FALSE;
     	}
     	if (!array_key_exists('SelectedKeyword', $this->vars) || empty($this->vars['SelectedKeyword'])) {
     		$this->init($this->errors->text('inputError', 'missing'));
-    		return;
+    		return FALSE;
     	}
         $resultset = $this->db->select('user_keywordgroups', ['userkeywordgroupsName']);
         while ($row = $this->db->fetchRow($resultset)) {
         	if ($row['userkeywordgroupsName'] == trim($this->vars['KeywordGroup'])) {
 				$this->init($this->errors->text('inputError', 'groupExists'));
-				return;
+				return FALSE;
 			}
         }
+        return TRUE;
     }
     /**
      * write edits to the database
@@ -328,6 +353,57 @@ class EDITKEYWORDGROUP
         $this->init($this->success->text("keyword"));
     }
     /**
+     * display user group select boxes
+     *
+     * @param bool default FALSE
+     *
+     * @return string
+     */
+    public function displayUserGroups($editForm = FALSE)
+    {
+    	if ($editForm) {
+			$this->db->formatConditions(['resourcecategoryResourceId' => $this->vars['id']]);
+			$resultset = $this->db->select('resource_category', ['resourcecategoryCategoryId', 'resourcecategorySubcategoryId']);
+			while ($row = $this->db->fetchRow($resultset)) {
+				$catArray[] = $row['resourcecategoryCategoryId'];
+				if ($row['resourcecategorySubcategoryId']) {
+					$this->subcatArray[] = $row['resourcecategorySubcategoryId'];
+				}
+			}
+			$selectedCategories = [];
+			foreach ($catArray as $key) {
+				if (!array_key_exists($key, $this->categories)) {
+					continue;
+				}
+				$selectedCategories[$key] = $this->categories[$key];
+				unset($this->categories[$key]);
+			}
+		}
+
+        $td = \HTML\tableStart();
+        $td .= \HTML\trStart();
+        $td .= \HTML\td(\FORM\selectFBoxValueMultiple(
+            $this->messages->text('select', "availableUserGroup"),
+            'AvailableUserGroup',
+            $this->userGroups,
+            10
+        ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
+        list($toLeftImage, $toRightImage) = $this->transferArrows('selectUserGroup', 'discardUserGroup');
+        $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
+
+		$td .= \HTML\td(\FORM\selectFBoxValueMultiple(
+			$this->messages->text('select', "userGroup") . \HTML\span('*', 'required'),
+			'SelectedUserGroup',
+			[],
+			10
+		), 'padding3px left width18percent');
+
+        $td .= \HTML\trEnd();
+        $td .= \HTML\tableEnd();
+
+        return $td;
+    }
+    /**
      * display keyword select boxes
      *
      * @param bool default FALSE
@@ -363,11 +439,11 @@ class EDITKEYWORDGROUP
             $this->keywords,
             10
         ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
-        list($toLeftImage, $toRightImage) = $this->transferArrows();
+        list($toLeftImage, $toRightImage) = $this->transferArrows('selectKeyword', 'discardKeyword');
         $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
 
 		$td .= \HTML\td(\FORM\selectFBoxValueMultiple(
-			$this->messages->text('select', "keyword") . ' ' . \HTML\span('*', 'required'),
+			$this->messages->text('select', "keyword") . \HTML\span('*', 'required'),
 			'SelectedKeyword',
 			[],
 			10
@@ -381,18 +457,21 @@ class EDITKEYWORDGROUP
     /**
      * transferArrows
      *
+     * @param string $startFunction1
+     * @param string $startFunction2
+     *
      * @return array
      */
-    private function transferArrows()
+    private function transferArrows($startFunction1, $startFunction2)
     {
         $jsonArray = [];
         $jsonArray[] = [
-            'startFunction' => 'selectKeyword',
+            'startFunction' => $startFunction1,
         ];
         $toRightImage = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
         $jsonArray = [];
         $jsonArray[] = [
-            'startFunction' => 'discardKeyword',
+            'startFunction' => $startFunction2,
         ];
         $toLeftImage = \AJAX\jActionIcon('toLeft', 'onclick', $jsonArray);
         return [$toLeftImage, $toRightImage];

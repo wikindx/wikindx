@@ -105,6 +105,8 @@ class LISTSOMERESOURCES
             $this->languageProcess();
         } elseif ($this->session->getVar("list_SomeResources") == 'keyword') {
             $this->keywordProcess();
+        } elseif ($this->session->getVar("list_SomeResources") == 'keywordGroup') {
+            $this->keywordGroupProcess();
         } elseif ($this->session->getVar("list_SomeResources") == 'metaKeyword') {
             $this->metaKeywordProcess();
         } elseif ($this->session->getVar("list_SomeResources") == 'publisher') {
@@ -368,6 +370,66 @@ class LISTSOMERESOURCES
             $sql = $this->quickQuery($queryString);
         }
         $this->session->setVar("list_SomeResources", 'keyword');
+        $this->session->setVar("list_SomeResources_id", $this->vars['id']);
+        // set the lastMulti session variable for quick return to this process.
+        $this->session->setVar("sql_LastMulti", $queryString);
+        $this->common->display($sql, 'list');
+    }
+    /**
+     * keywordGroupProcess - display resources with this keyword group
+     */
+    public function keywordGroupProcess()
+    {
+    	if ($this->session->getVar('setup_ReadOnly')) {
+        	GLOBALS::addTplVar('content', $this->errors->text('inputError', 'notRegistered'));
+    		return;
+    	}
+        if (!array_key_exists("id", $this->vars) || !$this->vars["id"]) {
+            $this->badInput->close($this->errors->text("inputError", "missing"));
+        }
+
+		$userId = $this->session->getVar('setup_UserId');
+// Get groups this user is a member of
+        $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
+        $recordset = $this->db->select('user_groups_users', 'usergroupsusersGroupId');
+		while ($row = $this->db->fetchRow($recordset)) {
+            $groups[] = $row['usergroupsusersGroupId'];
+        }
+		$this->db->leftJoin('user_kg_keywords', 'userkgkeywordsKeywordGroupId', 'userkeywordgroupsId');
+// Set conditions for groups this user is a member of
+		if (isset($groups)) {
+			$groupCondition = $this->db->formatConditionsOneField(array_values($groups), 
+				'userkgusergroupsUserGroupId', FALSE, TRUE, FALSE, FALSE, TRUE);
+			$userCondition = $this->db->formatConditions(['userkeywordgroupsUserId' => $userId], '=', TRUE);
+			$this->db->formatConditions('(' . $groupCondition . ' ' . $this->db->or . ' ' . $userCondition . ')');
+			$this->db->leftJoin('user_kg_usergroups', 'userkgusergroupsKeywordGroupId', 'userkeywordgroupsId');
+		}
+// Get only keyword groups this user owns
+		else {
+			$this->db->formatConditions(['userkeywordgroupsUserId' => $userId]);
+		}
+		$this->db->formatConditions(['userkeywordgroupsId' => $this->vars["id"]]);
+		$recordset = $this->db->select('user_keywordgroups', 'userkgkeywordsKeywordId');
+		while ($row = $this->db->fetchRow($recordset)) {
+            $keywordIds[] = $row['userkgkeywordsKeywordId'];
+        }
+
+// Get keywords in this keyword group
+    	$this->stmt->conditionsOneField['resourcekeywordKeywordId'] = $keywordIds;
+    	$queryString = "action=list_LISTSOMERESOURCES_CORE&method=keywordGroupProcess&id=" . $this->vars["id"];
+        if ($this->lastMulti($queryString)) {
+            return;
+        }
+        $this->pagingReset();
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
+            $this->stmt->joins['resource_keyword'] = ['resourcekeywordResourceId', 'resourceId'];
+            $subStmt = $this->setSubQuery();
+            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+        } else {
+            $sql = $this->quickQuery($queryString);
+        }
+        $this->session->setVar("list_SomeResources", 'keywordGroup');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);

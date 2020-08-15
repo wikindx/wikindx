@@ -143,6 +143,7 @@ class ERRORS
 				"ldapBind" => dgettext($domain, "Cannot connect to LDAP server. Unable to bind"),
 				"ldapSearch" => dgettext($domain, "Error while searching the LDAP catalog"),
 				"ldapGetEntries" => dgettext($domain, "Error reading LDAP entries"),
+				"notRegistered"  => dgettext($domain, "You must be a registered user to access this"),
 			),
 /// file_ File operations (import/export)
 			"file" => array(

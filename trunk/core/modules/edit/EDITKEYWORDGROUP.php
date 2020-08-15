@@ -90,7 +90,7 @@ class EDITKEYWORDGROUP
         if ($this->userGroups = $this->user->listUserGroups()) {
 			$pString .= \HTML\td($this->displayUserGroups());
 			$blank .= \HTML\td('&nbsp;');
-		}print_r($this->userGroups);
+		}
         $pString .= \HTML\td($this->displayKeywords());
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();

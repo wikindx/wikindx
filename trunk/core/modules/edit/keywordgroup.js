@@ -15,9 +15,23 @@ function selectKeyword()
 /**
 * Transfer an option from the selected keywords selectbox to the main keywords selectbox
 */
-function discardKeyword()
+function availableKeyword()
 {
 	coreSelectToSelect('AvailableKeyword', 'SelectedKeyword');
+}
+/**
+* Transfer an option from the main keywords selectbox to the selected keywords selectbox
+*/
+function edit_selectKeyword()
+{
+	coreSelectToSelect('editSelectedKeyword', 'editAvailableKeyword');
+}
+/**
+* Transfer an option from the selected keywords selectbox to the main keywords selectbox
+*/
+function edit_availableKeyword()
+{
+	coreSelectToSelect('editAvailableKeyword', 'editSelectedKeyword');
 }
 /**
 * Transfer an option from the main user groups selectbox to the selected user groups selectbox
@@ -29,17 +43,39 @@ function selectUserGroup()
 /**
 * Transfer an option from the selected user groups selectbox to the main user groups selectbox
 */
-function discardUserGroup()
+function availableUserGroup()
 {
 	coreSelectToSelect('AvailableUserGroup', 'SelectedUserGroup');
 }
 /**
-* On submit, select all options in the new selected keyword box -- this allows PHP to pick up those options.  Extra options for select resources
+* Transfer an option from the main user groups selectbox to the selected user groups selectbox
+*/
+function edit_selectUserGroup()
+{
+	coreSelectToSelect('editSelectedUserGroup', 'editAvailableUserGroup');
+}
+/**
+* Transfer an option from the selected user groups selectbox to the main user groups selectbox
+*/
+function edit_availableUserGroup()
+{
+	coreSelectToSelect('editAvailableUserGroup', 'editSelectedUserGroup');
+}
+/**
+* On submit, select all options in the new select boxes -- this allows PHP to pick up those options.
 */
 function selectAllNew()
 {
 	selectAllProcess('SelectedKeyword');
 	selectAllProcess('SelectedUserGroup');
+}
+/**
+* On submit, select all options in the edit select boxes -- this allows PHP to pick up those options.
+*/
+function selectAllEdit()
+{
+	selectAllProcess('editSelectedKeyword');
+	selectAllProcess('editSelectedUserGroup');
 }
 /**
 * Select selected options

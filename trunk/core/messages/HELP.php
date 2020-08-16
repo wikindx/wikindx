@@ -255,7 +255,7 @@ class HELP
 . dgettext($domain, 
 "<p>Keyword groups allow the individual user to group semantically similar resource keywords together so the resources can then be browsed together. To create a keyword group, at least two keywords must be in the database.</p>") 
 . dgettext($domain, 
-"<p>A keyword group is private to the user who created it but the ability to browse them can be shared with one or more user groups (created in  Wikindx|MyWikindx). When creating a keyword group, adding one or more user groups is not required, likewise the keyword group description; the name and at least two keywords, though, are required. </p>") 
+"<p>A keyword group is private to the user who created it but the ability to browse them can be shared with one or more user groups (created in Wikindx|MyWikindx). When creating a keyword group, adding one or more user groups is not required, likewise the keyword group description; the name and at least two keywords, though, are required. </p>") 
 . dgettext($domain, 
 "<p>Once created, the resources belonging to all of the keywords in the group can be browsed in Search|Browse... .</p>"),
 

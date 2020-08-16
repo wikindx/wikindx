@@ -178,6 +178,7 @@ class SUCCESS
 				"componentSuccess" => dgettext($domain, "Admin action successful. ###"),
 				"componentUpToDate" =>"The list is up-to-date.",
 				"keywordGroupNew" => dgettext($domain, "Successfully added keyword group"),
+				"keywordGroupEdit" => dgettext($domain, "Successfully added keyword group"),
 			),
 		);
 	}

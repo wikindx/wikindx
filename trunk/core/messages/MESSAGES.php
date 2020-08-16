@@ -469,6 +469,7 @@ class MESSAGES
 				"keywordGroup" => dgettext($domain, "Keyword Groups"),
 				"keywordGroupNew" => dgettext($domain, "New Keyword Group"),
 				"keywordGroupEdit" => dgettext($domain, "Edit Keyword Group"),
+				"keywordGroupName" => dgettext($domain, "Keyword Group"),
 				"kgDescription" => dgettext($domain, "Description"),
 				"creator" => dgettext($domain, "Creator ###"),
 				"firstname" => dgettext($domain, "Firstnames"),

@@ -73,10 +73,15 @@ class EDITKEYWORDGROUP
         $pString .= \HTML\td($this->displayDeleteForm());
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-//        if (!empty($this->kgs)) {
-//        	$pString .= \HTML\p(\HTML\hr());
-//        	$pString .= $this->displayEditForm();
-//        }
+        $pString .= \HTML\p(\HTML\hr());
+    	$groups = $this->getGroups(TRUE);
+        $pString .= \HTML\tableStart();
+        $pString .= \HTML\trStart();
+        if (!empty($groups)) {
+        	$pString .= \HTML\td($this->displayEditForm($groups));
+        }
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\tableEnd();
         GLOBALS::addTplVar('content', $pString);
 // Load at end because .js initialization needs various DIVs to be in the page before they are made invisible
         \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/edit/keywordgroup.js?ver=' . WIKINDX_PUBLIC_VERSION);
@@ -93,11 +98,11 @@ class EDITKEYWORDGROUP
         $pString .= \HTML\tableStart('generalTable');
         $pString .= \HTML\trStart();
         $pString .= \HTML\td($this->displayNewKg());
+        $pString .= \HTML\td($this->displayKeywords());
         if ($this->userGroups = $this->user->listUserGroups()) {
 			$pString .= \HTML\td($this->displayUserGroups());
 			$blank .= \HTML\td('&nbsp;');
 		}
-        $pString .= \HTML\td($this->displayKeywords());
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td(\FORM\formSubmit($this->messages->text("submit", "Add")));
@@ -178,37 +183,37 @@ class EDITKEYWORDGROUP
     /** 
      * Display keyword group edit form
      *
+     * @param array of keyword groups
      */
-    private function displayEditForm()
+    private function displayEditForm($groups)
     {
-        $pString = \FORM\formHeader('edit_EDITKEYWORDGROUP_CORE');
+    	$blank = '';
+        $pString = \FORM\formHeader('edit_EDITKEYWORDGROUP_CORE', "onsubmit=\"selectAllEdit();return true;\"");
         $pString .= \FORM\hidden("method", "edit");
-        $pString .= \HTML\tableStart();
+        $pString .= \HTML\tableStart('generalTable');
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\FORM\selectFBoxValue(FALSE, "kgIds", $kgs, 20));
-        $pString .= \HTML\td($this->transferArrow());
-        $td = \HTML\tableStart();
-        $td .= \HTML\trStart();
-        $td .= \HTML\td(\HTML\div('kgDiv', $this->displayEditKG(TRUE)));
-        $td .= \HTML\trEnd();
-        // Div and TD for glossary preceded by blank space
-        $td .= \HTML\trStart();
-        $td .= \HTML\td('&nbsp;');
-        $td .= \HTML\trEnd();
-        $td .= \HTML\trStart();
-        $td .= \HTML\td($this->messages->text('resources', 'kgDescription') . BR . \HTML\div('descriptionDiv', $this->displayDescription()));
-        $td .= \HTML\trEnd();
-        $td .= \HTML\tableEnd();
-        $pString .= \HTML\td($td);
+        $pString .= \HTML\td(\FORM\selectFBoxValue($this->messages->text('resources', 'keywordGroupEdit'), "kgIds", $groups, 10));
+        $pString .= \HTML\td($this->editTransferArrow(), 'padding3px left width5percent');
+        $pString .= \HTML\td($this->getEditNameAndDescription());
+        $pString .= \HTML\td($this->editDisplayKeywords(TRUE));
+        if ($this->userGroups = $this->user->listUserGroups()) {
+			$pString .= \HTML\td($this->editDisplayUGs(TRUE));
+			$blank .= \HTML\td('&nbsp;');
+		}
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\trStart();
+        $pString .= \HTML\td(\FORM\formSubmit($this->messages->text("submit", "Edit")));
+        $blank .= \HTML\td('&nbsp;');
+        $pString .= $blank;
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Edit")));
         $pString .= \FORM\formEnd();
         return $pString;
     }
     /**
      * Display interface to a new keyword group
      *
+     * @return string
      */
     private function displayNewKG()
     {
@@ -221,7 +226,7 @@ class EDITKEYWORDGROUP
             30,
             255
         );
-        $description = \HTML\div('descriptionDiv', $this->displayDescription(TRUE));
+        $description = $this->displayDescription();
 		$pString .= \HTML\td($textBox . \HTML\p($description));
         $pString .= \HTML\td();
         $pString .= \HTML\trEnd();
@@ -229,56 +234,82 @@ class EDITKEYWORDGROUP
         return $pString;
     }
     /**
-     * Display interface to edit keyword group
+     * Display name and description for editing a keyword group
      *
-     * @param bool $initialDisplay
+     * @return string
      */
-    public function displayEditKG($initialDisplay = FALSE)
+    private function getEditNameAndDescription()
     {
-        $keyword = $keywordId = FALSE;
-        if (!$initialDisplay) {
-            $this->db->formatConditions(['keywordId' => $this->vars['ajaxReturn']]);
-            $recordset = $this->db->select('keyword', 'keywordKeyword');
-            $row = $this->db->fetchRow($recordset);
-            $keyword = \HTML\dbToFormTidy($row['keywordKeyword']);
-            $keywordId = $this->vars['ajaxReturn'];
-        }
-        $pString = \FORM\hidden("editKeywordId", $keywordId);
-        $pString .= \FORM\textInput(
-            $this->messages->text('resources', 'keyword') . ' ' . \HTML\span('*', 'required'),
-            'keyword',
-            $keyword,
-            30,
-            255
-        );
+        $pString = \HTML\tableStart();
+        $pString .= \HTML\trStart();
+		$name = \HTML\div('nameDiv', $this->editDisplayName(TRUE));
+        $description = \HTML\div('descriptionDiv', $this->editDisplayDescription(TRUE));
+		$pString .= \HTML\td($name . \HTML\p($description));
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\tableEnd();
+        return $pString;
+    }
+    /**
+     * Display the description textarea for new keyword groups
+     *
+     * @return string
+     */
+    private function displayDescription()
+    {
+        return \FORM\textareaInput($this->messages->text('resources', 'kgDescription'), 'Description', FALSE, 50, 5);
+    }
+    /**
+     * Display the name textbox for editing
+     *
+     * @param bool $initialDisplay Default FALSE
+     */
+    public function editDisplayName($initialDisplay = FALSE)
+    {
         if ($initialDisplay) {
-            return $pString;
+            return \FORM\textInput(
+			$this->messages->text('resources', 'keywordGroupName') . \HTML\span('*', 'required'),
+			'editName',
+			FALSE,
+			30,
+			255
+		);
         }
+        $this->db->formatConditions(['userkeywordgroupsId' => $this->vars['ajaxReturn']]);
+        $recordset = $this->db->select('user_keywordgroups', 'userkeywordgroupsName');
+        $row = $this->db->fetchRow($recordset);
+        $name = \HTML\dbToFormTidy($row['userkeywordgroupsName']);
+        $pString = \FORM\textInput(
+			$this->messages->text('resources', 'keywordGroupName') . \HTML\span('*', 'required'),
+			'editName',
+			$name,
+			30,
+			255
+		);
         if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
         } else {
-            GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$pString"]));
+            GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $pString]));
         }
         FACTORY_CLOSERAW::getInstance();
     }
     /**
-     * Display the description textarea
+     * Display the description textarea for editing
      *
-     * @param bool $initialDisplay
+     * @param bool $initialDisplay Default FALSE
      */
-    public function displayDescription($initialDisplay = FALSE)
+    public function editDisplayDescription($initialDisplay = FALSE)
     {
         if ($initialDisplay) {
-            return \FORM\textareaInput($this->messages->text('resources', 'kgDescription'), "Description", FALSE, 50, 5);
+            return \FORM\textareaInput($this->messages->text('resources', 'kgDescription'), 'editDescription', FALSE, 50, 5);
         }
-        $this->db->formatConditions(['kgId' => $this->vars['ajaxReturn']]);
-        $recordset = $this->db->select('keyword', 'keywordGlossary');
+        $this->db->formatConditions(['userkeywordgroupsId' => $this->vars['ajaxReturn']]);
+        $recordset = $this->db->select('user_keywordgroups', 'userkeywordgroupsDescription');
         $row = $this->db->fetchRow($recordset);
-        $glossary = \HTML\dbToFormTidy($row['keywordGlossary']);
-        $pString = \FORM\textareaInput(FALSE, "Description", $glossary, 50, 5);
+        $description = \HTML\dbToFormTidy($row['userkeywordgroupsDescription']);
+        $pString = \FORM\textareaInput($this->messages->text('resources', 'kgDescription'), 'editDescription', $description, 50, 5);
         if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
@@ -351,7 +382,7 @@ class EDITKEYWORDGROUP
     		$this->init($this->errors->text('inputError', 'tooFewKeywordGroups'));
     		return FALSE;
     	}
-    	$groups = $groups = $this->getGroups();
+    	$groups = $this->getGroups();
     	if (!empty($groups) && (in_array(trim($this->vars['KeywordGroup']), $groups))) {
 			$this->init($this->errors->text('inputError', 'groupExists'));
 			return FALSE;
@@ -375,6 +406,7 @@ class EDITKEYWORDGROUP
         while ($row = $this->db->fetchRow($resultset)) {
         	$groups[$row['userkeywordgroupsId']] = \HTML\dbToFormTidy($row['userkeywordgroupsName']);
         }
+        natcasesort($groups);
         return $groups;
     }
     /**
@@ -383,97 +415,89 @@ class EDITKEYWORDGROUP
     public function edit()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        if (!array_key_exists('editKeywordId', $this->vars) || !$this->vars['editKeywordId']) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
-        }
-        $keyword = array_key_exists('keyword', $this->vars) ? trim($this->vars['keyword']) : FALSE;
-        if (!$keyword) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
-        }
-        if ($keywordExistId = $this->keyword->checkExists($keyword)) {
-            if ($keywordExistId != $this->vars['editKeywordId']) {
-                return $this->confirmDuplicate($keywordExistId, $keyword);
-            }
-        }
-        $updateArray['keywordKeyword'] = $keyword;
-        $glossary = trim($this->vars['text']);
-        if ($glossary) {
-            $updateArray['keywordGlossary'] = $glossary;
-        } else {
-            $this->db->formatConditions(['keywordId' => $this->vars['editKeywordId']]);
-            $this->db->updateNull('keyword', 'keywordGlossary');
-        }
-        $this->db->formatConditions(['keywordId' => $this->vars['editKeywordId']]);
-        $this->db->update('keyword', $updateArray);
-        // remove cache files for keywords
-        $this->db->deleteCache('cacheKeywords');
-        $this->db->deleteCache('cacheResourceKeywords');
-        $this->db->deleteCache('cacheMetadataKeywords');
-        $this->db->deleteCache('cacheQuoteKeywords');
-        $this->db->deleteCache('cacheParaphraseKeywords');
-        $this->db->deleteCache('cacheMusingKeywords');
-        // send back to editDisplay with success message
-        $this->init($this->success->text("keyword"));
+    	if (!$this->validateEditInput()) {
+    		return;
+    	}
+// We delete existing rows and insert new rows
+		$this->db->formatConditions(['userkeywordgroupsId' => $this->vars['kgIds']]);
+		$this->db->delete('user_keywordgroups');
+		$this->db->formatConditions(['userkgkeywordsKeywordGroupId' => $this->vars['kgIds']]);
+		$this->db->delete('user_kg_keywords');
+		$this->db->formatConditions(['userkgusergroupsKeywordGroupId' => $this->vars['kgIds']]);
+		$this->db->delete('user_kg_usergroups');
+
+		$fields[] = 'userkeywordgroupsName';
+		$values[] = trim($this->vars['editName']);
+		$fields[] = 'userkeywordgroupsUserId';
+		$values[] = $this->userId;
+		if ($description = trim($this->vars['editDescription'])) {
+			$fields[] = "userkeywordgroupsDescription";
+    	    $values[] = $description;
+    	}
+        $this->db->insert('user_keywordgroups', $fields, $values);
+        $autoId = $this->db->lastAutoId();
+        foreach ($this->vars['editSelectedKeyword'] as $id) {
+        	$fields = $values = [];
+        	$fields[] = 'userkgkeywordsKeywordGroupId';
+			$values[] = $autoId;
+        	$fields[] = 'userkgkeywordsKeywordId';
+			$values[] = $id;
+        	$this->db->insert('user_kg_keywords', $fields, $values);
+		}
+		if(!array_key_exists('editSelectedUserGroup', $this->vars)) { // User Group can be NULL
+				$fields = $values = [];
+				$fields[] = 'userkgusergroupsKeywordGroupId';
+				$values[] = $autoId;
+				$this->db->insert('user_kg_usergroups', $fields, $values);
+		}
+		else {
+			foreach ($this->vars['editSelectedUserGroup'] as $id) {
+				$fields = $values = [];
+				$fields[] = 'userkgusergroupsKeywordGroupId';
+				$values[] = $autoId;
+				$fields[] = 'userkgusergroupsUserGroupId';
+				$values[] = $id;
+				$this->db->insert('user_kg_usergroups', $fields, $values);
+			}
+		}
+	
+        $this->init($this->success->text("keywordGroupEdit"));
     }
-    /**
-     * write to the database
-     */
-    public function editConfirm()
+    private function validateEditInput()
     {
-        $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        if (!array_key_exists('editKeywordId', $this->vars) || !$this->vars['editKeywordId']) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
-        }
-        if (!array_key_exists('editKeywordExistId', $this->vars) || !$this->vars['editKeywordExistId']) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
-        }
-        $editId = $this->vars['editKeywordId'];
-        $existId = $this->vars['editKeywordExistId'];
-        // Delete old keyword
-        $this->db->formatConditions(['keywordId' => $editId]);
-        $this->db->delete('keyword');
-        // Update references to keyword
-        $this->db->formatConditions(['resourcekeywordKeywordId' => $editId]);
-        $this->db->update('resource_keyword', ['resourcekeywordKeywordId' => $existId]);
-        // remove cache files for keywords
-        $this->db->deleteCache('cacheKeywords');
-        $this->db->deleteCache('cacheResourceKeywords');
-        $this->db->deleteCache('cacheMetadataKeywords');
-        $this->db->deleteCache('cacheQuoteKeywords');
-        $this->db->deleteCache('cacheParaphraseKeywords');
-        $this->db->deleteCache('cacheMusingKeywords');
-        // send back to editDisplay with success message
-        $this->init($this->success->text("keyword"));
+    	if (!array_key_exists('kgIds', $this->vars)) {
+    		$this->init($this->errors->text('inputError', 'missing'));
+    		return FALSE;
+    	}
+    	if (!array_key_exists('editName', $this->vars) || !trim($this->vars['editName'])) {
+    		$this->init($this->errors->text('inputError', 'missing'));
+    		return FALSE;
+    	}
+    	if (!array_key_exists('editSelectedKeyword', $this->vars) || empty($this->vars['editSelectedKeyword'])) {
+    		$this->init($this->errors->text('inputError', 'missing'));
+    		return FALSE;
+    	}
+    	if (count($this->vars['editSelectedKeyword']) < 2) {
+    		$this->init($this->errors->text('inputError', 'tooFewKeywordGroups'));
+    		return FALSE;
+    	}
+    	$groups = $this->getGroups();
+    	if (!empty($groups) && ($key = array_search(trim($this->vars['editName']), $groups)) !== FALSE) {
+    		if ($key != $this->vars['kgIds']) {
+				$this->init($this->errors->text('inputError', 'groupExists'));
+				return FALSE;
+			}
+		}
+        return TRUE;
     }
     /**
      * display user group select boxes
      *
-     * @param bool default FALSE
-     *
      * @return string
      */
-    public function displayUserGroups($editForm = FALSE)
+    public function displayUserGroups()
     {
-    	if ($editForm) {
-			$this->db->formatConditions(['resourcecategoryResourceId' => $this->vars['id']]);
-			$resultset = $this->db->select('resource_category', ['resourcecategoryCategoryId', 'resourcecategorySubcategoryId']);
-			while ($row = $this->db->fetchRow($resultset)) {
-				$catArray[] = $row['resourcecategoryCategoryId'];
-				if ($row['resourcecategorySubcategoryId']) {
-					$this->subcatArray[] = $row['resourcecategorySubcategoryId'];
-				}
-			}
-			$selectedCategories = [];
-			foreach ($catArray as $key) {
-				if (!array_key_exists($key, $this->categories)) {
-					continue;
-				}
-				$selectedCategories[$key] = $this->categories[$key];
-				unset($this->categories[$key]);
-			}
-		}
-
-        $td = \HTML\tableStart();
+    	$td = \HTML\tableStart();
         $td .= \HTML\trStart();
         $td .= \HTML\td(\FORM\selectFBoxValueMultiple(
             $this->messages->text('select', "availableUserGroup"),
@@ -481,11 +505,11 @@ class EDITKEYWORDGROUP
             $this->userGroups,
             10
         ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
-        list($toLeftImage, $toRightImage) = $this->transferArrows('selectUserGroup', 'discardUserGroup');
+        list($toLeftImage, $toRightImage) = $this->transferArrows('selectUserGroup', 'availableUserGroup');
         $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
 
 		$td .= \HTML\td(\FORM\selectFBoxValueMultiple(
-			$this->messages->text('select', "userGroup") . \HTML\span('*', 'required'),
+			$this->messages->text('select', "userGroup"),
 			'SelectedUserGroup',
 			[],
 			10
@@ -497,33 +521,125 @@ class EDITKEYWORDGROUP
         return $td;
     }
     /**
-     * display keyword select boxes
+     * display user group select boxes for editing
      *
-     * @param bool default FALSE
+     * @param bool $initialDisplay Default FALSE
      *
      * @return string
      */
-    public function displayKeywords($editForm = FALSE)
+    private function editDisplayUGs($initialDisplay = FALSE)
     {
-    	if ($editForm) {
-			$this->db->formatConditions(['resourcecategoryResourceId' => $this->vars['id']]);
-			$resultset = $this->db->select('resource_category', ['resourcecategoryCategoryId', 'resourcecategorySubcategoryId']);
-			while ($row = $this->db->fetchRow($resultset)) {
-				$catArray[] = $row['resourcecategoryCategoryId'];
-				if ($row['resourcecategorySubcategoryId']) {
-					$this->subcatArray[] = $row['resourcecategorySubcategoryId'];
-				}
-			}
-			$selectedCategories = [];
-			foreach ($catArray as $key) {
-				if (!array_key_exists($key, $this->categories)) {
-					continue;
-				}
-				$selectedCategories[$key] = $this->categories[$key];
-				unset($this->categories[$key]);
-			}
-		}
+        $td = \HTML\tableStart();
+        $td .= \HTML\trStart();
+        $td .= \HTML\td(\HTML\div('availableUgDiv', $this->editAvailableUGsDiv($initialDisplay)) . 
+        	BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
+		
+        list($toLeftImage, $toRightImage) = $this->transferArrows('edit_selectUserGroup', 'edit_availableUserGroup');
+        $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
 
+		$td .= \HTML\td(\HTML\div('selectedUgDiv', $this->editSelectedUGsDiv($initialDisplay)), 'padding3px left width18percent');
+
+        $td .= \HTML\trEnd();
+        $td .= \HTML\tableEnd();
+
+        return $td;
+    }
+    /**
+     * get the div for the available user groups select box for editing
+     *
+     * @param bool $initialDisplay Default FALSE
+     *
+     * @return string
+     */
+    public function editAvailableUGsDiv($initialDisplay = FALSE)
+    {
+    	if ($initialDisplay) {
+			return \FORM\selectFBoxValueMultiple(
+				$this->messages->text('select', "availableUserGroup"),
+				'editAvailableUserGroup',
+				$this->userGroups,
+				10
+				);
+		}
+		$ugs = [];
+		$this->db->formatConditions(['userkgusergroupsKeywordGroupId' => $this->vars['ajaxReturn']]);
+		$this->db->leftJoin('user_groups', 'usergroupsId', 'userkgusergroupsUserGroupId');
+		$recordset = $this->db->select('user_kg_usergroups', ['usergroupsTitle', 'userkgusergroupsUserGroupId']);
+		while ($row = $this->db->fetchRow($recordset))
+		{
+			$ugs[$row['userkgusergroupsUserGroupId']] = \HTML\dbToFormTidy($row['usergroupsTitle']);
+		}
+		if (!empty($ugs)) {
+			$diff = array_diff_key($this->user->listUserGroups(), $ugs);
+			natcasesort($diff);
+		}
+		$pString = \FORM\selectFBoxValueMultiple(
+				$this->messages->text('select', "userGroup"),
+				'editAvailableUserGroup',
+				$diff,
+				10
+			);
+        if (is_array(error_get_last())) {
+            // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
+            $error = error_get_last();
+            $error = $error['message'];
+            GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
+        } else {
+            GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$pString"]));
+        }
+        FACTORY_CLOSERAW::getInstance();
+    }
+    /**
+     * get the div for the selected user groups select box for editing
+     *
+     * @param bool $initialDisplay Default FALSE
+     *
+     * @return string
+     */
+    public function editSelectedUGsDiv($initialDisplay = FALSE)
+    {
+    	if ($initialDisplay) {
+			return \FORM\selectFBoxValueMultiple(
+				$this->messages->text('select', "userGroup"),
+				'editSelectedUserGroup',
+				[],
+				10
+			);
+		}
+		$ugs = [];
+		$this->db->formatConditions(['userkgusergroupsKeywordGroupId' => $this->vars['ajaxReturn']]);
+		$this->db->leftJoin('user_groups', 'usergroupsId', 'userkgusergroupsUserGroupId');
+		$recordset = $this->db->select('user_kg_usergroups', ['usergroupsTitle', 'userkgusergroupsUserGroupId']);
+		while ($row = $this->db->fetchRow($recordset))
+		{
+			$ugs[$row['userkgusergroupsUserGroupId']] = \HTML\dbToFormTidy($row['usergroupsTitle']);
+		}
+		if (!empty($ugs)) {
+			natcasesort($ugs);
+		}
+		$pString = \FORM\selectFBoxValueMultiple(
+				$this->messages->text('select', "userGroup"),
+				'editSelectedUserGroup',
+				array_filter($ugs),
+				10
+			);
+        if (is_array(error_get_last())) {
+            // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
+            $error = error_get_last();
+            $error = $error['message'];
+            GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
+        } else {
+            GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$pString"]));
+        }
+        FACTORY_CLOSERAW::getInstance();
+    }
+    /**
+     * display keyword select boxes
+     *
+     * @return string
+     */
+    public function displayKeywords()
+    {
         $td = \HTML\tableStart();
         $td .= \HTML\trStart();
         $td .= \HTML\td(\FORM\selectFBoxValueMultiple(
@@ -532,7 +648,7 @@ class EDITKEYWORDGROUP
             $this->keywords,
             10
         ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
-        list($toLeftImage, $toRightImage) = $this->transferArrows('selectKeyword', 'discardKeyword');
+        list($toLeftImage, $toRightImage) = $this->transferArrows('selectKeyword', 'availableKeyword');
         $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
 
 		$td .= \HTML\td(\FORM\selectFBoxValueMultiple(
@@ -546,6 +662,112 @@ class EDITKEYWORDGROUP
         $td .= \HTML\tableEnd();
 
         return $td;
+    }
+    /**
+     * display keyword select boxes for editing
+     *
+     * @param bool $initialDisplay Default FALSE
+     *
+     * @return string
+     */
+    private function editDisplayKeywords($initialDisplay = FALSE)
+    {
+        $td = \HTML\tableStart();
+        $td .= \HTML\trStart();
+        $td .= \HTML\td(\HTML\div('availableKeywordDiv', $this->editAvailableKeywordsDiv($initialDisplay)) . 
+        	BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
+        list($toLeftImage, $toRightImage) = $this->transferArrows('edit_selectKeyword', 'edit_availableKeyword');
+        $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
+
+		$td .= \HTML\td(\HTML\div('selectedKeywordDiv', $this->editSelectedKeywordsDiv($initialDisplay)), 'padding3px left width18percent');
+
+        $td .= \HTML\trEnd();
+        $td .= \HTML\tableEnd();
+
+        return $td;
+    }
+    /**
+     * get the div for the selected keyword select box for editing
+     *
+     * @param bool $initialDisplay Default FALSE
+     *
+     * @return string
+     */
+    public function editSelectedKeywordsDiv($initialDisplay = FALSE)
+    {
+    	if ($initialDisplay) {
+			return \FORM\selectFBoxValueMultiple(
+				$this->messages->text('select', "keyword") . \HTML\span('*', 'required'),
+				'editSelectedKeyword',
+				[],
+				10
+			);
+		}
+		$this->db->formatConditions(['userkgkeywordsKeywordGroupId' => $this->vars['ajaxReturn']]);
+		$this->db->leftJoin('keyword', 'keywordId', 'userkgkeywordsKeywordId');
+		$recordset = $this->db->select('user_kg_keywords', ['keywordKeyword', 'userkgkeywordsKeywordId']);
+		while ($row = $this->db->fetchRow($recordset))
+		{
+			$keywords[$row['userkgkeywordsKeywordId']] = \HTML\dbToFormTidy($row['keywordKeyword']);
+		}
+		natcasesort($keywords);
+		$pString = \FORM\selectFBoxValueMultiple(
+				$this->messages->text('select', "keyword") . \HTML\span('*', 'required'),
+				'editSelectedKeyword',
+				array_filter($keywords),
+				10
+			);
+        if (is_array(error_get_last())) {
+            // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
+            $error = error_get_last();
+            $error = $error['message'];
+            GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
+        } else {
+            GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$pString"]));
+        }
+        FACTORY_CLOSERAW::getInstance();
+    }
+    /**
+     * get the div for the selected keyword select box for editing
+     *
+     * @param bool $initialDisplay Default FALSE
+     *
+     * @return string
+     */
+    public function editAvailableKeywordsDiv($initialDisplay = FALSE)
+    {
+    	if ($initialDisplay) {
+			return \FORM\selectFBoxValueMultiple(
+				$this->messages->text('select', "keyword") . \HTML\span('*', 'required'),
+				'editAvailableKeyword',
+				$this->keywords,
+				10
+			);
+		}
+		$this->db->formatConditions(['userkgkeywordsKeywordGroupId' => $this->vars['ajaxReturn']]);
+		$this->db->leftJoin('keyword', 'keywordId', 'userkgkeywordsKeywordId');
+		$recordset = $this->db->select('user_kg_keywords', ['keywordKeyword', 'userkgkeywordsKeywordId']);
+		while ($row = $this->db->fetchRow($recordset))
+		{
+			$keywords[$row['userkgkeywordsKeywordId']] = \HTML\dbToFormTidy($row['keywordKeyword']);
+		}
+		$diff = array_diff_key($this->keyword->grabAll(), $keywords);
+		natcasesort($diff);
+		$pString = \FORM\selectFBoxValueMultiple(
+				$this->messages->text('select', "keyword") . \HTML\span('*', 'required'),
+				'editAvailableKeyword',
+				$diff,
+				10
+			);
+        if (is_array(error_get_last())) {
+            // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
+            $error = error_get_last();
+            $error = $error['message'];
+            GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
+        } else {
+            GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$pString"]));
+        }
+        FACTORY_CLOSERAW::getInstance();
     }
     /**
      * transferArrows
@@ -562,11 +784,67 @@ class EDITKEYWORDGROUP
             'startFunction' => $startFunction1,
         ];
         $toRightImage = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
+        if (!$startFunction2) {
+        	return [$toRightImage];
+        }
         $jsonArray = [];
         $jsonArray[] = [
             'startFunction' => $startFunction2,
         ];
         $toLeftImage = \AJAX\jActionIcon('toLeft', 'onclick', $jsonArray);
         return [$toLeftImage, $toRightImage];
+    }
+    /**
+     * editTransferArrow
+     *
+     * @return string
+     */
+    private function editTransferArrow()
+    {
+        $jScript = 'index.php?action=edit_EDITKEYWORDGROUP_CORE&method=editDisplayName';
+        $jsonArray[] = [
+            'startFunction' => 'triggerFromSelect',
+            'script' => "$jScript",
+            'triggerField' => 'kgIds',
+            'targetDiv' => 'nameDiv',
+        ];
+        $jScript = 'index.php?action=edit_EDITKEYWORDGROUP_CORE&method=editDisplayDescription';
+        $jsonArray[] = [
+            'startFunction' => 'triggerFromSelect',
+            'script' => "$jScript",
+            'triggerField' => 'kgIds',
+            'targetDiv' => 'descriptionDiv',
+        ];
+        $jScript = 'index.php?action=edit_EDITKEYWORDGROUP_CORE&method=editAvailableKeywordsDiv';
+        $jsonArray[] = [
+            'startFunction' => 'triggerFromSelect',
+            'script' => "$jScript",
+            'triggerField' => 'kgIds',
+            'targetDiv' => 'availableKeywordDiv',
+        ];
+        $jScript = 'index.php?action=edit_EDITKEYWORDGROUP_CORE&method=editSelectedKeywordsDiv';
+        $jsonArray[] = [
+            'startFunction' => 'triggerFromSelect',
+            'script' => "$jScript",
+            'triggerField' => 'kgIds',
+            'targetDiv' => 'selectedKeywordDiv',
+        ];
+        $jScript = 'index.php?action=edit_EDITKEYWORDGROUP_CORE&method=editAvailableUGsDiv';
+        $jsonArray[] = [
+            'startFunction' => 'triggerFromSelect',
+            'script' => "$jScript",
+            'triggerField' => 'kgIds',
+            'targetDiv' => 'availableUgDiv',
+        ];
+        $jScript = 'index.php?action=edit_EDITKEYWORDGROUP_CORE&method=editSelectedUGsDiv';
+        $jsonArray[] = [
+            'startFunction' => 'triggerFromSelect',
+            'script' => "$jScript",
+            'triggerField' => 'kgIds',
+            'targetDiv' => 'selectedUgDiv',
+        ];
+        $image = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
+
+        return $image;
     }
 }

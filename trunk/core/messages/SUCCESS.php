@@ -122,6 +122,7 @@ class SUCCESS
 				"endnoteImport" => dgettext($domain, "Successfully uploaded Endnote XML bibliography"),
 				"keyword" => dgettext($domain, "Successfully edited keyword"),
 				"keywordDelete" => dgettext($domain, "Successfully deleted keyword(s)"),
+				"keywordGroupDelete" => dgettext($domain, "Successfully deleted keyword group(s)"),
 				"userAdd" => dgettext($domain, "Successfully added user(s)"),
 				"userEdit" => dgettext($domain, "Successfully edited user(s)"),
 				"userDelete" => dgettext($domain, "Successfully deleted user(s)"),

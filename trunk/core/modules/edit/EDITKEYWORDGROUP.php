@@ -54,6 +54,10 @@ class EDITKEYWORDGROUP
      */
     public function init($message = FALSE)
     {
+    	if (!$message && $this->session->getVar('kg_Message')) {
+    		$message = $this->session->getVar('kg_Message');
+    		$this->session->delVar('kg_Message');
+    	}
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $this->keywords = $this->keyword->grabAll();
 // Check we have some keywords
@@ -62,14 +66,13 @@ class EDITKEYWORDGROUP
 
             return;
         }
-        $this->db->formatConditions(['userkeywordgroupsUserId' => $this->userId]);
-        $resultset = $this->db->select('user_keywordgroups', ['userkeywordgroupsId', 'userkeywordgroupsName', 'userkeywordgroupsDescription']);
-        while ($row = $this->db->fetchRow($resultset)) {
-        	$this->kgs[$row['userkeywordgroupsId']]['name'] = $row['userkeywordgroupsName'];
-        	$this->kgs[$row['userkeywordgroupsId']]['description'] = $row['userkeywordgroupsDescription'];
-        }
         $pString = $message ? \HTML\p($message, "error", "center") : FALSE;
-        $pString .= $this->displayNewForm();
+        $pString .= \HTML\tableStart();
+        $pString .= \HTML\trStart();
+        $pString .= \HTML\td($this->displayNewForm());
+        $pString .= \HTML\td($this->displayDeleteForm());
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\tableEnd();
 //        if (!empty($this->kgs)) {
 //        	$pString .= \HTML\p(\HTML\hr());
 //        	$pString .= $this->displayEditForm();
@@ -103,8 +106,74 @@ class EDITKEYWORDGROUP
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \FORM\formEnd();
-        $pString .= \HTML\hr();
         return $pString;
+    }
+    /** 
+     * Display delete keyword group form
+     *
+     */
+    private function displayDeleteForm()
+    {
+    	if (empty($groups = $this->getGroups(TRUE))) {
+    		return '&nbsp;';
+    	}
+        $pString = \FORM\formHeader('edit_EDITKEYWORDGROUP_CORE');
+        $pString .= \FORM\hidden("method", "deleteConfirm");
+        $pString .= \HTML\tableStart('generalTable');
+        $pString .= \HTML\trStart();
+        $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
+            $this->messages->text('misc', "keywordGroupDelete"),
+            'delete_GroupId',
+            $groups,
+            10
+        ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\trStart();
+        $pString .= \HTML\td(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\tableEnd();
+        $pString .= \FORM\formEnd();
+        return $pString;
+    }
+    /**
+     * Confirm deletes
+     */
+    public function deleteConfirm()
+    {
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete2", " (" .
+            $this->messages->text("resources", "keywordGroup") . ")"));
+        $input = array_values($this->vars['delete_GroupId']);
+        $groups = $this->getGroups();
+        $input = "'" . implode("', '", array_keys(array_intersect(array_flip($groups), $input))) . "'";
+        $input = html_entity_decode($input);
+        $pString = \HTML\p($this->messages->text("resources", "deleteConfirmKeywordGroups") . ":&nbsp;&nbsp;$input");
+        $pString .= \FORM\formHeader("edit_EDITKEYWORDGROUP_CORE");
+        $pString .= \FORM\hidden("delete_GroupId", base64_encode(serialize($this->vars['delete_GroupId'])));
+        $pString .= \FORM\hidden("method", 'delete');
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Delete")));
+        $pString .= \FORM\formEnd();
+        GLOBALS::addTplVar('content', $pString);
+    }
+    /**
+     * write to the database
+     */
+    public function delete()
+    {
+        if (!array_key_exists('delete_GroupId', $this->vars) || !$this->vars['delete_GroupId']) {
+ 	       $this->session->setVar('kg_Message', $this->errors->text("inputError", "missing"));
+    	    header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init");
+        }
+        foreach (unserialize(base64_decode($this->vars['delete_GroupId'])) as $deleteId) {
+            $this->db->formatConditions(['userkeywordgroupsId' => $deleteId]);
+            $this->db->delete('user_keywordgroups');
+            $this->db->formatConditions(['userkgkeywordsKeywordGroupId' => $deleteId]);
+            $this->db->delete('user_kg_keywords');
+            $this->db->formatConditions(['userkgusergroupsKeywordGroupId' => $deleteId]);
+            $this->db->delete('user_kg_usergroups');
+        }
+        // send back to keyword group page with success message
+        $this->session->setVar('kg_Message', $this->success->text("keywordGroupDelete"));
+        header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init");
     }
     /** 
      * Display keyword group edit form
@@ -282,14 +351,31 @@ class EDITKEYWORDGROUP
     		$this->init($this->errors->text('inputError', 'tooFewKeywordGroups'));
     		return FALSE;
     	}
-        $resultset = $this->db->select('user_keywordgroups', ['userkeywordgroupsName']);
-        while ($row = $this->db->fetchRow($resultset)) {
-        	if ($row['userkeywordgroupsName'] == trim($this->vars['KeywordGroup'])) {
-				$this->init($this->errors->text('inputError', 'groupExists'));
-				return FALSE;
-			}
-        }
+    	$groups = $groups = $this->getGroups();
+    	if (!empty($groups) && (in_array(trim($this->vars['KeywordGroup']), $groups))) {
+			$this->init($this->errors->text('inputError', 'groupExists'));
+			return FALSE;
+		}
         return TRUE;
+    }
+    /**
+     * Get keyword groups
+     *
+     * @param bool Default FALSE: return all groups. If TRUE, return user's groups
+     *
+     * @return array
+     */
+    private function getGroups($user = FALSE)
+    {
+    	$groups = [];
+    	if ($user) {
+        	$this->db->formatConditions(['userkeywordgroupsUserId' => $this->userId]);
+    	}
+        $resultset = $this->db->select('user_keywordgroups', ['userkeywordgroupsName', 'userkeywordgroupsId']);
+        while ($row = $this->db->fetchRow($resultset)) {
+        	$groups[$row['userkeywordgroupsId']] = \HTML\dbToFormTidy($row['userkeywordgroupsName']);
+        }
+        return $groups;
     }
     /**
      * write edits to the database

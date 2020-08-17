@@ -1205,6 +1205,18 @@ class LISTCOMMON
                 $this->db->formatConditions(['keywordId' => $id]);
                 $id = $this->db->selectFirstField('keyword', 'keywordKeyword');
                 $strings[] = $this->messages->text('listParams', 'keyword') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
+            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'keywordGroupProcess')) {
+				$this->db->formatConditions(['userkeywordgroupsId' => $id]);
+				$this->db->leftJoin('user_kg_keywords', 'userkgkeywordsKeywordGroupId', 'userkeywordgroupsId');
+				$this->db->leftJoin('keyword', 'keywordId', 'userkgkeywordsKeywordId');
+				$this->db->orderBy('keywordKeyword');
+                $recordset = $this->db->select('user_keywordgroups', ['keywordKeyword', 'userkeywordgroupsName']);
+                while ($row = $this->db->fetchRow($recordset)) {
+                	$name = $row['userkeywordgroupsName'];
+                	$kgKeywords[] = $row['keywordKeyword'];
+                }
+                $param = $name . ' ('. join(', ', $kgKeywords) . ')';
+                $strings[] = $this->messages->text('listParams', 'keywordGroup') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($param);
             } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'categoryProcess')) {
                 $this->db->formatConditions(['categoryId' => $id]);
                 $id = $this->db->selectFirstField('category', 'categoryCategory');

@@ -1328,6 +1328,7 @@ class MESSAGES
 				"notInUserBib" => dgettext($domain, "NOT in user bibliography"),
 				"publisher" => dgettext($domain, "Publisher"),
 				"keyword" => dgettext($domain, "Keyword"),
+				"keywordGroup" => dgettext($domain, "Keyword Group"),
 				"creator" => dgettext($domain, "Creator"),
 				"list" => dgettext($domain, "List (###)"),
 				"addedBy" => dgettext($domain, "Resource added by ###"),

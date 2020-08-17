@@ -16,7 +16,7 @@
 class BROWSEKEYWORDGROUP
 {
     public $keywordGroup;
-    private $counted = [];
+    private $resourceCounts = [];
     private $keyword;
     public $description = [];
     public $sum;
@@ -68,34 +68,16 @@ class BROWSEKEYWORDGROUP
      */
     public function getKeywordGroups()
     {
-// First, get keywords used and their resource count
-        $this->common->userBibCondition('resourcekeywordResourceId');
-        $this->db->formatConditions($this->db->formatFields('resourcekeywordResourceId') . ' IS NOT NULL');
-        $this->db->groupBy('resourcekeywordKeywordId');
-        $recordset = $this->db->selectCounts('resource_keyword', 'resourcekeywordKeywordId');
-        while ($row = $this->db->fetchRow($recordset)) {
-            $this->keyword[$row['resourcekeywordKeywordId']] = $row['count'];
-        }
-// Get groups this user is a member of
+// First, get groups this user is a member of
         $this->db->formatConditions(['usergroupsusersUserId' => $this->userId]);
         $recordset = $this->db->select('user_groups_users', 'usergroupsusersGroupId');
 		while ($row = $this->db->fetchRow($recordset)) {
             $groups[] = $row['usergroupsusersGroupId'];
         }
+// Then, get only keyword groups this user owns
+		$this->setUGConditions($groups);
 		$this->db->formatConditionsOneField(array_keys($this->keyword), 'userkgkeywordsKeywordId');
 		$this->db->leftJoin('user_kg_keywords', 'userkgkeywordsKeywordGroupId', 'userkeywordgroupsId');
-// Set conditions for groups this user is a member of
-		if (isset($groups)) {
-			$groupCondition = $this->db->formatConditionsOneField(array_values($groups), 
-				'userkgusergroupsUserGroupId', FALSE, TRUE, FALSE, FALSE, TRUE);
-			$userCondition = $this->db->formatConditions(['userkeywordgroupsUserId' => $this->userId], '=', TRUE);
-			$this->db->formatConditions('(' . $groupCondition . ' ' . $this->db->or . ' ' . $userCondition . ')');
-			$this->db->leftJoin('user_kg_usergroups', 'userkgusergroupsKeywordGroupId', 'userkeywordgroupsId');
-		}
-// Get only keyword groups this user owns
-		else {
-			$this->db->formatConditions(['userkeywordgroupsUserId' => $this->userId]);
-		}
 		$this->db->orderBy('userkeywordgroupsName');
 		$recordset = $this->db->select('user_keywordgroups', 
 			['userkeywordgroupsId', 'userkeywordgroupsName', 'userkeywordgroupsDescription', 'userkgkeywordsKeywordId']);
@@ -103,6 +85,22 @@ class BROWSEKEYWORDGROUP
             $this->collate($row);
         }
     }
+    /** Set conditions for groups this user is a member of
+     *
+     */
+    private function setUGConditions($groups)
+    {
+		if (isset($groups)) {
+			$groupCondition = $this->db->formatConditionsOneField(array_values($groups), 
+				'userkgusergroupsUserGroupId', FALSE, TRUE, FALSE, FALSE, TRUE);
+			$userCondition = $this->db->formatConditions(['userkeywordgroupsUserId' => $this->userId], '=', TRUE);
+			$this->db->formatConditions('(' . $groupCondition . ' ' . $this->db->or . ' ' . $userCondition . ')');
+			$this->db->leftJoin('user_kg_usergroups', 'userkgusergroupsKeywordGroupId', 'userkeywordgroupsId');
+		}
+		else {
+			$this->db->formatConditions(['userkeywordgroupsUserId' => $this->userId]);
+		}
+	}
     /**
      * Add keyword groups to array and sum totals
      *
@@ -120,18 +118,21 @@ class BROWSEKEYWORDGROUP
                 $this->description[$row['userkeywordgroupsId']] = \HTML\dbToHtmlPopupTidy($row['userkeywordgroupsDescription']);
             }
         }
-        if (!array_key_exists($row['userkeywordgroupsId'], $this->sum)) {
-        	if (array_key_exists($row['userkgkeywordsKeywordId'], $this->keyword)) {
-            	$this->sum[$row['userkeywordgroupsId']] = $this->keyword[$row['userkgkeywordsKeywordId']];
-            	$this->counted[$row['userkeywordgroupsId']][] = $row['userkgkeywordsKeywordId'];
-        	}
-        } else {
-        	if (array_key_exists($row['userkgkeywordsKeywordId'], $this->keyword)) {
-        		if (!in_array($row['userkgkeywordsKeywordId'], $this->counted[$row['userkeywordgroupsId']])) {
-        			$this->counted[$row['userkeywordgroupsId']][] = $row['userkgkeywordsKeywordId'];
-	            	$this->sum[$row['userkeywordgroupsId']] += $this->keyword[$row['userkgkeywordsKeywordId']];
-        		}
-        	}
+// In each keyword group, if there are two keywords that appear in a single resource, the count of each resource is potentially doubled. 
+// This must be checked for.
+        $this->common->userBibCondition('resourcekeywordResourceId');
+        $this->db->formatConditions($this->db->formatFields('resourcekeywordResourceId') . ' IS NOT NULL');
+        $this->db->formatConditions(['resourcekeywordKeywordId' => $row['userkgkeywordsKeywordId']]);
+        $recordset = $this->db->select('resource_keyword', ['resourcekeywordResourceId']);
+        while ($row2 = $this->db->fetchRow($recordset)) {
+            if (!array_key_exists($row['userkeywordgroupsId'], $this->resourceCounts)) {
+            	$this->resourceCounts[$row['userkeywordgroupsId']][] = $row2['resourcekeywordResourceId'];
+            	$this->sum[$row['userkeywordgroupsId']] = 1;
+            }
+            elseif (!in_array($row2['resourcekeywordResourceId'], $this->resourceCounts[$row['userkeywordgroupsId']])) {
+            	$this->resourceCounts[$row['userkeywordgroupsId']][] = $row2['resourcekeywordResourceId'];
+            	++$this->sum[$row['userkeywordgroupsId']];
+            }
         }
     }
     /**

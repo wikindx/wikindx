@@ -187,26 +187,8 @@ class BROWSEKEYWORD
 		}
 		if (($this->type == 'musings') || ($this->type == 'ideas') || ($this->type == 'all') || ($this->type == 'notIdeas'))
     	{
-			// musings and ideas
-			if ($this->session->getVar("setup_ReadOnly")) {
-				$this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
-			} elseif ($userId = $this->session->getVar("setup_UserId")) {
-				$this->db->formatConditions(['usergroupsusersUserId' => $userId]);
-				$this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .
-					$this->db->formatFields('resourcemetadataPrivate'));
-				$subSql = $this->db->selectNoExecute('user_groups_users', 'usergroupsusersId', FALSE, TRUE, TRUE);
-				$subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->notEqual . $this->db->tidyInput('N')
-					. $this->db->and .
-					$this->db->formatFields('resourcemetadataPrivate') . $this->db->notEqual . $this->db->tidyInput('Y');
-				$case1 = $this->db->caseWhen($subject, FALSE, $subSql, FALSE, FALSE);
-				$subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->equal . $this->db->tidyInput('Y');
-				$result = $this->db->formatFields('resourcemetadataAddUserId') . $this->db->equal . $this->db->tidyInput($userId);
-				$case2 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
-				$subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->equal . $this->db->tidyInput('N');
-				$result = $this->db->tidyInput(1);
-				$case3 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
-				$this->db->formatConditions($case1 . $this->db->or . $case2 . $this->db->or . $case3);
-			}
+    		// musings and ideas
+    		$this->common->setPrivateConditions();
 			if ($this->type == 'all') {
 				$this->db->formatConditionsOneField(['m', 'i'], 'resourcemetadataType');
 			}

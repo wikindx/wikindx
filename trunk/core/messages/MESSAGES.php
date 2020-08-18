@@ -908,6 +908,7 @@ class MESSAGES
 				"browseKeyword" => dgettext($domain, "Keywords"),
 				"browseKeywordGroup" => dgettext($domain, "Keyword Groups"),
 				"browseKeywordSub" => dgettext($domain, "Keywords..."),
+				"browseKeywordGroupSub" => dgettext($domain, "Keyword Groups..."),
 				"browseKeywordAll" => dgettext($domain, "All"),
 				"browseKeywordQuotes" => dgettext($domain, "Quotes"),
 				"browseKeywordParaphrases" => dgettext($domain, "Paraphrases"),
@@ -1044,6 +1045,7 @@ class MESSAGES
 				"noKeywordGroups" => dgettext($domain, "There are no keyword groups in the database"),
 				"tooFewKeywords" => dgettext($domain, "There must be at least two keywords in the database in order to create a keyword group"),
 				"noMetaKeywords" => dgettext($domain, "There are no metadata keywords in the database"),
+				"noKeywordGroups" => dgettext($domain, "There are no used keywords in available keyword groups"),
 				"noCitations" => dgettext($domain, "There are no cited creators in the database"),
 				"noUsers" => dgettext($domain, "There are no registered users with resources in the database"),
 /// misc_categoryTreeKeywords When browsing the category tree, display keywords with resources in each category

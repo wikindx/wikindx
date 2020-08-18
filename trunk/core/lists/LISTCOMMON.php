@@ -30,6 +30,8 @@ class LISTCOMMON
     /** string */
     public $metadataKeyword = FALSE;
     /** array */
+    public $metadataKGKeywords = [];
+    /** array */
     public $metadataText = [];
     /** array */
     public $metadataTextCite = [];
@@ -203,7 +205,7 @@ class LISTCOMMON
         $useDateFormatMethod = method_exists($this->languageClass, "dateFormat");
         //$citeRadioButtonFirst = TRUE;
 
-        if ($this->metadataKeyword) {
+        if ($this->metadataKeyword || !empty($this->metadataKGKeywords)) {
             $listMetadataMethod = 'listMetadata';
         } elseif (!empty($this->metadataText)) {
             $listMetadataMethod = 'listMetadataText';
@@ -463,8 +465,12 @@ class LISTCOMMON
     private function listMetadata($resourceId)
     {
         $array = [];
-        // quotes
-        $this->db->formatConditions(['resourcekeywordKeywordId' => $this->metadataKeyword]);
+        if (!empty($this->metadataKGKeywords)) {
+	        $this->db->formatConditionsOneField($this->metadataKGKeywords, 'resourcekeywordKeywordId');
+        }
+        else {
+	        $this->db->formatConditions(['resourcekeywordKeywordId' => $this->metadataKeyword]);
+	    }
         $this->db->formatConditions(['resourcekeywordMetadataId' => ' IS NOT NULL']);
         $this->db->formatConditions(['resourcemetadataResourceId' => $resourceId]);
         $this->db->leftJoin('resource_metadata', 'resourcemetadataId', 'resourcekeywordMetadataId');
@@ -472,7 +478,6 @@ class LISTCOMMON
         while ($row = $this->db->fetchRow($resultset)) {
             $array[] = $this->cite->parseCitations(\HTML\nlToHtml($row['resourcemetadataText']), 'htmlNoBib', FALSE);
         }
-
         return $array;
     }
     /**
@@ -800,8 +805,14 @@ class LISTCOMMON
                 $linksInfo['info'] .= '&nbsp;' . \HTML\a('link', $this->messages->text('search', 'ideasFound'), "index.php?action=list_SEARCH_CORE" .
                     htmlentities("&method=reprocess&type=displayIdeas"));
             } else {
+					if (empty($this->metadataKGKeywords)) {
+						$ideaId = 'resourcekeywordKeywordId';
+					}
+					else {
+						$ideaId = 'userkeywordgroupsId';
+					}
                 $linksInfo['info'] .= '&nbsp;' . \HTML\a('link', $this->messages->text('search', 'ideasFound'), "index.php?action=ideas_IDEAS_CORE" .
-                    htmlentities("&method=" . 'keywordIdeaList') . htmlentities("&resourcekeywordKeywordId=" . $this->metadataKeyword));
+                    htmlentities("&method=" . 'keywordIdeaList') . htmlentities("&" . $ideaId . "=" . $this->metadataKeyword));
             }
         }
         if (!$resourcesExist) {
@@ -820,7 +831,8 @@ class LISTCOMMON
                 } else {
                     $formHeader = 'list_LISTRESOURCES_CORE';
                 }
-                $linksInfo['reorder'] =
+                $type = array_key_exists('type', $this->vars) ? \FORM\hidden("type", $this->vars['type']) : FALSE;
+                $linksInfo['reorder'] = $type . 
                     \FORM\hidden("method", "reorder") . $this->displayOrder($listType, TRUE) .
                     BR . \FORM\formSubmit($this->messages->text("submit", "Proceed"), 'Submit', "onclick=\"document.forms['formSortingAddingListInfo'].elements['action'].value='$formHeader'\"");
             } elseif ($listType == 'basket') {
@@ -1201,11 +1213,13 @@ class LISTCOMMON
                 $strings[] = $this->messages->text('listParams', 'publisher') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
             } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'yearProcess')) {
                 $strings[] = $this->messages->text('listParams', 'year') . ':&nbsp;&nbsp;' . base64_decode($id);
-            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'keywordProcess')) {
+            } elseif (array_key_exists('method', $this->vars) && 
+            	(($this->vars['method'] == 'keywordProcess') || ($this->vars['method'] == 'metaKeywordProcess'))) {
                 $this->db->formatConditions(['keywordId' => $id]);
                 $id = $this->db->selectFirstField('keyword', 'keywordKeyword');
                 $strings[] = $this->messages->text('listParams', 'keyword') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
-            } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'keywordGroupProcess')) {
+            } elseif (array_key_exists('method', $this->vars) && 
+            	(($this->vars['method'] == 'keywordGroupProcess') || ($this->vars['method'] == 'metaKeywordGroupProcess'))) {
 				$this->db->formatConditions(['userkeywordgroupsId' => $id]);
 				$this->db->leftJoin('user_kg_keywords', 'userkgkeywordsKeywordGroupId', 'userkeywordgroupsId');
 				$this->db->leftJoin('keyword', 'keywordId', 'userkgkeywordsKeywordId');

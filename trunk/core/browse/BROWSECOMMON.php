@@ -37,6 +37,8 @@ class BROWSECOMMON
     private $commonBib;
     /** string */
     private $bibInfo;
+    /** int */
+    private $userId;
 
     /**
      * BROWSECOMMON
@@ -56,6 +58,7 @@ class BROWSECOMMON
         $this->lowSize = WIKINDX_TAG_LOW_FACTOR / 100;
         $this->highSize = WIKINDX_TAG_HIGH_FACTOR / 100;
         $this->sizeDiff = $this->highSize - $this->lowSize;
+        $this->userId = $this->session->getVar('setup_UserId');
     }
     /**
      * Return a SQL condition clause if we are browsing a user bibliography to ensure that
@@ -74,6 +77,32 @@ class BROWSECOMMON
             $this->db->leftJoin('user_bibliography_resource', 'userbibliographyresourceResourceId', $field);
         }
     }
+    /**
+     * Set database conditions for browsing musings and ideas where some entries might be private or available only to groups
+     *
+     */
+    public function setPrivateConditions()
+    {
+		if ($this->session->getVar("setup_ReadOnly")) {
+			$this->db->formatConditions(['resourcemetadataPrivate' => 'N']);
+		} elseif ($this->userId) {
+			$this->db->formatConditions(['usergroupsusersUserId' => $this->userId]);
+			$this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .
+				$this->db->formatFields('resourcemetadataPrivate'));
+			$subSql = $this->db->selectNoExecute('user_groups_users', 'usergroupsusersId', FALSE, TRUE, TRUE);
+			$subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->notEqual . $this->db->tidyInput('N')
+				. $this->db->and .
+				$this->db->formatFields('resourcemetadataPrivate') . $this->db->notEqual . $this->db->tidyInput('Y');
+			$case1 = $this->db->caseWhen($subject, FALSE, $subSql, FALSE, FALSE);
+			$subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->equal . $this->db->tidyInput('Y');
+			$result = $this->db->formatFields('resourcemetadataAddUserId') . $this->db->equal . $this->db->tidyInput($this->userId);
+			$case2 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
+			$subject = $this->db->formatFields('resourcemetadataPrivate') . $this->db->equal . $this->db->tidyInput('N');
+			$result = $this->db->tidyInput(1);
+			$case3 = $this->db->caseWhen($subject, FALSE, $result, FALSE, FALSE);
+			$this->db->formatConditions($case1 . $this->db->or . $case2 . $this->db->or . $case3);
+		}
+	}
     /**
      * Work out text colour based on field frequency.
      *

@@ -26,6 +26,7 @@ class IDEAS
     private $success;
     private $badInput;
     private $ideas;
+    private $keywordIdeas = [];
 
     // Constructor
     public function __construct()
@@ -60,11 +61,29 @@ class IDEAS
         }
     }
     /**
-     * list ideas based on keyword
+     * list ideas based on keyword or keyword group
      */
     public function keywordIdeaList()
     {
-        if ((!array_key_exists('resourcekeywordKeywordId', $this->vars) || !$this->vars['resourcekeywordKeywordId'])) {
+// single metadata keyword
+        if ((array_key_exists('resourcekeywordKeywordId', $this->vars) && $this->vars['resourcekeywordKeywordId'])) {
+        	$this->keywordIdeas[] = $this->vars['resourcekeywordKeywordId'];
+        }
+// or metadata keywords from a keyword group
+        elseif (((array_key_exists('userkeywordgroupsId', $this->vars) && $this->vars['userkeywordgroupsId']))) {
+// Get keywords in this keyword group
+			$this->db->leftJoin('user_kg_keywords', 'userkgkeywordsKeywordGroupId', 'userkeywordgroupsId');
+			$this->db->formatConditionsOneField($this->vars['userkeywordgroupsId'], 'userkeywordgroupsId');
+			$recordset = $this->db->select('user_keywordgroups', 'userkgkeywordsKeywordId');
+			while ($row = $this->db->fetchRow($recordset)) {
+				$this->keywordIdeas[] = $row['userkgkeywordsKeywordId'];
+			}
+			if (empty($this->keywordIdeas)) {
+				GLOBALS::addTplVar('content', $this->messages->text("misc", "noKeywords"));
+				return;
+			}
+        }
+        else{
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $this->ideaList(TRUE);
@@ -113,11 +132,17 @@ class IDEAS
         $this->metadata->setCondition('i');
         if ($keywordList) {
             $this->db->leftJoin('resource_keyword', 'resourcekeywordMetadataId', 'resourcemetadataId');
-            $this->db->formatConditions(['resourcekeywordKeywordId' => $this->vars['resourcekeywordKeywordId']]);
+            $this->db->formatConditionsOneField($this->keywordIdeas, 'resourcekeywordKeywordId');
             $this->db->formatConditions(['resourcekeywordMetadataId' => ' IS NOT NULL']);
             $this->db->formatConditions(['resourcemetadataType' => 'i']);
-            $queryString = "index.php?action=ideas_IDEAS_CORE" .
-                "&method=" . 'keywordIdeaList' . "&resourcekeywordKeywordId=" . $this->vars['resourcekeywordKeywordId'];
+        	if ((array_key_exists('resourcekeywordKeywordId', $this->vars) && $this->vars['resourcekeywordKeywordId'])) {
+            	$queryString = "index.php?action=ideas_IDEAS_CORE" .
+                	"&method=" . 'keywordIdeaList' . "&resourcekeywordKeywordId=" . $this->vars['resourcekeywordKeywordId'];
+            }
+            else {
+            	$queryString = "index.php?action=ideas_IDEAS_CORE" .
+                	"&method=" . 'keywordIdeaList' . "&'userkeywordgroupsId'=" . $this->vars['userkeywordgroupsId'];
+            }
         } else {
             $queryString = "index.php?action=ideas_IDEAS_CORE" . "&method=" . 'ideaList';
         }

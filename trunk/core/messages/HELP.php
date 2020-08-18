@@ -253,11 +253,11 @@ class HELP
 /// keywordGroups_ Here, and elsewhere, do not edit #search# or similar words enclosed with '#', or words prefaced with '$'.
 "keywordGroups" => dgettext($domain, "<h3>Keyword Groups</h3>")
 . dgettext($domain, 
-"<p>Keyword groups allow the individual user to group semantically similar resource keywords together so the resources can then be browsed together. To create a keyword group, at least two keywords must be in the database.</p>") 
+"<p>Keyword groups allow the individual user to group semantically similar keywords together so the resources or metadata can then be browsed together. To create a keyword group, at least two keywords must be in the database.</p>") 
 . dgettext($domain, 
-"<p>A keyword group is private to the user who created it but the ability to browse them can be shared with one or more user groups (created in Wikindx|MyWikindx). When creating a keyword group, adding one or more user groups is not required, likewise the keyword group description; the name and at least two keywords, though, are required. </p>") 
+"<p>A keyword group is private to the user who created it but the ability to browse them can be shared with one or more user groups (created in Wikindx|MyWikindx). When creating a keyword group, adding one or more user groups is not required, likewise the keyword group description: the name and at least two keywords, though, are required. </p>") 
 . dgettext($domain, 
-"<p>Once created, the resources belonging to all of the keywords in the group can be browsed in Search|Browse... .</p>"),
+"<p>Once created, the resources belonging to all of the keywords in the group can be browsed in Search|Browse... and metadata can be browsed in the Metadata menu.</p>"),
 
 "plugins" => dgettext($domain, "<h3>Components</h3>")
 . dgettext($domain, "<p>Components are extras that are not part of the core WIKINDX download and can be plugins, templates, languages, or bibliographic styles. Plugins extend the functionality of WIKINDX beyond its core purpose and can be one of two types:  in-line plugins, where the output of the plugin is displayed in the body of WIKINDX; or menu plugins, where the plugins are accessed via the menus.</p>")

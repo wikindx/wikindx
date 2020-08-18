@@ -582,6 +582,15 @@ class MENU
                 $messages->text("menu", "browseKeywordIdeas") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=ideas',
                 $messages->text("menu", "browseKeywordNotIdeas") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=notIdeas',
             ],
+            'browseKeywordGroupSub' => [
+                $messages->text("menu", "browseKeywordGroupSub") => FALSE,
+                $messages->text("menu", "browseKeywordAll") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=all',
+                $messages->text("menu", "browseKeywordQuotes") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=quotes',
+                $messages->text("menu", "browseKeywordParaphrases") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=paraphrases',
+                $messages->text("menu", "browseKeywordMusings") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=musings',
+                $messages->text("menu", "browseKeywordIdeas") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=ideas',
+                $messages->text("menu", "browseKeywordNotIdeas") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=notIdeas',
+            ],
         ];
         if (!$this->ideasExist) {
             unset($this->text[$messages->text("menu", "listIdeas")]);

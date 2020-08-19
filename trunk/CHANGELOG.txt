@@ -1,5 +1,16 @@
 RELEASES: 
 
+vX.Y.Z
+Focus: Minor bug fixes
+
+BUG FIXES:
+1. When viewing a list, fix the use of 'Use all checked' and 'Use all in list' when organizing resources, adding to basket etc.
+
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+
 v6.3.8
 Focus: Minor bug fixes, maintenance, and feature enhancements
 

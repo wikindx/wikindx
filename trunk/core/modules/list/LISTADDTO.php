@@ -568,9 +568,9 @@ class LISTADDTO
         if (!is_array($string) && ($string == 'display')) {
             $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif (!is_array($string) && ($string == 'all')) {
-            $ids = $this->session->getVar("list_AllIds");
+            $ids = $this->getAllIds();
         } else {
-            $ids = $string;
+            $ids = unserialize(base64_decode($string));
         }
         $this->session->setVar("addToKeywordCategory", TRUE);
         include_once("core/modules/admin/DELETERESOURCE.php");
@@ -620,9 +620,9 @@ class LISTADDTO
         if (!is_array($string) && ($string == 'display')) {
             $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif (!is_array($string) && ($string == 'all')) {
-            $ids = $this->session->getVar("list_AllIds");
+            $ids = $this->getAllIds();
         } else {
-            $ids = $string; // checked resources
+            $ids = unserialize(base64_decode($string));
         }
         if (empty($ids)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
@@ -683,9 +683,9 @@ class LISTADDTO
         if (!is_array($string) && ($string == 'display')) {
             $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif (!is_array($string) && ($string == 'all')) {
-            $ids = $this->session->getVar("list_AllIds");
+            $ids = $this->getAllIds();
         } else {
-            $ids = $string;
+            $ids = unserialize(base64_decode($string));
         }
         foreach ($ids as $resourceId) {
             if (array_search($resourceId, $basket) === FALSE) {
@@ -718,9 +718,9 @@ class LISTADDTO
         if (!is_array($string) && ($string == 'display')) {
             $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif (!is_array($string) && ($string == 'all')) {
-            $ids = $this->session->getVar("list_AllIds");
+            $ids = $this->getAllIds();
         } else {
-            $ids = $string;
+            $ids = unserialize(base64_decode($string));
         }
         foreach ($ids as $resourceId) {
             if (($key = array_search($resourceId, $basket)) !== FALSE) {
@@ -833,7 +833,7 @@ class LISTADDTO
         if ($this->vars['ids'] == 'display') {
             $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif ($this->vars['ids'] == 'all') {
-            $ids = $this->session->getVar("list_AllIds");
+            $ids = $this->getAllIds();
         } else {
             $ids = unserialize(base64_decode($this->vars['ids']));
         }
@@ -854,9 +854,9 @@ class LISTADDTO
         if (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'display')) {
             $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'all')) {
-            $ids = $this->session->getVar("list_AllIds");
+            $ids = $this->getAllIds();
         } else {
-            $ids = $string;
+            $ids = unserialize(base64_decode($string));
         }
         $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $this->session->getVar("mywikindx_Bibliography_use")]);
         $this->db->formatConditionsOneField($ids, 'userbibliographyresourceResourceId');
@@ -872,5 +872,19 @@ class LISTADDTO
         $success = FACTORY_SUCCESS::getInstance();
         $this->navigate->listView($success->text("deleteFromBib"));
         FACTORY_CLOSE::getInstance(); // die
+    }
+    /**
+    * Get all resource ids when session list_AllIds == 'all'
+    *
+    * @return array
+    */
+    private function getAllIds()
+    {
+    	$ids = [];
+    	$resultset = $this->db->select('resource', ['resourceId']);
+    	while ($row = $this->db->fetchRow($resultset)) {
+    		$ids[] = $row['resourceId'];
+    	}
+    	return $ids;
     }
 }

@@ -1,11 +1,12 @@
 {
     "component_version": "191",
-    "component_name": "Debug Tools",
+    "component_sha256": "2a4883a310421062d921334c9541938846d6b9c918d534158ff29226d1dab124",
+    "component_name": "DB Adminer",
+    "component_description": "Embedded version of the database manager Adminer, with a selection of tested plugins. This plugin can be a security vulnerability for a public site. Use with caution.",
     "component_licence": "ISC License",
-    "component_description": "Some tools for debugging Wikindx. For developers, testers, or difficult situations when a bug arises.",
-    "component_id": "debugtools",
+    "component_id": "dbadminer",
     "component_builtin": "false",
-    "component_sha256": "fedcfb7da2a654864b0d12837f90cf2c9851a38441f724925c229b9331399f9f",
+    "component_website": "https://www.adminer.org/",
     "component_type": "plugin",
     "component_updatable": "true",
     "component_authors": [
@@ -26,9 +27,9 @@
     ],
     "component_packages": [
         {
-            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_debugtools_191.zip",
-            "package_sha256": "d13dd5224463922ca2e517ee708391c3a510b7ef52363839aaa872b219d52d61",
-            "package_size": 17760
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/trunk/wikindx_plugin_dbadminer_191.zip",
+            "package_sha256": "6fa7bf0d0c46ea961abd6f21439a39de363a01ba26040d415dd4810e32507c17",
+            "package_size": 327777
         }
     ]
 }

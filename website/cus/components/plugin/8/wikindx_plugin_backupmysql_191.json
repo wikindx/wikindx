@@ -27,7 +27,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_backupmysql_191.zip",
-            "package_sha256": "3c153ef00ab69c4b2eb3d615e91148fec4ed56a3212120a18ecdf4f14f4f1247",
+            "package_sha256": "5cd9b3ec5ba8d0bcd6dee63f8c1415e9d462ade7142ed58dd79f3abf65f24808",
             "package_size": 17381
         }
     ]

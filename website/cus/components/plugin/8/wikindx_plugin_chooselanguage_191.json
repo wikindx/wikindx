@@ -27,7 +27,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_chooselanguage_191.zip",
-            "package_sha256": "c497d4252308dbd94916407a610cf76fd3d88bd79d79fd739e03661be5ee53f8",
+            "package_sha256": "1082b92c14c1eac2cb6688a323537f716270a396656ede3a9c7507bef5a9235a",
             "package_size": 6397
         }
     ]

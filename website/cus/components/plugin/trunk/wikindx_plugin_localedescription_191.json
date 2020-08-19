@@ -1,34 +1,34 @@
 {
     "component_version": "191",
-    "component_sha256": "4bfde303ab6f07a9ecdce08bfd6d664aae86e0bf0653f120748708e528950bc1",
+    "component_sha256": "5c3a046e607fc6972c226900da6f7ee6936a9ebbfd19e1fa278befb1417b5130",
+    "component_description": "Customize the description on the home page in various languages.",
     "component_licence": "ISC License",
-    "component_name": "Idea Generator",
-    "component_description": "Idea Generator randomly selects and displays two items of metadata (quotes, paraphrases, musings, or ideas) in the hope that the new juxtaposition might lead to serendipity.",
+    "component_name": "Localized Front Page",
     "component_builtin": "false",
-    "component_id": "ideagen",
+    "component_id": "localedescription",
     "component_type": "plugin",
     "component_updatable": "true",
     "component_authors": [
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2020",
+            "author_copyright": "2013, 2016-2020",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Developer",
-            "author_copyright": "2020",
+            "author_copyright": "2016-2020",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
     "component_packages": [
         {
-            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_ideagen_191.zip",
-            "package_sha256": "6b8cd02e0fd2e345728e5bdbc567faf14b4b017f6e45c02f18ff214ea1bf4471",
-            "package_size": 13749
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/trunk/wikindx_plugin_localedescription_191.zip",
+            "package_sha256": "412e573b3e8eb5a044338cedbd191f47b103f01402423d2e2b243688814a2aed",
+            "package_size": 13571
         }
     ]
 }

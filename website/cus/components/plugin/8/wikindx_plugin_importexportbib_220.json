@@ -1,0 +1,40 @@
+{
+    "component_version": "220",
+    "component_name": "Bibliography Import/Export",
+    "component_licence": "ISC License",
+    "component_description": "Import and export bibliographies in various formats (Bibtex, EndNote, HTML, PubMed, RIS, RTF).",
+    "component_sha256": "b78b86e00dfcfeb120d35110b090191a6b70a83919d8f35f708ef8243acaca6e",
+    "component_builtin": "false",
+    "component_id": "importexportbib",
+    "component_type": "plugin",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Brian Cade",
+            "author_role": "Developer",
+            "author_copyright": "2006-2007",
+            "author_email": "bcade@users.sourceforge.net"
+        },
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2006-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2017-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_importexportbib_220.zip",
+            "package_sha256": "3ed564fecc16b327083f40f546b7176265235a5dc7872ce740758e0b0bf4fbd1",
+            "package_size": 101779
+        }
+    ]
+}

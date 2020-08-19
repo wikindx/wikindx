@@ -27,8 +27,8 @@
     ],
     "component_packages": [
         {
-            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_importamazon_191.zip",
-            "package_sha256": "ddacfb0f54d91e99643b63d678a745109544698f93727c90582b52d065cd4269",
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/trunk/wikindx_plugin_importamazon_191.zip",
+            "package_sha256": "ac423727ccd133f2cf3a4989c22dfd8c1e308170acfb6c43827d503c22f3dba7",
             "package_size": 18473
         }
     ]

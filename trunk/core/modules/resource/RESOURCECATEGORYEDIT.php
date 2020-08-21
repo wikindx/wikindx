@@ -151,12 +151,8 @@ class RESOURCECATEGORYEDIT
                     . \HTML\td('&nbsp;', '', 3)
                     . \HTML\trEnd()
                     . \HTML\tableEnd();
-
-                $pString .= \HTML\tableStart('');
-            } else {
-                $pString .= \HTML\tableStart('generalTable');
             }
-
+			$pString .= \HTML\tableStart('generalTable');
             $pString .= \HTML\trStart();
             $languages[0] = $this->messages->text("misc", "ignore");
             while ($row = $this->db->fetchRow($resultset)) {

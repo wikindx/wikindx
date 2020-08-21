@@ -646,6 +646,7 @@ class MENU
             $messages->text("menu", "categories") => 'index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit',
             $messages->text("menu", "subcategories") => 'index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit',
             $messages->text("menu", "custom") => 'index.php?action=admin_ADMINCUSTOM_CORE&method=init',
+			$messages->text("menu", "language")		=> 'index.php?action=admin_ADMINLANGUAGES_CORE&method=init',
             'userSub' => [
                 $messages->text("menu", "userSub") => FALSE,
                 $messages->text("menu", "userAdd") => 'index.php?action=admin_ADMINUSER_CORE&method=addInit',

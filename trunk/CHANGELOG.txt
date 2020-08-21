@@ -5,6 +5,7 @@ Focus: Minor bug fixes
 
 BUG FIXES:
 1. When viewing a list, fix the use of 'Use all checked' and 'Use all in list' when organizing resources, adding to basket etc.
+2. Add back in the missing Admin|Languages menu item.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

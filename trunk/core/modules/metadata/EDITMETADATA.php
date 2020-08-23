@@ -272,10 +272,10 @@ class EDITMETADATA
             }
             $this->db->insert('resource_text', $fields, $values);
         } else { // update
-            $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
             if (!$this->db->selectFirstField('resource_text', 'resourcetextAddUserIdNote') && $userId) {
                 $updateArray["resourcetextAddUserIdNote"] = $userId;
             }
+            $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
             // if noteText is empty, set fields to null
             if (!$note) {
                 $message = $this->success->text("noteDelete");
@@ -288,7 +288,6 @@ class EDITMETADATA
                 if ($userId) {
                     $updateArray["resourcetextEditUserIdNote"] = $userId;
                 }
-                $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
                 $this->db->update('resource_text', $updateArray);
             }
         }

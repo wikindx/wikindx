@@ -53,6 +53,7 @@ class SEARCH
     private $lastUnionResourceId;
     private $unionResourceIds = [];
     private $subQ;
+    private $backupPT;
 
     public function __construct()
     {
@@ -707,6 +708,11 @@ class SEARCH
             $this->session->setVar("search_AscDesc", $this->vars['search_AscDesc']);
             $this->session->setVar("advancedSearch_AscDesc", $this->vars['search_AscDesc']);
         }
+		if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'displayIdeas')) {
+// Store paging total for reseources and restore after calculating paging for ideas 
+// only (so paging for resources is correctly displayed with lastmulti
+			$this->backupPT = $this->session->getVar("setup_PagingTotal");
+		}
         $this->process(TRUE);
     }
     /**
@@ -717,7 +723,10 @@ class SEARCH
     public function process($reprocess = FALSE)
     {
         if (!array_key_exists('PagingStart', $this->vars)) {
-            if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'displayIdea')) {
+            if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'displayIdeas')) {
+// Store paging total for reseources and restore after calculating paging for ideas 
+// only (so paging for resources is correctly displayed with lastmulti
+				$this->backupPT = $this->session->getVar("setup_PagingTotal");
 	            $this->session->delVar("setup_PagingTotal");
 	        }
         }
@@ -741,6 +750,9 @@ class SEARCH
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
             $this->common->pagingObject = $this->pagingObject;
+            if ($this->session->getVar('sql_LastIdeaSearch')) {
+	            $this->common->ideasFound = TRUE;
+	        }
             $this->common->lastMulti('search');
 
             return;
@@ -1030,7 +1042,7 @@ class SEARCH
         }
         $this->db->formatConditions(implode($this->db->or, $conditions));
         $countQuery = $this->db->selectCountDistinctField('resource_metadata', 'resourcemetadataId');
-        $pagingObject->sqlTotal = $countQuery;
+        $this->session->setVar("setup_PagingTotal", $countQuery[0]['count']);
         $pagingObject->queryString = $queryString;
         $pagingObject->getPaging();
         $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_HighlightIdea"));
@@ -1047,7 +1059,9 @@ class SEARCH
         $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataTimestamp', 'resourcemetadataTimestampEdited',
             'resourcemetadataMetadataId', 'resourcemetadataText', 'resourcemetadataAddUserId', 'resourcemetadataPrivate', ]);
         if (!$this->db->numRows($resultset)) {
-            $this->badInput->close($this->messages->text("select", "noIdeas"));
+            $this->common->noIdeas();
+
+            return;
         }
         while ($row = $this->db->fetchRow($resultset)) {
             if ($multiUser) {
@@ -1069,6 +1083,7 @@ class SEARCH
         GLOBALS::addTplVar('ideaTemplate', TRUE);
         GLOBALS::addTplVar('ideaList', $ideaList);
         $this->common->pagingStyle($countQuery, FALSE, FALSE, $queryString);
+        $this->session->setVar("setup_PagingTotal", $this->backupPT);
     }
     /**
      * Display the first field of the search form

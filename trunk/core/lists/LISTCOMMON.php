@@ -312,6 +312,20 @@ class LISTCOMMON
         return TRUE;
     }
     /**
+     * Tidy display when there are no ideas found (if only ideas are searched on)
+     *
+     * @return bool
+     */
+    public function noIdeas()
+    {
+        $this->session->delVar("list_AllIds");
+        $this->session->delVar("list_NextPreviousIds");
+        GLOBALS::addTplVar('content', $this->messages->text("select", "noIdeas"));
+        GLOBALS::clearTplVar('pagingList');
+        
+        return TRUE;
+    }
+    /**
      * Print radio buttons ascending, descending for ordering
      *
      * @param string $type

@@ -1,12 +1,13 @@
 RELEASES: 
 
 vX.Y.Z
-Focus: Minor bug fixes
+Focus: Minor bug fixes and maintenance
 
 BUG FIXES:
 1. When viewing a list, fix the use of 'Use all checked' and 'Use all in list' when organizing resources, adding to basket etc.
 2. Add back in the missing Admin|Languages menu item.
 3. Fix global deletion when editing note and note happens to be an empty string.
+4. Fix paging of ideas from Advanced Search.
 
 MAINTENANCE:
 1. Update Smarty (v3.1.36)

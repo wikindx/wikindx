@@ -574,7 +574,7 @@ class EDITKEYWORDGROUP
 			natcasesort($diff);
 		}
 		$pString = \FORM\selectFBoxValueMultiple(
-				$this->messages->text('select', "userGroup"),
+				$this->messages->text('select', "availableUserGroup"),
 				'editAvailableUserGroup',
 				$diff,
 				10
@@ -738,7 +738,7 @@ class EDITKEYWORDGROUP
     {
     	if ($initialDisplay) {
 			return \FORM\selectFBoxValueMultiple(
-				$this->messages->text('select', "keyword") . \HTML\span('*', 'required'),
+				$this->messages->text('select', "availableKeyword") . \HTML\span('*', 'required'),
 				'editAvailableKeyword',
 				$this->keywords,
 				10
@@ -754,7 +754,7 @@ class EDITKEYWORDGROUP
 		$diff = array_diff_key($this->keyword->grabAll(), $keywords);
 		natcasesort($diff);
 		$pString = \FORM\selectFBoxValueMultiple(
-				$this->messages->text('select', "keyword") . \HTML\span('*', 'required'),
+				$this->messages->text('select', "availableKeyword") . \HTML\span('*', 'required'),
 				'editAvailableKeyword',
 				$diff,
 				10

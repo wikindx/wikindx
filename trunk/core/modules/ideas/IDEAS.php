@@ -421,7 +421,7 @@ class IDEAS
         $userId = $this->session->getVar("setup_UserId");
         // insert
         if (!array_key_exists('resourcemetadataId', $this->vars)) {
-            if (!array_key_exists('Text', $this->vars) || !trim(\HTML\stripHtml($this->vars['Text']))) {
+            if (!array_key_exists('Text', $this->vars) || !trim($this->vars['Text'])) {
                 $this->badInput->close($this->errors->text("inputError", "missing"));
             }
             $message = $this->success->text("ideaAdd");
@@ -526,7 +526,7 @@ class IDEAS
         $row = $this->db->selectFirstRow('resource_metadata', 'resourcemetadataPrivate');
         // insert
         if (!array_key_exists('resourcemetadataMetadataId', $this->vars)) {
-            if (!array_key_exists('Text', $this->vars) || !trim(\HTML\stripHtml($this->vars['Text']))) {
+            if (!array_key_exists('Text', $this->vars) || !trim($this->vars['Text'])) {
                 $this->badInput->close($this->errors->text("inputError", "missing"));
             }
             $message = $this->success->text("ideaAdd");

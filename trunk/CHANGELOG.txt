@@ -8,6 +8,7 @@ BUG FIXES:
 2. Add back in the missing Admin|Languages menu item.
 3. Fix global deletion when editing note and note happens to be an empty string.
 4. Fix paging of ideas from Advanced Search.
+5. Ensure that an idea can comprise just an image.
 
 MAINTENANCE:
 1. Update Smarty (v3.1.36)

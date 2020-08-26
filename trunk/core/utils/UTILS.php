@@ -28,7 +28,7 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
      */
     function listCoreMandatoryPHPExtensions()
     {
-        return ['Core', 'date', 'fileinfo', 'filter', 'gd', 'gettext', 'hash', 'iconv', 'json', 'mbstring', 'libxml','mysqli', 'pcre', 'session', 'SimpleXML', 'xmlreader'];
+        return ['Core', 'date', 'fileinfo', 'filter', 'gd', 'gettext', 'hash', 'iconv', 'intl', 'json', 'mbstring', 'libxml','mysqli', 'pcre', 'session', 'SimpleXML', 'xmlreader'];
     }
     /**
      * Return an array of optional PHP extensions used by the Wikindx core
@@ -40,7 +40,7 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
      */
     function listCoreOptionalPHPExtensions()
     {
-        return ['bzip2', 'curl', 'enchant', 'intl', 'openssl', 'Phar', 'pspell', 'sockets', 'zlib', 'zip'];
+        return ['bzip2', 'curl', 'enchant', 'openssl', 'Phar', 'pspell', 'sockets', 'zlib', 'zip'];
     }
     /**
      * Return the normalized name of the current os

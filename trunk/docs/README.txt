@@ -4,7 +4,7 @@ author:
  - Stéphane Aulery, <lkppo@users.sourceforge.net>
  - Mark Grimshaw-Aagaard, <sirfragalot@users.sourceforge.net>
  - The WIKINDX Team
-date: 2020-07-09
+date: 2020-08-26
 lang: en
 ---
 
@@ -141,9 +141,9 @@ not specified the need is valid for all versions of Wikindx.
 
  * Mandatory extensions: Core, date, fileinfo, filter (>= 5.2.0), gd
    (>= 4.0.0), gettext (>= 4.2.1), hash (>= 5.2.0), iconv (>= 4.0.3),
-   json (>= 4.0.3), mbstring (>= 5.2.0), libxml, mysqli, pcre, Reflection
-   (>= 5.2.0 and <= 6.0.1), session, SimpleXML (>= 4.2.0), xml, xmlreader
-   (>= 5.2.0).
+   intl (>= 6.3.9), json (>= 4.0.3), mbstring (>= 5.2.0), libxml, mysqli,
+   pcre, Reflection (>= 5.2.0 and <= 6.0.1), session, SimpleXML (>= 4.2.0),
+   xml, xmlreader (>= 5.2.0).
 
 In summary, from version 5.2.0 all the above mentioned extensions are
 necessary for a good functioning, which should be the case of almost all
@@ -158,10 +158,6 @@ the installations.
    * enchant (>= 5.2.0): if disabled, the spell checker incorporated into
      TinyMCE will be disabled. It is always disabled under Windows
      because the pspell is uninstallable in practice on this OS.
-
-   * intl (>= 5.2.0): if disabled, PHPMailer will silently fail to send
-     messages with a domain containing non ascii characters (see
-     [Punycode]).
 
    * openssl (>= 5.2.0): if disabled, PHPMailer will not be able to use
      secure protocols (starttls, tls, ssl) in SMTP mode and encryption.

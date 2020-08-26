@@ -1,7 +1,7 @@
 RELEASES: 
 
 vX.Y.Z
-Focus: Minor bug fixes and maintenance
+Focus: Minor bug fixes, maintenance, and feature enhancements
 
 BUG FIXES:
 1. When viewing a list, fix the use of 'Use all checked' and 'Use all in list' when organizing resources, adding to basket etc.
@@ -13,6 +13,9 @@ BUG FIXES:
 MAINTENANCE:
 1. Update Smarty (v3.1.36)
 2. Intl PHP extension is mandatory now.
+
+FEATURE ENHANCEMENTS:
+1. Improved the interface for managing uploaded images (Admin|Images) by displaying thumbnails of images selected for deletion.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

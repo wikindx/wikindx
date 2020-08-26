@@ -70,30 +70,190 @@ class DELETEIMAGES
             $pString .= \HTML\tableStart();
             $pString .= \HTML\trStart();
             if (!empty($this->usedImages)) {
-                $td = \FORM\formHeader('admin_DELETEIMAGES_CORE');
-                $td .= \FORM\hidden('function', 'process');
-                $size = $this->numUsedImages > 20 ? 20 : $this->numUsedImages;
-                $td .= \FORM\selectFBoxValueMultiple($this->messages->text("misc", "usedImages"), "image_ids", $this->usedImages, $size, 80) .
-                    BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint') . BR .
-                    BR . \FORM\formSubmit($this->messages->text("submit", "Delete"));
-                $td .= \FORM\formEnd();
-                $pString .= \HTML\td($td);
+            	$pString .= \HTML\td($this->displayUsedSelect());
             }
             if (!empty($this->unusedImages)) {
-                $td = \FORM\formHeader('admin_DELETEIMAGES_CORE');
-                $td .= \FORM\hidden('function', 'process');
-                $size = $this->numUnusedImages > 20 ? 20 : $this->numUnusedImages;
-                $td .= \FORM\selectFBoxValueMultiple($this->messages->text("misc", "unusedImages"), "image_ids", $this->unusedImages, $size, 80) .
-                    BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint') . BR .
-                    BR . \FORM\formSubmit($this->messages->text("submit", "Delete"));
-                $td .= \FORM\formEnd();
-                $pString .= \HTML\td($td);
+            	$pString .= \HTML\td($this->displayUnusedSelect());
             }
             $pString .= \HTML\trEnd();
             $pString .= \HTML\tableEnd();
         }
 
+        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js?ver=' . WIKINDX_PUBLIC_VERSION]);
         GLOBALS::addTplVar('content', $pString);
+    }
+    /**
+     * Display used images select box
+     *
+     * @return string
+     */
+    private function displayUsedSelect()
+    {
+        $pString = \HTML\tableStart('generalTable');
+        $pString .= \HTML\trStart();
+		$td = \FORM\formHeader('admin_DELETEIMAGES_CORE');
+		$td .= \FORM\hidden('function', 'process');
+		$size = $this->numUsedImages > 20 ? 20 : $this->numUsedImages;
+		$jScript = 'index.php?action=admin_DELETEIMAGES_CORE&method=displayUsedImages';
+		$jsonArray[] = [
+			'startFunction' => 'triggerFromMultiSelect',
+			'script' => "$jScript",
+			'triggerField' => 'used_image_ids',
+			'targetDiv' => 'usedDiv',
+		];
+		$js = \AJAX\jActionForm('onclick', $jsonArray);
+		$td .= \FORM\selectFBoxValueMultiple(
+				$this->messages->text("misc", "usedImages"), 
+				"used_image_ids", 
+				$this->usedImages, 
+				$size, 
+				80, 
+				$js
+			) .
+			BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint') . BR .
+			BR . \FORM\formSubmit($this->messages->text("submit", "Delete"));
+		$td .= \FORM\formEnd();
+        $pString .= \HTML\td($td);
+        $pString .= \HTML\td(\HTML\div('usedDiv', $this->displayUsedImages(TRUE)), 'left top width80percent');
+		$pString .= \HTML\trEnd();
+		$pString .= \HTML\tableEnd();
+    	return $pString;
+    }
+    /**
+     * Display unused images select box
+     *
+     * @return string
+     */
+    private function displayUnusedSelect()
+    {
+        $pString = \HTML\tableStart('generalTable');
+        $pString .= \HTML\trStart();
+		$td = \FORM\formHeader('admin_DELETEIMAGES_CORE');
+		$td .= \FORM\hidden('function', 'process');
+		$size = $this->numUnusedImages > 20 ? 20 : $this->numUnusedImages;
+		$jScript = 'index.php?action=admin_DELETEIMAGES_CORE&method=displayUnusedImages';
+		$jsonArray[] = [
+			'startFunction' => 'triggerFromMultiSelect',
+			'script' => "$jScript",
+			'triggerField' => 'unused_image_ids',
+			'targetDiv' => 'unusedDiv',
+		];
+		$js = \AJAX\jActionForm('onclick', $jsonArray);
+		$td .= \FORM\selectFBoxValueMultiple(
+				$this->messages->text("misc", "unusedImages"), 
+				"unused_image_ids", 
+				$this->unusedImages, 
+				$size, 
+				80, 
+				$js
+			) .
+			BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint') . BR .
+			BR . \FORM\formSubmit($this->messages->text("submit", "Delete"));
+		$td .= \FORM\formEnd();
+        $pString .= \HTML\td($td);
+        $pString .= \HTML\td(\HTML\div('unusedDiv', $this->displayUnusedImages(TRUE)), 'left top width80percent');
+		$pString .= \HTML\trEnd();
+		$pString .= \HTML\tableEnd();
+    	return $pString;
+    }
+    /**
+     * Display thumbnails of selected used images
+     *
+     * @param bool $initialState Default FALSE
+     * @return string
+     */
+    public function displayUsedImages($initialState = FALSE)
+    {
+    	$imageArray = array_keys($this->usedImages);
+    	$pString = $this->displayImages($imageArray, $initialState);
+		if ($initialState) {
+	    	return $pString;
+	    }
+        GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $pString]));
+        FACTORY_CLOSERAW::getInstance();
+    }
+    /**
+     * Display thumbnails of selected unused images
+     *
+     * @param bool $initialState Default FALSE
+     * @return string
+     */
+    public function displayUnusedImages($initialState = FALSE)
+    {
+    	$imageArray = array_keys($this->unusedImages);
+    	$pString = $this->displayImages($imageArray, $initialState);
+		if ($initialState) {
+	    	return $pString;
+	    }
+        GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $pString]));
+        FACTORY_CLOSERAW::getInstance();
+    }
+    /**
+     * Display thumbnails of images
+     *
+     * @param array of images
+     * @param bool $initialState
+     * @return string
+     */
+    private function displayImages($imageArray, $initialState)
+    {
+    	$numCells = 0;
+    	$maxCells = 3;
+        $pString = \HTML\tableStart();
+        $pString .= \HTML\trStart();
+    	if ($initialState) { // grab first image in array (i.e. what is initially selected in the select box)
+    		$image = WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . array_shift($imageArray);
+    		list($width, $height) = $this->imageWH($image);
+    		$pString .= \HTML\td(\HTML\img($image, $width, $height));
+    	}
+    	else {
+    		$array = explode(',', $this->vars['ajaxReturn']);
+    		foreach ($array as $image) {
+    			if ($numCells == $maxCells) {
+    				$pString .= \HTML\trEnd();
+    				$pString .= \HTML\trStart();
+    				$numCells = 0;
+    			}
+    			$image = WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $image;
+				list($width, $height) = $this->imageWH($image);
+				$pString .= \HTML\td(\HTML\img($image, $width, $height));
+				++$numCells;
+    		}
+    	}
+    	while ($numCells < $maxCells) {
+    		$pString .= \HTML\td('&nbsp;');
+    		++$numCells;
+    	}
+		$pString .= \HTML\trEnd();
+		$pString .= \HTML\tableEnd();
+		return $pString;
+    }
+    /**
+     * Return limited image width and height
+     * @param string $image
+     * @return array [width, height]
+     */
+    private function imageWH($image)
+    {
+    	$max_width = 100;
+        $max_height = 100;
+		$size = getimagesize($image);
+		$width = $size[0];
+        $height = $size[1];
+
+        $new_width = $max_width;
+        $new_height = $max_height;
+        if (($width / $height) > ($new_width / $new_height)) {
+            $new_height = $new_width * ($height / $width);
+        } else {
+            $new_width = $new_height * ($width / $height);
+        }
+
+        if ($new_width >= $width && $new_height >= $height) {
+            $new_width = $width;
+            $new_height = $height;
+        }
+    	return [$new_width, $new_height];
     }
     /**
      * Grab all images in array.
@@ -140,11 +300,11 @@ class DELETEIMAGES
     */
     private function process()
     {
-        if (!$this->validateInput()) {
+        if (empty($array = $this->validateInput())) {
             $this->display($this->errors->text("inputError", "missing"));
             FACTORY_CLOSE::getInstance();
         }
-        foreach ($this->vars['image_ids'] as $image) {
+        foreach ($array as $image) {
             @unlink(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $image);
         }
         $pString = $this->success->text("imageDelete");
@@ -157,6 +317,13 @@ class DELETEIMAGES
      */
     private function validateInput()
     {
-        return array_key_exists('image_ids', $this->vars);
+    	$array = [];
+        if (array_key_exists('used_image_ids', $this->vars)) {
+        	return $this->vars['used_image_ids'];
+        }
+        if (array_key_exists('unused_image_ids', $this->vars)) {
+        	return $this->vars['unused_image_ids'];
+        }
+        return $array;
     }
 }

@@ -331,6 +331,6 @@ class EDITMETADATA
     {
         $navigate = FACTORY_NAVIGATE::getInstance();
         $navigate->resource($this->vars['id'], $message);
-        FACTORY_CLOSE::getInstance();
+        // FACTORY_CLOSE::getInstance();
     }
 }

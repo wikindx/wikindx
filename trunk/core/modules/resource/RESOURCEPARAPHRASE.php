@@ -69,7 +69,7 @@ class RESOURCEPARAPHRASE
         $metadata['formfoot'] = \FORM\formEnd();
         GLOBALS::setTplVar('metadata', $metadata);
         unset($metadata);
-        $this->session->delVar("resourceParaphraseLock");
+        $this->session->delVar("resourceParaphraseLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId']);
     }
     /**
      * write to the database
@@ -78,7 +78,7 @@ class RESOURCEPARAPHRASE
      */
     public function edit()
     {
-        if ($this->session->getVar("resourceParaphraseLock")) {
+        if ($this->session->getVar("resourceParaphraseLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'])) {
             $this->badInput->close($this->errors->text("done", "paraphrase"));
         }
         $this->checkInput();
@@ -95,7 +95,7 @@ class RESOURCEPARAPHRASE
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // lock reload
-        $this->session->setVar("resourceParaphraseLock", TRUE);
+        $this->session->setVar("resourceParaphraseLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'], TRUE);
         // send back to view this resource with success message
         $this->navigate->resource($this->vars['resourceId'], $message);
     }
@@ -104,7 +104,7 @@ class RESOURCEPARAPHRASE
      */
     public function deleteInit()
     {
-        $this->session->delVar("resourceParaphraseLock");
+        $this->session->delVar("resourceParaphraseLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId']);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "paraphraseDelete"));
         $pString = \FORM\formHeader('resource_RESOURCEPARAPHRASE_CORE');
         $pString .= \FORM\hidden("method", 'delete');
@@ -121,7 +121,7 @@ class RESOURCEPARAPHRASE
      */
     public function delete()
     {
-        if ($this->session->getVar("resourceParaphraseLock")) {
+        if ($this->session->getVar("resourceParaphraseLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'])) {
             $this->badInput->close($this->errors->text("done", "paraphrase"));
         }
     	if (!array_key_exists('resourcemetadataId', $this->vars) || !array_key_exists('summaryType', $this->vars)) {
@@ -131,7 +131,7 @@ class RESOURCEPARAPHRASE
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // lock reload
-        $this->session->setVar("resourceParaphraseLock", TRUE);
+        $this->session->setVar("resourceParaphraseLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'], TRUE);
         // send back to view this resource with success message
         $this->navigate->resource($this->vars['resourceId'], $this->success->text("paraphraseDelete"));
     }

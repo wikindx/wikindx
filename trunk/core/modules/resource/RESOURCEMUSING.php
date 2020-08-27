@@ -150,7 +150,7 @@ class RESOURCEMUSING
         }
         $metadata['form']['submit'] = \FORM\formSubmit($this->messages->text("submit", "Save"));
         $metadata['formfoot'] = \FORM\formEnd();
-        $this->session->delVar("resourceMusingLock");
+        $this->session->delVar("resourceMusingLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId']);
         GLOBALS::setTplVar('metadata', $metadata);
         unset($metadata);
     }
@@ -161,7 +161,7 @@ class RESOURCEMUSING
      */
     public function edit()
     {
-        if ($this->session->getVar("resourceMusingLock")) {
+        if ($this->session->getVar("resourceMusingLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'])) {
             $this->badInput->close($this->errors->text("done", "musing"));
         }
         $this->checkInput();
@@ -290,7 +290,7 @@ class RESOURCEMUSING
             $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()));
         }
         // lock reload
-        $this->session->setVar("resourceMusingLock", TRUE);
+        $this->session->setVar("resourceMusingLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'], TRUE);
         // send back to view this resource with success message
         $this->navigate->resource($this->vars['resourceId'], $message);
     }
@@ -299,7 +299,7 @@ class RESOURCEMUSING
      */
     public function deleteInit()
     {
-        $this->session->delVar("resourceMusingLock");
+        $this->session->delVar("resourceMusingLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId']);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "musingDelete"));
         $pString = \FORM\formHeader('resource_RESOURCEMUSING_CORE');
         $pString .= \FORM\hidden("method", 'delete');
@@ -315,7 +315,7 @@ class RESOURCEMUSING
      */
     public function delete()
     {
-        if ($this->session->getVar("resourceMusingLock")) {
+        if ($this->session->getVar("resourceMusingLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'])) {
             $this->badInput->close($this->errors->text("done", "musing"));
         }
     	if (!array_key_exists('resourcemetadataId', $this->vars)) {
@@ -329,7 +329,7 @@ class RESOURCEMUSING
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // lock reload
-        $this->session->setVar("resourceMusingLock", TRUE);
+        $this->session->setVar("resourceMusingLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'], TRUE);
         // send back to view this resource with success message
         $this->navigate->resource($this->vars['resourceId'], $this->success->text("musingDelete"));
     }

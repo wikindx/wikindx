@@ -10,6 +10,7 @@ BUG FIXES:
 4. Fix paging of ideas from Advanced Search.
 5. Ensure that an idea can comprise just an image.
 6. Fixed case where noteEdit to second resource are lost upon saving after noteEdit of first resource are saved (editing resources in multiple tabs).
+7. Extended fix #6 to also allow editing individual quotes, paraphrases, and musing independently of other edits.
 
 MAINTENANCE:
 1. Update Smarty (v3.1.36)

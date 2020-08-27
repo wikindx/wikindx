@@ -305,7 +305,40 @@ class DELETEIMAGES
             FACTORY_CLOSE::getInstance();
         }
         foreach ($array as $image) {
-            @unlink(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $image);
+            $fileName = WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $image;
+			@unlink($fileName);
+// Deal with metadata using the image
+			$message = "[Image deleted by WIKINDX Administrator]";
+			$image = rawurlencode($image);
+            $this->db->formatConditions($this->db->formatFields('resourcemetadataText') . $this->db->like('%', $image, '%'));
+            $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataText'], TRUE);
+            while ($row = $this->db->fetchRow($resultset)) {
+        		$text = preg_replace("/<img.*$image.*>/Uusi", $message, $row['resourcemetadataText']);
+        		$this->db->formatConditions(['resourcemetadataId' => $row['resourcemetadataId']]);
+        		$this->db->update('resource_metadata', ['resourcemetadataText' => $text]);
+            }
+            $this->db->formatConditions($this->db->formatFields('resourcetextAbstract') . $this->db->like('%', $image, '%'));
+            $resultset = $this->db->select('resource_text', ['resourcetextId', 'resourcetextAbstract'], TRUE);
+            while ($row = $this->db->fetchRow($resultset)) {
+        		$text = preg_replace("/<img.*$image.*>/Uusi", $message, $row['resourcetextAbstract']);
+        		$this->db->formatConditions(['resourcetextId' => $row['resourcetextId']]);
+        		$this->db->update('resource_text', ['resourcetextAbstract' => $text]);
+            }
+            $this->db->formatConditions($this->db->formatFields('resourcetextNote') . $this->db->like('%', $image, '%'));
+            $resultset = $this->db->select('resource_text', ['resourcetextId', 'resourcetextNote'], TRUE);
+            while ($row = $this->db->fetchRow($resultset)) {
+        		$text = preg_replace("/<img.*$image.*>/Uusi", $message, $row['resourcetextNote']);
+        		$this->db->formatConditions(['resourcetextId' => $row['resourcetextId']]);
+        		$this->db->update('resource_text', ['resourcetextNote' => $text]);
+            }
+            $this->db->formatConditions(['configName' => 'configDescription']);
+            $this->db->formatConditions($this->db->formatFields('configText') . $this->db->like('%', $image, '%'));
+            $resultset = $this->db->select('config', ['configId', 'configText'], TRUE);
+            while ($row = $this->db->fetchRow($resultset)) {
+        		$text = preg_replace("/<img.*$image.*>/Uusi", $message, $row['configText']);
+        		$this->db->formatConditions(['configId' => $row['configId']]);
+        		$this->db->update('config', ['configText' => $text]);
+            }
         }
         $pString = $this->success->text("imageDelete");
         $this->display($pString);

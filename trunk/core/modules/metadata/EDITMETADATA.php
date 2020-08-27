@@ -63,7 +63,7 @@ class EDITMETADATA
      */
     public function abstractDeleteInit()
     {
-        $this->session->delVar("metadataLock");
+        $this->session->delVar("metadataLock".$this->vars['id']);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "abstractDelete"));
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "abstractDelete");
@@ -86,7 +86,7 @@ class EDITMETADATA
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
         // lock reload
-        $this->session->setVar("metadataLock", TRUE);
+        $this->session->setVar("metadataLock".$this->vars['id'], TRUE);
         $this->navigate($this->success->text("abstractDelete"));
     }
     /**
@@ -94,7 +94,7 @@ class EDITMETADATA
      */
     public function noteDeleteInit()
     {
-        $this->session->delVar("metadataLock");
+        $this->session->delVar("metadataLock".$this->vars['id']);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "notesDelete"));
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "noteDelete");
@@ -117,7 +117,7 @@ class EDITMETADATA
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
         // lock reload
-        $this->session->setVar("metadataLock", TRUE);
+        $this->session->setVar("metadataLock".$this->vars['id'], TRUE);
         $this->navigate($this->success->text("noteDelete"));
     }
     /**
@@ -125,7 +125,7 @@ class EDITMETADATA
      */
     private function abstractInit()
     {
-        $this->session->delVar("metadataLock");
+        $this->session->delVar("metadataLock".$this->vars['id']);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "abstract"));
         // Create citation link for this type
         //		include_once("core/cite/CITE.php");
@@ -158,7 +158,7 @@ class EDITMETADATA
      */
     private function noteInit()
     {
-        $this->session->delVar("metadataLock");
+        $this->session->delVar("metadataLock".$this->vars['id']);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "notes"));
         // Create citation link for this type
         //		include_once("core/cite/CITE.php");
@@ -195,7 +195,7 @@ class EDITMETADATA
             !array_key_exists('sql', $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        if ($this->session->getVar("metadataLock")) {
+        if ($this->session->getVar("metadataLock".$this->vars['id'])) {
             $this->navigate($this->errors->text("done", "abstract"));
         }
         $abstract = trim($this->vars['text']);
@@ -240,7 +240,7 @@ class EDITMETADATA
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
         // lock reload
-        $this->session->setVar("metadataLock", TRUE);
+        $this->session->setVar("metadataLock".$this->vars['id'], TRUE);
         $this->navigate($message);
     }
     /**
@@ -252,7 +252,7 @@ class EDITMETADATA
             !array_key_exists('sql', $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        if ($this->session->getVar("metadataLock")) {
+        if ($this->session->getVar("metadataLock".$this->vars['id'])) {
             $this->navigate($this->errors->text("done", "note"));
         }
         $note = trim($this->vars['text']);
@@ -296,7 +296,7 @@ class EDITMETADATA
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         $this->notify();
         // lock reload
-        $this->session->setVar("metadataLock", TRUE);
+        $this->session->setVar("metadataLock".$this->vars['id'], TRUE);
         $this->navigate($message);
     }
     /**
@@ -331,6 +331,6 @@ class EDITMETADATA
     {
         $navigate = FACTORY_NAVIGATE::getInstance();
         $navigate->resource($this->vars['id'], $message);
-        // FACTORY_CLOSE::getInstance();
+        FACTORY_CLOSE::getInstance();
     }
 }

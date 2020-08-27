@@ -69,7 +69,7 @@ class RESOURCEQUOTE
         $metadata['formfoot'] = \FORM\formEnd();
         GLOBALS::setTplVar('metadata', $metadata);
         unset($metadata);
-        $this->session->delVar("resourceQuoteLock");
+        $this->session->delVar("resourceQuoteLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId']);
     }
     /**
      * write to the database
@@ -78,7 +78,7 @@ class RESOURCEQUOTE
      */
     public function edit()
     {
-        if ($this->session->getVar("resourceQuoteLock")) {
+        if ($this->session->getVar("resourceQuoteLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'])) {
             $this->badInput->close($this->errors->text("done", "quote"));
         }
         $this->checkInput();
@@ -95,7 +95,7 @@ class RESOURCEQUOTE
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // lock reload
-        $this->session->setVar("resourceQuoteLock", TRUE);
+        $this->session->setVar("resourceQuoteLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'], TRUE);
         // send back to view this resource with success message
         $this->navigate->resource($this->vars['resourceId'], $message);
     }
@@ -104,7 +104,7 @@ class RESOURCEQUOTE
      */
     public function deleteInit()
     {
-        $this->session->delVar("resourceQuoteLock");
+        $this->session->delVar("resourceQuoteLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId']);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "quoteDelete"));
         $pString = \FORM\formHeader('resource_RESOURCEQUOTE_CORE');
         $pString .= \FORM\hidden("method", 'delete');
@@ -121,7 +121,7 @@ class RESOURCEQUOTE
      */
     public function delete()
     {
-        if ($this->session->getVar("resourceQuoteLock")) {
+        if ($this->session->getVar("resourceQuoteLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'])) {
             $this->badInput->close($this->errors->text("done", "quote"));
         }
     	if (!array_key_exists('resourcemetadataId', $this->vars) || !array_key_exists('summaryType', $this->vars)) {
@@ -131,7 +131,7 @@ class RESOURCEQUOTE
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // lock reload
-        $this->session->setVar("resourceQuoteLock", TRUE);
+        $this->session->setVar("resourceQuoteLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'], TRUE);
         // send back to view this resource with success message
         $this->navigate->resource($this->vars['resourceId'], $this->success->text("quoteDelete"));
     }

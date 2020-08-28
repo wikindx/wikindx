@@ -44,6 +44,7 @@ class ABOUT
         $pString .= \HTML\p(\HTML\strong('Mark Grimshaw-Aagaard:') . ' [ADMINSTRATOR/LEAD PROGRAMMER] (UK/New Zealand/Denmark)');
         $pString .= \HTML\p('Co-programmers:');
         $list = \HTML\li(\HTML\strong('St&eacute;phane Aulery:') . ' (France) ~ ' . \HTML\em('Senior programmer'));
+        $list .= \HTML\li(\HTML\strong('Dimitri Joukoff:') . ' (Australia)');
         $pString .= \HTML\ul($list);
         $pString .= \HTML\p('Beta-testers and de-buggers:');
         $list = \HTML\li(\HTML\strong('Joachim Trinkwitz:') . ' (University of Bonn, Germany)');

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-08-19 02:16+0200\n"
+"POT-Creation-Date: 2020-08-28 20:02+0200\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -3027,21 +3027,49 @@ msgid ""
 "</ul>"
 msgstr ""
 
-#. / keywordGroups_ Here, and elsewhere, do not edit #search# or similar words enclosed with '#', or words prefaced with '$'.
+#. / creatorGroups_ Here, and elsewhere, do not edit #search# or similar words enclosed with '#', or words prefaced with '$'.
 #: core/messages/help.php:254
+#, fuzzy
+#| msgid "<h3>Category Tree</h3>"
+msgid "<h3>Creator Groups</h3>"
+msgstr "<h3>Árbol de categorías</h3>"
+
+#: core/messages/help.php:256
+msgid ""
+"<p>Select and group multiple creators into one creator (the grouped creators "
+"will not be deleted). List operations on the group master will include "
+"grouped creators. This is intended for situations where one person may be "
+"represented by different creator names but you wish to keep those creator "
+"names accurate to the original bibliographic source.</p>"
+msgstr ""
+
+#: core/messages/help.php:258
+msgid ""
+"<p>The master of a group cannot be a member of a group, and creators can be "
+"members of one group only.</p>"
+msgstr ""
+
+#: core/messages/help.php:260
+msgid ""
+"<p>To remove a group, select the group master then remove all its group "
+"members.</p>"
+msgstr ""
+
+#. / keywordGroups_ Here, and elsewhere, do not edit #search# or similar words enclosed with '#', or words prefaced with '$'.
+#: core/messages/help.php:263
 #, fuzzy
 #| msgid "<h3>Category Tree</h3>"
 msgid "<h3>Keyword Groups</h3>"
 msgstr "<h3>Árbol de categorías</h3>"
 
-#: core/messages/help.php:256
+#: core/messages/help.php:265
 msgid ""
 "<p>Keyword groups allow the individual user to group semantically similar "
 "keywords together so the resources or metadata can then be browsed together. "
 "To create a keyword group, at least two keywords must be in the database.</p>"
 msgstr ""
 
-#: core/messages/help.php:258
+#: core/messages/help.php:267
 msgid ""
 "<p>A keyword group is private to the user who created it but the ability to "
 "browse them can be shared with one or more user groups (created in Wikindx|"
@@ -3050,20 +3078,20 @@ msgid ""
 "two keywords, though, are required. </p>"
 msgstr ""
 
-#: core/messages/help.php:260
+#: core/messages/help.php:269
 msgid ""
 "<p>Once created, the resources belonging to all of the keywords in the group "
 "can be browsed in Search|Browse... and metadata can be browsed in the "
 "Metadata menu.</p>"
 msgstr ""
 
-#: core/messages/help.php:262
+#: core/messages/help.php:271
 #, fuzzy
 #| msgid "<h3>Preferences</h3>"
 msgid "<h3>Components</h3>"
 msgstr "<h3>Preferencias</h3>"
 
-#: core/messages/help.php:263
+#: core/messages/help.php:272
 msgid ""
 "<p>Components are extras that are not part of the core WIKINDX download and "
 "can be plugins, templates, languages, or bibliographic styles. Plugins extend "
@@ -3073,7 +3101,7 @@ msgid ""
 "menus.</p>"
 msgstr ""
 
-#: core/messages/help.php:267
+#: core/messages/help.php:276
 msgid ""
 "<p>When checking the update status of plugins, styles, templates, and "
 "languages, only those that are enabled will be queried. Two update checks "
@@ -3081,7 +3109,7 @@ msgid ""
 msgstr ""
 
 #. translators: do not edit words prefaced with '$'
-#: core/messages/help.php:270
+#: core/messages/help.php:279
 msgid ""
 "<ol>\n"
 "<li>The timestamps of plugins, styles, templates, and languages on the remote "
@@ -3091,20 +3119,20 @@ msgid ""
 "</ol>"
 msgstr ""
 
-#: core/messages/help.php:275
+#: core/messages/help.php:284
 msgid ""
 "<p>Additionally, the remote server is queried for any new files. If updates "
 "are found or new files are available, an appropriate link is supplied (an "
 "Internet connection is required).</p>"
 msgstr ""
 
-#: core/messages/help.php:277
+#: core/messages/help.php:286
 msgid ""
 "<p>As an administrator, you can accomplish some management of components via "
 "this interface including:</p>"
 msgstr ""
 
-#: core/messages/help.php:278
+#: core/messages/help.php:287
 msgid ""
 "<ul>\n"
 "<li>Disable plugins (and templates, styles and languages):  This does not "
@@ -3117,20 +3145,20 @@ msgid ""
 msgstr ""
 
 #. translators: do not edit words prefaced with '$'
-#: core/messages/help.php:285
+#: core/messages/help.php:294
 msgid ""
 "<p>Positioning plugins and granting authorization is accomplished by editing "
 "the plugin's config.php file (typically only $menus and $authorize need be "
 "edited) -- be sure you know what you are doing:</p>"
 msgstr ""
 
-#: core/messages/help.php:287
+#: core/messages/help.php:296
 msgid ""
 "$menus should be an array of at least one of the following menu elements:"
 msgstr ""
 
 #. This code should not be translated
-#: core/messages/help.php:300
+#: core/messages/help.php:309
 msgid ""
 "'admin' is only available when logged in as admin, 'text' will only show if "
 "there are metadata (quotes etc.), and the three 'pluginX' menu trees only "
@@ -3138,33 +3166,33 @@ msgid ""
 msgstr ""
 
 #. translators: do not edit words prefaced with '$'
-#: core/messages/help.php:303
+#: core/messages/help.php:312
 msgid "$authorize should be one of the following:"
 msgstr ""
 
-#: core/messages/help.php:305
+#: core/messages/help.php:314
 msgid "(always unauthorised, menu item not displayed)"
 msgstr ""
 
-#: core/messages/help.php:306
+#: core/messages/help.php:315
 msgid "(menu item displayed for all users, logged in or not)"
 msgstr ""
 
-#: core/messages/help.php:307
+#: core/messages/help.php:316
 msgid "(menu item displayed for users logged in with write access)"
 msgstr ""
 
-#: core/messages/help.php:308
+#: core/messages/help.php:317
 msgid "(menu item displayed only for logged-in admins)"
 msgstr ""
 
-#: core/messages/help.php:313
+#: core/messages/help.php:322
 msgid ""
 "<p>Usually, you will insert a submenu into one of the pluginX menus. As a "
 "reference, a typical config.php file will look like this:</p>"
 msgstr ""
 
-#: core/messages/help.php:325
+#: core/messages/help.php:334
 msgid ""
 "<p>Inline plugins return output that is displayed in one of four containers "
 "that can be positioned anywhere in any of the template .tpl files.  To change "
@@ -3172,7 +3200,7 @@ msgid ""
 "</p>"
 msgstr ""
 
-#: core/messages/help.php:327
+#: core/messages/help.php:336
 msgid ""
 "<p>At least one template, one bibliographic style and one language must "
 "remain enabled. WIKINDX expects that the English language pack is available "
@@ -3244,13 +3272,13 @@ msgstr "Editar recurso"
 
 #: core/messages/messages.php:106 core/messages/messages.php:487
 #: core/messages/messages.php:919 core/messages/messages.php:959
-#: core/messages/messages.php:1247 core/messages/messages.php:1300
+#: core/messages/messages.php:1246 core/messages/messages.php:1299
 msgid "Categories"
 msgstr "Categorías"
 
 #: core/messages/messages.php:107 core/messages/messages.php:488
 #: core/messages/messages.php:920 core/messages/messages.php:960
-#: core/messages/messages.php:1249 core/messages/messages.php:1302
+#: core/messages/messages.php:1248 core/messages/messages.php:1301
 msgid "Subcategories"
 msgstr ""
 
@@ -3298,7 +3326,7 @@ msgstr ""
 
 #: core/messages/messages.php:118 core/messages/messages.php:484
 #: core/messages/messages.php:921 core/messages/messages.php:961
-#: core/messages/messages.php:1252
+#: core/messages/messages.php:1251
 msgid "Languages"
 msgstr ""
 
@@ -3319,7 +3347,7 @@ msgid "Browse User Bibliogaphies"
 msgstr ""
 
 #: core/messages/messages.php:123 core/messages/messages.php:926
-#: core/messages/messages.php:1245 core/messages/messages.php:1298
+#: core/messages/messages.php:1244 core/messages/messages.php:1297
 msgid "User Tags"
 msgstr ""
 
@@ -3404,7 +3432,7 @@ msgstr "Mi WIKINDX###"
 msgid "Forgotten Password"
 msgstr "Olvidé mi contraseña"
 
-#: core/messages/messages.php:146 core/messages/messages.php:971
+#: core/messages/messages.php:146 core/messages/messages.php:970
 msgid "Delete Resource"
 msgstr "Borrar recurso"
 
@@ -3514,15 +3542,15 @@ msgstr "Pasarela al Sistema de Gestión de Contenidos (CMS)"
 msgid "News"
 msgstr "Noticias###"
 
-#: core/messages/messages.php:175 core/messages/messages.php:1164
+#: core/messages/messages.php:175 core/messages/messages.php:1163
 msgid "Add News"
 msgstr ""
 
-#: core/messages/messages.php:176 core/messages/messages.php:1165
+#: core/messages/messages.php:176 core/messages/messages.php:1164
 msgid "Edit News"
 msgstr ""
 
-#: core/messages/messages.php:177 core/messages/messages.php:1166
+#: core/messages/messages.php:177 core/messages/messages.php:1165
 msgid "Delete News"
 msgstr ""
 
@@ -3532,8 +3560,8 @@ msgstr "Registarse"
 
 #. / heading_emailFriend Email a single resource link to a friend
 #. / misc_emailToFriend Email a single resource link to a friend.
-#: core/messages/messages.php:180 core/messages/messages.php:1064
-#: core/messages/messages.php:1092
+#: core/messages/messages.php:180 core/messages/messages.php:1063
+#: core/messages/messages.php:1091
 msgid "Email resource to friend"
 msgstr "Enviar el recurso a un amigo por correo electrónico"
 
@@ -3810,8 +3838,8 @@ msgid "Display"
 msgstr ""
 
 #: core/messages/messages.php:255 core/messages/messages.php:262
-#: core/messages/messages.php:406 core/messages/messages.php:1276
-#: core/messages/messages.php:1322
+#: core/messages/messages.php:406 core/messages/messages.php:1275
+#: core/messages/messages.php:1321
 msgid "Language"
 msgstr "Lengua"
 
@@ -3821,15 +3849,15 @@ msgid "Bibliographic style"
 msgstr "Estilo bibliográfico"
 
 #: core/messages/messages.php:257 core/messages/messages.php:427
-#: core/messages/messages.php:1205 core/messages/messages.php:1280
-#: core/messages/messages.php:1534 core/messages/messages.php:1579
-#: core/messages/messages.php:1585 core/messages/messages.php:1732
+#: core/messages/messages.php:1204 core/messages/messages.php:1279
+#: core/messages/messages.php:1533 core/messages/messages.php:1578
+#: core/messages/messages.php:1584 core/messages/messages.php:1731
 msgid "Title"
 msgstr "Título"
 
 #: core/messages/messages.php:258 core/messages/messages.php:359
-#: core/messages/messages.php:473 core/messages/messages.php:1535
-#: core/messages/messages.php:1580
+#: core/messages/messages.php:473 core/messages/messages.php:1534
+#: core/messages/messages.php:1579
 msgid "Description"
 msgstr "Descripción"
 
@@ -3896,13 +3924,13 @@ msgid "Forgotten password"
 msgstr "Olvidé mi contraseña"
 
 #. / user_notification Email notification of resource additions/edits etc.
-#: core/messages/messages.php:277 core/messages/messages.php:1553
+#: core/messages/messages.php:277 core/messages/messages.php:1552
 msgid "Email notification"
 msgstr "Notificar por correo electrónico"
 
 #. / menu_res Resources menu starts here
 #: core/messages/messages.php:278 core/messages/messages.php:858
-#: core/messages/messages.php:1694
+#: core/messages/messages.php:1693
 msgid "Resources"
 msgstr "Recursos"
 
@@ -3914,7 +3942,7 @@ msgstr ""
 msgid "Authentication"
 msgstr ""
 
-#: core/messages/messages.php:281 core/messages/messages.php:1454
+#: core/messages/messages.php:281 core/messages/messages.php:1453
 msgid "Email"
 msgstr "Correo electrónico de contacto (se muestra en la página de inicio)"
 
@@ -3935,8 +3963,8 @@ msgid "Google Scholar"
 msgstr ""
 
 #. / resourceType_miscellaneous For anything else that does not fit into the above categories.
-#: core/messages/messages.php:286 core/messages/messages.php:1190
-#: core/messages/messages.php:1415
+#: core/messages/messages.php:286 core/messages/messages.php:1189
+#: core/messages/messages.php:1414
 msgid "Miscellaneous"
 msgstr "Diversos"
 
@@ -4223,7 +4251,7 @@ msgstr ""
 msgid "Check for updates"
 msgstr ""
 
-#: core/messages/messages.php:355 core/messages/messages.php:1747
+#: core/messages/messages.php:355 core/messages/messages.php:1746
 msgid "Last updated"
 msgstr ""
 
@@ -4395,17 +4423,17 @@ msgstr "Número de visualizaciones:###"
 msgid "Resource type"
 msgstr ""
 
-#: core/messages/messages.php:400 core/messages/messages.php:1281
+#: core/messages/messages.php:400 core/messages/messages.php:1280
 msgid "Notes"
 msgstr "Notas"
 
 #: core/messages/messages.php:401 core/messages/messages.php:412
-#: core/messages/messages.php:913 core/messages/messages.php:1695
+#: core/messages/messages.php:913 core/messages/messages.php:1694
 msgid "Quotes"
 msgstr "Citas"
 
 #: core/messages/messages.php:402 core/messages/messages.php:413
-#: core/messages/messages.php:914 core/messages/messages.php:1696
+#: core/messages/messages.php:914 core/messages/messages.php:1695
 msgid "Paraphrases"
 msgstr "Paráfrasis"
 
@@ -4414,7 +4442,7 @@ msgstr "Paráfrasis"
 msgid "Musings"
 msgstr "Ideas/Reflexiones"
 
-#: core/messages/messages.php:404 core/messages/messages.php:1288
+#: core/messages/messages.php:404 core/messages/messages.php:1287
 msgid "Attachments"
 msgstr ""
 
@@ -4427,7 +4455,7 @@ msgid "View all bibliographic details"
 msgstr ""
 
 #: core/messages/messages.php:416 core/messages/messages.php:943
-#: core/messages/messages.php:1289
+#: core/messages/messages.php:1288
 msgid "Idea"
 msgstr ""
 
@@ -4540,8 +4568,8 @@ msgid "Remove from this user bibliography"
 msgstr "Eliminar de esta bibliografía de usuario"
 
 #: core/messages/messages.php:450 core/messages/messages.php:955
-#: core/messages/messages.php:966 core/messages/messages.php:975
-#: core/messages/messages.php:1445 core/messages/messages.php:1529
+#: core/messages/messages.php:966 core/messages/messages.php:974
+#: core/messages/messages.php:1444 core/messages/messages.php:1528
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -4600,7 +4628,7 @@ msgid "General"
 msgstr "General"
 
 #: core/messages/messages.php:466 core/messages/messages.php:871
-#: core/messages/messages.php:1305 core/messages/messages.php:1332
+#: core/messages/messages.php:1304 core/messages/messages.php:1331
 msgid "Keyword"
 msgstr "Palabra clave"
 
@@ -4631,7 +4659,7 @@ msgstr ""
 msgid "Edit Keyword Group"
 msgstr "Editar el grupo de usuarios"
 
-#: core/messages/messages.php:472 core/messages/messages.php:1333
+#: core/messages/messages.php:472 core/messages/messages.php:1332
 #, fuzzy
 #| msgid "Keyword"
 msgid "Keyword Group"
@@ -4659,13 +4687,13 @@ msgid "Prefix"
 msgstr "Prefijo"
 
 #: core/messages/messages.php:480 core/messages/messages.php:869
-#: core/messages/messages.php:1309 core/messages/messages.php:1326
+#: core/messages/messages.php:1308 core/messages/messages.php:1325
 msgid "Collection"
 msgstr "Colección"
 
 #: core/messages/messages.php:483 core/messages/messages.php:870
-#: core/messages/messages.php:1206 core/messages/messages.php:1308
-#: core/messages/messages.php:1331
+#: core/messages/messages.php:1205 core/messages/messages.php:1307
+#: core/messages/messages.php:1330
 msgid "Publisher"
 msgstr "Editor"
 
@@ -4680,7 +4708,7 @@ msgid "Default language"
 msgstr ""
 
 #: core/messages/messages.php:489 core/messages/messages.php:572
-#: core/messages/messages.php:1583
+#: core/messages/messages.php:1582
 msgid "User tags"
 msgstr ""
 
@@ -4693,8 +4721,8 @@ msgid "Keep resources in original category"
 msgstr ""
 
 #: core/messages/messages.php:492 core/messages/messages.php:848
-#: core/messages/messages.php:908 core/messages/messages.php:1239
-#: core/messages/messages.php:1295
+#: core/messages/messages.php:908 core/messages/messages.php:1238
+#: core/messages/messages.php:1294
 msgid "Keywords"
 msgstr "Palabras clave"
 
@@ -4743,7 +4771,7 @@ msgstr ""
 #: core/messages/messages.php:506 core/messages/messages.php:649
 #: core/messages/messages.php:650 core/messages/messages.php:651
 #: core/messages/messages.php:657 core/messages/messages.php:677
-#: core/messages/messages.php:1343
+#: core/messages/messages.php:1342
 msgid "Year"
 msgstr "Año"
 
@@ -4780,17 +4808,17 @@ msgid "End month"
 msgstr "Mes"
 
 #: core/messages/messages.php:516 core/messages/messages.php:941
-#: core/messages/messages.php:1283
+#: core/messages/messages.php:1282
 msgid "Quote"
 msgstr "Cita"
 
 #: core/messages/messages.php:517 core/messages/messages.php:940
-#: core/messages/messages.php:1284
+#: core/messages/messages.php:1283
 msgid "Paraphrase"
 msgstr "Paráfrasis"
 
 #: core/messages/messages.php:518 core/messages/messages.php:942
-#: core/messages/messages.php:1287
+#: core/messages/messages.php:1286
 msgid "Musing"
 msgstr "Idea/Relexión"
 
@@ -4829,7 +4857,7 @@ msgstr "ID nº (ISBN, etc.)"
 msgid "DOI"
 msgstr "DOI"
 
-#: core/messages/messages.php:530 core/messages/messages.php:1282
+#: core/messages/messages.php:530 core/messages/messages.php:1281
 msgid "Abstract"
 msgstr "Resumen"
 
@@ -4940,7 +4968,7 @@ msgid "Current attachments"
 msgstr ""
 
 #. / resources_url For adding URLs to resources
-#: core/messages/messages.php:567 core/messages/messages.php:1744
+#: core/messages/messages.php:567 core/messages/messages.php:1743
 msgid "URL"
 msgstr "URL"
 
@@ -5009,7 +5037,7 @@ msgstr ""
 msgid "Common details"
 msgstr ""
 
-#: core/messages/messages.php:588 core/messages/messages.php:1666
+#: core/messages/messages.php:588 core/messages/messages.php:1665
 msgid "Custom fields"
 msgstr "Campos personalizados"
 
@@ -5074,11 +5102,11 @@ msgstr "Año de revisión"
 msgid "Edition"
 msgstr "Edición"
 
-#: core/messages/messages.php:605 core/messages/messages.php:1721
+#: core/messages/messages.php:605 core/messages/messages.php:1720
 msgid "Page start"
 msgstr "Comienzo"
 
-#: core/messages/messages.php:606 core/messages/messages.php:1722
+#: core/messages/messages.php:606 core/messages/messages.php:1721
 msgid "Page end"
 msgstr "Fin"
 
@@ -5095,22 +5123,22 @@ msgstr "Número de volumen de la revista"
 msgid "Journal issue number"
 msgstr "Número de tomo de la revista"
 
-#: core/messages/messages.php:611 core/messages/messages.php:1182
+#: core/messages/messages.php:611 core/messages/messages.php:1181
 msgid "Journal"
 msgstr "Revista"
 
-#: core/messages/messages.php:612 core/messages/messages.php:1181
-#: core/messages/messages.php:1351
+#: core/messages/messages.php:612 core/messages/messages.php:1180
+#: core/messages/messages.php:1350
 msgid "Book"
 msgstr "Libro"
 
-#: core/messages/messages.php:613 core/messages/messages.php:1185
+#: core/messages/messages.php:613 core/messages/messages.php:1184
 msgid "Newspaper"
 msgstr "Periódico"
 
 #. / resourceType_proceedings Conference proceedings (complete set)
-#: core/messages/messages.php:615 core/messages/messages.php:1184
-#: core/messages/messages.php:1408
+#: core/messages/messages.php:615 core/messages/messages.php:1183
+#: core/messages/messages.php:1407
 msgid "Proceedings"
 msgstr "Actas"
 
@@ -5135,12 +5163,12 @@ msgid "Publication month"
 msgstr "Mes de publicación"
 
 #. / resources_department Department reports and documentation were issued from
-#: core/messages/messages.php:624 core/messages/messages.php:1346
-#: core/messages/messages.php:1496
+#: core/messages/messages.php:624 core/messages/messages.php:1345
+#: core/messages/messages.php:1495
 msgid "Department"
 msgstr "Departamento"
 
-#: core/messages/messages.php:625 core/messages/messages.php:1362
+#: core/messages/messages.php:625 core/messages/messages.php:1361
 msgid "Thesis/Dissertation"
 msgstr "Tesis/Disertación"
 
@@ -5164,8 +5192,8 @@ msgstr "Tesis"
 msgid "dissertation"
 msgstr "Disertación"
 
-#: core/messages/messages.php:632 core/messages/messages.php:1191
-#: core/messages/messages.php:1347 core/messages/messages.php:1497
+#: core/messages/messages.php:632 core/messages/messages.php:1190
+#: core/messages/messages.php:1346 core/messages/messages.php:1496
 msgid "Institution"
 msgstr "Institución"
 
@@ -5174,7 +5202,7 @@ msgid "Year of awarding"
 msgstr "Año de defensa"
 
 #. / resources_distributor Film distributor/studio
-#: core/messages/messages.php:635 core/messages/messages.php:1195
+#: core/messages/messages.php:635 core/messages/messages.php:1194
 msgid "Distributor"
 msgstr "Distribuidor"
 
@@ -5218,7 +5246,7 @@ msgstr "Volumen del informe"
 
 #. / resources_bill Parliamentary bills/laws
 #. / resourceType_bill Parliamentary bill (law)
-#: core/messages/messages.php:655 core/messages/messages.php:1378
+#: core/messages/messages.php:655 core/messages/messages.php:1377
 msgid "Bill"
 msgstr "Proyecto de Ley"
 
@@ -5251,7 +5279,7 @@ msgstr "Nº de Proyecto de Ley"
 msgid "Session Year"
 msgstr "Año de la sesión"
 
-#: core/messages/messages.php:666 core/messages/messages.php:1192
+#: core/messages/messages.php:666 core/messages/messages.php:1191
 msgid "Conference"
 msgstr "Conferencia"
 
@@ -5298,12 +5326,12 @@ msgstr "Comisión"
 msgid "Document Number"
 msgstr "Nº de Documento"
 
-#: core/messages/messages.php:681 core/messages/messages.php:1186
+#: core/messages/messages.php:681 core/messages/messages.php:1185
 msgid "Magazine"
 msgstr "Publicación"
 
 #. / resourceType_hearing Legal/Government Hearing
-#: core/messages/messages.php:682 core/messages/messages.php:1388
+#: core/messages/messages.php:682 core/messages/messages.php:1387
 msgid "Hearing"
 msgstr "Audiencia"
 
@@ -5323,7 +5351,7 @@ msgstr "Nº de manuscrito"
 
 #. / resources_map Maps
 #. / resourceType_map Maps
-#: core/messages/messages.php:689 core/messages/messages.php:1394
+#: core/messages/messages.php:689 core/messages/messages.php:1393
 msgid "Map"
 msgstr "Mapa"
 
@@ -5432,11 +5460,11 @@ msgstr ""
 msgid "Page"
 msgstr "Página"
 
-#: core/messages/messages.php:723 core/messages/messages.php:1448
+#: core/messages/messages.php:723 core/messages/messages.php:1447
 msgid "Add to basket"
 msgstr "Añadir al cesto"
 
-#: core/messages/messages.php:724 core/messages/messages.php:1449
+#: core/messages/messages.php:724 core/messages/messages.php:1448
 msgid "Remove from basket"
 msgstr "Eliminar del cesto"
 
@@ -5949,7 +5977,7 @@ msgstr "Desconexión"
 msgid "Read Only"
 msgstr ""
 
-#: core/messages/messages.php:845 core/messages/messages.php:987
+#: core/messages/messages.php:845 core/messages/messages.php:986
 msgid "Statistics..."
 msgstr ""
 
@@ -5971,12 +5999,12 @@ msgstr ""
 
 #. i.e. authors not editors
 #: core/messages/messages.php:852 core/messages/messages.php:922
-#: core/messages/messages.php:1254
+#: core/messages/messages.php:1253
 msgid "Publishers"
 msgstr "Buscar en editores"
 
 #: core/messages/messages.php:853 core/messages/messages.php:918
-#: core/messages/messages.php:1258
+#: core/messages/messages.php:1257
 msgid "Collections"
 msgstr "Buscar en colecciones"
 
@@ -6015,7 +6043,7 @@ msgid "Delete bookmarks"
 msgstr "Eliminar marcador"
 
 #. / menu_editSub edit submenu
-#: core/messages/messages.php:866 core/messages/messages.php:988
+#: core/messages/messages.php:866 core/messages/messages.php:987
 msgid "Edit..."
 msgstr ""
 
@@ -6024,8 +6052,8 @@ msgid "Collections..."
 msgstr ""
 
 #. / creators_creator Charts/images
-#: core/messages/messages.php:868 core/messages/messages.php:1290
-#: core/messages/messages.php:1334 core/messages/messages.php:1633
+#: core/messages/messages.php:868 core/messages/messages.php:1289
+#: core/messages/messages.php:1333 core/messages/messages.php:1632
 msgid "Creator"
 msgstr "Creador"
 
@@ -6061,7 +6089,7 @@ msgstr "Pegar BibTeX"
 msgid "Advanced Search"
 msgstr ""
 
-#: core/messages/messages.php:884 core/messages/messages.php:1439
+#: core/messages/messages.php:884 core/messages/messages.php:1438
 msgid "Search"
 msgstr "Búsqueda rápida"
 
@@ -6112,7 +6140,7 @@ msgid "Maturity desc."
 msgstr ""
 
 #. / menu_browseSub browse submenu
-#: core/messages/messages.php:903 core/messages/messages.php:990
+#: core/messages/messages.php:903 core/messages/messages.php:989
 msgid "Browse..."
 msgstr ""
 
@@ -6120,17 +6148,17 @@ msgstr ""
 msgid "Publishers..."
 msgstr ""
 
-#: core/messages/messages.php:906 core/messages/messages.php:983
-#: core/messages/messages.php:1256 core/messages/messages.php:1649
+#: core/messages/messages.php:906 core/messages/messages.php:982
+#: core/messages/messages.php:1255 core/messages/messages.php:1648
 msgid "Creators"
 msgstr "Buscar en creadores"
 
-#: core/messages/messages.php:907 core/messages/messages.php:1342
+#: core/messages/messages.php:907 core/messages/messages.php:1341
 msgid "Cited"
 msgstr ""
 
 #: core/messages/messages.php:910 core/messages/messages.php:963
-#: core/messages/messages.php:993
+#: core/messages/messages.php:992
 msgid "Keywords..."
 msgstr ""
 
@@ -6148,7 +6176,7 @@ msgstr ""
 msgid "Not Ideas"
 msgstr ""
 
-#: core/messages/messages.php:923 core/messages/messages.php:1237
+#: core/messages/messages.php:923 core/messages/messages.php:1236
 msgid "Types"
 msgstr ""
 
@@ -6190,7 +6218,7 @@ msgid "Last Idea Search"
 msgstr ""
 
 #. / menu_randomSub random submenu
-#: core/messages/messages.php:939 core/messages/messages.php:991
+#: core/messages/messages.php:939 core/messages/messages.php:990
 msgid "Random..."
 msgstr ""
 
@@ -6216,13 +6244,13 @@ msgstr "Administrar"
 msgid "News..."
 msgstr ""
 
-#: core/messages/messages.php:954 core/messages/messages.php:973
-#: core/messages/messages.php:1450
+#: core/messages/messages.php:954 core/messages/messages.php:972
+#: core/messages/messages.php:1449
 msgid "Add"
 msgstr "Añadir"
 
 #: core/messages/messages.php:956 core/messages/messages.php:964
-#: core/messages/messages.php:974 core/messages/messages.php:1447
+#: core/messages/messages.php:973 core/messages/messages.php:1446
 msgid "Edit"
 msgstr "Editar"
 
@@ -6242,7 +6270,7 @@ msgstr ""
 msgid "Merge"
 msgstr ""
 
-#: core/messages/messages.php:967 core/messages/messages.php:994
+#: core/messages/messages.php:967 core/messages/messages.php:993
 msgid "Creators..."
 msgstr ""
 
@@ -6250,246 +6278,242 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
-#: core/messages/messages.php:970
-msgid "Ungroup"
-msgstr ""
-
-#: core/messages/messages.php:972 core/messages/messages.php:992
+#: core/messages/messages.php:971 core/messages/messages.php:991
 msgid "Users..."
 msgstr ""
 
-#: core/messages/messages.php:976
+#: core/messages/messages.php:975
 msgid "Block/Unblock"
 msgstr ""
 
-#: core/messages/messages.php:977
+#: core/messages/messages.php:976
 msgid "Registrations"
 msgstr ""
 
-#: core/messages/messages.php:978
+#: core/messages/messages.php:977
 msgid "Import BibTeX"
 msgstr "Importar BibTeX"
 
-#: core/messages/messages.php:979
+#: core/messages/messages.php:978
 msgid "Quarantine"
 msgstr ""
 
-#: core/messages/messages.php:980
+#: core/messages/messages.php:979
 msgid "Components"
 msgstr ""
 
 #. / menu_customSub The admin can administer custom database fields for resources
-#: core/messages/messages.php:982
+#: core/messages/messages.php:981
 msgid "Custom Fields"
 msgstr ""
 
-#: core/messages/messages.php:989
+#: core/messages/messages.php:988
 msgid "Quick list all..."
 msgstr ""
 
-#: core/messages/messages.php:998
+#: core/messages/messages.php:997
 msgid "file"
 msgstr ""
 
 #. / misc_toLeft text for an arrow to shift items from a box on the right to the left
-#: core/messages/messages.php:1000
+#: core/messages/messages.php:999
 msgid "Shift item from right to left"
 msgstr ""
 
 #. / misc_toRight text for an arrow to shift items from a box on the left to the right
-#: core/messages/messages.php:1002
+#: core/messages/messages.php:1001
 msgid "Shift item from left to right"
 msgstr ""
 
 #. / misc_toBottom text for an arrow to shift items from a box on the top to the bottom
-#: core/messages/messages.php:1004
+#: core/messages/messages.php:1003
 msgid "Shift item from top to bottom"
 msgstr ""
 
-#: core/messages/messages.php:1005
+#: core/messages/messages.php:1004
 msgid "Shift item from bottom to top"
 msgstr ""
 
-#: core/messages/messages.php:1006
+#: core/messages/messages.php:1005
 msgid "add"
 msgstr "Añadir"
 
-#: core/messages/messages.php:1007
+#: core/messages/messages.php:1006
 msgid "remove"
 msgstr ""
 
-#: core/messages/messages.php:1008
+#: core/messages/messages.php:1007
 msgid "edit"
 msgstr ""
 
-#: core/messages/messages.php:1009
+#: core/messages/messages.php:1008
 msgid "delete"
 msgstr ""
 
-#: core/messages/messages.php:1010
+#: core/messages/messages.php:1009
 msgid "bibtex"
 msgstr ""
 
-#: core/messages/messages.php:1011 core/messages/messages.php:1012
-#: core/messages/messages.php:1013 core/messages/messages.php:1014
+#: core/messages/messages.php:1010 core/messages/messages.php:1011
+#: core/messages/messages.php:1012 core/messages/messages.php:1013
 msgid "view"
 msgstr ""
 
-#: core/messages/messages.php:1015
+#: core/messages/messages.php:1014
 msgid "download"
 msgstr ""
 
-#: core/messages/messages.php:1016
+#: core/messages/messages.php:1015
 msgid "Quarantined"
 msgstr ""
 
-#: core/messages/messages.php:1017
+#: core/messages/messages.php:1016
 msgid "There are no resources in the database"
 msgstr "No hay recursos en la base de datos"
 
-#: core/messages/messages.php:1018
+#: core/messages/messages.php:1017
 msgid "There are no metadata in the database"
 msgstr ""
 
-#: core/messages/messages.php:1019
+#: core/messages/messages.php:1018
 msgid "There are no quotes in the database"
 msgstr ""
 
-#: core/messages/messages.php:1020
+#: core/messages/messages.php:1019
 msgid "There are no paraphrases in the database"
 msgstr ""
 
-#: core/messages/messages.php:1021
+#: core/messages/messages.php:1020
 msgid "There are no musings in the database"
 msgstr ""
 
-#: core/messages/messages.php:1022
+#: core/messages/messages.php:1021
 msgid "There are no ideas in the database"
 msgstr ""
 
-#: core/messages/messages.php:1023
+#: core/messages/messages.php:1022
 msgid "There are no resources in that user bibliography"
 msgstr ""
 
-#: core/messages/messages.php:1024
+#: core/messages/messages.php:1023
 msgid "There are no categories in the database"
 msgstr ""
 
-#: core/messages/messages.php:1025
+#: core/messages/messages.php:1024
 msgid "There are no subcategories in the database"
 msgstr ""
 
-#: core/messages/messages.php:1026
+#: core/messages/messages.php:1025
 msgid "There are no user bibliographies in the database"
 msgstr ""
 
-#: core/messages/messages.php:1027
+#: core/messages/messages.php:1026
 msgid "There are no languages in the database"
 msgstr ""
 
-#: core/messages/messages.php:1028
+#: core/messages/messages.php:1027
 msgid "There are no resources with user tags in the database"
 msgstr ""
 
-#: core/messages/messages.php:1029
+#: core/messages/messages.php:1028
 msgid "There are no images available"
 msgstr ""
 
-#: core/messages/messages.php:1030
+#: core/messages/messages.php:1029
 msgid "Images used in metadata"
 msgstr ""
 
-#: core/messages/messages.php:1031
+#: core/messages/messages.php:1030
 msgid "Images not used in metadata"
 msgstr ""
 
 #. / misc_popIndex When viewing resources on the front page of the WIKINDX, display the popularity index.  This should be a short abbreviation
-#: core/messages/messages.php:1033
+#: core/messages/messages.php:1032
 msgid "Pop. ###%"
 msgstr "Pop."
 
 #. / misc_downIndex When viewing resources on the front page of the WIKINDX, display the download index.  This should be a short abbreviation
-#: core/messages/messages.php:1035
+#: core/messages/messages.php:1034
 msgid "Down. ###%"
 msgstr ""
 
 #. / misc_matIndex When viewing resources on the front page of the WIKINDX, display the maturity index.  This should be a short abbreviation
-#: core/messages/messages.php:1037
+#: core/messages/messages.php:1036
 msgid "Mat. ###"
 msgstr "Mad."
 
 #. / misc_ignore In select boxes - when it is not necessary to choose an existing selection.  WIKINDX will skip over this one. Could be '---'
-#: core/messages/messages.php:1039
+#: core/messages/messages.php:1038
 msgid "IGNORE"
 msgstr "IGNORAR"
 
-#: core/messages/messages.php:1040
+#: core/messages/messages.php:1039
 msgid "There are no creators in the database"
 msgstr "No hay creadores en la base de datos"
 
-#: core/messages/messages.php:1041
+#: core/messages/messages.php:1040
 msgid "There are no group master creators in the database"
 msgstr ""
 
-#: core/messages/messages.php:1042
+#: core/messages/messages.php:1041
 msgid "There are no collections in the database"
 msgstr "No hay colecciones en la base de datos"
 
-#: core/messages/messages.php:1043
+#: core/messages/messages.php:1042
 msgid "There are no publishers in the database"
 msgstr "No hay editores en la base de datos"
 
-#: core/messages/messages.php:1044
+#: core/messages/messages.php:1043
 msgid "There are no keywords in the database"
 msgstr "No hay palabras clave en la base de datos"
 
-#: core/messages/messages.php:1045
+#: core/messages/messages.php:1044
 #, fuzzy
 #| msgid "There are no keywords in the database"
 msgid "There are no keyword groups in the database"
 msgstr "No hay palabras clave en la base de datos"
 
-#: core/messages/messages.php:1046
+#: core/messages/messages.php:1045
 msgid ""
 "There must be at least two keywords in the database in order to create a "
 "keyword group"
 msgstr ""
 
-#: core/messages/messages.php:1047
+#: core/messages/messages.php:1046
 msgid "There are no metadata keywords in the database"
 msgstr ""
 
-#: core/messages/messages.php:1048
+#: core/messages/messages.php:1047
 #, fuzzy
 #| msgid "There are no keywords in the database"
 msgid "There are no used keywords in available keyword groups"
 msgstr "No hay palabras clave en la base de datos"
 
-#: core/messages/messages.php:1049
+#: core/messages/messages.php:1048
 msgid "There are no cited creators in the database"
 msgstr ""
 
-#: core/messages/messages.php:1050
+#: core/messages/messages.php:1049
 msgid "There are no registered users with resources in the database"
 msgstr ""
 
 #. / misc_categoryTreeKeywords When browsing the category tree, display keywords with resources in each category
-#: core/messages/messages.php:1052
+#: core/messages/messages.php:1051
 msgid "Resource keywords in this category:"
 msgstr "Palabras clave de recurso en esta categoría:"
 
 #. / misc_categoryTreeSubcategories When browsing the category tree, display subcategories with resources in each category
-#: core/messages/messages.php:1054
+#: core/messages/messages.php:1053
 msgid "Resource subcategories in this category:"
 msgstr ""
 
 #. / misc_set Used in SUCCESS.php when a user chooses a user bibliography to browse.  The message is "Successfully set Bibliography".
-#: core/messages/messages.php:1056
+#: core/messages/messages.php:1055
 msgid "set"
 msgstr "elegida"
 
 #. / misc_keywordExists Advice on what to do when editing a keyword name and the new name already exists in the database.
-#: core/messages/messages.php:1058
+#: core/messages/messages.php:1057
 msgid ""
 "If you proceed, this edited keyword will be deleted and all references in the "
 "database to it will be replaced by references to the pre-existing keyword."
@@ -6498,7 +6522,7 @@ msgstr ""
 "la BD y será reemplazada por las referencias a la palabra clave preexistente."
 
 #. / misc_collectionExists Advice on what to do when editing a collection name and the new name already exists in the database.
-#: core/messages/messages.php:1060
+#: core/messages/messages.php:1059
 msgid ""
 "If you proceed, this edited collection will be deleted and all references in "
 "the database to it will be replaced by references to the pre-existing "
@@ -6506,7 +6530,7 @@ msgid ""
 msgstr ""
 
 #. / misc_publisherExists Advice on what to do when editing a publisher name and the new name already exists in the database.
-#: core/messages/messages.php:1062
+#: core/messages/messages.php:1061
 msgid ""
 "If you proceed, this edited publisher will be deleted and all references in "
 "the database to it will be replaced by references to the pre-existing "
@@ -6516,12 +6540,12 @@ msgstr ""
 "serán reemplazadas por las referencias del editor preexistente."
 
 #. / misc_bibtexKey When viewing a single resource, display the bibtex citation key (such as 'aarseth.321')
-#: core/messages/messages.php:1066
+#: core/messages/messages.php:1065
 msgid "BibTeX citation key"
 msgstr "Clave BibTeX de citación:"
 
 #. / misc_bookmarks User bookmarks
-#: core/messages/messages.php:1068
+#: core/messages/messages.php:1067
 msgid ""
 "You may store up to 20 bookmarks for returning to a single or multi-resource "
 "view."
@@ -6529,7 +6553,7 @@ msgstr ""
 "Puede almacenar hasta 20 marcadores para volver a la visualización simple de "
 "un recurso."
 
-#: core/messages/messages.php:1069
+#: core/messages/messages.php:1068
 msgid ""
 "As you already have 20 bookmarks, you must choose one to be replaced by this "
 "new addition"
@@ -6537,37 +6561,37 @@ msgstr ""
 "Como ya tiene 20 marcadores, tiene que escoger uno para ser substituído por "
 "esta nueva adición"
 
-#: core/messages/messages.php:1070
+#: core/messages/messages.php:1069
 msgid "Select the bookmarks to be deleted"
 msgstr "Seleccione los marcadores que van a ser eliminados"
 
-#: core/messages/messages.php:1071
+#: core/messages/messages.php:1070
 msgid "Enter a short name for your bookmark"
 msgstr "Escriba un nombre corto para su carpeta de marcadores"
 
-#: core/messages/messages.php:1072
+#: core/messages/messages.php:1071
 msgid "edited"
 msgstr "editado"
 
-#: core/messages/messages.php:1073
+#: core/messages/messages.php:1072
 msgid "added"
 msgstr "añadido"
 
-#: core/messages/messages.php:1074
+#: core/messages/messages.php:1073
 msgid "deleted"
 msgstr "borrado"
 
 #. / misc_confirmDelete Ask for confirmation deleting a large number of resources
-#: core/messages/messages.php:1076
+#: core/messages/messages.php:1075
 msgid "Delete ### resources?"
 msgstr "Eliminar### recursos?"
 
-#: core/messages/messages.php:1077
+#: core/messages/messages.php:1076
 msgid "Delete language(s)?"
 msgstr ""
 
 #. / misc_keywordMerge Admins can merge multiple keywords into one keyword
-#: core/messages/messages.php:1079
+#: core/messages/messages.php:1078
 msgid ""
 "Select and merge multiple keywords into one keyword (the merged keywords will "
 "be deleted)"
@@ -6575,12 +6599,12 @@ msgstr ""
 "Seleccionar y combinar múltiples palabras clave en una sóla palabra clave "
 "(las palabras clave combinadas seran eliminadas)"
 
-#: core/messages/messages.php:1080
+#: core/messages/messages.php:1079
 msgid "New or target keyword"
 msgstr "Nueva palabra clave o palabra clave de destino"
 
 #. / misc_creatorMerge Admins can merge multiple creators into one creator
-#: core/messages/messages.php:1082
+#: core/messages/messages.php:1081
 msgid ""
 "Select and merge multiple creators into one creator (the merged creators will "
 "be deleted).  A selection in the target select box overrides any text input."
@@ -6588,81 +6612,78 @@ msgstr ""
 "Seleccionar y combinar múltiples creadores en uno sólo (los creadores "
 "combinados serán eliminados)"
 
-#: core/messages/messages.php:1083
-msgid ""
-"Select and group multiple creators into one creator (the grouped creators "
-"will not be deleted).  List operations on the group master will include "
-"grouped creators. This is intended for situations where one person may be "
-"represented by different creator names but you wish to keep those creator "
-"names accurate to the original bibliographic source."
-msgstr ""
-
-#: core/messages/messages.php:1084
+#: core/messages/messages.php:1082
 msgid "Original creators"
 msgstr ""
 
-#: core/messages/messages.php:1085
+#: core/messages/messages.php:1083
 msgid "Target creator"
 msgstr "Nuevo creador o creador de destino"
 
-#: core/messages/messages.php:1086
+#: core/messages/messages.php:1084
 msgid "Group members"
 msgstr ""
 
-#: core/messages/messages.php:1087
+#: core/messages/messages.php:1085
+#, fuzzy
+#| msgid "Available keywords"
+msgid "Available creators"
+msgstr "Palabras clave disponibles"
+
+#: core/messages/messages.php:1086
 msgid "Group master"
 msgstr ""
 
-#: core/messages/messages.php:1088
-msgid "Select the creators you wish to remove from the group"
+#: core/messages/messages.php:1087
+msgid "Show only group masters"
 msgstr ""
 
 #. / misc_tag Tag - when importing bibtex resources, the administrator can give a label to each import which makes it possible to later delete in one go resources that were imported under this label.
-#: core/messages/messages.php:1090
+#: core/messages/messages.php:1089
 msgid "Delete resources by import tag"
 msgstr "Eliminar recursos por etiqueta de importación"
 
-#: core/messages/messages.php:1093 core/messages/messages.php:1500
+#: core/messages/messages.php:1092 core/messages/messages.php:1499
 msgid "Email address"
 msgstr "Dirección de correo electrónico"
 
-#: core/messages/messages.php:1094
+#: core/messages/messages.php:1093
 msgid "Email subject"
 msgstr "Asunto"
 
-#: core/messages/messages.php:1095
+#: core/messages/messages.php:1094
 msgid "Email text"
 msgstr "Mensaje"
 
 #. / misc_keywordImport1 When importing bibliographies from external sources, these give the user the option to specify whether keywords, in the source bibliography, are separated by commas or semicolons
-#: core/messages/messages.php:1097
+#: core/messages/messages.php:1096
 msgid "Keywords are separated in the source bibliography by"
 msgstr "Las palabras clave están separadas en la bibliografía de origen por"
 
-#: core/messages/messages.php:1098
+#: core/messages/messages.php:1097
 msgid "Commas"
 msgstr "Comas"
 
-#: core/messages/messages.php:1099
+#: core/messages/messages.php:1098
 msgid "Semicolons"
 msgstr "Punto y coma"
 
-#: core/messages/messages.php:1100
+#: core/messages/messages.php:1099
 msgid "Commas or Semicolons"
 msgstr "Comas o punto y coma"
 
-#: core/messages/messages.php:1101
+#: core/messages/messages.php:1100
 msgid "SPACES"
 msgstr "ESPACIOS"
 
-#: core/messages/messages.php:1102
+#: core/messages/messages.php:1101
 #, fuzzy
 #| msgid "Add to keywords"
 msgid "Ignore keywords"
 msgstr "Añadir a las palabras clave"
 
 #. / misc_titleSubtitleSeparator When importing bibtex and endnote bibliographies, split title and subtitle on specified characters
-#: core/messages/messages.php:1104
+#: core/messages/messages.php:1103
 msgid ""
 "Split the title and subtitle in the source bibliography on the first "
 "occurrence of"
@@ -6670,32 +6691,32 @@ msgstr ""
 "adividir título y subtítulo en la fuente bibliográfica de la primera "
 "ocurrencia de:"
 
-#: core/messages/messages.php:1105
+#: core/messages/messages.php:1104
 msgid "NO SPLIT"
 msgstr "NO DIVIDIR"
 
-#: core/messages/messages.php:1106
+#: core/messages/messages.php:1105
 msgid ": (colon)"
 msgstr ": (dos puntos)"
 
-#: core/messages/messages.php:1107
+#: core/messages/messages.php:1106
 msgid "; (semicolon)"
 msgstr "; (punto y coma)"
 
-#: core/messages/messages.php:1108
+#: core/messages/messages.php:1107
 msgid ". or ! or ?"
 msgstr ". o ! o ?"
 
-#: core/messages/messages.php:1109
+#: core/messages/messages.php:1108
 msgid "-- (dash dash)"
 msgstr "-- (guión guión)"
 
-#: core/messages/messages.php:1110
+#: core/messages/messages.php:1109
 msgid "- (dash)"
 msgstr "- (guión)"
 
 #. / misc_mergeStored When importing a bibliography (e.g. bibTeX), the admin has the choice of storing fields that wikindx does not recognise. Later, when exporting a bibliography, the user will have the choice of merging these unrecognised fields into the wikindx export. Additionally, any stored citation keys from the original import can be used in preference to a WIKINDX-generated one.
-#: core/messages/messages.php:1112
+#: core/messages/messages.php:1111
 msgid ""
 "If any fields that WIKINDX does not recognise are stored from an original "
 "import, merge these fields into this export:"
@@ -6703,7 +6724,7 @@ msgstr ""
 "Si cualquiera de los campos que WIKINDX no reconoce han sido almacenados "
 "desde una importación original, combinar aquellos campos en esta exportación:"
 
-#: core/messages/messages.php:1113
+#: core/messages/messages.php:1112
 msgid ""
 "Use the citation keys from the original import (where available) in "
 "preference to WIKINDX generated keys:"
@@ -6712,142 +6733,142 @@ msgstr ""
 "antes que las claves generadas por WIKINDX:"
 
 #. / misc_shortString When exporting to bibTeX.  Don't translate @STRING.
-#: core/messages/messages.php:1115
+#: core/messages/messages.php:1114
 msgid "Use short titles for any @STRING values:"
 msgstr "Utilizar títulos abreviados para cualquier valor @STRING:"
 
 #. / misc_bibExportQuotes When exporting to bibtex, use either double quotes or braces to enclose field values. \"...\" must be given exactly as it is here
-#: core/messages/messages.php:1117
+#: core/messages/messages.php:1116
 msgid "Use double quotes \"...\" to enclose field values"
 msgstr "Usar comillas dobles \"...\" para encerrar los valores de campo"
 
-#: core/messages/messages.php:1118
+#: core/messages/messages.php:1117
 msgid "Use braces {...} to enclose field values"
 msgstr "Usar llaves {...} para encerrar los valores de campo"
 
-#: core/messages/messages.php:1119
+#: core/messages/messages.php:1118
 msgid "Use UTF-8 character encoding"
 msgstr ""
 
-#: core/messages/messages.php:1120
+#: core/messages/messages.php:1119
 msgid "Use ISO-8859-1 and TeX character encoding"
 msgstr ""
 
-#: core/messages/messages.php:1121
+#: core/messages/messages.php:1120
 msgid "Use semicolons ';' to separate keywords"
 msgstr ""
 
-#: core/messages/messages.php:1122
+#: core/messages/messages.php:1121
 msgid "Use commas ',' to separate keywords"
 msgstr ""
 
 #. / misc_exportMetadata1 User has option of exporting metadata to bibtex when exporting a bibliography
-#: core/messages/messages.php:1124
+#: core/messages/messages.php:1123
 msgid "Export metadata to bibtex."
 msgstr "Exportar metadatos a BibTeX."
 
-#: core/messages/messages.php:1125
+#: core/messages/messages.php:1124
 msgid "Enter a unique field name for each metadata field you wish to export:"
 msgstr ""
 "Introducir un nombre de campo único para cada campo de metadatos que desee "
 "exportar:"
 
 #. / misc_customFieldMap When exporting a bibliography to bibtex or endnote, if any custom fields exist in the SQL set, the user can map these to specified bibtex or endnote custom fields
-#: core/messages/messages.php:1127
+#: core/messages/messages.php:1126
 msgid "Map WIKINDX custom fields to export fields."
 msgstr "Mapear los campos personalizados WIKINDX con los campos de exportación:"
 
-#: core/messages/messages.php:1128
+#: core/messages/messages.php:1127
 msgid "Enter a unique field name for each custom field you wish to export:"
 msgstr ""
 
-#: core/messages/messages.php:1129
+#: core/messages/messages.php:1128
 msgid "Help"
 msgstr ""
 
-#: core/messages/messages.php:1130
+#: core/messages/messages.php:1129
 msgid "Enabled Plugins"
 msgstr ""
 
-#: core/messages/messages.php:1131
+#: core/messages/messages.php:1130
 msgid "Disabled Plugins"
 msgstr ""
 
-#: core/messages/messages.php:1132
+#: core/messages/messages.php:1131
 msgid "Check for new or updated plugins"
 msgstr ""
 
-#: core/messages/messages.php:1133
+#: core/messages/messages.php:1132
 msgid "Check for new or updated templates"
 msgstr ""
 
-#: core/messages/messages.php:1134
+#: core/messages/messages.php:1133
 msgid "Check for new or updated languages"
 msgstr ""
 
-#: core/messages/messages.php:1135
+#: core/messages/messages.php:1134
 msgid "Check for new or updated styles"
 msgstr ""
 
-#: core/messages/messages.php:1136
+#: core/messages/messages.php:1135
 msgid "Enabled Styles"
 msgstr ""
 
-#: core/messages/messages.php:1137
+#: core/messages/messages.php:1136
 msgid "Disabled Styles"
 msgstr ""
 
-#: core/messages/messages.php:1138
+#: core/messages/messages.php:1137
 #, fuzzy
 #| msgid "Available keywords"
 msgid "Available Languages"
 msgstr "Palabras clave disponibles"
 
-#: core/messages/messages.php:1139
+#: core/messages/messages.php:1138
 msgid "Disabled Languages"
 msgstr ""
 
-#: core/messages/messages.php:1140
+#: core/messages/messages.php:1139
 msgid "Enabled Templates"
 msgstr ""
 
-#: core/messages/messages.php:1141
+#: core/messages/messages.php:1140
 msgid "Disabled Templates"
 msgstr ""
 
-#: core/messages/messages.php:1142
+#: core/messages/messages.php:1141
 msgid "Configurable Menu Plugins"
 msgstr ""
 
-#: core/messages/messages.php:1143
+#: core/messages/messages.php:1142
 msgid "Plugins requiring updates"
 msgstr ""
 
-#: core/messages/messages.php:1144
+#: core/messages/messages.php:1143
 msgid "New plugins"
 msgstr ""
 
-#: core/messages/messages.php:1145
+#: core/messages/messages.php:1144
 msgid "Display README"
 msgstr ""
 
-#: core/messages/messages.php:1146
+#: core/messages/messages.php:1145
 msgid "Configurable Inline Plugins"
 msgstr ""
 
-#: core/messages/messages.php:1147
+#: core/messages/messages.php:1146
 msgid "Menu Location"
 msgstr ""
 
-#: core/messages/messages.php:1148
+#: core/messages/messages.php:1147
 msgid "Container Location"
 msgstr ""
 
-#: core/messages/messages.php:1149
+#: core/messages/messages.php:1148
 msgid "Plugin Config.php File"
 msgstr ""
 
-#: core/messages/messages.php:1150
+#: core/messages/messages.php:1149
 msgid ""
 "There are two variables common to all plugins: $wikindxVersion and "
 "$authorize. In-line plugins additionally have the $container variable while "
@@ -6864,70 +6885,70 @@ msgid ""
 "the display template."
 msgstr ""
 
-#: core/messages/messages.php:1151
+#: core/messages/messages.php:1150
 msgid "Plugin Commands"
 msgstr ""
 
-#: core/messages/messages.php:1152
+#: core/messages/messages.php:1151
 msgid "New styles"
 msgstr ""
 
-#: core/messages/messages.php:1153
+#: core/messages/messages.php:1152
 msgid "Styles requiring updates"
 msgstr ""
 
-#: core/messages/messages.php:1154
+#: core/messages/messages.php:1153
 msgid "New languages"
 msgstr ""
 
-#: core/messages/messages.php:1155
+#: core/messages/messages.php:1154
 msgid "Languages requiring updates"
 msgstr ""
 
-#: core/messages/messages.php:1156
+#: core/messages/messages.php:1155
 msgid "New templates"
 msgstr ""
 
-#: core/messages/messages.php:1157
+#: core/messages/messages.php:1156
 msgid "Templates requiring updates"
 msgstr ""
 
-#: core/messages/messages.php:1158
+#: core/messages/messages.php:1157
 msgid "Open README file"
 msgstr ""
 
-#: core/messages/messages.php:1159
+#: core/messages/messages.php:1158
 msgid "Plugin has no README file or the README file is empty"
 msgstr ""
 
-#: core/messages/messages.php:1160
+#: core/messages/messages.php:1159
 msgid ""
 "Resources can be labelled with a language when adding or editing resources"
 msgstr ""
 
-#: core/messages/messages.php:1161
+#: core/messages/messages.php:1160
 msgid "Add Language"
 msgstr ""
 
-#: core/messages/messages.php:1162
+#: core/messages/messages.php:1161
 msgid "Edit Language"
 msgstr ""
 
-#: core/messages/messages.php:1163
+#: core/messages/messages.php:1162
 msgid "Delete Language"
 msgstr ""
 
-#: core/messages/messages.php:1167
+#: core/messages/messages.php:1166
 #, fuzzy
 #| msgid "Delete user group"
 msgid "Delete Keyword Group"
 msgstr "Elminar el grupo de usuarios"
 
-#: core/messages/messages.php:1168 core/messages/messages.php:1462
+#: core/messages/messages.php:1167 core/messages/messages.php:1461
 msgid "Close"
 msgstr ""
 
-#: core/messages/messages.php:1169
+#: core/messages/messages.php:1168
 msgid ""
 "Before proceeding, attachments need to be converted to text files and cached "
 "in order to speed up full-text searches. This process might take some time if "
@@ -6948,568 +6969,568 @@ msgid ""
 "you login or go to the front page."
 msgstr ""
 
-#: core/messages/messages.php:1170
+#: core/messages/messages.php:1169
 msgid "### attachments remain to be cached."
 msgstr ""
 
-#: core/messages/messages.php:1171
+#: core/messages/messages.php:1170
 msgid "### attachments cached thus far."
 msgstr ""
 
 #. / misc_attachmentCache4 Don't translate 'CURL'
-#: core/messages/messages.php:1173
+#: core/messages/messages.php:1172
 msgid "Use CURL"
 msgstr ""
 
-#: core/messages/messages.php:1174
+#: core/messages/messages.php:1173
 msgid "Attempt to only cache this number of files at a time: ###"
 msgstr ""
 
-#: core/messages/messages.php:1175
+#: core/messages/messages.php:1174
 msgid "Skip caching"
 msgstr ""
 
-#: core/messages/messages.php:1176
+#: core/messages/messages.php:1175
 msgid "Delete all attachments for this resource"
 msgstr ""
 
-#: core/messages/messages.php:1180
+#: core/messages/messages.php:1179
 msgid "Choose the type of collection you wish to browse"
 msgstr "Seleccione el tipo de colección donde desea buscar"
 
-#: core/messages/messages.php:1183 core/messages/messages.php:1357
+#: core/messages/messages.php:1182 core/messages/messages.php:1356
 msgid "Web Site"
 msgstr "Revista electrónica"
 
-#: core/messages/messages.php:1187
+#: core/messages/messages.php:1186
 msgid "Thesis Abstracts"
 msgstr "Resúmenes de Tesis"
 
-#: core/messages/messages.php:1188
+#: core/messages/messages.php:1187
 msgid "Music Recording"
 msgstr ""
 
-#: core/messages/messages.php:1189 core/messages/messages.php:1392
+#: core/messages/messages.php:1188 core/messages/messages.php:1391
 msgid "Manuscript"
 msgstr "Manuscrito"
 
-#: core/messages/messages.php:1193
+#: core/messages/messages.php:1192
 msgid "Legal"
 msgstr ""
 
-#: core/messages/messages.php:1194
+#: core/messages/messages.php:1193
 msgid "Music"
 msgstr "Grabación musical"
 
-#: core/messages/messages.php:1196
+#: core/messages/messages.php:1195
 msgid "Chart"
 msgstr ""
 
 #. / resourceType_patent Patents
-#: core/messages/messages.php:1197 core/messages/messages.php:1400
+#: core/messages/messages.php:1196 core/messages/messages.php:1399
 msgid "Patent"
 msgstr "Patente"
 
 #. / collection_all When browsing collections, the user may browse ALL collections or by collection type.  'ALL' is is displayed at the top of a select box so should not be many words
-#: core/messages/messages.php:1199
+#: core/messages/messages.php:1198
 msgid "ALL"
 msgstr "TODOS LOS TIPOS"
 
-#: core/messages/messages.php:1203
+#: core/messages/messages.php:1202
 msgid "List all by"
 msgstr "Listar todos por"
 
-#: core/messages/messages.php:1204
+#: core/messages/messages.php:1203
 msgid "First Creator"
 msgstr "Primer creador"
 
-#: core/messages/messages.php:1207 core/messages/messages.php:1277
+#: core/messages/messages.php:1206 core/messages/messages.php:1276
 msgid "Publication Year"
 msgstr "Año de publicación"
 
-#: core/messages/messages.php:1208
+#: core/messages/messages.php:1207
 msgid "Timestamp"
 msgstr "Fecha"
 
-#: core/messages/messages.php:1209
+#: core/messages/messages.php:1208
 msgid "Order by"
 msgstr "Ordenar por"
 
-#: core/messages/messages.php:1210
+#: core/messages/messages.php:1209
 msgid "Views Index"
 msgstr ""
 
-#: core/messages/messages.php:1211
+#: core/messages/messages.php:1210
 msgid "Downloads Index"
 msgstr ""
 
-#: core/messages/messages.php:1212
+#: core/messages/messages.php:1211
 msgid "Popularity Index"
 msgstr "Índice de popularidad"
 
-#: core/messages/messages.php:1213 core/messages/messages.php:1279
+#: core/messages/messages.php:1212 core/messages/messages.php:1278
 msgid "Maturity Index"
 msgstr "Índice de madurez"
 
-#: core/messages/messages.php:1214
+#: core/messages/messages.php:1213
 msgid "Ascending"
 msgstr ""
 
-#: core/messages/messages.php:1215
+#: core/messages/messages.php:1214
 msgid "Descending"
 msgstr ""
 
-#: core/messages/messages.php:1216 core/messages/messages.php:1233
-#: core/messages/messages.php:1311
+#: core/messages/messages.php:1215 core/messages/messages.php:1232
+#: core/messages/messages.php:1310
 msgid "Resource added by"
 msgstr ""
 
-#: core/messages/messages.php:1217 core/messages/messages.php:1234
+#: core/messages/messages.php:1216 core/messages/messages.php:1233
 msgid "Resource last edited by"
 msgstr ""
 
-#: core/messages/messages.php:1221
+#: core/messages/messages.php:1220
 msgid "Select by ###"
 msgstr "Seleccionar por###"
 
-#: core/messages/messages.php:1222
+#: core/messages/messages.php:1221
 msgid "NOT in bibliography"
 msgstr "NO en la bibliografía de usuario"
 
-#: core/messages/messages.php:1223
+#: core/messages/messages.php:1222
 msgid "Metadata type"
 msgstr "Tipo de metadatos"
 
-#: core/messages/messages.php:1224
+#: core/messages/messages.php:1223
 msgid "Display options"
 msgstr ""
 
-#: core/messages/messages.php:1225
+#: core/messages/messages.php:1224
 msgid "With no attachments"
 msgstr ""
 
-#: core/messages/messages.php:1226 core/messages/messages.php:1325
+#: core/messages/messages.php:1225 core/messages/messages.php:1324
 msgid "With at least one attachment"
 msgstr "Con un fichero anexo como mínimo"
 
-#: core/messages/messages.php:1227
+#: core/messages/messages.php:1226
 msgid "Display only attachments"
 msgstr "Mostrar sólo los anexos"
 
-#: core/messages/messages.php:1228
+#: core/messages/messages.php:1227
 msgid "With at least one external URL"
 msgstr ""
 
-#: core/messages/messages.php:1229
+#: core/messages/messages.php:1228
 msgid "With DOI"
 msgstr ""
 
 #. / select_displayAttachmentZip 'Tar' is the UNIX function tar so should not be translated.  'Compress' is as in file compression.  This statement follows on from the previous one
-#: core/messages/messages.php:1231
+#: core/messages/messages.php:1230
 msgid "Tar and compress attachments"
 msgstr "y crear un tar y comprimir los anexos"
 
-#: core/messages/messages.php:1232
+#: core/messages/messages.php:1231
 msgid "If peer reviewed"
 msgstr "Mostrar sólo si está revisado por pares"
 
 #. / select_field Database field such as 'title', 'abstract', 'quotes' etc.
 #. / search_field Database field such as 'title', 'abstract', 'quotes' etc.
-#: core/messages/messages.php:1236 core/messages/messages.php:1293
+#: core/messages/messages.php:1235 core/messages/messages.php:1292
 msgid "Search on Fields"
 msgstr "en el campo"
 
-#: core/messages/messages.php:1238
+#: core/messages/messages.php:1237
 msgid "Selected Types"
 msgstr "Tipo"
 
-#: core/messages/messages.php:1240 core/messages/messages.php:1297
+#: core/messages/messages.php:1239 core/messages/messages.php:1296
 msgid "Selected Keywords"
 msgstr "Palabra clave"
 
-#: core/messages/messages.php:1241
+#: core/messages/messages.php:1240
 #, fuzzy
 #| msgid "My User Groups"
 msgid "User Groups"
 msgstr "Mis Grupos de usuarios"
 
-#: core/messages/messages.php:1242
+#: core/messages/messages.php:1241
 #, fuzzy
 #| msgid "Selected Users"
 msgid "Selected User Groups"
 msgstr "Recurso añadido por"
 
-#: core/messages/messages.php:1243 core/messages/messages.php:1296
+#: core/messages/messages.php:1242 core/messages/messages.php:1295
 msgid "Metadata Keywords"
 msgstr ""
 
-#: core/messages/messages.php:1244
+#: core/messages/messages.php:1243
 msgid "Selected Metadata Keywords"
 msgstr ""
 
-#: core/messages/messages.php:1246 core/messages/messages.php:1299
+#: core/messages/messages.php:1245 core/messages/messages.php:1298
 msgid "Selected User Tags"
 msgstr ""
 
-#: core/messages/messages.php:1248 core/messages/messages.php:1301
+#: core/messages/messages.php:1247 core/messages/messages.php:1300
 msgid "Selected Categories"
 msgstr "Categoría"
 
-#: core/messages/messages.php:1250
+#: core/messages/messages.php:1249
 msgid "Selected Subcategories"
 msgstr ""
 
-#: core/messages/messages.php:1251
+#: core/messages/messages.php:1250
 msgid "Selected Languages"
 msgstr ""
 
-#: core/messages/messages.php:1253
+#: core/messages/messages.php:1252
 msgid "Selected Publishers"
 msgstr "Editor"
 
-#: core/messages/messages.php:1255
+#: core/messages/messages.php:1254
 msgid "Selected Creators"
 msgstr "Creador"
 
-#: core/messages/messages.php:1257
+#: core/messages/messages.php:1256
 msgid "Selected Collections"
 msgstr "Colección"
 
-#: core/messages/messages.php:1259
+#: core/messages/messages.php:1258
 msgid "Import Tags"
 msgstr ""
 
-#: core/messages/messages.php:1260
+#: core/messages/messages.php:1259
 msgid "Selected tags"
 msgstr "Etiqueta de importación"
 
-#: core/messages/messages.php:1261
+#: core/messages/messages.php:1260
 msgid "Added By"
 msgstr ""
 
-#: core/messages/messages.php:1262 core/messages/messages.php:1264
+#: core/messages/messages.php:1261 core/messages/messages.php:1263
 msgid "Selected Users"
 msgstr "Recurso añadido por"
 
-#: core/messages/messages.php:1263
+#: core/messages/messages.php:1262
 msgid "Edited By"
 msgstr ""
 
-#: core/messages/messages.php:1265
+#: core/messages/messages.php:1264
 msgid "No ideas found matching your search"
 msgstr ""
 
-#: core/messages/messages.php:1269
+#: core/messages/messages.php:1268
 msgid "Method"
 msgstr "Método"
 
-#: core/messages/messages.php:1270 core/messages/messages.php:1319
+#: core/messages/messages.php:1269 core/messages/messages.php:1318
 msgid "Search word(s)"
 msgstr "Buscar palabra(s)"
 
 #. / search_partial Match part of a word or search term must equal whole word?
-#: core/messages/messages.php:1272 core/messages/messages.php:1320
+#: core/messages/messages.php:1271 core/messages/messages.php:1319
 msgid "Partial word match"
 msgstr "Ocurrencia parcial de palabra"
 
-#: core/messages/messages.php:1273
+#: core/messages/messages.php:1272
 msgid "Exact phrase"
 msgstr "Frase exacta"
 
 #. / search_type Type = book, journal article, thesis etc.
-#: core/messages/messages.php:1275 core/messages/messages.php:1323
+#: core/messages/messages.php:1274 core/messages/messages.php:1322
 msgid "Type"
 msgstr "de tipo"
 
-#: core/messages/messages.php:1278
+#: core/messages/messages.php:1277
 msgid "Number of Views"
 msgstr ""
 
-#: core/messages/messages.php:1285
+#: core/messages/messages.php:1284
 msgid "Quote comment"
 msgstr ""
 
-#: core/messages/messages.php:1286
+#: core/messages/messages.php:1285
 msgid "Paraphrase comment"
 msgstr ""
 
-#: core/messages/messages.php:1291
+#: core/messages/messages.php:1290
 msgid "Ideas have been found"
 msgstr ""
 
-#: core/messages/messages.php:1294
+#: core/messages/messages.php:1293
 msgid "Metadata Type"
 msgstr "Tipo de metadatos"
 
-#: core/messages/messages.php:1303 core/messages/messages.php:1328
+#: core/messages/messages.php:1302 core/messages/messages.php:1327
 msgid "Subcategory"
 msgstr ""
 
-#: core/messages/messages.php:1304 core/messages/messages.php:1327
-#: core/messages/messages.php:1466
+#: core/messages/messages.php:1303 core/messages/messages.php:1326
+#: core/messages/messages.php:1465
 msgid "Category"
 msgstr "de la categoría"
 
-#: core/messages/messages.php:1306
+#: core/messages/messages.php:1305
 msgid "Metadata keyword"
 msgstr ""
 
-#: core/messages/messages.php:1307 core/messages/messages.php:1329
+#: core/messages/messages.php:1306 core/messages/messages.php:1328
 msgid "User tag"
 msgstr ""
 
-#: core/messages/messages.php:1310
+#: core/messages/messages.php:1309
 msgid "Import tag"
 msgstr ""
 
-#: core/messages/messages.php:1312
+#: core/messages/messages.php:1311
 msgid "Resource edited by"
 msgstr ""
 
-#: core/messages/messages.php:1313
+#: core/messages/messages.php:1312
 msgid "Search/Select"
 msgstr ""
 
-#: core/messages/messages.php:1314
+#: core/messages/messages.php:1313
 msgid "View natural language"
 msgstr ""
 
-#: core/messages/messages.php:1315
+#: core/messages/messages.php:1314
 msgid "Results where"
 msgstr ""
 
-#: core/messages/messages.php:1321
+#: core/messages/messages.php:1320
 msgid "Field"
 msgstr "Campo"
 
-#: core/messages/messages.php:1324
+#: core/messages/messages.php:1323
 msgid "Import Tag"
 msgstr "Etiqueta de importación"
 
-#: core/messages/messages.php:1330
+#: core/messages/messages.php:1329
 msgid "NOT in user bibliography"
 msgstr "NO en la bibliografía de usuario"
 
-#: core/messages/messages.php:1335
+#: core/messages/messages.php:1334
 msgid "List (###)"
 msgstr ""
 
-#: core/messages/messages.php:1336
+#: core/messages/messages.php:1335
 msgid "Resource added by ###"
 msgstr ""
 
-#: core/messages/messages.php:1337
+#: core/messages/messages.php:1336
 msgid "Resource last edited by ###"
 msgstr ""
 
 #. / listParams_listParams List, search or select parameters when displaying a list
-#: core/messages/messages.php:1339
+#: core/messages/messages.php:1338
 msgid "Parameters"
 msgstr "Parámetros:"
 
 #. / listParams_listParamMultiple When displaying search, select or list parameters, this message is displayed if there are too many to reasonably display
-#: core/messages/messages.php:1341
+#: core/messages/messages.php:1340
 msgid "Multiple"
 msgstr "Múltiple"
 
-#: core/messages/messages.php:1344 core/messages/messages.php:1522
+#: core/messages/messages.php:1343 core/messages/messages.php:1521
 msgid "Bibliography"
 msgstr "Bibliografía"
 
-#: core/messages/messages.php:1345
+#: core/messages/messages.php:1344
 msgid "List all"
 msgstr ""
 
 #. / resourceType_book_article Titled chapter in book (i.e. chapter has title not number)
-#: core/messages/messages.php:1353
+#: core/messages/messages.php:1352
 msgid "Book Article"
 msgstr "Capítulo de libro"
 
 #. / resourceType_book_chapter Numeric chapter in book
-#: core/messages/messages.php:1355
+#: core/messages/messages.php:1354
 msgid "Book Chapter Number"
 msgstr "Número de capítulo de libro"
 
-#: core/messages/messages.php:1356
+#: core/messages/messages.php:1355
 msgid "Web Article"
 msgstr "Artículo de Internet"
 
-#: core/messages/messages.php:1358
+#: core/messages/messages.php:1357
 msgid "Web Encyclopedia"
 msgstr "Enciclopedia Web"
 
-#: core/messages/messages.php:1359
+#: core/messages/messages.php:1358
 msgid "Web Encyclopedia Article"
 msgstr "Entrada de enciclopedia Web"
 
-#: core/messages/messages.php:1360
+#: core/messages/messages.php:1359
 msgid "Journal Article"
 msgstr "Artículo de revista"
 
-#: core/messages/messages.php:1361
+#: core/messages/messages.php:1360
 msgid "Newspaper Article"
 msgstr "Artículo de periódico"
 
-#: core/messages/messages.php:1363
+#: core/messages/messages.php:1362
 msgid "Proceedings Article"
 msgstr "Artículo en Actas"
 
 #. / resourceType_broadcast TV or Radio broadcast
-#: core/messages/messages.php:1365
+#: core/messages/messages.php:1364
 msgid "Broadcast"
 msgstr "Emisión"
 
-#: core/messages/messages.php:1366
+#: core/messages/messages.php:1365
 msgid "Film"
 msgstr "Película"
 
 #. / resourceType_legal_ruling Legal Ruling or Regulation
-#: core/messages/messages.php:1368
+#: core/messages/messages.php:1367
 msgid "Legal Rule/Regulation"
 msgstr "Ley/Reglamento legal"
 
 #. / resourceType_software Computer software
-#: core/messages/messages.php:1370
+#: core/messages/messages.php:1369
 msgid "Software"
 msgstr "Software"
 
 #. / resourceType_artWork Art etc.
-#: core/messages/messages.php:1372
+#: core/messages/messages.php:1371
 msgid "Artwork"
 msgstr "Ilustraciones"
 
 #. / resourceType_audiovisual Audiovisual material
-#: core/messages/messages.php:1374
+#: core/messages/messages.php:1373
 msgid "Audiovisual"
 msgstr "Audiovisual"
 
 #. / resourceType_case Legal cases
-#: core/messages/messages.php:1376
+#: core/messages/messages.php:1375
 msgid "Legal Case"
 msgstr "Caso legal"
 
 #. / resourceType_classical Classical (historical) work
-#: core/messages/messages.php:1380
+#: core/messages/messages.php:1379
 msgid "Classical Work"
 msgstr "Obra clásica"
 
-#: core/messages/messages.php:1381
+#: core/messages/messages.php:1380
 msgid "Conference Paper"
 msgstr "Ponencia de conferencia"
 
-#: core/messages/messages.php:1382
+#: core/messages/messages.php:1381
 msgid "Conference Poster"
 msgstr ""
 
 #. / resourceType_report Reports or documentation
-#: core/messages/messages.php:1384
+#: core/messages/messages.php:1383
 msgid "Report/Documentation"
 msgstr "Informe/Documentación"
 
 #. / resourceType_government_report Government report or documentation
-#: core/messages/messages.php:1386
+#: core/messages/messages.php:1385
 msgid "Government Report/Documentation"
 msgstr "Informe/Documentación gubernamental"
 
 #. / resourceType_database Online databases
-#: core/messages/messages.php:1390
+#: core/messages/messages.php:1389
 msgid "Online Database"
 msgstr "Base de datos en línea"
 
-#: core/messages/messages.php:1391
+#: core/messages/messages.php:1390
 msgid "Magazine Article"
 msgstr "Artículo en revista (magazine)"
 
 #. / resourceType_chart Charts/images
-#: core/messages/messages.php:1396
+#: core/messages/messages.php:1395
 msgid "Chart/Image"
 msgstr "Diagrama/Imagen"
 
 #. / resourceType_statute Statute
-#: core/messages/messages.php:1398
+#: core/messages/messages.php:1397
 msgid "Statute"
 msgstr "Estatuto"
 
 #. / resourceType_brochure Company brochure
-#: core/messages/messages.php:1402
+#: core/messages/messages.php:1401
 msgid "Brochure"
 msgstr ""
 
 #. / resourceType_personal Personal Communication
-#: core/messages/messages.php:1404
+#: core/messages/messages.php:1403
 msgid "Personal Communication"
 msgstr "Comunicación personal"
 
 #. / resourceType_unpublished Unpublished work
-#: core/messages/messages.php:1406
+#: core/messages/messages.php:1405
 msgid "Unpublished Work"
 msgstr "Trabajo inédito"
 
 #. / resourceType_music_album Recorded music
-#: core/messages/messages.php:1410
+#: core/messages/messages.php:1409
 msgid "Recorded Music Album"
 msgstr "Álbum de música grabada"
 
-#: core/messages/messages.php:1411
+#: core/messages/messages.php:1410
 msgid "Recorded Music Track"
 msgstr "Pista de música grabada"
 
 #. / resourceType_music_score Sheet music
-#: core/messages/messages.php:1413
+#: core/messages/messages.php:1412
 msgid "Music Score"
 msgstr "Partitura"
 
 #. / resourceType_miscellaneous_section Similar to miscellaneous but a part of something else
-#: core/messages/messages.php:1417
+#: core/messages/messages.php:1416
 msgid "Miscellaneous Section"
 msgstr "Sección de diversos"
 
 #. / resourceType_genericBook Generic resource types used when creating bibliographic styles.
-#: core/messages/messages.php:1419
+#: core/messages/messages.php:1418
 msgid "Generic book-type"
 msgstr "Tipo de libro genérico"
 
-#: core/messages/messages.php:1420
+#: core/messages/messages.php:1419
 msgid "Generic article-type"
 msgstr "Tipo de artículo genérico"
 
-#: core/messages/messages.php:1421
+#: core/messages/messages.php:1420
 msgid "Generic miscellaneous"
 msgstr "Diversos genérico"
 
-#: core/messages/messages.php:1425
+#: core/messages/messages.php:1424
 msgid "Add category"
 msgstr ""
 
-#: core/messages/messages.php:1426
+#: core/messages/messages.php:1425
 msgid "Add subcategory"
 msgstr ""
 
-#: core/messages/messages.php:1427
+#: core/messages/messages.php:1426
 msgid "Edit category"
 msgstr ""
 
-#: core/messages/messages.php:1428
+#: core/messages/messages.php:1427
 msgid "Edit subcategory"
 msgstr ""
 
-#: core/messages/messages.php:1429
+#: core/messages/messages.php:1428
 msgid "Delete category"
 msgstr ""
 
-#: core/messages/messages.php:1430
+#: core/messages/messages.php:1429
 msgid "Delete subcategory"
 msgstr ""
 
-#: core/messages/messages.php:1431
+#: core/messages/messages.php:1430
 msgid "Delete category(s) ###"
 msgstr ""
 
-#: core/messages/messages.php:1432
+#: core/messages/messages.php:1431
 msgid "Delete subcategory(s) ###"
 msgstr ""
 
-#: core/messages/messages.php:1433
+#: core/messages/messages.php:1432
 msgid ""
 "Any resource belonging to the category(s) you are deleting that does not "
 "belong to another category will be placed in the 'General' category"
@@ -7517,70 +7538,70 @@ msgstr ""
 "Cualquier recurso perteneciente a la(s) categoría(s) que va a eliminar, y que "
 "no pertenezca a otra, será colocado en la categoría 'General'"
 
-#: core/messages/messages.php:1437
+#: core/messages/messages.php:1436
 msgid "Submit"
 msgstr "Enviar"
 
-#: core/messages/messages.php:1438
+#: core/messages/messages.php:1437
 msgid "List"
 msgstr "Listar"
 
-#: core/messages/messages.php:1440
+#: core/messages/messages.php:1439
 msgid "Select"
 msgstr "Seleccionar"
 
-#: core/messages/messages.php:1441
+#: core/messages/messages.php:1440
 msgid "Proceed"
 msgstr "Seguir"
 
 #. / submit_Reset Reset button for forms
-#: core/messages/messages.php:1443
+#: core/messages/messages.php:1442
 msgid "Reset"
 msgstr "Limpiar"
 
-#: core/messages/messages.php:1444
+#: core/messages/messages.php:1443
 msgid "Continue"
 msgstr "Continuar"
 
-#: core/messages/messages.php:1446
+#: core/messages/messages.php:1445
 msgid "Confirm"
 msgstr "Confirmar"
 
-#: core/messages/messages.php:1451
+#: core/messages/messages.php:1450
 msgid "Approve resource"
 msgstr ""
 
-#: core/messages/messages.php:1452
+#: core/messages/messages.php:1451
 msgid "Quarantine resource"
 msgstr ""
 
-#: core/messages/messages.php:1453
+#: core/messages/messages.php:1452
 msgid "Remove"
 msgstr ""
 
 #. / submit_Cite Add citation
-#: core/messages/messages.php:1456 core/messages/messages.php:1605
+#: core/messages/messages.php:1455 core/messages/messages.php:1604
 msgid "Cite"
 msgstr "Citar"
 
-#: core/messages/messages.php:1457
+#: core/messages/messages.php:1456
 msgid "Save"
 msgstr "Guardar"
 
-#: core/messages/messages.php:1458
+#: core/messages/messages.php:1457
 msgid "Test"
 msgstr ""
 
 #. / submit_Cache Convert and cache attachments
-#: core/messages/messages.php:1460
+#: core/messages/messages.php:1459
 msgid "Convert attachments"
 msgstr ""
 
-#: core/messages/messages.php:1461
+#: core/messages/messages.php:1460
 msgid "OK"
 msgstr ""
 
-#: core/messages/messages.php:1467
+#: core/messages/messages.php:1466
 msgid ""
 "All WIKINDX resources belong to at least one category which you chose here.  "
 "The category(s) a resource belongs to can always be edited later."
@@ -7590,22 +7611,22 @@ msgstr ""
 "editadas más adelante."
 
 #. / import_pasteBibtex An ordinary user may cut 'n' paste bibtex entries into a textarea box for importing into the bibliography. '###' is the maximum number that the admin allows. Don't translate '@string'
-#: core/messages/messages.php:1469
+#: core/messages/messages.php:1468
 msgid ""
 "You may paste up to ### bibTeX entries here in addition to @string types."
 msgstr "Puede pegar hasta### entradas BibTeX aquí, además de los tipos @string."
 
 #. / import_importDuplicates For file imports, allow duplicates?
-#: core/messages/messages.php:1471
+#: core/messages/messages.php:1470
 msgid "Import duplicates"
 msgstr "Importar duplicados"
 
-#: core/messages/messages.php:1472
+#: core/messages/messages.php:1471
 msgid "Store unused fields"
 msgstr "Almacenar los campos no utilizados"
 
 #. / import_storeRawBibtex Do not translate '@string'
-#: core/messages/messages.php:1474
+#: core/messages/messages.php:1473
 msgid ""
 "You may store BibTeX fields that WIKINDX does not use so that any resources "
 "later exported to BibTeX can include this original unchanged data.  Doing "
@@ -7617,22 +7638,22 @@ msgstr ""
 "sin cambios. Haciendo esto, también almacena la clave BibTeX y cualquier "
 "cadena @string que esté en el fichero BibTeX importado."
 
-#: core/messages/messages.php:1475
+#: core/messages/messages.php:1474
 msgid "File is empty"
 msgstr "El fichero está vacío"
 
-#: core/messages/messages.php:1476
+#: core/messages/messages.php:1475
 msgid "No. resources added: ###"
 msgstr "Nº de recursos añadidos:"
 
-#: core/messages/messages.php:1477
+#: core/messages/messages.php:1476
 msgid ""
 "No. resources discarded (duplicates, no titles, or in the deactivated "
 "resource type list): ###"
 msgstr "Nº de recursos descartados (duplicados):"
 
 #. / import_invalidField1 If non-standard bibtex fields are found in the input file, invite the user to map these fields to wikindx fields
-#: core/messages/messages.php:1479
+#: core/messages/messages.php:1478
 msgid ""
 "Unknown fields have been found. You may map these fields to WIKINDX fields -- "
 "no duplicate mapping is allowed."
@@ -7640,7 +7661,7 @@ msgstr ""
 "Se han encontrado campos desconocidos. Puede mapear estos campos a campos "
 "WIKINDX --No está permitido mapear duplicados."
 
-#: core/messages/messages.php:1480
+#: core/messages/messages.php:1479
 msgid ""
 "Where an unknown field is mapped to a WIKINDX field that would normally be "
 "automatically mapped to a standard input field, the unknown field mapping "
@@ -7650,22 +7671,22 @@ msgstr ""
 "normales sería automáticamente mapeado a un campo de entrada estándar, el "
 "mapeamiento del campo desconocido tiene preferencia"
 
-#: core/messages/messages.php:1481
+#: core/messages/messages.php:1480
 msgid ""
 "Unknown fields have been found. You may map these fields to custom fields -- "
 "no duplicate mapping is allowed."
 msgstr ""
 
-#: core/messages/messages.php:1482
+#: core/messages/messages.php:1481
 msgid "Import File"
 msgstr "Importar Fichero"
 
-#: core/messages/messages.php:1483
+#: core/messages/messages.php:1482
 msgid "Tag this import so you can do a mass select or delete later"
 msgstr "Etiquete esta importación"
 
 #. / import_executionTimeExceeded With large imports that would go over php.ini's max_execution time, WIKINDX splits the imports into chunks
-#: core/messages/messages.php:1485
+#: core/messages/messages.php:1484
 msgid ""
 "'max_execution_time' (### seconds) in php.ini was about to be exceeded.  "
 "WIKINDX is importing the bibliography in chunks."
@@ -7673,46 +7694,46 @@ msgstr ""
 "'max_execution_time' (### segundos) en php.ini fue excedido. WIKINDX va a "
 "importar la bibliografía por partes."
 
-#: core/messages/messages.php:1486
+#: core/messages/messages.php:1485
 msgid "No. resources added this chunk: ###"
 msgstr "Nº de recursos añadidos en esta parte:###"
 
-#: core/messages/messages.php:1487
+#: core/messages/messages.php:1486
 msgid "Quarantine from public view"
 msgstr ""
 
-#: core/messages/messages.php:1491
+#: core/messages/messages.php:1490
 #, fuzzy
 #| msgid "Username"
 msgid "User"
 msgstr "Nombre de usuario"
 
-#: core/messages/messages.php:1492
+#: core/messages/messages.php:1491
 msgid "Confirm password"
 msgstr "Confirmar la contraseña"
 
-#: core/messages/messages.php:1493
+#: core/messages/messages.php:1492
 msgid "Username"
 msgstr "Nombre de usuario"
 
-#: core/messages/messages.php:1494
+#: core/messages/messages.php:1493
 msgid "Delete user(s): ###"
 msgstr "Eliminar usuario(s)###"
 
-#: core/messages/messages.php:1495
+#: core/messages/messages.php:1494
 msgid "Full name"
 msgstr "Nombre completo"
 
-#: core/messages/messages.php:1498
+#: core/messages/messages.php:1497
 msgid "User is creator"
 msgstr ""
 
-#: core/messages/messages.php:1499
+#: core/messages/messages.php:1498
 msgid "Password"
 msgstr "Contraseña"
 
 #. / user_emailText Do not use any TAB or CR in this one or the message formatting will be messed up in the email client.
-#: core/messages/messages.php:1502
+#: core/messages/messages.php:1501
 msgid ""
 "You recently registered to use our WIKINDX. If this was not you, please "
 "ignore this email.  Otherwise, to complete the registration process, please "
@@ -7723,7 +7744,7 @@ msgstr ""
 "registro siga la dirección y mire las instrucciones:"
 
 #. / user_emailText2 Do not use any TAB or CR in this one or the message formatting will be messed up in the email client.
-#: core/messages/messages.php:1504
+#: core/messages/messages.php:1503
 msgid ""
 "Thank you for registering to use our WIKINDX.  Please keep this email for "
 "reference:"
@@ -7732,7 +7753,7 @@ msgstr ""
 "referencia:"
 
 #. / user_emailText3 Do not use any TAB or CR in this one or the message formatting will be messed up in the email client.
-#: core/messages/messages.php:1506
+#: core/messages/messages.php:1505
 msgid ""
 "You recently updated your details on our WIKINDX.  Please keep this email for "
 "reference:"
@@ -7741,12 +7762,12 @@ msgstr ""
 "correo como referencia:"
 
 #. / user_cookie For optional cookies
-#: core/messages/messages.php:1508
+#: core/messages/messages.php:1507
 msgid "Remember me"
 msgstr "Recordar mis datos"
 
 #. / user_forget1 If the user forgets a password, they can answer a series of questions they have earlier supplied to get a new temporary password emailed to them
-#: core/messages/messages.php:1510
+#: core/messages/messages.php:1509
 msgid ""
 "If you forget your password at some point in the future, you may have a "
 "temporary password emailed to you by correctly answering up to three "
@@ -7757,19 +7778,19 @@ msgstr ""
 "electrónico respondiendo correctamente hasta tres preguntas. Deberá tener la "
 "seguridad de que el correo almacenado en WIKINDX está siempre actualizado."
 
-#: core/messages/messages.php:1511
+#: core/messages/messages.php:1510
 msgid "Enter up to three short questions and answers:"
 msgstr "Introduzca hasta tres preguntas y respuestas breves:"
 
-#: core/messages/messages.php:1512
+#: core/messages/messages.php:1511
 msgid "Question ###"
 msgstr "Pregunta###"
 
-#: core/messages/messages.php:1513
+#: core/messages/messages.php:1512
 msgid "Answer ###"
 msgstr "Respuesta###"
 
-#: core/messages/messages.php:1514
+#: core/messages/messages.php:1513
 msgid ""
 "If you have just loaded this page and a question is displayed here but no "
 "answer, then the answer is already stored encrypted in the database. You "
@@ -7779,19 +7800,19 @@ msgstr ""
 "entonces la respuesta ya ha sido almacenada encriptada en la base de datos. "
 "Debe, sin embargo, proporcionar respuestas cuando pulse en el botón \"Seguir\""
 
-#: core/messages/messages.php:1515
+#: core/messages/messages.php:1514
 msgid "Forgotten your password?"
 msgstr "¿Olvidó su contraseña?"
 
-#: core/messages/messages.php:1516
+#: core/messages/messages.php:1515
 msgid "Enter either your username or email as stored in the WIKINDX."
 msgstr "Escriba su nombre o correo tal como fue introducido en WIKINDX."
 
-#: core/messages/messages.php:1517
+#: core/messages/messages.php:1516
 msgid "Answer the following questions:"
 msgstr "Responda a las siguientes cuestiones:"
 
-#: core/messages/messages.php:1518
+#: core/messages/messages.php:1517
 msgid ""
 "You recently requested a reset password for your WIKINDX account. A temporary "
 "password is given below. You should log into this WIKINDX as soon as possible "
@@ -7801,7 +7822,7 @@ msgstr ""
 "abajo se le proporciona una contraseña temporal. Deberá ingresar este WIKINDX "
 "cuanto antes y cambiar esta contraseña en su configuración de usuario."
 
-#: core/messages/messages.php:1519
+#: core/messages/messages.php:1518
 msgid ""
 "Thank you for correctly answering the questions. An email has been sent to "
 "your address with a temporary password which you should change the next time "
@@ -7811,24 +7832,24 @@ msgstr ""
 "correo electrónico a su dirección con una contraseña temporal que debe "
 "cambiar la próxima vez que se entre a WIKINDX."
 
-#: core/messages/messages.php:1520
+#: core/messages/messages.php:1519
 msgid "Return to log in prompt"
 msgstr "Volver a conectar cuando se le avise"
 
-#: core/messages/messages.php:1521
+#: core/messages/messages.php:1520
 msgid "WIKINDX Master Bibliography"
 msgstr "Bibliografía Maestra WIKINDX"
 
-#: core/messages/messages.php:1523
+#: core/messages/messages.php:1522
 msgid "Delete bibliography ###"
 msgstr "Eliminar la bibliografía###"
 
 #. / user_unknown When a user has been deleted but her input remains, display this when viewing a resource and its associated text
-#: core/messages/messages.php:1525
+#: core/messages/messages.php:1524
 msgid "Deleted user"
 msgstr "Usuario eliminado"
 
-#: core/messages/messages.php:1526
+#: core/messages/messages.php:1525
 msgid ""
 "How do you wish to deal with the deleted users' quotes, paraphrases, musings, "
 "ideas, and comments (metadata)? Metadata left unchanged will be shown as "
@@ -7838,149 +7859,149 @@ msgid ""
 "private and group musings, comments, and ideas will be made public."
 msgstr ""
 
-#: core/messages/messages.php:1527
+#: core/messages/messages.php:1526
 msgid "Leave unchanged"
 msgstr ""
 
-#: core/messages/messages.php:1528
+#: core/messages/messages.php:1527
 msgid "Transfer to superadmin"
 msgstr ""
 
 #. / user_bib This user's bibliographies
-#: core/messages/messages.php:1531
+#: core/messages/messages.php:1530
 #, fuzzy
 #| msgid "Add to user bibliographies"
 msgid "User bibliographies"
 msgstr "Añadir este recurso a las bibliografías de usuario"
 
-#: core/messages/messages.php:1532
+#: core/messages/messages.php:1531
 msgid "Use this bibliography for browsing"
 msgstr "Usar esta bibliografía para la búsqueda"
 
-#: core/messages/messages.php:1533
+#: core/messages/messages.php:1532
 msgid "Display bibliography details"
 msgstr "Mostrar detalles de la bibliografía"
 
-#: core/messages/messages.php:1536
+#: core/messages/messages.php:1535
 msgid "You do not yet have any bibliographies"
 msgstr "Aún no creó una bibliografía"
 
-#: core/messages/messages.php:1537
+#: core/messages/messages.php:1536
 msgid "Create a new user bibliography"
 msgstr "Crear una nueva bibliografía"
 
-#: core/messages/messages.php:1538
+#: core/messages/messages.php:1537
 msgid "Create a new group bibliography"
 msgstr ""
 
-#: core/messages/messages.php:1539
+#: core/messages/messages.php:1538
 msgid "Delete bibliography"
 msgstr "Eliminar bibliografía"
 
-#: core/messages/messages.php:1540
+#: core/messages/messages.php:1539
 msgid "Edit bibliography details"
 msgstr "Editar los detalles de la bibliografía"
 
-#: core/messages/messages.php:1541
+#: core/messages/messages.php:1540
 #, fuzzy
 #| msgid "Add users to this group"
 msgid "Add users to this bibliography"
 msgstr "Añadir usuarios a este grupo"
 
-#: core/messages/messages.php:1542
+#: core/messages/messages.php:1541
 msgid "Delete from bibliography"
 msgstr "Eliminar de la bibliografía"
 
 #. / user_otherBibs displayed in select box - other users' bibliographies
-#: core/messages/messages.php:1544
+#: core/messages/messages.php:1543
 msgid "______OTHER USERS______"
 msgstr "______OTROS USUARIOS______"
 
 #. / user_userBibs displayed in select box
-#: core/messages/messages.php:1546
+#: core/messages/messages.php:1545
 msgid "___MY BIBLIOGRAPHIES___"
 msgstr "___MIS BIBLIOGRAFÍAS___"
 
 #. / user_userGroupBibs displayed in select box
-#: core/messages/messages.php:1548
+#: core/messages/messages.php:1547
 msgid "___GROUP BIBLIOGRAPHIES___"
 msgstr "___BIBLIOGRAFÍAS DE GRUPO___"
 
-#: core/messages/messages.php:1549
+#: core/messages/messages.php:1548
 msgid "Number of resources"
 msgstr ""
 
-#: core/messages/messages.php:1550
+#: core/messages/messages.php:1549
 msgid "Administrator"
 msgstr "Administrador"
 
-#: core/messages/messages.php:1551
+#: core/messages/messages.php:1550
 msgid "Bypass the password check"
 msgstr ""
 
-#: core/messages/messages.php:1554
+#: core/messages/messages.php:1553
 msgid "Never"
 msgstr "Nunca"
 
-#: core/messages/messages.php:1555
+#: core/messages/messages.php:1554
 msgid "When any resource or its text is added/edited by other users"
 msgstr ""
 "Cuando cualquier recurso o su texto sea añadido o editado por otros usuarios"
 
-#: core/messages/messages.php:1556
+#: core/messages/messages.php:1555
 msgid ""
 "When any resource from my bibliographies or its text is added/edited by other "
 "users"
 msgstr ""
 
-#: core/messages/messages.php:1557
+#: core/messages/messages.php:1556
 msgid ""
 "When any resource or its text for which I am a creator is added/edited by "
 "other users"
 msgstr ""
 
-#: core/messages/messages.php:1558
+#: core/messages/messages.php:1557
 msgid "When a resource has been added"
 msgstr "Cuando se haya añadido un recurso"
 
-#: core/messages/messages.php:1559
+#: core/messages/messages.php:1558
 msgid "When a resource or its text has been edited"
 msgstr "Cuando un recurso o su texto haya sido editado"
 
-#: core/messages/messages.php:1560
+#: core/messages/messages.php:1559
 msgid ""
 "Provide a digest of additions/edits after x number of days since the last "
 "notification"
 msgstr "Notificar únicamente tras x nº de días desde la última notificación"
 
-#: core/messages/messages.php:1561
+#: core/messages/messages.php:1560
 msgid "Immediately"
 msgstr "Inmediatamente"
 
-#: core/messages/messages.php:1562
+#: core/messages/messages.php:1561
 msgid ""
 "At or below this value, receive a list of all added or edited resources; "
 "above this value, receive just the number of added or edited resources"
 msgstr ""
 
-#: core/messages/messages.php:1563
+#: core/messages/messages.php:1562
 msgid "### has added or edited the following resource or its text"
 msgstr "### ha añadido o editado el siguiente recurso o su texto"
 
 #. / user_notifyMass1 Email notification of new resources when there has been a mass import of more than 10.  This will produce something like: "Mark has added 29 new resources"
-#: core/messages/messages.php:1565
+#: core/messages/messages.php:1564
 msgid "### has added"
 msgstr "### ha añadido"
 
-#: core/messages/messages.php:1566
+#: core/messages/messages.php:1565
 msgid "### new resources"
 msgstr "### nuevos recursos"
 
-#: core/messages/messages.php:1567
+#: core/messages/messages.php:1566
 msgid "### resources have been added or edited since your last notification"
 msgstr "### recursos han sido añadidos o editados desde su última notificación"
 
-#: core/messages/messages.php:1568
+#: core/messages/messages.php:1567
 msgid ""
 "The following resources have been added or edited since your last notification"
 msgstr ""
@@ -7988,79 +8009,79 @@ msgstr ""
 "notificación"
 
 #. / user_addGroupsToBib When creating or editing a user group bibliography, the group admin can add user groups with access to this bibliography
-#: core/messages/messages.php:1570
+#: core/messages/messages.php:1569
 msgid "Give a user group write access to this bibliography"
 msgstr ""
 "Proporcionar permiso de escritura a un grupo de usuarios a esta bibliografía"
 
-#: core/messages/messages.php:1571
+#: core/messages/messages.php:1570
 msgid "You are not yet the administrator of any user groups"
 msgstr "Todavía no es el administrador de ningún grupo de usuarios"
 
-#: core/messages/messages.php:1572
+#: core/messages/messages.php:1571
 msgid "Create a new user group"
 msgstr "Crear un nuevo grupo de usuarios"
 
-#: core/messages/messages.php:1573
+#: core/messages/messages.php:1572
 msgid "Delete user group"
 msgstr "Elminar el grupo de usuarios"
 
-#: core/messages/messages.php:1574
+#: core/messages/messages.php:1573
 msgid "(This will also delete any user group bibliographies for this group)"
 msgstr ""
 "(Esto también borrará cualquier bibliografía de grupo de usuarios para este "
 "grupo)"
 
-#: core/messages/messages.php:1575
+#: core/messages/messages.php:1574
 msgid "Delete user group###"
 msgstr "Elminar el grupo de usuarios###"
 
-#: core/messages/messages.php:1576
+#: core/messages/messages.php:1575
 msgid "Edit user group"
 msgstr "Editar el grupo de usuarios"
 
-#: core/messages/messages.php:1577
+#: core/messages/messages.php:1576
 #, fuzzy
 #| msgid "My User Groups"
 msgid "User groups"
 msgstr "Mis Grupos de usuarios"
 
-#: core/messages/messages.php:1578
+#: core/messages/messages.php:1577
 #, fuzzy
 #| msgid "My User Groups"
 msgid "User group"
 msgstr "Mis Grupos de usuarios"
 
-#: core/messages/messages.php:1581
+#: core/messages/messages.php:1580
 msgid "Add users to this group"
 msgstr "Añadir usuarios a este grupo"
 
-#: core/messages/messages.php:1582
+#: core/messages/messages.php:1581
 msgid "Remove users from this group"
 msgstr "Eliminar usuarios de este grupo"
 
-#: core/messages/messages.php:1584
+#: core/messages/messages.php:1583
 msgid "You do not yet have any user tags"
 msgstr ""
 
-#: core/messages/messages.php:1586
+#: core/messages/messages.php:1585
 msgid "Create a new user tag"
 msgstr ""
 
-#: core/messages/messages.php:1587
+#: core/messages/messages.php:1586
 msgid "Delete user tag"
 msgstr ""
 
-#: core/messages/messages.php:1588
+#: core/messages/messages.php:1587
 msgid "Edit user tag"
 msgstr ""
 
-#: core/messages/messages.php:1589
+#: core/messages/messages.php:1588
 msgid "Delete user tag ###"
 msgstr ""
 
 #. / user_emailText4 Text that is emailed to the WIKINDX admin advising of a request for user registration.  'Admin' and 'Users' should be the same translations as in the menu array.
-#: core/messages/messages.php:1591
+#: core/messages/messages.php:1590
 msgid ""
 "There has been a request for WIKINDX registration.  In order to manage this "
 "request, please log on and use the 'Admin|Users' menu."
@@ -8069,7 +8090,7 @@ msgstr ""
 "por favor, abra una sesión y utilice el menú “Administrar > Usuarios”."
 
 #. / user_emailText5 A request for user registration has been declined.  '###' is the URL of the WIKINDX
-#: core/messages/messages.php:1593
+#: core/messages/messages.php:1592
 msgid ""
 "You recently requested registration at: ###. Unfortunately, the WIKINDX "
 "administrator has declined your request."
@@ -8078,11 +8099,11 @@ msgstr ""
 "administrador de WIKINDX ha declinado su petición."
 
 #. / user_pendingRegistration1 The Administrator has registration requests to manage
-#: core/messages/messages.php:1595
+#: core/messages/messages.php:1594
 msgid "Pending registration requests"
 msgstr "Hay peticiones de registro pendientes"
 
-#: core/messages/messages.php:1596
+#: core/messages/messages.php:1595
 msgid ""
 "Potential users will be emailed your decision with those accepted being "
 "invited to complete the registration process."
@@ -8091,140 +8112,140 @@ msgstr ""
 "decisión, siendo invitados a completar el proceso del registro aquellos que "
 "han sido aceptados."
 
-#: core/messages/messages.php:1597
+#: core/messages/messages.php:1596
 msgid "Accept registration"
 msgstr "Aceptar registro"
 
-#: core/messages/messages.php:1598
+#: core/messages/messages.php:1597
 msgid "Decline registration"
 msgstr "Rechazar registro"
 
-#: core/messages/messages.php:1599
+#: core/messages/messages.php:1598
 msgid "There are no users requesting registration"
 msgstr ""
 
-#: core/messages/messages.php:1600
+#: core/messages/messages.php:1599
 msgid "Authorized users"
 msgstr ""
 
-#: core/messages/messages.php:1601
+#: core/messages/messages.php:1600
 msgid "Blocked users"
 msgstr ""
 
 #. / cite_preText Text preceeding and following citations e.g. (see Grimshaw 1999; Boulanger 2004 for example): 'see' is preText and 'for example' is postText
 #. / cms_preText Text preceeding and following citations e.g. (see Grimshaw 1999; Boulanger 2004 for example): 'see' is preText and 'for example' is postText
-#: core/messages/messages.php:1607 core/messages/messages.php:1725
+#: core/messages/messages.php:1606 core/messages/messages.php:1724
 msgid "Preliminary text"
 msgstr "Texto preliminar"
 
-#: core/messages/messages.php:1608 core/messages/messages.php:1726
+#: core/messages/messages.php:1607 core/messages/messages.php:1725
 msgid "Following text"
 msgstr "Texto siguiente"
 
-#: core/messages/messages.php:1609
+#: core/messages/messages.php:1608
 msgid "Pages"
 msgstr ""
 
-#: core/messages/messages.php:1613
+#: core/messages/messages.php:1612
 msgid "Authors"
 msgstr "Autores"
 
-#: core/messages/messages.php:1614
+#: core/messages/messages.php:1613
 msgid "Editors"
 msgstr "Editores"
 
-#: core/messages/messages.php:1615
+#: core/messages/messages.php:1614
 msgid "Translators"
 msgstr "Traductores"
 
-#: core/messages/messages.php:1616
+#: core/messages/messages.php:1615
 msgid "Revisers"
 msgstr "Revisores"
 
-#: core/messages/messages.php:1617
+#: core/messages/messages.php:1616
 msgid "Series Editors"
 msgstr "Editor de la serie"
 
 #. / creators_director For films etc.
-#: core/messages/messages.php:1619
+#: core/messages/messages.php:1618
 msgid "Director"
 msgstr "Director"
 
-#: core/messages/messages.php:1620
+#: core/messages/messages.php:1619
 msgid "Producer"
 msgstr "Productor"
 
-#: core/messages/messages.php:1621
+#: core/messages/messages.php:1620
 msgid "Company"
 msgstr ""
 
 #. / creators_artist For artwork
-#: core/messages/messages.php:1623
+#: core/messages/messages.php:1622
 msgid "Artist"
 msgstr "Artista"
 
-#: core/messages/messages.php:1624
+#: core/messages/messages.php:1623
 msgid "Performer"
 msgstr "Ejecutante"
 
 #. / creators_counsel For legal cases
-#: core/messages/messages.php:1626
+#: core/messages/messages.php:1625
 msgid "Counsel"
 msgstr "Abogado"
 
-#: core/messages/messages.php:1627
+#: core/messages/messages.php:1626
 msgid "Judge"
 msgstr ""
 
 #. / creators_attributedTo For classical works of doubtful provenance
-#: core/messages/messages.php:1629
+#: core/messages/messages.php:1628
 msgid "Attributed to"
 msgstr "Atribuido a"
 
 #. / creators_cartographer Map makers
-#: core/messages/messages.php:1631
+#: core/messages/messages.php:1630
 msgid "Cartographer"
 msgstr "Cartógrafo"
 
 #. / creators_inventor For patents
-#: core/messages/messages.php:1635
+#: core/messages/messages.php:1634
 msgid "Inventor"
 msgstr "Inventor"
 
-#: core/messages/messages.php:1636
+#: core/messages/messages.php:1635
 msgid "Issuing Organisation"
 msgstr "Organización emisora"
 
-#: core/messages/messages.php:1637
+#: core/messages/messages.php:1636
 msgid "Agent/Attorney"
 msgstr "Agente/Abogado defensor"
 
 #. / creators_intAuthor International patent author
-#: core/messages/messages.php:1639
+#: core/messages/messages.php:1638
 msgid "International Author"
 msgstr "Autor internacional"
 
 #. / creators_recipient Personal Communication
-#: core/messages/messages.php:1641
+#: core/messages/messages.php:1640
 msgid "Recipient"
 msgstr "Receptor"
 
 #. / creators_composer For Musical works
-#: core/messages/messages.php:1643
+#: core/messages/messages.php:1642
 msgid "Composer"
 msgstr "Compositor"
 
-#: core/messages/messages.php:1644
+#: core/messages/messages.php:1643
 msgid "Conductor"
 msgstr "Director"
 
 #. / creators_supervisor for theses
-#: core/messages/messages.php:1646
+#: core/messages/messages.php:1645
 msgid "Supervisors"
 msgstr ""
 
 #. / creators_creatorExists Advice on what to do when editing a creator name and the new name already exists in the database.
-#: core/messages/messages.php:1648
+#: core/messages/messages.php:1647
 msgid ""
 "If you proceed, this edited creator will be deleted and all references in the "
 "database to it will be replaced by references to the pre-existing creator."
@@ -8234,17 +8255,17 @@ msgstr ""
 "preexistente."
 
 #. / creators_alias Some creators might have multiple names . . .
-#: core/messages/messages.php:1651
+#: core/messages/messages.php:1650
 msgid "Alias: ###"
 msgstr ""
 
 #. / custom_label The label given to the field
-#: core/messages/messages.php:1656
+#: core/messages/messages.php:1655
 msgid "Label"
 msgstr "Etiqueta"
 
 #. / custom_size The field storage space can be small or large
-#: core/messages/messages.php:1658
+#: core/messages/messages.php:1657
 msgid ""
 "The database size allocation for the field can be small (max. 255 characters) "
 "or large"
@@ -8252,15 +8273,15 @@ msgstr ""
 "La asignación de tamaño de la base de datos para el campo puede ser pequeña "
 "(máximo 255 caracteres) o grande"
 
-#: core/messages/messages.php:1659
+#: core/messages/messages.php:1658
 msgid "Small"
 msgstr "Pequeño"
 
-#: core/messages/messages.php:1660
+#: core/messages/messages.php:1659
 msgid "Large"
 msgstr "Grande"
 
-#: core/messages/messages.php:1661
+#: core/messages/messages.php:1660
 msgid ""
 "Deleting these fields will also remove any resource data belonging to the "
 "field."
@@ -8268,85 +8289,85 @@ msgstr ""
 "Suprimir estos campos eliminará también cualquier dato de recurso que "
 "pertenezca al campo."
 
-#: core/messages/messages.php:1662
+#: core/messages/messages.php:1661
 msgid "Add a field"
 msgstr "Añadir un campo"
 
-#: core/messages/messages.php:1663
+#: core/messages/messages.php:1662
 msgid "Delete fields"
 msgstr "Eliminar campos"
 
-#: core/messages/messages.php:1664
+#: core/messages/messages.php:1663
 msgid "Edit fields"
 msgstr "Editar campos"
 
-#: core/messages/messages.php:1665
+#: core/messages/messages.php:1664
 msgid "Delete fields(s) ###"
 msgstr "Eliminar campo(s)###"
 
-#: core/messages/messages.php:1670
+#: core/messages/messages.php:1669
 msgid "Highest number of views for any resource:"
 msgstr "Número mayor de vistas de cualquier recurso:"
 
-#: core/messages/messages.php:1671
+#: core/messages/messages.php:1670
 msgid "Lowest number of views for any resource:"
 msgstr "Número menor de vistas de cualquier recurso:"
 
-#: core/messages/messages.php:1672
+#: core/messages/messages.php:1671
 msgid "Date the first resource was added:"
 msgstr "Fecha en la que fue añadido el primer recurso"
 
-#: core/messages/messages.php:1673
+#: core/messages/messages.php:1672
 msgid "Date the last resource was added:"
 msgstr "Fecha en la que fue añadido el último recurso"
 
 #. / statistics_meanAddedResource 'mean' is a synonym for 'average'
-#: core/messages/messages.php:1675
+#: core/messages/messages.php:1674
 msgid "Mean date of added resources:"
 msgstr "Datadión media de los recursos añadidos"
 
-#: core/messages/messages.php:1676 core/messages/messages.php:1701
+#: core/messages/messages.php:1675 core/messages/messages.php:1700
 msgid "Total resources:"
 msgstr "Total recursos"
 
-#: core/messages/messages.php:1677
+#: core/messages/messages.php:1676
 msgid "Total quotes:"
 msgstr "Total citas"
 
-#: core/messages/messages.php:1678
+#: core/messages/messages.php:1677
 msgid "Total paraphrases:"
 msgstr "Total paráfrasis"
 
-#: core/messages/messages.php:1679
+#: core/messages/messages.php:1678
 msgid "Total musings:"
 msgstr "Total ideas"
 
-#: core/messages/messages.php:1680
+#: core/messages/messages.php:1679
 msgid "Greatest number of resources input by any one user:"
 msgstr "Número mayor de recursos incorporado por un usuario cualquiera"
 
-#: core/messages/messages.php:1681
+#: core/messages/messages.php:1680
 msgid "Greatest number of quotes input by any one user:"
 msgstr "Número mayor de citas introducidas por un usuario cualquiera"
 
-#: core/messages/messages.php:1682
+#: core/messages/messages.php:1681
 msgid "Greatest number of paraphrases input by any one user:"
 msgstr "Número mayor de paráfrasis introducidas por un usuario cualquiera"
 
-#: core/messages/messages.php:1683
+#: core/messages/messages.php:1682
 msgid "Greatest number of public musings input by any one user:"
 msgstr "Número mayor de ideas introducidas por un usuario cualquiera"
 
-#: core/messages/messages.php:1684
+#: core/messages/messages.php:1683
 msgid "Number of Resource Types:"
 msgstr "Número de Tipos de Recurso"
 
 #. / statistics_emailSubject Subject for email of statistics to users
-#: core/messages/messages.php:1686
+#: core/messages/messages.php:1685
 msgid "### (Usage statistics)"
 msgstr ""
 
-#: core/messages/messages.php:1687
+#: core/messages/messages.php:1686
 msgid ""
 "Your monthly statistics for ###. The indices are an indication of ranking "
 "weighted according to how long the resource has been available.  The closer "
@@ -8355,61 +8376,61 @@ msgid ""
 "is a combination of views index and downloads index."
 msgstr ""
 
-#: core/messages/messages.php:1688
+#: core/messages/messages.php:1687
 msgid "### views in the last month"
 msgstr ""
 
-#: core/messages/messages.php:1689
+#: core/messages/messages.php:1688
 msgid "(### views in total)"
 msgstr ""
 
-#: core/messages/messages.php:1690
+#: core/messages/messages.php:1689
 msgid "### attachment downloads in the last month"
 msgstr ""
 
-#: core/messages/messages.php:1691
+#: core/messages/messages.php:1690
 msgid "(### attachment downloads in total)"
 msgstr ""
 
-#: core/messages/messages.php:1692
+#: core/messages/messages.php:1691
 #, php-format
 msgid "Statistics are shown for each user as: user/total (% of total)"
 msgstr ""
 
-#: core/messages/messages.php:1693
+#: core/messages/messages.php:1692
 msgid "No user statistics are available"
 msgstr ""
 
-#: core/messages/messages.php:1697
+#: core/messages/messages.php:1696
 msgid "Public musings"
 msgstr ""
 
-#: core/messages/messages.php:1702
+#: core/messages/messages.php:1701
 msgid "Database queries:"
 msgstr ""
 
-#: core/messages/messages.php:1703
+#: core/messages/messages.php:1702
 msgid "Script execution:"
 msgstr ""
 
-#: core/messages/messages.php:1704
+#: core/messages/messages.php:1703
 msgid "DB execution:"
 msgstr ""
 
-#: core/messages/messages.php:1705
+#: core/messages/messages.php:1704
 msgid "Username:"
 msgstr ""
 
-#: core/messages/messages.php:1706
+#: core/messages/messages.php:1705
 msgid "Style:"
 msgstr ""
 
-#: core/messages/messages.php:1707
+#: core/messages/messages.php:1706
 msgid "Bibliography:"
 msgstr ""
 
 #. / cms_introduction1 Do not translate the README_CMS link
-#: core/messages/messages.php:1712
+#: core/messages/messages.php:1711
 msgid ""
 "If you wish to display elements of your WIKINDX in a Content Management "
 "System (CMS) you may generate CMS 'replacement' tags here and also "
@@ -8419,85 +8440,85 @@ msgid ""
 "\"docs/README_CMS.txt\">README_CMS</a>."
 msgstr ""
 
-#: core/messages/messages.php:1713
+#: core/messages/messages.php:1712
 msgid ""
 "If you wish to display a list from your WIKINDX in a Content Management "
 "System (CMS), copy the text below to a text file on your CMS system. Refer to "
 "<a href=\"docs/README_CMS.txt\">README_CMS</a>."
 msgstr ""
 
-#: core/messages/messages.php:1714
+#: core/messages/messages.php:1713
 msgid "Display WIKINDX ID numbers"
 msgstr "Moatrar los números de ID de WIKINDX"
 
 #. / cms_generateCmsTag Generate a CMS (Content Management System) 'replacement' tag
-#: core/messages/messages.php:1716
+#: core/messages/messages.php:1715
 msgid "Generate a CMS tag"
 msgstr "Generar una etiqueta CMS"
 
 #. / cms_cmsTagStart The initial section of a CMS (Content Management System) 'replacement' tag
-#: core/messages/messages.php:1718
+#: core/messages/messages.php:1717
 msgid "CMS tag starts with"
 msgstr "La etiqueta CMS comienza con"
 
 #. / cms_cmsTagEnd The closing section of a CMS (Content Management System) 'replacement' tag
-#: core/messages/messages.php:1720
+#: core/messages/messages.php:1719
 msgid "CMS tag ends with"
 msgstr "La etiqueta CMS finaliza con"
 
-#: core/messages/messages.php:1723
+#: core/messages/messages.php:1722
 msgid "Generated tag"
 msgstr "Etiqueta generada"
 
-#: core/messages/messages.php:1730
+#: core/messages/messages.php:1729
 msgid "There is no news available to view"
 msgstr "No hay noticias disponibles para ver"
 
-#: core/messages/messages.php:1731
+#: core/messages/messages.php:1730
 msgid "Delete news ###"
 msgstr "Eliminar noticias###"
 
-#: core/messages/messages.php:1733
+#: core/messages/messages.php:1732
 msgid "Main Text"
 msgstr "Texto principal"
 
-#: core/messages/messages.php:1734
+#: core/messages/messages.php:1733
 msgid "Email the edited news to registered users"
 msgstr "Mandar por correo las noticias editadas a los usuarios registrados"
 
-#: core/messages/messages.php:1738
+#: core/messages/messages.php:1737
 msgid "Add Table"
 msgstr ""
 
-#: core/messages/messages.php:1739
+#: core/messages/messages.php:1738
 msgid "Add Image"
 msgstr ""
 
-#: core/messages/messages.php:1740
+#: core/messages/messages.php:1739
 msgid "Add Link"
 msgstr ""
 
-#: core/messages/messages.php:1741
+#: core/messages/messages.php:1740
 msgid "Columns"
 msgstr ""
 
-#: core/messages/messages.php:1742
+#: core/messages/messages.php:1741
 msgid "Rows"
 msgstr ""
 
-#: core/messages/messages.php:1743
+#: core/messages/messages.php:1742
 msgid "Image URL"
 msgstr ""
 
-#: core/messages/messages.php:1745
+#: core/messages/messages.php:1744
 msgid "File name"
 msgstr ""
 
-#: core/messages/messages.php:1746
+#: core/messages/messages.php:1745
 msgid "Size"
 msgstr ""
 
-#: core/messages/messages.php:1748
+#: core/messages/messages.php:1747
 msgid "Upload file"
 msgstr ""
 
@@ -8849,8 +8870,10 @@ msgid "Successfully grouped creators"
 msgstr ""
 
 #: core/messages/success.php:171
-msgid "Successfully removed creators from group"
-msgstr ""
+#, fuzzy
+#| msgid "Successfully edited keyword"
+msgid "Successfully removed group"
+msgstr "La palabra clave ha sido editada correctamente"
 
 #: core/messages/success.php:172
 msgid ""
@@ -8892,6 +8915,53 @@ msgid "Successfully added keyword group"
 msgstr "La palabra clave ha sido editada correctamente"
 
 #~ msgid ""
+#~ "Before being able to use WIKINDX, you must configure it. The minimum "
+#~ "initially required are username, password and email. From the Admin menu, "
+#~ "after configuration, you can add and edit other settings."
+#~ msgstr "Antes de poder utilizar WIKINDX debe configurarlo"
+
+#, fuzzy
+#~| msgid "My Wikindx"
+#~ msgid "My Wikindxx"
+#~ msgstr "Mi Wikindx"
+
+#~ msgid "My Bibliographies"
+#~ msgstr "Mis bibliografías"
+
+#~ msgid "Upgrade the Database"
+#~ msgstr "Actualizar la base de datos"
+
+#~ msgid ""
+#~ "You are not logged on as the superAdmin: please ask that person ### to "
+#~ "carry out the upgrade through their web browser."
+#~ msgstr ""
+#~ "No está conectado como superadministrador: contacte con esta persona### "
+#~ "para iniciar la actualización desde su navegador."
+
+#~ msgid "Upgrade the database"
+#~ msgstr "Actualizar la base de datos"
+
+#~ msgid ""
+#~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
+#~ "you are strongly advised not to run it on a production server -- if you "
+#~ "wish to test it, either create a new database or make a copy of your "
+#~ "existing WIKINDX database and point config.php at it. Wait until all bugs "
+#~ "have been dealt with, and the final release version provided, before using "
+#~ "the WIKINDX code on a production server.</font> <p>To report bugs etc., go "
+#~ "to: https://sourceforge.net/p/wikindx/v5bugs/</strong></p> WIKINDX has "
+#~ "detected that this is the first time a new version is being run and that "
+#~ "the database requires upgrading. This upgrading is automatic but only the "
+#~ "WIKINDX superAdmin may carry it out.<p> You are <strong>strongly advised</"
+#~ "strong> to <strong>back up your old database</strong> first. If you do not "
+#~ "do this and you experience the memory errors detailed below when upgrading "
+#~ "your only copy of the database, then you will have irrevocably corrupted "
+#~ "the database: <em>caveat upgrader</em><p>"
+#~ msgstr ""
+#~ "WIKINDX detectó que esta es la primera vez que se ejecuta una nueva "
+#~ "versión y que es necesario actualizar la base de datos. Esta actualización "
+#~ "es automática pero sólo el administrador de WIKINDX lo puede iniciar."
+
+#~ msgid ""
 #~ "The upgrade process may take some time depending upon a number of factors. "
 #~ "If your database is large or your server is slow, it is advised to "
 #~ "temporarily increase 'max_execution_time' and 'memory_limit' in php.ini "
@@ -8929,50 +8999,3 @@ msgstr "La palabra clave ha sido editada correctamente"
 #~ "lento, es recomendable incrementar temporalmente el'max_execution_time' en "
 #~ "php.ini y reiniciar el servidor web antes de la actualización. Es muy "
 #~ "recomendable salvaguardar primero su antigua base de datos."
-
-#~ msgid ""
-#~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
-#~ "you are strongly advised not to run it on a production server -- if you "
-#~ "wish to test it, either create a new database or make a copy of your "
-#~ "existing WIKINDX database and point config.php at it. Wait until all bugs "
-#~ "have been dealt with, and the final release version provided, before using "
-#~ "the WIKINDX code on a production server.</font> <p>To report bugs etc., go "
-#~ "to: https://sourceforge.net/p/wikindx/v5bugs/</strong></p> WIKINDX has "
-#~ "detected that this is the first time a new version is being run and that "
-#~ "the database requires upgrading. This upgrading is automatic but only the "
-#~ "WIKINDX superAdmin may carry it out.<p> You are <strong>strongly advised</"
-#~ "strong> to <strong>back up your old database</strong> first. If you do not "
-#~ "do this and you experience the memory errors detailed below when upgrading "
-#~ "your only copy of the database, then you will have irrevocably corrupted "
-#~ "the database: <em>caveat upgrader</em><p>"
-#~ msgstr ""
-#~ "WIKINDX detectó que esta es la primera vez que se ejecuta una nueva "
-#~ "versión y que es necesario actualizar la base de datos. Esta actualización "
-#~ "es automática pero sólo el administrador de WIKINDX lo puede iniciar."
-
-#~ msgid "Upgrade the database"
-#~ msgstr "Actualizar la base de datos"
-
-#~ msgid ""
-#~ "You are not logged on as the superAdmin: please ask that person ### to "
-#~ "carry out the upgrade through their web browser."
-#~ msgstr ""
-#~ "No está conectado como superadministrador: contacte con esta persona### "
-#~ "para iniciar la actualización desde su navegador."
-
-#~ msgid "Upgrade the Database"
-#~ msgstr "Actualizar la base de datos"
-
-#~ msgid "My Bibliographies"
-#~ msgstr "Mis bibliografías"
-
-#, fuzzy
-#~| msgid "My Wikindx"
-#~ msgid "My Wikindxx"
-#~ msgstr "Mi Wikindx"
-
-#~ msgid ""
-#~ "Before being able to use WIKINDX, you must configure it. The minimum "
-#~ "initially required are username, password and email. From the Admin menu, "
-#~ "after configuration, you can add and edit other settings."
-#~ msgstr "Antes de poder utilizar WIKINDX debe configurarlo"

@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "importexportbib",
-    "component_version": "220",
+    "component_version": "229",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Bibliography Import/Export",
@@ -29,5 +29,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "b78b86e00dfcfeb120d35110b090191a6b70a83919d8f35f708ef8243acaca6e"
+    "component_sha256": "5eb3e061e3d15dc7bd7de0019eadefd12eaad73db83c891c9132df2b21532175"
 }

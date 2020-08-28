@@ -967,7 +967,6 @@ class MESSAGES
 				"creatorSub" => dgettext($domain, "Creators..."),
 				"creatorMerge" => dgettext($domain, "Merge"),
 				"creatorGroup" => dgettext($domain, "Group"),
-				"creatorUngroup" => dgettext($domain, "Ungroup"),
 				"delete" => dgettext($domain, "Delete Resource"),
 				"userSub" => dgettext($domain, "Users..."),
 				"userAdd" => dgettext($domain, "Add"),
@@ -1080,12 +1079,12 @@ class MESSAGES
 				"keywordMergeTarget" => dgettext($domain, "New or target keyword"),
 /// misc_creatorMerge Admins can merge multiple creators into one creator
 				"creatorMerge" => dgettext($domain, "Select and merge multiple creators into one creator (the merged creators will be deleted).  A selection in the target select box overrides any text input."),
-				"creatorGroup" => dgettext($domain, "Select and group multiple creators into one creator (the grouped creators will not be deleted).  List operations on the group master will include grouped creators. This is intended for situations where one person may be represented by different creator names but you wish to keep those creator names accurate to the original bibliographic source."),
 				"creatorMergeOriginal" => dgettext($domain, "Original creators"),
 				"creatorMergeTarget" => dgettext($domain, "Target creator"),
 				"creatorGroupMember" => dgettext($domain, "Group members"),
+				"creatorGroupAvailable" => dgettext($domain, "Available creators"),
 				"creatorGroupMaster" => dgettext($domain, "Group master"),
-				"creatorUngroup" => dgettext($domain, "Select the creators you wish to remove from the group"),
+				"creatorOnlyMasters" => dgettext($domain, "Show only group masters"),
 /// misc_tag Tag - when importing bibtex resources, the administrator can give a label to each import which makes it possible to later delete in one go resources that were imported under this label.
 				"tag" => dgettext($domain, "Delete resources by import tag"),
 /// misc_emailToFriend Email a single resource link to a friend.

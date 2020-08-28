@@ -253,8 +253,39 @@ function triggerFromSelect()
 
 /**
 * Do something AJAXy in the 'targetDiv' based upon input from a single checkbox form element
+* 
+* Return 'ajaxReturn' as either 'on' or 'off' depending on checkbox state
 */
 function triggerFromCheckbox()
+{
+// Check we have the required input
+	if(!A_OBJ[gateway.aobj_index].checkInput(['triggerField', 'targetDiv', 'script']))
+		return false;
+// Set the AJAX object's targetObj property
+	A_OBJ[gateway.aobj_index].targetObj = coreGetElementById(A_OBJ[gateway.aobj_index].input.targetDiv);
+// Gather the selected OPTIONS of the triggerField select box
+	var triggerObj = coreGetElementById(A_OBJ[gateway.aobj_index].input.triggerField);
+	var ajaxReturn = '';
+	if(triggerObj.checked)
+	{
+		ajaxReturn = '&ajaxReturn=on';
+	}
+	else
+	{
+		ajaxReturn = '&ajaxReturn=off';
+	}
+//alert(A_OBJ[gateway.aobj_index].input.targetDiv + ': ' + ajaxReturn);
+	A_OBJ[gateway.aobj_index].processedScript = A_OBJ[gateway.aobj_index].input.script + ajaxReturn;
+// Execute the AJAX
+	if(!A_OBJ[gateway.aobj_index].doXmlHttp())
+		return false;
+	return true;
+}
+
+/**
+* Toggle visibility of the 'targetDiv' based upon input from a single checkbox form element
+*/
+function toggleVisibilityFromCheckbox()
 {
 // Check we have the required input
 	if(!A_OBJ[gateway.aobj_index].checkInput(['triggerField', 'targetDiv', 'script']))

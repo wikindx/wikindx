@@ -26,6 +26,7 @@ class ADMINCREATOR
     private $badInput;
     private $newCreatorId;
     private $newName;
+    private $potentialMasters;
 
     public function __construct()
     {
@@ -169,128 +170,209 @@ class ADMINCREATOR
      */
     public function groupInit($message = FALSE)
     {
-        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js?ver=' . WIKINDX_PUBLIC_VERSION]);
-        $potentialMasters = $this->creator->grabGroupAvailableMasters();
+        include_once("core/modules/help/HELPMESSAGES.php");
+        $help = new HELPMESSAGES();
+        GLOBALS::setTplVar('help', $help->createLink('creatorGroups'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "groupCreators"));
         $pString = $message;
-        if (is_array($potentialMasters) && !empty($potentialMasters)) {
-            $potentialMembers = $this->creator->grabGroupAvailableMembers();
-            if (!is_array($potentialMembers)) {
-                $potentialMembers = $this->creator->grabGroupAvailableMembers(TRUE);
-            }
-            foreach ($potentialMasters as $id => $name) { // array_shift() breaks ids!
+        $this->potentialMasters = $this->creator->grabGroupAvailableMembers();
+        if (is_array($this->potentialMasters) && !empty($this->potentialMasters)) {
+            foreach ($this->potentialMasters as $id => $name) { // array_shift() breaks ids!
                 break;
             }
-            reset($potentialMasters);
-            $existingMembers = $this->creator->grabGroupMembers($id);
-            // add 0 => IGNORE to potentialMembers array
-            $temp[0] = $this->messages->text("misc", "ignore");
-            foreach ($potentialMembers as $key => $value) {
-                $temp[$key] = $value;
-            }
-            $potentialMembers = $temp;
-            unset($temp);
-            $pString .= \HTML\p($this->messages->text("misc", "creatorGroup"));
-            $pString .= \FORM\formHeader('admin_ADMINCREATOR_CORE');
+            reset($this->potentialMasters);
+
+            $pString .= \FORM\formHeader('admin_ADMINCREATOR_CORE', "onsubmit=\"selectAll();return true;\"");
             $pString .= \FORM\hidden("method", "groupProcess");
             $pString .= \HTML\tableStart();
             $pString .= \HTML\trStart();
-            $jScript = 'index.php?action=admin_ADMINCREATOR_CORE&method=groupDiv';
-            $jsonArray[] = [
-                'startFunction' => 'triggerFromMultiSelect',
-                'script' => "$jScript",
-                'triggerField' => 'creatorMaster',
-                'targetDiv' => 'creatorIds',
-            ];
-            $js = \AJAX\jActionForm('onclick', $jsonArray);
-            if (!is_array($existingMembers)) {
-                $td = \HTML\div('creatorIds', \FORM\selectFBoxValueMultiple(
-                    \HTML\strong($this->messages->text("misc", "creatorGroupMember")),
-                    "creatorIds",
-                    $potentialMembers,
-                    20,
-                    FALSE,
-                    $js
-                ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint') .
-                    \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed"))));
-            } else {
-                $existingMembers = array_keys($existingMembers);
-                $td = \HTML\div('creatorIds', \FORM\selectedBoxValueMultiple(
-                    \HTML\strong($this->messages->text("misc", "creatorGroupMember")),
-                    "creatorIds",
-                    $potentialMembers,
-                    $existingMembers,
-                    20,
-                    FALSE,
-                    $js
-                ) .
-                    BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint') .
-                    \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed"))));
-            }
-            $pString .= \HTML\td($td);
-            $pString .= \HTML\td(\FORM\selectFBoxValue(
-                \HTML\strong($this->messages->text("misc", "creatorGroupMaster")),
-                "creatorMaster",
-                $potentialMasters,
-                20
-            ));
+            $pString .= \HTML\td(\HTML\div('masterDiv', $this->masterDiv(TRUE)));
+            $pString .= \HTML\td(\HTML\div('memberDiv', $this->memberDiv($id)));
             $pString .= \HTML\trEnd();
             $pString .= \HTML\tableEnd();
+            $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
             $pString .= \FORM\formEnd();
             GLOBALS::addTplVar('content', $pString);
         } else {
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noCreators'));
         }
+        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/admin/admincreator.js?ver=' . WIKINDX_PUBLIC_VERSION);
+    }
+    /**
+     * Show group masters' DIV
+     * 
+     * @param bool $initialize Default FALSE
+     * @return string
+     */
+    public function masterDiv($initialize = FALSE)
+    {
+// Potential master list
+		$jScript = 'index.php?action=admin_ADMINCREATOR_CORE&method=memberDiv';
+		$jsonArray[] = [
+			'startFunction' => 'triggerFromMultiSelect',
+			'script' => "$jScript",
+			'triggerField' => 'creatorMaster',
+			'targetDiv' => 'memberDiv',
+		];
+		$js1 = \AJAX\jActionForm('onchange', $jsonArray);
+		$jsonArray = [];
+		$jScript = 'index.php?action=admin_ADMINCREATOR_CORE&method=masterDiv';
+		$jsonArray[] = [
+			'startFunction' => 'triggerFromCheckbox',
+			'script' => "$jScript",
+			'triggerField' => 'onlyMasters',
+			'targetDiv' => 'masterDiv',
+		];
+		$jScript = 'index.php?action=admin_ADMINCREATOR_CORE&method=memberDiv';
+		$jsonArray[] = [
+			'startFunction' => 'triggerFromCheckbox',
+			'script' => "$jScript",
+			'triggerField' => 'onlyMasters',
+			'targetDiv' => 'memberDiv',
+		];
+		$js2 = \AJAX\jActionForm('onchange', $jsonArray);
+		if ($initialize) {
+			return \FORM\selectFBoxValue(
+				\HTML\strong($this->messages->text("misc", "creatorGroupMaster")),
+				"creatorMaster",
+				$this->potentialMasters,
+				20, 
+				FALSE,
+				$js1
+				) . \HTML\p($this->messages->text("misc", "creatorOnlyMasters") . ':&nbsp;' . 
+					\FORM\checkbox(FALSE, "onlyMasters", FALSE, FALSE, $js2)
+			);
+		}
+		else {
+			if ($this->vars['ajaxReturn'] == 'on') {
+				$checked = TRUE;
+				$masters = $this->creator->grabGroupMasters();
+			}
+			else {
+				$checked = FALSE;
+				$masters = $this->creator->grabGroupAvailableMembers();
+			}
+			$pString = \FORM\selectFBoxValue(
+				\HTML\strong($this->messages->text("misc", "creatorGroupMaster")),
+				"creatorMaster",
+				$masters,
+				20, 
+				FALSE,
+				$js1
+				) . \HTML\p($this->messages->text("misc", "creatorOnlyMasters") . ':&nbsp;' . 
+					\FORM\checkbox(FALSE, "onlyMasters", $checked, FALSE, $js2)
+			);
+			GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $pString]));
+			FACTORY_CLOSERAW::getInstance();
+		}
     }
     /**
      * AJAX driven select box for creator group members
+     *
+     * @param int $id Default = FALSE
      */
-    public function groupDiv()
+    public function memberDiv($id = FALSE)
     {
-        $potentialMembers = $this->creator->grabGroupAvailableMembers();
-        if (!is_array($potentialMembers)) {
-            $potentialMembers = $this->creator->grabGroupAvailableMembers(TRUE);
-        }
-        $existingMembers = $this->creator->grabGroupMembers($this->vars['ajaxReturn']);
-        // add 0 => IGNORE to potentialMembers array
-        $temp[0] = $this->messages->text("misc", "ignore");
-        foreach ($potentialMembers as $key => $value) {
-            $temp[$key] = $value;
-        }
-        $potentialMembers = $temp;
-        unset($temp);
-        if (!is_array($existingMembers)) {
-            unset($potentialMembers[$this->vars['ajaxReturn']]);
-            $div = \HTML\div('creatorIdsOutput', \FORM\selectFBoxValueMultiple(
-                \HTML\strong($this->messages->text("misc", "creatorGroupMember")),
-                "creatorIds",
-                $potentialMembers,
-                20
-            ) . BR .
-                \HTML\span($this->messages->text("hint", "multiples"), 'hint') .
-                \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed"))));
-        } else {
-            unset($potentialMembers[$this->vars['ajaxReturn']]);
-            $existingMembers = array_keys($existingMembers);
-            $div = \HTML\div('creatorIdsOutput', \FORM\selectedBoxValueMultiple(
-                \HTML\strong($this->messages->text("misc", "creatorGroupMember")),
-                "creatorIds",
-                $potentialMembers,
-                $existingMembers,
-                20
-            ) . BR .
-                \HTML\span($this->messages->text("hint", "multiples"), 'hint') .
-                \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed"))));
-        }
-        GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $div]));
+// If 'ajaxReturn' is a number, it is the ID of the master creator.
+// If 'ajaxReturn is 'on', we are displaying only the current masters and so we must get the first ID of tht list.
+// If 'ajaxReturn is 'off', we are displaying all potential masters and so we must get the first ID of tht list.
+    	$initial = FALSE;
+    	if ($id) { // Initial loading of page so check for existing members for first-listed potential master
+    		$initial = TRUE;
+    	}
+    	elseif ($this->vars['ajaxReturn'] == 'on') {
+			$masters = $this->creator->grabGroupMasters();
+			foreach ($masters as $id => $name) { // array_shift() breaks ids!
+				break;
+			}
+//			reset($masters);
+    	}
+    	elseif ($this->vars['ajaxReturn'] == 'off') {
+        		$this->potentialMasters = $this->creator->grabGroupAvailableMembers();
+				foreach ($this->potentialMasters as $id => $name) { // array_shift() breaks ids!
+					break;
+				}
+//				reset($this->potentialMasters);
+  		}
+  		else { // 'ajaxReturn' is a number
+  			$id = $this->vars['ajaxReturn'];
+  		}
+    	$pString = $this->memberDivBoxes($id);
+		if ($initial) { // Initial loading of page
+			return $pString;
+		}
+        GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $pString]));
         FACTORY_CLOSERAW::getInstance();
     }
+    /**
+     * Create select boxes for group members
+     * 
+     * @param int $id of group master
+     * @return string
+     */
+    private function memberDivBoxes($id)
+    {
+        $existingMembers = $this->creator->grabGroupMembers($id);
+    	$potentialMembers = $this->creator->grabGroupAvailableMembers();
+		$masters = $this->creator->grabGroupMasters();
+// a potential group member cannot also be a master
+		$potentialMembers = array_diff_key($potentialMembers, $masters);
+    	unset($potentialMembers[$id]);
+		if (!is_array($potentialMembers)) {
+			$potentialMembers = [];
+		}
+		$pString = \HTML\tableStart();
+		$pString .= \HTML\trStart();
+		$pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
+			\HTML\strong($this->messages->text("misc", "creatorGroupAvailable")),
+			"creators",
+			$potentialMembers,
+			20
+		) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'));
+// Transfer arrows
+        $jsonArray = [];
+        $jsonArray[] = [
+            'startFunction' => 'toMembers',
+        ];
+        $toRightImage = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
+        $jsonArray = [];
+        $jsonArray[] = [
+            'startFunction' => 'fromMembers',
+        ];
+        $toLeftImage = \AJAX\jActionIcon('toLeft', 'onclick', $jsonArray);
+        $pString .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
+		if (!is_array($existingMembers)) {
+			$pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
+				\HTML\strong($this->messages->text("misc", "creatorGroupMember")),
+				"creatorIds",
+				[],
+				20
+			) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'));
+		} else {
+			$pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
+				\HTML\strong($this->messages->text("misc", "creatorGroupMember")),
+				"creatorIds",
+				$existingMembers,
+				20
+			) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'));
+		}
+		$pString .= \HTML\trEnd();
+		$pString .= \HTML\tableEnd();
+		return $pString;
+	}
     /**
      * start grouping process
      */
     public function groupProcess()
     {
         $this->validateInput('group');
+// Are we removing all creatorIds thus removing the group?
+		if (!array_key_exists("creatorIds", $this->vars) || empty($this->vars['creatorIds'])) {
+			$this->db->formatConditions(['creatorSameAs' => $this->vars['creatorMaster']]);
+            $this->db->updateNull('creator', 'creatorSameAs');
+        	return $this->groupInit($this->success->text("creatorUngroup"));
+		}
+// Otherwise creating or editing a group
         $creatorIds = $this->vars['creatorIds'];
         $targetCreatorId = $this->vars['creatorMaster'];
         if (($index = array_search($targetCreatorId, $creatorIds)) !== FALSE) {
@@ -303,91 +385,6 @@ class ADMINCREATOR
         $this->db->update('creator', ['creatorSameAs' => $targetCreatorId]);
 
         return $this->groupInit($this->success->text("creatorGroup"));
-    }
-    /**
-     * display options for creator ungrouping
-     *
-     * @param false|string $message
-     */
-    public function ungroupInit($message = FALSE)
-    {
-        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js?ver=' . WIKINDX_PUBLIC_VERSION]);
-        $mastersCopy = $masters = $this->creator->grabGroupMasters();
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "ungroupCreators"));
-        $pString = $message;
-        if (is_array($masters) && !empty($masters)) {
-            foreach ($mastersCopy as $id => $name) {
-                $initialMasterId = $id;
-
-                break;
-            }
-            $creators = $this->creator->grabGroupMembers($initialMasterId);
-            $pString .= \FORM\formHeader('admin_ADMINCREATOR_CORE');
-            $pString .= \FORM\hidden("method", "ungroupProcess");
-            $pString .= \HTML\tableStart();
-            $pString .= \HTML\trStart();
-            $jScript = 'index.php?action=admin_ADMINCREATOR_CORE&method=ungroupDiv';
-            $jsonArray[] = [
-                'startFunction' => 'triggerFromMultiSelect',
-                'script' => "$jScript",
-                'triggerField' => 'creatorMaster',
-                'targetDiv' => 'creatorIds',
-            ];
-            $js = \AJAX\jActionForm('onclick', $jsonArray);
-            $pString .= \HTML\td(\FORM\selectFBoxValue(
-                $this->messages->text("misc", "creatorGroupMaster"),
-                "creatorMaster",
-                $masters,
-                20,
-                FALSE,
-                $js
-            ));
-            $td = \HTML\div('creatorIds', \FORM\selectFBoxValueMultiple(
-                $this->messages->text("misc", "creatorUngroup"),
-                "creatorIds",
-                $creators,
-                20
-            ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint') .
-                \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Remove"))));
-            $pString .= \HTML\td($td);
-            $pString .= \HTML\trEnd();
-            $pString .= \HTML\tableEnd();
-            $pString .= \FORM\formEnd();
-            GLOBALS::addTplVar('content', $pString);
-        } else {
-            GLOBALS::addTplVar('content', $pString);
-            GLOBALS::addTplVar('content', $this->messages->text('misc', 'noGroupMasterCreators'));
-        }
-    }
-    /**
-     * AJAX driven select box for creator group members
-     */
-    public function ungroupDiv()
-    {
-        $creators = $this->creator->grabGroupMembers($this->vars['ajaxReturn']);
-        $div = \FORM\selectFBoxValueMultiple(
-            $this->messages->text("misc", "creatorUngroup"),
-            "creatorIds",
-            $creators,
-            20
-        ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint') .
-            \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
-        GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $div]));
-        FACTORY_CLOSERAW::getInstance();
-    }
-    /**
-     * ungroupProcess
-     */
-    public function ungroupProcess()
-    {
-        $this->validateInput('ungroup');
-        $creatorIds = $this->vars['creatorIds'];
-        foreach ($creatorIds as $oldId) {
-            $this->db->formatConditionsOneField($creatorIds, 'creatorId');
-            $this->db->updateNull('creator', 'creatorSameAs');
-        }
-
-        return $this->ungroupInit($this->success->text("creatorUngroup"));
     }
     /**
      * Remove old creator references from resource_creator and add new creator reference.
@@ -427,22 +424,17 @@ class ADMINCREATOR
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'mergeInit');
             }
         } elseif ($process == 'group') {
-            if (!array_key_exists("creatorIds", $this->vars) || empty($this->vars['creatorIds'])) {
-                $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'groupInit');
-            }
             if (!array_key_exists("creatorMaster", $this->vars)) {
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'groupInit');
             }
-            if ((count($this->vars['creatorIds']) == 1) && $this->vars['creatorIds'][0] == $this->vars['creatorMaster']) {
-                $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'groupInit');
-            }
-            if ((count($this->vars['creatorIds']) == 1) && $this->vars['creatorIds'][0] == 0) {
-                $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'groupInit');
-            }
-        } elseif ($process == 'ungroup') {
-            if (!array_key_exists("creatorIds", $this->vars) || empty($this->vars['creatorIds'])) {
-                $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'ungroupInit');
-            }
+            if (array_key_exists("creatorIds", $this->vars)) {
+				if ((count($this->vars['creatorIds']) == 1) && $this->vars['creatorIds'][0] == $this->vars['creatorMaster']) {
+					$this->badInput->close($this->errors->text("inputError", "missing"), $this, 'groupInit');
+				}
+				if ((count($this->vars['creatorIds']) == 1) && $this->vars['creatorIds'][0] == 0) {
+					$this->badInput->close($this->errors->text("inputError", "missing"), $this, 'groupInit');
+				}
+			}
         }
     }
 }

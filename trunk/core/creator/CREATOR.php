@@ -196,7 +196,7 @@ class CREATOR
      *
      * @return mixed FALSE|array of creators
      */
-    public function grabGroupAvailableMembers($notExists = FALSE)
+/*    public function grabGroupAvailableMembers($notExists = FALSE)
     {
         $this->db->formatConditions($this->db->formatFields('creatorId') . $this->db->equal . $this->db->formatFields('t1.creatorId'));
         $this->db->formatConditions(['creatorSameAs' => ' IS NOT NULL']);
@@ -223,8 +223,9 @@ class CREATOR
             return FALSE;
         }
     }
+*/
     /**
-     * Gather creators who are group members
+     * Gather creators who are group members of one group
      *
      * @param int $masterId
      *
@@ -253,7 +254,7 @@ class CREATOR
      *
      * @return mixed FALSE|array of creators
      */
-    public function grabGroupAvailableMasters()
+    public function grabGroupAvailableMembers()
     {
         $this->db->formatConditions(['creatorSameAs' => ' IS NULL']);
         $this->db->orderBy('creatorSurname');

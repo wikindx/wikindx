@@ -101,7 +101,7 @@ class PUBMED
         if (file_exists($this->configImport->bibutilsPath . 'xml2bib')) {
             $jScript = 'index.php?action=importexportbib_initPubMedImport&method=wikindx';
             $jsonArray[] = [
-                'startFunction' => 'triggerFromCheckbox',
+                'startFunction' => 'toggleVisibilityFromCheckbox',
                 'script' => "$jScript",
                 'triggerField' => 'importpubMed_Wikindx',
                 'targetDiv' => 'wikindxImport',

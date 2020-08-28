@@ -250,6 +250,15 @@ class HELP
 <li>If the original idea is deleted, then the entire thread is deleted (you will be asked to confirm this).</li>
 </ul>"),
 
+/// creatorGroups_ Here, and elsewhere, do not edit #search# or similar words enclosed with '#', or words prefaced with '$'.
+"creatorGroups" => dgettext($domain, "<h3>Creator Groups</h3>")
+. dgettext($domain, 
+"<p>Select and group multiple creators into one creator (the grouped creators will not be deleted). List operations on the group master will include grouped creators. This is intended for situations where one person may be represented by different creator names but you wish to keep those creator names accurate to the original bibliographic source.</p>") 
+. dgettext($domain, 
+"<p>The master of a group cannot be a member of a group, and creators can be members of one group only.</p>")
+. dgettext($domain, 
+"<p>To remove a group, select the group master then remove all its group members.</p>"),
+
 /// keywordGroups_ Here, and elsewhere, do not edit #search# or similar words enclosed with '#', or words prefaced with '$'.
 "keywordGroups" => dgettext($domain, "<h3>Keyword Groups</h3>")
 . dgettext($domain, 

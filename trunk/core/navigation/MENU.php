@@ -665,7 +665,6 @@ class MENU
                 $messages->text("menu", "creatorSub") => FALSE,
                 $messages->text("menu", "creatorMerge") => 'index.php?action=admin_ADMINCREATOR_CORE&method=mergeInit',
                 $messages->text("menu", "creatorGroup") => 'index.php?action=admin_ADMINCREATOR_CORE&method=groupInit',
-                $messages->text("menu", "creatorUngroup") => 'index.php?action=admin_ADMINCREATOR_CORE&method=ungroupInit',
             ],
             $messages->text("menu", "delete") => 'index.php?action=admin_DELETERESOURCE_CORE',
             $messages->text("menu", "importBibtex") => 'index.php?action=import_BIBTEXFILE_CORE',

@@ -168,7 +168,7 @@ class SUCCESS
 				"emailFriend" => dgettext($domain, "Successfully sent email"),
 				"creatorMerge" => dgettext($domain, "Successfully merged creators"),
 				"creatorGroup" => dgettext($domain, "Successfully grouped creators"),
-				"creatorUngroup" => dgettext($domain, "Successfully removed creators from group"),
+				"creatorUngroup" => dgettext($domain, "Successfully removed group"),
 				"registerRequest" => dgettext($domain, "Your registration request has been emailed to the WIKINDX administrator and you should receive an emailed response soon"),
 				"registerRequestManage" => dgettext($domain, "Successfully managed registration requests"),
 /// quarantineApprove_ ADMIN has approved a quarantined resource

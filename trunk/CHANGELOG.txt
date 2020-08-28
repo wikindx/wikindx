@@ -17,7 +17,8 @@ MAINTENANCE:
 2. Intl PHP extension is mandatory now.
 
 FEATURE ENHANCEMENTS:
-1. Improved the interface for managing uploaded images (Admin|Images) by displaying thumbnails of images selected for deletion. When deleting images, replace any reference to them in metadata and frontpage description with "[Image deleted by WIKINDX Administrator]."
+1. Improved the interface for managing uploaded images (Admin|Images) by displaying thumbnails of images selected for deletion. When deleting images, replace any reference to them in metadata and front page description with "[Image deleted by WIKINDX Administrator]."
+2. Improved the interface for grouping and ungrouping creators (Admin|Creators...|Group).
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

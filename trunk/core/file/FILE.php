@@ -904,6 +904,115 @@ namespace FILE
      *
      * @return string Absolute or relative path to the final package file with its extension
      */
+    function createComponentPackageUnix($SrcDir, $DstDir, $Archive, $Format)
+    {
+        $Format = strtoupper(trim($Format));
+        // Unsupported format is replaced by a ZIP archive
+        if (!in_array($Format, ["ZIP", "GZ", "BZIP2"])) {
+            $Format = "ZIP";
+        }
+        
+        switch ($Format) {
+            case 'ZIP':
+                $finalArchiveName = $DstDir . DIRECTORY_SEPARATOR . $Archive . ".zip";
+                createComponentPackageZipUnix($SrcDir, $finalArchiveName);
+
+            break;
+            
+            case 'GZ':
+                $finalArchiveName = $DstDir . DIRECTORY_SEPARATOR . $Archive . ".tar.gz";
+                createComponentPackageGzUnix($SrcDir, $finalArchiveName);
+
+            break;
+            
+            case 'BZIP2':
+                $finalArchiveName = $DstDir . DIRECTORY_SEPARATOR . $Archive . ".tar.bz2";
+                createComponentPackageBzip2Unix($SrcDir, $finalArchiveName);
+
+            break;
+        }
+        
+        return $finalArchiveName;
+    }
+    
+    /**
+     * Create a compressed package in .tar.bz2 format for the release of Wikindx core, manual or one of its components
+     *
+     * This function must be called from createComponentPackage() only.
+     *
+     * @param string $SrcDir Absolute or relative path to a source directory
+     * @param string $DstFile Absolute or relative path to a destination package file
+     */
+    function createComponentPackageBzip2Unix($SrcDir, $DstFile)
+    {
+        $DstFileTar = dirname($DstFile) . DIRECTORY_SEPARATOR . basename($DstFile, ".bz2");
+        $RootDir = dirname($SrcDir);
+        $LastDir = basename($SrcDir);
+        
+        // Use flags to make the archive reproductible
+        // Set unique perms: --mode=go=rX,u+rw,a-s
+        // Sort filenames: --sort=name
+        // Force a single timestamp: --mtime @1 --clamp-mtime
+        // Set a single owner: --owner=0 --group=0 --numeric-owner
+        
+        exec("cd \"$RootDir\"; tar -cf \"$DstFileTar\" \"$LastDir\" --mode=go=rX,u+rw,a-s --sort=name --mtime @1 --clamp-mtime --owner=0 --group=0 --numeric-owner; bzip2 -9 \"$DstFileTar\"");
+    }
+    
+    /**
+     * Create a compressed package in .tar.gz format for the release of Wikindx core, manual or one of its components
+     *
+     * This function must be called from createComponentPackage() only.
+     *
+     * @param string $SrcDir Absolute or relative path to a source directory
+     * @param string $DstFile Absolute or relative path to a destination package file
+     */
+    function createComponentPackageGzUnix($SrcDir, $DstFile)
+    {
+        $DstFileTar = dirname($DstFile) . DIRECTORY_SEPARATOR . basename($DstFile, ".gz");
+        $RootDir = dirname($SrcDir);
+        $LastDir = basename($SrcDir);
+        
+        // Use flags to make the archive reproductible
+        // Set unique perms: --mode=go=rX,u+rw,a-s
+        // Sort filenames: --sort=name
+        // Force a single timestamp: --mtime @1 --clamp-mtime
+        // Set a single owner: --owner=0 --group=0 --numeric-owner
+        
+        exec("cd \"$RootDir\"; tar -cf \"$DstFileTar\" \"$LastDir\" --mode=go=rX,u+rw,a-s --sort=name --mtime @1 --clamp-mtime --owner=0 --group=0 --numeric-owner; gzip -9 --no-name \"$DstFileTar\"");
+    }
+    
+    /**
+     * Create a compressed package in .zip format for the release of Wikindx core, manual or one of its components
+     *
+     * This function must be called from createComponentPackage() only.
+     *
+     * @param string $SrcDir Absolute or relative path to a source directory
+     * @param string $DstFile Absolute or relative path to a destination package file
+     */
+    function createComponentPackageZipUnix($SrcDir, $DstFile)
+    {
+        $RootDir = dirname($SrcDir);
+        $LastDir = basename($SrcDir);
+        
+        // Use flags to make the archive reproductible
+        // Remove extra headers: -X
+        // Force a single timestamp: --latest-time
+        
+        exec("cd \"$RootDir\"; zip -r -9 -X --latest-time \"$DstFile\" \"$LastDir\"");
+    }
+    
+    /**
+     * Create a compressed package for the release of Wikindx core, manual or one of its components
+     *
+     * This function is a wrapper that hide the specifics of compression formats.
+     *
+     * @param string $SrcDir Absolute or relative path to a source directory
+     * @param string $DstDir Absolute or relative path to a destination directory
+     * @param string $Archive Name of the package file, without path and extension
+     * @param string $Format Code of a package format (ZIP, GZ, BZIP2)
+     *
+     * @return string Absolute or relative path to the final package file with its extension
+     */
     function createComponentPackage($SrcDir, $DstDir, $Archive, $Format)
     {
         $Format = strtoupper(trim($Format));

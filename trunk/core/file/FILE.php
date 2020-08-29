@@ -950,6 +950,7 @@ namespace FILE
         $LastDir = basename($SrcDir);
         
         // Use flags to make the archive reproductible
+        // cf. https://wiki.debian.org/ReproducibleBuilds/Howto#Identified_problems.2C_and_possible_solutions
         // Set unique perms: --mode=go=rX,u+rw,a-s
         // Sort filenames: --sort=name
         // Force a single timestamp: --mtime @1 --clamp-mtime
@@ -973,6 +974,7 @@ namespace FILE
         $LastDir = basename($SrcDir);
         
         // Use flags to make the archive reproductible
+        // cf. https://wiki.debian.org/ReproducibleBuilds/Howto#Identified_problems.2C_and_possible_solutions
         // Set unique perms: --mode=go=rX,u+rw,a-s
         // Sort filenames: --sort=name
         // Force a single timestamp: --mtime @1 --clamp-mtime
@@ -995,6 +997,7 @@ namespace FILE
         $LastDir = basename($SrcDir);
         
         // Use flags to make the archive reproductible
+        // cf. https://wiki.debian.org/ReproducibleBuilds/TimestampsInZip
         // Remove extra headers: -X
         // Force a single timestamp: --latest-time
         

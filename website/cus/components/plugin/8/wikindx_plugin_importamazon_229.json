@@ -1,0 +1,35 @@
+{
+    "component_sha256": "198347d3d41917d970294b6d0d998da408829d72e9a8eb7f7476b92dfc179c59",
+    "component_version": "229",
+    "component_name": "Amazon Products Import",
+    "component_licence": "ISC License",
+    "component_description": "Import a resource from Amazon using Amazon's web services (imports only books). You must have a personal Amazon developer account to query the web service.",
+    "component_builtin": "false",
+    "component_website": "https://docs.aws.amazon.com/AWSECommerceService/latest/DG/CHAP_OperationListAlphabetical.html",
+    "component_id": "importamazon",
+    "component_type": "plugin",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2009-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2016-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_importamazon_229.zip",
+            "package_sha256": "44fb904106cdd713d0187521835e78e89a209cddf02d3198b52278619997958b",
+            "package_size": 18374
+        }
+    ]
+}

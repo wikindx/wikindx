@@ -1,0 +1,34 @@
+{
+    "component_version": "229",
+    "component_description": "Create various graphical visualizations from WIKINDX data with the JpGraph PHP library.",
+    "component_licence": "ISC License",
+    "component_name": "Visualize",
+    "component_sha256": "be5c04b36d6d116f9a927a77e2719ba0b1bef9d7165498db266cd5aec2b37594",
+    "component_builtin": "false",
+    "component_type": "plugin",
+    "component_updatable": "true",
+    "component_id": "visualize",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2019-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2019-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/8/wikindx_plugin_visualize_229.zip",
+            "package_sha256": "53dbf0fd8408b7c1b085005a74cc4f5924fe0f0ba5121c1522cb7e57e4a81917",
+            "package_size": 3784680
+        }
+    ]
+}

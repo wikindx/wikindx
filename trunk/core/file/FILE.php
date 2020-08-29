@@ -603,7 +603,10 @@ namespace FILE
      *
      * So a component should never create files and folders in
      * its code directories otherwise they will be deleted.
-     * Use the private cache and data folders of a component for this task.
+     * Use the private cache and data folders of a component for this task.*
+     *
+     * BUGS: https://bugs.php.net/bug.php?id=79912
+     * Phar crashs with an exception on Gzip/Bzip2 archives
      *
      * @param string $ComponentPackageFile Absolute or relative path to an archive file created with \FILE\createComponentPackage
      * @param string $DestinationFolder Absolute or relative path of a folder where the archive is extracted

@@ -403,7 +403,7 @@ class ADMINCOMPONENTS
             if (file_exists($this->serverComponentsListPath)) {
                 $datedl = date_create();
                 date_timestamp_set($datedl, filemtime($this->serverComponentsListPath));
-                $datedl = $datedl->format("r");
+                $datedl = $datedl->format("c");
             } else {
                 $datedl = "none";
             }

@@ -264,7 +264,7 @@ class DELETEIMAGES
      */
     private function grabImages()
     {
-        include_once("core/file/images.php");
+        include_once("core/libs/images.php");
         $encodeExplorer = new EncodeExplorer();
         $encodeExplorer->init();
         $location = new Location();

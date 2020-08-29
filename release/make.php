@@ -38,8 +38,8 @@ define('DIRSRC_TRUNK', DIRSRC_ROOT . DIRECTORY_SEPARATOR . 'trunk');
 define('BIN_PHPDOC', DIR_ROOT . DIRECTORY_SEPARATOR . 'tools' . DIRECTORY_SEPARATOR . 'phpDocumentor.phar');
 
 include_once(DIRSRC_TRUNK . "/core/startup/CONSTANTS.php");
-include_once(DIRSRC_TRUNK . "/core/file/FILE.php");
-include_once(DIRSRC_TRUNK . "/core/utils/UTILS.php");
+include_once(DIRSRC_TRUNK . "/core/libs/FILE.php");
+include_once(DIRSRC_TRUNK . "/core/libs/UTILS.php");
 
 $VersionsAvailable[] = WIKINDX_PUBLIC_VERSION;
 $VersionsAvailable[] = 'trunk';

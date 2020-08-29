@@ -10,17 +10,17 @@
 
 // Include code of libraries bundled in static classes
 // UTF8 must be included before others namespace because they use it
-include_once("core/utf8/UTF8.php");
+include_once("core/libs/UTF8.php");
 
 // Include code of libraries bundled in namespaces
 include_once("core/bibcitation/LOADSTYLE.php");
-include_once("core/display/HTML.php");
-include_once("core/display/FORM.php");
-include_once("core/ajax/AJAX.php");
-include_once("core/file/FILE.php");
-include_once("core/utils/UTILS.php");
-include_once("core/locales/LOCALES.php");
-include_once("core/urls/URL.php");
+include_once("core/libs/HTML.php");
+include_once("core/libs/FORM.php");
+include_once("core/libs/AJAX.php");
+include_once("core/libs/FILE.php");
+include_once("core/libs/UTILS.php");
+include_once("core/libs/LOCALES.php");
+include_once("core/libs/URL.php");
 
 /**
  * FACTORY_HOUSEKEEPING
@@ -188,7 +188,7 @@ class FACTORY_SESSION
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/session/SESSION.php");
+            include_once("core/libs/SESSION.php");
             self::$instance = new SESSION;
         }
 
@@ -223,7 +223,7 @@ class FACTORY_COOKIE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/session/COOKIE.php");
+            include_once("core/libs/COOKIE.php");
             self::$instance = new COOKIE();
         }
 
@@ -545,7 +545,7 @@ class FACTORY_DB
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/sql/SQL.php");
+            include_once("core/libs/SQL.php");
             self::$instance = new SQL;
         }
 
@@ -580,7 +580,7 @@ class FACTORY_SQLSTATEMENTS
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/sql/SQLSTATEMENTS.php");
+            include_once("core/libs/SQLSTATEMENTS.php");
             self::$instance = new SQLSTATEMENTS;
         }
 
@@ -615,7 +615,7 @@ class FACTORY_TEMPLATE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/display/TEMPLATE.php");
+            include_once("core/libs/TEMPLATE.php");
             self::$instance = new TEMPLATE;
         }
 
@@ -685,7 +685,7 @@ class FACTORY_CLOSE
     public static function getInstance()
     {
         if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSERAW::$instance)) {
-            include_once("core/display/CLOSE.php");
+            include_once("core/libs/CLOSE.php");
             self::$instance = new CLOSE;
         }
 
@@ -720,7 +720,7 @@ class FACTORY_FRONT
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/display/FRONT.php");
+            include_once("core/libs/FRONT.php");
             self::$instance = new FRONT;
         }
 
@@ -790,7 +790,7 @@ class FACTORY_CLOSENOMENU
     public static function getInstance()
     {
         if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSE::$instance) && empty(FACTORY_CLOSERAW::$instance)) {
-            include_once("core/display/CLOSE.php");
+            include_once("core/libs/CLOSE.php");
             self::$instance = new CLOSENOMENU;
         }
 
@@ -825,7 +825,7 @@ class FACTORY_CLOSEPOPUP
     public static function getInstance()
     {
         if (empty(self::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSE::$instance) && empty(FACTORY_CLOSERAW::$instance)) {
-            include_once("core/display/CLOSE.php");
+            include_once("core/libs/CLOSE.php");
             self::$instance = new CLOSEPOPUP;
         }
 
@@ -860,7 +860,7 @@ class FACTORY_CLOSERAW
     public static function getInstance()
     {
         if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSE::$instance)) {
-            include_once("core/display/CLOSE.php");
+            include_once("core/libs/CLOSE.php");
             self::$instance = new CLOSERAW;
         }
 
@@ -930,7 +930,7 @@ class FACTORY_LOADICONS
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/display/LOADICONS.php");
+            include_once("core/libs/LOADICONS.php");
             self::$instance = new LOADICONS;
         }
 

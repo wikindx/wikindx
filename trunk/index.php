@@ -69,7 +69,7 @@ if (!array_key_exists('action', $vars) || ($vars['action'] == 'front')) { // rea
     if (!array_key_exists('action', $vars)) {
         FACTORY_HOUSEKEEPING::getInstance($upgradeCompleted); // runs on autopilot
     }
-    include_once("core/display/FRONT.php");
+    include_once("core/libs/FRONT.php");
     $front = new FRONT($message); // __construct() runs on autopilot
     unset($front);
     $actionFound = TRUE;
@@ -82,7 +82,7 @@ elseif (array_key_exists('action', $vars) && ($vars['action'] == 'noMenu' || $va
     $actionFound = TRUE;
     unset($menu);
 } elseif (array_key_exists('action', $vars) && ($vars['action'] == 'skipCaching')) {
-    include_once("core/display/FRONT.php");
+    include_once("core/libs/FRONT.php");
     $front = new FRONT(); // __construct() runs on autopilot
     unset($front);
     $actionFound = TRUE;

@@ -21,9 +21,9 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
 
 include_once("core/startup/CONSTANTS.php");
-include_once("core/file/FILE.php");
-include_once("core/locales/LOCALES.php");
-include_once("core/utils/UTILS.php");
+include_once("core/libs/FILE.php");
+include_once("core/libs/LOCALES.php");
+include_once("core/libs/UTILS.php");
 
 // Begin page execution timer and define globals for rendering by template
 include_once("core/startup/GLOBALS.php");

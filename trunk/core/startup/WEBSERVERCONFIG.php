@@ -123,7 +123,7 @@ EOM;
 
 
 // Check if mandatories extensions are enabled.
-include_once("core/utils/UTILS.php");
+include_once("core/libs/UTILS.php");
 $MandatoryExtensions = \UTILS\listCoreMandatoryPHPExtensions();
 $InstalledExtensions = get_loaded_extensions();
 $MissingExtensions = array_diff($MandatoryExtensions, $InstalledExtensions);
@@ -275,7 +275,7 @@ foreach ([WIKINDX_DIR_CACHE, WIKINDX_DIR_CACHE_FILES, WIKINDX_DIR_CACHE_ATTACHME
 }
 
 // Create data and cache directories of plugins
-include_once("core/file/FILE.php");
+include_once("core/libs/FILE.php");
 foreach (\FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_PLUGINS) as $dir) {
     $plugencachedir = WIKINDX_DIR_CACHE_PLUGINS . DIRECTORY_SEPARATOR . basename($dir);
     if (!file_exists($plugencachedir)) {
@@ -348,7 +348,7 @@ FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
 FACTORY_LOADCONFIG::getInstance()->loadUserVars();
 
 // Locales setting needs to know the language prefered by the user which is now in GLOBALS
-include_once("core/locales/LOCALES.php");
+include_once("core/libs/LOCALES.php");
 \LOCALES\load_locales();
 
 $vars = GLOBALS::getVars();

@@ -55,7 +55,7 @@ namespace AJAX
         return "$action=\"$return gateway('$json');\"";
     }
     /**
-     * Create and load the IMG element insert for the AJAX action and function.  Works with core/display/LOADICONS.php.
+     * Create and load the IMG element insert for the AJAX action and function.  Works with core/libs/LOADICONS.php.
      *
      * @param string $icon The icon to make an image of ('add', 'delete', 'view' etc.)
      * @param string $action The javascript action such as 'onclick' etc.

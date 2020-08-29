@@ -412,7 +412,7 @@ class CITEFORMAT
     {
         // Create RTF stylesheet
         if ($this->wikindx && !$this->styleSheet && ($this->output == 'rtf')) {
-            include_once("core/session/SESSION.php");
+            include_once("core/libs/SESSION.php");
             $session = new SESSION();
             $this->styleSheet = "{\\stylesheet\n
 {\\*\\cs1 Hyperlink;}\n
@@ -1252,7 +1252,7 @@ class CITEFORMAT
         // for example, they will print out in the endnotes in that order if we use RTF's default endnote formatting.  If this is the case, we need to provide fake endnotes as a
         // plain string to be appended to the final RTF output.
         if ($this->wikindx) {
-            include_once("core/session/SESSION.php");
+            include_once("core/libs/SESSION.php");
             $session = new SESSION();
             // WIKINDX-specific:  Indentation of appended bibliography
             if ($session->getVar("exportPaper_indentBib") == 'indentAll') {
@@ -1349,7 +1349,7 @@ class CITEFORMAT
         if (!$this->wikindx) {
             return FALSE;
         }
-        include_once("core/session/SESSION.php");
+        include_once("core/libs/SESSION.php");
         $session = new SESSION();
         $styleSheet = "{\\stylesheet\n
 {\\*\\cs1 Hyperlink;}\n

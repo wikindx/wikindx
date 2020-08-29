@@ -9,7 +9,7 @@
 * ajax.js
 *
 * This file provides all the AJAX javascript functionality.
-* gateway() is the function to be called from the web page action and is set in core/ajax/AJAX.php.
+* gateway() is the function to be called from the web page action and is set in core/libs/AJAX.php.
 */
 
 var A_OBJ = new Array(); // array of AJAX objects
@@ -93,7 +93,7 @@ function checkInput(inputArray)
 /**
 * Create the xmlHttp object
 * @return xmlHttp object
-*/	
+*/
 function createXmlHttpObject()
 {
 	var xmlHttp = false;
@@ -102,7 +102,7 @@ function createXmlHttpObject()
 	{
 //If the javascript version is greater than 5.
 		xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
-	} 
+	}
 	catch (e)
 	{
 //If not, then use the older active x object.
@@ -110,7 +110,7 @@ function createXmlHttpObject()
 		{
 //If we are using IE.
 			xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-		} 
+		}
 		catch (E)
 		{
 //Else we must be using a non-IE browser.
@@ -253,7 +253,7 @@ function triggerFromSelect()
 
 /**
 * Do something AJAXy in the 'targetDiv' based upon input from a single checkbox form element
-* 
+*
 * Return 'ajaxReturn' as either 'on' or 'off' depending on checkbox state
 */
 function triggerFromCheckbox()

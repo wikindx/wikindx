@@ -99,7 +99,7 @@ class HOUSEKEEPING
             } else {
                 $message = '';
             }
-            include_once("core/display/FRONT.php");
+            include_once("core/libs/FRONT.php");
             $front = new FRONT($message); // __construct() runs on autopilot
             FACTORY_CLOSE::getInstance();
         }

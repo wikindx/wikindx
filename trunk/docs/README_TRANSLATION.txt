@@ -6,7 +6,7 @@ author:
  - Mark Grimshaw-Aagaard, <sirfragalot@users.sourceforge.net>
  - The WIKINDX Team
 lang: en
-date: 2020-07-18
+date: 2020-08-30
 ---
 
 # Introduction
@@ -226,8 +226,8 @@ the software.
 In the `core/languages` directory of your WIKINDX installation, create
 a folder named with the __locale code__ for the new language in lowercase
 (each plugin has also its own folders). The _locale code__ have to be taken
-from the __getAllLocales()__ function of __core/locales/LOCALES.php__
-file. For example, create a __sl__ code for Slovenian. Do the same thing
+from the __getAllLocales()__ function of __core/libs/LOCALES.php__ file.
+For example, create a __sl__ code for Slovenian. Do the same thing
 for each plugin if you have a file for it.
 
 Unless your language needs to be specified as a variant of a language that

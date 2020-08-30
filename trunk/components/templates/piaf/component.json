@@ -1,7 +1,7 @@
 {
     "component_type": "template",
     "component_id": "piaf",
-    "component_version": "191",
+    "component_version": "231",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "PIAF",
@@ -29,5 +29,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "e5b34de7fe3434db3c0ca5785807ec10fc6002c4a70245b011026df142e52978"
+    "component_sha256": "b94818eb4aa5da5bdc103f8031e31d4d4ab257213ee8f48218dfcf1f78c57a44"
 }

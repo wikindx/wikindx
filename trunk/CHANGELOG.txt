@@ -1,5 +1,16 @@
 RELEASES: 
 
+v6.3.10
+Focus: Interim bug fix
+
+BUG FIX:
+1. When organizing a list into categories, keywords, and so on, selecting the radio button 'Use all in list' then put all resources in the database into the selected categories, keywords, and so on. This operation should, of course, just use the members of the list. This has been corrected.
+
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
+
 v6.3.9
 Focus: Minor bug fixes, maintenance, and feature enhancements
 

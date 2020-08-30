@@ -880,11 +880,6 @@ class LISTADDTO
     */
     private function getAllIds()
     {
-    	$ids = [];
-    	$resultset = $this->db->select('resource', ['resourceId']);
-    	while ($row = $this->db->fetchRow($resultset)) {
-    		$ids[] = $row['resourceId'];
-    	}
-    	return $ids;
+    	return $this->session->getVar('list_AllIds');
     }
 }

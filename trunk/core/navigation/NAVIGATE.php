@@ -42,8 +42,7 @@ class NAVIGATE
     {
         $listCommon = FACTORY_LISTCOMMON::getInstance();
         $queryString = $this->session->getVar("sql_LastMulti");
-        if (!$queryString) { // default
-            include_once("core/libs/FRONT.php");
+        if (!$queryString) {// default
             $front = new FRONT($message); // __construct() runs on autopilot
             FACTORY_CLOSE::getInstance();
         }
@@ -95,7 +94,6 @@ class NAVIGATE
 
             return;
         } else { // default
-            include_once("core/libs/FRONT.php");
             $front = new FRONT($message); // __construct() runs on autopilot
             FACTORY_CLOSE::getInstance();
         }

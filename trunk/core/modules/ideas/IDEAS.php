@@ -478,7 +478,6 @@ class IDEAS
                 $this->db->delete('resource_keyword');
                 $keyword = FACTORY_KEYWORD::getInstance();
                 $keyword->removeHanging();
-                include_once("core/libs/FRONT.php");
                 $front = new FRONT($message); // __construct() runs on autopilot
                 FACTORY_CLOSE::getInstance();
             } else {
@@ -569,7 +568,6 @@ class IDEAS
                 $this->db->delete('resource_keyword');
                 $keyword = FACTORY_KEYWORD::getInstance();
                 $keyword->removeHanging();
-                include_once("core/libs/FRONT.php");
                 $front = new FRONT($message); // __construct() runs on autopilot
                 FACTORY_CLOSE::getInstance();
             } else {
@@ -611,7 +609,6 @@ class IDEAS
             $this->threadView($this->vars['resourcemetadataMetadataId'], $message);
             FACTORY_CLOSE::getInstance();
         }
-        include_once("core/libs/FRONT.php");
         $front = new FRONT($message); // __construct() runs on autopilot
         FACTORY_CLOSE::getInstance();
     }
@@ -662,7 +659,6 @@ class IDEAS
         $this->db->delete('resource_keyword');
         $keyword = FACTORY_KEYWORD::getInstance();
         $keyword->removeHanging();
-        include_once("core/libs/FRONT.php");
         $front = new FRONT($message); // __construct() runs on autopilot
         FACTORY_CLOSE::getInstance();
     }

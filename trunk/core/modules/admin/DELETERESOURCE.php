@@ -215,7 +215,6 @@ class DELETERESOURCE
         }
         // Which page do we return to?
         if ($this->session->getVar("setup_PagingTotal") == 0) {
-            include_once("core/libs/FRONT.php");
             $front = new FRONT($pString); // __construct() runs on autopilot
         }
         elseif ($this->navigate == 'nextResource') { // next single view
@@ -225,7 +224,6 @@ class DELETERESOURCE
             $navigate = FACTORY_NAVIGATE::getInstance();
             $navigate->listView($pString);
         } elseif ($this->navigate == 'front') { // Return to home page
-            include_once("core/libs/FRONT.php");
             $front = new FRONT($pString); // __construct() runs on autopilot
         } else {
             $this->display($pString); // return to multiple resource delete page -- $this->navigate == FALSE

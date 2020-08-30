@@ -187,7 +187,6 @@ class BASKET
     public function deleteConfirm()
     {
         $this->session->clearArray('basket');
-        include_once("core/libs/FRONT.php");
         $front = new FRONT($this->success->text("basketDelete")); // __construct() runs on autopilot
     }
     /**

@@ -67,7 +67,6 @@ class imageDialog
         $pString .= \HTML\hr();
         $pString .= \HTML\p();
         GLOBALS::addTplVar('content', $pString);
-        include_once("core/libs/images.php");
         if (WIKINDX_IMAGES_ALLOW) {
             // As user can upload images, we check again that user is registered
             if ($this->session->getVar("setup_UserId")) {

@@ -22,6 +22,14 @@ include_once("core/libs/UTILS.php");
 include_once("core/libs/LOCALES.php");
 include_once("core/libs/URL.php");
 
+// Include code of libraries bundled in classes
+include_once("core/libs/FRONT.php");
+include_once("core/libs/images.php");
+include_once("core/libs/SESSION.php");
+include_once("core/libs/COOKIE.php");
+include_once("core/libs/MAIL.php");
+
+
 /**
  * FACTORY_HOUSEKEEPING
  *
@@ -188,7 +196,6 @@ class FACTORY_SESSION
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/libs/SESSION.php");
             self::$instance = new SESSION;
         }
 
@@ -223,7 +230,6 @@ class FACTORY_COOKIE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/libs/COOKIE.php");
             self::$instance = new COOKIE();
         }
 
@@ -720,7 +726,6 @@ class FACTORY_FRONT
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/libs/FRONT.php");
             self::$instance = new FRONT;
         }
 

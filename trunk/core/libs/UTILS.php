@@ -718,7 +718,7 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
      *
      * @return array array(year, month, day)
      */
-    public function splitDate($dateInput)
+    function splitDate($dateInput)
     {
         $date = \UTF8::mb_explode('-', $dateInput);
 

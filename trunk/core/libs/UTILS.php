@@ -708,4 +708,20 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
             the web server user. The web server user can be the owner and/or the group of those folders. So you have to modify, the owner, the group and the permission bits according to the particular configuration of your web server, PHP and file transfer software. You may also be required to add the execution bit in certain cases. The same rights apply to files in these folders, but this script does not check them for performance reasons. See the chmod, web server and PHP manuals, and docs/INSTALL.txt for details.<p><p>r = readable; w = writable ; x = executable</p>" . $string);
         }
     }
+    
+    /**
+     * Take input from HTML FORM <input type=date> and split into separate fields.
+     * Date comes in as 'yyyy-mm-dd' (but displayed on web form as 'dd / mm / yyyy').
+     * All three fields must have a valid value else the form input is FALSE. This should be tested before calling this function.
+     *
+     * @param string $dateInput
+     *
+     * @return array array(year, month, day)
+     */
+    public function splitDate($dateInput)
+    {
+        $date = \UTF8::mb_explode('-', $dateInput);
+
+        return [$date[0], $date[1], $date[2]];
+    }
 }

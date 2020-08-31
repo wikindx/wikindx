@@ -22,7 +22,6 @@ class ATTACHMENTS
     private $success;
     private $gatekeep;
     private $attachment;
-    private $dateObject;
     private $resourceId;
     private $embargoArray = [];
     private $embargoNew;
@@ -36,7 +35,6 @@ class ATTACHMENTS
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->dateObject = FACTORY_DATE::getInstance();
         $this->attachment = FACTORY_ATTACHMENT::getInstance();
     }
     /**
@@ -272,7 +270,7 @@ class ATTACHMENTS
         // date comes in as 'yyyy-mm-dd' (but displayed on web form as 'dd / mm / yyyy').
         // all three fields must have a valid value else $this->vars["date"] is FALSE
         if (array_key_exists("date", $this->vars) && $this->vars["date"]) {
-            list($year, $month, $day) = $this->dateObject->splitDate($this->vars["date"]);
+            list($year, $month, $day) = \UTILS\splitDate($this->vars["date"]);
         } else {
             return;
         }

@@ -802,9 +802,8 @@ class RESOURCEWRITE
         }
         // Deal with date fields _ see RESOURCEMAP
         if (!empty($dates)) {
-            $dateObject = FACTORY_DATE::getInstance();
             foreach ($dates as $key => $date) {
-                list($year, $month, $day) = $dateObject->splitDate($date);
+                list($year, $month, $day) = \UTILS\splitDate($date);
                 if ($key == 'publicationDate') {
                     if ($this->resourceType == 'web_article') {
                         $this->resourceInput['resourcemisc']['resourcemiscField5'] = $day;

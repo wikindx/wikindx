@@ -36,12 +36,7 @@ class WPLOADTINYMCE extends LOADTINYMCE
         $footnotePluginPath = $externalPluginPath . 'wikindxWPFootnote/editor_plugin.js?ver=' . WIKINDX_PUBLIC_VERSION;
         $cssPath = $this->cssPath;
         $cssPopupPath = $this->cssPopupPath;
-        if (!$this->pathLoaded) {
-            $tinymcePath = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-            $this->pathLoaded = TRUE;
-        } else {
-            $tinymcePath = '';
-        }
+        $tinymcePath = $this->getIncludeTinyMceLib();
 
         // If the pspell or enchant extension are not available, disable the spell checker
         // Pspell is not installable on Windows (no recent binaries available), so it is always disable on this OS

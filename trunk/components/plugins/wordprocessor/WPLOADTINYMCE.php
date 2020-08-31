@@ -16,10 +16,10 @@ class WPLOADTINYMCE extends LOADTINYMCE
     // Constructor
     public function __construct()
     {
+        parent::__construct();
+        
         $session = FACTORY_SESSION::getInstance();
         $session->setVar("tinyMCE_mode", "wordprocessor");
-        
-        parent::__construct();
     }
     /**
      * Load tinymce -- full configuration for the word processor

@@ -22,8 +22,6 @@ class DATE
      */
     public function __construct()
     {
-        $this->db = FACTORY_DB::getInstance();
-        $this->vars = GLOBALS::getVars();
     }
     /**
      * Take input from HTML FORM <input type=date> and split into separate fields.

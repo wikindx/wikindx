@@ -157,68 +157,6 @@ tinyMCE.init({
 END;
     }
     /**
-     * Load tinymce -- metadata textarea configuration
-     *
-     * @param array $elements Array of textinput ids to apply editor to. Default is array()
-     *
-     * @return string
-     */
-    public function loadGlossaryTextarea()
-    {
-        $cssPath = $this->cssPath;
-        $cssPopupPath = $this->cssPopupPath;
-        $tinymcePath = $this->getIncludeTinyMceLib();
-
-        $mode = 'mode : "textareas"';
-        $ids = 'elements : ""';
-
-        return <<<END
-$tinymcePath
-<script>
-tinyMCE.init({
-        // General options
-		$mode,
-		$ids,
-        theme : "advanced",
-        element_format : "html",
-// Keep as UTF8
-        entity_encoding : "raw",
-        plugins : "paste, wikindxCite, advlist, wikindxLink, wikindxContextMenu, directionality, nonbreaking, wikindxSpecialChars",
-		editor_deselector : "mceNoEditor",
-		nonbreaking_force_tab : true,
-//		forced_root_block : false,
-//		force_br_newlines : true,
-//		force_p_newlines : false,
-
-        // Theme options
-        theme_advanced_buttons1 : "cut,copy,paste,pastetext,pasteword,|,bold,italic,underline,removeformat,code,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontselect,fontsizeselect,forecolor,|,bullist,numlist,|,wikindxLink,unlink,|,sub,sup,|,wikindxSpecialChars,wikindxCite,nonbreaking,ltr,rtl,",
-        theme_advanced_buttons2 : "",
-        theme_advanced_buttons3 : "",
-        theme_advanced_buttons4 : "",
-        theme_advanced_toolbar_location : "top",
-        theme_advanced_toolbar_align : "left",
-        theme_advanced_resizing : true,
-        theme_advanced_statusbar_location : "none",
-
-        // Skin options
-        skin : "o2k7",
-        skin_variant : "silver",
-
-        // Example content CSS (should be your site CSS)
-        content_css : "$cssPath",
-        popup_css : "$cssPopupPath",
-
-        // Drop lists for link/image/media/template dialogs
-        template_external_list_url : "js/template_list.js",
-        external_link_list_url : "js/link_list.js",
-        external_image_list_url : "js/image_list.js",
-        media_external_list_url : "js/media_list.js"
-});
-tinyMCE.execCommand('mceAddControl', true, 'glossaryDiv');
-</script>
-END;
-    }
-    /**
      * Load tinymce -- minimal textarea configuration
      *
      * @param array $elements Array of textinput ids to apply editor to. Default is array()
@@ -336,60 +274,6 @@ tinyMCE.init({
         external_link_list_url : "js/link_list.js",
         external_image_list_url : "js/image_list.js",
         media_external_list_url : "js/media_list.js"
-});
-</script>
-END;
-    }
-    /**
-     * Load tinymce -- blank textarea configuration -- no tinyMCE tools
-     *
-     * @param array $elements Array of textinput ids to apply editor to. Default is array()
-     *
-     * @return string
-     */
-    public function loadBlankTextarea($elements = [])
-    {
-        $cssPath = $this->cssPath;
-        $cssPopupPath = $this->cssPopupPath;
-        $tinymcePath = $this->getIncludeTinyMceLib();
-
-        if (!empty($elements)) {
-            $mode = 'mode : "exact"';
-            $ids = 'elements : "' . implode(',', $elements) . '"';
-        } else {
-            $mode = 'mode : "textareas"';
-            $ids = 'elements : ""';
-        }
-
-        return <<<END
-$tinymcePath
-<script>
-tinyMCE.init({
-        // General options
-		$mode,
-		$ids,
-        theme : "advanced",
-        element_format : "html",
-// Keep as UTF8
-        entity_encoding : "raw",
-		editor_deselector : "mceNoEditor",
-
-
-        // Theme options
-        theme_advanced_buttons1 : "",
-        theme_advanced_buttons2 : "",
-        theme_advanced_buttons3 : "",
-        theme_advanced_buttons4 : "",
-        theme_advanced_toolbar_location : "false",
-        theme_advanced_statusbar_location : "none",
-
-        // Skin options
-        skin : "o2k7",
-        skin_variant : "silver",
-
-        // Example content CSS (should be your site CSS)
-        content_css : "$cssPath",
-        popup_css : "$cssPopupPath"
 });
 </script>
 END;
@@ -541,12 +425,10 @@ END;
     protected function getIncludeTinyMceLib()
     {
         if ($this->pathLoaded) {
-            $includeLib = '';
+            return '';
         } else {
-            $includeLib = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
             $this->pathLoaded = TRUE;
+            return '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         }
-
-        return $includeLib;
     }
 }

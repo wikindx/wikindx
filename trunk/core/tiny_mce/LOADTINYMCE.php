@@ -37,50 +37,6 @@ class LOADTINYMCE
         $this->cssPath = $this->cssPopupPath = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_TEMPLATES . '/' . GLOBALS::getUserVar('Template') . '/template.css?ver=' . WIKINDX_PUBLIC_VERSION;
     }
     /**
-     * Load tiny_mce using compressor script
-     *
-     * @return string
-     */
-    public function loadCompressor()
-    {
-        $cssPath = $this->cssPath;
-        $cssPopupPath = $this->cssPopupPath;
-        $tinymcePath = $this->getIncludeTinyMceLib(TRUE);
-
-        return <<<END
-$tinymcePath
-<script>
-function setup() {
-   tinyMCE_GZ.init({
-      themes : "advanced",
-      plugins : "pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,media,searchreplace,print,wikindxContextMenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,wikindxSpecialChars",
-      languages : "en",
-      disk_cache : true
-   }, function() {
-      tinyMCE.init({
-         mode : "textareas",
-         theme : "advanced",
-         element_format : "html",
-         plugins : "pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,media,searchreplace,print,wikindxContextMenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
-         theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,removeformat,code,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
-         theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
-         theme_advanced_buttons3 : "tablecontrols,|,hr,visualaid,|,sub,sup,|,wikindxSpecialChars,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
-         theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,wikindxCite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak",
-         theme_advanced_toolbar_location : "top",
-         theme_advanced_toolbar_align : "left",
-         theme_advanced_statusbar_location : "bottom",
-         theme_advanced_resizing : true,
-
-         // Example content CSS (should be your site CSS)
-         content_css : "$cssPath",
-         popup_css : "$cssPopupPath"
-      });
-   });
-}
-</script>
-END;
-    }
-    /**
      * Load tinymce -- full configuration
      *
      * @return string
@@ -582,16 +538,12 @@ END;
      *
      * @return string
      */
-    protected function getIncludeTinyMceLib($compressorLib = FALSE)
+    protected function getIncludeTinyMceLib()
     {
         if ($this->pathLoaded) {
             $includeLib = '';
         } else {
-            if (!$compressorLib) {
-                $includeLib = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-            } else {
-                $includeLib = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_gzip.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-            }
+            $includeLib = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
             $this->pathLoaded = TRUE;
         }
 

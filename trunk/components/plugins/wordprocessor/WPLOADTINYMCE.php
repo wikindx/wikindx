@@ -12,14 +12,14 @@
  *	TinyMCE for wordProcessor class.
  */
 class WPLOADTINYMCE extends LOADTINYMCE
-{
+{    
     // Constructor
     public function __construct()
     {
         $session = FACTORY_SESSION::getInstance();
         $session->setVar("tinyMCE_mode", "wordprocessor");
-        $this->cssPath = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_TEMPLATES . '/' . GLOBALS::getUserVar('Template') . '/tinymce.css?ver=' . WIKINDX_PUBLIC_VERSION;
-        $this->cssPopupPath = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_TEMPLATES . '/' . GLOBALS::getUserVar('Template') . '/template.css?ver=' . WIKINDX_PUBLIC_VERSION;
+        
+        parent::__construct();
     }
     /**
      * Load tinymce -- full configuration for the word processor

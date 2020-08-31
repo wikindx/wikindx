@@ -95,7 +95,7 @@ class SQLSTATEMENTS
         $split = preg_split('/\s*FROM\s*\(/u', $subQuery);
         $split = preg_split('/\)\s*AS\s+/u', $split[1]);
 
-        $this->session->setVar("list_SubQuery", base64_encode($split[0]));
+        $this->session->setVar("list_SubQuery", $split[0]);
         $this->db->ascDesc = $this->db->desc;
         $this->db->orderBy($this->db->formatFields('resourcetimestampTimestamp'), FALSE, FALSE);
         $this->db->orderBy($this->db->ifClause(
@@ -162,7 +162,7 @@ class SQLSTATEMENTS
         )), 't1');
         $split = UTF8::mb_explode('(', $subQuery, 2);
         $split = UTF8::mb_explode(')', $split[1]);
-        $this->session->setVar("list_SubQuery", base64_encode($split[0]));
+        $this->session->setVar("list_SubQuery", $split[0]);
         $this->db->ascDesc = $this->db->desc;
         $this->db->orderBy($this->db->formatFields('resourcetimestampTimestamp'), FALSE, FALSE);
         $this->db->orderBy($this->db->ifClause(

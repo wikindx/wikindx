@@ -64,12 +64,8 @@ class ADMINKEYWORD
         $pString = \HTML\p($this->messages->text("misc", "keywordMerge"));
         if ($message) {
             $pString .= \HTML\p($message);
-        }
-/*		if ($error = $this->session->getVar('formDataError')) {
-	        $pString .= $error;
-	        $this->session->delVar('formDataError');
-	    }
-*/        if (is_array($keywords) && !empty($keywords)) {
+        }        
+        if (is_array($keywords) && !empty($keywords)) {
             $pString .= \FORM\formHeader('admin_ADMINKEYWORD_CORE');
             $pString .= \FORM\hidden("method", "merge");
             $pString .= \HTML\tableStart('left');
@@ -106,12 +102,7 @@ class ADMINKEYWORD
         if (!array_key_exists("keywordText", $this->vars) || !trim($this->vars['keywordText'])) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'mergeInit');
         }
-        
-/*    	\FORMDATA\putData($this->db, ['key1' => 'value1']);
-		$errors = FACTORY_ERRORS::getInstance();
-		$this->session->setVar("formDataError", $this->errors->text("dbError", "formData"));
-		header("Location: " . "index.php?action=admin_ADMINKEYWORD_CORE&method=mergeInit");
-*/        if (array_key_exists("glossaries", $this->vars)) {
+        if (array_key_exists("glossaries", $this->vars)) {
             $keywordIds = unserialize(base64_decode($this->vars['keywordIds']));
         } else {
             $keywordIds = $this->vars['keywordIds'];
@@ -147,7 +138,9 @@ class ADMINKEYWORD
                 $resultset = $this->db->select('keyword', ['keywordId', 'keywordKeyword', 'keywordGlossary']);
                 $glossaryString = '';
                 while ($row = $this->db->fetchRow($resultset)) {
-                    $glossaryString .= \HTML\p(\HTML\strong($row['keywordKeyword']) . ":&nbsp;&nbsp;" . $row['keywordGlossary']);
+                if ($row['keywordGlossary']) {
+	                    $glossaryString .= \HTML\p(\HTML\strong($row['keywordKeyword']) . ":&nbsp;&nbsp;" . $row['keywordGlossary']);
+	                }
                 }
                 if ($glossaryString) {
                     $pString = \HTML\p($this->messages->text("resources", "glossaryMerge"));

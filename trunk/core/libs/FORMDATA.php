@@ -72,7 +72,7 @@ namespace FORMDATA
 		$dbo->formatConditions(['formdataId' => $formdataId]);
 		$data = $dbo->fetchOne($dbo->select('form_data', ['formdataData']));
 		if ($data) {
-			$data = unserialize($data);
+			$data = array_map('tidy', unserialize($data));
 		}
 		else {
 			$data = [];
@@ -95,14 +95,23 @@ namespace FORMDATA
 		houseKeeping($dbo);
 	}
     /**
-     * Remove any rows in form_data older than 3 days
+     * Housekeeping: remove any rows in form_data older than 3 days
      *
      * @param object $dbo
      */
-	function houseKeeping()
+	function houseKeeping($dbo)
 	{
 		$dbo->formatConditions($dbo->dateIntervalCondition(3) . $dbo->greater .
 			$dbo->formatFields('formdataTimestamp'));
 		$dbo->delete('form_data');
+	}
+	/**
+	 * Tidy form_data array for the form
+	 *
+	 * @param string $data
+	 */
+	function tidy($data)
+	{
+		return \HTML\dbToFormTidy($data);
 	}
 }

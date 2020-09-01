@@ -65,7 +65,11 @@ class ADMINKEYWORD
         if ($message) {
             $pString .= \HTML\p($message);
         }
-        if (is_array($keywords) && !empty($keywords)) {
+/*		if ($error = $this->session->getVar('formDataError')) {
+	        $pString .= $error;
+	        $this->session->delVar('formDataError');
+	    }
+*/        if (is_array($keywords) && !empty($keywords)) {
             $pString .= \FORM\formHeader('admin_ADMINKEYWORD_CORE');
             $pString .= \FORM\hidden("method", "merge");
             $pString .= \HTML\tableStart('left');
@@ -102,13 +106,34 @@ class ADMINKEYWORD
         if (!array_key_exists("keywordText", $this->vars) || !trim($this->vars['keywordText'])) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'mergeInit');
         }
-        if (array_key_exists("glossaries", $this->vars)) {
+        
+/*    	\FORMDATA\putData($this->db, ['key1' => 'value1']);
+		$errors = FACTORY_ERRORS::getInstance();
+		$this->session->setVar("formDataError", $this->errors->text("dbError", "formData"));
+		header("Location: " . "index.php?action=admin_ADMINKEYWORD_CORE&method=mergeInit");
+*/        if (array_key_exists("glossaries", $this->vars)) {
             $keywordIds = unserialize(base64_decode($this->vars['keywordIds']));
         } else {
             $keywordIds = $this->vars['keywordIds'];
         }
         $newKeyword = trim($this->vars['keywordText']);
         $newKeywordId = $this->insertKeyword($newKeyword);
+// Convert keyword IDs in keyword groups
+        $this->db->formatConditionsOneField($keywordIds, 'userkgkeywordsKeywordId');
+        $this->db->update('user_kg_keywords', ['userkgkeywordsKeywordId' => $newKeywordId]);
+// If a keyword group now has multiple entries in user_kg_keywords with the same keyword ID, remove excess rows
+		$kgs = [];
+		$this->db->formatConditions(['userkgkeywordsKeywordId' => $newKeywordId]);
+		$resultset = $this->db->select('user_kg_keywords', ['userkgkeywordsId', 'userkgkeywordsKeywordGroupId']);
+		while ($row = $this->db->fetchRow($resultset)) {
+			if (!in_array($row['userkgkeywordsKeywordGroupId'], $kgs)) {
+				$kgs[] = $row['userkgkeywordsKeywordGroupId'];
+			}
+			else {
+				$this->db->formatConditions(['userkgkeywordsId' => $row['userkgkeywordsId']]);
+				$this->db->delete('user_kg_keywords');
+			}
+		}
         if (($index = array_search($newKeywordId, $keywordIds)) !== FALSE) {
             unset($keywordIds[$index]);
         }
@@ -190,6 +215,7 @@ class ADMINKEYWORD
         $this->db->deleteCache('cacheQuoteKeywords');
         $this->db->deleteCache('cacheParaphraseKeywords');
         $this->db->deleteCache('cacheMusingKeywords');
+        $this->keyword->checkKeywordGroups();
         $this->mergeInit($this->success->text("keywordMerge"));
     }
     /**
@@ -252,7 +278,8 @@ class ADMINKEYWORD
         if (!array_key_exists('delete_KeywordId', $this->vars) || !$this->vars['delete_KeywordId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'deleteInit');
         }
-        foreach (unserialize(base64_decode($this->vars['delete_KeywordId'])) as $deleteId) {
+        $deleteIds = unserialize(base64_decode($this->vars['delete_KeywordId']));
+        foreach ($deleteIds as $deleteId) {
             // Delete old keyword
             $this->db->formatConditions(['keywordId' => $deleteId]);
             $this->db->delete('keyword');
@@ -267,6 +294,7 @@ class ADMINKEYWORD
             $this->db->formatConditions(['resourcekeywordKeywordId' => $deleteId]);
             $this->db->delete('resource_keyword');
         }
+        $this->keyword->checkKeywordGroups();
         // lock reload
         $this->session->setVar("editLock", TRUE);
         // Clear session
@@ -275,7 +303,7 @@ class ADMINKEYWORD
         $this->deleteInit($this->success->text("keywordDelete"));
     }
     /**
-     * Insert new keyword or return ID if already exists
+     * When merging, insert new keyword or return ID if already exists
      *
      * @param string $keyword
      *

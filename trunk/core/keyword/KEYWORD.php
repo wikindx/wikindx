@@ -216,7 +216,15 @@ class KEYWORD
             $this->db->deleteCache('cacheMusingKeywords');
             $this->db->deleteCache('cacheKeywords');
         }
-// Deal with keyword groups. A KG must have at least two keywords or it should be deleted.
+        $this->checkKeywordGroups();
+    }
+    /**
+     * When deleting or merging keywords or deleting resources or metadata, check the consistency of keyword groups.
+	 * A KG must have at least two keywords or it should be deleted.
+     *
+     */
+    public function checkKeywordGroups()
+    {
         $deleteIds = [];
 		$subQ = $this->db->selectNoExecute('resource_keyword', 'resourcekeywordKeywordId');
 		$this->db->formatConditions('userkgkeywordsKeywordId' . $this->db->inClause($subQ, TRUE));

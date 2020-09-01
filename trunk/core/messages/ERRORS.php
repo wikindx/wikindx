@@ -97,6 +97,7 @@ class ERRORS
 				"updateMySQL" => dgettext($domain, "Unable to update database with update/updateMySQL.txt."),
 				"dbSpecified" => dgettext($domain, "No RDBMS type selected in config.php."),
 				"subQuery" => dgettext($domain, "Missing subQuery statement."),
+				"formData" => dgettext($domain, "Unable to write temporary form data to the database."),
 			),
 /// sessionError_ PHP Session errors
 			"sessionError" => array(

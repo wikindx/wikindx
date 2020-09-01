@@ -2,7 +2,10 @@ RELEASES:
 
 
 vX.Y.Z
-Focus: . . .
+Focus: Maintenance
+
+MAINTENANCE:
+1. When editing a form, store form data in the form_data table to repopulate the form in case of error.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

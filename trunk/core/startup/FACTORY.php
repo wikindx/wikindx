@@ -21,6 +21,7 @@ include_once("core/libs/FILE.php");
 include_once("core/libs/UTILS.php");
 include_once("core/libs/LOCALES.php");
 include_once("core/libs/URL.php");
+include_once("core/libs/FORMDATA.php");
 
 // Include code of libraries bundled in classes
 include_once("core/libs/FRONT.php");

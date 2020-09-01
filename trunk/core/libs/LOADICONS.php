@@ -11,7 +11,7 @@
 /**
  * Load image icons used throughout WIKINDX
  *
- * @package wikindx\core\display
+ * @package wikindx\core\libs\LOADICONS
  */
 class LOADICONS
 {

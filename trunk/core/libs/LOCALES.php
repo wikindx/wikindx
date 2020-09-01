@@ -11,7 +11,7 @@
 /**
  * Miscellaneous LOCALES functions
  *
- * @package wikindx\core\locales
+ * @package wikindx\core\libs\LOCALES
  */
 namespace LOCALES
 {

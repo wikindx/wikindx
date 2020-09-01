@@ -11,7 +11,7 @@
 /**
  * Common FILE routines
  *
- * @package wikindx\core\file
+ * @package wikindx\core\libs\FILE
  */
 namespace FILE
 {

@@ -11,7 +11,7 @@
 /**
  * Miscellaneous HTML elements except forms
  *
- * @package wikindx\core\display
+ * @package wikindx\core\libs\HTML
  */
 namespace HTML
 {

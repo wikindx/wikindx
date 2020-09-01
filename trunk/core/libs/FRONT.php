@@ -11,7 +11,7 @@
 /**
  * Front page of the system.
  *
- * @package wikindx\core\display
+ * @package wikindx\core\libs\FRONT
  */
 class FRONT
 {

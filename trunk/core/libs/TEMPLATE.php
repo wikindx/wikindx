@@ -11,7 +11,7 @@
 /**
  * Load the WIKINDX display template system
  *
- * @package wikindx\core\display
+ * @package wikindx\core\libs\TEMPLATE
  */
 class TEMPLATE
 {

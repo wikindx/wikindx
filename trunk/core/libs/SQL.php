@@ -13,7 +13,7 @@
  *
  * SQL abstraction layer for using MySQL.
  *
- * @package wikindx\core\sql
+ * @package wikindx\core\libs\SQL
  */
 class SQL
 {

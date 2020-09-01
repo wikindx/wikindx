@@ -11,7 +11,7 @@
 /**
  * Common methods for handling URLs
  *
- * @package wikindx\core\urls
+ * @package wikindx\core\libs\URL
  */
 namespace URL
 {

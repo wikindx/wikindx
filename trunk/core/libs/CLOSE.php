@@ -11,7 +11,7 @@
 /**
  * Close WIKINDX tidily and print footer.
  *
- * @package wikindx\core\display
+ * @package wikindx\core\libs\CLOSE
  */
 class CLOSE
 {

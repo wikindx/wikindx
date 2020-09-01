@@ -11,7 +11,7 @@
 /**
  * Interface for AJAX elements in various pages.
  *
- * @package wikindx\core\ajax
+ * @package wikindx\core\libs\AJAX
  */
 namespace AJAX
 {

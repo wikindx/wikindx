@@ -13,7 +13,7 @@
  *
  * Common cookie functions
  *
- * @package wikindx\core\session
+ * @package wikindx\core\libs\COOKIE
  */
 class COOKIE
 {

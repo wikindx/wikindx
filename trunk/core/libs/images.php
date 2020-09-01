@@ -13,7 +13,7 @@
  *
  * The class that displays images (icons and thumbnails)
  *
- * @package wikindx\core\file
+ * @package wikindx\core\libs\images
  */
 class ImageServer
 {

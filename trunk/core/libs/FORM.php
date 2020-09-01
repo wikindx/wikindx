@@ -12,7 +12,7 @@
 /**
  * Miscellaneous FORM elements
  *
- * @package wikindx\core\display
+ * @package wikindx\core\libs\FORM
  */
 namespace FORM
 {

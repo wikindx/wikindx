@@ -11,7 +11,7 @@
 /**
  * UTF-8 routines
  *
- * @package wikindx\core\utf8
+ * @package wikindx\core\libs\UTF8
  */
 class UTF8
 {

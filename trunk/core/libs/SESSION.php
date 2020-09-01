@@ -13,7 +13,7 @@
  *
  * Common session functions
  *
- * @package wikindx\core\session
+ * @package wikindx\core\libs\SESSION
  */
 class SESSION
 {

@@ -13,7 +13,7 @@
  *
  * Some default SQL statements/clauses for LIST/SEARCH operations.
  *
- * @package wikindx\core\sql
+ * @package wikindx\core\libs\SQLSTATEMENTS
  */
 class SQLSTATEMENTS
 {

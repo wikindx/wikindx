@@ -11,7 +11,7 @@
 /**
  * Miscellaneous UTILS functions
  *
- * @package wikindx\core\utils
+ * @package wikindx\core\libs\UTILS
  */
 namespace UTILS
 {

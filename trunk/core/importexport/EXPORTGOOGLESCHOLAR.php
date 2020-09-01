@@ -11,7 +11,7 @@
 /**
  * Extends EXPORTER
  */
-require_once("core/importexport/EXPORTER.php");
+include_once("core/importexport/EXPORTER.php");
 
 /**
  * Make WIKINDX resources available to Google Scholar

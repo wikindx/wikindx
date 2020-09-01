@@ -11,7 +11,7 @@
 /**
  * EXPORTBIBTEX
  */
-require_once("core/importexport/EXPORTER.php");
+include_once("core/importexport/EXPORTER.php");
 
 /**
  * Export BibTeX

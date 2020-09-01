@@ -11,7 +11,7 @@
 /**
  *	EXPORTCOINS
  */
-require_once("core/importexport/EXPORTER.php");
+include_once("core/importexport/EXPORTER.php");
 
 /**
  * Export COINS

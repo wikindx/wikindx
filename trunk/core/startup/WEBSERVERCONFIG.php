@@ -171,7 +171,7 @@ if (PHP_SAPI === 'cli') {
 }
 
 // Check for presence of config.php
-if (!is_file(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]))) {
+if (!is_file(implode(DIRECTORY_SEPARATOR, ["..", "..", "config.php"]))) {
     $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
@@ -207,7 +207,7 @@ EOM;
 }
 
 // Include the config file and check if the CONFIG class is in place
-include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, ["..", "..", "config.php"]));
 
 if (!class_exists("CONFIG")) {
     $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;

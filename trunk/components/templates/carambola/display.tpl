@@ -27,7 +27,7 @@
 	
 	{* Change this path and file name *}
 	<link rel="stylesheet" href="{$tplPath}/template.css?ver={$smarty.const.WIKINDX_PUBLIC_VERSION}" type="text/css">
-	<link rel="stylesheet" href="components/templates/override.css?ver={$smarty.const.WIKINDX_PUBLIC_VERSION}" type="text/css">
+	<link rel="stylesheet" href="{$tplPath}/../override.css?ver={$smarty.const.WIKINDX_PUBLIC_VERSION}" type="text/css">
 	<link rel="shortcut icon" type="image/x-icon" href="{$tplPath}/images/favicon.ico?ver={$smarty.const.WIKINDX_PUBLIC_VERSION}">
 
 	{if $displayRss == true}

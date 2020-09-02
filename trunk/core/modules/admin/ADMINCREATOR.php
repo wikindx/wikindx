@@ -285,14 +285,12 @@ class ADMINCREATOR
 			foreach ($masters as $id => $name) { // array_shift() breaks ids!
 				break;
 			}
-//			reset($masters);
     	}
     	elseif ($this->vars['ajaxReturn'] == 'off') {
         		$this->potentialMasters = $this->creator->grabGroupAvailableMembers();
 				foreach ($this->potentialMasters as $id => $name) { // array_shift() breaks ids!
 					break;
 				}
-//				reset($this->potentialMasters);
   		}
   		else { // 'ajaxReturn' is a number
   			$id = $this->vars['ajaxReturn'];

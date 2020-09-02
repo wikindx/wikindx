@@ -72,7 +72,7 @@ namespace FORMDATA
 		$dbo->formatConditions(['formdataId' => $formdataId]);
 		$data = $dbo->fetchOne($dbo->select('form_data', ['formdataData']));
 		if ($data) {
-			$data = array_map('tidy', unserialize($data));
+			$data = array_map('\FORMDATA\tidy', unserialize($data));
 		}
 		else {
 			$data = [];

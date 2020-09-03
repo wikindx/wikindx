@@ -131,16 +131,17 @@ class LOADICONS
             $basename = "file";
         }
         $iconfb = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_TEMPLATE_DEFAULT, 'icons', "file.png"]);
-        $icon = $this->getIconRealFileName($basename, $iconfb);
+        $iconfburl = implode("/", [WIKINDX_BASE_URL, WIKINDX_URL_COMPONENT_TEMPLATES, WIKINDX_TEMPLATE_DEFAULT, 'icons', "file.png"]);
+        $icon = $this->getIconRealFileName($basename, $iconfb, $iconfburl);
         
         // Disable a useless warning if the default file is missing
-        $size = @getimagesize($icon);
+        $size = @getimagesize($icon["path"]);
         if ($size === FALSE) {
             $size[0] = "16";
             $size[1] = "16";
         }
 
-        return \HTML\img($icon, $size[0], $size[1], $file);
+        return \HTML\img($icon["url"], $size[0], $size[1], $file);
     }
     /**
      * Store in the class members a link for each standard icon
@@ -158,13 +159,13 @@ class LOADICONS
 
         if ($icon != "") {
             // get image size data
-            $size = @getimagesize($icon);
+            $size = @getimagesize($icon["path"]);
             if ($size === FALSE) {
                 $size[0] = "16";
                 $size[1] = "16";
             }
 
-            $this->icons[$basename]["html"] = \HTML\img(str_replace("\\", "/", $icon), $size[0], $size[1], $title);
+            $this->icons[$basename]["html"] = \HTML\img($icon["url"], $size[0], $size[1], $title);
             $this->icons[$basename]["class"] = "imgLink";
         } else {
             $this->icons[$basename]["html"] = $title;
@@ -182,11 +183,12 @@ class LOADICONS
      * @param string $basename Basename of a file icon
      * @param string $filenameFallback A fallback path
      *
-     * @return string Path to an icon file or $filenameFallback value
+     * @return array Path to an icon file or $filenameFallback value
      */
-    private function getIconRealFileName($basename, $filenameFallback = "")
+    private function getIconRealFileName($basename, $filenameFallback = "", $urlFallback = "")
     {
         $filename = $filenameFallback;
+        $url = $urlFallback;
         $tplSearch = [];
         // Don't test the default template twice
         if ($this->templateDir != WIKINDX_TEMPLATE_DEFAULT) {
@@ -203,12 +205,13 @@ class LOADICONS
                 if (file_exists($tmp)) {
                     if (is_file($tmp)) {
                         $filename = $tmp;
+                        $url = implode("/", [WIKINDX_BASE_URL, WIKINDX_URL_COMPONENT_TEMPLATES, $tpl, "icons", $basename . "." . $ext]);
 
                         break;
                     }
                 }
             }
         }
-        return $filename;
+        return ["path" => $filename, "url" => $url];
     }
 }

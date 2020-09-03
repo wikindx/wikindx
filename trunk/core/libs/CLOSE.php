@@ -76,12 +76,11 @@ class CLOSE
         // Assigning values to the template and rendering
         $this->template = FACTORY_TEMPLATE::getInstance();
         $this->template->loadTemplate();
-        // Extract and fix url separator for HTML rendering
-        $tplPath = "/" . str_replace("\\", "/", $this->template->getDirectory());
 
         GLOBALS::addTplVar('displayPopUp', $displayPopUp);
-
-        GLOBALS::addTplVar('tplPath', WIKINDX_BASE_URL . $tplPath);
+        
+        // Extract and fix url separator for HTML rendering
+        GLOBALS::addTplVar('tplPath', $this->template->getUrl());
         GLOBALS::addTplVar('lang', \LOCALES\localetoBCP47(\LOCALES\determine_locale()));
         if (defined('WIKINDX_RSS_ALLOW')) {
             GLOBALS::addTplVar('displayRss', WIKINDX_RSS_ALLOW);

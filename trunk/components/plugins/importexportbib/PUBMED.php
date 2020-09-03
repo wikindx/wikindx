@@ -25,6 +25,7 @@ class PUBMED
     private $parentClass;
     private $configImport;
     private $filesDir;
+    private $filesUrl;
 
     /**
      * Constructor
@@ -51,6 +52,7 @@ class PUBMED
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->bibConfig = FACTORY_BIBTEXCONFIG::getInstance();
         $this->filesDir = WIKINDX_DIR_DATA_FILES . DIRECTORY_SEPARATOR;
+        $this->filesUrl = WIKINDX_URL_DATA_FILES . DIRECTORY_SEPARATOR;
     }
     /*
      * dislay options for importing
@@ -329,7 +331,7 @@ class PUBMED
             $pString = $obj->stage1(TRUE);
         } else {
             $pString = HTML\p($pString .
-                HTML\a("link", $this->pluginmessages->text('importPubMedOutputFile'), $this->filesDir . $bibFile, "_blank"), 'success');
+                HTML\a("link", $this->pluginmessages->text('importPubMedOutputFile'), $this->filesUrl . $bibFile, "_blank"), 'success');
         }
 
         return $pString;

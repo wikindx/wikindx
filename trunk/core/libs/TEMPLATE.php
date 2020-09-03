@@ -29,6 +29,8 @@ class TEMPLATE
     private $name;
     /** string */
     private $path;
+    /** string */
+    private $url;
     /** array */
     private $tplList = FALSE;
 
@@ -56,6 +58,16 @@ class TEMPLATE
     public function getDirectory()
     {
         return $this->path;
+    }
+
+    /**
+     * Return the url of the loaded template
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
     }
 
     /**
@@ -135,6 +147,10 @@ class TEMPLATE
         // with the name of the template instead of using indice 0
         $this->path = WIKINDX_DIR_COMPONENT_TEMPLATES . DIRECTORY_SEPARATOR . $this->name;
         $this->tpl->setTemplateDir([$this->name => $this->path]);
+
+        // Configure (main) template url of Smarty
+        // with the name of the template instead of using indice 0
+        $this->url = implode('/', [WIKINDX_BASE_URL, WIKINDX_URL_COMPONENT_TEMPLATES, $this->name]);
 
         // Register "menu" function of SmartyMenu plugin
         $this->tpl->registerDefaultPluginHandler([$this, 'plugin_SmartyMenu_handler']);

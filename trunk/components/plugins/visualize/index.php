@@ -359,10 +359,12 @@ class visualize_MODULE
      */
     private function display($graph)
     {
-        $filesDir = WIKINDX_DIR_DATA_FILES;
-        $file = $filesDir . DIRECTORY_SEPARATOR . 'jpGraph' . \UTILS\uuid() . '.png';
-        $graph->Stroke($file);
-        $pString = HTML\img($file, $this->config->width, $this->config->height);
+        $fileName = 'jpGraph' . \UTILS\uuid() . '.png';
+        $filesDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA_FILES, $fileName]);
+        $filesUrl = implode("/", [WIKINDX_URL_DATA_FILES, $fileName]);
+        
+        $graph->Stroke(implod($filesDir));
+        $pString = HTML\img($filesUrl, $this->config->width, $this->config->height);
         $size = count($this->xAxis);
         if (array_key_exists('maxXAxis', $this->vars) && ($this->vars['maxXAxis'] > 0)) {
             $p = $this->links($size);

@@ -43,7 +43,7 @@ class FRONT
         $this->listCommon = FACTORY_LISTCOMMON::getInstance();
         $this->listCommon->navigate = 'front';
         GLOBALS::setTplVar('heading', ''); // blank
-        include_once("core/modules/help/HELPMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('front'));
         $this->init();
@@ -66,7 +66,7 @@ class FRONT
 
         // Do we want the quick search form to be displayed?
         if (mb_substr_count($pString, '$QUICKSEARCH$')) {
-            include_once('core/modules/list/QUICKSEARCH.php');
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "list", "QUICKSEARCH.php"]));
             $qs = new QUICKSEARCH();
             $replace = $qs->init(FALSE, FALSE, TRUE);
             $pString = str_replace('$QUICKSEARCH$', $replace, $pString);

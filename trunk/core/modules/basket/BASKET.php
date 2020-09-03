@@ -62,7 +62,7 @@ class BASKET
         $this->session->setVar("basket_List", $basket);
         $this->session->saveState('basket');
         // send back to view this resource with success message
-        include_once("core/modules/resource/RESOURCEVIEW.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
         $resource = new RESOURCEVIEW();
         $resource->init($this->session->getVar("sql_LastSolo"));
         GLOBALS::addTplVar('content', $this->success->text("basketAdd"));
@@ -80,7 +80,7 @@ class BASKET
         $this->session->setVar("basket_List", $basket);
         $this->session->saveState('basket');
         // send back to view this resource with success message
-        include_once("core/modules/resource/RESOURCEVIEW.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
         $resource = new RESOURCEVIEW();
         $resource->init($this->session->getVar("sql_LastSolo"));
         GLOBALS::addTplVar('content', $this->success->text("basketRemove"));
@@ -167,7 +167,7 @@ class BASKET
     {
         if ($confirm) {
             $this->session->clearArray('basket');
-            include_once("core/front/FRONT.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
             $obj = new FRONT($this->db);
             $obj->message = $this->success->text("basketDelete");
 

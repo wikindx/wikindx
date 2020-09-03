@@ -30,7 +30,7 @@ private $catalogLanguage = array();
 		$session = FACTORY_SESSION::getInstance();
 		
 		$catalogData = array();
-		$catalogFile = WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR . $pluginDir . DIRECTORY_SEPARATOR . $pluginFile . '.php';
+		$catalogFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_PLUGINS, $pluginDir, $pluginFile . ".php"]);
 		$catalogClassName = $pluginFile;
 		
 		if(file_exists($catalogFile))

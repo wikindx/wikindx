@@ -155,7 +155,7 @@ class DELETERESOURCE
 
             return;
         }
-        include_once("core/miscellaneous/TAG.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "miscellaneous", "TAG.php"]));
         $tag = new TAG();
         $tags = $tag->grabAll();
         $pString = $message ? $message : FALSE;

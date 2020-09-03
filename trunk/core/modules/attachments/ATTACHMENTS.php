@@ -434,7 +434,7 @@ class ATTACHMENTS
 	        	case WIKINDX_MIMETYPE_DOCX:
 	        	case WIKINDX_MIMETYPE_DOC:
 		            $fileName = WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash;
-		            include_once("core/modules/list/FILETOTEXT.php");
+                    include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "list", "FILETOTEXT.php"]));
 		            $ftt = new FILETOTEXT();
 		            @file_put_contents($fileNameCache, $ftt->convertToText($fileName, $type)); // we do not halt on failure
 	        	break;

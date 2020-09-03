@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "visualize",
-    "component_version": "229",
+    "component_version": "235",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Visualize",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "be5c04b36d6d116f9a927a77e2719ba0b1bef9d7165498db266cd5aec2b37594"
+    "component_sha256": "2730ec36dccfa3d4146a1117c0652ed8891ac422d210ae7771bfd3a79c72d797"
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-08-28 20:02+0200\n"
+"POT-Creation-Date: 2020-09-03 05:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,46 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: core/libs/sql.php:28
+#: core/messages/errors.php:92
+msgid "Unable to open ### database."
+msgstr ""
+
+#: core/libs/sql.php:29
+#: core/messages/errors.php:93
+msgid "Unable to write to database."
+msgstr ""
+
+#: core/libs/sql.php:30
+#: core/messages/errors.php:94
+msgid "Unable to read database."
+msgstr ""
+
+#: core/libs/sql.php:31
+#: core/messages/errors.php:95
+msgid "Missing Configuration Parameter in config.php."
+msgstr ""
+
+#: core/libs/sql.php:32
+#: core/messages/errors.php:96
+msgid "Unable to open update/createMySQL.txt."
+msgstr ""
+
+#: core/libs/sql.php:33
+#: core/messages/errors.php:97
+msgid "Unable to update database with update/updateMySQL.txt."
+msgstr ""
+
+#: core/libs/sql.php:34
+#: core/messages/errors.php:98
+msgid "No RDBMS type selected in config.php."
+msgstr ""
+
+#: core/libs/sql.php:35
+#: core/messages/errors.php:99
+msgid "Missing subQuery statement."
+msgstr ""
 
 #. translators: When using the word processor how are extra, unnamed authors indicated? 
 #. In English this would be 'et al.' as in: 'According to Grimshaw et al., "blah blah blah".
@@ -2051,150 +2091,114 @@ msgstr ""
 msgid "Fiftieth"
 msgstr ""
 
-#: core/messages/errors.php:92
-#: core/sql/sql.php:28
-msgid "Unable to open ### database."
+#: core/messages/errors.php:100
+msgid "Unable to write temporary form data to the database."
 msgstr ""
 
-#: core/messages/errors.php:93
-#: core/sql/sql.php:29
-msgid "Unable to write to database."
-msgstr ""
-
-#: core/messages/errors.php:94
-#: core/sql/sql.php:30
-msgid "Unable to read database."
-msgstr ""
-
-#: core/messages/errors.php:95
-#: core/sql/sql.php:31
-msgid "Missing Configuration Parameter in config.php."
-msgstr ""
-
-#: core/messages/errors.php:96
-#: core/sql/sql.php:32
-msgid "Unable to open update/createMySQL.txt."
-msgstr ""
-
-#: core/messages/errors.php:97
-#: core/sql/sql.php:33
-msgid "Unable to update database with update/updateMySQL.txt."
-msgstr ""
-
-#: core/messages/errors.php:98
-#: core/sql/sql.php:34
-msgid "No RDBMS type selected in config.php."
-msgstr ""
-
-#: core/messages/errors.php:99
-#: core/sql/sql.php:35
-msgid "Missing subQuery statement."
-msgstr ""
-
-#: core/messages/errors.php:103
+#: core/messages/errors.php:104
 msgid "Unable to write to session."
 msgstr ""
 
-#: core/messages/errors.php:107
+#: core/messages/errors.php:108
 msgid "Input is not a number ###"
 msgstr ""
 
-#: core/messages/errors.php:108
+#: core/messages/errors.php:109
 msgid "Input is not an integer ###"
 msgstr ""
 
-#: core/messages/errors.php:109
+#: core/messages/errors.php:110
 msgid "Input is not a float ###"
 msgstr ""
 
-#: core/messages/errors.php:110
+#: core/messages/errors.php:111
 msgid "Missing input ###"
 msgstr ""
 
-#: core/messages/errors.php:111
+#: core/messages/errors.php:112
 msgid "Invalid input ###"
 msgstr ""
 
-#: core/messages/errors.php:112
+#: core/messages/errors.php:113
 msgid "Insecure username ###"
 msgstr ""
 
-#: core/messages/errors.php:113
+#: core/messages/errors.php:114
 msgid "That username already exists"
 msgstr ""
 
-#: core/messages/errors.php:114
+#: core/messages/errors.php:115
 msgid "That group already exists"
 msgstr ""
 
-#: core/messages/errors.php:115
+#: core/messages/errors.php:116
 msgid "That bibliography already exists"
 msgstr ""
 
-#: core/messages/errors.php:116
+#: core/messages/errors.php:117
 msgid ""
 "Unable to use email - please contact the WIKINDX administrator (ERROR: ###)"
 msgstr ""
 
 #. / inputError_noHashKey User registration - the hashKey supplied by email to a user has been deleted from the database as they did not confirm their registration within 10 days.
-#: core/messages/errors.php:118
+#: core/messages/errors.php:119
 msgid "That key no longer exists. Please re-register"
 msgstr ""
 
-#: core/messages/errors.php:119
+#: core/messages/errors.php:120
 msgid "That style already exists"
 msgstr ""
 
 #. / inputError_duplicateCustomMap When exporting bibliographies to bibtex or endnote and custom fields are mapped, duplicate field names are not allowed.
-#: core/messages/errors.php:121
+#: core/messages/errors.php:122
 msgid "Duplicate export field names"
 msgstr ""
 
 #. / inputError_incorrect Response given to an incorrect answer in the forgotten password system
-#: core/messages/errors.php:123
+#: core/messages/errors.php:124
 msgid "A question has been answered incorrectly.  Please try again."
 msgstr ""
 
 #. / inputError_duplicateFieldNames When exporting metadata to bibtex, the user has entered a 'unique' field name that already exists
-#: core/messages/errors.php:125
+#: core/messages/errors.php:126
 msgid "Duplicate field names"
 msgstr ""
 
 #. / inputError_chapterNotNumeric book_chapter resource type:  chapter must be a number
-#: core/messages/errors.php:127
+#: core/messages/errors.php:128
 msgid "Chapter must be numeric"
 msgstr ""
 
-#: core/messages/errors.php:128
+#: core/messages/errors.php:129
 msgid ""
 "You do not own any user groups.  You must first create a user group before "
 "you can create user group bibliographies"
 msgstr ""
 
-#: core/messages/errors.php:129
+#: core/messages/errors.php:130
 msgid "Unable to complete the operation due to a mail server error (ERROR: ###)"
 msgstr ""
 
 #. / inputError_passwordMismatch typed passwords do not match
-#: core/messages/errors.php:131
+#: core/messages/errors.php:132
 msgid "Passwords do not match."
 msgstr ""
 
-#: core/messages/errors.php:132
+#: core/messages/errors.php:133
 #: core/messages/messages.php:826
 msgid ""
 "Password must contain at least ### characters and be a mix of UPPER/"
 "lowercase. Spaces are not allowed."
 msgstr ""
 
-#: core/messages/errors.php:133
+#: core/messages/errors.php:134
 #: core/messages/messages.php:827
 msgid ""
 "Password must contain at least ### characters and be a mix of UPPER/lowercase "
 "and numbers. Spaces are not allowed."
 msgstr ""
 
-#: core/messages/errors.php:134
+#: core/messages/errors.php:135
 #: core/messages/messages.php:828
 msgid ""
 "Password must contain at least ### characters and be a mix of UPPER/"
@@ -2202,241 +2206,241 @@ msgid ""
 "Spaces are not allowed."
 msgstr ""
 
-#: core/messages/errors.php:135
+#: core/messages/errors.php:136
 msgid "That user tag already exists"
 msgstr ""
 
 #. / inputError_captcha CAPTCHA words entered incorrect
-#: core/messages/errors.php:137
+#: core/messages/errors.php:138
 msgid "Answer incorrect"
 msgstr ""
 
 #. / inputError_maxInputVars Too many input vars for PHP to handle
-#: core/messages/errors.php:139
+#: core/messages/errors.php:140
 msgid ""
 "Too many input variables selected for PHP to handle (input > ###). You can "
 "adjust this increasing max_input_vars in php.ini."
 msgstr ""
 
-#: core/messages/errors.php:140
+#: core/messages/errors.php:141
 msgid "Cannot connect to LDAP server. Server and/or port are not plausible"
 msgstr ""
 
-#: core/messages/errors.php:141
+#: core/messages/errors.php:142
 msgid "Cannot connect to LDAP server. Too many users on that login"
 msgstr ""
 
-#: core/messages/errors.php:142
+#: core/messages/errors.php:143
 msgid "Error while setting LDAP options"
 msgstr ""
 
-#: core/messages/errors.php:143
+#: core/messages/errors.php:144
 msgid "Cannot connect to LDAP server. Unable to bind"
 msgstr ""
 
-#: core/messages/errors.php:144
+#: core/messages/errors.php:145
 msgid "Error while searching the LDAP catalog"
 msgstr ""
 
-#: core/messages/errors.php:145
+#: core/messages/errors.php:146
 msgid "Error reading LDAP entries"
 msgstr ""
 
-#: core/messages/errors.php:146
+#: core/messages/errors.php:147
 msgid "You must be a registered user to access this"
 msgstr ""
 
-#: core/messages/errors.php:147
+#: core/messages/errors.php:148
 msgid "A keyword group requires at least two keywords in it"
 msgstr ""
 
-#: core/messages/errors.php:148
+#: core/messages/errors.php:149
 msgid "You neither own nor are a member of that keyword group"
 msgstr ""
 
-#: core/messages/errors.php:152
+#: core/messages/errors.php:153
 msgid "Unable to write to file ###"
 msgstr ""
 
-#: core/messages/errors.php:153
+#: core/messages/errors.php:154
 msgid "You must first list or select resources"
 msgstr ""
 
-#: core/messages/errors.php:154
+#: core/messages/errors.php:155
 msgid "Unable to read directory or file ###"
 msgstr ""
 
-#: core/messages/errors.php:155
+#: core/messages/errors.php:156
 msgid "You have not yet exported any files"
 msgstr ""
 
-#: core/messages/errors.php:156
+#: core/messages/errors.php:157
 msgid "File upload error"
 msgstr ""
 
-#: core/messages/errors.php:157
+#: core/messages/errors.php:158
 msgid "Unable to create directory"
 msgstr ""
 
-#: core/messages/errors.php:158
+#: core/messages/errors.php:159
 msgid "You may not map more than one unknown field to the same WIKINDX field"
 msgstr ""
 
 #. / file_fileSize Don't translate 'post_max_size', 'upload_max_filesize' and 'php.ini'
-#: core/messages/errors.php:160
+#: core/messages/errors.php:161
 msgid ""
 "Attachment exceeds maximum post_max_size or upload_max_filesize in php.ini (> "
 "### bytes)"
 msgstr ""
 
-#: core/messages/errors.php:161
+#: core/messages/errors.php:162
 msgid "Attachment already exists for this resource"
 msgstr ""
 
-#: core/messages/errors.php:162
+#: core/messages/errors.php:163
 msgid "File not found"
 msgstr ""
 
-#: core/messages/errors.php:163
+#: core/messages/errors.php:164
 msgid "Image already exists as ###"
 msgstr ""
 
-#: core/messages/errors.php:164
+#: core/messages/errors.php:165
 msgid "File type not allowed (only JPEG, GIF and PNG)"
 msgstr ""
 
-#: core/messages/errors.php:165
+#: core/messages/errors.php:166
 msgid "Image above maximum allowed size of ###MB"
 msgstr ""
 
-#: core/messages/errors.php:169
+#: core/messages/errors.php:170
 msgid "You have already created/edited/deleted that resource"
 msgstr ""
 
-#: core/messages/errors.php:170
+#: core/messages/errors.php:171
 msgid "You have already created/edited/deleted that note"
 msgstr ""
 
-#: core/messages/errors.php:171
+#: core/messages/errors.php:172
 msgid "You have already created/edited/deleted that quote"
 msgstr ""
 
-#: core/messages/errors.php:172
+#: core/messages/errors.php:173
 msgid "You have already created/edited/deleted that paraphrase"
 msgstr ""
 
-#: core/messages/errors.php:173
+#: core/messages/errors.php:174
 msgid "You have already created/edited/deleted that musing"
 msgstr ""
 
-#: core/messages/errors.php:174
+#: core/messages/errors.php:175
 msgid "You have already created/edited/deleted that idea"
 msgstr ""
 
-#: core/messages/errors.php:175
+#: core/messages/errors.php:176
 msgid "You have already created/edited/deleted that abstract"
 msgstr ""
 
-#: core/messages/errors.php:176
+#: core/messages/errors.php:177
 msgid "You have already created/edited/deleted that creator"
 msgstr ""
 
-#: core/messages/errors.php:177
+#: core/messages/errors.php:178
 msgid "You have already created/edited/deleted that publisher"
 msgstr ""
 
-#: core/messages/errors.php:178
+#: core/messages/errors.php:179
 msgid "You have already created/edited/deleted that collection"
 msgstr ""
 
-#: core/messages/errors.php:179
+#: core/messages/errors.php:180
 msgid "You have already imported that file"
 msgstr ""
 
-#: core/messages/errors.php:180
+#: core/messages/errors.php:181
 msgid "You have already edited that keyword"
 msgstr ""
 
-#: core/messages/errors.php:181
-#: core/messages/errors.php:191
+#: core/messages/errors.php:182
+#: core/messages/errors.php:192
 msgid "You have already deleted that keyword"
 msgstr ""
 
-#: core/messages/errors.php:182
+#: core/messages/errors.php:183
 msgid "You have already registered"
 msgstr ""
 
-#: core/messages/errors.php:183
+#: core/messages/errors.php:184
 msgid "You have already created/edited/deleted that bibliography"
 msgstr ""
 
-#: core/messages/errors.php:184
+#: core/messages/errors.php:185
 msgid "You have already edited/deleted that custom field"
 msgstr ""
 
-#: core/messages/errors.php:185
+#: core/messages/errors.php:186
 msgid "You have already attached that file"
 msgstr ""
 
-#: core/messages/errors.php:186
+#: core/messages/errors.php:187
 msgid "You have already deleted those files"
 msgstr ""
 
-#: core/messages/errors.php:187
+#: core/messages/errors.php:188
 msgid "You have already created/edited/deleted that user group"
 msgstr ""
 
-#: core/messages/errors.php:188
+#: core/messages/errors.php:189
 msgid "You have already added that URL"
 msgstr ""
 
-#: core/messages/errors.php:189
+#: core/messages/errors.php:190
 msgid "You have already created/edited/deleted that user tag"
 msgstr ""
 
-#: core/messages/errors.php:190
+#: core/messages/errors.php:191
 msgid "You have already created/edited/deleted that news item"
 msgstr ""
 
 #. / warning_resourceExists When inputting a new resource
-#: core/messages/errors.php:196
+#: core/messages/errors.php:197
 msgid "At least one resource of that type with that title already exists"
 msgstr ""
 
 #. / warning_superadminOnly WIKINDX not in multi user mode - this is displayed at the logon screen
-#: core/messages/errors.php:198
+#: core/messages/errors.php:199
 msgid "Multi user has not been enabled - only the superadmin may log on"
 msgstr ""
 
 #. / warning_creatorExists When editing a creator, the new one may be the same as an existing one.
-#: core/messages/errors.php:200
+#: core/messages/errors.php:201
 msgid "A creator of that name already exists in the database"
 msgstr ""
 
 #. / warning_publisherExists When editing a publisher, the new one may be the same as an existing one.
-#: core/messages/errors.php:202
+#: core/messages/errors.php:203
 msgid "A publisher of that name and location already exists in the database"
 msgstr ""
 
 #. / warning_collectionExists When editing a collection, the new one may be the same as an existing one.
-#: core/messages/errors.php:204
+#: core/messages/errors.php:205
 msgid "A collection with those details already exists in the database"
 msgstr ""
 
 #. / warning_keywordExists When editing a keyword, the new one may be the same as an existing one.
-#: core/messages/errors.php:206
+#: core/messages/errors.php:207
 msgid "A keyword of that name already exists in the database"
 msgstr ""
 
 #. / warning_forget1 For the forgotten password system: '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:208
+#: core/messages/errors.php:209
 msgid ""
 "Unfortunately you have not stored any question/answer pairs or you have "
 "entered your details incorrectly so WIKINDX is unable to help you.  Please "
 "contact the WIKINDX administrator ###"
 msgstr ""
 
-#: core/messages/errors.php:209
+#: core/messages/errors.php:210
 msgid ""
 "There is more than one user with that email address so WIKINDX is unable to "
 "help you. Please contact the WIKINDX administrator for further help or enter "
@@ -2444,67 +2448,67 @@ msgid ""
 msgstr ""
 
 #. / warning_forget3 Don't translate 'SMTP'.  In this case, '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:211
+#: core/messages/errors.php:212
 msgid ""
 "WIKINDX is unable to email you because the SMTP server does not appear to be "
 "available.  Please contact the WIKINDX administrator ###"
 msgstr ""
 
-#: core/messages/errors.php:212
+#: core/messages/errors.php:213
 msgid "Resource has been quarantined until an ADMIN approves it"
 msgstr ""
 
-#: core/messages/errors.php:213
+#: core/messages/errors.php:214
 msgid "Incompatible plugins: ###"
 msgstr ""
 
-#: core/messages/errors.php:214
+#: core/messages/errors.php:215
 msgid "If you delete the main idea, the entire thread will be deleted"
 msgstr ""
 
-#: core/messages/errors.php:215
+#: core/messages/errors.php:216
 msgid ""
 "The administrator of this wikindx has denied you access. Please contact the "
 "administrator for further details."
 msgstr ""
 
-#: core/messages/errors.php:219
+#: core/messages/errors.php:220
 msgid "No valid entries found in the file"
 msgstr ""
 
 #. / components_adminFailed This is used as preamble text. e.g. Admin action failed: No file selected.
-#: core/messages/errors.php:224
+#: core/messages/errors.php:225
 msgid "Admin action failed: ###"
 msgstr ""
 
-#: core/messages/errors.php:225
+#: core/messages/errors.php:226
 msgid ""
 "An error occurred while downloading the component list from the update "
 "server. Please try again later."
 msgstr ""
 
-#: core/messages/errors.php:226
+#: core/messages/errors.php:227
 msgid ""
 "An error occurred while parsing the component list from the update server. "
 "Please check for updates again."
 msgstr ""
 
-#: core/messages/errors.php:227
+#: core/messages/errors.php:228
 msgid "Unknown component."
 msgstr ""
 
-#: core/messages/errors.php:228
+#: core/messages/errors.php:229
 msgid ""
 "Two or more inline plugins have been assigned the same container: ###. The "
 "configuration has not been updated."
 msgstr ""
 
-#: core/messages/errors.php:229
+#: core/messages/errors.php:230
 msgid ""
 "The value of $container is invalid. The configuration has not been updated."
 msgstr ""
 
-#: core/messages/errors.php:230
+#: core/messages/errors.php:231
 msgid "The value of $menus is invalid. The configuration has not been updated."
 msgstr ""
 

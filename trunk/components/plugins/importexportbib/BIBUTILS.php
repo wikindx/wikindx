@@ -11,6 +11,7 @@
 class BIBUTILS
 {
     public $filesDir;
+    public $filesUrl;
     private $vars;
     private $pluginmessages;
     private $coremessages;
@@ -34,9 +35,9 @@ class BIBUTILS
         $this->parentClass = $parentClass;
 
         $this->session = FACTORY_SESSION::getInstance();
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->config = new importexportbib_BIBUTILSCONFIG();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -45,6 +46,7 @@ class BIBUTILS
         }
 
         $this->filesDir = WIKINDX_DIR_DATA_FILES . DIRECTORY_SEPARATOR;
+        $this->filesUrl = WIKINDX_URL_DATA_FILES . "/";
         $this->vars = GLOBALS::getVars();
         $this->outputTypesArray = $this->outputTypes();
         if (empty($this->outputTypesArray)) {
@@ -199,7 +201,7 @@ class BIBUTILS
         $pString .= HTML\p($this->pluginmessages->text('bibutilsSuccess', HTML\a(
             "link",
             $this->pluginmessages->text('bibutilsoutputFile'),
-            $this->filesDir . $linkFile,
+            $this->filesUrl . $linkFile,
             "_blank"
         )), 'success');
         $pString .= HTML\hr();

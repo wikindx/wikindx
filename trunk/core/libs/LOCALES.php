@@ -255,7 +255,7 @@ namespace LOCALES
             // Load the core translations
             if ($loading[WIKINDX_LANGUAGE_DOMAIN_DEFAULT])
             {
-                $dirlocales = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", WIKINDX_DIR_CORE_LANGUAGES]));
+                $dirlocales = WIKINDX_DIR_CORE_LANGUAGES;
                 $moFileName = WIKINDX_LANGUAGE_DOMAIN_DEFAULT . ".mo";
                 $moFilePath = implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES", $moFileName]);
                 if (file_exists($moFilePath)) {

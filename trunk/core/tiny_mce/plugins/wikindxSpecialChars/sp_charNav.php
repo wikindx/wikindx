@@ -8,30 +8,10 @@
  * @license https://www.isc.org/licenses/ ISC License
  */
 
-if(!function_exists("SetWikindxBasePath")) {
-    function SetWikindxBasePath()
-    {
-        $wikindxBasePath = __DIR__;
-        while (!in_array(basename($wikindxBasePath), ["", "components", "core"])) {
-            $wikindxBasePath = dirname($wikindxBasePath);
-        }
-        if (basename($wikindxBasePath) == "") {
-            die("
-                \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
-                and WIKINDX is unable to set the installation path automatically.
-                You should set \$WIKINDX_WIKINDX_PATH in config.php.
-            ");
-        }
-        chdir(dirname($wikindxBasePath));
-    }
-}
-
-SetWikindxBasePath();
-
 /**
  * Import initial configuration and initialize the web server
  */
-include_once("core/startup/WEBSERVERCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "startup", "WEBSERVERCONFIG.php"]));
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -82,7 +62,7 @@ include_once("core/startup/WEBSERVERCONFIG.php");
 	<select name="selectName" onchange="goto_URL(this.form.selectName)">
 <?php
 
-include_once('sp_charTableDef.php');
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "sp_charTableDef.php"]));
 
 ?><option value="sp_char.php?ul=0">Select a character set:</option><?php
 

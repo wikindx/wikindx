@@ -15,8 +15,7 @@
  */
 namespace UTILS
 {
-
-include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
+    include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "LOADSTYLE.php"]));
 
     /**
      * Return an array of mandatory PHP extensions used by the Wikindx core
@@ -364,7 +363,7 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
             }
             
             // Check if the component type is right directory for the component directory
-            $componentRootName = dirname($componentDirPath);
+            $componentRootName = realpath(dirname($componentDirPath));
             if ($componentMetadata["component_type"] == "plugin" && $componentRootName != WIKINDX_DIR_COMPONENT_PLUGINS) {
                 return 6;
             } elseif ($componentMetadata["component_type"] == "style" && $componentRootName != WIKINDX_DIR_COMPONENT_STYLES) {
@@ -439,7 +438,7 @@ include_once(__DIR__ . "/../bibcitation/LOADSTYLE.php");
                     return 30;
                 }
                 
-                include_once("core/modules/LOADEXTERNALMODULES.php");
+                include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "LOADEXTERNALMODULES.php"]));
                 $loadmodules = new \LOADEXTERNALMODULES();
                 if (!$loadmodules->checkVersion($componentMetadata["component_id"])) {
                     return 25;

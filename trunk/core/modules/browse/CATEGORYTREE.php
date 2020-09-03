@@ -23,13 +23,13 @@ class CATEGORYTREE
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
-        include_once("core/browse/BROWSECOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
         $this->common = new BROWSECOMMON();
-        include_once("core/modules/browse/BROWSECATEGORY.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BROWSECATEGORY.php"]));
         $this->categories = new BROWSECATEGORY();
-        include_once("core/modules/browse/BROWSEKEYWORD.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BROWSEKEYWORD.php"]));
         $this->keywords = new BROWSEKEYWORD();
-        include_once("core/modules/browse/BROWSESUBCATEGORY.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BROWSESUBCATEGORY.php"]));
         $this->subcategories = new BROWSESUBCATEGORY();
 
         $this->messages = FACTORY_MESSAGES::getInstance();
@@ -39,7 +39,7 @@ class CATEGORYTREE
      */
     public function init()
     {
-        include_once("core/modules/help/HELPMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('categoryTree'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "categoryTree"));

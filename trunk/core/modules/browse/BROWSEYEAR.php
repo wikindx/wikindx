@@ -26,7 +26,7 @@ class BROWSEYEAR
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        include_once("core/browse/BROWSECOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
         $this->common = new BROWSECOMMON();
         $this->messages = FACTORY_MESSAGES::getInstance();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "browseYear"));

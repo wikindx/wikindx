@@ -539,7 +539,7 @@ class LISTCOMMON
         if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId")) {
             $this->displayListInfo($listType, FALSE);
         }
-        include_once("core/miscellaneous/ATTACHMENT.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "miscellaneous", "ATTACHMENT.php"]));
         $attachments = new ATTACHMENT();
         $files = [];
         $zip = $this->session->getVar($listType . '_DisplayAttachmentZip') ? TRUE : FALSE;

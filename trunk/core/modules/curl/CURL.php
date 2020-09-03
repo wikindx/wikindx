@@ -25,7 +25,7 @@ class CURL
         // Define a custom header that point to the hash of the parsed file
         // This is mandatory because the output of PdfToText could be altered at byte level
         header('resourceattachmentsHashFilename: ' . $_GET['id']);
-        include_once("core/modules/list/FILETOTEXT.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "list", "FILETOTEXT.php"]));
         $ftt = new FILETOTEXT();
         echo $ftt->convertToText($_GET['file'], $_GET['fileType']);
         FACTORY_CLOSERAW::getInstance(); // die

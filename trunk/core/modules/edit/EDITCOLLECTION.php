@@ -50,7 +50,7 @@ class EDITCOLLECTION
     public function init($message = FALSE)
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        include_once("core/modules/help/HELPMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('collection'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" . $this->messages->text("resources", "collection") . ")"));
@@ -88,13 +88,13 @@ class EDITCOLLECTION
     public function editChooseCollection()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        include_once("core/modules/help/HELPMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('collection'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" .
             $this->messages->text("resources", "collection") . ")"));
         $collectionType = $this->vars['edit_collectionType'];
-        include_once("core/collection/COLLECTIONMAP.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONMAP.php"]));
         $this->map = new COLLECTIONMAP();
         if ($collectionType) {
             $this->db->formatConditions(['collectionType' => $collectionType]);
@@ -136,7 +136,7 @@ class EDITCOLLECTION
     public function editDisplayCollection($message = FALSE)
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        include_once("core/modules/help/HELPMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('collection'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" .
@@ -156,7 +156,7 @@ class EDITCOLLECTION
         } else {
             $short = FALSE;
         }
-        include_once("core/collection/COLLECTIONDEFAULTMAP.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
         $this->defaultMap = new COLLECTIONDEFAULTMAP();
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
         $pString = $message;
@@ -293,7 +293,7 @@ class EDITCOLLECTION
         if (!$title) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'editDisplayCollection');
         }
-        include_once("core/collection/COLLECTIONDEFAULTMAP.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
         $this->defaultMap = new COLLECTIONDEFAULTMAP();
         $this->db->formatConditions(['collectionId' => $this->vars['edit_collectionId']]);
         $recordset = $this->db->select('collection', ['collectionType', 'collectionDefault']);

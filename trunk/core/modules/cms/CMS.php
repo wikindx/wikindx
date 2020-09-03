@@ -452,7 +452,7 @@ class CMS
                 $items[$row['resourceId']] = $row['resourcetextNote'];
             }
         } elseif ($_GET['type'] == 'getQuote') {
-            include_once('core/modules/resource/RESOURCEMETA.php');
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEMETA.php"]));
             $meta = new RESOURCEMETA();
             $db->formatConditionsOneField($ids, 'resourceId');
             $resultset = $res->getResource(FALSE, $order);
@@ -485,7 +485,7 @@ class CMS
                 }
             }
         } elseif ($_GET['type'] == 'getParaphrase') {
-            include_once('core/modules/resource/RESOURCEMETA.php');
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEMETA.php"]));
             $meta = new RESOURCEMETA();
             $db->formatConditionsOneField($ids, 'resourceId');
             $resultset = $res->getResource(FALSE, $order);
@@ -518,7 +518,7 @@ class CMS
                 }
             }
         } elseif ($_GET['type'] == 'getMusing') {
-            include_once('core/modules/resource/RESOURCEMETA.php');
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEMETA.php"]));
             $meta = new RESOURCEMETA();
             $db->formatConditionsOneField($ids, 'resourceId');
             $resultset = $res->getResource(FALSE, $order);

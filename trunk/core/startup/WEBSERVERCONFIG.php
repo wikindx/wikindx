@@ -28,7 +28,7 @@
 /**
  * Import CONSTANTS
  */
-include_once("core/startup/CONSTANTS.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "CONSTANTS.php"]));
 
 
 /**
@@ -123,7 +123,7 @@ EOM;
 
 
 // Check if mandatories extensions are enabled.
-include_once("core/libs/UTILS.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "UTILS.php"]));
 $MandatoryExtensions = \UTILS\listCoreMandatoryPHPExtensions();
 $InstalledExtensions = get_loaded_extensions();
 $MissingExtensions = array_diff($MandatoryExtensions, $InstalledExtensions);
@@ -171,7 +171,7 @@ if (PHP_SAPI === 'cli') {
 }
 
 // Check for presence of config.php
-if (!is_file(implode(DIRECTORY_SEPARATOR, ["..", "..", "config.php"]))) {
+if (!is_file(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]))) {
     $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
@@ -207,7 +207,7 @@ EOM;
 }
 
 // Include the config file and check if the CONFIG class is in place
-include_once(implode(DIRECTORY_SEPARATOR, ["..", "..", "config.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]));
 
 if (!class_exists("CONFIG")) {
     $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
@@ -275,7 +275,7 @@ foreach ([WIKINDX_DIR_CACHE, WIKINDX_DIR_CACHE_FILES, WIKINDX_DIR_CACHE_ATTACHME
 }
 
 // Create data and cache directories of plugins
-include_once("core/libs/FILE.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "FILE.php"]));
 foreach (\FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_PLUGINS) as $dir) {
     $plugencachedir = WIKINDX_DIR_CACHE_PLUGINS . DIRECTORY_SEPARATOR . basename($dir);
     if (!file_exists($plugencachedir)) {
@@ -303,13 +303,13 @@ foreach (\FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_PLUGINS) as $dir) {
 ob_start();
 
 // Begin page execution timer and define globals for rendering by template
-include_once("core/startup/GLOBALS.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "GLOBALS.php"]));
 
 // Set up the FACTORY objects of commonly used classes and start the timer.
-include_once("core/startup/FACTORY.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "FACTORY.php"]));
 
 // Initialize the static config read from config.php file
-include_once("core/startup/LOADSTATICCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "LOADSTATICCONFIG.php"]));
 
 /**
  *	Initialize the system
@@ -325,14 +325,14 @@ $authorize = FACTORY_AUTHORIZE::getInstance();
 
 // Attempt an upgrade only if we are on the main script
 if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE) {
-    include_once("core/startup/UPDATE.php");
+    include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "UPDATE.php"]));
 
     // Do database upgrade check
     if (\UPDATE\needUpdate(FACTORY_DB::getInstance())) {
         // Force the update of the components.json files in case WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"] change
         \UTILS\refreshComponentsListCache(TRUE);
         // Upgrade database
-        include_once("core/startup/UPDATEDATABASE.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "UPDATEDATABASE.php"]));
         $update = new UPDATEDATABASE(); // __construct() runs on autopilot
         $upgradeCompleted = $update->upgradeCompleted;
         unset($update);
@@ -348,7 +348,7 @@ FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
 FACTORY_LOADCONFIG::getInstance()->loadUserVars();
 
 // Locales setting needs to know the language prefered by the user which is now in GLOBALS
-include_once("core/libs/LOCALES.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "LOCALES.php"]));
 \LOCALES\load_locales();
 
 $vars = GLOBALS::getVars();

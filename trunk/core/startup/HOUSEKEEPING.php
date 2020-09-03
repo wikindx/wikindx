@@ -90,7 +90,7 @@ class HOUSEKEEPING
             FACTORY_CLOSENOMENU::getInstance(); // die
         } else {
             if ($upgradeCompleted == TRUE) {
-                include_once('core/startup/INSTALLMESSAGES.php');
+                include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "INSTALLMESSAGES.php"]));
                 $installMessages = new INSTALLMESSAGES;
                 $message = \HTML\p($installMessages->text("upgradeDBSuccess"), "success", "center");
                 if (WIKINDX_INTERNAL_VERSION >= 5.3) {

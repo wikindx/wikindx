@@ -53,7 +53,7 @@ class UPDATEDATABASE
         $this->session = FACTORY_SESSION::getInstance();
 
         $this->messages = FACTORY_MESSAGES::getInstance();
-        include_once('core/startup/INSTALLMESSAGES.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "INSTALLMESSAGES.php"]));
         $this->installMessages = new INSTALLMESSAGES;
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->vars = GLOBALS::getVars();
@@ -361,7 +361,7 @@ class UPDATEDATABASE
     {
         if ($this->db->tableIsEmpty('users'))
         {
-            include_once("core/modules/usersgroups/SUPERADMIN.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "usersgroups", "SUPERADMIN.php"]));
             $config = new SUPERADMIN(TRUE);
             // force super initialization in CONFIGURE
             $config->insert = TRUE;

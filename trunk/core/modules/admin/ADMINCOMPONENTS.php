@@ -49,7 +49,7 @@ class ADMINCOMPONENTS
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
-        include_once("core/modules/help/HELPMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('plugins'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "adminComponents"));
@@ -865,7 +865,7 @@ class ADMINCOMPONENTS
                 if ($this->vars['configFileInline'] === $file) {
                     continue;
                 }
-                include_once(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . "config.php");
+                include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_PLUGINS, $file, "config.php"]));
                 $configClass = $file . '_CONFIG';
                 $config = new $configClass();
                 if (($index = array_search($config->container, $usedContainers)) === FALSE) {
@@ -967,7 +967,7 @@ class ADMINCOMPONENTS
     {
         $bool = FALSE;
         $id = 'a' . \UTILS\uuid(); // $id is used for the class name in the temporary file – ensure it does not begin with a number
-        $tempFile = WIKINDX_DIR_DATA_FILES . DIRECTORY_SEPARATOR . $id;
+        $tempFile = include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA_FILES, $id]));
         // rewrite temp class name so PHP doesn't complain about class being reused ('name is already in use'). . .
         $fileString = str_replace($componentId . '_CONFIG', $id . '_CONFIG', stripslashes($configString));
         if ($fh = @fopen($tempFile, "w")) {
@@ -1124,7 +1124,7 @@ class ADMINCOMPONENTS
     {
         if (array_key_exists('ajaxReturn', $this->vars)) {
             $file = $this->vars['ajaxReturn'];
-            include_once(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . "config.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_PLUGINS, $file, "config.php"]));
             $configClass = $file . '_CONFIG';
         } else { // grab the first of the list
             foreach ($enabled as $file => $null) {

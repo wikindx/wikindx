@@ -81,7 +81,7 @@ class BIBFORMAT
         $this->output = $output;
         if (!$this->preview) { // Not javascript preview
             if (!$this->dir) {
-                $this->dir = dirname(__FILE__) . "/";
+                $this->dir = __DIR__ . DIRECTORY_SEPARATOR;
             } else {
                 if (mb_substr($this->dir, mb_strlen($this->dir) - 1, 1) != DIRECTORY_SEPARATOR) {
                     $this->dir .= DIRECTORY_SEPARATOR;
@@ -1453,14 +1453,6 @@ class BIBFORMAT
          * This set of includes is for the OSBib public release and should be uncommented for that and
          * the WIKINDX-specific includes below commented out!
          */
-        /*
-                include_once($this->bibtexParsePath . "/PARSECREATORS.php");
-                $parseCreator = new PARSECREATORS();
-                include_once($this->bibtexParsePath . "/PARSEMONTH.php");
-                $parseDate = new PARSEMONTH();
-                include_once($this->bibtexParsePath . "/PARSEPAGE.php");
-                $parsePages = new PARSEPAGE();
-        */
         // WIKINDX naming of above files
         include_once($this->bibtexParsePath . "/BIBTEXCREATORPARSE.php");
         $parseCreator = new BIBTEXCREATORPARSE();

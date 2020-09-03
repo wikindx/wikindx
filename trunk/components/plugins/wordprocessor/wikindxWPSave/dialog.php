@@ -8,32 +8,13 @@
  * @license https://www.isc.org/licenses/ ISC License
  */
 
-if(!function_exists("SetWikindxBasePath")) {
-    function SetWikindxBasePath()
-    {
-        $wikindxBasePath = __DIR__;
-        while (!in_array(basename($wikindxBasePath), ["", "components", "core"])) {
-            $wikindxBasePath = dirname($wikindxBasePath);
-        }
-        if (basename($wikindxBasePath) == "") {
-            die("
-                \$WIKINDX_WIKINDX_PATH in config.php is set incorrectly
-                and WIKINDX is unable to set the installation path automatically.
-                You should set \$WIKINDX_WIKINDX_PATH in config.php.
-            ");
-        }
-        chdir(dirname($wikindxBasePath));
-    }
-}
-
-SetWikindxBasePath();
 
 /**
  * Import initial configuration and initialize the web server
  */
-include_once("core/startup/WEBSERVERCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "..", "core", "startup", "WEBSERVERCONFIG.php"]));
 
-include_once("core/messages/PLUGINMESSAGES.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
 
 $script = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
 $script .= '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/wordprocessor/wikindxWPcommon.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -57,7 +38,7 @@ class WPSaveDialog
         $this->session = FACTORY_SESSION::getInstance();
         $this->vars = GLOBALS::getVars();
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] = 'save')) {
-            include_once(__DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "WPCOMMON.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "WPCOMMON.php"]));
             $common = new WPCOMMON();
             $common->save();
             FACTORY_CLOSEPOPUP::getInstance();

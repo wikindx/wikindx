@@ -37,9 +37,9 @@ class PUBMED
         $this->vars = GLOBALS::getVars();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_MESSAGES::getInstance();
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->configImport = new importexportbib_IMPORTCONFIG();
         if (!$this->configImport->bibutilsPath) {
             $this->configImport->bibutilsPath = '/usr/local/bin/'; // default *NIX location
@@ -321,7 +321,7 @@ class PUBMED
         // for importing into BIBTEXIMPORT.php
         if (array_key_exists('importpubMed_Wikindx', $this->vars)) {
             GLOBALS::setTplVar('heading', $this->coremessages->text("heading", "bibtexImport"));
-            include_once("core/modules/import/IMPORTBIBTEX.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "import", "IMPORTBIBTEX.php"]));
             $obj = new IMPORTBIBTEX();
             $obj->importFile = $bibFile;
             $obj->type = 'file';

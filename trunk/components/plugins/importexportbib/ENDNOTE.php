@@ -26,7 +26,7 @@ class ENDNOTE
     {
         $this->parentClass = $parentClass;
         $this->coremessages = FACTORY_MESSAGES::getInstance();
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->session = FACTORY_SESSION::getInstance();
         $this->importCommon = FACTORY_IMPORT::getInstance();
@@ -137,7 +137,7 @@ class ENDNOTE
      */
     public function displayExport()
     {
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "EXPORTCOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTCOMMON.php"]));
         $common = new EXPORTCOMMON();
         $sql = $common->getSQL();
         if (!$sql) {

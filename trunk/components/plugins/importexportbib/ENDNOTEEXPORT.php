@@ -41,14 +41,14 @@ class ENDNOTEEXPORT
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "EXPORTCOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTCOMMON.php"]));
         $this->common = new EXPORTCOMMON();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "ENDNOTEMAP.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTEMAP.php"]));
         $this->map = new ENDNOTEMAP();
     }
     /**

@@ -11,7 +11,7 @@
 /**
  *	RICHTEXTFORMAT extends TINYMCETEXTEXPORT
  */
-include_once("core/importexport/TINYMCETEXTEXPORT.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "TINYMCETEXTEXPORT.php"]));
 
 /**
  * RTF encoding
@@ -129,7 +129,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
      */
     public function parse($text)
     {
-        ///		include_once("core/cite/CITE.php");
+        ///		include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "cite", "CITE.php"]));
         ///		$cite = new CITE($this->db, $this->vars);
         $text = $this->formatText($text);
 

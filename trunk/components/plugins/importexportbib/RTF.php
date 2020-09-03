@@ -31,7 +31,7 @@ class RTF
     public function __construct($parentClass = FALSE)
     {
         $this->parentClass = $parentClass;
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->session = FACTORY_SESSION::getInstance();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
@@ -78,7 +78,7 @@ class RTF
     public function display()
     {
         // Check we have a list to export
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "EXPORTCOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTCOMMON.php"]));
         $common = new EXPORTCOMMON();
         $sql = $common->getSQL();
         if (!$sql) {

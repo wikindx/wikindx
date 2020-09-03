@@ -17,7 +17,7 @@
 /**
  * Import initial configuration and initialize the web server
  */
-include_once("core/startup/WEBSERVERCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "startup", "WEBSERVERCONFIG.php"]));
 
 
 class importexportbib_MODULE
@@ -40,13 +40,13 @@ class importexportbib_MODULE
     public function __construct($menuInit = FALSE)
     {
         $this->session = FACTORY_SESSION::getInstance();
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->bibutilsImport = new importexportbib_BIBUTILSCONFIG();
         $configExport = new importexportbib_EXPORTCONFIG();
         $this->configImport = new importexportbib_IMPORTCONFIG();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "EXPORTCOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTCOMMON.php"]));
         $this->common = new EXPORTCOMMON();
         $this->db = FACTORY_DB::getInstance();
         if (!$this->configImport->bibutilsPath) {
@@ -189,7 +189,7 @@ class importexportbib_MODULE
             $auth->initLogon();
             FACTORY_CLOSE::getInstance();
         }
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "ENDNOTE.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTE.php"]));
         $endnote = new ENDNOTE($this);
         $this->session->delVar("importLock");
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerEndnoteImport"));
@@ -209,7 +209,7 @@ class importexportbib_MODULE
             $auth->initLogon();
             FACTORY_CLOSE::getInstance();
         }
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "PUBMED.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "PUBMED.php"]));
         $pubmed = new PUBMED($this);
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'wikindx')) {
             GLOBALS::addTplVar('content', AJAX\encode_jArray(['innerHTML' => $pubmed->wikindxImportFields()]));
@@ -230,7 +230,7 @@ class importexportbib_MODULE
      */
     public function initBibutils($message = FALSE)
     {
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "BIBUTILS.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BIBUTILS.php"]));
         $bibutils = new BIBUTILS($this);
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'ajax')) {
             $div = $bibutils->createOutputTypes();
@@ -269,7 +269,7 @@ class importexportbib_MODULE
      */
     public function initEndnoteExport($message = FALSE)
     {
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "ENDNOTE.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTE.php"]));
         $endnote = new ENDNOTE($this);
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerEndnoteExport"));
         $pString = $message ? $message : FALSE;
@@ -300,7 +300,7 @@ class importexportbib_MODULE
      */
     public function initRtfExport($message = FALSE)
     {
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "RTF.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RTF.php"]));
         $rtf = new RTF($this);
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerRtfExport"));
         $pString = $message ? $message : FALSE;
@@ -331,7 +331,7 @@ class importexportbib_MODULE
      */
     public function initBibtexExport($message = FALSE)
     {
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "BIBTEX.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BIBTEX.php"]));
         $bibtex = new BIBTEX();
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerBibtexExport"));
         $pString = $message ? $message : FALSE;
@@ -362,7 +362,7 @@ class importexportbib_MODULE
      */
     public function initHtmlExport($message = FALSE)
     {
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "HTML.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "HTML.php"]));
         $htmlExport = new HTMLEXPORT();
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerHtmlExport"));
         $pString = $message ? $message : FALSE;
@@ -491,7 +491,7 @@ class importexportbib_MODULE
         $pString = $message ? $message : FALSE;
         //GLOBALS::addTplVar('content', 'under construction'); return;
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process')) {
-            include_once(__DIR__ . DIRECTORY_SEPARATOR . "HTML.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "HTML.php"]));
             $htmlExport = new HTMLEXPORT($this);
             $pString .= $htmlExport->processExport();
         }
@@ -523,7 +523,7 @@ class importexportbib_MODULE
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerRisExport"));
         $pString = $message ? $message : FALSE;
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "RIS.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RIS.php"]));
         $ris = new RIS($this);
         $ris->process();
         GLOBALS::clearTplVar('pagingList');
@@ -538,7 +538,7 @@ class importexportbib_MODULE
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerIdeaExport"));
         $pString = $message ? $message : FALSE;
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "IDEA.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "IDEA.php"]));
         $idea = new IDEA($this);
         $pString .= $idea->exportOptions();
         GLOBALS::clearTplVar('pagingList');
@@ -553,7 +553,7 @@ class importexportbib_MODULE
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerIdeaExport"));
         $pString = $message ? $message : FALSE;
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "IDEAEXPORT.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "IDEAEXPORT.php"]));
         $idea = new IDEAEXPORT($this);
         $pString .= $idea->process();
         GLOBALS::clearTplVar('pagingList');
@@ -565,7 +565,7 @@ class importexportbib_MODULE
     public function processBibutils()
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerBibutils"));
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "BIBUTILS.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BIBUTILS.php"]));
         $bibutils = new BIBUTILS($this);
         $pString = $bibutils->startProcess();
         GLOBALS::addTplVar('content', $pString);

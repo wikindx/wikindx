@@ -66,15 +66,15 @@ class ENDNOTEIMPORT
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
         $this->tag = FACTORY_TAG::getInstance();
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "ENDNOTEMAP.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTEMAP.php"]));
         $this->map = new ENDNOTEMAP();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "ENDNOTEDATEPARSE.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTEDATEPARSE.php"]));
         $this->date = new ENDNOTEDATEPARSE();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "ENDNOTECREATORPARSE.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTECREATORPARSE.php"]));
         $this->parseCreator = new ENDNOTECREATORPARSE();
         $this->pages = FACTORY_BIBTEXPAGEPARSE::getInstance();
         $this->common = FACTORY_IMPORT::getInstance();
@@ -96,7 +96,7 @@ class ENDNOTEIMPORT
             $this->badInput(HTML\p($this->pluginmessages->text('fileImport'), 'error'));
         }
         $this->fileName = $this->gatherStage1();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "ENDNOTEPARSEXML.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTEPARSEXML.php"]));
         $parse = new ENDNOTEPARSEXML();
         $entries = $parse->extractEntries($this->fileName);
         if (!$parse->version8) {
@@ -287,7 +287,7 @@ class ENDNOTEIMPORT
             $this->session->delVar("sql_LastMulti");
             $this->session->setVar("importLock", TRUE);
             if ($this->resourceAdded) {
-                include_once("core/modules/email/EMAIL.php");
+                include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "email", "EMAIL.php"]));
                 $email = new EMAIL();
                 $email->notify(FALSE, TRUE);
             }

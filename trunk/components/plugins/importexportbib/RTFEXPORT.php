@@ -49,7 +49,7 @@ class RTFEXPORT
         $this->parentClass = $parentClass;
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->session = FACTORY_SESSION::getInstance();
         $this->coremessages = FACTORY_MESSAGES::getInstance();
@@ -57,7 +57,7 @@ class RTFEXPORT
         $this->cite = FACTORY_CITE::getInstance('rtf');
         $this->bibStyle = FACTORY_BIBSTYLE::getInstance('rtf');
         $this->styles = LOADSTYLE\loadDir();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "EXPORTCOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTCOMMON.php"]));
         $this->common = new EXPORTCOMMON();
         $this->rtf = FACTORY_RICHTEXTFORMAT::getInstance();
         $this->user = FACTORY_USER::getInstance();

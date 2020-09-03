@@ -652,6 +652,8 @@ class ATTACHMENTS
         $success = base64_encode($this->success->text("attachAdd"));
         $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $success;
         GLOBALS::addTplVar('scripts', '<script type="text/javascript">var successUrl = "' . $closeUrl . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var post_max_size = "' . ini_get('post_max_size') . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var upload_max_filesize = "' . ini_get('upload_max_filesize') . '"; </script>');
         $td1 = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop") . '</div>';
         GLOBALS::addTplVar('scripts', '<script type="text/javascript">var fallback = "' .
             $this->messages->text("resources", "fileAttachFallback") . '"; </script>');

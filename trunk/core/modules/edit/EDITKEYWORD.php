@@ -18,7 +18,6 @@ class EDITKEYWORD
     private $errors;
     private $messages;
     private $success;
-    private $session;
     private $keyword;
     private $gatekeep;
     private $badInput;
@@ -30,7 +29,6 @@ class EDITKEYWORD
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->session = FACTORY_SESSION::getInstance();
 
         $this->keyword = FACTORY_KEYWORD::getInstance();
 
@@ -43,14 +41,20 @@ class EDITKEYWORD
     /**
      * check we are allowed to edit and load appropriate method
      *
-     * @param false|mixed $message
+     * $message can be a string (a success message) or an array ([0] is the message and [1] is the UUID for DB form_data). 
+     * Alternatively, if init() is called externally from EDITKEYWORD-WRITE, there will be $this->vars['message'] – this must be checked for first.
+     *
+     * @param FALSE|mixed $message
      */
     public function init($message = FALSE)
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $error = '';
         $formData = [];
-        if (is_array($message)) { // error has occurred so get get form_data to populate form with
+        if (array_key_exists('message', $this->vars)) {
+        	$pString = rawurldecode($this->vars['message']);
+        }
+        elseif (is_array($message)) { // error has occurred so get get form_data to populate form with
         	$error = array_shift($message);
         	$pString = \HTML\p($error, "error", "center");
         	$uuid = array_shift($message);
@@ -141,7 +145,7 @@ class EDITKEYWORD
 		$keyword = \HTML\dbToFormTidy($row['keywordKeyword']);
         $pString = \FORM\hidden("editKeywordId", $keywordId);
         $pString .= \FORM\textInput(
-            $this->messages->text('resources', 'keyword') . ' ' . \HTML\span('*', 'required'),
+            \HTML\span('*', 'required') . $this->messages->text('resources', 'keyword'),
             'keyword',
             $keyword,
             30,
@@ -210,27 +214,10 @@ class EDITKEYWORD
                 return $this->confirmDuplicate($keywordExistId);
             }
         }
-        $updateArray['keywordKeyword'] = $keyword;
-        $glossary = trim($this->vars['text']);
-        if ($glossary) {
-            $updateArray['keywordGlossary'] = $glossary;
-        } else {
-            $this->db->formatConditions(['keywordId' => $this->vars['editKeywordId']]);
-            $this->db->updateNull('keyword', 'keywordGlossary');
-        }
-        $this->db->formatConditions(['keywordId' => $this->vars['editKeywordId']]);
-        $this->db->update('keyword', $updateArray);
-        // remove cache files for keywords
-        $this->db->deleteCache('cacheKeywords');
-        $this->db->deleteCache('cacheResourceKeywords');
-        $this->db->deleteCache('cacheMetadataKeywords');
-        $this->db->deleteCache('cacheQuoteKeywords');
-        $this->db->deleteCache('cacheParaphraseKeywords');
-        $this->db->deleteCache('cacheMusingKeywords');
-        $this->keyword->removeHanging();
-        $this->keyword->checkKeywordGroups();
-        // send back to editDisplay with success message
-        $this->init($this->success->text("keyword"));
+        // At this point, we're cleared to write
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EDITKEYWORD_WRITE.php"]));
+        $write = new EDITKEYWORD_WRITE();
+        $write->init('edit');
     }
     /**
      * write to the database
@@ -244,25 +231,10 @@ class EDITKEYWORD
         if (!array_key_exists('editKeywordExistId', $this->vars) || !$this->vars['editKeywordExistId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        $editId = $this->vars['editKeywordId'];
-        $existId = $this->vars['editKeywordExistId'];
-        // Delete old keyword
-        $this->db->formatConditions(['keywordId' => $editId]);
-        $this->db->delete('keyword');
-        // Update references to keyword
-        $this->db->formatConditions(['resourcekeywordKeywordId' => $editId]);
-        $this->db->update('resource_keyword', ['resourcekeywordKeywordId' => $existId]);
-        // remove cache files for keywords
-        $this->db->deleteCache('cacheKeywords');
-        $this->db->deleteCache('cacheResourceKeywords');
-        $this->db->deleteCache('cacheMetadataKeywords');
-        $this->db->deleteCache('cacheQuoteKeywords');
-        $this->db->deleteCache('cacheParaphraseKeywords');
-        $this->db->deleteCache('cacheMusingKeywords');
-        $this->keyword->removeHanging();
-        $this->keyword->checkKeywordGroups();
-        // send back to editDisplay with success message
-        $this->init($this->success->text("keyword"));
+        // At this point, we're cleared to write
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EDITKEYWORD_WRITE.php"]));
+        $write = new EDITKEYWORD_WRITE();
+        $write->init('editConfirm');
     }
     /**
      * The new keyword equals one already in the database. Confirm that this edited one is to be removed and

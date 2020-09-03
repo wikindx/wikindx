@@ -65,7 +65,6 @@ img {
 
 #nav li { /* all list items */
  position: relative;
- z-index: 31;
  float: left;
  width: 9.5em; /* width needed or else Opera goes nuts */
  /*line-height: 1.25em;*/
@@ -84,7 +83,6 @@ img {
 /* second-and-above-level lists, i.e. first level of vertical dropdown menus */
 #nav li ul {
  position: absolute;
- z-index: 31;
  left: -999em; /* get off the screen */
 }
 
@@ -92,7 +90,6 @@ img {
 #nav li ul ul {
  margin-left: 9.46em; /* move to the side, prevent gap in ie */
  margin-top: -1.5em; /* of its parent */
- z-index: 31;
 }
 
 #nav li ul {

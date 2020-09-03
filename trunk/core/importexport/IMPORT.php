@@ -908,7 +908,7 @@ class IMPORT
      */
     public function collectionDefaults()
     {
-        include_once("core/collection/COLLECTIONDEFAULTMAP.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
         $defaultMap = new COLLECTIONDEFAULTMAP();
         $typesArray = array_unique(array_values($defaultMap->collectionTypes));
         $collectionArray = [];

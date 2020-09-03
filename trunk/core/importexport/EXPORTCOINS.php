@@ -11,7 +11,7 @@
 /**
  *	EXPORTCOINS
  */
-include_once("core/importexport/EXPORTER.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTER.php"]));
 
 /**
  * Export COINS
@@ -26,7 +26,7 @@ class EXPORTCOINS extends EXPORTER
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
-        include_once("core/importexport/COINSMAP.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "COINSMAP.php"]));
         $this->map = new COINSMAP();
     }
     /**

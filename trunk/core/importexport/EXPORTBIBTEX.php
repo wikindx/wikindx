@@ -11,7 +11,7 @@
 /**
  * EXPORTBIBTEX
  */
-include_once("core/importexport/EXPORTER.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTER.php"]));
 
 /**
  * Export BibTeX

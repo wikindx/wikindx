@@ -71,7 +71,7 @@ class SUPERADMIN
             return FALSE;
         }
         $this->errorString = $messageString;
-        include_once("core/modules/help/HELPMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('configure'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "configure"));

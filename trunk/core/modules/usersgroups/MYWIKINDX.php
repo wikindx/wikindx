@@ -73,7 +73,7 @@ class MYWIKINDX
             return FALSE;
         }
         $this->errorString = $messageString;
-        include_once("core/modules/help/HELPMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('myWikindx'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "myWikindx", $this->userNameDisplay));
@@ -139,7 +139,7 @@ class MYWIKINDX
             $this->badInputLoad($this->errors->text("inputError", "missing"), 'user');
         }
         $this->user->writeUser(FALSE); // FALSE = editing user
-        include_once("core/modules/email/EMAIL.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->userEdit()) {
             $this->badInputLoad($this->errors->text("inputError", "mail", GLOBALS::getError()), 'user');
@@ -331,7 +331,7 @@ class MYWIKINDX
      */
     public function forgetConfigEdit()
     {
-        include_once('core/modules/usersgroups/FORGET.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "FORGET.php"]));
         $forget = new FORGET();
         list($success, $message) = $forget->forgetWrite();
         if ($success === FALSE) {
@@ -1736,7 +1736,7 @@ class MYWIKINDX
      */
     private function forgetConfigDisplay()
     {
-        include_once('core/modules/usersgroups/FORGET.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "FORGET.php"]));
         $forget = new FORGET();
         $pString = $this->errorString;
         $pString .= \FORM\hidden("method", "forgetConfigEdit");

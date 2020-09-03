@@ -152,7 +152,7 @@ class FORGET
                 $this->badInput->close($this->errors->text("inputError", "incorrect"), $this, 'forgetInitStage2');
             }
         }
-        include_once("core/modules/email/EMAIL.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         $password = time();
         if (!$emailClass->forgetProcess($usersUsername, $password)) {
@@ -221,7 +221,7 @@ class FORGET
      */
     public function forgetWrite()
     {
-        include_once('core/modules/usersgroups/MYWIKINDX.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "MYWIKINDX.php"]));
         $mywikindx = new MYWIKINDX();
         $array = ["usersPasswordQuestion1", "usersAnswer1", "usersPasswordQuestion2", "usersAnswer2", "usersPasswordQuestion3", "usersAnswer3"];
         foreach ($array as $key) {

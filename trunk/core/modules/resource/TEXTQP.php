@@ -460,7 +460,7 @@ class TEXTQP
                 }
             }
         }
-        include_once("core/modules/email/EMAIL.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->notify($this->vars['resourceId'])) {
             $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()));

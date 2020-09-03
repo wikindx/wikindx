@@ -228,7 +228,7 @@ class STATS
      */
     public function setMaturityIndex()
     {
-        include_once("core/modules/resource/RESOURCEVIEW.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
         $resource = new RESOURCEVIEW();
         $gatekeep = FACTORY_GATEKEEP::getInstance();
         $gatekeep->init();
@@ -766,7 +766,7 @@ class STATS
      */
     private function getPublishers()
     {
-        include_once("core/browse/BROWSECOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
         $common = new BROWSECOMMON();
         $this->miscField1 = [];
         $this->db->leftJoin('resource', 'resourceId', 'resourcemiscId');
@@ -832,7 +832,7 @@ class STATS
      */
     private function getCollections()
     {
-        include_once("core/browse/BROWSECOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
         $common = new BROWSECOMMON();
         $common->userBibCondition('resourcemiscId');
         $this->db->formatConditions(['collectionId' => ' IS NOT NULL']);
@@ -873,7 +873,7 @@ class STATS
      */
     private function getCreators($main)
     {
-        include_once("core/browse/BROWSECOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
         $common = new BROWSECOMMON();
         $common->userBibCondition('resourcecreatorResourceId');
         $this->db->formatConditions(['resourcecreatorCreatorId' => ' IS NOT NULL']);
@@ -951,7 +951,7 @@ class STATS
      */
     private function getKeywords()
     {
-        include_once("core/browse/BROWSECOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
         $common = new BROWSECOMMON();
         $common->userBibCondition('resourcekeywordResourceId');
         $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
@@ -992,7 +992,7 @@ class STATS
      */
     private function getYears()
     {
-        include_once("core/browse/BROWSECOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
         $common = new BROWSECOMMON();
         $common->userBibCondition('resourceyearId');
         $this->db->leftJoin('resource', 'resourceId', 'resourceyearId');

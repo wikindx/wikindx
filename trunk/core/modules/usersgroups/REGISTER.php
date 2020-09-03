@@ -99,7 +99,7 @@ class REGISTER
         }
         // time() should be unique enough
         $hashKey = md5(time());
-        include_once("core/modules/email/EMAIL.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->register($hashKey, $email)) {
             $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'initRegister');
@@ -191,7 +191,7 @@ class REGISTER
         $this->session->setVar("setup_Write", TRUE);
         // Write default preferences (TRUE == insert)
         $this->user->writePreferences($userId);
-        include_once("core/modules/email/EMAIL.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->registerUserAdd()) {
             $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'registerConfirm');
@@ -214,7 +214,7 @@ class REGISTER
         if (!$this->captchaCheck()) {
             $this->badInput->close($this->errors->text('inputError', 'captcha'), $this, "initRegister");
         }
-        include_once("core/modules/email/EMAIL.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->registerRequest($email)) {
             $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'initRegister');

@@ -10,25 +10,26 @@
 
 // Include code of libraries bundled in static classes
 // UTF8 must be included before others namespace because they use it
-include_once("core/libs/UTF8.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "UTF8.php"]));
 
 // Include code of libraries bundled in namespaces
-include_once("core/bibcitation/LOADSTYLE.php");
-include_once("core/libs/HTML.php");
-include_once("core/libs/FORM.php");
-include_once("core/libs/AJAX.php");
-include_once("core/libs/FILE.php");
-include_once("core/libs/UTILS.php");
-include_once("core/libs/LOCALES.php");
-include_once("core/libs/URL.php");
-include_once("core/libs/FORMDATA.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "LOADSTYLE.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "HTML.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "FORM.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "AJAX.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "FILE.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "UTILS.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "LOCALES.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "URL.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "FORMDATA.php"]));
+
 
 // Include code of libraries bundled in classes
-include_once("core/libs/FRONT.php");
-include_once("core/libs/images.php");
-include_once("core/libs/SESSION.php");
-include_once("core/libs/COOKIE.php");
-include_once("core/libs/MAIL.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "FRONT.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "images.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "SESSION.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "COOKIE.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "MAIL.php"]));
 
 
 /**
@@ -61,7 +62,7 @@ class FACTORY_HOUSEKEEPING
     public static function getInstance($upgradeCompleted = FALSE)
     {
         if (empty(self::$instance)) {
-            include_once("core/startup/HOUSEKEEPING.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "HOUSEKEEPING.php"]));
             self::$instance = new HOUSEKEEPING($upgradeCompleted);
         }
 
@@ -96,7 +97,7 @@ class FACTORY_PASSWORD
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/password/PASSWORD.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "password", "PASSWORD.php"]));
             self::$instance = new PASSWORD;
         }
 
@@ -130,7 +131,7 @@ class FACTORY_CONFIGDBSTRUCTURE
      */
     public static function getInstance()
     {
-        include_once("core/startup/CONFIGDBSTRUCTURE.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "CONFIGDBSTRUCTURE.php"]));
         self::$instance = new CONFIGDBSTRUCTURE;
 
         return self::$instance;
@@ -163,7 +164,7 @@ class FACTORY_LOADCONFIG
      */
     public static function getInstance()
     {
-        include_once("core/startup/LOADCONFIG.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "LOADCONFIG.php"]));
         self::$instance = new LOADCONFIG;
 
         return self::$instance;
@@ -265,7 +266,7 @@ class FACTORY_AUTHORIZE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/startup/AUTHORIZE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "AUTHORIZE.php"]));
             self::$instance = new AUTHORIZE;
         }
 
@@ -303,7 +304,7 @@ class FACTORY_MESSAGES
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/messages/MESSAGES.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "MESSAGES.php"]));
             self::$instance = new MESSAGES();
         }
 
@@ -320,7 +321,7 @@ class FACTORY_MESSAGES
      */
     public static function getFreshInstance()
     {
-        include_once("core/messages/MESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "MESSAGES.php"]));
         self::$instance = new MESSAGES();
 
         return self::$instance;
@@ -354,7 +355,7 @@ class FACTORY_ERRORS
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/messages/ERRORS.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "ERRORS.php"]));
             self::$instance = new ERRORS;
         }
 
@@ -369,7 +370,7 @@ class FACTORY_ERRORS
      */
     public static function getFreshInstance()
     {
-        include_once("core/messages/ERRORS.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "ERRORS.php"]));
         self::$instance = new ERRORS;
 
         return self::$instance;
@@ -403,7 +404,7 @@ class FACTORY_SUCCESS
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/messages/SUCCESS.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "SUCCESS.php"]));
             self::$instance = new SUCCESS;
         }
 
@@ -418,7 +419,7 @@ class FACTORY_SUCCESS
      */
     public static function getFreshInstance()
     {
-        include_once("core/messages/SUCCESS.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "SUCCESS.php"]));
         self::$instance = new SUCCESS;
 
         return self::$instance;
@@ -453,7 +454,7 @@ class FACTORY_CONSTANTS
      */
     public static function getFreshInstance($force_english = FALSE)
     {
-        include_once("core/messages/CONSTANTS.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "CONSTANTS.php"]));
         self::$instance = new CONSTANTS($force_english);
 
         return self::$instance;
@@ -468,7 +469,7 @@ class FACTORY_CONSTANTS
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/messages/CONSTANTS.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "CONSTANTS.php"]));
             self::$instance = new CONSTANTS;
         }
 
@@ -503,7 +504,7 @@ class FACTORY_HELP
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/messages/HELP.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "HELP.php"]));
             self::$instance = new HELP;
         }
 
@@ -518,7 +519,7 @@ class FACTORY_HELP
      */
     public static function getFreshInstance()
     {
-        include_once("core/messages/HELP.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "messages", "HELP.php"]));
         self::$instance = new HELP;
 
         return self::$instance;
@@ -552,7 +553,7 @@ class FACTORY_DB
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/libs/SQL.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "SQL.php"]));
             self::$instance = new SQL;
         }
 
@@ -587,7 +588,7 @@ class FACTORY_SQLSTATEMENTS
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/libs/SQLSTATEMENTS.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "SQLSTATEMENTS.php"]));
             self::$instance = new SQLSTATEMENTS;
         }
 
@@ -622,7 +623,7 @@ class FACTORY_TEMPLATE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/libs/TEMPLATE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "TEMPLATE.php"]));
             self::$instance = new TEMPLATE;
         }
 
@@ -657,7 +658,7 @@ class FACTORY_USER
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/usersgroups/USER.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "usersgroups", "USER.php"]));
             self::$instance = new USER;
         }
 
@@ -692,7 +693,7 @@ class FACTORY_CLOSE
     public static function getInstance()
     {
         if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSERAW::$instance)) {
-            include_once("core/libs/CLOSE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "CLOSE.php"]));
             self::$instance = new CLOSE;
         }
 
@@ -761,7 +762,7 @@ class FACTORY_QUARANTINE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/modules/admin/QUARANTINE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "admin", "QUARANTINE.php"]));
             self::$instance = new QUARANTINE;
         }
 
@@ -796,7 +797,7 @@ class FACTORY_CLOSENOMENU
     public static function getInstance()
     {
         if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSE::$instance) && empty(FACTORY_CLOSERAW::$instance)) {
-            include_once("core/libs/CLOSE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "CLOSE.php"]));
             self::$instance = new CLOSENOMENU;
         }
 
@@ -831,7 +832,7 @@ class FACTORY_CLOSEPOPUP
     public static function getInstance()
     {
         if (empty(self::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSE::$instance) && empty(FACTORY_CLOSERAW::$instance)) {
-            include_once("core/libs/CLOSE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "CLOSE.php"]));
             self::$instance = new CLOSEPOPUP;
         }
 
@@ -866,7 +867,7 @@ class FACTORY_CLOSERAW
     public static function getInstance()
     {
         if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSENOMENU::$instance) && empty(FACTORY_CLOSE::$instance)) {
-            include_once("core/libs/CLOSE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "CLOSE.php"]));
             self::$instance = new CLOSERAW;
         }
 
@@ -901,7 +902,7 @@ class FACTORY_STATISTICS
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/miscellaneous/STATISTICS.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "miscellaneous", "STATISTICS.php"]));
             self::$instance = new STATISTICS;
         }
 
@@ -936,7 +937,7 @@ class FACTORY_LOADICONS
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/libs/LOADICONS.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "LOADICONS.php"]));
             self::$instance = new LOADICONS;
         }
 
@@ -971,7 +972,7 @@ class FACTORY_EXPORTCOINS
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/importexport/EXPORTCOINS.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "EXPORTCOINS.php"]));
             self::$instance = new EXPORTCOINS;
         }
 
@@ -1006,7 +1007,7 @@ class FACTORY_EXPORTGOOGLESCHOLAR
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/importexport/EXPORTGOOGLESCHOLAR.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "EXPORTGOOGLESCHOLAR.php"]));
             self::$instance = new EXPORTGOOGLESCHOLAR;
         }
 
@@ -1041,7 +1042,7 @@ class FACTORY_BIBTEXPARSE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/importexport/BIBTEXPARSE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "BIBTEXPARSE.php"]));
             self::$instance = new BIBTEXPARSE;
         }
 
@@ -1078,7 +1079,7 @@ class FACTORY_RICHTEXTFORMAT
     public static function getInstance($imgMagickPath = FALSE)
     {
         if (empty(self::$instance)) {
-            include_once("core/importexport/RICHTEXTFORMAT.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "RICHTEXTFORMAT.php"]));
             self::$instance = new RICHTEXTFORMAT($imgMagickPath);
         }
 
@@ -1113,7 +1114,7 @@ class FACTORY_COINSMAP
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/importexport/COINSMAP.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "COINSMAP.php"]));
             self::$instance = new COINSMAP;
         }
 
@@ -1148,7 +1149,7 @@ class FACTORY_BIBTEXCONFIG
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/importexport/BIBTEXCONFIG.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "BIBTEXCONFIG.php"]));
             self::$instance = new BIBTEXCONFIG;
         }
 
@@ -1183,7 +1184,7 @@ class FACTORY_BIBTEXMAP
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/importexport/BIBTEXMAP.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "BIBTEXMAP.php"]));
             self::$instance = new BIBTEXMAP;
         }
 
@@ -1218,7 +1219,7 @@ class FACTORY_BIBTEXCREATORPARSE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/importexport/BIBTEXCREATORPARSE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "BIBTEXCREATORPARSE.php"]));
             self::$instance = new BIBTEXCREATORPARSE;
         }
 
@@ -1253,7 +1254,7 @@ class FACTORY_BIBTEXMONTHPARSE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/importexport/BIBTEXMONTHPARSE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "BIBTEXMONTHPARSE.php"]));
             self::$instance = new BIBTEXMONTHPARSE;
         }
 
@@ -1288,7 +1289,7 @@ class FACTORY_BIBTEXPAGEPARSE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/importexport/BIBTEXPAGEPARSE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "BIBTEXPAGEPARSE.php"]));
             self::$instance = new BIBTEXPAGEPARSE;
         }
 
@@ -1323,7 +1324,7 @@ class FACTORY_EXPORTBIBTEX
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/importexport/EXPORTBIBTEX.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "EXPORTBIBTEX.php"]));
             self::$instance = new EXPORTBIBTEX;
         }
 
@@ -1358,7 +1359,7 @@ class FACTORY_PARSEXML
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/bibcitation/PARSEXML.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "PARSEXML.php"]));
             self::$instance = new PARSEXML;
         }
 
@@ -1393,7 +1394,7 @@ class FACTORY_STYLEMAP
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/bibcitation/STYLEMAP.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "STYLEMAP.php"]));
             self::$instance = new STYLEMAP;
         }
 
@@ -1428,7 +1429,7 @@ class FACTORY_BROWSECOMMON
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/browse/BROWSECOMMON.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "browse", "BROWSECOMMON.php"]));
             self::$instance = new BROWSECOMMON;
         }
 
@@ -1465,7 +1466,7 @@ class FACTORY_BIBSTYLE
     public static function getInstance($output = 'html')
     {
         if (empty(self::$instance)) {
-            include_once("core/bibcitation/BIBSTYLE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "BIBSTYLE.php"]));
             self::$instance = new BIBSTYLE($output);
         }
 
@@ -1502,7 +1503,7 @@ class FACTORY_BIBFORMAT
     public static function getInstance($output = 'html')
     {
         if (empty(self::$instance)) {
-            include_once("core/bibcitation/BIBFORMAT.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "BIBFORMAT.php"]));
             self::$instance = new BIBFORMAT($output);
         }
 
@@ -1539,7 +1540,7 @@ class FACTORY_CITE
     public static function getInstance($output = 'html')
     {
         if (empty(self::$instance)) {
-            include_once("core/bibcitation/CITE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "CITE.php"]));
             self::$instance = new CITE($output);
         }
 
@@ -1576,7 +1577,7 @@ class FACTORY_CITESTYLE
     public static function getInstance($output = 'html')
     {
         if (empty(self::$instance)) {
-            include_once("core/bibcitation/CITESTYLE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "CITESTYLE.php"]));
             self::$instance = new CITESTYLE($output);
         }
 
@@ -1611,7 +1612,7 @@ class FACTORY_EXPORTFILTER
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/bibcitation/EXPORTFILTER.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "EXPORTFILTER.php"]));
             self::$instance = new EXPORTFILTER;
         }
 
@@ -1648,7 +1649,7 @@ class FACTORY_CITEFORMAT
     public static function getInstance($output = 'html')
     {
         if (empty(self::$instance)) {
-            include_once("core/bibcitation/CITEFORMAT.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "CITEFORMAT.php"]));
             self::$instance = new CITEFORMAT($output);
         }
 
@@ -1683,7 +1684,7 @@ class FACTORY_LISTCOMMON
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/lists/LISTCOMMON.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "lists", "LISTCOMMON.php"]));
             self::$instance = new LISTCOMMON;
         }
 
@@ -1718,7 +1719,7 @@ class FACTORY_METADATA
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/metadata/METADATA.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "metadata", "METADATA.php"]));
             self::$instance = new METADATA;
         }
 
@@ -1753,7 +1754,7 @@ class FACTORY_TYPE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/type/TYPE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "type", "TYPE.php"]));
             self::$instance = new TYPE;
         }
 
@@ -1788,7 +1789,7 @@ class FACTORY_CATEGORY
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/category/CATEGORY.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "category", "CATEGORY.php"]));
             self::$instance = new CATEGORY;
         }
 
@@ -1823,7 +1824,7 @@ class FACTORY_TAG
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/miscellaneous/TAG.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "miscellaneous", "TAG.php"]));
             self::$instance = new TAG;
         }
 
@@ -1858,7 +1859,7 @@ class FACTORY_USERTAGS
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/usersgroups/USERTAGS.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "usersgroups", "USERTAGS.php"]));
             self::$instance = new USERTAGS;
         }
 
@@ -1893,7 +1894,7 @@ class FACTORY_KEYWORD
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/keyword/KEYWORD.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "keyword", "KEYWORD.php"]));
             self::$instance = new KEYWORD;
         }
 
@@ -1927,7 +1928,7 @@ class FACTORY_RESOURCEMAP
      */
     public static function getFreshInstance()
     {
-        include_once("core/resources/RESOURCEMAP.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resources", "RESOURCEMAP.php"]));
         self::$instance = new RESOURCEMAP;
 
         return self::$instance;
@@ -1941,7 +1942,7 @@ class FACTORY_RESOURCEMAP
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/resources/RESOURCEMAP.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resources", "RESOURCEMAP.php"]));
             self::$instance = new RESOURCEMAP;
         }
 
@@ -1976,7 +1977,7 @@ class FACTORY_CREATOR
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/creator/CREATOR.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "creator", "CREATOR.php"]));
             self::$instance = new CREATOR;
         }
 
@@ -2011,7 +2012,7 @@ class FACTORY_PUBLISHER
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/publisher/PUBLISHER.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "publisher", "PUBLISHER.php"]));
             self::$instance = new PUBLISHER;
         }
 
@@ -2046,7 +2047,7 @@ class FACTORY_PUBLISHERMAP
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/publisher/PUBLISHERMAP.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "publisher", "PUBLISHERMAP.php"]));
             self::$instance = new PUBLISHERMAP;
         }
 
@@ -2081,7 +2082,7 @@ class FACTORY_COLLECTION
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/collection/COLLECTION.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "collection", "COLLECTION.php"]));
             self::$instance = new COLLECTION;
         }
 
@@ -2116,7 +2117,7 @@ class FACTORY_COLLECTIONMAP
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/collection/COLLECTIONMAP.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "collection", "COLLECTIONMAP.php"]));
             self::$instance = new COLLECTIONMAP;
         }
 
@@ -2151,7 +2152,7 @@ class FACTORY_MENU
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/navigation/MENU.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "navigation", "MENU.php"]));
             self::$instance = new MENU;
         }
 
@@ -2186,7 +2187,7 @@ class FACTORY_BADINPUT
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/navigation/BADINPUT.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "navigation", "BADINPUT.php"]));
             self::$instance = new BADINPUT;
         }
 
@@ -2221,7 +2222,7 @@ class FACTORY_NAVIGATE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/navigation/NAVIGATE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "navigation", "NAVIGATE.php"]));
             self::$instance = new NAVIGATE;
         }
 
@@ -2256,7 +2257,7 @@ class FACTORY_BIBLIOGRAPHYCOMMON
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/bibliographies/BIBLIOGRAPHYCOMMON.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibliographies", "BIBLIOGRAPHYCOMMON.php"]));
             self::$instance = new BIBLIOGRAPHYCOMMON;
         }
 
@@ -2291,7 +2292,7 @@ class FACTORY_GATEKEEP
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/miscellaneous/GATEKEEP.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "miscellaneous", "GATEKEEP.php"]));
             self::$instance = new GATEKEEP;
         }
 
@@ -2326,7 +2327,7 @@ class FACTORY_RESOURCECOMMON
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/resources/RESOURCECOMMON.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resources", "RESOURCECOMMON.php"]));
             self::$instance = new RESOURCECOMMON;
         }
 
@@ -2361,7 +2362,7 @@ class FACTORY_MAIL
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/libs/MAIL.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "MAIL.php"]));
             self::$instance = new MAIL;
         }
 
@@ -2396,7 +2397,7 @@ class FACTORY_PAGING
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/lists/PAGING.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "lists", "PAGING.php"]));
             self::$instance = new PAGING;
         }
 
@@ -2431,7 +2432,7 @@ class FACTORY_PAGINGALPHA
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/lists/PAGINGALPHA.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "PAGINGALPHA.php"]));
             self::$instance = new PAGINGALPHA;
         }
 
@@ -2466,7 +2467,7 @@ class FACTORY_PARSESTYLE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/bibcitation/PARSESTYLE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "bibcitation", "PARSESTYLE.php"]));
             self::$instance = new PARSESTYLE;
         }
 
@@ -2501,7 +2502,7 @@ class FACTORY_IMPORT
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/importexport/IMPORT.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "IMPORT.php"]));
             self::$instance = new IMPORT;
         }
 
@@ -2536,7 +2537,7 @@ class FACTORY_EXPORTER
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/importexport/EXPORTER.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "importexport", "EXPORTER.php"]));
             self::$instance = new EXPORTER;
         }
 
@@ -2571,7 +2572,7 @@ class FACTORY_LOADTINYMCE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/tiny_mce/LOADTINYMCE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "tiny_mce", "LOADTINYMCE.php"]));
             self::$instance = new LOADTINYMCE;
         }
 
@@ -2606,7 +2607,7 @@ class FACTORY_LOADTINYMCE5
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/tinymce/LOADTINYMCE5.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "tinymce", "LOADTINYMCE5.php"]));
             self::$instance = new LOADTINYMCE5;
         }
 
@@ -2641,7 +2642,7 @@ class FACTORY_PARSEPHRASE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/lists/PARSEPHRASE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "lists", "PARSEPHRASE.php"]));
             self::$instance = new PARSEPHRASE;
         }
 
@@ -2676,7 +2677,7 @@ class FACTORY_ATTACHMENT
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/miscellaneous/ATTACHMENT.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "miscellaneous", "ATTACHMENT.php"]));
             self::$instance = new ATTACHMENT;
         }
 
@@ -2711,7 +2712,7 @@ class FACTORY_DATE
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once("core/miscellaneous/DATE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "miscellaneous", "DATE.php"]));
             self::$instance = new DATE;
         }
 

@@ -17,7 +17,7 @@
 /**
  * Import initial configuration and initialize the web server
  */
-include_once("core/startup/WEBSERVERCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "startup", "WEBSERVERCONFIG.php"]));
 
 
 class debugtools_MODULE
@@ -38,11 +38,11 @@ class debugtools_MODULE
      */
     public function __construct($menuInit = FALSE)
     {
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('debugtools', 'debugtoolsMessages');
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->config = new debugtools_CONFIG();
         $this->session = FACTORY_SESSION::getInstance();
         $this->authorize = $this->config->authorize;

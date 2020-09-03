@@ -18,7 +18,7 @@
 /**
  * Import initial configuration and initialize the web server
  */
-include_once("core/startup/WEBSERVERCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "startup", "WEBSERVERCONFIG.php"]));
 
 
 class ideagen_MODULE
@@ -57,10 +57,10 @@ class ideagen_MODULE
      */
     public function __construct($menuInit = FALSE)
     {
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('ideagen', 'ideagenMessages');
         $this->coremessages = FACTORY_MESSAGES::getInstance();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->config = new ideagen_CONFIG();
         $this->authorize = $this->config->authorize;
         if ($menuInit) {
@@ -156,7 +156,7 @@ class ideagen_MODULE
      */
     public function ideaAdd()
     {
-		include_once("core/modules/resource/TEXTQP.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "resource", "TEXTQP.php"]));
         $textqp = new TEXTQP();
         $text = $metadataId = $owner = FALSE;
         $thisUserId = $this->session->getVar("setup_UserId");

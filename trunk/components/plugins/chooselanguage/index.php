@@ -15,7 +15,7 @@
 /**
  * Import initial configuration and initialize the web server
  */
-include_once("core/startup/WEBSERVERCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "startup", "WEBSERVERCONFIG.php"]));
 
 
 class chooselanguage_MODULE
@@ -30,7 +30,7 @@ class chooselanguage_MODULE
      */
     public function __construct($menuInit = FALSE)
     {
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $localconfig = new chooselanguage_CONFIG();
         $this->authorize = $localconfig->authorize;
         GLOBALS::setTplVar($localconfig->container, $this->display());
@@ -104,7 +104,7 @@ class chooselanguage_MODULE
 
         if (count($languages) > 1)
         {
-            $display .= HTML\jsInlineExternal(WIKINDX_BASE_URL . '/' . str_replace("\\", "/", WIKINDX_DIR_COMPONENT_PLUGINS) . '/' . basename(__DIR__) . '/chooseLanguage.js?ver=' . WIKINDX_PUBLIC_VERSION);
+            $display .= HTML\jsInlineExternal(implode("/", [WIKINDX_BASE_URL, WIKINDX_URL_COMPONENT_PLUGINS, basename(__DIR__), 'chooseLanguage.js?ver=' . WIKINDX_PUBLIC_VERSION]));
             $js = 'onchange="javascript:chooseLanguageChangeLanguage(this.value);"';
             $display .= FORM\selectedBoxValue(FALSE, "Language", $languages, $language, 1, FALSE, $js);
         }

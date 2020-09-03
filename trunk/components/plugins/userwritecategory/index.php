@@ -15,7 +15,7 @@
 /**
  * Import initial configuration and initialize the web server
  */
-include_once("core/startup/WEBSERVERCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "startup", "WEBSERVERCONFIG.php"]));
 
 
 class userwritecategory_MODULE
@@ -36,11 +36,11 @@ class userwritecategory_MODULE
         {
             return;
         }
-        include_once("core" . DIRECTORY_SEPARATOR . "messages" . DIRECTORY_SEPARATOR . "PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('userwritecategory', 'userwritecategoryMessages');
-        include_once("plugins" . DIRECTORY_SEPARATOR . "userwritecategory" . DIRECTORY_SEPARATOR . "config.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $config = new userwritecategory_CONFIG();
-        include_once("core" . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'ADMINCATEGORIES.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "admin", "ADMINCATEGORIES.php"]));
         $this->authorize = $config->authorize;
         if ($menuInit)
         { // portion of constructor used for menu initialisation

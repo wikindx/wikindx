@@ -17,7 +17,7 @@
 /**
  * Import initial configuration and initialize the web server
  */
-include_once("core/startup/WEBSERVERCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "startup", "WEBSERVERCONFIG.php"]));
 
 
 class wordprocessor_MODULE
@@ -41,10 +41,10 @@ class wordprocessor_MODULE
      */
     public function __construct($menuInit = FALSE)
     {
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->pluginmessages = new PLUGINMESSAGES('wordprocessor', 'wordprocessorMessages');
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->config = new wordprocessor_CONFIG();
         $this->authorize = $this->config->authorize;
         if ($menuInit) { // portion of constructor used for menu initialisation
@@ -74,7 +74,7 @@ class wordprocessor_MODULE
      */
     public function help()
     {
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $help = new PLUGINMESSAGES('wordprocessor', 'wordprocessorHelp');
         GLOBALS::addTplVar('content', $help->text('help'));
         FACTORY_CLOSEPOPUP::getInstance();
@@ -86,7 +86,7 @@ class wordprocessor_MODULE
     {
         GLOBALS::setTplVar('heading', '');
         FACTORY_LOADTINYMCE::getInstance();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . 'WPLOADTINYMCE.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "WPLOADTINYMCE.php"]));
         $tinyMce = new WPLOADTINYMCE();
         $pString = $this->heading();
         $message = "<span class='error'>" . $this->pluginmessages->text("notSavedStatus") . "</span>";
@@ -137,7 +137,7 @@ class wordprocessor_MODULE
             $pString = HTML\p($this->pluginmessages->text("noPapers"));
         }
         if ($append) {
-            include_once("core/html/CLOSEPOPUP.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "libs", "CLOSE.php"]));
             $this->template->setVar('body', $pString);
             new CLOSEPOPUP($this->template->process());
         }
@@ -153,7 +153,7 @@ class wordprocessor_MODULE
     public function open($message = FALSE, $text = FALSE, $title = FALSE)
     {
         FACTORY_LOADTINYMCE::getInstance();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . 'WPLOADTINYMCE.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "WPLOADTINYMCE.php"]));
         $tinyMce = new WPLOADTINYMCE();
         GLOBALS::setTplVar('heading', '');
         if (!$text) { // i.e. not importing but opening a file for example
@@ -407,7 +407,7 @@ class wordprocessor_MODULE
     public function wpExportDownload()
     {
         if (!array_key_exists('hash', $this->vars)) {
-            include_once(__DIR__ . DIRECTORY_SEPARATOR . "WPCOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "WPCOMMON.php"]));
             $common = new WPCOMMON();
             $common->failure($this->errors->text("inputError", "missing"));
         }

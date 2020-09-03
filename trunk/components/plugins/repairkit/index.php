@@ -17,7 +17,7 @@
 /**
  * Import initial configuration and initialize the web server
  */
-include_once("core/startup/WEBSERVERCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "startup", "WEBSERVERCONFIG.php"]));
 
 class repairkit_MODULE
 {
@@ -44,9 +44,9 @@ class repairkit_MODULE
     public function __construct($menuInit = FALSE)
     {
         $this->coremessages = FACTORY_MESSAGES::getInstance();
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('repairkit', 'repairkitMessages');
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $config = new repairkit_CONFIG();
         $this->authorize = $config->authorize;
         if ($menuInit) { // portion of constructor used for menu initialisation

@@ -33,14 +33,14 @@ class BIBTEX
     {
         $this->parentClass = $parentClass;
         $this->db = FACTORY_DB::getInstance();
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "EXPORTCOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTCOMMON.php"]));
         $this->common = new EXPORTCOMMON();
-        include_once("core/modules/resource/VIEWBIBTEX.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "resource", "VIEWBIBTEX.php"]));
         $this->bibtex = new VIEWBIBTEX();
     }
     /**

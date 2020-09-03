@@ -15,7 +15,7 @@
 /**
  * Import initial configuration and initialize the web server
  */
-include_once("core/startup/WEBSERVERCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "startup", "WEBSERVERCONFIG.php"]));
 
 
 class soundexplorer_MODULE
@@ -46,9 +46,9 @@ class soundexplorer_MODULE
         $this->vars = GLOBALS::getVars();
         // plugin folder name and generic message filename
         $this->coremessages = FACTORY_MESSAGES::getInstance();
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('soundexplorer', 'soundexplorerMessages');
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $config = new soundexplorer_CONFIG();
         $this->authorize = $config->authorize;
         $this->scripts[] = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/' . basename(__DIR__) . '/soundExplorer.js?ver=' . WIKINDX_PUBLIC_VERSION;
@@ -107,7 +107,7 @@ END;
      */
     public function sepluginSearchTarget()
     {
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "SOUNDEXPLORERQUICKSEARCH.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "SOUNDEXPLORERQUICKSEARCH.php"]));
         $qs = new SOUNDEXPLORERQUICKSEARCH();
         if (!$this->vars['ajaxReturn']) { // i.e. key is 0 so we want a new search
             // temp store plugin status (on/off) and plugin database status
@@ -151,7 +151,7 @@ END;
             $pString = $this->seConfigureDisplay();
             $pString .= HTML\p($this->pluginmessages->text('seDeleteSuccess'), 'success');
         } else {
-            include_once(__DIR__ . DIRECTORY_SEPARATOR . "SOUNDEXPLORERQUICKSEARCH.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "SOUNDEXPLORERQUICKSEARCH.php"]));
             $qs = new SOUNDEXPLORERQUICKSEARCH();
             $error = $qs->checkInput();
             if (!$error) {
@@ -239,7 +239,7 @@ END;
                 )
             )
         ) {
-            include_once(__DIR__ . DIRECTORY_SEPARATOR . "SOUNDEXPLORERQUICKSEARCH.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "SOUNDEXPLORERQUICKSEARCH.php"]));
             $qs = new SOUNDEXPLORERQUICKSEARCH();
             $return = $qs->process();
             if (is_array($return)) {
@@ -323,7 +323,7 @@ END;
             $pString .= HTML\hr();
             $pString .= HTML\div('sepluginSearchTarget', '&nbsp;');
         } else { // i.e. no stored searches
-            include_once(__DIR__ . DIRECTORY_SEPARATOR . "SOUNDEXPLORERQUICKSEARCH.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "SOUNDEXPLORERQUICKSEARCH.php"]));
             $qs = new SOUNDEXPLORERQUICKSEARCH();
             $pString .= HTML\div('sepluginSearchTarget', $qs->display());
         }

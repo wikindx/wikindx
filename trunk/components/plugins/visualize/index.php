@@ -21,7 +21,7 @@
 /**
  * Import initial configuration and initialize the web server
  */
-include_once("core/startup/WEBSERVERCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "startup", "WEBSERVERCONFIG.php"]));
 
 
 class visualize_MODULE
@@ -47,11 +47,11 @@ class visualize_MODULE
      */
     public function __construct($menuInit = FALSE)
     {
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->pluginmessages = new PLUGINMESSAGES('visualize', 'visualizeMessages');
         $this->errors = FACTORY_ERRORS::getInstance();
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->config = new visualize_CONFIG();
         $this->session = FACTORY_SESSION::getInstance();
         $this->db = FACTORY_DB::getInstance();
@@ -102,7 +102,7 @@ class visualize_MODULE
      */
     public function visualize()
     {
-        include_once('jpgraph/jpgraph.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "jpgraph", "jpgraph.php"]));
         if (!$this->validate()) {
             $this->badInput($this->pluginmessages->text('inputMissing'));
         }
@@ -285,7 +285,7 @@ class visualize_MODULE
      */
     private function barPlot($yAxis, $graph)
     {
-        include_once('jpgraph/jpgraph_bar.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "jpgraph", "jpgraph_bar.php"]));
         $plot = new BarPlot($yAxis);
         $graph->Add($plot);
         $plot->SetFillColor(['red','blue','green']);
@@ -304,7 +304,7 @@ class visualize_MODULE
      */
     private function linePlot($yAxis, $graph, $showValue = TRUE)
     {
-        include_once('jpgraph/jpgraph_line.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "jpgraph", "jpgraph_line.php"]));
         $plot = new LinePlot($yAxis);
         $graph->Add($plot);
         if ($showValue) {
@@ -323,7 +323,7 @@ class visualize_MODULE
      */
     private function scatterPlot($yAxis, $graph, $line = FALSE)
     {
-        include_once('jpgraph/jpgraph_scatter.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "jpgraph", "jpgraph_scatter.php"]));
         $plot = new ScatterPlot($yAxis);
         if ($line) {
             $plot->SetLinkPoints();
@@ -340,7 +340,7 @@ class visualize_MODULE
      */
     private function balloonPlot($yAxis, $graph)
     {
-        include_once('jpgraph/jpgraph_scatter.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "jpgraph", "jpgraph_scatter.php"]));
         $plot = new ScatterPlot($yAxis);
         // Use a lot of grace to get large scales
         $graph->yaxis->scale->SetGrace(10);

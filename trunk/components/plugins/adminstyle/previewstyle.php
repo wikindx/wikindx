@@ -34,7 +34,7 @@ class adminstyle_previewstyle
     public function display()
     {
         $map = FACTORY_STYLEMAP::getInstance();
-        include_once('core/bibcitation/PARSESTYLE.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "bibcitation", "PARSESTYLE.php"]));
         $adminstyle = new PARSESTYLE();
         $type = base64_decode($this->vars['templateName']);
         $templateString = preg_replace("/%u(\\d+)/u", "&#x$1;", base64_decode($this->vars['templateString']));

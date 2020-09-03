@@ -18,7 +18,7 @@
 /**
  * Import initial configuration and initialize the web server
  */
-include_once("core/startup/WEBSERVERCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "startup", "WEBSERVERCONFIG.php"]));
 
 
 class localedescription_MODULE
@@ -37,9 +37,9 @@ class localedescription_MODULE
     public function __construct($menuInit = FALSE)
     {
         $this->coremessages = FACTORY_MESSAGES::getInstance();
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('localedescription', 'localedescriptionMessages');
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->config = new localedescription_CONFIG();
         $this->authorize = $this->config->authorize;
         $this->session = FACTORY_SESSION::getInstance();

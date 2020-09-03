@@ -17,7 +17,7 @@
 /**
  * Import initial configuration and initialize the web server
  */
-include_once("core/startup/WEBSERVERCONFIG.php");
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "startup", "WEBSERVERCONFIG.php"]));
 
 
 class adminstyle_MODULE
@@ -44,9 +44,9 @@ class adminstyle_MODULE
     public function __construct($menuInit = FALSE)
     {
         $this->coremessages = FACTORY_MESSAGES::getInstance();
-        include_once("core/messages/PLUGINMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('adminstyle', 'adminstyleMessages');
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "config.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $config = new adminstyle_CONFIG();
         $this->authorize = $config->authorize;
         if ($menuInit) {
@@ -79,7 +79,7 @@ class adminstyle_MODULE
      */
     public function help()
     {
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . "help.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "help.php"]));
         $help = new adminstyle_help();
         $help->init();
     }
@@ -274,7 +274,7 @@ class adminstyle_MODULE
 
             return HTML\div($div, $pString);
         }
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . 'previewcite.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "previewcite.php"]));
         $pc = new adminstyle_previewcite();
         $string = $pc->display();
         if ($string === FALSE) {
@@ -303,7 +303,7 @@ class adminstyle_MODULE
 
             return HTML\div($div, $pString);
         }
-        include_once(__DIR__ . DIRECTORY_SEPARATOR . 'previewstyle.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "previewstyle.php"]));
         $ps = new adminstyle_previewstyle();
         $string = $ps->display();
         if ($string === FALSE) {

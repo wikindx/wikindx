@@ -58,7 +58,7 @@ class PASTEBIBTEX
         if (!$message) {
             $this->session->delVar("import_Paste");
         }
-        include_once("core/modules/help/HELPMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('pasteBibtex'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexImport"));

@@ -159,7 +159,7 @@ class ADMINUSER
         if ($this->user->writeUser(TRUE, 2)) {
             $this->badInput->close($this->errors->text("inputError", "userExists"), $this, "addInit");
         }
-        include_once("core/modules/email/EMAIL.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->registerUserAdd(TRUE)) { // Display password in email to new user
             $this->badInput->close($this->success->text("userAdd") .
@@ -425,7 +425,7 @@ class ADMINUSER
             return $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'registrationInit');
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
-        include_once("core/modules/email/EMAIL.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->registerRequestManage($registerIds)) {
             $this->badInput->close($this->errors->text("inputError", "mail2", GLOBALS::getError()), $this, 'registrationInit');

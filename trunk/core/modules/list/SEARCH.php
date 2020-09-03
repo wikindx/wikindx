@@ -73,7 +73,7 @@ class SEARCH
         $this->publisher = FACTORY_PUBLISHER::getInstance();
         $this->collection = FACTORY_COLLECTION::getInstance();
         $this->user = FACTORY_USER::getInstance();
-        include_once("core/miscellaneous/TAG.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "miscellaneous", "TAG.php"]));
         $this->tag = new TAG();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->parsePhrase = FACTORY_PARSEPHRASE::getInstance();
@@ -116,7 +116,7 @@ class SEARCH
         }
         $this->input = $this->session->getArray('advancedSearch');
         $this->checkAvailableFields();
-        include_once("core/modules/help/HELPMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('search'));
         if (!$returnString) {
@@ -2974,7 +2974,7 @@ class SEARCH
      */
     private function searchAttachments()
     {
-        include_once("core/modules/list/FILETOTEXT.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "list", "FILETOTEXT.php"]));
         $ftt = new FILETOTEXT();
         $excludeIds = $matchIds = [];
         foreach ($this->attachmentSearches as $key => $array) {

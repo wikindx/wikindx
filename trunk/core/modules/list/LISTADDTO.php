@@ -79,7 +79,7 @@ class LISTADDTO
      */
     public function displayCategory()
     {
-        include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
         $catForm = new RESOURCECATEGORYEDIT();
 
         if ($this->session->getVar("organize_CategoryHide")) { // currently hidden so show
@@ -110,7 +110,7 @@ class LISTADDTO
      */
     public function displaySubcategory()
     {
-        include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
         $catForm = new RESOURCECATEGORYEDIT();
 
         if ($this->session->getVar("organize_SubcategoryHide")) { // currently hidden so show
@@ -141,7 +141,7 @@ class LISTADDTO
      */
     public function displayLanguage()
     {
-        include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
         $catForm = new RESOURCECATEGORYEDIT();
 
         if ($this->session->getVar("organize_LanguageHide")) { // currently hidden so show
@@ -172,7 +172,7 @@ class LISTADDTO
      */
     public function displayKeyword()
     {
-        include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
         $catForm = new RESOURCECATEGORYEDIT();
 
         if ($this->session->getVar("organize_KeywordHide")) { // currently hidden so show
@@ -203,7 +203,7 @@ class LISTADDTO
      */
     public function displayUsertag()
     {
-        include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
         $catForm = new RESOURCECATEGORYEDIT();
 
         if ($this->session->getVar("organize_UsertagHide")) { // currently hidden so show
@@ -573,7 +573,7 @@ class LISTADDTO
             $ids = unserialize(base64_decode($string));
         }
         $this->session->setVar("addToKeywordCategory", TRUE);
-        include_once("core/modules/admin/DELETERESOURCE.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "admin", "DELETERESOURCE.php"]));
         $deleteResource = new DELETERESOURCE();
         $deleteResource->resourceIds['resource_id'] = $ids;
         $deleteResource->navigate = 'list';
@@ -744,7 +744,7 @@ class LISTADDTO
     private function organizeInit()
     {
         $this->session->clearArray('organize');
-        include_once('core/modules/resource/RESOURCECATEGORYEDIT.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
         $catForm = new RESOURCECATEGORYEDIT();
 
         $pString = \HTML\strong($this->messages->text("resources", "warningOrganize"));

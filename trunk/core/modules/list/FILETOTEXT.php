@@ -27,7 +27,7 @@ class FILETOTEXT
 
     public function __construct()
     {
-        include_once(WIKINDX_DIR_COMPONENT_VENDOR . '/pdftotext/PdfToText.phpclass');
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "pdftotext", "PdfToText.phpclass"]));
     }
 
     /**
@@ -183,7 +183,7 @@ class FILETOTEXT
         ini_set('display_errors', $errorDisplay);
         ini_set('memory_limit', $mem);
         ini_set('max_execution_time', $maxExecTime);
-        include_once("core/startup/HOUSEKEEPING.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "startup", "HOUSEKEEPING.php"]));
         $hk = new HOUSEKEEPING(FALSE);
     }
 

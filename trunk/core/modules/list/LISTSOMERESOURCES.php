@@ -38,7 +38,7 @@ class LISTSOMERESOURCES
         $this->common->browse = TRUE;
         $this->session = FACTORY_SESSION::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        include_once("core/browse/BROWSECOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
         $this->commonBrowse = new BROWSECOMMON();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "list"));
         // Turn on the 'add bookmark' menu item

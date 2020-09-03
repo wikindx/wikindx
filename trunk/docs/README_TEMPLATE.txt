@@ -148,7 +148,7 @@ The template's .css file is linked to in display.tpl. You have the option
 to override any CSS in the template's own .css file. To do this, create 
 a components/templates/override.css file and add CSS there. Custom template 
 designers should add:
-<link rel="stylesheet" href="components/templates/override.css" type="text/css">
+<link rel="stylesheet" href="{$tplPath}/../override.css" type="text/css">
 in their display.tpl following the template.css link. CSS in override.css acts 
 as global CSS overwriting any CSS styling in any template.css.
 

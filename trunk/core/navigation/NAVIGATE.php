@@ -56,7 +56,7 @@ class NAVIGATE
                 $listCommon->ideasFound = TRUE;
             }
             $listCommon->patterns = $this->session->getVar("search_Patterns");
-            include_once('core/modules/list/SEARCH.php');
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "list", "SEARCH.php"]));
             $s = new SEARCH();
             $s->reprocess();
 
@@ -67,27 +67,27 @@ class NAVIGATE
             $listCommon->quickSearch = TRUE;
             $listCommon->keepHighlight = TRUE;
             $listCommon->patterns = $this->session->getVar("search_Patterns");
-            include_once('core/modules/list/QUICKSEARCH.php');
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "list", "QUICKSEARCH.php"]));
             $qs = new QUICKSEARCH();
             $qs->reprocess();
 
             return;
         } elseif ($match[1] == 'LISTRESOURCES') {
             GLOBALS::addTplVar('content', $message);
-            include_once('core/modules/list/LISTRESOURCES.php');
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "list", "LISTRESOURCES.php"]));
             $list = new LISTRESOURCES('reorder');
 
             return;
         } elseif ($match[1] == 'LISTSOMERESOURCES') {
             GLOBALS::addTplVar('content', $message);
-            include_once('core/modules/list/LISTSOMERESOURCES.php');
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "list", "LISTSOMERESOURCES.php"]));
             $list = new LISTSOMERESOURCES();
             $list->reorder();
 
             return;
         } elseif ($match[1] == 'BASKET') {
             GLOBALS::addTplVar('content', $message);
-            include_once('core/modules/basket/BASKET.php');
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "basket", "BASKET.php"]));
             $basket = new BASKET();
             $basket->view();
             FACTORY_CLOSE::getInstance();
@@ -116,7 +116,7 @@ class NAVIGATE
      */
     public function resource($resourceId, $message)
     {
-        include_once('core/modules/resource/RESOURCEVIEW.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "resource", "RESOURCEVIEW.php"]));
         $resource = new RESOURCEVIEW();
         $resource->init($resourceId, $message);
     }
@@ -128,7 +128,7 @@ class NAVIGATE
      */
     public function ideaThread($ideaId, $message)
     {
-        include_once('core/modules/ideas/IDEAS.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "ideas", "IDEAS.php"]));
         $idea = new IDEAS();
         $idea->threadView($ideaId, $message);
     }

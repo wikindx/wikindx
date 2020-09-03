@@ -90,7 +90,7 @@ class MENU
     public function __construct()
     {
         // Keep here the responsibility to including SmartyMenu pulgin because
-        include_once(WIKINDX_DIR_COMPONENT_VENDOR . "/smarty/SmartyMenu/SmartyMenu.class.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "SmartyMenu", "SmartyMenu.class.php"]));
 
         $this->db = FACTORY_DB::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
@@ -674,10 +674,10 @@ class MENU
         }
         $imagesExists = FALSE;
         if (file_exists(WIKINDX_DIR_DATA_IMAGES)) {
-            $open_dir = opendir('.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR);
+            $open_dir = opendir(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR);
             while ($object = readdir($open_dir)) {
                 if ($object != "." && $object != "..") {
-                    $ext = mb_strtolower(pathinfo('.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $object, PATHINFO_EXTENSION));
+                    $ext = mb_strtolower(pathinfo(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $object, PATHINFO_EXTENSION));
                     if (($ext == 'jpeg') || ($ext == 'jpg') || ($ext == 'gif') || ($ext == 'png')) {
                         $imagesExists = TRUE;
 
@@ -724,12 +724,12 @@ class MENU
     {
         $menuHeadings = ["wikindx", "res", "search", "text", "admin", "plugin1", "plugin2", "plugin3"];
         
-        include_once("core/modules/LOADEXTERNALMODULES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "LOADEXTERNALMODULES.php"]));
         $loadmodules = new LOADEXTERNALMODULES();
         $moduleList = $loadmodules->readPluginsDirectory();
         
         foreach ($moduleList as $dirName) {
-            include_once(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR . $dirName . DIRECTORY_SEPARATOR . 'index.php');
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_PLUGINS, $dirName, "index.php"]));
             // class name must be in the form $dirName . MODULE
             $module = $dirName . "_MODULE";
             if (!class_exists($module)) {

@@ -48,11 +48,11 @@ class API
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
-        include_once('core/modules/resource/RESOURCEABSTRACT.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEABSTRACT.php"]));
         $this->abstract = new RESOURCEABSTRACT();
-        include_once('core/modules/resource/RESOURCENOTE.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCENOTE.php"]));
         $this->note = new RESOURCENOTE();
-        include_once('core/modules/resource/RESOURCEMETA.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEMETA.php"]));
         $this->meta = new RESOURCEMETA();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "resources"));
     }

@@ -101,7 +101,7 @@ class IMPORTBIBTEX
         $this->map = FACTORY_BIBTEXMAP::getInstance();
         // need to use English constants for BibTeX
         $constants = FACTORY_CONSTANTS::getFreshInstance(TRUE);
-        include_once("core/miscellaneous/TAG.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "miscellaneous", "TAG.php"]));
         $this->tag = new TAG();
         $this->parseCreator = FACTORY_BIBTEXCREATORPARSE::getInstance();
         $this->monthObj = FACTORY_BIBTEXMONTHPARSE::getInstance();
@@ -118,12 +118,12 @@ class IMPORTBIBTEX
         $this->dirName = WIKINDX_DIR_DATA_FILES;
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'paste')) {
             $this->type = 'paste';
-            include_once("core/modules/import/PASTEBIBTEX.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "PASTEBIBTEX.php"]));
             $this->badClass = new PASTEBIBTEX();
             $this->badFunction = 'display';
         } elseif (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'file')) {
             $this->type = 'file';
-            include_once("core/modules/import/BIBTEXFILE.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BIBTEXFILE.php"]));
             $this->badClass = new BIBTEXFILE();
             $this->badFunction = 'display';
         }
@@ -436,7 +436,7 @@ class IMPORTBIBTEX
             $this->session->delVar("sql_LastMulti");
             $this->session->setVar("importLock", TRUE);
             if ($this->resourceAdded) {
-                include_once("core/modules/email/EMAIL.php");
+                include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
                 $email = new EMAIL();
                 $email->notify(FALSE, TRUE);
             }

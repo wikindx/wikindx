@@ -37,7 +37,7 @@ class TEMPLATE
      */
     public function __construct()
     {
-        include_once(WIKINDX_DIR_COMPONENT_VENDOR . "/smarty/libs/Smarty.class.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "libs", "Smarty.class.php"]));
         $this->tpl = new Smarty();
 
         // PHP 8 will make E_ALL the default error level,
@@ -250,7 +250,7 @@ class TEMPLATE
             case Smarty::PLUGIN_FUNCTION:
                 switch ($name) {
                     case 'menu':
-                        $script = WIKINDX_DIR_COMPONENT_VENDOR . '/smarty/SmartyMenu/function.menu.php';
+                        $script = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "SmartyMenu", "function.menu.php"]);
                         $callback = 'smarty_function_menu';
 
                         return TRUE;
@@ -259,7 +259,7 @@ class TEMPLATE
             case Smarty::PLUGIN_COMPILER:
                 switch ($name) {
                     case 'menu':
-                    $script = WIKINDX_DIR_COMPONENT_VENDOR . '/smarty/SmartyMenu/function.menu.php';
+                    $script = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "SmartyMenu", "function.menu.php"]);
                     $callback = 'smarty_function_menu';
 
                     return TRUE;
@@ -270,7 +270,7 @@ class TEMPLATE
             case Smarty::PLUGIN_BLOCK:
                 switch ($name) {
                     case 'menu':
-                    $script = WIKINDX_DIR_COMPONENT_VENDOR . '/smarty/SmartyMenu/function.menu.php';
+                    $script = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "SmartyMenu", "function.menu.php"]);
                     $callback = 'smarty_function_menu';
 
                     return TRUE;

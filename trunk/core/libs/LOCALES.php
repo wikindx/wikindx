@@ -271,7 +271,7 @@ namespace LOCALES
             {
                 if ($loading[$domain])
                 {
-                    $dirlocales = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", WIKINDX_DIR_COMPONENT_PLUGINS, $domain, "languages"]));
+                    $dirlocales = realpath(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_PLUGINS, $domain, "languages"]));
                     $moFileName = $domain . ".mo";
                     $moFilePath = implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES", $moFileName]);
                     if (file_exists($moFilePath)) {

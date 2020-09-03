@@ -109,7 +109,7 @@ class CLOSE
         GLOBALS::addTplVar('displayMenu', $displayMenu);
         // If the menu is hidden, we can avoid to build it
         if ($displayMenu) {
-            include_once("core/navigation/MENU.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "navigation", "MENU.php"]));
             $menu = new MENU();
             $menu->menus();
         }

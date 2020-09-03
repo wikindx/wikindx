@@ -34,9 +34,9 @@ class MAIL
             return;
         }
         
-        require WIKINDX_DIR_COMPONENT_VENDOR . '/phpmailer/Exception.php';
-        require WIKINDX_DIR_COMPONENT_VENDOR . '/phpmailer/PHPMailer.php';
-        require WIKINDX_DIR_COMPONENT_VENDOR . '/phpmailer/SMTP.php';
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "phpmailer", "Exception.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "phpmailer", "PHPMailer.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "phpmailer", "SMTP.php"]));
 
         $this->mail = new PHPMailer();
 

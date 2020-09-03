@@ -245,19 +245,19 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
 
         // Insert images
         // Cut the string in smaller pieces to isolate hexfile name from other content
-        $tString = preg_split('/(##' . preg_quote(WIKINDX_URL_CACHE_FILES, "/") . '\/hex[0-9a-zA-Z]+\.txt##)/u', $text, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-
+        $tString = preg_split('/(##hex[0-9a-zA-Z]+\.txt##)/u', $text, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
         // Write the ressource in the tempfile by chunk
         $k = 0;
         for ($k = 0; $k < count($tString); $k++) {
             $c = $tString[$k];
 
             // Is an image: replace hexfile names by the content of these files
-            if (\UTILS\matchPrefix($c, '##' . WIKINDX_URL_CACHE_FILES . '/hex')) {
+            if (\UTILS\matchPrefix($c, '##hex')) {
                 $c = str_replace('#', '', $c);
-                if (file_exists($c)) {
-                    $c = file_get_contents(str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $c));
-                    @unlink($c);
+                $f = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE_FILES, $c]);
+                if (file_exists($f)) {
+                    $c = file_get_contents($f);
+                    @unlink($f);
                 }
             }
             $textWithImg .= $c;
@@ -408,14 +408,18 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         } else {
             return $matchArray[0]; // unable to read file so return link
         }
+        
+        $webimage = FALSE;
 
         // If this image is not local, test if it's a remote image
-        if (!file_exists($file)) {
+        if (file_exists(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA_IMAGES, basename($file)]))) {
+            $file = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA_IMAGES, basename($file)]);
+        } else {
             if (!$this->URL_exists($file)) {
                 return $file;
             } else {
                 // Download the file from the web to a temp file
-                $dlTempFile = 'files/dl' . \UTILS\uuid() . '.img';
+                $dlTempFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE_FILES, 'dl' . \UTILS\uuid() . '.img']);
 
                 if (ini_get('allow_url_fopen') == "1") {
                     $fddl = fopen($file, 'rb');
@@ -423,6 +427,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
                         if (file_put_contents($dlTempFile, $fddl) !== FALSE) {
                             fclose($fddl);
                             $file = $dlTempFile;
+                            $webimage = TRUE;
                         } else {
                             fclose($fddl);
                             @unlink($dlTempFile);
@@ -449,6 +454,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
                         curl_close($ch);
                         fclose($fp);
                         $file = $dlTempFile;
+                        $webimage = TRUE;
                     } else {
                         curl_close($ch);
                         fclose($fp);
@@ -510,8 +516,8 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         // Indicate the scale factor used for rendering the image with the desired size from the initial fixed size
         $blipScale = '\picscalex' . floor($editW * 100 / $width) . '\picscaley' . floor($editH * 100 / $height);
 
-        $tempFile = WIKINDX_URL_CACHE_FILES . '/bin' . \UTILS\uuid() . '.png';
-        $hexfile = WIKINDX_URL_CACHE_FILES . '/hex' . \UTILS\uuid() . '.txt';
+        $tempFile = WIKINDX_DIR_CACHE_FILES . DIRECTORY_SEPARATOR . 'bin' . \UTILS\uuid() . '.png';
+        $hexfile = WIKINDX_DIR_CACHE_FILES . DIRECTORY_SEPARATOR . 'hex' . \UTILS\uuid() . '.txt';
 
         switch ($type) {
             case IMAGETYPE_GIF:
@@ -550,15 +556,15 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
                 return $matchArray[0]; // unable to read file so return link
             break;
         }
-        $this->fbin2fhex($file, str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $hexfile));
+        $this->fbin2fhex($file, $hexfile);
         @unlink($tempFile);
 
         // Erase the tempfile of the image downloaded form the web
-        if (preg_match("/" . preg_quote(WIKINDX_URL_CACHE_FILES, "/") . "\\/dl.+\\.img/Uusi", $file, $array) == 1) {
+        if ($webimage) {
             @unlink($file);
         }
 
-        $out = '{\*\shppict{\pict__WIKINDX__NEWLINE__' . $blipSize . $blipScale . $blipType . '__WIKINDX__NEWLINE__##' . $hexfile . '##}}';
+        $out = '{\*\shppict{\pict__WIKINDX__NEWLINE__' . $blipSize . $blipScale . $blipType . '__WIKINDX__NEWLINE__##' . basename($hexfile) . '##}}';
 
         return $out;
     }

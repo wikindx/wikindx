@@ -202,9 +202,11 @@ class DELETEIMAGES
         $pString = \HTML\tableStart();
         $pString .= \HTML\trStart();
     	if ($initialState) { // grab first image in array (i.e. what is initially selected in the select box)
-    		$image = WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . array_shift($imageArray);
-    		list($width, $height) = $this->imageWH($image);
-    		$pString .= \HTML\td(\HTML\img($image, $width, $height));
+    	    $image = array_shift($imageArray);
+    		$imagePath = WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $image;
+    		$imageUrl = WIKINDX_URL_DATA_IMAGES . DIRECTORY_SEPARATOR . $image;
+    		list($width, $height) = $this->imageWH($imagePath);
+    		$pString .= \HTML\td(\HTML\img($imageUrl, $width, $height));
     	}
     	else {
     		$array = explode(',', $this->vars['ajaxReturn']);
@@ -214,9 +216,10 @@ class DELETEIMAGES
     				$pString .= \HTML\trStart();
     				$numCells = 0;
     			}
-    			$image = WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $image;
-				list($width, $height) = $this->imageWH($image);
-				$pString .= \HTML\td(\HTML\img($image, $width, $height));
+    			$imagePath = WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $image;
+    			$imageUrl = WIKINDX_URL_DATA_IMAGES . DIRECTORY_SEPARATOR . $image;
+				list($width, $height) = $this->imageWH($imagePath);
+				$pString .= \HTML\td(\HTML\img($imageUrl, $width, $height));
 				++$numCells;
     		}
     	}

@@ -48,7 +48,8 @@ class ImageServer
             return TRUE;
         } elseif (isset($_GET['thumb'])) {
             if (mb_strlen($_GET['thumb']) > 0) {
-                ImageServer::showThumbnail($_GET['thumb']);
+                $thumb = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA_IMAGES, basename($_GET['thumb'])]);
+                ImageServer::showThumbnail($thumb);
             }
 
             return TRUE;
@@ -105,7 +106,7 @@ class ImageServer
     }
     /**
      * Function for displaying the thumbnail.
-     * Includes attempts at cacheing it so that generation is minimised.
+     * Includes attempts at caching it so that generation is minimised.
      *
      * @param string $file Filename path
      */
@@ -201,7 +202,7 @@ class FileManager
         $split = UTF8::mb_explode('.', $name);
         array_pop($split);
         $name = implode('', $split);
-        $upload_file = '.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $name;
+        $upload_file = WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $name;
 
         $mime_type = FileServer::getFileMime($userfile['tmp_name']);
         $hash = sha1_file($userfile['tmp_name']);
@@ -276,8 +277,8 @@ class FileManager
 //
         // Reading the data of files and directories
 //
-        if (file_exists('.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR)) {
-            $open_dir = opendir('.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR);
+        if (file_exists(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR)) {
+            $open_dir = opendir(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR);
             $this->dirs = [];
             $this->files = [];
             while ($object = readdir($open_dir)) {
@@ -510,7 +511,7 @@ class Location
     {
         $dir = "";
         if ($prefix == TRUE) {
-            $dir .= '.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR;
+            $dir .= WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR;
         }
         if (is_array($this->path)) {
             for ($i = 0; $i < ((count($this->path) >= $up && $up > 0) ? count($this->path) - $up : count($this->path)); $i++) {
@@ -621,8 +622,8 @@ class EncodeExplorer
         //
         // Reading the data of files and directories
         //
-        if (file_exists('.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR)) {
-            $open_dir = opendir('.' . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR);
+        if (file_exists(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR)) {
+            $open_dir = opendir(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR);
             $this->dirs = [];
             $this->files = [];
             while ($object = readdir($open_dir)) {
@@ -902,10 +903,9 @@ $pString .= '$(document).ready(function()
                     }
                 }
 			}
-			var path = "' . WIKINDX_URL_DATA_IMAGES . '/" + image;
 
 			$("#thumb").remove();
-			$("body").append("<div id=\"thumb\"><img src=\"?thumb=" + path + "\" alt=\"Preview\"><\/div>");
+			$("body").append("<div id=\"thumb\"><img src=\"' . implode("/", [WIKINDX_BASE_URL, "core", "tiny_mce", "plugins", "wikindxImage", "dialog.php"]) . '?thumb=" + image + "\" alt=\"Preview\"><\/div>");
 			positionThumbnail(e);
 			$("#thumb").fadeIn("medium");
 		},
@@ -950,13 +950,13 @@ $pString .= '$(document).ready(function()
                     }
                 }
 			}
-			var path = "' . WIKINDX_URL_DATA_IMAGES . '/" + image;
+			var path = "' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_DATA_IMAGES . '/" + image;
 
 			imageDialogBrowse(path, width, height);
 		});
 		$("a.thumb").mousemove(function(e){
 			positionThumbnail(e);
-			});
+		});
 	}); ';
         $pString .= <<<END
 
@@ -985,7 +985,6 @@ END;
         if ($this->files) {
             $pString .= '<tbody class="scrollContent">' . LF;
             
-            $path = "/" . WIKINDX_URL_DATA_IMAGES . "/";
             $count = 0;
             foreach ($this->files as $file) {
                 $filename = EncodeExplorer::getFilename($file);
@@ -1010,7 +1009,7 @@ END;
                 $pString .= '<td class="icon"><img alt="' . $file->getType() . '" src="' . $this->makeIcon($file->getType()) . '"></td>' . LF;
                 $pString .= '<td class="name">' . LF;
                 // For some reason, only width is accepted here. But, adding width automatically proportionately sets height when the image is inserted
-                $pString .= '<a href="' . $path . $file->getNameEncoded() . '?width=' . $width . '&amp;height=' . $height . '"';
+                $pString .= '<a href="' . implode("/", [WIKINDX_URL_DATA_IMAGES, $file->getNameEncoded()]) . '?width=' . $width . '&amp;height=' . $height . '"';
                 $pString .= ' class="item file';
                 if ($file->isValidForThumb()) {
                     $pString .= ' thumb';

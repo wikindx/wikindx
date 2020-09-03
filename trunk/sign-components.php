@@ -25,7 +25,7 @@ include_once("core/startup/CONSTANTS.php");
 include_once("core/libs/FILE.php");
 include_once("core/libs/UTILS.php");
 
-define('DIR_BUILD', __DIR__ . DIRECTORY_SEPARATOR . WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'build');
+define('DIR_BUILD', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'build');
 if (!file_exists(DIR_BUILD)) {
     mkdir(DIR_BUILD, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
 }
@@ -34,10 +34,10 @@ if (!file_exists(WIKINDX_DIR_DATA)) {
 }
 
 $component_types = [
-    "plugin" => __DIR__ . DIRECTORY_SEPARATOR . WIKINDX_DIR_COMPONENT_PLUGINS,
-    "style" => __DIR__ . DIRECTORY_SEPARATOR . WIKINDX_DIR_COMPONENT_STYLES,
-    "template" => __DIR__ . DIRECTORY_SEPARATOR . WIKINDX_DIR_COMPONENT_TEMPLATES,
-    "vendor" => __DIR__ . DIRECTORY_SEPARATOR . WIKINDX_DIR_COMPONENT_VENDOR,
+    "plugin" => WIKINDX_DIR_COMPONENT_PLUGINS,
+    "style" => WIKINDX_DIR_COMPONENT_STYLES,
+    "template" => WIKINDX_DIR_COMPONENT_TEMPLATES,
+    "vendor" => WIKINDX_DIR_COMPONENT_VENDOR,
 ];
 
 ///////////////////////////////////////////////////////////////////////

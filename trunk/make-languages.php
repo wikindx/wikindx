@@ -25,20 +25,20 @@ include_once("core/libs/LOCALES.php");
 /// Configuration
 ///////////////////////////////////////////////////////////////////////
 
-$dirroot = __DIR__;
-$dirplugins = implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_COMPONENT_PLUGINS]);
+$dirroot = WIKINDX_DIR_ROOT;
+$dirplugins = WIKINDX_DIR_COMPONENT_PLUGINS;
 $execoutput = [];
 $errorcode = 0;
 $emailreport = "sirfragalot@users.sourceforge.net";
 $excludedir = [
-    implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_CACHE]), // Cache directory
-    implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_DATA]), // Data directory
-    implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_DB_SCHEMA]), // Data directory
-    implode(DIRECTORY_SEPARATOR, [__DIR__, "docs"]), // Data directory
-    implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_COMPONENT_STYLES]), // component directory
-    implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_COMPONENT_TEMPLATES]), // component directory
-    implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_COMPONENT_VENDOR]), // Third party lib
-    implode(DIRECTORY_SEPARATOR, [__DIR__, WIKINDX_DIR_COMPONENT_PLUGINS]), // Plugins are treated as their own domain
+    implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE]), // Cache directory
+    implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA]), // Data directory
+    implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DB_SCHEMA]), // Data directory
+    implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_ROOT, "docs"]), // Data directory
+    implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_STYLES]), // component directory
+    implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_TEMPLATES]), // component directory
+    implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR]), // Third party lib
+    implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_PLUGINS]), // Plugins are treated as their own domain
 ];
 
 
@@ -58,11 +58,11 @@ foreach ($listDirDomain as $dir => $DirDomain) {
     foreach ($DirDomain as $domain) {
         $packagename = mb_strtolower($domain);
 
-        if ($dir == __DIR__) {
+        if ($dir == WIKINDX_DIR_ROOT) {
             echo " - Core $domain domain\n";
             $inputdir = $dir;
-            $dirsrc = implode(DIRECTORY_SEPARATOR, [$inputdir, WIKINDX_DIR_CORE_LANGUAGES, "src"]);
-            $dirtra = implode(DIRECTORY_SEPARATOR, [$inputdir, WIKINDX_DIR_CORE_LANGUAGES]);
+            $dirsrc = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CORE_LANGUAGES, "src"]);
+            $dirtra = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CORE_LANGUAGES]);
 
         } else {
             echo " - Plugin $domain domain\n";

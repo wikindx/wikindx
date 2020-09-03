@@ -55,17 +55,17 @@ class RESOURCEVIEW
         $this->user = FACTORY_USER::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
-        include_once("core/browse/BROWSECOMMON.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
         $this->commonBib = new BROWSECOMMON();
-        include_once('core/modules/resource/RESOURCEABSTRACT.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCEABSTRACT.php"]));
         $this->abstract = new RESOURCEABSTRACT();
-        include_once('core/modules/resource/RESOURCENOTE.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCENOTE.php"]));
         $this->note = new RESOURCENOTE();
-        include_once('core/modules/resource/RESOURCEMETA.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCEMETA.php"]));
         $this->meta = new RESOURCEMETA();
-        include_once('core/modules/resource/RESOURCECUSTOM.php');
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCECUSTOM.php"]));
         $this->custom = new RESOURCECUSTOM();
-        include_once("core/modules/help/HELPMESSAGES.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         $this->languageClass = FACTORY_CONSTANTS::getInstance();
         GLOBALS::setTplVar('help', $help->createLink('resource'));
@@ -137,7 +137,7 @@ class RESOURCEVIEW
     {
         $resourceMap = FACTORY_RESOURCEMAP::getInstance();
         $typeMaps = $resourceMap->getTypeMap();
-        include_once("core/bibcitation/STYLEMAP.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bibcitation", "STYLEMAP.php"]));
         $styleMap = new STYLEMAP();
         // Grab all creator IDs for this resource
         $creators = $tempArray = [];

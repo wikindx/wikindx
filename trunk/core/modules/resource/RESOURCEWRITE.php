@@ -84,7 +84,7 @@ class RESOURCEWRITE
             return;
         }
         $this->writeTables();
-        include_once("core/modules/email/EMAIL.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         $newResource = $this->edit === FALSE ? TRUE : FALSE;
         if (!$emailClass->notify($this->resourceId, $newResource)) {
@@ -160,7 +160,7 @@ class RESOURCEWRITE
             $this->db->replace($this->db->replace('resourceSubtitle', '{', ''), '}', '', FALSE) . ', ' .
             $this->db->replace($this->db->replace('resourceNoSort', '{', ''), '}', '', FALSE), TRUE, FALSE);
         if ($this->db->numRows($resultset)) {
-            include_once("core/modules/resource/RESOURCEFORM.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "RESOURCEFORM.php"]));
             $rForm = new RESOURCEFORM();
 
             $res = FACTORY_RESOURCECOMMON::getInstance();
@@ -680,7 +680,7 @@ class RESOURCEWRITE
         // If there is a new collection
         if ($newCollection && ($this->collectionMap->collectionTypes[$this->resourceType] != 'thesis')) {
             // Gather defaults for this new collection
-            include_once("core/collection/COLLECTIONDEFAULTMAP.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
             $defaultMap = new COLLECTIONDEFAULTMAP();
             $collectionType = $this->collectionMap->collectionTypes[$this->resourceType];
             $defaults = $collectionDefaults = [];

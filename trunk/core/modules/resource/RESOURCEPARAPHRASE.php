@@ -33,7 +33,7 @@ class RESOURCEPARAPHRASE
         $this->gatekeep->init();
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        include_once("core/modules/resource/TEXTQP.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "TEXTQP.php"]));
         $this->textqp = new TEXTQP();
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();

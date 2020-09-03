@@ -191,7 +191,7 @@ class RESOURCECUSTOM
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // email notification
-        include_once("core/modules/email/EMAIL.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $email = new EMAIL($this->db);
         $email->notify($this->vars['resourceId']);
         // lock reload
@@ -270,7 +270,7 @@ class RESOURCECUSTOM
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // email notification
-        include_once("core/modules/email/EMAIL.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $email = new EMAIL($this->db);
         $email->notify($this->vars['resourceId']);
         // lock reload

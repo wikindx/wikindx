@@ -128,7 +128,7 @@ class EDITMETADATA
         $this->session->delVar("metadataLockAbstract".$this->vars['id']);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "abstract"));
         // Create citation link for this type
-        //		include_once("core/cite/CITE.php");
+        //		include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "cite", "CITE.php"]));
         //		$citeLink = CITE::makeCiteLink('abstract');
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "abstractEdit");
@@ -161,7 +161,7 @@ class EDITMETADATA
         $this->session->delVar("metadataLockNotes".$this->vars['id']);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "notes"));
         // Create citation link for this type
-        //		include_once("core/cite/CITE.php");
+        //		include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "cite", "CITE.php"]));
         //		$citeLink = CITE::makeCiteLink('note');
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "noteEdit");
@@ -318,7 +318,7 @@ class EDITMETADATA
      */
     private function notify()
     {
-        include_once("core/modules/email/EMAIL.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $email = new EMAIL();
         $email->notify($this->vars['id']);
     }

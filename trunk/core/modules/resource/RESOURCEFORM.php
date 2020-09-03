@@ -335,7 +335,7 @@ class RESOURCEFORM
      */
     public function getCollectionDefaults()
     {
-        include_once("core/collection/COLLECTIONDEFAULTMAP.php");
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
         $this->collectionDefaultMap = new COLLECTIONDEFAULTMAP();
         $this->db->formatConditions(['collectionId' => $this->collectionFill]);
         $recordset = $this->db->select('collection', ['collectionType', 'collectionDefault']);

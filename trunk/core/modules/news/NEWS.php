@@ -136,7 +136,7 @@ class NEWS
         $this->session->setVar("setup_News", TRUE);
         $this->session->setVar("news_Done", TRUE);
         if (WIKINDX_EMAIL_NEWS) {
-            include_once("core/modules/email/EMAIL.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
             $emailClass = new EMAIL();
             if (!$emailClass->news($title, $news)) {
                 $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'init');
@@ -267,7 +267,7 @@ class NEWS
         $this->db->update('news', $updateArray);
         $this->session->setVar("news_Done", TRUE);
         if (WIKINDX_EMAIL_NEWS) {
-            include_once("core/modules/email/EMAIL.php");
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
             $emailClass = new EMAIL();
             if (!$emailClass->news($updateArray['newsTitle'], $updateArray['newsNews'])) {
                 $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'init');

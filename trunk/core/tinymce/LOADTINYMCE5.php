@@ -44,12 +44,15 @@ class LOADTINYMCE5
      *
      * @return string
      */
-    public function loadBlankTextarea($Label, $Name, $Value)
+    public function loadBlankTextarea($Label, $Name, $Value, $width = "200px", $height = "1.5em")
     {
         $cssPath = $this->cssPath;
         $cssPopupPath = $this->cssPopupPath;
         $tinymcePath = $this->getIncludeTinyMceLib();
         $textarea = \FORM\textareaInput($Label, $Name, \HTML\dbToTinyMCE($Value));
+        //$textarea = "<div id=\"$Name\" class=\"tinymce_area_inline\" >$Value</div>";
+        $textarea = "<div id=\"$Name\" class=\"tinymce_area_inline\" style=\"width:$width;width:height:$height\">$Value</div>";
+        //$textarea = "<input type=\"text\" id=\"$Name\"value=\"$Value\">";
         
         $locale = $this->determine_locale();
         $language_url = $this->getLocalizationJS($locale);
@@ -64,6 +67,11 @@ $tinymcePath
     tinymce.init({
         {$locale}
         {$language_url}
+        inline: true,
+        content_css : 'http://wikindx.test/components/templates/default/tinymce5.css',
+        min_width: 1024, /* Make sure that the toolbar is long enough otherwise it takes the size of the text area !!! */
+        plugins: 'code',
+        toolbar: 'undo redo styleselect bold italic alignleft aligncenter alignright bullist numlist outdent indent code',
         selector: '#{$Name}'
     });
 </script>

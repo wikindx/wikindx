@@ -67,7 +67,7 @@ switch ($VersionPackaged)
     case 'trunk' :
         define('DIR_SRC', DIRSRC_TRUNK);
         define('DIR_DST', DIRPKG_ROOT . DIRECTORY_SEPARATOR . $VersionPackaged);
-        define('DIR_DST_SRC', DIR_DST . DIRECTORY_SEPARATOR . 'source');
+        define('DIR_DST_SRC', DIR_DST . DIRECTORY_SEPARATOR . 'wikindx');
         define('DIR_DST_PKG', DIR_DST . DIRECTORY_SEPARATOR . 'files');
         define('DIR_DST_COR', DIR_DST_PKG . DIRECTORY_SEPARATOR . $VersionPackaged);
         define('DIR_DST_COR_ARC', DIR_DST_PKG . DIRECTORY_SEPARATOR . 'archives' . DIRECTORY_SEPARATOR . $VersionPackaged);
@@ -95,7 +95,7 @@ switch ($VersionPackaged)
     default:
         define('DIR_SRC', DIRSRC_TRUNK);
         define('DIR_DST', DIRPKG_ROOT . DIRECTORY_SEPARATOR . $VersionPackaged);
-        define('DIR_DST_SRC', DIR_DST . DIRECTORY_SEPARATOR . 'source');
+        define('DIR_DST_SRC', DIR_DST . DIRECTORY_SEPARATOR . 'wikindx');
         define('DIR_DST_PKG', DIR_DST . DIRECTORY_SEPARATOR . 'files');
         define('DIR_DST_COR', DIR_DST_PKG . DIRECTORY_SEPARATOR . $VersionPackaged);
         define('DIR_DST_COR_ARC', DIR_DST_PKG . DIRECTORY_SEPARATOR . 'archives' . DIRECTORY_SEPARATOR . $VersionPackaged);

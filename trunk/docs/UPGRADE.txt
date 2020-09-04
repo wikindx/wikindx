@@ -127,8 +127,8 @@ several folders are writeable including:
 
 If anything is not writeable, you will be prompted to correct this.
 
-12/ Run WIKINDX through your web browser (http://<server>/wikindx). If the database 
-needs upgrading, you will be prompted. In order to account for
+12/ Run WIKINDX through your web browser (http://<my.wikindx.domain.example>/index.php).
+If the database needs upgrading, you will be prompted. In order to account for
 potential PHP timeouts when used on a large database, the database
 upgrade takes place over numerous stages.
 

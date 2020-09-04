@@ -88,23 +88,35 @@ max_allowed_packet in the MySQL server.
 length, then you should set public $WIKINDX_MEMORY_LIMIT = "64M"; in
 config.php in order to avoid memory allocation errors.
 
+5/ In what follows, 'wikindx/' refers to the top folder of your wikindx 
+installation.
+
+6/ If you prefer to back up your existing wikindx/ installation, copy 
+all files in the folder elsewhere and back up the database before proceeding. 
+Should you need to restore, a) replace the wikindx database with the backed-up 
+one, b) remove files and folders in wikindx/, and c) re-place the backed-up 
+wikindx/ contents.
+
+7/ Do not attempt to run WIKINDX before all upgrade steps have been completed.
+
 >> IMPORTANT
+
 
 UPGRADING <<
 
-5/ Unzip WIKINDX into a new folder on your web server -- it will create
-a wikindx/ folder.
+8/ Unzip WIKINDX into a folder on your computer -- this will create a wikindx/ 
+folder.
 
-6/ Create a new MySQL database (e.g. 'wikindx5'), GRANT ALL permissions
-on it to your wikindx user, dump your current WIKINDX database
-(including table structure) then import that dump into your new
-database.
+9/ Copy the files and folders from the unzipped wikindx/ folder to the wikindx/ 
+folder in the web server hierarchy. 
 
-7/ Copy wikindx/config.php.dist to wikindx/config.php and edit the
-latter (v5.4 moved a lot of configuration options to the database but,
-as a minimum, you will need to set the MySQL database access protocols).
+10/ If you are upgrading a version less than 5.9.1, move attachments in the 
+old wikindx/attachments/ folder to wikindx/data/attachments/ and then delete 
+the old wikindx/attachments/ folder. Likewise, files in wikindx/images/ must be 
+moved to wikindx/data/images/ and the wikindx/images/ folder deleted.
 
-8/ Ensure that
+11/ Now you are ready to run WIKINDX. On first running, WIKINDX will check that 
+several folders are writeable including:
 'cache/',
 'data/',
 'components/languages/',
@@ -113,33 +125,26 @@ as a minimum, you will need to set the MySQL database access protocols).
 'components/styles/',
 'components/vendor/'
 
-and the files and folders within these folders are writable by the web
-server user (usually 'nobody', 'www-data', or 'daemon').  If you are
-running WIKINDX locally on Windows (using something like XAMPP), you can
-skip this step as the folders will be writable by default.
+If anything is not writeable, you will be prompted to correct this.
 
-9/ If you have attachments in the old wikindxXXX/attachments folder,
-copy these to wikindx/data/attachments/. The upgrade process will remove
-references to resource attachments in the database if those attachments
-are not found in the wikindx/data/attachments/ folder.
-
-10/ Run v5 through your web browser (http://<server>/wikindx) and follow
-the instructions there to complete the upgrade. In order to account for
+12/ Run WIKINDX through your web browser (http://<server>/wikindx). If the database 
+needs upgrading, you will be prompted. In order to account for
 potential PHP timeouts when used on a large database, the database
 upgrade takes place over numerous stages.
 
-11/ Finally update officials components from the admin components panel
-of your website. If you have created custom components you must adapt
+13/ Finally update official components (plugins, templates, bibliographic 
+styles, and languages) from the admin components panel of your WIKINDX 
+installation. If you have created custom components you must adapt
 them to keep them working. Particularly in version 5.9.1, the
 component.json file is added to describe the component.
 
    a/ Administrators who have written their own bibliographic styles for
-   v3.x should edit and save them in the plug-in adminstyle editor
+   v3.x should open, edit, and save them in the plug-in adminstyle editor
    (download the plug-in from the WIKINDX Sourceforge page) prior to
    their use as this will add additions and amendments to those styles
    that are required in v4.x and up.
    
-   b/ Language localizations from v3.8.x will still work in WIKINDX v5
+   b/ Language localizations from v3.8.x will still work in WIKINDX 
    (before 5.9.1) but will be missing some messages (replaced
    automatically by English messages). v3.8.x localization files can be
    upgraded to v5 (before 5.9.1) by running them through the

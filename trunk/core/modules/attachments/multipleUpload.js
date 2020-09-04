@@ -23,10 +23,13 @@ var upcontrol = {
   // upcontrol.run() : proceed upload file
     var xhr = new XMLHttpRequest(),
         data = new FormData();
+	if (upcontrol.queue[upcontrol.now].size > max_file_size) { // die with error
+			window.location.href = sizeErrorUrl;
+	}
     data.append('file', upcontrol.queue[upcontrol.now]);
     var url = '';
     url = url.concat('index.php?action=attachments_ATTACHMENTS_CORE&method=init&function=addDragAndDrop', 
-    	'&resourceId=', rId, '&MAX_FILE_SIZE=', maxSize);
+    	'&resourceId=', rId, '&MAX_FILE_SIZE=', max_file_size);
     xhr.open('POST', url, true);
     xhr.onload = function (e) {
       // SHOW UPLOAD STATUS

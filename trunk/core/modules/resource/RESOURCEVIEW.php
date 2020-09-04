@@ -89,9 +89,9 @@ class RESOURCEVIEW
             $id = filter_var($id, FILTER_SANITIZE_NUMBER_INT); // NB, $id is now a string
             $this->vars['id'] = $id;
         }
-        // message can come base64-encoded from ATTACHMENTS.php when the user drags and drops files.
-        if (!$message and array_key_exists('message', $this->vars)) {
-            $message = base64_decode($this->vars['message']);
+        // message can come from ATTACHMENTS.php
+		if (!$message and array_key_exists('message', $this->vars)) {
+        	$message = rawurldecode($this->vars['message']);
         }
         $qs = $this->session->getArray('QueryStrings');
         if (empty($qs) || (mb_strpos($qs[0], 'RESOURCEFORM_CORE') !== FALSE)) {

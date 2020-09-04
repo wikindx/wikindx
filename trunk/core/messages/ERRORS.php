@@ -164,6 +164,7 @@ class ERRORS
 				"imageExists" => dgettext($domain, "Image already exists as ###"),
 				"uploadType" => dgettext($domain, "File type not allowed (only JPEG, GIF and PNG)"),
 				"imageSize" => dgettext($domain, "Image above maximum allowed size of ###MB"),
+				"uploadSize" => dgettext($domain, "One or more attachments exceed the maximum size (>### bytes). If you are the admin, try editing both 'post_max_size' and 'upload_max_filesize' in php.ini."),
 			),
 /// done_ Following input, editing operations etc., these messages are printed when a user attempts to redo the operation (usually by clicking on browser's 'reload' button)
 			"done" => array(

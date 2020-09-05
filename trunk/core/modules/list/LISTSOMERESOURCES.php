@@ -451,7 +451,10 @@ class LISTSOMERESOURCES
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $typeArray = ['all', 'quotes', 'paraphrases', 'musings', 'ideas', 'notIdeas', 'lastMulti'];
-        if (!array_key_exists("type", $this->vars) || !$this->vars["type"] || (array_search($this->vars['type'], $typeArray) === FALSE)) {
+        if (!array_key_exists("type", $this->vars) || $this->vars["type"]) {
+        	$type = 'all';
+        }
+        elseif (array_search($this->vars['type'], $typeArray) === FALSE) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         else {

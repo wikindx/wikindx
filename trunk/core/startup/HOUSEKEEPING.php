@@ -19,6 +19,8 @@ class HOUSEKEEPING
 {
     /** object */
     private $session;
+    /** object */
+    private $db;
     /**
      * HOUSEKEEPING
      *
@@ -27,7 +29,9 @@ class HOUSEKEEPING
     public function __construct($upgradeCompleted)
     {
         $this->session = FACTORY_SESSION::getInstance();
+        $this->db = FACTORY_DB::getInstance();
         $this->statistics();
+        $this->formData();
         if ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID) { // superadmin logging on – caching requires the superadmin to click further
             $this->cacheAttachments($upgradeCompleted);
         }
@@ -39,7 +43,6 @@ class HOUSEKEEPING
      */
     public function cacheAttachments($upgradeCompleted)
     {
-        $db = FACTORY_DB::getInstance();
         $messages = FACTORY_MESSAGES::getInstance();
         $count = 0;
         $attachDir = WIKINDX_DIR_DATA_ATTACHMENTS;
@@ -52,9 +55,9 @@ class HOUSEKEEPING
         }
         $this->session->setVar("cache_Attachments", count($cacheDirFiles));
         $mimeTypes = [WIKINDX_MIMETYPE_PDF, WIKINDX_MIMETYPE_DOCX, WIKINDX_MIMETYPE_DOC, WIKINDX_MIMETYPE_TXT];
-        $db->formatConditionsOneField($mimeTypes, 'resourceattachmentsFileType');
-        $resultset = $db->select('resource_attachments', ['resourceattachmentsHashFilename']);
-        while ($row = $db->fetchRow($resultset)) {
+        $this->db->formatConditionsOneField($mimeTypes, 'resourceattachmentsFileType');
+        $resultset = $this->db->select('resource_attachments', ['resourceattachmentsHashFilename']);
+        while ($row = $this->db->fetchRow($resultset)) {
             $f = $row['resourceattachmentsHashFilename'];
             $fileName = $attachDir . DIRECTORY_SEPARATOR . $f;
             $fileNameCache = $cacheDir . DIRECTORY_SEPARATOR . $f;
@@ -103,6 +106,16 @@ class HOUSEKEEPING
             FACTORY_CLOSE::getInstance();
         }
     }
+    /**
+     * Housekeeping: remove any rows in form_data older than 3 days
+     *
+     */
+	private function formData()
+	{
+		$this->db->formatConditions($this->db->dateIntervalCondition(3) . $this->db->greater .
+			$this->db->formatFields('formdataTimestamp'));
+		$this->db->delete('form_data');
+	}
     /**
      * Check if statistics need compiling and emailing out to registered users.
      */

@@ -92,18 +92,6 @@ namespace FORMDATA
 	{
 		$dbo->formatConditions(['formdataId' => $formdataId]);
 		$dbo->delete('form_data');
-		houseKeeping($dbo);
-	}
-    /**
-     * Housekeeping: remove any rows in form_data older than 3 days
-     *
-     * @param object $dbo
-     */
-	function houseKeeping($dbo)
-	{
-		$dbo->formatConditions($dbo->dateIntervalCondition(3) . $dbo->greater .
-			$dbo->formatFields('formdataTimestamp'));
-		$dbo->delete('form_data');
 	}
 	/**
 	 * Tidy form_data array for the form

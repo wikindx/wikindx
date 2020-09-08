@@ -85,7 +85,7 @@ class CMS
         );
         $pString .= \HTML\td(implode("&nbsp;&nbsp;&nbsp;", $links), 'width50percent');
         if (array_key_exists('type', $this->vars)) {
-            \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js?ver=' . WIKINDX_PUBLIC_VERSION]);
+            \AJAX\loadJavascript([WIKINDX_URL_BASE . '/core/modules/list/searchSelect.js?ver=' . WIKINDX_PUBLIC_VERSION]);
             if ($this->vars['type'] == 'categories') {
                 $category = FACTORY_CATEGORY::getInstance();
                 $raw = $category->grabAll();
@@ -270,7 +270,7 @@ class CMS
 // if no ajaxReturn, quietly exit
         $div = \HTML\td(\HTML\div('qString', '&nbsp;')); // default
         if (array_key_exists('ajaxReturn', $this->vars)) {
-            $qString = WIKINDX_BASE_URL . '/cmsprint.php?action=' . $this->vars['type'] . '&id=' . $this->vars['ajaxReturn'];
+            $qString = WIKINDX_URL_BASE . '/cmsprint.php?action=' . $this->vars['type'] . '&id=' . $this->vars['ajaxReturn'];
             $div = \HTML\td(\HTML\div('qString', $qString));
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $div]));
@@ -646,7 +646,7 @@ class CMS
      */
     private function getResourceQuery($id)
     {
-        return WIKINDX_BASE_URL . "/cmsprint.php?action=getResource&id=$id";
+        return WIKINDX_URL_BASE . "/cmsprint.php?action=getResource&id=$id";
     }
     /**
      * Function form for generating CMS tag

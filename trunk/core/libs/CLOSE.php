@@ -85,7 +85,7 @@ class CLOSE
         if (defined('WIKINDX_RSS_ALLOW')) {
             GLOBALS::addTplVar('displayRss', WIKINDX_RSS_ALLOW);
             GLOBALS::addTplVar('rssTitle', WIKINDX_RSS_TITLE);
-            GLOBALS::addTplVar('rssFeed', WIKINDX_BASE_URL . WIKINDX_RSS_PAGE);
+            GLOBALS::addTplVar('rssFeed', WIKINDX_URL_BASE . WIKINDX_RSS_PAGE);
         } else {
             GLOBALS::addTplVar('displayRss', FALSE);
         }
@@ -99,10 +99,10 @@ class CLOSE
         GLOBALS::addTplVar('headTitle', $title);
 
         // Mandatory script for Ajax and core functions
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/javascript/coreJavascript.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_VENDOR . '/progressbarjs/progressbar.min.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_VENDOR . '/jsonjs/json2.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/javascript/ajax.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/javascript/coreJavascript.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/' . WIKINDX_URL_COMPONENT_VENDOR . '/progressbarjs/progressbar.min.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/' . WIKINDX_URL_COMPONENT_VENDOR . '/jsonjs/json2.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/javascript/ajax.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
 
         // MENU
         GLOBALS::addTplVar('displayMenu', $displayMenu);

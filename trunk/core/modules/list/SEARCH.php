@@ -233,7 +233,7 @@ class SEARCH
         }
 
         // Load at end because .js initialization needs various DIVs to be in the page before they are made invisible
-        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js?ver=' . WIKINDX_PUBLIC_VERSION);
+        \AJAX\loadJavascript(WIKINDX_URL_BASE . '/core/modules/list/searchSelect.js?ver=' . WIKINDX_PUBLIC_VERSION);
     }
     /**
      * Reset the form and clear the session

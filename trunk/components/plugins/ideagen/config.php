@@ -14,5 +14,5 @@ class ideagen_CONFIG
     /** int */
     public $authorize = 1;
     /** float */
-    public $wikindxVersion = 8;
+    public $wikindxVersion = 9;
 }

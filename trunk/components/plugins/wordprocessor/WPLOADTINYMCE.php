@@ -29,7 +29,7 @@ class WPLOADTINYMCE extends LOADTINYMCE
     public function loadWPTextarea()
     {
         $path = $this->path;
-        $externalPluginPath = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/' . basename(__DIR__) . '/';
+        $externalPluginPath = WIKINDX_URL_BASE . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/' . basename(__DIR__) . '/';
         $exportPluginPath = $externalPluginPath . 'wikindxWPExport/editor_plugin.js?ver=' . WIKINDX_PUBLIC_VERSION;
         $savePluginPath = $externalPluginPath . 'wikindxWPSave/editor_plugin.js?ver=' . WIKINDX_PUBLIC_VERSION;
         $statsPluginPath = $externalPluginPath . 'wikindxWPStats/editor_plugin.js?ver=' . WIKINDX_PUBLIC_VERSION;

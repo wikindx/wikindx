@@ -104,7 +104,7 @@ class chooselanguage_MODULE
 
         if (count($languages) > 1)
         {
-            $display .= HTML\jsInlineExternal(implode("/", [WIKINDX_BASE_URL, WIKINDX_URL_COMPONENT_PLUGINS, basename(__DIR__), 'chooseLanguage.js?ver=' . WIKINDX_PUBLIC_VERSION]));
+            $display .= HTML\jsInlineExternal(implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_COMPONENT_PLUGINS, basename(__DIR__), 'chooseLanguage.js?ver=' . WIKINDX_PUBLIC_VERSION]));
             $js = 'onchange="javascript:chooseLanguageChangeLanguage(this.value);"';
             $display .= FORM\selectedBoxValue(FALSE, "Language", $languages, $language, 1, FALSE, $js);
         }

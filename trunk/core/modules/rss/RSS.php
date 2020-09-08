@@ -28,7 +28,7 @@ class RSS
             die("Access forbidden: this feature is disabled.");
         }
 
-        $baseURL = WIKINDX_BASE_URL;
+        $baseURL = WIKINDX_URL_BASE;
 
         // set up language
         $messages = FACTORY_MESSAGES::getInstance(WIKINDX_LANGUAGE);

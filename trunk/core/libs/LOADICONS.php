@@ -131,7 +131,7 @@ class LOADICONS
             $basename = "file";
         }
         $iconfb = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_TEMPLATE_DEFAULT, 'icons', "file.png"]);
-        $iconfburl = implode("/", [WIKINDX_BASE_URL, WIKINDX_URL_COMPONENT_TEMPLATES, WIKINDX_TEMPLATE_DEFAULT, 'icons', "file.png"]);
+        $iconfburl = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_COMPONENT_TEMPLATES, WIKINDX_TEMPLATE_DEFAULT, 'icons', "file.png"]);
         $icon = $this->getIconRealFileName($basename, $iconfb, $iconfburl);
         
         // Disable a useless warning if the default file is missing
@@ -205,7 +205,7 @@ class LOADICONS
                 if (file_exists($tmp)) {
                     if (is_file($tmp)) {
                         $filename = $tmp;
-                        $url = implode("/", [WIKINDX_BASE_URL, WIKINDX_URL_COMPONENT_TEMPLATES, $tpl, "icons", $basename . "." . $ext]);
+                        $url = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_COMPONENT_TEMPLATES, $tpl, "icons", $basename . "." . $ext]);
 
                         break;
                     }

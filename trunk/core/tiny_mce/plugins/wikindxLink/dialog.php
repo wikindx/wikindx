@@ -13,11 +13,11 @@
  */
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "startup", "WEBSERVERCONFIG.php"]));
 
-$script = '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-$script .= '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/utils/mctabs.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-$script .= '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/utils/form_utils.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-$script .= '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/utils/validate.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-$script .= '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/plugins/' . basename(__DIR__) . '/js/advlink.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+$script = '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/tiny_mce_popup.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+$script .= '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/utils/mctabs.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+$script .= '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/utils/form_utils.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+$script .= '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/utils/validate.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+$script .= '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/plugins/' . basename(__DIR__) . '/js/advlink.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
 GLOBALS::addTplVar('scripts', $script);
 
 $class = new linkDialog();

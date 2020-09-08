@@ -63,7 +63,7 @@ class EXPORTCOINS extends EXPORTER
         if (array_key_exists('resourcetextAbstract', $row) && $row['resourcetextAbstract']) {
             $abstract = '&amp;rft_id=info:abstract/' . $this->uEncode($row['resourcetextAbstract']);
         }
-        $sid = "&amp;rfr_sid=info:sid/" . WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'];
+        $sid = "&amp;rfr_sid=info:sid/" . WIKINDX_URL_BASE . $_SERVER['SCRIPT_NAME'];
         $return = "<span " . $this->map->coinsBase . "$type" . "$genre" .
             $entry . $authors . $url . $doi . $sid . $abstract . "\"></span>";
 

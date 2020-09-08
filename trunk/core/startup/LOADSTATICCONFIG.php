@@ -37,73 +37,39 @@ function loadStaticConfig()
         $config->WIKINDX_PATH_AUTO_DETECTION = TRUE;
     }
     
-    // Set the current working directory -- useful for ensuring TinyMCE plug-ins can find the wikindx base path for include() commands.
-    // Not all OSs allow getcwd() or sometimes the wikindx installation is in a directory that is not searchable.
-    if ($config->WIKINDX_PATH_AUTO_DETECTION) {
-        $config->WIKINDX_WIKINDX_PATH = realpath(\URL\getWikindxBasePath());
-    } else {
-        if (property_exists($config, 'WIKINDX_WIKINDX_PATH') && is_string($config->WIKINDX_WIKINDX_PATH)) {
-            $config->WIKINDX_WIKINDX_PATH = realpath(trim($config->WIKINDX_WIKINDX_PATH));
-        } else {
-            $errors[] = 'WIKINDX_WIKINDX_PATH must be a valid absolute path (switch to "" by default)';
-            $config->WIKINDX_WIKINDX_PATH = "";
-        }
-    }
-    
-    
-    // Remove the last slash
-    $config->WIKINDX_WIKINDX_PATH = trim(rtrim($config->WIKINDX_WIKINDX_PATH, "/"));
-    
-    // Test path is correct
-    if (!is_file($config->WIKINDX_WIKINDX_PATH . '/core/startup/' . basename(__FILE__))) {
-        if ($config->WIKINDX_PATH_AUTO_DETECTION) {
-            $errors[] = "
-                WIKINDX is unable to set the installation path automatically.
-                You should set {$WIKINDX_PATH_AUTO_DETECTION} to FALSE
-                and {$WIKINDX_WIKINDX_PATH} in config.php.
-            ";
-        } else {
-            $errors[] = "
-                The path {$WIKINDX_WIKINDX_PATH} in config.php is set incorrectly.
-                You should set it to a right value.
-            ";
-        }
-    }
-
     
     // Set base url (default if needed)
     if ($config->WIKINDX_PATH_AUTO_DETECTION) {
         // The fallback of HTTP_HOST is used for a CLI context only
-        $config->WIKINDX_BASE_URL = (PHP_SAPI !== 'cli') ? $_SERVER["HTTP_HOST"] : "localhost";
+        $config->WIKINDX_URL_BASE = (PHP_SAPI !== 'cli') ? $_SERVER["HTTP_HOST"] : "localhost";
         
         // In case the code is not installed in the root folder of the vhost,
         // deduct the additional subdirectories by difference with the root folder of the vhost.
         $DOCUMENT_ROOT = realpath($_SERVER['DOCUMENT_ROOT']);
-        $wikindxBasePath = realpath($config->WIKINDX_WIKINDX_PATH);
         
-        if ($_SERVER['DOCUMENT_ROOT'] != $wikindxBasePath) {
-            $wikindxSubPath = mb_substr($wikindxBasePath, mb_strlen($DOCUMENT_ROOT));
-            $config->WIKINDX_BASE_URL .= $wikindxSubPath;
+        if ($_SERVER['DOCUMENT_ROOT'] != WIKINDX_DIR_BASE) {
+            $wikindxSubPath = mb_substr(WIKINDX_DIR_BASE, mb_strlen($DOCUMENT_ROOT));
+            $config->WIKINDX_URL_BASE .= $wikindxSubPath;
         }
     } else {
-        if (!property_exists($config, 'WIKINDX_BASE_URL') || !is_string($config->WIKINDX_BASE_URL)) {
-            $errors[] = 'WIKINDX_BASE_URL must be a valid URL (switch to "" by default)';
-            $config->WIKINDX_BASE_URL = "";
+        if (!property_exists($config, 'WIKINDX_URL_BASE') || !is_string($config->WIKINDX_URL_BASE)) {
+            $errors[] = 'WIKINDX_URL_BASE must be a valid URL (switch to "" by default)';
+            $config->WIKINDX_URL_BASE = "";
         }
     }
     
     // Canonicalize the URL separator
-    $config->WIKINDX_BASE_URL = str_replace("\\", "/", $config->WIKINDX_BASE_URL);
+    $config->WIKINDX_URL_BASE = str_replace("\\", "/", $config->WIKINDX_URL_BASE);
     
     // Remove the last slash
-    $config->WIKINDX_BASE_URL = trim(rtrim($config->WIKINDX_BASE_URL, "/"));
+    $config->WIKINDX_URL_BASE = trim(rtrim($config->WIKINDX_URL_BASE, "/"));
     
     // Add the protocol requested when not defined
     // or replace it dynamically by the protocol requested by the browser (http or https)
-    if (!\UTILS\matchPrefix($config->WIKINDX_BASE_URL, "http://") && !\UTILS\matchPrefix($config->WIKINDX_BASE_URL, "https://")) {
-        $config->WIKINDX_BASE_URL = \URL\getCurrentProtocole() . '://' . $config->WIKINDX_BASE_URL;
+    if (!\UTILS\matchPrefix($config->WIKINDX_URL_BASE, "http://") && !\UTILS\matchPrefix($config->WIKINDX_URL_BASE, "https://")) {
+        $config->WIKINDX_URL_BASE = \URL\getCurrentProtocole() . '://' . $config->WIKINDX_URL_BASE;
     } else {
-        $config->WIKINDX_BASE_URL = preg_replace('/^https?/u', \URL\getCurrentProtocole(), $config->WIKINDX_BASE_URL);
+        $config->WIKINDX_URL_BASE = preg_replace('/^https?/u', \URL\getCurrentProtocole(), $config->WIKINDX_URL_BASE);
     }
 
 
@@ -211,8 +177,7 @@ function loadStaticConfig()
         "WIKINDX_DB_PASSWORD",
         "WIKINDX_DB_TABLEPREFIX",
         "WIKINDX_PATH_AUTO_DETECTION",
-        "WIKINDX_BASE_URL",
-        "WIKINDX_WIKINDX_PATH",
+        "WIKINDX_URL_BASE",
         "WIKINDX_MEMORY_LIMIT",
         "WIKINDX_MAX_EXECUTION_TIMEOUT",
         "WIKINDX_MAX_WRITECHUNK",

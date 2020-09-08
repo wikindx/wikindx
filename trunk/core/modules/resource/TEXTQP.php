@@ -40,7 +40,7 @@ class TEXTQP
         $this->cite = FACTORY_CITE::getInstance();
 
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js?ver=' . WIKINDX_PUBLIC_VERSION);
+        \AJAX\loadJavascript(WIKINDX_URL_BASE . '/core/modules/resource/resourceCategoryEdit.js?ver=' . WIKINDX_PUBLIC_VERSION);
     }
     /**
      * display the editing form

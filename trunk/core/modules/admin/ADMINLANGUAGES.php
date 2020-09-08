@@ -88,7 +88,7 @@ private $languages;
 		}
 		$pString .= \HTML\trEnd();
 		$pString .= \HTML\tableEnd();
-		\AJAX\loadJavascript(array(WIKINDX_BASE_URL . '/' . 'core/modules/admin/languageEdit.js'));
+		\AJAX\loadJavascript(array(WIKINDX_URL_BASE . '/' . 'core/modules/admin/languageEdit.js'));
 		GLOBALS::addTplVar('content', $pString);
 	}
 	private function transferArrow($function)

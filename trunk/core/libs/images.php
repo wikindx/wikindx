@@ -829,7 +829,7 @@ class EncodeExplorer
     public function outputHtml()
     {
         $pString = '<link rel="stylesheet" href="images.css?ver=' . WIKINDX_PUBLIC_VERSION . '" type="text/css">';
-        $pString .= '<script src="' . WIKINDX_BASE_URL . "/" . WIKINDX_URL_COMPONENT_VENDOR . '/jquery/jquery.min.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+        $pString .= '<script src="' . WIKINDX_URL_BASE . "/" . WIKINDX_URL_COMPONENT_VENDOR . '/jquery/jquery.min.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= <<<END
 <script>
 END;
@@ -905,7 +905,7 @@ $pString .= '$(document).ready(function()
 			}
 
 			$("#thumb").remove();
-			$("body").append("<div id=\"thumb\"><img src=\"' . implode("/", [WIKINDX_BASE_URL, "core", "tiny_mce", "plugins", "wikindxImage", "dialog.php"]) . '?thumb=" + image + "\" alt=\"Preview\"><\/div>");
+			$("body").append("<div id=\"thumb\"><img src=\"' . implode("/", [WIKINDX_URL_BASE, "core", "tiny_mce", "plugins", "wikindxImage", "dialog.php"]) . '?thumb=" + image + "\" alt=\"Preview\"><\/div>");
 			positionThumbnail(e);
 			$("#thumb").fadeIn("medium");
 		},
@@ -950,7 +950,7 @@ $pString .= '$(document).ready(function()
                     }
                 }
 			}
-			var path = "' . WIKINDX_BASE_URL . '/' . WIKINDX_URL_DATA_IMAGES . '/" + image;
+			var path = "' . WIKINDX_URL_BASE . '/' . WIKINDX_URL_DATA_IMAGES . '/" + image;
 
 			imageDialogBrowse(path, width, height);
 		});

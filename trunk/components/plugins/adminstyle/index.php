@@ -1555,7 +1555,7 @@ class adminstyle_MODULE
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Edit")));
         }
         $pString .= FORM\formEnd();
-        AJAX\loadJavascript(WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/adminstyle/adminstyle.js?ver=' . WIKINDX_PUBLIC_VERSION);
+        AJAX\loadJavascript(WIKINDX_URL_BASE . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/adminstyle/adminstyle.js?ver=' . WIKINDX_PUBLIC_VERSION);
 
         return $pString;
     }

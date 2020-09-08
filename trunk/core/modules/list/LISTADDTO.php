@@ -766,7 +766,7 @@ class LISTADDTO
         $pString .= \HTML\p($this->messages->text("resources", "replaceExisting") . "&nbsp;&nbsp;" .
             \FORM\checkbox(FALSE, "replaceExisting") . '&nbsp;&nbsp;' . \FORM\formSubmit($this->messages->text("submit", "Save")));
         $pString .= \FORM\formEnd();
-        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/resource/resourceCategoryEdit.js?ver=' . WIKINDX_PUBLIC_VERSION);
+        \AJAX\loadJavascript(WIKINDX_URL_BASE . '/core/modules/resource/resourceCategoryEdit.js?ver=' . WIKINDX_PUBLIC_VERSION);
         GLOBALS::addTplVar('content', $pString);
     }
     /**

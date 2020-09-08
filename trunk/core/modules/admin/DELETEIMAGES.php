@@ -79,7 +79,7 @@ class DELETEIMAGES
             $pString .= \HTML\tableEnd();
         }
 
-        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/list/searchSelect.js?ver=' . WIKINDX_PUBLIC_VERSION]);
+        \AJAX\loadJavascript([WIKINDX_URL_BASE . '/core/modules/list/searchSelect.js?ver=' . WIKINDX_PUBLIC_VERSION]);
         GLOBALS::addTplVar('content', $pString);
     }
     /**

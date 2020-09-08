@@ -150,7 +150,7 @@ class TEMPLATE
 
         // Configure (main) template url of Smarty
         // with the name of the template instead of using indice 0
-        $this->url = implode('/', [WIKINDX_BASE_URL, WIKINDX_URL_COMPONENT_TEMPLATES, $this->name]);
+        $this->url = implode('/', [WIKINDX_URL_BASE, WIKINDX_URL_COMPONENT_TEMPLATES, $this->name]);
 
         // Register "menu" function of SmartyMenu plugin
         $this->tpl->registerDefaultPluginHandler([$this, 'plugin_SmartyMenu_handler']);

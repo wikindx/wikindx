@@ -25,7 +25,7 @@ include_once("core/libs/LOCALES.php");
 /// Configuration
 ///////////////////////////////////////////////////////////////////////
 
-$dirroot = WIKINDX_DIR_ROOT;
+$dirroot = WIKINDX_DIR_BASE;
 $dirplugins = WIKINDX_DIR_COMPONENT_PLUGINS;
 $execoutput = [];
 $errorcode = 0;
@@ -34,7 +34,7 @@ $excludedir = [
     implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE]), // Cache directory
     implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA]), // Data directory
     implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DB_SCHEMA]), // Data directory
-    implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_ROOT, "docs"]), // Data directory
+    implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, "docs"]), // Data directory
     implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_STYLES]), // component directory
     implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_TEMPLATES]), // component directory
     implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR]), // Third party lib
@@ -58,7 +58,7 @@ foreach ($listDirDomain as $dir => $DirDomain) {
     foreach ($DirDomain as $domain) {
         $packagename = mb_strtolower($domain);
 
-        if ($dir == WIKINDX_DIR_ROOT) {
+        if ($dir == WIKINDX_DIR_BASE) {
             echo " - Core $domain domain\n";
             $inputdir = $dir;
             $dirsrc = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CORE_LANGUAGES, "src"]);

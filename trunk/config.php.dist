@@ -61,7 +61,7 @@ public $WIKINDX_DB_TABLEPREFIX = "wkx_";
 *****/
 // The auto-detection of the path installation and the base url is an experimental feature
 // which you can disable by changing this parameter to FALSE.
-// If you deactivate auto-detection you must fill in the options WIKINDX_BASE_URL and WIKINDX_WIKINDX_PATH.
+// If you deactivate auto-detection you must fill in the option WIKINDX_URL_BASE.
 // If you don't define this option, auto-detection is enabled by default.
 public $WIKINDX_PATH_AUTO_DETECTION = TRUE;
 // If option auto-detection is disabled you must define the base URL for the WIKINDX installation.
@@ -70,17 +70,7 @@ public $WIKINDX_PATH_AUTO_DETECTION = TRUE;
 // folder on the www.myserver.com, then set the variable
 // to http://www.myserver.com/wikindx
 // Otherwise, leave as "".
-public $WIKINDX_BASE_URL = "";
-// If option auto-detection is disabled you must define the WIKINDX server installation path
-// for plugins and dialogs.
-// WIKINDX tries to get this through getcwd() but this is not always possible.
-// In this case, you will receive an error message and WIKINDX will die and you should then set that path here.
-// The path should be the full path from the root folder to your wikindx folder with no trailing '/'.
-// On Apple OSX running XAMPP, for example, the case-sensitive path is: 
-// '/Applications/XAMPP/xamppfiles/htdocs/wikindx'.
-// The script will continue to die until it has a valid installation path.
-// Otherwise, leave as "".
-public $WIKINDX_WIKINDX_PATH = "";
+public $WIKINDX_URL_BASE = "";
 /*****
 * END PATHS CONFIGURATION
 *****/

@@ -34,7 +34,7 @@ define('TAB', "\t");
  *
  * @name WIKINDX_PUBLIC_VERSION
  */
-define('WIKINDX_PUBLIC_VERSION', '6.3.10');
+define('WIKINDX_PUBLIC_VERSION', '6.3.11');
 /**
  * WIKINDX internal version information
  *
@@ -44,7 +44,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.3.10');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 23.0);
+define('WIKINDX_INTERNAL_VERSION', 24.0);
 /**
  * WIKINDX minimum internal version upgradable
  *
@@ -67,7 +67,7 @@ define('WIKINDX_INTERNAL_VERSION_UPGRADE_MIN', 5.1);
  * @name WIKINDX_COMPONENTS_COMPATIBLE_VERSION
  */
 define('WIKINDX_COMPONENTS_COMPATIBLE_VERSION', [
-    'plugin'    => 8, // Must be an integer
+    'plugin'    => 9, // Must be an integer
     'style'     => 4, // Must be an integer
     'template'  => 1, // Must be an integer
     'vendor'    => WIKINDX_PUBLIC_VERSION, // Identical to the public version because this type of component is very closely linked to a version of the core
@@ -122,13 +122,13 @@ define('WIKINDX_COMPONENTS_UPDATE_SERVER', 'https://wikindx.sourceforge.io/cus/i
 define('WIKINDX_PACKAGE_HASH_ALGO', 'sha256');
 
 // List of core directories
-define('WIKINDX_DIR_ROOT', realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..'])));
+define('WIKINDX_DIR_BASE', realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..'])));
 
-define('WIKINDX_DIR_CORE', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_ROOT, 'core']));
+define('WIKINDX_DIR_CORE', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'core']));
 define('WIKINDX_DIR_CORE_LANGUAGES', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CORE, 'languages']));
 
 // List of components directories
-define('WIKINDX_DIR_COMPONENT', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_ROOT, 'components']));
+define('WIKINDX_DIR_COMPONENT', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'components']));
 define('WIKINDX_DIR_COMPONENT_PLUGINS', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT, 'plugins']));
 define('WIKINDX_DIR_COMPONENT_STYLES', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT, 'styles']));
 define('WIKINDX_DIR_COMPONENT_TEMPLATES', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT, 'templates']));
@@ -142,7 +142,7 @@ define('WIKINDX_URL_COMPONENT_VENDOR', implode('/', [WIKINDX_URL_COMPONENT, 'ven
 
 
 // List of data directories
-define('WIKINDX_DIR_DATA', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_ROOT, 'data']));
+define('WIKINDX_DIR_DATA', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'data']));
 define('WIKINDX_DIR_DATA_ATTACHMENTS', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA, 'attachments']));
 define('WIKINDX_DIR_DATA_FILES', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA, 'files']));
 define('WIKINDX_DIR_DATA_IMAGES', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA, 'images']));
@@ -156,7 +156,7 @@ define('WIKINDX_URL_DATA_PLUGINS', implode('/', [WIKINDX_URL_DATA, 'plugins']));
 
 
 // List of cache directories
-define('WIKINDX_DIR_CACHE', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_ROOT, 'cache']));
+define('WIKINDX_DIR_CACHE', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'cache']));
 define('WIKINDX_DIR_CACHE_ATTACHMENTS', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, 'attachments']));
 define('WIKINDX_DIR_CACHE_FILES',implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, 'files']));
 define('WIKINDX_DIR_CACHE_LANGUAGES', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, 'languages']));
@@ -174,7 +174,7 @@ define('WIKINDX_URL_CACHE_TEMPLATES', implode('/', [WIKINDX_URL_CACHE, 'template
 
 
 // List of special files
-define('WIKINDX_DIR_DB_SCHEMA', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_ROOT, 'dbschema']));
+define('WIKINDX_DIR_DB_SCHEMA', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'dbschema']));
 define('WIKINDX_FILE_REPAIRKIT_DB_SCHEMA', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DB_SCHEMA, 'repairkit.schema']));
 
 

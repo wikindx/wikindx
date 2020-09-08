@@ -84,7 +84,7 @@ class UPDATEDATABASE
         // The db schema is stored in a series of SQL file in the directory /dbschema/full for the core
         // or /plugins/<PluginDirectory>/dbschema/full
         $dbSchemaPath =
-            WIKINDX_WIKINDX_PATH
+            WIKINDX_DIR_BASE
             . $pluginPath . WIKINDX_DIR_DB_SCHEMA
             . DIRECTORY_SEPARATOR . 'full';
         foreach (FILE\fileInDirToArray($dbSchemaPath) as $sqlfile)
@@ -105,7 +105,7 @@ class UPDATEDATABASE
         // The db schema is stored in a serie of SQL file in the directory /dbschema/update/<$wkxVersion> for the core
         // or /plugins/<PluginDirectory>/dbschema/update/<$wkxVersion>
         $dbSchemaPath =
-            WIKINDX_WIKINDX_PATH
+            WIKINDX_DIR_BASE
             . $pluginPath . WIKINDX_DIR_DB_SCHEMA
             . DIRECTORY_SEPARATOR . 'update'
             . DIRECTORY_SEPARATOR . $wkxVersion;
@@ -343,6 +343,11 @@ class UPDATEDATABASE
             { // upgrade v6.3.10 to 6.3.11
                 $this->numStages = 1;
                 $this->stage23();
+            }
+            elseif ($dbVersion < 24.0)
+            { // upgrade v6.3.11 to 6.3.11
+                $this->numStages = 1;
+                $this->stage24();
             }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
@@ -904,8 +909,7 @@ class UPDATEDATABASE
      */
     private function stage16()
     {
-        $this->writeConfigFile6_3_8(); // dies if not possible
-        
+        // This stage was doing a config change that have been moved to stage 24
         $this->updateSoftwareVersion(16);
         $this->checkStatus('stage16');
         $this->pauseExecution('stage16');
@@ -993,6 +997,17 @@ class UPDATEDATABASE
         $this->updateSoftwareVersion(23);
         $this->checkStatus('stage23');
         $this->pauseExecution('stage23');
+    }
+    /**
+     * Upgrade database schema to version 23 (6.3.11)
+     */
+    private function stage24()
+    {
+        $this->writeConfigFile6_3_11(); // dies if not possible
+        
+        $this->updateSoftwareVersion(24);
+        $this->checkStatus('stage24');
+        $this->pauseExecution('stage24');
     }
     /**
      * Transfer statistics data to new tables then drop old table
@@ -1622,9 +1637,9 @@ class UPDATEDATABASE
         $this->db->updateNull('resource_metadata', 'resourcemetadataTimestampEdited'); // default is NULL
     }
     /**
-     * Write new config.php with upgrade to >= WIKINDX v6.3.8
+     * Write new config.php with upgrade to >= WIKINDX v6.3.11
      */
-    private function writeConfigFile6_3_8()
+    private function writeConfigFile6_3_11()
     {
         // Load a separate config class that containts original constant names
         $tmpconfig = new CONFIG();
@@ -1696,7 +1711,7 @@ END;
 *****/
 // The auto-detection of the path installation and the base url is an experimental feature
 // which you can disable by changing this parameter to FALSE.
-// If you deactivate auto-detection you must fill in the options WIKINDX_BASE_URL and WIKINDX_WIKINDX_PATH.
+// If you deactivate auto-detection you must fill in the option WIKINDX_URL_BASE.
 // If you don't define this option, auto-detection is enabled by default.
 
 END;
@@ -1711,28 +1726,13 @@ END;
 // Otherwise, leave as "".
 
 END;
-        $string .= 'public $WIKINDX_BASE_URL = "' . $tmpconfig->WIKINDX_BASE_URL . '";' . "\n";
-
-        $string .= <<<END
-// If option auto-detection is disabled you must define the WIKINDX server installation path
-// for plugins and dialogs.
-// WIKINDX tries to get this through getcwd() but this is not always possible.
-// In this case, you will receive an error message and WIKINDX will die and you should then set that path here.
-// The path should be the full path from the root folder to your wikindx folder with no trailing '/'.
-// On Apple OSX running XAMPP, for example, the case-sensitive path is: 
-// '/Applications/XAMPP/xamppfiles/htdocs/wikindx'.
-// The script will continue to die until it has a valid installation path.
-// Otherwise, leave as "".
-
-END;
-        if (property_exists($tmpconfig, 'WIKINDX_WIKINDX_PATH') && ($tmpconfig->WIKINDX_WIKINDX_PATH !== FALSE))
-        {
-            $string .= 'public $WIKINDX_WIKINDX_PATH = "' . $tmpconfig->WIKINDX_WIKINDX_PATH . '";' . "\n";
-        }
+        if (property_exists($tmpconfig, 'WIKINDX_BASE_URL'))
+            $string .= 'public $WIKINDX_URL_BASE = "' . $tmpconfig->WIKINDX_BASE_URL . '";' . "\n";
+        elseif (property_exists($tmpconfig, 'WIKINDX_URL_BASE'))
+            $string .= 'public $WIKINDX_URL_BASE = "' . $tmpconfig->WIKINDX_URL_BASE . '";' . "\n";
         else
-        {
-            $string .= 'public $WIKINDX_WIKINDX_PATH = FALSE;' . "\n";
-        }
+            $string .= 'public $WIKINDX_URL_BASE = "";' . "\n";
+        
         $string .= <<<END
 /*****
 * END PATHS CONFIGURATION

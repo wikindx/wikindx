@@ -15,7 +15,7 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "startup",
 
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "modules", "cite", "INSERTCITATION.php"]));
 
-GLOBALS::addTplVar('scripts', '<link href="' . WIKINDX_BASE_URL . '/core/tiny_mce/plugins/' . basename(__DIR__) . '/css/wikindxCite.css" rel="stylesheet" type="text/css">');
+GLOBALS::addTplVar('scripts', '<link href="' . WIKINDX_URL_BASE . '/core/tiny_mce/plugins/' . basename(__DIR__) . '/css/wikindxCite.css" rel="stylesheet" type="text/css">');
 
 $cite = new INSERTCITATION();
 $cite->init();

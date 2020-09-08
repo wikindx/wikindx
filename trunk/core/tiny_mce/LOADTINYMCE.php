@@ -34,8 +34,8 @@ class LOADTINYMCE
         $session = FACTORY_SESSION::getInstance();
         // Allows e.g. plugins to set different modes:  word processor plugin has a 'wordProcessor' mode.
         $session->setVar("tinyMCE_mode", "standard");
-        $this->cssPath = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_TEMPLATES . '/' . GLOBALS::getUserVar('Template') . '/tinymce.css?ver=' . WIKINDX_PUBLIC_VERSION;
-        $this->cssPopupPath = WIKINDX_BASE_URL . '/' . WIKINDX_URL_COMPONENT_TEMPLATES . '/' . GLOBALS::getUserVar('Template') . '/template.css?ver=' . WIKINDX_PUBLIC_VERSION;
+        $this->cssPath = WIKINDX_URL_BASE . '/' . WIKINDX_URL_COMPONENT_TEMPLATES . '/' . GLOBALS::getUserVar('Template') . '/tinymce.css?ver=' . WIKINDX_PUBLIC_VERSION;
+        $this->cssPopupPath = WIKINDX_URL_BASE . '/' . WIKINDX_URL_COMPONENT_TEMPLATES . '/' . GLOBALS::getUserVar('Template') . '/template.css?ver=' . WIKINDX_PUBLIC_VERSION;
     }
     /**
      * Load tinymce -- full configuration
@@ -429,7 +429,7 @@ END;
             return '';
         } else {
             $this->pathLoaded = TRUE;
-            return '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+            return '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/tiny_mce.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         }
     }
 }

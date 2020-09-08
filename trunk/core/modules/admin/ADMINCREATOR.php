@@ -196,7 +196,7 @@ class ADMINCREATOR
         } else {
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noCreators'));
         }
-        \AJAX\loadJavascript(WIKINDX_BASE_URL . '/core/modules/admin/admincreator.js?ver=' . WIKINDX_PUBLIC_VERSION);
+        \AJAX\loadJavascript(WIKINDX_URL_BASE . '/core/modules/admin/admincreator.js?ver=' . WIKINDX_PUBLIC_VERSION);
     }
     /**
      * Show group masters' DIV

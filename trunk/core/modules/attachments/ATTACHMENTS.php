@@ -511,7 +511,7 @@ class ATTACHMENTS
         $pString = \HTML\tableStart('generalTable left');
         $pString .= \HTML\trStart();
         // Quick and dirty multiple upload
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/modules/attachments/multipleUpload.js?ver=' . 
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/modules/attachments/multipleUpload.js?ver=' . 
         	WIKINDX_PUBLIC_VERSION . '"></script>');
         GLOBALS::addTplVar('scripts', '<script type="text/javascript">var rId = ' . $this->resourceId . '; </script>');
         $error = rawurlencode($this->errors->text("file", "upload"));
@@ -654,7 +654,7 @@ class ATTACHMENTS
         $maxSize = FILE\fileMaxSize();
         // Three ways to do this:
         // Quick and dirty multiple upload
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_BASE_URL . '/core/modules/attachments/multipleUpload.js?ver=' . 
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/modules/attachments/multipleUpload.js?ver=' . 
         	WIKINDX_PUBLIC_VERSION . '"></script>');
         GLOBALS::addTplVar('scripts', '<script type="text/javascript">var rId = ' . $this->resourceId . '; </script>');
         $error = rawurlencode($this->errors->text("file", "upload"));

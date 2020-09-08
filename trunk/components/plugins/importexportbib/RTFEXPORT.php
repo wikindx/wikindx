@@ -190,7 +190,7 @@ class RTFEXPORT
     {
         if (array_key_exists('link', $this->input)) {
             global $_SERVER;
-            $link = WIKINDX_BASE_URL . $_SERVER['SCRIPT_NAME'] . "?action=resource_RESOURCEVIEW_CORE&id=";
+            $link = WIKINDX_URL_BASE . $_SERVER['SCRIPT_NAME'] . "?action=resource_RESOURCEVIEW_CORE&id=";
             $this->session->setVar("exportRtf_link", TRUE);
             $wikindxTitle = stripslashes(WIKINDX_TITLE);
         } else {

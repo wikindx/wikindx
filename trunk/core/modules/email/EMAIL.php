@@ -56,7 +56,7 @@ class EMAIL
         if (array_key_exists('email', $this->vars)) {
             $email = $this->vars['email'];
             $subject = "WIKINDX Registration Confirmation";
-            $message = $this->messages->text("user", "emailText3") . "\n\nWIKINDX:\t\t" . WIKINDX_BASE_URL . "\n\nUSERNAME:\t\t" .
+            $message = $this->messages->text("user", "emailText3") . "\n\nWIKINDX:\t\t" . WIKINDX_URL_BASE . "\n\nUSERNAME:\t\t" .
                 trim($this->vars['uname']) . "\n" . LF;
             $this->smtp->sendEmail($email, $subject, $message);
 
@@ -80,7 +80,7 @@ class EMAIL
             return TRUE;
         }
         $subject = "WIKINDX Registration";
-        $link = WIKINDX_BASE_URL . "/index.php?action=usersgroups_REGISTER_CORE&method=registerConfirm&hashKey=$hashKey";
+        $link = WIKINDX_URL_BASE . "/index.php?action=usersgroups_REGISTER_CORE&method=registerConfirm&hashKey=$hashKey";
         $message = $this->messages->text("user", "emailText") . LF . LF . $link . LF . LF;
 
         return ($this->smtp->sendEmail($email, $subject, $message));
@@ -101,10 +101,10 @@ class EMAIL
         $email = $this->vars['email'];
         $subject = "WIKINDX Registration Confirmation";
         if ($passwordShow) {
-            $message = $this->messages->text("user", "emailText2") . "\n\nWIKINDX:\t\t" . WIKINDX_BASE_URL . "\n\nUSERNAME:\t\t" .
+            $message = $this->messages->text("user", "emailText2") . "\n\nWIKINDX:\t\t" . WIKINDX_URL_BASE . "\n\nUSERNAME:\t\t" .
                 trim($this->vars['usersUsername']) . "\n\nPASSWORD:\t\t" . trim($this->vars['password']) . "\n" . LF;
         } else {
-            $message = $this->messages->text("user", "emailText2") . "\n\nWIKINDX:\t\t" . WIKINDX_BASE_URL . "\n\nUSERNAME:\t\t" .
+            $message = $this->messages->text("user", "emailText2") . "\n\nWIKINDX:\t\t" . WIKINDX_URL_BASE . "\n\nUSERNAME:\t\t" .
                 trim($this->vars['usersUsername']) . "\n" . LF;
         }
         if (!$this->smtp->sendEmail($email, $subject, $message)) {
@@ -113,7 +113,7 @@ class EMAIL
         // If needed, email admin about new user
         $email = WIKINDX_EMAIL_NEW_REGISTRATIONS;
         if ($email && !$this->session->getVar("setup_Superadmin")) {
-            $message = "A new user has registered for" . "\n\nWIKINDX:\t\t" . WIKINDX_BASE_URL . "\n\nUSERNAME:\t\t" .
+            $message = "A new user has registered for" . "\n\nWIKINDX:\t\t" . WIKINDX_URL_BASE . "\n\nUSERNAME:\t\t" .
                 trim($this->vars['usersUsername']) . "\n" . LF;
             if ($this->vars['fullname']) {
                 $message .= "FULLNAME:\t\t" . trim($this->vars['fullname']) . "\n" . LF;
@@ -163,10 +163,10 @@ class EMAIL
             $email = $row['userregisterEmail'];
             $subject = "WIKINDX Registration Confirmation";
             if ($value == 'accept') {
-                $link = WIKINDX_BASE_URL . "/index.php?action=usersgroups_REGISTER_CORE&method=registerConfirm&hashKey=" . $row['userregisterHashKey'];
+                $link = WIKINDX_URL_BASE . "/index.php?action=usersgroups_REGISTER_CORE&method=registerConfirm&hashKey=" . $row['userregisterHashKey'];
                 $message = $this->messages->text("user", "emailText") . LF . LF . $link . LF . LF;
             } else {
-                $message = $this->messages->text("user", "emailText5", " " . WIKINDX_BASE_URL) . LF . LF;
+                $message = $this->messages->text("user", "emailText5", " " . WIKINDX_URL_BASE) . LF . LF;
             }
             // do nothing if email is not turned on
             if (WIKINDX_MAIL_USE) {
@@ -196,7 +196,7 @@ class EMAIL
     public function emailFriendDisplay($error = FALSE)
     {
         if (array_key_exists('id', $this->vars)) {
-            $hyperlink = WIKINDX_BASE_URL . "/index.php?action=resource_RESOURCEVIEW_CORE&id=" . $this->vars['id'];
+            $hyperlink = WIKINDX_URL_BASE . "/index.php?action=resource_RESOURCEVIEW_CORE&id=" . $this->vars['id'];
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "emailFriend"));
         $pString = $error ? \HTML\p($error, "error", "center") : FALSE;
@@ -271,7 +271,7 @@ class EMAIL
         $subject = "Password Reset";
         $message = $this->messages->text("user", "forget9");
         $message .= LF . LF;
-        $message .= $this->title . ":" . str_repeat(TAB, 4) . WIKINDX_BASE_URL;
+        $message .= $this->title . ":" . str_repeat(TAB, 4) . WIKINDX_URL_BASE;
         $message .= LF . LF;
         $message .= "USERNAME:" . str_repeat(TAB, 4) . $usersUsername;
         $message .= LF . LF;

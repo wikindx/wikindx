@@ -49,7 +49,7 @@ class INSERTCITATION
             $this->vars = $_GET;
         }
         GLOBALS::setVars($this->vars, $this->vars);
-        GLOBALS::addTplVar('content', '<script src="' . WIKINDX_BASE_URL . '/core/tiny_mce/tiny_mce_popup.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
+        GLOBALS::addTplVar('content', '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/tiny_mce_popup.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
         GLOBALS::addTplVar('content', '<script src="js/wikindxCitedialog.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();

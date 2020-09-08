@@ -117,7 +117,7 @@ class ADMINCUSTOM
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        \AJAX\loadJavascript([WIKINDX_BASE_URL . '/core/modules/admin/customEdit.js?ver=' . WIKINDX_PUBLIC_VERSION]);
+        \AJAX\loadJavascript([WIKINDX_URL_BASE . '/core/modules/admin/customEdit.js?ver=' . WIKINDX_PUBLIC_VERSION]);
         GLOBALS::addTplVar('content', $pString);
     }
     /**

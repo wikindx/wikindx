@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "adminstyle",
-    "component_version": "235",
+    "component_version": "241",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Admin Styles",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "94024ccfdc36f0a215216c2c9e27ace6385d1f80cbf46fe03917d27f01cc2eaa"
+    "component_sha256": "ba0285fbeb30a101e1ec031af80d0d06aba06b682107b89c0137af0dad40713b"
 }

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-09-03 05:06+0200\n"
+"POT-Creation-Date: 2020-09-09 02:08+0200\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -2309,128 +2309,134 @@ msgstr ""
 msgid "Image above maximum allowed size of ###MB"
 msgstr ""
 
-#: core/messages/errors.php:170
+#: core/messages/errors.php:167
+msgid ""
+"One or more attachments exceed the maximum size (>### bytes). If you are the "
+"admin, try editing both 'post_max_size' and 'upload_max_filesize' in php.ini."
+msgstr ""
+
+#: core/messages/errors.php:171
 msgid "You have already created/edited/deleted that resource"
 msgstr "Ud. ya ha creado/editado/eliminado ese recurso"
 
-#: core/messages/errors.php:171
+#: core/messages/errors.php:172
 msgid "You have already created/edited/deleted that note"
 msgstr "Ud. ya ha creado/editado/eliminado esa nota"
 
-#: core/messages/errors.php:172
+#: core/messages/errors.php:173
 msgid "You have already created/edited/deleted that quote"
 msgstr "Ud. ya ha creado/editado/eliminado esa cita"
 
-#: core/messages/errors.php:173
+#: core/messages/errors.php:174
 msgid "You have already created/edited/deleted that paraphrase"
 msgstr "Ud. ya ha creado/editado/eliminado esa paráfrasis"
 
-#: core/messages/errors.php:174
+#: core/messages/errors.php:175
 msgid "You have already created/edited/deleted that musing"
 msgstr "Ud. ya ha creado/editado/eliminado esa idea"
 
-#: core/messages/errors.php:175
+#: core/messages/errors.php:176
 msgid "You have already created/edited/deleted that idea"
 msgstr ""
 
-#: core/messages/errors.php:176
+#: core/messages/errors.php:177
 msgid "You have already created/edited/deleted that abstract"
 msgstr "Ud. ya ha creado/editado/eliminado ese resumen"
 
-#: core/messages/errors.php:177
+#: core/messages/errors.php:178
 msgid "You have already created/edited/deleted that creator"
 msgstr "Ud. ya ha creado/editado/eliminado esa autor"
 
-#: core/messages/errors.php:178
+#: core/messages/errors.php:179
 msgid "You have already created/edited/deleted that publisher"
 msgstr "Ud. ya ha creado/editado/eliminado ese editor"
 
-#: core/messages/errors.php:179
+#: core/messages/errors.php:180
 msgid "You have already created/edited/deleted that collection"
 msgstr "Ud. ya ha creado/editado/eliminado esa colección"
 
-#: core/messages/errors.php:180
+#: core/messages/errors.php:181
 msgid "You have already imported that file"
 msgstr "Ud. ya ha importado ese archivo"
 
-#: core/messages/errors.php:181
+#: core/messages/errors.php:182
 msgid "You have already edited that keyword"
 msgstr "Ud. ya ha editado esa palabra clave"
 
-#: core/messages/errors.php:182 core/messages/errors.php:192
+#: core/messages/errors.php:183 core/messages/errors.php:193
 msgid "You have already deleted that keyword"
 msgstr ""
 
-#: core/messages/errors.php:183
+#: core/messages/errors.php:184
 msgid "You have already registered"
 msgstr "Ud. ya está registrado"
 
-#: core/messages/errors.php:184
+#: core/messages/errors.php:185
 msgid "You have already created/edited/deleted that bibliography"
 msgstr "Ud. ya ha creado/editado/eliminado esa bibliografía"
 
-#: core/messages/errors.php:185
+#: core/messages/errors.php:186
 msgid "You have already edited/deleted that custom field"
 msgstr "Ud. ya ha creado/editado/eliminado ese campo personalizado"
 
-#: core/messages/errors.php:186
+#: core/messages/errors.php:187
 msgid "You have already attached that file"
 msgstr "Ud. ya ha adjuntado ese archivo"
 
-#: core/messages/errors.php:187
+#: core/messages/errors.php:188
 msgid "You have already deleted those files"
 msgstr "Ud. ya ha eliminado esos archivos"
 
-#: core/messages/errors.php:188
+#: core/messages/errors.php:189
 msgid "You have already created/edited/deleted that user group"
 msgstr "Ud. ya ha creado/editado/eliminado ese grupo de usuarios"
 
-#: core/messages/errors.php:189
+#: core/messages/errors.php:190
 msgid "You have already added that URL"
 msgstr ""
 
-#: core/messages/errors.php:190
+#: core/messages/errors.php:191
 msgid "You have already created/edited/deleted that user tag"
 msgstr ""
 
-#: core/messages/errors.php:191
+#: core/messages/errors.php:192
 msgid "You have already created/edited/deleted that news item"
 msgstr ""
 
 #. / warning_resourceExists When inputting a new resource
-#: core/messages/errors.php:197
+#: core/messages/errors.php:198
 msgid "At least one resource of that type with that title already exists"
 msgstr "Al menos un recurso de este tipo con este título existe ya"
 
 #. / warning_superadminOnly WIKINDX not in multi user mode - this is displayed at the logon screen
-#: core/messages/errors.php:199
+#: core/messages/errors.php:200
 msgid "Multi user has not been enabled - only the superadmin may log on"
 msgstr ""
 "La opción multiusuario no ha sido activada - sólo el superadministrador puede "
 "conectarse"
 
 #. / warning_creatorExists When editing a creator, the new one may be the same as an existing one.
-#: core/messages/errors.php:201
+#: core/messages/errors.php:202
 msgid "A creator of that name already exists in the database"
 msgstr "Un autor con ese nombre ya existe en la base de datos"
 
 #. / warning_publisherExists When editing a publisher, the new one may be the same as an existing one.
-#: core/messages/errors.php:203
+#: core/messages/errors.php:204
 msgid "A publisher of that name and location already exists in the database"
 msgstr "Un autor con ese nombre y localización ya existe en la base de datos"
 
 #. / warning_collectionExists When editing a collection, the new one may be the same as an existing one.
-#: core/messages/errors.php:205
+#: core/messages/errors.php:206
 msgid "A collection with those details already exists in the database"
 msgstr "Una colección con esos detalles ya existe en la base de datos"
 
 #. / warning_keywordExists When editing a keyword, the new one may be the same as an existing one.
-#: core/messages/errors.php:207
+#: core/messages/errors.php:208
 msgid "A keyword of that name already exists in the database"
 msgstr "Una palabra clave con ese nombre ya existe en la base de datos"
 
 #. / warning_forget1 For the forgotten password system: '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:209
+#: core/messages/errors.php:210
 msgid ""
 "Unfortunately you have not stored any question/answer pairs or you have "
 "entered your details incorrectly so WIKINDX is unable to help you.  Please "
@@ -2440,7 +2446,7 @@ msgstr ""
 "incorporado sus detalles incorrectamente por lo que WIKINDX no puede "
 "ayudarte. Por favor, contacte con el administrator### de WIKINDX"
 
-#: core/messages/errors.php:210
+#: core/messages/errors.php:211
 msgid ""
 "There is more than one user with that email address so WIKINDX is unable to "
 "help you. Please contact the WIKINDX administrator for further help or enter "
@@ -2451,7 +2457,7 @@ msgstr ""
 "ayuda  o introduzca su nombre de usuario."
 
 #. / warning_forget3 Don't translate 'SMTP'.  In this case, '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:212
+#: core/messages/errors.php:213
 msgid ""
 "WIKINDX is unable to email you because the SMTP server does not appear to be "
 "available.  Please contact the WIKINDX administrator ###"
@@ -2459,61 +2465,61 @@ msgstr ""
 "WIKINDX no puede enviarle un correo porque el servidor SMTPno parece estar "
 "disponible. Por favor, contacte con el administrator### de WIKINDX"
 
-#: core/messages/errors.php:213
+#: core/messages/errors.php:214
 msgid "Resource has been quarantined until an ADMIN approves it"
 msgstr ""
 
-#: core/messages/errors.php:214
+#: core/messages/errors.php:215
 msgid "Incompatible plugins: ###"
 msgstr ""
 
-#: core/messages/errors.php:215
+#: core/messages/errors.php:216
 msgid "If you delete the main idea, the entire thread will be deleted"
 msgstr ""
 
-#: core/messages/errors.php:216
+#: core/messages/errors.php:217
 msgid ""
 "The administrator of this wikindx has denied you access. Please contact the "
 "administrator for further details."
 msgstr ""
 
-#: core/messages/errors.php:220
+#: core/messages/errors.php:221
 msgid "No valid entries found in the file"
 msgstr ""
 
 #. / components_adminFailed This is used as preamble text. e.g. Admin action failed: No file selected.
-#: core/messages/errors.php:225
+#: core/messages/errors.php:226
 msgid "Admin action failed: ###"
 msgstr ""
 
-#: core/messages/errors.php:226
+#: core/messages/errors.php:227
 msgid ""
 "An error occurred while downloading the component list from the update "
 "server. Please try again later."
 msgstr ""
 
-#: core/messages/errors.php:227
+#: core/messages/errors.php:228
 msgid ""
 "An error occurred while parsing the component list from the update server. "
 "Please check for updates again."
 msgstr ""
 
-#: core/messages/errors.php:228
+#: core/messages/errors.php:229
 msgid "Unknown component."
 msgstr ""
 
-#: core/messages/errors.php:229
+#: core/messages/errors.php:230
 msgid ""
 "Two or more inline plugins have been assigned the same container: ###. The "
 "configuration has not been updated."
 msgstr ""
 
-#: core/messages/errors.php:230
+#: core/messages/errors.php:231
 msgid ""
 "The value of $container is invalid. The configuration has not been updated."
 msgstr ""
 
-#: core/messages/errors.php:231
+#: core/messages/errors.php:232
 msgid "The value of $menus is invalid. The configuration has not been updated."
 msgstr ""
 
@@ -8920,11 +8926,6 @@ msgstr ""
 msgid "Successfully added keyword group"
 msgstr "La palabra clave ha sido editada correctamente"
 
-#, fuzzy
-#~| msgid "My Wikindx"
-#~ msgid "My Wikindxx"
-#~ msgstr "Mi Wikindx"
-
 #~ msgid "My Bibliographies"
 #~ msgstr "Mis bibliografías"
 
@@ -8966,6 +8967,11 @@ msgstr "La palabra clave ha sido editada correctamente"
 #~ "initially required are username, password and email. From the Admin menu, "
 #~ "after configuration, you can add and edit other settings."
 #~ msgstr "Antes de poder utilizar WIKINDX debe configurarlo"
+
+#, fuzzy
+#~| msgid "My Wikindx"
+#~ msgid "My Wikindxx"
+#~ msgstr "Mi Wikindx"
 
 #~ msgid ""
 #~ "The upgrade process may take some time depending upon a number of factors. "

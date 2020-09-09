@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-09-03 05:06+0200\n"
+"POT-Creation-Date: 2020-09-09 02:08+0200\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -2341,128 +2341,134 @@ msgstr "Type d'image non autorisé (seulement JPEG, GIF, PNG)"
 msgid "Image above maximum allowed size of ###MB"
 msgstr "L'image dépasse la taille autorisée de ### Mo."
 
-#: core/messages/errors.php:170
+#: core/messages/errors.php:167
+msgid ""
+"One or more attachments exceed the maximum size (>### bytes). If you are the "
+"admin, try editing both 'post_max_size' and 'upload_max_filesize' in php.ini."
+msgstr ""
+
+#: core/messages/errors.php:171
 msgid "You have already created/edited/deleted that resource"
 msgstr "Vous avez déjà créé/modifié/supprimé cette référence."
 
-#: core/messages/errors.php:171
+#: core/messages/errors.php:172
 msgid "You have already created/edited/deleted that note"
 msgstr "Vous avez déjà créé/modifié/supprimé cette note."
 
-#: core/messages/errors.php:172
+#: core/messages/errors.php:173
 msgid "You have already created/edited/deleted that quote"
 msgstr "Vous avez déjà créé/modifié/supprimé cette citation."
 
-#: core/messages/errors.php:173
+#: core/messages/errors.php:174
 msgid "You have already created/edited/deleted that paraphrase"
 msgstr "Vous avez déjà créé/modifié/supprimé cette paraphrase."
 
-#: core/messages/errors.php:174
+#: core/messages/errors.php:175
 msgid "You have already created/edited/deleted that musing"
 msgstr "Vous avez déjà créé/modifié/supprimé cette idée."
 
-#: core/messages/errors.php:175
+#: core/messages/errors.php:176
 msgid "You have already created/edited/deleted that idea"
 msgstr "Vous avez déjà créé/modifié/supprimé cette remarque."
 
-#: core/messages/errors.php:176
+#: core/messages/errors.php:177
 msgid "You have already created/edited/deleted that abstract"
 msgstr "Vous avez déjà créé/modifié/supprimé ce résumé."
 
-#: core/messages/errors.php:177
+#: core/messages/errors.php:178
 msgid "You have already created/edited/deleted that creator"
 msgstr "Vous avez déjà créé/modifié/supprimé cet auteur."
 
-#: core/messages/errors.php:178
+#: core/messages/errors.php:179
 msgid "You have already created/edited/deleted that publisher"
 msgstr "Vous avez déjà créé/modifié/supprimé cet éditeur."
 
-#: core/messages/errors.php:179
+#: core/messages/errors.php:180
 msgid "You have already created/edited/deleted that collection"
 msgstr "Vous avez déjà créé/modifié/supprimé cette collection."
 
-#: core/messages/errors.php:180
+#: core/messages/errors.php:181
 msgid "You have already imported that file"
 msgstr "Vous avez déjà importé ce fichier."
 
-#: core/messages/errors.php:181
+#: core/messages/errors.php:182
 msgid "You have already edited that keyword"
 msgstr "Vous avez déjà modifié ce mot-clé."
 
-#: core/messages/errors.php:182 core/messages/errors.php:192
+#: core/messages/errors.php:183 core/messages/errors.php:193
 msgid "You have already deleted that keyword"
 msgstr "Vous avez déjà effacé ce mot-clé."
 
-#: core/messages/errors.php:183
+#: core/messages/errors.php:184
 msgid "You have already registered"
 msgstr "Vous êtes déjà enregistré."
 
-#: core/messages/errors.php:184
+#: core/messages/errors.php:185
 msgid "You have already created/edited/deleted that bibliography"
 msgstr "Vous avez déjà créé/modifié/supprimé cette bibliographie."
 
-#: core/messages/errors.php:185
+#: core/messages/errors.php:186
 msgid "You have already edited/deleted that custom field"
 msgstr "Vous avez déjà modifié/supprimé ce champ personnalisé."
 
-#: core/messages/errors.php:186
+#: core/messages/errors.php:187
 msgid "You have already attached that file"
 msgstr "Vous avez déjà joint ce fichier."
 
-#: core/messages/errors.php:187
+#: core/messages/errors.php:188
 msgid "You have already deleted those files"
 msgstr "Vous avez déjà supprimé ces fichiers."
 
-#: core/messages/errors.php:188
+#: core/messages/errors.php:189
 msgid "You have already created/edited/deleted that user group"
 msgstr "Vous avez déjà créé/modifié/supprimé ce groupe d'utilisateurs."
 
-#: core/messages/errors.php:189
+#: core/messages/errors.php:190
 msgid "You have already added that URL"
 msgstr "Vous avez déjà ajouté cet adresse URL."
 
-#: core/messages/errors.php:190
+#: core/messages/errors.php:191
 msgid "You have already created/edited/deleted that user tag"
 msgstr "Vous avez déjà créé/modifié/supprimé cette étiquette utilisateur."
 
-#: core/messages/errors.php:191
+#: core/messages/errors.php:192
 msgid "You have already created/edited/deleted that news item"
 msgstr "Vous avez déjà créé/modifié/supprimé ce nouvel item."
 
 #. / warning_resourceExists When inputting a new resource
-#: core/messages/errors.php:197
+#: core/messages/errors.php:198
 msgid "At least one resource of that type with that title already exists"
 msgstr "Au moins une référence de ce type avec ce titre existe déjà."
 
 #. / warning_superadminOnly WIKINDX not in multi user mode - this is displayed at the logon screen
-#: core/messages/errors.php:199
+#: core/messages/errors.php:200
 msgid "Multi user has not been enabled - only the superadmin may log on"
 msgstr ""
 "Le mode multi utilisateurs n'est pas activé. Seul l'administrateur principal "
 "peut se connecter."
 
 #. / warning_creatorExists When editing a creator, the new one may be the same as an existing one.
-#: core/messages/errors.php:201
+#: core/messages/errors.php:202
 msgid "A creator of that name already exists in the database"
 msgstr "Un auteur porte déjà ce nom dans la base."
 
 #. / warning_publisherExists When editing a publisher, the new one may be the same as an existing one.
-#: core/messages/errors.php:203
+#: core/messages/errors.php:204
 msgid "A publisher of that name and location already exists in the database"
 msgstr "Un éditeur porte déjà ce nom dans la base."
 
 #. / warning_collectionExists When editing a collection, the new one may be the same as an existing one.
-#: core/messages/errors.php:205
+#: core/messages/errors.php:206
 msgid "A collection with those details already exists in the database"
 msgstr "Une collection porte déjà ce nom dans la base."
 
 #. / warning_keywordExists When editing a keyword, the new one may be the same as an existing one.
-#: core/messages/errors.php:207
+#: core/messages/errors.php:208
 msgid "A keyword of that name already exists in the database"
 msgstr "Un descripteur du même nom existe déjà dans la base."
 
 #. / warning_forget1 For the forgotten password system: '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:209
+#: core/messages/errors.php:210
 msgid ""
 "Unfortunately you have not stored any question/answer pairs or you have "
 "entered your details incorrectly so WIKINDX is unable to help you.  Please "
@@ -2472,7 +2478,7 @@ msgstr ""
 "mal entré les détails, WIKINDX n'est donc pas en mesure de vous aider. SVP, "
 "veuillez contacter l'administrateur WIKINDX ###."
 
-#: core/messages/errors.php:210
+#: core/messages/errors.php:211
 msgid ""
 "There is more than one user with that email address so WIKINDX is unable to "
 "help you. Please contact the WIKINDX administrator for further help or enter "
@@ -2483,7 +2489,7 @@ msgstr ""
 "de l'assistance ou entrez votre nom d'utilisateur."
 
 #. / warning_forget3 Don't translate 'SMTP'.  In this case, '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:212
+#: core/messages/errors.php:213
 msgid ""
 "WIKINDX is unable to email you because the SMTP server does not appear to be "
 "available.  Please contact the WIKINDX administrator ###"
@@ -2491,50 +2497,50 @@ msgstr ""
 "WIKINDX est dans l'impossibilité de vous envoyer un courriel, car le serveur "
 "SMTP ne semble pas disponible."
 
-#: core/messages/errors.php:213
+#: core/messages/errors.php:214
 msgid "Resource has been quarantined until an ADMIN approves it"
 msgstr "La référence est en attente de validation par un administrateur."
 
-#: core/messages/errors.php:214
+#: core/messages/errors.php:215
 msgid "Incompatible plugins: ###"
 msgstr ""
 
-#: core/messages/errors.php:215
+#: core/messages/errors.php:216
 msgid "If you delete the main idea, the entire thread will be deleted"
 msgstr "Si vous effacez cette remarque, l'entièreté du fil sera effacée."
 
-#: core/messages/errors.php:216
+#: core/messages/errors.php:217
 msgid ""
 "The administrator of this wikindx has denied you access. Please contact the "
 "administrator for further details."
 msgstr ""
 
-#: core/messages/errors.php:220
+#: core/messages/errors.php:221
 msgid "No valid entries found in the file"
 msgstr "Aucune entrée valide dans ce fichier."
 
 #. / components_adminFailed This is used as preamble text. e.g. Admin action failed: No file selected.
-#: core/messages/errors.php:225
+#: core/messages/errors.php:226
 msgid "Admin action failed: ###"
 msgstr ""
 
-#: core/messages/errors.php:226
+#: core/messages/errors.php:227
 msgid ""
 "An error occurred while downloading the component list from the update "
 "server. Please try again later."
 msgstr ""
 
-#: core/messages/errors.php:227
+#: core/messages/errors.php:228
 msgid ""
 "An error occurred while parsing the component list from the update server. "
 "Please check for updates again."
 msgstr ""
 
-#: core/messages/errors.php:228
+#: core/messages/errors.php:229
 msgid "Unknown component."
 msgstr ""
 
-#: core/messages/errors.php:229
+#: core/messages/errors.php:230
 #, fuzzy
 #| msgid "Two or more inline plugins have been assigned the same container: ###"
 msgid ""
@@ -2542,12 +2548,12 @@ msgid ""
 "configuration has not been updated."
 msgstr "Deux plugins ou plus ont été assigné au même conteneur : ###."
 
-#: core/messages/errors.php:230
+#: core/messages/errors.php:231
 msgid ""
 "The value of $container is invalid. The configuration has not been updated."
 msgstr ""
 
-#: core/messages/errors.php:231
+#: core/messages/errors.php:232
 msgid "The value of $menus is invalid. The configuration has not been updated."
 msgstr ""
 
@@ -9256,9 +9262,6 @@ msgstr ""
 msgid "Successfully added keyword group"
 msgstr "Groupe ajouté avec succès"
 
-#~ msgid "Upgrade the database"
-#~ msgstr "Mettre à jour la base de données"
-
 #~ msgid "<h3>Plugins</h3>"
 #~ msgstr "<h3>Plugins</h3>"
 
@@ -9441,3 +9444,6 @@ msgstr "Groupe ajouté avec succès"
 
 #~ msgid "My Bibliographies"
 #~ msgstr "Mes bibliographies"
+
+#~ msgid "Upgrade the database"
+#~ msgstr "Mettre à jour la base de données"

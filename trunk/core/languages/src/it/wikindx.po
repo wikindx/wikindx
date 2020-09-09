@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-09-03 05:06+0200\n"
+"POT-Creation-Date: 2020-09-09 02:08+0200\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -2307,128 +2307,134 @@ msgstr ""
 msgid "Image above maximum allowed size of ###MB"
 msgstr ""
 
-#: core/messages/errors.php:170
+#: core/messages/errors.php:167
+msgid ""
+"One or more attachments exceed the maximum size (>### bytes). If you are the "
+"admin, try editing both 'post_max_size' and 'upload_max_filesize' in php.ini."
+msgstr ""
+
+#: core/messages/errors.php:171
 msgid "You have already created/edited/deleted that resource"
 msgstr "Hai già creato/modificato/cancellato quella risorsa"
 
-#: core/messages/errors.php:171
+#: core/messages/errors.php:172
 msgid "You have already created/edited/deleted that note"
 msgstr "Hai già creato/modificato/cancellato quella nota"
 
-#: core/messages/errors.php:172
+#: core/messages/errors.php:173
 msgid "You have already created/edited/deleted that quote"
 msgstr "Hai già creato/modificato/cancellato quella citazione"
 
-#: core/messages/errors.php:173
+#: core/messages/errors.php:174
 msgid "You have already created/edited/deleted that paraphrase"
 msgstr "Hai già creato/modificato/cancellato quella parafrasi"
 
-#: core/messages/errors.php:174
+#: core/messages/errors.php:175
 msgid "You have already created/edited/deleted that musing"
 msgstr "Hai già creato/modificato/cancellato quella riflessione"
 
-#: core/messages/errors.php:175
+#: core/messages/errors.php:176
 msgid "You have already created/edited/deleted that idea"
 msgstr ""
 
-#: core/messages/errors.php:176
+#: core/messages/errors.php:177
 msgid "You have already created/edited/deleted that abstract"
 msgstr "Hai già creato/modificato/cancellato quell'abstract"
 
-#: core/messages/errors.php:177
+#: core/messages/errors.php:178
 msgid "You have already created/edited/deleted that creator"
 msgstr "Hai già creato/modificato/cancellato quel creatore"
 
-#: core/messages/errors.php:178
+#: core/messages/errors.php:179
 msgid "You have already created/edited/deleted that publisher"
 msgstr "Hai già creato/modificato/cancellato quell'editore"
 
-#: core/messages/errors.php:179
+#: core/messages/errors.php:180
 msgid "You have already created/edited/deleted that collection"
 msgstr "Hai già creato/modificato/cancellato quella collezione"
 
-#: core/messages/errors.php:180
+#: core/messages/errors.php:181
 msgid "You have already imported that file"
 msgstr "Hai già importato quel file"
 
-#: core/messages/errors.php:181
+#: core/messages/errors.php:182
 msgid "You have already edited that keyword"
 msgstr "Hai già modificato quella keyword"
 
-#: core/messages/errors.php:182 core/messages/errors.php:192
+#: core/messages/errors.php:183 core/messages/errors.php:193
 msgid "You have already deleted that keyword"
 msgstr "Hai già cancellato quella keyword"
 
-#: core/messages/errors.php:183
+#: core/messages/errors.php:184
 msgid "You have already registered"
 msgstr "Sei già registrato"
 
-#: core/messages/errors.php:184
+#: core/messages/errors.php:185
 msgid "You have already created/edited/deleted that bibliography"
 msgstr "Hai già creato/modificato/cancellato quella bibliografia"
 
-#: core/messages/errors.php:185
+#: core/messages/errors.php:186
 msgid "You have already edited/deleted that custom field"
 msgstr "Hai già creato/modificato/cancellato quel campo personalizzato"
 
-#: core/messages/errors.php:186
+#: core/messages/errors.php:187
 msgid "You have already attached that file"
 msgstr "Hai già allegato quel file"
 
-#: core/messages/errors.php:187
+#: core/messages/errors.php:188
 msgid "You have already deleted those files"
 msgstr "Hai già cancellato quei files"
 
-#: core/messages/errors.php:188
+#: core/messages/errors.php:189
 msgid "You have already created/edited/deleted that user group"
 msgstr "Hai già creato/modificato/cancellato quel gruppo utente"
 
-#: core/messages/errors.php:189
+#: core/messages/errors.php:190
 msgid "You have already added that URL"
 msgstr "Hai già aggiunto quella URL"
 
-#: core/messages/errors.php:190
+#: core/messages/errors.php:191
 msgid "You have already created/edited/deleted that user tag"
 msgstr "Hai già creato/modificato/cancellato quel tag utente"
 
-#: core/messages/errors.php:191
+#: core/messages/errors.php:192
 msgid "You have already created/edited/deleted that news item"
 msgstr "Hai già creato/modificato/cancellato quella voce delle news"
 
 #. / warning_resourceExists When inputting a new resource
-#: core/messages/errors.php:197
+#: core/messages/errors.php:198
 msgid "At least one resource of that type with that title already exists"
 msgstr "Esiste già almeno una risorsa di quel tipo con lo stesso titolo"
 
 #. / warning_superadminOnly WIKINDX not in multi user mode - this is displayed at the logon screen
-#: core/messages/errors.php:199
+#: core/messages/errors.php:200
 msgid "Multi user has not been enabled - only the superadmin may log on"
 msgstr ""
 "Accesso Multi Utente non è stato attivato - solo il SuperAmministratore può "
 "accedere"
 
 #. / warning_creatorExists When editing a creator, the new one may be the same as an existing one.
-#: core/messages/errors.php:201
+#: core/messages/errors.php:202
 msgid "A creator of that name already exists in the database"
 msgstr "Un creatore con quel nome esiste già nel Database"
 
 #. / warning_publisherExists When editing a publisher, the new one may be the same as an existing one.
-#: core/messages/errors.php:203
+#: core/messages/errors.php:204
 msgid "A publisher of that name and location already exists in the database"
 msgstr "Un editore con quel nome esiste già nel Database"
 
 #. / warning_collectionExists When editing a collection, the new one may be the same as an existing one.
-#: core/messages/errors.php:205
+#: core/messages/errors.php:206
 msgid "A collection with those details already exists in the database"
 msgstr "Una collezione con quei dettagli esiste già nel Database"
 
 #. / warning_keywordExists When editing a keyword, the new one may be the same as an existing one.
-#: core/messages/errors.php:207
+#: core/messages/errors.php:208
 msgid "A keyword of that name already exists in the database"
 msgstr "Una keyword con quel nome esiste già nel Database"
 
 #. / warning_forget1 For the forgotten password system: '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:209
+#: core/messages/errors.php:210
 msgid ""
 "Unfortunately you have not stored any question/answer pairs or you have "
 "entered your details incorrectly so WIKINDX is unable to help you.  Please "
@@ -2438,7 +2444,7 @@ msgstr ""
 "oppure hai inserito i toui dati in modo non corretto; WIKINDX non è in grado "
 "di aiutarti. Si prega di contattare l'amministratore WIKINDX ###"
 
-#: core/messages/errors.php:210
+#: core/messages/errors.php:211
 msgid ""
 "There is more than one user with that email address so WIKINDX is unable to "
 "help you. Please contact the WIKINDX administrator for further help or enter "
@@ -2449,7 +2455,7 @@ msgstr ""
 "informazioni, oppure inserire il proprio Nome Utente."
 
 #. / warning_forget3 Don't translate 'SMTP'.  In this case, '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:212
+#: core/messages/errors.php:213
 msgid ""
 "WIKINDX is unable to email you because the SMTP server does not appear to be "
 "available.  Please contact the WIKINDX administrator ###"
@@ -2458,51 +2464,51 @@ msgstr ""
 "SMTP sembra non essere disponibile. Si prega di contattare l'amministratore "
 "WIKINDX ###"
 
-#: core/messages/errors.php:213
+#: core/messages/errors.php:214
 msgid "Resource has been quarantined until an ADMIN approves it"
 msgstr ""
 "La risorsa è stata messa in quarantena fino all'approvazione di un ADMIN"
 
-#: core/messages/errors.php:214
+#: core/messages/errors.php:215
 msgid "Incompatible plugins: ###"
 msgstr ""
 
-#: core/messages/errors.php:215
+#: core/messages/errors.php:216
 msgid "If you delete the main idea, the entire thread will be deleted"
 msgstr ""
 
-#: core/messages/errors.php:216
+#: core/messages/errors.php:217
 msgid ""
 "The administrator of this wikindx has denied you access. Please contact the "
 "administrator for further details."
 msgstr ""
 
-#: core/messages/errors.php:220
+#: core/messages/errors.php:221
 msgid "No valid entries found in the file"
 msgstr ""
 
 #. / components_adminFailed This is used as preamble text. e.g. Admin action failed: No file selected.
-#: core/messages/errors.php:225
+#: core/messages/errors.php:226
 msgid "Admin action failed: ###"
 msgstr ""
 
-#: core/messages/errors.php:226
+#: core/messages/errors.php:227
 msgid ""
 "An error occurred while downloading the component list from the update "
 "server. Please try again later."
 msgstr ""
 
-#: core/messages/errors.php:227
+#: core/messages/errors.php:228
 msgid ""
 "An error occurred while parsing the component list from the update server. "
 "Please check for updates again."
 msgstr ""
 
-#: core/messages/errors.php:228
+#: core/messages/errors.php:229
 msgid "Unknown component."
 msgstr ""
 
-#: core/messages/errors.php:229
+#: core/messages/errors.php:230
 #, fuzzy
 #| msgid "Two or more inline plugins have been assigned the same container: ###"
 msgid ""
@@ -2510,12 +2516,12 @@ msgid ""
 "configuration has not been updated."
 msgstr "Due o più plug-in linea sono stati assegnati lo stesso contenitore: ###"
 
-#: core/messages/errors.php:230
+#: core/messages/errors.php:231
 msgid ""
 "The value of $container is invalid. The configuration has not been updated."
 msgstr ""
 
-#: core/messages/errors.php:231
+#: core/messages/errors.php:232
 msgid "The value of $menus is invalid. The configuration has not been updated."
 msgstr ""
 
@@ -9296,79 +9302,49 @@ msgstr ""
 msgid "Successfully added keyword group"
 msgstr "Keyword modificata con successo"
 
-#~ msgid "Ungroup"
-#~ msgstr "Scorpora"
+#~ msgid ""
+#~ "<p>Ensure the wikindx/plugins directories (and the index.php and config."
+#~ "php files) and the wikindx/styles, wikindx/languages and wikindx/templates "
+#~ "folders (and all files therein) can be written to by the web server user.</"
+#~ "p>"
+#~ msgstr ""
+#~ "<p>Assicurarsi che le directory wikindx4/plugins (e i file index.php e "
+#~ "config.php) e wikindx4/styles, wikindx4/languages ​​e cartelle wikindx4/"
+#~ "templates (e tutti i file in essa contenuti) possono essere scritti "
+#~ "dall'utente web server.</p>"
 
-#~ msgid "Select the creators you wish to remove from the group"
-#~ msgstr "Seleziona i creatori che desideri rimuovere dal gruppo."
+#, fuzzy
+#~| msgid "My Wikindx"
+#~ msgid "My Wikindxx"
+#~ msgstr "My Wikindx"
 
-#~ msgid "Enabled Languages"
-#~ msgstr "Lingue Abilitate"
+#~ msgid "Upgrade the Database"
+#~ msgstr "Aggiornamento Database"
 
 #~ msgid ""
-#~ "If you have languages and styles that are in your WIKINDX installation "
-#~ "folders but they do not show here, then they are not compatible with this "
-#~ "version of WIKINDX.  Go to the WIKINDX Sourceforge download page (https://"
-#~ "sourceforge.net/projects/wikindx/files/pluginsxxx/), download the latest "
-#~ "localization and adminstyle plug-ins and use them to update your files."
+#~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
+#~ "you are strongly advised not to run it on a production server -- if you "
+#~ "wish to test it, either create a new database or make a copy of your "
+#~ "existing WIKINDX database and point config.php at it. Wait until all bugs "
+#~ "have been dealt with, and the final release version provided, before using "
+#~ "the WIKINDX code on a production server.</font> <p>To report bugs etc., go "
+#~ "to: https://sourceforge.net/p/wikindx/v5bugs/</strong></p> WIKINDX has "
+#~ "detected that this is the first time a new version is being run and that "
+#~ "the database requires upgrading. This upgrading is automatic but only the "
+#~ "WIKINDX superAdmin may carry it out.<p> You are <strong>strongly advised</"
+#~ "strong> to <strong>back up your old database</strong> first. If you do not "
+#~ "do this and you experience the memory errors detailed below when upgrading "
+#~ "your only copy of the database, then you will have irrevocably corrupted "
+#~ "the database: <em>caveat upgrader</em><p>"
 #~ msgstr ""
-#~ "Se si dispone di lingue e stili che sono nelle cartelle di installazione "
-#~ "WIKINDX ma non sono visualizzate qui, allora non sono compatibili con "
-#~ "questa versione di WIKINDX. Vai alla pagina di download di Sourceforge "
-#~ "WIKINDX (https://sourceforge.net/projects/wikindx//files/pluginsxxx/), "
-#~ "scaricare l'ultima localizzazione e adminstyle plug-in e usali per "
-#~ "aggiornare i file."
-
-#~ msgid ""
-#~ "<ul>\n"
-#~ "<li>User groups: In a multi-user WIKINDX, registered users can define user "
-#~ "groups.  Potentially private information, such as comments on quotations "
-#~ "or resource musings, can then be assigned to be viewed only by members of "
-#~ "a user group.  Additionally, user groups may collaborate in building a "
-#~ "user group bibliography.</li>\n"
-#~ "<li>User bibliographies: These are drawn from the WIKINDX Master "
-#~ "Bibliography and may be personal or managed by a user group. Operations on "
-#~ "a user bibliography (such as removing resources from it) have no effect on "
-#~ "the WIKINDX Master Bibliography.</li>\n"
-#~ "</ul>"
-#~ msgstr ""
-#~ "<ul>\n"
-#~ "<li>Gruppi di utenti: In un WIKINDX multi-utente, gli utenti registrati "
-#~ "possono definire gruppi di utenti. Informazioni potenzialmente riservati, "
-#~ "come commenti sulle citazioni o riflessioni sulle risorse, possono essere "
-#~ "assegnati per la visualizzazione solo dai membri di un gruppo di utenti. "
-#~ "Inoltre, i gruppi di utenti possono collaborare alla costruzione di una "
-#~ "bibliografia di gruppo.</li>\n"
-#~ "<li>Bibliografie degli utenti: Questi sono tratti dalla Bibliografia "
-#~ "Principale di WIKINDX e possono essere personali o gestite da un gruppo di "
-#~ "utenti. Operazioni su una bibliografia utente (ad esempio rimuovere le "
-#~ "risorse da esso) non hanno alcun effetto sulla Bibliografia Principale di "
-#~ "WIKINDX.</li>\n"
-#~ "</ul>"
-
-#~ msgid "My Bibliographies"
-#~ msgstr "Le mie Bibliografie"
-
-#~ msgid "Upgrade the database"
-#~ msgstr "Aggiornare il database"
-
-#~ msgid ""
-#~ "You are not logged on as the superAdmin: please ask that person ### to "
-#~ "carry out the upgrade through their web browser."
-#~ msgstr ""
-#~ "Non si è connessi come il superadmin: si prega di richiedere a quella "
-#~ "persona ### di effettuare l'aggiornamento attraverso il proprio browser web"
-
-#~ msgid ""
-#~ "Before being able to use WIKINDX, you must configure it. The minimum "
-#~ "initially required are username, password and email. From the Admin menu, "
-#~ "after configuration, you can add and edit other settings."
-#~ msgstr ""
-#~ "Prima di essere in grado di utilizzare WIKINDX, è necessario configurarlo. "
-#~ "Il minimo richiesto inizialmente sono nome utente, password ed e-mail. Dal "
-#~ "menu Admin, dopo la configurazione, è possibile aggiungere categorie, "
-#~ "sottocategorie, lingue, campi personalizzati (ognuno dei quali può essere "
-#~ "assegnato alle risorse quando vengono aggiunte) e gli utenti del sistema."
+#~ "WIKINDX ha rilevato che questa è la prima volta che una nuova versione è "
+#~ "in esecuzione e che il database richiede l'aggiornamento. Questo "
+#~ "aggiornamento è automatico, ma solo il superAmministratore di WIKINDX lo "
+#~ "può svolgere.<p> Sei <strong>fortemente avvisato</strong> di fare "
+#~ "preventivamente <strong>un backup del vecchio database</strong>. Se non lo "
+#~ "si fa e si verificano gli errori di memoria descritte di seguito, quando "
+#~ "si aggiorna l'unica copia del database, avrete irrevocabilmente "
+#~ "danneggiato il database: <em>ulteriore avvertimento</em><p>"
 
 #~ msgid ""
 #~ "The upgrade process may take some time depending upon a number of factors. "
@@ -9433,45 +9409,75 @@ msgstr "Keyword modificata con successo"
 #~ "posizione."
 
 #~ msgid ""
-#~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
-#~ "you are strongly advised not to run it on a production server -- if you "
-#~ "wish to test it, either create a new database or make a copy of your "
-#~ "existing WIKINDX database and point config.php at it. Wait until all bugs "
-#~ "have been dealt with, and the final release version provided, before using "
-#~ "the WIKINDX code on a production server.</font> <p>To report bugs etc., go "
-#~ "to: https://sourceforge.net/p/wikindx/v5bugs/</strong></p> WIKINDX has "
-#~ "detected that this is the first time a new version is being run and that "
-#~ "the database requires upgrading. This upgrading is automatic but only the "
-#~ "WIKINDX superAdmin may carry it out.<p> You are <strong>strongly advised</"
-#~ "strong> to <strong>back up your old database</strong> first. If you do not "
-#~ "do this and you experience the memory errors detailed below when upgrading "
-#~ "your only copy of the database, then you will have irrevocably corrupted "
-#~ "the database: <em>caveat upgrader</em><p>"
+#~ "Before being able to use WIKINDX, you must configure it. The minimum "
+#~ "initially required are username, password and email. From the Admin menu, "
+#~ "after configuration, you can add and edit other settings."
 #~ msgstr ""
-#~ "WIKINDX ha rilevato che questa è la prima volta che una nuova versione è "
-#~ "in esecuzione e che il database richiede l'aggiornamento. Questo "
-#~ "aggiornamento è automatico, ma solo il superAmministratore di WIKINDX lo "
-#~ "può svolgere.<p> Sei <strong>fortemente avvisato</strong> di fare "
-#~ "preventivamente <strong>un backup del vecchio database</strong>. Se non lo "
-#~ "si fa e si verificano gli errori di memoria descritte di seguito, quando "
-#~ "si aggiorna l'unica copia del database, avrete irrevocabilmente "
-#~ "danneggiato il database: <em>ulteriore avvertimento</em><p>"
-
-#~ msgid "Upgrade the Database"
-#~ msgstr "Aggiornamento Database"
-
-#, fuzzy
-#~| msgid "My Wikindx"
-#~ msgid "My Wikindxx"
-#~ msgstr "My Wikindx"
+#~ "Prima di essere in grado di utilizzare WIKINDX, è necessario configurarlo. "
+#~ "Il minimo richiesto inizialmente sono nome utente, password ed e-mail. Dal "
+#~ "menu Admin, dopo la configurazione, è possibile aggiungere categorie, "
+#~ "sottocategorie, lingue, campi personalizzati (ognuno dei quali può essere "
+#~ "assegnato alle risorse quando vengono aggiunte) e gli utenti del sistema."
 
 #~ msgid ""
-#~ "<p>Ensure the wikindx/plugins directories (and the index.php and config."
-#~ "php files) and the wikindx/styles, wikindx/languages and wikindx/templates "
-#~ "folders (and all files therein) can be written to by the web server user.</"
-#~ "p>"
+#~ "You are not logged on as the superAdmin: please ask that person ### to "
+#~ "carry out the upgrade through their web browser."
 #~ msgstr ""
-#~ "<p>Assicurarsi che le directory wikindx4/plugins (e i file index.php e "
-#~ "config.php) e wikindx4/styles, wikindx4/languages ​​e cartelle wikindx4/"
-#~ "templates (e tutti i file in essa contenuti) possono essere scritti "
-#~ "dall'utente web server.</p>"
+#~ "Non si è connessi come il superadmin: si prega di richiedere a quella "
+#~ "persona ### di effettuare l'aggiornamento attraverso il proprio browser web"
+
+#~ msgid "Upgrade the database"
+#~ msgstr "Aggiornare il database"
+
+#~ msgid "My Bibliographies"
+#~ msgstr "Le mie Bibliografie"
+
+#~ msgid ""
+#~ "<ul>\n"
+#~ "<li>User groups: In a multi-user WIKINDX, registered users can define user "
+#~ "groups.  Potentially private information, such as comments on quotations "
+#~ "or resource musings, can then be assigned to be viewed only by members of "
+#~ "a user group.  Additionally, user groups may collaborate in building a "
+#~ "user group bibliography.</li>\n"
+#~ "<li>User bibliographies: These are drawn from the WIKINDX Master "
+#~ "Bibliography and may be personal or managed by a user group. Operations on "
+#~ "a user bibliography (such as removing resources from it) have no effect on "
+#~ "the WIKINDX Master Bibliography.</li>\n"
+#~ "</ul>"
+#~ msgstr ""
+#~ "<ul>\n"
+#~ "<li>Gruppi di utenti: In un WIKINDX multi-utente, gli utenti registrati "
+#~ "possono definire gruppi di utenti. Informazioni potenzialmente riservati, "
+#~ "come commenti sulle citazioni o riflessioni sulle risorse, possono essere "
+#~ "assegnati per la visualizzazione solo dai membri di un gruppo di utenti. "
+#~ "Inoltre, i gruppi di utenti possono collaborare alla costruzione di una "
+#~ "bibliografia di gruppo.</li>\n"
+#~ "<li>Bibliografie degli utenti: Questi sono tratti dalla Bibliografia "
+#~ "Principale di WIKINDX e possono essere personali o gestite da un gruppo di "
+#~ "utenti. Operazioni su una bibliografia utente (ad esempio rimuovere le "
+#~ "risorse da esso) non hanno alcun effetto sulla Bibliografia Principale di "
+#~ "WIKINDX.</li>\n"
+#~ "</ul>"
+
+#~ msgid ""
+#~ "If you have languages and styles that are in your WIKINDX installation "
+#~ "folders but they do not show here, then they are not compatible with this "
+#~ "version of WIKINDX.  Go to the WIKINDX Sourceforge download page (https://"
+#~ "sourceforge.net/projects/wikindx/files/pluginsxxx/), download the latest "
+#~ "localization and adminstyle plug-ins and use them to update your files."
+#~ msgstr ""
+#~ "Se si dispone di lingue e stili che sono nelle cartelle di installazione "
+#~ "WIKINDX ma non sono visualizzate qui, allora non sono compatibili con "
+#~ "questa versione di WIKINDX. Vai alla pagina di download di Sourceforge "
+#~ "WIKINDX (https://sourceforge.net/projects/wikindx//files/pluginsxxx/), "
+#~ "scaricare l'ultima localizzazione e adminstyle plug-in e usali per "
+#~ "aggiornare i file."
+
+#~ msgid "Select the creators you wish to remove from the group"
+#~ msgstr "Seleziona i creatori che desideri rimuovere dal gruppo."
+
+#~ msgid "Ungroup"
+#~ msgstr "Scorpora"
+
+#~ msgid "Enabled Languages"
+#~ msgstr "Lingue Abilitate"

@@ -23,9 +23,6 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "s
 
 class ideagen_MODULE
 {
-    // The dump directory is the cache dircetory of this plugin
-    const DUMP_DIRECTORY = WIKINDX_DIR_CACHE_PLUGINS . DIRECTORY_SEPARATOR . "backupmysql";
-
     public $authorize;
     public $menus;
     

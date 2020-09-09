@@ -238,6 +238,7 @@ h1 {
 	top: 0px;
 	margin: 0;
 	padding: 0;
+	z-index: 1000;
 }
 
 #navigation li {

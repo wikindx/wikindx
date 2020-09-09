@@ -254,7 +254,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
             // Is an image: replace hexfile names by the content of these files
             if (\UTILS\matchPrefix($c, '##hex')) {
                 $c = str_replace('#', '', $c);
-                $f = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE_FILES, $c]);
+                $f = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_FILES, $c]);
                 if (file_exists($f)) {
                     $c = file_get_contents($f);
                     @unlink($f);
@@ -412,14 +412,14 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         $webimage = FALSE;
 
         // If this image is not local, test if it's a remote image
-        if (file_exists(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA_IMAGES, basename($file)]))) {
-            $file = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA_IMAGES, basename($file)]);
+        if (file_exists(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, basename($file)]))) {
+            $file = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, basename($file)]);
         } else {
             if (!$this->URL_exists($file)) {
                 return $file;
             } else {
                 // Download the file from the web to a temp file
-                $dlTempFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE_FILES, 'dl' . \UTILS\uuid() . '.img']);
+                $dlTempFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_FILES, 'dl' . \UTILS\uuid() . '.img']);
 
                 if (ini_get('allow_url_fopen') == "1") {
                     $fddl = fopen($file, 'rb');
@@ -516,8 +516,8 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         // Indicate the scale factor used for rendering the image with the desired size from the initial fixed size
         $blipScale = '\picscalex' . floor($editW * 100 / $width) . '\picscaley' . floor($editH * 100 / $height);
 
-        $tempFile = WIKINDX_DIR_CACHE_FILES . DIRECTORY_SEPARATOR . 'bin' . \UTILS\uuid() . '.png';
-        $hexfile = WIKINDX_DIR_CACHE_FILES . DIRECTORY_SEPARATOR . 'hex' . \UTILS\uuid() . '.txt';
+        $tempFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_FILES, 'bin' . \UTILS\uuid() . '.png']);
+        $hexfile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_FILES, 'hex' . \UTILS\uuid() . '.txt']);
 
         switch ($type) {
             case IMAGETYPE_GIF:

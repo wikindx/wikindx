@@ -45,8 +45,8 @@ class HOUSEKEEPING
     {
         $messages = FACTORY_MESSAGES::getInstance();
         $count = 0;
-        $attachDir = WIKINDX_DIR_DATA_ATTACHMENTS;
-        $cacheDir = WIKINDX_DIR_CACHE_ATTACHMENTS;
+        $attachDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
+        $cacheDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
         $cacheDirFiles = scandir($cacheDir);
         foreach ($cacheDirFiles as $key => $value) {
             if (strpos($value, '.') === 0) {

@@ -39,7 +39,7 @@ class TEMPLATE
      */
     public function __construct()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "libs", "Smarty.class.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "libs", "Smarty.class.php"]));
         $this->tpl = new Smarty();
 
         // PHP 8 will make E_ALL the default error level,
@@ -131,7 +131,7 @@ class TEMPLATE
         }
 
         // template may have been disabled by admin
-        if (!is_file(WIKINDX_DIR_COMPONENT_TEMPLATES . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR . 'component.json')) {
+        if (!is_file(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES, $this->name, 'component.json']))) {
             // During the upgrade / update process the database is not always available to query the configuration
             if (!$setupMode) {
                 $co = FACTORY_CONFIGDBSTRUCTURE::getInstance();
@@ -140,12 +140,12 @@ class TEMPLATE
         }
         
         // cache directories
-        $this->compileDir = WIKINDX_DIR_CACHE_TEMPLATES . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR . "compile";
-        $this->cacheDir = WIKINDX_DIR_CACHE_TEMPLATES . DIRECTORY_SEPARATOR . $this->name . DIRECTORY_SEPARATOR . "cache";
+        $this->compileDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_TEMPLATES, $this->name, "compile"]);
+        $this->cacheDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_TEMPLATES, $this->name, "cache"]);
 
         // Configure (main) template path of Smarty
         // with the name of the template instead of using indice 0
-        $this->path = WIKINDX_DIR_COMPONENT_TEMPLATES . DIRECTORY_SEPARATOR . $this->name;
+        $this->path = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES, $this->name]);
         $this->tpl->setTemplateDir([$this->name => $this->path]);
 
         // Configure (main) template url of Smarty
@@ -266,7 +266,7 @@ class TEMPLATE
             case Smarty::PLUGIN_FUNCTION:
                 switch ($name) {
                     case 'menu':
-                        $script = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "SmartyMenu", "function.menu.php"]);
+                        $script = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "SmartyMenu", "function.menu.php"]);
                         $callback = 'smarty_function_menu';
 
                         return TRUE;
@@ -275,7 +275,7 @@ class TEMPLATE
             case Smarty::PLUGIN_COMPILER:
                 switch ($name) {
                     case 'menu':
-                    $script = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "SmartyMenu", "function.menu.php"]);
+                    $script = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "SmartyMenu", "function.menu.php"]);
                     $callback = 'smarty_function_menu';
 
                     return TRUE;
@@ -286,7 +286,7 @@ class TEMPLATE
             case Smarty::PLUGIN_BLOCK:
                 switch ($name) {
                     case 'menu':
-                    $script = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "SmartyMenu", "function.menu.php"]);
+                    $script = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "SmartyMenu", "function.menu.php"]);
                     $callback = 'smarty_function_menu';
 
                     return TRUE;

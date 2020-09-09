@@ -120,7 +120,7 @@ if (!$actionFound) {
     // given action (e.g. folderName_actionName). We must remove the prepend.
     $split = UTF8::mb_explode("_", $vars["action"]);
     if (count($split) == 2) {
-        $index = implode(DIRECTORY_SEPARATOR , [WIKINDX_DIR_COMPONENT_PLUGINS, $split[0], 'index.php']);
+        $index = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $split[0], 'index.php']);
         if (file_exists($index)) {
             include_once($index);
             // class name must be in the form $dirName . _MODULE

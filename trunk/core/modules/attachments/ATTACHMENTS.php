@@ -365,8 +365,8 @@ class ATTACHMENTS
             // remove file from attachments and cache directories if there's no reference to it in any other resource
             $this->db->formatConditions(["resourceattachmentsHashFilename" => $hash]);
             if (!$this->db->numRows($this->db->select('resource_attachments', 'resourceattachmentsHashFilename'))) {
-                @unlink(WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash);
-                @unlink(WIKINDX_DIR_CACHE_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash);
+                @unlink(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $hash]));
+                @unlink(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS, $hash]));
             }
             // remove reference in statistics_attachment_downloads
             $this->db->formatConditions(['statisticsattachmentdownloadsResourceId' => $this->resourceId]);
@@ -430,11 +430,11 @@ class ATTACHMENTS
      */
     private function actuallyStoreFile($filename, $hash, $type, $size, $index)
     {
-        if (!FILE\fileStore(WIKINDX_DIR_DATA_ATTACHMENTS, $hash, $index)) {
+        if (!FILE\fileStore(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]), $hash, $index)) {
             $this->badInput->close($this->errors->text("file", "upload"));
         }
         // Convert to text and store in the cache directory if of PDF, DOC or DOCX type
-        $fileNameCache = WIKINDX_DIR_CACHE_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash;
+        $fileNameCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS, $hash]);
         if (!file_exists($fileNameCache))
         {
 	        switch ($type)
@@ -442,13 +442,13 @@ class ATTACHMENTS
 	        	case WIKINDX_MIMETYPE_PDF:
 	        	case WIKINDX_MIMETYPE_DOCX:
 	        	case WIKINDX_MIMETYPE_DOC:
-		            $fileName = WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash;
                     include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "list", "FILETOTEXT.php"]));
 		            $ftt = new FILETOTEXT();
+		            $fileName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $hash]);
 		            @file_put_contents($fileNameCache, $ftt->convertToText($fileName, $type)); // we do not halt on failure
 	        	break;
 	        	case WIKINDX_MIMETYPE_TXT:
-		            $fileName = WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash;
+		            $fileName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $hash]);
 		            @file_put_contents($fileNameCache, $fileName); // we do not halt on failure
 	        	break;
 	        	default:

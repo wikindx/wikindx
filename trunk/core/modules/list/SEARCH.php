@@ -2996,8 +2996,8 @@ class SEARCH
                 $this->partials[$key] = FALSE;
             }
         }
-        $attachDir = WIKINDX_DIR_DATA_ATTACHMENTS;
-        $cacheDir = WIKINDX_DIR_CACHE_ATTACHMENTS;
+        $attachDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
+        $cacheDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
         $mimeTypes = [WIKINDX_MIMETYPE_PDF, WIKINDX_MIMETYPE_DOCX, WIKINDX_MIMETYPE_DOC, WIKINDX_MIMETYPE_TXT];
         $this->db->formatConditionsOneField($mimeTypes, 'resourceattachmentsFileType');
         $resultset = $this->db->select(

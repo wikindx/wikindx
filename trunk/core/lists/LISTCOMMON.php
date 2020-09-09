@@ -562,7 +562,7 @@ class LISTCOMMON
             return;
         }
         if ($zip) { // zip the files
-            if (!$zipfile = FILE\zip($files, WIKINDX_DIR_DATA_ATTACHMENTS))
+            if (!$zipfile = FILE\zip($files, implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS])))
             {
                 $errors = FACTORY_ERRORS::getInstance();
                 $badInput = FACTORY_BADINPUT::getInstance();

@@ -40,7 +40,7 @@ class PARSEXML
     {
         $setupStyle = $this->getStyle($output, $export);
         if (!$this->loadCache($setupStyle)) {
-            $this->extractEntries(WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . $setupStyle . DIRECTORY_SEPARATOR . $setupStyle . ".xml");
+            $this->extractEntries(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES, $setupStyle, $setupStyle . ".xml"]));
             $this->createCache($setupStyle);
         }
 
@@ -71,8 +71,8 @@ class PARSEXML
      */
     private function loadCache($style)
     {
-        $styleFilePath = WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . $style . DIRECTORY_SEPARATOR . $style . ".xml";
-        $styleCacheFilePath = WIKINDX_DIR_CACHE_STYLES . DIRECTORY_SEPARATOR . $style;
+        $styleFilePath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES, $style, $style . ".xml"]);
+        $styleCacheFilePath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_STYLES, $style]);
 
         // If the cache file is missing, abort loading
         if (!file_exists($styleCacheFilePath)) {
@@ -107,7 +107,7 @@ class PARSEXML
      */
     private function createCache($style)
     {
-        if (FALSE !== ($fh = fopen(WIKINDX_DIR_CACHE_STYLES . DIRECTORY_SEPARATOR . $style, "w"))) {
+        if (FALSE !== ($fh = fopen(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_STYLES, $style]), "w"))) {
             // Serialize each array and write as one line to cache file
             fwrite($fh, serialize($this->info) . "\n");
             fwrite($fh, serialize($this->citation) . "\n");

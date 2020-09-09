@@ -157,10 +157,10 @@ class ATTACHMENT
         $deletes = [];
         $recordSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsHashFilename']);
         while ($row = $this->db->fetchRow($recordSet)) {
-            $fileName = WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $row['resourceattachmentsHashFilename'];
+            $fileName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $row['resourceattachmentsHashFilename']]);
             if (!file_exists($fileName)) {
                 $deletes[] = $row['resourceattachmentsId'];
-                $fileNameCache = WIKINDX_DIR_CACHE_ATTACHMENTS . DIRECTORY_SEPARATOR . $row['resourceattachmentsHashFilename'];
+                $fileNameCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS, $row['resourceattachmentsHashFilename']]);
                 if (file_exists($fileNameCache)) {
                     @unlink($fileNameCache);
                 }
@@ -174,10 +174,10 @@ class ATTACHMENT
         }
         // Delete uncorrelated attachments
         $deletes = $files = [];
-        $cdir = FILE\dirToArray(WIKINDX_DIR_DATA_ATTACHMENTS);
+        $cdir = FILE\dirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]));
         if (count($cdir) > 0) {
             foreach ($cdir as $v) {
-                if (is_file(WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $v)) {
+                if (is_file(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $v]))) {
                     $files[] = $v;
                 }
             }
@@ -188,10 +188,8 @@ class ATTACHMENT
                 }
             }
             foreach ($deletes as $file) {
-                $fileName = WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $file;
-                @unlink($fileName);
-                $fileNameCache = WIKINDX_DIR_CACHE_ATTACHMENTS . DIRECTORY_SEPARATOR . $file;
-                @unlink($fileNameCache);
+                @unlink(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $file]));
+                @unlink(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS, $file]));
             }
         }
     }

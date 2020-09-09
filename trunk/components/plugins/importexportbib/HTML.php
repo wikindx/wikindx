@@ -72,7 +72,7 @@ class HTMLEXPORT
         }
         if (array_key_exists('exportHyperlink', $this->vars)) {
             global $_SERVER;
-            $link = WIKINDX_URL_BASE . $_SERVER['SCRIPT_NAME'] . "?action=resource_RESOURCEVIEW_CORE&id=";
+            $link = implode("/", [WIKINDX_URL_BASE, "index.php?action=resource_RESOURCEVIEW_CORE&id="]);
             $this->session->setVar("exportHyperlink", TRUE);
             $wikindxTitle = stripslashes(WIKINDX_TITLE);
         } else {

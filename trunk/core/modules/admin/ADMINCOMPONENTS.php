@@ -21,7 +21,7 @@ class ADMINCOMPONENTS
      * On the other hand, it is compulsory to deliver the components for all versions,
      * even if they do not change.
      */
-    protected $serverComponentsListPath = WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . "components_" . WIKINDX_PUBLIC_VERSION . ".json";
+    protected $serverComponentsListPath = WIKINDX_DIR_BASE . DIRECTORY_SEPARATOR . WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . "components_" . WIKINDX_PUBLIC_VERSION . ".json";
     private $db;
     private $vars;
     private $session;
@@ -83,10 +83,10 @@ class ADMINCOMPONENTS
         $stringByType = ["plugin" => "", "style" => "", "template" => "", "vendor" => ""];
         $coutByType = ["plugin" => 0, "style" => 0, "template" => 0, "vendor" => 0];
         $rootPathByType = [
-            'plugin' => WIKINDX_DIR_COMPONENT_PLUGINS,
-            'style' => WIKINDX_DIR_COMPONENT_STYLES,
-            'template' => WIKINDX_DIR_COMPONENT_TEMPLATES,
-            'vendor' => WIKINDX_DIR_COMPONENT_VENDOR,
+            'plugin' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]),
+            'style' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES]),
+            'template' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES]),
+            'vendor' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR]),
         ];
         
         // Local components
@@ -563,10 +563,10 @@ class ADMINCOMPONENTS
                 $componentsRelease = \FILE\read_json_file($this->serverComponentsListPath);
                 
                 $rootPathByType = [
-                    'plugin' => WIKINDX_DIR_COMPONENT_PLUGINS,
-                    'style' => WIKINDX_DIR_COMPONENT_STYLES,
-                    'template' => WIKINDX_DIR_COMPONENT_TEMPLATES,
-                    'vendor' => WIKINDX_DIR_COMPONENT_VENDOR,
+                    'plugin' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]),
+                    'style' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES]),
+                    'template' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES]),
+                    'vendor' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR]),
                 ];
                 
                 
@@ -591,7 +591,7 @@ class ADMINCOMPONENTS
                 foreach ($dlpkg as $pkg) {
                     // Purge and recreate the setup cache before each attempt
                     // for cleaning any byproduct of a failed setup
-                    $pkgcachedir = WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . "setup";
+                    $pkgcachedir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "setup"]);
                     if (file_exists($pkgcachedir)) {
                         \FILE\recurse_rmdir($pkgcachedir);
                     }
@@ -639,17 +639,17 @@ class ADMINCOMPONENTS
     public function installByUpload()
     {
         $rootPathByType = [
-            'plugin' => WIKINDX_DIR_COMPONENT_PLUGINS,
-            'style' => WIKINDX_DIR_COMPONENT_STYLES,
-            'template' => WIKINDX_DIR_COMPONENT_TEMPLATES,
-            'vendor' => WIKINDX_DIR_COMPONENT_VENDOR,
+            'plugin' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]),
+            'style' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES]),
+            'template' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES]),
+            'vendor' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR]),
         ];
         
         $pString = "";
         
         // Purge and recreate the setup cache before each attempt
         // for cleaning any byproduct of a failed setup
-        $pkgcachedir = WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . "setup";
+        $pkgcachedir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "setup"]);
         if (file_exists($pkgcachedir)) {
             \FILE\recurse_rmdir($pkgcachedir);
         }
@@ -745,10 +745,10 @@ class ADMINCOMPONENTS
                 $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'vendorUninstallError'));
             } else {
                 $rootPathByType = [
-                    'plugin' => WIKINDX_DIR_COMPONENT_PLUGINS,
-                    'style' => WIKINDX_DIR_COMPONENT_STYLES,
-                    'template' => WIKINDX_DIR_COMPONENT_TEMPLATES,
-                    'vendor' => WIKINDX_DIR_COMPONENT_VENDOR,
+                    'plugin' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]),
+                    'style' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES]),
+                    'template' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES]),
+                    'vendor' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR]),
                 ];
                 
                 \FILE\recurse_rmdir($rootPathByType[$this->vars['component_type']] . DIRECTORY_SEPARATOR . $this->vars['component_id']);
@@ -775,10 +775,10 @@ class ADMINCOMPONENTS
     public function readMe()
     {
         $rootPathByType = [
-            'plugin' => WIKINDX_DIR_COMPONENT_PLUGINS,
-            'style' => WIKINDX_DIR_COMPONENT_STYLES,
-            'template' => WIKINDX_DIR_COMPONENT_TEMPLATES,
-            'vendor' => WIKINDX_DIR_COMPONENT_VENDOR,
+            'plugin' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]),
+            'style' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES]),
+            'template' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES]),
+            'vendor' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR]),
         ];
         
         $readmefile = $rootPathByType[$this->vars['type']] . DIRECTORY_SEPARATOR . $this->vars['file'] . DIRECTORY_SEPARATOR . 'README.txt';
@@ -830,7 +830,7 @@ class ADMINCOMPONENTS
                     return $this->init();
                 }
             }
-            $configFile = WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR . $this->vars['configFileMenu'] . DIRECTORY_SEPARATOR . 'config.php';
+            $configFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $this->vars['configFileMenu'], 'config.php']);
             $fileString = str_replace($id . '_CONFIG', $this->vars['configFileMenu'] . '_CONFIG', file_get_contents($tempFile));
             $bool = FALSE;
             if ($fh = @fopen($configFile, "w")) {
@@ -865,7 +865,7 @@ class ADMINCOMPONENTS
                 if ($this->vars['configFileInline'] === $file) {
                     continue;
                 }
-                include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_PLUGINS, $file, "config.php"]));
+                include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $file, "config.php"]));
                 $configClass = $file . '_CONFIG';
                 $config = new $configClass();
                 if (($index = array_search($config->container, $usedContainers)) === FALSE) {
@@ -884,7 +884,7 @@ class ADMINCOMPONENTS
 
                 return $this->init();
             }
-            $configFile = WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR . $this->vars['configFileInline'] . DIRECTORY_SEPARATOR . 'config.php';
+            $configFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $this->vars['configFileInline'], 'config.php']);
             $fileString = str_replace($id . '_CONFIG', $this->vars['configFileInline'] . '_CONFIG', file_get_contents($tempFile));
             $bool = FALSE;
             if ($fh = @fopen($configFile, "w")) {
@@ -967,7 +967,7 @@ class ADMINCOMPONENTS
     {
         $bool = FALSE;
         $id = 'a' . \UTILS\uuid(); // $id is used for the class name in the temporary file – ensure it does not begin with a number
-        $tempFile = include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA_FILES, $id]));
+        $tempFile = include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, $id]));
         // rewrite temp class name so PHP doesn't complain about class being reused ('name is already in use'). . .
         $fileString = str_replace($componentId . '_CONFIG', $id . '_CONFIG', stripslashes($configString));
         if ($fh = @fopen($tempFile, "w")) {
@@ -1058,7 +1058,7 @@ class ADMINCOMPONENTS
         $componentsInstalled = \UTILS\readComponentsList();
         foreach ($componentsInstalled as $cmp) {
             if ($cmp["component_type"] == "plugin") {
-                $type = WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR . $cmp["component_id"] . DIRECTORY_SEPARATOR . 'plugintype.txt';
+                $type = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $cmp["component_id"], 'plugintype.txt']);
                 
                 if (file_exists($type)) {
                     if ($fh = fopen($type, "r")) {
@@ -1101,7 +1101,7 @@ class ADMINCOMPONENTS
 
         $pString = '';
         
-        if ($fh = fopen(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . 'config.php', "r")) {
+        if ($fh = fopen(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $file, 'config.php']), "r")) {
             $string = '';
             while (!feof($fh)) {
                 $string .= fgets($fh);
@@ -1124,7 +1124,7 @@ class ADMINCOMPONENTS
     {
         if (array_key_exists('ajaxReturn', $this->vars)) {
             $file = $this->vars['ajaxReturn'];
-            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_PLUGINS, $file, "config.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $file, "config.php"]));
             $configClass = $file . '_CONFIG';
         } else { // grab the first of the list
             foreach ($enabled as $file => $null) {
@@ -1140,7 +1140,7 @@ class ADMINCOMPONENTS
                     'pluginsContainers'
                 ), 'configContainers', $this->possibleContainers, $config->container, 4);
         */
-        if ($fh = fopen(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR . $file . DIRECTORY_SEPARATOR . 'config.php', "r")) {
+        if ($fh = fopen(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $file, 'config.php']), "r")) {
             $string = '';
             while (!feof($fh)) {
                 $string .= fgets($fh);

@@ -113,8 +113,8 @@ namespace UTILS
     function readComponentsList($force = FALSE)
     {
         refreshComponentsListCache($force);
-        $path_components_list = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "components.json"]);
-        $path_components_list_status = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA, "components.json"]);
+        $path_components_list = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "components.json"]);
+        $path_components_list_status = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA, "components.json"]);
         
         $ComponentsList = \FILE\read_json_file($path_components_list);
         $ComponentsListStatus = \FILE\read_json_file($path_components_list_status);
@@ -152,8 +152,8 @@ namespace UTILS
      */
     function writeComponentsList($ComponentsList)
     {
-        $path_components_list = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "components.json"]);
-        $path_components_list_status = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA, "components.json"]);
+        $path_components_list = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "components.json"]);
+        $path_components_list_status = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA, "components.json"]);
         
         if (file_exists($path_components_list_status)) {
             $ComponentsListStatus = \FILE\read_json_file($path_components_list_status);
@@ -197,8 +197,8 @@ namespace UTILS
      */
     function refreshComponentsListCache($force = FALSE)
     {
-        $path_components_list = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE, "components.json"]);
-        $path_components_list_status = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA, "components.json"]);
+        $path_components_list = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "components.json"]);
+        $path_components_list_status = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA, "components.json"]);
         
         $cachedComponentsListStatusExists = file_exists($path_components_list_status);
         
@@ -243,10 +243,10 @@ namespace UTILS
     {
         $componentlist = [];
         $componentPath = [
-            WIKINDX_DIR_COMPONENT_PLUGINS => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_PLUGINS),
-            WIKINDX_DIR_COMPONENT_STYLES => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_STYLES),
-            WIKINDX_DIR_COMPONENT_TEMPLATES => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_TEMPLATES),
-            WIKINDX_DIR_COMPONENT_VENDOR => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_VENDOR),
+            implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]) => \FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS])),
+            implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES]) => \FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES])),
+            implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES]) => \FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES])),
+            implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR]) => \FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR])),
         ];
         
         foreach ($componentPath as $rootpath => $paths) {
@@ -258,10 +258,10 @@ namespace UTILS
                     $componentMetadata = \FILE\read_json_file($componentDirPath . DIRECTORY_SEPARATOR . 'component.json');
                 } else {
                     $legal_types = [
-                        WIKINDX_DIR_COMPONENT_PLUGINS => "plugin",
-                        WIKINDX_DIR_COMPONENT_STYLES => "style",
-                        WIKINDX_DIR_COMPONENT_TEMPLATES => "template",
-                        WIKINDX_DIR_COMPONENT_VENDOR => "vendor",
+                        implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]) => "plugin",
+                        implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES]) => "style",
+                        implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES]) => "template",
+                        implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR]) => "vendor",
                     ];
                     $fakejson = '{
                         "component_type": "' . $legal_types[$rootpath] . '",
@@ -307,10 +307,10 @@ namespace UTILS
     function createComponentMetadataFile($component_type, $component_id)
     {
         $legal_types = [
-            "plugin" => WIKINDX_DIR_COMPONENT_PLUGINS,
-            "style" => WIKINDX_DIR_COMPONENT_STYLES,
-            "template" => WIKINDX_DIR_COMPONENT_TEMPLATES,
-            "vendor" => WIKINDX_DIR_COMPONENT_VENDOR,
+            "plugin" => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]),
+            "style" => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES]),
+            "template" => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES]),
+            "vendor" => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR]),
         ];
         $fakejson = '{
             "component_type": "' . $component_type . '",
@@ -364,13 +364,13 @@ namespace UTILS
             
             // Check if the component type is right directory for the component directory
             $componentRootName = realpath(dirname($componentDirPath));
-            if ($componentMetadata["component_type"] == "plugin" && $componentRootName != WIKINDX_DIR_COMPONENT_PLUGINS) {
+            if ($componentMetadata["component_type"] == "plugin" && $componentRootName != implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS])) {
                 return 6;
-            } elseif ($componentMetadata["component_type"] == "style" && $componentRootName != WIKINDX_DIR_COMPONENT_STYLES) {
+            } elseif ($componentMetadata["component_type"] == "style" && $componentRootName != implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES])) {
                 return 6;
-            } elseif ($componentMetadata["component_type"] == "template" && $componentRootName != WIKINDX_DIR_COMPONENT_TEMPLATES) {
+            } elseif ($componentMetadata["component_type"] == "template" && $componentRootName != implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES])) {
                 return 6;
-            } elseif ($componentMetadata["component_type"] == "vendor" && $componentRootName != WIKINDX_DIR_COMPONENT_VENDOR) {
+            } elseif ($componentMetadata["component_type"] == "vendor" && $componentRootName != implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR])) {
                 return 6;
             }
             
@@ -660,13 +660,14 @@ namespace UTILS
         $aErrorPerms = [];
         
         $folderstocheck = [
-            WIKINDX_DIR_DATA => \FILE\dirInDirToArray(WIKINDX_DIR_DATA),
-            WIKINDX_DIR_CACHE => \FILE\dirInDirToArray(WIKINDX_DIR_CACHE),
+            implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA]) => \FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA])),
+            implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE]) => \FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE])),
             
-            WIKINDX_DIR_COMPONENT_PLUGINS => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_PLUGINS),
-            WIKINDX_DIR_COMPONENT_STYLES => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_STYLES),
-            WIKINDX_DIR_COMPONENT_TEMPLATES => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_TEMPLATES),
-            WIKINDX_DIR_COMPONENT_VENDOR => \FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_VENDOR),
+            implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]) => \FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS])),
+            implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES]) => \FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES])),
+            implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES]) => \FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES])),
+            implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR]) => \FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR])),
+            
         ];
         
         foreach ($folderstocheck as $root => $paths) {

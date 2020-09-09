@@ -90,7 +90,7 @@ class MENU
     public function __construct()
     {
         // Keep here the responsibility to including SmartyMenu pulgin because
-        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "SmartyMenu", "SmartyMenu.class.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "smarty", "SmartyMenu", "SmartyMenu.class.php"]));
 
         $this->db = FACTORY_DB::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
@@ -673,22 +673,20 @@ class MENU
             $this->admin[$messages->text("menu", "components")] = 'index.php?action=admin_ADMINCOMPONENTS_CORE';
         }
         $imagesExists = FALSE;
-        if (file_exists(WIKINDX_DIR_DATA_IMAGES)) {
-            $open_dir = opendir(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR);
-            while ($object = readdir($open_dir)) {
-                if ($object != "." && $object != "..") {
-                    $ext = mb_strtolower(pathinfo(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $object, PATHINFO_EXTENSION));
-                    if (($ext == 'jpeg') || ($ext == 'jpg') || ($ext == 'gif') || ($ext == 'png')) {
-                        $imagesExists = TRUE;
+        $open_dir = opendir(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES]));
+        while ($object = readdir($open_dir)) {
+            if ($object != "." && $object != "..") {
+                $ext = mb_strtolower(pathinfo(implode(DIRECTORY_SEPARATOR, [$open_dir, $object]), PATHINFO_EXTENSION));
+                if (($ext == 'jpeg') || ($ext == 'jpg') || ($ext == 'gif') || ($ext == 'png')) {
+                    $imagesExists = TRUE;
 
-                        break;
-                    }
+                    break;
                 }
             }
-            closedir($open_dir);
-            if ($imagesExists) {
-                $this->admin[$messages->text("menu", "images")] = 'index.php?action=admin_DELETEIMAGES_CORE';
-            }
+        }
+        closedir($open_dir);
+        if ($imagesExists) {
+            $this->admin[$messages->text("menu", "images")] = 'index.php?action=admin_DELETEIMAGES_CORE';
         }
         if ((defined("WIKINDX_QUARANTINE") ? WIKINDX_QUARANTINE : WIKINDX_QUARANTINE_DEFAULT) && $this->checkQuarantine()) {
             $this->admin[$messages->text("menu", "quarantine")] = 'index.php?action=list_LISTSOMERESOURCES_CORE&method=quarantineProcess';
@@ -729,7 +727,7 @@ class MENU
         $moduleList = $loadmodules->readPluginsDirectory();
         
         foreach ($moduleList as $dirName) {
-            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_PLUGINS, $dirName, "index.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $dirName, "index.php"]));
             // class name must be in the form $dirName . MODULE
             $module = $dirName . "_MODULE";
             if (!class_exists($module)) {

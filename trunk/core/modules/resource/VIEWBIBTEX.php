@@ -636,7 +636,7 @@ class VIEWBIBTEX
      */
     private function grabAttachments(&$entryArray, $rIds)
     {
-        $path = WIKINDX_URL_BASE . str_replace('index.php', WIKINDX_URL_DATA_ATTACHMENTS . '/', $_SERVER['PHP_SELF']);
+        $path = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_DATA_ATTACHMENTS]);
         $files = [];
         $this->db->formatConditionsOneField($rIds, 'resourceattachmentsResourceId');
         $resultset = $this->db->select(
@@ -646,7 +646,7 @@ class VIEWBIBTEX
         while ($row = $this->db->fetchRow($resultset)) {
             $array = [];
             $array[] = preg_replace('/[^\da-z]/iu', '', $this->resourceTitle) . '-' . $row['resourceattachmentsFileName'];
-            $array[] = $path . $row['resourceattachmentsHashFilename'];
+            $array[] = implode("/", [$path, $row['resourceattachmentsHashFilename']]);
             $split = UTF8::mb_explode('/', $row['resourceattachmentsFileType']);
             $array[] = $split[1];
             $files[$row['resourceattachmentsResourceId']][] = implode(':', $array);

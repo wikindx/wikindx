@@ -396,7 +396,7 @@ class AUTHORIZE
     {
         // Garbage disposal
         // remove this session's files
-        $dir = WIKINDX_DIR_DATA_FILES;
+        $dir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
         if ($sessArray = $this->session->getVar("fileExports")) {
             foreach (\FILE\fileInDirToArray($dir) as $f) {
                 if (array_search($f, $sessArray) === FALSE) {

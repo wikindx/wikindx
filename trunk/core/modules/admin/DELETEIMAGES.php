@@ -203,8 +203,8 @@ class DELETEIMAGES
         $pString .= \HTML\trStart();
     	if ($initialState) { // grab first image in array (i.e. what is initially selected in the select box)
     	    $image = array_shift($imageArray);
-    		$imagePath = WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $image;
-    		$imageUrl = WIKINDX_URL_DATA_IMAGES . DIRECTORY_SEPARATOR . $image;
+    		$imagePath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $image]);
+    		$imageUrl = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_DATA_IMAGES, $image]);
     		list($width, $height) = $this->imageWH($imagePath);
     		$pString .= \HTML\td(\HTML\img($imageUrl, $width, $height));
     	}
@@ -216,8 +216,8 @@ class DELETEIMAGES
     				$pString .= \HTML\trStart();
     				$numCells = 0;
     			}
-    			$imagePath = WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $image;
-    			$imageUrl = WIKINDX_URL_DATA_IMAGES . DIRECTORY_SEPARATOR . $image;
+        		$imagePath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $image]);
+        		$imageUrl = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_DATA_IMAGES, $image]);
 				list($width, $height) = $this->imageWH($imagePath);
 				$pString .= \HTML\td(\HTML\img($imageUrl, $width, $height));
 				++$numCells;
@@ -307,7 +307,7 @@ class DELETEIMAGES
             FACTORY_CLOSE::getInstance();
         }
         foreach ($array as $image) {
-            $fileName = WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $image;
+            $fileName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $image]);
 			@unlink($fileName);
 // Deal with metadata using the image
 			$message = "[Image deleted by WIKINDX Administrator]";

@@ -135,9 +135,7 @@ class importexportbib_MODULE
      */
     public function downloadFile()
     {
-        $dirName = WIKINDX_DIR_DATA_FILES;
-        $filename = $this->vars['filename'];
-        $filepath = $dirName . DIRECTORY_SEPARATOR . $filename;
+        $filepath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, $this->vars['filename']]);
         if (file_exists($filepath)) {
             switch (pathinfo($filepath)['extension']) {
                 case 'bib':
@@ -168,7 +166,7 @@ class importexportbib_MODULE
             }
             $size = filesize($filepath);
             $lastmodified = date(DateTime::RFC1123, filemtime($filepath));
-            FILE\setHeaders($type, $size, $filename, $lastmodified, $charset);
+            FILE\setHeaders($type, $size, basename($filepath), $lastmodified, $charset);
             FILE\readfile_chunked($filepath);
         } else {
             $this->badInput->closeType = 'closePopup';

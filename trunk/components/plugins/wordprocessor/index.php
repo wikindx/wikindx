@@ -32,7 +32,7 @@ class wordprocessor_MODULE
     private $session;
     private $badInput;
     private $config;
-    private $papersDir = WIKINDX_DIR_DATA_PLUGINS . DIRECTORY_SEPARATOR . "wordprocessor";
+    private $papersDir = WIKINDX_DIR_BASE . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_PLUGINS . DIRECTORY_SEPARATOR . "wordprocessor";
 
     /**
      * Constructor
@@ -411,7 +411,7 @@ class wordprocessor_MODULE
             $common = new WPCOMMON();
             $common->failure($this->errors->text("inputError", "missing"));
         }
-        $dirFilesName = WIKINDX_DIR_DATA_FILES;
+        $dirFilesName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
         $extension = $this->vars['extension'];
         $fileName = $this->vars['filename'];
         if ($this->vars['extension'] == 'rtf') {

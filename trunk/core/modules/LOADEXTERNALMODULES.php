@@ -50,7 +50,7 @@ class LOADEXTERNALMODULES
      */
     public function checkVersion($dir)
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_PLUGINS, $dir, "config.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $dir, "config.php"]));
         $class = $dir . "_CONFIG";
         if (class_exists($class)) {
             $config = new $class();

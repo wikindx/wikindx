@@ -360,8 +360,8 @@ class visualize_MODULE
     private function display($graph)
     {
         $fileName = 'jpGraph' . \UTILS\uuid() . '.png';
-        $filesDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA_FILES, $fileName]);
-        $filesUrl = implode("/", [WIKINDX_URL_DATA_FILES, $fileName]);
+        $filesDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, $fileName]);
+        $filesUrl = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_DATA_FILES, $fileName]);
         
         $graph->Stroke($filesDir);
         $pString = HTML\img($filesUrl, $this->config->width, $this->config->height);

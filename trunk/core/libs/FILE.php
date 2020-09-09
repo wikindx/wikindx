@@ -474,24 +474,24 @@ namespace FILE
             // no files in directory
             return [FALSE, FALSE, FALSE];
         }
-        if (!file_exists(WIKINDX_DIR_DATA_FILES)) {
+        if (!file_exists(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]))) {
             return [FALSE, FALSE, TRUE];
         }
 
         $fileArray = [];
 
         if ($fileExports) {
-            $files = array_intersect($fileExports, fileInDirToArray(WIKINDX_DIR_DATA_FILES));
+            $files = array_intersect($fileExports, fileInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES])));
 
             foreach ($files as $file) {
-                $fileArray[$file] = filemtime(WIKINDX_DIR_DATA_FILES . DIRECTORY_SEPARATOR . $file);
+                $fileArray[$file] = filemtime(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, $file]));
             }
 
             asort($fileArray, SORT_NUMERIC);
             $fileArray = array_reverse($fileArray);
         }
 
-        return [WIKINDX_DIR_DATA_FILES, WIKINDX_FILE_DELETE_SECONDS, $fileArray];
+        return [implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]), WIKINDX_FILE_DELETE_SECONDS, $fileArray];
     }
 
     /**
@@ -499,15 +499,15 @@ namespace FILE
      */
     function tidyFiles()
     {
-        if (file_exists(WIKINDX_DIR_DATA_FILES)) {
+        if (file_exists(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]))) {
             $now = time();
             $maxTime = WIKINDX_FILE_DELETE_SECONDS;
             
             $fileDeleteArray = [];
             $fileKeepArray = [];
             
-            foreach (fileInDirToArray(WIKINDX_DIR_DATA_FILES) as $f) {
-                $file = WIKINDX_DIR_DATA_FILES . DIRECTORY_SEPARATOR . $f;
+            foreach (fileInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES])) as $f) {
+                $file = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, $f]);
                 if (($now - filemtime($file)) >= $maxTime) {
                     @unlink($file);
                     $fileDeleteArray[] = $f;
@@ -544,8 +544,7 @@ namespace FILE
     function zip($files, $path)
     {
         // Compute a filename with a SHA1 hash of all filenames concatenated
-        $zipFile = WIKINDX_DIR_DATA_FILES;
-        $zipFile .= DIRECTORY_SEPARATOR . sha1(implode('', $files)) . '.zip';
+        $zipFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, sha1(implode('', $files)) . '.zip']);
 
         // If we can't create a Zip archive or add all files to it,
         // abort, clean Zip archive and return FALSE

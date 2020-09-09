@@ -717,22 +717,22 @@ class UPDATEDATABASE
     {
         // Copy files in various old directories to their new directories
         // Order is important – ned to know if files or attachments returns FALSE
-        $return = $this->copyFolderContents('attachments_cache', WIKINDX_DIR_CACHE_ATTACHMENTS);
+        $return = $this->copyFolderContents('attachments_cache', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]));
         if ($return !== TRUE)
         {
             $this->checkDatabase($return);
         }
-        $return = $this->copyFolderContents('images', WIKINDX_DIR_DATA_IMAGES);
+        $return = $this->copyFolderContents('images', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES]));
         if ($return !== TRUE)
         {
             $this->checkDatabase($return);
         }
-        $return = $this->copyFolderContents('files', WIKINDX_DIR_DATA_FILES);
+        $return = $this->copyFolderContents('files', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]));
         if ($return !== TRUE)
         {
             $this->checkDatabase($return);
         }
-        $return = $this->copyFolderContents('attachments', WIKINDX_DIR_DATA_ATTACHMENTS);
+        $return = $this->copyFolderContents('attachments', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]));
         if ($return !== TRUE)
         {
             $this->checkDatabase($return);
@@ -1219,7 +1219,7 @@ class UPDATEDATABASE
     private function copyBibContents()
     {
         $oldDir = 'styles' . DIRECTORY_SEPARATOR . 'bibliography';
-        foreach (\FILE\dirInDirToArray($oldDir) as $dir)
+        foreach (\FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, $oldDir])) as $dir)
         {
             $dirLower = mb_strtolower($dir);
             
@@ -1230,8 +1230,8 @@ class UPDATEDATABASE
                 continue;
             }
             
-            $oldDirStyle = $oldDir . DIRECTORY_SEPARATOR . $dir;
-            $newDirStyle = WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . $dirLower;
+            $oldDirStyle = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, $oldDir, $dir]);
+            $newDirStyle = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES, $dirLower]);
             @mkdir($newDirStyle, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
             
             foreach (\FILE\fileInDirToArray($oldDirStyle) as $file)
@@ -1258,10 +1258,10 @@ class UPDATEDATABASE
     private function copyWpContents()
     {
         // Move papers to the new dir
-        $newDir = WIKINDX_DIR_DATA_PLUGINS . DIRECTORY_SEPARATOR . 'wordprocessor';
+        $newDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_PLUGINS, 'wordprocessor']);
         foreach (['wordProcessor', 'wordprocessor'] as $plugindir)
         {
-            $oldDir = 'plugins' . DIRECTORY_SEPARATOR . $plugindir . DIRECTORY_SEPARATOR . 'papers';
+            $oldDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'plugins', $plugindir, 'papers']);
             foreach (\FILE\fileInDirToArray($oldDir) as $file)
             {
                 if ($file == 'PAPERS.txt')
@@ -1809,7 +1809,7 @@ END;
         // Save the old config file before writing it
         // Something could go wrong and configuration lost otherwise
         $cf = 'config.php';
-        $bf = WIKINDX_DIR_DATA_FILES . DIRECTORY_SEPARATOR . $cf . '.' . date('YmdHis');
+        $bf = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, $cf . '.' . date('YmdHis')]);
         if (copy($cf, $bf))
         {
             if (is_writable($cf))

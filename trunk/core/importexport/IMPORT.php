@@ -766,7 +766,7 @@ class IMPORT
         // Write entries as serialised array temporarily to a data folder
         $serArray = base64_encode(serialize($entries));
         
-        $dirName = WIKINDX_DIR_DATA_FILES;
+        $dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
         $fileName = sha1($serArray);
         $fullFileName = $dirName . DIRECTORY_SEPARATOR . $fileName;
         if (file_put_contents($fullFileName, $serArray) === FALSE) {

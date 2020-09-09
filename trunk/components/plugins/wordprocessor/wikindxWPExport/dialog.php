@@ -40,7 +40,7 @@ class WPExportDialog
         
         $this->session = FACTORY_SESSION::getInstance();
         $this->vars = GLOBALS::getVars();
-        $this->dirFilesName = WIKINDX_DIR_DATA_FILES;
+        $this->dirFilesName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] = 'save')) {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "WPCOMMON.php"]));
             $this->common = new WPCOMMON();

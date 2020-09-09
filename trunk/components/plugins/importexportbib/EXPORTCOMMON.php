@@ -38,7 +38,7 @@ class EXPORTCOMMON
         $this->coremessages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->cite = FACTORY_CITE::getInstance($outputType);
-        $this->filesDir = WIKINDX_DIR_DATA_FILES;
+        $this->filesDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
         // Perform some system admin
         FILE\tidyFiles();
     }

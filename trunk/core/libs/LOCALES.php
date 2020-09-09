@@ -54,7 +54,7 @@ namespace LOCALES
         
         refreshSystemLocalesCache();
         
-        $path_languages_localized = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE_LANGUAGES, "locales_system.json"]);
+        $path_languages_localized = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_LANGUAGES, "locales_system.json"]);
         if (!file_exists($path_languages_localized)) {
             echo "<p>The <strong>$path_languages_localized</strong> file doesn't exist.</p>" . $msgfallback;
 
@@ -95,7 +95,7 @@ namespace LOCALES
      */
     function refreshSystemLocalesCache($force = FALSE)
     {
-        $path_locales_sys = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CACHE_LANGUAGES, "locales_system.json"]);
+        $path_locales_sys = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_LANGUAGES, "locales_system.json"]);
         
         if ($force || !file_exists($path_locales_sys)) {
             file_put_contents($path_locales_sys, json_encode(checkSystemLocales(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
@@ -255,7 +255,7 @@ namespace LOCALES
             // Load the core translations
             if ($loading[WIKINDX_LANGUAGE_DOMAIN_DEFAULT])
             {
-                $dirlocales = WIKINDX_DIR_CORE_LANGUAGES;
+                $dirlocales = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE_LANGUAGES]);
                 $moFileName = WIKINDX_LANGUAGE_DOMAIN_DEFAULT . ".mo";
                 $moFilePath = implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES", $moFileName]);
                 if (file_exists($moFilePath)) {
@@ -271,7 +271,7 @@ namespace LOCALES
             {
                 if ($loading[$domain])
                 {
-                    $dirlocales = realpath(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_PLUGINS, $domain, "languages"]));
+                    $dirlocales = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $domain, "languages"]);
                     $moFileName = $domain . ".mo";
                     $moFilePath = implode(DIRECTORY_SEPARATOR, [$dirlocales, $locale, "LC_MESSAGES", $moFileName]);
                     if (file_exists($moFilePath)) {

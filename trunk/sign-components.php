@@ -25,19 +25,19 @@ include_once("core/startup/CONSTANTS.php");
 include_once("core/libs/FILE.php");
 include_once("core/libs/UTILS.php");
 
-define('DIR_BUILD', WIKINDX_DIR_CACHE . DIRECTORY_SEPARATOR . 'build');
+define('DIR_BUILD', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, 'build']));
 if (!file_exists(DIR_BUILD)) {
     mkdir(DIR_BUILD, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
 }
-if (!file_exists(WIKINDX_DIR_DATA)) {
-    mkdir(WIKINDX_DIR_DATA, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
+if (!file_exists(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA]))) {
+    mkdir(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA]), WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
 }
 
 $component_types = [
-    "plugin" => WIKINDX_DIR_COMPONENT_PLUGINS,
-    "style" => WIKINDX_DIR_COMPONENT_STYLES,
-    "template" => WIKINDX_DIR_COMPONENT_TEMPLATES,
-    "vendor" => WIKINDX_DIR_COMPONENT_VENDOR,
+    "plugin" => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]),
+    "style" => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES]),
+    "template" => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES]),
+    "vendor" => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR]),
 ];
 
 ///////////////////////////////////////////////////////////////////////

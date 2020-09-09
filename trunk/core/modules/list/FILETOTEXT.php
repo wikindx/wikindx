@@ -27,7 +27,7 @@ class FILETOTEXT
 
     public function __construct()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "pdftotext", "PdfToText.phpclass"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "pdftotext", "PdfToText.phpclass"]));
     }
 
     /**
@@ -38,8 +38,8 @@ class FILETOTEXT
         $db = FACTORY_DB::getInstance();
         $vars = GLOBALS::getVars();
         $session = FACTORY_SESSION::getInstance();
-        $attachDir = WIKINDX_DIR_DATA_ATTACHMENTS;
-        $cacheDir = WIKINDX_DIR_CACHE_ATTACHMENTS;
+        $attachDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
+        $cacheDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
         $mem = ini_get('memory_limit');
         $maxExecTime = ini_get('max_execution_time');
         ini_set('memory_limit', '-1'); // NB not always possible to set

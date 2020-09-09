@@ -130,7 +130,7 @@ class LOADICONS
         } else {
             $basename = "file";
         }
-        $iconfb = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_TEMPLATE_DEFAULT, 'icons', "file.png"]);
+        $iconfb = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_TEMPLATE_DEFAULT, 'icons', "file.png"]);
         $iconfburl = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_COMPONENT_TEMPLATES, WIKINDX_TEMPLATE_DEFAULT, 'icons', "file.png"]);
         $icon = $this->getIconRealFileName($basename, $iconfb, $iconfburl);
         
@@ -201,7 +201,7 @@ class LOADICONS
         // Search the best icon
         foreach ($tplSearch as $tpl) {
             foreach (["png", "jpg", "svg"] as $ext) {
-                $tmp = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_TEMPLATES, $tpl, "icons", $basename . "." . $ext]);
+                $tmp = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES, $tpl, "icons", $basename . "." . $ext]);
                 if (file_exists($tmp)) {
                     if (is_file($tmp)) {
                         $filename = $tmp;

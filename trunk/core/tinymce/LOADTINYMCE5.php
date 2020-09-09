@@ -104,7 +104,7 @@ END;
         // TinyMCE translations are available online at:
         // https://www.tiny.cloud/get-tiny/language-packages/
         $locale = \LOCALES\determine_locale();
-        $aScripts = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_COMPONENT_VENDOR, "tinymce", "langs"]));
+        $aScripts = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "tinymce", "langs"]));
         return in_array($locale . ".js", $aScripts) ? $locale : "";
 
     }

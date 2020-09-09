@@ -115,7 +115,7 @@ class IMPORTBIBTEX
         // For an import from a plug-in like ImportPubMed, this variable will be a file path
         $this->importFile = FALSE;
         $this->oldTime = time();
-        $this->dirName = WIKINDX_DIR_DATA_FILES;
+        $this->dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'paste')) {
             $this->type = 'paste';
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "PASTEBIBTEX.php"]));
@@ -182,8 +182,8 @@ class IMPORTBIBTEX
             $this->badInput->close($this->errors->text("done", "fileImport"), $this->badClass, $this->badFunction);
         }
         if (!is_file($this->session->getVar("import_FileNameEntries"))) {
-            $this->badInput->close($this->errors->text("file", "read", $this->dirName . DIRECTORY_SEPARATOR .
-            $this->session->getVar("import_FileNameEntries")), $this->badClass, $this->badFunction);
+            $this->badInput->close($this->errors->text("file", "read", implode(DIRECTORY_SEPARATOR, [$this->dirName,
+            $this->session->getVar("import_FileNameEntries")])), $this->badClass, $this->badFunction);
         }
         $this->garbageFiles[$this->session->getVar("import_FileNameEntries")] = FALSE;
         if ($this->fileName = fopen($this->session->getVar("import_FileNameEntries"), 'r')) {
@@ -1183,14 +1183,14 @@ class IMPORTBIBTEX
             if (!$this->importFile) {
                 if (!isset($_FILES['import_File'])) {
                     if ($file = $this->session->getVar("import_File")) {
-                        return $this->dirName . DIRECTORY_SEPARATOR . $file;
+                        return implode(DIRECTORY_SEPARATOR, [$this->dirName, $file]);
                     } else {
                         $this->badInput->close($this->errors->text("file", "upload"), $this->badClass, $this->badFunction);
                     }
                 }
                 // Check for file input
                 $fileName = \UTILS\uuid();
-                if (!move_uploaded_file($_FILES['import_File']['tmp_name'], $this->dirName . DIRECTORY_SEPARATOR . $fileName)) {
+                if (!move_uploaded_file($_FILES['import_File']['tmp_name'], implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, $this->dirName, $fileName]))) {
                     $this->badInput->close($this->errors->text("file", "upload"), $this->badClass, $this->badFunction);
                 }
             } else { // An import from a plug-in like ImportPubMed
@@ -1214,9 +1214,9 @@ class IMPORTBIBTEX
                     $this->badInput->close($this->errors->text("sessionError", "write"), $this->badClass, $this->badFunction);
                 }
             }
-            $this->garbageFiles[$this->dirName . DIRECTORY_SEPARATOR . $fileName] = FALSE;
+            $this->garbageFiles[implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, $this->dirName, $fileName])] = FALSE;
 
-            return $this->dirName . DIRECTORY_SEPARATOR . $fileName;
+            return implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, $this->dirName, $fileName]);
         } elseif ($this->type == 'paste') {
             if (!trim($this->vars['import_Paste'])) {
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this->badClass, $this->badFunction);

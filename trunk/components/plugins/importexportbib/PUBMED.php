@@ -51,8 +51,8 @@ class PUBMED
         $this->category = FACTORY_CATEGORY::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->bibConfig = FACTORY_BIBTEXCONFIG::getInstance();
-        $this->filesDir = WIKINDX_DIR_DATA_FILES . DIRECTORY_SEPARATOR;
-        $this->filesUrl = WIKINDX_URL_DATA_FILES . DIRECTORY_SEPARATOR;
+        $this->filesDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]) . DIRECTORY_SEPARATOR;
+        $this->filesUrl = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_DATA_FILES]) . "/";
     }
     /*
      * dislay options for importing

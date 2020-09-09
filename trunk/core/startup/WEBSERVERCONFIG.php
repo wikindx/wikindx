@@ -246,6 +246,7 @@ EOM;
 
 // Create components directories
 foreach ([WIKINDX_DIR_COMPONENT_PLUGINS, WIKINDX_DIR_COMPONENT_STYLES, WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_DIR_COMPONENT_VENDOR] as $dir) {
+    $dir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, $dir]);
     if (!file_exists($dir)) {
         // Continue without error, a procedure checks the permissions further.
         if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
@@ -256,6 +257,7 @@ foreach ([WIKINDX_DIR_COMPONENT_PLUGINS, WIKINDX_DIR_COMPONENT_STYLES, WIKINDX_D
 
 // Create data directories
 foreach ([WIKINDX_DIR_DATA, WIKINDX_DIR_DATA_ATTACHMENTS, WIKINDX_DIR_DATA_FILES, WIKINDX_DIR_DATA_IMAGES, WIKINDX_DIR_DATA_PLUGINS] as $dir) {
+    $dir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, $dir]);
     if (!file_exists($dir)) {
         // Continue without error, a procedure checks the permissions further.
         if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
@@ -266,6 +268,7 @@ foreach ([WIKINDX_DIR_DATA, WIKINDX_DIR_DATA_ATTACHMENTS, WIKINDX_DIR_DATA_FILES
 
 // Create cache directories
 foreach ([WIKINDX_DIR_CACHE, WIKINDX_DIR_CACHE_FILES, WIKINDX_DIR_CACHE_ATTACHMENTS, WIKINDX_DIR_CACHE_LANGUAGES, WIKINDX_DIR_CACHE_PLUGINS, WIKINDX_DIR_CACHE_STYLES, WIKINDX_DIR_CACHE_TEMPLATES] as $dir) {
+    $dir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, $dir]);
     if (!file_exists($dir)) {
         // Continue without error, a procedure checks the permissions further.
         if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
@@ -276,15 +279,15 @@ foreach ([WIKINDX_DIR_CACHE, WIKINDX_DIR_CACHE_FILES, WIKINDX_DIR_CACHE_ATTACHME
 
 // Create data and cache directories of plugins
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "FILE.php"]));
-foreach (\FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_PLUGINS) as $dir) {
-    $plugencachedir = WIKINDX_DIR_CACHE_PLUGINS . DIRECTORY_SEPARATOR . basename($dir);
+foreach (\FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS])) as $dir) {
+    $plugencachedir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_PLUGINS, basename($dir)]);
     if (!file_exists($plugencachedir)) {
         // Continue without error, a procedure checks the permissions further.
         if (!@mkdir($plugencachedir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
             echo "<div>Directory <strong>" . $plugencachedir . "</strong> has not been created. Check permissions.</div>\n";
         }
     }
-    $plugendatadir = WIKINDX_DIR_DATA_PLUGINS . DIRECTORY_SEPARATOR . basename($dir);
+    $plugendatadir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_PLUGINS, basename($dir)]);
     if (!file_exists($plugendatadir)) {
         // Continue without error, a procedure checks the permissions further.
         if (!@mkdir($plugendatadir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
@@ -292,6 +295,8 @@ foreach (\FILE\dirInDirToArray(WIKINDX_DIR_COMPONENT_PLUGINS) as $dir) {
         }
     }
 }
+
+
 
 // Check folders permissions
 \UTILS\checkFoldersPerms();

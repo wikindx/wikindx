@@ -81,7 +81,7 @@ class BIBFORMAT
         $this->output = $output;
         if (!$this->preview) { // Not javascript preview
             if (!$this->dir) {
-                $this->dir = __DIR__ . DIRECTORY_SEPARATOR;
+                $this->dir = realpath(__DIR__) . DIRECTORY_SEPARATOR;
             } else {
                 if (mb_substr($this->dir, mb_strlen($this->dir) - 1, 1) != DIRECTORY_SEPARATOR) {
                     $this->dir .= DIRECTORY_SEPARATOR;

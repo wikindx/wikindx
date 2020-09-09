@@ -306,7 +306,7 @@ class DELETERESOURCE
                 $this->db->formatConditions(['resourceattachmentsHashFilename' => $hash]);
                 $recordSet = $this->db->select('resource_attachments', 'resourceattachmentsHashFilename');
                 if (!$this->db->numRows($recordSet)) { // Unlink it
-                    @unlink(WIKINDX_DIR_DATA_ATTACHMENTS . DIRECTORY_SEPARATOR . $hash);
+                    @unlink(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $hash]));
                 }
             }
         }

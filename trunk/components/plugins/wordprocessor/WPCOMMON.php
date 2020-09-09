@@ -25,7 +25,7 @@ class WPCommon
     private $session;
     private $vars;
     private $db;
-    private $papersDir = WIKINDX_DIR_DATA_PLUGINS . DIRECTORY_SEPARATOR . "wordprocessor";
+    private $papersDir = WIKINDX_DIR_BASE . DIRECTORY_SEPARATOR .WIKINDX_DIR_DATA_PLUGINS . DIRECTORY_SEPARATOR . "wordprocessor";
 
     public function __construct()
     {

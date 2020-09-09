@@ -195,11 +195,11 @@ class adminstyle_MODULE
         if ($error = $this->validateInput('edit')) {
             $this->badInput->close($error, $this, 'editDisplay');
         }
-        $dirName = WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . mb_strtolower(trim($this->vars['styleShortName']));
-        $fileName = $dirName . DIRECTORY_SEPARATOR . mb_strtoupper(trim($this->vars['styleShortName'])) . ".xml";
+        $dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES, mb_strtolower(trim($this->vars['styleShortName']))]);
+        $fileName = implode(DIRECTORY_SEPARATOR, [$dirName, mb_strtoupper(trim($this->vars['styleShortName'])) . ".xml"]);
         $this->writeFile($fileName);
         // Delete cache file
-        @unlink(WIKINDX_DIR_CACHE_STYLES . DIRECTORY_SEPARATOR . mb_strtoupper(trim($this->vars['styleShortName'])));
+        @unlink($dirName);
         $pString = $this->pluginmessages->text('successEdit');
 
         return $this->editInit($pString);
@@ -350,10 +350,10 @@ class adminstyle_MODULE
         $this->session->setVar("editStyleFile", $this->vars['editStyleFile']);
         $dir = mb_strtolower($this->vars['editStyleFile']);
         $fileName = $this->vars['editStyleFile'] . ".xml";
-        if ($fh = fopen(WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $fileName, "r")) {
-            fclose($fh);
-
-            $filePath = WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $fileName;
+        
+        $filePath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES, $fileName]);
+        
+        if (is_readable($filePath)) {
             $parseXML->extractEntries($filePath);
             $info = $parseXML->info;
             $citation = $parseXML->citation;
@@ -2417,13 +2417,13 @@ class adminstyle_MODULE
         $fileString .= "</style>" . LF;
         if (!$fileName) { // called from add()
             // Create folder with lowercase styleShortName
-            $dirName = WIKINDX_DIR_COMPONENT_STYLES . DIRECTORY_SEPARATOR . mb_strtolower(trim($this->vars['styleShortName']));
+            $dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES, mb_strtolower(trim($this->vars['styleShortName']))]);
             if (!file_exists($dirName)) {
                 if (!mkdir($dirName, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
                     $this->badInput->close($error = $this->errors->text("file", "folder"), $this, 'display');
                 }
             }
-            $fileName = $dirName . DIRECTORY_SEPARATOR . mb_strtoupper(trim($this->vars['styleShortName'])) . ".xml";
+            $fileName = implode(DIRECTORY_SEPARATOR, [$dirName, mb_strtoupper(trim($this->vars['styleShortName'])) . ".xml"]);
         }
         if (!$fp = fopen("$fileName", "w")) {
             $this->badInput->close($this->errors->text("file", "write", ": $fileName"), $this, 'display');

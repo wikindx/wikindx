@@ -80,7 +80,7 @@ class ENDNOTEIMPORT
         $this->common = FACTORY_IMPORT::getInstance();
         $this->creators = ['creator1', 'creator2', 'creator3', 'creator4', 'creator5'];
         $this->oldTime = time();
-        $this->dirName = WIKINDX_DIR_DATA_FILES;
+        $this->dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
     }
     /**
      * start the process
@@ -147,8 +147,7 @@ class ENDNOTEIMPORT
             $this->badInput($this->errors->text("done", "fileImport"));
         }
         if (!is_file($this->session->getVar("import_FileNameEntries"))) {
-            $this->badInput($this->errors->text("file", "read", $this->dirName . DIRECTORY_SEPARATOR .
-            $this->session->getVar("import_FileNameEntries")));
+            $this->badInput($this->errors->text("file", "read", implode(DIRECTORY_SEPARATOR, [$this->dirName, $this->session->getVar("import_FileNameEntries")])));
         }
         $this->fileName = fopen($this->session->getVar("import_FileNameEntries"), 'r');
         $this->garbageFiles[$this->session->getVar("import_FileNameEntries")] = FALSE;
@@ -866,14 +865,14 @@ class ENDNOTEIMPORT
         }
         if (!isset($_FILES['import_File'])) {
             if ($file = $this->session->getVar("import_File")) {
-                return $this->dirName . $file;
+                return implode(DIRECTORY_SEPARATOR, [$this->dirName, $file]);
             } else {
                 $this->badInput(HTML\p($this->pluginmessages->text('upload'), 'error'));
             }
         }
         // Check for file input
         $fileName = \UTILS\uuid();
-        if (!move_uploaded_file($_FILES['import_File']['tmp_name'], $this->dirName . DIRECTORY_SEPARATOR . $fileName)) {
+        if (!move_uploaded_file($_FILES['import_File']['tmp_name'], implode(DIRECTORY_SEPARATOR, [$this->dirName, $fileName]))) {
             $this->badInput(HTML\p($this->pluginmessages->text('upload'), 'error'));
         }
         if (!$this->session->setVar("import_file", $_FILES['import_File']['name'])) {
@@ -895,7 +894,7 @@ class ENDNOTEIMPORT
             }
         }
 
-        return $this->dirName . DIRECTORY_SEPARATOR . $fileName;
+        return implode(DIRECTORY_SEPARATOR, [$this->dirName, $fileName]);
     }
     /**
      * ConvertEntries - convert values to UTF-8 ready for storing in the database, tidy up the array presentation

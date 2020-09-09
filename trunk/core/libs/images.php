@@ -48,7 +48,7 @@ class ImageServer
             return TRUE;
         } elseif (isset($_GET['thumb'])) {
             if (mb_strlen($_GET['thumb']) > 0) {
-                $thumb = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA_IMAGES, basename($_GET['thumb'])]);
+                $thumb = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, basename($_GET['thumb'])]);
                 ImageServer::showThumbnail($thumb);
             }
 
@@ -202,7 +202,7 @@ class FileManager
         $split = UTF8::mb_explode('.', $name);
         array_pop($split);
         $name = implode('', $split);
-        $upload_file = WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $name;
+        $upload_file = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $name]);
 
         $mime_type = FileServer::getFileMime($userfile['tmp_name']);
         $hash = sha1_file($userfile['tmp_name']);
@@ -274,25 +274,19 @@ class FileManager
      */
     public function readDir()
     {
-//
         // Reading the data of files and directories
-//
-        if (file_exists(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR)) {
-            $open_dir = opendir(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR);
-            $this->dirs = [];
-            $this->files = [];
-            while ($object = readdir($open_dir)) {
-                if ($object != "." && $object != "..") {
-                    $ext = FileServer::getFileExtension($object);
-                    if (($ext == 'jpeg') || ($ext == 'jpg') || ($ext == 'gif') || ($ext == 'png')) {
-                        $this->files[] = $object;
-                    }
+        $open_dir = opendir(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES]));
+        $this->dirs = [];
+        $this->files = [];
+        while ($object = readdir($open_dir)) {
+            if ($object != "." && $object != "..") {
+                $ext = FileServer::getFileExtension($object);
+                if (($ext == 'jpeg') || ($ext == 'jpg') || ($ext == 'gif') || ($ext == 'png')) {
+                    $this->files[] = $object;
                 }
             }
-            closedir($open_dir);
-        } else {
-            die("Unable to create ./data/images folder. You must create this folder at the top level of wikindx (the same level where the core/ folder is) and make it writeable by all.");
         }
+        closedir($open_dir);
     }
 }
 
@@ -325,9 +319,9 @@ class FileServer
         $this->name = $name;
         $this->location = $location;
 
-        $this->type = FileServer::getFileType($this->location->getDir(TRUE, FALSE, FALSE, 0) . $this->getName());
-        $this->size = FileServer::getFileSize($this->location->getDir(TRUE, FALSE, FALSE, 0) . $this->getName());
-        $this->modTime = filemtime($this->location->getDir(TRUE, FALSE, FALSE, 0) . $this->getName());
+        $this->type = FileServer::getFileType(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $this->getName()]));
+        $this->size = FileServer::getFileSize(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $this->getName()]));
+        $this->modTime = filemtime(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $this->getName()]));
     }
     /**
      * Get file name
@@ -474,60 +468,7 @@ class Location
 {
     /** var */
     public $path;
-
-    /**
-     * Split a file path into array elements
-     *
-     * @param string $dir
-     *
-     * @return array
-     */
-    public static function splitPath($dir)
-    {
-        $dir = stripslashes($dir);
-        $path1 = preg_split("/[\\\\\\/]+/u", $dir);
-        $path2 = [];
-        for ($i = 0; $i < count($path1); $i++) {
-            if ($path1[$i] == ".." || $path1[$i] == "." || $path1[$i] == "") {
-                continue;
-            }
-            $path2[] = $path1[$i];
-        }
-
-        return $path2;
-    }
-
-    /**
-     * Get the current directory.
-     *
-     * @param bool $prefix Include the prefix ("./")
-     * @param bool $encoded URL-encode the string
-     * @param bool $html HTML-encode the string
-     * @param int $up No. levels to go up
-     *
-     * @return string directory n-levels up
-     */
-    public function getDir($prefix, $encoded, $html, $up)
-    {
-        $dir = "";
-        if ($prefix == TRUE) {
-            $dir .= WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR;
-        }
-        if (is_array($this->path)) {
-            for ($i = 0; $i < ((count($this->path) >= $up && $up > 0) ? count($this->path) - $up : count($this->path)); $i++) {
-                $temp = $this->path[$i];
-                if ($encoded) {
-                    $temp = rawurlencode($temp);
-                }
-                if ($html) {
-                    $temp = htmlspecialchars($temp);
-                }
-                $dir .= $temp . "/";
-            }
-        }
-
-        return $dir;
-    }
+    
     /**
      * Is directory writable
      *
@@ -535,7 +476,7 @@ class Location
      */
     public function isWritable()
     {
-        return is_writable($this->getDir(TRUE, FALSE, FALSE, 0));
+        return is_writable(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES]));
     }
 }
 
@@ -619,24 +560,18 @@ class EncodeExplorer
      */
     public function readDir()
     {
-        //
         // Reading the data of files and directories
-        //
-        if (file_exists(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR)) {
-            $open_dir = opendir(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR);
-            $this->dirs = [];
-            $this->files = [];
-            while ($object = readdir($open_dir)) {
-                if ($object != "." && $object != "..") {
-                    if (in_array(FileServer::getFileExtension($object), ['jpeg', 'jpg', 'gif', 'png']) === TRUE) {
-                        $this->files[] = new FileServer($object, $this->location);
-                    }
+        $open_dir = opendir(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES]));
+        $this->dirs = [];
+        $this->files = [];
+        while ($object = readdir($open_dir)) {
+            if ($object != "." && $object != "..") {
+                if (in_array(FileServer::getFileExtension($object), ['jpeg', 'jpg', 'gif', 'png']) === TRUE) {
+                    $this->files[] = new FileServer($object, $this->location);
                 }
             }
-            closedir($open_dir);
-        } else {
-            die("Unable to create ./data/images folder. You must create this folder at the top level of wikindx (the same level where the core/ folder is) and make it writeable by all.");
         }
+        closedir($open_dir);
     }
     /**
      * Sort the file list
@@ -682,7 +617,7 @@ class EncodeExplorer
             $text = $this->messages->text('tinymce', "lastUpdated");
         }
 
-        return "<a href=\"" . $this->makeLink($sort_by, $sort_as, $this->location->getDir(FALSE, TRUE, FALSE, 0)) . "\">
+        return "<a href=\"" . $this->makeLink($sort_by, $sort_as, implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_DATA_IMAGES]) . "/") . "\">
 			$text <img style=\"border:0;\" alt=\"" . $sort_as . "\" src=\"img/" . $img . "\"></a>";
     }
     /**
@@ -798,12 +733,6 @@ class EncodeExplorer
         global $_ERROR;
         global $_ERROR2;
         $this->location = $location;
-        // Create folder if ! exists
-        if (!file_exists(WIKINDX_DIR_DATA_IMAGES)) {
-            if (!mkdir(WIKINDX_DIR_DATA_IMAGES, WIKINDX_UNIX_PERMS_DEFAULT)) {
-                die("Unable to create ./data/images folder. You must create this folder at the top level of wikindx (the same level where the core/ folder is) and make it writeable by all.");
-            }
-        }
         $this->readDir();
         $this->sort();
         if ($delete) {
@@ -988,7 +917,7 @@ END;
             $count = 0;
             foreach ($this->files as $file) {
                 $filename = EncodeExplorer::getFilename($file);
-                list($width, $height, $type, $attr) = getimagesize(WIKINDX_DIR_DATA_IMAGES . DIRECTORY_SEPARATOR . $file->getName());
+                list($width, $height, $type, $attr) = getimagesize(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $file->getName()]));
 
                 // We limit the display size of images. This can be changed by the user afterwards in the textarea.
                 $widthMax = WIKINDX_IMG_WIDTH_LIMIT;

@@ -18,7 +18,7 @@ namespace LOADSTYLE
 /**
  * LOADSTYLE
  */
-const ROOT_DIR = WIKINDX_DIR_COMPONENT_STYLES;
+const ROOT_DIR = WIKINDX_DIR_BASE . DIRECTORY_SEPARATOR . WIKINDX_DIR_COMPONENT_STYLES;
     /**
      * Read ROOT_DIR directory for XML style files and return an associative array. Each XML file should
      * be within its own folder within ROOT_DIR.  This folder name should match the first part of the XML file name e.g.

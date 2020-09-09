@@ -97,7 +97,7 @@ class ATTACHMENTS
      */
     public function downloadAttachment()
     {
-        $dirName = WIKINDX_DIR_DATA_ATTACHMENTS;
+        $dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
         $hash = $this->vars['filename'];
         $this->db->formatConditions(['resourceattachmentsId' => $this->vars['id']]);
         $recordset = $this->db->select(
@@ -111,13 +111,13 @@ class ATTACHMENTS
         $filename = $row['resourceattachmentsFileName'];
         $lastmodified = date('r', strtotime($row['resourceattachmentsTimestamp']));
         unset($row);
-        if (file_exists($dirName . "/" . $hash) === FALSE) {
+        if (file_exists($dirName . DIRECTORY_SEPARATOR . $hash) === FALSE) {
             $this->badInput->closeType = 'closePopup';
             $this->badInput->close($this->errors->text("file", "missing"));
             die;
         }
         FILE\setHeaders($type, $size, $filename, $lastmodified);
-        FILE\readfile_chunked($dirName . "/" . $hash);
+        FILE\readfile_chunked($dirName . DIRECTORY_SEPARATOR . $hash);
         $this->attachment->incrementDownloadCounter($this->vars['id'], $this->vars['resourceId']);
         die;
     }

@@ -20,6 +20,14 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "startup",
 	<title>Special Characters</title>
 
 	<style type="text/css">
+	body {
+		background-color : #EEE;
+		margin : 1em;
+	}
+	.links {
+		float : left;
+		padding : 0 10px 0 0;
+	}
 	.textTable {
 		text-align: left;
 		border: 1px dotted red;

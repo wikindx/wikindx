@@ -363,7 +363,7 @@ class visualize_MODULE
         $filesDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_DATA_FILES, $fileName]);
         $filesUrl = implode("/", [WIKINDX_URL_DATA_FILES, $fileName]);
         
-        $graph->Stroke(implod($filesDir));
+        $graph->Stroke($filesDir);
         $pString = HTML\img($filesUrl, $this->config->width, $this->config->height);
         $size = count($this->xAxis);
         if (array_key_exists('maxXAxis', $this->vars) && ($this->vars['maxXAxis'] > 0)) {

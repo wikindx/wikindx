@@ -28,7 +28,7 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "startup",
 	}
 	</style>
 
-	<script src="<?php echo WIKINDX_URL_BASE; ?>/core/tiny_mce/tiny_mce_popup.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>
+	<script src="<?php echo WIKINDX_URL_BASE; ?>/core/tiny_mce/tiny_mce_popup.js?ver=<?=WIKINDX_PUBLIC_VERSION?>"></script>
 	<script>
 	tinyMCEPopup.requireLangPack();
 

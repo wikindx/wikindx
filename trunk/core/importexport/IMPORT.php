@@ -671,21 +671,22 @@ class IMPORT
     {
         $letters = range('a', 'z');
         $sizeof = count($letters);
+        $year = FALSE;
         $this->db->formatConditions(['resourceyearId' => $this->resourceId]);
         $recordset = $this->db->select(['resource_year'], ['resourceyearYear1',
             'resourceyearYear2', 'resourceyearYear3', 'resourceyearYear4', ]);
         $row = $this->db->fetchRow($recordset);
-        if ($row['resourceyearYear1']) {
-            $year = $row['resourceyearYear1'];
-        } elseif ($row['resourceyearYear2']) {
-            $year = $row['resourceyearYear2'];
-        } elseif ($row['resourceyearYear3']) {
-            $year = $row['resourceyearYear3'];
-        } elseif ($row['resourceyearYear4']) {
-            $year = $row['resourceyearYear4'];
-        } else {
-            $year = FALSE;
-        }
+        if (is_array($row)) {
+			if ($row['resourceyearYear1']) {
+				$year = $row['resourceyearYear1'];
+			} elseif ($row['resourceyearYear2']) {
+				$year = $row['resourceyearYear2'];
+			} elseif ($row['resourceyearYear3']) {
+				$year = $row['resourceyearYear3'];
+			} elseif ($row['resourceyearYear4']) {
+				$year = $row['resourceyearYear4'];
+			}
+		}
         $this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorMain');
         $this->db->formatConditions(['resourcecreatorResourceId' => $this->resourceId]);
         $this->db->formatConditions(['resourcecreatorOrder' => '1']);

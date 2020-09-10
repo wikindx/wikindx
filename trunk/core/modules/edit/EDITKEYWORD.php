@@ -21,6 +21,7 @@ class EDITKEYWORD
     private $keyword;
     private $gatekeep;
     private $badInput;
+    private $formData;
 
     public function __construct()
     {
@@ -34,6 +35,9 @@ class EDITKEYWORD
 
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
+        
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "libs", "FORMDATA.php"]));
+        $this->formData = new FORMDATA();
 
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" .
             $this->messages->text("resources", "keyword") . ")"));
@@ -41,27 +45,22 @@ class EDITKEYWORD
     /**
      * check we are allowed to edit and load appropriate method
      *
-     * $message can be a string (a success message) or an array ([0] is the message and [1] is the UUID for DB form_data). 
-     * Alternatively, if init() is called externally from EDITKEYWORD-WRITE, there will be $this->vars['message'] – this must be checked for first.
-     *
      * @param FALSE|mixed $message
      */
     public function init($message = FALSE)
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        $error = '';
         $formData = [];
         if (array_key_exists('message', $this->vars)) {
-        	$pString = rawurldecode($this->vars['message']);
+            $pString = rawurldecode($this->vars['message']);
         }
         elseif (is_array($message)) { // error has occurred so get get form_data to populate form with
-        	$error = array_shift($message);
-        	$pString = \HTML\p($error, "error", "center");
-        	$uuid = array_shift($message);
-        	$formData = \FORMDATA\getData($this->db, $uuid);
+            $error = array_shift($message);
+            $pString = \HTML\p($error, "error", "center");
+            $formData = array_shift($message);
         }
         else {
-        	$pString = $message;
+            $pString = $message;
         }
         $keywords = $this->keyword->grabAll();
         if (!$keywords) {
@@ -142,7 +141,7 @@ class EDITKEYWORD
         }
 		$recordset = $this->db->select('keyword', 'keywordKeyword');
 		$row = $this->db->fetchRow($recordset);
-		$keyword = \HTML\dbToFormTidy($row['keywordKeyword']);
+		$keyword = $row['keywordKeyword'];
         $pString = \FORM\hidden("editKeywordId", $keywordId);
         $pString .= \FORM\textInput(
             \HTML\span('*', 'required') . $this->messages->text('resources', 'keyword'),
@@ -186,7 +185,7 @@ class EDITKEYWORD
         }
         $recordset = $this->db->select('keyword', 'keywordGlossary');
         $row = $this->db->fetchRow($recordset);
-        $glossary = \HTML\dbToFormTidy($row['keywordGlossary']);
+        $glossary = $row['keywordGlossary'];
         $pString = \FORM\textareaInput(FALSE, "text", $glossary, 50, 10);
         if ($initialDisplay) {
         	return $pString;
@@ -207,7 +206,7 @@ class EDITKEYWORD
     public function edit()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        $uuid = $this->validateInput();
+        $this->validateInput();
         $keyword = trim($this->vars['keyword']);
         if ($keywordExistId = $this->keyword->checkExists($keyword)) {
             if ($keywordExistId != $this->vars['editKeywordId']) {
@@ -215,9 +214,11 @@ class EDITKEYWORD
             }
         }
         // At this point, we're cleared to write
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EDITKEYWORD_WRITE.php"]));
-        $write = new EDITKEYWORD_WRITE();
-        $write->init('edit');
+        $this->editWrite();
+        $this->tidy();
+        // send back to main script with success message
+        $message = rawurlencode($this->success->text("keyword"));
+        header("Location: index.php?action=edit_EDITKEYWORD_CORE&method=init&message=$message");
     }
     /**
      * write to the database
@@ -232,9 +233,11 @@ class EDITKEYWORD
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         // At this point, we're cleared to write
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EDITKEYWORD_WRITE.php"]));
-        $write = new EDITKEYWORD_WRITE();
-        $write->init('editConfirm');
+        $this->editConfirmWrite();
+        $this->tidy();
+        // send back to form with success message
+        $message = rawurlencode($this->success->text("keyword"));
+        header("Location: index.php?action=edit_EDITKEYWORD_CORE&method=init&message=$message");
     }
     /**
      * The new keyword equals one already in the database. Confirm that this edited one is to be removed and
@@ -254,6 +257,36 @@ class EDITKEYWORD
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")), FALSE, "right");
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
+    }
+    /**
+     * write to the database
+     */
+    private function editWrite()
+    {
+        $updateArray['keywordKeyword'] = trim($this->vars['keyword']);
+        $glossary = trim($this->vars['text']);
+        if ($glossary) {
+            $updateArray['keywordGlossary'] = $glossary;
+        } else {
+            $this->db->formatConditions(['keywordId' => $this->vars['editKeywordId']]);
+            $this->db->updateNull('keyword', 'keywordGlossary');
+        }
+        $this->db->formatConditions(['keywordId' => $this->vars['editKeywordId']]);
+        $this->db->update('keyword', $updateArray);
+    }
+    /**
+     * write to the database
+     */
+    private function editConfirmWrite()
+    {
+        $editId = $this->vars['editKeywordId'];
+        $existId = $this->vars['editKeywordExistId'];
+        // Delete old keyword
+        $this->db->formatConditions(['keywordId' => $editId]);
+        $this->db->delete('keyword');
+        // Update references to keyword
+        $this->db->formatConditions(['resourcekeywordKeywordId' => $editId]);
+        $this->db->update('resource_keyword', ['resourcekeywordKeywordId' => $existId]);
     }
     /**
      * Validate the form input and write to form_data
@@ -277,16 +310,23 @@ class EDITKEYWORD
 // Second, write any input to form_data
 // Possible form fields – ensure fields are available whether filled in or not (NB checkbox fields do NOT exist in $this->vars if not checked)
 		$fields = ['keyword' => $this->vars['keyword'], 'keywordIds' => $this->vars['keywordIds'], 'text' => $this->vars['text']];
-		$uuid = FALSE;
-		if ($error) { // Only store form data if there is an error
-			$uuid = \FORMDATA\putData($this->db, $fields);
-			if (!$uuid) {
-				$error = $this->errors->text("dbError", "formData");
-			}
-		}
 		if ($error) {
-            $this->badInput->close($error, $this, ['init', $uuid]);
-        }
-        return $uuid;
+        	$this->badInput->close($error, $this, ['init', $fields]);
+		}
+    }
+    /**
+     * Tidy up
+     */
+    private function tidy()
+    {
+        // remove cache files for keywords
+        $this->db->deleteCache('cacheKeywords');
+        $this->db->deleteCache('cacheResourceKeywords');
+        $this->db->deleteCache('cacheMetadataKeywords');
+        $this->db->deleteCache('cacheQuoteKeywords');
+        $this->db->deleteCache('cacheParaphraseKeywords');
+        $this->db->deleteCache('cacheMusingKeywords');
+        $this->keyword->removeHanging();
+        $this->keyword->checkKeywordGroups();
     }
 }

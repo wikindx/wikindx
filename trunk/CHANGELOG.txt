@@ -10,7 +10,7 @@ BUG FIXES:
 3. Fix a missing input error message when clicking on a metadata keyword.
 
 FEATURE ENHANCEMENT:
-1. When editing a form, store form data in the form_data table to repopulate the form in case of error and lessen the load on sessions.
+1. When editing a form, store form data in the form_data table to repopulate the form in case of error and lessen the load on sessions. Also, restructure form management by splitting form presentation from DB data writing.
 	Done: Admin|Keywords...|Edit
 	TODO: All the other forms...
 

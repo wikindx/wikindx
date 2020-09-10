@@ -13,33 +13,39 @@
  *
  * @package wikindx\core\libs\FORMDATA
  */
-namespace FORMDATA
+class FORMDATA
 {
+/** array */
+private $formData = [];
+/** string */
+private $defaultErrorRedirect = "index.php"; // Front page
+/** string */
+private $successRedirect = '';
+/** string */
+private $errorRedirect = '';
+/** string */
+private $defaultErrorMessage = '';
+/** string */
+private $errorMessage = '';
+/** string */
+private $successMessage = '';
+
+/**
+* FORMDATA
+*/
+	public function __construct()
+    {
+    	$errors = FACTORY_ERRORS::getInstance();
+    	$this->defaultErrorMessage = $errors->text("inputError", "missing");
+    }
     /**
-     * Write data to the form_data table.
+     * Put data in the formData container.
      *
-     * @param object $dbo DB object
      * @param array $array Array of form data
-     *
-     * @return mixed FALSE on error else $uuid
      */
-	function putData($dbo, $array)
+	public function putData($array)
 	{
-		$index = 1;
-		do {
-			$uuid = getUuid($dbo);
-			if ($index > 100) { // some sanity
-				return FALSE;
-			}
-			++$index;
-		} while ($uuid === FALSE);
-		$data = serialize($array);
-		$keys[] = 'formdataId';
-		$values[] = $uuid;
-		$keys[] = 'formdataData';
-		$values[] = $data;
-		$dbo->insert('form_data', $keys, $values);
-		return $uuid;
+		$this->formData[] = serialize($array);
 	}
 	
     /**
@@ -60,26 +66,16 @@ namespace FORMDATA
 	}
 	
     /**
-     * Get data from the form_data table then remove the row
-     *
-     * @param object $dbo DB object
-     * @param string $formdataId
+     * Get data from the formData container
      *
      * @return array Array is empty if no data can be found
      */
-	function getData($dbo, $formdataId)
+	public function getData()
 	{
-		$dbo->formatConditions(['formdataId' => $formdataId]);
-		$data = $dbo->fetchOne($dbo->select('form_data', ['formdataData']));
-		if ($data) {
-			$data = array_map('\FORMDATA\tidy', unserialize($data));
+		if (!sizeOf($this->formData)) {
+			return [];
 		}
-		else {
-			$data = [];
-		}
-// Clean up 
-		deleteData($dbo, $formdataId);
-		return $data;
+		return unserialize(array_shift($this->formData));
 	}
 	
     /**

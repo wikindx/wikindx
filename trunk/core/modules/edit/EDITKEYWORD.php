@@ -35,9 +35,6 @@ class EDITKEYWORD
 
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "libs", "FORMDATA.php"]));
-        $this->formData = new FORMDATA();
 
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" .
             $this->messages->text("resources", "keyword") . ")"));

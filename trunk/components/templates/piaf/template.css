@@ -71,7 +71,7 @@ img {
 
 #nav li { /* all list items */
  position: relative;
- z-index: 31;
+ /*z-index: 31;*/
  float: left;
  width: 9em; /* width needed or else Opera goes nuts */
  background-color: #3C579D;

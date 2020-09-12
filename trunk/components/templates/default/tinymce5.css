@@ -1,0 +1,19 @@
+/*
+* CSS for TinyMCE 5 WYSIWYG editor
+*/
+
+/* Inline mode */
+
+.tinymce_area_inline {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 0.25em;
+    margin: 0;    
+}
+
+
+/* Classic mode */
+
+.tinymce_area_classic {
+	
+}

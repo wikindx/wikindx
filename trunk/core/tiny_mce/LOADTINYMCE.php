@@ -332,87 +332,8 @@ tinyMCE.init({
 		height : "3em",
 		nowrap : true,
         content_css : "$cssPath",
-        popup_css : "$cssPopupPath",
-
-		// Limit chars and provide alert if user goes over
-		setup : function(ed) {
-			tinyMCEArray = [[$countIds],[$countSizes]]; // Setup a matrix here.
-			ed.onKeyPress.add(function(ed, e)  // disable use of RETURN key
-			{
-				if ((e.charCode || e.keyCode) == 13)
-				{
-					tinyMCE.activeEditor.selection.setContent("");
-					return tinymce.dom.Event.cancel(e);
-				}
-          });
-		},
-		onchange_callback     : "tinyMceOnChange",
-		handle_event_callback : "tinyMceEventHandler"
+        popup_css : "$cssPopupPath"
 });
-
-// For IE implementations that don't use indexOf()
-if (!Array.prototype.indexOf)
-{
-  Array.prototype.indexOf = function(elt /*, from*/)
-  {
-	var len = this.length >>> 0;
-
-	var from = Number(arguments[1]) || 0;
-	from = (from < 0)
-		 ? Math.ceil(from)
-		 : Math.floor(from);
-	if (from < 0)
-	  from += len;
-
-	for (; from < len; from++)
-	{
-	  if (from in this &&
-		  this[from] === elt)
-		return from;
-	}
-	return -1;
-  };
-}
-
-var tinyMceBuffers    = new Object();
-var tinyMceCharCounts = new Object();
-var tinyMCEArray; 	// Will hold my array of settings.
-
-// Event fired when something in TinyMCE changes such as when an undo
-// level is added like after a copy/paste.
-function tinyMceOnChange(inst){
-	if(navigator.appName == 'Microsoft Internet Explorer')
-	{
-		var IEArray = tinyMCEArray[0];
-		var index = IEArray.indexOf(inst.id);
-		if (index != -1) { //IE does not like to have the array.indexOf being called directly.
-			tinyMceCheckContentLength(inst.id, tinyMCEArray[1][index]);
-		}
-	}
-	else
-	{
-		if (tinyMCEArray[0].indexOf(inst.id) != -1) {
-			var index = tinyMCEArray[0].indexOf(inst.id);
-			tinyMceCheckContentLength(inst.id, tinyMCEArray[1][index]);
-		}
-	}
-}
-
-// Event fired for any normal UI event such as a key or mouse press.
-function tinyMceEventHandler(e){
-    switch (e.type) {
-        case 'keyup': tinyMceOnChange(tinyMCE.activeEditor); break;
-    }
-    return true;
-}
-
-function tinyMceCheckContentLength(strEditorId, intMaxLength) {
-    var editorInstance   = tinyMCE.get(strEditorId);
-    if (editorInstance   == null || editorInstance   == undefined) { alert('NO EDITOR'); }
-
-    var contentContainer = editorInstance.getBody();
-    if (contentContainer == null || contentContainer == undefined) { alert('NO CONTENT CONTAINER'); }
-}
 </script>
 END;
     }

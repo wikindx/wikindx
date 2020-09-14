@@ -576,7 +576,7 @@ class RESOURCEVIEW
                     $this->messages->text('resources', 'attachmentReadMe'),
                     '#',
                     "",
-                    \HTML\stripHtml(\HTML\htmlToNl($row['resourceattachmentsDescription']))
+                    $row['resourceattachmentsDescription']
                 );
             } else {
                 $readme = '';

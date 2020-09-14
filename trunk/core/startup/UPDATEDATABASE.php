@@ -349,6 +349,11 @@ class UPDATEDATABASE
                 $this->numStages = 1;
                 $this->stage24();
             }
+            elseif ($dbVersion < 25.0)
+            { // upgrade v6.3.11 to 6.3.11
+                $this->numStages = 1;
+                $this->stage25();
+            }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
             // Refresh the locales list
@@ -999,7 +1004,7 @@ class UPDATEDATABASE
         $this->pauseExecution('stage23');
     }
     /**
-     * Upgrade database schema to version 23 (6.3.11)
+     * Upgrade database schema to version 24 (6.3.11)
      */
     private function stage24()
     {
@@ -1008,6 +1013,47 @@ class UPDATEDATABASE
         $this->updateSoftwareVersion(24);
         $this->checkStatus('stage24');
         $this->pauseExecution('stage24');
+    }
+    /**
+     * Upgrade database schema to version 25 (6.3.11)
+     */
+    private function stage25()
+    {
+        // Strip HTML from bibliograpy descriptions
+        $updateArray = [];
+        $this->db->formatConditions(['userbibliographyDescription' => 'IS NOT NULL']);
+        $resultSet = $this->db->select('user_bibliography', ['userbibliographyId', 'userbibliographyDescription']);
+    	while ($row = $this->db->fetchRow($resultSet))
+    	{
+    	    $desc = trim(\HTML\stripHtml($row['userbibliographyDescription']));
+    	    if ($desc != $row['userbibliographyDescription']) {
+    	        $updateArray[$row['userbibliographyId']] = ($desc != '' ? $desc : 'NULL');
+    	    }
+    	}
+    	
+    	if (count($updateArray) > 0) {
+    	    $this->db->multiUpdate('user_bibliography', 'userbibliographyDescription', 'userbibliographyId', $updateArray);
+    	}
+    	
+        // Strip HTML from attachment descriptions
+        $updateArray = [];
+        $this->db->formatConditions(['resourceattachmentsDescription' => 'IS NOT NULL']);
+        $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsDescription']);
+    	while ($row = $this->db->fetchRow($resultSet))
+    	{
+    	    $desc = trim(\HTML\stripHtml($row['resourceattachmentsDescription']));
+    	    if ($desc != $row['resourceattachmentsDescription']) {
+    	        $updateArray[$row['resourceattachmentsId']] = ($desc != '' ? $desc : 'NULL');
+    	    }
+    	}
+    	
+    	if (count($updateArray) > 0) {
+    	    $this->db->multiUpdate('resource_attachments', 'resourceattachmentsDescription', 'resourceattachmentsId', $updateArray);
+    	}
+        
+        $this->updateSoftwareVersion(25);
+        $this->checkStatus('stage25');
+        $this->pauseExecution('stage25');
     }
     /**
      * Transfer statistics data to new tables then drop old table

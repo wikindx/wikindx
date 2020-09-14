@@ -126,10 +126,12 @@ function sendMywikindxInput()
 		addUsers = JSON.stringify(addUsers);
 		var obj = coreGetElementById('title');
 		var title = JSON.stringify(coreTrim(obj.value));
-		var description = coreTrim(tinymce.EditorManager.get('description').getContent());
+		
+		var obj = coreGetElementById('description');
+		var description = JSON.stringify(coreTrim(obj.value));
 		description = description.replace(/^<p>/, '');
 		description = description.replace(/<\/p>/, '');
-		description = JSON.stringify(description);
+		
 		if((type.value == 'editUserGroup') || (type.value == 'editBib'))
 		{
 			select = coreGetElementById('deleteUsers');
@@ -151,14 +153,28 @@ function sendMywikindxInput()
 			if(type.value == 'editUserGroup')
 			{
 				var groupId = coreGetElementById('groupId').value;
-				var options = '&title=' + title + '&description=' + description + 
-					'&addUsers=' + addUsers + '&deleteUsers=' + deleteUsers + '&groupId=' + groupId;
+				var options =
+				    '&title=' + title +
+				    '&description=' + description + 
+					'&addUsers=' + addUsers +
+					'&deleteUsers=' + deleteUsers +
+					'&groupId=' + groupId;
 			}
 			else
 			{
 				var bibId = coreGetElementById('bibId').value;
-				var groupId = coreGetElementById('groupId').value;
-				var options = '&title=' + title + '&description=' + description + '&groupId=' + groupId + '&bibId=' + bibId;
+				
+                var groupId = coreGetElementById('groupId');
+                if (typeof(groupId) != 'undefined' && groupId != null)
+                    groupId = groupId.value;
+                else
+                    groupId = "";
+				
+				var options =
+				    '&title=' + title +
+				    '&description=' + description +
+				    '&groupId=' + groupId +
+				    '&bibId=' + bibId;
 			}
 		}
 		else

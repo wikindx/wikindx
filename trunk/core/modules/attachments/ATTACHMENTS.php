@@ -542,7 +542,7 @@ class ATTACHMENTS
         $td .= '<div id="fallback"></div>';
         $pString .= \HTML\td($td, 'attachmentBorder');
         // Single upload
-        $td = $tinymce->loadBasicTextArea($tinyEditors, 400);
+        $td = "";
         $td .= \FORM\formMultiHeader("attachments_ATTACHMENTS_CORE");
         $td .= \FORM\hidden('function', 'add');
         $td .= \FORM\hidden('resourceId', $this->resourceId);
@@ -662,7 +662,6 @@ class ATTACHMENTS
      */
     private function fileAttachAdd()
     {
-        $tinymce = FACTORY_LOADTINYMCE::getInstance();
         $maxSize = FILE\fileMaxSize();
         // Three ways to do this:
         // Quick and dirty multiple upload
@@ -691,7 +690,6 @@ class ATTACHMENTS
         $td2 .= \FORM\fileUpload($this->messages->text("resources", "fileAttach"), "file", 50);
         $td2 .= \HTML\p(\FORM\textInput($this->messages->text("resources", "fileName"), "fileName"));
         $td2 .= $this->embargoForm();
-        $td2 .= $tinymce->loadBasicTextArea(["fileDescription"], 400);
         $td2 .= \HTML\p(\FORM\textareaInput(
             $this->messages->text('resources', 'attachmentDescription'),
             "fileDescription",

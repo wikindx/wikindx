@@ -437,7 +437,6 @@ class MYWIKINDX
      */
     public function createUserGroupInit($error = FALSE)
     {
-        $tinymce = FACTORY_LOADTINYMCE::getInstance();
         $this->session->delVar("mywikindx_group_add");
         if (!$error) {
             $this->session->delVar("mywikindx_groupTitle");
@@ -453,7 +452,6 @@ class MYWIKINDX
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         $pString .= \FORM\formHeader(FALSE);
         $pString .= \FORM\hidden("method", "createUserGroup");
-        $pString .= $tinymce->loadBasicTextarea();
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $sessVar = $this->session->issetVar("mywikindx_groupTitle") ?
@@ -551,7 +549,6 @@ class MYWIKINDX
      */
     public function editUserGroupInit($error = FALSE)
     {
-        $tinymce = FACTORY_LOADTINYMCE::getInstance();
         $this->session->delVar("mywikindx_group_edit");
         if (!$error) {
             $this->session->delVar("mywikindx_groupTitle");
@@ -573,7 +570,6 @@ class MYWIKINDX
         $pString .= \FORM\formHeader(FALSE);
         $pString .= \FORM\hidden("method", "editUserGroup");
         $pString .= \FORM\hidden("groupId", $this->vars['groupId']);
-        $pString .= $tinymce->loadBasicTextarea();
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         if ($this->session->issetVar("mywikindx_groupTitle")) {
@@ -1122,7 +1118,6 @@ class MYWIKINDX
      */
     public function createUserBibInit($error = FALSE, $groupBib = FALSE)
     {
-        $tinymce = FACTORY_LOADTINYMCE::getInstance();
         // If creating a group bibliography, this user must own groups
         if ($groupBib) {
             GLOBALS::setTplVar('heading', $this->messages->text(
@@ -1167,7 +1162,6 @@ class MYWIKINDX
         } else {
             $pString .= \FORM\hidden("method", "createUserBib");
         }
-        $pString .= $tinymce->loadBasicTextarea();
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $sessVar = $this->session->issetVar("mywikindx_bibTitle") ?
@@ -1270,7 +1264,6 @@ class MYWIKINDX
      */
     public function editBibInit($error = FALSE)
     {
-        $tinymce = FACTORY_LOADTINYMCE::getInstance();
         $this->session->delVar("mywikindx_bib_edit");
         if (!$error) {
             $this->session->delVar("mywikindx_bibTitle");
@@ -1292,7 +1285,6 @@ class MYWIKINDX
         $pString .= \FORM\formHeader(FALSE);
         $pString .= \FORM\hidden("method", "editBib");
         $pString .= \FORM\hidden("bibId", $this->vars['bibId']);
-        $pString .= $tinymce->loadBasicTextarea();
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         if ($this->session->issetVar("mywikindx_Title")) {

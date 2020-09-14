@@ -23,6 +23,10 @@ Thus, plugins/soundexplorer/index.php etc.
 
 CHANGELOG:
 
+v2.5, 2020
+1. Remove use of sessions for completing form input and redirect on successful completion.
+2. Improvements to the interface.
+
 2020-07-11 : CHG : relicencing under ISC License terms.
 
 v2.4, 2020

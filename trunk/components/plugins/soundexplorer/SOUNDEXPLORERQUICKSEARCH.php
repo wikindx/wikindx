@@ -33,6 +33,7 @@ class SOUNDEXPLORERQUICKSEARCH
     private $execJoin = [];
     private $orderedJoins = [];
     private $foundResources = [];
+    public $formData = [];
 
     public function __construct()
     {
@@ -54,23 +55,30 @@ class SOUNDEXPLORERQUICKSEARCH
      * display form options
      *
      * @param false|int $id
+     * @param string $message
      *
      * @return string
      */
-    public function display($id = FALSE)
+    public function display($id = FALSE, $message = FALSE)
     {
         ///First check, do we have resources?
         if (!$this->common->resourcesExist()) {
             return;
         }
-        $pString = FORM\formHeader("soundexplorer_seStoreSearch");
+        $pString = '';
+        if ($message) {
+        	$pString .= $message;
+        }
+        $pString .= FORM\formHeader("soundexplorer_seStoreSearch");
         $pString .= FORM\hidden("method", "process");
         if ($id) {
             $pString .= FORM\hidden('sepluginId', $id);
+            $this->grabSE($id);
         }
         $pString .= HTML\tableStart();
         $pString .= HTML\trStart();
-        $label = $this->session->issetVar("seplugin_Label") ? htmlspecialchars(stripslashes($this->session->getVar("seplugin_Label")), ENT_QUOTES | ENT_HTML5) : FALSE;
+        $label = array_key_exists("Label", $this->formData) ? 
+        	htmlspecialchars(stripslashes($this->formData["Label"]), ENT_QUOTES | ENT_HTML5) : FALSE;
         $pString .= HTML\td(FORM\textInput(
             $this->pluginmessages->text("seLabel"),
             "seplugin_Label",
@@ -81,8 +89,8 @@ class SOUNDEXPLORERQUICKSEARCH
         $this->makeRadioButtons('Field');
         $pString .= HTML\td($this->makeFormMultiple($fields));
         $this->radioButtons = FALSE;
-        $word = $this->session->issetVar("seplugin_Word") ?
-            htmlspecialchars(stripslashes($this->session->getVar("seplugin_Word")), ENT_QUOTES | ENT_HTML5) : FALSE;
+        $word = array_key_exists("Word", $this->formData) ?
+            htmlspecialchars(stripslashes($this->formData["Word"]), ENT_QUOTES | ENT_HTML5) : FALSE;
         $hint = BR . HTML\span($this->coremessages->text("hint", "wordLogic"), 'hint');
         $pString .= HTML\td(FORM\textInput(
             $this->coremessages->text("search", "word"),
@@ -91,16 +99,17 @@ class SOUNDEXPLORERQUICKSEARCH
             40
         ) . $hint);
         $selectedArray = ['sine' => 'sine', 'square' => 'square', 'triangle' => 'triangle'];
-        $sound = $this->session->issetVar("seplugin_Sound") ? $this->session->getVar("seplugin_Sound") : 'sine';
+        $sound = array_key_exists("Sound", $this->formData) ? $this->formData["Sound"] : 'sine';
         $js = 'onClick="seTestSound()"';
         $pString .= HTML\td(FORM\selectedBoxValue($this->pluginmessages->text("seSound"), "seplugin_Sound", $selectedArray, $sound, 1, FALSE, $js));
         $selectedArray = ['enabled' => $this->pluginmessages->text("seEnabled"), 'disabled' => $this->pluginmessages->text("seDisabled")];
         if (!$id) {
             $status = 'enabled';
         } else {
-            $status = $this->session->getVar("seplugin_SearchStatus") == 'enabled' ? 'enabled' : 'disabled';
+            $status = array_key_exists("SearchStatus", $this->formData) && ($this->formData["SearchStatus"] == 'enabled') ? 'enabled' : 'disabled';
         }
-        $pString .= HTML\td(FORM\selectedBoxValue($this->pluginmessages->text("seSearchStatus"), "seplugin_SearchStatus", $selectedArray, $status, 1));
+        $pString .= HTML\td(FORM\selectedBoxValue($this->pluginmessages->text("seSearchStatus"), 
+        	"seplugin_SearchStatus", $selectedArray, $status, 1));
         if ($id) {
             $pString .= HTML\td(FORM\checkBox($this->pluginmessages->text("seSearchDelete"), "seplugin_SearchDelete"));
         }
@@ -108,8 +117,8 @@ class SOUNDEXPLORERQUICKSEARCH
         $pString .= HTML\tableEnd();
         $pString .= HTML\tableStart();
         $pString .= HTML\trStart();
-        $note = $this->session->issetVar("seplugin_SearchNote") ?
-            htmlspecialchars(stripslashes($this->session->getVar("seplugin_SearchNote")), ENT_QUOTES | ENT_HTML5) : FALSE;
+        $note = array_key_exists("SearchNote", $this->formData) ?
+            htmlspecialchars(stripslashes($this->formData["SearchNote"]), ENT_QUOTES | ENT_HTML5) : FALSE;
         $pString .= HTML\td(FORM\textareaInput($this->pluginmessages->text("seSearchNote"), "seplugin_SearchNote", $note, 60) .
             HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit"))));
         $pString .= HTML\trEnd();
@@ -152,6 +161,23 @@ class SOUNDEXPLORERQUICKSEARCH
         }
     }
     /**
+     * Grab form field data from database for a specific ID
+     *
+     * @param int $id
+     */
+    private function grabSE($id)
+    {
+		$this->db->formatConditions(['pluginsoundexplorerId' => $id]);
+		$resultset = $this->db->select('plugin_soundexplorer', ['pluginsoundexplorerLabel', 'pluginsoundexplorerArray']);
+		while ($row = $this->db->fetchRow($resultset)) {
+			$this->formData["Label"] = $row['pluginsoundexplorerLabel'];
+			$array = unserialize(base64_decode($row['pluginsoundexplorerArray']));
+		}
+		foreach ($array as $key => $value) {
+			$this->formData[$key] = $value;
+		}
+    }
+    /**
      * validate user input - method, word and field are required
      *
      * Input comes either from form input or, when paging, from the session.
@@ -160,22 +186,22 @@ class SOUNDEXPLORERQUICKSEARCH
      */
     public function checkInput()
     {
-        $this->writeSession();
+        $this->writeFormdata();
         $type = FALSE;
         if (array_key_exists("seplugin_Field", $this->vars) && $this->vars["seplugin_Field"]) {
             $type = $this->vars["seplugin_Field"];
-        } elseif ($this->session->issetVar("seplugin_Field")) {
-            $type = $this->session->getVar("seplugin_Field");
+        } elseif (array_key_exists("Field", $this->formData)) {
+            $type = $this->formData["Field"];
         }
         if (!$type) {
-            $this->session->setVar("seplugin_Field", "title"); // force to default title search
+            $this->formData["Field"] = "title"; // force to default title search
         }
         if ((array_key_exists("seplugin_Label", $this->vars) && !trim($this->vars["seplugin_Label"]))
-        || !$this->session->getVar("seplugin_Label")) {
+        || !array_key_exists("Label", $this->formData)) {
             return $this->errors->text("inputError", "missing");
         }
         if ((array_key_exists("seplugin_Word", $this->vars) && !trim($this->vars["seplugin_Word"]))
-        || !$this->session->getVar("seplugin_Word")) {
+        || !array_key_exists("Word", $this->formData)) {
             return $this->errors->text("inputError", "missing");
         } else {
             return FALSE;
@@ -242,7 +268,7 @@ class SOUNDEXPLORERQUICKSEARCH
     private function makeFormMultiple($array)
     {
         $temp = $array;
-        if ($selected = $this->session->getVar("seplugin_Field")) {
+        if (array_key_exists("Field", $this->formData) && ($selected = $this->formData["Field"])) {
             $selectedArray = UTF8::mb_explode(",", $selected);
             $pString = FORM\selectedBoxValueMultiple($this->coremessages->text("search", 'field'), "seplugin_Field", $temp, $selectedArray, 2);
         } else {
@@ -273,13 +299,15 @@ class SOUNDEXPLORERQUICKSEARCH
      */
     private function makeRadioButtons($type)
     {
-        $type = 'seplugin_' . $type . 'Method';
-        if ($this->session->getVar($type) == 'AND') {
+    	$type .= 'Method';
+        if (array_key_exists($type, $this->formData) && ($this->formData[$type] == 'AND')) {
+        	$type = 'seplugin_' . $type;
             $pString = HTML\span(FORM\radioButton(FALSE, $type, 'OR') . " OR", "small") . BR;
             $pString .= HTML\span(FORM\radioButton(FALSE, $type, 'AND', TRUE) . " AND", "small");
         }
         // Default
         else {
+       		$type = 'seplugin_' . $type;
             $pString = HTML\span(FORM\radioButton(FALSE, $type, 'OR', TRUE) . " OR", "small") .
                 BR;
             $pString .= HTML\span(FORM\radioButton(FALSE, $type, 'AND') . " AND", "small");
@@ -528,14 +556,14 @@ class SOUNDEXPLORERQUICKSEARCH
         return $found;
     }
     /**
-     * write input to session
+     * write input to array
      */
-    private function writeSession()
+    private function writeFormdata()
     {
         // First, write all input with 'search_' prefix to session
         foreach ($this->vars as $key => $value) {
             if (preg_match("/^seplugin_/u", $key)) {
-                $key = str_replace('seplugin_', '', $key);
+            	$key = str_replace('seplugin_', '', $key);
                 // Is this a multiple select box input?  If so, multiple choices are written to session as
                 // comma-delimited string (no spaces).
                 // Don't write any FALSE or '0' values.
@@ -548,15 +576,16 @@ class SOUNDEXPLORERQUICKSEARCH
                 if (!trim($value)) {
                     continue;
                 }
-                $temp[$key] = trim($value);
+                $this->formData[$key] = trim($value);
             }
         }
         // temp store plugin status (on/off) and plugin database status
-        $status = $this->session->getVar("seplugin_On");
+/*        $status = $this->session->getVar("seplugin_On");
         $dbStatus = $this->session->getVar("seplugin_DatabaseCreated");
         $this->session->clearArray("seplugin");
         $this->session->writeArray($temp, 'seplugin');
         $this->session->setVar("seplugin_On", $status);
         $this->session->setVar("seplugin_DatabaseCreated", $dbStatus);
+*/
     }
 }

@@ -71,7 +71,7 @@ class SOUNDEXPLORERQUICKSEARCH
         }
         $pString .= FORM\formHeader("soundexplorer_seStoreSearch");
         $pString .= FORM\hidden("method", "process");
-        if ($id) {
+        if ($id && is_int($id)) {
             $pString .= FORM\hidden('sepluginId', $id);
             $this->grabSE($id);
         }

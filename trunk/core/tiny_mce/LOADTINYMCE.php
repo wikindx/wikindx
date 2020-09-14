@@ -228,58 +228,6 @@ tinyMCE.init({
 END;
     }
     /**
-     * Load tinymce -- basic textarea configuration
-     *
-     * @return string
-     */
-    public function loadBasicTextarea()
-    {
-        $cssPath = $this->cssPath;
-        $cssPopupPath = $this->cssPopupPath;
-        $tinymcePath = $this->getIncludeTinyMceLib();
-
-        return <<<END
-$tinymcePath
-<script>
-tinyMCE.init({
-        // General options
-        mode : "textareas",
-        theme : "advanced",
-        element_format : "html",
-// Keep as UTF8
-        entity_encoding : "raw",
-		editor_deselector : "mceNoEditor",
-		plugins : "paste,wikindxSpecialChars",
-
-
-        // Theme options
-        theme_advanced_buttons1 : "paste,pastetext,pasteword,|bold,italic,underline,removeformat,code,|,formatselect,fontselect,fontsizeselect,forecolor,|,sub,sup,|,wikindxSpecialChars,",
-        theme_advanced_buttons2 : "",
-        theme_advanced_buttons3 : "",
-        theme_advanced_buttons4 : "",
-        theme_advanced_toolbar_location : "top",
-        theme_advanced_toolbar_align : "left",
-        theme_advanced_resizing : true,
-        theme_advanced_statusbar_location : "none",
-
-        // Skin options
-        skin : "o2k7",
-        skin_variant : "silver",
-
-        // Example content CSS (should be your site CSS)
-        content_css : "$cssPath",
-        popup_css : "$cssPopupPath",
-
-        // Drop lists for link/image/media/template dialogs
-        template_external_list_url : "js/template_list.js",
-        external_link_list_url : "js/link_list.js",
-        external_image_list_url : "js/image_list.js",
-        media_external_list_url : "js/media_list.js"
-});
-</script>
-END;
-    }
-    /**
      * Load tinymce -- basic textinput configuration
      *
      * @param array $elements Array of textinput ids to apply editor to. Default is array()

@@ -1378,8 +1378,8 @@ class MYWIKINDX
             $this->db->updateNull('user_bibliography', 'userbibliographyDescription');
         }
         $updateArray['userbibliographyTitle'] = $title;
-        if (array_key_exists('groupId', $this->vars)) { // user group bibliography
-            $updateArray['userbibliographyUserGroupId'] = json_decode($this->vars['groupId']);
+        if ($groupId = json_decode(trim($this->vars['groupId']))) { // user group bibliography
+            $updateArray['userbibliographyUserGroupId'] = $groupId;
         }
         $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['userbibliographyId' => $bibId]);

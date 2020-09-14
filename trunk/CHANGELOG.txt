@@ -19,7 +19,8 @@ MAINTENANCE:
 2. Replace WIKINDX_BASE_URL by  WIKINDX_URL_BASE.
 3. Make PHP includes independent of the web server layout: https://sourceforge.net/p/wikindx/v5bugs/244/
 4. Bump WIKINDX_COMPONENTS_COMPATIBLE_VERSION of plugins to 9 (for includes and WIKINDX_URL_BASE).
-5. Remove the check of title and subtitle length in TinyMCE editor
+5. Remove the check of title and subtitle length in TinyMCE editor.
+6. Remove the type attribute of scripts elements previously mandatory in XHTML.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

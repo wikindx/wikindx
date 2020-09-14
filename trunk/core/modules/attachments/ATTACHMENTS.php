@@ -45,7 +45,9 @@ class ATTACHMENTS
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->gatekeep->init();
         if (!array_key_exists('resourceId', $this->vars) || !array_key_exists('function', $this->vars)) {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
+    		$message = rawurlencode($this->errors->text("inputError", "missing"));
+        	header("Location: index.php?action=front&message=$message");
+        	die;
         }
         $this->resourceId = $this->vars['resourceId'];
 // Warnings about file size are handled BEFORE the script so set a custom error handler here and redirect with header()
@@ -66,10 +68,10 @@ class ATTACHMENTS
     public function deleteConfirmAll()
     {
         if (!array_key_exists('deleteAll', $this->vars)) {
-            $navigate = FACTORY_NAVIGATE::getInstance();
-            $navigate->resource($this->resourceId, $this->errors->text("inputError", "missing"));
-
-            return;
+        	$id = $this->resourceId;
+    		$message = rawurlencode($this->errors->text("inputError", "missing"));
+        	header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+        	die;
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete')));
         $pString = \FORM\formHeader("attachments_ATTACHMENTS_CORE");
@@ -93,7 +95,7 @@ class ATTACHMENTS
         GLOBALS::addTplVar('content', $pString);
     }
     /**
-     *download an attachment to a user
+     * download an attachment to a user
      */
     public function downloadAttachment()
     {
@@ -112,8 +114,9 @@ class ATTACHMENTS
         $lastmodified = date('r', strtotime($row['resourceattachmentsTimestamp']));
         unset($row);
         if (file_exists($dirName . DIRECTORY_SEPARATOR . $hash) === FALSE) {
-            $this->badInput->closeType = 'closePopup';
-            $this->badInput->close($this->errors->text("file", "missing"));
+        	$id = $this->vars['resourceId'];
+ 	   		$message = rawurlencode($this->errors->text("file", "missing"));
+    	    header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
             die;
         }
         FILE\setHeaders($type, $size, $filename, $lastmodified);
@@ -126,7 +129,6 @@ class ATTACHMENTS
      */
     private function editInit()
     {
-        $this->session->delVar("attachLock");
         $fields = $this->attachment->listFiles($this->resourceId);
         if (!empty($fields)) { // attachments exist for this resource
             GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", '(' . $this->messages->text('misc', 'edit') . ')'));
@@ -142,20 +144,17 @@ class ATTACHMENTS
      */
     private function add()
     {
-        if ($this->session->getVar("attachLock")) {
-            $this->badInput->close($this->errors->text("done", "attachAdd"));
-        }
+        $id = $this->resourceId;
         $this->getEmbargo();
-        $navigate = FACTORY_NAVIGATE::getInstance();
         if (!$this->storeFile()) { // FALSE if attachment already exists
-            $navigate->resource($this->resourceId, $this->errors->text("file", "attachmentExists"));
-
-            return;
+ 	   		$message = rawurlencode($this->errors->text("file", "attachmentExists"));
+    	    header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+            die;
         }
-        // Lock re-uploading
-        $this->session->setVar("attachLock", TRUE);
         // send back to view this resource with success message
-        $navigate->resource($this->resourceId, $this->success->text("attachAdd"));
+        $message = rawurlencode($this->success->text("attachAdd"));
+        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+        die;
     }
     /**
      * drag and drop multiple attachments.
@@ -176,20 +175,17 @@ class ATTACHMENTS
      */
     private function addMultipleFiles()
     {
-        if ($this->session->getVar("attachLock")) {
-            $this->badInput->close($this->errors->text("done", "attachAdd"));
-        }
         $this->getEmbargo();
-        $navigate = FACTORY_NAVIGATE::getInstance();
+        $id = $this->resourceId;
         if (!$this->storeFile(TRUE)) { // FALSE if attachment already exists
-            $navigate->resource($this->resourceId, $this->errors->text("file", "attachmentExists"));
-
-            return;
+       		$message = rawurlencode($this->errors->text("file", "attachmentExists"));
+        	header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+			die;
         }
-        // Lock re-uploading
-        $this->session->setVar("attachLock", TRUE);
         // send back to view this resource with success message
-        $navigate->resource($this->resourceId, $this->success->text("attachAdd"));
+       	$message = rawurlencode($this->success->text("attachAdd"));
+    	header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+    	die;
     }
     /**
      * edit attachments
@@ -216,7 +212,6 @@ class ATTACHMENTS
                 $descriptions[$split[1]] = $var;
             }
         }
-        $message = FALSE;
         // Edit files
         if (isset($edits)) {
             foreach ($edits as $hash => $filename) {
@@ -244,23 +239,17 @@ class ATTACHMENTS
                 $this->db->formatConditions(["resourceattachmentsHashFilename" => $hash]);
                 $this->db->update('resource_attachments', $updateArray);
             }
-            $message = $this->success->text("attachEdit");
         }
         // set primary attachment
         $this->setPrimaryAttachment($primary);
-        $navigate = FACTORY_NAVIGATE::getInstance();
+        $id = $this->resourceId;
         // Store any new file
         if (array_key_exists('file', $_FILES) && $_FILES['file']['tmp_name']) {
-            if ($this->session->getVar("attachLock")) {
-                $message = $this->errors->text("done", "attachAdd");
-            }
             if (!$this->storeFile()) { // FALSE if attachment already exists
-                $navigate->resource($this->resourceId, $this->errors->text("file", "attachmentExists"));
-
-                return;
+       			$message = rawurlencode($this->errors->text("file", "attachmentExists"));
+        		header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+				die;
             }
-            // Lock re-uploading
-            $this->session->setVar("attachLock", TRUE);
         }
         if (isset($deletes)) {
             $this->deleteConfirm($deletes);
@@ -268,7 +257,9 @@ class ATTACHMENTS
             return;
         }
         // send back to view this resource with success message (deleteConfirm breaks out before this)
-        $navigate->resource($this->resourceId, $this->success->text("attachEdit"));
+       	$message = rawurlencode($this->success->text("attachEdit"));
+		header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+		die;
     }
     /**
      * Grab and sort embargo date
@@ -383,8 +374,10 @@ class ATTACHMENTS
             $this->db->delete('statistics_attachment_downloads');
         }
         // send back to view this resource with success message
-        $navigate = FACTORY_NAVIGATE::getInstance();
-        $navigate->resource($this->resourceId, $this->success->text("attachDelete"));
+        $id = $this->resourceId;
+       	$message = rawurlencode($this->success->text("attachDelete"));
+		header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+		die;
     }
     /**
      * Store attachment
@@ -396,10 +389,13 @@ class ATTACHMENTS
     private function storeFile($multiple = FALSE)
     {
         $varFileName = array_key_exists('fileName', $this->vars) ? $this->vars['fileName'] : FALSE;
+        $id = $this->resourceId;
         if ($multiple) {
             $filesArray = FILE\fileUpload($varFileName, $multiple);
             if (empty($filesArray)) {
-                $this->badInput->close($this->errors->text("file", "upload"));
+ 	       		$message = rawurlencode($this->errors->text("file", "upload"));
+    	    	header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+    	    	die;
             }
             foreach ($filesArray as $array) {
                 // $array[0] = file name
@@ -408,7 +404,9 @@ class ATTACHMENTS
                 // $array[3] = file size
                 // $array[4] = index of array in $_FILES['file']
                 if (!$array[1]) {
-                    $this->badInput->close($this->errors->text("file", "upload"));
+					$message = rawurlencode($this->errors->text("file", "upload"));
+					header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+					die;
                 }
                 if (!$this->actuallyStoreFile($array[0], $array[1], $array[2], $array[3], $array[4])) {
                     return FALSE;
@@ -417,7 +415,9 @@ class ATTACHMENTS
         } else {
             list($filename, $hash, $type, $size) = FILE\fileUpload($varFileName);
             if (!$hash) {
-                $this->badInput->close($this->errors->text("file", "upload"));
+ 	       		$message = rawurlencode($this->errors->text("file", "upload"));
+    	    	header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+    	    	die;
             }
             if (!$this->actuallyStoreFile($filename, $hash, $type, $size, FALSE)) {
                 return FALSE;
@@ -440,7 +440,10 @@ class ATTACHMENTS
     private function actuallyStoreFile($filename, $hash, $type, $size, $index)
     {
         if (!FILE\fileStore(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]), $hash, $index)) {
-            $this->badInput->close($this->errors->text("file", "upload"));
+        	$id = $this->resourceId;
+			$message = rawurlencode($this->errors->text("file", "upload"));
+			header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+			die;
         }
         // Convert to text and store in the cache directory if of PDF, DOC or DOCX type
         $fileNameCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS, $hash]);
@@ -481,7 +484,7 @@ class ATTACHMENTS
             $values[] = $type;
             $fields[] = 'resourceattachmentsFileSize';
             $values[] = $size;
-            if (array_key_exists('embargo', $this->vars)) {
+            if (array_key_exists('embargo', $this->vars) && $this->embargoNew) {
                 $fields[] = 'resourceattachmentsEmbargo';
                 $values[] = 'Y';
                 $fields[] = 'resourceattachmentsEmbargoUntil';

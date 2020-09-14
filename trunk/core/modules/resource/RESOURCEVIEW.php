@@ -91,7 +91,7 @@ class RESOURCEVIEW
         }
         // message can come from ATTACHMENTS.php
 		if (!$message and array_key_exists('message', $this->vars)) {
-        	$message = rawurldecode($this->vars['message']);
+        	$message = $this->vars['message'];
         }
         $qs = $this->session->getArray('QueryStrings');
         if (empty($qs) || (mb_strpos($qs[0], 'RESOURCEFORM_CORE') !== FALSE)) {

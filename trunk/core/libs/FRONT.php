@@ -18,6 +18,8 @@ class FRONT
     /** object */
     private $db;
     /** object */
+    private $vars;
+    /** object */
     private $session;
     /** object */
     private $messages;
@@ -36,7 +38,13 @@ class FRONT
     public function __construct($message = FALSE)
     {
         $this->db = FACTORY_DB::getInstance();
-        $this->externalMessage = $message;
+        $this->vars = GLOBALS::getVars();
+        if (array_key_exists('message', $this->vars) && $this->vars['message']) {
+        	$this->externalMessage = $this->vars['message'];
+        }
+        else {
+	        $this->externalMessage = $message;
+        }
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();

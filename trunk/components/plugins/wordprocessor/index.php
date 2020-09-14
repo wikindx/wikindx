@@ -90,7 +90,7 @@ class wordprocessor_MODULE
         $tinyMce = new WPLOADTINYMCE();
         $pString = $this->heading();
         $message = "<span class='error'>" . $this->pluginmessages->text("notSavedStatus") . "</span>";
-        $pString .= "<script type=\"text/javascript\">var paperStatusMessage=\"$message\";</script>\n";
+        $pString .= "<script>var paperStatusMessage=\"$message\";</script>\n";
         // Complete form not required -- e.g. <form> ... </form> elements not needed here
         $pString .= $tinyMce->loadWPTextarea();
         $pString .= FORM\textareaInput(FALSE, "paperText", FALSE);
@@ -173,7 +173,7 @@ class wordprocessor_MODULE
         $text = stripslashes($text);
         $pString = $this->heading($title, $message);
         $message = "<span class='error'>" . $this->pluginmessages->text("notSavedStatus") . "</span>\n";
-        $pString .= "<script type=\"text/javascript\">var paperStatusMessage=\"$message\";</script>\n";
+        $pString .= "<script>var paperStatusMessage=\"$message\";</script>\n";
         $pString .= $tinyMce->loadWPTextarea();
         // Complete form not required -- e.g. <form> ... </form> elements not needed here
         $pString .= '<textarea class="formElements" name="paperText" id="paperText">' . $text . '</textarea>';

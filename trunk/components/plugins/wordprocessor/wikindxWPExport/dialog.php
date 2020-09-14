@@ -90,7 +90,7 @@ class WPExportDialog
         $exportLink = HTML\a("link", $title . '.rtf', "index.php?action=wordprocessor_wpExportDownload" .
             htmlentities("&hash=$hashFileName&filename=$titleUrl&extension=rtf"), "_new");
         $exportLink = str_replace('"', "'", $exportLink);
-        echo "<script type=\"text/javascript\">var fileCell=window.opener.document.getElementById('wpExportFile');fileCell.innerHTML=\"$exportLink\";window.close();</script>";
+        echo "<script>var fileCell=window.opener.document.getElementById('wpExportFile');fileCell.innerHTML=\"$exportLink\";window.close();</script>";
     }
     /**
      * Format WP text as required

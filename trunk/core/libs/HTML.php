@@ -623,9 +623,7 @@ namespace HTML
         if ($function == '') {
             return '';
         } else {
-            return '<script'
-                . \HTML\_inlineHtmlAttribute('type', 'text/javascript')
-                . '>' . LF . $function . LF . '</script>';
+            return '<script>' . LF . $function . LF . '</script>';
         }
     }
     /**
@@ -643,7 +641,6 @@ namespace HTML
             return '';
         } else {
             return '<script'
-                . \HTML\_inlineHtmlAttribute('type', 'text/javascript')
                 . \HTML\_inlineHtmlAttribute('src', $src)
                 . '></script>';
         }

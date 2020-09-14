@@ -72,7 +72,7 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "startup",
 	}
 	</style>
         <script src="<?php echo WIKINDX_URL_BASE . "/" . WIKINDX_URL_COMPONENT_VENDOR; ?>/jquery/jquery.min.js?ver=<?=WIKINDX_PUBLIC_VERSION?>"></script>
-	<script language="JavaScript" type="text/javascript">
+	<script>
         // SET CURSOR POSITION
         $.fn.setCursorPosition = function(pos) {
                 this.each(function(index, elem) {

@@ -513,19 +513,19 @@ class ATTACHMENTS
         // Quick and dirty multiple upload
         GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/modules/attachments/multipleUpload.js?ver=' . 
         	WIKINDX_PUBLIC_VERSION . '"></script>');
-        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var rId = ' . $this->resourceId . '; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var rId = ' . $this->resourceId . '; </script>');
         $error = rawurlencode($this->errors->text("file", "upload"));
         $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $error;
-        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var errorUrl = "' . $closeUrl . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var errorUrl = "' . $closeUrl . '"; </script>');
         $error = rawurlencode($this->errors->text("file", "uploadSize", $maxSize));
         $sizeErrorUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $error;
-        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var sizeErrorUrl = "' . $sizeErrorUrl . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var sizeErrorUrl = "' . $sizeErrorUrl . '"; </script>');
         $success = rawurlencode($this->success->text("attachAdd"));
         $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $success;
-        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var successUrl = "' . $closeUrl . '"; </script>');
-        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var max_file_size = "' . \FILE\fileMaxSize() . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var successUrl = "' . $closeUrl . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileMaxSize() . '"; </script>');
         $td = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop") . '</div>';
-        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var fallback = "' .
+        GLOBALS::addTplVar('scripts', '<script>var fallback = "' .
             $this->messages->text("resources", "fileAttachFallback") . '"; </script>');
         $td .= '<div id="fallback"></div>';
         $pString .= \HTML\td($td, 'attachmentBorder');
@@ -656,19 +656,19 @@ class ATTACHMENTS
         // Quick and dirty multiple upload
         GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/modules/attachments/multipleUpload.js?ver=' . 
         	WIKINDX_PUBLIC_VERSION . '"></script>');
-        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var rId = ' . $this->resourceId . '; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var rId = ' . $this->resourceId . '; </script>');
         $error = rawurlencode($this->errors->text("file", "upload"));
         $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $error;
-        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var errorUrl = "' . $closeUrl . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var errorUrl = "' . $closeUrl . '"; </script>');
         $error = rawurlencode($this->errors->text("file", "uploadSize", $maxSize));
         $sizeErrorUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $error;
-        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var sizeErrorUrl = "' . $sizeErrorUrl . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var sizeErrorUrl = "' . $sizeErrorUrl . '"; </script>');
         $success = rawurlencode($this->success->text("attachAdd"));
         $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $success;
-        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var successUrl = "' . $closeUrl . '"; </script>');
-        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var max_file_size = "' . \FILE\fileMaxSize() . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var successUrl = "' . $closeUrl . '"; </script>');
+        GLOBALS::addTplVar('scripts', '<script>var max_file_size = "' . \FILE\fileMaxSize() . '"; </script>');
         $td1 = '<div id="uploader">' . $this->messages->text("resources", "fileAttachDragAndDrop") . '</div>';
-        GLOBALS::addTplVar('scripts', '<script type="text/javascript">var fallback = "' .
+        GLOBALS::addTplVar('scripts', '<script>var fallback = "' .
             $this->messages->text("resources", "fileAttachFallback") . '"; </script>');
         $td1 .= '<div id="fallback"></div>';
         // Single file upload with filename, description and embargo

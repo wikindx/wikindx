@@ -96,7 +96,7 @@ class WPCommon
         $this->session->setVar("wp_HashFilename", $hashFileName);
         $this->session->setVar("wp_Id", $databaseId);
         $this->session->setVar("wp_Title", base64_encode($title));
-        $pString = "<script type=\"text/javascript\">tinyMCEPopup.close();</script>";
+        $pString = "<script>tinyMCEPopup.close();</script>";
         GLOBALS::addTplVar('content', $pString);
     }
     /**
@@ -107,7 +107,7 @@ class WPCommon
      */
     public function failure($message, $title)
     {
-        $pString .= "<script type=\"text/javascript\">var wpStatus=parent.opener.document.getElementById('wpStatus');wpStatus.innerHTML=\"$message\";var wpTitle=parent.opener.document.getElementById('wpTitle');wpTitle.innerHTML=\"$title\";tinyMCEPopup.close();</script>";
+        $pString .= "<script>var wpStatus=parent.opener.document.getElementById('wpStatus');wpStatus.innerHTML=\"$message\";var wpTitle=parent.opener.document.getElementById('wpTitle');wpTitle.innerHTML=\"$title\";tinyMCEPopup.close();</script>";
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSEPOPUP::getInstance();
     }

@@ -220,6 +220,11 @@ class ATTACHMENTS
         // Edit files
         if (isset($edits)) {
             foreach ($edits as $hash => $filename) {
+            	if (!trim($filename)) { // Must have a name . . .
+                    $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);
+                    $this->db->formatConditions(["resourceattachmentsHashFilename" => $hash]);
+                    $filename = $this->db->selectFirstField('resource_attachments', 'resourceattachmentsFileName');
+                }
                 $updateArray = [];
                 $updateArray['resourceattachmentsFileName'] = $filename;
                 if (array_key_exists($hash, $this->embargoArray)) {
@@ -275,11 +280,15 @@ class ATTACHMENTS
         if ($hash) {
             $arrayIndex = $hash;
             $hash = "_$hash";
+            $date = 'date' . $hash;
+        }
+        else {
+        	$date = 'date';
         }
         // date comes in as 'yyyy-mm-dd' (but displayed on web form as 'dd / mm / yyyy').
         // all three fields must have a valid value else $this->vars["date"] is FALSE
-        if (array_key_exists("date", $this->vars) && $this->vars["date"]) {
-            list($year, $month, $day) = \UTILS\splitDate($this->vars["date"]);
+        if (array_key_exists($date, $this->vars) && $this->vars[$date]) {
+            list($year, $month, $day) = \UTILS\splitDate($this->vars[$date]);
         } else {
             return;
         }

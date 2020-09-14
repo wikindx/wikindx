@@ -8,6 +8,7 @@ BUG FIXES:
 1. When merging or deleting keywords, ensure integrity of keyword_groups is maintained.
 2. Properly handle resource attachment upload errors in all three forms.
 3. Fix a missing input error message when clicking on a metadata keyword.
+4. Fix the editing/setting of embargo dates for existing resource attachments.
 
 FEATURE ENHANCEMENT:
 1. When editing a form, store form data in the form_data table to repopulate the form in case of error and lessen the load on sessions. Also, restructure form management by splitting form presentation from DB data writing.

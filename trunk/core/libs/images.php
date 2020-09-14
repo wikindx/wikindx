@@ -759,150 +759,146 @@ class EncodeExplorer
     {
         $pString = '<link rel="stylesheet" href="images.css?ver=' . WIKINDX_PUBLIC_VERSION . '" type="text/css">';
         $pString .= '<script src="' . WIKINDX_URL_BASE . "/" . WIKINDX_URL_COMPONENT_VENDOR . '/jquery/jquery.min.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-        $pString .= <<<END
-<script>
-END;
-
-        $pString .=
-' var $table = $("table.table"),
-    $bodyCells = $table.find("tbody tr:first").children(),
-    colWidth;';
-        // Adjust the width of table thead cells when window resizes
-$pString .= '$(window).resize(function() {
-    // Get the tbody columns width array
-    colWidth = $bodyCells.map(function() {
-        return $(this).width();
-    }).get();
-
-    // Set the width of thead columns
-    $table.find("thead tr").children().each(function(i, v) {
-        $(v).width(colWidth[i]);
-    });
-}).resize(); '; // Trigger resize handler
-
-$pString .= '$(document).ready(function()
-	{
-		function positionThumbnail(e)
-		{
-			xOffset = 30;
-			yOffset = 10;
-			$("#thumb").css("left",(e.clientX + xOffset) + "px");
-
-			diff = 0;
-			if(e.clientY + $("#thumb").height() > $(window).height())
-				diff = e.clientY + $("#thumb").height() - $(window).height();
-
-			$("#thumb").css("top",(e.pageY - yOffset - diff) + "px");
-		}
-
-		$("a.thumb").hover(function(e)
-		{
-			var hrefString = $(this).attr("href");
-			var parts = hrefString.split("/");
-			var image = parts.pop();
-			parts = image.split("?");
-            var width = 0;
-            var height = 0;
-
-			if(parts.length == 2) // xxx.jpg?width=64&height=5684
+        $pString .= LF . "<script>" . LF;
+        $pString .= '
+			var $table = $("table.table");
+		    var $bodyCells = $table.find("tbody tr:first").children();
+		    var colWidth;
+	    ';
+	    
+	    // Adjust the width of table thead cells when window resizes
+		$pString .= '$(window).resize(function() {
+		    // Get the tbody columns width array
+		    colWidth = $bodyCells.map(function() {
+		        return $(this).width();
+		    }).get();
+		
+		    // Set the width of thead columns
+		    $table.find("thead tr").children().each(function(i, v) {
+		        $(v).width(colWidth[i]);
+		    });
+		}).resize(); '; // Trigger resize handler
+		
+		$pString .= '$(document).ready(function()
 			{
-                var query = parts.pop();
-                image = parts.pop();
+				function positionThumbnail(e)
+				{
+					xOffset = 30;
+					yOffset = 10;
+					$("#thumb").css("left",(e.clientX + xOffset) + "px");
+		
+					diff = 0;
+					if(e.clientY + $("#thumb").height() > $(window).height())
+						diff = e.clientY + $("#thumb").height() - $(window).height();
+		
+					$("#thumb").css("top",(e.pageY - yOffset - diff) + "px");
+				}
+		
+				$("a.thumb").hover(function(e)
+				{
+					var hrefString = $(this).attr("href");
+					var parts = hrefString.split("/");
+					var image = parts.pop();
+					parts = image.split("?");
+		            var width = 0;
+		            var height = 0;
+		
+					if(parts.length == 2) // xxx.jpg?width=64&height=5684
+					{
+		                var query = parts.pop();
+		                image = parts.pop();
+		
+		                parts = query.split("&");
+		                if(parts.length == 2) // width=64&height=5684
+		                {
+		                    var q1 = parts.pop();
+		                    var p1 = q1.split("=");
+		                    if(p1.length == 2) // width=64
+		                    {
+		                        var v1 = p1.pop();
+		                        var n1 = p1.pop();
+		                        if (n1 == "width") width = v1;
+		                        if (n1 == "height") height = v1;
+		                    }
+		                    var q2 = parts.pop();
+		                    var p2 = q2.split("=");
+		                    if(p2.length == 2) // height=5684
+		                    {
+		                        var v2 = p2.pop();
+		                        var n2 = p2.pop();
+		                        if (n2 == "width") width = v2;
+		                        if (n2 == "height") height = v2;
+		                    }
+		                }
+					}
+		
+					$("#thumb").remove();
+					$("body").append("<div id=\"thumb\"><img src=\"' . implode("/", [WIKINDX_URL_BASE, "core", "tiny_mce", "plugins", "wikindxImage", "dialog.php"]) . '?thumb=" + image + "\" alt=\"Preview\"><\/div>");
+					positionThumbnail(e);
+					$("#thumb").fadeIn("medium");
+				},
+				function(){
+					$("#thumb").remove();
+				});
+				$("a.thumb").click(function (e) {
+					$("#thumb").remove();
+		
+					var hrefString = $(this).attr("href");
+					var parts = hrefString.split("/");
+					var image = parts.pop();
+					parts = image.split("?");
+		            var width = 0;
+		            var height = 0;
+		
+					if(parts.length == 2) // xxx.jpg?width=64&height=5684
+					{
+		                var query = parts.pop();
+		                image = parts.pop();
+		
+		                parts = query.split("&");
+		                if(parts.length == 2) // width=64&height=5684
+		                {
+		                    var q1 = parts.pop();
+		                    var p1 = q1.split("=");
+		                    if(p1.length == 2) // width=64
+		                    {
+		                        var v1 = p1.pop();
+		                        var n1 = p1.pop();
+		                        if (n1 == "width") width = v1;
+		                        if (n1 == "height") height = v1;
+		                    }
+		                    var q2 = parts.pop();
+		                    var p2 = q2.split("=");
+		                    if(p2.length == 2) // height=5684
+		                    {
+		                        var v2 = p2.pop();
+		                        var n2 = p2.pop();
+		                        if (n2 == "width") width = v2;
+		                        if (n2 == "height") height = v2;
+		                    }
+		                }
+					}
+					var path = "' . WIKINDX_URL_BASE . '/' . WIKINDX_URL_DATA_IMAGES . '/" + image;
+		
+					imageDialogBrowse(path, width, height);
+				});
+				$("a.thumb").mousemove(function(e){
+					positionThumbnail(e);
+				});
+			}); ';
+        $pString .= LF . "</script>" . LF;
 
-                parts = query.split("&");
-                if(parts.length == 2) // width=64&height=5684
-                {
-                    var q1 = parts.pop();
-                    var p1 = q1.split("=");
-                    if(p1.length == 2) // width=64
-                    {
-                        var v1 = p1.pop();
-                        var n1 = p1.pop();
-                        if (n1 == "width") width = v1;
-                        if (n1 == "height") height = v1;
-                    }
-                    var q2 = parts.pop();
-                    var p2 = q2.split("=");
-                    if(p2.length == 2) // height=5684
-                    {
-                        var v2 = p2.pop();
-                        var n2 = p2.pop();
-                        if (n2 == "width") width = v2;
-                        if (n2 == "height") height = v2;
-                    }
-                }
-			}
-
-			$("#thumb").remove();
-			$("body").append("<div id=\"thumb\"><img src=\"' . implode("/", [WIKINDX_URL_BASE, "core", "tiny_mce", "plugins", "wikindxImage", "dialog.php"]) . '?thumb=" + image + "\" alt=\"Preview\"><\/div>");
-			positionThumbnail(e);
-			$("#thumb").fadeIn("medium");
-		},
-		function(){
-			$("#thumb").remove();
-		});
-		$("a.thumb").click(function (e) {
-			$("#thumb").remove();
-
-			var hrefString = $(this).attr("href");
-			var parts = hrefString.split("/");
-			var image = parts.pop();
-			parts = image.split("?");
-            var width = 0;
-            var height = 0;
-
-			if(parts.length == 2) // xxx.jpg?width=64&height=5684
-			{
-                var query = parts.pop();
-                image = parts.pop();
-
-                parts = query.split("&");
-                if(parts.length == 2) // width=64&height=5684
-                {
-                    var q1 = parts.pop();
-                    var p1 = q1.split("=");
-                    if(p1.length == 2) // width=64
-                    {
-                        var v1 = p1.pop();
-                        var n1 = p1.pop();
-                        if (n1 == "width") width = v1;
-                        if (n1 == "height") height = v1;
-                    }
-                    var q2 = parts.pop();
-                    var p2 = q2.split("=");
-                    if(p2.length == 2) // height=5684
-                    {
-                        var v2 = p2.pop();
-                        var n2 = p2.pop();
-                        if (n2 == "width") width = v2;
-                        if (n2 == "height") height = v2;
-                    }
-                }
-			}
-			var path = "' . WIKINDX_URL_BASE . '/' . WIKINDX_URL_DATA_IMAGES . '/" + image;
-
-			imageDialogBrowse(path, width, height);
-		});
-		$("a.thumb").mousemove(function(e){
-			positionThumbnail(e);
-		});
-	}); ';
-        $pString .= <<<END
-
-</script>
-END;
-
-        $pString .= "\n<div id=\"frame\">" . LF;
+        $pString .= LF . "<div id=\"frame\">" . LF;
 
         $pString .= "<table class=\"table\">"
-    . "<thead class=\"fixedHeader\">"
-    . "<tr class=\"row one header\">" . LF
-    . "<th class=\"iconH\">&nbsp;</th>" . LF
-    . "<th class=\"nameH\">" . EncodeExplorer::makeArrow("name") . "</th>" . LF
-    . "<th class=\"sizeH\">" . EncodeExplorer::makeArrow("size") . "</th>" . LF
-    . "<th class=\"changedH\">" . EncodeExplorer::makeArrow("mod") . "</th>" . LF
-    . "</tr>" . LF
-    . "</thead>" . LF;
+		    . "<thead class=\"fixedHeader\">"
+		    . "<tr class=\"row one header\">" . LF
+		    . "<th class=\"iconH\">&nbsp;</th>" . LF
+		    . "<th class=\"nameH\">" . EncodeExplorer::makeArrow("name") . "</th>" . LF
+		    . "<th class=\"sizeH\">" . EncodeExplorer::makeArrow("size") . "</th>" . LF
+		    . "<th class=\"changedH\">" . EncodeExplorer::makeArrow("mod") . "</th>" . LF
+		    . "</tr>" . LF
+		    . "</thead>" . LF;
         //
         // Ready to display folders and files.
         //
@@ -969,7 +965,6 @@ END;
         $pString .= '<input name="userfile" type="file" class="upload_file">';
         $pString .= '<input type="submit" value="' . $this->messages->text('tinymce', "upload") . '" class="upload_sumbit">';
         $pString .= '</div><div class="bar"></div></div></form><!-- END: Upload area -->';
-
 
         return $pString;
     }

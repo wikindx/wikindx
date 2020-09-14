@@ -97,11 +97,7 @@ class soundexplorer_MODULE
             $js = "onClick=\"coreOpenPopup('index.php?action=soundexplorer_seConfigure', 90); return false\"";
             $innerHtml = base64_encode(HTML\aBrowse($color, '1em', $this->pluginmessages->text('se'), '#', '', '', $js));
 
-            $script = <<<END
-<script>
-window.onload=seChangeStatus('$innerHtml');
-</script>
-END;
+            $script = LF . "<script>window.onload = seChangeStatus('$innerHtml');</script>" . LF;
             GLOBALS::addTplVar('scripts', $script);
         }
         $this->session->saveState('seplugin');

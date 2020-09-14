@@ -107,7 +107,15 @@ class WPCommon
      */
     public function failure($message, $title)
     {
-        $pString .= "<script>var wpStatus=parent.opener.document.getElementById('wpStatus');wpStatus.innerHTML=\"$message\";var wpTitle=parent.opener.document.getElementById('wpTitle');wpTitle.innerHTML=\"$title\";tinyMCEPopup.close();</script>";
+        $pString .= "
+        	<script>
+	        	var wpStatus = parent.opener.document.getElementById('wpStatus');
+	        	wpStatus.innerHTML = \"$message\";
+	        	var wpTitle=parent.opener.document.getElementById('wpTitle');
+	        	wpTitle.innerHTML = \"$title\";
+	        	tinyMCEPopup.close();
+        	</script>
+        ";
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSEPOPUP::getInstance();
     }

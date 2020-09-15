@@ -21,7 +21,6 @@ class CHOOSEBIB
     private $errors;
     private $messages;
     private $success;
-    private $badInput;
     private $common;
 
     public function __construct()
@@ -32,7 +31,6 @@ class CHOOSEBIB
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->common = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
     }
     /**
@@ -49,6 +47,9 @@ class CHOOSEBIB
 
             return;
         }
+    	if (array_key_exists('message', $this->vars) && $this->vars['message']) {
+    		$message = $this->vars['message'];
+    	}
         $pString = $message ? $message : '';
         $pString .= \FORM\formHeader("bibliography_CHOOSEBIB_CORE");
         $pString .= \FORM\hidden("method", "useBib");
@@ -85,7 +86,7 @@ class CHOOSEBIB
      */
     public function initDetails()
     {
-        $div = \HTML\div('div', $this->displayBib());
+        $div = $this->displayBib();
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $div]));
         FACTORY_CLOSERAW::getInstance();
     }
@@ -104,8 +105,11 @@ class CHOOSEBIB
         if (!$bibId && array_key_exists('BibId', $this->vars)) {
             $bibId = $this->vars['BibId'];
         }
-        if (($bibId === FALSE) || ($bibId <= 0)) {
+        if ($bibId === FALSE) {
             $pString = \HTML\p($this->messages->text("user", "masterBib"));
+        }
+        elseif ($bibId <= 0) {
+            $pString = '&nbsp;';
         } else {
             $this->db->leftJoin(
                 'user_bibliography_resource',
@@ -143,11 +147,10 @@ class CHOOSEBIB
             }
             $pString .= \HTML\p($text);
         }
-        if (array_key_exists('BibId', $this->vars)) {
-            GLOBALS::addTplVar('content', $pString);
-        } else {
+//            GLOBALS::addTplVar('content', $pString);
+  //      } else {
             return $pString;
-        }
+    //    }
     }
     /**
      * Set a bibliography for browsing
@@ -159,7 +162,9 @@ class CHOOSEBIB
         if (!array_key_exists('BibId', $this->vars) || !$this->vars['BibId']) {
             $this->session->delVar("mywikindx_Bibliography_use");
         } elseif (array_key_exists('BibId', $this->vars) && ($this->vars['BibId'] < 0)) {
-            $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
+			$message = rawurlencode($this->errors->text("inputError", "invalid"));
+			header("Location: index.php?action=bibliography_CHOOSEBIB_CORE&message=$message");
+			die;
         } else {
             $this->session->setVar("mywikindx_Bibliography_use", $this->vars['BibId']);
         }
@@ -167,6 +172,8 @@ class CHOOSEBIB
         $this->session->delVar("mywikindx_PagingStart");
         $this->session->delVar("mywikindx_PagingStartAlpha");
         $this->session->delVar("sql_LastMulti");
-        $this->init($this->success->text("bibliographySet"));
+        $message = rawurlencode($this->success->text("bibliographySet"));
+        header("Location: index.php?action=bibliography_CHOOSEBIB_CORE&message=$message");
+        die;
     }
 }

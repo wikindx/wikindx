@@ -2,7 +2,7 @@ RELEASES:
 
 
 v6.3.11
-Focus: Minor bug fixes and feature enhancement
+Focus: Minor bug fixes, feature enhancement, and maintenance
 
 BUG FIXES:
 1. When merging or deleting keywords, ensure integrity of keyword_groups is maintained.
@@ -12,7 +12,7 @@ BUG FIXES:
 5. Fix the bibliography description edition.
 
 FEATURE ENHANCEMENT:
-1. When editing a form, store form data in the form_data table to repopulate the form in case of error and lessen the load on sessions. Also, restructure form management by splitting form presentation from DB data writing.
+1. When editing a form, use internal representations to repopulate the form in case of error and lessen the load on sessions. Also, restructure form management by splitting form presentation from DB data writing and use redirects to mitigate errors caused when attempting to reload a submitted form.
 	Done: Admin|Keywords...|Edit
 	TODO: All the other forms...
 

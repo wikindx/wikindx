@@ -42,14 +42,14 @@ class EDITKEYWORD
     /**
      * check we are allowed to edit and load appropriate method
      *
-     * @param FALSE|mixed $message
+     * @param mixed $message
      */
     public function init($message = FALSE)
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $formData = [];
         if (array_key_exists('message', $this->vars)) {
-            $pString = rawurldecode($this->vars['message']);
+            $pString = $this->vars['message'];
         }
         elseif (is_array($message)) { // error has occurred so get get form_data to populate form with
             $error = array_shift($message);
@@ -286,9 +286,8 @@ class EDITKEYWORD
         $this->db->update('resource_keyword', ['resourcekeywordKeywordId' => $existId]);
     }
     /**
-     * Validate the form input and write to form_data
+     * Validate the form input
      *
-     * @return string $uuid
      */
     private function validateInput()
     {

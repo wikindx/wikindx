@@ -965,6 +965,7 @@ class MESSAGES
 				"keywordMerge" => dgettext($domain, "Merge"),
 				"keywordDelete" => dgettext($domain, "Delete"),
 				"creatorSub" => dgettext($domain, "Creators..."),
+				"creatorEdit" => dgettext($domain, "Edit"),
 				"creatorMerge" => dgettext($domain, "Merge"),
 				"creatorGroup" => dgettext($domain, "Group"),
 				"delete" => dgettext($domain, "Delete Resource"),

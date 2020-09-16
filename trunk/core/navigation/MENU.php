@@ -663,6 +663,7 @@ class MENU
             ],
             'creatorSub' => [
                 $messages->text("menu", "creatorSub") => FALSE,
+                $messages->text("menu", "creatorEdit") => 'index.php?action=edit_EDITCREATOR_CORE',
                 $messages->text("menu", "creatorMerge") => 'index.php?action=admin_ADMINCREATOR_CORE&method=mergeInit',
                 $messages->text("menu", "creatorGroup") => 'index.php?action=admin_ADMINCREATOR_CORE&method=groupInit',
             ],

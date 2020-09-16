@@ -31,9 +31,7 @@ class EDITCREATOR
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-
         $this->creator = FACTORY_CREATOR::getInstance();
-
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
 
@@ -42,26 +40,53 @@ class EDITCREATOR
     /**
      * check we are allowed to edit and load appropriate method
      *
-     * @param false|string $message
+     * @param mixed $message
      */
     public function init($message = FALSE)
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        $this->session->clearArray('edit');
+        $formData = [];
+        if (array_key_exists('message', $this->vars)) {
+            $pString = $this->vars['message'];
+        }
+        elseif (is_array($message)) { // error has occurred so get get form_data to populate form with
+            $error = array_shift($message);
+            $pString = \HTML\p($error, "error", "center");
+            $formData = array_shift($message);
+        }
+        else {
+            $pString = $message;
+        }
         $creators = $this->creator->grabAll();
-        if (!$creators) {
+        if (!is_array($creators)) { // i.e. FALSE
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noCreators'));
 
             return;
         }
-        $pString = $message ? \HTML\p($message, "error", "center") : FALSE;
+        foreach ($creators as $id => $null) {
+	        $initialCreatorId = $id;
+			break;
+		}
+        $jsonArray = [];
+        $jScript = 'index.php?action=edit_EDITCREATOR_CORE&method=displayName';
+        $jsonArray[] = [
+            'startFunction' => 'triggerFromSelect',
+            'script' => "$jScript",
+            'triggerField' => 'creatorIds',
+            'targetDiv' => 'creatorDiv',
+        ];
+		$js = \AJAX\jActionForm('onchange', $jsonArray);
         $pString .= \FORM\formHeader('edit_EDITCREATOR_CORE');
         $pString .= \FORM\hidden("method", "edit");
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\FORM\selectFBoxValue(FALSE, "creatorIds", $creators, 20));
-        $pString .= \HTML\td($this->transferArrow());
-        $pString .= \HTML\td(\HTML\div('creatorDiv', $this->displayName(TRUE)));
+        if (array_key_exists('editCreatorId', $formData) && $formData['editCreatorId']) {
+        	$pString .= \HTML\td(\FORM\selectedBoxValue(FALSE, "creatorIds", $creators, $formData['editCreatorId'], 20, FALSE, $js));
+        }
+        else {
+	        $pString .= \HTML\td(\FORM\selectFBoxValue(FALSE, "creatorIds", $creators, 20, FALSE, $js));
+        }
+        $pString .= \HTML\td(\HTML\div('creatorDiv', $this->displayName(TRUE, $initialCreatorId, $formData)));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Edit")));
@@ -73,30 +98,60 @@ class EDITCREATOR
      * Display interface to edit chose name
      *
      * @param bool $initialDisplay
+     * @param int $creatorId
+     * @param array $formData
      */
-    public function displayName($initialDisplay = FALSE)
+    public function displayName($initialDisplay = FALSE, $creatorId = FALSE, $formData = [])
     {
-        $initials = $prefix = $firstname = $surname = $creatorId = FALSE;
-        if (!$initialDisplay) {
-            $this->db->formatConditions(['creatorId' => $this->vars['ajaxReturn']]);
+        $initials = $prefix = $firstname = $surname = FALSE;
+		if (array_key_exists('editCreatorId', $formData)) {
+			$creatorId = $formData['editCreatorId'];
+			$fields = $this->fillFields($formData['firstname'], $formData['initials'], $formData['prefix'], $formData['surname']);
+		}
+        else {
+        	if (!$initialDisplay) {
+        		$creatorId = $this->vars['ajaxReturn'];
+        	}
+            $this->db->formatConditions(['creatorId' => $creatorId]);
             $recordset = $this->db->select('creator', ["creatorSurname", "creatorFirstname", "creatorInitials", "creatorPrefix"]);
-            $row = $this->db->fetchRow($recordset);
-            if ($row['creatorInitials']) {
-                $initials = str_replace(" ", ".", \HTML\dbToFormTidy($row['creatorInitials']) . ".");
-            }
-            if ($row['creatorFirstname']) {
-                $firstname = \HTML\dbToFormTidy($row['creatorFirstname']);
-            }
-            if ($row['creatorPrefix']) {
-                $prefix = \HTML\dbToFormTidy($row['creatorPrefix']);
-            }
-            $surname = \HTML\dbToFormTidy($row['creatorSurname']);
-            $creatorId = $this->vars['ajaxReturn'];
+			$row = $this->db->fetchRow($recordset);
+			if ($row['creatorInitials']) {
+				$initials = str_replace(" ", ".", \HTML\dbToFormTidy($row['creatorInitials']) . ".");
+			}
+			if ($row['creatorFirstname']) {
+				$firstname = \HTML\dbToFormTidy($row['creatorFirstname']);
+			}
+			if ($row['creatorPrefix']) {
+				$prefix = \HTML\dbToFormTidy($row['creatorPrefix']);
+			}
+			$surname = \HTML\dbToFormTidy($row['creatorSurname']);
+			$fields = $this->fillFields($firstname, $initials, $prefix, $surname);
         }
         $pString = \FORM\hidden("editCreatorId", $creatorId);
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= $fields;
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\tableEnd();
+        if ($initialDisplay) {
+            return $pString;
+        }
+        GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $pString]));
+        FACTORY_CLOSERAW::getInstance();
+    }
+    /**
+     * Fill in form fields
+     *
+     * @param string $firstname
+     * @param string $initials
+     * @param string $prefix
+     * @param string $surname
+     * 
+     * @return string
+     */
+    private function fillFields($firstname, $initials, $prefix, $surname)
+    {
+    	$pString = \HTML\td(\FORM\textInput(
             $this->messages->text("resources", "firstname"),
             "firstname",
             $firstname,
@@ -118,20 +173,14 @@ class EDITCREATOR
             11,
             10
         ));
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("resources", "surname"),
             "surname",
             $surname,
             30,
             255
-        ) . ' ' . \HTML\span('*', 'required'));
-        $pString .= \HTML\trEnd();
-        $pString .= \HTML\tableEnd();
-        if ($initialDisplay) {
-            return $pString;
-        }
-        GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $pString]));
-        FACTORY_CLOSERAW::getInstance();
+        ));
+        return $pString;
     }
     /**
      * write to the database
@@ -139,13 +188,8 @@ class EDITCREATOR
     public function edit()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        if (!array_key_exists('editCreatorId', $this->vars) || !$this->vars['editCreatorId']) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
-        }
-        $surname = array_key_exists('surname', $this->vars) ? trim($this->vars['surname']) : FALSE;
-        if (!$surname) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
-        }
+        $this->validateInput();
+        $surname = trim($this->vars['surname']);
         $firstname = trim($this->vars['firstname']);
         $initials = $this->creator->formatInitials(trim($this->vars['initials']));
         $prefix = trim($this->vars['prefix']);
@@ -187,8 +231,32 @@ class EDITCREATOR
         // remove cache files for creators
         $this->db->deleteCache('cacheResourceCreators');
         $this->db->deleteCache('cacheMetadataCreators');
-        // send back to editDisplay with success message
-        $this->init($this->success->text("creator"));
+        // send back to main script with success message
+        $message = rawurlencode($this->success->text("creator"));
+        header("Location: index.php?action=edit_EDITCREATOR_CORE&method=init&message=$message");
+    }
+    /**
+     * Validate the form input
+     *
+     */
+    private function validateInput()
+    {
+// First check for input
+		$error = '';
+        if (!array_key_exists('editCreatorId', $this->vars) || !$this->vars['editCreatorId']) {
+        	$error = $this->errors->text("inputError", "missing");
+        }
+        $surname = array_key_exists('surname', $this->vars) ? trim($this->vars['surname']) : FALSE;
+        if (!$surname) {
+            $error = $this->errors->text("inputError", "missing");
+        }
+// Second, write any input to form_data
+// Possible form fields – ensure fields are available whether filled in or not (NB checkbox fields do NOT exist in $this->vars if not checked)
+		$fields = ['surname' => $this->vars['surname'], 'editCreatorId' => $this->vars['editCreatorId'], 
+			'firstname' => $this->vars['firstname'], 'initials' => $this->vars['initials'], 'prefix' => $this->vars['prefix']];
+		if ($error) {
+        	$this->badInput->close($error, $this, ['init', $fields]);
+		}
     }
     /**
      * write to the database
@@ -227,27 +295,9 @@ class EDITCREATOR
         // Update surname where resourcecreatorCreatorMain is $existId
         $this->db->formatConditions(['resourcecreatorCreatorMain' => $existId]);
         $this->db->update('resource_creator', ['resourcecreatorCreatorSurname' => $existSurname]);
-        // send back to editDisplay with success message
-        $this->init($this->success->text("creator"));
-    }
-    /**
-     * transferArrow
-     *
-     * @return string
-     */
-    private function transferArrow()
-    {
-        $jsonArray = [];
-        $jScript = 'index.php?action=edit_EDITCREATOR_CORE&method=displayName';
-        $jsonArray[] = [
-            'startFunction' => 'triggerFromSelect',
-            'script' => "$jScript",
-            'triggerField' => 'creatorIds',
-            'targetDiv' => 'creatorDiv',
-        ];
-        $image = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
-
-        return $image;
+        // send back to main script with success message
+        $message = rawurlencode($this->success->text("creator"));
+        header("Location: index.php?action=edit_EDITCREATOR_CORE&method=init&message=$message");
     }
     /**
      * The new name equals one already in the database. Confirm that this edited one is to be removed and

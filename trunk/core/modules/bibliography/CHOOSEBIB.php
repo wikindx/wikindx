@@ -147,10 +147,7 @@ class CHOOSEBIB
             }
             $pString .= \HTML\p($text);
         }
-//            GLOBALS::addTplVar('content', $pString);
-  //      } else {
-            return $pString;
-    //    }
+        return $pString;
     }
     /**
      * Set a bibliography for browsing

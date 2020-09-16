@@ -78,7 +78,7 @@ class EDITKEYWORDGROUP
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         if (!empty($groups)) {
-        	$pString .= \HTML\td($this->displayEditForm($groups));
+        	$pString .= \HTML\td($this->displayEditForm(TRUE, $groups));
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -183,21 +183,33 @@ class EDITKEYWORDGROUP
     /** 
      * Display keyword group edit form
      *
+     * @param bool $initialDisplay
      * @param array of keyword groups
      */
-    private function displayEditForm($groups)
+    private function displayEditForm($initialDisplay = FALSE, $groups)
     {
     	$blank = '';
+    	$kgId = FALSE;
+    	$js = $this->editOnChange();
         $pString = \FORM\formHeader('edit_EDITKEYWORDGROUP_CORE', "onsubmit=\"selectAllEdit();return true;\"");
         $pString .= \FORM\hidden("method", "edit");
         $pString .= \HTML\tableStart('generalTable');
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\FORM\selectFBoxValue($this->messages->text('resources', 'keywordGroupEdit'), "kgIds", $groups, 10));
-        $pString .= \HTML\td($this->editTransferArrow(), 'padding3px left width5percent');
-        $pString .= \HTML\td($this->getEditNameAndDescription());
-        $pString .= \HTML\td($this->editDisplayKeywords(TRUE));
+        if ($initialDisplay) {
+        	foreach ($groups as $kgId => $null) {
+        		break;
+        	}
+	        $pString .= \HTML\td(\FORM\selectedBoxValue($this->messages->text('resources', 'keywordGroupEdit'), 
+	        	"kgIds", $groups, $kgId, 10, FALSE, $js));
+        }
+        else {
+	        $pString .= \HTML\td(\FORM\selectFBoxValue($this->messages->text('resources', 'keywordGroupEdit'), 
+	        	"kgIds", $groups, 10, FALSE, $js));
+	    }
+        $pString .= \HTML\td($this->getEditNameAndDescription($kgId));
+        $pString .= \HTML\td($this->editDisplayKeywords(TRUE, $kgId));
         if ($this->userGroups = $this->user->listUserGroups()) {
-			$pString .= \HTML\td($this->editDisplayUGs(TRUE));
+			$pString .= \HTML\td($this->editDisplayUGs(TRUE, $kgId));
 			$blank .= \HTML\td('&nbsp;');
 		}
         $pString .= \HTML\trEnd();
@@ -219,8 +231,8 @@ class EDITKEYWORDGROUP
     {
         $pString = \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $textBox =  \FORM\textInput(
-            $this->messages->text('resources', 'keywordGroupNew') . \HTML\span('*', 'required'),
+        $textBox =  \HTML\span('*', 'required') . \FORM\textInput(
+            $this->messages->text('resources', 'keywordGroupNew'),
             'KeywordGroup',
             FALSE,
             30,
@@ -236,14 +248,16 @@ class EDITKEYWORDGROUP
     /**
      * Display name and description for editing a keyword group
      *
+     * @param int $kgID
+     *
      * @return string
      */
-    private function getEditNameAndDescription()
+    private function getEditNameAndDescription($kgId)
     {
         $pString = \HTML\tableStart();
         $pString .= \HTML\trStart();
-		$name = \HTML\div('nameDiv', $this->editDisplayName(TRUE));
-        $description = \HTML\div('descriptionDiv', $this->editDisplayDescription(TRUE));
+		$name = \HTML\div('nameDiv', $this->editDisplayName(TRUE, $kgId));
+        $description = \HTML\div('descriptionDiv', $this->editDisplayDescription(TRUE, $kgId));
 		$pString .= \HTML\td($name . \HTML\p($description));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -262,29 +276,27 @@ class EDITKEYWORDGROUP
      * Display the name textbox for editing
      *
      * @param bool $initialDisplay Default FALSE
+     * @param int $kgID
      */
-    public function editDisplayName($initialDisplay = FALSE)
+    public function editDisplayName($initialDisplay = FALSE, $kgId = FALSE)
     {
-        if ($initialDisplay) {
-            return \FORM\textInput(
-			$this->messages->text('resources', 'keywordGroupName') . \HTML\span('*', 'required'),
-			'editName',
-			FALSE,
-			30,
-			255
-		);
+        if (!$initialDisplay) {
+        	$kgId = $this->vars['ajaxReturn'];
         }
-        $this->db->formatConditions(['userkeywordgroupsId' => $this->vars['ajaxReturn']]);
+        $this->db->formatConditions(['userkeywordgroupsId' => $kgId]);
         $recordset = $this->db->select('user_keywordgroups', 'userkeywordgroupsName');
         $row = $this->db->fetchRow($recordset);
         $name = \HTML\dbToFormTidy($row['userkeywordgroupsName']);
-        $pString = \FORM\textInput(
-			$this->messages->text('resources', 'keywordGroupName') . \HTML\span('*', 'required'),
+        $pString = \HTML\span('*', 'required') . \FORM\textInput(
+			$this->messages->text('resources', 'keywordGroupName'),
 			'editName',
 			$name,
 			30,
 			255
 		);
+		if ($initialDisplay) {
+			return $pString;
+		}
         if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
@@ -299,17 +311,21 @@ class EDITKEYWORDGROUP
      * Display the description textarea for editing
      *
      * @param bool $initialDisplay Default FALSE
+     * @param int $kgID
      */
-    public function editDisplayDescription($initialDisplay = FALSE)
+    public function editDisplayDescription($initialDisplay = FALSE, $kgId = FALSE)
     {
-        if ($initialDisplay) {
-            return \FORM\textareaInput($this->messages->text('resources', 'kgDescription'), 'editDescription', FALSE, 50, 5);
+        if (!$initialDisplay) {
+        	$kgId = $this->vars['ajaxReturn'];
         }
-        $this->db->formatConditions(['userkeywordgroupsId' => $this->vars['ajaxReturn']]);
+        $this->db->formatConditions(['userkeywordgroupsId' => $kgId]);
         $recordset = $this->db->select('user_keywordgroups', 'userkeywordgroupsDescription');
         $row = $this->db->fetchRow($recordset);
         $description = \HTML\dbToFormTidy($row['userkeywordgroupsDescription']);
         $pString = \FORM\textareaInput($this->messages->text('resources', 'kgDescription'), 'editDescription', $description, 50, 5);
+		if ($initialDisplay) {
+			return $pString;
+		}
         if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
@@ -524,20 +540,20 @@ class EDITKEYWORDGROUP
      * display user group select boxes for editing
      *
      * @param bool $initialDisplay Default FALSE
+     * @param int $kgID
      *
      * @return string
      */
-    private function editDisplayUGs($initialDisplay = FALSE)
+    private function editDisplayUGs($initialDisplay = FALSE, $kgId = FALSE)
     {
         $td = \HTML\tableStart();
         $td .= \HTML\trStart();
-        $td .= \HTML\td(\HTML\div('availableUgDiv', $this->editAvailableUGsDiv($initialDisplay)) . 
-        	BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
+        $td .= \HTML\td(\HTML\div('availableUgDiv', $this->editAvailableUGsDiv($initialDisplay, $kgId), 'padding3px left width18percent'));
 		
         list($toLeftImage, $toRightImage) = $this->transferArrows('edit_selectUserGroup', 'edit_availableUserGroup');
         $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
 
-		$td .= \HTML\td(\HTML\div('selectedUgDiv', $this->editSelectedUGsDiv($initialDisplay)), 'padding3px left width18percent');
+		$td .= \HTML\td(\HTML\div('selectedUgDiv', $this->editSelectedUGsDiv($initialDisplay, $kgId)), 'padding3px left width18percent');
 
         $td .= \HTML\trEnd();
         $td .= \HTML\tableEnd();
@@ -548,25 +564,20 @@ class EDITKEYWORDGROUP
      * get the div for the available user groups select box for editing
      *
      * @param bool $initialDisplay Default FALSE
+     * @param int $kgId
      *
      * @return string
      */
-    public function editAvailableUGsDiv($initialDisplay = FALSE)
+    public function editAvailableUGsDiv($initialDisplay = FALSE, $kgId = FALSE)
     {
-    	if ($initialDisplay) {
-			return \FORM\selectFBoxValueMultiple(
-				$this->messages->text('select', "availableUserGroup"),
-				'editAvailableUserGroup',
-				$this->userGroups,
-				10
-				);
+    	if (!$initialDisplay) {
+			$kgId = $this->vars['ajaxReturn'];
 		}
 		$ugs = [];
-		$this->db->formatConditions(['userkgusergroupsKeywordGroupId' => $this->vars['ajaxReturn']]);
+		$this->db->formatConditions(['userkgusergroupsKeywordGroupId' => $kgId]);
 		$this->db->leftJoin('user_groups', 'usergroupsId', 'userkgusergroupsUserGroupId');
 		$recordset = $this->db->select('user_kg_usergroups', ['usergroupsTitle', 'userkgusergroupsUserGroupId']);
-		while ($row = $this->db->fetchRow($recordset))
-		{
+		while ($row = $this->db->fetchRow($recordset)) {
 			$ugs[$row['userkgusergroupsUserGroupId']] = \HTML\dbToFormTidy($row['usergroupsTitle']);
 		}
 		if (!empty($ugs)) {
@@ -578,7 +589,10 @@ class EDITKEYWORDGROUP
 				'editAvailableUserGroup',
 				$diff,
 				10
-			);
+			) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint');
+		if ($initialDisplay) {
+			return $pString;
+		}
         if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
@@ -593,25 +607,20 @@ class EDITKEYWORDGROUP
      * get the div for the selected user groups select box for editing
      *
      * @param bool $initialDisplay Default FALSE
+     * @param int $kgId
      *
      * @return string
      */
-    public function editSelectedUGsDiv($initialDisplay = FALSE)
+    public function editSelectedUGsDiv($initialDisplay = FALSE, $kgId = FALSE)
     {
-    	if ($initialDisplay) {
-			return \FORM\selectFBoxValueMultiple(
-				$this->messages->text('select', "userGroup"),
-				'editSelectedUserGroup',
-				[],
-				10
-			);
+    	if (!$initialDisplay) {
+			$kgId = $this->vars['ajaxReturn'];
 		}
 		$ugs = [];
-		$this->db->formatConditions(['userkgusergroupsKeywordGroupId' => $this->vars['ajaxReturn']]);
+		$this->db->formatConditions(['userkgusergroupsKeywordGroupId' => $kgId]);
 		$this->db->leftJoin('user_groups', 'usergroupsId', 'userkgusergroupsUserGroupId');
 		$recordset = $this->db->select('user_kg_usergroups', ['usergroupsTitle', 'userkgusergroupsUserGroupId']);
-		while ($row = $this->db->fetchRow($recordset))
-		{
+		while ($row = $this->db->fetchRow($recordset)) {
 			$ugs[$row['userkgusergroupsUserGroupId']] = \HTML\dbToFormTidy($row['usergroupsTitle']);
 		}
 		if (!empty($ugs)) {
@@ -623,6 +632,9 @@ class EDITKEYWORDGROUP
 				array_filter($ugs),
 				10
 			);
+		if ($initialDisplay) {
+			return $pString;
+		}
         if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
@@ -651,8 +663,8 @@ class EDITKEYWORDGROUP
         list($toLeftImage, $toRightImage) = $this->transferArrows('selectKeyword', 'availableKeyword');
         $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
 
-		$td .= \HTML\td(\FORM\selectFBoxValueMultiple(
-			$this->messages->text('select', "keyword") . \HTML\span('*', 'required'),
+		$td .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectFBoxValueMultiple(
+			$this->messages->text('select', "keyword"),
 			'SelectedKeyword',
 			[],
 			10
@@ -667,19 +679,19 @@ class EDITKEYWORDGROUP
      * display keyword select boxes for editing
      *
      * @param bool $initialDisplay Default FALSE
+     * @param int $kgID
      *
      * @return string
      */
-    private function editDisplayKeywords($initialDisplay = FALSE)
+    private function editDisplayKeywords($initialDisplay = FALSE, $kgId = FALSE)
     {
         $td = \HTML\tableStart();
         $td .= \HTML\trStart();
-        $td .= \HTML\td(\HTML\div('availableKeywordDiv', $this->editAvailableKeywordsDiv($initialDisplay)) . 
-        	BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
+        $td .= \HTML\td(\HTML\div('availableKeywordDiv', $this->editAvailableKeywordsDiv($initialDisplay, $kgId)), 'padding3px left width18percent');
         list($toLeftImage, $toRightImage) = $this->transferArrows('edit_selectKeyword', 'edit_availableKeyword');
         $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
 
-		$td .= \HTML\td(\HTML\div('selectedKeywordDiv', $this->editSelectedKeywordsDiv($initialDisplay)), 'padding3px left width18percent');
+		$td .= \HTML\td(\HTML\div('selectedKeywordDiv', $this->editSelectedKeywordsDiv($initialDisplay, $kgId)), 'padding3px left width18percent');
 
         $td .= \HTML\trEnd();
         $td .= \HTML\tableEnd();
@@ -690,33 +702,31 @@ class EDITKEYWORDGROUP
      * get the div for the selected keyword select box for editing
      *
      * @param bool $initialDisplay Default FALSE
+     * @param int $kgID
      *
      * @return string
      */
-    public function editSelectedKeywordsDiv($initialDisplay = FALSE)
+    public function editSelectedKeywordsDiv($initialDisplay = FALSE, $kgId = FALSE)
     {
-    	if ($initialDisplay) {
-			return \FORM\selectFBoxValueMultiple(
-				$this->messages->text('select', "keyword") . \HTML\span('*', 'required'),
-				'editSelectedKeyword',
-				[],
-				10
-			);
+    	if (!$initialDisplay) {
+			$kgId = $this->vars['ajaxReturn'];
 		}
-		$this->db->formatConditions(['userkgkeywordsKeywordGroupId' => $this->vars['ajaxReturn']]);
+		$this->db->formatConditions(['userkgkeywordsKeywordGroupId' => $kgId]);
 		$this->db->leftJoin('keyword', 'keywordId', 'userkgkeywordsKeywordId');
 		$recordset = $this->db->select('user_kg_keywords', ['keywordKeyword', 'userkgkeywordsKeywordId']);
-		while ($row = $this->db->fetchRow($recordset))
-		{
+		while ($row = $this->db->fetchRow($recordset)) {
 			$keywords[$row['userkgkeywordsKeywordId']] = \HTML\dbToFormTidy($row['keywordKeyword']);
 		}
 		natcasesort($keywords);
-		$pString = \FORM\selectFBoxValueMultiple(
-				$this->messages->text('select', "keyword") . \HTML\span('*', 'required'),
+		$pString = \HTML\span('*', 'required') . \FORM\selectFBoxValueMultiple(
+				$this->messages->text('select', "keyword"),
 				'editSelectedKeyword',
 				array_filter($keywords),
 				10
 			);
+		if ($initialDisplay) {
+			return $pString;
+		}
         if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
@@ -731,34 +741,32 @@ class EDITKEYWORDGROUP
      * get the div for the selected keyword select box for editing
      *
      * @param bool $initialDisplay Default FALSE
+     * @param int $kgID
      *
      * @return string
      */
-    public function editAvailableKeywordsDiv($initialDisplay = FALSE)
+    public function editAvailableKeywordsDiv($initialDisplay = FALSE, $kgId = FALSE)
     {
-    	if ($initialDisplay) {
-			return \FORM\selectFBoxValueMultiple(
-				$this->messages->text('select', "availableKeyword") . \HTML\span('*', 'required'),
-				'editAvailableKeyword',
-				$this->keywords,
-				10
-			);
+    	if (!$initialDisplay) {
+			$kgId = $this->vars['ajaxReturn'];
 		}
-		$this->db->formatConditions(['userkgkeywordsKeywordGroupId' => $this->vars['ajaxReturn']]);
+		$this->db->formatConditions(['userkgkeywordsKeywordGroupId' => $kgId]);
 		$this->db->leftJoin('keyword', 'keywordId', 'userkgkeywordsKeywordId');
 		$recordset = $this->db->select('user_kg_keywords', ['keywordKeyword', 'userkgkeywordsKeywordId']);
-		while ($row = $this->db->fetchRow($recordset))
-		{
+		while ($row = $this->db->fetchRow($recordset)) {
 			$keywords[$row['userkgkeywordsKeywordId']] = \HTML\dbToFormTidy($row['keywordKeyword']);
 		}
 		$diff = array_diff_key($this->keyword->grabAll(), $keywords);
 		natcasesort($diff);
-		$pString = \FORM\selectFBoxValueMultiple(
-				$this->messages->text('select', "availableKeyword") . \HTML\span('*', 'required'),
+		$pString = \HTML\span('*', 'required') . \FORM\selectFBoxValueMultiple(
+				$this->messages->text('select', "availableKeyword"),
 				'editAvailableKeyword',
 				$diff,
 				10
-			);
+			) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint');;
+		if ($initialDisplay) {
+			return $pString;
+		}
         if (is_array(error_get_last())) {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
@@ -795,11 +803,11 @@ class EDITKEYWORDGROUP
         return [$toLeftImage, $toRightImage];
     }
     /**
-     * editTransferArrow
+     * editOnChange
      *
      * @return string
      */
-    private function editTransferArrow()
+    private function editOnChange()
     {
         $jScript = 'index.php?action=edit_EDITKEYWORDGROUP_CORE&method=editDisplayName';
         $jsonArray[] = [
@@ -829,22 +837,22 @@ class EDITKEYWORDGROUP
             'triggerField' => 'kgIds',
             'targetDiv' => 'selectedKeywordDiv',
         ];
-        $jScript = 'index.php?action=edit_EDITKEYWORDGROUP_CORE&method=editAvailableUGsDiv';
-        $jsonArray[] = [
-            'startFunction' => 'triggerFromSelect',
-            'script' => "$jScript",
-            'triggerField' => 'kgIds',
-            'targetDiv' => 'availableUgDiv',
-        ];
-        $jScript = 'index.php?action=edit_EDITKEYWORDGROUP_CORE&method=editSelectedUGsDiv';
-        $jsonArray[] = [
-            'startFunction' => 'triggerFromSelect',
-            'script' => "$jScript",
-            'triggerField' => 'kgIds',
-            'targetDiv' => 'selectedUgDiv',
-        ];
-        $image = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
-
-        return $image;
+		if ($this->user->listUserGroups()) {
+			$jScript = 'index.php?action=edit_EDITKEYWORDGROUP_CORE&method=editAvailableUGsDiv';
+			$jsonArray[] = [
+				'startFunction' => 'triggerFromSelect',
+				'script' => "$jScript",
+				'triggerField' => 'kgIds',
+				'targetDiv' => 'availableUgDiv',
+			];
+			$jScript = 'index.php?action=edit_EDITKEYWORDGROUP_CORE&method=editSelectedUGsDiv';
+			$jsonArray[] = [
+				'startFunction' => 'triggerFromSelect',
+				'script' => "$jScript",
+				'triggerField' => 'kgIds',
+				'targetDiv' => 'selectedUgDiv',
+			];
+		}
+        return \AJAX\jActionForm('onchange', $jsonArray);
     }
 }

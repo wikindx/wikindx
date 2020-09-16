@@ -18,7 +18,6 @@ class EDITCREATOR
     private $errors;
     private $messages;
     private $success;
-    private $session;
     private $creator;
     private $gatekeep;
     private $badInput;
@@ -30,7 +29,6 @@ class EDITCREATOR
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->session = FACTORY_SESSION::getInstance();
         $this->creator = FACTORY_CREATOR::getInstance();
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();

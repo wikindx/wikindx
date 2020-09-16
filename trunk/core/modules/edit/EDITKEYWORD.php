@@ -303,7 +303,7 @@ class EDITKEYWORD
         if (!$keyword) {
             $error = $this->errors->text("inputError", "missing");
         }
-// Second, write any input to form_data
+// Second, write any input to formData
 // Possible form fields – ensure fields are available whether filled in or not (NB checkbox fields do NOT exist in $this->vars if not checked)
 		$fields = ['keyword' => $this->vars['keyword'], 'keywordIds' => $this->vars['keywordIds'], 'text' => $this->vars['text']];
 		if ($error) {

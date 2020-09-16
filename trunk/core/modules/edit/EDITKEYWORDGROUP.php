@@ -27,6 +27,7 @@ class EDITKEYWORDGROUP
     private $kgs = [];
     private $keywords;
     private $userGroups;
+    private $formData = [];
 
     public function __construct()
     {
@@ -50,14 +51,10 @@ class EDITKEYWORDGROUP
     /**
      * check we are allowed to edit and load appropriate method
      *
-     * @param false|string $message
+     * @param string $message
      */
     public function init($message = FALSE)
     {
-    	if (!$message && $this->session->getVar('kg_Message')) {
-    		$message = $this->session->getVar('kg_Message');
-    		$this->session->delVar('kg_Message');
-    	}
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $this->keywords = $this->keyword->grabAll();
 // Check we have some keywords
@@ -66,7 +63,10 @@ class EDITKEYWORDGROUP
 
             return;
         }
-        $pString = $message ? \HTML\p($message, "error", "center") : FALSE;
+    	if (array_key_exists('message', $this->vars)) {
+    		$message = $this->vars['message'];
+    	}
+        $pString = $message;
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td($this->displayNewForm());
@@ -116,8 +116,9 @@ class EDITKEYWORDGROUP
     /** 
      * Display delete keyword group form
      *
+     * @param string $message
      */
-    private function displayDeleteForm()
+    private function displayDeleteForm($message = FALSE)
     {
     	if (empty($groups = $this->getGroups(TRUE))) {
     		return '&nbsp;';
@@ -145,6 +146,11 @@ class EDITKEYWORDGROUP
      */
     public function deleteConfirm()
     {
+    	if (!array_key_exists('delete_GroupId', $this->vars)) {
+    		$message = rawurlencode($this->errors->text("inputError", "missing"));
+    		header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&message=$message");
+    		die;
+    	}
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete2", " (" .
             $this->messages->text("resources", "keywordGroup") . ")"));
         $input = array_values($this->vars['delete_GroupId']);
@@ -165,8 +171,9 @@ class EDITKEYWORDGROUP
     public function delete()
     {
         if (!array_key_exists('delete_GroupId', $this->vars) || !$this->vars['delete_GroupId']) {
- 	       $this->session->setVar('kg_Message', $this->errors->text("inputError", "missing"));
-    	    header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init");
+    		$message = rawurlencode($this->errors->text("inputError", "missing"));
+    		header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&message=$message");
+    		die;
         }
         foreach (unserialize(base64_decode($this->vars['delete_GroupId'])) as $deleteId) {
             $this->db->formatConditions(['userkeywordgroupsId' => $deleteId]);
@@ -177,8 +184,9 @@ class EDITKEYWORDGROUP
             $this->db->delete('user_kg_usergroups');
         }
         // send back to keyword group page with success message
-        $this->session->setVar('kg_Message', $this->success->text("keywordGroupDelete"));
-        header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init");
+        $message = rawurlencode($this->success->text("keywordGroupDelete"));
+        header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&message=$message");
+        die;
     }
     /** 
      * Display keyword group edit form
@@ -196,9 +204,14 @@ class EDITKEYWORDGROUP
         $pString .= \HTML\tableStart('generalTable');
         $pString .= \HTML\trStart();
         if ($initialDisplay) {
-        	foreach ($groups as $kgId => $null) {
-        		break;
+        	if (array_key_exists('kgIds', $this->formData)) {
+        		$kgId = $this->formData['kgIds'];
         	}
+        	else {
+	        	foreach ($groups as $kgId => $null) {
+    	    		break;
+    	    	}
+    	    }
 	        $pString .= \HTML\td(\FORM\selectedBoxValue($this->messages->text('resources', 'keywordGroupEdit'), 
 	        	"kgIds", $groups, $kgId, 10, FALSE, $js));
         }
@@ -229,12 +242,16 @@ class EDITKEYWORDGROUP
      */
     private function displayNewKG()
     {
+    	$title = FALSE;
+    	if (array_key_exists('KeywordGroup', $this->formData)) {
+    		$title = $this->formData['KeywordGroup'];
+    	}
         $pString = \HTML\tableStart();
         $pString .= \HTML\trStart();
         $textBox =  \HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text('resources', 'keywordGroupNew'),
             'KeywordGroup',
-            FALSE,
+            $title,
             30,
             255
         );
@@ -269,8 +286,12 @@ class EDITKEYWORDGROUP
      * @return string
      */
     private function displayDescription()
-    {
-        return \FORM\textareaInput($this->messages->text('resources', 'kgDescription'), 'Description', FALSE, 50, 5);
+    {	
+    	$description = FALSE;
+    	if (array_key_exists('Description', $this->formData)) {
+    		$description = $this->formData['Description'];
+    	}
+        return \FORM\textareaInput($this->messages->text('resources', 'kgDescription'), 'Description', $description, 50, 5);
     }
     /**
      * Display the name textbox for editing
@@ -283,10 +304,15 @@ class EDITKEYWORDGROUP
         if (!$initialDisplay) {
         	$kgId = $this->vars['ajaxReturn'];
         }
-        $this->db->formatConditions(['userkeywordgroupsId' => $kgId]);
-        $recordset = $this->db->select('user_keywordgroups', 'userkeywordgroupsName');
-        $row = $this->db->fetchRow($recordset);
-        $name = \HTML\dbToFormTidy($row['userkeywordgroupsName']);
+		if (array_key_exists('editName', $this->formData)) {
+			$name = $this->formData['editName'];
+		}
+		else {
+			$this->db->formatConditions(['userkeywordgroupsId' => $kgId]);
+			$recordset = $this->db->select('user_keywordgroups', 'userkeywordgroupsName');
+			$row = $this->db->fetchRow($recordset);
+			$name = \HTML\dbToFormTidy($row['userkeywordgroupsName']);
+		}
         $pString = \HTML\span('*', 'required') . \FORM\textInput(
 			$this->messages->text('resources', 'keywordGroupName'),
 			'editName',
@@ -318,10 +344,15 @@ class EDITKEYWORDGROUP
         if (!$initialDisplay) {
         	$kgId = $this->vars['ajaxReturn'];
         }
-        $this->db->formatConditions(['userkeywordgroupsId' => $kgId]);
-        $recordset = $this->db->select('user_keywordgroups', 'userkeywordgroupsDescription');
-        $row = $this->db->fetchRow($recordset);
-        $description = \HTML\dbToFormTidy($row['userkeywordgroupsDescription']);
+		if (array_key_exists('editDescription', $this->formData)) {
+			$description = $this->formData['editDescription'];
+		}
+		else {
+			$this->db->formatConditions(['userkeywordgroupsId' => $kgId]);
+			$recordset = $this->db->select('user_keywordgroups', 'userkeywordgroupsDescription');
+			$row = $this->db->fetchRow($recordset);
+			$description = \HTML\dbToFormTidy($row['userkeywordgroupsDescription']);
+		}
         $pString = \FORM\textareaInput($this->messages->text('resources', 'kgDescription'), 'editDescription', $description, 50, 5);
 		if ($initialDisplay) {
 			return $pString;
@@ -341,9 +372,7 @@ class EDITKEYWORDGROUP
      */
     public function new()
     {
-    	if (!$this->validateNewInput()) {
-    		return;
-    	}
+    	$this->validateNewInput();
 // All OK to write if we get here . . .
 		$fields[] = 'userkeywordgroupsName';
 		$values[] = trim($this->vars['KeywordGroup']);
@@ -379,31 +408,42 @@ class EDITKEYWORDGROUP
 				$this->db->insert('user_kg_usergroups', $fields, $values);
 			}
 		}
-        $this->init($this->success->text('keywordGroupNew'));
+        $message = rawurlencode($this->success->text('keywordGroupNew'));
+        header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&message=$message");
+        die;
     }
     /**
      * check new input
      */
     private function validateNewInput()
     {
+// First check for input
+    	$error = '';
     	if (!array_key_exists('KeywordGroup', $this->vars) || !trim($this->vars['KeywordGroup'])) {
-    		$this->init($this->errors->text('inputError', 'missing'));
-    		return FALSE;
+    		$error = $this->errors->text('inputError', 'missing');
     	}
     	if (!array_key_exists('SelectedKeyword', $this->vars) || empty($this->vars['SelectedKeyword'])) {
-    		$this->init($this->errors->text('inputError', 'missing'));
-    		return FALSE;
+    		$error = $this->errors->text('inputError', 'missing');
     	}
-    	if (count($this->vars['SelectedKeyword']) < 2) {
-    		$this->init($this->errors->text('inputError', 'tooFewKeywordGroups'));
-    		return FALSE;
+    	else if (count($this->vars['SelectedKeyword']) < 2) {
+    		$error = $this->errors->text('inputError', 'tooFewKeywordGroups');
     	}
     	$groups = $this->getGroups();
     	if (!empty($groups) && (in_array(trim($this->vars['KeywordGroup']), $groups))) {
-			$this->init($this->errors->text('inputError', 'groupExists'));
-			return FALSE;
+			$error = $this->errors->text('inputError', 'groupExists');
 		}
-        return TRUE;
+// Second, write any input to formData
+// Possible form fields – ensure fields are available whether filled in or not (NB checkbox fields do NOT exist in $this->vars if not checked)
+		$this->formData = ['KeywordGroup' => $this->vars['KeywordGroup'], 'Description' => $this->vars['Description']];
+		if (array_key_exists('SelectedKeyword', $this->vars)) {
+			$this->formData['SelectedKeyword'] = $this->vars['SelectedKeyword'];
+		}
+		if (array_key_exists('SelectedUserGroup', $this->vars)) {
+			$this->formData['SelectedUserGroup'] = $this->vars['SelectedUserGroup'];
+		}
+		if ($error) {
+        	$this->badInput->close($error, $this, 'init');
+		}
     }
     /**
      * Get keyword groups
@@ -431,9 +471,7 @@ class EDITKEYWORDGROUP
     public function edit()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-    	if (!$this->validateEditInput()) {
-    		return;
-    	}
+    	$this->validateEditInput();
 // We delete existing rows and insert new rows
 		$this->db->formatConditions(['userkeywordgroupsId' => $this->vars['kgIds']]);
 		$this->db->delete('user_keywordgroups');
@@ -476,35 +514,46 @@ class EDITKEYWORDGROUP
 				$this->db->insert('user_kg_usergroups', $fields, $values);
 			}
 		}
-	
-        $this->init($this->success->text("keywordGroupEdit"));
+        // send back to keyword group page with success message
+        $message = rawurlencode($this->success->text("keywordGroupEdit"));
+        header("Location: index.php?action=edit_EDITKEYWORDGROUP_CORE&method=init&message=$message");
+        die;
     }
     private function validateEditInput()
     {
+// First check for input
+    	$error = '';
     	if (!array_key_exists('kgIds', $this->vars)) {
-    		$this->init($this->errors->text('inputError', 'missing'));
-    		return FALSE;
+    		$error = $this->errors->text('inputError', 'missing');
     	}
     	if (!array_key_exists('editName', $this->vars) || !trim($this->vars['editName'])) {
-    		$this->init($this->errors->text('inputError', 'missing'));
-    		return FALSE;
+    		$error = $this->errors->text('inputError', 'missing');
     	}
     	if (!array_key_exists('editSelectedKeyword', $this->vars) || empty($this->vars['editSelectedKeyword'])) {
-    		$this->init($this->errors->text('inputError', 'missing'));
-    		return FALSE;
+    		$error = $this->errors->text('inputError', 'missing');
     	}
-    	if (count($this->vars['editSelectedKeyword']) < 2) {
-    		$this->init($this->errors->text('inputError', 'tooFewKeywordGroups'));
-    		return FALSE;
+    	else if (count($this->vars['editSelectedKeyword']) < 2) {
+    		$error = $this->errors->text('inputError', 'tooFewKeywordGroups');
     	}
     	$groups = $this->getGroups();
     	if (!empty($groups) && ($key = array_search(trim($this->vars['editName']), $groups)) !== FALSE) {
     		if ($key != $this->vars['kgIds']) {
-				$this->init($this->errors->text('inputError', 'groupExists'));
-				return FALSE;
+				$error = $this->errors->text('inputError', 'groupExists');
 			}
 		}
-        return TRUE;
+// Second, write any input to formData
+// Possible form fields – ensure fields are available whether filled in or not (NB checkbox fields do NOT exist in $this->vars if not checked)
+		$this->formData = ['kgIds' => $this->vars['kgIds'], 'editName' => $this->vars['editName'], 
+			'editDescription' => $this->vars['editDescription']];
+		if (array_key_exists('editSelectedKeyword', $this->vars)) {
+			$this->formData['editSelectedKeyword'] = $this->vars['editSelectedKeyword'];
+		}
+		if (array_key_exists('editSelectedUserGroup', $this->vars)) {
+			$this->formData['editSelectedUserGroup'] = $this->vars['editSelectedUserGroup'];
+		}
+		if ($error) {
+        	$this->badInput->close($error, $this, 'init');
+		}
     }
     /**
      * display user group select boxes
@@ -512,24 +561,36 @@ class EDITKEYWORDGROUP
      * @return string
      */
     public function displayUserGroups()
-    {
-    	$td = \HTML\tableStart();
+    {    	
+    	$ugs = [];
+    	if (array_key_exists('SelectedUserGroup', $this->formData)) {
+    		$ugs = array_intersect_key($this->userGroups, array_flip($this->formData['SelectedUserGroup']));
+    		natcasesort($ugs);
+    	}
+		$selectBox = \HTML\td(\FORM\selectFBoxValueMultiple(
+			$this->messages->text('select', "userGroup"),
+			'SelectedUserGroup',
+			$ugs,
+			10
+			), 'padding3px left width18percent');
+        $td = \HTML\tableStart();
         $td .= \HTML\trStart();
+		if (!empty($ugs)) {
+			$ugs = array_diff_key($this->userGroups, $ugs);
+		}
+		else {
+			$ugs = $this->userGroups;
+		}
         $td .= \HTML\td(\FORM\selectFBoxValueMultiple(
             $this->messages->text('select', "availableUserGroup"),
             'AvailableUserGroup',
-            $this->userGroups,
+            $ugs,
             10
         ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
         list($toLeftImage, $toRightImage) = $this->transferArrows('selectUserGroup', 'availableUserGroup');
         $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
 
-		$td .= \HTML\td(\FORM\selectFBoxValueMultiple(
-			$this->messages->text('select', "userGroup"),
-			'SelectedUserGroup',
-			[],
-			10
-		), 'padding3px left width18percent');
+		$td .= $selectBox;
 
         $td .= \HTML\trEnd();
         $td .= \HTML\tableEnd();
@@ -574,11 +635,16 @@ class EDITKEYWORDGROUP
 			$kgId = $this->vars['ajaxReturn'];
 		}
 		$ugs = [];
-		$this->db->formatConditions(['userkgusergroupsKeywordGroupId' => $kgId]);
-		$this->db->leftJoin('user_groups', 'usergroupsId', 'userkgusergroupsUserGroupId');
-		$recordset = $this->db->select('user_kg_usergroups', ['usergroupsTitle', 'userkgusergroupsUserGroupId']);
-		while ($row = $this->db->fetchRow($recordset)) {
-			$ugs[$row['userkgusergroupsUserGroupId']] = \HTML\dbToFormTidy($row['usergroupsTitle']);
+		if (array_key_exists('editSelectedUserGroup', $this->formData)) {
+    		$ugs = array_intersect_key($this->user->listUserGroups(), array_flip($this->formData['editSelectedUserGroup']));
+		}
+		else {
+			$this->db->formatConditions(['userkgusergroupsKeywordGroupId' => $kgId]);
+			$this->db->leftJoin('user_groups', 'usergroupsId', 'userkgusergroupsUserGroupId');
+			$recordset = $this->db->select('user_kg_usergroups', ['usergroupsTitle', 'userkgusergroupsUserGroupId']);
+			while ($row = $this->db->fetchRow($recordset)) {
+				$ugs[$row['userkgusergroupsUserGroupId']] = \HTML\dbToFormTidy($row['usergroupsTitle']);
+			}
 		}
 		if (!empty($ugs)) {
 			$diff = array_diff_key($this->user->listUserGroups(), $ugs);
@@ -617,11 +683,16 @@ class EDITKEYWORDGROUP
 			$kgId = $this->vars['ajaxReturn'];
 		}
 		$ugs = [];
-		$this->db->formatConditions(['userkgusergroupsKeywordGroupId' => $kgId]);
-		$this->db->leftJoin('user_groups', 'usergroupsId', 'userkgusergroupsUserGroupId');
-		$recordset = $this->db->select('user_kg_usergroups', ['usergroupsTitle', 'userkgusergroupsUserGroupId']);
-		while ($row = $this->db->fetchRow($recordset)) {
-			$ugs[$row['userkgusergroupsUserGroupId']] = \HTML\dbToFormTidy($row['usergroupsTitle']);
+		if (array_key_exists('editSelectedUserGroup', $this->formData)) {
+    		$ugs = array_intersect_key($this->user->listUserGroups(), array_flip($this->formData['editSelectedUserGroup']));
+		}
+		else {
+			$this->db->formatConditions(['userkgusergroupsKeywordGroupId' => $kgId]);
+			$this->db->leftJoin('user_groups', 'usergroupsId', 'userkgusergroupsUserGroupId');
+			$recordset = $this->db->select('user_kg_usergroups', ['usergroupsTitle', 'userkgusergroupsUserGroupId']);
+			while ($row = $this->db->fetchRow($recordset)) {
+				$ugs[$row['userkgusergroupsUserGroupId']] = \HTML\dbToFormTidy($row['usergroupsTitle']);
+			}
 		}
 		if (!empty($ugs)) {
 			natcasesort($ugs);
@@ -650,25 +721,37 @@ class EDITKEYWORDGROUP
      *
      * @return string
      */
-    public function displayKeywords()
+    private function displayKeywords()
     {
+    	$keywords = [];
+    	if (array_key_exists('SelectedKeyword', $this->formData)) {
+    		$keywords = array_intersect_key($this->keywords, array_flip($this->formData['SelectedKeyword']));
+    		natcasesort($keywords);
+    	}
+    	$selectBox = \HTML\td(\HTML\span('*', 'required') . \FORM\selectFBoxValueMultiple(
+			$this->messages->text('select', "keyword"),
+			'SelectedKeyword',
+			$keywords,
+			10
+			), 'padding3px left width18percent');
         $td = \HTML\tableStart();
         $td .= \HTML\trStart();
+		if (!empty($keywords)) {
+			$keywords = array_diff_key($this->keywords, $keywords);
+		}
+		else {
+			$keywords = $this->keywords;
+		}
         $td .= \HTML\td(\FORM\selectFBoxValueMultiple(
             $this->messages->text('select', "availableKeyword"),
             'AvailableKeyword',
-            $this->keywords,
+            $keywords,
             10
         ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
         list($toLeftImage, $toRightImage) = $this->transferArrows('selectKeyword', 'availableKeyword');
         $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
 
-		$td .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectFBoxValueMultiple(
-			$this->messages->text('select', "keyword"),
-			'SelectedKeyword',
-			[],
-			10
-		), 'padding3px left width18percent');
+		$td .= $selectBox;
 
         $td .= \HTML\trEnd();
         $td .= \HTML\tableEnd();
@@ -711,11 +794,16 @@ class EDITKEYWORDGROUP
     	if (!$initialDisplay) {
 			$kgId = $this->vars['ajaxReturn'];
 		}
-		$this->db->formatConditions(['userkgkeywordsKeywordGroupId' => $kgId]);
-		$this->db->leftJoin('keyword', 'keywordId', 'userkgkeywordsKeywordId');
-		$recordset = $this->db->select('user_kg_keywords', ['keywordKeyword', 'userkgkeywordsKeywordId']);
-		while ($row = $this->db->fetchRow($recordset)) {
-			$keywords[$row['userkgkeywordsKeywordId']] = \HTML\dbToFormTidy($row['keywordKeyword']);
+		if (array_key_exists('editSelectedKeyword', $this->formData)) {
+    		$keywords = array_intersect_key($this->keywords, array_flip($this->formData['editSelectedKeyword']));
+		}
+		else {
+			$this->db->formatConditions(['userkgkeywordsKeywordGroupId' => $kgId]);
+			$this->db->leftJoin('keyword', 'keywordId', 'userkgkeywordsKeywordId');
+			$recordset = $this->db->select('user_kg_keywords', ['keywordKeyword', 'userkgkeywordsKeywordId']);
+			while ($row = $this->db->fetchRow($recordset)) {
+				$keywords[$row['userkgkeywordsKeywordId']] = \HTML\dbToFormTidy($row['keywordKeyword']);
+			}
 		}
 		natcasesort($keywords);
 		$pString = \HTML\span('*', 'required') . \FORM\selectFBoxValueMultiple(
@@ -750,11 +838,16 @@ class EDITKEYWORDGROUP
     	if (!$initialDisplay) {
 			$kgId = $this->vars['ajaxReturn'];
 		}
-		$this->db->formatConditions(['userkgkeywordsKeywordGroupId' => $kgId]);
-		$this->db->leftJoin('keyword', 'keywordId', 'userkgkeywordsKeywordId');
-		$recordset = $this->db->select('user_kg_keywords', ['keywordKeyword', 'userkgkeywordsKeywordId']);
-		while ($row = $this->db->fetchRow($recordset)) {
-			$keywords[$row['userkgkeywordsKeywordId']] = \HTML\dbToFormTidy($row['keywordKeyword']);
+		if (array_key_exists('editSelectedKeyword', $this->formData)) {
+    		$keywords = array_intersect_key($this->keywords, array_flip($this->formData['editSelectedKeyword']));
+		}
+		else {
+			$this->db->formatConditions(['userkgkeywordsKeywordGroupId' => $kgId]);
+			$this->db->leftJoin('keyword', 'keywordId', 'userkgkeywordsKeywordId');
+			$recordset = $this->db->select('user_kg_keywords', ['keywordKeyword', 'userkgkeywordsKeywordId']);
+			while ($row = $this->db->fetchRow($recordset)) {
+				$keywords[$row['userkgkeywordsKeywordId']] = \HTML\dbToFormTidy($row['keywordKeyword']);
+			}
 		}
 		$diff = array_diff_key($this->keyword->grabAll(), $keywords);
 		natcasesort($diff);

@@ -2431,7 +2431,7 @@ class FACTORY_PAGINGALPHA
     public static function getInstance()
     {
         if (empty(self::$instance)) {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "PAGINGALPHA.php"]));
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "lists", "PAGINGALPHA.php"]));
             self::$instance = new PAGINGALPHA;
         }
 

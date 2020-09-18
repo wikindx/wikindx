@@ -1,7 +1,7 @@
 {
     "component_type": "template",
     "component_id": "carambola",
-    "component_version": "235",
+    "component_version": "250",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Carambola",
@@ -29,5 +29,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "d7e80440ca72432a67d620172594792a5ae309c45e84d8a25757cc6ff63cf88a"
+    "component_sha256": "0d5206edd1419a3d49f086f98fadf8f3678622be2a5edbf061a0a6d6fb1933c0"
 }

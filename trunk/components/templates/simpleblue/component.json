@@ -1,7 +1,7 @@
 {
     "component_type": "template",
     "component_id": "simpleblue",
-    "component_version": "235",
+    "component_version": "250",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Simple Blue",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "26b8b954051e23ecb8e035e2c95d0c9ad44cb7c26bd592481b25205fe6bdb733"
+    "component_sha256": "fefd16a3bc69c12bdecc08b496861701a6f6f601ae19f563eef709b49b244f28"
 }

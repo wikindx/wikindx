@@ -132,7 +132,8 @@ class EDITKEYWORDGROUP
             'delete_GroupId',
             $groups,
             10
-        ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
+        ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
@@ -586,7 +587,8 @@ class EDITKEYWORDGROUP
             'AvailableUserGroup',
             $ugs,
             10
-        ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
+        ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         list($toLeftImage, $toRightImage) = $this->transferArrows('selectUserGroup', 'availableUserGroup');
         $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
 
@@ -655,7 +657,8 @@ class EDITKEYWORDGROUP
 				'editAvailableUserGroup',
 				$diff,
 				10
-			) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint');
+			) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint');
 		if ($initialDisplay) {
 			return $pString;
 		}
@@ -747,7 +750,8 @@ class EDITKEYWORDGROUP
             'AvailableKeyword',
             $keywords,
             10
-        ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
+        ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         list($toLeftImage, $toRightImage) = $this->transferArrows('selectKeyword', 'availableKeyword');
         $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
 
@@ -856,7 +860,8 @@ class EDITKEYWORDGROUP
 				'editAvailableKeyword',
 				$diff,
 				10
-			) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint');;
+			) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint');
 		if ($initialDisplay) {
 			return $pString;
 		}

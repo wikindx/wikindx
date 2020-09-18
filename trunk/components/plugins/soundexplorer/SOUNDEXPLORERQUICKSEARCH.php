@@ -91,7 +91,8 @@ class SOUNDEXPLORERQUICKSEARCH
         $this->radioButtons = FALSE;
         $word = array_key_exists("Word", $this->formData) ?
             htmlspecialchars(stripslashes($this->formData["Word"]), ENT_QUOTES | ENT_HTML5) : FALSE;
-        $hint = BR . HTML\span($this->coremessages->text("hint", "wordLogic"), 'hint');
+        $hint = BR . \HTML\span(\HTML\aBrowse('green', '', $this->coremessages->text("hint", "hint"), '#', "", 
+            	$this->coremessages->text("hint", "wordLogic")), 'hint');
         $pString .= HTML\td(FORM\textInput(
             $this->coremessages->text("search", "word"),
             "seplugin_Word",
@@ -275,7 +276,8 @@ class SOUNDEXPLORERQUICKSEARCH
             // If $type == 'field', select all fields as default
             $pString = FORM\selectFBoxValueMultiple($this->coremessages->text("search", 'field'), "seplugin_Field", $temp, 2);
         }
-        $pString .= BR . HTML\span($this->coremessages->text("hint", "multiples"), 'hint') .
+        $pString .= BR . \HTML\span(\HTML\aBrowse('green', '', $this->coremessages->text("hint", "hint"), '#', "", 
+            	$this->coremessages->text("hint", "multiples")), 'hint') .
             BR;
         $pString .= $this->radioButtons . BR;
 

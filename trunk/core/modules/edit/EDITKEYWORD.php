@@ -216,6 +216,7 @@ class EDITKEYWORD
         // send back to main script with success message
         $message = rawurlencode($this->success->text("keyword"));
         header("Location: index.php?action=edit_EDITKEYWORD_CORE&method=init&message=$message");
+        die;
     }
     /**
      * write to the database
@@ -235,6 +236,7 @@ class EDITKEYWORD
         // send back to form with success message
         $message = rawurlencode($this->success->text("keyword"));
         header("Location: index.php?action=edit_EDITKEYWORD_CORE&method=init&message=$message");
+        die;
     }
     /**
      * The new keyword equals one already in the database. Confirm that this edited one is to be removed and
@@ -293,7 +295,7 @@ class EDITKEYWORD
     {
 // First check for input
 		$error = '';
-        if (!array_key_exists('editKeywordId', $this->vars) || !$this->vars['editKeywordId']) {die;
+        if (!array_key_exists('editKeywordId', $this->vars) || !$this->vars['editKeywordId']) {
             $error = $this->errors->text("inputError", "missing");
         }
         if (!array_key_exists('keywordIds', $this->vars) || !$this->vars['keywordIds']) {

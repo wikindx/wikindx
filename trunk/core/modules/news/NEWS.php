@@ -25,6 +25,7 @@ class NEWS
     private $badInput;
     private $newsTimestamp;
     private $languageClass;
+    private $formData = [];
 
     // Constructor
     public function __construct()
@@ -50,7 +51,10 @@ class NEWS
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "news"));
         $news = $this->grabAll();
-        $pString = $message ? \HTML\p($message) : FALSE;
+    	if (array_key_exists('message', $this->vars)) {
+    		$message = $this->vars['message'];
+    	}
+    	$pString = $message;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
         // Add
@@ -63,7 +67,7 @@ class NEWS
         if (!empty($news)) {
             // Edit
             $td = \FORM\formHeader('news_NEWS_CORE');
-            $td .= \FORM\hidden('method', 'editDisplay');
+            $td .= \FORM\hidden('method', 'initEdit');
             $td .= \HTML\p($this->messages->text("misc", "newsEdit"));
             $td .= \FORM\selectFBoxValue(FALSE, "editId", $news, 5) . BR . \FORM\formSubmit($this->messages->text("submit", "Edit"));
             $td .= \FORM\formEnd();
@@ -72,36 +76,40 @@ class NEWS
             $td = \FORM\formHeader('news_NEWS_CORE');
             $td .= \FORM\hidden('method', 'deleteConfirm');
             $td .= \HTML\p($this->messages->text("misc", "newsDelete"));
-            $td .= \FORM\selectFBoxValueMultiple(FALSE, 'newsDelete', $news, 5) . BR .
-                \HTML\span($this->messages->text("hint", "multiples"), 'hint');
+            $td .= \FORM\selectFBoxValueMultiple(FALSE, 'newsDelete', $news, 5) . BR . 
+            	\HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint');
             $td .= BR . \FORM\formSubmit($this->messages->text("submit", "Delete"));
             $td .= \FORM\formEnd();
             $pString .= \HTML\td($td);
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        $this->session->delVar("news_Done");
         GLOBALS::addTplVar('content', $pString);
     }
     /**
-     * Add a news item - display options.
+     * Add a news item - display options
+     *
+     * @param false|string $message
      */
-    public function initAdd()
+    public function initAdd($message = FALSE)
     {
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
+    	if (array_key_exists('message', $this->vars)) {
+    		$message = $this->vars['message'];
+    	}
+    	$pString = $message;
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsAdd"));
-        $pString = $tinymce->loadMinimalTextarea();
+        $pString .= $tinymce->loadMinimalTextarea();
         $pString .= \FORM\formHeader('news_NEWS_CORE');
         $pString .= \FORM\hidden('method', 'add');
-        $sessVar = $this->session->issetVar("news_Title") ?
-            \HTML\nlToHtml($this->session->getVar("news_Title")) : FALSE;
-        $pString .= \FORM\textInput($this->messages->text("news", "title"), "title", $sessVar, 30, 255);
+        $title = array_key_exists('title', $this->formData) ? $this->formData['title'] : FALSE;
+        $pString .= \HTML\span('*', 'required') . \FORM\textInput($this->messages->text("news", "title"), "title", $title, 30, 255);
         $pString .= BR . "&nbsp;" . BR;
-        $sessVar = $this->session->issetVar("news_Body") ?
-            \HTML\nlToHtml($this->session->getVar("news_Body")) : FALSE;
-        $pString .= \FORM\textAreaInput($this->messages->text("news", "body"), "body", $sessVar, 80, 10);
+        $body = array_key_exists('body', $this->formData) ? $this->formData['body'] : FALSE;
+        $pString .= \HTML\span('*', 'required') . \FORM\textAreaInput($this->messages->text("news", "body"), "body", $body, 80, 10);
         $pString .= BR . "&nbsp;" . BR;
         $pString .= \FORM\formSubmit($this->messages->text("submit", "Add"));
         $pString .= \FORM\formEnd();
@@ -115,14 +123,11 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsAdd"));
-        if ($this->session->getVar("news_Done")) {
-            $this->badInput->close($this->errors->text("done", "news"), $this, 'init');
-        }
         if (!array_key_exists('title', $this->vars) || !trim($this->vars['title']) ||
             !array_key_exists('body', $this->vars) || !trim($this->vars['body'])) {
-            $this->session->setVar("news_Title", trim($this->vars['title']));
-            $this->session->setVar("news_Body", trim($this->vars['body']));
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
+            $this->formData["title"] = $this->vars['title'];
+            $this->formData["body"] = $this->vars['body'];
+            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'initAdd');
         }
         $title = trim($this->vars['title']);
         $news = trim($this->vars['body']);
@@ -131,19 +136,18 @@ class NEWS
             ['newsTitle', 'newsNews', 'newsTimestamp'],
             [$title, $news, $this->db->formatTimestamp()]
         );
-        $this->session->delVar("news_Title");
-        $this->session->delVar("news_Body");
         $this->session->setVar("setup_News", TRUE);
-        $this->session->setVar("news_Done", TRUE);
         if (WIKINDX_EMAIL_NEWS) {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
             $emailClass = new EMAIL();
             if (!$emailClass->news($title, $news)) {
-                $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'init');
+                $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'initAdd');
             }
         }
 
-        return $this->init($this->success->text("newsAdd"));
+        $message = rawurlencode($this->success->text("newsAdd"));
+        header("Location: index.php?action=news_NEWS_CORE&method=init&message=$message");
+        die;
     }
     /**
      * Ask for confirmation of delete groups
@@ -177,9 +181,6 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsDelete"));
-        if ($this->session->getVar("news_Done")) {
-            $this->badInput->close($this->errors->text("done", "news"), $this, 'init');
-        }
         foreach ($this->vars as $key => $value) {
             if (!preg_match("/newsDelete_(.*)/u", $key, $match)) {
                 continue;
@@ -195,43 +196,62 @@ class NEWS
         if (empty($news)) {
             $this->session->delVar("setup_News");
         }
-        $this->session->setVar("news_Done", TRUE);
 
-        return $this->init($this->success->text("newsDelete"));
+        $message = rawurlencode($this->success->text("newsDelete"));
+        header("Location: index.php?action=news_NEWS_CORE&method=init&message=$message");
+        die;
     }
     /**
      * display news item for editing
+     *
+     * @param false|string $message
      */
-    public function editDisplay()
+    public function initEdit($message = FALSE)
     {
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsEdit"));
-        if (array_key_exists("editId", $this->vars)) {
-            $editId = trim($this->vars["editId"]);
-        } else {
-            $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
+        if (array_key_exists('editId', $this->formData)) {
+        	$editId = $this->formData['editId'];
         }
+        else if (!array_key_exists("editId", $this->vars) || (!$editId = trim($this->vars["editId"]))) {
+				$this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
+		}
+    	if (array_key_exists('message', $this->vars)) {
+    		$message = $this->vars['message'];
+    	}
+    	$pString = $message;
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $pString = $tinymce->loadMinimalTextarea();
-        $this->db->formatConditions(['newsId' => $editId]);
-        $recordset = $this->db->select('news', ['newsId', 'newsTitle', 'newsNews']);
-        $row = $this->db->fetchRow($recordset);
+        $pString .= $tinymce->loadMinimalTextarea();
+        $title = $body = '';
+        if (array_key_exists('title', $this->formData)) {
+        	$title = $this->formData['title'];
+        }
+        if (array_key_exists('body', $this->formData)) {
+        	$body = $this->formData['body'];
+        }
+    	if (!$title && !$body) {
+			$this->db->formatConditions(['newsId' => $editId]);
+			$recordset = $this->db->select('news', ['newsTitle', 'newsNews']);
+			$row = $this->db->fetchRow($recordset);
+			$title = \HTML\dbToFormTidy($row['newsTitle']);
+			$body = \HTML\dbToFormTidy($row['newsNews']);
+    	}
         $pString .= \FORM\formHeader('news_NEWS_CORE');
         $pString .= \FORM\hidden('method', 'edit');
         $pString .= \FORM\hidden('editId', $editId);
-        $pString .= \FORM\textInput(
+        $pString .= \HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("news", "title"),
             "title",
-            \HTML\dbToFormTidy($row['newsTitle']),
+            $title,
             30,
             255
         );
         $pString .= BR . "&nbsp;" . BR;
-        $pString .= \FORM\textAreaInput(
+        $pString .= \HTML\span('*', 'required') . \FORM\textAreaInput(
             $this->messages->text("news", "body"),
             "body",
-            \HTML\dbToFormTidy($row['newsNews']),
+            $body,
             80,
             10
         );
@@ -248,33 +268,32 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsEdit"));
-        if ($this->session->getVar("news_Done")) {
-            $this->badInput->close($this->errors->text("done", "news"), $this, 'init');
-        }
-        if (array_key_exists("editId", $this->vars)) {
-            $editId = trim($this->vars["editId"]);
-        } else {
+        if (!array_key_exists("editId", $this->vars) || (!$editId = trim($this->vars["editId"]))) {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
         if (!array_key_exists('title', $this->vars) || !trim($this->vars['title']) ||
             !array_key_exists('body', $this->vars) || !trim($this->vars['body'])) {
-            $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
+            $this->formData["editId"] = $this->vars['editId'];
+            $this->formData["title"] = $this->vars['title'];
+            $this->formData["body"] = $this->vars['body'];
+            $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'initEdit');
         }
         $updateArray['newsTitle'] = trim($this->vars['title']);
         $updateArray['newsNews'] = trim($this->vars['body']);
         $updateArray['newsTimestamp'] = $this->db->formatTimestamp();
         $this->db->formatConditions(['newsId' => $editId]);
         $this->db->update('news', $updateArray);
-        $this->session->setVar("news_Done", TRUE);
         if (WIKINDX_EMAIL_NEWS) {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
             $emailClass = new EMAIL();
             if (!$emailClass->news($updateArray['newsTitle'], $updateArray['newsNews'])) {
-                $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'init');
+                $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'initEdit');
             }
         }
 
-        return $this->init($this->success->text("newsEdit"));
+        $message = rawurlencode($this->success->text("newsEdit"));
+        header("Location: index.php?action=news_NEWS_CORE&method=init&message=$message");
+        die;
     }
     /**
      *View all available news items

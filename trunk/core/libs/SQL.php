@@ -2342,6 +2342,22 @@ class SQL
         return " UPPER($field)";
     }
     /**
+     * Create an LOWER clause
+     *
+     * @param string $field
+     * @param bool $tidy Default is TRUE. If TRUE, format fields for database type
+     *
+     * @return string
+     */
+    public function lower($field, $tidy = TRUE)
+    {
+        if ($tidy) {
+            $field = $this->formatFields($field);
+        }
+
+        return " LOWER($field)";
+    }
+    /**
      * Create a REGEXP clause
      *
      * @param string $first

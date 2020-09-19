@@ -114,6 +114,7 @@ class ERRORS
 				"userExists" => dgettext($domain, "That username already exists"),
 				"groupExists" => dgettext($domain, "That group already exists"),
 				"bibExists" => dgettext($domain, "That bibliography already exists"),
+				"labelExists" => dgettext($domain, "That label already exists"),
 				"mail" => dgettext($domain, "Unable to use email - please contact the WIKINDX administrator (ERROR: ###)"),
 /// inputError_noHashKey User registration - the hashKey supplied by email to a user has been deleted from the database as they did not confirm their registration within 10 days.
 				"noHashKey" => dgettext($domain, "That key no longer exists. Please re-register"),

@@ -13,7 +13,7 @@ BUG FIXES:
 6. Fix a bug in editing keyword groups when there are no user groups.
 
 FEATURE ENHANCEMENT:
-1. When editing a form, use internal representations to repopulate the form in case of error and lessen the load on sessions. Also, restructure form management by splitting form presentation from DB data writing and use redirects to mitigate errors caused when attempting to reload a submitted form.
+1. When editing a form, use internal representations to repopulate the form in case of error and lessen the load on sessions. Also, restructure form management by splitting form presentation from DB data writing and use redirects to mitigate errors caused when attempting to reload a submitted form. Along the way, do some tidying up of the form interfaces.
 	TODO: Convert all the forms...
 2. Improve the user interface for several forms.
 

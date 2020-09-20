@@ -62,6 +62,9 @@ if (!array_key_exists('action', $vars) || ($vars['action'] == 'front')) { // rea
     } else {
         $upgradeCompleted = FALSE;
     }
+    if (array_key_exists('message', $vars)) {
+    	$message = $vars['message'];
+    }
 
     /**
      * Do any housekeeping that is not part of database upgrading

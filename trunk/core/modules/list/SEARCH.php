@@ -699,6 +699,33 @@ class SEARCH
      */
     public function reprocess()
     {
+        if (array_key_exists('message', $this->vars)) {
+            GLOBALS::addTplVar('content', $this->vars['message']);
+        }
+        if (array_key_exists('quickSearch', $this->vars)) {
+        	if ($this->vars['quickSearch']) {
+	            $this->common->quickSearch = TRUE;
+	        } else {
+	            $this->common->quickSearch = FALSE;
+	        }
+        }
+        if (array_key_exists('keepHighlight', $this->vars)) {
+        	if ($this->vars['keepHighlight']) {
+	            $this->common->keepHighlight = TRUE;
+	        } else {
+	            $this->common->keepHighlight = FALSE;
+	        }
+        }
+        if (array_key_exists('ideasFound', $this->vars)) {
+        	if ($this->vars['ideasFound']) {
+	            $this->common->kideasFound = TRUE;
+	        } else {
+	            $this->common->ideasFound = FALSE;
+	        }
+        }
+        if (array_key_exists('patterns', $this->vars)) {
+            $this->common->patterns = unserialize(base64_decode($this->vars['patterns']));
+        }
         $this->input = $this->session->getArray("advancedSearch");
         if (array_key_exists("search_Order", $this->vars) && $this->vars["search_Order"]) {
             $this->input['Order'] = $this->vars["search_Order"];

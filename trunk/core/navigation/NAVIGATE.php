@@ -11,7 +11,7 @@
 /**
  * NAVIGATE
  *
- * Configure, create and print menus
+ * Return to various pages within WIKINDX (e.g. from DELETEREOURCES and LISTADDTO . . .)
  *
  * @package wikindx\core\navigation
  */
@@ -40,73 +40,44 @@ class NAVIGATE
      */
     public function listView($message = FALSE)
     {
-        $listCommon = FACTORY_LISTCOMMON::getInstance();
+    	$message = rawurlencode($message);
         $queryString = $this->session->getVar("sql_LastMulti");
         if (!$queryString) {// default
-            $front = new FRONT($message); // __construct() runs on autopilot
-            FACTORY_CLOSE::getInstance();
+			header("Location: index.php?message=$message");
+			die;
         }
+        $listCommon = FACTORY_LISTCOMMON::getInstance();
         preg_match("/_(.*)_CORE/u", $queryString, $match);
         if ($match[1] == 'SEARCH') {
-            GLOBALS::addTplVar('content', $message);
-            $listType = 'search';
-            $listCommon->quickSearch = FALSE;
-            $listCommon->keepHighlight = TRUE;
             if ($this->session->getVar("sql_LastIdeaSearch")) {
-                $listCommon->ideasFound = TRUE;
+                $ideasFound = 1;
+            } else {
+            	$ideasFound = 0;
             }
-            $listCommon->patterns = $this->session->getVar("search_Patterns");
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "list", "SEARCH.php"]));
-            $s = new SEARCH();
-            $s->reprocess();
-
-            return;
+            $patterns = base64_encode(serialize($this->session->getVar("search_Patterns")));
+			header("Location: index.php?action=list_QUICKSEARCH_CORE&method=reprocess&message=$message&quickSearch=0&keepHighlight=1&ideasFound=$ideasFound&patterns=$patterns");
+			die;
         } elseif ($match[1] == 'QUICKSEARCH') {
-            GLOBALS::addTplVar('content', $message);
-            $listType = 'search';
-            $listCommon->quickSearch = TRUE;
-            $listCommon->keepHighlight = TRUE;
-            $listCommon->patterns = $this->session->getVar("search_Patterns");
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "list", "QUICKSEARCH.php"]));
-            $qs = new QUICKSEARCH();
-            $qs->reprocess();
-
-            return;
+            $patterns = base64_encode(serialize($this->session->getVar("search_Patterns")));
+			header("Location: index.php?action=list_QUICKSEARCH_CORE&method=reprocess&message=$message&quickSearch=1&keepHighlight=1&patterns=$patterns");
+			die;
         } elseif ($match[1] == 'LISTRESOURCES') {
-            GLOBALS::addTplVar('content', $message);
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "list", "LISTRESOURCES.php"]));
-            $list = new LISTRESOURCES('reorder');
-
-            return;
+			header("Location: index.php?action=list_LISTRESOURCES_CORE&method=reorder&message=$message&url=1");
+			die;
         } elseif ($match[1] == 'LISTSOMERESOURCES') {
             GLOBALS::addTplVar('content', $message);
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "list", "LISTSOMERESOURCES.php"]));
             $list = new LISTSOMERESOURCES();
             $list->reorder();
-
-            return;
+			header("Location: index.php?action=list_LISTSOMERESOURCES_CORE&method=reorder&message=$message");
+			die;
         } elseif ($match[1] == 'BASKET') {
-            GLOBALS::addTplVar('content', $message);
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "basket", "BASKET.php"]));
-            $basket = new BASKET();
-            $basket->view();
-            FACTORY_CLOSE::getInstance();
-
-            return;
+			header("Location: index.php?action=basket_BASKET_CORE&method=view&message=$message");
+			die;
         } else { // default
-            $front = new FRONT($message); // __construct() runs on autopilot
-            FACTORY_CLOSE::getInstance();
+			header("Location: index.php?message=$message");
+			die;
         }
-        /*		GLOBALS::addTplVar('content', $message);
-                if($this->session->getVar($listType . '_DisplayAttachment'))
-                    $order = 'attachments';
-                else
-                    $order = $this->session->getVar($listType . '_Order');
-                if(!$order)
-                    $order = 'creator';
-                $listCommon->pagingStyle($countQuery, $listType, $order, $queryString, $countAlphaQuery);
-                $listCommon->display($sql, $listType);
-        */
     }
     /**
      * Navigate back to a single resource
@@ -116,9 +87,8 @@ class NAVIGATE
      */
     public function resource($resourceId, $message)
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "resource", "RESOURCEVIEW.php"]));
-        $resource = new RESOURCEVIEW();
-        $resource->init($resourceId, $message);
+		header("Location: index.php?action=basket_BASKET_CORE&method=view&message=$message&id=$resourceId");
+		die;
     }
     /**
      * Navigate back to idea thread
@@ -128,8 +98,8 @@ class NAVIGATE
      */
     public function ideaThread($ideaId, $message)
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "ideas", "IDEAS.php"]));
-        $idea = new IDEAS();
-        $idea->threadView($ideaId, $message);
+    	$message = rawurlencode($message);
+		header("Location: index.php?action=ideas_IDEAS_CORE&method=view&message=$message&resourcemetadataId=$ideaId");
+		die;
     }
 }

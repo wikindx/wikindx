@@ -41,8 +41,6 @@ class DELETERESOURCE
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-
-
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
     }
@@ -139,7 +137,6 @@ class DELETERESOURCE
         if ($numDeletes > 50) {
             $pString .= \FORM\formSubmit($this->messages->text("submit", "Delete")) . \FORM\formEnd();
         }
-        $this->session->setVar("deleteResourceLock", FALSE);
         GLOBALS::addTplVar('content', $pString);
     }
     /**
@@ -147,7 +144,7 @@ class DELETERESOURCE
      *
      * @param false|string $message
      */
-    private function display($message = FALSE)
+    public function display($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete"));
         if (!$this->resources = $this->grabAll()) {
@@ -158,13 +155,17 @@ class DELETERESOURCE
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "miscellaneous", "TAG.php"]));
         $tag = new TAG();
         $tags = $tag->grabAll();
-        $pString = $message ? $message : FALSE;
+        if (array_key_exists('message', $this->vars)) {
+            $message = $this->vars['message'];
+        }
+        $pString = $message;
         $pString .= \FORM\formHeader('admin_DELETERESOURCE_CORE');
         $pString .= \FORM\hidden('function', 'deleteResourceConfirm');
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(FALSE, "resource_id", $this->resources, 20, 80) .
-            BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint') . BR .
+            BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint') . BR .
             BR . \FORM\formSubmit($this->messages->text("submit", "Confirm")));
         if (is_array($tags)) {
             // add 0 => IGNORE to tags array
@@ -174,7 +175,8 @@ class DELETERESOURCE
             }
             $tags = $temp;
             $pString .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text("misc", "tag"), 'bibtex_tagId', $tags, 5) .
-            BR . $this->messages->text('hint', 'multiples'));
+            BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint'));
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -186,12 +188,7 @@ class DELETERESOURCE
      */
     private function process()
     {
-        // redeleting an already deleted resource?
-        if ($this->session->getVar("deleteResourceLock")) {
-            $this->display($this->errors->text('done', 'resource'));
-            FACTORY_CLOSE::getInstance();
-        }
-        if (!$this->validateInput()) {
+    	if (!$this->validateInput()) {
             $this->display($this->errors->text("inputError", "missing"));
             FACTORY_CLOSE::getInstance();
         }
@@ -206,27 +203,29 @@ class DELETERESOURCE
             $this->session->delVar("sql_LastMulti");
             $this->session->delVar("sql_LastSolo");
         }
-        $pString = $this->success->text("resourceDelete");
-        // Lock reload.
-        $this->session->setVar("deleteResourceLock", TRUE);
-        if ($this->vars['deleteWithinList']) { // i.e. from the organize list select box – need to recalculate list total we return to.
+        if ($this->vars['deleteWithinList'] || ($this->navigate == 'list')) { 
+        // i.e. from the organize list select box – need to recalculate list total we return to.
         	$this->session->setVar("setup_PagingTotal", $this->session->getVar("setup_PagingTotal") - count($this->idsRaw));
         	$this->session->delVar("list_PagingAlphaLinks");
         }
+		$message = rawurlencode($this->success->text("resourceDelete"));
         // Which page do we return to?
-        if ($this->session->getVar("setup_PagingTotal") == 0) {
-            $front = new FRONT($pString); // __construct() runs on autopilot
+        if ($this->session->getVar("setup_PagingTotal") == 0) { // Return to home page
+			header("Location: index.php?message=$message");
+			die;
         }
         elseif ($this->navigate == 'nextResource') { // next single view
             $navigate = FACTORY_NAVIGATE::getInstance();
-            $navigate->resource($this->nextResourceId, $pString);
+            $navigate->resource($this->nextResourceId, $this->success->text("resourceDelete"));
         } elseif ($this->navigate == 'list') { // previous multi list
             $navigate = FACTORY_NAVIGATE::getInstance();
-            $navigate->listView($pString);
+            $navigate->listView($this->success->text("resourceDelete"));
         } elseif ($this->navigate == 'front') { // Return to home page
-            $front = new FRONT($pString); // __construct() runs on autopilot
-        } else {
-            $this->display($pString); // return to multiple resource delete page -- $this->navigate == FALSE
+			header("Location: index.php?message=$message");
+			die;
+        } else { // return to multiple resource delete page -- $this->navigate == FALSE
+			header("Location: index.php?action=admin_DELETERESOURCE_CORE&method=display&message=$message");
+			die;
         }
         FACTORY_CLOSE::getInstance();
     }
@@ -284,6 +283,13 @@ class DELETERESOURCE
         $this->db->delete('statistics_resource_views');
         $this->db->formatConditionsOneField($this->idsRaw, 'statisticsattachmentdownloadsResourceId');
         $this->db->delete('statistics_attachment_downloads');
+// Delete resource from basket
+		$basketIds = array_diff($this->session->getVar("basket_List"), $this->idsRaw);
+		if (empty($basketIds)) {
+			$this->session->delVar("basket_List");
+		} else {
+			$this->session->setVar("basket_List", $basketIds);
+		}
         $this->deleteMetadata();
         $this->checkBibtexStringTable();
         // delete these ids from any user bibliographies

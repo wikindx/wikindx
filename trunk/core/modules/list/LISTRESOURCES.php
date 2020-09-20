@@ -58,12 +58,14 @@ class LISTRESOURCES
             if (!array_key_exists('method', $this->vars)) {
                 $badInput->close($errors->text("inputError", "missing"));
             }
+            $method = $this->vars['method'];
             if (array_key_exists('list_Order', $this->vars)) {
                 $this->session->setVar("list_Order", $this->vars['list_Order']);
             } elseif (!array_key_exists('type', $this->vars) || ($this->vars['type'] != 'lastMulti')) {
-                $badInput->close($errors->text("inputError", "missing"));
+            	if ($method != 'reorder') {
+	                $badInput->close($errors->text("inputError", "missing"));
+	            }
             }
-            $method = $this->vars['method'];
         }
         $this->session->setVar("sql_LastOrder", $this->session->getVar("list_Order"));
         if (!method_exists($this, $method)) {
@@ -122,13 +124,18 @@ class LISTRESOURCES
 		}
         $this->params = $this->session->getVar("sql_ListParams"); // temporarily store list parameters for use if reordering
         $this->session->delVar("sql_ListParams");
-        $this->{$method}();
+        if (!array_key_exists('url', $this->vars)) {
+        	$this->{$method}();
+        }
     }
     /**
      * With a reorder list request, which type of process do we want?
      */
     public function reorder()
     {
+        if (array_key_exists('message', $this->vars)) {
+            GLOBALS::addTplVar('content', $this->vars['message']);
+        }
     	$this->session->setVar("sql_ListParams", $this->params);
         if (array_key_exists("list_Order", $this->vars) && $this->vars["list_Order"]) {
             $this->session->setVar("search_Order", $this->vars["list_Order"]);

@@ -89,7 +89,7 @@ class RESOURCEVIEW
             $id = filter_var($id, FILTER_SANITIZE_NUMBER_INT); // NB, $id is now a string
             $this->vars['id'] = $id;
         }
-        // message can come from ATTACHMENTS.php
+        // message can come from ATTACHMENTS.php or when deleting a resource
 		if (!$message and array_key_exists('message', $this->vars)) {
         	$message = $this->vars['message'];
         }

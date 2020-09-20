@@ -98,7 +98,11 @@ class BASKET
      */
     public function view()
     {
+        if (array_key_exists('message', $this->vars)) {
+            GLOBALS::addTplVar('content', $this->vars['message']);
+        }
         $sql = FALSE;
+        $this->session->delVar('sql_ListParams');
         $this->common = FACTORY_LISTCOMMON::getInstance();
         $queryString = 'action=basket_BASKET_CORE&method=view';
         $bl = $this->session->getVar("basket_List");

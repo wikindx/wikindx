@@ -69,6 +69,9 @@ class LISTSOMERESOURCES
      */
     public function reorder()
     {
+        if (array_key_exists('message', $this->vars)) {
+            GLOBALS::addTplVar('content', $this->vars['message']);
+        }
     	$this->session->setVar("sql_ListParams", $this->params);
         if (array_key_exists('list_AscDesc', $this->vars)) {
             $this->session->setVar("list_AscDesc", $this->vars['list_AscDesc']);

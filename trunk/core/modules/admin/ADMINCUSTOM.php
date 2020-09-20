@@ -205,12 +205,9 @@ class ADMINCUSTOM
     public function deleteCustom()
     {
         $this->validateInput('deleteConfirm');
-        // $ids is an array of field IDs
-        $this->db->formatConditions($this->db->formatFields('customId') . $this->db->equal .
-            implode($this->db->or . $this->db->formatFields('customId') . $this->db->equal, $this->formData['ids']));
+        $this->db->formatConditionsOneField($this->formData['ids'], 'customId');
         $this->db->delete('custom');
-        $this->db->formatConditions($this->db->formatFields('resourcecustomId') . $this->db->equal .
-            implode($this->db->or . $this->db->formatFields('resourcecustomId') . $this->db->equal, $this->formData['ids']));
+        $this->db->formatConditionsOneField($this->formData['ids'], 'resourcecustomCustomId');
         $this->db->delete('resource_custom');
         $message = rawurlencode($this->success->text("fieldDelete"));
         header("Location: index.php?action=admin_ADMINCUSTOM_CORE&method=init&message=$message");

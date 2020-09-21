@@ -1027,8 +1027,8 @@ class MESSAGES
 				"noLanguages" => dgettext($domain, "There are no languages in the database"),
 				"noUsertags" => dgettext($domain, "There are no resources with user tags in the database"),
 				"noImages" => dgettext($domain, "There are no images available"),
-				"usedImages" => dgettext($domain, "Images used in metadata"),
-				"unusedImages" => dgettext($domain, "Images not used in metadata"),
+				"usedImages" => dgettext($domain, "Used images"),
+				"unusedImages" => dgettext($domain, "Unused images"),
 /// misc_popIndex When viewing resources on the front page of the WIKINDX, display the popularity index.  This should be a short abbreviation
 				"popIndex" => dgettext($domain, "Pop. ###%"),
 /// misc_downIndex When viewing resources on the front page of the WIKINDX, display the download index.  This should be a short abbreviation

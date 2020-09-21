@@ -20,7 +20,6 @@ class DELETEIMAGES
     private $messages;
     private $errors;
     private $success;
-    private $session;
     private $badInput;
     private $gatekeep;
     private $usedImages = [];
@@ -35,24 +34,27 @@ class DELETEIMAGES
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->session = FACTORY_SESSION::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
     }
     /**
      * check we are allowed to delete and load appropriate method
      *
-     * @param false|string $message
      */
-    public function init($message = FALSE)
+    public function init()
     {
         $this->gatekeep->requireSuper = TRUE; // only admins can delete images if set to TRUE
         $this->gatekeep->init();
+    	if (array_key_exists('message', $this->vars)) {
+    		$message = $this->vars['message'];
+    	} else {
+    		$message = FALSE;
+    	}
         if (array_key_exists('function', $this->vars)) {
             $function = $this->vars['function'];
             $this->{$function}();
         } else {
-            $this->display();
+            $this->display($message);
         }
     }
     /**
@@ -63,7 +65,7 @@ class DELETEIMAGES
     private function display($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "adminImages"));
-        $pString = $message ? $message : FALSE;
+        $pString = $message;
         if (!$this->grabImages()) {
             $pString .= $this->messages->text("misc", "noImages");
         } else {
@@ -110,7 +112,8 @@ class DELETEIMAGES
 				80, 
 				$js
 			) .
-			BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint') . BR .
+			BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint') . BR .
 			BR . \FORM\formSubmit($this->messages->text("submit", "Delete"));
 		$td .= \FORM\formEnd();
         $pString .= \HTML\td($td);
@@ -147,7 +150,8 @@ class DELETEIMAGES
 				80, 
 				$js
 			) .
-			BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint') . BR .
+			BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint') . BR .
 			BR . \FORM\formSubmit($this->messages->text("submit", "Delete"));
 		$td .= \FORM\formEnd();
         $pString .= \HTML\td($td);
@@ -208,7 +212,7 @@ class DELETEIMAGES
     		list($width, $height) = $this->imageWH($imagePath);
     		$pString .= \HTML\td(\HTML\img($imageUrl, $width, $height));
     	}
-    	else {
+    	elseif (array_key_exists('ajaxReturn', $this->vars)) {
     		$array = explode(',', $this->vars['ajaxReturn']);
     		foreach ($array as $image) {
     			if ($numCells == $maxCells) {
@@ -342,8 +346,9 @@ class DELETEIMAGES
         		$this->db->update('config', ['configText' => $text]);
             }
         }
-        $pString = $this->success->text("imageDelete");
-        $this->display($pString);
+        $message = rawurlencode($this->success->text("imageDelete"));
+        header("Location: index.php?action=admin_DELETEIMAGES_CORE&method=init&message=$message");
+        die;
     }
     /**
      * validate input

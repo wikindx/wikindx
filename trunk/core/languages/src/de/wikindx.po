@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-09-18 13:08+0200\n"
+"POT-Creation-Date: 2020-09-21 23:50+0200\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -51,7 +51,7 @@ msgstr "In config.php wurde kein RDBMS-Typ ausgewählt."
 msgid "Missing subQuery statement."
 msgstr "Fehlende subQuery-Anweisung."
 
-#. translators: When using the word processor how are extra, unnamed authors indicated?
+#. translators: When using the word processor how are extra, unnamed authors indicated? 
 #. In English this would be 'et al.' as in: 'According to Grimshaw et al., "blah blah blah".
 #: core/messages/constants.php:29
 msgid "et al."
@@ -61,10 +61,10 @@ msgstr "et al."
 #. You should not translate this string but establish a list separated by ;
 #. of the singular possessive forms of your language, if they exist.
 #. THAT END BY A POINT AND ONLY A POINT.
-#.
+#. 
 #. If your language does not use it or is incompatible with the operation described
 #. below of the word processor, put a ; in this string empty.
-#.
+#. 
 #. When using the word processor, how is singular possessive defined.
 #. This is only for a single creator's surname and, like 'et al.' above, is used
 #. to detect if a creator name should be removed from the in-text citation
@@ -101,20 +101,20 @@ msgstr "“"
 #. a list separated by ; of the most common abbreviations of your language
 #. or bibliographic styles used in your language (country)
 #. THAT END BY A POINT AND ONLY A POINT.
-#.
+#. 
 #. It is strongly recommended to leave the Latin abbreviations
 #. which are a common place of bibliographies.
-#.
+#. 
 #. Remove the English abbreviations unless they are used in your language.
-#.
+#. 
 #. Abreviations such as U.S.A., U.S.S.R., N.B. are dealt with in the code
 #. (must be capital English characters and no spaces).
 #. '...' and multiple dots consisting of two or more dots are dealt with in the code.
-#.
+#. 
 #. N.B. MATCHING IS CASE SENSITIVE. You must indicate all the possible cases of an abbreviation.
-#.
+#. 
 #. If you have no abbreviations, put a ; in this string.
-#.
+#. 
 #. When using the word processor, for certain styles the text
 #. must be split up into sentences -- e.g. APA requires that year
 #. must follow the author name and page no. follows the citation
@@ -123,7 +123,7 @@ msgstr "“"
 #. This string handles other groups of characters (commonly abbreviations)
 #. that may appear in a sentence // but do not indicate a sentence divider.
 #. If there are no such abbreviations, the string must exist and be empty.
-#.
+#. 
 #. The Latin abbreviations which are a common place of bibliographies
 #. are already included. Do not add them to your list.
 #. Latin abbreviations in order of apparition are:
@@ -144,7 +144,7 @@ msgstr "“"
 #. - sqq. : sequunturque
 #. - v. : versus
 #. - viz. : videre licet
-#.
+#. 
 #. English abbreviations in order of apparition are:
 #. - short for Brothers (as in Warner Bros.)
 #. - company
@@ -2126,46 +2126,64 @@ msgid "That bibliography already exists"
 msgstr "Diese Bibliographie existiert bereits."
 
 #: core/messages/errors.php:117
+#, fuzzy
+#| msgid "That style already exists"
+msgid "That label already exists"
+msgstr "Dieser Stil existiert bereits."
+
+#: core/messages/errors.php:118
+#, fuzzy
+#| msgid "That style already exists"
+msgid "That language already exists"
+msgstr "Dieser Stil existiert bereits."
+
+#: core/messages/errors.php:119
 msgid ""
 "Unable to use email - please contact the WIKINDX administrator (ERROR: ###)"
 msgstr ""
 "Es konnte keine E-Mail an Sie verschickt werden - bitte kontaktieren Sie den "
 "WIKINDX-Administrator."
 
+#: core/messages/errors.php:120
+#, fuzzy
+#| msgid "Email address"
+msgid "Invalid email address"
+msgstr "Adresse der E-Mail"
+
 #. / inputError_noHashKey User registration - the hashKey supplied by email to a user has been deleted from the database as they did not confirm their registration within 10 days.
-#: core/messages/errors.php:119
+#: core/messages/errors.php:122
 msgid "That key no longer exists. Please re-register"
 msgstr ""
 "Dieser Schlüssel existiert nicht mehr. Bitte registrieren Sie sich noch "
 "einmal."
 
-#: core/messages/errors.php:120
+#: core/messages/errors.php:123
 msgid "That style already exists"
 msgstr "Dieser Stil existiert bereits."
 
 #. / inputError_duplicateCustomMap When exporting bibliographies to bibtex or endnote and custom fields are mapped, duplicate field names are not allowed.
-#: core/messages/errors.php:122
+#: core/messages/errors.php:125
 msgid "Duplicate export field names"
 msgstr "Doppelte Feldnamen beim Export."
 
 #. / inputError_incorrect Response given to an incorrect answer in the forgotten password system
-#: core/messages/errors.php:124
+#: core/messages/errors.php:127
 msgid "A question has been answered incorrectly.  Please try again."
 msgstr ""
 "Eine Frage wurde nicht korrekt beantwortet. Bitte versuchen Sie es noch "
 "einmal."
 
 #. / inputError_duplicateFieldNames When exporting metadata to bibtex, the user has entered a 'unique' field name that already exists
-#: core/messages/errors.php:126
+#: core/messages/errors.php:129
 msgid "Duplicate field names"
 msgstr "Doppelte Feldnamen"
 
 #. / inputError_chapterNotNumeric book_chapter resource type:  chapter must be a number
-#: core/messages/errors.php:128
+#: core/messages/errors.php:131
 msgid "Chapter must be numeric"
 msgstr "Die Kapitelbezeichnung muss eine Zahl sein."
 
-#: core/messages/errors.php:129
+#: core/messages/errors.php:132
 msgid ""
 "You do not own any user groups.  You must first create a user group before "
 "you can create user group bibliographies"
@@ -2173,122 +2191,122 @@ msgstr ""
 "Sie haben bisher keine Benutzergruppen. Sie müssen zuerst eine Benutzergruppe "
 "einrichten, bevor Sie Benutzergruppen-Bibliographien einrichten können."
 
-#: core/messages/errors.php:130
+#: core/messages/errors.php:133
 msgid "Unable to complete the operation due to a mail server error (ERROR: ###)"
 msgstr ""
 "Der Vorgang kann wegen eines Fehlers beim Mailserver nicht abgeschlossen "
 "werden."
 
 #. / inputError_passwordMismatch typed passwords do not match
-#: core/messages/errors.php:132
+#: core/messages/errors.php:135
 msgid "Passwords do not match."
 msgstr "Die Passwörter stimmen nicht überein"
 
-#: core/messages/errors.php:133 core/messages/messages.php:826
+#: core/messages/errors.php:136 core/messages/messages.php:826
 msgid ""
 "Password must contain at least ### characters and be a mix of UPPER/"
 "lowercase. Spaces are not allowed."
 msgstr ""
 
-#: core/messages/errors.php:134 core/messages/messages.php:827
+#: core/messages/errors.php:137 core/messages/messages.php:827
 msgid ""
 "Password must contain at least ### characters and be a mix of UPPER/lowercase "
 "and numbers. Spaces are not allowed."
 msgstr ""
 
-#: core/messages/errors.php:135 core/messages/messages.php:828
+#: core/messages/errors.php:138 core/messages/messages.php:828
 msgid ""
 "Password must contain at least ### characters and be a mix of UPPER/"
 "lowercase, numbers, and non-alphanumeric characters ($ @ # ! % * ? & €). "
 "Spaces are not allowed."
 msgstr ""
 
-#: core/messages/errors.php:136
+#: core/messages/errors.php:139
 msgid "That user tag already exists"
 msgstr "Dieses Tag existiert bereits."
 
 #. / inputError_captcha CAPTCHA words entered incorrect
-#: core/messages/errors.php:138
+#: core/messages/errors.php:141
 msgid "Answer incorrect"
 msgstr "Das CAPTCHA-Wort wurde falsch eingegeben."
 
 #. / inputError_maxInputVars Too many input vars for PHP to handle
-#: core/messages/errors.php:140
+#: core/messages/errors.php:143
 msgid ""
 "Too many input variables selected for PHP to handle (input > ###). You can "
 "adjust this increasing max_input_vars in php.ini."
 msgstr ""
 
-#: core/messages/errors.php:141
+#: core/messages/errors.php:144
 msgid "Cannot connect to LDAP server. Server and/or port are not plausible"
 msgstr ""
 
-#: core/messages/errors.php:142
+#: core/messages/errors.php:145
 msgid "Cannot connect to LDAP server. Too many users on that login"
 msgstr ""
 
-#: core/messages/errors.php:143
+#: core/messages/errors.php:146
 msgid "Error while setting LDAP options"
 msgstr ""
 
-#: core/messages/errors.php:144
+#: core/messages/errors.php:147
 msgid "Cannot connect to LDAP server. Unable to bind"
 msgstr ""
 
-#: core/messages/errors.php:145
+#: core/messages/errors.php:148
 msgid "Error while searching the LDAP catalog"
 msgstr ""
 
-#: core/messages/errors.php:146
+#: core/messages/errors.php:149
 msgid "Error reading LDAP entries"
 msgstr ""
 
-#: core/messages/errors.php:147
+#: core/messages/errors.php:150
 msgid "You must be a registered user to access this"
 msgstr ""
 
-#: core/messages/errors.php:148
+#: core/messages/errors.php:151
 msgid "A keyword group requires at least two keywords in it"
 msgstr ""
 
-#: core/messages/errors.php:149
+#: core/messages/errors.php:152
 #, fuzzy
 #| msgid "You have already edited that keyword"
 msgid "You neither own nor are a member of that keyword group"
 msgstr "Sie haben dieses Schlagwort bereits bearbeitet."
 
-#: core/messages/errors.php:153
+#: core/messages/errors.php:156
 msgid "Unable to write to file ###"
 msgstr "In die Datei kann nicht geschrieben werden ###."
 
-#: core/messages/errors.php:154
+#: core/messages/errors.php:157
 msgid "You must first list or select resources"
 msgstr "Sie müssen zuerst Ressourcen auflisten oder auswählen."
 
-#: core/messages/errors.php:155
+#: core/messages/errors.php:158
 msgid "Unable to read directory or file ###"
 msgstr "Verzeichnis oder Datei kann nicht gelesen werden ###."
 
-#: core/messages/errors.php:156
+#: core/messages/errors.php:159
 msgid "You have not yet exported any files"
 msgstr "Sie haben noch keine Dateien exportiert."
 
-#: core/messages/errors.php:157
+#: core/messages/errors.php:160
 msgid "File upload error"
 msgstr "Fehler beim Datei-Upload"
 
-#: core/messages/errors.php:158
+#: core/messages/errors.php:161
 msgid "Unable to create directory"
 msgstr "Das Verzeichnis kann nicht angelegt werden."
 
-#: core/messages/errors.php:159
+#: core/messages/errors.php:162
 msgid "You may not map more than one unknown field to the same WIKINDX field"
 msgstr ""
 "Sie können nicht mehr als ein unbekanntes Feld mit demselben Wikindx-Feld "
 "verbinden."
 
 #. / file_fileSize Don't translate 'post_max_size', 'upload_max_filesize' and 'php.ini'
-#: core/messages/errors.php:161
+#: core/messages/errors.php:164
 msgid ""
 "Attachment exceeds maximum post_max_size or upload_max_filesize in php.ini (> "
 "### bytes)"
@@ -2296,157 +2314,157 @@ msgstr ""
 "Die Größe des Dateianhanges überschreitet das Maximum post_max_size oder "
 "upload_max_filesize in php.ini (> ### Bytes)."
 
-#: core/messages/errors.php:162
+#: core/messages/errors.php:165
 msgid "Attachment already exists for this resource"
 msgstr "Der Anhang existiert bereits für diese Ressource."
 
-#: core/messages/errors.php:163
+#: core/messages/errors.php:166
 msgid "File not found"
 msgstr "Datei wurde nicht gefunden."
 
-#: core/messages/errors.php:164
+#: core/messages/errors.php:167
 msgid "Image already exists as ###"
 msgstr ""
 
-#: core/messages/errors.php:165
+#: core/messages/errors.php:168
 msgid "File type not allowed (only JPEG, GIF and PNG)"
 msgstr ""
 
-#: core/messages/errors.php:166
+#: core/messages/errors.php:169
 msgid "Image above maximum allowed size of ###MB"
 msgstr ""
 
-#: core/messages/errors.php:167
+#: core/messages/errors.php:170
 msgid ""
 "One or more attachments exceed the maximum size (>### bytes). If you are the "
 "admin, try editing both 'post_max_size' and 'upload_max_filesize' in php.ini."
 msgstr ""
 
-#: core/messages/errors.php:171
+#: core/messages/errors.php:174
 msgid "You have already created/edited/deleted that resource"
 msgstr "Sie haben diese Ressource bereits erstellt/bearbeitet/gelöscht."
 
-#: core/messages/errors.php:172
+#: core/messages/errors.php:175
 msgid "You have already created/edited/deleted that note"
 msgstr "sie haben diese Anmerkung bereits erstellt/bearbeitet/gelöscht."
 
-#: core/messages/errors.php:173
+#: core/messages/errors.php:176
 msgid "You have already created/edited/deleted that quote"
 msgstr "Sie haben dieses Zitat bereits erstellt/bearbeitet/gelöscht."
 
-#: core/messages/errors.php:174
+#: core/messages/errors.php:177
 msgid "You have already created/edited/deleted that paraphrase"
 msgstr "Sie haben diese Umschreibung bereits erstellt/bearbeitet/gelöscht."
 
-#: core/messages/errors.php:175
+#: core/messages/errors.php:178
 msgid "You have already created/edited/deleted that musing"
 msgstr "Sie haben diesen Gedanken bereits erstellt/bearbeitet/gelöscht."
 
-#: core/messages/errors.php:176
+#: core/messages/errors.php:179
 msgid "You have already created/edited/deleted that idea"
 msgstr ""
 
-#: core/messages/errors.php:177
+#: core/messages/errors.php:180
 msgid "You have already created/edited/deleted that abstract"
 msgstr "Sie haben diese Zusammenfassung bereits erstellt/bearbeitet/gelöscht."
 
-#: core/messages/errors.php:178
+#: core/messages/errors.php:181
 msgid "You have already created/edited/deleted that creator"
 msgstr "Sie haben diesen bereits erstellt/bearbeitet/gelöscht."
 
-#: core/messages/errors.php:179
+#: core/messages/errors.php:182
 msgid "You have already created/edited/deleted that publisher"
 msgstr "Sie haben diesen Verlag bereits erstellt/bearbeitet/gelöscht."
 
-#: core/messages/errors.php:180
+#: core/messages/errors.php:183
 msgid "You have already created/edited/deleted that collection"
 msgstr "Sie haben diese Sammlung bereits erstellt/bearbeitet/gelöscht."
 
-#: core/messages/errors.php:181
+#: core/messages/errors.php:184
 msgid "You have already imported that file"
 msgstr "Sie haben diese Datei bereits importiert."
 
-#: core/messages/errors.php:182
+#: core/messages/errors.php:185
 msgid "You have already edited that keyword"
 msgstr "Sie haben dieses Schlagwort bereits bearbeitet."
 
-#: core/messages/errors.php:183 core/messages/errors.php:193
+#: core/messages/errors.php:186 core/messages/errors.php:196
 msgid "You have already deleted that keyword"
 msgstr "Sie haben dieses Schlagwort bereits gelöscht."
 
-#: core/messages/errors.php:184
+#: core/messages/errors.php:187
 msgid "You have already registered"
 msgstr "Sie haben sich bereits registriert."
 
-#: core/messages/errors.php:185
+#: core/messages/errors.php:188
 msgid "You have already created/edited/deleted that bibliography"
 msgstr "Sie haben diese Bibliographie bereits erstellt/bearbeitet/gelöscht."
 
-#: core/messages/errors.php:186
+#: core/messages/errors.php:189
 msgid "You have already edited/deleted that custom field"
 msgstr ""
 "Sie haben dieses zusätzliche Datenfeld bereits erstellt/bearbeitet/gelöscht."
 
-#: core/messages/errors.php:187
+#: core/messages/errors.php:190
 msgid "You have already attached that file"
 msgstr "Sie haben diese Datei bereits angehängt."
 
-#: core/messages/errors.php:188
+#: core/messages/errors.php:191
 msgid "You have already deleted those files"
 msgstr "Sie haben diese Dateien bereits gelöscht."
 
-#: core/messages/errors.php:189
+#: core/messages/errors.php:192
 msgid "You have already created/edited/deleted that user group"
 msgstr "Sie haben diese Benutzergruppe bereits erstellt/bearbeitet/gelöscht."
 
-#: core/messages/errors.php:190
+#: core/messages/errors.php:193
 msgid "You have already added that URL"
 msgstr "Sie haben diese URL bereits hinzugefügt."
 
-#: core/messages/errors.php:191
+#: core/messages/errors.php:194
 msgid "You have already created/edited/deleted that user tag"
 msgstr "Sie haben dieses Tag bereits erstellt/bearbeitet/gelöscht."
 
-#: core/messages/errors.php:192
+#: core/messages/errors.php:195
 msgid "You have already created/edited/deleted that news item"
 msgstr "Sie haben diese Nachricht bereits erstellt/bearbeitet/gelöscht."
 
 #. / warning_resourceExists When inputting a new resource
-#: core/messages/errors.php:198
+#: core/messages/errors.php:201
 msgid "At least one resource of that type with that title already exists"
 msgstr ""
 "Mindestens eine Ressource diesen Typs existiert bereits mit diesem Titel."
 
 #. / warning_superadminOnly WIKINDX not in multi user mode - this is displayed at the logon screen
-#: core/messages/errors.php:200
+#: core/messages/errors.php:203
 msgid "Multi user has not been enabled - only the superadmin may log on"
 msgstr ""
 "Multiuser wurde nicht aktiviert - nur der Superadmin kann sich anmelden."
 
 #. / warning_creatorExists When editing a creator, the new one may be the same as an existing one.
-#: core/messages/errors.php:202
+#: core/messages/errors.php:205
 msgid "A creator of that name already exists in the database"
 msgstr "Ein Urheber dieses Namens existiert bereits in der Datenbank."
 
 #. / warning_publisherExists When editing a publisher, the new one may be the same as an existing one.
-#: core/messages/errors.php:204
+#: core/messages/errors.php:207
 msgid "A publisher of that name and location already exists in the database"
 msgstr ""
 "Ein Verlag mit diesem Namen und diesem Standort existiert bereits in der "
 "Datenbank."
 
 #. / warning_collectionExists When editing a collection, the new one may be the same as an existing one.
-#: core/messages/errors.php:206
+#: core/messages/errors.php:209
 msgid "A collection with those details already exists in the database"
 msgstr "Eine Sammlung mit diesen Details existiert bereits in der Datenbank."
 
 #. / warning_keywordExists When editing a keyword, the new one may be the same as an existing one.
-#: core/messages/errors.php:208
+#: core/messages/errors.php:211
 msgid "A keyword of that name already exists in the database"
 msgstr "Ein Schlagwort dieses Namens existiert bereits in der Datenbank."
 
 #. / warning_forget1 For the forgotten password system: '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:210
+#: core/messages/errors.php:213
 msgid ""
 "Unfortunately you have not stored any question/answer pairs or you have "
 "entered your details incorrectly so WIKINDX is unable to help you.  Please "
@@ -2456,7 +2474,7 @@ msgstr ""
 "Details inkorrekt eingegeben, so dass WIKINDX Ihnen nicht helfen kann. Bitte "
 "wenden Sie sich an den WIKINDX-Administrator ###."
 
-#: core/messages/errors.php:211
+#: core/messages/errors.php:214
 msgid ""
 "There is more than one user with that email address so WIKINDX is unable to "
 "help you. Please contact the WIKINDX administrator for further help or enter "
@@ -2467,7 +2485,7 @@ msgstr ""
 "um weitere Hilfe zu erhalten oder geben Sie Ihren Benutzernamen ein."
 
 #. / warning_forget3 Don't translate 'SMTP'.  In this case, '###' is the admin's email address which may or may not be available.  If it is, the '###' may be something like '(me@blah.com).' otherwise it will be '.'.
-#: core/messages/errors.php:213
+#: core/messages/errors.php:216
 msgid ""
 "WIKINDX is unable to email you because the SMTP server does not appear to be "
 "available.  Please contact the WIKINDX administrator ###"
@@ -2475,50 +2493,50 @@ msgstr ""
 "WIKINDX kann Ihnen keine E-Mail schicken, da der SMTP-Server nicht erreichbar "
 "zu sein scheint. Bitte wenden Sie sich an den WIKINDX-Administrator ###."
 
-#: core/messages/errors.php:214
+#: core/messages/errors.php:217
 msgid "Resource has been quarantined until an ADMIN approves it"
 msgstr "Die Ressource wurde gesperrt, bis ein Administrator sie geprüft hat."
 
-#: core/messages/errors.php:215
+#: core/messages/errors.php:218
 msgid "Incompatible plugins: ###"
 msgstr ""
 
-#: core/messages/errors.php:216
+#: core/messages/errors.php:219
 msgid "If you delete the main idea, the entire thread will be deleted"
 msgstr ""
 
-#: core/messages/errors.php:217
+#: core/messages/errors.php:220
 msgid ""
 "The administrator of this wikindx has denied you access. Please contact the "
 "administrator for further details."
 msgstr ""
 
-#: core/messages/errors.php:221
+#: core/messages/errors.php:224
 msgid "No valid entries found in the file"
 msgstr ""
 
 #. / components_adminFailed This is used as preamble text. e.g. Admin action failed: No file selected.
-#: core/messages/errors.php:226
+#: core/messages/errors.php:229
 msgid "Admin action failed: ###"
 msgstr ""
 
-#: core/messages/errors.php:227
+#: core/messages/errors.php:230
 msgid ""
 "An error occurred while downloading the component list from the update "
 "server. Please try again later."
 msgstr ""
 
-#: core/messages/errors.php:228
+#: core/messages/errors.php:231
 msgid ""
 "An error occurred while parsing the component list from the update server. "
 "Please check for updates again."
 msgstr ""
 
-#: core/messages/errors.php:229
+#: core/messages/errors.php:232
 msgid "Unknown component."
 msgstr ""
 
-#: core/messages/errors.php:230
+#: core/messages/errors.php:233
 #, fuzzy
 #| msgid "Two or more inline plugins have been assigned the same container: ###"
 msgid ""
@@ -2527,12 +2545,12 @@ msgid ""
 msgstr ""
 "Zwei oder mehr Inline-Plugins wurden dem gleichen Container zugeordnet: ###"
 
-#: core/messages/errors.php:231
+#: core/messages/errors.php:234
 msgid ""
 "The value of $container is invalid. The configuration has not been updated."
 msgstr ""
 
-#: core/messages/errors.php:232
+#: core/messages/errors.php:235
 msgid "The value of $menus is invalid. The configuration has not been updated."
 msgstr ""
 
@@ -6806,11 +6824,13 @@ msgid "There are no images available"
 msgstr ""
 
 #: core/messages/messages.php:1030
-msgid "Images used in metadata"
-msgstr ""
+#, fuzzy
+#| msgid "Add Image"
+msgid "Used images"
+msgstr "Bild hinzufügen"
 
 #: core/messages/messages.php:1031
-msgid "Images not used in metadata"
+msgid "Unused images"
 msgstr ""
 
 #. / misc_popIndex When viewing resources on the front page of the WIKINDX, display the popularity index.  This should be a short abbreviation
@@ -9070,12 +9090,16 @@ msgid "Successfully deleted resource(s)"
 msgstr ""
 
 #: core/messages/success.php:109
-msgid "Successfully added category(s)"
-msgstr ""
+#, fuzzy
+#| msgid "Successfully edited creator"
+msgid "Successfully added category"
+msgstr "Urheber wurde erfolgreich bearbeitet."
 
 #: core/messages/success.php:110
-msgid "Successfully edited category(s)"
-msgstr ""
+#, fuzzy
+#| msgid "Successfully edited creator"
+msgid "Successfully edited category"
+msgstr "Urheber wurde erfolgreich bearbeitet."
 
 #: core/messages/success.php:111
 msgid "Successfully deleted category(s)"
@@ -9094,12 +9118,16 @@ msgid "Successfully deleted language"
 msgstr ""
 
 #: core/messages/success.php:115
-msgid "Successfully added subcategory(s)"
-msgstr ""
+#, fuzzy
+#| msgid "Successfully added bookmark"
+msgid "Successfully added subcategory"
+msgstr "Lesezeichen wurde erfolgreich hinzugefügt."
 
 #: core/messages/success.php:116
-msgid "Successfully edited subcategory(s)"
-msgstr ""
+#, fuzzy
+#| msgid "Successfully edited creator"
+msgid "Successfully edited subcategory"
+msgstr "Urheber wurde erfolgreich bearbeitet."
 
 #: core/messages/success.php:117
 msgid "Successfully deleted subcategory(s)"
@@ -9569,8 +9597,8 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 #~ msgid "My Bibliographies"
 #~ msgstr "Meine Bibliographien"
 
-#~ msgid "Select the creators you wish to remove from the group"
-#~ msgstr "Wählen Sie die Urheber, die aus der Gruppe entfernt werden sollen."
-
 #~ msgid "Ungroup"
 #~ msgstr "Gruppierung aufheben"
+
+#~ msgid "Select the creators you wish to remove from the group"
+#~ msgstr "Wählen Sie die Urheber, die aus der Gruppe entfernt werden sollen."

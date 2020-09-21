@@ -822,7 +822,7 @@ class ADMINCOMPONENTS
         if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars)) {
             $this->messageStringId = $this->vars['component_id'];
             $this->messageStringType = $this->vars['component_type'];
-            list($id, $tempFile, $config) = $this->writeTempConfigFile($this->vars['configFileMenu'], $this->vars['configConfig']);
+            $config = $this->writeTempConfigFile($this->vars['configFileMenu'], $this->vars['configConfig']);
             foreach ($config->menus as $menu) {
                 if (array_search($menu, ['wikindx', 'res', 'search', 'text', 'admin', 'plugin1', 'plugin2', 'plugin3']) === FALSE) {
                     $this->messageString = $this->errors->text('components', 'invalidMenu');
@@ -831,22 +831,11 @@ class ADMINCOMPONENTS
                 }
             }
             $configFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $this->vars['configFileMenu'], 'config.php']);
-            $fileString = str_replace($id . '_CONFIG', $this->vars['configFileMenu'] . '_CONFIG', file_get_contents($tempFile));
-            $bool = FALSE;
-            if ($fh = @fopen($configFile, "w")) {
-                $bool = @fwrite($fh, $fileString);
-                fclose($fh);
-                @unlink($tempFile);
-            }
-            if ($bool === FALSE) {
+            if (file_put_contents($configFile, $this->vars['configConfig']) === FALSE)
                 $this->messageSTring = $this->errors->text('file', 'write');
-
-                return $this->init();
-            } else {
+            else
                 $this->messageString = $this->success->text("plugins");
-
-                return $this->init();
-            }
+            return $this->init();
         }
     }
     /**
@@ -867,40 +856,30 @@ class ADMINCOMPONENTS
                 }
                 include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $file, "config.php"]));
                 $configClass = $file . '_CONFIG';
-                $config = new $configClass();
-                if (($index = array_search($config->container, $usedContainers)) === FALSE) {
-                    $usedContainers[$file] = $config->container;
+                $configOrigine = new $configClass();
+                if (($index = array_search($configOrigine->container, $usedContainers)) === FALSE) {
+                    $usedContainers[$file] = $configOrigine->container;
                     $array[] = $file;
                 }
             }
-            list($id, $tempFile, $config) = $this->writeTempConfigFile($this->vars['configFileInline'], $this->vars['configConfig']);
-            if (array_search($config->container, $usedContainers) !== FALSE) {
+            $configNew = $this->writeTempConfigFile($this->vars['configFileInline'], $this->vars['configConfig']);
+            if (array_search($configNew->container, $usedContainers) !== FALSE) {
                 $this->messageString = $this->errors->text('components', 'pluginConflict', implode(', ', $array));
 
                 return $this->init();
             }
-            if (array_search($config->container, ['inline1', 'inline2', 'inline3', 'inline4']) === FALSE) {
+            if (array_search($configNew->container, ['inline1', 'inline2', 'inline3', 'inline4']) === FALSE) {
                 $this->messageString = $this->errors->text('components', 'invalidInline');
 
                 return $this->init();
             }
             $configFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $this->vars['configFileInline'], 'config.php']);
-            $fileString = str_replace($id . '_CONFIG', $this->vars['configFileInline'] . '_CONFIG', file_get_contents($tempFile));
-            $bool = FALSE;
-            if ($fh = @fopen($configFile, "w")) {
-                $bool = @fwrite($fh, $fileString);
-                fclose($fh);
-                @unlink($tempFile);
-            }
-            if ($bool === FALSE) {
+           if (file_put_contents($configFile, $this->vars['configConfig']) === FALSE) {
                 $this->messageString = $this->errors->text('file', 'write');
-
-                return $this->init();
             } else {
                 $this->messageString = $this->success->text("plugins");
-
-                return $this->init();
             }
+            return $this->init();
         } else {
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'wrongParameters'));
         }
@@ -965,23 +944,27 @@ class ADMINCOMPONENTS
      */
     private function writeTempConfigFile($componentId, $configString)
     {
-        $bool = FALSE;
         $id = 'a' . \UTILS\uuid(); // $id is used for the class name in the temporary file – ensure it does not begin with a number
-        $tempFile = include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, $id]));
+        $tempFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_FILES, $id]);
         // rewrite temp class name so PHP doesn't complain about class being reused ('name is already in use'). . .
-        $fileString = str_replace($componentId . '_CONFIG', $id . '_CONFIG', stripslashes($configString));
-        if ($fh = @fopen($tempFile, "w")) {
-            $bool = @fwrite($fh, $fileString);
-            fclose($fh);
-        }
-        if ($bool === FALSE) {
+        $configString = str_replace($componentId . '_CONFIG', $id . '_CONFIG', $configString);
+        if (file_put_contents($tempFile, $configString) === FALSE) {
             return $this->init($this->errors->text('file', 'write'));
+        } else {
+            $include_error = include_once($tempFile);
+            unlink($tempFile);
+            if (!$include_error) {
+                try {
+                    $class = $id . '_CONFIG';
+                    $config = new $class();
+                    return $config;
+                } catch (Exception $e) {
+                    return $this->errors->text('components', 'invalidMenu');
+                }
+            } else {
+                return $this->errors->text('components', 'invalidMenu');
+            }
         }
-        include_once($tempFile);
-        $class = $id . '_CONFIG';
-        $config = new $class();
-
-        return [$id, $tempFile, $config];
     }
     /**
      * Display the config settings for the plugin

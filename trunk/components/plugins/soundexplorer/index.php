@@ -315,11 +315,15 @@ class soundexplorer_MODULE
 		];
 		$js = AJAX\jActionForm('onchange', $jsonArray);
 		array_key_exists('sepluginId', $this->vars) ? $id = $this->vars['sepluginId'] : $id = FALSE;
+		$size = count($searches);
+		if ($size > 5) {
+			$size = 5;
+		}
 		if (!$id) {
-			$pString .= FORM\selectFBoxValue(FALSE, "seType", $searches, 1, FALSE, $js);
+			$pString .= FORM\selectFBoxValue(FALSE, "seType", $searches, $size, FALSE, $js);
 		}
 		else {
-			$pString .= FORM\selectedBoxValue(FALSE, "seType", $searches, $id, 1, FALSE, $js);
+			$pString .= FORM\selectedBoxValue(FALSE, "seType", $searches, $id, $size, FALSE, $js);
 		}
 		$pString .= FORM\formEnd();
 		$pString .= HTML\hr();

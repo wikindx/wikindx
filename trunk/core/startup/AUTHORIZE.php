@@ -111,23 +111,15 @@ class AUTHORIZE
                 return FALSE;
             }
             // User registration
-            elseif (WIKINDX_MULTIUSER && WIKINDX_USER_REGISTRATION && (WIKINDX_MAIL_USE)) {
+            elseif (WIKINDX_MULTIUSER && WIKINDX_USER_REGISTRATION && WIKINDX_MAIL_USE) {
                 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "usersgroups", "REGISTER.php"]));
                 $obj = new REGISTER();
                 if ($this->vars["action"] == 'initRegisterUser') {
                     $obj->initRegister();
-                    if (!$this->session->getVar("setup_ReadOnly")) {
-                        FACTORY_CLOSENOMENU::getInstance();
-                    } else {
-                        FACTORY_CLOSE::getInstance();
-                    }
+                    FACTORY_CLOSENOMENU::getInstance();
                 } elseif (array_key_exists('method', $this->vars) && $this->vars["method"] == 'registerConfirm') {
                     GLOBALS::addTplVar('content', $obj->registerConfirm());
-                    if (!$this->session->getVar("setup_ReadOnly")) {
-                        FACTORY_CLOSENOMENU::getInstance();
-                    } else {
-                        FACTORY_CLOSE::getInstance();
-                    }
+                    FACTORY_CLOSENOMENU::getInstance();
                 } elseif (array_key_exists('method', $this->vars) && $this->vars["method"] == 'registerUser') {
                     $obj->registerUser();
                     if (!$this->session->getVar("setup_ReadOnly")) {
@@ -139,8 +131,7 @@ class AUTHORIZE
                     GLOBALS::addTplVar('content', $obj->registerUserAdd());
                     FACTORY_CLOSE::getInstance();
                 } elseif (array_key_exists('method', $this->vars) && $this->vars["method"] == 'registerRequest') {
-                    GLOBALS::addTplVar('content', $obj->registerRequest());
-                    FACTORY_CLOSE::getInstance();
+                    $obj->registerRequest();
                 }
             }
         }
@@ -194,6 +185,9 @@ class AUTHORIZE
         $this->session->delVar("setup_ReadOnly");
         $messages = FACTORY_MESSAGES::getFreshInstance();
         GLOBALS::setTplVar('heading', $messages->text("heading", "logon"));
+    	if (array_key_exists('message', $this->vars)) {
+    		$error = $this->vars['message'];
+    	}
         $pString = $error;
         if (!WIKINDX_MULTIUSER) {
             $errors = FACTORY_ERRORS::getFreshInstance();
@@ -240,7 +234,8 @@ class AUTHORIZE
         $user = FACTORY_USER::getInstance();
         // If checkPassword is successful, it also sets up some session variables to allow access without reauthentication.
         if (!$user->checkPassword($username, $password)) {
-            $this->failure();
+        	$error = FACTORY_ERRORS::getInstance();
+            $this->failure($error->text('inputError', 'invalid'));
         }
         // Success - so restore some session variables if stored from last logout
         $this->restoreEnvironment();
@@ -445,11 +440,14 @@ class AUTHORIZE
      */
     private function failure($error = FALSE)
     {
-        if (!$error && ($sessionError = $this->session->getVar("misc_ErrorMessage"))) {
+        if ($sessionError = $this->session->getVar("misc_ErrorMessage")) { // Perhaps from USER.php idap functions
             $error = $sessionError;
             $this->session->delVar("misc_ErrorMessage");
+        } else {
+        	$error = rawurlencode($error);
         }
         // Exit back to logon prompt
-        FACTORY_CLOSENOMENU::getInstance($this->initLogon($error));
+        header("Location: index.php?action=initLogon&message=$error");
+        die;
     }
 }

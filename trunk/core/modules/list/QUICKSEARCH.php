@@ -266,7 +266,6 @@ class QUICKSEARCH
             $this->session->delVar("sql_ListStmt");
             $this->session->delVar("advancedSearch_listParams");
         }
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));
         $this->stmt->listMethodAscDesc = 'search_AscDesc';
         $this->stmt->listType = 'search';
         $queryString = 'action=list_QUICKSEARCH_CORE&method=reprocess';
@@ -282,6 +281,7 @@ class QUICKSEARCH
         }
         $this->input['Partial'] = TRUE;
         GLOBALS::setTplVar('resourceListSearchForm', $this->init(FALSE, TRUE, TRUE));
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));
         if (!$this->getIds($reprocess, $queryString)) {
         	return FALSE;
         }

@@ -24,6 +24,7 @@ class ADMINUSER
     private $user;
     private $gatekeep;
     private $badInput;
+    private $formData = [];
 
     public function __construct()
     {
@@ -51,45 +52,41 @@ class ADMINUSER
     /**
      * Add a user - display options
      *
-     * @param false|string $error
+     * @param false|string $message
      */
-    public function addInit($error = FALSE)
+    public function addInit($message = FALSE)
     {
         $creator = FACTORY_CREATOR::getInstance();
         $password = FACTORY_PASSWORD::getInstance();
-        $creators = $creator->grabAll(FALSE, FALSE, FALSE, TRUE);
-        if (is_array($creators)) {
-            // add 0 => IGNORE to creators array
-            $temp[0] = $this->messages->text("misc", "ignore");
-            foreach ($creators as $key => $value) {
-                $temp[$key] = $value;
-            }
-            $creators = $temp;
-            unset($temp);
-        }
-        list($formText, $jsString) = $password->createElements(TRUE);
+        list($formText, $jsString) = $password->createElements(TRUE, FALSE, $this->formData);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userAdd"));
-        $pString = $error ? \HTML\p($error, "error", "center") : '';
+    	if (array_key_exists('message', $this->vars)) {
+    		$message = $this->vars['message'];
+    	}
+        $pString = $message;
         $pString .= \FORM\formHeader('admin_ADMINUSER_CORE', 'onsubmit="return checkForm(' . $jsString . ');"');
         $pString .= \FORM\hidden('method', 'add');
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $pString .= $formText;
-        $pString .= \HTML\td(\FORM\textInput(
+        $field = array_key_exists('email', $this->formData) ? $this->formData['email'] : FALSE;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "email"),
             "email",
-            FALSE,
+            $field,
             30,
             255
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= BR . "&nbsp;" . BR;
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\FORM\textInput($this->messages->text("user", "fullname"), "fullname", FALSE, 30, 255));
+        $field = array_key_exists('fullname', $this->formData) ? $this->formData['fullname'] : FALSE;
+        $pString .= \HTML\td(\FORM\textInput($this->messages->text("user", "fullname"), "fullname", $field, 30, 255));
         // Department
-        $td = \FORM\textInput($this->messages->text("user", "department"), "department", FALSE, 30, 255);
+        $field = array_key_exists('department', $this->formData) ? $this->formData['department'] : FALSE;
+        $td = \FORM\textInput($this->messages->text("user", "department"), "department", $field, 30, 255);
         $resultset = $this->db->select('users', 'usersDepartment', TRUE);
         $initial = FALSE;
         while ($row = $this->db->fetchRow($resultset)) {
@@ -107,11 +104,14 @@ class ADMINUSER
             }
             $departments = $temp;
             unset($temp);
-            $td .= BR . \FORM\selectFBoxValue(FALSE, "departmentId", $departments, 1);
+        	$field = array_key_exists('departmentId', $this->formData) ? 
+        		htmlspecialchars(trim($this->formData['departmentId']), ENT_QUOTES | ENT_HTML5) : 0;
+            $td .= BR . \FORM\selectedBoxValue(FALSE, "departmentId", $departments, $field, 1);
         }
         $pString .= \HTML\td($td);
         // Institution
-        $td = \FORM\textInput($this->messages->text("user", "institution"), "institution", FALSE, 30, 255);
+        $field = array_key_exists('institution', $this->formData) ? $this->formData['institution'] : FALSE;
+        $td = \FORM\textInput($this->messages->text("user", "institution"), "institution", $field, 30, 255);
         $resultset = $this->db->select('users', 'usersInstitution', TRUE);
         $initial = FALSE;
         while ($row = $this->db->fetchRow($resultset)) {
@@ -129,18 +129,33 @@ class ADMINUSER
             }
             $institutions = $temp;
             unset($temp);
-            $td .= BR . \FORM\selectFBoxValue(FALSE, "institutionId", $institutions, 1);
+        	$field = array_key_exists('institutionId', $this->formData) ? 
+        		htmlspecialchars(trim($this->formData['institutionId']), ENT_QUOTES | ENT_HTML5) : 0;
+            $td .= BR . \FORM\selectedBoxValue(FALSE, "institutionId", $institutions, $field, 1);
         }
         $pString .= \HTML\td($td);
+        $creators = $creator->grabAll(FALSE, FALSE, FALSE, TRUE);
         if (is_array($creators)) {
-            $pString .= \HTML\td(\FORM\selectFBoxValue(
+            // add 0 => IGNORE to creators array
+            $temp[0] = $this->messages->text("misc", "ignore");
+            foreach ($creators as $key => $value) {
+                $temp[$key] = $value;
+            }
+            $creators = $temp;
+            unset($temp);
+        }
+        if (is_array($creators)) {
+        	$field = array_key_exists('creatorId', $this->formData) ? $this->formData['creatorId'] : 0;
+            $pString .= \HTML\td(\FORM\selectedBoxValue(
                 $this->messages->text("user", "isCreator"),
                 "creatorId",
                 $creators,
+                $field,
                 1
             ));
         }
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "admin"), "admin", FALSE));
+        $field = array_key_exists('admin', $this->formData) ? TRUE : FALSE;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "admin"), "admin", $field));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Add")), FALSE, "left");
@@ -152,9 +167,7 @@ class ADMINUSER
      */
     public function add()
     {
-        if (!$this->validateInput('adminAdd')) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, "addInit");
-        }
+        $this->validateInput('adminAdd');
         // NB - writeUser returns FALSE on success!
         if ($this->user->writeUser(TRUE, 2)) {
             $this->badInput->close($this->errors->text("inputError", "userExists"), $this, "addInit");
@@ -165,9 +178,9 @@ class ADMINUSER
             $this->badInput->close($this->success->text("userAdd") .
             $this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'addInit');
         }
-        GLOBALS::addTplVar('content', $this->success->text("userAdd"));
-
-        return $this->init('addInit');
+        $message = rawurlencode($this->success->text("userAdd"));
+        header("Location: index.php?action=admin_ADMINUSER_CORE&method=addInit&message=$message");
+        die;
     }
     /**
      * Delete users display
@@ -500,14 +513,28 @@ class ADMINUSER
      */
     private function validateInput($type)
     {
+    	$error = '';
         if ($type == 'adminAdd') {
             if (!trim($this->vars['usersUsername']) || !trim($this->vars['password']) ||
                 !trim($this->vars['passwordConfirm']) || !trim($this->vars['email'])) {
-                return FALSE;
+                $error = $this->errors->text("inputError", "missing");
             }
             if (trim($this->vars['password']) != trim($this->vars['passwordConfirm'])) {
-                return FALSE;
+                $error = $this->errors->text("inputError", "missing");
             }
+            $function = 'addInit';
+        // Don't store passwords . . .
+            $this->formData['usersUsername'] = trim($this->vars['usersUsername']);
+            $this->formData['email'] = trim($this->vars['email']);
+            $this->formData['fullname'] = trim($this->vars['fullname']);
+            $this->formData['department'] = trim($this->vars['department']);
+            $this->formData['departmentId'] = $this->vars['departmentId'];
+            $this->formData['institution'] = trim($this->vars['institution']);
+            $this->formData['institutionId'] = $this->vars['institutionId'];
+            if (array_key_exists('admin', $this->vars)) {
+            	$this->formData['admin'] = TRUE;
+            }
+            $this->formData['creatorId'] = trim($this->vars['creatorId']);
         } elseif ($type == 'userAdd') {
             if (!trim($this->vars['usersUsername']) || !trim($this->vars['password']) ||
                 !trim($this->vars['passwordConfirm']) || !$this->vars['email'] || !$this->vars['hashKey']) {
@@ -554,8 +581,9 @@ class ADMINUSER
         if (isset($input)) {
             return $input;
         }
-
-        return TRUE;
+        if ($error) {
+	        $this->badInput->close($error, $this, $function);
+    	}
     }
     /**
      * grab users from database

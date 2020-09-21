@@ -23,6 +23,7 @@ class REGISTER
     private $session;
     private $user;
     private $badInput;
+    private $formData = [];
 
     public function __construct()
     {
@@ -43,7 +44,7 @@ class REGISTER
     public function initRegister($error = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
-        $pString = $error ? \HTML\p($error, "error", "center") : FALSE;
+        $pString = $error;
         $registrationModerate = WIKINDX_USER_REGISTRATION_MODERATE;
         if ($registrationModerate) {
             $pString .= \HTML\p($this->messages->text('config', 'registrationRequest1'));
@@ -55,29 +56,29 @@ class REGISTER
         }
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\FORM\textInput($this->messages->text("user", "email"), "email", FALSE, 30, 255)
-             . " " . \HTML\span('*', 'required') .
-             (!$registrationModerate ? BR . $this->messages->text("hint", "registerEmail") . \HTML\p('&nbsp;') : FALSE));
+        $field = array_key_exists('email', $this->formData) ? $this->formData['email'] : FALSE;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput($this->messages->text("user", "email"), "email", $field, 30, 255)
+              . (!$registrationModerate ? BR . $this->messages->text("hint", "registerEmail") . \HTML\p('&nbsp;') : FALSE));
         if ($registrationModerate) {
             $pString .= \HTML\td('&nbsp;');
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         if ($registrationModerate) {
-            $pString .= \HTML\td(BR .
-            \FORM\textareaInput($this->messages->text("config", "registrationRequest2"), "registerRequest", FALSE, 75, 15));
+        	$field = array_key_exists('registerRequest', $this->formData) ? $this->formData['registerRequest'] : FALSE;
+            $pString .= \HTML\td(BR . \HTML\span('*', 'required') . 
+            \FORM\textareaInput($this->messages->text("config", "registrationRequest2"), "registerRequest", $field, 75, 15));
         }
         if (!$registrationModerate) {
             $pString .= \HTML\p('&nbsp;');
         }
         $pString .= $this->createCaptcha();
-
         if ($registrationModerate) {
             $pString .= \HTML\td('&nbsp;');
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")), FALSE, "right");
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
     }
@@ -86,23 +87,29 @@ class REGISTER
      */
     public function registerUser()
     {
+    	$this->badInput->closeType = 'closenomenu';
+    	$error = '';
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
-        // check we're not reloading
-        if ($this->session->getVar("register_lock")) {
-            $this->badInput->close($this->errors->text("done", "register"), $this, 'initRegister');
-        }
         if (!$email = trim($this->vars['email'])) {
-            $this->badInput->close($this->errors->text('inputError', 'missing'), $this, 'initRegister');
+        	$error = $this->errors->text('inputError', 'missing');
         }
         if (!$this->captchaCheck()) {
-            $this->badInput->close($this->errors->text('inputError', 'captcha'), $this, "initRegister");
+        	$error = $this->errors->text('inputError', 'captcha');
+        }
+        $this->session->delVar("captcha");
+        $this->formData['email'] = trim($this->vars['email']);
+        if ($error) {
+            $this->badInput->close($error, $this, 'initRegister');
         }
         // time() should be unique enough
         $hashKey = md5(time());
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->register($hashKey, $email)) {
-            $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'initRegister');
+            $error = $this->errors->text("inputError", "mail", GLOBALS::getError());
+        }
+        if ($error) {
+            $this->badInput->close($error, $this, 'initRegister');
         }
         // END email
         // Now write details to WKX_user_register database
@@ -117,9 +124,9 @@ class REGISTER
         $this->db->formatConditions($this->db->dateIntervalCondition(20) . $this->db->greater .
             $this->db->formatFields('userregisterTimestamp'));
         $this->db->delete('user_register');
-        // Lock to prevent re-registration
-        $this->session->setVar("register_lock", TRUE);
-        GLOBALS::addTplVar('content', $this->success->text("registerEmail"));
+		$message = rawurlencode($this->success->text("registerEmail"));
+		header("location: index.php?message=$message");
+		die;
     }
     /**
      * user has entered hashkey for confirmation
@@ -128,36 +135,41 @@ class REGISTER
      */
     public function registerConfirm($error = FALSE)
     {
+        $pString = $error;
+    	$this->badInput->closeType = 'closenomenu';
+    	$error = '';
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
         if (!array_key_exists('hashKey', $this->vars)) {
-            $this->badInput->close($this->errors->text('inputError', 'missing'));
+        	$error = $this->errors->text('inputError', 'missing');
+			$this->badInput->close($error, $this, 'initRegister');
         }
         // $this->vars['hashKey'] -> check it exists in user_register
-        $this->db->formatConditions(['userregisterHashkey' => $this->vars['hashKey']]);
+        $hashKey = array_key_exists('hashKey', $this->formData) ? $this->formData['hashKey'] : $this->vars['hashKey'];
+        $this->db->formatConditions(['userregisterHashkey' => $hashKey]);
         $recordset = $this->db->select('user_register', ['userregisterId', 'userregisterEmail']);
         if (!$this->db->numRows($recordset)) {
-            $this->badInput->close($this->errors->text('inputError', 'noHashKey'));
+        	$error = $this->errors->text('inputError', 'noHashKey');
+			$this->badInput->close($error, $this, 'initRegister');
         }
         $row = $this->db->fetchRow($recordset);
         $id = $row['userregisterId'];
         $email = $row['userregisterEmail'];
-        $pString = $error ? \HTML\p($error, "error", "center") : FALSE;
         $password = FACTORY_PASSWORD::getInstance();
-        list($formText, $jsString) = $password->createElements();
+        list($formText, $jsString) = $password->createElements(TRUE, FALSE, $this->formData);
         $pString .= \FORM\formHeader('usersgroups_REGISTER_CORE', 'onsubmit="return checkForm(' . $jsString . ');"');
         $pString .= \FORM\hidden('method', 'registerUserAdd');
         $pString .= \FORM\hidden('id', $id);
-        $pString .= \FORM\hidden('hashKey', $this->vars['hashKey']);
+        $pString .= \FORM\hidden('hashKey', $hashKey);
         $pString .= \FORM\hidden('email', $email);
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $pString .= $formText;
-        $pString .= \HTML\td(\FORM\textInput($this->messages->text("user", "fullname"), "fullname", FALSE, 30, 255));
+        $fullname = array_key_exists('fullname', $this->formData) ? $this->formData['fullname'] : FALSe;
+        $pString .= \HTML\td(\FORM\textInput($this->messages->text("user", "fullname"), "fullname", $fullname, 30, 255));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-
         $pString .= \HTML\p($this->createCaptcha());
-        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Add")), FALSE, "right");
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Add")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
     }
@@ -166,20 +178,42 @@ class REGISTER
      */
     public function registerUserAdd()
     {
+    	$this->badInput->closeType = 'closenomenu';
+    	$error = '';
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
+        if (!array_key_exists('usersUsername', $this->vars) || !array_key_exists('password', $this->vars) ||
+            !array_key_exists('passwordConfirm', $this->vars) || !array_key_exists('email', $this->vars) || 
+            !array_key_exists('hashKey', $this->vars)) {print_r($this->vars);
+        	$error = $this->errors->text('inputError', 'missing');
+        }
         if (!trim($this->vars['usersUsername']) || !trim($this->vars['password']) ||
             !trim($this->vars['passwordConfirm']) || !$this->vars['email'] || !$this->vars['hashKey']) {
-            $this->badInput->close($this->errors->text('inputError', 'missing'), $this, 'registerConfirm');
+        	$error = $this->errors->text('inputError', 'missing');
         }
         if (trim($this->vars['password']) != trim($this->vars['passwordConfirm'])) {
-            $this->badInput->close($this->errors->text('inputError', 'missing'), $this, 'registerConfirm');
+        	$error = $this->errors->text('inputError', 'missing');
+        }
+        $this->formData['usersUsername'] = trim($this->vars['usersUsername']);
+        $this->formData['fullname'] = trim($this->vars['fullname']);
+        $this->formData['id'] = $this->vars['id'];
+        $this->formData['hashKey'] = trim($this->vars['hashKey']);
+        $this->formData['email'] = $this->vars['email'];
+        if ($error) {
+            $this->badInput->close($error, $this, 'registerConfirm');
         }
         if (!$this->captchaCheck()) {
-            $this->badInput->close($this->errors->text('inputError', 'captcha'), $this, "registerConfirm");
+        	$error = $this->errors->text('inputError', 'captcha');
+        }
+        $this->session->delVar("captcha");
+        if ($error) {
+            $this->badInput->close($error, $this, 'registerConfirm');
         }
         // NB - writeUser returns FALSE on success!
         if ($this->user->writeUser(TRUE, 0)) {
-            $this->badInput->close($this->errors->text('inputError', 'userExists'), $this, 'registerConfirm');
+        	$error = $this->errors->text('inputError', 'userExists');
+        }
+        if ($error) {
+            $this->badInput->close($error, $this, 'registerConfirm');
         }
         // remove id from user_register
         $this->db->formatConditions(['userregisterId' => $this->vars['id']]);
@@ -194,30 +228,45 @@ class REGISTER
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->registerUserAdd()) {
-            $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'registerConfirm');
+            $error = $this->errors->text("inputError", "mail", GLOBALS::getError());
         }
-        GLOBALS::addTplVar('content', $this->success->text("userAdd"));
+        if ($error) {
+            $this->badInput->close($error, $this, 'registerConfirm');
+        }
+		$message = rawurlencode($this->success->text("userAdd"));
+		header("location: index.php?message=$message");
+		die;
     }
     /**
      * Store request for registration
      */
     public function registerRequest()
     {
+    	$this->badInput->closeType = 'closenomenu';
+    	$error = '';
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
-        // check we're not reloading
-        if ($this->session->getVar("register_lock")) {
-            $this->badInput->close($this->errors->text("done", "register"), $this, 'initRegister');
-        }
         if ((!$email = trim($this->vars['email'])) || !$request = trim($this->vars['registerRequest'])) {
-            $this->badInput->close($this->errors->text('inputError', 'missing'), $this, 'initRegister');
+        	$error = $this->errors->text('inputError', 'missing');
         }
-        if (!$this->captchaCheck()) {
-            $this->badInput->close($this->errors->text('inputError', 'captcha'), $this, "initRegister");
+        elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE) {
+        	$error = $this->errors->text('inputError', 'invalidMail');
+        }
+        elseif (!$this->captchaCheck()) {
+        	$error = $this->errors->text('inputError', 'captcha');
+        }
+        $this->session->delVar("captcha");
+        $this->formData['registerRequest'] = trim($this->vars['registerRequest']);
+        $this->formData['email'] = trim($this->vars['email']);
+        if ($error) {
+            $this->badInput->close($error, $this, 'initRegister');
         }
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->registerRequest($email)) {
-            $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'initRegister');
+        	$error = $this->errors->text("inputError", "mail", GLOBALS::getError());
+        }
+        if ($error) {
+            $this->badInput->close($error, $this, 'initRegister');
         }
         // Now write details to WKX_user_register database
         $fields[] = 'userregisterHashKey';
@@ -229,9 +278,9 @@ class REGISTER
         $fields[] = 'userregisterTimestamp';
         $values[] = $this->db->formatTimestamp();
         $this->db->insert('user_register', $fields, $values);
-        // Lock to prevent re-registration
-        $this->session->setVar("register_lock", TRUE);
-        GLOBALS::addTplVar('content', $this->success->text("registerRequest"));
+		$message = rawurlencode($this->success->text("registerRequest"));
+		header("location: index.php?message=$message");
+		die;
     }
     /**
      * Create PNG of a simple maths question as anti-bot device
@@ -270,14 +319,13 @@ class REGISTER
         $data = ob_get_clean();
         imagedestroy($handle);
         // write answer to session
-        $session = FACTORY_SESSION::getInstance();
-        $session->setVar("captcha", $answer);
+        $this->session->setVar("captcha", $answer);
         // display the captcha
-        $pString = \HTML\td(
+        $pString = \HTML\td(\HTML\span('*', 'required') . 
             $this->messages->text('config', 'captcha1') . BR .
             '<img src="data:image/png;base64,' . base64_encode($data) . '" title="captcha" alt="captcha"' .
             ' width="' . $CaptchaWidth . '" height="' . $CaptchaHeight . '" style="vertical-align:middle;">' .
-            \FORM\textInput(FALSE, "answer", FALSE, 30, 30) . " " . \HTML\span('*', 'required')
+            \FORM\textInput(FALSE, "answer", FALSE, 30, 30)
         );
 
         return $pString;
@@ -289,9 +337,8 @@ class REGISTER
      */
     private function captchaCheck()
     {
-        $session = FACTORY_SESSION::getInstance();
         $user_answer = $this->vars['answer'];
-        $correct_answer = $session->getVar("captcha");
+        $correct_answer = $this->session->getVar("captcha");
 
         return ($user_answer == $correct_answer);
     }

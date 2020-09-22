@@ -351,8 +351,7 @@ class adminstyle_MODULE
         $dir = mb_strtolower($this->vars['editStyleFile']);
         $fileName = $this->vars['editStyleFile'] . ".xml";
         
-        $filePath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES, $fileName]);
-        
+        $filePath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES, $dir, $fileName]);
         if (is_readable($filePath)) {
             $parseXML->extractEntries($filePath);
             $info = $parseXML->info;

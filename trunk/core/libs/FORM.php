@@ -386,7 +386,7 @@ namespace FORM
             foreach ($array as $value) {
                 $string = \FORM\reduceLongText($value, $override);
     
-                if ($value === $select) {
+                if ($value == $select) {
                     $pString .= "<option value=\"$value\" selected>$string</option>" . LF;
                 } else {
                     $pString .= "<option>$string</option>" . LF;
@@ -485,7 +485,7 @@ namespace FORM
         if (is_array($array)) {
             foreach ($array as $key => $value) {
                 $value = \FORM\reduceLongText($value, $override);
-                ($key === $select) ?
+                ($key == $select) ?
                     $pString .= "<option value=\"$key\" selected>$value</option>" . LF :
                     $pString .= "<option value=\"$key\">$value</option>" . LF;
             }

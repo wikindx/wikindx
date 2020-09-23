@@ -508,7 +508,7 @@ class ADMINCOMPONENTS
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'wrongParameters'));
         }
         
-        $this->init();
+        $this->init($pString);
     }
     /**
      * enable action
@@ -738,11 +738,11 @@ class ADMINCOMPONENTS
             $this->messageStringId = $this->vars['component_id'];
             $this->messageStringType = $this->vars['component_type'];
             if ($this->vars['component_type'] == "template" && $this->vars['component_id'] == "default") {
-                $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'uninstallError', $this->vars['component_id'] . " " . $this->vars['component_type']));
+                $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'uninstallError', $this->vars['component_id'] . " " . $this->vars['component_type']));
             } elseif ($this->vars['component_type'] == "style" && $this->vars['component_id'] == "apa") {
-                $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'uninstallError', $this->vars['component_id'] . " " . $this->vars['component_type']));
+                $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'uninstallError', $this->vars['component_id'] . " " . $this->vars['component_type']));
             } elseif ($this->vars['component_type'] == "vendor") {
-                $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'vendorUninstallError'));
+                $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'vendorUninstallError'));
             } else {
                 $rootPathByType = [
                     'plugin' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]),
@@ -753,7 +753,7 @@ class ADMINCOMPONENTS
                 
                 \FILE\recurse_rmdir($rootPathByType[$this->vars['component_type']] . DIRECTORY_SEPARATOR . $this->vars['component_id']);
                 
-                $this->messageString = $this->success->text("componentSuccess");
+                $pString = $this->success->text("componentSuccess");
             }
         } else {
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'wrongParameters'));

@@ -1523,7 +1523,7 @@ class MESSAGES
 				"deleteConfirmBib" => dgettext($domain, "Delete bibliography ###"),
 /// user_unknown When a user has been deleted but her input remains, display this when viewing a resource and its associated text
 				"unknown" => dgettext($domain, "Deleted user"),
-				"deleteUserMetadata1" => dgettext($domain, "How do you wish to deal with the deleted users' quotes, paraphrases, musings, ideas, and comments (metadata)? Metadata left unchanged will be shown as added by 'Deleted user'. If you choose to delete users' metadata, other users' comments relating to those metadata will also be deleted. A deleted user's resources are not deleted. If you choose not to delete metadata, all private and group musings, comments, and ideas will be made public."),
+				"deleteUserMetadata1" => dgettext($domain, "How do you wish to deal with the deleted users' quotes, paraphrases, musings, ideas, and comments (metadata)? Metadata left unchanged will be shown as added by 'Deleted user'. If you choose to delete users' metadata, other users' comments relating to those metadata will also be deleted. A deleted user's resources are not deleted. If you choose not to delete metadata, all private and group musings, comments, and ideas will be made public"),
 				"deleteUserMetadata2" => dgettext($domain, "Leave unchanged"),
 				"deleteUserMetadata3" => dgettext($domain, "Transfer to superadmin"),
 				"deleteUserMetadata4" => dgettext($domain, "Delete"),

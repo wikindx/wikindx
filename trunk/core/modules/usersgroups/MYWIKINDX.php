@@ -22,9 +22,10 @@ class MYWIKINDX
     private $vars;
     private $bib;
     private $badInput;
-    private $errorString = FALSE;
+    private $messageString = FALSE;
     private $usersUsername = FALSE;
     private $userNameDisplay = FALSE;
+    private $formData = [];
 
     public function __construct()
     {
@@ -56,23 +57,24 @@ class MYWIKINDX
     public function init($message = FALSE)
     {
         // Anything in the session takes precedence
-        if (($messageIn = $this->session->getVar("mywikindx_Message")) && ($itemIn = $this->session->getVar("mywikindx_Item"))) {
+        if (($messageIn = $this->session->getVar("mywikindx_Message")) && ($item = $this->session->getVar("mywikindx_Item"))) {
             $this->session->delVar("mywikindx_Message");
             $this->session->delVar("mywikindx_Item");
-            $messageString = $messageIn;
-            $item = $itemIn;
+            $this->messageString = $messageIn;
         } elseif (is_array($message)) {
-            $messageString = $message[0];
+            $this->messageString = $message[0];
             $item = $message[1];
+        } elseif (array_key_exists('message', $this->vars) && array_key_exists('selectItem', $this->vars)) {
+        	$this->messageString = $this->vars['message'];
+        	$item = $this->vars['selectItem'];
         } else {
-            $messageString = $message;
+            $this->messageString = $message;
             $item = FALSE;
         }
         $configGroups = $this->getConfigGroups();
         if (empty($configGroups)) {
             return FALSE;
         }
-        $this->errorString = $messageString;
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('myWikindx'));
@@ -120,23 +122,34 @@ class MYWIKINDX
      */
     public function userConfigEdit()
     {
-        // Reinject the username after a change otherwise the value is taken from the db before the change
-        $this->usersUsername = $this->vars['usersUsername'];
-        
-    	if ($this->session->getVar('setup_UserId' == WIKINDX_SUPERADMIN_ID))
+        $error = '';
+    	if ($this->session->getVar('setup_UserId') == WIKINDX_SUPERADMIN_ID)
     	{
-			if (!trim($this->vars['usersUsername']) || !trim($this->vars['usersUsername'])) {
-				$this->badInputLoad($this->errors->text("inputError", "missing"), 'user');
+			if ((!$email = trim($this->vars['email'])) || !trim($this->vars['usersUsername']) || 
+				!trim($this->vars['password']) || !trim($this->vars['passwordConfirm'])) {
+				$error = $this->errors->text("inputError", "missing");
+			} else {
+// Reinject the username after a change otherwise the value is taken from the db before the change
+        		$this->usersUsername = trim($this->vars['usersUsername']);
 			}
+			$this->formData['usersUsername'] = trim($this->vars['usersUsername']);
         }
-        if (!trim($this->vars['password']) || !trim($this->vars['passwordConfirm'])) {
-            $this->badInputLoad($this->errors->text("inputError", "missing"), 'user');
+        elseif ((!$email = trim($this->vars['email'])) || !trim($this->vars['password']) || !trim($this->vars['passwordConfirm'])) {
+			$error = $this->errors->text("inputError", "missing");
         }
-        if (trim($this->vars['password']) != trim($this->vars['passwordConfirm'])) {
-            $this->badInputLoad($this->errors->text("inputError", "invalid"), 'user');
+        elseif (trim($this->vars['password']) != trim($this->vars['passwordConfirm'])) {
+            $error = $this->errors->text("inputError", "invalid");
         }
-        if ((!array_key_exists('email', $this->vars) || !trim($this->vars['email']))) {
-            $this->badInputLoad($this->errors->text("inputError", "missing"), 'user');
+		if (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE) {
+			$error = $this->errors->text('inputError', 'invalidMail');
+		}
+        $this->formData['email'] = $email;
+        $this->formData['fullname'] = trim($this->vars['fullname']);
+		if (array_key_exists('cookie', $this->vars)) {
+			$this->formData['cookie'] = TRUE;
+		}
+        if ($error) {
+        	$this->badInputLoad($error, 'user');
         }
         $this->user->writeUser(FALSE); // FALSE = editing user
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
@@ -144,8 +157,10 @@ class MYWIKINDX
         if (!$emailClass->userEdit()) {
             $this->badInputLoad($this->errors->text("inputError", "mail", GLOBALS::getError()), 'user');
         }
-        $this->init([$this->success->text("userEdit"), $this->vars['selectItem']]);
-        FACTORY_CLOSE::getInstance();
+        $message = rawurlencode($this->success->text("userEdit"));
+        $selectItem = $this->vars['selectItem'];
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=$selectItem");
+        die;
     }
     /**
      * Edit resource display details
@@ -208,7 +223,7 @@ class MYWIKINDX
      */
     public function appearanceConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \FORM\hidden("method", "appearanceConfigEdit");
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
@@ -219,25 +234,24 @@ class MYWIKINDX
         $templates = FACTORY_TEMPLATE::getInstance()->loadDir();
         $template = GLOBALS::getUserVar("Template", WIKINDX_TEMPLATE_DEFAULT);
         array_key_exists($template, $templates) ? $template = $template : $template = WIKINDX_TEMPLATE_DEFAULT;
-        $subTd .= \HTML\td(\FORM\selectedBoxValue(
+        $subTd .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "template"),
             "Template",
             $templates,
             $template,
             4
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         
         $menus[0] = $this->messages->text("config", "templateMenu1");
         $menus[1] = $this->messages->text("config", "templateMenu2");
         $menus[2] = $this->messages->text("config", "templateMenu3");
-        $subTd .= \HTML\td(\FORM\selectedBoxValue(
+        $subTd .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "templateMenu"),
             "TemplateMenu",
             $menus,
             GLOBALS::getUserVar('TemplateMenu'),
             3
-        )
-             . " " . \HTML\span('*', 'required'));
+        ));
         $subTd .= \HTML\trEnd();
         $subTd .= \HTML\tableEnd();
         $pString .= \HTML\td($subTd);
@@ -260,26 +274,25 @@ class MYWIKINDX
 	        $language = $this->session->getVar("setup_Language", $LanguageNeutralChoice);
 	        array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
 	    }
-        
-        $pString .= \HTML\td(\FORM\selectedBoxValue(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "language"),
             "Language",
             $languages,
             $language
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         
         // Display the user style but change the default selection of the list to the default style when no style is defined or a style not enabled is defined,
         // this avoid a crash when this option is written without value selected.
         $styles = \LOADSTYLE\loadDir();
         $style = GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT);
         array_key_exists($style, $styles) ? $style = $style : $style = WIKINDX_STYLE_DEFAULT;
-        $pString .= \HTML\td(\FORM\selectedBoxValue(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "style"),
             "Style",
             $styles,
             $style,
             4
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -315,16 +328,6 @@ class MYWIKINDX
             GLOBALS::setUserVar($key, $this->vars[$key]);
             //           $array[$value] = $this->vars[$value];
         }
-        /*        if (!array_key_exists("TemplateMenu", $this->vars))
-                {
-                    $this->badInputLoad($this->errors->text("inputError", "missing", " (TemplateMenu) "), 'appearance');
-                }
-                else
-                {
-                    $array['TemplateMenu'] = $this->vars['TemplateMenu'];
-                }
-        */        // All input good - write to session
-//        $this->session->writeArray($array, "setup");
     }
     /**
      * Edit forgotten password details
@@ -393,7 +396,7 @@ class MYWIKINDX
      */
     public function userGroupsConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \FORM\hidden("method", "userGroupsConfigEdit");
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
@@ -456,13 +459,13 @@ class MYWIKINDX
         $pString .= \HTML\trStart();
         $sessVar = $this->session->issetVar("mywikindx_groupTitle") ?
             \HTML\dbToFormTidy($this->session->getVar("mywikindx_groupTitle")) : FALSE;
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "groupTitle"),
             "title",
             $sessVar,
             50,
             255
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= BR . "&nbsp;" . BR;
@@ -605,13 +608,13 @@ class MYWIKINDX
                 }
             }
         }
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "groupTitle"),
             "title",
             $title,
             50,
             255
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= BR . "&nbsp;" . BR;
@@ -809,7 +812,7 @@ class MYWIKINDX
         // Get this user's user tags
         $userTagsObject = FACTORY_USERTAGS::getInstance();
         $userTags = $userTagsObject->grabAll();
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \FORM\hidden("method", "userTagsConfigEdit");
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
@@ -864,13 +867,13 @@ class MYWIKINDX
         $pString .= \HTML\trStart();
         $sessVar = $this->session->issetVar("mywikindx_tagTitle") ?
             \HTML\dbToFormTidy($this->session->getVar("mywikindx_tagTitle")) : FALSE;
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "tagTitle"),
             "title",
             $sessVar,
             50,
             255
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $jString = "onclick=\"javascript:sendMywikindxInput();return true;\"";
@@ -948,13 +951,13 @@ class MYWIKINDX
         if (!$userTagsObject->checkExists($title)) {
             $this->badInputPopup($this->errors->text('inputError', 'invalid'));
         }
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "tagTitle"),
             "title",
             $title,
             50,
             255
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $jString = "onclick=\"javascript:sendMywikindxInput();return true;\"";
@@ -1067,7 +1070,7 @@ class MYWIKINDX
     public function userBibsConfigDisplay()
     {
         $bibs = $this->getBibs();
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \FORM\hidden("method", "userBibsConfigEdit");
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
@@ -1166,13 +1169,13 @@ class MYWIKINDX
         $pString .= \HTML\trStart();
         $sessVar = $this->session->issetVar("mywikindx_bibTitle") ?
             \HTML\dbToFormTidy($this->session->getVar("mywikindx_bibTitle")) : FALSE;
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "bibTitle"),
             "title",
             $sessVar,
             50,
             255
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= BR . "&nbsp;" . BR;
@@ -1302,13 +1305,13 @@ class MYWIKINDX
             $title = \HTML\dbToFormTidy($row['userbibliographyTitle']);
             $userGroupId = $row['userbibliographyUserGroupId'];
         }
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "bibTitle"),
             "title",
             $title,
             50,
             255
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= BR . "&nbsp;" . BR;
@@ -1511,12 +1514,9 @@ class MYWIKINDX
         }
         if ($item == 'user') {
             $password = FACTORY_PASSWORD::getInstance();
-            if ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID)
-            {
-    	        list($formText, $jsString) = $password->createElements($this->usersUsername, TRUE);
-    	    }
-    	    else
-    	    {
+            if ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID) {
+    	        list($formText, $jsString) = $password->createElements($this->usersUsername, TRUE, $this->formData);
+    	    } else {
     	        list($formText, $jsString) = $password->createElements(FALSE);
     	    }
             $pString = \FORM\formHeader("usersgroups_MYWIKINDX_CORE", 'onsubmit="return checkForm(' . $jsString . ');"');
@@ -1594,7 +1594,7 @@ class MYWIKINDX
             $this->badInputLoad($this->errors->text("dbError", "read"), 'user');
         }
         $row = $this->db->fetchRow($recordset);
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \FORM\hidden("method", "userConfigEdit");
         $pString .= \FORM\hidden("uname", $this->usersUsername);
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
@@ -1608,20 +1608,32 @@ class MYWIKINDX
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\FORM\textInput(
+        $field = array_key_exists('email', $this->formData) ? $this->formData['email'] : $row["Email"];
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "email"),
             "email",
-            $row["Email"],
+            $field,
             30
-        ) . " " . \HTML\span('*', 'required'));
+        ));
+        $field = array_key_exists('fullname', $this->formData) ? $this->formData['fullname'] : $row["Fullname"];
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("user", "fullname"),
             "fullname",
-            $row["Fullname"],
+            $field,
             30
         ));
-        $cookie = $row["Cookie"] == 'Y' ? 'CHECKED' : FALSE;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "cookie"), "cookie", $cookie));
+        $field = FALSE;
+        if (!empty($this->formData)) {
+        	if (array_key_exists('cookie', $this->formData)) {
+	        	 $field = TRUE;
+	        } else {
+	        	$field = FALSE;
+	        }
+        }
+        elseif ($row["Cookie"] == 'Y') {
+        	$field = TRUE;
+        }
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "cookie"), "cookie", $field));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -1632,41 +1644,41 @@ class MYWIKINDX
      */
     private function resourcesConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \FORM\hidden("method", "resourcesConfigEdit");
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "paging"),
             "Paging",
             GLOBALS::getUserVar('Paging'),
             5
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingMaxLinks"));
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "maxPaging"),
             "PagingMaxLinks",
             GLOBALS::getUserVar('PagingMaxLinks'),
             5
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         if (!GLOBALS::getUserVar("PagingTagCloud")) {
             GLOBALS::setUserVar("PagingTagCloud", WIKINDX_PAGING_TAG_CLOUD_DEFAULT);
         }
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "pagingTagCloud"),
             "PagingTagCloud",
             GLOBALS::getUserVar("PagingTagCloud"),
             5
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "stringLimit"),
             "StringLimit",
             GLOBALS::getUserVar("StringLimit"),
             5
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td('&nbsp;');
@@ -1730,7 +1742,7 @@ class MYWIKINDX
     {
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "FORGET.php"]));
         $forget = new FORGET();
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \FORM\hidden("method", "forgetConfigEdit");
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
@@ -1745,7 +1757,7 @@ class MYWIKINDX
      */
     private function notificationConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \FORM\hidden("method", "notificationConfigEdit");
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();

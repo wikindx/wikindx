@@ -96,6 +96,9 @@ class PASSWORD
             ));
         } else {
             // superadmin from Configure menu
+            if (array_key_exists('usersUsername', $formData)) {
+            	$usersUsername = $formData['usersUsername'];
+            }
             $formText .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
                 $messages->text("config", "superUsername"),
                 "usersUsername",

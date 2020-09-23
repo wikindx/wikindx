@@ -490,50 +490,52 @@ class USER
      *
      * @param int $id Default is FALSE
      */
-    public function loadSession($id = FALSE)
+    public function loadFormData($id = FALSE)
     {
+    	$formData = $departments = $institutions = [];
         if (!$id) {
             $id = $this->session->getVar("setup_UserId");
         }
         $userArray = [
-            "usersUsername",
-            "usersPassword",
-            "usersEmail",
-            "usersFullname",
-            "usersAdmin",
-            "usersCookie",
-            "usersDepartment",
-            "usersInstitution",
-            "usersIsCreator",
+            "usersUsername" => "usersUsername",
+            "email" => "usersEmail",
+            "fullname" => "usersFullname",
+            "admin" => "usersAdmin",
+            "cookie" =>"usersCookie",
+            "department" => "usersDepartment",
+            "institution" => "usersInstitution",
+            "creatorId" => "usersIsCreator",
         ];
         for ($i = 1; $i < 4; $i++) {
             $userArray[] = "usersPasswordQuestion$i";
         }
         $this->db->formatConditions(['usersId' => $id]);
-        $recordset = $this->db->select('users', $userArray);
+        $recordset = $this->db->select('users', array_values($userArray));
         $row = $this->db->fetchRow($recordset);
-        foreach ($userArray as $key) {
-            $varName = "mywikindx_" . str_replace('users', '', $key);
-
+        foreach ($userArray as $key => $dbField) {
             if ($key == 'cookie') {
-                if ($row[$key] == 'Y') {
-                    $this->session->setVar($varName, TRUE);
-                } else {
-                    $this->session->delVar($varName);
+                if ($row[$dbField] == 'Y') {
+                    $formData[$key] = TRUE;
                 }
             }
             elseif ($key == 'admin') {
-                if ($row[$key] == 1) {
-                    $this->session->setVar($varName, TRUE);
-                } else {
-                    $this->session->delVar($varName);
+                if ($row[$dbField] == 1) {
+                    $formData[$key] = TRUE;
                 }
-            } 
-            elseif ($row[$key]) {
-                $this->session->setVar($varName, $row[$key]);
+            }
+            elseif ($row[$dbField]) {
+                $formData[$key] = $row[$dbField];
             }
         }
-        //		$this->bib->grabBibliographies($id);
+        if (array_key_exists('department', $formData)) {
+       		$formData['departmentId'] = $formData['department'];
+        	unset($formData['department']);
+        }
+        if (array_key_exists('institution', $formData)) {
+       		$formData['institutionId'] = $formData['institution'];
+       		unset($formData['institution']);
+        }
+        return $formData;
     }
     /**
      * display user details from users table
@@ -543,32 +545,32 @@ class USER
      * @param string $form
      * @param string $hidden
      * @param int $admin Default is FALSE
+     * @param array $formData populated if validation failed
      *
      * @return string
      */
-    public function displayUserDetails($form, $hidden, $admin = FALSE)
+    public function displayUserDetails($form, $hidden, $admin = FALSE, $formData = [])
     {
         $password = FACTORY_PASSWORD::getInstance();
         list($formText, $jsString) = $password->createElements(FALSE);
         $pString = \FORM\formHeader($form, 'onsubmit="return checkForm(' . $jsString . ');"');
         $pString .= \FORM\hidden('method', $hidden);
-        $sessVar = \HTML\dbToFormTidy($this->session->getVar("mywikindx_Username"));
-        $pString .= \FORM\hidden("usersUsername", $sessVar);
+        $field = array_key_exists('usersUsername', $formData) ? $formData['usersUsername'] : FALSE;
+        $pString .= \FORM\hidden("usersUsername", $field);
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\HTML\strong($this->messages->text("user", "username")) . ":&nbsp;&nbsp;$sessVar" .
+        $pString .= \HTML\td(\HTML\strong($this->messages->text("user", "username")) . ":&nbsp;&nbsp;$field" .
             BR . "&nbsp;");
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= $formText;
-        $sessVar = \HTML\dbToFormTidy($this->session->getVar("mywikindx_Email"));
-        $pString .= \HTML\td(\FORM\textInput($this->messages->text("user", "email"), "email", $sessVar, 20, 255)
-             . " " . \HTML\span('*', 'required'));
-        $sessVar = \HTML\dbToFormTidy($this->session->getVar("mywikindx_Fullname"));
+        $field = array_key_exists('email', $formData) ? $formData['email'] : FALSE;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput($this->messages->text("user", "email"), "email", $field, 20, 255));
+        $field = array_key_exists('fullname', $formData) ? $formData['fullname'] : FALSE;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("user", "fullname"),
             "fullname",
-            $sessVar,
+            $field,
             20,
             255
         ));
@@ -580,9 +582,9 @@ class USER
             $pString .= \HTML\tableStart();
             $pString .= \HTML\trStart();
             // Department
-            $td = \FORM\textInput($this->messages->text("user", "department"), "department", FALSE, 30, 255);
+        	$field = array_key_exists('department', $formData) ? $formData['department'] : FALSE;
+            $td = \FORM\textInput($this->messages->text("user", "department"), "department", $field, 30, 255);
             $resultset = $this->db->select('users', 'usersDepartment', TRUE);
-            $initial = FALSE;
             while ($row = $this->db->fetchRow($resultset)) {
                 $department = \HTML\dbToFormTidy($row['usersDepartment']);
                 if (!$department) {
@@ -598,14 +600,19 @@ class USER
                 }
                 $departments = $temp;
                 unset($temp);
-                $sessVar = \HTML\dbToFormTidy($this->session->getVar("mywikindx_Department"));
-                $td .= BR . \FORM\selectedBoxValue('', "departmentId", $departments, $sessVar, 1);
+        		$field = array_key_exists('departmentId', $formData) ? 
+        			htmlspecialchars(trim($formData['departmentId']), ENT_QUOTES | ENT_HTML5) : FALSE;
+        		if ($field) {
+	                $td .= BR . \FORM\selectedBoxValue('', "departmentId", $departments, $field, 1);
+	            } else {
+	                $td .= BR . \FORM\selectFBoxValue('', "departmentId", $departments, 1);
+	            }
             }
             $pString .= \HTML\td($td);
             // Institution
-            $td = \FORM\textInput($this->messages->text("user", "institution"), "institution", FALSE, 30, 255);
+        	$field = array_key_exists('institution', $formData) ? $formData['institution'] : FALSE;
+            $td = \FORM\textInput($this->messages->text("user", "institution"), "institution", $field, 30, 255);
             $resultset = $this->db->select('users', 'usersInstitution', TRUE);
-            $initial = FALSE;
             while ($row = $this->db->fetchRow($resultset)) {
                 $institution = \HTML\dbToFormTidy($row['usersInstitution']);
                 if (!$institution) {
@@ -621,8 +628,13 @@ class USER
                 }
                 $institutions = $temp;
                 unset($temp);
-                $sessVar = \HTML\dbToFormTidy($this->session->getVar("mywikindx_Institution"));
-                $td .= BR . \FORM\selectedBoxValue('', "institutionId", $institutions, $sessVar, 1);
+        		$field = array_key_exists('institutionId', $formData) ? 
+        			htmlspecialchars(trim($formData['institutionId']), ENT_QUOTES | ENT_HTML5) : FALSE;
+        		if ($field) {
+	                $td .= BR . \FORM\selectedBoxValue('', "institutionId", $institutions, $field, 1);
+	            } else {
+	                $td .= BR . \FORM\selectFBoxValue('', "institutionId", $institutions, 1);
+	            }
             }
             $pString .= \HTML\td($td);
             // User is creator
@@ -636,24 +648,25 @@ class USER
                 }
                 $creators = $temp;
                 unset($temp);
-                $sessVar = \HTML\dbToFormTidy($this->session->getVar("mywikindx_IsCreator"));
+        		$field = array_key_exists('creatorId', $formData) ? $formData['creatorId'] : 0;
                 $pString .= \HTML\td(\FORM\selectedBoxValue(
                     $this->messages->text("user", "isCreator"),
                     "creatorId",
                     $creators,
-                    $sessVar,
+                    $field,
                     1
                 ));
             }
-            $sessVar = $this->session->getVar("mywikindx_Admin") == 1 ? 'CHECKED' : FALSE;
-            $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "admin"), "admin", $sessVar));
+        	$field = array_key_exists('admin', $formData) ? TRUE : FALSE;
+            $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "admin"), "admin", $field));
         } else {
-            $sessVar = $this->session->getVar("mywikindx_Cookie") == 'Y' ? 'CHECKED' : FALSE;
-            $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "cookie"), "cookie", $sessVar));
+        	$field = array_key_exists('cookie', $formData) ? TRUE : FALSE;
+            $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "cookie"), "cookie", $field));
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        $pString .= \HTML\p(\FORM\checkbox($this->messages->text("user", "bypassPasswordCheck"), "bypassPasswordCheck"));
+        $field = array_key_exists('bypassPasswordCheck', $formData) ? TRUE : FALSE;
+        $pString .= \HTML\p(\FORM\checkbox($this->messages->text("user", "bypassPasswordCheck"), "bypassPasswordCheck", $field));
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Edit")), FALSE, "left");
         $pString .= \FORM\formEnd();
 

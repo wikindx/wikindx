@@ -21,12 +21,12 @@ class SUPERADMIN
     private $user;
     private $db;
     private $vars;
-    private $values;
     private $badInput;
     private $gatekeep;
     private $tinymce;
     private $configDbStructure;
     private $errorString = FALSE;
+    private $formData = [];
 
     public function __construct($initial = FALSE)
     {
@@ -62,7 +62,12 @@ class SUPERADMIN
         } elseif (is_array($message)) {
             $messageString = $message[0];
             $item = $message[1];
-        } else {
+        } elseif (array_key_exists('message', $this->vars)) {
+    		$messageString = $this->vars['message'];
+    		if (array_key_exists('selectItem', $this->vars)) {
+    			$item = $this->vars['selectItem'];
+    		}
+    	} else {
             $messageString = $message;
             $item = FALSE;
         }
@@ -70,7 +75,7 @@ class SUPERADMIN
         if (empty($configGroups)) {
             return FALSE;
         }
-        $this->errorString = $messageString;
+        $this->messageString = $messageString;
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('configure'));
@@ -123,7 +128,7 @@ class SUPERADMIN
      */
     public function displayFrontDescription()
     {
-        $this->values = $this->fromDbToSession();
+        $this->formData = $this->fromDbToSession();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "configure"));
         $pString = $this->session->getVar("configmessage");
         $this->session->delVar("configmessage");
@@ -131,7 +136,7 @@ class SUPERADMIN
         $pString .= \FORM\formHeader("usersgroups_SUPERADMIN_CORE", "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden("method", "writeDb");
         $pString .= \FORM\hidden("selectItem", 'frontDescription');
-        $input = array_key_exists("configDescription", $this->values) ? $this->values["configDescription"] : WIKINDX_DESCRIPTION_DEFAULT;
+        $input = array_key_exists("configDescription", $this->formData) ? $this->formData["configDescription"] : WIKINDX_DESCRIPTION_DEFAULT;
         $pString .= \FORM\textareaInput($this->messages->text("config", "description"), "configDescription", $input, 75, 20);
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")));
         $pString .= \FORM\formEnd();
@@ -261,7 +266,7 @@ class SUPERADMIN
             }
         }
         $headerRedirect = FALSE;
-        if ($this->insert) {
+        if ($this->insert) { // Only on initial DB configuration.
             $usersFieldArray = $usersValueArray = [];
             // if inserting after initial install, write superadmin's preferences to users table and create user session
             $usersFieldArray[] = 'usersUsername';
@@ -280,9 +285,16 @@ class SUPERADMIN
                 $usersValueArray[] = $this->vars['usersIsCreator'];
                 $usersFieldArray[] = 'usersIsCreator';
             }
+			if (array_key_exists('usersCookie', $this->vars) && $this->vars['usersCookie']) {
+				$cookie = FACTORY_COOKIE::getInstance();
+				$cookie->storeCookie($this->vars['usersUsername']);
+				$usersFieldArray[] = 'usersCookie';
+				$usersValueArray[] = 'Y';
+			}
             $this->db->insert('users', $usersFieldArray, $usersValueArray);
-            $this->user->writeSessionPreferences(WIKINDX_SUPERADMIN_ID); // '1' == superAdmin
-            $this->insert = FALSE;
+//            $this->user->writeSessionPreferences(WIKINDX_SUPERADMIN_ID); // '1' == superAdmin
+            $message = rawurlencode($this->success->text("config"));
+            header("Location: index.php?action=usersgroups_SUPERADMIN_CORE&method=init&message=$message&selectItem=front");
         } else {
             $updateUserArray = $nullsUserArray = [];
             $configFields = $this->configDbStructure->getAllData();
@@ -418,9 +430,9 @@ class SUPERADMIN
     private function getConfigDetails($groups, $item = FALSE)
     {
         if (!$this->insert) {
-            $this->values = $this->fromDbToSession();
+            $this->formData = $this->fromDbToSession();
         } else { // initial install
-            $this->values = $this->session->getArray("config");
+//            $this->formData = $this->session->getArray("config");
         }
         if (array_key_exists('ajaxReturn', $this->vars)) {
             $item = $this->vars['ajaxReturn'];
@@ -432,14 +444,19 @@ class SUPERADMIN
         $pString = '<script src="' . WIKINDX_URL_BASE . '/core/modules/admin/configure.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         if ($item == 'super') {
             $password = FACTORY_PASSWORD::getInstance();
-            $input = array_key_exists("usersUsername", $this->values) ? $this->values["usersUsername"] : FALSE;
+            $input = array_key_exists("usersUsername", $this->formData) ? $this->formData["usersUsername"] : FALSE;
             list($formText, $jsString) = $password->createElements($input, TRUE);
             $pString .= \FORM\formHeader("usersgroups_SUPERADMIN_CORE", 'onsubmit="selectAll();return checkForm(' . $jsString . ');"');
         } else {
             $pString .= \FORM\formHeader("usersgroups_SUPERADMIN_CORE", "onsubmit=\"selectAll();return true;\"");
         }
         $pString .= \FORM\hidden("method", "writeDb");
-        $pString .= \FORM\hidden("selectItem", $item);
+// For initial configuration, we wish to display the Front Page settings after inputting superadmin details
+		if ($item == 'super') {
+        	$pString .= \FORM\hidden("selectItem", 'front');
+		} else {
+	        $pString .= \FORM\hidden("selectItem", $item);
+	    }
         switch ($item) {
             case 'super': // super admin configuration
                 $pString .= $this->superConfigDisplay($formText);
@@ -518,10 +535,10 @@ class SUPERADMIN
      */
     private function frontConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
-        if (array_key_exists("configLastChangesType", $this->values) && ($this->values["configLastChangesType"] == 'number')) { // set number
+        if (array_key_exists("configLastChangesType", $this->formData) && ($this->formData["configLastChangesType"] == 'number')) { // set number
             $input = 1;
         } else { // Set no. days
             $input = 2;
@@ -539,20 +556,19 @@ class SUPERADMIN
             2,
             80
         ) . BR;
-        array_key_exists("configLastChanges", $this->values) ? $input = $this->values["configLastChanges"] : $input = WIKINDX_LAST_CHANGES_DEFAULT;
-        $td .= \FORM\textInput(FALSE, "configLastChanges", $input, 10, 10) . \HTML\span('*', 'required') . BR .
+        array_key_exists("configLastChanges", $this->formData) ? $input = $this->formData["configLastChanges"] : $input = WIKINDX_LAST_CHANGES_DEFAULT;
+        $td .= \HTML\span('*', 'required') . \FORM\textInput(FALSE, "configLastChanges", $input, 10, 10) . BR .
             \HTML\span($hint, 'hint');
         $pString .= \HTML\td($td);
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "lastChangesDayLimit"));
-        array_key_exists("configLastChangesDayLimit", $this->values) ? $input = $this->values["configLastChangesDayLimit"] : $input = WIKINDX_LAST_CHANGES_DAY_LIMIT_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        array_key_exists("configLastChangesDayLimit", $this->formData) ? $input = $this->formData["configLastChangesDayLimit"] : $input = WIKINDX_LAST_CHANGES_DAY_LIMIT_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "lastChanges4"),
             "configLastChangesDayLimit",
             $input,
             10,
             10
-        ) . \HTML\span('*', 'required') . BR .
-            \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td('&nbsp;');
@@ -560,7 +576,7 @@ class SUPERADMIN
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "contactEmail"));
-        $input = array_key_exists("configContactEmail", $this->values) ? $this->values["configContactEmail"] : WIKINDX_CONTACT_EMAIL_DEFAULT;
+        $input = array_key_exists("configContactEmail", $this->formData) ? $this->formData["configContactEmail"] : WIKINDX_CONTACT_EMAIL_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput($this->messages->text("config", "email"), "configContactEmail", $input, 30) . BR .
             \HTML\span($hint, 'hint'));
         $pString .= \HTML\td(\HTML\a(
@@ -582,7 +598,7 @@ class SUPERADMIN
      */
     private function superConfigDisplay($formText)
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
         $pString .= $formText;
@@ -593,14 +609,14 @@ class SUPERADMIN
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $input = array_key_exists("usersEmail", $this->values) ? $this->values["usersEmail"] : FALSE;
-        $pString .= \HTML\td(\FORM\textInput(
+        $input = array_key_exists("usersEmail", $this->formData) ? $this->formData["usersEmail"] : FALSE;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "email"),
             "usersEmail",
             $input,
             30
-        ) . " " . \HTML\span('*', 'required'));
-        $input = array_key_exists("usersFullname", $this->values) ? $this->values["usersFullname"] : FALSE;
+        ));
+        $input = array_key_exists("usersFullname", $this->formData) ? $this->formData["usersFullname"] : FALSE;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("user", "fullname"),
             "usersFullname",
@@ -613,7 +629,7 @@ class SUPERADMIN
         if (is_array($creators)) {
             // add 0 => IGNORE to creators array
             $creators = [0 => $this->messages->text("misc", "ignore")] + $creators;
-            $input = array_key_exists("usersIsCreator", $this->values) ? $this->values["usersIsCreator"] : FALSE;
+            $input = array_key_exists("usersIsCreator", $this->formData) ? $this->formData["usersIsCreator"] : FALSE;
             $pString .= \HTML\td(\FORM\selectedBoxValue(
                 $this->messages->text("user", "isCreator"),
                 "usersIsCreator",
@@ -622,6 +638,15 @@ class SUPERADMIN
                 1
             ));
         }
+        $field = FALSE;
+        if (!empty($this->formData)) {
+        	if (array_key_exists('usersCookie', $this->formData)) {
+	        	 $field = TRUE;
+	        } else {
+	        	$field = FALSE;
+	        }
+        }
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "cookie"), "usersCookie", $field));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -634,22 +659,22 @@ class SUPERADMIN
      */
     private function debugConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\p($this->messages->text("config", "debug"));
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "forceSmartyCompile"));
-        $input = array_key_exists("configBypassSmartyCompile", $this->values) && ($this->values['configBypassSmartyCompile']) ? "CHECKED" : WIKINDX_BYPASS_SMARTY_COMPILATION_DEFAULT;
+        $input = array_key_exists("configBypassSmartyCompile", $this->formData) && ($this->formData['configBypassSmartyCompile']) ? "CHECKED" : WIKINDX_BYPASS_SMARTY_COMPILATION_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "forceSmartyCompile"), "configBypassSmartyCompile", $input) . BR . \HTML\span($hint, 'hint'));
         
-        $input = array_key_exists("configErrorReport", $this->values) && ($this->values['configErrorReport']) ? "CHECKED" : WIKINDX_DEBUG_ERRORS_DEFAULT;
+        $input = array_key_exists("configErrorReport", $this->formData) && ($this->formData['configErrorReport']) ? "CHECKED" : WIKINDX_DEBUG_ERRORS_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "errorReport"), "configErrorReport", $input));
         
-        $input = array_key_exists("configDebugSql", $this->values) && ($this->values['configDebugSql']) ? "CHECKED" : WIKINDX_DEBUG_SQL_DEFAULT;
+        $input = array_key_exists("configDebugSql", $this->formData) && ($this->formData['configDebugSql']) ? "CHECKED" : WIKINDX_DEBUG_SQL_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "sqlStatements"), "configDebugSql", $input));
         
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "isTrunk"));
-        $input = array_key_exists("configIsTrunk", $this->values) && ($this->values['configIsTrunk']) ? "CHECKED" : WIKINDX_IS_TRUNK_DEFAULT;
+        $input = array_key_exists("configIsTrunk", $this->formData) && ($this->formData['configIsTrunk']) ? "CHECKED" : WIKINDX_IS_TRUNK_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "isTrunk"), "configIsTrunk", $input) . BR . \HTML\span($hint, 'hint'));
         
         $pString .= \HTML\trEnd();
@@ -664,25 +689,25 @@ class SUPERADMIN
      */
     private function usersConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailServerRequired"));
-        $input = array_key_exists("configMultiUser", $this->values) && ($this->values['configMultiUser']) ? "CHECKED" : WIKINDX_MULTIUSER_DEFAULT;
+        $input = array_key_exists("configMultiUser", $this->formData) && ($this->formData['configMultiUser']) ? "CHECKED" : WIKINDX_MULTIUSER_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "multiUser"), "configMultiUser", $input));
-        $input = array_key_exists("configUserRegistration", $this->values) && ($this->values['configUserRegistration']) ? "CHECKED" : WIKINDX_USER_REGISTRATION_DEFAULT;
+        $input = array_key_exists("configUserRegistration", $this->formData) && ($this->formData['configUserRegistration']) ? "CHECKED" : WIKINDX_USER_REGISTRATION_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "userRegistration"),
             "configUserRegistration",
             $input
         ) . BR . \HTML\span($hint, 'hint'));
-        $input = array_key_exists("configUserRegistrationModerate", $this->values) && ($this->values['configUserRegistrationModerate']) ? "CHECKED" : WIKINDX_USER_REGISTRATION_MODERATE_DEFAULT;
+        $input = array_key_exists("configUserRegistrationModerate", $this->formData) && ($this->formData['configUserRegistrationModerate']) ? "CHECKED" : WIKINDX_USER_REGISTRATION_MODERATE_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "registrationModerate"),
             "configUserRegistrationModerate",
             $input
         ) . BR . \HTML\span($hint, 'hint'));
-        $input = array_key_exists("configEmailNewRegistrations", $this->values) ? $this->values["configEmailNewRegistrations"] : WIKINDX_EMAIL_NEW_REGISTRATIONS_DEFAULT;
+        $input = array_key_exists("configEmailNewRegistrations", $this->formData) ? $this->formData["configEmailNewRegistrations"] : WIKINDX_EMAIL_NEW_REGISTRATIONS_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "emailNewRegistrations"),
             "configEmailNewRegistrations",
@@ -697,17 +722,17 @@ class SUPERADMIN
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $input = array_key_exists("configDenyReadOnly", $this->values) && ($this->values['configDenyReadOnly']) ? "CHECKED" : WIKINDX_DENY_READONLY_DEFAULT;
+        $input = array_key_exists("configDenyReadOnly", $this->formData) && ($this->formData['configDenyReadOnly']) ? "CHECKED" : WIKINDX_DENY_READONLY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "denyReadOnly"), "configDenyReadOnly", $input));
         if ($this->insert) {
             $input = "CHECKED"; // NB checked by default
         } else {
-            $input = array_key_exists("configReadOnlyAccess", $this->values) && ($this->values['configReadOnlyAccess']) ? "CHECKED" : FALSE;
+            $input = array_key_exists("configReadOnlyAccess", $this->formData) && ($this->formData['configReadOnlyAccess']) ? "CHECKED" : FALSE;
         }
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "readOnlyAccess"), "configReadOnlyAccess", $input));
-        $input = array_key_exists("configOriginatorEditOnly", $this->values) && ($this->values['configOriginatorEditOnly']) ? "CHECKED" : WIKINDX_ORIGINATOR_EDIT_ONLY_DEFAULT;
+        $input = array_key_exists("configOriginatorEditOnly", $this->formData) && ($this->formData['configOriginatorEditOnly']) ? "CHECKED" : WIKINDX_ORIGINATOR_EDIT_ONLY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "originatorEditOnly"), "configOriginatorEditOnly", $input));
-        $input = array_key_exists("configGlobalEdit", $this->values) && ($this->values['configGlobalEdit']) ? "CHECKED" : WIKINDX_GLOBAL_EDIT_DEFAULT;
+        $input = array_key_exists("configGlobalEdit", $this->formData) && ($this->formData['configGlobalEdit']) ? "CHECKED" : WIKINDX_GLOBAL_EDIT_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "globalEdit"), "configGlobalEdit", $input));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
@@ -717,7 +742,7 @@ class SUPERADMIN
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $input = array_key_exists("configImportBib", $this->values) && ($this->values['configImportBib']) ? "CHECKED" : WIKINDX_IMPORT_BIB_DEFAULT;
+        $input = array_key_exists("configImportBib", $this->formData) && ($this->formData['configImportBib']) ? "CHECKED" : WIKINDX_IMPORT_BIB_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "importBib"),
             "configImportBib",
@@ -726,12 +751,12 @@ class SUPERADMIN
         if ($this->insert) {
             $input = "CHECKED"; // NB checked by default
         } else {
-            $input = array_key_exists("configMetadataAllow", $this->values) && ($this->values['configMetadataAllow']) ? "CHECKED" : FALSE;
+            $input = array_key_exists("configMetadataAllow", $this->formData) && ($this->formData['configMetadataAllow']) ? "CHECKED" : FALSE;
         }
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "metadataAllow"), "configMetadataAllow", $input));
-        $input = array_key_exists("configMetadataUserOnly", $this->values) && ($this->values['configMetadataUserOnly']) ? "CHECKED" : WIKINDX_METADATA_USERONLY_DEFAULT;
+        $input = array_key_exists("configMetadataUserOnly", $this->formData) && ($this->formData['configMetadataUserOnly']) ? "CHECKED" : WIKINDX_METADATA_USERONLY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "metadataUserOnly"), "configMetadataUserOnly", $input));
-        $input = array_key_exists("configQuarantine", $this->values) && ($this->values['configQuarantine']) ? "CHECKED" : WIKINDX_QUARANTINE_DEFAULT;
+        $input = array_key_exists("configQuarantine", $this->formData) && ($this->formData['configQuarantine']) ? "CHECKED" : WIKINDX_QUARANTINE_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "quarantine"), "configQuarantine", $input));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
@@ -742,11 +767,11 @@ class SUPERADMIN
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "displayStatistics"));
-        $input = array_key_exists("configDisplayStatistics", $this->values) && ($this->values['configDisplayStatistics']) ? "CHECKED" : WIKINDX_DISPLAY_STATISTICS_DEFAULT;
+        $input = array_key_exists("configDisplayStatistics", $this->formData) && ($this->formData['configDisplayStatistics']) ? "CHECKED" : WIKINDX_DISPLAY_STATISTICS_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "displayStatistics"), "configDisplayStatistics", $input) .
              BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "displayUserStatistics"));
-        $input = array_key_exists("configDisplayUserStatistics", $this->values) && ($this->values['configDisplayUserStatistics']) ? "CHECKED" : WIKINDX_DISPLAY_USER_STATISTICS_DEFAULT;
+        $input = array_key_exists("configDisplayUserStatistics", $this->formData) && ($this->formData['configDisplayUserStatistics']) ? "CHECKED" : WIKINDX_DISPLAY_USER_STATISTICS_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "displayUserStatistics"), "configDisplayUserStatistics", $input) .
              BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\td('&nbsp;');
@@ -763,39 +788,38 @@ class SUPERADMIN
      */
     private function listConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
-        array_key_exists("configPaging", $this->values) ? $input = $this->values["configPaging"] : $input = WIKINDX_PAGING_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput($this->messages->text("config", "paging"), "configPaging", $input, 10, 10) .
-            " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        array_key_exists("configPaging", $this->formData) ? $input = $this->formData["configPaging"] : $input = WIKINDX_PAGING_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . 
+        	\FORM\textInput($this->messages->text("config", "paging"), "configPaging", $input, 10, 10) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingMaxLinks"));
-        array_key_exists("configPagingMaxLinks", $this->values) ? $input = $this->values["configPagingMaxLinks"] : $input = WIKINDX_PAGING_MAXLINKS_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        array_key_exists("configPagingMaxLinks", $this->formData) ? $input = $this->formData["configPagingMaxLinks"] : $input = WIKINDX_PAGING_MAXLINKS_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "maxPaging"),
             "configPagingMaxLinks",
             $input,
             10,
             10
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingTagCloud"));
-        array_key_exists("configPagingTagCloud", $this->values) ? $input = $this->values["configPagingTagCloud"] : $input = WIKINDX_PAGING_TAG_CLOUD_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        array_key_exists("configPagingTagCloud", $this->formData) ? $input = $this->formData["configPagingTagCloud"] : $input = WIKINDX_PAGING_TAG_CLOUD_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "pagingTagCloud"),
             "configPagingTagCloud",
             $input,
             10,
             10
-        ) . " " . \HTML\span('*', 'required') . BR .
-        \HTML\span($hint, 'hint'));
+        ) . BR .\HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $input = array_key_exists("configListLink", $this->values) && ($this->values['configListLink']) ? "CHECKED" : WIKINDX_LIST_LINK_DEFAULT;
+        $input = array_key_exists("configListLink", $this->formData) && ($this->formData['configListLink']) ? "CHECKED" : WIKINDX_LIST_LINK_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "ListLink"), "configListLink", $input));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "noSort"));
         if ($this->insert) {
@@ -842,39 +866,39 @@ class SUPERADMIN
      */
     private function displayConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "title"));
-        array_key_exists("configTitle", $this->values) ? $input = $this->values["configTitle"] : $input = WIKINDX_TITLE_DEFAULT;
+        array_key_exists("configTitle", $this->formData) ? $input = $this->formData["configTitle"] : $input = WIKINDX_TITLE_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput($this->messages->text("config", "title"), "configTitle", $input, 30) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "stringLimit"));
-        array_key_exists("configStringLimit", $this->values) ? $input = $this->values["configStringLimit"] : $input = WIKINDX_STRING_LIMIT_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        array_key_exists("configStringLimit", $this->formData) ? $input = $this->formData["configStringLimit"] : $input = WIKINDX_STRING_LIMIT_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "stringLimit"),
             "configStringLimit",
             $input,
             10,
             10
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "imgWidthLimit"));
-        array_key_exists("configImgWidthLimit", $this->values) ? $input = $this->values["configImgWidthLimit"] : $input = WIKINDX_IMG_WIDTH_LIMIT_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        array_key_exists("configImgWidthLimit", $this->formData) ? $input = $this->formData["configImgWidthLimit"] : $input = WIKINDX_IMG_WIDTH_LIMIT_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "imgWidthLimit"),
             "configImgWidthLimit",
             $input,
             10,
             10
-        ) . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "imgHeightLimit"));
-        array_key_exists("configImgHeightLimit", $this->values) ? $input = $this->values["configImgHeightLimit"] : $input = WIKINDX_IMG_HEIGHT_LIMIT_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        array_key_exists("configImgHeightLimit", $this->formData) ? $input = $this->formData["configImgHeightLimit"] : $input = WIKINDX_IMG_HEIGHT_LIMIT_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "imgHeightLimit"),
             "configImgHeightLimit",
             $input,
             10,
             10
-        ) . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td('&nbsp;');
@@ -887,40 +911,40 @@ class SUPERADMIN
         // Display the global template but change the default selection of the list to the default template when no template is defined or a template not enabled is defined,
         // this avoid a crash when this option is written without value selected.
         $templates = FACTORY_TEMPLATE::getInstance()->loadDir();
-        array_key_exists("configTemplate", $this->values) ? $input = $this->values["configTemplate"] : $input = WIKINDX_TEMPLATE_DEFAULT;
+        array_key_exists("configTemplate", $this->formData) ? $input = $this->formData["configTemplate"] : $input = WIKINDX_TEMPLATE_DEFAULT;
         array_key_exists($input, $templates) ? $input = $input : $input = WIKINDX_TEMPLATE_DEFAULT;
-        $pString .= \HTML\td(\FORM\selectedBoxValue(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "template"),
             "configTemplate",
             $templates,
             $input
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         
         // Display the global language but change the default selection of the list to the default language when no template is defined or a language not enabled is defined,
         // this avoid a crash when this option is written without value selected.
         $languages = \LOCALES\getSystemLocales();
-        array_key_exists("configLanguage", $this->values) ? $input = $this->values["configLanguage"] : $input = WIKINDX_LANGUAGE_DEFAULT;
+        array_key_exists("configLanguage", $this->formData) ? $input = $this->formData["configLanguage"] : $input = WIKINDX_LANGUAGE_DEFAULT;
         array_key_exists($input, $languages) ? $input = $input : $input = WIKINDX_LANGUAGE_DEFAULT;
         
-        $pString .= \HTML\td(\FORM\selectedBoxValue(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "language"),
             "configLanguage",
             $languages,
             $input
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         
         // Display the global style but change the default selection of the list to the default style when no style is defined or a style not enabled is defined,
         // this avoid a crash when this option is written without value selected.
         $styles = \LOADSTYLE\loadDir();
-        array_key_exists("configStyle", $this->values) ? $input = $this->values["configStyle"] : $input = WIKINDX_STYLE_DEFAULT;
+        array_key_exists("configStyle", $this->formData) ? $input = $this->formData["configStyle"] : $input = WIKINDX_STYLE_DEFAULT;
         array_key_exists($input, $styles) ? $input = $input : $input = WIKINDX_STYLE_DEFAULT;
-        $pString .= \HTML\td(\FORM\selectedBoxValue(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "style"),
             "configStyle",
             $styles,
             $input,
             4
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
@@ -933,28 +957,27 @@ class SUPERADMIN
         $pString .= \HTML\trStart();
         $timezones = DateTimeZone::listIdentifiers();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "timezone"));
-        array_key_exists("configTimezone", $this->values) ? $input = $this->values["configTimezone"] : $input = WIKINDX_TIMEZONE_DEFAULT;
-        $pString .= \HTML\td(\FORM\selectedBoxValue(
+        array_key_exists("configTimezone", $this->formData) ? $input = $this->formData["configTimezone"] : $input = WIKINDX_TIMEZONE_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "timezone"),
             "configTimezone",
             $timezones,
             array_search($input, $timezones),
             10
-        ) . " " . \HTML\span('*', 'required') .
-            BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "imagesAllow"));
-        $input = array_key_exists("configImagesAllow", $this->values) && ($this->values['configImagesAllow']) ? "CHECKED" : WIKINDX_IMAGES_ALLOW_DEFAULT;
+        $input = array_key_exists("configImagesAllow", $this->formData) && ($this->formData['configImagesAllow']) ? "CHECKED" : WIKINDX_IMAGES_ALLOW_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "imagesAllow"), "configImagesAllow", $input) .
             BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "imagesMaxSize"));
-        array_key_exists("configImagesMaxSize", $this->values) ? $input = $this->values["configImagesMaxSize"] : $input = WIKINDX_IMAGES_MAXSIZE_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        array_key_exists("configImagesMaxSize", $this->formData) ? $input = $this->formData["configImagesMaxSize"] : $input = WIKINDX_IMAGES_MAXSIZE_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "imagesMaxSize"),
             "configImagesMaxSize",
             $input,
             10,
             10
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
@@ -965,20 +988,20 @@ class SUPERADMIN
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "tagCloud"));
-        array_key_exists("configTagLowColour", $this->values) ? $input = '#' . $this->values["configTagLowColour"] :
+        array_key_exists("configTagLowColour", $this->formData) ? $input = '#' . $this->formData["configTagLowColour"] :
             $input = '#' . WIKINDX_TAG_LOW_COLOUR_DEFAULT;
-        $pString .= \HTML\td(\FORM\colorInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\colorInput(
             $this->messages->text("config", "tagLowColour"),
             "configTagLowColour",
             $input
-        ) . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
-        array_key_exists("configTagHighColour", $this->values) ? $input = '#' . $this->values["configTagHighColour"] :
+        ) . BR . \HTML\span($hint, 'hint'));
+        array_key_exists("configTagHighColour", $this->formData) ? $input = '#' . $this->formData["configTagHighColour"] :
             $input = '#' . WIKINDX_TAG_HIGH_COLOUR_DEFAULT;
-        $pString .= \HTML\td(\FORM\colorInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\colorInput(
             $this->messages->text("config", "tagHighColour"),
             "configTagHighColour",
             $input
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         
         // Scale factors of the tags cloud
         $tagfactors = [];
@@ -986,23 +1009,23 @@ class SUPERADMIN
             $tagfactors[$v] = $v;
         }
         
-        array_key_exists("configTagLowFactor", $this->values) ? $input = $this->values["configTagLowFactor"] : $input = WIKINDX_TAG_LOW_FACTOR_DEFAULT;
-        $pString .= \HTML\td(\FORM\selectedBoxValue(
+        array_key_exists("configTagLowFactor", $this->formData) ? $input = $this->formData["configTagLowFactor"] : $input = WIKINDX_TAG_LOW_FACTOR_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "tagLowSize"),
             "configTagLowFactor",
             $tagfactors,
             array_search($input, $tagfactors),
             1
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         
-        array_key_exists("configTagHighFactor", $this->values) ? $input = $this->values["configTagHighFactor"] : $input = WIKINDX_TAG_HIGH_FACTOR_DEFAULT;
-        $pString .= \HTML\td(\FORM\selectedBoxValue(
+        array_key_exists("configTagHighFactor", $this->formData) ? $input = $this->formData["configTagHighFactor"] : $input = WIKINDX_TAG_HIGH_FACTOR_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "tagHighSize"),
             "configTagHighFactor",
             $tagfactors,
             array_search($input, $tagfactors),
             1
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -1016,29 +1039,29 @@ class SUPERADMIN
      */
     private function rssConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "rssAllow"));
-        $input = array_key_exists("configRssAllow", $this->values) && ($this->values['configRssAllow']) ? "CHECKED" : WIKINDX_RSS_ALLOW_DEFAULT;
+        $input = array_key_exists("configRssAllow", $this->formData) && ($this->formData['configRssAllow']) ? "CHECKED" : WIKINDX_RSS_ALLOW_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "rssAllow"), "configRssAllow", $input) .
             BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "rssDisplay"));
-        $input = array_key_exists("configRssDisplay", $this->values) && ($this->values['configRssDisplay']) ? "CHECKED" : WIKINDX_RSS_DISPLAY_DEFAULT;
+        $input = array_key_exists("configRssDisplay", $this->formData) && ($this->formData['configRssDisplay']) ? "CHECKED" : WIKINDX_RSS_DISPLAY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "rssDisplay"), "configRssDisplay", $input) .
             BR . \HTML\span($hint, 'hint'));
         // Display the global style but change the default selection of the list to the default style when no style is defined or a style not enabled is defined,
         // this avoid a crash when this option is written without value selected.
         $styles = \LOADSTYLE\loadDir();
-        array_key_exists("configRssBibstyle", $this->values) ? $input = $this->values["configRssBibstyle"] : $input = WIKINDX_STYLE_DEFAULT;
+        array_key_exists("configRssBibstyle", $this->formData) ? $input = $this->formData["configRssBibstyle"] : $input = WIKINDX_STYLE_DEFAULT;
         array_key_exists($input, $styles) ? $input = $input : $input = WIKINDX_STYLE_DEFAULT;
-        $pString .= \HTML\td(\FORM\selectedBoxValue(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "rssBibstyle"),
             "configRssBibstyle",
             $styles,
             $input,
             5
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td('&nbsp;');
@@ -1047,32 +1070,31 @@ class SUPERADMIN
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        array_key_exists("configRssTitle", $this->values) ? $input = $this->values["configRssTitle"] : $input = WIKINDX_RSS_TITLE_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        array_key_exists("configRssTitle", $this->formData) ? $input = $this->formData["configRssTitle"] : $input = WIKINDX_RSS_TITLE_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "rssTitle"),
             "configRssTitle",
             $input,
             20,
             100
-        ) . " " . \HTML\span('*', 'required'));
-        array_key_exists("configRssDescription", $this->values) ? $input = $this->values["configRssDescription"] : $input = WIKINDX_RSS_DESCRIPTION_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        ));
+        array_key_exists("configRssDescription", $this->formData) ? $input = $this->formData["configRssDescription"] : $input = WIKINDX_RSS_DESCRIPTION_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "rssDescription"),
             "configRssDescription",
             $input,
             50,
             255
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "rssLimit"));
-        array_key_exists("configRssLimit", $this->values) ? $input = $this->values["configRssLimit"] : $input = WIKINDX_RSS_LIMIT_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        array_key_exists("configRssLimit", $this->formData) ? $input = $this->formData["configRssLimit"] : $input = WIKINDX_RSS_LIMIT_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "rssLimit"),
             "configRssLimit",
             $input,
             10,
             10
-        ) . " " . \HTML\span('*', 'required') .
-            BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -1086,25 +1108,25 @@ class SUPERADMIN
      */
     private function cmsConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "cmsAllow"));
-        $input = array_key_exists("configCmsAllow", $this->values) && ($this->values['configCmsAllow']) ? "CHECKED" : WIKINDX_CMS_ALLOW_DEFAULT;
+        $input = array_key_exists("configCmsAllow", $this->formData) && ($this->formData['configCmsAllow']) ? "CHECKED" : WIKINDX_CMS_ALLOW_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "cmsAllow"), "configCmsAllow", $input) .
             BR . \HTML\span($hint, 'hint'));
         // Display the global style but change the default selection of the list to the default style when no style is defined or a style not enabled is defined,
         // this avoid a crash when this option is written without value selected.
         $styles = \LOADSTYLE\loadDir();
-        array_key_exists("configCmsBibstyle", $this->values) ? $input = $this->values["configCmsBibstyle"] : $input = WIKINDX_STYLE_DEFAULT;
+        array_key_exists("configCmsBibstyle", $this->formData) ? $input = $this->formData["configCmsBibstyle"] : $input = WIKINDX_STYLE_DEFAULT;
         array_key_exists($input, $styles) ? $input = $input : $input = WIKINDX_STYLE_DEFAULT;
-        $pString .= \HTML\td(\FORM\selectedBoxValue(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "cmsBibstyle"),
             "configCmsBibstyle",
             $styles,
             $input,
             5
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td('&nbsp;');
@@ -1113,25 +1135,25 @@ class SUPERADMIN
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "cmsSql"));
-        $input = array_key_exists("configCmsSql", $this->values) && ($this->values['configCmsSql']) ? "CHECKED" : WIKINDX_CMS_SQL_DEFAULT;
+        $input = array_key_exists("configCmsSql", $this->formData) && ($this->formData['configCmsSql']) ? "CHECKED" : WIKINDX_CMS_SQL_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "cmsSql"), "configCmsSql", $input) .
             BR . \HTML\span($hint, 'hint'));
-        array_key_exists("configCmsDbUser", $this->values) ? $input = $this->values["configCmsDbUser"] : $input = WIKINDX_CMS_DB_USER_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        array_key_exists("configCmsDbUser", $this->formData) ? $input = $this->formData["configCmsDbUser"] : $input = WIKINDX_CMS_DB_USER_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "cmsDbUser"),
             "configCmsDbUser",
             $input,
             50,
             255
-        ) . " " . \HTML\span('*', 'required'));
-        array_key_exists("configCmsDbPassword", $this->values) ? $input = $this->values["configCmsDbPassword"] : $input = WIKINDX_CMS_DB_PASSWORD_DEFAULT;
-        $pString .= \HTML\td(\FORM\passwordInput(
+        ));
+        array_key_exists("configCmsDbPassword", $this->formData) ? $input = $this->formData["configCmsDbPassword"] : $input = WIKINDX_CMS_DB_PASSWORD_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\passwordInput(
             $this->messages->text("config", "cmsDbPassword"),
             "configCmsDbPassword",
             $input,
             50,
             255
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -1144,15 +1166,15 @@ class SUPERADMIN
      */
     private function gsConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "gsAllow"));
-        $input = array_key_exists("configGsAllow", $this->values) && ($this->values['configGsAllow']) ? "CHECKED" : WIKINDX_GS_ALLOW_DEFAULT;
+        $input = array_key_exists("configGsAllow", $this->formData) && ($this->formData['configGsAllow']) ? "CHECKED" : WIKINDX_GS_ALLOW_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "gsAllow"), "configGsAllow", $input) .
             BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "gsAttachment"));
-        $input = array_key_exists("configGsAttachment", $this->values) && ($this->values['configGsAttachment']) ? "CHECKED" : WIKINDX_GS_ATTACHMENT_DEFAULT;
+        $input = array_key_exists("configGsAttachment", $this->formData) && ($this->formData['configGsAttachment']) ? "CHECKED" : WIKINDX_GS_ATTACHMENT_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "gsAttachment"), "configGsAttachment", $input) .
             BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
@@ -1171,7 +1193,7 @@ class SUPERADMIN
         $mailMessage = FALSE;
 
         if ($isLdapExtAvailable) {
-	        if (array_key_exists("configLdapUse", $this->values) && $this->values['configLdapUse']) {
+	        if (array_key_exists("configLdapUse", $this->formData) && $this->formData['configLdapUse']) {
 	            if (array_key_exists('configLdapTestUser', $this->vars) && $this->vars['configLdapTestUser']) {
 	                $this->testLdap();
 	                $jScript = "javascript:coreOpenPopup('index.php?action=usersgroups_SUPERADMIN_CORE&amp;method=ldapTransactionReport', 80)";
@@ -1180,43 +1202,43 @@ class SUPERADMIN
 	            }
 	        }
         }
-        $pString = $this->errorString . $mailMessage;
+        $pString = $this->messageString . $mailMessage;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
-        array_key_exists("configPasswordSize", $this->values) ? $input = $this->values["configPasswordSize"] : $input = WIKINDX_PASSWORD_SIZE_DEFAULT;
+        array_key_exists("configPasswordSize", $this->formData) ? $input = $this->formData["configPasswordSize"] : $input = WIKINDX_PASSWORD_SIZE_DEFAULT;
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "passwordSize"));
-        $pString .= \HTML\td(\FORM\textInput(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "passwordSize"),
             "configPasswordSize",
             $input,
             3,
             4
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "passwordStrength"));
         $array = [
             'weak' => $this->messages->text("config", "passwordWeak"),
             'medium' => $this->messages->text("config", "passwordMedium"),
             'strong' => $this->messages->text("config", "passwordStrong"),
         ];
-        array_key_exists("configPasswordStrength", $this->values) ? $input = $this->values["configPasswordStrength"] :
+        array_key_exists("configPasswordStrength", $this->formData) ? $input = $this->formData["configPasswordStrength"] :
             $input = WIKINDX_PASSWORD_STRENGTH_DEFAULT;
-        $pString .= \HTML\td(\FORM\selectedBoxValue(
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "passwordStrength"),
             "configPasswordStrength",
             $array,
             $input,
             3
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
-        $input = array_key_exists("configLdapUse", $this->values) && ($this->values['configLdapUse']) ? "CHECKED" : WIKINDX_LDAP_USE_DEFAULT;
+        $input = array_key_exists("configLdapUse", $this->formData) && ($this->formData['configLdapUse']) ? "CHECKED" : WIKINDX_LDAP_USE_DEFAULT;
         $pString .= \HTML\td(
             \FORM\checkbox($this->messages->text("config", "ldapUse"), "configLdapUse", $input)
             .  BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapUse")))
         );
-        array_key_exists("configLdapProtocolVersion", $this->values) ? $input = $this->values["configLdapProtocolVersion"] :
+        array_key_exists("configLdapProtocolVersion", $this->formData) ? $input = $this->formData["configLdapProtocolVersion"] :
             $input = WIKINDX_LDAP_PROTOCOL_VERSION_DEFAULT;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "ldapProtocolVersion"),
@@ -1225,7 +1247,7 @@ class SUPERADMIN
             $input,
             1
         ));
-        array_key_exists("configLdapServer", $this->values) ? $input = $this->values["configLdapServer"] : $input = WIKINDX_LDAP_SERVER_DEFAULT;
+        array_key_exists("configLdapServer", $this->formData) ? $input = $this->formData["configLdapServer"] : $input = WIKINDX_LDAP_SERVER_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "ldapServer"),
             "configLdapServer",
@@ -1234,7 +1256,7 @@ class SUPERADMIN
             255
         ));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapDn"));
-        array_key_exists("configLdapDn", $this->values) ? $input = $this->values["configLdapDn"] : $input = WIKINDX_LDAP_DN_DEFAULT;
+        array_key_exists("configLdapDn", $this->formData) ? $input = $this->formData["configLdapDn"] : $input = WIKINDX_LDAP_DN_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "ldapDn"),
             "configLdapDn",
@@ -1242,7 +1264,7 @@ class SUPERADMIN
             30,
             255
         ) . BR . \HTML\span($hint, 'hint'));
-        array_key_exists("configLdapPort", $this->values) ? $input = $this->values["configLdapPort"] : $input = WIKINDX_LDAP_PORT_DEFAULT;
+        array_key_exists("configLdapPort", $this->formData) ? $input = $this->formData["configLdapPort"] : $input = WIKINDX_LDAP_PORT_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "ldapPort"),
             "configLdapPort",
@@ -1255,9 +1277,9 @@ class SUPERADMIN
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "authGate"));
-        $input = array_key_exists("configAuthGate", $this->values) && ($this->values['configAuthGate']) ? "CHECKED" : WIKINDX_AUTHGATE_USE_DEFAULT;
+        $input = array_key_exists("configAuthGate", $this->formData) && ($this->formData['configAuthGate']) ? "CHECKED" : WIKINDX_AUTHGATE_USE_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGate"), "configAuthGate", $input) . BR . \HTML\span($hint, 'hint'));
-        array_key_exists("configAuthGateMessage", $this->values) ? $input = $this->values["configAuthGateMessage"] :
+        array_key_exists("configAuthGateMessage", $this->formData) ? $input = $this->formData["configAuthGateMessage"] :
             $input = WIKINDX_AUTHGATE_MESSAGE_DEFAULT;
         $pString .= \HTML\td(\FORM\textareaInputmceNoEditor($this->messages->text("config", "authGateMessage"), "configAuthGateMessage", $input, 80));
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGateReset"), "configAuthGateReset", WIKINDX_AUTHGATE_RESET_DEFAULT));
@@ -1285,13 +1307,13 @@ class SUPERADMIN
      */
     private function emailConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
-        $input = array_key_exists("configMailUse", $this->values) && ($this->values['configMailUse']) ? "CHECKED" : WIKINDX_MAIL_USE_DEFAULT;
+        $input = array_key_exists("configMailUse", $this->formData) && ($this->formData['configMailUse']) ? "CHECKED" : WIKINDX_MAIL_USE_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "mailServer"), "configMailUse", $input));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailFrom"));
-        array_key_exists("configMailFrom", $this->values) ? $input = $this->values["configMailFrom"] : $input = WIKINDX_MAIL_FROM_DEFAULT;
+        array_key_exists("configMailFrom", $this->formData) ? $input = $this->formData["configMailFrom"] : $input = WIKINDX_MAIL_FROM_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "mailFrom"),
             "configMailFrom",
@@ -1300,7 +1322,7 @@ class SUPERADMIN
             255
         ) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailReplyTo"));
-        array_key_exists("configMailReturnPath", $this->values) ? $input = $this->values["configMailReplyTo"] : $input = WIKINDX_MAIL_REPLYTO_DEFAULT;
+        array_key_exists("configMailReturnPath", $this->formData) ? $input = $this->formData["configMailReplyTo"] : $input = WIKINDX_MAIL_REPLYTO_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "mailReplyTo"),
             "configMailReplyTo",
@@ -1317,16 +1339,16 @@ class SUPERADMIN
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        array_key_exists("configMailBackend", $this->values) ? $input = $this->values["configMailBackend"] : $input = WIKINDX_MAIL_BACKEND_DEFAULT;
-        $pString .= \HTML\td(\FORM\selectedBoxValue(
+        array_key_exists("configMailBackend", $this->formData) ? $input = $this->formData["configMailBackend"] : $input = WIKINDX_MAIL_BACKEND_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "mailBackend"),
             "configMailBackend",
             WIKINDX_PHPMAILER_BACKENDS,
             $input,
             count(WIKINDX_PHPMAILER_BACKENDS)
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailReturnPath"));
-        array_key_exists("configMailReturnPath", $this->values) ? $input = $this->values["configMailReturnPath"] : $input = WIKINDX_MAIL_RETURN_PATH_DEFAULT;
+        array_key_exists("configMailReturnPath", $this->formData) ? $input = $this->formData["configMailReturnPath"] : $input = WIKINDX_MAIL_RETURN_PATH_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "mailReturnPath"),
             "configMailReturnPath",
@@ -1335,7 +1357,7 @@ class SUPERADMIN
             255
         ) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailSmPath"));
-        array_key_exists("configMailSmPath", $this->values) ? $input = $this->values["configMailSmPath"] : $input = WIKINDX_MAIL_SENDMAIL_PATH_DEFAULT;
+        array_key_exists("configMailSmPath", $this->formData) ? $input = $this->formData["configMailSmPath"] : $input = WIKINDX_MAIL_SENDMAIL_PATH_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "mailSmPath"),
             "configMailSmPath",
@@ -1353,7 +1375,7 @@ class SUPERADMIN
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailSmtpServer"));
-        array_key_exists("configMailSmtpServer", $this->values) ? $input = $this->values["configMailSmtpServer"] : $input = WIKINDX_MAIL_SMTP_SERVER_DEFAULT;
+        array_key_exists("configMailSmtpServer", $this->formData) ? $input = $this->formData["configMailSmtpServer"] : $input = WIKINDX_MAIL_SMTP_SERVER_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "mailSmtpServer"),
             "configMailSmtpServer",
@@ -1361,7 +1383,7 @@ class SUPERADMIN
             30,
             255
         ) . BR . \HTML\span($hint, 'hint'));
-        array_key_exists("configMailSmtpPort", $this->values) ? $input = $this->values["configMailSmtpPort"] : $input = WIKINDX_MAIL_SMTP_PORT_DEFAULT;
+        array_key_exists("configMailSmtpPort", $this->formData) ? $input = $this->formData["configMailSmtpPort"] : $input = WIKINDX_MAIL_SMTP_PORT_DEFAULT;
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailSmtpPort"));
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "mailSmtpPort"),
@@ -1370,7 +1392,7 @@ class SUPERADMIN
             10,
             10
         ) . BR . \HTML\span($hint, 'hint'));
-        array_key_exists("configMailSmtpEncrypt", $this->values) ? $input = $this->values["configMailSmtpEncrypt"] : $input = WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT;
+        array_key_exists("configMailSmtpEncrypt", $this->formData) ? $input = $this->formData["configMailSmtpEncrypt"] : $input = WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT;
         $input = (!$input) ? WIKINDX_MAIL_SMTP_ENCRYPT_DEFAULT : $input;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "mailSmtpEncrypt"),
@@ -1380,7 +1402,7 @@ class SUPERADMIN
             count(WIKINDX_PHPMAILER_SMTP_ENCRYPT)
         ));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailSmtpPersist"));
-        $input = array_key_exists("configMailSmtpPersist", $this->values) && ($this->values['configMailSmtpPersist']) ? "CHECKED" : WIKINDX_MAIL_SMTP_PERSIST_DEFAULT;
+        $input = array_key_exists("configMailSmtpPersist", $this->formData) && ($this->formData['configMailSmtpPersist']) ? "CHECKED" : WIKINDX_MAIL_SMTP_PERSIST_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "mailSmtpPersist"), "configMailSmtpPersist", $input) .
         BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
@@ -1392,25 +1414,25 @@ class SUPERADMIN
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailSmtpAuth"));
-        $input = array_key_exists("configMailSmtpAuth", $this->values) && ($this->values['configMailSmtpAuth']) ? "CHECKED" : WIKINDX_MAIL_SMTP_AUTH_DEFAULT;
+        $input = array_key_exists("configMailSmtpAuth", $this->formData) && ($this->formData['configMailSmtpAuth']) ? "CHECKED" : WIKINDX_MAIL_SMTP_AUTH_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "mailSmtpAuth"), "configMailSmtpAuth", $input) .
             BR . \HTML\span($hint, 'hint'));
-        array_key_exists("configMailSmtpUsername", $this->values) ? $input = $this->values["configMailSmtpUsername"] : $input = WIKINDX_MAIL_SMTP_USERNAME_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        array_key_exists("configMailSmtpUsername", $this->formData) ? $input = $this->formData["configMailSmtpUsername"] : $input = WIKINDX_MAIL_SMTP_USERNAME_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "mailSmtpUsername"),
             "configMailSmtpUsername",
             $input,
             30,
             255
-        ) . " " . \HTML\span('*', 'required'));
-        array_key_exists("configMailSmtpPassword", $this->values) ? $input = $this->values["configMailSmtpPassword"] : $input = WIKINDX_MAIL_SMTP_PASSWORD_DEFAULT;
-        $pString .= \HTML\td(\FORM\passwordInput(
+        ));
+        array_key_exists("configMailSmtpPassword", $this->formData) ? $input = $this->formData["configMailSmtpPassword"] : $input = WIKINDX_MAIL_SMTP_PASSWORD_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\passwordInput(
             $this->messages->text("config", "mailSmtpPassword"),
             "configMailSmtpPassword",
             $input,
             30,
             255
-        ) . " " . \HTML\span('*', 'required'));
+        ));
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
@@ -1420,11 +1442,11 @@ class SUPERADMIN
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $input = array_key_exists("configNotify", $this->values) && ($this->values['configNotify']) ? "CHECKED" : WIKINDX_NOTIFY_DEFAULT;
+        $input = array_key_exists("configNotify", $this->formData) && ($this->formData['configNotify']) ? "CHECKED" : WIKINDX_NOTIFY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "notify"), "configNotify", $input));
-        $input = array_key_exists("configEmailStatistics", $this->values) && ($this->values['configEmailStatistics']) ? "CHECKED" : WIKINDX_EMAIL_STATISTICS_DEFAULT;
+        $input = array_key_exists("configEmailStatistics", $this->formData) && ($this->formData['configEmailStatistics']) ? "CHECKED" : WIKINDX_EMAIL_STATISTICS_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "statistics"), "configEmailStatistics", $input));
-        $input = array_key_exists("configEmailNews", $this->values) && ($this->values['configEmailNews']) ? "CHECKED" : WIKINDX_EMAIL_NEWS_DEFAULT;
+        $input = array_key_exists("configEmailNews", $this->formData) && ($this->formData['configEmailNews']) ? "CHECKED" : WIKINDX_EMAIL_NEWS_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "emailNews"), "configEmailNews", $input));
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
@@ -1513,21 +1535,21 @@ class SUPERADMIN
      */
     private function fileConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "deleteSeconds"));
-        array_key_exists("configFileDeleteSeconds", $this->values) ? $input = $this->values["configFileDeleteSeconds"] : $input = WIKINDX_FILE_DELETE_SECONDS_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        array_key_exists("configFileDeleteSeconds", $this->formData) ? $input = $this->formData["configFileDeleteSeconds"] : $input = WIKINDX_FILE_DELETE_SECONDS_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "deleteSeconds"),
             "configFileDeleteSeconds",
             $input,
             10,
             10
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
-        $input = array_key_exists("configFileAttach", $this->values) && ($this->values['configFileAttach']) ? "CHECKED" : WIKINDX_FILE_ATTACH_DEFAULT;
+        ) . BR . \HTML\span($hint, 'hint'));
+        $input = array_key_exists("configFileAttach", $this->formData) && ($this->formData['configFileAttach']) ? "CHECKED" : WIKINDX_FILE_ATTACH_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "fileAttach"), "configFileAttach", $input));
-        $input = array_key_exists("configFileViewLoggedOnOnly", $this->values) && ($this->values['configFileViewLoggedOnOnly']) ? "CHECKED" : WIKINDX_FILE_VIEW_LOGGEDON_ONLY_DEFAULT;
+        $input = array_key_exists("configFileViewLoggedOnOnly", $this->formData) && ($this->formData['configFileViewLoggedOnOnly']) ? "CHECKED" : WIKINDX_FILE_VIEW_LOGGEDON_ONLY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "fileViewLoggedOnOnly"),
             "configFileViewLoggedOnOnly",
@@ -1546,7 +1568,7 @@ class SUPERADMIN
     private function resourcesConfigDisplay()
     {
         $deactivated = [];
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         // need to force reload so display box of active types displays properly after DB write
         $resourceMap = FACTORY_RESOURCEMAP::getFreshInstance();
         $typesRaw = $resourceMap->getTypesRaw();
@@ -1602,17 +1624,17 @@ class SUPERADMIN
         unset($users[1]);
         natcasesort($users);
         $users = [0 => $this->messages->text("misc", "ignore")] + $users;
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "siteMapAllow"));
-        $input = array_key_exists("configSiteMapAllow", $this->values) && ($this->values['configSiteMapAllow']) ? "CHECKED" : WIKINDX_SITEMAP_ALLOW_DEFAULT;
+        $input = array_key_exists("configSiteMapAllow", $this->formData) && ($this->formData['configSiteMapAllow']) ? "CHECKED" : WIKINDX_SITEMAP_ALLOW_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "siteMapAllow"), "configSiteMapAllow", $input) .
             BR . \HTML\span($hint, 'hint'));
         
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "restrictUserId"));
-        array_key_exists("configRestrictUserId", $this->values) ? $input = $this->values["configRestrictUserId"] : WIKINDX_RESTRICT_USERID_DEFAULT;
+        array_key_exists("configRestrictUserId", $this->formData) ? $input = $this->formData["configRestrictUserId"] : WIKINDX_RESTRICT_USERID_DEFAULT;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "restrictUserId"),
             "configRestrictUserId",
@@ -1622,14 +1644,14 @@ class SUPERADMIN
         ) . BR . \HTML\span($hint, 'hint'));
         
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "maxPaste"));
-        $input = array_key_exists("configMaxPaste", $this->values) ? $this->values["configMaxPaste"] : WIKINDX_MAX_PASTE_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
+        $input = array_key_exists("configMaxPaste", $this->formData) ? $this->formData["configMaxPaste"] : WIKINDX_MAX_PASTE_DEFAULT;
+        $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text('config', 'maxPaste'),
             "configMaxPaste",
             $input,
             10,
             10
-        ) . " " . \HTML\span('*', 'required') . BR . \HTML\span($hint, 'hint'));
+        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -1872,6 +1894,7 @@ class SUPERADMIN
         if (array_key_exists('configAuthGateReset', $this->vars) && $this->vars['configAuthGateReset']) {
             $this->db->update('users', ['usersGDPR' => 'N']);
         }
+        $error = '';
         $array = $required = [];
         // Store in session first and remove unrequired session variables
         foreach (WIKINDX_LIST_CONFIG_OPTIONS as $key => $unused) {
@@ -1913,7 +1936,6 @@ class SUPERADMIN
                     "configMetadataUserOnly",
                     "configMultiUser",
                     "configNotify",
-                    "configNotify",
                     "configOriginatorEditOnly",
                     "configQuarantine",
                     "configReadOnlyAccess",
@@ -1928,6 +1950,11 @@ class SUPERADMIN
                 $this->session->delVar("setup_" . str_replace('config', 'setup', $key));
             }
         }
+        if (array_key_exists('usersUsername', $this->vars)) {
+            $array['usersUsername'] = trim($this->vars['usersUsername']);
+        } else {
+            $this->session->delVar("config_usersUsername");
+        }
         if (array_key_exists('usersFullname', $this->vars)) {
             $array['usersFullname'] = trim($this->vars['usersFullname']);
         } else {
@@ -1939,12 +1966,19 @@ class SUPERADMIN
             $this->session->delVar("config_usersIsCreator");
         }
         if (array_key_exists('usersEmail', $this->vars)) {
-            $array['usersEmail'] = trim($this->vars['usersEmail']);
+            $array['usersEmail'] = trim($this->vars['usersEmail']);           
+			if (filter_var($array['usersEmail'], FILTER_VALIDATE_EMAIL) === FALSE) {
+				$error = $this->errors->text('inputError', 'invalidMail');
+			}
         } else {
             $this->session->delVar("config_usersEmail");
         }
+        if (array_key_exists('usersCookie', $this->vars)) {
+            $array['usersCookie'] = TRUE;
+        }
         if (!empty($array)) {
             $this->session->writeArray($array, "config");
+            $this->formData = $array;
         }
         $requireDefault = [
             "configFileDeleteSeconds" => WIKINDX_FILE_DELETE_SECONDS_DEFAULT,
@@ -1987,18 +2021,21 @@ class SUPERADMIN
                 $input = trim($this->vars[$value]);
                 if ($value == 'usersUsername') {
                     if (array_search(mb_strtolower($input), ['sa', 'admin', 'super', 'superadmin'])) {
-                        $this->badInputLoad($this->errors->text("inputError", 'badUsername', " ($value) "), $this->vars['selectItem']);
+                    	$error = $this->errors->text("inputError", 'badUsername', " ($value) ");
                     }
                 }
             } else {
                 continue;
             }
             if (!$input) {
-                $this->badInputLoad($this->errors->text("inputError", 'missing', " ($value) "), $this->vars['selectItem']);
+            	$error = $this->errors->text("inputError", 'missing', " ($value) ");
             }
         }
         if (array_key_exists('password', $this->vars) && ($this->vars['password'] != $this->vars['passwordConfirm'])) {
-            $this->badInputLoad($this->errors->text("inputError", 'passwordMismatch'), $this->vars['selectItem']);
+        	$error = $this->errors->text("inputError", 'passwordMismatch');
+        }
+        if ($error) {
+            $this->badInputLoad($error, $this->vars['selectItem']);
         }
         $isInt = [
             "configFileDeleteSeconds",

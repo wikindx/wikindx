@@ -33,6 +33,7 @@ MAINTENANCE:
 9. Always disable the SQL debug output if WIKINDX_DEBUG_SQL is not yet defined (on install).
 10. Gives the CLOSE class alone the responsibility of displaying SQL traces.
 11. Isolate some functions for enabling/disabling a component.
+12. Enable by default private styles.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

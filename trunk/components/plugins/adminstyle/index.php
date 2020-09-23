@@ -137,6 +137,7 @@ class adminstyle_MODULE
         $this->writeFile();
         
     	\UTILS\createComponentMetadataFile("style", mb_strtolower(trim($this->vars['styleShortName'])));
+    	\UTILS\enableComponent("style", mb_strtolower(trim($this->vars['styleShortName'])));
     	
         $pString = $this->pluginmessages->text('successAdd');
         // Reload styles list after adding a new
@@ -257,6 +258,7 @@ class adminstyle_MODULE
         $this->writeFile();
         
     	\UTILS\createComponentMetadataFile("style", mb_strtolower(trim($this->vars['styleShortName'])));
+    	\UTILS\enableComponent("style", mb_strtolower(trim($this->vars['styleShortName'])));
     	
         $pString = $this->pluginmessages->text('successAdd');
         // Reload styles list after a duplication

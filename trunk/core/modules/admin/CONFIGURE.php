@@ -26,7 +26,7 @@ class CONFIGURE
     private $gatekeep;
     private $tinymce;
     private $configDbStructure;
-    private $errorString = FALSE;
+    private $messageString = FALSE;
 
     public function __construct($initial = FALSE)
     {
@@ -62,7 +62,12 @@ class CONFIGURE
         } elseif (is_array($message)) {
             $messageString = $message[0];
             $item = $message[1];
-        } else {
+        } elseif (array_key_exists('message', $this->vars)) {
+    		$messageString = $this->vars['message'];
+    		if (array_key_exists('selectItem', $this->vars)) {
+    			$item = $this->vars['selectItem'];
+    		}
+    	} else {
             $messageString = $message;
             $item = FALSE;
         }
@@ -70,7 +75,7 @@ class CONFIGURE
         if (empty($configGroups)) {
             return FALSE;
         }
-        $this->errorString = $messageString;
+        $this->messageString = $messageString;
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('configure'));
@@ -455,7 +460,7 @@ class CONFIGURE
      */
     private function frontConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
         if (array_key_exists("configLastChangesType", $this->values) && ($this->values["configLastChangesType"] == 'number')) { // set number
@@ -517,7 +522,7 @@ class CONFIGURE
      */
     private function debugConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\p($this->messages->text("config", "debug"));
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
@@ -547,7 +552,7 @@ class CONFIGURE
      */
     private function usersConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "mailServerRequired"));
@@ -646,7 +651,7 @@ class CONFIGURE
      */
     private function listConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
@@ -725,7 +730,7 @@ class CONFIGURE
      */
     private function displayConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "title"));
@@ -899,7 +904,7 @@ class CONFIGURE
      */
     private function rssConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "rssAllow"));
@@ -969,7 +974,7 @@ class CONFIGURE
      */
     private function cmsConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "cmsAllow"));
@@ -1027,7 +1032,7 @@ class CONFIGURE
      */
     private function gsConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "gsAllow"));
@@ -1063,7 +1068,7 @@ class CONFIGURE
                 }
             }
         }
-        $pString = $this->errorString . $mailMessage;
+        $pString = $this->messageString . $mailMessage;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         array_key_exists("configPasswordSize", $this->values) ? $input = $this->values["configPasswordSize"] : $input = WIKINDX_PASSWORD_SIZE_DEFAULT;
@@ -1168,7 +1173,7 @@ class CONFIGURE
      */
     private function emailConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $input = array_key_exists("configMailUse", $this->values) && ($this->values['configMailUse']) ? "CHECKED" : WIKINDX_MAIL_USE_DEFAULT;
@@ -1396,7 +1401,7 @@ class CONFIGURE
      */
     private function fileConfigDisplay()
     {
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "deleteSeconds"));
@@ -1429,7 +1434,7 @@ class CONFIGURE
     private function resourcesConfigDisplay()
     {
         $deactivated = [];
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         // need to force reload so display box of active types displays properly after DB write
         $resourceMap = FACTORY_RESOURCEMAP::getFreshInstance();
         $typesRaw = $resourceMap->getTypesRaw();
@@ -1485,7 +1490,7 @@ class CONFIGURE
         unset($users[1]);
         natcasesort($users);
         $users = [0 => $this->messages->text("misc", "ignore")] + $users;
-        $pString = $this->errorString;
+        $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         

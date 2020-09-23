@@ -293,7 +293,7 @@ class SUPERADMIN
 			}
             $this->db->insert('users', $usersFieldArray, $usersValueArray);
             $message = rawurlencode($this->success->text("config"));
-            header("Location: index.php?action=usersgroups_SUPERADMIN_CORE&method=init&message=$message&selectItem=front&dbInitCompleted=1");
+            header("Location: index.php?action=admin_CONFIGURE_CORE&method=init&message=$message&selectItem=front");
         } else {
             $updateUserArray = $nullsUserArray = [];
             $configFields = $this->configDbStructure->getAllData();

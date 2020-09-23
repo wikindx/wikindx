@@ -598,10 +598,12 @@ class SUPERADMIN
      */
     private function superConfigDisplay($formText)
     {
+    	define('WIKINDX_DEBUG_SQL', FALSE);
         $pString = $this->messageString;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
         $pString .= $formText;
+        $pString .= \FORM\hidden('selectItem', 'super');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td('&nbsp;');

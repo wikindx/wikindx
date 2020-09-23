@@ -818,7 +818,6 @@ class ADMINCOMPONENTS
      */
     public function writeConfigMenu()
     {
-        $pString = '';
         if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars)) {
             $this->messageStringId = $this->vars['component_id'];
             $this->messageStringType = $this->vars['component_type'];
@@ -874,12 +873,11 @@ class ADMINCOMPONENTS
                 return $this->init();
             }
             $configFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $this->vars['configFileInline'], 'config.php']);
-           if (file_put_contents($configFile, $this->vars['configConfig']) === FALSE) {
+            if (file_put_contents($configFile, $this->vars['configConfig']) === FALSE) {
                 $this->messageString = $this->errors->text('file', 'write');
             } else {
                 $this->messageString = $this->success->text("plugins");
             }
-            return $this->init();
         } else {
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'wrongParameters'));
         }

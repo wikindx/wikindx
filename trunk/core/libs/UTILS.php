@@ -301,6 +301,8 @@ namespace UTILS
     /**
      * Create the component.json file of a component
      *
+     * Do not overwrite the file if it already exists.
+     *
      * @param string $component_type
      * @param string $component_id
      */
@@ -312,10 +314,18 @@ namespace UTILS
             "template" => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES]),
             "vendor" => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR]),
         ];
+        
+        $path = implode(DIRECTORY_SEPARATOR, [$legal_types[$component_type], $component_id, 'component.json']);
+        
+        // Don't overwrite the file
+    	if (file_exists($path)) {
+    		return;
+    	}
+    	
         $fakejson = '{
             "component_type": "' . $component_type . '",
             "component_id": "' . $component_id . '",
-            "component_version": "Unknow",
+            "component_version": "0",
             "component_builtin": "false",
             "component_updatable": "false",
             "component_name": "' . $component_id . '",
@@ -323,7 +333,8 @@ namespace UTILS
             "component_' . WIKINDX_PACKAGE_HASH_ALGO . '": ""
         }';
         $componentMetadata = json_decode($fakejson, TRUE);
-        \FILE\write_json_file($legal_types[$component_type] . DIRECTORY_SEPARATOR . $component_id . DIRECTORY_SEPARATOR . 'component.json', $componentMetadata);
+        
+        \FILE\write_json_file($path, $componentMetadata);
     }
     
     /**

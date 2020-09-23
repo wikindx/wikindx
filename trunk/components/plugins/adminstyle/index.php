@@ -135,6 +135,9 @@ class adminstyle_MODULE
             $this->badInput->close($error, $this, 'addInit');
         }
         $this->writeFile();
+        
+    	\UTILS\createComponentMetadataFile("style", mb_strtolower(trim($this->vars['styleShortName'])));
+    	
         $pString = $this->pluginmessages->text('successAdd');
         // Reload styles list after adding a new
         $this->styles = \LOADSTYLE\loadDir();
@@ -252,6 +255,9 @@ class adminstyle_MODULE
             $this->badInput->close($error, $this, 'copyDisplay');
         }
         $this->writeFile();
+        
+    	\UTILS\createComponentMetadataFile("style", mb_strtolower(trim($this->vars['styleShortName'])));
+    	
         $pString = $this->pluginmessages->text('successAdd');
         // Reload styles list after a duplication
         $this->styles = LOADSTYLE\loadDir();
@@ -2431,6 +2437,7 @@ class adminstyle_MODULE
             $this->badInput->close($this->errors->text("file", "write", ": $fileName"), $this, 'display');
         }
         fclose($fp);
+    	
         // Remove sessionvars
         $this->session->clearArray("cite");
         $this->session->clearArray("style");

@@ -2662,11 +2662,8 @@ class SQL
      */
     public function printSQLDebug($querystring = '', $executionType = 'SQL')
     {
-        $beautified = FALSE;
-        if (defined("WIKINDX_DEBUG_SQL") && WIKINDX_DEBUG_SQL) {
-            $beautified = $this->beautify($querystring, $executionType);
-            GLOBALS::addTplVar('logsql', $beautified);
-        }
+        $beautified = $this->beautify($querystring, $executionType);
+        GLOBALS::addTplVar('logsql', $beautified);
 
         return $beautified;
     }
@@ -2769,30 +2766,28 @@ class SQL
      */
     private function CheckEngineVersion()
     {
-        if (defined("WIKINDX_DEBUG_SQL") && WIKINDX_DEBUG_SQL) {
-            $this->sqlTimerOn();
-            $EngineVersionRaw = $this->getStringEngineVersion();
-            $this->sqlTimerOff();
-            
-            $EngineVersion = strtolower($EngineVersionRaw);
-            
-            if (strstr($EngineVersion, "mariadb")) {
-                $EngineName = "MariaDB";
-                $VersionMin = WIKINDX_MARIADB_VERSION_MIN; // Check MariaDB version
-            } else {
-                $EngineName = "MySQL";
-                $VersionMin = WIKINDX_MYSQL_VERSION_MIN; // Check MySql or unknow engine version
-            }
-            
-            // If the current engine version is lower than the minimum needed
-            if (strcmp($EngineVersion, $VersionMin) < 0) {
-                $errorMessage = "
-                	WIKINDX requires " . $EngineName . " " . $VersionMin . ".
-                	Your version is " . $EngineVersionRaw . ".
-                	Please upgrade your db engine.
-                ";
-                GLOBALS::addTplVar('logsql', "<p style='font-weight:bold;color:red;'>" . $errorMessage . "</p>");
-            }
+        $this->sqlTimerOn();
+        $EngineVersionRaw = $this->getStringEngineVersion();
+        $this->sqlTimerOff();
+        
+        $EngineVersion = strtolower($EngineVersionRaw);
+        
+        if (strstr($EngineVersion, "mariadb")) {
+            $EngineName = "MariaDB";
+            $VersionMin = WIKINDX_MARIADB_VERSION_MIN; // Check MariaDB version
+        } else {
+            $EngineName = "MySQL";
+            $VersionMin = WIKINDX_MYSQL_VERSION_MIN; // Check MySql or unknow engine version
+        }
+        
+        // If the current engine version is lower than the minimum needed
+        if (strcmp($EngineVersion, $VersionMin) < 0) {
+            $errorMessage = "
+            	WIKINDX requires " . $EngineName . " " . $VersionMin . ".
+            	Your version is " . $EngineVersionRaw . ".
+            	Please upgrade your db engine.
+            ";
+            GLOBALS::addTplVar('logsql', "<p style='font-weight:bold;color:red;'>" . $errorMessage . "</p>");
         }
     }
     /**
@@ -2997,9 +2992,7 @@ class SQL
      */
     private function printSQLDebugTime()
     {
-        if (defined("WIKINDX_DEBUG_SQL") && WIKINDX_DEBUG_SQL) {
-            GLOBALS::addTplVar('logsql', '<hr><div>Elapsed time: ' . sprintf('%.3f', round($this->elapsedTime(), 3)) . ' s</div>');
-        }
+        GLOBALS::addTplVar('logsql', '<hr><div>Elapsed time: ' . sprintf('%.3f', round($this->elapsedTime(), 3)) . ' s</div>');
     }
     /**
      * Die or throw an exception depending on the configuration

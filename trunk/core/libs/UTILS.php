@@ -329,7 +329,7 @@ namespace UTILS
             "component_builtin": "false",
             "component_updatable": "false",
             "component_name": "' . $component_id . '",
-            "component_description": "",
+            "component_description": "' . $component_id . ' ' . $component_type . '",
             "component_' . WIKINDX_PACKAGE_HASH_ALGO . '": ""
         }';
         $componentMetadata = json_decode($fakejson, TRUE);

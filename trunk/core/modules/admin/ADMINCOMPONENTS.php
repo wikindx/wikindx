@@ -493,17 +493,11 @@ class ADMINCOMPONENTS
         if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars)) {
             $this->messageStringId = $this->vars['component_id'];
             $this->messageStringType = $this->vars['component_type'];
-            $componentsInstalled = \UTILS\readComponentsList(TRUE);
             
-            foreach ($componentsInstalled as $ki => $ci) {
-                if ($ci["component_type"] == $this->vars['component_type'] && $ci["component_id"] == $this->vars['component_id']) {
-                    $componentsInstalled[$ki]["component_status"] = "disabled";
-                    \UTILS\writeComponentsList($componentsInstalled);
-                    $this->messageString = $this->success->text("componentSuccess");
-
-                    break;
-                }
-            }
+            if (\UTILS\disableComponent($this->vars['component_type'], $this->vars['component_id']))
+                $this->messageString = $this->success->text("componentSuccess");
+            else
+                $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'disable'));
         } else {
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'wrongParameters'));
         }
@@ -519,17 +513,11 @@ class ADMINCOMPONENTS
         if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars)) {
             $this->messageStringId = $this->vars['component_id'];
             $this->messageStringType = $this->vars['component_type'];
-            $componentsInstalled = \UTILS\readComponentsList(TRUE);
             
-            foreach ($componentsInstalled as $ki => $ci) {
-                if ($ci["component_type"] == $this->vars['component_type'] && $ci["component_id"] == $this->vars['component_id']) {
-                    $componentsInstalled[$ki]["component_status"] = "enabled";
-                    \UTILS\writeComponentsList($componentsInstalled);
-                    $this->messageString = $this->success->text("componentSuccess");
-                    
-                    break;
-                }
-            }
+            if (\UTILS\enableComponent($this->vars['component_type'], $this->vars['component_id']))
+                $this->messageString = $this->success->text("componentSuccess");
+            else
+                $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'disable'));
         } else {
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'wrongParameters'));
         }

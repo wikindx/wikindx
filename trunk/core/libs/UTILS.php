@@ -303,7 +303,7 @@ namespace UTILS
      *
      * Do not overwrite the file if it already exists.
      *
-     * @param string $component_type
+     * @param string $component_type (plugin, style, template, or vendor)
      * @param string $component_id
      */
     function createComponentMetadataFile($component_type, $component_id)
@@ -336,6 +336,64 @@ namespace UTILS
         
         \FILE\write_json_file($path, $componentMetadata);
     }
+    
+    
+    /**
+     * Enable a component
+     *
+     * @param string $component_type (plugin, style, template, or vendor)
+     * @param string $component_id
+     *
+     * @return bool TRUE on success, FALSE otherwise
+     */
+    function enableComponent($component_type, $component_id)
+    {
+        $result = FALSE;
+        
+        $componentsInstalled = \UTILS\readComponentsList(TRUE);
+        
+        foreach ($componentsInstalled as $ki => $ci) {
+            if ($ci["component_type"] == $component_type && $ci["component_id"] == $component_id) {
+                $componentsInstalled[$ki]["component_status"] = "enabled";
+                \UTILS\writeComponentsList($componentsInstalled);
+                
+                $result = TRUE;
+                break;
+            }
+        }
+        
+        return $result;
+    }
+    
+    
+    /**
+     * Disable a component
+     *
+     * @param string $component_type (plugin, style, template, or vendor)
+     * @param string $component_id
+     *
+     * @return bool TRUE on success, FALSE otherwise
+     */
+    function disableComponent($component_type, $component_id)
+    {
+        $result = FALSE;
+        
+        $componentsInstalled = \UTILS\readComponentsList(TRUE);
+        
+        foreach ($componentsInstalled as $ki => $ci) {
+            if ($ci["component_type"] == $component_type && $ci["component_id"] == $component_id) {
+                $componentsInstalled[$ki]["component_status"] = "disabled";
+                \UTILS\writeComponentsList($componentsInstalled);
+                
+                $result = TRUE;
+                break;
+            }
+        }
+        
+        return $result;
+    }
+    
+    
     
     /**
      * Check the integrity of a component

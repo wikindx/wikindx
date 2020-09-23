@@ -28,6 +28,7 @@ MAINTENANCE:
 6. Remove the type attribute of scripts elements previously mandatory in XHTML.
 7. Convert bibliography descriptions to plain text.
 8. Convert the  attachment descriptions to plain text.
+9. Always disable the SQL debug output if WIKINDX_DEBUG_SQL is not yet defined (on install)
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

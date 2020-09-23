@@ -2663,7 +2663,7 @@ class SQL
     public function printSQLDebug($querystring = '', $executionType = 'SQL')
     {
         $beautified = FALSE;
-        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL) {
+        if (defined("WIKINDX_DEBUG_SQL") && WIKINDX_DEBUG_SQL) {
             $beautified = $this->beautify($querystring, $executionType);
             GLOBALS::addTplVar('logsql', $beautified);
         }
@@ -2769,7 +2769,7 @@ class SQL
      */
     private function CheckEngineVersion()
     {
-        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL) {
+        if (defined("WIKINDX_DEBUG_SQL") && WIKINDX_DEBUG_SQL) {
             $this->sqlTimerOn();
             $EngineVersionRaw = $this->getStringEngineVersion();
             $this->sqlTimerOff();
@@ -2997,7 +2997,7 @@ class SQL
      */
     private function printSQLDebugTime()
     {
-        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL) {
+        if (defined("WIKINDX_DEBUG_SQL") && WIKINDX_DEBUG_SQL) {
             GLOBALS::addTplVar('logsql', '<hr><div>Elapsed time: ' . sprintf('%.3f', round($this->elapsedTime(), 3)) . ' s</div>');
         }
     }

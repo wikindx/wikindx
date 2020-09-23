@@ -230,7 +230,7 @@ class CLOSE
         if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE) {
             $debugString = '';
             // Insert SQL log
-            if ((!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL) && in_array('logsql', $tplKeys)) {
+            if (defined("WIKINDX_DEBUG_SQL") && WIKINDX_DEBUG_SQL && in_array('logsql', $tplKeys)) {
                 $debugString .= $debugLogSQLString;
             }
             // Insert debug timers

@@ -375,7 +375,14 @@ class UPDATEDATABASE
             $config = new SUPERADMIN(TRUE);
             // force super initialization in CONFIGURE
             $config->insert = TRUE;
-            if (isset($this->vars['action']) && $this->vars['action'] == 'usersgroups_SUPERADMIN_CORE')
+/*
+For the DB initialization, once the user has input initial superadmin details, he/she is returned to the front of Admin|Configure in order 
+to continue configuring WIKINDX. If, the user (for some reason) then deletes all DB tables and reloads the browser window, 
+UPDATEDATABASE::checkUsersTable() is triggered and new DB tables are written but also the superadmin user entry in the users table 
+BUT without username, email and so on. To stop this, 'dbInitCompleted' is in $this->vars.
+*/
+            if (!array_key_exists('dbInitCompleted', $this->vars) && 
+            	array_key_exists('action', $this->vars) && ($this->vars['action'] == 'usersgroups_SUPERADMIN_CORE'))
             {
                 GLOBALS::addTplVar('content', $config->writeDb());
             }

@@ -292,9 +292,8 @@ class SUPERADMIN
 				$usersValueArray[] = 'Y';
 			}
             $this->db->insert('users', $usersFieldArray, $usersValueArray);
-//            $this->user->writeSessionPreferences(WIKINDX_SUPERADMIN_ID); // '1' == superAdmin
             $message = rawurlencode($this->success->text("config"));
-            header("Location: index.php?action=usersgroups_SUPERADMIN_CORE&method=init&message=$message&selectItem=front");
+            header("Location: index.php?action=usersgroups_SUPERADMIN_CORE&method=init&message=$message&selectItem=front&dbInitCompleted=1");
         } else {
             $updateUserArray = $nullsUserArray = [];
             $configFields = $this->configDbStructure->getAllData();

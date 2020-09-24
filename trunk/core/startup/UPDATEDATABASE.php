@@ -371,11 +371,9 @@ class UPDATEDATABASE
     {
         if ($this->db->tableIsEmpty('users'))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "usersgroups", "SUPERADMIN.php"]));
-            $config = new SUPERADMIN(TRUE);
-            // force super initialization in CONFIGURE
-            $config->insert = TRUE;
-            if (array_key_exists('action', $this->vars) && ($this->vars['action'] == 'usersgroups_SUPERADMIN_CORE'))
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "usersgroups", "INITSUPERADMIN.php"]));
+            $config = new INITSUPERADMIN(TRUE);
+            if (array_key_exists('action', $this->vars) && ($this->vars['action'] == 'usersgroups_INITSUPERADMIN_CORE'))
             {
                 GLOBALS::addTplVar('content', $config->writeDb());
             }
@@ -387,7 +385,7 @@ class UPDATEDATABASE
                 $this->session->setVar("setup_Superadmin", TRUE);
                 // superadmin userId is always WIKINDX_SUPERADMIN_ID
                 $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID);
-                GLOBALS::addTplVar('content', $config->init([\HTML\p($this->installMessages->text("install"), "error", "center"), 'super']));
+                GLOBALS::addTplVar('content', $config->init(\HTML\p($this->installMessages->text("install"), "error", "center")));
                 FACTORY_CLOSENOMENU::getInstance();
             }
         }

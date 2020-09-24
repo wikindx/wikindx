@@ -28,6 +28,7 @@ class PASSWORD
     {
         $errors = FACTORY_ERRORS::getInstance();
         $messages = FACTORY_MESSAGES::getInstance();
+        $formText = '';
         
         $pwdSize = defined('WIKINDX_PASSWORD_SIZE') ? WIKINDX_PASSWORD_SIZE : WIKINDX_PASSWORD_SIZE_DEFAULT;
         $pwdStrength = defined('WIKINDX_PASSWORD_STRENGTH') ? WIKINDX_PASSWORD_STRENGTH : WIKINDX_PASSWORD_STRENGTH_DEFAULT;
@@ -64,7 +65,6 @@ class PASSWORD
             $messages->text("hint", $hintArray[$pwdStrength], $pwdSize) .
             '     ' . $messages->text("hint", 'password4')
         );
-        $formText = '';
         if (!$super) {
             if ($usersUsername) {
             	if (array_key_exists('usersUsername', $formData)) {
@@ -95,7 +95,7 @@ class PASSWORD
                 255
             ));
         } else {
-            // superadmin from Configure menu
+            // superadmin from My Wikindx menu
             if (array_key_exists('usersUsername', $formData)) {
             	$usersUsername = $formData['usersUsername'];
             }

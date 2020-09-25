@@ -13,7 +13,6 @@
  */
 class CONFIGURE
 {
-    public $insert = FALSE;
     private $errors;
     private $messages;
     private $success;
@@ -27,6 +26,7 @@ class CONFIGURE
     private $tinymce;
     private $configDbStructure;
     private $messageString = FALSE;
+    private $formData = [];
 
     public function __construct($initial = FALSE)
     {
@@ -80,35 +80,29 @@ class CONFIGURE
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('configure'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "configure"));
-        if (!$this->insert) {
-            $jsonArray = [];
-            $jScript = 'index.php?action=admin_CONFIGURE_CORE&method=initConfigDiv';
-            $jsonArray[] = [
-                'startFunction' => 'triggerFromMultiSelect',
-                'script' => "$jScript",
-                'triggerField' => 'configMenu',
-                'targetDiv' => 'configDiv',
-            ];
-            $js = \AJAX\jActionForm('onchange', $jsonArray);
-        }
+		$jsonArray = [];
+		$jScript = 'index.php?action=admin_CONFIGURE_CORE&method=initConfigDiv';
+		$jsonArray[] = [
+			'startFunction' => 'triggerFromMultiSelect',
+			'script' => "$jScript",
+			'triggerField' => 'configMenu',
+			'targetDiv' => 'configDiv',
+		];
+		$js = \AJAX\jActionForm('onchange', $jsonArray);
         $pString = \HTML\tableStart('');
         $pString .= \HTML\trStart();
-        if (!$this->insert) {
-            if ($item) {
-                $pString .= \HTML\td(\FORM\selectedBoxValue($this->messages->text(
-                    'config',
-                    'options'
-                ), 'configMenu', $configGroups, $item, sizeof($configGroups), FALSE, $js));
-            } else {
-                $pString .= \HTML\td(\FORM\selectFBoxValue($this->messages->text(
-                    'config',
-                    'options'
-                ), 'configMenu', $configGroups, sizeof($configGroups), FALSE, $js));
-            }
-            $pString .= \HTML\td(\HTML\div('configDiv', $this->getConfigDetails($configGroups, $item)), 'left top width80percent');
-        } else {
-            $pString .= \HTML\td($this->getConfigDetails($configGroups, $item));
-        }
+		if ($item) {
+			$pString .= \HTML\td(\FORM\selectedBoxValue($this->messages->text(
+				'config',
+				'options'
+			), 'configMenu', $configGroups, $item, sizeof($configGroups), FALSE, $js));
+		} else {
+			$pString .= \HTML\td(\FORM\selectFBoxValue($this->messages->text(
+				'config',
+				'options'
+			), 'configMenu', $configGroups, sizeof($configGroups), FALSE, $js));
+		}
+		$pString .= \HTML\td(\HTML\div('configDiv', $this->getConfigDetails($configGroups, $item)), 'left top width80percent');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -183,115 +177,109 @@ class CONFIGURE
     {
         $this->checkInput();
         // If we get here, we're cleared to write to the database.  This user is always id = 1
-        if (!$this->insert) {
-            $updateArray = $nulls = [];
-            $possibleVars = $this->getPossibleVars();
-            foreach ($possibleVars as $field) {
-                if ($field == 'configDeactivateResourceTypes') {
-                    if (array_key_exists('configDeactivateResourceTypes', $this->vars)) {
-                        // Ensure we always have at least one resource . . .
-                        $resourceMap = FACTORY_RESOURCEMAP::getInstance();
-                        $typesRaw = $resourceMap->getTypesRaw();
-                        foreach ($typesRaw as $type) {
-                            $types[$type] = $this->messages->text("resourceType", $type);
-                        }
-                        $sizeDefault = count($types);
-                        if ($sizeDefault == count($this->vars[$field])) {
-                            array_shift($this->vars[$field]);
-                        }
-                        // so that the select boxes display properly when returning to the DIV
-                        $deactivateResourceTypes = [];
-                        foreach ($this->vars[$field] as $key => $value) {
-                            $deactivateResourceTypes[$key] = $value;
-                        }
-                        $value = base64_encode(serialize($deactivateResourceTypes));
-                    } else {
-                        $deactivateResourceTypes = [];
-                        $value = base64_encode(serialize([]));
-                    }
-                    $this->session->setVar("config_deactivateResourceTypes", $value);
-                } elseif (WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"] == 'configBoolean') {
-                    if (!array_key_exists($field, $this->vars)) { // checkboxes not checked
-                        $value = FALSE;
-                    } else {
-                        $value = TRUE;
-                    }
-                } elseif ($field != 'configDescription') {
-                    $value = \HTML\removeNl($this->vars[$field]);
-                } elseif (($field == 'configDescription') && array_key_exists($field, $this->vars)) {
-                    $value = trim($this->vars[$field]);
-                }
-                if (($field == "configTagLowColour") || ($field == "configTagHighColour")) {
-                    $value = str_replace('#', '', $this->vars[$field]);
-                }
-                if ($field == 'configNoSort') {
-                    $array = [];
-                    $oldNoSort = base64_encode(serialize(WIKINDX_NO_SORT));
-                    if ($value) {
-                        foreach (UTF8::mb_explode(',', $value) as $word) {
-                            $word = mb_strtolower(stripslashes(trim($word)));
-                            if ($word && array_search($word, $array) === FALSE) {
-                                $array[] = $word;
-                            }
-                        }
-                        $value = base64_encode(serialize($array));
-                    }
-                    if (isset($oldNoSort) && $oldNoSort != $value) {
-                        $this->updateNoSort($oldNoSort);
-                        $this->session->setVar("config_noSort", $value);
-                    }
-                } elseif ($field == 'configSearchFilter') {
-                    $array = [];
-                    if ($value) {
-                        foreach (UTF8::mb_explode(',', $value) as $word) {
-                            $word = mb_strtolower(stripslashes(trim($word)));
-                            if ($word && array_search($word, $array) === FALSE) {
-                                $array[] = $word;
-                            }
-                        }
-                        $value = base64_encode(serialize($array));
-                        $this->session->setVar("config_searchFilter", $value);
-                    }
-                } elseif ($field == 'configTimezone') {
-                    $timezones = DateTimeZone::listIdentifiers();
-                    $value = $timezones[$value];
-                } elseif ($field == 'configLastChangesType') {
-                    $value = $this->vars['configLastChangesType'] == 1 ? 'number' : 'days'; // 2 == 'days'
-                }
-                if ($value || ($value === 0) || ($value === FALSE)) {
-                    $updateArray[$field] = $value;
-                } else {
-                    $nulls[] = $field;
-                }
-            }
-        }
+		$updateArray = $nulls = [];
+		$possibleVars = $this->getPossibleVars();
+		foreach ($possibleVars as $field) {
+			if ($field == 'configDeactivateResourceTypes') {
+				if (array_key_exists('configDeactivateResourceTypes', $this->vars)) {
+					// Ensure we always have at least one resource . . .
+					$resourceMap = FACTORY_RESOURCEMAP::getInstance();
+					$typesRaw = $resourceMap->getTypesRaw();
+					foreach ($typesRaw as $type) {
+						$types[$type] = $this->messages->text("resourceType", $type);
+					}
+					$sizeDefault = count($types);
+					if ($sizeDefault == count($this->vars[$field])) {
+						array_shift($this->vars[$field]);
+					}
+					// so that the select boxes display properly when returning to the DIV
+					$deactivateResourceTypes = [];
+					foreach ($this->vars[$field] as $key => $value) {
+						$deactivateResourceTypes[$key] = $value;
+					}
+					$value = base64_encode(serialize($deactivateResourceTypes));
+				} else {
+					$deactivateResourceTypes = [];
+					$value = base64_encode(serialize([]));
+				}
+				$this->session->setVar("config_deactivateResourceTypes", $value);
+			} elseif (WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"] == 'configBoolean') {
+				if (!array_key_exists($field, $this->vars)) { // checkboxes not checked
+					$value = FALSE;
+				} else {
+					$value = TRUE;
+				}
+			} elseif ($field != 'configDescription') {
+				$value = \HTML\removeNl($this->vars[$field]);
+			} elseif (($field == 'configDescription') && array_key_exists($field, $this->vars)) {
+				$value = trim($this->vars[$field]);
+			}
+			if (($field == "configTagLowColour") || ($field == "configTagHighColour")) {
+				$value = str_replace('#', '', $this->vars[$field]);
+			}
+			if ($field == 'configNoSort') {
+				$array = [];
+				$oldNoSort = base64_encode(serialize(WIKINDX_NO_SORT));
+				if ($value) {
+					foreach (UTF8::mb_explode(',', $value) as $word) {
+						$word = mb_strtolower(stripslashes(trim($word)));
+						if ($word && array_search($word, $array) === FALSE) {
+							$array[] = $word;
+						}
+					}
+					$value = base64_encode(serialize($array));
+				}
+				if (isset($oldNoSort) && $oldNoSort != $value) {
+					$this->updateNoSort($oldNoSort);
+					$this->session->setVar("config_noSort", $value);
+				}
+			} elseif ($field == 'configSearchFilter') {
+				$array = [];
+				if ($value) {
+					foreach (UTF8::mb_explode(',', $value) as $word) {
+						$word = mb_strtolower(stripslashes(trim($word)));
+						if ($word && array_search($word, $array) === FALSE) {
+							$array[] = $word;
+						}
+					}
+					$value = base64_encode(serialize($array));
+					$this->session->setVar("config_searchFilter", $value);
+				}
+			} elseif ($field == 'configTimezone') {
+				$timezones = DateTimeZone::listIdentifiers();
+				$value = $timezones[$value];
+			} elseif ($field == 'configLastChangesType') {
+				$value = $this->vars['configLastChangesType'] == 1 ? 'number' : 'days'; // 2 == 'days'
+			}
+			if ($value || ($value === 0) || ($value === FALSE)) {
+				$updateArray[$field] = $value;
+			} else {
+				$nulls[] = $field;
+			}
+		}
         $headerRedirect = FALSE;
-        if ($this->insert) {
-            $this->insert = FALSE;
-        } else {
-            $configFields = $this->configDbStructure->getAllData();
-            foreach ($updateArray as $field => $value) {
-                if ($field == 'configDebugSql') { // debugging configuration – see header() below
-                    $headerRedirect = TRUE;
-                }
-                if ($value === FALSE) {
-                    $value = 0;
-                } elseif ($value === TRUE) {
-                    $value = 1;
-                }
-                // create database row if it doesn't exist
-                if (array_key_exists($field, $configFields) === FALSE) {
-                    $this->db->insert('config', ['configName', WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"]], [$field, $value]);
-                } else {
-                    $this->db->formatConditions(['configName' => $field]);
-                    $this->db->update('config', [WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"] => $value]);
-                }
-            }
-            foreach ($nulls as $field) {
-                $this->db->formatConditions(['configName' => $field]);
-                $this->db->updateNull('config', WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"]);
-            }
-        }
+		$configFields = $this->configDbStructure->getAllData();
+		foreach ($updateArray as $field => $value) {
+			if ($field == 'configDebugSql') { // debugging configuration – see header() below
+				$headerRedirect = TRUE;
+			}
+			if ($value === FALSE) {
+				$value = 0;
+			} elseif ($value === TRUE) {
+				$value = 1;
+			}
+			// create database row if it doesn't exist
+			if (array_key_exists($field, $configFields) === FALSE) {
+				$this->db->insert('config', ['configName', WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"]], [$field, $value]);
+			} else {
+				$this->db->formatConditions(['configName' => $field]);
+				$this->db->update('config', [WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"] => $value]);
+			}
+		}
+		foreach ($nulls as $field) {
+			$this->db->formatConditions(['configName' => $field]);
+			$this->db->updateNull('config', WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"]);
+		}
         // need to use header() to ensure any change in appearance is immediately picked up.
         if ($headerRedirect) {
             $this->session->setVar("configmessage", $this->success->text("config"));
@@ -370,11 +358,7 @@ class CONFIGURE
      */
     private function getConfigDetails($groups, $item = FALSE)
     {
-        if (!$this->insert) {
-            $this->values = $this->fromDbToSession();
-        } else { // initial install
-            $this->values = $this->session->getArray("config");
-        }
+        $this->values = $this->fromDbToSession();
         if (array_key_exists('ajaxReturn', $this->vars)) {
             $item = $this->vars['ajaxReturn'];
         } elseif (!$item) { // grab the first of the list
@@ -587,11 +571,7 @@ class CONFIGURE
         $pString .= \HTML\trStart();
         $input = array_key_exists("configDenyReadOnly", $this->values) && ($this->values['configDenyReadOnly']) ? "CHECKED" : WIKINDX_DENY_READONLY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "denyReadOnly"), "configDenyReadOnly", $input));
-        if ($this->insert) {
-            $input = "CHECKED"; // NB checked by default
-        } else {
-            $input = array_key_exists("configReadOnlyAccess", $this->values) && ($this->values['configReadOnlyAccess']) ? "CHECKED" : FALSE;
-        }
+        $input = array_key_exists("configReadOnlyAccess", $this->values) && ($this->values['configReadOnlyAccess']) ? "CHECKED" : FALSE;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "readOnlyAccess"), "configReadOnlyAccess", $input));
         $input = array_key_exists("configOriginatorEditOnly", $this->values) && ($this->values['configOriginatorEditOnly']) ? "CHECKED" : WIKINDX_ORIGINATOR_EDIT_ONLY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "originatorEditOnly"), "configOriginatorEditOnly", $input));
@@ -611,11 +591,7 @@ class CONFIGURE
             "configImportBib",
             $input
         ));
-        if ($this->insert) {
-            $input = "CHECKED"; // NB checked by default
-        } else {
-            $input = array_key_exists("configMetadataAllow", $this->values) && ($this->values['configMetadataAllow']) ? "CHECKED" : FALSE;
-        }
+        $input = array_key_exists("configMetadataAllow", $this->values) && ($this->values['configMetadataAllow']) ? "CHECKED" : FALSE;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "metadataAllow"), "configMetadataAllow", $input));
         $input = array_key_exists("configMetadataUserOnly", $this->values) && ($this->values['configMetadataUserOnly']) ? "CHECKED" : WIKINDX_METADATA_USERONLY_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "metadataUserOnly"), "configMetadataUserOnly", $input));
@@ -686,9 +662,7 @@ class CONFIGURE
         $input = array_key_exists("configListLink", $this->values) && ($this->values['configListLink']) ? "CHECKED" : WIKINDX_LIST_LINK_DEFAULT;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "ListLink"), "configListLink", $input));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "noSort"));
-        if ($this->insert) {
-            $input = implode(', ', unserialize(base64_decode(WIKINDX_NO_SORT_DEFAULT))); // default at first install
-        } elseif ($this->session->getVar("config_noSort")) { // After updating the field
+    	if ($this->session->getVar("config_noSort")) { // After updating the field
             $input = implode(', ', unserialize(base64_decode($this->session->getVar("config_noSort"))));
             $this->session->delVar("config_noSort");
         } else {
@@ -702,9 +676,7 @@ class CONFIGURE
             7
         ) . BR . \HTML\span($hint, 'hint')));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "searchFilter"));
-        if ($this->insert) {
-            $input = implode(', ', unserialize(base64_decode(WIKINDX_SEARCH_FILTER_DEFAULT))); // default at first install
-        } elseif ($this->session->getVar("config_searchFilter")) { // After updating the field
+        if ($this->session->getVar("config_searchFilter")) { // After updating the field
             $input = implode(', ', unserialize(base64_decode($this->session->getVar("config_searchFilter"))));
             $this->session->delVar("config_searchFilter");
         } else {
@@ -1904,7 +1876,7 @@ class CONFIGURE
                 continue;
             }
             if (($value == "configTagLowColour") || ($value == "configTagHighColour")) {
-                $input = hexdec($input);
+                $input = hexdec(ltrim($input, '#'));
             }
             // some values cannot be less than 0
             if ((array_search($value, $notNegative) !== FALSE) && ((int)$input < 0)) {
@@ -2011,9 +1983,6 @@ class CONFIGURE
      */
     private function badInputLoad($error, $item = FALSE)
     {
-        if ($this->insert) { // new install
-            $this->badInput->closeType = 'closeNoMenu';
-        }
         if ($item) {
             $this->badInput->close($error, $this, ['init', $item]);
         } else {

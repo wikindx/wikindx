@@ -203,6 +203,14 @@ class ADMINUSER
         if (empty($this->users)) {
             $this->badInput->close($this->messages->text("resources", "noUsers"), $this, "addInit");
         }
+        // don't allow this user to operate on self or superadmin (id == 1)
+        $selfId = $this->session->getVar("setup_UserId");
+        if (array_key_exists($selfId, $this->users)) {
+            unset($this->users[$selfId]);
+        }
+        if (array_key_exists(1, $this->users)) {
+            unset($this->users[1]);
+        }
         $pString .= \FORM\formHeader('admin_ADMINUSER_CORE');
         $pString .= \FORM\hidden('method', 'deleteConfirm');
         $pString .= \FORM\selectFBoxValueMultiple(FALSE, "userDelete", $this->users, 20);
@@ -344,6 +352,14 @@ class ADMINUSER
         $pString .= \FORM\formHeader('admin_ADMINUSER_CORE');
         $pString .= \FORM\hidden('method', 'editDisplay');
         $this->grabUsers();
+        // don't allow this user to operate on self or superadmin (id == 1)
+        $selfId = $this->session->getVar("setup_UserId");
+        if (array_key_exists($selfId, $this->users)) {
+            unset($this->users[$selfId]);
+        }
+        if (array_key_exists(1, $this->users)) {
+            unset($this->users[1]);
+        }
         if (empty($this->users)) {
             $this->badInput->close($this->messages->text("resources", "noUsers"), $this, "addInit");
         }
@@ -597,7 +613,7 @@ class ADMINUSER
 					$error = $this->errors->text("inputError", "missing");
 				}
 			}
-            if ((!$email = trim($this->vars['email'])) || !$this->vars['userId'] || !$this->vars['creatorId']) {
+            if ((!$email = trim($this->vars['email'])) || !$this->vars['userId']) {
                 $error = $this->errors->text("inputError", "missing");
             }
        		elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE) {

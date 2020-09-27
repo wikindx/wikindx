@@ -18,10 +18,10 @@ class ADMINKEYWORD
     private $errors;
     private $messages;
     private $success;
-    private $session;
     private $keyword;
     private $gatekeep;
     private $badInput;
+    private $formData = [];
 
     public function __construct()
     {
@@ -30,14 +30,12 @@ class ADMINKEYWORD
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->session = FACTORY_SESSION::getInstance();
 
         $this->keyword = FACTORY_KEYWORD::getInstance();
 
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->gatekeep->init();
-        $this->session->clearArray('edit');
     }
     /**
      * editInit
@@ -62,16 +60,27 @@ class ADMINKEYWORD
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "adminKeywords"));
         $keywords = $this->keyword->grabAll();
         $pString = \HTML\p($this->messages->text("misc", "keywordMerge"));
-        if ($message) {
-            $pString .= \HTML\p($message);
-        }        
+    	if (array_key_exists('message', $this->vars)) {
+    		$message = $this->vars['message'];
+    	}
+        $pString .= $message;
         if (is_array($keywords) && !empty($keywords)) {
+        	if (array_key_exists('keywordIds', $this->formData)) {
+        		$initialKeys = $this->formData['keywordIds'];
+        	}
+        	else {
+				foreach ($keywords as $key => $null) {
+					$initialKeys[] = $key;
+					break;
+				}
+			}
             $pString .= \FORM\formHeader('admin_ADMINKEYWORD_CORE');
             $pString .= \FORM\hidden("method", "merge");
             $pString .= \HTML\tableStart('left');
             $pString .= \HTML\trStart();
-            $td = \FORM\selectFBoxValueMultiple(FALSE, "keywordIds", $keywords, 20) .
-                BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint');
+            $td = \FORM\selectedBoxValueMultiple(FALSE, "keywordIds", $keywords, $initialKeys, 20) .
+                BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint');
             $pString .= \HTML\td($td);
             $td = \FORM\textInput(
                 $this->messages->text("misc", "keywordMergeTarget"),
@@ -96,18 +105,24 @@ class ADMINKEYWORD
      */
     public function merge()
     {
+    	$error = '';
         if (!array_key_exists("keywordIds", $this->vars)) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'mergeInit');
+        	$error = $this->errors->text("inputError", "missing");
         }
         if (!array_key_exists("keywordText", $this->vars) || !trim($this->vars['keywordText'])) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'mergeInit');
+        	$error = $this->errors->text("inputError", "missing");
+        }
+        $this->formData['keywordIds'] = $this->vars['keywordIds'];
+        $this->formData['keywordText'] = trim($this->vars['keywordText']);
+        if ($error) {
+        	$this->badInput->close($error, $this, 'mergeInit');
         }
         if (array_key_exists("glossaries", $this->vars)) {
             $keywordIds = unserialize(base64_decode($this->vars['keywordIds']));
         } else {
-            $keywordIds = $this->vars['keywordIds'];
+            $keywordIds = $this->formData['keywordIds'];
         }
-        $newKeyword = trim($this->vars['keywordText']);
+        $newKeyword = $this->formData['keywordText'];
         $newKeywordId = $this->insertKeyword($newKeyword);
 // Convert keyword IDs in keyword groups
         $this->db->formatConditionsOneField($keywordIds, 'userkgkeywordsKeywordId');
@@ -209,7 +224,9 @@ class ADMINKEYWORD
         $this->db->deleteCache('cacheParaphraseKeywords');
         $this->db->deleteCache('cacheMusingKeywords');
         $this->keyword->checkKeywordGroups();
-        $this->mergeInit($this->success->text("keywordMerge"));
+        $message = rawurlencode($this->success->text("keywordMerge"));
+        header("Location: index.php?action=admin_ADMINKEYWORD_CORE&method=mergeInit&message=$message");
+        die;
     }
     /**
      * deleteInit
@@ -226,13 +243,17 @@ class ADMINKEYWORD
 
             return;
         }
+    	if (array_key_exists('message', $this->vars)) {
+    		$message = $this->vars['message'];
+    	}
         $pString = $message;
         $pString .= \HTML\tableStart('left');
         $pString .= \HTML\trStart();
         $td = \FORM\formHeader('admin_ADMINKEYWORD_CORE');
         $td .= \FORM\hidden("method", "deleteConfirm");
         $td .= \FORM\selectFBoxValueMultiple(FALSE, "delete_KeywordId", $keywords, 20) .
-            BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint');
+            BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint');
         $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
         $td .= \FORM\formEnd();
         $pString .= \HTML\td($td);
@@ -245,7 +266,6 @@ class ADMINKEYWORD
      */
     public function deleteConfirm()
     {
-        $this->session->delVar("editLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete2", " (" .
             $this->messages->text("resources", "keyword") . ")"));
         $input = array_values($this->vars['delete_KeywordId']);
@@ -265,9 +285,6 @@ class ADMINKEYWORD
      */
     public function delete()
     {
-        if ($this->session->getVar("editLock")) {
-            $this->badInput->close($this->errors->text("done", "keywordDelete"), $this, 'deleteInit');
-        }
         if (!array_key_exists('delete_KeywordId', $this->vars) || !$this->vars['delete_KeywordId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'deleteInit');
         }
@@ -288,12 +305,10 @@ class ADMINKEYWORD
             $this->db->delete('resource_keyword');
         }
         $this->keyword->checkKeywordGroups();
-        // lock reload
-        $this->session->setVar("editLock", TRUE);
-        // Clear session
-        $this->session->clearArray("edit");
         // send back to deleteDisplay with success message
-        $this->deleteInit($this->success->text("keywordDelete"));
+        $message = rawurlencode($this->success->text("keywordDelete"));
+        header("Location: index.php?action=admin_ADMINKEYWORD_CORE&method=deleteInit&message=$message");
+        die;
     }
     /**
      * When merging, insert new keyword or return ID if already exists

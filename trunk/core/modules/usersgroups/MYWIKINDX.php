@@ -56,6 +56,10 @@ class MYWIKINDX
      */
     public function init($message = FALSE)
     {
+    	// Cleanup if necessary
+        if (array_key_exists('uuid', $this->vars)) {
+	        \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+	    }
         // Anything in the session takes precedence
         if (($messageIn = $this->session->getVar("mywikindx_Message")) && ($item = $this->session->getVar("mywikindx_Item"))) {
             $this->session->delVar("mywikindx_Message");
@@ -67,7 +71,10 @@ class MYWIKINDX
         } elseif (array_key_exists('message', $this->vars) && array_key_exists('selectItem', $this->vars)) {
         	$this->messageString = $this->vars['message'];
         	$item = $this->vars['selectItem'];
-        } else {
+        } elseif (array_key_exists('selectItem', $this->vars)) { // e.g. javascript redirect from e.g. tags, groups, bibs operations
+        	$item = $this->vars['selectItem'];
+        }
+         else {
             $this->messageString = $message;
             $item = FALSE;
         }
@@ -474,32 +481,30 @@ class MYWIKINDX
     /**
      * Display further user groups settings for creating
      *
-     * @param mixed $error
+     * @param mixed $message
      */
-    public function createUserGroupInit($error = FALSE)
+    public function createUserGroupInit($message = FALSE)
     {
-        $this->session->delVar("mywikindx_group_add");
-        if (!$error) {
-            $this->session->delVar("mywikindx_groupTitle");
-            $this->session->delVar("mywikindx_groupDescription");
-        }
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
             ": " . $this->messages->text("user", "createGroup")
         ));
-        $pString = $error ? \HTML\p($error, "error", "center") : '';
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
+        $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-        $pString .= \FORM\formHeader(FALSE);
+        GLOBALS::addTplVar('scripts', '<script>var selectItem = "userGroups"; </script>');
+        $pString .= \FORM\formHeader("usersgroups_MYWIKINDX_CORE");
         $pString .= \FORM\hidden("method", "createUserGroup");
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $sessVar = $this->session->issetVar("mywikindx_groupTitle") ?
-            \HTML\dbToFormTidy($this->session->getVar("mywikindx_groupTitle")) : FALSE;
+        $title = array_key_exists('title', $this->formData) ? $this->formData['title'] : FALSE;
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "groupTitle"),
             "title",
-            $sessVar,
+            $title,
             50,
             255
         ));
@@ -508,12 +513,11 @@ class MYWIKINDX
         $pString .= BR . "&nbsp;" . BR;
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $sessVar = $this->session->issetVar("mywikindx_groupDescription") ?
-            \HTML\dbToFormTidy($this->session->getVar("mywikindx_groupDescription")) : FALSE;
+        $description = array_key_exists('description', $this->formData) ? $this->formData['description'] : FALSE;
         $pString .= \HTML\td(\FORM\textAreaInput(
             $this->messages->text("user", "groupDescription"),
             "description",
-            $sessVar,
+            $description,
             80,
             10
         ));
@@ -522,17 +526,26 @@ class MYWIKINDX
         $users = $this->user->grabAll(TRUE);
         unset($users[$this->session->getVar("setup_UserId")]);
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "multiples"));
-        $pString .= \HTML\p(\FORM\selectFBoxValueMultiple(
-            $this->messages->text("user", "groupUserAdd"),
-            "addUsers",
-            $users,
-            10
-        ) . BR . \HTML\span($hint, 'hint'));
-        $jString = "onclick=\"javascript:sendMywikindxInput();return true;\"";
-        $pString .= \HTML\p(\FORM\formSubmitButton($this->messages->text("submit", "Add"), FALSE, $jString));
+        if (array_key_exists('addUsers', $this->formData)) {
+			$pString .= \HTML\p(\FORM\selectedBoxValueMultiple(
+				$this->messages->text("user", "groupUserAdd"),
+				"addUsers",
+				$users,
+				$this->formData['addUsers'],
+				10
+			) . BR . \HTML\span($hint, 'hint'));
+		}
+		else {
+			$pString .= \HTML\p(\FORM\selectFBoxValueMultiple(
+				$this->messages->text("user", "groupUserAdd"),
+				"addUsers",
+				$users,
+				10
+			) . BR . \HTML\span($hint, 'hint'));
+		}
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Add")));
         $pString .= \FORM\formEnd();
-        $pString .= \FORM\formHeader("usersgroups_WIKINDX_CORE&amp;method=init", "onsubmit=\"window.close();return true;\"");
-        $pString .= \FORM\hidden("selectItem", "userGroups");
+        $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -544,30 +557,36 @@ class MYWIKINDX
     public function createUserGroup()
     {
     	$error = '';
-        if (array_key_exists('description', $this->vars) && trim($this->vars['description'])) {
-            $description = json_decode($this->vars['description']);
-            $this->session->setVar("mywikindx_groupDescription", $description);
-            $fields[] = 'usergroupsDescription';
-            $values[] = $description;
-        }
-        if (!$title = json_decode($this->vars['title'])) {
+        if (!$title = trim($this->vars['title'])) {
             $error = $this->errors->text("inputError", "missing");
+        } else {
+        	$this->formData['title'] = $this->vars['title'];
+        }
+        if (empty($this->vars['addUsers'])) {
+            $error = $this->errors->text("inputError", "missing");
+        } else {
+        	$this->formData['addUsers'] = $this->vars['addUsers'];
+        }
+    	if (!$this->checkUserGroupExists($title, FALSE)) {
+            $error = $this->errors->text("inputError", "groupExists");
+        }
+        if (array_key_exists('description', $this->vars) && trim($this->vars['description'])) {
+            $description = $this->formData['description'] = trim($this->vars['description']);
         }
         if ($error) {
-        	$this->badInputLoad($error, 'userGroups');
+        	$this->badInputPopup($error, 'createUserGroupInit');
         }
-        $this->session->setVar("mywikindx_groupTitle", $title);
-    	$this->checkUserGroupExists($title, FALSE);
         $userId = $this->session->getVar("setup_UserId");
         $fields[] = 'usergroupsTitle';
         $values[] = $title;
+        $fields[] = 'usergroupsDescription';
+        $values[] = $description;
         $fields[] = 'usergroupsAdminId';
         $values[] = $userId;
         $this->db->insert('user_groups', $fields, $values);
         $groupId = $this->db->lastAutoId();
         $userIds[] = $userId;
-        $users = json_decode($this->vars['addUsers']);
-        foreach ($users as $userId) {
+        foreach ($this->vars['addUsers'] as $userId) {
             if (!$userId) { // IGNORE
                 continue;
             }
@@ -577,73 +596,74 @@ class MYWIKINDX
         foreach ($userIds as $id) {
             $this->db->insert('user_groups_users', ['usergroupsusersUserId', 'usergroupsusersGroupId'], [$id, $groupId]);
         }
-        $this->session->delVar("mywikindx_groupDescription");
-        $this->session->delVar("mywikindx_groupTitle");
         $message = rawurlencode($this->success->text("groupAdd"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=userGroups");
+        $this->formData = [];
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserGroupInit&message=$message");
         die;
     }
     /**
      * Display further user groups settings for editing
      *
-     * @param false|string $error
+     * @param false|string $message
      */
-    public function editUserGroupInit($error = FALSE)
+    public function editUserGroupInit($message = FALSE)
     {
-        $this->session->delVar("mywikindx_group_edit");
-        if (!$error) {
-            $this->session->delVar("mywikindx_groupTitle");
-            $this->session->delVar("mywikindx_groupDescription");
-        }
+    	$uuid = FALSE;
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
             ": " . $this->messages->text("user", "editGroup")
         ));
-        if (!array_key_exists('groupId', $this->vars) || !$this->vars['groupId']) {
-            $this->badInputPopup($this->errors->text("inputError", "missing"));
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
         }
-        $this->checkValidUserGroup();
-        $groupUsers = [];
-        $pString = $error ? \HTML\p($error, "error", "center") : '';
+        if (array_key_exists('uuid', $this->vars)) {
+        	$uuid = $this->vars['uuid'];
+        }
+        $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-        $pString .= \FORM\formHeader(FALSE);
+        GLOBALS::addTplVar('scripts', '<script>var selectItem = "userGroups"; </script>');
+        $pString .= \FORM\formHeader("usersgroups_MYWIKINDX_CORE", "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden("method", "editUserGroup");
-        $pString .= \FORM\hidden("groupId", $this->vars['groupId']);
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        if ($this->session->issetVar("mywikindx_groupTitle")) {
-            $title = \HTML\dbToFormTidy($this->session->getVar("mywikindx_groupTitle"));
-            $description = \HTML\dbToFormTidy($this->session->getVar("mywikindx_groupDescription"));
-        } else {
-            $this->db->formatConditions(['usergroupsId' => $this->vars['groupId']]);
+        if (!$uuid) {
+            $groupId = $this->vars['groupId'];
+            $this->db->formatConditions(['usergroupsId' => $groupId]);
             $recordset = $this->db->select('user_groups', ['usergroupsTitle', 'usergroupsDescription']);
             $row = $this->db->fetchRow($recordset);
             $title = \HTML\dbToFormTidy($row['usergroupsTitle']);
             $description = \HTML\dbToFormTidy($row['usergroupsDescription']);
-            $this->db->formatConditions(['usergroupsusersGroupId' => $this->vars['groupId']]);
-            $this->db->leftJoin('users', 'usersId', 'usergroupsusersUserId');
-            $recordset = $this->db->select(
-                'user_groups_users',
-                ['usergroupsusersUserId', 'usersUsername', 'usersFullname', 'usersAdmin']
-            );
-            // add 0 => IGNORE to $array
-            $groupUsers[0] = $this->messages->text("misc", "ignore");
-            while ($row = $this->db->fetchRow($recordset)) {
-                if (!$row['usergroupsusersUserId']) {
-                    continue;
-                }
-                if ($row['usergroupsusersUserId'] == $this->session->getVar("setup_UserId")) {
-                    continue;
-                }
-                $groupUsers[$row['usergroupsusersUserId']] = \HTML\dbToFormTidy($row['usersUsername']);
-                if ($row['usersFullname']) {
-                    $groupUsers[$row['usergroupsusersUserId']] .= " (" . \HTML\dbToFormTidy($row['usersFullname']) . ")";
-                }
-                if ($row['usersAdmin']) {
-                    $groupUsers[$row['usergroupsusersUserId']] .= " ADMIN";
-                }
-            }
+			$groupUsers = $this->getGroupUsers($groupId);
+        	$pString .= \FORM\hidden("groupId", $groupId);
+        }
+        else { // Back here after editing group so fetch details from temp_storage
+        	$data = \TEMPSTORAGE\fetch($this->db, $uuid);
+        	$groupId = $data['groupId'];
+        	$pString .= \FORM\hidden("groupId", $groupId);
+        	$pString .= \FORM\hidden("uuid", $uuid);
+        	$title = $data['title'];
+        	$description = $data['description'];
+        	$groupUsers = [];
+        	if (!empty($data['selectedUsers'])) {
+        		$this->db->formatConditionsOneField($data['selectedUsers'], ['usersId']);
+				$recordset = $this->db->select('users', ['usersId', 'usersUsername', 'usersFullname', 'usersAdmin']);
+				while ($row = $this->db->fetchRow($recordset)) {
+					if ($row['usersId'] == $this->session->getVar("setup_UserId")) {
+						continue;
+					}
+					$groupUsers[$row['usersId']] = \HTML\dbToFormTidy($row['usersUsername']);
+					if ($row['usersFullname']) {
+						$groupUsers[$row['usersId']] .= " (" . \HTML\dbToFormTidy($row['usersFullname']) . ")";
+					}
+					if ($row['usersAdmin']) {
+						$groupUsers[$row['usersId']] .= " ADMIN";
+					}
+				}
+			}
+        }
+        if (!$this->checkValidUserGroup($groupId)) {
+            $this->catastrophic($this->errors->text("inputError", "invalid"), 'userGroups');
         }
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "groupTitle"),
@@ -667,8 +687,7 @@ class MYWIKINDX
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $users = $this->user->grabAll(TRUE);
-        // add 0 => IGNORE to $array
-        $temp[0] = $this->messages->text("misc", "ignore");
+        $potentialUsers = [];
         foreach ($users as $key => $value) {
             if ($key == $this->session->getVar("setup_UserId")) {
                 continue;
@@ -676,134 +695,159 @@ class MYWIKINDX
             if (array_key_exists($key, $groupUsers)) {
                 continue;
             }
-            $temp[$key] = $value;
+            $potentialUsers[$key] = $value;
         }
         $pString .= BR . "&nbsp;" . BR;
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "multiples"));
-        if (count($groupUsers) > 1) {
-            $pString .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text(
-                "user",
-                "groupUserDelete"
-            ), "deleteUsers", $groupUsers, 10) . BR . \HTML\span($hint, 'hint'));
-        }
-        if (count($temp) > 1) {
-            $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
-                $this->messages->text("user", "groupUserAdd"),
-                "addUsers",
-                $temp,
-                10
-            ) . BR . \HTML\span($hint, 'hint'));
-        }
+		$pString .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text(
+			"user",
+			"selectedUsers"
+		), "selectedUsers", $groupUsers, 10) . BR . \HTML\span($hint, 'hint'));
+        list($toRightImage, $toLeftImage) = $this->transferArrows();
+        $pString .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
+		$pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
+			$this->messages->text("user", "potentialUsers"),
+			"potentialUsers",
+			$potentialUsers,
+			10
+		) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        
-        $jString = "onclick=\"javascript:sendMywikindxInput();return true;\"";
-        $pString .= \HTML\p(\FORM\formSubmitButton($this->messages->text("submit", "Edit"), FALSE, $jString));
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Edit")));
         $pString .= \FORM\formEnd();
-        $pString .= \FORM\formHeader("usersgroups_WIKINDX_CORE&amp;method=init", "onsubmit=\"window.close();return true;\"");
-        $pString .= \FORM\hidden("selectItem", "userGroups");
+        $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSENOMENU::getInstance();
     }
     /**
+     * Get group users
+     *
+     * @param int $groupId
+     *
+     * @return array
+     */
+    private function getGroupUsers($groupId)
+    {
+    	$groupUsers = [];
+		$this->db->formatConditions(['usergroupsusersGroupId' => $groupId]);
+		$this->db->leftJoin('users', 'usersId', 'usergroupsusersUserId');
+		$recordset = $this->db->select(
+			'user_groups_users',
+			['usergroupsusersUserId', 'usersUsername', 'usersFullname', 'usersAdmin']
+		);
+		while ($row = $this->db->fetchRow($recordset)) {
+			if (!$row['usergroupsusersUserId']) {
+				continue;
+			}
+			if ($row['usergroupsusersUserId'] == $this->session->getVar("setup_UserId")) {
+				continue;
+			}
+			$groupUsers[$row['usergroupsusersUserId']] = \HTML\dbToFormTidy($row['usersUsername']);
+			if ($row['usersFullname']) {
+				$groupUsers[$row['usergroupsusersUserId']] .= " (" . \HTML\dbToFormTidy($row['usersFullname']) . ")";
+			}
+			if ($row['usersAdmin']) {
+				$groupUsers[$row['usergroupsusersUserId']] .= " ADMIN";
+			}
+		}
+		return $groupUsers;
+	}
+    /**
      * edit a user group
      */
     public function editUserGroup()
     {
     	$error = '';
-    	if (!array_key_exists('groupId', $this->vars) || !$this->vars['groupId']) {
+    	$groupId = FALSE;
+    	if (!array_key_exists('groupId', $this->vars) || (!$groupId = $this->vars['groupId'])) {
             $error = $this->errors->text("inputError", "missing");
         }
-        if (!$title = json_decode(trim($this->vars['title']))) {
+        if (!$title = trim($this->vars['title'])) {
             $error = $this->errors->text("inputError", "missing");
+        }
+        if (empty($this->vars['selectedUsers'])) {
+            $error = $this->errors->text("inputError", "missing");
+        }
+        $description = trim($this->vars['description']);
+        if (!$this->checkValidUserGroup($groupId)) {
+            $this->catastrophic($this->errors->text("inputError", "invalid"), 'userGroups');
+        }
+        if (!$this->checkUserGroupExists($title, $this->vars['groupId'])) {
+            $this->catastrophic($this->errors->text("inputError", "groupExists"), 'userGroups');
         }
         if ($error) {
-        	$this->badInputLoad($error, 'userGroups');
+        	if (array_key_exists('uuid', $this->vars)) {
+        		$uuid = $this->vars['uuid'];
+				\TEMPSTORAGE\delete($this->db, $uuid);
+        	} else {
+				$uuid = \TEMPSTORAGE\getUuid($this->db);
+			}
+	        \TEMPSTORAGE\store($this->db, $uuid, ['title' => $title, 'description' => $description, 'groupId' => $groupId, 
+	        	'selectedUsers' => $this->vars['selectedUsers']]);
+			$message = rawurlencode($error);
+        	header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserGroupInit&message=$message&uuid=$uuid");
+			die;
         }
-        $this->session->setVar("mywikindx_groupTitle", $title);
-        $this->checkValidUserGroup('userGroups');
-        $this->checkUserGroupExists($title, $this->vars['groupId']); // Check for title duplicate
-        if ($description = trim($this->vars['description'])) {
-            $description = json_decode($description);
-            $this->session->setVar("mywikindx_groupDescription", $description);
-            $updateArray['usergroupsDescription'] = $description;
-        } else {
+        if (!$description) {
             $this->db->formatConditions(['usergroupsId' => $this->vars['groupId']]);
             $this->db->updateNull('user_groups', 'usergroupsDescription');
+        } else {
+        	$updateArray['usergroupsDescription'] = $description;
         }
         $updateArray['usergroupsTitle'] = $title;
         $this->db->formatConditions(['usergroupsId' => $this->vars['groupId']]);
         $this->db->update('user_groups', $updateArray);
-        // delete any users
-        if (array_key_exists('deleteUsers', $this->vars)) {
-            $users = json_decode($this->vars['deleteUsers']);
-            foreach ($users as $userId) { // to be deleted
-                if (!$userId) { // 'IGNORE'
-                    continue;
-                }
-                $this->db->formatConditions(['usergroupsusersGroupId' => $this->vars['groupId']]);
-                $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
-                $this->db->delete('user_groups_users');
-            }
-        }
+        // delete any users before inserting them
+		$this->db->formatConditions(['usergroupsusersGroupId' => $this->vars['groupId']]);
+		$this->db->delete('user_groups_users');
         // Insert new users
-        $addUsers = [];
-        $users = json_decode($this->vars['addUsers']);
-        foreach ($users as $userId) {
-            if (!$userId) { // IGNORE
-                continue;
-            }
-            $addUsers[] = $userId;
-        }
-        foreach ($addUsers as $id) {
+        foreach ($this->vars['selectedUsers'] as $id) {
             $this->db->insert(
                 'user_groups_users',
                 ['usergroupsusersUserId', 'usergroupsusersGroupId'],
                 [$id, $this->vars['groupId']]
             );
         }
-        $this->session->delVar("mywikindx_groupDescription");
-        $this->session->delVar("mywikindx_groupTitle");
+        if (array_key_exists('uuid', $this->vars)) {
+	        \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+	    }
         $message = rawurlencode($this->success->text("groupEdit"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=userGroups");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserGroupInit&message=$message&groupId=$groupId");
         die;
     }
     /**
      * Display further user groups settings for deleting
      *
-     * @param mixed $error
+     * @param mixed $message
      */
-    public function deleteUserGroupInit($error = FALSE)
+    public function deleteUserGroupInit($message = FALSE)
     {
-        if (!array_key_exists('groupId', $this->vars) || !$this->vars['groupId']) {
-            $this->badInputPopup($this->errors->text("inputError", "invalid"));
-        }
-        $this->checkValidUserGroup();
-        GLOBALS::setTplVar('heading', $this->messages->text(
+    	GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
             ": " . $this->messages->text("user", "deleteGroup")
         ));
-        $pString = $error ? \HTML\p($error, "error", "center") : '';
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
+        $pString = $message;
         $this->db->formatConditions(['usergroupsId' => $this->vars['groupId']]);
         $title = \HTML\strong($this->db->selectFirstField('user_groups', 'usergroupsTitle'));
         $pString .= \HTML\p($this->messages->text("user", "deleteConfirmGroup") . ":&nbsp;&nbsp;" .
             \HTML\nlToHtml($title));
         $pString .= \HTML\p($this->messages->text("user", "deleteGroup2"));
-        $this->session->delVar("mywikindx_group_delete");
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-        $pString .= \FORM\formHeader(FALSE);
+        GLOBALS::addTplVar('scripts', '<script>var selectItem = "userGroups"; </script>');
+        $pString .= \FORM\formHeader("usersgroups_MYWIKINDX_CORE");
         $pString .= \FORM\hidden("method", "deleteUserGroup");
         $pString .= \FORM\hidden("groupId", $this->vars['groupId']);
-        $jString = "onclick=\"javascript:sendMywikindxInput();return true;\"";
-        $pString .= \HTML\p(\FORM\formSubmitButton($this->messages->text("submit", "Delete"), FALSE, $jString));
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Delete")));
         $pString .= \FORM\formEnd();
-        $pString .= \FORM\formHeader("usersgroups_WIKINDX_CORE&amp;method=init", "onsubmit=\"window.close();return true;\"");
-        $pString .= \FORM\hidden("selectItem", "userGroups");
+        $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -814,14 +858,6 @@ class MYWIKINDX
      */
     public function deleteUserGroup()
     {
-    	$error = '';
-        if (!array_key_exists('groupId', $this->vars) || !$this->vars['groupId']) {
-            $error = $this->errors->text("inputError", "invalid");
-        }
-        if ($error) {
-        	$this->badInputLoad($error, 'userGroups');
-        }
-        $this->checkValidUserGroup('userGroups');
         // Get any bibliographyIds and delete those bibliographies
         $this->db->formatConditions(['userbibliographyUserGroupId' => $this->vars['groupId']]);
         $recordset = $this->db->select('user_bibliography', 'userbibliographyId');
@@ -841,8 +877,32 @@ class MYWIKINDX
         $this->db->formatConditions(['usergroupsId' => $this->vars['groupId']]);
         $this->db->delete('user_groups');
         $message = rawurlencode($this->success->text("groupDelete"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=userGroups");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=deleteUserGroupSuccess&message=$message");
         die;
+    }
+    /**
+     * Display success page when deleting a user group
+     *
+     * @param mixed $message
+     */
+    public function deleteUserGroupSuccess($message = FALSE)
+    {
+        GLOBALS::setTplVar('heading', $this->messages->text(
+            "heading",
+            "myWikindx",
+            ": " . $this->messages->text("user", "deleteGroup")
+        ));
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
+        $pString = $message;
+        $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+        GLOBALS::addTplVar('scripts', '<script>var selectItem = "userGroups"; </script>');
+        $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
+        $pString .= \FORM\formEnd();
+        GLOBALS::addTplVar('content', $pString);
+        FACTORY_CLOSENOMENU::getInstance();
     }
     /**
      * Display user tags config options
@@ -854,6 +914,7 @@ class MYWIKINDX
         // Get this user's user tags
         $userTagsObject = FACTORY_USERTAGS::getInstance();
         $userTags = $userTagsObject->grabAll();
+        natcasesort($userTags);
         $pString = $this->messageString;
         $pString .= \FORM\hidden("method", "userTagsConfigEdit");
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
@@ -887,41 +948,37 @@ class MYWIKINDX
     /**
      * Display further user tags settings for creating
      *
-     * @param mixed $error
+     * @param mixed $message
      */
-    public function createUserTagInit($error = FALSE)
+    public function createUserTagInit($message = FALSE)
     {
-        $this->session->delVar("mywikindx_tag_add");
-        if (!$error) {
-            $this->session->delVar("mywikindx_tagTitle");
-        }
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
             ": " . $this->messages->text("user", "createUserTag")
         ));
-        $pString = $error ? \HTML\p($error, "error", "center") : '';
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
+        $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-        $pString .= \FORM\formHeader(FALSE);
+        GLOBALS::addTplVar('scripts', '<script>var selectItem = "userTags"; </script>');
+        $pString .= \FORM\formHeader("usersgroups_MYWIKINDX_CORE");
         $pString .= \FORM\hidden("method", "createUserTag");
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $sessVar = $this->session->issetVar("mywikindx_tagTitle") ?
-            \HTML\dbToFormTidy($this->session->getVar("mywikindx_tagTitle")) : FALSE;
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "tagTitle"),
             "title",
-            $sessVar,
+            FALSE,
             50,
             255
         ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        $jString = "onclick=\"javascript:sendMywikindxInput();return true;\"";
-        $pString .= \HTML\p(\FORM\formSubmitButton($this->messages->text("submit", "Add"), FALSE, $jString));
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Add")));
         $pString .= \FORM\formEnd();
-        $pString .= \FORM\formHeader("usersgroups_WIKINDX_CORE&amp;method=init", "onsubmit=\"window.close();return true;\"");
-        $pString .= \FORM\hidden("selectItem", "userTags");
+        $pString .= \FORM\formHeader(FALSE, "onsubmit=\"closeAndRedirect();return true;\"");
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -933,64 +990,63 @@ class MYWIKINDX
     public function createUserTag()
     {
 	    $error = '';
-        if (!$title = json_decode(trim($this->vars['title']))) {
+        if (!$title = trim($this->vars['title'])) {
             $error = $this->errors->text("inputError", "missing");
         }
-        $this->session->setVar("mywikindx_Title", $title);
         $userTagsObject = FACTORY_USERTAGS::getInstance();
         if ($userTagsObject->checkExists($title)) {
             $error = $this->errors->text('inputError', 'userTagExists');
         }
         if ($error) {
-        	$this->badInputLoad($error, 'userTags');
+        	$this->badInputPopup($error, 'createUserTagInit');
         }
         $fields[] = 'usertagsTag';
         $values[] = $title;
         $fields[] = 'usertagsUserId';
         $values[] = $this->session->getVar("setup_UserId");
         $this->db->insert('user_tags', $fields, $values);
-        $this->session->delVar("mywikindx_Title");
-        $message = rawurlencode($this->success->text("usertagAdd"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=userTags");
+        $message = rawurlencode($this->success->text("usertagAdd", $title));
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserTagInit&message=$message");
         die;
     }
     /**
      * Display further user tags settings for editing
      *
-     * @param mixed $error
+     * @param mixed $message
      */
-    public function editUserTagInit($error = FALSE)
+    public function editUserTagInit($message = FALSE)
     {
-        $this->session->delVar("mywikindx_tag_edit");
-        if (!$error) {
-            $this->session->delVar("mywikindx_tagTitle");
-        }
+    	$uuid = FALSE;
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
             ": " . $this->messages->text("user", "editUserTag")
         ));
-        if (!array_key_exists('tagId', $this->vars) || !$this->vars['tagId']) {
-            $this->badInputPopup($this->errors->text("inputError", "missing"));
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
         }
-        $pString = $error ? \HTML\p($error, "error", "center") : '';
+        if (array_key_exists('uuid', $this->vars)) {
+        	$uuid = $this->vars['uuid'];
+        }
+        $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-        $pString .= \FORM\formHeader(FALSE);
+        GLOBALS::addTplVar('scripts', '<script>var selectItem = "userTags"; </script>');
+        $pString .= \FORM\formHeader("usersgroups_MYWIKINDX_CORE");
         $pString .= \FORM\hidden("method", "editUserTag");
-        $pString .= \FORM\hidden("tagId", $this->vars['tagId']);
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        if ($this->session->issetVar("mywikindx_tagTitle")) {
-            $title = \HTML\dbToFormTidy($this->session->getVar("mywikindx_tagTitle"));
-        } else {
+        if (!$uuid) {
             $this->db->formatConditions(['usertagsId' => $this->vars['tagId']]);
             $recordset = $this->db->select('user_tags', 'usertagsTag');
             $row = $this->db->fetchRow($recordset);
             $title = \HTML\dbToFormTidy($row['usertagsTag']);
+        	$pString .= \FORM\hidden("tagId", $this->vars['tagId']);
         }
-        $userTagsObject = FACTORY_USERTAGS::getInstance();
-        if (!$userTagsObject->checkExists($title)) {
-            $this->badInputPopup($this->errors->text('inputError', 'invalid'));
+        else { // Back here after editing tag so fetch details from temp_storage
+        	$data = \TEMPSTORAGE\fetch($this->db, $uuid);
+        	$pString .= \FORM\hidden("tagId", $data['tagId']);
+        	$pString .= \FORM\hidden("uuid", $uuid);
+        	$title = $data['title'];
         }
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "tagTitle"),
@@ -1001,11 +1057,12 @@ class MYWIKINDX
         ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        $jString = "onclick=\"javascript:sendMywikindxInput();return true;\"";
-        $pString .= \HTML\p(\FORM\formSubmitButton($this->messages->text("submit", "Edit"), FALSE, $jString));
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Edit")));
         $pString .= \FORM\formEnd();
-        $pString .= \FORM\formHeader("usersgroups_WIKINDX_CORE&amp;method=init", "onsubmit=\"window.close();return true;\"");
-        $pString .= \FORM\hidden("selectItem", "userTags");
+        if ($uuid) {
+			GLOBALS::addTplVar('scripts', '<script>var uuid = ' . $uuid . '; </script>');
+		}
+        $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -1017,13 +1074,12 @@ class MYWIKINDX
     public function editUserTag()
     {
     	$error = '';
-        if (!$title = json_decode(trim($this->vars['title']))) {
+        if (!$title = trim($this->vars['title'])) {
             $error = $this->errors->text("inputError", "missing");
         }
-        if (!$tagId = json_decode($this->vars['tagId'])) {
+        if (!$tagId = $this->vars['tagId']) {
             $error = $this->errors->text("inputError", "missing");
         }
-        $this->session->setVar("mywikindx_Title", $title);
         $userTagsObject = FACTORY_USERTAGS::getInstance();
         $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['usertagsId' => $tagId]);
@@ -1032,51 +1088,62 @@ class MYWIKINDX
             $error = $this->errors->text('inputError', 'invalid');
         }
         if ($error) {
-        	$this->badInputLoad($error, 'userTags');
+        	if (array_key_exists('uuid', $this->vars)) {
+        		$uuid = $this->vars['uuid'];
+        	} else {
+				$uuid = \TEMPSTORAGE\getUuid($this->db);
+				\TEMPSTORAGE\store($this->db, $uuid, ['title' => $title, 'tagId' => $tagId]);
+			}
+			$message = rawurlencode($error);
+			header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserTagInit&message=$message&uuid=$uuid");
+			die;
         }
         $this->db->formatConditions(['usertagsId' => $tagId]);
         $this->db->update('user_tags', ['usertagsTag' => $title]);
-        $this->session->delVar("mywikindx_Title");
+        if (array_key_exists('uuid', $this->vars)) {
+	        \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+	    }
         $message = rawurlencode($this->success->text("usertagEdit"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=userTags");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserTagInit&message=$message&tagId=$tagId");
         die;
     }
     /**
      * Display further user tags settings for deleting
      *
-     * @param mixed $error
+     * @param mixed $message
      */
-    public function deleteUserTagInit($error = FALSE)
+    public function deleteUserTagInit($message = FALSE)
     {
-        if (!$tagId = json_decode($this->vars['tagId'])) {
-            $this->badInputPopup($this->errors->text("inputError", "missing"));
+        if (!$tagId = $this->vars['tagId']) {
+            $this->badInputPopup($this->errors->text("inputError", "missing"), 'userTags');
         }
         $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['usertagsId' => $tagId]);
         $recordSet = $this->db->select('user_tags', 'usertagsId');
         if (!$this->db->numRows($recordSet)) {
-            $this->badInputPopup($this->errors->text('inputError', 'invalid'));
+            $this->badInputPopup($this->errors->text('inputError', 'invalid'), 'userTags');
         }
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
             ": " . $this->messages->text("user", "deleteUserTag")
         ));
-        $pString = $error ? \HTML\p($error, "error", "center") : '';
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
+        $pString = $message;
         $this->db->formatConditions(['usertagsId' => $this->vars['tagId']]);
         $title = \HTML\strong($this->db->selectFirstField('user_tags', 'usertagsTag'));
         $pString .= \HTML\p($this->messages->text("user", "deleteConfirmUserTag") . ":&nbsp;&nbsp;" .
             \HTML\nlToHtml($title));
-        $this->session->delVar("mywikindx_tag_delete");
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-        $pString .= \FORM\formHeader(FALSE);
+        GLOBALS::addTplVar('scripts', '<script>var selectItem = "userTags"; </script>');
+        $pString .= \FORM\formHeader('usersgroups_MYWIKINDX_CORE');
         $pString .= \FORM\hidden("method", "deleteUserTag");
         $pString .= \FORM\hidden("tagId", $this->vars['tagId']);
-        $jString = "onclick=\"javascript:sendMywikindxInput();return true;\"";
-        $pString .= \HTML\p(\FORM\formSubmitButton($this->messages->text("submit", "Delete"), FALSE, $jString));
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Delete")));
         $pString .= \FORM\formEnd();
-        $pString .= \FORM\formHeader("usersgroups_WIKINDX_CORE&amp;method=init", "onsubmit=\"window.close();return true;\"");
-        $pString .= \FORM\hidden("selectItem", "userTags");
+        $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -1088,18 +1155,6 @@ class MYWIKINDX
     public function deleteUserTag()
     {
     	$error = '';
-        if (!$tagId = json_decode($this->vars['tagId'])) {
-            $error = $this->errors->text("inputError", "missing");
-        }
-        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
-        $this->db->formatConditions(['usertagsId' => $tagId]);
-        $recordSet = $this->db->select('user_tags', 'usertagsId');
-        if (!$this->db->numRows($recordSet)) {
-            $error = $this->errors->text('inputError', 'invalid');
-        }
-        if ($error) {
-        	$this->badInputLoad($error, 'userTags');
-        }
         // Delete usertag
         $this->db->formatConditions(['usertagsId' => $this->vars['tagId']]);
         $this->db->delete('user_tags');
@@ -1107,8 +1162,32 @@ class MYWIKINDX
         $this->db->formatConditions(['resourceusertagsTagId' => $this->vars['tagId']]);
         $this->db->delete('resource_user_tags');
         $message = rawurlencode($this->success->text("usertagDelete"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=userTags");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=deleteUserTagSuccess&message=$message");
         die;
+    }
+    /**
+     * Display success page when deleting a user tag
+     *
+     * @param mixed $message
+     */
+    public function deleteUserTagSuccess($message = FALSE)
+    {
+        GLOBALS::setTplVar('heading', $this->messages->text(
+            "heading",
+            "myWikindx",
+            ": " . $this->messages->text("user", "deleteUserTag")
+        ));
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
+        $pString = $message;
+        $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+        GLOBALS::addTplVar('scripts', '<script>var selectItem = "userTags"; </script>');
+        $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
+        $pString .= \FORM\formEnd();
+        GLOBALS::addTplVar('content', $pString);
+        FACTORY_CLOSENOMENU::getInstance();
     }
     /**
      * Display user bibs config options
@@ -1162,10 +1241,10 @@ class MYWIKINDX
     /**
      * Display further user bibs settings for creating
      *
-     * @param mixed $error
+     * @param mixed $message
      * @param mixed $groupBib
      */
-    public function createUserBibInit($error = FALSE, $groupBib = FALSE)
+    public function createUserBibInit($message = FALSE, $groupBib = FALSE)
     {
         // If creating a group bibliography, this user must own groups
         if ($groupBib) {
@@ -1178,7 +1257,7 @@ class MYWIKINDX
             $this->db->orderBy('usergroupsTitle');
             $recordset = $this->db->select('user_groups', ['usergroupsId', 'usergroupsTitle']);
             if (!$this->db->numRows($recordset)) {
-                $this->badInputPopup($this->errors->text("inputError", "userHasNoGroups"));
+                $this->catastrophic($this->errors->text("inputError", "userHasNoGroups"), 'userBibs');
             }
             while ($row = $this->db->fetchRow($recordset)) {
                 $groups[$row['usergroupsId']] = \HTML\dbToFormTidy($row['usergroupsTitle']);
@@ -1197,14 +1276,13 @@ class MYWIKINDX
                 ": " . $this->messages->text("user", "createBib")
             ));
         }
-        $this->session->delVar("mywikindx_bib_add");
-        if (!$error) {
-            $this->session->delVar("mywikindx_bibTitle");
-            $this->session->delVar("mywikindx_bibDescription");
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
         }
-        $pString = $error ? \HTML\p($error, "error", "center") : '';
+        $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-        $pString .= \FORM\formHeader(FALSE);
+        GLOBALS::addTplVar('scripts', '<script>var selectItem = "userBibs"; </script>');
+        $pString .= \FORM\formHeader("usersgroups_MYWIKINDX_CORE");
         if ($groupBib) {
             $pString .= \FORM\hidden("method", "createGroupBib");
         } else {
@@ -1212,12 +1290,10 @@ class MYWIKINDX
         }
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $sessVar = $this->session->issetVar("mywikindx_bibTitle") ?
-            \HTML\dbToFormTidy($this->session->getVar("mywikindx_bibTitle")) : FALSE;
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "bibTitle"),
             "title",
-            $sessVar,
+            FALSE,
             50,
             255
         ));
@@ -1226,23 +1302,20 @@ class MYWIKINDX
         $pString .= BR . "&nbsp;" . BR;
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $sessVar = $this->session->issetVar("mywikindx_bibDescription") ?
-            \HTML\dbToFormTidy($this->session->getVar("mywikindx_bibDescription")) : FALSE;
+        $description = array_key_exists('description', $this->formData) ? $this->formData['description'] : FALSE;
         $pString .= \HTML\td(\FORM\textAreaInput(
             $this->messages->text("user", "bibDescription"),
             "description",
-            $sessVar,
+            $description,
             80,
             10
         ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= $groupString;
-        $jString = "onclick=\"javascript:sendMywikindxInput();return true;\"";
-        $pString .= \HTML\p(\FORM\formSubmitButton($this->messages->text("submit", "Add"), FALSE, $jString));
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Add")));
         $pString .= \FORM\formEnd();
-        $pString .= \FORM\formHeader("usersgroups_WIKINDX_CORE&amp;method=init", "onsubmit=\"window.close();return true;\"");
-        $pString .= \FORM\hidden("selectItem", "userGroups");
+        $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -1251,12 +1324,16 @@ class MYWIKINDX
     /**
      * Display further group bibs settings for creating
      *
-     * @param mixed $error
+     * @param mixed $message
      */
-    public function createGroupBibInit($error = FALSE)
+    public function createGroupBibInit($message = FALSE)
     {
-        $this->createUserBibInit(FALSE, TRUE);
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
+        $this->createUserBibInit($message, TRUE);
     }
+// NOT USED?????
     /**
      * create a user/group bibliography
      */
@@ -1271,84 +1348,100 @@ class MYWIKINDX
     {
     	$error = '';
         if (array_key_exists('description', $this->vars)) {
-            $description = json_decode(trim($this->vars['description']));
+            $description = trim($this->vars['description']);
             if ($description) {
                 $this->session->setVar("mywikindx_Description", $description);
                 $fields[] = 'userbibliographyDescription';
                 $values[] = $description;
             }
+            $this->formData['description'] = $description;
         }
-        if (!$title = json_decode(trim($this->vars['title']))) {
+        if (!$title = trim($this->vars['title'])) {
             $error = $this->errors->text("inputError", "missing");
         }
-        if ($error) {
-        	$this->badInputLoad($error, 'userBibs');
+        $this->formData['title'] = $title;
+        if (!$this->checkBibliographyExists($title)) {
+        	$error = $this->errors->text("inputError", "bibExists");
         }
-        $this->session->setVar("mywikindx_Title", $title);
-        $this->checkBibliographyExists($title);
+        if ($error) {
+        	if (array_key_exists('addUsers', $this->vars)) {
+	        	$this->badInputPopup($error, 'createGroupBibInit');
+        	} else {
+	        	$this->badInputPopup($error, 'createUserBibInit');
+	        }
+        }
         $fields[] = 'userbibliographyTitle';
         $values[] = $title;
         $fields[] = 'userbibliographyUserId';
         $values[] = $this->session->getVar("setup_UserId");
-        $groupIds = json_decode($this->vars['addUsers']);
-        if ($groupIds[0]) { // [0] will be '0' if not a group bibliography
-            $groupId = $groupIds[0];
-            $fields[] = 'userbibliographyUserGroupId';
-            $values[] = $groupId;
-        } else {
-            $groupId = FALSE;
+        if (array_key_exists('addUsers', $this->vars)) {
+			$groupIds = $this->vars['addUsers'];
+			if ($groupIds[0]) { // [0] will be '0' if not a group bibliography
+				$groupId = $groupIds[0];
+				$fields[] = 'userbibliographyUserGroupId';
+				$values[] = $groupId;
+			}
         }
         $this->db->insert('user_bibliography', $fields, $values);
-        $this->session->delVar("mywikindx_Description");
-        $this->session->delVar("mywikindx_Title");
         $this->session->setVar("setup_Bibliographies", TRUE);
-        $message = rawurlencode($this->success->text("bibliographyAdd"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=userBibs");
+        $message = rawurlencode($this->success->text("bibliographyAdd", $title));
+        $this->formData = [];
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserBibInit&message=$message");
         die;
     }
     /**
      * Display further user/group bibs settings for editing
      *
-     * @param mixed $error
+     * @param mixed $message
      */
-    public function editBibInit($error = FALSE)
+    public function editBibInit($message = FALSE)
     {
-        $this->session->delVar("mywikindx_bib_edit");
-        if (!$error) {
-            $this->session->delVar("mywikindx_bibTitle");
-            $this->session->delVar("mywikindx_bibDescription");
-        }
+    	$uuid = FALSE;
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
             ": " . $this->messages->text("user", "editBib")
         ));
-        if (!array_key_exists('bibId', $this->vars) || !$this->vars['bibId']) {
-            $this->badInputPopup($this->errors->text("inputError", "missing"));
-        }
-        $this->checkValidBibliography($this->vars['bibId']);
         $groupUsers = [];
-        $pString = $error ? \HTML\p($error, "error", "center") : '';
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
+        if (array_key_exists('uuid', $this->vars)) {
+        	$uuid = $this->vars['uuid'];
+        }
+        $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-        $pString .= \FORM\formHeader(FALSE);
+        GLOBALS::addTplVar('scripts', '<script>var selectItem = "userBibs"; </script>');
+        $pString .= \FORM\formHeader("usersgroups_MYWIKINDX_CORE");
         $pString .= \FORM\hidden("method", "editBib");
-        $pString .= \FORM\hidden("bibId", $this->vars['bibId']);
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        if ($this->session->issetVar("mywikindx_Title")) {
-            $title = \HTML\dbToFormTidy($this->session->getVar("mywikindx_Title"));
-            $description = \HTML\dbToFormTidy($this->session->getVar("mywikindx_Description"));
-        } else {
+        if (!$uuid) {
             $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
             $this->db->formatConditions(['userbibliographyId' => $this->vars['bibId']]);
             $recordset = $this->db->select(
                 'user_bibliography',
                 ['userbibliographyTitle', 'userbibliographyDescription', 'userbibliographyUserGroupId']
             );
+            if (!$this->db->numRows($recordset)) {
+            	$this->catastrophic($this->errors->text("inputError", "invalid"), 'userBibs');
+            }
             $row = $this->db->fetchRow($recordset);
             $description = \HTML\dbToFormTidy($row['userbibliographyDescription']);
             $title = \HTML\dbToFormTidy($row['userbibliographyTitle']);
-            $userGroupId = $row['userbibliographyUserGroupId'];
+            $groupId = $row['userbibliographyUserGroupId'];
+        	$pString .= \FORM\hidden("bibId", $this->vars['bibId']);
+        }
+        else { // Back here after editing bib so fetch details from temp_storage
+        	$data = \TEMPSTORAGE\fetch($this->db, $uuid);
+        	$pString .= \FORM\hidden("bibId", $data['bibId']);
+        	$pString .= \FORM\hidden("uuid", $uuid);
+        	$title = $data['title'];
+        	$description = $data['description'];
+        	$groupId = array_key_exists('groupId', $data) ? $data['groupId'] : FALSE;
+        	if ($groupId) {
+        		$pString .= \FORM\hidden("groupId", $groupId);
+        	}
         }
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "bibTitle"),
@@ -1371,7 +1464,7 @@ class MYWIKINDX
         ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        if ($userGroupId) { // This is a user group bibliography
+        if ($groupId) { // This is a user group bibliography
             $pString .= BR . "&nbsp;" . BR;
             $pString .= \HTML\tableStart();
             $pString .= \HTML\trStart();
@@ -1386,17 +1479,18 @@ class MYWIKINDX
                 $this->messages->text("user", "addGroupsToBib"),
                 "groupId",
                 $groups,
-                $userGroupId,
+                $groupId,
                 10
             ));
             $pString .= \HTML\trEnd();
             $pString .= \HTML\tableEnd();
         }
-        $jString = "onclick=\"javascript:sendMywikindxInput();return true;\"";
-        $pString .= \HTML\p(\FORM\formSubmitButton($this->messages->text("submit", "Edit"), FALSE, $jString));
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Edit")));
         $pString .= \FORM\formEnd();
-        $pString .= \FORM\formHeader("usersgroups_WIKINDX_CORE&amp;method=init", "onsubmit=\"window.close();return true;\"");
-        $pString .= \FORM\hidden("selectItem", "userBibs");
+        $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
+        if ($uuid) {
+			GLOBALS::addTplVar('scripts', '<script>var uuid = ' . $uuid . '; </script>');
+		}
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -1408,18 +1502,39 @@ class MYWIKINDX
     public function editBib()
     {
     	$error = '';
-        if (!$bibId = json_decode($this->vars['bibId'])) {
+        if (!$bibId = $this->vars['bibId']) {
             $error = $this->errors->text("inputError", "missing");
         }
-        $this->checkValidBibliography($bibId, 'userBibs');
-        if (!$title = json_decode(trim($this->vars['title']))) {
+        if (!$this->checkValidBibliography($bibId)) {
+        	$error = $this->errors->text("inputError", "invalid");
+        }
+        if (!$title = trim($this->vars['title'])) {
             $error = $this->errors->text("inputError", "missing");
         }
+        if (!$this->checkBibliographyExists($title, $bibId)) {
+        	$error = $this->errors->text("inputError", "bibExists");
+        }
+        $description = trim($this->vars['description']);
+        if (array_key_exists('groupId', $this->vars)) { // user group bibliography
+        	$groupId = $this->vars['groupId'];
+        	$tsArray = ['title' => $title, 'bibId' => $bibId, 'description' => $description, 'groupId' => $groupId];
+            $updateArray['userbibliographyUserGroupId'] = $groupId;
+        } else {
+	        $tsArray = ['title' => $title, 'bibId' => $bibId, 'description' => $description];
+	    }
         if ($error) {
-        	$this->badInputLoad($error, 'userBibs');
+        	if (array_key_exists('uuid', $this->vars)) {
+        		$uuid = $this->vars['uuid'];
+				\TEMPSTORAGE\delete($this->db, $uuid);
+        	} else {
+				$uuid = \TEMPSTORAGE\getUuid($this->db);
+			}
+	        \TEMPSTORAGE\store($this->db, $uuid, $tsArray);
+			$message = rawurlencode($error);
+        	header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editBibInit&message=$message&uuid=$uuid");
+			die;
         }
-        if ($description = json_decode(trim($this->vars['description']))) {
-            $this->session->setVar("mywikindx_Description", $description);
+        if ($description) {
             $updateArray['userbibliographyDescription'] = $description;
         } else {
             $this->db->formatConditions(['userbibliographyId' => $bibId]);
@@ -1427,49 +1542,45 @@ class MYWIKINDX
             $this->db->updateNull('user_bibliography', 'userbibliographyDescription');
         }
         $updateArray['userbibliographyTitle'] = $title;
-        if ($groupId = json_decode(trim($this->vars['groupId']))) { // user group bibliography
-            $updateArray['userbibliographyUserGroupId'] = $groupId;
-        }
         $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['userbibliographyId' => $bibId]);
         $this->db->update('user_bibliography', $updateArray);
-        $this->session->delVar("mywikindx_Description");
-        $this->session->delVar("mywikindx_Title");
+        if (array_key_exists('uuid', $this->vars)) {
+	        \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+	    }
         $message = rawurlencode($this->success->text("bibliographyEdit"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=userBibs");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editBibInit&message=$message&bibId=$bibId");
         die;
     }
     /**
      * Ask for confirmation of delete bibliography
      *
-     * @param mixed $error
+     * @param mixed $message
      */
-    public function deleteBibInit($error = FALSE)
+    public function deleteBibInit($message = FALSE)
     {
-        if (!$bibId = $this->vars['bibId']) {
-            $this->badInputPopup($this->errors->text("inputError", "missing"));
-        }
-        $this->checkValidBibliography($bibId);
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
-            ": " . $this->messages->text("user", "deleteUserTag")
+            ": " . $this->messages->text("user", "deleteBib")
         ));
-        $pString = $error ? \HTML\p($error, "error", "center") : '';
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
+        $pString = $message;
+        $bibId = $this->vars['bibId'];
         $this->db->formatConditions(['userbibliographyId' => $bibId]);
         $title = \HTML\strong($this->db->selectFirstField('user_bibliography', 'userbibliographyTitle'));
         $pString .= \HTML\p($this->messages->text("user", "deleteConfirmBib") . ":&nbsp;&nbsp;" .
             \HTML\nlToHtml($title));
-        $this->session->delVar("mywikindx_bib_delete");
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-        $pString .= \FORM\formHeader(FALSE);
+        GLOBALS::addTplVar('scripts', '<script>var selectItem = "userBibs"; </script>');
+        $pString .= \FORM\formHeader("usersgroups_MYWIKINDX_CORE");
         $pString .= \FORM\hidden("method", "deleteBib");
         $pString .= \FORM\hidden("bibId", $bibId);
-        $jString = "onclick=\"javascript:sendMywikindxInput();return true;\"";
-        $pString .= \HTML\p(\FORM\formSubmitButton($this->messages->text("submit", "Delete"), FALSE, $jString));
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Delete")));
         $pString .= \FORM\formEnd();
-        $pString .= \FORM\formHeader("usersgroups_WIKINDX_CORE&amp;method=init", "onsubmit=\"window.close();return true;\"");
-        $pString .= \FORM\hidden("selectItem", "userBibs");
+        $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -1481,11 +1592,14 @@ class MYWIKINDX
     public function deleteBib()
     {
     	$error = '';
-        if (!$bibId = json_decode($this->vars['bibId'])) {
+        if (!$bibId = $this->vars['bibId']) {
             $error = $this->errors->text("inputError", "missing");
         }
+        if (!$this->checkValidBibliography($bibId)) {
+        	$error = $this->errors->text("inputError", "invalid");
+        }
         if ($error) {
-        	$this->badInputLoad($error, 'userBibs');
+        	$this->catastrophic($error, 'userBibs');
         }
         $this->checkValidBibliography($bibId, 'userBibs');
         $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
@@ -1503,8 +1617,32 @@ class MYWIKINDX
             $this->session->delVar("setup_Bibliographies");
         }
         $message = rawurlencode($this->success->text("bibliographyDelete"));
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=userBibs");
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=deleteBibSuccess&message=$message");
         die;
+    }
+    /**
+     * Display success for delete bibliography
+     *
+     * @param mixed $message
+     */
+    public function deleteBibSuccess($message = FALSE)
+    {
+        GLOBALS::setTplVar('heading', $this->messages->text(
+            "heading",
+            "myWikindx",
+            ": " . $this->messages->text("user", "deleteBib")
+        ));
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
+        $pString = $message;
+        $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+        GLOBALS::addTplVar('scripts', '<script>var selectItem = "userBibs"; </script>');
+        $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
+        $pString .= \FORM\formEnd();
+        GLOBALS::addTplVar('content', $pString);
+        FACTORY_CLOSENOMENU::getInstance();
     }
     /**
      * create array of config menu items
@@ -1998,76 +2136,76 @@ class MYWIKINDX
      *
      * @param mixed $title
      * @param mixed $groupId
+     *
+     * @return bool
      */
     private function checkUserGroupExists($title, $groupId = FALSE)
     {
         if ($groupId) {
-            $this->db->formatConditions(['usergroupsId' => $groupId], TRUE);
+            $this->db->formatConditions(['usergroupsId' => $groupId], TRUE); // Not this $groupId
         }
         $recordset = $this->db->select('user_groups', ['usergroupsTitle', 'usergroupsId']);
         while ($row = $this->db->fetchRow($recordset)) {
-            if ($title == $row['usergroupsTitle']) {
-                $this->badInputPopup($this->errors->text("inputError", "groupExists"));
+            if (mb_strtolower($title) == mb_strtolower($row['usergroupsTitle'])) {
+            	return FALSE;
             }
         }
+        return TRUE;
     }
     /**
-     * check this user can edit, delete and deleteFrom bibliographies
+     * check this user can edit and delete bibliographies
      *
-     * @param mixed $bibId
-     * @param mixed $item
+     * @param string $bibId
+     * @param mixed $uuid
+     *
+     * @return bool
      */
-    private function checkValidBibliography($bibId, $item = FALSE)
+    private function checkValidBibliography($bibId)
     {
         $this->db->formatConditions(['userbibliographyId' => $bibId]);
         $adminId = $this->db->selectFirstField('user_bibliography', 'userbibliographyUserId');
         if ($this->session->getVar("setup_UserId") != $adminId) {
-            if ($item) {
-                $this->badInputLoad($this->errors->text("inputError", "invalid"), $item);
-            } else {
-                $this->badInputPopup($this->errors->text("inputError", "invalid"));
-            }
+        	return FALSE;
         }
+        return TRUE;
     }
     /**
      * Does bibliography already exist?
      * If $bibId, we're editing an existing user bibliography.
      *
-     * @param mixed $title
+     * @param string $title
      * @param mixed $bibId
+     *
+     * @return bool
      */
     private function checkBibliographyExists($title, $bibId = FALSE)
     {
         if ($bibId) {
-            $this->db->formatConditions(['userbibliographyId' => $bibId], TRUE);
+            $this->db->formatConditions(['userbibliographyId' => $bibId], TRUE); // NOT this $bibId
         }
-        $recordset = $this->db->select('user_bibliography', ['userbibliographyTitle', 'userbibliographyId']);
+        $recordset = $this->db->select('user_bibliography', ['userbibliographyTitle']);
         while ($row = $this->db->fetchRow($recordset)) {
-            if ($title == $row['userbibliographyTitle']) {
-                if ($bibId) {
-                    $this->badInputPopup($this->errors->text("inputError", "bibExists"));
-                } else {
-                    $this->badInputPopup($this->errors->text("inputError", "bibExists"));
-                }
+            if (mb_strtolower($title) == mb_strtolower($row['userbibliographyTitle'])) {
+                return FALSE;
             }
         }
+        return TRUE;
     }
     /**
-     * check this user can edit, delete and deleteFrom from user groups
+     * check this user can edit and delete user groups
      *
-     * @param mixed $item
+     * @param int $groupId
+     *
+     * @return bool
      */
-    private function checkValidUserGroup($item = FALSE)
+    private function checkValidUserGroup($groupId)
     {
-        $this->db->formatConditions(['usergroupsId' => $this->vars['groupId']]);
+        $this->db->formatConditions(['usergroupsId' => $groupId]);
         $adminId = $this->db->selectFirstField('user_groups', 'usergroupsAdminId');
         if ($this->session->getVar("setup_UserId") != $adminId) {
-            if ($item) {
-                $this->badInputLoad($this->errors->text("inputError", "invalid"), $item);
-            } else {
-                $this->badInputPopup($this->errors->text("inputError", "invalid"));
-            }
+            return FALSE;
         }
+        return TRUE;
     }
     /**
      * Error handling
@@ -2086,16 +2224,49 @@ class MYWIKINDX
     /**
      * Error handling for a popup
      *
-     * @param mixed $pString
+     * @param mixed $error
+     * @param string $item
      */
-    private function badInputPopup($pString)
+    private function badInputPopup($error, $item)
     {
-        GLOBALS::clearTplVar('heading');
-        $pString .= \FORM\formHeader("usersgroups_WIKINDX_CORE&amp;method=init", "onsubmit=\"window.close();return true;\"");
-        $pString .= \FORM\hidden("selectItem", "userBibs");
-        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
-        $pString .= \FORM\formEnd();
-        GLOBALS::addTplVar('content', $pString);
-        FACTORY_CLOSENOMENU::getInstance();
+    	$this->badInput->closeType = 'closeNoMenu';
+        $this->badInput->close($error, $this, $item);
+    }
+    /**
+     * Catostrophic error – bail out immediately!
+     *
+     * @param string $error
+     * @param string $selectItem
+     */
+    private function catastrophic($error, $selectItem)
+    {
+		$pString = $error;
+		$pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+		$pString .= '<script>var selectItem = "' . $selectItem . '";</script>';
+		$pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
+		$pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
+		$pString .= \FORM\formEnd();
+		$this->badInput->closeType = 'closeNoMenu';
+		$this->badInput->close($pString);
+    }
+    /**
+     * Make the select transfer arrows to transfer users between select boxes with onclick
+     *
+     * @return array (toRightImage, toLeftImage)
+     */
+    public function transferArrows()
+    {
+        $jsonArray = [];
+        $jsonArray[] = [
+            'startFunction' => 'selectedUsers',
+        ];
+        $toRightImage = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
+        $jsonArray = [];
+        $jsonArray[] = [
+            'startFunction' => 'potentialUsers',
+        ];
+        $toLeftImage = \AJAX\jActionIcon('toLeft', 'onclick', $jsonArray);
+
+        return [$toRightImage, $toLeftImage];
     }
 }

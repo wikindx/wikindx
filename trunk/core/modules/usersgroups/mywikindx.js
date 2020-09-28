@@ -217,3 +217,44 @@ function sendMywikindxInput()
 	window.opener.location.href=url;
 	window.close();
 }
+function closeAndRedirect()
+{
+	selectItem = '&selectItem=' + selectItem;
+	if (typeof uuid !== 'undefined') {
+		uuid = '&uuid=' + uuid.value;
+		var url = 'index.php?action=usersgroups_MYWIKINDX_CORE&method=init' + selectItem + uuid;
+	} else {
+		var url = 'index.php?action=usersgroups_MYWIKINDX_CORE&method=init' + selectItem;
+	}
+	window.opener.location.href=url;
+	window.close();
+}
+/**
+* Transfer an option from the group users selectbox to the potential users selectbox
+*/
+function selectedUsers()
+{
+	var target = 'potentialUsers';
+	var source = 'selectedUsers';
+	coreSelectToSelect(target, source);
+}
+/**
+* Transfer an option from the potential users selectbox to the selected users selectbox
+*/
+function potentialUsers()
+{
+	var target = 'selectedUsers';
+	var source = 'potentialUsers';
+	coreSelectToSelect(target, source);
+}
+/**
+* Select selected options
+*/
+function selectAll()
+{
+	var obj = coreGetElementById('selectedUsers');
+	if(obj == null)
+		return;
+	for(i = obj.options.length - 1; i >= 0; i--)
+		obj.options[i].selected = true;
+}

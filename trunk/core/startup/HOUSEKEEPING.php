@@ -31,7 +31,7 @@ class HOUSEKEEPING
         $this->session = FACTORY_SESSION::getInstance();
         $this->db = FACTORY_DB::getInstance();
         $this->statistics();
-        $this->formData();
+        $this->tempStorage();
         if ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID) { // superadmin logging on – caching requires the superadmin to click further
             $this->cacheAttachments($upgradeCompleted);
         }
@@ -107,14 +107,14 @@ class HOUSEKEEPING
         }
     }
     /**
-     * Housekeeping: remove any rows in form_data older than 3 days
+     * Housekeeping: remove any rows in temp_storage older than 3 days
      *
      */
-	private function formData()
+	private function tempStorage()
 	{
 		$this->db->formatConditions($this->db->dateIntervalCondition(3) . $this->db->greater .
-			$this->db->formatFields('formdataTimestamp'));
-		$this->db->delete('form_data');
+			$this->db->formatFields('tempstorageTimestamp'));
+		$this->db->delete('temp_storage');
 	}
     /**
      * Check if statistics need compiling and emailing out to registered users.

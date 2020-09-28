@@ -120,7 +120,7 @@ class CONFIGURE
         $pString = $this->session->getVar("configmessage");
         $this->session->delVar("configmessage");
         $pString .= $this->tinymce->loadMinimalTextarea(['configDescription'], TRUE);
-        $pString .= \FORM\formHeader("admin_CONFIGURE_CORE", "onsubmit=\"selectAll();return true;\"");
+        $pString .= \FORM\formHeader("admin_CONFIGURE_CORE");
         $pString .= \FORM\hidden("method", "writeDb");
         $pString .= \FORM\hidden("selectItem", 'frontDescription');
         $input = array_key_exists("configDescription", $this->formData) ? $this->formData["configDescription"] : WIKINDX_DESCRIPTION_DEFAULT;
@@ -250,12 +250,8 @@ class CONFIGURE
 				$nulls[] = $field;
 			}
 		}
-        $headerRedirect = FALSE;
 		$configFields = $this->configDbStructure->getAllData();
 		foreach ($updateArray as $field => $value) {
-			if ($field == 'configDebugSql') { // debugging configuration – see header() below
-				$headerRedirect = TRUE;
-			}
 			if ($value === FALSE) {
 				$value = 0;
 			} elseif ($value === TRUE) {
@@ -300,7 +296,8 @@ class CONFIGURE
         
         if (array_key_exists("configMailTest", $this->vars)) {
             $mail = new MAIL();
-            if (!$mail->sendEmail($this->vars['configMailTest'], \HTML\stripHtml(WIKINDX_TITLE), $this->messages->text('config', 'mailTestSuccess'))) {
+            if (!$mail->sendEmail($this->vars['configMailTest'], \HTML\stripHtml(WIKINDX_TITLE), 
+            	$this->messages->text('config', 'mailTestSuccess'))) {
                 $content .= \HTML\p("The test fails", "error", "center");
             } else {
                 $content .= \HTML\p("The test passed", "success", "center");

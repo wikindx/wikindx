@@ -21,6 +21,7 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "FILE.php"]));
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "UTILS.php"]));
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "LOCALES.php"]));
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "URL.php"]));
+include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "TEMPSTORAGE.php"]));
 
 
 // Include code of libraries bundled in classes

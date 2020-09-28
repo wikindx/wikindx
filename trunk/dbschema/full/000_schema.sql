@@ -99,11 +99,11 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%database_summary` (
   `databasesummarySoftwareVersion` varchar(16) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%form_data` (
-  `formdataId` varchar(128) NOT NULL,
-  `formdataData` text COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `formdataTimestamp` datetime DEFAULT current_timestamp() NOT NULL,
-  PRIMARY KEY (`formdataId`)
+CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%temp_storage` (
+  `tempstorageId` char(36) NOT NULL,
+  `tempstorageData` text COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `tempstorageTimestamp` datetime DEFAULT current_timestamp() NOT NULL,
+  PRIMARY KEY (`tempstorageId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%import_raw` (

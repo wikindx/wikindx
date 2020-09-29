@@ -17,10 +17,11 @@
  */
 class SQL
 {
-    /** string */
-    public $error = ""; // Error message returned by db drivers or Wikindx
-    /** integer */
-    public $errno = 0; // Error code returned by db drivers
+    /** @var string Error message returned by db drivers or Wikindx */
+    public $error = "";
+    
+    /** @var integer Error code returned by db drivers */
+    public $errno = 0;
 
     private function getErrorMsg($key)
     {
@@ -108,7 +109,7 @@ class SQL
         $this->ascDesc = $this->asc;
     }
     /**
-     * Test connection to a MySQL/MaraDB server
+     * Test connection to a MySQL/MariaDB server
      *
      * @param string $dbhost Hostname/IP of the server and it's port (optional, eg. hostname:3306)
      * @param string $dbname Name of the database

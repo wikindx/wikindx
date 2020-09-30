@@ -21,6 +21,7 @@ class FORGET
     private $success;
     private $session;
     private $badInput;
+    private $formData = [];
 
     public function __construct()
     {
@@ -108,9 +109,10 @@ class FORGET
             if (!$row["usersPasswordQuestion$i"]) {
                 continue;
             }
+            $answer = array_key_exists("answer$i", $this->formData) ? $this->formData["answer$i"] : FALSE;
             $string = $this->messages->text("user", "forget3", "&nbsp;" . $i) .
                 ":&nbsp;&nbsp;" . \HTML\nlToHtml($row["usersPasswordQuestion$i"]);
-            $string .= BR . \FORM\textInput(FALSE, "answer$i", FALSE, 50, 100);
+            $string .= BR . \FORM\textInput(FALSE, "answer$i", $answer, 50, 100);
             $pString .= \HTML\p($string);
             $questionFound = TRUE;
         }
@@ -135,6 +137,7 @@ class FORGET
      */
     public function forgetProcess()
     {
+    	$error = '';
         $this->badInput->closeType = 'closeNoMenu';
         $usersUsername = trim($this->vars['usersUsername']);
         $this->db->formatConditions(['usersUsername' => $usersUsername]);
@@ -147,10 +150,14 @@ class FORGET
             if (!array_key_exists("answer$i", $this->vars)) {
                 continue;
             }
-            $answer = sha1(mb_strtolower(trim($this->vars["answer$i"])));
+            $this->formData["answer$i"] = trim($this->vars["answer$i"]);
+            $answer = sha1(mb_strtolower($this->formData["answer$i"]));
             if ($answer != $row["usersPasswordAnswer$i"]) {
-                $this->badInput->close($this->errors->text("inputError", "incorrect"), $this, 'forgetInitStage2');
+            	$error = $this->errors->text("inputError", "incorrect");
             }
+        }
+        if ($error) {
+            $this->badInput->close($error, $this, 'forgetInitStage2');
         }
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
@@ -166,106 +173,27 @@ class FORGET
             }
             $this->badInput->close($this->errors->text("warning", "forget3", $contact), $this, 'forgetInitStage1');
         }
-        // If we get here, all questions have been correctly answered so write temp pass word to database and send out email.
-        // NB  This is done after sending out email.  If email fails, we don't want to change the user's password.  However, the risk is that a password may be sent
-        // and then the update code below will fail.  This is judged to be the lesser of two evils.
+        // If we get here, all questions have been correctly answered so write temp pass word to database.
+        // NB  This is done after sending out email. If email fails, we don't want to change the user's password.  
+        // However, the risk is that a password may be sent and then the update code below will fail. 
+        // This is judged to be the lesser of two evils.
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "forget"));
         $cryptPassword = crypt($password, UTF8::mb_strrev(time()));
         $this->db->formatConditions(['usersUsername' => $usersUsername]);
-        $this->db->updateSingle('users', $this->db->formatFields('usersPassword') . $this->db->equal .
-            $this->db->tidyInput($cryptPassword));
+        $this->db->updateSingle('users', $this->db->formatFields('usersPassword') . $this->db->equal . $this->db->tidyInput($cryptPassword));
+        header("Location: index.php?action=usersgroups_FORGET_CORE&method=success");
+        die;
+    }
+    /**
+     * Successfully written temporary password
+     *
+     */
+    public function success()
+    {
         $pString = $this->messages->text("user", "forget10");
         $link = "index.php?action=initLogon";
         $pString .= \HTML\p(\HTML\a("link", $this->messages->text("user", "forget11"), $link), FALSE, "right");
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSENOMENU::getInstance();
-    }
-    /**
-     * display form for entering questions and answers for a forgotten password scenario
-     *
-     * @return string
-     */
-    public function forgetSet()
-    {
-        $pString = \HTML\p($this->messages->text("user", "forget1"));
-        $pString .= \HTML\p($this->messages->text("user", "forget5"));
-        $pString .= \HTML\p($this->messages->text("user", "forget2"));
-        for ($i = 1; $i < 4; $i++) {
-            $question = $this->session->issetVar("mywikindx_usersPasswordQuestion$i") ?
-                \HTML\dbToFormTidy($this->session->getVar("mywikindx_usersPasswordQuestion$i")) : FALSE;
-            $answer = $this->session->issetVar("mywikindx_usersAnswer$i") ?
-                \HTML\dbToFormTidy($this->session->getVar("mywikindx_usersAnswer$i")) : FALSE;
-            $string = \FORM\textInput(
-                $this->messages->text("user", "forget3", "&nbsp;" . $i),
-                "usersPasswordQuestion$i",
-                $question,
-                100,
-                255
-            );
-            $string .= BR . \FORM\textInput(
-                $this->messages->text("user", "forget4", "&nbsp;" . $i),
-                "usersAnswer$i",
-                $answer,
-                50,
-                100
-            );
-            $pString .= \HTML\p($string);
-        }
-
-        return $pString;
-    }
-    /**
-     * Set the forget password system's questions and answers
-     *
-     * @param array Array of two values
-     */
-    public function forgetWrite()
-    {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "MYWIKINDX.php"]));
-        $mywikindx = new MYWIKINDX();
-        $array = ["usersPasswordQuestion1", "usersAnswer1", "usersPasswordQuestion2", "usersAnswer2", "usersPasswordQuestion3", "usersAnswer3"];
-        foreach ($array as $key) {
-            if (array_key_exists($key, $this->vars) && $this->vars[$key]) {
-                if (($key == "usersPasswordQuestion1") || ($key == "usersPasswordQuestion2") || ($key == "usersPasswordQuestion3")) {
-                    $this->session->setVar("mywikindx_" . $key, $this->vars[$key]);
-                }
-            }
-        }
-        $inputArray = [];
-        for ($i = 1; $i < 4; $i++) {
-            $question = trim($this->vars["usersPasswordQuestion$i"]);
-            if (!$question) {
-                $this->session->delVar("mywikindx_usersPasswordQuestion$i");
-                $this->session->delVar("mywikindx_usersAnswer$i");
-            }
-            $answer = trim($this->vars["usersAnswer$i"]);
-            if ($question && !$answer) {
-                return [FALSE, $this->errors->text("inputError", "missing")];
-            } elseif ($question && $answer) {
-                $inputArray[$question] = sha1(mb_strtolower($answer));
-            }
-        }
-        $index = 1;
-        foreach ($inputArray as $q => $a) {
-            $update["usersPasswordQuestion$index"] = $q;
-            $update["usersPasswordAnswer$index"] = $a;
-            $index++;
-        }
-        if (isset($update)) { // values to update
-            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
-            $this->db->update('users', $update);
-        }
-        // Set remaining fields to NULL
-        while ($index < 4) {
-            $nulls[] = "usersPasswordQuestion$index";
-            $nulls[] = "usersPasswordAnswer$index";
-            $index++;
-        }
-        if (isset($nulls)) {
-            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
-            $this->db->updateNull('users', $nulls);
-        }
-
-        return [TRUE, FALSE];
     }
 }

@@ -24,6 +24,7 @@ class MYWIKINDX
     private $badInput;
     private $messageString = FALSE;
     private $usersUsername = FALSE;
+    private $usersEmail = FALSE;
     private $userNameDisplay = FALSE;
     private $formData = [];
 
@@ -40,12 +41,13 @@ class MYWIKINDX
         $this->badInput = FACTORY_BADINPUT::getInstance();
         if ($this->session->getVar("setup_UserId")) {
             $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
-            $recordset = $this->db->select('users', 'usersUsername');
+            $recordset = $this->db->select('users', ['usersUsername', 'usersEmail']);
             if (!$this->db->numRows($recordset)) {
                 die($this->errors->text("dbError", "read"));
             }
             $row = $this->db->fetchRow($recordset);
             $this->usersUsername = $row['usersUsername'];
+            $this->usersEmail = $row['usersEmail'];
             $this->userNameDisplay = ': ' . $row['usersUsername'];
         }
     }
@@ -60,12 +62,7 @@ class MYWIKINDX
         if (array_key_exists('uuid', $this->vars)) {
 	        \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
 	    }
-        // Anything in the session takes precedence
-        if (($messageIn = $this->session->getVar("mywikindx_Message")) && ($item = $this->session->getVar("mywikindx_Item"))) {
-            $this->session->delVar("mywikindx_Message");
-            $this->session->delVar("mywikindx_Item");
-            $this->messageString = $messageIn;
-        } elseif (is_array($message)) {
+        if (is_array($message)) {
             $this->messageString = $message[0];
             $item = $message[1];
         } elseif (array_key_exists('message', $this->vars) && array_key_exists('selectItem', $this->vars)) {
@@ -174,7 +171,6 @@ class MYWIKINDX
      */
     public function resourcesConfigEdit()
     {
-        // checkInput writes the session
         $this->checkResourcesInput();
         // If this is a logged on user, write preferences to user table
         if ($this->session->getVar("setup_UserId"))
@@ -361,26 +357,6 @@ class MYWIKINDX
 	    }
     }
     /**
-     * Edit forgotten password details
-     */
-    public function forgetConfigEdit()
-    {
-    	$error = '';
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "FORGET.php"]));
-        $forget = new FORGET();
-        list($success, $message) = $forget->forgetWrite();
-        if ($success === FALSE) {
-            $error = $message;
-        }
-        if ($error) {
-        	$this->badInputLoad($error, 'forget');
-        }
-        $message = rawurlencode($this->success->text("forgetUpdate"));
-        $selectItem = $this->vars['selectItem'];
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=$selectItem");
-        die;
-    }
-    /**
      * Set email notification
      */
     public function notificationConfigEdit()
@@ -451,18 +427,11 @@ class MYWIKINDX
                 $this->messages->text("user", "createGroup"), FALSE, "left");
         } else {
             $pString .= \HTML\td(\FORM\selectFBoxValue($this->messages->text("user", "groups"), "groupId", $groups, 5));
-            if (!$this->session->getVar("mywikindx_group_radio")) {
-                $checked = TRUE;
-            } else {
-                $checked = $this->session->getVar("mywikindx_group_radio") == 'create' ? TRUE : FALSE;
-            }
-            $radios = \HTML\p(\FORM\radioButton(FALSE, "method", "createUserGroupInit", $checked) .
+            $radios = \HTML\p(\FORM\radioButton(FALSE, "method", "createUserGroupInit", TRUE) .
                 "&nbsp;&nbsp;" . $this->messages->text("user", "createGroup"), FALSE, "left");
-            $checked = $this->session->getVar("mywikindx_group_radio") == 'edit' ? TRUE : FALSE;
-            $radios .= \HTML\p(\FORM\radioButton(FALSE, "method", "editUserGroupInit", $checked) .
+            $radios .= \HTML\p(\FORM\radioButton(FALSE, "method", "editUserGroupInit", FALSE) .
                 "&nbsp;&nbsp;" . $this->messages->text("user", "editGroup"), FALSE, "left");
-            $checked = $this->session->getVar("mywikindx_group_radio") == 'delete' ? TRUE : FALSE;
-            $radios .= \HTML\p(\FORM\radioButton(FALSE, "method", "deleteUserGroupInit", $checked) .
+            $radios .= \HTML\p(\FORM\radioButton(FALSE, "method", "deleteUserGroupInit", FALSE) .
                 "&nbsp;&nbsp;" . $this->messages->text("user", "deleteGroup"), FALSE, "left");
         }
         $pString .= \HTML\td($radios);
@@ -485,6 +454,8 @@ class MYWIKINDX
      */
     public function createUserGroupInit($message = FALSE)
     {
+        $uuid = $title = $description = FALSE;
+        $groupUsers = [];
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
@@ -493,14 +464,38 @@ class MYWIKINDX
         if (array_key_exists('message', $this->vars)) {
         	$message = $this->vars['message'];
         }
+        if (array_key_exists('uuid', $this->vars)) {
+        	$uuid = $this->vars['uuid'];
+        }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         GLOBALS::addTplVar('scripts', '<script>var selectItem = "userGroups"; </script>');
-        $pString .= \FORM\formHeader("usersgroups_MYWIKINDX_CORE");
+        $pString .= \FORM\formHeader("usersgroups_MYWIKINDX_CORE", "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden("method", "createUserGroup");
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $title = array_key_exists('title', $this->formData) ? $this->formData['title'] : FALSE;
+    	if ($uuid) { // Back here after editing group so fetch details from temp_storage
+        	$data = \TEMPSTORAGE\fetch($this->db, $uuid);
+        	$pString .= \FORM\hidden("uuid", $uuid);
+        	$title = $data['title'];
+        	$description = $data['description'];
+        	if (!empty($data['selectedUsers'])) {
+        		$this->db->formatConditionsOneField($data['selectedUsers'], 'usersId');
+				$recordset = $this->db->select('users', ['usersId', 'usersUsername', 'usersFullname', 'usersAdmin']);
+				while ($row = $this->db->fetchRow($recordset)) {
+					if ($row['usersId'] == $this->session->getVar("setup_UserId")) {
+						continue;
+					}
+					$groupUsers[$row['usersId']] = \HTML\dbToFormTidy($row['usersUsername']);
+					if ($row['usersFullname']) {
+						$groupUsers[$row['usersId']] .= " (" . \HTML\dbToFormTidy($row['usersFullname']) . ")";
+					}
+					if ($row['usersAdmin']) {
+						$groupUsers[$row['usersId']] .= " ADMIN";
+					}
+				}
+			}
+        }
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "groupTitle"),
             "title",
@@ -513,7 +508,6 @@ class MYWIKINDX
         $pString .= BR . "&nbsp;" . BR;
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $description = array_key_exists('description', $this->formData) ? $this->formData['description'] : FALSE;
         $pString .= \HTML\td(\FORM\textAreaInput(
             $this->messages->text("user", "groupDescription"),
             "description",
@@ -524,25 +518,34 @@ class MYWIKINDX
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $users = $this->user->grabAll(TRUE);
-        unset($users[$this->session->getVar("setup_UserId")]);
+        $potentialUsers = [];
+        foreach ($users as $key => $value) {
+            if ($key == $this->session->getVar("setup_UserId")) {
+                continue;
+            }
+            if (array_key_exists($key, $groupUsers)) {
+                continue;
+            }
+            $potentialUsers[$key] = $value;
+        }
+        $pString .= BR . "&nbsp;" . BR;
+        $pString .= \HTML\tableStart();
+        $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "multiples"));
-        if (array_key_exists('addUsers', $this->formData)) {
-			$pString .= \HTML\p(\FORM\selectedBoxValueMultiple(
-				$this->messages->text("user", "groupUserAdd"),
-				"addUsers",
-				$users,
-				$this->formData['addUsers'],
-				10
-			) . BR . \HTML\span($hint, 'hint'));
-		}
-		else {
-			$pString .= \HTML\p(\FORM\selectFBoxValueMultiple(
-				$this->messages->text("user", "groupUserAdd"),
-				"addUsers",
-				$users,
-				10
-			) . BR . \HTML\span($hint, 'hint'));
-		}
+		$pString .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text(
+			"user",
+			"selectedUsers"
+		), "selectedUsers", $groupUsers, 10) . BR . \HTML\span($hint, 'hint'));
+        list($toRightImage, $toLeftImage) = $this->transferArrows();
+        $pString .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
+		$pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
+			$this->messages->text("user", "potentialUsers"),
+			"potentialUsers",
+			$potentialUsers,
+			10
+		) . BR . \HTML\span($hint, 'hint'));
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\tableEnd();
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Add")));
         $pString .= \FORM\formEnd();
         $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
@@ -559,22 +562,28 @@ class MYWIKINDX
     	$error = '';
         if (!$title = trim($this->vars['title'])) {
             $error = $this->errors->text("inputError", "missing");
-        } else {
-        	$this->formData['title'] = $this->vars['title'];
         }
-        if (empty($this->vars['addUsers'])) {
+        if (empty($this->vars['selectedUsers'])) {
             $error = $this->errors->text("inputError", "missing");
-        } else {
-        	$this->formData['addUsers'] = $this->vars['addUsers'];
         }
     	if (!$this->checkUserGroupExists($title, FALSE)) {
             $error = $this->errors->text("inputError", "groupExists");
         }
         if (array_key_exists('description', $this->vars) && trim($this->vars['description'])) {
-            $description = $this->formData['description'] = trim($this->vars['description']);
+            $description = trim($this->vars['description']);
         }
         if ($error) {
-        	$this->badInputPopup($error, 'createUserGroupInit');
+        	if (array_key_exists('uuid', $this->vars)) {
+        		$uuid = $this->vars['uuid'];
+				\TEMPSTORAGE\delete($this->db, $uuid);
+        	} else {
+				$uuid = \TEMPSTORAGE\getUuid($this->db);
+			}
+	        \TEMPSTORAGE\store($this->db, $uuid, ['title' => $title, 'description' => $description, 
+	        	'selectedUsers' => $this->vars['selectedUsers']]);
+			$message = rawurlencode($error);
+        	header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserGroupInit&message=$message&uuid=$uuid");
+			die;
         }
         $userId = $this->session->getVar("setup_UserId");
         $fields[] = 'usergroupsTitle';
@@ -586,7 +595,7 @@ class MYWIKINDX
         $this->db->insert('user_groups', $fields, $values);
         $groupId = $this->db->lastAutoId();
         $userIds[] = $userId;
-        foreach ($this->vars['addUsers'] as $userId) {
+        foreach ($this->vars['selectedUsers'] as $userId) {
             if (!$userId) { // IGNORE
                 continue;
             }
@@ -646,7 +655,7 @@ class MYWIKINDX
         	$description = $data['description'];
         	$groupUsers = [];
         	if (!empty($data['selectedUsers'])) {
-        		$this->db->formatConditionsOneField($data['selectedUsers'], ['usersId']);
+        		$this->db->formatConditionsOneField($data['selectedUsers'], 'usersId');
 				$recordset = $this->db->select('users', ['usersId', 'usersUsername', 'usersFullname', 'usersAdmin']);
 				while ($row = $this->db->fetchRow($recordset)) {
 					if ($row['usersId'] == $this->session->getVar("setup_UserId")) {
@@ -1154,7 +1163,6 @@ class MYWIKINDX
      */
     public function deleteUserTag()
     {
-    	$error = '';
         // Delete usertag
         $this->db->formatConditions(['usertagsId' => $this->vars['tagId']]);
         $this->db->delete('user_tags');
@@ -1350,7 +1358,6 @@ class MYWIKINDX
         if (array_key_exists('description', $this->vars)) {
             $description = trim($this->vars['description']);
             if ($description) {
-                $this->session->setVar("mywikindx_Description", $description);
                 $fields[] = 'userbibliographyDescription';
                 $values[] = $description;
             }
@@ -1653,10 +1660,10 @@ class MYWIKINDX
             'appearance' => $this->messages->text('config', 'appearance'),
         ];
         if ($this->session->getVar("setup_UserId") != WIKINDX_RESTRICT_USERID) {
-            if ($this->session->issetVar("mywikindx_Email") && WIKINDX_MAIL_USE) {
+            if ($this->usersEmail && WIKINDX_MAIL_USE) {
                 $groups['forget'] = $this->messages->text('config', 'forget');
+            	$groups['notification'] = $this->messages->text('config', 'notification');
             }
-            $groups['notification'] = $this->messages->text('config', 'notification');
         }
         // Only for logged on users
         if ($this->session->getVar("setup_UserId")) {
@@ -1958,17 +1965,104 @@ class MYWIKINDX
      */
     private function forgetConfigDisplay()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "FORGET.php"]));
-        $forget = new FORGET();
+    	if (empty($this->formData)) {
+            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
+    	 	$resultSet = $this->db->select('users', ["usersPasswordQuestion1", "usersPasswordQuestion2", "usersPasswordQuestion3"]);
+    	 	while ($row = $this->db->fetchRow($resultSet)) {
+    	 		$fields["usersPasswordQuestion1"] = $row["usersPasswordQuestion1"];
+    	 		$fields["usersPasswordQuestion2"] = $row["usersPasswordQuestion2"];
+    	 		$fields["usersPasswordQuestion3"] = $row["usersPasswordQuestion3"];
+    	 		$fields["usersAnser1"] = FALSE;
+    	 		$fields["usersAnser2"] = FALSE;
+    	 		$fields["usersAnser3"] = FALSE;
+    	 	}
+    	}
+    	else {
+    		$fields = $this->formData;
+    	}
         $pString = $this->messageString;
         $pString .= \FORM\hidden("method", "forgetConfigEdit");
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td($forget->forgetSet());
+		$td = $this->messages->text("user", "forget1");
+        $td .= \HTML\p($this->messages->text("user", "forget5"));
+        $td .= \HTML\p($this->messages->text("user", "forget2"));
+        for ($i = 1; $i < 4; $i++) {
+            $question = array_key_exists("usersPasswordQuestion$i", $fields) ?
+                \HTML\dbToFormTidy($fields["usersPasswordQuestion$i"]) : FALSE;
+            $answer = array_key_exists("usersAnswer$i", $fields) ?
+                \HTML\dbToFormTidy($fields["usersAnswer$i"]) : FALSE;
+            $string = \FORM\textInput(
+                $this->messages->text("user", "forget3", "&nbsp;" . $i),
+                "usersPasswordQuestion$i",
+                $question,
+                100,
+                255
+            );
+            $string .= BR . \FORM\textInput(
+                $this->messages->text("user", "forget4", "&nbsp;" . $i),
+                "usersAnswer$i",
+                $answer,
+                50,
+                100
+            );
+            $td .= \HTML\p($string);
+        }
+		$pString .= \HTML\td($td);
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
         return $pString;
+    }
+    /**
+     * Edit forgotten password details
+     */
+    public function forgetConfigEdit()
+    {
+    	$error = '';
+        $array = ["usersPasswordQuestion1", "usersAnswer1", "usersPasswordQuestion2", "usersAnswer2", "usersPasswordQuestion3", "usersAnswer3"];
+        foreach ($array as $key) {
+            if (array_key_exists($key, $this->vars) && trim($this->vars[$key])) {
+                $this->formData[$key] = trim($this->vars[$key]);
+            } else {
+            	$this->formData[$key] = FALSE;
+            }
+        }
+        $inputArray = [];
+        for ($i = 1; $i < 4; $i++) {
+            if ($this->formData["usersPasswordQuestion$i"] && !$this->formData["usersAnswer$i"]) {
+            	$error = $this->errors->text("inputError", "missing");
+            } elseif ($this->formData["usersPasswordQuestion$i"] && $this->formData["usersAnswer$i"]) {
+                $inputArray[$this->formData["usersPasswordQuestion$i"]] = sha1(mb_strtolower($this->formData["usersAnswer$i"]));
+            }
+        }
+        if ($error) {
+        	$this->badInputLoad($error, 'forget');
+        }
+        $index = 1;
+        foreach ($inputArray as $q => $a) {
+            $update["usersPasswordQuestion$index"] = $q;
+            $update["usersPasswordAnswer$index"] = $a;
+            $index++;
+        }
+        if (isset($update)) { // values to update
+            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
+            $this->db->update('users', $update);
+        }
+        // Set remaining fields to ''
+        while ($index < 4) {
+            $nulls["usersPasswordQuestion$index"] = '';
+            $nulls["usersPasswordAnswer$index"] = '';
+            $index++;
+        }
+        if (isset($nulls)) {
+            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
+            $this->db->update('users', $nulls);
+        }
+        $message = rawurlencode($this->success->text("forgetUpdate"));
+        $selectItem = $this->vars['selectItem'];
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=$selectItem");
+        die;
     }
     /**
      * Email notification config options

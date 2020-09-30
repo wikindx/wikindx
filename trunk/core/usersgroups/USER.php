@@ -486,7 +486,7 @@ class USER
         }
     }
     /**
-     * Load user details into session mywikindx_ array
+     * Load user details into an array
      *
      * @param int $id Default is FALSE
      */

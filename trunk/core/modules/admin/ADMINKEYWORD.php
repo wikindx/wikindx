@@ -266,6 +266,9 @@ class ADMINKEYWORD
      */
     public function deleteConfirm()
     {
+        if (!array_key_exists('delete_KeywordId', $this->vars) || !$this->vars['delete_KeywordId']) {
+            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'deleteInit');
+        }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete2", " (" .
             $this->messages->text("resources", "keyword") . ")"));
         $input = array_values($this->vars['delete_KeywordId']);

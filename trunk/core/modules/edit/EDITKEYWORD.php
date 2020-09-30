@@ -183,7 +183,9 @@ class EDITKEYWORD
         $recordset = $this->db->select('keyword', 'keywordGlossary');
         $row = $this->db->fetchRow($recordset);
         $glossary = $row['keywordGlossary'];
-        $pString = \FORM\textareaInput(FALSE, "text", $glossary, 50, 10);
+        $pString = \FORM\textareaInput(FALSE, "text", $glossary, 50, 10) . 
+        	BR . 
+        	\HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "glossary")), 'hint');
         if ($initialDisplay) {
         	return $pString;
         }

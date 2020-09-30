@@ -828,6 +828,7 @@ class MESSAGES
 				"password3" => dgettext($domain, "Password must contain at least ### characters and be a mix of UPPER/lowercase, numbers, and non-alphanumeric characters ($ @ # ! % * ? & €). Spaces are not allowed."),
 				"password4"	=> dgettext($domain, "If you are logged in, the password fields will be empty for security reasons – your password is stored but, if you click on the submit button, you must fill in the password fields again."),
 				"hashFile" => dgettext($domain, "The hash file is optional – use it to check the integrity of the uploaded package."),
+				"glossary" => dgettext($domain, "The glossary appears when hovering over a keyword."),
 			),
 /// menu_ Menu subsystem.  The trick here is to use short terms that don't cause problems with overflowing the CSS drop-down boxes - some browsers may happily handle this, others won't. Up to 15-16 characters (depending on character width) is a good guide - but check! NB!!!!!  For this array, the values should be unique where the keys form part of the same menu item.  For example, in the File menu, the 'file' key and the 'show' key should not have the same value of, for example, 'Files'.
 		    "menu" => array(
@@ -1079,7 +1080,7 @@ class MESSAGES
 				"keywordMerge" => dgettext($domain, "Select and merge multiple keywords into one keyword (the merged keywords will be deleted)"),
 				"keywordMergeTarget" => dgettext($domain, "New or target keyword"),
 /// misc_creatorMerge Admins can merge multiple creators into one creator
-				"creatorMerge" => dgettext($domain, "Select and merge multiple creators into one creator (the merged creators will be deleted).  A selection in the target select box overrides any text input."),
+				"creatorMerge" => dgettext($domain, "Select and merge multiple creators into one creator (the merged creators will be deleted).  A selection in the target select box overrides any text input. At least two original creators must be selected."),
 				"creatorMergeOriginal" => dgettext($domain, "Original creators"),
 				"creatorMergeTarget" => dgettext($domain, "Target creator"),
 				"creatorGroupMember" => dgettext($domain, "Group members"),

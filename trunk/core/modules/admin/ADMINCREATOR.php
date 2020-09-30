@@ -20,13 +20,13 @@ class ADMINCREATOR
     private $errors;
     private $messages;
     private $success;
-    private $session;
     private $creator;
     private $gatekeep;
     private $badInput;
     private $newCreatorId;
     private $newName;
     private $potentialMasters;
+    private $formData = [];
 
     public function __construct()
     {
@@ -35,14 +35,12 @@ class ADMINCREATOR
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->session = FACTORY_SESSION::getInstance();
 
         $this->creator = FACTORY_CREATOR::getInstance();
 
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->gatekeep->init();
-        $this->session->clearArray('edit');
     }
     /**
      * display options for creator merging
@@ -53,6 +51,9 @@ class ADMINCREATOR
     {
         $creators = $this->creator->grabAll();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "mergeCreators"));
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
         $pString = $message;
         if (is_array($creators) && !empty($creators)) {
             $pString .= \HTML\p($this->messages->text("misc", "creatorMerge"));
@@ -60,12 +61,25 @@ class ADMINCREATOR
             $pString .= \FORM\hidden("method", "mergeProcess");
             $pString .= \HTML\tableStart();
             $pString .= \HTML\trStart();
-            $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
-                \HTML\strong($this->messages->text("misc", "creatorMergeOriginal")),
-                "creatorIds",
-                $creators,
-                20
-            ) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'));
+            if (array_key_exists('creatorIds', $this->formData)) {
+				$pString .= \HTML\td(\FORM\selectedBoxValueMultiple(
+					\HTML\strong($this->messages->text("misc", "creatorMergeOriginal")),
+					"creatorIds",
+					$creators,
+					$this->formData['creatorIds'],
+					20
+				) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+					$this->messages->text("hint", "multiples")), 'hint'));
+			}
+			else {
+				$pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
+					\HTML\strong($this->messages->text("misc", "creatorMergeOriginal")),
+					"creatorIds",
+					$creators,
+					20
+				) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+					$this->messages->text("hint", "multiples")), 'hint'));
+			}
             $pString .= \HTML\tdStart();
             $pString .= \HTML\tableStart('left');
             $pString .= \HTML\trStart();
@@ -77,41 +91,56 @@ class ADMINCREATOR
             $creators = $temp;
             unset($temp);
             $pString .= \HTML\td('&nbsp;');
-            $pString .= \HTML\td(\FORM\selectFBoxValue(
-                \HTML\strong($this->messages->text("misc", "creatorMergeTarget")),
-                "creatorIdsOutput",
-                $creators,
-                20
-            ));
+            if (array_key_exists('creatorIdsOutputs', $this->formData)) {
+				$pString .= \HTML\td(\FORM\selectedBoxValue(
+					\HTML\strong($this->messages->text("misc", "creatorMergeTarget")),
+					"creatorIdsOutput",
+					$creators,
+					$this->formData['creatorIdsOutput'],
+					20
+				));
+			}
+            else {
+				$pString .= \HTML\td(\FORM\selectFBoxValue(
+					\HTML\strong($this->messages->text("misc", "creatorMergeTarget")),
+					"creatorIdsOutput",
+					$creators,
+					20
+				));
+			}
+			$field = array_key_exists('firstname', $this->formData) ? $this->formData['firstname'] : FALSE;
             $pString .= \HTML\td(\FORM\textInput(
                 $this->messages->text("resources", "firstname"),
                 "firstname",
-                FALSE,
+                $field,
                 20,
                 255
             ));
+            $field = array_key_exists('initials', $this->formData) ? $this->formData['initials'] : FALSE;
             $pString .= \HTML\td(\FORM\textInput(
                 $this->messages->text("resources", "initials"),
                 "initials",
-                FALSE,
+                $field,
                 6,
                 255
-            ) . BR .
-                \HTML\span($this->messages->text("hint", "initials"), 'hint'));
+            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "initials")), 'hint'));
+            $field = array_key_exists('prefix', $this->formData) ? $this->formData['prefix'] : FALSE;
             $pString .= \HTML\td(\FORM\textInput(
                 $this->messages->text("resources", "prefix"),
                 "prefix",
-                FALSE,
+                $field,
                 11,
                 10
             ));
-            $pString .= \HTML\td(\FORM\textInput(
+            $field = array_key_exists('surname', $this->formData) ? $this->formData['surname'] : FALSE;
+            $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
                 $this->messages->text("resources", "surname"),
                 "surname",
-                FALSE,
+                $field,
                 20,
                 255
-            ) . " " . \HTML\span('*', 'required'));
+            ));
             $pString .= \HTML\trEnd();
             $pString .= \HTML\tableEnd();
             $pString .= \HTML\tdEnd();
@@ -133,7 +162,8 @@ class ADMINCREATOR
         $creatorIds = $this->vars['creatorIds'];
         $this->newCreatorId = $this->insertCreator();
         $this->db->formatConditions(['creatorId' => $this->newCreatorId]);
-        $row = $this->db->fetchRow($this->db->select('creator', ['creatorSurname', 'creatorFirstname', 'creatorInitials']));
+        $resultset = $this->db->select('creator', ['creatorSurname', 'creatorFirstname', 'creatorInitials']);
+        $row = $this->db->fetchRow($resultset);
         $this->newName = $row['creatorSurname'];
         foreach ($creatorIds as $oldId) {
             // Remove old creators
@@ -147,7 +177,9 @@ class ADMINCREATOR
         $this->db->deleteCache('cacheResourceCreators');
         $this->db->deleteCache('cacheMetadataCreators');
 
-        return $this->mergeInit($this->success->text("creatorMerge"));
+        $message = rawurlencode($this->success->text("creatorMerge"));
+    	header("Location: index.php?action=admin_ADMINCREATOR_CORE&method=mergeInit&message=$message");
+    	die;
     }
     /**
      * Insert new creator or return ID if already exists
@@ -156,12 +188,12 @@ class ADMINCREATOR
      */
     public function insertCreator()
     {
-        if ($this->vars['creatorIdsOutput']) {
-            return $this->vars['creatorIdsOutput'];
+        if ($this->formData['creatorIdsOutput']) {
+            return $this->formData['creatorIdsOutput'];
         }
 
-        return $this->creator->insert(['surname' => $this->vars['surname'], 'initials' => $this->vars['initials'],
-            'firstname' => $this->vars['firstname'], 'prefix' => $this->vars['prefix'], ]);
+        return $this->creator->insert(['surname' => $this->formData['surname'], 'initials' => $this->formData['initials'],
+            'firstname' => $this->formData['firstname'], 'prefix' => $this->formData['prefix'], ]);
     }
     /**
      * display options for creator grouping
@@ -174,6 +206,9 @@ class ADMINCREATOR
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('creatorGroups'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "groupCreators"));
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
         $pString = $message;
         $this->potentialMasters = $this->creator->grabGroupAvailableMembers();
         if (is_array($this->potentialMasters) && !empty($this->potentialMasters)) {
@@ -326,7 +361,8 @@ class ADMINCREATOR
 			"creators",
 			$potentialMembers,
 			20
-		) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'));
+		) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint'));
 // Transfer arrows
         $jsonArray = [];
         $jsonArray[] = [
@@ -345,14 +381,16 @@ class ADMINCREATOR
 				"creatorIds",
 				[],
 				20
-			) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'));
+			) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint'));
 		} else {
 			$pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
 				\HTML\strong($this->messages->text("misc", "creatorGroupMember")),
 				"creatorIds",
 				$existingMembers,
 				20
-			) . BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'));
+			) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint'));
 		}
 		$pString .= \HTML\trEnd();
 		$pString .= \HTML\tableEnd();
@@ -368,7 +406,9 @@ class ADMINCREATOR
 		if (!array_key_exists("creatorIds", $this->vars) || empty($this->vars['creatorIds'])) {
 			$this->db->formatConditions(['creatorSameAs' => $this->vars['creatorMaster']]);
             $this->db->updateNull('creator', 'creatorSameAs');
-        	return $this->groupInit($this->success->text("creatorUngroup"));
+            $message = rawurlencode($this->success->text("creatorUngroup"));
+    		header("Location: index.php?action=admin_ADMINCREATOR_CORE&method=groupInit&message=$message");
+    		die;
 		}
 // Otherwise creating or editing a group
         $creatorIds = $this->vars['creatorIds'];
@@ -381,8 +421,10 @@ class ADMINCREATOR
         $this->db->updateNull('creator', 'creatorSameAs');
         $this->db->formatConditionsOneField($creatorIds, 'creatorId');
         $this->db->update('creator', ['creatorSameAs' => $targetCreatorId]);
-
-        return $this->groupInit($this->success->text("creatorGroup"));
+        
+        $message = rawurlencode($this->success->text("creatorGroup"));
+    	header("Location: index.php?action=admin_ADMINCREATOR_CORE&method=groupInit&message=$message");
+    	die;
     }
     /**
      * Remove old creator references from resource_creator and add new creator reference.
@@ -408,31 +450,51 @@ class ADMINCREATOR
      */
     private function validateInput($process)
     {
+    	$error = '';
         if ($process == 'merge') {
-            if (!array_key_exists("creatorIds", $this->vars) || empty($this->vars['creatorIds'])
-                 || (count($this->vars['creatorIds']) == 1)) {
-                $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'mergeInit');
-            }
-            if (!array_key_exists("creatorIdsOutput", $this->vars) || empty($this->vars['creatorIdsOutput'])) {
+            if (empty($this->vars['creatorIds']) || (count($this->vars['creatorIds']) == 1)) {
+                $error = $this->errors->text("inputError", "missing");
+                $function = 'mergeInit';
+            } else {
+	            $this->formData['creatorIds'] = $this->vars['creatorIds'];
+	        }
+            if ($this->vars['creatorIdsOutput'][0] == 0) {
                 if (!array_key_exists("surname", $this->vars) || !trim($this->vars['surname'])) {
-                    $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'mergeInit');
+					$error = $this->errors->text("inputError", "missing");
+					$function = 'mergeInit';
                 }
             } elseif ((!array_key_exists("surname", $this->vars) || !trim($this->vars['surname'])) &&
-                (count($this->vars['creatorIds']) == 1) && $this->vars['creatorIds'][0] == $this->vars['creatorIdsOutput']) {
-                $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'mergeInit');
+                (!empty($this->vars['creatorIds']) && count($this->vars['creatorIds']) == 1) 
+                	&& $this->vars['creatorIds'][0] == $this->vars['creatorIdsOutput']) {
+                $error = $this->errors->text("inputError", "missing");
+                $function = 'mergeInit';
             }
+			$this->formData['creatorIdsOutput'] = $this->vars['creatorIdsOutput'];
+            $this->formData['surname'] = trim($this->vars['surname']);
+            $this->formData['firstname'] = trim($this->vars['firstname']);
+            $this->formData['initials'] = trim($this->vars['initials']);
+            $this->formData['prefix'] = trim($this->vars['prefix']);
         } elseif ($process == 'group') {
             if (!array_key_exists("creatorMaster", $this->vars)) {
-                $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'groupInit');
+                $error = $this->errors->text("inputError", "missing");
+                $function = 'groupInit';
+            } else {
+            	$this->formData['creatorMaster'] = $this->vars['creatorMaster'];
             }
             if (array_key_exists("creatorIds", $this->vars)) {
 				if ((count($this->vars['creatorIds']) == 1) && $this->vars['creatorIds'][0] == $this->vars['creatorMaster']) {
-					$this->badInput->close($this->errors->text("inputError", "missing"), $this, 'groupInit');
+      				$error = $this->errors->text("inputError", "missing");
+            		$function = 'groupInit';
 				}
 				if ((count($this->vars['creatorIds']) == 1) && $this->vars['creatorIds'][0] == 0) {
-					$this->badInput->close($this->errors->text("inputError", "missing"), $this, 'groupInit');
+                	$error = $this->errors->text("inputError", "missing");
+                	$function = 'groupInit';
 				}
+				$this->formData['creatorIds'] = $this->vars['creatorIds'];
 			}
+        }
+        if ($error) {
+        	$this->badInput->close($error, $this, $function);
         }
     }
 }

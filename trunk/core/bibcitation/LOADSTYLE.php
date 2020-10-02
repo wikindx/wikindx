@@ -41,8 +41,10 @@ const ROOT_DIR = WIKINDX_DIR_BASE . DIRECTORY_SEPARATOR . WIKINDX_DIR_COMPONENT_
                 $fileName = $cmp["component_id"] . ".xml";
                 $filePath = \LOADSTYLE\ROOT_DIR . DIRECTORY_SEPARATOR . $cmp["component_id"] . DIRECTORY_SEPARATOR . $fileName;
                 
-                $arrayStyleInfo = \LOADSTYLE\loadStyleInfo($filePath);
-                $array[$cmp["component_id"]] = $arrayStyleInfo['description'];
+                if (file_exists($filePath)) {
+	                $arrayStyleInfo = \LOADSTYLE\loadStyleInfo($filePath);
+	                $array[$cmp["component_id"]] = $arrayStyleInfo['description'];
+	            }
             }
         }
         

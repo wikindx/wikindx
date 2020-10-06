@@ -52,7 +52,6 @@ class IMPORT
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
-
         $this->creator = FACTORY_CREATOR::getInstance();
         $this->keyword = FACTORY_KEYWORD::getInstance();
         $this->collection = FACTORY_COLLECTION::getInstance();
@@ -68,6 +67,31 @@ class IMPORT
         }
     }
     /**
+     * Print details of successful import and do some tidying up
+     *
+    	*/
+    public function importSuccess()
+    {
+		$pString = \HTML\p($this->success->text("bibtexImport"));
+		$pString .= \HTML\p($this->messages->text("import", "added", " " . $this->resourceAdded));
+		$pString .= $this->import->printDuplicates($this->resourceDiscarded, $this->rejectTitles);
+		$pString .= \HTML\hr();
+		if (!empty($this->rIds) && (count($this->rIds) <= GLOBALS::getUserVar('PagingMaxLinks'))) {
+			$resourceList = [];
+			$rCommon = FACTORY_RESOURCECOMMON::getInstance();
+			$bibStyle = FACTORY_BIBSTYLE::getInstance();
+			$bibStyle->output = 'html';
+			$this->db->formatConditionsOneField($this->rIds, 'resourceId');
+			$recordset = $rCommon->getResource(FALSE, $this->db->formatFields('creatorSurname'));
+			while ($row = $this->db->fetchRow($recordset)) {
+				$resourceList[]['resource'] = $bibStyle->process($row);
+			}
+			// Templates expect list ordered from 0, so we renumber from zero
+			$rL = array_values($resourceList);
+			GLOBALS::setTplVar('resourceList', $rL);
+		}
+    }
+    /**
      * Check for duplicate title/resourceType
      *
      * If the session variable 'import_ImportDuplicates' is TRUE, the function quits immediately.
@@ -77,12 +101,13 @@ class IMPORT
      * @param string $title
      * @param string $subtitle
      * @param string $type
+     * @param array $formData
      *
      * @return bool TRUE if resource already exists, FALSE if not.
      */
-    public function checkDuplicates($noSort, $title, $subtitle, $type)
+    public function checkDuplicates($noSort, $title, $subtitle, $type, $formData = [])
     {
-        if ($this->session->getVar("import_ImportDuplicates")) {
+        if (array_key_exists("import_ImportDuplicates", $formData)) {
             return FALSE; // i.e. allow duplicates
         }
         if ($subtitle) {
@@ -134,16 +159,17 @@ class IMPORT
      * title / subtitle split is calculated on the session variable 'import_TitleSubtitleSeparator'.
      *
      * @param $title
+     * @param array $formData
      *
      * @return array (noSort, title, subtitle)
      */
-    public function splitTitle($title)
+    public function splitTitle($title, $formData = [])
     {
         if (!trim($title)) {
             return [FALSE, FALSE, FALSE];
         }
         $noSort = $subtitle = FALSE;
-        $split = $this->session->getVar("import_TitleSubtitleSeparator");
+        $split = $formData["import_TitleSubtitleSeparator"];
         if ($split) { // split title and subtitle
             switch ($split) {
                 case 1:
@@ -201,12 +227,14 @@ class IMPORT
     /**
      * Select box for specifying keyword separation character in source bibliography
      *
+     * @param array $formData
+     *
      * @return string
      */
-    public function keywordSeparator()
+    public function keywordSeparator($formData = [])
     {
-        $sessVar = $this->session->issetVar("import_KeywordSeparator") ?
-            $this->session->getVar("import_KeywordSeparator") : FALSE;
+        $sessVar = array_key_exists("import_KeywordSeparator", $formData) ?
+            $formData["import_KeywordSeparator"] : FALSE;
         $array = [
             $this->messages->text('misc', 'keywordImport1'),
             $this->messages->text('misc', 'keywordImport2'),
@@ -229,7 +257,7 @@ class IMPORT
                 4
             );
         }
-        $sessVar = $this->session->issetVar("import_KeywordIgnore") ? TRUE : FALSE;
+        $sessVar = array_key_exists("import_KeywordIgnore", $formData) ? TRUE : FALSE;
 
         return $pString .= \HTML\p(\FORM\checkBox(
             $this->messages->text('misc', 'keywordIgnore'),
@@ -240,11 +268,13 @@ class IMPORT
     /**
      * Select box for specifying title/subtitle separation character in source bibliography
      *
+     * @param array $formData
+     *
      * @return string
      */
-    public function titleSubtitleSeparator()
+    public function titleSubtitleSeparator($formData = [])
     {
-        $sessVar = $this->session->getVar("import_TitleSubtitleSeparator");
+        $sessVar = array_key_exists("import_TitleSubtitleSeparator", $formData) ? $formData["import_TitleSubtitleSeparator"] : FALSE;
         $array = [
             $this->messages->text('misc', 'titleSubtitleSeparator1'),
             $this->messages->text('misc', 'titleSubtitleSeparator2'),
@@ -274,9 +304,11 @@ class IMPORT
     /**
      * Selext box for selecting user bibliographies to import into
      *
+     * @param array $formData
+     *
      * @return string
      */
-    public function bibliographySelect()
+    public function bibliographySelect($formData = [])
     {
         // Get this user's bibliographies
         if ($this->session->getVar("mywikindx_Bibliographies")) {
@@ -308,7 +340,8 @@ class IMPORT
             }
         }
         if (isset($bibsArray)) {
-            return \FORM\selectFBoxValueMultiple($this->messages->text("user", 'bib'), "import_BibId", $bibsArray, 5);
+        	$field = array_key_exists("import_BibId", $formData) ? $formData["import_BibId"] : [-1];
+            return \FORM\selectedBoxValueMultiple($this->messages->text("user", 'bib'), "import_BibId", $bibsArray, $field, 5);
         } else {
             return FALSE;
         }
@@ -570,7 +603,7 @@ class IMPORT
      */
     public function writeResourcecategoryTable($categories)
     {
-        foreach (UTF8::mb_explode(',', $categories) as $cId) {
+        foreach ($categories as $cId) {
             $this->db->insert(
                 'resource_category',
                 ['resourcecategoryResourceId', 'resourcecategoryCategoryId'],
@@ -604,10 +637,11 @@ class IMPORT
      * @param array $rejectedArray Rejected input values for this resource
      * @param int $bibtexStringId ID of the BibTeX string in the bibtex_string table. Default is FALSE
      * @param string $importType Default is FALSE
+     * @param array $formData
      */
-    public function writeImportrawTable($rejectedArray, $bibtexStringId = FALSE, $importType = FALSE)
+    public function writeImportrawTable($rejectedArray, $bibtexStringId = FALSE, $importType = FALSE, $formData = [])
     {
-        if (empty($rejectedArray) || !$this->session->getVar("import_Raw")) {
+        if (empty($rejectedArray) || !array_key_exists("import_Raw", $formData)) {
             return;
         }
         if (!$importType) {
@@ -639,7 +673,7 @@ class IMPORT
         if (!$bibId) {
             return;
         }
-        foreach (UTF8::mb_explode(',', $bibId) as $bId) {
+        foreach ($bibId as $bId) {
             $this->db->insert(
                 'user_bibliography_resource',
                 ['userbibliographyresourceResourceId', 'userbibliographyresourceBibliographyId'],
@@ -650,14 +684,16 @@ class IMPORT
     /**
      * writeTagTable - write import tag to tag table
      *
+     * @param array $formData
+     *
      * @return false|int lastAutoId
      */
-    public function writeTagTable()
+    public function writeTagTable($formData = [])
     {
-        if ($tagId = $this->session->getVar("import_TagId")) {
-            return $tagId;
+    	if (array_key_exists('import_TagId', $formData)) {
+        	return $formData["import_TagId"];
         }
-        if (!$tag = $this->session->getVar("import_Tag")) {
+        if (!$tag = $formData["import_Tag"]) {
             return FALSE;
         }
         $this->db->insert('tag', ['tagTag'], [\HTML\removeNl($tag)]);
@@ -878,12 +914,14 @@ class IMPORT
      *
      * Follows from prompting for field mapping
      *
+     * @param array $formData
+     *
      * @return array 1st element is error message or FALSE, 2nd element is array of custom fields, 3rd element is array of unrecognized fields
      */
-    public function getUnrecognisedFields()
+    public function getUnrecognisedFields($formData = [])
     {
         $unrecognisedFields =
-            unserialize(base64_decode($this->session->getVar("import_UnrecognisedFields")));
+            unserialize(base64_decode($formData["import_UnrecognisedFields"]));
         $mapFields = $customFields = [];
         foreach ($unrecognisedFields as $key) {
             $importKey = 'import_' . $key;

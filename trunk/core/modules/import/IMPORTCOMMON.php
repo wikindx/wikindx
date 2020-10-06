@@ -11,9 +11,9 @@
 /**
  * Common functions for importing resources into wikindx
  *
- * @package wikindx\core\importexport
+ * @package wikindx\core\modules\import
  */
-class IMPORT
+class IMPORTCOMMON
 {
     /** int */
     public $resourceId;
@@ -41,9 +41,13 @@ class IMPORT
     private $publisherMap;
     /** object */
     private $bibConfig;
+    /** bool */
+    public $kwIgnore = FALSE;
+    /** bool */
+    public $quarantine = FALSE;
 
     /**
-     *	IMPORT
+     *	IMPORTCOMMON
      */
     public function __construct()
     {
@@ -69,27 +73,98 @@ class IMPORT
     /**
      * Print details of successful import and do some tidying up
      *
-    	*/
+     */
     public function importSuccess()
     {
-		$pString = \HTML\p($this->success->text("bibtexImport"));
-		$pString .= \HTML\p($this->messages->text("import", "added", " " . $this->resourceAdded));
-		$pString .= $this->import->printDuplicates($this->resourceDiscarded, $this->rejectTitles);
-		$pString .= \HTML\hr();
-		if (!empty($this->rIds) && (count($this->rIds) <= GLOBALS::getUserVar('PagingMaxLinks'))) {
-			$resourceList = [];
-			$rCommon = FACTORY_RESOURCECOMMON::getInstance();
-			$bibStyle = FACTORY_BIBSTYLE::getInstance();
-			$bibStyle->output = 'html';
-			$this->db->formatConditionsOneField($this->rIds, 'resourceId');
-			$recordset = $rCommon->getResource(FALSE, $this->db->formatFields('creatorSurname'));
-			while ($row = $this->db->fetchRow($recordset)) {
-				$resourceList[]['resource'] = $bibStyle->process($row);
+    	$pString = $this->vars['message'];
+		$data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']); // FALSE if nothing there (reloading page?), else array
+		if (is_array($data)) {
+            foreach ($data['garbageFiles'] as $fileName => $null) {
+                unlink($fileName); // remove garbage - ignore errors
+            }
+            if ($data['resourceAdded']) {
+                include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
+                $email = new EMAIL();
+                $email->notify(FALSE, TRUE);
+            }
+			$pString .= \HTML\p($this->messages->text("import", "added", " " . $data['resourceAdded']));
+			$pString .= $this->printDuplicates($data['resourceDiscarded'], $data['rejectTitles']);
+			$pString .= \HTML\hr();
+			if (!empty($data['rIds']) && (count($data['rIds']) <= GLOBALS::getUserVar('PagingMaxLinks'))) {
+				$resourceList = [];
+				$rCommon = FACTORY_RESOURCECOMMON::getInstance();
+				$bibStyle = FACTORY_BIBSTYLE::getInstance();
+				$bibStyle->output = 'html';
+				$this->db->formatConditionsOneField($data['rIds'], 'resourceId');
+				$recordset = $rCommon->getResource(FALSE, $this->db->formatFields('creatorSurname'));
+				while ($row = $this->db->fetchRow($recordset)) {
+					$resourceList[]['resource'] = $bibStyle->process($row);
+				}
+				// Templates expect list ordered from 0, so we renumber from zero
+				$rL = array_values($resourceList);
+				GLOBALS::setTplVar('resourceList', $rL);
 			}
-			// Templates expect list ordered from 0, so we renumber from zero
-			$rL = array_values($resourceList);
-			GLOBALS::setTplVar('resourceList', $rL);
+        	$this->deleteCaches($data);
+			\TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+			$this->tidyTables();
+			$this->session->delVar("sql_LastMulti");
 		}
+		GLOBALS::setTplVar('content', $pString);
+    }
+    /**
+     * Print invalid fields for mapping to wikindx fields
+     *
+     */
+    public function importInvalidFields()
+    {
+		$data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
+		$pString = $data['form'];
+		GLOBALS::setTplVar('heading', $data['heading']);
+		GLOBALS::setTplVar('content', $pString);
+    }
+    /**
+     * Print continuation message when importing in chunks
+     *
+     */
+    public function importContinue()
+    {
+		$data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
+		$pString = $data['form'];
+		GLOBALS::setTplVar('heading', $data['heading']);
+		GLOBALS::setTplVar('content', $pString);
+    }
+    /**
+     * Delete caches if required.  Must be deleted if various creators, publishers etc. have been added with this import
+     */
+    private function deleteCaches($data)
+    {
+        if ($data['deleteCacheCreators']) {
+            // remove cache files for creators
+            $this->db->deleteCache('cacheResourceCreators');
+            $this->db->deleteCache('cacheMetadataCreators');
+        }
+        if ($data['deleteCachePublishers']) {
+            // remove cache files for publishers
+            $this->db->deleteCache('cacheResourcePublishers');
+            $this->db->deleteCache('cacheMetadataPublishers');
+            $this->db->deleteCache('cacheConferenceOrganisers');
+        }
+        if ($data['deleteCacheCollections']) {
+            // remove cache files for collections
+            $this->db->deleteCache('cacheResourceCollections');
+            $this->db->deleteCache('cacheMetadataCollections');
+            $this->db->deleteCache('cacheResourceCollectionTitles');
+            $this->db->deleteCache('cacheResourceCollectionShorts');
+        }
+        if ($data['deleteCacheKeywords']) {
+            // remove cache files for keywords
+            $this->db->deleteCache('cacheResourceKeywords');
+            $this->db->deleteCache('cacheMetadataKeywords');
+            $this->db->deleteCache('cacheQuoteKeywords');
+            $this->db->deleteCache('cacheParaphraseKeywords');
+            $this->db->deleteCache('cacheMusingKeywords');
+            $this->db->deleteCache('cacheKeywords');
+        }
     }
     /**
      * Check for duplicate title/resourceType
@@ -347,6 +422,28 @@ class IMPORT
         }
     }
     /**
+     * Selext box for selecting categories to import into
+     *
+     * @param array $categories
+     * @param array $formData
+     *
+     * @return string
+     */
+    public function categorySelect($categories, $formData = [])
+    {
+		if (array_key_exists("import_Categories", $formData)) {
+			return \FORM\selectedBoxValueMultiple($this->messages->text(
+				"import",
+				"category"
+			), 'import_Categories', $categories, $formData['import_Categories'], 5);
+		} else {
+			return \FORM\selectFBoxValueMultiple($this->messages->text(
+				"import",
+				"category"
+			), 'import_Categories', $categories, 5);
+		}
+    }
+    /**
      * Write the resource table
      *
      * @param array $fields
@@ -371,11 +468,7 @@ class IMPORT
     {
         $fields[] = 'resourcemiscId';
         $values[] = $this->resourceId;
-        if (($this->session->getVar("setup_Superadmin") != 1) && (WIKINDX_QUARANTINE)) {
-            $fields[] = 'resourcemiscQuarantine';
-            $values[] = 'Y';
-        }
-        elseif ($this->session->getVar("import_Quarantine")) {
+        if (WIKINDX_QUARANTINE && (($this->session->getVar("setup_Superadmin") != 1) || $this->quarantine)) {
             $fields[] = 'resourcemiscQuarantine';
             $values[] = 'Y';
         }
@@ -581,7 +674,7 @@ class IMPORT
      */
     public function writeKeywordTables($keywords)
     {
-        if ($this->session->getVar("import_KeywordIgnore")) {
+        if ($this->kwIgnore) {
             return;
         }
         foreach ($keywords as $kWord) {
@@ -626,8 +719,8 @@ class IMPORT
         } else {
             $writeArray['resourcecustomLong'] = $string;
         }
-        $writeArray['resourcecustomAddUserIdCustom'] = $this->session->getVar("setup_UserId");
-        $writeArray['resourcecustomCustomId'] = $customId;
+        $writeArray['resourcecustomAddUserIdCustom'] = intval($this->session->getVar("setup_UserId")); // No idea why, but needed
+        $writeArray['resourcecustomCustomId'] = intval($customId); // No idea why, but needed
         $writeArray['resourcecustomResourceId'] = $this->resourceId;
         $this->db->insert('resource_custom', array_keys($writeArray), array_values($writeArray));
     }
@@ -693,7 +786,7 @@ class IMPORT
     	if (array_key_exists('import_TagId', $formData)) {
         	return $formData["import_TagId"];
         }
-        if (!$tag = $formData["import_Tag"]) {
+        if (!array_key_exists('import_Tag', $formData) || (!$tag = $formData["import_Tag"])) {
             return FALSE;
         }
         $this->db->insert('tag', ['tagTag'], [\HTML\removeNl($tag)]);
@@ -792,10 +885,11 @@ class IMPORT
      * @param array $invalidFieldNames
      * @param mixed $strings array|FALSE. Default is FALSE
      * @param string $importType
+     * @param array $formData
      *
-     * @return array 1st element is error message or FALSE, 2nd element is string for display
+     * @return array 1st element is error message or FALSE, 2nd element is string for display, 3rd element is the temp_storage table id
      */
-    public function promptFieldNames($entries, $inputTypes, $map, $invalidFieldNames, $strings = FALSE, $importType = FALSE)
+    public function promptFieldNames($entries, $inputTypes, $map, $invalidFieldNames, $strings = FALSE, $importType = FALSE, $formData)
     {
         // Do some system management
         FILE\tidyFiles();
@@ -805,29 +899,20 @@ class IMPORT
         
         $dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
         $fileName = sha1($serArray);
-        $fullFileName = $dirName . DIRECTORY_SEPARATOR . $fileName;
+        $entriesFileName = $fullFileName = $dirName . DIRECTORY_SEPARATOR . $fileName;
         if (file_put_contents($fullFileName, $serArray) === FALSE) {
             return [$this->errors->text("file", "write", ": " . $fileName), FALSE];
         }
-
-        // Write filename to session
-        $this->session->setVar("import_FileNameEntries", $fullFileName);
-
         // Write $this->strings as serialised array temporarily to a data folder
         if ($strings) {
             $stringArray = base64_encode(serialize($strings));
             $fileName = sha1($stringArray);
-            $fullFileName = $dirName . DIRECTORY_SEPARATOR . $fileName;
+            $stringsFileName = $fullFileName = $dirName . DIRECTORY_SEPARATOR . $fileName;
             if (file_put_contents($fullFileName, $stringArray) === FALSE) {
                 return [$this->errors->text("file", "write", ": " . $fileName), FALSE];
             }
-
-            // Write filename to session
-            $this->session->setVar("import_FileNameStrings", $fullFileName);
         }
-        // Write unrecognised fields to session as serialised array
-        $serArray = base64_encode(serialize($invalidFieldNames));
-        $this->session->setVar("import_UnrecognisedFields", $serArray);
+        $formData["import_UnrecognisedFields"] = $invalidFieldNames;
         // Create select boxes of all valid field names in WIKINDX including custom fields
         $possibleFields[0] = $this->messages->text('misc', 'ignore');
         foreach ($map->types as $wkType => $extType) {
@@ -867,31 +952,7 @@ class IMPORT
         if (array_key_exists('type', $this->vars)) {
             $pString .= \FORM\hidden('type', $this->vars['type']);
         }
-        if (isset($this->vars['import_Tag']) && $this->vars['import_Tag']) {
-            $pString .= \FORM\hidden('import_Tag', $this->vars['import_Tag']);
-        }
-        if (isset($this->vars['import_Categories']) && $this->vars['import_Categories']) {
-            $pString .= \FORM\hidden('import_Categories', trim(implode(',', ($this->vars['import_Categories']))));
-        }
-        if (isset($this->vars['import_KeywordSeparator'])) {
-            $pString .= \FORM\hidden('import_KeywordSeparator', $this->vars['import_KeywordSeparator']);
-        }
-        if (isset($this->vars['import_KeywordIgnore'])) {
-            $pString .= \FORM\hidden('import_KeywordIgnore', $this->vars['import_KeywordIgnore']);
-        }
-        if (isset($this->vars['import_TitleSubtitleSeparator'])) {
-            $pString .= \FORM\hidden('import_TitleSubtitleSeparator', $this->vars['import_TitleSubtitleSeparator']);
-        }
-        if (isset($this->vars['import_Raw']) && $this->vars['import_Raw']) {
-            $pString .= \FORM\hidden('import_Raw', $this->vars['import_Raw']);
-        }
-        if (isset($this->vars['import_ImportDuplicates']) && $this->vars['import_ImportDuplicates']) {
-            $pString .= \FORM\hidden('import_ImportDuplicates', $this->vars['import_ImportDuplicates']);
-        }
-        if (isset($this->vars['import_BibId']) && $this->vars['import_BibId']) {
-            $pString .= \FORM\hidden('import_BibId', trim(implode(',', ($this->vars['import_BibId']))));
-        }
-        foreach ($invalidFieldNames as $invalidField) {
+		foreach ($invalidFieldNames as $invalidField) {
             $pString .= \HTML\p(\FORM\selectFBox(
                 \HTML\strong($invalidField),
                 'import_' . $invalidField,
@@ -905,9 +966,16 @@ class IMPORT
                 "import_Precedence"
             ));
         }
+        $uuid = \TEMPSTORAGE\getUuid($this->db);
+        $pString .= \FORM\hidden('uuid', $uuid);
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Submit")));
-
-        return [FALSE, $pString];
+// store data
+		$formData["import_FileNameEntries"] = $entriesFileName;
+		if (isset($stringsFileName)) {
+			$formData["import_FileNameStrings"] = $stringsFileName;
+		}
+        \TEMPSTORAGE\store($this->db, $uuid, $formData);
+        return [FALSE, $pString, $uuid];
     }
     /**
      * getUnrecognised fields
@@ -920,10 +988,8 @@ class IMPORT
      */
     public function getUnrecognisedFields($formData = [])
     {
-        $unrecognisedFields =
-            unserialize(base64_decode($formData["import_UnrecognisedFields"]));
         $mapFields = $customFields = [];
-        foreach ($unrecognisedFields as $key) {
+        foreach ($formData["import_UnrecognisedFields"] as $key) {
             $importKey = 'import_' . $key;
             if (array_key_exists($importKey, $this->vars) && ($this->vars[$importKey] != $this->messages->text('misc', 'ignore')) &&
                 (array_search($this->vars[$importKey], $mapFields) !== FALSE)) {
@@ -940,14 +1006,14 @@ class IMPORT
             }
         }
 
-        return [FALSE, $customFields, $unrecognisedFields];
+        return [FALSE, $customFields, $formData["import_UnrecognisedFields"]];
     }
     /**
      * Set collectionDefault column in the collections table
      */
     public function collectionDefaults()
     {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
         $defaultMap = new COLLECTIONDEFAULTMAP();
         $typesArray = array_unique(array_values($defaultMap->collectionTypes));
         $collectionArray = [];

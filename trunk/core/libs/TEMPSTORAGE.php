@@ -21,7 +21,7 @@ namespace TEMPSTORAGE
      * @param class $db
      *
      * @return string $uuid
-    */
+     */
     function getUuid($db)
     {
 		return $db->queryFetchFirstField("SELECT UUID()");
@@ -33,8 +33,7 @@ namespace TEMPSTORAGE
      * @param class $db
      * @param string $uuid
      * @param array $data
-     *
-    */
+     */
     function store($db, $uuid, $data)
     {
     	$data = serialize($data);
@@ -48,8 +47,7 @@ namespace TEMPSTORAGE
      * @param string $uuid
      *
      * @return array $data
-     *
-    */
+     */
     function fetch($db, $uuid)
     {
     	$db->formatConditions(['tempstorageId' => $uuid]);
@@ -57,13 +55,30 @@ namespace TEMPSTORAGE
 		return unserialize($data);
     }
     
+    
+    /**
+     * Merge data – assumes unique keys
+     *
+     * @param class $db
+     * @param string $uuid
+     * @param array $newData
+     */
+    function merge($db, $uuid, $newData)
+    {
+    	$db->formatConditions(['tempstorageId' => $uuid]);
+		$oldData = $db->selectFirstField('temp_storage', 'tempstorageData');
+		$array = array_merge(unserialize($oldData), $newData);
+    	$data = serialize($array);
+    	$db->formatConditions(['tempstorageId' => $uuid]);
+    	$db->update('temp_storage', ['tempstorageData' => $data]);
+    }
+    
     /**
      * Delete row
      *
      * @param class $db
      * @param string $uuid
-     *
-    */
+     */
     function delete($db, $uuid)
     {
     	$db->formatConditions(['tempstorageId' => $uuid]);

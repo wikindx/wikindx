@@ -1506,7 +1506,7 @@ class SEARCH
             $selected = [];
             $temp = unserialize(base64_decode($this->input["Select_$index"]));
             foreach ($temp as $value) {
-                if (!array_key_exists($value, $array)) { // could be the case bibliography used for browsing has changed
+                if (!is_array($array) || !array_key_exists($value, $array)) { // could be the case bibliography used for browsing has changed
                     continue;
                 }
                 $selected[$value] = $array[$value];
@@ -2244,9 +2244,11 @@ class SEARCH
         $recordset = $this->db->select('custom', ['customId', 'customLabel', 'customSize']);
         while ($row = $this->db->fetchRow($recordset)) {
             if ($row['customSize'] == 'S') {
-                $fields['Custom_S_' . $row['customId']] = \HTML\dbToFormTidy($row['customLabel']);
+                $fields['Custom_S_' . $row['customId']] = 
+                	$this->messages->text('custom', 'customField') . ':&nbsp;' . \HTML\dbToFormTidy($row['customLabel']);
             } else {
-                $fields['Custom_L_' . $row['customId']] = \HTML\dbToFormTidy($row['customLabel']);
+                $fields['Custom_L_' . $row['customId']] = 
+                	$this->messages->text('custom', 'customField') . ':&nbsp;' . \HTML\dbToFormTidy($row['customLabel']);
             }
         }
         if ($userBib) {
@@ -2373,7 +2375,7 @@ class SEARCH
             ];
         }
         $js = \AJAX\jActionForm('onchange', $jsonArray);
-        if (array_key_exists("Field_$index", $this->input)) {
+        if (array_key_exists("Field_$index", $this->input) && array_key_exists($this->input["Field_$index"], $fields)) {
             return \FORM\selectedBoxValue(
                 $this->messages->text("search", "searchSelect"),
                 "advancedSearch_Field_$index",
@@ -2384,6 +2386,7 @@ class SEARCH
                 $js
             );
         } else {
+        	$this->input["Field_$index"] = 'title'; // As long as 'title' is the first element . . .
             return \FORM\selectFBoxValue($this->messages->text("search", "searchSelect"), "advancedSearch_Field_$index", $fields, 5, FALSE, $js);
         }
     }

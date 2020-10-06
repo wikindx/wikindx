@@ -179,6 +179,7 @@ class MESSAGES
 /// heading_emailFriend Email a single resource link to a friend
 				"emailFriend" => dgettext($domain, "Email resource to friend"),
 				"bibtexImport" => dgettext($domain, "Import BibTeX Bibliography"),
+				"bibtexPaste" => dgettext($domain, "Paste BibTeX Bibliography"),
 				"exportBibtex" => dgettext($domain, "Export BibTeX"),
 				"adminComponents" => dgettext($domain, "Administer Components"),
 				"addCitation" => dgettext($domain, "Add Citation"),
@@ -337,7 +338,7 @@ class MESSAGES
 				"displayBibtexLink" => dgettext($domain, "When viewing lists of resources, display an icon to view the bibtex version of each resource"),
 				"displayCmsLink" => dgettext($domain, "When viewing lists of resources, display a hyperlink to a pop-up window to generate a CMS (Content Management System) 'replacement tag' for each resource"),
 				"pagingStyle" => dgettext($domain, "When viewing lists ordered by creator or title, replace the numerical paging links with an alphabetical list"),
-				"quarantine" => dgettext($domain, "Quarantine new resources from public view until approved by an ADMIN"),
+				"quarantine" => dgettext($domain, "Allow new resources to be quarantined from non-admin view until approved"),
 				"ListLink" => dgettext($domain, "For resource lists, make each resource hyperlinked to viewing that resource"),
 				"noSort" => dgettext($domain, "Ignore list (sorting)"),
 				"searchFilter" => dgettext($domain, "Ignore list (searching)"),
@@ -722,6 +723,8 @@ class MESSAGES
 				"page" => dgettext($domain, "Page"),
 				"basketAdd" => dgettext($domain, "Add to basket"),
 				"basketRemove" => dgettext($domain, "Remove from basket"),
+				"putInQuarantine" => dgettext($domain, "Quarantine resource"),
+				"removeFromQuarantine" => dgettext($domain, "Approve resource"),
 			),
 /// hint_ Hint messages.  Helpful tips usually displayed in smaller text
 		    "hint" => array(
@@ -829,6 +832,8 @@ class MESSAGES
 				"password4"	=> dgettext($domain, "If you are logged in, the password fields will be empty for security reasons – your password is stored but, if you click on the submit button, you must fill in the password fields again."),
 				"hashFile" => dgettext($domain, "The hash file is optional – use it to check the integrity of the uploaded package."),
 				"glossary" => dgettext($domain, "The glossary appears when hovering over a keyword."),
+/// hint_storeRawBibtex Do not translate '@string'
+				"storeRawBibtex" => dgettext($domain, "You may store BibTeX fields that WIKINDX does not use so that any resources later exported to BibTeX can include this original unchanged data.  Doing this, also stores the bibtex key and any @string strings that are in the imported BibTeX file."),
 			),
 /// menu_ Menu subsystem.  The trick here is to use short terms that don't cause problems with overflowing the CSS drop-down boxes - some browsers may happily handle this, others won't. Up to 15-16 characters (depending on character width) is a good guide - but check! NB!!!!!  For this array, the values should be unique where the keys form part of the same menu item.  For example, in the File menu, the 'file' key and the 'show' key should not have the same value of, for example, 'Files'.
 		    "menu" => array(
@@ -1468,24 +1473,23 @@ class MESSAGES
 				"categoryPrompt" => dgettext($domain, "All WIKINDX resources belong to at least one category which you chose here.  The category(s) a resource belongs to can always be edited later."),
 /// import_pasteBibtex An ordinary user may cut 'n' paste bibtex entries into a textarea box for importing into the bibliography. '###' is the maximum number that the admin allows. Don't translate '@string'
 				"pasteBibtex" => dgettext($domain, "You may paste up to ### bibTeX entries here in addition to @string types."),
+				"pasteBibtex2" => dgettext($domain, "Paste the bibtex entries here"),
 /// import_importDuplicates For file imports, allow duplicates?
-				"importDuplicates" => dgettext($domain, "Import duplicates"),
-				"storeRawLabel" => dgettext($domain, "Store unused fields"),
-/// import_storeRawBibtex Do not translate '@string'
-				"storeRawBibtex" => dgettext($domain, "You may store BibTeX fields that WIKINDX does not use so that any resources later exported to BibTeX can include this original unchanged data.  Doing this, also stores the bibtex key and any @string strings that are in the imported BibTeX file."),
+				"importDuplicates" => dgettext($domain, "Import duplicates:"),
+				"storeRawLabel" => dgettext($domain, "Store unused fields:"),
 				"empty" => dgettext($domain, "File is empty"),
 				"added" => dgettext($domain, "No. resources added: ###"),
 				"discarded" => dgettext($domain, "No. resources discarded (duplicates, no titles, or in the deactivated resource type list): ###"),
 /// import_invalidField1 If non-standard bibtex fields are found in the input file, invite the user to map these fields to wikindx fields
 				"invalidField1" => dgettext($domain, "Unknown fields have been found. You may map these fields to WIKINDX fields -- no duplicate mapping is allowed."),
-				"invalidField2" => dgettext($domain, "Where an unknown field is mapped to a WIKINDX field that would normally be automatically mapped to a standard input field, the unknown field mapping takes precedence."),
+				"invalidField2" => dgettext($domain, "Where an unknown field is mapped to a WIKINDX field that would normally be automatically mapped to a standard input field, the unknown field mapping takes precedence"),
 				"invalidField3" => dgettext($domain, "Unknown fields have been found. You may map these fields to custom fields -- no duplicate mapping is allowed."),
 				"file" => dgettext($domain, "Import File"),
 				"tag" => dgettext($domain, "Tag this import so you can do a mass select or delete later"),
 /// import_executionTimeExceeded With large imports that would go over php.ini's max_execution time, WIKINDX splits the imports into chunks
 				"executionTimeExceeded" => dgettext($domain, "'max_execution_time' (### seconds) in php.ini was about to be exceeded.  WIKINDX is importing the bibliography in chunks."),
 				"addedChunk" => dgettext($domain, "No. resources added this chunk: ###"),
-				"quarantine" => dgettext($domain, "Quarantine from public view"),
+				"quarantine" => dgettext($domain, "Quarantine from public view:"),
 			),
 /// user_ Users in a multi user WIKINDX
 		    "user" => array(
@@ -1665,6 +1669,7 @@ class MESSAGES
 				"editLabel" => dgettext($domain, "Edit fields"),
 				"deleteConfirm" => dgettext($domain, "Delete fields(s) ###"),
 				"customFields" => dgettext($domain, "Custom fields"),
+				"customField" => dgettext($domain, "Custom field"),
 			),
 /// statistics_ Messages for the administrator statistics section
 		    "statistics" => array(

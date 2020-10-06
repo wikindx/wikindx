@@ -60,6 +60,8 @@ class LOADICONS
                 "add" => "misc",
                 "basketAdd" => "resources",
                 "basketRemove" => "resources",
+                "putInQuarantine" => "resources",
+                "removeFromQuarantine" => "resources",
                 "bibtex" => "misc",
                 "cite" => "cite",
                 "delete" => "misc",

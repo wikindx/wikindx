@@ -359,6 +359,11 @@ class UPDATEDATABASE
                 $this->numStages = 1;
                 $this->stage26();
             }
+            elseif ($dbVersion < 27.0)
+            { // upgrade v6.3.11 to 6.3.11
+                $this->numStages = 1;
+                $this->stage27();
+            }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
             // Refresh the locales list
@@ -1069,6 +1074,18 @@ class UPDATEDATABASE
         $this->updateSoftwareVersion(26);
         $this->checkStatus('stage26');
         $this->pauseExecution('stage26');
+    }
+    /**
+     * Upgrade database schema to version 27 (6.3.11)
+     */
+    private function stage27()
+    {
+    	// Drop form_data and create temp_storage table
+        $this->updateDbSchema('27');
+        
+        $this->updateSoftwareVersion(27);
+        $this->checkStatus('stage27');
+        $this->pauseExecution('stage27');
     }
     /**
      * Transfer statistics data to new tables then drop old table

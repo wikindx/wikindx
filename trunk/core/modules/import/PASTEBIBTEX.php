@@ -30,42 +30,38 @@ class PASTEBIBTEX
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
-
-
-        $this->import = FACTORY_IMPORT::getInstance();
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexImport"));
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "IMPORTCOMMON.php"]));
+        $this->import = new IMPORTCOMMON();
     }
     /**
-     * check we are allowed to delete and load appropriate method
+     * check we are allowed to paste and then load display()
      */
     public function init()
     {
         $this->gatekeep->init();
-        if (array_key_exists('function', $this->vars)) {
-            $function = $this->vars['function'];
-            $this->{$function}();
-        } else {
-            $this->display();
-        }
+        $this->display();
     }
     /**
      * Display form for pasting bibtex
      *
-     * @param false|string $message
+     * @param mixed $message
      */
     public function display($message = FALSE)
     {
-        if (!$message) {
-            $this->session->delVar("import_Paste");
+        $formData = [];
+        if (is_array($message)) {
+            $formData = $message[1]; // For some reason, this need to be taken first . . .
+            $message = $message[0];
+        } elseif (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
         }
+        $pString = $message;
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('pasteBibtex'));
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexImport"));
-        $this->session->delVar("importLock");
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexPaste"));
         $category = FACTORY_CATEGORY::getInstance();
         $categories = $category->grabAll();
-        $pString = $message;
         if (count($categories) > 1) {
             $pString .= \HTML\p($this->messages->text("import", "categoryPrompt"));
         }
@@ -79,60 +75,56 @@ class PASTEBIBTEX
                 ' ' . WIKINDX_MAX_PASTE . " "
             ));
         }
-        $pString .= \HTML\tableStart('borderSpacingMedium');
+        $pString .= \HTML\tableStart('generalTable borderSpacingMedium');
         $pString .= \HTML\trStart();
         $categoryTd = FALSE;
         if (count($categories) > 1) {
-            if ($sessionCategories = $this->session->getVar("import_Categories")) {
-                $sCategories = UTF8::mb_explode(",", $sessionCategories);
-                $element = \FORM\selectedBoxValueMultiple($this->messages->text(
-                    "import",
-                    "category"
-                ), 'import_Categories', $categories, $sCategories, 5);
-            } else {
-                $element = \FORM\selectFBoxValueMultiple($this->messages->text(
-                    "import",
-                    "category"
-                ), 'import_Categories', $categories, 5);
-            }
-            $pString .= \HTML\td($element . BR .
-                \HTML\span($this->messages->text("hint", "multiples"), 'hint'));
+        	$cats = $this->import->categorySelect($categories, $formData);
+            $pString .= \HTML\td($cats . BR .
+                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint'));
             $categoryTd = TRUE;
         }
-        if ($bibs = $this->import->bibliographySelect()) {
+        if ($bibs = $this->import->bibliographySelect($formData)) {
             $pString .= \HTML\td($bibs . BR .
-                \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'left bottom');
+                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint'));
         }
-        $pString .= \HTML\trEnd();
-        $pString .= \HTML\trStart();
-        $paste = $this->session->issetVar("import_Paste") ?
-            unserialize(base64_decode($this->session->getVar("import_Paste"))) : FALSE;
-        $pString .= \HTML\td(BR . "&nbsp;" . BR . \FORM\textareaInput(
-            FALSE,
+        $paste = array_key_exists("import_Paste", $formData) ? $formData["import_Paste"] : FALSE;
+        $pString .= \HTML\td(\FORM\textareaInput(
+            $this->messages->text("import", "pasteBibtex2"),
             "import_Paste",
             $paste,
             80,
             20
-        ), 'left bottom');
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
         $pString .= BR . "&nbsp;" . BR;
 
-        $pString .= \HTML\tableStart('borderSpacingMedium');
+        $pString .= \HTML\tableStart('generalTable borderSpacingMedium');
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td($this->messages->text("import", "quarantine") . "&nbsp;&nbsp;" .
-        	\FORM\checkbox(FALSE, "import_Quarantine"));
-        $pString .= \HTML\td($this->messages->text("import", "importDuplicates") . "&nbsp;&nbsp;" .
-            \FORM\checkbox(FALSE, 'import_ImportDuplicates'));
-        $td = $this->messages->text("import", "storeRawBibtex");
-        $pString .= \HTML\td($td . "&nbsp;&nbsp;" . $this->messages->text("import", "storeRawLabel") . "&nbsp;&nbsp;" .
-            \FORM\checkbox(FALSE, 'import_Raw'));
-        $pString .= \HTML\td($this->import->keywordSeparator());
-        $pString .= \HTML\td($this->import->titleSubtitleSeparator());
+        $td = '';
+        if (WIKINDX_QUARANTINE) {
+			$field = array_key_exists("import_Quarantine", $formData) ? TRUE : FALSE;
+			$td .= $this->messages->text("import", "quarantine") . "&nbsp;&nbsp;" .
+				\FORM\checkbox(FALSE, "import_Quarantine", $field);
+		}
+        $field = array_key_exists("import_ImportDuplicates", $formData) ? TRUE : FALSE;
+        $td .= \HTML\p($this->messages->text("import", "importDuplicates") . "&nbsp;&nbsp;" .
+            \FORM\checkbox(FALSE, 'import_ImportDuplicates', $field));
+        $field = array_key_exists("import_Raw", $formData) ? TRUE : FALSE;
+        $td .= \HTML\p($this->messages->text("import", "storeRawLabel") . "&nbsp;&nbsp;" .
+            \FORM\checkbox(FALSE, 'import_Raw', $field) . BR .
+                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "storeRawBibtex")), 'hint'));
+        $pString .= \HTML\td($td);
+        $pString .= \HTML\td($this->import->keywordSeparator($formData));
+        $pString .= \HTML\td($this->import->titleSubtitleSeparator($formData));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Submit")), FALSE, "right");
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Submit")));
         $pString .= \FORM\formEnd();
         $this->session->clearArray("import");
         GLOBALS::addTplVar('content', $pString);

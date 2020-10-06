@@ -432,22 +432,9 @@ class RESOURCEVIEW
             $this->viewDetails($row)
         );
         $resourceSingle['info']['basket'] = $this->displayBasket($row);
-        if ((WIKINDX_QUARANTINE) && $this->session->getVar("setup_Superadmin") &&
-            ($row['resourcemiscQuarantine'] == 'Y')) {
-            $quarantine = \FORM\formHeader('admin_QUARANTINE_CORE');
-            $quarantine .= \FORM\hidden("method", 'approve');
-            $quarantine .= \FORM\hidden("resourceId", $row['resourceId']);
-            $quarantine .= \FORM\formSubmit($this->messages->text("submit", "ApproveResource"));
-            $quarantine .= \FORM\formEnd();
-            $resourceSingle['info']['approveResource'] = $quarantine;
-        } elseif ((WIKINDX_QUARANTINE) && $this->session->getVar("setup_Superadmin")) {
-            $quarantine = \FORM\formHeader('admin_QUARANTINE_CORE');
-            $quarantine .= \FORM\hidden("method", 'putInQuarantine');
-            $quarantine .= \FORM\hidden("resourceId", $row['resourceId']);
-            $quarantine .= \FORM\formSubmit($this->messages->text("submit", "QuarantineResource"));
-            $quarantine .= \FORM\formEnd();
-            $resourceSingle['info']['approveResource'] = $quarantine;
-        }
+        if (WIKINDX_QUARANTINE && $this->session->getVar("setup_Superadmin")) {
+	        $resourceSingle['info']['approveResource'] = $this->displayQuarantine($row);
+	    }
         if ($return = $this->displayCategories($row)) {
             $resourceSingle['lists']['categories'] = $return;
         }
@@ -654,7 +641,7 @@ class RESOURCEVIEW
      */
     private function urls($resourceId, $userAddId)
     {
-        $this->db->formatConditions(['resourcetextId' => $resourceId]);
+    	$this->db->formatConditions(['resourcetextId' => $resourceId]);
         $recordset = $this->db->select('resource_text', ['resourcetextUrls', 'resourcetextUrlText']);
         while ($row = $this->db->fetchRow($recordset)) {
             if ($row['resourcetextUrls']) {
@@ -1055,7 +1042,7 @@ class RESOURCEVIEW
         if ($useBib) {
             $this->commonBib->userBibCondition('resourcemiscId');
         }
-        if (($row['resourceType'] == 'proceedings_article') || ($row['resourceType'] == 'proceedings')) {
+        if ((($row['resourceType'] == 'proceedings_article') || ($row['resourceType'] == 'proceedings')) && $row['resourcemiscField1']) {
             $this->db->formatConditions(['resourcemiscField1' => $row['resourcemiscField1']]);
             $resultset = $this->db->selectCounts('resource_misc', 'resourcemiscField1');
             $publisherId = $row['resourcemiscField1'];
@@ -1361,7 +1348,7 @@ class RESOURCEVIEW
                 "link",
                 \HTML\nlToHtml($line['userbibliographyTitle']),
                 "index.php?action=bibliography_CHOOSEBIB_CORE" .
-                htmlentities("&method=displayBib") . htmlentities("&BibId=" . $line['userbibliographyId'])
+                htmlentities("&method=init") . htmlentities("&BibId=" . $line['userbibliographyId'])
             );
         }
 
@@ -1417,6 +1404,29 @@ class RESOURCEVIEW
             $this->icons->getHTML("basketAdd"),
             "index.php?" . htmlentities("action=basket_BASKET_CORE&resourceId=" . $row['resourceId'])
         );
+    }
+    /**
+     * Add controls for quarantining or approving the resouce
+     *
+     * @param mixed $row
+     *
+     * @return string
+     */
+    private function displayQuarantine($row)
+    {
+        if ($row['resourcemiscQuarantine'] == 'Y') {
+			return \HTML\a(
+				$this->icons->getClass("putInQuarantine"),
+				$this->icons->getHTML("removeFromQuarantine"),
+				"index.php?" . htmlentities("action=admin_QUARANTINE_CORE&method=approve&resourceId=" . $row['resourceId'])
+			);
+        } else {
+			return \HTML\a(
+				$this->icons->getClass("removeFromQuarantine"),
+				$this->icons->getHTML("putInQuarantine"),
+				"index.php?" . htmlentities("action=admin_QUARANTINE_CORE&method=putInQuarantine&resourceId=" . $row['resourceId'])
+			);
+        }
     }
     /**
      * Display the bibtex or wikindx key

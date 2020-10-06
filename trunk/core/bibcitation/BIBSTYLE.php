@@ -277,10 +277,10 @@ class BIBSTYLE
                     $recordset = $this->db->select('publisher', ["publisherName", "publisherLocation"]);
                     $pubRow = $this->db->fetchRow($recordset);
 
-                    if ($pubRow['publisherName']) {
+                    if (is_array($pubRow) && $pubRow['publisherName']) {
                         $this->bibformat->addItem($pubRow['publisherName'], 'publisher');
                     }
-                    if ($pubRow['publisherLocation']) {
+                    if (is_array($pubRow) && $pubRow['publisherLocation']) {
                         $this->bibformat->addItem($pubRow['publisherLocation'], 'location');
                     }
                 }
@@ -292,10 +292,10 @@ class BIBSTYLE
                     $recordset = $this->db->select('publisher', ["publisherName", "publisherLocation"]);
                     $pubRow = $this->db->fetchRow($recordset);
 
-                    if ($pubRow['publisherName']) {
+                    if (is_array($pubRow) && $pubRow['publisherName']) {
                         $this->bibformat->addItem($pubRow['publisherName'], 'transPublisherName');
                     }
-                    if ($pubRow['publisherLocation']) {
+                    if (is_array($pubRow) && $pubRow['publisherLocation']) {
                         $this->bibformat->addItem($pubRow['publisherLocation'], 'transPublisherLocation');
                     }
                 }

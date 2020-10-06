@@ -62,7 +62,7 @@ class CHOOSEBIB
             'targetDiv' => 'div',
         ];
         $js = \AJAX\jActionForm('onchange', $jsonArray);
-        $selected = $this->session->getVar("mywikindx_Bibliography_use");
+        $selected = array_key_exists('BibId', $this->vars) ? $this->vars['BibId'] : $this->session->getVar("mywikindx_Bibliography_use");
         $size = count($bibsArray);
         if ($size > 20) {
             $size = 10;

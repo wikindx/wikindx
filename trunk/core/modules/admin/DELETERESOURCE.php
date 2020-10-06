@@ -76,7 +76,8 @@ class DELETERESOURCE
         }
         $res = FACTORY_RESOURCECOMMON::getInstance();
         if (is_array($this->vars['resource_id'])) {
-            $maxSize = ini_get('max_input_vars');
+// Appears to be an unnecessary check . . .
+/*            $maxSize = ini_get('max_input_vars');
             $size = 0;
             foreach ($this->vars as $var) {
                 if (is_array($var)) {
@@ -89,7 +90,7 @@ class DELETERESOURCE
                 $this->display($this->errors->text("inputError", "maxInputVars", "$maxSize"));
                 FACTORY_CLOSE::getInstance();
             }
-            $this->db->formatConditionsOneField($this->vars['resource_id'], 'resourceId');
+*/            $this->db->formatConditionsOneField($this->vars['resource_id'], 'resourceId');
         } else {
             $this->db->formatConditions(['resourceId' => $this->vars['resource_id']]);
         }
@@ -99,8 +100,8 @@ class DELETERESOURCE
             FACTORY_CLOSE::getInstance();
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete"));
-        // Rather than print 100s or 1000s of resources, we limit display to <= 50
-        if ($numDeletes <= 50) {
+        // Rather than print 100s or 1000s of resources, we limit display to <= 'PagingMaxLinks'
+        if ($numDeletes <= GLOBALS::getUserVar('PagingMaxLinks')) {
             $resourceList = [];
             $bibStyle = FACTORY_BIBSTYLE::getInstance();
             $bibStyle->output = 'html';
@@ -134,7 +135,7 @@ class DELETERESOURCE
             $pString .= \FORM\hidden("nextDelete", $this->vars['nextDelete']);
         }
         $pString .= BR . "&nbsp;" . BR;
-        if ($numDeletes > 50) {
+        if ($numDeletes > GLOBALS::getUserVar('PagingMaxLinks')) {
             $pString .= \FORM\formSubmit($this->messages->text("submit", "Delete")) . \FORM\formEnd();
         }
         GLOBALS::addTplVar('content', $pString);
@@ -174,7 +175,7 @@ class DELETERESOURCE
                 $temp[$key] = $value;
             }
             $tags = $temp;
-            $pString .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text("misc", "tag"), 'bibtex_tagId', $tags, 5) .
+            $pString .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text("misc", "tag"), 'tagId', $tags, 5) .
             BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
             	$this->messages->text("hint", "multiples")), 'hint'));
         }
@@ -423,8 +424,8 @@ class DELETERESOURCE
         if (!empty($this->resourceIds)) {
             $this->vars = array_merge($this->vars, $this->resourceIds);
         }
-        if (array_key_exists('bibtex_tagId', $this->vars)) {
-            foreach ($this->vars['bibtex_tagId'] as $tag) {
+        if (array_key_exists('tagId', $this->vars)) {
+            foreach ($this->vars['tagId'] as $tag) {
                 if ($tag) {
                     $this->deleteType = 'tag';
 
@@ -500,7 +501,7 @@ class DELETERESOURCE
      */
     private function collectResourceFromTag()
     {
-        $this->db->formatConditionsOneField($this->vars['bibtex_tagId'], 'resourcemiscTag');
+        $this->db->formatConditionsOneField($this->vars['tagId'], 'resourcemiscTag');
         $recordset = $this->db->select('resource_misc', 'resourcemiscId');
         if (!$this->db->numRows($recordset)) {
             $this->display($this->messages->text("resources", "noResult"));

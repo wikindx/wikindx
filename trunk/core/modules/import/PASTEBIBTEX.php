@@ -90,7 +90,7 @@ class PASTEBIBTEX
                 \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
             	$this->messages->text("hint", "multiples")), 'hint'));
         }
-        $paste = array_key_exists("import_Paste", $formData) ? $formData["import_Paste"] : FALSE;
+        $paste = array_key_exists("import_Paste", $formData) ? base64_decode($formData["import_Paste"]) : FALSE;
         $pString .= \HTML\td(\FORM\textareaInput(
             $this->messages->text("import", "pasteBibtex2"),
             "import_Paste",

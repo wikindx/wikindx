@@ -139,8 +139,9 @@ class importexportbibMessages
             "exportEndnoteFileType" => dgettext($domain, "Endnote file type"),
             "exportEndnoteXml" => dgettext($domain, "Endnote XML"),
             "exportEndnoteTabbed" => dgettext($domain, "Endnote tabbed"),
-            "importPubMedIntro" => dgettext($domain, "Search PubMed: please enter one or more fields.  Multiple items within a field
-				should be separated by a space.  Per NCBI policy, a maximum of 100 search results can be obtained."),
+            "importPubMedIntro" => dgettext($domain, "Search PubMed: please enter one or more fields – if the ID field is 
+            	completed, only one result will be returned if found. Multiple items within a field
+				should be separated by a space. Per NCBI policy, a maximum of 100 search results can be obtained."),
             "importPubMedId" => dgettext($domain, "PubMed ID"),
             "importPubMedFields" => dgettext($domain, "All Fields"),
             "importPubMedAuthor" => dgettext($domain, "Author"),

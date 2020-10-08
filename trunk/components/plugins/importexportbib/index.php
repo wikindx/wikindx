@@ -115,7 +115,14 @@ class importexportbib_MODULE
 
             return;
         }
-        $pString = $message ? $message : FALSE;
+        if (array_key_exists('uuid', $this->vars)) {
+        	$data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
+        	if (is_array($data)) { // FALSE if no longer there (reloading page e.g.)
+				\TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+				$message = $data['message'];
+			}
+        }
+        $pString = $message;
         $filesDir = TRUE;
         $pString .= HTML\p($this->pluginmessages->text("contents"));
         $minutes = $deletePeriod / 60;
@@ -130,6 +137,8 @@ class importexportbib_MODULE
         $pString .= HTML\p($this->pluginmessages->text("warning", " $minutes "));
         GLOBALS::addTplVar('content', $pString);
     }
+    /**
+     * 
     /**
      * downloadFile
      */
@@ -215,7 +224,6 @@ class importexportbib_MODULE
 
             return;
         }
-        $this->session->delVar("importLock");
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerPubMedImport"));
         $pString = $message ? $message : FALSE;
         $pString .= $pubmed->displayImport();

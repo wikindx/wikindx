@@ -1149,13 +1149,14 @@ class IMPORTBIBTEX
             	$error = $this->errors->text("inputError", "missing");
             }
             else {
-				$this->formData["import_Paste"] = stripslashes(trim($this->vars['import_Paste']));
-				list($fileName, $fullFileName) = FILE\createFileName($this->dirName, $this->formData["import_Paste"], '.bib');
+            	$pasteInput = stripslashes(trim($this->vars['import_Paste']));
+				$this->formData["import_Paste"] = base64_encode($pasteInput);
+				list($fileName, $fullFileName) = FILE\createFileName($this->dirName, $pasteInput, '.bib');
 				if (!$fullFileName) {
 					$error = $this->errors->text("file", "write", ": $fileName");
 				}
 				if ($fp = fopen("$fullFileName", "w")) {
-					if (!fwrite($fp, $this->formData["import_Paste"])) {
+					if (!fwrite($fp, $pasteInput)) {
 						$error = $this->errors->text("file", "write", ": $fileName");
 					}
 					fclose($fp);

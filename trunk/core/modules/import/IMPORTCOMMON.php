@@ -928,13 +928,8 @@ class IMPORTCOMMON
         $possibleFields = array_unique($possibleFields);
         // Get custom fields
         $recordset = $this->db->select('custom', ['customId', 'customLabel']);
-        $customFound = FALSE;
         while ($row = $this->db->fetchRow($recordset)) {
             $possibleFields[] = $row['customId'] . '&nbsp;&nbsp;custom:&nbsp;&nbsp;' . $row['customLabel'];
-            $customFound = TRUE;
-        }
-        if (!$customFound) {
-            return [FALSE, FALSE];
         }
         if ($importType == 'endnote') {
             $pString = \HTML\p($this->messages->text('import', 'invalidField3'));

@@ -134,18 +134,21 @@ class PUBMED
     /*
      * Print form fields for importing into WIKINDX
      *
-     * @param bool $display
-     *
      * @return string
      */
-    public function wikindxImportFields($display = FALSE)
+    public function wikindxImportFields()
     {
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "import", "IMPORTCOMMON.php"]));
         $importCommon = new IMPORTCOMMON();
         $coremessages = FACTORY_MESSAGES::getInstance();
         $tag = FACTORY_TAG::getInstance();
         $category = FACTORY_CATEGORY::getInstance();
-        $formData = [];
+		$db = FACTORY_DB::getInstance();
+		$session = FACTORY_SESSION::getInstance();
+		$uuid = $session->getVar('import_Uuid');
+		$session->delVar('import_Uuid');
+		$formData = \TEMPSTORAGE\fetch($db, $uuid);
+		\TEMPSTORAGE\delete($db, $uuid);
         $categories = $category->grabAll();
         $pString = '';
         if (count($categories) > 1) {
@@ -155,7 +158,8 @@ class PUBMED
         $pString .= HTML\trStart();
         // Load tags
         $tags = $tag->grabAll();
-        $tagInput = FORM\textInput($coremessages->text("import", "tag"), "import_Tag", $this->session->getVar("import_Tag"), 30, 255);
+        $input = is_array($formData) && array_key_exists("import_Tag", $formData) ? $formData["import_Tag"] : FALSE; 
+        $tagInput = FORM\textInput($coremessages->text("import", "tag"), "import_Tag", $input, 30, 255);
         if ($tags) {
             // add 0 => IGNORE to tags array
             $temp[0] = $coremessages->text("misc", "ignore");
@@ -163,10 +167,8 @@ class PUBMED
                 $temp[$key] = $value;
             }
             $tags = $temp;
-            $sessionTag = $this->session->issetVar("import_TagId") ?
-                $this->session->getVar("import_TagId") : FALSE;
-            if ($sessionTag) {
-                $element = FORM\selectedBoxValue(FALSE, 'import_TagId', $tags, 5);
+            if (is_array($formData) && array_key_exists("import_TagId", $formData)) {
+                $element = FORM\selectedBoxValue(FALSE, 'import_TagId', $tags, $formData["import_TagId"], 5);
             } else {
                 $element = FORM\selectFBoxValue(FALSE, 'import_TagId', $tags, 5);
             }
@@ -176,7 +178,7 @@ class PUBMED
         }
         $categoryTd = FALSE;
         if (count($categories) > 1) {
-            if (array_key_exists("import_Categories", $formData)) {
+            if (is_array($formData) && array_key_exists("import_Categories", $formData)) {
                 $element = FORM\selectedBoxValueMultiple($coremessages->text(
                     "import",
                     "category"
@@ -198,15 +200,15 @@ class PUBMED
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
         $pString .= HTML\tableStart('generalTable borderStyleSolid');
-        $checked = array_key_exists("import_Quarantine", $formData) ? TRUE : FALSE;
+        $checked = is_array($formData) && array_key_exists("import_Quarantine", $formData) ? TRUE : FALSE;
         $td = $coremessages->text("import", "quarantine") . "&nbsp;&nbsp;" .
-        	\FORM\checkbox(FALSE, "import_Quarantine");
-        $checked = $this->session->issetVar("import_ImportDuplicates", $formData) ? TRUE : FALSE;
-        $td .= HTML\p($coremessages->text("import", "importDuplicates") . "&nbsp;&nbsp;" .
-            FORM\checkbox(FALSE, 'import_ImportDuplicates'), $checked);
-        $field = array_key_exists("import_Raw", $formData) ? TRUE : FALSE;
+        	\FORM\checkbox(FALSE, "import_Quarantine", $checked);
+        $checked = is_array($formData) && array_key_exists("import_ImportDuplicates", $formData) ? TRUE : FALSE;
+        $td .= \HTML\p($coremessages->text("import", "importDuplicates") . 
+        	"&nbsp;&nbsp;" . \FORM\checkbox(FALSE, 'import_ImportDuplicates', $checked));
+        $checked = is_array($formData) && array_key_exists("import_Raw", $formData) ? TRUE : FALSE;
         $td .= \HTML\p($coremessages->text("import", "storeRawLabel") . "&nbsp;&nbsp;" .
-            \FORM\checkbox(FALSE, 'import_Raw', $field) . BR .
+            \FORM\checkbox(FALSE, 'import_Raw', $checked) . BR .
                 \HTML\span(\HTML\aBrowse('green', '', $coremessages->text("hint", "hint"), '#', "", 
             	$coremessages->text("hint", "storeRawBibtex")), 'hint'));
         $pString .= \HTML\td($td);
@@ -214,7 +216,6 @@ class PUBMED
         $pString .= HTML\td($importCommon->titleSubtitleSeparator($formData));
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
-
         return HTML\div('wikindxImport', $pString);
     }
     /*
@@ -222,10 +223,10 @@ class PUBMED
      */
     public function processPubMed()
     {
-        $this->validateInput();
         if (array_key_exists('importpubMed_Wikindx', $this->vars)) {
             $this->storeImport();
         }
+        $this->validateInput();
         $pString = $this->fetch();
         if (!array_key_exists('importpubMed_Wikindx', $this->vars)) {
         	$db = FACTORY_DB::getInstance();
@@ -450,55 +451,44 @@ class PUBMED
      */
     private function storeImport()
     {
-        // a multiple select box so handle as array
+    	$formData = [];
+    	// a multiple select box so handle as array
         if (array_key_exists('import_Categories', $this->vars) && $this->vars['import_Categories']) {
-            if (!$this->session->setVar("import_Categories", trim(implode(',', $this->vars['import_Categories'])))) {
-                $this->badInput($this->errors->text("sessionError", "write"));
-            }
+            $formData["import_Categories"] = $this->vars['import_Categories'];
+        } else { // force to 'General'
+        	$formData["import_Categories"] = [1];
         }
         // a multiple select box so handle as array
         if (array_key_exists('import_BibId', $this->vars) && $this->vars['import_BibId']) {
-            if (!$this->session->setVar("import_BibId", trim(implode(',', $this->vars['import_BibId'])))) {
-                $this->badInput($this->errors->text("sessionError", "write"));
-            }
+            $formData["import_BibId"] = $this->vars['import_BibId'];
         }
         if (array_key_exists('import_Raw', $this->vars) && $this->vars['import_Raw']) {
-            if (!$this->session->setVar("import_Raw", 1)) {
-                $this->badInput($this->errors->text("sessionError", "write"));
-            }
+            $formData["import_Raw"] = $this->vars['import_Raw'];
         }
-        if (!$this->session->setVar("import_KeywordSeparator", $this->vars['import_KeywordSeparator'])) {
-            $this->badInput($this->errors->text("sessionError", "write"));
+        if (array_key_exists('import_KeywordIgnore', $this->vars)) {
+        	$formData["import_KeywordIgnore"] = $this->vars['import_KeywordIgnore'];
         }
-        if (!$this->session->setVar("import_TitleSubtitleSeparator", $this->vars['import_TitleSubtitleSeparator'])) {
-            $this->badInput($this->errors->text("sessionError", "write"));
+        if (array_key_exists('import_ImportDuplicates', $this->vars)) {
+        	$formData["import_ImportDuplicates"] = $this->vars['import_ImportDuplicates'];
         }
-        if (array_key_exists('import_ImportDuplicates', $this->vars) && $this->vars['import_ImportDuplicates']) {
-            if (!$this->session->setVar("import_ImportDuplicates", 1)) {
-                $this->badInput($this->errors->text("sessionError", "write"));
-            }
+        if (array_key_exists('import_Quarantine', $this->vars)) {
+        	$formData["import_Quarantine"] = $this->vars['import_Quarantine'];
         }
-        // Force to 1 => 'General' category
-        if (!$this->session->getVar("import_Categories")) {
-            if (!$this->session->setVar("import_Categories", 1)) {
-                $this->badInput($this->errors->text("sessionError", "write"));
-            }
-        }
-        if (trim($this->vars['import_Tag'])) {
-            if (!$tagId = $this->tag->checkExists(trim($this->vars['import_Tag']))) {
-                if (!$this->session->setVar("import_Tag", trim($this->vars['import_Tag']))) {
-                    $this->badInput($this->errors->text("sessionError", "write"));
-                }
-            } else {
-                if (!$this->session->setVar("import_TagId", $tagId)) {
-                    $this->badInput($this->errors->text("sessionError", "write"));
-                }
-            }
-        } elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId']) {
-            if (!$this->session->setVar("import_TagId", $this->vars['import_TagId'])) {
-                $this->badInput($this->errors->text("sessionError", "write"));
-            }
-        }
+        $formData["import_KeywordSeparator"] = $this->vars['import_KeywordSeparator'];
+        $formData["import_TitleSubtitleSeparator"] = $this->vars['import_TitleSubtitleSeparator'];
+		if ($this->vars['import_Tag']) {
+			if ($tagId = $this->tag->checkExists(trim($this->vars['import_Tag']))) { // Existing tag found
+				$formData['import_TagId'] = $tagId;
+			} else {
+				$formData['import_Tag'] = trim($this->vars['import_Tag']);
+			}
+		} elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId']) {
+			$formData['import_TagId'] = $this->vars['import_TagId'];
+		}
+		$db = FACTORY_DB::getInstance();
+		$uuid = \TEMPSTORAGE\getUuid($db);
+		\TEMPSTORAGE\store($db, $uuid, $formData);
+		$this->session->setVar('import_Uuid', $uuid);
     }
     /*
      * validate and store input in session

@@ -308,7 +308,7 @@ class IMPORTCOMMON
      */
     public function keywordSeparator($formData = [])
     {
-        $sessVar = array_key_exists("import_KeywordSeparator", $formData) ?
+        $sessVar = is_array($formData) && array_key_exists("import_KeywordSeparator", $formData) ?
             $formData["import_KeywordSeparator"] : FALSE;
         $array = [
             $this->messages->text('misc', 'keywordImport1'),
@@ -332,7 +332,7 @@ class IMPORTCOMMON
                 4
             );
         }
-        $sessVar = array_key_exists("import_KeywordIgnore", $formData) ? TRUE : FALSE;
+        $sessVar = is_array($formData) && array_key_exists("import_KeywordIgnore", $formData) ? TRUE : FALSE;
 
         return $pString .= \HTML\p(\FORM\checkBox(
             $this->messages->text('misc', 'keywordIgnore'),
@@ -349,7 +349,8 @@ class IMPORTCOMMON
      */
     public function titleSubtitleSeparator($formData = [])
     {
-        $sessVar = array_key_exists("import_TitleSubtitleSeparator", $formData) ? $formData["import_TitleSubtitleSeparator"] : FALSE;
+        $sessVar = is_array($formData) && array_key_exists("import_TitleSubtitleSeparator", $formData) ? 
+        	$formData["import_TitleSubtitleSeparator"] : FALSE;
         $array = [
             $this->messages->text('misc', 'titleSubtitleSeparator1'),
             $this->messages->text('misc', 'titleSubtitleSeparator2'),
@@ -415,7 +416,16 @@ class IMPORTCOMMON
             }
         }
         if (isset($bibsArray)) {
-        	$field = array_key_exists("import_BibId", $formData) ? $formData["import_BibId"] : [-1];
+        	$field = is_array($formData) && array_key_exists("import_BibId", $formData) ? $formData["import_BibId"] : [-1];
+        	if ((sizeof($field) > 1) && in_array(-1, $field)) {
+        		unset($field[array_search(-1, $field)]);
+			}
+        	if (in_array(-2, $field)) {
+        		unset($field[array_search(-2, $field)]);
+				if (empty($field)) {
+					$field = [-1];
+				}
+			}
             return \FORM\selectedBoxValueMultiple($this->messages->text("user", 'bib'), "import_BibId", $bibsArray, $field, 5);
         } else {
             return FALSE;

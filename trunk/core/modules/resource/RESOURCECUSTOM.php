@@ -118,7 +118,6 @@ class RESOURCECUSTOM
         $this->gatekeep->init();
         $this->checkInput(['id', 'size']);
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $this->session->delVar("resourceCustomLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userEditField"));
         if ($this->vars['size'] == 'L') {
             $fieldName = 'resourcecustomLong';
@@ -162,9 +161,6 @@ class RESOURCECUSTOM
      */
     public function edit()
     {
-        if ($this->session->getVar("resourceCustomLock")) {
-            $this->badInput->close($this->errors->text("done", "custom"));
-        }
         $this->gatekeep->init();
         $this->checkInput(['id', 'size', 'resourceId']);
         $userId = $this->session->getVar("setup_UserId");
@@ -194,8 +190,6 @@ class RESOURCECUSTOM
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $email = new EMAIL($this->db);
         $email->notify($this->vars['resourceId']);
-        // lock reload
-        $this->session->setVar("resourceCustomLock", TRUE);
         // send back to view this resource with success message
         $this->navigate($message);
     }
@@ -207,7 +201,6 @@ class RESOURCECUSTOM
         $this->gatekeep->init();
         $this->checkInput(['id', 'resourceId']);
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $this->session->delVar("resourceCustomLock");
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userEditField"));
         $this->db->formatConditions(['customId' => $this->vars['id']]);
         $row = $this->db->selectFirstRow('custom', ['customLabel', 'customSize']);
@@ -244,9 +237,6 @@ class RESOURCECUSTOM
      */
     public function write()
     {
-        if ($this->session->getVar("resourceCustomLock")) {
-            $this->badInput->close($this->errors->text("done", "custom"));
-        }
         $this->gatekeep->init();
         $this->checkInput(['id', 'size', 'resourceId', 'customText']);
         $userId = $this->session->getVar("setup_UserId");
@@ -273,8 +263,6 @@ class RESOURCECUSTOM
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $email = new EMAIL($this->db);
         $email->notify($this->vars['resourceId']);
-        // lock reload
-        $this->session->setVar("resourceCustomLock", TRUE);
         // send back to view this resource with success message
         $this->navigate($this->success->text("fieldAdd"));
     }
@@ -287,7 +275,7 @@ class RESOURCECUSTOM
     {
         foreach ($array as $item) {
             if (!array_key_exists($item, $this->vars) || !$this->vars[$item]) {
-                $this->badInput->close($this->errors->text("inputError", "missing"));
+                $this->navigate($this->errors->text("inputError", "missing"));
             }
         }
     }

@@ -87,7 +87,7 @@ class NAVIGATE
      */
     public function resource($resourceId, $message)
     {
-		header("Location: index.php?action=basket_BASKET_CORE&method=view&message=$message&id=$resourceId");
+		header("Location: index.php?action=resource_RESOURCEVIEW_CORE&message=$message&id=$resourceId");
 		die;
     }
     /**

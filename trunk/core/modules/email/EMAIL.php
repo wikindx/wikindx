@@ -30,6 +30,7 @@ class EMAIL
     private $titles = [];
     private $allAddedIds = [];
     private $allEditedIds = [];
+    private $formData = [];
 
     public function __construct()
     {
@@ -191,23 +192,28 @@ class EMAIL
      * START functions for emailing a resource to a friend
      * Called from index.php
      *
-     * @param mixed $error
+     * @param mixed $message
      */
-    public function emailFriendDisplay($error = FALSE)
+    public function emailFriendDisplay($message = FALSE)
     {
         if (array_key_exists('id', $this->vars)) {
             $hyperlink = WIKINDX_URL_BASE . "/index.php?action=resource_RESOURCEVIEW_CORE&id=" . $this->vars['id'];
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "emailFriend"));
-        $pString = $error ? \HTML\p($error, "error", "center") : FALSE;
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
+        $pString = $message;
         $pString .= \FORM\formHeader("email_EMAIL_CORE");
         $pString .= \FORM\hidden('method', 'emailFriend');
-        $address = $this->session->getVar("emailFriend_Address");
-        $subject = $this->session->getVar("emailFriend_Subject");
+        $pString .= \FORM\hidden('id', $this->vars['id']);
+        $address = array_key_exists("emailFriend_Address", $this->formData) ? $this->formData["emailFriend_Address"] : FALSE;
+        $subject = array_key_exists("emailFriend_Subject", $this->formData) ? $this->formData["emailFriend_Subject"] : FALSE;
         if (isset($hyperlink)) {
             $text = "\n\n$hyperlink";
         } else {
             $text = $this->session->getVar("emailFriend_Text");
+        	$text = array_key_exists("emailFriend_Text", $this->formData) ? $this->formData["emailFriend_Text"] : FALSE;
         }
         $pString .= \HTML\p(\FORM\textInput(
             $this->messages->text("misc", "emailFriendAddress"),
@@ -229,7 +235,8 @@ class EMAIL
             80,
             10
         ));
-        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Email")), FALSE, "right");
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Email")) . '&nbsp;&nbsp;' . 
+        	\FORM\closePopup($this->messages->text("misc", "closePopup")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSENOMENU::getInstance();
@@ -248,9 +255,36 @@ class EMAIL
         if (!$this->smtp->sendEmail($addresses, $subject, $text)) {
             $this->badInput->close($this->errors->text('inputError', 'mail2'), $this, 'emailFriendDisplay');
         }
-        $this->session->clearArray('emailFriend');
-        GLOBALS::addTplVar('content', $this->success->text('emailFriend'));
-        FACTORY_CLOSENOMENU::getInstance();
+		$message = rawurlencode($this->success->text('emailFriend'));
+		$id = $this->vars['id'];
+		header("Location: index.php?action=email_EMAIL_CORE&method=emailFriendDisplay&message=$message&id=$id");
+		die;
+    }
+    /**
+     * checkFriendInput
+     *
+     * @return array
+     */
+    private function checkFriendInput()
+    {
+        $address = $subject = $text = FALSE;
+        if (array_key_exists('emailFriend_address', $this->vars)) {
+            $address = trim($this->vars['emailFriend_address']);
+        }
+        if (array_key_exists('emailFriend_subject', $this->vars)) {
+            $subject = trim($this->vars['emailFriend_subject']);
+        }
+        if (array_key_exists('emailFriend_text', $this->vars)) {
+            $text = trim($this->vars['emailFriend_text']);
+        }
+        $this->formData["emailFriend_Address"] = $address;
+        $this->formData["emailFriend_Subject"] = $subject;
+        $this->formData["emailFriend_Text"] = $text;
+        if (!$address || !$subject || !$text) {
+            $this->badInput->close($this->errors->text('inputError', 'missing'), $this, 'emailFriendDisplay');
+        }
+
+        return [$address, $subject, $text];
     }
     /**
      * Emailing username::password to forgetful user
@@ -345,32 +379,6 @@ class EMAIL
         }
 
         return TRUE; // success
-    }
-    /**
-     * checkFriendInput
-     *
-     * @return array
-     */
-    private function checkFriendInput()
-    {
-        $address = $subject = $text = FALSE;
-        if (array_key_exists('emailFriend_address', $this->vars)) {
-            $address = trim($this->vars['emailFriend_address']);
-        }
-        if (array_key_exists('emailFriend_subject', $this->vars)) {
-            $subject = trim($this->vars['emailFriend_subject']);
-        }
-        if (array_key_exists('emailFriend_text', $this->vars)) {
-            $text = trim($this->vars['emailFriend_text']);
-        }
-        $this->session->setVar("emailFriend_Address", $address);
-        $this->session->setVar("emailFriend_Subject", $subject);
-        $this->session->setVar("emailFriend_Text", $text);
-        if (!$address || !$subject || !$text) {
-            $this->badInput->close($this->errors->text('inputError', 'missing'), $this, 'emailFriendDisplay');
-        }
-
-        return [$address, $subject, $text];
     }
     /**
      * Email those with a notification threshold set

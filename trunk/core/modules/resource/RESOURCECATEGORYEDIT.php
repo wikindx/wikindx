@@ -30,6 +30,7 @@ class RESOURCECATEGORYEDIT
     private $subcategories = [];
     private $keywords = [];
     private $subcatArray = [];
+    private $formData = [];
 
     public function __construct()
     {
@@ -73,7 +74,6 @@ class RESOURCECATEGORYEDIT
         $pString .= \FORM\formEnd();
         \AJAX\loadJavascript(WIKINDX_URL_BASE . '/core/modules/resource/resourceCategoryEdit.js?ver=' . WIKINDX_PUBLIC_VERSION);
         GLOBALS::addTplVar('content', $pString);
-        $this->session->delVar("resourceLock");
     }
     /**
      * Display categories etc. in a table.
@@ -110,16 +110,16 @@ class RESOURCECATEGORYEDIT
      */
     public function edit()
     {
-        if ($this->session->getVar("resourceLock")) {
-            $this->badInput->close($this->errors->text("done", "resource"));
-        }
         if (!array_key_exists('id', $this->vars) || !$this->vars['id']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
-        }
+        } // force to 'General' if nothing there
         if (!array_key_exists('categoryIds', $this->vars) || empty($this->vars['categoryIds'])) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
+            $this->vars['categoryIds'][0] = 1;
         }
-        $this->writeLanguageTable();
+        $this->storeData();
+        if (!$this->writeLanguageTable()) {
+        	return;
+        }
         $this->writeCategoryTable();
         $this->writeKeywordTable();
         $this->writeUserTagsTable();
@@ -129,7 +129,6 @@ class RESOURCECATEGORYEDIT
         // Update edit user
         $this->db->formatConditions(['resourcemiscId' => $this->vars['id']]);
         $this->db->update('resource_misc', ['resourcemiscEditUserIdResource' => $this->session->getVar("setup_UserId")]);
-        $this->session->setVar("resourceLock", TRUE);
         $this->navigate($this->success->text("categoryKeywordEdit"));
     }
     /**
@@ -169,14 +168,16 @@ class RESOURCECATEGORYEDIT
                     $pString .= \HTML\td(\FORM\selectedBoxValueMultiple($this->messages->text(
                         'resources',
                         'languages'
-                    ), 'languageIds', $languages, $selected, 6) . BR .
-                        \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px');
+                    ), 'languageIds', $languages, $selected, 6) . BR . 
+                    \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            		$this->messages->text("hint", "multiples")), 'hint'), 'padding3px');
                 } else {
                     $pString .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text(
                         'resources',
                         'languages'
-                    ), 'languageIds', $languages, 6) . BR .
-                        \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px');
+                    ), 'languageIds', $languages, 6) . BR . 
+                    \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            		$this->messages->text("hint", "multiples")), 'hint'), 'padding3px');
                 }
             } else {
                 $checkbox = FALSE;
@@ -194,8 +195,9 @@ class RESOURCECATEGORYEDIT
                 $pString .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text(
                     'resources',
                     'languages'
-                ) . $checkbox, 'languageIds', $languages, 6) . BR .
-                        \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px');
+                ) . $checkbox, 'languageIds', $languages, 6) . BR . 
+                    \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            		$this->messages->text("hint", "multiples")), 'hint'), 'padding3px');
             }
             if ($multiIds) {
                 $radios = \HTML\span(\FORM\radioButton(FALSE, 'languageRadio', 'add', TRUE) .
@@ -222,14 +224,21 @@ class RESOURCECATEGORYEDIT
     public function displayCategory($multiIds)
     {
         if (!$multiIds) {
-            $this->db->formatConditions(['resourcecategoryResourceId' => $this->vars['id']]);
-            $resultset = $this->db->select('resource_category', ['resourcecategoryCategoryId', 'resourcecategorySubcategoryId']);
-            while ($row = $this->db->fetchRow($resultset)) {
-                $catArray[] = $row['resourcecategoryCategoryId'];
-                if ($row['resourcecategorySubcategoryId']) {
-                    $this->subcatArray[] = $row['resourcecategorySubcategoryId'];
-                }
-            }
+			if (!empty($this->formData)) {
+				if (array_key_exists('categoryIds', $this->formData)) {
+					$catArray = $this->formData['categoryIds'];
+				}
+			}
+			else {
+				$this->db->formatConditions(['resourcecategoryResourceId' => $this->vars['id']]);
+				$resultset = $this->db->select('resource_category', ['resourcecategoryCategoryId', 'resourcecategorySubcategoryId']);
+				while ($row = $this->db->fetchRow($resultset)) {
+					$catArray[] = $row['resourcecategoryCategoryId'];
+					if ($row['resourcecategorySubcategoryId']) {
+						$this->subcatArray[] = $row['resourcecategorySubcategoryId'];
+					}
+				}
+			}
             $selectedCategories = [];
             foreach ($catArray as $key) {
                 if (!array_key_exists($key, $this->categories)) {
@@ -269,8 +278,8 @@ class RESOURCECATEGORYEDIT
             'availableCategory',
             $this->categories,
             6
-        ) .
-            BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
+        ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         list($toRightImage, $toLeftImage) = $this->category->transferArrowsCat();
         $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage) . $radios, 'padding3px left width5percent');
         if (!$multiIds) {
@@ -279,14 +288,16 @@ class RESOURCECATEGORYEDIT
                 'categoryIds',
                 $selectedCategories,
                 6
-            ), 'padding3px left width18percent');
+            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         } else {
             $td .= \HTML\td(\FORM\selectFBoxValueMultiple(
                 $this->messages->text('select', "category"),
                 'categoryIds',
                 [],
                 6
-            ), 'padding3px left width18percent');
+            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         }
         $td .= \HTML\trEnd();
         $td .= \HTML\tableEnd();
@@ -307,15 +318,22 @@ class RESOURCECATEGORYEDIT
         }
         $pString = FALSE;
         $checkbox = FALSE;
+        $selectedSubcategories = [];
+		if (!empty($this->formData)) {
+			if (array_key_exists('subcategoryIds', $this->formData)) {
+				$this->subcatArray = $this->formData['subcategoryIds'];
+			} else {
+				$this->subcatArray = [];
+			}
+		}
+		foreach ($this->subcatArray as $key) {
+			if (!array_key_exists($key, $this->subcategories)) {
+				continue;
+			}
+			$selectedSubcategories[$key] = $this->subcategories[$key];
+			unset($this->subcategories[$key]);
+		}
         if (!$multiIds) {
-            $selectedSubcategories = [];
-            foreach ($this->subcatArray as $key) {
-                if (!array_key_exists($key, $this->subcategories)) {
-                    continue;
-                }
-                $selectedSubcategories[$key] = $this->subcategories[$key];
-                unset($this->subcategories[$key]);
-            }
             $pString .= \HTML\tableStart()
                 . \HTML\trStart()
                 . \HTML\td('&nbsp;', '', 3)
@@ -343,8 +361,8 @@ class RESOURCECATEGORYEDIT
             'availableSubcategory',
             $this->subcategories,
             6
-        ) .
-            BR . \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width18percent');
+        ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         list($toRightImage, $toLeftImage) = $this->category->transferArrowsSubcat();
         $pString .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage) . $radios, 'padding3px left width5percent');
         if (!$multiIds) {
@@ -353,14 +371,16 @@ class RESOURCECATEGORYEDIT
                 'subcategoryIds',
                 $selectedSubcategories,
                 6
-            ), 'padding3px left width18percent');
+            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         } else {
             $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
                 $this->messages->text('select', "subcategory"),
                 'subcategoryIds',
                 [],
                 6
-            ), 'padding3px left width18percent');
+            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -377,24 +397,38 @@ class RESOURCECATEGORYEDIT
     public function displayKeyword($multiIds)
     {
         $checkbox = FALSE;
+        $keywordString = '';
         $pString = \HTML\tableStart('generalTable');
         $pString .= \HTML\trStart();
         if (!empty($this->keywords)) {
-            // If preferences reduce long keywords, we want to transfer the original rather than the condensed version.
-            // Store the base64-encoded value for retrieval in the javascript.
-            foreach ($this->keywords as $key => $value) {
-                $key = $key . '_' . base64_encode($value);
-                $keywords[$key] = html_entity_decode($value);
-            }
             if (!$multiIds) {
-                $this->db->formatConditions(['resourcekeywordResourceId' => $this->vars['id']]);
-                $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
-                $this->db->orderBy('keywordKeyword');
-                $resultset = $this->db->select('resource_keyword', ['resourcekeywordKeywordId', 'keywordKeyword']);
-                while ($row = $this->db->fetchRow($resultset)) {
-                    $keywordArray[] = $row['keywordKeyword'];
-                }
-                $keywordString = isset($keywordArray) ? implode(', ', $keywordArray) : FALSE;
+				if (!empty($this->formData) && trim($this->formData['keywords'])) {
+					$keywordString = $this->formData['keywords'];
+					$inputKws = explode(',', $keywordString);
+					foreach ($inputKws as $name) {
+						if (in_array(trim($name), $this->keywords)) {
+							$key = array_search(trim($name), $this->keywords);
+							unset($this->keywords[$key]);
+						}
+					}
+				}
+				else {
+					$keywordArray = [];
+					$this->db->formatConditions(['resourcekeywordResourceId' => $this->vars['id']]);
+					$this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
+					$this->db->orderBy('keywordKeyword');
+					$resultset = $this->db->select('resource_keyword', ['resourcekeywordKeywordId', 'keywordKeyword']);
+					while ($row = $this->db->fetchRow($resultset)) {
+						$keywordArray[] = $row['keywordKeyword'];
+					}
+					foreach ($keywordArray as $name) {
+						if (in_array(trim($name), $this->keywords)) {
+							$key = array_search(trim($name), $this->keywords);
+							unset($this->keywords[$key]);
+						}
+					}
+                	$keywordString = isset($keywordArray) ? implode(', ', $keywordArray) : FALSE;
+				}
                 $radios = FALSE;
             } else {
                 $jScript = 'index.php?action=list_LISTADDTO_CORE&method=displayKeyword';
@@ -419,13 +453,19 @@ class RESOURCECATEGORYEDIT
                 ), "small");
                 $radios = \HTML\p($radios);
             }
+            // If preferences reduce long keywords, we want to transfer the original rather than the condensed version.
+            // Store the base64-encoded value for retrieval in the javascript.
+            foreach ($this->keywords as $key => $value) {
+                $key = $key . '_' . base64_encode($value);
+                $keywords[$key] = html_entity_decode($value);
+            }
             $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
                 $this->messages->text('resources', 'availableKeywords') . $checkbox,
                 'fromKeywords',
                 $keywords,
                 6
-            ) . BR .
-                \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width20percent');
+            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
             $jsonArray = [];
             $jsonArray[] = [
                 'startFunction' => 'transferKeyword',
@@ -440,8 +480,8 @@ class RESOURCECATEGORYEDIT
                     \HTML\dbToFormTidy($keywordString),
                     50,
                     5
-                ) . BR .
-                    \HTML\span($this->messages->text("hint", "keywords"), 'hint'), 'padding3px left width20percent');
+                ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "keywords")), 'hint'), 'padding3px left width18percent');
             } else {
                 $pString .= \HTML\td(\FORM\textareaInput(
                     $this->messages->text("resources", "keywords"),
@@ -449,8 +489,8 @@ class RESOURCECATEGORYEDIT
                     FALSE,
                     45,
                     5
-                ) . BR .
-                    \HTML\span($this->messages->text("hint", "keywords"), 'hint'), 'padding3px left width20percent');
+                ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "keywords")), 'hint'), 'padding3px left width18percent');
             }
         } else {
             $pString .= \HTML\td(\FORM\textareaInput(
@@ -459,7 +499,8 @@ class RESOURCECATEGORYEDIT
                 FALSE,
                 50,
                 5
-            ) . BR . \HTML\span($this->messages->text("hint", "keywordsAlt"), 'hint'), 'padding3px');
+            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -476,6 +517,7 @@ class RESOURCECATEGORYEDIT
     public function displayUserTags($multiIds)
     {
         $checkbox = FALSE;
+        $userTagString = '';
         if (!$multiIds) {
             $this->db->formatConditions(['resourceusertagsResourceId' => $this->vars['id']]);
             $radios = FALSE;
@@ -502,23 +544,32 @@ class RESOURCECATEGORYEDIT
             ), "small");
             $radios = \HTML\p($radios);
         }
-        $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
-        $this->db->leftJoin('user_tags', 'usertagsId', 'resourceusertagsTagId');
-        $resultset = $this->db->select('resource_user_tags', 'resourceusertagsTagId');
-        $tagIds = [];
-        while ($row = $this->db->fetchRow($resultset)) {
-            $tagIds[] = $row['resourceusertagsTagId'];
-        }
-        foreach ($this->userTags as $userTagId => $userTagName) {
-            if (array_search($userTagId, $tagIds) !== FALSE) {
-                $thisResourceTags[$userTagId] = $userTagName;
-            }
-            // If preferences reduce long userTags, we want to transfer the original rather than the condensed version.
-            // Store the base64-encoded value for retrieval in the javascript.
-            $userTagId = $userTagId . '_' . base64_encode($userTagName);
-            $userTags[$userTagId] = html_entity_decode($userTagName);
-        }
-        $userTagString = isset($thisResourceTags) ? implode(', ', $thisResourceTags) : FALSE;
+        $tagIds = $userTags = [];
+        if (!empty($this->formData) && trim($this->formData['userTags'])) {
+        	$userTagString = $this->formData['userTags'];
+        	$inputTags = explode(',', $userTagString);
+        	foreach ($inputTags as $name) {
+				if (in_array(trim($name), $this->userTags)) {
+					$key = array_search(trim($name), $this->userTags);
+					unset($this->userTags[$key]);
+				}
+			}
+        } else {
+			$this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
+			$this->db->leftJoin('user_tags', 'usertagsId', 'resourceusertagsTagId');
+			$resultset = $this->db->select('resource_user_tags', 'resourceusertagsTagId');
+			while ($row = $this->db->fetchRow($resultset)) {
+				$tagIds[] = $this->userTags[$row['resourceusertagsTagId']];
+				unset($this->userTags[$row['resourceusertagsTagId']]);
+			}
+	        $userTagString = isset($tagIds) ? implode(', ', $tagIds) : FALSE;
+	    }
+		foreach ($this->userTags as $userTagId => $userTagName) {
+			// If preferences reduce long userTags, we want to transfer the original rather than the condensed version.
+			// Store the base64-encoded value for retrieval in the javascript.
+			$userTagId = $userTagId . '_' . base64_encode($userTagName);
+			$userTags[$userTagId] = html_entity_decode($userTagName);
+		}
         $pString = \HTML\tableStart('generalTable');
         $pString .= \HTML\trStart();
         $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
@@ -526,8 +577,8 @@ class RESOURCECATEGORYEDIT
             'fromUserTags',
             $userTags,
             6
-        ) . BR .
-            \HTML\span($this->messages->text("hint", "multiples"), 'hint'), 'padding3px left width20percent');
+        ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         $jsonArray = [];
         $jsonArray[] = [
             'startFunction' => 'transferUserTag',
@@ -542,8 +593,8 @@ class RESOURCECATEGORYEDIT
                 $userTagString,
                 50,
                 5
-            ) . BR .
-                \HTML\span($this->messages->text("hint", "userTags"), 'hint'), 'padding3px left width20percent');
+            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            $this->messages->text("hint", "userTags")), 'hint'), 'padding3px left width18percent');
         } else {
             $pString .= \HTML\td(\FORM\textareaInput(
                 $this->messages->text("resources", "userTags"),
@@ -551,21 +602,72 @@ class RESOURCECATEGORYEDIT
                 FALSE,
                 45,
                 5
-            ) . BR .
-                \HTML\span($this->messages->text("hint", "userTags"), 'hint'), 'padding3px left width20percent');
+            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            $this->messages->text("hint", "userTags")), 'hint'), 'padding3px left width18percent');
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
         return $pString;
     }
+    /** 
+	 * Store form data in case of missing languageIds
+	 *
+	 */
+	private function storeData()
+	{
+		if (array_key_exists('languageIds', $this->vars)) {
+			$this->formData['languageIds'] = $this->vars['languageIds'];
+			if (array_key_exists('languageRadio', $this->vars)) {
+				$this->formData['languageRadio'] = $this->vars['languageRadio'];
+			}
+			if (array_key_exists('displayLanguage', $this->vars)) {
+				$this->formData['displayLanguage'] = $this->vars['displayLanguage'];
+			}
+		}
+		$this->formData['categoryIds'] = $this->vars['categoryIds'];
+		if (array_key_exists('categoryRadio', $this->vars)) {
+			$this->formData['categoryRadio'] = $this->vars['categoryRadio'];
+		}
+		if (array_key_exists('displayCategory', $this->vars)) {
+			$this->formData['displayCategory'] = $this->vars['displayCategory'];
+		}
+		if (array_key_exists('subcategoryIds', $this->vars)) {
+			$this->formData['subcategoryIds'] = $this->vars['subcategoryIds'];
+			if (array_key_exists('subcategoryRadio', $this->vars)) {
+				$this->formData['subcategoryRadio'] = $this->vars['subcategoryRadio'];
+			}
+			if (array_key_exists('displaySubcategory', $this->vars)) {
+				$this->formData['displaySubcategory'] = $this->vars['displaySubcategory'];
+			}
+		}
+		if (array_key_exists('keywords', $this->vars)) {
+			$this->formData['keywords'] = trim($this->vars['keywords']);
+			if (array_key_exists('keywordRadio', $this->vars)) {
+				$this->formData['keywordRadio'] = $this->vars['keywordRadio'];
+			}
+			if (array_key_exists('displayKeyword', $this->vars)) {
+				$this->formData['displayKeyword'] = $this->vars['displayKeyword'];
+			}
+		}
+		if (array_key_exists('userTags', $this->vars)) {
+			$this->formData['userTags'] = trim($this->vars['userTags']);
+			if (array_key_exists('usertagRadio', $this->vars)) {
+				$this->formData['usertagRadio'] = $this->vars['usertagRadio'];
+			}
+			if (array_key_exists('displayUsertag', $this->vars)) {
+				$this->formData['displayUsertag'] = $this->vars['displayUsertag'];
+			}
+		}
+	}
     /**
      * write to resource_language
      */
     private function writeLanguageTable()
     {
         if (!array_key_exists('languageIds', $this->vars)) {
-            return;
+            $this->init($this->errors->text("inputError", "missing"));
+            return FALSE;
         }
         // remove all old languages from resource
         $this->db->formatConditions(['resourcelanguageResourceId' => $this->vars['id']]);
@@ -581,6 +683,7 @@ class RESOURCECATEGORYEDIT
                 [$this->vars['id'], $lId]
             );
         }
+        return TRUE;
     }
     /**
      * write to resource_category
@@ -591,9 +694,6 @@ class RESOURCECATEGORYEDIT
         $this->db->formatConditions(['resourcecategoryResourceId' => $this->vars['id']]);
         $this->db->delete('resource_category');
         // add new categories
-        if (empty($this->vars['categoryIds'])) {
-            $this->vars['categoryIds'][] = 1; // force to 'General' category
-        }
         foreach ($this->vars['categoryIds'] as $cId) {
             $this->db->insert(
                 'resource_category',
@@ -602,10 +702,6 @@ class RESOURCECATEGORYEDIT
             );
         }
         if (array_key_exists('subcategoryIds', $this->vars)) {
-            // Remove 'IGNORE' field
-            if (array_search(0, $this->vars['subcategoryIds']) === 0) {
-                unset($this->vars['subcategoryIds'][0]);
-            }
             $this->writeSubcategoryTable();
         }
     }

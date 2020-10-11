@@ -30,7 +30,7 @@ class RESOURCECATEGORYEDIT
     private $subcategories = [];
     private $keywords = [];
     private $subcatArray = [];
-    private $formData = [];
+    public $formData = []; // Used by modules/list/LISTADDTO.php
 
     public function __construct()
     {
@@ -190,7 +190,8 @@ class RESOURCECATEGORYEDIT
                         'targetDiv' => 'languageDiv',
                     ];
                     $js = \AJAX\jActionForm('onchange', $jsonArray);
-                    $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displayLanguage", TRUE, '', $js = '');
+            		$check = !empty($this->formData) && !array_key_exists('displayLanguage', $this->formData) ? FALSE : TRUE;
+                    $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displayLanguage", $check, '', $js = '');
                 }
                 $pString .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text(
                     'resources',
@@ -223,31 +224,32 @@ class RESOURCECATEGORYEDIT
      */
     public function displayCategory($multiIds)
     {
-        if (!$multiIds) {
-			if (!empty($this->formData)) {
-				if (array_key_exists('categoryIds', $this->formData)) {
-					$catArray = $this->formData['categoryIds'];
+    	if (!empty($this->formData)) {
+			if (array_key_exists('categoryIds', $this->formData)) {
+				$catArray = $this->formData['categoryIds'];
+			}
+		}
+        elseif (!$multiIds) {
+			$this->db->formatConditions(['resourcecategoryResourceId' => $this->vars['id']]);
+			$resultset = $this->db->select('resource_category', ['resourcecategoryCategoryId', 'resourcecategorySubcategoryId']);
+			while ($row = $this->db->fetchRow($resultset)) {
+				$catArray[] = $row['resourcecategoryCategoryId'];
+				if ($row['resourcecategorySubcategoryId']) {
+					$this->subcatArray[] = $row['resourcecategorySubcategoryId'];
 				}
 			}
-			else {
-				$this->db->formatConditions(['resourcecategoryResourceId' => $this->vars['id']]);
-				$resultset = $this->db->select('resource_category', ['resourcecategoryCategoryId', 'resourcecategorySubcategoryId']);
-				while ($row = $this->db->fetchRow($resultset)) {
-					$catArray[] = $row['resourcecategoryCategoryId'];
-					if ($row['resourcecategorySubcategoryId']) {
-						$this->subcatArray[] = $row['resourcecategorySubcategoryId'];
-					}
-				}
-			}
-            $selectedCategories = [];
-            foreach ($catArray as $key) {
-                if (!array_key_exists($key, $this->categories)) {
-                    continue;
-                }
-                $selectedCategories[$key] = $this->categories[$key];
-                unset($this->categories[$key]);
-            }
         }
+        else {
+			$catArray = [];
+		}
+		$selectedCategories = [];
+		foreach ($catArray as $key) {
+			if (!array_key_exists($key, $this->categories)) {
+				continue;
+			}
+			$selectedCategories[$key] = $this->categories[$key];
+			unset($this->categories[$key]);
+		}
         $td = FALSE;
         if (!$multiIds) {
             $td .= \HTML\tableStart() . \HTML\trStart() .
@@ -267,7 +269,8 @@ class RESOURCECATEGORYEDIT
                 'targetDiv' => 'categoryDiv',
             ];
             $js = \AJAX\jActionForm('onchange', $jsonArray);
-            $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displayCategory", TRUE, '', $js = '');
+            $check = !empty($this->formData) && !array_key_exists('displayCategory', $this->formData) ? FALSE : TRUE;
+            $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displayCategory", $check, '', $js = '');
             $radios = \HTML\span(\FORM\radioButton(FALSE, 'categoryRadio', 'add', TRUE) .
                 $this->messages->text('misc', 'add'), "small") . BR;
             $radios .= \HTML\span(\FORM\radioButton(FALSE, 'categoryRadio', 'remove') .
@@ -282,23 +285,13 @@ class RESOURCECATEGORYEDIT
             $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         list($toRightImage, $toLeftImage) = $this->category->transferArrowsCat();
         $td .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage) . $radios, 'padding3px left width5percent');
-        if (!$multiIds) {
-            $td .= \HTML\td(\FORM\selectFBoxValueMultiple(
-                $this->messages->text('select', "category"),
-                'categoryIds',
-                $selectedCategories,
-                6
-            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
-        } else {
-            $td .= \HTML\td(\FORM\selectFBoxValueMultiple(
-                $this->messages->text('select', "category"),
-                'categoryIds',
-                [],
-                6
-            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
-        }
+        $td .= \HTML\td(\FORM\selectFBoxValueMultiple(
+			$this->messages->text('select', "category"),
+			'categoryIds',
+			$selectedCategories,
+			6
+			) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+			$this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         $td .= \HTML\trEnd();
         $td .= \HTML\tableEnd();
 
@@ -348,7 +341,8 @@ class RESOURCECATEGORYEDIT
                 'targetDiv' => 'subcategoryDiv',
             ];
             $js = \AJAX\jActionForm('onchange', $jsonArray);
-            $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displaySubcategory", TRUE, '', $js = '');
+            $check = !empty($this->formData) && !array_key_exists('displaySubcategory', $this->formData) ? FALSE : TRUE;
+            $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displaySubcategory", $check, '', $js = '');
             $radios = \HTML\span(\FORM\radioButton(FALSE, 'subcategoryRadio', 'add', TRUE) .
                 $this->messages->text('misc', 'add'), "small") . BR;
             $radios .= \HTML\span(\FORM\radioButton(FALSE, 'subcategoryRadio', 'remove') .
@@ -365,23 +359,13 @@ class RESOURCECATEGORYEDIT
             $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         list($toRightImage, $toLeftImage) = $this->category->transferArrowsSubcat();
         $pString .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage) . $radios, 'padding3px left width5percent');
-        if (!$multiIds) {
-            $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
-                $this->messages->text('select', "subcategory"),
-                'subcategoryIds',
-                $selectedSubcategories,
-                6
-            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
-        } else {
-            $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
-                $this->messages->text('select', "subcategory"),
-                'subcategoryIds',
-                [],
-                6
-            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            $this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
-        }
+        $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
+			$this->messages->text('select', "subcategory"),
+			'subcategoryIds',
+			$selectedSubcategories,
+			6
+			) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+			$this->messages->text("hint", "multiples")), 'hint'), 'padding3px left width18percent');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -397,40 +381,14 @@ class RESOURCECATEGORYEDIT
     public function displayKeyword($multiIds)
     {
         $checkbox = FALSE;
-        $keywordString = '';
+        $keywordString = FALSE;
         $pString = \HTML\tableStart('generalTable');
         $pString .= \HTML\trStart();
         if (!empty($this->keywords)) {
-            if (!$multiIds) {
-				if (!empty($this->formData) && trim($this->formData['keywords'])) {
-					$keywordString = $this->formData['keywords'];
-					$inputKws = explode(',', $keywordString);
-					foreach ($inputKws as $name) {
-						if (in_array(trim($name), $this->keywords)) {
-							$key = array_search(trim($name), $this->keywords);
-							unset($this->keywords[$key]);
-						}
-					}
-				}
-				else {
-					$keywordArray = [];
-					$this->db->formatConditions(['resourcekeywordResourceId' => $this->vars['id']]);
-					$this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
-					$this->db->orderBy('keywordKeyword');
-					$resultset = $this->db->select('resource_keyword', ['resourcekeywordKeywordId', 'keywordKeyword']);
-					while ($row = $this->db->fetchRow($resultset)) {
-						$keywordArray[] = $row['keywordKeyword'];
-					}
-					foreach ($keywordArray as $name) {
-						if (in_array(trim($name), $this->keywords)) {
-							$key = array_search(trim($name), $this->keywords);
-							unset($this->keywords[$key]);
-						}
-					}
-                	$keywordString = isset($keywordArray) ? implode(', ', $keywordArray) : FALSE;
-				}
-                $radios = FALSE;
-            } else {
+        	if (!$multiIds) {
+				$radios = FALSE;
+			}
+            else {
                 $jScript = 'index.php?action=list_LISTADDTO_CORE&method=displayKeyword';
                 $jsonArray[] = [
                     'startFunction' => 'triggerFromSelect',
@@ -439,7 +397,8 @@ class RESOURCECATEGORYEDIT
                     'targetDiv' => 'keywordDiv',
                 ];
                 $js = \AJAX\jActionForm('onchange', $jsonArray);
-                $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displayKeyword", TRUE, '', $js = '');
+            	$check = !empty($this->formData) && !array_key_exists('displayKeyword', $this->formData) ? FALSE : TRUE;
+                $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displayKeyword", $check, '', $js = '');
                 $radios = \HTML\span(\FORM\radioButton(
                     $this->messages->text('misc', 'add'),
                     'keywordRadio',
@@ -453,6 +412,21 @@ class RESOURCECATEGORYEDIT
                 ), "small");
                 $radios = \HTML\p($radios);
             }
+			$keywords = $keywordArray = [];
+			if (!empty($this->formData) && trim($this->formData['keywords'])) {
+				$keywordString = $this->formData['keywords'];
+			} else {
+				if (!$multiIds) {
+					$this->db->formatConditions(['resourcekeywordResourceId' => $this->vars['id']]);
+				}
+				$this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
+				$this->db->orderBy('keywordKeyword');
+				$resultset = $this->db->select('resource_keyword', ['resourcekeywordKeywordId', 'keywordKeyword']);
+				while ($row = $this->db->fetchRow($resultset)) {
+					$keywordArray[] = $row['keywordKeyword'];
+				}
+				$keywordString = isset($keywordArray) ? implode(', ', $keywordArray) : FALSE;
+			}
             // If preferences reduce long keywords, we want to transfer the original rather than the condensed version.
             // Store the base64-encoded value for retrieval in the javascript.
             foreach ($this->keywords as $key => $value) {
@@ -473,30 +447,19 @@ class RESOURCECATEGORYEDIT
             $toLeftImage = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
             $pString .= \HTML\td($toLeftImage . $radios, 'padding3px', 'left', FALSE, FALSE, '5%');
             // Entry text area
-            if (!$multiIds) {
-                $pString .= \HTML\td(\FORM\textareaInput(
-                    $this->messages->text("resources", "keywords"),
-                    "keywords",
-                    \HTML\dbToFormTidy($keywordString),
-                    50,
-                    5
-                ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "keywords")), 'hint'), 'padding3px left width18percent');
-            } else {
-                $pString .= \HTML\td(\FORM\textareaInput(
-                    $this->messages->text("resources", "keywords"),
-                    "keywords",
-                    FALSE,
-                    45,
-                    5
-                ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "keywords")), 'hint'), 'padding3px left width18percent');
-            }
+            $pString .= \HTML\td(\FORM\textareaInput(
+				$this->messages->text("resources", "keywords"),
+				"keywords",
+				\HTML\dbToFormTidy($keywordString),
+				50,
+				5
+				) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+				$this->messages->text("hint", "keywords")), 'hint'), 'padding3px left width18percent');
         } else {
             $pString .= \HTML\td(\FORM\textareaInput(
                 $this->messages->text("resources", "keywords"),
                 "keywords",
-                FALSE,
+                $keywordString,
                 50,
                 5
             ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
@@ -519,7 +482,6 @@ class RESOURCECATEGORYEDIT
         $checkbox = FALSE;
         $userTagString = '';
         if (!$multiIds) {
-            $this->db->formatConditions(['resourceusertagsResourceId' => $this->vars['id']]);
             $radios = FALSE;
         } else {
             $jScript = 'index.php?action=list_LISTADDTO_CORE&method=displayUsertag';
@@ -530,7 +492,8 @@ class RESOURCECATEGORYEDIT
                 'targetDiv' => 'usertagDiv',
             ];
             $js = \AJAX\jActionForm('onchange', $jsonArray);
-            $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displayUsertag", TRUE, '', $js = '');
+            $check = !empty($this->formData) && !array_key_exists('displayUsertag', $this->formData) ? FALSE : TRUE;
+            $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displayUsertag", $check, '', $js = '');
             $radios = \HTML\span(\FORM\radioButton(
                 $this->messages->text('misc', 'add'),
                 'usertagRadio',
@@ -547,20 +510,15 @@ class RESOURCECATEGORYEDIT
         $tagIds = $userTags = [];
         if (!empty($this->formData) && trim($this->formData['userTags'])) {
         	$userTagString = $this->formData['userTags'];
-        	$inputTags = explode(',', $userTagString);
-        	foreach ($inputTags as $name) {
-				if (in_array(trim($name), $this->userTags)) {
-					$key = array_search(trim($name), $this->userTags);
-					unset($this->userTags[$key]);
-				}
-			}
         } else {
+			if (!$multiIds) {
+				$this->db->formatConditions(['resourceusertagsResourceId' => $this->vars['id']]);
+			}
 			$this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
 			$this->db->leftJoin('user_tags', 'usertagsId', 'resourceusertagsTagId');
 			$resultset = $this->db->select('resource_user_tags', 'resourceusertagsTagId');
 			while ($row = $this->db->fetchRow($resultset)) {
 				$tagIds[] = $this->userTags[$row['resourceusertagsTagId']];
-				unset($this->userTags[$row['resourceusertagsTagId']]);
 			}
 	        $userTagString = isset($tagIds) ? implode(', ', $tagIds) : FALSE;
 	    }
@@ -586,25 +544,14 @@ class RESOURCECATEGORYEDIT
         $toLeftImage = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
         $pString .= \HTML\td($toLeftImage . $radios, 'padding3px left width5percent');
         // Entry text area
-        if (!$multiIds) {
-            $pString .= \HTML\td(\FORM\textareaInput(
-                $this->messages->text("resources", "userTags"),
-                "userTags",
-                $userTagString,
-                50,
-                5
-            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            $this->messages->text("hint", "userTags")), 'hint'), 'padding3px left width18percent');
-        } else {
-            $pString .= \HTML\td(\FORM\textareaInput(
-                $this->messages->text("resources", "userTags"),
-                "userTags",
-                FALSE,
-                45,
-                5
-            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            $this->messages->text("hint", "userTags")), 'hint'), 'padding3px left width18percent');
-        }
+		$pString .= \HTML\td(\FORM\textareaInput(
+			$this->messages->text("resources", "userTags"),
+			"userTags",
+			$userTagString,
+			50,
+			5
+		) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+		$this->messages->text("hint", "userTags")), 'hint'), 'padding3px left width18percent');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -614,7 +561,7 @@ class RESOURCECATEGORYEDIT
 	 * Store form data in case of missing languageIds
 	 *
 	 */
-	private function storeData()
+	public function storeData()
 	{
 		if (array_key_exists('languageIds', $this->vars)) {
 			$this->formData['languageIds'] = $this->vars['languageIds'];
@@ -625,12 +572,14 @@ class RESOURCECATEGORYEDIT
 				$this->formData['displayLanguage'] = $this->vars['displayLanguage'];
 			}
 		}
-		$this->formData['categoryIds'] = $this->vars['categoryIds'];
-		if (array_key_exists('categoryRadio', $this->vars)) {
-			$this->formData['categoryRadio'] = $this->vars['categoryRadio'];
-		}
-		if (array_key_exists('displayCategory', $this->vars)) {
-			$this->formData['displayCategory'] = $this->vars['displayCategory'];
+		if (array_key_exists('categoryIds', $this->vars)) {
+			$this->formData['categoryIds'] = $this->vars['categoryIds'];
+			if (array_key_exists('categoryRadio', $this->vars)) {
+				$this->formData['categoryRadio'] = $this->vars['categoryRadio'];
+			}
+			if (array_key_exists('displayCategory', $this->vars)) {
+				$this->formData['displayCategory'] = $this->vars['displayCategory'];
+			}
 		}
 		if (array_key_exists('subcategoryIds', $this->vars)) {
 			$this->formData['subcategoryIds'] = $this->vars['subcategoryIds'];

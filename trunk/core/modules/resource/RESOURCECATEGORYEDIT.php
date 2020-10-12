@@ -201,9 +201,17 @@ class RESOURCECATEGORYEDIT
             		$this->messages->text("hint", "multiples")), 'hint'), 'padding3px');
             }
             if ($multiIds) {
-                $radios = \HTML\span(\FORM\radioButton(FALSE, 'languageRadio', 'add', TRUE) .
+            	if (!empty($this->formData) && array_key_exists('languageRadio', $this->formData) && 
+            		($this->formData['languageRadio'] == 'remove')) {
+            		$add = FALSE;
+    	        	$remove = 'CHECKED';
+    	        } else {
+					$add = 'CHECKED';
+					$remove = FALSE;
+				}
+                $radios = \HTML\span(\FORM\radioButton(FALSE, 'languageRadio', 'add', $add) .
                     $this->messages->text('misc', 'add'), "small") . BR;
-                $radios .= \HTML\span(\FORM\radioButton(FALSE, 'languageRadio', 'remove') .
+                $radios .= \HTML\span(\FORM\radioButton(FALSE, 'languageRadio', 'remove', $remove) .
                     $this->messages->text('misc', 'remove'), "small");
                 $pString .= \HTML\td($radios, 'padding3px');
             }
@@ -224,6 +232,7 @@ class RESOURCECATEGORYEDIT
      */
     public function displayCategory($multiIds)
     {
+		$catArray = [];
     	if (!empty($this->formData)) {
 			if (array_key_exists('categoryIds', $this->formData)) {
 				$catArray = $this->formData['categoryIds'];
@@ -239,9 +248,6 @@ class RESOURCECATEGORYEDIT
 				}
 			}
         }
-        else {
-			$catArray = [];
-		}
 		$selectedCategories = [];
 		foreach ($catArray as $key) {
 			if (!array_key_exists($key, $this->categories)) {
@@ -271,9 +277,17 @@ class RESOURCECATEGORYEDIT
             $js = \AJAX\jActionForm('onchange', $jsonArray);
             $check = !empty($this->formData) && !array_key_exists('displayCategory', $this->formData) ? FALSE : TRUE;
             $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displayCategory", $check, '', $js = '');
-            $radios = \HTML\span(\FORM\radioButton(FALSE, 'categoryRadio', 'add', TRUE) .
+			if (!empty($this->formData) && array_key_exists('categoryRadio', $this->formData) && 
+				($this->formData['categoryRadio'] == 'remove')) {
+				$add = FALSE;
+				$remove = 'CHECKED';
+			} else {
+				$add = 'CHECKED';
+				$remove = FALSE;
+			}
+            $radios = \HTML\span(\FORM\radioButton(FALSE, 'categoryRadio', 'add', $add) .
                 $this->messages->text('misc', 'add'), "small") . BR;
-            $radios .= \HTML\span(\FORM\radioButton(FALSE, 'categoryRadio', 'remove') .
+            $radios .= \HTML\span(\FORM\radioButton(FALSE, 'categoryRadio', 'remove', $remove) .
                 $this->messages->text('misc', 'remove'), "small");
         }
         $td .= \HTML\td(\FORM\selectFBoxValueMultiple(
@@ -343,9 +357,17 @@ class RESOURCECATEGORYEDIT
             $js = \AJAX\jActionForm('onchange', $jsonArray);
             $check = !empty($this->formData) && !array_key_exists('displaySubcategory', $this->formData) ? FALSE : TRUE;
             $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displaySubcategory", $check, '', $js = '');
-            $radios = \HTML\span(\FORM\radioButton(FALSE, 'subcategoryRadio', 'add', TRUE) .
+			if (!empty($this->formData) && array_key_exists('subcategoryRadio', $this->formData) && 
+				($this->formData['subcategoryRadio'] == 'remove')) {
+				$add = FALSE;
+				$remove = 'CHECKED';
+			} else {
+				$add = 'CHECKED';
+				$remove = FALSE;
+			}
+            $radios = \HTML\span(\FORM\radioButton(FALSE, 'subcategoryRadio', 'add', $add) .
                 $this->messages->text('misc', 'add'), "small") . BR;
-            $radios .= \HTML\span(\FORM\radioButton(FALSE, 'subcategoryRadio', 'remove') .
+            $radios .= \HTML\span(\FORM\radioButton(FALSE, 'subcategoryRadio', 'remove', $remove) .
                 $this->messages->text('misc', 'remove'), "small");
         }
         $pString .= \HTML\tableStart('generalTable');
@@ -399,16 +421,25 @@ class RESOURCECATEGORYEDIT
                 $js = \AJAX\jActionForm('onchange', $jsonArray);
             	$check = !empty($this->formData) && !array_key_exists('displayKeyword', $this->formData) ? FALSE : TRUE;
                 $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displayKeyword", $check, '', $js = '');
+				if (!empty($this->formData) && array_key_exists('keywordRadio', $this->formData) && 
+					($this->formData['keywordRadio'] == 'remove')) {
+					$add = FALSE;
+					$remove = 'CHECKED';
+				} else {
+					$add = 'CHECKED';
+					$remove = FALSE;
+				}
                 $radios = \HTML\span(\FORM\radioButton(
                     $this->messages->text('misc', 'add'),
                     'keywordRadio',
                     'add',
-                    TRUE
+                    $add
                 ), "small") . BR;
                 $radios .= \HTML\span(\FORM\radioButton(
                     $this->messages->text('misc', 'remove'),
                     'keywordRadio',
-                    'remove'
+                    'remove',
+                    $remove
                 ), "small");
                 $radios = \HTML\p($radios);
             }
@@ -418,14 +449,16 @@ class RESOURCECATEGORYEDIT
 			} else {
 				if (!$multiIds) {
 					$this->db->formatConditions(['resourcekeywordResourceId' => $this->vars['id']]);
+					$this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
+					$this->db->orderBy('keywordKeyword');
+					$resultset = $this->db->select('resource_keyword', ['resourcekeywordKeywordId', 'keywordKeyword']);
+					while ($row = $this->db->fetchRow($resultset)) {
+						$keywordArray[] = $row['keywordKeyword'];
+					}
+					$keywordString = isset($keywordArray) ? implode(', ', $keywordArray) : FALSE;
+				} else {
+					$keywordString = FALSE;
 				}
-				$this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
-				$this->db->orderBy('keywordKeyword');
-				$resultset = $this->db->select('resource_keyword', ['resourcekeywordKeywordId', 'keywordKeyword']);
-				while ($row = $this->db->fetchRow($resultset)) {
-					$keywordArray[] = $row['keywordKeyword'];
-				}
-				$keywordString = isset($keywordArray) ? implode(', ', $keywordArray) : FALSE;
 			}
             // If preferences reduce long keywords, we want to transfer the original rather than the condensed version.
             // Store the base64-encoded value for retrieval in the javascript.
@@ -494,16 +527,25 @@ class RESOURCECATEGORYEDIT
             $js = \AJAX\jActionForm('onchange', $jsonArray);
             $check = !empty($this->formData) && !array_key_exists('displayUsertag', $this->formData) ? FALSE : TRUE;
             $checkbox = "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "displayUsertag", $check, '', $js = '');
+			if (!empty($this->formData) && array_key_exists('usertagRadio', $this->formData) && 
+				($this->formData['usertagRadio'] == 'remove')) {
+				$add = FALSE;
+				$remove = 'CHECKED';
+			} else {
+				$add = 'CHECKED';
+				$remove = FALSE;
+			}
             $radios = \HTML\span(\FORM\radioButton(
                 $this->messages->text('misc', 'add'),
                 'usertagRadio',
                 'add',
-                TRUE
+                $add
             ), "small") . BR;
             $radios .= \HTML\span(\FORM\radioButton(
                 $this->messages->text('misc', 'remove'),
                 'usertagRadio',
-                'remove'
+                'remove',
+                $remove
             ), "small");
             $radios = \HTML\p($radios);
         }
@@ -513,14 +555,16 @@ class RESOURCECATEGORYEDIT
         } else {
 			if (!$multiIds) {
 				$this->db->formatConditions(['resourceusertagsResourceId' => $this->vars['id']]);
+				$this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
+				$this->db->leftJoin('user_tags', 'usertagsId', 'resourceusertagsTagId');
+				$resultset = $this->db->select('resource_user_tags', 'resourceusertagsTagId');
+				while ($row = $this->db->fetchRow($resultset)) {
+					$tagIds[] = $this->userTags[$row['resourceusertagsTagId']];
+				}
+				$userTagString = isset($tagIds) ? implode(', ', $tagIds) : FALSE;
+			} else {
+				$userTagString = FALSE;
 			}
-			$this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
-			$this->db->leftJoin('user_tags', 'usertagsId', 'resourceusertagsTagId');
-			$resultset = $this->db->select('resource_user_tags', 'resourceusertagsTagId');
-			while ($row = $this->db->fetchRow($resultset)) {
-				$tagIds[] = $this->userTags[$row['resourceusertagsTagId']];
-			}
-	        $userTagString = isset($tagIds) ? implode(', ', $tagIds) : FALSE;
 	    }
 		foreach ($this->userTags as $userTagId => $userTagName) {
 			// If preferences reduce long userTags, we want to transfer the original rather than the condensed version.
@@ -565,48 +609,51 @@ class RESOURCECATEGORYEDIT
 	{
 		if (array_key_exists('languageIds', $this->vars)) {
 			$this->formData['languageIds'] = $this->vars['languageIds'];
-			if (array_key_exists('languageRadio', $this->vars)) {
-				$this->formData['languageRadio'] = $this->vars['languageRadio'];
-			}
-			if (array_key_exists('displayLanguage', $this->vars)) {
-				$this->formData['displayLanguage'] = $this->vars['displayLanguage'];
-			}
+		}
+		if (array_key_exists('languageRadio', $this->vars)) {
+			$this->formData['languageRadio'] = $this->vars['languageRadio'];
+		}
+		if (array_key_exists('displayLanguage', $this->vars)) {
+			$this->formData['displayLanguage'] = $this->vars['displayLanguage'];
 		}
 		if (array_key_exists('categoryIds', $this->vars)) {
 			$this->formData['categoryIds'] = $this->vars['categoryIds'];
-			if (array_key_exists('categoryRadio', $this->vars)) {
-				$this->formData['categoryRadio'] = $this->vars['categoryRadio'];
-			}
-			if (array_key_exists('displayCategory', $this->vars)) {
-				$this->formData['displayCategory'] = $this->vars['displayCategory'];
-			}
+		}
+		if (array_key_exists('categoryRadio', $this->vars)) {
+			$this->formData['categoryRadio'] = $this->vars['categoryRadio'];
+		}
+		if (array_key_exists('displayCategory', $this->vars)) {
+			$this->formData['displayCategory'] = $this->vars['displayCategory'];
 		}
 		if (array_key_exists('subcategoryIds', $this->vars)) {
 			$this->formData['subcategoryIds'] = $this->vars['subcategoryIds'];
-			if (array_key_exists('subcategoryRadio', $this->vars)) {
-				$this->formData['subcategoryRadio'] = $this->vars['subcategoryRadio'];
-			}
-			if (array_key_exists('displaySubcategory', $this->vars)) {
-				$this->formData['displaySubcategory'] = $this->vars['displaySubcategory'];
-			}
+		}
+		if (array_key_exists('subcategoryRadio', $this->vars)) {
+			$this->formData['subcategoryRadio'] = $this->vars['subcategoryRadio'];
+		}
+		if (array_key_exists('displaySubcategory', $this->vars)) {
+			$this->formData['displaySubcategory'] = $this->vars['displaySubcategory'];
 		}
 		if (array_key_exists('keywords', $this->vars)) {
 			$this->formData['keywords'] = trim($this->vars['keywords']);
-			if (array_key_exists('keywordRadio', $this->vars)) {
-				$this->formData['keywordRadio'] = $this->vars['keywordRadio'];
-			}
-			if (array_key_exists('displayKeyword', $this->vars)) {
-				$this->formData['displayKeyword'] = $this->vars['displayKeyword'];
-			}
+		}
+		if (array_key_exists('keywordRadio', $this->vars)) {
+			$this->formData['keywordRadio'] = $this->vars['keywordRadio'];
+		}
+		if (array_key_exists('displayKeyword', $this->vars)) {
+			$this->formData['displayKeyword'] = $this->vars['displayKeyword'];
 		}
 		if (array_key_exists('userTags', $this->vars)) {
 			$this->formData['userTags'] = trim($this->vars['userTags']);
-			if (array_key_exists('usertagRadio', $this->vars)) {
-				$this->formData['usertagRadio'] = $this->vars['usertagRadio'];
-			}
-			if (array_key_exists('displayUsertag', $this->vars)) {
-				$this->formData['displayUsertag'] = $this->vars['displayUsertag'];
-			}
+		}
+		if (array_key_exists('usertagRadio', $this->vars)) {
+			$this->formData['usertagRadio'] = $this->vars['usertagRadio'];
+		}
+		if (array_key_exists('displayUsertag', $this->vars)) {
+			$this->formData['displayUsertag'] = $this->vars['displayUsertag'];
+		}
+		if (array_key_exists('replaceExisting', $this->vars)) {
+			$this->formData['replaceExisting'] = TRUE;
 		}
 	}
     /**

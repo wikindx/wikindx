@@ -956,7 +956,6 @@ class LISTSOMERESOURCES
         $this->pagingReset();
         if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->stmt->conditions[] = ['userbibliographyresourceBibliographyId' => $this->vars["id"]];
-            $this->stmt->joins['user_bibliography_resource'] = ['userbibliographyresourceResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
             $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
             $sql = $this->stmt->listList($this->session->getVar("list_Order"));
@@ -1052,7 +1051,6 @@ class LISTSOMERESOURCES
     /**
      * Set the subQuery
      *
-     * @param string $queryString
      * @param mixed $table
      */
     private function setSubQuery($table = 'resource')
@@ -1061,9 +1059,7 @@ class LISTSOMERESOURCES
         switch ($this->session->getVar("list_Order")) {
             case 'title':
                 $this->stmt->quarantine(FALSE, 'resourceId');
-                if ($this->session->getVar("list_SomeResources") != 'bibliography') {
-                    $this->stmt->useBib('resourceId');
-                }
+            	$this->stmt->useBib('resourceId');
                 $this->stmt->executeCondJoins();
                 $this->db->groupBy(['rId']);
                 if (GLOBALS::getUserVar('PagingStyle') == 'A') {
@@ -1076,9 +1072,7 @@ class LISTSOMERESOURCES
                 $this->stmt->joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
                 $this->stmt->joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
                 $this->stmt->quarantine(FALSE, 'resourcecreatorResourceId');
-                if ($this->session->getVar("list_SomeResources") != 'bibliography') {
-                    $this->stmt->useBib('resourcecreatorResourceId');
-                }
+                $this->stmt->useBib('resourcecreatorResourceId');
                 $this->stmt->executeCondJoins();
                 $this->db->groupBy(['resourcecreatorResourceId']);
 
@@ -1087,9 +1081,7 @@ class LISTSOMERESOURCES
                 $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
                 $this->stmt->joins['publisher'] = ['publisherId', 'resourcemiscPublisher'];
                 $this->stmt->quarantine(FALSE, 'resourcemiscId', FALSE);
-                if ($this->session->getVar("list_SomeResources") != 'bibliography') {
-                    $this->stmt->useBib('resourcemiscId');
-                }
+                $this->stmt->useBib('resourcemiscId');
                 $this->stmt->executeCondJoins();
                 $this->db->groupBy(['rId']);
 
@@ -1097,9 +1089,7 @@ class LISTSOMERESOURCES
             case 'year':
                 $this->stmt->joins['resource_year'] = ['resourceyearId', 'resourceId'];
                 $this->stmt->quarantine(FALSE, 'resourceyearId');
-                if ($this->session->getVar("list_SomeResources") != 'bibliography') {
-                    $this->stmt->useBib('resourceyearId');
-                }
+                $this->stmt->useBib('resourceyearId');
                 $this->stmt->executeCondJoins();
                 $this->db->groupBy(['rId']);
 
@@ -1107,9 +1097,7 @@ class LISTSOMERESOURCES
             case 'timestamp':
                 $this->stmt->joins['resource_timestamp'] = ['resourcetimestampId', 'resourceId'];
                 $this->stmt->quarantine(FALSE, 'resourcetimestampId');
-                if ($this->session->getVar("list_SomeResources") != 'bibliography') {
-                    $this->stmt->useBib('resourcetimestampId');
-                }
+                $this->stmt->useBib('resourcetimestampId');
                 $this->stmt->executeCondJoins();
                 $this->db->groupBy(['rId']);
 

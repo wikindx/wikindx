@@ -572,8 +572,7 @@ class MESSAGES
 				"deleteConfirmUrl" => dgettext($domain, "Delete URL(s) ###"),
 				"usertags" => dgettext($domain, "User tags"),
 /// resources_warningOrganize A warning shown when organizing a list of resources (search, select etc.) into categories, keywords etc.
-				"warningOrganize" => dgettext($domain, "If you select nothing for item labels that are displayed, opt to replace the existing set and then save, you are removing those item labels from all selected resources. A resource must always belong to a category; if you attempt to save with categories removed, the resources will be placed in category 'General'.  "),
-				"replaceExisting" => dgettext($domain, "When adding items, you may either append the selections above to an existing set for each resource or replace the existing set with the selections.  Replace existing set:"),
+				"warningOrganize" => dgettext($domain, "If you select nothing for item labels that are displayed, opt to replace the existing set and then save, you are removing those item labels from all selected resources. A resource must always belong to a category; if you attempt to save with categories removed, the resources will be placed in category 'General'. Uncheck the checkboxes to disable editing for that group."),
 /// resources_availableKeywords Existing keywords stored in the database
 				"availableKeywords" => dgettext($domain, "Available keywords"),
 /// resources_availableUserTags Existing user tags stored in the database
@@ -725,6 +724,7 @@ class MESSAGES
 				"basketRemove" => dgettext($domain, "Remove from basket"),
 				"putInQuarantine" => dgettext($domain, "Quarantine resource"),
 				"removeFromQuarantine" => dgettext($domain, "Approve resource"),
+				"replaceExisting" => dgettext($domain, "Replace existing set"),
 			),
 /// hint_ Hint messages.  Helpful tips usually displayed in smaller text
 		    "hint" => array(
@@ -818,7 +818,7 @@ class MESSAGES
 				"dateEnacted" => dgettext($domain, "Date Enacted"),
 				"issueDate" => dgettext($domain, "Issuing Date"),
 				"collection" => dgettext($domain, "If adding a resource to an existing collection or conference, after selecting the resource type, select the collection or conference from the select box first to automatically fill in other fields"),
-				"quote" => dgettext($domain, "(To allow for free-form quoting such as: 'it is claimed that WIKINDX is \"amongst the best\" resources available', you are expected to distinguish the actual quote from surrounding text yourself)"),
+				"quote" => dgettext($domain, "To allow for free-form quoting such as: it is claimed that WIKINDX is 'amongst the best' resources available, you are expected to distinguish the actual quote from surrounding text yourself."),
 				"emailFriendAddress" => dgettext($domain, "Separate multiple addresses with commas or semicolons"),
 				"noSort" => dgettext($domain, "When ordering resources by title, ignore the following list of case-insensitive words if they are the first word of the title. Comma-separated list"),
 				"searchFilter" => dgettext($domain, "When searching resources or metadata, ignore the following list of case-insensitive words if they are not part of an exact phrase. Comma-separated list"),
@@ -834,6 +834,7 @@ class MESSAGES
 				"glossary" => dgettext($domain, "The glossary appears when hovering over a keyword."),
 /// hint_storeRawBibtex Do not translate '@string'
 				"storeRawBibtex" => dgettext($domain, "You may store BibTeX fields that WIKINDX does not use so that any resources later exported to BibTeX can include this original unchanged data.  Doing this, also stores the bibtex key and any @string strings that are in the imported BibTeX file."),
+				"replaceExisting" => dgettext($domain, "When adding items, you may either append the selections above to an existing set for each resource or replace the existing set with the selections."),
 			),
 /// menu_ Menu subsystem.  The trick here is to use short terms that don't cause problems with overflowing the CSS drop-down boxes - some browsers may happily handle this, others won't. Up to 15-16 characters (depending on character width) is a good guide - but check! NB!!!!!  For this array, the values should be unique where the keys form part of the same menu item.  For example, in the File menu, the 'file' key and the 'show' key should not have the same value of, for example, 'Files'.
 		    "menu" => array(

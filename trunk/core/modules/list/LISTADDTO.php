@@ -24,6 +24,7 @@ class LISTADDTO
     private $user;
     private $badInput;
     private $navigate;
+    private $catForm;
 
     public function __construct()
     {
@@ -32,7 +33,8 @@ class LISTADDTO
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
+        $this->catForm = new RESOURCECATEGORYEDIT();
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->user = FACTORY_USER::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
@@ -75,169 +77,20 @@ class LISTADDTO
         return stripslashes($element);
     }
     /**
-     * hide or display fields
-     */
-    public function displayCategory()
-    {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
-        $catForm = new RESOURCECATEGORYEDIT();
-
-        if ($this->session->getVar("organize_CategoryHide")) { // currently hidden so show
-            $div = $catForm->displayCategory(TRUE);
-            $this->session->setVar("organize_CategoryHide", FALSE);
-        } else { // currently visible so hide
-            $div = \HTML\tableStart('generalTable');
-            $div .= \HTML\trStart();
-            $jScript = 'index.php?action=list_LISTADDTO_CORE&method=displayCategory';
-            $jsonArray[] = [
-                'startFunction' => 'triggerFromSelect',
-                'script' => "$jScript",
-                'triggerField' => 'displayCategory',
-                'targetDiv' => 'categoryDiv',
-            ];
-            $js = \AJAX\jActionForm('onchange', $jsonArray);
-            $div .= \HTML\td($this->messages->text('select', "availableCategory") . "&nbsp;&nbsp;" .
-                \FORM\checkbox(FALSE, "displayCategory", FALSE, '', $js = ''), 'padding3px');
-            $div .= \HTML\trEnd();
-            $div .= \HTML\tableEnd();
-            $this->session->setVar("organize_CategoryHide", TRUE);
-        }
-        GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$div"]));
-        FACTORY_CLOSERAW::getInstance();
-    }
-    /**
-     * hide or display fields
-     */
-    public function displaySubcategory()
-    {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
-        $catForm = new RESOURCECATEGORYEDIT();
-
-        if ($this->session->getVar("organize_SubcategoryHide")) { // currently hidden so show
-            $div = $catForm->displaySubcategory(TRUE);
-            $this->session->setVar("organize_SubcategoryHide", FALSE);
-        } else { // currently visible so hide
-            $div = \HTML\tableStart('generalTable');
-            $div .= \HTML\trStart();
-            $jScript = 'index.php?action=list_LISTADDTO_CORE&method=displaySubcategory';
-            $jsonArray[] = [
-                'startFunction' => 'triggerFromSelect',
-                'script' => "$jScript",
-                'triggerField' => 'displaySubcategory',
-                'targetDiv' => 'subcategoryDiv',
-            ];
-            $js = \AJAX\jActionForm('onchange', $jsonArray);
-            $div .= \HTML\td($this->messages->text('select', "availableSubcategory") . "&nbsp;&nbsp;" .
-                \FORM\checkbox(FALSE, "displaySubcategory", FALSE, '', $js = ''), 'padding3px');
-            $div .= \HTML\trEnd();
-            $div .= \HTML\tableEnd();
-            $this->session->setVar("organize_SubcategoryHide", TRUE);
-        }
-        GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$div"]));
-        FACTORY_CLOSERAW::getInstance();
-    }
-    /**
-     * hide or display fields
-     */
-    public function displayLanguage()
-    {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
-        $catForm = new RESOURCECATEGORYEDIT();
-
-        if ($this->session->getVar("organize_LanguageHide")) { // currently hidden so show
-            $div = $catForm->displayLanguage(TRUE);
-            $this->session->setVar("organize_LanguageHide", FALSE);
-        } else { // currently visible so hide
-            $div = \HTML\tableStart();
-            $div .= \HTML\trStart();
-            $jScript = 'index.php?action=list_LISTADDTO_CORE&method=displayLanguage';
-            $jsonArray[] = [
-                'startFunction' => 'triggerFromSelect',
-                'script' => "$jScript",
-                'triggerField' => 'displayLanguage',
-                'targetDiv' => 'languageDiv',
-            ];
-            $js = \AJAX\jActionForm('onchange', $jsonArray);
-            $div .= \HTML\td($this->messages->text('select', "language") . "&nbsp;&nbsp;" .
-                \FORM\checkbox(FALSE, "displayLanguage", FALSE, '', $js = ''));
-            $div .= \HTML\trEnd();
-            $div .= \HTML\tableEnd();
-            $this->session->setVar("organize_LanguageHide", TRUE);
-        }
-        GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$div"]));
-        FACTORY_CLOSERAW::getInstance();
-    }
-    /**
-     * hide or display fields
-     */
-    public function displayKeyword()
-    {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
-        $catForm = new RESOURCECATEGORYEDIT();
-
-        if ($this->session->getVar("organize_KeywordHide")) { // currently hidden so show
-            $div = $catForm->displayKeyword(TRUE);
-            $this->session->setVar("organize_KeywordHide", FALSE);
-        } else { // currently visible so hide
-            $div = \HTML\tableStart('generalTable');
-            $div .= \HTML\trStart();
-            $jScript = 'index.php?action=list_LISTADDTO_CORE&method=displayKeyword';
-            $jsonArray[] = [
-                'startFunction' => 'triggerFromSelect',
-                'script' => "$jScript",
-                'triggerField' => 'displayKeyword',
-                'targetDiv' => 'keywordDiv',
-            ];
-            $js = \AJAX\jActionForm('onchange', $jsonArray);
-            $div .= \HTML\td($this->messages->text('select', "availableKeyword") . "&nbsp;&nbsp;" .
-                \FORM\checkbox(FALSE, "displayKeyword", FALSE, '', $js = ''), 'padding3px');
-            $div .= \HTML\trEnd();
-            $div .= \HTML\tableEnd();
-            $this->session->setVar("organize_KeywordHide", TRUE);
-        }
-        GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$div"]));
-        FACTORY_CLOSERAW::getInstance();
-    }
-    /**
-     * hide or display fields
-     */
-    public function displayUsertag()
-    {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
-        $catForm = new RESOURCECATEGORYEDIT();
-
-        if ($this->session->getVar("organize_UsertagHide")) { // currently hidden so show
-            $div = $catForm->displayUserTags(TRUE);
-            $this->session->setVar("organize_UsertagHide", FALSE);
-        } else { // currently visible so hide
-            $div = \HTML\tableStart('generalTable');
-            $div .= \HTML\trStart();
-            $jScript = 'index.php?action=list_LISTADDTO_CORE&method=displayUsertag';
-            $jsonArray[] = [
-                'startFunction' => 'triggerFromSelect',
-                'script' => "$jScript",
-                'triggerField' => 'displayUsertag',
-                'targetDiv' => 'usertagDiv',
-            ];
-            $js = \AJAX\jActionForm('onchange', $jsonArray);
-            $div .= \HTML\td($this->messages->text('resources', 'availableUserTags') . "&nbsp;&nbsp;" .
-                \FORM\checkbox(FALSE, "displayUsertag", FALSE, '', $js = ''), 'padding3px');
-            $div .= \HTML\trEnd();
-            $div .= \HTML\tableEnd();
-            $this->session->setVar("organize_UsertagHide", TRUE);
-        }
-        GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$div"]));
-        FACTORY_CLOSERAW::getInstance();
-    }
-    /**
      * Update resources with new or removed selections of categories, subcategories, languages, keywords and usertags
      */
     public function organize()
     {
-        if (!array_key_exists("languageIds", $this->vars) && !array_key_exists("categoryIds", $this->vars) &&
-            !array_key_exists("subcategoryIds", $this->vars) && !array_key_exists("keywords", $this->vars) &&
-            !array_key_exists("usertags", $this->vars) && !array_key_exists("replaceExisting", $this->vars)) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+        $this->catForm->storeData();
+        if (!array_key_exists("displayCategory", $this->vars) && !array_key_exists("displaySubcategory", $this->vars) && 
+            !array_key_exists("displayLanguage", $this->vars) && !array_key_exists("displayKeyword", $this->vars) &&
+            !array_key_exists("displayUsertags", $this->vars)) {
+            $this->badInput->close($this->errors->text("inputError", "missing"), $this, ['organizeInit', $this->vars['uuid']]);
+        }
+        if (array_key_exists("displayLanguage", $this->vars) && 
+        	(!array_key_exists("languageIds", $this->vars) || empty($this->vars["languageIds"]))) {
+            $this->badInput->close($this->errors->text("inputError", "missing"), $this, ['organizeInit', $this->vars['uuid']]);
+            return;
         }
         $resourceIds = $this->getHiddenIds();
         // Categories
@@ -516,7 +369,6 @@ class LISTADDTO
         if (!empty($values)) {
             $this->db->insert('resource_category', ['resourcecategoryResourceId', 'resourcecategoryCategoryId'], $values);
         }
-        $this->session->setVar("addToKeywordCategory", TRUE);
         $success = FACTORY_SUCCESS::getInstance();
         $this->navigate->listView($success->text("organized"));
         FACTORY_CLOSE::getInstance(); // die
@@ -527,7 +379,7 @@ class LISTADDTO
     public function addResourceToBib()
     {
         if (!array_key_exists('bibId', $this->vars) || ($this->vars['bibId'] < 1)) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+            $this->badInput->close($this->errors->text("inputError", "missing"), $this, ['addToUserBibInit', $this->vars['uuid']]);
         }
         $ids = $this->getHiddenIds();
         // valid user?
@@ -572,7 +424,6 @@ class LISTADDTO
         } else {
             $ids = unserialize(base64_decode($string));
         }
-        $this->session->setVar("addToKeywordCategory", TRUE);
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "admin", "DELETERESOURCE.php"]));
         $deleteResource = new DELETERESOURCE();
         $deleteResource->resourceIds['resource_id'] = $ids;
@@ -583,10 +434,16 @@ class LISTADDTO
     /**
      * Check for proper resource ID input and produce hidden fields
      *
+     * @param mixed $uuid default FALSE
+     *
      * @return array
      */
-    private function checkIdInput()
+    private function checkIdInput($uuid = FALSE)
     {
+    	if ($uuid) {
+    		 $string = \TEMPSTORAGE\fetch($this->db, $uuid);
+    		 return [TRUE, $string];
+    	}
         if (array_key_exists("selectWhat", $this->vars) && ($this->vars['selectWhat'] != 'checked')) {
             if ($this->vars['selectWhat'] == 'all') {
                 return [TRUE, 'all'];
@@ -675,17 +532,17 @@ class LISTADDTO
         if (!$idFound) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-        if ($this->session->issetVar("basket_List")) {
-            $basket = $this->session->getVar("basket_List");
-        } else {
-            $basket = [];
-        }
         if (!is_array($string) && ($string == 'display')) {
             $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif (!is_array($string) && ($string == 'all')) {
             $ids = $this->getAllIds();
         } else {
             $ids = unserialize(base64_decode($string));
+        }
+        if ($this->session->issetVar("basket_List")) {
+            $basket = $this->session->getVar("basket_List");
+        } else {
+            $basket = [];
         }
         foreach ($ids as $resourceId) {
             if (array_search($resourceId, $basket) === FALSE) {
@@ -696,7 +553,6 @@ class LISTADDTO
         array_unique($basket);
         $this->session->setVar("basket_List", $basket);
         $this->session->saveState('basket');
-        $this->session->setVar("addToKeywordCategory", TRUE);
         $success = FACTORY_SUCCESS::getInstance();
         $this->navigate->listView($success->text("basketAdd"));
         FACTORY_CLOSE::getInstance(); // die
@@ -710,17 +566,17 @@ class LISTADDTO
         if (!$idFound) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-        if ($this->session->issetVar("basket_List")) {
-            $basket = $this->session->getVar("basket_List");
-        } else {
-            $basket = [];
-        }
         if (!is_array($string) && ($string == 'display')) {
             $ids = $this->session->getVar("list_NextPreviousIds");
         } elseif (!is_array($string) && ($string == 'all')) {
             $ids = $this->getAllIds();
         } else {
             $ids = unserialize(base64_decode($string));
+        }
+        if ($this->session->issetVar("basket_List")) {
+            $basket = $this->session->getVar("basket_List");
+        } else {
+            $basket = [];
         }
         foreach ($ids as $resourceId) {
             if (($key = array_search($resourceId, $basket)) !== FALSE) {
@@ -733,48 +589,70 @@ class LISTADDTO
             $this->session->setVar("basket_List", $basket);
         }
         $this->session->saveState('basket');
-        $this->session->setVar("addToKeywordCategory", TRUE);
         $success = FACTORY_SUCCESS::getInstance();
+        if (empty($basket)) {
+        	$message = rawurlencode($success->text("basketRemove"));
+			header("Location: index.php?message=$message");
+			die;
+        }
         $this->navigate->listView($success->text("basketRemove"));
         FACTORY_CLOSE::getInstance(); // die
     }
     /**
      * add/remove selected resources to categories etc.  Display the form
+     *
+     * @param mixed $message
      */
-    private function organizeInit()
+    public function organizeInit($message = FALSE)
     {
-        $this->session->clearArray('organize');
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCECATEGORYEDIT.php"]));
-        $catForm = new RESOURCECATEGORYEDIT();
-
-        $pString = \HTML\strong($this->messages->text("resources", "warningOrganize"));
+        $pString = '';
+        $uuid = FALSE;
+		if (is_array($message)) {
+			$pString = $message[0];
+			$uuid = $message[1];
+		}
+        $pString .= \HTML\strong($this->messages->text("resources", "warningOrganize"));
         $pString .= \FORM\formHeader('list_LISTADDTO_CORE', "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden("method", "organize");
         $display = ['categoryDisplay' => $this->messages->text("resources", "categories"),
             'subcategoryDisplay' => $this->messages->text("resources", "subcategories"),
             'languageDisplay' => $this->messages->text("resources", "languages"),
             'keywordDisplay' => $this->messages->text("resources", "keywords"), ];
-        if (!empty($catForm->userTags)) {
+        if (!empty($this->catForm->userTags)) {
             $display['usertagDisplay'] = $this->messages->text("resources", "usertags");
         }
-        list($idFound, $string) = $this->checkIdInput();
+        list($idFound, $string) = $this->checkIdInput($uuid);
         if (!$idFound) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-        $pString .= \FORM\hidden("ids", $string);
-        $pString .= $catForm->getTable(TRUE);
-        $pString .= \HTML\p($this->messages->text("resources", "replaceExisting") . "&nbsp;&nbsp;" .
-            \FORM\checkbox(FALSE, "replaceExisting") . '&nbsp;&nbsp;' . \FORM\formSubmit($this->messages->text("submit", "Save")));
+        if (!$uuid) {
+	        $uuid = \TEMPSTORAGE\getUuid($this->db);
+	        \TEMPSTORAGE\store($this->db, $uuid, $string);
+	    }
+        $pString .= $this->catForm->getTable(TRUE);
+        $pString .= \FORM\hidden('uuid', $uuid);
+        $check = !empty($this->catForm->formData) && !array_key_exists('replaceExisting', $this->catForm->formData) ? FALSE : TRUE;
+        $pString .= \HTML\p(\FORM\checkbox($this->messages->text("resources", "replaceExisting"), "replaceExisting", $check) . BR . 
+        	\HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "replaceExisting")), 'hint'));
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Save")));
         $pString .= \FORM\formEnd();
         \AJAX\loadJavascript(WIKINDX_URL_BASE . '/core/modules/resource/resourceCategoryEdit.js?ver=' . WIKINDX_PUBLIC_VERSION);
         GLOBALS::addTplVar('content', $pString);
     }
     /**
      * addToUserBibInit
+     *
+     * @param mixed $message
      */
-    private function addToUserBibInit()
+    public function addToUserBibInit($message = FALSE)
     {
-        $usingBib = $pString = FALSE;
+        $pString = $uuid = $usingBib = FALSE;
+        $uuid = FALSE;
+		if (is_array($message)) {
+			$pString = $message[0];
+			$uuid = $message[1];
+		}
         $bibs = [];
         $useBib = $this->session->getVar("mywikindx_Bibliography_use");
         if ($useBib) {
@@ -796,13 +674,17 @@ class LISTADDTO
             }
         }
         if (!empty($bibs)) {
-            $pString = \FORM\formHeader('list_LISTADDTO_CORE');
-            $pString .= \FORM\hidden("method", "addResourceToBib");
-            list($idFound, $string) = $this->checkIdInput();
+            list($idFound, $string) = $this->checkIdInput($uuid);
             if (!$idFound) {
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
             }
-            $pString .= \FORM\hidden("ids", $string);
+			if (!$uuid) {
+				$uuid = \TEMPSTORAGE\getUuid($this->db);
+				\TEMPSTORAGE\store($this->db, $uuid, $string);
+			}
+            $pString .= \FORM\formHeader('list_LISTADDTO_CORE');
+            $pString .= \FORM\hidden("method", "addResourceToBib");
+        	$pString .= \FORM\hidden('uuid', $uuid);
             $pString .= \HTML\tableStart();
             $pString .= \HTML\trStart();
             $sessVar = $this->session->getVar("mywikindx_Bibliography_add");
@@ -817,6 +699,9 @@ class LISTADDTO
             $pString .= \HTML\tableEnd();
             $pString .= \FORM\formEnd();
         }
+        else {
+        	$pString = $this->errors->text("warning", "noBibliographies");
+        }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "addToBib"));
         GLOBALS::addTplVar('content', $pString);
     }
@@ -827,15 +712,17 @@ class LISTADDTO
      */
     private function getHiddenIds()
     {
-        if (!array_key_exists("ids", $this->vars)) {
+        if (!array_key_exists("uuid", $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-        if ($this->vars['ids'] == 'display') {
+    	$idsString = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
+    	\TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+        if ($idsString == 'display') {
             $ids = $this->session->getVar("list_NextPreviousIds");
-        } elseif ($this->vars['ids'] == 'all') {
+        } elseif ($idsString == 'all') {
             $ids = $this->getAllIds();
         } else {
-            $ids = unserialize(base64_decode($this->vars['ids']));
+            $ids = unserialize(base64_decode($ids));
         }
         if (!isset($ids)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
@@ -851,9 +738,9 @@ class LISTADDTO
         if (!$idFound) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
-        if (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'display')) {
+        if (!is_array($string) && ($string == 'display')) {
             $ids = $this->session->getVar("list_NextPreviousIds");
-        } elseif (array_key_exists('id', $this->vars) && ($this->vars['ids'] == 'all')) {
+        } elseif (!is_array($string) && ($string == 'all')) {
             $ids = $this->getAllIds();
         } else {
             $ids = unserialize(base64_decode($string));
@@ -862,14 +749,18 @@ class LISTADDTO
         $this->db->formatConditionsOneField($ids, 'userbibliographyresourceResourceId');
         $this->db->delete('user_bibliography_resource');
         $bibs = $this->commonBib->getUserBibs();
-        if (empty($bibs)) {
-            $bibs = $this->commonBib->getUserBibs();
-        }
+        $success = FACTORY_SUCCESS::getInstance();
         if (!empty($bibs)) {
             $this->session->setVar("setup_Bibliographies", TRUE);
         }
-        $this->session->setVar("addToKeywordCategory", TRUE);
-        $success = FACTORY_SUCCESS::getInstance();
+        $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $this->session->getVar("mywikindx_Bibliography_use")]);
+        $resultset = $this->db->select('user_bibliography_resource', ['userbibliographyresourceId']);
+        if (!$this->db->numRows($resultset)) {
+        	$this->session->delVar("mywikindx_Bibliography_use");
+        	$message = rawurlencode($success->text("deleteFromBib"));
+			header("Location: index.php?message=$message");
+			die;
+		}
         $this->navigate->listView($success->text("deleteFromBib"));
         FACTORY_CLOSE::getInstance(); // die
     }

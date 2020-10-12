@@ -129,7 +129,7 @@ class ERRORS
 				"duplicateFieldNames" => dgettext($domain, "Duplicate field names"),
 /// inputError_chapterNotNumeric book_chapter resource type:  chapter must be a number
 				"chapterNotNumeric" => dgettext($domain, "Chapter must be numeric"),
-				"userHasNoGroups" => dgettext($domain, "You do not own any user groups.  You must first create a user group before you can create user group bibliographies"),
+				"userHasNoGroups" => dgettext($domain, "You do not own any user groups. You must first create a user group before you can create user group bibliographies"),
 				"mail2" => dgettext($domain, "Unable to complete the operation due to a mail server error (ERROR: ###)"),
 /// inputError_passwordMismatch typed passwords do not match
 				"passwordMismatch" => dgettext($domain, "Passwords do not match."),
@@ -218,6 +218,7 @@ class ERRORS
 				"pluginVersion1" => dgettext($domain, "Incompatible plugins: ###"),
 				"ideaDelete" => dgettext($domain, "If you delete the main idea, the entire thread will be deleted"),
 				"blocked" => dgettext($domain, "The administrator of this wikindx has denied you access. Please contact the administrator for further details."),
+				"noBibliographies" => dgettext($domain, "There are no user bibliographies in the database"),
 			),
 /// import bibliography error messages
 			"import" => array(

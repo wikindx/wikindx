@@ -209,13 +209,22 @@ class DELETERESOURCE
         	$this->session->setVar("setup_PagingTotal", $this->session->getVar("setup_PagingTotal") - count($this->idsRaw));
         	$this->session->delVar("list_PagingAlphaLinks");
         }
-		$message = rawurlencode($this->success->text("resourceDelete"));
         // Which page do we return to?
+		$message = rawurlencode($this->success->text("resourceDelete"));
+		if ($this->session->getVar("mywikindx_Bibliography_use")) {
+			$this->db->formatConditions(['userbibliographyresourceBibliographyId' => $this->session->getVar("mywikindx_Bibliography_use")]);
+			$resultset = $this->db->select('user_bibliography_resource', ['userbibliographyresourceId']);
+			if (!$this->db->numRows($resultset)) {
+				$this->session->delVar("mywikindx_Bibliography_use");
+				header("Location: index.php?message=$message");
+				die;
+			}
+		}
         if ($this->session->getVar("setup_PagingTotal") == 0) { // Return to home page
 			header("Location: index.php?message=$message");
 			die;
         }
-        elseif ($this->navigate == 'nextResource') { // next single view
+        if ($this->navigate == 'nextResource') { // next single view
             $navigate = FACTORY_NAVIGATE::getInstance();
             $navigate->resource($this->nextResourceId, $this->success->text("resourceDelete"));
         } elseif ($this->navigate == 'list') { // previous multi list

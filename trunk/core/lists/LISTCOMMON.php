@@ -75,6 +75,8 @@ class LISTCOMMON
     private $rows = [];
     /** array */
     public $attachmentHashnames = [];
+    /** bool */
+    public $quarantineList = FALSE;
 
 
     /**
@@ -906,6 +908,9 @@ class LISTCOMMON
         }
         if ($this->session->getVar("setup_Superadmin")) {
             $array[4] = $this->messages->text('resources', 'deleteResource');
+            if ($this->quarantineList) {
+	            $array[5] = $this->messages->text('resources', 'unquarantineResource');
+	        }
         }
         $array[9] = $this->messages->text('resources', 'exportCoins1');
         if (!isset($array)) {

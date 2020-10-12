@@ -179,6 +179,7 @@ class SUCCESS
 				"componentUpToDate" =>"The list is up-to-date.",
 				"keywordGroupNew" => dgettext($domain, "Successfully added keyword group"),
 				"keywordGroupEdit" => dgettext($domain, "Successfully edited keyword group"),
+				"unquarantineResource" => dgettext($domain, "Successfully approved resource(s)"),
 			),
 		);
 	}

@@ -994,6 +994,7 @@ class LISTSOMERESOURCES
         $this->session->setVar("list_SomeResources", 'quarantine');
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        $this->common->quarantineList = TRUE;
         $this->common->display($sql, 'list');
     }
     /**

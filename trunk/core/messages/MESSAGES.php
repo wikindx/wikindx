@@ -462,6 +462,7 @@ class MESSAGES
 				"selectCheck" => dgettext($domain, "Use all checked:"),
 /// resources_organize This is displayed in a selectbox when viewing a list so that users can add/remove the list to/from categories, keywords etc.
 				"organize" => dgettext($domain, "Organize"),
+				"unquarantineResource" => dgettext($domain, "Approve resource"),
 /// resources_general 'General' is the catch-all default category
 				"general" => dgettext($domain, "General"),
 				"keyword" => dgettext($domain, "Keyword"),

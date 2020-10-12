@@ -55,6 +55,8 @@ class LISTADDTO
             return $this->deleteFromBib();
         } elseif ($this->vars['resourceSelectedTo'] == 4) {	// delete resources from WIKINDX
             return $this->deleteFromWikindx();
+        } elseif ($this->vars['resourceSelectedTo'] == 5) {	// approve quarantined resources
+            return $this->unquarantine();
         } elseif ($this->vars['resourceSelectedTo'] == 7) {	// add to basket
             return $this->addToBasket();
         } elseif ($this->vars['resourceSelectedTo'] == 8) {	// remove from basket
@@ -762,6 +764,39 @@ class LISTADDTO
 			die;
 		}
         $this->navigate->listView($success->text("deleteFromBib"));
+        FACTORY_CLOSE::getInstance(); // die
+    }
+    /**
+     * Approve quarantined resources
+     */
+    private function unquarantine()
+    {
+        $gatekeep = FACTORY_GATEKEEP::getInstance(); // superadmin required
+        $gatekeep->requireSuper = TRUE;
+        $gatekeep->init();
+        list($idFound, $string) = $this->checkIdInput();
+        if (!$idFound) {
+            $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
+        }
+        if (!is_array($string) && ($string == 'display')) {
+            $ids = $this->session->getVar("list_NextPreviousIds");
+        } elseif (!is_array($string) && ($string == 'all')) {
+            $ids = $this->getAllIds();
+        } else {
+            $ids = unserialize(base64_decode($string));
+        }
+        $this->db->formatConditionsOneField($ids, 'resourcemiscId');
+        $updateArray = ['resourcemiscQuarantine' => 'N'];
+        $this->db->update('resource_misc', $updateArray);
+        $success = FACTORY_SUCCESS::getInstance();
+        $this->db->formatConditions(['resourcemiscQuarantine' => 'Y']);
+        $resultset = $this->db->select('resource_misc', ['resourcemiscId']);
+        if (!$this->db->numRows($resultset)) {
+        	$message = rawurlencode($success->text("unquarantineResource"));
+			header("Location: index.php?message=$message");
+			die;
+		}
+        $this->navigate->listView($success->text("unquarantineResource"));
         FACTORY_CLOSE::getInstance(); // die
     }
     /**

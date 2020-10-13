@@ -117,9 +117,7 @@ class RESOURCECATEGORYEDIT
             $this->vars['categoryIds'][0] = 1;
         }
         $this->storeData();
-        if (!$this->writeLanguageTable()) {
-        	return;
-        }
+        $this->writeLanguageTable();
         $this->writeCategoryTable();
         $this->writeKeywordTable();
         $this->writeUserTagsTable();
@@ -661,10 +659,6 @@ class RESOURCECATEGORYEDIT
      */
     private function writeLanguageTable()
     {
-        if (!array_key_exists('languageIds', $this->vars)) {
-            $this->init($this->errors->text("inputError", "missing"));
-            return FALSE;
-        }
         // remove all old languages from resource
         $this->db->formatConditions(['resourcelanguageResourceId' => $this->vars['id']]);
         $this->db->delete('resource_language');
@@ -679,7 +673,6 @@ class RESOURCECATEGORYEDIT
                 [$this->vars['id'], $lId]
             );
         }
-        return TRUE;
     }
     /**
      * write to resource_category

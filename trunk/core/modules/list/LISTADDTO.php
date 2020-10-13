@@ -86,7 +86,7 @@ class LISTADDTO
         $this->catForm->storeData();
         if (!array_key_exists("displayCategory", $this->vars) && !array_key_exists("displaySubcategory", $this->vars) && 
             !array_key_exists("displayLanguage", $this->vars) && !array_key_exists("displayKeyword", $this->vars) &&
-            !array_key_exists("displayUsertags", $this->vars)) {
+            !array_key_exists("displayUsertag", $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, ['organizeInit', $this->vars['uuid']]);
         }
         if (array_key_exists("displayLanguage", $this->vars) && 
@@ -96,197 +96,209 @@ class LISTADDTO
         }
         $resourceIds = $this->getHiddenIds();
         // Categories
-        $categoryIds = array_key_exists('categoryIds', $this->vars) ? $this->vars['categoryIds'] : [];
-        if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("categoryRadio", $this->vars) &&
-        ($this->vars['categoryRadio'] == 'add')) {
-            // remove all old categories and subcategories from resource if adding categories
-            $this->db->formatConditionsOneField($resourceIds, 'resourcecategoryResourceId');
-            $this->db->delete('resource_category');
-        }
-        // remove categories
-        if (array_key_exists("categoryRadio", $this->vars) && $this->vars['categoryRadio'] == 'remove') {
-            foreach ($categoryIds as $cId) {
-                foreach ($resourceIds as $rId) {
-                    $this->db->formatConditions(['resourcecategoryResourceId' => $rId]);
-                    $this->db->formatConditions(['resourcecategoryCategoryId' => $cId]);
-                    $this->db->delete('resource_category');
-                }
-            }
-        }
-        // add new categories
-        else {
-            $values = [];
-            foreach ($categoryIds as $cId) {
-                $foundIds = [];
-                $this->db->formatConditionsOneField($resourceIds, 'resourcecategoryResourceId');
-                $this->db->formatConditions(['resourcecategoryCategoryId' => $cId]);
-                $resultSet = $this->db->select('resource_category', 'resourcecategoryResourceId');
-                while ($row = $this->db->fetchRow($resultSet)) {
-                    $foundIds[] = $row['resourcecategoryResourceId'];
-                }
-                foreach (array_diff($resourceIds, $foundIds) as $rId) {
-                    $values[] = [$rId, $cId];
-                }
-            }
-            if (!empty($values)) {
-                $this->db->insert('resource_category', ['resourcecategoryResourceId', 'resourcecategoryCategoryId'], $values);
-            }
-        }
+        if (array_key_exists("displayCategory", $this->vars))
+        {
+			$categoryIds = array_key_exists('categoryIds', $this->vars) ? $this->vars['categoryIds'] : [];
+			if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("categoryRadio", $this->vars) &&
+			($this->vars['categoryRadio'] == 'add')) {
+				// remove all old categories and subcategories from resource if adding categories
+				$this->db->formatConditionsOneField($resourceIds, 'resourcecategoryResourceId');
+				$this->db->delete('resource_category');
+			}
+			// remove categories
+			if (array_key_exists("categoryRadio", $this->vars) && $this->vars['categoryRadio'] == 'remove') {
+				foreach ($categoryIds as $cId) {
+					foreach ($resourceIds as $rId) {
+						$this->db->formatConditions(['resourcecategoryResourceId' => $rId]);
+						$this->db->formatConditions(['resourcecategoryCategoryId' => $cId]);
+						$this->db->delete('resource_category');
+					}
+				}
+			}
+			// add new categories
+			else {
+				$values = [];
+				foreach ($categoryIds as $cId) {
+					$foundIds = [];
+					$this->db->formatConditionsOneField($resourceIds, 'resourcecategoryResourceId');
+					$this->db->formatConditions(['resourcecategoryCategoryId' => $cId]);
+					$resultSet = $this->db->select('resource_category', 'resourcecategoryResourceId');
+					while ($row = $this->db->fetchRow($resultSet)) {
+						$foundIds[] = $row['resourcecategoryResourceId'];
+					}
+					foreach (array_diff($resourceIds, $foundIds) as $rId) {
+						$values[] = [$rId, $cId];
+					}
+				}
+				if (!empty($values)) {
+					$this->db->insert('resource_category', ['resourcecategoryResourceId', 'resourcecategoryCategoryId'], $values);
+				}
+			}
+		}
         // Subcategories
-        $subcategoryIds = array_key_exists('subcategoryIds', $this->vars) ? $this->vars['subcategoryIds'] : [];
-        if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("subcategoryRadio", $this->vars) &&
-        ($this->vars['subcategoryRadio'] == 'add')) {
-            // remove all old subcategories from resource if adding subcategories
-            $this->db->formatConditionsOneField($resourceIds, 'resourcecategoryResourceId');
-            $this->db->formatConditionsOneField($subcategoryIds, 'resourcecategorySubcategoryId');
-            $this->db->delete('resource_category');
-        }
-        // remove subcategories
-        if (array_key_exists("subcategoryRadio", $this->vars) && $this->vars['subcategoryRadio'] == 'remove') {
-            foreach ($subcategoryIds as $cId) {
-                foreach ($resourceIds as $rId) {
-                    $this->db->formatConditions(['resourcecategoryResourceId' => $rId]);
-                    $this->db->formatConditions(['resourcecategorySubcategoryId' => $cId]);
-                    $this->db->delete('resource_category');
-                }
-            }
-        }
-        // add subcategories
-        else {
-            // Find categories subcategories belong to in case category needs adding to resource_category.CategoryId
-            foreach ($subcategoryIds as $subcategoryId) {
-                $this->db->formatConditions(['subcategoryId' => $subcategoryId]);
-                $scIds[] = $this->db->selectFirstField('subcategory', 'subcategoryCategoryId');
-            }
-        }
-        // If category of which subcategory is a member is not in table row, add it
-        if (isset($scIds)) {
-            $values = [];
-            foreach ($subcategoryIds as $subcategoryId) {
-                foreach (array_unique($scIds) as $cId) {
-                    $foundIds = [];
-                    $this->db->formatConditionsOneField($resourceIds, 'resourcecategoryResourceId');
-                    $this->db->formatConditions(['resourcecategoryCategoryId' => $cId]);
-                    $this->db->formatConditions(['resourcecategorySubcategoryId' => ' IS NOT NULL']);
-                    $resultSet = $this->db->select('resource_category', 'resourcecategoryResourceId');
-                    while ($row = $this->db->fetchRow($resultSet)) {
-                        $foundIds[] = $row['resourcecategoryResourceId'];
-                    }
-                    foreach (array_diff($resourceIds, $foundIds) as $rId) {
-                        $values[] = [$rId, $cId, $subcategoryId];
-                    }
-                }
-            }
-            if (!empty($values)) {
-                $this->db->insert('resource_category', ['resourcecategoryResourceId', 'resourcecategoryCategoryId',
-                    'resourcecategorySubcategoryId', ], $values);
-            }
+        if (array_key_exists("displaySubcategory", $this->vars))
+        {
+			$subcategoryIds = array_key_exists('subcategoryIds', $this->vars) ? $this->vars['subcategoryIds'] : [];
+			if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("subcategoryRadio", $this->vars) &&
+			($this->vars['subcategoryRadio'] == 'add')) {
+				// remove all old subcategories from resource if adding subcategories
+				$this->db->formatConditionsOneField($resourceIds, 'resourcecategoryResourceId');
+				$this->db->formatConditionsOneField($subcategoryIds, 'resourcecategorySubcategoryId');
+				$this->db->delete('resource_category');
+			}
+			// remove subcategories
+			if (array_key_exists("subcategoryRadio", $this->vars) && $this->vars['subcategoryRadio'] == 'remove') {
+				foreach ($subcategoryIds as $cId) {
+					foreach ($resourceIds as $rId) {
+						$this->db->formatConditions(['resourcecategoryResourceId' => $rId]);
+						$this->db->formatConditions(['resourcecategorySubcategoryId' => $cId]);
+						$this->db->delete('resource_category');
+					}
+				}
+			}
+			// add subcategories
+			else {
+				// Find categories subcategories belong to in case category needs adding to resource_category.CategoryId
+				foreach ($subcategoryIds as $subcategoryId) {
+					$this->db->formatConditions(['subcategoryId' => $subcategoryId]);
+					$scIds[] = $this->db->selectFirstField('subcategory', 'subcategoryCategoryId');
+				}
+			}
+			// If category of which subcategory is a member is not in table row, add it
+			if (isset($scIds)) {
+				$values = [];
+				foreach ($subcategoryIds as $subcategoryId) {
+					foreach (array_unique($scIds) as $cId) {
+						$foundIds = [];
+						$this->db->formatConditionsOneField($resourceIds, 'resourcecategoryResourceId');
+						$this->db->formatConditions(['resourcecategoryCategoryId' => $cId]);
+						$this->db->formatConditions(['resourcecategorySubcategoryId' => ' IS NOT NULL']);
+						$resultSet = $this->db->select('resource_category', 'resourcecategoryResourceId');
+						while ($row = $this->db->fetchRow($resultSet)) {
+							$foundIds[] = $row['resourcecategoryResourceId'];
+						}
+						foreach (array_diff($resourceIds, $foundIds) as $rId) {
+							$values[] = [$rId, $cId, $subcategoryId];
+						}
+					}
+				}
+				if (!empty($values)) {
+					$this->db->insert('resource_category', ['resourcecategoryResourceId', 'resourcecategoryCategoryId',
+						'resourcecategorySubcategoryId', ], $values);
+				}
+			}
         }
         // Languages
-        $languageIds = array_key_exists('languageIds', $this->vars) ? $this->vars['languageIds'] : [];
-        if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("languageRadio", $this->vars) &&
-        ($this->vars['languageRadio'] == 'add')) {
-            // remove all old languages from resource when adding
-            $this->db->formatConditionsOneField($resourceIds, 'resourcelanguageResourceId');
-            $this->db->delete('resource_language');
-        }
-        // remove languages
-        if (array_key_exists("languageRadio", $this->vars) && $this->vars['languageRadio'] == 'remove') {
-            foreach ($languageIds as $lId) {
-                if (!$lId) { // IGNORE
-                    continue;
-                }
-                foreach ($resourceIds as $rId) {
-                    $this->db->formatConditions(['resourcelanguageResourceId' => $rId]);
-                    $this->db->formatConditions(['resourcelanguageLanguageId' => $lId]);
-                    $this->db->delete('resource_language');
-                }
-            }
-        }
-        // add new languages
-        else {
-            $values = [];
-            foreach ($languageIds as $lId) {
-                if (!$lId) {
-                    continue;
-                }
-                $foundIds = [];
-                $this->db->formatConditionsOneField($resourceIds, 'resourcelanguageResourceId');
-                $this->db->formatConditions(['resourcelanguageLanguageId' => $lId]);
-                $resultSet = $this->db->select('resource_language', 'resourcelanguageResourceId');
-                while ($row = $this->db->fetchRow($resultSet)) {
-                    $foundIds[] = $row['resourcelanguageResourceId'];
-                }
-                foreach (array_diff($resourceIds, $foundIds) as $rId) {
-                    $values[] = [$rId, $lId];
-                }
-            }
-            if (!empty($values)) {
-                $this->db->insert('resource_language', ['resourcelanguageResourceId', 'resourcelanguageLanguageId'], $values);
-            }
-        }
+        if (array_key_exists("displayLanguage", $this->vars))
+        {
+			$languageIds = array_key_exists('languageIds', $this->vars) ? $this->vars['languageIds'] : [];
+			if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("languageRadio", $this->vars) &&
+			($this->vars['languageRadio'] == 'add')) {
+				// remove all old languages from resource when adding
+				$this->db->formatConditionsOneField($resourceIds, 'resourcelanguageResourceId');
+				$this->db->delete('resource_language');
+			}
+			// remove languages
+			if (array_key_exists("languageRadio", $this->vars) && $this->vars['languageRadio'] == 'remove') {
+				foreach ($languageIds as $lId) {
+					if (!$lId) { // IGNORE
+						continue;
+					}
+					foreach ($resourceIds as $rId) {
+						$this->db->formatConditions(['resourcelanguageResourceId' => $rId]);
+						$this->db->formatConditions(['resourcelanguageLanguageId' => $lId]);
+						$this->db->delete('resource_language');
+					}
+				}
+			}
+			// add new languages
+			else {
+				$values = [];
+				foreach ($languageIds as $lId) {
+					if (!$lId) {
+						continue;
+					}
+					$foundIds = [];
+					$this->db->formatConditionsOneField($resourceIds, 'resourcelanguageResourceId');
+					$this->db->formatConditions(['resourcelanguageLanguageId' => $lId]);
+					$resultSet = $this->db->select('resource_language', 'resourcelanguageResourceId');
+					while ($row = $this->db->fetchRow($resultSet)) {
+						$foundIds[] = $row['resourcelanguageResourceId'];
+					}
+					foreach (array_diff($resourceIds, $foundIds) as $rId) {
+						$values[] = [$rId, $lId];
+					}
+				}
+				if (!empty($values)) {
+					$this->db->insert('resource_language', ['resourcelanguageResourceId', 'resourcelanguageLanguageId'], $values);
+				}
+			}
+		}
         // Keywords
-        $keyword = FACTORY_KEYWORD::getInstance();
-        $keywordIds = [];
-        if (array_key_exists('keywords', $this->vars) && trim($this->vars['keywords'])) {
-            $keywordTexts = UTF8::mb_explode(',', trim($this->vars['keywords']));
-        } else {
-            $keywordTexts = [];
-        }
-        foreach ($keywordTexts as $text) {
-            $keywordText = trim($text);
-            if ($keywordText) {
-                if ($id = $keyword->checkExists($keywordText)) {
-                    if (array_search($id, $keywordIds) === FALSE) {
-                        $keywordIds[] = $id;
-                    }
-                } else {
-                    // given keyword doesn't exist so now write to db
-                    $fields = $values = [];
-                    $fields[] = "keywordKeyword";
-                    $values[] = $keywordText;
-                    $this->db->insert('keyword', $fields, $values);
-                    $keywordIds[] = $this->db->lastAutoId();
-                }
-            }
-        }
-        if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("keywordRadio", $this->vars) &&
-        ($this->vars['keywordRadio'] == 'add')) {
-            // remove old keywords from all selected resources when adding
-            $this->db->formatConditionsOneField($resourceIds, 'resourcekeywordResourceId');
-            $this->db->delete('resource_keyword');
-        }
-        // remove keywords
-        if (array_key_exists("keywordRadio", $this->vars) && $this->vars['keywordRadio'] == 'remove') {
-            foreach ($keywordIds as $kId) {
-                foreach ($resourceIds as $rId) {
-                    $this->db->formatConditions(['resourcekeywordResourceId' => $rId]);
-                    $this->db->formatConditions(['resourcekeywordKeywordId' => $kId]);
-                    $this->db->delete('resource_keyword');
-                }
-            }
-        }
-        // add new keywords
-        else {
-            $values = [];
-            foreach ($keywordIds as $kId) {
-                $foundIds = [];
-                $this->db->formatConditionsOneField($resourceIds, 'resourcekeywordResourceId');
-                $this->db->formatConditions(['resourcekeywordKeywordId' => $kId]);
-                $resultSet = $this->db->select('resource_keyword', 'resourcekeywordResourceId');
-                while ($row = $this->db->fetchRow($resultSet)) {
-                    $foundIds[] = $row['resourcekeywordResourceId'];
-                }
-                foreach (array_diff($resourceIds, $foundIds) as $rId) {
-                    $values[] = [$rId, $kId];
-                }
-            }
-            if (!empty($values)) {
-                $this->db->insert('resource_keyword', ['resourcekeywordResourceId', 'resourcekeywordKeywordId'], $values);
-            }
-        }
-        // remove keyword(s) if they no longer have resources attached to them
-        $keyword->removeHanging();
+        if (array_key_exists("displayKeyword", $this->vars))
+        {
+			$keyword = FACTORY_KEYWORD::getInstance();
+			$keywordIds = [];
+			if (array_key_exists('keywords', $this->vars) && trim($this->vars['keywords'])) {
+				$keywordTexts = UTF8::mb_explode(',', trim($this->vars['keywords']));
+			} else {
+				$keywordTexts = [];
+			}
+			foreach ($keywordTexts as $text) {
+				$keywordText = trim($text);
+				if ($keywordText) {
+					if ($id = $keyword->checkExists($keywordText)) {
+						if (array_search($id, $keywordIds) === FALSE) {
+							$keywordIds[] = $id;
+						}
+					} else {
+						// given keyword doesn't exist so now write to db
+						$fields = $values = [];
+						$fields[] = "keywordKeyword";
+						$values[] = $keywordText;
+						$this->db->insert('keyword', $fields, $values);
+						$keywordIds[] = $this->db->lastAutoId();
+					}
+				}
+			}
+			if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("keywordRadio", $this->vars) &&
+			($this->vars['keywordRadio'] == 'add')) {
+				// remove old keywords from all selected resources when adding
+				$this->db->formatConditionsOneField($resourceIds, 'resourcekeywordResourceId');
+				$this->db->delete('resource_keyword');
+			}
+			// remove keywords
+			if (array_key_exists("keywordRadio", $this->vars) && $this->vars['keywordRadio'] == 'remove') {
+				foreach ($keywordIds as $kId) {
+					foreach ($resourceIds as $rId) {
+						$this->db->formatConditions(['resourcekeywordResourceId' => $rId]);
+						$this->db->formatConditions(['resourcekeywordKeywordId' => $kId]);
+						$this->db->delete('resource_keyword');
+					}
+				}
+			}
+			// add new keywords
+			else {
+				$values = [];
+				foreach ($keywordIds as $kId) {
+					$foundIds = [];
+					$this->db->formatConditionsOneField($resourceIds, 'resourcekeywordResourceId');
+					$this->db->formatConditions(['resourcekeywordKeywordId' => $kId]);
+					$resultSet = $this->db->select('resource_keyword', 'resourcekeywordResourceId');
+					while ($row = $this->db->fetchRow($resultSet)) {
+						$foundIds[] = $row['resourcekeywordResourceId'];
+					}
+					foreach (array_diff($resourceIds, $foundIds) as $rId) {
+						$values[] = [$rId, $kId];
+					}
+				}
+				if (!empty($values)) {
+					$this->db->insert('resource_keyword', ['resourcekeywordResourceId', 'resourcekeywordKeywordId'], $values);
+				}
+			}
+        	// remove keyword(s) if they no longer have resources attached to them
+        	$keyword->removeHanging();
+		}
         // remove cache files for keywords
         $this->db->deleteCache('cacheResourceKeywords');
         $this->db->deleteCache('cacheMetadataKeywords');
@@ -295,67 +307,70 @@ class LISTADDTO
         $this->db->deleteCache('cacheMusingKeywords');
         $this->db->deleteCache('cacheKeywords');
         // User tags
-        $usertag = FACTORY_USERTAGS::getInstance();
-        $usertagIds = [];
-        if (array_key_exists('userTags', $this->vars) && trim($this->vars['userTags'])) {
-            $usertagTexts = UTF8::mb_explode(',', trim($this->vars['userTags']));
-        } else {
-            $usertagTexts = [];
-        }
-        foreach ($usertagTexts as $text) {
-            $usertagText = trim($text);
-            if ($usertagText) {
-                if ($id = $usertag->checkExists($usertagText)) {
-                    if (array_search($id, $usertagIds) === FALSE) {
-                        $usertagIds[] = $id;
-                    }
-                } else {
-                    // given usertag doesn't exist so now write to db
-                    $fields = $values = [];
-                    $fields[] = 'usertagsTag';
-                    $values[] = $usertagText;
-                    $fields[] = 'usertagsUserId';
-                    $values[] = $this->session->getVar("setup_UserId");
-                    $this->db->insert('user_tags', $fields, $values);
-                    $usertagIds[] = $this->db->lastAutoId();
-                }
-            }
-        }
-        if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("usertagRadio", $this->vars) &&
-        ($this->vars['usertagRadio'] == 'add')) {
-            // remove old usertags from all selected resources
-            $this->db->formatConditionsOneField($resourceIds, 'resourceusertagsResourceId');
-            $this->db->delete('resource_user_tags');
-        }
-        // remove usertags
-        if (array_key_exists("usertagRadio", $this->vars) && $this->vars['usertagRadio'] == 'remove') {
-            foreach ($usertagIds as $uId) {
-                foreach ($resourceIds as $rId) {
-                    $this->db->formatConditions(['resourceusertagsResourceId' => $rId]);
-                    $this->db->formatConditions(['resourceusertagsTagId' => $uId]);
-                    $this->db->delete('resource_user_tags');
-                }
-            }
-        }
-        // add new usertags
-        else {
-            $values = [];
-            foreach ($usertagIds as $uId) {
-                $foundIds = [];
-                $this->db->formatConditionsOneField($resourceIds, 'resourceusertagsResourceId');
-                $this->db->formatConditions(['resourceusertagsTagId' => $uId]);
-                $resultSet = $this->db->select('resource_user_tags', 'resourceusertagsResourceId');
-                while ($row = $this->db->fetchRow($resultSet)) {
-                    $foundIds[] = $row['resourceusertagsResourceId'];
-                }
-                foreach (array_diff($resourceIds, $foundIds) as $rId) {
-                    $values[] = [$rId, $uId];
-                }
-            }
-            if (!empty($values)) {
-                $this->db->insert('resource_user_tags', ['resourceusertagsResourceId', 'resourceusertagsTagId'], $values);
-            }
-        }
+        if (array_key_exists("displayUsertag", $this->vars))
+        {
+			$usertag = FACTORY_USERTAGS::getInstance();
+			$usertagIds = [];
+			if (array_key_exists('userTags', $this->vars) && trim($this->vars['userTags'])) {
+				$usertagTexts = UTF8::mb_explode(',', trim($this->vars['userTags']));
+			} else {
+				$usertagTexts = [];
+			}
+			foreach ($usertagTexts as $text) {
+				$usertagText = trim($text);
+				if ($usertagText) {
+					if ($id = $usertag->checkExists($usertagText)) {
+						if (array_search($id, $usertagIds) === FALSE) {
+							$usertagIds[] = $id;
+						}
+					} else {
+						// given usertag doesn't exist so now write to db
+						$fields = $values = [];
+						$fields[] = 'usertagsTag';
+						$values[] = $usertagText;
+						$fields[] = 'usertagsUserId';
+						$values[] = $this->session->getVar("setup_UserId");
+						$this->db->insert('user_tags', $fields, $values);
+						$usertagIds[] = $this->db->lastAutoId();
+					}
+				}
+			}
+			if (array_key_exists("replaceExisting", $this->vars) && array_key_exists("usertagRadio", $this->vars) &&
+			($this->vars['usertagRadio'] == 'add')) {
+				// remove old usertags from all selected resources
+				$this->db->formatConditionsOneField($resourceIds, 'resourceusertagsResourceId');
+				$this->db->delete('resource_user_tags');
+			}
+			// remove usertags
+			if (array_key_exists("usertagRadio", $this->vars) && $this->vars['usertagRadio'] == 'remove') {
+				foreach ($usertagIds as $uId) {
+					foreach ($resourceIds as $rId) {
+						$this->db->formatConditions(['resourceusertagsResourceId' => $rId]);
+						$this->db->formatConditions(['resourceusertagsTagId' => $uId]);
+						$this->db->delete('resource_user_tags');
+					}
+				}
+			}
+			// add new usertags
+			else {
+				$values = [];
+				foreach ($usertagIds as $uId) {
+					$foundIds = [];
+					$this->db->formatConditionsOneField($resourceIds, 'resourceusertagsResourceId');
+					$this->db->formatConditions(['resourceusertagsTagId' => $uId]);
+					$resultSet = $this->db->select('resource_user_tags', 'resourceusertagsResourceId');
+					while ($row = $this->db->fetchRow($resultSet)) {
+						$foundIds[] = $row['resourceusertagsResourceId'];
+					}
+					foreach (array_diff($resourceIds, $foundIds) as $rId) {
+						$values[] = [$rId, $uId];
+					}
+				}
+				if (!empty($values)) {
+					$this->db->insert('resource_user_tags', ['resourceusertagsResourceId', 'resourceusertagsTagId'], $values);
+				}
+			}
+		}
         // Check that each of these resources still belongs to at least one category, if not, set to 'General'
         $values = [];
         $foundIds = [];
@@ -633,7 +648,7 @@ class LISTADDTO
 	    }
         $pString .= $this->catForm->getTable(TRUE);
         $pString .= \FORM\hidden('uuid', $uuid);
-        $check = !empty($this->catForm->formData) && !array_key_exists('replaceExisting', $this->catForm->formData) ? FALSE : TRUE;
+        $check = !empty($this->catForm->formData) && array_key_exists('replaceExisting', $this->catForm->formData) ? TRUE : FALSE;
         $pString .= \HTML\p(\FORM\checkbox($this->messages->text("resources", "replaceExisting"), "replaceExisting", $check) . BR . 
         	\HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
             	$this->messages->text("hint", "replaceExisting")), 'hint'));
@@ -724,7 +739,7 @@ class LISTADDTO
         } elseif ($idsString == 'all') {
             $ids = $this->getAllIds();
         } else {
-            $ids = unserialize(base64_decode($ids));
+            $ids = unserialize(base64_decode($idsString));
         }
         if (!isset($ids)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');

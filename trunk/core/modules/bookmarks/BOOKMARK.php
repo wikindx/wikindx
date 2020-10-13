@@ -180,9 +180,9 @@ class BOOKMARK
             $this->messages->text("misc", "bookmarkDeleteInit"),
             "bookmark_id",
             $bookmarkArray,
-            20
-        ) . BR .
-            \HTML\span($this->messages->text('hint', 'multiples'), 'hint') .
+            10
+        ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint') .
             BR . \FORM\formSubmit($this->messages->text("submit", "Delete"));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -195,6 +195,7 @@ class BOOKMARK
         if (!array_key_exists("bookmark_id", $this->vars)) {
             $this->badInput($this->errors->text("inputError", "missing"), 'deleteInit');
         }
+        $deletes = 0;
         $bookmarks = $this->session->getArray("bookmark");
         for ($i = 1; $i <= 20; $i++) {
             if (array_search($i, $this->vars['bookmark_id']) !== FALSE) {
@@ -204,10 +205,18 @@ class BOOKMARK
                     $this->session->delVar("bookmark_" . $i . '_multi');
                 }
                 $this->session->delVar("bookmark_" . $i . '_name');
+                ++$deletes;
             }
         }
         $this->session->saveState('bookmark');
-        $this->deleteInit($this->success->text('bookmarkDelete'));
+        // Any bookmarks left?
+        if (count($this->session->getArray("bookmark")) == 2) { // Send back to front
+        	$message = rawurlencode($this->success->text("bookmarkDelete"));
+			header("Location: index.php?message=$message");
+			die;
+        } else {
+	        $this->deleteInit($this->success->text('bookmarkDelete'));
+	    }
     }
     /**
      * view a multi list bookmark

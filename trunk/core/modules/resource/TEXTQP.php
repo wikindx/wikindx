@@ -24,6 +24,9 @@ class TEXTQP
     private $keyword;
     private $cite;
     private $badInput;
+    public $type = FALSE;
+    private $formData = [];
+    private $commentOnly = FALSE;
 
     // Constructor
     public function __construct()
@@ -31,14 +34,11 @@ class TEXTQP
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
-
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->user = FACTORY_USER::getInstance();
-
         $this->keyword = FACTORY_KEYWORD::getInstance();
         $this->cite = FACTORY_CITE::getInstance();
-
         $this->badInput = FACTORY_BADINPUT::getInstance();
         \AJAX\loadJavascript(WIKINDX_URL_BASE . '/core/modules/resource/resourceCategoryEdit.js?ver=' . WIKINDX_PUBLIC_VERSION);
     }
@@ -47,12 +47,25 @@ class TEXTQP
      *
      * Only the original poster can edit the quote/paraphrase and only the original posters can edit their comment
      *
-     * @param string $type is either 'quote' or 'paraphrase'
+     * @param mixed $message
      *
      * @return array
      */
-    public function editDisplay($type)
+    public function editDisplay($message = FALSE)
     {
+        if (!array_key_exists('resourceId', $this->vars) || !$this->vars['resourceId']) {
+            $this->badInput->close($this->errors->text("inputError", "missing"));
+        }
+        $pString = $message;
+        $tinymce = FACTORY_LOADTINYMCE::getInstance();
+        if ($this->type == 'quote') {
+	        $pString .= \FORM\formHeader('resource_RESOURCEQUOTE_CORE');
+        } else {
+	        $pString .= \FORM\formHeader('resource_RESOURCEPARAPHRASE_CORE');
+	    }
+        $pString .= \FORM\hidden('method', 'edit');
+        $pString .= $tinymce->loadMetadataTextarea(['Text', 'Comment']);
+        $metadata['hidden'] = $pString;
         $pageStart = 'PageStart';
         $pageEnd = 'PageEnd';
         $paragraph = 'Paragraph';
@@ -64,8 +77,18 @@ class TEXTQP
         $hidden = \FORM\hidden("resourceId", $this->vars['resourceId']);
         $page_start = $page_end = $db_paragraph = $db_section = $db_chapter = $text = $comment = FALSE;
         $private = 'Y';
+        if (!empty($this->formData) && !$this->commentOnly) {
+        	$page_start = $this->formData['PageStart'];
+        	$page_end = $this->formData['PageEnd'];
+        	$db_paragraph = $this->formData['Paragraph'];
+        	$db_section = $this->formData['Section'];
+        	$db_chapter = $this->formData['Chapter'];
+        	$text = array_key_exists('Text', $this->formData) ? $this->formData['Text'] : FALSE;
+        	$comment = array_key_exists('Comment', $this->formData) ? $this->formData['Comment'] : FALSE;
+        	$private = $this->formData['private'];
+        }
         // are we editing or adding?
-        if (array_key_exists('resourcemetadataId', $this->vars)) {
+        elseif (array_key_exists('resourcemetadataId', $this->vars)) { // Editing
             $hidden .= \FORM\hidden('resourcemetadataId', $this->vars['resourcemetadataId']);
             $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
             $row = $this->db->selectFirstRow('resource_metadata', ['resourcemetadataText', 'resourcemetadataPageStart',
@@ -92,13 +115,17 @@ class TEXTQP
                 $private = $rowComment['resourcemetadataPrivate'];
             }
         }
-        if (isset($row) && (($userId != $row['resourcemetadataAddUserId']) && !WIKINDX_SUPERADMIN_ID)) {
-            $hidden .= \FORM\hidden("commentOnly", TRUE);
+        if (array_key_exists('commentOnly', $this->formData) || 
+        	(isset($row) && ($userId != $row['resourcemetadataAddUserId']) || !WIKINDX_SUPERADMIN_ID)) {
+        	$this->commentOnly = TRUE;
+        	$hidden .= \FORM\hidden("commentOnly", TRUE);
         }
-        if (!isset($row) || ($text && (($userId == $row['resourcemetadataAddUserId'] || WIKINDX_SUPERADMIN_ID)))) {
-            $metadata['keyword'] = $this->displayKeywordForm($type, 'resourcemetadataId');
+        if (!$this->commentOnly) {
+            $metadata['keyword'] = $this->displayKeywordForm();
+        } else {
+        	$metadata['keyword'] = FALSE;
         }
-        if (!$text || ($text && (($userId == $row['resourcemetadataAddUserId']) || WIKINDX_SUPERADMIN_ID))) {
+        if (!$this->commentOnly) {
             $locations = \HTML\tableStart('left');
             $locations .= \HTML\trStart();
             $locations .= \HTML\td($hidden . \FORM\textInput(
@@ -137,44 +164,53 @@ class TEXTQP
         } else {
             $page = FALSE;
         }
-        $hint = ($type == 'quote') ? \HTML\span($this->messages->text("hint", $type), 'hint') : FALSE;
+        if ($this->commentOnly) {
+        	$metadata['locations'] = $page;
+        }
+        $hint = ($this->type == 'quote') ? \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            $this->messages->text("hint", $this->type)), 'hint') : FALSE;
         // The second parameter ($typeText) to textareaInput is the textarea name
-        if (!$text || ($text && (($userId == $row['resourcemetadataAddUserId']) || WIKINDX_SUPERADMIN_ID))) {
+        if (!$this->commentOnly) {
             $metadata['metadata'] = \FORM\textareaInput(FALSE, $typeText, $text, 80, 10) . $hint;
-            $metadata['metadataTitle'] = $this->messages->text("resources", $type);
+            $metadata['metadataTitle'] = $this->messages->text("resources", $this->type);
         } else {
             $metadata['original'] = $hidden . $page . $this->cite->parseCitations($text, 'html');
         }
         // The second parameter ($typeComment) to textareaInput is the textarea name
         $metadata['comment'] = \FORM\textareaInput(FALSE, $typeComment, $comment, 80, 10);
         $metadata['commentTitle'] = $this->messages->text("resources", "comment");
-        $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
-        $this->db->leftJoin('user_groups', 'usergroupsId', 'usergroupsusersGroupId');
-        $recordset3 = $this->db->select('user_groups_users', ['usergroupsusersGroupId', 'usergroupsTitle']);
-        if ($this->db->numRows($recordset3)) {
-            $privateArray = ['Y' => $this->messages->text("resources", "private"),
-                'N' => $this->messages->text("resources", "public"), ];
-            while ($row = $this->db->fetchRow($recordset3)) {
-                $privateArray[$row['usergroupsusersGroupId']] =
-                    $this->messages->text("resources", "availableToGroups", \HTML\dbToFormTidy($row['usergroupsTitle']));
-            }
-            $metadata['form']['private'] = \FORM\selectedBoxValue(
-                $this->messages->text("resources", "commentPrivate"),
-                "private",
-                $privateArray,
-                $private,
-                3
-            );
-        } else {
-            $privateArray = ['Y' => $this->messages->text("resources", "private"),
-                'N' => $this->messages->text("resources", "public"), ];
-            $metadata['form']['private'] = \FORM\selectedBoxValue(
-                $this->messages->text("resources", "commentPrivate"),
-                "private",
-                $privateArray,
-                $private,
-                2
-            );
+        if (!$this->commentOnly) {
+			$this->db->formatConditions(['usergroupsusersUserId' => $userId]);
+			$this->db->leftJoin('user_groups', 'usergroupsId', 'usergroupsusersGroupId');
+			$recordset3 = $this->db->select('user_groups_users', ['usergroupsusersGroupId', 'usergroupsTitle']);
+			if ($this->db->numRows($recordset3)) {
+				$privateArray = ['Y' => $this->messages->text("resources", "private"),
+					'N' => $this->messages->text("resources", "public"), ];
+				while ($row = $this->db->fetchRow($recordset3)) {
+					$privateArray[$row['usergroupsusersGroupId']] =
+						$this->messages->text("resources", "availableToGroups", \HTML\dbToFormTidy($row['usergroupsTitle']));
+				}
+				$metadata['form']['private'] = \FORM\selectedBoxValue(
+					$this->messages->text("resources", "commentPrivate"),
+					"private",
+					$privateArray,
+					$private,
+					3
+				);
+			} else {
+				$privateArray = ['Y' => $this->messages->text("resources", "private"),
+					'N' => $this->messages->text("resources", "public"), ];
+				$metadata['form']['private'] = \FORM\selectedBoxValue(
+					$this->messages->text("resources", "commentPrivate"),
+					"private",
+					$privateArray,
+					$private,
+					2
+				);
+			}
+        }
+        else {
+        	$metadata['form']['private'] = FALSE;
         }
         $metadata['form']['submit'] = \FORM\formSubmit($this->messages->text("submit", "Save"));
         // display other comments
@@ -205,19 +241,20 @@ class TEXTQP
                 ++$index;
             }
         }
-
-        return $metadata;
+        $metadata['formfoot'] = \FORM\formEnd();
+        GLOBALS::setTplVar('metadata', $metadata);
     }
     /**
      * display keyword form
      *
-     * @param string $type
-     * @param int $textId
-     *
+     * @param array $formData – populated if from RESOURCEMUSING
      * @return string
      */
-    public function displayKeywordForm($type, $textId)
+    public function displayKeywordForm($formData = [])
     {
+    	if (!empty($formData)) {
+    		$this->formData = $formData;
+    	}
         $keywords = $this->keyword->grabAll();
         $pString = \HTML\tableStart('left');
         $pString .= \HTML\trStart();
@@ -228,34 +265,38 @@ class TEXTQP
                 $key = $key . '_' . base64_encode($value);
                 $keywordList[$key] = $value;
             }
-            if (array_key_exists($textId, $this->vars)) { // editing
-                $field = 'resourcekeywordMetadataId';
-                $this->db->formatConditions([$field => $this->vars[$textId]]);
-                $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
-                $this->db->orderBy('keywordKeyword');
-                $resultset = $this->db->select('resource_keyword', 'keywordKeyword');
-                while ($row = $this->db->fetchRow($resultset)) {
-                    $keywordArray[] = $row['keywordKeyword'];
-                }
-            }
-            // If this is a new metadata entry (not editing), populate textarea with resource's keywords
-            elseif (!array_key_exists('resourcemetadataId', $this->vars) && ($type != 'idea')) {
-                $this->db->formatConditions(['resourcekeywordResourceId' => $this->vars['resourceId']]);
-                $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
-                $this->db->orderBy('keywordKeyword');
-                $resultset = $this->db->select('resource_keyword', ['resourcekeywordKeywordId', 'keywordKeyword']);
-                while ($row = $this->db->fetchRow($resultset)) {
-                    $keywordArray[] = $row['keywordKeyword'];
-                }
-            }
-            $keywordString = isset($keywordArray) ? implode(', ', $keywordArray) : FALSE;
+            if (!array_key_exists('keywords', $this->formData)) {
+				if (array_key_exists('resourcemetadataId', $this->vars)) { // editing
+					$this->db->formatConditions(['resourcekeywordMetadataId' => $this->vars['resourcemetadataId']]);
+					$this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
+					$this->db->orderBy('keywordKeyword');
+					$resultset = $this->db->select('resource_keyword', 'keywordKeyword');
+					while ($row = $this->db->fetchRow($resultset)) {
+						$keywordArray[] = $row['keywordKeyword'];
+					}
+				}
+				// If this is a new metadata entry (not editing), populate textarea with resource's keywords
+				elseif (!array_key_exists('resourcemetadataId', $this->vars) && ($this->type != 'idea')) {
+					$this->db->formatConditions(['resourcekeywordResourceId' => $this->vars['resourceId']]);
+					$this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
+					$this->db->orderBy('keywordKeyword');
+					$resultset = $this->db->select('resource_keyword', ['resourcekeywordKeywordId', 'keywordKeyword']);
+					while ($row = $this->db->fetchRow($resultset)) {
+						$keywordArray[] = $row['keywordKeyword'];
+					}
+				}
+				$keywordString = isset($keywordArray) ? implode(', ', $keywordArray) : FALSE;
+			}
+			else {
+				$keywordString = $this->formData['keywords'];
+			}
             $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
                 $this->messages->text('resources', 'availableKeywords'),
                 'fromKeywords',
                 $keywordList,
                 6
-            ) . BR .
-                \HTML\span($this->messages->text("hint", "multiples"), 'hint'));
+            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint'));
             $jsonArray = [];
             $jsonArray[] = [
                 'startFunction' => 'transferKeyword',
@@ -269,20 +310,20 @@ class TEXTQP
                 \HTML\dbToFormTidy($keywordString),
                 50,
                 5
-            ) . BR .
-                \HTML\span($this->messages->text("hint", "keywords"), 'hint') . \HTML\p('&nbsp;'));
+            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "keywords")), 'hint'));
         } else {
+        	$keywordString = array_key_exists('keywords', $this->formData) ? $this->formData['keywords'] : FALSE;
             $pString .= \HTML\td(\FORM\textareaInput(
                 $this->messages->text("resources", "keywords"),
                 "keywords",
-                FALSE,
+                $keywordString,
                 50,
                 5
-            ) . BR . \HTML\span(
-                $this->messages->text("hint", "keywordsAlt"),
-                'hint'
-            ) . \HTML\p('&nbsp;'));
+            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "keywordsAlt")), 'hint'));
         }
+        $pString .= \HTML\p('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -293,11 +334,9 @@ class TEXTQP
      *
      * if there is no 'quoteId'/'paraphraseId' input, we are adding a new quote/paraphrase.  Otherwise, editing one.
      *
-     * @param string $type is either 'quote' or 'paraphrase'
-     *
      * @return string
      */
-    public function edit($type)
+    public function edit()
     {
         $pageStart = 'PageStart';
         $pageEnd = 'PageEnd';
@@ -306,13 +345,11 @@ class TEXTQP
         $chapter = 'Chapter';
         $typeText = 'Text';
         $typeComment = 'Comment';
-        $summaryType = $type == 'quote' ? 'resourcesummaryQuotes' : 'resourcesummaryParaphrases';
+        $summaryType = $this->type == 'quote' ? 'resourcesummaryQuotes' : 'resourcesummaryParaphrases';
         $userId = $this->session->getVar("setup_UserId");
+        $this->checkInput();
         // insert
         if (!array_key_exists('resourcemetadataId', $this->vars)) {
-            if (!array_key_exists($typeText, $this->vars) || !trim($this->vars[$typeText])) {
-                return FALSE;
-            }
             $addEdit = 'added';
             $fields[] = 'resourcemetadataResourceId';
             $values[] = $this->vars['resourceId'];
@@ -344,7 +381,7 @@ class TEXTQP
                 $fields[] = 'resourcemetadataAddUserId';
                 $values[] = $userId;
             }
-            if ($type == 'quote') {
+            if ($this->type == 'quote') {
                 $fields[] = 'resourcemetadataType';
                 $values[] = 'q';
             } else {
@@ -359,7 +396,7 @@ class TEXTQP
             $this->summary(1, $summaryType);
             // Write comments table
             if (array_key_exists($typeComment, $this->vars) && $this->vars[$typeComment]) {
-                $this->insertComment($lastAutoId, $userId, $typeComment, $type);
+                $this->insertComment($lastAutoId, $userId, $typeComment);
             }
             $this->writeKeywords($lastAutoId, 'resourcekeywordMetadataId');
         }
@@ -396,7 +433,7 @@ class TEXTQP
                         } else {
                             $updateArray['resourcemetadataPrivate'] = 'Y';
                         }
-                        if ($type == 'quote') {
+                        if ($this->type == 'quote') {
                             $updateArray['resourcemetadataType'] = 'qc';
                         } else {
                             $updateArray['resourcemetadataType'] = 'pc';
@@ -408,7 +445,7 @@ class TEXTQP
                     }
                     // new comment
                     else {
-                        $this->insertComment($this->vars['resourcemetadataId'], $userId, $typeComment, $type);
+                        $this->insertComment($this->vars['resourcemetadataId'], $userId, $typeComment, $this->type);
                     }
                 }
                 // remove comment row
@@ -463,7 +500,7 @@ class TEXTQP
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         if (!$emailClass->notify($this->vars['resourceId'])) {
-            $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()));
+            return $this->errors->text("inputError", "mail", GLOBALS::getError());
         }
 
         return $addEdit;
@@ -585,9 +622,8 @@ class TEXTQP
      * @param mixed $lastAutoId
      * @param mixed $userId
      * @param mixed $typeComment
-     * @param mixed $type
      */
-    private function insertComment($lastAutoId, $userId, $typeComment, $type)
+    private function insertComment($lastAutoId, $userId, $typeComment)
     {
         $fields = $values = [];
         $fields[] = 'resourcemetadataMetadataId';
@@ -608,7 +644,7 @@ class TEXTQP
             $fields[] = 'resourcemetadataPrivate';
             $values[] = 'Y';
         }
-        if ($type == 'quote') {
+        if ($this->type == 'quote') {
             $fields[] = 'resourcemetadataType';
             $values[] = 'qc';
         } else {
@@ -618,5 +654,49 @@ class TEXTQP
         $fields[] = 'resourcemetadataTimestamp';
         $values[] = $this->db->formatTimestamp();
         $this->db->insert('resource_metadata', $fields, $values);
+    }
+    /**
+     * Check we have appropriate input.
+     *
+     */
+    private function checkInput()
+    {
+    	$error = '';
+    	if (!array_key_exists('resourceId', $this->vars) || !$this->vars['resourceId']) {
+            $this->badInput->close($this->errors->text("inputError", "missing"));
+        }
+        if (array_key_exists('commentOnly', $this->vars)) {
+        	$this->commentOnly = TRUE;
+        	$this->formData['commentOnly'] = TRUE;
+        }
+        else {
+			$this->formData['PageStart'] = trim($this->vars['PageStart']);
+			$this->formData['PageEnd'] = trim($this->vars['PageEnd']);
+			$this->formData['Paragraph'] = trim($this->vars['Paragraph']);
+			$this->formData['Section'] = trim($this->vars['Section']);
+			$this->formData['Chapter'] = trim($this->vars['Chapter']);
+			$this->formData['keywords'] = trim($this->vars['keywords']);
+			$this->formData['private'] = $this->vars['private'];
+			if (array_key_exists('commentOnly', $this->vars)) {
+			
+			}
+			if (array_key_exists('resourcemetadataId', $this->vars)) { // Editing
+				$this->formData['resourcemetadataId'] = $this->vars['resourcemetadataId'];
+			} elseif (array_key_exists('Text', $this->vars) && trim($this->vars['Text'])) { // Inserting
+				$this->formData['Text'] = trim($this->vars['Text']);
+			}
+			else {
+				$error = $this->errors->text("inputError", "missing");
+			}
+		}
+		if (array_key_exists('Comment', $this->vars) && trim($this->vars['Comment'])) { // Inserting
+        	$this->formData['Comment'] = trim($this->vars['Comment']);
+		}
+		elseif ($this->commentOnly) {
+			$error = $this->errors->text("inputError", "missing");
+		}
+        if ($error) {
+            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'editDisplay');
+        }
     }
 }

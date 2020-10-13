@@ -19,12 +19,12 @@ class RESOURCEQUOTE
     private $db;
     private $vars;
     private $textqp;
-    private $session;
     private $messages;
     private $errors;
     private $success;
     private $navigate;
     private $badInput;
+    private $formData = [];
 
     // Constructor
     public function __construct()
@@ -35,7 +35,6 @@ class RESOURCEQUOTE
         $this->vars = GLOBALS::getVars();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "TEXTQP.php"]));
         $this->textqp = new TEXTQP();
-        $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
@@ -59,43 +58,28 @@ class RESOURCEQUOTE
      */
     public function quoteEdit()
     {
-        $this->checkInput();
-        $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $pString = \FORM\formHeader('resource_RESOURCEQUOTE_CORE');
-        $pString .= \FORM\hidden('method', 'edit');
-        $pString .= $tinymce->loadMetadataTextarea(['Text', 'Comment']);
-        $metadata = $this->textqp->editdisplay('quote');
-        $metadata['hidden'] = $pString;
-        $metadata['formfoot'] = \FORM\formEnd();
-        GLOBALS::setTplVar('metadata', $metadata);
-        unset($metadata);
-        $this->session->delVar("resourceQuoteLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId']);
+        $this->textqp->type = 'quote';
+    	$this->textqp->editdisplay();
     }
     /**
      * write to the database
      *
-     * if there is no 'quoteId' input, we are adding a new quote.  Otherwise, editing one.
      */
     public function edit()
     {
-        if ($this->session->getVar("resourceQuoteLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'])) {
-            $this->badInput->close($this->errors->text("done", "quote"));
-        }
-        $this->checkInput();
-        if (!$addEdit = $this->textqp->edit('quote')) {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
+        $this->textqp->type = 'quote';
+        $addEdit = $this->textqp->edit();
         if ($addEdit == 'added') {
             $message = $this->success->text("quoteAdd");
         } elseif ($addEdit == 'edited') {
             $message = $this->success->text("quoteEdit");
         } elseif ($addEdit == 'deleted') {
             $message = $this->success->text("quoteDelete");
+        } else {
+        	$message = $addEdit; // $addEdit is an error message
         }
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
-        // lock reload
-        $this->session->setVar("resourceQuoteLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'], TRUE);
         // send back to view this resource with success message
         $this->navigate->resource($this->vars['resourceId'], $message);
     }
@@ -104,7 +88,6 @@ class RESOURCEQUOTE
      */
     public function deleteInit()
     {
-        $this->session->delVar("resourceQuoteLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId']);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "quoteDelete"));
         $pString = \FORM\formHeader('resource_RESOURCEQUOTE_CORE');
         $pString .= \FORM\hidden("method", 'delete');
@@ -121,29 +104,13 @@ class RESOURCEQUOTE
      */
     public function delete()
     {
-        if ($this->session->getVar("resourceQuoteLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'])) {
-            $this->badInput->close($this->errors->text("done", "quote"));
-        }
-    	if (!array_key_exists('resourcemetadataId', $this->vars) || !array_key_exists('summaryType', $this->vars)) {
+        if (!array_key_exists('resourcemetadataId', $this->vars) || !array_key_exists('summaryType', $this->vars)) {
     		$this->badInput->close($this->errors->text("inputError", "missing"));
     	}
         $this->textqp->delete($this->vars['summaryType']);
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
-        // lock reload
-        $this->session->setVar("resourceQuoteLock".$this->vars['resourceId']."-".$this->vars['resourcemetadataId'], TRUE);
         // send back to view this resource with success message
         $this->navigate->resource($this->vars['resourceId'], $this->success->text("quoteDelete"));
-    }
-    /**
-     * Check we have appropriate input.
-     *
-     * Page and comment are optional
-     */
-    private function checkInput()
-    {
-        if (!array_key_exists('resourceId', $this->vars) || !$this->vars['resourceId']) {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
     }
 }

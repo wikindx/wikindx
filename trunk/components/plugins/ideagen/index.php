@@ -155,6 +155,7 @@ class ideagen_MODULE
     {
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "resource", "TEXTQP.php"]));
         $textqp = new TEXTQP();
+        $textqp->type = 'idea';
         $text = $metadataId = $owner = FALSE;
         $thisUserId = $this->session->getVar("setup_UserId");
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
@@ -163,7 +164,7 @@ class ideagen_MODULE
         $hidden = \FORM\hidden('method', 'edit');
         $idea['hidden'] = $pString;
 		$private = 'Y';
-        $idea['keyword'] = $hidden . $textqp->displayKeywordForm('idea', 'resourcemetadataId');
+        $idea['keyword'] = $hidden . $textqp->displayKeywordForm();
         // The second parameter ('Text') to textareaInput is the textarea name
         $idea['idea'] = \FORM\textareaInput(FALSE, 'Text', $text, 80, 10);
         $idea['ideaTitle'] = $this->coremessages->text("metadata", 'idea');

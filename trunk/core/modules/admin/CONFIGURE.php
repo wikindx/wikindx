@@ -304,7 +304,10 @@ class CONFIGURE
             }
             $content .= "<pre>" . $mail->TransactionLog . "</pre>";
         }
-        
+        $close = \FORM\formHeader("admin_CONFIGURE_CORE&amp;method=init&amp;selectItem=front", "onsubmit=\"window.close();return true;\"");
+        $close .= \FORM\hidden("selectItem", "email");
+        $close .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
+        $content .= \HTML\p($close);
         GLOBALS::addTplVar('content', $content);
         FACTORY_CLOSENOMENU::getInstance();
     }

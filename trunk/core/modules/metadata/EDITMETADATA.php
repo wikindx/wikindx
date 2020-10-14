@@ -185,7 +185,7 @@ class EDITMETADATA
             !array_key_exists('sql', $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        $abstract = trim($this->vars['text']);
+        $abstract = UTF8::mb_trim($this->vars['text']);
         $userId = $this->session->getVar("setup_UserId");
         if ($this->vars['sql'] == 'insert') {
             if (!$abstract) {
@@ -237,7 +237,7 @@ class EDITMETADATA
             !array_key_exists('sql', $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        $note = trim($this->vars['text']);
+        $note = UTF8::mb_trim($this->vars['text']);
         $userId = $this->session->getVar("setup_UserId");
         if ($this->vars['sql'] == 'insert') {
             if (!$note) {

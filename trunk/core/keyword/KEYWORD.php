@@ -269,7 +269,7 @@ class KEYWORD
             $keywords = UTF8::mb_explode(',', $inputArray['keywords']);
         }
         foreach ($keywords as $keyword) {
-            if (!$keyword = trim($keyword)) {
+            if (!$keyword = UTF8::mb_trim($keyword)) {
                 continue;
             }
             $values[0] = $keyword;

@@ -289,7 +289,7 @@ class EDITCOLLECTION
         if (!array_key_exists('edit_collectionType', $this->vars)) { // can be NULL
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        $title = array_key_exists('edit_collectionTitle', $this->vars) ? trim($this->vars['edit_collectionTitle']) : FALSE;
+        $title = array_key_exists('edit_collectionTitle', $this->vars) ? UTF8::mb_trim($this->vars['edit_collectionTitle']) : FALSE;
         if (!$title) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'editDisplayCollection');
         }
@@ -305,7 +305,7 @@ class EDITCOLLECTION
         // Deal with creators
         $temp['creators'] = $this->editCreators();
         $titleShort = array_key_exists('edit_collectionTitleShort', $this->vars) ?
-            trim($this->vars['edit_collectionTitleShort']) : FALSE;
+            UTF8::mb_trim($this->vars['edit_collectionTitleShort']) : FALSE;
         if ($collectionExistId = $this->collection->checkExists($this->vars['edit_collectionId'], $title, $titleShort, $this->vars['edit_collectionType'])) {
             if ($collectionExistId != $this->vars['edit_collectionId']) {
                 return $this->confirmDuplicate($collectionExistId, $title, $titleShort);
@@ -1525,10 +1525,10 @@ class EDITCOLLECTION
     {
         $pubObject = FACTORY_PUBLISHER::getInstance();
         $returnValue = FALSE;
-        if (array_key_exists($name, $this->vars) && trim($this->vars[$name])) {
-            $name = trim($this->vars[$name]);
+        if (array_key_exists($name, $this->vars) && UTF8::mb_trim($this->vars[$name])) {
+            $name = UTF8::mb_trim($this->vars[$name]);
             if (array_key_exists($location, $this->vars)) {
-                $location = trim($this->vars[$location]);
+                $location = UTF8::mb_trim($this->vars[$location]);
             } else {
                 $location = '';
             }

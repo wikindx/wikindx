@@ -1759,7 +1759,7 @@ class CONFIGURE
         ];
         foreach ($required as $value) {
             if (array_key_exists($value, $this->vars)) {
-                $input = trim($this->vars[$value]);
+                $input = UTF8::mb_trim($this->vars[$value]);
                 if (!$input) {
                 	$error = $this->errors->text("inputError", 'missing', " ($value) ");
                 }

@@ -420,11 +420,11 @@ class URLS
     {
     	$error = '';
 // If both url and name fields are empty, we are just editing existing urls as in edit(). If a name exists, so must the url.
-        if (trim($this->vars['url'])) {
-            $this->formData['url'] = trim($this->vars['url']);
+        if (UTF8::mb_trim($this->vars['url'])) {
+            $this->formData['url'] = UTF8::mb_trim($this->vars['url']);
         }
-        if (trim($this->vars['name'])) {
-            $this->formData['name'] = trim($this->vars['name']);
+        if (UTF8::mb_trim($this->vars['name'])) {
+            $this->formData['name'] = UTF8::mb_trim($this->vars['name']);
             if (!array_key_exists('url', $this->formData)) {
             	$error = $this->errors->text("inputError", "missing");
         	}

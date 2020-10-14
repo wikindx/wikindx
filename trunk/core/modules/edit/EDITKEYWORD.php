@@ -206,7 +206,7 @@ class EDITKEYWORD
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $this->validateInput();
-        $keyword = trim($this->vars['keyword']);
+        $keyword = UTF8::mb_trim($this->vars['keyword']);
         if ($keywordExistId = $this->keyword->checkExists($keyword)) {
             if ($keywordExistId != $this->vars['editKeywordId']) {
                 return $this->confirmDuplicate($keywordExistId);
@@ -264,8 +264,8 @@ class EDITKEYWORD
      */
     private function editWrite()
     {
-        $updateArray['keywordKeyword'] = trim($this->vars['keyword']);
-        $glossary = trim($this->vars['text']);
+        $updateArray['keywordKeyword'] = UTF8::mb_trim($this->vars['keyword']);
+        $glossary = UTF8::mb_trim($this->vars['text']);
         if ($glossary) {
             $updateArray['keywordGlossary'] = $glossary;
         } else {
@@ -303,7 +303,7 @@ class EDITKEYWORD
         if (!array_key_exists('keywordIds', $this->vars) || !$this->vars['keywordIds']) {
             $error = $this->errors->text("inputError", "missing");
         }
-        $keyword = array_key_exists('keyword', $this->vars) ? trim($this->vars['keyword']) : FALSE;
+        $keyword = array_key_exists('keyword', $this->vars) ? UTF8::mb_trim($this->vars['keyword']) : FALSE;
         if (!$keyword) {
             $error = $this->errors->text("inputError", "missing");
         }

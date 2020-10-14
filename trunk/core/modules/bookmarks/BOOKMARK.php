@@ -81,7 +81,7 @@ class BOOKMARK
         if (!array_key_exists("name", $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        $name = trim($this->vars['name']);
+        $name = UTF8::mb_trim($this->vars['name']);
         if (!$name) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }

@@ -45,7 +45,7 @@ class ideagen_MODULE
     private $ideasExist;
     private $storedId = FALSE;
     private $lastId = FALSE;
-    
+    private $formData = [];
 
     /**
      * Constructor
@@ -110,14 +110,14 @@ class ideagen_MODULE
      * Select and display a metadata pair
      *
      */
-    public function generate($message = FALSE)
+    public function generate()
     {
-        if ($message) {
-            $pString = $message;
-        } else {
-            $pString = '';
+        if (array_key_exists('uuid', $this->vars)) {
+        	\TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
         }
-        $pString .= FORM\formHeader("ideagen_generate");
+        $pString = FORM\formHeader("ideagen_generate");
+        $uuid = \TEMPSTORAGE\getUuid($this->db);
+        $pString .= \FORM\hidden('uuid', $uuid);
         $pString .= HTML\p(FORM\formSubmit($this->pluginmessages->text('generateAgain')));
         $pString .= FORM\formEnd();
         $pString .= HTML\tableStart('generalTable');
@@ -143,15 +143,20 @@ class ideagen_MODULE
             $pString .= HTML\trEnd();
         	}
         }
+        // Store the two metadata ideas in case there is an error when adding a new idea
+        \TEMPSTORAGE\store($this->db, $uuid, ['id1' => $this->storedId, 'id2' => $this->lastId]);
         $pString .= HTML\tableEnd();
         GLOBALS::addTplVar('content', $pString);
         GLOBALS::addTplVar('content', HTML\p(HTML\h($this->pluginmessages->text('addIdea'))));
-        $this->ideaAdd();
+        $this->ideaAdd($uuid);
     }
     /**
      * display the adding form for a new idea
+     *
+     * @param string $uuid
+     * @param mixed $message
      */
-    public function ideaAdd()
+    public function ideaAdd($uuid, $message = FALSE)
     {
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "resource", "TEXTQP.php"]));
         $textqp = new TEXTQP();
@@ -162,8 +167,13 @@ class ideagen_MODULE
         $pString = $tinymce->loadMetadataTextarea(['Text']);
         $pString .= \FORM\formHeader('ideas_IDEAS_CORE');
         $hidden = \FORM\hidden('method', 'edit');
+        $hidden .= \FORM\hidden('uuid', $uuid);
+        $hidden .= \FORM\hidden('ideaGen', TRUE);
         $idea['hidden'] = $pString;
-		$private = 'Y';
+		$private = array_key_exists('private', $this->formData) ? $this->formData['private'] : 'Y';
+		if (array_key_exists('keywords', $this->formData)) {
+			$textqp->formData['keywords'] = $this->formData['keywords'];
+		}
         $idea['keyword'] = $hidden . $textqp->displayKeywordForm();
         // The second parameter ('Text') to textareaInput is the textarea name
         $idea['idea'] = \FORM\textareaInput(FALSE, 'Text', $text, 80, 10);
@@ -199,6 +209,59 @@ class ideagen_MODULE
         $this->session->delVar("ideaLock");
         GLOBALS::addTplVar('ideaTemplate', TRUE);
         GLOBALS::addTplVar('idea', $idea);
+    }
+    /**
+     * Error handling when adding an idea (missing Text)
+     * Called from core/modules/ideas/IDEAS.php
+     *
+     */
+    public function ideaAddError()
+    {
+    	$this->formData = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
+    	$this->storedId = $this->formData['id1'];
+    	$this->lastId = $this->formData['id2'];
+        $this->db->formatConditions(['resourcemetadataId' => $this->storedId]);
+        $rows[] = $this->db->selectFirstRow('resource_metadata', ['resourcemetadataId', 'resourcemetadataResourceId', 
+        	'resourcemetadataMetadataId', 'resourcemetadataType', 'resourcemetadataText']);
+        $this->db->formatConditions(['resourcemetadataId' => $this->lastId]);
+        $rows[] = $this->db->selectFirstRow('resource_metadata', ['resourcemetadataId', 'resourcemetadataResourceId', 
+        	'resourcemetadataMetadataId', 'resourcemetadataType', 'resourcemetadataText']);
+        foreach ($rows as $row) {
+			if ($row['resourcemetadataType'] == 'q') {
+				$return[] = $this->getQPMString($row, HTML\strong($this->pluginmessages->text('quote')));
+			} elseif ($row['resourcemetadataType'] == 'p') {
+				$return[] = $this->getQPMString($row, HTML\strong($this->pluginmessages->text('paraphrase')));
+			} elseif ($row['resourcemetadataType'] == 'qc') {
+				$return[] = $this->getQPMString($row, HTML\strong($this->pluginmessages->text('quoteComment')));
+			} elseif ($row['resourcemetadataType'] == 'pc') {
+				$return[] = $this->getQPMString($row, HTML\strong($this->pluginmessages->text('paraphraseComment')));
+			} elseif ($row['resourcemetadataType'] == 'm') {
+				$return[] = $this->getQPMString($row, HTML\strong($this->pluginmessages->text('musing')));
+			} elseif ($row['resourcemetadataType'] == 'i') {
+				$return[] = $this->getQPMString($row, HTML\strong($this->pluginmessages->text('idea')));
+			}
+		}
+        $count = 0;
+        $pString = FORM\formHeader("ideagen_generate");
+        $uuid = \TEMPSTORAGE\getUuid($this->db);
+        $pString .= \FORM\hidden('uuid', $uuid);
+        $pString .= HTML\p(FORM\formSubmit($this->pluginmessages->text('generateAgain')));
+        $pString .= FORM\formEnd();
+        $pString .= HTML\tableStart('generalTable');
+        foreach ($return as $string)
+        {
+        	$pString .= $string;
+        	++$count;
+        	if ($count == 1) {
+        	$pString .= HTML\trStart();
+            $pString .= HTML\td(HTML\hr(), '', 3);
+            $pString .= HTML\trEnd();
+        	}
+        }
+        $pString .= HTML\tableEnd();
+        GLOBALS::addTplVar('content', $pString);
+        GLOBALS::addTplVar('content', HTML\p(HTML\h($this->pluginmessages->text('addIdea'))));
+        $this->ideaAdd($this->vars['uuid']);
     }
     /**
     * select the random function
@@ -339,7 +402,7 @@ class ideagen_MODULE
     */
     private function getQPMString($row, $label)
     {
-    	if (!$row['resourcemetadataResourceId']) {// i.e. quote or paraphrase comment
+    	if (!$row['resourcemetadataResourceId']) {// i.e. quote or paraphrase comment or idea
     		$this->db->formatConditions(['resourcemetadataId' => $row['resourcemetadataMetadataId']]);
         	$resourceId = $this->db->selectFirstField('resource_metadata', 'resourcemetadataResourceId');
     	}

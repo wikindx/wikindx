@@ -148,13 +148,13 @@ class INITSUPERADMIN
     {
     	$error = '';
         if (array_key_exists('usersUsername', $this->vars)) {
-            $this->formData['usersUsername'] = trim($this->vars['usersUsername']);
+            $this->formData['usersUsername'] = UTF8::mb_trim($this->vars['usersUsername']);
         }
         if (array_key_exists('usersFullname', $this->vars)) {
-            $this->formData['usersFullname'] = trim($this->vars['usersFullname']);
+            $this->formData['usersFullname'] = UTF8::mb_trim($this->vars['usersFullname']);
         }
         if (array_key_exists('usersEmail', $this->vars)) {
-            $this->formData['usersEmail'] = trim($this->vars['usersEmail']);           
+            $this->formData['usersEmail'] = UTF8::mb_trim($this->vars['usersEmail']);           
 			if (filter_var($this->formData['usersEmail'], FILTER_VALIDATE_EMAIL) === FALSE) {
 				$error = $this->errors->text('inputError', 'invalidMail');
 			}
@@ -171,7 +171,7 @@ class INITSUPERADMIN
         ];
         foreach ($required as $value) {
             if (array_key_exists($value, $this->vars)) {
-                $input = trim($this->vars[$value]);
+                $input = UTF8::mb_trim($this->vars[$value]);
                 if ($value == 'usersUsername') {
                     if (array_search(mb_strtolower($input), ['sa', 'admin', 'super', 'superadmin'])) {
                     	$error = $this->errors->text("inputError", 'badUsername', " ($value) ");

@@ -165,7 +165,7 @@ class RESOURCECUSTOM
         $this->checkInput(['id', 'size', 'resourceId']);
         $userId = $this->session->getVar("setup_UserId");
         // if customText is empty, delete the row
-        if (!trim($this->vars['customText'])) {
+        if (!UTF8::mb_trim($this->vars['customText'])) {
             $message = $this->success->text("fieldDelete");
             $this->db->formatConditions(['resourcecustomId' => $this->vars['id']]);
             $this->db->delete('resource_custom');
@@ -176,7 +176,7 @@ class RESOURCECUSTOM
             } else {
                 $field = 'resourcecustomLong';
             }
-            $updateArray[$field] = trim($this->vars['customText']);
+            $updateArray[$field] = UTF8::mb_trim($this->vars['customText']);
             if ($userId) {
                 $updateArray["resourcecustomEditUserIdCustom"] = $userId;
             }
@@ -240,7 +240,7 @@ class RESOURCECUSTOM
         $this->gatekeep->init();
         $this->checkInput(['id', 'size', 'resourceId', 'customText']);
         $userId = $this->session->getVar("setup_UserId");
-        if (!trim($this->vars['customText'])) {
+        if (!UTF8::mb_trim($this->vars['customText'])) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         } else {
             if ($this->vars['size'] == 'S') {
@@ -248,7 +248,7 @@ class RESOURCECUSTOM
             } else {
                 $field = 'resourcecustomLong';
             }
-            $array[$field] = trim($this->vars['customText']);
+            $array[$field] = UTF8::mb_trim($this->vars['customText']);
             if ($userId) {
                 $array["resourcecustomAddUserIdCustom"] = $userId;
             }

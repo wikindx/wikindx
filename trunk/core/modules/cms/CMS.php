@@ -748,12 +748,12 @@ class CMS
         }
         $tag .= ':' . $this->vars['id'];
         if ($this->vars['cmsPageStart']) {
-            $tag .= ':' . trim($this->vars['cmsPageStart']);
+            $tag .= ':' . UTF8::mb_trim($this->vars['cmsPageStart']);
             if ($this->vars['cmsPageEnd']) {
-                $tag .= '-' . trim($this->vars['cmsPageEnd']);
+                $tag .= '-' . UTF8::mb_trim($this->vars['cmsPageEnd']);
             }
         } elseif ($this->vars['cmsPageEnd']) { // Assume pageEnd is actually meant to be pageStart
-            $tag .= ':' . trim($this->vars['cmsPageEnd']);
+            $tag .= ':' . UTF8::mb_trim($this->vars['cmsPageEnd']);
             $this->vars['cmsPageStart'] = $this->vars['cmsPageEnd'];
             unset($this->vars['cmsPageEnd']);
         }

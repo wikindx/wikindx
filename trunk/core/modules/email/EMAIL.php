@@ -58,7 +58,7 @@ class EMAIL
             $email = $this->vars['email'];
             $subject = "WIKINDX Registration Confirmation";
             $message = $this->messages->text("user", "emailText3") . "\n\nWIKINDX:\t\t" . WIKINDX_URL_BASE . "\n\nUSERNAME:\t\t" .
-                trim($this->vars['uname']) . "\n" . LF;
+                UTF8::mb_trim($this->vars['uname']) . "\n" . LF;
             $this->smtp->sendEmail($email, $subject, $message);
 
             return TRUE;
@@ -103,10 +103,10 @@ class EMAIL
         $subject = "WIKINDX Registration Confirmation";
         if ($passwordShow) {
             $message = $this->messages->text("user", "emailText2") . "\n\nWIKINDX:\t\t" . WIKINDX_URL_BASE . "\n\nUSERNAME:\t\t" .
-                trim($this->vars['usersUsername']) . "\n\nPASSWORD:\t\t" . trim($this->vars['password']) . "\n" . LF;
+                UTF8::mb_trim($this->vars['usersUsername']) . "\n\nPASSWORD:\t\t" . UTF8::mb_trim($this->vars['password']) . "\n" . LF;
         } else {
             $message = $this->messages->text("user", "emailText2") . "\n\nWIKINDX:\t\t" . WIKINDX_URL_BASE . "\n\nUSERNAME:\t\t" .
-                trim($this->vars['usersUsername']) . "\n" . LF;
+                UTF8::mb_trim($this->vars['usersUsername']) . "\n" . LF;
         }
         if (!$this->smtp->sendEmail($email, $subject, $message)) {
             return FALSE;
@@ -115,9 +115,9 @@ class EMAIL
         $email = WIKINDX_EMAIL_NEW_REGISTRATIONS;
         if ($email && !$this->session->getVar("setup_Superadmin")) {
             $message = "A new user has registered for" . "\n\nWIKINDX:\t\t" . WIKINDX_URL_BASE . "\n\nUSERNAME:\t\t" .
-                trim($this->vars['usersUsername']) . "\n" . LF;
+                UTF8::mb_trim($this->vars['usersUsername']) . "\n" . LF;
             if ($this->vars['fullname']) {
-                $message .= "FULLNAME:\t\t" . trim($this->vars['fullname']) . "\n" . LF;
+                $message .= "FULLNAME:\t\t" . UTF8::mb_trim($this->vars['fullname']) . "\n" . LF;
             }
             if (!$this->smtp->sendEmail($email, $subject, $message)) {
                 return FALSE;
@@ -269,13 +269,13 @@ class EMAIL
     {
         $address = $subject = $text = FALSE;
         if (array_key_exists('emailFriend_address', $this->vars)) {
-            $address = trim($this->vars['emailFriend_address']);
+            $address = UTF8::mb_trim($this->vars['emailFriend_address']);
         }
         if (array_key_exists('emailFriend_subject', $this->vars)) {
-            $subject = trim($this->vars['emailFriend_subject']);
+            $subject = UTF8::mb_trim($this->vars['emailFriend_subject']);
         }
         if (array_key_exists('emailFriend_text', $this->vars)) {
-            $text = trim($this->vars['emailFriend_text']);
+            $text = UTF8::mb_trim($this->vars['emailFriend_text']);
         }
         $this->formData["emailFriend_Address"] = $address;
         $this->formData["emailFriend_Subject"] = $subject;
@@ -301,7 +301,7 @@ class EMAIL
             return TRUE;
         }
         $password = time();
-        $email = trim($this->vars['email']);
+        $email = UTF8::mb_trim($this->vars['email']);
         $subject = "Password Reset";
         $message = $this->messages->text("user", "forget9");
         $message .= LF . LF;

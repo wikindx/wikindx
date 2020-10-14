@@ -376,10 +376,10 @@ class EDITKEYWORDGROUP
     	$this->validateNewInput();
 // All OK to write if we get here . . .
 		$fields[] = 'userkeywordgroupsName';
-		$values[] = trim($this->vars['KeywordGroup']);
+		$values[] = UTF8::mb_trim($this->vars['KeywordGroup']);
 		$fields[] = 'userkeywordgroupsUserId';
 		$values[] = $this->userId;
-		if ($description = trim($this->vars['Description'])) {
+		if ($description = UTF8::mb_trim($this->vars['Description'])) {
 			$fields[] = "userkeywordgroupsDescription";
     	    $values[] = $description;
     	}
@@ -420,7 +420,7 @@ class EDITKEYWORDGROUP
     {
 // First check for input
     	$error = '';
-    	if (!array_key_exists('KeywordGroup', $this->vars) || !trim($this->vars['KeywordGroup'])) {
+    	if (!array_key_exists('KeywordGroup', $this->vars) || !UTF8::mb_trim($this->vars['KeywordGroup'])) {
     		$error = $this->errors->text('inputError', 'missing');
     	}
     	if (!array_key_exists('SelectedKeyword', $this->vars) || empty($this->vars['SelectedKeyword'])) {
@@ -430,7 +430,7 @@ class EDITKEYWORDGROUP
     		$error = $this->errors->text('inputError', 'tooFewKeywordGroups');
     	}
     	$groups = $this->getGroups();
-    	if (!empty($groups) && (in_array(trim($this->vars['KeywordGroup']), $groups))) {
+    	if (!empty($groups) && (in_array(UTF8::mb_trim($this->vars['KeywordGroup']), $groups))) {
 			$error = $this->errors->text('inputError', 'groupExists');
 		}
 // Second, write any input to formData
@@ -482,10 +482,10 @@ class EDITKEYWORDGROUP
 		$this->db->delete('user_kg_usergroups');
 
 		$fields[] = 'userkeywordgroupsName';
-		$values[] = trim($this->vars['editName']);
+		$values[] = UTF8::mb_trim($this->vars['editName']);
 		$fields[] = 'userkeywordgroupsUserId';
 		$values[] = $this->userId;
-		if ($description = trim($this->vars['editDescription'])) {
+		if ($description = UTF8::mb_trim($this->vars['editDescription'])) {
 			$fields[] = "userkeywordgroupsDescription";
     	    $values[] = $description;
     	}
@@ -527,7 +527,7 @@ class EDITKEYWORDGROUP
     	if (!array_key_exists('kgIds', $this->vars)) {
     		$error = $this->errors->text('inputError', 'missing');
     	}
-    	if (!array_key_exists('editName', $this->vars) || !trim($this->vars['editName'])) {
+    	if (!array_key_exists('editName', $this->vars) || !UTF8::mb_trim($this->vars['editName'])) {
     		$error = $this->errors->text('inputError', 'missing');
     	}
     	if (!array_key_exists('editSelectedKeyword', $this->vars) || empty($this->vars['editSelectedKeyword'])) {
@@ -537,7 +537,7 @@ class EDITKEYWORDGROUP
     		$error = $this->errors->text('inputError', 'tooFewKeywordGroups');
     	}
     	$groups = $this->getGroups();
-    	if (!empty($groups) && ($key = array_search(trim($this->vars['editName']), $groups)) !== FALSE) {
+    	if (!empty($groups) && ($key = array_search(UTF8::mb_trim($this->vars['editName']), $groups)) !== FALSE) {
     		if ($key != $this->vars['kgIds']) {
 				$error = $this->errors->text('inputError', 'groupExists');
 			}

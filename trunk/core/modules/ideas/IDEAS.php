@@ -27,6 +27,7 @@ class IDEAS
     private $badInput;
     private $ideas;
     private $keywordIdeas = [];
+    private $formData = [];
 
     // Constructor
     public function __construct()
@@ -37,6 +38,7 @@ class IDEAS
         $this->vars = GLOBALS::getVars();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "TEXTQP.php"]));
         $this->textqp = new TEXTQP();
+        $this->textqp->type = 'idea';
         $this->metadata = FACTORY_METADATA::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
 
@@ -95,6 +97,16 @@ class IDEAS
      */
     public function ideaList($keywordList = FALSE)
     {
+        if (array_key_exists('message', $this->vars)) {
+            GLOBALS::setTplVar('content', $this->vars['message']);
+            $this->db->formatConditions(['resourcemetadataType' => 'i']);
+            $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
+            $this->db->limit(1, 0);
+            $resultSet = $this->db->select('resource_metadata', ['resourcemetadataId']);
+            if (!$this->db->numRows($resultSet)) {
+        		FACTORY_CLOSE::getInstance();
+            }
+        }
         $this->session->delVar("search_Highlight");
         $icons = FACTORY_LOADICONS::getInstance();
         $cite = FACTORY_CITE::getInstance();
@@ -250,12 +262,18 @@ class IDEAS
      */
     public function threadView($ideaId = FALSE, $message = FALSE)
     {
+        if (array_key_exists('returnId', $this->vars)) {
+        	$ideaId = $this->vars['returnId'];
+        }
         if (!$ideaId && (!array_key_exists('resourcemetadataId', $this->vars) || !$this->vars['resourcemetadataId'])) {
             $this->session->setVar("sql_LastThread", FALSE);
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         if (!$ideaId) {
             $ideaId = $this->vars['resourcemetadataId'];
+        }
+        if (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
         }
         if ($message) {
             GLOBALS::addTplVar('content', $message);
@@ -274,8 +292,10 @@ class IDEAS
     }
     /**
      * display the adding/editing form for a sub idea
+     *
+	 * @param mixed $message
      */
-    public function subIdeaForm()
+    public function subIdeaForm($message = FALSE)
     {
         if (!array_key_exists('resourcemetadataId', $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
@@ -285,8 +305,9 @@ class IDEAS
         }
         $this->ideas = [];
         $text = FALSE;
+        $pString = $message;
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $pString = $tinymce->loadMetadataTextarea(['Text']);
+        $pString .= $tinymce->loadMetadataTextarea(['Text']);
         $pString .= \FORM\formHeader('ideas_IDEAS_CORE');
         $hidden = \FORM\hidden('method', 'subIdeaAdd');
         $hidden .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
@@ -307,13 +328,13 @@ class IDEAS
             $recordset = $this->db->select('resource_metadata', 'resourcemetadataText');
             $row = $this->db->fetchRow($recordset);
             $text = \HTML\dbToTinyMCE($row['resourcemetadataText']);
-            $idea['keyword'] = $this->textqp->displayKeywordForm('idea', 'resourcemetadataMetadataId');
+            $idea['keyword'] = $this->textqp->displayKeywordForm($this->formData);
             $icons = FACTORY_LOADICONS::getInstance();
             $add = $icons->getHTML("add");
             $idea['add'] = \HTML\a($icons->getClass("add"), $add, "index.php?action=ideas_IDEAS_CORE" . "&method=" . 'subIdeaForm' .
                 "&resourcemetadataId=" . $this->vars['resourcemetadataMetadataId']);
         } else {
-            $idea['keyword'] = $this->textqp->displayKeywordForm('idea', 'resourcemetadataId');
+            $idea['keyword'] = $this->textqp->displayKeywordForm($this->formData);
         }
         $idea['hidden'] = $pString . $hidden;
         // The second parameter ('Text') to textareaInput is the textarea name
@@ -324,24 +345,33 @@ class IDEAS
         $this->otherIdeas($metadataId, TRUE);
         $this->otherIdeas($metadataId, FALSE, 1);
         $idea['otherIdeas'] = $this->ideas;
-        $this->session->delVar("ideaLock");
         GLOBALS::addTplVar('ideaTemplate', TRUE);
         GLOBALS::addTplVar('idea', $idea);
     }
     /**
      * display the adding/editing form for the main idea
+	 *
+	 * @param mixed $message
      */
-    public function ideaEdit()
+    public function ideaEdit($message = FALSE)
     {
         $text = $metadataId = $owner = FALSE;
         $thisUserId = $this->session->getVar("setup_UserId");
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $pString = $tinymce->loadMetadataTextarea(['Text']);
+        if (array_key_exists('message', $this->vars)) {
+        	$pString = $this->vars['message'];
+        } else {
+        	$pString = $message;
+        }
+        $pString .= $tinymce->loadMetadataTextarea(['Text']);
         $pString .= \FORM\formHeader('ideas_IDEAS_CORE');
         $hidden = \FORM\hidden('method', 'edit');
         $idea['hidden'] = $pString;
+		if (!empty($this->formData)) {
+			$private = $this->formData['private'];
+		}
         // are we editing or adding?
-        if (array_key_exists('resourcemetadataId', $this->vars)) { // editing
+        elseif (array_key_exists('resourcemetadataId', $this->vars)) { // editing
             // Check this user is allowed to edit the idea.
             $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
             $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
@@ -350,25 +380,25 @@ class IDEAS
                 $this->session->setVar("sql_LastThread", FALSE);
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
-            $hidden .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
-            $metadataId = $this->vars['resourcemetadataId'];
-            $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
-            $recordset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataText',
-                'resourcemetadataPrivate', 'resourcemetadataAddUserId', ]);
-            $row = $this->db->fetchRow($recordset);
-            if ($row['resourcemetadataAddUserId'] == $thisUserId) {
-                $owner = TRUE;
-            }
-            $text = \HTML\dbToTinyMCE($row['resourcemetadataText']);
-            $private = $row['resourcemetadataPrivate'];
-            $icons = FACTORY_LOADICONS::getInstance();
-            $add = $icons->getHTML("add");
-            $idea['add'] = \HTML\a($icons->getClass("add"), $add, "index.php?action=ideas_IDEAS_CORE" . "&method=" . 'subIdeaForm' .
-                "&resourcemetadataId=" . $this->vars['resourcemetadataId']);
+			$hidden .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
+			$metadataId = $this->vars['resourcemetadataId'];
+			$this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
+			$recordset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataText',
+				'resourcemetadataPrivate', 'resourcemetadataAddUserId', ]);
+			$row = $this->db->fetchRow($recordset);
+			if ($row['resourcemetadataAddUserId'] == $thisUserId) {
+				$owner = TRUE;
+			}
+			$text = \HTML\dbToTinyMCE($row['resourcemetadataText']);
+			$private = $row['resourcemetadataPrivate'];
+			$icons = FACTORY_LOADICONS::getInstance();
+			$add = $icons->getHTML("add");
+			$idea['add'] = \HTML\a($icons->getClass("add"), $add, "index.php?action=ideas_IDEAS_CORE" . "&method=" . 'subIdeaForm' .
+				"&resourcemetadataId=" . $this->vars['resourcemetadataId']);
         } else {
             $private = 'Y';
         }
-        $idea['keyword'] = $hidden . $this->textqp->displayKeywordForm('idea', 'resourcemetadataId');
+        $idea['keyword'] = $hidden . $this->textqp->displayKeywordForm($this->formData);
         // The second parameter ('Text') to textareaInput is the textarea name
         $idea['idea'] = \FORM\textareaInput(FALSE, 'Text', $text, 80, 10);
         $idea['ideaTitle'] = $this->messages->text("metadata", 'idea');
@@ -404,7 +434,6 @@ class IDEAS
             $this->otherIdeas($metadataId);
             $idea['otherIdeas'] = $this->ideas;
         }
-        $this->session->delVar("ideaLock");
         GLOBALS::addTplVar('ideaTemplate', TRUE);
         GLOBALS::addTplVar('idea', $idea);
     }
@@ -415,18 +444,16 @@ class IDEAS
      */
     public function edit()
     {
-        if ($this->session->getVar("ideaLock")) {
-            $this->error($this->errors->text("done", "idea"));
-        }
         $userId = $this->session->getVar("setup_UserId");
+        $this->checkInput();
         // insert
         if (!array_key_exists('resourcemetadataId', $this->vars)) {
-            if (!array_key_exists('Text', $this->vars) || !trim($this->vars['Text'])) {
-                $this->badInput->close($this->errors->text("inputError", "missing"));
-            }
+        	if (array_key_exists('uuid', $this->vars)) { // i.e. from ideaGen plugin
+        		\TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+        	}
             $message = $this->success->text("ideaAdd");
             $fields[] = 'resourcemetadataText';
-            $values[] = trim($this->vars['Text']);
+            $values[] = UTF8::mb_trim($this->vars['Text']);
             $fields[] = 'resourcemetadataPrivate';
             if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N')) {
                 $values[] = 'N';
@@ -478,12 +505,13 @@ class IDEAS
                 $this->db->delete('resource_keyword');
                 $keyword = FACTORY_KEYWORD::getInstance();
                 $keyword->removeHanging();
-                $front = new FRONT($message); // __construct() runs on autopilot
-                FACTORY_CLOSE::getInstance();
+        		$message = rawurlencode($message);
+				header("Location: index.php?action=ideas_IDEAS_CORE&method=ideaList&message=$message");
+				die;
             } else {
                 $message = $this->success->text("ideaEdit");
                 $updateArray = [];
-                $updateArray['resourcemetadataText'] = trim($this->vars['Text']);
+                $updateArray['resourcemetadataText'] = UTF8::mb_trim($this->vars['Text']);
                 if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N')) {
                     $updateArray['resourcemetadataPrivate'] = 'N';
                 } elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private']))) {
@@ -504,11 +532,13 @@ class IDEAS
                 $this->textqp->writeKeywords($this->vars['resourcemetadataId'], 'resourcekeywordMetadataId');
             }
         }
-        // lock reload
-        $this->session->setVar("ideaLock", TRUE);
-        // send back to idea thread with success message
-        $this->threadView($ideaId, $message);
-        FACTORY_CLOSE::getInstance();
+        $message = rawurlencode($message);
+        if (array_key_exists('resourcemetadataId', $this->vars)) { // editing
+			header("Location: index.php?action=ideas_IDEAS_CORE&method=ideaList&message=$message");
+        } else {
+			header("Location: index.php?action=ideas_IDEAS_CORE&method=ideaEdit&message=$message");
+		}
+		die;
     }
     /**
      * Write to the database a subidea
@@ -517,20 +547,15 @@ class IDEAS
      */
     public function subIdeaAdd()
     {
-        if ($this->session->getVar("ideaLock")) {
-            $this->error($this->errors->text("done", "idea"));
-        }
         $userId = $this->session->getVar("setup_UserId");
+        $this->checkInput();
         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
         $row = $this->db->selectFirstRow('resource_metadata', 'resourcemetadataPrivate');
         // insert
         if (!array_key_exists('resourcemetadataMetadataId', $this->vars)) {
-            if (!array_key_exists('Text', $this->vars) || !trim($this->vars['Text'])) {
-                $this->badInput->close($this->errors->text("inputError", "missing"));
-            }
             $message = $this->success->text("ideaAdd");
             $fields[] = 'resourcemetadataText';
-            $values[] = trim($this->vars['Text']);
+            $values[] = UTF8::mb_trim($this->vars['Text']);
             $fields[] = 'resourcemetadataMetadataId';
             $values[] = $this->vars['resourcemetadataId'];
             $fields[] = 'resourcemetadataPrivate';
@@ -559,7 +584,7 @@ class IDEAS
             }
             // if Text is empty, delete the row
             if (!$this->vars['Text']) {
-                $message = $this->success->text("ideaaDelete");
+                $message = $this->success->text("ideaDelete");
                 $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                 $this->db->delete('resource_metadata');
                 $this->db->formatConditions(['resourcemetadataMetadataId' => $this->vars['resourcemetadataId']]); // delete subideas in thread
@@ -568,12 +593,11 @@ class IDEAS
                 $this->db->delete('resource_keyword');
                 $keyword = FACTORY_KEYWORD::getInstance();
                 $keyword->removeHanging();
-                $front = new FRONT($message); // __construct() runs on autopilot
-                FACTORY_CLOSE::getInstance();
+                $returnId = $this->vars['resourcemetadataMetadataId'];
             } else {
                 $message = $this->success->text("ideaEdit");
                 $updateArray = [];
-                $updateArray['resourcemetadataText'] = trim($this->vars['Text']);
+                $updateArray['resourcemetadataText'] = UTF8::mb_trim($this->vars['Text']);
                 $updateArray['resourcemetadataTimestampEdited'] = $this->db->formatTimestamp();
                 $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                 $this->db->update('resource_metadata', $updateArray);
@@ -581,11 +605,9 @@ class IDEAS
                 $returnId = $this->vars['resourcemetadataMetadataId'];
             }
         }
-        // lock reload
-        $this->session->setVar("ideaLock", TRUE);
-        // send back to idea thread with success message
-        $this->threadView($returnId, $message);
-        FACTORY_CLOSE::getInstance();
+        $message = rawurlencode($message);
+		header("Location: index.php?action=ideas_IDEAS_CORE&method=threadView&message=$message&returnId=$returnId");
+		die;
     }
     /**
      * Delete a subIdea
@@ -609,8 +631,10 @@ class IDEAS
             $this->threadView($this->vars['resourcemetadataMetadataId'], $message);
             FACTORY_CLOSE::getInstance();
         }
-        $front = new FRONT($message); // __construct() runs on autopilot
-        FACTORY_CLOSE::getInstance();
+        $message = rawurlencode($message);
+        $returnId = $this->vars['resourcemetadataId'];
+		header("Location: index.php?action=ideas_IDEAS_CORE&method=threadView&message=$message&returnId=$returnId");
+		die;
     }
     /**
      * When deleting a thread, ask for confirmation
@@ -650,7 +674,6 @@ class IDEAS
         if (!$this->db->numRows($resultset)) {
             $this->error($this->errors->text("inputError", "invalid"));
         }
-        $message = $this->success->text("ideaDelete");
         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
         $this->db->delete('resource_metadata');
         $this->db->formatConditions(['resourcemetadataMetadataId' => $this->vars['resourcemetadataId']]); // delete subideas in thread
@@ -659,8 +682,9 @@ class IDEAS
         $this->db->delete('resource_keyword');
         $keyword = FACTORY_KEYWORD::getInstance();
         $keyword->removeHanging();
-        $front = new FRONT($message); // __construct() runs on autopilot
-        FACTORY_CLOSE::getInstance();
+        $message = rawurlencode($this->success->text("ideaDelete"));
+		header("Location: index.php?action=ideas_IDEAS_CORE&method=ideaList&message=$message");
+		die;
     }
     /**
      * error function
@@ -722,5 +746,29 @@ class IDEAS
             $this->ideas[$index]['text'] = $cite->parseCitations($row['resourcemetadataText'], 'html');
             ++$index;
         }
+    }
+    /**
+     * Check input
+     *
+     */
+    private function checkInput()
+    {
+		$this->formData['keywords'] = UTF8::mb_trim($this->vars['keywords']);
+		if (array_key_exists('private', $this->vars)) {
+			$this->formData['private'] = $this->vars['private'];
+    	}
+    	if (!array_key_exists('Text', $this->vars) || !UTF8::mb_trim($this->vars['Text'])) {
+    		if (array_key_exists('ideaGen', $this->vars)) { // Being used in the ideaGen plugin
+    			$uuid = $this->vars['uuid'];
+    			\TEMPSTORAGE\merge($this->db, $uuid, $this->formData);
+    			header("Location: index.php?action=ideagen_ideaAddError&uuid=$uuid");
+    			die;
+			} elseif (($this->vars['method'] == 'edit') && !array_key_exists('resourcemetadataId', $this->vars)) { // inserting so need text
+	        	$this->badInput->close($this->errors->text("inputError", "missing"), $this, 'ideaEdit');
+		    } elseif (($this->vars['method'] == 'subIdeaAdd') && !array_key_exists('resourcemetadataMetadataId', $this->vars)) { // Inserting
+		    	$this->badInput->close($this->errors->text("inputError", "missing"), $this, 'subIdeaForm');
+		    }
+        }
+		$this->formData['Text'] = UTF8::mb_trim($this->vars['Text']);
     }
 }

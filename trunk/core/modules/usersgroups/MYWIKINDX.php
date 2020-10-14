@@ -129,26 +129,27 @@ class MYWIKINDX
         $error = '';
     	if ($this->session->getVar('setup_UserId') == WIKINDX_SUPERADMIN_ID)
     	{
-			if ((!$email = trim($this->vars['email'])) || !trim($this->vars['usersUsername']) || 
-				!trim($this->vars['password']) || !trim($this->vars['passwordConfirm'])) {
+			if ((!$email = UTF8::mb_trim($this->vars['email'])) || !UTF8::mb_trim($this->vars['usersUsername']) || 
+				!UTF8::mb_trim($this->vars['password']) || !UTF8::mb_trim($this->vars['passwordConfirm'])) {
 				$error = $this->errors->text("inputError", "missing");
 			} else {
 // Reinject the username after a change otherwise the value is taken from the db before the change
-        		$this->usersUsername = trim($this->vars['usersUsername']);
+        		$this->usersUsername = UTF8::mb_trim($this->vars['usersUsername']);
 			}
-			$this->formData['usersUsername'] = trim($this->vars['usersUsername']);
+			$this->formData['usersUsername'] = UTF8::mb_trim($this->vars['usersUsername']);
         }
-        elseif ((!$email = trim($this->vars['email'])) || !trim($this->vars['password']) || !trim($this->vars['passwordConfirm'])) {
+        elseif ((!$email = UTF8::mb_trim($this->vars['email'])) || !UTF8::mb_trim($this->vars['password']) || 
+        	!UTF8::mb_trim($this->vars['passwordConfirm'])) {
 			$error = $this->errors->text("inputError", "missing");
         }
-        elseif (trim($this->vars['password']) != trim($this->vars['passwordConfirm'])) {
+        elseif (UTF8::mb_trim($this->vars['password']) != UTF8::mb_trim($this->vars['passwordConfirm'])) {
             $error = $this->errors->text("inputError", "invalid");
         }
 		if (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE) {
 			$error = $this->errors->text('inputError', 'invalidMail');
 		}
         $this->formData['email'] = $email;
-        $this->formData['fullname'] = trim($this->vars['fullname']);
+        $this->formData['fullname'] = UTF8::mb_trim($this->vars['fullname']);
 		if (array_key_exists('cookie', $this->vars)) {
 			$this->formData['cookie'] = TRUE;
 		}
@@ -396,9 +397,9 @@ class MYWIKINDX
             $updateArray['usersNotifyThreshold'] = $this->vars['NotifyThreshold'];
         }
         if (array_key_exists('DigestThreshold', $this->vars)) {
-            $input = trim($this->vars['DigestThreshold']) + 0;
+            $input = UTF8::mb_trim($this->vars['DigestThreshold']) + 0;
             if (is_int($input) && ($input > 0)) {
-                $updateArray['usersNotifyDigestThreshold'] = trim($this->vars['DigestThreshold']);
+                $updateArray['usersNotifyDigestThreshold'] = UTF8::mb_trim($this->vars['DigestThreshold']);
             } else {
                 $updateArray['usersNotifyDigestThreshold'] = 100;
             }
@@ -560,7 +561,7 @@ class MYWIKINDX
     public function createUserGroup()
     {
     	$error = '';
-        if (!$title = trim($this->vars['title'])) {
+        if (!$title = UTF8::mb_trim($this->vars['title'])) {
             $error = $this->errors->text("inputError", "missing");
         }
         if (empty($this->vars['selectedUsers'])) {
@@ -569,8 +570,8 @@ class MYWIKINDX
     	if (!$this->checkUserGroupExists($title, FALSE)) {
             $error = $this->errors->text("inputError", "groupExists");
         }
-        if (array_key_exists('description', $this->vars) && trim($this->vars['description'])) {
-            $description = trim($this->vars['description']);
+        if (array_key_exists('description', $this->vars) && UTF8::mb_trim($this->vars['description'])) {
+            $description = UTF8::mb_trim($this->vars['description']);
         }
         if ($error) {
         	if (array_key_exists('uuid', $this->vars)) {
@@ -775,13 +776,13 @@ class MYWIKINDX
     	if (!array_key_exists('groupId', $this->vars) || (!$groupId = $this->vars['groupId'])) {
             $error = $this->errors->text("inputError", "missing");
         }
-        if (!$title = trim($this->vars['title'])) {
+        if (!$title = UTF8::mb_trim($this->vars['title'])) {
             $error = $this->errors->text("inputError", "missing");
         }
         if (empty($this->vars['selectedUsers'])) {
             $error = $this->errors->text("inputError", "missing");
         }
-        $description = trim($this->vars['description']);
+        $description = UTF8::mb_trim($this->vars['description']);
         if (!$this->checkValidUserGroup($groupId)) {
             $this->catastrophic($this->errors->text("inputError", "invalid"), 'userGroups');
         }
@@ -999,7 +1000,7 @@ class MYWIKINDX
     public function createUserTag()
     {
 	    $error = '';
-        if (!$title = trim($this->vars['title'])) {
+        if (!$title = UTF8::mb_trim($this->vars['title'])) {
             $error = $this->errors->text("inputError", "missing");
         }
         $userTagsObject = FACTORY_USERTAGS::getInstance();
@@ -1083,7 +1084,7 @@ class MYWIKINDX
     public function editUserTag()
     {
     	$error = '';
-        if (!$title = trim($this->vars['title'])) {
+        if (!$title = UTF8::mb_trim($this->vars['title'])) {
             $error = $this->errors->text("inputError", "missing");
         }
         if (!$tagId = $this->vars['tagId']) {
@@ -1356,14 +1357,14 @@ class MYWIKINDX
     {
     	$error = '';
         if (array_key_exists('description', $this->vars)) {
-            $description = trim($this->vars['description']);
+            $description = UTF8::mb_trim($this->vars['description']);
             if ($description) {
                 $fields[] = 'userbibliographyDescription';
                 $values[] = $description;
             }
             $this->formData['description'] = $description;
         }
-        if (!$title = trim($this->vars['title'])) {
+        if (!$title = UTF8::mb_trim($this->vars['title'])) {
             $error = $this->errors->text("inputError", "missing");
         }
         $this->formData['title'] = $title;
@@ -1515,13 +1516,13 @@ class MYWIKINDX
         if (!$this->checkValidBibliography($bibId)) {
         	$error = $this->errors->text("inputError", "invalid");
         }
-        if (!$title = trim($this->vars['title'])) {
+        if (!$title = UTF8::mb_trim($this->vars['title'])) {
             $error = $this->errors->text("inputError", "missing");
         }
         if (!$this->checkBibliographyExists($title, $bibId)) {
         	$error = $this->errors->text("inputError", "bibExists");
         }
-        $description = trim($this->vars['description']);
+        $description = UTF8::mb_trim($this->vars['description']);
         if (array_key_exists('groupId', $this->vars)) { // user group bibliography
         	$groupId = $this->vars['groupId'];
         	$tsArray = ['title' => $title, 'bibId' => $bibId, 'description' => $description, 'groupId' => $groupId];
@@ -2022,8 +2023,8 @@ class MYWIKINDX
     	$error = '';
         $array = ["usersPasswordQuestion1", "usersAnswer1", "usersPasswordQuestion2", "usersAnswer2", "usersPasswordQuestion3", "usersAnswer3"];
         foreach ($array as $key) {
-            if (array_key_exists($key, $this->vars) && trim($this->vars[$key])) {
-                $this->formData[$key] = trim($this->vars[$key]);
+            if (array_key_exists($key, $this->vars) && UTF8::mb_trim($this->vars[$key])) {
+                $this->formData[$key] = UTF8::mb_trim($this->vars[$key]);
             } else {
             	$this->formData[$key] = FALSE;
             }

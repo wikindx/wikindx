@@ -90,14 +90,14 @@ class REGISTER
     	$this->badInput->closeType = 'closenomenu';
     	$error = '';
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
-        if (!$email = trim($this->vars['email'])) {
+        if (!$email = UTF8::mb_trim($this->vars['email'])) {
         	$error = $this->errors->text('inputError', 'missing');
         }
         if (!$this->captchaCheck()) {
         	$error = $this->errors->text('inputError', 'captcha');
         }
         $this->session->delVar("captcha");
-        $this->formData['email'] = trim($this->vars['email']);
+        $this->formData['email'] = UTF8::mb_trim($this->vars['email']);
         if ($error) {
             $this->badInput->close($error, $this, 'initRegister');
         }
@@ -186,17 +186,17 @@ class REGISTER
             !array_key_exists('hashKey', $this->vars)) {print_r($this->vars);
         	$error = $this->errors->text('inputError', 'missing');
         }
-        if (!trim($this->vars['usersUsername']) || !trim($this->vars['password']) ||
-            !trim($this->vars['passwordConfirm']) || !$this->vars['email'] || !$this->vars['hashKey']) {
+        if (!UTF8::mb_trim($this->vars['usersUsername']) || !UTF8::mb_trim($this->vars['password']) ||
+            !UTF8::mb_trim($this->vars['passwordConfirm']) || !$this->vars['email'] || !$this->vars['hashKey']) {
         	$error = $this->errors->text('inputError', 'missing');
         }
-        if (trim($this->vars['password']) != trim($this->vars['passwordConfirm'])) {
+        if (UTF8::mb_trim($this->vars['password']) != UTF8::mb_trim($this->vars['passwordConfirm'])) {
         	$error = $this->errors->text('inputError', 'missing');
         }
-        $this->formData['usersUsername'] = trim($this->vars['usersUsername']);
-        $this->formData['fullname'] = trim($this->vars['fullname']);
+        $this->formData['usersUsername'] = UTF8::mb_trim($this->vars['usersUsername']);
+        $this->formData['fullname'] = UTF8::mb_trim($this->vars['fullname']);
         $this->formData['id'] = $this->vars['id'];
-        $this->formData['hashKey'] = trim($this->vars['hashKey']);
+        $this->formData['hashKey'] = UTF8::mb_trim($this->vars['hashKey']);
         $this->formData['email'] = $this->vars['email'];
         if ($error) {
             $this->badInput->close($error, $this, 'registerConfirm');
@@ -245,7 +245,7 @@ class REGISTER
     	$this->badInput->closeType = 'closenomenu';
     	$error = '';
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
-        if ((!$email = trim($this->vars['email'])) || !$request = trim($this->vars['registerRequest'])) {
+        if ((!$email = UTF8::mb_trim($this->vars['email'])) || !$request = UTF8::mb_trim($this->vars['registerRequest'])) {
         	$error = $this->errors->text('inputError', 'missing');
         }
         elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE) {
@@ -255,8 +255,8 @@ class REGISTER
         	$error = $this->errors->text('inputError', 'captcha');
         }
         $this->session->delVar("captcha");
-        $this->formData['registerRequest'] = trim($this->vars['registerRequest']);
-        $this->formData['email'] = trim($this->vars['email']);
+        $this->formData['registerRequest'] = UTF8::mb_trim($this->vars['registerRequest']);
+        $this->formData['email'] = UTF8::mb_trim($this->vars['email']);
         if ($error) {
             $this->badInput->close($error, $this, 'initRegister');
         }

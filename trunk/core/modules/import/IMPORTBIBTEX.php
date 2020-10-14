@@ -1130,10 +1130,10 @@ class IMPORTBIBTEX
             }
             $this->formData['import_File'] = $fileName;
             if ($this->vars['import_Tag']) {
-                if ($tagId = $this->tag->checkExists(trim($this->vars['import_Tag']))) { // Existing tag found
+                if ($tagId = $this->tag->checkExists(UTF8::mb_trim($this->vars['import_Tag']))) { // Existing tag found
                		$this->formData['import_TagId'] = $tagId;
                 } else {
-            		$this->formData['import_Tag'] = trim($this->vars['import_Tag']);
+            		$this->formData['import_Tag'] = UTF8::mb_trim($this->vars['import_Tag']);
             	}
             } elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId']) {
             	$this->formData['import_TagId'] = $this->vars['import_TagId'];
@@ -1145,11 +1145,11 @@ class IMPORTBIBTEX
 
             return implode(DIRECTORY_SEPARATOR, [$this->dirName, $fileName]);
         } elseif ($this->type == 'paste') {
-            if (!trim($this->vars['import_Paste'])) {
+            if (!UTF8::mb_trim($this->vars['import_Paste'])) {
             	$error = $this->errors->text("inputError", "missing");
             }
             else {
-            	$pasteInput = stripslashes(trim($this->vars['import_Paste']));
+            	$pasteInput = stripslashes(UTF8::mb_trim($this->vars['import_Paste']));
 				$this->formData["import_Paste"] = base64_encode($pasteInput);
 				list($fileName, $fullFileName) = FILE\createFileName($this->dirName, $pasteInput, '.bib');
 				if (!$fullFileName) {

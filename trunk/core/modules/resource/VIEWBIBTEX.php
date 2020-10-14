@@ -308,7 +308,7 @@ class VIEWBIBTEX
         // Check for metadata input and write to session
         $metadataFields = ["Quotation", "QuotationComment", "Paraphrase", "ParaphraseComment", "Musing"];
         foreach ($metadataFields as $field) {
-            $input = trim($this->vars[$field]);
+            $input = UTF8::mb_trim($this->vars[$field]);
             if ($input) {
                 if (($field == 'QuotationComment') || ($field == 'ParaphraseComment')) { // may be duplicated
                     $this->session->setVar("export_$field", $input);

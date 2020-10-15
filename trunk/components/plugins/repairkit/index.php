@@ -67,11 +67,17 @@ class repairkit_MODULE
      */
     public function dbIntegrityInit()
     {
+    	if (array_key_exists('message', $this->vars)) {
+    		$pString = $this->vars['message'];
+    	} else {
+    		$pString = '';
+    	}
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDbIntegrity'));
         $wVersion = WIKINDX_INTERNAL_VERSION;
         $dbVersion = $this->db->selectFirstField('database_summary', 'databasesummarySoftwareVersion');
         if (floatval($dbVersion) != floatval($wVersion)) { // Shouldn't ever happen if UPDATEDATABASE is functioning correctly . . .
-            $pString = HTML\p($this->pluginmessages->text('dbIntegrityPreamble1a', $dbVersion) . '&nbsp;' . $this->pluginmessages->text('dbIntegrityPreamble1b', $wVersion));
+            $pString .= HTML\p($this->pluginmessages->text('dbIntegrityPreamble1a', $dbVersion) . '&nbsp;' . 
+            	$this->pluginmessages->text('dbIntegrityPreamble1b', $wVersion));
             GLOBALS::addTplVar('content', $pString);
 
             return;
@@ -79,7 +85,7 @@ class repairkit_MODULE
         $currentDbSchema = $this->db->createRepairKitDbSchema();
         $correctDbSchema = $this->db->getRepairKitDbSchema(WIKINDX_FILE_REPAIRKIT_DB_SCHEMA);
         if ($correctDbSchema === FALSE) {
-            $pString = HTML\p($this->pluginmessages->text('fileReadError'), 'error');
+            $pString .= HTML\p($this->pluginmessages->text('fileReadError'), 'error');
             GLOBALS::addTplVar('content', $pString);
 
             return;
@@ -88,13 +94,13 @@ class repairkit_MODULE
             $this->dbInvalidDatetime = TRUE;
         }
         if (($this->dbIntegrityReport($currentDbSchema, $correctDbSchema) === TRUE) && !$this->dbInvalidDatetime) {
-            $pString = HTML\p($this->pluginmessages->text('dbIntegrityPreamble2'));
+            $pString .= HTML\p($this->pluginmessages->text('dbIntegrityPreamble2'));
             GLOBALS::addTplVar('content', $pString);
 
             return;
         } else { // Structure needs fixing – can it be?
             if (!empty($this->dbMissingTables)) { // Cannot be fixed
-                $pString = HTML\p($this->pluginmessages->text('dbIntegrityMissingTables') . BR . implode(BR, $this->dbMissingTables));
+                $pString .= HTML\p($this->pluginmessages->text('dbIntegrityMissingTables') . BR . implode(BR, $this->dbMissingTables));
                 GLOBALS::addTplVar('content', $pString);
 
                 return;
@@ -104,13 +110,13 @@ class repairkit_MODULE
                 foreach ($this->dbMissingFields as $table) { // [0] == table, [1] == field
                     $missingFields .= "TABLE " . $table[0] . ": " . $table[1] . BR;
                 }
-                $pString = HTML\p($this->pluginmessages->text('dbIntegrityMissingFields') . BR . $missingFields);
+                $pString .= HTML\p($this->pluginmessages->text('dbIntegrityMissingFields') . BR . $missingFields);
                 GLOBALS::addTplVar('content', $pString);
 
                 return;
             }
             // Database can be fixed
-            $pString = HTML\p($this->pluginmessages->text('dbIntegrityPreamble3', $wVersion));
+            $pString .= HTML\p($this->pluginmessages->text('dbIntegrityPreamble3', $wVersion));
             $pString .= FORM\formHeader("repairkit_dbIntegrityFix");
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "OK")));
             $pString .= FORM\formEnd();
@@ -242,18 +248,22 @@ class repairkit_MODULE
                 $this->db->query("CREATE INDEX `$keyName`" . " ON `" . WIKINDX_DB_TABLEPREFIX . "$table` (`$columnName`$subPart)");
             }
         }
-        $pString = HTML\p($this->pluginmessages->text('success'));
-        GLOBALS::addTplVar('content', $pString);
-
-        return;
+        $message = rawurlencode($this->pluginmessages->text('success'));
+        header("Location: index.php?action=repairkit_dbIntegrityInit&message=$message");
+		die;
     }
     /**
      * creatorsInit
      */
     public function creatorsInit()
     {
+        if (array_key_exists('message', $this->vars)) {
+    		$pString = $this->vars['message'];
+    	} else {
+    		$pString = '';
+    	}
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingCreators'));
-        $pString = HTML\p($this->pluginmessages->text('preamble1'));
+        $pString .= HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));
         GLOBALS::addTplVar('content', $pString);
         $this->creatorsDisplay();
@@ -265,8 +275,13 @@ class repairkit_MODULE
      */
     public function missingrowsInit()
     {
+    	if (array_key_exists('message', $this->vars)) {
+    		$pString = $this->vars['message'];
+    	} else {
+    		$pString = '';
+    	}
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingMissingrows'));
-        $pString = HTML\p($this->pluginmessages->text('preamble1'));
+        $pString .= HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));
         GLOBALS::addTplVar('content', $pString);
 
@@ -277,8 +292,13 @@ class repairkit_MODULE
      */
     public function totalsInit()
     {
+        if (array_key_exists('message', $this->vars)) {
+    		$pString = $this->vars['message'];
+    	} else {
+    		$pString = '';
+    	}
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingTotals'));
-        $pString = HTML\p($this->pluginmessages->text('preamble1'));
+        $pString .= HTML\p($this->pluginmessages->text('preamble1'));
         $pString .= HTML\p($this->pluginmessages->text('preamble2'));
         GLOBALS::addTplVar('content', $pString);
 
@@ -373,8 +393,9 @@ class repairkit_MODULE
             }
         }
         $string = $this->pluginmessages->text('missingRowsCount', $resources);
-        GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text('success', $string), 'success', 'center'));
-        $this->missingrowsInit();
+        $message = rawurlencode(HTML\p($this->pluginmessages->text('success', $string), 'success', 'center'));
+        header("Location: index.php?action=repairkit_missingrowsInit&message=$message");
+		die;
     }
     /**
      * Fix totals in database_summary table
@@ -393,9 +414,9 @@ class repairkit_MODULE
         $this->db->formatConditions(['resourcemetadataType' => 'm']);
         $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
         $this->db->update('database_summary', ['databasesummaryTotalMusings' => $num]);
-        $string = $this->pluginmessages->text('success');
-        GLOBALS::addTplVar('content', HTML\p($string, 'success', 'center'));
-        $this->totalsInit();
+        $message = rawurlencode(HTML\p($this->pluginmessages->text('success'), 'success', 'center'));
+        header("Location: index.php?action=repairkit_totalsInit&message=$message");
+		die;
     }
     /**
      * Fix various creator errors
@@ -421,9 +442,9 @@ class repairkit_MODULE
                 $this->db->update('resource_creator', ['resourcecreatorCreatorSurname' => $creatorIds[$row['resourcecreatorCreatorMain']]]);
             }
         }
-        $string = $this->pluginmessages->text('success');
-        GLOBALS::addTplVar('content', HTML\p($string, 'success', 'center'));
-        $this->creatorsInit();
+        $message = rawurlencode(HTML\p($this->pluginmessages->text('success'), 'success', 'center'));
+        header("Location: index.php?action=repairkit_creatorsInit&message=$message");
+		die;
     }
     /**
      * Make the menus

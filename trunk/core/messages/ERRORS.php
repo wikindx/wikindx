@@ -234,6 +234,7 @@ class ERRORS
 				"pluginConflict" => dgettext($domain, "Two or more inline plugins have been assigned the same container: ###. The configuration has not been updated."),
 				"invalidInline" => dgettext($domain, "The value of \$container is invalid. The configuration has not been updated."),
 				"invalidMenu" => dgettext($domain, "The value of \$menus is invalid. The configuration has not been updated."),
+				"invalidConfigLoading" => dgettext($domain, "Loading failed. The configuration has not been updated."),
 			),
 		);
 	}

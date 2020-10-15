@@ -953,10 +953,10 @@ class ADMINCOMPONENTS
                     $config = new $class();
                     return $config;
                 } catch (Exception $e) {
-                    return $this->errors->text('components', 'invalidMenu');
+                    return $this->errors->text('components', 'invalidConfigLoading');
                 }
             } else {
-                return $this->errors->text('components', 'invalidMenu');
+                return $this->errors->text('file', 'read');
             }
         }
     }

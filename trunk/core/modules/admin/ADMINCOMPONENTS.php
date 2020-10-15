@@ -810,6 +810,10 @@ class ADMINCOMPONENTS
             $this->messageStringId = $this->vars['component_id'];
             $this->messageStringType = $this->vars['component_type'];
             $config = $this->writeTempConfigFile($this->vars['configFileMenu'], $this->vars['configConfig']);
+            if (!is_object($config)) {
+                $this->messageString = $config;
+                return $this->init();
+            }
             foreach ($config->menus as $menu) {
                 if (array_search($menu, ['wikindx', 'res', 'search', 'text', 'admin', 'plugin1', 'plugin2', 'plugin3']) === FALSE) {
                     $this->messageString = $this->errors->text('components', 'invalidMenu');
@@ -850,6 +854,10 @@ class ADMINCOMPONENTS
                 }
             }
             $configNew = $this->writeTempConfigFile($this->vars['configFileInline'], $this->vars['configConfig']);
+            if (!is_object($configNew)) {
+                $this->messageString = $configNew;
+                return $this->init();
+            }
             if (array_search($configNew->container, $usedContainers) !== FALSE) {
                 $this->messageString = $this->errors->text('components', 'pluginConflict', implode(', ', $array));
 

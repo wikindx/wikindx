@@ -39,6 +39,7 @@ MAINTENANCE:
 11. Isolate some functions for enabling/disabling a component.
 12. Enable by default private bibliographic styles.
 13. No more controls over manually configuring a plugin's configuration.
+14. Uses a consistent name for the plugin load class.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

@@ -58,7 +58,7 @@ define('WIKINDX_INTERNAL_VERSION_UPGRADE_MIN', 5.1);
 /**
  * Components compatibility
  *
- * This array is used by LOADEXTERNALMODULES class
+ * This array is used by LOADPLUGINS class
  * and \UTILS\checkComponentIntegrity() to check components compatibility with the core.
  *
  * Each type of component has its own compatibility version

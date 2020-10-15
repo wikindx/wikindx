@@ -9,9 +9,9 @@
  */
 
 /**
- * LOADEXTERNALMODULES class for third-party plug-in modules in the WIKINDX_DIR_COMPONENT_PLUGINS directory
+ * LOADPLUGINS class for third-party plug-in modules in the WIKINDX_DIR_COMPONENT_PLUGINS directory
  */
-class LOADEXTERNALMODULES
+class LOADPLUGINS
 {
     public static $moduleList = [];
 

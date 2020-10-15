@@ -507,8 +507,8 @@ namespace UTILS
                     return 30;
                 }
                 
-                include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "LOADEXTERNALMODULES.php"]));
-                $loadmodules = new \LOADEXTERNALMODULES();
+                include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "startup", "LOADPLUGINS.php"]));
+                $loadmodules = new \LOADPLUGINS();
                 if (!$loadmodules->checkVersion($componentMetadata["component_id"])) {
                     return 25;
                 }

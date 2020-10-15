@@ -723,8 +723,8 @@ class MENU
     {
         $menuHeadings = ["wikindx", "res", "search", "text", "admin", "plugin1", "plugin2", "plugin3"];
         
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "LOADEXTERNALMODULES.php"]));
-        $loadmodules = new LOADEXTERNALMODULES();
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "startup", "LOADPLUGINS.php"]));
+        $loadmodules = new LOADPLUGINS();
         $moduleList = $loadmodules->readPluginsDirectory();
         
         foreach ($moduleList as $dirName) {

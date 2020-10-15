@@ -15,6 +15,7 @@ BUG FIXES:
 8. Display a message on failure when a component is disabled.
 9. Display a message on failure when a component is uninstalled.
 10. When copying a bibliographic style in the adminstyle plugin, ensure the appropriate component.json file is written too.
+11. Unbreak the plugin configuration.
 
 FEATURE ENHANCEMENT:
 1. When editing a form, use internal representations to repopulate the form in case of error and lessen the load on sessions. Also, restructure form management by splitting form presentation from DB data writing and use redirects to mitigate errors caused when attempting to reload a submitted form. Along the way, do some tidying up of the form interfaces.
@@ -37,6 +38,7 @@ MAINTENANCE:
 10. Gives the CLOSE class alone the responsibility of displaying SQL traces.
 11. Isolate some functions for enabling/disabling a component.
 12. Enable by default private bibliographic styles.
+13. No more controls over manually configuring a plugin's configuration.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

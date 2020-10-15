@@ -945,15 +945,23 @@ class ADMINCOMPONENTS
         if (file_put_contents($tempFile, $configString) === FALSE) {
             return $this->init($this->errors->text('file', 'write'));
         } else {
-            $include_error = include_once($tempFile);
-            unlink($tempFile);
-            if (!$include_error) {
-                try {
-                    $class = $id . '_CONFIG';
-                    $config = new $class();
-                    return $config;
-                } catch (Exception $e) {
-                    return $this->errors->text('components', 'invalidConfigLoading');
+            $include_success = include_once($tempFile);
+            if ($include_success) {
+                $class = $id . '_CONFIG';
+                if (class_exists($class)) {
+                    try {
+                        $config = new $class();
+                        
+                        if (property_exists($config, "wikindxVersion")) {
+                            return $config;
+                        } else {
+                            return $this->errors->text('components', 'missingConfigClassMember', '$wikindxVersion');
+                        }
+                    } catch (Exception $e) {
+                        return $this->errors->text('components', 'invalidConfigLoading');
+                    }
+                } else {
+                    return $this->errors->text('components', 'invalidConfigClassName');
                 }
             } else {
                 return $this->errors->text('file', 'read');

@@ -1100,15 +1100,7 @@ class ADMINCOMPONENTS
                 break;
             }
         }
-//        $config = new $configClass();
-
         $pString = '';
-        
-        /*        $pString .= \FORM\selectedBoxValue($this->messages->text(
-                    'misc',
-                    'pluginsContainers'
-                ), 'configContainers', $this->possibleContainers, $config->container, 4);
-        */
         if ($fh = fopen(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $file, 'config.php']), "r")) {
             $string = '';
             while (!feof($fh)) {

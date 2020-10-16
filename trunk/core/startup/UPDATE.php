@@ -161,7 +161,7 @@ namespace UPDATE
         if ($dbo->numRows($recordset) == 1) {
             // verify the password
             $row = $dbo->fetchRow($recordset);
-            if (crypt($password, $row['usersPassword']) == $row['usersPassword']) {
+            if (password_verify($password, $row['usersPassword'])) {
                 return TRUE;
             }
         }

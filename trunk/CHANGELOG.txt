@@ -42,7 +42,7 @@ MAINTENANCE:
 14. Uses a consistent name for the plugin load class.
 
 SECURITY:
-1. Use hash_equals() against auth timing attack.
+1. Replace crypt/hash_equals() by password_hash/password_verify() which is stronger by default.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

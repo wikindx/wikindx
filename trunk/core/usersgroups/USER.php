@@ -139,7 +139,7 @@ class USER
 					$this->pwdInputEncrypted = FALSE;
 					$pwd = $this->db->fetchOne($recordset);
 					if ($password != $pwd) {
-						$password = crypt($password, UTF8::mb_strrev(time()));
+						$password = password_hash($password, PASSWORD_DEFAULT);
 					} else {
 						$this->pwdInputEncrypted = TRUE;
 					}
@@ -166,7 +166,7 @@ class USER
             $this->db->formatConditions(['usersId' => $userId]);
             $this->db->update('users', $update);
         } else { // insert new user
-            $password = crypt($password, UTF8::mb_strrev(time()));
+            $password = password_hash($password, PASSWORD_DEFAULT);
             $field[] = 'usersUsername';
             $value[] = $usersUsername;
             $field[] = 'usersPassword';
@@ -915,9 +915,7 @@ class USER
         if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID)) {
             return FALSE;
         }
-        // Don't use the equality operator ; it's not safe against timing attack
-        // cf. https://www.php.net/manual/fr/function.hash-equals.php
-        if (!hash_equals($row['usersPassword'], crypt($pwdInput, $row['usersPassword']))) {
+        if (!password_verify($pwdInput, $row['usersPassword'])) {
             return FALSE;
         }
         // Logged in, check user is not blocked

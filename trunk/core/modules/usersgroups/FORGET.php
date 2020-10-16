@@ -178,7 +178,7 @@ class FORGET
         // However, the risk is that a password may be sent and then the update code below will fail. 
         // This is judged to be the lesser of two evils.
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "forget"));
-        $cryptPassword = crypt($password, UTF8::mb_strrev(time()));
+        $cryptPassword = password_hash($password, PASSWORD_DEFAULT);
         $this->db->formatConditions(['usersUsername' => $usersUsername]);
         $this->db->updateSingle('users', $this->db->formatFields('usersPassword') . $this->db->equal . $this->db->tidyInput($cryptPassword));
         header("Location: index.php?action=usersgroups_FORGET_CORE&method=success");

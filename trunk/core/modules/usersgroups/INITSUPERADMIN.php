@@ -66,7 +66,7 @@ class INITSUPERADMIN
 		$usersFieldArray[] = 'usersUsername';
 		$usersValueArray[] = $this->vars['usersUsername'];
 		$usersFieldArray[] = 'usersPassword';
-		$usersValueArray[] = password_hash($this->vars['password'], PASSWORD_DEFAULT);
+		$usersValueArray[] = \UTILS\password_hash($this->vars['password']);
 		$usersFieldArray[] = 'usersEmail';
 		$usersValueArray[] = $this->vars['usersEmail'];
 		$usersFieldArray[] = 'usersAdmin';

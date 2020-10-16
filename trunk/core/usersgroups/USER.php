@@ -139,7 +139,7 @@ class USER
 					$this->pwdInputEncrypted = FALSE;
 					$pwd = $this->db->fetchOne($recordset);
 					if ($password != $pwd) {
-						$password = password_hash($password, PASSWORD_DEFAULT);
+						$password = \UTILS\password_hash($password);
 					} else {
 						$this->pwdInputEncrypted = TRUE;
 					}
@@ -166,7 +166,7 @@ class USER
             $this->db->formatConditions(['usersId' => $userId]);
             $this->db->update('users', $update);
         } else { // insert new user
-            $password = password_hash($password, PASSWORD_DEFAULT);
+            $password = \UTILS\password_hash($password);
             $field[] = 'usersUsername';
             $value[] = $usersUsername;
             $field[] = 'usersPassword';
@@ -915,7 +915,7 @@ class USER
         if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID)) {
             return FALSE;
         }
-        if (!password_verify($pwdInput, $row['usersPassword'])) {
+        if (!\UTILS\password_verify($pwdInput, $row['usersPassword'])) {
             return FALSE;
         }
         // Logged in, check user is not blocked

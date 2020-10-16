@@ -41,6 +41,9 @@ MAINTENANCE:
 13. No more controls over manually configuring a plugin's configuration.
 14. Uses a consistent name for the plugin load class.
 
+SECURITY:
+1. Use hash_equals() against auth timing attack.
+
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

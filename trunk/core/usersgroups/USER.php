@@ -915,7 +915,9 @@ class USER
         if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID)) {
             return FALSE;
         }
-        if (crypt($pwdInput, $row['usersPassword']) != $row['usersPassword']) {
+        // Don't use the equality operator ; it's not safe against timing attack
+        // cf. https://www.php.net/manual/fr/function.hash-equals.php
+        if (!hash_equals($row['usersPassword'], crypt($pwdInput, $row['usersPassword']))) {
             return FALSE;
         }
         // Logged in, check user is not blocked

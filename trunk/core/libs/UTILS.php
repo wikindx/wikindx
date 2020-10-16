@@ -828,6 +828,7 @@ namespace UTILS
      *
      * This is a simplified version of the eponymous PHP function.
      * It hides the implementation changes linked to the evolution of cryptographic techniques.
+     * cf. https://www.php.net/manual/en/function.password-hash.php#124138
      *
      * Implementation history: see \UTILS\password_hash()
      *

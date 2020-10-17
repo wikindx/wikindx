@@ -109,11 +109,11 @@ class ADMINKEYWORD
         if (!array_key_exists("keywordIds", $this->vars)) {
         	$error = $this->errors->text("inputError", "missing");
         }
-        if (!array_key_exists("keywordText", $this->vars) || !UTF8::mb_trim($this->vars['keywordText'])) {
+        if (!array_key_exists("keywordText", $this->vars) || !\UTF8\mb_trim($this->vars['keywordText'])) {
         	$error = $this->errors->text("inputError", "missing");
         }
         $this->formData['keywordIds'] = $this->vars['keywordIds'];
-        $this->formData['keywordText'] = UTF8::mb_trim($this->vars['keywordText']);
+        $this->formData['keywordText'] = \UTF8\mb_trim($this->vars['keywordText']);
         if ($error) {
         	$this->badInput->close($error, $this, 'mergeInit');
         }
@@ -180,7 +180,7 @@ class ADMINKEYWORD
             $this->db->delete('keyword');
             // Add or edit glossary
             if (array_key_exists("glossary", $this->vars)) {
-                $glossary = UTF8::mb_trim($this->vars['glossary']);
+                $glossary = \UTF8\mb_trim($this->vars['glossary']);
                 $this->db->formatConditions(['keywordId' => $newKeywordId]);
                 if ($glossary) {
                     $this->db->update('keyword', ['keywordGlossary' => $glossary]);

@@ -118,9 +118,9 @@ class EDITPUBLISHER
         if (!array_key_exists('editPublisherId', $this->vars) || !$this->vars['editPublisherId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        $name = array_key_exists('publisherName', $this->vars) ? UTF8::mb_trim($this->vars['publisherName']) : FALSE;
+        $name = array_key_exists('publisherName', $this->vars) ? \UTF8\mb_trim($this->vars['publisherName']) : FALSE;
         $location = array_key_exists('publisherLocation', $this->vars) ?
-            UTF8::mb_trim($this->vars['publisherLocation']) : FALSE;
+            \UTF8\mb_trim($this->vars['publisherLocation']) : FALSE;
         if (!$name & !$location) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }

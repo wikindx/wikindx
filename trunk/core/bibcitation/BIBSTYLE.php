@@ -232,7 +232,7 @@ class BIBSTYLE
             if (array_key_exists($type, $this->bibformat->customTypes)) {
                 $custom = [];
                 foreach ($localBibType as $key => $value) {
-                    $split = UTF8::mb_explode('_', $key);
+                    $split = \UTF8\mb_explode('_', $key);
                     if ((count($split) == 2) && ($split[0] == 'custom')) {
                         $custom[] = $value;
                     }
@@ -549,7 +549,7 @@ class BIBSTYLE
     private function grabNames($nameType, $singleResource)
     {
         $this->coinsCreators = [];
-        $nameIds = UTF8::mb_explode(",", $this->row[$nameType]);
+        $nameIds = \UTF8\mb_explode(",", $this->row[$nameType]);
         foreach ($nameIds as $nameId) {
             if (array_key_exists($nameId, $this->creators)) {
                 $rowSql[$nameId] = $this->creators[$nameId];

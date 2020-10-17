@@ -220,7 +220,7 @@ class wordprocessor_MODULE
             $fileName = $_FILES['import_file']['name'];
         }
         // Remove any extension
-        $split = UTF8::mb_explode(".", $fileName);
+        $split = \UTF8\mb_explode(".", $fileName);
         if (count($split) > 1) {
             array_pop($split);
             $fileName = implode(".", $split);

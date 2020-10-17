@@ -51,7 +51,7 @@ class ERRORS
 		$message = stripslashes($message);
 		
 		if($html)
-			return \HTML\p(UTF8::html_uentity_decode(trim($message)), "error", "center");
+			return \HTML\p(\UTF8\html_uentity_decode(trim($message)), "error", "center");
 		else
 			return trim($message);
 	}

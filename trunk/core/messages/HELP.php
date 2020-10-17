@@ -57,7 +57,7 @@ class HELP
 		$message = stripslashes($message);
 		
 		if($html)
-			return UTF8::html_uentity_decode(trim($message));
+			return \UTF8\html_uentity_decode(trim($message));
 		else
 			return trim($message);
 	}

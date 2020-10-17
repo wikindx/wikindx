@@ -161,7 +161,7 @@ private $formData = [];
 	{
 		$this->validateInput('edit');
 		$this->db->formatConditions(array('languageId' => $this->vars['languageEditId']));
-		$this->db->update('language', array('languageLanguage' => UTF8::mb_trim($this->vars['languageEdit'])));
+		$this->db->update('language', array('languageLanguage' => \UTF8\mb_trim($this->vars['languageEdit'])));
         $message = rawurlencode($this->success->text("languageEdit"));
         header("Location: index.php?action=admin_ADMINLANGUAGES_CORE&method=init&message=$message");
         die;
@@ -182,18 +182,18 @@ private $formData = [];
 		$error = '';
 		if ($type == 'add')
 		{
-			if (!UTF8::mb_trim($this->vars['languageAdd'])) {
+			if (!\UTF8\mb_trim($this->vars['languageAdd'])) {
         		$error = $this->errors->text("inputError", "missing");
         	}
         	else {
             	$this->db->formatConditions($this->db->lower('languageLanguage') . 
-            		$this->db->like(FALSE, mb_strtolower(UTF8::mb_trim($this->vars['languageAdd'])), FALSE));
+            		$this->db->like(FALSE, mb_strtolower(\UTF8\mb_trim($this->vars['languageAdd'])), FALSE));
 				$recordset = $this->db->select('language', ['languageLanguage']);
 				if ($this->db->numRows($recordset)) {
 					$error = $this->errors->text("inputError", "languageExists");
 				}
 			}
-            $this->formData['languageAdd'] = UTF8::mb_trim($this->vars['languageAdd']);
+            $this->formData['languageAdd'] = \UTF8\mb_trim($this->vars['languageAdd']);
 		}
 		elseif ($type == 'delete')
 		{
@@ -218,12 +218,12 @@ private $formData = [];
 		}
 		elseif ($type == 'edit')
 		{
-        	if (!array_key_exists('languageEdit', $this->vars) || !UTF8::mb_trim($this->vars['languageEdit'])) {
+        	if (!array_key_exists('languageEdit', $this->vars) || !\UTF8\mb_trim($this->vars['languageEdit'])) {
         		$error = $this->errors->text("inputError", "missing");
         	}
         	else {
             	$this->db->formatConditions($this->db->lower('languageLanguage') . 
-            		$this->db->like(FALSE, mb_strtolower(UTF8::mb_trim($this->vars['languageEdit'])), FALSE));
+            		$this->db->like(FALSE, mb_strtolower(\UTF8\mb_trim($this->vars['languageEdit'])), FALSE));
 				$recordset = $this->db->select('language', ['languageId', 'languageLanguage']);
 				if ($this->db->numRows($recordset)) {
 					$row = $this->db->fetchRow($recordset);
@@ -232,7 +232,7 @@ private $formData = [];
 					}
 				}
 			}
-			$this->formData['language'] = UTF8::mb_trim($this->vars['languageEdit']);
+			$this->formData['language'] = \UTF8\mb_trim($this->vars['languageEdit']);
 			$this->formData['id'] = $this->vars['languageEditId'];
 		}
         if ($error) {

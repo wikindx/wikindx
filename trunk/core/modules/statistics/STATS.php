@@ -239,7 +239,7 @@ class STATS
 
             return;
         }
-        $mIndex = round(UTF8::mb_trim($this->vars['maturityIndex']), 1);
+        $mIndex = round(\UTF8\mb_trim($this->vars['maturityIndex']), 1);
         if ($mIndex > 10) {
             $mIndex = 10;
         } elseif ($mIndex < 0) {

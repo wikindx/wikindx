@@ -1130,10 +1130,10 @@ class IMPORTBIBTEX
             }
             $this->formData['import_File'] = $fileName;
             if ($this->vars['import_Tag']) {
-                if ($tagId = $this->tag->checkExists(UTF8::mb_trim($this->vars['import_Tag']))) { // Existing tag found
+                if ($tagId = $this->tag->checkExists(\UTF8\mb_trim($this->vars['import_Tag']))) { // Existing tag found
                		$this->formData['import_TagId'] = $tagId;
                 } else {
-            		$this->formData['import_Tag'] = UTF8::mb_trim($this->vars['import_Tag']);
+            		$this->formData['import_Tag'] = \UTF8\mb_trim($this->vars['import_Tag']);
             	}
             } elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId']) {
             	$this->formData['import_TagId'] = $this->vars['import_TagId'];
@@ -1145,11 +1145,11 @@ class IMPORTBIBTEX
 
             return implode(DIRECTORY_SEPARATOR, [$this->dirName, $fileName]);
         } elseif ($this->type == 'paste') {
-            if (!UTF8::mb_trim($this->vars['import_Paste'])) {
+            if (!\UTF8\mb_trim($this->vars['import_Paste'])) {
             	$error = $this->errors->text("inputError", "missing");
             }
             else {
-            	$pasteInput = stripslashes(UTF8::mb_trim($this->vars['import_Paste']));
+            	$pasteInput = stripslashes(\UTF8\mb_trim($this->vars['import_Paste']));
 				$this->formData["import_Paste"] = base64_encode($pasteInput);
 				list($fileName, $fullFileName) = FILE\createFileName($this->dirName, $pasteInput, '.bib');
 				if (!$fullFileName) {
@@ -1182,19 +1182,19 @@ class IMPORTBIBTEX
     private function convertEntries($entries)
     {
         foreach ($this->bibConfig->bibtexSpCh as $key => $value) {
-            $replaceBibtex[] = UTF8::mb_chr($key);
+            $replaceBibtex[] = \UTF8\mb_chr($key);
             $matchBibtex[] = preg_quote("/$value/u");
         }
         foreach ($this->bibConfig->bibtexSpChOld as $key => $value) {
-            $replaceBibtex[] = UTF8::mb_chr($key);
+            $replaceBibtex[] = \UTF8\mb_chr($key);
             $matchBibtex[] = preg_quote("/$value/u");
         }
         foreach ($this->bibConfig->bibtexSpChOld2 as $key => $value) {
-            $replaceBibtex[] = UTF8::mb_chr($key);
+            $replaceBibtex[] = \UTF8\mb_chr($key);
             $matchBibtex[] = preg_quote("/$value/u");
         }
         foreach ($this->bibConfig->bibtexSpChLatex as $key => $value) {
-            $replaceBibtex[] = UTF8::mb_chr($key);
+            $replaceBibtex[] = \UTF8\mb_chr($key);
             $matchBibtex[] = preg_quote("/$value/u");
         }
         foreach ($this->bibConfig->bibtexWordsTranslate as $key => $value) { // NB reverse key--value
@@ -1208,12 +1208,12 @@ class IMPORTBIBTEX
         $index = 0;
         foreach ($entries as $eKey => $array) {
             if (!is_array($array)) { // e.g. strings array
-                $temp[$eKey] = stripslashes(UTF8::smartUtf8_encode(preg_replace($matchBibtex, $replaceBibtex, $array)));
+                $temp[$eKey] = stripslashes(\UTF8\smartUtf8_encode(preg_replace($matchBibtex, $replaceBibtex, $array)));
 
                 continue;
             }
             foreach ($array as $key => $value) {
-                $temp[$index][$key] = stripslashes(UTF8::smartUtf8_encode(preg_replace($matchBibtex, $replaceBibtex, $value)));
+                $temp[$index][$key] = stripslashes(\UTF8\smartUtf8_encode(preg_replace($matchBibtex, $replaceBibtex, $value)));
             }
             $index++;
         }

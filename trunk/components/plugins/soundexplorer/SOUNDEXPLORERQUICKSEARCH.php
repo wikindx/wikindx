@@ -270,7 +270,7 @@ class SOUNDEXPLORERQUICKSEARCH
     {
         $temp = $array;
         if (array_key_exists("Field", $this->formData) && ($selected = $this->formData["Field"])) {
-            $selectedArray = UTF8::mb_explode(",", $selected);
+            $selectedArray = \UTF8\mb_explode(",", $selected);
             $pString = FORM\selectedBoxValueMultiple($this->coremessages->text("search", 'field'), "seplugin_Field", $temp, $selectedArray, 2);
         } else {
             // If $type == 'field', select all fields as default
@@ -339,12 +339,12 @@ class SOUNDEXPLORERQUICKSEARCH
             return;
         }
         $conditionArray = $metaCond = [];
-        $fields = UTF8::mb_explode(",", $this->input['Field']);
+        $fields = \UTF8\mb_explode(",", $this->input['Field']);
         $this->joinResourceId = 'resourceId';
         $metadata = FALSE;
         foreach ($fields as $field) {
             if (mb_strpos($field, 'Custom_') === 0) {
-                $split = UTF8::mb_explode('_', $field);
+                $split = \UTF8\mb_explode('_', $field);
                 if ($split[1] == 'S') {
                     $searchField = 'resourcecustomShort';
                 } else {
@@ -411,7 +411,7 @@ class SOUNDEXPLORERQUICKSEARCH
                 $this->execJoin['keyword']['extField'] = 'resourcekeywordKeywordId';
             } elseif ($field == 'creator') {
                 $wc = str_replace('!WIKINDXFIELDWIKINDX!', $this->db->formatFields('creatorSurname'), $this->words);
-                $creatorsCond = UTF8::mb_explode(' AND ', $wc);
+                $creatorsCond = \UTF8\mb_explode(' AND ', $wc);
                 if (sizeof($creatorsCond) > 1) {
                     $creatorStmts = $creatorAlias = [];
                     foreach ($creatorsCond as $creatorCond) {
@@ -515,7 +515,7 @@ class SOUNDEXPLORERQUICKSEARCH
             'user_bibliography_resource', 'publisher', 'resource_language', ];
         foreach ($tables as $tableOrder) {
             foreach ($this->execJoin as $table => $array) {
-                $split = UTF8::mb_explode('.', $table);
+                $split = \UTF8\mb_explode('.', $table);
                 if ((sizeof($split) == 2) && ($split[1] == $tableOrder)) {
                     $array['alias'] = $split[0];
                     $array['table'] = $split[1];

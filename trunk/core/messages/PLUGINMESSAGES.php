@@ -59,6 +59,6 @@ private $catalogLanguage = array();
 		
 		$message = $this->catalogLanguage[$indexName];
 		$message = preg_replace("/###/u", str_replace("\\", "\\\\", trim($extra . "")), $message);
-		return UTF8::html_uentity_decode($message);
+		return \UTF8\html_uentity_decode($message);
 	}
 }

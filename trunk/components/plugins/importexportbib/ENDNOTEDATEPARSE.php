@@ -42,9 +42,9 @@ class ENDNOTEDATEPARSE
     {
         $day = $month = $year = FALSE;
         if (mb_strpos($dateField, '/') !== FALSE) {
-            $date = UTF8::mb_explode("/", $dateField);
+            $date = \UTF8\mb_explode("/", $dateField);
         } else {
-            $date = UTF8::mb_explode(" ", $dateField);
+            $date = \UTF8\mb_explode(" ", $dateField);
         }
         if ((count($date) == 3) && ((mb_strlen($date[0]) == 4))) { // e.g. yyyy/mm/dd
             $year = $date[0];

@@ -494,17 +494,17 @@ class ADMINCATEGORIES
     {
     	$error = '';
         if ($type == 'addCat') {
-            if (!UTF8::mb_trim($this->vars['categoryAdd'])) {
+            if (!\UTF8\mb_trim($this->vars['categoryAdd'])) {
             	$error = $this->errors->text("inputError", "missing");
             	$function = 'catInit';
             }
-            $this->formData['categoryAdd'] = UTF8::mb_trim($this->vars['categoryAdd']);
+            $this->formData['categoryAdd'] = \UTF8\mb_trim($this->vars['categoryAdd']);
         } elseif ($type == 'addSub') {
-            if (!UTF8::mb_trim($this->vars['addSubcategory']) || !$this->vars['categoryId']) {
+            if (!\UTF8\mb_trim($this->vars['addSubcategory']) || !$this->vars['categoryId']) {
             	$error = $this->errors->text("inputError", "missing");
             	$function = 'subInit';
             }
-            $this->formData['addSubcategory'] = UTF8::mb_trim($this->vars['addSubcategory']);
+            $this->formData['addSubcategory'] = \UTF8\mb_trim($this->vars['addSubcategory']);
             $this->formData['categoryId'] = $this->vars['categoryId'];
         } elseif ($type == 'deleteCat') {
             if (!array_key_exists('categoryIds', $this->vars) || !$this->vars['categoryIds']) {
@@ -539,21 +539,21 @@ class ADMINCATEGORIES
             	$this->formData['subcategoryIds'] = unserialize(base64_decode($this->vars['subcategoryIds']));
             }
         } elseif ($type == 'editCat') {
-            if (!UTF8::mb_trim($this->vars['categoryEdit']) || !array_key_exists('categoryEditId', $this->vars)) {
+            if (!\UTF8\mb_trim($this->vars['categoryEdit']) || !array_key_exists('categoryEditId', $this->vars)) {
             	$error = $this->errors->text("inputError", "missing");
             	$function = 'catInit';
             }
-            $this->formData['text'] = UTF8::mb_trim($this->vars['categoryEdit']);
+            $this->formData['text'] = \UTF8\mb_trim($this->vars['categoryEdit']);
             if (array_key_exists('categoryEditId', $this->vars)) {
             	$this->formData['id'] = $this->vars['categoryEditId'];
             }
         } elseif ($type == 'editSub') {
-            if (!UTF8::mb_trim($this->vars['subcategoryEdit']) || !array_key_exists('subcategoryEditId', $this->vars) ||
+            if (!\UTF8\mb_trim($this->vars['subcategoryEdit']) || !array_key_exists('subcategoryEditId', $this->vars) ||
                 !array_key_exists('categoryId', $this->vars) || !$this->vars['subcategoryEditId'] || !$this->vars['categoryId']) {
             	$error = $this->errors->text("inputError", "missing");
             	$function = 'subInit';
             }
-            $this->formData['subcategoryEdit'] = UTF8::mb_trim($this->vars['subcategoryEdit']);
+            $this->formData['subcategoryEdit'] = \UTF8\mb_trim($this->vars['subcategoryEdit']);
             if (array_key_exists('subcategoryEditId', $this->vars)) {
 	            $this->formData['subcategoryEditId'] = $this->vars['subcategoryEditId'];
 	        }

@@ -83,7 +83,7 @@ class URLS
     	$this->validateInput();
         if (array_key_exists('links', $this->formData)) {
 			foreach ($this->formData['links'] as $key => $var) {
-				$split = UTF8::mb_explode('_', $key);
+				$split = \UTF8\mb_explode('_', $key);
 				if ($split[0] == 'urlEditLink') {
 					$editLinks[$split[1]] = $var;
 				}
@@ -91,7 +91,7 @@ class URLS
 		}
         if (array_key_exists('names', $this->formData)) {
 			foreach ($this->formData['names'] as $key => $var) {
-				$split = UTF8::mb_explode('_', $key);
+				$split = \UTF8\mb_explode('_', $key);
 				if ($split[0] == 'urlEditName') {
 					$editNames[$split[1]] = $var;
 				}
@@ -99,7 +99,7 @@ class URLS
 		}
         if (array_key_exists('deletes', $this->formData)) {
 			foreach ($this->formData['deletes'] as $key => $var) {
-				$split = UTF8::mb_explode('_', $key);
+				$split = \UTF8\mb_explode('_', $key);
 				if ($split[0] == 'urlDelete') {
 					$deletes[$split[1]] = $var;
 				}
@@ -420,11 +420,11 @@ class URLS
     {
     	$error = '';
 // If both url and name fields are empty, we are just editing existing urls as in edit(). If a name exists, so must the url.
-        if (UTF8::mb_trim($this->vars['url'])) {
-            $this->formData['url'] = UTF8::mb_trim($this->vars['url']);
+        if (\UTF8\mb_trim($this->vars['url'])) {
+            $this->formData['url'] = \UTF8\mb_trim($this->vars['url']);
         }
-        if (UTF8::mb_trim($this->vars['name'])) {
-            $this->formData['name'] = UTF8::mb_trim($this->vars['name']);
+        if (\UTF8\mb_trim($this->vars['name'])) {
+            $this->formData['name'] = \UTF8\mb_trim($this->vars['name']);
             if (!array_key_exists('url', $this->formData)) {
             	$error = $this->errors->text("inputError", "missing");
         	}
@@ -437,7 +437,7 @@ class URLS
         // find any URLs to edit and files to delete
         foreach ($this->vars as $key => $var) {
         	$delete = FALSE;
-            $split = UTF8::mb_explode('_', $key);
+            $split = \UTF8\mb_explode('_', $key);
             if (($split[0] == 'urlEditLink')) {
             	if (trim($var)) {
 	                $this->formData['links'][$key] = trim($var);
@@ -454,7 +454,7 @@ class URLS
         }
         if (array_key_exists('names', $this->formData)) {
         	foreach ($this->formData['names'] as $key => $var) {
-            	$split = UTF8::mb_explode('_', $key);
+            	$split = \UTF8\mb_explode('_', $key);
                 if (array_key_exists('links', $this->formData) && !array_key_exists('urlEditLink_' . $split[1], $this->formData['links'])) {
             		$error = $this->errors->text("inputError", "missing");
                 }

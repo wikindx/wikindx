@@ -193,7 +193,7 @@ class DELETERESOURCE
             $this->display($this->errors->text("inputError", "missing"));
             FACTORY_CLOSE::getInstance();
         }
-        $this->idsRaw = UTF8::mb_explode(',', $this->vars['resource_id']);
+        $this->idsRaw = \UTF8\mb_explode(',', $this->vars['resource_id']);
         $this->reallyDelete();
         $this->checkHanging();
         $this->resetSummary();

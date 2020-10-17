@@ -842,14 +842,14 @@ class IMPORTCOMMON
             if ($row['creatorPrefix']) {
                 $prefix = utf8_decode($row['creatorPrefix']);
                 foreach ($this->bibConfig->bibtexSpChPlain as $key => $value) {
-                    $char = preg_quote(UTF8::mb_chr($key), '/');
+                    $char = preg_quote(\UTF8\mb_chr($key), '/');
                     $prefix = preg_replace("/$char/u", $value, $prefix);
                 }
                 $prefix = preg_replace("/\\W/u", '', $prefix);
             }
             $surname = utf8_decode($row['creatorSurname']);
             foreach ($this->bibConfig->bibtexSpChPlain as $key => $value) {
-                $char = preg_quote(UTF8::mb_chr($key), '/');
+                $char = preg_quote(\UTF8\mb_chr($key), '/');
                 $surname = preg_replace("/$char/u", $value, $surname);
             }
             $surname = preg_replace("/\\W/u", '', $surname);
@@ -1005,7 +1005,7 @@ class IMPORTCOMMON
             if (array_key_exists($importKey, $this->vars) && ($this->vars[$importKey] == $this->messages->text('misc', 'ignore'))) {
                 unset($this->vars[$importKey]);
             } elseif (array_key_exists($importKey, $this->vars) &&
-                (count($split = UTF8::mb_explode("custom:", str_replace('&nbsp;&nbsp;', '', $this->vars[$importKey]))) == 2)) {
+                (count($split = \UTF8\mb_explode("custom:", str_replace('&nbsp;&nbsp;', '', $this->vars[$importKey]))) == 2)) {
                 $customFields[$key] = $split[0];
                 unset($this->vars[$importKey]);
             }

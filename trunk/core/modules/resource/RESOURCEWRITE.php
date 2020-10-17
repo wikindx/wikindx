@@ -926,7 +926,7 @@ class RESOURCEWRITE
         foreach ($input as $key => $value) {
             if (mb_strpos($key, 'Creator') === 0) {
                 $removeFromInput[] = $key;
-                $explode = UTF8::mb_explode('_', $key);
+                $explode = \UTF8\mb_explode('_', $key);
                 $this->resourceInput['resourcecreator'][trim($explode[0], 'Creator')][$explode[1] + 1][$explode[2]] = $value;
             }
         }
@@ -1024,7 +1024,7 @@ class RESOURCEWRITE
             unset($input['resourcekeywordKeywords']);
         }
         if (array_key_exists('keywordList', $input)) {
-            foreach (UTF8::mb_explode(',', $input['keywordList']) as $word) {
+            foreach (\UTF8\mb_explode(',', $input['keywordList']) as $word) {
                 $this->resourceInput['resourcekeyword']['keywordList'][] = trim($word);
             }
             unset($input['keywordList']);
@@ -1038,7 +1038,7 @@ class RESOURCEWRITE
             unset($input['resourceusertagsTagId']);
         }
         if (array_key_exists('userTagList', $input)) {
-            foreach (UTF8::mb_explode(',', $input['userTagList']) as $word) {
+            foreach (\UTF8\mb_explode(',', $input['userTagList']) as $word) {
                 $this->resourceInput['resourceusertags']['userTagList'][] = trim($word);
             }
             unset($input['userTagList']);
@@ -1117,13 +1117,13 @@ class RESOURCEWRITE
             if ($row['creatorPrefix']) {
                 $prefix = utf8_decode($row['creatorPrefix']);
                 foreach ($config->bibtexSpChPlain as $key => $value) {
-                    $prefix = preg_replace("/" . UTF8::mb_chr($key) . "/u", $value, $prefix);
+                    $prefix = preg_replace("/" . \UTF8\mb_chr($key) . "/u", $value, $prefix);
                 }
                 $prefix = preg_replace("/\\W/u", '', $prefix);
             }
             $surname = utf8_decode($row['creatorSurname']);
             foreach ($config->bibtexSpChPlain as $key => $value) {
-                $surname = preg_replace("/" . UTF8::mb_chr($key) . "/u", $value, $surname);
+                $surname = preg_replace("/" . \UTF8\mb_chr($key) . "/u", $value, $surname);
             }
             $surname = preg_replace("/\\W/u", '', $surname);
             $base = $prefix . $surname . $year;

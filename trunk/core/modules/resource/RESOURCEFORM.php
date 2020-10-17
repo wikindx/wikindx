@@ -726,7 +726,7 @@ class RESOURCEFORM
         if (is_array($temp)) {
             $selectedSubcategories = [];
             if (array_key_exists('resourcecategorySubcategories', $this->sessionVars)) {
-                $selected = UTF8::mb_explode(',', $this->sessionVars['resourcecategorySubcategories']);
+                $selected = \UTF8\mb_explode(',', $this->sessionVars['resourcecategorySubcategories']);
                 foreach ($selected as $key) {
                     $selectedSubcategories[$key] = $temp[$key];
                     unset($temp[$key]);
@@ -768,7 +768,7 @@ class RESOURCEFORM
                 $subcategories[$key] = $value;
             }
             if (array_key_exists('resourcecategorySubcategories', $this->sessionVars)) {
-                $selected = UTF8::mb_explode(',', $this->sessionVars['resourcecategorySubcategories']);
+                $selected = \UTF8\mb_explode(',', $this->sessionVars['resourcecategorySubcategories']);
 
                 return \HTML\td(\HTML\div(
                     'subcategory',
@@ -1280,7 +1280,7 @@ class RESOURCEFORM
                 continue;
             }
             if (mb_strpos($tableKey, 'hint_') === 0) { // found at start
-                $hintArray = UTF8::mb_explode('_', $tableKey);
+                $hintArray = \UTF8\mb_explode('_', $tableKey);
                 $hints[$hintArray[1]] = BR . \HTML\span(\HTML\aBrowse(
                     'green',
                     '',
@@ -2149,7 +2149,7 @@ class RESOURCEFORM
         $categories = $this->category->grabAll();
         $selectedCategories = [];
         if (array_key_exists('resourcecategoryCategories', $this->sessionVars)) {
-            $selected = UTF8::mb_explode(',', $this->sessionVars['resourcecategoryCategories']);
+            $selected = \UTF8\mb_explode(',', $this->sessionVars['resourcecategoryCategories']);
             foreach ($selected as $key) {
                 $selectedCategories[$key] = $categories[$key];
                 unset($categories[$key]);
@@ -2196,7 +2196,7 @@ class RESOURCEFORM
                 $this->languages[$row['languageId']] = \HTML\dbToFormtidy($row['languageLanguage']);
             }
             if (array_key_exists('resourcelanguageLanguages', $this->sessionVars)) {
-                $selectedLanguages = UTF8::mb_explode(',', $this->sessionVars['resourcelanguageLanguages']);
+                $selectedLanguages = \UTF8\mb_explode(',', $this->sessionVars['resourcelanguageLanguages']);
                 $tdContent3 .= \HTML\td(\FORM\selectedBoxValueMultiple($this->messages->text(
                     'resources',
                     'languages'
@@ -2349,7 +2349,7 @@ class RESOURCEFORM
             }
         }
         if (array_key_exists('bibliographies', $this->sessionVars) && (count($bibs) > 1)) {
-            $selected = UTF8::mb_explode(',', $this->sessionVars['bibliographies']);
+            $selected = \UTF8\mb_explode(',', $this->sessionVars['bibliographies']);
             $tdContent4 .= \HTML\td(\FORM\selectedBoxValueMultiple($this->messages->text(
                 'resources',
                 'addNewResourceToBib'

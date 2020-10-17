@@ -179,7 +179,7 @@ class LISTSOMERESOURCES
         }
         $this->pagingReset();
         if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
-            $split = UTF8::mb_explode(',', $this->vars["id"]);
+            $split = \UTF8\mb_explode(',', $this->vars["id"]);
             if (count($split) > 1) {
                 foreach ($split as $id) {
                     $array[] = $id;

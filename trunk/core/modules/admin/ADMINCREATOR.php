@@ -459,21 +459,21 @@ class ADMINCREATOR
 	            $this->formData['creatorIds'] = $this->vars['creatorIds'];
 	        }
             if ($this->vars['creatorIdsOutput'][0] == 0) {
-                if (!array_key_exists("surname", $this->vars) || !UTF8::mb_trim($this->vars['surname'])) {
+                if (!array_key_exists("surname", $this->vars) || !\UTF8\mb_trim($this->vars['surname'])) {
 					$error = $this->errors->text("inputError", "missing");
 					$function = 'mergeInit';
                 }
-            } elseif ((!array_key_exists("surname", $this->vars) || !UTF8::mb_trim($this->vars['surname'])) &&
+            } elseif ((!array_key_exists("surname", $this->vars) || !\UTF8\mb_trim($this->vars['surname'])) &&
                 (!empty($this->vars['creatorIds']) && count($this->vars['creatorIds']) == 1) 
                 	&& $this->vars['creatorIds'][0] == $this->vars['creatorIdsOutput']) {
                 $error = $this->errors->text("inputError", "missing");
                 $function = 'mergeInit';
             }
 			$this->formData['creatorIdsOutput'] = $this->vars['creatorIdsOutput'];
-            $this->formData['surname'] = UTF8::mb_trim($this->vars['surname']);
-            $this->formData['firstname'] = UTF8::mb_trim($this->vars['firstname']);
-            $this->formData['initials'] = UTF8::mb_trim($this->vars['initials']);
-            $this->formData['prefix'] = UTF8::mb_trim($this->vars['prefix']);
+            $this->formData['surname'] = \UTF8\mb_trim($this->vars['surname']);
+            $this->formData['firstname'] = \UTF8\mb_trim($this->vars['firstname']);
+            $this->formData['initials'] = \UTF8\mb_trim($this->vars['initials']);
+            $this->formData['prefix'] = \UTF8\mb_trim($this->vars['prefix']);
         } elseif ($process == 'group') {
             if (!array_key_exists("creatorMaster", $this->vars)) {
                 $error = $this->errors->text("inputError", "missing");

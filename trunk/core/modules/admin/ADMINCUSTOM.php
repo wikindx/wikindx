@@ -224,26 +224,26 @@ class ADMINCUSTOM
     {
     	$error = '';
         if ($type == 'add') {
-        	if (!array_key_exists('custom_label', $this->vars) || !UTF8::mb_trim($this->vars['custom_label'])) {
+        	if (!array_key_exists('custom_label', $this->vars) || !\UTF8\mb_trim($this->vars['custom_label'])) {
         		$error = $this->errors->text("inputError", "missing");
         	}
         	else {
             	$this->db->formatConditions($this->db->lower('customLabel') . 
-            		$this->db->like(FALSE, mb_strtolower(UTF8::mb_trim($this->vars['custom_label'])), FALSE));
+            		$this->db->like(FALSE, mb_strtolower(\UTF8\mb_trim($this->vars['custom_label'])), FALSE));
 				$recordset = $this->db->select('custom', ['customLabel']);
 				if ($this->db->numRows($recordset)) {
 					$error = $this->errors->text("inputError", "labelExists");
 				}
 			}
             $this->formData['size'] = $this->vars['custom_size'];
-            $this->formData['label'] = UTF8::mb_trim($this->vars['custom_label']);
+            $this->formData['label'] = \UTF8\mb_trim($this->vars['custom_label']);
         } elseif ($type == 'edit') {
-        	if (!array_key_exists('customEdit', $this->vars) || !UTF8::mb_trim($this->vars['customEdit'])) {
+        	if (!array_key_exists('customEdit', $this->vars) || !\UTF8\mb_trim($this->vars['customEdit'])) {
         		$error = $this->errors->text("inputError", "missing");
         	}
         	else {
             	$this->db->formatConditions($this->db->lower('customLabel') . 
-            		$this->db->like(FALSE, mb_strtolower(UTF8::mb_trim($this->vars['customEdit'])), FALSE));
+            		$this->db->like(FALSE, mb_strtolower(\UTF8\mb_trim($this->vars['customEdit'])), FALSE));
 				$recordset = $this->db->select('custom', ['customId', 'customLabel']);
 				if ($this->db->numRows($recordset)) {
 					$row = $this->db->fetchRow($recordset);
@@ -252,8 +252,8 @@ class ADMINCUSTOM
 					}
 				}
 			}
-			$this->formData['label'] = UTF8::mb_trim($this->vars['customEdit']);
-			$this->formData['id'] = UTF8::mb_trim($this->vars['customEditId']);
+			$this->formData['label'] = \UTF8\mb_trim($this->vars['customEdit']);
+			$this->formData['id'] = \UTF8\mb_trim($this->vars['customEditId']);
         } elseif ($type == 'delete') {
             if (!array_key_exists('customIds', $this->vars) || empty($this->vars['customIds'])) {
         		$error = $this->errors->text("inputError", "missing");

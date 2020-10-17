@@ -1886,7 +1886,7 @@ class adminstyle_MODULE
             $subjectFieldIndex = $index;
             // this pair depend on the preceding field
             if (($index > 1) && (mb_substr_count($subject, "$") == 3) && (mb_strpos($subject, "$") === 0)) {
-                $dollarSplit = UTF8::mb_explode("$", trim($subject));
+                $dollarSplit = \UTF8\mb_explode("$", trim($subject));
                 $temp = [];
                 $elements = 0;
                 if ($dollarSplit[1]) {
@@ -1923,7 +1923,7 @@ class adminstyle_MODULE
             }
             // this pair depend on the following field
             elseif ((mb_substr_count($subject, "#") == 3) && (mb_strpos($subject, "#") === 0)) {
-                $hashSplit = UTF8::mb_explode("#", trim($subject));
+                $hashSplit = \UTF8\mb_explode("#", trim($subject));
                 $temp = [];
                 $elements = $subjectFieldIndex;
                 if ($hashSplit[1]) {
@@ -1987,7 +1987,7 @@ class adminstyle_MODULE
         if ($this->footnotePages && !array_key_exists('pages', $this->styleMap->$type)) {
             $search .= '|' . 'pages';
         }
-        $subjectArray = UTF8::mb_explode("|", $subject);
+        $subjectArray = \UTF8\mb_explode("|", $subject);
         list($subjectArray, $alternates) = $this->findAlternateFields($subjectArray, $search);
         $sizeSubject = count($subjectArray);
         // Loop each field string
@@ -2280,7 +2280,7 @@ class adminstyle_MODULE
         ];
         foreach ($inputArray as $input) {
             if (isset($this->vars[$input])) {
-                $split = UTF8::mb_explode("_", $input, 2);
+                $split = \UTF8\mb_explode("_", $input, 2);
                 $elementName = $split[1];
                 $fileString .= "<$elementName>" .
                     htmlspecialchars(stripslashes($this->vars[$input])) . "</$elementName>" . LF;
@@ -2323,7 +2323,7 @@ class adminstyle_MODULE
         ];
         foreach ($inputArray as $input) {
             if (isset($this->vars[$input])) {
-                $split = UTF8::mb_explode("_", $input, 2);
+                $split = \UTF8\mb_explode("_", $input, 2);
                 $elementName = $split[1];
                 $fileString .= "<$elementName>" .
                     htmlspecialchars(stripslashes($this->vars[$input])) . "</$elementName>" . LF;
@@ -2376,7 +2376,7 @@ class adminstyle_MODULE
         ];
         foreach ($inputArray as $input) {
             if (isset($this->vars[$input])) {
-                $split = UTF8::mb_explode("_", $input, 2);
+                $split = \UTF8\mb_explode("_", $input, 2);
                 $elementName = $split[1];
                 $fileString .= "<$elementName>" .
                     htmlspecialchars(stripslashes($this->vars[$input])) . "</$elementName>" . LF;
@@ -2435,7 +2435,7 @@ class adminstyle_MODULE
         if (!$fp = fopen("$fileName", "w")) {
             $this->badInput->close($this->errors->text("file", "write", ": $fileName"), $this, 'display');
         }
-        if (!fwrite($fp, UTF8::html_uentity_decode($fileString))) {
+        if (!fwrite($fp, \UTF8\html_uentity_decode($fileString))) {
             $this->badInput->close($this->errors->text("file", "write", ": $fileName"), $this, 'display');
         }
         fclose($fp);

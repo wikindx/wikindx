@@ -156,7 +156,7 @@ class BIBTEXCREATORPARSE
     public function getInitials($firstname)
     {
         $initials = '';
-        $name = UTF8::mb_explode(' ', $firstname);
+        $name = \UTF8\mb_explode(' ', $firstname);
         foreach ($name as $part) {
             $size = mb_strlen($part);
             if (\UTILS\matchSuffix($part, ".") && ($size < 4)) {

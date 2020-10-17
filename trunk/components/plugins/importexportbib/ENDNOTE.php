@@ -73,7 +73,7 @@ class ENDNOTE
         $categoryTd = FALSE;
         if (count($categories) > 1) {
             if ($sessionCategories = $this->session->getVar("import_Categories")) {
-                $sCategories = UTF8::mb_explode(",", $sessionCategories);
+                $sCategories = \UTF8\mb_explode(",", $sessionCategories);
                 $element = FORM\selectedBoxValueMultiple(
                     $this->pluginmessages->text('category'),
                     'import_Categories',

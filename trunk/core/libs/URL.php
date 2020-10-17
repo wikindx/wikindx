@@ -49,7 +49,7 @@ namespace URL
         if (($limit != -1) && (($count = mb_strlen($text)) > $limit)) {
             $start = floor(($limit / 2) - 2);
             $length = $count - (2 * $start);
-            $text = \UTF8::mb_substr_replace($text, " ... ", $start, $length);
+            $text = \UTF8\mb_substr_replace($text, " ... ", $start, $length);
         }
 
         return $text;

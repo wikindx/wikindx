@@ -74,7 +74,7 @@ class adminstyle_previewstyle
             if (array_key_exists('independent', $templateArray)) {
                 $temp = $templateArray['independent'];
                 foreach ($temp as $key => $value) {
-                    $split = UTF8::mb_explode("_", $key);
+                    $split = \UTF8\mb_explode("_", $key);
                     $independent[$split[1]] = $value;
                 }
                 $templateArray['independent'] = $independent;
@@ -83,7 +83,7 @@ class adminstyle_previewstyle
             $this->loadArrays($type);
             $fields = [];
             if (array_key_exists('ajaxReturn', $this->vars)) {
-                $split = UTF8::mb_explode(',', base64_decode($this->vars['ajaxReturn']));
+                $split = \UTF8\mb_explode(',', base64_decode($this->vars['ajaxReturn']));
                 foreach ($split as $field) {
                     $fields[] = base64_decode($field);
                 }

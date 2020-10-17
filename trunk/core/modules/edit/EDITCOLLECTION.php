@@ -289,7 +289,7 @@ class EDITCOLLECTION
         if (!array_key_exists('edit_collectionType', $this->vars)) { // can be NULL
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        $title = array_key_exists('edit_collectionTitle', $this->vars) ? UTF8::mb_trim($this->vars['edit_collectionTitle']) : FALSE;
+        $title = array_key_exists('edit_collectionTitle', $this->vars) ? \UTF8\mb_trim($this->vars['edit_collectionTitle']) : FALSE;
         if (!$title) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'editDisplayCollection');
         }
@@ -305,7 +305,7 @@ class EDITCOLLECTION
         // Deal with creators
         $temp['creators'] = $this->editCreators();
         $titleShort = array_key_exists('edit_collectionTitleShort', $this->vars) ?
-            UTF8::mb_trim($this->vars['edit_collectionTitleShort']) : FALSE;
+            \UTF8\mb_trim($this->vars['edit_collectionTitleShort']) : FALSE;
         if ($collectionExistId = $this->collection->checkExists($this->vars['edit_collectionId'], $title, $titleShort, $this->vars['edit_collectionType'])) {
             if ($collectionExistId != $this->vars['edit_collectionId']) {
                 return $this->confirmDuplicate($collectionExistId, $title, $titleShort);
@@ -336,7 +336,7 @@ class EDITCOLLECTION
             }
             $var = trim($value);
             if ($var) {
-                $split = UTF8::mb_explode('_', $key);
+                $split = \UTF8\mb_explode('_', $key);
                 $temp[$split[1]] = $var;
                 if (mb_strpos($split[1], 'resourcemisc') === 0) {
                     $miscArray[$split[1]] = $var;
@@ -711,7 +711,7 @@ class EDITCOLLECTION
             $surnames = [];
             foreach ($this->sessionVars as $key => $value) {
                 if (mb_strpos($key, 'Creator') === 0) {
-                    $split = UTF8::mb_explode('_', $key);
+                    $split = \UTF8\mb_explode('_', $key);
                     if ($split[2] == 'surname') {
                         trim($value) ? $surnames[$split[0] . '_' . $split[1] . '_select'] = TRUE : $surnames[$split[0] . '_' . $split[1] . '_select'] = FALSE;
                     }
@@ -733,7 +733,7 @@ class EDITCOLLECTION
             return [];
         }
         foreach ($this->defaults['creators'] as $creator => $creatorId) {
-            $split = UTF8::mb_explode('_', $creator);
+            $split = \UTF8\mb_explode('_', $creator);
             $role = str_replace('Creator', '', $split[0]);
             if ($role == $creatorRole) {
                 ${$creatorRole}[$creatorId] = $split[1];
@@ -1399,7 +1399,7 @@ class EDITCOLLECTION
         $creators = [];
         foreach ($this->sessionVars as $key => $value) {
             if (mb_strpos($key, 'Creator') === 0) {
-                $split = UTF8::mb_explode('_', $key);
+                $split = \UTF8\mb_explode('_', $key);
                 $role = str_replace('Creator', '', $split[0]);
                 if ($split[2] == 'firstname') {
                     $creators[$role][$split[1]]['firstname'] = trim($value) ? trim($value) : FALSE;
@@ -1525,10 +1525,10 @@ class EDITCOLLECTION
     {
         $pubObject = FACTORY_PUBLISHER::getInstance();
         $returnValue = FALSE;
-        if (array_key_exists($name, $this->vars) && UTF8::mb_trim($this->vars[$name])) {
-            $name = UTF8::mb_trim($this->vars[$name]);
+        if (array_key_exists($name, $this->vars) && \UTF8\mb_trim($this->vars[$name])) {
+            $name = \UTF8\mb_trim($this->vars[$name]);
             if (array_key_exists($location, $this->vars)) {
-                $location = UTF8::mb_trim($this->vars[$location]);
+                $location = \UTF8\mb_trim($this->vars[$location]);
             } else {
                 $location = '';
             }
@@ -1627,7 +1627,7 @@ class EDITCOLLECTION
             }
             // Write creator session data and ensure each creator in each role is correctly ordered
             elseif (mb_strpos($key, 'Creator') === 0) {
-                $split = UTF8::mb_explode('_', $key);
+                $split = \UTF8\mb_explode('_', $key);
                 $newKey = $split[0] . '_' . $split[1];
                 $allCreators[$split[0]]['order'][$newKey] = $split[1];
                 if ($split[2] == 'initials') {

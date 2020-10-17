@@ -85,11 +85,11 @@ abstract class EXPORTER
         }
         if ($creatorRow['creatorInitials']) {
             if ($exportType == 'endnote') {
-                $initials = implode(' ', UTF8::mb_explode(' ', stripslashes($creatorRow['creatorInitials'])));
+                $initials = implode(' ', \UTF8\mb_explode(' ', stripslashes($creatorRow['creatorInitials'])));
             } elseif ($exportType == 'ris') {
-                $initials = implode('.', UTF8::mb_explode(' ', stripslashes($creatorRow['creatorInitials']))) . ".";
+                $initials = implode('.', \UTF8\mb_explode(' ', stripslashes($creatorRow['creatorInitials']))) . ".";
             } elseif ($exportType == 'bibtex') {
-                $initials = implode('. ', UTF8::mb_explode(' ', stripslashes($creatorRow['creatorInitials']))) . ".";
+                $initials = implode('. ', \UTF8\mb_explode(' ', stripslashes($creatorRow['creatorInitials']))) . ".";
             }
         }
         if ($exportType == 'ris') {

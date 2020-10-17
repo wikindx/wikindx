@@ -295,7 +295,7 @@ class QUICKSEARCH
 
             return;
         }
-        $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_Highlight"));
+        $searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_Highlight"));
         $patterns = [];
         foreach ($searchTerms as $term) {
             if (trim($term)) {
@@ -449,7 +449,7 @@ class QUICKSEARCH
     private function checkInput()
     {
         $this->writeSession();
-        if ((array_key_exists("search_Word", $this->vars) && !UTF8::mb_trim($this->vars["search_Word"]))
+        if ((array_key_exists("search_Word", $this->vars) && !\UTF8\mb_trim($this->vars["search_Word"]))
         || !$this->session->getVar("search_Word")) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }

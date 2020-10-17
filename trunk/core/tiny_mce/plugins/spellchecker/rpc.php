@@ -76,7 +76,7 @@ if (isset($config['general.remote_rpc_url'])) {
         fclose($socket);
 
         // Split response header/data
-        $resp = UTF8::mb_explode(CR . LF . CR . LF, $resp);
+        $resp = \UTF8\mb_explode(CR . LF . CR . LF, $resp);
         echo $resp[1]; // Output body
     }
 

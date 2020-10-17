@@ -146,16 +146,16 @@ class FILETOTEXT
 
                 // Identify the file parsed with its custom header 'resourceattachmentsHashFilename'
                 // This is mandatory because the output of PdfToText could be altered at byte level
-                $split = UTF8::mb_explode("\r\n\r\n", $return, 2);
+                $split = \UTF8\mb_explode("\r\n\r\n", $return, 2);
                 if (count($split) == 2) {
                     $headers = $split[0];
                     $body = $split[1];
 
                     // Split headers / body
-                    $headers = UTF8::mb_explode("\r\n", $headers);
+                    $headers = \UTF8\mb_explode("\r\n", $headers);
                     foreach ($headers as $h) {
                         // Split each header in key / value
-                        $h = UTF8::mb_explode(":", $h);
+                        $h = \UTF8\mb_explode(":", $h);
                         if (count($split) == 2) {
                             // Identify the file parsed
                             if ($h[0] == 'resourceattachmentsHashFilename') {

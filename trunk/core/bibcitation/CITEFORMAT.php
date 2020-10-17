@@ -325,7 +325,7 @@ class CITEFORMAT
         if (array_key_exists('independent', $array)) {
             $ind1 = $array['independent'];
             foreach ($ind1 as $key => $value) {
-                $split = UTF8::mb_explode('_', $key);
+                $split = \UTF8\mb_explode('_', $key);
                 $ind2[$split[1]] = $value;
             }
             if (isset($ind2)) {
@@ -771,7 +771,7 @@ class CITEFORMAT
             $this->sentenceSplit,
             preg_replace($this->quotationMarker, "", preg_replace("/\\[.*\\]|\\[\\/.*\\]|<.*[>]+/Uus", "", $text))
         );
-        //		$split = UTF8::mb_explode('. ',
+        //		$split = \UTF8\mb_explode('. ',
         //			preg_replace("/\[.*\]|\[\/.*\]|<.*[>]+/Uus", "", $text)); // strip BBCode and HTML temporarily
         $lastSplit = $split[count($split) - 1];
         // Perhaps we've split on the dot in 'et al.' or equivalent
@@ -1645,7 +1645,7 @@ class CITEFORMAT
         if ($creator['firstname'] && !$firstNameInitial) { // Full name
             $firstName = $creator['firstname'];
         } elseif ($creator['firstname']) { // Initial only of first name.  'firstname' field may actually have several 'firstnames'
-            $fn = UTF8::mb_explode(" ", $creator['firstname']);
+            $fn = \UTF8\mb_explode(" ", $creator['firstname']);
             $firstTime = TRUE;
             foreach ($fn as $name) {
                 if ($firstTime) {
@@ -1680,7 +1680,7 @@ class CITEFORMAT
 
             return ''; // nothing here
         }
-        $initialsArray = UTF8::mb_explode(' ', $creator['initials']);
+        $initialsArray = \UTF8\mb_explode(' ', $creator['initials']);
         /**
          * If firstname is initial only, prepend to array
          */
@@ -1729,7 +1729,7 @@ class CITEFORMAT
      */
     public function formatTitle($pString, $delimitLeft = FALSE, $delimitRight = FALSE)
     {
-        $split = UTF8::mb_explode($this->style['titleSubtitleSeparator'], $pString);
+        $split = \UTF8\mb_explode($this->style['titleSubtitleSeparator'], $pString);
         $this->items[$this->count]['mainTitle'] = $split[0];
 
         $title = BIBFORMAT::titleCapitalization($pString, $delimitLeft, $delimitRight, $this->style['titleCapitalization']);

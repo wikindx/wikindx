@@ -214,7 +214,7 @@ class CONFIGURE
 				$array = [];
 				$oldNoSort = base64_encode(serialize(WIKINDX_NO_SORT));
 				if ($value) {
-					foreach (UTF8::mb_explode(',', $value) as $word) {
+					foreach (\UTF8\mb_explode(',', $value) as $word) {
 						$word = mb_strtolower(stripslashes(trim($word)));
 						if ($word && array_search($word, $array) === FALSE) {
 							$array[] = $word;
@@ -229,7 +229,7 @@ class CONFIGURE
 			} elseif ($field == 'configSearchFilter') {
 				$array = [];
 				if ($value) {
-					foreach (UTF8::mb_explode(',', $value) as $word) {
+					foreach (\UTF8\mb_explode(',', $value) as $word) {
 						$word = mb_strtolower(stripslashes(trim($word)));
 						if ($word && array_search($word, $array) === FALSE) {
 							$array[] = $word;
@@ -1759,7 +1759,7 @@ class CONFIGURE
         ];
         foreach ($required as $value) {
             if (array_key_exists($value, $this->vars)) {
-                $input = UTF8::mb_trim($this->vars[$value]);
+                $input = \UTF8\mb_trim($this->vars[$value]);
                 if (!$input) {
                 	$error = $this->errors->text("inputError", 'missing', " ($value) ");
                 }

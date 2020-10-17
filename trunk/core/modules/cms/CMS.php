@@ -303,7 +303,7 @@ class CMS
         $res = FACTORY_RESOURCECOMMON::getInstance();
         $bibStyle = FACTORY_BIBSTYLE::getInstance();
         if (array_key_exists('id', $_GET)) {
-            $ids = UTF8::mb_explode(',', $_GET['id']);
+            $ids = \UTF8\mb_explode(',', $_GET['id']);
         }
         // Remove WIKINDX-style hyperlink class.
         $pattern = preg_quote("<a class=\"rLink\"");
@@ -748,12 +748,12 @@ class CMS
         }
         $tag .= ':' . $this->vars['id'];
         if ($this->vars['cmsPageStart']) {
-            $tag .= ':' . UTF8::mb_trim($this->vars['cmsPageStart']);
+            $tag .= ':' . \UTF8\mb_trim($this->vars['cmsPageStart']);
             if ($this->vars['cmsPageEnd']) {
-                $tag .= '-' . UTF8::mb_trim($this->vars['cmsPageEnd']);
+                $tag .= '-' . \UTF8\mb_trim($this->vars['cmsPageEnd']);
             }
         } elseif ($this->vars['cmsPageEnd']) { // Assume pageEnd is actually meant to be pageStart
-            $tag .= ':' . UTF8::mb_trim($this->vars['cmsPageEnd']);
+            $tag .= ':' . \UTF8\mb_trim($this->vars['cmsPageEnd']);
             $this->vars['cmsPageStart'] = $this->vars['cmsPageEnd'];
             unset($this->vars['cmsPageEnd']);
         }

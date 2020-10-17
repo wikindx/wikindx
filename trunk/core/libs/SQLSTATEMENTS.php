@@ -160,8 +160,8 @@ class SQLSTATEMENTS
             'resource_timestamp',
             [['resourcetimestampId' => ' rId']]
         )), 't1');
-        $split = UTF8::mb_explode('(', $subQuery, 2);
-        $split = UTF8::mb_explode(')', $split[1]);
+        $split = \UTF8\mb_explode('(', $subQuery, 2);
+        $split = \UTF8\mb_explode(')', $split[1]);
         $this->session->setVar("list_SubQuery", $split[0]);
         $this->db->ascDesc = $this->db->desc;
         $this->db->orderBy($this->db->formatFields('resourcetimestampTimestamp'), FALSE, FALSE);

@@ -123,14 +123,14 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsAdd"));
-        if (!array_key_exists('title', $this->vars) || !UTF8::mb_trim($this->vars['title']) ||
-            !array_key_exists('body', $this->vars) || !UTF8::mb_trim($this->vars['body'])) {
+        if (!array_key_exists('title', $this->vars) || !\UTF8\mb_trim($this->vars['title']) ||
+            !array_key_exists('body', $this->vars) || !\UTF8\mb_trim($this->vars['body'])) {
             $this->formData["title"] = $this->vars['title'];
             $this->formData["body"] = $this->vars['body'];
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'initAdd');
         }
-        $title = UTF8::mb_trim($this->vars['title']);
-        $news = UTF8::mb_trim($this->vars['body']);
+        $title = \UTF8\mb_trim($this->vars['title']);
+        $news = \UTF8\mb_trim($this->vars['body']);
         $this->db->insert(
             "news",
             ['newsTitle', 'newsNews', 'newsTimestamp'],
@@ -214,7 +214,7 @@ class NEWS
         if (array_key_exists('editId', $this->formData)) {
         	$editId = $this->formData['editId'];
         }
-        else if (!array_key_exists("editId", $this->vars) || (!$editId = UTF8::mb_trim($this->vars["editId"]))) {
+        else if (!array_key_exists("editId", $this->vars) || (!$editId = \UTF8\mb_trim($this->vars["editId"]))) {
 				$this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
 		}
     	if (array_key_exists('message', $this->vars)) {
@@ -268,18 +268,18 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsEdit"));
-        if (!array_key_exists("editId", $this->vars) || (!$editId = UTF8::mb_trim($this->vars["editId"]))) {
+        if (!array_key_exists("editId", $this->vars) || (!$editId = \UTF8\mb_trim($this->vars["editId"]))) {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
-        if (!array_key_exists('title', $this->vars) || !tUTF8::mb_trim($this->vars['title']) ||
-            !array_key_exists('body', $this->vars) || !UTF8::mb_trim($this->vars['body'])) {
+        if (!array_key_exists('title', $this->vars) || !t\UTF8\mb_trim($this->vars['title']) ||
+            !array_key_exists('body', $this->vars) || !\UTF8\mb_trim($this->vars['body'])) {
             $this->formData["editId"] = $this->vars['editId'];
             $this->formData["title"] = $this->vars['title'];
             $this->formData["body"] = $this->vars['body'];
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'initEdit');
         }
-        $updateArray['newsTitle'] = UTF8::mb_trim($this->vars['title']);
-        $updateArray['newsNews'] = UTF8::mb_trim($this->vars['body']);
+        $updateArray['newsTitle'] = \UTF8\mb_trim($this->vars['title']);
+        $updateArray['newsNews'] = \UTF8\mb_trim($this->vars['body']);
         $updateArray['newsTimestamp'] = $this->db->formatTimestamp();
         $this->db->formatConditions(['newsId' => $editId]);
         $this->db->update('news', $updateArray);
@@ -324,7 +324,7 @@ class NEWS
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "news"));
         if (array_key_exists("id", $this->vars)) {
-            $id = UTF8::mb_trim($this->vars["id"]);
+            $id = \UTF8\mb_trim($this->vars["id"]);
         } else {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, "viewNews");
         }
@@ -334,8 +334,8 @@ class NEWS
         if (method_exists($this->languageClass, "dateFormat")) {
             $date = \LOCALES\dateFormat($row['newsTimestamp']);
         } else {
-            $dateSplit = UTF8::mb_explode(' ', $row['newsTimestamp']);
-            $dateSplit = UTF8::mb_explode('-', $dateSplit[0]);
+            $dateSplit = \UTF8\mb_explode(' ', $row['newsTimestamp']);
+            $dateSplit = \UTF8\mb_explode('-', $dateSplit[0]);
             $date = date("d/M/Y", mktime(0, 0, 0, $dateSplit[1], $dateSplit[2], $dateSplit[0]));
         }
         $pString = \HTML\p(\HTML\strong(\HTML\nlToHtml($row['newsTitle'])) . BR . $date);

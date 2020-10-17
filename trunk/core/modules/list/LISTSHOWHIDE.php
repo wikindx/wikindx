@@ -58,7 +58,7 @@ class LISTSHOWHIDE
             $this->checkMetadataExists();
             $this->types = $this->typeObj->grabAll(TRUE, $this->metadataTypeArray);
         } else {
-            $this->types = $this->typeObj->grabAll(TRUE, UTF8::mb_explode(',', $this->vars['ajaxReturn']));
+            $this->types = $this->typeObj->grabAll(TRUE, \UTF8\mb_explode(',', $this->vars['ajaxReturn']));
         }
         $this->grabPreviouslySelected('ajaxReturn2');
         if (is_array($this->types)) {
@@ -84,7 +84,7 @@ class LISTSHOWHIDE
             $this->categories = $this->category->grabAll(
                 $this->session->getVar("mywikindx_Bibliography_use"),
                 TRUE,
-                UTF8::mb_explode(',', $this->vars['ajaxReturn'])
+                \UTF8\mb_explode(',', $this->vars['ajaxReturn'])
             );
         }
         $this->grabPreviouslySelected('ajaxReturn2');
@@ -94,7 +94,7 @@ class LISTSHOWHIDE
             $categoryTable .= \HTML\trStart();
             $selectedCategories = [];
             if ($selected = $this->session->getVar($this->type . "_Category")) {
-                $selected = UTF8::mb_explode(',', $selected);
+                $selected = \UTF8\mb_explode(',', $selected);
                 foreach ($selected as $key) {
                     if (!array_key_exists($key, $this->categories)) {
                         continue;
@@ -124,7 +124,7 @@ class LISTSHOWHIDE
         $db = FACTORY_DB::getInstance();
         if (array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean specific resource types
             $db->leftJoin('resource', 'resourceId', 'resourcelanguageResourceId');
-            $db->formatConditionsOneField(UTF8::mb_explode(',', $this->vars['ajaxReturn']), 'resourceType');
+            $db->formatConditionsOneField(\UTF8\mb_explode(',', $this->vars['ajaxReturn']), 'resourceType');
         }
         $languages = [];
         $db->orderBy('languageLanguage');
@@ -152,7 +152,7 @@ class LISTSHOWHIDE
                 $this->checkMetadataExists();
                 $this->keywords = $this->keyword->grabAll(TRUE, $this->metadataTypeArray);
             } else {
-                $this->keywords = $this->keyword->grabAll(TRUE, UTF8::mb_explode(',', $this->vars['ajaxReturn']));
+                $this->keywords = $this->keyword->grabAll(TRUE, \UTF8\mb_explode(',', $this->vars['ajaxReturn']));
             }
         } else {
             if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
@@ -165,7 +165,7 @@ class LISTSHOWHIDE
                 $this->keywords = $this->keyword->grabAll(
                     $this->session->getVar("mywikindx_Bibliography_use"),
                     'resource',
-                    UTF8::mb_explode(',', $this->vars['ajaxReturn'])
+                    \UTF8\mb_explode(',', $this->vars['ajaxReturn'])
                 );
             }
         }
@@ -176,7 +176,7 @@ class LISTSHOWHIDE
             $keywordTable .= \HTML\trStart();
             $selectedKeywords = [];
             if ($selected = $this->session->getVar($this->type . "Keyword")) {
-                $selected = UTF8::mb_explode(',', $selected);
+                $selected = \UTF8\mb_explode(',', $selected);
                 foreach ($selected as $key) {
                     if (array_key_exists($key, $this->keywords)) {
                         $selectedKeywords[$key] = $this->keywords[$key];
@@ -218,7 +218,7 @@ class LISTSHOWHIDE
             $categories = $this->category->grabAll(
                 $this->session->getVar("mywikindx_Bibliography_use"),
                 TRUE,
-                UTF8::mb_explode(',', $this->vars['ajaxReturn']),
+                \UTF8\mb_explode(',', $this->vars['ajaxReturn']),
                 FALSE
             );
         }
@@ -235,7 +235,7 @@ class LISTSHOWHIDE
             $subcatTable .= \HTML\trStart();
             $selectedSubcats = [];
             if ($selected = $this->session->getVar("search_Subcategory")) {
-                $selected = UTF8::mb_explode(',', $selected);
+                $selected = \UTF8\mb_explode(',', $selected);
                 foreach ($selected as $key) {
                     if (!array_key_exists($key, $this->subcategories)) {
                         continue;
@@ -302,7 +302,7 @@ class LISTSHOWHIDE
                 $this->checkMetadataExists();
                 $this->creators = $this->creator->grabAll(TRUE, FALSE, $this->metadataTypeArray);
             } else {
-                $this->creators = $this->creator->grabAll(TRUE, FALSE, UTF8::mb_explode(',', $this->vars['ajaxReturn']));
+                $this->creators = $this->creator->grabAll(TRUE, FALSE, \UTF8\mb_explode(',', $this->vars['ajaxReturn']));
             }
         } else {
             if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
@@ -313,7 +313,7 @@ class LISTSHOWHIDE
             } else {
                 $this->creators = $this->creator->grabAll(
                     $this->session->getVar("mywikindx_Bibliography_use"),
-                    UTF8::mb_explode(',', $this->vars['ajaxReturn']),
+                    \UTF8\mb_explode(',', $this->vars['ajaxReturn']),
                     FALSE,
                     TRUE
                 );
@@ -326,7 +326,7 @@ class LISTSHOWHIDE
             $creatorTable .= \HTML\trStart();
             $selectedCreators = [];
             if ($selected = $this->session->getVar($this->type . "_Creator")) {
-                $selected = UTF8::mb_explode(',', $selected);
+                $selected = \UTF8\mb_explode(',', $selected);
                 foreach ($selected as $key) {
                     if (!array_key_exists($key, $this->creators)) {
                         continue;
@@ -366,7 +366,7 @@ class LISTSHOWHIDE
             $this->publishers = $this->publisher->grabAll(
                 FALSE,
                 $this->session->getVar("mywikindx_Bibliography_use"),
-                UTF8::mb_explode(',', $this->vars['ajaxReturn'])
+                \UTF8\mb_explode(',', $this->vars['ajaxReturn'])
             );
         }
         $this->grabPreviouslySelected('ajaxReturn2');
@@ -375,7 +375,7 @@ class LISTSHOWHIDE
             $publisherTable .= \HTML\trStart();
             $selectedPublishers = [];
             if ($selected = $this->session->getVar($this->type . "_Publisher")) {
-                $selected = UTF8::mb_explode(',', $selected);
+                $selected = \UTF8\mb_explode(',', $selected);
                 foreach ($selected as $key) {
                     if (!array_key_exists($key, $this->publishers)) {
                         continue;
@@ -415,7 +415,7 @@ class LISTSHOWHIDE
             $this->collections = $this->collection->grabAll(
                 FALSE,
                 $this->session->getVar("mywikindx_Bibliography_use"),
-                UTF8::mb_explode(',', $this->vars['ajaxReturn'])
+                \UTF8\mb_explode(',', $this->vars['ajaxReturn'])
             );
         }
         $this->grabPreviouslySelected('ajaxReturn2');
@@ -424,7 +424,7 @@ class LISTSHOWHIDE
             $collectionTable .= \HTML\trStart();
             $selectedCollections = [];
             if ($selected = $this->session->getVar($this->type . "_Collection")) {
-                $selected = UTF8::mb_explode(',', $selected);
+                $selected = \UTF8\mb_explode(',', $selected);
                 foreach ($selected as $key) {
                     if (!array_key_exists($key, $this->collections)) {
                         continue;
@@ -461,7 +461,7 @@ class LISTSHOWHIDE
             $this->collections = $this->collection->grabAll(
                 FALSE,
                 $this->session->getVar("mywikindx_Bibliography_use"),
-                UTF8::mb_explode(',', $this->vars['ajaxReturn'])
+                \UTF8\mb_explode(',', $this->vars['ajaxReturn'])
             );
         }
         $this->grabPreviouslySelected('ajaxReturn2');
@@ -491,7 +491,7 @@ class LISTSHOWHIDE
         } else {
             $this->userTags = $this->userTag->grabAll(
                 $this->session->getVar("mywikindx_Bibliography_use"),
-                UTF8::mb_explode(',', $this->vars['ajaxReturn']),
+                \UTF8\mb_explode(',', $this->vars['ajaxReturn']),
                 TRUE
             );
         }
@@ -502,7 +502,7 @@ class LISTSHOWHIDE
             $utTable .= \HTML\trStart();
             $selectedUTs = [];
             if ($selected = $this->session->getVar($this->type . "_UserTag")) {
-                $selected = UTF8::mb_explode(',', $selected);
+                $selected = \UTF8\mb_explode(',', $selected);
                 foreach ($selected as $key) {
                     if (!array_key_exists($key, $this->userTags)) {
                         continue;
@@ -607,7 +607,7 @@ class LISTSHOWHIDE
     private function grabPreviouslySelected($qsElement)
     {
         if (array_key_exists($qsElement, $this->vars)) {
-            $this->previousSelect = UTF8::mb_explode(',', $this->vars[$qsElement]);
+            $this->previousSelect = \UTF8\mb_explode(',', $this->vars[$qsElement]);
             if (($index = array_search(0, $this->previousSelect)) !== FALSE) {
                 unset($this->previousSelect[$index]); // remove 'IGNORE' selected
             }

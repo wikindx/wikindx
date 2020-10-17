@@ -149,7 +149,7 @@ class BIBFORMAT
                     if (($rName == 'independent') && is_array($rValue)) {
                         $array = [];
                         foreach ($rValue as $iName => $iValue) {
-                            $split = UTF8::mb_explode('_', $iName);
+                            $split = \UTF8\mb_explode('_', $iName);
                             $array[$split[1]] = $iValue;
                         }
                         $this->{$footnoteType}['independent'] = $array;
@@ -416,7 +416,7 @@ class BIBFORMAT
                 preg_match("/^(\\[.*?[\\]]+)*([.,;:?!])|^([.,;:?!])/u", $post, $capture, PREG_OFFSET_CAPTURE)) {
                 // There is punctuation in post either immediately following BBCode formatting or at the start of the string.
                 // The offset for the punctuation character in $post is given at $capture[2][1]
-                $post = UTF8::mb_substr_replace($post, '', $capture[2][1], 1);
+                $post = \UTF8\mb_substr_replace($post, '', $capture[2][1], 1);
             }
             // Match $itemArray[$lastFieldKey] with $pre
             if (($lastFieldKey !== FALSE) && $pre && preg_match("/^[.,;:?!]/u", $pre) &&
@@ -427,7 +427,7 @@ class BIBFORMAT
                     PREG_OFFSET_CAPTURE
                 )) {
                 // There is punctuation in post either immediately following BBCode formatting or at the start of the string.
-                $pre = UTF8::mb_substr_replace($pre, '', 0, 1);
+                $pre = \UTF8\mb_substr_replace($pre, '', 0, 1);
             }
             if ($this->item[$key]) {
                 $itemArray[$index] = $pre . $this->item[$key] . $post;
@@ -795,12 +795,12 @@ class BIBFORMAT
         if ($creator['firstname'] && !$firstNameInitial) { // Full name
             $firstName = $creator['firstname'];
         } elseif ($creator['firstname']) { // Initial only of first name.  'firstname' field may actually have several 'firstnames'
-            $fn = UTF8::mb_explode(" ", $creator['firstname']);
+            $fn = \UTF8\mb_explode(" ", $creator['firstname']);
             $firstTime = TRUE;
             foreach ($fn as $name) {
                 // May be the first name is a hyphenated name
                 // We separate each part of the name separated by a -
-                $fn2 = UTF8::mb_explode("-", trim($name));
+                $fn2 = \UTF8\mb_explode("-", trim($name));
                 if ($firstTime) {
                     if (count($fn2) == 1) { // no hyphen
                         $firstNameInitialMake =
@@ -865,7 +865,7 @@ class BIBFORMAT
 
             return ''; // nothing here
         }
-        $initialsArray = UTF8::mb_explode(' ', $creator['initials']);
+        $initialsArray = \UTF8\mb_explode(' ', $creator['initials']);
         if ($initialsStyle <= 1) { // needs '.' before any hyphen
             foreach ($initialsArray as $key => $i) {
                 $initialsArray[$key] = str_replace('-', '.-', $i);

@@ -571,7 +571,7 @@ class RESOURCEFORMAJAX
         // if no ajaxReturn, quietly exit
         $div = \HTML\td(\HTML\div('subcategory', "&nbsp;")); // default
         if (array_key_exists('ajaxReturn', $this->vars)) {
-            $this->subcategories = $this->category->grabSubAll(TRUE, FALSE, UTF8::mb_explode(',', $this->vars['ajaxReturn']));
+            $this->subcategories = $this->category->grabSubAll(TRUE, FALSE, \UTF8\mb_explode(',', $this->vars['ajaxReturn']));
             $this->grabPreviouslySelected('ajaxReturn2');
             if (is_array($this->subcategories)) {
                 $div = $this->resourceForm->subcategoryBox($this->subcategories);
@@ -648,7 +648,7 @@ class RESOURCEFORMAJAX
     private function grabPreviouslySelected($qsElement)
     {
         if (array_key_exists($qsElement, $this->vars)) {
-            $this->previousSelect = UTF8::mb_explode(',', $this->vars[$qsElement]);
+            $this->previousSelect = \UTF8\mb_explode(',', $this->vars[$qsElement]);
             if (($index = array_search(0, $this->previousSelect)) !== FALSE) {
                 unset($this->previousSelect[$index]); // remove 'IGNORE' selected
             }

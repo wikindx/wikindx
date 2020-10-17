@@ -239,8 +239,8 @@ class LISTADDTO
         {
 			$keyword = FACTORY_KEYWORD::getInstance();
 			$keywordIds = [];
-			if (array_key_exists('keywords', $this->vars) && UTF8::mb_trim($this->vars['keywords'])) {
-				$keywordTexts = UTF8::mb_explode(',', UTF8::mb_trim($this->vars['keywords']));
+			if (array_key_exists('keywords', $this->vars) && \UTF8\mb_trim($this->vars['keywords'])) {
+				$keywordTexts = \UTF8\mb_explode(',', \UTF8\mb_trim($this->vars['keywords']));
 			} else {
 				$keywordTexts = [];
 			}
@@ -311,8 +311,8 @@ class LISTADDTO
         {
 			$usertag = FACTORY_USERTAGS::getInstance();
 			$usertagIds = [];
-			if (array_key_exists('userTags', $this->vars) && UTF8::mb_trim($this->vars['userTags'])) {
-				$usertagTexts = UTF8::mb_explode(',', UTF8::mb_trim($this->vars['userTags']));
+			if (array_key_exists('userTags', $this->vars) && \UTF8\mb_trim($this->vars['userTags'])) {
+				$usertagTexts = \UTF8\mb_explode(',', \UTF8\mb_trim($this->vars['userTags']));
 			} else {
 				$usertagTexts = [];
 			}

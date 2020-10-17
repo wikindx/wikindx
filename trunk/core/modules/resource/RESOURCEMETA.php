@@ -144,7 +144,7 @@ class RESOURCEMETA
         $write = $this->session->getVar("setup_Write") ? TRUE : FALSE;
         $index = 0;
         if (array_key_exists("search", $this->vars) && $this->vars["search"] = 'highlight') {
-            $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_Highlight"));
+            $searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_Highlight"));
             foreach ($searchTerms as $term) {
                 $patterns[] = "/($term)(?!\\S*\" \\S*>)/i";
             }
@@ -228,7 +228,7 @@ class RESOURCEMETA
         $index = 0;
         $thisUserId = $this->session->getVar("setup_UserId");
         if (array_key_exists("search", $this->vars) && $this->vars["search"] = 'highlight') {
-            $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_Highlight"));
+            $searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_Highlight"));
             foreach ($searchTerms as $term) {
                 $patterns[] = "/($term)(?!\\S*\" \\S*>)/i";
             }

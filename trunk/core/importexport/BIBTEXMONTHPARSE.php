@@ -41,7 +41,7 @@ class BIBTEXMONTHPARSE
         // need to use English constants for BibTeX
         $constants = FACTORY_CONSTANTS::getFreshInstance(TRUE);
         $startMonth = $this->startDay = $endMonth = $this->endDay = FALSE;
-        $date = UTF8::mb_explode(' ', $monthField); // ' # ' has been replaced by ' ' in PARSEBIBTEX.php
+        $date = \UTF8\mb_explode(' ', $monthField); // ' # ' has been replaced by ' ' in PARSEBIBTEX.php
         foreach ($date as $field) {
             $field = ucfirst(mb_strtolower(trim($field)));
             if ($month = array_search($field, $constants->monthToLongName())) {

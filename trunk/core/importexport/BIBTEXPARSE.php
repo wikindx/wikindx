@@ -83,7 +83,7 @@ class BIBTEXPARSE
     public function loadBibtexString($bibtex_string)
     {
         if (is_string($bibtex_string)) {
-            $this->bibtexString = UTF8::mb_explode(LF, $bibtex_string);
+            $this->bibtexString = \UTF8\mb_explode(LF, $bibtex_string);
         } else {
             $this->bibtexString = $bibtex_string;
         }
@@ -192,9 +192,9 @@ class BIBTEXPARSE
         }
         foreach ($values as $value) {
             $pos = mb_strpos($oldString, $value);
-            $oldString = UTF8::mb_substr_replace($oldString, '', $pos, mb_strlen($value));
+            $oldString = \UTF8\mb_substr_replace($oldString, '', $pos, mb_strlen($value));
         }
-        $rev = UTF8::mb_strrev(trim($oldString));
+        $rev = \UTF8\mb_strrev(trim($oldString));
         if (mb_substr($rev, 0, 1) != ',') {
             $oldString .= ',';
         }
@@ -205,7 +205,7 @@ class BIBTEXPARSE
         array_pop($keys);
         foreach ($keys as $key) {
             $value = trim(array_shift($values));
-            $rev = UTF8::mb_strrev($value);
+            $rev = \UTF8\mb_strrev($value);
             // remove any dangling ',' left on final field of entry
             if (mb_substr($rev, 0, 1) == ',') {
                 $value = rtrim($value, ',');
@@ -313,7 +313,7 @@ class BIBTEXPARSE
     }
 
     /**
-     * This function works like UTF8::mb_explode('#',$val) but has to take into account whether
+     * This function works like \UTF8\mb_explode('#',$val) but has to take into account whether
      *
      * the character # is part of a string (i.e., is enclosed into "..." or {...} )
      * or defines a string concatenation as in @string{ "x # x" # ss # {xx{x}x} }

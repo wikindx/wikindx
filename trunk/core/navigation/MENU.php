@@ -442,7 +442,7 @@ class MENU
                 } elseif (array_key_exists($i . "_name", $this->bookmarkArray) &&
                     array_key_exists($i . "_multi", $this->bookmarkArray) && ($this->bookmarkView == 'multi')) {
                     $encodedSql = base64_encode($this->stmt);
-                    $bk = UTF8::mb_explode('|', $this->bookmarkArray[$i . "_multi"]); // statement, multi, listParams
+                    $bk = \UTF8\mb_explode('|', $this->bookmarkArray[$i . "_multi"]); // statement, multi, listParams
                     if ($bk[0] == $encodedSql) {
                         $found = TRUE;
 

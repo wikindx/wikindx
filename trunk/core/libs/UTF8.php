@@ -13,7 +13,7 @@
  *
  * @package wikindx\core\libs\UTF8
  */
-class UTF8
+namespace UTF8
 {
     /**
      * Encode a string in UTF-8 if not already UTF-8
@@ -41,14 +41,14 @@ class UTF8
      *
      * @return string
      */
-    public static function smartUtf8_encode($str)
+    function smartUtf8_encode($str)
     {
-        $mState = 0;     // cached expected number of octets after the current octet
-                     // until the beginning of the next UTF8 character sequence
-    $mUcs4 = 0;     // cached Unicode character
-    $mBytes = 1;     // cached expected number of octets in the current sequence
-
-    $len = strlen($str);
+        $mState = 0;    // cached expected number of octets after the current octet
+                        // until the beginning of the next UTF8 character sequence
+        $mUcs4 = 0;     // cached Unicode character
+        $mBytes = 1;    // cached expected number of octets in the current sequence
+    
+        $len = strlen($str);
 
         for ($i = 0; $i < $len; $i++) {
             $in = ord($str[$i]);
@@ -156,12 +156,12 @@ class UTF8
      *
      * @return string
      */
-    public static function smartUtf8_decode($inStr)
+    function smartUtf8_decode($inStr)
     {
         // Replace ? with a unique string
         $newStr = str_replace("?", "w0i0k0i0n0d0x", $inStr);
         // Try the utf8_decode
-        $newStr = self::decodeUtf8($newStr);
+        $newStr = decodeUtf8($newStr);
         // if it contains ? marks
         if (strpos($newStr, "?") !== FALSE) {
             // Something went wrong, set newStr to the original string.
@@ -190,7 +190,7 @@ class UTF8
      *
      * @return string
      */
-    public static function decodeUtf8($utf8_string)
+    function decodeUtf8($utf8_string)
     {
         $out = "";
         $ns = strlen($utf8_string);
@@ -277,11 +277,11 @@ class UTF8
      *
      * @return string
      */
-    public static function html_uentity_decode($str)
+    function html_uentity_decode($str)
     {
         preg_match_all("/&#([0-9]*?);/u", $str, $unicode);
         foreach ($unicode[0] as $key => $value) {
-            $str = "" . preg_replace("/" . $value . "/u", self::code2utf8($unicode[1][$key]), $str);
+            $str = "" . preg_replace("/" . $value . "/u", code2utf8($unicode[1][$key]), $str);
         }
 
         return $str;
@@ -297,7 +297,7 @@ class UTF8
      *
      * @return string
      */
-    public static function mb_ucfirst($str)
+    function mb_ucfirst($str)
     {
         $fc = mb_substr($str, 0, 1);
 
@@ -330,7 +330,7 @@ class UTF8
      *
      * @return int|string[]
      */
-    public static function mb_str_word_count($str, $format = 0, $charlist = "")
+    function mb_str_word_count($str, $format = 0, $charlist = "")
     {
         $preg_split_flags = ($format == 2) ? PREG_SPLIT_OFFSET_CAPTURE : 0;
         $res = preg_split('~[^\p{L}\p{N}' . preg_quote($charlist) . '\']+~u', $str, -1, $preg_split_flags);
@@ -356,7 +356,7 @@ class UTF8
      *
      * @return string
      */
-    public static function mb_chr($dec)
+    function mb_chr($dec)
     {
         if (function_exists("mb_chr")) {
             $utf = mb_chr($dec);
@@ -393,7 +393,7 @@ class UTF8
      *
      * @return string
      */
-    public static function mb_explode($delimiter, $string, $limit = PHP_INT_MAX)
+    function mb_explode($delimiter, $string, $limit = PHP_INT_MAX)
     {
         if ($delimiter == '') {
             return FALSE;
@@ -435,7 +435,7 @@ class UTF8
      *
      * @return string
      */
-    public static function mb_str_pad($str, $pad_len, $pad_str = ' ', $dir = STR_PAD_RIGHT, $encoding = NULL)
+    function mb_str_pad($str, $pad_len, $pad_str = ' ', $dir = STR_PAD_RIGHT, $encoding = NULL)
     {
         $encoding = $encoding === NULL ? mb_internal_encoding() : $encoding;
         $padBefore = $dir === STR_PAD_BOTH || $dir === STR_PAD_LEFT;
@@ -462,7 +462,7 @@ class UTF8
      *
      * @return string
      */
-    public static function mb_strcasecmp($str1, $str2, $encoding = NULL)
+    function mb_strcasecmp($str1, $str2, $encoding = NULL)
     {
         if (NULL === $encoding) {
             $encoding = mb_internal_encoding();
@@ -478,7 +478,7 @@ class UTF8
      *
      * @return string
      */
-    public static function mb_strrev($str)
+    function mb_strrev($str)
     {
         preg_match_all('/./us', $str, $ar);
 
@@ -496,7 +496,7 @@ class UTF8
      *
      * @return string
      */
-    public static function mb_substr_replace($string, $replacement, $start, $length = NULL, $encoding = NULL)
+    function mb_substr_replace($string, $replacement, $start, $length = NULL, $encoding = NULL)
     {
         if (extension_loaded('mbstring') === TRUE) {
             $string_length = (is_null($encoding) === TRUE) ? mb_strlen($string) : mb_strlen($string, $encoding);
@@ -534,7 +534,7 @@ class UTF8
      *
      * @return string
      */
-    public static function mb_ord($string)
+    function mb_ord($string)
     {
         if (function_exists("mb_ord")) {
             if ($string != "") {
@@ -612,7 +612,7 @@ class UTF8
      * @param boolean trim the right?
      * @return String
      */ 
-    public static function mb_trim($string, $charlist='\\\\s', $ltrim=true, $rtrim=true)
+    function mb_trim($string, $charlist='\\\\s', $ltrim=true, $rtrim=true)
     {
         $both_ends = $ltrim && $rtrim;
 
@@ -648,7 +648,7 @@ class UTF8
      *
      * @return string
      */
-    private static function code2utf8($num)
+    function code2utf8($num)
     {
         if ($num < 128) {
             return chr($num);

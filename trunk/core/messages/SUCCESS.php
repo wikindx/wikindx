@@ -47,7 +47,7 @@ class SUCCESS
 		$message = stripslashes($message);
 		
 		if($html)
-			return \HTML\p(UTF8::html_uentity_decode(trim($message)), "success", "center");
+			return \HTML\p(\UTF8\html_uentity_decode(trim($message)), "success", "center");
 		else
 			return trim($message);
 	}

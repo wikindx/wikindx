@@ -357,7 +357,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
      */
     public function createfonttbl($font)
     {
-        $fonts = UTF8::mb_explode(',', $font);
+        $fonts = \UTF8\mb_explode(',', $font);
         $font = $fonts[0];
 
         return $this->setFontBlock($font);
@@ -649,7 +649,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         // 1. For each UTF8 character
         foreach ($string as $c) {
             // 2. Take it's unicode code point
-            $ucodepoint = UTF8::mb_ord($c);
+            $ucodepoint = \UTF8\mb_ord($c);
 
             // 3. If it's code point maps to ASCII not extended charset
 
@@ -1137,9 +1137,9 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
     {
         $text = str_replace(' ', 'WIKINDX_SPACE', $text);
         if ($this->isIE) {
-            $params = UTF8::mb_explode('&nbsp;', $styleString);
+            $params = \UTF8\mb_explode('&nbsp;', $styleString);
         } else {
-            $params = UTF8::mb_explode(';', $styleString);
+            $params = \UTF8\mb_explode(';', $styleString);
         }
         $justify = $indentL = $indentR = FALSE;
         $slashCellAdded = FALSE;
@@ -1148,9 +1148,9 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
                 continue;
             }
             if ($this->isIE) {
-                $splitParam = UTF8::mb_explode('=', $param);
+                $splitParam = \UTF8\mb_explode('=', $param);
             } else {
-                $splitParam = UTF8::mb_explode(':', $param);
+                $splitParam = \UTF8\mb_explode(':', $param);
             }
             if (!array_key_exists(1, $splitParam)) { // not recognised - usually result of pasting from Office etc.
                 continue;
@@ -1303,12 +1303,12 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         }
         // are there quotes within the quote?
         if (mb_strpos($matchArray[4], $this->qme)) {
-            $split = UTF8::mb_explode($this->qme, $matchArray[4]);
+            $split = \UTF8\mb_explode($this->qme, $matchArray[4]);
             $lastElement = array_pop($split);
             $matchArray[4] = $lastElement;
             $matchArray[2] .= $matchArray[3] . implode($this->qme, $split);
         }
-        if (UTF8::mb_str_word_count($matchArray[2]) >= $this->quoteNumWords) {
+        if (\UTF8\mb_str_word_count($matchArray[2]) >= $this->quoteNumWords) {
             if (trim($matchArray[6])) { // intervening text
                 $trail = trim($matchArray[6]) . $matchArray[7] . $matchArray[8];
                 $removeSpace = '';

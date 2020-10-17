@@ -633,7 +633,7 @@ class RESOURCECATEGORYEDIT
 			$this->formData['displaySubcategory'] = $this->vars['displaySubcategory'];
 		}
 		if (array_key_exists('keywords', $this->vars)) {
-			$this->formData['keywords'] = UTF8::mb_trim($this->vars['keywords']);
+			$this->formData['keywords'] = \UTF8\mb_trim($this->vars['keywords']);
 		}
 		if (array_key_exists('keywordRadio', $this->vars)) {
 			$this->formData['keywordRadio'] = $this->vars['keywordRadio'];
@@ -642,7 +642,7 @@ class RESOURCECATEGORYEDIT
 			$this->formData['displayKeyword'] = $this->vars['displayKeyword'];
 		}
 		if (array_key_exists('userTags', $this->vars)) {
-			$this->formData['userTags'] = UTF8::mb_trim($this->vars['userTags']);
+			$this->formData['userTags'] = \UTF8\mb_trim($this->vars['userTags']);
 		}
 		if (array_key_exists('usertagRadio', $this->vars)) {
 			$this->formData['usertagRadio'] = $this->vars['usertagRadio'];
@@ -765,8 +765,8 @@ class RESOURCECATEGORYEDIT
             return;
         }
         $tagIds = [];
-        if (UTF8::mb_trim($this->vars['userTags'])) {
-            foreach (UTF8::mb_explode(',', $this->vars['userTags']) as $inputTag) {
+        if (\UTF8\mb_trim($this->vars['userTags'])) {
+            foreach (\UTF8\mb_explode(',', $this->vars['userTags']) as $inputTag) {
                 $fields = $values = [];
                 if (!$inputTag = trim($inputTag)) {
                     continue;

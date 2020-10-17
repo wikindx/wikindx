@@ -453,7 +453,7 @@ class IDEAS
         	}
             $message = $this->success->text("ideaAdd");
             $fields[] = 'resourcemetadataText';
-            $values[] = UTF8::mb_trim($this->vars['Text']);
+            $values[] = \UTF8\mb_trim($this->vars['Text']);
             $fields[] = 'resourcemetadataPrivate';
             if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N')) {
                 $values[] = 'N';
@@ -511,7 +511,7 @@ class IDEAS
             } else {
                 $message = $this->success->text("ideaEdit");
                 $updateArray = [];
-                $updateArray['resourcemetadataText'] = UTF8::mb_trim($this->vars['Text']);
+                $updateArray['resourcemetadataText'] = \UTF8\mb_trim($this->vars['Text']);
                 if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N')) {
                     $updateArray['resourcemetadataPrivate'] = 'N';
                 } elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private']))) {
@@ -555,7 +555,7 @@ class IDEAS
         if (!array_key_exists('resourcemetadataMetadataId', $this->vars)) {
             $message = $this->success->text("ideaAdd");
             $fields[] = 'resourcemetadataText';
-            $values[] = UTF8::mb_trim($this->vars['Text']);
+            $values[] = \UTF8\mb_trim($this->vars['Text']);
             $fields[] = 'resourcemetadataMetadataId';
             $values[] = $this->vars['resourcemetadataId'];
             $fields[] = 'resourcemetadataPrivate';
@@ -597,7 +597,7 @@ class IDEAS
             } else {
                 $message = $this->success->text("ideaEdit");
                 $updateArray = [];
-                $updateArray['resourcemetadataText'] = UTF8::mb_trim($this->vars['Text']);
+                $updateArray['resourcemetadataText'] = \UTF8\mb_trim($this->vars['Text']);
                 $updateArray['resourcemetadataTimestampEdited'] = $this->db->formatTimestamp();
                 $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                 $this->db->update('resource_metadata', $updateArray);
@@ -753,11 +753,11 @@ class IDEAS
      */
     private function checkInput()
     {
-		$this->formData['keywords'] = UTF8::mb_trim($this->vars['keywords']);
+		$this->formData['keywords'] = \UTF8\mb_trim($this->vars['keywords']);
 		if (array_key_exists('private', $this->vars)) {
 			$this->formData['private'] = $this->vars['private'];
     	}
-    	if (!array_key_exists('Text', $this->vars) || !UTF8::mb_trim($this->vars['Text'])) {
+    	if (!array_key_exists('Text', $this->vars) || !\UTF8\mb_trim($this->vars['Text'])) {
     		if (array_key_exists('ideaGen', $this->vars)) { // Being used in the ideaGen plugin
     			$uuid = $this->vars['uuid'];
     			\TEMPSTORAGE\merge($this->db, $uuid, $this->formData);
@@ -769,6 +769,6 @@ class IDEAS
 		    	$this->badInput->close($this->errors->text("inputError", "missing"), $this, 'subIdeaForm');
 		    }
         }
-		$this->formData['Text'] = UTF8::mb_trim($this->vars['Text']);
+		$this->formData['Text'] = \UTF8\mb_trim($this->vars['Text']);
     }
 }

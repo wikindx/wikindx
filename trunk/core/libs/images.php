@@ -189,7 +189,7 @@ class FileManager
         $this->readDir();
         $existingHashes = [];
         foreach ($this->files as $fileName) {
-            $split = UTF8::mb_explode('_', $fileName);
+            $split = \UTF8\mb_explode('_', $fileName);
             if (count($split) > 1) {
                 $hashExt = array_pop($split);
                 $readableName = implode('_', $split);
@@ -199,7 +199,7 @@ class FileManager
         $name = basename($userfile['name']);
         //$name = stripslashes($name);
 
-        $split = UTF8::mb_explode('.', $name);
+        $split = \UTF8\mb_explode('.', $name);
         array_pop($split);
         $name = implode('', $split);
         $upload_file = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES, $name]);
@@ -405,7 +405,7 @@ class FileServer
          * Unfortunately it doesn't properly detect the difference between text-based file types.
          *
         $mime_type = FileServer::getMimeType($filepath);
-        $mime_type_chunks = UTF8::mb_explode("/", $mime_type, 2);
+        $mime_type_chunks = \UTF8\mb_explode("/", $mime_type, 2);
         $type = $mime_type_chunks[1];
         */
         return FileServer::getFileExtension($filepath);
@@ -424,7 +424,7 @@ class FileServer
         $mime_type = finfo_file($fhandle, $filepath);
         $mime_type_chunks = preg_split('/\s+/u', $mime_type);
         $mime_type = $mime_type_chunks[0];
-        $mime_type_chunks = UTF8::mb_explode(";", $mime_type);
+        $mime_type_chunks = \UTF8\mb_explode(";", $mime_type);
         $mime_type = $mime_type_chunks[0];
 
         return $mime_type;
@@ -511,7 +511,7 @@ class EncodeExplorer
      */
     public static function getFilename($file)
     {
-        $filenameArray = UTF8::mb_explode('_', $file->getNameHtml());
+        $filenameArray = \UTF8\mb_explode('_', $file->getNameHtml());
         if (count($filenameArray) > 1) {
             array_pop($filenameArray);
 
@@ -693,7 +693,7 @@ class EncodeExplorer
      */
     public static function cmp_name($b, $a)
     {
-        return UTF8::mb_strcasecmp($a->name, $b->name);
+        return \UTF8\mb_strcasecmp($a->name, $b->name);
     }
     /**
      * Comparison callback for sorting by size

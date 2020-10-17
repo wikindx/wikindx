@@ -274,10 +274,10 @@ class GLOBALS
      */
     public static function getPageElapsedTime()
     {
-        $tmp = UTF8::mb_explode(' ', self::$WIKINDX_PAGE_STARTING_TIME_CHRONO);
+        $tmp = \UTF8\mb_explode(' ', self::$WIKINDX_PAGE_STARTING_TIME_CHRONO);
         $beginTimer = $tmp[0] + $tmp[1];
 
-        $tmp = UTF8::mb_explode(' ', self::$WIKINDX_PAGE_ENDING_TIME_CHRONO);
+        $tmp = \UTF8\mb_explode(' ', self::$WIKINDX_PAGE_ENDING_TIME_CHRONO);
         $endTimer = $tmp[0] + $tmp[1];
 
         return round($endTimer - $beginTimer, 5);

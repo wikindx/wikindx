@@ -196,7 +196,7 @@ class ATTACHMENTS
         $primary = array_key_exists('attachmentPrimary', $this->vars) ? $this->vars['attachmentPrimary'] : FALSE;
         // find any files to edit and files to delete
         foreach ($this->vars as $key => $var) {
-            $split = UTF8::mb_explode('_', $key);
+            $split = \UTF8\mb_explode('_', $key);
             if ($split[0] == 'attachmentEdit') {
                 $edits[$split[1]] = $var;
             }
@@ -351,7 +351,7 @@ class ATTACHMENTS
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete')));
         foreach ($this->vars as $key => $var) {
-            $split = UTF8::mb_explode('_', $key);
+            $split = \UTF8\mb_explode('_', $key);
             if ($split[0] == 'attachmentDelete') {
                 $deletes[] = $split[2];
                 $attachmentIds[] = $split[1];
@@ -740,8 +740,8 @@ class ATTACHMENTS
                 $embargo = 'CHECKED';
             }
             $hash = '_' . $hash;
-            $split = UTF8::mb_explode(' ', $row['resourceattachmentsEmbargoUntil']);
-            $date = UTF8::mb_explode('-', $split[0]);
+            $split = \UTF8\mb_explode(' ', $row['resourceattachmentsEmbargoUntil']);
+            $date = \UTF8\mb_explode('-', $split[0]);
             if ($date[0] != '0000') {
                 $year = $date[0];
             }

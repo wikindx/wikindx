@@ -100,7 +100,7 @@ class RESOURCECOMMON
     public function setHighlightPatterns()
     {
         if ($this->session->getVar("search_Highlight") && empty($this->highlightPatterns)) {
-            $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_Highlight"));
+            $searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_Highlight"));
             foreach ($searchTerms as $term) {
                 //				$this->highlightPatterns[] = "/($term)(?!\S*\" \S*>)/ui";
                 $this->highlightPatterns[] = "/($term)(?=[^>]*(<|$))/u";

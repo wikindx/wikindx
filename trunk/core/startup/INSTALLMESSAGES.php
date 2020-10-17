@@ -35,7 +35,7 @@ class INSTALLMESSAGES
         $message = preg_replace("/###/u", trim($extra . ""), $message);
         $message = stripslashes($message);
 
-        return UTF8::html_uentity_decode(trim($message));
+        return \UTF8\html_uentity_decode(trim($message));
     }
     /**
      * Grab the message

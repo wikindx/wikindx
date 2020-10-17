@@ -454,7 +454,7 @@ class CREATOR
             }
         }
         foreach ($creators as $creator => $creatorId) {
-            $split = UTF8::mb_explode('_', $creator);
+            $split = \UTF8\mb_explode('_', $creator);
             $newKey = $split[0] . '_' . $split[1];
             $allCreators[$split[0]]['order'][$newKey] = $split[1];
             $allCreators[$split[0]]['creators'][$newKey]['select'] = $creatorId;

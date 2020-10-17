@@ -261,11 +261,11 @@ class PARSEPHRASE
             $this->orsFT[] = ltrim(array_pop($this->andsFT), '+');
         }
         if (!$this->idea) {
-            $storedHighlight = array_filter(UTF8::mb_explode(',', $this->session->getVar("search_Highlight")));
+            $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_Highlight")));
             $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
             $this->session->setVar("search_Highlight", implode(",", $searchHighlight));
         } else {
-            $storedHighlight = array_filter(UTF8::mb_explode(',', $this->session->getVar("search_HighlightIdea")));
+            $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_HighlightIdea")));
             $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
             $this->session->setVar("search_HighlightIdea", implode(",", $searchHighlight));
         }
@@ -402,11 +402,11 @@ class PARSEPHRASE
             }
         }
         if (!$this->idea) {
-            $storedHighlight = array_filter(UTF8::mb_explode(',', $this->session->getVar("search_Highlight")));
+            $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_Highlight")));
             $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
             $this->session->setVar("search_Highlight", implode(",", $searchHighlight));
         } else {
-            $storedHighlight = array_filter(UTF8::mb_explode(',', $this->session->getVar("search_HighlightIdea")));
+            $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_HighlightIdea")));
             $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
             $this->session->setVar("search_HighlightIdea", implode(",", $searchHighlight));
         }
@@ -589,7 +589,7 @@ class PARSEPHRASE
     {
 // remove multiple spaces
     	$phrase = preg_replace('!\s+!', ' ', $phrase);
-        return UTF8::mb_explode(' ', $phrase);
+        return \UTF8\mb_explode(' ', $phrase);
     }
     /**
      * check for malformed search strings -- i.e. odd no. of " chars

@@ -290,7 +290,7 @@ class VIEWBIBTEX
         $checkDuplicates = [];
         $duplicateMapping = FALSE;
         foreach ($this->vars as $key => $value) {
-            $split = UTF8::mb_explode("Map_", $key); // custom fields mapping
+            $split = \UTF8\mb_explode("Map_", $key); // custom fields mapping
             if (count($split) == 2) {
                 $value = trim($value);
                 if ($value) {
@@ -308,7 +308,7 @@ class VIEWBIBTEX
         // Check for metadata input and write to session
         $metadataFields = ["Quotation", "QuotationComment", "Paraphrase", "ParaphraseComment", "Musing"];
         foreach ($metadataFields as $field) {
-            $input = UTF8::mb_trim($this->vars[$field]);
+            $input = \UTF8\mb_trim($this->vars[$field]);
             if ($input) {
                 if (($field == 'QuotationComment') || ($field == 'ParaphraseComment')) { // may be duplicated
                     $this->session->setVar("export_$field", $input);
@@ -647,7 +647,7 @@ class VIEWBIBTEX
             $array = [];
             $array[] = preg_replace('/[^\da-z]/iu', '', $this->resourceTitle) . '-' . $row['resourceattachmentsFileName'];
             $array[] = implode("/", [$path, $row['resourceattachmentsHashFilename']]);
-            $split = UTF8::mb_explode('/', $row['resourceattachmentsFileType']);
+            $split = \UTF8\mb_explode('/', $row['resourceattachmentsFileType']);
             $array[] = $split[1];
             $files[$row['resourceattachmentsResourceId']][] = implode(':', $array);
             unset($row);
@@ -691,7 +691,7 @@ class VIEWBIBTEX
                     preg_match_all("/@STRING{(.*)}/u", $rawString, $strings);
                 }
                 foreach ($strings[1] as $string) {
-                    $split = UTF8::mb_explode("=", $string, 2);
+                    $split = \UTF8\mb_explode("=", $string, 2);
                     $key = trim($split[0]);
                     if (array_search($key, $this->rawString) === FALSE) {
                         $this->rawString[$key] = trim($split[1]);
@@ -719,10 +719,10 @@ class VIEWBIBTEX
         $this->strValues = array_unique($this->strValues);
         $this->strKeys = array_unique($this->strKeys);
         foreach ($rawEntries as $rId => $rawEntry) {
-            $rawEntry = UTF8::mb_explode(LF, $rawEntry);
+            $rawEntry = \UTF8\mb_explode(LF, $rawEntry);
             array_pop($rawEntry); // always an empty array at end so get rid of it.
             foreach ($rawEntry as $entries) {
-                $entry = UTF8::mb_explode("=", $entries, 2);
+                $entry = \UTF8\mb_explode("=", $entries, 2);
                 if (!trim($entry[1])) {
                     continue;
                 }
@@ -927,16 +927,16 @@ class VIEWBIBTEX
         if ($encoding == 'ISO-8859-1') {
             if ($type == 'plain') {
                 foreach ($this->spChPlain as $key => $value) {
-                    $char = preg_quote(UTF8::mb_chr($key), '/');
+                    $char = preg_quote(\UTF8\mb_chr($key), '/');
                     $c = preg_replace("/$char/u", $value, $c);
                 }
             } else {
                 // '\' and '$' are special cases and must be treated separately.  Former MUST be treated first!
-                $char = preg_quote("\\" . UTF8::mb_chr(0x005C), '/');	// '\'
+                $char = preg_quote("\\" . \UTF8\mb_chr(0x005C), '/');	// '\'
                 $rep = "\\textbackslash";
                 $c = preg_replace("/$char/u", $rep, $c);
                 foreach ($this->spCh as $key => $value) {
-                    $match[] = "/" . preg_quote(UTF8::mb_chr($key), '/') . "/u";
+                    $match[] = "/" . preg_quote(\UTF8\mb_chr($key), '/') . "/u";
                     $replace[] = $value;
                 }
                 $c = preg_replace($match, $replace, $c);
@@ -1059,7 +1059,7 @@ class VIEWBIBTEX
             $firstname = stripslashes($row['creatorFirstname']);
         }
         if ($row['creatorInitials']) {
-            $initials = implode('. ', UTF8::mb_explode(' ', stripslashes($row['creatorInitials']))) . ".";
+            $initials = implode('. ', \UTF8\mb_explode(' ', stripslashes($row['creatorInitials']))) . ".";
         }
         if (preg_match("/(.*)(Sr\\.|jr\\.)/ui", $surname, $matches)) {
             $surname = trim($matches[1]) . ", " . trim($matches[2]);
@@ -1213,11 +1213,11 @@ class VIEWBIBTEX
         while ($row = $this->db->fetchRow($resultSet)) {
             // Ensure first letter is capitalized
             if ($row['resourcetextNote']) {
-                $note = UTF8::mb_ucfirst(\HTML\stripHtml($row['resourcetextNote']));
+                $note = \UTF8\mb_ucfirst(\HTML\stripHtml($row['resourcetextNote']));
                 $entryArray[$row['resourcetextId']][] = "note = " . $this->convertCharacter($this->parseCitation($note));
             }
             if ($row['resourcetextAbstract']) {
-                $abstract = UTF8::mb_ucfirst(\HTML\stripHtml($row['resourcetextAbstract']));
+                $abstract = \UTF8\mb_ucfirst(\HTML\stripHtml($row['resourcetextAbstract']));
                 $entryArray[$row['resourcetextId']][] = "abstract = " . $this->convertCharacter($this->parseCitation($abstract));
             }
             if ($row['resourcetextUrls'] &&
@@ -1247,9 +1247,9 @@ class VIEWBIBTEX
             return $text;
         }
         // Capture any text after last [cite]...[/cite] tag
-        $explode = UTF8::mb_explode("]etic/[", UTF8::mb_strrev($text), 2);
-        $tailText = UTF8::mb_strrev($explode[0]);
-        $text = UTF8::mb_strrev("]etic/[" . $explode[1]);
+        $explode = \UTF8\mb_explode("]etic/[", \UTF8\mb_strrev($text), 2);
+        $tailText = \UTF8\mb_strrev($explode[0]);
+        $text = \UTF8\mb_strrev("]etic/[" . $explode[1]);
 
         return preg_replace_callback("/(\\[cite\\])(.*)(\\[\\/cite\\])/Uuis", [$this, "citeCallback"], $text . $tailText);
     }
@@ -1279,8 +1279,8 @@ class VIEWBIBTEX
     private function parseCiteTag($cite)
     {
         $citeKey = FALSE;
-        $rawCitation = UTF8::mb_explode("|", $cite);
-        $idPart = UTF8::mb_explode(":", $rawCitation[0]);
+        $rawCitation = \UTF8\mb_explode("|", $cite);
+        $idPart = \UTF8\mb_explode(":", $rawCitation[0]);
         $id = $idPart[0];
         $this->db->formatConditions(['resourceId' => $id]);
         $resultset = $this->db->select('resource', ['resourceId']);
@@ -1292,10 +1292,10 @@ class VIEWBIBTEX
             $this->db->formatConditions(['importrawId' => $id]);
             $rawEntries = unserialize(base64_decode($this->db->selectFirstField('import_raw', 'importrawText')));
             if ($rawEntries) {
-                $rawEntries = UTF8::mb_explode(LF, $rawEntries);
+                $rawEntries = \UTF8\mb_explode(LF, $rawEntries);
                 array_pop($rawEntries); // always an empty array at end so get rid of it.
                 foreach ($rawEntries as $entries) {
-                    $entry = UTF8::mb_explode("=", $entries, 2);
+                    $entry = \UTF8\mb_explode("=", $entries, 2);
                     if (!trim($entry[1])) {
                         continue;
                     }
@@ -1316,7 +1316,7 @@ class VIEWBIBTEX
         
         $citeKey = "WIKINDXCITEKEYSTART" . $citeKey . ".$id" . "WIKINDXCITEKEYEND";
         if (array_key_exists('1', $idPart)) {
-            $pages = UTF8::mb_explode("-", $idPart[1]);
+            $pages = \UTF8\mb_explode("-", $idPart[1]);
             $pageStart = $pages[0];
             $pageEnd = array_key_exists('1', $pages) ? $pages[1] : FALSE;
             if ($pageEnd) {
@@ -1328,7 +1328,7 @@ class VIEWBIBTEX
             $pages = FALSE;
         }
         if (array_key_exists('1', $rawCitation)) {
-            $text = UTF8::mb_explode("`", $rawCitation[1]);
+            $text = \UTF8\mb_explode("`", $rawCitation[1]);
             $preText = $text[0];
             $postText = array_key_exists('1', $text) ? $text[1] : FALSE;
         } else {

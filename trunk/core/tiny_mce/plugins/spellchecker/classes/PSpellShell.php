@@ -100,7 +100,7 @@ class PSpellShell extends SpellChecker
             preg_match("/\\&[^:]+:(.*)/ui", $dstr, $matches);
 
             if (!empty($matches[1])) {
-                $words = array_slice(UTF8::mb_explode(',', $matches[1]), 0, 10);
+                $words = array_slice(\UTF8\mb_explode(',', $matches[1]), 0, 10);
 
                 for ($i = 0; $i < count($words); $i++) {
                     $words[$i] = trim($words[$i]);

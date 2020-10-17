@@ -539,36 +539,36 @@ class ADMINUSER
     	$error = $email = '';
         if ($type == 'adminAdd') {
             $function = 'addInit';
-            if (!UTF8::mb_trim($this->vars['usersUsername']) || (!$email = UTF8::mb_trim($this->vars['email'])) || 
-            	!UTF8::mb_trim($this->vars['password']) || !UTF8::mb_trim($this->vars['passwordConfirm'])) {
+            if (!\UTF8\mb_trim($this->vars['usersUsername']) || (!$email = \UTF8\mb_trim($this->vars['email'])) || 
+            	!\UTF8\mb_trim($this->vars['password']) || !\UTF8\mb_trim($this->vars['passwordConfirm'])) {
                 $error = $this->errors->text("inputError", "missing");
             }
        		elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE) {
         		$error = $this->errors->text('inputError', 'invalidMail');
         	}
-            if (UTF8::mb_trim($this->vars['password']) != UTF8::mb_trim($this->vars['passwordConfirm'])) {
+            if (\UTF8\mb_trim($this->vars['password']) != \UTF8\mb_trim($this->vars['passwordConfirm'])) {
                 $error = $this->errors->text("inputError", "missing");
             }
         // Don't store passwords . . .
-            $this->formData['usersUsername'] = UTF8::mb_trim($this->vars['usersUsername']);
+            $this->formData['usersUsername'] = \UTF8\mb_trim($this->vars['usersUsername']);
             $this->formData['email'] = $email;
-            $this->formData['fullname'] = UTF8::mb_trim($this->vars['fullname']);
-            $this->formData['department'] = UTF8::mb_trim($this->vars['department']);
+            $this->formData['fullname'] = \UTF8\mb_trim($this->vars['fullname']);
+            $this->formData['department'] = \UTF8\mb_trim($this->vars['department']);
             $this->formData['departmentId'] = $this->vars['departmentId'];
-            $this->formData['institution'] = UTF8::mb_trim($this->vars['institution']);
+            $this->formData['institution'] = \UTF8\mb_trim($this->vars['institution']);
             $this->formData['institutionId'] = $this->vars['institutionId'];
             if (array_key_exists('admin', $this->vars)) {
             	$this->formData['admin'] = TRUE;
             }
-            $this->formData['creatorId'] = UTF8::mb_trim($this->vars['creatorId']);
+            $this->formData['creatorId'] = \UTF8\mb_trim($this->vars['creatorId']);
         } 
 // Appears not to be used . . . .
 /*        elseif ($type == 'userAdd') {
-            if (!UTF8::mb_trim($this->vars['usersUsername']) || !UTF8::mb_trim($this->vars['password']) ||
-                !UTF8::mb_trim($this->vars['passwordConfirm']) || !$this->vars['email'] || !$this->vars['hashKey']) {
+            if (!\UTF8\mb_trim($this->vars['usersUsername']) || !\UTF8\mb_trim($this->vars['password']) ||
+                !\UTF8\mb_trim($this->vars['passwordConfirm']) || !$this->vars['email'] || !$this->vars['hashKey']) {
                 return FALSE;
             }
-            if (UTF8::mb_trim($this->vars['password']) != UTF8::mb_trim($this->vars['passwordConfirm'])) {
+            if (\UTF8\mb_trim($this->vars['password']) != \UTF8\mb_trim($this->vars['passwordConfirm'])) {
                 return FALSE;
             }
         } 
@@ -576,7 +576,7 @@ class ADMINUSER
             $function = 'registrationInit';
 			foreach ($this->vars as $key => $value) {
 				if (mb_strpos($key, "registerUser_") !== FALSE) {
-					$split = UTF8::mb_explode("_", $key);
+					$split = \UTF8\mb_explode("_", $key);
 					$this->formData[$split[1]] = $value;
 				}
 			}
@@ -609,23 +609,23 @@ class ADMINUSER
         } elseif ($type == 'edit') {
             $function = 'editDisplay';
         	if (!array_key_exists('bypassPasswordCheck', $this->vars)) {
-				if (!UTF8::mb_trim($this->vars['password']) || !UTF8::mb_trim($this->vars['passwordConfirm'])) {
+				if (!\UTF8\mb_trim($this->vars['password']) || !\UTF8\mb_trim($this->vars['passwordConfirm'])) {
 					$error = $this->errors->text("inputError", "missing");
 				}
 			}
-            if ((!$email = UTF8::mb_trim($this->vars['email'])) || !$this->vars['userId']) {
+            if ((!$email = \UTF8\mb_trim($this->vars['email'])) || !$this->vars['userId']) {
                 $error = $this->errors->text("inputError", "missing");
             }
        		elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE) {
         		$error = $this->errors->text('inputError', 'invalidMail');
         	}
-            $this->formData['usersUsername'] = UTF8::mb_trim($this->vars['usersUsername']);
+            $this->formData['usersUsername'] = \UTF8\mb_trim($this->vars['usersUsername']);
             $this->formData['userId'] = $this->vars['userId'];
             $this->formData['email'] = $email;
-            $this->formData['fullname'] = UTF8::mb_trim($this->vars['fullname']);
-            $this->formData['department'] = UTF8::mb_trim($this->vars['department']);
+            $this->formData['fullname'] = \UTF8\mb_trim($this->vars['fullname']);
+            $this->formData['department'] = \UTF8\mb_trim($this->vars['department']);
             $this->formData['departmentId'] = $this->vars['departmentId'];
-            $this->formData['institution'] = UTF8::mb_trim($this->vars['institution']);
+            $this->formData['institution'] = \UTF8\mb_trim($this->vars['institution']);
             $this->formData['institutionId'] = $this->vars['institutionId'];
             if (array_key_exists('admin', $this->vars)) {
             	$this->formData['admin'] = TRUE;

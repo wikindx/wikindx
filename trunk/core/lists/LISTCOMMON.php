@@ -992,7 +992,7 @@ class LISTCOMMON
         if (array_key_exists('statistics', $this->vars) && ($this->vars['statistics'] == 'Type')) {
             $strings[] = $this->messages->text('listParams', 'type') . ':&nbsp;&nbsp;' . $this->vars['id'];
         } elseif ($id = $this->session->getVar($listType . "_Type")) {
-            $ids = UTF8::mb_explode(',', $id);
+            $ids = \UTF8\mb_explode(',', $id);
             if (count($ids) > 1) {
                 $strings[] = $this->messages->text('listParams', 'type') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
@@ -1002,7 +1002,7 @@ class LISTCOMMON
         }
         if ($listType == 'select') {
             if ($id = $this->session->getVar($listType . '_Tag')) {
-                $ids = UTF8::mb_explode(',', $id);
+                $ids = \UTF8\mb_explode(',', $id);
                 if (count($ids) > 1) {
                     $strings[] = $this->messages->text('listParams', 'tag') . ':&nbsp;&nbsp;' .
                         \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
@@ -1021,7 +1021,7 @@ class LISTCOMMON
                 $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
             }
-            $cats = UTF8::mb_explode(',', $id);
+            $cats = \UTF8\mb_explode(',', $id);
             if (count($cats) > 1) {
                 $strings[] = $this->messages->text('listParams', 'category') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
@@ -1036,7 +1036,7 @@ class LISTCOMMON
                 $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
             }
-            $cats = UTF8::mb_explode(',', $id);
+            $cats = \UTF8\mb_explode(',', $id);
             if (count($cats) > 1) {
                 $strings[] = $this->messages->text('listParams', 'subcategory') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
@@ -1051,7 +1051,7 @@ class LISTCOMMON
                 $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
             }
-            $cats = UTF8::mb_explode(',', $id);
+            $cats = \UTF8\mb_explode(',', $id);
             if (count($cats) > 1) {
                 $strings[] = $this->messages->text('listParams', 'userTag') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
@@ -1066,7 +1066,7 @@ class LISTCOMMON
                 $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
             }
-            $cats = UTF8::mb_explode(',', $id);
+            $cats = \UTF8\mb_explode(',', $id);
             if (count($cats) > 1) {
                 $strings[] = $this->messages->text('listParams', 'collection') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
@@ -1081,7 +1081,7 @@ class LISTCOMMON
                 $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
             }
-            $cats = UTF8::mb_explode(',', $id);
+            $cats = \UTF8\mb_explode(',', $id);
             if (count($cats) > 1) {
                 $strings[] = $this->messages->text('listParams', 'publisher') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
@@ -1104,7 +1104,7 @@ class LISTCOMMON
                 $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
             }
-            $ids = UTF8::mb_explode(',', $id);
+            $ids = \UTF8\mb_explode(',', $id);
             if (count($ids) > 1) {
                 $strings[] = $this->messages->text('listParams', 'keyword') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
@@ -1115,7 +1115,7 @@ class LISTCOMMON
             }
         }
         if ($id = $this->session->getVar($listType . '_Language')) {
-            $ids = UTF8::mb_explode(',', $id);
+            $ids = \UTF8\mb_explode(',', $id);
             if (count($ids) > 1) {
                 $strings[] = $this->messages->text('listParams', 'language') . ':&nbsp;&nbsp;' .
                     \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
@@ -1137,7 +1137,7 @@ class LISTCOMMON
                     $id = array_key_exists("id", $this->vars) ?
                     $this->vars["id"] : $this->session->getVar("list_Ids");
                 }
-                $ids = UTF8::mb_explode(',', $id);
+                $ids = \UTF8\mb_explode(',', $id);
                 if (count($ids) > 1) {
                     $strings[] = $this->messages->text('listParams', 'creator') . ':&nbsp;&nbsp;' .
                         \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
@@ -1164,13 +1164,13 @@ class LISTCOMMON
                 ) . BR;
             } else {
                 if ($id = $this->session->getVar($listType . '_Field')) {
-                    $ids = UTF8::mb_explode(',', $id);
+                    $ids = \UTF8\mb_explode(',', $id);
                     if (count($ids) > 1) {
                         $strings[] = $this->messages->text('listParams', 'field') . ':&nbsp;&nbsp;' .
                             \HTML\em($this->messages->text('listParams', 'listParamMultiple'));
                     } else {
                         if (mb_strpos($id, 'Custom_') === 0) {
-                            $customField = UTF8::mb_explode('_', $id);
+                            $customField = \UTF8\mb_explode('_', $id);
                             $this->db->formatConditions(['customId' => $customField[2]]);
                             $id = $this->db->selectFirstField('custom', 'customLabel');
                         } else {

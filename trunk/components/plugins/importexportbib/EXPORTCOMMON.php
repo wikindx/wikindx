@@ -245,11 +245,11 @@ class EXPORTCOMMON
         }
         if ($creatorRow['creatorInitials']) {
             if (($exportType == 'endnoteTabbed') || ($exportType == 'endnoteXml')) {
-                $initials = implode(' ', UTF8::mb_explode(' ', stripslashes($creatorRow['creatorInitials'])));
+                $initials = implode(' ', \UTF8\mb_explode(' ', stripslashes($creatorRow['creatorInitials'])));
             } elseif ($exportType == 'ris') {
-                $initials = implode('.', UTF8::mb_explode(' ', stripslashes($creatorRow['creatorInitials']))) . ".";
+                $initials = implode('.', \UTF8\mb_explode(' ', stripslashes($creatorRow['creatorInitials']))) . ".";
             } elseif ($exportType == 'bibtex') {
-                $initials = implode('. ', UTF8::mb_explode(' ', stripslashes($creatorRow['creatorInitials']))) . ".";
+                $initials = implode('. ', \UTF8\mb_explode(' ', stripslashes($creatorRow['creatorInitials']))) . ".";
             }
         }
         if ($exportType == 'ris') {
@@ -334,7 +334,7 @@ class EXPORTCOMMON
             }
             // For bibtex, ensure first letter is capitalized
             if ($exportType == 'bibtex') {
-                return UTF8::mb_ucfirst($text);
+                return \UTF8\mb_ucfirst($text);
             }
 
             return $text;
@@ -364,7 +364,7 @@ class EXPORTCOMMON
             }
             // For bibtex, ensure first letter is capitalized
             if ($exportType == 'bibtex') {
-                return UTF8::mb_ucfirst($text);
+                return \UTF8\mb_ucfirst($text);
             }
 
             return $text;

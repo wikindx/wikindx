@@ -33,11 +33,11 @@ class ENDNOTECREATORPARSE
         // check if there's anything that looks like et. al
         foreach ($authorArray as $value) {
             $appellation = $prefix = $surname = $firstname = $initials = '';
-            $author = UTF8::mb_explode(",", preg_replace("/\\s{2,}/u", ' ', trim($value)));
+            $author = \UTF8\mb_explode(",", preg_replace("/\\s{2,}/u", ' ', trim($value)));
             $size = count($author);
             // No commas therefore something like Mark Grimshaw-Aagaard, Mark Nicholas Grimshaw, M N Grimshaw, Mark N. Grimshaw
             if ($size == 1) {
-                $author = UTF8::mb_explode(" ", $value);
+                $author = \UTF8\mb_explode(" ", $value);
                 // last of array is surname (no prefix if entered correctly)
                 $surname = array_pop($author);
             }
@@ -74,7 +74,7 @@ class ENDNOTECREATORPARSE
     private function grabFirstnameInitials($remainder)
     {
         $firstname = $initials = '';
-        $array = UTF8::mb_explode(" ", $remainder);
+        $array = \UTF8\mb_explode(" ", $remainder);
         foreach ($array as $value) {
             if (preg_match("/[a-zA-Z]{2,}/u", trim($value))) {
                 $firstnameArray[] = trim($value);
@@ -102,7 +102,7 @@ class ENDNOTECREATORPARSE
      */
     private function grabSurname($input)
     {
-        $surnameArray = UTF8::mb_explode(" ", $input);
+        $surnameArray = \UTF8\mb_explode(" ", $input);
         foreach ($surnameArray as $value) {
             $firstChar = mb_substr($value, 0, 1);
             if ((ord($firstChar) >= 97) && (ord($firstChar) <= 122)) {

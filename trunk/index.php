@@ -94,9 +94,9 @@ elseif (array_key_exists('action', $vars) && ($vars['action'] == 'noMenu' || $va
  * The optional querystring 'method' defines the class method to use -- if not present, the init() class method is the default
  */
 else {
-    $split = UTF8::mb_explode("_", $vars["action"]);
+    $split = \UTF8\mb_explode("_", $vars["action"]);
     if ((count($split) == 3) && ($split[2] == 'CORE')) { // this is a core module
-        if (count($fileSplit = UTF8::mb_explode('::', $split[1])) == 2) { // file and named class in that file
+        if (count($fileSplit = \UTF8\mb_explode('::', $split[1])) == 2) { // file and named class in that file
             $file = "core" . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR . $split[0] . DIRECTORY_SEPARATOR . $fileSplit[0] . '.php';
             $class = $fileSplit[1];
         } else {
@@ -120,7 +120,7 @@ else {
 if (!$actionFound) {
     // To guarantee that the action label is not the same as a core one, the module folder name is prepended to the
     // given action (e.g. folderName_actionName). We must remove the prepend.
-    $split = UTF8::mb_explode("_", $vars["action"]);
+    $split = \UTF8\mb_explode("_", $vars["action"]);
     if (count($split) == 2) {
         $index = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $split[0], 'index.php']);
         if (file_exists($index)) {

@@ -44,7 +44,7 @@ class CONSTANTS
 // then it should be in double quotes (or else the PHP script will fail).
 // English has two forms (the second below for names that end in 's').
         $possessive = trim($this->local_gettext("'s;'"));
-		$possessive = UTF8::mb_explode(";", $possessive);
+		$possessive = \UTF8\mb_explode(";", $possessive);
 		foreach ($possessive as $k => $v)
 		{
 		    if ($possessive[$k] == "") unset($possessive[$k]);
@@ -139,7 +139,7 @@ class CONSTANTS
 //   - Manuscript
         $abr = trim($this->local_gettext("Bros.;co.;Fig.;fig.;no.;secs.;msecs.;Ph. D.;MS."));
         $abr .= ";ad loc.;c.;ca.;cf.;e.g.;etc.;i.e.;ibid.;id.;loc. cit.;loc. laud.;N. B.;N.B.;op. cit.;v.;viz.";
-		$abr = UTF8::mb_explode(";", $abr);
+		$abr = \UTF8\mb_explode(";", $abr);
         // The syntax of the matching rule is that a sentence divider has been found
         // if there is a dot followed by a space where the dot is not preceeded by a member of the array.
         // For example, the 'e.g.' in "Blah blah blah, e.g. more blah, and even more blah" is not seen as

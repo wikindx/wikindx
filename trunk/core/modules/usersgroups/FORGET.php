@@ -77,9 +77,9 @@ class FORGET
     public function forgetInitStage2($error = FALSE)
     {
         $this->badInput->closeType = 'closeNoMenu';
-        if (array_key_exists('usersUsername', $this->vars) && ($usersUsername = UTF8::mb_trim($this->vars['usersUsername']))) {
+        if (array_key_exists('usersUsername', $this->vars) && ($usersUsername = \UTF8\mb_trim($this->vars['usersUsername']))) {
             $this->db->formatConditions(['usersUsername' => $usersUsername]);
-        } elseif (array_key_exists('email', $this->vars) && ($email = UTF8::mb_trim($this->vars['email']))) {
+        } elseif (array_key_exists('email', $this->vars) && ($email = \UTF8\mb_trim($this->vars['email']))) {
             $this->db->formatConditions(['usersEmail' => $email]);
         } else {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'forgetInitStage1');
@@ -139,7 +139,7 @@ class FORGET
     {
     	$error = '';
         $this->badInput->closeType = 'closeNoMenu';
-        $usersUsername = UTF8::mb_trim($this->vars['usersUsername']);
+        $usersUsername = \UTF8\mb_trim($this->vars['usersUsername']);
         $this->db->formatConditions(['usersUsername' => $usersUsername]);
         for ($i = 1; $i < 4; $i++) {
             $userArray[] = "usersPasswordQuestion$i";
@@ -150,7 +150,7 @@ class FORGET
             if (!array_key_exists("answer$i", $this->vars)) {
                 continue;
             }
-            $this->formData["answer$i"] = UTF8::mb_trim($this->vars["answer$i"]);
+            $this->formData["answer$i"] = \UTF8\mb_trim($this->vars["answer$i"]);
             $answer = sha1(mb_strtolower($this->formData["answer$i"]));
             if ($answer != $row["usersPasswordAnswer$i"]) {
             	$error = $this->errors->text("inputError", "incorrect");

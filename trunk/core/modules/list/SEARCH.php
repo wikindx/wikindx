@@ -276,13 +276,13 @@ class SEARCH
             $vars = GLOBALS::getVars();
             $jArray = \AJAX\decode_jString($vars['ajaxReturn']);
             if (array_key_exists('advancedSearch_BibId', $jArray['elementFields'])) {
-                $bibIdArray = UTF8::mb_explode(',', $jArray['elementFields']['advancedSearch_BibId']);
-                $optionsArray = UTF8::mb_explode(',', $jArray['elementFields']['advancedSearch_Options']);
+                $bibIdArray = \UTF8\mb_explode(',', $jArray['elementFields']['advancedSearch_BibId']);
+                $optionsArray = \UTF8\mb_explode(',', $jArray['elementFields']['advancedSearch_Options']);
             }
             unset($jArray['elementFields']['advancedSearch_BibId']);
             unset($jArray['elementFields']['advancedSearch_Options']);
             foreach ($jArray['elementFields'] as $key => $value) {
-                $split = UTF8::mb_explode('_', $key);
+                $split = \UTF8\mb_explode('_', $key);
                 $array[$split[2]][$split[1]] = $value;
             }
         }
@@ -330,9 +330,9 @@ class SEARCH
                         $testArray[$key1]['String'] = $word;
                     }
                 } elseif ($key2 == 'Select') {
-                    $testArray[$key1]['Select'] = UTF8::mb_explode(',', $value2);
+                    $testArray[$key1]['Select'] = \UTF8\mb_explode(',', $value2);
                 } elseif ($key2 == 'Field') {
-                    $split = UTF8::mb_explode('_', $value2);
+                    $split = \UTF8\mb_explode('_', $value2);
                     if (count($split) == 3) {
                         if (mb_strpos($split[0], 'Custom') !== FALSE) {
                             $this->db->formatConditions(['customId' => $split[2]]);
@@ -791,7 +791,7 @@ class SEARCH
         $array1 = $array2 = [];
         $options = unserialize(base64_decode($this->input['Options']));
         foreach ($this->input as $key => $value) {
-            $split = UTF8::mb_explode('_', $key);
+            $split = \UTF8\mb_explode('_', $key);
             if (count($split) != 2) {
                 continue;
             }
@@ -1019,7 +1019,7 @@ class SEARCH
                 return;
             }
         }
-        $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_Highlight"));
+        $searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_Highlight"));
         foreach ($searchTerms as $term) {
             if (trim($term)) {
                 $term = preg_quote($term, '/');
@@ -1072,7 +1072,7 @@ class SEARCH
         $this->session->setVar("setup_PagingTotal", $countQuery[0]['count']);
         $pagingObject->queryString = $queryString;
         $pagingObject->getPaging();
-        $searchTerms = UTF8::mb_explode(",", $this->session->getVar("search_HighlightIdea"));
+        $searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_HighlightIdea"));
         foreach ($searchTerms as $term) {
             if (trim($term)) {
                 $patterns[] = "/($term)(?=[^>]*(<|$))/ui";
@@ -3065,9 +3065,9 @@ class SEARCH
                             // 0 or more (lazy) - asterisk (*)
                             // 1 character - question mark (?)
                             if ($type == 'exactNOT') {
-                                $pattern = UTF8::mb_explode("*", $phrase);
+                                $pattern = \UTF8\mb_explode("*", $phrase);
                                 foreach ($pattern as $k1 => $p1) {
-                                    $p1 = UTF8::mb_explode("?", $p1);
+                                    $p1 = \UTF8\mb_explode("?", $p1);
 
                                     foreach ($p1 as $k2 => $p2) {
                                         $p2 = preg_quote($p2, '/');
@@ -3105,9 +3105,9 @@ class SEARCH
                         // 0 or more (lazy) - asterisk (*)
                         // 1 character - question mark (?)
                         if (($type == 'exactAND') || ($type == 'exactOR')) {
-                            $pattern = UTF8::mb_explode("*", $phrase);
+                            $pattern = \UTF8\mb_explode("*", $phrase);
                             foreach ($pattern as $k1 => $p1) {
-                                $p1 = UTF8::mb_explode("?", $p1);
+                                $p1 = \UTF8\mb_explode("?", $p1);
 
                                 foreach ($p1 as $k2 => $p2) {
                                     $p2 = preg_quote($p2, '/');

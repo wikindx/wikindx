@@ -376,7 +376,7 @@ class TEXTQP
                 $values[] = trim(mb_strtolower($this->vars[$chapter]));
             }
             $fields[] = 'resourcemetadataText';
-            $values[] = UTF8::mb_trim($this->vars[$typeText]);
+            $values[] = \UTF8\mb_trim($this->vars[$typeText]);
             if ($userId) {
                 $fields[] = 'resourcemetadataAddUserId';
                 $values[] = $userId;
@@ -403,7 +403,7 @@ class TEXTQP
         // else edit/delete
         else {
             // if quoteText is empty, delete the row
-            if (!array_key_exists('commentOnly', $this->vars) && !UTF8::mb_trim($this->vars[$typeText])) {
+            if (!array_key_exists('commentOnly', $this->vars) && !\UTF8\mb_trim($this->vars[$typeText])) {
                 $addEdit = 'deleted';
                 $this->delete($summaryType);
             } else {
@@ -412,20 +412,20 @@ class TEXTQP
                 $updateArray = [];
                 if (!array_key_exists('commentOnly', $this->vars)) {
                     $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
-                    $updateArray['resourcemetadataText'] = UTF8::mb_trim($this->vars[$typeText]);
+                    $updateArray['resourcemetadataText'] = \UTF8\mb_trim($this->vars[$typeText]);
                     $updateArray['resourcemetadataTimestampEdited'] = $this->db->formatTimestamp();
                     $this->db->update('resource_metadata', $updateArray);
                     $this->writeKeywords($this->vars['resourcemetadataId'], 'resourcekeywordMetadataId');
                 }
                 // Comment
                 $updateArray = [];
-                if (array_key_exists($typeComment, $this->vars) && UTF8::mb_trim($this->vars[$typeComment])) {
+                if (array_key_exists($typeComment, $this->vars) && \UTF8\mb_trim($this->vars[$typeComment])) {
                     // Is this a new comment or are we editing an old comment?
                     $this->db->formatConditions(['resourcemetadataMetadataId' => $this->vars['resourcemetadataId']]);
                     $this->db->formatConditions(['resourcemetadataAddUserId' => $userId]);
                     $recordset = $this->db->select('resource_metadata', 'resourcemetadataMetadataId');
                     if ($this->db->numRows($recordset)) {  // edit existing comment
-                        $updateArray['resourcemetadataText'] = UTF8::mb_trim($this->vars[$typeComment]);
+                        $updateArray['resourcemetadataText'] = \UTF8\mb_trim($this->vars[$typeComment]);
                         if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N')) {
                             $updateArray['resourcemetadataPrivate'] = 'N';
                         } elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private']))) {
@@ -472,17 +472,17 @@ class TEXTQP
                         $nulls[] = 'resourcemetadataPageEnd';
                     }
                     if (array_key_exists($paragraph, $this->vars) && $this->vars[$paragraph]) {
-                        $updateArray['resourcemetadataParagraph'] = UTF8::mb_trim($this->vars[$paragraph]);
+                        $updateArray['resourcemetadataParagraph'] = \UTF8\mb_trim($this->vars[$paragraph]);
                     } else {
                         $nulls[] = 'resourcemetadataParagraph';
                     }
                     if (array_key_exists($section, $this->vars) && $this->vars[$section]) {
-                        $updateArray['resourcemetadataSection'] = UTF8::mb_trim($this->vars[$section]);
+                        $updateArray['resourcemetadataSection'] = \UTF8\mb_trim($this->vars[$section]);
                     } else {
                         $nulls[] = 'resourcemetadataSection';
                     }
                     if (array_key_exists($chapter, $this->vars) && $this->vars[$chapter]) {
-                        $updateArray['resourcemetadataChapter'] = UTF8::mb_trim($this->vars[$chapter]);
+                        $updateArray['resourcemetadataChapter'] = \UTF8\mb_trim($this->vars[$chapter]);
                     } else {
                         $nulls[] = 'resourcemetadataChapter';
                     }
@@ -633,7 +633,7 @@ class TEXTQP
             $values[] = $userId;
         }
         $fields[] = 'resourcemetadataText';
-        $values[] = UTF8::mb_trim($this->vars[$typeComment]);
+        $values[] = \UTF8\mb_trim($this->vars[$typeComment]);
         if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N')) {
             $fields[] = 'resourcemetadataPrivate';
             $values[] = 'N';
@@ -670,27 +670,27 @@ class TEXTQP
         	$this->formData['commentOnly'] = TRUE;
         }
         else {
-			$this->formData['PageStart'] = UTF8::mb_trim($this->vars['PageStart']);
-			$this->formData['PageEnd'] = UTF8::mb_trim($this->vars['PageEnd']);
-			$this->formData['Paragraph'] = UTF8::mb_trim($this->vars['Paragraph']);
-			$this->formData['Section'] = UTF8::mb_trim($this->vars['Section']);
-			$this->formData['Chapter'] = UTF8::mb_trim($this->vars['Chapter']);
-			$this->formData['keywords'] = UTF8::mb_trim($this->vars['keywords']);
+			$this->formData['PageStart'] = \UTF8\mb_trim($this->vars['PageStart']);
+			$this->formData['PageEnd'] = \UTF8\mb_trim($this->vars['PageEnd']);
+			$this->formData['Paragraph'] = \UTF8\mb_trim($this->vars['Paragraph']);
+			$this->formData['Section'] = \UTF8\mb_trim($this->vars['Section']);
+			$this->formData['Chapter'] = \UTF8\mb_trim($this->vars['Chapter']);
+			$this->formData['keywords'] = \UTF8\mb_trim($this->vars['keywords']);
 			$this->formData['private'] = $this->vars['private'];
 			if (array_key_exists('commentOnly', $this->vars)) {
 			
 			}
 			if (array_key_exists('resourcemetadataId', $this->vars)) { // Editing
 				$this->formData['resourcemetadataId'] = $this->vars['resourcemetadataId'];
-			} elseif (array_key_exists('Text', $this->vars) && UTF8::mb_trim($this->vars['Text'])) { // Inserting
-				$this->formData['Text'] = UTF8::mb_trim($this->vars['Text']);
+			} elseif (array_key_exists('Text', $this->vars) && \UTF8\mb_trim($this->vars['Text'])) { // Inserting
+				$this->formData['Text'] = \UTF8\mb_trim($this->vars['Text']);
 			}
 			else {
 				$error = $this->errors->text("inputError", "missing");
 			}
 		}
-		if (array_key_exists('Comment', $this->vars) && UTF8::mb_trim($this->vars['Comment'])) { // Inserting
-        	$this->formData['Comment'] = UTF8::mb_trim($this->vars['Comment']);
+		if (array_key_exists('Comment', $this->vars) && \UTF8\mb_trim($this->vars['Comment'])) { // Inserting
+        	$this->formData['Comment'] = \UTF8\mb_trim($this->vars['Comment']);
 		}
 		elseif ($this->commentOnly) {
 			$error = $this->errors->text("inputError", "missing");

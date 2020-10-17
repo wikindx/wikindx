@@ -604,10 +604,10 @@ class ENDNOTEEXPORT
             $rawEntries = unserialize(base64_decode($rawRow['importrawText']));
         }
         if ($rawEntries) {
-            $rawEntries = UTF8::mb_explode(LF, $rawEntries);
+            $rawEntries = \UTF8\mb_explode(LF, $rawEntries);
             array_pop($rawEntries); // always an empty array at end so get rid of it.
             foreach ($rawEntries as $entries) {
-                $entry = UTF8::mb_explode("=", $entries, 2);
+                $entry = \UTF8\mb_explode("=", $entries, 2);
                 if (!trim($entry[1])) {
                     continue;
                 }

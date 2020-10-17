@@ -118,9 +118,9 @@ class adminstyle_previewcite
         $this->pageStart = $this->pageEnd = $this->preText = $this->postText = $this->citeIds = [];
         // Parse $this->text
         // Capture any text after last [cite]...[/cite] tag
-        $explode = UTF8::mb_explode("]etic/[", UTF8::mb_strrev($text), 2);
-        $this->tailText = UTF8::mb_strrev($explode[0]);
-        $text = UTF8::mb_strrev("]etic/[" . $explode[1]);
+        $explode = \UTF8\mb_explode("]etic/[", \UTF8\mb_strrev($text), 2);
+        $this->tailText = \UTF8\mb_strrev($explode[0]);
+        $text = \UTF8\mb_strrev("]etic/[" . $explode[1]);
         preg_match_all("/(.*)\\s*\\[cite\\](.*)\\[\\/cite\\]/Uis", $text, $match);
         foreach ($match[1] as $value) {
             $this->matches[1][] = $value;
@@ -192,11 +192,11 @@ class adminstyle_previewcite
     {
         // When a user cut's 'n' pastes in HTML design mode, superfluous HTML tags (usually <style lang=xx></span>) are inserted.  Remove anything that looks like HTML
         $tag = preg_replace("/<.*?>/usi", "", $tag);
-        $rawCitation = UTF8::mb_explode("|", $tag);
-        $idPart = UTF8::mb_explode(":", $rawCitation[0]);
+        $rawCitation = \UTF8\mb_explode("|", $tag);
+        $idPart = \UTF8\mb_explode(":", $rawCitation[0]);
         $id = $idPart[0];
         if (array_key_exists('1', $idPart)) {
-            $pages = UTF8::mb_explode("-", $idPart[1]);
+            $pages = \UTF8\mb_explode("-", $idPart[1]);
             $pageStart = $pages[0];
             $pageEnd = array_key_exists('1', $pages) ? $pages[1] : FALSE;
         } else {
@@ -204,7 +204,7 @@ class adminstyle_previewcite
         }
         $this->citeformat->formatPages($pageStart, $pageEnd);
         if (array_key_exists('1', $rawCitation)) {
-            $text = UTF8::mb_explode("`", $rawCitation[1]);
+            $text = \UTF8\mb_explode("`", $rawCitation[1]);
             $this->preText[] = $text[0];
             $this->postText[] = array_key_exists('1', $text) ? $text[1] : FALSE;
         } else {

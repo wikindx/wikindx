@@ -266,10 +266,10 @@ class KEYWORD
         $addedKeyword = FALSE;
         $ids = $keywords = [];
         if (array_key_exists('keywords', $inputArray)) {
-            $keywords = UTF8::mb_explode(',', $inputArray['keywords']);
+            $keywords = \UTF8\mb_explode(',', $inputArray['keywords']);
         }
         foreach ($keywords as $keyword) {
-            if (!$keyword = UTF8::mb_trim($keyword)) {
+            if (!$keyword = \UTF8\mb_trim($keyword)) {
                 continue;
             }
             $values[0] = $keyword;
@@ -290,7 +290,7 @@ class KEYWORD
         }
         // merge two arrays to remove duplicate ids.
         if (array_key_exists('keyword_ids', $inputArray) && $inputArray['keyword_ids']) {
-            $ids = array_unique(array_merge($ids, UTF8::mb_explode(',', $inputArray['keyword_ids'])));
+            $ids = array_unique(array_merge($ids, \UTF8\mb_explode(',', $inputArray['keyword_ids'])));
         }
         if (empty($ids)) {
             return FALSE;

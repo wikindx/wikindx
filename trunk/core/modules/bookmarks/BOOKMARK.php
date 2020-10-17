@@ -81,7 +81,7 @@ class BOOKMARK
         if (!array_key_exists("name", $this->vars)) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        $name = UTF8::mb_trim($this->vars['name']);
+        $name = \UTF8\mb_trim($this->vars['name']);
         if (!$name) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
@@ -94,7 +94,7 @@ class BOOKMARK
         } else {
             if (count($bookmarks) > 0) {
                 if ($key = array_search($name, $bookmarks)) {
-                    $split = UTF8::mb_explode('_', $key);
+                    $split = \UTF8\mb_explode('_', $key);
                     $id = $split[0];
                 } else {
                     for ($i = 1; $i <= 20; $i++) {

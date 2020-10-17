@@ -37,7 +37,7 @@ class PARSESTYLE
         if ($date) {
             $search .= '|' . 'date';
         }
-        $subjectArray = UTF8::mb_explode('|', $subject);
+        $subjectArray = \UTF8\mb_explode('|', $subject);
         list($subjectArray, $alternates) = $this->findAlternateFields($subjectArray, $search);
         $sizeSubject = count($subjectArray);
         // Loop each field string
@@ -292,7 +292,7 @@ class PARSESTYLE
             $subjectFieldIndex = $index;
             // this pair depend on the preceding field
             if (($index > 1) && (mb_substr_count($subject, "$") == 3) && (mb_strpos($subject, "$") === 0)) {
-                $dollarSplit = UTF8::mb_explode("$", trim($subject));
+                $dollarSplit = \UTF8\mb_explode("$", trim($subject));
                 $temp = [];
                 $elements = 0;
                 if ($dollarSplit[1]) {
@@ -329,7 +329,7 @@ class PARSESTYLE
             }
             // this pair depend on the following field
             elseif ((mb_substr_count($subject, "#") == 3) && (mb_strpos($subject, "#") === 0)) {
-                $hashSplit = UTF8::mb_explode("#", trim($subject));
+                $hashSplit = \UTF8\mb_explode("#", trim($subject));
                 $temp = [];
                 $elements = $subjectFieldIndex;
                 if ($hashSplit[1]) {

@@ -562,7 +562,7 @@ class ENDNOTEIMPORT
      */
     private function getMicrotime()
     {
-        $tmp = UTF8::mb_explode(" ", microtime());
+        $tmp = \UTF8\mb_explode(" ", microtime());
 
         return $tmp[0] + $tmp[1];
     }

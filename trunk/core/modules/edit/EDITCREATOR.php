@@ -187,10 +187,10 @@ class EDITCREATOR
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $this->validateInput();
-        $surname = UTF8::mb_trim($this->vars['surname']);
-        $firstname = UTF8::mb_trim($this->vars['firstname']);
-        $initials = $this->creator->formatInitials(UTF8::mb_trim($this->vars['initials']));
-        $prefix = UTF8::mb_trim($this->vars['prefix']);
+        $surname = \UTF8\mb_trim($this->vars['surname']);
+        $firstname = \UTF8\mb_trim($this->vars['firstname']);
+        $initials = $this->creator->formatInitials(\UTF8\mb_trim($this->vars['initials']));
+        $prefix = \UTF8\mb_trim($this->vars['prefix']);
         $updateArray['creatorSurname'] = $sortName = $surname;
         if ($creatorExistId = $this->creator->checkExists($surname, $firstname, $initials, $prefix)) {
             if ($creatorExistId != $this->vars['editCreatorId']) {
@@ -244,7 +244,7 @@ class EDITCREATOR
         if (!array_key_exists('editCreatorId', $this->vars) || !$this->vars['editCreatorId']) {
         	$error = $this->errors->text("inputError", "missing");
         }
-        $surname = array_key_exists('surname', $this->vars) ? UTF8::mb_trim($this->vars['surname']) : FALSE;
+        $surname = array_key_exists('surname', $this->vars) ? \UTF8\mb_trim($this->vars['surname']) : FALSE;
         if (!$surname) {
             $error = $this->errors->text("inputError", "missing");
         }

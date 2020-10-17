@@ -103,14 +103,14 @@ class USER
                 } else {
                     $update['usersAdmin'] = 0;
                 }
-                if (array_key_exists('department', $this->vars) && ($dept = UTF8::mb_trim($this->vars['department']))) {
+                if (array_key_exists('department', $this->vars) && ($dept = \UTF8\mb_trim($this->vars['department']))) {
                     $update['usersDepartment'] = $dept;
                 } elseif (array_key_exists('departmentId', $this->vars) && ($dept = $this->vars['departmentId'])) {
                     $update['usersDepartment'] = $dept;
                 } else {
                     $nulls[] = 'usersDepartment';
                 }
-                if (array_key_exists('institution', $this->vars) && ($inst = UTF8::mb_trim($this->vars['institution']))) {
+                if (array_key_exists('institution', $this->vars) && ($inst = \UTF8\mb_trim($this->vars['institution']))) {
                     $update['usersInstitution'] = $inst;
                 } elseif (array_key_exists('institutionId', $this->vars) && ($inst = $this->vars['institutionId'])) {
                     $update['usersInstitution'] = $inst;
@@ -186,14 +186,14 @@ class USER
                     $field[] = 'usersAdmin';
                     $value[] = 1;
                 }
-                if (array_key_exists('department', $this->vars) && ($dept = UTF8::mb_trim($this->vars['department']))) {
+                if (array_key_exists('department', $this->vars) && ($dept = \UTF8\mb_trim($this->vars['department']))) {
                     $field[] = 'usersDepartment';
                     $value[] = $dept;
                 } elseif (array_key_exists('departmentId', $this->vars) && ($dept = $this->vars['departmentId'])) {
                     $field[] = 'usersDepartment';
                     $value[] = $dept;
                 }
-                if (array_key_exists('institution', $this->vars) && ($inst = UTF8::mb_trim($this->vars['institution']))) {
+                if (array_key_exists('institution', $this->vars) && ($inst = \UTF8\mb_trim($this->vars['institution']))) {
                     $field[] = 'usersInstitution';
                     $value[] = $inst;
                 } elseif (array_key_exists('institutionId', $this->vars) && ($inst = $this->vars['institutionId'])) {

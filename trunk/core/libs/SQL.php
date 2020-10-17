@@ -1364,7 +1364,7 @@ class SQL
     public function formatFields($fields, $withExceptions = FALSE, $tidyLeft = TRUE)
     {
         if (!is_array($fields)) {
-            if (count($split = UTF8::mb_explode('.', $fields)) > 1) {
+            if (count($split = \UTF8\mb_explode('.', $fields)) > 1) {
                 return $this->formatTables($split[0]) . ".`$split[1]`";
             } else {
                 return "`$fields`";
@@ -1381,7 +1381,7 @@ class SQL
                     $array[] = $this->formatAlias($field, FALSE, $tidyLeft);
                 }
             } else {
-                if (count($split = UTF8::mb_explode('.', $field)) > 1) {
+                if (count($split = \UTF8\mb_explode('.', $field)) > 1) {
                     $array[] = $this->formatTables($split[0]) . ".`$split[1]`";
                 } else {
                     $array[] = "`$field`";
@@ -2684,9 +2684,9 @@ class SQL
             $endTimer = microtime();
         }
 
-        $tmp = UTF8::mb_explode(" ", $startTimer);
+        $tmp = \UTF8\mb_explode(" ", $startTimer);
         $startTimer = $tmp[0] + $tmp[1];
-        $tmp = UTF8::mb_explode(" ", $endTimer);
+        $tmp = \UTF8\mb_explode(" ", $endTimer);
         $endTimer = $tmp[0] + $tmp[1];
 
         return $endTimer - $startTimer;
@@ -2939,7 +2939,7 @@ class SQL
                 return       WIKINDX_DB_TABLEPREFIX . "$key AS " . WIKINDX_DB_TABLEPREFIX . $value;
             }
         }
-        if (count($split = UTF8::mb_explode('.', $key)) > 1) {
+        if (count($split = \UTF8\mb_explode('.', $key)) > 1) {
             if ($tidyLeft) {
                 return $this->formatTables($split[0]) . ".`$split[1]` AS $value";
             } else {
@@ -2977,7 +2977,7 @@ class SQL
         if (preg_match("/^UNIX_TIMESTAMP/u", $key)) {
             return $key . " AS $value";
         }
-        if (count($split = UTF8::mb_explode('.', $key)) > 1) {
+        if (count($split = \UTF8\mb_explode('.', $key)) > 1) {
             return $this->formatTables($split[0]) . ".`$split[1]` AS $value";
         } else {
             if ($tidyLeft) {

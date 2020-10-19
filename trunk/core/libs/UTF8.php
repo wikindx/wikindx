@@ -359,7 +359,7 @@ namespace UTF8
     function mb_chr($dec)
     {
         if (function_exists("mb_chr")) {
-            $utf = mb_chr($dec);
+            $utf = \mb_chr($dec);
         } else {
             if ($dec < 0x80) {
                 $utf = chr($dec);
@@ -538,7 +538,7 @@ namespace UTF8
     {
         if (function_exists("mb_ord")) {
             if ($string != "") {
-                $utf = mb_ord($string);
+                $utf = \mb_ord($string);
             } else {
                 $utf = 0;
             }

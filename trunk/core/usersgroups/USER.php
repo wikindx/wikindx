@@ -986,7 +986,7 @@ class USER
 
             return FALSE;
         }
-        if (($sr = @ldap_search($ds, WIKINDX_LDAP_DN, '(uid=' . $usersUsername . ')')) === FALSE) {
+        if (($sr = @ldap_search($ds, WIKINDX_LDAP_DN, '(&(| (objectClass=user)(objectClass=person))(| (uid=' . $usersUsername . ')(cn=' . $usersUsername . ')))', ["cn", "dn", "sn", "mail", "displayName", "givenName"])) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSearch"));
 
             return FALSE;
@@ -996,21 +996,13 @@ class USER
 
             return FALSE;
         }
-        if ($info['count'] > 1) {
-            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapTooManyUsers"));
-
+        if ($info['count'] == 0) {
             return FALSE;
-        }
-        if ($info['count'] == 1) {
-            $ldaprdn = $info[0]['dn'];
         } else {
-            $ldaprdn = "cn=" . $usersUsername . "," . WIKINDX_LDAP_DN;
+            $ldaprdn = $info[0]['dn'];
         }
         // Check the connection with the user credentials
-        $ldappass = $pwdInput;
-        if (($ldapbind = @ldap_bind($ds, $ldaprdn, $ldappass)) === FALSE) {
-            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapBind"));
-
+        if (($ldapbind = @ldap_bind($ds, $ldaprdn, $pwdInput)) === FALSE) {
             return FALSE;
         }
         

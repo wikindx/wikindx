@@ -16,6 +16,7 @@ BUG FIXES:
 9. Display a message on failure when a component is uninstalled.
 10. When copying a bibliographic style in the adminstyle plugin, ensure the appropriate component.json file is written too.
 11. Unbreak the plugin configuration.
+12. Fix a regression preventing ldap auth.
 
 FEATURE ENHANCEMENT:
 1. When editing a form, use internal representations to repopulate the form in case of error and lessen the load on sessions. Also, restructure form management by splitting form presentation from DB data writing and use redirects to mitigate errors caused when attempting to reload a submitted form. Along the way, do some tidying up of the form interfaces.

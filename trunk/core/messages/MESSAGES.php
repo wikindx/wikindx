@@ -432,6 +432,7 @@ class MESSAGES
 				"shortJournal" => dgettext($domain, "Short title"),
 				"shortBook" => dgettext($domain, "Short title"),
 				"shortConference" => dgettext($domain, "Short title"),
+				"shortMagazine" => dgettext($domain, "Short title"),
 				"bookTitle" => dgettext($domain, "Title of book"),
 /// resources_numContributors 'Contributors' are creators, authors, editors, translators etc.
 				"numContributors" => dgettext($domain, "Select the number of contributors to this resource"),
@@ -1471,6 +1472,7 @@ class MESSAGES
 			),
 /// import_ Bibliography import messages
 		    "import" => array(
+		    	"bibtexImport" => dgettext($domain, "You may import BibteX bibliographies (.bib files) here. Large files may take some time so if WIKINDX senses that php.ini's 'max_execution_time' variable is about to be exceeded, it will start importing the bibliography in chunks. If you have custom fields in your import file, create custom fields first in the WIKINDX database (the Admin menu) so that you can then map the import custom fields."),
 				"category" => dgettext($domain, "Category"),
 				"categoryPrompt" => dgettext($domain, "All WIKINDX resources belong to at least one category which you chose here.  The category(s) a resource belongs to can always be edited later."),
 /// import_pasteBibtex An ordinary user may cut 'n' paste bibtex entries into a textarea box for importing into the bibliography. '###' is the maximum number that the admin allows. Don't translate '@string'

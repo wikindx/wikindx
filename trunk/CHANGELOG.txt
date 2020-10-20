@@ -40,6 +40,7 @@ MAINTENANCE:
 12. Enable by default private bibliographic styles.
 13. No more controls over manually configuring a plugin's configuration.
 14. Uses a consistent name for the plugin load class.
+15. Delete the Amazon import plugin. This imported one resource (only books) at a time from Amazon but it is too much bother keeping up with Amazon's constant changes to the API and connection protocols.
 
 SECURITY:
 1. Replace crypt/hash_equals() by password_hash/password_verify() which is stronger by default.

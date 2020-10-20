@@ -96,6 +96,7 @@ class IMPORTBIBTEX
         $this->session = FACTORY_SESSION::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "IMPORTCOMMON.php"]));
         $this->import = new IMPORTCOMMON();
+        $this->import->importType = 'bibtex';
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
@@ -104,8 +105,7 @@ class IMPORTBIBTEX
         $this->map = FACTORY_BIBTEXMAP::getInstance();
         // need to use English constants for BibTeX
         $constants = FACTORY_CONSTANTS::getFreshInstance(TRUE);
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "miscellaneous", "TAG.php"]));
-        $this->tag = new TAG();
+        $this->tag = FACTORY_TAG::getInstance();
         $this->parseCreator = FACTORY_BIBTEXCREATORPARSE::getInstance();
         $this->monthObj = FACTORY_BIBTEXMONTHPARSE::getInstance();
         $this->pages = FACTORY_BIBTEXPAGEPARSE::getInstance();
@@ -115,31 +115,25 @@ class IMPORTBIBTEX
         $this->parseCreator->separateInitials = TRUE;
         // Load bibConfig arrays
         $this->bibConfig->bibtex();
-        // For an import from a plug-in like ImportPubMed, this variable will be a file path
-        $this->importFile = FALSE;
         $this->oldTime = time();
         $this->dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'paste')) {
             $this->type = 'paste';
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "PASTEBIBTEX.php"]));
             $this->badClass = new PASTEBIBTEX();
-            $this->badFunction = 'display';
+            $this->badFunction = 'init';
         } elseif (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'file')) {
             $this->type = 'file';
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BIBTEXFILE.php"]));
             $this->badClass = new BIBTEXFILE();
-            $this->badFunction = 'display';
+            $this->badFunction = 'init';
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexImport"));
     }
     /**
      * stage1 - start the process
-     *
-     * @param mixed $returnPstring
-     *
-     * @return string
      */
-    public function stage1($returnPstring = FALSE)
+    public function stage1()
     {
         if (!$this->importFile) {
             $this->gatekeep->init();
@@ -155,11 +149,7 @@ class IMPORTBIBTEX
         $this->entriesLeft = $this->entries = $this->convertEntries($entries);
         $finalInput = $this->writeDb();
         $this->import->collectionDefaults();
-        $pString = $this->cleanUp($finalInput);
-        if ($returnPstring) {
-            return $pString;
-        }
-        GLOBALS::addTplVar('content', $pString);
+        $this->cleanUp($finalInput);
     }
     /**
      * stage2Invalid - following on from invalid fields having been found
@@ -204,16 +194,12 @@ class IMPORTBIBTEX
         // NB - we need to write data to database as UTF-8 and parse all bibTeX values for laTeX code
         $this->entriesLeft = $this->entries;
         $finalInput = $this->writeDb();
-        $pString = $this->errorMessage ? $this->errorMessage : '';
-        $pString .= $this->cleanUp($finalInput);
-        GLOBALS::addTplVar('content', $pString);
+        $this->cleanUp($finalInput);
     }
     /**
      * Garbage clean up and intermediate session saving when importing in chunks
      *
      * @param mixed $finalInput
-     *
-     * @return string
      */
     private function cleanUp($finalInput)
     {
@@ -283,8 +269,6 @@ class IMPORTBIBTEX
 			header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importContinue&uuid=$uuid");
 			die;
         }
-
-        return $pString;
     }
     /**
      * Continue an import
@@ -319,9 +303,7 @@ class IMPORTBIBTEX
 		\TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
         $this->vars = $data["import_ThisVars"];
         $finalInput = $this->writeDb(TRUE);
-        $pString = $this->errorMessage ? $this->errorMessage : '';
-        $pString .= $this->cleanUp($finalInput);
-        GLOBALS::addTplVar('content', $pString);
+        $this->cleanUp($finalInput);
     }
     /**
      * find unrecognised field names
@@ -362,7 +344,6 @@ class IMPORTBIBTEX
                 $this->map,
                 $this->invalidFieldNames,
                 $this->strings,
-                'bibtex',
                 $this->formData
             );
             if ($error) {
@@ -571,7 +552,7 @@ class IMPORTBIBTEX
             $this->writeResourceCustomTable($custom);
             $this->import->writeResourcecategoryTable($this->formData["import_Categories"]);
             $this->import->writeResourceTimestampTable();
-            $this->import->writeImportrawTable($this->rejected, $this->bibtexStringId, FALSE, $this->formData);
+            $this->import->writeImportrawTable($this->rejected, $this->bibtexStringId, $this->formData);
             $this->import->writeUserbibliographyresourceTable($this->formData["import_BibId"]);
             $this->import->writeBibtexKey();
             $this->resourceAdded++;

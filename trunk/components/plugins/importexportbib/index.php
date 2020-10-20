@@ -198,10 +198,10 @@ class importexportbib_MODULE
         }
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTE.php"]));
         $endnote = new ENDNOTE($this);
-        $this->session->delVar("importLock");
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerEndnoteImport"));
-        $this->session->clearArray("import");
-        GLOBALS::addTplVar('content', $message . $endnote->displayImport());
+        $pString = $message ? $message : FALSE;
+        $pString .= HTML\p($this->pluginmessages->text('introEndnoteImport'));
+        $endnote->displayImport($pString);
     }
     /**
      * initPubMedImport

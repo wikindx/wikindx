@@ -10,12 +10,11 @@
 class ENDNOTE
 {
     private $coremessages;
-    private $pluginmessages;
     private $session;
     private $importCommon;
-    private $tag;
-    private $category;
     private $parentClass;
+    private $vars;
+    private $gatekeep;
 
     /**
      * Constructor
@@ -26,109 +25,24 @@ class ENDNOTE
     {
         $this->parentClass = $parentClass;
         $this->coremessages = FACTORY_MESSAGES::getInstance();
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
-        $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         $this->session = FACTORY_SESSION::getInstance();
-        $this->importCommon = FACTORY_IMPORT::getInstance();
-        $this->tag = FACTORY_TAG::getInstance();
-        $this->category = FACTORY_CATEGORY::getInstance();
-        $this->errors = FACTORY_ERRORS::getInstance();
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "import", "IMPORTCOMMON.php"]));
+        $this->importCommon = new IMPORTCOMMON();
+        $this->importCommon->importType = 'endnote';
+        $this->vars = GLOBALS::getVars();
+        $this->gatekeep = FACTORY_GATEKEEP::getInstance();
     }
     /**
      * dislay options for importing
      *
+     ' @param mixed $message
+     *
      * @return string
      */
-    public function displayImport()
+    public function displayImport($message = FALSE)
     {
-        $categories = $this->category->grabAll();
-        $pString = HTML\p($this->pluginmessages->text('introEndnoteImport'));
-        if (count($categories) > 1) {
-            $pString .= HTML\p($this->pluginmessages->text('categoryPrompt'));
-        }
-        $pString .= FORM\formMultiHeader("importexportbib_importEndnote");
-        $pString .= FORM\hidden('method', 'process');
-        $pString .= HTML\tableStart('generalTable borderStyleSolid left');
-        $pString .= HTML\trStart();
-        // Load tags
-        $tags = $this->tag->grabAll();
-        $tagInput = FORM\textInput($this->pluginmessages->text('tag'), "import_Tag", FALSE, 30, 255);
-        if ($tags) {
-            // add 0 => IGNORE to tags array
-            $temp[0] = $this->coremessages->text("misc", "ignore");
-            foreach ($tags as $key => $value) {
-                $temp[$key] = $value;
-            }
-            $tags = $temp;
-            $sessionTag = $this->session->issetVar("import_TagId") ? $this->session->getVar("import_TagId") : FALSE;
-            if ($sessionTag && array_key_exists($sessionTag, $tags)) {
-                $element = FORM\selectedBoxValue(FALSE, 'import_TagId', $tags, 5);
-            } else {
-                $element = FORM\selectFBoxValue(FALSE, 'import_TagId', $tags, 5);
-            }
-            $pString .= HTML\td($tagInput . '&nbsp;&nbsp;' . $element);
-        } else {
-            $pString .= HTML\td($tagInput);
-        }
-        $categoryTd = FALSE;
-        if (count($categories) > 1) {
-            if ($sessionCategories = $this->session->getVar("import_Categories")) {
-                $sCategories = \UTF8\mb_explode(",", $sessionCategories);
-                $element = FORM\selectedBoxValueMultiple(
-                    $this->pluginmessages->text('category'),
-                    'import_Categories',
-                    $categories,
-                    $sCategories,
-                    5
-                );
-            } else {
-                $element = FORM\selectFBoxValueMultiple(
-                    $this->pluginmessages->text('category'),
-                    'import_Categories',
-                    $categories,
-                    5
-                );
-            }
-            $pString .= HTML\td($element . BR .
-                HTML\span($this->coremessages->text("hint", "multiples"), 'hint'));
-            $categoryTd = TRUE;
-        }
-        if ($bibs = $this->importCommon->bibliographySelect()) {
-            $pString .= HTML\td($bibs . BR .
-                HTML\span($this->coremessages->text("hint", "multiples"), 'hint'), FALSE, "left", "bottom");
-        }
-        $pString .= HTML\td(FORM\fileUpload(
-            $this->coremessages->text("import", "file"),
-            "import_File",
-            30
-        ), FALSE, "left", "bottom");
-        $pString .= HTML\trEnd();
-        $pString .= HTML\trStart();
-        //		if($categoryTd)
-        //			$pString .= HTML\td("&nbsp;");
-        $pString .= HTML\trEnd();
-        $pString .= HTML\tableEnd();
-        $pString .= HTML\tableStart('generalTable borderStyleSolid left');
-        $pString .= HTML\trStart();
-        $checked = $this->session->issetVar("import_Quarantine") ? TRUE : FALSE;
-        $td = \HTML\p($this->coremessages->text("import", "quarantine") . "&nbsp;&nbsp;" .
-        	\FORM\checkbox(FALSE, "import_Quarantine"));
-        $checked = $this->session->getVar("import_ImportDuplicates") ? TRUE : FALSE;
-        $td .= HTML\p($this->pluginmessages->text('importDuplicates') . "&nbsp;&nbsp;" .
-            FORM\checkbox(FALSE, 'import_ImportDuplicates'), $checked);
-        $checked = $this->session->getVar("import_KeywordIgnore") ? TRUE : FALSE;
-        $td .= HTML\p($this->pluginmessages->text('importKeywordIgnore') . "&nbsp;&nbsp;" .
-            FORM\checkbox(FALSE, 'import_KeywordIgnore', $checked));
-        $pString .= HTML\td($td);
-        //		$pString .= HTML\td($this->pluginmessages->text('storeRawEndnoteImport') . "&nbsp;&nbsp;" .
-        //			FORM\checkbox(FALSE, 'import_Raw'));
-        $pString .= HTML\td($this->importCommon->titleSubtitleSeparator());
-        $pString .= HTML\trEnd();
-        $pString .= HTML\tableEnd();
-        $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")), FALSE, "right");
-        $pString .= FORM\formEnd();
-
-        return $pString;
+        $this->gatekeep->init();
+        $this->importCommon->display($message);
     }
     /**
      * Display options for exporting

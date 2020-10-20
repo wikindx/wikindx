@@ -17,6 +17,7 @@ class ENDNOTEIMPORT
     private $vars;
     private $session;
     private $parentClass;
+    private $badInput;
     private $tag;
     private $map;
     private $date;
@@ -53,6 +54,7 @@ class ENDNOTEIMPORT
     private $garbageFiles = [];
     private $rIds = [];
     private $errorMessage = FALSE;
+    private $formData = [];
 
     /**
      * Constructor
@@ -65,6 +67,7 @@ class ENDNOTEIMPORT
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
+        $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->tag = FACTORY_TAG::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
@@ -77,34 +80,27 @@ class ENDNOTEIMPORT
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTECREATORPARSE.php"]));
         $this->parseCreator = new ENDNOTECREATORPARSE();
         $this->pages = FACTORY_BIBTEXPAGEPARSE::getInstance();
-        $this->common = FACTORY_IMPORT::getInstance();
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "import", "IMPORTCOMMON.php"]));
+        $this->common = new IMPORTCOMMON();
+        $this->common->importType = 'endnote';
         $this->creators = ['creator1', 'creator2', 'creator3', 'creator4', 'creator5'];
         $this->oldTime = time();
         $this->dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
+        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerEndnoteImport"));
     }
     /**
      * start the process
-     *
-     * @param string $message - optional error message
-     *
-     * @return string
      */
-    public function process($message = FALSE)
+    public function process()
     {
-        // if session variable 'importLock' is TRUE, user is simply reloading this form
-        if ($this->session->getVar("importLock")) {
-            $this->badInput(HTML\p($this->pluginmessages->text('fileImport'), 'error'));
-        }
         $this->fileName = $this->gatherStage1();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTEPARSEXML.php"]));
         $parse = new ENDNOTEPARSEXML();
         $entries = $parse->extractEntries($this->fileName);
         if (!$parse->version8) {
-            GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text('importEndnoteNotv8'), 'error'));
-            FACTORY_CLOSE::getInstance();
+            $this->badInput(HTML\p($this->pluginmessages->text('importEndnoteNotv8'), 'error'));
         }
         if (empty($entries)) {
-            $this->session->setVar("importLock", TRUE);
             $this->badInput(HTML\p($this->pluginmessages->text('empty'), 'error'));
         }
         $this->version8 = $parse->version8;
@@ -119,97 +115,83 @@ class ENDNOTEIMPORT
             }
         }
         if (empty($this->entries)) {
-            $this->session->setVar("importLock", TRUE);
             $this->badInput(HTML\p($this->pluginmessages->text('empty'), 'error'));
         }
-        if ($fields = $this->findInvalidFields($entries)) {
-            @unlink($this->fileName); // remove garbage - ignore errors
-            GLOBALS::addTplVar('content', $fields);
-
-            return;
-        }
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerEndnoteImport"));
+        $this->formData['import_Rejects'] = $this->rejects;
+        $this->findInvalidFields($entries);
         $this->entriesLeft = $this->entries;
         $finalInput = $this->writeDb();
         $this->common->collectionDefaults();
-        $pString = $this->cleanUp($finalInput);
-        GLOBALS::addTplVar('content', $pString);
+        $this->cleanUp($finalInput);
     }
     /**
      * stage2Invalid - following on from invalid fields having been found
-     *
-     * @param string $message - optional error message
      */
     public function stage2Invalid()
     {
-        // if session variable 'importLock' is TRUE, user is simply reloading this form
-        if ($this->session->getVar("importLock")) {
-            $this->badInput($this->errors->text("done", "fileImport"));
+        $this->formData = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
+        $this->rejects = $this->formData['import_Rejects'];
+        \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+        if (!is_file($this->formData["import_FileNameEntries"])) {
+            $this->badInput->close($this->errors->text("file", "read", implode(DIRECTORY_SEPARATOR, [$this->dirName,
+            $this->formData["import_FileNameEntries"]])), $this->badClass, $this->badFunction);
         }
-        if (!is_file($this->session->getVar("import_FileNameEntries"))) {
-            $this->badInput($this->errors->text("file", "read", implode(DIRECTORY_SEPARATOR, [$this->dirName, $this->session->getVar("import_FileNameEntries")])));
-        }
-        $this->fileName = fopen($this->session->getVar("import_FileNameEntries"), 'r');
-        $this->garbageFiles[$this->session->getVar("import_FileNameEntries")] = FALSE;
-        if (!feof($this->fileName)) {
-            $this->entries = unserialize(base64_decode(trim(fgets($this->fileName))));
-        }
-        fclose($this->fileName);
-        if ($this->session->issetVar("import_Rejects")) {
-            $this->rejects = $this->session->getVar("import_Rejects");
-        } else {
-            $this->rejects = [];
+        $this->garbageFiles[$this->formData["import_FileNameEntries"]] = FALSE;
+        if ($this->fileName = fopen($this->formData["import_FileNameEntries"], 'r')) {
+            if (!feof($this->fileName)) {
+                $this->entries = unserialize(base64_decode(trim(fgets($this->fileName))));
+            }
+            fclose($this->fileName);
         }
         if (empty($this->entries)) {
-            $this->session->setVar("importLock", TRUE);
             $this->badInput($this->errors->text("import", "empty"));
         }
-        list($error, $this->customFields, $this->unrecognisedFields) = $this->common->getUnrecognisedFields();
+        list($error, $this->customFields, $this->unrecognisedFields) = $this->common->getUnrecognisedFields($this->formData);
         if ($error) {
             $this->badInput($error);
         }
         // NB - we need to write data to database as UTF-8 and parse all bibTeX values for laTeX code
         $this->entriesLeft = $this->entries;
         $finalInput = $this->writeDb();
-        $pString = $this->errorMessage ? $this->errorMessage : '';
-        $pString .= $this->cleanUp($finalInput);
-        GLOBALS::addTplVar('content', $pString);
+        $this->cleanUp($finalInput);
     }
     /**
      * Continue an import
      */
     public function continueImport()
     {
-        // Restore session
-        if ($this->session->issetVar("import_RejectTitles")) {
-            $this->rejectTitles = $this->session->getVar("import_RejectTitles");
-        } else {
-            $this->rejectTitles = [];
-        }
-        if ($this->session->issetVar("import_ResourceIds")) {
-            $this->rIds = $this->session->getVar("import_ResourceIds");
-        } else {
-            $this->rIds = [];
-        }
+		$data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
+        if (array_key_exists("import_RejectTitles", $data)) {
+       		$this->rejectTitles = $data["import_RejectTitles"];
+       	}
+        if (array_key_exists("import_Rejects", $data)) {
+       		$this->rejects = $data["import_Rejects"];
+       	}
+        $this->rIds = $data["import_ResourceIds"];
         // Number added so far
-        $this->resourceAdded = $this->session->getVar("import_ResourceAdded");
+        $this->resourceAdded = $data["import_ResourceAdded"];
         // Number discarded so far
-        $this->resourceDiscarded = $this->session->getVar("import_ResourceDiscarded");
+        $this->resourceDiscarded = $data["import_ResourceDiscarded"];
         // tag ID
-        if ($this->session->issetVar("import_TagID")) {
-            $this->tagId = $this->session->getVar("import_TagID");
+        if (array_key_exists("import_TagId", $data)) {
+            $this->tagId = $data["import_TagId"];
         }
-        $this->entriesLeft = $this->entries = $this->session->getVar("import_Entries");
-        $this->garbageFiles = $this->session->getVar("import_GarbageFiles");
-        if ($this->session->issetVar("import_UnrecognisedFields")) {
-            $this->unrecognisedFields = $this->session->getVar("import_UnrecognisedFields");
-            $this->customFields = $this->session->getVar("import_CustomFields");
-            $this->vars = $this->session->getVar("import_ThisVars");
+        // bibtexString ID
+        if (array_key_exists("import_BibtexStringId", $data)) {
+            $this->bibtexStringId = $data["import_BibtexStringId"];
         }
+        $this->entriesLeft = $this->entries = $data["import_Entries"];
+        $this->garbageFiles = $data["import_GarbageFiles"];
+        if (array_key_exists("import_UnrecognisedFields", $data)) {
+            $this->unrecognisedFields = $data["import_UnrecognisedFields"];
+			if (array_key_exists("import_CustomFields", $data)) {
+				$this->customFields = $data["import_CustomFields"];
+            }
+        }
+		\TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+        $this->vars = $data["import_ThisVars"];
         $finalInput = $this->writeDb(TRUE);
-        $pString = $this->errorMessage ? $this->errorMessage : '';
-        $pString .= $this->cleanUp($finalInput);
-        GLOBALS::addTplVar('content', $pString);
+        $this->cleanUp($finalInput);
     }
     /**
      * find unrecognised field names
@@ -233,22 +215,24 @@ class ENDNOTEIMPORT
                 }
             }
         }
-        if (!empty($this->rejects)) {
-            $this->session->setVar("import_Rejects", $this->rejects);
-        }
-        if (!empty($this->invalidFieldNames)) { // prompt to map field names
-            list($error, $string) = $this->common->promptFieldNames(
+        // Can only map to custom fields – check there are some. . .
+		$recordset = $this->db->select('custom', ['customId', 'customLabel']);
+        if (!empty($this->invalidFieldNames) && $this->db->numRows($recordset)) { // prompt to map field names
+            list($error, $pString, $uuid) = $this->common->promptFieldNames(
                 $this->entries,
                 $this->inputTypes,
                 $this->map,
                 $this->invalidFieldNames,
                 FALSE,
-                'endnote'
+                $this->formData
             );
             if ($error) {
                 $this->badInput($error);
             } else {
-                return $string;
+            	@unlink($this->fileName); // remove garbage - ignore errors
+            	\TEMPSTORAGE\merge($this->db, $uuid, ['form' => $pString, 'heading' => $this->pluginmessages->text("headerEndnoteImport")]);
+				header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importInvalidFields&uuid=$uuid");
+				die;
             }
         }
 
@@ -258,8 +242,6 @@ class ENDNOTEIMPORT
      * Garbage clean up and intermediate session saving when importing in chunks
      *
      * @param mixed $finalInput
-     *
-     * @return string
      */
     private function cleanUp($finalInput)
     {
@@ -267,62 +249,51 @@ class ENDNOTEIMPORT
         $recordset = $this->db->select('database_summary', 'databasesummaryTotalResources');
         $totalResources = $this->db->fetchOne($recordset) + $this->resourceAddedThisRound;
         $this->db->update('database_summary', ['databasesummaryTotalResources' => $totalResources]);
+        $uuid = \TEMPSTORAGE\getUuid($this->db);
         if ($finalInput) {
-            $rCommon = FACTORY_RESOURCECOMMON::getInstance();
-            $listCommon = FACTORY_LISTCOMMON::getInstance();
-            $this->deleteCaches();
-            $this->common->tidyTables();
-            foreach ($this->garbageFiles as $fileName => $null) {
-                unlink($fileName); // remove garbage
-            }
-            $pString = HTML\p($this->pluginmessages->text("importEndnoteSuccess"), 'success');
-            $pString .= HTML\p($this->coremessages->text("import", "added", " " . $this->resourceAdded));
-            $pString .= $this->common->printDuplicates($this->resourceDiscarded, $this->rejectTitles);
-            $pString .= HTML\hr();
-            if (!empty($this->rIds) && (count($this->rIds) <= 50)) {
-                $sql = $rCommon->getResource($this->rIds, FALSE, FALSE, FALSE, FALSE, TRUE);
-                $listCommon->display($sql, 'list');
-            }
-            $this->session->delVar("sql_LastMulti");
-            $this->session->setVar("importLock", TRUE);
-            if ($this->resourceAdded) {
-                include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "email", "EMAIL.php"]));
-                $email = new EMAIL();
-                $email->notify(FALSE, TRUE);
-            }
+	        \TEMPSTORAGE\store($this->db, $uuid, 
+	        	['rIds' => $this->rIds, 'resourceAdded' => $this->resourceAdded, 'garbageFiles' => $this->garbageFiles, 
+	        	'resourceDiscarded' => $this->resourceDiscarded, 'rejectTitles' => $this->rejectTitles, 'rejects' => $this->rejects, 
+	        	'deleteCacheCreators' => $this->deleteCacheCreators, 'deleteCachePublishers' => $this->deleteCachePublishers, 
+	        	'deleteCacheCollections' => $this->deleteCacheCollections, 'deleteCacheKeywords' => $this->deleteCacheKeywords]);
+	        $message = rawurlencode(HTML\p($this->pluginmessages->text("importEndnoteSuccess"), 'success'));
+			header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importSuccess&message=$message&uuid=$uuid");
+			die;
         } else {
-            // Store temporary session variables
             // Number added
-            $this->session->setVar("import_ResourceAdded", $this->resourceAdded);
+            $tsArray["import_ResourceAdded"] = $this->resourceAdded;
             // Number of rejects
-            $this->session->setVar("import_ResourceDiscarded", $this->resourceDiscarded);
+            $tsArray["import_ResourceDiscarded"] = $this->resourceDiscarded;
             // tag ID
-            if ($this->tagId) {
-                $this->session->setVar("import_TagID", $this->tagId);
+            if (isset($this->tagId)) {
+                $tsArray["import_TagId"] = $this->tagId;
             }
             // bibtexString ID
-            if ($this->bibtexStringId) {
-                $this->session->setVar("import_BibtexStringID", $this->bibtexStringId);
+            if (isset($this->bibtexStringId)) {
+                $tsArray["import_BibtexStringId"] =  $this->bibtexStringId;
             }
             // Resource IDs
-            $this->session->setVar("import_ResourceIds", $this->rIds);
+            $tsArray["import_ResourceIds"] = $this->rIds;
             // Remaining entries
-            $this->session->setVar("import_Entries", $this->entriesLeft);
+            $tsArray["import_Entries"] = $this->entriesLeft;
             // Rejected titles
             if (!empty($this->rejectTitles)) {
-                $this->session->setVar("import_RejectTitles", $this->rejectTitles);
+                $tsArray["import_RejectTitles"] = $this->rejectTitles;
+            }
+            // Rejected titles
+            if (!empty($this->rejects)) {
+                $tsArray["import_Rejects"] = $this->rejects;
             }
             // garbage files
-            $this->session->setVar("import_GarbageFiles", $this->garbageFiles);
+            $tsArray["import_GarbageFiles"] = $this->garbageFiles;
             // Unrecognised field mapping
             if (isset($this->unrecognisedFields)) {
-                $this->session->setVar("import_UnrecognisedFields", $this->unrecognisedFields);
+                $tsArray["import_UnrecognisedFields"] = $this->unrecognisedFields;
                 // Custom field mapping
                 if (isset($this->customFields)) {
-                    $this->session->setVar("import_CustomFields", $this->customFields);
+                    $tsArray["import_CustomFields"] = $this->customFields;
                 }
-                // $this->vars
-                $this->session->setVar("import_ThisVars", $this->vars);
+                $tsArray["import_ThisVars"] = $this->vars;
             }
             $remainder = count($this->entriesLeft);
             $pString = HTML\p($this->coremessages->text(
@@ -334,44 +305,15 @@ class ENDNOTEIMPORT
                 $this->resourceAddedThisRound));
             $pString .= HTML\p("$remainder entries remaining.");
             $pString .= FORM\formHeader("importexportbib_importEndnote");
-            $pString .= FORM\hidden('method', 'continueImport');
+            $pString .= \FORM\hidden('method', 'continueImport');
+            $pString .= \FORM\hidden('uuid', $uuid);
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Continue")));
             $pString .= FORM\formEnd();
-        }
-
-        return $pString;
-    }
-    /**
-     * Delete caches if required.  Must be deleted if various creators, publishers etc. have been added with this import
-     */
-    private function deleteCaches()
-    {
-        if ($this->deleteCacheCreators) {
-            // remove cache files for creators
-            $this->db->deleteCache('cacheResourceCreators');
-            $this->db->deleteCache('cacheMetadataCreators');
-        }
-        if ($this->deleteCachePublishers) {
-            // remove cache files for publishers
-            $this->db->deleteCache('cacheResourcePublishers');
-            $this->db->deleteCache('cacheMetadataPublishers');
-            $this->db->deleteCache('cacheConferenceOrganisers');
-        }
-        if ($this->deleteCacheCollections) {
-            // remove cache files for collections
-            $this->db->deleteCache('cacheResourceCollections');
-            $this->db->deleteCache('cacheMetadataCollections');
-            $this->db->deleteCache('cacheResourceCollectionTitles');
-            $this->db->deleteCache('cacheResourceCollectionShorts');
-        }
-        if ($this->deleteCacheKeywords) {
-            // remove cache files for keywords
-            $this->db->deleteCache('cacheResourceKeywords');
-            $this->db->deleteCache('cacheMetadataKeywords');
-            $this->db->deleteCache('cacheQuoteKeywords');
-            $this->db->deleteCache('cacheParaphraseKeywords');
-            $this->db->deleteCache('cacheMusingKeywords');
-            $this->db->deleteCache('cacheKeywords');
+            $tsArray['heading'] = $this->pluginmessages->text("headerEndnoteImport");
+            $tsArray['form'] = $pString;
+	        \TEMPSTORAGE\store($this->db, $uuid, $tsArray);
+			header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importContinue&uuid=$uuid");
+			die;
         }
     }
     /**
@@ -397,6 +339,12 @@ class ENDNOTEIMPORT
      */
     private function writeDb($continue = FALSE)
     {
+        if (array_key_exists('import_Quarantine', $this->formData)) {
+        	$this->import->quarantine = TRUE;
+        }
+        if (array_key_exists('import_KeywordIgnore', $this->formData)) {
+        	$this->import->kwIgnore = TRUE;
+        }
         $tagWritten = FALSE;
         if (!$continue) {
             $this->tagId = FALSE;
@@ -416,8 +364,8 @@ class ENDNOTEIMPORT
                 $this->entry['resource_year']['resourceyearYear2'] = $this->entry['resource_year']['resourceyearYear1'];
                 $this->entry['resource_year']['resourceyearYear1'] = $year2;
             }
-            list($noSort, $title, $subtitle) = $this->common->splitTitle($this->entry['title']);
-            if ($this->common->checkDuplicates($noSort, $title, $subtitle, $this->entry['type'])
+            list($noSort, $title, $subtitle) = $this->common->splitTitle($this->entry['title'], $this->formData);
+            if ($this->common->checkDuplicates($noSort, $title, $subtitle, $this->entry['type'], $this->formData)
             ||
             (array_search($this->entry['type'], WIKINDX_DEACTIVATE_RESOURCE_TYPES) !== FALSE)) {
                 $rejectTitle = $this->entry['title'] . ".";
@@ -437,7 +385,7 @@ class ENDNOTEIMPORT
             // endnote entries are duplicates - we don't want an empty tag in the WKX_tag table.
             if (!$continue) {
                 if (!$tagWritten) {
-                    $this->tagId = $this->common->writeTagTable();
+                    $this->tagId = $this->common->writeTagTable($this->formData);
                     $tagWritten = TRUE;
                 }
             }
@@ -447,6 +395,7 @@ class ENDNOTEIMPORT
                     $creatorRoleString = implode(" and ", $creatorRoleArray);
                     $creators[$creatorRole] = $this->parseCreator->parse($creatorRoleString);
                 }
+				$this->deleteCacheCreators = TRUE;
             } else {
                 $creators = [];
             }
@@ -460,11 +409,10 @@ class ENDNOTEIMPORT
             if (!empty($custom)) {
                 $this->writeResourceCustomTable($custom);
             }
-            $this->writeResourceCategoryTable();
+            $this->common->writeResourceCategoryTable($this->formData["import_Categories"]);
             $this->writeResourceTextTable();
             $this->common->writeResourceTimestampTable();
-            $this->writeImportRawTable();
-            $this->common->writeUserbibliographyresourceTable($this->session->getVar("import_BibId"));
+            $this->common->writeUserbibliographyresourceTable($this->formData["import_BibId"]);
             $this->common->writeBibtexKey();
             $this->resourceAdded++;
             $this->resourceAddedThisRound++;
@@ -629,6 +577,7 @@ class ENDNOTEIMPORT
             return;
         }
         $this->collectionId = $this->common->writeCollectionTable($title, $short, $this->entry['type']);
+        $this->deleteCacheCollections = TRUE;
     }
     /**
      * writePublisherTable - write WKX_publisher table
@@ -649,6 +598,7 @@ class ENDNOTEIMPORT
             return;
         }
         $this->publisherId = $this->common->writePublisherTable($publisherName, $publisherLocation, $this->entry['type']);
+        $this->deleteCachePublishers = TRUE;
     }
     /**
      * writeResourceMiscTable - write WKX_resource_misc table
@@ -736,36 +686,8 @@ class ENDNOTEIMPORT
     {
         if (array_key_exists('keywords', $this->entry)) {
             $this->common->writeKeywordTables($this->entry['keywords']);
+            $this->deleteCacheKeywords = TRUE;
         }
-    }
-    /**
-     * writeResourceCategoryTable - write WKX_resource_category table
-     */
-    private function writeResourceCategoryTable()
-    {
-        if (!$categories = $this->session->getVar("import_Categories")) {
-            $categories = 1; // force to 'General' category
-        }
-        $this->common->writeResourcecategoryTable($categories);
-    }
-    /**
-     * writeImportRawTable - write WKX_import_raw table
-     */
-    private function writeImportRawTable()
-    {
-        if (empty($this->reject) || !$this->session->getVar("import_Raw")) {
-            return;
-        }
-        $rejected = [];
-        foreach ($this->reject as $key => $value) {
-            if (($key == 'source-app') || ($key == 'ref-type')) {
-                continue;
-            }
-            if (array_key_exists($key, $this->endnoteXmlFields)) {
-                $rejected[$this->endnoteXmlFields[$key]] = $value;
-            }
-        }
-        $this->common->writeImportrawTable($rejected, FALSE, 'endnote');
     }
     /**
      * writeResourceCustomTable - write WKX_resource_custom table
@@ -818,83 +740,64 @@ class ENDNOTEIMPORT
     /**
      * gatherStage1 - gather input from stage 1 and return a fullpath filename for parsing.
      *
+     * If $this->type == 'paste', this is a user cut 'n' pasting bibtex entries in a textarea box. We write the input to a
+     * temporary file.
+     *
      * @return string
      */
     private function gatherStage1()
     {
+    	$error = '';
         // a multiple select box so handle as array
-        if (isset($this->vars['import_Categories']) && $this->vars['import_Categories']) {
-            if (!$this->session->setVar("import_Categories", trim(implode(',', $this->vars['import_Categories'])))) {
-                $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
+        if (array_key_exists('import_Categories', $this->vars) && $this->vars['import_Categories']) {
+            $this->formData["import_Categories"] = $this->vars['import_Categories'];
+        } else { // force to 'General'
+        	$this->formData["import_Categories"] = [1];
+        }
+        // a multiple select box so handle as array
+        if (array_key_exists('import_BibId', $this->vars) && $this->vars['import_BibId']) {
+            $this->formData["import_BibId"] = $this->vars['import_BibId'];
+        }
+        if (array_key_exists('import_KeywordIgnore', $this->vars)) {
+        	$this->formData["import_KeywordIgnore"] = $this->vars['import_KeywordIgnore'];
+        }
+        if (array_key_exists('import_ImportDuplicates', $this->vars)) {
+        	$this->formData["import_ImportDuplicates"] = $this->vars['import_ImportDuplicates'];
+        }
+        if (array_key_exists('import_Quarantine', $this->vars)) {
+        	$this->formData["import_Quarantine"] = $this->vars['import_Quarantine'];
+        }
+        $this->formData["import_TitleSubtitleSeparator"] = $this->vars['import_TitleSubtitleSeparator'];
+        if (!array_key_exists("import_UnrecognisedFields", $this->formData)) {
+			if (!isset($_FILES['import_File'])) {
+				if ($file = $this->session->getVar("import_File")) {
+					return implode(DIRECTORY_SEPARATOR, [$this->dirName, $file]);
+				} else {
+					$error = $this->errors->text("file", "upload");
+				}
+			}
+			// Check for file input
+			$fileName = \UTILS\uuid();
+			if (!move_uploaded_file($_FILES['import_File']['tmp_name'], implode(DIRECTORY_SEPARATOR, [$this->dirName, $fileName]))) {
+				$error = $this->errors->text("file", "upload");
+			}
+            $this->formData['import_File'] = $fileName;
+            if ($this->vars['import_Tag']) {
+                if ($tagId = $this->tag->checkExists(\UTF8\mb_trim($this->vars['import_Tag']))) { // Existing tag found
+               		$this->formData['import_TagId'] = $tagId;
+                } else {
+            		$this->formData['import_Tag'] = \UTF8\mb_trim($this->vars['import_Tag']);
+            	}
+            } elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId']) {
+            	$this->formData['import_TagId'] = $this->vars['import_TagId'];
             }
-        }
-        // bib_Ids is a multiple select box so handle as array
-        if (isset($this->vars['import_BibId']) && $this->vars['import_BibId']) {
-            if (!$this->session->setVar("import_BibId", trim(implode(',', $this->vars['import_BibId'])))) {
-                $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
+            $this->garbageFiles[implode(DIRECTORY_SEPARATOR, [$this->dirName, $fileName])] = FALSE;
+            if ($error) {
+                $this->badInput($error);
             }
-        }
-        if (isset($this->vars['import_Raw']) && $this->vars['import_Raw']) {
-            if (!$this->session->setVar("import_Raw", 1)) {
-                $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
-            }
-        }
-        if (!$this->session->setVar("import_TitleSubtitleSeparator", $this->vars['import_TitleSubtitleSeparator'])) {
-            $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
-        }
-        if (isset($this->vars['import_Quarantine']) && $this->vars['import_Quarantine']) {
-            if (!$this->session->setVar("import_Quarantine", 1)) {
-                $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
-            }
-        }
-        if (isset($this->vars['import_ImportDuplicates']) && $this->vars['import_ImportDuplicates']) {
-            if (!$this->session->setVar("import_ImportDuplicates", 1)) {
-                $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
-            }
-        }
-        if (isset($this->vars['import_KeywordIgnore']) && $this->vars['import_KeywordIgnore']) {
-            if (!$this->session->setVar("import_KeywordIgnore", 1)) {
-                $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
-            }
-        }
-        // Force to 1 => 'General' group
-        if (!$this->session->getVar("import_Categories")) {
-            if (!$this->session->setVar("import_Categories", 1)) {
-                $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
-            }
-        }
-        if (!isset($_FILES['import_File'])) {
-            if ($file = $this->session->getVar("import_File")) {
-                return implode(DIRECTORY_SEPARATOR, [$this->dirName, $file]);
-            } else {
-                $this->badInput(HTML\p($this->pluginmessages->text('upload'), 'error'));
-            }
-        }
-        // Check for file input
-        $fileName = \UTILS\uuid();
-        if (!move_uploaded_file($_FILES['import_File']['tmp_name'], implode(DIRECTORY_SEPARATOR, [$this->dirName, $fileName]))) {
-            $this->badInput(HTML\p($this->pluginmessages->text('upload'), 'error'));
-        }
-        if (!$this->session->setVar("import_file", $_FILES['import_File']['name'])) {
-            $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
-        }
-        if ($this->vars['import_Tag']) {
-            if (!$tagId = $this->tag->checkExists($this->vars['import_Tag'])) {
-                if (!$this->session->setVar("import_Tag", $this->vars['import_Tag'])) {
-                    $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
-                }
-            } else {
-                if (!$this->session->setVar("import_TagId", $tagId)) {
-                    $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
-                }
-            }
-        } elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId']) {
-            if (!$this->session->setVar("import_TagId", $this->vars['import_TagId'])) {
-                $this->badInput(HTML\p($this->errors->text("sessionError", "write"), 'error'));
-            }
-        }
 
-        return implode(DIRECTORY_SEPARATOR, [$this->dirName, $fileName]);
+            return implode(DIRECTORY_SEPARATOR, [$this->dirName, $fileName]);
+        }
     }
     /**
      * ConvertEntries - convert values to UTF-8 ready for storing in the database, tidy up the array presentation
@@ -1157,8 +1060,8 @@ class ENDNOTEIMPORT
      */
     private function badInput($error)
     {
-        echo $error;
-        $this->parentClass->initEndnoteImport($error);
-        FACTORY_CLOSE::getInstance();
+		$this->badInput->close($this->errors->text("inputError", "invalid"), $this->common, ['display', $this->formData]);
+//        $this->parentClass->initEndnoteImport($error);
+//        FACTORY_CLOSE::getInstance();
     }
 }

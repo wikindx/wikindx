@@ -41,10 +41,14 @@ class IMPORTCOMMON
     private $publisherMap;
     /** object */
     private $bibConfig;
+    /** object */
+    private $tag;
     /** bool */
     public $kwIgnore = FALSE;
     /** bool */
     public $quarantine = FALSE;
+    /** string */
+    public $importType = 'bibtex';
 
     /**
      *	IMPORTCOMMON
@@ -56,6 +60,7 @@ class IMPORTCOMMON
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
+        $this->tag = FACTORY_TAG::getInstance();
         $this->creator = FACTORY_CREATOR::getInstance();
         $this->keyword = FACTORY_KEYWORD::getInstance();
         $this->collection = FACTORY_COLLECTION::getInstance();
@@ -69,6 +74,128 @@ class IMPORTCOMMON
         while ($row = $this->db->fetchRow($recordset)) {
             $this->bibtexKeys[] = $row['resourceBibtexKey'];
         }
+    }
+    /**
+     * Display form for importing bibliographies
+     *
+     * @param mixed $message
+     */
+    public function display($message = FALSE)
+    {
+        $formData = [];
+        if (is_array($message)) {
+            $formData = $message[1]; // For some reason, this need to be taken first . . .
+            $message = $message[0];
+        } elseif (array_key_exists('message', $this->vars)) {
+        	$message = $this->vars['message'];
+        }
+        $pString = $message;
+        if ($this->importType == 'bibtex') {
+        	GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexImport"));
+	        $pString .= \HTML\p($this->messages->text("import", "bibtexImport"));
+	    } elseif ($this->importType == 'pasteBibtex') {
+			include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
+			$help = new HELPMESSAGES();
+			GLOBALS::setTplVar('help', $help->createLink('pasteBibtex'));
+			GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexPaste"));
+	    }
+        $category = FACTORY_CATEGORY::getInstance();
+        $categories = $category->grabAll();
+        if (count($categories) > 1) {
+            $pString .= \HTML\p($this->messages->text("import", "categoryPrompt"));
+        }
+        if ($this->importType == 'endnote') {
+        	$pString .= FORM\formMultiHeader("importexportbib_importEndnote");
+        	$pString .= FORM\hidden('method', 'process');
+        }
+        else {
+			$pString .= \FORM\formMultiHeader("import_IMPORTBIBTEX_CORE");
+			$pString .= \FORM\hidden('method', 'stage1');
+		}
+        if ($this->importType == 'pasteBibtex') {
+	        $pString .= \FORM\hidden('type', 'paste');
+	    } else {
+	        $pString .= \FORM\hidden('type', 'file');
+        }
+        $pString .= \HTML\tableStart('generalTable borderSpacingMedium');
+        $pString .= \HTML\trStart();
+        if ($this->importType == 'pasteBibtex') {
+			$paste = array_key_exists("import_Paste", $formData) ? base64_decode($formData["import_Paste"]) : FALSE;
+			$pString .= \HTML\td(\FORM\textareaInput(
+				$this->messages->text("import", "pasteBibtex2"),
+				"import_Paste",
+				$paste,
+				80,
+				20
+			));
+        }
+        else {
+			$pString .= \HTML\td(\FORM\fileUpload(
+				$this->messages->text("import", "file"),
+				"import_File",
+				30
+			));
+			// Load tags
+			$tags = $this->tag->grabAll();
+			$field = array_key_exists('import_Tag', $formData) ? $formData['import_Tag'] : FALSE;
+			$tagInput = \FORM\textInput($this->messages->text("import", "tag"), "import_Tag", $field, 30, 255);
+			if ($tags) {
+				// add 0 => IGNORE to tags array
+				$temp[0] = $this->messages->text("misc", "ignore");
+				foreach ($tags as $key => $value) {
+					$temp[$key] = $value;
+				}
+				$tags = $temp;
+				if (array_key_exists("import_TagId", $formData)) {
+					$element = \FORM\selectedBoxValue(FALSE, 'import_TagId', $tags, $formData['import_TagId'], 5);
+				} else {
+					$element = \FORM\selectFBoxValue(FALSE, 'import_TagId', $tags, 5);
+				}
+				$pString .= \HTML\td($tagInput . '&nbsp;&nbsp;' . $element);
+			} else {
+				$pString .= \HTML\td($tagInput);
+			}
+        }
+        $categoryTd = FALSE;
+        if (count($categories) > 1) {
+        	$cats = $this->categorySelect($categories, $formData);
+            $pString .= \HTML\td($cats . BR .
+                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint'));
+            $categoryTd = TRUE;
+        }
+        if ($bibs = $this->bibliographySelect($formData)) {
+            $pString .= \HTML\td($bibs . BR .
+                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "multiples")), 'hint'));
+        }
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\tableEnd();
+        $pString .= BR . "&nbsp;" . BR;
+        $pString .= \HTML\tableStart('generalTable borderSpacingMedium');
+        $pString .= \HTML\trStart();
+        $td = '';
+        if (WIKINDX_QUARANTINE && $this->session->getVar("setup_Superadmin") == 1) {
+			$field = array_key_exists("import_Quarantine", $formData) ? TRUE : FALSE;
+			$td .= $this->messages->text("import", "quarantine") . "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "import_Quarantine", $field);
+		}
+        $field = array_key_exists("import_ImportDuplicates", $formData) ? TRUE : FALSE;
+        $td .= \HTML\p($this->messages->text("import", "importDuplicates") . 
+        	"&nbsp;&nbsp;" . \FORM\checkbox(FALSE, 'import_ImportDuplicates', $field));
+        if ($this->importType != 'endnote') {
+	        $field = array_key_exists("import_Raw", $formData) ? TRUE : FALSE;
+	        $td .= \HTML\p($this->messages->text("import", "storeRawLabel") . "&nbsp;&nbsp;" .
+	            \FORM\checkbox(FALSE, 'import_Raw', $field) . BR .
+	                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+	            	$this->messages->text("hint", "storeRawBibtex")), 'hint'));
+        }
+        $pString .= \HTML\td($td);
+        $pString .= \HTML\td($this->keywordSeparator($formData));
+        $pString .= \HTML\td($this->titleSubtitleSeparator($formData));
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\tableEnd();
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Submit")));
+        GLOBALS::addTplVar('content', $pString);
     }
     /**
      * Print details of successful import and do some tidying up
@@ -308,29 +435,32 @@ class IMPORTCOMMON
      */
     public function keywordSeparator($formData = [])
     {
-        $sessVar = is_array($formData) && array_key_exists("import_KeywordSeparator", $formData) ?
-            $formData["import_KeywordSeparator"] : FALSE;
-        $array = [
-            $this->messages->text('misc', 'keywordImport1'),
-            $this->messages->text('misc', 'keywordImport2'),
-            $this->messages->text('misc', 'keywordImport3'),
-            $this->messages->text('misc', 'keywordImport4'),
-        ];
-        if ($sessVar !== FALSE) {
-            $pString = \FORM\selectedBoxValue(
-                $this->messages->text('misc', 'keywordImport'),
-                'import_KeywordSeparator',
-                $array,
-                $sessVar,
-                4
-            );
-        } else {
-            $pString = \FORM\selectFBoxValue(
-                $this->messages->text('misc', 'keywordImport'),
-                'import_KeywordSeparator',
-                $array,
-                4
-            );
+    	$pString = '';
+    	if ($this->importType != 'endnote') {
+			$sessVar = is_array($formData) && array_key_exists("import_KeywordSeparator", $formData) ?
+				$formData["import_KeywordSeparator"] : FALSE;
+			$array = [
+				$this->messages->text('misc', 'keywordImport1'),
+				$this->messages->text('misc', 'keywordImport2'),
+				$this->messages->text('misc', 'keywordImport3'),
+				$this->messages->text('misc', 'keywordImport4'),
+			];
+			if ($sessVar !== FALSE) {
+				$pString .= \FORM\selectedBoxValue(
+					$this->messages->text('misc', 'keywordImport'),
+					'import_KeywordSeparator',
+					$array,
+					$sessVar,
+					4
+				);
+			} else {
+				$pString .= \FORM\selectFBoxValue(
+					$this->messages->text('misc', 'keywordImport'),
+					'import_KeywordSeparator',
+					$array,
+					4
+				);
+			}
         }
         $sessVar = is_array($formData) && array_key_exists("import_KeywordIgnore", $formData) ? TRUE : FALSE;
 
@@ -739,16 +869,12 @@ class IMPORTCOMMON
      *
      * @param array $rejectedArray Rejected input values for this resource
      * @param int $bibtexStringId ID of the BibTeX string in the bibtex_string table. Default is FALSE
-     * @param string $importType Default is FALSE
      * @param array $formData
      */
-    public function writeImportrawTable($rejectedArray, $bibtexStringId = FALSE, $importType = FALSE, $formData = [])
+    public function writeImportrawTable($rejectedArray, $bibtexStringId = FALSE, $formData = [])
     {
         if (empty($rejectedArray) || !array_key_exists("import_Raw", $formData)) {
             return;
-        }
-        if (!$importType) {
-            $importType = 'bibtex';
         }
         $rejected = '';
         foreach ($rejectedArray as $key => $value) {
@@ -763,7 +889,7 @@ class IMPORTCOMMON
         $fields[] = 'importrawText';
         $values[] = base64_encode(serialize($rejected));
         $fields[] = 'importrawImportType';
-        $values[] = $importType;
+        $values[] = $this->importType;
         $this->db->insert('import_raw', $fields, $values);
     }
     /**
@@ -894,12 +1020,11 @@ class IMPORTCOMMON
      * @param array $map
      * @param array $invalidFieldNames
      * @param mixed $strings array|FALSE. Default is FALSE
-     * @param string $importType
      * @param array $formData
      *
      * @return array 1st element is error message or FALSE, 2nd element is string for display, 3rd element is the temp_storage table id
      */
-    public function promptFieldNames($entries, $inputTypes, $map, $invalidFieldNames, $strings = FALSE, $importType = FALSE, $formData)
+    public function promptFieldNames($entries, $inputTypes, $map, $invalidFieldNames, $strings = FALSE, $formData)
     {
         // Do some system management
         FILE\tidyFiles();
@@ -941,16 +1066,16 @@ class IMPORTCOMMON
         while ($row = $this->db->fetchRow($recordset)) {
             $possibleFields[] = $row['customId'] . '&nbsp;&nbsp;custom:&nbsp;&nbsp;' . $row['customLabel'];
         }
-        if ($importType == 'endnote') {
+        if ($this->importType == 'endnote') {
             $pString = \HTML\p($this->messages->text('import', 'invalidField3'));
         } else {
             $pString = \HTML\p($this->messages->text('import', 'invalidField1'));
         }
-        if (!$importType || ($importType == 'bibtex')) {
+        if ($this->importType == 'bibtex') {
             $pString .= \FORM\formHeader("import_IMPORTBIBTEX_CORE");
             $pString .= \FORM\hidden('method', 'stage2Invalid');
         }
-        if (($importType == 'endnote')) {
+        if (($this->importType == 'endnote')) {
             $pString .= \FORM\formHeader("importexportbib_importEndnote");
             $pString .= \FORM\hidden('method', 'stage2Invalid');
         }
@@ -965,7 +1090,7 @@ class IMPORTCOMMON
                 5
             ));
         }
-        if (($importType == 'bibtex')) {
+        if (($this->importType == 'bibtex')) {
             $pString .= \HTML\p(\FORM\checkbox(
                 $this->messages->text('import', 'invalidField2'),
                 "import_Precedence"
@@ -1101,8 +1226,6 @@ class IMPORTCOMMON
                         $updateArray = [];
                         $count = 0;
                     }
-                    //					$this->db->formatConditions(array('collectionId' => $collectionId));
-//					$this->db->update('collection', array('collectionDefault' => $default));
                 }
                 if (!empty($updateArray)) { // do the remainder
                     $this->db->multiUpdate('collection', 'collectiondefault', 'collectionId', $updateArray);

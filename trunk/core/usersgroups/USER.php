@@ -253,17 +253,75 @@ class USER
      */
     public function writeLdapUser($info, $usersUsername)
     {
+        // Login
         $field[] = 'usersUsername';
         $value[] = $usersUsername;
+        
+        // Fake password
         $field[] = 'usersPassword';
         $value[] = 'LDAP';
+        
+        // Mail (the first non empty)
         $field[] = 'usersEmail';
-        $value[] = $info[0]['mail'][0];
+        $usersEmail = "";
+        if (array_key_exists('mail', $info)) {
+            for ($k = 0; $k < $info["count"]; $k++) {
+                $usersEmail = $info["mail"][$k];
+                if ($usersEmail != "") {
+                    break;
+                }
+            }
+        }
+        $value[] = $usersEmail;
+        
+        // Search the real Display Name
         $field[] = 'usersFullname';
-        $value[] = $info[0]['cn'][0];
+        $usersFullname = "";
+        if (array_key_exists('displayName', $info)) {
+            // displayName = Display Name
+            for ($k = 0; $k < $info["count"]; $k++) {
+                $usersFullname = $info["displayName"][$k];
+                if ($usersFullname != "") {
+                    break;
+                }
+            }
+        }
+        // Or built the Display Name from givenName + sn
+        if ($usersFullname == "" & array_key_exists('givenName', $info)) {
+            // givenName = First Name
+            for ($k = 0; $k < $info["count"]; $k++) {
+                $usersFullname = $info["givenName"][$k];
+                if ($info["givenName"][$k] != "") {
+                    break;
+                }
+            }
+            // sn = Last Name
+            for ($k = 0; $k < $info["count"]; $k++) {
+                $usersFullname .= $info["sn"][$k];
+                if ($info["sn"][$k] != "") {
+                    break;
+                }
+            }
+        }
+        // Or use the Common Name as a Display Name
+        if ($usersFullname == "" & array_key_exists('cn', $info)) {
+            // cn = Common Name
+            for ($k = 0; $k < $info["count"]; $k++) {
+                $usersFullname = $info["cn"][$k];
+                if ($usersFullname != "") {
+                    break;
+                }
+            }
+        }
+        // Or use the user login as a Display Name
+        if ($usersFullname == "") {
+            $usersFullname = $usersUsername;
+        }
+        $value[] = $usersFullname;
+        
+        // insert preferences to table
         $this->db->insert('users', $field, $value);
         $userId = $this->db->lastAutoId();
-        // insert preferences to table
         $this->writePreferences($userId, TRUE);
 
         return $userId; // success!

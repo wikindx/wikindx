@@ -56,7 +56,7 @@ class importexportbibMessages
             "bibutilsoption1" => dgettext($domain, "Encode unicode characters directly in the file rather than as XML entities"),
             "bibutilsoption2" => dgettext($domain, "Don't put citation key in the MODS id field"),
             "bibutilsoption3" => dgettext($domain, "Don't split titles into TITLE/SUBTITLE pairs"),
-            "bibutilsoption4" => dgettext($domain, "Do not covert latex character combinations"),
+            "bibutilsoption4" => dgettext($domain, "Don't covert latex character combinations"),
             "bibutilsoption5" => dgettext($domain, "Unicode in, unicode out"),
             "bibutilsSuccess" => dgettext($domain, "Successfully converted ###"),
             "introEndnoteImport" => dgettext($domain, "You may import Endnote XML bibliographies (.xml files) here. Large files may take some time so if

@@ -18,7 +18,6 @@ class EDITPUBLISHER
     private $errors;
     private $messages;
     private $success;
-    private $session;
     private $publisher;
     private $gatekeep;
     private $badInput;
@@ -30,7 +29,6 @@ class EDITPUBLISHER
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->session = FACTORY_SESSION::getInstance();
 
         $this->publisher = FACTORY_PUBLISHER::getInstance();
 
@@ -48,48 +46,80 @@ class EDITPUBLISHER
     public function init($message = FALSE)
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
+        $initialPublisherId = FALSE;
         if (array_key_exists('PublisherType', $this->vars)) {
             $publisherType = $this->vars['PublisherType'];
         } else {
             $publisherType = FALSE;
         }
+        if (array_key_exists('message', $this->vars)) {
+            $pString = $this->vars['message'];
+			if (array_key_exists('id', $this->vars)) {
+				$initialPublisherId = $this->vars['id'];
+			}
+        }
+        elseif (is_array($message)) { // error has occurred . . .
+            $error = array_shift($message);
+            $pString = \HTML\p($error, "error", "center");
+            $initialPublisherId = array_shift($message);
+        }
+        else {
+            $pString = $message;
+        }
         $publishers = $this->publisher->grabAll($publisherType);
-        if (!$publishers) {
+        if (!is_array($publishers)) {
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noPublishers'));
 
             return;
         }
-        $pString = $message ? \HTML\p($message, "error", "center") : FALSE;
+        if (!$initialPublisherId) {
+	        foreach ($publishers AS $id => $value) {
+		        $initialPublisherId = $id;
+	    	    break;
+	    	}
+	    }
+        $jsonArray = [];
+        $jScript = 'index.php?action=edit_EDITPUBLISHER_CORE&method=displayPublisher';
+        $jsonArray[] = [
+            'startFunction' => 'triggerFromSelect',
+            'script' => "$jScript",
+            'triggerField' => 'publisherIds',
+            'targetDiv' => 'publisherDiv',
+        ];
+		$js = \AJAX\jActionForm('onchange', $jsonArray);
         $pString .= \FORM\formHeader('edit_EDITPUBLISHER_CORE');
         $pString .= \FORM\hidden("method", "edit");
+        $pString .= \FORM\hidden("PublisherType", $this->vars['PublisherType']);
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\FORM\selectFBoxValue(FALSE, "publisherIds", $publishers, 20));
-        $pString .= \HTML\td($this->transferArrow());
-        $pString .= \HTML\td(\HTML\div('publisherDiv', $this->displayPublisher(TRUE)));
+        $pString .= \HTML\td(\FORM\selectedBoxValue(FALSE, "publisherIds", $publishers, $initialPublisherId, 20, FALSE, $js));
+        $pString .= \HTML\td(\HTML\div('publisherDiv', $this->displayPublisher(TRUE, $initialPublisherId)));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Edit")));
         $pString .= \FORM\formEnd();
-        \AJAX\loadJavascript();
         GLOBALS::addTplVar('content', $pString);
     }
     /**
      * Display interface to edit publisher
      *
      * @param bool $initialDisplay
+     * @param int publisherId
      */
-    public function displayPublisher($initialDisplay = FALSE)
+    public function displayPublisher($initialDisplay = FALSE, $publisherId = FALSE)
     {
-        $name = $location = $publisherId = FALSE;
-        if (!$initialDisplay) {
+        $name = $location = FALSE;
+        if ($initialDisplay) {
+            $this->db->formatConditions(['publisherId' => $publisherId]);
+        }
+        else {
             $this->db->formatConditions(['publisherId' => $this->vars['ajaxReturn']]);
-            $recordset = $this->db->select('publisher', ['publisherName', 'publisherLocation']);
-            $row = $this->db->fetchRow($recordset);
-            $location = \HTML\dbToFormTidy($row['publisherLocation']);
-            $name = \HTML\dbToFormTidy($row['publisherName']);
             $publisherId = $this->vars['ajaxReturn'];
         }
+		$recordset = $this->db->select('publisher', ['publisherName', 'publisherLocation']);
+		$row = $this->db->fetchRow($recordset);
+		$location = \HTML\dbToFormTidy($row['publisherLocation']);
+		$name = \HTML\dbToFormTidy($row['publisherName']);
         $pString = \FORM\hidden("editPublisherId", $publisherId);
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
@@ -115,20 +145,9 @@ class EDITPUBLISHER
     public function edit()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        if (!array_key_exists('editPublisherId', $this->vars) || !$this->vars['editPublisherId']) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
-        }
-        $name = array_key_exists('publisherName', $this->vars) ? \UTF8\mb_trim($this->vars['publisherName']) : FALSE;
-        $location = array_key_exists('publisherLocation', $this->vars) ?
-            \UTF8\mb_trim($this->vars['publisherLocation']) : FALSE;
-        if (!$name & !$location) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
-        }
-        if ($publisherExistId = $this->publisher->checkExists($name, $location)) {
-            if ($publisherExistId != $this->vars['editPublisherId']) {
-                return $this->confirmDuplicate($publisherExistId);
-            }
-        }
+		$this->validateInput();
+		$name = \UTF8\mb_trim($this->vars['publisherName']);
+		$location = \UTF8\mb_trim($this->vars['publisherLocation']);
         if ($name) {
             $updateArray['publisherName'] = $name;
         } else {
@@ -151,7 +170,10 @@ class EDITPUBLISHER
         $this->db->deleteCache('cacheResourcePublishers');
         $this->db->deleteCache('cacheMetadataPublishers');
         // send back to editDisplay with success message
-        $this->init($this->success->text("publisher"));
+        $message = rawurlencode($this->success->text("publisher"));
+        header("Location: index.php?action=edit_EDITPUBLISHER_CORE&method=init&message=$message&id=" . $this->vars['editPublisherId'] . 
+        	"&PublisherType=" . $this->vars['PublisherType']);
+        die;
     }
     /**
      * Write to the database
@@ -196,44 +218,56 @@ class EDITPUBLISHER
                 $this->db->update('resource_misc', $updateArray);
             }
         }
-        // send back to editDisplay with success message
-        $this->init($this->success->text("publisher"));
-    }
-    /**
-     * transferArrow
-     *
-     * @return string
-     */
-    private function transferArrow()
-    {
-        $jsonArray = [];
-        $jScript = 'index.php?action=edit_EDITPUBLISHER_CORE&method=displayPublisher';
-        $jsonArray[] = [
-            'startFunction' => 'triggerFromSelect',
-            'script' => "$jScript",
-            'triggerField' => 'publisherIds',
-            'targetDiv' => 'publisherDiv',
-        ];
-        $image = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
-
-        return $image;
+        $message = rawurlencode($this->success->text("publisher"));
+        header("Location: index.php?action=edit_EDITPUBLISHER_CORE&method=init&message=$message&id=$existId&PublisherType=" . 
+        	$this->vars['PublisherType']);
+        die;
     }
     /**
      * The new publisher equals one already in the database. Confirm that this edited one is to be removed and
      * all references to it replaced by the existing one.
      *
-     * @param mixed $publisherExistId
      */
-    private function confirmDuplicate($publisherExistId)
+    public function confirmDuplicate()
     {
         $pString = $this->errors->text("warning", "publisherExists");
         $pString .= \HTML\p($this->messages->text("misc", "publisherExists"));
         $pString .= \FORM\formHeader("edit_EDITPUBLISHER_CORE");
-        $pString .= \FORM\hidden("editPublisherId", $this->vars['editPublisherId']);
-        $pString .= \FORM\hidden("editPublisherExistId", $publisherExistId);
+        $pString .= \FORM\hidden("PublisherType", $this->vars['PublisherType']);
+        $pString .= \FORM\hidden("editPublisherId", $this->vars['editId']);
+        $pString .= \FORM\hidden("editPublisherExistId", $this->vars['existId']);
         $pString .= \FORM\hidden("method", 'editConfirm');
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")), FALSE, "right");
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
+    }
+    /**
+     * Validate the form input
+     *
+     */
+    private function validateInput()
+    {
+// First check for input
+		$error = '';
+        if (!array_key_exists('editPublisherId', $this->vars) || !$this->vars['editPublisherId']) {
+            $error = $this->errors->text("inputError", "missing");
+        }
+        $name = array_key_exists('publisherName', $this->vars) ? \UTF8\mb_trim($this->vars['publisherName']) : FALSE;
+        $location = array_key_exists('publisherLocation', $this->vars) ? \UTF8\mb_trim($this->vars['publisherLocation']) : FALSE;
+        if (!$name && !$location) {
+            $error = $this->errors->text("inputError", "missing");
+        }
+		if ($error) {
+        	$this->badInput->close($error, $this, ['init', $this->vars['editPublisherId']]);
+		}
+// Then check for duplicates
+        if ($existId = $this->publisher->checkExists($name, $location)) {
+            if ($existId != $this->vars['editPublisherId']) {
+            	$editId = $this->vars['editPublisherId'];
+				header("Location: index.php?action=edit_EDITPUBLISHER_CORE&method=confirmDuplicate&editId=$editId&existId=$existId&PublisherType=" . 
+        			$this->vars['PublisherType']);
+				die;
+            }
+        }
     }
 }

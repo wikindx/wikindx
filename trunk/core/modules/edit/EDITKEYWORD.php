@@ -21,7 +21,6 @@ class EDITKEYWORD
     private $keyword;
     private $gatekeep;
     private $badInput;
-    private $formData;
 
     public function __construct()
     {
@@ -48,8 +47,12 @@ class EDITKEYWORD
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $formData = [];
+        $initialKeywordId = FALSE;
         if (array_key_exists('message', $this->vars)) {
             $pString = $this->vars['message'];
+			if (array_key_exists('id', $this->vars)) {
+				$initialKeywordId = $this->vars['id'];
+			}
         }
         elseif (is_array($message)) { // error has occurred so get get form_data to populate form with
             $error = array_shift($message);
@@ -65,10 +68,12 @@ class EDITKEYWORD
 
             return;
         }
-        foreach ($keywords AS $id => $value) {
-	        $initialKeywordId = $id;
-	        break;
-	    }
+        if (!$initialKeywordId) {
+			foreach ($keywords AS $id => $value) {
+				$initialKeywordId = $id;
+				break;
+			}
+		}
         $jsonArray = [];
         $jScript = 'index.php?action=edit_EDITKEYWORD_CORE&method=displayKeyword';
         $jsonArray[] = [
@@ -93,7 +98,7 @@ class EDITKEYWORD
         	$pString .= \HTML\td(\FORM\selectedBoxValue(FALSE, "keywordIds", $keywords, $formData['keywordIds'], 20, FALSE, $js));
         }
         else {
-	        $pString .= \HTML\td(\FORM\selectFBoxValue(FALSE, "keywordIds", $keywords, 20, FALSE, $js));
+	        $pString .= \HTML\td(\FORM\selectedBoxValue(FALSE, "keywordIds", $keywords, $initialKeywordId, 20, FALSE, $js));
         }
         $td = \HTML\tableStart();
         $td .= \HTML\trStart();
@@ -113,7 +118,6 @@ class EDITKEYWORD
         $pString .= \HTML\tableEnd();
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Edit")));
         $pString .= \FORM\formEnd();
-        \AJAX\loadJavascript();
         GLOBALS::addTplVar('content', $pString);
     }
     /**
@@ -207,9 +211,12 @@ class EDITKEYWORD
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         $this->validateInput();
         $keyword = \UTF8\mb_trim($this->vars['keyword']);
-        if ($keywordExistId = $this->keyword->checkExists($keyword)) {
-            if ($keywordExistId != $this->vars['editKeywordId']) {
-                return $this->confirmDuplicate($keywordExistId);
+        if ($existId = $this->keyword->checkExists($keyword)) {
+            if ($existId != $this->vars['editKeywordId']) {
+            	$editId = $this->vars['editKeywordId'];
+            	$text = \UTF8\mb_trim($this->vars['text']) ? rawurlencode(\UTF8\mb_trim($this->vars['text'])) : FALSE;
+				header("Location: index.php?action=edit_EDITKEYWORD_CORE&method=confirmDuplicate&editId=$editId&existId=$existId&text=$text");
+				die;
             }
         }
         // At this point, we're cleared to write
@@ -217,7 +224,7 @@ class EDITKEYWORD
         $this->tidy();
         // send back to main script with success message
         $message = rawurlencode($this->success->text("keyword"));
-        header("Location: index.php?action=edit_EDITKEYWORD_CORE&method=init&message=$message");
+        header("Location: index.php?action=edit_EDITKEYWORD_CORE&method=init&message=$message&id=" . $this->vars['editKeywordId']);
         die;
     }
     /**
@@ -244,16 +251,15 @@ class EDITKEYWORD
      * The new keyword equals one already in the database. Confirm that this edited one is to be removed and
      * all references to it replaced by the existing one.
      *
-     * @param mixed $keywordExistId
      */
-    private function confirmDuplicate($keywordExistId)
+    public function confirmDuplicate()
     {
         $pString = $this->errors->text("warning", "keywordExists");
         $pString .= \HTML\p($this->messages->text("misc", "keywordExists"));
         $pString .= \FORM\formHeader("edit_EDITKEYWORD_CORE");
-        $pString .= \FORM\hidden("editKeywordId", $this->vars['editKeywordId']);
+        $pString .= \FORM\hidden("editKeywordId", $this->vars['editId']);
         $pString .= \FORM\hidden("text", $this->vars['text']);
-        $pString .= \FORM\hidden("editKeywordExistId", $keywordExistId);
+        $pString .= \FORM\hidden("editKeywordExistId", $this->vars['existId']);
         $pString .= \FORM\hidden("method", 'editConfirm');
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")), FALSE, "right");
         $pString .= \FORM\formEnd();
@@ -307,7 +313,6 @@ class EDITKEYWORD
         if (!$keyword) {
             $error = $this->errors->text("inputError", "missing");
         }
-// Second, write any input to formData
 // Possible form fields – ensure fields are available whether filled in or not (NB checkbox fields do NOT exist in $this->vars if not checked)
 		$fields = ['keyword' => $this->vars['keyword'], 'keywordIds' => $this->vars['keywordIds'], 'text' => $this->vars['text']];
 		if ($error) {

@@ -605,10 +605,16 @@ class ENDNOTEIMPORT
      */
     private function writeResourceMiscTable()
     {
+    	$intRequired = ['resourcemiscField1', 'resourcemiscField2', 'resourcemiscField3', 'resourcemiscField4', 
+    		'resourcemiscField5', 'resourcemiscField6'];
         if (array_key_exists('resource_misc', $this->entry)) {
             foreach ($this->entry['resource_misc'] as $field => $value) {
                 $fields[] = $field;
-                $values[] = $value;
+                if (in_array($field, $intRequired)) {
+                	$values[] = preg_replace("/[^0-9]/", '', $value);
+                } else {
+	                $values[] = $value;
+	            }
             }
         }
         if ($this->collectionId) {

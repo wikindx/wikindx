@@ -684,10 +684,16 @@ class IMPORTBIBTEX
      */
     public function writeResourceMiscTable($entry, $wkType)
     {
+    	$intRequired = ['resourcemiscField1', 'resourcemiscField2', 'resourcemiscField3', 'resourcemiscField4', 
+    		'resourcemiscField5', 'resourcemiscField6'];
         foreach ($entry as $bibField => $bibValue) {
             if ($wkField = array_search($bibField, $this->map->{$wkType}['resource_misc'])) {
                 $fields[] = $wkField;
-                $values[] = $bibValue;
+                if (in_array($wkField, $intRequired)) {
+                	$values[] = preg_replace("/[^0-9]/", '', $bibValue);
+                } else {
+	                $values[] = $bibValue;
+	            }
             }
         }
         if ($this->collectionId) {
@@ -731,10 +737,6 @@ class IMPORTBIBTEX
                 $fields[] = 'resourcemiscField5';
                 $values[] = $this->endDay;
             }
-        }
-        if ((($wkType == 'book') || ($wkType == 'thesis')) && ($bibField == 'pages') && is_int($bibValue)) {
-            $fields[] = 'resourcemiscField6';
-            $values[] = $bibValue;
         }
         $fields[] = 'resourcemiscAddUserIdResource';
         $values[] = $this->session->getVar("setup_UserId");
@@ -820,21 +822,21 @@ class IMPORTBIBTEX
         $title = $short = FALSE;
         // inbook type with a chapter field that is numeric, bibtex field 'chapter' is wikindx's title, bibtex field 'title' is wikindx collectionTitle
         if ($wkType == 'book_chapter') {
-            $title = trim($entry['title']);
+            $title = \UTF8\mb_trim($entry['title']);
         }
         // This was originally bibtex @inbook, because the bibtex field chapter was nonnumeric, it's been converted to wikindx book_article.
         // bibtex field 'chapter' is wikindx's title, bibtex field 'title' is wikindx collectionTitle
         elseif (($wkType == 'book_article') && array_key_exists('chapter', $entry)) {
-            $title = trim($entry['title']);
+            $title = \UTF8\mb_trim($entry['title']);
         } elseif (($wkType == 'book_article') && !array_key_exists('booktitle', $entry)) {
             return;
         } elseif (array_key_exists('booktitle', $entry)) {
-            $title = trim($entry['booktitle']);
+            $title = \UTF8\mb_trim($entry['booktitle']);
         }
         if (!$title && !array_key_exists('journal', $entry)) {
             return;
         } elseif (!$title && array_key_exists('journal', $entry)) {
-            $title = trim($entry['journal']);
+            $title = \UTF8\mb_trim($entry['journal']);
         }
         if (!$title) {
             return;
@@ -855,30 +857,30 @@ class IMPORTBIBTEX
     {
         $organization = $publisherName = $publisherLocation = $conferenceLocation = FALSE;
         if (array_key_exists('publisher', $entry)) {
-            $publisherName = trim($entry['publisher']);
+            $publisherName = \UTF8\mb_trim($entry['publisher']);
         }
         if (array_key_exists('organization', $entry) && ($wkType != 'proceedings_article')) {
-            $publisherName = trim($entry['organization']);
+            $publisherName = \UTF8\mb_trim($entry['organization']);
         } elseif (array_key_exists('organization', $entry)) {
-            $organization = trim($entry['organization']);
+            $organization = \UTF8\mb_trim($entry['organization']);
         } elseif (array_key_exists('school', $entry)) {
-            $publisherName = trim($entry['school']);
+            $publisherName = \UTF8\mb_trim($entry['school']);
         } elseif (array_key_exists('institution', $entry)) {
-            $publisherName = trim($entry['institution']);
+            $publisherName = \UTF8\mb_trim($entry['institution']);
         }
         if (!$organization && !$publisherName) {
             return;
         }
         if (array_key_exists('address', $entry) && ($wkType != 'proceedings_article')) {
-            $publisherLocation = trim($entry['address']);
+            $publisherLocation = \UTF8\mb_trim($entry['address']);
         } elseif (array_key_exists('address', $entry)) {
-            $conferenceLocation = trim($entry['address']);
+            $conferenceLocation = \UTF8\mb_trim($entry['address']);
         }
         if (array_key_exists('location', $entry)) {
             if ($wkType == 'proceedings_article') {
-                $conferenceLocation = trim($entry['location']);
+                $conferenceLocation = \UTF8\mb_trim($entry['location']);
             } else {
-                $publisherLocation = trim($entry['location']);
+                $publisherLocation = \UTF8\mb_trim($entry['location']);
             }
         }
         if ($wkType == 'proceedings_article') {
@@ -976,16 +978,16 @@ class IMPORTBIBTEX
             $separator = $this->formData['import_KeywordSeparator'];
         }
         if ($separator == 0) {
-            $keywords = preg_split("/,/u", trim($entry['keywords']));
+            $keywords = preg_split("/,/u", \UTF8\mb_trim($entry['keywords']));
         } elseif ($separator == 1) {
-            $keywords = preg_split("/;/u", trim($entry['keywords']));
+            $keywords = preg_split("/;/u", \UTF8\mb_trim($entry['keywords']));
         } elseif ($separator == 2) {
-            $keywords = preg_split("/;|,/u", trim($entry['keywords']));
+            $keywords = preg_split("/;|,/u", \UTF8\mb_trim($entry['keywords']));
         } else {
-            $keywords = preg_split("/ /u", trim($entry['keywords']));
+            $keywords = preg_split("/ /u", \UTF8\mb_trim($entry['keywords']));
         }
         foreach ($keywords as $keyword) {
-            $keyword = \HTML\stripHtml(trim($keyword));
+            $keyword = \HTML\stripHtml(\UTF8\mb_trim($keyword));
             if (!$keyword) {
                 continue;
             }
@@ -995,7 +997,7 @@ class IMPORTBIBTEX
             return;
         }
         $keywords = array_unique($tempK);
-        if (array_key_exists('keywords', $entry) && trim($entry['keywords'])) {
+        if (array_key_exists('keywords', $entry) && \UTF8\mb_trim($entry['keywords'])) {
             $this->import->writeKeywordTables($keywords);
             $this->deleteCacheKeywords = TRUE;
         }
@@ -1092,6 +1094,15 @@ class IMPORTBIBTEX
         }
         $this->formData["import_KeywordSeparator"] = $this->vars['import_KeywordSeparator'];
         $this->formData["import_TitleSubtitleSeparator"] = $this->vars['import_TitleSubtitleSeparator'];
+		if (array_key_exists('import_Tag', $this->vars) && \UTF8\mb_trim($this->vars['import_Tag'])) {
+			if ($tagId = $this->tag->checkExists(\UTF8\mb_trim($this->vars['import_Tag']))) { // Existing tag found
+				$this->formData['import_TagId'] = $tagId;
+			} else {
+				$this->formData['import_Tag'] = \UTF8\mb_trim($this->vars['import_Tag']);
+			}
+		} elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId']) {
+			$this->formData['import_TagId'] = $this->vars['import_TagId'];
+		}
         if (($this->type == 'file') && !array_key_exists("import_UnrecognisedFields", $this->formData)) {
             if (!$this->importFile) {
                 if (!isset($_FILES['import_File'])) {
@@ -1110,15 +1121,6 @@ class IMPORTBIBTEX
                 $fileName = $this->importFile;
             }
             $this->formData['import_File'] = $fileName;
-            if ($this->vars['import_Tag']) {
-                if ($tagId = $this->tag->checkExists(\UTF8\mb_trim($this->vars['import_Tag']))) { // Existing tag found
-               		$this->formData['import_TagId'] = $tagId;
-                } else {
-            		$this->formData['import_Tag'] = \UTF8\mb_trim($this->vars['import_Tag']);
-            	}
-            } elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId']) {
-            	$this->formData['import_TagId'] = $this->vars['import_TagId'];
-            }
             $this->garbageFiles[implode(DIRECTORY_SEPARATOR, [$this->dirName, $fileName])] = FALSE;
             if ($error) {
                 $this->badInput->close($error, $this->badClass, [$this->badFunction, $this->formData]);

@@ -135,7 +135,9 @@ class IMPORTCOMMON
 				"import_File",
 				30
 			));
-			// Load tags
+		}
+		// Load tags
+		if (($this->importType != 'pasteBibtex') || $this->session->getVar('setup_Superadmin')) {
 			$tags = $this->tag->grabAll();
 			$field = array_key_exists('import_Tag', $formData) ? $formData['import_Tag'] : FALSE;
 			$tagInput = \FORM\textInput($this->messages->text("import", "tag"), "import_Tag", $field, 30, 255);
@@ -155,7 +157,7 @@ class IMPORTCOMMON
 			} else {
 				$pString .= \HTML\td($tagInput);
 			}
-        }
+		}
         $categoryTd = FALSE;
         if (count($categories) > 1) {
         	$cats = $this->categorySelect($categories, $formData);

@@ -253,6 +253,11 @@ class USER
      */
     public function writeLdapUser($info, $usersUsername)
     {
+    	// The characters case described by the standard in not reliable
+    	// Go for a lowercase everywhere
+    	// cf. https://docs.bmc.com/docs/fpsc121/ldap-attributes-and-associated-fields-495323340.html
+    	$info = array_change_key_case($info, CASE_LOWER);
+    	
         // Login
         $field[] = 'usersUsername';
         $value[] = $usersUsername;
@@ -277,21 +282,21 @@ class USER
         // Search the real Display Name
         $field[] = 'usersFullname';
         $usersFullname = "";
-        if (array_key_exists('displayName', $info)) {
+        if (array_key_exists('displayname', $info)) {
             // displayName = Display Name
             for ($k = 0; $k < $info["count"]; $k++) {
-                $usersFullname = $info["displayName"][$k];
+                $usersFullname = $info["displayname"][$k];
                 if ($usersFullname != "") {
                     break;
                 }
             }
         }
         // Or built the Display Name from givenName + sn
-        if ($usersFullname == "" & array_key_exists('givenName', $info)) {
+        if ($usersFullname == "" & array_key_exists('givenname', $info)) {
             // givenName = First Name
             for ($k = 0; $k < $info["count"]; $k++) {
-                $usersFullname = $info["givenName"][$k];
-                if ($info["givenName"][$k] != "") {
+                $usersFullname = $info["givenname"][$k];
+                if ($info["givenname"][$k] != "") {
                     break;
                 }
             }

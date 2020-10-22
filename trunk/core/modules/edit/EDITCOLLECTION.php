@@ -18,8 +18,6 @@ class EDITCOLLECTION
     private $errors;
     private $messages;
     private $success;
-    private $session;
-    private $sessionVars = [];
     private $collection;
     private $gatekeep;
     private $badInput;
@@ -27,6 +25,7 @@ class EDITCOLLECTION
     private $defaultMap;
     private $creatorsArray;
     private $defaults = [];
+    private $formData = [];
 
     public function __construct()
     {
@@ -35,9 +34,6 @@ class EDITCOLLECTION
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-        $this->session = FACTORY_SESSION::getInstance();
-
-
         $this->collection = FACTORY_COLLECTION::getInstance();
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
@@ -54,7 +50,6 @@ class EDITCOLLECTION
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('collection'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" . $this->messages->text("resources", "collection") . ")"));
-        $this->session->clearArray('edit');
         $this->db->groupBy('collectionType');
         $recordset = $this->db->select('collection', 'collectionType');
         if (!$this->db->numRows($recordset)) {
@@ -74,7 +69,7 @@ class EDITCOLLECTION
         $pString .= \HTML\trStart();
         $td = \FORM\formHeader('edit_EDITCOLLECTION_CORE');
         $td .= \FORM\hidden("method", "editChooseCollection");
-        $td .= \FORM\selectFBoxValue(FALSE, "edit_collectionType", $collections, 10);
+        $td .= \FORM\selectFBoxValue(FALSE, "collectionType", $collections, 10);
         $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
         $td .= \FORM\formEnd();
         $pString .= \HTML\td($td);
@@ -84,8 +79,10 @@ class EDITCOLLECTION
     }
     /**
      * check we are allowed to edit and load appropriate method
+     *
+     * @param mixed $message
      */
-    public function editChooseCollection()
+    public function editChooseCollection($message = FALSE)
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
@@ -93,7 +90,18 @@ class EDITCOLLECTION
         GLOBALS::setTplVar('help', $help->createLink('collection'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" .
             $this->messages->text("resources", "collection") . ")"));
-        $collectionType = $this->vars['edit_collectionType'];
+        if (array_key_exists('message', $this->vars)) {
+            $pString = $this->vars['message'];
+        }
+        elseif (is_array($message)) { // error has occurred . . .
+            $error = array_shift($message);
+            $pString = \HTML\p($error, "error", "center");
+            $initialPublisherId = array_shift($message);
+        }
+        else {
+            $pString = '';
+        }
+        $collectionType = $this->vars['collectionType'];
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONMAP.php"]));
         $this->map = new COLLECTIONMAP();
         if ($collectionType) {
@@ -114,13 +122,13 @@ class EDITCOLLECTION
             $title = $row['collectionTitle'] . $short;
             $collections[$row['collectionId']] = preg_replace("/{(.*)}/Uu", "$1", \HTML\dbToFormTidy($title, TRUE));
         }
-        $pString = \HTML\tableStart('left');
+        $pString .= \HTML\tableStart('left');
         $pString .= \HTML\trStart();
         $td = \FORM\formHeader('edit_EDITCOLLECTION_CORE');
         $td .= \FORM\hidden("method", "editDisplayCollection");
         $td .= \FORM\hidden("title", $title);
         $td .= \FORM\hidden("shortTitle", $short);
-        $td .= \FORM\selectFBoxValue(FALSE, "edit_collectionId", $collections, 20);
+        $td .= \FORM\selectFBoxValue(FALSE, "collectionId", $collections, 20);
         $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
         $td .= \FORM\formEnd();
         $pString .= \HTML\td($td);
@@ -141,12 +149,11 @@ class EDITCOLLECTION
         GLOBALS::setTplVar('help', $help->createLink('collection'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "edit", " (" .
             $this->messages->text("resources", "collection") . ")"));
-        $this->session->setVar("editLock", FALSE);
-        if (!array_key_exists('edit_collectionId', $this->vars) || !$this->vars['edit_collectionId']) {
+        if (!array_key_exists('collectionId', $this->vars) || !$this->vars['collectionId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
         if (!array_key_exists('title', $this->vars) || !$this->vars['title']) { // coming back here after mis-edit without title
-            $this->db->formatConditions(['collectionId' => $this->vars['edit_collectionId']]);
+            $this->db->formatConditions(['collectionId' => $this->vars['collectionId']]);
             $recordset = $this->db->select('collection', 'collectionTitle');
             $row = $this->db->fetchRow($recordset);
             $title = $row['collectionTitle'];
@@ -162,9 +169,9 @@ class EDITCOLLECTION
         $pString = $message;
         $pString .= \FORM\formHeader('edit_EDITCOLLECTION_CORE');
         $pString .= \FORM\hidden("method", "edit");
-        $pString .= \FORM\hidden("edit_collectionId", $this->vars['edit_collectionId']);
-        if (empty($this->sessionVars)) {
-            $this->db->formatConditions(['collectionId' => $this->vars['edit_collectionId']]);
+        $pString .= \FORM\hidden("collectionId", $this->vars['collectionId']);
+        if (empty($this->formData)) {
+            $this->db->formatConditions(['collectionId' => $this->vars['collectionId']]);
             $recordset = $this->db->select('collection', ['collectionTitle', 'collectionTitleShort', 'collectionType', 'collectionDefault']);
             $row = $this->db->fetchRow($recordset);
             if ($row['collectionDefault']) {
@@ -172,28 +179,28 @@ class EDITCOLLECTION
             }
             $title = \HTML\dbToTinyMCE($row['collectionTitle']);
             $titleShort = \HTML\dbToFormTidy($row['collectionTitleShort']);
-            $pString .= \FORM\hidden("edit_collectionType", $row['collectionType']);
+            $pString .= \FORM\hidden("collectionType", $row['collectionType']);
             $collectionType = $row['collectionType'];
         } else { // after a mis-edit
-            $this->defaults = $this->sessionVars;
+            $this->defaults = $this->formData;
             $title = $this->defaults['collectionTitle'];
             $titleShort = $this->defaults['collectionTitleShort'];
-            $pString .= \FORM\hidden("edit_collectionType", $this->defaults['collectionType']);
+            $pString .= \FORM\hidden("collectionType", $this->defaults['collectionType']);
             $collectionType = $this->defaults['collectionType'];
         }
         $pString .= \HTML\tableStart('generalTable borderStyleSolid');
         $pString .= \HTML\trStart();
-        $td = $tinymce->loadBasicTextinput(['edit_collectionTitle'], 600);
+        $td = $tinymce->loadBasicTextinput(['collectionTitle'], 600);
         $td .= \HTML\td(\FORM\textAreaInput(
-            $this->messages->text('resources', 'collection') . ' ' . \HTML\span('*', 'required'),
-            'edit_collectionTitle',
+            \HTML\span('*', 'required') . $this->messages->text('resources', 'collection'),
+            'collectionTitle',
             $title,
             60,
             1
         ));
         $td .= \HTML\td(\FORM\textInput(
             $this->messages->text('resources', 'collectionShort'),
-            'edit_collectionTitleShort',
+            'collectionTitleShort',
             $titleShort,
             30
         ));
@@ -251,7 +258,9 @@ class EDITCOLLECTION
             $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, \HTML\dbToFormTidy($text), 30, 255));
             $entry = $type . '_' . $index . '_initials';
             $text = array_key_exists($entry, $inputArray['creatorFields']) ? $inputArray['creatorFields'][$entry] : FALSE;
-            $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, \HTML\dbToFormTidy($text), 6, 255));
+            $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, \HTML\dbToFormTidy($text), 6, 255) .
+        		BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+        		$this->messages->text("hint", "initials")), 'hint'));
             $entry = $type . '_' . $index . '_prefix';
             $text = array_key_exists($entry, $inputArray['creatorFields']) ? $inputArray['creatorFields'][$entry] : FALSE;
             $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, \HTML\dbToFormTidy($text), 11, 255));
@@ -279,23 +288,10 @@ class EDITCOLLECTION
     public function edit()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        $this->writeVarsToSession();
-        if ($this->session->getVar("editLock")) {
-            $this->badInput->close($this->errors->text("done", "collection"), $this, 'init');
-        }
-        if (!array_key_exists('edit_collectionId', $this->vars) || !$this->vars['edit_collectionId']) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
-        }
-        if (!array_key_exists('edit_collectionType', $this->vars)) { // can be NULL
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
-        }
-        $title = array_key_exists('edit_collectionTitle', $this->vars) ? \UTF8\mb_trim($this->vars['edit_collectionTitle']) : FALSE;
-        if (!$title) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'editDisplayCollection');
-        }
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
+        $this->validateInput();
+    	include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
         $this->defaultMap = new COLLECTIONDEFAULTMAP();
-        $this->db->formatConditions(['collectionId' => $this->vars['edit_collectionId']]);
+        $this->db->formatConditions(['collectionId' => $this->formData['collectionId']]);
         $recordset = $this->db->select('collection', ['collectionType', 'collectionDefault']);
         $row = $this->db->fetchRow($recordset);
         if ($row['collectionDefault']) {
@@ -304,10 +300,11 @@ class EDITCOLLECTION
         $updateArray = $temp = $miscArray = $yearArray = $resourceArray = [];
         // Deal with creators
         $temp['creators'] = $this->editCreators();
-        $titleShort = array_key_exists('edit_collectionTitleShort', $this->vars) ?
-            \UTF8\mb_trim($this->vars['edit_collectionTitleShort']) : FALSE;
-        if ($collectionExistId = $this->collection->checkExists($this->vars['edit_collectionId'], $title, $titleShort, $this->vars['edit_collectionType'])) {
-            if ($collectionExistId != $this->vars['edit_collectionId']) {
+        $title = $this->formData['collectionTitle'];
+        $titleShort = $this->formData['collectionTitleShort'];
+        if ($collectionExistId = $this->collection->checkExists($this->formData['collectionId'], 
+        	$title, $titleShort, $this->formData['collectionType'])) {
+            if ($collectionExistId != $this->formData['collectionId']) {
                 return $this->confirmDuplicate($collectionExistId, $title, $titleShort);
             }
         }
@@ -315,39 +312,37 @@ class EDITCOLLECTION
         if ($titleShort) {
             $updateArray['collectionTitleShort'] = $titleShort;
         } else {
-            $this->db->formatConditions(['collectionId' => $this->vars['edit_collectionId']]);
+            $this->db->formatConditions(['collectionId' => $this->formData['collectionId']]);
             $this->db->updateNull('collection', 'collectionTitleshort');
         }
         // first, check publishers
         if ($row['collectionType'] == 'book') {
             $miscArray['resourcemiscPublisher'] = $temp['resourcemiscPublisher'] =
-                $this->editPublisherDetails('edit_publisherName', 'edit_publisherLocation', 'book', 'edit_resourcemiscPublisher');
+                $this->editPublisherDetails('publisherName', 'publisherLocation', 'book', 'resourcemiscPublisher');
             $miscArray['resourcemiscField1'] = $temp['resourcemiscField1'] =
-                $this->editPublisherDetails('edit_transPublisherName', 'edit_transPublisherLocation', 'book', 'edit_resourcemiscField1');
+                $this->editPublisherDetails('transPublisherName', 'transPublisherLocation', 'book', 'resourcemiscField1');
         } elseif ($row['collectionType'] == 'proceedings') {
             $miscArray['resourcemiscField1'] = $temp['resourcemiscField1'] =
-                $this->editPublisherDetails('edit_conferenceOrganiser', 'edit_conferenceOrganiserLocation', 'conference', 'edit_resourcemiscField1');
+                $this->editPublisherDetails('conferenceOrganiser', 'conferenceOrganiserLocation', 'conference', 'resourcemiscField1');
         }
-        foreach ($this->vars as $key => $value) {
-            if (($key == 'edit_collectionId') || ($key == 'edit_collectionTitle') || ($key == 'edit_collectionTitleShort')
-                || ($key == 'edit_collectionType') || ($key == 'action') || ($key == 'method') || ($key == 'submit')
+        foreach ($this->formData as $key => $value) {
+            if (($key == 'collectionId') || ($key == 'collectionTitle') || ($key == 'collectionTitleShort')
+                || ($key == 'collectionType') || ($key == 'action') || ($key == 'method') || ($key == 'submit')
                 || (mb_strpos($key, 'Creator') === 0)) {
                 continue;
             }
-            $var = trim($value);
-            if ($var) {
-                $split = \UTF8\mb_explode('_', $key);
-                $temp[$split[1]] = $var;
-                if (mb_strpos($split[1], 'resourcemisc') === 0) {
-                    $miscArray[$split[1]] = $var;
-                } elseif (mb_strpos($split[1], 'resourceyear') === 0) {
-                    $yearArray[$split[1]] = $var;
-                } elseif (mb_strpos($split[1], 'resource') === 0) {
-                    $resourceArray[$split[1]] = $var;
+            if ($value) {
+                $temp[$key] = $value;
+                if ($key == 'resourcemisc') {
+                    $miscArray[$key] = $value;
+                } elseif ($key == 'resourceyear') {
+                    $yearArray[$key] = $value;
+                } elseif ($key == 'resource') {
+                    $resourceArray[$key] = $value;
                 }
             }
         }
-        if (!array_key_exists('edit_resourcemiscPeerReviewed', $this->vars)) {
+        if (!array_key_exists('resourcemiscPeerReviewed', $this->formData)) {
             $miscArray['resourcemiscPeerReviewed'] = $temp['resourcemiscPeerReviewed'] = 'N';
         } else {
             $miscArray['resourcemiscPeerReviewed'] = $temp['resourcemiscPeerReviewed'] = 'Y';
@@ -362,7 +357,7 @@ class EDITCOLLECTION
             $this->updateResourceTable($resourceArray);
         }
         // Finally, create default value and write fields in collection table
-        $this->db->formatConditions(['collectionId' => $this->vars['edit_collectionId']]);
+        $this->db->formatConditions(['collectionId' => $this->formData['collectionId']]);
         $this->db->update('collection', $updateArray);
         // remove cache files for collections
         $this->db->deleteCache('cacheResourceCollections');
@@ -375,10 +370,12 @@ class EDITCOLLECTION
             }
         }
         // Update collection defaults field
-        $this->db->formatConditions(['collectionId' => $this->vars['edit_collectionId']]);
+        $this->db->formatConditions(['collectionId' => $this->formData['collectionId']]);
         $this->db->update('collection', ['collectionDefault' => base64_encode(serialize($collectionDefaults))]);
-        // send back to editDisplay with success message
-        $this->init($this->success->text("collection"));
+        $message = rawurlencode($this->success->text("collection"));
+        header("Location: index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&message=$message" . 
+        	"&collectionType=" . $this->formData['collectionType']);
+        die;
     }
     /**
      * write to the database
@@ -386,17 +383,14 @@ class EDITCOLLECTION
     public function editConfirm()
     {
         $this->gatekeep->init(TRUE); // write access requiring WIKINDX_GLOBAL_EDIT to be TRUE
-        if ($this->session->getVar("editLock")) {
-            $this->badInput->close($this->errors->text("done", "collection"), $this, 'init');
-        }
-        if (!array_key_exists('edit_collectionId', $this->vars) || !$this->vars['edit_collectionId']) {
+        if (!array_key_exists('collectionId', $this->vars) || !$this->vars['collectionId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        if (!array_key_exists('edit_collectionExistId', $this->vars) || !$this->vars['edit_collectionExistId']) {
+        if (!array_key_exists('collectionExistId', $this->vars) || !$this->vars['collectionExistId']) {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
         }
-        $editId = $this->vars['edit_collectionId'];
-        $existId = $this->vars['edit_collectionExistId'];
+        $editId = $this->vars['collectionId'];
+        $existId = $this->vars['collectionExistId'];
         // Delete old creator
         $this->db->formatConditions(['collectionId' => $editId]);
         $this->db->delete('collection');
@@ -412,19 +406,10 @@ class EDITCOLLECTION
             $this->db->formatConditions(['resourcemiscId' => $row['resourcemiscId']]);
             $this->db->update('resource_misc', ['resourcemiscCollection' => $existId]);
         }
-        // lock reload
-        $this->session->setVar("editLock", TRUE);
-        // Clear session
-        $this->session->clearArray("edit");
-        // send back to editDisplay with success message
-        $this->init($this->success->text("collection"));
-    }
-    /**
-     * Setter for loading session variables into $this->sessionVars when editing and using AJAX
-     */
-    public function setSessionVars()
-    {
-        $this->sessionVars = $this->session->getArray('edit');
+        $message = rawurlencode($this->success->text("collection"));
+        header("Location: index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&message=$message" . 
+        	"&collectionType=" . $this->formData['collectionType']);
+        die;
     }
     /**
      * Create form for book collections
@@ -480,7 +465,7 @@ class EDITCOLLECTION
     {
         return \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->thesis['resource']['Isbn']),
-            'edit_resourceIsbn',
+            'resourceIsbn',
             $this->defaultFormElementValue('resourceIsbn'),
             30
         ));
@@ -525,13 +510,13 @@ class EDITCOLLECTION
         $tab .= \HTML\trStart();
         $tab .= \HTML\td(\HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->newspaper['resource']['Field2']),
-            'edit_resourceField2',
+            'resourceField2',
             $this->defaultFormElementValue('resourceField2'),
             30
         )));
         $tab .= \HTML\td(\HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->newspaper['resource']['Isbn']),
-            'edit_resourceIsbn',
+            'resourceIsbn',
             $this->defaultFormElementValue('resourceIsbn'),
             30
         )));
@@ -549,7 +534,7 @@ class EDITCOLLECTION
         $tab .= \HTML\trStart();
         $tab .= \HTML\td(\HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->magazine['resource']['Isbn']),
-            'edit_resourceIsbn',
+            'resourceIsbn',
             $this->defaultFormElementValue('resourceIsbn'),
             30
         )));
@@ -567,7 +552,7 @@ class EDITCOLLECTION
         $tab .= \HTML\trStart();
         $tab .= \HTML\td(\HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->manuscript['resource']['Isbn']),
-            'edit_resourceIsbn',
+            'resourceIsbn',
             $this->defaultFormElementValue('resourceIsbn'),
             30
         )));
@@ -675,24 +660,26 @@ class EDITCOLLECTION
     {
         $fields = \HTML\trStart();
         $entry = $creatorType . '_' . $creatorOrder . '_firstname';
-        array_key_exists($entry, $this->sessionVars) ? $value = $this->sessionVars[$entry] : $value = FALSE;
-        $this->session->setVar("edit_" . $entry, $value);
+        array_key_exists($entry, $this->formData) ? $value = $this->formData[$entry] : $value = FALSE;
+        $this->formData[$entry] = $value;
         $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 30, 255));
         $entry = $creatorType . '_' . $creatorOrder . '_initials';
-        array_key_exists($entry, $this->sessionVars) ? $value = $this->sessionVars[$entry] : $value = FALSE;
-        $this->session->setVar("edit_" . $entry, $value);
-        $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 6, 255));
+        array_key_exists($entry, $this->formData) ? $value = $this->formData[$entry] : $value = FALSE;
+        $this->formData[$entry] = $value;
+        $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 6, 255) . BR . 
+        	\HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+        	$this->messages->text("hint", "initials")), 'hint'));
         $entry = $creatorType . '_' . $creatorOrder . '_prefix';
-        array_key_exists($entry, $this->sessionVars) ? $value = $this->sessionVars[$entry] : $value = FALSE;
-        $this->session->setVar("edit_" . $entry, $value);
+        array_key_exists($entry, $this->formData) ? $value = $this->formData[$entry] : $value = FALSE;
+        $this->formData[$entry] = $value;
         $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 11, 255));
         $entry = $creatorType . '_' . $creatorOrder . '_surname';
-        array_key_exists($entry, $this->sessionVars) ? $value = $this->sessionVars[$entry] : $value = FALSE;
-        $this->session->setVar("edit_" . $entry, $value);
+        array_key_exists($entry, $this->formData) ? $value = $this->formData[$entry] : $value = FALSE;
+        $this->formData[$entry] = $value;
         $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 30, 255));
         $entry = $creatorType . '_' . $creatorOrder . '_select';
-        array_key_exists($entry, $this->sessionVars) ? $value = $this->sessionVars[$entry] : $value = $creatorId;
-        $this->session->setVar("edit_" . $entry, $value);
+        array_key_exists($entry, $this->formData) ? $value = $this->formData[$entry] : $value = $creatorId;
+        $this->formData[$entry] = $value;
         $fields .= \HTML\td(\FORM\selectedBoxValue(FALSE, $entry, $this->creatorsArray, $value, 1));
         $fields .= \HTML\trEnd();
 
@@ -707,13 +694,14 @@ class EDITCOLLECTION
      */
     private function getCreatorRoles($creatorRole)
     {
-        if (!empty($this->sessionVars)) { // back here after a mis-edit so pull any select
+        if (!empty($this->formData)) { // back here after a mis-edit so pull any select
             $surnames = [];
-            foreach ($this->sessionVars as $key => $value) {
+            foreach ($this->formData as $key => $value) {
                 if (mb_strpos($key, 'Creator') === 0) {
                     $split = \UTF8\mb_explode('_', $key);
                     if ($split[2] == 'surname') {
-                        trim($value) ? $surnames[$split[0] . '_' . $split[1] . '_select'] = TRUE : $surnames[$split[0] . '_' . $split[1] . '_select'] = FALSE;
+                        trim($value) ? $surnames[$split[0] . '_' . $split[1] . '_select'] = TRUE : 
+                        $surnames[$split[0] . '_' . $split[1] . '_select'] = FALSE;
                     }
                     if ($split[2] != 'select') {
                         continue;
@@ -814,8 +802,7 @@ class EDITCOLLECTION
     {
         $label = \HTML\trStart();
         $label .= \HTML\td($this->messages->text("resources", "firstname"));
-        $label .= \HTML\td($this->messages->text("resources", "initials") .
-            BR . \HTML\span($this->messages->text("hint", "initials"), 'hint'));
+        $label .= \HTML\td($this->messages->text("resources", "initials"));
         $label .= \HTML\td($this->messages->text("resources", "prefix"));
         $label .= \HTML\td($this->messages->text("resources", "surname"));
         $label .= \HTML\td('&nbsp;');
@@ -832,36 +819,36 @@ class EDITCOLLECTION
     {
         $td = \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->book['resource_misc']['Field4']),
-            'edit_resourcemiscField4',
+            'resourcemiscField4',
             $this->defaultFormElementValue('resourcemiscField4'),
             10
-        ) . BR .
-            \HTML\span($this->messages->text('hint', 'arabicNumeral1'), 'hint'));
+        ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+        		$this->messages->text("hint", "arabicNumeral1")), 'hint'));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->book['resource']['Field4']),
-            'edit_resourceField4',
+            'resourceField4',
             $this->defaultFormElementValue('resourceField4'),
             10
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'volumeYear'),
-            'edit_resourceyearYear3',
+            'resourceyearYear3',
             $this->defaultFormElementValue('resourceyearYear3'),
             10
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->book['resource']['Isbn']),
-            'edit_resourceIsbn',
+            'resourceIsbn',
             $this->defaultFormElementValue('resourceIsbn'),
             30
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->book['resource']['Doi']),
-            'edit_resourceDoi',
+            'resourceDoi',
             $this->defaultFormElementValue('resourceDoi'),
             30
-        ) .
-            BR . \HTML\span($this->messages->text('hint', 'doi'), 'hint'));
+        )  . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+        		$this->messages->text("hint", "doi")), 'hint'));
 
         return $td;
     }
@@ -874,26 +861,26 @@ class EDITCOLLECTION
     {
         $td = \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->book['resource']['Field1']),
-            'edit_resourceField1',
+            'resourceField1',
             $this->defaultFormElementValue('resourceField1'),
             60
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->book['resource']['Field3']),
-            'edit_resourceField3',
+            'resourceField3',
             $this->defaultFormElementValue('resourceField3'),
             10
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->book['resource']['Field2']),
-            'edit_resourceField2',
+            'resourceField2',
             $this->defaultFormElementValue('resourceField2'),
             10
         ));
         $checked = $this->defaultFormElementValue('resourcemiscPeerReviewed') == 'Y' ? TRUE : FALSE;
         $td .= \HTML\p(\FORM\checkbox(
             $this->messages->text("resources", $this->defaultMap->book['resource_misc']['PeerReviewed']),
-            'edit_resourcemiscPeerReviewed',
+            'resourcemiscPeerReviewed',
             $checked
         ));
 
@@ -908,32 +895,32 @@ class EDITCOLLECTION
     {
         $td = \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->proceedings['resource']['Field1']),
-            'edit_resourceField1',
+            'resourceField1',
             $this->defaultFormElementValue('resourceField1'),
             60
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->proceedings['resource']['Field3']),
-            'edit_resourceField3',
+            'resourceField3',
             $this->defaultFormElementValue('resourceField3'),
             10
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->proceedings['resource']['Isbn']),
-            'edit_resourceIsbn',
+            'resourceIsbn',
             $this->defaultFormElementValue('resourceIsbn'),
             30
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'proceedingsVolumeNumber'),
-            'edit_resourceField4',
+            'resourceField4',
             $this->defaultFormElementValue('resourceField4'),
             10
         ));
         $checked = $this->defaultFormElementValue('resourcemiscPeerReviewed') == 'Y' ? TRUE : FALSE;
         $td .= \HTML\p(\FORM\checkbox(
             $this->messages->text("resources", $this->defaultMap->proceedings['resource_misc']['PeerReviewed']),
-            'edit_resourcemiscPeerReviewed',
+            'resourcemiscPeerReviewed',
             $checked
         ));
 
@@ -957,19 +944,19 @@ class EDITCOLLECTION
         }
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->book['resource']['TransTitle']),
-            'edit_resourceTransTitle',
+            'resourceTransTitle',
             $select,
             80
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->book['resource']['TransSubtitle']),
-            'edit_resourceTransSubtitle',
+            'resourceTransSubtitle',
             $this->defaultFormElementValue('resourceTransSubtitle'),
             80
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->book['resource']['TransShortTitle']),
-            'edit_resourceTransShortTitle',
+            'resourceTransShortTitle',
             $this->defaultFormElementValue('resourceTransShortTitle'),
             30
         ));
@@ -988,14 +975,14 @@ class EDITCOLLECTION
         $tab .= \HTML\trStart();
         $td = \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'conferenceOrganiser'),
-            'edit_conferenceOrganiser',
-            '',
+            'conferenceOrganiser',
+            $this->defaultFormElementValue('conferenceOrganiser'),
             40
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'conferenceLocation'),
-            'edit_conferenceLocation',
-            '',
+            'conferenceLocation',
+            $this->defaultFormElementValue('conferenceLocation'),
             40
         ));
         $temp = $publisher->grabAll('conference');
@@ -1007,9 +994,9 @@ class EDITCOLLECTION
             }
             $select = $this->defaultFormElementValue('resourcemiscField1');
             if ($select) {
-                $td .= \HTML\p(\FORM\selectedBoxValue($pub, 'edit_resourcemiscField1', $pubs, $select, 1));
+                $td .= \HTML\p(\FORM\selectedBoxValue($pub, 'resourcemiscField1', $pubs, $select, 1));
             } else {
-                $td .= \HTML\p(\FORM\selectFBoxValue($pub, 'edit_resourcemiscField1', $pubs, 1));
+                $td .= \HTML\p(\FORM\selectFBoxValue($pub, 'resourcemiscField1', $pubs, 1));
             }
         }
         $tab .= \HTML\td($td);
@@ -1017,29 +1004,29 @@ class EDITCOLLECTION
         $days[] = $this->messages->text("misc", "ignore");
         $days = array_merge($days, range(1, 31));
         $select = $this->defaultFormElementValue('resourcemiscField2');
-        $td = \HTML\p(\FORM\selectedBoxValue($this->messages->text("resources", 'startDay'), 'edit_resourcemiscField2', $days, $select, 1));
+        $td = \HTML\p(\FORM\selectedBoxValue($this->messages->text("resources", 'startDay'), 'resourcemiscField2', $days, $select, 1));
         $select = $this->defaultFormElementValue('resourcemiscField5');
-        $td .= \HTML\p(\FORM\selectedBoxValue($this->messages->text("resources", 'endDay'), 'edit_resourcemiscField5', $days, $select, 1));
+        $td .= \HTML\p(\FORM\selectedBoxValue($this->messages->text("resources", 'endDay'), 'resourcemiscField5', $days, $select, 1));
         $tab .= \HTML\td($td);
         // months
         $constant = FACTORY_CONSTANTS::getInstance();
         $months[] = $this->messages->text("misc", "ignore");
         $months = array_merge($months, $constant->monthToLongName());
         $select = $this->defaultFormElementValue('resourcemiscField3');
-        $td = \HTML\p(\FORM\selectedBoxValue($this->messages->text("resources", 'startMonth'), 'edit_resourcemiscField3', $months, $select, 1));
+        $td = \HTML\p(\FORM\selectedBoxValue($this->messages->text("resources", 'startMonth'), 'resourcemiscField3', $months, $select, 1));
         $select = $this->defaultFormElementValue('resourcemiscField6');
-        $td .= \HTML\p(\FORM\selectedBoxValue($this->messages->text("resources", 'endMonth'), 'edit_resourcemiscField6', $months, $select, 1));
+        $td .= \HTML\p(\FORM\selectedBoxValue($this->messages->text("resources", 'endMonth'), 'resourcemiscField6', $months, $select, 1));
         $tab .= \HTML\td($td);
         // years
         $td = \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'startYear'),
-            'edit_resourceyearYear2',
+            'resourceyearYear2',
             $this->defaultFormElementValue('resourceyearYear2'),
             10
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'endYear'),
-            'edit_resourceyearYear3',
+            'resourceyearYear3',
             $this->defaultFormElementValue('resourceyearYear3'),
             10
         ));
@@ -1061,14 +1048,14 @@ class EDITCOLLECTION
         $publisher = FACTORY_PUBLISHER::getInstance();
         $td = \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'publisherName'),
-            'edit_publisherName',
-            '',
+            'publisherName',
+            $this->defaultFormElementValue('publisherName'),
             40
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'publisherLocation'),
-            'edit_publisherLocation',
-            '',
+            'publisherLocation',
+            $this->defaultFormElementValue('publisherLocation'),
             40
         ));
         $temp = $publisher->grabAll($type);
@@ -1080,9 +1067,9 @@ class EDITCOLLECTION
             }
             $select = $this->defaultFormElementValue('resourcemiscPublisher');
             if ($select) {
-                $td .= \HTML\p(\FORM\selectedBoxValue($pub, 'edit_resourcemiscPublisher', $pubs, $select, 1));
+                $td .= \HTML\p(\FORM\selectedBoxValue($pub, 'resourcemiscPublisher', $pubs, $select, 1));
             } else {
-                $td .= \HTML\p(\FORM\selectFBoxValue($pub, 'edit_resourcemiscPublisher', $pubs, 1));
+                $td .= \HTML\p(\FORM\selectFBoxValue($pub, 'resourcemiscPublisher', $pubs, 1));
             }
         }
 
@@ -1098,14 +1085,14 @@ class EDITCOLLECTION
         $td = $this->pub();
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'publicationYear'),
-            'edit_resourceyearYear1',
+            'resourceyearYear1',
             $this->defaultFormElementValue('resourceyearYear1'),
             10
-        ) .
-            BR . \HTML\span($this->messages->text('hint', 'publicationYear'), 'hint'));
+        ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+        		$this->messages->text("hint", "publicationYear")), 'hint'));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'reprintYear'),
-            'edit_resourceyearYear2',
+            'resourceyearYear2',
             $this->defaultFormElementValue('resourceyearYear2'),
             10
         ));
@@ -1122,11 +1109,11 @@ class EDITCOLLECTION
         $td = $this->pub('conference');
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'publicationYear'),
-            'edit_resourceyearYear1',
+            'resourceyearYear1',
             $this->defaultFormElementValue('resourceyearYear1'),
             10
-        ) .
-            BR . \HTML\span($this->messages->text('hint', 'publicationYear'), 'hint'));
+        ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+        		$this->messages->text("hint", "publicationYear")), 'hint'));
 
         return $td;
     }
@@ -1140,14 +1127,14 @@ class EDITCOLLECTION
         $td = $this->pub();
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->journal['resource']['Isbn']),
-            'edit_resourceIsbn',
+            'resourceIsbn',
             $this->defaultFormElementValue('resourceIsbn'),
             30
         ));
         $checked = $this->defaultFormElementValue('resourcemiscPeerReviewed') == 'Y' ? TRUE : FALSE;
         $td .= \HTML\p(\FORM\checkbox(
             $this->messages->text("resources", $this->defaultMap->journal['resource_misc']['PeerReviewed']),
-            'edit_resourcemiscPeerReviewed',
+            'resourcemiscPeerReviewed',
             $checked
         ));
 
@@ -1163,14 +1150,14 @@ class EDITCOLLECTION
         $td = $this->pub();
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->web['resource']['Isbn']),
-            'edit_resourceIsbn',
+            'resourceIsbn',
             $this->defaultFormElementValue('resourceIsbn'),
             30
         ));
         $checked = $this->defaultFormElementValue('resourcemiscPeerReviewed') == 'Y' ? TRUE : FALSE;
         $td .= \HTML\p(\FORM\checkbox(
             $this->messages->text("resources", $this->defaultMap->web['resource_misc']['PeerReviewed']),
-            'edit_resourcemiscPeerReviewed',
+            'resourcemiscPeerReviewed',
             $checked
         ));
 
@@ -1186,13 +1173,13 @@ class EDITCOLLECTION
         $td = $this->pub('music');
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->music['resource']['Field2']),
-            'edit_resourceField2',
+            'resourceField2',
             $this->defaultFormElementValue('resourceField2'),
             30
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->music['resource']['Isbn']),
-            'edit_resourceIsbn',
+            'resourceIsbn',
             $this->defaultFormElementValue('resourceIsbn'),
             30
         ));
@@ -1209,27 +1196,27 @@ class EDITCOLLECTION
         $td = $this->pub();
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'publicationYear'),
-            'edit_resourceyearYear1',
+            'resourceyearYear1',
             $this->defaultFormElementValue('resourceyearYear1'),
             10
-        ) .
-            BR . \HTML\span($this->messages->text('hint', 'publicationYear'), 'hint'));
+        ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+        		$this->messages->text("hint", "publicationYear")), 'hint'));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->miscellaneous['resource']['Field2']),
-            'edit_resourceField2',
+            'resourceField2',
             $this->defaultFormElementValue('resourceField2'),
             30
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', $this->defaultMap->miscellaneous['resource']['Isbn']),
-            'edit_resourceIsbn',
+            'resourceIsbn',
             $this->defaultFormElementValue('resourceIsbn'),
             30
         ));
         $checked = $this->defaultFormElementValue('resourcemiscPeerReviewed') == 'Y' ? TRUE : FALSE;
         $td .= \HTML\p(\FORM\checkbox(
             $this->messages->text("resources", $this->defaultMap->miscellaneous['resource_misc']['PeerReviewed']),
-            'edit_resourcemiscPeerReviewed',
+            'resourcemiscPeerReviewed',
             $checked
         ));
 
@@ -1245,14 +1232,14 @@ class EDITCOLLECTION
         $publisher = FACTORY_PUBLISHER::getInstance();
         $td = \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'publisherName'),
-            'edit_transPublisherName',
-            '',
+            'transPublisherName',
+            $this->defaultFormElementValue('transPublisherName'),
             40
         ));
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'publisherLocation'),
-            'edit_transPublisherLocation',
-            '',
+            'transPublisherLocation',
+            $this->defaultFormElementValue('transPublisherLocation'),
             40
         ));
         $temp = $publisher->grabAll();
@@ -1264,14 +1251,14 @@ class EDITCOLLECTION
             }
             $select = $this->defaultFormElementValue('resourcemiscField1');
             if ($select) {
-                $td .= \HTML\p(\FORM\selectedBoxValue($pub, 'edit_resourcemiscField1', $pubs, $select, 1));
+                $td .= \HTML\p(\FORM\selectedBoxValue($pub, 'resourcemiscField1', $pubs, $select, 1));
             } else {
-                $td .= \HTML\p(\FORM\selectFBoxValue($pub, 'edit_resourcemiscField1', $pubs, 1));
+                $td .= \HTML\p(\FORM\selectFBoxValue($pub, 'resourcemiscField1', $pubs, 1));
             }
         }
         $td .= \HTML\p(\FORM\textInput(
             $this->messages->text('resources', 'publicationYear'),
-            'edit_resourceyearYear4',
+            'resourceyearYear4',
             $this->defaultFormElementValue('resourceyearYear4'),
             10
         ));
@@ -1301,7 +1288,7 @@ class EDITCOLLECTION
     private function updateResourceTable($resourceArray)
     {
         $defaults = $nulls = $update = [];
-        foreach ($this->defaultMap->{$this->vars['edit_collectionType']}['resource'] as $key => $value) {
+        foreach ($this->defaultMap->{$this->formData['collectionType']}['resource'] as $key => $value) {
             $defaults[] = 'resource' . $key;
         }
         $nulls = array_diff($defaults, array_keys($resourceArray));
@@ -1313,12 +1300,12 @@ class EDITCOLLECTION
             }
         }
         if (!empty($update)) {
-            $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
+            $this->db->formatConditions(['resourcemiscCollection' => $this->formData['collectionId']]);
             $this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceId');
             $this->db->update('resource', $update);
         }
         if (!empty($nulls)) {
-            $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
+            $this->db->formatConditions(['resourcemiscCollection' => $this->formData['collectionId']]);
             $this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceId');
             $this->db->updateNull('resource', $nulls);
         }
@@ -1331,7 +1318,7 @@ class EDITCOLLECTION
     private function updateMiscTable($miscArray)
     {
         $defaults = $nulls = $update = [];
-        foreach ($this->defaultMap->{$this->vars['edit_collectionType']}['resource_misc'] as $key => $value) {
+        foreach ($this->defaultMap->{$this->formData['collectionType']}['resource_misc'] as $key => $value) {
             $defaults[] = 'resourcemisc' . $key;
         }
         $nulls = array_diff($defaults, array_keys($miscArray));
@@ -1343,11 +1330,11 @@ class EDITCOLLECTION
             }
         }
         if (!empty($update)) {
-            $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
+            $this->db->formatConditions(['resourcemiscCollection' => $this->formData['collectionId']]);
             $this->db->update('resource_misc', $update);
         }
         if (!empty($nulls)) {
-            $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
+            $this->db->formatConditions(['resourcemiscCollection' => $this->formData['collectionId']]);
             $this->db->updateNull('resource_misc', $nulls);
         }
     }
@@ -1359,7 +1346,7 @@ class EDITCOLLECTION
     private function updateYearTable($yearArray)
     {
         $defaults = $nulls = $update = [];
-        foreach ($this->defaultMap->{$this->vars['edit_collectionType']}['resource_year'] as $key => $value) {
+        foreach ($this->defaultMap->{$this->formData['collectionType']}['resource_year'] as $key => $value) {
             $defaults[] = 'resourceyear' . $key;
         }
         $nulls = array_diff($defaults, array_keys($yearArray));
@@ -1371,12 +1358,12 @@ class EDITCOLLECTION
             }
         }
         if (!empty($update)) {
-            $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
+            $this->db->formatConditions(['resourcemiscCollection' => $this->formData['collectionId']]);
             $this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceyearId');
             $this->db->update('resource_year', $update);
         }
         if (!empty($nulls)) {
-            $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
+            $this->db->formatConditions(['resourcemiscCollection' => $this->formData['collectionId']]);
             $this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceyearId');
             $this->db->updateNull('resource_year', $nulls);
         }
@@ -1386,7 +1373,7 @@ class EDITCOLLECTION
      * Use values from session as these have been sorted into the correct order.
      * When adding creators, must also add creators to the resources of the collection (possibly re-ordered creators so delete all first).
      * When deleting creators, must also delete from any collection defaults if the deleted creator no longer exists in a resource.
-     * $sessionVars contains e.g. Creator2_0_initials and Creator2_0_prefix where '2' refers to creator role and '0' order of the creator (less 1).
+     * $formData contains e.g. Creator2_0_initials and Creator2_0_prefix where '2' refers to creator role and '0' order of the creator (less 1).
      * The collection defaults array has the 'creators' array which is e.g.
      * ( [creators] => Array ( [Creator2_0_select] => 809 [Creator3_0_select] => 812 [Creator4_0_select] => 813 [Creator2_1_select] => 810 ). That is,
      * it only stores creatorIDs. Therefore, collection defaults are written after any creators are added or deleted in the database.
@@ -1397,7 +1384,7 @@ class EDITCOLLECTION
     private function editCreators()
     {
         $creators = [];
-        foreach ($this->sessionVars as $key => $value) {
+        foreach ($this->formData as $key => $value) {
             if (mb_strpos($key, 'Creator') === 0) {
                 $split = \UTF8\mb_explode('_', $key);
                 $role = str_replace('Creator', '', $split[0]);
@@ -1474,7 +1461,7 @@ class EDITCOLLECTION
             }
         }
         $writeArray = [];
-        $this->db->formatConditions(['resourcemiscCollection' => $this->vars['edit_collectionId']]);
+        $this->db->formatConditions(['resourcemiscCollection' => $this->formData['collectionId']]);
         $this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourcemiscId');
         $resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcecreatorCreatorMain', 'resourcecreatorCreatorSurname'], TRUE);
         while ($row = $this->db->fetchRow($resultSet)) {
@@ -1525,15 +1512,15 @@ class EDITCOLLECTION
     {
         $pubObject = FACTORY_PUBLISHER::getInstance();
         $returnValue = FALSE;
-        if (array_key_exists($name, $this->vars) && \UTF8\mb_trim($this->vars[$name])) {
-            $name = \UTF8\mb_trim($this->vars[$name]);
-            if (array_key_exists($location, $this->vars)) {
-                $location = \UTF8\mb_trim($this->vars[$location]);
+        if (array_key_exists($name, $this->formData) && $this->formData[$name]) {
+            $name = $this->formData[$name];
+            if (array_key_exists($location, $this->formData)) {
+                $location = $this->formData[$location];
             } else {
                 $location = '';
             }
             if ($publisherExistsId = $pubObject->checkExists($name, $location)) {
-                $this->vars[$id] = $returnValue = $publisherExistsId;
+                $this->formData[$id] = $returnValue = $publisherExistsId;
             } else { // need to write new publisher to publisher table
                 $fields[] = 'publisherName';
                 $values[] = $name;
@@ -1544,14 +1531,14 @@ class EDITCOLLECTION
                 $fields[] = 'publisherType';
                 $values[] = $type;
                 $this->db->insert('publisher', $fields, $values);
-                $this->vars[$id] = $returnValue = $this->db->lastAutoId();
+                $this->formData[$id] = $returnValue = $this->db->lastAutoId();
             }
-        } elseif (array_key_exists($id, $this->vars) && ($this->vars[$id] == 0)) { // i.e. 'IGNORE'
-            unset($this->vars[$id]);
+        } elseif (array_key_exists($id, $this->formData) && ($this->formData[$id] == 0)) { // i.e. 'IGNORE'
+            unset($this->formData[$id]);
             $returnValue = FALSE;
         }
-        unset($this->vars[$name]);
-        unset($this->vars[$location]);
+        unset($this->formData[$name]);
+        unset($this->formData[$location]);
         $pubObject->removeHanging();
         $this->db->deleteCache('cacheResourcePublishers');
         $this->db->deleteCache('cacheMetadataPublishers');
@@ -1573,8 +1560,9 @@ class EDITCOLLECTION
         $pString = $this->errors->text("warning", "collectionExists");
         $pString .= \HTML\p($this->messages->text("misc", "collectionExists"));
         $pString .= \FORM\formHeader("edit_EDITCOLLECTION_CORE");
-        $pString .= \FORM\hidden("edit_collectionId", $this->vars['edit_collectionId']);
-        $pString .= \FORM\hidden("edit_collectionExistId", $collectionExistId);
+        $pString .= \FORM\hidden("collectionId", $this->vars['collectionId']);
+        $pString .= \FORM\hidden("collectionType", $this->vars['collectionType']);
+        $pString .= \FORM\hidden("collectionExistId", $collectionExistId);
         $pString .= \FORM\hidden("method", 'editConfirm');
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")), FALSE, "right");
         $pString .= \FORM\formEnd();
@@ -1589,44 +1577,41 @@ class EDITCOLLECTION
      */
     private function writeSessionCreators($array)
     {
-        $temp = $this->session->getArray('edit');
         if (!empty($array['creatorFields'])) {
             // $array['creatorFields'] does not store fields set to IGNORE or blank so, if creator fields don't exist, remove them from the session.
-            foreach ($temp as $key => $value) {
+            foreach ($array as $key => $value) {
                 if (!array_key_exists($key, $array['creatorFields']) && (mb_strpos($key, 'Creator') === 0)) {
-                    $this->session->delVar("edit_$key");
+                    unset($this->formData["$key"]);
                 }
             }
-            $this->session->writeArray($array['creatorFields'], 'edit');
+            $this->formData['creatorFields'] = $array['creatorFields'];
         }
         // else remove all creator fields
         else {
-            foreach ($temp as $key => $value) {
+            foreach ($array as $key => $value) {
                 if (mb_strpos($key, 'Creator') === 0) {
-                    $this->session->delVar("edit_$key");
+                    unset($this->formData["$key"]);
                 }
             }
         }
-        $this->sessionVars = $this->session->getArray('edit');
     }
     /**
-     * Write edit_ vars to session
+     * Validate input and write vars to formData
      */
-    private function writeVarsToSession()
+    private function validateInput()
     {
-        $this->session->clearArray('edit');
         $allCreators = [];
         foreach ($this->vars as $key => $value) {
-            if (mb_strpos($key, 'edit_') === 0) {
-                if ($key == 'edit_resourcemiscPeerReviewed') {
-                    $this->sessionVars[str_replace('edit_', '', $key)] = 'Y';
+			if ($key == 'resourcemiscPeerReviewed') {
+				$this->formData[$key] = 'Y';
 
-                    continue;
-                }
-                $this->sessionVars[str_replace('edit_', '', $key)] = $value;
-            }
+				continue;
+			}
+			if (($key == 'method') || ($key == 'submit')) {
+				continue;
+			}
             // Write creator session data and ensure each creator in each role is correctly ordered
-            elseif (mb_strpos($key, 'Creator') === 0) {
+            if (mb_strpos($key, 'Creator') === 0) {
                 $split = \UTF8\mb_explode('_', $key);
                 $newKey = $split[0] . '_' . $split[1];
                 $allCreators[$split[0]]['order'][$newKey] = $split[1];
@@ -1641,6 +1626,9 @@ class EDITCOLLECTION
                 } elseif ($split[2] == 'select') {
                     $allCreators[$split[0]]['creators'][$newKey]['select'] = $value;
                 }
+            }
+            else {
+                $this->formData[$key] = \UTF8\mb_trim($value);
             }
         }
         if (!empty($allCreators)) {
@@ -1659,20 +1647,27 @@ class EDITCOLLECTION
                 foreach ($array['order'] as $key => $value) {
                     $newKey = $role . '_' . $index;
                     $sessionKey = $newKey . '_initials';
-                    $this->sessionVars[$sessionKey] = $allCreators[$role]['creators'][$key]['initials'];
+                    $this->formData[$sessionKey] = \UTF8\mb_trim($allCreators[$role]['creators'][$key]['initials']);
                     $sessionKey = $newKey . '_prefix';
-                    $this->sessionVars[$sessionKey] = $allCreators[$role]['creators'][$key]['prefix'];
+                    $this->formData[$sessionKey] = \UTF8\mb_trim($allCreators[$role]['creators'][$key]['prefix']);
                     $sessionKey = $newKey . '_firstname';
-                    $this->sessionVars[$sessionKey] = $allCreators[$role]['creators'][$key]['firstname'];
+                    $this->formData[$sessionKey] = \UTF8\mb_trim($allCreators[$role]['creators'][$key]['firstname']);
                     $sessionKey = $newKey . '_surname';
-                    $this->sessionVars[$sessionKey] = $allCreators[$role]['creators'][$key]['surname'];
+                    $this->formData[$sessionKey] = \UTF8\mb_trim($allCreators[$role]['creators'][$key]['surname']);
                     $sessionKey = $newKey . '_select';
-                    $this->sessionVars[$sessionKey] = $allCreators[$role]['creators'][$key]['select'];
+                    $this->formData[$sessionKey] = \UTF8\mb_trim($allCreators[$role]['creators'][$key]['select']);
                     ++$index;
                 }
             }
         }
-        $this->session->writeArray($this->sessionVars, 'edit');
-        $this->sessionVars = $this->session->getArray('edit'); // also picks up creator fields
+        if (!array_key_exists('collectionId', $this->formData) || !$this->formData['collectionId']) {
+            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
+        }
+        if (!array_key_exists('collectionType', $this->formData)) { // can be NULL
+            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
+        }
+        if (!array_key_exists('collectionTitle', $this->formData) || !$this->formData['collectionTitle']) {
+            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'editDisplayCollection');
+        }
     }
 }

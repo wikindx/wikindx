@@ -977,7 +977,7 @@ class MENU
         $browseArray[$messages->text("collection", 'all')] = 'index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=0';
         $editArray[$messages->text("menu", "editSubCollection")] = FALSE;
         $editArray[$messages->text("collection", 'all')] =
-            'index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&edit_collectionType=0';
+            'index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&collectionType=0';
         while ($row = $this->db->fetchRow($recordset)) {
             if (!$row['collectionType']) {
                 continue;
@@ -985,7 +985,7 @@ class MENU
             $browseArray[$messages->text("collection", $row['collectionType'])] =
                 'index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=' . $row['collectionType'];
             $editArray[$messages->text("collection", $row['collectionType'])] =
-                'index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&edit_collectionType=' .
+                'index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&collectionType=' .
                 $row['collectionType'];
         }
 

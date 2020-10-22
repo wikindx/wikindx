@@ -19,10 +19,10 @@ class localedescriptionMessages
         $this->text = [
             "menu" => dgettext($domain, "Localize Front Page"),
             "heading" => dgettext($domain, "Localize Front Page Description"),
-            "text1" => dgettext($domain, "Here, you can set an alternate front page description for each localization language you have installed.
-						 Alternate descriptions are stored in the config_ database as configDescription_xx where 'xx' is the localization
-						 folder name. The original description, set in Admin|Configure, is displayed whenever the user changes to a localization
-						 language for which there is no alternate front page description."),
+            "text1" => dgettext($domain, "Here, you can set an alternate front page description for each localization you have installed.
+						 Alternate descriptions are stored in the config_ database as configDescription_xx_XX. The original 
+						 description, set in Admin|Configure, is displayed whenever the user changes to a localization
+						 for which there is no alternate front page description."),
             "text2" => dgettext($domain, "If you empty the description and submit, you are removing the database field."),
             "choose" => dgettext($domain, "Choose localization"),
             "original" => dgettext($domain, "Original Admin|Configure description"),

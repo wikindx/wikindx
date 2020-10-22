@@ -164,6 +164,7 @@ class soundexplorer_MODULE
         // redirect to display with success message
         $message = rawurlencode($message);
         header("Location: index.php?action=soundexplorer_seConfigure&message=$message");
+        die;
     }
     /**
      * checkTables

@@ -370,4 +370,5 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configTitle"                    => ["constname" => "WIKINDX_TITLE",                      "type" => "configVarchar"],
     "configUserRegistration"         => ["constname" => "WIKINDX_USER_REGISTRATION",          "type" => "configBoolean"],
     "configUserRegistrationModerate" => ["constname" => "WIKINDX_USER_REGISTRATION_MODERATE", "type" => "configBoolean"],
+    "configResourceUrlPrefix"        => ["constname" => "WIKINDX_RESOURCE_URL_PREFIX",        "type" => "configVarchar"],
 ]);

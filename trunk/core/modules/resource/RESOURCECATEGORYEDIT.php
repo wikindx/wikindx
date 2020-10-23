@@ -21,6 +21,7 @@ class RESOURCECATEGORYEDIT
     private $errors;
     private $messages;
     private $success;
+    private $icons;
     private $session;
     private $badInput;
     private $category;
@@ -41,8 +42,7 @@ class RESOURCECATEGORYEDIT
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-
-
+        $this->icons = FACTORY_LOADICONS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->category = FACTORY_CATEGORY::getInstance();
@@ -53,7 +53,12 @@ class RESOURCECATEGORYEDIT
         $this->keywords = $this->keyword->grabAll();
         $this->userTagsObject = FACTORY_USERTAGS::getInstance();
         $this->userTags = $this->userTagsObject->grabAll();
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "resourceEdit"));
+    	$return = \HTML\a(
+			$this->icons->getClass("edit"),
+			$this->icons->getHTML("Return"),
+			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id']
+		);
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "resourceEdit") . '&nbsp;&nbsp;' . $return);
     }
     /**
      * Display form for editing

@@ -1474,6 +1474,8 @@ class MESSAGES
 				"Cache" => dgettext($domain, "Convert attachments"),
 				"OK" => dgettext($domain, "OK"),
 				"Close" => dgettext($domain, "Close"),
+/// submit_Return Not really a submit button but ALT text on the 'Return' icon used for navigation
+				"Return" => dgettext($domain, "Return"),
 			),
 /// import_ Bibliography import messages
 		    "import" => array(

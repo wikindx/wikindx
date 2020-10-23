@@ -23,6 +23,7 @@ class DELETERESOURCE
     private $messages;
     private $errors;
     private $success;
+    private $icons;
     private $session;
     private $badInput;
     private $gatekeep;
@@ -43,6 +44,7 @@ class DELETERESOURCE
         $this->session = FACTORY_SESSION::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
+        $this->icons = FACTORY_LOADICONS::getInstance();
     }
     /**
      * check we are allowed to delete and load appropriate method
@@ -90,16 +92,22 @@ class DELETERESOURCE
                 $this->display($this->errors->text("inputError", "maxInputVars", "$maxSize"));
                 FACTORY_CLOSE::getInstance();
             }
-*/            $this->db->formatConditionsOneField($this->vars['resource_id'], 'resourceId');
-        } else {
+*/			$this->db->formatConditionsOneField($this->vars['resource_id'], 'resourceId');
+			$return = FALSE;
+        } else { // just the one resource so add navigation link
             $this->db->formatConditions(['resourceId' => $this->vars['resource_id']]);
+            $return = '&nbsp;&nbsp;' . \HTML\a(
+				$this->icons->getClass("edit"),
+				$this->icons->getHTML("Return"),
+				'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['resource_id']
+			);
         }
         $recordset = $res->getResource(FALSE, $this->db->formatFields('creatorSurname'));
         if (!$numDeletes = $this->db->numRows($recordset)) {
             $this->display($this->messages->text("resources", "noResult"));
             FACTORY_CLOSE::getInstance();
         }
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete"));
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete") . $return);
         // Rather than print 100s or 1000s of resources, we limit display to <= 'PagingMaxLinks'
         if ($numDeletes <= GLOBALS::getUserVar('PagingMaxLinks')) {
             $resourceList = [];

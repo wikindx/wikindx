@@ -24,6 +24,8 @@ class RESOURCEQUOTE
     private $success;
     private $navigate;
     private $badInput;
+    private $icons;
+    private $return;
     private $formData = [];
 
     // Constructor
@@ -38,10 +40,9 @@ class RESOURCEQUOTE
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-
+        $this->icons = FACTORY_LOADICONS::getInstance();
         $this->navigate = FACTORY_NAVIGATE::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "quotes"));
         if (!array_key_exists('resourceId', $this->vars) || !$this->vars['resourceId'] ||
             !array_key_exists('method', $this->vars) || !$this->vars['method']) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
@@ -50,6 +51,11 @@ class RESOURCEQUOTE
         if (!method_exists($this, $function)) {
             $this->navigate->resource($this->vars['resourceId'], $this->errors->text("inputError", "invalid"));
         }
+        $this->return = '&nbsp;&nbsp;' . \HTML\a(
+			$this->icons->getClass("edit"),
+			$this->icons->getHTML("Return"),
+			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['resourceId']
+		);
     }
     /**
      * display the editing form
@@ -58,6 +64,7 @@ class RESOURCEQUOTE
      */
     public function quoteEdit()
     {
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "quotes") . $this->return);
         $this->textqp->type = 'quote';
     	$this->textqp->editdisplay();
     }
@@ -88,7 +95,7 @@ class RESOURCEQUOTE
      */
     public function deleteInit()
     {
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "quoteDelete"));
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "quoteDelete") . $this->return);
         $pString = \FORM\formHeader('resource_RESOURCEQUOTE_CORE');
         $pString .= \FORM\hidden("method", 'delete');
         $pString .= \FORM\hidden("resourceId", $this->vars['resourceId']);

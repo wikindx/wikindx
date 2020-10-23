@@ -22,6 +22,8 @@ class RESOURCEPARAPHRASE
     private $messages;
     private $errors;
     private $success;
+    private $icons;
+    private $return;
     private $navigate;
     private $badInput;
 
@@ -37,10 +39,9 @@ class RESOURCEPARAPHRASE
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
-
+        $this->icons = FACTORY_LOADICONS::getInstance();
         $this->navigate = FACTORY_NAVIGATE::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "paraphrases"));
         if (!array_key_exists('resourceId', $this->vars) || !$this->vars['resourceId'] ||
             !array_key_exists('method', $this->vars) || !$this->vars['method']) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
@@ -49,6 +50,11 @@ class RESOURCEPARAPHRASE
         if (!method_exists($this, $function)) {
             $this->navigate->resource($this->vars['resourceId'], $this->errors->text("inputError", "invalid"));
         }
+        $this->return = '&nbsp;&nbsp;' . \HTML\a(
+			$this->icons->getClass("edit"),
+			$this->icons->getHTML("Return"),
+			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['resourceId']
+		);
     }
     /**
      * display the editing form
@@ -57,6 +63,7 @@ class RESOURCEPARAPHRASE
      */
     public function paraphraseEdit()
     {
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "paraphrases") . $this->return);
         $this->textqp->type = 'paraphrase';
         $this->textqp->editdisplay();
     }
@@ -87,7 +94,7 @@ class RESOURCEPARAPHRASE
      */
     public function deleteInit()
     {
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "paraphraseDelete"));
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "paraphraseDelete") . $this->return);
         $pString = \FORM\formHeader('resource_RESOURCEPARAPHRASE_CORE');
         $pString .= \FORM\hidden("method", 'delete');
         $pString .= \FORM\hidden("resourceId", $this->vars['resourceId']);

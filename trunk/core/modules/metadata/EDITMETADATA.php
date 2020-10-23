@@ -23,6 +23,8 @@ class EDITMETADATA
     private $success;
     private $session;
     private $tinymce;
+    private $icons;
+    private $return;
 
     public function __construct()
     {
@@ -35,6 +37,7 @@ class EDITMETADATA
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->tinymce = FACTORY_LOADTINYMCE::getInstance();
+        $this->icons = FACTORY_LOADICONS::getInstance();
     }
     /**
      * init
@@ -52,6 +55,11 @@ class EDITMETADATA
         } else {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
+        $this->return = '&nbsp;&nbsp;' . \HTML\a(
+			$this->icons->getClass("edit"),
+			$this->icons->getHTML("Return"),
+			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id']
+		);
         // proceed
         $type = $this->vars['type'];
         $this->{$type}();
@@ -61,7 +69,7 @@ class EDITMETADATA
      */
     public function abstractDeleteInit()
     {
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "abstractDelete"));
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "abstractDelete") . $this->return);
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "abstractDelete");
         $pString .= \FORM\hidden("id", $this->vars['id']);
@@ -89,7 +97,7 @@ class EDITMETADATA
      */
     public function noteDeleteInit()
     {
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "notesDelete"));
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "notesDelete") . $this->return);
         $pString = \FORM\formHeader('metadata_EDITMETADATA_CORE');
         $pString .= \FORM\hidden("type", "noteDelete");
         $pString .= \FORM\hidden("id", $this->vars['id']);
@@ -117,7 +125,7 @@ class EDITMETADATA
      */
     private function abstractInit()
     {
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "abstract"));
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "abstract") . $this->return);
         // Create citation link for this type
         //		include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "cite", "CITE.php"]));
         //		$citeLink = CITE::makeCiteLink('abstract');
@@ -149,7 +157,7 @@ class EDITMETADATA
      */
     private function noteInit()
     {
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "notes"));
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "notes") . $this->return);
         // Create citation link for this type
         //		include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "cite", "CITE.php"]));
         //		$citeLink = CITE::makeCiteLink('note');

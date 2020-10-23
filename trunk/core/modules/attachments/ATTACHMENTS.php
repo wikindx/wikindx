@@ -20,6 +20,7 @@ class ATTACHMENTS
     private $errors;
     private $messages;
     private $success;
+    private $icons;
     private $gatekeep;
     private $attachment;
     private $resourceId;
@@ -36,6 +37,7 @@ class ATTACHMENTS
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->attachment = FACTORY_ATTACHMENT::getInstance();
+        $this->icons = FACTORY_LOADICONS::getInstance();
     }
     /**
      * add, edit, delete resource attachments
@@ -73,7 +75,12 @@ class ATTACHMENTS
         	header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
         	die;
         }
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete')));
+        $return = \HTML\a(
+			$this->icons->getClass("edit"),
+			$this->icons->getHTML("Return"),
+			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
+		);
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete') . '&nbsp;&nbsp;' . $return));
         $pString = \FORM\formHeader("attachments_ATTACHMENTS_CORE");
         $pString .= \FORM\hidden('function', 'delete');
         $pString .= \FORM\hidden('resourceId', $this->resourceId);
@@ -129,12 +136,19 @@ class ATTACHMENTS
      */
     private function editInit()
     {
+        $return = \HTML\a(
+			$this->icons->getClass("edit"),
+			$this->icons->getHTML("Return"),
+			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
+		);
         $fields = $this->attachment->listFiles($this->resourceId);
         if (!empty($fields)) { // attachments exist for this resource
-            GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", '(' . $this->messages->text('misc', 'edit') . ')'));
+            GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", '(' . $this->messages->text('misc', 'edit') . ')' . 
+            	'&nbsp;&nbsp;' . $return));
             GLOBALS::addTplVar('content', $this->fileAttachEdit($fields));
         } else { // add a new attachment
-            GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", '(' . $this->messages->text('misc', 'add') . ')'));
+            GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", '(' . $this->messages->text('misc', 'add') . ')' . 
+            	'&nbsp;&nbsp;' . $return));
             GLOBALS::addTplVar('content', HTML\p($this->messages->text("resources", "fileAttachments")));
             GLOBALS::addTplVar('content', $this->fileAttachAdd());
         }
@@ -321,7 +335,13 @@ class ATTACHMENTS
      */
     private function deleteConfirm($deletes)
     {
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete')));
+        $return = \HTML\a(
+			$this->icons->getClass("edit"),
+			$this->icons->getHTML("Return"),
+			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
+		);
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete') . 
+            '&nbsp;&nbsp;' . $return));
         $pString = \FORM\formHeader("attachments_ATTACHMENTS_CORE");
         $pString .= \FORM\hidden('function', 'delete');
         $pString .= \FORM\hidden('resourceId', $this->resourceId);
@@ -349,7 +369,13 @@ class ATTACHMENTS
      */
     private function delete()
     {
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete')));
+        $return = \HTML\a(
+			$this->icons->getClass("edit"),
+			$this->icons->getHTML("Return"),
+			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
+		);
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete') . 
+            '&nbsp;&nbsp;' . $return));
         foreach ($this->vars as $key => $var) {
             $split = \UTF8\mb_explode('_', $key);
             if ($split[0] == 'attachmentDelete') {

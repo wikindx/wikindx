@@ -80,6 +80,7 @@ class LOADICONS
                 "viewAttach" => "misc",
                 "viewmeta" => "misc",
                 "viewmetaAttach" => "misc",
+                "Return" => "submit"
             ];
             $this->setupDone = TRUE;
         }

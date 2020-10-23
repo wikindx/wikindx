@@ -19,6 +19,7 @@ class RESOURCEFORM
     private $db;
     private $vars;
     private $messages;
+    private $icons;
     private $session;
     private $type;
     private $gatekeep;
@@ -52,7 +53,7 @@ class RESOURCEFORM
         $this->gatekeep->init();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
-
+        $this->icons = FACTORY_LOADICONS::getInstance();
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->type = FACTORY_TYPE::getInstance();
@@ -96,7 +97,12 @@ class RESOURCEFORM
             $this->resourceType = array_key_exists("resourceType", $this->sessionVars) ? $this->sessionVars['resourceType'] : FALSE;
         }
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'edit')) {
-            GLOBALS::setTplVar('heading', $this->messages->text('heading', 'editResource'));
+        	$return = '&nbsp;&nbsp;' . \HTML\a(
+				$this->icons->getClass("edit"),
+				$this->icons->getHTML("Return"),
+				'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id']
+			);
+            GLOBALS::setTplVar('heading', $this->messages->text('heading', 'editResource') . $return);
             if (!$error) {
                 $this->getEditSession();
             }

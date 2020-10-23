@@ -2110,7 +2110,7 @@ class RESOURCEFORM
         $tdContent1 .= \HTML\trEnd() . \HTML\tableEnd();
         $tdContent1 .= BR . '&nbsp;' . BR;
         $tdContent2 = \HTML\tableStart() . \HTML\trStart();
-        $text = array_key_exists('resourcetextUrl', $this->sessionVars) ? $this->sessionVars['resourcetextUrl'] : 'http://';
+        $text = array_key_exists('resourcetextUrl', $this->sessionVars) ? $this->sessionVars['resourcetextUrl'] : WIKINDX_RESOURCE_URL_PREFIX;
         $urlContent = \FORM\textInput(
             $this->messages->text("resources", "url"),
             "resourcetextUrl",

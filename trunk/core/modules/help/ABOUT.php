@@ -51,6 +51,7 @@ class ABOUT
         $list .= \HTML\li(\HTML\strong('Mathis Bicker:') . ' (University of Bonn, Germany)');
         $list .= \HTML\li(\HTML\strong('Allen Wilkinson:') . ' (NASA Glen Research Center, USA)');
         $list .= \HTML\li(\HTML\strong('Phil Abel:') . ' (NASA Glen Research Center, USA)');
+        $list .= \HTML\li(\HTML\strong('Eli Akl:') . ' (University Saint-Joseph of Beirut, Lebanon)');
         $pString .= \HTML\ul($list);
         $pString .= \HTML\p('Contributors to earlier versions include:');
         $list = \HTML\li('H&eacute;lio Alvarenga Nunes');

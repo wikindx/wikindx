@@ -205,7 +205,7 @@ class CONFIGURE
 			} elseif ($field != 'configDescription') {
 				$value = \HTML\removeNl($this->formData[$field]);
 			} elseif (($field == 'configDescription') && array_key_exists($field, $this->formData)) {
-				$value = trim($this->formData[$field]);
+				$value = \UTF8\mb_trim($this->formData[$field]);
 			}
 			if (($field == "configTagLowColour") || ($field == "configTagHighColour")) {
 				$value = str_replace('#', '', $this->formData[$field]);
@@ -215,7 +215,7 @@ class CONFIGURE
 				$oldNoSort = base64_encode(serialize(WIKINDX_NO_SORT));
 				if ($value) {
 					foreach (\UTF8\mb_explode(',', $value) as $word) {
-						$word = mb_strtolower(stripslashes(trim($word)));
+						$word = mb_strtolower(stripslashes(\UTF8\mb_trim($word)));
 						if ($word && array_search($word, $array) === FALSE) {
 							$array[] = $word;
 						}
@@ -230,7 +230,7 @@ class CONFIGURE
 				$array = [];
 				if ($value) {
 					foreach (\UTF8\mb_explode(',', $value) as $word) {
-						$word = mb_strtolower(stripslashes(trim($word)));
+						$word = mb_strtolower(stripslashes(\UTF8\mb_trim($word)));
 						if ($word && array_search($word, $array) === FALSE) {
 							$array[] = $word;
 						}
@@ -1475,6 +1475,17 @@ class CONFIGURE
             10,
             10
         ) . BR . \HTML\span($hint, 'hint'));
+        
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "urlPrefix"));
+        $input = array_key_exists("configResourceUrlPrefix", $this->formData) ? 
+        	$this->formData["configResourceUrlPrefix"] : WIKINDX_MAX_PASTE_DEFAULT;
+        $pString .= \HTML\td(\FORM\textInput(
+            $this->messages->text('config', 'urlPrefix'),
+            "configResourceUrlPrefix",
+            $input,
+            30,
+            255
+        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -1616,6 +1627,7 @@ class CONFIGURE
                     "configMaxPaste",
                     "configRestrictUserId",
                     "configSiteMapAllow",
+                    "configResourceUrlPrefix",
                 ];
 
                 break;
@@ -1871,7 +1883,7 @@ class CONFIGURE
         if (array_key_exists($parent, $this->formData)) {
             foreach ($childArray as $value) {
                 if (array_key_exists($value, $this->formData)) {
-                    $input = trim($this->formData[$value]);
+                    $input = \UTF8\mb_trim($this->formData[$value]);
                 } else {
                     $this->badInputLoad($this->errors->text("inputError", 'missing', " ($value) "), $this->vars['selectItem']);
                 }

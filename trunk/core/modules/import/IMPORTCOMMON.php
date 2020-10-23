@@ -140,7 +140,9 @@ class IMPORTCOMMON
 		if (($this->importType != 'pasteBibtex') || $this->session->getVar('setup_Superadmin')) {
 			$tags = $this->tag->grabAll();
 			$field = array_key_exists('import_Tag', $formData) ? $formData['import_Tag'] : FALSE;
-			$tagInput = \FORM\textInput($this->messages->text("import", "tag"), "import_Tag", $field, 30, 255);
+			$tagInput = \FORM\textInput($this->messages->text("import", "tag"), "import_Tag", $field, 30, 255) . BR .
+                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "tagImport")), 'hint');
 			if ($tags) {
 				// add 0 => IGNORE to tags array
 				$temp[0] = $this->messages->text("misc", "ignore");
@@ -153,7 +155,12 @@ class IMPORTCOMMON
 				} else {
 					$element = \FORM\selectFBoxValue(FALSE, 'import_TagId', $tags, 5);
 				}
-				$pString .= \HTML\td($tagInput . '&nbsp;&nbsp;' . $element);
+				$tagTable = \HTML\tableStart('generalTable') . \HTML\trStart();
+				$tagTable .= \HTML\td($tagInput);
+				$tagTable .= \HTML\td($element);
+				$tagTable .= \HTML\trEnd();
+				$tagTable .= \HTML\tableEnd();
+				$pString .= \HTML\td($tagTable);
 			} else {
 				$pString .= \HTML\td($tagInput);
 			}
@@ -454,14 +461,18 @@ class IMPORTCOMMON
 					$array,
 					$sessVar,
 					4
-				);
+				) . BR .
+                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "keywordImport")), 'hint');
 			} else {
 				$pString .= \FORM\selectFBoxValue(
 					$this->messages->text('misc', 'keywordImport'),
 					'import_KeywordSeparator',
 					$array,
 					4
-				);
+				) . BR .
+                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "keywordImport")), 'hint');
 			}
         }
         $sessVar = is_array($formData) && array_key_exists("import_KeywordIgnore", $formData) ? TRUE : FALSE;
@@ -498,7 +509,9 @@ class IMPORTCOMMON
                 $array,
                 $sessVar,
                 6
-            );
+            ) . BR .
+                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "splitImport")), 'hint');
         } else {
             return \FORM\selectedBoxValue(
                 $this->messages->text('misc', 'titleSubtitleSeparator'),
@@ -506,7 +519,9 @@ class IMPORTCOMMON
                 $array,
                 1,
                 6
-            );
+            ) . BR .
+                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "splitImport")), 'hint');
         }
     }
     /**

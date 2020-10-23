@@ -318,6 +318,7 @@ class MESSAGES
 				"emailSql2" => dgettext($domain, "Email SQL statements to this address"),
 				"forceSmartyCompile" => dgettext($domain, "Force Smarty templates compilation"),
 				"maxPaste" => dgettext($domain, "Max. number of bibTeX entries a user can paste"),
+				"urlPrefix" => dgettext($domain, "URL prefix"),
 				"displayStatistics" => dgettext($domain, "Display statistics"),
 				"displayUserStatistics" => dgettext($domain, "Display user statistics"),
 				"kwBibliography" => dgettext($domain, "When browsing a user bibliography, limit the keyword list to keywords found in that bibliography"),
@@ -837,6 +838,10 @@ class MESSAGES
 /// hint_storeRawBibtex Do not translate '@string'
 				"storeRawBibtex" => dgettext($domain, "You may store BibTeX fields that WIKINDX does not use so that any resources later exported to BibTeX can include this original unchanged data.  Doing this, also stores the bibtex key and any @string strings that are in the imported BibTeX file."),
 				"replaceExisting" => dgettext($domain, "When adding items, you may either append the selections above to an existing set for each resource or replace the existing set with the selections."),
+				"tagImport" => dgettext($domain, "Tag this import so you can do a mass select or delete later."),
+				"splitImport" => dgettext($domain, "Split the title and subtitle in the source bibliography on the first occurrence of the chosen character(s)."),
+				"keywordImport" => dgettext($domain, "Keywords are separated in the source bibliography by the chosen character(s)."),
+				"urlPrefix" => dgettext($domain, "The URL prefix displayed when adding URLs to resources."),
 			),
 /// menu_ Menu subsystem.  The trick here is to use short terms that don't cause problems with overflowing the CSS drop-down boxes - some browsers may happily handle this, others won't. Up to 15-16 characters (depending on character width) is a good guide - but check! NB!!!!!  For this array, the values should be unique where the keys form part of the same menu item.  For example, in the File menu, the 'file' key and the 'show' key should not have the same value of, for example, 'Files'.
 		    "menu" => array(
@@ -1103,14 +1108,14 @@ class MESSAGES
 				"emailFriendSubject" => dgettext($domain, "Email subject"),
 				"emailFriendText" => dgettext($domain, "Email text"),
 /// misc_keywordImport1 When importing bibliographies from external sources, these give the user the option to specify whether keywords, in the source bibliography, are separated by commas or semicolons
-				"keywordImport" => dgettext($domain, "Keywords are separated in the source bibliography by"),
+				"keywordImport" => dgettext($domain, "Keyword separation"),
 				"keywordImport1" => dgettext($domain, "Commas"),
 				"keywordImport2" => dgettext($domain, "Semicolons"),
 				"keywordImport3" => dgettext($domain, "Commas or Semicolons"),
 				"keywordImport4" => dgettext($domain, "SPACES"),
 				"keywordIgnore" => dgettext($domain, "Ignore keywords"),
 /// misc_titleSubtitleSeparator When importing bibtex and endnote bibliographies, split title and subtitle on specified characters
-				"titleSubtitleSeparator" => dgettext($domain, "Split the title and subtitle in the source bibliography on the first occurrence of"),
+				"titleSubtitleSeparator" => dgettext($domain, "Title/subtitle split"),
 				"titleSubtitleSeparator1" => dgettext($domain, "NO SPLIT"),
 				"titleSubtitleSeparator2" => dgettext($domain, ": (colon)"),
 				"titleSubtitleSeparator3" => dgettext($domain, "; (semicolon)"),
@@ -1489,7 +1494,7 @@ class MESSAGES
 				"invalidField2" => dgettext($domain, "Where an unknown field is mapped to a WIKINDX field that would normally be automatically mapped to a standard input field, the unknown field mapping takes precedence"),
 				"invalidField3" => dgettext($domain, "Unknown fields have been found. You may map these fields to custom fields -- no duplicate mapping is allowed."),
 				"file" => dgettext($domain, "Import File"),
-				"tag" => dgettext($domain, "Tag this import so you can do a mass select or delete later"),
+				"tag" => dgettext($domain, "Tag"),
 /// import_executionTimeExceeded With large imports that would go over php.ini's max_execution time, WIKINDX splits the imports into chunks
 				"executionTimeExceeded" => dgettext($domain, "'max_execution_time' (### seconds) in php.ini was about to be exceeded.  WIKINDX is importing the bibliography in chunks."),
 				"addedChunk" => dgettext($domain, "No. resources added this chunk: ###"),

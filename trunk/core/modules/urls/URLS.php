@@ -314,7 +314,7 @@ class URLS
         // Form elements for adding another URL
         $pString .= \HTML\tableStart('left');
         $pString .= \HTML\trStart();
-        $field = array_key_exists('url', $this->formData) ? $this->formData['url'] : FALSE;
+        $field = array_key_exists('url', $this->formData) ? $this->formData['url'] : WIKINDX_RESOURCE_URL_PREFIX;
         $pString .= \HTML\td($this->messages->text("resources", "url") . ":&nbsp;" . \FORM\textInput(FALSE, "url", $field, 70), 'left bottom');
         $field = array_key_exists('name', $this->formData) ? $this->formData['name'] : FALSE;
         $pString .= \HTML\td($this->messages->text("resources", "urlLabel") . ":&nbsp;" . \FORM\textInput(FALSE, "name", $field, 50), 'left bottom');
@@ -398,7 +398,7 @@ class URLS
         $pString .= \HTML\tableStart('left');
         $pString .= \HTML\trStart();
         $pString .= \HTML\td($this->messages->text("resources", "url") . ":&nbsp;" .
-            \FORM\textInput(FALSE, "url", FALSE, 70), 'left bottom');
+            \FORM\textInput(FALSE, "url", WIKINDX_RESOURCE_URL_PREFIX, 70), 'left bottom');
         $field = array_key_exists('name', $this->formData) ? $this->formData['name'] : FALSE;
         $pString .= \HTML\td($this->messages->text("resources", "urlLabel") . ":&nbsp;" .
             \FORM\textInput(FALSE, "name", $field, 50), 'left bottom');

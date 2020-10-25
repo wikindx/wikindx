@@ -1,8 +1,10 @@
 RELEASES:
 
 
-v6.3.11
+v6.4.0
 Focus: Minor bug fixes, feature enhancement, and maintenance
+
+NB: THIS VERSION SUPPORTS PHP 7.3 AND 7.4 ONLY.
 
 BUG FIXES:
 1. When merging or deleting keywords, ensure integrity of keyword_groups is maintained.
@@ -46,6 +48,9 @@ MAINTENANCE:
 14. Uses a consistent name for the plugin load class.
 15. Delete the Amazon import plugin. This imported one resource (only books) at a time from Amazon but it is too much bother keeping up with Amazon's constant changes to the API and connection protocols.
 16. Make packaging reproducible.
+17. Drop PHP 7.0 support.
+18. Drop PHP 7.1 support.
+19. Drop PHP 7.2 support.
 
 SECURITY:
 1. Replace crypt/hash_equals() by password_hash/password_verify() which is stronger by default.
@@ -58,6 +63,8 @@ SECURITY:
 
 v6.3.10
 Focus: Interim bug fix
+
+NB: THIS VERSION IS THE LAST SUPPORTING PHP 7.0, 7.1 and 7.2.
 
 BUG FIX:
 1. When organizing a list into categories, keywords, and so on, selecting the radio button 'Use all in list' then put all resources in the database into the selected categories, keywords, and so on. This operation should, of course, just use the members of the list. This has been corrected.

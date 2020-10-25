@@ -34,7 +34,7 @@ define('TAB', "\t");
  *
  * @name WIKINDX_PUBLIC_VERSION
  */
-define('WIKINDX_PUBLIC_VERSION', '6.3.11');
+define('WIKINDX_PUBLIC_VERSION', '6.4.0');
 /**
  * WIKINDX internal version information
  *
@@ -77,7 +77,7 @@ define('WIKINDX_COMPONENTS_COMPATIBLE_VERSION', [
  *
  * @name WIKINDX_PHP_VERSION_MIN
  */
-define('WIKINDX_PHP_VERSION_MIN', '7.0.0');
+define('WIKINDX_PHP_VERSION_MIN', '7.3.0');
 /**
  * Maximum required PHP version
  *

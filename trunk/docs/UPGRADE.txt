@@ -15,22 +15,23 @@ you can update a second time to a more recent version:
 
  - v6.0.8 which supports PHP 5.6 minimum.
  - v6.1.0 which supports PHP 7.0 minimum.
+ - v6.4.0 which supports PHP 7.3 minimum.
 
 >>>>>>> A note on UTF-8 characters <<<<<<<
-Databases used since v5.1 might exhibit errors in the conversion to UTF-8 
-characters that came in with v5.1. The repairkit plugin attempts to fix these 
-issues but, because the UTF-8 correction code was removed in this plugin from 
-v6.2.1, databases that have been upgraded since before 5.1 but have not had 
+Databases used since v5.1 might exhibit errors in the conversion to UTF-8
+characters that came in with v5.1. The repairkit plugin attempts to fix these
+issues but, because the UTF-8 correction code was removed in this plugin from
+v6.2.1, databases that have been upgraded since before 5.1 but have not had
 their UTF-8 repaired with the plugin, should follow this procedure:
 1. Download and install WIKINDX 6.0.8 or 6.1.0 according to your PHP version.
 2. Run WIKINDX and follow the database upgrade.
-3. Install the repairkit plugin for the relevant wikindx version and run the 
+3. Install the repairkit plugin for the relevant wikindx version and run the
 plugin’s ‘Fix chars’ code.
-4. If you do not have PHP 7.0 or greater, you cannot go further than using 
-WIKINDX v6.0.8. If you have PHP 7.0 or greater, then you can now safely download 
+4. If you do not have PHP 7.0 or greater, you cannot go further than using
+WIKINDX v6.0.8. If you have PHP 7.0 or greater, then you can now safely download
 and install the highest version of WIKINDX available.
 
-The above results from a code clean-out and the understanding that there are 
+The above results from a code clean-out and the understanding that there are
 very few (if any) current users of WIKINDX with pre-v5.1 databases.
 >>>>>>> <<<<<<<
 
@@ -88,13 +89,13 @@ max_allowed_packet in the MySQL server.
 length, then you should set public $WIKINDX_MEMORY_LIMIT = "64M"; in
 config.php in order to avoid memory allocation errors.
 
-5/ In what follows, 'wikindx/' refers to the top folder of your wikindx 
+5/ In what follows, 'wikindx/' refers to the top folder of your wikindx
 installation.
 
-6/ If you prefer to back up your existing wikindx/ installation, copy 
-all files in the folder elsewhere and back up the database before proceeding. 
-Should you need to restore, a) replace the wikindx database with the backed-up 
-one, b) remove files and folders in wikindx/, and c) re-place the backed-up 
+6/ If you prefer to back up your existing wikindx/ installation, copy
+all files in the folder elsewhere and back up the database before proceeding.
+Should you need to restore, a) replace the wikindx database with the backed-up
+one, b) remove files and folders in wikindx/, and c) re-place the backed-up
 wikindx/ contents.
 
 7/ Do not attempt to run WIKINDX before all upgrade steps have been completed.
@@ -104,18 +105,18 @@ wikindx/ contents.
 
 UPGRADING <<
 
-8/ Unzip WIKINDX into a folder on your computer -- this will create a wikindx/ 
+8/ Unzip WIKINDX into a folder on your computer -- this will create a wikindx/
 folder.
 
-9/ Copy the files and folders from the unzipped wikindx/ folder to the wikindx/ 
-folder in the web server hierarchy. 
+9/ Copy the files and folders from the unzipped wikindx/ folder to the wikindx/
+folder in the web server hierarchy.
 
-10/ If you are upgrading a version less than 5.9.1, move attachments in the 
-old wikindx/attachments/ folder to wikindx/data/attachments/ and then delete 
-the old wikindx/attachments/ folder. Likewise, files in wikindx/images/ must be 
+10/ If you are upgrading a version less than 5.9.1, move attachments in the
+old wikindx/attachments/ folder to wikindx/data/attachments/ and then delete
+the old wikindx/attachments/ folder. Likewise, files in wikindx/images/ must be
 moved to wikindx/data/images/ and the wikindx/images/ folder deleted.
 
-11/ Now you are ready to run WIKINDX. On first running, WIKINDX will check that 
+11/ Now you are ready to run WIKINDX. On first running, WIKINDX will check that
 several folders are writeable including:
 'cache/',
 'data/',
@@ -132,8 +133,8 @@ If the database needs upgrading, you will be prompted. In order to account for
 potential PHP timeouts when used on a large database, the database
 upgrade takes place over numerous stages.
 
-13/ Finally update official components (plugins, templates, bibliographic 
-styles, and languages) from the admin components panel of your WIKINDX 
+13/ Finally update official components (plugins, templates, bibliographic
+styles, and languages) from the admin components panel of your WIKINDX
 installation. If you have created custom components you must adapt
 them to keep them working. Particularly in version 5.9.1, the
 component.json file is added to describe the component.
@@ -143,8 +144,8 @@ component.json file is added to describe the component.
    (download the plug-in from the WIKINDX Sourceforge page) prior to
    their use as this will add additions and amendments to those styles
    that are required in v4.x and up.
-   
-   b/ Language localizations from v3.8.x will still work in WIKINDX 
+
+   b/ Language localizations from v3.8.x will still work in WIKINDX
    (before 5.9.1) but will be missing some messages (replaced
    automatically by English messages). v3.8.x localization files can be
    upgraded to v5 (before 5.9.1) by running them through the
@@ -158,13 +159,13 @@ component.json file is added to describe the component.
    to do some editing. The templating subsystem has greatly changed in
    order to give template designers a lot more control over the visual
    design of WIKINDX. See wikindx/components/templates/default/ for examples.
-   
+
    d/ To date, each version greatly modifies the interface between the
    core and the plugins. You will probably have to rewrite some of your
    private plugins. We encourage you to contact us to integrate them
    into the official distribution or at least to make yourself known so
    that we have an idea of the impact of the interface modifications.
-   
+
    e/ If you want an embedded spell checker, you need to enable enchant
    extension in your php.ini or .htaccess file. See your webserver
    manual.
@@ -177,7 +178,7 @@ tag does not appear first.
 
     ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 
--- 
+--
 Mark Grimshaw-Aagaard
 The WIKINDX Team 2020
 sirfragalot@users.sourceforge.net

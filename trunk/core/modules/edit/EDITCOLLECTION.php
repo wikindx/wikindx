@@ -101,11 +101,10 @@ class EDITCOLLECTION
         else {
             $pString = '';
         }
-        $collectionType = $this->vars['collectionType'];
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONMAP.php"]));
         $this->map = new COLLECTIONMAP();
-        if ($collectionType) {
-            $this->db->formatConditions(['collectionType' => $collectionType]);
+        if ($this->vars['collectionType']) {
+            $this->db->formatConditions(['collectionType' => $this->vars['collectionType']]);
         }
         $this->db->formatConditions($this->db->formatFields('collectionId'), ' IS NOT NULL');
         $this->db->leftJoin('collection', 'collectionId', 'resourcemiscCollection');
@@ -128,6 +127,7 @@ class EDITCOLLECTION
         $td .= \FORM\hidden("method", "editDisplayCollection");
         $td .= \FORM\hidden("title", $title);
         $td .= \FORM\hidden("shortTitle", $short);
+        $td .= \FORM\hidden('collectionTypeOriginal', $this->vars['collectionType']);
         $td .= \FORM\selectFBoxValue(FALSE, "collectionId", $collections, 20);
         $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
         $td .= \FORM\formEnd();
@@ -169,6 +169,7 @@ class EDITCOLLECTION
         $pString = $message;
         $pString .= \FORM\formHeader('edit_EDITCOLLECTION_CORE');
         $pString .= \FORM\hidden("method", "edit");
+        $pString .= \FORM\hidden('collectionTypeOriginal', $this->vars['collectionTypeOriginal']);
         $pString .= \FORM\hidden("collectionId", $this->vars['collectionId']);
         if (empty($this->formData)) {
             $this->db->formatConditions(['collectionId' => $this->vars['collectionId']]);
@@ -374,7 +375,7 @@ class EDITCOLLECTION
         $this->db->update('collection', ['collectionDefault' => base64_encode(serialize($collectionDefaults))]);
         $message = rawurlencode($this->success->text("collection"));
         header("Location: index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&message=$message" . 
-        	"&collectionType=" . $this->formData['collectionType']);
+        	"&collectionType=" . $this->vars['collectionTypeOriginal']);
         die;
     }
     /**

@@ -135,7 +135,7 @@ class RESOURCEVIEW
      */
     public function viewDetails($row)
     {
-        $resourceMap = FACTORY_RESOURCEMAP::getInstance();
+        $resourceMap = FACTORY_RESOURCEMAP::getInstance($row['resourceType']);
         $typeMaps = $resourceMap->getTypeMap();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "bibcitation", "STYLEMAP.php"]));
         $styleMap = new STYLEMAP();

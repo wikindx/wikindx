@@ -20,8 +20,7 @@ BUG FIXES:
 13. When importing bibTeX or Endnote bibliographies, ensure certain fields are integers if required by the database structure.
 
 FEATURE ENHANCEMENT:
-1. When editing a form, use internal representations to repopulate the form in case of error and lessen the load on sessions. Also, restructure form management by splitting form presentation from DB data writing and use redirects to mitigate errors caused when attempting to reload a submitted form. Along the way, do some tidying up of the form interfaces.
-	TODO: Convert all the forms...
+1. When editing a form, use internal representations to repopulate the form in case of error and lessen the load on sessions. Also, restructure form management by splitting form presentation from DB data writing and use redirects to mitigate errors caused when attempting to reload a submitted form.
 2. Improve the user interface for several forms.
 3. Create the component.json file when creating or copying a style.
 4. In single resource view, added icons to toggle between quarantining/approving the resource (quarantining must be enabled in Admin|Configure|Users).

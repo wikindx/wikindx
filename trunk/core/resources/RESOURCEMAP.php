@@ -32,18 +32,21 @@ class RESOURCEMAP
 
     /**
      * RESOURCEMAP
+     *
+     * @param mixed $exception
      */
-    public function __construct($showAllTypes)
+    public function __construct($exception = FALSE)
     {
         $this->loadMap();
-        if (!$showAllTypes) {
-			foreach (WIKINDX_DEACTIVATE_RESOURCE_TYPES as $removeType) {
-				if (($index = array_search($removeType, $this->types)) !== FALSE) {
-					unset($this->types[$index]);
-					unset($this->typeMap[$removeType]);
-				}
+		foreach (WIKINDX_DEACTIVATE_RESOURCE_TYPES as $removeType) {
+			if ($removeType == $exception) {
+				continue;
 			}
-        }
+			if (($index = array_search($removeType, $this->types)) !== FALSE) {
+				unset($this->types[$index]);
+				unset($this->typeMap[$removeType]);
+			}
+		}
     }
     /**
      * Get readable name of resource type from database field
@@ -101,6 +104,9 @@ class RESOURCEMAP
      */
     public function getTables($type)
     {
+    	if (!array_key_exists( $type, $this->typeMap)) {
+    		return [];
+    	}
         $ret = [];
         foreach ($this->typeMap[$type] as $key => $value) {
             if ($key == 'optional') {

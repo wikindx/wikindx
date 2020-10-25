@@ -59,7 +59,6 @@ class RESOURCEFORM
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->type = FACTORY_TYPE::getInstance();
-        $this->resourceMap = FACTORY_RESOURCEMAP::getInstance();
         $this->category = FACTORY_CATEGORY::getInstance();
         $this->keyword = FACTORY_KEYWORD::getInstance();
         $this->userTagObj = FACTORY_USERTAGS::getInstance();
@@ -70,11 +69,18 @@ class RESOURCEFORM
         $this->creator = FACTORY_CREATOR::getInstance();
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->tinymce = FACTORY_LOADTINYMCE::getInstance();
-        $this->typeMaps = $this->resourceMap->getTypeMap();
         $this->loadElementDefinitions();
         if (array_key_exists('uuid', $this->vars)) {
         	$this->uuid = $this->vars['uuid'];
         }
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'edit')) {
+	    	$this->db->formatConditions(['resourceId' => $this->vars['id']]);
+    		$this->resourceType = $this->db->queryFetchFirstField($this->db->selectNoExecute('resource', ['resourceType']));
+        	$this->resourceMap = FACTORY_RESOURCEMAP::getInstance($this->resourceType);
+        } else {
+        	$this->resourceMap = FACTORY_RESOURCEMAP::getInstance();
+        }
+		$this->typeMaps = $this->resourceMap->getTypeMap();
     }
     /**
      * Start the process of entering a new resource by asking for the choice of resource type and number of authors
@@ -83,22 +89,6 @@ class RESOURCEFORM
      */
     public function init($error = FALSE)
     {
-        // type stored in $this->formData['resourceType'] might have been disabled in the Admin|Configure interface
-/*        if (array_key_exists('resourceType', $this->formData) && !array_key_exists($this->formData['resourceType'], $this->typeMaps)) {
-            $aKeys = array_keys($this->typeMaps);
-            $this->resourceType = $this->formData['resourceType'] = array_shift($aKeys);
-        }
-        if (!$error) {
-            $this->session->clearArray('resourceForm');
-            $this->formData = [];
-        } else {
-            $this->error = TRUE;
-            if (!$this->formData = $this->session->getArray('resourceForm')) {
-                $this->formData = [];
-            }
-            $this->resourceType = array_key_exists("resourceType", $this->formData) ? $this->formData['resourceType'] : FALSE;
-        }
-*/
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'edit')) {
         	$return = '&nbsp;&nbsp;' . \HTML\a(
 				$this->icons->getClass("edit"),

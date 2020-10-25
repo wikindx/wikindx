@@ -78,21 +78,7 @@ class DELETERESOURCE
         }
         $res = FACTORY_RESOURCECOMMON::getInstance();
         if (is_array($this->vars['resource_id'])) {
-// Appears to be an unnecessary check . . .
-/*            $maxSize = ini_get('max_input_vars');
-            $size = 0;
-            foreach ($this->vars as $var) {
-                if (is_array($var)) {
-                    $size += count($var);
-                } else {
-                    ++$size;
-                }
-            }
-            if ($size >= $maxSize) {
-                $this->display($this->errors->text("inputError", "maxInputVars", "$maxSize"));
-                FACTORY_CLOSE::getInstance();
-            }
-*/			$this->db->formatConditionsOneField($this->vars['resource_id'], 'resourceId');
+			$this->db->formatConditionsOneField($this->vars['resource_id'], 'resourceId');
 			$return = FALSE;
         } else { // just the one resource so add navigation link
             $this->db->formatConditions(['resourceId' => $this->vars['resource_id']]);
@@ -135,7 +121,19 @@ class DELETERESOURCE
             $pString .= \FORM\hidden('nextResourceId', $this->nextResourceId);
         }
         if (is_array($this->vars['resource_id'])) {
-            $pString .= \FORM\hidden("resource_id", implode(",", $this->vars['resource_id']));
+        	$numIds = count($this->vars['resource_id']);
+            $oldMaxSize = ini_get('max_input_vars');
+            if ($numIds > ($oldMaxSize - 20)) {
+				ini_set('max_input_vars', $numIds + 21);
+				$newMaxSize = ini_get('max_input_vars');
+				if ($newMaxSize <= $oldMaxSize) { // i.e. unable to increase max_input_vars
+					$this->display($this->errors->text("inputError", "maxInputVars", "$oldMaxSize"));
+					FACTORY_CLOSE::getInstance();
+				}
+            }
+        	$uuid = \TEMPSTORAGE\getUuid($this->db);
+        	\TEMPSTORAGE\store($this->db, $uuid, $this->vars['resource_id']);
+            $pString .= \FORM\hidden("uuid", $uuid);
         } else {
             $pString .= \FORM\hidden("resource_id", $this->vars['resource_id']);
         }
@@ -201,7 +199,12 @@ class DELETERESOURCE
             $this->display($this->errors->text("inputError", "missing"));
             FACTORY_CLOSE::getInstance();
         }
-        $this->idsRaw = \UTF8\mb_explode(',', $this->vars['resource_id']);
+        if (array_key_exists('uuid', $this->vars)) { // i.e. large numbers of deletes
+        	$this->idsRaw = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
+        	\TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+        } else {
+	        $this->idsRaw = \UTF8\mb_explode(',', $this->vars['resource_id']);
+	    }
         $this->reallyDelete();
         $this->checkHanging();
         $this->resetSummary();
@@ -450,7 +453,9 @@ class DELETERESOURCE
                 }
             }
         }
-
+		if (array_key_exists('uuid', $this->vars)) {
+			return TRUE;
+		}
         return array_key_exists('resource_id', $this->vars);
     }
     /**

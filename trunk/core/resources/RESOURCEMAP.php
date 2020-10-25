@@ -33,14 +33,16 @@ class RESOURCEMAP
     /**
      * RESOURCEMAP
      */
-    public function __construct()
+    public function __construct($showAllTypes)
     {
         $this->loadMap();
-        foreach (WIKINDX_DEACTIVATE_RESOURCE_TYPES as $removeType) {
-            if (($index = array_search($removeType, $this->types)) !== FALSE) {
-                unset($this->types[$index]);
-                unset($this->typeMap[$removeType]);
-            }
+        if (!$showAllTypes) {
+			foreach (WIKINDX_DEACTIVATE_RESOURCE_TYPES as $removeType) {
+				if (($index = array_search($removeType, $this->types)) !== FALSE) {
+					unset($this->types[$index]);
+					unset($this->typeMap[$removeType]);
+				}
+			}
         }
     }
     /**

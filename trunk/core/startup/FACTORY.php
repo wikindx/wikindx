@@ -1924,12 +1924,13 @@ class FACTORY_RESOURCEMAP
     /**
      * Get fresh instance
      *
+     * @param bool $showAllTypes
      * @return object (self::$instance)
      */
-    public static function getFreshInstance()
+    public static function getFreshInstance($showAllTypes = TRUE)
     {
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resources", "RESOURCEMAP.php"]));
-        self::$instance = new RESOURCEMAP;
+        self::$instance = new RESOURCEMAP($showAllTypes);
 
         return self::$instance;
     }
@@ -1937,13 +1938,14 @@ class FACTORY_RESOURCEMAP
     /**
      * Get instance
      *
+     * @param bool $showAllTypes
      * @return object (self::$instance)
      */
-    public static function getInstance()
+    public static function getInstance($showAllTypes = TRUE)
     {
         if (empty(self::$instance)) {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resources", "RESOURCEMAP.php"]));
-            self::$instance = new RESOURCEMAP;
+            self::$instance = new RESOURCEMAP($showAllTypes);
         }
 
         return self::$instance;

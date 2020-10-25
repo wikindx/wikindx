@@ -13,7 +13,6 @@
  */
 class RESOURCEFORMAJAX
 {
-    private $session;
     private $messages;
     private $errors;
     private $resourceMap;
@@ -26,16 +25,12 @@ class RESOURCEFORMAJAX
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-
-
-        $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->resourceMap = FACTORY_RESOURCEMAP::getInstance();
-
         include('core/modules/resource/RESOURCEFORM.php');
         $this->resourceForm = new RESOURCEFORM();
-        $this->resourceForm->setSessionVars();
+        $this->resourceForm->setFormData();
         $this->typeMaps = $this->resourceMap->getTypeMap();
     }
     /**
@@ -578,41 +573,6 @@ class RESOURCEFORMAJAX
             }
         }
         GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => $div]));
-        FACTORY_CLOSERAW::getInstance();
-    }
-    /**
-     * RESOURCEFORM input validation -- NOT USED
-     */
-    public function validate2()
-    {
-        $error = FALSE;
-        $jArray1 = \AJAX\decode_jString($this->vars['ajaxReturn']);
-        $jArray2 = \AJAX\decode_jString($this->vars['ajaxReturn2']);
-
-        $error = !((($id = array_search('resourceTitle', $jArray1)) !== FALSE) && (trim($jArray2[$id])));
-
-        if ($error) {
-            $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=validateError';
-            $div = $this->errors->text('inputError', 'missing');
-            $jsonResponseArray = [
-                'innerHTML' => "$div",
-                'script' => "$jScript",
-                'next' => 'TRUE',
-                'startFunction' => 'validateError',
-                'targetDiv' => 'validateOuter',
-            ];
-        } else {
-            $div = 'SUCCESS';
-            $jScript = 'index.php?action=resource_RESOURCEWRITE_CORE';
-            $jsonResponseArray = [
-                'innerHTML' => "$div",
-                'script' => "$jScript",
-                'next' => 'TRUE',
-                'startFunction' => 'writeResource',
-                'targetDiv' => 'validateOuter',
-            ];
-        }
-        GLOBALS::addTplVar('content', \AJAX\encode_jArray($jsonResponseArray));
         FACTORY_CLOSERAW::getInstance();
     }
     /**

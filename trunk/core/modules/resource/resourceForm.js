@@ -82,6 +82,7 @@ function validate()
 function validateInput(names, values)
 {
 	tinyMCE.triggerSave(); // See http://www.tinymce.com/forum/viewtopic.php?id=28
+	var uuid = coreGetElementById('uuid').value;
 // Check resource title
 // tinyMCE converts returns to <p> tags and encloses more than two spaces with <p> tags
 //	coreGetElementById('resourceTitle').value = coreGetElementById('resourceTitle').value.replace(new RegExp("<p>|<\/p>+", "ig"), '');
@@ -89,7 +90,7 @@ function validateInput(names, values)
 //	coreGetElementById('resourceSubtitle').value = coreGetElementById('resourceSubtitle').value.replace(/<(?:.|\n)*?>/gm, '');
 	if(!coreRemoveNonPrintable(coreTrim(coreGetElementById('resourceTitle').value)))
 	{
-		validateError('resourceTitle', 'missing');
+		validateError('resourceTitle', 'missing', uuid);
 		return false;
 	}
 	if((rtIndex = coreSearchArray(names, 'resourceType')) == -1)
@@ -100,7 +101,7 @@ function validateInput(names, values)
 	{
 		if(!coreTrim(coreGetElementById('resourcetextUrl').value) || (coreTrim(coreGetElementById('resourcetextUrl').value) == 'http://') || (coreTrim(coreGetElementById('resourcetextUrl').value) == 'https://'))
 		{
-			validateError('resourcetextUrl', 'missing');
+			validateError('resourcetextUrl', 'missing', uuid);
 			return false;
 		}
 	}
@@ -126,7 +127,7 @@ function validateInput(names, values)
 			var nameIndex = coreSearchArray(names, spl[id]);
 			if(nameIndex == -1)
 			{
-				validateError(spl[id], 'missing');
+				validateError(spl[id], 'missing', uuid);
 				return false;
 			}
 		}
@@ -144,7 +145,7 @@ function validateInput(names, values)
 				continue;
 			if(!coreIsInteger(values[i]))
 			{
-				validateError(names[i], 'nan');
+				validateError(names[i], 'nan', uuid);
 				return false;
 			}
 		}
@@ -165,7 +166,7 @@ function validateInput(names, values)
 		cIndex = coreSearchArray(names, checkSurname[i]);
 		if((cIndex == -1) || !values[cIndex])
 			{
-				validateError(checkSurname[i], 'missing');
+				validateError(checkSurname[i], 'missing', uuid);
 				return false;
 			}
 	}
@@ -174,10 +175,10 @@ function validateInput(names, values)
 /**
 * Finish the process of javascript validation of RESOURCEFORM input when there is an error
 */
-function validateError(field, error)
+function validateError(field, error, uuid)
 {
 // Set the AJAX object's targetObj property
-	var ajaxReturn = '&field=' + field + '&error=' + error;
+	var ajaxReturn = '&field=' + field + '&error=' + error + '&uuid=' + uuid;
 	A_OBJ[gateway.aobj_index].targetObj = coreGetElementById(A_OBJ[gateway.aobj_index].input.targetDiv);
 	A_OBJ[gateway.aobj_index].processedScript = A_OBJ[gateway.aobj_index].input.script + ajaxReturn;
 // Execute the AJAX

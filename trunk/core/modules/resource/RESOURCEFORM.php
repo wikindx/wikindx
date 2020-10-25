@@ -46,6 +46,8 @@ class RESOURCEFORM
     private $collectionType = FALSE;
     private $error = FALSE;
     private $tinymce;
+    private $formData = [];
+    private $uuid;
 
     public function __construct()
     {
@@ -58,7 +60,6 @@ class RESOURCEFORM
         $this->vars = GLOBALS::getVars();
         $this->type = FACTORY_TYPE::getInstance();
         $this->resourceMap = FACTORY_RESOURCEMAP::getInstance();
-
         $this->category = FACTORY_CATEGORY::getInstance();
         $this->keyword = FACTORY_KEYWORD::getInstance();
         $this->userTagObj = FACTORY_USERTAGS::getInstance();
@@ -71,7 +72,9 @@ class RESOURCEFORM
         $this->tinymce = FACTORY_LOADTINYMCE::getInstance();
         $this->typeMaps = $this->resourceMap->getTypeMap();
         $this->loadElementDefinitions();
-        $this->session->delVar("resourceLock");
+        if (array_key_exists('uuid', $this->vars)) {
+        	$this->uuid = $this->vars['uuid'];
+        }
     }
     /**
      * Start the process of entering a new resource by asking for the choice of resource type and number of authors
@@ -80,22 +83,22 @@ class RESOURCEFORM
      */
     public function init($error = FALSE)
     {
-        // type stored in $this->sessionVars['resourceType'] might have been disabled in the Admin|Configure interface
-        if (array_key_exists('resourceType', $this->sessionVars) && !array_key_exists($this->sessionVars['resourceType'], $this->typeMaps)) {
+        // type stored in $this->formData['resourceType'] might have been disabled in the Admin|Configure interface
+/*        if (array_key_exists('resourceType', $this->formData) && !array_key_exists($this->formData['resourceType'], $this->typeMaps)) {
             $aKeys = array_keys($this->typeMaps);
-            $this->resourceType = $this->sessionVars['resourceType'] = array_shift($aKeys);
+            $this->resourceType = $this->formData['resourceType'] = array_shift($aKeys);
         }
         if (!$error) {
             $this->session->clearArray('resourceForm');
-            $this->session->clearArray('resourceFormValidate');
-            $this->sessionVars = [];
+            $this->formData = [];
         } else {
             $this->error = TRUE;
-            if (!$this->sessionVars = $this->session->getArray('resourceForm')) {
-                $this->sessionVars = [];
+            if (!$this->formData = $this->session->getArray('resourceForm')) {
+                $this->formData = [];
             }
-            $this->resourceType = array_key_exists("resourceType", $this->sessionVars) ? $this->sessionVars['resourceType'] : FALSE;
+            $this->resourceType = array_key_exists("resourceType", $this->formData) ? $this->formData['resourceType'] : FALSE;
         }
+*/
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'edit')) {
         	$return = '&nbsp;&nbsp;' . \HTML\a(
 				$this->icons->getClass("edit"),
@@ -104,12 +107,12 @@ class RESOURCEFORM
 			);
             GLOBALS::setTplVar('heading', $this->messages->text('heading', 'editResource') . $return);
             if (!$error) {
-                $this->getEditSession();
+                $this->getEditData();
             }
-            $this->session->setVar("resourceFormType", 'edit');
+            $this->formData["resourceFormType"] = 'edit';
         } else {
             GLOBALS::setTplVar('heading', $this->messages->text('heading', 'newResource'));
-            $this->session->setVar("resourceFormType", 'new');
+            $this->formData["resourceFormType"] = 'new';
         }
         $pString = \HTML\p($this->messages->text('resources', 'new', '&nbsp;' . $this->required()));
         $pString .= \HTML\hr();
@@ -124,7 +127,11 @@ class RESOURCEFORM
             'requiredArray' => "$requiredArray",
         ];
         $js = \AJAX\jActionForm('onsubmit', $jsonArray, TRUE);
+        $this->uuid = \TEMPSTORAGE\getUuid($this->db);
+        \TEMPSTORAGE\store($this->db, $this->uuid, $this->formData);
         $pString .= \FORM\formHeaderName('resource_RESOURCEWRITE_CORE', 'resourceForm', $js);
+        $pString .= \FORM\hidden('resourceFormType', $this->formData["resourceFormType"]);
+        $pString .= \FORM\hidden('uuid', $this->uuid);
         if ($this->edit) {
             $pString .= \FORM\hidden('resourceId', $this->vars['id']);
         }
@@ -134,9 +141,9 @@ class RESOURCEFORM
         $pString .= $this->optionalCells();
         // creators
         $array = [];
-        if (array_key_exists('resourceType', $this->sessionVars)) {
-            if (array_key_exists('resourcecreator', $this->typeMaps[$this->sessionVars['resourceType']])) {
-                $array = $this->typeMaps[$this->sessionVars['resourceType']]['resourcecreator'];
+        if (array_key_exists('resourceType', $this->formData)) {
+            if (array_key_exists('resourcecreator', $this->typeMaps[$this->formData['resourceType']])) {
+                $array = $this->typeMaps[$this->formData['resourceType']]['resourcecreator'];
             }
         } else {
             $array = $this->typeMaps[$this->resourceType]['resourcecreator']; // default when 'new resource' selected
@@ -280,8 +287,8 @@ class RESOURCEFORM
      */
     public function series()
     {
-        if ($this->collectionFill && array_key_exists('series', $this->sessionVars)) {
-            $this->seriesFill = $this->sessionVars['series'];
+        if ($this->collectionFill && array_key_exists('series', $this->formData)) {
+            $this->seriesFill = $this->formData['series'];
             $insert = $this->seriesInsertFill();
         } elseif ($this->seriesFill) {
             $insert = $this->seriesInsertFill();
@@ -311,7 +318,7 @@ class RESOURCEFORM
     public function conference()
     {
         if ($this->collectionFill !== FALSE) {
-            $this->sessionVars['conferenceId'] = $this->collectionFill;
+            $this->formData['conferenceId'] = $this->collectionFill;
             $insert = $this->conferenceInsert();
         } else {
             $insert = $this->conferenceInsert();
@@ -336,7 +343,7 @@ class RESOURCEFORM
     /**
      * Get collection defaults when a collection is chosen from the collection select box.
      *
-     * Called from RESOURCEFORM\AJAX\fillPublisher() if
+     * Called from RESOURCEFORM\AJAX\fillCollection() if
      * 'fromCollection' is present in $this->vars. Load defaults into $sessionVars.
      */
     public function getCollectionDefaults()
@@ -345,6 +352,9 @@ class RESOURCEFORM
         $this->collectionDefaultMap = new COLLECTIONDEFAULTMAP();
         $this->db->formatConditions(['collectionId' => $this->collectionFill]);
         $recordset = $this->db->select('collection', ['collectionType', 'collectionDefault']);
+        if (!$this->db->numRows($recordset)) {
+        	return;
+        }
         $row = $this->db->fetchRow($recordset);
         if ($row['collectionDefault']) {
             $this->collectionDefaults = unserialize(base64_decode($row['collectionDefault']));
@@ -353,9 +363,9 @@ class RESOURCEFORM
                 $field = 'resource' . $key;
                 if (array_key_exists($field, $this->collectionDefaults)) {
                     if ($key == 'Field1') { // seriesTitle
-                        $this->sessionVars['series'] = base64_encode($this->collectionDefaults[$field]);
+                        $this->formData['series'] = base64_encode($this->collectionDefaults[$field]);
                     } else {
-                        $this->sessionVars[$field] = $this->collectionDefaults[$field];
+                        $this->formData[$field] = $this->collectionDefaults[$field];
                     }
                 } else {
                     $this->session->delVar($field);
@@ -364,7 +374,7 @@ class RESOURCEFORM
             foreach ($this->collectionDefaultMap->{$this->collectionType}['resource_year'] as $key => $value) {
                 $field = 'resourceyear' . $key;
                 if (array_key_exists($field, $this->collectionDefaults)) {
-                    $this->sessionVars[$field] = $this->collectionDefaults[$field];
+                    $this->formData[$field] = $this->collectionDefaults[$field];
                 } else {
                     $this->session->delVar($field);
                 }
@@ -373,17 +383,17 @@ class RESOURCEFORM
                 $field = 'resourcemisc' . $key;
                 if (array_key_exists($field, $this->collectionDefaults)) {
                     if (($field == 'resourcemiscPublisher') && ($this->collectionType == 'proceedings')) {
-                        $this->sessionVars['organizerId'] = $this->collectionDefaults[$field];
+                        $this->formData['organizerId'] = $this->collectionDefaults[$field];
                     } elseif (($field == 'resourcemiscField1') && ($this->collectionType == 'proceedings')) {
-                        $this->sessionVars['publisherId'] = $this->collectionDefaults[$field];
+                        $this->formData['publisherId'] = $this->collectionDefaults[$field];
                     } elseif ($field == 'resourcemiscPublisher') {
-                        $this->sessionVars['publisherId'] = $this->collectionDefaults[$field];
+                        $this->formData['publisherId'] = $this->collectionDefaults[$field];
                     } elseif ($field == 'resourcemiscField1') { // trans publisher
-                        $this->sessionVars['transPublisherId'] = $this->collectionDefaults[$field];
+                        $this->formData['transPublisherId'] = $this->collectionDefaults[$field];
                     } elseif (($field == 'resourcemiscPeerReviewed') && ($this->collectionDefaults[$field] == 'N')) {
                         $this->session->delVar($field);
                     } else {
-                        $this->sessionVars[$field] = $this->collectionDefaults[$field];
+                        $this->formData[$field] = $this->collectionDefaults[$field];
                     }
                 } else {
                     $this->session->delVar($field);
@@ -392,7 +402,7 @@ class RESOURCEFORM
             if (array_key_exists('creators', $this->collectionDefaults)) {
                 foreach ($this->collectionDefaults['creators'] as $key => $value) {
                     if ($value) {
-                        $this->sessionVars[$key] = $value;
+                        $this->formData[$key] = $value;
                     }
                 }
             }
@@ -463,22 +473,21 @@ class RESOURCEFORM
             if ($index == 0) {
                 $label = $this->makeCreatorLabel();
             }
-            $this->session->setVar("resourceFormValidate_" . $type . '_' . $index, TRUE);
             $entry = $type . '_' . $index . '_firstname';
-            $text = array_key_exists($entry, $this->sessionVars) ? $this->sessionVars[$entry] : FALSE;
+            $text = array_key_exists($entry, $this->formData) ? $this->formData[$entry] : FALSE;
             $fields .= \HTML\trStart();
             $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, \HTML\dbToFormTidy($text), 30, 255));
             $entry = $type . '_' . $index . '_initials';
-            $text = array_key_exists($entry, $this->sessionVars) ? $this->sessionVars[$entry] : FALSE;
+            $text = array_key_exists($entry, $this->formData) ? $this->formData[$entry] : FALSE;
             $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, \HTML\dbToFormTidy($text), 6, 255));
             $entry = $type . '_' . $index . '_prefix';
-            $text = array_key_exists($entry, $this->sessionVars) ? $this->sessionVars[$entry] : FALSE;
+            $text = array_key_exists($entry, $this->formData) ? $this->formData[$entry] : FALSE;
             $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, \HTML\dbToFormTidy($text), 11, 255));
             $entry = $type . '_' . $index . '_surname';
-            $text = array_key_exists($entry, $this->sessionVars) ? $this->sessionVars[$entry] : FALSE;
+            $text = array_key_exists($entry, $this->formData) ? $this->formData[$entry] : FALSE;
             $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, \HTML\dbToFormTidy($text), 30, 255));
             $entry = $type . '_' . $index . '_select';
-            $selected = array_key_exists($entry, $this->sessionVars) ? $this->sessionVars[$entry] : FALSE;
+            $selected = array_key_exists($entry, $this->formData) ? $this->formData[$entry] : FALSE;
             if ($selected) {
                 $fields .= \HTML\td(\FORM\selectedBoxValue(FALSE, $entry, $this->creatorsArray, $selected, 1));
             } else {
@@ -513,34 +522,33 @@ class RESOURCEFORM
             $found = FALSE;
             $thisRow = FALSE;
             $select = $type . '_' . $index . '_select';
-            if (!array_key_exists($select, $this->sessionVars) && !$this->error) {
+            if (!array_key_exists($select, $this->formData) && !$this->error) {
                 break;
             }
-            $this->session->setVar("resourceFormValidate_" . $type . '_' . $index, TRUE);
             $entry = $type . '_' . $index . '_firstname';
-            $value = $this->session->getVar("resourceForm_" . $entry) ? $this->session->getVar("resourceForm_" . $entry) : FALSE;
+            $value = array_key_exists($entry, $this->formData) ? $this->formData[$entry] : FALSE;
             $found = $value ? TRUE : FALSE;
             $thisRow .= \HTML\trStart();
             $thisRow .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 30, 255));
             $entry = $type . '_' . $index . '_initials';
-            $value = $this->session->getVar("resourceForm_" . $entry) ? $this->session->getVar("resourceForm_" . $entry) : FALSE;
+            $value = array_key_exists($entry, $this->formData) ? $this->formData[$entry] : FALSE;
             $found = $value ? TRUE : FALSE;
             $thisRow .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 6, 255));
             $entry = $type . '_' . $index . '_prefix';
-            $value = $this->session->getVar("resourceForm_" . $entry) ? $this->session->getVar("resourceForm_" . $entry) : FALSE;
+            $value = array_key_exists($entry, $this->formData) ? $this->formData[$entry] : FALSE;
             $found = $value ? TRUE : FALSE;
             $thisRow .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 11, 255));
             $entry = $type . '_' . $index . '_surname';
-            $value = $this->session->getVar("resourceForm_" . $entry) ? $this->session->getVar("resourceForm_" . $entry) : FALSE;
+            $value = array_key_exists($entry, $this->formData) ? $this->formData[$entry] : FALSE;
             $found = $value ? TRUE : FALSE;
             $thisRow .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 30, 255));
-            if (array_key_exists($select, $this->sessionVars)) {
+            if (array_key_exists($select, $this->formData)) {
                 $found = TRUE;
                 $thisRow .= \HTML\td(\FORM\selectedBoxValue(
                     FALSE,
                     $select,
                     $this->creatorsArray,
-                    $this->sessionVars[$select],
+                    $this->formData[$select],
                     1
                 ));
             } else {
@@ -573,8 +581,8 @@ class RESOURCEFORM
     public function blankCreatorCell($key, $creatorMsg)
     {
         $jsonArray = [];
-        $jScript = "index.php?action=resource_RESOURCEFORMAJAX_CORE&method=addCreatorField&creatorType=$key";
-        if ($this->edit || $this->error || $this->collectionFill || ($this->session->getVar("resourceFormType") == 'edit')) {
+        $jScript = "index.php?action=resource_RESOURCEFORMAJAX_CORE&method=addCreatorField&creatorType=$key&uuid=" . $this->uuid;
+        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit')) {
             list($index, $editCell) = $this->creatorFieldsEdit($key);
             $jsonArray[] = [
                 'startFunction' => 'addCreator',
@@ -593,8 +601,8 @@ class RESOURCEFORM
         }
         $addImage = \AJAX\jActionIcon('add', 'onclick', $jsonArray);
         $jsonArray = [];
-        $jScript = "index.php?action=resource_RESOURCEFORMAJAX_CORE&method=removeCreatorField&creatorType=$key";
-        if ($this->edit || $this->error || $this->collectionFill || ($this->session->getVar("resourceFormType") == 'edit')) {
+        $jScript = "index.php?action=resource_RESOURCEFORMAJAX_CORE&method=removeCreatorField&creatorType=$key&uuid=" . $this->uuid;
+        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit')) {
             $jsonArray[] = [
                 'startFunction' => 'removeCreator',
                 'script' => "$jScript",
@@ -614,7 +622,7 @@ class RESOURCEFORM
         $images = '&nbsp;&nbsp;' . $addImage . '&nbsp;&nbsp;' . $removeImage;
         $creatorCells = \HTML\trStart();
         $creatorCells .= \HTML\td(\HTML\h($this->messages->text('creators', $creatorMsg) . $images, FALSE, 4), $this->tdLabelWidth);
-        if ($this->edit || $this->error || $this->collectionFill || ($this->session->getVar("resourceFormType") == 'edit')) {
+        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit')) {
             $creatorCells .= \HTML\td(\HTML\div($key . '_Inner', $editCell), $this->tdContentWidth);
         } else {
             $creatorCells .= \HTML\td(\HTML\div($key . '_Inner', '&nbsp;'), $this->tdContentWidth);
@@ -684,8 +692,8 @@ class RESOURCEFORM
      */
     public function divIsbn()
     {
-        $text = array_key_exists('resourceIsbn', $this->sessionVars) ?
-            \HTML\dbToFormTidy($this->sessionVars['resourceIsbn']) : FALSE;
+        $text = array_key_exists('resourceIsbn', $this->formData) ?
+            \HTML\dbToFormTidy($this->formData['resourceIsbn']) : FALSE;
 
         return \HTML\div('isbnOuter', \FORM\textInput(
             $this->messages->text("resources", "isbn"),
@@ -702,8 +710,8 @@ class RESOURCEFORM
      */
     public function divDoi()
     {
-        $text = array_key_exists('resourceDoi', $this->sessionVars) ?
-            \HTML\dbToFormTidy($this->sessionVars['resourceDoi']) : FALSE;
+        $text = array_key_exists('resourceDoi', $this->formData) ?
+            \HTML\dbToFormTidy($this->formData['resourceDoi']) : FALSE;
 
         return \HTML\div('doiOuter', \FORM\textInput(
             $this->messages->text("resources", "doi"),
@@ -731,8 +739,8 @@ class RESOURCEFORM
     {
         if (is_array($temp)) {
             $selectedSubcategories = [];
-            if (array_key_exists('resourcecategorySubcategories', $this->sessionVars)) {
-                $selected = \UTF8\mb_explode(',', $this->sessionVars['resourcecategorySubcategories']);
+            if (array_key_exists('resourcecategorySubcategories', $this->formData)) {
+                $selected = \UTF8\mb_explode(',', $this->formData['resourcecategorySubcategories']);
                 foreach ($selected as $key) {
                     $selectedSubcategories[$key] = $temp[$key];
                     unset($temp[$key]);
@@ -773,8 +781,8 @@ class RESOURCEFORM
             foreach ($temp as $key => $value) {
                 $subcategories[$key] = $value;
             }
-            if (array_key_exists('resourcecategorySubcategories', $this->sessionVars)) {
-                $selected = \UTF8\mb_explode(',', $this->sessionVars['resourcecategorySubcategories']);
+            if (array_key_exists('resourcecategorySubcategories', $this->formData)) {
+                $selected = \UTF8\mb_explode(',', $this->formData['resourcecategorySubcategories']);
 
                 return \HTML\td(\HTML\div(
                     'subcategory',
@@ -825,16 +833,17 @@ class RESOURCEFORM
         $this->resourceType = $resourceType;
     }
     /**
-     * Setter for loading session variables into $this->sessionVars when editing and using AJAX
+     * Setter for loading temp_storage variables into $this->formData when editing and using AJAX
+     *
      */
-    public function setSessionVars()
+    public function setFormData()
     {
-        $this->sessionVars = $this->session->getArray('resourceForm');
+        $this->formData = \TEMPSTORAGE\fetch($this->db, $this->uuid);
     }
     /**
-     * We're editing a resource so get resource details and place in $this->sessionVars
+     * We're editing a resource so get resource details and place in $this->formData
      */
-    private function getEditSession()
+    private function getEditData()
     {
         $badInput = FACTORY_BADINPUT::getInstance();
         if (!array_key_exists('id', $this->vars) || !$this->vars['id']) {
@@ -848,30 +857,30 @@ class RESOURCEFORM
             $badInput->close($this->messages->text("resources", "noResult"));
         }
         $row = $this->db->fetchRow($resultset);
-        $this->resourceType = $this->sessionVars['resourceType'] = $row['resourceType'];
-        $this->sessionVars['resourceTitle'] = $row['resourceTitle'];
+        $this->resourceType = $this->formData['resourceType'] = $row['resourceType'];
+        $this->formData['resourceTitle'] = $row['resourceTitle'];
         if (array_key_exists('resourceNoSort', $row) && $row['resourceNoSort']) {
-            $this->sessionVars['resourceNoSort'] = $row['resourceNoSort'];
+            $this->formData['resourceNoSort'] = $row['resourceNoSort'];
         }
         if (array_key_exists('resourceSubtitle', $row) && $row['resourceSubtitle']) {
-            $this->sessionVars['resourceSubtitle'] = $row['resourceSubtitle'];
+            $this->formData['resourceSubtitle'] = $row['resourceSubtitle'];
         }
         if (array_key_exists('resourceShortTitle', $row) && $row['resourceShortTitle']) {
-            $this->sessionVars['resourceShortTitle'] = $row['resourceShortTitle'];
+            $this->formData['resourceShortTitle'] = $row['resourceShortTitle'];
         }
         if (array_key_exists('resourceTransNoSort', $row) && $row['resourceTransNoSort']) {
-            $this->sessionVars['resourceTransNoSort'] = $row['resourceTransNoSort'];
+            $this->formData['resourceTransNoSort'] = $row['resourceTransNoSort'];
         }
         if (array_key_exists('resourcetextUrls', $row) && $row['resourcetextUrls']) {
             $tmp = base64_decode($row['resourcetextUrls']);
             $tmp = unserialize($tmp);
             $tmp = array_shift($tmp);
-            $this->sessionVars['resourcetextUrl'] = $tmp;
+            $this->formData['resourcetextUrl'] = $tmp;
             if (array_key_exists('resourcetextUrlText', $row) && $row['resourcetextUrlText']) {
                 $tmp = base64_decode($row['resourcetextUrlText']);
                 $tmp = unserialize($tmp);
                 $tmp = array_shift($tmp);
-                $this->sessionVars['resourcetextUrlText'] = $tmp;
+                $this->formData['resourcetextUrlText'] = $tmp;
             }
         }
         $ids = [];
@@ -884,7 +893,7 @@ class RESOURCEFORM
                     foreach ($this->typeMaps[$this->resourceType]['optional'][$optional][$table] as $key => $value) {
                         $rowKey = $table . $key;
                         if (array_key_exists($rowKey, $row) && $row[$rowKey]) {
-                            $this->sessionVars[$rowKey] = $row[$rowKey];
+                            $this->formData[$rowKey] = $row[$rowKey];
                         }
                     }
                 }
@@ -892,7 +901,7 @@ class RESOURCEFORM
                     foreach ($this->typeMaps[$this->resourceType]['optional'][$optional][$table . '*'] as $key => $value) {
                         $rowKey = $table . $key;
                         if (array_key_exists($rowKey, $row) && $row[$rowKey]) {
-                            $this->sessionVars[$rowKey] = $row[$rowKey];
+                            $this->formData[$rowKey] = $row[$rowKey];
                         }
                     }
                 }
@@ -902,7 +911,7 @@ class RESOURCEFORM
                     foreach ($this->typeMaps[$this->resourceType]['virtual'][$table] as $key => $value) {
                         $rowKey = $table . $key;
                         if (array_key_exists($rowKey, $row) && $row[$rowKey]) {
-                            $this->sessionVars[$value] = $row[$rowKey];
+                            $this->formData[$value] = $row[$rowKey];
                             $ids[] = $value;
                         }
                     }
@@ -911,16 +920,16 @@ class RESOURCEFORM
         }
         // abstract, note, isbn, doi
         if (array_key_exists('resourcetextAbstract', $row) && $row['resourcetextAbstract']) {
-            $this->sessionVars['resourcetextAbstract'] = $row['resourcetextAbstract'];
+            $this->formData['resourcetextAbstract'] = $row['resourcetextAbstract'];
         }
         if (array_key_exists('resourcetextNote', $row) && $row['resourcetextNote']) {
-            $this->sessionVars['resourcetextNote'] = $row['resourcetextNote'];
+            $this->formData['resourcetextNote'] = $row['resourcetextNote'];
         }
         if (array_key_exists('resourceIsbn', $row) && $row['resourceIsbn']) {
-            $this->sessionVars['resourceIsbn'] = $row['resourceIsbn'];
+            $this->formData['resourceIsbn'] = $row['resourceIsbn'];
         }
         if (array_key_exists('resourceDoi', $row) && $row['resourceDoi']) {
-            $this->sessionVars['resourceDoi'] = $row['resourceDoi'];
+            $this->formData['resourceDoi'] = $row['resourceDoi'];
         }
         // creators
         if (array_key_exists('resourcecreator', $this->typeMaps[$this->resourceType])) {
@@ -934,7 +943,7 @@ class RESOURCEFORM
             foreach ($this->typeMaps[$this->resourceType]['resourcecreator'] as $key => $value) {
                 foreach ($array as $role => $cArray) {
                     foreach ($cArray as $index => $cId) {
-                        $this->sessionVars["Creator$role" . "_$index" . '_select'] = $cId;
+                        $this->formData["Creator$role" . "_$index" . '_select'] = $cId;
                     }
                 }
             }
@@ -948,7 +957,7 @@ class RESOURCEFORM
             $array[] = $row['keywordKeyword'];
         }
         if (!empty($array)) {
-            $this->sessionVars['resourcekeywordKeywords'] = implode(',', $array);
+            $this->formData['resourcekeywordKeywords'] = implode(',', $array);
         }
         $array = [];
         $this->db->formatConditions(['resourcecategoryCategoryId' => ' IS NOT NULL']);
@@ -958,7 +967,7 @@ class RESOURCEFORM
             $array[] = $row['resourcecategoryCategoryId'];
         }
         if (!empty($array)) {
-            $this->sessionVars['resourcecategoryCategories'] = implode(',', $array);
+            $this->formData['resourcecategoryCategories'] = implode(',', $array);
         }
         $array = [];
         $this->db->formatConditions(['resourcecategoryResourceId' => $this->vars['id']]);
@@ -968,7 +977,7 @@ class RESOURCEFORM
             $array[] = $row['resourcecategorySubcategoryId'];
         }
         if (!empty($array)) {
-            $this->sessionVars['resourcecategorySubcategories'] = implode(',', $array);
+            $this->formData['resourcecategorySubcategories'] = implode(',', $array);
         }
         $array = [];
         $this->db->formatConditions(['resourceusertagsResourceId' => $this->vars['id']]);
@@ -978,7 +987,7 @@ class RESOURCEFORM
             $array[] = $row['usertagsTag'];
         }
         if (!empty($array)) {
-            $this->sessionVars['resourceusertagsTagId'] = implode(',', $array);
+            $this->formData['resourceusertagsTagId'] = implode(',', $array);
         }
         // User bibliographies
         $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
@@ -996,7 +1005,7 @@ class RESOURCEFORM
                 $array[] = $row['userbibliographyresourceBibliographyId'];
             }
             if (!empty($array)) {
-                $this->sessionVars['bibliographies'] = implode(',', $array);
+                $this->formData['bibliographies'] = implode(',', $array);
             }
         }
         // Languages
@@ -1007,23 +1016,22 @@ class RESOURCEFORM
             $array[] = $row['resourcelanguageLanguageId'];
         }
         if (!empty($array)) {
-            $this->sessionVars['resourcelanguageLanguages'] = implode(',', $array);
+            $this->formData['resourcelanguageLanguages'] = implode(',', $array);
         }
         // Remove 'virtualFields' values (see RESOURCEMAP.php)
         foreach ($ids as $value) {
             if (array_key_exists('virtualFields', $this->typeMaps[$this->resourceType]) &&
                 array_key_exists($value, $this->typeMaps[$this->resourceType]['virtualFields'])) {
                 foreach ($this->typeMaps[$this->resourceType]['virtualFields'][$value] as $removeField) {
-                    if (array_key_exists($removeField, $this->sessionVars)) {
-                        unset($this->sessionVars[$removeField]);
+                    if (array_key_exists($removeField, $this->formData)) {
+                        unset($this->formData[$removeField]);
                     }
                 }
             }
         }
-        if (array_key_exists('resourcemiscPeerReviewed', $this->sessionVars) && ($this->sessionVars['resourcemiscPeerReviewed'] == 'N')) {
-            unset($this->sessionVars['resourcemiscPeerReviewed']);
+        if (array_key_exists('resourcemiscPeerReviewed', $this->formData) && ($this->formData['resourcemiscPeerReviewed'] == 'N')) {
+            unset($this->formData['resourcemiscPeerReviewed']);
         }
-        $this->session->writeArray($this->sessionVars, 'resourceForm');
     }
     /**
      * Print custom fields if any exist and we're not editing
@@ -1046,7 +1054,7 @@ class RESOURCEFORM
         if (empty($array)) {
             return;
         }
-        $this->sessionVars['customFields'] = serialize($array);
+        $this->formData['customFields'] = serialize($array);
         $pString = \HTML\td(\HTML\h($this->messages->text('resources', 'customFields'), FALSE, 4), $this->tdLabelWidth);
 
         $tdContent = \HTML\tableStart();
@@ -1145,7 +1153,7 @@ class RESOURCEFORM
         }
         $jsonArray = [];
         // Amend creators lists depending upon which resource types are chosen
-        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initCreators';
+        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initCreators&uuid=' . $this->uuid;
         $jsonArray[] = [
             'startFunction' => 'triggerFromSelect',
             'script' => "$jScript",
@@ -1153,7 +1161,7 @@ class RESOURCEFORM
             'targetDiv' => 'creatorsOuter',
         ];
         // Display collections details depending upon which resource types are chosen
-        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initCollection';
+        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initCollection&uuid=' . $this->uuid;
         $jsonArray[] = [
             'startFunction' => 'triggerFromSelect',
             'script' => "$jScript",
@@ -1161,7 +1169,7 @@ class RESOURCEFORM
             'targetDiv' => 'organizerOuter',
         ];
         // Display series details depending upon which resource types are chosen
-        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initSeries';
+        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initSeries&uuid=' . $this->uuid;
         $jsonArray[] = [
             'startFunction' => 'triggerFromSelect',
             'script' => "$jScript",
@@ -1169,7 +1177,7 @@ class RESOURCEFORM
             'targetDiv' => 'seriesOuter',
         ];
         // Display conference details depending upon which resource types are chosen
-        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initConference';
+        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initConference&uuid=' . $this->uuid;
         $jsonArray[] = [
             'startFunction' => 'triggerFromSelect',
             'script' => "$jScript",
@@ -1177,7 +1185,7 @@ class RESOURCEFORM
             'targetDiv' => 'conferenceOuter',
         ];
         // Display publisher details depending upon which resource types are chosen
-        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initPublisher';
+        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initPublisher&uuid=' . $this->uuid;
         $jsonArray[] = [
             'startFunction' => 'triggerFromSelect',
             'script' => "$jScript",
@@ -1185,7 +1193,7 @@ class RESOURCEFORM
             'targetDiv' => 'publisherOuter',
         ];
         // Display translation details depending upon which resource types are chosen
-        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initTranslation';
+        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initTranslation&uuid=' . $this->uuid;
         $jsonArray[] = [
             'startFunction' => 'triggerFromSelect',
             'script' => "$jScript",
@@ -1193,7 +1201,7 @@ class RESOURCEFORM
             'targetDiv' => 'translationOuter',
         ];
         // Display miscellaneous details depending upon which resource types are chosen
-        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initMiscellaneous';
+        $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=initMiscellaneous&uuid=' . $this->uuid;
         $jsonArray[] = [
             'startFunction' => 'triggerFromSelect',
             'script' => "$jScript",
@@ -1202,14 +1210,14 @@ class RESOURCEFORM
         ];
         $js = \AJAX\jActionForm('onchange', $jsonArray);
         $tdContent .= \HTML\td(\FORM\selectedBoxValue(FALSE, "resourceType", $array, $this->resourceType, 15, FALSE, $js));
-        $title = array_key_exists("resourceTitle", $this->sessionVars) ?
-            \HTML\dbToTinyMCE($this->sessionVars['resourceTitle']) : FALSE;
-        $title = array_key_exists("resourceNoSort", $this->sessionVars) ?
-            \HTML\dbToTinyMCE($this->sessionVars['resourceNoSort']) . " $title" : FALSE . $title;
-        $subtitle = array_key_exists("resourceSubtitle", $this->sessionVars) ?
-            \HTML\dbToTinyMCE($this->sessionVars['resourceSubtitle']) : FALSE;
-        $shortTitle = array_key_exists("resourceShortTitle", $this->sessionVars) ?
-            \HTML\dbToFormTidy($this->sessionVars['resourceShortTitle']) : FALSE;
+        $title = array_key_exists("resourceTitle", $this->formData) ?
+            \HTML\dbToTinyMCE($this->formData['resourceTitle']) : FALSE;
+        $title = array_key_exists("resourceNoSort", $this->formData) ?
+            \HTML\dbToTinyMCE($this->formData['resourceNoSort']) . " $title" : FALSE . $title;
+        $subtitle = array_key_exists("resourceSubtitle", $this->formData) ?
+            \HTML\dbToTinyMCE($this->formData['resourceSubtitle']) : FALSE;
+        $shortTitle = array_key_exists("resourceShortTitle", $this->formData) ?
+            \HTML\dbToFormTidy($this->formData['resourceShortTitle']) : FALSE;
         $tdContent .= \HTML\td($this->required() . \FORM\textInput(
             $this->messages->text("resources", "title"),
             "resourceTitle",
@@ -1306,15 +1314,15 @@ class RESOURCEFORM
                         $required = array_search($tableKey . $key, $this->typeMaps[$this->resourceType]['required']) !== FALSE ?
                             $this->required() : FALSE;
                     }
-                    $sessionVar = array_key_exists($tableKey . $key, $this->sessionVars) ?
-                        \HTML\dbToFormTidy($this->sessionVars[$tableKey . $key]) : FALSE;
+                    $sessionVar = array_key_exists($tableKey . $key, $this->formData) ?
+                        \HTML\dbToFormTidy($this->formData[$tableKey . $key]) : FALSE;
                     $hint = array_key_exists($key, $hints) ? $hints[$key] : FALSE;
                     if (array_key_exists($key, $insertBefore)) {
                         $tdElements[] = $insertBefore[$key];
                     }
                     if ($this->eds[$value]['type'] == 'textInput') {
-                        if (($key == 'TransTitle') && (array_key_exists($tableKey . 'TransNoSort', $this->sessionVars))) {
-                            $sessionVar = \HTML\dbToFormTidy($this->sessionVars[$tableKey . 'TransNoSort']) . ' ' . $sessionVar;
+                        if (($key == 'TransTitle') && (array_key_exists($tableKey . 'TransNoSort', $this->formData))) {
+                            $sessionVar = \HTML\dbToFormTidy($this->formData[$tableKey . 'TransNoSort']) . ' ' . $sessionVar;
                         }
                         if (isset($date) && !$sessionVar && ($key == 'Year2')) {
                             $sessionVar = $date['year'];
@@ -1432,7 +1440,7 @@ class RESOURCEFORM
         $this->db->limit(1, 0); // pick just the first one
         $resultset = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscField1']);
         if (!$this->db->numRows($resultset)) {
-            unset($this->sessionVars['publisherId']);
+            unset($this->formData['publisherId']);
 
             return $this->publisherInsert();
         }
@@ -1467,16 +1475,16 @@ class RESOURCEFORM
             $row = $this->db->selectFirstRow($table, $fieldArrayDB);
             foreach ($fieldArrayDB as $field) {
                 if ($row[$field]) {
-                    $this->sessionVars[$field] = $row[$field];
+                    $this->formData[$field] = $row[$field];
                 } else {
-                    unset($this->sessionVars[$field]);
+                    unset($this->formData[$field]);
                 }
             }
         }
         if (($this->resourceType == 'proceedings_article') || ($this->resourceType == 'proceedings')) {
-            $this->sessionVars['organizerId'] = $publisherId;
+            $this->formData['organizerId'] = $publisherId;
         } else {
-            $this->sessionVars['publisherId'] = $publisherId;
+            $this->formData['publisherId'] = $publisherId;
         }
 
         return $this->publisherInsert();
@@ -1518,8 +1526,8 @@ class RESOURCEFORM
             } else {
                 $id = 'publisherId';
             }
-            $pId = array_key_exists($id, $this->sessionVars) ?
-                \HTML\dbToFormTidy($this->sessionVars[$id]) : FALSE;
+            $pId = array_key_exists($id, $this->formData) ?
+                \HTML\dbToFormTidy($this->formData[$id]) : FALSE;
             if ($pId) {
                 return \FORM\selectedBoxValue($title, $id, $publishers, $pId, 1);
             } else {
@@ -1573,9 +1581,9 @@ class RESOURCEFORM
             $row = $this->db->selectFirstRow($table, $fieldArrayDB);
             foreach ($fieldArrayDB as $field) {
                 if ($row[$field]) {
-                    $this->sessionVars[$field] = $row[$field];
+                    $this->formData[$field] = $row[$field];
                 } else {
-                    unset($this->sessionVars[$field]);
+                    unset($this->formData[$field]);
                 }
             }
         }
@@ -1583,9 +1591,9 @@ class RESOURCEFORM
         $resultset = $this->db->select('resource_misc', 'resourcemiscField1');
         $row = $this->db->fetchRow($resultset);
         if ($row['resourcemiscField1']) {
-            $this->sessionVars['transPublisherId'] = $row['resourcemiscField1'];
+            $this->formData['transPublisherId'] = $row['resourcemiscField1'];
         } else {
-            unset($this->sessionVars['transPublisherId']);
+            unset($this->formData['transPublisherId']);
         }
 
         return [$this->translationTitleInsert(), $this->translationPubInsert()]; // sets title and publisher select boxes back to IGNORE
@@ -1626,7 +1634,8 @@ class RESOURCEFORM
                 $title = $this->messages->text("resources", "originalTitle");
             }
             // Fill in trans DIV depending upon which trans is chosen
-            $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillTrans&resourceType=' . $this->resourceType;
+            $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillTrans&resourceType=' . $this->resourceType . 
+            	'&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -1638,8 +1647,8 @@ class RESOURCEFORM
             foreach ($temp as $value) {
                 $titles[base64_encode(serialize($value[0]))] = $value[1];
             }
-            $tId = array_key_exists("transTitles", $this->sessionVars) ?
-                \HTML\dbToFormTidy($this->sessionVars['transTitles']) : FALSE;
+            $tId = array_key_exists("transTitles", $this->formData) ?
+                \HTML\dbToFormTidy($this->formData['transTitles']) : FALSE;
             if ($tId) {
                 return \FORM\selectedBoxValue($title, 'transTitles', $titles, $tId, 1, FALSE, $js);
             } else {
@@ -1677,8 +1686,8 @@ class RESOURCEFORM
             foreach ($temp as $key => $value) {
                 $publishers[$key] = $value;
             }
-            $pId = array_key_exists("transPublisherId", $this->sessionVars) ?
-                \HTML\dbToFormTidy($this->sessionVars['transPublisherId']) : FALSE;
+            $pId = array_key_exists("transPublisherId", $this->formData) ?
+                \HTML\dbToFormTidy($this->formData['transPublisherId']) : FALSE;
             if ($pId) {
                 return \FORM\selectedBoxValue($title, 'transPublisherId', $publishers, $pId, 1);
             } else {
@@ -1728,9 +1737,9 @@ class RESOURCEFORM
             $row = $this->db->selectFirstRow($table, $fieldArrayDB);
             foreach ($fieldArrayDB as $field) {
                 if ($row[$field]) {
-                    $this->sessionVars[$field] = $row[$field];
+                    $this->formData[$field] = $row[$field];
                 } else {
-                    unset($this->sessionVars[$field]);
+                    unset($this->formData[$field]);
                 }
             }
         }
@@ -1759,7 +1768,8 @@ class RESOURCEFORM
         }
         if (isset($temp)) {
             // Fill in series DIV depending upon which series is chosen
-            $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillSeries&resourceType=' . $this->resourceType;
+            $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillSeries&resourceType=' . $this->resourceType . 
+            	'&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -1771,10 +1781,6 @@ class RESOURCEFORM
             foreach ($temp as $value) {
                 $series[base64_encode($value)] = $value;
             }
-            //			$selected = array_key_exists('series', $this->sessionVars) ? $this->sessionVars['series'] : FALSE;
-            //			if($selected)
-            //				return \FORM\selectedBoxValue(FALSE, "series", $series, $selected, 1);
-            //			else
             return \FORM\selectFBoxValue(FALSE, "series", $series, 1, FALSE, $js);
         }
 
@@ -1818,13 +1824,13 @@ class RESOURCEFORM
             $row = $this->db->selectFirstRow($table, $fieldArrayDB);
             foreach ($fieldArrayDB as $field) {
                 if ($row[$field]) {
-                    $this->sessionVars[$field] = $row[$field];
+                    $this->formData[$field] = $row[$field];
                 } else {
-                    unset($this->sessionVars[$field]);
+                    unset($this->formData[$field]);
                 }
             }
         }
-        $this->sessionVars['conferenceId'] = $this->collectionFill;
+        $this->formData['conferenceId'] = $this->collectionFill;
 
         return $this->conferenceInsert();
     }
@@ -1856,7 +1862,7 @@ class RESOURCEFORM
         if (!empty($temp)) {
             // Fill in conference DIV depending upon which conference is chosen
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillConference&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -1865,7 +1871,7 @@ class RESOURCEFORM
             ];
             // Fill in conference organizer DIV depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillOrganizer&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -1875,7 +1881,7 @@ class RESOURCEFORM
 
             // Fill in publisher DIV depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillPublisher&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -1884,7 +1890,7 @@ class RESOURCEFORM
             ];
             // Fill in series DIV depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillSeries&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -1893,7 +1899,7 @@ class RESOURCEFORM
             ];
             // Fill in miscellaneous DIV depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillMiscellaneous&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -1902,7 +1908,7 @@ class RESOURCEFORM
             ];
             // Fill in translation DIV depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillTrans&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -1911,7 +1917,7 @@ class RESOURCEFORM
             ];
             // Fill in isbn/ID DIV depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillIsbn&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -1920,7 +1926,7 @@ class RESOURCEFORM
             ];
             // Fill in DOI DIV depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillDoi&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -1929,7 +1935,7 @@ class RESOURCEFORM
             ];
             // Fill in creator DIVs depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillCreators&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -1949,7 +1955,7 @@ class RESOURCEFORM
             foreach ($temp as $key => $value) {
                 $collections[$key] = $value;
             }
-            $selected = array_key_exists('conferenceId', $this->sessionVars) ? $this->sessionVars['conferenceId'] : FALSE;
+            $selected = array_key_exists('conferenceId', $this->formData) ? $this->formData['conferenceId'] : FALSE;
 
             return \FORM\selectedBoxValue($title, "conferenceId", $collections, $selected, 1, FALSE, $js);
         }
@@ -2012,7 +2018,7 @@ class RESOURCEFORM
             }
             // Fill in publisher DIV depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillPublisher&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -2021,7 +2027,7 @@ class RESOURCEFORM
             ];
             // Fill in series DIV depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillSeries&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -2030,7 +2036,7 @@ class RESOURCEFORM
             ];
             // Fill in miscellaneous DIV depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillMiscellaneous&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -2039,7 +2045,7 @@ class RESOURCEFORM
             ];
             // Fill in translation DIV depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillTrans&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -2048,7 +2054,7 @@ class RESOURCEFORM
             ];
             // Fill in isbn/ID DIV depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillIsbn&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -2057,7 +2063,7 @@ class RESOURCEFORM
             ];
             // Fill in DOI DIV depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillDoi&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -2066,7 +2072,7 @@ class RESOURCEFORM
             ];
             // Fill in creator DIVs depending upon which collection is chosen and type of resource
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillCreators&resourceType=' . $this->resourceType .
-                '&fromCollection=1';
+                '&fromCollection=1&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -2074,7 +2080,7 @@ class RESOURCEFORM
                 'targetDiv' => 'creatorsOuter',
             ];
             $js = \AJAX\jActionForm('onchange', $jsonArray);
-            $selected = array_key_exists($id, $this->sessionVars) ? $this->sessionVars[$id] : FALSE;
+            $selected = array_key_exists($id, $this->formData) ? $this->formData[$id] : FALSE;
             if ($selected) {
                 return \FORM\selectedBoxValue($title, $id, $collections, $selected, 1, FALSE, $js);
             } else {
@@ -2094,8 +2100,8 @@ class RESOURCEFORM
         $pString = \HTML\td(\HTML\h($this->messages->text('resources', 'commonDetails'), FALSE, 4) .
             \HTML\span($this->messages->text("hint", "keywordsUserTags"), 'hint'), $this->tdLabelWidth);
         $tdContent1 = \HTML\tableStart() . \HTML\trStart();
-        $text = array_key_exists('resourcetextAbstract', $this->sessionVars) ?
-            \HTML\dbToFormTidy($this->sessionVars['resourcetextAbstract']) : FALSE;
+        $text = array_key_exists('resourcetextAbstract', $this->formData) ?
+            \HTML\dbToFormTidy($this->formData['resourcetextAbstract']) : FALSE;
         $tdContent1 .= \HTML\td(\FORM\textareaInput(
             $this->messages->text("resources", "abstract"),
             "resourcetextAbstract",
@@ -2104,8 +2110,8 @@ class RESOURCEFORM
             10
         ));
         $tdContent1 .= \HTML\trEnd() . \HTML\trStart();
-        $text = array_key_exists('resourcetextNote', $this->sessionVars) ?
-            \HTML\dbToFormTidy($this->sessionVars['resourcetextNote']) : FALSE;
+        $text = array_key_exists('resourcetextNote', $this->formData) ?
+            \HTML\dbToFormTidy($this->formData['resourcetextNote']) : FALSE;
         $tdContent1 .= \HTML\td(\FORM\textareaInput(
             $this->messages->text("resources", "note"),
             "resourcetextNote",
@@ -2116,7 +2122,7 @@ class RESOURCEFORM
         $tdContent1 .= \HTML\trEnd() . \HTML\tableEnd();
         $tdContent1 .= BR . '&nbsp;' . BR;
         $tdContent2 = \HTML\tableStart() . \HTML\trStart();
-        $text = array_key_exists('resourcetextUrl', $this->sessionVars) ? $this->sessionVars['resourcetextUrl'] : WIKINDX_RESOURCE_URL_PREFIX;
+        $text = array_key_exists('resourcetextUrl', $this->formData) ? $this->formData['resourcetextUrl'] : WIKINDX_RESOURCE_URL_PREFIX;
         $urlContent = \FORM\textInput(
             $this->messages->text("resources", "url"),
             "resourcetextUrl",
@@ -2131,8 +2137,8 @@ class RESOURCEFORM
             "",
             $this->messages->text("hint", "url")
         ), 'hint');
-        $text = array_key_exists('resourcetextUrlText', $this->sessionVars) ?
-            \HTML\dbToFormTidy($this->sessionVars['resourcetextUrlText']) : FALSE;
+        $text = array_key_exists('resourcetextUrlText', $this->formData) ?
+            \HTML\dbToFormTidy($this->formData['resourcetextUrlText']) : FALSE;
         $urlContent .= BR . '&nbsp;' . BR;
         $urlContent .= \FORM\textInput(
             $this->messages->text("resources", "urlLabel"),
@@ -2142,11 +2148,11 @@ class RESOURCEFORM
             255
         );
         $tdContent2 .= \HTML\td($urlContent, 'width50percent');
-        $text = array_key_exists('resourceIsbn', $this->sessionVars) ?
-            \HTML\dbToFormTidy($this->sessionVars['resourceIsbn']) : FALSE;
+        $text = array_key_exists('resourceIsbn', $this->formData) ?
+            \HTML\dbToFormTidy($this->formData['resourceIsbn']) : FALSE;
         $tdContent2 .= \HTML\td($this->divIsbn(), 'width25percent');
-        $text = array_key_exists('resourceDoi', $this->sessionVars) ?
-            \HTML\dbToFormTidy($this->sessionVars['resourceDoi']) : '';
+        $text = array_key_exists('resourceDoi', $this->formData) ?
+            \HTML\dbToFormTidy($this->formData['resourceDoi']) : '';
         $tdContent2 .= \HTML\td($this->divDoi(), 'width25percent');
         $tdContent2 .= \HTML\trEnd() . \HTML\tableEnd();
         $tdContent2 .= BR . '&nbsp;' . BR;
@@ -2154,8 +2160,8 @@ class RESOURCEFORM
         // categories
         $categories = $this->category->grabAll();
         $selectedCategories = [];
-        if (array_key_exists('resourcecategoryCategories', $this->sessionVars)) {
-            $selected = \UTF8\mb_explode(',', $this->sessionVars['resourcecategoryCategories']);
+        if (array_key_exists('resourcecategoryCategories', $this->formData)) {
+            $selected = \UTF8\mb_explode(',', $this->formData['resourcecategoryCategories']);
             foreach ($selected as $key) {
                 $selectedCategories[$key] = $categories[$key];
                 unset($categories[$key]);
@@ -2201,8 +2207,8 @@ class RESOURCEFORM
             while ($row = $this->db->fetchRow($resultset)) {
                 $this->languages[$row['languageId']] = \HTML\dbToFormtidy($row['languageLanguage']);
             }
-            if (array_key_exists('resourcelanguageLanguages', $this->sessionVars)) {
-                $selectedLanguages = \UTF8\mb_explode(',', $this->sessionVars['resourcelanguageLanguages']);
+            if (array_key_exists('resourcelanguageLanguages', $this->formData)) {
+                $selectedLanguages = \UTF8\mb_explode(',', $this->formData['resourcelanguageLanguages']);
                 $tdContent3 .= \HTML\td(\FORM\selectedBoxValueMultiple($this->messages->text(
                     'resources',
                     'languages'
@@ -2250,8 +2256,8 @@ class RESOURCEFORM
                 'startFunction' => 'transferKeyword',
             ];
             $toBottom = \AJAX\jActionIcon('toBottom', 'onclick', $jsonArray);
-            $text = array_key_exists('resourcekeywordKeywords', $this->sessionVars) ?
-                stripslashes($this->sessionVars['resourcekeywordKeywords']) : FALSE;
+            $text = array_key_exists('resourcekeywordKeywords', $this->formData) ?
+                stripslashes($this->formData['resourcekeywordKeywords']) : FALSE;
             $keywordText = \HTML\p(\FORM\textareaInputmceNoEditor(FALSE, "keywordList", $text, 40, 2) . BR .
                     \HTML\span(\HTML\aBrowse(
                         'green',
@@ -2293,7 +2299,7 @@ class RESOURCEFORM
             'startFunction' => 'transferUserTag',
         ];
         $toBottom = \AJAX\jActionIcon('toBottom', 'onclick', $jsonArray);
-        $text = array_key_exists('resourceusertagsTagId', $this->sessionVars) ? stripslashes($this->sessionVars['resourceusertagsTagId']) : FALSE;
+        $text = array_key_exists('resourceusertagsTagId', $this->formData) ? stripslashes($this->formData['resourceusertagsTagId']) : FALSE;
         $userTagText = \HTML\p(\FORM\textareaInputmceNoEditor(FALSE, "userTagList", $text, 40, 2) . BR . \HTML\span(\HTML\aBrowse(
             'green',
             '',
@@ -2354,8 +2360,8 @@ class RESOURCEFORM
                 $bibs[$key] = $value;
             }
         }
-        if (array_key_exists('bibliographies', $this->sessionVars) && (count($bibs) > 1)) {
-            $selected = \UTF8\mb_explode(',', $this->sessionVars['bibliographies']);
+        if (array_key_exists('bibliographies', $this->formData) && (count($bibs) > 1)) {
+            $selected = \UTF8\mb_explode(',', $this->formData['bibliographies']);
             $tdContent4 .= \HTML\td(\FORM\selectedBoxValueMultiple($this->messages->text(
                 'resources',
                 'addNewResourceToBib'
@@ -2447,7 +2453,7 @@ class RESOURCEFORM
                 }
             }
         }
-        $this->sessionVars = $this->session->getArray('resourceForm');
+        $this->formData = $this->session->getArray('resourceForm');
     }
     /**
      * Required indicator as HTML element

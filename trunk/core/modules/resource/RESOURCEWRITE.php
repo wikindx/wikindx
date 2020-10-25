@@ -19,8 +19,6 @@ class RESOURCEWRITE
     private $success;
     private $session;
     private $gatekeep;
-    private $resourceInput = [];
-    private $resourceType;
     private $typeMaps;
     private $edit = FALSE;
     private $resourceId = FALSE;
@@ -35,6 +33,7 @@ class RESOURCEWRITE
     private $userTag;
     private $badInput;
     private $navigate;
+    private $formData = [];
 
     public function __construct()
     {
@@ -65,7 +64,7 @@ class RESOURCEWRITE
      */
     public function init()
     {
-        if ($this->session->getVar("resourceFormType") == 'new') {
+        if ($this->formData["resourceFormType"] == 'new') {
             if (($this->session->getVar("setup_Superadmin") != 1) && (WIKINDX_QUARANTINE)) {
                 $success = $this->success->text("resourceAdd") . \HTML\p($this->success->text('quarantined'));
             } else {
@@ -76,10 +75,8 @@ class RESOURCEWRITE
             $success = $this->success->text("resourceEdit");
             GLOBALS::setTplVar('heading', $this->messages->text('heading', 'editResource'));
         }
-        if ($this->session->getVar("resourceLock")) {
-            $this->badInput->close($this->errors->text("done", "resource"));
-        }
         $this->gatherInput();
+        print_r($this->formData);
         if (!$this->edit && !$this->checkDuplicate()) {
             return;
         }
@@ -88,10 +85,8 @@ class RESOURCEWRITE
         $emailClass = new EMAIL();
         $newResource = $this->edit === FALSE ? TRUE : FALSE;
         if (!$emailClass->notify($this->resourceId, $newResource)) {
-            $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()));
+            $success .= $this->errors->text("inputError", "mail", GLOBALS::getError());
         }
-        $this->session->clearArray('resourceForm');
-        $this->session->setVar("resourceLock", TRUE);
         $this->navigate->resource($this->resourceId, $success);
     }
 
@@ -112,9 +107,9 @@ class RESOURCEWRITE
         // blame TinyMCE!
         $string = preg_replace('/(&Acirc;&nbsp;)+/ui', '', $string);
         if ($charlist === NULL) {
-            $string = trim($string);
+            $string = \UTF8\mb_trim($string);
         } else {
-            $string = trim($string, $charlist);
+            $string = \UTF8\mb_trim($string, $charlist);
         }
 
         if (empty($string)) {
@@ -134,16 +129,16 @@ class RESOURCEWRITE
             return TRUE;
         }
         $noSort = $subTitle = FALSE;
-        $title = str_replace(['{', '}'], '', $this->resourceInput['resource']['resourceTitle']);
-        if (array_key_exists('resourceSubtitle', $this->resourceInput['resource'])) {
-            $subTitle = str_replace(['{', '}'], '', $this->resourceInput['resource']['resourceSubtitle']);
+        $title = str_replace(['{', '}'], '', $this->formData['resource']['resourceTitle']);
+        if (array_key_exists('resourceSubtitle', $this->formData['resource'])) {
+            $subTitle = str_replace(['{', '}'], '', $this->formData['resource']['resourceSubtitle']);
             $this->db->formatConditions($this->db->replace($this->db->replace('resourceSubtitle', '{', ''), '}', '', FALSE) .
                 $this->db->like(FALSE, $subTitle, FALSE));
         } else {
             $this->db->formatConditions(['resourceSubtitle' => ' IS NULL']);
         }
-        if (array_key_exists('resourceNoSort', $this->resourceInput['resource'])) {
-            $noSort = str_replace(['{', '}'], '', $this->resourceInput['resource']['resourceNoSort']);
+        if (array_key_exists('resourceNoSort', $this->formData['resource'])) {
+            $noSort = str_replace(['{', '}'], '', $this->formData['resource']['resourceNoSort']);
             $this->db->formatConditions($this->db->replace($this->db->replace('resourceNoSort', '{', ''), '}', '', FALSE) .
                 $this->db->like(FALSE, $noSort, FALSE));
         } else {
@@ -152,7 +147,7 @@ class RESOURCEWRITE
         if ($this->edit) {
             $this->db->formatConditions(['resourceId' => $this->vars['resourceId']], TRUE); // not equal to
         }
-        $this->db->formatConditions(['resourceType' => $this->resourceType]);
+        $this->db->formatConditions(['resourceType' => $this->formData['resourceType']]);
         $this->db->formatConditions($this->db->replace($this->db->replace('resourceTitle', '{', ''), '}', '', FALSE) .
             $this->db->equal . $this->db->tidyInput($title));
         $resultset = $this->db->select('resource', $this->db->formatFields('resourceId') . ', ' .
@@ -188,7 +183,7 @@ class RESOURCEWRITE
         $newCollection = FALSE;
         $collectionDefaults = [];
         // resource table
-        $writeArray = $this->resourceInput['resource'];
+        $writeArray = $this->formData['resource'];
         if ($this->edit) {
             $this->db->formatConditions(['resourceId' => $this->resourceId]);
             $this->db->delete('resource');
@@ -201,8 +196,8 @@ class RESOURCEWRITE
         // Years
         $this->db->formatConditions(['resourceyearId' => $this->resourceId]);
         $this->db->delete('resource_year');
-        if (array_key_exists('resourceyear', $this->resourceInput)) {
-            $writeArray = $this->resourceInput['resourceyear'];
+        if (array_key_exists('resourceyear', $this->formData)) {
+            $writeArray = $this->formData['resourceyear'];
             $writeArray['resourceyearId'] = $this->resourceId;
             $this->db->insert('resource_year', array_keys($writeArray), array_values($writeArray));
         } else { // need blank row for list operations
@@ -211,8 +206,8 @@ class RESOURCEWRITE
         // Page numbers
         $this->db->formatConditions(['resourcepageId' => $this->resourceId]);
         $this->db->delete('resource_page');
-        if (array_key_exists('resourcepage', $this->resourceInput)) {
-            $writeArray = $this->resourceInput['resourcepage'];
+        if (array_key_exists('resourcepage', $this->formData)) {
+            $writeArray = $this->formData['resourcepage'];
             $writeArray['resourcepageId'] = $this->resourceId;
             $this->db->insert('resource_page', array_keys($writeArray), array_values($writeArray));
         }
@@ -229,66 +224,66 @@ class RESOURCEWRITE
         $this->db->formatConditions(['resourcetextId' => $this->resourceId]);
         $this->db->delete('resource_text');
         $writeArray = [];
-        if (array_key_exists('resourcetext', $this->resourceInput)) {
+        if (array_key_exists('resourcetext', $this->formData)) {
             $writeArray['resourcetextId'] = $this->resourceId;
-            if (array_key_exists('resourcetextAbstract', $this->resourceInput['resourcetext'])) {
-                $writeArray['resourcetextAbstract'] = $this->resourceInput['resourcetext']['resourcetextAbstract'];
+            if (array_key_exists('resourcetextAbstract', $this->formData['resourcetext'])) {
+                $writeArray['resourcetextAbstract'] = $this->formData['resourcetext']['resourcetextAbstract'];
             }
-            if (array_key_exists('resourcetextNote', $this->resourceInput['resourcetext'])) {
-                $writeArray['resourcetextNote'] = $this->resourceInput['resourcetext']['resourcetextNote'];
+            if (array_key_exists('resourcetextNote', $this->formData['resourcetext'])) {
+                $writeArray['resourcetextNote'] = $this->formData['resourcetext']['resourcetextNote'];
             }
             // We can only edit the first URL of multiple URLs so need to remove the existing initial URL and label first
-            if ($this->edit && array_key_exists('resourcetextUrl', $this->resourceInput['resourcetext'])) {
+            if ($this->edit && array_key_exists('resourcetextUrl', $this->formData['resourcetext'])) {
                 $urlSet = FALSE;
                 if (isset($existingUrls)) {
                     $urlArray = unserialize(base64_decode($existingUrls));
-                    $urlArray[0] = $this->resourceInput['resourcetext']['resourcetextUrl'];
+                    $urlArray[0] = $this->formData['resourcetext']['resourcetextUrl'];
                     $writeArray['resourcetextUrls'] = base64_encode(serialize($urlArray));
                     $urlSet = TRUE;
                 } else { // new URL
                     $urlArray = [];
-                    $urlArray[0] = $this->resourceInput['resourcetext']['resourcetextUrl'];
+                    $urlArray[0] = $this->formData['resourcetext']['resourcetextUrl'];
                     $writeArray['resourcetextUrls'] = base64_encode(serialize($urlArray));
                     $urlSet = TRUE;
                 }
-                if (isset($existingUrlLabels) && $urlSet && array_key_exists('resourcetextUrlText', $this->resourceInput['resourcetext'])) {
+                if (isset($existingUrlLabels) && $urlSet && array_key_exists('resourcetextUrlText', $this->formData['resourcetext'])) {
                     $urlArray = unserialize(base64_decode($existingUrlLabels));
-                    $urlArray[0] = $this->resourceInput['resourcetext']['resourcetextUrlText'];
+                    $urlArray[0] = $this->formData['resourcetext']['resourcetextUrlText'];
                     $writeArray['resourcetextUrlText'] = base64_encode(serialize($urlArray));
-                } elseif ($urlSet && array_key_exists('resourcetextUrlText', $this->resourceInput['resourcetext'])) {
+                } elseif ($urlSet && array_key_exists('resourcetextUrlText', $this->formData['resourcetext'])) {
                     $urlArray = [];
-                    $urlArray[0] = $this->resourceInput['resourcetext']['resourcetextUrlText'];
+                    $urlArray[0] = $this->formData['resourcetext']['resourcetextUrlText'];
                     $writeArray['resourcetextUrlText'] = base64_encode(serialize($urlArray));
                 }
-            } elseif (array_key_exists('resourcetextUrl', $this->resourceInput['resourcetext'])) {
+            } elseif (array_key_exists('resourcetextUrl', $this->formData['resourcetext'])) {
                 $writeArray['resourcetextUrls'] =
-                    base64_encode(serialize([$this->resourceInput['resourcetext']['resourcetextUrl']]));
-                if (array_key_exists('resourcetextUrlText', $this->resourceInput['resourcetext'])) {
+                    base64_encode(serialize([$this->formData['resourcetext']['resourcetextUrl']]));
+                if (array_key_exists('resourcetextUrlText', $this->formData['resourcetext'])) {
                     $writeArray['resourcetextUrlText'] =
-                    base64_encode(serialize([$this->resourceInput['resourcetext']['resourcetextUrlText']]));
+                    base64_encode(serialize([$this->formData['resourcetext']['resourcetextUrlText']]));
                 }
             }
-            if (array_key_exists('resourcetextNote', $this->resourceInput)) {
+            if (array_key_exists('resourcetextNote', $this->formData)) {
                 $writeArray['resourcetextAddUserIdNote'] = $this->userId;
             }
-            if (array_key_exists('resourcetextAbstract', $this->resourceInput)) {
+            if (array_key_exists('resourcetextAbstract', $this->formData)) {
                 $writeArray['resourcetextAddUserIdAbstract'] = $this->userId;
             }
             $this->db->insert('resource_text', array_keys($writeArray), array_values($writeArray));
         }
         // Collection
         $collectionId = FALSE;
-        if (array_key_exists('collection', $this->resourceInput)) {
-            $title = array_key_exists('collectionTitle', $this->resourceInput['collection']) ?
-                $this->resourceInput['collection']['collectionTitle'] : FALSE;
-            $short = array_key_exists('collectionTitleShort', $this->resourceInput['collection']) ?
-                $this->resourceInput['collection']['collectionTitleShort'] : FALSE;
-            $type = array_key_exists($this->resourceType, $this->collectionMap->collectionTypes) ?
-                $this->collectionMap->collectionTypes[$this->resourceType] : FALSE;
+        if (array_key_exists('collection', $this->formData)) {
+            $title = array_key_exists('collectionTitle', $this->formData['collection']) ?
+                $this->formData['collection']['collectionTitle'] : FALSE;
+            $short = array_key_exists('collectionTitleShort', $this->formData['collection']) ?
+                $this->formData['collection']['collectionTitleShort'] : FALSE;
+            $type = array_key_exists($this->formData['resourceType'], $this->collectionMap->collectionTypes) ?
+                $this->collectionMap->collectionTypes[$this->formData['resourceType']] : FALSE;
             if ($title && !$collectionId = $this->collection->checkExists(FALSE, $title, $short, $type)) {
-                $writeArray = $this->resourceInput['collection'];
+                $writeArray = $this->formData['collection'];
                 if ($type) {
-                    $writeArray['collectionType'] = $this->collectionMap->collectionTypes[$this->resourceType];
+                    $writeArray['collectionType'] = $this->collectionMap->collectionTypes[$this->formData['resourceType']];
                 }
                 $this->db->insert('collection', array_keys($writeArray), array_values($writeArray));
                 $collectionId = $this->db->lastAutoID();
@@ -300,24 +295,24 @@ class RESOURCEWRITE
                 $this->db->deleteCache('cacheResourceCollectionShorts');
             }
             if ($collectionId) {
-                if (($this->resourceType == 'proceedings') || ($this->resourceType == 'proceedings_article') ||
-                ($this->resourceType == 'conference_paper') || ($this->resourceType == 'conference_poster')) {
-                    $field = array_search('conferenceId', $this->typeMaps[$this->resourceType]['virtual']['resourcemisc']);
+                if (($this->formData['resourceType'] == 'proceedings') || ($this->formData['resourceType'] == 'proceedings_article') ||
+                ($this->formData['resourceType'] == 'conference_paper') || ($this->formData['resourceType'] == 'conference_poster')) {
+                    $field = array_search('conferenceId', $this->typeMaps[$this->formData['resourceType']]['virtual']['resourcemisc']);
                 } else {
-                    $field = array_search('collectionId', $this->typeMaps[$this->resourceType]['virtual']['resourcemisc']);
+                    $field = array_search('collectionId', $this->typeMaps[$this->formData['resourceType']]['virtual']['resourcemisc']);
                 }
                 if ($field) {
-                    $this->resourceInput['resourcemisc']['resourcemisc' . $field] = $collectionId;
+                    $this->formData['resourcemisc']['resourcemisc' . $field] = $collectionId;
                 }
             }
         }
         // Publisher
         $publisherId = $transPublisherId = $field1Id = $deleteCache = FALSE;
-        if (array_key_exists('publisher', $this->resourceInput)) {
-            $name = array_key_exists('publisherpublisherName', $this->resourceInput['publisher']) ?
-                $this->resourceInput['publisher']['publisherpublisherName'] : FALSE;
-            $location = array_key_exists('publisherpublisherLocation', $this->resourceInput['publisher']) ?
-                $this->resourceInput['publisher']['publisherpublisherLocation'] : FALSE;
+        if (array_key_exists('publisher', $this->formData)) {
+            $name = array_key_exists('publisherpublisherName', $this->formData['publisher']) ?
+                $this->formData['publisher']['publisherpublisherName'] : FALSE;
+            $location = array_key_exists('publisherpublisherLocation', $this->formData['publisher']) ?
+                $this->formData['publisher']['publisherpublisherLocation'] : FALSE;
             if ($name && !$publisherId = $this->publisher->checkExists($name, $location)) {
                 $writeArray = [];
                 if ($name) {
@@ -326,30 +321,30 @@ class RESOURCEWRITE
                 if ($location) {
                     $writeArray['publisherLocation'] = $location;
                 }
-                if (array_key_exists($this->resourceType, $this->publisherMap->publisherTypes)) {
-                    $writeArray['publisherType'] = $this->publisherMap->publisherTypes[$this->resourceType];
+                if (array_key_exists($this->formData['resourceType'], $this->publisherMap->publisherTypes)) {
+                    $writeArray['publisherType'] = $this->publisherMap->publisherTypes[$this->formData['resourceType']];
                 }
                 $this->db->insert('publisher', array_keys($writeArray), array_values($writeArray));
                 $publisherId = $this->db->lastAutoID();
                 $deleteCache = TRUE;
             }
             if ($publisherId) {
-                if (($this->resourceType == 'proceedings') || ($this->resourceType == 'proceedings_article') ||
-                ($this->resourceType == 'conference_paper') || ($this->resourceType == 'conference_poster')) {
-                    $field = array_search('organizerId', $this->typeMaps[$this->resourceType]['virtual']['resourcemisc']);
+                if (($this->formData['resourceType'] == 'proceedings') || ($this->formData['resourceType'] == 'proceedings_article') ||
+                ($this->formData['resourceType'] == 'conference_paper') || ($this->formData['resourceType'] == 'conference_poster')) {
+                    $field = array_search('organizerId', $this->typeMaps[$this->formData['resourceType']]['virtual']['resourcemisc']);
                 } else {
-                    $field = array_search('publisherId', $this->typeMaps[$this->resourceType]['virtual']['resourcemisc']);
+                    $field = array_search('publisherId', $this->typeMaps[$this->formData['resourceType']]['virtual']['resourcemisc']);
                 }
                 if ($field) {
-                    $this->resourceInput['resourcemisc']['resourcemisc' . $field] = $publisherId;
+                    $this->formData['resourcemisc']['resourcemisc' . $field] = $publisherId;
                 }
             }
-            if (($this->resourceType == 'proceedings') || ($this->resourceType == 'proceedings_article') ||
-                ($this->resourceType == 'conference_paper') || ($this->resourceType == 'conference_poster')) {
-                $name = array_key_exists('publisherconferenceOrganiser', $this->resourceInput['publisher']) ?
-                    $this->resourceInput['publisher']['publisherconferenceOrganiser'] : FALSE;
-                $location = array_key_exists('publisherconferenceLocation', $this->resourceInput['publisher']) ?
-                    $this->resourceInput['publisher']['publisherconferenceLocation'] : FALSE;
+            if (($this->formData['resourceType'] == 'proceedings') || ($this->formData['resourceType'] == 'proceedings_article') ||
+                ($this->formData['resourceType'] == 'conference_paper') || ($this->formData['resourceType'] == 'conference_poster')) {
+                $name = array_key_exists('publisherconferenceOrganiser', $this->formData['publisher']) ?
+                    $this->formData['publisher']['publisherconferenceOrganiser'] : FALSE;
+                $location = array_key_exists('publisherconferenceLocation', $this->formData['publisher']) ?
+                    $this->formData['publisher']['publisherconferenceLocation'] : FALSE;
                 if ($name && !$field1Id = $this->publisher->checkExists($name, $location)) {
                     $writeArray = [];
                     if ($name) {
@@ -358,24 +353,24 @@ class RESOURCEWRITE
                     if ($location) {
                         $writeArray['publisherLocation'] = $location;
                     }
-                    if (array_key_exists($this->resourceType, $this->publisherMap->publisherTypes)) {
-                        $writeArray['publisherType'] = $this->publisherMap->publisherTypes[$this->resourceType];
+                    if (array_key_exists($this->formData['resourceType'], $this->publisherMap->publisherTypes)) {
+                        $writeArray['publisherType'] = $this->publisherMap->publisherTypes[$this->formData['resourceType']];
                     }
                     $this->db->insert('publisher', array_keys($writeArray), array_values($writeArray));
                     $field1Id = $this->db->lastAutoID();
                     $deleteCache = TRUE;
                 }
                 if ($field1Id) {
-                    $field = array_search('publisherId', $this->typeMaps[$this->resourceType]['virtual']['resourcemisc']);
+                    $field = array_search('publisherId', $this->typeMaps[$this->formData['resourceType']]['virtual']['resourcemisc']);
                     if ($field) {
-                        $this->resourceInput['resourcemisc']['resourcemisc' . $field] = $field1Id;
+                        $this->formData['resourcemisc']['resourcemisc' . $field] = $field1Id;
                     }
                 }
             }
-            $name = array_key_exists('publishertransPublisherName', $this->resourceInput['publisher']) ?
-                $this->resourceInput['publisher']['publishertransPublisherName'] : FALSE;
-            $location = array_key_exists('publishertransPublisherLocation', $this->resourceInput['publisher']) ?
-                $this->resourceInput['publisher']['publishertransPublisherLocation'] : FALSE;
+            $name = array_key_exists('publishertransPublisherName', $this->formData['publisher']) ?
+                $this->formData['publisher']['publishertransPublisherName'] : FALSE;
+            $location = array_key_exists('publishertransPublisherLocation', $this->formData['publisher']) ?
+                $this->formData['publisher']['publishertransPublisherLocation'] : FALSE;
             if ($name && !$transPublisherId = $this->publisher->checkExists($name, $location)) {
                 $writeArray = [];
                 if ($name) {
@@ -384,14 +379,14 @@ class RESOURCEWRITE
                 if ($location) {
                     $writeArray['publisherLocation'] = $location;
                 }
-                if (array_key_exists($this->resourceType, $this->publisherMap->publisherTypes)) {
-                    $writeArray['publisherType'] = $this->publisherMap->publisherTypes[$this->resourceType];
+                if (array_key_exists($this->formData['resourceType'], $this->publisherMap->publisherTypes)) {
+                    $writeArray['publisherType'] = $this->publisherMap->publisherTypes[$this->formData['resourceType']];
                 }
                 $this->db->insert('publisher', array_keys($writeArray), array_values($writeArray));
                 $transPublisherId = $this->db->lastAutoID();
-                $field = array_search('transPublisherId', $this->typeMaps[$this->resourceType]['virtual']['resourcemisc']);
+                $field = array_search('transPublisherId', $this->typeMaps[$this->formData['resourceType']]['virtual']['resourcemisc']);
                 if ($field) {
-                    $this->resourceInput['resourcemisc']['resourcemisc' . $field] = $transPublisherId;
+                    $this->formData['resourcemisc']['resourcemisc' . $field] = $transPublisherId;
                 }
                 $deleteCache = TRUE;
             }
@@ -403,8 +398,8 @@ class RESOURCEWRITE
             }
         }
         // resource_misc table
-        $writeArray = array_key_exists('resourcemisc', $this->resourceInput) ?
-            $this->resourceInput['resourcemisc'] : [];
+        $writeArray = array_key_exists('resourcemisc', $this->formData) ?
+            $this->formData['resourcemisc'] : [];
         if ($this->edit) {
             $this->db->formatConditions(['resourcemiscId' => $this->resourceId]);
             $resultset = $this->db->select('resource_misc', ['resourcemiscTag', 'resourcemiscAddUserIdResource',
@@ -438,16 +433,16 @@ class RESOURCEWRITE
         // Categories/subcategories
         $this->db->formatConditions(['resourcecategoryResourceId' => $this->resourceId]);
         $this->db->delete('resource_category');
-        if (array_key_exists('resourcecategory', $this->resourceInput)) {
-            if (array_key_exists('resourcecategoryCategories', $this->resourceInput['resourcecategory'])) {
-                if (!is_array($this->resourceInput['resourcecategory']['resourcecategoryCategories'])) {
+        if (array_key_exists('resourcecategory', $this->formData)) {
+            if (array_key_exists('resourcecategoryCategories', $this->formData['resourcecategory'])) {
+                if (!is_array($this->formData['resourcecategory']['resourcecategoryCategories'])) {
                     $this->db->insert(
                         'resource_category',
                         ['resourcecategoryResourceId', 'resourcecategoryCategoryId'],
                         [$this->resourceId, '1']
                     ); // force to 'general' category
                 } else {
-                    foreach ($this->resourceInput['resourcecategory']['resourcecategoryCategories'] as $cId) {
+                    foreach ($this->formData['resourcecategory']['resourcecategoryCategories'] as $cId) {
                         $this->db->insert(
                             'resource_category',
                             ['resourcecategoryResourceId', 'resourcecategoryCategoryId'],
@@ -456,8 +451,8 @@ class RESOURCEWRITE
                     }
                 }
             }
-            if (array_key_exists('resourcecategorySubcategories', $this->resourceInput['resourcecategory'])) {
-                foreach ($this->resourceInput['resourcecategory']['resourcecategorySubcategories'] as $scId) {
+            if (array_key_exists('resourcecategorySubcategories', $this->formData['resourcecategory'])) {
+                foreach ($this->formData['resourcecategory']['resourcecategorySubcategories'] as $scId) {
                     $this->db->insert(
                         'resource_category',
                         ['resourcecategoryResourceId', 'resourcecategorySubcategoryId'],
@@ -469,10 +464,10 @@ class RESOURCEWRITE
         // Keywords
         $this->db->formatConditions(['resourcekeywordResourceId' => $this->resourceId]);
         $this->db->delete('resource_keyword');
-        if (array_key_exists('resourcekeyword', $this->resourceInput)) {
-            if (array_key_exists('keywordList', $this->resourceInput['resourcekeyword'])) {
+        if (array_key_exists('resourcekeyword', $this->formData)) {
+            if (array_key_exists('keywordList', $this->formData['resourcekeyword'])) {
                 $deleteCache = FALSE;
-                foreach ($this->resourceInput['resourcekeyword']['keywordList'] as $kWord) {
+                foreach ($this->formData['resourcekeyword']['keywordList'] as $kWord) {
                     if (!$kWord) {
                         continue;
                     }
@@ -510,9 +505,9 @@ class RESOURCEWRITE
             $this->db->formatConditionsOneField($tagIds, 'resourceusertagsTagId');
             $this->db->delete('resource_user_tags');
         }
-        if (array_key_exists('resourceusertags', $this->resourceInput)) {
-            if (array_key_exists('userTagList', $this->resourceInput['resourceusertags'])) {
-                foreach ($this->resourceInput['resourceusertags']['userTagList'] as $uWord) {
+        if (array_key_exists('resourceusertags', $this->formData)) {
+            if (array_key_exists('userTagList', $this->formData['resourceusertags'])) {
+                foreach ($this->formData['resourceusertags']['userTagList'] as $uWord) {
                     if (!$uWord) {
                         continue;
                     }
@@ -531,10 +526,10 @@ class RESOURCEWRITE
         // Creators
         $this->db->formatConditions(['resourcecreatorResourceId' => $this->resourceId]);
         $this->db->delete('resource_creator');
-        if (array_key_exists('resourcecreator', $this->resourceInput)) {
+        if (array_key_exists('resourcecreator', $this->formData)) {
             $collectionCreators = [];
             $mainSurname = $mainId = $rowWritten = $deleteCache = FALSE;
-            foreach ($this->resourceInput['resourcecreator'] as $role => $roleArray) {
+            foreach ($this->formData['resourcecreator'] as $role => $roleArray) {
                 foreach ($roleArray as $order => $creatorArray) {
                     $creatorId = FALSE;
                     if ($creatorArray['surname']) { // entry in surname takes precedence
@@ -611,8 +606,8 @@ class RESOURCEWRITE
         // custom fields
         $this->db->formatConditions(['resourcecustomResourceId' => $this->resourceId]);
         $this->db->delete('resource_custom');
-        if (array_key_exists('resourcecustom', $this->resourceInput)) {
-            foreach ($this->resourceInput['resourcecustom'] as $id => $value) {
+        if (array_key_exists('resourcecustom', $this->formData)) {
+            foreach ($this->formData['resourcecustom'] as $id => $value) {
                 $writeArray = [];
                 $this->db->formatConditions(['customId' => $id]);
                 if ($this->db->selectFirstField('custom', 'customSize') == 'S') {
@@ -627,15 +622,15 @@ class RESOURCEWRITE
             }
         }
         // bibliographies
-        if (array_key_exists('userbibliographyresource', $this->resourceInput)) {
-            if (array_key_exists('userbibliographyresourceBibliographyId', $this->resourceInput['userbibliographyresource'])) {
+        if (array_key_exists('userbibliographyresource', $this->formData)) {
+            if (array_key_exists('userbibliographyresourceBibliographyId', $this->formData['userbibliographyresource'])) {
                 $this->db->formatConditions(['userbibliographyresourceResourceId' => $this->resourceId]);
                 $this->db->formatConditionsOneField(
-                    $this->resourceInput['userbibliographyresource']['userbibliographyresourceBibliographyId'],
+                    $this->formData['userbibliographyresource']['userbibliographyresourceBibliographyId'],
                     'userbibliographyresourceBibliographyId'
                 );
                 $this->db->delete('user_bibliography_resource');
-                foreach ($this->resourceInput['userbibliographyresource']['userbibliographyresourceBibliographyId'] as $bId) {
+                foreach ($this->formData['userbibliographyresource']['userbibliographyresourceBibliographyId'] as $bId) {
                     $this->db->insert(
                         'user_bibliography_resource',
                         ['userbibliographyresourceResourceId', 'userbibliographyresourceBibliographyId'],
@@ -647,10 +642,10 @@ class RESOURCEWRITE
         // language
         $this->db->formatConditions(['resourcelanguageResourceId' => $this->resourceId]);
         $this->db->delete('resource_language');
-        if (array_key_exists('resourcelanguage', $this->resourceInput)) {
-            if (array_key_exists('resourcelanguageLanguages', $this->resourceInput['resourcelanguage'])) {
-                if (is_array($this->resourceInput['resourcelanguage']['resourcelanguageLanguages'])) {
-                    foreach ($this->resourceInput['resourcelanguage']['resourcelanguageLanguages'] as $lId) {
+        if (array_key_exists('resourcelanguage', $this->formData)) {
+            if (array_key_exists('resourcelanguageLanguages', $this->formData['resourcelanguage'])) {
+                if (is_array($this->formData['resourcelanguage']['resourcelanguageLanguages'])) {
+                    foreach ($this->formData['resourcelanguage']['resourcelanguageLanguages'] as $lId) {
                         $this->db->insert(
                             'resource_language',
                             ['resourcelanguageResourceId', 'resourcelanguageLanguageId'],
@@ -678,36 +673,36 @@ class RESOURCEWRITE
             $this->db->insert('resource_timestamp', array_keys($writeArray), array_values($writeArray));
         }
         // If there is a new collection
-        if ($newCollection && ($this->collectionMap->collectionTypes[$this->resourceType] != 'thesis')) {
+        if ($newCollection && ($this->collectionMap->collectionTypes[$this->formData['resourceType']] != 'thesis')) {
             // Gather defaults for this new collection
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "collection", "COLLECTIONDEFAULTMAP.php"]));
             $defaultMap = new COLLECTIONDEFAULTMAP();
-            $collectionType = $this->collectionMap->collectionTypes[$this->resourceType];
+            $collectionType = $this->collectionMap->collectionTypes[$this->formData['resourceType']];
             $defaults = $collectionDefaults = [];
             foreach ($defaultMap->{$collectionType}['resource'] as $key => $value) {
                 $defaults[] = 'resource' . $key;
             }
-            if (array_key_exists('resource', $this->resourceInput)) {
-                foreach (array_intersect(array_keys($this->resourceInput['resource']), $defaults) as $key) {
-                    $collectionDefaults[$key] = $this->resourceInput['resource'][$key];
+            if (array_key_exists('resource', $this->formData)) {
+                foreach (array_intersect(array_keys($this->formData['resource']), $defaults) as $key) {
+                    $collectionDefaults[$key] = $this->formData['resource'][$key];
                 }
             }
             $defaults = [];
             foreach ($defaultMap->{$collectionType}['resource_misc'] as $key => $value) {
                 $defaults[] = 'resourcemisc' . $key;
             }
-            if (array_key_exists('resourcemisc', $this->resourceInput)) {
-                foreach (array_intersect(array_keys($this->resourceInput['resourcemisc']), $defaults) as $key) {
-                    $collectionDefaults[$key] = $this->resourceInput['resourcemisc'][$key];
+            if (array_key_exists('resourcemisc', $this->formData)) {
+                foreach (array_intersect(array_keys($this->formData['resourcemisc']), $defaults) as $key) {
+                    $collectionDefaults[$key] = $this->formData['resourcemisc'][$key];
                 }
             }
             $defaults = [];
             foreach ($defaultMap->{$collectionType}['resource_year'] as $key => $value) {
                 $defaults[] = 'resourceyear' . $key;
             }
-            if (array_key_exists('resourceyear', $this->resourceInput)) {
-                foreach (array_intersect(array_keys($this->resourceInput['resourceyear']), $defaults) as $key) {
-                    $collectionDefaults[$key] = $this->resourceInput['resourceyear'][$key];
+            if (array_key_exists('resourceyear', $this->formData)) {
+                foreach (array_intersect(array_keys($this->formData['resourceyear']), $defaults) as $key) {
+                    $collectionDefaults[$key] = $this->formData['resourceyear'][$key];
                 }
             }
             // add collection creators
@@ -721,14 +716,14 @@ class RESOURCEWRITE
         }
     }
     /**
-     * Gather input and place in the $resourceInput array
+     * Gather input and place in the $this->formData array
      */
     private function gatherInput()
     {
-        $this->session->clearArray('resourceForm');
-        $this->resourceType = $this->vars['resourceType'];
-        $this->session->setVar("resourceForm_resourceType", $this->resourceType);
+        $this->formData['resourceType'] = $this->vars['resourceType'];
+        $this->formData["resourceFormType"] = $this->vars['resourceFormType'];
         unset($this->vars['resourceType']);
+        unset($this->vars['resourceFormType']);
         $input = $dates = [];
         foreach ($this->vars as $inputKey => $inputValue) {
             if ($inputKey == 'action') {
@@ -740,15 +735,11 @@ class RESOURCEWRITE
                 }
                 if (!empty($inputValue) && ($inputKey != 'resourceusertagsTagId') && ($inputKey != 'resourcekeywordKeywords')) {
                     $input[$inputKey] = $inputValue;
-                    $this->session->setVar("resourceForm_" . $inputKey, implode(',', $inputValue));
                 }
             } elseif (($inputKey == 'series') && (base64_decode($inputValue) == 'IGNORE')) {
                 continue;
             } else {
-                $inputValue = trim($inputValue);
-                if ($inputValue) {
-                    $this->session->setVar("resourceForm_" . $inputKey, $inputValue);
-                }
+                $inputValue = \UTF8\mb_trim($inputValue);
             }
             if ($inputValue && (mb_strpos($inputKey, 'customId') === 0)) {
                 $input[$inputKey] = $inputValue;
@@ -769,13 +760,13 @@ class RESOURCEWRITE
         $this->gatherInputMiscellaneous($input);
         $this->gatherInputCustom($input);
         foreach ($this->resourceMap->getOptional() as $optional) {
-            if (!array_key_exists($optional, $this->typeMaps[$this->resourceType]['optional'])) {
+            if (!array_key_exists($optional, $this->typeMaps[$this->formData['resourceType']]['optional'])) {
                 continue;
             }
-            if (!is_array($this->typeMaps[$this->resourceType]['optional'][$optional])) {
+            if (!is_array($this->typeMaps[$this->formData['resourceType']]['optional'][$optional])) {
                 continue;
             }
-            foreach ($this->typeMaps[$this->resourceType]['optional'][$optional] as $table => $tableArray) {
+            foreach ($this->typeMaps[$this->formData['resourceType']]['optional'][$optional] as $table => $tableArray) {
                 $table = str_replace('*', '', $table); // RESOURCEMAP: a '*' is sometimes appended to the table name in order to help with the visual display
                 if (!is_array($tableArray)) {
                     continue;
@@ -784,9 +775,9 @@ class RESOURCEWRITE
                     $field = $table . $fieldKey;
                     if (array_key_exists($field, $input)) {
                         if ($field == 'resourcemiscPeerReviewed') {
-                            $this->resourceInput[$table][$field] = 'Y';
+                            $this->formData[$table][$field] = 'Y';
                         } else {
-                            $this->resourceInput[$table][$field] = $input[$field];
+                            $this->formData[$table][$field] = $input[$field];
                         }
                         unset($input[$field]);
                     } elseif (($fieldKey == 'publicationDate') || ($fieldKey == 'accessDate') || ($fieldKey == 'startDate') || ($fieldKey == 'endDate')) {
@@ -805,34 +796,35 @@ class RESOURCEWRITE
             foreach ($dates as $key => $date) {
                 list($year, $month, $day) = \UTILS\splitDate($date);
                 if ($key == 'publicationDate') {
-                    if ($this->resourceType == 'web_article') {
-                        $this->resourceInput['resourcemisc']['resourcemiscField5'] = $day;
-                        $this->resourceInput['resourcemisc']['resourcemiscField6'] = $month;
-                        $this->resourceInput['resourceyear']['resourceyearYear1'] = $year;
+                    if ($this->formData['resourceType'] == 'web_article') {
+                        $this->formData['resourcemisc']['resourcemiscField5'] = $day;
+                        $this->formData['resourcemisc']['resourcemiscField6'] = $month;
+                        $this->formData['resourceyear']['resourceyearYear1'] = $year;
                     } else {
-                        $this->resourceInput['resourcemisc']['resourcemiscField2'] = $day;
-                        $this->resourceInput['resourcemisc']['resourcemiscField3'] = $month;
-                        $this->resourceInput['resourceyear']['resourceyearYear1'] = $year;
+                        $this->formData['resourcemisc']['resourcemiscField2'] = $day;
+                        $this->formData['resourcemisc']['resourcemiscField3'] = $month;
+                        $this->formData['resourceyear']['resourceyearYear1'] = $year;
                     }
                 } elseif ($key == 'accessDate') {
-                    $this->resourceInput['resourcemisc']['resourcemiscField2'] = $day;
-                    $this->resourceInput['resourcemisc']['resourcemiscField3'] = $month;
-                    $this->resourceInput['resourceyear']['resourceyearYear2'] = $year;
+                    $this->formData['resourcemisc']['resourcemiscField2'] = $day;
+                    $this->formData['resourcemisc']['resourcemiscField3'] = $month;
+                    $this->formData['resourceyear']['resourceyearYear2'] = $year;
                 } elseif ($key == 'startDate') {
-                    $this->resourceInput['resourcemisc']['resourcemiscField2'] = $day;
-                    $this->resourceInput['resourcemisc']['resourcemiscField3'] = $month;
-                    if ($this->resourceType == 'magazine_article') {
-                        $this->resourceInput['resourceyear']['resourceyearYear1'] = $year;
+                    $this->formData['resourcemisc']['resourcemiscField2'] = $day;
+                    $this->formData['resourcemisc']['resourcemiscField3'] = $month;
+                    if ($this->formData['resourceType'] == 'magazine_article') {
+                        $this->formData['resourceyear']['resourceyearYear1'] = $year;
                     } else {
-                        $this->resourceInput['resourceyear']['resourceyearYear2'] = $year;
+                        $this->formData['resourceyear']['resourceyearYear2'] = $year;
                     }
                 } elseif ($key == 'endDate') {
-                    $this->resourceInput['resourcemisc']['resourcemiscField5'] = $day;
-                    $this->resourceInput['resourcemisc']['resourcemiscField6'] = $month;
-                    $this->resourceInput['resourceyear']['resourceyearYear3'] = $year;
+                    $this->formData['resourcemisc']['resourcemiscField5'] = $day;
+                    $this->formData['resourcemisc']['resourcemiscField6'] = $month;
+                    $this->formData['resourceyear']['resourceyearYear3'] = $year;
                 }
             }
         }
+        \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
     }
     /**
      * Place title elements and optional transTitle elements into resourceInput array.  Remove accepted elements from $input array
@@ -841,7 +833,7 @@ class RESOURCEWRITE
      */
     private function gatherInputTitle(&$input)
     {
-        $this->resourceInput['resource']['resourceType'] = $this->resourceType;
+        $this->formData['resource']['resourceType'] = $this->formData['resourceType'];
         $noSortFound = FALSE;
         // tinyMCE adds P and BR tags in some cases
         $input['resourceTitle'] = str_ireplace(["<p>", "</p>", "</br>", "<br>"], '', $input['resourceTitle']);
@@ -849,12 +841,12 @@ class RESOURCEWRITE
         foreach (WIKINDX_NO_SORT as $pattern) {
             if (preg_match("/^($pattern)\\s(.*)|^\\{($pattern)\\s(.*)/ui", $input['resourceTitle'], $matches)) {
                 if (array_key_exists(3, $matches)) { // found second set of matches
-                    $resourceTitleSort = trim(\HTML\removeNl($matches[4]));
-                    $this->resourceInput['resource']['resourceTitle'] = '{' . $resourceTitleSort;
-                    $this->resourceInput['resource']['resourceNoSort'] = trim(\HTML\removeNl($matches[3]));
+                    $resourceTitleSort = \UTF8\mb_trim(\HTML\removeNl($matches[4]));
+                    $this->formData['resource']['resourceTitle'] = '{' . $resourceTitleSort;
+                    $this->formData['resource']['resourceNoSort'] = \UTF8\mb_trim(\HTML\removeNl($matches[3]));
                 } else {
-                    $this->resourceInput['resource']['resourceTitle'] = $resourceTitleSort = trim(\HTML\removeNl($matches[2]));
-                    $this->resourceInput['resource']['resourceNoSort'] = trim(\HTML\removeNl($matches[1]));
+                    $this->formData['resource']['resourceTitle'] = $resourceTitleSort = \UTF8\mb_trim(\HTML\removeNl($matches[2]));
+                    $this->formData['resource']['resourceNoSort'] = \UTF8\mb_trim(\HTML\removeNl($matches[1]));
                 }
                 $noSortFound = TRUE;
 
@@ -862,7 +854,7 @@ class RESOURCEWRITE
             }
         }
         if (!$noSortFound) {
-            $this->resourceInput['resource']['resourceTitle'] = $resourceTitleSort = $input['resourceTitle'];
+            $this->formData['resource']['resourceTitle'] = $resourceTitleSort = $input['resourceTitle'];
         }
         unset($input['resourceTitle']);
         if (array_key_exists('resourceSubtitle', $input)) {
@@ -870,15 +862,15 @@ class RESOURCEWRITE
             $subTitle = str_ireplace(["<p>", "</p>", "</br>", "<br>"], '', $input['resourceSubtitle']);
             $subTitle = $this->trimString($subTitle);
             if ($subTitle) {
-                $this->resourceInput['resource']['resourceSubtitle'] = $subTitle;
+                $this->formData['resource']['resourceSubtitle'] = $subTitle;
                 $resourceTitleSort .= ' ' . $input['resourceSubtitle'];
             }
             unset($input['resourceSubtitle']);
         }
         $resourceTitleSort = str_replace(['{', '}'], '', \HTML\stripHtml($resourceTitleSort));
-        $this->resourceInput['resource']['resourceTitleSort'] = preg_replace('/[^\p{L}\p{N}\s]/u', '', $resourceTitleSort);
+        $this->formData['resource']['resourceTitleSort'] = preg_replace('/[^\p{L}\p{N}\s]/u', '', $resourceTitleSort);
         if (array_key_exists('resourceShortTitle', $input)) {
-            $this->resourceInput['resource']['resourceShortTitle'] = $input['resourceShortTitle'];
+            $this->formData['resource']['resourceShortTitle'] = $input['resourceShortTitle'];
             unset($input['resourceShortTitle']);
         }
         if (array_key_exists('resourceTransTitle', $input)) {
@@ -886,11 +878,11 @@ class RESOURCEWRITE
             foreach (WIKINDX_NO_SORT as $pattern) {
                 if (preg_match("/^($pattern)\\s(.*)|^\\{($pattern)\\s(.*)/ui", $input['resourceTransTitle'], $matches)) {
                     if (array_key_exists(3, $matches)) { // found second set of matches
-                        $this->resourceInput['resource']['resourceTransTitle'] = '{' . trim(\HTML\removeNl($matches[4]));
-                        $this->resourceInput['resource']['resourceTransNoSort'] = trim(\HTML\removeNl($matches[3]));
+                        $this->formData['resource']['resourceTransTitle'] = '{' . \UTF8\mb_trim(\HTML\removeNl($matches[4]));
+                        $this->formData['resource']['resourceTransNoSort'] = \UTF8\mb_trim(\HTML\removeNl($matches[3]));
                     } else {
-                        $this->resourceInput['resource']['resourceTransTitle'] = trim(\HTML\removeNl($matches[2]));
-                        $this->resourceInput['resource']['resourceTransNoSort'] = trim(\HTML\removeNl($matches[1]));
+                        $this->formData['resource']['resourceTransTitle'] = \UTF8\mb_trim(\HTML\removeNl($matches[2]));
+                        $this->formData['resource']['resourceTransNoSort'] = \UTF8\mb_trim(\HTML\removeNl($matches[1]));
                     }
                     $noSortFound = TRUE;
 
@@ -898,15 +890,15 @@ class RESOURCEWRITE
                 }
             }
             if (!$noSortFound) {
-                $this->resourceInput['resource']['resourceTransTitle'] = $input['resourceTransTitle'];
+                $this->formData['resource']['resourceTransTitle'] = $input['resourceTransTitle'];
             }
             unset($input['resourceTransTitle']);
             if (array_key_exists('resourceTransSubtitle', $input)) {
-                $this->resourceInput['resource']['resourceTransSubtitle'] = $input['resourceTransSubtitle'];
+                $this->formData['resource']['resourceTransSubtitle'] = $input['resourceTransSubtitle'];
                 unset($input['resourceTransSubtitle']);
             }
             if (array_key_exists('resourceTransShortTitle', $input)) {
-                $this->resourceInput['resource']['resourceTransShortTitle'] = $input['resourceTransShortTitle'];
+                $this->formData['resource']['resourceTransShortTitle'] = $input['resourceTransShortTitle'];
                 unset($input['resourceTransShortTitle']);
             }
         }
@@ -918,7 +910,7 @@ class RESOURCEWRITE
      */
     private function gatherInputCreators(&$input)
     {
-        if (!array_key_exists('resourcecreator', $this->typeMaps[$this->resourceType])) {
+        if (!array_key_exists('resourcecreator', $this->typeMaps[$this->formData['resourceType']])) {
             return;
         }
         $removeFromInput = [];
@@ -927,7 +919,7 @@ class RESOURCEWRITE
             if (mb_strpos($key, 'Creator') === 0) {
                 $removeFromInput[] = $key;
                 $explode = \UTF8\mb_explode('_', $key);
-                $this->resourceInput['resourcecreator'][trim($explode[0], 'Creator')][$explode[1] + 1][$explode[2]] = $value;
+                $this->formData['resourcecreator'][\UTF8\mb_trim($explode[0], 'Creator')][$explode[1] + 1][$explode[2]] = $value;
             }
         }
         // remove creator fields from $input
@@ -947,7 +939,7 @@ class RESOURCEWRITE
         foreach ($input as $key => $value) {
             if (mb_strpos($key, 'customId') === 0) {
                 $removeFromInput[] = $key;
-                $this->resourceInput['resourcecustom'][trim($key, 'customId')] = $value;
+                $this->formData['resourcecustom'][\UTF8\mb_trim($key, 'customId')] = $value;
             }
         }
         // remove custom fields from $input
@@ -962,20 +954,20 @@ class RESOURCEWRITE
      */
     private function gatherInputVirtual(&$input)
     {
-        if (!array_key_exists('virtual', $this->typeMaps[$this->resourceType])) {
+        if (!array_key_exists('virtual', $this->typeMaps[$this->formData['resourceType']])) {
             return;
         }
-        foreach ($this->typeMaps[$this->resourceType]['virtual'] as $table => $tableArray) {
+        foreach ($this->typeMaps[$this->formData['resourceType']]['virtual'] as $table => $tableArray) {
             foreach ($tableArray as $fieldKey => $fieldValue) {
-                if (array_key_exists($fieldValue, $this->typeMaps[$this->resourceType]['virtualFields'])) {
+                if (array_key_exists($fieldValue, $this->typeMaps[$this->formData['resourceType']]['virtualFields'])) {
                     $found = FALSE;
-                    foreach ($this->typeMaps[$this->resourceType]['virtualFields'][$fieldValue] as $vField) {
+                    foreach ($this->typeMaps[$this->formData['resourceType']]['virtualFields'][$fieldValue] as $vField) {
                         if (array_key_exists($vField, $input)) {
                             $field = $table . $fieldKey;
                             if (($vField == 'publishertransPublisherName') || ($vField == 'publishertransPublisherLocation')) {
-                                $this->resourceInput['publisher'][$vField] = $input[$vField];
+                                $this->formData['publisher'][$vField] = $input[$vField];
                             } else {
-                                $this->resourceInput['collection'][$vField] = $input[$vField];
+                                $this->formData['collection'][$vField] = $input[$vField];
                             }
                             unset($input[$fieldValue]);
                             $found = TRUE;
@@ -984,7 +976,7 @@ class RESOURCEWRITE
                     if (!$found) {
                         $field = $table . $fieldKey;
                         if (array_key_exists($fieldValue, $input)) {
-                            $this->resourceInput[$table][$field] = $input[$fieldValue];
+                            $this->formData[$table][$field] = $input[$fieldValue];
                             unset($input[$fieldValue]);
                         }
                     }
@@ -1000,76 +992,76 @@ class RESOURCEWRITE
     private function gatherInputMiscellaneous(&$input)
     {
         if (array_key_exists('resourcecategoryCategories', $input)) {
-            $this->resourceInput['resourcecategory']['resourcecategoryCategories'] = $input['resourcecategoryCategories'];
+            $this->formData['resourcecategory']['resourcecategoryCategories'] = $input['resourcecategoryCategories'];
             unset($input['resourcecategoryCategories']);
         }
         if (array_key_exists('resourcecategorySubcategories', $input)) {
-            $this->resourceInput['resourcecategory']['resourcecategorySubcategories'] = $input['resourcecategorySubcategories'];
+            $this->formData['resourcecategory']['resourcecategorySubcategories'] = $input['resourcecategorySubcategories'];
             foreach ($input['resourcecategorySubcategories'] as $subCat) {
                 $this->db->formatConditions(['subcategoryId' => $subCat]);
                 $cId = $this->db->selectFirstField('subcategory', 'subcategoryCategoryId');
-                if (!array_key_exists('resourcecategoryCategories', $this->resourceInput['resourcecategory'])) {
-                    $this->resourceInput['resourcecategory']['resourcecategoryCategories'][] = $cId;
-                } elseif (array_search($cId, $this->resourceInput['resourcecategory']['resourcecategoryCategories']) === FALSE) {
-                    $this->resourceInput['resourcecategory']['resourcecategoryCategories'][] = $cId;
+                if (!array_key_exists('resourcecategoryCategories', $this->formData['resourcecategory'])) {
+                    $this->formData['resourcecategory']['resourcecategoryCategories'][] = $cId;
+                } elseif (array_search($cId, $this->formData['resourcecategory']['resourcecategoryCategories']) === FALSE) {
+                    $this->formData['resourcecategory']['resourcecategoryCategories'][] = $cId;
                 }
             }
             unset($input['resourcecategorySubcategories']);
         }
-        if (!array_key_exists('resourcecategory', $this->resourceInput)) { // force to 'General'
-            $this->resourceInput['resourcecategory']['resourcecategoryCategories'] = 1;
+        if (!array_key_exists('resourcecategory', $this->formData)) { // force to 'General'
+            $this->formData['resourcecategory']['resourcecategoryCategories'] = 1;
         }
         if (array_key_exists('resourcekeywordKeywords', $input)) {
-            $this->resourceInput['resourcekeyword']['resourcekeywordKeywords'] = $input['resourcekeywordKeywords'];
+            $this->formData['resourcekeyword']['resourcekeywordKeywords'] = $input['resourcekeywordKeywords'];
             unset($input['resourcekeywordKeywords']);
         }
         if (array_key_exists('keywordList', $input)) {
             foreach (\UTF8\mb_explode(',', $input['keywordList']) as $word) {
-                $this->resourceInput['resourcekeyword']['keywordList'][] = trim($word);
+                $this->formData['resourcekeyword']['keywordList'][] = \UTF8\mb_trim($word);
             }
             unset($input['keywordList']);
         }
         if (array_key_exists('language', $input)) {
-            $this->resourceInput['resourcelanguage']['resourcelanguageLanguages'] = $input['language'];
+            $this->formData['resourcelanguage']['resourcelanguageLanguages'] = $input['language'];
             unset($input['language']);
         }
         if (array_key_exists('resourceusertagsTagId', $input)) {
-            $this->resourceInput['resourceusertags']['resourceusertagsTagId'] = $input['resourceusertagsTagId'];
+            $this->formData['resourceusertags']['resourceusertagsTagId'] = $input['resourceusertagsTagId'];
             unset($input['resourceusertagsTagId']);
         }
         if (array_key_exists('userTagList', $input)) {
             foreach (\UTF8\mb_explode(',', $input['userTagList']) as $word) {
-                $this->resourceInput['resourceusertags']['userTagList'][] = trim($word);
+                $this->formData['resourceusertags']['userTagList'][] = \UTF8\mb_trim($word);
             }
             unset($input['userTagList']);
         }
         if (array_key_exists('bibliographies', $input)) {
-            $this->resourceInput['userbibliographyresource']['userbibliographyresourceBibliographyId'] = $input['bibliographies'];
+            $this->formData['userbibliographyresource']['userbibliographyresourceBibliographyId'] = $input['bibliographies'];
             unset($input['userbibliographyresource']);
         }
         if (array_key_exists('resourcetextAbstract', $input) && $input['resourcetextAbstract']) {
-            $this->resourceInput['resourcetext']['resourcetextAbstract'] = $input['resourcetextAbstract'];
+            $this->formData['resourcetext']['resourcetextAbstract'] = $input['resourcetextAbstract'];
             unset($input['resourcetextAbstract']);
         }
         if (array_key_exists('resourcetextNote', $input) && $input['resourcetextNote']) {
-            $this->resourceInput['resourcetext']['resourcetextNote'] = $input['resourcetextNote'];
+            $this->formData['resourcetext']['resourcetextNote'] = $input['resourcetextNote'];
             unset($input['resourcetextNote']);
         }
         if (array_key_exists('resourcetextUrl', $input) && ($input['resourcetextUrl'] != 'http://') && ($input['resourcetextUrl'] != 'https://')) {
-            $this->resourceInput['resourcetext']['resourcetextUrl'] = $input['resourcetextUrl'];
+            $this->formData['resourcetext']['resourcetextUrl'] = $input['resourcetextUrl'];
             unset($input['resourcetextUrl']);
         }
-        if (array_key_exists('resourcetext', $this->resourceInput) && array_key_exists('resourcetextUrl', $this->resourceInput['resourcetext'])
+        if (array_key_exists('resourcetext', $this->formData) && array_key_exists('resourcetextUrl', $this->formData['resourcetext'])
             && array_key_exists('resourcetextUrlText', $input) && $input['resourcetextUrlText']) {
-            $this->resourceInput['resourcetext']['resourcetextUrlText'] = $input['resourcetextUrlText'];
+            $this->formData['resourcetext']['resourcetextUrlText'] = $input['resourcetextUrlText'];
             unset($input['resourcetextUrlText']);
         }
         if (array_key_exists('resourceIsbn', $input) && $input['resourceIsbn']) {
-            $this->resourceInput['resource']['resourceIsbn'] = $input['resourceIsbn'];
+            $this->formData['resource']['resourceIsbn'] = $input['resourceIsbn'];
             unset($input['resourceIsbn']);
         }
         if (array_key_exists('resourceDoi', $input) && $input['resourceDoi'] && ($input['resourceDoi'] != 'doi:')) {
-            $this->resourceInput['resource']['resourceDoi'] = $input['resourceDoi'];
+            $this->formData['resource']['resourceDoi'] = $input['resourceDoi'];
             unset($input['resourceDoi']);
         }
     }

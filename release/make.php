@@ -199,7 +199,7 @@ if ($ManualRebuildingFlag) build_manual(DIR_DST_SRC, 'WIKINDX Documentation ' . 
 //foreach (["ZIP"] as $archformat)
 foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
 {                
-    $pkgarch = \FILE\createComponentPackageUnix(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'manual', DIR_DST_COR_ARC, $pkg, $archformat);
+    $pkgarch = \FILE\createComponentPackageReproducible(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'manual', DIR_DST_COR_ARC, $pkg, $archformat);
     copy($pkgarch, DIR_DST_COR . DIRECTORY_SEPARATOR . basename($pkgarch));
     echo " - $archformat arch: " . $pkgarch . "\n";
     
@@ -356,7 +356,7 @@ foreach ($componentPath as $rootpath => $paths)
                 //foreach (["ZIP"] as $archformat)
                 foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
                 {                
-                    $pkgarch = \FILE\createComponentPackageUnix($componentDir, DIR_DST_CMP_ARC[$componentConfig["component_type"]], $pkg, $archformat);
+                    $pkgarch = \FILE\createComponentPackageReproducible($componentDir, DIR_DST_CMP_ARC[$componentConfig["component_type"]], $pkg, $archformat);
                     copy($pkgarch, DIR_DST_CMP . DIRECTORY_SEPARATOR . basename($pkgarch));
                     echo " - $archformat arch: " . $pkgarch . "\n";
                     
@@ -430,7 +430,7 @@ echo "Package " . $pkg . "\n";
 //foreach (["ZIP"] as $archformat)
 foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
 {                
-    $pkgarch = \FILE\createComponentPackageUnix(DIR_DST_SRC, DIR_DST_COR_ARC, $pkg, $archformat);
+    $pkgarch = \FILE\createComponentPackageReproducible(DIR_DST_SRC, DIR_DST_COR_ARC, $pkg, $archformat);
     copy($pkgarch, DIR_DST_COR . DIRECTORY_SEPARATOR . basename($pkgarch));
     echo " - $archformat arch: " . $pkgarch . "\n";
     

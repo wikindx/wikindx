@@ -914,6 +914,53 @@ namespace FILE
             return [];
         }
     }
+
+
+    /**
+     * Create a compressed package for the release of Wikindx core, manual or one of its components
+     *
+     * This function is a wrapper that hide the specifics of compression formats.
+     *
+     * @param string $SrcDir Absolute or relative path to a source directory
+     * @param string $DstDir Absolute or relative path to a destination directory
+     * @param string $Archive Name of the package file, without path and extension
+     * @param string $Format Code of a package format (ZIP, GZ, BZIP2)
+     *
+     * @return string Absolute or relative path to the final package file with its extension
+     */
+    function createComponentPackageReproducible($SrcDir, $DstDir, $Archive, $Format)
+    {
+        recurse_ChangeDateOfFiles($SrcDir, 0);
+
+        $Format = strtoupper(trim($Format));
+        // Unsupported format is replaced by a ZIP archive
+        if (!in_array($Format, ["ZIP", "GZ", "BZIP2"])) {
+            $Format = "ZIP";
+        }
+        
+        switch ($Format) {
+            case 'ZIP':
+                $finalArchiveName = $DstDir . DIRECTORY_SEPARATOR . $Archive . ".zip";
+                createComponentPackageZip($SrcDir, $finalArchiveName);
+
+            break;
+            
+            case 'GZ':
+                $finalArchiveName = $DstDir . DIRECTORY_SEPARATOR . $Archive . ".tar.gz";
+                createComponentPackageGzUnix($SrcDir, $finalArchiveName);
+
+            break;
+            
+            case 'BZIP2':
+                $finalArchiveName = $DstDir . DIRECTORY_SEPARATOR . $Archive . ".tar.bz2";
+                createComponentPackageBzip2Unix($SrcDir, $finalArchiveName);
+
+            break;
+        }
+        
+        return $finalArchiveName;
+    }
+
     
     /**
      * Create a compressed package for the release of Wikindx core, manual or one of its components
@@ -940,7 +987,7 @@ namespace FILE
         switch ($Format) {
             case 'ZIP':
                 $finalArchiveName = $DstDir . DIRECTORY_SEPARATOR . $Archive . ".zip";
-                createComponentPackageZip($SrcDir, $finalArchiveName);
+                createComponentPackageZipUnix($SrcDir, $finalArchiveName);
 
             break;
             

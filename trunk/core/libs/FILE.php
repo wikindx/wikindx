@@ -930,7 +930,7 @@ namespace FILE
      */
     function createComponentPackageReproducible($SrcDir, $DstDir, $Archive, $Format)
     {
-        recurse_ChangeDateOfFiles($SrcDir, 0);
+        recurse_ChangeDateOfFiles($SrcDir, WIKINDX_RELEASE_TIMESTAMP);
 
         $Format = strtoupper(trim($Format));
         // Unsupported format is replaced by a ZIP archive
@@ -976,7 +976,7 @@ namespace FILE
      */
     function createComponentPackageUnix($SrcDir, $DstDir, $Archive, $Format)
     {
-        recurse_ChangeDateOfFiles($SrcDir, 0);
+        recurse_ChangeDateOfFiles($SrcDir, WIKINDX_RELEASE_TIMESTAMP);
 
         $Format = strtoupper(trim($Format));
         // Unsupported format is replaced by a ZIP archive

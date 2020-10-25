@@ -194,7 +194,7 @@ file_put_contents(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARAT
 
 if ($ManualRebuildingFlag) build_manual(DIR_DST_SRC, 'WIKINDX Documentation ' . $VersionPackaged);
 
-\FILE\recurse_ChangeDateOfFiles(DIR_DST_SRC, 0);
+\FILE\recurse_ChangeDateOfFiles(DIR_DST_SRC, WIKINDX_RELEASE_TIMESTAMP);
 
 //foreach (["ZIP"] as $archformat)
 foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
@@ -260,7 +260,7 @@ foreach(\FILE\recurse_fileInDirToArray(DIR_DST_SRC) as $d)
     }
 }
 
-\FILE\recurse_ChangeDateOfFiles(DIR_DST_SRC, 0);
+\FILE\recurse_ChangeDateOfFiles(DIR_DST_SRC, WIKINDX_RELEASE_TIMESTAMP);
 
 
 ///////////////////////////////////////////////////////////////////////

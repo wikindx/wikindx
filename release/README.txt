@@ -32,50 +32,52 @@ I. Code preparation and checks
 
 3. Check the release number in WIKINDX_PUBLIC_VERSION and the changelog.
 
-4. Check the internal version number in WIKINDX_INTERNAL_VERSION.
+4. Change WIKINDX_RELEASE_DATE to the current date.
+
+5. Check the internal version number in WIKINDX_INTERNAL_VERSION.
    Increment it by one (and one only) if a core upgrade is needed.
 
-5. Check that WIKINDX_PLUGIN_VERSION and $wikindxVersion in plugins have
+6. Check that WIKINDX_PLUGIN_VERSION and $wikindxVersion in plugins have
    the same value.
 
-6. Check that the core upgrade stage for this version is complete and
+7. Check that the core upgrade stage for this version is complete and
    functional: database, constants, variables, files, folders, messages,
    version numbers.
 
-7. Check that the plugins upgrade for this version is complete and
+8. Check that the plugins upgrade for this version is complete and
    functional: database, constants, variables, files, folders, messages,
    version numbers.
 
-8. Check if a code change has changed compatibility. Update
+9. Check if a code change has changed compatibility. Update
    WIKINDX_PHP_VERSION_MIN, WIKINDX_MYSQL_VERSION_MIN, and
    WIKINDX_MARIADB_VERSION_MIN.
 
-9. Check if a code change has changed PHP extensions compatibility.
+10. Check if a code change has changed PHP extensions compatibility.
    Update \UTILS\listCoreMandatoryPHPExtensions() and
    \UTILS\listCoreOptionalPHPExtensions() functions.
 
-10. Update "PHP & MySQL versions", "PHP extensions",
+11. Update "PHP & MySQL versions", "PHP extensions",
    and "Browser compatibility" sections in docs/README.md.
 
-11. Update browser compatibility in docs/README.md.
+12. Update browser compatibility in docs/README.md.
 
-12. Check that the changelog of the core is complete.
+13. Check that the changelog of the core is complete.
 
-13. Check that the changelog of each component is complete.
+14. Check that the changelog of each component is complete.
 
-14. Update WIKINDX_COPYRIGHT_YEAR.
+15. Update WIKINDX_COPYRIGHT_YEAR.
 
-15. Update the phpdoc fields @author, @copyright and @version of each
+16. Update the phpdoc fields @author, @copyright and @version of each
     file modified during the developement.
 
-16. Update component.json file of components and check their integrity
+17. Update component.json file of components and check their integrity
     in the admin components panel.
 
-17. Update the db schema of the Repair Kit.
+18. Update the db schema of the Repair Kit.
 
     $ php dump-repairkit-schema.php
 
-18. Update translations in SVN and push POT files on Transifex via the
+19. Update translations in SVN and push POT files on Transifex via the
     /home/project-web/wikindx/htdocs/transifex/pot directory on the SF
     Wikindx Website FTP. Wait for Transifex to update the resources
     (twice a day). You can force the update by hand but put the PORT
@@ -84,14 +86,14 @@ I. Code preparation and checks
 
     $ php make-languages.php
 
-19. On the translation deadline, copy the PO files from Transifex to SVN
+20. On the translation deadline, copy the PO files from Transifex to SVN
     and compile the MO files for Gettext.
 
     $ php make-languages.php
 
-20. Update the changelog and component.json file of language components.
+21. Update the changelog and component.json file of language components.
 
-21. Sign components. If the hash of a component changes (use "svn diff"
+22. Sign components. If the hash of a component changes (use "svn diff"
     for checking it) then its code has changed. Check that its version
     number has been incremented and that the changelog is up to date,
     the component.json file is up to date. Sign them again (the hash
@@ -99,21 +101,21 @@ I. Code preparation and checks
 
     $ php sign-components.php
 
-22. When the components are up to date, build their packages from the
+23. When the components are up to date, build their packages from the
     trunk with the release script release/make.php.
 
-23. Upload the content of release/trunk/files in the
+24. Upload the content of release/trunk/files in the
     /home/pfs/project/wikindx/ directory of the SourceForge Wikindx
     Project FTP.
 
-24. Upload the content of release/trunk/cus in the
+25. Upload the content of release/trunk/cus in the
     /home/project-web/wikindx/htdocs/cus directory of the SourceForge
     Wikindx Project FTP.
 
-25. Try the update server.
+26. Try the update server.
     Don't forget to switch $WIKINDX_TRUNK_VERSION = TRUE;
 
-26. When the components are ready commit them to SVN and don't change
+27. When the components are ready commit them to SVN and don't change
     them anymore because their signature must be definitively fixed.
 
 

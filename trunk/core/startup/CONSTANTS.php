@@ -103,6 +103,20 @@ define('WIKINDX_MARIADB_VERSION_MIN', '10.2');
  */
 define('WIKINDX_COPYRIGHT_YEAR', "2003-2020");
 /**
+ * WIKINDX release date
+ *
+ * @name WIKINDX_RELEASE_DATE
+ */
+define('WIKINDX_RELEASE_DATE', "2020-11-01");
+/**
+ * WIKINDX release timestamp
+ * 
+ * The release script use it to change the date of files and make archives reproducible.
+ *
+ * @name WIKINDX_RELEASE_TIMESTAMP
+ */
+define('WIKINDX_RELEASE_TIMESTAMP', (new DateTime(WIKINDX_RELEASE_DATE))->getTimestamp());
+/**
  * WIKINDX SF url
  *
  * @name WIKINDX_URL

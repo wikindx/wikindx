@@ -291,6 +291,28 @@ namespace FILE
     }
     
     /**
+     * Change recursively the last access/modification datetime of files and subdirectories of a directory
+     *
+     * @param string $dir A directory to explore
+     * @param int $time A Unix timestamp
+     */
+    function recurse_ChangeDateOfFiles($dir, $time)
+    {
+        touch($dir, $time, $time);
+        $cdir = dirToArray($dir);
+        
+        if (count($cdir) > 0) {
+            foreach ($cdir as $k => $v) {
+                touch($dir . DIRECTORY_SEPARATOR . $v, $time, $time);
+
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $v)) {
+                    recurse_ChangeDateOfFiles($dir . DIRECTORY_SEPARATOR . $v, $time);
+                }
+            }
+        }
+    }
+
+    /**
      * Copy recursively a folder
      *
      * @param string $src Source directory
@@ -907,6 +929,8 @@ namespace FILE
      */
     function createComponentPackageUnix($SrcDir, $DstDir, $Archive, $Format)
     {
+        recurse_ChangeDateOfFiles($SrcDir, 0);
+
         $Format = strtoupper(trim($Format));
         // Unsupported format is replaced by a ZIP archive
         if (!in_array($Format, ["ZIP", "GZ", "BZIP2"])) {
@@ -916,7 +940,7 @@ namespace FILE
         switch ($Format) {
             case 'ZIP':
                 $finalArchiveName = $DstDir . DIRECTORY_SEPARATOR . $Archive . ".zip";
-                createComponentPackageZipUnix($SrcDir, $finalArchiveName);
+                createComponentPackageZip($SrcDir, $finalArchiveName);
 
             break;
             
@@ -957,7 +981,7 @@ namespace FILE
         // Force a single timestamp: --mtime @1 --clamp-mtime
         // Set a single owner: --owner=0 --group=0 --numeric-owner
         
-        exec("cd \"$RootDir\"; tar -cf \"$DstFileTar\" \"$LastDir\" --mode=go=rX,u+rw,a-s --sort=name --mtime @1 --clamp-mtime --owner=0 --group=0 --numeric-owner; bzip2 -9 \"$DstFileTar\"");
+        exec("cd \"$RootDir\"; tar -cf \"$DstFileTar\" \"$LastDir\" --mode=go=rX,u+rw,a-s --sort=name --mtime=@1 --clamp-mtime --owner=0 --group=0 --numeric-owner; bzip2 -9 \"$DstFileTar\"");
     }
     
     /**
@@ -981,7 +1005,7 @@ namespace FILE
         // Force a single timestamp: --mtime @1 --clamp-mtime
         // Set a single owner: --owner=0 --group=0 --numeric-owner
         
-        exec("cd \"$RootDir\"; tar -cf \"$DstFileTar\" \"$LastDir\" --mode=go=rX,u+rw,a-s --sort=name --mtime @1 --clamp-mtime --owner=0 --group=0 --numeric-owner; gzip -9 --no-name \"$DstFileTar\"");
+        exec("cd \"$RootDir\"; tar -cf \"$DstFileTar\" \"$LastDir\" --mode=go=rX,u+rw,a-s --sort=name --mtime=@1 --clamp-mtime --owner=0 --group=0 --numeric-owner; gzip -9 --no-name \"$DstFileTar\"");
     }
     
     /**
@@ -1019,6 +1043,8 @@ namespace FILE
      */
     function createComponentPackage($SrcDir, $DstDir, $Archive, $Format)
     {
+        recurse_ChangeDateOfFiles($SrcDir, 0);
+
         $Format = strtoupper(trim($Format));
         // Unsupported format is replaced by a ZIP archive
         if (!in_array($Format, ["ZIP", "GZ", "BZIP2"])) {
@@ -1154,7 +1180,7 @@ namespace FILE
             
             foreach (recurse_AbsoluteDirToArray($SrcDir) as $dir => $v) {
                 $tarpath = mb_substr($v, 0 + mb_strlen($basedir), mb_strlen($v) - mb_strlen($basedir));
-                
+
                 if (is_dir($v)) {
                     $phar->addEmptyDir($tarpath);
                 } else {

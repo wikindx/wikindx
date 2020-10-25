@@ -194,9 +194,12 @@ file_put_contents(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARAT
 
 if ($ManualRebuildingFlag) build_manual(DIR_DST_SRC, 'WIKINDX Documentation ' . $VersionPackaged);
 
+\FILE\recurse_ChangeDateOfFiles(DIR_DST_SRC, 0);
+
+//foreach (["ZIP"] as $archformat)
 foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
 {                
-    $pkgarch = \FILE\createComponentPackage(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'manual', DIR_DST_COR_ARC, $pkg, $archformat);
+    $pkgarch = \FILE\createComponentPackageUnix(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'manual', DIR_DST_COR_ARC, $pkg, $archformat);
     copy($pkgarch, DIR_DST_COR . DIRECTORY_SEPARATOR . basename($pkgarch));
     echo " - $archformat arch: " . $pkgarch . "\n";
     
@@ -228,7 +231,6 @@ echo "Clear source code\n";
 \FILE\rmfile(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'config copy.php');
 \FILE\rmfile(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'config.php');
 
-
 // Create placeholder files in empty (cache or not) directories to prevent TAR from deleting them
 foreach(\FILE\recurse_fileInDirToArray(DIR_DST_SRC) as $d)
 {
@@ -258,6 +260,7 @@ foreach(\FILE\recurse_fileInDirToArray(DIR_DST_SRC) as $d)
     }
 }
 
+\FILE\recurse_ChangeDateOfFiles(DIR_DST_SRC, 0);
 
 
 ///////////////////////////////////////////////////////////////////////
@@ -353,7 +356,7 @@ foreach ($componentPath as $rootpath => $paths)
                 //foreach (["ZIP"] as $archformat)
                 foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
                 {                
-                    $pkgarch = \FILE\createComponentPackage($componentDir, DIR_DST_CMP_ARC[$componentConfig["component_type"]], $pkg, $archformat);
+                    $pkgarch = \FILE\createComponentPackageUnix($componentDir, DIR_DST_CMP_ARC[$componentConfig["component_type"]], $pkg, $archformat);
                     copy($pkgarch, DIR_DST_CMP . DIRECTORY_SEPARATOR . basename($pkgarch));
                     echo " - $archformat arch: " . $pkgarch . "\n";
                     
@@ -424,9 +427,10 @@ echo "Build core package\n";
 $pkg = APP_PKG_PREFIX;
 echo "Package " . $pkg . "\n";
 
+//foreach (["ZIP"] as $archformat)
 foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
 {                
-    $pkgarch = \FILE\createComponentPackage(DIR_DST_SRC, DIR_DST_COR_ARC, $pkg, $archformat);
+    $pkgarch = \FILE\createComponentPackageUnix(DIR_DST_SRC, DIR_DST_COR_ARC, $pkg, $archformat);
     copy($pkgarch, DIR_DST_COR . DIRECTORY_SEPARATOR . basename($pkgarch));
     echo " - $archformat arch: " . $pkgarch . "\n";
     

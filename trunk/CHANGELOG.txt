@@ -51,6 +51,7 @@ MAINTENANCE:
 17. Drop PHP 7.0 support.
 18. Drop PHP 7.1 support.
 19. Drop PHP 7.2 support.
+20. Update PHPMailer to version 6.1.8.
 
 SECURITY:
 1. Replace crypt/hash_equals() by password_hash/password_verify() which is stronger by default.

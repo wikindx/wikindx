@@ -289,7 +289,7 @@ class SOUNDEXPLORERQUICKSEARCH
     private function grabKeywords()
     {
         $this->keywords = $this->keyword->grabAll(
-            $this->session->getVar("mywikindx_Bibliography_use"),
+            GLOBALS::getUserVar('BrowseBibliography'),
             'resource',
             $this->typeArray
         );

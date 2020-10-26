@@ -76,13 +76,13 @@ class LISTSHOWHIDE
         $this->type = $this->vars['type'];
         if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
             $this->categories = $this->category->grabAll(
-                $this->session->getVar("mywikindx_Bibliography_use"),
+                GLOBALS::getUserVar('BrowseBibliography'),
                 TRUE,
                 array_keys($this->typeObj->grabAll())
             );
         } else {
             $this->categories = $this->category->grabAll(
-                $this->session->getVar("mywikindx_Bibliography_use"),
+                GLOBALS::getUserVar('BrowseBibliography'),
                 TRUE,
                 \UTF8\mb_explode(',', $this->vars['ajaxReturn'])
             );
@@ -157,13 +157,13 @@ class LISTSHOWHIDE
         } else {
             if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
                 $this->keywords = $this->keyword->grabAll(
-                    $this->session->getVar("mywikindx_Bibliography_use"),
+                    GLOBALS::getUserVar('BrowseBibliography'),
                     'resource',
                     array_keys($this->typeObj->grabAll())
                 );
             } else {
                 $this->keywords = $this->keyword->grabAll(
-                    $this->session->getVar("mywikindx_Bibliography_use"),
+                    GLOBALS::getUserVar('BrowseBibliography'),
                     'resource',
                     \UTF8\mb_explode(',', $this->vars['ajaxReturn'])
                 );
@@ -209,14 +209,14 @@ class LISTSHOWHIDE
         $this->type = $this->vars['type'];
         if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
             $categories = $this->category->grabAll(
-                $this->session->getVar("mywikindx_Bibliography_use"),
+                GLOBALS::getUserVar('BrowseBibliography'),
                 TRUE,
                 array_keys($this->typeObj->grabAll()),
                 FALSE
             );
         } else {
             $categories = $this->category->grabAll(
-                $this->session->getVar("mywikindx_Bibliography_use"),
+                GLOBALS::getUserVar('BrowseBibliography'),
                 TRUE,
                 \UTF8\mb_explode(',', $this->vars['ajaxReturn']),
                 FALSE
@@ -224,7 +224,7 @@ class LISTSHOWHIDE
         }
         $this->subcategories = $this->category->grabSubAll(
             TRUE,
-            $this->session->getVar("mywikindx_Bibliography_use"),
+            GLOBALS::getUserVar('BrowseBibliography'),
             array_keys($categories),
             TRUE
         );
@@ -277,7 +277,7 @@ class LISTSHOWHIDE
         $this->type = $this->vars['type'];
         $this->subcategories = $this->category->grabSubAll(
             TRUE,
-            $this->session->getVar("mywikindx_Bibliography_use"),
+            GLOBALS::getUserVar('BrowseBibliography'),
             $matchCategoryIds,
             TRUE
         );
@@ -307,12 +307,12 @@ class LISTSHOWHIDE
         } else {
             if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
                 $this->creators = $this->creator->grabAll(
-                    $this->session->getVar("mywikindx_Bibliography_use"),
+                    GLOBALS::getUserVar('BrowseBibliography'),
                     array_keys($this->typeObj->grabAll())
                 );
             } else {
                 $this->creators = $this->creator->grabAll(
-                    $this->session->getVar("mywikindx_Bibliography_use"),
+                    GLOBALS::getUserVar('BrowseBibliography'),
                     \UTF8\mb_explode(',', $this->vars['ajaxReturn']),
                     FALSE,
                     TRUE
@@ -359,13 +359,13 @@ class LISTSHOWHIDE
         if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
             $this->publishers = $this->publisher->grabAll(
                 FALSE,
-                $this->session->getVar("mywikindx_Bibliography_use"),
+                GLOBALS::getUserVar('BrowseBibliography'),
                 array_keys($this->typeObj->grabAll())
             );
         } else {
             $this->publishers = $this->publisher->grabAll(
                 FALSE,
-                $this->session->getVar("mywikindx_Bibliography_use"),
+                GLOBALS::getUserVar('BrowseBibliography'),
                 \UTF8\mb_explode(',', $this->vars['ajaxReturn'])
             );
         }
@@ -408,13 +408,13 @@ class LISTSHOWHIDE
         if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
             $this->collections = $this->collection->grabAll(
                 FALSE,
-                $this->session->getVar("mywikindx_Bibliography_use"),
+                GLOBALS::getUserVar('BrowseBibliography'),
                 array_keys($this->typeObj->grabAll())
             );
         } else {
             $this->collections = $this->collection->grabAll(
                 FALSE,
-                $this->session->getVar("mywikindx_Bibliography_use"),
+                GLOBALS::getUserVar('BrowseBibliography'),
                 \UTF8\mb_explode(',', $this->vars['ajaxReturn'])
             );
         }
@@ -454,13 +454,13 @@ class LISTSHOWHIDE
         if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
             $this->collections = $this->collection->grabAll(
                 FALSE,
-                $this->session->getVar("mywikindx_Bibliography_use"),
+                GLOBALS::getUserVar('BrowseBibliography'),
                 array_keys($this->typeObj->grabAll())
             );
         } else {
             $this->collections = $this->collection->grabAll(
                 FALSE,
-                $this->session->getVar("mywikindx_Bibliography_use"),
+                GLOBALS::getUserVar('BrowseBibliography'),
                 \UTF8\mb_explode(',', $this->vars['ajaxReturn'])
             );
         }
@@ -484,13 +484,13 @@ class LISTSHOWHIDE
         $this->type = $this->vars['type'];
         if (!array_key_exists('ajaxReturn', $this->vars)) { // i.e. we mean all resource types
             $this->userTags = $this->userTag->grabAll(
-                $this->session->getVar("mywikindx_Bibliography_use"),
+                GLOBALS::getUserVar('BrowseBibliography'),
                 array_keys($this->typeObj->grabAll()),
                 TRUE
             );
         } else {
             $this->userTags = $this->userTag->grabAll(
-                $this->session->getVar("mywikindx_Bibliography_use"),
+                GLOBALS::getUserVar('BrowseBibliography'),
                 \UTF8\mb_explode(',', $this->vars['ajaxReturn']),
                 TRUE
             );

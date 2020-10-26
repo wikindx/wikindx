@@ -512,7 +512,7 @@ class MENU
                 $messages->text("menu", "categoryTree") => 'index.php?action=browse_CATEGORYTREE_CORE',
             ];
             $userTagsObject = FACTORY_USERTAGS::getInstance();
-            $userTags = $userTagsObject->grabAll($this->session->getVar("mywikindx_Bibliography_use"));
+            $userTags = $userTagsObject->grabAll(GLOBALS::getUserVar('BrowseBibliography'));
             if (!empty($userTags)) {
                 $this->search['browseSub'][$messages->text("menu", "browseUserTags")] = 'index.php?action=browse_BROWSEUSERTAGS_CORE';
             }

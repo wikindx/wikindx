@@ -57,7 +57,7 @@ class CLOSE
         $styleId = strtolower(GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT));
         $styleName = array_key_exists($styleId, $styles) ? $styles[$styleId] : $styles[WIKINDX_STYLE_DEFAULT];
 
-        if ($useBib = $this->session->getVar("mywikindx_Bibliography_use")) {
+        if ($useBib = GLOBALS::getUserVar('BrowseBibliography')) {
             $this->db->formatConditions(['userbibliographyId' => $useBib]);
             $bib = \HTML\nlToHtml($this->db->selectFirstField('user_bibliography', 'userbibliographyTitle'));
         } else {

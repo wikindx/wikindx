@@ -83,7 +83,7 @@ class BIBLIOGRAPHYCOMMON
      */
     public function displayBib($hint = FALSE)
     {
-        $userBib = $this->session->getVar("mywikindx_Bibliography_use");
+        $userBib = GLOBALS::getUserVar('BrowseBibliography');
         if ($userBib) {
             $this->db->formatConditions(['userbibliographyId' => $userBib]);
             $recordset = $this->db->select('user_bibliography', 'userbibliographyTitle');
@@ -168,7 +168,7 @@ class BIBLIOGRAPHYCOMMON
         if ($this->bailOut) {
             return FALSE;
         }
-        if ($useBib = $this->session->getVar("mywikindx_Bibliography_use")) {
+        if ($useBib = GLOBALS::getUserVar('BrowseBibliography')) {
             $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $useBib]);
             if ($joinField) {
                 $this->db->leftJoin('user_bibliography_resource', 'userbibliographyresourceResourceId', $joinField);

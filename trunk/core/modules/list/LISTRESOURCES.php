@@ -119,7 +119,7 @@ class LISTRESOURCES
             $this->session->setVar("list_Order", "creator");
         }
         // if browsing on the master bib, setting allIds = TRUE makes the execution marginally quicker for large databases.
-        if (!$this->session->getVar("mywikindx_Bibliography_use")) {
+        if (!GLOBALS::getUserVar('BrowseBibliography')) {
 	        $this->stmt->allIds = TRUE;
 		}
         $this->params = $this->session->getVar("sql_ListParams"); // temporarily store list parameters for use if reordering

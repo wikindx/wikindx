@@ -76,6 +76,7 @@ class LOADCONFIG
             "PagingStyle",
             "PagingTagCloud",
             "HomeBib",
+            "BrowseBibliography",
             "StringLimit",
             "Style",
             "Template",

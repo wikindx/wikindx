@@ -113,7 +113,7 @@ class LISTCOMMON
 
             return FALSE;
         }
-        if ($useBib = $this->session->getVar("mywikindx_Bibliography_use")) {
+        if ($useBib = GLOBALS::getUserVar('BrowseBibliography')) {
             $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $useBib]);
             $this->db->formatConditions($this->db->formatFields('userbibliographyresourceResourceId') . $this->db->equal .
                 $this->db->formatFields('resourceId'));
@@ -787,7 +787,7 @@ class LISTCOMMON
         $uBibs = $this->commonBib->getUserBibs();
         $gBibs = $this->commonBib->getGroupBibs();
         $bibs = array_merge($uBibs, $gBibs);
-        $useBib = $this->session->getVar("mywikindx_Bibliography_use");
+        $useBib = GLOBALS::getUserVar('BrowseBibliography');
         if ($useBib) {
             $this->db->formatConditions(['userbibliographyId' => $useBib]);
             $recordset = $this->db->select('user_bibliography', ['userbibliographyTitle', 'userbibliographyUserId']);

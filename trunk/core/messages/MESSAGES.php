@@ -732,6 +732,7 @@ class MESSAGES
 /// hint_ Hint messages.  Helpful tips usually displayed in smaller text
 		    "hint" => array(
 				"hint" => dgettext($domain, "Hint"),
+				"homeBib" => dgettext($domain, "If browsing a user bibliography, use it also for the front page (which otherwise uses the master bibliography)."),
 				"addedBy" => dgettext($domain, "Added by: ###"),
 				"editedBy" => dgettext($domain, "Last edited by: ###"),
 				"stringLimit" => dgettext($domain, "-1 is unlimited. Default is 40"),
@@ -1536,6 +1537,7 @@ class MESSAGES
 				"forget11" => dgettext($domain, "Return to log in prompt"),
 				"masterBib" => dgettext($domain, "WIKINDX Master Bibliography"),
 				"bibliography" => dgettext($domain, "Bibliography"),
+				"homeBib" => dgettext($domain, "Front page"),
 				"deleteConfirmBib" => dgettext($domain, "Delete bibliography ###"),
 /// user_unknown When a user has been deleted but her input remains, display this when viewing a resource and its associated text
 				"unknown" => dgettext($domain, "Deleted user"),

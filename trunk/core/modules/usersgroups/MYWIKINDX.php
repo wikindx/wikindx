@@ -1616,8 +1616,9 @@ class MYWIKINDX
         // Get any bibliographyIds and delete those bibliographies
         $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $bibId]);
         $this->db->delete('user_bibliography_resource');
-        if ($bibId == $this->session->getVar("mywikindx_Bibliography_use")) {
-            $this->session->delVar("mywikindx_Bibliography_use");
+        if ($bibId == GLOBALS::getUserVar('BrowseBibliography')) {
+			$this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+			$this->db->update('users', ['usersBrowseBibliography' => 0]);
         }
         $bibsU = $this->bib->getUserBibs();
         $bibsUG = $this->bib->getGroupBibs();

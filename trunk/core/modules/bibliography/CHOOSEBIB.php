@@ -22,6 +22,7 @@ class CHOOSEBIB
     private $messages;
     private $success;
     private $common;
+    private $homeBib = FALSE;
 
     public function __construct()
     {
@@ -40,6 +41,10 @@ class CHOOSEBIB
      */
     public function init($message = FALSE)
     {
+        $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+        if ($this->db->queryFetchFirstField($this->db->selectNoExecute('users', ['usersHomeBib']))) {
+        	$this->homeBib = TRUE;
+        }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibs"));
         $bibsArray = $this->common->getBibsArray();
         if (empty($bibsArray)) {
@@ -62,7 +67,7 @@ class CHOOSEBIB
             'targetDiv' => 'div',
         ];
         $js = \AJAX\jActionForm('onchange', $jsonArray);
-        $selected = array_key_exists('BibId', $this->vars) ? $this->vars['BibId'] : $this->session->getVar("mywikindx_Bibliography_use");
+        $selected = array_key_exists('BibId', $this->vars) ? $this->vars['BibId'] : GLOBALS::getUserVar('BrowseBibliography');
         $size = count($bibsArray);
         if ($size > 20) {
             $size = 10;
@@ -77,6 +82,13 @@ class CHOOSEBIB
         $pString .= \HTML\td(\HTML\div('div', $this->displayBib($selected)), 'left top width80percent');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
+		$pString .= \HTML\p(\FORM\checkbox(
+			$this->messages->text('user', 'homeBib'),
+			"HomeBib",
+			$this->homeBib
+			) . BR .
+                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
+            	$this->messages->text("hint", "homeBib")), 'hint'));
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Select")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -154,23 +166,34 @@ class CHOOSEBIB
      */
     public function useBib()
     {
+    	$updateArray = [];
+    	if (array_key_exists('HomeBib', $this->vars)) {
+    		$updateArray['usersHomeBib'] = 1;
+    	} else {
+    		$updateArray['usersHomeBib'] = 0;
+    	}
         // bibId of 0 == master bibliography
         // bibId of < 0 == a label
         if (!array_key_exists('BibId', $this->vars) || !$this->vars['BibId']) {
-            $this->session->delVar("mywikindx_Bibliography_use");
-        } elseif (array_key_exists('BibId', $this->vars) && ($this->vars['BibId'] < 0)) {
+        	$this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+        	$updateArray['usersBrowseBibliography'] = 0;
+        	$this->db->update('users', $updateArray);
+        } elseif ($this->vars['BibId'] < 0) {
 			$message = rawurlencode($this->errors->text("inputError", "invalid"));
 			header("Location: index.php?action=bibliography_CHOOSEBIB_CORE&message=$message");
 			die;
         } else {
-            $this->session->setVar("mywikindx_Bibliography_use", $this->vars['BibId']);
+        	GLOBALS::setUserVar('BrowseBibliography', $this->vars['BibId']);
+        	$updateArray['usersBrowseBibliography'] = $this->vars['BibId'];
+        	$this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+        	$this->db->update('users', $updateArray);
         }
         $this->session->delVar("mywikindx_Bibliography_add");
         $this->session->delVar("mywikindx_PagingStart");
         $this->session->delVar("mywikindx_PagingStartAlpha");
         $this->session->delVar("sql_LastMulti");
         $message = rawurlencode($this->success->text("bibliographySet"));
-        header("Location: index.php?action=bibliography_CHOOSEBIB_CORE&message=$message");
+        header("Location: index.php?action=bibliography_CHOOSEBIB_CORE&message=$message&BibId=" . $this->vars['BibId']);
         die;
     }
 }

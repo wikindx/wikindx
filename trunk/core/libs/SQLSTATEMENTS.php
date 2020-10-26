@@ -82,9 +82,9 @@ class SQLSTATEMENTS
     public function frontSetDays($days, $limit)
     {
         $this->quarantine(TRUE);
-        if ($this->session->getVar('setup_UserId') && GLOBALS::getUserVar('HomeBib') && $this->session->getVar('mywikindx_Bibliography_use')) {
+        if ($this->session->getVar('setup_UserId') && GLOBALS::getUserVar('HomeBib') && GLOBALS::getUserVar('BrowseBibliography')) {
             // i.e. ignore if value is ‘0’ (main wikindx bibliography) or user is readOnly
-            $this->conditions[] = ['userbibliographyresourceBibliographyId' =>  $this->session->getVar('mywikindx_Bibliography_use')];
+            $this->conditions[] = ['userbibliographyresourceBibliographyId' => GLOBALS::getUserVar('BrowseBibliography')];
             $this->joins['user_bibliography_resource'] = ['userbibliographyresourceResourceId', 'resourcetimestampId'];
         }
         $this->executeCondJoins();
@@ -158,9 +158,9 @@ class SQLSTATEMENTS
     public function frontSetNumber($limit)
     {
         $this->quarantine(TRUE);
-        if ($this->session->getVar('setup_UserId') && GLOBALS::getUserVar('HomeBib') && $this->session->getVar('mywikindx_Bibliography_use')) {
+        if ($this->session->getVar('setup_UserId') && GLOBALS::getUserVar('HomeBib') && GLOBALS::getUserVar('BrowseBibliography')) {
             // i.e. ignore if value is ‘0’ (main wikindx bibliography) or user is readOnly
-            $this->conditions[] = ['userbibliographyresourceBibliographyId' =>  $this->session->getVar('mywikindx_Bibliography_use')];
+            $this->conditions[] = ['userbibliographyresourceBibliographyId' => GLOBALS::getUserVar('BrowseBibliography')];
             $this->joins['user_bibliography_resource'] = ['userbibliographyresourceResourceId', 'resourcetimestampId'];
         }
         $this->executeCondJoins();
@@ -442,7 +442,7 @@ class SQLSTATEMENTS
             $this->session->delVar("list_AllIds");
         }
         if (!$this->session->getVar("list_AllIds")) {
-            if ($this->allIds and !$this->session->getVar("mywikindx_Bibliography_use")) {
+            if ($this->allIds and !GLOBALS::getUserVar('BrowseBibliography')) {
                 $this->session->setVar("setup_PagingTotal", $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources'));
                 $this->session->setVar("list_AllIds", 'all');
             } else {
@@ -787,7 +787,7 @@ class SQLSTATEMENTS
      */
     public function useBib($joinField = FALSE)
     {
-        if ($useBib = $this->session->getVar("mywikindx_Bibliography_use")) {
+        if ($useBib = GLOBALS::getUserVar('BrowseBibliography')) {
             $this->conditions[] = ['userbibliographyresourceBibliographyId' => $useBib];
             if ($joinField) {
                 $this->joins['user_bibliography_resource'] = ['userbibliographyresourceResourceId', $joinField];

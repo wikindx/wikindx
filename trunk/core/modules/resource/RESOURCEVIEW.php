@@ -1038,7 +1038,7 @@ class RESOURCEVIEW
         if (!$row['publisherName'] && !$row['publisherLocation']) {
             return FALSE;
         }
-        $useBib = $this->session->getVar("mywikindx_Bibliography_use");
+        $useBib = GLOBALS::getUserVar('BrowseBibliography');
         if ($useBib) {
             $this->commonBib->userBibCondition('resourcemiscId');
         }
@@ -1074,7 +1074,7 @@ class RESOURCEVIEW
         if (!$row['collectionTitle']) {
             return FALSE;
         }
-        $useBib = $this->session->getVar("mywikindx_Bibliography_use");
+        $useBib = GLOBALS::getUserVar('BrowseBibliography');
         if ($useBib) {
             $this->commonBib->userBibCondition('resourcemiscId');
         }

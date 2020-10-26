@@ -222,11 +222,12 @@ class DELETERESOURCE
         }
         // Which page do we return to?
 		$message = rawurlencode($this->success->text("resourceDelete"));
-		if ($this->session->getVar("mywikindx_Bibliography_use")) {
-			$this->db->formatConditions(['userbibliographyresourceBibliographyId' => $this->session->getVar("mywikindx_Bibliography_use")]);
+		if (GLOBALS::getUserVar('BrowseBibliography')) {
+			$this->db->formatConditions(['userbibliographyresourceBibliographyId' => GLOBALS::getUserVar('BrowseBibliography')]);
 			$resultset = $this->db->select('user_bibliography_resource', ['userbibliographyresourceId']);
 			if (!$this->db->numRows($resultset)) {
-				$this->session->delVar("mywikindx_Bibliography_use");
+				$this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+				$this->db->update('users', ['usersBrowseBibliography' => 0]);
 				header("Location: index.php?message=$message");
 				die;
 			}

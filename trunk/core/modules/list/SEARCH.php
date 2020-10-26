@@ -1397,7 +1397,7 @@ class SEARCH
     private function userBibs()
     {
         $bibs = $this->commonBib->getUserBibs() + $this->commonBib->getGroupBibs();
-        if ($userBib = $this->session->getVar("mywikindx_Bibliography_use")) {
+        if ($userBib = GLOBALS::getUserVar('BrowseBibliography')) {
             unset($bibs[$userBib]);
         }
         if (empty($bibs)) {
@@ -1547,7 +1547,7 @@ class SEARCH
      */
     private function typeDiv($index)
     {
-        $types = $this->type->grabAll($this->session->getVar("mywikindx_Bibliography_use"), TRUE);
+        $types = $this->type->grabAll(GLOBALS::getUserVar('BrowseBibliography'), TRUE);
         $selectBox = $this->makeSelectBox($types, 'type', $index);
         if (is_array($types)) {
             natcasesort($types);
@@ -1577,7 +1577,7 @@ class SEARCH
      */
     private function categoryDiv($index)
     {
-        $categories = $this->category->grabAll($this->session->getVar("mywikindx_Bibliography_use"), TRUE);
+        $categories = $this->category->grabAll(GLOBALS::getUserVar('BrowseBibliography'), TRUE);
         $selectBox = $this->makeSelectBox($categories, 'category', $index);
         if (is_array($categories)) {
             natcasesort($categories);
@@ -1607,7 +1607,7 @@ class SEARCH
      */
     private function subcategoryDiv($index)
     {
-        $subcategories = $this->category->grabSubAll(TRUE, $this->session->getVar("mywikindx_Bibliography_use"), FALSE, TRUE);
+        $subcategories = $this->category->grabSubAll(TRUE, GLOBALS::getUserVar('BrowseBibliography'), FALSE, TRUE);
         $selectBox = $this->makeSelectBox($subcategories, 'subcategory', $index);
         if (is_array($subcategories)) {
             natcasesort($subcategories);
@@ -1637,7 +1637,7 @@ class SEARCH
      */
     private function creatorDiv($index)
     {
-        $creators = $this->creator->grabAll($this->session->getVar("mywikindx_Bibliography_use"));
+        $creators = $this->creator->grabAll(GLOBALS::getUserVar('BrowseBibliography'));
         $selectBox = $this->makeSelectBox($creators, 'creator', $index);
         if (is_array($creators)) {
             natcasesort($creators);
@@ -1667,7 +1667,7 @@ class SEARCH
      */
     private function keywordDiv($index)
     {
-        $keywords = $this->keyword->grabAll($this->session->getVar("mywikindx_Bibliography_use"), 'resource');
+        $keywords = $this->keyword->grabAll(GLOBALS::getUserVar('BrowseBibliography'), 'resource');
         $selectBox = $this->makeSelectBox($keywords, 'keyword', $index);
         if (is_array($keywords)) {
             natcasesort($keywords);
@@ -1757,7 +1757,7 @@ class SEARCH
      */
     private function publisherDiv($index)
     {
-        $publishers = $this->publisher->grabAll(FALSE, $this->session->getVar("mywikindx_Bibliography_use"));
+        $publishers = $this->publisher->grabAll(FALSE, GLOBALS::getUserVar('BrowseBibliography'));
         $selectBox = $this->makeSelectBox($publishers, 'publisher', $index);
         if (is_array($publishers)) {
             natcasesort($publishers);
@@ -1787,7 +1787,7 @@ class SEARCH
      */
     private function collectionDiv($index)
     {
-        $collections = $this->collection->grabAll(FALSE, $this->session->getVar("mywikindx_Bibliography_use"));
+        $collections = $this->collection->grabAll(FALSE, GLOBALS::getUserVar('BrowseBibliography'));
         $selectBox = $this->makeSelectBox($collections, 'collection', $index);
         if (is_array($collections)) {
             natcasesort($collections);
@@ -1817,7 +1817,7 @@ class SEARCH
      */
     private function userTagDiv($index)
     {
-        $userTags = $this->userTag->grabAll($this->session->getVar("mywikindx_Bibliography_use"), FALSE, TRUE);
+        $userTags = $this->userTag->grabAll(GLOBALS::getUserVar('BrowseBibliography'), FALSE, TRUE);
         $selectBox = $this->makeSelectBox($userTags, 'userTag', $index);
         if (is_array($userTags)) {
             natcasesort($userTags);
@@ -1980,7 +1980,7 @@ class SEARCH
      */
     private function grabLanguages()
     {
-        $userBib = $this->session->getVar("mywikindx_Bibliography_use");
+        $userBib = GLOBALS::getUserVar('BrowseBibliography');
         if ($userBib) {
             $this->commonBib->userBibCondition('resourceLanguageResourceId');
         }
@@ -2000,7 +2000,7 @@ class SEARCH
      */
     private function grabUsers($addEdit = 'add')
     {
-        return $this->user->grabAll(TRUE, $this->session->getVar("mywikindx_Bibliography_use"), $addEdit);
+        return $this->user->grabAll(TRUE, GLOBALS::getUserVar('BrowseBibliography'), $addEdit);
     }
     // Check what search fields are available for this user in the database
     /*
@@ -2052,7 +2052,7 @@ class SEARCH
         $userId = $this->session->getVar("setup_UserId");
         // userTags
         $this->db->formatConditions(['userTagsUserId' => $userId]);
-        if (!empty($this->userTag->grabAll($this->session->getVar("mywikindx_Bibliography_use"), FALSE, TRUE))) {
+        if (!empty($this->userTag->grabAll(GLOBALS::getUserVar('BrowseBibliography'), FALSE, TRUE))) {
             $this->displayUserTags = TRUE;
         }
         if ((!WIKINDX_METADATA_ALLOW)) {
@@ -2062,7 +2062,7 @@ class SEARCH
                 return;
             }
         }
-        $userBib = $this->session->getVar("mywikindx_Bibliography_use");
+        $userBib = GLOBALS::getUserVar('BrowseBibliography');
         // for everything here, the user must be logged on
         if (!$userId) {
             return;
@@ -2159,7 +2159,7 @@ class SEARCH
      */
     private function searchFields($index = 0)
     {
-        $userBib = $this->session->getVar("mywikindx_Bibliography_use");
+        $userBib = GLOBALS::getUserVar('BrowseBibliography');
         $fields = ["title" => $this->messages->text("search", "title")];
         if ($userBib) {
             $this->commonBib->userBibCondition('resourcetextId');

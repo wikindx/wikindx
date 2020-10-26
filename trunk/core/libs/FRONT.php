@@ -81,7 +81,13 @@ class FRONT
         }
         if ($lastChanges = WIKINDX_LAST_CHANGES) {
             if ($this->getChanges($lastChanges)) {
-                $pString .= \HTML\p(\HTML\h($this->messages->text("resources", "lastChanges"), FALSE, 4));
+            	if (GLOBALS::getUserVar('HomeBib') && GLOBALS::getUserVar('BrowseBibliography')) {
+            		$this->db->formatConditions(['userbibliographyId' => GLOBALS::getUserVar('BrowseBibliography')]);
+            		$bib = $this->db->queryFetchFirstField($this->db->selectNoExecute('user_bibliography', ['userbibliographyTitle']));
+            	} else {
+            		$bib = $this->messages->text("user", "masterBib");
+            	}
+                $pString .= \HTML\p(\HTML\h($this->messages->text("resources", "lastChanges") . "&nbsp;($bib)", FALSE, 4));
             }
         }
         $pString .= $this->externalMessage;

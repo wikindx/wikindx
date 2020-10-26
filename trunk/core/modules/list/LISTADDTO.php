@@ -671,7 +671,7 @@ class LISTADDTO
 			$uuid = $message[1];
 		}
         $bibs = [];
-        $useBib = $this->session->getVar("mywikindx_Bibliography_use");
+        $useBib = GLOBALS::getUserVar('BrowseBibliography');
         if ($useBib) {
             $this->db->formatConditions(['userbibliographyId' => $useBib]);
             $usingBib = $this->db->selectFirstField('user_bibliography', 'userbibliographyTitle');
@@ -762,7 +762,7 @@ class LISTADDTO
         } else {
             $ids = unserialize(base64_decode($string));
         }
-        $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $this->session->getVar("mywikindx_Bibliography_use")]);
+        $this->db->formatConditions(['userbibliographyresourceBibliographyId' => GLOBALS::getUserVar('BrowseBibliography')]);
         $this->db->formatConditionsOneField($ids, 'userbibliographyresourceResourceId');
         $this->db->delete('user_bibliography_resource');
         $bibs = $this->commonBib->getUserBibs();
@@ -770,10 +770,11 @@ class LISTADDTO
         if (!empty($bibs)) {
             $this->session->setVar("setup_Bibliographies", TRUE);
         }
-        $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $this->session->getVar("mywikindx_Bibliography_use")]);
+        $this->db->formatConditions(['userbibliographyresourceBibliographyId' => GLOBALS::getUserVar('BrowseBibliography')]);
         $resultset = $this->db->select('user_bibliography_resource', ['userbibliographyresourceId']);
         if (!$this->db->numRows($resultset)) {
-        	$this->session->delVar("mywikindx_Bibliography_use");
+			$this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+			$this->db->update('users', ['usersBrowseBibliography' => 0]);
         	$message = rawurlencode($success->text("deleteFromBib"));
 			header("Location: index.php?message=$message");
 			die;

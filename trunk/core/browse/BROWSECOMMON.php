@@ -72,7 +72,7 @@ class BROWSECOMMON
         if ($bibInfo) {
             $this->bibInfo = \HTML\nlToHtml($this->commonBib->displayBib());
         }
-        if ($useBib = $this->session->getVar("mywikindx_Bibliography_use")) {
+        if ($useBib = GLOBALS::getUserVar('BrowseBibliography')) {
             $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $useBib]);
             $this->db->leftJoin('user_bibliography_resource', 'userbibliographyresourceResourceId', $field);
         }

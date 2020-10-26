@@ -916,10 +916,13 @@ class IMPORTCOMMON
      */
     public function writeUserbibliographyresourceTable($bibId)
     {
-        if (!$bibId) {
-            return;
-        }
+    	if (!is_array($bibId)) {
+    		return;
+    	}
         foreach ($bibId as $bId) {
+        	if (!$bId || ($bId < 0)) {
+            	continue;
+        	}
             $this->db->insert(
                 'user_bibliography_resource',
                 ['userbibliographyresourceResourceId', 'userbibliographyresourceBibliographyId'],

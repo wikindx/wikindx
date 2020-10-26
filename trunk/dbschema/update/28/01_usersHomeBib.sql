@@ -11,5 +11,5 @@
 -- 2) Switch from using session based ('mywikindx_Bibliography_use')storage of currently selected bibliography to database based storage ('usersBrowseBibliography').
 
 
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users ADD COLUMN usersHomeBib tinyint(1) DEFAULT 0;
-ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users ADD COLUMN usersBrowseBibliography int(11) default -1;
+ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users ADD COLUMN usersHomeBib tinyint(1) NOT NULL DEFAULT 0;
+ALTER TABLE %%WIKINDX_DB_TABLEPREFIX%%users ADD COLUMN usersBrowseBibliography int(11) NOT NULL DEFAULT 0;

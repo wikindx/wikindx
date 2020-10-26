@@ -340,34 +340,39 @@ class UPDATEDATABASE
                 $this->stage22();
             }
             elseif ($dbVersion < 23.0)
-            { // upgrade v6.3.10 to 6.3.11
+            { // upgrade v6.3.10 to 6.4.0
                 $this->numStages = 1;
                 $this->stage23();
             }
             elseif ($dbVersion < 24.0)
-            { // upgrade v6.3.11 to 6.3.11
+            { // upgrade v6.3.11 to 6.4.0
                 $this->numStages = 1;
                 $this->stage24();
             }
             elseif ($dbVersion < 25.0)
-            { // upgrade v6.3.11 to 6.3.11
+            { // upgrade v6.3.11 to 6.4.0
                 $this->numStages = 1;
                 $this->stage25();
             }
             elseif ($dbVersion < 26.0)
-            { // upgrade v6.3.11 to 6.3.11
+            { // upgrade v6.3.11 to 6.4.0
                 $this->numStages = 1;
                 $this->stage26();
             }
             elseif ($dbVersion < 27.0)
-            { // upgrade v6.3.11 to 6.3.11
+            { // upgrade v6.3.11 to 6.4.0
                 $this->numStages = 1;
                 $this->stage27();
             }
             elseif ($dbVersion < 28.0)
-            { // upgrade v6.3.11 to 6.3.11 (userHomeBib)
+            { // upgrade v6.3.11 to 6.4.0 (userHomeBib)
                 $this->numStages = 1;
                 $this->stage28();
+            }
+            elseif ($dbVersion < 29.0)
+            { // upgrade v6.3.11 to 6.4.0
+                $this->numStages = 1;
+                $this->stage29();
             }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
@@ -1103,6 +1108,17 @@ class UPDATEDATABASE
         $this->updateSoftwareVersion(28);
         $this->checkStatus('stage28');
         $this->pauseExecution('stage28');
+    }
+    /**
+     * Remove unwanted rows in user_bibliography_resource
+     */
+    private function stage29()
+    {
+    	$this->db->formatConditionsOneField([-1, -2], 'userbibliographyresourceBibliographyId');
+        $this->db->delete('user_bibliography_resource');
+        $this->updateSoftwareVersion(29);
+        $this->checkStatus('stage29');
+        $this->pauseExecution('stage29');
     }
 
     /**

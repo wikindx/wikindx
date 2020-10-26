@@ -75,6 +75,7 @@ class LOADCONFIG
             "PagingMaxLinks",
             "PagingStyle",
             "PagingTagCloud",
+            "HomeBib",
             "StringLimit",
             "Style",
             "Template",

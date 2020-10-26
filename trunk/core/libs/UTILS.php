@@ -839,6 +839,7 @@ namespace UTILS
      */
     function password_verify($password, $password_hashed)
     {
-        return \password_verify($password, $password_hashed);
+        //return \password_verify($password, $password_hashed);
+        return crypt($password, $password_hashed) == $password_hashed);
     }
 }

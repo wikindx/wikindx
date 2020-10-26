@@ -970,10 +970,14 @@ class USER
         
         $this->db->formatConditions($cond);
         $recordset = $this->db->select('users', $fields);
-        if (!$this->db->numRows($recordset)) {
+        
+        // One and only one user
+        if ($this->db->numRows($recordset) != 1) {
             return FALSE;
         }
+        
         $row = $this->db->fetchRow($recordset);
+        
         // only the superadmin may log on when multi user is not enabled
         if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID)) {
             return FALSE;

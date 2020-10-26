@@ -77,9 +77,16 @@ class SQLSTATEMENTS
      *
      * @return string SQL statement ready to be executed
      */
+
+
     public function frontSetDays($days, $limit)
     {
         $this->quarantine(TRUE);
+        if ($this->session->getVar('setup_UserId') && GLOBALS::getUserVar('HomeBib') && $this->session->getVar('mywikindx_Bibliography_use')) {
+            // i.e. ignore if value is ‘0’ (main wikindx bibliography) or user is readOnly
+            $this->conditions[] = ['userbibliographyresourceBibliographyId' =>  $this->session->getVar('mywikindx_Bibliography_use')];
+            $this->joins['user_bibliography_resource'] = ['userbibliographyresourceResourceId', 'resourcetimestampId'];
+        }
         $this->executeCondJoins();
         $this->db->formatConditions("DATE_SUB(CURRENT_DATE, INTERVAL $days DAY)<=" .
             $this->db->formatFields('resourcetimestampTimestamp'));
@@ -151,6 +158,11 @@ class SQLSTATEMENTS
     public function frontSetNumber($limit)
     {
         $this->quarantine(TRUE);
+        if ($this->session->getVar('setup_UserId') && GLOBALS::getUserVar('HomeBib') && $this->session->getVar('mywikindx_Bibliography_use')) {
+            // i.e. ignore if value is ‘0’ (main wikindx bibliography) or user is readOnly
+            $this->conditions[] = ['userbibliographyresourceBibliographyId' =>  $this->session->getVar('mywikindx_Bibliography_use')];
+            $this->joins['user_bibliography_resource'] = ['userbibliographyresourceResourceId', 'resourcetimestampId'];
+        }
         $this->executeCondJoins();
         $this->db->limit($limit, 0);
         $this->db->ascDesc = $this->db->desc;
@@ -358,7 +370,7 @@ class SQLSTATEMENTS
      */
     public function listListQS($order = 'creator', $table = 'resource', $subQ = FALSE)
     {
-    	$this->listJoins = [];
+        $this->listJoins = [];
         if (!$this->allIds && !$this->session->getVar("list_AllIds")) {
             return FALSE; // Perhaps browsing metadata keywords where the keyword is not attached to resources but only to ideas.
         }
@@ -373,8 +385,8 @@ class SQLSTATEMENTS
             }
         }
         else {
-			$this->pagingAlphaCondition($order);
-			$this->executeCondJoins();
+            $this->pagingAlphaCondition($order);
+            $this->executeCondJoins();
         }
         $this->db->formatConditions($this->db->formatFields('resourceId') .
                 $this->db->inClause(implode(',', $this->session->getVar("list_AllIds"))));
@@ -754,9 +766,9 @@ class SQLSTATEMENTS
      *
      * result is a tidied SQL condition such as:
      * (`matchField` NOT IN (
-     *	SELECT `userbibliographyresourceResourceId` FROM `WKX_user_bibliography_resource`
-     *	WHERE (`userbibliographyresourceBibliographyId` = 1)
-     *	)
+     *  SELECT `userbibliographyresourceResourceId` FROM `WKX_user_bibliography_resource`
+     *  WHERE (`userbibliographyresourceBibliographyId` = 1)
+     *  )
      *
      * @param string $bibId user bibliography id
      * @param string $matchField databasefield to be searched for Default 'resourceId'
@@ -878,19 +890,19 @@ class SQLSTATEMENTS
         }
         $this->db->groupBy('resourceId');
         if (!$QS) {
-        	if ((GLOBALS::getUserVar('PagingStyle') == 'A') && (($order == 'creator') || ($order == 'title'))) {
-        		$this->db->leftJoin('resource', 'resourceId', 'rId');
-        	}
-        	$this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');
-        	$this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
+            if ((GLOBALS::getUserVar('PagingStyle') == 'A') && (($order == 'creator') || ($order == 'title'))) {
+                $this->db->leftJoin('resource', 'resourceId', 'rId');
+            }
+            $this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');
+            $this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
         }
         else if ($QS && (GLOBALS::getUserVar('PagingStyle') != 'A')) {
-        	$this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');
-        	$this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
+            $this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');
+            $this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
         }
         else if ($QS && ($order != 'creator') && ($order != 'title')) {
-        	$this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');
-        	$this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
+            $this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');
+            $this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
         }
         $this->db->leftJoin('resource_misc', 'resourcemiscId', 'resourceId');
         $this->db->leftJoin('resource_timestamp', 'resourcetimestampId', 'resourceId');

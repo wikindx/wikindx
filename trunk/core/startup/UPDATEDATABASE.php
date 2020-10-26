@@ -364,6 +364,11 @@ class UPDATEDATABASE
                 $this->numStages = 1;
                 $this->stage27();
             }
+            elseif ($dbVersion < 28.0)
+            { // upgrade v6.3.11 to 6.3.11 (userHomeBib)
+                $this->numStages = 1;
+                $this->stage28();
+            }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
             // Refresh the locales list
@@ -441,10 +446,10 @@ class UPDATEDATABASE
     private function checkConfigFile()
     {
         $message = HTML\p("
-        	Part of the upgrade process for a WIKINDX that is younger than v6.2.2 is the transfer of many settings in config.php to the database (from where they can be configured via the Admin|Configure menu).
-        	In order to accomplish this, config.php must be writeable by the web server user and the upgrade will not proceed until this is the case.
-        	Equally, some settings are removed from config.php where the WIKINDX is 5.3 and older but younger than 6.2.2.
-        	Once the upgrade has completed, you can then return the file permissions on config.php to read only.
+            Part of the upgrade process for a WIKINDX that is younger than v6.2.2 is the transfer of many settings in config.php to the database (from where they can be configured via the Admin|Configure menu).
+            In order to accomplish this, config.php must be writeable by the web server user and the upgrade will not proceed until this is the case.
+            Equally, some settings are removed from config.php where the WIKINDX is 5.3 and older but younger than 6.2.2.
+            Once the upgrade has completed, you can then return the file permissions on config.php to read only.
         ");
         if (!file_exists('config.php'))
         {
@@ -1031,33 +1036,33 @@ class UPDATEDATABASE
         $updateArray = [];
         $this->db->formatConditions(['userbibliographyDescription' => 'IS NOT NULL']);
         $resultSet = $this->db->select('user_bibliography', ['userbibliographyId', 'userbibliographyDescription']);
-    	while ($row = $this->db->fetchRow($resultSet))
-    	{
-    	    $desc = trim(\HTML\stripHtml($row['userbibliographyDescription']));
-    	    if ($desc != $row['userbibliographyDescription']) {
-    	        $updateArray[$row['userbibliographyId']] = ($desc != '' ? $desc : 'NULL');
-    	    }
-    	}
-    	
-    	if (count($updateArray) > 0) {
-    	    $this->db->multiUpdate('user_bibliography', 'userbibliographyDescription', 'userbibliographyId', $updateArray);
-    	}
-    	
+        while ($row = $this->db->fetchRow($resultSet))
+        {
+            $desc = trim(\HTML\stripHtml($row['userbibliographyDescription']));
+            if ($desc != $row['userbibliographyDescription']) {
+                $updateArray[$row['userbibliographyId']] = ($desc != '' ? $desc : 'NULL');
+            }
+        }
+        
+        if (count($updateArray) > 0) {
+            $this->db->multiUpdate('user_bibliography', 'userbibliographyDescription', 'userbibliographyId', $updateArray);
+        }
+        
         // Strip HTML from attachment descriptions
         $updateArray = [];
         $this->db->formatConditions(['resourceattachmentsDescription' => 'IS NOT NULL']);
         $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsDescription']);
-    	while ($row = $this->db->fetchRow($resultSet))
-    	{
-    	    $desc = trim(\HTML\stripHtml($row['resourceattachmentsDescription']));
-    	    if ($desc != $row['resourceattachmentsDescription']) {
-    	        $updateArray[$row['resourceattachmentsId']] = ($desc != '' ? $desc : 'NULL');
-    	    }
-    	}
-    	
-    	if (count($updateArray) > 0) {
-    	    $this->db->multiUpdate('resource_attachments', 'resourceattachmentsDescription', 'resourceattachmentsId', $updateArray);
-    	}
+        while ($row = $this->db->fetchRow($resultSet))
+        {
+            $desc = trim(\HTML\stripHtml($row['resourceattachmentsDescription']));
+            if ($desc != $row['resourceattachmentsDescription']) {
+                $updateArray[$row['resourceattachmentsId']] = ($desc != '' ? $desc : 'NULL');
+            }
+        }
+        
+        if (count($updateArray) > 0) {
+            $this->db->multiUpdate('resource_attachments', 'resourceattachmentsDescription', 'resourceattachmentsId', $updateArray);
+        }
         
         $this->updateSoftwareVersion(25);
         $this->checkStatus('stage25');
@@ -1068,7 +1073,7 @@ class UPDATEDATABASE
      */
     private function stage26()
     {
-    	// Drop form_data and create temp_storage table
+        // Drop form_data and create temp_storage table
         $this->updateDbSchema('26');
         
         $this->updateSoftwareVersion(26);
@@ -1080,7 +1085,7 @@ class UPDATEDATABASE
      */
     private function stage27()
     {
-    	// Drop form_data and create temp_storage table
+        // Drop form_data and create temp_storage table
         $this->updateDbSchema('27');
         
         $this->updateSoftwareVersion(27);
@@ -1088,96 +1093,109 @@ class UPDATEDATABASE
         $this->pauseExecution('stage27');
     }
     /**
+     * Upgrade database schema to version 28 (6.3.11)
+     */
+    private function stage28()
+    {
+        // Drop form_data and create temp_storage table
+        $this->updateDbSchema('28');
+        
+        $this->updateSoftwareVersion(28);
+        $this->checkStatus('stage28');
+        $this->pauseExecution('stage28');
+    }
+
+    /**
      * Transfer statistics data to new tables then drop old table
      *
      * A fault in the previous statistics compilation means that each month's statistics needs to be backdated one month ...
      */
     private function transferStatistics()
     {
-    	$resourceInsertFields = ['statisticsresourceviewsResourceId', 'statisticsresourceviewsMonth', 'statisticsresourceviewsCount'];
-    	$attachmentInsertFields = ['statisticsattachmentdownloadsAttachmentId', 'statisticsattachmentdownloadsMonth', 'statisticsattachmentdownloadsCount', 'statisticsattachmentdownloadsResourceId'];
-    	
-    	$countTransfered = 0;
-    	$insertResourceValues = [];
-    	$insertAttachmentValues = [];
-    	$deleteStatisticsAttachment = [];
-    	$deleteStatisticsResource = [];
-    	
+        $resourceInsertFields = ['statisticsresourceviewsResourceId', 'statisticsresourceviewsMonth', 'statisticsresourceviewsCount'];
+        $attachmentInsertFields = ['statisticsattachmentdownloadsAttachmentId', 'statisticsattachmentdownloadsMonth', 'statisticsattachmentdownloadsCount', 'statisticsattachmentdownloadsResourceId'];
+        
+        $countTransfered = 0;
+        $insertResourceValues = [];
+        $insertAttachmentValues = [];
+        $deleteStatisticsAttachment = [];
+        $deleteStatisticsResource = [];
+        
     // 1. Past statistics from statistics table
-    	$resultSet = $this->db->select('statistics', ['statisticsId', 'statisticsResourceId', 'statisticsAttachmentId', 'statisticsStatistics']);
-    	while ($row = $this->db->fetchRow($resultSet))
-    	{
-    		$id = $row['statisticsAttachmentId'] ? $row['statisticsAttachmentId'] : $row['statisticsResourceId'];
-    		
-    		if ($row['statisticsAttachmentId'])
-    	        $deleteStatisticsAttachment[] = $row['statisticsId'];
-    		else
-    	        $deleteStatisticsResource[] = $row['statisticsId'];
-    		
-    		$statsArray = unserialize(base64_decode($row['statisticsStatistics']));
-    		if ($statsArray === FALSE)
-    		{
-    		    continue;
-    		}
-    		
-    		foreach ($statsArray as $month => $count)
-    		{
-    			if (!$count) // Ensure there is a valid INSERT value here ...
-    			{
-    				$count = 0;
-    			}
-    			
-    		    // If the month (period) is too short or long (YYYYMM format expected), skip this stat
-    		    $month = trim($month . "");
-    		    if (strlen($month) != 6) continue;
-    			
-    			$month = intval($month);
-    			
-    			// If the month is not in the range 01..12, skip this stat
-    			if ($month % 100 > 12) continue;
-    			
-    			// Shift of one month back
-    			$month = $month - 1;
-    			// Month 0 doesn't exist, so shift one year back on december
-    			$month = ($month % 100 == 0) ? $month - 100 + 12 : $month;
-    			
-    			$insertValues = [$id, $month, $count];
-    			
-    			if ($row['statisticsAttachmentId'])
-    			{
-    			    $deleteStatisticsAttachment[] = $row['statisticsId'];
-    			    $insertValues[] = $row['statisticsResourceId'];
-    			    $insertAttachmentValues[] = '(' . implode(',', $insertValues) . ')';
-    			    
-    				if (count($insertAttachmentValues) % 1000 == 0)
-    				{
-    					$this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
-    					$countTransfered += count($insertAttachmentValues);
-    					$insertAttachmentValues = [];
-    					
+        $resultSet = $this->db->select('statistics', ['statisticsId', 'statisticsResourceId', 'statisticsAttachmentId', 'statisticsStatistics']);
+        while ($row = $this->db->fetchRow($resultSet))
+        {
+            $id = $row['statisticsAttachmentId'] ? $row['statisticsAttachmentId'] : $row['statisticsResourceId'];
+            
+            if ($row['statisticsAttachmentId'])
+                $deleteStatisticsAttachment[] = $row['statisticsId'];
+            else
+                $deleteStatisticsResource[] = $row['statisticsId'];
+            
+            $statsArray = unserialize(base64_decode($row['statisticsStatistics']));
+            if ($statsArray === FALSE)
+            {
+                continue;
+            }
+            
+            foreach ($statsArray as $month => $count)
+            {
+                if (!$count) // Ensure there is a valid INSERT value here ...
+                {
+                    $count = 0;
+                }
+                
+                // If the month (period) is too short or long (YYYYMM format expected), skip this stat
+                $month = trim($month . "");
+                if (strlen($month) != 6) continue;
+                
+                $month = intval($month);
+                
+                // If the month is not in the range 01..12, skip this stat
+                if ($month % 100 > 12) continue;
+                
+                // Shift of one month back
+                $month = $month - 1;
+                // Month 0 doesn't exist, so shift one year back on december
+                $month = ($month % 100 == 0) ? $month - 100 + 12 : $month;
+                
+                $insertValues = [$id, $month, $count];
+                
+                if ($row['statisticsAttachmentId'])
+                {
+                    $deleteStatisticsAttachment[] = $row['statisticsId'];
+                    $insertValues[] = $row['statisticsResourceId'];
+                    $insertAttachmentValues[] = '(' . implode(',', $insertValues) . ')';
+                    
+                    if (count($insertAttachmentValues) % 1000 == 0)
+                    {
+                        $this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
+                        $countTransfered += count($insertAttachmentValues);
+                        $insertAttachmentValues = [];
+                        
                         $this->db->formatConditionsOneField($deleteStatisticsAttachment, 'statisticsId');
                         $this->db->delete('statistics');
-    			        $deleteStatisticsAttachment = [];
-    				}
-    			}
-    			else
-    			{
-    			    $deleteStatisticsResource[] = $row['statisticsId'];
-    			    $insertResourceValues[] = '(' . implode(',', $insertValues) . ')';
-    			    
-    				if (count($insertResourceValues) % 1000 == 0)
-    				{
-    					$this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
-    					$countTransfered += count($insertResourceValues);
-    					$insertResourceValues = [];
-    					
+                        $deleteStatisticsAttachment = [];
+                    }
+                }
+                else
+                {
+                    $deleteStatisticsResource[] = $row['statisticsId'];
+                    $insertResourceValues[] = '(' . implode(',', $insertValues) . ')';
+                    
+                    if (count($insertResourceValues) % 1000 == 0)
+                    {
+                        $this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
+                        $countTransfered += count($insertResourceValues);
+                        $insertResourceValues = [];
+                        
                         $this->db->formatConditionsOneField($deleteStatisticsResource, 'statisticsId');
                         $this->db->delete('statistics');
-    			        $deleteStatisticsResource = [];
-    				}
-    			}
-    		}
-    		
+                        $deleteStatisticsResource = [];
+                    }
+                }
+            }
+            
             // Check we have more than 6 seconds buffer before max_execution_time times out.
             if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)) || $countTransfered >= 200000)
             {
@@ -1186,27 +1204,27 @@ class UPDATEDATABASE
                 $this->stageInterruptMessage .= "<br>stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
                 $this->pauseExecution('stage13', 'stage13');
             }
-    	}
-    	// Remaining past statistics
-    	if (count($insertAttachmentValues) > 0)
-    	{
-    		$this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
-    	}
-    	if (count($insertResourceValues) > 0)
-    	{
-    		$this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
-    	}
-    	if (count($deleteStatisticsAttachment) > 0)
-    	{
+        }
+        // Remaining past statistics
+        if (count($insertAttachmentValues) > 0)
+        {
+            $this->db->multiInsert('statistics_attachment_downloads', $attachmentInsertFields, implode(', ', $insertAttachmentValues));
+        }
+        if (count($insertResourceValues) > 0)
+        {
+            $this->db->multiInsert('statistics_resource_views', $resourceInsertFields, implode(', ', $insertResourceValues));
+        }
+        if (count($deleteStatisticsAttachment) > 0)
+        {
             $this->db->formatConditionsOneField($deleteStatisticsAttachment, 'statisticsId');
             $this->db->delete('statistics');
-    	}
-    	if (count($deleteStatisticsResource) > 0)
-    	{
+        }
+        if (count($deleteStatisticsResource) > 0)
+        {
             $this->db->formatConditionsOneField($deleteStatisticsResource, 'statisticsId');
             $this->db->delete('statistics');
-    	}
-    	
+        }
+        
         // Check we have more than 6 seconds buffer before max_execution_time times out.
         if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)))
         {
@@ -1217,79 +1235,79 @@ class UPDATEDATABASE
         }
     
     // 2. Current statistics for views
-    	$month = date('Ym');
-    	$insertResourceValues = [];
-    	$resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod']);
-    	while ($row = $this->db->fetchRow($resultSet))
-    	{
-			if (!$row['resourcemiscAccessesPeriod']) // Ensure there is a valid INSERT value here ...
-			{
-				$count = 1;
-			}
-			else 
-			{
-				$count = $row['resourcemiscAccessesPeriod'];
-			}
-    	    $insertResourceValues[] = '(' . implode(',', [$row['resourcemiscId'], $month, $count]) . ')';
-    	    
-    	    if (count($insertResourceValues) % 5000 == 0)
-    	    {
-    			$this->db->multiInsert('statistics_resource_views',
-    				['statisticsresourceviewsResourceId', 
-    					'statisticsresourceviewsMonth', 
-    					'statisticsresourceviewsCount'],
-    					implode(', ', $insertResourceValues)
-    			);
-    			$insertResourceValues = [];
-    		}
-    	}
+        $month = date('Ym');
+        $insertResourceValues = [];
+        $resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod']);
+        while ($row = $this->db->fetchRow($resultSet))
+        {
+            if (!$row['resourcemiscAccessesPeriod']) // Ensure there is a valid INSERT value here ...
+            {
+                $count = 1;
+            }
+            else 
+            {
+                $count = $row['resourcemiscAccessesPeriod'];
+            }
+            $insertResourceValues[] = '(' . implode(',', [$row['resourcemiscId'], $month, $count]) . ')';
+            
+            if (count($insertResourceValues) % 5000 == 0)
+            {
+                $this->db->multiInsert('statistics_resource_views',
+                    ['statisticsresourceviewsResourceId', 
+                        'statisticsresourceviewsMonth', 
+                        'statisticsresourceviewsCount'],
+                        implode(', ', $insertResourceValues)
+                );
+                $insertResourceValues = [];
+            }
+        }
         if (count($insertResourceValues) > 0)
         {
-    		$this->db->multiInsert('statistics_resource_views',
-    			['statisticsresourceviewsResourceId', 
-    				'statisticsresourceviewsMonth', 
-    				'statisticsresourceviewsCount'],
-    				implode(', ', $insertResourceValues)
-    		);
-    	}
+            $this->db->multiInsert('statistics_resource_views',
+                ['statisticsresourceviewsResourceId', 
+                    'statisticsresourceviewsMonth', 
+                    'statisticsresourceviewsCount'],
+                    implode(', ', $insertResourceValues)
+            );
+        }
     
     // 3. Current statistics for downloads
-    	$insertAttachmentValues = [];
-    	$resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsDownloadsPeriod']);
-    	while ($row = $this->db->fetchRow($resultSet))
-    	{
-			if (!$row['resourceattachmentsDownloadsPeriod']) // Ensure there is a valid INSERT value here ...
-			{
-				$count = 1;
-			}
-			else 
-			{
-				$count = $row['resourceattachmentsDownloadsPeriod'];
-			}
-    	    $insertAttachmentValues[] = '(' . implode(',', [$row['resourceattachmentsResourceId'], $row['resourceattachmentsId'], $month, $count]) . ')';
-    	    
-    	    if (count($insertAttachmentValues) % 5000 == 0)
-    	    {
-    		    $this->db->multiInsert('statistics_attachment_downloads',
-    				['statisticsattachmentdownloadsResourceId',
-    					'statisticsattachmentdownloadsAttachmentId', 
-    					'statisticsattachmentdownloadsMonth', 
-    					'statisticsattachmentdownloadsCount'],
-    					implode(', ', $insertAttachmentValues)
-    			);
-    			$insertAttachmentValues = [];
-    		}
-    	}
+        $insertAttachmentValues = [];
+        $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsDownloadsPeriod']);
+        while ($row = $this->db->fetchRow($resultSet))
+        {
+            if (!$row['resourceattachmentsDownloadsPeriod']) // Ensure there is a valid INSERT value here ...
+            {
+                $count = 1;
+            }
+            else 
+            {
+                $count = $row['resourceattachmentsDownloadsPeriod'];
+            }
+            $insertAttachmentValues[] = '(' . implode(',', [$row['resourceattachmentsResourceId'], $row['resourceattachmentsId'], $month, $count]) . ')';
+            
+            if (count($insertAttachmentValues) % 5000 == 0)
+            {
+                $this->db->multiInsert('statistics_attachment_downloads',
+                    ['statisticsattachmentdownloadsResourceId',
+                        'statisticsattachmentdownloadsAttachmentId', 
+                        'statisticsattachmentdownloadsMonth', 
+                        'statisticsattachmentdownloadsCount'],
+                        implode(', ', $insertAttachmentValues)
+                );
+                $insertAttachmentValues = [];
+            }
+        }
         if (count($insertAttachmentValues) > 0)
         {
-    	    $this->db->multiInsert('statistics_attachment_downloads',
-    			['statisticsattachmentdownloadsResourceId',
-    				'statisticsattachmentdownloadsAttachmentId', 
-    				'statisticsattachmentdownloadsMonth', 
-    				'statisticsattachmentdownloadsCount'],
-    				implode(', ', $insertAttachmentValues)
-    		);
-    	}
+            $this->db->multiInsert('statistics_attachment_downloads',
+                ['statisticsattachmentdownloadsResourceId',
+                    'statisticsattachmentdownloadsAttachmentId', 
+                    'statisticsattachmentdownloadsMonth', 
+                    'statisticsattachmentdownloadsCount'],
+                    implode(', ', $insertAttachmentValues)
+            );
+        }
     }
     /**
      * Copy non-official bibliographic styles (if they exist)
@@ -1925,15 +1943,15 @@ END;
             if (array_search('plugin_wordprocessor', $tables) === FALSE)
             {
                 $this->db->queryNoError("
-					CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor` (
-						`pluginwordprocessorId` int(11) NOT NULL AUTO_INCREMENT,
-						`pluginwordprocessorHashFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-						`pluginwordprocessorFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-						`pluginwordprocessorUserId` int(11) NOT NULL,
-						`pluginwordprocessorTimestamp` datetime NOT NULL,
-						PRIMARY KEY (`pluginwordprocessorId`)
-					) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-				");
+                    CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor` (
+                        `pluginwordprocessorId` int(11) NOT NULL AUTO_INCREMENT,
+                        `pluginwordprocessorHashFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+                        `pluginwordprocessorFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+                        `pluginwordprocessorUserId` int(11) NOT NULL,
+                        `pluginwordprocessorTimestamp` datetime NOT NULL,
+                        PRIMARY KEY (`pluginwordprocessorId`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+                ");
             }
             $resultset = $this->db->select('papers', ['papersId', 'papersHashFilename', 'papersUserId', 'papersFilename', 'papersTimestamp']);
             while ($row = $this->db->fetchRow($resultset))
@@ -1978,9 +1996,9 @@ END;
     private function pauseExecution($finished)
     {
         // Print form and die
-        //		$pString = "php.ini's max_execution time (" . ini_get("max_execution_time") . " seconds) was about
-        //			to be exceeded.  Please click on the button to continue the upgrade.&nbsp;&nbsp;Do <strong>not</strong> click
-        //			until each script has finished.";
+        //      $pString = "php.ini's max_execution time (" . ini_get("max_execution_time") . " seconds) was about
+        //          to be exceeded.  Please click on the button to continue the upgrade.&nbsp;&nbsp;Do <strong>not</strong> click
+        //          until each script has finished.";
         $pString = \HTML\p(\HTML\strong($this->installMessages->text("upgradeDBHeading")));
         $pString .= \HTML\p($this->statusString);
         if ($this->stageInterruptMessage)
@@ -1991,7 +2009,7 @@ END;
         {
             $pString .= \HTML\p("`$finished` of " . $this->numStages .
             " finished.  Please click on the button to continue the upgrade.&nbsp;&nbsp;Do <b>not</b> click
-			until each script has finished.");
+            until each script has finished.");
         }
         $pString .= \FORM\formHeader('continueExecution');
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Continue")) . \FORM\formEnd());
@@ -2071,13 +2089,13 @@ END;
 <!DOCTYPE html>
 <html>
 <head>
-	<title>WIKINDX Upgrade</title>
-	<meta charset="UTF-8">
-	<link rel="stylesheet" href="$styledir/template.css" type="text/css">
-	<link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
+    <title>WIKINDX Upgrade</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="$styledir/template.css" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
 </head>
 <body>
-	$pString
+    $pString
 </body>
 </html>
 END;

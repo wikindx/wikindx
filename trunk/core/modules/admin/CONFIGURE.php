@@ -1026,6 +1026,7 @@ class CONFIGURE
             }
         }
         $pString = $this->messageString . $mailMessage;
+        $pString .= \HTML\h("Builtin auth");
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         array_key_exists("configPasswordSize", $this->formData) ? $input = $this->formData["configPasswordSize"] : $input = WIKINDX_PASSWORD_SIZE_DEFAULT;
@@ -1054,6 +1055,12 @@ class CONFIGURE
         ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
+        
+        $pString .= \HTML\h("Ldap auth");
+        if (!in_array("ldap", get_loaded_extensions())) {
+            $pString .= \HTML\p($this->messages->text("hint", "ldapExtDisabled"), "bold");
+        }
+        
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         $input = array_key_exists("configLdapUse", $this->formData) && ($this->formData['configLdapUse']) ? "CHECKED" : WIKINDX_LDAP_USE_DEFAULT;
@@ -1097,17 +1104,6 @@ class CONFIGURE
         ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
-        $pString .= \HTML\trStart();
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "authGate"));
-        $input = array_key_exists("configAuthGate", $this->formData) && ($this->formData['configAuthGate']) ? "CHECKED" : WIKINDX_AUTHGATE_USE_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGate"), "configAuthGate", $input) . BR . \HTML\span($hint, 'hint'));
-        array_key_exists("configAuthGateMessage", $this->formData) ? $input = $this->formData["configAuthGateMessage"] :
-            $input = WIKINDX_AUTHGATE_MESSAGE_DEFAULT;
-        $pString .= \HTML\td(\FORM\textareaInputmceNoEditor($this->messages->text("config", "authGateMessage"), "configAuthGateMessage", $input, 80));
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGateReset"), "configAuthGateReset", WIKINDX_AUTHGATE_RESET_DEFAULT));
-        $pString .= \HTML\trEnd();
-        $pString .= \HTML\tableEnd();
 
         if ($isLdapExtAvailable) {
         // Extra field not in the database used for test purposes only
@@ -1120,6 +1116,19 @@ class CONFIGURE
         } else {
             $pString .= \HTML\p($this->messages->text("hint", "ldapExtDisabled"), 'redText');
         }
+        
+        $pString .= \HTML\h("Other options");
+        $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
+        $pString .= \HTML\trStart();
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "authGate"));
+        $input = array_key_exists("configAuthGate", $this->formData) && ($this->formData['configAuthGate']) ? "CHECKED" : WIKINDX_AUTHGATE_USE_DEFAULT;
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGate"), "configAuthGate", $input) . BR . \HTML\span($hint, 'hint'));
+        array_key_exists("configAuthGateMessage", $this->formData) ? $input = $this->formData["configAuthGateMessage"] :
+            $input = WIKINDX_AUTHGATE_MESSAGE_DEFAULT;
+        $pString .= \HTML\td(\FORM\textareaInputmceNoEditor($this->messages->text("config", "authGateMessage"), "configAuthGateMessage", $input, 80));
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "authGateReset"), "configAuthGateReset", WIKINDX_AUTHGATE_RESET_DEFAULT));
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\tableEnd();
 
         return $pString;
     }

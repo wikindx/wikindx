@@ -234,7 +234,9 @@ class IMPORTCOMMON
 				$this->db->formatConditionsOneField($data['rIds'], 'resourceId');
 				$recordset = $rCommon->getResource(FALSE, $this->db->formatFields('creatorSurname'));
 				while ($row = $this->db->fetchRow($recordset)) {
-					$resourceList[]['resource'] = $bibStyle->process($row);
+					$link = \HTML\a('link', $bibStyle->process($row), "index.php?action=resource_RESOURCEFORM_CORE" .
+                    	htmlentities("&type=edit&id=" . $row['resourceId']));
+					$resourceList[]['resource'] = $link;
 				}
 				// Templates expect list ordered from 0, so we renumber from zero
 				$rL = array_values($resourceList);

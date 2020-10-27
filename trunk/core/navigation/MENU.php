@@ -79,6 +79,8 @@ class MENU
     private $metadataExist = FALSE;
     /** boolean */
     private $ideasExist = FALSE;
+    /** boolean */
+    private $enableMetadataMenu = FALSE;
     /** int */
     private $reduceMenuLevel;
     /** string */
@@ -106,6 +108,13 @@ class MENU
             'databaseSummaryTotalQuotes', 'databaseSummaryTotalParaphrases', 'databaseSummaryTotalMusings', ]);
         if ($row['databaseSummaryTotalResources']) {
             $this->resourcesExist = TRUE;
+        }
+        if ($this->session->getVar("setup_Superadmin")) {
+        	$this->enableMetadataMenu = TRUE;
+        } elseif (WIKINDX_METADATA_USERONLY && $this->session->getVar("setup_UserId")) {
+        	$this->enableMetadataMenu = TRUE;
+        } elseif (WIKINDX_METADATA_ALLOW) {
+        	$this->enableMetadataMenu = TRUE;
         }
         // Admin may have turned off metadata subsystem. Default for $this->metadataExist is FALSE in the class constructor
         if ($this->session->getVar("setup_Superadmin")
@@ -199,7 +208,7 @@ class MENU
             array_push($this->menuSub, $searchSub);
         }
         unset($searchSub);
-        if ($this->resourcesExist && $this->metadataExist) {
+        if ($this->resourcesExist && !empty($this->text)) {
             $this->createMenuArray($this->text, 'metadata', $metadataSub);
             array_push($this->menuSub, $metadataSub);
         }
@@ -558,56 +567,76 @@ class MENU
                 unset($this->search['browseSub'][$k]);
             }
         }
-        if (!$this->metadataExist) {
-            unset($this->search[$messages->text("menu", "selectMeta")]);
-            unset($this->search[$messages->text("menu", "searchMeta")]);
-        }
-        $this->text = [
-            $messages->text("menu", "text") => 'index.php?action=noMenu&method=text',
-            'randomSub' => [
-                $messages->text("menu", "randomSub") => FALSE,
-                $messages->text("menu", "randomQuotes") => 'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomQuote',
-                $messages->text("menu", "randomParaphrases") => 'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomParaphrase',
-                $messages->text("menu", "randomMusings") => 'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomMusing',
-                $messages->text("menu", "randomIdeas") => 'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomIdea',
-            ],
-            $messages->text("menu", "addIdea") => 'index.php?action=ideas_IDEAS_CORE&method=ideaEdit',
-            $messages->text("menu", "listIdeas") => 'index.php?action=ideas_IDEAS_CORE&method=ideaList',
-            'browseKeywordSub' => [
-                $messages->text("menu", "browseKeywordSub") => FALSE,
-                $messages->text("menu", "browseKeywordAll") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=all',
-                $messages->text("menu", "browseKeywordQuotes") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=quotes',
-                $messages->text("menu", "browseKeywordParaphrases") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=paraphrases',
-                $messages->text("menu", "browseKeywordMusings") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=musings',
-                $messages->text("menu", "browseKeywordIdeas") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=ideas',
-                $messages->text("menu", "browseKeywordNotIdeas") => 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=notIdeas',
-            ],
-            'browseKeywordGroupSub' => [
-                $messages->text("menu", "browseKeywordGroupSub") => FALSE,
-                $messages->text("menu", "browseKeywordAll") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=all',
-                $messages->text("menu", "browseKeywordQuotes") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=quotes',
-                $messages->text("menu", "browseKeywordParaphrases") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=paraphrases',
-                $messages->text("menu", "browseKeywordMusings") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=musings',
-                $messages->text("menu", "browseKeywordIdeas") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=ideas',
-                $messages->text("menu", "browseKeywordNotIdeas") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=notIdeas',
-            ],
-        ];
-        if (!$this->ideasExist) {
-            unset($this->text[$messages->text("menu", "listIdeas")]);
-            unset($this->text['randomSub'][$messages->text("menu", "randomIdeas")]);
-            unset($this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordIdeas")]);
-            unset($this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordNotIdeas")]);
-        }
-        // readOnly user
-        if (!$this->write) {
-            unset($this->text['randomSub'][$messages->text("menu", "randomMusings")]);
-            unset($this->text['randomSub'][$messages->text("menu", "randomIdeas")]);
-            unset($this->text[$messages->text("menu", "addIdea")]);
-            unset($this->text[$messages->text("menu", "listIdeas")]);
-        }
-        if ($this->lastThread && $this->ideasExist) {
-            $this->text[$messages->text("menu", "lastIdea")] = 'index.php?action=ideas_IDEAS_CORE&method=threadView&resourcemetadataId=' . $this->lastThread;
-        }
+        $this->text = [];
+        if ($this->enableMetadataMenu) {
+	        $this->text[$messages->text("menu", "text")] = 'index.php?action=noMenu&method=text';
+	        $this->text[$messages->text("menu", "addIdea")] = 'index.php?action=ideas_IDEAS_CORE&method=ideaEdit';
+			if (!$this->metadataExist) {
+				unset($this->search[$messages->text("menu", "selectMeta")]);
+				unset($this->search[$messages->text("menu", "searchMeta")]);
+			}
+			else {
+				$this->text['randomSub'][$messages->text("menu", "randomSub")] = FALSE;
+				$this->text['randomSub'][$messages->text("menu", "randomQuotes")] = 
+					'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomQuote';
+				$this->text['randomSub'][$messages->text("menu", "randomParaphrases")] = 
+					'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomParaphrase';
+				$this->text['randomSub'][$messages->text("menu", "randomMusings")] = 
+					'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomMusing';
+
+				$this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordSub")] = FALSE;
+				$this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordAll")] = 
+					'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=all';
+				$this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordQuotes")] = 
+					'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=quotes';
+				$this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordParaphrases")] = 
+					'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=paraphrases';
+				$this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordMusings")] = 
+					'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=musings';
+				
+				$this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordGroupSub")] = FALSE;
+				$this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordAll")] = 
+					'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=all';
+				$this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordQuotes")] = 
+					'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=quotes';
+				$this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordParaphrases")] = 
+					'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=paraphrases';
+				$this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordMusings")] = 
+					'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=musings';
+			}
+			if ($this->ideasExist) {
+				if (!array_key_exists('randomSub', $this->text)) {
+					$this->text['randomSub'][$messages->text("menu", "randomSub")] = FALSE;
+				}
+				if (!array_key_exists('browseKeywordSub', $this->text)) {
+					$this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordSub")] = FALSE;
+				}
+				if (!array_key_exists('browseKeywordGroupSub', $this->text)) {
+					$this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordGroupSub")] = FALSE;
+				}
+				$this->text['randomSub'][$messages->text("menu", "randomIdeas")] = 'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomIdea';
+				$this->text[$messages->text("menu", "listIdeas")] = 'index.php?action=ideas_IDEAS_CORE&method=ideaList';
+				$this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordIdeas")] = 
+					 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=ideas';
+				$this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordNotIdeas")] = 
+					'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=notIdeas';
+				$this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordIdeas")] = 
+					'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=ideas';
+				$this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordNotIdeas")] = 
+					'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=notIdeas';
+			}
+       // readOnly user
+			if (!$this->write) {
+				unset($this->text['randomSub'][$messages->text("menu", "randomMusings")]);
+				unset($this->text['randomSub'][$messages->text("menu", "randomIdeas")]);
+				unset($this->text[$messages->text("menu", "addIdea")]);
+				unset($this->text[$messages->text("menu", "listIdeas")]);
+			}
+			if ($this->lastThread && $this->ideasExist) {
+				$this->text[$messages->text("menu", "lastIdea")] = 
+					'index.php?action=ideas_IDEAS_CORE&method=threadView&resourcemetadataId=' . $this->lastThread;
+			}
+		}
         if ($this->lastSolo) {
             $this->res[$messages->text("menu", "lastSolo")] = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->lastSolo;
         }

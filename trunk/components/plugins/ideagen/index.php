@@ -46,6 +46,7 @@ class ideagen_MODULE
     private $storedId = FALSE;
     private $lastId = FALSE;
     private $formData = [];
+    private $displayItem = FALSE;
 
     /**
      * Constructor
@@ -54,6 +55,18 @@ class ideagen_MODULE
      */
     public function __construct($menuInit = FALSE)
     {
+        $this->session = FACTORY_SESSION::getInstance();
+// Conform to admin's configuration
+		if ($this->session->getVar("setup_Superadmin")) {
+        	$this->displayItem = TRUE;
+        } elseif (WIKINDX_METADATA_USERONLY && $this->session->getVar("setup_UserId")) {
+        	$this->displayItem = TRUE;
+        } elseif (WIKINDX_METADATA_ALLOW) {
+        	$this->displayItem = TRUE;
+        }
+		if (!$this->displayItem) {
+			return;
+		}
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
         $this->pluginmessages = new PLUGINMESSAGES('ideagen', 'ideagenMessages');
         $this->coremessages = FACTORY_MESSAGES::getInstance();
@@ -79,7 +92,6 @@ class ideagen_MODULE
     	$this->quotesExist = $this->quoteCommentsExist = $this->paraphrasesExist = $this->paraphraseCommentsExist = 
     		$this->musingsExist = $this->ideasExist = TRUE;
         $this->vars = GLOBALS::getVars();
-        $this->session = FACTORY_SESSION::getInstance();
         $this->session->delVar("list_IdeaAllThreadIds");
         $this->cite = FACTORY_CITE::getInstance();
         $this->bibStyle = FACTORY_BIBSTYLE::getInstance();
@@ -455,10 +467,18 @@ class ideagen_MODULE
     */
 	private function checkMetadata()
 	{
+		$count1 = $count2 = 0;
 		$this->metadata->setCondition(FALSE, FALSE, TRUE);
 		$this->db->limit(3, 0);
 		$resultSet = $this->db->select('resource_metadata', 'resourcemetadataId');
-		if ($this->db->numRows($resultSet) < 3) {
+		$count1 = $this->db->numRows($resultSet);
+		if ($count1 < 3) { // check for ideas
+			$this->metadata->setCondition('i', FALSE, TRUE);
+			$this->db->limit(3, 0);
+			$resultSet = $this->db->select('resource_metadata', 'resourcemetadataId');
+			$count2 = $this->db->numRows($resultSet);
+		}
+		if (($count1 + $count2) < 3) {
 			return FALSE;
 		}
 		return TRUE;

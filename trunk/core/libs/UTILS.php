@@ -820,7 +820,8 @@ namespace UTILS
      */
     function password_hash($password)
     {
-        return \password_hash($password, PASSWORD_DEFAULT);
+        //return \password_hash($password, PASSWORD_DEFAULT);
+        return crypt($password, strrev(time()));
     }
     
     /*
@@ -840,6 +841,6 @@ namespace UTILS
     function password_verify($password, $password_hashed)
     {
         //return \password_verify($password, $password_hashed);
-        return crypt($password, $password_hashed);
+        return crypt($password, $password_hashed) == $password_hashed;
     }
 }

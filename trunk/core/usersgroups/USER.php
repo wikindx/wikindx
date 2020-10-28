@@ -1074,26 +1074,30 @@ class USER
         }
         
         // NB: according to PHP doc an empty password performs an anonymous binding,
-        // but we do it explicitly.
+        // but we do it explicitly, and reject an emptu password for an explicit proxy or user auth
         $ldapbind = FALSE;
         switch (WIKINDX_LDAP_SERVER_BIND_TYPE)
         {
         	case "proxy":
-				$ldapbind_login  = WIKINDX_LDAP_SERVER_BIND_LOGIN;
-				$ldapbind_login .= WIKINDX_LDAP_SERVER_BIND_DOMAIN == "" ? "" : "@" . WIKINDX_LDAP_SERVER_BIND_DOMAIN;
-				$ldapbind_pwd = "";
+				$ldapbind_pwd = WIKINDX_LDAP_SERVER_BIND_PASSWORD;
+        	    if ($ldapbind_pwd == "") {
+        	        return FALSE;
+        	    }
+        	    
+				$ldapbind_login = $this->formatLdapLogin(WIKINDX_LDAP_SERVER_BIND_LOGIN);
 				$ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
         	break;
         	case "user":
-				$ldapbind_login  = $usersUsername;
-				$ldapbind_login .= $pwdInput;
-				$ldapbind_pwd = "";
+				$ldapbind_pwd = $pwdInput;
+        	    if ($ldapbind_pwd == "") {
+        	        return FALSE;
+        	    }
+        	    
+				$ldapbind_login = $this->formatLdapLogin($usersUsername);
 				$ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
         	break;
         	case "anonymous":
 			default:
-				$ldapbind_login = "";
-				$ldapbind_pwd = "";
 				$ldapbind = ldap_bind($ds);
         	break;
         }
@@ -1147,5 +1151,22 @@ class USER
         $this->environment($row, $usersUsername);
 
         return TRUE; // this is our ultimate goal
+    }
+    
+    private function formatLdapLogin($login)
+    {
+        assert(in_array(WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT, ["sam", "upn"]));
+        
+    	if (WIKINDX_LDAP_SERVER_BIND_DOMAIN == "") {
+    	    $login_formated = $login; // No format needed
+    	} else if (WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT == "upn") {
+    	    $login_formated = $login . "@" . WIKINDX_LDAP_SERVER_BIND_DOMAIN; // user@domain.example.com
+    	} else if (WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT == "sam") {
+    	    $login_formated = WIKINDX_LDAP_SERVER_BIND_DOMAIN . "\\" . $login; // DOMAIN\user
+    	} else {
+    	    $login_formated = $login; // No format provided (error)
+    	}
+    	
+    	return $login_formated;
     }
 }

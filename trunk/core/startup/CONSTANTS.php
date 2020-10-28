@@ -336,6 +336,7 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configLdapServer"               => ["constname" => "WIKINDX_LDAP_SERVER",                "type" => "configVarchar"],
     "configLdapServerEncryption"     => ["constname" => "WIKINDX_LDAP_SERVER_ENCRYPTION",     "type" => "configVarchar"],
     "configLdapServerBindDomain"     => ["constname" => "WIKINDX_LDAP_SERVER_BIND_DOMAIN",    "type" => "configVarchar"],
+    "configLdapServerBindDomainFormat"=> ["constname" => "WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT","type" => "configVarchar"],
     "configLdapServerBindType"       => ["constname" => "WIKINDX_LDAP_SERVER_BIND_TYPE",      "type" => "configVarchar"],
     "configLdapServerBindLogin"      => ["constname" => "WIKINDX_LDAP_SERVER_BIND_LOGIN",     "type" => "configVarchar"],
     "configLdapServerBindPassword"   => ["constname" => "WIKINDX_LDAP_SERVER_BIND_PASSWORD",  "type" => "configVarchar"],

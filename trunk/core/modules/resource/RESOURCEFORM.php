@@ -1227,8 +1227,14 @@ class RESOURCEFORM
                 35
             ));
         $tdContent .= \HTML\trEnd() . \HTML\tableEnd();
-        $div = \HTML\td(\HTML\h($tdLabel, FALSE, 4) .
-            \HTML\span($this->messages->text("hint", "capitals"), 'hint'), $this->tdLabelWidth)
+        $div = \HTML\td(\HTML\h($tdLabel, FALSE, 4) .\HTML\span(\HTML\aBrowse(
+            'green',
+            '',
+            $this->messages->text("hint", "hint"),
+            '#',
+            "",
+            $this->messages->text("hint", "capitals")
+        ), 'hint'), $this->tdLabelWidth) 
             . \HTML\td($tdContent, $this->tdContentWidth);
 
         return \HTML\div('typeOuter', \HTML\tableStart('generalTable borderStyleSolid') . \HTML\trStart() .
@@ -2087,8 +2093,14 @@ class RESOURCEFORM
      */
     private function otherCell()
     {
-        $pString = \HTML\td(\HTML\h($this->messages->text('resources', 'commonDetails'), FALSE, 4) .
-            \HTML\span($this->messages->text("hint", "keywordsUserTags"), 'hint'), $this->tdLabelWidth);
+        $pString = \HTML\td(\HTML\h($this->messages->text('resources', 'commonDetails'), FALSE, 4) . \HTML\span(\HTML\aBrowse(
+            'green',
+            '',
+            $this->messages->text("hint", "hint"),
+            '#',
+            "",
+            $this->messages->text("hint", "keywordsUserTags")
+        ), 'hint'), $this->tdLabelWidth);
         $tdContent1 = \HTML\tableStart() . \HTML\trStart();
         $text = array_key_exists('resourcetextAbstract', $this->formData) ?
             \HTML\dbToFormTidy($this->formData['resourcetextAbstract']) : FALSE;

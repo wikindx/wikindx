@@ -1060,13 +1060,48 @@ class USER
 
             return FALSE;
         }
-        if (@ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, WIKINDX_LDAP_PROTOCOL_VERSION) === FALSE) {
+        
+        // Set the protocol version
+        // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_protocol_version_in_ldap_get_init.html
+        assert(in_array(WIKINDX_LDAP_PROTOCOL_VERSION, [2, 3]));
+        if (ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, WIKINDX_LDAP_PROTOCOL_VERSION) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSetOption"));
 
             return FALSE;
         }
         
-        // Start TLS over a plain connection
+        // Don't follow referrals
+        // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_referrals_in_ldap_get_init.html
+        if (ldap_set_option($ds, LDAP_OPT_REFERRALS, 0) === FALSE) {
+            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSetOption"));
+
+            return FALSE;
+        }
+        
+        // Set a network timeout
+        if (ldap_set_option($ds, LDAP_OPT_NETWORK_TIMEOUT, 1) === FALSE) {
+            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSetOption"));
+
+            return FALSE;
+        }
+        
+        // Set a response timeout in seconds
+        // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_timelimit_in_ldap_get_init.html
+        if (ldap_set_option($ds, LDAP_OPT_TIMELIMIT, 1) === FALSE) {
+            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSetOption"));
+
+            return FALSE;
+        }
+        
+        // Don't verify the certificate in TLS mode
+        putenv('LDAPTLS_REQCERT=never');
+        if (ldap_set_option($ds, LDAP_OPT_X_TLS_REQUIRE_CERT, 0) === FALSE) {
+            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSetOption"));
+
+            return FALSE;
+        }
+        
+        // Start TLS over a non encrypted connection
         if (WIKINDX_LDAP_SERVER_ENCRYPTION == "startls") {
 	        if (ldap_start_tls($ds) === FALSE) {
 	        	return FALSE;
@@ -1074,7 +1109,7 @@ class USER
         }
         
         // NB: according to PHP doc an empty password performs an anonymous binding,
-        // but we do it explicitly, and reject an emptu password for an explicit proxy or user auth
+        // but we do it explicitly, and reject empty passwords for an explicit proxy or binding user.
         $ldapbind = FALSE;
         switch (WIKINDX_LDAP_SERVER_BIND_TYPE)
         {

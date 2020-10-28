@@ -1055,7 +1055,7 @@ class USER
 				$ldap_server_uri = "ldaps://" . WIKINDX_LDAP_SERVER;
         	break;
         }
-        if (($ds = @ldap_connect($ldap_server_uri, WIKINDX_LDAP_PORT)) === FALSE) {
+        if (($ds = ldap_connect($ldap_server_uri, WIKINDX_LDAP_PORT)) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapConnect"));
 
             return FALSE;
@@ -1142,12 +1142,12 @@ class USER
             return FALSE;
         }
         
-        if (($sr = @ldap_search($ds, WIKINDX_LDAP_DN, '(&(| (objectClass=user)(objectClass=person))(| (uid=' . $usersUsername . ')(cn=' . $usersUsername . ')))', ["cn", "dn", "sn", "mail", "displayName", "givenName"])) === FALSE) {
+        if (($sr = ldap_search($ds, WIKINDX_LDAP_DN, '(&(| (objectClass=user)(objectClass=person))(| (uid=' . $usersUsername . ')(cn=' . $usersUsername . ')))', ["cn", "dn", "sn", "mail", "displayName", "givenName"])) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSearch"));
 
             return FALSE;
         }
-        if (($info = @ldap_get_entries($ds, $sr)) === FALSE) {
+        if (($info = ldap_get_entries($ds, $sr)) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapGetEntries"));
 
             return FALSE;
@@ -1158,7 +1158,7 @@ class USER
             $ldaprdn = $info[0]['dn'];
         }
         // Check the connection with the user credentials
-        if (($ldapbind = @ldap_bind($ds, $ldaprdn, $pwdInput)) === FALSE) {
+        if (($ldapbind = ldap_bind($ds, $ldaprdn, $pwdInput)) === FALSE) {
             return FALSE;
         }
         

@@ -7,6 +7,7 @@ or multi-user collaborative use across the internet.</p>
 <ul>
 	<li>Mark Grimshaw-Aagaard: [CREATOR/PROGRAMMER] (UK/New Zealand/Denmark)</li>
     <li>Stéphane Aulery: [SENIOR PROGRAMMER] (France)</li>
+    <li>Dimitri Joukoff: [PROGRAMMER] (Australia)</li>
 
 	<li>Programming contributors:
     	<ul>
@@ -21,6 +22,7 @@ or multi-user collaborative use across the internet.</p>
     		<li>Mathis Bicker: (University of Bonn, Germany)</li>
     		<li>Allen Wilkinson: (NASA Glen Research Center, USA)</li>
     		<li>Phil Abel: (NASA Glen Research Center, USA)</li>
+    		<li>Elie Akl: (University Saint-Joseph of Beirut, Lebanon)</li>
     	</ul>
 	</li>
 	

@@ -25,7 +25,7 @@
     	<li><a href="index.php?page=features">Features</a></li>
     	<li><a href="index.php?page=extensions">Extensions</a></li>
     	<li><a href="index.php?page=faq">FAQ</a></li>
-    	<li><a href="index.php?page=wamp">WAMP</a></li>
+    	<li><a href="index.php?page=install">Install</a></li>
     	<li><a href="index.php?page=screenshots">Screenshots</a></li>
     	<li><a href="https://testdrive.wikindx.com/" target="_blank">Test-Drive</a></li>
     	<li><a href="index.php?page=users">Users</a></li>

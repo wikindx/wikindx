@@ -1,10 +1,10 @@
-<p>WIKINDX requires a web server environment comprising an httpd server (typically apache), PHP scripting, and a MySQL or MariaDB server. Most web-hosting providers can provide this configuration. Placing WIKINDX on such a remote web server means that it can be accessed from any machine and/or by multiple people. WIKINDX can also be installed locally for a single user on one desktop or laptop computer. There are a variety of packages that can be downloaded to create the required web server environment including <a href="http://www.wampserver.com/en/" target="_blank">WAMP</a> for Windows and <a href="http://www.apachefriends.org/en/xampp.html" target="_blank">XAMPP</a> for Windows/Linux/MacOS (further instructions on downloading and configuring XAMPP for MacOS are at the bottom of the page).</p>
+<p>WIKINDX requires a web server environment comprising a web server (typically apache), PHP scripting, and a MySQL or MariaDB server. Most web-hosting providers can provide this configuration. Placing WIKINDX on such a remote web server means that it can be accessed from any machine and/or by multiple people. WIKINDX can also be installed locally for a single user on one desktop or laptop computer. There are a variety of packages that can be downloaded to create the required web server environment including <a href="http://www.wampserver.com/en/" target="_blank">WAMP</a> for Windows and <a href="http://www.apachefriends.org/en/xampp.html" target="_blank">XAMPP</a> for Windows/Linux/MacOS (further instructions on downloading and configuring XAMPP for MacOS are at the bottom of the page).</p>
 
-<h3>In all cases, the following steps need to be taken once the web server environment is up an running.</h3>
+<h3>In all cases, the following steps need to be taken once the web server environment is up and running.</h3>
  
-<p>The details may be slightly different depending on the version of phpMyAdmin that is available or whether running WIKINDX on a hosted web environment or locally but the principles are the same.</p>
+<p>The details may be slightly different (especially steps 4/ to 7/) depending on the version of phpMyAdmin that is available or whether running WIKINDX on a hosted web environment or locally but the principles are the same.</p>
 
-<p>1/ If you haven't already, unzip wikindx into the web server environment folder (typically 'www/' or 'httpd/') where it will create the folder 'wikindx6/' – and copy config.php.dist to config.php.</p>
+<p>1/ If you haven't already, unzip wikindx into the web server environment folder (typically 'www/' or 'httpd/') where it will create the folder 'wikindx6/' – and copy config.php.dist to config.php. Depending on your Operating System, you might be prompted at stage 8/ below to change the permissions of various folders and files.</p>
 <p>2/ By default, wikindx6/config.php has the following:</p>
 <p>// name of the database which these scripts interface with: <br>
   $WIKINDX_DB = &quot;wikindx6&quot;; <br>
@@ -14,7 +14,7 @@
 <p>Assuming you won't change these, we'll use these values in phpMyAdmin. NB, the password and username are for accessing the database and not for using WIKINDX. When you first launch WIKINDX (see below), you will be asked to enter a username/password which may or may not be the same as the set above. </p>
 <p>3/ If running WIKINDX locally, ensure the web server environment (e.g. WAMP or XAMPP) is running both apache and MySQL.</p>
 <p>4/ Launch PhpMyAdmin in a web browser. There might be a link to this in your web server control panel or, if running locally, try 'http://localhost/phpmyadmin/' in the web browser address bar.</p>
-<p>5/ In the 'Databases' tab of PhpMyAdmin, type in 'wikindx6' as the name of a new database, set 'utf8mb4_unicode_520_ci' as the collation, and click create.</p>
+<p>5/ In the 'Databases' tab of PhpMyAdmin, type in 'wikindx6' as the name of a new database, set 'utf8mb4_unicode_520_ci' as the collation, and click 'Create'.</p>
 <p>6/ Go back to the 'Databases' tab, click on 'Check privileges' for the new database, and select 'Add user account'.</p>
 <p>7/ In the field 'User name', type in 'wikindx' and type 'wikindx' into the two password fields. If running WIKINDX locally, select 'local' for host. Check the checkbox for 'Grant all privileges on database wikindx6' then click on the 'Go' button. </p>
 <p>8/ Type in the WIKINDX address in the web browser – if running locally, this will be http://localhost/wikindx6/ – to complete your WIKINDX configuration.</p>
@@ -66,7 +66,7 @@
 	&lt;string&gt;/Applications/XAMPP/xamppfiles/sbin/mysqld&lt;/string&gt;
 	&lt;key&gt;ProgramArguments&lt;/key&gt;
 	&lt;array&gt;
-		&lt;string&gt;/Applications/XAMPP/xamppfiles/bin/mysqld&lt;/string&gt;
+		&lt;string&gt;/Applications/XAMPP/xamppfiles/sbin/mysqld&lt;/string&gt;
 		&lt;string&gt;--user=_mysql&lt;/string&gt;
 	&lt;/array&gt;
 	&lt;key&gt;QueueDirectories&lt;/key&gt;

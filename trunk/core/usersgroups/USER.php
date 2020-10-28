@@ -1153,6 +1153,15 @@ class USER
         return TRUE; // this is our ultimate goal
     }
     
+    /**
+     * Format a login for ldap with the domain configured
+     *
+     * Use it only for the binding user.
+     *
+     * @param string $login
+     *
+     * @return string
+     */
     private function formatLdapLogin($login)
     {
         assert(in_array(WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT, ["sam", "upn"]));

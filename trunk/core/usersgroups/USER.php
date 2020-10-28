@@ -1038,7 +1038,24 @@ class USER
         if (!in_array("ldap", get_loaded_extensions())) {
             return FALSE;
         }
-        if (($ds = @ldap_connect(WIKINDX_LDAP_SERVER, WIKINDX_LDAP_PORT)) === FALSE) {
+        
+        // NB: according to PHP doc an empty password performs an anonymous binding,
+        // but we do it explicitly.
+        $ldap_server_uri = "";
+        switch (WIKINDX_LDAP_SERVER_ENCRYPTION)
+        {
+        	case "plain":
+				$ldap_server_uri = "ldap://" . WIKINDX_LDAP_SERVER;
+        	break;
+        	case "startls":
+				$ldap_server_uri = "ldap://" . WIKINDX_LDAP_SERVER;
+        	break;
+        	case "ssl":
+			default:
+				$ldap_server_uri = "ldaps://" . WIKINDX_LDAP_SERVER;
+        	break;
+        }
+        if (($ds = @ldap_connect($ldap_server_uri, WIKINDX_LDAP_PORT)) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapConnect"));
 
             return FALSE;
@@ -1048,11 +1065,44 @@ class USER
 
             return FALSE;
         }
-        if (($ldapbind = @ldap_bind($ds)) === FALSE) {
+        
+        // Start TLS over a plain connection
+        if (WIKINDX_LDAP_SERVER_ENCRYPTION == "startls") {
+	        if (ldap_start_tls($ds) === FALSE) {
+	        	return FALSE;
+	        }
+        }
+        
+        // NB: according to PHP doc an empty password performs an anonymous binding,
+        // but we do it explicitly.
+        $ldapbind = FALSE;
+        switch (WIKINDX_LDAP_SERVER_BIND_TYPE)
+        {
+        	case "proxy":
+				$ldapbind_login  = WIKINDX_LDAP_SERVER_BIND_LOGIN;
+				$ldapbind_login .= WIKINDX_LDAP_SERVER_BIND_DOMAIN == "" ? "" : "@" . WIKINDX_LDAP_SERVER_BIND_DOMAIN;
+				$ldapbind_pwd = "";
+				$ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
+        	break;
+        	case "user":
+				$ldapbind_login  = $usersUsername;
+				$ldapbind_login .= $pwdInput;
+				$ldapbind_pwd = "";
+				$ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
+        	break;
+        	case "anonymous":
+			default:
+				$ldapbind_login = "";
+				$ldapbind_pwd = "";
+				$ldapbind = ldap_bind($ds);
+        	break;
+        }
+        if ($ldapbind === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapBind"));
 
             return FALSE;
         }
+        
         if (($sr = @ldap_search($ds, WIKINDX_LDAP_DN, '(&(| (objectClass=user)(objectClass=person))(| (uid=' . $usersUsername . ')(cn=' . $usersUsername . ')))', ["cn", "dn", "sn", "mail", "displayName", "givenName"])) === FALSE) {
             $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSearch"));
 

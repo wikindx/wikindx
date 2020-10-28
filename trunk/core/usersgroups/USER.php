@@ -1044,7 +1044,7 @@ class USER
         $ldap_server_uri = "";
         switch (WIKINDX_LDAP_SERVER_ENCRYPTION)
         {
-        	case "plain":
+        	case "no":
 				$ldap_server_uri = "ldap://" . WIKINDX_LDAP_SERVER;
         	break;
         	case "startls":

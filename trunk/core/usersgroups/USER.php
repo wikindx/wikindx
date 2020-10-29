@@ -219,6 +219,110 @@ class USER
 
         return FALSE; // success!
     }
+    
+    /**
+     * Write ldap user details to WKX_users
+     *
+     * We don't store the LDAP password just 'LDAP' to indicate a LDAP user
+     *
+     * @param string $usersUsername Username
+     * @param array $ldapUserEntry User ldap info get from checkPasswordLdap()
+     */
+    private function writeLdapUser($usersUsername, $ldapUserEntry)
+    {
+    	// The characters case described by the standard in not reliable
+    	// Go for a lowercase everywhere
+    	// cf. https://docs.bmc.com/docs/fpsc121/ldap-attributes-and-associated-fields-495323340.html
+    	$ldapUserEntry = array_change_key_case($ldapUserEntry, CASE_LOWER);
+    	
+        // Login
+        $field[] = 'usersUsername';
+        $value[] = $usersUsername;
+        $updateArray['usersUsername'] = $usersUsername;
+        
+        // Fake password
+        $field[] = 'usersPassword';
+        $value[] = 'LDAP';
+        $updateArray['usersPassword'] = 'LDAP';
+        
+        // Mail (the first non empty)
+        $field[] = 'usersEmail';
+        $usersEmail = "";
+        if (array_key_exists('mail', $ldapUserEntry)) {
+            for ($k = 0; $k < $ldapUserEntry["count"]; $k++) {
+                $usersEmail = $ldapUserEntry["mail"][$k];
+                if ($usersEmail != "") {
+                    break;
+                }
+            }
+        }
+        $value[] = $usersEmail;
+        $updateArray['usersEmail'] = $usersEmail;
+        
+        // Search the real Display Name
+        $field[] = 'usersFullname';
+        $usersFullname = "";
+        if (array_key_exists('displayname', $ldapUserEntry)) {
+            // displayName = Display Name
+            for ($k = 0; $k < $ldapUserEntry["count"]; $k++) {
+                $usersFullname = $ldapUserEntry["displayname"][$k];
+                if ($usersFullname != "") {
+                    break;
+                }
+            }
+        }
+        // Or built the Display Name from givenName + sn
+        if ($usersFullname == "" & array_key_exists('givenname', $ldapUserEntry)) {
+            // givenName = First Name
+            for ($k = 0; $k < $ldapUserEntry["count"]; $k++) {
+                $usersFullname = $ldapUserEntry["givenname"][$k];
+                if ($ldapUserEntry["givenname"][$k] != "") {
+                    break;
+                }
+            }
+            // sn = Last Name
+            for ($k = 0; $k < $ldapUserEntry["count"]; $k++) {
+                $usersFullname .= $ldapUserEntry["sn"][$k];
+                if ($ldapUserEntry["sn"][$k] != "") {
+                    break;
+                }
+            }
+        }
+        // Or use the Common Name as a Display Name
+        if ($usersFullname == "" & array_key_exists('cn', $ldapUserEntry)) {
+            // cn = Common Name
+            for ($k = 0; $k < $ldapUserEntry["count"]; $k++) {
+                $usersFullname = $ldapUserEntry["cn"][$k];
+                if ($usersFullname != "") {
+                    break;
+                }
+            }
+        }
+        // Or use the user login as a Display Name
+        if ($usersFullname == "") {
+            $usersFullname = $usersUsername;
+        }
+        $value[] = $usersFullname;
+        $updateArray['usersFullname'] = $usersFullname;
+        
+        // Retrieve user data
+        $this->db->formatConditions(['usersUsername' => $usersUsername]);
+        $recordset = $this->db->select('users', ['usersId']);
+        
+        // Write user data
+        if ($this->db->numRows($recordset) == 1) {
+            // Update the user table
+            $row = $this->db->fetchRow($recordset);
+            $this->db->formatConditions(['usersId' => $row['usersId']]);
+            $this->db->update('users', $updateArray);
+        } else {
+            // Insert into the user table
+            $this->db->insert('users', $field, $value);
+            $userId = $this->db->lastAutoId();
+            $this->writePreferences($userId, TRUE);
+        }
+    }
+    
     /**
      * Compare encrypted passwords.
      *
@@ -231,117 +335,346 @@ class USER
      */
     public function checkPassword($usersUsername, $pwdInput)
     {
+        $ldapUserEntry = [];
+            
+        // Abort if the user is blocked
+        if ($this->checkBlocked($usersUsername)) {
+            return FALSE;
+        }
+        // Abort if the user is not the superadmin in single mode
+        if ($this->checkDisallowedInSingleMode($usersUsername)) {
+            return FALSE;
+        }
+        // Auth with LDAP
         if (WIKINDX_LDAP_USE && in_array("ldap", get_loaded_extensions())) {
-            if ($this->ldapCheckPassword($usersUsername, $pwdInput)) {
-                return TRUE;
-            } else {
-                return $this->wikindxCheckPassword($usersUsername, $pwdInput, TRUE);
+            // Don't catch traces in regular auth
+            if (!$this->checkPasswordLdap($usersUsername, $pwdInput, $ldapUserEntry)) {
+                // When LDAP fails, fallback on bluitin ONLY for the superadmin
+                if (!$this->checkPasswordBuiltin($usersUsername, $pwdInput, TRUE)) {
+                    return FALSE;
+                }
             }
-        } else {
-            return $this->wikindxCheckPassword($usersUsername, $pwdInput);
+        } elseif (!$this->checkPasswordBuiltin($usersUsername, $pwdInput)) {
+            return FALSE;
         }
+        
+        // At this point the user is authenticated
+        
+        // Sync the user from ldap data
+        if (count($ldapUserEntry) > 0) {
+            $this->writeLDAPUser($usersUsername, $ldapUserEntry);
+        }
+        
+        // Retrieve user data
+        $this->db->formatConditions(['usersUsername' => $usersUsername]);
+        $recordset = $this->db->select('users', ['usersId', 'usersAdmin', 'usersCookie']);
+        $row = $this->db->fetchRow($recordset);
+        
+        // And now set up his environment
+        $this->environment($row, $usersUsername);
+        
+        // Success
+        return TRUE;
     }
+    
     /**
-     * Write ldap user details to WKX_users
+     * Compare encrypted passwords on WIKINDX
      *
-     * We don't store the LDAP password just 'LDAP' to indicate a LDAP user
+     * Return FALSE for password not found or password doesn't match.
+     * Superadmin is always id = 1
      *
-     * @param array $info ldap info
-     * @param string $usersUsername Username
+     * @param string $usersUsername
+     * @param string $pwdInput
+     * @param bool $bSuperAdmin If TRUE, restrict verification to superadmin account
      *
-     * @return int
+     * @return bool
      */
-    public function writeLdapUser($info, $usersUsername)
+    private function checkPasswordBuiltin($usersUsername, $pwdInput, $bSuperAdmin = FALSE)
     {
-    	// The characters case described by the standard in not reliable
-    	// Go for a lowercase everywhere
-    	// cf. https://docs.bmc.com/docs/fpsc121/ldap-attributes-and-associated-fields-495323340.html
-    	$info = array_change_key_case($info, CASE_LOWER);
-    	
-        // Login
-        $field[] = 'usersUsername';
-        $value[] = $usersUsername;
+        $this->db->formatConditions(['usersUsername' => $usersUsername], '=');
+        if ($bSuperAdmin) $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID], '=');
+        $recordset = $this->db->select('users', ['usersId', 'usersPassword']);
         
-        // Fake password
-        $field[] = 'usersPassword';
-        $value[] = 'LDAP';
+        if ($this->db->numRows($recordset) == 1) {
+            $row = $this->db->fetchRow($recordset);
+            return \UTILS\password_verify($pwdInput, $row['usersPassword']);
+        }
         
-        // Mail (the first non empty)
-        $field[] = 'usersEmail';
-        $usersEmail = "";
-        if (array_key_exists('mail', $info)) {
-            for ($k = 0; $k < $info["count"]; $k++) {
-                $usersEmail = $info["mail"][$k];
-                if ($usersEmail != "") {
-                    break;
-                }
-            }
-        }
-        $value[] = $usersEmail;
-        
-        // Search the real Display Name
-        $field[] = 'usersFullname';
-        $usersFullname = "";
-        if (array_key_exists('displayname', $info)) {
-            // displayName = Display Name
-            for ($k = 0; $k < $info["count"]; $k++) {
-                $usersFullname = $info["displayname"][$k];
-                if ($usersFullname != "") {
-                    break;
-                }
-            }
-        }
-        // Or built the Display Name from givenName + sn
-        if ($usersFullname == "" & array_key_exists('givenname', $info)) {
-            // givenName = First Name
-            for ($k = 0; $k < $info["count"]; $k++) {
-                $usersFullname = $info["givenname"][$k];
-                if ($info["givenname"][$k] != "") {
-                    break;
-                }
-            }
-            // sn = Last Name
-            for ($k = 0; $k < $info["count"]; $k++) {
-                $usersFullname .= $info["sn"][$k];
-                if ($info["sn"][$k] != "") {
-                    break;
-                }
-            }
-        }
-        // Or use the Common Name as a Display Name
-        if ($usersFullname == "" & array_key_exists('cn', $info)) {
-            // cn = Common Name
-            for ($k = 0; $k < $info["count"]; $k++) {
-                $usersFullname = $info["cn"][$k];
-                if ($usersFullname != "") {
-                    break;
-                }
-            }
-        }
-        // Or use the user login as a Display Name
-        if ($usersFullname == "") {
-            $usersFullname = $usersUsername;
-        }
-        $value[] = $usersFullname;
-        
-        // insert preferences to table
-        $this->db->insert('users', $field, $value);
-        $userId = $this->db->lastAutoId();
-        $this->writePreferences($userId, TRUE);
-
-        return $userId; // success!
+        return FALSE;
     }
+    
+    /**
+     * Compare encrypted passwords on LDAP
+     *
+     * Return FALSE for password not found or password doesn't match.
+     * If LDAP user does not exist in WIKINDX, write user details to WIKINDX
+     * Superadmin is always id = 1
+     *
+     * LDAP functions adapted from work by Fabrice Boyrie
+     *
+     * @param string $usersUsername
+     * @param string $pwdInput
+     * @param array $ldapUserEntry User ldap info
+     * @param string $trace
+     *
+     * @return bool
+     */
+    public function checkPasswordLdap($usersUsername, $pwdInput, &$ldapUserEntry = [], &$trace = "")
+    {
+        $auth = FALSE; // Reject unless the password match and all goes well
+        $fail = FALSE; // Allow to skip operations if a step has failed
+        
+        // Interception of the traces of the library
+        $trace = "";
+        ob_start();
+        
+        // WARNING ----------------------------------------------
+        // The empty password is never allowed because the ldap_bind() function allows unconditional access in this case.
+        // See parameter bind_password of ldap_bind()
+        // cf. https://www.php.net/manual/en/function.ldap-bind.php
+        // cf. https://tools.ietf.org/html/rfc2251#section-4.2.2
+        if ($pwdInput == "") {
+            $fail = TRUE;
+            $trace .= "Empty password!" . LF;
+        }
+        
+        // The ldap extension is not available
+        if (!$fail && !in_array("ldap", get_loaded_extensions())) {
+            $fail = TRUE;
+            $trace .= $this->messages->text("hint", "ldapExtDisabled") . LF;
+        }
+        
+        // Turn on debugging (7 = max level)
+        $trace .= "LDAP_OPT_DEBUG_LEVEL=7" . LF;
+        if (!$fail && ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7) === FALSE) {
+            $fail = TRUE;
+            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
+        }
+        
+        // Choice the encryption mode and connect
+        $ds = FALSE;
+        if (!$fail) {
+            $trace .= "SERVER_ENCRYPTION=" . WIKINDX_LDAP_SERVER_ENCRYPTION . LF;
+            $ldap_server_uri = "";
+            switch (WIKINDX_LDAP_SERVER_ENCRYPTION)
+            {
+            	case "no":
+                    // Start a non encrypted connection
+                    // Insecure
+    				$ldap_server_uri = "ldap://" . WIKINDX_LDAP_SERVER;
+            	break;
+            	case "startls":
+                    // Start a non encrypted connection and upgrades the connection later with TLS encryption ldap_start_tls()
+                    // Less secure than SSL
+    				$ldap_server_uri = "ldap://" . WIKINDX_LDAP_SERVER;
+            	break;
+            	case "ssl":
+    			default:
+    			    // SSL encryption from the start
+    			    // Most secure
+    				$ldap_server_uri = "ldaps://" . WIKINDX_LDAP_SERVER;
+            	break;
+            }
+            // NB: according to PHP doc an empty password performs an anonymous binding, but we do it explicitly.
+            $trace .= "SERVER_URI=" . $ldap_server_uri . LF;
+            $trace .= "SERVER_PORT=" . WIKINDX_LDAP_PORT . LF;
+            $ds = ldap_connect($ldap_server_uri, WIKINDX_LDAP_PORT);
+            if ($ds === FALSE) {
+                $fail = TRUE;
+                $trace .= $this->errors->text("inputError", "ldapConnect") . LF;
+            }
+        }
+        
+        // Set the protocol version
+        // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_protocol_version_in_ldap_get_init.html
+        $trace .= "LDAP_OPT_PROTOCOL_VERSION=" . WIKINDX_LDAP_PROTOCOL_VERSION . LF;
+        if (!$fail && ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, WIKINDX_LDAP_PROTOCOL_VERSION) === FALSE) {
+            $fail = TRUE;
+            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
+        }
+        
+        // Don't follow referrals
+        // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_referrals_in_ldap_get_init.html
+        $trace .= "LDAP_OPT_REFERRALS=" . 0 . LF;
+        if (!$fail && ldap_set_option($ds, LDAP_OPT_REFERRALS, 0) === FALSE) {
+            $fail = TRUE;
+            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
+        }
+        
+        // Set a network timeout
+        $trace .= "LDAP_OPT_NETWORK_TIMEOUT=" . 1 . LF;
+        if (!$fail && ldap_set_option($ds, LDAP_OPT_NETWORK_TIMEOUT, 1) === FALSE) {
+            $fail = TRUE;
+            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
+        }
+        
+        // Set a response timeout in seconds
+        // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_timelimit_in_ldap_get_init.html
+        $trace .= "LDAP_OPT_TIMELIMIT=" . 1 . LF;
+        if (!$fail && ldap_set_option($ds, LDAP_OPT_TIMELIMIT, 1) === FALSE) {
+            $fail = TRUE;
+            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
+        }
+        
+        // Don't verify the certificate in TLS mode (and SSL?)
+        if (!$fail) {
+            $trace .= "LDAPTLS_REQCERT=never" . LF;
+            putenv('LDAPTLS_REQCERT=never');
+        }
+        $trace .= "LDAP_OPT_X_TLS_REQUIRE_CERT=" . 0 . LF;
+        if (!$fail && ldap_set_option($ds, LDAP_OPT_X_TLS_REQUIRE_CERT, 0) === FALSE) {
+            $fail = TRUE;
+            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
+        }
+        
+        // Start TLS over a non encrypted connection
+        if (!$fail && WIKINDX_LDAP_SERVER_ENCRYPTION == "startls") {
+            $trace .= "Starting TLS";
+	        if (ldap_start_tls($ds) === FALSE) {
+                $fail = TRUE;
+                $trace .= " failed" . LF;
+	        } else {
+	            $trace .= " succeed" . LF;
+	        }
+        }
+        
+        // Bind to the server
+        // NB: according to PHP doc an empty password performs an anonymous binding,
+        // but we do it explicitly, and reject empty passwords for an explicit proxy or binding user.
+        $ldapbind = FALSE;
+        if (!$fail) {
+            $trace .= "SERVER_BIND_TYPE=" . WIKINDX_LDAP_SERVER_BIND_TYPE . LF;
+            switch (WIKINDX_LDAP_SERVER_BIND_TYPE)
+            {
+            	case "proxy":
+    				$ldapbind_pwd = WIKINDX_LDAP_SERVER_BIND_PASSWORD;
+            	    if ($ldapbind_pwd == "") {
+                        $fail = TRUE;
+                        $trace .= "Empty binding password!" . LF;
+            	    }
+            	    
+    				$ldapbind_login = $this->formatLdapLogin(WIKINDX_LDAP_SERVER_BIND_LOGIN);
+    				$trace .= "LOGIN=" . $ldapbind_login . LF;
+    				$ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
+            	break;
+            	case "user":
+    				$ldapbind_pwd = $pwdInput;
+            	    if ($ldapbind_pwd == "") {
+                        $fail = TRUE;
+                        $trace .= "Empty binding password!" . LF;
+            	    }
+            	    
+    				$ldapbind_login = $this->formatLdapLogin($usersUsername);
+    				$trace .= "LOGIN=" . $ldapbind_login . LF;
+    				$ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
+            	break;
+            	case "anonymous":
+    			default:
+    			    $ldapbind_login = "";
+    			    $ldapbind_pwd = "";
+    				$ldapbind = ldap_bind($ds);
+            	break;
+            }
+            $trace .= "SERVER_BIND_USER=" . $ldapbind_login . LF;
+            if ($ldapbind === FALSE) {
+                $fail = TRUE;
+                $trace .= $this->errors->text("inputError", "ldapBind") . LF;
+            }
+        }
+        
+        // Search the user with his login in the whole tree under an Organizational Unit (OU) or a Domain Controller (DC)
+        // Return a query id
+        $sr = FALSE;
+        if (!$fail) {
+            $trace .= "DN=" . WIKINDX_LDAP_DN . LF;
+            //$trace .= "USER_FILTER=" . WIKINDX_LDAP_DN . LF;
+            $sr = ldap_search($ds, WIKINDX_LDAP_DN, '(&(| (objectClass=user)(objectClass=person))(| (uid=' . $usersUsername . ')(cn=' . $usersUsername . ')))', ["cn", "dn", "sn", "mail", "displayName", "givenName"]);
+            if ($sr === FALSE) {
+                $fail = TRUE;
+                $trace .= $this->errors->text("inputError", "ldapSearch") . LF;
+            }
+        }
+        
+        // Retrieve user data from the previous search
+        $entries = FALSE;
+        if (!$fail) {
+            $entries = ldap_get_entries($ds, $sr);
+            if ($entries === FALSE) {
+                $fail = TRUE;
+                $trace .= $this->errors->text("inputError", "ldapGetEntries") . LF;
+            } else {
+                $trace .= "USERS=" . print_r($entries, TRUE) . LF;
+            }
+        }
+        
+        // One or more user found
+        if (!$fail && $entries['count'] >= 1) {
+            // Check the connection with the exact user credentials (DN = Distinguished Names) of the first user only
+            $trace .= "VERIFY_USER_PASSWORD=" . $entries[0]['dn'] . LF;
+            $auth = ldap_bind($ds, $entries[0]['dn'], $pwdInput);
+            if ($auth) {
+                $ldapUserEntry = $entries[0];
+            }
+            $trace .= "AUTH=" . $auth ? "OK" : "NOK" . LF;
+        }
+        
+        // Disconnect
+        if ($ds !== FALSE) {
+            ldap_unbind($ds);
+        }
+        
+        // Add the debug trace of the library
+        $trace .= LF;
+        $trace .= trim(ob_get_clean());
+        
+        return ($auth === TRUE) && ($fail === FALSE);
+    }
+    
+    /**
+     * Check if the user has been blocked by an admin
+     *
+     * @param string $login
+     *
+     * @return bool
+     */
+    private function checkBlocked($login)
+    {
+        // Return one row if the user is blocked and not the superadmin
+        $this->db->formatConditions(['usersUsername' => $login], "=");
+        $this->db->formatConditions(['usersBlock' => 'Y'], "=");
+        $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID], "!=");
+        $recordset = $this->db->select('users', ['usersId']);
+        return ($this->db->numRows($recordset) == 1);
+    }
+    
+    /**
+     * Check if the user is disallowed to auth in single mode
+     *
+     * Only the superadmin can be logged in if the multiuser mode is not enable.
+     *
+     * @param string $login
+     *
+     * @return bool
+     */
+    private function checkDisallowedInSingleMode($login)
+    {
+        $this->db->formatConditions(['usersUsername' => $usersUsername], '=');
+        $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID], '=');
+        $recordset = $this->db->select('users', ['usersId']);
+        return (!WIKINDX_MULTIUSER) && ($this->db->numRows($recordset) != 1);
+    }
+    
     /**
      * set up user environment on first logon
      *
-     * @param array $row
+     * @param array $row A user record
      * @param string $usersUsername Default is FALSE
      */
     public function environment($row, $usersUsername = FALSE)
     {
         // First delete any pre-existing session
         $this->session->clearSessionData();
-        if ($row['usersAdmin']) 
+        if (array_key_exists('usersAdmin', $row) && $row['usersAdmin'])
         {
             $this->session->setVar("setup_Superadmin", TRUE);
         }
@@ -948,244 +1281,6 @@ class USER
         }
 
         return TRUE;
-    }
-    /**
-     * Compare encrypted passwords on WIKINDX
-     *
-     * Return FALSE for password not found or password doesn't match.
-     * Superadmin is always id = 1
-     *
-     * @param string $usersUsername
-     * @param string $pwdInput
-     * @param bool $bSuperAdmin If TRUE, restrict verification to superadmin account
-     *
-     * @return bool
-     */
-    private function wikindxCheckPassword($usersUsername, $pwdInput, $bSuperAdmin = FALSE)
-    {
-        $fields = $this->db->prependTableToField('users', ["Id", "Password", "Admin", "Cookie", "Block"]);
-        
-        $cond = ['usersUsername' => $usersUsername];
-        if ($bSuperAdmin) $cond["usersId"] = WIKINDX_SUPERADMIN_ID;
-        
-        $this->db->formatConditions($cond);
-        $recordset = $this->db->select('users', $fields);
-        
-        // One and only one user
-        if ($this->db->numRows($recordset) != 1) {
-            return FALSE;
-        }
-        
-        $row = $this->db->fetchRow($recordset);
-        
-        // only the superadmin may log on when multi user is not enabled
-        if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID)) {
-            return FALSE;
-        }
-        if (!\UTILS\password_verify($pwdInput, $row['usersPassword'])) {
-            return FALSE;
-        }
-        // Logged in, check user is not blocked
-        if (!$this->checkBlock($row)) {
-            return FALSE;
-        }
-        // Logged in, now set up environment
-        $this->environment($row, $usersUsername);
-
-        return TRUE;
-    }
-    /**
-     * Check if user has been blocked by the admin
-     *
-     * @param array $row
-     *
-     * @return bool
-     */
-    private function checkBlock($row)
-    {
-        if ($row['usersBlock'] == 'Y') {
-            $this->session->setVar("misc_ErrorMessage", $this->errors->text("warning", "blocked"));
-
-            return FALSE;
-        }
-
-        return TRUE;
-    }
-    /**
-     * Compare encrypted passwords on LDAP
-     *
-     * Return FALSE for password not found or password doesn't match.
-     * If LDAP user does not exist in WIKINDX, write user details to WIKINDX
-     * Superadmin is always id = 1
-     *
-     * LDAP functions adapted from work by Fabrice Boyrie
-     *
-     * @param string $usersUsername
-     * @param string $pwdInput
-     *
-     * @return bool
-     */
-    private function ldapCheckPassword($usersUsername, $pwdInput)
-    {
-        // WARNING ----------------------------------------------
-        // The empty password is never allowed because the ldap_bind() function allows unconditional access in this case.
-        // See parameter bind_password of ldap_bind()
-        // cf. https://www.php.net/manual/en/function.ldap-bind.php
-        // cf. https://tools.ietf.org/html/rfc2251#section-4.2.2 
-        if ($pwdInput == "") {
-            return FALSE;
-        }
-        if (!in_array("ldap", get_loaded_extensions())) {
-            return FALSE;
-        }
-        
-        // NB: according to PHP doc an empty password performs an anonymous binding,
-        // but we do it explicitly.
-        $ldap_server_uri = "";
-        switch (WIKINDX_LDAP_SERVER_ENCRYPTION)
-        {
-        	case "no":
-				$ldap_server_uri = "ldap://" . WIKINDX_LDAP_SERVER;
-        	break;
-        	case "startls":
-				$ldap_server_uri = "ldap://" . WIKINDX_LDAP_SERVER;
-        	break;
-        	case "ssl":
-			default:
-				$ldap_server_uri = "ldaps://" . WIKINDX_LDAP_SERVER;
-        	break;
-        }
-        if (($ds = ldap_connect($ldap_server_uri, WIKINDX_LDAP_PORT)) === FALSE) {
-            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapConnect"));
-
-            return FALSE;
-        }
-        
-        // Set the protocol version
-        // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_protocol_version_in_ldap_get_init.html
-        assert(in_array(WIKINDX_LDAP_PROTOCOL_VERSION, [2, 3]));
-        if (ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, WIKINDX_LDAP_PROTOCOL_VERSION) === FALSE) {
-            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSetOption"));
-
-            return FALSE;
-        }
-        
-        // Don't follow referrals
-        // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_referrals_in_ldap_get_init.html
-        if (ldap_set_option($ds, LDAP_OPT_REFERRALS, 0) === FALSE) {
-            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSetOption"));
-
-            return FALSE;
-        }
-        
-        // Set a network timeout
-        if (ldap_set_option($ds, LDAP_OPT_NETWORK_TIMEOUT, 1) === FALSE) {
-            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSetOption"));
-
-            return FALSE;
-        }
-        
-        // Set a response timeout in seconds
-        // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_timelimit_in_ldap_get_init.html
-        if (ldap_set_option($ds, LDAP_OPT_TIMELIMIT, 1) === FALSE) {
-            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSetOption"));
-
-            return FALSE;
-        }
-        
-        // Don't verify the certificate in TLS mode
-        putenv('LDAPTLS_REQCERT=never');
-        if (ldap_set_option($ds, LDAP_OPT_X_TLS_REQUIRE_CERT, 0) === FALSE) {
-            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSetOption"));
-
-            return FALSE;
-        }
-        
-        // Start TLS over a non encrypted connection
-        if (WIKINDX_LDAP_SERVER_ENCRYPTION == "startls") {
-	        if (ldap_start_tls($ds) === FALSE) {
-	        	return FALSE;
-	        }
-        }
-        
-        // NB: according to PHP doc an empty password performs an anonymous binding,
-        // but we do it explicitly, and reject empty passwords for an explicit proxy or binding user.
-        $ldapbind = FALSE;
-        switch (WIKINDX_LDAP_SERVER_BIND_TYPE)
-        {
-        	case "proxy":
-				$ldapbind_pwd = WIKINDX_LDAP_SERVER_BIND_PASSWORD;
-        	    if ($ldapbind_pwd == "") {
-        	        return FALSE;
-        	    }
-        	    
-				$ldapbind_login = $this->formatLdapLogin(WIKINDX_LDAP_SERVER_BIND_LOGIN);
-				$ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
-        	break;
-        	case "user":
-				$ldapbind_pwd = $pwdInput;
-        	    if ($ldapbind_pwd == "") {
-        	        return FALSE;
-        	    }
-        	    
-				$ldapbind_login = $this->formatLdapLogin($usersUsername);
-				$ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
-        	break;
-        	case "anonymous":
-			default:
-				$ldapbind = ldap_bind($ds);
-        	break;
-        }
-        if ($ldapbind === FALSE) {
-            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapBind"));
-
-            return FALSE;
-        }
-        
-        if (($sr = ldap_search($ds, WIKINDX_LDAP_DN, '(&(| (objectClass=user)(objectClass=person))(| (uid=' . $usersUsername . ')(cn=' . $usersUsername . ')))', ["cn", "dn", "sn", "mail", "displayName", "givenName"])) === FALSE) {
-            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapSearch"));
-
-            return FALSE;
-        }
-        if (($info = ldap_get_entries($ds, $sr)) === FALSE) {
-            $this->session->setVar("misc_ErrorMessage", $this->errors->text("inputError", "ldapGetEntries"));
-
-            return FALSE;
-        }
-        if ($info['count'] == 0) {
-            return FALSE;
-        } else {
-            $ldaprdn = $info[0]['dn'];
-        }
-        // Check the connection with the user credentials
-        if (($ldapbind = ldap_bind($ds, $ldaprdn, $pwdInput)) === FALSE) {
-            return FALSE;
-        }
-        
-        // The user is authenticated
-        $fields = $this->db->prependTableToField('users', ["Id", "Password", "Admin", "Cookie", "Block"]);
-        $this->db->formatConditions(['usersUsername' => $usersUsername]);
-        $this->db->formatConditions(['usersPassword' => 'LDAP']);
-        $recordset = $this->db->select('users', $fields);
-        if (!$this->db->numRows($recordset)) {
-            // Create the missing user
-            $userId = $this->writeLDAPUser($info[0], $usersUsername);
-            $this->db->formatConditions(['usersId' => $userId]);
-            $recordset = $this->db->select('users', $fields);
-        }
-        $row = $this->db->fetchRow($recordset);
-        // only the superadmin may log on when multi user is not enabled
-        if (!WIKINDX_MULTIUSER && ($row['usersId'] != WIKINDX_SUPERADMIN_ID)) {
-            return FALSE;
-        }
-        // Logged in, check user is not blocked
-        if (!$this->checkBlock($row)) {
-            return FALSE;
-        }
-        // Logged in, now set up environment
-        $this->environment($row, $usersUsername);
-
-        return TRUE; // this is our ultimate goal
     }
     
     /**

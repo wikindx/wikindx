@@ -1297,68 +1297,20 @@ class CONFIGURE
         return $pString;
     }
     /**
-     * Test the ldap configuration
+     * Test the ldap configuration and extract some traces
      *
      * @return bool
      */
     private function testLdap()
     {
-        if (!in_array("ldap", get_loaded_extensions())) {
-            return FALSE;
-        }
-        if (($ds = @ldap_connect(WIKINDX_LDAP_SERVER, WIKINDX_LDAP_PORT)) === FALSE) {
-            if (ldap_errno($ds)) {
-                $error = \HTML\p(ldap_err2str(ldap_errno($ds)));
-                $this->session->setVar("ldapTransactionLog", $error);
-                $this->session->setVar("ldapTransactionLogStatus", "failure");
-
-                return FALSE;
-            }
-        }
-        @ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, WIKINDX_LDAP_PROTOCOL_VERSION);
-        if (($ldapbind = @ldap_bind($ds)) === FALSE) {
-            if (ldap_errno($ds)) {
-                $error = \HTML\p(ldap_err2str(ldap_errno($ds)));
-                ldap_get_option($ds, 0x32, $err);
-                $error .= \HTML\p($err);
-                $this->session->setVar("ldapTransactionLog", $error);
-                $this->session->setVar("ldapTransactionLogStatus", "failure");
-
-                return FALSE;
-            }
-        }
-        $sr = @ldap_search($ds, WIKINDX_LDAP_DN, '(uid=' . $this->vars['configLdapTestUser'] . ')');
-        $info = @ldap_get_entries($ds, $sr);
-        if ($info['count'] > 1) {
-            if (ldap_errno($ds)) {
-                $error = \HTML\p(ldap_err2str(ldap_errno($ds)));
-                ldap_get_option($ds, 0x32, $err);
-                $error .= \HTML\p($err);
-                $this->session->setVar("ldapTransactionLog", $error);
-                $this->session->setVar("ldapTransactionLogStatus", "failure");
-
-                return FALSE;
-            }
-        }
-        if ($info['count'] == 1) {
-            $ldaprdn = $info[0]['dn'];
-        } else {
-            $ldaprdn = "cn=" . $this->vars['configLdapTestUser'] . "," . WIKINDX_LDAP_DN;
-        }
-        // Connexion au serveur LDAP
-        $ldapbind = @ldap_bind($ds, $ldaprdn, $this->vars['configLdapTestPassword']);
-        if (ldap_errno($ds)) {
-            $error = \HTML\p(ldap_err2str(ldap_errno($ds)));
-            ldap_get_option($ds, 0x32, $err);
-            $error .= \HTML\p($err);
-            $this->session->setVar("ldapTransactionLog", $error);
-            $this->session->setVar("ldapTransactionLogStatus", "failure");
-
-            return FALSE;
-        } else { // success
-            $this->session->setVar("ldapTransactionLog", $this->messages->text('config', 'ldapTestSuccess'));
-            $this->session->setVar("ldapTransactionLogStatus", "success");
-        }
+        $ldapUserEntry = [];
+        $log = "";
+        
+        $user = FACTORY_USER::getInstance();
+        $status = $user->checkPasswordLdap($this->vars['configLdapTestUser'], $this->vars['configLdapTestPassword'], $ldapUserEntry, $ldapTransactionLog);
+        
+        $this->session->setVar("ldapTransactionLog", $log);
+        $this->session->setVar("ldapTransactionLogStatus", $status ? "success" : "failure");
     }
     /**
      * Display file/attachment config options

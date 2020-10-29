@@ -284,8 +284,7 @@ class CONFIGURE
         $content .= \FORM\formHeader("admin_CONFIGURE_CORE");
         
         $content .= \FORM\hidden("method", "mailTransactionReport");
-        
-        $content .= \HTML\p($this->messages->text("hint", "mailTest"));
+
         array_key_exists("configMailTest", $this->vars) ? $input = $this->vars["configMailTest"] : $input = FALSE;
         
         $content .= \HTML\p(
@@ -1066,7 +1065,8 @@ class CONFIGURE
         $input = array_key_exists("configLdapUse", $this->formData) && ($this->formData['configLdapUse']) ? "CHECKED" : WIKINDX_LDAP_USE_DEFAULT;
         $pString .= \HTML\td(
             \FORM\checkbox($this->messages->text("config", "ldapUse"), "configLdapUse", $input)
-            .  BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapUse")))
+            .  BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapUse")),
+            	'hint')
         );
         array_key_exists("configLdapProtocolVersion", $this->formData) ? $input = $this->formData["configLdapProtocolVersion"] :
             $input = WIKINDX_LDAP_PROTOCOL_VERSION_DEFAULT;
@@ -1291,7 +1291,7 @@ class CONFIGURE
         $pString .= \HTML\p(
             \FORM\textInput($this->messages->text("config", "mailTest"), "configMailTest", $input, 30, 255)
             . "&nbsp;" . \FORM\formSubmitButton($this->messages->text("submit", "Test"), "emailtest", $jScript)
-            . BR . $hint
+            . BR . \HTML\span($hint, 'hint')
         );
 
         return $pString;

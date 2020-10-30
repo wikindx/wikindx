@@ -454,30 +454,21 @@ class USER
         // Choice the encryption mode and connect
         $ds = FALSE;
         if (!$fail) {
+            $ldap_server_uri = \UTILS\array_value_select([
+            	// Start a non encrypted connection (insecure)
+            	"no" => "ldap://" . WIKINDX_LDAP_SERVER,
+            	// Start a non encrypted connection and upgrades the connection later with TLS  (less secure than SSL)
+            	"startls" => "ldap://" . WIKINDX_LDAP_SERVER,
+            	// SSL encryption from the start (most secure)
+            	"ssl" => "ldaps://" . WIKINDX_LDAP_SERVER], 
+            	WIKINDX_LDAP_SERVER_ENCRYPTION,
+            	WIKINDX_LDAP_SERVER_ENCRYPTION_DEFAULT
+            );
+            
             $trace .= "SERVER_ENCRYPTION=" . WIKINDX_LDAP_SERVER_ENCRYPTION . LF;
-            $ldap_server_uri = "";
-            switch (WIKINDX_LDAP_SERVER_ENCRYPTION)
-            {
-            	case "no":
-                    // Start a non encrypted connection
-                    // Insecure
-    				$ldap_server_uri = "ldap://" . WIKINDX_LDAP_SERVER;
-            	break;
-            	case "startls":
-                    // Start a non encrypted connection and upgrades the connection later with TLS encryption ldap_start_tls()
-                    // Less secure than SSL
-    				$ldap_server_uri = "ldap://" . WIKINDX_LDAP_SERVER;
-            	break;
-            	case "ssl":
-    			default:
-    			    // SSL encryption from the start
-    			    // Most secure
-    				$ldap_server_uri = "ldaps://" . WIKINDX_LDAP_SERVER;
-            	break;
-            }
-            // NB: according to PHP doc an empty password performs an anonymous binding, but we do it explicitly.
             $trace .= "SERVER_URI=" . $ldap_server_uri . LF;
             $trace .= "SERVER_PORT=" . WIKINDX_LDAP_PORT . LF;
+            
             $ds = ldap_connect($ldap_server_uri, WIKINDX_LDAP_PORT);
             if ($ds === FALSE) {
                 $fail = TRUE;
@@ -591,7 +582,7 @@ class USER
             $ldap_search_func = \UTILS\array_value_select(
             	["tree" => "ldap_search", "list" => "ldap_list"],
             	WIKINDX_LDAP_SEARCH_TYPE,
-            	WIKINDX_LDAP_SERVER_SEARCH_TYPE
+            	WIKINDX_LDAP_SEARCH_TYPE_DEFAULT
             );
             $trace .= "LDAP_SEARCH_FUNCTION=" . $ldap_search_func . LF;
             

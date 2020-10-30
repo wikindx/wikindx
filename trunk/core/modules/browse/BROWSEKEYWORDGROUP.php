@@ -63,7 +63,7 @@ class BROWSEKEYWORDGROUP
         }
         else {
 	        $this->getKeywordGroups();
-			if (empty($this->keywordGroup)) {
+			if (empty($this->keywordGroup) || empty($this->sum)) {
 				GLOBALS::addTplVar('content', $this->messages->text("misc", "noKeywordGroups"));
 
 				return;
@@ -262,8 +262,8 @@ class BROWSEKEYWORDGROUP
     {
 // In each keyword group, if there are two keywords that appear in a single resource, the count of each resource is potentially doubled. 
 // This must be checked for.
-		$this->db->formatConditions($this->db->formatFields('resourcekeywordResourceId') . ' IS NOT NULL');
         $this->common->userBibCondition('resourcekeywordResourceId');
+		$this->db->formatConditions($this->db->formatFields('resourcekeywordResourceId') . ' IS NOT NULL');
         $this->db->formatConditions(['resourcekeywordKeywordId' => $row['userkgkeywordsKeywordId']]);
         $recordset = $this->db->select('resource_keyword', ['resourcekeywordResourceId']);
         while ($row2 = $this->db->fetchRow($recordset)) {
@@ -295,7 +295,7 @@ class BROWSEKEYWORDGROUP
      */
     private function process()
     {
-        $lowestSum = current($this->sum);
+		$lowestSum = current($this->sum);
         $highestSum = end($this->sum);
         foreach ($this->keywordGroup as $id => $name) {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);

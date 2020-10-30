@@ -53,12 +53,16 @@ class RESOURCECATEGORYEDIT
         $this->keywords = $this->keyword->grabAll();
         $this->userTagsObject = FACTORY_USERTAGS::getInstance();
         $this->userTags = $this->userTagsObject->grabAll();
-    	$return = \HTML\a(
-			$this->icons->getClass("edit"),
-			$this->icons->getHTML("Return"),
-			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id']
-		);
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "resourceEdit") . '&nbsp;&nbsp;' . $return);
+        if (array_key_exists('id', $this->vars)) {
+			$return = '&nbsp;&nbsp;' . \HTML\a(
+				$this->icons->getClass("edit"),
+				$this->icons->getHTML("Return"),
+				'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id']
+			);
+		} else {
+			$return = FALSE;
+		}
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "resourceEdit") . $return);
     }
     /**
      * Display form for editing

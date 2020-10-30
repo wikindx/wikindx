@@ -587,8 +587,17 @@ class USER
         $sr = FALSE;
         if (!$fail) {
             $trace .= "DN=" . WIKINDX_LDAP_DN . LF;
+            
+            $ldap_search_func = \UTILS\array_value_select(
+            	["tree" => "ldap_search", "list" => "ldap_list"],
+            	WIKINDX_LDAP_SEARCH_TYPE,
+            	WIKINDX_LDAP_SERVER_SEARCH_TYPE
+            );
+            $trace .= "LDAP_SEARCH_FUNCTION=" . $ldap_search_func . LF;
+            
             //$trace .= "USER_FILTER=" . WIKINDX_LDAP_DN . LF;
-            $sr = ldap_search($ds, WIKINDX_LDAP_DN, '(&(| (objectClass=user)(objectClass=person))(| (uid=' . $usersUsername . ')(cn=' . $usersUsername . ')))', ["cn", "dn", "sn", "mail", "displayName", "givenName"]);
+            
+            $sr = $ldap_search_func($ds, WIKINDX_LDAP_DN, '(&(| (objectClass=user)(objectClass=person))(| (uid=' . $usersUsername . ')(cn=' . $usersUsername . ')))', ["cn", "dn", "sn", "mail", "displayName", "givenName"]);
             if ($sr === FALSE) {
                 $fail = TRUE;
                 $trace .= $this->errors->text("inputError", "ldapSearch") . LF;

@@ -844,4 +844,30 @@ namespace UTILS
         //return \password_verify($password, $password_hashed);
         return crypt($password, $password_hashed) == $password_hashed;
     }
+    
+    /*
+     * Return the corresponding value of an array key or a default value
+     *
+     * This function is an access to the value of an array with fallback solutions in the event of absence.
+     *
+     * This function is useful when it is necessary to select a value from a list and one of the inputs
+     * is also the default key or it is mandatory to obtain a consistent value at the output of the selection
+     * without having to write additional code.
+     *
+     * @param array $array An array to search the key for
+     * @param mixed $key The key whose value must be returned
+     * @param mixed $defaultKey The default key whose value must be returned if the key was not found (NULL by default)
+     * @param mixed $defaultValue The value returned if no key was found (NULL by default)
+     *
+     * @return mixed
+     */
+    function array_value_select($array, $key, $defaultKey = NULL, $defaultValue = NULL)
+    {
+    	if (array_key_exists($key, $array))
+    		return $array[$key];
+    	elseif (array_key_exists($defaultKey, $array))
+    		return $array[$defaultKey];
+    	else
+    		return $defaultValue;
+    }
 }

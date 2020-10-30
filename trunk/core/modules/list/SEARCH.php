@@ -2334,9 +2334,6 @@ class SEARCH
         if ($this->db->fetchOne($this->db->select('resource_year', 'resourceyearYear1'))) {
             $fields['publicationYear'] = $this->messages->text("search", "publicationYear");
         }
-        if ($userBib) {
-            $this->commonBib->userBibCondition('resourcemiscId');
-        }
 // Temporarily remove searching on resource views as the resultant SQL is complicated by the need to do a SUM().
 /*        $this->db->formatConditions(['statisticsresourceviewsCount' => 'IS NOT NULL']);
         $this->db->limit(1, 0); // Keep memory usage down for large databases

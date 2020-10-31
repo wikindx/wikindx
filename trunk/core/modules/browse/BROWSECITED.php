@@ -44,7 +44,7 @@ class BROWSECITED
     {
         $this->sum = $this->surname = $this->prefix = $this->citedResourceIds = $this->citeIds = $this->citeList = [];
         $this->getCitations();
-        if (empty($this->citedResourceIds)) {
+        if (empty($this->citedResourceIds) || empty($this->sum)) {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noCitations"));
 
             return;

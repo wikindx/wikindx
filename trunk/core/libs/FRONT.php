@@ -68,7 +68,6 @@ class FRONT
         $this->db->formatConditions(['configName' => 'configDescription_' . \LOCALES\determine_locale()]);
         $input = $this->db->fetchOne($this->db->select('config', 'configText'));
         
-        $pString = WIKINDX_DESCRIPTION;
         $pString = $input ? $input : WIKINDX_DESCRIPTION;
         $pString = \HTML\nlToHtml($pString);
 

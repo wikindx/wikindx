@@ -1038,7 +1038,7 @@ class MESSAGES
 				"noResourcesBib" => dgettext($domain, "There are no resources in that user bibliography"),
 				"noCategories" => dgettext($domain, "There are no categories in the database"),
 				"noSubcategories" => dgettext($domain, "There are no subcategories in the database"),
-				"noBibliographies" => dgettext($domain, "There are no user bibliographies in the database"),
+				"noBibliographies" => dgettext($domain, "There are no populated user bibliographies in the database"),
 				"noLanguages" => dgettext($domain, "There are no languages in the database"),
 				"noUsertags" => dgettext($domain, "There are no resources with user tags in the database"),
 				"noImages" => dgettext($domain, "There are no images available"),

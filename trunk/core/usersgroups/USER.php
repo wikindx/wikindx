@@ -344,17 +344,24 @@ class USER
         
         // At this point the user is authenticated
         
-        // Sync the user from ldap data
-        if (count($ldapUserEntry) > 0) {
+        // Create the user from ldap data
+        if (WIKINDX_LDAP_USER_CREATE && count($ldapUserEntry) > 0) {
             $this->writeLDAPUser($usersUsername, $ldapUserEntry);
         }
         
         // Retrieve user data
         $this->db->formatConditions(['usersUsername' => $usersUsername]);
         $recordset = $this->db->select('users', ['usersId', 'usersAdmin', 'usersCookie']);
-        $row = $this->db->fetchRow($recordset);
+        
+        // BUT if the auth was not builtin and the user is not create by this method,
+        // or failed to create it, then the auth can STILL be rejected
+        if ($this->db->numRows($recordset) == 0)
+        {
+            return FALSE;
+        }
         
         // And now set up his environment
+        $row = $this->db->fetchRow($recordset);
         $this->environment($row, $usersUsername);
         
         // Success

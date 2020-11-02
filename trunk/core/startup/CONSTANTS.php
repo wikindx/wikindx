@@ -341,6 +341,7 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configLdapServerBindPassword"    => ["constname" => "WIKINDX_LDAP_SERVER_BIND_PASSWORD",     "type" => "configVarchar"],
     "configLdapServerBindType"        => ["constname" => "WIKINDX_LDAP_SERVER_BIND_TYPE",         "type" => "configVarchar"],
     "configLdapServerEncryption"      => ["constname" => "WIKINDX_LDAP_SERVER_ENCRYPTION",        "type" => "configVarchar"],
+    "configLdapUserCreate"            => ["constname" => "WIKINDX_LDAP_USER_CREATE",              "type" => "configBoolean"],
     "configLdapUserFilter"            => ["constname" => "WIKINDX_LDAP_USER_FILTER",              "type" => "configVarchar"],
     "configLdapUserAttributFullname"  => ["constname" => "WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME",  "type" => "configVarchar"],
     "configLdapUserAttributEmail"     => ["constname" => "WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL",     "type" => "configVarchar"],

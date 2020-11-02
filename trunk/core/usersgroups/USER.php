@@ -248,55 +248,37 @@ class USER
         // Mail (the first non empty)
         $field[] = 'usersEmail';
         $usersEmail = "";
-        if (array_key_exists('mail', $ldapUserEntry)) {
-            for ($k = 0; $k < $ldapUserEntry["count"]; $k++) {
-                $usersEmail = $ldapUserEntry["mail"][$k];
-                if ($usersEmail != "") {
-                    break;
-                }
-            }
+        if (WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL != "") {
+        	$field_search = mb_strtolower(WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL);
+        	
+	        if (array_key_exists($field_search, $ldapUserEntry)) {
+	            for ($k = 0; $k < $ldapUserEntry["count"]; $k++) {
+	                $usersEmail = $ldapUserEntry[$field_search][$k];
+	                if ($usersEmail != "") {
+	                    break;
+	                }
+	            }
+	        }
         }
         $value[] = $usersEmail;
         $updateArray['usersEmail'] = $usersEmail;
         
+        // Fullname (the first non empty)
         // Search the real Display Name
         $field[] = 'usersFullname';
         $usersFullname = "";
-        if (array_key_exists('displayname', $ldapUserEntry)) {
-            // displayName = Display Name
-            for ($k = 0; $k < $ldapUserEntry["count"]; $k++) {
-                $usersFullname = $ldapUserEntry["displayname"][$k];
-                if ($usersFullname != "") {
-                    break;
-                }
-            }
-        }
-        // Or built the Display Name from givenName + sn
-        if ($usersFullname == "" & array_key_exists('givenname', $ldapUserEntry)) {
-            // givenName = First Name
-            for ($k = 0; $k < $ldapUserEntry["count"]; $k++) {
-                $usersFullname = $ldapUserEntry["givenname"][$k];
-                if ($ldapUserEntry["givenname"][$k] != "") {
-                    break;
-                }
-            }
-            // sn = Last Name
-            for ($k = 0; $k < $ldapUserEntry["count"]; $k++) {
-                $usersFullname .= $ldapUserEntry["sn"][$k];
-                if ($ldapUserEntry["sn"][$k] != "") {
-                    break;
-                }
-            }
-        }
-        // Or use the Common Name as a Display Name
-        if ($usersFullname == "" & array_key_exists('cn', $ldapUserEntry)) {
-            // cn = Common Name
-            for ($k = 0; $k < $ldapUserEntry["count"]; $k++) {
-                $usersFullname = $ldapUserEntry["cn"][$k];
-                if ($usersFullname != "") {
-                    break;
-                }
-            }
+        if (WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME != "") {
+        	$field_search = mb_strtolower(WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME);
+	        
+	        if (array_key_exists($field_search, $ldapUserEntry)) {
+	            // displayName = Display Name
+	            for ($k = 0; $k < $ldapUserEntry["count"]; $k++) {
+	                $usersFullname = $ldapUserEntry[$field_search][$k];
+	                if ($usersFullname != "") {
+	                    break;
+	                }
+	            }
+	        }
         }
         // Or use the user login as a Display Name
         if ($usersFullname == "") {
@@ -314,6 +296,8 @@ class USER
             // Update the user table
             $row = $this->db->fetchRow($recordset);
             $this->db->formatConditions(['usersId' => $row['usersId']]);
+            // Prevents superadmin password from being overwritten in the event of a bug
+            $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID], "!=");
             $this->db->update('users', $updateArray);
         } else {
             // Insert into the user table
@@ -589,7 +573,16 @@ class USER
             $user_filter = str_replace("%u", $usersUsername, WIKINDX_LDAP_USER_FILTER);
             $trace .= "USER_FILTER=" . $user_filter . LF;
             
-            $sr = $ldap_search_func($ds, WIKINDX_LDAP_DN, $user_filter, ["cn", "dn", "sn", "mail", "displayName", "givenName"]);
+            $user_fields = ["dn"];
+            if (WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME != "") {
+            	$user_fields[] = WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME;
+            }
+            if (WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL != "") {
+            	$user_fields[] = WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL;
+            }
+            $trace .= "USER_FIELDS=" . implode(", ", $user_fields) . LF;
+            
+            $sr = $ldap_search_func($ds, WIKINDX_LDAP_DN, $user_filter, $user_fields);
             if ($sr === FALSE) {
                 $fail = TRUE;
                 $trace .= $this->errors->text("inputError", "ldapSearch") . LF;

@@ -99,8 +99,6 @@ define('WIKINDX_PASSWORD_STRENGTH_DEFAULT', 'strong');
 
 
 // LDAP Auth
-define('WIKINDX_LDAP_GROUP_DN_DEFAULT', '');
-define('WIKINDX_LDAP_GROUP_FILTER_DEFAULT', '(&(objectClass=group)(sAMAccountName=*))');
 define('WIKINDX_LDAP_PORT_DEFAULT', 636);
 define('WIKINDX_LDAP_SEARCH_TYPE_DEFAULT', 'tree');
 define('WIKINDX_LDAP_SERVER_BIND_DOMAIN_DEFAULT', '');

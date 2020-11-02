@@ -330,8 +330,6 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configLastChanges"               => ["constname" => "WIKINDX_LAST_CHANGES",                  "type" => "configInt"],
     "configLastChangesDayLimit"       => ["constname" => "WIKINDX_LAST_CHANGES_DAY_LIMIT",        "type" => "configInt"],
     "configLastChangesType"           => ["constname" => "WIKINDX_LAST_CHANGES_TYPE",             "type" => "configVarchar"],
-    "configLdapGroupDn"               => ["constname" => "WIKINDX_LDAP_GROUP_DN",                 "type" => "configVarchar"],
-    "configLdapGroupFilter"           => ["constname" => "WIKINDX_LDAP_GROUP_FILTER",             "type" => "configVarchar"],
     "configLdapPort"                  => ["constname" => "WIKINDX_LDAP_PORT",                     "type" => "configInt"],
     "configLdapSearchType"            => ["constname" => "WIKINDX_LDAP_SEARCH_TYPE",              "type" => "configVarchar"],
     "configLdapServer"                => ["constname" => "WIKINDX_LDAP_SERVER",                   "type" => "configVarchar"],

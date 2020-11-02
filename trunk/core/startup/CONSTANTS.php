@@ -333,6 +333,8 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configLdapPort"                  => ["constname" => "WIKINDX_LDAP_PORT",                     "type" => "configInt"],
     "configLdapSearchType"            => ["constname" => "WIKINDX_LDAP_SEARCH_TYPE",              "type" => "configVarchar"],
     "configLdapServer"                => ["constname" => "WIKINDX_LDAP_SERVER",                   "type" => "configVarchar"],
+    "configLdapServerNetworkTimeout"  => ["constname" => "WIKINDX_LDAP_SERVER_NETWORK_TIMEOUT",   "type" => "configInt"],
+    "configLdapServerResponseTimeout" => ["constname" => "WIKINDX_LDAP_SERVER_RESPONSE_TIMEOUT",  "type" => "configInt"],
     "configLdapServerBindDomain"      => ["constname" => "WIKINDX_LDAP_SERVER_BIND_DOMAIN",       "type" => "configVarchar"],
     "configLdapServerBindDomainFormat"=> ["constname" => "WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT","type" => "configVarchar"],
     "configLdapServerBindLogin"       => ["constname" => "WIKINDX_LDAP_SERVER_BIND_LOGIN",        "type" => "configVarchar"],

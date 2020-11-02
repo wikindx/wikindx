@@ -496,17 +496,17 @@ class USER
             $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
         }
         
-        // Set a network timeout
-        $trace .= "LDAP_OPT_NETWORK_TIMEOUT=" . 1 . LF;
-        if (!$fail && ldap_set_option($ds, LDAP_OPT_NETWORK_TIMEOUT, 1) === FALSE) {
+        // Set a network timeout in seconds
+        $trace .= "LDAP_OPT_NETWORK_TIMEOUT=" . WIKINDX_LDAP_SERVER_NETWORK_TIMEOUT . LF;
+        if (!$fail && ldap_set_option($ds, LDAP_OPT_NETWORK_TIMEOUT, WIKINDX_LDAP_SERVER_NETWORK_TIMEOUT) === FALSE) {
             $fail = TRUE;
             $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
         }
         
         // Set a response timeout in seconds
         // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_timelimit_in_ldap_get_init.html
-        $trace .= "LDAP_OPT_TIMELIMIT=" . 1 . LF;
-        if (!$fail && ldap_set_option($ds, LDAP_OPT_TIMELIMIT, 1) === FALSE) {
+        $trace .= "LDAP_OPT_TIMELIMIT=" . WIKINDX_LDAP_SERVER_RESPONSE_TIMEOUT . LF;
+        if (!$fail && ldap_set_option($ds, LDAP_OPT_TIMELIMIT, WIKINDX_LDAP_SERVER_RESPONSE_TIMEOUT) === FALSE) {
             $fail = TRUE;
             $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
         }

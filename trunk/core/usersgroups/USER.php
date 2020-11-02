@@ -478,8 +478,8 @@ class USER
         
         // Don't follow referrals
         // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_referrals_in_ldap_get_init.html
-        $trace .= "LDAP_OPT_REFERRALS=" . 0 . LF;
-        if (!$fail && ldap_set_option($ds, LDAP_OPT_REFERRALS, 0) === FALSE) {
+        $trace .= "LDAP_OPT_REFERRALS=" . print_r(WIKINDX_LDAP_USE_REFERRALS, TRUE) . LF;
+        if (!$fail && ldap_set_option($ds, LDAP_OPT_REFERRALS, WIKINDX_LDAP_USE_REFERRALS) === FALSE) {
             $fail = TRUE;
             $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
         }

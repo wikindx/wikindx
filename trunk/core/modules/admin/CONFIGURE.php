@@ -1077,10 +1077,10 @@ class CONFIGURE
             255
         ));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapDn"));
-        array_key_exists("configLdapDn", $this->formData) ? $input = $this->formData["configLdapDn"] : $input = WIKINDX_LDAP_DN_DEFAULT;
+        array_key_exists("configLdapUserDn", $this->formData) ? $input = $this->formData["configLdapUserDn"] : $input = WIKINDX_LDAP_USER_DN_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "ldapDn"),
-            "configLdapDn",
+            "configLdapUserDn",
             $input,
             30,
             255
@@ -1536,7 +1536,7 @@ class CONFIGURE
                 $array = [
                     "configAuthGate",
                     "configAuthGateMessage",
-                    "configLdapDn",
+                    "configLdapUserDn",
                     "configLdapPort",
                     "configLdapServer",
                     "configLdapUse",

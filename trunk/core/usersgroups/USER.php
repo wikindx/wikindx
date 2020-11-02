@@ -333,7 +333,7 @@ class USER
         if (WIKINDX_LDAP_USE && in_array("ldap", get_loaded_extensions())) {
             // Don't catch traces in regular auth
             if (!$this->checkPasswordLdap($usersUsername, $pwdInput, $ldapUserEntry)) {
-                // When LDAP fails, fallback on bluitin ONLY for the superadmin
+                // When LDAP fails, fallback on builtin ONLY for the superadmin
                 if (!$this->checkPasswordBuiltin($usersUsername, $pwdInput, TRUE)) {
                     return FALSE;
                 }
@@ -569,7 +569,7 @@ class USER
         // Return a query id
         $sr = FALSE;
         if (!$fail) {
-            $trace .= "DN=" . WIKINDX_LDAP_DN . LF;
+            $trace .= "USER_DN=" . WIKINDX_LDAP_USER_DN . LF;
             
             $ldap_search_func = \UTILS\array_value_select(
             	["tree" => "ldap_search", "list" => "ldap_list"],
@@ -590,7 +590,7 @@ class USER
             }
             $trace .= "USER_FIELDS=" . implode(", ", $user_fields) . LF;
             
-            $sr = $ldap_search_func($ds, WIKINDX_LDAP_DN, $user_filter, $user_fields);
+            $sr = $ldap_search_func($ds, WIKINDX_LDAP_USER_DN, $user_filter, $user_fields);
             if ($sr === FALSE) {
                 $fail = TRUE;
                 $trace .= $this->errors->text("inputError", "ldapSearch") . LF;

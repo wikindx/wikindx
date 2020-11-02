@@ -468,9 +468,10 @@ class USER
         }
         
         // Set the protocol version
+        // LDAPv2 is legacy and insecure. Don't bother ourself with that stuff and go v3 only
         // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_protocol_version_in_ldap_get_init.html
-        $trace .= "LDAP_OPT_PROTOCOL_VERSION=" . WIKINDX_LDAP_PROTOCOL_VERSION . LF;
-        if (!$fail && ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, WIKINDX_LDAP_PROTOCOL_VERSION) === FALSE) {
+        $trace .= "LDAP_OPT_PROTOCOL_VERSION=3" . LF;
+        if (!$fail && ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3) === FALSE) {
             $fail = TRUE;
             $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
         }

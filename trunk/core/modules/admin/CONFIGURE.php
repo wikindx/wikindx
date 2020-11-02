@@ -1068,15 +1068,6 @@ class CONFIGURE
             .  BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapUse")),
             	'hint')
         );
-        array_key_exists("configLdapProtocolVersion", $this->formData) ? $input = $this->formData["configLdapProtocolVersion"] :
-            $input = WIKINDX_LDAP_PROTOCOL_VERSION_DEFAULT;
-        $pString .= \HTML\td(\FORM\selectedBoxValue(
-            $this->messages->text("config", "ldapProtocolVersion"),
-            "configLdapProtocolVersion",
-            WIKINDX_LDAP_PROTOCOLE_VERSIONS,
-            $input,
-            1
-        ));
         array_key_exists("configLdapServer", $this->formData) ? $input = $this->formData["configLdapServer"] : $input = WIKINDX_LDAP_SERVER_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "ldapServer"),
@@ -1547,7 +1538,6 @@ class CONFIGURE
                     "configAuthGateMessage",
                     "configLdapDn",
                     "configLdapPort",
-                    "configLdapProtocolVersion",
                     "configLdapServer",
                     "configLdapUse",
                     "configPasswordSize",
@@ -1750,7 +1740,6 @@ class CONFIGURE
             "configLastChanges",
             "configLastChangesDayLimit",
             "configLdapPort",
-            "configLdapProtocolVersion",
             "configMailSmtpPort",
             "configMaxPaste",
             "configPaging",
@@ -1811,7 +1800,7 @@ class CONFIGURE
         $this->dependencies('configCmsAllow', ['configCmsBibstyle']);
         $this->dependencies('configCmsSql', ['configCmsDbUser', 'configCmsDbPassword']);
         $this->dependencies('configMailUse', ['configMailBackend']);
-        $this->dependencies('configLdapUse', ['configLdapServer', 'configLdapPort', 'configLdapProtocolVersion', 'configLdapDn']);
+        $this->dependencies('configLdapUse', ['configLdapServer', 'configLdapPort', 'configLdapUserDn']);
         $this->dependencies('configAuthGate', ['configAuthGateMessage']);
         $this->dependencies('configUserRegistrationModerate', ['configEmailNewRegistrations']);
         if (array_key_exists('configMailUse', $this->formData) && ($this->formData['configMailBackend'] == 'sendmail')) {

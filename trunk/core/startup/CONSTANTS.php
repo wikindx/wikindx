@@ -332,7 +332,6 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configLastChangesType"           => ["constname" => "WIKINDX_LAST_CHANGES_TYPE",             "type" => "configVarchar"],
     "configLdapDn"                    => ["constname" => "WIKINDX_LDAP_DN",                       "type" => "configVarchar"],
     "configLdapPort"                  => ["constname" => "WIKINDX_LDAP_PORT",                     "type" => "configInt"],
-    "configLdapProtocolVersion"       => ["constname" => "WIKINDX_LDAP_PROTOCOL_VERSION",         "type" => "configInt"],
     "configLdapSearchType"            => ["constname" => "WIKINDX_LDAP_SEARCH_TYPE",              "type" => "configVarchar"],
     "configLdapServer"                => ["constname" => "WIKINDX_LDAP_SERVER",                   "type" => "configVarchar"],
     "configLdapServerBindDomain"      => ["constname" => "WIKINDX_LDAP_SERVER_BIND_DOMAIN",       "type" => "configVarchar"],

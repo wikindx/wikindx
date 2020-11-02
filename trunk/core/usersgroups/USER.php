@@ -484,6 +484,18 @@ class USER
             $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
         }
         
+        // Rules for following aliases at the server
+        // 0: LDAP_DEREF_NEVER
+        // 1: LDAP_DEREF_SEARCHING
+        // 2: LDAP_DEREF_FINDING
+        // 3: LDAP_DEREF_ALWAYS
+        // cf. https://www.ibm.com/support/knowledgecenter/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_deref_in_ldap_get_init.html
+        $trace .= "LDAP_OPT_DEREF=" . WIKINDX_LDAP_SERVER_DEREF . LF;
+        if (!$fail && ldap_set_option($ds, LDAP_OPT_DEREF, WIKINDX_LDAP_SERVER_DEREF) === FALSE) {
+            $fail = TRUE;
+            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
+        }
+        
         // Set a network timeout
         $trace .= "LDAP_OPT_NETWORK_TIMEOUT=" . 1 . LF;
         if (!$fail && ldap_set_option($ds, LDAP_OPT_NETWORK_TIMEOUT, 1) === FALSE) {

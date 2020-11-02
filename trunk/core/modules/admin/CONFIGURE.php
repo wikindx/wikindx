@@ -1094,6 +1094,7 @@ class CONFIGURE
             30,
             255
         ) . BR . \HTML\span($hint, 'hint'));
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapPort"));
         array_key_exists("configLdapPort", $this->formData) ? $input = $this->formData["configLdapPort"] : $input = WIKINDX_LDAP_PORT_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
             $this->messages->text("config", "ldapPort"),
@@ -1101,7 +1102,7 @@ class CONFIGURE
             $input,
             6,
             6
-        ));
+        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 

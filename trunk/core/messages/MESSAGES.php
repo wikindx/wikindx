@@ -760,6 +760,7 @@ class MESSAGES
 				"deactivateResourceTypes" => dgettext($domain, "The importing and exporting of bibliographies and entry of new resources will ignore resource types that are deactivated. Deactivated resource types that are already in the database will not have their display affected. At least one type must remain active. Multiples can be chosen"),
 				"ldapUse" => dgettext($domain, "This option enables authentication from an LDAP / Active Directory server of all users. As an exception to guarantee access in the event of a misconfiguration or an offline server, if the LDAP authentication of the Super Admin account fails, a second will be attempted with the native method."),
 				"ldapDn" => dgettext($domain, "For example, 'o=My Company, c=US'"),
+				"ldapPort" => dgettext($domain, "LDAP standard ports are: 389 (no encryption), 636 (ssl)"),
 				"ldapExtDisabled" => dgettext($domain, "The PHP LDAP extension is disabled or not installed. As long as it is not available the LDAP auth mode will be ignored."),
 				"ldapTest" => dgettext($domain, "Enter a valid LDAP username/password here to test the LDAP configuration when you click on Proceed"),
 				"authGate" => dgettext($domain, "If checked, user must click on OK after login in order to proceed. Used for situations such as notification about privacy policies such as that mandated by the EU's GDPR. Once the user has clicked on OK, they are not required to do so again until the authentication gate flag is reset."),

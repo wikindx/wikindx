@@ -17,7 +17,13 @@
  *
  * @package wikindx
  */
- 
+if (!array_key_exists('browserTabID', $_GET)) {
+// go into gatekeeper for a redirect and addition of a browserTabID to the querystring
+print <<< END
+<script src = 'gatekeeper.js'></script>
+<script>redirectSet("$_SERVER[QUERY_STRING]")</script>
+END;
+}
 /**
   * Import initial configuration and initialize the web server
   */

@@ -52,6 +52,10 @@ class GLOBALS
      * Error messages. A convenient place to store a single error message
      */
     private static $WIKINDX_ERROR = '';
+    /**
+     * The unique browser tab ID
+     */
+    private static $WIKINDX_BROWSER_TAB_ID = NULL;
 
     /**
      *	GLOBALS
@@ -96,6 +100,24 @@ class GLOBALS
     public static function getDirtyVars()
     {
         return self::$dirtyVars;
+    }
+    /**
+     * Set browserTabID
+     *
+     * @param $browserTabID
+     */
+    public static function setBrowserTabID($browserTabID)
+    {
+        self::$WIKINDX_BROWSER_TAB_ID = $browserTabID;
+    }
+    /**
+     * Get browserTabID
+     *
+     * @return $WIKINDX_BROWSER_TAB_ID
+     */
+    public static function getBrowserTabID()
+    {
+        return self::$WIKINDX_BROWSER_TAB_ID;
     }
     /**
      * Set a user variable

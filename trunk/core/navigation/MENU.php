@@ -641,7 +641,8 @@ class MENU
             $this->res[$messages->text("menu", "lastSolo")] = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->lastSolo;
         }
         if ($this->lastMulti) {
-            $this->res[$messages->text("menu", "lastMulti")] = 'index.php?' . $this->lastMulti . '&type=lastMulti';
+            $this->res[$messages->text("menu", "lastMulti")] = 'index.php?' . $this->lastMulti . 
+            	'&type=lastMulti&browserTabID=' . GLOBALS::getBrowserTabID();
         }
         $basket = $this->basketList;
         if ($this->basketList && !empty($basket)) {

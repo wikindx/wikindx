@@ -25,6 +25,7 @@ class LOADCONFIG
         $this->getVars();
         
         $vars = GLOBALS::getVars();
+        GLOBALS::setBrowserTabID($vars['browserTabID']);
         if (
             !empty($vars)
             && array_key_exists('cookie', $vars)
@@ -279,7 +280,6 @@ class LOADCONFIG
                 $cleanVars['method'] = $method;
             }
         }
-        
         // Store globally
         GLOBALS::setVars($cleanVars, $dirtyVars);
     }

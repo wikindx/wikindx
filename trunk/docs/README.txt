@@ -11,7 +11,7 @@ lang: en
 # Preamble (Mark Grimshaw-Aagaard)
 
 I originally started developing this as a means to help organise my PhD
-research  by catalogueing  bibliographic notations,  references, quotes
+research  by cataloguing  bibliographic notations,  references, quotes
 and thoughts on a computer via a program that was not tied to a single
 operating system (like similar and expensively commercial software) and
 that could be accessed from anywhere on the web (unlike other systems).
@@ -27,7 +27,7 @@ encyclopaedia.
 
 Since the original ideas, various others have been implemented such as a
 wide variety of import and export options and, importantly, the
-incorportation of a WYSIWYG word processor that can insert citations and
+incorporation of a WYSIWYG word processor that can insert citations and
 (re)format them with a few clicks of the mouse.  This was powerful
 enough for me to write my entire PhD thesis in. (v4 removed this feature
 to a plug-in rather than being a core feature.)

@@ -225,7 +225,23 @@ define('WIKINDX_LANGUAGE_DOMAIN_DEFAULT', 'wikindx');
 
 
 // LDAP
-define('WIKINDX_LDAP_PROTOCOLE_VERSIONS', [2 => '2', 3 => '3']);
+// cf. https://chrisbeams.wordpress.com/2009/05/10/active-directory-samaccounttype/
+// 268435456  SAM_GROUP_OBJECT
+// 268435457  SAM_NON_SECURITY_GROUP_OBJECT
+// 536870912  SAM_ALIAS_OBJECT
+// 536870913  SAM_NON_SECURITY_ALIAS_OBJECT
+// 805306368  SAM_NORMAL_USER_ACCOUNT
+// 805306369  SAM_MACHINE_ACCOUNT
+// 805306370  SAM_TRUST_ACCOUNT
+// 1073741824 SAM_APP_BASIC_GROUP
+// 1073741825 SAM_APP_QUERY_GROUP
+// 2147483647 SAM_ACCOUNT_TYPE_MAX
+define('WIKINDX_LDAP_USER_FILTER', '(sAMAccountType=805306368)');
+define('WIKINDX_LDAP_GROUP_FILTER', '(|(sAMAccountType=268435456)(sAMAccountType=268435457))');
+define('WIKINDX_LDAP_DEBUG_LEVEL', 7); // 7 = max level
+define('WIKINDX_LDAP_SERVER_NETWORK_TIMEOUT', 10); // In seconds
+define('WIKINDX_LDAP_SERVER_RESPONSE_TIMEOUT', 15); // In seconds
+define('WIKINDX_LDAP_USE_REFERRALS', 0); // 1/0 = On/off
 
 
 // Mail system
@@ -333,22 +349,19 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configLdapPort"                  => ["constname" => "WIKINDX_LDAP_PORT",                     "type" => "configInt"],
     "configLdapSearchType"            => ["constname" => "WIKINDX_LDAP_SEARCH_TYPE",              "type" => "configVarchar"],
     "configLdapServer"                => ["constname" => "WIKINDX_LDAP_SERVER",                   "type" => "configVarchar"],
-    "configLdapServerNetworkTimeout"  => ["constname" => "WIKINDX_LDAP_SERVER_NETWORK_TIMEOUT",   "type" => "configInt"],
-    "configLdapServerResponseTimeout" => ["constname" => "WIKINDX_LDAP_SERVER_RESPONSE_TIMEOUT",  "type" => "configInt"],
     "configLdapServerBindDomain"      => ["constname" => "WIKINDX_LDAP_SERVER_BIND_DOMAIN",       "type" => "configVarchar"],
     "configLdapServerBindDomainFormat"=> ["constname" => "WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT","type" => "configVarchar"],
     "configLdapServerBindLogin"       => ["constname" => "WIKINDX_LDAP_SERVER_BIND_LOGIN",        "type" => "configVarchar"],
     "configLdapServerBindPassword"    => ["constname" => "WIKINDX_LDAP_SERVER_BIND_PASSWORD",     "type" => "configVarchar"],
     "configLdapServerBindType"        => ["constname" => "WIKINDX_LDAP_SERVER_BIND_TYPE",         "type" => "configVarchar"],
-    "configLdapServerDeref"           => ["constname" => "WIKINDX_LDAP_SERVER_DEREF",             "type" => "configInt"],
     "configLdapServerEncryption"      => ["constname" => "WIKINDX_LDAP_SERVER_ENCRYPTION",        "type" => "configVarchar"],
     "configLdapUse"                   => ["constname" => "WIKINDX_LDAP_USE",                      "type" => "configBoolean"],
     "configLdapUserAttributEmail"     => ["constname" => "WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL",     "type" => "configVarchar"],
     "configLdapUserAttributFullname"  => ["constname" => "WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME",  "type" => "configVarchar"],
+    "configLdapUserAttributLogin"     => ["constname" => "WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN",     "type" => "configVarchar"],
     "configLdapUserCreate"            => ["constname" => "WIKINDX_LDAP_USER_CREATE",              "type" => "configBoolean"],
     "configLdapUserDn"                => ["constname" => "WIKINDX_LDAP_USER_DN",                  "type" => "configVarchar"],
-    "configLdapUseReferrals"          => ["constname" => "WIKINDX_LDAP_USE_REFERRALS",            "type" => "configBoolean"],
-    "configLdapUserFilter"            => ["constname" => "WIKINDX_LDAP_USER_FILTER",              "type" => "configVarchar"],
+    "configLdapGroupCn"               => ["constname" => "WIKINDX_LDAP_GROUP_CN",                 "type" => "configVarchar"],
     "configListLink"                  => ["constname" => "WIKINDX_LIST_LINK",                     "type" => "configBoolean"],
     "configMailBackend"               => ["constname" => "WIKINDX_MAIL_BACKEND",                  "type" => "configVarchar"],
     "configMailFrom"                  => ["constname" => "WIKINDX_MAIL_FROM",                     "type" => "configVarchar"],

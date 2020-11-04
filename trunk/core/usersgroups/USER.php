@@ -403,6 +403,12 @@ class USER
      *
      * LDAP functions adapted from work by Fabrice Boyrie
      *
+     * Limitations:
+     *
+     * - LDAP_OPT_PROTOCOL_VERSION: v3 is stable since 1997 so we don't provide an option to choice the version (v3 is the default in php_ldap).
+     * - LDAP_OPT_DEREF: dereferencing seems an arcane option and could be avoided by setting the main domain name so we keep the default (never deref)
+     * - LDAP_OPT_REFERRALS: referrals (forests shared between servers) are very rare and AD don't provide them so we do not support them
+     *
      * @param string $usersUsername
      * @param string $pwdInput
      * @param array $ldapUserEntry User ldap info
@@ -435,9 +441,9 @@ class USER
             $trace .= $this->messages->text("hint", "ldapExtDisabled") . LF;
         }
         
-        // Turn on debugging (7 = max level)
-        $trace .= "LDAP_OPT_DEBUG_LEVEL=7" . LF;
-        if (!$fail && ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7) === FALSE) {
+        // Turn on debugging
+        $trace .= "LDAP_OPT_DEBUG_LEVEL=" . WIKINDX_LDAP_DEBUG_LEVEL . LF;
+        if (!$fail && ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, WIKINDX_LDAP_DEBUG_LEVEL) === FALSE) {
             $fail = TRUE;
             $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
         }
@@ -467,31 +473,10 @@ class USER
             }
         }
         
-        // Set the protocol version
-        // LDAPv2 is legacy and insecure. Don't bother ourself with that stuff and go v3 only
-        // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_protocol_version_in_ldap_get_init.html
-        $trace .= "LDAP_OPT_PROTOCOL_VERSION=3" . LF;
-        if (!$fail && ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3) === FALSE) {
-            $fail = TRUE;
-            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
-        }
-        
         // Don't follow referrals
         // cf. https://www.ibm.com/support/knowledgecenter/en/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_referrals_in_ldap_get_init.html
-        $trace .= "LDAP_OPT_REFERRALS=" . print_r(WIKINDX_LDAP_USE_REFERRALS, TRUE) . LF;
+        $trace .= "LDAP_OPT_REFERRALS=" . WIKINDX_LDAP_USE_REFERRALS . LF;
         if (!$fail && ldap_set_option($ds, LDAP_OPT_REFERRALS, WIKINDX_LDAP_USE_REFERRALS) === FALSE) {
-            $fail = TRUE;
-            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
-        }
-        
-        // Rules for following aliases at the server
-        // 0: LDAP_DEREF_NEVER
-        // 1: LDAP_DEREF_SEARCHING
-        // 2: LDAP_DEREF_FINDING
-        // 3: LDAP_DEREF_ALWAYS
-        // cf. https://www.ibm.com/support/knowledgecenter/SSVJJU_6.3.1/com.ibm.IBMDS.doc_6.3.1/reference/r_pg_opt_deref_in_ldap_get_init.html
-        $trace .= "LDAP_OPT_DEREF=" . WIKINDX_LDAP_SERVER_DEREF . LF;
-        if (!$fail && ldap_set_option($ds, LDAP_OPT_DEREF, WIKINDX_LDAP_SERVER_DEREF) === FALSE) {
             $fail = TRUE;
             $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
         }
@@ -577,59 +562,151 @@ class USER
             }
         }
         
-        // Search the user with his login in the whole tree under an Organizational Unit (OU) or a Domain Controller (DC)
-        // Return a query id
-        $sr = FALSE;
-        if (!$fail) {
-            $trace .= "USER_DN=" . WIKINDX_LDAP_USER_DN . LF;
+        // Search the users in the tree under an Organizational Unit (OU) or a Domain Controller (DC)
+        $UsersInDn = [];
+        if (!$fail && WIKINDX_LDAP_USER_DN != "")
+        {
+            $sr = FALSE;
+            if (!$fail) {
+                $ldap_search_func = \UTILS\array_value_select(
+                	["tree" => "ldap_search", "list" => "ldap_list"],
+                	WIKINDX_LDAP_SEARCH_TYPE,
+                	WIKINDX_LDAP_SEARCH_TYPE_DEFAULT
+                );
+                
+                $trace .= "USER_DN=" . WIKINDX_LDAP_USER_DN . LF;
+                $trace .= "LDAP_SEARCH_FUNCTION=" . $ldap_search_func . LF;
+                $trace .= "USER_FILTER=" . WIKINDX_LDAP_USER_FILTER . LF;
+                $trace .= "USER_ATTRIBUTES=dn" . LF;
+                
+                $sr = $ldap_search_func($ds, WIKINDX_LDAP_USER_DN, WIKINDX_LDAP_USER_FILTER, ["dn"]);
+                if ($sr === FALSE) {
+                    $fail = TRUE;
+                    $trace .= $this->errors->text("inputError", "ldapSearch") . LF;
+                }
+            }
             
-            $ldap_search_func = \UTILS\array_value_select(
-            	["tree" => "ldap_search", "list" => "ldap_list"],
-            	WIKINDX_LDAP_SEARCH_TYPE,
-            	WIKINDX_LDAP_SEARCH_TYPE_DEFAULT
-            );
-            $trace .= "LDAP_SEARCH_FUNCTION=" . $ldap_search_func . LF;
+            // Retrieve user DN from the previous search
+            $entries = FALSE;
+            if (!$fail) {
+                $entries = ldap_get_entries($ds, $sr);
+                if ($entries === FALSE) {
+                    $fail = TRUE;
+                    $trace .= $this->errors->text("inputError", "ldapGetEntries") . LF;
+                } else {
+                    $trace .= "USERS=" . print_r($entries, TRUE) . LF;
+    	            for ($k = 0; $k < $entries["count"]; $k++) {
+        	            for ($p = 0; $p < $entries[$k]["dn"]["count"]; $p++) {
+        	                $UsersInDn[] = $entries[$k]["dn"][$p];
+        	            }
+    	            }
+                }
+            }
+        }
+        
+        // Search the users in a group
+        $UsersInGroup = [];
+        if (!$fail && WIKINDX_LDAP_GROUP_CN != "")
+        {
+            $sr = FALSE;
+            if (!$fail) {
+                $trace .= "GROUP_CN=" . WIKINDX_LDAP_GROUP_CN . LF;
+                $trace .= "GROUP_FILTER=" . WIKINDX_LDAP_GROUP_FILTER . LF;
+                $trace .= "GROUP_ATTRIBUTES=member" . LF;
+                
+                $sr = ldap_read($ds, WIKINDX_LDAP_GROUP_CN, WIKINDX_LDAP_GROUP_FILTER, ["member"]);
+                if ($sr === FALSE) {
+                    $fail = TRUE;
+                    $trace .= $this->errors->text("inputError", "ldapSearch") . LF;
+                }
+            }
             
-            $user_filter = str_replace("%u", $usersUsername, WIKINDX_LDAP_USER_FILTER);
-            $trace .= "USER_FILTER=" . $user_filter . LF;
-            
+            // Retrieve user DN from the previous search
+            $entries = FALSE;
+            if (!$fail) {
+                $entries = ldap_get_entries($ds, $sr);
+                if ($entries === FALSE) {
+                    $fail = TRUE;
+                    $trace .= $this->errors->text("inputError", "ldapGetEntries") . LF;
+                } else {
+                    $trace .= "USERS=" . print_r($entries, TRUE) . LF;
+    	            for ($k = 0; $k < $entries["count"]; $k++) {
+        	            for ($p = 0; $p < $entries[$k]["member"]["count"]; $p++) {
+        	                $UsersInGroup[] = $entries[$k]["member"][$p];
+        	            }
+    	            }
+                }
+            }
+        }
+        
+        // Calculate the intersection of the two user lists
+        if (WIKINDX_LDAP_USER_DN != "" && WIKINDX_LDAP_GROUP_CN != "") {
+            $Users = array_intersect($UsersInDn, $UsersInGroup);
+        } elseif (WIKINDX_LDAP_USER_DN != "") {
+            $Users = $UsersInDn;
+        } elseif (WIKINDX_LDAP_GROUP_CN != "") {
+            $Users = $UsersInGroup;
+        }
+        
+        // Stop if the list is empty
+        if (!$fail && count($Users) == 0)
+        {
+            $fail = TRUE;
+        }
+        
+        // Find the user whose login attribute matches the input login and checks his password
+        if (!$fail && count($Users) > 0)
+        {
             $user_fields = ["dn"];
+            if (WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN != "") {
+            	$user_fields[] = WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN;
+            }
             if (WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME != "") {
             	$user_fields[] = WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME;
             }
             if (WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL != "") {
             	$user_fields[] = WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL;
             }
-            $trace .= "USER_FIELDS=" . implode(", ", $user_fields) . LF;
             
-            $sr = $ldap_search_func($ds, WIKINDX_LDAP_USER_DN, $user_filter, $user_fields);
-            if ($sr === FALSE) {
-                $fail = TRUE;
-                $trace .= $this->errors->text("inputError", "ldapSearch") . LF;
+            foreach ($Users as $dn)
+            {
+                $trace .= "USER_DN=" . WIKINDX_LDAP_USER_DN . LF;
+                $trace .= "USER_FILTER=" . WIKINDX_LDAP_USER_FILTER . LF;
+                $trace .= "USER_FIELDS=" . implode(", ", $user_fields) . LF;
+                $sr = ldap_read($ds, $dn, WIKINDX_LDAP_USER_FILTER, $user_fields);
+                if ($sr === FALSE) {
+                    $fail = TRUE;
+                    $trace .= $this->errors->text("inputError", "ldapSearch") . LF;
+                    break;
+                } else {
+                    // Retrieve user data from the previous search
+                    $entries = ldap_get_entries($ds, $sr);
+                    if ($entries === FALSE) {
+                        $fail = TRUE;
+                        $trace .= $this->errors->text("inputError", "ldapGetEntries") . LF;
+                        break;
+                    } else {
+                        $entries = array_change_key_case($entries, CASE_LOWER);
+                        $login_attribut = mb_strtolower(WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN);
+                        $trace .= "USERS_VALUES=" . print_r($entries, TRUE) . LF;
+                        
+        	            for ($k = 0; $k < $entries["count"]; $k++) {
+            	            for ($p = 0; $p < $entries[$k][$login_attribut]["count"]; $p++) {
+            	                if ($entries[$k][$login_attribut][$p] == $usersUsername) {
+                                    // Check the connection with the exact user credentials (DN = Distinguished Names) of the first user only
+                                    $trace .= "VERIFY_USER_PASSWORD=" . $dn . LF;
+                                    $auth = ldap_bind($ds, $dn, $pwdInput);
+                                    $trace .= "AUTH=" . $auth ? "OK" : "NOK" . LF;
+                                    if ($auth) {
+                                        $ldapUserEntry = $entries[0];
+                                        break;
+                                    }
+            	                }
+            	            }
+        	            }
+                    }
+                }
             }
-        }
-        
-        // Retrieve user data from the previous search
-        $entries = FALSE;
-        if (!$fail) {
-            $entries = ldap_get_entries($ds, $sr);
-            if ($entries === FALSE) {
-                $fail = TRUE;
-                $trace .= $this->errors->text("inputError", "ldapGetEntries") . LF;
-            } else {
-                $trace .= "USERS=" . print_r($entries, TRUE) . LF;
-            }
-        }
-        
-        // One or more user found
-        if (!$fail && $entries['count'] >= 1) {
-            // Check the connection with the exact user credentials (DN = Distinguished Names) of the first user only
-            $trace .= "VERIFY_USER_PASSWORD=" . $entries[0]['dn'] . LF;
-            $auth = ldap_bind($ds, $entries[0]['dn'], $pwdInput);
-            if ($auth) {
-                $ldapUserEntry = $entries[0];
-            }
-            $trace .= "AUTH=" . $auth ? "OK" : "NOK" . LF;
         }
         
         // Disconnect

@@ -562,7 +562,7 @@ class USER
             }
         }
         
-        // Search the users in the tree under an Organizational Unit (OU) or a Domain Controller (DC)
+        // Search the user in the tree under an Organizational Unit (OU) or a Domain Controller (DC)
         $UsersInDn = [];
         if (!$fail && WIKINDX_LDAP_USER_DN != "")
         {
@@ -574,12 +574,18 @@ class USER
                 	WIKINDX_LDAP_SEARCH_TYPE_DEFAULT
                 );
                 
+                // filter on user type AND user login
+                $user_filter = "(&" . WIKINDX_LDAP_USER_TYPE_FILTER . "(" . $usersUsername . "=" . $usersUsername . "))";
+                
+                // Attributs retrived
+	            $user_filter_attributs = ["dn"];
+	            
                 $trace .= "USER_DN=" . WIKINDX_LDAP_USER_DN . LF;
                 $trace .= "LDAP_SEARCH_FUNCTION=" . $ldap_search_func . LF;
-                $trace .= "USER_FILTER=" . WIKINDX_LDAP_USER_FILTER . LF;
-                $trace .= "USER_ATTRIBUTES=dn" . LF;
+                $trace .= "USER_FILTER=" . $user_filter . LF;
+                $trace .= "USER_FILTER_ATTRIBUTES=" implode(", ", $user_filter_attributs) . LF;
                 
-                $sr = $ldap_search_func($ds, WIKINDX_LDAP_USER_DN, WIKINDX_LDAP_USER_FILTER, ["dn"]);
+                $sr = $ldap_search_func($ds, WIKINDX_LDAP_USER_DN, $user_filter, $user_filter_attributs);
                 if ($sr === FALSE) {
                     $fail = TRUE;
                     $trace .= $this->errors->text("inputError", "ldapSearch") . LF;
@@ -610,11 +616,18 @@ class USER
         {
             $sr = FALSE;
             if (!$fail) {
-                $trace .= "GROUP_CN=" . WIKINDX_LDAP_GROUP_CN . LF;
-                $trace .= "GROUP_FILTER=" . WIKINDX_LDAP_GROUP_FILTER . LF;
-                $trace .= "GROUP_ATTRIBUTES=member" . LF;
+                // filter on group type only
+                $group_filter = WIKINDX_LDAP_GROUP_TYPE_FILTER;
                 
-                $sr = ldap_read($ds, WIKINDX_LDAP_GROUP_CN, WIKINDX_LDAP_GROUP_FILTER, ["member"]);
+                // Attributs retrived
+	            $group_filter_attributs = ["dn", "member"];
+	            
+                $trace .= "GROUP_CN=" . WIKINDX_LDAP_GROUP_CN . LF;
+                $trace .= "GROUP_FILTER=" . WIKINDX_LDAP_GROUP_TYPE_FILTER . LF;
+                $trace .= "GROUP_ATTRIBUTES=dn,member" . LF;
+                $trace .= "GROUP_FILTER_ATTRIBUTES=" implode(", ", $group_filter_attributs) . LF;
+                
+                $sr = ldap_read($ds, WIKINDX_LDAP_GROUP_CN, $group_filter, $group_filter_attributs);
                 if ($sr === FALSE) {
                     $fail = TRUE;
                     $trace .= $this->errors->text("inputError", "ldapSearch") . LF;
@@ -657,23 +670,27 @@ class USER
         // Find the user whose login attribute matches the input login and checks his password
         if (!$fail && count($Users) > 0)
         {
-            $user_fields = ["dn"];
-            if (WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN != "") {
-            	$user_fields[] = WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN;
-            }
-            if (WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME != "") {
-            	$user_fields[] = WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME;
-            }
-            if (WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL != "") {
-            	$user_fields[] = WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL;
-            }
+            // filter on user type only
+            $user_filter = "(&" . WIKINDX_LDAP_USER_TYPE_FILTER . "(" . $usersUsername . "=" . $usersUsername . "))";
+            
+            // Attributs retrived, when defined
+            $user_filter_attributs = array_diff([
+	            	"dn",
+	            	WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN,
+	            	WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME,
+	            	WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL,
+	            ],
+	            [""]
+            );
+            
+            $trace .= "USER_FILTER=" . WIKINDX_LDAP_USER_TYPE_FILTER . LF;
+            $trace .= "USER_FILTER_ATTRIBUTES=" implode(", ", $user_filter_attributs) . LF;
             
             foreach ($Users as $dn)
             {
-                $trace .= "USER_DN=" . WIKINDX_LDAP_USER_DN . LF;
-                $trace .= "USER_FILTER=" . WIKINDX_LDAP_USER_FILTER . LF;
-                $trace .= "USER_FIELDS=" . implode(", ", $user_fields) . LF;
-                $sr = ldap_read($ds, $dn, WIKINDX_LDAP_USER_FILTER, $user_fields);
+            	$trace .= "USER_DN=" . $dn . LF;
+                
+                $sr = ldap_read($ds, $dn, $user_filter, $user_filter_attributs);
                 if ($sr === FALSE) {
                     $fail = TRUE;
                     $trace .= $this->errors->text("inputError", "ldapSearch") . LF;

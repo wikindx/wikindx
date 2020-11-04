@@ -2,8 +2,13 @@
 
 function redirectSet(url)
 {
-	var browserTabID = uuidv4();
-	sessionStorage.setItem('browserTabID', browserTabID);
+	var browserTabID;
+	if (sessionStorage.getItem('browserTabID') == null) {
+		browserTabID = uuidv4();
+		sessionStorage.setItem('browserTabID', browserTabID);
+	} else { // This shouldn't be necessary but is here for completeness. Perhaps of use in the future
+		browserTabID = sessionStorage.getItem('browserTabID');
+	}
 	url = 'index.php?' + url + '&browserTabID=' + browserTabID;
 	window.location.href = url;
 }

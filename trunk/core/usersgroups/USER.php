@@ -583,7 +583,7 @@ class USER
                 $trace .= "USER_DN=" . WIKINDX_LDAP_USER_DN . LF;
                 $trace .= "LDAP_SEARCH_FUNCTION=" . $ldap_search_func . LF;
                 $trace .= "USER_FILTER=" . $user_filter . LF;
-                $trace .= "USER_FILTER_ATTRIBUTES=" implode(", ", $user_filter_attributs) . LF;
+                $trace .= "USER_FILTER_ATTRIBUTES=" . implode(", ", $user_filter_attributs) . LF;
                 
                 $sr = $ldap_search_func($ds, WIKINDX_LDAP_USER_DN, $user_filter, $user_filter_attributs);
                 if ($sr === FALSE) {
@@ -625,7 +625,7 @@ class USER
                 $trace .= "GROUP_CN=" . WIKINDX_LDAP_GROUP_CN . LF;
                 $trace .= "GROUP_FILTER=" . WIKINDX_LDAP_GROUP_TYPE_FILTER . LF;
                 $trace .= "GROUP_ATTRIBUTES=dn,member" . LF;
-                $trace .= "GROUP_FILTER_ATTRIBUTES=" implode(", ", $group_filter_attributs) . LF;
+                $trace .= "GROUP_FILTER_ATTRIBUTES=" . implode(", ", $group_filter_attributs) . LF;
                 
                 $sr = ldap_read($ds, WIKINDX_LDAP_GROUP_CN, $group_filter, $group_filter_attributs);
                 if ($sr === FALSE) {
@@ -684,7 +684,7 @@ class USER
             );
             
             $trace .= "USER_FILTER=" . WIKINDX_LDAP_USER_TYPE_FILTER . LF;
-            $trace .= "USER_FILTER_ATTRIBUTES=" implode(", ", $user_filter_attributs) . LF;
+            $trace .= "USER_FILTER_ATTRIBUTES=" . implode(", ", $user_filter_attributs) . LF;
             
             foreach ($Users as $dn)
             {

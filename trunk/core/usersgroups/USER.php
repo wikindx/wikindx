@@ -602,9 +602,7 @@ class USER
                 } else {
                     $trace .= "USERS=" . print_r($entries, TRUE) . LF;
     	            for ($k = 0; $k < $entries["count"]; $k++) {
-        	            for ($p = 0; $p < $entries[$k]["dn"]["count"]; $p++) {
-        	                $UsersInDn[] = $entries[$k]["dn"][$p];
-        	            }
+        	            $UsersInDn[] = $entries[$k]["dn"];
     	            }
                 }
             }

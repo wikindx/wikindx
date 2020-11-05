@@ -575,7 +575,7 @@ class USER
                 );
                 
                 // filter on user type AND user login
-                $user_filter = "(&" . WIKINDX_LDAP_USER_TYPE_FILTER . "(" . $usersUsername . "=" . $usersUsername . "))";
+                $user_filter = "(&" . WIKINDX_LDAP_USER_TYPE_FILTER . "(" . WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN . "=" . $usersUsername . "))";
                 
                 // Attributs retrived
 	            $user_filter_attributs = ["dn"];
@@ -673,7 +673,7 @@ class USER
         if (!$fail && count($Users) > 0)
         {
             // filter on user type only
-            $user_filter = "(&" . WIKINDX_LDAP_USER_TYPE_FILTER . "(" . $usersUsername . "=" . $usersUsername . "))";
+            $user_filter = "(&" . WIKINDX_LDAP_USER_TYPE_FILTER . "(" . WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN . "=" . $usersUsername . "))";
             
             // Attributs retrived, when defined
             $user_filter_attributs = array_diff([

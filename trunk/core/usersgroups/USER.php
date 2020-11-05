@@ -659,6 +659,8 @@ class USER
             $Users = $UsersInDn;
         } elseif (WIKINDX_LDAP_GROUP_CN != "") {
             $Users = $UsersInGroup;
+        } else {
+            $Users = [];
         }
         
         // Stop if the list is empty

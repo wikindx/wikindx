@@ -233,6 +233,10 @@ class MENU
             array_push($this->menuSub, $plugin3Sub);
         }
         unset($plugin3Sub);
+        $browserTabID = GLOBALS::getBrowserTabID();
+        if ($browserTabID) {
+        	$browserTabID = '&browserTabID=' . $browserTabID;
+        }
         // Top level of above subMenus
         $this->smartyMenu->initMenu($menu);
         foreach ($this->topLevel as $menuArray) {
@@ -642,7 +646,7 @@ class MENU
         }
         if ($this->lastMulti) {
             $this->res[$messages->text("menu", "lastMulti")] = 'index.php?' . $this->lastMulti . 
-            	'&type=lastMulti&browserTabID=' . GLOBALS::getBrowserTabID();
+            	'&type=lastMulti';
         }
         $basket = $this->basketList;
         if ($this->basketList && !empty($basket)) {

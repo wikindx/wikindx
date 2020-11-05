@@ -230,7 +230,7 @@ class ENDNOTEIMPORT
                 $this->badInput($error);
             } else {
             	@unlink($this->fileName); // remove garbage - ignore errors
-            	\TEMPSTORAGE\merge($this->db, $uuid, ['form' => $pString, 'heading' => $this->pluginmessages->text("headerEndnoteImport")]);
+            	\TEMPSTORAGE\store($this->db, $uuid, ['form' => $pString, 'heading' => $this->pluginmessages->text("headerEndnoteImport")]);
 				header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importInvalidFields&uuid=$uuid");
 				die;
             }

@@ -760,7 +760,7 @@ class IDEAS
     	if (!array_key_exists('Text', $this->vars) || !\UTF8\mb_trim($this->vars['Text'])) {
     		if (array_key_exists('ideaGen', $this->vars)) { // Being used in the ideaGen plugin
     			$uuid = $this->vars['uuid'];
-    			\TEMPSTORAGE\merge($this->db, $uuid, $this->formData);
+    			\TEMPSTORAGE\store($this->db, $uuid, $this->formData);
     			header("Location: index.php?action=ideagen_ideaAddError&uuid=$uuid");
     			die;
 			} elseif (($this->vars['method'] == 'edit') && !array_key_exists('resourcemetadataId', $this->vars)) { // inserting so need text

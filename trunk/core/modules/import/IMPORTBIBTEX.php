@@ -350,7 +350,7 @@ class IMPORTBIBTEX
                 $this->badInput->close($error, $this->badClass, $this->badFunction);
             } else {
             	@unlink($this->fileName); // remove garbage - ignore errors
-            	\TEMPSTORAGE\merge($this->db, $uuid, ['form' => $pString, 'heading' => $this->messages->text("heading", "bibtexImport")]);
+            	\TEMPSTORAGE\store($this->db, $uuid, ['form' => $pString, 'heading' => $this->messages->text("heading", "bibtexImport")]);
 				header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importInvalidFields&uuid=$uuid");
 				die;
             }

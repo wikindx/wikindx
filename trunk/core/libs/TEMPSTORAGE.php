@@ -28,7 +28,7 @@ namespace TEMPSTORAGE
     }
     
     /**
-     * Store data
+     * Store/merge data
      *
      * @param class $db
      * @param string $uuid
@@ -36,8 +36,18 @@ namespace TEMPSTORAGE
      */
     function store($db, $uuid, $data)
     {
-    	$data = serialize($data);
-    	$db->insert('temp_storage', ['tempstorageId', 'tempstorageData'], [$uuid, $data]);
+    // Check for existence
+    	$db->formatConditions(['tempstorageId' => $uuid]);
+		$oldData = $db->selectFirstField('temp_storage', 'tempstorageData');
+    	if (!$oldData) {
+    		$data = serialize($data);
+	    	$db->insert('temp_storage', ['tempstorageId', 'tempstorageData'], [$uuid, $data]);
+	    } else {
+			$array = array_merge(unserialize($oldData), $data);
+			$newData = serialize($array);
+			$db->formatConditions(['tempstorageId' => $uuid]);
+			$db->update('temp_storage', ['tempstorageData' => $newData]);
+	    }
     }
     
     /**
@@ -53,24 +63,6 @@ namespace TEMPSTORAGE
     	$db->formatConditions(['tempstorageId' => $uuid]);
 		$data = $db->selectFirstField('temp_storage', 'tempstorageData');
 		return unserialize($data);
-    }
-    
-    
-    /**
-     * Merge data – assumes unique keys
-     *
-     * @param class $db
-     * @param string $uuid
-     * @param array $newData
-     */
-    function merge($db, $uuid, $newData)
-    {
-    	$db->formatConditions(['tempstorageId' => $uuid]);
-		$oldData = $db->selectFirstField('temp_storage', 'tempstorageData');
-		$array = array_merge(unserialize($oldData), $newData);
-    	$data = serialize($array);
-    	$db->formatConditions(['tempstorageId' => $uuid]);
-    	$db->update('temp_storage', ['tempstorageData' => $data]);
     }
     
     /**

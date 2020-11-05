@@ -25,7 +25,6 @@ class LOADCONFIG
         $this->getVars();
         
         $vars = GLOBALS::getVars();
-        GLOBALS::setBrowserTabID($vars['browserTabID']);
         if (
             !empty($vars)
             && array_key_exists('cookie', $vars)

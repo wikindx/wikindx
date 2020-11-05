@@ -17,17 +17,32 @@
  *
  * @package wikindx
  */
-if (!array_key_exists('browserTabID', $_GET)) {
-// go into gatekeeper for a redirect and addition of a browserTabID to the querystring
-print <<< END
-<script src = 'gatekeeper.js'></script>
-<script>redirectSet("$_SERVER[QUERY_STRING]")</script>
-END;
-}
 /**
   * Import initial configuration and initialize the web server
   */
 include_once("core/startup/WEBSERVERCONFIG.php");
+/**
+  * Generate/return the unique browser tab/window identifier
+  */
+$script = WIKINDX_URL_BASE . '/gatekeeper.js?ver=' . WIKINDX_PUBLIC_VERSION;
+$qs = $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : FALSE;
+$url = WIKINDX_URL_BASE . '/index.php' . $qs;
+if (!array_key_exists('browserTabID', $_GET)) {
+// go into gatekeeper for a redirect and addition of a browserTabID to the querystring
+print <<< END
+<script src="$script"></script>
+<script>redirectSet("$url", "$qs")</script>
+END;
+}
+else {
+// go into gatekeeper to check if browserTabID is unique to the tab (perhaps user has opened link with browserTabID in a new tab/window)
+$id = $_GET['browserTabID'];
+print <<< END
+<script src="$script"></script>
+<script>getBrowserTabID("$url", "$qs", "$id")</script>
+END;
+}
+GLOBALS::setBrowserTabID($_GET['browserTabID']);
 /**
  *	First pass through authentication.
  */

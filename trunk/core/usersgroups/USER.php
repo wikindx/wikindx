@@ -453,9 +453,9 @@ class USER
         if (!$fail) {
             $ldap_server_uri = \UTILS\array_value_select([
             	// Start a non encrypted connection (insecure)
-            	"no" => "ldap://" . WIKINDX_LDAP_SERVER,
+            	"none" => "ldap://" . WIKINDX_LDAP_SERVER,
             	// Start a non encrypted connection and upgrades the connection later with TLS  (less secure than SSL)
-            	"startls" => "ldap://" . WIKINDX_LDAP_SERVER,
+            	"starttls" => "ldap://" . WIKINDX_LDAP_SERVER,
             	// SSL encryption from the start (most secure)
             	"ssl" => "ldaps://" . WIKINDX_LDAP_SERVER], 
             	WIKINDX_LDAP_SERVER_ENCRYPTION,
@@ -526,7 +526,7 @@ class USER
             $trace .= "SERVER_BIND_TYPE=" . WIKINDX_LDAP_SERVER_BIND_TYPE . LF;
             switch (WIKINDX_LDAP_SERVER_BIND_TYPE)
             {
-            	case "proxy":
+            	case "proxyuser":
     				$ldapbind_pwd = WIKINDX_LDAP_SERVER_BIND_PASSWORD;
             	    if ($ldapbind_pwd == "") {
                         $fail = TRUE;
@@ -1402,7 +1402,11 @@ class USER
      */
     private function formatLdapLogin($login)
     {
-        assert(in_array(WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT, ["sam", "upn"]));
+        $format = \UTILS\array_value_select(
+        	WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT_LIST,
+        	WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT,
+        	WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT_DEFAULT
+        );
         
     	if (WIKINDX_LDAP_SERVER_BIND_DOMAIN == "") {
     	    $login_formated = $login; // No format needed
@@ -1410,8 +1414,8 @@ class USER
     	    $login_formated = $login . "@" . WIKINDX_LDAP_SERVER_BIND_DOMAIN; // user@domain.example.com
     	} else if (WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT == "sam") {
     	    $login_formated = WIKINDX_LDAP_SERVER_BIND_DOMAIN . "\\" . $login; // DOMAIN\user
-    	} else {
-    	    $login_formated = $login; // No format provided (error)
+    	} else if (WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT == "none") {
+    	    $login_formated = $login; // No format requested
     	}
     	
     	return $login_formated;

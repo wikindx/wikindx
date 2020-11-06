@@ -242,6 +242,13 @@ define('WIKINDX_LDAP_DEBUG_LEVEL', 7); // 7 = max level
 define('WIKINDX_LDAP_SERVER_NETWORK_TIMEOUT', 10); // In seconds
 define('WIKINDX_LDAP_SERVER_RESPONSE_TIMEOUT', 15); // In seconds
 define('WIKINDX_LDAP_USE_REFERRALS', 0); // 1/0 = On/off
+define('WIKINDX_LDAP_SERVER_ENCRYPTION_LIST', ['none' => 'none', 'ssl' => 'ssl', 'starttls' => 'starttls']);
+define('WIKINDX_LDAP_SERVER_BIND_TYPE_LIST', ['anonymous' => 'anonymous', 'proxyuser' => 'proxyuser', 'user' => 'user']);
+define('WIKINDX_LDAP_SEARCH_TYPE_LIST', ['list' => 'list', 'tree' => 'tree']);
+define('WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT_LIST', ['none' => 'none', 'sam' => 'sam', 'upn' => 'upn']);
+define('WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL', 'mail');
+define('WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME', 'displayname');
+define('WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN_LIST', ['sAMAccountName' => 'sAMAccountName', 'uid' => 'uid', 'userPrincipalName' => 'userPrincipalName']);
 
 
 // Mail system
@@ -356,8 +363,6 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configLdapServerBindType"        => ["constname" => "WIKINDX_LDAP_SERVER_BIND_TYPE",         "type" => "configVarchar"],
     "configLdapServerEncryption"      => ["constname" => "WIKINDX_LDAP_SERVER_ENCRYPTION",        "type" => "configVarchar"],
     "configLdapUse"                   => ["constname" => "WIKINDX_LDAP_USE",                      "type" => "configBoolean"],
-    "configLdapUserAttributEmail"     => ["constname" => "WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL",     "type" => "configVarchar"],
-    "configLdapUserAttributFullname"  => ["constname" => "WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME",  "type" => "configVarchar"],
     "configLdapUserAttributLogin"     => ["constname" => "WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN",     "type" => "configVarchar"],
     "configLdapUserCreate"            => ["constname" => "WIKINDX_LDAP_USER_CREATE",              "type" => "configBoolean"],
     "configLdapUserDn"                => ["constname" => "WIKINDX_LDAP_USER_DN",                  "type" => "configVarchar"],

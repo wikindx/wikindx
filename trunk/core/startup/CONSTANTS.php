@@ -417,4 +417,5 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configUserRegistration"          => ["constname" => "WIKINDX_USER_REGISTRATION",             "type" => "configBoolean"],
     "configUserRegistrationModerate"  => ["constname" => "WIKINDX_USER_REGISTRATION_MODERATE",    "type" => "configBoolean"],
     "configResourceUrlPrefix"         => ["constname" => "WIKINDX_RESOURCE_URL_PREFIX",           "type" => "configVarchar"],
+    "configBrowserTagID"         	  => ["constname" => "WIKINDX_BROWSER_TAG_ID",    			  "type" => "configBoolean"],
 ]);

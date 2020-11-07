@@ -33,6 +33,44 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "MAIL.php"]));
 
 
 /**
+ * FACTORY_BROWSERTABID
+ *
+ *	Create objects for commonly used classes.
+ *	Theoretically, this should save time in loading classes using include() statements and, perhaps, memory
+ *	by not having multiple instances of the same object.
+ *	Many WIKINDX classes have busy __construct() methods (initializing arrays etc.).  Using FACTORY ensures that
+ *	this work is only done once each time the web server deals with a script -- subsequent class instantiations
+ *	in the same server call return only the already constructed object.
+ *
+ *	e.g. To call the FACTORY SESSION object:
+ *		$this->session = FACTORY_SESSION::getInstance();
+ *
+ * @package wikindx\core\startup
+ */
+class FACTORY_BROWSERTABID
+{
+    /** object */
+    private static $instance;
+
+    /**
+     * Get instance
+     *
+     * @param string $upgradeCompleted (Default is FALSE)
+     *
+     * @return object (self::$instance)
+     */
+    public static function getInstance($upgradeCompleted = FALSE)
+    {
+        if (empty(self::$instance)) {
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BROWSERTABID.php"]));
+            self::$instance = new BROWSERTABID($upgradeCompleted);
+        }
+
+        return self::$instance;
+    }
+}
+
+/**
  * FACTORY_HOUSEKEEPING
  *
  *	Create objects for commonly used classes.

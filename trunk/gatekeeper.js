@@ -14,7 +14,7 @@ function redirectSet(url, qs)
 	}
 	if (qs) {
 		url = url + '&browserTabID=' + browserTabID;
-	} else {
+	} else { // plain index.php
 		url = url + '?browserTabID=' + browserTabID;
 	}
 	window.location.href = url;
@@ -35,7 +35,7 @@ function getBrowserTabID(url, qs, browserTabID)
 	sessionStorage.setItem('browserTabID', browserTabID);
 	if (qs) {
 		url = url + '&browserTabID=' + browserTabID;
-	} else {
+	} else { // plain index.php
 		url = url + '?browserTabID=' + browserTabID;
 	}
 	window.location.href = url;

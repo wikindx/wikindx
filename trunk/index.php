@@ -22,28 +22,6 @@
   */
 include_once("core/startup/WEBSERVERCONFIG.php");
 /**
-  * Generate/return the unique browser tab/window identifier
-  */
-$script = WIKINDX_URL_BASE . '/gatekeeper.js?ver=' . WIKINDX_PUBLIC_VERSION;
-$qs = $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : FALSE;
-$url = WIKINDX_URL_BASE . '/index.php' . $qs;
-if (!array_key_exists('browserTabID', $_GET)) {
-// go into gatekeeper for a redirect and addition of a browserTabID to the querystring
-print <<< END
-<script src="$script"></script>
-<script>redirectSet("$url", "$qs")</script>
-END;
-}
-else {
-// go into gatekeeper to check if browserTabID is unique to the tab (perhaps user has opened link with browserTabID in a new tab/window)
-$id = $_GET['browserTabID'];
-print <<< END
-<script src="$script"></script>
-<script>getBrowserTabID("$url", "$qs", "$id")</script>
-END;
-}
-GLOBALS::setBrowserTabID($_GET['browserTabID']);
-/**
  *	First pass through authentication.
  */
 // return from gatekeep is either TRUE (meaning proceed without change) or FALSE (meaning set $vars['action'] = "front')
@@ -56,6 +34,9 @@ if ($authorize->gateKeep() === FALSE) {
 if (array_key_exists('method', $vars) && ($vars['method'] == 'RSS')) {
     unset($vars['method']);
 }
+// Generate the javascript for the BROWSERTABID now that we've checked authorization
+$btID = FACTORY_BROWSERTABID::getInstance();
+$btID->js();
 // User bookmarks can only be added when looking at a single resource's details or resource lists.
 // Set default behaviour here to remove 'add bookmark' link from menu
 $session = FACTORY_SESSION::getInstance();

@@ -41,6 +41,8 @@ class PAGINGALPHA
     private $session;
     /** object */
     private $messages;
+    /** string */
+    private $browserTabID = FALSE;
 
     /**
      *	PAGING
@@ -51,6 +53,7 @@ class PAGINGALPHA
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
         $this->getPagingStart();
     }
     /**
@@ -65,8 +68,13 @@ class PAGINGALPHA
      */
     public function getPaging($conditions, $joins, $conditionsOneField, $table = 'resource', $subQ, $QS = FALSE)
     {
-        $this->total = $this->session->getVar("setup_PagingTotal");
-        if ($this->pagingArray = $this->session->getVar("list_PagingAlphaLinks")) {
+        if (!$this->total = GLOBALS::getTempStorage('setup_PagingTotal')) {
+        	$this->total = $this->session->getVar("setup_PagingTotal");
+        }
+        if (!$this->pagingArray = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_PagingAlphaLinks')) {
+        	$this->pagingArray = $this->session->getVar("list_PagingAlphaLinks");
+        }
+        if (!is_bool($this->pagingArray)) {
             $this->sizeOfPA = count($this->pagingArray);
             $this->createLinks();
 
@@ -77,8 +85,10 @@ class PAGINGALPHA
             $viewMax = 20; // a cludge
         }
         if ($QS) {
-        	$conditions[] = $this->db->formatConditionsOneField($this->session->getVar("list_AllIds"), 
-        	'resourceId', '=', TRUE, FALSE, FALSE, TRUE);
+			if (!$ids = GLOBALS::getTempStorage('list_AllIds')) {
+				$ids = $this->session->getVar("list_AllIds");
+			}
+        	$conditions[] = $this->db->formatConditionsOneField($ids, 'resourceId', '=', TRUE, FALSE, FALSE, TRUE);
         	$joins = [];
             $joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
             $joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
@@ -160,7 +170,9 @@ class PAGINGALPHA
         }
         
         if ($start === FALSE) {
-            $start = $this->session->getVar("mywikindx_PagingStart", FALSE);
+        	if (!$start = GLOBALS::getTempStorage('mywikindx_PagingStart')) {
+	            $start = $this->session->getVar("mywikindx_PagingStart", FALSE);
+	        }
         }
         
         if ($start === FALSE) {
@@ -181,6 +193,7 @@ class PAGINGALPHA
         if (count($this->pagingArray) <= 1) {
             return FALSE;
         }
+        $BT = $this->browserTabID ? '&browserTabID=' . $this->browserTabID : FALSE;
         $tempArray = $this->pagingArray;
         if (mb_strpos($this->queryString, '?') !== FALSE) {
             $rootFile = FALSE;
@@ -197,7 +210,7 @@ class PAGINGALPHA
             if ($this->start == $index) {
                 $links[] = $chars;
             } else {
-                $link = htmlentities($this->queryString . "&PagingStart=$index");
+                $link = htmlentities($this->queryString . "&PagingStart=$index") . $BT;
                 $links[] = \HTML\a("page", "&nbsp;&nbsp;$chars&nbsp;&nbsp;", $rootFile . $link);
             }
         }

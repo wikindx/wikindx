@@ -77,6 +77,8 @@ class LISTCOMMON
     public $attachmentHashnames = [];
     /** bool */
     public $quarantineList = FALSE;
+    /** string */
+    private $browserTabID = FALSE;
 
 
     /**
@@ -99,6 +101,7 @@ class LISTCOMMON
         $this->resCommon = FACTORY_RESOURCECOMMON::getInstance();
         $this->languageClass = FACTORY_CONSTANTS::getInstance();
         $this->stats->list = TRUE;
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * Check there are resources to display
@@ -142,12 +145,32 @@ class LISTCOMMON
     {
         $this->session->delVar("mywikindx_PagingStart");
         $this->session->delVar("list_NextPreviousIds");
-        $sql = $this->session->getVar("sql_ListStmt");
+        if ($this->browserTabID) {
+        	GLOBALS::unsetTempStorage(['list_NextPreviousIds', 'mywikindx_PagingStart']);
+        }
+        if ($this->browserTabID) {
+        	$sql = GLOBALS::getTempStorage('sql_ListStmt');
+        } else {
+        	$sql = $this->session->getVar("sql_ListStmt");
+        }
         // set back to beginning
         $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         $this->display($sql . $limit, $listType);
         $this->session->saveState(['list', 'sql', 'bookmark']);
         $this->session->setVar("list_SubQuery", $this->session->getVar("list_SubQueryMulti"));
+        if ($this->browserTabID) {
+        	GLOBALS::setTempStorage(['list_SubQuery' => $this->session->getVar("list_SubQueryMulti")]);
+        }
+    }
+    /** 
+     * Store various parameters in temp_storage
+     */
+    public function updateTempStorage()
+    {
+    	if (!$this->browserTabID) {
+    		return;
+    	}
+        \TEMPSTORAGE\store($this->db, $this->browserTabID, GLOBALS::getTempStorage());
     }
     /**
      * Produce a list of resources
@@ -159,9 +182,12 @@ class LISTCOMMON
      */
     public function display($sql, $listType = FALSE)
     {
-        $this->session->setVar("list_On", TRUE);
+    	$this->session->setVar("list_On", TRUE);
         if (!$this->keepHighlight) {
             $this->session->delVar("search_Highlight");
+			if ($this->browserTabID) {
+				GLOBALS::unsetTempStorage(['search_Highlight']);
+			}
         }
         $this->bibStyle->bibformat->patterns = $this->patterns;
         if (GLOBALS::getUserVar('ListLink')) {
@@ -271,6 +297,7 @@ class LISTCOMMON
 
         if (count($resources) > 0) {
             $this->session->setVar("list_NextPreviousIds", $resIds);
+            GLOBALS::setTempStorage(["list_NextPreviousIds" => $resIds]);
             $this->formatResources($listType, $resourceList, $resources);
             $this->createLinks($listType, $resourceList, $resources);
 
@@ -304,6 +331,9 @@ class LISTCOMMON
     {
         $this->session->delVar("list_AllIds");
         $this->session->delVar("list_NextPreviousIds");
+		if ($this->browserTabID) {
+			GLOBALS::unsetTempStorage(['list_NextPreviousIds', 'list_AllIds']);
+		}
         if ($this->pagingObject && ($listType != 'cite')) {
             $this->displayListInfo($listType, FALSE);
         } else { // from SEARCH.php if only ideas are searched on
@@ -322,6 +352,9 @@ class LISTCOMMON
     {
         $this->session->delVar("list_AllIds");
         $this->session->delVar("list_NextPreviousIds");
+		if ($this->browserTabID) {
+			GLOBALS::unsetTempStorage(['list_NextPreviousIds', 'list_AllIds']);
+		}
         GLOBALS::addTplVar('content', $this->messages->text("select", "noIdeas"));
         GLOBALS::clearTplVar('pagingList');
         
@@ -336,24 +369,20 @@ class LISTCOMMON
      */
     public function displayAscDesc($type)
     {
-        if ($ascDesc = trim($this->session->getVar($type . "_AscDesc"))) {
-            if ($ascDesc == 'ASC') {
-                return \FORM\radioButton(FALSE, $type . "_AscDesc", 'ASC', TRUE) .
-                    $this->messages->text("list", "ascending") .
-                    BR . \FORM\radioButton(FALSE, $type . "_AscDesc", 'DESC') .
-                    $this->messages->text("list", "descending");
-            } else {
-                return \FORM\radioButton(FALSE, $type . "_AscDesc", 'ASC') .
-                    $this->messages->text("list", "ascending") .
-                    BR . \FORM\radioButton(FALSE, $type . "_AscDesc", 'DESC', TRUE) .
-                    $this->messages->text("list", "descending");
-            }
-        } else {
-            return \FORM\radioButton(FALSE, $type . "_AscDesc", 'ASC', TRUE) .
-                $this->messages->text("list", "ascending") .
-                BR . \FORM\radioButton(FALSE, $type . "_AscDesc", 'DESC') .
-                $this->messages->text("list", "descending");
-        }
+    	if (!$ascDesc = GLOBALS::getTempStorage($type . "_AscDesc")) {
+	        $ascDesc = $this->session->getVar($type . "_AscDesc");
+	    }
+		if (trim($ascDesc) == 'ASC') {
+			return \FORM\radioButton(FALSE, $type . "_AscDesc", 'ASC', TRUE) .
+				$this->messages->text("list", "ascending") .
+				BR . \FORM\radioButton(FALSE, $type . "_AscDesc", 'DESC') .
+				$this->messages->text("list", "descending");
+		} else {
+			return \FORM\radioButton(FALSE, $type . "_AscDesc", 'ASC') .
+				$this->messages->text("list", "ascending") .
+				BR . \FORM\radioButton(FALSE, $type . "_AscDesc", 'DESC', TRUE) .
+				$this->messages->text("list", "descending");
+		}
     }
     /**
      * Set the paging object if paging is alphabetic or not
@@ -407,37 +436,23 @@ class LISTCOMMON
     public function displayOrder($type, $reorder = FALSE)
     {
         if (($type == 'list') && !$this->browse) {
-//            if (WIKINDX_FILE_VIEW_LOGGEDON_ONLY && !$this->session->getVar("setup_UserId")) {
-                $order = [
-                    "creator" => $this->messages->text("list", "creator"),
-                    "title" => $this->messages->text("list", "title"),
-                    "publisher" => $this->messages->text("list", "publisher"),
-                    "year" => $this->messages->text("list", "year"),
-                    "timestamp" => $this->messages->text("list", "timestamp"),
-                    "maturityIndex" => $this->messages->text("list", "maturity"),
-                ];
-/*            } else {
-                $order = [
-                    "creator" => $this->messages->text("list", "creator"),
-                    "title" => $this->messages->text("list", "title"),
-                    "publisher" => $this->messages->text("list", "publisher"),
-                    "year" => $this->messages->text("list", "year"),
-                    "timestamp" => $this->messages->text("list", "timestamp"),
-                    "popularityIndex" => $this->messages->text("list", "popularity"),
-                    "viewsIndex" => $this->messages->text("list", "views"),
-                    "downloadsIndex" => $this->messages->text("list", "downloads"),
-                    "maturityIndex" => $this->messages->text("list", "maturity"),
-                ];
-            }
-*/        } 
-		  else {
-            $order = [
-                "creator" => $this->messages->text("list", "creator"),
-                "title" => $this->messages->text("list", "title"),
-                "publisher" => $this->messages->text("list", "publisher"),
-                "year" => $this->messages->text("list", "year"),
-                "timestamp" => $this->messages->text("list", "timestamp"),
-            ];
+			$order = [
+				"creator" => $this->messages->text("list", "creator"),
+				"title" => $this->messages->text("list", "title"),
+				"publisher" => $this->messages->text("list", "publisher"),
+				"year" => $this->messages->text("list", "year"),
+				"timestamp" => $this->messages->text("list", "timestamp"),
+				"maturityIndex" => $this->messages->text("list", "maturity"),
+			];
+        }
+		else {
+			$order = [
+				"creator" => $this->messages->text("list", "creator"),
+				"title" => $this->messages->text("list", "title"),
+				"publisher" => $this->messages->text("list", "publisher"),
+				"year" => $this->messages->text("list", "year"),
+				"timestamp" => $this->messages->text("list", "timestamp"),
+			];
         }
         if ($type == 'basket') {
             $type = 'list';
@@ -447,7 +462,10 @@ class LISTCOMMON
         } else {
             $size = '2';
         }
-        if ($selected = $this->session->getVar($type . "_Order")) {
+        if (!$selected = GLOBALS::getTempStorage($type . "_Order")) {
+        	$selected = $this->session->getVar($type . "_Order");
+        }
+        if ($selected) {
             $pString = \FORM\selectedBoxValue(
                 $this->messages->text("list", "order"),
                 $type . "_Order",
@@ -857,9 +875,12 @@ class LISTCOMMON
                     BR . \FORM\formSubmit($this->messages->text("submit", "Proceed"), 'Submit', "onclick=\"document.forms['formSortingAddingListInfo'].elements['action'].value='basket_BASKET_CORE'\"");
             } elseif ($listType == 'search') {
                 if ($this->quickSearch) {
-                    $linksInfo['reorder'] =
+                    $linksInfo['reorder'] = 
+                    	\FORM\hidden("browserTabID", $this->browserTabID) . 
                         \FORM\hidden("method", "reprocess") . $this->displayOrder($listType, TRUE) .
-                        BR . \FORM\formSubmit($this->messages->text("submit", "Proceed"), 'Submit', "onclick=\"document.forms['formSortingAddingListInfo'].elements['action'].value='list_QUICKSEARCH_CORE'\"");
+                        BR . \FORM\formSubmit($this->messages->text("submit", "Proceed"), 'Submit', 
+                        "onclick=\"document.forms['formSortingAddingListInfo'].elements['action'].value='list_QUICKSEARCH_CORE'
+                        \"");
                 } else {
                     $linksInfo['reorder'] =
                         \FORM\hidden("method", "reprocess") . $this->displayOrder($listType, TRUE) .
@@ -1179,8 +1200,14 @@ class LISTCOMMON
                         $strings[] = $this->messages->text('listParams', 'field') . ':&nbsp;&nbsp;' . $id;
                     }
                 }
-                if ($id = $this->session->getVar($listType . '_Word')) {
-                    if ($this->session->getVar($listType . '_Partial') == 'on') {
+                if ($this->browserTabID && ($id = GLOBALS::getTempStorage('search_Word'))) {
+                    if (GLOBALS::getTempStorage('search_Partial')) {
+                        $id .= "&nbsp;(" . $this->messages->text('listParams', 'partial') . ")";
+                    }
+                    $strings[] = $this->messages->text('listParams', 'word') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
+                }
+                else if ($id = $this->session->getVar('search_Word')) {
+                    if ($this->session->getVar('search_Partial') == 'on') {
                         $id .= "&nbsp;(" . $this->messages->text('listParams', 'partial') . ")";
                     }
                     $strings[] = $this->messages->text('listParams', 'word') . ':&nbsp;&nbsp;' . \HTML\nlToHtml($id);
@@ -1284,6 +1311,9 @@ class LISTCOMMON
         }
         if (empty($strings)) {
             $this->session->delVar("sql_ListParams");
+			if ($this->browserTabID) {
+				GLOBALS::unsetTempStorage(['sql_ListParams']);
+			}
 
             return FALSE;
         }

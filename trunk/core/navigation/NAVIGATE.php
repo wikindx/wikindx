@@ -23,6 +23,8 @@ class NAVIGATE
     private $session;
     /** object */
     private $messages;
+    /** string */
+    private $browserTabID = FALSE;
 
     /**
      * NAVIGATE
@@ -32,6 +34,7 @@ class NAVIGATE
         $this->db = FACTORY_DB::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * Navigate back to a list view
@@ -58,8 +61,11 @@ class NAVIGATE
 			header("Location: index.php?action=list_QUICKSEARCH_CORE&method=reprocess&message=$message&quickSearch=0&keepHighlight=1&ideasFound=$ideasFound&patterns=$patterns");
 			die;
         } elseif ($match[1] == 'QUICKSEARCH') {
-            $patterns = base64_encode(serialize($this->session->getVar("search_Patterns")));
-			header("Location: index.php?action=list_QUICKSEARCH_CORE&method=reprocess&message=$message&quickSearch=1&keepHighlight=1&patterns=$patterns");
+        	if (!$patterns = GLOBALS::getTempStorage('search_Patterns')) {
+	            $patterns = $this->session->getVar("search_Patterns");
+	        }
+	        $patterns = base64_encode(serialize($patterns));
+			header("Location: index.php?action=list_QUICKSEARCH_CORE&method=reprocess&message=$message&quickSearch=1&keepHighlight=1&patterns=$patterns&navigate=1");
 			die;
         } elseif ($match[1] == 'LISTRESOURCES') {
 			header("Location: index.php?action=list_LISTRESOURCES_CORE&method=reorder&message=$message&url=1");

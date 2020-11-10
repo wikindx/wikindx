@@ -47,6 +47,8 @@ class PARSEPHRASE
     private $attachmentSearch;
     /** array */
     private $useRegex;
+    /** string */
+    private $browserTabID = FALSE;
 
     /**
      * PARSEPHRASE
@@ -56,6 +58,7 @@ class PARSEPHRASE
         $this->session = FACTORY_SESSION::getInstance();
         $this->db = FACTORY_DB::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * Parse input and create SQL condition
@@ -264,10 +267,16 @@ class PARSEPHRASE
             $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_Highlight")));
             $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
             $this->session->setVar("search_Highlight", implode(",", $searchHighlight));
+            if ($this->browserTabID) {
+            	GLOBALS::setTempStorage(['search_Highlight' => $searchHighlight]);
+            }
         } else {
             $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_HighlightIdea")));
             $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
             $this->session->setVar("search_HighlightIdea", implode(",", $searchHighlight));
+            if ($this->browserTabID) {
+            	GLOBALS::setTempStorage(['search_HighlightIdea' => $searchHighlight]);
+            }
         }
 
         return trim($phrase);
@@ -405,10 +414,16 @@ class PARSEPHRASE
             $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_Highlight")));
             $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
             $this->session->setVar("search_Highlight", implode(",", $searchHighlight));
+            if ($this->browserTabID) {
+            	GLOBALS::setTempStorage(['search_Highlight' => $searchHighlight]);
+            }
         } else {
             $storedHighlight = array_filter(\UTF8\mb_explode(',', $this->session->getVar("search_HighlightIdea")));
             $searchHighlight = array_unique(array_merge($storedHighlight, $searchHighlight));
             $this->session->setVar("search_HighlightIdea", implode(",", $searchHighlight));
+            if ($this->browserTabID) {
+            	GLOBALS::setTempStorage(['search_HighlightIdea' => $searchHighlight]);
+            }
         }
         $sizeof = count($conditions);
         $count = 0;

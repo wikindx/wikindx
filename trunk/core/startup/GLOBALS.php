@@ -28,6 +28,10 @@ class GLOBALS
      */
     private static $userVars = [];
     /**
+     * temp_storage table variables are stored here
+     */
+    private static $tempStorage = [];
+    /**
      *  The db queries counter
      */
     private static $WIKINDX_DB_QUERIES = 0;
@@ -100,6 +104,68 @@ class GLOBALS
     public static function getDirtyVars()
     {
         return self::$dirtyVars;
+    }
+    /**
+     * Initaliaze the tempStorage array
+     *
+     * @param object $db
+     * @param string uuid
+     */
+    public static function initTempStorage($db, $uuid)
+    { 
+    	$db->formatConditions(['tempstorageId' => $uuid]);
+		$row = $db->selectFirstField('temp_storage', 'tempstorageData');
+		if (is_bool($row)) {
+			self::$tempStorage = [];
+			return;
+		}
+		$data = unserialize($row);
+		if (empty($data)) {
+			self::$tempStorage = [];
+			return;
+		}
+		self::$tempStorage = $data;
+    }
+    /**
+     * Set tempStorage variables
+     *
+     * @param array $array (assoc. array)
+     * @param mixed $value
+     */
+    public static function setTempStorage($array)
+    {
+    	foreach ($array as $key => $value) {
+	        self::$tempStorage[$key] = $value;
+	    }
+    }
+    /**
+     * Unset tempStorage variables
+     *
+     * @param array $array (keys to unset)
+     * @param mixed $value
+     */
+    public static function unsetTempStorage($array)
+    {
+    	foreach ($array as $key) {
+	        unset(self::$tempStorage[$key]);
+	    }
+    }
+    /**
+     * Get $tempStorage either in whole or in part
+     *
+     * @param string $key default is FALSE
+     *
+     * @return mixed Array ($key == FALSE), FALSE if $key not found, else string
+     */
+    public static function getTempStorage($key = FALSE)
+    {
+    	if ($key) {
+    		if (!array_key_exists($key, self::$tempStorage)) {
+    			return FALSE;
+    		}
+    		return self::$tempStorage[$key];
+    	}
+        return self::$tempStorage;
     }
     /**
      * Set browserTabID

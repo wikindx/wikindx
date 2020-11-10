@@ -32,7 +32,7 @@ class QUICKSEARCH
     private $parsePhrase;
     private $commonBib;
     private $subQ;
-    public $browserTabID = FALSE;
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
@@ -50,27 +50,28 @@ class QUICKSEARCH
         $this->parsePhrase = FACTORY_PARSEPHRASE::getInstance();
     	$this->parsePhrase->quickSearch = TRUE;
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
-        switch ($this->session->getVar("search_Order")) {
-            case 'title':
-                break;
-            case 'creator':
-                break;
-            case 'publisher':
-                break;
-            case 'year':
-                break;
-            case 'timestamp':
-                break;
-            default:
-                $this->session->setVar("search_Order", "creator");
+        $this->browserTabID = GLOBALS::getBrowserTabID();
+        if ($this->browserTabID) {
+        // 1. Load any pre-existing search data into GLOBALS $tempStorage
+        // 2. Store in and extract data from $tempStorage
+        // 3. Finally, put back $tempStorage into temp_storage using $this->common->updateTempStorage();
+        	GLOBALS::initTempStorage($this->db, $this->browserTabID);
+        	$order = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'search_Order');
+        	$order = GLOBALS::getTempStorage('search_Order');
+        	if (!$order) {
+        		$order = 'creator';
+        	}
+        } else {
+        	$order = $this->session->getVar("search_Order");
+			if (!in_array($order, ['title', 'creator', 'publisher', 'year', 'timestamp'])) { // set default
+				$this->session->setVar("search_Order", "creator");
+			}
         }
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
-        $this->browserTabID = GLOBALS::getBrowserTabID();
-        print 'ID: ' . $this->browserTabID;
     }
     /**
-     * display form options. $word comes from modules/cite/INSERTCITATION.php
+     * display form options. $word comes from modules/cite/INSERTCITATION.php if being used.
      *
      * @param mixed $error
      * @param mixed $tableBorder
@@ -81,7 +82,7 @@ class QUICKSEARCH
      */
     public function init($error = FALSE, $tableBorder = FALSE, $returnString = FALSE, $word = FALSE)
     {
-        ///First check, do we have resources?
+		// First check, do we have resources?
         if (!$this->common->resourcesExist()) {
             return;
         }
@@ -96,6 +97,9 @@ class QUICKSEARCH
         }
         $this->session->delVar("mywikindx_PagingStart");
         $this->session->delVar("mywikindx_PagingStartAlpha");
+		if ($this->browserTabID) {
+			GLOBALS::unsetTempStorage(['mywikindx_PagingStart', 'mywikindx_PagingStartAlpha']);
+		}
         $pString = $error ? $error : FALSE;
         if (!$this->insertCitation) {
             $pString .= \FORM\formHeader("list_QUICKSEARCH_CORE");
@@ -103,6 +107,7 @@ class QUICKSEARCH
             $pString .= \FORM\formHeaderVisibleAction("dialog.php", "searchInsertCitation");
         }
         $pString .= \FORM\hidden("method", "process");
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         if ($tableBorder) {
             $pString .= \HTML\tableStart('generalTable borderStyleSolid');
         } else {
@@ -111,8 +116,13 @@ class QUICKSEARCH
         $pString .= \HTML\trStart();
         $this->radioButtons = FALSE;
         if (!$word) {
-            $word = $this->session->issetVar("search_Word") ?
-                htmlspecialchars(stripslashes($this->session->getVar("search_Word")), ENT_QUOTES | ENT_HTML5) : FALSE;
+        	if ($this->browserTabID && ($word = GLOBALS::getTempStorage('search_Word'))) {
+        		$word = htmlspecialchars(stripslashes($word), ENT_QUOTES | ENT_HTML5);
+        	} else if ($this->session->issetVar("search_Word")) {
+            	$word = htmlspecialchars(stripslashes($this->session->getVar("search_Word")), ENT_QUOTES | ENT_HTML5);
+            } else {
+            	$word = FALSE;
+            }
         }
         $hint = BR . \HTML\span(\HTML\aBrowse(
             'green',
@@ -145,14 +155,6 @@ class QUICKSEARCH
         } else {
             GLOBALS::addTplVar('content', $pString);
         }
-    }
-    /**
-     * Reset the form and clear the session
-     */
-    public function reset()
-    {
-        $this->session->clearArray('search');
-        $this->init();
     }
     /**
      * create the unions
@@ -220,7 +222,17 @@ class QUICKSEARCH
      */
     public function reprocess()
     {
-        if (array_key_exists('message', $this->vars)) {
+    	if ($this->browserTabID && array_key_exists('type', $this->vars) && 
+    		($this->vars['type'] == 'lastMulti') && !\TEMPSTORAGE\exists($this->db, $this->browserTabID)) { // Opened Last Multi in a new tab
+    		$this->init();
+    		return;
+    	}
+    	if ($this->browserTabID && array_key_exists('method', $this->vars) && 
+    		($this->vars['method'] == 'reprocess') && !\TEMPSTORAGE\exists($this->db, $this->browserTabID)) { // Opened paging link in a new tab
+    		$this->init();
+    		return;
+    	}
+    	if (array_key_exists('message', $this->vars)) {
             GLOBALS::addTplVar('content', $this->vars['message']);
         }
         if (array_key_exists('quickSearch', $this->vars)) {
@@ -237,20 +249,44 @@ class QUICKSEARCH
 	            $this->common->keepHighlight = FALSE;
 	        }
         }
-        if (array_key_exists('patterns', $this->vars)) {
+        if ($this->browserTabID) {
+        	$this->common->keepHighlight = TRUE;
+        	$this->common->patterns = GLOBALS::getTempStorage('search_Patterns');
+        }
+        else if (array_key_exists('patterns', $this->vars)) {
             $this->common->patterns = unserialize(base64_decode($this->vars['patterns']));
         }
         $reprocess = TRUE;
-        $this->input = $this->session->getArray("search");
         if (array_key_exists("search_Order", $this->vars) && $this->vars["search_Order"]) {
             if (($this->session->getVar("search_Order") != $this->vars["search_Order"]) ||
                 ($this->session->getVar("search_AscDesc") != $this->vars['search_AscDesc'])) {
                 $reprocess = FALSE;
             }
-            $this->input['order'] = $this->vars["search_Order"];
-            $this->session->setVar("search_Order", $this->input['order']);
-            $this->session->setVar("sql_LastOrder", $this->input['order']);
+            $this->input['Order'] = $this->vars["search_Order"];
+            $this->input['AscDesc'] = $this->vars["search_AscDesc"];
+            $this->session->setVar("search_Order", $this->vars["search_Order"]);
+            $this->session->setVar("sql_LastOrder", $this->vars["search_Order"]);
             $this->session->setVar("search_AscDesc", $this->vars['search_AscDesc']);
+            if ($this->browserTabID) {
+				GLOBALS::setTempStorage(['search_Order' => $this->vars["search_Order"]]);
+				GLOBALS::setTempStorage(['sql_LastOrder' => $this->vars["search_Order"]]);
+				GLOBALS::setTempStorage(['search_AscDesc' => $this->vars['search_AscDesc']]);
+				$this->input['Word'] = GLOBALS::getTempStorage('search_Word');
+            }
+            else {
+            	$this->input['Word'] = $this->session->getVar("search_Word");
+            }
+        }
+        else if ($this->browserTabID) {
+			$this->input['Word'] = GLOBALS::getTempStorage('search_Word');
+			$this->input['Order'] = GLOBALS::getTempStorage('search_Order');
+			$this->input['AscDesc'] = GLOBALS::getTempStorage('search_AscDesc');
+        } 
+        else {
+        	$this->input = $this->session->getArray("search");
+        }
+        if (array_key_exists("navigate", $this->vars)) {
+        	$reprocess = FALSE;
         }
         $this->process($reprocess);
     }
@@ -264,10 +300,16 @@ class QUICKSEARCH
         if (!$reprocess) {
             $this->session->delVar("list_AllIds");
             $this->session->delVar("list_PagingAlphaLinks");
+			if ($this->browserTabID) {
+				GLOBALS::unsetTempStorage(['list_AllIds', 'list_PagingAlphaLinks']);
+			}
         }
         if (!$reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
             $this->session->delVar("sql_ListStmt");
             $this->session->delVar("advancedSearch_listParams");
+			if ($this->browserTabID) {
+				GLOBALS::unsetTempStorage(['sql_ListStmt', 'advancedSearch_listParams']);
+			}
         }
         $this->stmt->listMethodAscDesc = 'search_AscDesc';
         $this->stmt->listType = 'search';
@@ -279,10 +321,21 @@ class QUICKSEARCH
             $this->session->setVar("search_Order", 'creator');
             $this->session->setVar("sql_LastOrder", 'creator');
             $this->session->setVar("search_AscDesc", $this->db->asc);
+            if ($this->browserTabID) {
+	            GLOBALS::setTempStorage(['search_Order' => 'creator']);
+    	        GLOBALS::setTempStorage(['sql_LastOrder' => 'creator']);
+        	    GLOBALS::setTempStorage(['search_AscDesc' => $this->db->asc]);
+        	}
         } else {
             $this->session->setVar("sql_LastOrder", $this->input['Order']);
+            if ($this->browserTabID) {
+            	GLOBALS::setTempStorage(['sql_LastOrder' => $this->input['Order']]);
+            }
         }
         $this->input['Partial'] = TRUE;
+        if ($this->browserTabID) {
+        	GLOBALS::setTempStorage(['search_Partial' => $this->input['Partial']]);
+        }
         GLOBALS::setTplVar('resourceListSearchForm', $this->init(FALSE, TRUE, TRUE));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));
         if (!$this->getIds($reprocess, $queryString)) {
@@ -295,10 +348,15 @@ class QUICKSEARCH
             $this->pagingObject->getPaging();
             $this->common->pagingObject = $this->pagingObject;
             $this->common->lastMulti('search');
+        	$this->common->updateTempStorage();
 
             return;
         }
-        $searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_Highlight"));
+        if ($this->browserTabID) {
+        	$searchTerms = GLOBALS::getTempStorage('search_Highlight');
+        } else {
+	        $searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_Highlight"));
+	    }
         $patterns = [];
         foreach ($searchTerms as $term) {
             if (trim($term)) {
@@ -308,13 +366,21 @@ class QUICKSEARCH
         }
         $this->common->patterns = $patterns;
         $this->session->setVar("search_Patterns", $patterns);
+        if ($this->browserTabID) {
+//	        GLOBALS::setTempStorage(['search_AscDesc' => $this->db->asc]);
+	        GLOBALS::setTempStorage(['search_Patterns' => $patterns]);
+	    }
         $this->common->keepHighlight = TRUE;
         $sql = $this->getFinalSql($reprocess, $queryString);
         $this->common->display($sql, 'search');
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+		if ($this->browserTabID) {
+			GLOBALS::setTempStorage(['sql_LastMulti' => $queryString]);
+		}
         $this->session->saveState(['search', 'sql', 'setup', 'bookmark', 'list']);
         $this->session->delVar("bookmarkRead");
+        $this->common->updateTempStorage();
     }
     /**
      * Get the list of resource ids
@@ -349,6 +415,9 @@ class QUICKSEARCH
  					$allIds[] = $row['resourceId'];
  				}
  				$this->session->setVar("list_AllIds", $allIds);
+ 				if ($this->browserTabID) {
+	        		GLOBALS::setTempStorage(['list_AllIds' => $allIds]);
+	        	}
  				unset($allIds);
             }
             if ($nots) {
@@ -375,9 +444,14 @@ class QUICKSEARCH
         	$this->stmt->joins = [];
         	$this->stmt->joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
             $this->stmt->joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
-            $sql = $this->stmt->listListQS($this->session->getVar("search_Order"), FALSE, $this->subQ);
+            if (!$order = GLOBALS::getTempStorage('search_Order')) {
+            	$order = $this->session->getVar("search_Order");
+            }
+            $sql = $this->stmt->listListQS($order, FALSE, $this->subQ);
         } else {
-            $sql = $this->session->getVar("sql_ListStmt");
+            if (!$sql = GLOBALS::getTempStorage('sql_ListStmt')) {
+            	$sql = $this->session->getVar("sql_ListStmt");
+            }
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
@@ -418,28 +492,21 @@ class QUICKSEARCH
      */
     private function writeSession()
     {
-        // First, write all input with 'search_' prefix to session
-        foreach ($this->vars as $key => $value) {
-            if (preg_match("/^search_/u", $key)) {
-                $key = str_replace('search_', '', $key);
-                // Is this a multiple select box input?  If so, multiple choices are written to session as
-                // comma-delimited string (no spaces).
-                // Don't write any FALSE or '0' values.
-                if (is_array($value)) {
-                    if (!$value[0] || ($value[0] == $this->messages->text("misc", "ignore"))) {
-                        unset($value[0]);
-                    }
-                    $value = implode(",", $value);
-                }
-                if (!trim($value)) {
-                    continue;
-                }
-                $temp[$key] = trim($value);
-            }
-        }
         $this->session->clearArray("search");
-        if (!empty($temp)) {
-            $this->session->writeArray($temp, 'search');
+        if (!array_key_exists('search_Word', $this->vars)) {
+	    	$this->vars['search_Word'] = $this->session->getVar('tempTab_search_Word');
+	    	$this->session->clearArray('tempTab');
+	    }
+	    $word = \UTF8\mb_trim($this->vars['search_Word']);
+		$this->session->setVar('search_Word', $word);
+		if ($this->browserTabID) {
+        	GLOBALS::setTempStorage(['search_Word' => $word]);
+        }
+        if (array_key_exists('search_Order', $this->vars)) {
+			$this->session->setVar('search_Order', $this->vars['search_Order']);
+			if ($this->browserTabID) {
+				GLOBALS::setTempStorage(['search_Order' => $this->vars['search_Order']]);
+			}
         }
     }
     /**
@@ -452,12 +519,26 @@ class QUICKSEARCH
     private function checkInput()
     {
         $this->writeSession();
-        if ((array_key_exists("search_Word", $this->vars) && !\UTF8\mb_trim($this->vars["search_Word"]))
-        || !$this->session->getVar("search_Word")) {
-            $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
-        }
-
-        return $this->session->getArray("search");
+        if (!$this->browserTabID) {
+			if ((array_key_exists("search_Word", $this->vars) && !\UTF8\mb_trim($this->vars["search_Word"]))
+			|| !$this->session->getVar("search_Word")) {
+				$this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
+			}
+        	return $this->session->getArray("search");
+		}
+		else {
+			if ((array_key_exists("search_Word", $this->vars) && !\UTF8\mb_trim($this->vars["search_Word"]))
+			|| !GLOBALS::getTempStorage('search_Word')) {
+				$this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
+			}
+			foreach (GLOBALS::getTempStorage() as $key => $value) {
+				if (preg_match("/^search_/u", $key)) {
+                	$key = str_replace('search_', '', $key);
+                	$array[$key] = $value;
+                }
+			}
+        	return $array;
+		}
     }
     /**
      * Set the subQuery
@@ -466,9 +547,15 @@ class QUICKSEARCH
     {
     	if (!$this->session->getVar("search_Order")) { // from INSERTCITE
     		$this->session->setVar("search_Order", 'creator');
+    		if ($this->browserTabID) {
+    			GLOBALS::setTempStorage(['search_Order' => 'creator']);
+    		}
     	}
     	if (!$this->session->getVar("search_AscDesc")) { // from INSERTCITE
     		$this->session->setVar("search_AscDesc", $this->db->asc);
+    		if ($this->browserTabID) {
+    			GLOBALS::setTempStorage(['search_AscDesc' => $this->db->asc]);
+    		}
     	}
         $this->db->ascDesc = $this->session->getVar("search_AscDesc");
         switch ($this->session->getVar("search_Order")) {

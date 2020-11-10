@@ -39,6 +39,7 @@ class RESOURCEVIEW
     private $languageClass;
     private $execNP = TRUE;
     private $startNP = FALSE;
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
@@ -68,6 +69,7 @@ class RESOURCEVIEW
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
         $this->languageClass = FACTORY_CONSTANTS::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
         GLOBALS::setTplVar('help', $help->createLink('resource'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "resources"));
     }
@@ -79,7 +81,7 @@ class RESOURCEVIEW
      */
     public function init($id = FALSE, $message = FALSE)
     {
-        if ($id === FALSE) {
+    	if ($id === FALSE) {
             if (array_key_exists('id', $this->vars)) {
                 $id = $this->vars['id'];
             }
@@ -125,6 +127,7 @@ class RESOURCEVIEW
         $this->common->setHighlightPatterns();
         $this->updateAccesses();
         $this->displayResource($message);
+        \TEMPSTORAGE\store($this->db, $this->browserTabID, ['sql_LastSolo' => $this->vars['id']]);
     }
     /**
      * Display popup for all resource's bibliographic details
@@ -525,6 +528,7 @@ class RESOURCEVIEW
             }
         }
         $this->session->setVar("sql_LastSolo", $row['resourceId']);
+        \TEMPSTORAGE\store($this->db, $this->browserTabID, ['sql_LastSolo' => $row['resourceId']]);
         $this->session->saveState('sql');
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
@@ -696,23 +700,38 @@ class RESOURCEVIEW
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'random')) {
             return $this->nextRandomLink($thisId);
         }
+        // Check if opening this resource from a list into a new tab (sql_ListStmt not stored in temp_storage)
+    	if ($this->browserTabID && !\TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_ListStmt')) {
+    		return [];
+    	}
         if (!$this->execNP) {
             return [];
         }
         if ($this->startNP === FALSE) {
-            $start = $this->session->getVar("mywikindx_PagingStart", 0);
+			$start = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'mywikindx_PagingStart');
+			if (is_bool($start)) {
+				$start = $this->session->getVar("mywikindx_PagingStart", 0);
+			}
         } else {
             $start = $this->startNP;
         }
-        if (empty($this->session->getVar("list_NextPreviousIds"))) {
+        $allIds = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_NextPreviousIds');
+        if (is_bool($allIds)) {
+	        $allIds = $this->session->getVar("list_NextPreviousIds");
+	    }
+        if (is_bool($allIds) || empty($allIds)) {
             return [];
         }
-        $allIds = $this->session->getVar("list_NextPreviousIds");
         $thisKey = array_search($thisId, $allIds);
         if ($thisKey === FALSE) {
             return [];
         }
-        $order = $this->session->getVar("sql_LastOrder");
+        if (!$total = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'setup_PagingTotal')) {
+	        $total = $this->session->getVar("setup_PagingTotal");
+	    }
+        if (!$order = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_LastOrder')) {
+	        $order = $this->session->getVar("sql_LastOrder");
+	    }
         $alpha = (GLOBALS::getUserVar('PagingStyle') == 'A') && in_array($order, ['title', 'creator', 'attachments']);
         if ($thisKey) {
             $array['back'] = \HTML\a(
@@ -735,7 +754,7 @@ class RESOURCEVIEW
                 $this->icons->getHTML("next"),
                 "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $allIds[$thisKey + 1])
             );
-        } elseif (($start + GLOBALS::getUserVar('Paging') < $this->session->getVar("setup_PagingTotal")) && !$alpha) {
+        } elseif (($start + GLOBALS::getUserVar('Paging') < $total) && !$alpha) {
             $array['forward'] = \HTML\a(
                 $this->icons->getClass("next"),
                 $this->icons->getHTML("next"),
@@ -766,19 +785,24 @@ class RESOURCEVIEW
      */
     private function setPreviousNext($querySession, $returnId = FALSE, $reload = FALSE, $thisId = FALSE)
     {
-        $allIds = $this->session->getVar("list_NextPreviousIds");
-        if ($this->session->getVar("mywikindx_PagingStart")) {
+        $allIds = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_NextPreviousIds');
+        if (is_bool($allIds)) {
+	        $allIds = $this->session->getVar("list_NextPreviousIds");
+	    }
+	    if (!$start = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'mywikindx_PagingStart')) {
+	    	$start = $this->session->getVar("mywikindx_PagingStart");
+	    }
+        if ($start) {
             if ($returnId == 'forward') {
-                $this->session->setVar("mywikindx_PagingStart", $this->session->getVar("mywikindx_PagingStart") +
-                    GLOBALS::getUserVar('Paging'));
+                $this->session->setVar("mywikindx_PagingStart", $start + GLOBALS::getUserVar('Paging'));
             } else {
-                $this->session->setVar("mywikindx_PagingStart", $this->session->getVar("mywikindx_PagingStart") -
-                    GLOBALS::getUserVar('Paging'));
+                $this->session->setVar("mywikindx_PagingStart", $start - GLOBALS::getUserVar('Paging'));
             }
         } else {
             $this->session->setVar("mywikindx_PagingStart", count($allIds));
         }
-        $start = $this->session->getVar("mywikindx_PagingStart");
+		$start = $this->session->getVar("mywikindx_PagingStart");
+        \TEMPSTORAGE\store($this->db, $this->browserTabID, ['mywikindx_PagingStart' => $start]);
         $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $start, TRUE); // "LIMIT $limitStart, $limit";
         $query = $querySession . $limit;
         $resultset = $this->db->query($query);
@@ -791,6 +815,7 @@ class RESOURCEVIEW
         }
         if (isset($totalIds)) {
             $this->session->setVar("list_NextPreviousIds", $totalIds);
+        	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['list_NextPreviousIds' => $totalIds]);
         }
         if (isset($totalIds) && ($returnId == 'forward')) { // moving forwards
             return [$start, $totalIds[0]];

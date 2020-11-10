@@ -59,6 +59,8 @@ class SQLSTATEMENTS
         'resourcecreatorCreatorSurname', ];
     /** booolean */
     private $quickListAll = FALSE;
+    /** string */
+    private $browserTabID = FALSE;
 
     /**
      * SQLSTATEMENTS
@@ -68,6 +70,7 @@ class SQLSTATEMENTS
         $this->db = FACTORY_DB::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->common = FACTORY_LISTCOMMON::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * Select front page resources according to $limit resources from last $days
@@ -264,7 +267,9 @@ class SQLSTATEMENTS
             return FALSE; // Perhaps browsing metadata keywords where the keyword is not attached to resources but only to ideas.
         }
         $totalSubQuery = FALSE;
-        $this->db->ascDesc = $this->session->getVar($this->listMethodAscDesc);
+        if (!$this->db->ascDesc = GLOBALS::getTempStorage($this->listMethodAscDesc)) {
+	        $this->db->ascDesc = $this->session->getVar($this->listMethodAscDesc);
+	    }
         $np = [];
         $limit = FALSE;
         if ((GLOBALS::getUserVar('PagingStyle') != 'A') || ((GLOBALS::getUserVar('PagingStyle') == 'A') &&
@@ -371,11 +376,16 @@ class SQLSTATEMENTS
     public function listListQS($order = 'creator', $table = 'resource', $subQ = FALSE)
     {
         $this->listJoins = [];
-        if (!$this->allIds && !$this->session->getVar("list_AllIds")) {
+        if (!$allIds = GLOBALS::getTempStorage('list_AllIds')) {
+        	$allIds = $this->session->getVar("list_AllIds");
+        }
+        if (!$this->allIds && !$allIds) {
             return FALSE; // Perhaps browsing metadata keywords where the keyword is not attached to resources but only to ideas.
         }
         $totalSubQuery = FALSE;
-        $this->db->ascDesc = $this->session->getVar($this->listMethodAscDesc);
+        if (!$this->db->ascDesc = GLOBALS::getTempStorage($this->listMethodAscDesc)) {
+	        $this->db->ascDesc = $this->session->getVar($this->listMethodAscDesc);
+	    }
         $np = [];
         $limit = FALSE;
         if ((GLOBALS::getUserVar('PagingStyle') != 'A') || ((GLOBALS::getUserVar('PagingStyle') == 'A') &&
@@ -389,7 +399,7 @@ class SQLSTATEMENTS
             $this->executeCondJoins();
         }
         $this->db->formatConditions($this->db->formatFields('resourceId') .
-                $this->db->inClause(implode(',', $this->session->getVar("list_AllIds"))));
+                $this->db->inClause(implode(',', $allIds)));
         $this->listJoins($order, TRUE);
         if (($order == 'popularityIndex') || ($order == 'downloadsIndex') || ($order == 'viewsIndex')) {
             $this->listFields[] = 'index';
@@ -412,6 +422,9 @@ class SQLSTATEMENTS
             $listQuery = $this->db->queryNoExecute($this->db->selectNoExecute('resource', $this->listFields));
         }
         $this->session->setVar("sql_ListStmt", $listQuery);
+		if ($this->browserTabID) {
+			GLOBALS::setTempStorage(['sql_ListStmt' => $listQuery]);
+		}
 
         return $listQuery . $limit;
     }
@@ -443,7 +456,8 @@ class SQLSTATEMENTS
         }
         if (!$this->session->getVar("list_AllIds")) {
             if ($this->allIds and !GLOBALS::getUserVar('BrowseBibliography')) {
-                $this->session->setVar("setup_PagingTotal", $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources'));
+            	$total = $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources');
+                $this->session->setVar("setup_PagingTotal", $total);
                 $this->session->setVar("list_AllIds", 'all');
             } else {
                 $resultSet = $this->db->query($totalSubQuery);
@@ -454,9 +468,13 @@ class SQLSTATEMENTS
                     return FALSE;
                 }
                 $ids = array_filter($ids); // array_filter() to ensure no null ids
-                $this->session->setVar("setup_PagingTotal", count($ids));
+                $total = count($ids);
+                $this->session->setVar("setup_PagingTotal", $total);
                 $this->session->setVar("list_AllIds", $ids);
                 $this->session->delVar("sql_CountAlphaStmt");
+				if ($this->browserTabID) {
+					GLOBALS::unsetTempStorage(['sql_CountAlphaStmt']);
+				}
             }
         }
         $this->common->pagingStyle(
@@ -497,7 +515,9 @@ class SQLSTATEMENTS
     public function quicksearchSubQuery($queryString = FALSE, $totalSubQuery = FALSE, $subQ = FALSE, $type = FALSE)
     {
         $ids = [];
-        $order = $this->session->getVar("search_Order");
+        if (!$order = GLOBALS::getTempStorage('search_Order')) {
+	        $order = $this->session->getVar("search_Order");
+	    }
         if ($type != 'final') {
             $resultSet = $this->db->query($totalSubQuery);
             while ($row = $this->db->fetchRow($resultSet)) {
@@ -510,22 +530,28 @@ class SQLSTATEMENTS
             switch ($type) {
                 case 'or':
                     $this->session->setVar("list_AllIds", $ids);
-
+        			GLOBALS::setTempStorage(['list_AllIds' => $ids]);
                     return TRUE;
                 case 'and':
-                    if ($this->session->getVar("list_AllIds")) {
-                        $pastIds = $this->session->getVar("list_AllIds");
+                	if (!$pastIds = GLOBALS::getTempStorage('list_AllIds')) {
+                		$pastIds = $this->session->getVar("list_AllIds");
+                	}
+                    if ($pastIds) {
                         $ids = array_intersect($ids, $pastIds);
                     }
                     $this->session->setVar("list_AllIds", $ids);
+        			GLOBALS::setTempStorage(['list_AllIds' => $ids]);
 
                     return TRUE;
                 case 'not':
-                    if ($this->session->getVar("list_AllIds")) {
-                        $pastIds = $this->session->getVar("list_AllIds");
+                	if (!$pastIds = GLOBALS::getTempStorage('list_AllIds')) {
+                		$pastIds = $this->session->getVar("list_AllIds");
+                	}
+                    if ($pastIds) {
                         $ids = array_diff($pastIds, $ids);
                     }
                     $this->session->setVar("list_AllIds", $ids);
+        			GLOBALS::setTempStorage(['list_AllIds' => $ids]);
 
                     return TRUE;
                 default:
@@ -533,13 +559,19 @@ class SQLSTATEMENTS
             }
         }
         // If we get here, $quicksearch is 'final'
-        $ids = $this->session->getVar("list_AllIds");
+		if (!$ids = GLOBALS::getTempStorage('list_AllIds')) {
+			$ids = $this->session->getVar("list_AllIds");
+		}
         if (is_bool($ids) || empty($ids)) { // FALSE
             return FALSE;
         }
-        $this->session->setVar("setup_PagingTotal", count($ids));
+        $total = count($ids);
+        $this->session->setVar("setup_PagingTotal", $total);
+        GLOBALS::setTempStorage(['setup_PagingTotal' => $total]);
         $this->session->delVar("sql_CountAlphaStmt");
-                
+		if ($this->browserTabID) {
+			GLOBALS::unsetTempStorage(['sql_CountAlphaStmt']);
+		}
         $this->common->pagingStyle(
             $this->countQuery,
             $this->listType,
@@ -552,9 +584,9 @@ class SQLSTATEMENTS
             $subQ, 
             TRUE
         );
-        if (!$this->session->getVar("list_AllIds")) {
-            return FALSE;
-        }
+//        if (!$this->session->getVar("list_AllIds")) {
+//            return FALSE;
+//        }
 
         return TRUE;
     }
@@ -826,7 +858,6 @@ class SQLSTATEMENTS
      */
     private function listJoins($order, $QS = FALSE)
     {
-        $this->db->ascDesc = $this->session->getVar($this->listMethodAscDesc);
         if ($order == 'title') {
             $this->db->orderBy('resourceTitleSort', TRUE, FALSE);
             $this->db->orderBy('resourcecreatorCreatorSurname', TRUE, FALSE);

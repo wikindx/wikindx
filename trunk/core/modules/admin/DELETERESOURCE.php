@@ -33,6 +33,7 @@ class DELETERESOURCE
     private $checkConfPublishers = [];
     private $checkCollections = [];
     private $checkTags = [];
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
@@ -45,6 +46,7 @@ class DELETERESOURCE
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * check we are allowed to delete and load appropriate method
@@ -113,6 +115,7 @@ class DELETERESOURCE
         }
         $pString .= \FORM\formHeader('admin_DELETERESOURCE_CORE');
         $pString .= \FORM\hidden('function', 'process');
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= \FORM\hidden('deleteWithinList', $deleteWithinList);
         if ($this->navigate) {
             $pString .= \FORM\hidden('navigate', $this->navigate);
@@ -214,11 +217,66 @@ class DELETERESOURCE
             $this->session->delVar("sql_ListStmt");
             $this->session->delVar("sql_LastMulti");
             $this->session->delVar("sql_LastSolo");
+            if ($this->browserTabID) {
+            	\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['sql_ListStmt', 'sql_LastMulti', 'sql_LastSolo']);
+            }
+        }
+        else if (!$lastSolo = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_LastSolo')) { // If the row doesn't exist, FALSE
+        	$lastSolo = $this->session->getVar("sql_LastSolo");
+        	if (is_array($this->idsRaw)) {
+				$diff = array_diff($this->session->getVar('list_NextPreviousIds'), $this->idsRaw);
+				foreach ($diff as $id) {
+					$newDiff[] = $id;
+				}
+				$this->session->setVar('list_NextPreviousIds', $newDiff);
+				if (in_array($lastSolo, $this->idsRaw)) {
+					$this->session->delVar("sql_LastSolo");
+				}
+			}
+			else {
+				$diff = $this->session->getVar('list_NextPreviousIds');
+				unset($diff[$this->idsRaw]);
+				foreach ($diff as $id) {
+					$newDiff[] = $id;
+				}
+				$this->session->setVar('list_NextPreviousIds', $newDiff);
+				if ($lastSolo == $this->idsRaw) {
+					$this->session->delVar("sql_LastSolo");
+				}
+			}
+        }
+        else {
+			if (is_array($this->idsRaw)) {
+				$diff = array_diff(\TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_NextPreviousIds'), $this->idsRaw);
+				foreach ($diff as $id) {
+					$newDiff[] = $id;
+				}
+        		\TEMPSTORAGE\store($this->db, $this->browserTabID, ['list_NextPreviousIds' => $newDiff]);
+				if (in_array($lastSolo, $this->idsRaw)) {
+					\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['sql_LastSolo']);
+				}
+			}
+			else {
+				$diff = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_NextPreviousIds');
+				unset($diff[$this->idsRaw]);
+				foreach ($diff as $id) {
+					$newDiff[] = $id;
+				}
+        		\TEMPSTORAGE\store($this->db, $this->browserTabID, ['list_NextPreviousIds' => $newDiff]);
+				if ($lastSolo == $this->idsRaw) {
+					\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['sql_LastSolo']);
+				}
+			}
         }
         if ($this->vars['deleteWithinList'] || ($this->navigate == 'list')) { 
         // i.e. from the organize list select box – need to recalculate list total we return to.
-        	$this->session->setVar("setup_PagingTotal", $this->session->getVar("setup_PagingTotal") - count($this->idsRaw));
+        	$newPagingTotal = $this->session->getVar("setup_PagingTotal") - count($this->idsRaw);
+        	$this->session->setVar("setup_PagingTotal", $newPagingTotal);
         	$this->session->delVar("list_PagingAlphaLinks");
+            if ($this->browserTabID) {
+        		\TEMPSTORAGE\store($this->db, $this->browserTabID, ['setup_PagingTotal' => $newPagingTotal]);
+            	\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['list_PagingAlphaLinks']);
+            }
         }
         // Which page do we return to?
 		$message = rawurlencode($this->success->text("resourceDelete"));

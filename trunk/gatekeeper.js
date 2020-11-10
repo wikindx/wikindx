@@ -5,6 +5,9 @@
  */
 function redirectSet(url, qs)
 {
+	if (typeof sessionStorage.getItem !== "function") {
+		return;
+	}
 	var browserTabID;
 	if ((sessionStorage.getItem('browserTabID') == null) || !sessionStorage.getItem('browserTabID')) {
 		browserTabID = uuidv4();
@@ -27,6 +30,9 @@ function redirectSet(url, qs)
  */
 function getBrowserTabID(url, qs, browserTabID)
 {
+	if (typeof sessionStorage.getItem !== "function") {
+		return;
+	}
 	if (browserTabID == sessionStorage.getItem('browserTabID')) { // Continuing in same tab/window
 		return;
 	}

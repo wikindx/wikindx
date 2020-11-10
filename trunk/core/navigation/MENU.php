@@ -58,13 +58,13 @@ class MENU
     /** string */
     private $bookmarkAdd;
     /** string */
-    private $lastSolo;
+    private $lastSolo = FALSE;
     /** string */
     private $lastThread;
     /** string */
-    private $stmt;
+    private $stmt = FALSE;
     /** string */
-    private $lastMulti;
+    private $lastMulti = FALSE;
     /** string */
     private $lastMultiMeta;
     /** string */
@@ -85,6 +85,8 @@ class MENU
     private $reduceMenuLevel;
     /** string */
     private $reduceMenuLevelPretext = '';
+    /** string */
+    private $browserTabID = FALSE;
 
     /**
      * MENU class
@@ -96,6 +98,7 @@ class MENU
 
         $this->db = FACTORY_DB::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
         $this->superAdmin = $this->session->getVar("setup_Superadmin");
         $this->smartyMenu = new SmartyMenu();
         $this->write = $this->session->getVar("setup_Write");
@@ -162,10 +165,25 @@ class MENU
         }
         $stateArray[] = defined("WIKINDX_MULTIUSER") ? WIKINDX_MULTIUSER : WIKINDX_MULTIUSER_DEFAULT;
         $stateArray[] = $this->bibliographies = $this->session->getVar("setup_Bibliographies");
-        $stateArray[] = $this->lastSolo = $this->session->getVar("sql_LastSolo");
-        $stateArray[] = $this->stmt = $this->session->getVar("sql_ListStmt");
-        if ($this->session->getVar("sql_ListStmt")) { // don't display for 0 results.
-            $stateArray[] = $this->lastMulti = $this->session->getVar("sql_LastMulti");
+        if ($this->browserTabID) {
+        	$lastSolo = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_LastSolo');
+        } else {
+        	$lastSolo = $this->session->getVar("sql_LastSolo");
+        }
+        $stateArray[] = $this->lastSolo = $lastSolo;
+        if ($this->browserTabID) {
+        	$stmt = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_ListStmt');
+        } else {
+        	$stmt = $this->session->getVar("sql_ListStmt");
+        }
+        $stateArray[] = $this->stmt = $stmt;
+        if ($stmt) { // Don't display for 0 results
+        	if ($this->browserTabID) {
+        		$lastMulti = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_LastMulti');
+        	} else {
+        		$lastMulti = $this->session->getVar("sql_LastMulti");
+        	}
+        	$stateArray[] = $this->lastMulti = $lastMulti;
         }
         $stateArray[] = $this->lastThread = $this->session->getVar("sql_LastThread");
         $stateArray[] = $this->lastMultiMeta = $this->session->getVar("sql_LastMultiMeta");
@@ -645,8 +663,9 @@ class MENU
             $this->res[$messages->text("menu", "lastSolo")] = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->lastSolo;
         }
         if ($this->lastMulti) {
+        	$BT = $this->browserTabID ? '&browserTabID=' . $this->browserTabID : FALSE;
             $this->res[$messages->text("menu", "lastMulti")] = 'index.php?' . $this->lastMulti . 
-            	'&type=lastMulti';
+            	'&type=lastMulti' . $BT;
         }
         $basket = $this->basketList;
         if ($this->basketList && !empty($basket)) {

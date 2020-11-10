@@ -27,10 +27,14 @@ class PAGING
     public $whereStmt = FALSE;
     /** array */
     private $vars;
+    /** array */
+    private $db;
     /** object */
     private $session;
     /** object */
     private $messages;
+    /** string */
+    private $browserTabID = FALSE;
 
     /**
      *	PAGING
@@ -38,8 +42,10 @@ class PAGING
     public function __construct()
     {
         $this->vars = GLOBALS::getVars();
+        $this->db = FACTORY_DB::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * grab paging from session
@@ -47,7 +53,9 @@ class PAGING
     public function getPaging()
     {
         $this->getPagingStart();
-        $this->total = $this->session->getVar("setup_PagingTotal");
+        if (!$this->total = GLOBALS::getTempStorage('setup_PagingTotal')) {
+        	$this->total = $this->session->getVar("setup_PagingTotal");
+        }
         $this->paging = GLOBALS::getUserVar('Paging');
         $this->maxLinks = GLOBALS::getUserVar('PagingMaxLinks');
         $this->maxLinksHalf = round($this->maxLinks / 2);
@@ -70,7 +78,9 @@ class PAGING
         }
         
         if ($start === FALSE) {
-            $start = $this->session->getVar("mywikindx_PagingStart", FALSE);
+        	if (!$start = GLOBALS::getTempStorage('mywikindx_PagingStart')) {
+	            $start = $this->session->getVar("mywikindx_PagingStart", FALSE);
+	        }
         }
         
         if ($start === FALSE) {
@@ -120,6 +130,7 @@ class PAGING
         if (($this->paging <= 0) || ($this->total <= $this->paging)) {
             return;
         }
+        $BT = $this->browserTabID ? '&browserTabID=' . $this->browserTabID : FALSE;
         $end = $advanced = 0;
         $index = $maxLinks = 1;
         $advance = $this->start;
@@ -138,7 +149,7 @@ class PAGING
             $links[] = \HTML\a(
                 "page",
                 $this->messages->text("resources", "pagingStart"),
-                $rootFile . htmlentities($this->queryString . "&PagingStart=0")
+                $rootFile . htmlentities($this->queryString . "&PagingStart=0") . $BT
             );
             $maxLinks++;
         }
@@ -151,7 +162,7 @@ class PAGING
                 $end = $this->total;
             }
             $start = $index - 1;
-            $link = htmlentities($this->queryString . "&PagingStart=$start");
+            $link = htmlentities($this->queryString . "&PagingStart=$start") . $BT;
             $name = $index . " - " . $end;
             if ($this->start == $start) {
                 $links[] = $name;
@@ -165,7 +176,7 @@ class PAGING
                 $links = [\HTML\a(
                     "page",
                     $this->messages->text("resources", "pagingStart"),
-                    $rootFile . htmlentities($this->queryString . "&PagingStart=0")
+                    $rootFile . htmlentities($this->queryString . "&PagingStart=0") . $BT
                 )];
             } elseif (count($links) > 1) {
                 $start = $this->total - ($this->total % $this->paging);
@@ -175,7 +186,7 @@ class PAGING
                 $links[] = \HTML\a(
                     "page",
                     $this->messages->text("resources", "pagingEnd"),
-                    $rootFile . htmlentities($this->queryString . "&PagingStart=$start")
+                    $rootFile . htmlentities($this->queryString . "&PagingStart=$start") . $BT
                 );
             }
         }

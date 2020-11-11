@@ -150,7 +150,7 @@ class CONFIGURE
      */
     public function ldapTransactionReport()
     {
-        $pString = $this->session->getVar("ldapTransactionLog");
+        $pString = "<pre>" . $this->session->getVar("ldapTransactionLog") . "</pre>";
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSENOMENU::getInstance();
     }
@@ -1482,11 +1482,14 @@ class CONFIGURE
      */
     private function testLdap()
     {
+        $user = FACTORY_USER::getInstance();
+        
+        $login = $this->formData['configLdapTestUser'];
+        $pwd = $this->formData['configLdapTestPassword'];
         $ldapUserEntry = [];
         $log = "";
         
-        $user = FACTORY_USER::getInstance();
-        $status = $user->checkPasswordLdap($this->vars['configLdapTestUser'], $this->vars['configLdapTestPassword'], $ldapUserEntry, $ldapTransactionLog);
+        $status = $user->checkPasswordLdap($login, $pwd, $ldapUserEntry, $log);
         
         $this->session->setVar("ldapTransactionLog", $log);
         $this->session->setVar("ldapTransactionLogStatus", $status ? "success" : "failure");

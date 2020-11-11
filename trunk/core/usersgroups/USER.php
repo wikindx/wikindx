@@ -503,7 +503,7 @@ class USER
                     }
                     
                     $ldapbind_login = $this->formatLdapLogin(WIKINDX_LDAP_SERVER_BIND_LOGIN);
-                    $trace .= "LOGIN=" . $ldapbind_login . LF;
+                    $trace .= "SERVER_BIND_USER=" . $ldapbind_login . LF;
                     $ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
 
                 break;
@@ -516,7 +516,7 @@ class USER
                     }
                     
                     $ldapbind_login = $this->formatLdapLogin($usersUsername);
-                    $trace .= "LOGIN=" . $ldapbind_login . LF;
+                    $trace .= "SERVER_BIND_USER=" . $ldapbind_login . LF;
                     $ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
 
                 break;
@@ -528,7 +528,6 @@ class USER
 
                 break;
             }
-            $trace .= "SERVER_BIND_USER=" . $ldapbind_login . LF;
             if ($ldapbind === FALSE)
             {
                 $fail = TRUE;

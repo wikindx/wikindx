@@ -540,7 +540,7 @@ class USER
         $UserOU = \UTF8\mb_explode("\n", WIKINDX_LDAP_USER_OU);
         foreach ($UserOU as $k => $v)
         {
-            $UserOU[$j] = trim($v);
+            $UserOU[$k] = trim($v);
         }
         $UserOU = array_diff($UserOU, [""]);
         
@@ -612,7 +612,7 @@ class USER
         $GroupCN = \UTF8\mb_explode("\n", WIKINDX_LDAP_GROUP_CN);
         foreach ($GroupCN as $k => $v)
         {
-            $GroupCN[$j] = trim($v);
+            $GroupCN[$k] = trim($v);
         }
         $GroupCN = array_diff($GroupCN, [""]);
         

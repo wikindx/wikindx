@@ -474,15 +474,14 @@ class USER
         // Start TLS over a non encrypted connection
         if (!$fail && WIKINDX_LDAP_SERVER_ENCRYPTION == "startls")
         {
-            $trace .= "Starting TLS";
             if (ldap_start_tls($ds) === FALSE)
             {
                 $fail = TRUE;
-                $trace .= " failed" . LF;
+                $trace .= "Starting TLS failed" . LF;
             }
             else
             {
-                $trace .= " succeed" . LF;
+                $trace .= "Starting TLS succeed" . LF;
             }
         }
         
@@ -496,27 +495,29 @@ class USER
             switch (WIKINDX_LDAP_SERVER_BIND_TYPE) {
                 case "proxyuser":
                     $ldapbind_pwd = WIKINDX_LDAP_SERVER_BIND_PASSWORD;
-                    if ($ldapbind_pwd == "")
-                    {
-                        $fail = TRUE;
-                        $trace .= "Empty binding password!" . LF;
-                    }
-                    
                     $ldapbind_login = $this->formatLdapLogin(WIKINDX_LDAP_SERVER_BIND_LOGIN);
                     $trace .= "SERVER_BIND_USER=" . $ldapbind_login . LF;
+                    
+                    if ($ldapbind_login = "" || $ldapbind_pwd == "")
+                    {
+                        $fail = TRUE;
+                        $trace .= $this->errors->text("inputError", "ldapEmptyBindCredentials") . LF;
+                    }
+                    
                     $ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
 
                 break;
                 case "user":
-                    $ldapbind_pwd = $pwdInput;
-                    if ($ldapbind_pwd == "")
-                    {
-                        $fail = TRUE;
-                        $trace .= "Empty binding password!" . LF;
-                    }
-                    
+                    $ldapbind_pwd = $pwdInput;                    
                     $ldapbind_login = $this->formatLdapLogin($usersUsername);
                     $trace .= "SERVER_BIND_USER=" . $ldapbind_login . LF;
+                    
+                    if ($ldapbind_login = "" || $ldapbind_pwd == "")
+                    {
+                        $fail = TRUE;
+                        $trace .= $this->errors->text("inputError", "ldapEmptyBindCredentials") . LF;
+                    }
+                    
                     $ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
 
                 break;

@@ -145,6 +145,7 @@ class ERRORS
 				"ldapTooManyUsers" => dgettext($domain, "Cannot connect to LDAP server. Too many users on that login"),
 				"ldapSetOption" => dgettext($domain, "Error while setting LDAP options"),
 				"ldapBind" => dgettext($domain, "Cannot connect to LDAP server. Unable to bind"),
+				"ldapEmptyBindCredentials" => dgettext($domain, "Cannot connect to LDAP server. Unable to bind"),
 				"ldapSearch" => dgettext($domain, "Error while searching the LDAP catalog"),
 				"ldapGetEntries" => dgettext($domain, "Error reading LDAP entries"),
 				"notRegistered"  => dgettext($domain, "You must be a registered user to access this"),

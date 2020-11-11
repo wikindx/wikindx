@@ -48,10 +48,12 @@ class INITSUPERADMIN
         $pString .= $this->superConfigDisplay();
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        if ($this->error) {
-        	GLOBALS::addTplVar('content', $pString);
-        	FACTORY_CLOSENOMENU::getInstance();
+        if ($this->error)
+        {
+            GLOBALS::addTplVar('content', $pString);
+            FACTORY_CLOSENOMENU::getInstance();
         }
+
         return $pString;
     }
     /**
@@ -61,33 +63,36 @@ class INITSUPERADMIN
     {
         $this->checkInput();
         // If we get here, we're cleared to write to the database.
-		$usersFieldArray = $usersValueArray = [];
-		// if inserting after initial install, write superadmin's preferences to users table and create user session
-		$usersFieldArray[] = 'usersUsername';
-		$usersValueArray[] = $this->vars['usersUsername'];
-		$usersFieldArray[] = 'usersPassword';
-		$usersValueArray[] = \UTILS\password_hash($this->vars['password']);
-		$usersFieldArray[] = 'usersEmail';
-		$usersValueArray[] = $this->vars['usersEmail'];
-		$usersFieldArray[] = 'usersAdmin';
-		$usersValueArray[] = TRUE;
-		if (array_key_exists('usersFullname', $this->vars)) {
-			$usersFieldArray[] = 'usersFullname';
-			$usersValueArray[] = $this->vars['usersFullname'];
-		}
-		if (array_key_exists('usersIsCreator', $this->vars) && $this->vars['usersIsCreator']) {
-			$usersValueArray[] = $this->vars['usersIsCreator'];
-			$usersFieldArray[] = 'usersIsCreator';
-		}
-		if (array_key_exists('usersCookie', $this->vars) && $this->vars['usersCookie']) {
-			$cookie = FACTORY_COOKIE::getInstance();
-			$cookie->storeCookie($this->vars['usersUsername']);
-			$usersFieldArray[] = 'usersCookie';
-			$usersValueArray[] = 'Y';
-		}
-		$this->db->insert('users', $usersFieldArray, $usersValueArray);
-		$message = rawurlencode($this->success->text("config"));
-		header("Location: index.php?action=admin_CONFIGURE_CORE&method=init&message=$message&selectItem=front");
+        $usersFieldArray = $usersValueArray = [];
+        // if inserting after initial install, write superadmin's preferences to users table and create user session
+        $usersFieldArray[] = 'usersUsername';
+        $usersValueArray[] = $this->vars['usersUsername'];
+        $usersFieldArray[] = 'usersPassword';
+        $usersValueArray[] = \UTILS\password_hash($this->vars['password']);
+        $usersFieldArray[] = 'usersEmail';
+        $usersValueArray[] = $this->vars['usersEmail'];
+        $usersFieldArray[] = 'usersAdmin';
+        $usersValueArray[] = TRUE;
+        if (array_key_exists('usersFullname', $this->vars))
+        {
+            $usersFieldArray[] = 'usersFullname';
+            $usersValueArray[] = $this->vars['usersFullname'];
+        }
+        if (array_key_exists('usersIsCreator', $this->vars) && $this->vars['usersIsCreator'])
+        {
+            $usersValueArray[] = $this->vars['usersIsCreator'];
+            $usersFieldArray[] = 'usersIsCreator';
+        }
+        if (array_key_exists('usersCookie', $this->vars) && $this->vars['usersCookie'])
+        {
+            $cookie = FACTORY_COOKIE::getInstance();
+            $cookie->storeCookie($this->vars['usersUsername']);
+            $usersFieldArray[] = 'usersCookie';
+            $usersValueArray[] = 'Y';
+        }
+        $this->db->insert('users', $usersFieldArray, $usersValueArray);
+        $message = rawurlencode($this->success->text("config"));
+        header("Location: index.php?action=admin_CONFIGURE_CORE&method=init&message=$message&selectItem=front");
     }
     /**
      * Display super config options
@@ -126,12 +131,16 @@ class INITSUPERADMIN
             30
         ));
         $field = FALSE;
-        if (!empty($this->formData)) {
-        	if (array_key_exists('usersCookie', $this->formData)) {
-	        	 $field = TRUE;
-	        } else {
-	        	$field = FALSE;
-	        }
+        if (!empty($this->formData))
+        {
+            if (array_key_exists('usersCookie', $this->formData))
+            {
+                $field = TRUE;
+            }
+            else
+            {
+                $field = FALSE;
+            }
         }
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "cookie"), "usersCookie", $field));
         $pString .= \HTML\trEnd();
@@ -146,20 +155,25 @@ class INITSUPERADMIN
      */
     private function checkInput()
     {
-    	$error = '';
-        if (array_key_exists('usersUsername', $this->vars)) {
+        $error = '';
+        if (array_key_exists('usersUsername', $this->vars))
+        {
             $this->formData['usersUsername'] = \UTF8\mb_trim($this->vars['usersUsername']);
         }
-        if (array_key_exists('usersFullname', $this->vars)) {
+        if (array_key_exists('usersFullname', $this->vars))
+        {
             $this->formData['usersFullname'] = \UTF8\mb_trim($this->vars['usersFullname']);
         }
-        if (array_key_exists('usersEmail', $this->vars)) {
-            $this->formData['usersEmail'] = \UTF8\mb_trim($this->vars['usersEmail']);           
-			if (filter_var($this->formData['usersEmail'], FILTER_VALIDATE_EMAIL) === FALSE) {
-				$error = $this->errors->text('inputError', 'invalidMail');
-			}
+        if (array_key_exists('usersEmail', $this->vars))
+        {
+            $this->formData['usersEmail'] = \UTF8\mb_trim($this->vars['usersEmail']);
+            if (filter_var($this->formData['usersEmail'], FILTER_VALIDATE_EMAIL) === FALSE)
+            {
+                $error = $this->errors->text('inputError', 'invalidMail');
+            }
         }
-        if (array_key_exists('usersCookie', $this->vars)) {
+        if (array_key_exists('usersCookie', $this->vars))
+        {
             $this->formData['usersCookie'] = TRUE;
         }
         // strings that are required
@@ -169,29 +183,39 @@ class INITSUPERADMIN
             "usersEmail",
             "usersUsername",
         ];
-        foreach ($required as $value) {
-            if (array_key_exists($value, $this->vars)) {
+        foreach ($required as $value)
+        {
+            if (array_key_exists($value, $this->vars))
+            {
                 $input = \UTF8\mb_trim($this->vars[$value]);
-                if ($value == 'usersUsername') {
-                    if (array_search(mb_strtolower($input), ['sa', 'admin', 'super', 'superadmin'])) {
-                    	$error = $this->errors->text("inputError", 'badUsername', " ($value) ");
+                if ($value == 'usersUsername')
+                {
+                    if (array_search(mb_strtolower($input), ['sa', 'admin', 'super', 'superadmin']))
+                    {
+                        $error = $this->errors->text("inputError", 'badUsername', " ($value) ");
                     }
                 }
-            } else {
+            }
+            else
+            {
                 continue;
             }
-            if (!$input) {
-            	$error = $this->errors->text("inputError", 'missing', " ($value) ");
+            if (!$input)
+            {
+                $error = $this->errors->text("inputError", 'missing', " ($value) ");
             }
         }
-        if (array_key_exists('password', $this->vars) && ($this->vars['password'] != $this->vars['passwordConfirm'])) {
-        	$error = $this->errors->text("inputError", 'passwordMismatch');
+        if (array_key_exists('password', $this->vars) && ($this->vars['password'] != $this->vars['passwordConfirm']))
+        {
+            $error = $this->errors->text("inputError", 'passwordMismatch');
         }
-        if ($error) {
+        if ($error)
+        {
             $this->badInputLoad($error);
         }
         // Check size of password is no less than N chars
-        if (array_key_exists('configPasswordSize', $this->vars) && ($this->vars['configPasswordSize'] < WIKINDX_PASSWORD_SIZE_DEFAULT)) {
+        if (array_key_exists('configPasswordSize', $this->vars) && ($this->vars['configPasswordSize'] < WIKINDX_PASSWORD_SIZE_DEFAULT))
+        {
             $this->vars['configPasswordSize'] = WIKINDX_PASSWORD_SIZE_DEFAULT;
         }
     }

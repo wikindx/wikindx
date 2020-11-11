@@ -27,7 +27,8 @@ namespace URL
     function getUrls($field)
     {
         $array = unserialize(base64_decode($field));
-        if (!is_array($array)) {
+        if (!is_array($array))
+        {
             $array = []; // empty array
         }
 
@@ -43,10 +44,12 @@ namespace URL
      */
     function reduceUrl($text, $limit = FALSE)
     {
-        if (!$limit) {
+        if (!$limit)
+        {
             $limit = \GLOBALS::getUserVar("StringLimit");
         }
-        if (($limit != -1) && (($count = mb_strlen($text)) > $limit)) {
+        if (($limit != -1) && (($count = mb_strlen($text)) > $limit))
+        {
             $start = floor(($limit / 2) - 2);
             $length = $count - (2 * $start);
             $text = \UTF8\mb_substr_replace($text, " ... ", $start, $length);
@@ -65,9 +68,12 @@ namespace URL
         if (
             (!empty($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https')
             || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
-            || (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')) {
+            || (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443'))
+        {
             $protocole = 'https';
-        } else {
+        }
+        else
+        {
             $protocole = 'http';
         }
 

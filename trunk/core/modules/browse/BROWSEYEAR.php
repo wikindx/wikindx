@@ -38,7 +38,8 @@ class BROWSEYEAR
     {
         $this->sum = [];
         $this->getYears();
-        if (empty($this->years)) {
+        if (empty($this->years))
+        {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noResources"));
 
             return;
@@ -58,7 +59,8 @@ class BROWSEYEAR
     {
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
-        foreach ($this->years as $id => $name) {
+        foreach ($this->years as $id => $name)
+        {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .
@@ -77,7 +79,8 @@ class BROWSEYEAR
         $this->db->leftJoin('resource', 'resourceId', 'resourceyearId');
         $this->db->orderBy('resourceyearYear1');
         $recordset = $this->db->selectCounts('resource_year', 'resourceyearYear1');
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $this->collate($row);
         }
     }
@@ -88,7 +91,8 @@ class BROWSEYEAR
      */
     private function collate($row)
     {
-        if (!$row['resourceyearYear1']) {
+        if (!$row['resourceyearYear1'])
+        {
             return;
         }
         $this->years[$row['resourceyearYear1']] = \HTML\nlToHtml($row['resourceyearYear1']);

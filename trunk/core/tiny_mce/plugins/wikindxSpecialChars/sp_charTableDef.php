@@ -517,11 +517,14 @@ $tableDeactivation = [
 ];
 
 // Remove disabled characters sets
-foreach ($tableDeactivation as $did => $reason) {
+foreach ($tableDeactivation as $did => $reason)
+{
     // The array is traversed in reverse order to not cause
     // a crash when deleting entries during the course
-    for ($kc = count($tableChars) - 1; $kc >= 0; $kc--) {
-        if ($tableChars[$kc]['id'] == $did) {
+    for ($kc = count($tableChars) - 1; $kc >= 0; $kc--)
+    {
+        if ($tableChars[$kc]['id'] == $did)
+        {
             array_splice($tableChars, $kc, 1);
         }
     }
@@ -536,8 +539,10 @@ $tableDiacritics = [
 
 // Add boolean "diac" field to diacritics characters sets
 // It help to display them in a specific way
-for ($k = 0; $k < count($tableChars); $k++) {
-    foreach ($tableDiacritics as $did) {
+for ($k = 0; $k < count($tableChars); $k++)
+{
+    foreach ($tableDiacritics as $did)
+    {
         $tableChars[$k]['diac'] = ($tableChars[$k]['id'] == $did);
     }
 }
@@ -546,8 +551,10 @@ for ($k = 0; $k < count($tableChars); $k++) {
 // Avoid control characters because this could do weird things
 // by rewriting left and right bound of the basic latin table
 // Controls characters only are at position 0000 to 001F and 007F
-for ($k = 0; $k < count($tableChars); $k++) {
-    if ($tableChars[$k]['id'] == 'C0 Controls and Basic Latin') {
+for ($k = 0; $k < count($tableChars); $k++)
+{
+    if ($tableChars[$k]['id'] == 'C0 Controls and Basic Latin')
+    {
         $tableChars[$k]['fcp'] = '0020';
         $tableChars[$k]['lcp'] = '007E';
     }

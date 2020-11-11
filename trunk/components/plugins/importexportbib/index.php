@@ -49,40 +49,51 @@ class importexportbib_MODULE
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTCOMMON.php"]));
         $this->common = new EXPORTCOMMON();
         $this->db = FACTORY_DB::getInstance();
-        if (!$this->configImport->bibutilsPath) {
+        if (!$this->configImport->bibutilsPath)
+        {
             $this->configImport->bibutilsPath = '/usr/local/bin/'; // default *NIX location
         }
-        if (!$this->bibutilsImport->bibutilsPath) {
+        if (!$this->bibutilsImport->bibutilsPath)
+        {
             $this->bibutilsImport->bibutilsPath = '/usr/local/bin/'; // default *NIX location
         }
 
         $authorize = FACTORY_AUTHORIZE::getInstance();
 
-        if ($authorize->isPluginExecutionAuthorised($this->bibutilsImport->authorize)) { // if TRUE, we're authorised so display menus
+        if ($authorize->isPluginExecutionAuthorised($this->bibutilsImport->authorize))
+        { // if TRUE, we're authorised so display menus
             $this->authorize = $this->bibutilsImport->authorize;
-            if ($menuInit) { // portion of constructor used for menu initialisation
+            if ($menuInit)
+            { // portion of constructor used for menu initialisation
                 $this->makeMenu($this->bibutilsImport->menus, 'bibutils');
             }
         }
-        if ($this->common->setIdeasCondition()) {
-            if ($this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'))) {
+        if ($this->common->setIdeasCondition())
+        {
+            if ($this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId')))
+            {
                 $this->menus[$this->configImport->menus[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuIdeaExport')] =
                     'initIdeaExport';
             }
         }
-        if ($authorize->isPluginExecutionAuthorised($configExport->authorize)) { // if TRUE, we're authorised so display menus
+        if ($authorize->isPluginExecutionAuthorised($configExport->authorize))
+        { // if TRUE, we're authorised so display menus
             $this->authorize = $configExport->authorize;
-            if ($menuInit) { // portion of constructor used for menu initialisation
+            if ($menuInit)
+            { // portion of constructor used for menu initialisation
                 $this->makeMenu($configExport->menus, 'export');
             }
         }
-        if ($authorize->isPluginExecutionAuthorised($this->configImport->authorize)) { // if TRUE, we're authorised so display menus
+        if ($authorize->isPluginExecutionAuthorised($this->configImport->authorize))
+        { // if TRUE, we're authorised so display menus
             $this->authorize = $this->configImport->authorize;
-            if ($menuInit) { // portion of constructor used for menu initialisation
+            if ($menuInit)
+            { // portion of constructor used for menu initialisation
                 $this->makeMenu($this->configImport->menus, 'import');
             }
         }
-        if ($menuInit) {
+        if ($menuInit)
+        {
             return; // Need do nothing more as this is simply menu initialisation.
         }
 
@@ -104,30 +115,40 @@ class importexportbib_MODULE
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerListFiles"));
         list($dirName, $deletePeriod, $fileArray) = FILE\listFiles();
 
-        if (!$dirName) {
-            if (!$fileArray) {
+        if (!$dirName)
+        {
+            if (!$fileArray)
+            {
                 GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text("noContents"), 'error'));
-            } elseif (!$errorMethod) {
+            }
+            elseif (!$errorMethod)
+            {
                 GLOBALS::addTplVar('content', $errors->text('file', "read"));
-            } else {
+            }
+            else
+            {
                 $this->{$errorMethod}($errors->text("file", "read"));
             }
 
             return;
         }
-        if (array_key_exists('uuid', $this->vars)) {
-        	$data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
-        	if (is_array($data)) { // FALSE if no longer there (reloading page e.g.)
-				\TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
-				$message = $data['message'];
-			}
+        if (array_key_exists('uuid', $this->vars))
+        {
+            $data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
+            if (is_array($data))
+            { // FALSE if no longer there (reloading page e.g.)
+                \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+                $message = $data['message'];
+            }
         }
         $pString = $message;
         $filesDir = TRUE;
         $pString .= HTML\p($this->pluginmessages->text("contents"));
         $minutes = $deletePeriod / 60;
-        if (!empty($fileArray)) {
-            foreach ($fileArray as $key => $value) {
+        if (!empty($fileArray))
+        {
+            foreach ($fileArray as $key => $value)
+            {
                 $pString .= date(DateTime::W3C, filemtime($dirName . DIRECTORY_SEPARATOR . $key)) . ': ';
                 $pString .= HTML\a("link", $key, "index.php?action=importexportbib_downloadFile" .
                 htmlentities("&filename=" . $key), "_blank") . BR . LF;
@@ -138,14 +159,14 @@ class importexportbib_MODULE
         GLOBALS::addTplVar('content', $pString);
     }
     /**
-     * 
-    /**
+     * /**
      * downloadFile
      */
     public function downloadFile()
     {
         $filepath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, $this->vars['filename']]);
-        if (file_exists($filepath)) {
+        if (file_exists($filepath))
+        {
             switch (pathinfo($filepath)['extension']) {
                 case 'bib':
                     $type = WIKINDX_MIMETYPE_BIB;
@@ -177,7 +198,9 @@ class importexportbib_MODULE
             $lastmodified = date(DateTime::RFC1123, filemtime($filepath));
             FILE\setHeaders($type, $size, basename($filepath), $lastmodified, $charset);
             FILE\readfile_chunked($filepath);
-        } else {
+        }
+        else
+        {
             $this->badInput->closeType = 'closePopup';
             $this->badInput->close($this->errors->text("file", "missing"));
         }
@@ -191,7 +214,8 @@ class importexportbib_MODULE
     public function initEndnoteImport($message = FALSE)
     {
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->configImport->authorize)) { // if FALSE, we're not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->configImport->authorize))
+        { // if FALSE, we're not authorised
             $auth = FACTORY_AUTHORIZE::getInstance();
             $auth->initLogon();
             FACTORY_CLOSE::getInstance();
@@ -211,14 +235,16 @@ class importexportbib_MODULE
     public function initPubMedImport($message = FALSE)
     {
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->configImport->authorize)) { // if FALSE, we're not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->configImport->authorize))
+        { // if FALSE, we're not authorised
             $auth = FACTORY_AUTHORIZE::getInstance();
             $auth->initLogon();
             FACTORY_CLOSE::getInstance();
         }
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "PUBMED.php"]));
         $pubmed = new PUBMED($this);
-        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'wikindx')) {
+        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'wikindx'))
+        {
             GLOBALS::addTplVar('content', AJAX\encode_jArray(['innerHTML' => $pubmed->wikindxImportFields()]));
             FACTORY_CLOSERAW::getInstance();
 
@@ -238,7 +264,8 @@ class importexportbib_MODULE
     {
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BIBUTILS.php"]));
         $bibutils = new BIBUTILS($this);
-        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'ajax')) {
+        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'ajax'))
+        {
             $div = $bibutils->createOutputTypes();
             GLOBALS::addTplVar('content', AJAX\encode_jArray(['innerHTML' => $div]));
             FACTORY_CLOSERAW::getInstance();
@@ -381,21 +408,27 @@ class importexportbib_MODULE
     public function importEndnote()
     {
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->configImport->authorize)) { // if FALSE, we're not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->configImport->authorize))
+        { // if FALSE, we're not authorised
             $auth = FACTORY_AUTHORIZE::getInstance();
             $auth->initLogon();
             FACTORY_CLOSE::getInstance();
         }
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerEndnoteImport"));
-        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process')) {
+        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
+        {
             include_once(__DIR__ . DIRECTORY_SEPARATOR . 'ENDNOTEIMPORT.php');
             $endnote = new ENDNOTEIMPORT($this);
             $endnote->process();
-        } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'continueImport')) {
+        }
+        elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'continueImport'))
+        {
             include_once(__DIR__ . DIRECTORY_SEPARATOR . 'ENDNOTEIMPORT.php');
             $endnote = new ENDNOTEIMPORT($this);
             $endnote->continueImport();
-        } elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'stage2Invalid')) {
+        }
+        elseif (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'stage2Invalid'))
+        {
             include_once(__DIR__ . DIRECTORY_SEPARATOR . 'ENDNOTEIMPORT.php');
             $endnote = new ENDNOTEIMPORT($this);
             $endnote->stage2Invalid();
@@ -407,12 +440,14 @@ class importexportbib_MODULE
     public function importPubMed()
     {
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->configImport->authorize)) { // if FALSE, we're not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->configImport->authorize))
+        { // if FALSE, we're not authorised
             $auth = FACTORY_AUTHORIZE::getInstance();
             $auth->initLogon();
             FACTORY_CLOSE::getInstance();
         }
-        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process')) {
+        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
+        {
             GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerPubMedImport"));
             include_once(__DIR__ . DIRECTORY_SEPARATOR . 'PUBMED.php');
             $pubmed = new PUBMED($this);
@@ -452,7 +487,8 @@ class importexportbib_MODULE
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerRtfExport"));
         $pString = $message ? $message : FALSE;
         //GLOBALS::addTplVar('content', 'under construction'); return;
-        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process')) {
+        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
+        {
             include_once(__DIR__ . DIRECTORY_SEPARATOR . 'RTFEXPORT.php');
             $rtf = new RTFEXPORT($this);
             $pString .= $rtf->process();
@@ -474,7 +510,8 @@ class importexportbib_MODULE
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerBibtexExport"));
         $pString = $message ? $message : FALSE;
         //GLOBALS::addTplVar('content', 'under construction'); return;
-        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process')) {
+        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
+        {
             include_once(__DIR__ . DIRECTORY_SEPARATOR . "BIBTEX.php");
             $bibtex = new BIBTEX($this);
             $pString .= $bibtex->processExport();
@@ -496,7 +533,8 @@ class importexportbib_MODULE
         GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerHtmlExport"));
         $pString = $message ? $message : FALSE;
         //GLOBALS::addTplVar('content', 'under construction'); return;
-        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process')) {
+        if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
+        {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "HTML.php"]));
             $htmlExport = new HTMLEXPORT($this);
             $pString .= $htmlExport->processExport();
@@ -584,7 +622,8 @@ class importexportbib_MODULE
      */
     private function makeMenu($menuArray, $type)
     {
-        if (empty($this->menus)) { // initialization of menu structure
+        if (empty($this->menus))
+        { // initialization of menu structure
             $this->menus = [
                 $menuArray[0] => ['importexportbibpluginSub' => [
                     $this->pluginmessages->text('menu') => FALSE,
@@ -592,80 +631,112 @@ class importexportbib_MODULE
                 ],
             ];
         }
-        if (($type == 'bibutils') && (FILE\command_exists($this->configImport->bibutilsPath . 'bib2xml'))) {
+        if (($type == 'bibutils') && (FILE\command_exists($this->configImport->bibutilsPath . 'bib2xml')))
+        {
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuBibutils')] = "initBibutils";
-        } elseif (($type == 'export') && ($this->session->getVar("sql_LastMulti") || $this->session->getVar("basket_List"))) {
-            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List")) {
+        }
+        elseif (($type == 'export') && ($this->session->getVar("sql_LastMulti") || $this->session->getVar("basket_List")))
+        {
+            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List"))
+            {
                 $array = [$this->pluginmessages->text('menuRtfExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initRtfExportB",
                     $this->pluginmessages->text('menuExportList') => "initRtfExportL", ];
-            } elseif ($this->session->getVar("basket_List")) {
+            }
+            elseif ($this->session->getVar("basket_List"))
+            {
                 $array = [$this->pluginmessages->text('menuRtfExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initRtfExportB", ];
-            } elseif ($this->session->getVar("sql_LastMulti")) {
+            }
+            elseif ($this->session->getVar("sql_LastMulti"))
+            {
                 $array = [$this->pluginmessages->text('menuRtfExport') => FALSE,
                     $this->pluginmessages->text('menuExportList') => "initRtfExportL", ];
             }
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
 
-            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List")) {
+            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List"))
+            {
                 $array = [$this->pluginmessages->text('menuBibtexExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initBibtexExportB",
                     $this->pluginmessages->text('menuExportList') => "initBibtexExportL", ];
-            } elseif ($this->session->getVar("basket_List")) {
+            }
+            elseif ($this->session->getVar("basket_List"))
+            {
                 $array = [$this->pluginmessages->text('menuBibtexExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initBibtexExportB", ];
-            } elseif ($this->session->getVar("sql_LastMulti")) {
+            }
+            elseif ($this->session->getVar("sql_LastMulti"))
+            {
                 $array = [$this->pluginmessages->text('menuBibtexExport') => FALSE,
                     $this->pluginmessages->text('menuExportList') => "initBibtexExportL", ];
             }
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
 
-            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List")) {
+            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List"))
+            {
                 $array = [$this->pluginmessages->text('menuHtmlExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initHtmlExportB",
                     $this->pluginmessages->text('menuExportList') => "initHtmlExportL", ];
-            } elseif ($this->session->getVar("basket_List")) {
+            }
+            elseif ($this->session->getVar("basket_List"))
+            {
                 $array = [$this->pluginmessages->text('menuHtmlExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initHtmlExportB", ];
-            } elseif ($this->session->getVar("sql_LastMulti")) {
+            }
+            elseif ($this->session->getVar("sql_LastMulti"))
+            {
                 $array = [$this->pluginmessages->text('menuHtmlExport') => FALSE,
                     $this->pluginmessages->text('menuExportList') => "initHtmlExportL", ];
             }
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
 
-            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List")) {
+            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List"))
+            {
                 $array = [$this->pluginmessages->text('menuEndnoteExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initEndnoteExportB",
                     $this->pluginmessages->text('menuExportList') => "initEndnoteExportL", ];
-            } elseif ($this->session->getVar("basket_List")) {
+            }
+            elseif ($this->session->getVar("basket_List"))
+            {
                 $array = [$this->pluginmessages->text('menuEndnoteExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initEndnoteExportB", ];
-            } elseif ($this->session->getVar("sql_LastMulti")) {
+            }
+            elseif ($this->session->getVar("sql_LastMulti"))
+            {
                 $array = [$this->pluginmessages->text('menuEndnoteExport') => FALSE,
                     $this->pluginmessages->text('menuExportList') => "initEndnoteExportL", ];
             }
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
 
-            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List")) {
+            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List"))
+            {
                 $array = [$this->pluginmessages->text('menuRisExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initRisExportB",
                     $this->pluginmessages->text('menuExportList') => "initRisExportL", ];
-            } elseif ($this->session->getVar("basket_List")) {
+            }
+            elseif ($this->session->getVar("basket_List"))
+            {
                 $array = [$this->pluginmessages->text('menuRisExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initRisExportB", ];
-            } elseif ($this->session->getVar("sql_LastMulti")) {
+            }
+            elseif ($this->session->getVar("sql_LastMulti"))
+            {
                 $array = [$this->pluginmessages->text('menuRisExport') => FALSE,
                     $this->pluginmessages->text('menuExportList') => "initRisExportL", ];
             }
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
 
-            if ($this->session->getVar("fileExports")) {
+            if ($this->session->getVar("fileExports"))
+            {
                 $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuListFiles')] = 'listFiles';
             }
-        } elseif ($type == 'import') { // import
+        }
+        elseif ($type == 'import')
+        { // import
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuEndnoteImport')] = "initEndnoteImport";
-            if (FILE\command_exists($this->configImport->bibutilsPath . 'med2xml')) {
+            if (FILE\command_exists($this->configImport->bibutilsPath . 'med2xml'))
+            {
                 $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuPubMedImport')] = "initPubMedImport";
             }
         }

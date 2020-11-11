@@ -42,9 +42,10 @@ class PREFERENCES
      */
     public function init($message = FALSE)
     {
-    	if (array_key_exists('message', $this->vars)) {
-    		$message = $this->vars['message'];
-    	}
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
+        }
         $pString = $message;
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
@@ -68,11 +69,14 @@ class PREFERENCES
         // Display the global template but change the default selection of the list to the default template when no template is defined or a template not enabled is defined,
         // this avoid a crash when this option is written without value selected.
         $templates = FACTORY_TEMPLATE::getInstance()->loadDir();
-        if (!empty($this->formData)) {
-        	$template = $this->formData['Template'];
-        } else {
-	        $template = GLOBALS::getUserVar("Template", WIKINDX_TEMPLATE_DEFAULT);
-	    }
+        if (!empty($this->formData))
+        {
+            $template = $this->formData['Template'];
+        }
+        else
+        {
+            $template = GLOBALS::getUserVar("Template", WIKINDX_TEMPLATE_DEFAULT);
+        }
         array_key_exists($template, $templates) ? $template = $template : $template = WIKINDX_TEMPLATE_DEFAULT;
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "template"),
@@ -85,11 +89,14 @@ class PREFERENCES
         $menus[0] = $this->messages->text("config", "templateMenu1");
         $menus[1] = $this->messages->text("config", "templateMenu2");
         $menus[2] = $this->messages->text("config", "templateMenu3");
-        if (!empty($this->formData)) {
-        	$menuLevel = $this->formData['TemplateMenu'];
-        } else {
-	        $menuLevel = $this->session->getVar("setup_TemplateMenu"); // TODO: Why is this not accessible via GLOBALS?
-	    }
+        if (!empty($this->formData))
+        {
+            $menuLevel = $this->formData['TemplateMenu'];
+        }
+        else
+        {
+            $menuLevel = $this->session->getVar("setup_TemplateMenu"); // TODO: Why is this not accessible via GLOBALS?
+        }
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "templateMenu"),
             "TemplateMenu",
@@ -102,11 +109,14 @@ class PREFERENCES
         $LanguageNeutralChoice = "auto";
         $languages[$LanguageNeutralChoice] = "Auto";
         $languages = array_merge($languages, \LOCALES\getSystemLocales());
-        if (!empty($this->formData)) {
-        	$language = $this->formData['Language'];
-        } else {
-	        $language = GLOBALS::getUserVar('Language', WIKINDX_LANGUAGE_DEFAULT);
-	    }
+        if (!empty($this->formData))
+        {
+            $language = $this->formData['Language'];
+        }
+        else
+        {
+            $language = GLOBALS::getUserVar('Language', WIKINDX_LANGUAGE_DEFAULT);
+        }
         $language = array_key_exists($language, $languages) ? $language : $LanguageNeutralChoice;
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "language"),
@@ -115,15 +125,18 @@ class PREFERENCES
             $language
         ));
         
-        // Display the user style but change the default selection of the list to the default style when 
+        // Display the user style but change the default selection of the list to the default style when
         // no style is defined or a style not enabled is defined,
         // this avoid a crash when this option is written without value selected.
         $styles = \LOADSTYLE\loadDir();
-        if (!empty($this->formData)) {
-        	$style = $this->formData['Style'];
-        } else {
-	        $style = GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT);
-	    }
+        if (!empty($this->formData))
+        {
+            $style = $this->formData['Style'];
+        }
+        else
+        {
+            $style = GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT);
+        }
         array_key_exists($style, $styles) ? $style = $style : $style = WIKINDX_STYLE_DEFAULT;
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "style"),
@@ -142,22 +155,28 @@ class PREFERENCES
         
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
-        if (!empty($this->formData) && $this->formData['Paging']) {
-        	$paging = $this->formData['Paging'];
-        } else {
-	        $paging = GLOBALS::getUserVar("Paging", WIKINDX_PAGING_DEFAULT);
-	    }
+        if (!empty($this->formData) && $this->formData['Paging'])
+        {
+            $paging = $this->formData['Paging'];
+        }
+        else
+        {
+            $paging = GLOBALS::getUserVar("Paging", WIKINDX_PAGING_DEFAULT);
+        }
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "paging"),
             "Paging",
             $paging,
             5
         ) . BR . \HTML\span($hint, 'hint'));
-        if (!empty($this->formData) && $this->formData['PagingMaxLinks']) {
-        	$pagingML = $this->formData['PagingMaxLinks'];
-        } else {
-	        $pagingML = GLOBALS::getUserVar("PagingMaxLinks", WIKINDX_PAGING_MAXLINKS_DEFAULT);
-	    }
+        if (!empty($this->formData) && $this->formData['PagingMaxLinks'])
+        {
+            $pagingML = $this->formData['PagingMaxLinks'];
+        }
+        else
+        {
+            $pagingML = GLOBALS::getUserVar("PagingMaxLinks", WIKINDX_PAGING_MAXLINKS_DEFAULT);
+        }
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingMaxLinks"));
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "maxPaging"),
@@ -165,11 +184,14 @@ class PREFERENCES
             $pagingML,
             5
         ) . BR . \HTML\span($hint, 'hint'));
-        if (!empty($this->formData) && $this->formData['PagingTagCloud']) {
-        	$pagingTC = $this->formData['PagingTagCloud'];
-        } else {
-	        $pagingTC = GLOBALS::getUserVar("PagingTagCloud", WIKINDX_PAGING_TAG_CLOUD_DEFAULT);
-	    }
+        if (!empty($this->formData) && $this->formData['PagingTagCloud'])
+        {
+            $pagingTC = $this->formData['PagingTagCloud'];
+        }
+        else
+        {
+            $pagingTC = GLOBALS::getUserVar("PagingTagCloud", WIKINDX_PAGING_TAG_CLOUD_DEFAULT);
+        }
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "pagingTagCloud"),
@@ -178,24 +200,32 @@ class PREFERENCES
             5
         ) . BR . \HTML\span($hint, 'hint'));
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
-        if (!empty($this->formData) && $this->formData['StringLimit']) {
-        	$stringLimit = $this->formData['StringLimit'];
-        } else {
-	        $stringLimit = GLOBALS::getUserVar("StringLimit", WIKINDX_STRING_LIMIT_DEFAULT);
-	    }
+        if (!empty($this->formData) && $this->formData['StringLimit'])
+        {
+            $stringLimit = $this->formData['StringLimit'];
+        }
+        else
+        {
+            $stringLimit = GLOBALS::getUserVar("StringLimit", WIKINDX_STRING_LIMIT_DEFAULT);
+        }
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("config", "stringLimit"),
             "StringLimit",
             $stringLimit,
             5
         ) . BR . \HTML\span($hint, 'hint'));
-        if (!empty($this->formData) && $this->formData['ListLink']) {
-        	$check = 'CHECKED';
-        } elseif (!empty($this->formData)) {
-        	$check = FALSE;
-        } else {
-	        $check = GLOBALS::getUserVar("ListLink", WIKINDX_LIST_LINK_DEFAULT) ? 'CHECKED' : FALSE;
-	    }
+        if (!empty($this->formData) && $this->formData['ListLink'])
+        {
+            $check = 'CHECKED';
+        }
+        elseif (!empty($this->formData))
+        {
+            $check = FALSE;
+        }
+        else
+        {
+            $check = GLOBALS::getUserVar("ListLink", WIKINDX_LIST_LINK_DEFAULT) ? 'CHECKED' : FALSE;
+        }
         $check = GLOBALS::getUserVar('ListLink') ? "CHECKED" : FALSE;
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "ListLink"), "ListLink", $check));
         $pString .= \HTML\trEnd();
@@ -212,34 +242,42 @@ class PREFERENCES
      */
     public function edit()
     {
-    	$error = '';
+        $error = '';
         $required = ["Paging", "PagingMaxLinks", "StringLimit", "PagingTagCloud"];
-        foreach ($required as $key) {
-            if (!is_numeric($this->vars[$key]) || !is_int($this->vars[$key] + 0)) { // cast to number
-            	$error = $this->errors->text("inputError", "nan", " ($key) ");
+        foreach ($required as $key)
+        {
+            if (!is_numeric($this->vars[$key]) || !is_int($this->vars[$key] + 0))
+            { // cast to number
+                $error = $this->errors->text("inputError", "nan", " ($key) ");
             }
-            if (!array_key_exists($key, $this->vars) || !$this->vars[$key]) {
-            	$error = $this->errors->text("inputError", "missing", " ($key) ");
+            if (!array_key_exists($key, $this->vars) || !$this->vars[$key])
+            {
+                $error = $this->errors->text("inputError", "missing", " ($key) ");
             }
-            elseif (($key == "StringLimit") && ($this->vars[$key] < 10)) {
-            	$this->vars[$key] = 10;
+            elseif (($key == "StringLimit") && ($this->vars[$key] < 10))
+            {
+                $this->vars[$key] = 10;
             }
-            elseif ($this->vars[$key] < 0) {
+            elseif ($this->vars[$key] < 0)
+            {
                 $this->vars[$key] = -1;
             }
             $this->formData[$key] = $this->vars[$key];
         }
         $required = ["Language", "Template", "Style", "TemplateMenu"];
-        foreach ($required as $value) {
-            if (!array_key_exists($value, $this->vars)) {
-            	$error = $this->errors->text("inputError", "missing", " ($value) ");
+        foreach ($required as $value)
+        {
+            if (!array_key_exists($value, $this->vars))
+            {
+                $error = $this->errors->text("inputError", "missing", " ($value) ");
             }
             $this->formData[$value] = $this->vars[$value];
         }
         // Checkbox
         $this->formData['ListLink'] = array_key_exists('ListLink', $this->vars);
-        if ($error) {
-        	$this->badInputLoad($error);
+        if ($error)
+        {
+            $this->badInputLoad($error);
         }
         // write new values to setup session – read only user so session vars required!
         $this->session->writeArray($this->formData, "setup");

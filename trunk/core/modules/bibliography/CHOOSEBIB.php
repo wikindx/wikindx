@@ -42,19 +42,22 @@ class CHOOSEBIB
     public function init($message = FALSE)
     {
         $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
-        if ($this->db->queryFetchFirstField($this->db->selectNoExecute('users', ['usersHomeBib']))) {
-        	$this->homeBib = TRUE;
+        if ($this->db->queryFetchFirstField($this->db->selectNoExecute('users', ['usersHomeBib'])))
+        {
+            $this->homeBib = TRUE;
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibs"));
         $bibsArray = $this->common->getBibsArray();
-        if (empty($bibsArray)) {
+        if (empty($bibsArray))
+        {
             GLOBALS::addTplVar('content', \HTML\p($this->messages->text("misc", "noBibliographies")));
 
             return;
         }
-    	if (array_key_exists('message', $this->vars) && $this->vars['message']) {
-    		$message = $this->vars['message'];
-    	}
+        if (array_key_exists('message', $this->vars) && $this->vars['message'])
+        {
+            $message = $this->vars['message'];
+        }
         $pString = $message ? $message : '';
         $pString .= \FORM\formHeader("bibliography_CHOOSEBIB_CORE");
         $pString .= \FORM\hidden("method", "useBib");
@@ -69,26 +72,36 @@ class CHOOSEBIB
         $js = \AJAX\jActionForm('onchange', $jsonArray);
         $selected = array_key_exists('BibId', $this->vars) ? $this->vars['BibId'] : GLOBALS::getUserVar('BrowseBibliography');
         $size = count($bibsArray);
-        if ($size > 20) {
+        if ($size > 20)
+        {
             $size = 10;
         }
         $pString .= \HTML\tableStart('');
         $pString .= \HTML\trStart();
-        if ($selected) {
+        if ($selected)
+        {
             $pString .= \HTML\td(\FORM\selectedBoxValue(FALSE, "BibId", $bibsArray, $selected, $size, FALSE, $js));
-        } else {
+        }
+        else
+        {
             $pString .= \HTML\td(\FORM\selectFBoxValue(FALSE, "BibId", $bibsArray, $size, FALSE, $js));
         }
         $pString .= \HTML\td(\HTML\div('div', $this->displayBib($selected)), 'left top width80percent');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-		$pString .= \HTML\p(\FORM\checkbox(
-			$this->messages->text('user', 'homeBib'),
-			"HomeBib",
-			$this->homeBib
-			) . BR .
-                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "homeBib")), 'hint'));
+        $pString .= \HTML\p(\FORM\checkbox(
+            $this->messages->text('user', 'homeBib'),
+            "HomeBib",
+            $this->homeBib
+        ) . BR .
+                \HTML\span(\HTML\aBrowse(
+                    'green',
+                    '',
+                    $this->messages->text("hint", "hint"),
+                    '#',
+                    "",
+                    $this->messages->text("hint", "homeBib")
+                ), 'hint'));
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Select")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -111,18 +124,24 @@ class CHOOSEBIB
      */
     public function displayBib($bibId = FALSE)
     {
-        if (array_key_exists('ajaxReturn', $this->vars)) {
+        if (array_key_exists('ajaxReturn', $this->vars))
+        {
             $bibId = $this->vars['ajaxReturn'];
         }
-        if (!$bibId && array_key_exists('BibId', $this->vars)) {
+        if (!$bibId && array_key_exists('BibId', $this->vars))
+        {
             $bibId = $this->vars['BibId'];
         }
-        if ($bibId === FALSE) {
+        if ($bibId === FALSE)
+        {
             $pString = \HTML\p($this->messages->text("user", "masterBib"));
         }
-        elseif ($bibId <= 0) {
+        elseif ($bibId <= 0)
+        {
             $pString = '&nbsp;';
-        } else {
+        }
+        else
+        {
             $this->db->leftJoin(
                 'user_bibliography_resource',
                 $this->db->formatFields('userbibliographyresourceBibliographyId'),
@@ -143,7 +162,8 @@ class CHOOSEBIB
                 \HTML\nlToHtml($row['usersFullname']);
             $pString = \HTML\p($text);
             $text = '';
-            if ($row['count']) {
+            if ($row['count'])
+            {
                 $text .= \HTML\strong($this->messages->text("user", "numResources") . ":&nbsp;&nbsp;") .
                     $row['count'] . BR;
             }
@@ -151,7 +171,8 @@ class CHOOSEBIB
                 \HTML\nlToHtml($row['userbibliographyTitle']) . BR;
             $text .= \HTML\strong($this->messages->text("user", "bibDescription") . ":&nbsp;&nbsp;") .
                 \HTML\nlToHtml($row['userbibliographyDescription']);
-            if ($row['userbibliographyUserGroupId']) { // a group bibliography
+            if ($row['userbibliographyUserGroupId'])
+            { // a group bibliography
                 $this->db->formatConditions(['usergroupsId' => $row['userbibliographyUserGroupId']]);
                 $userGroup = $this->db->selectFirstField('user_groups', 'usergroupsTitle');
                 $text .= BR . \HTML\strong($this->messages->text("user", "group") . ":&nbsp;&nbsp;") .
@@ -159,6 +180,7 @@ class CHOOSEBIB
             }
             $pString .= \HTML\p($text);
         }
+
         return $pString;
     }
     /**
@@ -166,27 +188,35 @@ class CHOOSEBIB
      */
     public function useBib()
     {
-    	$updateArray = [];
-    	if (array_key_exists('HomeBib', $this->vars)) {
-    		$updateArray['usersHomeBib'] = 1;
-    	} else {
-    		$updateArray['usersHomeBib'] = 0;
-    	}
+        $updateArray = [];
+        if (array_key_exists('HomeBib', $this->vars))
+        {
+            $updateArray['usersHomeBib'] = 1;
+        }
+        else
+        {
+            $updateArray['usersHomeBib'] = 0;
+        }
         // bibId of 0 == master bibliography
         // bibId of < 0 == a label
-        if (!array_key_exists('BibId', $this->vars) || !$this->vars['BibId']) {
-        	$this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
-        	$updateArray['usersBrowseBibliography'] = 0;
-        	$this->db->update('users', $updateArray);
-        } elseif ($this->vars['BibId'] < 0) {
-			$message = rawurlencode($this->errors->text("inputError", "invalid"));
-			header("Location: index.php?action=bibliography_CHOOSEBIB_CORE&message=$message");
-			die;
-        } else {
-        	GLOBALS::setUserVar('BrowseBibliography', $this->vars['BibId']);
-        	$updateArray['usersBrowseBibliography'] = $this->vars['BibId'];
-        	$this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
-        	$this->db->update('users', $updateArray);
+        if (!array_key_exists('BibId', $this->vars) || !$this->vars['BibId'])
+        {
+            $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+            $updateArray['usersBrowseBibliography'] = 0;
+            $this->db->update('users', $updateArray);
+        }
+        elseif ($this->vars['BibId'] < 0)
+        {
+            $message = rawurlencode($this->errors->text("inputError", "invalid"));
+            header("Location: index.php?action=bibliography_CHOOSEBIB_CORE&message=$message");
+            die;
+        }
+        else
+        {
+            GLOBALS::setUserVar('BrowseBibliography', $this->vars['BibId']);
+            $updateArray['usersBrowseBibliography'] = $this->vars['BibId'];
+            $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+            $this->db->update('users', $updateArray);
         }
         $this->session->delVar("mywikindx_Bibliography_add");
         $this->session->delVar("mywikindx_PagingStart");

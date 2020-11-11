@@ -12,7 +12,7 @@
  *	TinyMCE for wordProcessor class.
  */
 class WPLOADTINYMCE extends LOADTINYMCE
-{    
+{
     // Constructor
     public function __construct()
     {

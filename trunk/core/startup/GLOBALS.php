@@ -66,7 +66,8 @@ class GLOBALS
      */
     public function __construct()
     {
-        if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL) {
+        if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL)
+        {
             $this->setPageStartingTime(microtime());
         }
     }
@@ -80,10 +81,12 @@ class GLOBALS
      */
     public static function setVars($cleanInput, $dirtyInput)
     {
-        if (empty(self::$vars)) {
+        if (empty(self::$vars))
+        {
             self::$vars = $cleanInput;
         }
-        if (empty(self::$dirtyVars)) {
+        if (empty(self::$dirtyVars))
+        {
             self::$dirtyVars = $dirtyInput;
         }
     }
@@ -110,21 +113,26 @@ class GLOBALS
      *
      * @param object $db
      * @param string uuid
+     * @param mixed $uuid
      */
     public static function initTempStorage($db, $uuid)
-    { 
-    	$db->formatConditions(['tempstorageId' => $uuid]);
-		$row = $db->selectFirstField('temp_storage', 'tempstorageData');
-		if (is_bool($row)) {
-			self::$tempStorage = [];
-			return;
-		}
-		$data = unserialize($row);
-		if (empty($data)) {
-			self::$tempStorage = [];
-			return;
-		}
-		self::$tempStorage = $data;
+    {
+        $db->formatConditions(['tempstorageId' => $uuid]);
+        $row = $db->selectFirstField('temp_storage', 'tempstorageData');
+        if (is_bool($row))
+        {
+            self::$tempStorage = [];
+
+            return;
+        }
+        $data = unserialize($row);
+        if (empty($data))
+        {
+            self::$tempStorage = [];
+
+            return;
+        }
+        self::$tempStorage = $data;
     }
     /**
      * Set tempStorage variables
@@ -134,9 +142,10 @@ class GLOBALS
      */
     public static function setTempStorage($array)
     {
-    	foreach ($array as $key => $value) {
-	        self::$tempStorage[$key] = $value;
-	    }
+        foreach ($array as $key => $value)
+        {
+            self::$tempStorage[$key] = $value;
+        }
     }
     /**
      * Unset tempStorage variables
@@ -146,9 +155,10 @@ class GLOBALS
      */
     public static function unsetTempStorage($array)
     {
-    	foreach ($array as $key) {
-	        unset(self::$tempStorage[$key]);
-	    }
+        foreach ($array as $key)
+        {
+            unset(self::$tempStorage[$key]);
+        }
     }
     /**
      * Get $tempStorage either in whole or in part
@@ -159,12 +169,16 @@ class GLOBALS
      */
     public static function getTempStorage($key = FALSE)
     {
-    	if ($key) {
-    		if (!array_key_exists($key, self::$tempStorage)) {
-    			return FALSE;
-    		}
-    		return self::$tempStorage[$key];
-    	}
+        if ($key)
+        {
+            if (!array_key_exists($key, self::$tempStorage))
+            {
+                return FALSE;
+            }
+
+            return self::$tempStorage[$key];
+        }
+
         return self::$tempStorage;
     }
     /**
@@ -205,12 +219,14 @@ class GLOBALS
      */
     public static function getUserVar($key, $default = FALSE)
     {
-    // Added the check for FALSE because, in some cases (Read Only from the Wikindx menu after being logged in), 
-    // self::$userVars[$key] exists but is FALSE. e.g. a warning is produced in PARSEXML line 139 because $style is a bool.
-    // TODO: Check loading of user vars for read only –– here is a temporary fix only.
-        if (!array_key_exists($key, self::$userVars) || (self::$userVars[$key] === FALSE)) {
+        // Added the check for FALSE because, in some cases (Read Only from the Wikindx menu after being logged in),
+        // self::$userVars[$key] exists but is FALSE. e.g. a warning is produced in PARSEXML line 139 because $style is a bool.
+        // TODO: Check loading of user vars for read only –– here is a temporary fix only.
+        if (!array_key_exists($key, self::$userVars) || (self::$userVars[$key] === FALSE))
+        {
             return $default;
         }
+
         return self::$userVars[$key];
     }
     /**
@@ -319,9 +335,12 @@ class GLOBALS
      */
     public static function getTplVar($variableName)
     {
-        if (self::tplVarExists($variableName)) {
+        if (self::tplVarExists($variableName))
+        {
             return self::$WIKINDX_TEMPLATE_VARIABLE_STORE[$variableName];
-        } else {
+        }
+        else
+        {
             return [];
         }
     }
@@ -342,7 +361,8 @@ class GLOBALS
     public static function setPageStartingTime($pageStartingTime)
     {
         // Don't launch again start timer if we include this file twice
-        if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL) {
+        if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL)
+        {
             self::$WIKINDX_PAGE_STARTING_TIME_CHRONO = $pageStartingTime;
         }
     }

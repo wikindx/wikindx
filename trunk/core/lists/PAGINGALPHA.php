@@ -68,46 +68,56 @@ class PAGINGALPHA
      */
     public function getPaging($conditions, $joins, $conditionsOneField, $table = 'resource', $subQ, $QS = FALSE)
     {
-        if (!$this->total = GLOBALS::getTempStorage('setup_PagingTotal')) {
-        	$this->total = $this->session->getVar("setup_PagingTotal");
+        if (!$this->total = GLOBALS::getTempStorage('setup_PagingTotal'))
+        {
+            $this->total = $this->session->getVar("setup_PagingTotal");
         }
-        if (!$this->pagingArray = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_PagingAlphaLinks')) {
-        	$this->pagingArray = $this->session->getVar("list_PagingAlphaLinks");
+        if (!$this->pagingArray = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_PagingAlphaLinks'))
+        {
+            $this->pagingArray = $this->session->getVar("list_PagingAlphaLinks");
         }
-        if (!is_bool($this->pagingArray)) {
+        if (!is_bool($this->pagingArray))
+        {
             $this->sizeOfPA = count($this->pagingArray);
             $this->createLinks();
 
             return;
         }
         $viewMax = GLOBALS::getUserVar('Paging');
-        if ($viewMax <= 0) {
+        if ($viewMax <= 0)
+        {
             $viewMax = 20; // a cludge
         }
-        if ($QS) {
-			if (!$ids = GLOBALS::getTempStorage('list_AllIds')) {
-				$ids = $this->session->getVar("list_AllIds");
-			}
-        	$conditions[] = $this->db->formatConditionsOneField($ids, 'resourceId', '=', TRUE, FALSE, FALSE, TRUE);
-        	$joins = [];
+        if ($QS)
+        {
+            if (!$ids = GLOBALS::getTempStorage('list_AllIds'))
+            {
+                $ids = $this->session->getVar("list_AllIds");
+            }
+            $conditions[] = $this->db->formatConditionsOneField($ids, 'resourceId', '=', TRUE, FALSE, FALSE, TRUE);
+            $joins = [];
             $joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
             $joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
             $joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
             $subQ = FALSE;
         }
-	    $stmt = $this->db->countAlpha($this->order, $subQ, $conditions, $joins, $conditionsOneField, $table);
+        $stmt = $this->db->countAlpha($this->order, $subQ, $conditions, $joins, $conditionsOneField, $table);
         $resultSet = $this->db->query($stmt);
         $total = 0;
         $letterArray = [];
         $numRows = $this->db->numRows($resultSet);
         $index = 0;
-        while ($row = $this->db->fetchRow($resultSet)) {
+        while ($row = $this->db->fetchRow($resultSet))
+        {
             $total += $row['count'];
-            if ($total <= $viewMax) {
+            if ($total <= $viewMax)
+            {
                 $letterArray[] = $row['page'];
 
                 continue;
-            } else {
+            }
+            else
+            {
                 $letterArray[] = $row['page'];
             }
             $this->pagingArray[] = $letterArray;
@@ -115,7 +125,8 @@ class PAGINGALPHA
             $total = 0;
             ++$index;
         }
-        if (($index < $numRows) && !empty($letterArray)) {
+        if (($index < $numRows) && !empty($letterArray))
+        {
             $this->pagingArray[] = $letterArray;
         }
         $this->sizeOfPA = count($this->pagingArray);
@@ -131,25 +142,35 @@ class PAGINGALPHA
      */
     public function linksInfo($bibTitle = FALSE)
     {
-        if (!$this->total) {
+        if (!$this->total)
+        {
             return $this->messages->text("resources", "noResult");
         }
         $bib = FALSE;
-        if (count($this->pagingArray) == 1) {
+        if (count($this->pagingArray) == 1)
+        {
             $num = $this->total;
-        } else {
+        }
+        else
+        {
             $array = $this->pagingArray[$this->start];
-            if (count($array) > 1) {
+            if (count($array) > 1)
+            {
                 $chars = array_shift($array) . '~' . array_pop($array);
-            } else {
+            }
+            else
+            {
                 $chars = array_shift($array);
             }
             $num = "'" . $chars . "'";
         }
-        if ($bibTitle) {
+        if ($bibTitle)
+        {
             $bib = " (" . $this->messages->text("user", "bibliography") . ": " .
             \HTML\nlToHtml($bibTitle) . ")";
-        } elseif (WIKINDX_MULTIUSER) {
+        }
+        elseif (WIKINDX_MULTIUSER)
+        {
             $bib = " (" . $this->messages->text("user", "bibliography") . ": " .
                 $this->messages->text("user", "masterBib") . ")";
         }
@@ -165,17 +186,21 @@ class PAGINGALPHA
         $DefaultStart = 0;
         $start = FALSE;
         
-        if (array_key_exists('PagingStart', $this->vars)) {
+        if (array_key_exists('PagingStart', $this->vars))
+        {
             $start = filter_var($this->vars['PagingStart'], FILTER_VALIDATE_INT);
         }
         
-        if ($start === FALSE) {
-        	if (!$start = GLOBALS::getTempStorage('mywikindx_PagingStart')) {
-	            $start = $this->session->getVar("mywikindx_PagingStart", FALSE);
-	        }
+        if ($start === FALSE)
+        {
+            if (!$start = GLOBALS::getTempStorage('mywikindx_PagingStart'))
+            {
+                $start = $this->session->getVar("mywikindx_PagingStart", FALSE);
+            }
         }
         
-        if ($start === FALSE) {
+        if ($start === FALSE)
+        {
             $start = $DefaultStart;
         }
         
@@ -190,31 +215,43 @@ class PAGINGALPHA
      */
     private function createLinks()
     {
-        if (count($this->pagingArray) <= 1) {
+        if (count($this->pagingArray) <= 1)
+        {
             return FALSE;
         }
         $BT = $this->browserTabID ? '&browserTabID=' . $this->browserTabID : FALSE;
         $tempArray = $this->pagingArray;
-        if (mb_strpos($this->queryString, '?') !== FALSE) {
+        if (mb_strpos($this->queryString, '?') !== FALSE)
+        {
             $rootFile = FALSE;
-        } else {
+        }
+        else
+        {
             $rootFile = 'index.php?';
         }
-        foreach ($this->pagingArray as $index => $array) {
+        foreach ($this->pagingArray as $index => $array)
+        {
             $array = array_shift($tempArray);
-            if (count($array) > 1) {
+            if (count($array) > 1)
+            {
                 $chars = array_shift($array) . '~' . array_pop($array);
-            } else {
+            }
+            else
+            {
                 $chars = array_shift($array);
             }
-            if ($this->start == $index) {
+            if ($this->start == $index)
+            {
                 $links[] = $chars;
-            } else {
+            }
+            else
+            {
                 $link = htmlentities($this->queryString . "&PagingStart=$index") . $BT;
                 $links[] = \HTML\a("page", "&nbsp;&nbsp;$chars&nbsp;&nbsp;", $rootFile . $link);
             }
         }
-        if ($this->session->getVar($this->listType . '_AscDesc') == 'DESC') {
+        if ($this->session->getVar($this->listType . '_AscDesc') == 'DESC')
+        {
             $links = array_reverse($links);
         }
         GLOBALS::setTplVar('pagingList', $links);

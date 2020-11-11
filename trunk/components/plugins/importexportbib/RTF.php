@@ -81,7 +81,8 @@ class RTF
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTCOMMON.php"]));
         $common = new EXPORTCOMMON();
         $sql = $common->getSQL();
-        if (!$sql) {
+        if (!$sql)
+        {
             return HTML\p($this->pluginmessages->text("noList"), 'error');
         }
         // load the session
@@ -89,23 +90,32 @@ class RTF
         $pString = HTML\p($this->pluginmessages->text('introRtfExport'));
         $pString .= FORM\formHeader("importexportbib_exportRtf");
         $pString .= FORM\hidden('method', 'process');
-        if ($this->session->issetVar("exportRtf_bibliography")) {
+        if ($this->session->issetVar("exportRtf_bibliography"))
+        {
             $checked = $this->session->getVar("exportRtf_bibliography") ? 'CHECKED' : FALSE;
-        } else {
+        }
+        else
+        {
             $checked = $this->session->issetVar("exportRtf_done") ? FALSE : 'CHECKED';
         }
         $pString .= $this->makeForm($checked, "bibliography", "bibliography");
         $pString .= BR;
-        if ($this->session->issetVar("exportRtf_abstract")) {
+        if ($this->session->issetVar("exportRtf_abstract"))
+        {
             $checked = $this->session->getVar("exportRtf_abstract") ? 'CHECKED' : FALSE;
-        } else {
+        }
+        else
+        {
             $checked = $this->session->issetVar("exportRtf_done") ? FALSE : 'CHECKED';
         }
         $pString .= $this->makeForm($checked, "abstract", "abstract");
         $pString .= BR;
-        if ($this->session->issetVar("exportRtf_notes")) {
+        if ($this->session->issetVar("exportRtf_notes"))
+        {
             $checked = $this->session->getVar("exportRtf_notes") ? 'CHECKED' : FALSE;
-        } else {
+        }
+        else
+        {
             $checked = $this->session->issetVar("exportRtf_done") ? FALSE : 'CHECKED';
         }
         $pString .= $this->makeForm($checked, "notes", "notes");
@@ -115,7 +125,8 @@ class RTF
         $selected = $this->session->getVar("exportRtf_metadata");
         $metadata = [0 => $this->pluginmessages->text("metadataAll"),
             1 => $this->pluginmessages->text("metadataUser"), ];
-        if ($selected) {
+        if ($selected)
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("metadata"),
                 "exportRtf_metadata",
@@ -123,7 +134,9 @@ class RTF
                 $selected,
                 2
             ));
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectFBoxValue(
                 $this->pluginmessages->text("metadata"),
                 "exportRtf_metadata",
@@ -140,23 +153,32 @@ class RTF
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
         $pString .= BR;
-        if ($this->session->issetVar("exportRtf_quotes")) {
+        if ($this->session->issetVar("exportRtf_quotes"))
+        {
             $checked = $this->session->getVar("exportRtf_quotes") ? 'CHECKED' : FALSE;
-        } else {
+        }
+        else
+        {
             $checked = $this->session->issetVar("exportRtf_done") ? FALSE : 'CHECKED';
         }
         $pString .= $this->makeForm($checked, "quotes", "quotes", TRUE);
         $pString .= BR;
-        if ($this->session->issetVar("exportRtf_paraphrases")) {
+        if ($this->session->issetVar("exportRtf_paraphrases"))
+        {
             $checked = $this->session->getVar("exportRtf_paraphrases") ? 'CHECKED' : FALSE;
-        } else {
+        }
+        else
+        {
             $checked = $this->session->issetVar("exportRtf_done") ? FALSE : 'CHECKED';
         }
         $pString .= $this->makeForm($checked, "paraphrases", "paraphrases", TRUE);
         $pString .= BR;
-        if ($this->session->issetVar("exportRtf_musings")) {
+        if ($this->session->issetVar("exportRtf_musings"))
+        {
             $checked = $this->session->getVar("exportRtf_musings") ? 'CHECKED' : FALSE;
-        } else {
+        }
+        else
+        {
             $checked = $this->session->issetVar("exportRtf_done") ? FALSE : 'CHECKED';
         }
         $pString .= $this->makeForm($checked, "musings", "musings");
@@ -164,9 +186,12 @@ class RTF
         // Entry divider
         $pString .= HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= HTML\trStart();
-        if (!$this->session->getVar("exportRtf_done")) {
+        if (!$this->session->getVar("exportRtf_done"))
+        {
             $selected = '______________________________________________________________';
-        } else {
+        }
+        else
+        {
             $selected = trim($this->session->getVar("exportRtf_divider"));
         }
         $pString .= HTML\td(FORM\textInput(
@@ -176,7 +201,8 @@ class RTF
             75
         ));
         // Divider Font
-        if (!$selected = $this->session->getVar("exportRtf_dividerFont")) {
+        if (!$selected = $this->session->getVar("exportRtf_dividerFont"))
+        {
             $selected = 3; // Georgia
         }
         $pString .= HTML\td(FORM\selectedBoxValue(
@@ -187,7 +213,8 @@ class RTF
             3
         ));
         // Divider Font Size
-        if (!$selected = $this->session->getVar("exportRtf_dividerFontSize")) {
+        if (!$selected = $this->session->getVar("exportRtf_dividerFontSize"))
+        {
             $selected = 2; // 10
         }
         $pString .= HTML\td(FORM\selectedBoxValue(
@@ -202,7 +229,8 @@ class RTF
         $pString .= HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= HTML\trStart();
         // Carriage returns after each entry
-        if (!$selected = $this->session->getVar("exportRtf_dividerCR")) {
+        if (!$selected = $this->session->getVar("exportRtf_dividerCR"))
+        {
             $selected = 4;
         }
         $pString .= HTML\td(FORM\selectedBoxValue(
@@ -213,7 +241,8 @@ class RTF
             3
         ));
         // preferences
-        if ($selected = $this->session->getVar("exportRtf_style")) {
+        if ($selected = $this->session->getVar("exportRtf_style"))
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->coremessages->text("config", "style"),
                 "exportRtf_style",
@@ -221,7 +250,9 @@ class RTF
                 $this->session->getVar("exportRtf_style"),
                 4
             ));
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->coremessages->text("config", "style"),
                 "exportRtf_style",
@@ -233,7 +264,8 @@ class RTF
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
         $pString .= BR;
-        if (count($sessionVars) > 1) { // by default, array has a single 'style' key (see above)
+        if (count($sessionVars) > 1)
+        { // by default, array has a single 'style' key (see above)
             $this->session->clearArray("exportRtf");
             $this->session->setVar("exportRtf_style", GLOBALS::getUserVar("Style"));
             $reset =
@@ -241,7 +273,9 @@ class RTF
                 FORM\formSubmit($this->coremessages->text("submit", "Reset")) .
                 FORM\formEnd();
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Proceed")) . FORM\formEnd() . $reset);
-        } else {
+        }
+        else
+        {
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Proceed")) .
             BR . BR . FORM\formReset($this->coremessages->text('submit', 'Reset')) . FORM\formEnd());
         }
@@ -264,10 +298,14 @@ class RTF
         $pString .= HTML\trStart();
         $temp = HTML\strong($this->pluginmessages->text($text)) . "&nbsp;" .
             FORM\checkbox(FALSE, "exportRtf_" . $text, $checked);
-        if ($session != 'bibliography') {
-            if (!$this->session->getVar("exportRtf_done")) {
+        if ($session != 'bibliography')
+        {
+            if (!$this->session->getVar("exportRtf_done"))
+            {
                 $selected = $this->pluginmessages->text($session . 'Tag');
-            } else {
+            }
+            else
+            {
                 $selected = trim($this->session->getVar("exportRtf_" . $session . "Tag"));
             }
             $temp .= BR . FORM\textInput(
@@ -278,15 +316,20 @@ class RTF
             );
         }
         $pString .= HTML\td($temp);
-        if ($comments) {
-            if ($this->session->issetVar("exportRtf_" . $session . "Comments")) {
+        if ($comments)
+        {
+            if ($this->session->issetVar("exportRtf_" . $session . "Comments"))
+            {
                 $checkedC = $this->session->getVar("exportRtf_" . $session . "Comments") ? 'CHECKED' : FALSE;
-            } else {
+            }
+            else
+            {
                 $checkedC = $this->session->issetVar("exportRtf_done") ? FALSE : 'CHECKED';
             }
             $temp = $this->pluginmessages->text("comments") . "&nbsp;" .
                 FORM\checkbox(FALSE, "exportRtf_" . $text . "Comments", $checkedC);
-            if (!$selected = trim($this->session->getVar("exportRtf_" . $session . "CommentsTag"))) {
+            if (!$selected = trim($this->session->getVar("exportRtf_" . $session . "CommentsTag")))
+            {
                 $selected = $this->pluginmessages->text($session . 'CommentTag');
             }
             $temp .= BR . FORM\textInput(
@@ -298,7 +341,8 @@ class RTF
             $pString .= HTML\td($temp);
         }
         // Font
-        if (!$selected = $this->session->getVar("exportRtf_" . $session . "Font")) {
+        if (!$selected = $this->session->getVar("exportRtf_" . $session . "Font"))
+        {
             $selected = 3; // Georgia
         }
         $pString .= HTML\td(FORM\selectedBoxValue(
@@ -309,10 +353,14 @@ class RTF
             3
         ));
         // Font Size
-        if (!$selected = $this->session->getVar("exportRtf_" . $session . "FontSize")) {
-            if ($session == 'bibliography') {
+        if (!$selected = $this->session->getVar("exportRtf_" . $session . "FontSize"))
+        {
+            if ($session == 'bibliography')
+            {
                 $selected = 1; // 8
-            } else {
+            }
+            else
+            {
                 $selected = 2; // 10
             }
         }
@@ -324,8 +372,10 @@ class RTF
             3
         ));
         // Underline, Italics, Bold, Normal
-        if ($session != 'bibliography') {
-            if ($selected = $this->session->getVar("exportRtf_" . $session . "TextFormat")) {
+        if ($session != 'bibliography')
+        {
+            if ($selected = $this->session->getVar("exportRtf_" . $session . "TextFormat"))
+            {
                 $pString .= HTML\td(FORM\selectedBoxValue(
                     $this->pluginmessages->text("textFormat"),
                     "exportRtf_" . $session . "TextFormat",
@@ -333,7 +383,9 @@ class RTF
                     $selected,
                     3
                 ));
-            } else {
+            }
+            else
+            {
                 $pString .= HTML\td(FORM\selectFBoxValue(
                     $this->pluginmessages->text("textFormat"),
                     "exportRtf_" . $session . "TextFormat",
@@ -341,8 +393,11 @@ class RTF
                     3
                 ));
             }
-        } else {
-            if ($selected = $this->session->getVar("exportRtf_bibliographyTextFormat")) {
+        }
+        else
+        {
+            if ($selected = $this->session->getVar("exportRtf_bibliographyTextFormat"))
+            {
                 $pString .= HTML\td(FORM\selectedBoxValue(
                     $this->pluginmessages->text("textFormat"),
                     "exportRtf_bibliographyTextFormat",
@@ -350,7 +405,9 @@ class RTF
                     $selected,
                     2
                 ));
-            } else {
+            }
+            else
+            {
                 $pString .= HTML\td(FORM\selectFBoxValue(
                     $this->pluginmessages->text("textFormat"),
                     "exportRtf_bibliographyTextFormat",
@@ -364,10 +421,14 @@ class RTF
         $pString .= HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= HTML\trStart();
         // Left Indent
-        if (!$selected = $this->session->getVar("exportRtf_" . $session . "IndentL")) {
-            if ($session != 'bibliography') {
+        if (!$selected = $this->session->getVar("exportRtf_" . $session . "IndentL"))
+        {
+            if ($session != 'bibliography')
+            {
                 $selected = 2; // 1
-            } else {
+            }
+            else
+            {
                 $selected = 1; // 0
             }
         }
@@ -379,12 +440,18 @@ class RTF
             3
         ));
         // Right Indent
-        if (!$selected = $this->session->getVar("exportRtf_" . $session . "IndentR")) {
-            if (($session == 'abstract') || ($session == 'notes')) {
+        if (!$selected = $this->session->getVar("exportRtf_" . $session . "IndentR"))
+        {
+            if (($session == 'abstract') || ($session == 'notes'))
+            {
                 $selected = 2; // 1
-            } elseif ($session != 'bibliography') {
+            }
+            elseif ($session != 'bibliography')
+            {
                 $selected = 1; // 2
-            } else {
+            }
+            else
+            {
                 $selected = 1; // 0
             }
         }
@@ -395,9 +462,11 @@ class RTF
             $selected,
             3
         ));
-        if (($session == 'musings') || ($session == 'quotes') || ($session == 'paraphrases')) {
+        if (($session == 'musings') || ($session == 'quotes') || ($session == 'paraphrases'))
+        {
             // Carriage Returns between parts of element
-            if (!$selected = $this->session->getVar("exportRtf_" . $session . "CrBetween")) {
+            if (!$selected = $this->session->getVar("exportRtf_" . $session . "CrBetween"))
+            {
                 $selected = 2; // 1
             }
             $pString .= HTML\td(FORM\selectedBoxValue(
@@ -409,7 +478,8 @@ class RTF
             ));
         }
         // Carriage Returns after element
-        if (!$selected = $this->session->getVar("exportRtf_" . $session . "CrFollowing")) {
+        if (!$selected = $this->session->getVar("exportRtf_" . $session . "CrFollowing"))
+        {
             $selected = 2; // 1
         }
         $pString .= HTML\td(FORM\selectedBoxValue(
@@ -420,7 +490,8 @@ class RTF
             3
         ));
         // ISBN and Keywords and hyperlink
-        if ($session == 'bibliography') {
+        if ($session == 'bibliography')
+        {
             $checkedC = $this->session->issetVar("exportRtf_bibliographyIsbn") ? 'CHECKED' : FALSE;
             $pString .= HTML\td($this->pluginmessages->text("isbn") . "&nbsp;" .
                 FORM\checkbox(FALSE, "exportRtf_bibliographyIsbn", $checkedC));

@@ -36,12 +36,16 @@ class TAG
     {
         $this->db->orderBy('tagTag');
         $recordset = $this->db->select('tag', ['tagId', 'tagTag']);
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $tags[$row['tagId']] = \HTML\dbToFormTidy($row['tagTag']);
         }
-        if (isset($tags)) {
+        if (isset($tags))
+        {
             return $tags;
-        } else {
+        }
+        else
+        {
             return FALSE;
         }
     }
@@ -56,9 +60,12 @@ class TAG
     {
         $this->db->formatConditions(['tagTag' => $tag]);
         $resultset = $this->db->select('tag', 'tagId');
-        if ($this->db->numRows($resultset)) {
+        if ($this->db->numRows($resultset))
+        {
             return $this->db->fetchOne($resultset);
-        } else {
+        }
+        else
+        {
             return FALSE; // not found
         }
     }

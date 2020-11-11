@@ -195,7 +195,7 @@ class UPDATEDATABASE
         {
             GLOBALS::addTplVar("content", "
                 Your WIKINDX database version is $dbVersion.
-                This version of the application (" . WIKINDX_PUBLIC_VERSION . ") is not compatible with a version of the database greater than " . WIKINDX_INTERNAL_VERSION  . ".
+                This version of the application (" . WIKINDX_PUBLIC_VERSION . ") is not compatible with a version of the database greater than " . WIKINDX_INTERNAL_VERSION . ".
                 Please upgrade the application or restore a previous database.
             ");
             FACTORY_CLOSENOMENU::getInstance(); // die
@@ -1044,12 +1044,14 @@ class UPDATEDATABASE
         while ($row = $this->db->fetchRow($resultSet))
         {
             $desc = trim(\HTML\stripHtml($row['userbibliographyDescription']));
-            if ($desc != $row['userbibliographyDescription']) {
+            if ($desc != $row['userbibliographyDescription'])
+            {
                 $updateArray[$row['userbibliographyId']] = ($desc != '' ? $desc : 'NULL');
             }
         }
         
-        if (count($updateArray) > 0) {
+        if (count($updateArray) > 0)
+        {
             $this->db->multiUpdate('user_bibliography', 'userbibliographyDescription', 'userbibliographyId', $updateArray);
         }
         
@@ -1060,12 +1062,14 @@ class UPDATEDATABASE
         while ($row = $this->db->fetchRow($resultSet))
         {
             $desc = trim(\HTML\stripHtml($row['resourceattachmentsDescription']));
-            if ($desc != $row['resourceattachmentsDescription']) {
+            if ($desc != $row['resourceattachmentsDescription'])
+            {
                 $updateArray[$row['resourceattachmentsId']] = ($desc != '' ? $desc : 'NULL');
             }
         }
         
-        if (count($updateArray) > 0) {
+        if (count($updateArray) > 0)
+        {
             $this->db->multiUpdate('resource_attachments', 'resourceattachmentsDescription', 'resourceattachmentsId', $updateArray);
         }
         
@@ -1114,7 +1118,7 @@ class UPDATEDATABASE
      */
     private function stage29()
     {
-    	$this->db->formatConditionsOneField([-1, -2], 'userbibliographyresourceBibliographyId');
+        $this->db->formatConditionsOneField([-1, -2], 'userbibliographyresourceBibliographyId');
         $this->db->delete('user_bibliography_resource');
         $this->updateSoftwareVersion(29);
         $this->checkStatus('stage29');
@@ -1137,16 +1141,20 @@ class UPDATEDATABASE
         $deleteStatisticsAttachment = [];
         $deleteStatisticsResource = [];
         
-    // 1. Past statistics from statistics table
+        // 1. Past statistics from statistics table
         $resultSet = $this->db->select('statistics', ['statisticsId', 'statisticsResourceId', 'statisticsAttachmentId', 'statisticsStatistics']);
         while ($row = $this->db->fetchRow($resultSet))
         {
             $id = $row['statisticsAttachmentId'] ? $row['statisticsAttachmentId'] : $row['statisticsResourceId'];
             
             if ($row['statisticsAttachmentId'])
+            {
                 $deleteStatisticsAttachment[] = $row['statisticsId'];
+            }
             else
+            {
                 $deleteStatisticsResource[] = $row['statisticsId'];
+            }
             
             $statsArray = unserialize(base64_decode($row['statisticsStatistics']));
             if ($statsArray === FALSE)
@@ -1156,19 +1164,25 @@ class UPDATEDATABASE
             
             foreach ($statsArray as $month => $count)
             {
-                if (!$count) // Ensure there is a valid INSERT value here ...
-                {
+                if (!$count)
+                { // Ensure there is a valid INSERT value here ...
                     $count = 0;
                 }
                 
                 // If the month (period) is too short or long (YYYYMM format expected), skip this stat
                 $month = trim($month . "");
-                if (strlen($month) != 6) continue;
+                if (strlen($month) != 6)
+                {
+                    continue;
+                }
                 
                 $month = intval($month);
                 
                 // If the month is not in the range 01..12, skip this stat
-                if ($month % 100 > 12) continue;
+                if ($month % 100 > 12)
+                {
+                    continue;
+                }
                 
                 // Shift of one month back
                 $month = $month - 1;
@@ -1250,17 +1264,17 @@ class UPDATEDATABASE
             $this->pauseExecution('stage13', 'stage13');
         }
     
-    // 2. Current statistics for views
+        // 2. Current statistics for views
         $month = date('Ym');
         $insertResourceValues = [];
         $resultSet = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscAccessesPeriod']);
         while ($row = $this->db->fetchRow($resultSet))
         {
-            if (!$row['resourcemiscAccessesPeriod']) // Ensure there is a valid INSERT value here ...
-            {
+            if (!$row['resourcemiscAccessesPeriod'])
+            { // Ensure there is a valid INSERT value here ...
                 $count = 1;
             }
-            else 
+            else
             {
                 $count = $row['resourcemiscAccessesPeriod'];
             }
@@ -1268,35 +1282,37 @@ class UPDATEDATABASE
             
             if (count($insertResourceValues) % 5000 == 0)
             {
-                $this->db->multiInsert('statistics_resource_views',
-                    ['statisticsresourceviewsResourceId', 
-                        'statisticsresourceviewsMonth', 
-                        'statisticsresourceviewsCount'],
-                        implode(', ', $insertResourceValues)
+                $this->db->multiInsert(
+                    'statistics_resource_views',
+                    ['statisticsresourceviewsResourceId',
+                        'statisticsresourceviewsMonth',
+                        'statisticsresourceviewsCount', ],
+                    implode(', ', $insertResourceValues)
                 );
                 $insertResourceValues = [];
             }
         }
         if (count($insertResourceValues) > 0)
         {
-            $this->db->multiInsert('statistics_resource_views',
-                ['statisticsresourceviewsResourceId', 
-                    'statisticsresourceviewsMonth', 
-                    'statisticsresourceviewsCount'],
-                    implode(', ', $insertResourceValues)
+            $this->db->multiInsert(
+                'statistics_resource_views',
+                ['statisticsresourceviewsResourceId',
+                    'statisticsresourceviewsMonth',
+                    'statisticsresourceviewsCount', ],
+                implode(', ', $insertResourceValues)
             );
         }
     
-    // 3. Current statistics for downloads
+        // 3. Current statistics for downloads
         $insertAttachmentValues = [];
         $resultSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsDownloadsPeriod']);
         while ($row = $this->db->fetchRow($resultSet))
         {
-            if (!$row['resourceattachmentsDownloadsPeriod']) // Ensure there is a valid INSERT value here ...
-            {
+            if (!$row['resourceattachmentsDownloadsPeriod'])
+            { // Ensure there is a valid INSERT value here ...
                 $count = 1;
             }
-            else 
+            else
             {
                 $count = $row['resourceattachmentsDownloadsPeriod'];
             }
@@ -1304,24 +1320,26 @@ class UPDATEDATABASE
             
             if (count($insertAttachmentValues) % 5000 == 0)
             {
-                $this->db->multiInsert('statistics_attachment_downloads',
+                $this->db->multiInsert(
+                    'statistics_attachment_downloads',
                     ['statisticsattachmentdownloadsResourceId',
-                        'statisticsattachmentdownloadsAttachmentId', 
-                        'statisticsattachmentdownloadsMonth', 
-                        'statisticsattachmentdownloadsCount'],
-                        implode(', ', $insertAttachmentValues)
+                        'statisticsattachmentdownloadsAttachmentId',
+                        'statisticsattachmentdownloadsMonth',
+                        'statisticsattachmentdownloadsCount', ],
+                    implode(', ', $insertAttachmentValues)
                 );
                 $insertAttachmentValues = [];
             }
         }
         if (count($insertAttachmentValues) > 0)
         {
-            $this->db->multiInsert('statistics_attachment_downloads',
+            $this->db->multiInsert(
+                'statistics_attachment_downloads',
                 ['statisticsattachmentdownloadsResourceId',
-                    'statisticsattachmentdownloadsAttachmentId', 
-                    'statisticsattachmentdownloadsMonth', 
-                    'statisticsattachmentdownloadsCount'],
-                    implode(', ', $insertAttachmentValues)
+                    'statisticsattachmentdownloadsAttachmentId',
+                    'statisticsattachmentdownloadsMonth',
+                    'statisticsattachmentdownloadsCount', ],
+                implode(', ', $insertAttachmentValues)
             );
         }
     }
@@ -1839,11 +1857,17 @@ END;
 
 END;
         if (property_exists($tmpconfig, 'WIKINDX_BASE_URL'))
+        {
             $string .= 'public $WIKINDX_URL_BASE = "' . $tmpconfig->WIKINDX_BASE_URL . '";' . "\n";
+        }
         elseif (property_exists($tmpconfig, 'WIKINDX_URL_BASE'))
+        {
             $string .= 'public $WIKINDX_URL_BASE = "' . $tmpconfig->WIKINDX_URL_BASE . '";' . "\n";
+        }
         else
+        {
             $string .= 'public $WIKINDX_URL_BASE = "";' . "\n";
+        }
         
         $string .= <<<END
 /*****

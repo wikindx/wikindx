@@ -61,15 +61,21 @@ class ADMINCOMPONENTS
      */
     public function checkUpdatesOnline($message = FALSE)
     {
-        if (WIKINDX_IS_TRUNK) {
+        if (WIKINDX_IS_TRUNK)
+        {
             $upd_srv_link = WIKINDX_COMPONENTS_UPDATE_SERVER . "?version=" . "trunk";
-        } else {
+        }
+        else
+        {
             $upd_srv_link = WIKINDX_COMPONENTS_UPDATE_SERVER . "?version=" . WIKINDX_PUBLIC_VERSION;
         }
         
-        if (\UTILS\download_sf_file($upd_srv_link, $this->serverComponentsListPath)) {
+        if (\UTILS\download_sf_file($upd_srv_link, $this->serverComponentsListPath))
+        {
             $this->init($this->success->text("componentUpToDate"));
-        } else {
+        }
+        else
+        {
             $this->init($this->success->text("componentUpToDate"));
         }
     }
@@ -100,25 +106,32 @@ class ADMINCOMPONENTS
         
         $pString = "";
         // Without curl we can't download
-        if (!in_array("curl", $InstalledExtensions)) {
+        if (!in_array("curl", $InstalledExtensions))
+        {
             $AllowUpdate = FALSE;
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'missingCurl'));
         }
         // Without a decompressor we can't update
-        elseif (!in_array("zip", $InstalledExtensions)) {
+        elseif (!in_array("zip", $InstalledExtensions))
+        {
             $AllowUpdate = FALSE;
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'missingCompression'));
         }
         // Retrieve the list
-        else {
-            if (file_exists($this->serverComponentsListPath)) {
+        else
+        {
+            if (file_exists($this->serverComponentsListPath))
+            {
                 $componentsRelease = \FILE\read_json_file($this->serverComponentsListPath);
-                if ($componentsRelease === NULL) {
+                if ($componentsRelease === NULL)
+                {
                     $componentsRelease = [];
                     $AllowUpdate = FALSE;
                     $pString .= $this->errors->text("components", "parse");
                 }
-            } else {
+            }
+            else
+            {
                 $componentsRelease = [];
                 $AllowUpdate = FALSE;
                 $pString .= "The component list has not yet been downloaded.";
@@ -133,9 +146,12 @@ class ADMINCOMPONENTS
         $componentslistMerged = [];
         
         // 1. Search installed components with a version online
-        foreach ($componentsInstalled as $ki => $ci) {
-            foreach ($componentsRelease as $kr => $cr) {
-                if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"]) {
+        foreach ($componentsInstalled as $ki => $ci)
+        {
+            foreach ($componentsRelease as $kr => $cr)
+            {
+                if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"])
+                {
                     // Use the metadata from the last component and keep additional fields of the installed component
                     $cr["component_version_latest"] = $cr["component_version"];
                     $cr["component_version"] = $ci["component_version"];
@@ -148,22 +164,28 @@ class ADMINCOMPONENTS
                     
                     // Decides on possible actions
                     $action = [];
-                    if ($cr["component_status"] == "enabled" && $cr["component_builtin"] == "false" && $cr["component_type"] != "vendor") {
+                    if ($cr["component_status"] == "enabled" && $cr["component_builtin"] == "false" && $cr["component_type"] != "vendor")
+                    {
                         $action["disable"] = $this->messages->text("components", "disable");
                     }
-                    if ($cr["component_status"] == "disabled" && $cr["component_integrity"] == 0) {
+                    if ($cr["component_status"] == "disabled" && $cr["component_integrity"] == 0)
+                    {
                         $action["enable"] = $this->messages->text("components", "enable");
                     }
-                    if ($cr["component_builtin"] == "false" && $cr["component_type"] != "vendor") {
+                    if ($cr["component_builtin"] == "false" && $cr["component_type"] != "vendor")
+                    {
                         $action["uninstall"] = $this->messages->text("components", "uninstall");
                     }
-                    if ($cr["component_updatable"] == "true" && $cr[$lasthashkeyid] == $cr[$hashkeyid] && $AllowUpdate) {
+                    if ($cr["component_updatable"] == "true" && $cr[$lasthashkeyid] == $cr[$hashkeyid] && $AllowUpdate)
+                    {
                         $action["reinstall"] = $this->messages->text("components", "reinstall");
                     }
-                    if ($cr["component_updatable"] == "true" && $cr[$lasthashkeyid] != $cr[$hashkeyid] && $AllowUpdate) {
+                    if ($cr["component_updatable"] == "true" && $cr[$lasthashkeyid] != $cr[$hashkeyid] && $AllowUpdate)
+                    {
                         $action["update"] = $this->messages->text("components", "update");
                     }
-                    if ($cr["component_type"] == "plugin") {
+                    if ($cr["component_type"] == "plugin")
+                    {
                         $action["configure"] = $this->messages->text("components", "configure");
                     }
                     
@@ -175,28 +197,36 @@ class ADMINCOMPONENTS
         }
         
         // 2. Search installed components without online alternative
-        foreach ($componentsInstalled as $ki => $ci) {
+        foreach ($componentsInstalled as $ki => $ci)
+        {
             $match = FALSE;
-            foreach ($componentsRelease as $kr => $cr) {
-                if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"]) {
+            foreach ($componentsRelease as $kr => $cr)
+            {
+                if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"])
+                {
                     $match = TRUE;
 
                     break;
                 }
             }
-            if (!$match) {
+            if (!$match)
+            {
                 // Decides on possible actions
                 $action = [];
-                if ($ci["component_status"] == "enabled" && $ci["component_builtin"] == "false" && $ci["component_type"] != "vendor") {
+                if ($ci["component_status"] == "enabled" && $ci["component_builtin"] == "false" && $ci["component_type"] != "vendor")
+                {
                     $action["disable"] = $this->messages->text("components", "disable");
                 }
-                if ($ci["component_status"] == "disabled" && $ci["component_integrity"] == 0) {
+                if ($ci["component_status"] == "disabled" && $ci["component_integrity"] == 0)
+                {
                     $action["enable"] = $this->messages->text("components", "enable");
                 }
-                if ($ci["component_builtin"] == "false" && $ci["component_type"] != "vendor") {
+                if ($ci["component_builtin"] == "false" && $ci["component_type"] != "vendor")
+                {
                     $action["uninstall"] = $this->messages->text("components", "uninstall");
                 }
-                if ($ci["component_type"] == "plugin") {
+                if ($ci["component_type"] == "plugin")
+                {
                     $action["configure"] = $this->messages->text("components", "configure");
                 }
                 
@@ -207,16 +237,20 @@ class ADMINCOMPONENTS
         }
         
         // 3. Search components available online and not installed
-        foreach ($componentsRelease as $kr => $cr) {
+        foreach ($componentsRelease as $kr => $cr)
+        {
             $match = FALSE;
-            foreach ($componentsInstalled as $ki => $ci) {
-                if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"]) {
+            foreach ($componentsInstalled as $ki => $ci)
+            {
+                if ($ci["component_type"] == $cr["component_type"] && $ci["component_id"] == $cr["component_id"])
+                {
                     $match = TRUE;
 
                     break;
                 }
             }
-            if (!$match) {
+            if (!$match)
+            {
                 $cr["component_version_latest"] = $cr["component_version"];
                 $cr["component_version"] = "";
                 
@@ -230,9 +264,12 @@ class ADMINCOMPONENTS
                 $cr["component_status"] = "disabled";
                     
                 // Decides on possible actions
-                if ($AllowUpdate) {
+                if ($AllowUpdate)
+                {
                     $cr["component_action"] = ["install" => $this->messages->text("components", "install")];
-                } else {
+                }
+                else
+                {
                     $cr["component_action"] = [];
                 }
                 
@@ -242,19 +279,23 @@ class ADMINCOMPONENTS
         
         // Ignore installed language components (this type have been removed in 6.3.6)
         // TODO: remove this code after two or three releases
-        foreach ($componentslistMerged as $k => $cmp) {
-            if ($cmp["component_type"] == "language") {
+        foreach ($componentslistMerged as $k => $cmp)
+        {
+            if ($cmp["component_type"] == "language")
+            {
                 unset($componentslistMerged[$k]);
             }
         }
         
-        foreach ($componentslistMerged as $k => $cmp) {
+        foreach ($componentslistMerged as $k => $cmp)
+        {
             $sortArray[] = $cmp["component_name"];
         }
         
         natsort($sortArray);
         
-        foreach ($stringByType as $type => $unused) {
+        foreach ($stringByType as $type => $unused)
+        {
             $h = HTML\trStart();
             $h .= HTML\td(HTML\aName($type, "&nbsp;") . $type . " " . HTML\a("link", "&uarr;", "#topnav"), "smallcaps alternate3 middle center padding5px", "6");
             $h .= HTML\trEnd();
@@ -270,29 +311,34 @@ class ADMINCOMPONENTS
             $stringByType[$type] .= $h;
         }
         
-        foreach ($sortArray as $cmpkey => $unused) {
+        foreach ($sortArray as $cmpkey => $unused)
+        {
             $cmp = $componentslistMerged[$cmpkey];
             $coutByType[$cmp["component_type"]]++;
             $rootPath = $rootPathByType[$cmp["component_type"]];
             $h = "";
-            if ($this->messageString && ($this->messageStringId == $cmp["component_id"]) && ($this->messageStringType == $cmp["component_type"])) {
+            if ($this->messageString && ($this->messageStringId == $cmp["component_id"]) && ($this->messageStringType == $cmp["component_type"]))
+            {
                 $h .= HTML\trStart("alternate" . (1 + $coutByType[$cmp["component_type"]] % 2));
                 $h .= HTML\td(HTML\aName($cmp["component_type"] . $coutByType[$cmp["component_type"]]) . $this->messageString, '', 6);
                 $h .= HTML\trEnd();
             }
             $h .= HTML\trStart("alternate" . (1 + $coutByType[$cmp["component_type"]] % 2));
             $h .= HTML\tdStart("padding5px");
-            if (!$this->messageString) {
+            if (!$this->messageString)
+            {
                 $h .= HTML\aName($cmp["component_type"] . $coutByType[$cmp["component_type"]]);
             }
             $h .= "<h4>";
             $h .= $cmp["component_name"];
-            if (array_key_exists("component_website", $cmp)) {
+            if (array_key_exists("component_website", $cmp))
+            {
                 $h .= " " . HTML\a("link", "&#x1f310;", $cmp["component_website"], "blank");
             }
             $h .= "</h4>";
             $h .= "<p>" . $cmp["component_description"] . "</p>";
-            if (file_exists($rootPath . DIRECTORY_SEPARATOR . $cmp["component_id"] . DIRECTORY_SEPARATOR . 'README.txt')) {
+            if (file_exists($rootPath . DIRECTORY_SEPARATOR . $cmp["component_id"] . DIRECTORY_SEPARATOR . 'README.txt'))
+            {
                 $js = "onClick=\"coreOpenPopup('index.php?action=admin_ADMINCOMPONENTS_CORE&method=readMe&type=" . $cmp["component_type"] . "&file=" . $cmp["component_id"] . "&dummy=" . \UTILS\uuid() . "'); return false\"";
                 $h .= \HTML\div("divReadMeMenu", \HTML\aBrowse(
                     'green',
@@ -304,21 +350,26 @@ class ADMINCOMPONENTS
                     $js
                 ));
             }
-            if (array_key_exists("component_integrity", $cmp) && $cmp["component_integrity"] != 0) {
+            if (array_key_exists("component_integrity", $cmp) && $cmp["component_integrity"] != 0)
+            {
                 $h .= \HTML\p("Integrity Error " . $cmp["component_integrity"] . ": " . \UTILS\componentIntegrityErrorMessage($cmp["component_integrity"]), "error");
             }
             $h .= HTML\tdEnd();
             
             $h .= HTML\tdStart("padding5px");
-            if (array_key_exists("component_authors", $cmp)) {
+            if (array_key_exists("component_authors", $cmp))
+            {
                 $h .= "<ul>";
-                foreach ($cmp["component_authors"] as $author) {
+                foreach ($cmp["component_authors"] as $author)
+                {
                     $h .= "<li>";
-                    if (array_key_exists("author_email", $author)) {
+                    if (array_key_exists("author_email", $author))
+                    {
                         $email = \HTML\nlToHtml($author["author_email"]);
                         $author["author_email"] = \HTML\a("link", "&#x1f4e7;", "mailto:$email");
                     }
-                    if (array_key_exists("author_website", $author)) {
+                    if (array_key_exists("author_website", $author))
+                    {
                         $author["author_website"] = HTML\a("link", "&#x1f310;", $author["author_website"], "blank");
                     }
                                 
@@ -344,9 +395,12 @@ class ADMINCOMPONENTS
             $h .= HTML\tdEnd();
             
             $h .= HTML\tdStart("padding5px");
-            if (array_key_exists("component_packages", $cmp)) {
-                foreach ($cmp["component_packages"] as $dlink) {
-                    if (\UTILS\matchSuffix($dlink["package_location"], ".zip") && in_array("zip", $InstalledExtensions)) {
+            if (array_key_exists("component_packages", $cmp))
+            {
+                foreach ($cmp["component_packages"] as $dlink)
+                {
+                    if (\UTILS\matchSuffix($dlink["package_location"], ".zip") && in_array("zip", $InstalledExtensions))
+                    {
                         $h .= "" . \HTML\a("link", "&#x1f4e6;", $dlink["package_location"], "blank", $dlink["package_location"]);
                         $h .= "&nbsp;<span title=\"" . WIKINDX_PACKAGE_HASH_ALGO . " hash: " . $dlink["package_" . WIKINDX_PACKAGE_HASH_ALGO] . "\">&#x1f511;</span>";
                         $h .= "&nbsp;<span class=\"small\">zip</span>";
@@ -358,7 +412,8 @@ class ADMINCOMPONENTS
             $h .= HTML\tdEnd();
                 
             $h .= HTML\tdStart("padding5px");
-            foreach ($cmp["component_action"] as $action => $label) {
+            foreach ($cmp["component_action"] as $action => $label)
+            {
                 // Map an admin action name to a class function
                 $actionlink = "index.php"
                     . "?action=admin_ADMINCOMPONENTS_CORE"
@@ -379,7 +434,8 @@ class ADMINCOMPONENTS
         $nav = HTML\aName("topnav", "&nbsp;");
         $nav .= "Browse by type: ";
         
-        foreach (array_keys($stringByType) as $type) {
+        foreach (array_keys($stringByType) as $type)
+        {
             $aLink[] = HTML\a(
                 "link",
                 $type,
@@ -393,18 +449,23 @@ class ADMINCOMPONENTS
         $h = "";
         
         // Status message of the last action
-        if ($message) {
+        if ($message)
+        {
             $h .= \HTML\p($message);
             $h .= "\n";
         }
         
         // Global admin actions
-        if (in_array("curl", $InstalledExtensions)) {
-            if (file_exists($this->serverComponentsListPath)) {
+        if (in_array("curl", $InstalledExtensions))
+        {
+            if (file_exists($this->serverComponentsListPath))
+            {
                 $datedl = date_create();
                 date_timestamp_set($datedl, filemtime($this->serverComponentsListPath));
                 $datedl = $datedl->format("c");
-            } else {
+            }
+            else
+            {
                 $datedl = "none";
             }
             $h .= HTML\p(\HTML\a("link", $this->messages->text("components", "checkUpdates"), "index.php?action=admin_ADMINCOMPONENTS_CORE&amp;method=checkUpdatesOnline&amp;dummy=" . \UTILS\uuid()) . " (" . $this->messages->text("components", "lastUpdate") . "&nbsp;" . $datedl . ")", "", "right");
@@ -412,14 +473,16 @@ class ADMINCOMPONENTS
         }
         
         // Action of fixing misconfigured user preferences
-        if ($this->checkMisconfiguredUserPreferences($componentsInstalled)) {
+        if ($this->checkMisconfiguredUserPreferences($componentsInstalled))
+        {
             $h .= HTML\p($this->messages->text("components", "defaultQuery")
                 . " " . \HTML\a("link", $this->messages->text("components", "defaultInstall"), "index.php?action=admin_ADMINCOMPONENTS_CORE&amp;method=fixUsersPreferences&amp;dummy=" . \UTILS\uuid(), "", "right"));
             $h .= "\n";
         }
         
         // Display the upload form only if an archive format is supported
-        if (in_array("zip", $InstalledExtensions)) {
+        if (in_array("zip", $InstalledExtensions))
+        {
             $h .= \FORM\formMultiHeader("admin_ADMINCOMPONENTS_CORE");
             $h .= \FORM\hidden('method', 'installByUpload');
             $h .= \FORM\hidden('type', 'file');
@@ -455,7 +518,8 @@ class ADMINCOMPONENTS
      */
     public function configure($message = FALSE)
     {
-        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars)) {
+        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars))
+        {
             $this->possibleMenus = [
                 'wikindx' => 'Wikindx',
                 'res' => $this->messages->text('menu', 'res'),
@@ -474,11 +538,14 @@ class ADMINCOMPONENTS
             ];
             
             $pString = '';
-            if ($message) {
+            if ($message)
+            {
                 $pString .= \HTML\p($message);
             }
             $pString .= $this->displayConfig($this->vars["component_type"], $this->vars["component_id"]);
-        } else {
+        }
+        else
+        {
             $pString = $this->errors->text("components", "unknown");
         }
         
@@ -490,15 +557,22 @@ class ADMINCOMPONENTS
     public function disable()
     {
         $pString = '';
-        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars)) {
+        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars))
+        {
             $this->messageStringId = $this->vars['component_id'];
             $this->messageStringType = $this->vars['component_type'];
             
             if (\UTILS\disableComponent($this->vars['component_type'], $this->vars['component_id']))
+            {
                 $this->messageString = $this->success->text("componentSuccess");
+            }
             else
+            {
                 $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'disable'));
-        } else {
+            }
+        }
+        else
+        {
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'wrongParameters'));
         }
         
@@ -510,15 +584,22 @@ class ADMINCOMPONENTS
     public function enable()
     {
         $pString = '';
-        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars)) {
+        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars))
+        {
             $this->messageStringId = $this->vars['component_id'];
             $this->messageStringType = $this->vars['component_type'];
             
             if (\UTILS\enableComponent($this->vars['component_type'], $this->vars['component_id']))
+            {
                 $this->messageString = $this->success->text("componentSuccess");
+            }
             else
+            {
                 $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'disable'));
-        } else {
+            }
+        }
+        else
+        {
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'wrongParameters'));
         }
         
@@ -530,24 +611,28 @@ class ADMINCOMPONENTS
     public function install()
     {
         $pString = '';
-        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars)) {
+        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars))
+        {
             $this->messageStringId = $this->vars['component_id'];
             $this->messageStringType = $this->vars['component_type'];
             $AllowUpdate = TRUE;
             $InstalledExtensions = get_loaded_extensions();
             
             // Without curl we can't download
-            if (!in_array("curl", $InstalledExtensions)) {
+            if (!in_array("curl", $InstalledExtensions))
+            {
                 $AllowUpdate = FALSE;
                 $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'missingCurl'));
             }
             // Without a decompressor we can't update
-            elseif (!in_array("zip", $InstalledExtensions)) {
+            elseif (!in_array("zip", $InstalledExtensions))
+            {
                 $AllowUpdate = FALSE;
                 $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'missingCompression'));
             }
             // Install
-            else {
+            else
+            {
                 $componentsRelease = \FILE\read_json_file($this->serverComponentsListPath);
                 
                 $rootPathByType = [
@@ -561,10 +646,14 @@ class ADMINCOMPONENTS
                 $dlpkg = [];
                 
                 // Keep the packages with a compression algo supported on the current system
-                foreach ($componentsRelease as $k => $cr) {
-                    if ($cr["component_type"] == $this->vars['component_type'] && $cr["component_id"] == $this->vars['component_id']) {
-                        foreach ($cr["component_packages"] as $kd => $dlink) {
-                            if (\UTILS\matchSuffix($dlink["package_location"], ".zip") && in_array("zip", $InstalledExtensions)) {
+                foreach ($componentsRelease as $k => $cr)
+                {
+                    if ($cr["component_type"] == $this->vars['component_type'] && $cr["component_id"] == $this->vars['component_id'])
+                    {
+                        foreach ($cr["component_packages"] as $kd => $dlink)
+                        {
+                            if (\UTILS\matchSuffix($dlink["package_location"], ".zip") && in_array("zip", $InstalledExtensions))
+                            {
                                 $dlpkg[$dlink["package_size"]] = $dlink;
                             }
                         }
@@ -576,32 +665,42 @@ class ADMINCOMPONENTS
                 
                 // Try to install the component from the smallest package to the largest
                 // The first successful installation completes the operation
-                foreach ($dlpkg as $pkg) {
+                foreach ($dlpkg as $pkg)
+                {
                     // Purge and recreate the setup cache before each attempt
                     // for cleaning any byproduct of a failed setup
                     $pkgcachedir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "setup"]);
-                    if (file_exists($pkgcachedir)) {
+                    if (file_exists($pkgcachedir))
+                    {
                         \FILE\recurse_rmdir($pkgcachedir);
                     }
-                    if (!file_exists($pkgcachedir)) {
+                    if (!file_exists($pkgcachedir))
+                    {
                         mkdir($pkgcachedir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
                     }
                     
                     $pkgcachefile = $pkgcachedir . DIRECTORY_SEPARATOR . basename($pkg["package_location"]);
                     $cmpdstdir = $rootPathByType[$this->vars['component_type']];
                     
-                    if (\UTILS\download_sf_file($pkg["package_location"], $pkgcachefile)) {
+                    if (\UTILS\download_sf_file($pkg["package_location"], $pkgcachefile))
+                    {
                         $pkghash = \UTILS\hash_path($pkgcachefile, WIKINDX_PACKAGE_HASH_ALGO);
-                        if ($pkghash == $pkg["package_" . WIKINDX_PACKAGE_HASH_ALGO]) {
-                            if (\FILE\extractComponentPackage($pkgcachefile, $cmpdstdir)) {
+                        if ($pkghash == $pkg["package_" . WIKINDX_PACKAGE_HASH_ALGO])
+                        {
+                            if (\FILE\extractComponentPackage($pkgcachefile, $cmpdstdir))
+                            {
                                 $this->messageString = $this->success->text("componentSuccess");
                                 \FILE\rmfile($pkgcachefile);
 
                                 break;
-                            } else {
+                            }
+                            else
+                            {
                                 $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'installError', basename($pkg["package_location"])));
                             }
-                        } else {
+                        }
+                        else
+                        {
                             $this->messageString = $this->errors->text(
                                 "components",
                                 'adminFailed',
@@ -610,12 +709,16 @@ class ADMINCOMPONENTS
                                 $this->messages->text("components", 'computedHash', $pkghash)
                             );
                         }
-                    } else {
+                    }
+                    else
+                    {
                         $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'downloadError', basename($pkg["package_location"])));
                     }
                 }
             }
-        } else {
+        }
+        else
+        {
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'wrongParameters'));
         }
         
@@ -638,16 +741,20 @@ class ADMINCOMPONENTS
         // Purge and recreate the setup cache before each attempt
         // for cleaning any byproduct of a failed setup
         $pkgcachedir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, "setup"]);
-        if (file_exists($pkgcachedir)) {
+        if (file_exists($pkgcachedir))
+        {
             \FILE\recurse_rmdir($pkgcachedir);
         }
-        if (!file_exists($pkgcachedir)) {
+        if (!file_exists($pkgcachedir))
+        {
             mkdir($pkgcachedir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
         }
         
         $pkghashorigin = "";
-        if (isset($_FILES["hashfile"])) {
-            if ($_FILES["hashfile"]["error"] == UPLOAD_ERR_OK) {
+        if (isset($_FILES["hashfile"]))
+        {
+            if ($_FILES["hashfile"]["error"] == UPLOAD_ERR_OK)
+            {
                 // Get the package uploaded
                 $tmp_name = $_FILES["hashfile"]["tmp_name"];
                 // basename() may prevent filesystem traversal attacks;
@@ -659,8 +766,10 @@ class ADMINCOMPONENTS
             }
         }
         
-        if (isset($_FILES["packaqefile"])) {
-            if ($_FILES["packaqefile"]["error"] == UPLOAD_ERR_OK) {
+        if (isset($_FILES["packaqefile"]))
+        {
+            if ($_FILES["packaqefile"]["error"] == UPLOAD_ERR_OK)
+            {
                 // Get the package uploaded
                 $tmp_name = $_FILES["packaqefile"]["tmp_name"];
                 // basename() may prevent filesystem traversal attacks;
@@ -669,21 +778,28 @@ class ADMINCOMPONENTS
                 $pkgcachefile = $pkgcachedir . DIRECTORY_SEPARATOR . $name;
                 move_uploaded_file($tmp_name, $pkgcachefile);
                 
-                if (\UTILS\matchSuffix($pkgcachefile, ".zip")) {
+                if (\UTILS\matchSuffix($pkgcachefile, ".zip"))
+                {
                     // Extract its metadata
                     $pkg = \FILE\extractComponentPackageDefinition($pkgcachefile);
                     $cmpdstdir = $rootPathByType[$pkg['component_type']];
                     
                     // Verify the signature and install it
                     $pkghash = \UTILS\hash_path($pkgcachefile, WIKINDX_PACKAGE_HASH_ALGO);
-                    if ($pkghash == $pkghashorigin || $pkghashorigin == "" || $pkghashorigin === FALSE) {
-                        if (\FILE\extractComponentPackage($pkgcachefile, $cmpdstdir)) {
+                    if ($pkghash == $pkghashorigin || $pkghashorigin == "" || $pkghashorigin === FALSE)
+                    {
+                        if (\FILE\extractComponentPackage($pkgcachefile, $cmpdstdir))
+                        {
                             $pString = $this->success->text("componentSuccess", $this->messages->text("components", "installSuccess", $name));
                             \FILE\rmfile($pkgcachefile);
-                        } else {
+                        }
+                        else
+                        {
                             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'installError'));
                         }
-                    } else {
+                    }
+                    else
+                    {
                         $pString = $this->errors->text(
                             "components",
                             'adminFailed',
@@ -692,7 +808,9 @@ class ADMINCOMPONENTS
                             $this->messages->text("components", 'computedHash', $pkghash)
                         );
                     }
-                } else {
+                }
+                else
+                {
                     $pString = $this->errors->text(
                         "components",
                         'adminFailed',
@@ -702,7 +820,8 @@ class ADMINCOMPONENTS
             }
         }
         
-        if ($pString == "") {
+        if ($pString == "")
+        {
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'nothingToDo'));
         }
         
@@ -722,16 +841,24 @@ class ADMINCOMPONENTS
     public function uninstall()
     {
         $pString = '';
-        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars)) {
+        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars))
+        {
             $this->messageStringId = $this->vars['component_id'];
             $this->messageStringType = $this->vars['component_type'];
-            if ($this->vars['component_type'] == "template" && $this->vars['component_id'] == "default") {
+            if ($this->vars['component_type'] == "template" && $this->vars['component_id'] == "default")
+            {
                 $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'uninstallError', $this->vars['component_id'] . " " . $this->vars['component_type']));
-            } elseif ($this->vars['component_type'] == "style" && $this->vars['component_id'] == "apa") {
+            }
+            elseif ($this->vars['component_type'] == "style" && $this->vars['component_id'] == "apa")
+            {
                 $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'uninstallError', $this->vars['component_id'] . " " . $this->vars['component_type']));
-            } elseif ($this->vars['component_type'] == "vendor") {
+            }
+            elseif ($this->vars['component_type'] == "vendor")
+            {
                 $this->messageString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'vendorUninstallError'));
-            } else {
+            }
+            else
+            {
                 $rootPathByType = [
                     'plugin' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS]),
                     'style' => implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES]),
@@ -743,7 +870,9 @@ class ADMINCOMPONENTS
                 
                 $pString = $this->success->text("componentSuccess");
             }
-        } else {
+        }
+        else
+        {
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'wrongParameters'));
         }
         
@@ -771,10 +900,12 @@ class ADMINCOMPONENTS
         
         $readmefile = $rootPathByType[$this->vars['type']] . DIRECTORY_SEPARATOR . $this->vars['file'] . DIRECTORY_SEPARATOR . 'README.txt';
         $pString = FALSE;
-        if (file_exists($readmefile) && is_readable($readmefile)) {
+        if (file_exists($readmefile) && is_readable($readmefile))
+        {
             $pString = "<pre>" . file_get_contents($readmefile) . "</pre>";
         }
-        if ($pString === FALSE) {
+        if ($pString === FALSE)
+        {
             $pString = $this->errors->text('file', 'read');
         }
         $pString .= HTML\p(\FORM\closePopup($this->messages->text("misc", "closePopup")), "right");
@@ -806,16 +937,21 @@ class ADMINCOMPONENTS
      */
     public function writeConfigMenu()
     {
-        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars)) {
+        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars))
+        {
             $this->messageStringId = $this->vars['component_id'];
             $this->messageStringType = $this->vars['component_type'];
             $config = $this->writeTempConfigFile($this->vars['configFileMenu'], $this->vars['configConfig']);
-            if (!is_object($config)) {
+            if (!is_object($config))
+            {
                 $this->messageString = $config;
+
                 return $this->init();
             }
-            foreach ($config->menus as $menu) {
-                if (array_search($menu, ['wikindx', 'res', 'search', 'text', 'admin', 'plugin1', 'plugin2', 'plugin3']) === FALSE) {
+            foreach ($config->menus as $menu)
+            {
+                if (array_search($menu, ['wikindx', 'res', 'search', 'text', 'admin', 'plugin1', 'plugin2', 'plugin3']) === FALSE)
+                {
                     $this->messageString = $this->errors->text('components', 'invalidMenu');
 
                     return $this->init();
@@ -823,9 +959,14 @@ class ADMINCOMPONENTS
             }
             $configFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $this->vars['configFileMenu'], 'config.php']);
             if (file_put_contents($configFile, $this->vars['configConfig']) === FALSE)
+            {
                 $this->messageSTring = $this->errors->text('file', 'write');
+            }
             else
+            {
                 $this->messageString = $this->success->text("plugins");
+            }
+
             return $this->init();
         }
     }
@@ -835,46 +976,59 @@ class ADMINCOMPONENTS
     public function writeConfigInline()
     {
         $pString = '';
-        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars)) {
+        if (array_key_exists('component_id', $this->vars) && array_key_exists('component_type', $this->vars))
+        {
             $this->messageStringId = $this->vars['component_id'];
             $this->messageStringType = $this->vars['component_type'];
             $usedContainers = [];
             $array[] = $this->vars['configFileInline'];
             list($enabledMenu, $enabledInline) = $this->configurablePlugins();
-            foreach ($enabledInline as $file => $null) {
-                if ($this->vars['configFileInline'] === $file) {
+            foreach ($enabledInline as $file => $null)
+            {
+                if ($this->vars['configFileInline'] === $file)
+                {
                     continue;
                 }
                 include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $file, "config.php"]));
                 $configClass = $file . '_CONFIG';
                 $configOrigine = new $configClass();
-                if (($index = array_search($configOrigine->container, $usedContainers)) === FALSE) {
+                if (($index = array_search($configOrigine->container, $usedContainers)) === FALSE)
+                {
                     $usedContainers[$file] = $configOrigine->container;
                     $array[] = $file;
                 }
             }
             $configNew = $this->writeTempConfigFile($this->vars['configFileInline'], $this->vars['configConfig']);
-            if (!is_object($configNew)) {
+            if (!is_object($configNew))
+            {
                 $this->messageString = $configNew;
+
                 return $this->init();
             }
-            if (array_search($configNew->container, $usedContainers) !== FALSE) {
+            if (array_search($configNew->container, $usedContainers) !== FALSE)
+            {
                 $this->messageString = $this->errors->text('components', 'pluginConflict', implode(', ', $array));
 
                 return $this->init();
             }
-            if (array_search($configNew->container, ['inline1', 'inline2', 'inline3', 'inline4']) === FALSE) {
+            if (array_search($configNew->container, ['inline1', 'inline2', 'inline3', 'inline4']) === FALSE)
+            {
                 $this->messageString = $this->errors->text('components', 'invalidInline');
 
                 return $this->init();
             }
             $configFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $this->vars['configFileInline'], 'config.php']);
-            if (file_put_contents($configFile, $this->vars['configConfig']) === FALSE) {
+            if (file_put_contents($configFile, $this->vars['configConfig']) === FALSE)
+            {
                 $this->messageString = $this->errors->text('file', 'write');
-            } else {
+            }
+            else
+            {
                 $this->messageString = $this->success->text("plugins");
             }
-        } else {
+        }
+        else
+        {
             $pString = $this->errors->text("components", 'adminFailed', $this->messages->text("components", 'wrongParameters'));
         }
         
@@ -890,11 +1044,16 @@ class ADMINCOMPONENTS
         
         $componentsInstalled = \UTILS\readComponentsList();
         
-        foreach ($componentsInstalled as $cmp) {
-            if ($cmp["component_status"] == "enabled") {
-                if ($cmp["component_type"] == "template") {
+        foreach ($componentsInstalled as $cmp)
+        {
+            if ($cmp["component_status"] == "enabled")
+            {
+                if ($cmp["component_type"] == "template")
+                {
                     $list_tpl[] = $cmp["component_id"];
-                } elseif ($cmp["component_type"] == "style") {
+                }
+                elseif ($cmp["component_type"] == "style")
+                {
                     $list_style[] = $cmp["component_id"];
                 }
             }
@@ -906,7 +1065,8 @@ class ADMINCOMPONENTS
         
         // Reset system template
         $sys_tpl = $this->co->getOne('configTemplate');
-        if (!array_search($sys_tpl, $list_tpl) !== FALSE) {
+        if (!array_search($sys_tpl, $list_tpl) !== FALSE)
+        {
             $this->co->updateOne('configTemplate', WIKINDX_TEMPLATE_DEFAULT);
         }
         
@@ -919,7 +1079,8 @@ class ADMINCOMPONENTS
         
         // Reset system style
         $sys_style = $this->co->getOne('configStyle');
-        if (!array_search($sys_style, $list_style) !== FALSE) {
+        if (!array_search($sys_style, $list_style) !== FALSE)
+        {
             $this->co->updateOne('configStyle', WIKINDX_STYLE_DEFAULT);
         }
         
@@ -942,28 +1103,43 @@ class ADMINCOMPONENTS
         $tempFile = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_FILES, $id]);
         // rewrite temp class name so PHP doesn't complain about class being reused ('name is already in use'). . .
         $configString = str_replace($componentId . '_CONFIG', $id . '_CONFIG', $configString);
-        if (file_put_contents($tempFile, $configString) === FALSE) {
+        if (file_put_contents($tempFile, $configString) === FALSE)
+        {
             return $this->init($this->errors->text('file', 'write'));
-        } else {
+        }
+        else
+        {
             $include_success = include_once($tempFile);
-            if ($include_success) {
+            if ($include_success)
+            {
                 $class = $id . '_CONFIG';
-                if (class_exists($class)) {
-                    try {
+                if (class_exists($class))
+                {
+                    try
+                    {
                         $config = new $class();
                         
-                        if (property_exists($config, "wikindxVersion")) {
+                        if (property_exists($config, "wikindxVersion"))
+                        {
                             return $config;
-                        } else {
+                        }
+                        else
+                        {
                             return $this->errors->text('components', 'missingConfigClassMember', '$wikindxVersion');
                         }
-                    } catch (Exception $e) {
+                    }
+                    catch (Exception $e)
+                    {
                         return $this->errors->text('components', 'invalidConfigLoading');
                     }
-                } else {
+                }
+                else
+                {
                     return $this->errors->text('components', 'invalidConfigClassName');
                 }
-            } else {
+            }
+            else
+            {
                 return $this->errors->text('file', 'read');
             }
         }
@@ -980,24 +1156,30 @@ class ADMINCOMPONENTS
     {
         list($enabledMenu, $enabledInline) = $this->configurablePlugins();
         
-        foreach ($enabledMenu as $k => $v) {
-            if ($k != $component_id) {
+        foreach ($enabledMenu as $k => $v)
+        {
+            if ($k != $component_id)
+            {
                 unset($enabledMenu[$k]);
             }
         }
         
-        foreach ($enabledInline as $k => $v) {
-            if ($k != $component_id) {
+        foreach ($enabledInline as $k => $v)
+        {
+            if ($k != $component_id)
+            {
                 unset($enabledInline[$k]);
             }
         }
         
-        if (empty($enabledMenu) && empty($enabledInline)) {
+        if (empty($enabledMenu) && empty($enabledInline))
+        {
             return FALSE;
         }
         $pString = '';
         
-        if (!empty($enabledMenu)) {
+        if (!empty($enabledMenu))
+        {
             $pString .= \FORM\formHeader("admin_ADMINCOMPONENTS_CORE");
             $pString .= \FORM\hidden("method", "writeConfigMenu");
             $pString .= \HTML\tableStart('');
@@ -1011,8 +1193,10 @@ class ADMINCOMPONENTS
             $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
             $pString .= \FORM\formEnd();
         }
-        if (!empty($enabledInline)) {
-            if (!empty($enabledMenu)) {
+        if (!empty($enabledInline))
+        {
+            if (!empty($enabledMenu))
+            {
                 $pString .= \HTML\hr();
             }
             $pString .= \FORM\formHeader("admin_ADMINCOMPONENTS_CORE");
@@ -1041,25 +1225,33 @@ class ADMINCOMPONENTS
         $enabledMenu = $enabledInline = [];
         
         $componentsInstalled = \UTILS\readComponentsList();
-        foreach ($componentsInstalled as $cmp) {
-            if ($cmp["component_type"] == "plugin") {
+        foreach ($componentsInstalled as $cmp)
+        {
+            if ($cmp["component_type"] == "plugin")
+            {
                 $type = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $cmp["component_id"], 'plugintype.txt']);
                 
-                if (file_exists($type)) {
-                    if ($fh = fopen($type, "r")) {
+                if (file_exists($type))
+                {
+                    if ($fh = fopen($type, "r"))
+                    {
                         // read one line
                         $type = fgets($fh);
                         fclose($fh);
                     }
                 }
                 
-                if ($type === FALSE) {
+                if ($type === FALSE)
+                {
                     $type = '';
                 }
                 
-                if ($type == 'menu') {
+                if ($type == 'menu')
+                {
                     $enabledMenu[$cmp["component_id"]] = $cmp["component_name"];
-                } elseif ($type == 'inline') {
+                }
+                elseif ($type == 'inline')
+                {
                     $enabledInline[$cmp["component_id"]] = $cmp["component_name"];
                 }
             }
@@ -1076,19 +1268,25 @@ class ADMINCOMPONENTS
      */
     private function getConfigDetailsMenu($enabled)
     {
-        if (array_key_exists('ajaxReturn', $this->vars)) {
+        if (array_key_exists('ajaxReturn', $this->vars))
+        {
             $file = $this->vars['ajaxReturn'];
-        } else { // grab the first of the list
-            foreach ($enabled as $file => $null) {
+        }
+        else
+        { // grab the first of the list
+            foreach ($enabled as $file => $null)
+            {
                 break;
             }
         }
 
         $pString = '';
         
-        if ($fh = fopen(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $file, 'config.php']), "r")) {
+        if ($fh = fopen(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $file, 'config.php']), "r"))
+        {
             $string = '';
-            while (!feof($fh)) {
+            while (!feof($fh))
+            {
                 $string .= fgets($fh);
             }
             fclose($fh);
@@ -1107,19 +1305,25 @@ class ADMINCOMPONENTS
      */
     private function getConfigDetailsInline($enabled)
     {
-        if (array_key_exists('ajaxReturn', $this->vars)) {
+        if (array_key_exists('ajaxReturn', $this->vars))
+        {
             $file = $this->vars['ajaxReturn'];
             include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $file, "config.php"]));
             $configClass = $file . '_CONFIG';
-        } else { // grab the first of the list
-            foreach ($enabled as $file => $null) {
+        }
+        else
+        { // grab the first of the list
+            foreach ($enabled as $file => $null)
+            {
                 break;
             }
         }
         $pString = '';
-        if ($fh = fopen(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $file, 'config.php']), "r")) {
+        if ($fh = fopen(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $file, 'config.php']), "r"))
+        {
             $string = '';
-            while (!feof($fh)) {
+            while (!feof($fh))
+            {
                 $string .= fgets($fh);
             }
             fclose($fh);
@@ -1142,11 +1346,16 @@ class ADMINCOMPONENTS
         $list_tpl = [];
         $list_style = [];
         
-        foreach ($componentsInstalled as $cmp) {
-            if ($cmp["component_status"] == "enabled") {
-                if ($cmp["component_type"] == "template") {
+        foreach ($componentsInstalled as $cmp)
+        {
+            if ($cmp["component_status"] == "enabled")
+            {
+                if ($cmp["component_type"] == "template")
+                {
                     $list_tpl[] = $cmp["component_id"];
-                } elseif ($cmp["component_type"] == "style") {
+                }
+                elseif ($cmp["component_type"] == "style")
+                {
                     $list_style[] = $cmp["component_id"];
                 }
             }

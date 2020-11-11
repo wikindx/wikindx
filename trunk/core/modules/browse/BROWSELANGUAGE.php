@@ -38,7 +38,8 @@ class BROWSELANGUAGE
     {
         $this->sum = [];
         $this->getLanguages();
-        if (empty($this->languages)) {
+        if (empty($this->languages))
+        {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noLanguages"));
 
             return;
@@ -68,7 +69,8 @@ class BROWSELANGUAGE
         $this->db->leftJoin('language', 'languageId', 'resourcelanguageLanguageId');
         $this->db->orderBy('languageLanguage');
         $recordset = $this->db->selectFromSubQuery(FALSE, ['languageId', 'languageLanguage', 'count'], $subQ);
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $this->collate($row);
         }
     }
@@ -93,7 +95,8 @@ class BROWSELANGUAGE
     {
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
-        foreach ($this->languages as $id => $name) {
+        foreach ($this->languages as $id => $name)
+        {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .

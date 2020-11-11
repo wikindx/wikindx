@@ -65,15 +65,19 @@ class EXPORTCOMMON
      */
     public function openFile($string = FALSE, $extension, $mode = 'w')
     {
-        if (!$string) {
+        if (!$string)
+        {
             $string = \UTILS\uuid();
         }
         $this->context = stream_context_create();
         list($this->fileName, $this->fullFileName) = FILE\createFileName($this->filesDir, $string, $extension);
         $fullFileName = $this->fullFileName;
-        if (!$this->fp = fopen($fullFileName, $mode, FALSE, $this->context)) {
+        if (!$this->fp = fopen($fullFileName, $mode, FALSE, $this->context))
+        {
             return FALSE;
-        } else {
+        }
+        else
+        {
             return TRUE;
         }
     }
@@ -82,7 +86,8 @@ class EXPORTCOMMON
      */
     public function closeFile()
     {
-        if ($this->fp) {
+        if ($this->fp)
+        {
             fclose($this->fp);
         }
     }
@@ -95,23 +100,33 @@ class EXPORTCOMMON
      */
     public function writeToFile($string)
     {
-        if (!$this->fullFileName) { // file not yet created and $fp not yet opened
+        if (!$this->fullFileName)
+        { // file not yet created and $fp not yet opened
             list($this->fileName, $this->fullFileName) = $this->createFileName($string, '.bib');
-            if (!$this->fullFileName) {
+            if (!$this->fullFileName)
+            {
                 return FALSE;
             }
             $fullFileName = $this->fullFileName;
             $this->context = stream_context_create();
-            if ($this->fp = fopen($fullFileName, 'w', FALSE, $this->context)) {
-                if (fwrite($this->fp, $string) === FALSE) {
+            if ($this->fp = fopen($fullFileName, 'w', FALSE, $this->context))
+            {
+                if (fwrite($this->fp, $string) === FALSE)
+                {
                     return FALSE;
                 }
-            } else {
+            }
+            else
+            {
                 return FALSE;
             }
-        } elseif (fwrite($this->fp, $string) === FALSE) { // appending because $this->fp has not been closed yet
+        }
+        elseif (fwrite($this->fp, $string) === FALSE)
+        { // appending because $this->fp has not been closed yet
             return FALSE;
-        } else {
+        }
+        else
+        {
             return TRUE;
         }
     }
@@ -122,12 +137,16 @@ class EXPORTCOMMON
      */
     public function writeFilenameToSession($fileName)
     {
-        if ($sessVar = $this->session->getVar("fileExports")) {
+        if ($sessVar = $this->session->getVar("fileExports"))
+        {
             $sessArray = $sessVar;
-        } else {
+        }
+        else
+        {
             $sessArray = [];
         }
-        if (array_search($fileName, $sessArray) === FALSE) {
+        if (array_search($fileName, $sessArray) === FALSE)
+        {
             $sessArray[] = $fileName;
             $this->session->setVar("fileExports", $sessArray);
         }
@@ -140,7 +159,8 @@ class EXPORTCOMMON
     public function getSQL()
     {
         $stmt = FACTORY_SQLSTATEMENTS::getInstance();
-        if ($this->session->getVar("exportBasket")) {
+        if ($this->session->getVar("exportBasket"))
+        {
             $tempAllIds = $this->session->getVar("list_AllIds");
             $tempListStmt = $this->session->getVar("sql_ListStmt");
             $this->session->setVar("list_AllIds", $this->session->getVar("basket_List"));
@@ -151,7 +171,9 @@ class EXPORTCOMMON
             $this->session->setVar("sql_ListStmt", $tempListStmt);
 
             return $sqlEncoded;
-        } else {
+        }
+        else
+        {
             $sql = $stmt->getExportSql();
 
             return $sql;
@@ -165,28 +187,36 @@ class EXPORTCOMMON
      */
     public function getCustomFields($export = 'bibtex')
     {
-        if ($this->db->tableIsEmpty('resource_custom')) {
+        if ($this->db->tableIsEmpty('resource_custom'))
+        {
             return FALSE;
         }
         $this->db->leftJoin('resource_custom', 'resourcecustomCustomId', 'customId');
         $recordset = $this->db->select('custom', ['resourcecustomCustomId', 'customLabel']);
-        while ($row = $this->db->fetchRow($recordset)) {
-            if ($row['resourcecustomCustomId']) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
+            if ($row['resourcecustomCustomId'])
+            {
                 $customLabels[$row['resourcecustomCustomId']] = stripslashes($row['customLabel']);
             }
         }
-        if (!isset($customLabels) || empty($customLabels)) {
+        if (!isset($customLabels) || empty($customLabels))
+        {
             return FALSE;
         }
         $customLabels = array_unique($customLabels);
-        if ($export == 'bibtex') {
+        if ($export == 'bibtex')
+        {
             $pString = HTML\p(HTML\strong($this->coremessages->text("misc", "customFieldMap")) .
                 ' ' . $this->coremessages->text("misc", "customFieldMap2"));
-            foreach ($customLabels as $id => $label) {
+            foreach ($customLabels as $id => $label)
+            {
                 $text = $this->session->getVar("export_Map_$id");
                 $pString .= HTML\p(FORM\textInput($label, "Map_$id", $text));
             }
-        } elseif ($export == 'endnote') {
+        }
+        elseif ($export == 'endnote')
+        {
             $pString = HTML\p(HTML\strong($this->coremessages->text("misc", "customFieldMap")));
             $mapArray = [
                 "0" => $this->coremessages->text('misc', 'ignore'),
@@ -199,10 +229,12 @@ class EXPORTCOMMON
                 "7" => "Custom 7",
             ];
             $keys = array_keys($mapArray);
-            foreach ($customLabels as $id => $label) {
+            foreach ($customLabels as $id => $label)
+            {
                 $key = array_shift($keys);
                 $selected = $this->session->getVar("exportMapInternal_" . $id);
-                if ($selected === FALSE) {
+                if ($selected === FALSE)
+                {
                     $selected = $key;
                 }
                 $select = \FORM\selectedBoxValue(
@@ -214,7 +246,9 @@ class EXPORTCOMMON
                 );
                 $pString .= HTML\p($label . '&nbsp;&nbsp;' . $select);
             }
-        } else {
+        }
+        else
+        {
             return FALSE;
         }
 
@@ -232,54 +266,87 @@ class EXPORTCOMMON
     {
         $surname = $firstname = $initials = '';
         // WIKINDX stores Jr., IV etc. at end of surname...
-        if ($creatorRow['creatorSurname']) {
-            if ($creatorRow['creatorPrefix']) {
+        if ($creatorRow['creatorSurname'])
+        {
+            if ($creatorRow['creatorPrefix'])
+            {
                 $surname = stripslashes($creatorRow['creatorPrefix']) . " " .
                 stripslashes($creatorRow['creatorSurname']);
-            } else {
+            }
+            else
+            {
                 $surname = stripslashes($creatorRow['creatorSurname']);
             }
         }
-        if ($creatorRow['creatorFirstname']) {
+        if ($creatorRow['creatorFirstname'])
+        {
             $firstname = stripslashes($creatorRow['creatorFirstname']);
         }
-        if ($creatorRow['creatorInitials']) {
-            if (($exportType == 'endnoteTabbed') || ($exportType == 'endnoteXml')) {
+        if ($creatorRow['creatorInitials'])
+        {
+            if (($exportType == 'endnoteTabbed') || ($exportType == 'endnoteXml'))
+            {
                 $initials = implode(' ', \UTF8\mb_explode(' ', stripslashes($creatorRow['creatorInitials'])));
-            } elseif ($exportType == 'ris') {
+            }
+            elseif ($exportType == 'ris')
+            {
                 $initials = implode('.', \UTF8\mb_explode(' ', stripslashes($creatorRow['creatorInitials']))) . ".";
-            } elseif ($exportType == 'bibtex') {
+            }
+            elseif ($exportType == 'bibtex')
+            {
                 $initials = implode('. ', \UTF8\mb_explode(' ', stripslashes($creatorRow['creatorInitials']))) . ".";
             }
         }
-        if ($exportType == 'ris') {
-            if ($firstname && $initials) {
+        if ($exportType == 'ris')
+        {
+            if ($firstname && $initials)
+            {
                 return $surname . ',' . $firstname . ',' . $initials;
-            } elseif ($firstname) {
+            }
+            elseif ($firstname)
+            {
                 return $surname . ',' . $firstname;
-            } elseif ($initials) {
+            }
+            elseif ($initials)
+            {
                 return $surname . ',' . $initials;
             }
-        } elseif (($exportType == 'endnoteTabbed') || ($exportType == 'endnoteXml')) {
-            if ($firstname && $initials) {
+        }
+        elseif (($exportType == 'endnoteTabbed') || ($exportType == 'endnoteXml'))
+        {
+            if ($firstname && $initials)
+            {
                 return $surname . ',' . $firstname . ' ' . $initials;
-            } elseif ($firstname) {
+            }
+            elseif ($firstname)
+            {
                 return $surname . ',' . $firstname;
-            } elseif ($initials) {
+            }
+            elseif ($initials)
+            {
                 return $surname . ',' . $initials;
             }
-        } elseif ($exportType == 'bibtex') {
-            if (preg_match("/(.*)(Sr\\.|jr\\.)/ui", $surname, $matches)) {
+        }
+        elseif ($exportType == 'bibtex')
+        {
+            if (preg_match("/(.*)(Sr\\.|jr\\.)/ui", $surname, $matches))
+            {
                 $surname = trim($matches[1]) . ", " . trim($matches[2]);
             }
-            if (preg_match("/(.*)\\s(I|II|III|IV|V|VI|VII|VIII|IX|X)$/u", $surname, $matches)) {
+            if (preg_match("/(.*)\\s(I|II|III|IV|V|VI|VII|VIII|IX|X)$/u", $surname, $matches))
+            {
                 $surname = trim($matches[1]) . ", " . trim($matches[2]);
             }
-            if ($firstname && $initials) {
+            if ($firstname && $initials)
+            {
                 return $surname . ", " . $firstname . ' ' . $initials;
-            } elseif ($firstname) {
+            }
+            elseif ($firstname)
+            {
                 return $surname . ", " . $firstname;
-            } elseif ($initials) {
+            }
+            elseif ($initials)
+            {
                 return $surname . ", " . $initials;
             }
         }
@@ -297,16 +364,21 @@ class EXPORTCOMMON
     public function titleFormat($row, $bibtex = FALSE)
     {
         // For book_chapter, 'title' is bibtex 'chapter' and 'collectionTitle' is bibtex 'title'
-        if ($bibtex && ($row['resourceType'] == 'book_chapter')) {
+        if ($bibtex && ($row['resourceType'] == 'book_chapter'))
+        {
             return stripslashes($row['collectionTitle']);
         }
         $noSort = $row['resourceNoSort'] ? stripslashes($row['resourceNoSort']) . ' ' : FALSE;
-        if ($row['resourceSubtitle']) {
+        if ($row['resourceSubtitle'])
+        {
             $string = $noSort . stripslashes($row['resourceTitle']) . ": " . stripslashes($row['resourceSubtitle']);
-        } else {
+        }
+        else
+        {
             $string = $noSort . stripslashes($row['resourceTitle']);
         }
-        if ($bibtex) {
+        if ($bibtex)
+        {
             return $string;
         }
         // If !bibtex, remove any braces that have been inserted to maintain case of characters - only required for resource title
@@ -322,18 +394,24 @@ class EXPORTCOMMON
      */
     public function grabNote($row, $exportType)
     {
-        if ($row['resourcetextNote']) {
-            if (($exportType == 'ris') || ($exportType == 'endnoteTabbed')) {
+        if ($row['resourcetextNote'])
+        {
+            if (($exportType == 'ris') || ($exportType == 'endnoteTabbed'))
+            {
                 $text = $this->cite->parseCitations(stripslashes($row['resourcetextNote']), $exportType, FALSE);
-            } else {
+            }
+            else
+            {
                 $text = stripslashes($row['resourcetextNote']);
             }
             // replace all whitespace (TABS, CR, \n etc.) with single space.
-            if (($exportType == 'ris') || ($exportType == 'endnoteTabbed') || ($exportType == 'endnoteXml')) {
+            if (($exportType == 'ris') || ($exportType == 'endnoteTabbed') || ($exportType == 'endnoteXml'))
+            {
                 return preg_replace("/\\s/u", " ", $text);
             }
             // For bibtex, ensure first letter is capitalized
-            if ($exportType == 'bibtex') {
+            if ($exportType == 'bibtex')
+            {
                 return \UTF8\mb_ucfirst($text);
             }
 
@@ -352,18 +430,24 @@ class EXPORTCOMMON
      */
     public function grabAbstract($row, $exportType)
     {
-        if ($row['resourcetextAbstract']) {
-            if (($exportType == 'ris') || ($exportType == 'endnoteTabbed')) {
+        if ($row['resourcetextAbstract'])
+        {
+            if (($exportType == 'ris') || ($exportType == 'endnoteTabbed'))
+            {
                 $text = $this->cite->parseCitations(stripslashes($row['resourcetextAbstract']), $exportType, FALSE);
-            } else {
+            }
+            else
+            {
                 $text = stripslashes($row['resourcetextAbstract']);
             }
             // replace all whitespace (TABS, CR, \n etc.) with single space.
-            if (($exportType == 'ris') || ($exportType == 'endnoteTabbed') || ($exportType == 'endnoteXml')) {
+            if (($exportType == 'ris') || ($exportType == 'endnoteTabbed') || ($exportType == 'endnoteXml'))
+            {
                 return preg_replace("/\\s/u", " ", $text);
             }
             // For bibtex, ensure first letter is capitalized
-            if ($exportType == 'bibtex') {
+            if ($exportType == 'bibtex')
+            {
                 return \UTF8\mb_ucfirst($text);
             }
 
@@ -383,25 +467,38 @@ class EXPORTCOMMON
     public function pageFormat($row, $exportType)
     {
         $page = FALSE;
-        if ($row['resourcepagePageStart']) {
-            if (($exportType == 'endnoteTabbed') || ($exportType == 'endnoteXml')) {
+        if ($row['resourcepagePageStart'])
+        {
+            if (($exportType == 'endnoteTabbed') || ($exportType == 'endnoteXml'))
+            {
                 $page = stripslashes($row['resourcepagePageStart']);
-            } elseif ($exportType == 'ris') {
+            }
+            elseif ($exportType == 'ris')
+            {
                 $page = 'SP  - ' . stripslashes($row['resourcepagePageStart']);
-            } elseif ($exportType == 'bibtex') {
+            }
+            elseif ($exportType == 'bibtex')
+            {
                 $page = stripslashes($row['resourcepagePageStart']);
             }
         }
-        if ($row['resourcepagePageEnd']) {
-            if (($exportType == 'endnoteTabbed') || ($exportType == 'endnoteXml')) {
+        if ($row['resourcepagePageEnd'])
+        {
+            if (($exportType == 'endnoteTabbed') || ($exportType == 'endnoteXml'))
+            {
                 $page .= '-' . stripslashes($row['resourcepagePageEnd']);
-            } elseif ($exportType == 'ris') {
+            }
+            elseif ($exportType == 'ris')
+            {
                 $page .= CR . 'EP  - ' . stripslashes($row['resourcepagePageEnd']);
-            } elseif ($exportType == 'bibtex') {
+            }
+            elseif ($exportType == 'bibtex')
+            {
                 $page .= '--' . stripslashes($row['resourcepagePageEnd']);
             }
         }
-        if ($page) {
+        if ($page)
+        {
             return $page;
         }
 
@@ -420,22 +517,32 @@ class EXPORTCOMMON
         $this->db->formatConditions(['resourcekeywordResourceId' => $row['resourceId']]);
         $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
         $recordset = $this->db->select('resource_keyword', 'keywordKeyword');
-        if ($this->db->numRows($recordset)) {
-            while ($kw = $this->db->fetchRow($recordset)) {
+        if ($this->db->numRows($recordset))
+        {
+            while ($kw = $this->db->fetchRow($recordset))
+            {
                 $k[] = stripslashes($kw['keywordKeyword']);
             }
-            if ($exportType == 'endnoteTabbed') { // tabbed file
+            if ($exportType == 'endnoteTabbed')
+            { // tabbed file
                 return implode(";", $k);
-            } elseif ($exportType == 'endnoteXml') { // XML
+            }
+            elseif ($exportType == 'endnoteXml')
+            { // XML
                 return $k;
-            } elseif ($exportType == 'ris') {
+            }
+            elseif ($exportType == 'ris')
+            {
                 // asterisk (character 42) is not allowed in the author, keywords, or periodical name fields - replace with '#'
-                foreach ($k as $key => $value) {
+                foreach ($k as $key => $value)
+                {
                     $k[$key] = 'KW  - ' . preg_replace("/\\*/u", "#", $value);
                 }
 
                 return implode(CR, $k);
-            } elseif ($exportType == 'bibtex') {
+            }
+            elseif ($exportType == 'bibtex')
+            {
                 return implode(",", $k);
             }
         }
@@ -459,7 +566,8 @@ class EXPORTCOMMON
         $creators = [];
         $pString = '';
         $resultSet = $this->getCreators(array_keys($rows));
-        while ($cRow = $this->db->fetchRow($resultSet)) {
+        while ($cRow = $this->db->fetchRow($resultSet))
+        {
             $creators[$cRow['resourcecreatorResourceId']][$cRow['resourcecreatorRole']][] = $cRow['creatorId'];
             $array = [
                 'surname' => $cRow['surname'],
@@ -471,35 +579,52 @@ class EXPORTCOMMON
             $bibStyle->creators[$cRow['creatorId']] = array_map([$bibStyle, "removeSlashes"], $array);
         }
         unset($cRow);
-        if ($exportType == 'html') {
-            foreach ($rows as $rId => $row) {
-                if (empty($creators) || !array_key_exists($rId, $creators) || empty($creators[$rId])) {
-                    for ($index = 1; $index <= 5; $index++) {
+        if ($exportType == 'html')
+        {
+            foreach ($rows as $rId => $row)
+            {
+                if (empty($creators) || !array_key_exists($rId, $creators) || empty($creators[$rId]))
+                {
+                    for ($index = 1; $index <= 5; $index++)
+                    {
                         $row["creator$index"] = ''; // need empty fields for BIBSTYLE
                     }
-                } else {
-                    for ($index = 1; $index <= 5; $index++) {
-                        if (array_key_exists($index, $creators[$rId])) {
+                }
+                else
+                {
+                    for ($index = 1; $index <= 5; $index++)
+                    {
+                        if (array_key_exists($index, $creators[$rId]))
+                        {
                             $row["creator$index"] = implode(',', $creators[$rId][$index]);
-                        } else {
+                        }
+                        else
+                        {
                             $row["creator$index"] = '';
                         }
                     }
                 }
                 $hyperlink = $param2 ? "&nbsp;&nbsp;" . HTML\a('link', "[$param1]", $param2 . $rId) : $param2;
                 $string = HTML\p($bibStyle->process($row, FALSE, FALSE) . $hyperlink) . LF;
-                if ($writeToFile) {
-                    if (!$this->fp || !fwrite($this->fp, $string)) {
+                if ($writeToFile)
+                {
+                    if (!$this->fp || !fwrite($this->fp, $string))
+                    {
                         return FALSE;
                     }
-                } else {
+                }
+                else
+                {
                     $pString .= $string;
                 }
             }
         }
-        if ($pString) {
+        if ($pString)
+        {
             return $pString;
-        } else {
+        }
+        else
+        {
             return TRUE;
         }
     }
@@ -510,7 +635,8 @@ class EXPORTCOMMON
      */
     public function setIdeasCondition()
     {
-        if ($userId = $this->session->getVar("setup_UserId")) {
+        if ($userId = $this->session->getVar("setup_UserId"))
+        {
             $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
             $this->db->formatConditions($this->db->formatFields('usergroupsusersGroupId') . $this->db->equal .
                 $this->db->formatFields('resourcemetadataPrivate'));

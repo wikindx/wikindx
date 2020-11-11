@@ -23,7 +23,8 @@ class GoogleSpell extends SpellChecker
         $matches = $this->_getMatches($lang, $wordstr);
         $words = [];
 
-        for ($i = 0; $i < count($matches); $i++) {
+        for ($i = 0; $i < count($matches); $i++)
+        {
             $words[] = $this->_unhtmlentities(mb_substr($wordstr, $matches[$i][1], $matches[$i][2], "UTF-8"));
         }
 
@@ -44,13 +45,16 @@ class GoogleSpell extends SpellChecker
         $osug = [];
         $matches = $this->_getMatches($lang, $word);
 
-        if (count($matches) > 0) {
+        if (count($matches) > 0)
+        {
             $sug = \UTF8\mb_explode("\t", utf8_encode($this->_unhtmlentities($matches[0][4])));
         }
 
         // Remove empty
-        foreach ($sug as $item) {
-            if ($item) {
+        foreach ($sug as $item)
+        {
+            if ($item)
+            {
                 $osug[] = $item;
             }
         }
@@ -83,7 +87,8 @@ class GoogleSpell extends SpellChecker
         $header .= $xml;
 
         // Use curl if it exists
-        if (function_exists('curl_init')) {
+        if (function_exists('curl_init'))
+        {
             // Use curl
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -92,21 +97,27 @@ class GoogleSpell extends SpellChecker
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
             $xml = curl_exec($ch);
             curl_close($ch);
-        } else {
+        }
+        else
+        {
             // Use raw sockets
             $fp = fsockopen("ssl://" . $server, $port, $errno, $errstr, 30);
-            if ($fp) {
+            if ($fp)
+            {
                 // Send request
                 fwrite($fp, $header);
 
                 // Read response
                 $xml = "";
-                while (!feof($fp)) {
+                while (!feof($fp))
+                {
                     $xml .= fgets($fp, 128);
                 }
 
                 fclose($fp);
-            } else {
+            }
+            else
+            {
                 echo "Could not open SSL connection to google.";
             }
         }
@@ -131,41 +142,57 @@ class GoogleSpell extends SpellChecker
 }
 
 // Patch in multibyte support
-if (!function_exists('mb_substr')) {
+if (!function_exists('mb_substr'))
+{
     function mb_substr($str, $start, $len = '', $encoding = "UTF-8")
     {
         $limit = mb_strlen($str);
 
-        for ($s = 0; $start > 0;--$start) {// found the real start
-            if ($s >= $limit) {
+        for ($s = 0; $start > 0;--$start)
+        {// found the real start
+            if ($s >= $limit)
+            {
                 break;
             }
 
-            if ($str[$s] <= "\x7F") {
+            if ($str[$s] <= "\x7F")
+            {
                 ++$s;
-            } else {
+            }
+            else
+            {
                 ++$s; // skip length
 
-                while ($str[$s] >= "\x80" && $str[$s] <= "\xBF") {
+                while ($str[$s] >= "\x80" && $str[$s] <= "\xBF")
+                {
                     ++$s;
                 }
             }
         }
 
-        if ($len == '') {
+        if ($len == '')
+        {
             return mb_substr($str, $s);
-        } else {
-            for ($e = $s; $len > 0; --$len) {//found the real end
-                if ($e >= $limit) {
+        }
+        else
+        {
+            for ($e = $s; $len > 0; --$len)
+            {//found the real end
+                if ($e >= $limit)
+                {
                     break;
                 }
 
-                if ($str[$e] <= "\x7F") {
+                if ($str[$e] <= "\x7F")
+                {
                     ++$e;
-                } else {
+                }
+                else
+                {
                     ++$e;//skip length
 
-                    while ($str[$e] >= "\x80" && $str[$e] <= "\xBF" && $e < $limit) {
+                    while ($str[$e] >= "\x80" && $str[$e] <= "\xBF" && $e < $limit)
+                    {
                         ++$e;
                     }
                 }

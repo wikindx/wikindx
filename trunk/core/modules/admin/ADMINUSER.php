@@ -60,9 +60,10 @@ class ADMINUSER
         $password = FACTORY_PASSWORD::getInstance();
         list($formText, $jsString) = $password->createElements(TRUE, FALSE, $this->formData);
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userAdd"));
-    	if (array_key_exists('message', $this->vars)) {
-    		$message = $this->vars['message'];
-    	}
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
+        }
         $pString = $message;
         $pString .= \FORM\formHeader('admin_ADMINUSER_CORE', 'onsubmit="return checkForm(' . $jsString . ');"');
         $pString .= \FORM\hidden('method', 'add');
@@ -89,28 +90,35 @@ class ADMINUSER
         $td = \FORM\textInput($this->messages->text("user", "department"), "department", $field, 30, 255);
         $resultset = $this->db->select('users', 'usersDepartment', TRUE);
         $initial = FALSE;
-        while ($row = $this->db->fetchRow($resultset)) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
             $department = \HTML\dbToFormTidy($row['usersDepartment']);
-            if (!$department) {
+            if (!$department)
+            {
                 continue;
             }
             $departments[$department] = $department;
         }
-        if (isset($departments)) {
+        if (isset($departments))
+        {
             // add 0 => IGNORE to departments array
             $temp[0] = $this->messages->text("misc", "ignore");
-            foreach ($departments as $key => $value) {
+            foreach ($departments as $key => $value)
+            {
                 $temp[$key] = $value;
             }
             $departments = $temp;
             unset($temp);
-        	$field = array_key_exists('departmentId', $this->formData) ? 
-        		htmlspecialchars(trim($this->formData['departmentId']), ENT_QUOTES | ENT_HTML5) : FALSE;
-        	if ($field) {
-	            $td .= BR . \FORM\selectedBoxValue(FALSE, "departmentId", $departments, $field, 1);
-        	} else {
-	            $td .= BR . \FORM\selectFBoxValue(FALSE, "departmentId", $departments, 1);
-	        }
+            $field = array_key_exists('departmentId', $this->formData) ?
+                htmlspecialchars(trim($this->formData['departmentId']), ENT_QUOTES | ENT_HTML5) : FALSE;
+            if ($field)
+            {
+                $td .= BR . \FORM\selectedBoxValue(FALSE, "departmentId", $departments, $field, 1);
+            }
+            else
+            {
+                $td .= BR . \FORM\selectFBoxValue(FALSE, "departmentId", $departments, 1);
+            }
         }
         $pString .= \HTML\td($td);
         // Institution
@@ -118,42 +126,52 @@ class ADMINUSER
         $td = \FORM\textInput($this->messages->text("user", "institution"), "institution", $field, 30, 255);
         $resultset = $this->db->select('users', 'usersInstitution', TRUE);
         $initial = FALSE;
-        while ($row = $this->db->fetchRow($resultset)) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
             $institution = \HTML\dbToFormTidy($row['usersInstitution']);
-            if (!$institution) {
+            if (!$institution)
+            {
                 continue;
             }
             $institutions[$institution] = $institution;
         }
-        if (isset($institutions)) {
+        if (isset($institutions))
+        {
             // add 0 => IGNORE to insitutions array
             $temp[0] = $this->messages->text("misc", "ignore");
-            foreach ($institutions as $key => $value) {
+            foreach ($institutions as $key => $value)
+            {
                 $temp[$key] = $value;
             }
             $institutions = $temp;
             unset($temp);
-        	$field = array_key_exists('institutionId', $this->formData) ? 
-        		htmlspecialchars(trim($this->formData['institutionId']), ENT_QUOTES | ENT_HTML5) : FALSE;
-        	if ($field) {
-	            $td .= BR . \FORM\selectedBoxValue(FALSE, "institutionId", $institutions, $field, 1);
-	        } else {
-	            $td .= BR . \FORM\selectFBoxValue(FALSE, "institutionId", $institutions, 1);
-	        }
+            $field = array_key_exists('institutionId', $this->formData) ?
+                htmlspecialchars(trim($this->formData['institutionId']), ENT_QUOTES | ENT_HTML5) : FALSE;
+            if ($field)
+            {
+                $td .= BR . \FORM\selectedBoxValue(FALSE, "institutionId", $institutions, $field, 1);
+            }
+            else
+            {
+                $td .= BR . \FORM\selectFBoxValue(FALSE, "institutionId", $institutions, 1);
+            }
         }
         $pString .= \HTML\td($td);
         $creators = $creator->grabAll(FALSE, FALSE, FALSE, TRUE);
-        if (is_array($creators)) {
+        if (is_array($creators))
+        {
             // add 0 => IGNORE to creators array
             $temp[0] = $this->messages->text("misc", "ignore");
-            foreach ($creators as $key => $value) {
+            foreach ($creators as $key => $value)
+            {
                 $temp[$key] = $value;
             }
             $creators = $temp;
             unset($temp);
         }
-        if (is_array($creators)) {
-        	$field = array_key_exists('creatorId', $this->formData) ? $this->formData['creatorId'] : 0;
+        if (is_array($creators))
+        {
+            $field = array_key_exists('creatorId', $this->formData) ? $this->formData['creatorId'] : 0;
             $pString .= \HTML\td(\FORM\selectedBoxValue(
                 $this->messages->text("user", "isCreator"),
                 "creatorId",
@@ -177,12 +195,14 @@ class ADMINUSER
     {
         $this->validateInput('adminAdd');
         // NB - writeUser returns FALSE on success!
-        if ($this->user->writeUser(TRUE, 2)) {
+        if ($this->user->writeUser(TRUE, 2))
+        {
             $this->badInput->close($this->errors->text("inputError", "userExists"), $this, "addInit");
         }
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
-        if (!$emailClass->registerUserAdd(TRUE)) { // Display password in email to new user
+        if (!$emailClass->registerUserAdd(TRUE))
+        { // Display password in email to new user
             $this->badInput->close($this->success->text("userAdd") .
             $this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'addInit');
         }
@@ -200,22 +220,31 @@ class ADMINUSER
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userDelete"));
         $pString = $error ? \HTML\p($error, "error", "center") : '';
         $this->grabUsers();
-        if (empty($this->users)) {
+        if (empty($this->users))
+        {
             $this->badInput->close($this->messages->text("resources", "noUsers"), $this, "addInit");
         }
         // don't allow this user to operate on self or superadmin (id == 1)
         $selfId = $this->session->getVar("setup_UserId");
-        if (array_key_exists($selfId, $this->users)) {
+        if (array_key_exists($selfId, $this->users))
+        {
             unset($this->users[$selfId]);
         }
-        if (array_key_exists(1, $this->users)) {
+        if (array_key_exists(1, $this->users))
+        {
             unset($this->users[1]);
         }
         $pString .= \FORM\formHeader('admin_ADMINUSER_CORE');
         $pString .= \FORM\hidden('method', 'deleteConfirm');
         $pString .= \FORM\selectFBoxValueMultiple(FALSE, "userDelete", $this->users, 20);
-        $pString .= BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "multiples")), 'hint') . BR;
+        $pString .= BR . \HTML\span(\HTML\aBrowse(
+            'green',
+            '',
+            $this->messages->text("hint", "hint"),
+            '#',
+            "",
+            $this->messages->text("hint", "multiples")
+        ), 'hint') . BR;
         $pString .= BR . \FORM\formSubmit($this->messages->text("submit", "Delete"));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -228,7 +257,8 @@ class ADMINUSER
         $this->validateInput('delete');
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userDelete"));
         $this->grabUsers();
-        if (empty($this->users)) { // should never happen at this point
+        if (empty($this->users))
+        { // should never happen at this point
             $this->badInput->close($this->messages->text("resources", "noUsers"), $this, "addInit");
         }
         $users = "'" . implode("', '", array_keys(array_intersect(
@@ -238,7 +268,8 @@ class ADMINUSER
         $pString = \HTML\p($this->messages->text("user", "deleteConfirm", $users));
         $pString .= \FORM\formHeader('admin_ADMINUSER_CORE');
         $pString .= \FORM\hidden('method', 'delete');
-        foreach ($this->vars['userDelete'] as $id) {
+        foreach ($this->vars['userDelete'] as $id)
+        {
             $pString .= \FORM\hidden("userDelete_" . $id, $id);
         }
         $array = [0 => $this->messages->text("user", "deleteUserMetadata2"),
@@ -261,7 +292,8 @@ class ADMINUSER
     {
         $this->validateInput('deleteConfirm');
         // $this->formData is an array of user IDs
-        if (!$this->user->deleteSql($this->formData)) {
+        if (!$this->user->deleteSql($this->formData))
+        {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'deleteInit');
         }
         $message = rawurlencode($this->success->text("userDelete"));
@@ -272,27 +304,32 @@ class ADMINUSER
      * Block users display
      *
      * @param false|string $error
+     * @param mixed $message
      */
     public function blockInit($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userBlock"));
         $pString = '<script src="' . WIKINDX_URL_BASE .
             '/core/modules/admin/adminUser.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-    	if (array_key_exists('message', $this->vars)) {
-    		$message = $this->vars['message'];
-    	}
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
+        }
         $pString .= $message;
         $this->grabUsers();
-        if (empty($this->users)) {
+        if (empty($this->users))
+        {
             $this->badInput->close($this->messages->text("resources", "noUsers"), $this, "addInit");
         }
         $authUsers = $this->grabAuthUsers(TRUE);
         // don't allow this user to operate on self or superadmin (id == 1)
         $this->selfId = $this->session->getVar("setup_UserId");
-        if (array_key_exists($this->selfId, $authUsers)) {
+        if (array_key_exists($this->selfId, $authUsers))
+        {
             unset($authUsers[$this->selfId]);
         }
-        if (array_key_exists(1, $authUsers)) {
+        if (array_key_exists(1, $authUsers))
+        {
             unset($authUsers[1]);
         }
         $blockedUsers = $this->grabAuthUsers(FALSE);
@@ -327,11 +364,13 @@ class ADMINUSER
      */
     public function block()
     {
-        if (array_key_exists('authorizedUsers', $this->vars) && count($this->vars['authorizedUsers'])) {
+        if (array_key_exists('authorizedUsers', $this->vars) && count($this->vars['authorizedUsers']))
+        {
             $this->db->formatConditionsOneField($this->vars['authorizedUsers'], 'usersId');
             $this->db->update('users', ['usersBlock' => 'N']);
         }
-        if (array_key_exists('blockedUsers', $this->vars) && count($this->vars['blockedUsers'])) {
+        if (array_key_exists('blockedUsers', $this->vars) && count($this->vars['blockedUsers']))
+        {
             $this->db->formatConditionsOneField($this->vars['blockedUsers'], 'usersId');
             $this->db->update('users', ['usersBlock' => 'Y']);
         }
@@ -354,13 +393,16 @@ class ADMINUSER
         $this->grabUsers();
         // don't allow this user to operate on self or superadmin (id == 1)
         $selfId = $this->session->getVar("setup_UserId");
-        if (array_key_exists($selfId, $this->users)) {
+        if (array_key_exists($selfId, $this->users))
+        {
             unset($this->users[$selfId]);
         }
-        if (array_key_exists(1, $this->users)) {
+        if (array_key_exists(1, $this->users))
+        {
             unset($this->users[1]);
         }
-        if (empty($this->users)) {
+        if (empty($this->users))
+        {
             $this->badInput->close($this->messages->text("resources", "noUsers"), $this, "addInit");
         }
         $pString .= \FORM\selectFBoxValue(FALSE, "editId", $this->users, 20) . BR .
@@ -378,20 +420,25 @@ class ADMINUSER
     public function editDisplay($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userEdit"));
-    	if (array_key_exists('message', $this->vars)) {
-    		$message = $this->vars['message'];
-    	}
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
+        }
         $pString = $message;
         $this->userId = FALSE;
-        if (array_key_exists("editId", $this->vars)) {
+        if (array_key_exists("editId", $this->vars))
+        {
             $this->userId = $this->vars["editId"];
-        } elseif (array_key_exists("userId", $this->vars)) {
+        }
+        elseif (array_key_exists("userId", $this->vars))
+        {
             $this->userId = $this->vars["userId"];
         }
         $this->validateInput('editId');
-        if (empty($this->formData)) { // i.e. initial load
-	        $this->formData = $this->user->loadFormData($this->userId);
-	    }
+        if (empty($this->formData))
+        { // i.e. initial load
+            $this->formData = $this->user->loadFormData($this->userId);
+        }
         $pString .= $this->user->displayUserDetails('admin_ADMINUSER_CORE', 'edit', $this->userId, $this->formData);
         GLOBALS::addTplVar('content', $pString);
     }
@@ -403,7 +450,8 @@ class ADMINUSER
         $this->validateInput('edit');
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "userEdit"));
         // writeUser() returns FALSE for success
-        if ($this->user->writeUser(FALSE, 2)) { // TRUE on error!
+        if ($this->user->writeUser(FALSE, 2))
+        { // TRUE on error!
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'editDisplay');
         }
         $message = rawurlencode($this->success->text("userEdit"));
@@ -419,23 +467,28 @@ class ADMINUSER
     public function registrationInit($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
-    	if (array_key_exists('message', $this->vars)) {
-    		$message = $this->vars['message'];
-    	}
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
+        }
         $pString = $message;
         $this->db->formatConditions(['userregisterConfirmed' => 'N']);
         $this->db->formatConditions(['userregisterRequest' => ' IS NOT NULL']);
         $resultset = $this->db->select('user_register', ['userregisterId', 'userregisterRequest',
             'userregisterEmail', 'userregisterTimestamp', ]);
-        if (!$this->db->numRows($resultset)) {
+        if (!$this->db->numRows($resultset))
+        {
             $pString .= $this->messages->text('user', 'noUsers');
-        } else {
+        }
+        else
+        {
             $pString .= \HTML\p($this->messages->text('user', 'pendingRegistration1'));
             $pString .= \HTML\p($this->messages->text('user', 'pendingRegistration2')) . BR;
             $pString .= \FORM\formHeader('admin_ADMINUSER_CORE');
             $pString .= \FORM\hidden('method', 'register');
             $pString .= \HTML\tableStart('generalTable borderStyleSolid');
-            while ($row = $this->db->fetchRow($resultset)) {
+            while ($row = $this->db->fetchRow($resultset))
+            {
                 $pString .= \HTML\trStart();
                 $pString .= \HTML\td($row['userregisterEmail']);
                 $pString .= \HTML\td(\HTML\nlToHtml($row['userregisterRequest']));
@@ -457,19 +510,24 @@ class ADMINUSER
      */
     public function register()
     {
-    	$this->validateInput('register');
+        $this->validateInput('register');
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "register"));
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
-        if (!$emailClass->registerRequestManage($this->formData)) {
+        if (!$emailClass->registerRequestManage($this->formData))
+        {
             $this->badInput->close($this->errors->text("inputError", "mail2", GLOBALS::getError()), $this, 'registrationInit');
         }
         // Delete those declined and confirm those accepted
-        foreach ($this->formData as $id => $value) {
+        foreach ($this->formData as $id => $value)
+        {
             $this->db->formatConditions(['userregisterId' => $id]);
-            if ($value == 'accept') {
+            if ($value == 'accept')
+            {
                 $this->db->update('user_register', ['userregisterConfirmed' => 'Y']);
-            } else {
+            }
+            else
+            {
                 $this->db->delete('user_register');
             }
         }
@@ -488,18 +546,24 @@ class ADMINUSER
     {
         $users = [];
         $this->db->orderBy('usersUsername');
-        if ($auth) {
+        if ($auth)
+        {
             $this->db->formatConditions(['usersBlock' => 'N']);
-        } else {
+        }
+        else
+        {
             $this->db->formatConditions(['usersBlock' => 'Y']);
         }
         $recordset = $this->db->select('users', ["usersId", "usersUsername", "usersFullname", "usersAdmin"], TRUE);
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $usersUsername = $row['usersUsername'];
-            if ($row['usersFullname']) {
+            if ($row['usersFullname'])
+            {
                 $usersUsername .= " (" . $row['usersFullname'] . ")";
             }
-            if ($row['usersAdmin']) {
+            if ($row['usersAdmin'])
+            {
                 $usersUsername .= " ADMIN";
             }
             $users[$row['usersId']] = \HTML\dbToFormTidy($usersUsername);
@@ -536,20 +600,24 @@ class ADMINUSER
      */
     private function validateInput($type)
     {
-    	$error = $email = '';
-        if ($type == 'adminAdd') {
+        $error = $email = '';
+        if ($type == 'adminAdd')
+        {
             $function = 'addInit';
-            if (!\UTF8\mb_trim($this->vars['usersUsername']) || (!$email = \UTF8\mb_trim($this->vars['email'])) || 
-            	!\UTF8\mb_trim($this->vars['password']) || !\UTF8\mb_trim($this->vars['passwordConfirm'])) {
+            if (!\UTF8\mb_trim($this->vars['usersUsername']) || (!$email = \UTF8\mb_trim($this->vars['email'])) ||
+                !\UTF8\mb_trim($this->vars['password']) || !\UTF8\mb_trim($this->vars['passwordConfirm']))
+            {
                 $error = $this->errors->text("inputError", "missing");
             }
-       		elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE) {
-        		$error = $this->errors->text('inputError', 'invalidMail');
-        	}
-            if (\UTF8\mb_trim($this->vars['password']) != \UTF8\mb_trim($this->vars['passwordConfirm'])) {
+            elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE)
+            {
+                $error = $this->errors->text('inputError', 'invalidMail');
+            }
+            if (\UTF8\mb_trim($this->vars['password']) != \UTF8\mb_trim($this->vars['passwordConfirm']))
+            {
                 $error = $this->errors->text("inputError", "missing");
             }
-        // Don't store passwords . . .
+            // Don't store passwords . . .
             $this->formData['usersUsername'] = \UTF8\mb_trim($this->vars['usersUsername']);
             $this->formData['email'] = $email;
             $this->formData['fullname'] = \UTF8\mb_trim($this->vars['fullname']);
@@ -557,68 +625,91 @@ class ADMINUSER
             $this->formData['departmentId'] = $this->vars['departmentId'];
             $this->formData['institution'] = \UTF8\mb_trim($this->vars['institution']);
             $this->formData['institutionId'] = $this->vars['institutionId'];
-            if (array_key_exists('admin', $this->vars)) {
-            	$this->formData['admin'] = TRUE;
+            if (array_key_exists('admin', $this->vars))
+            {
+                $this->formData['admin'] = TRUE;
             }
             $this->formData['creatorId'] = \UTF8\mb_trim($this->vars['creatorId']);
-        } 
-// Appears not to be used . . . .
-/*        elseif ($type == 'userAdd') {
-            if (!\UTF8\mb_trim($this->vars['usersUsername']) || !\UTF8\mb_trim($this->vars['password']) ||
-                !\UTF8\mb_trim($this->vars['passwordConfirm']) || !$this->vars['email'] || !$this->vars['hashKey']) {
-                return FALSE;
-            }
-            if (\UTF8\mb_trim($this->vars['password']) != \UTF8\mb_trim($this->vars['passwordConfirm'])) {
-                return FALSE;
-            }
-        } 
-*/        elseif ($type == 'register') {
+        }
+        // Appears not to be used . . . .
+        /*        elseif ($type == 'userAdd') {
+                    if (!\UTF8\mb_trim($this->vars['usersUsername']) || !\UTF8\mb_trim($this->vars['password']) ||
+                        !\UTF8\mb_trim($this->vars['passwordConfirm']) || !$this->vars['email'] || !$this->vars['hashKey']) {
+                        return FALSE;
+                    }
+                    if (\UTF8\mb_trim($this->vars['password']) != \UTF8\mb_trim($this->vars['passwordConfirm'])) {
+                        return FALSE;
+                    }
+                }
+        */        elseif ($type == 'register')
+        {
             $function = 'registrationInit';
-			foreach ($this->vars as $key => $value) {
-				if (mb_strpos($key, "registerUser_") !== FALSE) {
-					$split = \UTF8\mb_explode("_", $key);
-					$this->formData[$split[1]] = $value;
-				}
-			}
-			if (empty($this->formData)) {
-                $error = $this->errors->text("inputError", "missing");
-			}
-        } elseif ($type == 'delete') {
-            if (!array_key_exists('userDelete', $this->vars) || empty($this->vars['userDelete'])) {
+            foreach ($this->vars as $key => $value)
+            {
+                if (mb_strpos($key, "registerUser_") !== FALSE)
+                {
+                    $split = \UTF8\mb_explode("_", $key);
+                    $this->formData[$split[1]] = $value;
+                }
+            }
+            if (empty($this->formData))
+            {
                 $error = $this->errors->text("inputError", "missing");
             }
-        } elseif ($type == 'deleteConfirm') {
+        }
+        elseif ($type == 'delete')
+        {
+            if (!array_key_exists('userDelete', $this->vars) || empty($this->vars['userDelete']))
+            {
+                $error = $this->errors->text("inputError", "missing");
+            }
+        }
+        elseif ($type == 'deleteConfirm')
+        {
             // Ensure we don't delete superadmin with id of 1
-            foreach ($this->vars as $key => $value) {
-                if (!$value || ($value == 1)) {
+            foreach ($this->vars as $key => $value)
+            {
+                if (!$value || ($value == 1))
+                {
                     continue;
                 }
-                if (!preg_match("/userDelete_/u", $key)) {
+                if (!preg_match("/userDelete_/u", $key))
+                {
                     continue;
                 }
                 $this->formData[] = $value;
             }
-            if (empty($this->formData)) {
+            if (empty($this->formData))
+            {
                 $error = $this->errors->text("inputError", "missing");
             }
-        } elseif ($type == 'editId') {
+        }
+        elseif ($type == 'editId')
+        {
             $function = 'editInit';
-            if (!$this->userId) {
+            if (!$this->userId)
+            {
                 $error = $this->errors->text("inputError", "missing");
             }
-        } elseif ($type == 'edit') {
+        }
+        elseif ($type == 'edit')
+        {
             $function = 'editDisplay';
-        	if (!array_key_exists('bypassPasswordCheck', $this->vars)) {
-				if (!\UTF8\mb_trim($this->vars['password']) || !\UTF8\mb_trim($this->vars['passwordConfirm'])) {
-					$error = $this->errors->text("inputError", "missing");
-				}
-			}
-            if ((!$email = \UTF8\mb_trim($this->vars['email'])) || !$this->vars['userId']) {
+            if (!array_key_exists('bypassPasswordCheck', $this->vars))
+            {
+                if (!\UTF8\mb_trim($this->vars['password']) || !\UTF8\mb_trim($this->vars['passwordConfirm']))
+                {
+                    $error = $this->errors->text("inputError", "missing");
+                }
+            }
+            if ((!$email = \UTF8\mb_trim($this->vars['email'])) || !$this->vars['userId'])
+            {
                 $error = $this->errors->text("inputError", "missing");
             }
-       		elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE) {
-        		$error = $this->errors->text('inputError', 'invalidMail');
-        	}
+            elseif (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE)
+            {
+                $error = $this->errors->text('inputError', 'invalidMail');
+            }
             $this->formData['usersUsername'] = \UTF8\mb_trim($this->vars['usersUsername']);
             $this->formData['userId'] = $this->vars['userId'];
             $this->formData['email'] = $email;
@@ -627,17 +718,20 @@ class ADMINUSER
             $this->formData['departmentId'] = $this->vars['departmentId'];
             $this->formData['institution'] = \UTF8\mb_trim($this->vars['institution']);
             $this->formData['institutionId'] = $this->vars['institutionId'];
-            if (array_key_exists('admin', $this->vars)) {
-            	$this->formData['admin'] = TRUE;
+            if (array_key_exists('admin', $this->vars))
+            {
+                $this->formData['admin'] = TRUE;
             }
-            if (array_key_exists('bypassPasswordCheck', $this->vars)) {
-            	$this->formData['bypassPasswordCheck'] = TRUE;
+            if (array_key_exists('bypassPasswordCheck', $this->vars))
+            {
+                $this->formData['bypassPasswordCheck'] = TRUE;
             }
             $this->formData['creatorId'] = $this->vars['creatorId'];
         }
-        if ($error) {
-	        $this->badInput->close($error, $this, $function);
-    	}
+        if ($error)
+        {
+            $this->badInput->close($error, $this, $function);
+        }
     }
     /**
      * grab users from database
@@ -647,7 +741,8 @@ class ADMINUSER
         $this->users = $this->user->grabAll(TRUE);
         // don't allow non-superAdmin admins to operate on superadmin (id == WIKINDX_SUPERADMIN_ID)
         $this->selfId = $this->session->getVar("setup_UserId");
-        if (array_key_exists(WIKINDX_SUPERADMIN_ID, $this->users) && ($this->selfId != WIKINDX_SUPERADMIN_ID)) {
+        if (array_key_exists(WIKINDX_SUPERADMIN_ID, $this->users) && ($this->selfId != WIKINDX_SUPERADMIN_ID))
+        {
             unset($this->users[WIKINDX_SUPERADMIN_ID]);
         }
     }

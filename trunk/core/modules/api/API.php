@@ -61,13 +61,15 @@ class API
      */
     public function fetchId()
     {
-        if (!array_key_exists('bibtexKey', $this->vars) || !$this->vars['bibtexKey']) {
+        if (!array_key_exists('bibtexKey', $this->vars) || !$this->vars['bibtexKey'])
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
 
         $this->db->formatConditions(['resourceBibtexKey' => $this->vars['bibtexKey']]);
         $resultset = $this->db->select('resource', ['resourceId']);
-        if (!$this->db->numRows($resultset)) {
+        if (!$this->db->numRows($resultset))
+        {
             $this->badInput->close($this->messages->text("resources", "noResult"));
         }
         $row = $this->db->fetchRow($resultset);
@@ -80,14 +82,16 @@ class API
      */
     public function getBibtex()
     {
-        if (!array_key_exists('id', $this->vars) || !$this->vars['id']) {
+        if (!array_key_exists('id', $this->vars) || !$this->vars['id'])
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
 
         $this->stmt->listJoin();
         $this->db->formatConditions(['resourceId' => $this->vars['id']]);
         $resultset = $this->db->select('resource', $this->stmt->listFields());
-        if (!$this->db->numRows($resultset)) {
+        if (!$this->db->numRows($resultset))
+        {
             $this->badInput->close($this->messages->text("resources", "noResult"));
         }
         $row = $this->db->fetchRow($resultset);

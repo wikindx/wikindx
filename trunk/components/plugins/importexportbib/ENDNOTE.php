@@ -35,7 +35,7 @@ class ENDNOTE
     /**
      * dislay options for importing
      *
-     ' @param mixed $message
+     * @param mixed $message
      *
      * @return string
      */
@@ -54,7 +54,8 @@ class ENDNOTE
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTCOMMON.php"]));
         $common = new EXPORTCOMMON();
         $sql = $common->getSQL();
-        if (!$sql) {
+        if (!$sql)
+        {
             $this->parentClass->initEndnoteExport(HTML\p($this->coremessages->text("noList"), 'error'));
 
             return;
@@ -65,7 +66,8 @@ class ENDNOTE
         $pString .= HTML\trStart();
         $checked = $this->session->getVar("exportMergeStored") ? 'CHECKED' : FALSE;
         $pString .= HTML\td($this->coremessages->text('misc', "mergeStored") . FORM\checkbox(FALSE, "mergeStored", $checked));
-        if ($custom = $common->getCustomFields('endnote')) {
+        if ($custom = $common->getCustomFields('endnote'))
+        {
             $pString .= HTML\trEnd();
             $pString .= HTML\trStart();
             $pString .= HTML\td($custom);

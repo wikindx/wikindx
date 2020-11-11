@@ -44,22 +44,26 @@ class EDITMETADATA
      */
     public function init()
     {
-        if (!array_key_exists('type', $this->vars) || !array_key_exists('id', $this->vars)) {
+        if (!array_key_exists('type', $this->vars) || !array_key_exists('id', $this->vars))
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         if (($this->vars['type'] == 'abstractInit') || ($this->vars['type'] == 'noteInit') ||
             ($this->vars['type'] == 'noteDeleteInit') || ($this->vars['type'] == 'abstractDeleteInit') ||
             ($this->vars['type'] == 'noteDelete') || ($this->vars['type'] == 'abstractDelete') ||
-            ($this->vars['type'] == 'abstractEdit') || ($this->vars['type'] == 'noteEdit')) {
+            ($this->vars['type'] == 'abstractEdit') || ($this->vars['type'] == 'noteEdit'))
+        {
             $this->gatekeep->init();
-        } else {
+        }
+        else
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $this->return = '&nbsp;&nbsp;' . \HTML\a(
-			$this->icons->getClass("edit"),
-			$this->icons->getHTML("Return"),
-			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id']
-		);
+            $this->icons->getClass("edit"),
+            $this->icons->getHTML("Return"),
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id']
+        );
         // proceed
         $type = $this->vars['type'];
         $this->{$type}();
@@ -136,9 +140,12 @@ class EDITMETADATA
         $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
         $recordset = $this->db->select('resource_text', 'resourcetextAbstract');
         $row = $this->db->fetchRow($recordset);
-        if (!$this->db->numRows($recordset)) {
+        if (!$this->db->numRows($recordset))
+        {
             $pString .= \FORM\hidden('sql', 'insert');
-        } else {
+        }
+        else
+        {
             $pString .= \FORM\hidden('sql', 'update');
         }
         $pString .= \FORM\textareaInput(
@@ -168,9 +175,12 @@ class EDITMETADATA
         $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
         $recordset = $this->db->select('resource_text', 'resourcetextNote');
         $row = $this->db->fetchRow($recordset);
-        if (!$this->db->numRows($recordset)) {
+        if (!$this->db->numRows($recordset))
+        {
             $pString .= \FORM\hidden('sql', 'insert');
-        } else {
+        }
+        else
+        {
             $pString .= \FORM\hidden('sql', 'update');
         }
         $pString .= \FORM\textareaInput(
@@ -190,13 +200,16 @@ class EDITMETADATA
     private function abstractEdit()
     {
         if (!array_key_exists('type', $this->vars) || !array_key_exists('id', $this->vars) ||
-            !array_key_exists('sql', $this->vars)) {
+            !array_key_exists('sql', $this->vars))
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $abstract = \UTF8\mb_trim($this->vars['text']);
         $userId = $this->session->getVar("setup_UserId");
-        if ($this->vars['sql'] == 'insert') {
-            if (!$abstract) {
+        if ($this->vars['sql'] == 'insert')
+        {
+            if (!$abstract)
+            {
                 $this->navigate($this->errors->text("inputError", "missing"));
             }
             $message = $this->success->text("abstractAdd");
@@ -204,26 +217,34 @@ class EDITMETADATA
             $values[] = $this->vars['id'];
             $fields[] = "resourcetextAbstract";
             $values[] = $abstract;
-            if ($userId) {
+            if ($userId)
+            {
                 $fields[] = "resourcetextAddUserIdAbstract";
                 $values[] = $userId;
             }
             $this->db->insert('resource_text', $fields, $values);
-        } else { // update
+        }
+        else
+        { // update
             $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
             // if abstractText is empty, set fields to null
-            if (!$abstract) {
+            if (!$abstract)
+            {
                 $message = $this->success->text("abstractDelete");
                 $this->db->updateNull('resource_text', ['resourcetextAbstract', 'resourcetextAddUserIdAbstract',
                     'resourcetextEditUserIdAbstract', ]);
                 $this->checkDeleteRow();
-            } else {
+            }
+            else
+            {
                 $message = $this->success->text("abstractEdit");
-                if (!$this->db->selectFirstField('resource_text', 'resourcetextAddUserIdAbstract') && $userId) {
+                if (!$this->db->selectFirstField('resource_text', 'resourcetextAddUserIdAbstract') && $userId)
+                {
                     $updateArray["resourcetextAddUserIdAbstract"] = $userId;
                 }
                 $updateArray["resourcetextAbstract"] = $abstract;
-                if ($userId) {
+                if ($userId)
+                {
                     $updateArray["resourcetextEditUserIdAbstract"] = $userId;
                 }
                 $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
@@ -242,13 +263,16 @@ class EDITMETADATA
     private function noteEdit()
     {
         if (!array_key_exists('type', $this->vars) || !array_key_exists('id', $this->vars) ||
-            !array_key_exists('sql', $this->vars)) {
+            !array_key_exists('sql', $this->vars))
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $note = \UTF8\mb_trim($this->vars['text']);
         $userId = $this->session->getVar("setup_UserId");
-        if ($this->vars['sql'] == 'insert') {
-            if (!$note) {
+        if ($this->vars['sql'] == 'insert')
+        {
+            if (!$note)
+            {
                 $this->navigate($this->errors->text("inputError", "missing"));
             }
             $message = $this->success->text("noteAdd");
@@ -256,26 +280,34 @@ class EDITMETADATA
             $values[] = $this->vars['id'];
             $fields[] = "resourcetextNote";
             $values[] = $note;
-            if ($userId) {
+            if ($userId)
+            {
                 $fields[] = "resourcetextAddUserIdNote";
                 $values[] = $userId;
             }
             $this->db->insert('resource_text', $fields, $values);
-        } else { // update
-            if (!$this->db->selectFirstField('resource_text', 'resourcetextAddUserIdNote') && $userId) {
+        }
+        else
+        { // update
+            if (!$this->db->selectFirstField('resource_text', 'resourcetextAddUserIdNote') && $userId)
+            {
                 $updateArray["resourcetextAddUserIdNote"] = $userId;
             }
             $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
             // if noteText is empty, set fields to null
-            if (!$note) {
+            if (!$note)
+            {
                 $message = $this->success->text("noteDelete");
                 $this->db->updateNull('resource_text', ['resourcetextNote', 'resourcetextAddUserIdNote',
                     'resourcetextEditUserIdNote', ]);
                 $this->checkDeleteRow();
-            } else {
+            }
+            else
+            {
                 $message = $this->success->text("noteEdit");
                 $updateArray["resourcetextNote"] = $note;
-                if ($userId) {
+                if ($userId)
+                {
                     $updateArray["resourcetextEditUserIdNote"] = $userId;
                 }
                 $this->db->update('resource_text', $updateArray);
@@ -296,7 +328,8 @@ class EDITMETADATA
         $recordset = $this->db->select('resource_text', ['resourcetextAbstract', 'resourcetextNote',
             'resourcetextUrls', ]);
         $row = $this->db->fetchRow($recordset);
-        if (!$row['resourcetextAbstract'] && !$row['resourcetextNote'] && !$row['resourcetextUrls']) {
+        if (!$row['resourcetextAbstract'] && !$row['resourcetextNote'] && !$row['resourcetextUrls'])
+        {
             $this->db->formatConditions(['resourcetextId' => $this->vars['id']]);
             $this->db->delete('resource_text');
         }

@@ -51,9 +51,11 @@ class BASKET
     public function init()
     {
         $basket = $this->session->getVar("basket_List", []);
-        if (array_key_exists('resourceId', $this->vars)) {
+        if (array_key_exists('resourceId', $this->vars))
+        {
             $resourceId = $this->vars['resourceId'];
-            if (array_search($resourceId, $basket) === FALSE) {
+            if (array_search($resourceId, $basket) === FALSE)
+            {
                 $basket[] = $resourceId;
             }
         }
@@ -74,7 +76,8 @@ class BASKET
     {
         $basket = $this->session->getVar("basket_List", []);
         $resourceId = $this->vars['resourceId'];
-        if (($key = array_search($resourceId, $basket)) !== FALSE) {
+        if (($key = array_search($resourceId, $basket)) !== FALSE)
+        {
             unset($basket[$key]);
         }
         $this->session->setVar("basket_List", $basket);
@@ -98,7 +101,8 @@ class BASKET
      */
     public function view()
     {
-        if (array_key_exists('message', $this->vars)) {
+        if (array_key_exists('message', $this->vars))
+        {
             GLOBALS::addTplVar('content', $this->vars['message']);
         }
         $sql = FALSE;
@@ -113,23 +117,29 @@ class BASKET
         $this->pagingObject->getPaging();
         $this->common->pagingObject = $this->pagingObject;
         GLOBALS::setTplVar('heading', $this->messages->text('heading', 'basket'));
-        if (array_key_exists('list_Order', $this->vars)) {
+        if (array_key_exists('list_Order', $this->vars))
+        {
             $this->session->setVar("list_Order", $this->vars['list_Order']);
         }
         $this->session->delVar("mywikindx_PagingStart");
         $this->session->delVar("mywikindx_PagingStartAlpha");
-        if ($this->lastMulti($queryString)) {
+        if ($this->lastMulti($queryString))
+        {
             return;
         }
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A')) {
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
+        {
             $this->session->delVar("list_PagingAlphaLinks");
             $this->session->delVar("list_AllIds");
             $this->session->setVar("list_AllIds", $this->session->getVar("basket_List"));
             $sql = $this->returnBasketSql($queryString);
-        } else {
+        }
+        else
+        {
             $sql = $this->quickQuery($queryString);
         }
-        if (!$sql) {
+        if (!$sql)
+        {
             $errors = FACTORY_ERRORS::getInstance();
             $badInput = FACTORY_BADINPUT::getInstance();
             $badInput->close($errors->text("inputError", "invalid"));
@@ -152,7 +162,8 @@ class BASKET
      */
     public function returnBasketSql($queryString = FALSE, $order = FALSE)
     {
-        if (!$order) {
+        if (!$order)
+        {
             $order = $this->session->getVar("list_Order");
         }
         $subStmt = $this->setSubQuery($this->session->getVar("basket_List"));
@@ -169,7 +180,8 @@ class BASKET
      */
     public function delete($confirm = FALSE)
     {
-        if ($confirm) {
+        if ($confirm)
+        {
             $this->session->clearArray('basket');
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
             $obj = new FRONT($this->db);
@@ -215,7 +227,8 @@ class BASKET
      */
     private function lastMulti($queryString)
     {
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A')) {
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A'))
+        {
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
@@ -236,7 +249,8 @@ class BASKET
      */
     private function setSubQuery($ids)
     {
-        if (!$this->session->getVar("list_Order")) {
+        if (!$this->session->getVar("list_Order"))
+        {
             $this->session->setVar("list_Order", "creator");
         }
         $this->db->ascDesc = $this->session->getVar("list_AscDesc");
@@ -246,9 +260,12 @@ class BASKET
                 $this->stmt->useBib('resourceId');
                 $this->stmt->conditionsOneField['resourceId'] = $ids;
                 $this->stmt->executeCondJoins();
-                if (GLOBALS::getUserVar('PagingStyle') == 'A') {
+                if (GLOBALS::getUserVar('PagingStyle') == 'A')
+                {
                     return $this->db->selectNoExecute('resource', ['resourceTitleSort', ['resourceId' => 'rId']], FALSE, TRUE, TRUE);
-                } else {
+                }
+                else
+                {
                     return $this->db->selectNoExecute('resource', [['resourceId' => 'rId']], FALSE, TRUE, TRUE);
                 }
                     // no break

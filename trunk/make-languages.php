@@ -54,17 +54,21 @@ $listDirDomain = [
     $dirplugins => FILE\dirInDirToArray($dirplugins),
 ];
 
-foreach ($listDirDomain as $dir => $DirDomain) {
-    foreach ($DirDomain as $domain) {
+foreach ($listDirDomain as $dir => $DirDomain)
+{
+    foreach ($DirDomain as $domain)
+    {
         $packagename = mb_strtolower($domain);
 
-        if ($dir == __DIR__) {
+        if ($dir == __DIR__)
+        {
             echo " - Core $domain domain\n";
             $inputdir = $dir;
             $dirsrc = implode(DIRECTORY_SEPARATOR, [$inputdir, WIKINDX_DIR_CORE_LANGUAGES, "src"]);
             $dirtra = implode(DIRECTORY_SEPARATOR, [$inputdir, WIKINDX_DIR_CORE_LANGUAGES]);
-
-        } else {
+        }
+        else
+        {
             echo " - Plugin $domain domain\n";
             $inputdir = $dirplugins . DIRECTORY_SEPARATOR . $domain;
             $dirsrc = implode(DIRECTORY_SEPARATOR, [$inputdir, "languages", "src"]);
@@ -73,10 +77,12 @@ foreach ($listDirDomain as $dir => $DirDomain) {
         
         echo "Create missing locales folders\n";
 
-        if (!file_exists($dirsrc)) {
+        if (!file_exists($dirsrc))
+        {
             mkdir($dirsrc, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
         }
-        if (!file_exists($dirtra)) {
+        if (!file_exists($dirtra))
+        {
             mkdir($dirtra, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
         }
         
@@ -86,9 +92,12 @@ foreach ($listDirDomain as $dir => $DirDomain) {
         
         echo "   - List all PHP files to $phpfilelist\n";
         
-        if ($dir == __DIR__) {
+        if ($dir == __DIR__)
+        {
             saveListPHPfilesInDirectory($phpfilelist, $inputdir, $excludedir);
-        } else {
+        }
+        else
+        {
             saveListPHPfilesInDirectory($phpfilelist, $inputdir);
         }
             
@@ -99,29 +108,37 @@ foreach ($listDirDomain as $dir => $DirDomain) {
         unlink($phpfilelist);
 
         // When the best file is the new, overwrite the previous with the new file
-        if ($potfiletmp == bestPotFile($potfile, $potfiletmp)) {
+        if ($potfiletmp == bestPotFile($potfile, $potfiletmp))
+        {
             rename($potfiletmp, $potfile);
-        } else {
-            if (file_exists($potfiletmp)) {
+        }
+        else
+        {
+            if (file_exists($potfiletmp))
+            {
                 unlink($potfiletmp);
             }
         }
         
         // countinue only for domains with translatable strings
         echo "   - Merge and compile translations:\n";
-        foreach (FILE\dirInDirToArray($dirtra) as $locale) {
+        foreach (FILE\dirInDirToArray($dirtra) as $locale)
+        {
             // Skip folders that do not contain po files
-            if (!checkLocaleCode($locale)) {
+            if (!checkLocaleCode($locale))
+            {
                 continue;
             }
             
             $dirmo = $dirtra . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . "LC_MESSAGES";
-            if (!file_exists($dirmo)) {
+            if (!file_exists($dirmo))
+            {
                 echo " - MKDIR $dirmo\n";
                 mkdir($dirmo, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
             }
             $dirpo = $dirsrc . DIRECTORY_SEPARATOR . $locale;
-            if (!file_exists($dirpo)) {
+            if (!file_exists($dirpo))
+            {
                 echo " - MKDIR $dirpo\n";
                 mkdir($dirpo, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
             }
@@ -134,7 +151,10 @@ foreach ($listDirDomain as $dir => $DirDomain) {
                 
             initPoFile($potfile, $pofile, $locale);
             mergePoFile($pofile, $potfile, $tmpfile, $locale);
-            if (file_exists($tmpfile)) rename($tmpfile, $pofile);
+            if (file_exists($tmpfile))
+            {
+                rename($tmpfile, $pofile);
+            }
             compileMoFile($pofile, $mofile);
         }
         
@@ -165,19 +185,21 @@ function checkLocaleCode($locale)
             mb_strtolower($locale_variant) == mb_strtolower($locale) ||
             mb_strtolower($locale_country) == mb_strtolower($locale) ||
             mb_strtolower($locale_language) == mb_strtolower($locale)
-        ){
+        ) {
             return TRUE;
         }
     }
+
     return FALSE;
 }
 // Return the name of the POT to keep
-// 
+//
 // The new POT file if it has significative changes, otherwise the old
 function bestPotFile($potFileOld, $potFileNew)
 {
     // Avoid merging a new pot file with translations if it doesn't change more than by its creation date
-    if (file_exists($potFileOld) && file_exists($potFileNew)) {
+    if (file_exists($potFileOld) && file_exists($potFileNew))
+    {
         $potfilecontentold = file_get_contents($potFileOld);
         $potfilecontentnew = file_get_contents($potFileNew);
 
@@ -185,14 +207,24 @@ function bestPotFile($potFileOld, $potFileNew)
         $potfilecontentnew = preg_replace('/"POT-Creation-Date:.+"/um', "", $potfilecontentnew);
 
         if ($potfilecontentold == $potfilecontentnew)
+        {
             return $potFileOld;
+        }
         else
+        {
             return $potFileNew;
-    } elseif (file_exists($potFileOld)) {
+        }
+    }
+    elseif (file_exists($potFileOld))
+    {
         return $potFileOld;
-    } elseif (file_exists($potFileNew)) {
+    }
+    elseif (file_exists($potFileNew))
+    {
         return $potFileNew;
-    } else {
+    }
+    else
+    {
         return "";
     }
 }
@@ -202,7 +234,8 @@ function extractPotFile($potFile, $aFileList, $packagename, $emailreport)
 {
     exec("xgettext -L PHP --from-code=UTF-8 -c -n -w 80 --sort-by-file --keyword=local_gettext --msgid-bugs-address=$emailreport --package-name=$packagename -o \"$potFile\" -f \"$aFileList\"");
 
-    if (file_exists($potFile)) {
+    if (file_exists($potFile))
+    {
         // Customizing the pot file for the project
         $potcontent = file_get_contents($potFile);
 
@@ -236,7 +269,8 @@ function extractPotFile($potFile, $aFileList, $packagename, $emailreport)
 // Init a gettext translation file from a pot template
 function initPoFile($potFile, $poFile, $locale)
 {
-    if (!file_exists($potFile) || file_exists($poFile)) {
+    if (!file_exists($potFile) || file_exists($poFile))
+    {
         return;
     }
 
@@ -246,14 +280,15 @@ function initPoFile($potFile, $poFile, $locale)
     $errorcode = 0;
     $execoutput = [];
     exec("msginit --no-translator --locale=$locale.UTF-8 -i \"$potFile\" -o \"$poFile\" 2>&1", $execoutput, $errorcode);
-    abortOnError($errorcode);    
+    abortOnError($errorcode);
 }
 
 // Merge the 1st and 2d po file to 3rd po file
 // 1st po file must be the previous po file
 function mergePoFile($poFile1, $poFile2, $poFile3, $locale)
 {
-    if (!file_exists($poFile1) || !file_exists($poFile2)) {
+    if (!file_exists($poFile1) || !file_exists($poFile2))
+    {
         return;
     }
 
@@ -263,7 +298,8 @@ function mergePoFile($poFile1, $poFile2, $poFile3, $locale)
     exec("msgmerge -q --previous -w 80 --sort-by-file --lang=$locale -o \"$poFile3\" \"$poFile1\" \"$poFile2\"", $execoutput, $errorcode);
     abortOnError($errorcode, $errorcode);
 
-    if (file_exists($poFile3)) {
+    if (file_exists($poFile3))
+    {
         $pocontent = file_get_contents($poFile3);
         $pocontent = str_replace(
             "# SOME DESCRIPTIVE TITLE.",
@@ -282,7 +318,8 @@ function mergePoFile($poFile1, $poFile2, $poFile3, $locale)
 // Compile a PO gettext catalog to binary format (MO file)
 function compileMoFile($poFile, $moFile)
 {
-    if (!file_exists($poFile)) {
+    if (!file_exists($poFile))
+    {
         return;
     }
 
@@ -301,13 +338,19 @@ function recursiveListPHPfilesInDirectory($rootdir, $excludedir = NULL)
 {
     $list = [];
     
-    foreach (FILE\dirToArray($rootdir) as $p) {
-        if (is_dir($rootdir . DIRECTORY_SEPARATOR . $p)) {
+    foreach (FILE\dirToArray($rootdir) as $p)
+    {
+        if (is_dir($rootdir . DIRECTORY_SEPARATOR . $p))
+        {
             $process = TRUE;
-            if (is_array($excludedir)) {
-                if (count($excludedir) > 0) {
-                    foreach ($excludedir as $ed) {
-                        if (mb_substr($rootdir . DIRECTORY_SEPARATOR . $p, 0, mb_strlen($ed)) == $ed) {
+            if (is_array($excludedir))
+            {
+                if (count($excludedir) > 0)
+                {
+                    foreach ($excludedir as $ed)
+                    {
+                        if (mb_substr($rootdir . DIRECTORY_SEPARATOR . $p, 0, mb_strlen($ed)) == $ed)
+                        {
                             $process = FALSE;
 
                             break;
@@ -316,11 +359,14 @@ function recursiveListPHPfilesInDirectory($rootdir, $excludedir = NULL)
                 }
             }
             
-            if ($process) {
+            if ($process)
+            {
                 $tmp = recursiveListPHPfilesInDirectory($rootdir . DIRECTORY_SEPARATOR . $p, $excludedir);
                 $list = array_merge($list, $tmp);
             }
-        } elseif (matchExtension($p, ".php")) {
+        }
+        elseif (matchExtension($p, ".php"))
+        {
             $list[] = $rootdir . DIRECTORY_SEPARATOR . $p;
         }
     }
@@ -335,7 +381,8 @@ function matchExtension($filename, $ext)
 
 function abortOnError($errorcode)
 {
-    if ($errorcode != 0) {
+    if ($errorcode != 0)
+    {
         die("\n" . "The previous process exited with error code " . $errorcode . "\n");
     }
 }

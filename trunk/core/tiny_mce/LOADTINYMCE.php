@@ -101,10 +101,13 @@ END;
         $cssPopupPath = $this->cssPopupPath;
         $tinymcePath = $this->getIncludeTinyMceLib();
 
-        if (!empty($elements)) {
+        if (!empty($elements))
+        {
             $mode = 'mode : "exact"';
             $ids = 'elements : "' . implode(',', $elements) . '"';
-        } else {
+        }
+        else
+        {
             $mode = 'mode : "textareas"';
             $ids = 'elements : ""';
         }
@@ -171,17 +174,23 @@ END;
         $cssPopupPath = $this->cssPopupPath;
         $tinymcePath = $this->getIncludeTinyMceLib();
 
-        if (!empty($elements)) {
+        if (!empty($elements))
+        {
             $mode = 'mode : "exact"';
             $ids = 'elements : "' . implode(',', $elements) . '"';
-        } else {
+        }
+        else
+        {
             $mode = 'mode : "textareas"';
             $ids = 'elements : ""';
         }
-        if ($configurePage) {
+        if ($configurePage)
+        {
             $plugins = 'plugins : "paste,wikindxTable,wikindxLink,wikindxSpecialChars,wikindxImage,table,wikindxContextMenu"';
             $buttons2 = 'theme_advanced_buttons2 : "wikindxTable,delete_table,delete_col,delete_row,col_before,col_after,row_before,row_after,"';
-        } else {
+        }
+        else
+        {
             $plugins = 'plugins : "paste,wikindxSpecialChars"';
             $buttons2 = 'theme_advanced_buttons2 : ""';
         }
@@ -242,7 +251,8 @@ END;
         $tinymcePath = $this->getIncludeTinyMceLib();
 
         $ids = implode(',', $elements);
-        foreach ($elements as $id) {
+        foreach ($elements as $id)
+        {
             $countIdsArray[] = "'$id'";
             $countSizesArray[] = '255';
         }
@@ -294,10 +304,14 @@ END;
      */
     protected function getIncludeTinyMceLib()
     {
-        if ($this->pathLoaded) {
+        if ($this->pathLoaded)
+        {
             return '';
-        } else {
+        }
+        else
+        {
             $this->pathLoaded = TRUE;
+
             return '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/tiny_mce.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         }
     }

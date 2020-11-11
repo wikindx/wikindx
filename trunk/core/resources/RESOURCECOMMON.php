@@ -99,9 +99,11 @@ class RESOURCECOMMON
      */
     public function setHighlightPatterns()
     {
-        if ($this->session->getVar("search_Highlight") && empty($this->highlightPatterns)) {
+        if ($this->session->getVar("search_Highlight") && empty($this->highlightPatterns))
+        {
             $searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_Highlight"));
-            foreach ($searchTerms as $term) {
+            foreach ($searchTerms as $term)
+            {
                 //				$this->highlightPatterns[] = "/($term)(?!\S*\" \S*>)/ui";
                 $this->highlightPatterns[] = "/($term)(?=[^>]*(<|$))/u";
             }
@@ -116,20 +118,24 @@ class RESOURCECOMMON
      */
     public function doHighlight($text)
     {
-        if ($this->session->getVar("search_Highlight")) {
-            if (empty($this->highlightPatterns)) {
+        if ($this->session->getVar("search_Highlight"))
+        {
+            if (empty($this->highlightPatterns))
+            {
                 $this->setHighlightPatterns();
             }
             /**
              * Temporarily replace any URL - works for just one URL in the output string.
              */
             $url = FALSE;
-            if (preg_match("/(<a.*>)/Uui", $text, $match)) {
+            if (preg_match("/(<a.*>)/Uui", $text, $match))
+            {
                 $url = preg_quote($match[1], '/');
                 $text = preg_replace("/$url/u", "OSBIB__URL__OSBIB", $text);
             }
             // Recover any URL
-            if ($url) {
+            if ($url)
+            {
                 $text = str_replace("OSBIB__URL__OSBIB", $match[1], $text);
             }
             // UTF8 safe
@@ -160,24 +166,30 @@ class RESOURCECOMMON
             'resource_metadata',
             [['resourcemetadataResourceId' => 'rId']]
         ));
-        if ($countOnly) {
-        	$this->db->formatConditions(['rId' => $resourceId], TRUE);
+        if ($countOnly)
+        {
+            $this->db->formatConditions(['rId' => $resourceId], TRUE);
             $resultSet = $this->db->query($this->db->selectNoExecuteFromSubQuery(
                 FALSE,
                 'rId',
                 $this->db->subQuery($this->db->union($unions), 'u')
             ));
-            if ($this->db->numRows($resultSet)) {
+            if ($this->db->numRows($resultSet))
+            {
                 return \HTML\a(
                     'link',
                     $this->messages->text("resources", "citedResources", ' ' .
                     \HTML\nlToHtml($this->commonBib->displayBib())),
                     'index.php?action=list_LISTSOMERESOURCES_CORE&method=citeProcess&id=' . $resourceId
                 );
-            } else {
+            }
+            else
+            {
                 return FALSE;
             }
-        } else {
+        }
+        else
+        {
             return $this->db->union($unions);
         }
     }
@@ -196,39 +208,49 @@ class RESOURCECOMMON
     {
         $this->gatekeep->init();
 
-        if (trim($v['type'])) {
+        if (trim($v['type']))
+        {
             $type = $v['type'];
-        } else {
+        }
+        else
+        {
             array_push($errs, $this->error->text('inputError', 'missing', 'type'));
         }
 
         $id = FALSE;
         $tables = $this->resourceMap->getTables($type); // resource is always first value
 
-        foreach ($tables as $tableName) {
+        foreach ($tables as $tableName)
+        {
             $fieldPrefix = str_replace('_', '', $tableName);
 
             $fields = [];
-            if ($tableName == "resource") {
+            if ($tableName == "resource")
+            {
                 $fields[$fieldPrefix . 'Type'] = $type;
             }
-            if ($id !== FALSE) {
+            if ($id !== FALSE)
+            {
                 $fields[$fieldPrefix . 'Id'] = $id;
             }
 
             $keys = $this->db->listFields($tableName);
-            foreach ($keys as $key) {
+            foreach ($keys as $key)
+            {
                 $base = mb_substr($key, mb_strlen($fieldPrefix));
                 $base[0] = mb_strtolower($base[0]);
 
-                if (array_key_exists($base, $v) && trim($v[$base])) {
+                if (array_key_exists($base, $v) && trim($v[$base]))
+                {
                     $fields[$key] = $v[$base];
                 }
             }
 
             $msgKeys = $this->resourceMap->getMsgKeys($type);
-            foreach ($msgKeys as $msgKey) {
-                if (array_key_exists($msgKey, $v) && trim($v[$msgKey])) {
+            foreach ($msgKeys as $msgKey)
+            {
+                if (array_key_exists($msgKey, $v) && trim($v[$msgKey]))
+                {
                     addField(
                         $fields,
                         $fieldPrefix,
@@ -238,14 +260,18 @@ class RESOURCECOMMON
                 }
             }
             // don't add table if there is no information or if there are errors
-            if (!empty($fields) && empty($errs)) {
+            if (!empty($fields) && empty($errs))
+            {
                 $this->db->insert($tableName, array_keys($fields), array_values($fields));
 
                 // @todo I currently assume that db->insert doesn't return any errors!!!
                 // @mark -- insert, delete, select, update use SQL::query() which places db error messages in the public SQL->error string variable
-                if ($id === FALSE && $tableName == 'resource') {
+                if ($id === FALSE && $tableName == 'resource')
+                {
                     $id = $this->db->lastAutoId();
-                } elseif ($id == FALSE) {
+                }
+                elseif ($id == FALSE)
+                {
                     // @todo need to push the error onto $errors before returning FALSE
                     return FALSE;
                 }
@@ -272,14 +298,19 @@ class RESOURCECOMMON
     public function getResource($ids = FALSE, $order1 = FALSE, $order2 = FALSE, $order3 = FALSE, $subQuery = FALSE, $sqlOnly = FALSE)
     {
         $this->tableSetup();
-        if (is_array($ids)) {
+        if (is_array($ids))
+        {
             $this->db->formatConditionsOneField($ids, 'resourceId');
-        } elseif ($ids) {
+        }
+        elseif ($ids)
+        {
             $this->db->formatConditions(['resourceId' => $ids]);
         }
-        if (!$subQuery) {
+        if (!$subQuery)
+        {
             $this->db->leftJoin('resource_creator', 'resourcecreatorResourceId', 'resourceId');
-            if ($this->withUnixTimestamp) {
+            if ($this->withUnixTimestamp)
+            {
                 $subQuery = $this->db->subQuery($this->db->queryNoExecute($this->db->selectNoExecuteWithExceptions(
                     'resource',
                     array_merge(
@@ -289,7 +320,9 @@ class RESOURCECOMMON
                     ),
                     TRUE
                 )), 't1');
-            } else {
+            }
+            else
+            {
                 $subQuery = $this->db->subQuery($this->db->queryNoExecute($this->db->selectNoExecute(
                     'resource',
                     array_merge(
@@ -314,19 +347,24 @@ class RESOURCECOMMON
             'resourcemiscEditUserIdResource',
             'resourcemiscAddUserIdResource'
         ), FALSE);
-        if ($order1) {
+        if ($order1)
+        {
             $this->db->orderBy($order1, FALSE);
         }
-        if ($order2) {
+        if ($order2)
+        {
             $this->db->orderBy($order2, FALSE);
         }
-        if ($order3) {
+        if ($order3)
+        {
             $this->db->orderBy($order3, FALSE);
         }
         //		if($this->groupByResourceId)
         //			$this->db->groupBy('resourceId');
-        if ($this->withUnixTimestamp) {
-            if ($sqlOnly) {
+        if ($this->withUnixTimestamp)
+        {
+            if ($sqlOnly)
+            {
                 $fields = array_merge(
                     $this->resourceFields,
                     $this->pageFields,
@@ -364,7 +402,8 @@ class RESOURCECOMMON
                 $this->collectionFields,
                 $this->publisherFields
             );
-            if ($this->limit) {
+            if ($this->limit)
+            {
                 $this->db->limit($this->limit, 0);
             }
             //			if($this->groupByResourceId)
@@ -377,8 +416,11 @@ class RESOURCECOMMON
                 FALSE,
                 TRUE
             ));
-        } else {
-            if ($sqlOnly) {
+        }
+        else
+        {
+            if ($sqlOnly)
+            {
                 $fields = array_merge(
                     $this->resourceFields,
                     $this->pageFields,
@@ -414,7 +456,8 @@ class RESOURCECOMMON
                 $this->collectionFields,
                 $this->publisherFields
             );
-            if ($this->limit) {
+            if ($this->limit)
+            {
                 $this->db->limit($this->limit, 0);
             }
             //			if($this->groupByResourceId)

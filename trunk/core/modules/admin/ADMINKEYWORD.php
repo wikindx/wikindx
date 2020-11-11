@@ -60,27 +60,39 @@ class ADMINKEYWORD
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "adminKeywords"));
         $keywords = $this->keyword->grabAll();
         $pString = \HTML\p($this->messages->text("misc", "keywordMerge"));
-    	if (array_key_exists('message', $this->vars)) {
-    		$message = $this->vars['message'];
-    	}
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
+        }
         $pString .= $message;
-        if (is_array($keywords) && !empty($keywords)) {
-        	if (array_key_exists('keywordIds', $this->formData)) {
-        		$initialKeys = $this->formData['keywordIds'];
-        	}
-        	else {
-				foreach ($keywords as $key => $null) {
-					$initialKeys[] = $key;
-					break;
-				}
-			}
+        if (is_array($keywords) && !empty($keywords))
+        {
+            if (array_key_exists('keywordIds', $this->formData))
+            {
+                $initialKeys = $this->formData['keywordIds'];
+            }
+            else
+            {
+                foreach ($keywords as $key => $null)
+                {
+                    $initialKeys[] = $key;
+
+                    break;
+                }
+            }
             $pString .= \FORM\formHeader('admin_ADMINKEYWORD_CORE');
             $pString .= \FORM\hidden("method", "merge");
             $pString .= \HTML\tableStart('left');
             $pString .= \HTML\trStart();
             $td = \FORM\selectedBoxValueMultiple(FALSE, "keywordIds", $keywords, $initialKeys, 20) .
-                BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "multiples")), 'hint');
+                BR . \HTML\span(\HTML\aBrowse(
+                    'green',
+                    '',
+                    $this->messages->text("hint", "hint"),
+                    '#',
+                    "",
+                    $this->messages->text("hint", "multiples")
+                ), 'hint');
             $pString .= \HTML\td($td);
             $td = \FORM\textInput(
                 $this->messages->text("misc", "keywordMergeTarget"),
@@ -95,7 +107,9 @@ class ADMINKEYWORD
             $pString .= \HTML\trEnd();
             $pString .= \HTML\tableEnd();
             $pString .= \FORM\formEnd();
-        } else {
+        }
+        else
+        {
             $pString .= \HTML\p($this->messages->text("misc", "noKeywords"));
         }
         GLOBALS::addTplVar('content', $pString);
@@ -105,59 +119,76 @@ class ADMINKEYWORD
      */
     public function merge()
     {
-    	$error = '';
-        if (!array_key_exists("keywordIds", $this->vars)) {
-        	$error = $this->errors->text("inputError", "missing");
+        $error = '';
+        if (!array_key_exists("keywordIds", $this->vars))
+        {
+            $error = $this->errors->text("inputError", "missing");
         }
-        if (!array_key_exists("keywordText", $this->vars) || !\UTF8\mb_trim($this->vars['keywordText'])) {
-        	$error = $this->errors->text("inputError", "missing");
+        if (!array_key_exists("keywordText", $this->vars) || !\UTF8\mb_trim($this->vars['keywordText']))
+        {
+            $error = $this->errors->text("inputError", "missing");
         }
         $this->formData['keywordIds'] = $this->vars['keywordIds'];
         $this->formData['keywordText'] = \UTF8\mb_trim($this->vars['keywordText']);
-        if ($error) {
-        	$this->badInput->close($error, $this, 'mergeInit');
+        if ($error)
+        {
+            $this->badInput->close($error, $this, 'mergeInit');
         }
-        if (array_key_exists("glossaries", $this->vars)) {
+        if (array_key_exists("glossaries", $this->vars))
+        {
             $keywordIds = unserialize(base64_decode($this->vars['keywordIds']));
-        } else {
+        }
+        else
+        {
             $keywordIds = $this->formData['keywordIds'];
         }
         $newKeyword = $this->formData['keywordText'];
         $newKeywordId = $this->insertKeyword($newKeyword);
-// Convert keyword IDs in keyword groups
+        // Convert keyword IDs in keyword groups
         $this->db->formatConditionsOneField($keywordIds, 'userkgkeywordsKeywordId');
         $this->db->update('user_kg_keywords', ['userkgkeywordsKeywordId' => $newKeywordId]);
-// If a keyword group now has multiple entries in user_kg_keywords with the same keyword ID, remove excess rows
-		$kgs = [];
-		$this->db->formatConditions(['userkgkeywordsKeywordId' => $newKeywordId]);
-		$resultset = $this->db->select('user_kg_keywords', ['userkgkeywordsId', 'userkgkeywordsKeywordGroupId']);
-		while ($row = $this->db->fetchRow($resultset)) {
-			if (!in_array($row['userkgkeywordsKeywordGroupId'], $kgs)) {
-				$kgs[] = $row['userkgkeywordsKeywordGroupId'];
-			}
-			else {
-				$this->db->formatConditions(['userkgkeywordsId' => $row['userkgkeywordsId']]);
-				$this->db->delete('user_kg_keywords');
-			}
-		}
-        if (($index = array_search($newKeywordId, $keywordIds)) !== FALSE) {
+        // If a keyword group now has multiple entries in user_kg_keywords with the same keyword ID, remove excess rows
+        $kgs = [];
+        $this->db->formatConditions(['userkgkeywordsKeywordId' => $newKeywordId]);
+        $resultset = $this->db->select('user_kg_keywords', ['userkgkeywordsId', 'userkgkeywordsKeywordGroupId']);
+        while ($row = $this->db->fetchRow($resultset))
+        {
+            if (!in_array($row['userkgkeywordsKeywordGroupId'], $kgs))
+            {
+                $kgs[] = $row['userkgkeywordsKeywordGroupId'];
+            }
+            else
+            {
+                $this->db->formatConditions(['userkgkeywordsId' => $row['userkgkeywordsId']]);
+                $this->db->delete('user_kg_keywords');
+            }
+        }
+        if (($index = array_search($newKeywordId, $keywordIds)) !== FALSE)
+        {
             unset($keywordIds[$index]);
         }
-        if (empty($keywordIds)) { // basically, we're renaming the keyword and that's all
+        if (empty($keywordIds))
+        { // basically, we're renaming the keyword and that's all
             $this->db->formatConditions(['keywordId' => $newKeywordId]);
             $this->db->update('keyword', ['keywordKeyword' => $newKeyword]);
-        } else {
+        }
+        else
+        {
             // Check for glossary entries
-            if (!array_key_exists("glossaries", $this->vars)) {
+            if (!array_key_exists("glossaries", $this->vars))
+            {
                 $this->db->formatConditionsOneField($keywordIds, 'keywordId');
                 $resultset = $this->db->select('keyword', ['keywordId', 'keywordKeyword', 'keywordGlossary']);
                 $glossaryString = '';
-                while ($row = $this->db->fetchRow($resultset)) {
-                if ($row['keywordGlossary']) {
-	                    $glossaryString .= \HTML\p(\HTML\strong($row['keywordKeyword']) . ":&nbsp;&nbsp;" . $row['keywordGlossary']);
-	                }
+                while ($row = $this->db->fetchRow($resultset))
+                {
+                    if ($row['keywordGlossary'])
+                    {
+                        $glossaryString .= \HTML\p(\HTML\strong($row['keywordKeyword']) . ":&nbsp;&nbsp;" . $row['keywordGlossary']);
+                    }
                 }
-                if ($glossaryString) {
+                if ($glossaryString)
+                {
                     $pString = \HTML\p($this->messages->text("resources", "glossaryMerge"));
                     $pString .= \FORM\formHeader('admin_ADMINKEYWORD_CORE');
                     $pString .= \FORM\hidden("method", "merge");
@@ -179,12 +210,16 @@ class ADMINKEYWORD
             $this->db->formatConditionsOneField($keywordIds, 'keywordId');
             $this->db->delete('keyword');
             // Add or edit glossary
-            if (array_key_exists("glossary", $this->vars)) {
+            if (array_key_exists("glossary", $this->vars))
+            {
                 $glossary = \UTF8\mb_trim($this->vars['glossary']);
                 $this->db->formatConditions(['keywordId' => $newKeywordId]);
-                if ($glossary) {
+                if ($glossary)
+                {
                     $this->db->update('keyword', ['keywordGlossary' => $glossary]);
-                } else {
+                }
+                else
+                {
                     $this->db->updateNull('keyword', 'keywordGlossary');
                 }
             }
@@ -196,22 +231,31 @@ class ADMINKEYWORD
             $deleteIds = $rIds = [];
             $resultset = $this->db->select('resource_keyword', ['resourcekeywordId', 'resourcekeywordResourceId',
                 'resourcekeywordMetadataId', 'resourcekeywordKeywordId', ]);
-            while ($row = $this->db->fetchRow($resultset)) {
+            while ($row = $this->db->fetchRow($resultset))
+            {
                 if (!array_key_exists($row['resourcekeywordId'], $deleteIds) &&
                     $row['resourcekeywordResourceId'] && array_key_exists($row['resourcekeywordResourceId'], $rIds)
-                    && ($rIds[$row['resourcekeywordResourceId']] == $row['resourcekeywordKeywordId'])) {
+                    && ($rIds[$row['resourcekeywordResourceId']] == $row['resourcekeywordKeywordId']))
+                {
                     $deleteIds[] = $row['resourcekeywordId'];
-                } elseif ($row['resourcekeywordResourceId']) {
+                }
+                elseif ($row['resourcekeywordResourceId'])
+                {
                     $rIds[$row['resourcekeywordResourceId']] = $row['resourcekeywordKeywordId'];
-                } elseif (!array_key_exists($row['resourcekeywordId'], $deleteIds) &&
+                }
+                elseif (!array_key_exists($row['resourcekeywordId'], $deleteIds) &&
                     $row['resourcekeywordMetadataId'] && array_key_exists($row['resourcekeywordMetadataId'], $rIds)
-                    && ($rIds[$row['resourcekeywordMetadataId']] == $row['resourcekeywordKeywordId'])) {
+                    && ($rIds[$row['resourcekeywordMetadataId']] == $row['resourcekeywordKeywordId']))
+                {
                     $deleteIds[] = $row['resourcekeywordId'];
-                } elseif ($row['resourcekeywordMetadataId']) {
+                }
+                elseif ($row['resourcekeywordMetadataId'])
+                {
                     $rIds[$row['resourcekeywordMetadataId']] = $row['resourcekeywordKeywordId'];
                 }
             }
-            if (!empty($deleteIds)) {
+            if (!empty($deleteIds))
+            {
                 $this->db->formatConditionsOneField($deleteIds, 'resourcekeywordId');
                 $this->db->delete('resource_keyword');
             }
@@ -238,22 +282,30 @@ class ADMINKEYWORD
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete2", " (" .
             $this->messages->text("resources", "keyword") . ")"));
         $keywords = $this->keyword->grabAll();
-        if (!$keywords) {
+        if (!$keywords)
+        {
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noKeywords'));
 
             return;
         }
-    	if (array_key_exists('message', $this->vars)) {
-    		$message = $this->vars['message'];
-    	}
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
+        }
         $pString = $message;
         $pString .= \HTML\tableStart('left');
         $pString .= \HTML\trStart();
         $td = \FORM\formHeader('admin_ADMINKEYWORD_CORE');
         $td .= \FORM\hidden("method", "deleteConfirm");
         $td .= \FORM\selectFBoxValueMultiple(FALSE, "delete_KeywordId", $keywords, 20) .
-            BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "multiples")), 'hint');
+            BR . \HTML\span(\HTML\aBrowse(
+                'green',
+                '',
+                $this->messages->text("hint", "hint"),
+                '#',
+                "",
+                $this->messages->text("hint", "multiples")
+            ), 'hint');
         $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
         $td .= \FORM\formEnd();
         $pString .= \HTML\td($td);
@@ -266,7 +318,8 @@ class ADMINKEYWORD
      */
     public function deleteConfirm()
     {
-        if (!array_key_exists('delete_KeywordId', $this->vars) || !$this->vars['delete_KeywordId']) {
+        if (!array_key_exists('delete_KeywordId', $this->vars) || !$this->vars['delete_KeywordId'])
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'deleteInit');
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "delete2", " (" .
@@ -288,11 +341,13 @@ class ADMINKEYWORD
      */
     public function delete()
     {
-        if (!array_key_exists('delete_KeywordId', $this->vars) || !$this->vars['delete_KeywordId']) {
+        if (!array_key_exists('delete_KeywordId', $this->vars) || !$this->vars['delete_KeywordId'])
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'deleteInit');
         }
         $deleteIds = unserialize(base64_decode($this->vars['delete_KeywordId']));
-        foreach ($deleteIds as $deleteId) {
+        foreach ($deleteIds as $deleteId)
+        {
             // Delete old keyword
             $this->db->formatConditions(['keywordId' => $deleteId]);
             $this->db->delete('keyword');
@@ -323,7 +378,8 @@ class ADMINKEYWORD
     private function insertKeyword($keyword)
     {
         $this->keywordExists = TRUE;
-        if ($id = $this->keyword->checkExists($keyword)) {
+        if ($id = $this->keyword->checkExists($keyword))
+        {
             return $id;
         }
         $this->keywordExists = FALSE;

@@ -40,7 +40,8 @@ class CONFIGDBSTRUCTURE
      */
     public function getOne(string $field)
     {
-        if (!array_key_exists($field, WIKINDX_LIST_CONFIG_OPTIONS)) {
+        if (!array_key_exists($field, WIKINDX_LIST_CONFIG_OPTIONS))
+        {
             die('CONFIGDBSTRUCTURE->getOne(): bad config option name requested:' . $field);
         }
         $column = WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"];
@@ -67,33 +68,40 @@ class CONFIGDBSTRUCTURE
      */
     public function getData($match)
     {
-        if (!is_array($match)) {
+        if (!is_array($match))
+        {
             $match = [$match];
         }
         
-        foreach ($match as $configName) {
-	        if (!array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS)) {
-	            die('CONFIGDBSTRUCTURE->getData(): bad config option name requested:' . $configName);
-	        }
+        foreach ($match as $configName)
+        {
+            if (!array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS))
+            {
+                die('CONFIGDBSTRUCTURE->getData(): bad config option name requested:' . $configName);
+            }
         }
         
         $row = [];
         $this->db->formatConditionsOneField($match, 'configName');
         $resultSet = $this->db->select('config', '*');
-        while ($coRow = $this->db->fetchRow($resultSet)) {
+        while ($coRow = $this->db->fetchRow($resultSet))
+        {
             // NB we grab only basic configuration variables – extra rows are added e.g. by localeDescription plugin
             $configName = $coRow['configName'];
             
             // Retrieving known options only
-            if (array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS)) {
-            	$constName = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["constname"];
-            	$configType = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["type"];
-            	$configValue = $this->convertVarDB2PHP($configType, $coRow[$configType]);
+            if (array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS))
+            {
+                $constName = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["constname"];
+                $configType = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["type"];
+                $configValue = $this->convertVarDB2PHP($configType, $coRow[$configType]);
                 
                 // Unserialize the value for some options
-                if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
+                if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
+                {
                     $configValue = unserialize(base64_decode($configValue));
-                    if (!is_array($configValue)) {
+                    if (!is_array($configValue))
+                    {
                         $configValue = unserialize(base64_decode(constant($constName . "_DEFAULT")));
                     }
                 }
@@ -104,13 +112,16 @@ class CONFIGDBSTRUCTURE
         
         // During and installation the config table is not initialized before this function is called,
         // so return default values in that case
-        if (count($row) < count($match)) {
-            foreach ($match as $configName) {
+        if (count($row) < count($match))
+        {
+            foreach ($match as $configName)
+            {
                 $constName = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["constname"];
                 $value = constant($constName . "_DEFAULT");
                 
                 // Unserialize some options
-                if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
+                if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
+                {
                     $value = unserialize(base64_decode($value));
                 }
                 
@@ -128,12 +139,14 @@ class CONFIGDBSTRUCTURE
      */
     public function updateOne(string $name, $value)
     {
-        if (!array_key_exists($name, WIKINDX_LIST_CONFIG_OPTIONS)) {
+        if (!array_key_exists($name, WIKINDX_LIST_CONFIG_OPTIONS))
+        {
             die('CONFIGDBSTRUCTURE->updateOne(): bad config option name updated:' . $name);
         }
         
         // Serialize some options
-        if (in_array($name, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
+        if (in_array($name, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
+        {
             $value = base64_encode(serialize($value));
         }
         

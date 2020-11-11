@@ -65,13 +65,18 @@ class PASSWORD
             $messages->text("hint", $hintArray[$pwdStrength], $pwdSize) .
             '     ' . $messages->text("hint", 'password4')
         );
-        if (!$super) {
-            if ($usersUsername) {
-            	if (array_key_exists('usersUsername', $formData)) {
-            		$usersUsername = $formData['usersUsername'];
-            	} else {
-            		$usersUsername = FALSE; // initial display
-            	}
+        if (!$super)
+        {
+            if ($usersUsername)
+            {
+                if (array_key_exists('usersUsername', $formData))
+                {
+                    $usersUsername = $formData['usersUsername'];
+                }
+                else
+                {
+                    $usersUsername = FALSE; // initial display
+                }
                 $formText .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
                     $messages->text("user", "username"),
                     "usersUsername",
@@ -94,10 +99,13 @@ class PASSWORD
                 15,
                 255
             ));
-        } else {
+        }
+        else
+        {
             // superadmin from My Wikindx menu
-            if (array_key_exists('usersUsername', $formData)) {
-            	$usersUsername = $formData['usersUsername'];
+            if (array_key_exists('usersUsername', $formData))
+            {
+                $usersUsername = $formData['usersUsername'];
             }
             $formText .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
                 $messages->text("config", "superUsername"),

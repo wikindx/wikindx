@@ -43,9 +43,12 @@ class INSERTCITATION
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
-        if (!empty($_POST)) {
+        if (!empty($_POST))
+        {
             $this->vars = $_POST;
-        } elseif (!empty($_GET)) {
+        }
+        elseif (!empty($_GET))
+        {
             $this->vars = $_GET;
         }
         GLOBALS::setVars($this->vars, $this->vars);
@@ -71,30 +74,36 @@ class INSERTCITATION
     public function init($error = FALSE)
     {
         //First check, do we have resources?
-        if (!$this->db->selectFirstField('database_summary', 'databaseSummaryTotalResources')) {
+        if (!$this->db->selectFirstField('database_summary', 'databaseSummaryTotalResources'))
+        {
             $pString = $this->messages->text('misc', 'noResources');
             GLOBALS::addTplVar('content', $pString);
             FACTORY_CLOSEPOPUP::getInstance();
         }
-        if (!array_key_exists('PagingStart', $this->vars)) { // reset paging counter and clear session
+        if (!array_key_exists('PagingStart', $this->vars))
+        { // reset paging counter and clear session
             $this->session->delVar("mywikindx_PagingStart");
             $this->session->delVar("mywikindx_PagingStartAlpha");
         }
         $pString = $error ? $error : '';
         $pString .= \HTML\h($this->messages->text("heading", "addCitation"), FALSE, 3);
-        if (!array_key_exists('method', $this->vars)) {
+        if (!array_key_exists('method', $this->vars))
+        {
             $pString .= $this->search->init(FALSE, FALSE, TRUE, $this->session->getVar("search_Word"));
             $this->session->delVar("list_AllIds");
             $this->session->delVar("list_PagingAlphaLinks");
         }
-        else {
-			if ($this->vars['method'] == 'reprocess') {
-				$this->reprocess = TRUE;
-        		$this->search->input = $this->session->getArray("search");
-			}
-			else {
-	        	$this->search->input = $this->checkInput();
-	        }
+        else
+        {
+            if ($this->vars['method'] == 'reprocess')
+            {
+                $this->reprocess = TRUE;
+                $this->search->input = $this->session->getArray("search");
+            }
+            else
+            {
+                $this->search->input = $this->checkInput();
+            }
             $pString .= $this->search->init(FALSE, FALSE, TRUE, $this->session->getVar("search_Word"));
             $pString .= \HTML\hr();
             $pString .= $this->process();
@@ -114,12 +123,14 @@ class INSERTCITATION
         $this->stmt->listType = 'search';
         $this->search->input['Partial'] = TRUE;
         $queryString = 'dialog.php?method=reprocess';
-        if (!$this->search->getIds($this->reprocess, $queryString)) {
-        	return FALSE;
+        if (!$this->search->getIds($this->reprocess, $queryString))
+        {
+            return FALSE;
         }
         $sql = $this->search->getFinalSql($this->reprocess, $queryString);
         $found = $this->common->display($sql, 'cite');
-        if ($found) {
+        if ($found)
+        {
             $citeFields['formheader'] = \FORM\formHeaderName('', 'citeForm');
             $citeFields['pageStart'] = $this->messages->text("cite", "pages") . "&nbsp;&nbsp;" .
                 \FORM\textInput(FALSE, 'pageStart', FALSE, 6, 5);
@@ -134,7 +145,9 @@ class INSERTCITATION
             GLOBALS::addTplVar('citeFields', $citeFields);
 
             return FALSE;
-        } else {
+        }
+        else
+        {
             return \HTML\p($this->messages->text("resources", "noResult"));
         }
     }
@@ -144,26 +157,32 @@ class INSERTCITATION
     private function writeSession()
     {
         // First, write all input with 'search_' prefix to session
-        foreach ($this->vars as $key => $value) {
-            if (preg_match("/^search_/u", $key)) {
+        foreach ($this->vars as $key => $value)
+        {
+            if (preg_match("/^search_/u", $key))
+            {
                 $key = str_replace('search_', '', $key);
                 // Is this a multiple select box input?  If so, multiple choices are written to session as
                 // comma-delimited string (no spaces).
                 // Don't write any FALSE or '0' values.
-                if (is_array($value)) {
-                    if (!$value[0] || ($value[0] == $this->messages->text("misc", "ignore"))) {
+                if (is_array($value))
+                {
+                    if (!$value[0] || ($value[0] == $this->messages->text("misc", "ignore")))
+                    {
                         unset($value[0]);
                     }
                     $value = implode(",", $value);
                 }
-                if (!trim($value)) {
+                if (!trim($value))
+                {
                     continue;
                 }
                 $temp[$key] = trim($value);
             }
         }
         $this->session->clearArray("search");
-        if (!empty($temp)) {
+        if (!empty($temp))
+        {
             $this->session->writeArray($temp, 'search');
         }
     }
@@ -178,7 +197,8 @@ class INSERTCITATION
     {
         $this->writeSession();
         if ((array_key_exists("search_Word", $this->vars) && !\UTF8\mb_trim($this->vars["search_Word"]))
-            || !$this->session->getVar("search_Word")) {
+            || !$this->session->getVar("search_Word"))
+        {
             $pString = $this->errors->text("inputError", "missing");
             $pString .= \HTML\h($this->messages->text("heading", "addCitation"), FALSE, 3);
             $pString .= $this->search->init(FALSE, FALSE, TRUE);

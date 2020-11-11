@@ -87,7 +87,8 @@ date_default_timezone_set(@date_default_timezone_get());
 
 
 // Check PHP minimum version and above.
-if (version_compare(PHP_VERSION, WIKINDX_PHP_VERSION_MIN, '<')) {
+if (version_compare(PHP_VERSION, WIKINDX_PHP_VERSION_MIN, '<'))
+{
     $PHPVersion = PHP_VERSION;
     $PHPVersionMin = WIKINDX_PHP_VERSION_MIN;
     $SourceFile = __FILE__;
@@ -128,7 +129,8 @@ $MandatoryExtensions = \UTILS\listCoreMandatoryPHPExtensions();
 $InstalledExtensions = get_loaded_extensions();
 $MissingExtensions = array_diff($MandatoryExtensions, $InstalledExtensions);
 
-if (count($MissingExtensions) > 0) {
+if (count($MissingExtensions) > 0)
+{
     $EnabledExtensions = array_intersect($MandatoryExtensions, $InstalledExtensions);
     $ListExtensions = '<tr><td>' . implode('</td><td style="color:red">DISABLED</td></tr><tr><td>', $MissingExtensions) . '<td style="color:red">DISABLED</td></tr>';
     $ListExtensions .= '<tr><td>' . implode('</td><td style="color:green">ENABLED</td></tr><tr><td>', $EnabledExtensions) . '<td style="color:green">ENABLED</td></tr>';
@@ -166,12 +168,14 @@ EOM;
 }
 
 // Check PHP execution environnement (CLI isn't supported)
-if (PHP_SAPI === 'cli') {
+if (PHP_SAPI === 'cli')
+{
     die("WIKINDX doesn't support CLI execution.");
 }
 
 // Check for presence of config.php
-if (!is_file(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]))) {
+if (!is_file(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"])))
+{
     $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
@@ -209,7 +213,8 @@ EOM;
 // Include the config file and check if the CONFIG class is in place
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]));
 
-if (!class_exists("CONFIG")) {
+if (!class_exists("CONFIG"))
+{
     $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
     $msg = <<<EOM
 <!DOCTYPE html>
@@ -245,33 +250,42 @@ EOM;
 }
 
 // Create components directories
-foreach ([WIKINDX_DIR_COMPONENT_PLUGINS, WIKINDX_DIR_COMPONENT_STYLES, WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_DIR_COMPONENT_VENDOR] as $dir) {
+foreach ([WIKINDX_DIR_COMPONENT_PLUGINS, WIKINDX_DIR_COMPONENT_STYLES, WIKINDX_DIR_COMPONENT_TEMPLATES, WIKINDX_DIR_COMPONENT_VENDOR] as $dir)
+{
     $dir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, $dir]);
-    if (!file_exists($dir)) {
+    if (!file_exists($dir))
+    {
         // Continue without error, a procedure checks the permissions further.
-        if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
+        if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
+        {
             echo "<div>Directory <strong>" . $dir . "</strong> has not been created. Check permissions.</div>\n";
         }
     }
 }
 
 // Create data directories
-foreach ([WIKINDX_DIR_DATA, WIKINDX_DIR_DATA_ATTACHMENTS, WIKINDX_DIR_DATA_FILES, WIKINDX_DIR_DATA_IMAGES, WIKINDX_DIR_DATA_PLUGINS] as $dir) {
+foreach ([WIKINDX_DIR_DATA, WIKINDX_DIR_DATA_ATTACHMENTS, WIKINDX_DIR_DATA_FILES, WIKINDX_DIR_DATA_IMAGES, WIKINDX_DIR_DATA_PLUGINS] as $dir)
+{
     $dir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, $dir]);
-    if (!file_exists($dir)) {
+    if (!file_exists($dir))
+    {
         // Continue without error, a procedure checks the permissions further.
-        if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
+        if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
+        {
             echo "<div>Directory <strong>" . $dir . "</strong> has not been created. Check permissions.</div>\n";
         }
     }
 }
 
 // Create cache directories
-foreach ([WIKINDX_DIR_CACHE, WIKINDX_DIR_CACHE_FILES, WIKINDX_DIR_CACHE_ATTACHMENTS, WIKINDX_DIR_CACHE_LANGUAGES, WIKINDX_DIR_CACHE_PLUGINS, WIKINDX_DIR_CACHE_STYLES, WIKINDX_DIR_CACHE_TEMPLATES] as $dir) {
+foreach ([WIKINDX_DIR_CACHE, WIKINDX_DIR_CACHE_FILES, WIKINDX_DIR_CACHE_ATTACHMENTS, WIKINDX_DIR_CACHE_LANGUAGES, WIKINDX_DIR_CACHE_PLUGINS, WIKINDX_DIR_CACHE_STYLES, WIKINDX_DIR_CACHE_TEMPLATES] as $dir)
+{
     $dir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, $dir]);
-    if (!file_exists($dir)) {
+    if (!file_exists($dir))
+    {
         // Continue without error, a procedure checks the permissions further.
-        if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
+        if (!@mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
+        {
             echo "<div>Directory <strong>" . $dir . "</strong> has not been created. Check permissions.</div>\n";
         }
     }
@@ -279,18 +293,23 @@ foreach ([WIKINDX_DIR_CACHE, WIKINDX_DIR_CACHE_FILES, WIKINDX_DIR_CACHE_ATTACHME
 
 // Create data and cache directories of plugins
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "FILE.php"]));
-foreach (\FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS])) as $dir) {
+foreach (\FILE\dirInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS])) as $dir)
+{
     $plugencachedir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_PLUGINS, basename($dir)]);
-    if (!file_exists($plugencachedir)) {
+    if (!file_exists($plugencachedir))
+    {
         // Continue without error, a procedure checks the permissions further.
-        if (!@mkdir($plugencachedir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
+        if (!@mkdir($plugencachedir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
+        {
             echo "<div>Directory <strong>" . $plugencachedir . "</strong> has not been created. Check permissions.</div>\n";
         }
     }
     $plugendatadir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_PLUGINS, basename($dir)]);
-    if (!file_exists($plugendatadir)) {
+    if (!file_exists($plugendatadir))
+    {
         // Continue without error, a procedure checks the permissions further.
-        if (!@mkdir($plugendatadir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
+        if (!@mkdir($plugendatadir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
+        {
             echo "<div>Directory <strong>" . $plugendatadir . "</strong> has not been created. Check permissions.</div>\n";
         }
     }
@@ -329,11 +348,13 @@ FACTORY_LOADCONFIG::getInstance();
 $authorize = FACTORY_AUTHORIZE::getInstance();
 
 // Attempt an upgrade only if we are on the main script
-if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE) {
+if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_NAME']) === FALSE)
+{
     include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "UPDATE.php"]));
 
     // Do database upgrade check
-    if (\UPDATE\needUpdate(FACTORY_DB::getInstance())) {
+    if (\UPDATE\needUpdate(FACTORY_DB::getInstance()))
+    {
         // Force the update of the components.json files in case WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"] change
         \UTILS\refreshComponentsListCache(TRUE);
         // Upgrade database
@@ -358,6 +379,7 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "LOCALES.php"]
 
 $vars = GLOBALS::getVars();
 
-if (array_key_exists('action', $vars) && ($vars['action'] == 'continueExecution')) {
+if (array_key_exists('action', $vars) && ($vars['action'] == 'continueExecution'))
+{
     unset($vars['action']);
 }

@@ -44,7 +44,8 @@ class BROWSEBIBLIOGRAPHY
         $this->gatekeep->init(); // No Read-only access allowed
         $this->sum = $this->bibs = [];
         $this->getBibliographies();
-        if (empty($this->bibs)) {
+        if (empty($this->bibs))
+        {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noBibliographies"));
 
             return;
@@ -62,11 +63,13 @@ class BROWSEBIBLIOGRAPHY
     public function getBibliographies()
     {
         $array = $this->commonBib->getUserBibs();
-        foreach ($array as $id => $title) {
+        foreach ($array as $id => $title)
+        {
             $this->collate($id, $title);
         }
         $array = $this->commonBib->getGroupBibs();
-        foreach ($array as $id => $title) {
+        foreach ($array as $id => $title)
+        {
             $this->collate($id, $title);
         }
     }
@@ -81,7 +84,8 @@ class BROWSEBIBLIOGRAPHY
         $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $id]);
         $recordset = $this->db->selectCountDistinctField('user_bibliography_resource', 'userbibliographyresourceId');
         $count = $this->db->fetchOne($recordset);
-        if ($count) {
+        if ($count)
+        {
             $this->bibs[$id] = preg_replace("/{(.*)}/Uu", "$1", \HTML\nlToHtml($title));
             $this->sum[$id] = $count;
         }
@@ -95,7 +99,8 @@ class BROWSEBIBLIOGRAPHY
     {
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
-        foreach ($this->bibs as $id => $name) {
+        foreach ($this->bibs as $id => $name)
+        {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .

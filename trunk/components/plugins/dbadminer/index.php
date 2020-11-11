@@ -46,14 +46,16 @@ class dbadminer_MODULE
         $this->config = new dbadminer_CONFIG();
         $this->session = FACTORY_SESSION::getInstance();
         $this->authorize = $this->config->authorize;
-        if ($menuInit) {
+        if ($menuInit)
+        {
             $this->makeMenu($this->config->menus);
 
             return; // Need do nothing more as this is simply menu initialisation.
         }
 
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->authorize))
+        { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
 

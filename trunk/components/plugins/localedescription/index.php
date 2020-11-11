@@ -23,10 +23,10 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "s
 
 class localedescription_MODULE
 {
-    private $db;
-    private $vars;
     public $authorize;
     public $menus;
+    private $db;
+    private $vars;
     private $pluginmessages;
     private $coremessages;
 
@@ -45,14 +45,16 @@ class localedescription_MODULE
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->config = new localedescription_CONFIG();
         $this->authorize = $this->config->authorize;
-        if ($menuInit) { // portion of constructor used for menu initialisation
+        if ($menuInit)
+        { // portion of constructor used for menu initialisation
             $this->makeMenu($this->config->menus);
 
             return; // need do nothing more.
         }
 
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->authorize))
+        { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
 
@@ -69,33 +71,42 @@ class localedescription_MODULE
      * display select box to choose localization
      *
      * @param mixed $message
-     *
      */
     public function display($message = FALSE)
     {
-        if (array_key_exists('message', $this->vars)) {
+        if (array_key_exists('message', $this->vars))
+        {
             $pString = $this->vars['message'];
-        } else {
-        	$pString = $message;
         }
-        if (array_key_exists('language', $this->vars)) {
+        else
+        {
+            $pString = $message;
+        }
+        if (array_key_exists('language', $this->vars))
+        {
             $language = $this->vars['language'];
-        } else {
-        	$language = FALSE;
+        }
+        else
+        {
+            $language = FALSE;
         }
         $pString .= FORM\formHeader("localedescription_edit");
         $pString .= HTML\p($this->pluginmessages->text("text1"));
         $languages = \LOCALES\getSystemLocales();
-        if ((count($languages) == 1) && array_key_exists(WIKINDX_LANGUAGE_DEFAULT, $languages)) {
+        if ((count($languages) == 1) && array_key_exists(WIKINDX_LANGUAGE_DEFAULT, $languages))
+        {
             GLOBALS::addTplVar('content', HTML\p($this->pluginmessages->text("onlyEnglish"), "error", "center"));
             FACTORY_CLOSE::getInstance();
         }
         unset($languages[WIKINDX_LANGUAGE_DEFAULT]);
-        if (!$language) {
-        	foreach ($languages as $lang => $null) {
-        		$language = $lang;
-        		break;
-        	}
+        if (!$language)
+        {
+            foreach ($languages as $lang => $null)
+            {
+                $language = $lang;
+
+                break;
+            }
         }
         $size = count($languages) > 5 ? 5 : count($languages);
         $pString .= HTML\p(FORM\selectedBoxValue(
@@ -114,13 +125,15 @@ class localedescription_MODULE
      */
     public function edit()
     {
-        if (!array_key_exists('language', $this->vars)) {
+        if (!array_key_exists('language', $this->vars))
+        {
             $this->display(HTML\p($this->pluginmessages->text("missingLanguage"), "error", "center"));
             FACTORY_CLOSE::getInstance();
         }
         $field = 'configDescription_' . $this->vars['language'];
         $this->db->formatConditions(['configName' => $field]);
-        if ($input = $this->db->fetchOne($this->db->select('config', 'configText'))) {
+        if ($input = $this->db->fetchOne($this->db->select('config', 'configText')))
+        {
             $input = HTML\nlToHtml($input);
         }
         $original = HTML\nlToHtml(WIKINDX_DESCRIPTION);
@@ -147,19 +160,24 @@ class localedescription_MODULE
         $this->db->formatConditions(['configName' => $field]);
         $resultSet = $this->db->select('config', '*');
         $exists = $this->db->numRows($resultSet);
-        if (!array_key_exists('description', $this->vars) || !\UTF8\mb_trim($this->vars['description'])) { // delete row if it exists in table
-            if ($exists) {
+        if (!array_key_exists('description', $this->vars) || !\UTF8\mb_trim($this->vars['description']))
+        { // delete row if it exists in table
+            if ($exists)
+            {
                 $this->db->formatConditions(['configName' => $field]);
                 $this->db->delete('config');
             }
             header("Location: index.php?action=localedescription_init&message=$message&language=" . $this->vars['language']);
-        	die;
+            die;
         }
         // something to write
-        if ($exists) {
+        if ($exists)
+        {
             $this->db->formatConditions(['configName' => $field]);
             $this->db->update('config', ['configText' => \UTF8\mb_trim($this->vars['description'])]);
-        } else {
+        }
+        else
+        {
             $this->db->insert('config', ['configName', 'configText'], [$field, \UTF8\mb_trim($this->vars['description'])]);
         }
         header("Location: index.php?action=localedescription_init&message=$message&language=" . $this->vars['language']);

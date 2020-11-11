@@ -25,8 +25,10 @@ class LOADPLUGINS
      */
     public function readPluginsDirectory()
     {
-        if (count(self::$moduleList) == 0) {
-            foreach (\UTILS\readComponentsList() as $cmp) {
+        if (count(self::$moduleList) == 0)
+        {
+            foreach (\UTILS\readComponentsList() as $cmp)
+            {
                 // Load only:
                 if (
                        $cmp["component_type"] == "plugin" // Components of plugin type
@@ -52,9 +54,11 @@ class LOADPLUGINS
     {
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_PLUGINS, $dir, "config.php"]));
         $class = $dir . "_CONFIG";
-        if (class_exists($class)) {
+        if (class_exists($class))
+        {
             $config = new $class();
-            if (property_exists($config, "wikindxVersion") && ($config->wikindxVersion == WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"])) {
+            if (property_exists($config, "wikindxVersion") && ($config->wikindxVersion == WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"]))
+            {
                 return TRUE;
             }
         }

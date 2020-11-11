@@ -65,15 +65,18 @@ class BROWSECATEGORY
         $this->db->leftJoin('category', 'categoryId', 'resourcecategoryCategoryId');
         $this->db->orderBy('categoryCategory');
         $recordset = $this->db->selectFromSubQuery(FALSE, ['categoryId', 'categoryCategory', 'count'], $subQ);
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $this->collate($row);
         }
         // Place 'General' first
-        if (array_key_exists(1, $this->category)) {
+        if (array_key_exists(1, $this->category))
+        {
             $general[1] = $this->category[1];
             unset($this->category[1]);
         }
-        foreach ($this->category as $id => $category) {
+        foreach ($this->category as $id => $category)
+        {
             $general[$id] = $category;
         }
         $this->category = $general;
@@ -101,7 +104,8 @@ class BROWSECATEGORY
     {
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
-        foreach ($this->category as $id => $name) {
+        foreach ($this->category as $id => $name)
+        {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .

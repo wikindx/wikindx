@@ -49,16 +49,23 @@ class ATTACHMENT
         $icons = FACTORY_LOADICONS::getInstance();
         $session = FACTORY_SESSION::getInstance();
 
-        if (!$list) {
-            if (!$hyperlink) {
+        if (!$list)
+        {
+            if (!$hyperlink)
+            {
                 return "index.php?action=attachments_ATTACHMENTS_CORE" .
                     htmlentities("&method=downloadAttachment&id=$id&resourceId=$resourceId&filename=" .
                     $row['resourceattachmentsHashFilename']);
-            } else {
-                if (array_key_exists('resourceattachmentsFileName', $row) && !empty($row['resourceattachmentsFileName'])) {
+            }
+            else
+            {
+                if (array_key_exists('resourceattachmentsFileName', $row) && !empty($row['resourceattachmentsFileName']))
+                {
                     $name = \HTML\nlToHtml($row['resourceattachmentsFileName']) . " " .
                     $icons->getIconForAFileExtension($row['resourceattachmentsFileName']);
-                } else {
+                }
+                else
+                {
                     $name = $icons->getHTML("file");
                 }
 
@@ -66,23 +73,34 @@ class ATTACHMENT
                     htmlentities("&method=downloadAttachment&id=$id&resourceId=$resourceId&filename=" .
                     $row['resourceattachmentsHashFilename']), "_new");
             }
-        } else {
-            if (array_key_exists('resourceattachmentsFileName', $row) && !empty($row['resourceattachmentsFileName'])) {
+        }
+        else
+        {
+            if (array_key_exists('resourceattachmentsFileName', $row) && !empty($row['resourceattachmentsFileName']))
+            {
                 $name = \HTML\nlToHtml($row['resourceattachmentsFileName']) . " " .
                     $icons->getIconForAFileExtension($row['resourceattachmentsFileName']);
                 $label = $row['resourceattachmentsFileName'];
-            } else {
-                if ($reduce) {
+            }
+            else
+            {
+                if ($reduce)
+                {
                     $name = \FORM\reduceLongText(\HTML\nlToHtml($row['resourceattachmentsFileName']));
-                } else {
+                }
+                else
+                {
                     $name = \HTML\nlToHtml($row['resourceattachmentsFileName']);
                 }
             }
-            if (!$hyperlink) {
+            if (!$hyperlink)
+            {
                 return "index.php?action=attachments_ATTACHMENTS_CORE" .
                     htmlentities("&method=downloadAttachment&id=$id&resourceId=$resourceId&filename=" .
                     $row['resourceattachmentsHashFilename']);
-            } else {
+            }
+            else
+            {
                 return \HTML\a('link', $name, "index.php?action=attachments_ATTACHMENTS_CORE" .
                     htmlentities("&method=downloadAttachment&id=$id&resourceId=$resourceId&filename=" .
                     $row['resourceattachmentsHashFilename']), "_new");
@@ -103,9 +121,11 @@ class ATTACHMENT
         $this->db->orderBy('resourceattachmentsFileName');
         $recordSet = $this->db->select('resource_attachments', ['resourceattachmentsHashFilename',
             'resourceattachmentsFileName', 'resourceattachmentsPrimary', ]);
-        while ($row = $this->db->fetchRow($recordSet)) {
+        while ($row = $this->db->fetchRow($recordSet))
+        {
             $array[$row['resourceattachmentsHashFilename']] = \HTML\dbToFormTidy($row['resourceattachmentsFileName']);
-            if ($row['resourceattachmentsPrimary'] == 'Y') {
+            if ($row['resourceattachmentsPrimary'] == 'Y')
+            {
                 $this->primary = $row['resourceattachmentsHashFilename'];
             }
         }
@@ -125,7 +145,8 @@ class ATTACHMENT
         $this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => $id]);
         $this->db->formatConditions(['statisticsattachmentdownloadsMonth' => $month]);
         // insert new month row for this attachment
-        if (!$this->db->selectFirstRow('statistics_attachment_downloads', ['statisticsattachmentdownloadsCount'])) {
+        if (!$this->db->selectFirstRow('statistics_attachment_downloads', ['statisticsattachmentdownloadsCount']))
+        {
             $this->db->insert(
                 'statistics_attachment_downloads',
                 ['statisticsattachmentdownloadsResourceId',
@@ -137,7 +158,9 @@ class ATTACHMENT
                     $month,
                     1, ]
             );
-        } else {
+        }
+        else
+        {
             $this->db->formatConditions(['statisticsattachmentdownloadsResourceId' => $resourceId]);
             $this->db->formatConditions(['statisticsattachmentdownloadsAttachmentId' => $id]);
             $this->db->formatConditions(['statisticsattachmentdownloadsMonth' => $month]);
@@ -156,18 +179,23 @@ class ATTACHMENT
         // Delete uncorrelated rows
         $deletes = [];
         $recordSet = $this->db->select('resource_attachments', ['resourceattachmentsId', 'resourceattachmentsHashFilename']);
-        while ($row = $this->db->fetchRow($recordSet)) {
+        while ($row = $this->db->fetchRow($recordSet))
+        {
             $fileName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $row['resourceattachmentsHashFilename']]);
-            if (!file_exists($fileName)) {
+            if (!file_exists($fileName))
+            {
                 $deletes[] = $row['resourceattachmentsId'];
                 $fileNameCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS, $row['resourceattachmentsHashFilename']]);
-                if (file_exists($fileNameCache)) {
+                if (file_exists($fileNameCache))
+                {
                     @unlink($fileNameCache);
                 }
             }
         }
-        if (!empty($deletes)) {
-            foreach ($deletes as $id) {
+        if (!empty($deletes))
+        {
+            foreach ($deletes as $id)
+            {
                 $this->db->formatConditions(["resourceattachmentsId" => $id]);
                 $this->db->delete('resource_attachments');
             }
@@ -175,19 +203,25 @@ class ATTACHMENT
         // Delete uncorrelated attachments
         $deletes = $files = [];
         $cdir = FILE\dirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]));
-        if (count($cdir) > 0) {
-            foreach ($cdir as $v) {
-                if (is_file(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $v]))) {
+        if (count($cdir) > 0)
+        {
+            foreach ($cdir as $v)
+            {
+                if (is_file(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $v])))
+                {
                     $files[] = $v;
                 }
             }
-            foreach ($files as $file) {
+            foreach ($files as $file)
+            {
                 $this->db->formatConditions(['resourceattachmentsHashFilename' => $file]);
-                if (!$this->db->numRows($this->db->select('resource_attachments', 'resourceattachmentsId'))) {
+                if (!$this->db->numRows($this->db->select('resource_attachments', 'resourceattachmentsId')))
+                {
                     $deletes[] = $file;
                 }
             }
-            foreach ($deletes as $file) {
+            foreach ($deletes as $file)
+            {
                 @unlink(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $file]));
                 @unlink(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS, $file]));
             }

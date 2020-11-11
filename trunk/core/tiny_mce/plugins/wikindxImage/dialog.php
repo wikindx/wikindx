@@ -15,7 +15,7 @@
  */
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "startup", "WEBSERVERCONFIG.php"]));
 
-$script  = '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/tiny_mce_popup.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+$script = '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/tiny_mce_popup.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
 $script .= '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/plugins/' . basename(__DIR__) . '/js/wikindxImagedialog.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
 GLOBALS::addTplVar('scripts', $script);
 
@@ -45,14 +45,17 @@ class imageDialog
         $pString .= \HTML\hr();
         $pString .= \HTML\p();
         GLOBALS::addTplVar('content', $pString);
-        if (WIKINDX_IMAGES_ALLOW) {
+        if (WIKINDX_IMAGES_ALLOW)
+        {
             // As user can upload images, we check again that user is registered
-            if ($this->session->getVar("setup_UserId")) {
+            if ($this->session->getVar("setup_UserId"))
+            {
 //
                 // This is where the system is activated.
                 // We check if the user wants an image and show it. If not, we show the explorer.
 //
-                if (!ImageServer::showImage()) {
+                if (!ImageServer::showImage())
+                {
                     $encodeExplorer = new EncodeExplorer();
                     $encodeExplorer->init();
                     $location = new Location();

@@ -45,20 +45,26 @@ class BROWSECREATOR
     {
         $this->sum = $this->surname = $this->prefix = $this->sameAs = $this->alias = [];
         $this->getCreators();
-        if (empty($this->surname)) {
+        if (empty($this->surname))
+        {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noCreators"));
 
             return;
         }
         $this->surname = $this->common->paging($this->surname);
-        foreach ($this->surname as $id => $surname) {
-            if (!empty($this->prefix) && array_key_exists($id, $this->prefix)) {
+        foreach ($this->surname as $id => $surname)
+        {
+            if (!empty($this->prefix) && array_key_exists($id, $this->prefix))
+            {
                 $this->surname[$id] = $this->prefix[$id] . ' ' . $surname;
                 $findName = $this->prefix[$id] . $surname;
-            } else {
+            }
+            else
+            {
                 $findName = $surname;
             }
-            if (!array_key_exists($findName, $this->collectedSurnames) || ($this->collectedSurnames[$findName] == 1)) {
+            if (!array_key_exists($findName, $this->collectedSurnames) || ($this->collectedSurnames[$findName] == 1))
+            {
                 unset($this->initials[$id]);
             }
         }
@@ -75,9 +81,12 @@ class BROWSECREATOR
     private function process()
     {
         $links = [];
-        foreach ($this->surname as $id => $name) {
-            if (is_array($this->initials)) {
-                if (array_key_exists($id, $this->initials)) {
+        foreach ($this->surname as $id => $name)
+        {
+            if (is_array($this->initials))
+            {
+                if (array_key_exists($id, $this->initials))
+                {
                     $name .= $this->initials[$id];
                 }
             }
@@ -106,30 +115,39 @@ class BROWSECREATOR
         $this->db->orderBy('creatorSurname');
         $recordset = $this->db->selectCounts(FALSE, 'resourcecreatorCreatorId', ['creatorPrefix', 'creatorSurname',
             'creatorSameAs', 'creatorInitials', 'creatorFirstname', ], $this->db->subQuery($subSql, 'rc', FALSE), FALSE);
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $this->collate($row);
         }
-        foreach ($this->sameAs as $id => $sameAsId) {
-            if (!array_key_exists($sameAsId, $this->surname)) {
+        foreach ($this->sameAs as $id => $sameAsId)
+        {
+            if (!array_key_exists($sameAsId, $this->surname))
+            {
                 continue;
             }
-            if (!array_key_exists($sameAsId, $this->prefix)) {
+            if (!array_key_exists($sameAsId, $this->prefix))
+            {
                 $this->prefix[$sameAsId] = '';
             }
             $this->db->formatConditions(['creatorId' => $id]);
             $row = $this->db->selectFirstRow('creator', ['creatorPrefix', 'creatorSurname']);
             $surname = preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorSurname']));
             $prefix = preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorPrefix']));
-            if ($prefix !== FALSE) {
+            if ($prefix !== FALSE)
+            {
                 $prefix .= ' ';
             }
             $name = $prefix . $surname;
-            if ($this->prefix[$sameAsId] . ' ' . $this->surname[$sameAsId] == $name) {
+            if ($this->prefix[$sameAsId] . ' ' . $this->surname[$sameAsId] == $name)
+            {
                 continue;
             }
-            if (!array_key_exists($sameAsId, $this->alias)) {
+            if (!array_key_exists($sameAsId, $this->alias))
+            {
                 $this->alias[$sameAsId][] = $name;
-            } elseif (array_search($name, $this->alias[$sameAsId]) === FALSE) {
+            }
+            elseif (array_search($name, $this->alias[$sameAsId]) === FALSE)
+            {
                 $this->alias[$sameAsId][] = $name;
             }
         }
@@ -145,11 +163,14 @@ class BROWSECREATOR
      */
     private function collate($row)
     {
-        if (!trim($row['creatorSurname'])) {
+        if (!trim($row['creatorSurname']))
+        {
             return;
         }
-        if ($row['creatorSameAs']) {
-            if (!array_key_exists($row['creatorSameAs'], $this->sum)) {
+        if ($row['creatorSameAs'])
+        {
+            if (!array_key_exists($row['creatorSameAs'], $this->sum))
+            {
                 $this->sum[$row['creatorSameAs']] = 0;
             }
             $this->sum[$row['creatorSameAs']] += $row['count'];
@@ -159,27 +180,36 @@ class BROWSECREATOR
         }
         $surname = preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorSurname']));
         $prefix = preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorPrefix']));
-        if (!array_key_exists($prefix . $surname, $this->collectedSurnames)) {
+        if (!array_key_exists($prefix . $surname, $this->collectedSurnames))
+        {
             $this->collectedSurnames[$prefix . $surname] = 1;
-        } else {
+        }
+        else
+        {
             $this->collectedSurnames[$prefix . $surname]++;
         }
-        if ($row['creatorFirstname'] || $row['creatorInitials']) {
+        if ($row['creatorFirstname'] || $row['creatorInitials'])
+        {
             $firstname = FALSE;
-            if ($row['creatorFirstname']) {
+            if ($row['creatorFirstname'])
+            {
                 $split = preg_split('/(?<!^)(?!$)/u', preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorFirstname'])));
                 $firstname = $split[0] . '.';
             }
-            if ($row['creatorInitials']) {
+            if ($row['creatorInitials'])
+            {
                 $this->initials[$row['resourcecreatorCreatorId']] = ', ' . $firstname .
                     str_replace(' ', '.', preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorInitials']))) . '.';
-            } else {
+            }
+            else
+            {
                 $this->initials[$row['resourcecreatorCreatorId']] = ', ' . $firstname;
             }
         }
         $this->surname[$row['resourcecreatorCreatorId']] = $surname;
         $this->prefix[$row['resourcecreatorCreatorId']] = $prefix;
-        if (!array_key_exists($row['resourcecreatorCreatorId'], $this->sum)) {
+        if (!array_key_exists($row['resourcecreatorCreatorId'], $this->sum))
+        {
             $this->sum[$row['resourcecreatorCreatorId']] = 0;
         }
         $this->sum[$row['resourcecreatorCreatorId']] += $row['count'];

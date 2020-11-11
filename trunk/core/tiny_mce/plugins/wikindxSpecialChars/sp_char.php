@@ -72,7 +72,7 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "startup",
 	}
 	</style>
 	
-    <script src="<?php echo WIKINDX_URL_BASE . "/" . WIKINDX_URL_COMPONENT_VENDOR; ?>/jquery/jquery.min.js?ver=<?=WIKINDX_PUBLIC_VERSION?>"></script>
+    <script src="<?php echo WIKINDX_URL_BASE . "/" . WIKINDX_URL_COMPONENT_VENDOR; ?>/jquery/jquery.min.js?ver=<?php echo WIKINDX_PUBLIC_VERSION;?>"></script>
     
 	<script>
         // SET CURSOR POSITION
@@ -123,22 +123,26 @@ function bodyCharsetTable($charsetArray, $name, $title, $diacritic)
 
     $lString = "";
     $lString .= "<tr>\n\t<td class=\"charsetHeading\" colspan=\"$numColumns\"><a name=\"$name\">$title";
-    if ($diacritic) {
+    if ($diacritic)
+    {
         $lString .= " <span style=\"color:red;\">*</span>";
     }
     $lString .= "</td>\n</tr>\n";
 
     $charPreview = $diacritic ? 'o' : '';
 
-    foreach (array_chunk($charsetArray, $numColumns) as $lineArray) {
+    foreach (array_chunk($charsetArray, $numColumns) as $lineArray)
+    {
         $lString .= "<tr>\n";
 
-        foreach ($lineArray as $char) {
+        foreach ($lineArray as $char)
+        {
             $lString .= "\t<td id=\"ul$char\" onclick=\"selectSpChar($char);\">&#$char;$charPreview</td>\n";
         }
 
         $index = count($lineArray);
-        if ($index < $numColumns) {
+        if ($index < $numColumns)
+        {
             $lString .= "\t<td class=\"emptyCell\" colspan=\"" . ($numColumns - $index) . "\">&nbsp;</td>\n";
         }
 
@@ -150,10 +154,13 @@ function bodyCharsetTable($charsetArray, $name, $title, $diacritic)
 
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "sp_charTableDef.php"]));
 
-if (isset($_GET['ul'])) {
+if (isset($_GET['ul']))
+{
     $ul = $_GET['ul'];
     $ul = intval(str_replace('ul', '', $ul));
-} else {
+}
+else
+{
     $ul = 0;
 }
 
@@ -163,7 +170,8 @@ $id = $tableChars[$ul]['id'];
 $diac = $tableChars[$ul]['diac'];
 
 $charsetArray = [];
-for ($char = base_convert($fcp, 16, 10); $char <= base_convert($lcp, 16, 10); $char++) {
+for ($char = base_convert($fcp, 16, 10); $char <= base_convert($lcp, 16, 10); $char++)
+{
     $charsetArray[] = $char;
 }
 

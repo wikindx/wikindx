@@ -50,7 +50,8 @@ class Moxiecode_Logger
      */
     public function setLevel($level)
     {
-        if (is_string($level)) {
+        if (is_string($level))
+        {
             switch (mb_strtolower($level)) {
                 case "debug":
                     $level = MC_LOGGER_DEBUG;
@@ -132,12 +133,14 @@ class Moxiecode_Logger
         $logMaxSizeBytes = intval(preg_replace("/[^0-9]/u", "", $size));
 
         // Is KB
-        if (mb_strpos((mb_strtolower($size)), "k") > 0) {
+        if (mb_strpos((mb_strtolower($size)), "k") > 0)
+        {
             $logMaxSizeBytes *= 1024;
         }
 
         // Is MB
-        if (mb_strpos((mb_strtolower($size)), "m") > 0) {
+        if (mb_strpos((mb_strtolower($size)), "m") > 0)
+        {
             $logMaxSizeBytes *= (1024 * 1024);
         }
 
@@ -219,7 +222,8 @@ class Moxiecode_Logger
     {
         $roll = FALSE;
 
-        if ($level < $this->_level) {
+        if ($level < $this->_level)
+        {
             return;
         }
 
@@ -261,21 +265,26 @@ class Moxiecode_Logger
         $message = $text . CR . LF;
 
         // Check filesize
-        if (file_exists($logFile)) {
+        if (file_exists($logFile))
+        {
             $size = @filesize($logFile);
 
-            if ($size + mb_strlen($message) > $this->_maxSizeBytes) {
+            if ($size + mb_strlen($message) > $this->_maxSizeBytes)
+            {
                 $roll = TRUE;
             }
         }
 
         // Roll if the size is right
-        if ($roll) {
-            for ($i = $this->_maxFiles - 1; $i >= 1; $i--) {
+        if ($roll)
+        {
+            for ($i = $this->_maxFiles - 1; $i >= 1; $i--)
+            {
                 $rfile = $this->toOSPath($logFile . "." . $i);
                 $nfile = $this->toOSPath($logFile . "." . ($i + 1));
 
-                if (@file_exists($rfile)) {
+                if (@file_exists($rfile))
+                {
                     @rename($rfile, $nfile);
                 }
             }
@@ -284,13 +293,15 @@ class Moxiecode_Logger
 
             // Delete last logfile
             $delfile = $this->toOSPath($logFile . "." . ($this->_maxFiles + 1));
-            if (@file_exists($delfile)) {
+            if (@file_exists($delfile))
+            {
                 @unlink($delfile);
             }
         }
 
         // Append log line
-        if (($fp = @fopen($logFile, "a")) != NULL) {
+        if (($fp = @fopen($logFile, "a")) != NULL)
+        {
             @fwrite($fp, $message);
             @fflush($fp);
             @fclose($fp);

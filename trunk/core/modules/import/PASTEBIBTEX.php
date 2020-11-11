@@ -34,6 +34,6 @@ class PASTEBIBTEX
     public function init($message = FALSE)
     {
         $this->gatekeep->init();
-    	$this->import->display($message);
+        $this->import->display($message);
     }
 }

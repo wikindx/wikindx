@@ -44,24 +44,28 @@ class BROWSECITED
     {
         $this->sum = $this->surname = $this->prefix = $this->citedResourceIds = $this->citeIds = $this->citeList = [];
         $this->getCitations();
-        if (empty($this->citedResourceIds) || empty($this->sum)) {
+        if (empty($this->citedResourceIds) || empty($this->sum))
+        {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noCitations"));
 
             return;
         }
         $this->getCreators();
         $this->surname = $this->common->paging($this->surname);
-        foreach ($this->surname as $id => $surname) {
-            if (!empty($this->prefix) && array_key_exists($id, $this->prefix)) {
+        foreach ($this->surname as $id => $surname)
+        {
+            if (!empty($this->prefix) && array_key_exists($id, $this->prefix))
+            {
                 $this->surname[$id] = $this->prefix[$id] . ' ' . $surname;
             }
         }
         $this->common->linksInfo();
         $pString = $this->process();
-        if (!$pString) {
-        	GLOBALS::addTplVar('content', $this->messages->text("misc", "noCitations")); // only resources without creators could be cited.
-        	
-        	return;
+        if (!$pString)
+        {
+            GLOBALS::addTplVar('content', $this->messages->text("misc", "noCitations")); // only resources without creators could be cited.
+            
+            return;
         }
         $pString = \HTML\pBrowse($pString, "center");
         $this->common->pagingLinks('action=browse_BROWSECITED_CORE');
@@ -93,9 +97,12 @@ class BROWSECITED
         $this->common->userBibCondition('resourcemetadataResourceId');
         $matchAgainst = $this->db->fulltextSearch(['resourcemetadataText'], $search);
         $this->db->formatConditions($matchAgainst);
-        if ($this->session->getVar("setup_Write")) {
+        if ($this->session->getVar("setup_Write"))
+        {
             $this->db->formatConditionsOneField(['q', 'p', 'qc', 'pc', 'm', 'i'], 'resourcemetadataType');
-        } else {
+        }
+        else
+        {
             $this->db->formatConditionsOneField(['q', 'p'], 'resourcemetadataType');
         }
         $unions[] = $this->db->queryNoExecute($this->db->selectNoExecute(
@@ -107,21 +114,30 @@ class BROWSECITED
             ['rId', 'text'],
             $this->db->subQuery($this->db->union($unions), 'u')
         ));
-        while ($row = $this->db->fetchRow($resultset)) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
             $ids = [];
             preg_match_all('/\[cite\](\d+)/u', $row['text'], $match);
-            foreach ($match[1] as $id) {
-                if (!array_key_exists($id, $this->citeIds)) {
-                    $this->citeIds[$id][] = $row['rId'];
-                } elseif (array_search($row['rId'], $this->citeIds[$id]) === FALSE) {
+            foreach ($match[1] as $id)
+            {
+                if (!array_key_exists($id, $this->citeIds))
+                {
                     $this->citeIds[$id][] = $row['rId'];
                 }
-                if (array_search($id, $ids) !== FALSE) { // already cited in this resource
+                elseif (array_search($row['rId'], $this->citeIds[$id]) === FALSE)
+                {
+                    $this->citeIds[$id][] = $row['rId'];
+                }
+                if (array_search($id, $ids) !== FALSE)
+                { // already cited in this resource
                     continue;
                 }
-                if (!array_key_exists($id, $this->citedResourceIds)) {
+                if (!array_key_exists($id, $this->citedResourceIds))
+                {
                     $this->citedResourceIds[$id] = 1;
-                } else {
+                }
+                else
+                {
                     $this->citedResourceIds[$id]++;
                 }
                 $ids[] = $id;
@@ -135,14 +151,16 @@ class BROWSECITED
      */
     private function process()
     {
-    	if (empty($this->sum)) {  		
-			return FALSE;
-		}
+        if (empty($this->sum))
+        {
+            return FALSE;
+        }
         $sum = $this->sum;
         sort($sum);
         $highestSum = $sum[count($sum) - 1];
         $lowestSum = $sum[0];
-        foreach ($this->surname as $id => $name) {
+        foreach ($this->surname as $id => $name)
+        {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $citeIds = implode(',', array_unique($this->citeList[$id]));
@@ -150,6 +168,7 @@ class BROWSECITED
                 htmlentities('action=list_LISTSOMERESOURCES_CORE&method=citeProcessCreator&id=' . $citeIds)) .
                 "&nbsp;[" . $this->sum[$id] . "]";
         }
+
         return implode("&nbsp; ", $links);
     }
     /**
@@ -170,7 +189,8 @@ class BROWSECITED
             ['resourcecreatorResourceId', 'creatorId', 'creatorPrefix', 'creatorSurname'],
             TRUE
         );
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $this->collate($row);
         }
     }
@@ -183,10 +203,13 @@ class BROWSECITED
     {
         $this->surname[$row['creatorId']] = preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorSurname']));
         $this->prefix[$row['creatorId']] = preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['creatorPrefix']));
-        if (array_key_exists($row['creatorId'], $this->citeList)) {
+        if (array_key_exists($row['creatorId'], $this->citeList))
+        {
             $this->citeList[$row['creatorId']] =
             array_merge($this->citeList[$row['creatorId']], $this->citeIds[$row['resourcecreatorResourceId']]);
-        } else {
+        }
+        else
+        {
             $this->citeList[$row['creatorId']] = $this->citeIds[$row['resourcecreatorResourceId']];
         }
         $this->citeList[$row['creatorId']] = array_unique($this->citeList[$row['creatorId']]);

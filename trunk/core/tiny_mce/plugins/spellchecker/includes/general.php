@@ -15,7 +15,8 @@ require_once(dirname(__FILE__) . "/../classes/utils/JSON.php");
 require_once(dirname(__FILE__) . "/../config.php");
 require_once(dirname(__FILE__) . "/../classes/SpellChecker.php");
 
-if (isset($config['general.engine'])) {
+if (isset($config['general.engine']))
+{
     require_once(dirname(__FILE__) . "/../classes/" . $config["general.engine"] . ".php");
 }
 
@@ -29,14 +30,17 @@ if (isset($config['general.engine'])) {
  */
 function getRequestParam($name, $default_value = FALSE)
 {
-    if (!isset($_REQUEST[$name])) {
+    if (!isset($_REQUEST[$name]))
+    {
         return $default_value;
     }
 
-    if (is_array($_REQUEST[$name])) {
+    if (is_array($_REQUEST[$name]))
+    {
         $newarray = [];
 
-        foreach ($_REQUEST[$name] as $name => $value) {
+        foreach ($_REQUEST[$name] as $name => $value)
+        {
             $newarray[$name] = $value;
         }
 
@@ -50,11 +54,13 @@ function &getLogger()
 {
     global $mcLogger, $man;
 
-    if (isset($man)) {
+    if (isset($man))
+    {
         $mcLogger = $man->getLogger();
     }
 
-    if (!$mcLogger) {
+    if (!$mcLogger)
+    {
         $mcLogger = new Moxiecode_Logger();
 
         // Set logger options

@@ -70,17 +70,21 @@ class RESOURCEFORM
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->tinymce = FACTORY_LOADTINYMCE::getInstance();
         $this->loadElementDefinitions();
-        if (array_key_exists('uuid', $this->vars)) {
-        	$this->uuid = $this->vars['uuid'];
+        if (array_key_exists('uuid', $this->vars))
+        {
+            $this->uuid = $this->vars['uuid'];
         }
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'edit')) {
-	    	$this->db->formatConditions(['resourceId' => $this->vars['id']]);
-    		$this->resourceType = $this->db->queryFetchFirstField($this->db->selectNoExecute('resource', ['resourceType']));
-        	$this->resourceMap = FACTORY_RESOURCEMAP::getInstance($this->resourceType);
-        } else {
-        	$this->resourceMap = FACTORY_RESOURCEMAP::getInstance();
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'edit'))
+        {
+            $this->db->formatConditions(['resourceId' => $this->vars['id']]);
+            $this->resourceType = $this->db->queryFetchFirstField($this->db->selectNoExecute('resource', ['resourceType']));
+            $this->resourceMap = FACTORY_RESOURCEMAP::getInstance($this->resourceType);
         }
-		$this->typeMaps = $this->resourceMap->getTypeMap();
+        else
+        {
+            $this->resourceMap = FACTORY_RESOURCEMAP::getInstance();
+        }
+        $this->typeMaps = $this->resourceMap->getTypeMap();
     }
     /**
      * Start the process of entering a new resource by asking for the choice of resource type and number of authors
@@ -89,18 +93,22 @@ class RESOURCEFORM
      */
     public function init($error = FALSE)
     {
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'edit')) {
-        	$return = '&nbsp;&nbsp;' . \HTML\a(
-				$this->icons->getClass("edit"),
-				$this->icons->getHTML("Return"),
-				'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id']
-			);
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'edit'))
+        {
+            $return = '&nbsp;&nbsp;' . \HTML\a(
+                $this->icons->getClass("edit"),
+                $this->icons->getHTML("Return"),
+                'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id']
+            );
             GLOBALS::setTplVar('heading', $this->messages->text('heading', 'editResource') . $return);
-            if (!$error) {
+            if (!$error)
+            {
                 $this->getEditData();
             }
             $this->formData["resourceFormType"] = 'edit';
-        } else {
+        }
+        else
+        {
             GLOBALS::setTplVar('heading', $this->messages->text('heading', 'newResource'));
             $this->formData["resourceFormType"] = 'new';
         }
@@ -122,7 +130,8 @@ class RESOURCEFORM
         $pString .= \FORM\formHeaderName('resource_RESOURCEWRITE_CORE', 'resourceForm', $js);
         $pString .= \FORM\hidden('resourceFormType', $this->formData["resourceFormType"]);
         $pString .= \FORM\hidden('uuid', $this->uuid);
-        if ($this->edit) {
+        if ($this->edit)
+        {
             $pString .= \FORM\hidden('resourceId', $this->vars['id']);
         }
         // resource type and title
@@ -131,22 +140,30 @@ class RESOURCEFORM
         $pString .= $this->optionalCells();
         // creators
         $array = [];
-        if (array_key_exists('resourceType', $this->formData)) {
-            if (array_key_exists('resourcecreator', $this->typeMaps[$this->formData['resourceType']])) {
+        if (array_key_exists('resourceType', $this->formData))
+        {
+            if (array_key_exists('resourcecreator', $this->typeMaps[$this->formData['resourceType']]))
+            {
                 $array = $this->typeMaps[$this->formData['resourceType']]['resourcecreator'];
             }
-        } else {
+        }
+        else
+        {
             $array = $this->typeMaps[$this->resourceType]['resourcecreator']; // default when 'new resource' selected
         }
-        if (!empty($array)) {
+        if (!empty($array))
+        {
             $cell = \HTML\tableStart('generalTable borderStyleEmphasis');
-            foreach ($array as $key => $creatorMsg) {
+            foreach ($array as $key => $creatorMsg)
+            {
                 $cell .= $this->blankCreatorCell($key, $creatorMsg);
             }
             $cell .= \HTML\tableEnd();
             // Creator tables all wrapped up in 'creatorsOuter' DIV which is hidden if no creators selected or available for this resource type.
             $pString .= \HTML\div('creatorsOuter', $cell);
-        } else {
+        }
+        else
+        {
             $pString .= \HTML\div('creatorsOuter', FALSE);
         }
         // custom fields
@@ -173,39 +190,67 @@ class RESOURCEFORM
     public function optionalCells($cellFunction = FALSE)
     {
         if ($cellFunction && array_key_exists($cellFunction, $this->typeMaps[$this->resourceType]['optional']) &&
-            method_exists($this, $cellFunction)) {
+            method_exists($this, $cellFunction))
+        {
             return $this->{$cellFunction}();
-        } elseif ($cellFunction) {
-            if ($cellFunction == 'publisher') {
+        }
+        elseif ($cellFunction)
+        {
+            if ($cellFunction == 'publisher')
+            {
                 return $this->blankPublisher();
-            } elseif ($cellFunction == 'conference') {
+            }
+            elseif ($cellFunction == 'conference')
+            {
                 return $this->blankConference();
-            } elseif ($cellFunction == 'series') {
+            }
+            elseif ($cellFunction == 'series')
+            {
                 return $this->blankSeries();
-            } elseif ($cellFunction == 'collection') {
+            }
+            elseif ($cellFunction == 'collection')
+            {
                 return $this->blankCollection();
-            } elseif ($cellFunction == 'translation') {
+            }
+            elseif ($cellFunction == 'translation')
+            {
                 return $this->blankTranslation();
-            } elseif ($cellFunction == 'miscellaneous') {
+            }
+            elseif ($cellFunction == 'miscellaneous')
+            {
                 return $this->blankMiscellaneous();
             }
         }
         $pString = '';
-        foreach ($this->resourceMap->getOptional() as $cellFunction) {
+        foreach ($this->resourceMap->getOptional() as $cellFunction)
+        {
             if (array_key_exists($cellFunction, $this->typeMaps[$this->resourceType]['optional']) &&
-                method_exists($this, $cellFunction)) {
+                method_exists($this, $cellFunction))
+            {
                 $pString .= $this->{$cellFunction}();
-            } elseif ($cellFunction == 'publisher') {
+            }
+            elseif ($cellFunction == 'publisher')
+            {
                 $pString .= $this->blankPublisher();
-            } elseif ($cellFunction == 'conference') {
+            }
+            elseif ($cellFunction == 'conference')
+            {
                 $pString .= $this->blankConference();
-            } elseif ($cellFunction == 'series') {
+            }
+            elseif ($cellFunction == 'series')
+            {
                 $pString .= $this->blankSeries();
-            } elseif ($cellFunction == 'collection') {
+            }
+            elseif ($cellFunction == 'collection')
+            {
                 $pString .= $this->blankCollection();
-            } elseif ($cellFunction == 'translation') {
+            }
+            elseif ($cellFunction == 'translation')
+            {
                 $pString .= $this->blankTranslation();
-            } elseif ($cellFunction == 'miscellaneous') {
+            }
+            elseif ($cellFunction == 'miscellaneous')
+            {
                 $pString .= $this->blankMiscellaneous();
             }
         }
@@ -220,15 +265,18 @@ class RESOURCEFORM
     public function publisher()
     {
         $insert = $this->publisherInsert();
-        if (empty($insert)) {
+        if (empty($insert))
+        {
             $insert = '';
         }
         $insertAfter = $insertBefore = [];
-        if (array_key_exists('insertBefore', $this->typeMaps[$this->resourceType]['optional']['publisher'])) {
+        if (array_key_exists('insertBefore', $this->typeMaps[$this->resourceType]['optional']['publisher']))
+        {
             $insertBefore[$this->typeMaps[$this->resourceType]['optional']['publisher']['insertBefore']] = $insert;
             unset($this->typeMaps[$this->resourceType]['optional']['publisher']['insertBefore']);
         }
-        if (array_key_exists('insertAfter', $this->typeMaps[$this->resourceType]['optional']['publisher'])) {
+        if (array_key_exists('insertAfter', $this->typeMaps[$this->resourceType]['optional']['publisher']))
+        {
             $insertAfter[$this->typeMaps[$this->resourceType]['optional']['publisher']['insertAfter']] = $insert;
             unset($this->typeMaps[$this->resourceType]['optional']['publisher']['insertAfter']);
         }
@@ -242,28 +290,36 @@ class RESOURCEFORM
      */
     public function translation()
     {
-        if (($this->resourceType != 'book') && ($this->resourceType != 'book_article') && ($this->resourceType != 'book_chapter')) {
+        if (($this->resourceType != 'book') && ($this->resourceType != 'book_article') && ($this->resourceType != 'book_chapter'))
+        {
             return '';
         }
-        if ($this->translationFill) {
+        if ($this->translationFill)
+        {
             list($titInsert, $pubInsert) = $this->translationInsertFill();
-        } else {
+        }
+        else
+        {
             $pubInsert = $this->translationPubInsert();
             $titInsert = $this->translationTitleInsert();
         }
-        if (!$pubInsert) {
+        if (!$pubInsert)
+        {
             $pubInsert = '';
         }
-        if (!$titInsert) {
+        if (!$titInsert)
+        {
             $titInsert = '';
         }
         $insertAfter = $insertBefore = [];
         // In RESOURCEMAP, we stipulate that insert_after is used for title select box and insert_before for publisher select box
-        if (array_key_exists('insertBefore', $this->typeMaps[$this->resourceType]['optional']['translation'])) {
+        if (array_key_exists('insertBefore', $this->typeMaps[$this->resourceType]['optional']['translation']))
+        {
             $insertBefore[$this->typeMaps[$this->resourceType]['optional']['translation']['insertBefore']] = $pubInsert;
             unset($this->typeMaps[$this->resourceType]['optional']['translation']['insertBefore']);
         }
-        if (array_key_exists('insertAfter', $this->typeMaps[$this->resourceType]['optional']['translation'])) {
+        if (array_key_exists('insertAfter', $this->typeMaps[$this->resourceType]['optional']['translation']))
+        {
             $insertAfter[$this->typeMaps[$this->resourceType]['optional']['translation']['insertAfter']] = $titInsert;
             unset($this->typeMaps[$this->resourceType]['optional']['translation']['insertAfter']);
         }
@@ -277,23 +333,31 @@ class RESOURCEFORM
      */
     public function series()
     {
-        if ($this->collectionFill && array_key_exists('series', $this->formData)) {
+        if ($this->collectionFill && array_key_exists('series', $this->formData))
+        {
             $this->seriesFill = $this->formData['series'];
             $insert = $this->seriesInsertFill();
-        } elseif ($this->seriesFill) {
+        }
+        elseif ($this->seriesFill)
+        {
             $insert = $this->seriesInsertFill();
-        } else {
+        }
+        else
+        {
             $insert = $this->seriesInsert();
         }
-        if (!$insert) {
+        if (!$insert)
+        {
             $insert = '';
         }
         $insertAfter = $insertBefore = [];
-        if (array_key_exists('insertBefore', $this->typeMaps[$this->resourceType]['optional']['series'])) {
+        if (array_key_exists('insertBefore', $this->typeMaps[$this->resourceType]['optional']['series']))
+        {
             $insertBefore[$this->typeMaps[$this->resourceType]['optional']['series']['insertBefore']] = $insert;
             unset($this->typeMaps[$this->resourceType]['optional']['series']['insertBefore']);
         }
-        if (array_key_exists('insertAfter', $this->typeMaps[$this->resourceType]['optional']['series'])) {
+        if (array_key_exists('insertAfter', $this->typeMaps[$this->resourceType]['optional']['series']))
+        {
             $insertAfter[$this->typeMaps[$this->resourceType]['optional']['series']['insertAfter']] = $insert;
             unset($this->typeMaps[$this->resourceType]['optional']['series']['insertAfter']);
         }
@@ -307,22 +371,28 @@ class RESOURCEFORM
      */
     public function conference()
     {
-        if ($this->collectionFill !== FALSE) {
+        if ($this->collectionFill !== FALSE)
+        {
             $this->formData['conferenceId'] = $this->collectionFill;
             $insert = $this->conferenceInsert();
-        } else {
+        }
+        else
+        {
             $insert = $this->conferenceInsert();
         }
-        if (empty($insert)) {
+        if (empty($insert))
+        {
             $insert = '';
         }
         $insertAfter = $insertBefore = [];
-        if (array_key_exists('insertBefore', $this->typeMaps[$this->resourceType]['optional']['conference'])) {
+        if (array_key_exists('insertBefore', $this->typeMaps[$this->resourceType]['optional']['conference']))
+        {
             $insertBefore[$this->typeMaps[$this->resourceType]['optional']['conference']['insertBefore']] =
                 $insert;
             unset($this->typeMaps[$this->resourceType]['optional']['conference']['insertBefore']);
         }
-        if (array_key_exists('insertAfter', $this->typeMaps[$this->resourceType]['optional']['conference'])) {
+        if (array_key_exists('insertAfter', $this->typeMaps[$this->resourceType]['optional']['conference']))
+        {
             $insertAfter[$this->typeMaps[$this->resourceType]['optional']['conference']['insertAfter']] =
                 $insert;
             unset($this->typeMaps[$this->resourceType]['optional']['conference']['insertAfter']);
@@ -342,56 +412,87 @@ class RESOURCEFORM
         $this->collectionDefaultMap = new COLLECTIONDEFAULTMAP();
         $this->db->formatConditions(['collectionId' => $this->collectionFill]);
         $recordset = $this->db->select('collection', ['collectionType', 'collectionDefault']);
-        if (!$this->db->numRows($recordset)) {
-        	return;
+        if (!$this->db->numRows($recordset))
+        {
+            return;
         }
         $row = $this->db->fetchRow($recordset);
-        if ($row['collectionDefault']) {
+        if ($row['collectionDefault'])
+        {
             $this->collectionDefaults = unserialize(base64_decode($row['collectionDefault']));
             $this->collectionType = $row['collectionType'];
-            foreach ($this->collectionDefaultMap->{$this->collectionType}['resource'] as $key => $value) {
+            foreach ($this->collectionDefaultMap->{$this->collectionType}['resource'] as $key => $value)
+            {
                 $field = 'resource' . $key;
-                if (array_key_exists($field, $this->collectionDefaults)) {
-                    if ($key == 'Field1') { // seriesTitle
+                if (array_key_exists($field, $this->collectionDefaults))
+                {
+                    if ($key == 'Field1')
+                    { // seriesTitle
                         $this->formData['series'] = base64_encode($this->collectionDefaults[$field]);
-                    } else {
+                    }
+                    else
+                    {
                         $this->formData[$field] = $this->collectionDefaults[$field];
                     }
-                } else {
+                }
+                else
+                {
                     $this->session->delVar($field);
                 }
             }
-            foreach ($this->collectionDefaultMap->{$this->collectionType}['resource_year'] as $key => $value) {
+            foreach ($this->collectionDefaultMap->{$this->collectionType}['resource_year'] as $key => $value)
+            {
                 $field = 'resourceyear' . $key;
-                if (array_key_exists($field, $this->collectionDefaults)) {
+                if (array_key_exists($field, $this->collectionDefaults))
+                {
                     $this->formData[$field] = $this->collectionDefaults[$field];
-                } else {
+                }
+                else
+                {
                     $this->session->delVar($field);
                 }
             }
-            foreach ($this->collectionDefaultMap->{$this->collectionType}['resource_misc'] as $key => $value) {
+            foreach ($this->collectionDefaultMap->{$this->collectionType}['resource_misc'] as $key => $value)
+            {
                 $field = 'resourcemisc' . $key;
-                if (array_key_exists($field, $this->collectionDefaults)) {
-                    if (($field == 'resourcemiscPublisher') && ($this->collectionType == 'proceedings')) {
+                if (array_key_exists($field, $this->collectionDefaults))
+                {
+                    if (($field == 'resourcemiscPublisher') && ($this->collectionType == 'proceedings'))
+                    {
                         $this->formData['organizerId'] = $this->collectionDefaults[$field];
-                    } elseif (($field == 'resourcemiscField1') && ($this->collectionType == 'proceedings')) {
+                    }
+                    elseif (($field == 'resourcemiscField1') && ($this->collectionType == 'proceedings'))
+                    {
                         $this->formData['publisherId'] = $this->collectionDefaults[$field];
-                    } elseif ($field == 'resourcemiscPublisher') {
+                    }
+                    elseif ($field == 'resourcemiscPublisher')
+                    {
                         $this->formData['publisherId'] = $this->collectionDefaults[$field];
-                    } elseif ($field == 'resourcemiscField1') { // trans publisher
+                    }
+                    elseif ($field == 'resourcemiscField1')
+                    { // trans publisher
                         $this->formData['transPublisherId'] = $this->collectionDefaults[$field];
-                    } elseif (($field == 'resourcemiscPeerReviewed') && ($this->collectionDefaults[$field] == 'N')) {
+                    }
+                    elseif (($field == 'resourcemiscPeerReviewed') && ($this->collectionDefaults[$field] == 'N'))
+                    {
                         $this->session->delVar($field);
-                    } else {
+                    }
+                    else
+                    {
                         $this->formData[$field] = $this->collectionDefaults[$field];
                     }
-                } else {
+                }
+                else
+                {
                     $this->session->delVar($field);
                 }
             }
-            if (array_key_exists('creators', $this->collectionDefaults)) {
-                foreach ($this->collectionDefaults['creators'] as $key => $value) {
-                    if ($value) {
+            if (array_key_exists('creators', $this->collectionDefaults))
+            {
+                foreach ($this->collectionDefaults['creators'] as $key => $value)
+                {
+                    if ($value)
+                    {
                         $this->formData[$key] = $value;
                     }
                 }
@@ -406,16 +507,19 @@ class RESOURCEFORM
     public function collection()
     {
         $insert = $this->collectionInsert();
-        if (empty($insert)) {
+        if (empty($insert))
+        {
             $insert = '';
         }
         $insertAfter = $insertBefore = [];
-        if (array_key_exists('insertBefore', $this->typeMaps[$this->resourceType]['optional']['collection'])) {
+        if (array_key_exists('insertBefore', $this->typeMaps[$this->resourceType]['optional']['collection']))
+        {
             $insertBefore[$this->typeMaps[$this->resourceType]['optional']['collection']['insertBefore']] =
                 $insert;
             unset($this->typeMaps[$this->resourceType]['optional']['collection']['insertBefore']);
         }
-        if (array_key_exists('insertAfter', $this->typeMaps[$this->resourceType]['optional']['collection'])) {
+        if (array_key_exists('insertAfter', $this->typeMaps[$this->resourceType]['optional']['collection']))
+        {
             $insertAfter[$this->typeMaps[$this->resourceType]['optional']['collection']['insertAfter']] =
                 $insert;
             unset($this->typeMaps[$this->resourceType]['optional']['collection']['insertAfter']);
@@ -431,10 +535,12 @@ class RESOURCEFORM
     public function miscellaneous()
     {
         $insertAfter = $insertBefore = []; // empty arrays
-        if (array_key_exists('insertBefore', $this->typeMaps[$this->resourceType]['optional']['miscellaneous'])) {
+        if (array_key_exists('insertBefore', $this->typeMaps[$this->resourceType]['optional']['miscellaneous']))
+        {
             unset($this->typeMaps[$this->resourceType]['optional']['miscellaneous']['insertBefore']);
         }
-        if (array_key_exists('insertAfter', $this->typeMaps[$this->resourceType]['optional']['miscellaneous'])) {
+        if (array_key_exists('insertAfter', $this->typeMaps[$this->resourceType]['optional']['miscellaneous']))
+        {
             unset($this->typeMaps[$this->resourceType]['optional']['miscellaneous']['insertAfter']);
         }
 
@@ -451,16 +557,20 @@ class RESOURCEFORM
     public function creatorFields($type, $inputArray)
     {
         $fields = $label = '';
-        if (empty($this->creatorsArray)) {
+        if (empty($this->creatorsArray))
+        {
             $temp = $this->creator->grabAll();
             $this->creatorsArray[0] = $this->messages->text("misc", "ignore");
-            if (is_array($temp)) {
+            if (is_array($temp))
+            {
                 $this->creatorsArray = $this->creatorsArray + $temp;
             }
         }
         $this->writeSessionCreators($inputArray);
-        for ($index = 0; $index < $inputArray['index']; $index++) {
-            if ($index == 0) {
+        for ($index = 0; $index < $inputArray['index']; $index++)
+        {
+            if ($index == 0)
+            {
                 $label = $this->makeCreatorLabel();
             }
             $entry = $type . '_' . $index . '_firstname';
@@ -478,16 +588,22 @@ class RESOURCEFORM
             $fields .= \HTML\td(\FORM\textInput(FALSE, $entry, \HTML\dbToFormTidy($text), 30, 255));
             $entry = $type . '_' . $index . '_select';
             $selected = array_key_exists($entry, $this->formData) ? $this->formData[$entry] : FALSE;
-            if ($selected) {
+            if ($selected)
+            {
                 $fields .= \HTML\td(\FORM\selectedBoxValue(FALSE, $entry, $this->creatorsArray, $selected, 1));
-            } else {
+            }
+            else
+            {
                 $fields .= \HTML\td(\FORM\selectFBoxValue(FALSE, $entry, $this->creatorsArray, 1));
             }
             $fields .= \HTML\trEnd();
         }
-        if (!$label) {
+        if (!$label)
+        {
             return FALSE;
-        } else {
+        }
+        else
+        {
             return $label . $fields;
         }
     }
@@ -501,18 +617,22 @@ class RESOURCEFORM
     public function creatorFieldsEdit($type)
     {
         $fields = $label = '';
-        if (empty($this->creatorsArray)) {
+        if (empty($this->creatorsArray))
+        {
             $temp = $this->creator->grabAll();
             $this->creatorsArray[0] = $this->messages->text("misc", "ignore");
-            if (is_array($temp)) {
+            if (is_array($temp))
+            {
                 $this->creatorsArray = $this->creatorsArray + $temp;
             }
         }
-        for ($index = 0; ; $index++) {
+        for ($index = 0; ; $index++)
+        {
             $found = FALSE;
             $thisRow = FALSE;
             $select = $type . '_' . $index . '_select';
-            if (!array_key_exists($select, $this->formData) && !$this->error) {
+            if (!array_key_exists($select, $this->formData) && !$this->error)
+            {
                 break;
             }
             $entry = $type . '_' . $index . '_firstname';
@@ -532,7 +652,8 @@ class RESOURCEFORM
             $value = array_key_exists($entry, $this->formData) ? $this->formData[$entry] : FALSE;
             $found = $value ? TRUE : FALSE;
             $thisRow .= \HTML\td(\FORM\textInput(FALSE, $entry, $value, 30, 255));
-            if (array_key_exists($select, $this->formData)) {
+            if (array_key_exists($select, $this->formData))
+            {
                 $found = TRUE;
                 $thisRow .= \HTML\td(\FORM\selectedBoxValue(
                     FALSE,
@@ -541,20 +662,27 @@ class RESOURCEFORM
                     $this->formData[$select],
                     1
                 ));
-            } else {
+            }
+            else
+            {
                 $thisRow .= \HTML\td(\FORM\selectFBoxValue(FALSE, $select, $this->creatorsArray, 1));
             }
             $thisRow .= \HTML\trEnd();
-            if (!$found) {
+            if (!$found)
+            {
                 break;
-            } else {
+            }
+            else
+            {
                 $fields .= $thisRow;
             }
-            if ($index == 0) {
+            if ($index == 0)
+            {
                 $label = $this->makeCreatorLabel();
             }
         }
-        if (!$label) {
+        if (!$label)
+        {
             return [$index, \HTML\tableStart('generalTable borderStyleSolid') . FALSE . \HTML\tableEnd()];
         }
 
@@ -572,7 +700,8 @@ class RESOURCEFORM
     {
         $jsonArray = [];
         $jScript = "index.php?action=resource_RESOURCEFORMAJAX_CORE&method=addCreatorField&creatorType=$key&uuid=" . $this->uuid;
-        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit')) {
+        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit'))
+        {
             list($index, $editCell) = $this->creatorFieldsEdit($key);
             $jsonArray[] = [
                 'startFunction' => 'addCreator',
@@ -581,7 +710,9 @@ class RESOURCEFORM
                 'type' => 'edit',
                 'index' => "$index",
             ];
-        } else {
+        }
+        else
+        {
             $jsonArray[] = [
                 'startFunction' => 'addCreator',
                 'script' => "$jScript",
@@ -592,7 +723,8 @@ class RESOURCEFORM
         $addImage = \AJAX\jActionIcon('add', 'onclick', $jsonArray);
         $jsonArray = [];
         $jScript = "index.php?action=resource_RESOURCEFORMAJAX_CORE&method=removeCreatorField&creatorType=$key&uuid=" . $this->uuid;
-        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit')) {
+        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit'))
+        {
             $jsonArray[] = [
                 'startFunction' => 'removeCreator',
                 'script' => "$jScript",
@@ -600,7 +732,9 @@ class RESOURCEFORM
                 'type' => 'edit',
                 'index' => "$index",
             ];
-        } else {
+        }
+        else
+        {
             $jsonArray[] = [
                 'startFunction' => 'removeCreator',
                 'script' => "$jScript",
@@ -612,9 +746,12 @@ class RESOURCEFORM
         $images = '&nbsp;&nbsp;' . $addImage . '&nbsp;&nbsp;' . $removeImage;
         $creatorCells = \HTML\trStart();
         $creatorCells .= \HTML\td(\HTML\h($this->messages->text('creators', $creatorMsg) . $images, FALSE, 4), $this->tdLabelWidth);
-        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit')) {
+        if ($this->edit || $this->error || $this->collectionFill || ($this->formData["resourceFormType"] == 'edit'))
+        {
             $creatorCells .= \HTML\td(\HTML\div($key . '_Inner', $editCell), $this->tdContentWidth);
-        } else {
+        }
+        else
+        {
             $creatorCells .= \HTML\td(\HTML\div($key . '_Inner', '&nbsp;'), $this->tdContentWidth);
         }
         $creatorCells .= \HTML\trEnd();
@@ -727,11 +864,14 @@ class RESOURCEFORM
      */
     public function subcategoryBox($temp)
     {
-        if (is_array($temp)) {
+        if (is_array($temp))
+        {
             $selectedSubcategories = [];
-            if (array_key_exists('resourcecategorySubcategories', $this->formData)) {
+            if (array_key_exists('resourcecategorySubcategories', $this->formData))
+            {
                 $selected = \UTF8\mb_explode(',', $this->formData['resourcecategorySubcategories']);
-                foreach ($selected as $key) {
+                foreach ($selected as $key)
+                {
                     $selectedSubcategories[$key] = $temp[$key];
                     unset($temp[$key]);
                 }
@@ -768,10 +908,12 @@ class RESOURCEFORM
             return \HTML\td(\HTML\div('subcategory', $td, 'width33percent'));
 
             $subcategories[0] = $this->messages->text("misc", "ignore");
-            foreach ($temp as $key => $value) {
+            foreach ($temp as $key => $value)
+            {
                 $subcategories[$key] = $value;
             }
-            if (array_key_exists('resourcecategorySubcategories', $this->formData)) {
+            if (array_key_exists('resourcecategorySubcategories', $this->formData))
+            {
                 $selected = \UTF8\mb_explode(',', $this->formData['resourcecategorySubcategories']);
 
                 return \HTML\td(\HTML\div(
@@ -791,7 +933,9 @@ class RESOURCEFORM
                         $this->messages->text("hint", "multiples")
                     ), 'hint')
                 ), 'width20percent');
-            } else {
+            }
+            else
+            {
                 return \HTML\td(\HTML\div(
                     'subcategory',
                     \FORM\selectFBoxValueMultiple(
@@ -809,7 +953,9 @@ class RESOURCEFORM
                     ), 'hint')
                 ), 'width20percent');
             }
-        } else {
+        }
+        else
+        {
             return \HTML\td(\HTML\div('subcategory', "&nbsp;"));
         }
     }
@@ -824,7 +970,6 @@ class RESOURCEFORM
     }
     /**
      * Setter for loading temp_storage variables into $this->formData when editing and using AJAX
-     *
      */
     public function setFormData()
     {
@@ -836,37 +981,45 @@ class RESOURCEFORM
     private function getEditData()
     {
         $badInput = FACTORY_BADINPUT::getInstance();
-        if (!array_key_exists('id', $this->vars) || !$this->vars['id']) {
+        if (!array_key_exists('id', $this->vars) || !$this->vars['id'])
+        {
             $errors = FACTORY_ERRORS::getInstance();
             $badInput->close($errors->text("inputError", "missing"));
         }
         $this->edit = TRUE;
         $res = FACTORY_RESOURCECOMMON::getInstance();
         $resultset = $res->getResource($this->vars['id']);
-        if (!$this->db->numRows($resultset)) {
+        if (!$this->db->numRows($resultset))
+        {
             $badInput->close($this->messages->text("resources", "noResult"));
         }
         $row = $this->db->fetchRow($resultset);
         $this->resourceType = $this->formData['resourceType'] = $row['resourceType'];
         $this->formData['resourceTitle'] = $row['resourceTitle'];
-        if (array_key_exists('resourceNoSort', $row) && $row['resourceNoSort']) {
+        if (array_key_exists('resourceNoSort', $row) && $row['resourceNoSort'])
+        {
             $this->formData['resourceNoSort'] = $row['resourceNoSort'];
         }
-        if (array_key_exists('resourceSubtitle', $row) && $row['resourceSubtitle']) {
+        if (array_key_exists('resourceSubtitle', $row) && $row['resourceSubtitle'])
+        {
             $this->formData['resourceSubtitle'] = $row['resourceSubtitle'];
         }
-        if (array_key_exists('resourceShortTitle', $row) && $row['resourceShortTitle']) {
+        if (array_key_exists('resourceShortTitle', $row) && $row['resourceShortTitle'])
+        {
             $this->formData['resourceShortTitle'] = $row['resourceShortTitle'];
         }
-        if (array_key_exists('resourceTransNoSort', $row) && $row['resourceTransNoSort']) {
+        if (array_key_exists('resourceTransNoSort', $row) && $row['resourceTransNoSort'])
+        {
             $this->formData['resourceTransNoSort'] = $row['resourceTransNoSort'];
         }
-        if (array_key_exists('resourcetextUrls', $row) && $row['resourcetextUrls']) {
+        if (array_key_exists('resourcetextUrls', $row) && $row['resourcetextUrls'])
+        {
             $tmp = base64_decode($row['resourcetextUrls']);
             $tmp = unserialize($tmp);
             $tmp = array_shift($tmp);
             $this->formData['resourcetextUrl'] = $tmp;
-            if (array_key_exists('resourcetextUrlText', $row) && $row['resourcetextUrlText']) {
+            if (array_key_exists('resourcetextUrlText', $row) && $row['resourcetextUrlText'])
+            {
                 $tmp = base64_decode($row['resourcetextUrlText']);
                 $tmp = unserialize($tmp);
                 $tmp = array_shift($tmp);
@@ -874,33 +1027,46 @@ class RESOURCEFORM
             }
         }
         $ids = [];
-        foreach ($this->resourceMap->getTables($this->resourceType) as $table) {
-            foreach ($this->resourceMap->getOptional() as $optional) {
-                if (!array_key_exists($optional, $this->typeMaps[$this->resourceType]['optional'])) {
+        foreach ($this->resourceMap->getTables($this->resourceType) as $table)
+        {
+            foreach ($this->resourceMap->getOptional() as $optional)
+            {
+                if (!array_key_exists($optional, $this->typeMaps[$this->resourceType]['optional']))
+                {
                     continue;
                 }
-                if (array_key_exists($table, $this->typeMaps[$this->resourceType]['optional'][$optional])) {
-                    foreach ($this->typeMaps[$this->resourceType]['optional'][$optional][$table] as $key => $value) {
+                if (array_key_exists($table, $this->typeMaps[$this->resourceType]['optional'][$optional]))
+                {
+                    foreach ($this->typeMaps[$this->resourceType]['optional'][$optional][$table] as $key => $value)
+                    {
                         $rowKey = $table . $key;
-                        if (array_key_exists($rowKey, $row) && $row[$rowKey]) {
+                        if (array_key_exists($rowKey, $row) && $row[$rowKey])
+                        {
                             $this->formData[$rowKey] = $row[$rowKey];
                         }
                     }
                 }
-                if (array_key_exists($table . '*', $this->typeMaps[$this->resourceType]['optional'][$optional])) {
-                    foreach ($this->typeMaps[$this->resourceType]['optional'][$optional][$table . '*'] as $key => $value) {
+                if (array_key_exists($table . '*', $this->typeMaps[$this->resourceType]['optional'][$optional]))
+                {
+                    foreach ($this->typeMaps[$this->resourceType]['optional'][$optional][$table . '*'] as $key => $value)
+                    {
                         $rowKey = $table . $key;
-                        if (array_key_exists($rowKey, $row) && $row[$rowKey]) {
+                        if (array_key_exists($rowKey, $row) && $row[$rowKey])
+                        {
                             $this->formData[$rowKey] = $row[$rowKey];
                         }
                     }
                 }
             }
-            if (array_key_exists('virtual', $this->typeMaps[$this->resourceType])) {
-                if (array_key_exists($table, $this->typeMaps[$this->resourceType]['virtual'])) {
-                    foreach ($this->typeMaps[$this->resourceType]['virtual'][$table] as $key => $value) {
+            if (array_key_exists('virtual', $this->typeMaps[$this->resourceType]))
+            {
+                if (array_key_exists($table, $this->typeMaps[$this->resourceType]['virtual']))
+                {
+                    foreach ($this->typeMaps[$this->resourceType]['virtual'][$table] as $key => $value)
+                    {
                         $rowKey = $table . $key;
-                        if (array_key_exists($rowKey, $row) && $row[$rowKey]) {
+                        if (array_key_exists($rowKey, $row) && $row[$rowKey])
+                        {
                             $this->formData[$value] = $row[$rowKey];
                             $ids[] = $value;
                         }
@@ -909,30 +1075,39 @@ class RESOURCEFORM
             }
         }
         // abstract, note, isbn, doi
-        if (array_key_exists('resourcetextAbstract', $row) && $row['resourcetextAbstract']) {
+        if (array_key_exists('resourcetextAbstract', $row) && $row['resourcetextAbstract'])
+        {
             $this->formData['resourcetextAbstract'] = $row['resourcetextAbstract'];
         }
-        if (array_key_exists('resourcetextNote', $row) && $row['resourcetextNote']) {
+        if (array_key_exists('resourcetextNote', $row) && $row['resourcetextNote'])
+        {
             $this->formData['resourcetextNote'] = $row['resourcetextNote'];
         }
-        if (array_key_exists('resourceIsbn', $row) && $row['resourceIsbn']) {
+        if (array_key_exists('resourceIsbn', $row) && $row['resourceIsbn'])
+        {
             $this->formData['resourceIsbn'] = $row['resourceIsbn'];
         }
-        if (array_key_exists('resourceDoi', $row) && $row['resourceDoi']) {
+        if (array_key_exists('resourceDoi', $row) && $row['resourceDoi'])
+        {
             $this->formData['resourceDoi'] = $row['resourceDoi'];
         }
         // creators
-        if (array_key_exists('resourcecreator', $this->typeMaps[$this->resourceType])) {
+        if (array_key_exists('resourcecreator', $this->typeMaps[$this->resourceType]))
+        {
             $array = [];
             $this->db->formatConditions(['resourcecreatorResourceId' => $this->vars['id']]);
             $this->db->orderBy(['resourcecreatorRole', 'resourcecreatorOrder'], TRUE, FALSE);
             $resultset = $this->db->select('resource_creator', ['resourcecreatorCreatorId', 'resourcecreatorRole', 'resourcecreatorOrder']);
-            while ($row = $this->db->fetchRow($resultset)) {
+            while ($row = $this->db->fetchRow($resultset))
+            {
                 $array[$row['resourcecreatorRole']][] = $row['resourcecreatorCreatorId'];
             }
-            foreach ($this->typeMaps[$this->resourceType]['resourcecreator'] as $key => $value) {
-                foreach ($array as $role => $cArray) {
-                    foreach ($cArray as $index => $cId) {
+            foreach ($this->typeMaps[$this->resourceType]['resourcecreator'] as $key => $value)
+            {
+                foreach ($array as $role => $cArray)
+                {
+                    foreach ($cArray as $index => $cId)
+                    {
                         $this->formData["Creator$role" . "_$index" . '_select'] = $cId;
                     }
                 }
@@ -943,58 +1118,70 @@ class RESOURCEFORM
         $this->db->formatConditions(['resourcekeywordResourceId' => $this->vars['id']]);
         $this->db->leftJoin('keyword', 'keywordId', 'resourcekeywordKeywordId');
         $resultset = $this->db->select('resource_keyword', 'keywordKeyword');
-        while ($row = $this->db->fetchRow($resultset)) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
             $array[] = $row['keywordKeyword'];
         }
-        if (!empty($array)) {
+        if (!empty($array))
+        {
             $this->formData['resourcekeywordKeywords'] = implode(',', $array);
         }
         $array = [];
         $this->db->formatConditions(['resourcecategoryCategoryId' => ' IS NOT NULL']);
         $this->db->formatConditions(['resourcecategoryResourceId' => $this->vars['id']]);
         $resultset = $this->db->select('resource_category', 'resourcecategoryCategoryId');
-        while ($row = $this->db->fetchRow($resultset)) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
             $array[] = $row['resourcecategoryCategoryId'];
         }
-        if (!empty($array)) {
+        if (!empty($array))
+        {
             $this->formData['resourcecategoryCategories'] = implode(',', $array);
         }
         $array = [];
         $this->db->formatConditions(['resourcecategoryResourceId' => $this->vars['id']]);
         $this->db->formatConditions(['resourcecategorySubcategoryId' => ' IS NOT NULL']);
         $resultset = $this->db->select('resource_category', 'resourcecategorySubcategoryId');
-        while ($row = $this->db->fetchRow($resultset)) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
             $array[] = $row['resourcecategorySubcategoryId'];
         }
-        if (!empty($array)) {
+        if (!empty($array))
+        {
             $this->formData['resourcecategorySubcategories'] = implode(',', $array);
         }
         $array = [];
         $this->db->formatConditions(['resourceusertagsResourceId' => $this->vars['id']]);
         $this->db->leftJoin('user_tags', 'usertagsId', 'resourceusertagsTagId');
         $resultset = $this->db->select('resource_user_tags', 'usertagsTag');
-        while ($row = $this->db->fetchRow($resultset)) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
             $array[] = $row['usertagsTag'];
         }
-        if (!empty($array)) {
+        if (!empty($array))
+        {
             $this->formData['resourceusertagsTagId'] = implode(',', $array);
         }
         // User bibliographies
         $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
         $resultset = $this->db->select('user_bibliography', 'userbibliographyId');
         $array = [];
-        while ($row = $this->db->fetchRow($resultset)) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
             $array[] = $row['userbibliographyId'];
         }
-        if (!empty($array)) {
+        if (!empty($array))
+        {
             $this->db->formatconditionsOneField($array, 'userbibliographyresourceBibliographyId');
             $this->db->formatConditions(['userbibliographyresourceResourceId' => $this->vars['id']]);
             $resultset = $this->db->select('user_bibliography_resource', 'userbibliographyresourceBibliographyId');
             $array = [];
-            while ($row = $this->db->fetchRow($resultset)) {
+            while ($row = $this->db->fetchRow($resultset))
+            {
                 $array[] = $row['userbibliographyresourceBibliographyId'];
             }
-            if (!empty($array)) {
+            if (!empty($array))
+            {
                 $this->formData['bibliographies'] = implode(',', $array);
             }
         }
@@ -1002,24 +1189,31 @@ class RESOURCEFORM
         $array = [];
         $this->db->formatConditions(['resourcelanguageResourceId' => $this->vars['id']]);
         $resultset = $this->db->select('resource_language', 'resourcelanguageLanguageId');
-        while ($row = $this->db->fetchRow($resultset)) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
             $array[] = $row['resourcelanguageLanguageId'];
         }
-        if (!empty($array)) {
+        if (!empty($array))
+        {
             $this->formData['resourcelanguageLanguages'] = implode(',', $array);
         }
         // Remove 'virtualFields' values (see RESOURCEMAP.php)
-        foreach ($ids as $value) {
+        foreach ($ids as $value)
+        {
             if (array_key_exists('virtualFields', $this->typeMaps[$this->resourceType]) &&
-                array_key_exists($value, $this->typeMaps[$this->resourceType]['virtualFields'])) {
-                foreach ($this->typeMaps[$this->resourceType]['virtualFields'][$value] as $removeField) {
-                    if (array_key_exists($removeField, $this->formData)) {
+                array_key_exists($value, $this->typeMaps[$this->resourceType]['virtualFields']))
+            {
+                foreach ($this->typeMaps[$this->resourceType]['virtualFields'][$value] as $removeField)
+                {
+                    if (array_key_exists($removeField, $this->formData))
+                    {
                         unset($this->formData[$removeField]);
                     }
                 }
             }
         }
-        if (array_key_exists('resourcemiscPeerReviewed', $this->formData) && ($this->formData['resourcemiscPeerReviewed'] == 'N')) {
+        if (array_key_exists('resourcemiscPeerReviewed', $this->formData) && ($this->formData['resourcemiscPeerReviewed'] == 'N'))
+        {
             unset($this->formData['resourcemiscPeerReviewed']);
         }
     }
@@ -1033,15 +1227,20 @@ class RESOURCEFORM
         $array = $small = $large = [];
         $this->db->orderBy('customSize', TRUE, FALSE); // 'L' before 'S'
         $resultset = $this->db->select('custom', ['customSize', 'customLabel', 'customId']);
-        while ($row = $this->db->fetchRow($resultset)) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
             $array[$row['customId']] = [$row['customLabel'], $row['customSize']];
-            if ($row['customSize'] == 'L') {
+            if ($row['customSize'] == 'L')
+            {
                 $large[$row['customId']] = \HTML\dbToFormTidy($row['customLabel']);
-            } else {
+            }
+            else
+            {
                 $small[$row['customId']] = \HTML\dbToFormTidy($row['customLabel']);
             }
         }
-        if (empty($array)) {
+        if (empty($array))
+        {
             return;
         }
         $this->formData['customFields'] = serialize($array);
@@ -1051,12 +1250,16 @@ class RESOURCEFORM
         $tdContent .= \HTML\trStart();
 
         $count = 3;
-        foreach ($small as $id => $label) {
+        foreach ($small as $id => $label)
+        {
             $value = FALSE;
-            if ($this->error) {
+            if ($this->error)
+            {
                 $value = $this->session->getVar("resourceForm_customId" . $id) ?
                     $this->session->getVar("resourceForm_customId" . $id) : FALSE;
-            } elseif ($this->edit) {
+            }
+            elseif ($this->edit)
+            {
                 $this->db->formatConditions(['resourcecustomResourceId' => $this->vars['id']]);
                 $this->db->formatConditions(['resourcecustomCustomId' => $id]);
                 $row = $this->db->selectFirstRow('resource_custom', 'resourcecustomShort');
@@ -1065,14 +1268,16 @@ class RESOURCEFORM
             $tdContent .= \HTML\td(\FORM\textInput($label, 'customId' . $id, $value, 30, 255));
 
             --$count;
-            if (!$count) {
+            if (!$count)
+            {
                 $tdContent .= \HTML\trEnd();
                 $tdContent .= \HTML\trStart();
                 $count = 3;
             }
         }
 
-        while ($count > 0) {
+        while ($count > 0)
+        {
             $tdContent .= \HTML\td('&nbsp;');
             --$count;
         }
@@ -1086,13 +1291,17 @@ class RESOURCEFORM
 
         $idArray = [];
         $count = 1;
-        foreach ($large as $id => $label) {
+        foreach ($large as $id => $label)
+        {
             $idArray[] = 'customId' . $id;
             $value = FALSE;
-            if ($this->error) {
+            if ($this->error)
+            {
                 $value = $this->session->getVar("resourceForm_customId" . $id) ?
                     $this->session->getVar("resourceForm_customId" . $id) : FALSE;
-            } elseif ($this->edit) {
+            }
+            elseif ($this->edit)
+            {
                 $this->db->formatConditions(['resourcecustomResourceId' => $this->vars['id']]);
                 $this->db->formatConditions(['resourcecustomCustomId' => $id]);
                 $row = $this->db->selectFirstRow('resource_custom', 'resourcecustomLong');
@@ -1101,14 +1310,16 @@ class RESOURCEFORM
             $tdContent .= \HTML\td(\FORM\textareaInput($label, 'customId' . $id, \HTML\dbToFormTidy($value), 60, 10));
 
             --$count;
-            if (!$count) {
+            if (!$count)
+            {
                 $tdContent .= \HTML\trEnd();
                 $tdContent .= \HTML\trStart();
                 $count = 1;
             }
         }
 
-        while ($count > 0) {
+        while ($count > 0)
+        {
             $tdContent .= \HTML\td('&nbsp;');
             --$count;
         }
@@ -1117,7 +1328,8 @@ class RESOURCEFORM
         $tdContent .= \HTML\tableEnd();
 
 
-        if (!empty($idArray)) {
+        if (!empty($idArray))
+        {
             $pString .= $this->tinymce->loadMetadataTextarea($idArray);
         }
         $pString .= \HTML\td($tdContent, $this->tdContentWidth);
@@ -1138,7 +1350,8 @@ class RESOURCEFORM
         $tdLabel = $this->messages->text("resources", "type");
         $tdContent = \HTML\tableStart();
         $tdContent .= \HTML\trStart();
-        foreach ($this->typeMaps as $type => $null) {
+        foreach ($this->typeMaps as $type => $null)
+        {
             $array[$type] = $this->messages->text("resourceType", $type);
         }
         $jsonArray = [];
@@ -1227,14 +1440,14 @@ class RESOURCEFORM
                 35
             ));
         $tdContent .= \HTML\trEnd() . \HTML\tableEnd();
-        $div = \HTML\td(\HTML\h($tdLabel, FALSE, 4) .\HTML\span(\HTML\aBrowse(
+        $div = \HTML\td(\HTML\h($tdLabel, FALSE, 4) . \HTML\span(\HTML\aBrowse(
             'green',
             '',
             $this->messages->text("hint", "hint"),
             '#',
             "",
             $this->messages->text("hint", "capitals")
-        ), 'hint'), $this->tdLabelWidth) 
+        ), 'hint'), $this->tdLabelWidth)
             . \HTML\td($tdContent, $this->tdContentWidth);
 
         return \HTML\div('typeOuter', \HTML\tableStart('generalTable borderStyleSolid') . \HTML\trStart() .
@@ -1259,16 +1472,21 @@ class RESOURCEFORM
     {
         if ((($this->resourceType == 'web_site') || ($this->resourceType == 'web_article') || ($this->resourceType == 'database') ||
             ($this->resourceType == 'web_encyclopedia') || ($this->resourceType == 'web_encyclopedia_article')) &&
-            ($optionalArray == 'miscellaneous')) {
+            ($optionalArray == 'miscellaneous'))
+        {
             $date = getdate();
         }
-        if (array_key_exists('title', $this->typeMaps[$this->resourceType]['optional'][$optionalArray])) {
+        if (array_key_exists('title', $this->typeMaps[$this->resourceType]['optional'][$optionalArray]))
+        {
             $tdLabel = $this->messages->text("resources", $this->typeMaps[$this->resourceType]['optional'][$optionalArray]['title']);
             unset($this->typeMaps[$this->resourceType]['optional'][$optionalArray]['title']);
-        } else {
+        }
+        else
+        {
             $tdLabel = $this->messages->text("resources", $tdLabel);
         }
-        if (array_key_exists('titleHint', $this->typeMaps[$this->resourceType]['optional'][$optionalArray])) {
+        if (array_key_exists('titleHint', $this->typeMaps[$this->resourceType]['optional'][$optionalArray]))
+        {
             $tdHint = \HTML\p(\HTML\span(\HTML\aBrowse(
                 'green',
                 '',
@@ -1278,18 +1496,23 @@ class RESOURCEFORM
                 $this->messages->text("hint", $this->typeMaps[$this->resourceType]['optional'][$optionalArray]['titleHint'])
             ), 'hint'));
             unset($this->typeMaps[$this->resourceType]['optional'][$optionalArray]['titleHint']);
-        } else {
+        }
+        else
+        {
             $tdHint = FALSE;
         }
         $contentTable = \HTML\tableStart() . \HTML\trStart();
         $tds = $tdElements = $hints = [];
-        foreach ($this->typeMaps[$this->resourceType]['optional'][$optionalArray] as $tableKey => $tableArray) {
+        foreach ($this->typeMaps[$this->resourceType]['optional'][$optionalArray] as $tableKey => $tableArray)
+        {
             $tableKey = str_replace('*', '', $tableKey); // RESOURCEMAP: a '*' is sometimes appended to the table name in order to help with the visual display
             if (($tableKey == 'insertBefore') || ($tableKey == 'insertAfter')
-                 || ($tableKey == 'insertTitle')) { // should have been dealt with and removed earlier
+                 || ($tableKey == 'insertTitle'))
+            { // should have been dealt with and removed earlier
                 continue;
             }
-            if (mb_strpos($tableKey, 'hint_') === 0) { // found at start
+            if (mb_strpos($tableKey, 'hint_') === 0)
+            { // found at start
                 $hintArray = \UTF8\mb_explode('_', $tableKey);
                 $hints[$hintArray[1]] = BR . \HTML\span(\HTML\aBrowse(
                     'green',
@@ -1303,24 +1526,31 @@ class RESOURCEFORM
                 continue;
             }
             $continue = FALSE;
-            foreach ($tableArray as $key => $value) {
-                if (!is_bool($value) && array_key_exists($value, $this->eds)) {
+            foreach ($tableArray as $key => $value)
+            {
+                if (!is_bool($value) && array_key_exists($value, $this->eds))
+                {
                     $required = FALSE;
-                    if (array_key_exists('required', $this->typeMaps[$this->resourceType])) {
+                    if (array_key_exists('required', $this->typeMaps[$this->resourceType]))
+                    {
                         $required = array_search($tableKey . $key, $this->typeMaps[$this->resourceType]['required']) !== FALSE ?
                             $this->required() : FALSE;
                     }
                     $sessionVar = array_key_exists($tableKey . $key, $this->formData) ?
                         \HTML\dbToFormTidy($this->formData[$tableKey . $key]) : FALSE;
                     $hint = array_key_exists($key, $hints) ? $hints[$key] : FALSE;
-                    if (array_key_exists($key, $insertBefore)) {
+                    if (array_key_exists($key, $insertBefore))
+                    {
                         $tdElements[] = $insertBefore[$key];
                     }
-                    if ($this->eds[$value]['type'] == 'textInput') {
-                        if (($key == 'TransTitle') && (array_key_exists($tableKey . 'TransNoSort', $this->formData))) {
+                    if ($this->eds[$value]['type'] == 'textInput')
+                    {
+                        if (($key == 'TransTitle') && (array_key_exists($tableKey . 'TransNoSort', $this->formData)))
+                        {
                             $sessionVar = \HTML\dbToFormTidy($this->formData[$tableKey . 'TransNoSort']) . ' ' . $sessionVar;
                         }
-                        if (isset($date) && !$sessionVar && ($key == 'Year2')) {
+                        if (isset($date) && !$sessionVar && ($key == 'Year2'))
+                        {
                             $sessionVar = $date['year'];
                         }
                         $tdElements[] = $required . \FORM\textInput(
@@ -1330,7 +1560,9 @@ class RESOURCEFORM
                             $this->eds[$value]['width'],
                             $this->eds[$value]['max']
                         ) . $hint;
-                    } elseif ($this->eds[$value]['type'] == 'textareaInput') {
+                    }
+                    elseif ($this->eds[$value]['type'] == 'textareaInput')
+                    {
                         $tdElements[] = $required . \FORM\textareaInput(
                             $this->messages->text("resources", $value),
                             $tableKey . $key,
@@ -1338,19 +1570,28 @@ class RESOURCEFORM
                             $this->eds[$value]['width'],
                             $this->eds[$value]['max']
                         ) . $hint;
-                    } elseif ($this->eds[$value]['type'] == 'checkbox') {
+                    }
+                    elseif ($this->eds[$value]['type'] == 'checkbox')
+                    {
                         $tdElements[] = \FORM\checkbox($this->messages->text("resources", $value), $tableKey . $key, $sessionVar) . $hint;
-                    } elseif ($this->eds[$value]['type'] == 'date') {
+                    }
+                    elseif ($this->eds[$value]['type'] == 'date')
+                    {
                         $tdElements[] = \FORM\dateInput($this->messages->text("resources", "date"), $value, FALSE);
-                    } elseif ($this->eds[$value]['type'] == 'day_selectbox') {
-                        if (!isset($days)) {
+                    }
+                    elseif ($this->eds[$value]['type'] == 'day_selectbox')
+                    {
+                        if (!isset($days))
+                        {
                             $days[] = $this->messages->text("misc", "ignore");
                             $days = array_merge($days, range(1, 31));
                         }
-                        if (isset($date) && !$sessionVar) {
+                        if (isset($date) && !$sessionVar)
+                        {
                             $sessionVar = $date['mday'];
                         }
-                        if ($sessionVar) {
+                        if ($sessionVar)
+                        {
                             $tdElements[] = $required . \FORM\selectedBoxValue(
                                 $this->messages->text("resources", $value),
                                 $tableKey . $key,
@@ -1358,7 +1599,9 @@ class RESOURCEFORM
                                 $sessionVar,
                                 1
                             ) . $hint;
-                        } else {
+                        }
+                        else
+                        {
                             $tdElements[] = $required . \FORM\selectFBoxValue(
                                 $this->messages->text("resources", $value),
                                 $tableKey . $key,
@@ -1366,20 +1609,26 @@ class RESOURCEFORM
                                 1
                             ) . $hint;
                         }
-                    } elseif ($this->eds[$value]['type'] == 'month_selectbox') {
+                    }
+                    elseif ($this->eds[$value]['type'] == 'month_selectbox')
+                    {
                         $constant = FACTORY_CONSTANTS::getInstance();
-                        if (!isset($months)) {
+                        if (!isset($months))
+                        {
                             $months[] = $this->messages->text("misc", "ignore");
                             $months = array_merge($months, $constant->monthToLongName());
                         }
-                        if (!isset($days)) {
+                        if (!isset($days))
+                        {
                             $days[] = $this->messages->text("misc", "ignore");
                             $days = array_merge($days, range(1, 31));
                         }
-                        if (isset($date) && !$sessionVar) {
+                        if (isset($date) && !$sessionVar)
+                        {
                             $sessionVar = $date['mon'];
                         }
-                        if ($sessionVar) {
+                        if ($sessionVar)
+                        {
                             $tdElements[] = $required . \FORM\selectedBoxValue(
                                 $this->messages->text("resources", $value),
                                 $tableKey . $key,
@@ -1387,7 +1636,9 @@ class RESOURCEFORM
                                 $sessionVar,
                                 1
                             ) . $hint;
-                        } else {
+                        }
+                        else
+                        {
                             $tdElements[] = $required . \FORM\selectFBoxValue(
                                 $this->messages->text("resources", $value),
                                 $tableKey . $key,
@@ -1396,23 +1647,30 @@ class RESOURCEFORM
                             ) . $hint;
                         }
                     }
-                    if (array_key_exists($key, $insertAfter)) {
+                    if (array_key_exists($key, $insertAfter))
+                    {
                         $tdElements[] = $insertAfter[$key];
                     }
-                } elseif ($key == 'continue') {
+                }
+                elseif ($key == 'continue')
+                {
                     $continue = TRUE;
-                } elseif (mb_strpos($key, 'break') === 0) {
+                }
+                elseif (mb_strpos($key, 'break') === 0)
+                {
                     $tds[] = $tdElements;
                     $tdElements = [];
                 }
             }
-            if (!$continue) {
+            if (!$continue)
+            {
                 $tds[] = $tdElements;
                 $tdElements = [];
             }
         }
         $tdWidth = 'width' . floor(100 / count($tds)) . 'percent';
-        foreach ($tds as $td) {
+        foreach ($tds as $td)
+        {
             $tdString = implode(BR, $td);
             $contentTable .= \HTML\td($tdString, $tdWidth);
         }
@@ -1435,7 +1693,8 @@ class RESOURCEFORM
         $this->db->formatConditions(['resourcemiscField1' => ' IS NOT NULL']);
         $this->db->limit(1, 0); // pick just the first one
         $resultset = $this->db->select('resource_misc', ['resourcemiscId', 'resourcemiscField1']);
-        if (!$this->db->numRows($resultset)) {
+        if (!$this->db->numRows($resultset))
+        {
             unset($this->formData['publisherId']);
 
             return $this->publisherInsert();
@@ -1443,43 +1702,60 @@ class RESOURCEFORM
         $row = $this->db->fetchRow($resultset);
         $publisherId = $row['resourcemiscField1'];
         $resourceId = $row['resourcemiscId'];
-        foreach ($this->typeMaps[$this->resourceType]['optional']['publisher'] as $tableKey => $tableArray) {
+        foreach ($this->typeMaps[$this->resourceType]['optional']['publisher'] as $tableKey => $tableArray)
+        {
             if (($tableKey == 'insertBefore') || ($tableKey == 'insertAfter') || ($tableKey == 'title')
                  || ($tableKey == 'insertTitle') || ($tableKey == 'publisher') || ($tableKey == 'resourcepage')
-                 || (mb_strpos($tableKey, 'hint_') === 0)) {
+                 || (mb_strpos($tableKey, 'hint_') === 0))
+            {
                 continue;
             }
-            if (array_key_exists('break', $tableArray)) {
+            if (array_key_exists('break', $tableArray))
+            {
                 unset($tableArray['break']);
             }
-            if (array_key_exists('break2', $tableArray)) {
+            if (array_key_exists('break2', $tableArray))
+            {
                 unset($tableArray['break2']);
             }
-            if (array_key_exists('continue', $tableArray)) {
+            if (array_key_exists('continue', $tableArray))
+            {
                 unset($tableArray['continue']);
             }
-            if ($tableKey == 'resourcemisc') {
+            if ($tableKey == 'resourcemisc')
+            {
                 $table = 'resource_misc';
-            } elseif ($tableKey == 'resourceyear') {
+            }
+            elseif ($tableKey == 'resourceyear')
+            {
                 $table = 'resource_year';
-            } else {
+            }
+            else
+            {
                 $table = $tableKey;
             }
             $fieldArray = array_keys($tableArray);
             $fieldArrayDB = $this->db->prependTableToField($tableKey, $fieldArray);
             $this->db->formatConditions([$tableKey . 'Id' => $resourceId]);
             $row = $this->db->selectFirstRow($table, $fieldArrayDB);
-            foreach ($fieldArrayDB as $field) {
-                if ($row[$field]) {
+            foreach ($fieldArrayDB as $field)
+            {
+                if ($row[$field])
+                {
                     $this->formData[$field] = $row[$field];
-                } else {
+                }
+                else
+                {
                     unset($this->formData[$field]);
                 }
             }
         }
-        if (($this->resourceType == 'proceedings_article') || ($this->resourceType == 'proceedings')) {
+        if (($this->resourceType == 'proceedings_article') || ($this->resourceType == 'proceedings'))
+        {
             $this->formData['organizerId'] = $publisherId;
-        } else {
+        }
+        else
+        {
             $this->formData['publisherId'] = $publisherId;
         }
 
@@ -1492,41 +1768,58 @@ class RESOURCEFORM
      */
     private function publisherInsert()
     {
-        if (array_key_exists($this->resourceType, $this->publisherMap->publisherTypes)) {
+        if (array_key_exists($this->resourceType, $this->publisherMap->publisherTypes))
+        {
             $tempA = $this->publisher->grabAll($this->publisherMap->publisherTypes[$this->resourceType]);
-        } else {
+        }
+        else
+        {
             $tempA = $this->publisher->grabAll();
         }
-        if (!is_array($tempA)) {
+        if (!is_array($tempA))
+        {
             return [];
         }
         $temp = [];
-        foreach ($tempA as $key => $value) {
+        foreach ($tempA as $key => $value)
+        {
             $temp[$key] = preg_replace("/{(.*)}/Uu", "$1", $value);
         }
-        if (!empty($temp)) {
-            if (array_key_exists('insertTitle', $this->typeMaps[$this->resourceType]['optional']['publisher'])) {
-                if ($this->typeMaps[$this->resourceType]['optional']['publisher']['insertTitle']) {
+        if (!empty($temp))
+        {
+            if (array_key_exists('insertTitle', $this->typeMaps[$this->resourceType]['optional']['publisher']))
+            {
+                if ($this->typeMaps[$this->resourceType]['optional']['publisher']['insertTitle'])
+                {
                     $title =
                     $this->messages->text("resources", $this->typeMaps[$this->resourceType]['optional']['publisher']['insertTitle']);
                 }
-            } else {
+            }
+            else
+            {
                 $title = $this->messages->text("resources", "publisher");
             }
             $publishers[0] = $this->messages->text("misc", "ignore");
-            foreach ($temp as $key => $value) {
+            foreach ($temp as $key => $value)
+            {
                 $publishers[$key] = $value;
             }
-            if (($this->resourceType == 'proceedings_article') || ($this->resourceType == 'proceedings')) {
+            if (($this->resourceType == 'proceedings_article') || ($this->resourceType == 'proceedings'))
+            {
                 $id = 'organizerId';
-            } else {
+            }
+            else
+            {
                 $id = 'publisherId';
             }
             $pId = array_key_exists($id, $this->formData) ?
                 \HTML\dbToFormTidy($this->formData[$id]) : FALSE;
-            if ($pId) {
+            if ($pId)
+            {
                 return \FORM\selectedBoxValue($title, $id, $publishers, $pId, 1);
-            } else {
+            }
+            else
+            {
                 return \FORM\selectFBoxValue($title, $id, $publishers, 1);
             }
         }
@@ -1540,45 +1833,64 @@ class RESOURCEFORM
     {
         // Get a resourceId to fill in translation details from
         $array = unserialize(base64_decode($this->translationFill));
-        if ($array[0]) {
+        if ($array[0])
+        {
             $this->db->formatConditions(['resourceTransNoSort' => $array[0]]); // noSort
-        } else {
+        }
+        else
+        {
             $this->db->formatConditions(['resourceTransNoSort' => ' IS NULL']); // noSort
         }
         $this->db->formatConditions(['resourceTransTitle' => $array[1]]); // title
-        if (count($array) > 2) {
+        if (count($array) > 2)
+        {
             $this->db->formatConditions(['resourceTransSubtitle' => $array[2]]); // subTitle
-        } else {
+        }
+        else
+        {
             $this->db->formatConditions(['resourceTransSubtitle' => ' IS NULL']); // subTitle
         }
         $this->db->limit(1, 0); // pick just the first one
         $resourceId = $this->db->selectFirstField('resource', 'resourceId');
-        foreach ($this->typeMaps[$this->resourceType]['optional']['translation'] as $tableKey => $tableArray) {
+        foreach ($this->typeMaps[$this->resourceType]['optional']['translation'] as $tableKey => $tableArray)
+        {
             if (($tableKey == 'insertBefore') || ($tableKey == 'insertAfter') || ($tableKey == 'title')
-                 || ($tableKey == 'insertTitle') || ($tableKey == 'publisher') || (mb_strpos($tableKey, 'hint_') === 0)) {
+                 || ($tableKey == 'insertTitle') || ($tableKey == 'publisher') || (mb_strpos($tableKey, 'hint_') === 0))
+            {
                 continue;
             }
-            if (array_key_exists('break', $tableArray)) {
+            if (array_key_exists('break', $tableArray))
+            {
                 unset($tableArray['break']);
             }
-            if (array_key_exists('continue', $tableArray)) {
+            if (array_key_exists('continue', $tableArray))
+            {
                 unset($tableArray['continue']);
             }
-            if ($tableKey == 'resourcemisc') {
+            if ($tableKey == 'resourcemisc')
+            {
                 $table = 'resource_misc';
-            } elseif ($tableKey == 'resourceyear') {
+            }
+            elseif ($tableKey == 'resourceyear')
+            {
                 $table = 'resource_year';
-            } else {
+            }
+            else
+            {
                 $table = $tableKey;
             }
             $fieldArray = array_keys($tableArray);
             $fieldArrayDB = $this->db->prependTableToField($tableKey, $fieldArray);
             $this->db->formatConditions([$tableKey . 'Id' => $resourceId]);
             $row = $this->db->selectFirstRow($table, $fieldArrayDB);
-            foreach ($fieldArrayDB as $field) {
-                if ($row[$field]) {
+            foreach ($fieldArrayDB as $field)
+            {
+                if ($row[$field])
+                {
                     $this->formData[$field] = $row[$field];
-                } else {
+                }
+                else
+                {
                     unset($this->formData[$field]);
                 }
             }
@@ -1586,9 +1898,12 @@ class RESOURCEFORM
         $this->db->formatConditions(['resourcemiscId' => $resourceId]);
         $resultset = $this->db->select('resource_misc', 'resourcemiscField1');
         $row = $this->db->fetchRow($resultset);
-        if ($row['resourcemiscField1']) {
+        if ($row['resourcemiscField1'])
+        {
             $this->formData['transPublisherId'] = $row['resourcemiscField1'];
-        } else {
+        }
+        else
+        {
             unset($this->formData['transPublisherId']);
         }
 
@@ -1607,31 +1922,43 @@ class RESOURCEFORM
         $this->db->orderBy('resourceTransTitle');
         $resultset = $this->db->select('resource', ['resourceTransTitle', 'resourceTransSubtitle', 'resourceTransShortTitle',
             'resourceTransNoSort', ], TRUE);
-        while ($row = $this->db->fetchRow($resultset)) {
-            if ($row['resourceTransNoSort']) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
+            if ($row['resourceTransNoSort'])
+            {
                 $noSort = \HTML\dbToFormTidy($row['resourceTransNoSort']) . ' ';
-            } else {
+            }
+            else
+            {
                 $noSort = '';
             }
-            if ($row['resourceTransSubtitle']) {
+            if ($row['resourceTransSubtitle'])
+            {
                 $temp[] = [[$noSort, $row['resourceTransTitle'], $row['resourceTransSubtitle']],
                     $noSort . \HTML\dbToFormTidy($row['resourceTransTitle']) . ': ' . \HTML\dbToFormTidy($row['resourceTransSubtitle']), ];
-            } else {
+            }
+            else
+            {
                 $temp[] = [[$noSort, $row['resourceTransTitle']], $noSort . \HTML\dbToFormTidy($row['resourceTransTitle'])];
             }
         }
-        if (!empty($temp)) {
-            if (array_key_exists('insertTitle', $this->typeMaps[$this->resourceType]['optional']['translation'])) {
-                if ($this->typeMaps[$this->resourceType]['optional']['translation']['insertTitle']) {
+        if (!empty($temp))
+        {
+            if (array_key_exists('insertTitle', $this->typeMaps[$this->resourceType]['optional']['translation']))
+            {
+                if ($this->typeMaps[$this->resourceType]['optional']['translation']['insertTitle'])
+                {
                     $title =
                     $this->messages->text("resources", $this->typeMaps[$this->resourceType]['optional']['translation']['insertTitle']);
                 }
-            } else {
+            }
+            else
+            {
                 $title = $this->messages->text("resources", "originalTitle");
             }
             // Fill in trans DIV depending upon which trans is chosen
-            $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillTrans&resourceType=' . $this->resourceType . 
-            	'&uuid=' . $this->uuid;
+            $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillTrans&resourceType=' . $this->resourceType .
+                '&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -1640,14 +1967,18 @@ class RESOURCEFORM
             ];
             $js = \AJAX\jActionForm('onchange', $jsonArray);
             $titles[base64_encode('IGNORE')] = $this->messages->text("misc", "ignore");
-            foreach ($temp as $value) {
+            foreach ($temp as $value)
+            {
                 $titles[base64_encode(serialize($value[0]))] = $value[1];
             }
             $tId = array_key_exists("transTitles", $this->formData) ?
                 \HTML\dbToFormTidy($this->formData['transTitles']) : FALSE;
-            if ($tId) {
+            if ($tId)
+            {
                 return \FORM\selectedBoxValue($title, 'transTitles', $titles, $tId, 1, FALSE, $js);
-            } else {
+            }
+            else
+            {
                 return \FORM\selectFBoxValue($title, 'transTitles', $titles, 1, FALSE, $js);
             }
         }
@@ -1662,31 +1993,42 @@ class RESOURCEFORM
     private function translationPubInsert()
     {
         $tempA = $this->publisher->grabAll();
-        if (!is_array($tempA)) {
+        if (!is_array($tempA))
+        {
             return [];
         }
         $temp = [];
-        foreach ($tempA as $key => $value) {
+        foreach ($tempA as $key => $value)
+        {
             $temp[$key] = preg_replace("/{(.*)}/Uu", "$1", $value);
         }
-        if (!empty($temp)) {
-            if (array_key_exists('insertTitle', $this->typeMaps[$this->resourceType]['optional']['translation'])) {
-                if ($this->typeMaps[$this->resourceType]['optional']['translation']['insertTitle']) {
+        if (!empty($temp))
+        {
+            if (array_key_exists('insertTitle', $this->typeMaps[$this->resourceType]['optional']['translation']))
+            {
+                if ($this->typeMaps[$this->resourceType]['optional']['translation']['insertTitle'])
+                {
                     $title =
                     $this->messages->text("resources", $this->typeMaps[$this->resourceType]['optional']['translation']['insertTitle']);
                 }
-            } else {
+            }
+            else
+            {
                 $title = $this->messages->text("resources", "publisher");
             }
             $publishers[0] = $this->messages->text("misc", "ignore");
-            foreach ($temp as $key => $value) {
+            foreach ($temp as $key => $value)
+            {
                 $publishers[$key] = $value;
             }
             $pId = array_key_exists("transPublisherId", $this->formData) ?
                 \HTML\dbToFormTidy($this->formData['transPublisherId']) : FALSE;
-            if ($pId) {
+            if ($pId)
+            {
                 return \FORM\selectedBoxValue($title, 'transPublisherId', $publishers, $pId, 1);
-            } else {
+            }
+            else
+            {
                 return \FORM\selectFBoxValue($title, 'transPublisherId', $publishers, 1);
             }
         }
@@ -1701,40 +2043,56 @@ class RESOURCEFORM
     private function seriesInsertFill()
     {
         // Get a resourceId to fill in series details from
-        if (($this->resourceType == 'proceedings') || ($this->resourceType == 'proceedings_article')) {
+        if (($this->resourceType == 'proceedings') || ($this->resourceType == 'proceedings_article'))
+        {
             $this->db->formatConditionsOneField(['proceedings', 'proceedings_article'], 'resourceType');
-        } elseif (($this->resourceType == 'book') || ($this->resourceType == 'book_article') || ($this->resourceType == 'book_chapter')) {
+        }
+        elseif (($this->resourceType == 'book') || ($this->resourceType == 'book_article') || ($this->resourceType == 'book_chapter'))
+        {
             $this->db->formatConditionsOneField(['book', 'book_article', 'book_chapter'], 'resourceType');
         }
         $this->db->formatConditions(['resourceField1' => base64_decode($this->seriesFill)]);
         $this->db->limit(1, 0); // pick just the first one
         $resourceId = $this->db->selectFirstField('resource', 'resourceId');
-        foreach ($this->typeMaps[$this->resourceType]['optional']['series'] as $tableKey => $tableArray) {
+        foreach ($this->typeMaps[$this->resourceType]['optional']['series'] as $tableKey => $tableArray)
+        {
             if (($tableKey == 'insertBefore') || ($tableKey == 'insertAfter') || ($tableKey == 'title')
-                 || ($tableKey == 'insertTitle') || (mb_strpos($tableKey, 'hint_') === 0)) {
+                 || ($tableKey == 'insertTitle') || (mb_strpos($tableKey, 'hint_') === 0))
+            {
                 continue;
             }
-            if (array_key_exists('break', $tableArray)) {
+            if (array_key_exists('break', $tableArray))
+            {
                 unset($tableArray['break']);
             }
-            if (array_key_exists('continue', $tableArray)) {
+            if (array_key_exists('continue', $tableArray))
+            {
                 unset($tableArray['continue']);
             }
-            if ($tableKey == 'resourcemisc') {
+            if ($tableKey == 'resourcemisc')
+            {
                 $table = 'resource_misc';
-            } elseif ($tableKey == 'resourceyear') {
+            }
+            elseif ($tableKey == 'resourceyear')
+            {
                 $table = 'resource_year';
-            } else {
+            }
+            else
+            {
                 $table = $tableKey;
             }
             $fieldArray = array_keys($tableArray);
             $fieldArrayDB = $this->db->prependTableToField($tableKey, $fieldArray);
             $this->db->formatConditions([$tableKey . 'Id' => $resourceId]);
             $row = $this->db->selectFirstRow($table, $fieldArrayDB);
-            foreach ($fieldArrayDB as $field) {
-                if ($row[$field]) {
+            foreach ($fieldArrayDB as $field)
+            {
+                if ($row[$field])
+                {
                     $this->formData[$field] = $row[$field];
-                } else {
+                }
+                else
+                {
                     unset($this->formData[$field]);
                 }
             }
@@ -1749,23 +2107,29 @@ class RESOURCEFORM
      */
     private function seriesInsert()
     {
-        if (($this->resourceType == 'proceedings') || ($this->resourceType == 'proceedings_article')) {
+        if (($this->resourceType == 'proceedings') || ($this->resourceType == 'proceedings_article'))
+        {
             $this->db->formatConditionsOneField(['proceedings', 'proceedings_article'], 'resourceType');
-        } elseif (($this->resourceType == 'book') || ($this->resourceType == 'book_article') || ($this->resourceType == 'book_chapter')) {
+        }
+        elseif (($this->resourceType == 'book') || ($this->resourceType == 'book_article') || ($this->resourceType == 'book_chapter'))
+        {
             $this->db->formatConditionsOneField(['book', 'book_article', 'book_chapter'], 'resourceType');
         }
         $this->db->formatConditions(['resourceField1' => ' IS NOT NULL']);
         $this->db->orderBy('resourceField1');
         $resultset = $this->db->select('resource', 'resourceField1', TRUE);
-        while ($row = $this->db->fetchRow($resultset)) {
-            if ($row['resourceField1']) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
+            if ($row['resourceField1'])
+            {
                 $temp[] = \HTML\dbToFormTidy($row['resourceField1']);
             }
         }
-        if (isset($temp)) {
+        if (isset($temp))
+        {
             // Fill in series DIV depending upon which series is chosen
-            $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillSeries&resourceType=' . $this->resourceType . 
-            	'&uuid=' . $this->uuid;
+            $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillSeries&resourceType=' . $this->resourceType .
+                '&uuid=' . $this->uuid;
             $jsonArray[] = [
                 'startFunction' => 'triggerFromSelect',
                 'script' => "$jScript",
@@ -1774,9 +2138,11 @@ class RESOURCEFORM
             ];
             $js = \AJAX\jActionForm('onchange', $jsonArray);
             $series[base64_encode('IGNORE')] = $this->messages->text("misc", "ignore");
-            foreach ($temp as $value) {
+            foreach ($temp as $value)
+            {
                 $series[base64_encode($value)] = $value;
             }
+
             return \FORM\selectFBoxValue(FALSE, "series", $series, 1, FALSE, $js);
         }
 
@@ -1793,35 +2159,49 @@ class RESOURCEFORM
         $this->db->formatConditions(['resourcemiscCollection' => $this->collectionFill]);
         $this->db->limit(1, 0); // pick just the first one
         $resourceId = $this->db->selectFirstField('resource_misc', 'resourcemiscId');
-        foreach ($this->typeMaps[$this->resourceType]['optional']['conference'] as $tableKey => $tableArray) {
+        foreach ($this->typeMaps[$this->resourceType]['optional']['conference'] as $tableKey => $tableArray)
+        {
             if (($tableKey == 'insertBefore') || ($tableKey == 'insertAfter') || ($tableKey == 'title') || ($tableKey == 'titleHint')
-                 || ($tableKey == 'insertTitle') || ($tableKey == 'collection') || (mb_strpos($tableKey, 'hint_') === 0)) {
+                 || ($tableKey == 'insertTitle') || ($tableKey == 'collection') || (mb_strpos($tableKey, 'hint_') === 0))
+            {
                 continue;
             }
-            if (array_key_exists('break', $tableArray)) {
+            if (array_key_exists('break', $tableArray))
+            {
                 unset($tableArray['break']);
             }
-            if (array_key_exists('break2', $tableArray)) {
+            if (array_key_exists('break2', $tableArray))
+            {
                 unset($tableArray['break2']);
             }
-            if (array_key_exists('continue', $tableArray)) {
+            if (array_key_exists('continue', $tableArray))
+            {
                 unset($tableArray['continue']);
             }
-            if ($tableKey == 'resourcemisc') {
+            if ($tableKey == 'resourcemisc')
+            {
                 $table = 'resource_misc';
-            } elseif ($tableKey == 'resourceyear') {
+            }
+            elseif ($tableKey == 'resourceyear')
+            {
                 $table = 'resource_year';
-            } else {
+            }
+            else
+            {
                 $table = $tableKey;
             }
             $fieldArray = array_keys($tableArray);
             $fieldArrayDB = $this->db->prependTableToField($tableKey, $fieldArray);
             $this->db->formatConditions([$tableKey . 'Id' => $resourceId]);
             $row = $this->db->selectFirstRow($table, $fieldArrayDB);
-            foreach ($fieldArrayDB as $field) {
-                if ($row[$field]) {
+            foreach ($fieldArrayDB as $field)
+            {
+                if ($row[$field])
+                {
                     $this->formData[$field] = $row[$field];
-                } else {
+                }
+                else
+                {
                     unset($this->formData[$field]);
                 }
             }
@@ -1837,25 +2217,32 @@ class RESOURCEFORM
      */
     private function conferenceInsert()
     {
-        if (!array_key_exists('conference', $this->typeMaps[$this->resourceType]['optional'])) {
+        if (!array_key_exists('conference', $this->typeMaps[$this->resourceType]['optional']))
+        {
             return;
         }
         // check there are collections/conferences
         if ((($this->resourceType == 'proceedings_article') || ($this->resourceType == 'conference_paper') ||
             ($this->resourceType == 'conference_poster') || ($this->resourceType == 'proceedings'))
-            && array_key_exists($this->resourceType, $this->collectionMap->collectionTypes)) {
+            && array_key_exists($this->resourceType, $this->collectionMap->collectionTypes))
+        {
             $tempA = $this->collection->grabAll($this->collectionMap->collectionTypes[$this->resourceType]);
-        } else {
+        }
+        else
+        {
             $tempA = $this->collection->grabAll();
         }
-        if (!is_array($tempA)) {
+        if (!is_array($tempA))
+        {
             return [];
         }
         $temp = [];
-        foreach ($tempA as $key => $value) {
+        foreach ($tempA as $key => $value)
+        {
             $temp[$key] = preg_replace("/{(.*)}/Uu", "$1", $value);
         }
-        if (!empty($temp)) {
+        if (!empty($temp))
+        {
             // Fill in conference DIV depending upon which conference is chosen
             $jScript = 'index.php?action=resource_RESOURCEFORMAJAX_CORE&method=fillConference&resourceType=' . $this->resourceType .
                 '&fromCollection=1&uuid=' . $this->uuid;
@@ -1939,16 +2326,21 @@ class RESOURCEFORM
                 'targetDiv' => 'creatorsOuter',
             ];
             $js = \AJAX\jActionForm('onchange', $jsonArray);
-            if (array_key_exists('insertTitle', $this->typeMaps[$this->resourceType]['optional']['conference'])) {
-                if ($this->typeMaps[$this->resourceType]['optional']['conference']['insertTitle']) {
+            if (array_key_exists('insertTitle', $this->typeMaps[$this->resourceType]['optional']['conference']))
+            {
+                if ($this->typeMaps[$this->resourceType]['optional']['conference']['insertTitle'])
+                {
                     $title =
                     $this->messages->text("resources", $this->typeMaps[$this->resourceType]['optional']['conference']['insertTitle']);
                 }
-            } else {
+            }
+            else
+            {
                 $title = $this->messages->text("resources", "collection");
             }
             $collections[0] = $this->messages->text("misc", "ignore");
-            foreach ($temp as $key => $value) {
+            foreach ($temp as $key => $value)
+            {
                 $collections[$key] = $value;
             }
             $selected = array_key_exists('conferenceId', $this->formData) ? $this->formData['conferenceId'] : FALSE;
@@ -1976,40 +2368,60 @@ class RESOURCEFORM
         $temp = [];
         if ((($this->resourceType == 'proceedings_article') || ($this->resourceType == 'conference_paper') ||
             ($this->resourceType == 'conference_poster') || ($this->resourceType == 'proceedings'))
-            && array_key_exists($this->resourceType, $this->publisherMap->publisherTypes)) {
+            && array_key_exists($this->resourceType, $this->publisherMap->publisherTypes))
+        {
             $tempA = $this->publisher->grabAll($this->publisherMap->publisherTypes[$this->resourceType]);
-        } elseif (($this->resourceType == 'proceedings_article') || ($this->resourceType == 'conference_paper') ||
-            ($this->resourceType == 'conference_poster') || ($this->resourceType == 'proceedings')) {
+        }
+        elseif (($this->resourceType == 'proceedings_article') || ($this->resourceType == 'conference_paper') ||
+            ($this->resourceType == 'conference_poster') || ($this->resourceType == 'proceedings'))
+        {
             $tempA = $this->publisher->grabAll();
-        } elseif (array_key_exists($this->resourceType, $this->collectionMap->collectionTypes)) {
+        }
+        elseif (array_key_exists($this->resourceType, $this->collectionMap->collectionTypes))
+        {
             $tempA = $this->collection->grabAll($this->collectionMap->collectionTypes[$this->resourceType]);
-        } else {
+        }
+        else
+        {
             $tempA = $this->collection->grabAll();
         }
-        if (!is_array($tempA)) {
+        if (!is_array($tempA))
+        {
             return [];
         }
-        foreach ($tempA as $key => $value) {
+        foreach ($tempA as $key => $value)
+        {
             $temp[$key] = preg_replace("/{(.*)}/Uu", "$1", $value);
         }
-        if (!empty($temp)) {
-            if (array_key_exists('insertTitle', $this->typeMaps[$this->resourceType]['optional']['collection'])) {
-                if ($this->typeMaps[$this->resourceType]['optional']['collection']['insertTitle']) {
+        if (!empty($temp))
+        {
+            if (array_key_exists('insertTitle', $this->typeMaps[$this->resourceType]['optional']['collection']))
+            {
+                if ($this->typeMaps[$this->resourceType]['optional']['collection']['insertTitle'])
+                {
                     $title =
                     $this->messages->text("resources", $this->typeMaps[$this->resourceType]['optional']['collection']['insertTitle']);
                 }
-            } else {
+            }
+            else
+            {
                 $title = $this->messages->text("resources", "collection");
             }
             $collections[0] = $this->messages->text("misc", "ignore");
-            foreach ($temp as $key => $value) {
+            foreach ($temp as $key => $value)
+            {
                 $collections[$key] = $value;
             }
-            if (($this->resourceType == 'conference_paper') || ($this->resourceType == 'conference_poster')) {
+            if (($this->resourceType == 'conference_paper') || ($this->resourceType == 'conference_poster'))
+            {
                 $id = 'publisherId';
-            } elseif (($this->resourceType == 'proceedings_article') || ($this->resourceType == 'proceedings')) {
+            }
+            elseif (($this->resourceType == 'proceedings_article') || ($this->resourceType == 'proceedings'))
+            {
                 $id = 'publisherId';
-            } else {
+            }
+            else
+            {
                 $id = 'collectionId';
             }
             // Fill in publisher DIV depending upon which collection is chosen and type of resource
@@ -2077,9 +2489,12 @@ class RESOURCEFORM
             ];
             $js = \AJAX\jActionForm('onchange', $jsonArray);
             $selected = array_key_exists($id, $this->formData) ? $this->formData[$id] : FALSE;
-            if ($selected) {
+            if ($selected)
+            {
                 return \FORM\selectedBoxValue($title, $id, $collections, $selected, 1, FALSE, $js);
-            } else {
+            }
+            else
+            {
                 return \FORM\selectFBoxValue($title, $id, $collections, 1, FALSE, $js);
             }
         }
@@ -2162,9 +2577,11 @@ class RESOURCEFORM
         // categories
         $categories = $this->category->grabAll();
         $selectedCategories = [];
-        if (array_key_exists('resourcecategoryCategories', $this->formData)) {
+        if (array_key_exists('resourcecategoryCategories', $this->formData))
+        {
             $selected = \UTF8\mb_explode(',', $this->formData['resourcecategoryCategories']);
-            foreach ($selected as $key) {
+            foreach ($selected as $key)
+            {
                 $selectedCategories[$key] = $categories[$key];
                 unset($categories[$key]);
             }
@@ -2204,12 +2621,15 @@ class RESOURCEFORM
         // Resource languages
         $this->db->orderBy('languageLanguage');
         $resultset = $this->db->select('language', ['languageId', 'languageLanguage']);
-        if ($this->db->numRows($resultset)) {
+        if ($this->db->numRows($resultset))
+        {
             $this->languages[0] = $this->messages->text("misc", "ignore");
-            while ($row = $this->db->fetchRow($resultset)) {
+            while ($row = $this->db->fetchRow($resultset))
+            {
                 $this->languages[$row['languageId']] = \HTML\dbToFormtidy($row['languageLanguage']);
             }
-            if (array_key_exists('resourcelanguageLanguages', $this->formData)) {
+            if (array_key_exists('resourcelanguageLanguages', $this->formData))
+            {
                 $selectedLanguages = \UTF8\mb_explode(',', $this->formData['resourcelanguageLanguages']);
                 $tdContent3 .= \HTML\td(\FORM\selectedBoxValueMultiple($this->messages->text(
                     'resources',
@@ -2222,7 +2642,9 @@ class RESOURCEFORM
                     "",
                     $this->messages->text("hint", "multiples")
                 ), 'hint'), 'width33percent');
-            } else {
+            }
+            else
+            {
                 $tdContent3 .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text(
                     'resources',
                     'languages'
@@ -2246,10 +2668,12 @@ class RESOURCEFORM
         // keywords
         $text = FALSE;
         $keywords = $this->keyword->grabAll();
-        if (!empty($keywords)) {
+        if (!empty($keywords))
+        {
             // If preferences reduce long keywords, we want to transfer the original rather than the condensed version.
             // Store the base64-encoded value for retrieval in the javascript.
-            foreach ($keywords as $key => $value) {
+            foreach ($keywords as $key => $value)
+            {
                 $key = $key . '_' . base64_encode($value);
                 $keywordArray[$key] = html_entity_decode($value);
             }
@@ -2283,7 +2707,9 @@ class RESOURCEFORM
                 $this->messages->text("hint", "multiples")
             ), 'hint') .
             BR . $toBottom . $keywordText, 'width33percent');
-        } else {
+        }
+        else
+        {
             $keywordText = \FORM\textareaInputmceNoEditor($this->messages->text('resources', 'keywords'), "keywordList", $text, 40, 2) .
                 BR . \HTML\span(\HTML\aBrowse(
                     'green',
@@ -2311,10 +2737,12 @@ class RESOURCEFORM
             $this->messages->text("hint", "keywordList")
         ), 'hint'));
         $userTags = $this->userTagObj->grabAll();
-        if (!empty($userTags)) {
+        if (!empty($userTags))
+        {
             // If preferences reduce long userTags, we want to transfer the original rather than the condensed version.
             // Store the base64-encoded value for retrieval in the javascript.
-            foreach ($userTags as $key => $value) {
+            foreach ($userTags as $key => $value)
+            {
                 $key = $key . '_' . base64_encode($value);
                 $userTagArray[$key] = html_entity_decode($value);
             }
@@ -2337,32 +2765,41 @@ class RESOURCEFORM
         // bibliographies
         $bibs[0] = $this->messages->text("misc", "ignore");
         // Get this user's bibliographies
-        if ($this->session->getVar("mywikindx_Bibliographies")) {
+        if ($this->session->getVar("mywikindx_Bibliographies"))
+        {
             $bibsRaw = unserialize($this->session->getVar("mywikindx_Bibliographies"));
-            foreach ($bibsRaw as $key => $value) {
+            foreach ($bibsRaw as $key => $value)
+            {
                 $bibsU[$key] = \HTML\dbToFormTidy($value);
             }
         }
         // Get this user's user group bibliographies
-        if ($this->session->getVar("mywikindx_Groupbibliographies")) {
+        if ($this->session->getVar("mywikindx_Groupbibliographies"))
+        {
             $bibsRaw = unserialize($this->session->getVar("mywikindx_Groupbibliographies"));
-            foreach ($bibsRaw as $key => $value) {
+            foreach ($bibsRaw as $key => $value)
+            {
                 $bibsUG[$key] = \HTML\dbToFormTidy($value);
             }
         }
         $bibsU = $this->commonBib->getUserBibs();
-        if (!empty($bibsU)) {
-            foreach ($bibsU as $key => $value) {
+        if (!empty($bibsU))
+        {
+            foreach ($bibsU as $key => $value)
+            {
                 $bibs[$key] = $value;
             }
         }
         $bibsUG = $this->commonBib->getGroupBibs();
-        if (!empty($bibsUG)) {
-            foreach ($bibsUG as $key => $value) {
+        if (!empty($bibsUG))
+        {
+            foreach ($bibsUG as $key => $value)
+            {
                 $bibs[$key] = $value;
             }
         }
-        if (array_key_exists('bibliographies', $this->formData) && (count($bibs) > 1)) {
+        if (array_key_exists('bibliographies', $this->formData) && (count($bibs) > 1))
+        {
             $selected = \UTF8\mb_explode(',', $this->formData['bibliographies']);
             $tdContent4 .= \HTML\td(\FORM\selectedBoxValueMultiple($this->messages->text(
                 'resources',
@@ -2375,7 +2812,9 @@ class RESOURCEFORM
                 "",
                 $this->messages->text("hint", "multiples")
             ), 'hint'), 'width33percent');
-        } elseif (count($bibs) > 1) {
+        }
+        elseif (count($bibs) > 1)
+        {
             $tdContent4 .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text(
                 'resources',
                 'addNewResourceToBib'
@@ -2438,19 +2877,25 @@ class RESOURCEFORM
     private function writeSessionCreators($array)
     {
         $temp = $this->session->getArray('resourceForm');
-        if (!empty($array['creatorFields'])) {
+        if (!empty($array['creatorFields']))
+        {
             // $array['creatorFields'] does not store fields set to IGNORE or blank so, if creator fields don't exist, remove them from the session.
-            foreach ($temp as $key => $value) {
-                if (!array_key_exists($key, $array['creatorFields']) && (mb_strpos($key, 'Creator') === 0)) {
+            foreach ($temp as $key => $value)
+            {
+                if (!array_key_exists($key, $array['creatorFields']) && (mb_strpos($key, 'Creator') === 0))
+                {
                     $this->session->delVar("resourceForm_$key");
                 }
             }
             $this->session->writeArray($array['creatorFields'], 'resourceForm');
         }
         // else remove all creator fields
-        else {
-            foreach ($temp as $key => $value) {
-                if (mb_strpos($key, 'Creator') === 0) {
+        else
+        {
+            foreach ($temp as $key => $value)
+            {
+                if (mb_strpos($key, 'Creator') === 0)
+                {
                     $this->session->delVar("resourceForm_$key");
                 }
             }
@@ -2506,15 +2951,18 @@ class RESOURCEFORM
         $day_sb = ['type' => 'day_selectbox'];
         $month_sb = ['type' => 'month_selectbox'];
         // textInput large
-        foreach ([] as $element) {
+        foreach ([] as $element)
+        {
             $this->eds[$element] = $ti_large;
         }
         // textInput medium large
-        foreach ([] as $element) {
+        foreach ([] as $element)
+        {
             $this->eds[$element] = $ti_medLarge;
         }
         // textInput medium
-        foreach (['title', 'subTitle', 'seriesTitle',] as $element) {
+        foreach (['title', 'subTitle', 'seriesTitle',] as $element)
+        {
             $this->eds[$element] = $ti_med;
         }
         // textInput medium small
@@ -2523,7 +2971,8 @@ class RESOURCEFORM
             'channelLocation', 'typeOfSoftware', 'medium', 'court', 'reporter', 'reporterVolume', 'code',
             'codeVolume', 'legislativeLocation', 'section', 'volume', 'conferenceOrganiser', 'conferenceLocation',
             'hearing', 'legislativeBody', 'committee', 'nameOfFile', 'publishedSource', 'patentType', 'intPatentTitle',
-            'intPatentClassification', 'legalStatus', 'typeOfCommunication', 'typeOfWork', 'recordLabel', ] as $element) {
+            'intPatentClassification', 'legalStatus', 'typeOfCommunication', 'typeOfWork', 'recordLabel', ] as $element)
+        {
             $this->eds[$element] = $ti_medSmall;
         }
         // textInput small
@@ -2534,27 +2983,33 @@ class RESOURCEFORM
             'session', 'sessionYear', 'billNumber', 'startYear', 'endYear', 'ruleType', 'ruleNumber',
             'issueNumber', 'typeOfReport', 'documentNumber', 'typeOfArticle', 'typeOfManuscript', 'manuscriptNumber',
             'typeOfMap', 'imageProgram', 'imageType', 'imageSize', 'number', 'publicLawNumber', 'codeNumber',
-            'applicationNumber', 'patentVersionNumber', 'intPatentNumber', 'patentNumber',] as $element) {
+            'applicationNumber', 'patentVersionNumber', 'intPatentNumber', 'patentNumber',] as $element)
+        {
             $this->eds[$element] = $ti_small;
         }
         // textarea input
-        foreach ([] as $element) {
+        foreach ([] as $element)
+        {
             $this->eds[$element] = $ta;
         }
         // checkbox input
-        foreach (['peerReviewed'] as $element) {
+        foreach (['peerReviewed'] as $element)
+        {
             $this->eds[$element] = $cb;
         }
         // date input
-        foreach (['publicationDate', 'startDate', 'endDate', 'accessDate'] as $element) {
+        foreach (['publicationDate', 'startDate', 'endDate', 'accessDate'] as $element)
+        {
             $this->eds[$element] = $di;
         }
         // day selectbox
-        foreach (['day', 'startDay', 'endDay', 'publicationDay'] as $element) {
+        foreach (['day', 'startDay', 'endDay', 'publicationDay'] as $element)
+        {
             $this->eds[$element] = $day_sb;
         }
         // month selectbox
-        foreach (['month', 'startMonth', 'endMonth', 'publicationMonth'] as $element) {
+        foreach (['month', 'startMonth', 'endMonth', 'publicationMonth'] as $element)
+        {
             $this->eds[$element] = $month_sb;
         }
     }

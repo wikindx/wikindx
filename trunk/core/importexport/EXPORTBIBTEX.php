@@ -51,10 +51,12 @@ class EXPORTBIBTEX extends EXPORTER
 
         $this->getData($row);
 
-        if (!empty($this->entry)) {
+        if (!empty($this->entry))
+        {
             $entry = $this->convertEntry();
         }
-        if (!empty($this->authors)) {
+        if (!empty($this->authors))
+        {
             $authors = $this->convertEntryAuthors();
         }
 
@@ -75,7 +77,8 @@ class EXPORTBIBTEX extends EXPORTER
     {
         $array = [];
         array_map([$this, "uEncode"], $this->entry);
-        foreach ($this->entry as $key => $value) {
+        foreach ($this->entry as $key => $value)
+        {
             $array[] = "$key = $value";
         }
 

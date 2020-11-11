@@ -24,7 +24,7 @@ namespace TEMPSTORAGE
      */
     function getUuid($db)
     {
-		return $db->queryFetchFirstField("SELECT UUID()");
+        return $db->queryFetchFirstField("SELECT UUID()");
     }
     
     /**
@@ -38,24 +38,29 @@ namespace TEMPSTORAGE
      */
     function store($db, $uuid, $data)
     {
-    	if (!$uuid || empty($data)) {
-    		return FALSE;
-    	}
-    // Check for existence
-    	$db->formatConditions(['tempstorageId' => $uuid]);
-		$oldData = $db->selectFirstField('temp_storage', 'tempstorageData');
-    	if (!$oldData) {
-    		$data = serialize($data);
-	    	$db->insert('temp_storage', ['tempstorageId', 'tempstorageData'], [$uuid, $data]);
-	    } else {
-			$array = array_merge(unserialize($oldData), $data);
-			$newData = serialize($array);
-			$db->formatConditions(['tempstorageId' => $uuid]);
-			$db->update('temp_storage', ['tempstorageData' => $newData]);
-			$db->formatConditions(['tempstorageId' => $uuid]);
-			$db->updateTimestamp('temp_storage', ['tempStorageTimestamp' => '']); // default is CURRENT_TIMESTAMP
-	    }
-	    return TRUE;
+        if (!$uuid || empty($data))
+        {
+            return FALSE;
+        }
+        // Check for existence
+        $db->formatConditions(['tempstorageId' => $uuid]);
+        $oldData = $db->selectFirstField('temp_storage', 'tempstorageData');
+        if (!$oldData)
+        {
+            $data = serialize($data);
+            $db->insert('temp_storage', ['tempstorageId', 'tempstorageData'], [$uuid, $data]);
+        }
+        else
+        {
+            $array = array_merge(unserialize($oldData), $data);
+            $newData = serialize($array);
+            $db->formatConditions(['tempstorageId' => $uuid]);
+            $db->update('temp_storage', ['tempstorageData' => $newData]);
+            $db->formatConditions(['tempstorageId' => $uuid]);
+            $db->updateTimestamp('temp_storage', ['tempStorageTimestamp' => '']); // default is CURRENT_TIMESTAMP
+        }
+
+        return TRUE;
     }
     
     /**
@@ -68,12 +73,14 @@ namespace TEMPSTORAGE
      */
     function exists($db, $uuid)
     {
-    	$db->formatConditions(['tempstorageId' => $uuid]);
-		$row = $db->selectFirstField('temp_storage', 'tempstorageData');
-		if (empty($row)) {
-			return FALSE;
-		}
-		return TRUE;
+        $db->formatConditions(['tempstorageId' => $uuid]);
+        $row = $db->selectFirstField('temp_storage', 'tempstorageData');
+        if (empty($row))
+        {
+            return FALSE;
+        }
+
+        return TRUE;
     }
     
     /**
@@ -86,13 +93,15 @@ namespace TEMPSTORAGE
      */
     function fetch($db, $uuid)
     {
-    	$db->formatConditions(['tempstorageId' => $uuid]);
-		$row = $db->selectFirstField('temp_storage', 'tempstorageData');
-		$data = unserialize($row);
-		if (empty($row)) {
-			return FALSE;
-		}
-		return $data;
+        $db->formatConditions(['tempstorageId' => $uuid]);
+        $row = $db->selectFirstField('temp_storage', 'tempstorageData');
+        $data = unserialize($row);
+        if (empty($row))
+        {
+            return FALSE;
+        }
+
+        return $data;
     }
     
     /**
@@ -106,16 +115,19 @@ namespace TEMPSTORAGE
      */
     function fetchOne($db, $uuid, $key)
     {
-    	$db->formatConditions(['tempstorageId' => $uuid]);
-		$row = $db->selectFirstField('temp_storage', 'tempstorageData');
-		$data = unserialize($row);
-		if (is_bool($data)) {
-			return FALSE;
-		}
-		if (!array_key_exists($key, $data)) {
-			return FALSE;
-		}
-		return $data[$key];
+        $db->formatConditions(['tempstorageId' => $uuid]);
+        $row = $db->selectFirstField('temp_storage', 'tempstorageData');
+        $data = unserialize($row);
+        if (is_bool($data))
+        {
+            return FALSE;
+        }
+        if (!array_key_exists($key, $data))
+        {
+            return FALSE;
+        }
+
+        return $data[$key];
     }
     
     /**
@@ -126,8 +138,8 @@ namespace TEMPSTORAGE
      */
     function delete($db, $uuid)
     {
-    	$db->formatConditions(['tempstorageId' => $uuid]);
-		$db->delete('temp_storage');
+        $db->formatConditions(['tempstorageId' => $uuid]);
+        $db->delete('temp_storage');
     }
      
     /**
@@ -141,28 +153,34 @@ namespace TEMPSTORAGE
      */
     function deleteKeys($db, $uuid, $deleteKeys)
     {
-    // Check for existence
-    	$db->formatConditions(['tempstorageId' => $uuid]);
-		$oldData = $db->selectFirstField('temp_storage', 'tempstorageData');
-    	if (!$oldData) {
-    		return FALSE;
-	    } else {
-			$array = unserialize($oldData);
-			foreach ($deleteKeys as $key) {
-				unset($array[$key]);
-			}
-			$newData = serialize($array);
-			$db->formatConditions(['tempstorageId' => $uuid]);
-			$db->update('temp_storage', ['tempstorageData' => $newData]);
-			$db->formatConditions(['tempstorageId' => $uuid]);
-			$db->updateTimestamp('temp_storage', ['tempStorageTimestamp' => '']); // default is CURRENT_TIMESTAMP
-			// Delete row if empty
-			$data = $db->selectFirstField('temp_storage', 'tempstorageData');
-			if (empty(unserialize($data))) {
-				$db->formatConditions(['tempstorageId' => $uuid]);
-				$db->delete('temp_storage');
-			}
-	    }
-	    return TRUE;
+        // Check for existence
+        $db->formatConditions(['tempstorageId' => $uuid]);
+        $oldData = $db->selectFirstField('temp_storage', 'tempstorageData');
+        if (!$oldData)
+        {
+            return FALSE;
+        }
+        else
+        {
+            $array = unserialize($oldData);
+            foreach ($deleteKeys as $key)
+            {
+                unset($array[$key]);
+            }
+            $newData = serialize($array);
+            $db->formatConditions(['tempstorageId' => $uuid]);
+            $db->update('temp_storage', ['tempstorageData' => $newData]);
+            $db->formatConditions(['tempstorageId' => $uuid]);
+            $db->updateTimestamp('temp_storage', ['tempStorageTimestamp' => '']); // default is CURRENT_TIMESTAMP
+            // Delete row if empty
+            $data = $db->selectFirstField('temp_storage', 'tempstorageData');
+            if (empty(unserialize($data)))
+            {
+                $db->formatConditions(['tempstorageId' => $uuid]);
+                $db->delete('temp_storage');
+            }
+        }
+
+        return TRUE;
     }
 }

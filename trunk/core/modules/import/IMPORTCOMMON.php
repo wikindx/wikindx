@@ -17,6 +17,12 @@ class IMPORTCOMMON
 {
     /** int */
     public $resourceId;
+    /** bool */
+    public $kwIgnore = FALSE;
+    /** bool */
+    public $quarantine = FALSE;
+    /** string */
+    public $importType = 'bibtex';
     /** object */
     private $db;
     /** array */
@@ -43,12 +49,6 @@ class IMPORTCOMMON
     private $bibConfig;
     /** object */
     private $tag;
-    /** bool */
-    public $kwIgnore = FALSE;
-    /** bool */
-    public $quarantine = FALSE;
-    /** string */
-    public $importType = 'bibtex';
 
     /**
      *	IMPORTCOMMON
@@ -71,7 +71,8 @@ class IMPORTCOMMON
         $this->bibConfig->bibtex();
         $bibtexKeys = [];
         $recordset = $this->db->select('resource', 'resourceBibtexKey');
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $this->bibtexKeys[] = $row['resourceBibtexKey'];
         }
     }
@@ -83,100 +84,142 @@ class IMPORTCOMMON
     public function display($message = FALSE)
     {
         $formData = [];
-        if (is_array($message)) {
+        if (is_array($message))
+        {
             $formData = $message[1]; // For some reason, this need to be taken first . . .
             $message = $message[0];
-        } elseif (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        }
+        elseif (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
         $pString = $message;
-        if ($this->importType == 'bibtex') {
-        	GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexImport"));
-	        $pString .= \HTML\p($this->messages->text("import", "bibtexImport"));
-	    } elseif ($this->importType == 'pasteBibtex') {
-			include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
-			$help = new HELPMESSAGES();
-			GLOBALS::setTplVar('help', $help->createLink('pasteBibtex'));
-			GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexPaste"));
-	    }
+        if ($this->importType == 'bibtex')
+        {
+            GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexImport"));
+            $pString .= \HTML\p($this->messages->text("import", "bibtexImport"));
+        }
+        elseif ($this->importType == 'pasteBibtex')
+        {
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
+            $help = new HELPMESSAGES();
+            GLOBALS::setTplVar('help', $help->createLink('pasteBibtex'));
+            GLOBALS::setTplVar('heading', $this->messages->text("heading", "bibtexPaste"));
+        }
         $category = FACTORY_CATEGORY::getInstance();
         $categories = $category->grabAll();
-        if (count($categories) > 1) {
+        if (count($categories) > 1)
+        {
             $pString .= \HTML\p($this->messages->text("import", "categoryPrompt"));
         }
-        if ($this->importType == 'endnote') {
-        	$pString .= FORM\formMultiHeader("importexportbib_importEndnote");
-        	$pString .= FORM\hidden('method', 'process');
+        if ($this->importType == 'endnote')
+        {
+            $pString .= FORM\formMultiHeader("importexportbib_importEndnote");
+            $pString .= FORM\hidden('method', 'process');
         }
-        else {
-			$pString .= \FORM\formMultiHeader("import_IMPORTBIBTEX_CORE");
-			$pString .= \FORM\hidden('method', 'stage1');
-		}
-        if ($this->importType == 'pasteBibtex') {
-	        $pString .= \FORM\hidden('type', 'paste');
-	    } else {
-	        $pString .= \FORM\hidden('type', 'file');
+        else
+        {
+            $pString .= \FORM\formMultiHeader("import_IMPORTBIBTEX_CORE");
+            $pString .= \FORM\hidden('method', 'stage1');
+        }
+        if ($this->importType == 'pasteBibtex')
+        {
+            $pString .= \FORM\hidden('type', 'paste');
+        }
+        else
+        {
+            $pString .= \FORM\hidden('type', 'file');
         }
         $pString .= \HTML\tableStart('generalTable borderSpacingMedium');
         $pString .= \HTML\trStart();
-        if ($this->importType == 'pasteBibtex') {
-			$paste = array_key_exists("import_Paste", $formData) ? base64_decode($formData["import_Paste"]) : FALSE;
-			$pString .= \HTML\td(\FORM\textareaInput(
-				$this->messages->text("import", "pasteBibtex2"),
-				"import_Paste",
-				$paste,
-				80,
-				20
-			));
+        if ($this->importType == 'pasteBibtex')
+        {
+            $paste = array_key_exists("import_Paste", $formData) ? base64_decode($formData["import_Paste"]) : FALSE;
+            $pString .= \HTML\td(\FORM\textareaInput(
+                $this->messages->text("import", "pasteBibtex2"),
+                "import_Paste",
+                $paste,
+                80,
+                20
+            ));
         }
-        else {
-			$pString .= \HTML\td(\FORM\fileUpload(
-				$this->messages->text("import", "file"),
-				"import_File",
-				30
-			));
-		}
-		// Load tags
-		if (($this->importType != 'pasteBibtex') || $this->session->getVar('setup_Superadmin')) {
-			$tags = $this->tag->grabAll();
-			$field = array_key_exists('import_Tag', $formData) ? $formData['import_Tag'] : FALSE;
-			$tagInput = \FORM\textInput($this->messages->text("import", "tag"), "import_Tag", $field, 30, 255) . BR .
-                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "tagImport")), 'hint');
-			if ($tags) {
-				// add 0 => IGNORE to tags array
-				$temp[0] = $this->messages->text("misc", "ignore");
-				foreach ($tags as $key => $value) {
-					$temp[$key] = $value;
-				}
-				$tags = $temp;
-				if (array_key_exists("import_TagId", $formData)) {
-					$element = \FORM\selectedBoxValue(FALSE, 'import_TagId', $tags, $formData['import_TagId'], 5);
-				} else {
-					$element = \FORM\selectFBoxValue(FALSE, 'import_TagId', $tags, 5);
-				}
-				$tagTable = \HTML\tableStart('generalTable') . \HTML\trStart();
-				$tagTable .= \HTML\td($tagInput);
-				$tagTable .= \HTML\td($element);
-				$tagTable .= \HTML\trEnd();
-				$tagTable .= \HTML\tableEnd();
-				$pString .= \HTML\td($tagTable);
-			} else {
-				$pString .= \HTML\td($tagInput);
-			}
-		}
+        else
+        {
+            $pString .= \HTML\td(\FORM\fileUpload(
+                $this->messages->text("import", "file"),
+                "import_File",
+                30
+            ));
+        }
+        // Load tags
+        if (($this->importType != 'pasteBibtex') || $this->session->getVar('setup_Superadmin'))
+        {
+            $tags = $this->tag->grabAll();
+            $field = array_key_exists('import_Tag', $formData) ? $formData['import_Tag'] : FALSE;
+            $tagInput = \FORM\textInput($this->messages->text("import", "tag"), "import_Tag", $field, 30, 255) . BR .
+                \HTML\span(\HTML\aBrowse(
+                    'green',
+                    '',
+                    $this->messages->text("hint", "hint"),
+                    '#',
+                    "",
+                    $this->messages->text("hint", "tagImport")
+                ), 'hint');
+            if ($tags)
+            {
+                // add 0 => IGNORE to tags array
+                $temp[0] = $this->messages->text("misc", "ignore");
+                foreach ($tags as $key => $value)
+                {
+                    $temp[$key] = $value;
+                }
+                $tags = $temp;
+                if (array_key_exists("import_TagId", $formData))
+                {
+                    $element = \FORM\selectedBoxValue(FALSE, 'import_TagId', $tags, $formData['import_TagId'], 5);
+                }
+                else
+                {
+                    $element = \FORM\selectFBoxValue(FALSE, 'import_TagId', $tags, 5);
+                }
+                $tagTable = \HTML\tableStart('generalTable') . \HTML\trStart();
+                $tagTable .= \HTML\td($tagInput);
+                $tagTable .= \HTML\td($element);
+                $tagTable .= \HTML\trEnd();
+                $tagTable .= \HTML\tableEnd();
+                $pString .= \HTML\td($tagTable);
+            }
+            else
+            {
+                $pString .= \HTML\td($tagInput);
+            }
+        }
         $categoryTd = FALSE;
-        if (count($categories) > 1) {
-        	$cats = $this->categorySelect($categories, $formData);
+        if (count($categories) > 1)
+        {
+            $cats = $this->categorySelect($categories, $formData);
             $pString .= \HTML\td($cats . BR .
-                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "multiples")), 'hint'));
+                \HTML\span(\HTML\aBrowse(
+                    'green',
+                    '',
+                    $this->messages->text("hint", "hint"),
+                    '#',
+                    "",
+                    $this->messages->text("hint", "multiples")
+                ), 'hint'));
             $categoryTd = TRUE;
         }
-        if ($bibs = $this->bibliographySelect($formData)) {
+        if ($bibs = $this->bibliographySelect($formData))
+        {
             $pString .= \HTML\td($bibs . BR .
-                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "multiples")), 'hint'));
+                \HTML\span(\HTML\aBrowse(
+                    'green',
+                    '',
+                    $this->messages->text("hint", "hint"),
+                    '#',
+                    "",
+                    $this->messages->text("hint", "multiples")
+                ), 'hint'));
         }
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
@@ -184,19 +227,27 @@ class IMPORTCOMMON
         $pString .= \HTML\tableStart('generalTable borderSpacingMedium');
         $pString .= \HTML\trStart();
         $td = '';
-        if (WIKINDX_QUARANTINE && $this->session->getVar("setup_Superadmin") == 1) {
-			$field = array_key_exists("import_Quarantine", $formData) ? TRUE : FALSE;
-			$td .= $this->messages->text("import", "quarantine") . "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "import_Quarantine", $field);
-		}
+        if (WIKINDX_QUARANTINE && $this->session->getVar("setup_Superadmin") == 1)
+        {
+            $field = array_key_exists("import_Quarantine", $formData) ? TRUE : FALSE;
+            $td .= $this->messages->text("import", "quarantine") . "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, "import_Quarantine", $field);
+        }
         $field = array_key_exists("import_ImportDuplicates", $formData) ? TRUE : FALSE;
-        $td .= \HTML\p($this->messages->text("import", "importDuplicates") . 
-        	"&nbsp;&nbsp;" . \FORM\checkbox(FALSE, 'import_ImportDuplicates', $field));
-        if ($this->importType != 'endnote') {
-	        $field = array_key_exists("import_Raw", $formData) ? TRUE : FALSE;
-	        $td .= \HTML\p($this->messages->text("import", "storeRawLabel") . "&nbsp;&nbsp;" .
-	            \FORM\checkbox(FALSE, 'import_Raw', $field) . BR .
-	                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-	            	$this->messages->text("hint", "storeRawBibtex")), 'hint'));
+        $td .= \HTML\p($this->messages->text("import", "importDuplicates") .
+            "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, 'import_ImportDuplicates', $field));
+        if ($this->importType != 'endnote')
+        {
+            $field = array_key_exists("import_Raw", $formData) ? TRUE : FALSE;
+            $td .= \HTML\p($this->messages->text("import", "storeRawLabel") . "&nbsp;&nbsp;" .
+                \FORM\checkbox(FALSE, 'import_Raw', $field) . BR .
+                    \HTML\span(\HTML\aBrowse(
+                        'green',
+                        '',
+                        $this->messages->text("hint", "hint"),
+                        '#',
+                        "",
+                        $this->messages->text("hint", "storeRawBibtex")
+                    ), 'hint'));
         }
         $pString .= \HTML\td($td);
         $pString .= \HTML\td($this->keywordSeparator($formData));
@@ -208,101 +259,70 @@ class IMPORTCOMMON
     }
     /**
      * Print details of successful import and do some tidying up
-     *
      */
     public function importSuccess()
     {
-    	$pString = $this->vars['message'];
-		$data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']); // FALSE if nothing there (reloading page?), else array
-		if (is_array($data)) {
-            foreach ($data['garbageFiles'] as $fileName => $null) {
+        $pString = $this->vars['message'];
+        $data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']); // FALSE if nothing there (reloading page?), else array
+        if (is_array($data))
+        {
+            foreach ($data['garbageFiles'] as $fileName => $null)
+            {
                 unlink($fileName); // remove garbage - ignore errors
             }
-            if ($data['resourceAdded']) {
+            if ($data['resourceAdded'])
+            {
                 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
                 $email = new EMAIL();
                 $email->notify(FALSE, TRUE);
             }
-			$pString .= \HTML\p($this->messages->text("import", "added", " " . $data['resourceAdded']));
-			$pString .= $this->printDuplicates($data['resourceDiscarded'], $data['rejectTitles']);
-			$pString .= \HTML\hr();
-			if (!empty($data['rIds']) && (count($data['rIds']) <= GLOBALS::getUserVar('PagingMaxLinks'))) {
-				$resourceList = [];
-				$rCommon = FACTORY_RESOURCECOMMON::getInstance();
-				$bibStyle = FACTORY_BIBSTYLE::getInstance();
-				$bibStyle->output = 'html';
-				$this->db->formatConditionsOneField($data['rIds'], 'resourceId');
-				$recordset = $rCommon->getResource(FALSE, $this->db->formatFields('creatorSurname'));
-				while ($row = $this->db->fetchRow($recordset)) {
-					$link = \HTML\a('link', $bibStyle->process($row), "index.php?action=resource_RESOURCEFORM_CORE" .
-                    	htmlentities("&type=edit&id=" . $row['resourceId']));
-					$resourceList[]['resource'] = $link;
-				}
-				// Templates expect list ordered from 0, so we renumber from zero
-				$rL = array_values($resourceList);
-				GLOBALS::setTplVar('resourceList', $rL);
-			}
-        	$this->deleteCaches($data);
-			\TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
-			$this->tidyTables();
-			$this->session->delVar("sql_LastMulti");
-		}
-		GLOBALS::setTplVar('content', $pString);
+            $pString .= \HTML\p($this->messages->text("import", "added", " " . $data['resourceAdded']));
+            $pString .= $this->printDuplicates($data['resourceDiscarded'], $data['rejectTitles']);
+            $pString .= \HTML\hr();
+            if (!empty($data['rIds']) && (count($data['rIds']) <= GLOBALS::getUserVar('PagingMaxLinks')))
+            {
+                $resourceList = [];
+                $rCommon = FACTORY_RESOURCECOMMON::getInstance();
+                $bibStyle = FACTORY_BIBSTYLE::getInstance();
+                $bibStyle->output = 'html';
+                $this->db->formatConditionsOneField($data['rIds'], 'resourceId');
+                $recordset = $rCommon->getResource(FALSE, $this->db->formatFields('creatorSurname'));
+                while ($row = $this->db->fetchRow($recordset))
+                {
+                    $link = \HTML\a('link', $bibStyle->process($row), "index.php?action=resource_RESOURCEFORM_CORE" .
+                        htmlentities("&type=edit&id=" . $row['resourceId']));
+                    $resourceList[]['resource'] = $link;
+                }
+                // Templates expect list ordered from 0, so we renumber from zero
+                $rL = array_values($resourceList);
+                GLOBALS::setTplVar('resourceList', $rL);
+            }
+            $this->deleteCaches($data);
+            \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+            $this->tidyTables();
+            $this->session->delVar("sql_LastMulti");
+        }
+        GLOBALS::setTplVar('content', $pString);
     }
     /**
      * Print invalid fields for mapping to wikindx fields
-     *
      */
     public function importInvalidFields()
     {
-		$data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
-		$pString = $data['form'];
-		GLOBALS::setTplVar('heading', $data['heading']);
-		GLOBALS::setTplVar('content', $pString);
+        $data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
+        $pString = $data['form'];
+        GLOBALS::setTplVar('heading', $data['heading']);
+        GLOBALS::setTplVar('content', $pString);
     }
     /**
      * Print continuation message when importing in chunks
-     *
      */
     public function importContinue()
     {
-		$data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
-		$pString = $data['form'];
-		GLOBALS::setTplVar('heading', $data['heading']);
-		GLOBALS::setTplVar('content', $pString);
-    }
-    /**
-     * Delete caches if required.  Must be deleted if various creators, publishers etc. have been added with this import
-     */
-    private function deleteCaches($data)
-    {
-        if ($data['deleteCacheCreators']) {
-            // remove cache files for creators
-            $this->db->deleteCache('cacheResourceCreators');
-            $this->db->deleteCache('cacheMetadataCreators');
-        }
-        if ($data['deleteCachePublishers']) {
-            // remove cache files for publishers
-            $this->db->deleteCache('cacheResourcePublishers');
-            $this->db->deleteCache('cacheMetadataPublishers');
-            $this->db->deleteCache('cacheConferenceOrganisers');
-        }
-        if ($data['deleteCacheCollections']) {
-            // remove cache files for collections
-            $this->db->deleteCache('cacheResourceCollections');
-            $this->db->deleteCache('cacheMetadataCollections');
-            $this->db->deleteCache('cacheResourceCollectionTitles');
-            $this->db->deleteCache('cacheResourceCollectionShorts');
-        }
-        if ($data['deleteCacheKeywords']) {
-            // remove cache files for keywords
-            $this->db->deleteCache('cacheResourceKeywords');
-            $this->db->deleteCache('cacheMetadataKeywords');
-            $this->db->deleteCache('cacheQuoteKeywords');
-            $this->db->deleteCache('cacheParaphraseKeywords');
-            $this->db->deleteCache('cacheMusingKeywords');
-            $this->db->deleteCache('cacheKeywords');
-        }
+        $data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
+        $pString = $data['form'];
+        GLOBALS::setTplVar('heading', $data['heading']);
+        GLOBALS::setTplVar('content', $pString);
     }
     /**
      * Check for duplicate title/resourceType
@@ -320,21 +340,28 @@ class IMPORTCOMMON
      */
     public function checkDuplicates($noSort, $title, $subtitle, $type, $formData = [])
     {
-        if (array_key_exists("import_ImportDuplicates", $formData)) {
+        if (array_key_exists("import_ImportDuplicates", $formData))
+        {
             return FALSE; // i.e. allow duplicates
         }
-        if ($subtitle) {
+        if ($subtitle)
+        {
             $subtitle = str_replace(['{', '}'], '', $subtitle);
             $this->db->formatConditions($this->db->replace($this->db->replace('resourceSubtitle', '{', ''), '}', '', FALSE) .
                 $this->db->like(FALSE, $subtitle, FALSE));
-        } else {
+        }
+        else
+        {
             $this->db->formatConditions(['resourceSubtitle' => ' IS NULL']);
         }
-        if ($noSort) {
+        if ($noSort)
+        {
             $noSort = str_replace(['{', '}'], '', $noSort);
             $this->db->formatConditions($this->db->replace($this->db->replace('resourceNoSort', '{', ''), '}', '', FALSE) .
                 $this->db->like(FALSE, $noSort, FALSE));
-        } else {
+        }
+        else
+        {
             $this->db->formatConditions(['resourceNoSort' => ' IS NULL']);
         }
         $this->db->formatConditions(['resourceType' => $type]);
@@ -355,9 +382,11 @@ class IMPORTCOMMON
      */
     public function printDuplicates($numDiscarded, $titlesDiscarded)
     {
-        if (($numDiscarded <= 50) && !empty($titlesDiscarded)) {
+        if (($numDiscarded <= 50) && !empty($titlesDiscarded))
+        {
             $reject = $this->messages->text("import", "discarded", " " . $numDiscarded);
-            foreach ($titlesDiscarded as $title) {
+            foreach ($titlesDiscarded as $title)
+            {
                 $reject .= BR . $title;
             }
 
@@ -378,12 +407,14 @@ class IMPORTCOMMON
      */
     public function splitTitle($title, $formData = [])
     {
-        if (!trim($title)) {
+        if (!trim($title))
+        {
             return [FALSE, FALSE, FALSE];
         }
         $noSort = $subtitle = FALSE;
         $split = $formData["import_TitleSubtitleSeparator"];
-        if ($split) { // split title and subtitle
+        if ($split)
+        { // split title and subtitle
             switch ($split) {
                 case 1:
                     $split = ': ';
@@ -407,26 +438,36 @@ class IMPORTCOMMON
                     break;
             }
             $array = preg_split("/$split/u", $title, 2);
-            if (count($array) > 1) {
+            if (count($array) > 1)
+            {
                 $title = trim(array_shift($array));
                 $subtitle = trim(implode('', $array));
                 // Correct any incomplete braces
-                if ((mb_strpos($title, '{') !== FALSE) && (mb_strpos($title, '}') === FALSE)) {
+                if ((mb_strpos($title, '{') !== FALSE) && (mb_strpos($title, '}') === FALSE))
+                {
                     $title .= '}';
                 }
-                if ((mb_strpos($subtitle, '}') !== FALSE) && (mb_strpos($subtitle, '{') === FALSE)) {
+                if ((mb_strpos($subtitle, '}') !== FALSE) && (mb_strpos($subtitle, '{') === FALSE))
+                {
                     $subtitle = '{' . $subtitle;
                 }
-            } else {
+            }
+            else
+            {
                 $title = trim($array[0]);
             }
         }
-        foreach (WIKINDX_NO_SORT as $pattern) {
-            if (preg_match("/^($pattern)\\s(.*)|^\\{($pattern)\\s(.*)/ui", $title, $matches)) {
-                if (array_key_exists(3, $matches)) { // found second set of matches
+        foreach (WIKINDX_NO_SORT as $pattern)
+        {
+            if (preg_match("/^($pattern)\\s(.*)|^\\{($pattern)\\s(.*)/ui", $title, $matches))
+            {
+                if (array_key_exists(3, $matches))
+                { // found second set of matches
                     $title = '{' . trim(\HTML\removeNl($matches[4]));
                     $noSort = trim(\HTML\removeNl($matches[3]));
-                } else {
+                }
+                else
+                {
                     $title = trim(\HTML\removeNl($matches[2]));
                     $noSort = trim(\HTML\removeNl($matches[1]));
                 }
@@ -446,36 +487,52 @@ class IMPORTCOMMON
      */
     public function keywordSeparator($formData = [])
     {
-    	$pString = '';
-    	if ($this->importType != 'endnote') {
-			$sessVar = is_array($formData) && array_key_exists("import_KeywordSeparator", $formData) ?
-				$formData["import_KeywordSeparator"] : FALSE;
-			$array = [
-				$this->messages->text('misc', 'keywordImport1'),
-				$this->messages->text('misc', 'keywordImport2'),
-				$this->messages->text('misc', 'keywordImport3'),
-				$this->messages->text('misc', 'keywordImport4'),
-			];
-			if ($sessVar !== FALSE) {
-				$pString .= \FORM\selectedBoxValue(
-					$this->messages->text('misc', 'keywordImport'),
-					'import_KeywordSeparator',
-					$array,
-					$sessVar,
-					4
-				) . BR .
-                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "keywordImport")), 'hint');
-			} else {
-				$pString .= \FORM\selectFBoxValue(
-					$this->messages->text('misc', 'keywordImport'),
-					'import_KeywordSeparator',
-					$array,
-					4
-				) . BR .
-                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "keywordImport")), 'hint');
-			}
+        $pString = '';
+        if ($this->importType != 'endnote')
+        {
+            $sessVar = is_array($formData) && array_key_exists("import_KeywordSeparator", $formData) ?
+                $formData["import_KeywordSeparator"] : FALSE;
+            $array = [
+                $this->messages->text('misc', 'keywordImport1'),
+                $this->messages->text('misc', 'keywordImport2'),
+                $this->messages->text('misc', 'keywordImport3'),
+                $this->messages->text('misc', 'keywordImport4'),
+            ];
+            if ($sessVar !== FALSE)
+            {
+                $pString .= \FORM\selectedBoxValue(
+                    $this->messages->text('misc', 'keywordImport'),
+                    'import_KeywordSeparator',
+                    $array,
+                    $sessVar,
+                    4
+                ) . BR .
+                \HTML\span(\HTML\aBrowse(
+                    'green',
+                    '',
+                    $this->messages->text("hint", "hint"),
+                    '#',
+                    "",
+                    $this->messages->text("hint", "keywordImport")
+                ), 'hint');
+            }
+            else
+            {
+                $pString .= \FORM\selectFBoxValue(
+                    $this->messages->text('misc', 'keywordImport'),
+                    'import_KeywordSeparator',
+                    $array,
+                    4
+                ) . BR .
+                \HTML\span(\HTML\aBrowse(
+                    'green',
+                    '',
+                    $this->messages->text("hint", "hint"),
+                    '#',
+                    "",
+                    $this->messages->text("hint", "keywordImport")
+                ), 'hint');
+            }
         }
         $sessVar = is_array($formData) && array_key_exists("import_KeywordIgnore", $formData) ? TRUE : FALSE;
 
@@ -494,8 +551,8 @@ class IMPORTCOMMON
      */
     public function titleSubtitleSeparator($formData = [])
     {
-        $sessVar = is_array($formData) && array_key_exists("import_TitleSubtitleSeparator", $formData) ? 
-        	$formData["import_TitleSubtitleSeparator"] : FALSE;
+        $sessVar = is_array($formData) && array_key_exists("import_TitleSubtitleSeparator", $formData) ?
+            $formData["import_TitleSubtitleSeparator"] : FALSE;
         $array = [
             $this->messages->text('misc', 'titleSubtitleSeparator1'),
             $this->messages->text('misc', 'titleSubtitleSeparator2'),
@@ -504,7 +561,8 @@ class IMPORTCOMMON
             $this->messages->text('misc', 'titleSubtitleSeparator5'),
             $this->messages->text('misc', 'titleSubtitleSeparator6'),
         ];
-        if ($sessVar !== FALSE) {
+        if ($sessVar !== FALSE)
+        {
             return \FORM\selectedBoxValue(
                 $this->messages->text('misc', 'titleSubtitleSeparator'),
                 'import_TitleSubtitleSeparator',
@@ -512,9 +570,17 @@ class IMPORTCOMMON
                 $sessVar,
                 6
             ) . BR .
-                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "splitImport")), 'hint');
-        } else {
+                \HTML\span(\HTML\aBrowse(
+                    'green',
+                    '',
+                    $this->messages->text("hint", "hint"),
+                    '#',
+                    "",
+                    $this->messages->text("hint", "splitImport")
+                ), 'hint');
+        }
+        else
+        {
             return \FORM\selectedBoxValue(
                 $this->messages->text('misc', 'titleSubtitleSeparator'),
                 'import_TitleSubtitleSeparator',
@@ -522,8 +588,14 @@ class IMPORTCOMMON
                 1,
                 6
             ) . BR .
-                \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "splitImport")), 'hint');
+                \HTML\span(\HTML\aBrowse(
+                    'green',
+                    '',
+                    $this->messages->text("hint", "hint"),
+                    '#',
+                    "",
+                    $this->messages->text("hint", "splitImport")
+                ), 'hint');
         }
     }
     /**
@@ -536,47 +608,62 @@ class IMPORTCOMMON
     public function bibliographySelect($formData = [])
     {
         // Get this user's bibliographies
-        if ($this->session->getVar("mywikindx_Bibliographies")) {
+        if ($this->session->getVar("mywikindx_Bibliographies"))
+        {
             $bibsRaw = unserialize($this->session->getVar("mywikindx_Bibliographies"));
-            foreach ($bibsRaw as $key => $value) {
+            foreach ($bibsRaw as $key => $value)
+            {
                 $bibsU[$key] = \HTML\dbToFormTidy($value);
             }
         }
         // Get this user's user group bibliographies
-        if ($this->session->getVar("mywikindx_Groupbibliographies")) {
+        if ($this->session->getVar("mywikindx_Groupbibliographies"))
+        {
             $bibsRaw = unserialize($this->session->getVar("mywikindx_Groupbibliographies"));
-            foreach ($bibsRaw as $key => $value) {
+            foreach ($bibsRaw as $key => $value)
+            {
                 $bibsUG[$key] = \HTML\dbToFormTidy($value);
             }
         }
         $bib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $bibsU = $bib->getUserBibs();
         $bibsUG = $bib->getGroupBibs();
-        if (!empty($bibsU)) {
+        if (!empty($bibsU))
+        {
             $bibsArray[-1] = $this->messages->text('user', 'userBibs');
-            foreach ($bibsU as $key => $value) {
+            foreach ($bibsU as $key => $value)
+            {
                 $bibsArray[$key] = $value;
             }
         }
-        if (!empty($bibsUG)) {
+        if (!empty($bibsUG))
+        {
             $bibsArray[-2] = $this->messages->text('user', 'userGroupBibs');
-            foreach ($bibsUG as $key => $value) {
+            foreach ($bibsUG as $key => $value)
+            {
                 $bibsArray[$key] = $value;
             }
         }
-        if (isset($bibsArray)) {
-        	$field = is_array($formData) && array_key_exists("import_BibId", $formData) ? $formData["import_BibId"] : [-1];
-        	if ((sizeof($field) > 1) && in_array(-1, $field)) {
-        		unset($field[array_search(-1, $field)]);
-			}
-        	if (in_array(-2, $field)) {
-        		unset($field[array_search(-2, $field)]);
-				if (empty($field)) {
-					$field = [-1];
-				}
-			}
+        if (isset($bibsArray))
+        {
+            $field = is_array($formData) && array_key_exists("import_BibId", $formData) ? $formData["import_BibId"] : [-1];
+            if ((sizeof($field) > 1) && in_array(-1, $field))
+            {
+                unset($field[array_search(-1, $field)]);
+            }
+            if (in_array(-2, $field))
+            {
+                unset($field[array_search(-2, $field)]);
+                if (empty($field))
+                {
+                    $field = [-1];
+                }
+            }
+
             return \FORM\selectedBoxValueMultiple($this->messages->text("user", 'bib'), "import_BibId", $bibsArray, $field, 5);
-        } else {
+        }
+        else
+        {
             return FALSE;
         }
     }
@@ -590,17 +677,20 @@ class IMPORTCOMMON
      */
     public function categorySelect($categories, $formData = [])
     {
-		if (array_key_exists("import_Categories", $formData)) {
-			return \FORM\selectedBoxValueMultiple($this->messages->text(
-				"import",
-				"category"
-			), 'import_Categories', $categories, $formData['import_Categories'], 5);
-		} else {
-			return \FORM\selectFBoxValueMultiple($this->messages->text(
-				"import",
-				"category"
-			), 'import_Categories', $categories, 5);
-		}
+        if (array_key_exists("import_Categories", $formData))
+        {
+            return \FORM\selectedBoxValueMultiple($this->messages->text(
+                "import",
+                "category"
+            ), 'import_Categories', $categories, $formData['import_Categories'], 5);
+        }
+        else
+        {
+            return \FORM\selectFBoxValueMultiple($this->messages->text(
+                "import",
+                "category"
+            ), 'import_Categories', $categories, 5);
+        }
     }
     /**
      * Write the resource table
@@ -627,7 +717,8 @@ class IMPORTCOMMON
     {
         $fields[] = 'resourcemiscId';
         $values[] = $this->resourceId;
-        if (WIKINDX_QUARANTINE && (($this->session->getVar("setup_Superadmin") != 1) || $this->quarantine)) {
+        if (WIKINDX_QUARANTINE && (($this->session->getVar("setup_Superadmin") != 1) || $this->quarantine))
+        {
             $fields[] = 'resourcemiscQuarantine';
             $values[] = 'Y';
         }
@@ -641,16 +732,20 @@ class IMPORTCOMMON
      */
     public function writeCreatorTables($creators)
     {
-        if (empty($creators)) { // need blank row for list operations
+        if (empty($creators))
+        { // need blank row for list operations
             $this->db->insert('resource_creator', ['resourcecreatorResourceId'], [$this->resourceId]);
 
             return;
         }
         $mainName = $mainId = $rowWritten = $deleteCache = FALSE;
-        foreach ($creators as $role => $roleArray) {
-            foreach ($roleArray as $order => $creatorArray) {
+        foreach ($creators as $role => $roleArray)
+        {
+            foreach ($roleArray as $order => $creatorArray)
+            {
                 $creatorId = FALSE;
-                if ($creatorArray['surname']) { // entry in surname takes precedence
+                if ($creatorArray['surname'])
+                { // entry in surname takes precedence
                     unset($creatorArray['select']);
                     $initials = $this->creator->formatInitials($creatorArray['initials']);
                     $creatorId = $this->creator->checkExists(
@@ -659,31 +754,40 @@ class IMPORTCOMMON
                         $initials,
                         $creatorArray['prefix']
                     );
-                    if (!$creatorId) { // new creator
+                    if (!$creatorId)
+                    { // new creator
                         $writeArray = [];
                         $writeArray['creatorSurname'] = trim($creatorArray['surname']);
-                        if ($creatorArray['firstname']) {
+                        if ($creatorArray['firstname'])
+                        {
                             $writeArray['creatorFirstname'] = trim($creatorArray['firstname']);
                         }
-                        if ($creatorArray['prefix']) {
+                        if ($creatorArray['prefix'])
+                        {
                             $writeArray['creatorPrefix'] = trim($creatorArray['prefix']);
                         }
-                        if (trim($initials)) {
+                        if (trim($initials))
+                        {
                             $writeArray['creatorInitials'] = trim($initials);
                         }
                         $this->db->insert('creator', array_keys($writeArray), array_values($writeArray));
                         $creatorId = $this->db->lastAutoID();
-                        if (!$mainName) {
+                        if (!$mainName)
+                        {
                             $mainName = $writeArray['creatorSurname'];
                             $mainId = $creatorId;
                         }
                         $deleteCache = TRUE;
                     }
-                } elseif (array_key_exists('select', $creatorArray) && $creatorArray['select']) {
+                }
+                elseif (array_key_exists('select', $creatorArray) && $creatorArray['select'])
+                {
                     $creatorId = $creatorArray['select'];
                 }
-                if ($creatorId) {
-                    if (!$mainName) {
+                if ($creatorId)
+                {
+                    if (!$mainName)
+                    {
                         $this->db->formatConditions(['creatorId' => $creatorId]);
                         $mainName = $this->db->selectFirstField('creator', 'creatorSurname');
                         $mainId = $creatorId;
@@ -714,14 +818,18 @@ class IMPORTCOMMON
     public function writePublisherTable($name, $location, $wkType)
     {
         $publisherId = FALSE;
-        if ($name && (!$publisherId = $this->publisher->checkExists($name, $location))) {
-            if ($name) {
+        if ($name && (!$publisherId = $this->publisher->checkExists($name, $location)))
+        {
+            if ($name)
+            {
                 $writeArray['publisherName'] = $name;
             }
-            if ($location) {
+            if ($location)
+            {
                 $writeArray['publisherLocation'] = $location;
             }
-            if (array_key_exists($wkType, $this->publisherMap->publisherTypes)) {
+            if (array_key_exists($wkType, $this->publisherMap->publisherTypes))
+            {
                 $writeArray['publisherType'] = $this->publisherMap->publisherTypes[$wkType];
             }
             $this->db->insert('publisher', array_keys($writeArray), array_values($writeArray));
@@ -741,17 +849,21 @@ class IMPORTCOMMON
      */
     public function writeCollectionTable($title, $titleShort, $wkType)
     {
-        if ($title) {
+        if ($title)
+        {
             $writeArray['collectionTitle'] = $title;
         }
-        if ($titleShort) {
+        if ($titleShort)
+        {
             $writeArray['collectionTitleShort'] = $titleShort;
         }
         $type = FALSE;
-        if (array_key_exists($wkType, $this->collectionMap->collectionTypes)) {
+        if (array_key_exists($wkType, $this->collectionMap->collectionTypes))
+        {
             $writeArray['collectionType'] = $type = $this->collectionMap->collectionTypes[$wkType];
         }
-        if ($title && (!$collectionId = $this->collection->checkExists(FALSE, $title, $titleShort, $type))) {
+        if ($title && (!$collectionId = $this->collection->checkExists(FALSE, $title, $titleShort, $type)))
+        {
             $this->db->insert('collection', array_keys($writeArray), array_values($writeArray));
             $collectionId = $this->db->lastAutoID();
         }
@@ -805,20 +917,24 @@ class IMPORTCOMMON
     {
         $fields[] = 'resourcetextId';
         $values[] = $this->resourceId;
-        if ($notes) {
+        if ($notes)
+        {
             $fields[] = 'resourcetextNote';
             $values[] = $notes;
             $fields[] = 'resourcetextAddUserIdNote';
             $values[] = $this->session->getVar("setup_UserId");
         }
-        if ($abstract) {
+        if ($abstract)
+        {
             $fields[] = 'resourcetextAbstract';
             $values[] = $abstract;
             $fields[] = 'resourcetextAddUserIdAbstract';
             $values[] = $this->session->getVar("setup_UserId");
         }
-        if ($url) {
-            if (!is_array($url)) {
+        if ($url)
+        {
+            if (!is_array($url))
+            {
                 $url = [$url];
             }
             $fields[] = 'resourcetextUrls';
@@ -833,11 +949,14 @@ class IMPORTCOMMON
      */
     public function writeKeywordTables($keywords)
     {
-        if ($this->kwIgnore) {
+        if ($this->kwIgnore)
+        {
             return;
         }
-        foreach ($keywords as $kWord) {
-            if (!$kId = $this->keyword->checkExists($kWord)) {
+        foreach ($keywords as $kWord)
+        {
+            if (!$kId = $this->keyword->checkExists($kWord))
+            {
                 $this->db->insert('keyword', ['keywordKeyword'], [$kWord]);
                 $kId = $this->db->lastAutoID();
             }
@@ -855,7 +974,8 @@ class IMPORTCOMMON
      */
     public function writeResourcecategoryTable($categories)
     {
-        foreach ($categories as $cId) {
+        foreach ($categories as $cId)
+        {
             $this->db->insert(
                 'resource_category',
                 ['resourcecategoryResourceId', 'resourcecategoryCategoryId'],
@@ -873,9 +993,12 @@ class IMPORTCOMMON
     {
         $writeArray = [];
         $this->db->formatConditions(['customId' => $customId]);
-        if ($this->db->selectFirstField('custom', 'customSize') == 'S') {
+        if ($this->db->selectFirstField('custom', 'customSize') == 'S')
+        {
             $writeArray['resourcecustomShort'] = $string;
-        } else {
+        }
+        else
+        {
             $writeArray['resourcecustomLong'] = $string;
         }
         $writeArray['resourcecustomAddUserIdCustom'] = intval($this->session->getVar("setup_UserId")); // No idea why, but needed
@@ -892,16 +1015,19 @@ class IMPORTCOMMON
      */
     public function writeImportrawTable($rejectedArray, $bibtexStringId = FALSE, $formData = [])
     {
-        if (empty($rejectedArray) || !array_key_exists("import_Raw", $formData)) {
+        if (empty($rejectedArray) || !array_key_exists("import_Raw", $formData))
+        {
             return;
         }
         $rejected = '';
-        foreach ($rejectedArray as $key => $value) {
+        foreach ($rejectedArray as $key => $value)
+        {
             $rejected .= "$key = $value" . LF;
         }
         $fields[] = 'importrawId';
         $values[] = $this->resourceId;
-        if ($bibtexStringId) {
+        if ($bibtexStringId)
+        {
             $fields[] = 'importrawStringId';
             $values[] = $bibtexStringId;
         }
@@ -918,13 +1044,16 @@ class IMPORTCOMMON
      */
     public function writeUserbibliographyresourceTable($bibId)
     {
-    	if (!is_array($bibId)) {
-    		return;
-    	}
-        foreach ($bibId as $bId) {
-        	if (!$bId || ($bId < 0)) {
-            	continue;
-        	}
+        if (!is_array($bibId))
+        {
+            return;
+        }
+        foreach ($bibId as $bId)
+        {
+            if (!$bId || ($bId < 0))
+            {
+                continue;
+            }
             $this->db->insert(
                 'user_bibliography_resource',
                 ['userbibliographyresourceResourceId', 'userbibliographyresourceBibliographyId'],
@@ -941,10 +1070,12 @@ class IMPORTCOMMON
      */
     public function writeTagTable($formData = [])
     {
-    	if (array_key_exists('import_TagId', $formData)) {
-        	return $formData["import_TagId"];
+        if (array_key_exists('import_TagId', $formData))
+        {
+            return $formData["import_TagId"];
         }
-        if (!array_key_exists('import_Tag', $formData) || (!$tag = $formData["import_Tag"])) {
+        if (!array_key_exists('import_Tag', $formData) || (!$tag = $formData["import_Tag"]))
+        {
             return FALSE;
         }
         $this->db->insert('tag', ['tagTag'], [\HTML\removeNl($tag)]);
@@ -963,17 +1094,25 @@ class IMPORTCOMMON
         $recordset = $this->db->select(['resource_year'], ['resourceyearYear1',
             'resourceyearYear2', 'resourceyearYear3', 'resourceyearYear4', ]);
         $row = $this->db->fetchRow($recordset);
-        if (is_array($row)) {
-			if ($row['resourceyearYear1']) {
-				$year = $row['resourceyearYear1'];
-			} elseif ($row['resourceyearYear2']) {
-				$year = $row['resourceyearYear2'];
-			} elseif ($row['resourceyearYear3']) {
-				$year = $row['resourceyearYear3'];
-			} elseif ($row['resourceyearYear4']) {
-				$year = $row['resourceyearYear4'];
-			}
-		}
+        if (is_array($row))
+        {
+            if ($row['resourceyearYear1'])
+            {
+                $year = $row['resourceyearYear1'];
+            }
+            elseif ($row['resourceyearYear2'])
+            {
+                $year = $row['resourceyearYear2'];
+            }
+            elseif ($row['resourceyearYear3'])
+            {
+                $year = $row['resourceyearYear3'];
+            }
+            elseif ($row['resourceyearYear4'])
+            {
+                $year = $row['resourceyearYear4'];
+            }
+        }
         $this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorMain');
         $this->db->formatConditions(['resourcecreatorResourceId' => $this->resourceId]);
         $this->db->formatConditions(['resourcecreatorOrder' => '1']);
@@ -983,20 +1122,26 @@ class IMPORTCOMMON
         $recordset = $this->db->select(['resource_creator'], ['creatorSurname', 'creatorPrefix']);
         $row = $this->db->fetchRow($recordset);
         $keyMade = FALSE;
-        if ((!is_array($row) || !array_key_exists('creatorSurname', $row) || !$row['creatorSurname'])) { // anonymous
+        if ((!is_array($row) || !array_key_exists('creatorSurname', $row) || !$row['creatorSurname']))
+        { // anonymous
             $base = 'anon' . $year;
-        } else {
+        }
+        else
+        {
             $prefix = '';
-            if ($row['creatorPrefix']) {
+            if ($row['creatorPrefix'])
+            {
                 $prefix = utf8_decode($row['creatorPrefix']);
-                foreach ($this->bibConfig->bibtexSpChPlain as $key => $value) {
+                foreach ($this->bibConfig->bibtexSpChPlain as $key => $value)
+                {
                     $char = preg_quote(\UTF8\mb_chr($key), '/');
                     $prefix = preg_replace("/$char/u", $value, $prefix);
                 }
                 $prefix = preg_replace("/\\W/u", '', $prefix);
             }
             $surname = utf8_decode($row['creatorSurname']);
-            foreach ($this->bibConfig->bibtexSpChPlain as $key => $value) {
+            foreach ($this->bibConfig->bibtexSpChPlain as $key => $value)
+            {
                 $char = preg_quote(\UTF8\mb_chr($key), '/');
                 $surname = preg_replace("/$char/u", $value, $surname);
             }
@@ -1004,15 +1149,18 @@ class IMPORTCOMMON
             $base = $prefix . $surname . $year;
         }
         $bibtexKey = $base;
-        for ($i = 0; $i < $sizeof; $i++) {
-            if (array_search($bibtexKey, $this->bibtexKeys) === FALSE) {
+        for ($i = 0; $i < $sizeof; $i++)
+        {
+            if (array_search($bibtexKey, $this->bibtexKeys) === FALSE)
+            {
                 $keyMade = TRUE;
 
                 break;
             }
             $bibtexKey = $base . $letters[$i];
         }
-        if (!$keyMade) {
+        if (!$keyMade)
+        {
             $bibtexKey = $base . '.' . $this->resourceId; // last resort
         }
         $bibtexKey = str_replace(' ', '', $bibtexKey);
@@ -1057,27 +1205,34 @@ class IMPORTCOMMON
         $dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
         $fileName = sha1($serArray);
         $entriesFileName = $fullFileName = $dirName . DIRECTORY_SEPARATOR . $fileName;
-        if (file_put_contents($fullFileName, $serArray) === FALSE) {
+        if (file_put_contents($fullFileName, $serArray) === FALSE)
+        {
             return [$this->errors->text("file", "write", ": " . $fileName), FALSE];
         }
         // Write $this->strings as serialised array temporarily to a data folder
-        if ($strings) {
+        if ($strings)
+        {
             $stringArray = base64_encode(serialize($strings));
             $fileName = sha1($stringArray);
             $stringsFileName = $fullFileName = $dirName . DIRECTORY_SEPARATOR . $fileName;
-            if (file_put_contents($fullFileName, $stringArray) === FALSE) {
+            if (file_put_contents($fullFileName, $stringArray) === FALSE)
+            {
                 return [$this->errors->text("file", "write", ": " . $fileName), FALSE];
             }
         }
         $formData["import_UnrecognisedFields"] = $invalidFieldNames;
         // Create select boxes of all valid field names in WIKINDX including custom fields
         $possibleFields[0] = $this->messages->text('misc', 'ignore');
-        foreach ($map->types as $wkType => $extType) {
-            if (array_search($extType, $inputTypes) === FALSE) {
+        foreach ($map->types as $wkType => $extType)
+        {
+            if (array_search($extType, $inputTypes) === FALSE)
+            {
                 continue;
             }
-            foreach ($map->{$wkType}['possible'] as $field) {
-                if (array_search($field, $map->noMap) === FALSE) {
+            foreach ($map->{$wkType}['possible'] as $field)
+            {
+                if (array_search($field, $map->noMap) === FALSE)
+                {
                     $possibleFields[] = $field;
                 }
             }
@@ -1085,26 +1240,34 @@ class IMPORTCOMMON
         $possibleFields = array_unique($possibleFields);
         // Get custom fields
         $recordset = $this->db->select('custom', ['customId', 'customLabel']);
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $possibleFields[] = $row['customId'] . '&nbsp;&nbsp;custom:&nbsp;&nbsp;' . $row['customLabel'];
         }
-        if ($this->importType == 'endnote') {
+        if ($this->importType == 'endnote')
+        {
             $pString = \HTML\p($this->messages->text('import', 'invalidField3'));
-        } else {
+        }
+        else
+        {
             $pString = \HTML\p($this->messages->text('import', 'invalidField1'));
         }
-        if ($this->importType == 'bibtex') {
+        if ($this->importType == 'bibtex')
+        {
             $pString .= \FORM\formHeader("import_IMPORTBIBTEX_CORE");
             $pString .= \FORM\hidden('method', 'stage2Invalid');
         }
-        if (($this->importType == 'endnote')) {
+        if (($this->importType == 'endnote'))
+        {
             $pString .= \FORM\formHeader("importexportbib_importEndnote");
             $pString .= \FORM\hidden('method', 'stage2Invalid');
         }
-        if (array_key_exists('type', $this->vars)) {
+        if (array_key_exists('type', $this->vars))
+        {
             $pString .= \FORM\hidden('type', $this->vars['type']);
         }
-		foreach ($invalidFieldNames as $invalidField) {
+        foreach ($invalidFieldNames as $invalidField)
+        {
             $pString .= \HTML\p(\FORM\selectFBox(
                 \HTML\strong($invalidField),
                 'import_' . $invalidField,
@@ -1112,7 +1275,8 @@ class IMPORTCOMMON
                 5
             ));
         }
-        if (($this->importType == 'bibtex')) {
+        if (($this->importType == 'bibtex'))
+        {
             $pString .= \HTML\p(\FORM\checkbox(
                 $this->messages->text('import', 'invalidField2'),
                 "import_Precedence"
@@ -1121,12 +1285,14 @@ class IMPORTCOMMON
         $uuid = \TEMPSTORAGE\getUuid($this->db);
         $pString .= \FORM\hidden('uuid', $uuid);
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Submit")));
-// store data
-		$formData["import_FileNameEntries"] = $entriesFileName;
-		if (isset($stringsFileName)) {
-			$formData["import_FileNameStrings"] = $stringsFileName;
-		}
+        // store data
+        $formData["import_FileNameEntries"] = $entriesFileName;
+        if (isset($stringsFileName))
+        {
+            $formData["import_FileNameStrings"] = $stringsFileName;
+        }
         \TEMPSTORAGE\store($this->db, $uuid, $formData);
+
         return [FALSE, $pString, $uuid];
     }
     /**
@@ -1141,18 +1307,25 @@ class IMPORTCOMMON
     public function getUnrecognisedFields($formData = [])
     {
         $mapFields = $customFields = [];
-        foreach ($formData["import_UnrecognisedFields"] as $key) {
+        foreach ($formData["import_UnrecognisedFields"] as $key)
+        {
             $importKey = 'import_' . $key;
             if (array_key_exists($importKey, $this->vars) && ($this->vars[$importKey] != $this->messages->text('misc', 'ignore')) &&
-                (array_search($this->vars[$importKey], $mapFields) !== FALSE)) {
+                (array_search($this->vars[$importKey], $mapFields) !== FALSE))
+            {
                 return [$this->errors->text("file", "fieldMap"), [], []];
-            } elseif ($this->vars[$importKey] != $this->messages->text('misc', 'ignore')) {
+            }
+            elseif ($this->vars[$importKey] != $this->messages->text('misc', 'ignore'))
+            {
                 $mapFields[] = $this->vars[$importKey];
             }
-            if (array_key_exists($importKey, $this->vars) && ($this->vars[$importKey] == $this->messages->text('misc', 'ignore'))) {
+            if (array_key_exists($importKey, $this->vars) && ($this->vars[$importKey] == $this->messages->text('misc', 'ignore')))
+            {
                 unset($this->vars[$importKey]);
-            } elseif (array_key_exists($importKey, $this->vars) &&
-                (count($split = \UTF8\mb_explode("custom:", str_replace('&nbsp;&nbsp;', '', $this->vars[$importKey]))) == 2)) {
+            }
+            elseif (array_key_exists($importKey, $this->vars) &&
+                (count($split = \UTF8\mb_explode("custom:", str_replace('&nbsp;&nbsp;', '', $this->vars[$importKey]))) == 2))
+            {
                 $customFields[$key] = $split[0];
                 unset($this->vars[$importKey]);
             }
@@ -1172,30 +1345,41 @@ class IMPORTCOMMON
         $maxPacket = $this->db->getMaxPacket();
         // For each 1MB max_allowed_packet (1048576 bytes), 600 updates in one go seems fine as a value for $maxCounts (based on trial and error)
         $maxCounts = floor(600 * ($maxPacket / 1048576));
-        foreach ($typesArray as $type) {
+        foreach ($typesArray as $type)
+        {
             $fieldNames = [];
-            foreach ($defaultMap->{$type} as $typeKey => $typeKeyArray) {
+            foreach ($defaultMap->{$type} as $typeKey => $typeKeyArray)
+            {
                 $typeKey = str_replace('_', '', $typeKey);
-                if (($typeKey == 'resource') && !empty($typeKeyArray)) {
+                if (($typeKey == 'resource') && !empty($typeKeyArray))
+                {
                     $this->db->leftJoin('resource', 'resourceId', 'resourcemiscId');
-                    foreach ($typeKeyArray as $key => $value) {
+                    foreach ($typeKeyArray as $key => $value)
+                    {
                         $fieldName = $typeKey . $key;
                         $fieldNames[] = $fieldName;
                     }
-                } elseif (($typeKey == 'resourcemisc') && !empty($typeKeyArray)) {
-                    foreach ($typeKeyArray as $key => $value) {
+                }
+                elseif (($typeKey == 'resourcemisc') && !empty($typeKeyArray))
+                {
+                    foreach ($typeKeyArray as $key => $value)
+                    {
                         $fieldName = $typeKey . $key;
                         $fieldNames[] = $fieldName;
                     }
-                } elseif (($typeKey == 'resourceyear') && !empty($typeKeyArray)) {
+                }
+                elseif (($typeKey == 'resourceyear') && !empty($typeKeyArray))
+                {
                     $this->db->leftJoin('resource_year', 'resourceyearId', 'resourcemiscId');
-                    foreach ($typeKeyArray as $key => $value) {
+                    foreach ($typeKeyArray as $key => $value)
+                    {
                         $fieldName = $typeKey . $key;
                         $fieldNames[] = $fieldName;
                     }
                 }
             }
-            if (empty($fieldNames)) {
+            if (empty($fieldNames))
+            {
                 continue;
             }
             $fieldNames[] = 'collectionId';
@@ -1205,9 +1389,12 @@ class IMPORTCOMMON
             $this->db->formatConditions(['collectionType' => $type]);
             $this->db->leftJoin('collection', 'collectionId', 'resourcemiscCollection');
             $resultset = $this->db->select('resource_misc', $fieldNames, TRUE);
-            while ($row = $this->db->fetchRow($resultset)) {
-                foreach ($fieldNames as $fieldName) {
-                    if (($fieldName == 'collectionId') || ($fieldName == 'resourcemiscId')) {
+            while ($row = $this->db->fetchRow($resultset))
+            {
+                foreach ($fieldNames as $fieldName)
+                {
+                    if (($fieldName == 'collectionId') || ($fieldName == 'resourcemiscId'))
+                    {
                         continue;
                     }
                     if (
@@ -1216,43 +1403,90 @@ class IMPORTCOMMON
                         (array_key_exists($row['collectionId'], $collectionArray)
                             && (!array_key_exists($fieldName, $collectionArray[$row['collectionId']])))
                         ) {
-                        if ($row[$fieldName]) {
+                        if ($row[$fieldName])
+                        {
                             $collectionArray[$row['collectionId']][$fieldName] = $row[$fieldName];
                         }
                     }
                 }
-                if (array_key_exists('resource_creator', $defaultMap->{$type}) && !empty($defaultMap->{$type}['resource_creator'])) {
+                if (array_key_exists('resource_creator', $defaultMap->{$type}) && !empty($defaultMap->{$type}['resource_creator']))
+                {
                     $creators = [];
                     $roles = array_keys($defaultMap->{$type}['resource_creator']);
                     $this->db->formatConditions(['resourcecreatorResourceId' => $row['resourcemiscId']]);
                     $this->db->formatConditionsOneField($roles, 'resourcecreatorRole');
                     $this->db->orderBy('resourcecreatorOrder', TRUE, FALSE);
                     $resultsetC = $this->db->select('resource_creator', ['resourcecreatorCreatorId', 'resourcecreatorRole', 'resourcecreatorOrder']);
-                    while ($rowC = $this->db->fetchRow($resultsetC)) {
+                    while ($rowC = $this->db->fetchRow($resultsetC))
+                    {
                         $order = $rowC['resourcecreatorOrder'] - 1;
                         $creators['Creator' . $rowC['resourcecreatorRole'] . '_' . $order . '_select'] = $rowC['resourcecreatorCreatorId'];
                     }
-                    if (!empty($creators)) {
+                    if (!empty($creators))
+                    {
                         $collectionArray[$row['collectionId']]['creators'] = $creators;
                     }
                 }
             }
-            if (!empty($collectionArray)) {
+            if (!empty($collectionArray))
+            {
                 $count = 0;
                 $updateArray = [];
-                foreach ($collectionArray as $collectionId => $array) {
+                foreach ($collectionArray as $collectionId => $array)
+                {
                     ++$count;
                     $updateArray[$collectionId] = base64_encode(serialize($array));
-                    if ($count >= $maxCounts) {
+                    if ($count >= $maxCounts)
+                    {
                         $this->db->multiUpdate('collection', 'collectiondefault', 'collectionId', $updateArray);
                         $updateArray = [];
                         $count = 0;
                     }
                 }
-                if (!empty($updateArray)) { // do the remainder
+                if (!empty($updateArray))
+                { // do the remainder
                     $this->db->multiUpdate('collection', 'collectiondefault', 'collectionId', $updateArray);
                 }
             }
+        }
+    }
+    /**
+     * Delete caches if required.  Must be deleted if various creators, publishers etc. have been added with this import
+     *
+     * @param mixed $data
+     */
+    private function deleteCaches($data)
+    {
+        if ($data['deleteCacheCreators'])
+        {
+            // remove cache files for creators
+            $this->db->deleteCache('cacheResourceCreators');
+            $this->db->deleteCache('cacheMetadataCreators');
+        }
+        if ($data['deleteCachePublishers'])
+        {
+            // remove cache files for publishers
+            $this->db->deleteCache('cacheResourcePublishers');
+            $this->db->deleteCache('cacheMetadataPublishers');
+            $this->db->deleteCache('cacheConferenceOrganisers');
+        }
+        if ($data['deleteCacheCollections'])
+        {
+            // remove cache files for collections
+            $this->db->deleteCache('cacheResourceCollections');
+            $this->db->deleteCache('cacheMetadataCollections');
+            $this->db->deleteCache('cacheResourceCollectionTitles');
+            $this->db->deleteCache('cacheResourceCollectionShorts');
+        }
+        if ($data['deleteCacheKeywords'])
+        {
+            // remove cache files for keywords
+            $this->db->deleteCache('cacheResourceKeywords');
+            $this->db->deleteCache('cacheMetadataKeywords');
+            $this->db->deleteCache('cacheQuoteKeywords');
+            $this->db->deleteCache('cacheParaphraseKeywords');
+            $this->db->deleteCache('cacheMusingKeywords');
+            $this->db->deleteCache('cacheKeywords');
         }
     }
 }

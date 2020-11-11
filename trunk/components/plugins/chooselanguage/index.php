@@ -1,7 +1,9 @@
 <?php
 /**
  * WIKINDX : Bibliographic Management system.
+ *
  * @see https://wikindx.sourceforge.io/ The WIKINDX SourceForge project
+ *
  * @author The WIKINDX Team
  * @license https://www.isc.org/licenses/ ISC License
  */
@@ -50,7 +52,7 @@ class chooselanguage_MODULE
     public function resetLanguage()
     {
         $vars = GLOBALS::getVars();
-	    $session = FACTORY_SESSION::getInstance();
+        $session = FACTORY_SESSION::getInstance();
         if (array_key_exists('language', $vars))
         {
             $language = $vars['language'];
@@ -61,16 +63,16 @@ class chooselanguage_MODULE
         array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
         
         $userId = $session->getVar('setup_UserId');
-	    if ($userId)
-	    {
-        	$db = FACTORY_DB::getInstance();
-	    	$db->formatConditions(['usersId' => $userId]);
-	    	$db->update('users', ['usersLanguage' => $language]);
-	    }
-	    else // read-only user
-	    {
-	        $session->setVar("setup_Language", $language);
-	    }
+        if ($userId)
+        {
+            $db = FACTORY_DB::getInstance();
+            $db->formatConditions(['usersId' => $userId]);
+            $db->update('users', ['usersLanguage' => $language]);
+        }
+        else
+        { // read-only user
+            $session->setVar("setup_Language", $language);
+        }
         header("Location: index.php");
     }
     /**
@@ -90,15 +92,15 @@ class chooselanguage_MODULE
         $userId = $session->getVar('setup_UserId');
         if ($userId)
         {
-	        $db->formatConditions(['usersId' => $userId]);
-	        $language = $db->selectFirstField("users", "usersLanguage");
-	        array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
-		}
-		else // i.e. read-only so use a session
-		{
-	        $language = $session->getVar("setup_Language", $LanguageNeutralChoice);
-	        array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
-	    }
+            $db->formatConditions(['usersId' => $userId]);
+            $language = $db->selectFirstField("users", "usersLanguage");
+            array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
+        }
+        else
+        { // i.e. read-only so use a session
+            $language = $session->getVar("setup_Language", $LanguageNeutralChoice);
+            array_key_exists($language, $languages) ? $language = $language : $language = $LanguageNeutralChoice;
+        }
         
         $display = "";
 

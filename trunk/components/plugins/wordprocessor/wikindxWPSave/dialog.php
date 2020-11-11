@@ -16,7 +16,7 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "..", "cor
 
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
 
-$script  = '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/tiny_mce_popup.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+$script = '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/tiny_mce_popup.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
 $script .= '<script src="' . WIKINDX_URL_BASE . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/wordprocessor/wikindxWPcommon.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
 $script .= '<script src="' . WIKINDX_URL_BASE . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/wordprocessor/' . basename(__DIR__) . '/js/wikindxWPSavedialog.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
 GLOBALS::addTplVar('scripts', $script);
@@ -37,12 +37,15 @@ class WPSaveDialog
 
         $this->session = FACTORY_SESSION::getInstance();
         $this->vars = GLOBALS::getVars();
-        if (array_key_exists('method', $this->vars) && ($this->vars['method'] = 'save')) {
+        if (array_key_exists('method', $this->vars) && ($this->vars['method'] = 'save'))
+        {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "WPCOMMON.php"]));
             $common = new WPCOMMON();
             $common->save();
             FACTORY_CLOSEPOPUP::getInstance();
-        } else {
+        }
+        else
+        {
             $this->saveDialogue();
         }
     }
@@ -60,16 +63,21 @@ class WPSaveDialog
         $js = "onsubmit=\"return wordprocessorSave('$savedMessage', '$notSavedMessage');\"";
         $pString .= FORM\formHeaderVisibleAction("dialog.php", "wpSave", $js);
         $pString .= FORM\hidden("method", "save");
-        if ($hashFilename = $this->session->getVar("wp_HashFilename")) {
+        if ($hashFilename = $this->session->getVar("wp_HashFilename"))
+        {
             $pString .= FORM\hidden("hashFilename", $hashFilename);
         }
-        if ($id = $this->session->getVar("wp_Id")) {
+        if ($id = $this->session->getVar("wp_Id"))
+        {
             $pString .= FORM\hidden("id", $id);
         }
         $pString .= "<input type=\"hidden\" id=\"hdnpaperText\" name=\"hdnpaperText\" value=\"\">";
-        if ($this->session->getVar("wp_Title")) {
+        if ($this->session->getVar("wp_Title"))
+        {
             $title = base64_decode($this->session->getVar("wp_Title"));
-        } else {
+        }
+        else
+        {
             $title = '';
         }
         //		$export = $this->session->getVar("wp_ExportAndSave") ? TRUE : FALSE;

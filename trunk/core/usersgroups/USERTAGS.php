@@ -46,25 +46,32 @@ class USERTAGS
     public function grabAll($userBib = FALSE, $typeArray = FALSE, $populated = FALSE)
     {
         $this->db->leftJoin('resource_user_tags', 'resourceusertagsTagId', 'usertagsId');
-        if ($userBib) {
+        if ($userBib)
+        {
             $this->commonBib->userBibCondition('resourceusertagsResourceId');
         }
-        if (is_array($typeArray) && !empty($typeArray)) {
+        if (is_array($typeArray) && !empty($typeArray))
+        {
             $this->db->leftJoin('resource', 'resourceId', 'resourceusertagsResourceId');
-            foreach ($typeArray as $type) {
+            foreach ($typeArray as $type)
+            {
                 $conditions[] = $type;
             }
             $this->db->formatConditionsOneField($conditions, 'resourceType');
         }
         $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
-        if ($populated) {
+        if ($populated)
+        {
             $this->db->groupBy(['usertagsId', 'usertagsTag', 'resourceusertagsTagId'], TRUE, $this->db->count('resourceusertagsTagId') . '>0');
             $resultset = $this->db->selectCounts('user_tags', 'resourceusertagsTagId', ['usertagsId', 'usertagsTag'], FALSE, FALSE);
-        } else {
+        }
+        else
+        {
             $resultset = $this->db->select('user_tags', ['usertagsId', 'usertagsTag']);
         }
         $array = [];
-        while ($row = $this->db->fetchRow($resultset)) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
             $array[$row['usertagsId']] = \HTML\dbToFormTidy($row['usertagsTag']);
         }
 
@@ -82,9 +89,12 @@ class USERTAGS
         $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions($this->db->formatFields('usertagsTag') . $this->db->like(FALSE, $usertag, FALSE));
         $resultset = $this->db->select('user_tags', 'usertagsId');
-        if ($this->db->numRows($resultset)) {
+        if ($this->db->numRows($resultset))
+        {
             return $this->db->fetchOne($resultset);
-        } else {
+        }
+        else
+        {
             return FALSE; // not found
         }
     }

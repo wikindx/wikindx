@@ -46,14 +46,16 @@ class debugtools_MODULE
         $this->config = new debugtools_CONFIG();
         $this->session = FACTORY_SESSION::getInstance();
         $this->authorize = $this->config->authorize;
-        if ($menuInit) {
+        if ($menuInit)
+        {
             $this->makeMenu($this->config->menus);
 
             return; // Need do nothing more as this is simply menu initialisation.
         }
 
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->authorize))
+        { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
 
@@ -90,8 +92,10 @@ class debugtools_MODULE
             'CREATE ',
         ];
         
-        foreach ($SQLkeyWords as $keyWord) {
-            if (stripos($Text, $keyWord) !== FALSE) {
+        foreach ($SQLkeyWords as $keyWord)
+        {
+            if (stripos($Text, $keyWord) !== FALSE)
+            {
                 return TRUE;
             }
         }
@@ -107,9 +111,12 @@ class debugtools_MODULE
     {
         GLOBALS::setTplVar("heading", $this->pluginmessages->text("headingSession"));
         
-        if ($message) {
+        if ($message)
+        {
             $pString = $message;
-        } else {
+        }
+        else
+        {
             $pString = "";
         }
         
@@ -145,7 +152,8 @@ class debugtools_MODULE
         
         $pString .= HTML\tbodyStart();
         
-        foreach ($tmpSession as $k => $v) {
+        foreach ($tmpSession as $k => $v)
+        {
             if (is_array($v) || is_object($v))
             {
                 $v = print_r($v, TRUE);
@@ -158,41 +166,53 @@ class debugtools_MODULE
                 "index.php?action=debugtools_deleteSessionVariable" . htmlentities("&variable=" . $k)
             );
             
-            if ($v == $vd) {
+            if ($v == $vd)
+            {
                 $pString .= HTML\trStart("alternate" . (1 + $i % 2));
                 $pString .= HTML\td($deleteLink, "middle padding5px");
                 $pString .= HTML\td($k, "middle padding5px");
                 $pString .= HTML\td($this->pluginmessages->text("both"), "middle padding5px");
-                if ($this->isSQLStatement($v)) {
+                if ($this->isSQLStatement($v))
+                {
                     $pString .= HTML\td(FORM\textareaInput("", "", $v, 100, 10), "middle padding5px");
-                } else {
+                }
+                else
+                {
                     $pString .= HTML\td("<pre>" . $v . "</pre>", "middle padding5px");
                 }
                 $pString .= HTML\trEnd();
-            } else {
+            }
+            else
+            {
                 // Display raw data
-                    $pString .= HTML\trStart("alternate" . (1 + $i % 2));
-                    $pString .= HTML\td($deleteLink, "middle padding5px");
-                    $pString .= HTML\td($k, "middle padding5px");
-                    $pString .= HTML\td($this->pluginmessages->text("raw"), "middle padding5px");
-                    if ($this->isSQLStatement($v)) {
-                        $pString .= HTML\td(FORM\textareaInput("", "", $v, 100, 10), "middle padding5px");
-                    } else {
-                        $pString .= HTML\td("<pre>" . print_r($v, TRUE) . "</pre>", "middle padding5px");
-                    }
-                    $pString .= HTML\trEnd();
+                $pString .= HTML\trStart("alternate" . (1 + $i % 2));
+                $pString .= HTML\td($deleteLink, "middle padding5px");
+                $pString .= HTML\td($k, "middle padding5px");
+                $pString .= HTML\td($this->pluginmessages->text("raw"), "middle padding5px");
+                if ($this->isSQLStatement($v))
+                {
+                    $pString .= HTML\td(FORM\textareaInput("", "", $v, 100, 10), "middle padding5px");
+                }
+                else
+                {
+                    $pString .= HTML\td("<pre>" . print_r($v, TRUE) . "</pre>", "middle padding5px");
+                }
+                $pString .= HTML\trEnd();
 
                 // Display format data
-                    $pString .= HTML\trStart("alternate" . (1 + $i % 2));
-                    $pString .= HTML\td("&nbsp;", "middle padding5px");
-                    $pString .= HTML\td("&nbsp;", "middle padding5px");
-                    $pString .= HTML\td($this->pluginmessages->text("decoded"), "middle padding5px");
-                    if ($this->isSQLStatement($vd)) {
-                        $pString .= HTML\td(FORM\textareaInput("", "", $vd, 100, 10), "middle padding5px");
-                    } else {
-                        $pString .= HTML\td("<pre>" . $vd . "</pre>", "middle padding5px");
-                    }
-                    $pString .= HTML\trEnd();
+                $pString .= HTML\trStart("alternate" . (1 + $i % 2));
+                $pString .= HTML\td("&nbsp;", "middle padding5px");
+                $pString .= HTML\td("&nbsp;", "middle padding5px");
+                $pString .= HTML\td($this->pluginmessages->text("decoded"), "middle padding5px");
+                if ($this->isSQLStatement($vd))
+                {
+                    $pString .= HTML\td(FORM\textareaInput("", "", $vd, 100, 10), "middle padding5px");
+                }
+                else
+                {
+                    $pString .= HTML\td("<pre>" . $vd . "</pre>", "middle padding5px");
+                }
+                $pString .= HTML\trEnd();
             }
             
             $i++;
@@ -245,9 +265,12 @@ class debugtools_MODULE
     {
         GLOBALS::setTplVar("heading", $this->pluginmessages->text("headingConstant"));
         
-        if ($message) {
+        if ($message)
+        {
             $pString = $message;
-        } else {
+        }
+        else
+        {
             $pString = "";
         }
         
@@ -258,7 +281,8 @@ class debugtools_MODULE
         $nav = HTML\aName("topnav", "&nbsp;");
         $nav .= $this->pluginmessages->text("catBrowse");
         
-        foreach (array_keys($categories) as $category) {
+        foreach (array_keys($categories) as $category)
+        {
             $aLink[] = HTML\a(
                 "link",
                 $category,
@@ -270,7 +294,8 @@ class debugtools_MODULE
         
         $pString .= HTML\p($nav);
         
-        foreach ($categories as $category => $constants) {
+        foreach ($categories as $category => $constants)
+        {
             ksort($constants, SORT_NATURAL | SORT_FLAG_CASE);
         
             
@@ -293,7 +318,8 @@ class debugtools_MODULE
             
             $pString .= HTML\tbodyStart();
             
-            foreach ($constants as $key => $value) {
+            foreach ($constants as $key => $value)
+            {
                 $value = "<pre>" . $this->dumpEncodedData2Text($value) . "</pre>";
                     
                 $pString .= HTML\trStart("alternate" . (1 + $i % 2));
@@ -321,9 +347,12 @@ class debugtools_MODULE
     {
         GLOBALS::setTplVar("heading", $this->pluginmessages->text("headingExtension"));
         
-        if ($message) {
+        if ($message)
+        {
             $pString = $message;
-        } else {
+        }
+        else
+        {
             $pString = "";
         }
         
@@ -333,24 +362,31 @@ class debugtools_MODULE
         $extensions = array_flip($extensions);
         ksort($extensions, SORT_NATURAL | SORT_FLAG_CASE);
         
-        foreach ($extensions as $k => $v) {
+        foreach ($extensions as $k => $v)
+        {
             $extensions[$k] = ["required" => "--", "loaded" => $this->pluginmessages->text("yes")];
         }
 
         $extRequirements = [];
-        foreach (\UTILS\listCoreMandatoryPHPExtensions() as $ext) {
+        foreach (\UTILS\listCoreMandatoryPHPExtensions() as $ext)
+        {
             $extRequirements[$ext] = "mandatory";
         }
-        foreach (\UTILS\listCoreOptionalPHPExtensions() as $ext) {
+        foreach (\UTILS\listCoreOptionalPHPExtensions() as $ext)
+        {
             $extRequirements[$ext] = "optional";
         }
         
-        foreach ($extRequirements as $extension => $status) {
+        foreach ($extRequirements as $extension => $status)
+        {
             $status = $this->pluginmessages->text($status);
             
-            if (array_key_exists($extension, $extensions)) {
+            if (array_key_exists($extension, $extensions))
+            {
                 $extensions[$extension]["required"] = $status;
-            } else {
+            }
+            else
+            {
                 $extensions[$extension] = ["required" => $status, "loaded" => $this->pluginmessages->text("no")];
             }
         }
@@ -370,7 +406,8 @@ class debugtools_MODULE
         $pString .= HTML\theadEnd();
         $pString .= HTML\tbodyStart();
         
-        foreach ($extensions as $extension => $v) {
+        foreach ($extensions as $extension => $v)
+        {
             $pString .= HTML\trStart("alternate" . (1 + $i % 2));
             $pString .= HTML\td($extension, "middle padding5px");
             $pString .= HTML\td($v["required"], "middle padding5px");
@@ -397,9 +434,12 @@ class debugtools_MODULE
     {
         GLOBALS::setTplVar("heading", $this->pluginmessages->text("headingCookie"));
         
-        if ($message) {
+        if ($message)
+        {
             $pString = $message;
-        } else {
+        }
+        else
+        {
             $pString = "";
         }
         
@@ -417,18 +457,25 @@ class debugtools_MODULE
         $pString .= HTML\theadEnd();
         $pString .= HTML\tbodyStart();
         
-        if (isset($_COOKIE)) {
+        if (isset($_COOKIE))
+        {
             $cookies = $_COOKIE;
-        } else {
+        }
+        else
+        {
             $cookies = [];
         }
         
-        foreach ($cookies as $k => $v) {
+        foreach ($cookies as $k => $v)
+        {
             $pString .= HTML\trStart("alternate" . (1 + $i % 2));
             $pString .= HTML\td($k, "middle padding5px");
-            if ($k != 'PHPSESSID') {
+            if ($k != 'PHPSESSID')
+            {
                 $pString .= HTML\td('<pre>' . $this->dumpEncodedData2Text($v) . '</pre>', "middle padding5px");
-            } else {
+            }
+            else
+            {
                 $pString .= HTML\td($v, "middle padding5px");
             }
             $pString .= HTML\trEnd();
@@ -450,9 +497,12 @@ class debugtools_MODULE
     {
         GLOBALS::setTplVar("heading", $this->pluginmessages->text("headingServer"));
         
-        if ($message) {
+        if ($message)
+        {
             $pString = $message;
-        } else {
+        }
+        else
+        {
             $pString = "";
         }
         
@@ -473,7 +523,8 @@ class debugtools_MODULE
         $servers = $_SERVER;
         ksort($servers, SORT_NATURAL | SORT_FLAG_CASE);
         
-        foreach ($servers as $k => $v) {
+        foreach ($servers as $k => $v)
+        {
             $pString .= HTML\trStart("alternate" . (1 + $i % 2));
             $pString .= HTML\td($k, "middle padding5px");
             $pString .= HTML\td($v, "middle padding5px");
@@ -498,9 +549,12 @@ class debugtools_MODULE
     {
         GLOBALS::setTplVar("heading", $this->pluginmessages->text("headingEnvironment"));
         
-        if ($message) {
+        if ($message)
+        {
             $pString = $message;
-        } else {
+        }
+        else
+        {
             $pString = "";
         }
         
@@ -521,9 +575,10 @@ class debugtools_MODULE
         $envConfig = (array) new CONFIG();
         ksort($envConfig, SORT_NATURAL | SORT_FLAG_CASE);
         
-        foreach ($envConfig as $k => $v) {
+        foreach ($envConfig as $k => $v)
+        {
             $pString .= HTML\trStart("alternate" . (1 + $i % 2));
-            $pString .= HTML\td($k, "middle padding5px");    
+            $pString .= HTML\td($k, "middle padding5px");
             $pString .= HTML\td("<pre>" . $this->dumpEncodedData2Text($v) . "</pre>", "middle padding5px");
             $pString .= HTML\trEnd();
             
@@ -548,9 +603,12 @@ class debugtools_MODULE
         
         GLOBALS::setTplVar("heading", $this->pluginmessages->text("headingConfigApplication"));
         
-        if ($message) {
+        if ($message)
+        {
             $pString = $message;
-        } else {
+        }
+        else
+        {
             $pString = "";
         }
         
@@ -572,19 +630,26 @@ class debugtools_MODULE
         $db->orderBy("configName");
         $resultSet = $db->select("config", "*");
         
-        while ($row = $db->fetchRow($resultSet)) {
+        while ($row = $db->fetchRow($resultSet))
+        {
             $pString .= HTML\trStart("alternate" . (1 + $i % 2));
             
             $tmpId = "";
             $tmpName = "";
             $tmpValue = "";
             
-            foreach ($row as $k => $v) {
-                if ($k == "configId") {
+            foreach ($row as $k => $v)
+            {
+                if ($k == "configId")
+                {
                     $tmpId = $v;
-                } elseif ($k == "configName") {
+                }
+                elseif ($k == "configName")
+                {
                     $tmpName = $v;
-                } elseif ($v != NULL) {
+                }
+                elseif ($v != NULL)
+                {
                     $tmpValue = $v;
 
                     break;
@@ -592,7 +657,8 @@ class debugtools_MODULE
             }
 
             $tmpValue = $this->dumpEncodedData2Text($tmpValue);
-            if (in_array($tmpName, ["configMailSmtpPassword", "configCmsDbPassword"])) {
+            if (in_array($tmpName, ["configMailSmtpPassword", "configCmsDbPassword"]))
+            {
                 $tmpValue = str_repeat("*", strlen($tmpValue)) . ' ' . $this->pluginmessages->text("security");
             }
             $tmpValue = "<pre>" . $tmpValue . "</pre>";
@@ -623,9 +689,12 @@ class debugtools_MODULE
         
         GLOBALS::setTplVar("heading", $this->pluginmessages->text("headingConfigUser"));
         
-        if ($message) {
+        if ($message)
+        {
             $pString = $message;
-        } else {
+        }
+        else
+        {
             $pString = "";
         }
         
@@ -647,11 +716,14 @@ class debugtools_MODULE
         $db->formatConditions(['usersId' => $userId]);
         $resultSet = $db->select("users", "*");
         
-        while ($row = $db->fetchRow($resultSet)) {
-            foreach ($row as $k => $v) {
+        while ($row = $db->fetchRow($resultSet))
+        {
+            foreach ($row as $k => $v)
+            {
                 $v = $this->dumpEncodedData2Text($v);
                 
-                if ($k == "usersPassword") {
+                if ($k == "usersPassword")
+                {
                     $v = str_repeat("*", strlen($v)) . ' ' . $this->pluginmessages->text("security");
                 }
 
@@ -706,65 +778,80 @@ class debugtools_MODULE
      */
     private function dumpEncodedData2Text($encodedData)
     {
-        $array_base64_pattern  = "/^YTo[A-Za-z0-9+\/=]+/u";
-        $object_base64_pattern = "/^Tzo[A-Za-z0-9+\/=]+/u";
-        $array_serialized_pattern  = '/^a:\d+:{.+/u';
+        $array_base64_pattern = "/^YTo[A-Za-z0-9+\\/=]+/u";
+        $object_base64_pattern = "/^Tzo[A-Za-z0-9+\\/=]+/u";
+        $array_serialized_pattern = '/^a:\d+:{.+/u';
         $object_serialized_pattern = '/^O:\d+:".+/u';
 
         $tmp = $encodedData;
 
-        switch (gettype($tmp))
-        {
+        switch (gettype($tmp)) {
             case "boolean":
                 return $tmp ? "TRUE" : "FALSE";
+
             break;
             case "integer":
                 return print_r($tmp, TRUE);
+
             break;
             case "double":
                 return print_r($tmp, TRUE);
+
             break;
             case "string":
                 if (preg_match($array_base64_pattern, $tmp) > 0 || preg_match($object_base64_pattern, $tmp) > 0)
                 {
                     $tmp1 = @base64_decode($tmp);
-                    if ($tmp1 !== FALSE) {
+                    if ($tmp1 !== FALSE)
+                    {
                         $tmp = $tmp1;
                     }
                 }
                 if (preg_match($array_serialized_pattern, $tmp) > 0 || preg_match($object_serialized_pattern, $tmp) > 0)
                 {
                     $tmp1 = @unserialize($tmp);
-                    if ($tmp1 !== FALSE) {
+                    if ($tmp1 !== FALSE)
+                    {
                         $tmp = $this->dumpEncodedData2Text($tmp1);
                     }
                 }
+
                 return $tmp;
+
             break;
             case "array":
                 // When it's an array, try to decode recursively its values
-                foreach ($tmp as $k => $v) {
+                foreach ($tmp as $k => $v)
+                {
                     $tmp[$k] = $this->dumpEncodedData2Text($v);
                 }
+
                 return print_r($tmp, TRUE);
+
             break;
             case "object":
                 return print_r($tmp, TRUE);
+
             break;
             case "resource":
                 return print_r($tmp, TRUE) . " resource";
+
             break;
             case "resource(closed)":
                 return print_r($tmp, TRUE) . " resource(closed)";
+
             break;
             case "NULL":
                 return "NULL";
+
             break;
             case "unknown type":
                 return $tmp;
+
                 break;
             default:
                 return $tmp;
+
             break;
         }
     }

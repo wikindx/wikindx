@@ -38,7 +38,8 @@ class BROWSETYPE
     {
         $this->sum = [];
         $this->getTypes();
-        if (empty($this->types)) {
+        if (empty($this->types))
+        {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noResources"));
 
             return;
@@ -60,7 +61,8 @@ class BROWSETYPE
     {
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
-        foreach ($this->types as $id => $name) {
+        foreach ($this->types as $id => $name)
+        {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .
@@ -78,7 +80,8 @@ class BROWSETYPE
         $this->common->userBibCondition('resourceId');
         $this->db->orderByCollate('resourceType', FALSE);
         $recordset = $this->db->selectCounts('resource', 'resourceType');
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $this->collate($row);
         }
     }

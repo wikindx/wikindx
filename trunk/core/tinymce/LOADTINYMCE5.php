@@ -41,6 +41,11 @@ class LOADTINYMCE5
      * Load tinymce -- blank textarea configuration -- no tinyMCE tools
      *
      * @param array $elements Array of textinput ids to apply editor to. Default is array()
+     * @param mixed $Label
+     * @param mixed $Name
+     * @param mixed $Value
+     * @param mixed $width
+     * @param mixed $height
      *
      * @return string
      */
@@ -60,7 +65,8 @@ class LOADTINYMCE5
         // Wrap only the config if the locale is available otherwise TinyMCE throws JS errors
         $locale = !empty($locale) ? "language: '" . $locale . "'," : "";
         $language_url = !empty($language_url) ? "language_url: '" . $language_url . "'," : "";
-$language_url = "";
+        $language_url = "";
+
         return <<<END
 $tinymcePath
 <script>
@@ -87,10 +93,14 @@ END;
      */
     protected function getIncludeTinyMceLib()
     {
-        if ($this->pathLoaded) {
+        if ($this->pathLoaded)
+        {
             return '';
-        } else {
+        }
+        else
+        {
             $this->pathLoaded = TRUE;
+
             return '<script src="' . WIKINDX_URL_BASE . '/' . WIKINDX_URL_COMPONENT_VENDOR . '/tinymce/tinymce.min.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         }
     }
@@ -105,21 +115,26 @@ END;
         // https://www.tiny.cloud/get-tiny/language-packages/
         $locale = \LOCALES\determine_locale();
         $aScripts = \FILE\fileInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "tinymce", "langs"]));
-        return in_array($locale . ".js", $aScripts) ? $locale : "";
 
+        return in_array($locale . ".js", $aScripts) ? $locale : "";
     }
     /**
      * Include tiny_mce compressor
      *
      * @param bool $compressorLib Default is FALSE
+     * @param mixed $locale
      *
      * @return string
      */
     protected function getLocalizationJS($locale)
     {
         if (empty($locale))
+        {
             return '';
+        }
         else
+        {
             return WIKINDX_URL_BASE . '/' . WIKINDX_URL_COMPONENT_VENDOR . '/tinymce/languages/' . $locale . '.js';
+        }
     }
 }

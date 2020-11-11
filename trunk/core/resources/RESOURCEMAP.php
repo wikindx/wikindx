@@ -38,15 +38,18 @@ class RESOURCEMAP
     public function __construct($exception = FALSE)
     {
         $this->loadMap();
-		foreach (WIKINDX_DEACTIVATE_RESOURCE_TYPES as $removeType) {
-			if ($removeType == $exception) {
-				continue;
-			}
-			if (($index = array_search($removeType, $this->types)) !== FALSE) {
-				unset($this->types[$index]);
-				unset($this->typeMap[$removeType]);
-			}
-		}
+        foreach (WIKINDX_DEACTIVATE_RESOURCE_TYPES as $removeType)
+        {
+            if ($removeType == $exception)
+            {
+                continue;
+            }
+            if (($index = array_search($removeType, $this->types)) !== FALSE)
+            {
+                unset($this->types[$index]);
+                unset($this->typeMap[$removeType]);
+            }
+        }
     }
     /**
      * Get readable name of resource type from database field
@@ -71,9 +74,12 @@ class RESOURCEMAP
      */
     public function lookupDBfield($type, $readableName)
     {
-        if (array_key_exists($readableName, $this->reverseTypeMap[$type])) {
+        if (array_key_exists($readableName, $this->reverseTypeMap[$type]))
+        {
             return $this->reverseTypeMap[$type][$readableName];
-        } else {
+        }
+        else
+        {
             return $readableName;
         }
     }
@@ -85,8 +91,10 @@ class RESOURCEMAP
     public function getRequired()
     {
         $array = [];
-        foreach ($this->types as $type) {
-            if (array_key_exists('required', $this->typeMap[$type])) {
+        foreach ($this->types as $type)
+        {
+            if (array_key_exists('required', $this->typeMap[$type]))
+            {
                 $array[$type] = $this->typeMap[$type]['required'];
             }
         }
@@ -104,27 +112,37 @@ class RESOURCEMAP
      */
     public function getTables($type)
     {
-    	if (!array_key_exists( $type, $this->typeMap)) {
-    		return [];
-    	}
+        if (!array_key_exists($type, $this->typeMap))
+        {
+            return [];
+        }
         $ret = [];
-        foreach ($this->typeMap[$type] as $key => $value) {
-            if ($key == 'optional') {
-                foreach ($this->typeMap[$type]['optional'] as $optKey => $optValue) {
-                    if (array_search($optKey, $this->optional) !== FALSE) {
-                        foreach ($this->typeMap[$type]['optional'][$optKey] as $typeOptKey => $typeOptValue) {
+        foreach ($this->typeMap[$type] as $key => $value)
+        {
+            if ($key == 'optional')
+            {
+                foreach ($this->typeMap[$type]['optional'] as $optKey => $optValue)
+                {
+                    if (array_search($optKey, $this->optional) !== FALSE)
+                    {
+                        foreach ($this->typeMap[$type]['optional'][$optKey] as $typeOptKey => $typeOptValue)
+                        {
                             if (($typeOptKey == 'title') || ($typeOptKey == 'insertBefore') || ($typeOptKey == 'insertAfter')
                                 || ($typeOptKey == 'insertTitle')
-                                || ($typeOptKey == 'titleHint') || ($typeOptKey == 'resource') || (mb_strpos($typeOptKey, 'hint_') === 0)) {
+                                || ($typeOptKey == 'titleHint') || ($typeOptKey == 'resource') || (mb_strpos($typeOptKey, 'hint_') === 0))
+                            {
                                 continue;
                             }
-                            if (array_search($typeOptKey, $ret) === FALSE) {
+                            if (array_search($typeOptKey, $ret) === FALSE)
+                            {
                                 $ret[] = $typeOptKey;
                             }
                         }
                     }
                 }
-            } else {
+            }
+            else
+            {
                 $ret[] = $key;
             }
         }
@@ -153,20 +171,27 @@ class RESOURCEMAP
     public function getTypeMap()
     {
         // Check if $returnTypeMap is not empty -- if populated, we've already run this optimizing function so return the array.
-        if (!empty($this->returnTypeMap)) {
+        if (!empty($this->returnTypeMap))
+        {
             return $this->returnTypeMap;
         }
         $this->returnTypeMap = $this->typeMap;
         // Remove invalid ['optional'] elements or, if ['optional'] does not exist, add an empty array (this voids requirements
         // in user loop functions to check if ['optional'] exists).
-        foreach ($this->typeMap as $type => $value) {
-            if (array_key_exists('optional', $value)) {
-                foreach ($this->typeMap[$type]['optional'] as $optKey => $optValue) {
-                    if (array_search($optKey, $this->optional) === FALSE) {
+        foreach ($this->typeMap as $type => $value)
+        {
+            if (array_key_exists('optional', $value))
+            {
+                foreach ($this->typeMap[$type]['optional'] as $optKey => $optValue)
+                {
+                    if (array_search($optKey, $this->optional) === FALSE)
+                    {
                         unset($this->returnTypeMap[$type]['optional'][$optKey]);
                     }
                 }
-            } else {
+            }
+            else
+            {
                 $this->returnTypeMap[$type]['optional'] = [];
             }
         }

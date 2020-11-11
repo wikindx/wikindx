@@ -15,6 +15,7 @@
  */
 class SOUNDEXPLORERQUICKSEARCH
 {
+    public $formData = [];
     private $db;
     private $vars;
     private $errors;
@@ -33,7 +34,6 @@ class SOUNDEXPLORERQUICKSEARCH
     private $execJoin = [];
     private $orderedJoins = [];
     private $foundResources = [];
-    public $formData = [];
 
     public function __construct()
     {
@@ -62,23 +62,26 @@ class SOUNDEXPLORERQUICKSEARCH
     public function display($id = FALSE, $message = FALSE)
     {
         ///First check, do we have resources?
-        if (!$this->common->resourcesExist()) {
+        if (!$this->common->resourcesExist())
+        {
             return;
         }
         $pString = '';
-        if ($message) {
-        	$pString .= $message;
+        if ($message)
+        {
+            $pString .= $message;
         }
         $pString .= FORM\formHeader("soundexplorer_seStoreSearch");
         $pString .= FORM\hidden("method", "process");
-        if ($id) {
+        if ($id)
+        {
             $pString .= FORM\hidden('sepluginId', $id);
             $this->grabSE($id);
         }
         $pString .= HTML\tableStart();
         $pString .= HTML\trStart();
-        $label = array_key_exists("Label", $this->formData) ? 
-        	htmlspecialchars(stripslashes($this->formData["Label"]), ENT_QUOTES | ENT_HTML5) : FALSE;
+        $label = array_key_exists("Label", $this->formData) ?
+            htmlspecialchars(stripslashes($this->formData["Label"]), ENT_QUOTES | ENT_HTML5) : FALSE;
         $pString .= HTML\td(FORM\textInput(
             $this->pluginmessages->text("seLabel"),
             "seplugin_Label",
@@ -91,8 +94,14 @@ class SOUNDEXPLORERQUICKSEARCH
         $this->radioButtons = FALSE;
         $word = array_key_exists("Word", $this->formData) ?
             htmlspecialchars(stripslashes($this->formData["Word"]), ENT_QUOTES | ENT_HTML5) : FALSE;
-        $hint = BR . \HTML\span(\HTML\aBrowse('green', '', $this->coremessages->text("hint", "hint"), '#', "", 
-            	$this->coremessages->text("hint", "wordLogic")), 'hint');
+        $hint = BR . \HTML\span(\HTML\aBrowse(
+            'green',
+            '',
+            $this->coremessages->text("hint", "hint"),
+            '#',
+            "",
+            $this->coremessages->text("hint", "wordLogic")
+        ), 'hint');
         $pString .= HTML\td(FORM\textInput(
             $this->coremessages->text("search", "word"),
             "seplugin_Word",
@@ -104,14 +113,23 @@ class SOUNDEXPLORERQUICKSEARCH
         $js = 'onClick="seTestSound()"';
         $pString .= HTML\td(FORM\selectedBoxValue($this->pluginmessages->text("seSound"), "seplugin_Sound", $selectedArray, $sound, 1, FALSE, $js));
         $selectedArray = ['enabled' => $this->pluginmessages->text("seEnabled"), 'disabled' => $this->pluginmessages->text("seDisabled")];
-        if (!$id) {
+        if (!$id)
+        {
             $status = 'enabled';
-        } else {
+        }
+        else
+        {
             $status = array_key_exists("SearchStatus", $this->formData) && ($this->formData["SearchStatus"] == 'enabled') ? 'enabled' : 'disabled';
         }
-        $pString .= HTML\td(FORM\selectedBoxValue($this->pluginmessages->text("seSearchStatus"), 
-        	"seplugin_SearchStatus", $selectedArray, $status, 1));
-        if ($id) {
+        $pString .= HTML\td(FORM\selectedBoxValue(
+            $this->pluginmessages->text("seSearchStatus"),
+            "seplugin_SearchStatus",
+            $selectedArray,
+            $status,
+            1
+        ));
+        if ($id)
+        {
             $pString .= HTML\td(FORM\checkBox($this->pluginmessages->text("seSearchDelete"), "seplugin_SearchDelete"));
         }
         $pString .= HTML\trEnd();
@@ -139,44 +157,37 @@ class SOUNDEXPLORERQUICKSEARCH
         $this->db->formatConditions(['pluginsoundexplorerUserId' => $session->getVar("setup_UserId")]);
         $resultset = $this->db->select('plugin_soundexplorer', ['pluginsoundexplorerLabel', 'pluginsoundexplorerArray']);
         $sounds = [];
-        while ($row = $this->db->fetchRow($resultset)) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
             $this->input = unserialize(base64_decode($row['pluginsoundexplorerArray']));
-            if ($this->input['SearchStatus'] == 'disabled') {
+            if ($this->input['SearchStatus'] == 'disabled')
+            {
                 continue;
             }
-            if ($this->runSearch($row['pluginsoundexplorerLabel'])) {
-                if (array_search($this->input['Sound'], $sounds) === FALSE) {
+            if ($this->runSearch($row['pluginsoundexplorerLabel']))
+            {
+                if (array_search($this->input['Sound'], $sounds) === FALSE)
+                {
                     $sounds[] = $this->input['Sound'];
                 }
             }
         }
-        if (!empty($this->foundResources)) {
+        if (!empty($this->foundResources))
+        {
             $session->setVar("seplugin_FoundResources", $this->foundResources);
-        } else {
+        }
+        else
+        {
             $session->delVar("seplugin_FoundResources");
         }
-        if (!empty($sounds)) {
+        if (!empty($sounds))
+        {
             return $sounds;
-        } else {
+        }
+        else
+        {
             return FALSE;
         }
-    }
-    /**
-     * Grab form field data from database for a specific ID
-     *
-     * @param int $id
-     */
-    private function grabSE($id)
-    {
-		$this->db->formatConditions(['pluginsoundexplorerId' => $id]);
-		$resultset = $this->db->select('plugin_soundexplorer', ['pluginsoundexplorerLabel', 'pluginsoundexplorerArray']);
-		while ($row = $this->db->fetchRow($resultset)) {
-			$this->formData["Label"] = $row['pluginsoundexplorerLabel'];
-			$array = unserialize(base64_decode($row['pluginsoundexplorerArray']));
-		}
-		foreach ($array as $key => $value) {
-			$this->formData[$key] = $value;
-		}
     }
     /**
      * validate user input - method, word and field are required
@@ -189,23 +200,50 @@ class SOUNDEXPLORERQUICKSEARCH
     {
         $this->writeFormdata();
         $type = FALSE;
-        if (array_key_exists("seplugin_Field", $this->vars) && $this->vars["seplugin_Field"]) {
+        if (array_key_exists("seplugin_Field", $this->vars) && $this->vars["seplugin_Field"])
+        {
             $type = $this->vars["seplugin_Field"];
-        } elseif (array_key_exists("Field", $this->formData)) {
+        }
+        elseif (array_key_exists("Field", $this->formData))
+        {
             $type = $this->formData["Field"];
         }
-        if (!$type) {
+        if (!$type)
+        {
             $this->formData["Field"] = "title"; // force to default title search
         }
         if ((array_key_exists("seplugin_Label", $this->vars) && !trim($this->vars["seplugin_Label"]))
-        || !array_key_exists("Label", $this->formData)) {
+        || !array_key_exists("Label", $this->formData))
+        {
             return $this->errors->text("inputError", "missing");
         }
         if ((array_key_exists("seplugin_Word", $this->vars) && !trim($this->vars["seplugin_Word"]))
-        || !array_key_exists("Word", $this->formData)) {
+        || !array_key_exists("Word", $this->formData))
+        {
             return $this->errors->text("inputError", "missing");
-        } else {
+        }
+        else
+        {
             return FALSE;
+        }
+    }
+    /**
+     * Grab form field data from database for a specific ID
+     *
+     * @param int $id
+     */
+    private function grabSE($id)
+    {
+        $this->db->formatConditions(['pluginsoundexplorerId' => $id]);
+        $resultset = $this->db->select('plugin_soundexplorer', ['pluginsoundexplorerLabel', 'pluginsoundexplorerArray']);
+        while ($row = $this->db->fetchRow($resultset))
+        {
+            $this->formData["Label"] = $row['pluginsoundexplorerLabel'];
+            $array = unserialize(base64_decode($row['pluginsoundexplorerArray']));
+        }
+        foreach ($array as $key => $value)
+        {
+            $this->formData[$key] = $value;
         }
     }
     /* Return array of database fields to perform the search on
@@ -216,43 +254,54 @@ class SOUNDEXPLORERQUICKSEARCH
     {
         $fields = ["title" => $this->coremessages->text("search", "title")];
         $this->db->limit(1, 0); // Keep memory usage down for large databases
-        if ($this->db->fetchOne($this->db->selectCount('resource_creator', 'resourcecreatorId'))) {
+        if ($this->db->fetchOne($this->db->selectCount('resource_creator', 'resourcecreatorId')))
+        {
             $fields['creator'] = $this->coremessages->text("search", "creator");
         }
         $this->db->limit(1, 0); // Keep memory usage down for large databases
-        if ($this->db->fetchOne($this->db->selectCount('resource_text', 'resourcetextId'))) {
+        if ($this->db->fetchOne($this->db->selectCount('resource_text', 'resourcetextId')))
+        {
             $fields['note'] = $this->coremessages->text("search", "note");
         }
-        if ($this->db->fetchOne($this->db->selectCount('resource_text', 'resourcetextId'))) {
+        if ($this->db->fetchOne($this->db->selectCount('resource_text', 'resourcetextId')))
+        {
             $fields['abstract'] = $this->coremessages->text("search", "abstract");
         }
         $this->db->formatConditions(['resourcemetadataType' => 'q']);
         $this->db->limit(1, 0); // Keep memory usage down for large databases
-        if ($this->db->fetchOne($this->db->selectCount('resource_metadata', 'resourcemetadataId'))) {
+        if ($this->db->fetchOne($this->db->selectCount('resource_metadata', 'resourcemetadataId')))
+        {
             $fields['quote'] = $this->coremessages->text("search", "quote");
         }
         $this->db->formatConditions(['resourcemetadataType' => 'p']);
         $this->db->limit(1, 0); // Keep memory usage down for large databases
-        if ($this->db->fetchOne($this->db->selectCount('resource_metadata', 'resourcemetadataId'))) {
+        if ($this->db->fetchOne($this->db->selectCount('resource_metadata', 'resourcemetadataId')))
+        {
             $fields['paraphrase'] = $this->coremessages->text("search", "paraphrase");
         }
         $this->db->formatConditions(['resourcemetadataType' => 'm']);
         $this->db->limit(1, 0); // Keep memory usage down for large databases
-        if ($this->db->fetchOne($this->db->selectCount('resource_metadata', 'resourcemetadataId'))) {
+        if ($this->db->fetchOne($this->db->selectCount('resource_metadata', 'resourcemetadataId')))
+        {
             $fields['musing'] = $this->coremessages->text("search", "musing");
         }
         $this->grabKeywords();
-        if (is_array($this->keywords)) {
+        if (is_array($this->keywords))
+        {
             $fields['keyword'] = $this->coremessages->text("resources", "keyword");
         }
         // Add any used custom fields
         $subQ = $this->db->subQuery($this->db->selectNoExecute('resource_custom', 'resourcecustomCustomId'), FALSE, FALSE, TRUE);
         $this->db->formatConditions($this->db->formatFields('customId') . $this->db->inClause($subQ));
         $recordset = $this->db->select('custom', ['customId', 'customLabel', 'customSize']);
-        while ($row = $this->db->fetchRow($recordset)) {
-            if ($row['customSize'] == 'S') {
+        while ($row = $this->db->fetchRow($recordset))
+        {
+            if ($row['customSize'] == 'S')
+            {
                 $fields['Custom_S_' . $row['customId']] = HTML\dbToFormTidy($row['customLabel']);
-            } else {
+            }
+            else
+            {
                 $fields['Custom_L_' . $row['customId']] = HTML\dbToFormTidy($row['customLabel']);
             }
         }
@@ -269,15 +318,24 @@ class SOUNDEXPLORERQUICKSEARCH
     private function makeFormMultiple($array)
     {
         $temp = $array;
-        if (array_key_exists("Field", $this->formData) && ($selected = $this->formData["Field"])) {
+        if (array_key_exists("Field", $this->formData) && ($selected = $this->formData["Field"]))
+        {
             $selectedArray = \UTF8\mb_explode(",", $selected);
             $pString = FORM\selectedBoxValueMultiple($this->coremessages->text("search", 'field'), "seplugin_Field", $temp, $selectedArray, 2);
-        } else {
+        }
+        else
+        {
             // If $type == 'field', select all fields as default
             $pString = FORM\selectFBoxValueMultiple($this->coremessages->text("search", 'field'), "seplugin_Field", $temp, 2);
         }
-        $pString .= BR . \HTML\span(\HTML\aBrowse('green', '', $this->coremessages->text("hint", "hint"), '#', "", 
-            	$this->coremessages->text("hint", "multiples")), 'hint') .
+        $pString .= BR . \HTML\span(\HTML\aBrowse(
+            'green',
+            '',
+            $this->coremessages->text("hint", "hint"),
+            '#',
+            "",
+            $this->coremessages->text("hint", "multiples")
+        ), 'hint') .
             BR;
         $pString .= $this->radioButtons . BR;
 
@@ -301,15 +359,17 @@ class SOUNDEXPLORERQUICKSEARCH
      */
     private function makeRadioButtons($type)
     {
-    	$type .= 'Method';
-        if (array_key_exists($type, $this->formData) && ($this->formData[$type] == 'AND')) {
-        	$type = 'seplugin_' . $type;
+        $type .= 'Method';
+        if (array_key_exists($type, $this->formData) && ($this->formData[$type] == 'AND'))
+        {
+            $type = 'seplugin_' . $type;
             $pString = HTML\span(FORM\radioButton(FALSE, $type, 'OR') . " OR", "small") . BR;
             $pString .= HTML\span(FORM\radioButton(FALSE, $type, 'AND', TRUE) . " AND", "small");
         }
         // Default
-        else {
-       		$type = 'seplugin_' . $type;
+        else
+        {
+            $type = 'seplugin_' . $type;
             $pString = HTML\span(FORM\radioButton(FALSE, $type, 'OR', TRUE) . " OR", "small") .
                 BR;
             $pString .= HTML\span(FORM\radioButton(FALSE, $type, 'AND') . " AND", "small");
@@ -324,9 +384,12 @@ class SOUNDEXPLORERQUICKSEARCH
     private function parseWord()
     {
         $this->words = $this->parsePhrase->parse($this->input);
-        if (!$this->words) {
+        if (!$this->words)
+        {
             return FALSE;
-        } else {
+        }
+        else
+        {
             return TRUE;
         }
     }
@@ -335,19 +398,25 @@ class SOUNDEXPLORERQUICKSEARCH
      */
     private function fieldSql()
     {
-        if (!array_key_exists('Field', $this->input)) {
+        if (!array_key_exists('Field', $this->input))
+        {
             return;
         }
         $conditionArray = $metaCond = [];
         $fields = \UTF8\mb_explode(",", $this->input['Field']);
         $this->joinResourceId = 'resourceId';
         $metadata = FALSE;
-        foreach ($fields as $field) {
-            if (mb_strpos($field, 'Custom_') === 0) {
+        foreach ($fields as $field)
+        {
+            if (mb_strpos($field, 'Custom_') === 0)
+            {
                 $split = \UTF8\mb_explode('_', $field);
-                if ($split[1] == 'S') {
+                if ($split[1] == 'S')
+                {
                     $searchField = 'resourcecustomShort';
-                } else {
+                }
+                else
+                {
                     $searchField = 'resourcecustomLong';
                 }
                 $cId = $split[2];
@@ -361,21 +430,30 @@ class SOUNDEXPLORERQUICKSEARCH
                 $this->execJoin[$this->tAlias . '.resource_custom']['intField'] = $this->tAlias . '.resourcecustomResourceId';
                 $this->execJoin[$this->tAlias . '.resource_custom']['extField'] = $this->joinResourceId;
                 ++$this->tAlias;
-            } elseif ($field == 'title') {
+            }
+            elseif ($field == 'title')
+            {
                 $wc = str_replace('!WIKINDXFIELDWIKINDX!', $this->db->formatFields('resourceTitleSort'), $this->words);
                 $conditionArray[] = $wc;
-            } elseif ($field == 'note') {
+            }
+            elseif ($field == 'note')
+            {
                 $wc = str_replace('!WIKINDXFIELDWIKINDX!', $this->db->formatFields('resourcetextNote'), $this->words);
                 $conditionArray[] = $wc;
                 $this->execJoin['resource_text']['intField'] = 'resourcetextId';
                 $this->execJoin['resource_text']['extField'] = $this->joinResourceId;
-            } elseif ($field == 'abstract') {
+            }
+            elseif ($field == 'abstract')
+            {
                 $wc = str_replace('!WIKINDXFIELDWIKINDX!', $this->db->formatFields('resourcetextAbstract'), $this->words);
                 $conditionArray[] = $wc;
                 $this->execJoin['resource_text']['intField'] = 'resourcetextId';
                 $this->execJoin['resource_text']['extField'] = $this->joinResourceId;
-            } elseif ($field == 'quote') {
-                if (!$metadata) {
+            }
+            elseif ($field == 'quote')
+            {
+                if (!$metadata)
+                {
                     $wc = str_replace('!WIKINDXFIELDWIKINDX!', $this->db->formatFields('resourcemetadataText'), $this->words);
                     $conditionArray[] = $wc;
                     $metadata = TRUE;
@@ -383,8 +461,11 @@ class SOUNDEXPLORERQUICKSEARCH
                 $metaCond[] = $this->db->formatFields('resourcemetadataType') . $this->db->equal . $this->db->tidyInput('q');
                 $this->execJoin['resource_metadata']['intField'] = 'resourcemetadataResourceId';
                 $this->execJoin['resource_metadata']['extField'] = $this->joinResourceId;
-            } elseif ($field == 'paraphrase') {
-                if (!$metadata) {
+            }
+            elseif ($field == 'paraphrase')
+            {
+                if (!$metadata)
+                {
                     $wc = str_replace('!WIKINDXFIELDWIKINDX!', $this->db->formatFields('resourcemetadataText'), $this->words);
                     $conditionArray[] = $wc;
                     $metadata = TRUE;
@@ -392,8 +473,11 @@ class SOUNDEXPLORERQUICKSEARCH
                 $metaCond[] = $this->db->formatFields('resourcemetadataType') . $this->db->equal . $this->db->tidyInput('p');
                 $this->execJoin['resource_metadata']['intField'] = 'resourcemetadataResourceId';
                 $this->execJoin['resource_metadata']['extField'] = $this->joinResourceId;
-            } elseif ($field == 'musing') {
-                if (!$metadata) {
+            }
+            elseif ($field == 'musing')
+            {
+                if (!$metadata)
+                {
                     $wc = str_replace('!WIKINDXFIELDWIKINDX!', $this->db->formatFields('resourcemetadataText'), $this->words);
                     $conditionArray[] = $wc;
                     $metadata = TRUE;
@@ -401,7 +485,9 @@ class SOUNDEXPLORERQUICKSEARCH
                 $metaCond[] = $this->db->formatFields('resourcemetadataType') . $this->db->equal . $this->db->tidyInput('m');
                 $this->execJoin['resource_metadata']['intField'] = 'resourcemetadataResourceId';
                 $this->execJoin['resource_metadata']['extField'] = $this->joinResourceId;
-            } elseif ($field == 'keyword') {
+            }
+            elseif ($field == 'keyword')
+            {
                 $wc = str_replace('!WIKINDXFIELDWIKINDX!', $this->db->formatFields('keywordKeyword'), $this->words);
                 $conditionArray[] = $wc;
                 $this->execCond[] = $this->db->formatFields('resourcekeywordResourceId') . ' IS NOT NULL';
@@ -409,12 +495,16 @@ class SOUNDEXPLORERQUICKSEARCH
                 $this->execJoin['resource_keyword']['extField'] = $this->joinResourceId;
                 $this->execJoin['keyword']['intField'] = 'keywordId';
                 $this->execJoin['keyword']['extField'] = 'resourcekeywordKeywordId';
-            } elseif ($field == 'creator') {
+            }
+            elseif ($field == 'creator')
+            {
                 $wc = str_replace('!WIKINDXFIELDWIKINDX!', $this->db->formatFields('creatorSurname'), $this->words);
                 $creatorsCond = \UTF8\mb_explode(' AND ', $wc);
-                if (sizeof($creatorsCond) > 1) {
+                if (sizeof($creatorsCond) > 1)
+                {
                     $creatorStmts = $creatorAlias = [];
-                    foreach ($creatorsCond as $creatorCond) {
+                    foreach ($creatorsCond as $creatorCond)
+                    {
                         $this->db->formatConditions("$creatorCond");
                         $this->db->leftJoin('creator', 'creatorId', 'resourcecreatorCreatorId');
                         $creatorStmts[] = $this->db->subQuery(
@@ -432,7 +522,8 @@ class SOUNDEXPLORERQUICKSEARCH
                         ++$this->tAlias;
                     }
                     $masterCreatorId = $this->db->formatFields(array_shift($creatorAlias));
-                    foreach ($creatorAlias as $cAlias) {
+                    foreach ($creatorAlias as $cAlias)
+                    {
                         $creatorCondArray[] = $this->db->equal . $this->db->formatFields($cAlias);
                     }
                     $this->db->formatConditions($masterCreatorId . implode($this->db->and . $masterCreatorId, $creatorCondArray));
@@ -445,14 +536,18 @@ class SOUNDEXPLORERQUICKSEARCH
                         TRUE
                     );
                     $this->execCond[] = $this->db->formatFields('resourceId') . $this->db->inClause($creatStmt);
-                } else {
+                }
+                else
+                {
                     $conditionArray[] = $wc;
                     $this->execJoin['c.resource_creator']['intField'] = 'c.resourcecreatorResourceId';
                     $this->execJoin['c.resource_creator']['extField'] = $this->joinResourceId;
                     $this->execJoin['creator']['intField'] = 'creatorId';
                     $this->execJoin['creator']['extField'] = 'c.resourcecreatorCreatorId';
                 }
-            } elseif ($field == 'userTag') {
+            }
+            elseif ($field == 'userTag')
+            {
                 $wc = str_replace('!WIKINDXFIELDWIKINDX!', $this->db->formatFields('usertagsTag'), $this->words);
                 $conditionArray[] = $wc;
                 $this->execCond[] = ['usertagsUserId' => $this->session->getVar("setup_UserId")];
@@ -462,11 +557,13 @@ class SOUNDEXPLORERQUICKSEARCH
                 $this->execJoin['user_tags']['extField'] = 'resourceusertagsTagId';
             }
         }
-        if (!empty($conditionArray)) {
+        if (!empty($conditionArray))
+        {
             $conditionJoin = $this->input['FieldMethod'] == 'OR' ? $this->db->or : $this->db->and;
             $this->execCond[] = ('(' . implode($conditionJoin, array_map([$this, 'addBrackets'], $conditionArray)) . ')');
         }
-        if (!empty($metaCond)) {
+        if (!empty($metaCond))
+        {
             $conditionJoin = $this->input['FieldMethod'] == 'OR' ? $this->db->or : $this->db->and;
             $this->execCond[] = ('(' . implode($conditionJoin, array_map([$this, 'addBrackets'], $metaCond)) . ')');
         }
@@ -489,13 +586,18 @@ class SOUNDEXPLORERQUICKSEARCH
     private function executeCondJoin()
     {
         $this->orderJoins();
-        foreach ($this->execCond as $cond) {
+        foreach ($this->execCond as $cond)
+        {
             $this->db->formatConditions($cond);
         }
-        foreach ($this->orderedJoins as $table => $array) {
-            if (array_key_exists('alias', $array)) {
+        foreach ($this->orderedJoins as $table => $array)
+        {
+            if (array_key_exists('alias', $array))
+            {
                 $this->db->leftJoin([[$array['table'] => $array['alias']]], $array['intField'], $array['extField']);
-            } else {
+            }
+            else
+            {
                 $this->db->leftJoin($table, $array['intField'], $array['extField']);
             }
         }
@@ -513,14 +615,19 @@ class SOUNDEXPLORERQUICKSEARCH
             'resource_text', 'resource_category', 'resource_keyword', 'keyword', 'resource_timestamp', 'resource_year',
             'resource_metadata', 'resource_user_tags', 'user_tags', 'resource_custom',
             'user_bibliography_resource', 'publisher', 'resource_language', ];
-        foreach ($tables as $tableOrder) {
-            foreach ($this->execJoin as $table => $array) {
+        foreach ($tables as $tableOrder)
+        {
+            foreach ($this->execJoin as $table => $array)
+            {
                 $split = \UTF8\mb_explode('.', $table);
-                if ((sizeof($split) == 2) && ($split[1] == $tableOrder)) {
+                if ((sizeof($split) == 2) && ($split[1] == $tableOrder))
+                {
                     $array['alias'] = $split[0];
                     $array['table'] = $split[1];
                     $this->orderedJoins[$table] = $array;
-                } elseif ($table == $tableOrder) {
+                }
+                elseif ($table == $tableOrder)
+                {
                     $this->orderedJoins[$table] = $array;
                 }
             }
@@ -535,22 +642,28 @@ class SOUNDEXPLORERQUICKSEARCH
      */
     private function runSearch($label)
     {
-        if (!$this->session->getVar("list_AllIds")) {
+        if (!$this->session->getVar("list_AllIds"))
+        {
             return FALSE;
         }
-        if (array_key_exists('order', $this->input)) {
+        if (array_key_exists('order', $this->input))
+        {
             $order = $this->input['order'];
-        } else {
+        }
+        else
+        {
             $order = 'creator';
         }
-        if (!$this->parseWord()) {
+        if (!$this->parseWord())
+        {
             return FALSE;
         }
         $this->fieldSql();
         $this->db->formatConditionsOneField($this->session->getVar("list_AllIds"), 'resourceId');
         $resultset = $this->db->select('resource', 'resourceId');
         $found = FALSE;
-        while ($row = $this->db->fetchRow($resultset)) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
             $found = TRUE;
             $this->foundResources[$label][] = $row['resourceId'];
         }
@@ -563,19 +676,24 @@ class SOUNDEXPLORERQUICKSEARCH
     private function writeFormdata()
     {
         // First, write all input with 'search_' prefix to session
-        foreach ($this->vars as $key => $value) {
-            if (preg_match("/^seplugin_/u", $key)) {
-            	$key = str_replace('seplugin_', '', $key);
+        foreach ($this->vars as $key => $value)
+        {
+            if (preg_match("/^seplugin_/u", $key))
+            {
+                $key = str_replace('seplugin_', '', $key);
                 // Is this a multiple select box input?  If so, multiple choices are written to session as
                 // comma-delimited string (no spaces).
                 // Don't write any FALSE or '0' values.
-                if (is_array($value)) {
-                    if (!$value[0] || ($value[0] == $this->coremessages->text("misc", "ignore"))) {
+                if (is_array($value))
+                {
+                    if (!$value[0] || ($value[0] == $this->coremessages->text("misc", "ignore")))
+                    {
                         unset($value[0]);
                     }
                     $value = implode(",", $value);
                 }
-                if (!trim($value)) {
+                if (!trim($value))
+                {
                     continue;
                 }
                 $this->formData[$key] = trim($value);

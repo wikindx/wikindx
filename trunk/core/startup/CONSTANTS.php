@@ -8,13 +8,13 @@
  * @license https://www.isc.org/licenses/ ISC License
  */
 
- /**
-  * CONSTANTS
-  *
-  * VARIOUS WIKINDX constants
-  *
-  * @package wikindx\core\startup
-  */
+/**
+ * CONSTANTS
+ *
+ * VARIOUS WIKINDX constants
+ *
+ * @package wikindx\core\startup
+ */
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "CONSTANTS_CONFIG_DEFAULT.php"]));
 
 /**
@@ -110,7 +110,7 @@ define('WIKINDX_COPYRIGHT_YEAR', "2003-2020");
 define('WIKINDX_RELEASE_DATE', "2020-11-01");
 /**
  * WIKINDX release timestamp
- * 
+ *
  * The release script use it to change the date of files and make archives reproducible.
  *
  * @name WIKINDX_RELEASE_TIMESTAMP

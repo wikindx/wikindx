@@ -51,10 +51,11 @@ class NEWS
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "news"));
         $news = $this->grabAll();
-    	if (array_key_exists('message', $this->vars)) {
-    		$message = $this->vars['message'];
-    	}
-    	$pString = $message;
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
+        }
+        $pString = $message;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
         // Add
@@ -64,7 +65,8 @@ class NEWS
         $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Add")));
         $td .= \FORM\formEnd();
         $pString .= \HTML\td($td);
-        if (!empty($news)) {
+        if (!empty($news))
+        {
             // Edit
             $td = \FORM\formHeader('news_NEWS_CORE');
             $td .= \FORM\hidden('method', 'initEdit');
@@ -76,9 +78,15 @@ class NEWS
             $td = \FORM\formHeader('news_NEWS_CORE');
             $td .= \FORM\hidden('method', 'deleteConfirm');
             $td .= \HTML\p($this->messages->text("misc", "newsDelete"));
-            $td .= \FORM\selectFBoxValueMultiple(FALSE, 'newsDelete', $news, 5) . BR . 
-            	\HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "multiples")), 'hint');
+            $td .= \FORM\selectFBoxValueMultiple(FALSE, 'newsDelete', $news, 5) . BR .
+                \HTML\span(\HTML\aBrowse(
+                    'green',
+                    '',
+                    $this->messages->text("hint", "hint"),
+                    '#',
+                    "",
+                    $this->messages->text("hint", "multiples")
+                ), 'hint');
             $td .= BR . \FORM\formSubmit($this->messages->text("submit", "Delete"));
             $td .= \FORM\formEnd();
             $pString .= \HTML\td($td);
@@ -96,10 +104,11 @@ class NEWS
     {
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
-    	if (array_key_exists('message', $this->vars)) {
-    		$message = $this->vars['message'];
-    	}
-    	$pString = $message;
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
+        }
+        $pString = $message;
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsAdd"));
         $pString .= $tinymce->loadMinimalTextarea();
@@ -124,7 +133,8 @@ class NEWS
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsAdd"));
         if (!array_key_exists('title', $this->vars) || !\UTF8\mb_trim($this->vars['title']) ||
-            !array_key_exists('body', $this->vars) || !\UTF8\mb_trim($this->vars['body'])) {
+            !array_key_exists('body', $this->vars) || !\UTF8\mb_trim($this->vars['body']))
+        {
             $this->formData["title"] = $this->vars['title'];
             $this->formData["body"] = $this->vars['body'];
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'initAdd');
@@ -137,10 +147,12 @@ class NEWS
             [$title, $news, $this->db->formatTimestamp()]
         );
         $this->session->setVar("setup_News", TRUE);
-        if (WIKINDX_EMAIL_NEWS) {
+        if (WIKINDX_EMAIL_NEWS)
+        {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
             $emailClass = new EMAIL();
-            if (!$emailClass->news($title, $news)) {
+            if (!$emailClass->news($title, $news))
+            {
                 $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'initAdd');
             }
         }
@@ -157,7 +169,8 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsDelete"));
-        if (!array_key_exists('newsDelete', $this->vars) || empty($this->vars['newsDelete'])) {
+        if (!array_key_exists('newsDelete', $this->vars) || empty($this->vars['newsDelete']))
+        {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
         $news = $this->grabAll();
@@ -166,7 +179,8 @@ class NEWS
         $pString = \HTML\p($this->messages->text("news", "deleteConfirm", ": $news"));
         $pString .= \FORM\formHeader('news_NEWS_CORE');
         $pString .= \FORM\hidden('method', 'delete');
-        foreach ($this->vars['newsDelete'] as $id) {
+        foreach ($this->vars['newsDelete'] as $id)
+        {
             $pString .= \FORM\hidden("newsDelete_" . $id, $id);
         }
         $pString .= BR . \FORM\formSubmit($this->messages->text("submit", "Confirm"));
@@ -181,19 +195,23 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsDelete"));
-        foreach ($this->vars as $key => $value) {
-            if (!preg_match("/newsDelete_(.*)/u", $key, $match)) {
+        foreach ($this->vars as $key => $value)
+        {
+            if (!preg_match("/newsDelete_(.*)/u", $key, $match))
+            {
                 continue;
             }
             $input[] = $match[1];
         }
-        if (!isset($input)) {
+        if (!isset($input))
+        {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
         $this->db->formatConditionsOneField($input, 'newsId');
         $this->db->delete('news');
         $news = $this->grabAll();
-        if (empty($news)) {
+        if (empty($news))
+        {
             $this->session->delVar("setup_News");
         }
 
@@ -211,32 +229,38 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsEdit"));
-        if (array_key_exists('editId', $this->formData)) {
-        	$editId = $this->formData['editId'];
+        if (array_key_exists('editId', $this->formData))
+        {
+            $editId = $this->formData['editId'];
         }
-        else if (!array_key_exists("editId", $this->vars) || (!$editId = \UTF8\mb_trim($this->vars["editId"]))) {
-				$this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
-		}
-    	if (array_key_exists('message', $this->vars)) {
-    		$message = $this->vars['message'];
-    	}
-    	$pString = $message;
+        elseif (!array_key_exists("editId", $this->vars) || (!$editId = \UTF8\mb_trim($this->vars["editId"])))
+        {
+            $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
+        }
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
+        }
+        $pString = $message;
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
         $pString .= $tinymce->loadMinimalTextarea();
         $title = $body = '';
-        if (array_key_exists('title', $this->formData)) {
-        	$title = $this->formData['title'];
+        if (array_key_exists('title', $this->formData))
+        {
+            $title = $this->formData['title'];
         }
-        if (array_key_exists('body', $this->formData)) {
-        	$body = $this->formData['body'];
+        if (array_key_exists('body', $this->formData))
+        {
+            $body = $this->formData['body'];
         }
-    	if (!$title && !$body) {
-			$this->db->formatConditions(['newsId' => $editId]);
-			$recordset = $this->db->select('news', ['newsTitle', 'newsNews']);
-			$row = $this->db->fetchRow($recordset);
-			$title = \HTML\dbToFormTidy($row['newsTitle']);
-			$body = \HTML\dbToFormTidy($row['newsNews']);
-    	}
+        if (!$title && !$body)
+        {
+            $this->db->formatConditions(['newsId' => $editId]);
+            $recordset = $this->db->select('news', ['newsTitle', 'newsNews']);
+            $row = $this->db->fetchRow($recordset);
+            $title = \HTML\dbToFormTidy($row['newsTitle']);
+            $body = \HTML\dbToFormTidy($row['newsNews']);
+        }
         $pString .= \FORM\formHeader('news_NEWS_CORE');
         $pString .= \FORM\hidden('method', 'edit');
         $pString .= \FORM\hidden('editId', $editId);
@@ -268,11 +292,13 @@ class NEWS
         $this->gatekeep->requireSuper = TRUE;
         $this->gatekeep->init();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "newsEdit"));
-        if (!array_key_exists("editId", $this->vars) || (!$editId = \UTF8\mb_trim($this->vars["editId"]))) {
+        if (!array_key_exists("editId", $this->vars) || (!$editId = \UTF8\mb_trim($this->vars["editId"])))
+        {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
         if (!array_key_exists('title', $this->vars) || !t\UTF8\mb_trim($this->vars['title']) ||
-            !array_key_exists('body', $this->vars) || !\UTF8\mb_trim($this->vars['body'])) {
+            !array_key_exists('body', $this->vars) || !\UTF8\mb_trim($this->vars['body']))
+        {
             $this->formData["editId"] = $this->vars['editId'];
             $this->formData["title"] = $this->vars['title'];
             $this->formData["body"] = $this->vars['body'];
@@ -283,10 +309,12 @@ class NEWS
         $updateArray['newsTimestamp'] = $this->db->formatTimestamp();
         $this->db->formatConditions(['newsId' => $editId]);
         $this->db->update('news', $updateArray);
-        if (WIKINDX_EMAIL_NEWS) {
+        if (WIKINDX_EMAIL_NEWS)
+        {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
             $emailClass = new EMAIL();
-            if (!$emailClass->news($updateArray['newsTitle'], $updateArray['newsNews'])) {
+            if (!$emailClass->news($updateArray['newsTitle'], $updateArray['newsNews']))
+            {
                 $this->badInput->close($this->errors->text("inputError", "mail", GLOBALS::getError()), $this, 'initEdit');
             }
         }
@@ -303,8 +331,10 @@ class NEWS
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "news"));
         $news = $this->grabAll();
         $pString = '';
-        if (is_array($news)) {
-            foreach ($news as $id => $title) {
+        if (is_array($news))
+        {
+            foreach ($news as $id => $title)
+            {
                 $pString .= \HTML\p(\HTML\a(
                     "link",
                     \HTML\nlToHtml($title),
@@ -312,7 +342,9 @@ class NEWS
                 ) .
                     '&nbsp;&nbsp;' . \HTML\em($this->newsTimestamp[$id]));
             }
-        } else {
+        }
+        else
+        {
             $pString .= $this->messages->text("news", "noNews");
         }
         GLOBALS::addTplVar('content', $pString);
@@ -323,17 +355,23 @@ class NEWS
     public function viewNewsItem()
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "news"));
-        if (array_key_exists("id", $this->vars)) {
+        if (array_key_exists("id", $this->vars))
+        {
             $id = \UTF8\mb_trim($this->vars["id"]);
-        } else {
+        }
+        else
+        {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, "viewNews");
         }
         $this->db->formatConditions(['newsId' => $id]);
         $recordset = $this->db->select('news', ['newsTimestamp', 'newsTitle', 'newsNews']);
         $row = $this->db->fetchRow($recordset);
-        if (method_exists($this->languageClass, "dateFormat")) {
+        if (method_exists($this->languageClass, "dateFormat"))
+        {
             $date = \LOCALES\dateFormat($row['newsTimestamp']);
-        } else {
+        }
+        else
+        {
             $dateSplit = \UTF8\mb_explode(' ', $row['newsTimestamp']);
             $dateSplit = \UTF8\mb_explode('-', $dateSplit[0]);
             $date = date("d/M/Y", mktime(0, 0, 0, $dateSplit[1], $dateSplit[2], $dateSplit[0]));
@@ -352,15 +390,20 @@ class NEWS
         $this->db->ascDesc = $this->db->desc;
         $this->db->orderBy("newsTimestamp", TRUE, FALSE);
         $recordset = $this->db->select("news", ["newsId", "newsTitle", "newsTimestamp"]);
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $news[$row['newsId']] = \HTML\dbToFormTidy($row['newsTitle']);
-            if (method_exists($this->languageClass, "dateFormat")) {
+            if (method_exists($this->languageClass, "dateFormat"))
+            {
                 $this->newsTimestamp[$row['newsId']] = \LOCALES\dateFormat($row['newsTimestamp']);
-            } else {
+            }
+            else
+            {
                 $this->newsTimestamp[$row['newsId']] = $row['newsTimestamp'];
             }
         }
-        if (isset($news)) {
+        if (isset($news))
+        {
             return $news;
         }
 

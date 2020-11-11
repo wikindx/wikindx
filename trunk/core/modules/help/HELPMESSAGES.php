@@ -40,9 +40,12 @@ class HELPMESSAGES
      */
     public function init()
     {
-        if (array_key_exists('message', $this->vars) && $this->vars['message']) {
+        if (array_key_exists('message', $this->vars) && $this->vars['message'])
+        {
             GLOBALS::addTplVar('content', $this->help->text($this->vars['message']) . \HTML\p(\FORM\closePopup($this->messages->text("misc", "closePopup"))));
-        } else {
+        }
+        else
+        {
             $this->badInput->closeType = 'closePopup';
             $this->badInput->close($this->errors->text('inputError', 'missing'));
         }

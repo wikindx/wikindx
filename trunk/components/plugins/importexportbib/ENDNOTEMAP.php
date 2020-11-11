@@ -1248,7 +1248,8 @@ class ENDNOTEMAP
         $this->brochure['resource_publisher'] = []; // need empty array
         $this->brochure['resource_collection'] = []; // need empty array
 // Possible wikindx keys used for mapping custom Endnote resourceFields to wikindx resourceFields in an Endnote import.
-        foreach (array_keys($this->types) as $type) {
+        foreach (array_keys($this->types) as $type)
+        {
             $this->{$type}['possible'] = array_values($this->{$type}['resource']);
             $this->{$type}['possible'] = array_merge(
                 $this->{$type}['possible'],

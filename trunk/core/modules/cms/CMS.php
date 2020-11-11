@@ -28,7 +28,8 @@ class CMS
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->errors = FACTORY_ERRORS::getInstance();
 
-        if (!WIKINDX_CMS_ALLOW) {
+        if (!WIKINDX_CMS_ALLOW)
+        {
             // deny access
             die("CMS access denied by WIKINDX configuration");
         }
@@ -41,7 +42,8 @@ class CMS
      */
     public function display()
     {
-        if (!array_key_exists('id', $this->vars)) {
+        if (!array_key_exists('id', $this->vars))
+        {
             $this->badInput->closeType = 'closeNoMenu';
             $this->badInput->close($this->messages->text('inputError', 'missing'));
         }
@@ -84,12 +86,15 @@ class CMS
             'index.php?action=cms_CMS_CORE&method=display&type=collections&id=' . $id
         );
         $pString .= \HTML\td(implode("&nbsp;&nbsp;&nbsp;", $links), 'width50percent');
-        if (array_key_exists('type', $this->vars)) {
+        if (array_key_exists('type', $this->vars))
+        {
             \AJAX\loadJavascript([WIKINDX_URL_BASE . '/core/modules/list/searchSelect.js?ver=' . WIKINDX_PUBLIC_VERSION]);
-            if ($this->vars['type'] == 'categories') {
+            if ($this->vars['type'] == 'categories')
+            {
                 $category = FACTORY_CATEGORY::getInstance();
                 $raw = $category->grabAll();
-                if (is_array($raw) && !empty($raw)) {
+                if (is_array($raw) && !empty($raw))
+                {
                     $jScript = 'index.php?action=cms_CMS_CORE&method=qStringAjax&type=getCategory';
                     $jsonArray = [];
                     $jsonArray[] = [
@@ -99,7 +104,8 @@ class CMS
                         'targetDiv' => 'qString',
                     ];
                     $js = \AJAX\jActionForm('onclick', $jsonArray);
-                    foreach ($raw as $key => $value) {
+                    foreach ($raw as $key => $value)
+                    {
                         $array[$key] = $value . ":&nbsp;&nbsp;" . $key;
                     }
                     $pString .= \HTML\td(\FORM\selectFBoxValue(
@@ -111,10 +117,13 @@ class CMS
                         $js
                     ));
                 }
-            } elseif ($this->vars['type'] == 'subcategories') {
+            }
+            elseif ($this->vars['type'] == 'subcategories')
+            {
                 $category = FACTORY_CATEGORY::getInstance();
                 $raw = $category->grabSubAll();
-                if (is_array($raw) && !empty($raw)) {
+                if (is_array($raw) && !empty($raw))
+                {
                     $jScript = 'index.php?action=cms_CMS_CORE&method=qStringAjax&type=getSubcategory';
                     $jsonArray = [];
                     $jsonArray[] = [
@@ -124,7 +133,8 @@ class CMS
                         'targetDiv' => 'qString',
                     ];
                     $js = \AJAX\jActionForm('onclick', $jsonArray);
-                    foreach ($raw as $key => $value) {
+                    foreach ($raw as $key => $value)
+                    {
                         $sarray[$key] = $value . ":&nbsp;&nbsp;" . $key;
                     }
                     $pString .= \HTML\td(\FORM\selectFBoxValue(
@@ -136,10 +146,13 @@ class CMS
                         $js
                     ));
                 }
-            } elseif ($this->vars['type'] == 'keywords') {
+            }
+            elseif ($this->vars['type'] == 'keywords')
+            {
                 $keyword = FACTORY_KEYWORD::getInstance();
                 $raw = $keyword->grabAll();
-                if (is_array($raw) && !empty($raw)) {
+                if (is_array($raw) && !empty($raw))
+                {
                     $jScript = 'index.php?action=cms_CMS_CORE&method=qStringAjax&type=getKeyword';
                     $jsonArray = [];
                     $jsonArray[] = [
@@ -149,7 +162,8 @@ class CMS
                         'targetDiv' => 'qString',
                     ];
                     $js = \AJAX\jActionForm('onclick', $jsonArray);
-                    foreach ($raw as $key => $value) {
+                    foreach ($raw as $key => $value)
+                    {
                         $array[$key] = $value . ":&nbsp;&nbsp;" . $key;
                     }
                     $pString .= \HTML\td(\FORM\selectFBoxValue(
@@ -161,10 +175,13 @@ class CMS
                         $js
                     ));
                 }
-            } elseif ($this->vars['type'] == 'creators') {
+            }
+            elseif ($this->vars['type'] == 'creators')
+            {
                 $creator = FACTORY_CREATOR::getInstance();
                 $raw = $creator->grabAll();
-                if (is_array($raw) && !empty($raw)) {
+                if (is_array($raw) && !empty($raw))
+                {
                     $jScript = 'index.php?action=cms_CMS_CORE&method=qStringAjax&type=getCreator';
                     $jsonArray = [];
                     $jsonArray[] = [
@@ -174,7 +191,8 @@ class CMS
                         'targetDiv' => 'qString',
                     ];
                     $js = \AJAX\jActionForm('onclick', $jsonArray);
-                    foreach ($raw as $key => $value) {
+                    foreach ($raw as $key => $value)
+                    {
                         $array[$key] = $value . ":&nbsp;&nbsp;" . $key;
                     }
                     $pString .= \HTML\td(\FORM\selectFBoxValue(
@@ -186,10 +204,13 @@ class CMS
                         $js
                     ));
                 }
-            } elseif ($this->vars['type'] == 'publishers') {
+            }
+            elseif ($this->vars['type'] == 'publishers')
+            {
                 $publisher = FACTORY_PUBLISHER::getInstance();
                 $raw = $publisher->grabAll();
-                if (is_array($raw) && !empty($raw)) {
+                if (is_array($raw) && !empty($raw))
+                {
                     $jScript = 'index.php?action=cms_CMS_CORE&method=qStringAjax&type=getPublisher';
                     $jsonArray = [];
                     $jsonArray[] = [
@@ -199,7 +220,8 @@ class CMS
                         'targetDiv' => 'qString',
                     ];
                     $js = \AJAX\jActionForm('onclick', $jsonArray);
-                    foreach ($raw as $key => $value) {
+                    foreach ($raw as $key => $value)
+                    {
                         $array[$key] = $value . ":&nbsp;&nbsp;" . $key;
                     }
                     $pString .= \HTML\td(\FORM\selectFBoxValue(
@@ -211,10 +233,13 @@ class CMS
                         $js
                     ));
                 }
-            } elseif ($this->vars['type'] == 'collections') {
+            }
+            elseif ($this->vars['type'] == 'collections')
+            {
                 $collection = FACTORY_COLLECTION::getInstance();
                 $raw = $collection->grabAll();
-                if (is_array($raw) && !empty($raw)) {
+                if (is_array($raw) && !empty($raw))
+                {
                     $jScript = 'index.php?action=cms_CMS_CORE&method=qStringAjax&type=getCollection';
                     $jsonArray = [];
                     $jsonArray[] = [
@@ -224,7 +249,8 @@ class CMS
                         'targetDiv' => 'qString',
                     ];
                     $js = \AJAX\jActionForm('onclick', $jsonArray);
-                    foreach ($raw as $key => $value) {
+                    foreach ($raw as $key => $value)
+                    {
                         $array[$key] = $value . ":&nbsp;&nbsp;" . $key;
                     }
                     $pString .= \HTML\td(\FORM\selectFBoxValue(
@@ -269,7 +295,8 @@ class CMS
 
 // if no ajaxReturn, quietly exit
         $div = \HTML\td(\HTML\div('qString', '&nbsp;')); // default
-        if (array_key_exists('ajaxReturn', $this->vars)) {
+        if (array_key_exists('ajaxReturn', $this->vars))
+        {
             $qString = WIKINDX_URL_BASE . '/cmsprint.php?action=' . $this->vars['type'] . '&id=' . $this->vars['ajaxReturn'];
             $div = \HTML\td(\HTML\div('qString', $qString));
         }
@@ -283,89 +310,127 @@ class CMS
      */
     public function queryDb()
     {
-        if (empty($_GET) || !array_key_exists('type', $_GET)) {
+        if (empty($_GET) || !array_key_exists('type', $_GET))
+        {
             die('Missing or incorrect queryString');
         }
-        if (($_GET['type'] != 'getRecent') && !array_key_exists('id', $_GET)) {
+        if (($_GET['type'] != 'getRecent') && !array_key_exists('id', $_GET))
+        {
             die('Missing or incorrect queryString');
         }
         $db = FACTORY_DB::getInstance();
-        if (array_key_exists('bibStyle', $_GET)) {
+        if (array_key_exists('bibStyle', $_GET))
+        {
             GLOBALS::setUserVar('Style', $_GET['bibStyle']);
-        } else {
+        }
+        else
+        {
             GLOBALS::setUserVar('Style', WIKINDX_CMS_BIBSTYLE);
         }
-        if (array_key_exists('language', $_GET)) {
+        if (array_key_exists('language', $_GET))
+        {
             GLOBALS::setUserVar('Language', \LOCALES\determine_locale($_GET['language']));
-        } else {
+        }
+        else
+        {
             GLOBALS::setUserVar('Language', \LOCALES\determine_locale());
         }
         $res = FACTORY_RESOURCECOMMON::getInstance();
         $bibStyle = FACTORY_BIBSTYLE::getInstance();
-        if (array_key_exists('id', $_GET)) {
+        if (array_key_exists('id', $_GET))
+        {
             $ids = \UTF8\mb_explode(',', $_GET['id']);
         }
         // Remove WIKINDX-style hyperlink class.
         $pattern = preg_quote("<a class=\"rLink\"");
         // $sqlMethod only used for 'getKeyword', 'getCategory' and 'getCreator'
-        if (array_key_exists('sqlMethod', $_GET) && (mb_strtolower($_GET['sqlMethod']) == 'and')) {
+        if (array_key_exists('sqlMethod', $_GET) && (mb_strtolower($_GET['sqlMethod']) == 'and'))
+        {
             $sqlMethod = ' AND ';
             $resourceFields = ['resourceId', 'resourceType', 'resourceTitle', 'resourceSubtitle', 'resourceShortTitle', 'resourceTitleSort', 'resourceTransTitle', 'resourceTransSubtitle', 'resourceTransShortTitle', 'resourceField1', 'resourceField2', 'resourceField3', 'resourceField4', 'resourceField5', 'resourceField6', 'resourceField7', 'resourceField8', 'resourceField9', 'resourceNoSort', 'resourceTransNoSort', 'resourceIsbn', 'resourceBibtexKey', 'resourceDoi'];
-        } else {
+        }
+        else
+        {
             $sqlMethod = ' OR ';
         }
         $order = 'creatorSurname';
-        if (array_key_exists('order', $_GET)) {
-            if ($_GET['order'] == 'timestamp') {
+        if (array_key_exists('order', $_GET))
+        {
+            if ($_GET['order'] == 'timestamp')
+            {
                 $order = 'resourcetimestampTimestamp';
-            } elseif ($_GET['order'] == 'year') {
+            }
+            elseif ($_GET['order'] == 'year')
+            {
                 $order = 'resourceyearYear1';
-            } elseif ($_GET['order'] == 'title') {
+            }
+            elseif ($_GET['order'] == 'title')
+            {
                 $order = 'resourceTitleSort';
             }
         }
-        if ($_GET['type'] == 'getResource') {
+        if ($_GET['type'] == 'getResource')
+        {
             $resultset = $res->getResource($ids, $order);
-            while ($row = $db->fetchRow($resultset)) {
+            while ($row = $db->fetchRow($resultset))
+            {
                 $items[$row['resourceId']] = preg_replace("/$pattern/u", '<a', $bibStyle->process($row));
             }
-        } elseif ($_GET['type'] == 'getCategory') {
-            if ($sqlMethod == ' AND ') {
+        }
+        elseif ($_GET['type'] == 'getCategory')
+        {
+            if ($sqlMethod == ' AND ')
+            {
                 $index = 1;
-                foreach ($ids as $id) {
+                foreach ($ids as $id)
+                {
                     $db->leftJoin([['resource_category' => $index]], $index . '.resourcecategoryResourceId', 'resourceId');
                     $db->formatConditions([$index . '.resourcecategoryCategoryId' => $id]);
                     $index++;
                 }
-            } else {
+            }
+            else
+            {
                 $db->formatConditionsOneField($ids, 'resourcecategoryCategoryId');
                 $db->leftJoin('resource_category', 'resourcecategoryResourceId', 'resourceId');
             }
             $resultset = $res->getResource(FALSE, $order);
-            while ($row = $db->fetchRow($resultset)) {
+            while ($row = $db->fetchRow($resultset))
+            {
                 $items[$row['resourceId']] = preg_replace("/$pattern/u", '<a', $bibStyle->process($row));
             }
-        } elseif ($_GET['type'] == 'getKeyword') {
-            if (($sqlMethod == ' AND ') && (count($ids) > 1)) {
+        }
+        elseif ($_GET['type'] == 'getKeyword')
+        {
+            if (($sqlMethod == ' AND ') && (count($ids) > 1))
+            {
                 $index = 1;
-                foreach ($ids as $id) {
+                foreach ($ids as $id)
+                {
                     $db->leftJoin([['resource_keyword' => $index]], $index . '.resourcekeywordResourceId', 'resourceId');
                     $db->formatConditions([$index . '.resourcekeywordKeywordId' => $id]);
                     $db->formatConditions([$index . '.resourcekeywordResourceId' => ' IS NOT NULL']);
                     $index++;
                 }
-            } else {
+            }
+            else
+            {
                 $db->formatConditionsOneField($ids, 'resourcekeywordKeywordId');
                 $db->leftJoin('resource_keyword', 'resourcekeywordResourceId', 'resourceId');
             }
             $resultset = $res->getResource(FALSE, $order);
-            while ($row = $db->fetchRow($resultset)) {
+            while ($row = $db->fetchRow($resultset))
+            {
                 $items[$row['resourceId']] = preg_replace("/$pattern/u", '<a', $bibStyle->process($row));
             }
-        } elseif ($_GET['type'] == 'getCreator') {
-            if (($sqlMethod == ' AND ') && (count($ids) > 1)) {
+        }
+        elseif ($_GET['type'] == 'getCreator')
+        {
+            if (($sqlMethod == ' AND ') && (count($ids) > 1))
+            {
                 $index = 1;
-                foreach ($ids as $id) {
+                foreach ($ids as $id)
+                {
                     $db->leftJoin([['resource_creator' => $index]], $index . '.resourcecreatorResourceId', 'resourceId');
                     $db->formatConditions([$index . '.resourcecreatorCreatorId' => $id]);
                     $index++;
@@ -382,16 +447,22 @@ class CMS
                     TRUE
                 ), 't1');
                 $resultset = $res->getResource(FALSE, $order, FALSE, FALSE, $subQuery);
-            } else {
+            }
+            else
+            {
                 $db->formatConditionsOneField($ids, 'resourcecreatorCreatorId');
                 $resultset = $res->getResource(FALSE, $order);
             }
-            while ($row = $db->fetchRow($resultset)) {
+            while ($row = $db->fetchRow($resultset))
+            {
                 $items[$row['resourceId']] = preg_replace("/$pattern/u", '<a', $bibStyle->process($row));
             }
-        } elseif ($_GET['type'] == 'getPublisher') {
+        }
+        elseif ($_GET['type'] == 'getPublisher')
+        {
             // 'proceedings_article', 'proceedings', 'book' and 'book_article' resource types have publisher in 'miscField1' (if publisher exists)
-            foreach ($ids as $id) {
+            foreach ($ids as $id)
+            {
                 $conditionArray[] = $db->ifClause(
                     $db->formatFields('resourceType') . $db->equal . $db->tidyInput('proceedings_article') .
                     $db->or .
@@ -410,25 +481,35 @@ class CMS
             $db->formatConditions(implode($db->or, $conditionArray));
             $db->leftJoin('resource_misc', 'resourcemiscId', 'resourceId');
             $resultset = $res->getResource(FALSE, $order);
-            while ($row = $db->fetchRow($resultset)) {
+            while ($row = $db->fetchRow($resultset))
+            {
                 $items[$row['resourceId']] = preg_replace("/$pattern/u", '<a', $bibStyle->process($row));
             }
-        } elseif ($_GET['type'] == 'getCollection') {
+        }
+        elseif ($_GET['type'] == 'getCollection')
+        {
             $db->formatConditionsOneField($ids, 'resourcemiscCollection');
             $db->leftJoin('resource_misc', 'resourcemiscId', 'resourceId');
             $resultset = $res->getResource(FALSE, $order);
-            while ($row = $db->fetchRow($resultset)) {
+            while ($row = $db->fetchRow($resultset))
+            {
                 $items[$row['resourceId']] = preg_replace("/$pattern/u", '<a', $bibStyle->process($row));
             }
-        } elseif ($_GET['type'] == 'getRecent') {
+        }
+        elseif ($_GET['type'] == 'getRecent')
+        {
             $stmt = FACTORY_SQLSTATEMENTS::getInstance();
             $limit = array_key_exists('limit', $_GET) ? $_GET['limit'] : 10; // default limit of 10
-            if (array_key_exists('days', $_GET)) {
+            if (array_key_exists('days', $_GET))
+            {
                 $resultset = $db->query($stmt->frontSetDays($_GET['days'], $limit));
-            } else {
+            }
+            else
+            {
                 $resultset = $db->query($stmt->frontSetNumber($limit));
             }
-            while ($row = $db->fetchRow($resultset)) {
+            while ($row = $db->fetchRow($resultset))
+            {
                 $items[$row['resourceId']] = preg_replace("/$pattern/u", '<a', $bibStyle->process($row));
             }
         }
@@ -437,29 +518,39 @@ class CMS
          * BEGINNING
          *
          */
-        elseif ($_GET['type'] == 'getAbstract') {
+        elseif ($_GET['type'] == 'getAbstract')
+        {
             $db->formatConditionsOneField($ids, 'resourcetextId');
             $db->leftJoin('resource_text', 'resourcetextId', 'resourceId');
             $resultset = $res->getResource(FALSE, $order);
-            while ($row = $db->fetchRow($resultset)) {
+            while ($row = $db->fetchRow($resultset))
+            {
                 $items[$row['resourceId']] = $row['resourcetextAbstract'];
             }
-        } elseif ($_GET['type'] == 'getNotes') {
+        }
+        elseif ($_GET['type'] == 'getNotes')
+        {
             $db->formatConditionsOneField($ids, 'resourcetextId');
             $db->leftJoin('resource_text', 'resourcetextId', 'resourceId');
             $resultset = $res->getResource(FALSE, $order);
-            while ($row = $db->fetchRow($resultset)) {
+            while ($row = $db->fetchRow($resultset))
+            {
                 $items[$row['resourceId']] = $row['resourcetextNote'];
             }
-        } elseif ($_GET['type'] == 'getQuote') {
+        }
+        elseif ($_GET['type'] == 'getQuote')
+        {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEMETA.php"]));
             $meta = new RESOURCEMETA();
             $db->formatConditionsOneField($ids, 'resourceId');
             $resultset = $res->getResource(FALSE, $order);
-            while ($row = $db->fetchRow($resultset)) {
+            while ($row = $db->fetchRow($resultset))
+            {
                 $quotes = $meta->viewQuotes($row);
-                foreach ($quotes as $key => $quote) {
-                    if ($key === 'title') {
+                foreach ($quotes as $key => $quote)
+                {
+                    if ($key === 'title')
+                    {
                         continue;
                     }
                     $tempArray = [];
@@ -469,30 +560,39 @@ class CMS
                     $db->formatConditions(['resourcemetadataType' => 'qc']);
                     $db->orderBy('resourcemetadataTimestamp', TRUE, FALSE);
                     $resultset2 = $db->select('resource_metadata', ['resourcemetadataText', 'resourcemetadataTimestamp']);
-                    while ($row2 = $db->fetchRow($resultset2)) {
+                    while ($row2 = $db->fetchRow($resultset2))
+                    {
                         $comments[] = ['comment' => $row2['resourcemetadataText'], 'timestamp' => $row2['resourcemetadataTimestamp']];
                     }
-                    if (array_key_exists('quote', $quote)) {
+                    if (array_key_exists('quote', $quote))
+                    {
                         $tempArray['quote'] = $quote['quote'];
                     }
-                    if (array_key_exists('keywords', $quote)) {
+                    if (array_key_exists('keywords', $quote))
+                    {
                         $tempArray['keywords'] = $quote['keywords'];
                     }
-                    if (array_key_exists('details', $quote)) {
+                    if (array_key_exists('details', $quote))
+                    {
                         $tempArray['details'] = $quote['details'];
                     }
                     $items[$row['resourceId']]['quotes'][] = $tempArray;
                 }
             }
-        } elseif ($_GET['type'] == 'getParaphrase') {
+        }
+        elseif ($_GET['type'] == 'getParaphrase')
+        {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEMETA.php"]));
             $meta = new RESOURCEMETA();
             $db->formatConditionsOneField($ids, 'resourceId');
             $resultset = $res->getResource(FALSE, $order);
-            while ($row = $db->fetchRow($resultset)) {
+            while ($row = $db->fetchRow($resultset))
+            {
                 $paraphrases = $meta->viewParaphrases($row);
-                foreach ($paraphrases as $key => $paraphrase) {
-                    if ($key === 'title') {
+                foreach ($paraphrases as $key => $paraphrase)
+                {
+                    if ($key === 'title')
+                    {
                         continue;
                     }
                     $tempArray = [];
@@ -502,30 +602,39 @@ class CMS
                     $db->formatConditions(['resourcemetadataaction' => 'pc']);
                     $db->orderBy('resourcemetadataTimestamp', TRUE, FALSE);
                     $resultset2 = $db->select('resource_metadata', ['resourcemetadataText', 'resourcemetadataTimestamp']);
-                    while ($row2 = $db->fetchRow($resultset2)) {
+                    while ($row2 = $db->fetchRow($resultset2))
+                    {
                         $comments[] = ['comment' => $row2['resourcemetadataText'], 'timestamp' => $row2['resourcemetadataTimestamp']];
                     }
-                    if (array_key_exists('paraphrase', $paraphrase)) {
+                    if (array_key_exists('paraphrase', $paraphrase))
+                    {
                         $tempArray['paraphrase'] = $paraphrase['paraphrase'];
                     }
-                    if (array_key_exists('keywords', $paraphrase)) {
+                    if (array_key_exists('keywords', $paraphrase))
+                    {
                         $tempArray['keywords'] = $paraphrase['keywords'];
                     }
-                    if (array_key_exists('details', $paraphrase)) {
+                    if (array_key_exists('details', $paraphrase))
+                    {
                         $tempArray['details'] = $paraphrase['details'];
                     }
                     $items[$row['resourceId']]['quotes'][] = $tempArray;
                 }
             }
-        } elseif ($_GET['type'] == 'getMusing') {
+        }
+        elseif ($_GET['type'] == 'getMusing')
+        {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEMETA.php"]));
             $meta = new RESOURCEMETA();
             $db->formatConditionsOneField($ids, 'resourceId');
             $resultset = $res->getResource(FALSE, $order);
-            while ($row = $db->fetchRow($resultset)) {
+            while ($row = $db->fetchRow($resultset))
+            {
                 $musings = $meta->viewMusings($row);
-                foreach ($musings as $key => $musing) {
-                    if ($key === 'title') {
+                foreach ($musings as $key => $musing)
+                {
+                    if ($key === 'title')
+                    {
                         continue;
                     }
                     $items[$row['resourceId']]['musings'][] = ['musing' => $musing['musing'],
@@ -538,14 +647,18 @@ class CMS
          * Additions by Andreas Wagner, to provide access to notes, quotes etc.
          * END
          */
-        else {
+        else
+        {
             die('Missing or incorrect queryString');
         }
 
-        if (!empty($items)) {
+        if (!empty($items))
+        {
             //output = base64_encode(serialize($items));
             $output = serialize($items);
-        } else {
+        }
+        else
+        {
             // no resources found
             $output = '';
         }
@@ -562,31 +675,46 @@ class CMS
     public function parseText()
     {
         // Set bibliographic style
-        if (array_key_exists('bibStyle', $_GET)) {
+        if (array_key_exists('bibStyle', $_GET))
+        {
             GLOBALS::setUserVar('Style', $_GET['bibStyle']);
-        } else {
+        }
+        else
+        {
             GLOBALS::setUserVar('Style', WIKINDX_CMS_BIBSTYLE);
         }
-        if (array_key_exists('language', $_GET)) {
+        if (array_key_exists('language', $_GET))
+        {
             GLOBALS::setUserVar('Language', \LOCALES\determine_locale($_GET['language']));
-        } else {
+        }
+        else
+        {
             GLOBALS::setUserVar('Language', \LOCALES\determine_locale());
         }
         $cite = FACTORY_CITE::getInstance();
-        if (array_key_exists('wikindxLink', $_GET) && $_GET['wikindxLink'] == 1) {
+        if (array_key_exists('wikindxLink', $_GET) && $_GET['wikindxLink'] == 1)
+        {
             $linkToWikindxResource = TRUE;
-        } else {
+        }
+        else
+        {
             $linkToWikindxResource = FALSE;
         }
 
-        if (!array_key_exists('address', $_GET) || !$_GET['address']) {
+        if (!array_key_exists('address', $_GET) || !$_GET['address'])
+        {
             die('Missing or incorrect queryString');
-        } else {
+        }
+        else
+        {
             $address = urldecode($_GET['address']);
 
-            if (file_exists($address)) {
+            if (file_exists($address))
+            {
                 $text = file_get_contents($address);
-            } else {
+            }
+            else
+            {
                 $text = '';
             }
 
@@ -603,21 +731,30 @@ class CMS
         // Remove WIKINDX-style hyperlink class.
         $pattern = preg_quote("<a class=\"rLink\"");
         // Set bibliographic style
-        if (array_key_exists('bibStyle', $_GET)) {
+        if (array_key_exists('bibStyle', $_GET))
+        {
             $this->session->setVar("setup_Style", $_GET['bibStyle']);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("setup_Style", WIKINDX_CMS_BIBSTYLE);
         }
         $bibStyle = FACTORY_BIBSTYLE::getInstance();
 
-        if (!array_key_exists('address', $_GET) || !$_GET['address']) {
+        if (!array_key_exists('address', $_GET) || !$_GET['address'])
+        {
             die('Missing or incorrect queryString');
-        } else {
+        }
+        else
+        {
             $address = urldecode($_GET['address']);
 
-            if (file_exists($address)) {
+            if (file_exists($address))
+            {
                 $text = file_get_contents($address);
-            } else {
+            }
+            else
+            {
                 $text = '';
             }
 
@@ -626,13 +763,17 @@ class CMS
 
             $recordset = $this->db->query($querystring);
 
-            while ($row = $this->db->fetchRow($recordset)) {
+            while ($row = $this->db->fetchRow($recordset))
+            {
                 $items[$row['resourceId']] = preg_replace("/$pattern/u", '<a', $bibStyle->process($row));
             }
 
-            if (!empty($items)) {
+            if (!empty($items))
+            {
                 return base64_encode(serialize($items));
-            } else {
+            }
+            else
+            {
                 return FALSE; // Else, no resources found
             }
         }
@@ -655,11 +796,14 @@ class CMS
      */
     private function displayTag()
     {
-        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'generateCmsTag')) {
+        if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'generateCmsTag'))
+        {
             $this->checkInput();
             $tag = $this->generateTag();
             unset($this->vars['type']);
-        } else {
+        }
+        else
+        {
             $tag = FALSE;
         }
         $pString = \HTML\h($this->messages->text('cms', 'generateCmsTag'), FALSE, 3);
@@ -720,7 +864,8 @@ class CMS
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td(BR . \FORM\formSubmit($this->messages->text("submit", "Submit")));
-        if ($tag) {
+        if ($tag)
+        {
             $pString .= \HTML\td(BR . \FORM\textInput(
                 $this->messages->text('cms', 'tag'),
                 FALSE,
@@ -743,29 +888,39 @@ class CMS
     private function generateTag()
     {
         $tag = FALSE;
-        if ($this->vars['cmsTagStart']) {
+        if ($this->vars['cmsTagStart'])
+        {
             $tag = $this->vars['cmsTagStart'];
         }
         $tag .= ':' . $this->vars['id'];
-        if ($this->vars['cmsPageStart']) {
+        if ($this->vars['cmsPageStart'])
+        {
             $tag .= ':' . \UTF8\mb_trim($this->vars['cmsPageStart']);
-            if ($this->vars['cmsPageEnd']) {
+            if ($this->vars['cmsPageEnd'])
+            {
                 $tag .= '-' . \UTF8\mb_trim($this->vars['cmsPageEnd']);
             }
-        } elseif ($this->vars['cmsPageEnd']) { // Assume pageEnd is actually meant to be pageStart
+        }
+        elseif ($this->vars['cmsPageEnd'])
+        { // Assume pageEnd is actually meant to be pageStart
             $tag .= ':' . \UTF8\mb_trim($this->vars['cmsPageEnd']);
             $this->vars['cmsPageStart'] = $this->vars['cmsPageEnd'];
             unset($this->vars['cmsPageEnd']);
         }
-        if ($this->vars['cmsPreText']) {
+        if ($this->vars['cmsPreText'])
+        {
             $tag .= '|' . $this->vars['cmsPreText'];
-            if ($this->vars['cmsPostText']) {
+            if ($this->vars['cmsPostText'])
+            {
                 $tag .= '`' . $this->vars['cmsPostText'];
             }
-        } elseif ($this->vars['cmsPostText']) {
+        }
+        elseif ($this->vars['cmsPostText'])
+        {
             $tag .= '|`' . $this->vars['cmsPostText'];
         }
-        if ($this->vars['cmsTagEnd']) {
+        if ($this->vars['cmsTagEnd'])
+        {
             $tag .= $this->vars['cmsTagEnd'];
         }
 
@@ -777,15 +932,18 @@ class CMS
     private function checkInput()
     {
         $cmsTagChanged = FALSE;
-        if (GLOBALS::getUserVar('cmsTagStart') != $this->vars['cmsTagStart']) {
+        if (GLOBALS::getUserVar('cmsTagStart') != $this->vars['cmsTagStart'])
+        {
             $cmsTagChanged = TRUE;
             $this->session->setVar("setup_cmsTagStart", $this->vars['cmsTagStart']);
         }
-        if (GLOBALS::getUserVar('cmsTagEnd') != $this->vars['cmsTagEnd']) {
+        if (GLOBALS::getUserVar('cmsTagEnd') != $this->vars['cmsTagEnd'])
+        {
             $cmsTagChanged = TRUE;
             $this->session->setVar("setup_cmsTagEnd", $this->vars['cmsTagEnd']);
         }
-        if ($cmsTagChanged && $this->session->getVar("setup_UserId")) {
+        if ($cmsTagChanged && $this->session->getVar("setup_UserId"))
+        {
             $string = base64_encode(serialize([$this->vars['cmsTagStart'], $this->vars['cmsTagEnd']]));
             $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $this->db->update('users', ['usersCmsTag' => $string]);

@@ -49,25 +49,32 @@ class BIBLIOGRAPHYCOMMON
         $bibsUG = $this->getGroupBibs();
         // add main wikindx bibliography to array with id of 0
         $bibsArray[0] = $this->messages->text("user", "masterBib");
-        if (!empty($bibsU)) {
+        if (!empty($bibsU))
+        {
             $bibsArray[-1] = $this->messages->text('user', 'userBibs');
-            foreach ($bibsU as $key => $value) {
+            foreach ($bibsU as $key => $value)
+            {
                 $bibsArray[$key] = $value;
             }
         }
-        if (!empty($bibsUG)) {
+        if (!empty($bibsUG))
+        {
             $bibsArray[-2] = $this->messages->text('user', 'userGroupBibs');
-            foreach ($bibsUG as $key => $value) {
+            foreach ($bibsUG as $key => $value)
+            {
                 $bibsArray[$key] = $value;
             }
         }
-        if (!empty($otherBibs)) {
+        if (!empty($otherBibs))
+        {
             $bibsArray[-3] = $this->messages->text('user', 'otherBibs');
-            foreach ($otherBibs as $key => $value) {
+            foreach ($otherBibs as $key => $value)
+            {
                 $bibsArray[$key] = $value;
             }
         }
-        if (count($bibsArray) == 1) { // only the master bib
+        if (count($bibsArray) == 1)
+        { // only the master bib
             $bibsArray = [];
             $this->session->setVar("setup_Bibliographies", FALSE);
         }
@@ -84,17 +91,23 @@ class BIBLIOGRAPHYCOMMON
     public function displayBib($hint = FALSE)
     {
         $userBib = GLOBALS::getUserVar('BrowseBibliography');
-        if ($userBib) {
+        if ($userBib)
+        {
             $this->db->formatConditions(['userbibliographyId' => $userBib]);
             $recordset = $this->db->select('user_bibliography', 'userbibliographyTitle');
             $row = $this->db->fetchRow($recordset);
             $bib = $row['userbibliographyTitle'];
-        } elseif (WIKINDX_MULTIUSER) {
+        }
+        elseif (WIKINDX_MULTIUSER)
+        {
             $bib = $this->messages->text("user", "masterBib");
-        } else {
+        }
+        else
+        {
             return '';
         }
-        if ($hint) {
+        if ($hint)
+        {
             return \HTML\span(' (' . $this->messages->text("user", "bibliography") . ": " . $bib . ')', 'hint');
         }
 
@@ -107,7 +120,8 @@ class BIBLIOGRAPHYCOMMON
      */
     public function getUserBibs()
     {
-        if (!$this->session->getVar("setup_UserId")) {
+        if (!$this->session->getVar("setup_UserId"))
+        {
             return [];
         }
         // Get this user's bibliographies
@@ -116,7 +130,8 @@ class BIBLIOGRAPHYCOMMON
         $this->db->formatConditions($this->db->formatFields('userbibliographyUserGroupId') . ' IS NULL');
         $this->db->orderBy('userbibliographyTitle');
         $recordset = $this->db->select('user_bibliography', ['userbibliographyId', 'userbibliographyTitle']);
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $tempU[$row['userbibliographyId']] = \HTML\dbToFormTidy($row['userbibliographyTitle']);
         }
 
@@ -129,7 +144,8 @@ class BIBLIOGRAPHYCOMMON
      */
     public function getGroupBibs()
     {
-        if (!$this->session->getVar("setup_UserId")) {
+        if (!$this->session->getVar("setup_UserId"))
+        {
             return [];
         }
         $tempUG = [];
@@ -149,7 +165,8 @@ class BIBLIOGRAPHYCOMMON
             ['userbibliographyId', 'userbibliographyUserGroupId', 'userbibliographyTitle'],
             $subQ
         );
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $tempUG[$row['userbibliographyId']] = \HTML\dbToFormTidy($row['userbibliographyTitle']);
         }
 
@@ -165,12 +182,15 @@ class BIBLIOGRAPHYCOMMON
      */
     public function userBibCondition($joinField = FALSE)
     {
-        if ($this->bailOut) {
+        if ($this->bailOut)
+        {
             return FALSE;
         }
-        if ($useBib = GLOBALS::getUserVar('BrowseBibliography')) {
+        if ($useBib = GLOBALS::getUserVar('BrowseBibliography'))
+        {
             $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $useBib]);
-            if ($joinField) {
+            if ($joinField)
+            {
                 $this->db->leftJoin('user_bibliography_resource', 'userbibliographyresourceResourceId', $joinField);
             }
 

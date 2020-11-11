@@ -45,16 +45,21 @@ abstract class EXPORTER
     public function titleFormat($row, $bibtex = FALSE)
     {
         // For book_chapter, 'title' is bibtex 'chapter' and 'collectionTitle' is bibtex 'title'
-        if ($bibtex && ($row['resourceType'] == 'book_chapter')) {
+        if ($bibtex && ($row['resourceType'] == 'book_chapter'))
+        {
             return stripslashes($row['collectionTitle']);
         }
         $noSort = $row['resourceNoSort'] ? stripslashes($row['resourceNoSort']) . ' ' : FALSE;
-        if ($row['resourceSubtitle']) {
+        if ($row['resourceSubtitle'])
+        {
             $string = $noSort . stripslashes($row['resourceTitle']) . ": " . stripslashes($row['resourceSubtitle']);
-        } else {
+        }
+        else
+        {
             $string = $noSort . stripslashes($row['resourceTitle']);
         }
-        if ($bibtex) {
+        if ($bibtex)
+        {
             return $string;
         }
         // If !bibtex, remove any braces that have been inserted to maintain case of characters - only required for resource title
@@ -72,54 +77,87 @@ abstract class EXPORTER
     {
         $surname = $firstname = $initials = '';
         // WIKINDX stores Jr., IV etc. at end of surname...
-        if ($creatorRow['creatorSurname']) {
-            if ($creatorRow['creatorPrefix']) {
+        if ($creatorRow['creatorSurname'])
+        {
+            if ($creatorRow['creatorPrefix'])
+            {
                 $surname = stripslashes($creatorRow['creatorPrefix']) . " " .
                 stripslashes($creatorRow['creatorSurname']);
-            } else {
+            }
+            else
+            {
                 $surname = stripslashes($creatorRow['creatorSurname']);
             }
         }
-        if ($creatorRow['creatorFirstname']) {
+        if ($creatorRow['creatorFirstname'])
+        {
             $firstname = stripslashes($creatorRow['creatorFirstname']);
         }
-        if ($creatorRow['creatorInitials']) {
-            if ($exportType == 'endnote') {
+        if ($creatorRow['creatorInitials'])
+        {
+            if ($exportType == 'endnote')
+            {
                 $initials = implode(' ', \UTF8\mb_explode(' ', stripslashes($creatorRow['creatorInitials'])));
-            } elseif ($exportType == 'ris') {
+            }
+            elseif ($exportType == 'ris')
+            {
                 $initials = implode('.', \UTF8\mb_explode(' ', stripslashes($creatorRow['creatorInitials']))) . ".";
-            } elseif ($exportType == 'bibtex') {
+            }
+            elseif ($exportType == 'bibtex')
+            {
                 $initials = implode('. ', \UTF8\mb_explode(' ', stripslashes($creatorRow['creatorInitials']))) . ".";
             }
         }
-        if ($exportType == 'ris') {
-            if ($firstname && $initials) {
+        if ($exportType == 'ris')
+        {
+            if ($firstname && $initials)
+            {
                 return $surname . ',' . $firstname . ',' . $initials;
-            } elseif ($firstname) {
+            }
+            elseif ($firstname)
+            {
                 return $surname . ',' . $firstname;
-            } elseif ($initials) {
+            }
+            elseif ($initials)
+            {
                 return $surname . ',' . $initials;
             }
-        } elseif ($exportType == 'endnote') {
-            if ($firstname && $initials) {
+        }
+        elseif ($exportType == 'endnote')
+        {
+            if ($firstname && $initials)
+            {
                 return $surname . ',' . $firstname . ' ' . $initials;
-            } elseif ($firstname) {
+            }
+            elseif ($firstname)
+            {
                 return $surname . ',' . $firstname;
-            } elseif ($initials) {
+            }
+            elseif ($initials)
+            {
                 return $surname . ',' . $initials;
             }
-        } elseif ($exportType == 'bibtex') {
-            if (preg_match("/(.*)(Sr\\.|jr\\.)/ui", $surname, $matches)) {
+        }
+        elseif ($exportType == 'bibtex')
+        {
+            if (preg_match("/(.*)(Sr\\.|jr\\.)/ui", $surname, $matches))
+            {
                 $surname = trim($matches[1]) . ", " . trim($matches[2]);
             }
-            if (preg_match("/(.*)\\s(I|II|III|IV|V|VI|VII|VIII|IX|X)$/u", $surname, $matches)) {
+            if (preg_match("/(.*)\\s(I|II|III|IV|V|VI|VII|VIII|IX|X)$/u", $surname, $matches))
+            {
                 $surname = trim($matches[1]) . ", " . trim($matches[2]);
             }
-            if ($firstname && $initials) {
+            if ($firstname && $initials)
+            {
                 return $surname . ", " . $firstname . ' ' . $initials;
-            } elseif ($firstname) {
+            }
+            elseif ($firstname)
+            {
                 return $surname . ", " . $firstname;
-            } elseif ($initials) {
+            }
+            elseif ($initials)
+            {
                 return $surname . ", " . $initials;
             }
         }
@@ -149,18 +187,23 @@ abstract class EXPORTER
         $this->nameFormat();
         if ((!array_key_exists('resourceyearYear1', $row)
             || !$row['resourceyearYear1']) && array_key_exists('resourceyearYear2', $row)
-            && $row['resourceyearYear2']) {
+            && $row['resourceyearYear2'])
+        {
             $row['resourceyearYear1'] = $row['resourceyearYear2'];
         }
-        if (array_key_exists('resourceyearYear1', $row) && $row['resourceyearYear1']) {
+        if (array_key_exists('resourceyearYear1', $row) && $row['resourceyearYear1'])
+        {
             $this->dateFormat($row);
         }
         // Add everything else
-        foreach ($this->map->{$row['resourceType']} as $key => $value) {
-            if (!array_key_exists($key, $row) || !$row[$key]) {
+        foreach ($this->map->{$row['resourceType']} as $key => $value)
+        {
+            if (!array_key_exists($key, $row) || !$row[$key])
+            {
                 continue;
             }
-            if ($key == 'resourceTitle') {
+            if ($key == 'resourceTitle')
+            {
                 continue;
             }
             $this->entry[$value] = $this->uEncode(stripslashes($row[$key]));
@@ -171,12 +214,15 @@ abstract class EXPORTER
      */
     protected function nameFormat()
     {
-        foreach ($this->creators as $array) {
-            foreach ($array as $field => $value) {
+        foreach ($this->creators as $array)
+        {
+            foreach ($array as $field => $value)
+            {
                 $creatorRow['creator' . ucfirst($field)] = $value;
             }
             $name = $this->formatName($creatorRow, 'bibtex'); // use bibTeX format
-            if ($name) {
+            if ($name)
+            {
                 $this->authors[] = $name;
             }
         }
@@ -188,27 +234,38 @@ abstract class EXPORTER
      */
     protected function dateFormat($row)
     {
-        if ($row['resourceType'] == 'web_article') {
+        if ($row['resourceType'] == 'web_article')
+        {
             $startDay = array_key_exists('resourcemiscField5', $row) ? $row['resourcemiscField5'] : FALSE;
             $startMonth = array_key_exists('resourcemiscField6', $row) ? $row['resourcemiscField6'] : FALSE;
-        } else {
+        }
+        else
+        {
             $startDay = array_key_exists('resourcemiscField2', $row) ? $row['resourcemiscField2'] : FALSE;
             $startMonth = array_key_exists('resourcemiscField3', $row) ? $row['resourcemiscField3'] : FALSE;
         }
         $startDay = ($startDay == 0) ? FALSE : $startDay;
         $startMonth = ($startMonth == 0) ? FALSE : $startMonth;
-        if (!$startMonth) {
+        if (!$startMonth)
+        {
             $date = $row['resourceyearYear1'];
-        } elseif (!$startDay) {
-            if ($startMonth < 10) {
+        }
+        elseif (!$startDay)
+        {
+            if ($startMonth < 10)
+            {
                 $startMonth = '0' . $startMonth;
             }
             $date = $row['resourceyearYear1'] . '-' . $startMonth;
-        } else {
-            if ($startMonth < 10) {
+        }
+        else
+        {
+            if ($startMonth < 10)
+            {
                 $startMonth = '0' . $startMonth;
             }
-            if ($startDay < 10) {
+            if ($startDay < 10)
+            {
                 $startDay = '0' . $startDay;
             }
             $date = $row['resourceyearYear1'] . '-' . $startMonth . '-' . $startDay;

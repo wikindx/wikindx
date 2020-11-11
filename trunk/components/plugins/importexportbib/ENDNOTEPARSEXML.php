@@ -29,7 +29,8 @@ class ENDNOTEPARSEXML
     {
         $sxi = new SimpleXmlIterator($file, NULL, TRUE);
         $array = $this->sxiToArray($sxi);
-        foreach ($array['records'][0]['record'] as $records) {
+        foreach ($array['records'][0]['record'] as $records)
+        {
             $this->parse($records);
         }
 
@@ -44,24 +45,30 @@ class ENDNOTEPARSEXML
     {
         $entries = [];
         // check for v8 first
-        foreach ($array as $key => $keyArray) {
+        foreach ($array as $key => $keyArray)
+        {
             // Endnote 8 (which has a _very_ different XML format to previous versions *&^$*&^!) identifies itself as:
             // <source-app name="EndNote" version="8.0">EndNote</source-app>.
             // Need to capture this for ENDNOTEIMPORTSTAGE2
-            if (($key == 'source-app') && ($keyArray['version'] >= 8.0)) {
+            if (($key == 'source-app') && ($keyArray['version'] >= 8.0))
+            {
                 $this->version8 = TRUE;
 
                 break;
             }
         }
-        if (!$this->version8) {
+        if (!$this->version8)
+        {
             return;
         }
-        foreach ($array as $key => $keyArray) {
-            if (($key == 'database') || ($key == 'rec-number') || ($key == 'periodical') || ($key == 'full-title') || ($key == 'source-app')) {
+        foreach ($array as $key => $keyArray)
+        {
+            if (($key == 'database') || ($key == 'rec-number') || ($key == 'periodical') || ($key == 'full-title') || ($key == 'source-app'))
+            {
                 continue;
             }
-            if ($key == 'ref-type') {
+            if ($key == 'ref-type')
+            {
                 $entries['ref-type-name'] = $keyArray['name'];
             }
             $entries[$key] = $keyArray[0];
@@ -78,18 +85,24 @@ class ENDNOTEPARSEXML
     private function sxiToArray($sxi)
     {
         $a = [];
-        for ($sxi->rewind(); $sxi->valid(); $sxi->next()) {
+        for ($sxi->rewind(); $sxi->valid(); $sxi->next())
+        {
             $key = $sxi->key();
-            if (!array_key_exists($key, $a)) {
+            if (!array_key_exists($key, $a))
+            {
                 $a[$key] = [];
             }
-            if ($sxi->hasChildren()) {
+            if ($sxi->hasChildren())
+            {
                 $a[$key][] = $this->sxiToArray($sxi->current());
-            } else {
+            }
+            else
+            {
                 $a[$key][] = strval($sxi->current());
             }
             $currentObj = $sxi->{$key}[0]->attributes();
-            foreach ($currentObj as $b => $c) {
+            foreach ($currentObj as $b => $c)
+            {
                 $a[$key][$b] = (string)$c;
             }
         }

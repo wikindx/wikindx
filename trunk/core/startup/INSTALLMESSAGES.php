@@ -46,7 +46,8 @@ class INSTALLMESSAGES
      */
     private function internaltext($indexName)
     {
-        if (!array_key_exists($indexName, $this->languageArray)) {
+        if (!array_key_exists($indexName, $this->languageArray))
+        {
             debug_print_backtrace();
             die("<p>Section <strong>$arrayName</strong> not found in translations.</p>");
         }

@@ -51,10 +51,12 @@ class EMAIL
     public function userEdit()
     {
         // do nothing if email is not turned on
-        if (!WIKINDX_MAIL_USE) {
+        if (!WIKINDX_MAIL_USE)
+        {
             return TRUE;
         }
-        if (array_key_exists('email', $this->vars)) {
+        if (array_key_exists('email', $this->vars))
+        {
             $email = $this->vars['email'];
             $subject = "WIKINDX Registration Confirmation";
             $message = $this->messages->text("user", "emailText3") . "\n\nWIKINDX:\t\t" . WIKINDX_URL_BASE . "\n\nUSERNAME:\t\t" .
@@ -77,7 +79,8 @@ class EMAIL
     public function register($hashKey, $email)
     {
         // do nothing if email is not turned on
-        if (!WIKINDX_MAIL_USE) {
+        if (!WIKINDX_MAIL_USE)
+        {
             return TRUE;
         }
         $subject = "WIKINDX Registration";
@@ -96,30 +99,38 @@ class EMAIL
     public function registerUserAdd($passwordShow = FALSE)
     {
         // do nothing if email is not turned on
-        if (!WIKINDX_MAIL_USE) {
+        if (!WIKINDX_MAIL_USE)
+        {
             return TRUE;
         }
         $email = $this->vars['email'];
         $subject = "WIKINDX Registration Confirmation";
-        if ($passwordShow) {
+        if ($passwordShow)
+        {
             $message = $this->messages->text("user", "emailText2") . "\n\nWIKINDX:\t\t" . WIKINDX_URL_BASE . "\n\nUSERNAME:\t\t" .
                 \UTF8\mb_trim($this->vars['usersUsername']) . "\n\nPASSWORD:\t\t" . \UTF8\mb_trim($this->vars['password']) . "\n" . LF;
-        } else {
+        }
+        else
+        {
             $message = $this->messages->text("user", "emailText2") . "\n\nWIKINDX:\t\t" . WIKINDX_URL_BASE . "\n\nUSERNAME:\t\t" .
                 \UTF8\mb_trim($this->vars['usersUsername']) . "\n" . LF;
         }
-        if (!$this->smtp->sendEmail($email, $subject, $message)) {
+        if (!$this->smtp->sendEmail($email, $subject, $message))
+        {
             return FALSE;
         }
         // If needed, email admin about new user
         $email = WIKINDX_EMAIL_NEW_REGISTRATIONS;
-        if ($email && !$this->session->getVar("setup_Superadmin")) {
+        if ($email && !$this->session->getVar("setup_Superadmin"))
+        {
             $message = "A new user has registered for" . "\n\nWIKINDX:\t\t" . WIKINDX_URL_BASE . "\n\nUSERNAME:\t\t" .
                 \UTF8\mb_trim($this->vars['usersUsername']) . "\n" . LF;
-            if ($this->vars['fullname']) {
+            if ($this->vars['fullname'])
+            {
                 $message .= "FULLNAME:\t\t" . \UTF8\mb_trim($this->vars['fullname']) . "\n" . LF;
             }
-            if (!$this->smtp->sendEmail($email, $subject, $message)) {
+            if (!$this->smtp->sendEmail($email, $subject, $message))
+            {
                 return FALSE;
             }
         }
@@ -134,11 +145,13 @@ class EMAIL
     public function registerRequest()
     {
         // do nothing if email is not turned on
-        if (!WIKINDX_MAIL_USE) {
+        if (!WIKINDX_MAIL_USE)
+        {
             return TRUE;
         }
         $adminEmail = WIKINDX_EMAIL_NEW_REGISTRATIONS;
-        if (!$adminEmail) {
+        if (!$adminEmail)
+        {
             return FALSE;
         }
         $subject = "WIKINDX Registration Request";
@@ -155,7 +168,8 @@ class EMAIL
      */
     public function registerRequestManage($registerIds)
     {
-        foreach ($registerIds as $id => $value) {
+        foreach ($registerIds as $id => $value)
+        {
             $this->db->formatConditions(['userregisterId' => $id]);
             $this->db->formatConditions(['userregisterConfirmed' => 'N']);
             $resultset = $this->db->select('user_register', ['userregisterEmail', 'userregisterHashKey']);
@@ -163,23 +177,31 @@ class EMAIL
             // Email user
             $email = $row['userregisterEmail'];
             $subject = "WIKINDX Registration Confirmation";
-            if ($value == 'accept') {
+            if ($value == 'accept')
+            {
                 $link = WIKINDX_URL_BASE . "/index.php?action=usersgroups_REGISTER_CORE&method=registerConfirm&hashKey=" . $row['userregisterHashKey'];
                 $message = $this->messages->text("user", "emailText") . LF . LF . $link . LF . LF;
-            } else {
+            }
+            else
+            {
                 $message = $this->messages->text("user", "emailText5", " " . WIKINDX_URL_BASE) . LF . LF;
             }
             // do nothing if email is not turned on
-            if (WIKINDX_MAIL_USE) {
-                if (!$this->smtp->sendEmail($email, $subject, $message)) {
+            if (WIKINDX_MAIL_USE)
+            {
+                if (!$this->smtp->sendEmail($email, $subject, $message))
+                {
                     return FALSE;
                 }
             }
             // Delete those declined and confirm those accepted
             $this->db->formatConditions(['userregisterId' => $id]);
-            if ($value == 'accept') {
+            if ($value == 'accept')
+            {
                 $this->db->update('user_register', ['userregisterConfirmed' => 'Y']);
-            } else {
+            }
+            else
+            {
                 $this->db->delete('user_register');
             }
         }
@@ -196,12 +218,14 @@ class EMAIL
      */
     public function emailFriendDisplay($message = FALSE)
     {
-        if (array_key_exists('id', $this->vars)) {
+        if (array_key_exists('id', $this->vars))
+        {
             $hyperlink = WIKINDX_URL_BASE . "/index.php?action=resource_RESOURCEVIEW_CORE&id=" . $this->vars['id'];
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "emailFriend"));
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
         $pString = $message;
         $pString .= \FORM\formHeader("email_EMAIL_CORE");
@@ -209,11 +233,14 @@ class EMAIL
         $pString .= \FORM\hidden('id', $this->vars['id']);
         $address = array_key_exists("emailFriend_Address", $this->formData) ? $this->formData["emailFriend_Address"] : FALSE;
         $subject = array_key_exists("emailFriend_Subject", $this->formData) ? $this->formData["emailFriend_Subject"] : FALSE;
-        if (isset($hyperlink)) {
+        if (isset($hyperlink))
+        {
             $text = "\n\n$hyperlink";
-        } else {
+        }
+        else
+        {
             $text = $this->session->getVar("emailFriend_Text");
-        	$text = array_key_exists("emailFriend_Text", $this->formData) ? $this->formData["emailFriend_Text"] : FALSE;
+            $text = array_key_exists("emailFriend_Text", $this->formData) ? $this->formData["emailFriend_Text"] : FALSE;
         }
         $pString .= \HTML\p(\FORM\textInput(
             $this->messages->text("misc", "emailFriendAddress"),
@@ -235,8 +262,8 @@ class EMAIL
             80,
             10
         ));
-        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Email")) . '&nbsp;&nbsp;' . 
-        	\FORM\closePopup($this->messages->text("misc", "closePopup")));
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Email")) . '&nbsp;&nbsp;' .
+            \FORM\closePopup($this->messages->text("misc", "closePopup")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSENOMENU::getInstance();
@@ -247,44 +274,20 @@ class EMAIL
     public function emailFriend()
     {
         // do nothing if email is not turned on
-        if (!WIKINDX_MAIL_USE) {
+        if (!WIKINDX_MAIL_USE)
+        {
             return TRUE;
         }
         list($addresses, $subject, $text) = $this->checkFriendInput();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "emailFriend"));
-        if (!$this->smtp->sendEmail($addresses, $subject, $text)) {
+        if (!$this->smtp->sendEmail($addresses, $subject, $text))
+        {
             $this->badInput->close($this->errors->text('inputError', 'mail2'), $this, 'emailFriendDisplay');
         }
-		$message = rawurlencode($this->success->text('emailFriend'));
-		$id = $this->vars['id'];
-		header("Location: index.php?action=email_EMAIL_CORE&method=emailFriendDisplay&message=$message&id=$id");
-		die;
-    }
-    /**
-     * checkFriendInput
-     *
-     * @return array
-     */
-    private function checkFriendInput()
-    {
-        $address = $subject = $text = FALSE;
-        if (array_key_exists('emailFriend_address', $this->vars)) {
-            $address = \UTF8\mb_trim($this->vars['emailFriend_address']);
-        }
-        if (array_key_exists('emailFriend_subject', $this->vars)) {
-            $subject = \UTF8\mb_trim($this->vars['emailFriend_subject']);
-        }
-        if (array_key_exists('emailFriend_text', $this->vars)) {
-            $text = \UTF8\mb_trim($this->vars['emailFriend_text']);
-        }
-        $this->formData["emailFriend_Address"] = $address;
-        $this->formData["emailFriend_Subject"] = $subject;
-        $this->formData["emailFriend_Text"] = $text;
-        if (!$address || !$subject || !$text) {
-            $this->badInput->close($this->errors->text('inputError', 'missing'), $this, 'emailFriendDisplay');
-        }
-
-        return [$address, $subject, $text];
+        $message = rawurlencode($this->success->text('emailFriend'));
+        $id = $this->vars['id'];
+        header("Location: index.php?action=email_EMAIL_CORE&method=emailFriendDisplay&message=$message&id=$id");
+        die;
     }
     /**
      * Emailing username::password to forgetful user
@@ -297,7 +300,8 @@ class EMAIL
     public function forgetProcess($usersUsername, $password)
     {
         // do nothing if email is not turned on
-        if (!WIKINDX_MAIL_USE) {
+        if (!WIKINDX_MAIL_USE)
+        {
             return TRUE;
         }
         $password = time();
@@ -325,7 +329,8 @@ class EMAIL
     public function news($title, $news)
     {
         // do nothing if email is not turned on
-        if (!WIKINDX_MAIL_USE) {
+        if (!WIKINDX_MAIL_USE)
+        {
             return TRUE;
         }
         $news = preg_replace('/\<br(\s*)?\/?\>/ui', CR . LF, $news);
@@ -336,13 +341,16 @@ class EMAIL
         $message = "\n\n$title\n" . LF;
         $message .= "$news\n" . LF;
         $recordset = $this->db->select('users', 'usersEmail');
-        while ($row = $this->db->fetchRow($recordset)) {
-            if (!$row['usersEmail']) { // This should only happen if superadmin has not entered email
+        while ($row = $this->db->fetchRow($recordset))
+        {
+            if (!$row['usersEmail'])
+            { // This should only happen if superadmin has not entered email
                 continue;
             }
             $addresses[] = $row['usersEmail'];
         }
-        if (!isset($addresses)) {
+        if (!isset($addresses))
+        {
             return TRUE;
         }
 
@@ -359,7 +367,8 @@ class EMAIL
     public function notify($resourceId, $newResource = FALSE)
     {
         // do nothing if admin does not allow notification or email is not turned on
-        if (!WIKINDX_MAIL_USE || !WIKINDX_NOTIFY) {
+        if (!WIKINDX_MAIL_USE || !WIKINDX_NOTIFY)
+        {
             return TRUE;
         }
         $this->bibStyle = FACTORY_BIBSTYLE::getInstance();
@@ -368,17 +377,50 @@ class EMAIL
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
         $this->res = FACTORY_RESOURCECOMMON::getInstance();
         $subject = "Resource Notification";
-        if (!$this->emailImmediate($resourceId, $newResource, $subject)) {
+        if (!$this->emailImmediate($resourceId, $newResource, $subject))
+        {
             return FALSE;
         }
         // Now deal with users with a set email threshold
-        if (count($this->usersThreshold) > 0) {
-            if (!$this->emailThreshold($resourceId, $subject)) {
+        if (count($this->usersThreshold) > 0)
+        {
+            if (!$this->emailThreshold($resourceId, $subject))
+            {
                 return FALSE;
             }
         }
 
         return TRUE; // success
+    }
+    /**
+     * checkFriendInput
+     *
+     * @return array
+     */
+    private function checkFriendInput()
+    {
+        $address = $subject = $text = FALSE;
+        if (array_key_exists('emailFriend_address', $this->vars))
+        {
+            $address = \UTF8\mb_trim($this->vars['emailFriend_address']);
+        }
+        if (array_key_exists('emailFriend_subject', $this->vars))
+        {
+            $subject = \UTF8\mb_trim($this->vars['emailFriend_subject']);
+        }
+        if (array_key_exists('emailFriend_text', $this->vars))
+        {
+            $text = \UTF8\mb_trim($this->vars['emailFriend_text']);
+        }
+        $this->formData["emailFriend_Address"] = $address;
+        $this->formData["emailFriend_Subject"] = $subject;
+        $this->formData["emailFriend_Text"] = $text;
+        if (!$address || !$subject || !$text)
+        {
+            $this->badInput->close($this->errors->text('inputError', 'missing'), $this, 'emailFriendDisplay');
+        }
+
+        return [$address, $subject, $text];
     }
     /**
      * Email those with a notification threshold set
@@ -394,107 +436,144 @@ class EMAIL
         $this->db->formatConditions(['usersId' => $userId]);
         $digestThreshold = $this->db->selectFirstField('users', 'usersNotifyDigestThreshold');
         $this->grabResources($digestThreshold);
-        if (empty($this->allAddedIds) && empty($this->allEditedIds)) {
+        if (empty($this->allAddedIds) && empty($this->allEditedIds))
+        {
             return TRUE; // nothing to do
         }
-        foreach ($this->usersThreshold as $userId => $userArray) 
+        foreach ($this->usersThreshold as $userId => $userArray)
         {
-            if (!$userArray['email']) { // This should only happen if superadmin has not entered email
+            if (!$userArray['email'])
+            { // This should only happen if superadmin has not entered email
                 continue;
             }
-			$message = $this->messages->text("user", "notifyMass4") . "\n\n\n" . LF; // reset each time
-			$notifyArray = []; // reset each time
+            $message = $this->messages->text("user", "notifyMass4") . "\n\n\n" . LF; // reset each time
+            $notifyArray = []; // reset each time
 // User wants notification only on new resources
-			if (!empty($this->allAddedIds) && ($userArray['notifyAddEdit'] == 'N')) {
-				$notifyArray = $this->grabTitlesThreshold($userArray, $this->allAddedIds);
-			}
-			// User wants notification only on edited resources
-			elseif (!empty($this->allEditedIds) && ($userArray['notifyAddEdit'] == 'E')) {
-				$notifyArray = $this->grabTitlesThreshold($userArray, $this->allEditedIds);
-			}
-			if (empty($notifyArray) && $userArray['notify'] == 'A') { // notify on all resources
-				// NB, if resource has not been edited, editedTimestamp is same as addedTimestamp
-				$notifyArray = $this->grabTitlesThreshold($userArray, $this->allEditedIds);
-			}
-			// notify on resources in a user's bibliography
-			elseif (($userArray['notify'] == 'M')) {
-				if (empty($notifyArray) && !empty($this->allEditedIds)) {
-					$newArray = $this->allEditedIds;
-				} elseif (!empty($notifyArray)) {
-					$newArray = $notifyArray;
-				} else {
-					continue;
-				}
-				$remainIds = [];
-				$this->db->formatConditions(['userbibliographyId' => $userId]);
-				$this->db->formatConditions(['userbibliographyresourceResourceId' => $resourceId]);
-				$this->db->leftJoin('user_bibliography_resource', 'userbibliographyresourceBibliographyId', 'userbibliographyId');
-				$recordset = $this->db->select('user_bibliography', 'userbibliographyId');
-				if (!$this->db->numRows($recordset)) { // This resource not in user's bibliography
-					continue;
-				}
-				while ($row = $this->db->fetchRow($recordset)) {
-					$bibs = \UTF8\mb_explode(',', $row['bibliography']);
-					foreach ($newArray as $id => $field) {
-						if (array_search($id, $bibs) !== FALSE) {
-							$remainIds[$id] = $field;
-						}
-					}
-				}
-				if (empty($notifyArray)) { // $field is not a formatted title but is unixTimestamp from $this->allEditedIds
-					$notifyArray = $this->grabTitlesThreshold($userArray, $remainIds);
-				} else {
-					$notifyArray = $remainIds;
-				}
-			}
-			// notify if user is a creator of this resource and resourceId is not FALSE (e.g. notify from a mass bibliography import)
-			elseif ($resourceId && ($userArray['notify'] == 'C')) {
-				if (empty($notifyArray) && !empty($this->allEditedIds)) {
-					$newArray = $this->allEditedIds;
-				} elseif (!empty($notifyArray)) {
-					$newArray = $notifyArray;
-				} else {
-					continue;
-				}
-				$remainIds = [];
-				$this->db->formatConditions(['resourcecreatorResourceId' => $resourceId]);
-				$this->db->leftJoin(
-					'creator',
-					$this->db->formatFields('creatorSameAs'),
-					$this->db->tidyInput($userArray['creatorId']),
-					FALSE
-				);
-				$recordset = $this->db->select('resource_creator', 'resourcecreatorResourceId', TRUE);
-				if (!$this->db->numRows($recordset)) { // This resource not in user's bibliography
-					continue;
-				}
-				while ($row = $this->db->fetchRow($recordset)) {
-					foreach ($newArray as $id => $field) {
-						if ($id = $row['resourcecreatorResourceId']) {
-							$remainIds[$id] = $field;
-						}
-					}
-				}
-				if (empty($notifyArray)) { // $field is not a formatted title but is unixTimestamp from $this->allEditedIds
-					$notifyArray = $this->grabTitlesThreshold($userArray, $remainIds);
-				} else {
-					$notifyArray = $remainIds;
-				}
-			}
-			if (empty($notifyArray)) {
-				continue;
-			}
-			// If more than xxx added resources, simply grab the number of added resources
-			$size = count($notifyArray);
-            if ($size > $digestThreshold) {
+            if (!empty($this->allAddedIds) && ($userArray['notifyAddEdit'] == 'N'))
+            {
+                $notifyArray = $this->grabTitlesThreshold($userArray, $this->allAddedIds);
+            }
+            // User wants notification only on edited resources
+            elseif (!empty($this->allEditedIds) && ($userArray['notifyAddEdit'] == 'E'))
+            {
+                $notifyArray = $this->grabTitlesThreshold($userArray, $this->allEditedIds);
+            }
+            if (empty($notifyArray) && $userArray['notify'] == 'A')
+            { // notify on all resources
+                // NB, if resource has not been edited, editedTimestamp is same as addedTimestamp
+                $notifyArray = $this->grabTitlesThreshold($userArray, $this->allEditedIds);
+            }
+            // notify on resources in a user's bibliography
+            elseif (($userArray['notify'] == 'M'))
+            {
+                if (empty($notifyArray) && !empty($this->allEditedIds))
+                {
+                    $newArray = $this->allEditedIds;
+                }
+                elseif (!empty($notifyArray))
+                {
+                    $newArray = $notifyArray;
+                }
+                else
+                {
+                    continue;
+                }
+                $remainIds = [];
+                $this->db->formatConditions(['userbibliographyId' => $userId]);
+                $this->db->formatConditions(['userbibliographyresourceResourceId' => $resourceId]);
+                $this->db->leftJoin('user_bibliography_resource', 'userbibliographyresourceBibliographyId', 'userbibliographyId');
+                $recordset = $this->db->select('user_bibliography', 'userbibliographyId');
+                if (!$this->db->numRows($recordset))
+                { // This resource not in user's bibliography
+                    continue;
+                }
+                while ($row = $this->db->fetchRow($recordset))
+                {
+                    $bibs = \UTF8\mb_explode(',', $row['bibliography']);
+                    foreach ($newArray as $id => $field)
+                    {
+                        if (array_search($id, $bibs) !== FALSE)
+                        {
+                            $remainIds[$id] = $field;
+                        }
+                    }
+                }
+                if (empty($notifyArray))
+                { // $field is not a formatted title but is unixTimestamp from $this->allEditedIds
+                    $notifyArray = $this->grabTitlesThreshold($userArray, $remainIds);
+                }
+                else
+                {
+                    $notifyArray = $remainIds;
+                }
+            }
+            // notify if user is a creator of this resource and resourceId is not FALSE (e.g. notify from a mass bibliography import)
+            elseif ($resourceId && ($userArray['notify'] == 'C'))
+            {
+                if (empty($notifyArray) && !empty($this->allEditedIds))
+                {
+                    $newArray = $this->allEditedIds;
+                }
+                elseif (!empty($notifyArray))
+                {
+                    $newArray = $notifyArray;
+                }
+                else
+                {
+                    continue;
+                }
+                $remainIds = [];
+                $this->db->formatConditions(['resourcecreatorResourceId' => $resourceId]);
+                $this->db->leftJoin(
+                    'creator',
+                    $this->db->formatFields('creatorSameAs'),
+                    $this->db->tidyInput($userArray['creatorId']),
+                    FALSE
+                );
+                $recordset = $this->db->select('resource_creator', 'resourcecreatorResourceId', TRUE);
+                if (!$this->db->numRows($recordset))
+                { // This resource not in user's bibliography
+                    continue;
+                }
+                while ($row = $this->db->fetchRow($recordset))
+                {
+                    foreach ($newArray as $id => $field)
+                    {
+                        if ($id = $row['resourcecreatorResourceId'])
+                        {
+                            $remainIds[$id] = $field;
+                        }
+                    }
+                }
+                if (empty($notifyArray))
+                { // $field is not a formatted title but is unixTimestamp from $this->allEditedIds
+                    $notifyArray = $this->grabTitlesThreshold($userArray, $remainIds);
+                }
+                else
+                {
+                    $notifyArray = $remainIds;
+                }
+            }
+            if (empty($notifyArray))
+            {
+                continue;
+            }
+            // If more than xxx added resources, simply grab the number of added resources
+            $size = count($notifyArray);
+            if ($size > $digestThreshold)
+            {
                 $message = $this->messages->text("user", "notifyMass3", $size);
-            } else {
-                if (!isset($notifyArray)) {
+            }
+            else
+            {
+                if (!isset($notifyArray))
+                {
                     continue;
                 }
                 $message .= implode("\n" . LF, $notifyArray);
             }
-            if (!$this->smtp->sendEmail($userArray['email'], $subject, $message)) {
+            if (!$this->smtp->sendEmail($userArray['email'], $subject, $message))
+            {
                 return FALSE;
             }
             // set this user's users.notifyTimestamp to current date
@@ -526,22 +605,28 @@ class EMAIL
             'usersNotifyAddEdit', 'usersNotifyThreshold', 'usersIsCreator',
             ["UNIX_TIMESTAMP(usersNotifyTimestamp)" => 'usersUnixNotifyTimestamp'],
             ["UNIX_TIMESTAMP(usersTimestamp)" => 'usersUnixTimestamp'], ]);
-        if (!$this->db->numRows($recordset)) { // nothing to do
+        if (!$this->db->numRows($recordset))
+        { // nothing to do
             return TRUE;
         }
-        while ($row = $this->db->fetchRow($recordset)) {
-            if ($row['usersNotifyThreshold'] > 0) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
+            if ($row['usersNotifyThreshold'] > 0)
+            {
                 // Store greatest user notification threshold
-                if (!$this->greatestThreshold || ($row['usersNotifyThreshold'] > $this->greatestThreshold)) {
+                if (!$this->greatestThreshold || ($row['usersNotifyThreshold'] > $this->greatestThreshold))
+                {
                     $this->greatestThreshold = $row['usersNotifyThreshold'];
                 }
                 // Store earliest user notification timestamp
                 if (!$this->earliestNotifyUnixTimestamp || ($row['usersUnixNotifyTimestamp']
-                    < $this->earliestNotifyUnixTimestamp)) {
+                    < $this->earliestNotifyUnixTimestamp))
+                {
                     $this->earliestNotifyUnixTimestamp = $row['usersUnixNotifyTimestamp'];
                 }
                 // Store earliest user notification timestamp
-                if (!$this->earliestUserUnixTimestamp || ($row['usersUnixTimestamp'] < $this->earliestUserUnixTimestamp)) {
+                if (!$this->earliestUserUnixTimestamp || ($row['usersUnixTimestamp'] < $this->earliestUserUnixTimestamp))
+                {
                     $this->earliestUserUnixTimestamp = $row['usersUnixTimestamp'];
                 }
                 $this->usersThreshold[$row['usersId']] = [
@@ -553,7 +638,9 @@ class EMAIL
                     'unixTimestamp' => $row['usersUnixTimestamp'],
                     'creatorId' => $row['usersIsCreator'],
                 ];
-            } else {
+            }
+            else
+            {
                 $users[$row['usersId']] = [
                     'email' => $row['usersEmail'],
                     'notify' => $row['usersNotify'],
@@ -562,54 +649,67 @@ class EMAIL
                 ];
             }
         }
-        if (!isset($users)) { // nothing to do
+        if (!isset($users))
+        { // nothing to do
             return TRUE;
         }
         // Get this user's name (the user adding/editing a resource)
         $userAddEdit = $this->user->displayUserAddEditPlain($userId);
         // Grab resource details if single
-        if ($resourceId) {
+        if ($resourceId)
+        {
             list($title, $notifyMessage) = $this->formatTitle($resourceId, $userAddEdit, $digestThreshold);
             $message = $notifyMessage . "\n\n$title\n" . LF;
-        } else { // mass import from bibliography
+        }
+        else
+        { // mass import from bibliography
             $message = $this->messages->text("user", "notifyMass1", $userAddEdit);
             $message .= ' ' . $this->messages->text("user", "notifyMass2");
         }
         $addresses = [];
-        foreach ($users as $userId => $user) {
+        foreach ($users as $userId => $user)
+        {
             // User wants notification only on new resources
-            if (($user['notifyAddEdit'] == 'N') && !$newResource) {
+            if (($user['notifyAddEdit'] == 'N') && !$newResource)
+            {
                 continue;
             }
             // User wants notification only on edited resources
-            if (($user['notifyAddEdit'] == 'E') && $newResource) {
+            if (($user['notifyAddEdit'] == 'E') && $newResource)
+            {
                 continue;
             }
-            if (!$user['email']) { // This should only happen if superadmin has not entered email
+            if (!$user['email'])
+            { // This should only happen if superadmin has not entered email
                 continue;
             }
             // notify on resources in a user's bibliography (works for only a single resourceId)
-            if ($resourceId && ($user['notify'] == 'M') && !is_array($resourceId)) {
+            if ($resourceId && ($user['notify'] == 'M') && !is_array($resourceId))
+            {
                 $this->db->formatConditions(['userbibliographyId' => $userId]);
                 $this->db->formatConditions(['userbibliographyresourceResourceId' => $resourceId]);
                 $this->db->leftJoin('user_bibliography_resource', 'userbibliographyresourceBibliographyId', 'userbibliographyId');
                 $recordset2 = $this->db->select('user_bibliography', 'userbibliographyId');
-                if (!$this->db->numRows($recordset2)) { // This resource not in user's bibliography
+                if (!$this->db->numRows($recordset2))
+                { // This resource not in user's bibliography
                     continue;
                 }
             }
             // notify if user is a creator of this resource
-            elseif ($resourceId && ($user['notify'] == 'C')) {
+            elseif ($resourceId && ($user['notify'] == 'C'))
+            {
                 $this->db->formatConditions(['resourcecreatorResourceId' => $resourceId]);
                 $this->db->leftJoin('creator', $this->db->formatFields('creatorSameAs'), $this->db->tidyInput($user['creatorId']), FALSE);
                 $recordset2 = $this->db->select('resource_creator', 'resourcecreatorResourceId', TRUE);
-                if (!$this->db->numRows($recordset2)) { // This resource not in user's bibliography
+                if (!$this->db->numRows($recordset2))
+                { // This resource not in user's bibliography
                     continue;
                 }
             }
             $addresses[] = $user['email']; // add user to email recipients
         }
-        if (empty($addresses)) {
+        if (empty($addresses))
+        {
             return TRUE;
         }
 
@@ -631,9 +731,12 @@ class EMAIL
         $now = time();
         $passed = (($now - $userArray['unixNotifyTimestamp']) > $userThreshold) ? TRUE : FALSE;
         $notifyArray = [];
-        foreach ($idArray as $id => $resourceTimestamp) {
-            if (time()) {
-                if (($resourceTimestamp > $userArray['unixNotifyTimestamp']) && ($passed)) {
+        foreach ($idArray as $id => $resourceTimestamp)
+        {
+            if (time())
+            {
+                if (($resourceTimestamp > $userArray['unixNotifyTimestamp']) && ($passed))
+                {
                     $notifyArray[$id] = $this->titles[$id];
                 }
             }
@@ -661,11 +764,14 @@ class EMAIL
         $recordset = $this->res->getResource();
         $this->res->withUnixTimestamp = FALSE;
         $this->res->groupByResourceId = TRUE;
-        if (($size = $this->db->numRows($recordset)) > $digestThreshold) {
+        if (($size = $this->db->numRows($recordset)) > $digestThreshold)
+        {
             return $size;
         }
-        while ($row = $this->db->fetchRow($recordset)) {
-            if (!array_key_exists($row['resourceId'], $this->titles)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
+            if (!array_key_exists($row['resourceId'], $this->titles))
+            {
                 $this->formatTitleThreshold($row);
             }
             $this->allAddedIds[$row['resourceId']] = $row['addUnixTimestamp'];
@@ -679,11 +785,14 @@ class EMAIL
         $recordset = $this->res->getResource();
         $this->res->withUnixTimestamp = FALSE;
         $this->res->groupByResourceId = TRUE;
-        if (($size = $this->db->numRows($recordset)) > $digestThreshold) {
+        if (($size = $this->db->numRows($recordset)) > $digestThreshold)
+        {
             return $size;
         }
-        while ($row = $this->db->fetchRow($recordset)) {
-            if (!array_key_exists($row['resourceId'], $this->titles)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
+            if (!array_key_exists($row['resourceId'], $this->titles))
+            {
                 $this->formatTitleThreshold($row);
             }
             $this->allEditedIds[$row['resourceId']] = $row['editUnixTimestamp'];
@@ -715,22 +824,29 @@ class EMAIL
     {
         $title = '';
         $this->res->limit = $digestThreshold + 1;
-        if (is_array($resourceId)) { // always an array coming from emailThreshold()
+        if (is_array($resourceId))
+        { // always an array coming from emailThreshold()
             // If more than xxx added resources, simply grab the number of added resources
             $size = count($resourceId);
-            if ($size > $digestThreshold) {
+            if ($size > $digestThreshold)
+            {
                 $notifyMessage = $this->messages->text("user", "notifyMass1", $userAddEdit);
                 $notifyMessage .= ' ' . $this->messages->text("user", "notifyMass2", $size);
                 $title = FALSE;
-            } else {
+            }
+            else
+            {
                 $recordset = $this->res->getResource($resourceId);
-                while ($row = $this->db->fetchRow($recordset)) {
+                while ($row = $this->db->fetchRow($recordset))
+                {
                     $this->titles[$row['resourceId']] = html_entity_decode(\HTML\stripHtml($this->bibStyle->process($row)));
                 }
                 $title = implode("\n" . LF, $this->titles);
                 $notifyMessage = $this->messages->text("user", "notifyMass1", $userAddEdit);
             }
-        } else {
+        }
+        else
+        {
             $recordset = $this->res->getResource($resourceId);
             $row = $this->db->fetchRow($recordset);
             $title = html_entity_decode(\HTML\stripHtml($this->bibStyle->process($row)));

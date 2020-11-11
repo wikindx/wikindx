@@ -33,7 +33,8 @@ class BIBTEXFILE
      */
     public function init($message = FALSE)
     {
-        if (!WIKINDX_IMPORT_BIB) {
+        if (!WIKINDX_IMPORT_BIB)
+        {
             $this->gatekeep->requireSuper = TRUE;
         }
         $this->gatekeep->init();

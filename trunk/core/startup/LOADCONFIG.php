@@ -48,10 +48,12 @@ class LOADCONFIG
     public function startSession()
     {
         // Protect from a session already launched by an other page but not well loaded (plugins)
-        if (session_status() === PHP_SESSION_ACTIVE) {
+        if (session_status() === PHP_SESSION_ACTIVE)
+        {
             session_write_close();
         }
-        if (session_status() === PHP_SESSION_NONE) {
+        if (session_status() === PHP_SESSION_NONE)
+        {
             ini_set('session.gc_probability', 0);
             // start session
             session_start();
@@ -84,25 +86,33 @@ class LOADCONFIG
             "UseBibtexKey",
             "UseWikindxKey",
         ];
-        if ($session->getVar("setup_UserId", 0) > 0) { // logged on user so setup from users table
+        if ($session->getVar("setup_UserId", 0) > 0)
+        { // logged on user so setup from users table
             $table = 'users';
             $preferences = $db->prependTableToField($table, $basic);
             $db->formatConditions([$table . 'Id' => $session->getVar("setup_UserId")]);
             $resultSet = $db->select($table, $preferences);
             $row = $db->fetchRow($resultSet);
-        } else { // read only user – read default settings from config table
+        }
+        else
+        { // read only user – read default settings from config table
             $table = 'config';
             $row = [];
             foreach ($basic as $key)
             {
                 $rowKey = $table . $key;
-                if ($session->issetVar("setup_" . $key)) {
+                if ($session->issetVar("setup_" . $key))
+                {
                     $row[$rowKey] = $session->getVar("setup_" . $key);
                 // Options inherited from the global config
-                } elseif (array_key_exists($rowKey, WIKINDX_LIST_CONFIG_OPTIONS)) {
+                }
+                elseif (array_key_exists($rowKey, WIKINDX_LIST_CONFIG_OPTIONS))
+                {
                     $constName = WIKINDX_LIST_CONFIG_OPTIONS[$rowKey]["constname"];
                     $row[$rowKey] = constant($constName);
-                } else {
+                }
+                else
+                {
                     // Language should be inherited but it needs a special default
                     // which allows the browser to control the preferred language first
                     $row[$rowKey] = WIKINDX_USER_LANGUAGE_DEFAULT;
@@ -117,21 +127,31 @@ class LOADCONFIG
                 }
             }
         }
-        foreach ($basic as $key) {
+        foreach ($basic as $key)
+        {
             $rowKey = $table . $key;
-            if (array_key_exists($rowKey, $row)) {
-                if ($key == 'CmsTag') {
-                    if (!$row[$rowKey]) {
+            if (array_key_exists($rowKey, $row))
+            {
+                if ($key == 'CmsTag')
+                {
+                    if (!$row[$rowKey])
+                    {
                         GLOBALS::setUserVar('CmsTagStart', FALSE);
                         GLOBALS::setUserVar('CmsTagEnd', FALSE);
-                    } else {
+                    }
+                    else
+                    {
                         $cms = unserialize(base64_decode($row[$rowKey]));
                         GLOBALS::setUserVar('CmsTagStart', $cms[0]);
                         GLOBALS::setUserVar('CmsTagEnd', $cms[1]);
                     }
-                } elseif (!$row[$rowKey]) {
+                }
+                elseif (!$row[$rowKey])
+                {
                     GLOBALS::setUserVar($key, FALSE);
-                } else {
+                }
+                else
+                {
                     GLOBALS::setUserVar($key, $row[$rowKey]);
                 }
             }
@@ -148,8 +168,10 @@ class LOADCONFIG
         
         // Load the configuration from the db and destroy unused config options
         $resultSet = $db->select('config', '*');
-        while ($row = $db->fetchRow($resultSet)) {
-            if (array_key_exists($row['configName'], WIKINDX_LIST_CONFIG_OPTIONS)) {
+        while ($row = $db->fetchRow($resultSet))
+        {
+            if (array_key_exists($row['configName'], WIKINDX_LIST_CONFIG_OPTIONS))
+            {
                 // Load
                 $tmp_config[$row['configName']] = [
                     "configBoolean" => $row['configBoolean'],
@@ -166,18 +188,22 @@ class LOADCONFIG
         }
         // If an option is missing in the db create it
         // and use its default value
-        foreach (WIKINDX_LIST_CONFIG_OPTIONS as $configName => $unused) {
-            if (array_key_exists($configName, $tmp_config) === FALSE) {
+        foreach (WIKINDX_LIST_CONFIG_OPTIONS as $configName => $unused)
+        {
+            if (array_key_exists($configName, $tmp_config) === FALSE)
+            {
                 // Retrieve the default value
                 $constName = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["constname"];
                 $configType = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["type"];
-                if (!defined($constName . "_DEFAULT")) {
+                if (!defined($constName . "_DEFAULT"))
+                {
                     die("A default constant value for $constName option is missing (" . $constName . "_DEFAULT expected).");
                 }
                 
                 // Create the option in the db
                 $defaultvalue = constant($constName . "_DEFAULT");
-                if ($configType == 'configBoolean') {
+                if ($configType == 'configBoolean')
+                {
                     $defaultvalue = $defaultvalue === FALSE ? 0 : 1;
                 }
                 $db->insert('config', ['configName', $configType], [$configName, $defaultvalue]);
@@ -194,44 +220,62 @@ class LOADCONFIG
             }
         }
         // Cast the value retrieved from the db and create a constant config member for each global option
-        foreach ($tmp_config as $configName => $configValues) {
+        foreach ($tmp_config as $configName => $configValues)
+        {
             $constName = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["constname"];
             $configType = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["type"];
             $value = $configValues[$configType];
-            if ($configType == 'configBoolean') {
+            if ($configType == 'configBoolean')
+            {
                 $value = $value == 1 ? TRUE : FALSE; // Cast to bool
-            } elseif ($configType == 'configDatetime') {
+            }
+            elseif ($configType == 'configDatetime')
+            {
                 // Keep the value unchanged
-            } elseif ($configType == 'configInt') {
+            }
+            elseif ($configType == 'configInt')
+            {
                 $value = $value + 0; // cast to number from database string
-            } elseif ($configType == 'configText') {
+            }
+            elseif ($configType == 'configText')
+            {
                 // Keep the value unchanged
-            } elseif ($configType == 'configVarchar') {
+            }
+            elseif ($configType == 'configVarchar')
+            {
                 // Keep the value unchanged
-            } else {
+            }
+            else
+            {
                 die("db config type unsupported: $configType");
             }
             
             // Unserialize some options
-            if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes'])) {
+            if (in_array($configName, ['configNoSort', 'configSearchFilter', 'configDeactivateResourceTypes']))
+            {
                 $value = unserialize(base64_decode($value));
                 // at some point in the past, incorrect values have crept in – remove them
-                if ($configName == 'configDeactivateResourceTypes') {
-                	$tempValue = [];
-                	foreach ($value as $key => $index) {
-                		if (!is_numeric($index)) {
-                			$tempValue[$key] = $index;
-                		}
-                	}
-                	$value = $tempValue;
+                if ($configName == 'configDeactivateResourceTypes')
+                {
+                    $tempValue = [];
+                    foreach ($value as $key => $index)
+                    {
+                        if (!is_numeric($index))
+                        {
+                            $tempValue[$key] = $index;
+                        }
+                    }
+                    $value = $tempValue;
                 }
-                if (!is_array($value)) {
+                if (!is_array($value))
+                {
                     $value = unserialize(base64_decode(constant($constName . "_DEFAULT")));
                 }
             }
             
             // Create the global constant
-            if (!defined($constName)) {
+            if (!defined($constName))
+            {
                 define($constName, $value);
             }
         }
@@ -260,11 +304,16 @@ class LOADCONFIG
      */
     private function getVars()
     {
-        if (!empty($_POST)) {
+        if (!empty($_POST))
+        {
             $vars = $_POST;
-        } elseif (!empty($_GET)) {
+        }
+        elseif (!empty($_GET))
+        {
             $vars = $_GET;
-        } else {
+        }
+        else
+        {
             return FALSE;
         }
 
@@ -272,8 +321,10 @@ class LOADCONFIG
 
         $cleanVars = array_map([$this, "stripHtmlTags"], $dirtyVars);
         
-        if (array_key_exists('action', $cleanVars) && ($cleanVars['action'] == 'noMenu' || $cleanVars['action'] == 'noSubMenu')) {
-            if (array_key_exists('method', $cleanVars)) {
+        if (array_key_exists('action', $cleanVars) && ($cleanVars['action'] == 'noMenu' || $cleanVars['action'] == 'noSubMenu'))
+        {
+            if (array_key_exists('method', $cleanVars))
+            {
                 $method = trim($cleanVars['method']);
                 $method = filter_var($method, FILTER_CALLBACK, ['options' => [$this, "filterMethod"]]);
                 $cleanVars['method'] = $method;
@@ -293,9 +344,12 @@ class LOADCONFIG
      */
     private function stripHtmlTags($element)
     {
-        if (is_array($element)) {
+        if (is_array($element))
+        {
             return array_map([$this, "stripHtmlTags"], $element);
-        } else {
+        }
+        else
+        {
             /*
             $search = array('@<script[^>]*?>.*?</script>@si',  // Strip out javascript
                '@<style[^>]*?>.*?</style>@siU',                // Strip style tags properly
@@ -308,7 +362,8 @@ class LOADCONFIG
                 '@<![\s\S]*?--[ \t\n\r]*>@u',       // Strip multi-line comments including CDATA
             ];
             $element = preg_replace($search, '', $element);
-            if (mb_strpos($element, '<p>') === 0) {
+            if (mb_strpos($element, '<p>') === 0)
+            {
                 $element = preg_replace('@<p>(.*)</p>@u', '$1', $element, 1);
             }
 

@@ -38,7 +38,8 @@ class QUARANTINE
     public function approve()
     {
         $this->gatekeep->init();
-        if (!array_key_exists('resourceId', $this->vars)) {
+        if (!array_key_exists('resourceId', $this->vars))
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $this->db->formatConditions(['resourcemiscId' => $this->vars['resourceId']]);
@@ -52,7 +53,8 @@ class QUARANTINE
     public function putInQuarantine()
     {
         $this->gatekeep->init();
-        if (!array_key_exists('resourceId', $this->vars)) {
+        if (!array_key_exists('resourceId', $this->vars))
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $this->db->formatConditions(['resourcemiscId' => $this->vars['resourceId']]);

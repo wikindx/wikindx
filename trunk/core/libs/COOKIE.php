@@ -28,7 +28,8 @@ class COOKIE
     public function __construct()
     {
         // whatever array cookie variables are in, we grab 'em.
-        if (isset($_COOKIE)) {
+        if (isset($_COOKIE))
+        {
             $this->cookieVars = &$_COOKIE;
         }
     }
@@ -62,24 +63,28 @@ class COOKIE
      */
     public function grabCookie()
     {
-        if (!array_key_exists($this->cookieName, $this->cookieVars)) {
+        if (!array_key_exists($this->cookieName, $this->cookieVars))
+        {
             return FALSE; // no cookie set
         }
 
         $cookieArray = unserialize(base64_decode($this->cookieVars[$this->cookieName]));
 
-        if (!array_key_exists('username', $cookieArray)) {
+        if (!array_key_exists('username', $cookieArray))
+        {
             return FALSE; // invalid cookie
         }
 
-        if (!$cookieArray['username']) {
+        if (!$cookieArray['username'])
+        {
             return FALSE; // invalid cookie
         }
 
         // Cookie set so check for valid username
         $db = FACTORY_DB::getInstance();
         $recordSet = $db->select('users', ['usersUsername', 'usersId', 'usersAdmin'], ['usersUsername' => $cookieArray['username']]);
-        if (!$db->numRows($recordSet)) {
+        if (!$db->numRows($recordSet))
+        {
             return FALSE;
         }
 

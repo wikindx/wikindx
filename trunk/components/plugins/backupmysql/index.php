@@ -56,14 +56,16 @@ class backupmysql_MODULE
         $this->session = FACTORY_SESSION::getInstance();
         $this->authorize = $this->config->authorize;
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        if ($menuInit) {
+        if ($menuInit)
+        {
             $this->makeMenu($this->config->menus);
 
             return; // Need do nothing more as this is simply menu initialisation.
         }
 
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->authorize))
+        { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
 
@@ -84,10 +86,12 @@ class backupmysql_MODULE
      */
     public function display($message = FALSE)
     {
-    	if ($message) {
+        if ($message)
+        {
             $pString = $message;
         }
-        else {
+        else
+        {
             $pString = '';
         }
         $pString .= HTML\tableStart('generalTable borderStyleSolid');
@@ -97,23 +101,27 @@ class backupmysql_MODULE
         $td .= FORM\formEnd();
         $pString .= HTML\td($td);
         $files = $this->listFiles();
-        if (!empty($files)) {
-        	$icons = FACTORY_LOADICONS::getInstance();
+        if (!empty($files))
+        {
+            $icons = FACTORY_LOADICONS::getInstance();
             $td = '';
-            foreach ($files as $fileName => $tStamp) {
+            foreach ($files as $fileName => $tStamp)
+            {
                 $td .= HTML\a("link", $fileName, "index.php?action=backupmysql_downloadFile" .
                 htmlentities("&filename=" . $fileName), "_blank") . BR . LF;
             }
             $pString .= HTML\td($td);
         }
-        if (!empty($files)) {
+        if (!empty($files))
+        {
             $td = HTML\td($this->deleteList(array_keys($files)));
             $pString .= HTML\td($td);
         }
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
-        if (!empty($files)) {
-        	$pString .= $this->renameInit($files);
+        if (!empty($files))
+        {
+            $pString .= $this->renameInit($files);
         }
         GLOBALS::addTplVar('content', $pString);
     }
@@ -125,42 +133,20 @@ class backupmysql_MODULE
         $dirName = self::DUMP_DIRECTORY;
         $filename = $this->vars['filename'];
         $filepath = $dirName . DIRECTORY_SEPARATOR . $filename;
-        if (file_exists($filepath)) {
+        if (file_exists($filepath))
+        {
             $type = 'application/x-sql+gzip';
             $size = filesize($filepath);
             $lastmodified = date(DateTime::RFC1123, filemtime($filepath));
             FILE\setHeaders($type, $size, $filename, $lastmodified);
             FILE\readfile_chunked($filepath);
-        } else {
+        }
+        else
+        {
             $this->badInput->closeType = 'closePopup';
             $this->badInput->close($this->errors->text("file", "missing"));
         }
         die;
-    }
-    /**
-    * Form for renaming file
-    */
-    private function renameInit($files)
-    {
-        foreach ($files as $file => $null) {
-            $fileArray[str_replace('.sql.gz', '', $file)] = $file;
-        }
-    	$pString = \FORM\formHeader('backupmysql_rename');
-        $pString .= \HTML\tableStart('generalTable borderStyleSolid');
-        $pString .= \HTML\trStart();
-        $pString .= \HTML\td(\FORM\selectFBoxValue($this->pluginmessages->text("rename"), "renameFiles", $fileArray, 10));
-        $pString .= \FORM\formEnd();
-        $pString .= \HTML\td($this->transferArrow());
-        $td = \HTML\tableStart();
-        $td .= \HTML\trStart();
-        $td .= \HTML\td(\HTML\div('fileDiv', $this->displayFile(TRUE)));
-        $td .= \HTML\trEnd();
-        $td .= \HTML\tableEnd();
-        $pString .= \HTML\td($td);
-        $pString .= \HTML\trEnd();
-        $pString .= \HTML\tableEnd();
-        \AJAX\loadJavascript();
-        return $pString;
     }
     /**
      * Display interface to edit filename
@@ -169,89 +155,95 @@ class backupmysql_MODULE
      */
     public function displayFile($initialDisplay = FALSE)
     {
-    	$file = '';
-        if (!$initialDisplay) {
+        $file = '';
+        if (!$initialDisplay)
+        {
             $file = $this->vars['ajaxReturn'];
             $this->session->setVar('backupmysql_oldFileName', $this->vars['ajaxReturn']);
         }
-        $hint = \HTML\aBrowse('green', '', $this->coremessages->text("hint", "hint"), '#', "", 
-        	htmlentities($this->pluginmessages->text("invalidChars")));
-        $pString = \FORM\textInput($this->pluginmessages->text("newFileName") . \HTML\span('*', 'required'),
+        $hint = \HTML\aBrowse(
+            'green',
+            '',
+            $this->coremessages->text("hint", "hint"),
+            '#',
+            "",
+            htmlentities($this->pluginmessages->text("invalidChars"))
+        );
+        $pString = \FORM\textInput(
+            $this->pluginmessages->text("newFileName") . \HTML\span('*', 'required'),
             'newFileName',
             $file,
             30,
             255
         ) . '.sql.gz' . BR . LF . $hint;
         $pString .= \HTML\p(\FORM\formSubmit($this->pluginmessages->text("rename")));
-        if ($initialDisplay) {
+        if ($initialDisplay)
+        {
             return $pString;
         }
-        if (is_array(error_get_last())) {
+        if (is_array(error_get_last()))
+        {
             // NB E_STRICT in PHP5 gives warning about use of GLOBALS below.  E_STRICT cannot be controlled through WIKINDX
             $error = error_get_last();
             $error = $error['message'];
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['ERROR' => $error]));
-        } else {
+        }
+        else
+        {
             GLOBALS::addTplVar('content', \AJAX\encode_jArray(['innerHTML' => "$pString"]));
         }
         FACTORY_CLOSERAW::getInstance();
     }
     /**
-     * transferArrow
-     *
-     * @return string
+     * Rename a file
      */
-    private function transferArrow()
-    {
-        $jScript = 'index.php?action=backupmysql_displayFile';
-        $jsonArray[] = [
-            'startFunction' => 'triggerFromSelect',
-            'script' => "$jScript",
-            'triggerField' => 'renameFiles',
-            'targetDiv' => 'fileDiv',
-        ];
-        $image = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
-        return $image;
-    }
-    /**
-    * Rename a file
-    */
     public function rename()
     {
-    	if (!array_key_exists('newFileName', $this->vars) 
-    		|| !$this->vars['newFileName'] || !$this->session->getVar('backupmysql_oldFileName')) {
+        if (!array_key_exists('newFileName', $this->vars)
+            || !$this->vars['newFileName'] || !$this->session->getVar('backupmysql_oldFileName'))
+        {
             $this->display($this->errors->text("inputError", "invalid"));
+
             return;
         }
         $oldFileName = self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $this->session->getVar('backupmysql_oldFileName') . '.sql.gz';
-    	$this->session->delVar('backupmysql_oldFileName');
-// Sanitize filename
-    	$file = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $this->vars['newFileName']);
-    	$file = mb_ereg_replace("([\.]{2,})", '', $file);
-    	if (!$file) {
+        $this->session->delVar('backupmysql_oldFileName');
+        // Sanitize filename
+        $file = mb_ereg_replace("([^\\w\\s\\d\\-_~,;\\[\\]\\(\\).])", '', $this->vars['newFileName']);
+        $file = mb_ereg_replace("([\\.]{2,})", '', $file);
+        if (!$file)
+        {
             $this->display($this->errors->text("inputError", "invalid"));
-            return;
-    	}
-        $newFileName = self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $file . '.sql.gz';
-        if (!rename($oldFileName, $newFileName)) {
-            $this->display(HTML\p($this->errors->text("file", "write", $newFileName)));
+
             return;
         }
-        else {
-	        $this->display(HTML\p($this->pluginmessages->text("renamed"), 'success'));
-	        return;
-	    }
+        $newFileName = self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $file . '.sql.gz';
+        if (!rename($oldFileName, $newFileName))
+        {
+            $this->display(HTML\p($this->errors->text("file", "write", $newFileName)));
+
+            return;
+        }
+        else
+        {
+            $this->display(HTML\p($this->pluginmessages->text("renamed"), 'success'));
+
+            return;
+        }
     }
     /**
      * Delete chosen files
      */
     public function delete()
     {
-        if (!array_key_exists('files', $this->vars)) {
+        if (!array_key_exists('files', $this->vars))
+        {
             $this->display($this->errors->text("inputError", "missing"));
+
             return;
         }
-        foreach ($this->vars['files'] as $file) {
+        foreach ($this->vars['files'] as $file)
+        {
             @unlink(self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $file);
         }
         $this->display(HTML\p($this->pluginmessages->text("deleted"), 'success'));
@@ -269,7 +261,8 @@ class backupmysql_MODULE
         ini_set('memory_limit', '-1');
         
         // Check the cache directory is writable
-        if (!is_writable(self::DUMP_DIRECTORY)) {
+        if (!is_writable(self::DUMP_DIRECTORY))
+        {
             $this->display(HTML\p($this->pluginmessages->text('noWrite', mb_substr(sprintf('%o', fileperms(self::DUMP_DIRECTORY)), -4)), 'error'));
 
             return;
@@ -304,15 +297,65 @@ class backupmysql_MODULE
         //Use GZip compression if using 'MSB_SAVE' or 'MSB_DOWNLOAD'?
         $use_gzip = TRUE;
 
-        if (!$backup_obj->Execute($task, $filename, $use_gzip)) {
+        if (!$backup_obj->Execute($task, $filename, $use_gzip))
+        {
             $output = HTML\p($backup_obj->error, 'error');
-        } else {
+        }
+        else
+        {
             $output = HTML\p('Operation Completed Successfully At: <strong>' . date('g:i:s A') . '</strong><em> ( Local Server Time )</em>', 'success');
         }
         $this->display($output);
 
         // Restore memory limit configuration
         ini_set('memory_limit', $memory_limit);
+    }
+    /**
+     * Form for renaming file
+     *
+     * @param mixed $files
+     */
+    private function renameInit($files)
+    {
+        foreach ($files as $file => $null)
+        {
+            $fileArray[str_replace('.sql.gz', '', $file)] = $file;
+        }
+        $pString = \FORM\formHeader('backupmysql_rename');
+        $pString .= \HTML\tableStart('generalTable borderStyleSolid');
+        $pString .= \HTML\trStart();
+        $pString .= \HTML\td(\FORM\selectFBoxValue($this->pluginmessages->text("rename"), "renameFiles", $fileArray, 10));
+        $pString .= \FORM\formEnd();
+        $pString .= \HTML\td($this->transferArrow());
+        $td = \HTML\tableStart();
+        $td .= \HTML\trStart();
+        $td .= \HTML\td(\HTML\div('fileDiv', $this->displayFile(TRUE)));
+        $td .= \HTML\trEnd();
+        $td .= \HTML\tableEnd();
+        $pString .= \HTML\td($td);
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\tableEnd();
+        \AJAX\loadJavascript();
+
+        return $pString;
+    }
+    /**
+     * transferArrow
+     *
+     * @return string
+     */
+    private function transferArrow()
+    {
+        $jScript = 'index.php?action=backupmysql_displayFile';
+        $jsonArray[] = [
+            'startFunction' => 'triggerFromSelect',
+            'script' => "$jScript",
+            'triggerField' => 'renameFiles',
+            'targetDiv' => 'fileDiv',
+        ];
+        $image = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
+
+        return $image;
     }
     /**
      * Make the menus
@@ -332,7 +375,8 @@ class backupmysql_MODULE
      */
     private function deleteList($files)
     {
-        foreach ($files as $file) {
+        foreach ($files as $file)
+        {
             $fileArray[$file] = $file;
         }
         $td = FORM\formHeader("backupmysql_delete");
@@ -352,7 +396,8 @@ class backupmysql_MODULE
     {
         $fileArray = [];
         
-        foreach (\FILE\fileInDirToArray(self::DUMP_DIRECTORY) as $file) {
+        foreach (\FILE\fileInDirToArray(self::DUMP_DIRECTORY) as $file)
+        {
             $fileArray[$file] = filemtime(self::DUMP_DIRECTORY . DIRECTORY_SEPARATOR . $file);
         }
 

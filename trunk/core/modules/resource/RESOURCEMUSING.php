@@ -47,18 +47,20 @@ class RESOURCEMUSING
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         if (!array_key_exists('resourceId', $this->vars) || !$this->vars['resourceId'] ||
-            !array_key_exists('method', $this->vars) || !$this->vars['method']) {
+            !array_key_exists('method', $this->vars) || !$this->vars['method'])
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $function = $this->vars['method'];
-        if (!method_exists($this, $function)) {
+        if (!method_exists($this, $function))
+        {
             $this->navigate->resource($this->vars['resourceId'], $this->errors->text("inputError", "invalid"));
         }
         $this->return = '&nbsp;&nbsp;' . \HTML\a(
-			$this->icons->getClass("edit"),
-			$this->icons->getHTML("Return"),
-			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['resourceId']
-		);
+            $this->icons->getClass("edit"),
+            $this->icons->getHTML("Return"),
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['resourceId']
+        );
     }
     /**
      * display the editing form
@@ -77,17 +79,19 @@ class RESOURCEMUSING
         $metadata['hidden'] = $pString;
         $page_start = $page_end = $db_paragraph = $db_section = $db_chapter = $text = $private = FALSE;
         $private = 'Y';
-        if (!empty($this->formData)) {
-        	$page_start = $this->formData['PageStart'];
-        	$page_end = $this->formData['PageEnd'];
-        	$db_paragraph = $this->formData['Paragraph'];
-        	$db_section = $this->formData['Section'];
-        	$db_chapter = $this->formData['Chapter'];
-        	$text = array_key_exists('Text', $this->formData) ? $this->formData['Text'] : FALSE;
-        	$private = $this->formData['private'];
+        if (!empty($this->formData))
+        {
+            $page_start = $this->formData['PageStart'];
+            $page_end = $this->formData['PageEnd'];
+            $db_paragraph = $this->formData['Paragraph'];
+            $db_section = $this->formData['Section'];
+            $db_chapter = $this->formData['Chapter'];
+            $text = array_key_exists('Text', $this->formData) ? $this->formData['Text'] : FALSE;
+            $private = $this->formData['private'];
         }
         // are we editing or adding?
-        elseif (array_key_exists('resourcemetadataId', $this->vars)) {
+        elseif (array_key_exists('resourcemetadataId', $this->vars))
+        {
             $hidden .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
             $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
             $recordset = $this->db->select(
@@ -142,10 +146,12 @@ class RESOURCEMUSING
         $this->db->formatConditions(['usergroupsusersUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->leftJoin('user_groups', 'usergroupsId', 'usergroupsusersGroupId');
         $recordset3 = $this->db->select('user_groups_users', ['usergroupsusersGroupId', 'usergroupsTitle']);
-        if ($this->db->numRows($recordset3)) {
+        if ($this->db->numRows($recordset3))
+        {
             $privateArray = ['Y' => $this->messages->text("resources", "private"),
                 'N' => $this->messages->text("resources", "public"), ];
-            while ($row = $this->db->fetchRow($recordset3)) {
+            while ($row = $this->db->fetchRow($recordset3))
+            {
                 $privateArray[$row['usergroupsusersGroupId']] =
                     $this->messages->text("resources", "availableToGroups", \HTML\dbToFormTidy($row['usergroupsTitle']));
             }
@@ -156,7 +162,9 @@ class RESOURCEMUSING
                 $private,
                 3
             );
-        } else {
+        }
+        else
+        {
             $privateArray = ['Y' => $this->messages->text("resources", "private"),
                 'N' => $this->messages->text("resources", "public"), ];
             $metadata['form']['private'] = \FORM\selectedBoxValue(
@@ -182,45 +190,57 @@ class RESOURCEMUSING
         $userId = $this->session->getVar("setup_UserId");
         $this->checkInput();
         // insert
-        if (!array_key_exists('resourcemetadataId', $this->vars)) {
+        if (!array_key_exists('resourcemetadataId', $this->vars))
+        {
             $message = $this->success->text("musingAdd");
             $fields[] = 'resourcemetadataResourceId';
             $values[] = \UTF8\mb_trim($this->vars['resourceId']);
-            if (array_key_exists('PageStart', $this->vars) && $this->vars['PageStart']) {
+            if (array_key_exists('PageStart', $this->vars) && $this->vars['PageStart'])
+            {
                 $fields[] = 'resourcemetadataPageStart';
                 $values[] = \UTF8\mb_trim(mb_strtolower($this->vars['PageStart']));
-                if (array_key_exists('PageEnd', $this->vars) && $this->vars['PageEnd']) {
+                if (array_key_exists('PageEnd', $this->vars) && $this->vars['PageEnd'])
+                {
                     $fields[] = 'resourcemetadataPageEnd';
                     $values[] = \UTF8\mb_trim(mb_strtolower($this->vars['PageEnd']));
                 }
             }
-            if (array_key_exists('Paragraph', $this->vars) && $this->vars['Paragraph']) {
+            if (array_key_exists('Paragraph', $this->vars) && $this->vars['Paragraph'])
+            {
                 $fields[] = 'resourcemetadataParagraph';
                 $values[] = trim(mb_strtolower($this->vars['Paragraph']));
             }
-            if (array_key_exists('Section', $this->vars) && $this->vars['Section']) {
+            if (array_key_exists('Section', $this->vars) && $this->vars['Section'])
+            {
                 $fields[] = 'resourcemetadataSection';
                 $values[] = trim(mb_strtolower($this->vars['Section']));
             }
-            if (array_key_exists('Chapter', $this->vars) && $this->vars['Chapter']) {
+            if (array_key_exists('Chapter', $this->vars) && $this->vars['Chapter'])
+            {
                 $fields[] = 'resourcemetadataChapter';
                 $values[] = trim(mb_strtolower($this->vars['Chapter']));
             }
             $fields[] = 'resourcemetadataText';
             $values[] = \UTF8\mb_trim($this->vars['Text']);
             $fields[] = 'resourcemetadataPrivate';
-            if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N')) {
+            if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N'))
+            {
                 $values[] = 'N';
-            } elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private']))) {
+            }
+            elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private'])))
+            {
                 $values[] = $this->vars['private'];
-            } else {
+            }
+            else
+            {
                 $values[] = 'Y';
             }
             $fields[] = 'resourcemetadataTimestamp';
             $values[] = $this->db->formatTimestamp();
             $fields[] = 'resourcemetadataType';
             $values[] = 'm';
-            if ($userId) {
+            if ($userId)
+            {
                 $fields[] = "resourcemetadataAddUserId";
                 $values[] = $userId;
             }
@@ -230,24 +250,33 @@ class RESOURCEMUSING
             $this->textqp->writeKeywords($lastAutoId, 'resourcekeywordMetadataId');
         }
         // else edit/delete?
-        else {
+        else
+        {
             // if musingText is empty, delete the row
-            if (!$this->vars['Text']) {
+            if (!$this->vars['Text'])
+            {
                 $message = $this->success->text("musingDelete");
                 $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                 $this->db->delete('resource_metadata');
                 $this->db->formatConditions(['resourcekeywordMetadataId' => $this->vars['resourcemetadataId']]);
                 $this->db->delete('resource_keyword');
                 $this->textqp->summary(-1, 'resourcesummaryMusings');
-            } else {
+            }
+            else
+            {
                 $message = $this->success->text("musingEdit");
                 $updateArray = [];
                 $updateArray['resourcemetadataText'] = \UTF8\mb_trim($this->vars['Text']);
-                if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N')) {
+                if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N'))
+                {
                     $updateArray['resourcemetadataPrivate'] = 'N';
-                } elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private']))) {
+                }
+                elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private'])))
+                {
                     $updateArray['resourcemetadataPrivate'] = $this->vars['private'];
-                } else {
+                }
+                else
+                {
                     $updateArray['resourcemetadataPrivate'] = 'Y';
                 }
                 $updateArray['resourcemetadataTimestamp'] = $this->db->formatTimestamp();
@@ -255,37 +284,54 @@ class RESOURCEMUSING
                 $this->db->update('resource_metadata', $updateArray);
                 $updateArray = $nulls = [];
                 // page number lowercased in case roman numerals input!
-                if (array_key_exists('PageStart', $this->vars) && $this->vars['PageStart']) {
+                if (array_key_exists('PageStart', $this->vars) && $this->vars['PageStart'])
+                {
                     $updateArray['resourcemetadataPageStart'] = trim(mb_strtolower($this->vars['PageStart']));
-                    if (array_key_exists('PageEnd', $this->vars) && $this->vars['PageEnd']) {
+                    if (array_key_exists('PageEnd', $this->vars) && $this->vars['PageEnd'])
+                    {
                         $updateArray['resourcemetadataPageEnd'] = trim(mb_strtolower($this->vars['PageEnd']));
-                    } else {
+                    }
+                    else
+                    {
                         $nulls[] = 'resourcemetadataPageEnd';
                     }
-                } else {
+                }
+                else
+                {
                     $nulls[] = 'resourcemetadataPageStart';
                     $nulls[] = 'resourcemetadataPageEnd';
                 }
-                if (array_key_exists('Paragraph', $this->vars) && $this->vars['Paragraph']) {
+                if (array_key_exists('Paragraph', $this->vars) && $this->vars['Paragraph'])
+                {
                     $updateArray['resourcemetadataParagraph'] = \UTF8\mb_trim($this->vars['Paragraph']);
-                } else {
+                }
+                else
+                {
                     $nulls[] = 'resourcemetadataParagraph';
                 }
-                if (array_key_exists('Section', $this->vars) && $this->vars['Section']) {
+                if (array_key_exists('Section', $this->vars) && $this->vars['Section'])
+                {
                     $updateArray['resourcemetadataSection'] = \UTF8\mb_trim($this->vars['Section']);
-                } else {
+                }
+                else
+                {
                     $nulls[] = 'resourcemetadataSection';
                 }
-                if (array_key_exists('Chapter', $this->vars) && $this->vars['Chapter']) {
+                if (array_key_exists('Chapter', $this->vars) && $this->vars['Chapter'])
+                {
                     $updateArray['resourcemetadataChapter'] = \UTF8\mb_trim($this->vars['Chapter']);
-                } else {
+                }
+                else
+                {
                     $nulls[] = 'resourcemetadataChapter';
                 }
-                if (!empty($updateArray)) {
+                if (!empty($updateArray))
+                {
                     $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                     $this->db->update('resource_metadata', $updateArray);
                 }
-                if (!empty($nulls)) {
+                if (!empty($nulls))
+                {
                     $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                     $this->db->updateNull('resource_metadata', $nulls);
                 }
@@ -297,7 +343,8 @@ class RESOURCEMUSING
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
-        if (!$emailClass->notify($this->vars['resourceId'])) {
+        if (!$emailClass->notify($this->vars['resourceId']))
+        {
             $message = $this->errors->text("inputError", "mail", GLOBALS::getError());
         }
         // send back to view this resource with success message
@@ -319,18 +366,18 @@ class RESOURCEMUSING
     }
     /**
      * Delete the musing and all peripheral data
-     *
      */
     public function delete()
     {
-        if (!array_key_exists('resourcemetadataId', $this->vars)) {
-    		$this->badInput->close($this->errors->text("inputError", "missing"));
-    	}
-		$this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
-		$this->db->delete('resource_metadata');
-		$this->db->formatConditions(['resourcekeywordMetadataId' => $this->vars['resourcemetadataId']]);
-		$this->db->delete('resource_keyword');
-		$this->textqp->summary(-1, 'resourcesummaryMusings');
+        if (!array_key_exists('resourcemetadataId', $this->vars))
+        {
+            $this->badInput->close($this->errors->text("inputError", "missing"));
+        }
+        $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
+        $this->db->delete('resource_metadata');
+        $this->db->formatConditions(['resourcekeywordMetadataId' => $this->vars['resourcemetadataId']]);
+        $this->db->delete('resource_keyword');
+        $this->textqp->summary(-1, 'resourcesummaryMusings');
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
         // send back to view this resource with success message
@@ -338,30 +385,35 @@ class RESOURCEMUSING
     }
     /**
      * Check we have appropriate input.
-     *
      */
     private function checkInput()
     {
-    	$error = '';
-    	if (!array_key_exists('resourceId', $this->vars) || !$this->vars['resourceId']) {
+        $error = '';
+        if (!array_key_exists('resourceId', $this->vars) || !$this->vars['resourceId'])
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-    	$this->formData['PageStart'] = \UTF8\mb_trim($this->vars['PageStart']);
+        $this->formData['PageStart'] = \UTF8\mb_trim($this->vars['PageStart']);
         $this->formData['PageEnd'] = \UTF8\mb_trim($this->vars['PageEnd']);
         $this->formData['Paragraph'] = \UTF8\mb_trim($this->vars['Paragraph']);
         $this->formData['Section'] = \UTF8\mb_trim($this->vars['Section']);
         $this->formData['Chapter'] = \UTF8\mb_trim($this->vars['Chapter']);
         $this->formData['keywords'] = \UTF8\mb_trim($this->vars['keywords']);
         $this->formData['private'] = $this->vars['private'];
-        if (array_key_exists('resourcemetadataId', $this->vars)) { // Editing
-	        $this->formData['resourcemetadataId'] = $this->vars['resourcemetadataId'];
-        } elseif (array_key_exists('Text', $this->vars) && \UTF8\mb_trim($this->vars['Text'])) { // Inserting
-        	$this->formData['Text'] = \UTF8\mb_trim($this->vars['Text']);
-		}
-		else {
-			$error = $this->errors->text("inputError", "missing");
-		}
-		if ($error) {
+        if (array_key_exists('resourcemetadataId', $this->vars))
+        { // Editing
+            $this->formData['resourcemetadataId'] = $this->vars['resourcemetadataId'];
+        }
+        elseif (array_key_exists('Text', $this->vars) && \UTF8\mb_trim($this->vars['Text']))
+        { // Inserting
+            $this->formData['Text'] = \UTF8\mb_trim($this->vars['Text']);
+        }
+        else
+        {
+            $error = $this->errors->text("inputError", "missing");
+        }
+        if ($error)
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'musingEdit');
         }
     }

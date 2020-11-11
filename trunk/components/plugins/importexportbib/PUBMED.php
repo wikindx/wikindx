@@ -43,7 +43,8 @@ class PUBMED
         $this->pluginmessages = new PLUGINMESSAGES('importexportbib', 'importexportbibMessages');
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->configImport = new importexportbib_IMPORTCONFIG();
-        if (!$this->configImport->bibutilsPath) {
+        if (!$this->configImport->bibutilsPath)
+        {
             $this->configImport->bibutilsPath = '/usr/local/bin/'; // default *NIX location
         }
         $this->session = FACTORY_SESSION::getInstance();
@@ -111,7 +112,8 @@ class PUBMED
         $pString .= \HTML\tableEnd();
         $input = array_key_exists('importpubMed_MaxResults', $this->formData) ? $this->formData['importpubMed_MaxResults'] : 100; // default == 100
         $limit = FORM\textInput($this->pluginmessages->text('importPubMedMaxResults'), "importpubMed_MaxResults", $input, 3, 3);
-        if (file_exists($this->configImport->bibutilsPath . 'xml2bib')) {
+        if (file_exists($this->configImport->bibutilsPath . 'xml2bib'))
+        {
             $jScript = 'index.php?action=importexportbib_initPubMedImport&method=wikindx';
             $jsonArray[] = [
                 'startFunction' => 'toggleVisibilityFromCheckbox',
@@ -123,8 +125,8 @@ class PUBMED
             $pString .= FORM\checkbox($this->pluginmessages->text('importPubMedWikindx'), "importpubMed_Wikindx", FALSE, '', $js);
             $pString .= HTML\div('wikindxImport', '&nbsp;') . BR;
         }
-        $pString .= $limit . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . 
-        	FORM\formSubmit($this->coremessages->text("submit", "Submit"));
+        $pString .= $limit . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' .
+            FORM\formSubmit($this->coremessages->text("submit", "Submit"));
         $pString .= FORM\formEnd();
         // Load at end because .js initialization needs various DIVs to be in the page before they are made invisible
         AJAX\loadJavascript();
@@ -143,79 +145,111 @@ class PUBMED
         $coremessages = FACTORY_MESSAGES::getInstance();
         $tag = FACTORY_TAG::getInstance();
         $category = FACTORY_CATEGORY::getInstance();
-		$db = FACTORY_DB::getInstance();
-		$session = FACTORY_SESSION::getInstance();
-		$uuid = $session->getVar('import_Uuid');
-		$session->delVar('import_Uuid');
-		$formData = \TEMPSTORAGE\fetch($db, $uuid);
-		\TEMPSTORAGE\delete($db, $uuid);
+        $db = FACTORY_DB::getInstance();
+        $session = FACTORY_SESSION::getInstance();
+        $uuid = $session->getVar('import_Uuid');
+        $session->delVar('import_Uuid');
+        $formData = \TEMPSTORAGE\fetch($db, $uuid);
+        \TEMPSTORAGE\delete($db, $uuid);
         $categories = $category->grabAll();
         $pString = '';
-        if (count($categories) > 1) {
+        if (count($categories) > 1)
+        {
             $pString .= HTML\p($coremessages->text("import", "categoryPrompt"));
         }
         $pString .= HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= HTML\trStart();
         // Load tags
         $tags = $tag->grabAll();
-        $input = is_array($formData) && array_key_exists("import_Tag", $formData) ? $formData["import_Tag"] : FALSE; 
+        $input = is_array($formData) && array_key_exists("import_Tag", $formData) ? $formData["import_Tag"] : FALSE;
         $tagInput = FORM\textInput($coremessages->text("import", "tag"), "import_Tag", $input, 30, 255);
-        if ($tags) {
+        if ($tags)
+        {
             // add 0 => IGNORE to tags array
             $temp[0] = $coremessages->text("misc", "ignore");
-            foreach ($tags as $key => $value) {
+            foreach ($tags as $key => $value)
+            {
                 $temp[$key] = $value;
             }
             $tags = $temp;
-            if (is_array($formData) && array_key_exists("import_TagId", $formData)) {
+            if (is_array($formData) && array_key_exists("import_TagId", $formData))
+            {
                 $element = FORM\selectedBoxValue(FALSE, 'import_TagId', $tags, $formData["import_TagId"], 5);
-            } else {
+            }
+            else
+            {
                 $element = FORM\selectFBoxValue(FALSE, 'import_TagId', $tags, 5);
             }
             $pString .= HTML\td($tagInput . '&nbsp;&nbsp;' . $element);
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td($tagInput);
         }
         $categoryTd = FALSE;
-        if (count($categories) > 1) {
-            if (is_array($formData) && array_key_exists("import_Categories", $formData)) {
+        if (count($categories) > 1)
+        {
+            if (is_array($formData) && array_key_exists("import_Categories", $formData))
+            {
                 $element = FORM\selectedBoxValueMultiple($coremessages->text(
                     "import",
                     "category"
                 ), 'import_Categories', $categories, $formData['import_Categories'], 5);
-            } else {
+            }
+            else
+            {
                 $element = FORM\selectFBoxValueMultiple($coremessages->text(
                     "import",
                     "category"
                 ), 'import_Categories', $categories, 5);
             }
-            $pString .= HTML\td($element . BR . \HTML\span(\HTML\aBrowse('green', '', $coremessages->text("hint", "hint"), '#', "", 
-            	$coremessages->text("hint", "multiples")), 'hint'));
+            $pString .= HTML\td($element . BR . \HTML\span(\HTML\aBrowse(
+                'green',
+                '',
+                $coremessages->text("hint", "hint"),
+                '#',
+                "",
+                $coremessages->text("hint", "multiples")
+            ), 'hint'));
             $categoryTd = TRUE;
         }
-        if ($bibs = $importCommon->bibliographySelect($formData)) {
-            $pString .= HTML\td($bibs . BR . \HTML\span(\HTML\aBrowse('green', '', $coremessages->text("hint", "hint"), '#', "", 
-            	$coremessages->text("hint", "multiples")), 'hint'), FALSE, "left", "bottom");
+        if ($bibs = $importCommon->bibliographySelect($formData))
+        {
+            $pString .= HTML\td($bibs . BR . \HTML\span(\HTML\aBrowse(
+                'green',
+                '',
+                $coremessages->text("hint", "hint"),
+                '#',
+                "",
+                $coremessages->text("hint", "multiples")
+            ), 'hint'), FALSE, "left", "bottom");
         }
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
         $pString .= HTML\tableStart('generalTable borderStyleSolid');
         $checked = is_array($formData) && array_key_exists("import_Quarantine", $formData) ? TRUE : FALSE;
         $td = $coremessages->text("import", "quarantine") . "&nbsp;&nbsp;" .
-        	\FORM\checkbox(FALSE, "import_Quarantine", $checked);
+            \FORM\checkbox(FALSE, "import_Quarantine", $checked);
         $checked = is_array($formData) && array_key_exists("import_ImportDuplicates", $formData) ? TRUE : FALSE;
-        $td .= \HTML\p($coremessages->text("import", "importDuplicates") . 
-        	"&nbsp;&nbsp;" . \FORM\checkbox(FALSE, 'import_ImportDuplicates', $checked));
+        $td .= \HTML\p($coremessages->text("import", "importDuplicates") .
+            "&nbsp;&nbsp;" . \FORM\checkbox(FALSE, 'import_ImportDuplicates', $checked));
         $checked = is_array($formData) && array_key_exists("import_Raw", $formData) ? TRUE : FALSE;
         $td .= \HTML\p($coremessages->text("import", "storeRawLabel") . "&nbsp;&nbsp;" .
             \FORM\checkbox(FALSE, 'import_Raw', $checked) . BR .
-                \HTML\span(\HTML\aBrowse('green', '', $coremessages->text("hint", "hint"), '#', "", 
-            	$coremessages->text("hint", "storeRawBibtex")), 'hint'));
+                \HTML\span(\HTML\aBrowse(
+                    'green',
+                    '',
+                    $coremessages->text("hint", "hint"),
+                    '#',
+                    "",
+                    $coremessages->text("hint", "storeRawBibtex")
+                ), 'hint'));
         $pString .= \HTML\td($td);
         $pString .= HTML\td($importCommon->keywordSeparator($formData));
         $pString .= HTML\td($importCommon->titleSubtitleSeparator($formData));
         $pString .= HTML\trEnd();
         $pString .= HTML\tableEnd();
+
         return HTML\div('wikindxImport', $pString);
     }
     /*
@@ -223,17 +257,19 @@ class PUBMED
      */
     public function processPubMed()
     {
-        if (array_key_exists('importpubMed_Wikindx', $this->vars)) {
+        if (array_key_exists('importpubMed_Wikindx', $this->vars))
+        {
             $this->storeImport();
         }
         $this->validateInput();
         $pString = $this->fetch();
-        if (!array_key_exists('importpubMed_Wikindx', $this->vars)) {
-        	$db = FACTORY_DB::getInstance();
-        	$uuid = \TEMPSTORAGE\getUuid($db);
-	        \TEMPSTORAGE\store($db, $uuid, ['message' => $pString]);
-			header("Location: index.php?action=importexportbib_listFiles&uuid=$uuid");
-			die;
+        if (!array_key_exists('importpubMed_Wikindx', $this->vars))
+        {
+            $db = FACTORY_DB::getInstance();
+            $uuid = \TEMPSTORAGE\getUuid($db);
+            \TEMPSTORAGE\store($db, $uuid, ['message' => $pString]);
+            header("Location: index.php?action=importexportbib_listFiles&uuid=$uuid");
+            die;
         }
     }
     /*
@@ -244,61 +280,81 @@ class PUBMED
     private function fetch()
     {
         // Grab via Pubmed IDs - can be multiple
-        if (array_key_exists('importpubMed_ID', $this->vars) && (preg_match("/\\d/u", $this->vars['importpubMed_ID']))) {
+        if (array_key_exists('importpubMed_ID', $this->vars) && (preg_match("/\\d/u", $this->vars['importpubMed_ID'])))
+        {
             $pmid = preg_replace("/\\s+/u", ",", trim($this->vars['importpubMed_ID']));
             $array = $this->pubmed_fetch($pmid);
-            if (!empty($array)) {
+            if (!empty($array))
+            {
                 $xml_data[] = $array;
 
                 $actualCount = mb_substr_count($pmid, ',') + 1;
-            } else {
+            }
+            else
+            {
                 $actualCount = 0;
             }
         }
         // Grab multiple results (i.e. not searching by single ID)
-        else {
+        else
+        {
             $term_array = [];
             $modifier = "";
-            if (array_key_exists('importpubMed_ALL', $this->vars) && (mb_strlen($this->vars['importpubMed_ALL']) > 0)) {
+            if (array_key_exists('importpubMed_ALL', $this->vars) && (mb_strlen($this->vars['importpubMed_ALL']) > 0))
+            {
                 $term_array[] = preg_replace("/\\s+/u", "+", trim($this->vars['importpubMed_ALL'])) . "[ALL]";
             }
-            if (array_key_exists('importpubMed_AU', $this->vars) && (mb_strlen($this->vars['importpubMed_AU']) > 0)) {
+            if (array_key_exists('importpubMed_AU', $this->vars) && (mb_strlen($this->vars['importpubMed_AU']) > 0))
+            {
                 $term_array[] = preg_replace("/\\s+/u", "+", trim($this->vars['importpubMed_AU'])) . "[AU]";
             }
-            if (array_key_exists('importpubMed_1AU', $this->vars) && (mb_strlen($this->vars['importpubMed_1AU']) > 0)) {
+            if (array_key_exists('importpubMed_1AU', $this->vars) && (mb_strlen($this->vars['importpubMed_1AU']) > 0))
+            {
                 $term_array[] = preg_replace("/\\s+/u", "+", trim($this->vars['importpubMed_1AU'])) . "[1AU]";
             }
-            if (array_key_exists('importpubMed_LASTAU', $this->vars) && (mb_strlen($this->vars['importpubMed_LASTAU']) > 0)) {
+            if (array_key_exists('importpubMed_LASTAU', $this->vars) && (mb_strlen($this->vars['importpubMed_LASTAU']) > 0))
+            {
                 $term_array[] = preg_replace("/\\s+/u", "+", trim($this->vars['importpubMed_LASTAU'])) . "[LASTAU]";
             }
-            if (array_key_exists('importpubMed_TI', $this->vars) && (mb_strlen($this->vars['importpubMed_TI']) > 0)) {
+            if (array_key_exists('importpubMed_TI', $this->vars) && (mb_strlen($this->vars['importpubMed_TI']) > 0))
+            {
                 $term_array[] = preg_replace("/\\s+/u", "+", trim($this->vars['importpubMed_TI'])) . "[TI]";
             }
-            if (array_key_exists('importpubMed_TIAB', $this->vars) && (mb_strlen($this->vars['importpubMed_TIAB']) > 0)) {
+            if (array_key_exists('importpubMed_TIAB', $this->vars) && (mb_strlen($this->vars['importpubMed_TIAB']) > 0))
+            {
                 $term_array[] = preg_replace("/\\s+/u", "+", trim($this->vars['importpubMed_TIAB'])) . "[TIAB]";
             }
-            if (array_key_exists('importpubMed_DP', $this->vars) && (mb_strlen($this->vars['importpubMed_DP']) > 0)) {
+            if (array_key_exists('importpubMed_DP', $this->vars) && (mb_strlen($this->vars['importpubMed_DP']) > 0))
+            {
                 $term_array[] = preg_replace("/\\s+/u", "+", trim($this->vars['importpubMed_DP'])) . "[DP]";
             }
-            if (array_key_exists('importpubMed_TA', $this->vars) && (mb_strlen($this->vars['importpubMed_TA']) > 0)) {
+            if (array_key_exists('importpubMed_TA', $this->vars) && (mb_strlen($this->vars['importpubMed_TA']) > 0))
+            {
                 $term_array[] = preg_replace("/\\s+/u", "+", trim($this->vars['importpubMed_TA'])) . "[TA]";
             }
-            if (array_key_exists('importpubMed_VI', $this->vars) && (mb_strlen($this->vars['importpubMed_VI']) > 0)) {
+            if (array_key_exists('importpubMed_VI', $this->vars) && (mb_strlen($this->vars['importpubMed_VI']) > 0))
+            {
                 $term_array[] = preg_replace("/\\s+/u", "+", trim($this->vars['importpubMed_VI'])) . "[VI]";
             }
-            if (array_key_exists('importpubMed_IP', $this->vars) && (mb_strlen($this->vars['importpubMed_IP']) > 0)) {
+            if (array_key_exists('importpubMed_IP', $this->vars) && (mb_strlen($this->vars['importpubMed_IP']) > 0))
+            {
                 $term_array[] = preg_replace("/\\s+/u", "+", trim($this->vars['importpubMed_IP'])) . "[IP]";
             }
-            if (array_key_exists('importpubMed_LA', $this->vars) && (mb_strlen($this->vars['importpubMed_LA']) > 0)) {
+            if (array_key_exists('importpubMed_LA', $this->vars) && (mb_strlen($this->vars['importpubMed_LA']) > 0))
+            {
                 $term_array[] = preg_replace("/\\s+/u", "+", trim($this->vars['importpubMed_LA'])) . "[LA]";
             }
-            if (array_key_exists('importpubMed_reldate', $this->vars) && (is_numeric(trim($this->vars['importpubMed_reldate'])))) {
+            if (array_key_exists('importpubMed_reldate', $this->vars) && (is_numeric(trim($this->vars['importpubMed_reldate']))))
+            {
                 $modifier .= "&reldate=" . ($this->vars['importpubMed_reldate']);
             }
-            if (array_key_exists('importpubMed_MaxResults', $this->vars)) {
+            if (array_key_exists('importpubMed_MaxResults', $this->vars))
+            {
                 $this->maxResults = trim($this->vars['importpubMed_MaxResults']);
                 $this->maxResults = $this->maxResults == 1 ? 2 : $this->maxResults; // Avoids a bug when fetching a single result.
-            } else {
+            }
+            else
+            {
                 $this->maxResults = 100;
             }
             // Max 100 returns per NCBI's request- see https://www.ncbi.nlm.nih.gov/books/NBK25501/
@@ -307,26 +363,33 @@ class PUBMED
             $url .= implode("+", $term_array);
             $lines = file($url);
             $ids = [];
-            foreach ($lines as $line) {
+            foreach ($lines as $line)
+            {
                 preg_match("/<Id>(\\d+)<\\/Id>/ui", $line, $matches);
-                if (isset($matches[1])) {
+                if (isset($matches[1]))
+                {
                     $ids[] = $matches[1];
                 }
             }
             $xml_data = $this->pubmed_fetch_multiple($ids);
             $actualCount = count($xml_data);
         }
-        if ($actualCount == 0) {
+        if ($actualCount == 0)
+        {
             $this->badInput(HTML\p($this->pluginmessages->text('importPubMedNoResults'), 'error'));
         }
         $fileName = \UTILS\uuid();
         $bibFile = $fileName . '.bib';
         $pubmed_bib_path = $this->filesDir . $bibFile;
         $pubmed_pre_xml_path = $this->filesDir . $fileName . ".med";
-        if ($pubmed_output_handle = fopen($pubmed_pre_xml_path, "w+")) {
-            for ($i = 0; $i < $actualCount; $i++) {
-                if (count($xml_data[$i]) > 0) {
-                    foreach ($xml_data[$i] as $line) {
+        if ($pubmed_output_handle = fopen($pubmed_pre_xml_path, "w+"))
+        {
+            for ($i = 0; $i < $actualCount; $i++)
+            {
+                if (count($xml_data[$i]) > 0)
+                {
+                    foreach ($xml_data[$i] as $line)
+                    {
                         fwrite($pubmed_output_handle, $line);
                     }
                 }
@@ -345,14 +408,17 @@ class PUBMED
         $result = $actualCount > 1 ? $this->pluginmessages->text('importPubMedResults') : $this->pluginmessages->text('importPubMedResult');
         $pString = $this->pluginmessages->text('importPubMedSuccess', $actualCount) . " $result:&nbsp;&nbsp;";
         // for importing into BIBTEXIMPORT.php
-        if (array_key_exists('importpubMed_Wikindx', $this->vars)) {
+        if (array_key_exists('importpubMed_Wikindx', $this->vars))
+        {
             GLOBALS::setTplVar('heading', $this->coremessages->text("heading", "bibtexImport"));
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "import", "IMPORTBIBTEX.php"]));
             $obj = new IMPORTBIBTEX();
             $obj->importFile = $bibFile;
             $obj->type = 'file';
             $pString = $obj->stage1(TRUE);
-        } else {
+        }
+        else
+        {
             $pString = HTML\p($pString .
                 HTML\a("link", $this->pluginmessages->text('importPubMedOutputFile'), $this->filesUrl . $bibFile, "_blank"), 'success');
         }
@@ -368,9 +434,12 @@ class PUBMED
     private function process($command, $inputFile)
     {
         $cmd = $this->configImport->bibutilsPath . $command;
-        if (getenv("OS") == "Windows_NT") {
+        if (getenv("OS") == "Windows_NT")
+        {
             $this->win_execute($cmd, $inputFile);
-        } elseif (exec($cmd, $output, $returnVar) === FALSE) {
+        }
+        elseif (exec($cmd, $output, $returnVar) === FALSE)
+        {
             @unlink($inputFile);
             $this->badInput(HTML\p($this->pluginmessages->text('importPubMedFailConvert', $returnVar), 'error'));
         }
@@ -390,7 +459,8 @@ class PUBMED
         // Make a new instance of the COM object
         $WshShell = new COM("WScript.Shell") or die("Failed to instantiate COM");
         // Make the command window but dont show it.
-        if ($oExec = $WshShell->Run($cmdline, 0, TRUE)) {
+        if ($oExec = $WshShell->Run($cmdline, 0, TRUE))
+        {
             @unlink($inputFile);
             $this->badInput(HTML\p($this->pluginmessages->text('importPubMedFailConvert', $oExec), 'error'));
         }
@@ -405,8 +475,10 @@ class PUBMED
     private function pubmed_fetch($id)
     {
         $pubmed_file = file("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=$id");
-        foreach ($pubmed_file as $line) {
-            if (mb_strpos($line, "Empty id list - nothing todo") !== FALSE) {
+        foreach ($pubmed_file as $line)
+        {
+            if (mb_strpos($line, "Empty id list - nothing todo") !== FALSE)
+            {
                 return [];
             }
         }
@@ -424,21 +496,28 @@ class PUBMED
     {
         $idString = implode(',', $ids);
         $pubmed_file = file("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&id=$idString");
-        if (count($ids) == 1) { // Only one result possible.
+        if (count($ids) == 1)
+        { // Only one result possible.
             return($pubmed_file);
         }
         $xml_data = [];
         $startArticle = FALSE;
-        foreach ($pubmed_file as $line) {
-            if (!$startArticle && (mb_strpos($line, "<PubmedArticle>") !== FALSE)) { // article not yet open -- this marks start
+        foreach ($pubmed_file as $line)
+        {
+            if (!$startArticle && (mb_strpos($line, "<PubmedArticle>") !== FALSE))
+            { // article not yet open -- this marks start
                 $array = [];
                 $array[] = $line;
                 $startArticle = TRUE;
-            } elseif ($startArticle && (mb_strpos($line, "</PubmedArticle>") !== FALSE)) { // article opened -- search for closure
+            }
+            elseif ($startArticle && (mb_strpos($line, "</PubmedArticle>") !== FALSE))
+            { // article opened -- search for closure
                 $array[] = $line;
                 $xml_data[] = $array;
                 $startArticle = FALSE;
-            } elseif ($startArticle) { // Article open
+            }
+            elseif ($startArticle)
+            { // Article open
                 $array[] = $line;
             }
             // else -- discard everything else
@@ -451,44 +530,58 @@ class PUBMED
      */
     private function storeImport()
     {
-    	$formData = [];
-    	// a multiple select box so handle as array
-        if (array_key_exists('import_Categories', $this->vars) && $this->vars['import_Categories']) {
+        $formData = [];
+        // a multiple select box so handle as array
+        if (array_key_exists('import_Categories', $this->vars) && $this->vars['import_Categories'])
+        {
             $formData["import_Categories"] = $this->vars['import_Categories'];
-        } else { // force to 'General'
-        	$formData["import_Categories"] = [1];
+        }
+        else
+        { // force to 'General'
+            $formData["import_Categories"] = [1];
         }
         // a multiple select box so handle as array
-        if (array_key_exists('import_BibId', $this->vars) && $this->vars['import_BibId']) {
+        if (array_key_exists('import_BibId', $this->vars) && $this->vars['import_BibId'])
+        {
             $formData["import_BibId"] = $this->vars['import_BibId'];
         }
-        if (array_key_exists('import_Raw', $this->vars) && $this->vars['import_Raw']) {
+        if (array_key_exists('import_Raw', $this->vars) && $this->vars['import_Raw'])
+        {
             $formData["import_Raw"] = $this->vars['import_Raw'];
         }
-        if (array_key_exists('import_KeywordIgnore', $this->vars)) {
-        	$formData["import_KeywordIgnore"] = $this->vars['import_KeywordIgnore'];
+        if (array_key_exists('import_KeywordIgnore', $this->vars))
+        {
+            $formData["import_KeywordIgnore"] = $this->vars['import_KeywordIgnore'];
         }
-        if (array_key_exists('import_ImportDuplicates', $this->vars)) {
-        	$formData["import_ImportDuplicates"] = $this->vars['import_ImportDuplicates'];
+        if (array_key_exists('import_ImportDuplicates', $this->vars))
+        {
+            $formData["import_ImportDuplicates"] = $this->vars['import_ImportDuplicates'];
         }
-        if (array_key_exists('import_Quarantine', $this->vars)) {
-        	$formData["import_Quarantine"] = $this->vars['import_Quarantine'];
+        if (array_key_exists('import_Quarantine', $this->vars))
+        {
+            $formData["import_Quarantine"] = $this->vars['import_Quarantine'];
         }
         $formData["import_KeywordSeparator"] = $this->vars['import_KeywordSeparator'];
         $formData["import_TitleSubtitleSeparator"] = $this->vars['import_TitleSubtitleSeparator'];
-		if ($this->vars['import_Tag']) {
-			if ($tagId = $this->tag->checkExists(trim($this->vars['import_Tag']))) { // Existing tag found
-				$formData['import_TagId'] = $tagId;
-			} else {
-				$formData['import_Tag'] = trim($this->vars['import_Tag']);
-			}
-		} elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId']) {
-			$formData['import_TagId'] = $this->vars['import_TagId'];
-		}
-		$db = FACTORY_DB::getInstance();
-		$uuid = \TEMPSTORAGE\getUuid($db);
-		\TEMPSTORAGE\store($db, $uuid, $formData);
-		$this->session->setVar('import_Uuid', $uuid);
+        if ($this->vars['import_Tag'])
+        {
+            if ($tagId = $this->tag->checkExists(trim($this->vars['import_Tag'])))
+            { // Existing tag found
+                $formData['import_TagId'] = $tagId;
+            }
+            else
+            {
+                $formData['import_Tag'] = trim($this->vars['import_Tag']);
+            }
+        }
+        elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId'])
+        {
+            $formData['import_TagId'] = $this->vars['import_TagId'];
+        }
+        $db = FACTORY_DB::getInstance();
+        $uuid = \TEMPSTORAGE\getUuid($db);
+        \TEMPSTORAGE\store($db, $uuid, $formData);
+        $this->session->setVar('import_Uuid', $uuid);
     }
     /*
      * validate and store input in session
@@ -498,72 +591,91 @@ class PUBMED
     private function validateInput()
     {
         $inputFound = FALSE;
-        if (array_key_exists('importpubMed_ID', $this->vars) && preg_match("/\\d/u", $this->vars['importpubMed_ID'])) {
+        if (array_key_exists('importpubMed_ID', $this->vars) && preg_match("/\\d/u", $this->vars['importpubMed_ID']))
+        {
             $inputFound = TRUE;
             $this->formData['importpubMed_ID'] = trim($this->vars['importpubMed_ID']);
         }
-        if (array_key_exists('importpubMed_ALL', $this->vars) && (mb_strlen($this->vars['importpubMed_ALL']) !== 0)) {
+        if (array_key_exists('importpubMed_ALL', $this->vars) && (mb_strlen($this->vars['importpubMed_ALL']) !== 0))
+        {
             $inputFound = TRUE;
             $this->formData['importpubMed_ALL'] = trim($this->vars['importpubMed_ALL']);
         }
-        if (array_key_exists('importpubMed_AU', $this->vars) && (mb_strlen($this->vars['importpubMed_AU']) !== 0)) {
+        if (array_key_exists('importpubMed_AU', $this->vars) && (mb_strlen($this->vars['importpubMed_AU']) !== 0))
+        {
             $inputFound = TRUE;
             $this->formData['importpubMed_AU'] = trim($this->vars['importpubMed_AU']);
         }
-        if (array_key_exists('importpubMed_1AU', $this->vars) && (mb_strlen($this->vars['importpubMed_1AU']) !== 0)) {
+        if (array_key_exists('importpubMed_1AU', $this->vars) && (mb_strlen($this->vars['importpubMed_1AU']) !== 0))
+        {
             $inputFound = TRUE;
             $this->formData['importpubMed_1AU'] = trim($this->vars['importpubMed_1AU']);
         }
-        if (array_key_exists('importpubMed_LASTAU', $this->vars) && (mb_strlen($this->vars['importpubMed_LASTAU']) !== 0)) {
+        if (array_key_exists('importpubMed_LASTAU', $this->vars) && (mb_strlen($this->vars['importpubMed_LASTAU']) !== 0))
+        {
             $inputFound = TRUE;
             $this->formData['importpubMed_LASTAU'] = trim($this->vars['importpubMed_LASTAU']);
         }
-        if (array_key_exists('importpubMed_TI', $this->vars) && (mb_strlen($this->vars['importpubMed_TI']) !== 0)) {
+        if (array_key_exists('importpubMed_TI', $this->vars) && (mb_strlen($this->vars['importpubMed_TI']) !== 0))
+        {
             $inputFound = TRUE;
             $this->formData['importpubMed_TI'] = trim($this->vars['importpubMed_TI']);
         }
-        if (array_key_exists('importpubMed_TIAB', $this->vars) && (mb_strlen($this->vars['importpubMed_TIAB']) !== 0)) {
+        if (array_key_exists('importpubMed_TIAB', $this->vars) && (mb_strlen($this->vars['importpubMed_TIAB']) !== 0))
+        {
             $inputFound = TRUE;
             $this->formData['importpubMed_TIAB'] = trim($this->vars['importpubMed_TIAB']);
         }
-        if (array_key_exists('importpubMed_DP', $this->vars) && (mb_strlen($this->vars['importpubMed_DP']) !== 0)) {
+        if (array_key_exists('importpubMed_DP', $this->vars) && (mb_strlen($this->vars['importpubMed_DP']) !== 0))
+        {
             $inputFound = TRUE;
             $this->formData['importpubMed_DP'] = trim($this->vars['importpubMed_DP']);
         }
-        if (array_key_exists('importpubMed_TA', $this->vars) && (mb_strlen($this->vars['importpubMed_TA']) !== 0)) {
+        if (array_key_exists('importpubMed_TA', $this->vars) && (mb_strlen($this->vars['importpubMed_TA']) !== 0))
+        {
             $inputFound = TRUE;
             $this->formData['importpubMed_TA'] = trim($this->vars['importpubMed_TA']);
         }
-        if (array_key_exists('importpubMed_VI', $this->vars) && (mb_strlen($this->vars['importpubMed_VI']) !== 0)) {
+        if (array_key_exists('importpubMed_VI', $this->vars) && (mb_strlen($this->vars['importpubMed_VI']) !== 0))
+        {
             $inputFound = TRUE;
             $this->formData['importpubMed_VI'] = trim($this->vars['importpubMed_VI']);
         }
-        if (array_key_exists('importpubMed_IP', $this->vars) && (mb_strlen($this->vars['importpubMed_IP']) !== 0)) {
+        if (array_key_exists('importpubMed_IP', $this->vars) && (mb_strlen($this->vars['importpubMed_IP']) !== 0))
+        {
             $inputFound = TRUE;
             $this->formData['importpubMed_IP'] = trim($this->vars['importpubMed_IP']);
         }
-        if (array_key_exists('importpubMed_LA', $this->vars) && (mb_strlen($this->vars['importpubMed_LA']) !== 0)) {
+        if (array_key_exists('importpubMed_LA', $this->vars) && (mb_strlen($this->vars['importpubMed_LA']) !== 0))
+        {
             $inputFound = TRUE;
             $this->formData['importpubMed_LA'] = trim($this->vars['importpubMed_LA']);
         }
-        if (array_key_exists('importpubMed_reldate', $this->vars) && (mb_strlen($this->vars['importpubMed_reldate']) !== 0)) {
+        if (array_key_exists('importpubMed_reldate', $this->vars) && (mb_strlen($this->vars['importpubMed_reldate']) !== 0))
+        {
             $inputFound = TRUE;
             $this->formData['importpubMed_reldate'] = trim($this->vars['importpubMed_reldate']);
         }
 
-        if (array_key_exists('importpubMed_MaxResults', $this->vars)) {
-            if (!is_numeric(trim($this->vars['importpubMed_MaxResults']))) {
+        if (array_key_exists('importpubMed_MaxResults', $this->vars))
+        {
+            if (!is_numeric(trim($this->vars['importpubMed_MaxResults'])))
+            {
                 $this->badInput(HTML\p($this->pluginmessages->text("importPubMedLimitError"), 'error'));
             }
             if ((trim($this->vars['importpubMed_MaxResults']) < 1) ||
-            (trim($this->vars['importpubMed_MaxResults']) > 100)) {
+            (trim($this->vars['importpubMed_MaxResults']) > 100))
+            {
                 $this->vars['importpubMed_MaxResults'] = 100; // default
             }
             $this->formData['importpubMed_MaxResults'] = trim($this->vars['importpubMed_MaxResults']);
-        } else {
+        }
+        else
+        {
             $this->formData['importpubMed_MaxResults'] = 100;
         }
-        if (!$inputFound) {
+        if (!$inputFound)
+        {
             $this->badInput(HTML\p($this->pluginmessages->text("importPubMedInputError"), 'error'));
         }
     }

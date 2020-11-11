@@ -41,7 +41,8 @@ class BROWSESUBCATEGORY
     {
         $this->sum = $this->subcategory = [];
         $this->getSubcategories();
-        if (empty($this->subcategory)) {
+        if (empty($this->subcategory))
+        {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noSubcategories"));
 
             return;
@@ -69,8 +70,10 @@ class BROWSESUBCATEGORY
             'resourcecategorySubcategoryId',
             ['subcategorySubcategory', 'subcategoryCategoryId', 'categoryId', 'categoryCategory']
         );
-        while ($row = $this->db->fetchRow($recordset)) {
-            if ($row['resourcecategorySubcategoryId']) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
+            if ($row['resourcecategorySubcategoryId'])
+            {
                 $this->categories[$row['resourcecategorySubcategoryId']] = \HTML\nlToHtml($row['categoryCategory']);
             }
             $this->collate($row);
@@ -83,7 +86,8 @@ class BROWSESUBCATEGORY
      */
     public function collate($row)
     {
-        if (!$row['subcategorySubcategory']) {
+        if (!$row['subcategorySubcategory'])
+        {
             return;
         }
         $this->subcategory[$row['resourcecategorySubcategoryId']] = preg_replace(
@@ -102,7 +106,8 @@ class BROWSESUBCATEGORY
     {
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
-        foreach ($this->subcategory as $id => $name) {
+        foreach ($this->subcategory as $id => $name)
+        {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
             $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .

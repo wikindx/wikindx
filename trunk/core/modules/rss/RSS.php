@@ -23,7 +23,8 @@ class RSS
     public function init()
     {
         $db = FACTORY_DB::getInstance();
-        if (!WIKINDX_RSS_ALLOW) {
+        if (!WIKINDX_RSS_ALLOW)
+        {
             header('HTTP/1.0 403 Forbidden');
             die("Access forbidden: this feature is disabled.");
         }
@@ -54,27 +55,35 @@ class RSS
 
         // Extract the date of the last updated resource or use the date of the current date
         // for the date of last build of the feed
-        if ($numResults > 0) {
+        if ($numResults > 0)
+        {
             $DateMax = date_create('1854-12-08');
 
-            for ($i = 0; $i < $numResults; $i++) {
-                if (mb_strlen($item['timestamp'][$i]) > 0) {
+            for ($i = 0; $i < $numResults; $i++)
+            {
+                if (mb_strlen($item['timestamp'][$i]) > 0)
+                {
                     $datetime2 = date_create($item['timestamp'][$i]);
-                    if ($datetime2 > $DateMax) {
+                    if ($datetime2 > $DateMax)
+                    {
                         $DateMax = $datetime2;
                     }
                 }
             }
 
             $channel['lastBuildDate'] = $DateMax->format(DateTime::RFC822);
-        } else {
+        }
+        else
+        {
             $channel['lastBuildDate'] = date(DateTime::RFC822);
         }
 
         echo TAB . TAB . "<lastBuildDate>" . $this->escape_xml($channel['lastBuildDate']) . "</lastBuildDate>" . LF;
 
-        if ($numResults > 0) {
-            for ($i = 0; $i < $numResults; $i++) {
+        if ($numResults > 0)
+        {
+            for ($i = 0; $i < $numResults; $i++)
+            {
                 /**
                  * loop thru the item array
                  * print item data
@@ -82,18 +91,24 @@ class RSS
                 $description = FALSE;
                 echo TAB . TAB . "<item>" . LF;
 
-                if (mb_strlen($item['title'][$i]) > 0) {
+                if (mb_strlen($item['title'][$i]) > 0)
+                {
                     echo TAB . TAB . TAB . "<title>" . $this->escape_xml($item['title'][$i]) . "</title>" . LF;
                 }
 
-                if (mb_strlen($item['timestamp'][$i]) > 0) {
+                if (mb_strlen($item['timestamp'][$i]) > 0)
+                {
                     echo TAB . TAB . TAB . "<pubDate>" . date(DateTime::RFC822, strtotime($item['timestamp'][$i])) . "</pubDate>" . LF;
                 }
 
-                if (mb_strlen($item['link'][$i]) > 0) {
-                    if (WIKINDX_DENY_READONLY) {
+                if (mb_strlen($item['link'][$i]) > 0)
+                {
+                    if (WIKINDX_DENY_READONLY)
+                    {
                         $ItemUrl = $baseURL . "/?action=logout";
-                    } else {
+                    }
+                    else
+                    {
                         $ItemUrl = $baseURL . "/?method=RSS&amp;action=resource_RESOURCEVIEW_CORE&amp;id=" . $item['link'][$i];
                     }
 
@@ -101,13 +116,17 @@ class RSS
                     echo TAB . TAB . TAB . "<guid isPermaLink=\"false\">" . $ItemUrl . "</guid>" . LF;
                 }
 
-                if (mb_strlen($item['editUser'][$i]) > 0) {
+                if (mb_strlen($item['editUser'][$i]) > 0)
+                {
                     echo TAB . TAB . TAB . "<author>" . $this->escape_xml($item['editUser'][$i]) . "</author>" . LF;
-                } elseif (mb_strlen($item['addUser'][$i]) > 0) {
+                }
+                elseif (mb_strlen($item['addUser'][$i]) > 0)
+                {
                     echo TAB . TAB . TAB . "<author>" . $this->escape_xml($item['addUser'][$i]) . "</author>" . LF;
                 }
 
-                if (mb_strlen($item['description'][$i]) > 0) {
+                if (mb_strlen($item['description'][$i]) > 0)
+                {
                     echo TAB . TAB . TAB . "<description>" . $this->escape_xml($item['description'][$i]) . "</description>" . LF;
                 }
 
@@ -149,7 +168,8 @@ class RSS
         $session = FACTORY_SESSION::getInstance();
         $session->setVar("setup_Style", $bibstyle);
         $bibStyle = FACTORY_BIBSTYLE::getInstance();
-        if (!WIKINDX_RSS_DISPLAY) { // display only added resources
+        if (!WIKINDX_RSS_DISPLAY)
+        { // display only added resources
             $db->formatConditions($db->formatFields('resourcetimestampTimestampAdd') .
                 $db->equal . $db->formatFields('resourcetimestampTimestamp'));
         }
@@ -197,10 +217,14 @@ class RSS
             'resourcemiscEditUserIdResource',
             'resourcemiscAddUserIdResource'
         ), FALSE);
-        foreach ($listFields as $field) {
-            if ($field == 'resourcetimestampId') {
+        foreach ($listFields as $field)
+        {
+            if ($field == 'resourcetimestampId')
+            {
                 $listFields[] = 't2.' . $field;
-            } else {
+            }
+            else
+            {
                 $listFields[] = $field;
             }
         }
@@ -216,10 +240,12 @@ class RSS
         $numResults = $db->numRows($resultSet);
         $x = 0;
         $item = [];
-        while ($list_results = $db->fetchRow($resultSet)) {
+        while ($list_results = $db->fetchRow($resultSet))
+        {
             /** construct a hierarchial array for the item node */
             $item['title'][$x] = $messages->text('resourceType', $list_results['resourceType']) . ': ';
-            if ($list_results['resourceNoSort']) {
+            if ($list_results['resourceNoSort'])
+            {
                 $item['title'][$x] .= $list_results['resourceNoSort'] . ' ';
             }
             $item['title'][$x] .= $list_results['resourceTitle'];
@@ -250,23 +276,31 @@ class RSS
     private function getUser($db, $addId, $editId)
     {
         $add = $edit = FALSE;
-        if ($addId) {
+        if ($addId)
+        {
             $db->formatConditions(['usersId' => $addId]);
             $resultSet = $db->select('users', ['usersUsername', 'usersFullname']);
             $row = $db->fetchRow($resultSet);
-            if ($row['usersFullname']) {
+            if ($row['usersFullname'])
+            {
                 $add = $row['usersFullname'];
-            } elseif ($row['usersUsername']) {
+            }
+            elseif ($row['usersUsername'])
+            {
                 $add = $row['usersUsername'];
             }
         }
-        if ($editId) {
+        if ($editId)
+        {
             $db->formatConditions(['usersId' => $editId]);
             $resultSet = $db->select('users', ['usersUsername', 'usersFullname']);
             $row = $db->fetchRow($resultSet);
-            if ($row['usersFullname']) {
+            if ($row['usersFullname'])
+            {
                 $edit = $row['usersFullname'];
-            } elseif ($row['usersUsername']) {
+            }
+            elseif ($row['usersUsername'])
+            {
                 $edit = $row['usersUsername'];
             }
         }

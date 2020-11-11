@@ -25,7 +25,7 @@ class WPCommon
     private $session;
     private $vars;
     private $db;
-    private $papersDir = WIKINDX_DIR_BASE . DIRECTORY_SEPARATOR .WIKINDX_DIR_DATA_PLUGINS . DIRECTORY_SEPARATOR . "wordprocessor";
+    private $papersDir = WIKINDX_DIR_BASE . DIRECTORY_SEPARATOR . WIKINDX_DIR_DATA_PLUGINS . DIRECTORY_SEPARATOR . "wordprocessor";
 
     public function __construct()
     {
@@ -42,16 +42,19 @@ class WPCommon
         $saveAsNewVersion = FALSE;
         $text = $this->vars['hdnpaperText'];
         $title = trim($this->vars['title']);
-        if (!$title || !preg_match("/^[A-Za-z0-9_ ]+$/u", $title)) {
+        if (!$title || !preg_match("/^[A-Za-z0-9_ ]+$/u", $title))
+        {
             $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("invalidTitle") . "</span>", base64_decode($this->session->getVar("wp_Title")));
         }
         $userId = $this->session->getVar("setup_UserId");
         $hashFileName = sha1($userId . $title . $text);
-        if (array_key_exists('saveAsNewVersion', $this->vars) && ($title != base64_decode($this->session->getVar("wp_Title")))) {
+        if (array_key_exists('saveAsNewVersion', $this->vars) && ($title != base64_decode($this->session->getVar("wp_Title"))))
+        {
             $saveAsNewVersion = TRUE;
         }
         // inserting
-        if (!array_key_exists('id', $this->vars) || $saveAsNewVersion) {
+        if (!array_key_exists('id', $this->vars) || $saveAsNewVersion)
+        {
             $fields[] = 'pluginwordprocessorHashFilename';
             $values[] = $hashFileName;
             $fields[] = 'pluginwordprocessorUserId';
@@ -64,7 +67,8 @@ class WPCommon
             $databaseId = $this->db->lastAutoId();
         }
         // updating
-        else {
+        else
+        {
             $updateArray['pluginwordprocessorHashFilename'] = $hashFileName;
             $updateArray['pluginwordprocessorFilename'] = $title;
             $updateArray['pluginwordprocessorTimestamp'] = $this->db->formatTimestamp();
@@ -73,16 +77,21 @@ class WPCommon
             $this->db->update('plugin_wordprocessor', $updateArray);
         }
         $fullFileName = $this->papersDir . DIRECTORY_SEPARATOR . $hashFileName;
-        if ($fp = fopen("$fullFileName", "w")) {
-            if (!$text) {
+        if ($fp = fopen("$fullFileName", "w"))
+        {
+            if (!$text)
+            {
                 $text = ' '; // fputs won't write empty string.
             }
-            if (!fwrite($fp, $text)) {
+            if (!fwrite($fp, $text))
+            {
                 $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("saveFailure") . "</span>", base64_decode($this->session->getVar("wp_Title")));
             }
 
             fclose($fp);
-        } else {
+        }
+        else
+        {
             $this->failure("<span class=\\'error\\'>" . $this->pluginmessages->text("saveFailure") . "</span>", base64_decode($this->session->getVar("wp_Title")));
         }
 
@@ -90,7 +99,8 @@ class WPCommon
         if (array_key_exists('hashFilename', $this->vars) &&
             ($this->vars['hashFilename'] != $hashFileName) &&
             file_exists($this->papersDir . DIRECTORY_SEPARATOR . $this->vars['hashFilename']) &&
-            !$saveAsNewVersion) {
+            !$saveAsNewVersion)
+        {
             unlink($this->papersDir . DIRECTORY_SEPARATOR . $this->vars['hashFilename']);
         }
         $this->session->setVar("wp_HashFilename", $hashFileName);

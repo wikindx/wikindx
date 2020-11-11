@@ -30,7 +30,8 @@ class MAIL
     public function __construct()
     {
         // If messaging is turned off, just do nothing
-        if (!WIKINDX_MAIL_USE) {
+        if (!WIKINDX_MAIL_USE)
+        {
             return;
         }
         
@@ -45,9 +46,12 @@ class MAIL
         $this->mail->SMTPDebug = 3;
 
         // From (work because it's globaly defined)
-        if (filter_var(WIKINDX_MAIL_FROM, FILTER_VALIDATE_EMAIL) !== FALSE) {
+        if (filter_var(WIKINDX_MAIL_FROM, FILTER_VALIDATE_EMAIL) !== FALSE)
+        {
             $From = WIKINDX_MAIL_FROM;
-        } else {
+        }
+        else
+        {
             // The fallback of HTTP_HOST is used for a CLI context only
             $From = \HTML\stripHtml(WIKINDX_TITLE) . '@' . (PHP_SAPI !== 'cli') ? $_SERVER["HTTP_HOST"] : "localhost";
         }
@@ -55,20 +59,25 @@ class MAIL
         $this->mail->setFrom(filter_var($From, FILTER_SANITIZE_EMAIL), WIKINDX_TITLE);
 
         // ReplyTo (work because it's globaly defined)
-        if (filter_var(WIKINDX_MAIL_REPLYTO, FILTER_VALIDATE_EMAIL) !== FALSE) {
+        if (filter_var(WIKINDX_MAIL_REPLYTO, FILTER_VALIDATE_EMAIL) !== FALSE)
+        {
             $ReplyTo = WIKINDX_MAIL_REPLYTO;
-        } else {
+        }
+        else
+        {
             $ReplyTo = WIKINDX_MAIL_REPLYTO_DEFAULT;
         }
         
-        if ($ReplyTo != "") {
+        if ($ReplyTo != "")
+        {
             $this->mail->addReplyTo(filter_var($ReplyTo, FILTER_SANITIZE_EMAIL), WIKINDX_TITLE);
         }
         
         $this->mail->ContentType = WIKINDX_MIMETYPE_TXT;
         $this->mail->CharSet = WIKINDX_CHARSET;
 
-        if (WIKINDX_MAIL_BACKEND == 'smtp') {
+        if (WIKINDX_MAIL_BACKEND == 'smtp')
+        {
             $this->mail->isSMTP();
             $this->mail->Host = WIKINDX_MAIL_SMTP_SERVER;
             $this->mail->Port = WIKINDX_MAIL_SMTP_PORT;
@@ -87,11 +96,14 @@ class MAIL
 
             $this->mail->SMTPKeepAlive = WIKINDX_MAIL_SMTP_PERSIST;
             $this->mail->SMTPAuth = WIKINDX_MAIL_SMTP_AUTH;
-            if (WIKINDX_MAIL_SMTP_AUTH) {
+            if (WIKINDX_MAIL_SMTP_AUTH)
+            {
                 $this->mail->Username = WIKINDX_MAIL_SMTP_USERNAME;
                 $this->mail->Password = WIKINDX_MAIL_SMTP_PASSWORD;
             }
-        } elseif (WIKINDX_MAIL_BACKEND == 'sendmail') {
+        }
+        elseif (WIKINDX_MAIL_BACKEND == 'sendmail')
+        {
             $this->mail->isSendmail();
             $this->mail->Sendmail = WIKINDX_MAIL_SENDMAIL_PATH;
         }
@@ -107,7 +119,8 @@ class MAIL
         // because we have enabled KeepAlive mode for SMTP.
         // The debug output of this operation is trashed because the object will be unused
         // and we should prevent any indesirable printing.
-        if (WIKINDX_MAIL_USE && WIKINDX_MAIL_BACKEND == 'smtp' && WIKINDX_MAIL_SMTP_PERSIST) {
+        if (WIKINDX_MAIL_USE && WIKINDX_MAIL_BACKEND == 'smtp' && WIKINDX_MAIL_SMTP_PERSIST)
+        {
             ob_start();
             $this->mail->smtpClose();
             ob_get_clean();
@@ -128,7 +141,7 @@ class MAIL
         
         // Don't use HTML for a display in pre or CLI context
         // Display the current config at the top of the log
-        $this->TransactionLog  = "";
+        $this->TransactionLog = "";
         $this->TransactionLog .= "---[CONFIGURATION]------------------------------------------------------";
         $this->TransactionLog .= LF . LF;
         foreach ([
@@ -145,10 +158,14 @@ class MAIL
             "WIKINDX_MAIL_SMTP_SERVER",
             "WIKINDX_MAIL_SMTP_USERNAME",
             "WIKINDX_MAIL_USE",
-        ] as $k) {
-            if ($k == "WIKINDX_MAIL_SMTP_PASSWORD") {
+        ] as $k)
+        {
+            if ($k == "WIKINDX_MAIL_SMTP_PASSWORD")
+            {
                 $this->TransactionLog .= $k . " = [credentials hidden]" . LF;
-            } else {
+            }
+            else
+            {
                 $this->TransactionLog .= $k . " = " . (constant($k) !== FALSE ? constant($k) : "0") . LF;
             }
         }
@@ -159,39 +176,48 @@ class MAIL
         ob_start();
         
         // If messaging is turned on
-        if (WIKINDX_MAIL_USE) {
+        if (WIKINDX_MAIL_USE)
+        {
             // Avoid a special case
-            if (!is_array($addresses)) {
+            if (!is_array($addresses))
+            {
                 $addresses = [$addresses];
             }
             // To
             $ToArray = [];
-            foreach ($addresses as $address) {
+            foreach ($addresses as $address)
+            {
                 // Split a single or multiple addresses in RFC822 format
                 $tmpAddresses = $this->mail->parseAddresses(preg_replace('/;/u', ',', trim($address)), FALSE);
     
                 // Send one message by address
-                foreach ($tmpAddresses as $tmpAddress) {
+                foreach ($tmpAddresses as $tmpAddress)
+                {
                     $ToArray[] = $tmpAddress;
                 }
             }
     
             // Avoid sending a message if there are no valid address
-            if (count($ToArray) > 0) {
+            if (count($ToArray) > 0)
+            {
                 // Message
                 $this->mail->Subject = $subject;
                 $this->mail->Body = $message;
     
                 // Send one message by address
-                foreach ($ToArray as $To) {
+                foreach ($ToArray as $To)
+                {
                     $this->mail->addAddress($To['address'], $To['name']);
                     $SendStatus = $this->mail->send();
     
                     echo LF . LF;
-                    if ($SendStatus) {
+                    if ($SendStatus)
+                    {
                         echo "Message sent with " . WIKINDX_MAIL_BACKEND . " backend " .
                              "to &lt;" . $To['address'] . "&gt; " . "without error.";
-                    } else {
+                    }
+                    else
+                    {
                         echo $this->mail->ErrorInfo;
                     }
                     echo LF . LF;
@@ -203,14 +229,18 @@ class MAIL
                 $this->mail->clearBCCs();
                 $this->mail->Subject = '';
                 $this->mail->Body = '';
-            } else {
+            }
+            else
+            {
                 $errmsg = "No valid recipient address to send or addresses not RFC822 compliant.";
                 echo $errmsg . LF;
     
                 GLOBALS::setError($errmsg);
                 $SendStatus = FALSE;
             }
-        } else {
+        }
+        else
+        {
             echo "The email sending function is disabled." . LF;
         }
 

@@ -50,7 +50,8 @@ class BIBTEX
      */
     public function exportOptions()
     {
-        if (!$this->session->getVar("sql_ListStmt")) {
+        if (!$this->session->getVar("sql_ListStmt"))
+        {
             $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
         }
         $cString = $this->common->getCustomFields();
@@ -67,24 +68,30 @@ class BIBTEX
     {
         $this->bibtex->writeSession();
         $sql = $this->common->getSQL();
-        if (!$sql) {
+        if (!$sql)
+        {
             $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
         }
-        if (!$this->common->openFile(FALSE, '.bib')) {
+        if (!$this->common->openFile(FALSE, '.bib'))
+        {
             $this->failure($this->errors->text("file", "write", ": " . $this->common->fileName));
         }
         $sqlArray = unserialize(base64_decode($sql));
-        foreach ($sqlArray as $sql) {
+        foreach ($sqlArray as $sql)
+        {
             $recordset = $this->db->query($sql);
-            if (!$this->bibtex->getData($recordset, $this->common->fp)) {
+            if (!$this->bibtex->getData($recordset, $this->common->fp))
+            {
                 $this->failure($this->errors->text("file", "write", ": " . $this->common->fileName));
             }
             $this->bibtex->formatRawString();
         }
-        if ($this->common->fullFileName) {
+        if ($this->common->fullFileName)
+        {
             fclose($this->common->fp);
         }
-        if (!empty($this->bibtex->rawStringArray)) { // Prepend @STRING strings
+        if (!empty($this->bibtex->rawStringArray))
+        { // Prepend @STRING strings
             $rawString = implode("\n", $this->bibtex->rawStringArray) . "\n\n";
             $fp = fopen($this->common->fullFileName, 'r', 1, $this->common->context);
             $tmpname = $this->common->filesDir . DIRECTORY_SEPARATOR . \UTILS\uuid();

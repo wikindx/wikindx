@@ -17,51 +17,61 @@
  */
 class BROWSERTABID
 {
-/** array */
-private $vars;
+    /** array */
+    private $vars;
     
-	public function __construct()
+    public function __construct()
     {
         $this->vars = GLOBALS::getVars();
     }
-/**
- * Generate/return the unique browser tab/window identifier for specific scripts
- */
-	public function js()
-	{
-		$active = ['list_QUICKSEARCH_CORE', 'resource_RESOURCEVIEW_CORE', 'admin_DELETERESOURCE_CORE'];
-		$tempSession = [];
-		if (WIKINDX_BROWSER_TAG_ID && array_key_exists('action', $this->vars) && in_array($this->vars['action'], $active)) {
-			GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/gatekeeper.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
-			$script = WIKINDX_URL_BASE . '/gatekeeper.js?ver=' . WIKINDX_PUBLIC_VERSION;
-			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-				foreach ($this->vars as $key => $value) {
-					if (($key != 'method') && ($key != 'action') && ($key != 'browserTabID') && ($key != 'submit')) {
-						$tempSession[$key] = $value;
-						continue;
-					}
-					$qsArray[] = $key . '=' . $value;
-				}
-				$qs = '?' . join('&', $qsArray);
-			} else {
-				$qs = $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : FALSE;
-			}
-			$url = WIKINDX_URL_BASE . '/index.php' . $qs;
-			if (!array_key_exists('browserTabID', $this->vars) || !$this->vars['browserTabID']) {
-				if (!empty($tempSession)) {
-					$session = FACTORY_SESSION::getInstance();
-					$session->writeArray($tempSession, 'tempTab');
-				}
-			// go into gatekeeper for a redirect and addition of a browserTabID to the querystring
-				$gatewayString = '<script>redirectSet("' . $url . '", "' . $qs . '")</script>';
-			}
-			else {
-			// go into gatekeeper to check if browserTabID is unique to the tab (perhaps user has opened link with browserTabID in a new tab/window)
-				$id = $this->vars['browserTabID'];
-				$gatewayString = '<script>getBrowserTabID("' . $url . '", "' . $qs . '", "' . $id . '")</script>';
-				GLOBALS::setBrowserTabID($id);
-			}
-			GLOBALS::addTplVar('scripts', "$gatewayString");
-		}
-	}
+    /**
+     * Generate/return the unique browser tab/window identifier for specific scripts
+     */
+    public function js()
+    {
+        $active = ['list_QUICKSEARCH_CORE', 'resource_RESOURCEVIEW_CORE', 'admin_DELETERESOURCE_CORE'];
+        $tempSession = [];
+        if (WIKINDX_BROWSER_TAG_ID && array_key_exists('action', $this->vars) && in_array($this->vars['action'], $active))
+        {
+            GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/gatekeeper.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
+            $script = WIKINDX_URL_BASE . '/gatekeeper.js?ver=' . WIKINDX_PUBLIC_VERSION;
+            if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            {
+                foreach ($this->vars as $key => $value)
+                {
+                    if (($key != 'method') && ($key != 'action') && ($key != 'browserTabID') && ($key != 'submit'))
+                    {
+                        $tempSession[$key] = $value;
+
+                        continue;
+                    }
+                    $qsArray[] = $key . '=' . $value;
+                }
+                $qs = '?' . join('&', $qsArray);
+            }
+            else
+            {
+                $qs = $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : FALSE;
+            }
+            $url = WIKINDX_URL_BASE . '/index.php' . $qs;
+            if (!array_key_exists('browserTabID', $this->vars) || !$this->vars['browserTabID'])
+            {
+                if (!empty($tempSession))
+                {
+                    $session = FACTORY_SESSION::getInstance();
+                    $session->writeArray($tempSession, 'tempTab');
+                }
+                // go into gatekeeper for a redirect and addition of a browserTabID to the querystring
+                $gatewayString = '<script>redirectSet("' . $url . '", "' . $qs . '")</script>';
+            }
+            else
+            {
+                // go into gatekeeper to check if browserTabID is unique to the tab (perhaps user has opened link with browserTabID in a new tab/window)
+                $id = $this->vars['browserTabID'];
+                $gatewayString = '<script>getBrowserTabID("' . $url . '", "' . $qs . '", "' . $id . '")</script>';
+                GLOBALS::setBrowserTabID($id);
+            }
+            GLOBALS::addTplVar('scripts', "$gatewayString");
+        }
+    }
 }

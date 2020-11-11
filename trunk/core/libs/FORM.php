@@ -133,7 +133,8 @@ namespace FORM
      */
     function formSubmit($value = FALSE, $name = FALSE, $js = '')
     {
-        if (!$name) {
+        if (!$name)
+        {
             $name = 'submit';
         }
 
@@ -178,7 +179,8 @@ namespace FORM
      */
     function formSubmitButton($value, $name = FALSE, $js = '')
     {
-        if (!$name) {
+        if (!$name)
+        {
             $name = 'submit';
         }
 
@@ -258,9 +260,12 @@ namespace FORM
     {
         $checked ? $checked = ' checked' : '';
 
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -289,9 +294,12 @@ namespace FORM
     {
         $checked ? $checked = ' checked' : '';
 
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -322,9 +330,12 @@ namespace FORM
      */
     function selectFBox($label, $name, $array, $size = 3, $override = FALSE, $js = '')
     {
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -337,11 +348,14 @@ namespace FORM
 
         $value = array_shift($array);
         $string = \FORM\reduceLongText($value, $override);
-        if (!empty($array)) {
+        if (!empty($array))
+        {
             $pString .= "<option value=\"$value\" selected>" . $string . '</option>' . LF;
         }
-        if (is_array($array)) {
-            foreach ($array as $value) {
+        if (is_array($array))
+        {
+            foreach ($array as $value)
+            {
                 $string = \FORM\reduceLongText($value, $override);
                 $pString .= "<option value=\"$value\">$string</option>" . LF;
             }
@@ -369,9 +383,12 @@ namespace FORM
      */
     function selectedBox($label, $name, $array, $select, $size = 3, $override = FALSE, $js = '')
     {
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -382,13 +399,18 @@ namespace FORM
             . \FORM\_inlineHtmlAttribute('size', $size)
             . ' ' . $js . '>' . LF;
 
-        if (is_array($array)) {
-            foreach ($array as $value) {
+        if (is_array($array))
+        {
+            foreach ($array as $value)
+            {
                 $string = \FORM\reduceLongText($value, $override);
     
-                if ($value == $select) {
+                if ($value == $select)
+                {
                     $pString .= "<option value=\"$value\" selected>$string</option>" . LF;
-                } else {
+                }
+                else
+                {
                     $pString .= "<option>$string</option>" . LF;
                 }
             }
@@ -416,9 +438,12 @@ namespace FORM
      */
     function selectFBoxValue($label, $name, $array, $size = 3, $override = FALSE, $js = '')
     {
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -429,15 +454,19 @@ namespace FORM
             . \FORM\_inlineHtmlAttribute('size', $size)
             . ' ' . $js . '>' . LF;
 
-        if (!empty($array)) {
+        if (!empty($array))
+        {
             $pString .= "<option value=\"" . key($array) . "\" selected>" .
                 \FORM\reduceLongText(current($array), $override) . '</option>' . LF;
             $doneFirst = FALSE;
         }
-        if (is_array($array)) {
-            foreach ($array as $key => $value) {
+        if (is_array($array))
+        {
+            foreach ($array as $key => $value)
+            {
                 $value = \FORM\reduceLongText($value, $override);
-                if (!$doneFirst) {
+                if (!$doneFirst)
+                {
                     $doneFirst = TRUE;
 
                     continue;
@@ -469,9 +498,12 @@ namespace FORM
      */
     function selectedBoxValue($label, $name, $array, $select, $size = 3, $override = FALSE, $js = '')
     {
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -482,8 +514,10 @@ namespace FORM
             . \FORM\_inlineHtmlAttribute('size', $size)
             . ' ' . $js . '>' . LF;
 
-        if (is_array($array)) {
-            foreach ($array as $key => $value) {
+        if (is_array($array))
+        {
+            foreach ($array as $key => $value)
+            {
                 $value = \FORM\reduceLongText($value, $override);
                 ($key == $select) ?
                     $pString .= "<option value=\"$key\" selected>$value</option>" . LF :
@@ -517,9 +551,12 @@ namespace FORM
         $id = $name;
         $name .= '[]';
 
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -530,15 +567,19 @@ namespace FORM
             . \FORM\_inlineHtmlAttribute('size', $size)
             . ' multiple ' . $js . '>' . LF;
 
-        if (!empty($array)) {
+        if (!empty($array))
+        {
             $pString .= "<option value=\"" . key($array) . "\" selected>" .
                 \FORM\reduceLongText(current($array), $override) . "</option>" . LF;
             $doneFirst = FALSE;
         }
-        if (is_array($array)) {
-            foreach ($array as $key => $value) {
+        if (is_array($array))
+        {
+            foreach ($array as $key => $value)
+            {
                 $value = \FORM\reduceLongText($value, $override);
-                if (!$doneFirst) {
+                if (!$doneFirst)
+                {
                     $doneFirst = TRUE;
 
                     continue;
@@ -572,9 +613,12 @@ namespace FORM
         $id = $name;
         $name .= '[]';
 
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -585,12 +629,17 @@ namespace FORM
             . \FORM\_inlineHtmlAttribute('size', $size)
             . ' multiple ' . $js . '>' . LF;
 
-        if (is_array($array)) {
-            foreach ($array as $key => $value) {
+        if (is_array($array))
+        {
+            foreach ($array as $key => $value)
+            {
                 $value = \FORM\reduceLongText($value, $override);
-                if ((array_search($key, $values) !== FALSE) && $key) {
+                if ((array_search($key, $values) !== FALSE) && $key)
+                {
                     $pString .= "<option value=\"$key\" selected>" . $value . "</option>" . LF;
-                } else {
+                }
+                else
+                {
                     $pString .= "<option value=\"$key\">$value</option>" . LF;
                 }
             }
@@ -615,9 +664,12 @@ namespace FORM
      */
     function passwordInput($label, $name, $value = FALSE, $size = 20, $maxLength = 255, $js = '')
     {
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -646,9 +698,12 @@ namespace FORM
      */
     function textInput($label, $name, $value = FALSE, $size = 20, $maxLength = 255, $js = '')
     {
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -675,9 +730,12 @@ namespace FORM
      */
     function colorInput($label, $name, $value = FALSE, $js = '')
     {
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -704,9 +762,12 @@ namespace FORM
      */
     function textareaInput($label, $name, $value = FALSE, $cols = 30, $rows = 5, $js = '')
     {
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -734,9 +795,12 @@ namespace FORM
      */
     function textareaInputmceNoEditor($label, $name, $value = FALSE, $cols = 30, $rows = 5, $js = '')
     {
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -764,9 +828,12 @@ namespace FORM
      */
     function textareaReadonly($label, $name, $value = FALSE, $cols = 30, $rows = 5, $js = '')
     {
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -792,9 +859,12 @@ namespace FORM
      */
     function fileUpload($label, $name, $size = 20, $js = '')
     {
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -819,9 +889,12 @@ namespace FORM
      */
     function fileUploadMultiple($label, $name, $size = 20, $js = '')
     {
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
         
@@ -847,9 +920,12 @@ namespace FORM
      */
     function dateInput($label, $name, $value = FALSE, $js = '')
     {
-        if ($label) {
+        if ($label)
+        {
             $pString = $label . ':' . BR;
-        } else {
+        }
+        else
+        {
             $pString = '';
         }
 
@@ -879,7 +955,8 @@ namespace FORM
         $limit = $override ? $override : $userStringLimit;
         $text = str_replace("&nbsp;", " ", $text);
         $count = mb_strlen($text);
-        if (($limit != -1) && ($count > $limit)) {
+        if (($limit != -1) && ($count > $limit))
+        {
             $start = 0;
             $length = floor(($limit / 2) - 2);
             $substr1 = mb_substr($text, $start, $length);

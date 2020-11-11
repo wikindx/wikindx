@@ -28,17 +28,22 @@ namespace UPDATE
         // it reads the db system catalog and can't fail if the db exists
         
         // Check if 'database_summary' table doesn't exist
-        if (!existsTableDatabaseVersion($dbo)) {
+        if (!existsTableDatabaseVersion($dbo))
+        {
             return TRUE;
         }
         // Check if the database version number is not the same as source code version number
-        elseif (getDatabaseVersion($dbo) != WIKINDX_INTERNAL_VERSION) {
+        elseif (getDatabaseVersion($dbo) != WIKINDX_INTERNAL_VERSION)
+        {
             return TRUE;
         }
         // Check if 'users' table has not been filled with the superadmin account
-        elseif (!existsSuperadminAccount($dbo)) {
+        elseif (!existsSuperadminAccount($dbo))
+        {
             return TRUE;
-        } else {
+        }
+        else
+        {
             return FALSE;
         }
     }
@@ -71,14 +76,17 @@ namespace UPDATE
     {
         $dbVersion = 0.0;
         $recordset = $dbo->queryNoError($dbo->selectNoExecute('database_summary', '*'));
-        if ($recordset !== FALSE) {
+        if ($recordset !== FALSE)
+        {
             $row = $dbo->fetchRow($recordset);
             // From version 6
-            if (array_key_exists('databasesummarySoftwareVersion', $row)) {
+            if (array_key_exists('databasesummarySoftwareVersion', $row))
+            {
                 $field = "databasesummarySoftwareVersion";
             }
             // Up to version 5.9.1
-            if (array_key_exists('databasesummaryDbVersion', $row)) {
+            if (array_key_exists('databasesummaryDbVersion', $row))
+            {
                 $field = "databasesummaryDbVersion";
             }
             $dbVersion = floatval($row[$field]);
@@ -101,6 +109,7 @@ namespace UPDATE
     {
         $dbo->formatConditionsOneField(WIKINDX_SUPERADMIN_ID, 'usersId');
         $recordset = $dbo->queryNoError($dbo->selectNoExecute('users', '*'));
+
         return ($recordset !== FALSE);
     }
     
@@ -118,20 +127,25 @@ namespace UPDATE
     {
         $email = WIKINDX_CONTACT_EMAIL_DEFAULT;
         $recordset = $dbo->queryNoError($dbo->selectNoExecute("config", "*"));
-        if ($recordset !== FALSE) {
+        if ($recordset !== FALSE)
+        {
             $field = "";
             $row = $dbo->fetchRow($recordset);
             // Up to version 5.3
-            if (array_key_exists("configContactEmail", $row)) {
+            if (array_key_exists("configContactEmail", $row))
+            {
                 $field = "configContactEmail";
             }
             // From version 5.4
-            if (array_key_exists("configName", $row) && array_key_exists("configVarchar", $row)) {
+            if (array_key_exists("configName", $row) && array_key_exists("configVarchar", $row))
+            {
                 $field = "configVarchar";
                 
                 // Search the recond
-                do {
-                    if ($row["configName"] == "configContactEmail") {
+                do
+                {
+                    if ($row["configName"] == "configContactEmail")
+                    {
                         break;
                     }
                 } while ($row = $dbo->fetchRow($recordset));
@@ -158,10 +172,12 @@ namespace UPDATE
         // superAdmin is id '1'
         $dbo->formatConditions(['usersUsername' => $username, 'usersId' => WIKINDX_SUPERADMIN_ID]);
         $recordset = $dbo->select('users', ['usersId', 'usersPassword']);
-        if ($dbo->numRows($recordset) == 1) {
+        if ($dbo->numRows($recordset) == 1)
+        {
             // verify the password
             $row = $dbo->fetchRow($recordset);
-            if (\UTILS\password_verify($password, $row['usersPassword'])) {
+            if (\UTILS\password_verify($password, $row['usersPassword']))
+            {
                 return TRUE;
             }
         }

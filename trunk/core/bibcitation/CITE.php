@@ -43,22 +43,26 @@ class CITE
     public function parseCitations($text, $output, $citeLink = TRUE, $rtfBibExport = FALSE, $suwpExport = FALSE)
     {
         // If no citations, return doing nothing
-        if (mb_strpos(mb_strtolower($text), "[cite]") === FALSE) {
+        if (mb_strpos(mb_strtolower($text), "[cite]") === FALSE)
+        {
             return $text;
         }
         $this->citeStyle->output = $output;
         $this->citeStyle->rtfBibExport = $rtfBibExport;
-        if ($suwpExport) {
+        if ($suwpExport)
+        {
             // Exporting from the SUWP
             $this->citeStyle->citeFormat->suwpExport = TRUE;
-            if ($this->citeStyle->citeFormat->style['citationStyle'] && ($output == 'rtf')) {
+            if ($this->citeStyle->citeFormat->style['citationStyle'] && ($output == 'rtf'))
+            {
                 $text = preg_replace_callback(
                     "/(\\[footnote])(.*)(\\[\\/footnote\\])/Uus",
                     [$this, 'footnoteCallback'],
                     $text
                 );
             }
-            if ($this->citeStyle->citeFormat->style['endnoteStyle'] == 1) {
+            if ($this->citeStyle->citeFormat->style['endnoteStyle'] == 1)
+            {
                 $this->citeStyle->citeFormat->citeOffsets = preg_split(
                     "/\\[cite\\]/Uuis",
                     $text,
@@ -87,13 +91,16 @@ class CITE
      */
     private function footnoteCallback($matches)
     {
-        if (preg_match("/(.*)\\[cite\\].*\\[\\/cite\\](.*)/Uus", $matches[2])) {
+        if (preg_match("/(.*)\\[cite\\].*\\[\\/cite\\](.*)/Uus", $matches[2]))
+        {
             return $matches[1] . preg_replace_callback(
                 "/\\s*\\[cite].*\\[\\/cite\\](.*)/Uus",
                 [$this, 'footnoteCiteCallback'],
                 $matches[2]
             ) . $matches[3];
-        } else {
+        }
+        else
+        {
             return $matches[1] . $matches[2] . $matches[3];
         }
     }

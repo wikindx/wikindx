@@ -26,10 +26,12 @@ include_once("core/libs/FILE.php");
 include_once("core/libs/UTILS.php");
 
 define('DIR_BUILD', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE, 'build']));
-if (!file_exists(DIR_BUILD)) {
+if (!file_exists(DIR_BUILD))
+{
     mkdir(DIR_BUILD, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
 }
-if (!file_exists(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA]))) {
+if (!file_exists(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA])))
+{
     mkdir(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA]), WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
 }
 
@@ -50,7 +52,8 @@ echo "Components signature script\n";
 echo "\n";
 $componentlist = \UTILS\readComponentsList(TRUE);
 
-foreach ($componentlist as $k => $cmp) {
+foreach ($componentlist as $k => $cmp)
+{
     $dircmpsrc = $component_types[$cmp["component_type"]] . DIRECTORY_SEPARATOR . $cmp["component_id"];
     $dircmpdst = DIR_BUILD . DIRECTORY_SEPARATOR . $cmp["component_type"] . "_" . $cmp["component_id"];
     $pkgcmp = DIR_BUILD . DIRECTORY_SEPARATOR . $cmp["component_id"] . ".zip";

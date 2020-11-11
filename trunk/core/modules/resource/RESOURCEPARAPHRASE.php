@@ -43,18 +43,20 @@ class RESOURCEPARAPHRASE
         $this->navigate = FACTORY_NAVIGATE::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         if (!array_key_exists('resourceId', $this->vars) || !$this->vars['resourceId'] ||
-            !array_key_exists('method', $this->vars) || !$this->vars['method']) {
+            !array_key_exists('method', $this->vars) || !$this->vars['method'])
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $function = $this->vars['method'];
-        if (!method_exists($this, $function)) {
+        if (!method_exists($this, $function))
+        {
             $this->navigate->resource($this->vars['resourceId'], $this->errors->text("inputError", "invalid"));
         }
         $this->return = '&nbsp;&nbsp;' . \HTML\a(
-			$this->icons->getClass("edit"),
-			$this->icons->getHTML("Return"),
-			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['resourceId']
-		);
+            $this->icons->getClass("edit"),
+            $this->icons->getHTML("Return"),
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['resourceId']
+        );
     }
     /**
      * display the editing form
@@ -69,20 +71,26 @@ class RESOURCEPARAPHRASE
     }
     /**
      * write to the database
-     *
      */
     public function edit()
     {
         $this->textqp->type = 'paraphrase';
         $addEdit = $this->textqp->edit();
-        if ($addEdit == 'added') {
+        if ($addEdit == 'added')
+        {
             $message = $this->success->text("paraphraseAdd");
-        } elseif ($addEdit == 'edited') {
+        }
+        elseif ($addEdit == 'edited')
+        {
             $message = $this->success->text("paraphraseEdit");
-        } elseif ($addEdit == 'deleted') {
+        }
+        elseif ($addEdit == 'deleted')
+        {
             $message = $this->success->text("paraphraseDelete");
-        } else {
-        	$message = $addEdit; // $addEdit is an error message
+        }
+        else
+        {
+            $message = $addEdit; // $addEdit is an error message
         }
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);
@@ -106,13 +114,13 @@ class RESOURCEPARAPHRASE
     }
     /**
      * Delete the musing and all peripheral data
-     *
      */
     public function delete()
     {
-        if (!array_key_exists('resourcemetadataId', $this->vars) || !array_key_exists('summaryType', $this->vars)) {
-    		$this->badInput->close($this->errors->text("inputError", "missing"));
-    	}
+        if (!array_key_exists('resourcemetadataId', $this->vars) || !array_key_exists('summaryType', $this->vars))
+        {
+            $this->badInput->close($this->errors->text("inputError", "missing"));
+        }
         $this->textqp->delete($this->vars['summaryType']);
         $this->db->formatConditions(['resourcetimestampId' => $this->vars['resourceId']]);
         $this->db->update('resource_timestamp', ['resourcetimestampTimestamp' => $this->db->formatTimestamp()]);

@@ -39,11 +39,13 @@ class FRONT
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
-        if (array_key_exists('message', $this->vars) && $this->vars['message']) {
-        	$this->externalMessage = $this->vars['message'];
+        if (array_key_exists('message', $this->vars) && $this->vars['message'])
+        {
+            $this->externalMessage = $this->vars['message'];
         }
-        else {
-	        $this->externalMessage = $message;
+        else
+        {
+            $this->externalMessage = $message;
         }
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
@@ -55,7 +57,7 @@ class FRONT
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('front'));
         $this->init();
-		$this->session->setVar("bookmark_DisplayAdd", FALSE);
+        $this->session->setVar("bookmark_DisplayAdd", FALSE);
     }
     /**
      * Display front page information.  If $noMenu, display WIKINDX submenu links
@@ -72,20 +74,26 @@ class FRONT
         $pString = \HTML\nlToHtml($pString);
 
         // Do we want the quick search form to be displayed?
-        if (mb_substr_count($pString, '$QUICKSEARCH$')) {
+        if (mb_substr_count($pString, '$QUICKSEARCH$'))
+        {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "list", "QUICKSEARCH.php"]));
             $qs = new QUICKSEARCH();
             $replace = $qs->init(FALSE, FALSE, TRUE);
             $pString = str_replace('$QUICKSEARCH$', $replace, $pString);
         }
-        if ($lastChanges = WIKINDX_LAST_CHANGES) {
-            if ($this->getChanges($lastChanges)) {
-            	if (GLOBALS::getUserVar('HomeBib') && GLOBALS::getUserVar('BrowseBibliography')) {
-            		$this->db->formatConditions(['userbibliographyId' => GLOBALS::getUserVar('BrowseBibliography')]);
-            		$bib = $this->db->queryFetchFirstField($this->db->selectNoExecute('user_bibliography', ['userbibliographyTitle']));
-            	} else {
-            		$bib = $this->messages->text("user", "masterBib");
-            	}
+        if ($lastChanges = WIKINDX_LAST_CHANGES)
+        {
+            if ($this->getChanges($lastChanges))
+            {
+                if (GLOBALS::getUserVar('HomeBib') && GLOBALS::getUserVar('BrowseBibliography'))
+                {
+                    $this->db->formatConditions(['userbibliographyId' => GLOBALS::getUserVar('BrowseBibliography')]);
+                    $bib = $this->db->queryFetchFirstField($this->db->selectNoExecute('user_bibliography', ['userbibliographyTitle']));
+                }
+                else
+                {
+                    $bib = $this->messages->text("user", "masterBib");
+                }
                 $pString .= \HTML\p(\HTML\h($this->messages->text("resources", "lastChanges") . "&nbsp;($bib)", FALSE, 4));
             }
         }
@@ -103,16 +111,21 @@ class FRONT
     private function getChanges($limit)
     {
         // If no resources, return FALSE
-        if ($this->db->tableIsEmpty('resource')) {
+        if ($this->db->tableIsEmpty('resource'))
+        {
             return FALSE;
         }
         $this->db->ascDesc = $this->db->desc; // descending order
-        if (WIKINDX_LAST_CHANGES_TYPE == 'days') { // Display from last $limit days
-            if (($limitResources = WIKINDX_LAST_CHANGES_DAY_LIMIT) < 0) {
+        if (WIKINDX_LAST_CHANGES_TYPE == 'days')
+        { // Display from last $limit days
+            if (($limitResources = WIKINDX_LAST_CHANGES_DAY_LIMIT) < 0)
+            {
                 $limitResources = FALSE;
             }
             $sql = $this->stmt->frontSetDays($limit, $limitResources);
-        } else { // Display set number
+        }
+        else
+        { // Display set number
             $sql = $this->stmt->frontSetNumber($limit);
         }
 

@@ -53,7 +53,8 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '') {
+        if ($data == '')
+        {
             $data = "&nbsp;";
         }
 
@@ -99,7 +100,8 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '') {
+        if ($data == '')
+        {
             $data = '&nbsp;';
         }
 
@@ -122,7 +124,8 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '') {
+        if ($data == '')
+        {
             $data = '&nbsp;';
         }
 
@@ -154,7 +157,8 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '') {
+        if ($data == '')
+        {
             $data = '&nbsp;';
         }
 
@@ -172,7 +176,8 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '') {
+        if ($data == '')
+        {
             $data = '&nbsp;';
         }
 
@@ -190,7 +195,8 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '') {
+        if ($data == '')
+        {
             $data = '&nbsp;';
         }
 
@@ -251,9 +257,12 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '') {
+        if ($data == '')
+        {
             return '';
-        } else {
+        }
+        else
+        {
             return '<span' . \HTML\_inlineHtmlAttribute('class', $class) . '>' . $data . '</span>';
         }
     }
@@ -269,9 +278,12 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '') {
+        if ($data == '')
+        {
             return '';
-        } else {
+        }
+        else
+        {
             return '<strong' . \HTML\_inlineHtmlAttribute('class', $class) . '>' . $data . '</strong>';
         }
     }
@@ -287,9 +299,12 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '') {
+        if ($data == '')
+        {
             return '';
-        } else {
+        }
+        else
+        {
             return '<em' . \HTML\_inlineHtmlAttribute('class', $class) . '>' . $data . '</em>';
         }
     }
@@ -430,9 +445,12 @@ namespace HTML
     function tableCaption($caption = '', $class = '')
     {
         $caption = trim($caption);
-        if ($caption == '') {
+        if ($caption == '')
+        {
             return '';
-        } else {
+        }
+        else
+        {
             return '<caption' . \HTML\_inlineHtmlAttribute('class', $class) . '>' . $caption . '</caption>' . LF;
         }
     }
@@ -553,7 +571,8 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '') {
+        if ($data == '')
+        {
             $data = '&nbsp;';
         }
 
@@ -599,7 +618,8 @@ namespace HTML
     {
         // this tag must have a value
         $data = trim($data);
-        if ($data == '') {
+        if ($data == '')
+        {
             $data = '&nbsp;';
         }
 
@@ -620,9 +640,12 @@ namespace HTML
     {
         $function = trim($function);
 
-        if ($function == '') {
+        if ($function == '')
+        {
             return '';
-        } else {
+        }
+        else
+        {
             return '<script>' . LF . $function . LF . '</script>';
         }
     }
@@ -637,9 +660,12 @@ namespace HTML
     {
         $src = trim($src);
 
-        if ($src == '') {
+        if ($src == '')
+        {
             return '';
-        } else {
+        }
+        else
+        {
             return '<script'
                 . \HTML\_inlineHtmlAttribute('src', $src)
                 . '></script>';
@@ -709,9 +735,12 @@ namespace HTML
      */
     function dbToFormTidy($string, $stripHtml = FALSE)
     {
-        if ($stripHtml) {
+        if ($stripHtml)
+        {
             return \HTML\stripHtml($string);
-        } else {
+        }
+        else
+        {
             return htmlspecialchars($string, ENT_QUOTES | ENT_HTML5);
         }
     }

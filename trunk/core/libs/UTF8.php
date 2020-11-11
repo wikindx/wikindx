@@ -50,33 +50,44 @@ namespace UTF8
     
         $len = strlen($str);
 
-        for ($i = 0; $i < $len; $i++) {
+        for ($i = 0; $i < $len; $i++)
+        {
             $in = ord($str[$i]);
-            if ($mState == 0) {
+            if ($mState == 0)
+            {
                 // When mState is zero we expect either a US-ASCII character or a
                 // multi-octet sequence.
-                if (0 == (0x80 & ($in))) {
+                if (0 == (0x80 & ($in)))
+                {
                     // US-ASCII, pass straight through.
                     $mBytes = 1;
-                } elseif (0xC0 == (0xE0 & ($in))) {
+                }
+                elseif (0xC0 == (0xE0 & ($in)))
+                {
                     // First octet of 2 octet sequence
                     $mUcs4 = ($in);
                     $mUcs4 = ($mUcs4 & 0x1F) << 6;
                     $mState = 1;
                     $mBytes = 2;
-                } elseif (0xE0 == (0xF0 & ($in))) {
+                }
+                elseif (0xE0 == (0xF0 & ($in)))
+                {
                     // First octet of 3 octet sequence
                     $mUcs4 = ($in);
                     $mUcs4 = ($mUcs4 & 0x0F) << 12;
                     $mState = 2;
                     $mBytes = 3;
-                } elseif (0xF0 == (0xF8 & ($in))) {
+                }
+                elseif (0xF0 == (0xF8 & ($in)))
+                {
                     // First octet of 4 octet sequence
                     $mUcs4 = ($in);
                     $mUcs4 = ($mUcs4 & 0x07) << 18;
                     $mState = 3;
                     $mBytes = 4;
-                } elseif (0xF8 == (0xFC & ($in))) {
+                }
+                elseif (0xF8 == (0xFC & ($in)))
+                {
                     /* First octet of 5 octet sequence.
                     *
                     * This is illegal because the encoded codepoint must be either
@@ -89,22 +100,29 @@ namespace UTF8
                     $mUcs4 = ($mUcs4 & 0x03) << 24;
                     $mState = 4;
                     $mBytes = 5;
-                } elseif (0xFC == (0xFE & ($in))) {
+                }
+                elseif (0xFC == (0xFE & ($in)))
+                {
                     // First octet of 6 octet sequence, see comments for 5 octet sequence.
                     $mUcs4 = ($in);
                     $mUcs4 = ($mUcs4 & 1) << 30;
                     $mState = 5;
                     $mBytes = 6;
-                } else {
+                }
+                else
+                {
                     /* Current octet is neither in the US-ASCII range nor a legal first
                     * octet of a multi-octet sequence.
                      */
                     return utf8_encode($str);
                 }
-            } else {
+            }
+            else
+            {
                 // When mState is non-zero, we expect a continuation of the multi-octet
                 // sequence
-                if (0x80 == (0xC0 & ($in))) {
+                if (0x80 == (0xC0 & ($in)))
+                {
                     // Legal continuation.
                     $shift = ($mState - 1) * 6;
                     $tmp = $in;
@@ -114,7 +132,8 @@ namespace UTF8
                      * End of the multi-octet sequence. mUcs4 now contains the final
                      * Unicode codepoint to be output
                      */
-                    if (0 == --$mState) {
+                    if (0 == --$mState)
+                    {
                         /*
                          * Check for illegal sequences and codepoints.
                          */
@@ -126,7 +145,8 @@ namespace UTF8
                         // From Unicode 3.2, surrogate characters are illegal
                         (($mUcs4 & 0xFFFFF800) == 0xD800) ||
                         // Codepoints outside the Unicode range are illegal
-                        ($mUcs4 > 0x10FFFF)) {
+                        ($mUcs4 > 0x10FFFF))
+                        {
                             return utf8_encode($str);
                         }
                         //initialize UTF8 cache
@@ -134,7 +154,9 @@ namespace UTF8
                         $mUcs4 = 0;
                         $mBytes = 1;
                     }
-                } else {
+                }
+                else
+                {
                     /**
                      *((0xC0 & (*in) != 0x80) && (mState != 0))
                      * Incomplete multi-octet sequence.
@@ -163,10 +185,13 @@ namespace UTF8
         // Try the utf8_decode
         $newStr = decodeUtf8($newStr);
         // if it contains ? marks
-        if (strpos($newStr, "?") !== FALSE) {
+        if (strpos($newStr, "?") !== FALSE)
+        {
             // Something went wrong, set newStr to the original string.
             $newStr = $inStr;
-        } else {
+        }
+        else
+        {
             // If not then all is well, put the ?-marks back where is belongs
             $newStr = str_replace("w0i0k0i0n0d0x", "?", $newStr);
         }
@@ -194,19 +219,22 @@ namespace UTF8
     {
         $out = "";
         $ns = strlen($utf8_string);
-        for ($nn = 0; $nn < $ns; $nn++) {
+        for ($nn = 0; $nn < $ns; $nn++)
+        {
             $ch = $utf8_string[$nn];
             $ii = ord($ch);
 
             //1 7 0bbbbbbb (127)
 
-            if ($ii < 128) {
+            if ($ii < 128)
+            {
                 $out .= $ch;
             }
 
             //2 11 110bbbbb 10bbbbbb (2047)
 
-            elseif ($ii >> 5 == 6) {
+            elseif ($ii >> 5 == 6)
+            {
                 $b1 = ($ii & 31);
 
                 $nn++;
@@ -222,7 +250,8 @@ namespace UTF8
 
             //3 16 1110bbbb 10bbbbbb 10bbbbbb
 
-            elseif ($ii >> 4 == 14) {
+            elseif ($ii >> 4 == 14)
+            {
                 $b1 = ($ii & 31);
 
                 $nn++;
@@ -243,7 +272,8 @@ namespace UTF8
 
             //4 21 11110bbb 10bbbbbb 10bbbbbb 10bbbbbb
 
-            elseif ($ii >> 3 == 30) {
+            elseif ($ii >> 3 == 30)
+            {
                 $b1 = ($ii & 31);
 
                 $nn++;
@@ -280,7 +310,8 @@ namespace UTF8
     function html_uentity_decode($str)
     {
         preg_match_all("/&#([0-9]*?);/u", $str, $unicode);
-        foreach ($unicode[0] as $key => $value) {
+        foreach ($unicode[0] as $key => $value)
+        {
             $str = "" . preg_replace("/" . $value . "/u", code2utf8($unicode[1][$key]), $str);
         }
 
@@ -335,16 +366,24 @@ namespace UTF8
         $preg_split_flags = ($format == 2) ? PREG_SPLIT_OFFSET_CAPTURE : 0;
         $res = preg_split('~[^\p{L}\p{N}' . preg_quote($charlist) . '\']+~u', $str, -1, $preg_split_flags);
     
-        if ($format == 0) {
+        if ($format == 0)
+        {
             return ($res !== FALSE) ? count($res) : 0;
-        } elseif ($format == 1) {
+        }
+        elseif ($format == 1)
+        {
             return ($res !== FALSE) ? $res : [];
-        } elseif ($format == 2) {
+        }
+        elseif ($format == 2)
+        {
             $res2 = [];
-            foreach ($res as $m) {
+            foreach ($res as $m)
+            {
                 $res2[$m[1]] = $m[0];
             }
-        } else {
+        }
+        else
+        {
             return 0;
         }
     }
@@ -358,24 +397,36 @@ namespace UTF8
      */
     function mb_chr($dec)
     {
-        if (function_exists("mb_chr")) {
+        if (function_exists("mb_chr"))
+        {
             $utf = \mb_chr($dec);
-        } else {
-            if ($dec < 0x80) {
+        }
+        else
+        {
+            if ($dec < 0x80)
+            {
                 $utf = chr($dec);
-            } elseif ($dec < 0x0800) {
+            }
+            elseif ($dec < 0x0800)
+            {
                 $utf = chr(0xC0 + ($dec >> 6));
                 $utf .= chr(0x80 + ($dec & 0x3f));
-            } elseif ($dec < 0x010000) {
+            }
+            elseif ($dec < 0x010000)
+            {
                 $utf = chr(0xE0 + ($dec >> 12));
                 $utf .= chr(0x80 + (($dec >> 6) & 0x3f));
                 $utf .= chr(0x80 + ($dec & 0x3f));
-            } elseif ($dec < 0x200000) {
+            }
+            elseif ($dec < 0x200000)
+            {
                 $utf = chr(0xF0 + ($dec >> 18));
                 $utf .= chr(0x80 + (($dec >> 12) & 0x3f));
                 $utf .= chr(0x80 + (($dec >> 6) & 0x3f));
                 $utf .= chr(0x80 + ($dec & 0x3f));
-            } else {
+            }
+            else
+            {
                 // UTF-8 character size can't use more than 4 bytes!
                 $utf = '';
             }
@@ -395,14 +446,17 @@ namespace UTF8
      */
     function mb_explode($delimiter, $string, $limit = PHP_INT_MAX)
     {
-        if ($delimiter == '') {
+        if ($delimiter == '')
+        {
             return FALSE;
         }
 
-        if ($limit === NULL) {
+        if ($limit === NULL)
+        {
             PHP_INT_MAX;
         }
-        if ($limit == 0) {
+        if ($limit == 0)
+        {
             $limit = 1;
         }
 
@@ -410,16 +464,24 @@ namespace UTF8
 
         $aString = preg_split($pattern, $string, $limit);
 
-        if ($limit < 0 && count($aString) == 1) {
+        if ($limit < 0 && count($aString) == 1)
+        {
             return [];
-        } elseif ($limit < 0 && count($aString) > 1) {
+        }
+        elseif ($limit < 0 && count($aString) > 1)
+        {
             $length = count($aString) - abs($limit);
-            if ($length <= 0) {
+            if ($length <= 0)
+            {
                 return [];
-            } else {
+            }
+            else
+            {
                 return array_slice($aString, 0, $length, TRUE);
             }
-        } else {
+        }
+        else
+        {
             return $aString;
         }
     }
@@ -464,7 +526,8 @@ namespace UTF8
      */
     function mb_strcasecmp($str1, $str2, $encoding = NULL)
     {
-        if (NULL === $encoding) {
+        if (NULL === $encoding)
+        {
             $encoding = mb_internal_encoding();
         }
 
@@ -498,26 +561,35 @@ namespace UTF8
      */
     function mb_substr_replace($string, $replacement, $start, $length = NULL, $encoding = NULL)
     {
-        if (extension_loaded('mbstring') === TRUE) {
+        if (extension_loaded('mbstring') === TRUE)
+        {
             $string_length = (is_null($encoding) === TRUE) ? mb_strlen($string) : mb_strlen($string, $encoding);
 
-            if ($start < 0) {
+            if ($start < 0)
+            {
                 $start = max(0, $string_length + $start);
-            } elseif ($start > $string_length) {
+            }
+            elseif ($start > $string_length)
+            {
                 $start = $string_length;
             }
 
-            if ($length < 0) {
+            if ($length < 0)
+            {
                 $length = max(0, $string_length - $start + $length);
-            } elseif ((is_null($length) === TRUE) || ($length > $string_length)) {
+            }
+            elseif ((is_null($length) === TRUE) || ($length > $string_length))
+            {
                 $length = $string_length;
             }
 
-            if (($start + $length) > $string_length) {
+            if (($start + $length) > $string_length)
+            {
                 $length = $string_length - $start;
             }
 
-            if (is_null($encoding) === TRUE) {
+            if (is_null($encoding) === TRUE)
+            {
                 return mb_substr($string, 0, $start) . $replacement . mb_substr($string, $start + $length, $string_length - $start - $length);
             }
 
@@ -536,28 +608,40 @@ namespace UTF8
      */
     function mb_ord($string)
     {
-        if (function_exists("mb_ord")) {
-            if ($string != "") {
+        if (function_exists("mb_ord"))
+        {
+            if ($string != "")
+            {
                 $utf = \mb_ord($string);
-            } else {
+            }
+            else
+            {
                 $utf = 0;
             }
-        } else {
+        }
+        else
+        {
             $offset = 0;
-            while ($offset >= 0) {
+            while ($offset >= 0)
+            {
                 $code = ord(substr($string, $offset, 1));
-                if ($code >= 128) {        //otherwise 0xxxxxxx
-                    if ($code < 224) {
+                if ($code >= 128)
+                {        //otherwise 0xxxxxxx
+                    if ($code < 224)
+                    {
                         $bytesnumber = 2;
                     }                //110xxxxx
-                    elseif ($code < 240) {
+                    elseif ($code < 240)
+                    {
                         $bytesnumber = 3;
                     }        //1110xxxx
-                    elseif ($code < 248) {
+                    elseif ($code < 248)
+                    {
                         $bytesnumber = 4;
                     }    //11110xxx
                     $codetemp = $code - 192 - ($bytesnumber > 2 ? 32 : 0) - ($bytesnumber > 3 ? 16 : 0);
-                    for ($i = 2; $i <= $bytesnumber; $i++) {
+                    for ($i = 2; $i <= $bytesnumber; $i++)
+                    {
                         $offset++;
                         $code2 = ord(substr($string, $offset, 1)) - 128;        //10xxxxxx
                         $codetemp = $codetemp * 64 + $code2;
@@ -565,7 +649,8 @@ namespace UTF8
                     $code = $codetemp;
                 }
                 $offset += 1;
-                if ($offset >= strlen($string)) {
+                if ($offset >= strlen($string))
+                {
                     $offset = -1;
                 }
             }
@@ -608,17 +693,22 @@ namespace UTF8
      *
      * @param string
      * @param charlist list of characters to remove from the ends of this string.
-     * @param boolean trim the left?
-     * @param boolean trim the right?
-     * @return String
-     */ 
-    function mb_trim($string, $charlist='\\\\s', $ltrim=true, $rtrim=true)
+     * @param bool trim the left?
+     * @param bool trim the right?
+     * @param mixed $string
+     * @param mixed $charlist
+     * @param mixed $ltrim
+     * @param mixed $rtrim
+     *
+     * @return string
+     */
+    function mb_trim($string, $charlist = '\\\\s', $ltrim = TRUE, $rtrim = TRUE)
     {
         $both_ends = $ltrim && $rtrim;
 
         $char_class_inner = preg_replace(
-            array( '/[\^\-\]\\\]/S', '/\\\{4}/S' ),
-            array( '\\\\\\0', '\\' ),
+            ['/[\^\-\]\\\]/S', '/\\\{4}/S'],
+            ['\\\\\\0', '\\'],
             $charlist
         );
 
@@ -626,11 +716,11 @@ namespace UTF8
         $ltrim && $left_pattern = '^' . $work_horse;
         $rtrim && $right_pattern = $work_horse . '$';
 
-        if($both_ends)
+        if ($both_ends)
         {
             $pattern_middle = $left_pattern . '|' . $right_pattern;
         }
-        elseif($ltrim)
+        elseif ($ltrim)
         {
             $pattern_middle = $left_pattern;
         }
@@ -640,7 +730,7 @@ namespace UTF8
         }
 
         return preg_replace("/$pattern_middle/usSD", '', $string);
-    } 
+    }
     /**
      * convert an integer to its chr() representation
      *
@@ -650,16 +740,20 @@ namespace UTF8
      */
     function code2utf8($num)
     {
-        if ($num < 128) {
+        if ($num < 128)
+        {
             return chr($num);
         }
-        if ($num < 2048) {
+        if ($num < 2048)
+        {
             return chr(($num >> 6) + 192) . chr(($num & 63) + 128);
         }
-        if ($num < 65536) {
+        if ($num < 65536)
+        {
             return chr(($num >> 12) + 224) . chr((($num >> 6) & 63) + 128) . chr(($num & 63) + 128);
         }
-        if ($num < 2097152) {
+        if ($num < 2097152)
+        {
             return chr(($num >> 18) + 240) . chr((($num >> 12) & 63) + 128) . chr((($num >> 6) & 63) + 128) . chr(($num & 63) + 128);
         }
 

@@ -44,7 +44,8 @@ class ADMINCATEGORIES
         $this->gatekeep->init();
         $this->session->clearArray('edit');
         $this->categories = $this->category->grabAll();
-        if (empty($this->categories)) {
+        if (empty($this->categories))
+        {
             GLOBALS::setTplVar('heading', $this->messages->text("heading", "editCategory"));
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noCategories"));
 
@@ -61,8 +62,9 @@ class ADMINCATEGORIES
     public function catInit($message = FALSE)
     {
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "editCategory"));
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
         $pString = $message;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
@@ -74,24 +76,27 @@ class ADMINCATEGORIES
         $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Add")));
         $td .= \FORM\formEnd();
         $pString .= \HTML\td($td, 'generalTable borderStyleSolid left');
-        if (!empty($this->categories)) {
+        if (!empty($this->categories))
+        {
             // Edit
             // If preferences reduce long categories, we want to transfer the original rather than the condensed version.
             // Store the base64-encoded value for retrieval in the javascript.
-            foreach ($this->categories as $key => $value) {
+            foreach ($this->categories as $key => $value)
+            {
                 $key = $key . '_' . base64_encode($value);
                 $categories[$key] = $value;
             }
             $td = \FORM\formHeader("admin_ADMINCATEGORIES_CORE");
             $td .= \FORM\hidden("method", "editCat");
             $jsonArray = [];
-			$jsonArray[] = [
-				'startFunction' => 'transferCategory',
-			];
+            $jsonArray[] = [
+                'startFunction' => 'transferCategory',
+            ];
             $js = \AJAX\jActionForm('onchange', $jsonArray);
-			foreach ($categories as $categoryEditId => $initialCategory) {
-				break;
-			}
+            foreach ($categories as $categoryEditId => $initialCategory)
+            {
+                break;
+            }
             $td .= \FORM\selectFBoxValue(
                 $this->messages->text("category", "editCategory"),
                 'categoryId',
@@ -115,8 +120,14 @@ class ADMINCATEGORIES
                 'categoryIds',
                 $this->categories,
                 10
-            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "hashFile")), 'hint');
+            ) . BR . \HTML\span(\HTML\aBrowse(
+                'green',
+                '',
+                $this->messages->text("hint", "hint"),
+                '#',
+                "",
+                $this->messages->text("hint", "hashFile")
+            ), 'hint');
             $td .= \HTML\p($this->messages->text("category", "deleteWarning"));
             $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Delete")));
             $td .= \FORM\formEnd();
@@ -134,15 +145,17 @@ class ADMINCATEGORIES
      */
     public function subInit($message = FALSE)
     {
-        if (empty($this->categories)) {
+        if (empty($this->categories))
+        {
             GLOBALS::setTplVar('heading', $this->messages->text("heading", "editCategory"));
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noCategories"));
 
             return;
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "editSubcategory"));
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
         $pString = $message;
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
@@ -163,7 +176,8 @@ class ADMINCATEGORIES
         $pString .= \HTML\td($td, 'generalTable borderStyleSolid left');
         // Edit
         $subcategories = $this->category->grabSubAll();
-        if (is_array($subcategories)) {
+        if (is_array($subcategories))
+        {
             $td = \FORM\formHeader("admin_ADMINCATEGORIES_CORE");
             $td .= \FORM\hidden("method", "editSub");
             $jScript = 'index.php?action=admin_ADMINCATEGORIES_CORE&method=subcatIsPartCat';
@@ -174,13 +188,14 @@ class ADMINCATEGORIES
                 'triggerField' => 'subcategoryId',
                 'targetDiv' => 'categoryIdDiv',
             ];
-			$jsonArray[] = [
-				'startFunction' => 'transferSubcategory',
-			];
+            $jsonArray[] = [
+                'startFunction' => 'transferSubcategory',
+            ];
             $js = \AJAX\jActionForm('onchange', $jsonArray);
             // If preferences reduce long subcategories, we want to transfer the original rather than the condensed version.
             // Store the base64-encoded value for retrieval in the javascript.
-            foreach ($subcategories as $key => $value) {
+            foreach ($subcategories as $key => $value)
+            {
                 $key = $key . '_' . base64_encode($value);
                 $subcats[$key] = $value;
             }
@@ -194,15 +209,18 @@ class ADMINCATEGORIES
             ));
             // Don't collapse the three lines that follow
             // PHP is angry if array_shift get the result of array_keys passed by reference
-            if (array_key_exists('categoryId', $this->formData)) {
-            	$selected = $this->formData['categoryId'];
-        	} else {
-				$subcategoryIdcond = array_keys($subcategories);
-				$subcategoryIdcond = array_shift($subcategoryIdcond);
-				$subcategoryIdcond = ['subcategoryId' => $subcategoryIdcond];
-				$this->db->formatConditions($subcategoryIdcond);
-				$selected = $this->db->selectFirstField('subcategory', 'subcategoryCategoryId');
-			}
+            if (array_key_exists('categoryId', $this->formData))
+            {
+                $selected = $this->formData['categoryId'];
+            }
+            else
+            {
+                $subcategoryIdcond = array_keys($subcategories);
+                $subcategoryIdcond = array_shift($subcategoryIdcond);
+                $subcategoryIdcond = ['subcategoryId' => $subcategoryIdcond];
+                $this->db->formatConditions($subcategoryIdcond);
+                $selected = $this->db->selectFirstField('subcategory', 'subcategoryCategoryId');
+            }
             $td1 .= \HTML\td(\HTML\div('categoryIdDiv', \FORM\selectedBoxValue(
                 $this->messages->text('resources', 'subcategoryPart'),
                 'categoryId',
@@ -210,9 +228,10 @@ class ADMINCATEGORIES
                 $selected,
                 10
             )));
-			foreach ($subcategories as $subcategoryEditId => $initialSubcategory) {
-				break;
-			}
+            foreach ($subcategories as $subcategoryEditId => $initialSubcategory)
+            {
+                break;
+            }
             $split = explode('_', $subcategoryEditId);
             $subcategoryEditId = $split[0];
             $td2 = \HTML\p(\FORM\textInput(FALSE, "subcategoryEdit", $initialSubcategory, 30, 255));
@@ -236,8 +255,14 @@ class ADMINCATEGORIES
                 'subcategoryIds',
                 $subcategories,
                 10
-            ) . BR . \HTML\span(\HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", 
-            	$this->messages->text("hint", "hashFile")), 'hint');
+            ) . BR . \HTML\span(\HTML\aBrowse(
+                'green',
+                '',
+                $this->messages->text("hint", "hint"),
+                '#',
+                "",
+                $this->messages->text("hint", "hashFile")
+            ), 'hint');
             $td .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Delete")));
             $td .= \FORM\formEnd();
             $pString .= \HTML\td($td, 'generalTable borderStyleSolid left');
@@ -274,15 +299,16 @@ class ADMINCATEGORIES
         // database match is case insensitive.
         $this->db->formatConditions(['categoryCategory' => $this->formData['categoryAdd']]);
         $categoryId = $this->db->selectFirstField('category', 'categoryId');
-    	$message = rawurlencode($this->success->text("categoryAdd"));
+        $message = rawurlencode($this->success->text("categoryAdd"));
         // If category already exists quietly return without error.
-        if ($categoryId) {
-			header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&message=$message");
-			die;
+        if ($categoryId)
+        {
+            header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&message=$message");
+            die;
         }
         $this->db->insert('category', 'categoryCategory', $this->formData);
-    	header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&message=$message");
-    	die;
+        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&message=$message");
+        die;
     }
     /**
      * Add a subcategory
@@ -294,19 +320,20 @@ class ADMINCATEGORIES
         $this->db->formatConditions(['subcategorySubcategory' => $this->formData['addSubcategory']]);
         $this->db->formatConditions(['subcategoryCategoryId' => $this->formData['categoryId']]);
         $subcategoryId = $this->db->selectFirstField('subcategory', 'subcategoryId');
-    	$message = rawurlencode($this->success->text("subcategoryAdd"));
+        $message = rawurlencode($this->success->text("subcategoryAdd"));
         // If subcategory already exists quietly return without error.
-        if ($subcategoryId) {
-			header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&message=$message");
-			die;
+        if ($subcategoryId)
+        {
+            header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&message=$message");
+            die;
         }
         $fields[] = 'subcategorySubcategory';
         $values[] = $this->formData['addSubcategory'];
         $fields[] = 'subcategoryCategoryId';
         $values[] = $this->formData['categoryId'];
         $this->db->insert('subcategory', $fields, $values);
-    	header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&message=$message");
-    	die;
+        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&message=$message");
+        die;
     }
     /**
      * Ask for confirmation of delete categories
@@ -334,7 +361,8 @@ class ADMINCATEGORIES
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "editSubcategory"));
         $this->db->formatConditionsOneField($this->formData['subcategoryIds'], 'subcategoryId');
         $recordset = $this->db->select('subcategory', 'subcategorySubCategory');
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $list[] = \HTML\nlToHtml($row['subcategorySubCategory']);
         }
         $subcategories = html_entity_decode(implode(', ', $list));
@@ -353,13 +381,14 @@ class ADMINCATEGORIES
     {
         $this->validateInput('deleteCatConfirm');
         // ensure that category 1 'General' is never deleted
-        if ($key = array_search(1, $this->formData['categoryIds'])) {
+        if ($key = array_search(1, $this->formData['categoryIds']))
+        {
             unset($this->formData['categoryIds'][$key]);
         }
         $this->deleteSql($this->formData['categoryIds']);
-    	$message = rawurlencode($this->success->text("categoryDelete"));
-		header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&message=$message");
-		die;
+        $message = rawurlencode($this->success->text("categoryDelete"));
+        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&message=$message");
+        die;
     }
     /**
      * Delete subcategories
@@ -367,12 +396,13 @@ class ADMINCATEGORIES
     public function deleteSub()
     {
         $this->validateInput('deleteSubConfirm');
-        if (!$this->deleteSubSql($this->formData['subcategoryIds'])) {
+        if (!$this->deleteSubSql($this->formData['subcategoryIds']))
+        {
             $this->badInput($this->errors->text("inputError", "invalid"), 'subInit');
         }
-    	$message = rawurlencode($this->success->text("subcategoryDelete"));
-		header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&message=$message");
-		die;
+        $message = rawurlencode($this->success->text("subcategoryDelete"));
+        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&message=$message");
+        die;
     }
     /**
      * Edit categories
@@ -382,15 +412,16 @@ class ADMINCATEGORIES
         $this->validateInput('editCat');
         $this->db->formatConditions(['categoryId' => $this->formData['id']]);
         $categoryId = $this->db->select('category', 'categoryId');
-        if (!$categoryId) {
+        if (!$categoryId)
+        {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'catInit');
         }
         $update['categoryCategory'] = $this->formData['text'];
         $this->db->formatConditions(['categoryId' => $this->formData['id']]);
         $this->db->update('category', $update);
-    	$message = rawurlencode($this->success->text("categoryEdit"));
-		header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&message=$message");
-		die;
+        $message = rawurlencode($this->success->text("categoryEdit"));
+        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit&message=$message");
+        die;
     }
     /**
      * Edit a subcategory
@@ -401,13 +432,16 @@ class ADMINCATEGORIES
         $this->db->formatConditions(['subcategoryId' => $this->formData['subcategoryEditId']]);
         $oldCatId = $this->db->selectFirstField('subcategory', 'subcategoryCategoryId');
         // Need to insert new rows to resource_category if the category has changed -- get resource Id from this subCategory
-        if ($oldCatId != $this->formData['categoryId']) {
+        if ($oldCatId != $this->formData['categoryId'])
+        {
             $this->db->formatConditions(['resourcecategorySubcategoryId' => $this->formData['subcategoryEditId']]);
             $resultset = $this->db->select('resource_category', ['resourcecategoryCategoryId', 'resourcecategoryResourceId'], TRUE);
-            while ($row = $this->db->fetchRow($resultset)) {
+            while ($row = $this->db->fetchRow($resultset))
+            {
                 $this->db->formatConditions(['resourcecategoryCategoryId' => $this->formData['categoryId']]);
                 $this->db->formatConditions(['resourcecategoryResourceId' => $row['resourcecategoryResourceId']]);
-                if (!$this->db->numRows($this->db->select('resource_category', '*'))) {
+                if (!$this->db->numRows($this->db->select('resource_category', '*')))
+                {
                     $this->db->insert(
                         'resource_category',
                         ['resourcecategoryResourceId', 'resourcecategoryCategoryId'],
@@ -420,9 +454,9 @@ class ADMINCATEGORIES
         $update['subcategoryCategoryId'] = $this->formData['categoryId'];
         $this->db->formatConditions(['subcategoryId' => $this->formData['subcategoryEditId']]);
         $this->db->update('subcategory', $update);
-    	$message = rawurlencode($this->success->text("subcategoryEdit"));
-		header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&message=$message");
-		die;
+        $message = rawurlencode($this->success->text("subcategoryEdit"));
+        header("Location: index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit&message=$message");
+        die;
     }
     /**
      * Delete category(s) from category table
@@ -441,10 +475,12 @@ class ADMINCATEGORIES
         // Find subcategories that are part of the categories and delete those rows from resource_category
         $this->db->formatConditionsOneField($input, 'subcategoryCategoryId');
         $recordset = $this->db->select('subcategory', 'subcategoryId');
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $subcatIds[] = $row['subcategoryId'];
         }
-        if (isset($subcatIds)) {
+        if (isset($subcatIds))
+        {
             $this->db->formatConditionsOneField($subcatIds, 'resourcecategorySubcategoryId');
             $this->db->delete('resource_category');
         }
@@ -452,11 +488,13 @@ class ADMINCATEGORIES
         $subStmt = $this->db->subQuery($this->db->selectNoExecute('resource_category', 'resourcecategoryResourceId'), FALSE, FALSE, TRUE);
         $this->db->formatConditions($this->db->formatFields('resourceId') . $this->db->inClause($subStmt, TRUE));
         $recordset = $this->db->select('resource', 'resourceId');
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $this->db->insert('resource_category', ['resourcecategoryResourceId', 'resourcecategoryCategoryId'], [$row['resourceId'], '1']);
         }
         // Finally delete categories and any subcategories
-        foreach ($input as $value) {
+        foreach ($input as $value)
+        {
             $this->db->formatConditions(['categoryId' => $value]);
             $this->db->delete('category');
             $this->db->formatConditions(['subcategoryCategoryId' => $value]);
@@ -478,7 +516,8 @@ class ADMINCATEGORIES
         $this->db->formatConditionsOneField($input, 'resourcecategorySubcategoryId');
         $this->db->delete('resource_category');
         // Delete subcategories
-        foreach ($input as $value) {
+        foreach ($input as $value)
+        {
             $this->db->formatConditions(['subcategoryId' => $value]);
             $this->db->delete('subcategory');
         }
@@ -492,76 +531,107 @@ class ADMINCATEGORIES
      */
     private function validateInput($type)
     {
-    	$error = '';
-        if ($type == 'addCat') {
-            if (!\UTF8\mb_trim($this->vars['categoryAdd'])) {
-            	$error = $this->errors->text("inputError", "missing");
-            	$function = 'catInit';
+        $error = '';
+        if ($type == 'addCat')
+        {
+            if (!\UTF8\mb_trim($this->vars['categoryAdd']))
+            {
+                $error = $this->errors->text("inputError", "missing");
+                $function = 'catInit';
             }
             $this->formData['categoryAdd'] = \UTF8\mb_trim($this->vars['categoryAdd']);
-        } elseif ($type == 'addSub') {
-            if (!\UTF8\mb_trim($this->vars['addSubcategory']) || !$this->vars['categoryId']) {
-            	$error = $this->errors->text("inputError", "missing");
-            	$function = 'subInit';
+        }
+        elseif ($type == 'addSub')
+        {
+            if (!\UTF8\mb_trim($this->vars['addSubcategory']) || !$this->vars['categoryId'])
+            {
+                $error = $this->errors->text("inputError", "missing");
+                $function = 'subInit';
             }
             $this->formData['addSubcategory'] = \UTF8\mb_trim($this->vars['addSubcategory']);
             $this->formData['categoryId'] = $this->vars['categoryId'];
-        } elseif ($type == 'deleteCat') {
-            if (!array_key_exists('categoryIds', $this->vars) || !$this->vars['categoryIds']) {
-            	$error = $this->errors->text("inputError", "missing");
-            	$function = 'catInit';
+        }
+        elseif ($type == 'deleteCat')
+        {
+            if (!array_key_exists('categoryIds', $this->vars) || !$this->vars['categoryIds'])
+            {
+                $error = $this->errors->text("inputError", "missing");
+                $function = 'catInit';
             }
-            if (array_key_exists('categoryIds', $this->vars)) {
-	            $this->formData['categoryIds'] = $this->vars['categoryIds'];
-	        }
-        } elseif ($type == 'deleteCatConfirm') {
-            if (!array_key_exists('categoryIds', $this->vars) || !$this->vars['categoryIds']) {
-            	$error = $this->errors->text("inputError", "missing");
-            	$function = 'catInit';
+            if (array_key_exists('categoryIds', $this->vars))
+            {
+                $this->formData['categoryIds'] = $this->vars['categoryIds'];
             }
-            if (array_key_exists('categoryIds', $this->vars)) {
-            	$this->formData['categoryIds'] = unserialize(base64_decode($this->vars['categoryIds']));
+        }
+        elseif ($type == 'deleteCatConfirm')
+        {
+            if (!array_key_exists('categoryIds', $this->vars) || !$this->vars['categoryIds'])
+            {
+                $error = $this->errors->text("inputError", "missing");
+                $function = 'catInit';
             }
-        } elseif ($type == 'deleteSub') {
-            if (!array_key_exists('subcategoryIds', $this->vars) || !$this->vars['subcategoryIds']) {
-            	$error = $this->errors->text("inputError", "missing");
-            	$function = 'subInit';
+            if (array_key_exists('categoryIds', $this->vars))
+            {
+                $this->formData['categoryIds'] = unserialize(base64_decode($this->vars['categoryIds']));
             }
-            if (array_key_exists('subcategoryIds', $this->vars)) {
-            	$this->formData['subcategoryIds'] = $this->vars['subcategoryIds'];
+        }
+        elseif ($type == 'deleteSub')
+        {
+            if (!array_key_exists('subcategoryIds', $this->vars) || !$this->vars['subcategoryIds'])
+            {
+                $error = $this->errors->text("inputError", "missing");
+                $function = 'subInit';
             }
-        } elseif ($type == 'deleteSubConfirm') {
-            if (!array_key_exists('subcategoryIds', $this->vars) || !$this->vars['subcategoryIds']) {
-            	$error = $this->errors->text("inputError", "missing");
-            	$function = 'subInit';
+            if (array_key_exists('subcategoryIds', $this->vars))
+            {
+                $this->formData['subcategoryIds'] = $this->vars['subcategoryIds'];
             }
-            if (array_key_exists('subcategoryIds', $this->vars)) {
-            	$this->formData['subcategoryIds'] = unserialize(base64_decode($this->vars['subcategoryIds']));
+        }
+        elseif ($type == 'deleteSubConfirm')
+        {
+            if (!array_key_exists('subcategoryIds', $this->vars) || !$this->vars['subcategoryIds'])
+            {
+                $error = $this->errors->text("inputError", "missing");
+                $function = 'subInit';
             }
-        } elseif ($type == 'editCat') {
-            if (!\UTF8\mb_trim($this->vars['categoryEdit']) || !array_key_exists('categoryEditId', $this->vars)) {
-            	$error = $this->errors->text("inputError", "missing");
-            	$function = 'catInit';
+            if (array_key_exists('subcategoryIds', $this->vars))
+            {
+                $this->formData['subcategoryIds'] = unserialize(base64_decode($this->vars['subcategoryIds']));
+            }
+        }
+        elseif ($type == 'editCat')
+        {
+            if (!\UTF8\mb_trim($this->vars['categoryEdit']) || !array_key_exists('categoryEditId', $this->vars))
+            {
+                $error = $this->errors->text("inputError", "missing");
+                $function = 'catInit';
             }
             $this->formData['text'] = \UTF8\mb_trim($this->vars['categoryEdit']);
-            if (array_key_exists('categoryEditId', $this->vars)) {
-            	$this->formData['id'] = $this->vars['categoryEditId'];
+            if (array_key_exists('categoryEditId', $this->vars))
+            {
+                $this->formData['id'] = $this->vars['categoryEditId'];
             }
-        } elseif ($type == 'editSub') {
+        }
+        elseif ($type == 'editSub')
+        {
             if (!\UTF8\mb_trim($this->vars['subcategoryEdit']) || !array_key_exists('subcategoryEditId', $this->vars) ||
-                !array_key_exists('categoryId', $this->vars) || !$this->vars['subcategoryEditId'] || !$this->vars['categoryId']) {
-            	$error = $this->errors->text("inputError", "missing");
-            	$function = 'subInit';
+                !array_key_exists('categoryId', $this->vars) || !$this->vars['subcategoryEditId'] || !$this->vars['categoryId'])
+            {
+                $error = $this->errors->text("inputError", "missing");
+                $function = 'subInit';
             }
             $this->formData['subcategoryEdit'] = \UTF8\mb_trim($this->vars['subcategoryEdit']);
-            if (array_key_exists('subcategoryEditId', $this->vars)) {
-	            $this->formData['subcategoryEditId'] = $this->vars['subcategoryEditId'];
-	        }
-            if (array_key_exists('categoryId', $this->vars)) {
-	            $this->formData['categoryId'] = $this->vars['categoryId'];
-	        }
+            if (array_key_exists('subcategoryEditId', $this->vars))
+            {
+                $this->formData['subcategoryEditId'] = $this->vars['subcategoryEditId'];
+            }
+            if (array_key_exists('categoryId', $this->vars))
+            {
+                $this->formData['categoryId'] = $this->vars['categoryId'];
+            }
         }
-        if ($error) {
+        if ($error)
+        {
             $this->badInput->close($error, $this, $function);
         }
     }

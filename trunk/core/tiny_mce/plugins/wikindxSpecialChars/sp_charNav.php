@@ -36,7 +36,7 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "startup",
 	}
 	</style>
 
-	<script src="<?php echo WIKINDX_URL_BASE; ?>/core/tiny_mce/tiny_mce_popup.js?ver=<?=WIKINDX_PUBLIC_VERSION?>"></script>
+	<script src="<?php echo WIKINDX_URL_BASE; ?>/core/tiny_mce/tiny_mce_popup.js?ver=<?php echo WIKINDX_PUBLIC_VERSION;?>"></script>
 	
 	<script>
 	tinyMCEPopup.requireLangPack();
@@ -75,7 +75,8 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "sp_charTableDef.php"]));
 
 ?><option value="sp_char.php?ul=0">Select a character set:</option><?php
 
-foreach ($tableChars as $anchorNumber => $listDef) {
+foreach ($tableChars as $anchorNumber => $listDef)
+{
     ?><option value="sp_char.php?ul=<?php echo('ul' . $anchorNumber); ?>"><?php echo($listDef['id']); ?></option><?php
 }
 

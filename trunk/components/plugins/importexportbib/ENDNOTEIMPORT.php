@@ -97,24 +97,30 @@ class ENDNOTEIMPORT
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTEPARSEXML.php"]));
         $parse = new ENDNOTEPARSEXML();
         $entries = $parse->extractEntries($this->fileName);
-        if (!$parse->version8) {
+        if (!$parse->version8)
+        {
             $this->badInput(HTML\p($this->pluginmessages->text('importEndnoteNotv8'), 'error'));
         }
-        if (empty($entries)) {
+        if (empty($entries))
+        {
             $this->badInput(HTML\p($this->pluginmessages->text('empty'), 'error'));
         }
         $this->version8 = $parse->version8;
         $this->endnoteVersion();
-        foreach ($entries as $key => $entry) {
+        foreach ($entries as $key => $entry)
+        {
             $this->entry = $this->reject = [];
-            if ($this->convertEntries($entry)) {
+            if ($this->convertEntries($entry))
+            {
                 $this->entries[$key] = $this->entry;
             }
-            if (!empty($this->reject)) {
+            if (!empty($this->reject))
+            {
                 $this->rejects[$key] = $this->reject;
             }
         }
-        if (empty($this->entries)) {
+        if (empty($this->entries))
+        {
             $this->badInput(HTML\p($this->pluginmessages->text('empty'), 'error'));
         }
         $this->formData['import_Rejects'] = $this->rejects;
@@ -132,22 +138,27 @@ class ENDNOTEIMPORT
         $this->formData = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
         $this->rejects = $this->formData['import_Rejects'];
         \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
-        if (!is_file($this->formData["import_FileNameEntries"])) {
+        if (!is_file($this->formData["import_FileNameEntries"]))
+        {
             $this->badInput->close($this->errors->text("file", "read", implode(DIRECTORY_SEPARATOR, [$this->dirName,
-            $this->formData["import_FileNameEntries"]])), $this->badClass, $this->badFunction);
+                $this->formData["import_FileNameEntries"], ])), $this->badClass, $this->badFunction);
         }
         $this->garbageFiles[$this->formData["import_FileNameEntries"]] = FALSE;
-        if ($this->fileName = fopen($this->formData["import_FileNameEntries"], 'r')) {
-            if (!feof($this->fileName)) {
+        if ($this->fileName = fopen($this->formData["import_FileNameEntries"], 'r'))
+        {
+            if (!feof($this->fileName))
+            {
                 $this->entries = unserialize(base64_decode(trim(fgets($this->fileName))));
             }
             fclose($this->fileName);
         }
-        if (empty($this->entries)) {
+        if (empty($this->entries))
+        {
             $this->badInput($this->errors->text("import", "empty"));
         }
         list($error, $this->customFields, $this->unrecognisedFields) = $this->common->getUnrecognisedFields($this->formData);
-        if ($error) {
+        if ($error)
+        {
             $this->badInput($error);
         }
         // NB - we need to write data to database as UTF-8 and parse all bibTeX values for laTeX code
@@ -160,35 +171,41 @@ class ENDNOTEIMPORT
      */
     public function continueImport()
     {
-		$data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
-        if (array_key_exists("import_RejectTitles", $data)) {
-       		$this->rejectTitles = $data["import_RejectTitles"];
-       	}
-        if (array_key_exists("import_Rejects", $data)) {
-       		$this->rejects = $data["import_Rejects"];
-       	}
+        $data = \TEMPSTORAGE\fetch($this->db, $this->vars['uuid']);
+        if (array_key_exists("import_RejectTitles", $data))
+        {
+            $this->rejectTitles = $data["import_RejectTitles"];
+        }
+        if (array_key_exists("import_Rejects", $data))
+        {
+            $this->rejects = $data["import_Rejects"];
+        }
         $this->rIds = $data["import_ResourceIds"];
         // Number added so far
         $this->resourceAdded = $data["import_ResourceAdded"];
         // Number discarded so far
         $this->resourceDiscarded = $data["import_ResourceDiscarded"];
         // tag ID
-        if (array_key_exists("import_TagId", $data)) {
+        if (array_key_exists("import_TagId", $data))
+        {
             $this->tagId = $data["import_TagId"];
         }
         // bibtexString ID
-        if (array_key_exists("import_BibtexStringId", $data)) {
+        if (array_key_exists("import_BibtexStringId", $data))
+        {
             $this->bibtexStringId = $data["import_BibtexStringId"];
         }
         $this->entriesLeft = $this->entries = $data["import_Entries"];
         $this->garbageFiles = $data["import_GarbageFiles"];
-        if (array_key_exists("import_UnrecognisedFields", $data)) {
+        if (array_key_exists("import_UnrecognisedFields", $data))
+        {
             $this->unrecognisedFields = $data["import_UnrecognisedFields"];
-			if (array_key_exists("import_CustomFields", $data)) {
-				$this->customFields = $data["import_CustomFields"];
+            if (array_key_exists("import_CustomFields", $data))
+            {
+                $this->customFields = $data["import_CustomFields"];
             }
         }
-		\TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+        \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
         $this->vars = $data["import_ThisVars"];
         $finalInput = $this->writeDb(TRUE);
         $this->cleanUp($finalInput);
@@ -201,23 +218,29 @@ class ENDNOTEIMPORT
     private function findInvalidFields()
     {
         $this->invalidFieldNames = [];
-        if (!empty($this->inputTypes)) {
+        if (!empty($this->inputTypes))
+        {
             $this->inputTypes = array_unique($this->inputTypes);
         }
         $this->day = $this->month = FALSE;
-        foreach ($this->rejects as $reject) {
-            foreach ($reject as $field => $value) {
-                if (($field == 'source-app') || ($field == 'ref-type') || is_array($value)) {
+        foreach ($this->rejects as $reject)
+        {
+            foreach ($reject as $field => $value)
+            {
+                if (($field == 'source-app') || ($field == 'ref-type') || is_array($value))
+                {
                     continue;
                 }
-                if (array_search($field, $this->invalidFieldNames) === FALSE) {
+                if (array_search($field, $this->invalidFieldNames) === FALSE)
+                {
                     $this->invalidFieldNames[] = $field;
                 }
             }
         }
         // Can only map to custom fields – check there are some. . .
-		$recordset = $this->db->select('custom', ['customId', 'customLabel']);
-        if (!empty($this->invalidFieldNames) && $this->db->numRows($recordset)) { // prompt to map field names
+        $recordset = $this->db->select('custom', ['customId', 'customLabel']);
+        if (!empty($this->invalidFieldNames) && $this->db->numRows($recordset))
+        { // prompt to map field names
             list($error, $pString, $uuid) = $this->common->promptFieldNames(
                 $this->entries,
                 $this->inputTypes,
@@ -226,13 +249,16 @@ class ENDNOTEIMPORT
                 FALSE,
                 $this->formData
             );
-            if ($error) {
+            if ($error)
+            {
                 $this->badInput($error);
-            } else {
-            	@unlink($this->fileName); // remove garbage - ignore errors
-            	\TEMPSTORAGE\store($this->db, $uuid, ['form' => $pString, 'heading' => $this->pluginmessages->text("headerEndnoteImport")]);
-				header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importInvalidFields&uuid=$uuid");
-				die;
+            }
+            else
+            {
+                @unlink($this->fileName); // remove garbage - ignore errors
+                \TEMPSTORAGE\store($this->db, $uuid, ['form' => $pString, 'heading' => $this->pluginmessages->text("headerEndnoteImport")]);
+                header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importInvalidFields&uuid=$uuid");
+                die;
             }
         }
 
@@ -250,47 +276,59 @@ class ENDNOTEIMPORT
         $totalResources = $this->db->fetchOne($recordset) + $this->resourceAddedThisRound;
         $this->db->update('database_summary', ['databasesummaryTotalResources' => $totalResources]);
         $uuid = \TEMPSTORAGE\getUuid($this->db);
-        if ($finalInput) {
-	        \TEMPSTORAGE\store($this->db, $uuid, 
-	        	['rIds' => $this->rIds, 'resourceAdded' => $this->resourceAdded, 'garbageFiles' => $this->garbageFiles, 
-	        	'resourceDiscarded' => $this->resourceDiscarded, 'rejectTitles' => $this->rejectTitles, 'rejects' => $this->rejects, 
-	        	'deleteCacheCreators' => $this->deleteCacheCreators, 'deleteCachePublishers' => $this->deleteCachePublishers, 
-	        	'deleteCacheCollections' => $this->deleteCacheCollections, 'deleteCacheKeywords' => $this->deleteCacheKeywords]);
-	        $message = rawurlencode(HTML\p($this->pluginmessages->text("importEndnoteSuccess"), 'success'));
-			header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importSuccess&message=$message&uuid=$uuid");
-			die;
-        } else {
+        if ($finalInput)
+        {
+            \TEMPSTORAGE\store(
+                $this->db,
+                $uuid,
+                ['rIds' => $this->rIds, 'resourceAdded' => $this->resourceAdded, 'garbageFiles' => $this->garbageFiles,
+                    'resourceDiscarded' => $this->resourceDiscarded, 'rejectTitles' => $this->rejectTitles, 'rejects' => $this->rejects,
+                    'deleteCacheCreators' => $this->deleteCacheCreators, 'deleteCachePublishers' => $this->deleteCachePublishers,
+                    'deleteCacheCollections' => $this->deleteCacheCollections, 'deleteCacheKeywords' => $this->deleteCacheKeywords, ]
+            );
+            $message = rawurlencode(HTML\p($this->pluginmessages->text("importEndnoteSuccess"), 'success'));
+            header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importSuccess&message=$message&uuid=$uuid");
+            die;
+        }
+        else
+        {
             // Number added
             $tsArray["import_ResourceAdded"] = $this->resourceAdded;
             // Number of rejects
             $tsArray["import_ResourceDiscarded"] = $this->resourceDiscarded;
             // tag ID
-            if (isset($this->tagId)) {
+            if (isset($this->tagId))
+            {
                 $tsArray["import_TagId"] = $this->tagId;
             }
             // bibtexString ID
-            if (isset($this->bibtexStringId)) {
-                $tsArray["import_BibtexStringId"] =  $this->bibtexStringId;
+            if (isset($this->bibtexStringId))
+            {
+                $tsArray["import_BibtexStringId"] = $this->bibtexStringId;
             }
             // Resource IDs
             $tsArray["import_ResourceIds"] = $this->rIds;
             // Remaining entries
             $tsArray["import_Entries"] = $this->entriesLeft;
             // Rejected titles
-            if (!empty($this->rejectTitles)) {
+            if (!empty($this->rejectTitles))
+            {
                 $tsArray["import_RejectTitles"] = $this->rejectTitles;
             }
             // Rejected titles
-            if (!empty($this->rejects)) {
+            if (!empty($this->rejects))
+            {
                 $tsArray["import_Rejects"] = $this->rejects;
             }
             // garbage files
             $tsArray["import_GarbageFiles"] = $this->garbageFiles;
             // Unrecognised field mapping
-            if (isset($this->unrecognisedFields)) {
+            if (isset($this->unrecognisedFields))
+            {
                 $tsArray["import_UnrecognisedFields"] = $this->unrecognisedFields;
                 // Custom field mapping
-                if (isset($this->customFields)) {
+                if (isset($this->customFields))
+                {
                     $tsArray["import_CustomFields"] = $this->customFields;
                 }
                 $tsArray["import_ThisVars"] = $this->vars;
@@ -311,9 +349,9 @@ class ENDNOTEIMPORT
             $pString .= FORM\formEnd();
             $tsArray['heading'] = $this->pluginmessages->text("headerEndnoteImport");
             $tsArray['form'] = $pString;
-	        \TEMPSTORAGE\store($this->db, $uuid, $tsArray);
-			header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importContinue&uuid=$uuid");
-			die;
+            \TEMPSTORAGE\store($this->db, $uuid, $tsArray);
+            header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importContinue&uuid=$uuid");
+            die;
         }
     }
     /**
@@ -322,10 +360,13 @@ class ENDNOTEIMPORT
      */
     private function endnoteVersion()
     {
-        if ($this->version8) {
+        if ($this->version8)
+        {
             $this->importTypes = $this->map->importTypes8;
             $this->endnoteXmlFields = $this->map->endnoteXmlFields8;
-        } else {
+        }
+        else
+        {
             $this->importTypes = $this->map->importTypesPre8;
             $this->endnoteXmlFields = $this->map->endnoteXmlFieldsPre8;
         }
@@ -339,18 +380,22 @@ class ENDNOTEIMPORT
      */
     private function writeDb($continue = FALSE)
     {
-        if (array_key_exists('import_Quarantine', $this->formData)) {
-        	$this->import->quarantine = TRUE;
+        if (array_key_exists('import_Quarantine', $this->formData))
+        {
+            $this->import->quarantine = TRUE;
         }
-        if (array_key_exists('import_KeywordIgnore', $this->formData)) {
-        	$this->import->kwIgnore = TRUE;
+        if (array_key_exists('import_KeywordIgnore', $this->formData))
+        {
+            $this->import->kwIgnore = TRUE;
         }
         $tagWritten = FALSE;
-        if (!$continue) {
+        if (!$continue)
+        {
             $this->tagId = FALSE;
         }
         $finalInput = TRUE;
-        foreach ($this->entries as $key => $entry) {
+        foreach ($this->entries as $key => $entry)
+        {
             $custom = [];
             unset($this->entriesLeft[$key]);
             $this->entry = $entry;
@@ -359,7 +404,8 @@ class ENDNOTEIMPORT
             if ((($this->entry['type'] == 'book') || ($this->entry['type'] == 'book_article')) &&
                 array_key_exists('resource_year', $this->entry) &&
                 array_key_exists('resourceyearYear1', $this->entry['resource_year'])
-                && array_key_exists('resourceyearYear2', $this->entry['resource_year'])) {
+                && array_key_exists('resourceyearYear2', $this->entry['resource_year']))
+            {
                 $year2 = $this->entry['resource_year']['resourceyearYear2'];
                 $this->entry['resource_year']['resourceyearYear2'] = $this->entry['resource_year']['resourceyearYear1'];
                 $this->entry['resource_year']['resourceyearYear1'] = $year2;
@@ -367,7 +413,8 @@ class ENDNOTEIMPORT
             list($noSort, $title, $subtitle) = $this->common->splitTitle($this->entry['title'], $this->formData);
             if ($this->common->checkDuplicates($noSort, $title, $subtitle, $this->entry['type'], $this->formData)
             ||
-            (array_search($this->entry['type'], WIKINDX_DEACTIVATE_RESOURCE_TYPES) !== FALSE)) {
+            (array_search($this->entry['type'], WIKINDX_DEACTIVATE_RESOURCE_TYPES) !== FALSE))
+            {
                 $rejectTitle = $this->entry['title'] . ".";
                 $this->rejectTitles[] = $rejectTitle;
                 $this->resourceDiscarded++;
@@ -377,26 +424,33 @@ class ENDNOTEIMPORT
             }
             $this->publisherId = $this->collectionId = FALSE;
             $this->grabDate($this->entry['type']);
-            if(array_key_exists($key, $this->rejects)) {
-	            $custom = $this->reject($key);
-	        }
+            if (array_key_exists($key, $this->rejects))
+            {
+                $custom = $this->reject($key);
+            }
             $this->resourceId = $this->writeResourceTable($noSort, $title, $subtitle);
             // add any import tag and get tag auto ID.  We write it here after the resource table in case we forbid duplicates and all
             // endnote entries are duplicates - we don't want an empty tag in the WKX_tag table.
-            if (!$continue) {
-                if (!$tagWritten) {
+            if (!$continue)
+            {
+                if (!$tagWritten)
+                {
                     $this->tagId = $this->common->writeTagTable($this->formData);
                     $tagWritten = TRUE;
                 }
             }
-            if (array_key_exists('creators', $this->entry)) {
+            if (array_key_exists('creators', $this->entry))
+            {
                 $creators = [];
-                foreach ($this->entry['creators'] as $creatorRole => $creatorRoleArray) {
+                foreach ($this->entry['creators'] as $creatorRole => $creatorRoleArray)
+                {
                     $creatorRoleString = implode(" and ", $creatorRoleArray);
                     $creators[$creatorRole] = $this->parseCreator->parse($creatorRoleString);
                 }
-				$this->deleteCacheCreators = TRUE;
-            } else {
+                $this->deleteCacheCreators = TRUE;
+            }
+            else
+            {
                 $creators = [];
             }
             $this->common->writeCreatorTables($creators);
@@ -406,7 +460,8 @@ class ENDNOTEIMPORT
             $this->writeResourceYearTable();
             $this->writeResourcePageTable();
             $this->writeResourceKeywordTable();
-            if (!empty($custom)) {
+            if (!empty($custom))
+            {
                 $this->writeResourceCustomTable($custom);
             }
             $this->common->writeResourceCategoryTable($this->formData["import_Categories"]);
@@ -417,7 +472,8 @@ class ENDNOTEIMPORT
             $this->resourceAdded++;
             $this->resourceAddedThisRound++;
             // Check we have more than 5 seconds buffer before max_execution_time times out.
-            if ((time() - $this->oldTime) >= (ini_get("max_execution_time") - 5)) {
+            if ((time() - $this->oldTime) >= (ini_get("max_execution_time") - 5))
+            {
                 $finalInput = FALSE;
 
                 break;
@@ -441,51 +497,63 @@ class ENDNOTEIMPORT
     {
         $custom = [];
         $wkType = $this->entry['type'];
-        foreach ($this->rejects[$topKey] as $key => $value) {
+        foreach ($this->rejects[$topKey] as $key => $value)
+        {
             $newEntry = [];
             if (($key == 'bibtexEntryType') ||
-            ($key == 'howpublished') || ($key == 'abstract') || ($key == 'keywords')) {
+            ($key == 'howpublished') || ($key == 'abstract') || ($key == 'keywords'))
+            {
                 $newEntry[$key] = $value;
 
                 continue;
             }
-            if ($key == 'note') { // Use 'note' in preference to 'annote'
+            if ($key == 'note')
+            { // Use 'note' in preference to 'annote'
                 $newEntry[$key] = $value;
 
                 continue;
             }
-            if (($key == 'annote') && !array_key_exists('note', $this->entry)) { // Use 'note' in preference to 'annote'
+            if (($key == 'annote') && !array_key_exists('note', $this->entry))
+            { // Use 'note' in preference to 'annote'
                 $newEntry[$key] = $value;
 
                 continue;
             }
-            if (array_search($key, $this->map->{$wkType}['possible']) !== FALSE) {
-                if (!array_key_exists($key, $newEntry)) {
+            if (array_search($key, $this->map->{$wkType}['possible']) !== FALSE)
+            {
+                if (!array_key_exists($key, $newEntry))
+                {
                     $newEntry[$key] = $value;
                 }
             }
             // Do we map unrecognised fields?
-            if (!empty($this->unrecognisedFields) && array_search($key, $this->unrecognisedFields) !== FALSE) {
+            if (!empty($this->unrecognisedFields) && array_search($key, $this->unrecognisedFields) !== FALSE)
+            {
                 $importKey = 'import_' . $key;
                 if (array_key_exists($importKey, $this->vars) &&
-                    array_search($this->vars[$importKey], $this->map->{$wkType}['possible']) !== FALSE) {
+                    array_search($this->vars[$importKey], $this->map->{$wkType}['possible']) !== FALSE)
+                {
                     // Do unrecognised fields take precedence?
-                    if (array_key_exists('import_Precedence', $this->vars)) {
+                    if (array_key_exists('import_Precedence', $this->vars))
+                    {
                         $newEntry[$this->vars[$importKey]] = $value;
 
                         continue;
                     }
-                    if (!array_key_exists($this->vars[$importKey], $newEntry)) {
+                    if (!array_key_exists($this->vars[$importKey], $newEntry))
+                    {
                         $newEntry[$this->vars[$importKey]] = $value;
 
                         continue;
                     }
                 }
             }
-            if (array_key_exists($key, $newEntry)) {
+            if (array_key_exists($key, $newEntry))
+            {
                 continue;
             }
-            if (!empty($this->customFields) && array_key_exists($key, $this->customFields)) {
+            if (!empty($this->customFields) && array_key_exists($key, $this->customFields))
+            {
                 $custom[$key] = $value;
 
                 continue;
@@ -526,7 +594,8 @@ class ENDNOTEIMPORT
     private function writeResourceTable($noSort, $title, $subtitle)
     {
         // If there's nothing saying whether a thesis is a thesis or a dissertation, here we force it to 'thesis'.
-        if ($this->entry['type'] == 'thesis') {
+        if ($this->entry['type'] == 'thesis')
+        {
             $fields[] = 'resourceField1';
             $values[] = 'thesis';
         }
@@ -535,20 +604,25 @@ class ENDNOTEIMPORT
         $fields[] = 'resourceTitle';
         $values[] = $title;
         $titleSort = $title;
-        if ($noSort) {
+        if ($noSort)
+        {
             $fields[] = 'resourceNoSort';
             $values[] = $noSort;
         }
-        if ($subtitle) {
+        if ($subtitle)
+        {
             $fields[] = 'resourceSubtitle';
             $values[] = $subtitle;
             $titleSort .= ' ' . $subtitle;
         }
         $fields[] = 'resourceTitleSort';
         $values[] = str_replace(['{', '}'], '', $titleSort);
-        if (array_key_exists('resource', $this->entry)) {
-            foreach ($this->entry['resource'] as $field => $value) {
-                if (($this->entry['type'] == 'thesis') && ($field == 'resourceField1')) {
+        if (array_key_exists('resource', $this->entry))
+        {
+            foreach ($this->entry['resource'] as $field => $value)
+            {
+                if (($this->entry['type'] == 'thesis') && ($field == 'resourceField1'))
+                {
                     continue;
                 }
                 $fields[] = $field;
@@ -563,17 +637,21 @@ class ENDNOTEIMPORT
      */
     private function writeCollectionTable()
     {
-        if (!array_key_exists('resource_collection', $this->entry)) {
+        if (!array_key_exists('resource_collection', $this->entry))
+        {
             return;
         }
         $title = $short = FALSE;
-        if (array_key_exists('collectionTitle', $this->entry['resource_collection'])) {
+        if (array_key_exists('collectionTitle', $this->entry['resource_collection']))
+        {
             $title = trim($this->entry['resource_collection']['collectionTitle']);
         }
-        if (array_key_exists('collectionTitleShort', $this->entry['resource_collection'])) {
+        if (array_key_exists('collectionTitleShort', $this->entry['resource_collection']))
+        {
             $short = trim($this->entry['resource_collection']['collectionTitleShort']);
         }
-        if (!$title) {
+        if (!$title)
+        {
             return;
         }
         $this->collectionId = $this->common->writeCollectionTable($title, $short, $this->entry['type']);
@@ -584,17 +662,21 @@ class ENDNOTEIMPORT
      */
     private function writePublisherTable()
     {
-        if (!array_key_exists('resource_publisher', $this->entry)) {
+        if (!array_key_exists('resource_publisher', $this->entry))
+        {
             return;
         }
         $publisherName = $publisherLocation = FALSE;
-        if (array_key_exists('publisherName', $this->entry['resource_publisher'])) {
+        if (array_key_exists('publisherName', $this->entry['resource_publisher']))
+        {
             $publisherName = trim($this->entry['resource_publisher']['publisherName']);
         }
-        if (array_key_exists('publisherLocation', $this->entry['resource_publisher'])) {
+        if (array_key_exists('publisherLocation', $this->entry['resource_publisher']))
+        {
             $publisherLocation = trim($this->entry['resource_publisher']['publisherLocation']);
         }
-        if (!$publisherName) {
+        if (!$publisherName)
+        {
             return;
         }
         $this->publisherId = $this->common->writePublisherTable($publisherName, $publisherLocation, $this->entry['type']);
@@ -605,27 +687,35 @@ class ENDNOTEIMPORT
      */
     private function writeResourceMiscTable()
     {
-    	$intRequired = ['resourcemiscField1', 'resourcemiscField2', 'resourcemiscField3', 'resourcemiscField4', 
-    		'resourcemiscField5', 'resourcemiscField6'];
-        if (array_key_exists('resource_misc', $this->entry)) {
-            foreach ($this->entry['resource_misc'] as $field => $value) {
+        $intRequired = ['resourcemiscField1', 'resourcemiscField2', 'resourcemiscField3', 'resourcemiscField4',
+            'resourcemiscField5', 'resourcemiscField6', ];
+        if (array_key_exists('resource_misc', $this->entry))
+        {
+            foreach ($this->entry['resource_misc'] as $field => $value)
+            {
                 $fields[] = $field;
-                if (in_array($field, $intRequired)) {
-                	$values[] = preg_replace("/[^0-9]/", '', $value);
-                } else {
-	                $values[] = $value;
-	            }
+                if (in_array($field, $intRequired))
+                {
+                    $values[] = preg_replace("/[^0-9]/", '', $value);
+                }
+                else
+                {
+                    $values[] = $value;
+                }
             }
         }
-        if ($this->collectionId) {
+        if ($this->collectionId)
+        {
             $fields[] = 'resourcemiscCollection';
             $values[] = $this->collectionId;
         }
-        if ($this->publisherId) {
+        if ($this->publisherId)
+        {
             $fields[] = 'resourcemiscPublisher';
             $values[] = $this->publisherId;
         }
-        if ($this->tagId) {
+        if ($this->tagId)
+        {
             $fields[] = 'resourcemiscTag';
             $values[] = $this->tagId;
         }
@@ -638,13 +728,16 @@ class ENDNOTEIMPORT
      */
     private function writeResourceYearTable()
     {
-        if (array_key_exists('resource_year', $this->entry)) {
-            foreach ($this->entry['resource_year'] as $field => $value) {
+        if (array_key_exists('resource_year', $this->entry))
+        {
+            foreach ($this->entry['resource_year'] as $field => $value)
+            {
                 $fields[] = $field;
                 $values[] = $value;
             }
         }
-        if (!isset($fields)) {
+        if (!isset($fields))
+        {
             return;
         }
         $this->common->writeYearTable($fields, $values);
@@ -654,16 +747,19 @@ class ENDNOTEIMPORT
      */
     private function writeResourcePageTable()
     {
-        if (!array_key_exists('PageStart', $this->entry)) {
+        if (!array_key_exists('PageStart', $this->entry))
+        {
             return;
         }
         $fields[] = 'resourcepagePageStart';
         $values[] = $this->entry['PageStart'];
-        if (array_key_exists('PageEnd', $this->entry)) {
+        if (array_key_exists('PageEnd', $this->entry))
+        {
             $fields[] = 'resourcepagePageEnd';
             $values[] = $this->entry['PageEnd'];
         }
-        if (!isset($fields)) {
+        if (!isset($fields))
+        {
             return;
         }
         $this->common->writePageTable($fields, $values);
@@ -674,13 +770,16 @@ class ENDNOTEIMPORT
     private function writeResourceTextTable()
     {
         $notes = $abstract = $url = FALSE;
-        if (array_key_exists('notes', $this->entry)) {
+        if (array_key_exists('notes', $this->entry))
+        {
             $notes = $this->entry['notes'];
         }
-        if (array_key_exists('abstract', $this->entry)) {
+        if (array_key_exists('abstract', $this->entry))
+        {
             $abstract = $this->entry['abstract'];
         }
-        if (array_key_exists('URLS', $this->entry)) {
+        if (array_key_exists('URLS', $this->entry))
+        {
             $url = $this->entry['URLS'];
         }
         $this->common->writeResourcetextTable($notes, $abstract, $url);
@@ -690,7 +789,8 @@ class ENDNOTEIMPORT
      */
     private function writeResourceKeywordTable()
     {
-        if (array_key_exists('keywords', $this->entry)) {
+        if (array_key_exists('keywords', $this->entry))
+        {
             $this->common->writeKeywordTables($this->entry['keywords']);
             $this->deleteCacheKeywords = TRUE;
         }
@@ -702,11 +802,14 @@ class ENDNOTEIMPORT
      */
     private function writeResourceCustomTable($custom)
     {
-        if (empty($this->customFields)) {
+        if (empty($this->customFields))
+        {
             return;
         }
-        foreach ($this->customFields as $importKey => $id) {
-            if (!array_key_exists($importKey, $custom)) {
+        foreach ($this->customFields as $importKey => $id)
+        {
+            if (!array_key_exists($importKey, $custom))
+            {
                 continue;
             }
             $this->common->writeResourcecustomTable($custom[$importKey], $id);
@@ -719,25 +822,32 @@ class ENDNOTEIMPORT
      */
     private function grabDate($type)
     {
-        if (array_key_exists('date', $this->entry)) {
-            if (!array_key_exists('resource_misc', $this->map->{$type}) or empty($this->map->{$type}['resource_misc'])) {
+        if (array_key_exists('date', $this->entry))
+        {
+            if (!array_key_exists('resource_misc', $this->map->{$type}) or empty($this->map->{$type}['resource_misc']))
+            {
                 return;
             }
             list($month, $day, $year) = $this->date->init($this->entry['date']);
-            if (!$year && array_key_exists('year', $this->entry)) { // February 31 or 31 February and no year
+            if (!$year && array_key_exists('year', $this->entry))
+            { // February 31 or 31 February and no year
                 $year = $this->entry['year'];
             }
-            if ($month && ($key = array_search('Month', $this->map->{$type}['resource_misc']))) {
+            if ($month && ($key = array_search('Month', $this->map->{$type}['resource_misc'])))
+            {
                 $this->entry['resource_misc'][$key] = $month;
             }
-            if ($day && ($key = array_search('Day', $this->map->{$type}['resource_misc']))) {
+            if ($day && ($key = array_search('Day', $this->map->{$type}['resource_misc'])))
+            {
                 $this->entry['resource_misc'][$key] = $day;
             }
             if ($year && array_key_exists('resource_year', $this->map->{$type}) &&
-                array_key_exists('resourceyearYear1', $this->map->{$type}['resource_year'])) {
+                array_key_exists('resourceyearYear1', $this->map->{$type}['resource_year']))
+            {
                 $this->entry['resource_year']['resourceyearYear1'] = $year;
             }
-            if (!$day && !$month && !$year) {
+            if (!$day && !$month && !$year)
+            {
                 $this->reject['Date'] = $this->entry['date'];
             }
             unset($this->entry['date']);
@@ -753,52 +863,72 @@ class ENDNOTEIMPORT
      */
     private function gatherStage1()
     {
-    	$error = '';
+        $error = '';
         // a multiple select box so handle as array
-        if (array_key_exists('import_Categories', $this->vars) && $this->vars['import_Categories']) {
+        if (array_key_exists('import_Categories', $this->vars) && $this->vars['import_Categories'])
+        {
             $this->formData["import_Categories"] = $this->vars['import_Categories'];
-        } else { // force to 'General'
-        	$this->formData["import_Categories"] = [1];
+        }
+        else
+        { // force to 'General'
+            $this->formData["import_Categories"] = [1];
         }
         // a multiple select box so handle as array
-        if (array_key_exists('import_BibId', $this->vars) && $this->vars['import_BibId']) {
+        if (array_key_exists('import_BibId', $this->vars) && $this->vars['import_BibId'])
+        {
             $this->formData["import_BibId"] = $this->vars['import_BibId'];
         }
-        if (array_key_exists('import_KeywordIgnore', $this->vars)) {
-        	$this->formData["import_KeywordIgnore"] = $this->vars['import_KeywordIgnore'];
+        if (array_key_exists('import_KeywordIgnore', $this->vars))
+        {
+            $this->formData["import_KeywordIgnore"] = $this->vars['import_KeywordIgnore'];
         }
-        if (array_key_exists('import_ImportDuplicates', $this->vars)) {
-        	$this->formData["import_ImportDuplicates"] = $this->vars['import_ImportDuplicates'];
+        if (array_key_exists('import_ImportDuplicates', $this->vars))
+        {
+            $this->formData["import_ImportDuplicates"] = $this->vars['import_ImportDuplicates'];
         }
-        if (array_key_exists('import_Quarantine', $this->vars)) {
-        	$this->formData["import_Quarantine"] = $this->vars['import_Quarantine'];
+        if (array_key_exists('import_Quarantine', $this->vars))
+        {
+            $this->formData["import_Quarantine"] = $this->vars['import_Quarantine'];
         }
         $this->formData["import_TitleSubtitleSeparator"] = $this->vars['import_TitleSubtitleSeparator'];
-        if (!array_key_exists("import_UnrecognisedFields", $this->formData)) {
-			if (!isset($_FILES['import_File'])) {
-				if ($file = $this->session->getVar("import_File")) {
-					return implode(DIRECTORY_SEPARATOR, [$this->dirName, $file]);
-				} else {
-					$error = $this->errors->text("file", "upload");
-				}
-			}
-			// Check for file input
-			$fileName = \UTILS\uuid();
-			if (!move_uploaded_file($_FILES['import_File']['tmp_name'], implode(DIRECTORY_SEPARATOR, [$this->dirName, $fileName]))) {
-				$error = $this->errors->text("file", "upload");
-			}
+        if (!array_key_exists("import_UnrecognisedFields", $this->formData))
+        {
+            if (!isset($_FILES['import_File']))
+            {
+                if ($file = $this->session->getVar("import_File"))
+                {
+                    return implode(DIRECTORY_SEPARATOR, [$this->dirName, $file]);
+                }
+                else
+                {
+                    $error = $this->errors->text("file", "upload");
+                }
+            }
+            // Check for file input
+            $fileName = \UTILS\uuid();
+            if (!move_uploaded_file($_FILES['import_File']['tmp_name'], implode(DIRECTORY_SEPARATOR, [$this->dirName, $fileName])))
+            {
+                $error = $this->errors->text("file", "upload");
+            }
             $this->formData['import_File'] = $fileName;
-            if ($this->vars['import_Tag']) {
-                if ($tagId = $this->tag->checkExists(\UTF8\mb_trim($this->vars['import_Tag']))) { // Existing tag found
-               		$this->formData['import_TagId'] = $tagId;
-                } else {
-            		$this->formData['import_Tag'] = \UTF8\mb_trim($this->vars['import_Tag']);
-            	}
-            } elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId']) {
-            	$this->formData['import_TagId'] = $this->vars['import_TagId'];
+            if ($this->vars['import_Tag'])
+            {
+                if ($tagId = $this->tag->checkExists(\UTF8\mb_trim($this->vars['import_Tag'])))
+                { // Existing tag found
+                    $this->formData['import_TagId'] = $tagId;
+                }
+                else
+                {
+                    $this->formData['import_Tag'] = \UTF8\mb_trim($this->vars['import_Tag']);
+                }
+            }
+            elseif (array_key_exists('import_TagId', $this->vars) && $this->vars['import_TagId'])
+            {
+                $this->formData['import_TagId'] = $this->vars['import_TagId'];
             }
             $this->garbageFiles[implode(DIRECTORY_SEPARATOR, [$this->dirName, $fileName])] = FALSE;
-            if ($error) {
+            if ($error)
+            {
                 $this->badInput($error);
             }
 
@@ -819,18 +949,23 @@ class ENDNOTEIMPORT
         $type = FALSE;
         $this->inputTypes[] = $entry['ref-type'];
         // Endnote's 'Edited Book' type is WIKINDX's 'book'
-        if ($entry['ref-type-name'] == 'Edited Book') {
+        if ($entry['ref-type-name'] == 'Edited Book')
+        {
             $type = $this->entry['type'] = 'book';
-        } else {
+        }
+        else
+        {
             $type = $this->entry['type'] = array_search($entry['ref-type-name'], $this->importTypes);
         }
         unset($entry['ref-type']);
         unset($entry['ref-type-name']);
         $this->accessYear = $this->accessDate = FALSE;
-        foreach ($entry as $key => $value) {
+        foreach ($entry as $key => $value)
+        {
             $this->extractEntries($key, $value, $type);
         }
-        if ($this->accessYear && $this->accessDate) {
+        if ($this->accessYear && $this->accessDate)
+        {
             $this->entry['date'] = $this->accessDate . ' ' . $this->accessYear;
         }
 
@@ -845,48 +980,62 @@ class ENDNOTEIMPORT
      */
     private function extractEntries($key, $value, $type)
     {
-        if (is_array($value)) {
+        if (is_array($value))
+        {
             $value = $this->extractFromStyleArray($value);
         }
         $mapped = $pages = $volume = $number = FALSE;
-        if ($key == 'pages') {
+        if ($key == 'pages')
+        {
             $pages = $value;
         }
-        if ($key == 'PAGES') {
+        if ($key == 'PAGES')
+        {
             $pages = $value;
         }
-        if ($pages && array_key_exists('resource_page', $this->map->{$type})) {
+        if ($pages && array_key_exists('resource_page', $this->map->{$type}))
+        {
             list($this->entry['PageStart'], $this->entry['PageEnd']) = $this->pages->init($pages);
 
             return;
         }
         // Endnote stores the last update date in pub-dates and access year in volume and access date in number for its
         // Electronic Source.  We want the last two if $type == 'web_article or 'database' and don't want 'pub-dates'.
-        if ($key == 'volume') {
-            $volume = $value;
-        } elseif ($key == 'VOLUME') {
+        if ($key == 'volume')
+        {
             $volume = $value;
         }
-        if ($key == 'number') {
+        elseif ($key == 'VOLUME')
+        {
+            $volume = $value;
+        }
+        if ($key == 'number')
+        {
             $number = $value;
-        } elseif ($key == 'NUMBER') {
+        }
+        elseif ($key == 'NUMBER')
+        {
             $number = $value;
         }
         if ($volume && (($type == 'web_article') || ($type == 'database') ||
-            ($type == 'web_encyclopedia') || ($type == 'web_encyclopedia_article') || ($type == 'web_site'))) {
+            ($type == 'web_encyclopedia') || ($type == 'web_encyclopedia_article') || ($type == 'web_site')))
+        {
             $this->accessYear = trim($volume);
 
             return;
         }
         if ($number && (($type == 'web_article') || ($type == 'database') ||
-            ($type == 'web_encyclopedia') || ($type == 'web_encyclopedia_article') || ($type == 'web_site'))) {
+            ($type == 'web_encyclopedia') || ($type == 'web_encyclopedia_article') || ($type == 'web_site')))
+        {
             $this->accessDate = trim($number);
 
             return;
         }
-        foreach ($this->map->$type as $mapTable => $mapArray) {
+        foreach ($this->map->$type as $mapTable => $mapArray)
+        {
             if (array_key_exists($key, $this->endnoteXmlFields) &&
-                ($mapKey = array_search($this->endnoteXmlFields[$key], $mapArray))) {
+                ($mapKey = array_search($this->endnoteXmlFields[$key], $mapArray)))
+            {
                 $mapped = TRUE;
                 $this->entry[$mapTable][$mapKey] = $value;
 
@@ -894,23 +1043,33 @@ class ENDNOTEIMPORT
             }
         }
         if (($key == 'abstract') || ($key == 'ABSTRACT') ||
-            ($key == 'notes') || ($key == 'NOTES')) {
+            ($key == 'notes') || ($key == 'NOTES'))
+        {
             $mapped = TRUE;
             $this->entry[$key] = $value;
         }
-        if (!$mapped) {
+        if (!$mapped)
+        {
             $this->reject[$key] = $value;
         }
-        if ($mapped) {
+        if ($mapped)
+        {
             return;
         }
-        if ($key == 'contributors') {
+        if ($key == 'contributors')
+        {
             $this->extractContributors($value, $type);
-        } elseif ($key == 'urls') {
+        }
+        elseif ($key == 'urls')
+        {
             $this->extractUrl($value, $type);
-        } elseif (($key == 'keywords') || ($key == 'KEYWORDS')) {
+        }
+        elseif (($key == 'keywords') || ($key == 'KEYWORDS'))
+        {
             $this->extractKeywords($value, $type);
-        } elseif (is_array($value)) {
+        }
+        elseif (is_array($value))
+        {
             $this->extractSecondOrder($value, $type);
         }
     }
@@ -923,9 +1082,12 @@ class ENDNOTEIMPORT
      */
     private function extractFromStyleArray($value)
     {
-        if (is_array($value) && @array_shift(array_keys($value)) == 'style') {
+        if (is_array($value) && @array_shift(array_keys($value)) == 'style')
+        {
             return $value['style'][0];
-        } else {
+        }
+        else
+        {
             return $value;
         }
     }
@@ -937,8 +1099,10 @@ class ENDNOTEIMPORT
      */
     private function extractSecondOrder($array, $type)
     {
-        foreach ($array as $key => $value) {
-            if ($key == 'title') {
+        foreach ($array as $key => $value)
+        {
+            if ($key == 'title')
+            {
                 $this->entry['title'] = $this->extractFromStyleArray($value[0]);
 
                 continue;
@@ -948,31 +1112,39 @@ class ENDNOTEIMPORT
             if (($type == 'patent') && ($key == 'tertiary-title') && ($mapKey = array_search(
                 $this->endnoteXmlFields[$key],
                 $this->map->{$type}['resource_creator']
-            ))) {
+            )))
+            {
                 $this->entry[$mapKey][] = $this->extractFromStyleArray($value[0]);
 
                 continue;
             }
             $mapped = FALSE;
-            foreach ($this->map->$type as $mapTable => $mapArray) {
+            foreach ($this->map->$type as $mapTable => $mapArray)
+            {
                 if (array_key_exists($key, $this->endnoteXmlFields) &&
-                    ($mapKey = array_search($this->endnoteXmlFields[$key], $mapArray))) {
+                    ($mapKey = array_search($this->endnoteXmlFields[$key], $mapArray)))
+                {
                     $mapped = TRUE;
                     $this->entry[$mapTable][$mapKey] = $this->extractFromStyleArray($value[0]);
 
                     break;
                 }
             }
-            if (!$mapped) {
+            if (!$mapped)
+            {
                 $this->reject[$key] = $this->extractFromStyleArray($value[0]);
             }
             // Endnote stores the last update date in pub-dates and access year in volume and access date in number for its
             // Electronic Source.  We want the last two if $type == 'web_article or 'database' and don't want 'pub-dates'.
-            if ($key == 'pub-dates') {
+            if ($key == 'pub-dates')
+            {
                 if (($type != 'web_article') && ($type != 'database') &&
-                    ($type != 'web_site') && ($type != 'web_encyclopedia') && ($type != 'web_encyclopedia_article')) {
-                    foreach ($value[0] as $dateKey => $dateValue) {
-                        if ($dateKey == 'date') {
+                    ($type != 'web_site') && ($type != 'web_encyclopedia') && ($type != 'web_encyclopedia_article'))
+                {
+                    foreach ($value[0] as $dateKey => $dateValue)
+                    {
+                        if ($dateKey == 'date')
+                        {
                             $this->entry['date'] = $this->extractFromStyleArray($dateValue[0]);
 
                             continue;
@@ -991,9 +1163,11 @@ class ENDNOTEIMPORT
      */
     private function extractKeywords($array, $type)
     {
-        foreach ($array['keyword'] as $value) {
+        foreach ($array['keyword'] as $value)
+        {
             $keyword = $this->extractFromStyleArray($value);
-            if (!array_key_exists('keywords', $this->entry) || (array_search($keyword, $this->entry['keywords']) === FALSE)) {
+            if (!array_key_exists('keywords', $this->entry) || (array_search($keyword, $this->entry['keywords']) === FALSE))
+            {
                 $this->entry['keywords'][] = $keyword;
             }
         }
@@ -1006,12 +1180,17 @@ class ENDNOTEIMPORT
      */
     private function extractContributors($array, $type)
     {
-        foreach ($array as $aKey => $value) {
-            foreach ($value as $aValue) {
-                foreach ($aValue as $authorKey => $authorValue) {
+        foreach ($array as $aKey => $value)
+        {
+            foreach ($value as $aValue)
+            {
+                foreach ($aValue as $authorKey => $authorValue)
+                {
                     if (array_key_exists($aKey, $this->endnoteXmlFields) &&
-                        ($mapKey = array_search($this->endnoteXmlFields[$aKey], $this->map->{$type}['resource_creator']))) {
-                        foreach ($authorValue as $authorElement) {
+                        ($mapKey = array_search($this->endnoteXmlFields[$aKey], $this->map->{$type}['resource_creator'])))
+                    {
+                        foreach ($authorValue as $authorElement)
+                        {
                             $this->entry['creators'][$mapKey][] = $this->extractFromStyleArray($authorElement);
                         }
 
@@ -1021,7 +1200,8 @@ class ENDNOTEIMPORT
                     // in the tertiary-author field.  Why I ask you?
                     if (($type == 'patent') &&
                         ($mapKey = array_search($this->endnoteXmlFields[$authorKey], $this->map->{$type}['resource'])) &&
-                        ($authorKey == 'tertiary-authors')) {
+                        ($authorKey == 'tertiary-authors'))
+                    {
                         $this->entry['resource'][$mapKey] = $this->extractFromStyleArray($authorValue[0]);
 
                         continue;
@@ -1039,21 +1219,29 @@ class ENDNOTEIMPORT
      */
     private function extractUrl($array, $type)
     {
-        if (!is_array($array)) {
+        if (!is_array($array))
+        {
             return;
         }
-        foreach ($array as $key => $value) {
-            if ($key == 'related-urls') {
+        foreach ($array as $key => $value)
+        {
+            if ($key == 'related-urls')
+            {
                 $uArray = [];
-                foreach ($value[0] as $urlKey => $urlValue) {
+                foreach ($value[0] as $urlKey => $urlValue)
+                {
                     if (($urlKey == 'url') && array_key_exists($urlKey, $this->endnoteXmlFields) &&
-                        (FALSE !== array_search($this->endnoteXmlFields[$urlKey], $this->map->{$type}['resource']))) {
+                        (FALSE !== array_search($this->endnoteXmlFields[$urlKey], $this->map->{$type}['resource'])))
+                    {
                         $uArray[] = $this->extractFromStyleArray($urlValue[0]);
                     }
                 }
-                if (!empty($uArray)) {
+                if (!empty($uArray))
+                {
                     $this->entry['URLS'] = $uArray;
-                } else {
+                }
+                else
+                {
                     $this->reject[$key] = $value;
                 }
             }
@@ -1066,7 +1254,7 @@ class ENDNOTEIMPORT
      */
     private function badInput($error)
     {
-		$this->badInput->close($this->errors->text("inputError", "invalid"), $this->common, ['display', $this->formData]);
+        $this->badInput->close($this->errors->text("inputError", "invalid"), $this->common, ['display', $this->formData]);
 //        $this->parentClass->initEndnoteImport($error);
 //        FACTORY_CLOSE::getInstance();
     }

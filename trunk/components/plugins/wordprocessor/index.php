@@ -47,14 +47,16 @@ class wordprocessor_MODULE
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
         $this->config = new wordprocessor_CONFIG();
         $this->authorize = $this->config->authorize;
-        if ($menuInit) { // portion of constructor used for menu initialisation
+        if ($menuInit)
+        { // portion of constructor used for menu initialisation
             $this->makeMenu($this->config->menus);
 
             return; // Need do nothing more as this is simply menu initialisation.
         }
         $this->session = FACTORY_SESSION::getInstance();
         $authorize = FACTORY_AUTHORIZE::getInstance();
-        if (!$authorize->isPluginExecutionAuthorised($this->authorize)) { // not authorised
+        if (!$authorize->isPluginExecutionAuthorised($this->authorize))
+        { // not authorised
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
         $this->db = FACTORY_DB::getInstance();
@@ -108,35 +110,46 @@ class wordprocessor_MODULE
     {
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingOpen'));
         // all messages coming in are error messages
-        if ($message) {
+        if ($message)
+        {
             $message = "<span class='error'>$message</span>";
         }
         $pString = $message ? $message : '';
         list($papers, $papersTimestamp) = $this->grabPapers();
-        if ($append) {
+        if ($append)
+        {
             $title = base64_decode($this->session->getVar("wp_Title"));
-            if (($key = array_search($title, $papers)) !== FALSE) {
+            if (($key = array_search($title, $papers)) !== FALSE)
+            {
                 unset($papers[$key]);
             }
         }
-        if (!empty($papers)) {
-            foreach ($papers as $id => $title) {
+        if (!empty($papers))
+        {
+            foreach ($papers as $id => $title)
+            {
                 $entries[$id] = $title . " (" . $papersTimestamp[$id] . ")";
             }
-            if ($append) {
+            if ($append)
+            {
                 $pString .= FORM\formHeader("wordprocessor_loadAppend");
                 $pString .= FORM\selectFBoxValue(FALSE, "id", $entries, 20, 80) .
                     BR . FORM\formSubmit($this->pluginmessages->text("loadAppendPaper"));
-            } else {
+            }
+            else
+            {
                 $pString .= FORM\formHeader("wordprocessor_open");
                 $pString .= FORM\selectFBoxValue(FALSE, "id", $entries, 20, 80) .
                     BR . FORM\formSubmit($this->coremessages->text("submit", "Select"));
             }
             $pString .= FORM\formEnd();
-        } else {
+        }
+        else
+        {
             $pString = HTML\p($this->pluginmessages->text("noPapers"));
         }
-        if ($append) {
+        if ($append)
+        {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "libs", "CLOSE.php"]));
             $this->template->setVar('body', $pString);
             new CLOSEPOPUP($this->template->process());
@@ -156,12 +169,14 @@ class wordprocessor_MODULE
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "WPLOADTINYMCE.php"]));
         $tinyMce = new WPLOADTINYMCE();
         GLOBALS::setTplVar('heading', '');
-        if (!$text) { // i.e. not importing but opening a file for example
+        if (!$text)
+        { // i.e. not importing but opening a file for example
             $fields = ["pluginwordprocessorId", "pluginwordprocessorHashFilename", "pluginwordprocessorFilename",
                 "pluginwordprocessorTimestamp", ];
             $this->db->formatConditions(['pluginwordprocessorId' => $this->vars['id']]);
             $row = $this->db->selectFirstRow("plugin_wordprocessor", $fields);
-            if (!($text = @file_get_contents($this->papersDir . DIRECTORY_SEPARATOR . $row['pluginwordprocessorHashFilename']))) {
+            if (!($text = @file_get_contents($this->papersDir . DIRECTORY_SEPARATOR . $row['pluginwordprocessorHashFilename'])))
+            {
                 $this->badInput->close($this->errors->text("file", "read"), $this, "openInit");
             }
             $title = $row["pluginwordprocessorFilename"];
@@ -187,7 +202,8 @@ class wordprocessor_MODULE
     public function importInit($message = FALSE)
     {
         // all messages coming in are error messages
-        if ($message) {
+        if ($message)
+        {
             $message = "<span class='error'>$message</span>";
         }
         $pString = $message ? $message : '';
@@ -205,42 +221,53 @@ class wordprocessor_MODULE
      */
     public function import()
     {
-        if (!isset($_FILES['import_file'])) {
+        if (!isset($_FILES['import_file']))
+        {
             $this->badInput->close($this->errors->text("file", "upload"), $this, 'importInit');
         }
         $userId = $this->session->getVar("setup_UserId");
         // Check for file input
-        if (!($text = @file_get_contents($_FILES['import_file']['tmp_name']))) {
+        if (!($text = @file_get_contents($_FILES['import_file']['tmp_name'])))
+        {
             $this->badInput->close($this->errors->text("file", "read"), $this, "importInit");
         }
         $text = $text;
-        if (trim($this->vars['import_fileName'])) {
+        if (trim($this->vars['import_fileName']))
+        {
             $fileName = trim($this->vars['import_fileName']);
-        } else {
+        }
+        else
+        {
             $fileName = $_FILES['import_file']['name'];
         }
         // Remove any extension
         $split = \UTF8\mb_explode(".", $fileName);
-        if (count($split) > 1) {
+        if (count($split) > 1)
+        {
             array_pop($split);
             $fileName = implode(".", $split);
         }
         $hashFileName = sha1($userId . $fileName . $text);
         $fullFileName = $this->papersDir . DIRECTORY_SEPARATOR . $hashFileName;
         // If file exists, we don't import
-        if (file_exists($fullFileName)) {
+        if (file_exists($fullFileName))
+        {
             $this->badInput->close($this->pluginmessages->text("paperExists"), $this, 'importInit');
         }
         // Else, write file and database entry
-        if (!move_uploaded_file($_FILES['import_file']['tmp_name'], $fullFileName)) {
+        if (!move_uploaded_file($_FILES['import_file']['tmp_name'], $fullFileName))
+        {
             $this->badInput->close($this->errors->text("file", "upload"), $this, "importInit");
         }
         // If filename exists in the database, don't write a new row.  This is probably an import from wikindx v3.x
         $this->db->formatConditions(['pluginwordprocessorHashFilename' => $fileName]);
         $pluginwordprocessorId = $this->db->select('plugin_wordprocessor', 'pluginwordprocessorId');
-        if ($pluginwordprocessorId) {
+        if ($pluginwordprocessorId)
+        {
             $databaseId = $pluginwordprocessorId;
-        } else {
+        }
+        else
+        {
             $fields[] = 'pluginwordprocessorHashFilename';
             $values[] = $hashFileName;
             $fields[] = 'pluginwordprocessorUserId';
@@ -266,14 +293,17 @@ class wordprocessor_MODULE
     public function deleteInit($message = FALSE)
     {
         // all messages coming in are error messages
-        if ($message) {
+        if ($message)
+        {
             $message = "<span class='error'>$message</span>";
         }
         $pString = $message ? $message : '';
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDelete'));
         list($papers, $papersTimestamp) = $this->grabPapers();
-        if (!empty($papers)) {
-            foreach ($papers as $id => $title) {
+        if (!empty($papers))
+        {
+            foreach ($papers as $id => $title)
+            {
                 $entries[$id] = $title . " (" . $papersTimestamp[$id] . ")";
             }
             $pString .= FORM\formHeader("wordprocessor_deleteConfirm");
@@ -281,7 +311,9 @@ class wordprocessor_MODULE
                 BR . $this->coremessages->text("hint", "multiples") . BR .
                 BR . FORM\formSubmit($this->coremessages->text("submit", "Confirm"));
             $pString .= FORM\formEnd();
-        } else {
+        }
+        else
+        {
             $pString = HTML\p($this->pluginmessages->text("noPapers"));
         }
         GLOBALS::addTplVar('content', $pString);
@@ -291,14 +323,16 @@ class wordprocessor_MODULE
      */
     public function deleteConfirm()
     {
-        if (!array_key_exists('id', $this->vars)) {
+        if (!array_key_exists('id', $this->vars))
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'deleteInit');
         }
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDelete'));
         $this->session->delVar("wp_LockDelete");
         $userId = $this->session->getVar("setup_UserId");
         $pString = FORM\formHeader("wordprocessor_delete");
-        foreach ($this->vars['id'] as $id) {
+        foreach ($this->vars['id'] as $id)
+        {
             $conditions[] = $id;
             $pString .= FORM\hidden("paperDelete_" . $id, $id);
         }
@@ -306,7 +340,8 @@ class wordprocessor_MODULE
         $this->db->formatConditions(['pluginwordprocessorUserId' => $userId]);
         // We do a further check here that these files really do belong to the user.
         $recordSet = $this->db->select("plugin_wordprocessor", "pluginwordprocessorFilename");
-        while ($row = $this->db->fetchRow($recordSet)) {
+        while ($row = $this->db->fetchRow($recordSet))
+        {
             $papers[] = \HTML\nlToHtml($row['pluginwordprocessorFilename']);
         }
         $paper = implode(", ", $papers);
@@ -320,24 +355,30 @@ class wordprocessor_MODULE
      */
     public function delete()
     {
-        if ($this->session->getVar("wp_LockDelete")) {
+        if ($this->session->getVar("wp_LockDelete"))
+        {
             $this->badInput->close($this->pluginmessages->text('deletedPaper'), $this, 'deleteInit');
         }
         $userId = $this->session->getVar("setup_UserId");
         $ids = [];
-        foreach ($this->vars as $key => $value) {
-            if (!$value) {
+        foreach ($this->vars as $key => $value)
+        {
+            if (!$value)
+            {
                 continue;
             }
-            if (!preg_match("/paperDelete_/u", $key)) {
+            if (!preg_match("/paperDelete_/u", $key))
+            {
                 continue;
             }
             $ids[] = $value;
         }
-        if (empty($ids)) {
+        if (empty($ids))
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'deleteInit');
         }
-        foreach ($ids as $id) {
+        foreach ($ids as $id)
+        {
             $this->db->formatConditions(['pluginwordprocessorUserId' => $userId]);
             $this->db->formatConditions(['pluginwordprocessorId' => $id]);
             $pluginwordprocessorHashFilename = $this->db->selectFirstField("plugin_wordprocessor", 'pluginwordprocessorHashFilename');
@@ -358,14 +399,17 @@ class wordprocessor_MODULE
     public function listPapers($message = FALSE)
     {
         // all messages coming in are error messages
-        if ($message) {
+        if ($message)
+        {
             $message = "<span class='error'>$message</span>";
         }
         $pString = $message ? $message : '';
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingListPapers'));
         list($papers, $papersTimestamp) = $this->grabPapers(TRUE);
-        if (!empty($papers)) {
-            foreach ($papers as $id => $paperArray) {
+        if (!empty($papers))
+        {
+            foreach ($papers as $id => $paperArray)
+            {
                 $hash = $paperArray[0];
                 $title = $paperArray[1];
                 $timestamp = $papersTimestamp[$id];
@@ -378,7 +422,9 @@ class wordprocessor_MODULE
             }
             $pString .= HTML\p($this->pluginmessages->text("backup"));
             $pString .= implode(BR . LF, $fileLinks);
-        } else {
+        }
+        else
+        {
             $pString .= HTML\p($this->pluginmessages->text("noPapers"));
         }
         GLOBALS::addTplVar('content', $pString);
@@ -388,7 +434,8 @@ class wordprocessor_MODULE
      */
     public function wpFileDownload()
     {
-        if (!array_key_exists('hash', $this->vars)) {
+        if (!array_key_exists('hash', $this->vars))
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'listPapers');
         }
         $fileName = $this->vars['filename'];
@@ -406,18 +453,22 @@ class wordprocessor_MODULE
      */
     public function wpExportDownload()
     {
-        if (!array_key_exists('hash', $this->vars)) {
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "WPCOMMON.php"]));
+        if (!array_key_exists('hash', $this->vars))
+        {
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "WPCOMMON.php"]));
             $common = new WPCOMMON();
             $common->failure($this->errors->text("inputError", "missing"));
         }
         $dirFilesName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
         $extension = $this->vars['extension'];
         $fileName = $this->vars['filename'];
-        if ($this->vars['extension'] == 'rtf') {
+        if ($this->vars['extension'] == 'rtf')
+        {
             $type = WIKINDX_MIMETYPE_RTF;
             $charset = '';
-        } else {
+        }
+        else
+        {
             $type = WIKINDX_MIMETYPE_TXT;
             $charset = WIKINDX_CHARSET;
         }
@@ -459,11 +510,13 @@ class wordprocessor_MODULE
         // To be sure, it is necessary to lowercase all table elements
         $tables = $this->db->listTables(FALSE);
 
-        foreach ($tables as $k => $v) {
+        foreach ($tables as $k => $v)
+        {
             $tables[$k] = mb_strtolower($v);
         }
 
-        if (array_search('plugin_wordprocessor', $tables) === FALSE) {
+        if (array_search('plugin_wordprocessor', $tables) === FALSE)
+        {
             $this->db->queryNoError("
                 CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor` (
                 	`pluginwordprocessorId` int(11) NOT NULL AUTO_INCREMENT,
@@ -477,12 +530,15 @@ class wordprocessor_MODULE
         }
         // Unlink papers and delete from papers table if a user has been deleted
         $resultset1 = $this->db->select('plugin_wordprocessor', 'pluginwordprocessorUserId');
-        while ($row1 = $this->db->fetchRow($resultset1)) {
+        while ($row1 = $this->db->fetchRow($resultset1))
+        {
             $this->db->formatConditions(['usersId' => $row1['pluginwordprocessorUserId']]);
-            if (!$this->db->selectFirstField('users', 'usersId')) {
+            if (!$this->db->selectFirstField('users', 'usersId'))
+            {
                 $this->db->formatConditions(['pluginwordprocessorUserId' => $row1['pluginwordprocessorUserId']]);
                 $resultset2 = $this->db->select('plugin_wordprocessor', 'pluginwordprocessorHashFilename');
-                while ($row2 = $this->db->fetchRow($resultset2)) {
+                while ($row2 = $this->db->fetchRow($resultset2))
+                {
                     $file = $this->papersDir . DIRECTORY_SEPARATOR . $row2['pluginwordprocessorHashFilename'];
                     @unlink($file);
                 }
@@ -505,9 +561,12 @@ class wordprocessor_MODULE
         $heading = HTML\tableStart();
         $heading .= HTML\trStart();
         $heading .= HTML\td(HTML\h($this->pluginmessages->text('headingPaper'), FALSE, 3), 'width30percent');
-        if ($title) {
+        if ($title)
+        {
             $heading .= "<td id=\"wpTitle\" name=\"wpTitle\" align=\"left\" width=\"30%\">$title</td>\n";
-        } else {
+        }
+        else
+        {
             $heading .= "<td id=\"wpTitle\" name=\"wpTitle\" align=\"left\" width=\"30%\">" . $this->pluginmessages->text('new') . "</td>\n";
         }
         $heading .= "<td id=\"wpStatus\" name=\"wpStatus\" align=\"left\">$status</td>\n";
@@ -534,15 +593,20 @@ class wordprocessor_MODULE
         $this->db->formatConditions(['pluginwordprocessorUserId' => $userId]);
         $this->db->orderBy('pluginwordprocessorTimestamp');
         $recordSet = $this->db->select("plugin_wordprocessor", $fields);
-        while ($row = $this->db->fetchRow($recordSet)) {
-            if (!$this->checkFileExists($row['pluginwordprocessorHashFilename'])) {
+        while ($row = $this->db->fetchRow($recordSet))
+        {
+            if (!$this->checkFileExists($row['pluginwordprocessorHashFilename']))
+            {
                 continue;
             }
-            if ($download) {
+            if ($download)
+            {
                 $papers[$row['pluginwordprocessorId']][0] = $row['pluginwordprocessorHashFilename'];
                 $papers[$row['pluginwordprocessorId']][1] = HTML\dbToFormTidy($row['pluginwordprocessorFilename']);
                 $papersTimestamp[$row['pluginwordprocessorId']] = HTML\dbToFormTidy($row['pluginwordprocessorTimestamp']);
-            } else {
+            }
+            else
+            {
                 $papers[$row['pluginwordprocessorId']] = HTML\dbToFormTidy($row['pluginwordprocessorFilename']);
                 $papersTimestamp[$row['pluginwordprocessorId']] = HTML\dbToFormTidy($row['pluginwordprocessorTimestamp']);
             }

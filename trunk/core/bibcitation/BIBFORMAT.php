@@ -79,33 +79,47 @@ class BIBFORMAT
     public function __construct($output = 'html')
     {
         $this->output = $output;
-        if (!$this->preview) { // Not javascript preview
-            if (!$this->dir) {
+        if (!$this->preview)
+        { // Not javascript preview
+            if (!$this->dir)
+            {
                 $this->dir = realpath(__DIR__) . DIRECTORY_SEPARATOR;
-            } else {
-                if (mb_substr($this->dir, mb_strlen($this->dir) - 1, 1) != DIRECTORY_SEPARATOR) {
+            }
+            else
+            {
+                if (mb_substr($this->dir, mb_strlen($this->dir) - 1, 1) != DIRECTORY_SEPARATOR)
+                {
                     $this->dir .= DIRECTORY_SEPARATOR;
                 }
             }
             $this->bibtexParsePath = $this->dir . "bibtexParse";
-        } else { // preview
+        }
+        else
+        { // preview
             $this->dir = '';
         }
-        if ($this->bibtex) {
+        if ($this->bibtex)
+        {
             include_once($this->dir . "STYLEMAPBIBTEX.php");
             $this->styleMap = new STYLEMAPBIBTEX();
-        } else {
+        }
+        else
+        {
             $db = FACTORY_DB::getInstance();
             include_once($this->dir . "STYLEMAP.php");
             $this->styleMap = new STYLEMAP();
             // Grab any custom fields
             $recordset = $db->select('custom', ['customId', 'customLabel']);
-            while ($row = $db->fetchRow($recordset)) {
+            while ($row = $db->fetchRow($recordset))
+            {
                 $this->customFields['custom_' . $row['customId']] = $row['customId'];
             }
-            if (!empty($this->customFields)) {
-                foreach ($this->styleMap as $type => $typeArray) {
-                    foreach ($this->customFields as $key => $value) {
+            if (!empty($this->customFields))
+            {
+                foreach ($this->styleMap as $type => $typeArray)
+                {
+                    foreach ($this->customFields as $key => $value)
+                    {
                         $this->styleMap->{$type}[$key] = $value;
                     }
                 }
@@ -135,47 +149,64 @@ class BIBFORMAT
         $this->fallback = $types['fallback'];
         unset($types['fallback']);
         $this->backup = $types;
-        foreach ($types as $name => $value) {
-            if (!array_key_exists($name, $this->customTypes)) {
-                foreach ($this->customFields as $cKey => $cValue) {
-                    if (array_key_exists($cKey, $value)) {
+        foreach ($types as $name => $value)
+        {
+            if (!array_key_exists($name, $this->customTypes))
+            {
+                foreach ($this->customFields as $cKey => $cValue)
+                {
+                    if (array_key_exists($cKey, $value))
+                    {
                         $this->customTypes[$name] = TRUE;
                     }
                 }
             }
-            if (array_key_exists($name, $footnote) && $footnote[$name]) {
+            if (array_key_exists($name, $footnote) && $footnote[$name])
+            {
                 $footnoteType = 'footnote_' . $name;
-                foreach ($footnote[$name] as $rName => $rValue) {
-                    if (($rName == 'independent') && is_array($rValue)) {
+                foreach ($footnote[$name] as $rName => $rValue)
+                {
+                    if (($rName == 'independent') && is_array($rValue))
+                    {
                         $array = [];
-                        foreach ($rValue as $iName => $iValue) {
+                        foreach ($rValue as $iName => $iValue)
+                        {
                             $split = \UTF8\mb_explode('_', $iName);
                             $array[$split[1]] = $iValue;
                         }
                         $this->{$footnoteType}['independent'] = $array;
-                    } else {
+                    }
+                    else
+                    {
                         $this->{$footnoteType}[$rName] = $rValue;
                     }
                 }
             }
             $this->$name = $value;
             $typeTemplateSet = $name . 'TemplateSet';
-            if (!empty($this->$name) && (count($this->$name) > 3)) {
+            if (!empty($this->$name) && (count($this->$name) > 3))
+            {
                 $this->$typeTemplateSet = TRUE;
-            } else {
+            }
+            else
+            {
                 $this->$typeTemplateSet = FALSE;
             }
         }
         // Set fallbacks
-        foreach ($types as $name => $value) {
+        foreach ($types as $name => $value)
+        {
             $typeTemplateSet = $name . 'TemplateSet';
-            if (array_key_exists($name, $this->fallback)) {
+            if (array_key_exists($name, $this->fallback))
+            {
                 $footnoteType = 'footnote_' . $name;
-                if (array_key_exists($name, $footnote) && !$footnote[$name]) {
+                if (array_key_exists($name, $footnote) && !$footnote[$name])
+                {
                     $this->{$footnoteType} = $footnote[$this->fallback[$name]];
                 }
             }
-            if (array_key_exists('fallbackstyle', $value) && $this->$typeTemplateSet) {
+            if (array_key_exists('fallbackstyle', $value) && $this->$typeTemplateSet)
+            {
                 $this->fallback[$name] = $value['fallbackstyle'];
             }
         }
@@ -201,12 +232,15 @@ class BIBFORMAT
         // Map this system's resource type to OSBib's resource type
         $this->type = array_search($type, $this->styleMap->types);
         $typeTemplateSet = $type . 'TemplateSet';
-        if ($this->bibtex) {
-            if (array_key_exists('author', $row)) {
+        if ($this->bibtex)
+        {
+            if (array_key_exists('author', $row))
+            {
                 $row['creator1'] = $row['author'];
                 unset($row['author']);
             }
-            if (array_key_exists('editor', $row)) {
+            if (array_key_exists('editor', $row))
+            {
                 $row['creator2'] = $row['editor'];
                 unset($row['editor']);
             }
@@ -216,7 +250,8 @@ class BIBFORMAT
          */
         if (!$this->preview && (($type == 'book') || ($type == 'book_article')) &&
             $row['creator2'] && !$row['creator1'] && $this->style['editorSwitch'] &&
-            array_key_exists('author', $this->$type)) {
+            array_key_exists('author', $this->$type))
+        {
             $row['creator1'] = $row['creator2'];
             $row['creator2'] = FALSE;
             $editorArray = $this->parsestyle->parseStringToArray(
@@ -224,14 +259,16 @@ class BIBFORMAT
                 $this->style['editorSwitchIfYes'],
                 $this->styleMap
             );
-            if (!empty($editorArray) && array_key_exists('editor', $editorArray)) {
+            if (!empty($editorArray) && array_key_exists('editor', $editorArray))
+            {
                 $this->{$type}['author'] = $editorArray['editor'];
                 unset($this->{$type}['editor']);
                 $this->editorSwitch = TRUE;
             }
         }
         if ($this->style['dateMonthNoDay'] && array_key_exists('date', $this->styleMap->$type) &&
-            array_key_exists('dateMonthNoDayString', $this->style) && $this->style['dateMonthNoDayString']) {
+            array_key_exists('dateMonthNoDayString', $this->style) && $this->style['dateMonthNoDayString'])
+        {
             $this->dateArray = $this->parsestyle->parseStringToArray(
                 $type,
                 $this->style['dateMonthNoDayString'],
@@ -243,7 +280,8 @@ class BIBFORMAT
         /**
          * If $row comes in in BibTeX format, process and add items to $this->item
          */
-        if ($this->bibtex) {
+        if ($this->bibtex)
+        {
             list($type, $row) = $this->preProcessBibtex($row, $this->type);
         }
         /**
@@ -251,28 +289,39 @@ class BIBFORMAT
          * we only print if the value in $this->styleMap matches the value in
          * $this->styleMap->generic for each key.
          */
-        if ($this->citationFootnote) { // using footnote template
+        if ($this->citationFootnote)
+        { // using footnote template
             $footnoteType = 'footnote_' . $type;
-            if (isset($this->$footnoteType)) { // footnote template for this resource exists
+            if (isset($this->$footnoteType))
+            { // footnote template for this resource exists
                 $this->footnoteType = $footnoteType;
                 $this->footnoteTypeArray[$type] = $footnoteType;
-            } else {
+            }
+            else
+            {
                 $footnoteType = 'footnote_' . $this->fallback[$type];
-                if (isset($this->$footnoteType)) { // fallback footnote template exists
+                if (isset($this->$footnoteType))
+                { // fallback footnote template exists
                     $this->footnoteType = $footnoteType;
                     $this->footnoteTypeArray[$type] = $footnoteType;
-                } elseif (!$this->$typeTemplateSet) { // use fallback bibliography template
+                }
+                elseif (!$this->$typeTemplateSet)
+                { // use fallback bibliography template
                     $fallback = $this->fallback[$type];
                     $this->footnoteTypeArray[$type] = $fallback;
                     $type = $fallback;
                 }
                 // else, we're using the bibliography template for this resource type
-                else {
+                else
+                {
                     $this->footnoteTypeArray[$type] = $type;
                 }
             }
-        } else {
-            if (!$this->{$typeTemplateSet}) {
+        }
+        else
+        {
+            if (!$this->{$typeTemplateSet})
+            {
                 $fallback = $this->fallback[$type];
                 $type = $fallback;
             }
@@ -281,7 +330,8 @@ class BIBFORMAT
         /**
          * Add BibTeX entry to $this->item
          */
-        if ($this->bibtex) {
+        if ($this->bibtex)
+        {
             $this->addAllOtherItems($row);
         }
         $this->countRecords++;
@@ -300,9 +350,12 @@ class BIBFORMAT
     {
         $type = $pluralType = $this->type;
         // Check for partial templates
-        if (!$this->footnoteType) {
+        if (!$this->footnoteType)
+        {
             $this->checkPartial($type);
-        } else {
+        }
+        else
+        {
             $type = $this->footnoteType;
             $this->footnoteType = FALSE;
         }
@@ -310,7 +363,8 @@ class BIBFORMAT
         $ultimate = $preliminary = '';
         $index = 0;
         $previousFieldExists = $nextFieldExists = TRUE;
-        if (array_key_exists('independent', $this->$type)) {
+        if (array_key_exists('independent', $this->$type))
+        {
             $independent = $this->{$type}['independent'];
         }
         /**
@@ -321,27 +375,33 @@ class BIBFORMAT
         array_shift($checkPost);
         $lastFieldKey = FALSE;
         // Add or replace pages field if this process is called from CITEFORMAT for footnotes where $this->footnotePages are the formatted citation pages.
-        if ($this->footnotePages) {
+        if ($this->footnotePages)
+        {
             $this->item['pages'] = $this->footnotePages;
         }
 
         $arrayType = $this->$type;
 
-        foreach ($arrayType as $key => $value) {
-            if (($key == 'partial') || ($key == 'partialReplace')) {
+        foreach ($arrayType as $key => $value)
+        {
+            if (($key == 'partial') || ($key == 'partialReplace'))
+            {
                 continue;
             }
-            if ($key == 'ultimate') {
+            if ($key == 'ultimate')
+            {
                 $ultimate = $value;
 
                 continue;
             }
-            if ($key == 'preliminaryText') {
+            if ($key == 'preliminaryText')
+            {
                 $preliminary = $value;
 
                 continue;
             }
-            if (!array_key_exists($key, $this->item) || !$this->item[$key]) {
+            if (!array_key_exists($key, $this->item) || !$this->item[$key])
+            {
                 $index++;
                 array_shift($checkPost);
                 $previousFieldExists = FALSE;
@@ -349,7 +409,8 @@ class BIBFORMAT
                 continue;
             }
             $checkPostShift = array_shift($checkPost);
-            if (!array_key_exists($checkPostShift, $this->item) || !$this->item[$checkPostShift]) {
+            if (!array_key_exists($checkPostShift, $this->item) || !$this->item[$checkPostShift])
+            {
                 $nextFieldExists = FALSE;
             }
             $pre = array_key_exists('pre', $value) ? $value['pre'] : '';
@@ -358,44 +419,62 @@ class BIBFORMAT
              * Deal with __DEPENDENT_ON_PREVIOUS_FIELD__ for characters dependent on previous field's existence and
              * __DEPENDENT_ON_NEXT_FIELD__ for characters dependent on the next field's existence
              */
-            if ($previousFieldExists && array_key_exists('dependentPre', $value)) {
+            if ($previousFieldExists && array_key_exists('dependentPre', $value))
+            {
                 $pre = preg_replace("/__DEPENDENT_ON_PREVIOUS_FIELD__/u", $value['dependentPre'], $pre);
-            } elseif (array_key_exists('dependentPreAlternative', $value)) {
+            }
+            elseif (array_key_exists('dependentPreAlternative', $value))
+            {
                 $pre = preg_replace("/__DEPENDENT_ON_PREVIOUS_FIELD__/u", $value['dependentPreAlternative'], $pre);
-            } else {
+            }
+            else
+            {
                 $pre = preg_replace("/__DEPENDENT_ON_PREVIOUS_FIELD__/u", '', $pre);
             }
 
-            if ($nextFieldExists && array_key_exists('dependentPost', $value)) {
+            if ($nextFieldExists && array_key_exists('dependentPost', $value))
+            {
                 $post = str_replace("__DEPENDENT_ON_NEXT_FIELD__", $value['dependentPost'], $post);
-            } elseif (array_key_exists('dependentPostAlternative', $value)) {
+            }
+            elseif (array_key_exists('dependentPostAlternative', $value))
+            {
                 $post = preg_replace("/__DEPENDENT_ON_NEXT_FIELD__/u", $value['dependentPostAlternative'], $post);
-            } else {
+            }
+            else
+            {
                 $post = preg_replace("/__DEPENDENT_ON_NEXT_FIELD__/u", '', $post);
             }
             /**
              * Deal with __SINGULAR_PLURAL__ for creator lists and pages
              */
-            if ($styleKey = array_search($key, $this->styleMap->$pluralType)) {
+            if ($styleKey = array_search($key, $this->styleMap->$pluralType))
+            {
                 $pluralKey = $styleKey . "_plural";
             }
             // For use with generic footnote templates which uses generic 'creator' field
-            else {
+            else
+            {
                 $pluralKey = "creator_plural";
             }
-            if (isset($this->$pluralKey) && $this->$pluralKey) { // plural alternative for this key
-                if (array_key_exists('plural', $value)) {
+            if (isset($this->$pluralKey) && $this->$pluralKey)
+            { // plural alternative for this key
+                if (array_key_exists('plural', $value))
+                {
                     $pre = preg_replace("/__SINGULAR_PLURAL__/u", $value['plural'], $pre);
                     $post = preg_replace("/__SINGULAR_PLURAL__/u", $value['plural'], $post);
                 }
-            } elseif (isset($this->$pluralKey)) { // singular alternative for this key
-                if (array_key_exists('singular', $value)) {
+            }
+            elseif (isset($this->$pluralKey))
+            { // singular alternative for this key
+                if (array_key_exists('singular', $value))
+                {
                     $pre = preg_replace("/__SINGULAR_PLURAL__/u", $value['singular'], $pre);
                     $post = preg_replace("/__SINGULAR_PLURAL__/u", $value['singular'], $post);
                 }
             }
             // Deal with en dash characters in pages
-            if ($key == 'pages') {
+            if ($key == 'pages')
+            {
                 $this->item[$key] = $this->export->format($this->item[$key]);
             }
             /**
@@ -408,12 +487,14 @@ class BIBFORMAT
              */
             $lastPre = mb_substr($post, -1);
             $firstItem = mb_substr($this->item[$key], 0, 1);
-            if ($firstItem === $lastPre) {
+            if ($firstItem === $lastPre)
+            {
                 $this->item[$key] = mb_substr($this->item[$key], 1);
             }
             // Match last character of this field with $post
             if ($post && preg_match("/[.,;:?!]$/u", $this->item[$key]) &&
-                preg_match("/^(\\[.*?[\\]]+)*([.,;:?!])|^([.,;:?!])/u", $post, $capture, PREG_OFFSET_CAPTURE)) {
+                preg_match("/^(\\[.*?[\\]]+)*([.,;:?!])|^([.,;:?!])/u", $post, $capture, PREG_OFFSET_CAPTURE))
+            {
                 // There is punctuation in post either immediately following BBCode formatting or at the start of the string.
                 // The offset for the punctuation character in $post is given at $capture[2][1]
                 $post = \UTF8\mb_substr_replace($post, '', $capture[2][1], 1);
@@ -425,11 +506,13 @@ class BIBFORMAT
                     $itemArray[$lastFieldKey],
                     $capture,
                     PREG_OFFSET_CAPTURE
-                )) {
+                ))
+            {
                 // There is punctuation in post either immediately following BBCode formatting or at the start of the string.
                 $pre = \UTF8\mb_substr_replace($pre, '', 0, 1);
             }
-            if ($this->item[$key]) {
+            if ($this->item[$key])
+            {
                 $itemArray[$index] = $pre . $this->item[$key] . $post;
                 $lastFieldKey = $index;
             }
@@ -441,25 +524,35 @@ class BIBFORMAT
         /**
          * Check for independent characters.  These (should) come in pairs.
          */
-        if (isset($independent)) {
+        if (isset($independent))
+        {
             $independentKeys = array_keys($independent);
-            while ($independent) {
+            while ($independent)
+            {
                 $preAlternative = $postAlternative = FALSE;
                 $startFound = $endFound = FALSE;
                 $pre = array_shift($independent);
                 $post = array_shift($independent);
-                if (preg_match("/%(.*)%(.*)%|%(.*)%/Uu", $pre, $dependent)) {
-                    if (count($dependent) == 4) {
+                if (preg_match("/%(.*)%(.*)%|%(.*)%/Uu", $pre, $dependent))
+                {
+                    if (count($dependent) == 4)
+                    {
                         $pre = $dependent[3];
-                    } else {
+                    }
+                    else
+                    {
                         $pre = $dependent[1];
                         $preAlternative = $dependent[2];
                     }
                 }
-                if (preg_match("/%(.*)%(.*)%|%(.*)%/Uu", $post, $dependent)) {
-                    if (count($dependent) == 4) {
+                if (preg_match("/%(.*)%(.*)%|%(.*)%/Uu", $post, $dependent))
+                {
+                    if (count($dependent) == 4)
+                    {
                         $post = $dependent[3];
-                    } else {
+                    }
+                    else
+                    {
                         $post = $dependent[1];
                         $postAlternative = $dependent[2];
                     }
@@ -471,28 +564,37 @@ class BIBFORMAT
                 $postAlternative = str_replace("`", '', $postAlternative);
                 $firstKey = str_replace('independent_', '', array_shift($independentKeys));
                 $secondKey = str_replace('independent_', '', array_shift($independentKeys));
-                for ($index = $firstKey; $index <= $secondKey; $index++) {
-                    if (array_key_exists($index, $itemArray)) {
+                for ($index = $firstKey; $index <= $secondKey; $index++)
+                {
+                    if (array_key_exists($index, $itemArray))
+                    {
                         $startFound = $index;
 
                         break;
                     }
                 }
-                for ($index = $secondKey; $index >= $firstKey; $index--) {
-                    if (array_key_exists($index, $itemArray)) {
+                for ($index = $secondKey; $index >= $firstKey; $index--)
+                {
+                    if (array_key_exists($index, $itemArray))
+                    {
                         $endFound = $index;
 
                         break;
                     }
                 }
-                if (($startFound !== FALSE) && ($endFound !== FALSE)) { // intervening fields found
+                if (($startFound !== FALSE) && ($endFound !== FALSE))
+                { // intervening fields found
                     $itemArray[$startFound] = $pre . $itemArray[$startFound];
                     $itemArray[$endFound] = $itemArray[$endFound] . $post;
-                } else { // intervening fields not found - do we have an alternative?
-                    if (array_key_exists($firstKey - 1, $itemArray) && $preAlternative) {
+                }
+                else
+                { // intervening fields not found - do we have an alternative?
+                    if (array_key_exists($firstKey - 1, $itemArray) && $preAlternative)
+                    {
                         $itemArray[$firstKey - 1] .= $preAlternative;
                     }
-                    if (array_key_exists($secondKey + 1, $itemArray) && $postAlternative) {
+                    if (array_key_exists($secondKey + 1, $itemArray) && $postAlternative)
+                    {
                         $itemArray[$secondKey + 1] = $postAlternative . $itemArray[$secondKey + 1];
                     }
                 }
@@ -500,7 +602,8 @@ class BIBFORMAT
         }
 
         // Empty titles should not occur but, in case, this catches errors
-        if (!isset($itemArray)) {
+        if (!isset($itemArray))
+        {
             $itemArray = [];
         }
         $pString = implode('', $itemArray);
@@ -508,18 +611,21 @@ class BIBFORMAT
          * if last character is punctuation (which it may be with missing fields etc.), and $ultimate is also
          * punctuation, set $ultimate to empty string.
          */
-        if (isset($ultimate) && $ultimate) {
+        if (isset($ultimate) && $ultimate)
+        {
             $pString = trim($pString);
             /**
              * Don't do ';' in case last element is URL with &gt; ...!
              */
             if (preg_match("/^[.,:?!]/u", $ultimate) &&
-                preg_match("/([.,:?!])(\\[.*?[\\]]+)*$|([.,:?!])$/u", $pString)) {
+                preg_match("/([.,:?!])(\\[.*?[\\]]+)*$|([.,:?!])$/u", $pString))
+            {
                 $ultimate = '';
             }
         }
         // If $this->editorSwitch or $this->dateMonthNoDay, we have altered $this->$bibformat->$type so need to reload styles
-        if (!$this->preview && ($this->editorSwitch || $this->dateMonthNoDay || $this->partialDone)) {
+        if (!$this->preview && ($this->editorSwitch || $this->dateMonthNoDay || $this->partialDone))
+        {
             $this->restoreTypes();
             $this->editorSwitch = $this->dateMonthNoDay = FALSE;
         }
@@ -549,7 +655,8 @@ class BIBFORMAT
         /**
          * Citation creators
          */
-        if ($nameType == 'citation') {
+        if ($nameType == 'citation')
+        {
             $limit = 'creatorListLimit';
             $moreThan = 'creatorListMore';
             $abbreviation = 'creatorListAbbreviation';
@@ -565,7 +672,8 @@ class BIBFORMAT
         /**
          * Primary creator
          */
-        elseif ($nameType == 'creator1') {
+        elseif ($nameType == 'creator1')
+        {
             $limit = 'primaryCreatorListLimit';
             $moreThan = 'primaryCreatorListMore';
             $abbreviation = 'primaryCreatorListAbbreviation';
@@ -577,7 +685,9 @@ class BIBFORMAT
             $delimitLast = 'primaryCreatorSepNextLast';
             $uppercase = 'primaryCreatorUppercase';
             $italics = 'primaryCreatorListAbbreviationItalic';
-        } else {
+        }
+        else
+        {
             $limit = 'otherCreatorListLimit';
             $moreThan = 'otherCreatorListMore';
             $abbreviation = 'otherCreatorListAbbreviation';
@@ -596,35 +706,53 @@ class BIBFORMAT
          */
         // For use with generic footnote templates which uses generic 'creator' field
         if ($this->citationFootnote && ($nameType == 'creator1') &&
-        ($this->styleMap->{$type}[$nameType] != 'creator')) {
+        ($this->styleMap->{$type}[$nameType] != 'creator'))
+        {
             $pluralKey = "creator_plural";
-        } else {
+        }
+        else
+        {
             $pluralKey = $nameType . "_plural";
         }
         $this->$pluralKey = FALSE;
         $firstInList = TRUE;
         $rewriteCreatorBeforeDone = $rewriteCreatorFinal = FALSE;
 
-        foreach ($creators as $creator) {
-            if ($first) {
-                if ($nameType == 'citation') {
+        foreach ($creators as $creator)
+        {
+            if ($first)
+            {
+                if ($nameType == 'citation')
+                {
                     $nameStyle = 'creatorStyle';
-                } elseif ($nameType == 'creator1') {
+                }
+                elseif ($nameType == 'creator1')
+                {
                     $nameStyle = 'primaryCreatorFirstStyle';
-                } else {
+                }
+                else
+                {
                     $nameStyle = 'otherCreatorFirstStyle';
                 }
-            } else {
-                if ($nameType == 'citation') {
+            }
+            else
+            {
+                if ($nameType == 'citation')
+                {
                     $nameStyle = 'creatorOtherStyle';
-                } elseif ($nameType == 'creator1') {
+                }
+                elseif ($nameType == 'creator1')
+                {
                     $nameStyle = 'primaryCreatorOtherStyle';
-                } else {
+                }
+                else
+                {
                     $nameStyle = 'otherCreatorOtherStyle';
                 }
             }
 
-            if (array_key_exists('creatorId', $creator)) {
+            if (array_key_exists('creatorId', $creator))
+            {
                 $creatorIds[] = $creator['creatorId'];
             }
             $firstName = trim($this->checkInitials(
@@ -664,37 +792,56 @@ class BIBFORMAT
                 break;
             }
 
-            if (isset($style[$uppercase])) {
+            if (isset($style[$uppercase]))
+            {
                 $nameString = mb_strtoupper($nameString);
             }
             $nameString = trim($nameString);
-            if ($firstInList) {
+            if ($firstInList)
+            {
                 $rewriteCreatorField = $nameType . "_firstString";
                 $rewriteCreatorFieldBefore = $nameType . "_firstString_before";
-            } else {
+            }
+            else
+            {
                 $rewriteCreatorField = $nameType . "_remainderString";
                 $rewriteCreatorFieldBefore = $nameType . "_remainderString_before";
                 $rewriteCreatorFieldEach = $nameType . "_remainderString_each";
             }
-            if (array_key_exists($rewriteCreatorField, $this->$type)) {
-                if ($firstInList) {
-                    if (array_key_exists($rewriteCreatorFieldBefore, $this->$type)) {
+            if (array_key_exists($rewriteCreatorField, $this->$type))
+            {
+                if ($firstInList)
+                {
+                    if (array_key_exists($rewriteCreatorFieldBefore, $this->$type))
+                    {
                         $nameString = $this->{$type}[$rewriteCreatorField] . $nameString;
-                    } else {
+                    }
+                    else
+                    {
                         $nameString .= $this->{$type}[$rewriteCreatorField];
                     }
                     $firstInList = FALSE;
-                } elseif (array_key_exists($rewriteCreatorFieldEach, $this->$type)) {
-                    if (array_key_exists($rewriteCreatorFieldBefore, $this->$type)) {
+                }
+                elseif (array_key_exists($rewriteCreatorFieldEach, $this->$type))
+                {
+                    if (array_key_exists($rewriteCreatorFieldBefore, $this->$type))
+                    {
                         $nameString = $this->{$type}[$rewriteCreatorField] . $nameString;
-                    } else {
+                    }
+                    else
+                    {
                         $nameString .= $this->{$type}[$rewriteCreatorField];
                     }
-                } elseif (!$rewriteCreatorBeforeDone) {
-                    if (array_key_exists($rewriteCreatorFieldBefore, $this->$type)) {
+                }
+                elseif (!$rewriteCreatorBeforeDone)
+                {
+                    if (array_key_exists($rewriteCreatorFieldBefore, $this->$type))
+                    {
                         $nameString = $this->{$type}[$rewriteCreatorField] . $nameString;
                         $rewriteCreatorBeforeDone = TRUE;
-                    } elseif (!array_key_exists($rewriteCreatorFieldEach, $this->$type)) {
+                    }
+                    elseif (!array_key_exists($rewriteCreatorFieldEach, $this->$type))
+                    {
                         $rewriteCreatorFinal = $this->{$type}[$rewriteCreatorField];
                     }
                 }
@@ -708,25 +855,37 @@ class BIBFORMAT
          * Keep only some elements in array if we've exceeded $moreThan
          */
         $etAl = FALSE;
-        if ($style[$limit] && (count($cArray) >= $style[$moreThan])) {
+        if ($style[$limit] && (count($cArray) >= $style[$moreThan]))
+        {
             array_splice($cArray, $style[$limit]);
-            if (isset($style[$italics])) {
+            if (isset($style[$italics]))
+            {
                 $etAl = "[i]" . $style[$abbreviation] . "[/i]";
-            } else {
+            }
+            else
+            {
                 $etAl = $style[$abbreviation];
             }
         }
         /**
          * add delimiters
          */
-        if (count($cArray) > 1) {
-            if (count($cArray) == 2) {
+        if (count($cArray) > 1)
+        {
+            if (count($cArray) == 2)
+            {
                 $cArray[0] .= $style[$delimitTwo];
-            } else {
-                for ($index = 0; $index < (count($cArray) - 2); $index++) {
-                    if (!$index) {
+            }
+            else
+            {
+                for ($index = 0; $index < (count($cArray) - 2); $index++)
+                {
+                    if (!$index)
+                    {
                         $cArray[$index] .= $style[$delimitFirstBetween];
-                    } else {
+                    }
+                    else
+                    {
                         $cArray[$index] .= $style[$delimitNextBetween];
                     }
                 }
@@ -736,38 +895,49 @@ class BIBFORMAT
         /**
          * If sizeof of $cArray > 1 or $etAl != FALSE, set this $nameType_plural to TRUE
          */
-        if ((count($cArray) > 1) || $etAl) {
+        if ((count($cArray) > 1) || $etAl)
+        {
             //			$pluralKey = $nameType . "_plural";
             $this->$pluralKey = TRUE;
         }
         /**
          * Finally flatten array
          */
-        if ($etAl) {
+        if ($etAl)
+        {
             $pString = implode('', $cArray) . $etAl;
-        } else {
+        }
+        else
+        {
             $pString = implode('', $cArray);
         }
-        if ($rewriteCreatorFinal) {
+        if ($rewriteCreatorFinal)
+        {
             $pString .= $rewriteCreatorFinal;
         }
         /**
          * Check for repeating primary creator list in subsequent bibliographic item.
          */
-        if (($nameType == 'creator1')) {
+        if (($nameType == 'creator1'))
+        {
             $tempString = $pString;
-            if (($style['primaryCreatorRepeat'] == 2) && ($this->previousCreator == $pString)) {
+            if (($style['primaryCreatorRepeat'] == 2) && ($this->previousCreator == $pString))
+            {
                 $pString = $style['primaryCreatorRepeatString'];
-            } elseif (($style['primaryCreatorRepeat'] == 1) && ($this->previousCreator == $pString)) {
+            }
+            elseif (($style['primaryCreatorRepeat'] == 1) && ($this->previousCreator == $pString))
+            {
                 $pString = ''; // don't print creator list
             }
             $this->previousCreator = $tempString;
         }
-        if ($shortFootnote) {
+        if ($shortFootnote)
+        {
             return [$pString, $creatorIds];
         }
         // For use with generic footnote templates, we must also place 'creator1' string (if not called 'creator') into the 'creator' slot
-        if (($nameType == 'creator1') && ($this->styleMap->{$type}[$nameType] != 'creator')) {
+        if (($nameType == 'creator1') && ($this->styleMap->{$type}[$nameType] != 'creator'))
+        {
             $this->item['creator'] = $pString;
         }
         $this->item[$this->styleMap->{$type}[$nameType]] = $pString;
@@ -792,17 +962,23 @@ class BIBFORMAT
         /**
          * Format firstname
          */
-        if ($creator['firstname'] && !$firstNameInitial) { // Full name
+        if ($creator['firstname'] && !$firstNameInitial)
+        { // Full name
             $firstName = $creator['firstname'];
-        } elseif ($creator['firstname']) { // Initial only of first name.  'firstname' field may actually have several 'firstnames'
+        }
+        elseif ($creator['firstname'])
+        { // Initial only of first name.  'firstname' field may actually have several 'firstnames'
             $fn = \UTF8\mb_explode(" ", $creator['firstname']);
             $firstTime = TRUE;
-            foreach ($fn as $name) {
+            foreach ($fn as $name)
+            {
                 // May be the first name is a hyphenated name
                 // We separate each part of the name separated by a -
                 $fn2 = \UTF8\mb_explode("-", trim($name));
-                if ($firstTime) {
-                    if (count($fn2) == 1) { // no hyphen
+                if ($firstTime)
+                {
+                    if (count($fn2) == 1)
+                    { // no hyphen
                         $firstNameInitialMake =
                             mb_strtoupper(mb_substr($fn2[0], 0, 1));
                         $firstTime = FALSE;
@@ -810,37 +986,52 @@ class BIBFORMAT
                         continue;
                     }
                     $firstNameInitialMake = "";
-                    foreach ($fn2 as $nameparts) {
-                        if ($firstNameInitialMake && ($initialsStyle <= 1)) { // needs '.'
+                    foreach ($fn2 as $nameparts)
+                    {
+                        if ($firstNameInitialMake && ($initialsStyle <= 1))
+                        { // needs '.'
                             $firstNameInitialMake .= ".-";
-                        } elseif ($firstNameInitialMake) {
+                        }
+                        elseif ($firstNameInitialMake)
+                        {
                             $firstNameInitialMake .= "-";
                         }
                         $firstNameInitialMake .=
                             mb_strtoupper(mb_substr($nameparts, 0, 1));
                         $firstTime = FALSE;
                     }
-                } else {
-                    if (count($fn2) == 1) { // no hyphen
+                }
+                else
+                {
+                    if (count($fn2) == 1)
+                    { // no hyphen
                         $initials[] = mb_strtoupper(mb_substr($fn2[0], 0, 1));
 
                         continue;
                     }
                     $fn3 = '';
-                    foreach ($fn2 as $nameparts) {
-                        if ($fn3) {
+                    foreach ($fn2 as $nameparts)
+                    {
+                        if ($fn3)
+                        {
                             $fn3 .= "-";
                             $initials[] = $fn3 . mb_strtoupper(mb_substr(trim($nameparts), 0, 1));
-                        } else {
+                        }
+                        else
+                        {
                             $fn3 = mb_strtoupper(mb_substr(trim($nameparts), 0, 1));
                         }
                     }
                 }
             }
-            if (isset($initials)) {
-                if ($creator['initials']) {
+            if (isset($initials))
+            {
+                if ($creator['initials'])
+                {
                     $creator['initials'] = implode(" ", $initials) . ' ' . $creator['initials'];
-                } else {
+                }
+                else
+                {
                     $creator['initials'] = implode(" ", $initials);
                 }
             }
@@ -849,14 +1040,18 @@ class BIBFORMAT
          * Initials are stored as space-delimited characters.
          * If no initials, return just the firstname or its initial in the correct format.
          */
-        if (!$creator['initials']) {
-            if (isset($firstName)) {	// full first name only
+        if (!$creator['initials'])
+        {
+            if (isset($firstName))
+            {	// full first name only
                 return $firstName;
             }
-            if (isset($firstNameInitialMake) && $initialsStyle > 1) { // First name initial with no '.'
+            if (isset($firstNameInitialMake) && $initialsStyle > 1)
+            { // First name initial with no '.'
                 return $firstNameInitialMake;
             }
-            if (isset($firstNameInitialMake)) { // First name initial with  '.'
+            if (isset($firstNameInitialMake))
+            { // First name initial with  '.'
                 // replace hyphen with '.-' so we get 'J.-F' for example
                 str_replace('-', '.-', $firstNameInitialMake);
 
@@ -866,30 +1061,41 @@ class BIBFORMAT
             return ''; // nothing here
         }
         $initialsArray = \UTF8\mb_explode(' ', $creator['initials']);
-        if ($initialsStyle <= 1) { // needs '.' before any hyphen
-            foreach ($initialsArray as $key => $i) {
+        if ($initialsStyle <= 1)
+        { // needs '.' before any hyphen
+            foreach ($initialsArray as $key => $i)
+            {
                 $initialsArray[$key] = str_replace('-', '.-', $i);
             }
         }
         /**
          * If firstname is initial only, prepend to array
          */
-        if (isset($firstNameInitialMake)) {
+        if (isset($firstNameInitialMake))
+        {
             array_unshift($initialsArray, $firstNameInitialMake);
         }
-        if ($initialsStyle == 0) { // 'T. U. '
+        if ($initialsStyle == 0)
+        { // 'T. U. '
             $initials = implode('. ', $initialsArray) . '.';
-        } elseif ($initialsStyle == 1) { // 'T.U.'
+        }
+        elseif ($initialsStyle == 1)
+        { // 'T.U.'
             $initials = implode('.', $initialsArray) . '.';
-        } elseif ($initialsStyle == 2) { // 'T U '
+        }
+        elseif ($initialsStyle == 2)
+        { // 'T U '
             $initials = implode(' ', $initialsArray);
-        } else { // 'TU '
+        }
+        else
+        { // 'TU '
             $initials = implode('', $initialsArray);
         }
         /**
          * If we have a full first name, prepend it to $initials.
          */
-        if (isset($firstName)) {
+        if (isset($firstName))
+        {
             return ($firstName . ' ' . $initials);
         }
 
@@ -904,12 +1110,14 @@ class BIBFORMAT
     public function addItem($item, $fieldName)
     {
         $type = $this->type;
-        if ($item !== FALSE) {
+        if ($item !== FALSE)
+        {
             $key = $this->styleMap->{$type}[$fieldName];
             /**
              * This item may already exist (e.g. edition field for WIKINDX)
              */
-            if (!(isset($this->item) && array_key_exists($key, $this->item))) {
+            if (!(isset($this->item) && array_key_exists($key, $this->item)))
+            {
                 $this->item[$key] = $item;
             }
         }
@@ -926,7 +1134,8 @@ class BIBFORMAT
 
         $row = array_intersect_key($row, $typeStyleMap);
 
-        foreach ($row as $field => $value) {
+        foreach ($row as $field => $value)
+        {
             $this->addItem($value, $field);
         }
 
@@ -947,13 +1156,19 @@ class BIBFORMAT
         $key = array_search('title', $this->styleMap->$type);
         $subKey = $this->styleMap->{$type}[$key];
 
-        if ($key !== FALSE) {
-            if (array_key_exists($subKey, $this->item)) { // i.e. we're now dealing with subtitle
+        if ($key !== FALSE)
+        {
+            if (array_key_exists($subKey, $this->item))
+            { // i.e. we're now dealing with subtitle
                 $this->item[$subKey] .= BIBFORMAT::titleCapitalization($pString, $delimitLeft, $delimitRight, $this->style['titleCapitalization']);
-            } else {
+            }
+            else
+            {
                 $this->item[$subKey] = BIBFORMAT::titleCapitalization($pString, $delimitLeft, $delimitRight, $this->style['titleCapitalization']);
             }
-        } else {
+        }
+        else
+        {
             $this->item[$subKey] = '';
         }
     }
@@ -971,7 +1186,8 @@ class BIBFORMAT
         $type = $this->type;
         $key = array_search('shortTitle', $this->styleMap->$type);
 
-        if ($key !== FALSE) {
+        if ($key !== FALSE)
+        {
             $this->item[$this->styleMap->{$type}[$key]] = BIBFORMAT::titleCapitalization($pString, $delimitLeft, $delimitRight, $this->style['titleCapitalization']);
         }
     }
@@ -989,11 +1205,15 @@ class BIBFORMAT
         $type = $this->type;
         $key = array_search('transTitle', $this->styleMap->$type);
 
-        if ($key !== FALSE) {
+        if ($key !== FALSE)
+        {
             $subKey = $this->styleMap->{$type}[$key];
-            if (array_key_exists($subKey, $this->item)) { // i.e. we're now dealing with subtitle
+            if (array_key_exists($subKey, $this->item))
+            { // i.e. we're now dealing with subtitle
                 $this->item[$subKey] .= BIBFORMAT::titleCapitalization($pString, $delimitLeft, $delimitRight, $this->style['titleCapitalization']);
-            } else {
+            }
+            else
+            {
                 $this->item[$subKey] = BIBFORMAT::titleCapitalization($pString, $delimitLeft, $delimitRight, $this->style['titleCapitalization']);
             }
         }
@@ -1017,15 +1237,18 @@ class BIBFORMAT
         $pString = ltrim($pString);
 
         // Empty string
-        if (mb_strlen($pString) == 0) {
+        if (mb_strlen($pString) == 0)
+        {
             return $pString;
         }
         // Error: delimiters not balanced
-        elseif ((mb_strlen($delimitLeft . $delimitRight) > 0) && (mb_strlen($delimitLeft) == 0 || mb_strlen($delimitRight) == 0)) {
+        elseif ((mb_strlen($delimitLeft . $delimitRight) > 0) && (mb_strlen($delimitLeft) == 0 || mb_strlen($delimitRight) == 0))
+        {
             return $pString;
         }
         // Use defaults delimiters
-        elseif (mb_strlen($delimitLeft) == 0 && mb_strlen($delimitRight) == 0) {
+        elseif (mb_strlen($delimitLeft) == 0 && mb_strlen($delimitRight) == 0)
+        {
             $delimitLeft = '{';
             $delimitRight = '}';
         }
@@ -1037,12 +1260,14 @@ class BIBFORMAT
 
         // Remove all closing delimiter at the head of the string (malformed string)
         // to find the real first character to capitalize
-        while ((mb_substr($pString, 0, $sizeDelimitRight) == $delimitRight) && (mb_strlen($pString) >= $sizeDelimitRight)) {
+        while ((mb_substr($pString, 0, $sizeDelimitRight) == $delimitRight) && (mb_strlen($pString) >= $sizeDelimitRight))
+        {
             $pString = ltrim(mb_substr($pString, $sizeDelimitRight));
         }
 
         // If the first character isn't an opening delimiter, extract and capitalize it
-        if ((mb_substr($pString, 0, $sizeDelimitLeft) != $delimitLeft) && $CondCapitalization) {
+        if ((mb_substr($pString, 0, $sizeDelimitLeft) != $delimitLeft) && $CondCapitalization)
+        {
             $firstChar = mb_strtoupper(mb_substr($pString, 0, 1));
             $pString = mb_substr($pString, 1);
         }
@@ -1052,25 +1277,30 @@ class BIBFORMAT
         $sReturn = '';
 
         // Lowercase text not enclosed by delims
-        for ($p = 0; $p < mb_strlen($pString); $p++) {
+        for ($p = 0; $p < mb_strlen($pString); $p++)
+        {
             $tmp .= mb_substr($pString, $p, 1);
             $sTmp = mb_strlen($tmp);
 
-            if ($sTmp == $sizeDelimitLeft || $sTmp == $sizeDelimitRight) {
+            if ($sTmp == $sizeDelimitLeft || $sTmp == $sizeDelimitRight)
+            {
                 // Opening
-                if ($tmp == $delimitLeft) {
+                if ($tmp == $delimitLeft)
+                {
                     $tmp = '';
                     $nbDelimOpen++;
                 }
                 // Closing
-                elseif ($tmp == $delimitRight) {
+                elseif ($tmp == $delimitRight)
+                {
                     $tmp = '';
                     // max() is used to not decrement below 0
                     // if we encounter a closing delim not preceded by an opening delim.
                     $nbDelimOpen = max($nbDelimOpen - 1, 0);
                 }
                 // Delimiter not matched, it's just ordinary text to transform
-                else {
+                else
+                {
                     $sReturn .= ($nbDelimOpen == 0 && $CondCapitalization) ? mb_strtolower($tmp) : $tmp;
                     $tmp = '';
                 }
@@ -1078,7 +1308,8 @@ class BIBFORMAT
         }
 
         // If any text remains, transform it
-        if ($tmp != '') {
+        if ($tmp != '')
+        {
             $sReturn .= ($nbDelimOpen == 0 && $CondCapitalization) ? mb_strtolower($tmp) : $tmp;
             $tmp = '';
         }
@@ -1110,7 +1341,8 @@ class BIBFORMAT
         /**
          * If no page end, return just $start;
          */
-        if (!$end) {
+        if (!$end)
+        {
             $this->item[$this->styleMap->{$type}['pages']] = $start;
 
             return;
@@ -1118,7 +1350,8 @@ class BIBFORMAT
         /**
          * Pages may be in roman numeral format etc.  Return unchanged
          */
-        if (!is_numeric($start)) {
+        if (!is_numeric($start))
+        {
             $this->item[$this->styleMap->{$type}['pages']] = $start . 'WIKINDX_NDASH' . $end;
 
             return;
@@ -1130,46 +1363,60 @@ class BIBFORMAT
         /**
          * They've done something wrong so give them back exactly what they entered
          */
-        if (($end <= $start) || (mb_strlen($end) < mb_strlen($start))) {
+        if (($end <= $start) || (mb_strlen($end) < mb_strlen($start)))
+        {
             $this->item[$this->styleMap->{$type}['pages']] = $start . 'WIKINDX_NDASH' . $end;
 
             return;
-        } elseif ($style['pageFormat'] == 2) {
+        }
+        elseif ($style['pageFormat'] == 2)
+        {
             $this->item[$this->styleMap->{$type}['pages']] = $start . 'WIKINDX_NDASH' . $end;
 
             return;
-        } else {
+        }
+        else
+        {
             /**
              * We assume page numbers are not into the 10,000 range - if so, return the complete pages
              */
-            if (mb_strlen($start) <= 4) {
+            if (mb_strlen($start) <= 4)
+            {
                 $startArray = preg_split('//u', $start);
                 array_shift($startArray); // always an empty element at start?
                 array_pop($startArray); // always an empty array element at end?
-                if ($style['pageFormat'] == 0) {
+                if ($style['pageFormat'] == 0)
+                {
                     array_pop($startArray);
                     $endPage = mb_substr($end, -1);
                     $index = -2;
-                } else {
+                }
+                else
+                {
                     array_pop($startArray);
                     array_pop($startArray);
                     $endPage = mb_substr($end, -2);
                     $index = -3;
                 }
-                while (!empty($startArray)) {
+                while (!empty($startArray))
+                {
                     $startPop = array_pop($startArray);
                     $endSub = mb_substr($end, $index--, 1);
-                    if ($endSub == $startPop) {
+                    if ($endSub == $startPop)
+                    {
                         $this->item[$this->styleMap->{$type}['pages']]
                             = $start . '-' . $endPage;
 
                         return;
                     }
-                    if ($endSub > $startPop) {
+                    if ($endSub > $startPop)
+                    {
                         $endPage = $endSub . $endPage;
                     }
                 }
-            } else {
+            }
+            else
+            {
                 $this->item[$this->styleMap->{$type}['pages']] = $start . 'WIKINDX_NDASH' . $end;
 
                 return;
@@ -1189,64 +1436,99 @@ class BIBFORMAT
     public function formatRunningTime($minutes, $hours)
     {
         $type = $this->type;
-        if ($this->style['runningTimeFormat'] == 0) { // 1'45"
-            if (isset($minutes) && $minutes) {
-                if ($minutes < 10) {
+        if ($this->style['runningTimeFormat'] == 0)
+        { // 1'45"
+            if (isset($minutes) && $minutes)
+            {
+                if ($minutes < 10)
+                {
                     $minutes = '0' . $minutes;
                 }
                 $runningTime = $hours . "'" . $minutes . "\"";
-            } else {
+            }
+            else
+            {
                 $runningTime = $hours . "'00\"";
             }
-        } elseif ($this->style['runningTimeFormat'] == 1) { // 1:45
-            if (isset($minutes) && $minutes) {
-                if ($minutes < 10) {
+        }
+        elseif ($this->style['runningTimeFormat'] == 1)
+        { // 1:45
+            if (isset($minutes) && $minutes)
+            {
+                if ($minutes < 10)
+                {
                     $minutes = '0' . $minutes;
                 }
                 $runningTime = $hours . ":" . $minutes;
-            } else {
+            }
+            else
+            {
                 $runningTime = $hours . ":00";
             }
-        } elseif ($this->style['runningTimeFormat'] == 2) { // 1,45
-            if (isset($minutes) && $minutes) {
-                if ($minutes < 10) {
+        }
+        elseif ($this->style['runningTimeFormat'] == 2)
+        { // 1,45
+            if (isset($minutes) && $minutes)
+            {
+                if ($minutes < 10)
+                {
                     $minutes = '0' . $minutes;
                 }
                 $runningTime = $hours . "," . $minutes;
-            } else {
+            }
+            else
+            {
                 $runningTime = $hours . ",00";
             }
-        } elseif ($this->style['runningTimeFormat'] == 3) { // 1 hours, 45 minutes
+        }
+        elseif ($this->style['runningTimeFormat'] == 3)
+        { // 1 hours, 45 minutes
             $hours = ($hours == 1) ? $hours . " hour" : $hours . " hours";
-            if (isset($minutes) && $minutes) {
+            if (isset($minutes) && $minutes)
+            {
                 $minutes = ($minutes == 1) ? $minutes . " minute" : $minutes . " minutes";
                 $runningTime = $hours . ", " . $minutes;
-            } else {
+            }
+            else
+            {
                 $runningTime = $hours;
             }
-        } elseif ($this->style['runningTimeFormat'] == 4) { // 1 hours and 45 minutes
+        }
+        elseif ($this->style['runningTimeFormat'] == 4)
+        { // 1 hours and 45 minutes
             $hours = ($hours == 1) ? $hours . " hour" : $hours . " hours";
-            if (isset($minutes) && $minutes) {
+            if (isset($minutes) && $minutes)
+            {
                 $minutes = ($minutes == 1) ? $minutes . " minute" : $minutes . " minutes";
                 $runningTime = $hours . " and " . $minutes;
-            } else {
+            }
+            else
+            {
                 $runningTime = $hours;
             }
-        } elseif ($this->style['runningTimeFormat'] == 5) { // 105 minutes
+        }
+        elseif ($this->style['runningTimeFormat'] == 5)
+        { // 105 minutes
             $time = 0;
-            if (isset($hours)) {
+            if (isset($hours))
+            {
                 $time = $hours * 60;
             }
-            if (isset($minutes) && $minutes) {
+            if (isset($minutes) && $minutes)
+            {
                 $time += $minutes;
             }
             $runningTime = ($time == 1) ? $time . " minute" : $time . " minutes";
-        } elseif ($this->style['runningTimeFormat'] == 6) { // 105 mins
+        }
+        elseif ($this->style['runningTimeFormat'] == 6)
+        { // 105 mins
             $time = 0;
-            if (isset($hours)) {
+            if (isset($hours))
+            {
                 $time = $hours * 60;
             }
-            if (isset($minutes) && $minutes) {
+            if (isset($minutes) && $minutes)
+            {
                 $time += $minutes;
             }
             $runningTime = ($time == 1) ? $time . " min" : $time . " mins";
@@ -1269,87 +1551,132 @@ class BIBFORMAT
         $type = $this->type;
         $oldStartDay = $startDay;
         $oldEndDay = $endDay;
-        if ($this->dateMonthNoDay && !$startDay && !$endDay) {
+        if ($this->dateMonthNoDay && !$startDay && !$endDay)
+        {
             $this->{$type}[$this->styleMap->{$type}['date']] =
             $this->dateArray[$this->styleMap->{$type}['date']];
         }
-        if ($startDay !== FALSE) {
-            if ($this->style['dayFormat'] == 1) { // e.g. 10.
+        if ($startDay !== FALSE)
+        {
+            if ($this->style['dayFormat'] == 1)
+            { // e.g. 10.
                 $startDay .= '.';
-            } elseif ($this->style['dayFormat'] == 2) { // e.g. 10th
+            }
+            elseif ($this->style['dayFormat'] == 2)
+            { // e.g. 10th
                 $startDay = $this->cardinalToOrdinal($startDay, 'dayMonth');
             }
-            if (array_key_exists('dayLeadingZero', $this->style) && $oldStartDay < 10) {
+            if (array_key_exists('dayLeadingZero', $this->style) && $oldStartDay < 10)
+            {
                 $startDay = '0' . $startDay;
             }
         }
-        if ($endDay !== FALSE) {
-            if ($this->style['dayFormat'] == 1) { // e.g. 10.
+        if ($endDay !== FALSE)
+        {
+            if ($this->style['dayFormat'] == 1)
+            { // e.g. 10.
                 $endDay .= '.';
-            } elseif ($this->style['dayFormat'] == 2) { // e.g. 10th
+            }
+            elseif ($this->style['dayFormat'] == 2)
+            { // e.g. 10th
                 $endDay = $this->cardinalToOrdinal($endDay, 'dayMonth');
             }
-            if (array_key_exists('dayLeadingZero', $this->style) && $oldEndDay < 10) {
+            if (array_key_exists('dayLeadingZero', $this->style) && $oldEndDay < 10)
+            {
                 $endDay = '0' . $endDay;
             }
         }
-        if ($this->style['monthFormat'] == 1) { // Full month name
+        if ($this->style['monthFormat'] == 1)
+        { // Full month name
             $monthArray = $this->longMonth;
-        } elseif ($this->style['monthFormat'] == 2) { // User-defined
-            for ($i = 1; $i <= 16; $i++) {
+        }
+        elseif ($this->style['monthFormat'] == 2)
+        { // User-defined
+            for ($i = 1; $i <= 16; $i++)
+            {
                 $monthArray[$i] = $this->style["userMonth_$i"];
             }
-        } else { // Short month name
+        }
+        else
+        { // Short month name
             $monthArray = $this->shortMonth;
         }
-        if ($startMonth !== FALSE) {
-            if (!array_key_exists($startMonth, $monthArray)) {
+        if ($startMonth !== FALSE)
+        {
+            if (!array_key_exists($startMonth, $monthArray))
+            {
                 $startMonth = 'UnknownMonth';
-            } else {
+            }
+            else
+            {
                 $startMonth = $monthArray[$startMonth];
             }
         }
-        if ($endMonth !== FALSE) {
-            if (!array_key_exists($endMonth, $monthArray)) {
+        if ($endMonth !== FALSE)
+        {
+            if (!array_key_exists($endMonth, $monthArray))
+            {
                 $endMonth = 'UnknownMonth';
-            } else {
+            }
+            else
+            {
                 $endMonth = $monthArray[$endMonth];
             }
         }
-        if (!$endMonth) {
-            if ($this->style['dateFormat']) { // Order == Month Day
+        if (!$endMonth)
+        {
+            if ($this->style['dateFormat'])
+            { // Order == Month Day
                 $startDay = ($startDay === FALSE) ? '' : ' ' . $startDay;
                 $date = $startMonth . $startDay;
-            } else { // Order == Day Month
+            }
+            else
+            { // Order == Day Month
                 $startDay = ($startDay === FALSE) ? '' : $startDay . ' ';
                 $date = $startDay . $startMonth;
             }
-        } else { // date range
-            if (!$startDay) {
+        }
+        else
+        { // date range
+            if (!$startDay)
+            {
                 $delimit = $this->style['dateRangeDelimit2'];
-            } else {
+            }
+            else
+            {
                 $delimit = $this->style['dateRangeDelimit1'];
             }
-            if (($endMonth !== FALSE) && ($startMonth == $endMonth) && ($this->style['dateRangeSameMonth'] == 1)) {
+            if (($endMonth !== FALSE) && ($startMonth == $endMonth) && ($this->style['dateRangeSameMonth'] == 1))
+            {
                 $endMonth = FALSE;
-                if (!$endDay) {
+                if (!$endDay)
+                {
                     $delimit = FALSE;
                 }
             }
-            if ($this->style['dateFormat']) { // Order == Month Day
+            if ($this->style['dateFormat'])
+            { // Order == Month Day
                 $startDay = ($startDay === FALSE) ? '' : ' ' . $startDay;
                 $startDate = $startMonth . $startDay;
-                if ($endMonth) {
+                if ($endMonth)
+                {
                     $endDate = $endMonth . $endDay = ($endDay === FALSE) ? '' : ' ' . $endDay;
-                } else {
+                }
+                else
+                {
                     $endDate = $endDay;
                 }
-            } else { // Order == Day Month
-                if ($endMonth) {
+            }
+            else
+            { // Order == Day Month
+                if ($endMonth)
+                {
                     $startDate = $startDay . ' ' . $startMonth;
                     $endDate = $endDay = ($endDay === FALSE) ? '' : $endDay . ' ';
                     $endDate .= $endMonth;
-                } else {
+                }
+                else
+                {
                     $startDate = $startDay;
                     $endDate = ($endDay === FALSE) ? ' ' : $endDay . ' ';
                     $endDate .= $startMonth;
@@ -1357,11 +1684,15 @@ class BIBFORMAT
             }
             $date = $startDate . $delimit . $endDate;
         }
-        if ($webArticle) {
-            if (array_key_exists('publicationDate', $this->styleMap->{$type})) {
+        if ($webArticle)
+        {
+            if (array_key_exists('publicationDate', $this->styleMap->{$type}))
+            {
                 $this->item[$this->styleMap->{$type}['publicationDate']] = $date;
             }
-        } else {
+        }
+        else
+        {
             $this->item[$this->styleMap->{$type}['date']] = $date;
         }
     }
@@ -1373,11 +1704,16 @@ class BIBFORMAT
     public function formatEdition($edition)
     {
         $type = $this->type;
-        if (!is_numeric($edition)) {
+        if (!is_numeric($edition))
+        {
             $edition = $edition;
-        } elseif ($this->style['editionFormat'] == 1) { // 10.
+        }
+        elseif ($this->style['editionFormat'] == 1)
+        { // 10.
             $edition .= '.';
-        } elseif ($this->style['editionFormat'] == 2) { // 10th
+        }
+        elseif ($this->style['editionFormat'] == 2)
+        { // 10th
             $edition = $this->cardinalToOrdinal($edition, 'edition');
         }
         $this->item[$this->styleMap->{$type}[array_search('edition', $this->styleMap->$type)]] = $edition;
@@ -1388,10 +1724,12 @@ class BIBFORMAT
     public function loadArrays()
     {
         // WIKINDX-specific
-        if ($this->wikindx) {
+        if ($this->wikindx)
+        {
             $this->wikindxLanguageClass = FACTORY_CONSTANTS::getInstance();
             if (method_exists($this->wikindxLanguageClass, "monthToLongName")
-                && method_exists($this->wikindxLanguageClass, "monthToShortName")) {
+                && method_exists($this->wikindxLanguageClass, "monthToShortName"))
+            {
                 $this->longMonth = $this->wikindxLanguageClass->monthToLongName();
                 $this->shortMonth = $this->wikindxLanguageClass->monthToShortName();
 
@@ -1434,7 +1772,8 @@ class BIBFORMAT
      */
     private function restoreTypes()
     {
-        foreach ($this->backup as $type => $array) {
+        foreach ($this->backup as $type => $array)
+        {
             $this->$type = $array;
         }
     }
@@ -1463,54 +1802,76 @@ class BIBFORMAT
         /**
          * Bibtex-specific types not defined in STYLEMAPBIBTEX
          */
-        if (!$this->type) {
-            if ($type == 'mastersthesis') {
+        if (!$this->type)
+        {
+            if ($type == 'mastersthesis')
+            {
                 $type = 'thesis';
                 $row['type'] = "Master's Dissertation";
             }
-            if ($type == 'phdthesis') {
+            if ($type == 'phdthesis')
+            {
                 $type = 'thesis';
                 $row['type'] = "PhD Thesis";
-            } elseif ($type == 'booklet') {
+            }
+            elseif ($type == 'booklet')
+            {
                 $type = 'miscellaneous';
-            } elseif ($type == 'conference') {
+            }
+            elseif ($type == 'conference')
+            {
                 $type = 'proceedings_article';
-            } elseif ($type == 'incollection') {
+            }
+            elseif ($type == 'incollection')
+            {
                 $type = 'book_article';
-            } elseif ($type == 'manual') {
+            }
+            elseif ($type == 'manual')
+            {
                 $type = 'report';
             }
         }
         /**
          * 'article' could be journal, newspaper or magazine article
          */
-        elseif ($type == 'article') {
-            if (array_key_exists('month', $row) && array_key_exists('date', $this->styleMap->$type)) {
+        elseif ($type == 'article')
+        {
+            if (array_key_exists('month', $row) && array_key_exists('date', $this->styleMap->$type))
+            {
                 list($month, $day) = $parseDate->init($row['month']);
-                if ($day) {
+                if ($day)
+                {
                     $type = 'newspaper_article';
-                } elseif ($month) {
+                }
+                elseif ($month)
+                {
                     $type = 'magazine_article';
                 }
                 $this->formatDate($day, $month);
-            } else {
+            }
+            else
+            {
                 $type = 'journal_article';
             }
         }
         /**
          * Is this a web article?
          */
-        elseif (($type == 'misc') && array_key_exists('howpublished', $row)) {
-            if (preg_match("#^\\\\url{(.*://.*)}#u", $row['howpublished'], $match)) {
+        elseif (($type == 'misc') && array_key_exists('howpublished', $row))
+        {
+            if (preg_match("#^\\\\url{(.*://.*)}#u", $row['howpublished'], $match))
+            {
                 $row['URL'] = $match[1];
                 $type = 'web_article';
             }
         }
         $this->type = $type;
         if (array_key_exists('creator1', $row) && $row['creator1'] &&
-            array_key_exists('creator1', $this->styleMap->$type)) {
+            array_key_exists('creator1', $this->styleMap->$type))
+        {
             $creators = $parseCreator->parse($row['creator1']);
-            foreach ($creators as $cArray) {
+            foreach ($creators as $cArray)
+            {
                 $temp[] = [
                     'surname' => trim($cArray[2]),
                     'firstname' => trim($cArray[0]),
@@ -1522,9 +1883,11 @@ class BIBFORMAT
             unset($temp);
         }
         if (array_key_exists('creator2', $row) && $row['creator2'] &&
-            array_key_exists('creator2', $this->styleMap->$type)) {
+            array_key_exists('creator2', $this->styleMap->$type))
+        {
             $creators = $parseCreator->parse($row['creator2']);
-            foreach ($creators as $cArray) {
+            foreach ($creators as $cArray)
+            {
                 $temp[] = [
                     'surname' => trim($cArray[2]),
                     'firstname' => trim($cArray[0]),
@@ -1534,7 +1897,8 @@ class BIBFORMAT
             }
             $this->formatNames($temp, 'creator2');
         }
-        if (array_key_exists('pages', $row) && array_key_exists('pages', $this->styleMap->$type)) {
+        if (array_key_exists('pages', $row) && array_key_exists('pages', $this->styleMap->$type))
+        {
             list($start, $end) = $parsePages->init($row['pages']);
             $this->formatPages(trim($start), trim($end));
         }
@@ -1551,22 +1915,32 @@ class BIBFORMAT
     {
         $typeArray = array_intersect_key($typeArray, $this->item);
 
-        foreach ($typeArray as $field => $array) {
-            if (is_array($array)) {
+        foreach ($typeArray as $field => $array)
+        {
+            if (is_array($array))
+            {
                 if (array_key_exists('alternatePreFirst', $array) ||
-                    array_key_exists('alternatePreSecond', $array)) {
-                    if (!$this->item[$field]) {
+                    array_key_exists('alternatePreSecond', $array))
+                {
+                    if (!$this->item[$field])
+                    {
                         unset($this->item[$array['alternatePreFirst']]);
-                    } else {
+                    }
+                    else
+                    {
                         unset($this->item[$array['alternatePreSecond']]);
                     }
                 }
 
                 if (array_key_exists('alternatePostFirst', $array) ||
-                    array_key_exists('alternatePostSecond', $array)) {
-                    if (!$this->item[$field]) {
+                    array_key_exists('alternatePostSecond', $array))
+                {
+                    if (!$this->item[$field])
+                    {
                         unset($this->item[$array['alternatePostFirst']]);
-                    } else {
+                    }
+                    else
+                    {
                         unset($this->item[$array['alternatePostSecond']]);
                     }
                 }
@@ -1583,11 +1957,13 @@ class BIBFORMAT
     private function checkPartial($type)
     {
         $this->partialDone = FALSE;
-        if (!array_key_exists('partial', $this->$type) || !$this->{$type}['partial']) {
+        if (!array_key_exists('partial', $this->$type) || !$this->{$type}['partial'])
+        {
             return; // nothing to do
         }
         $typeKeys = array_keys($this->$type);
-        if (array_key_exists($typeKeys[0], $this->item) && $this->item[$typeKeys[0]]) {
+        if (array_key_exists($typeKeys[0], $this->item) && $this->item[$typeKeys[0]])
+        {
             return;
         }	// item key exists -- nothing to do
         $this->{$type}['partial'] = $this->parsestyle->parseStringToArray(
@@ -1596,15 +1972,21 @@ class BIBFORMAT
             $this->styleMap
         );
         // Replace the whole template with the partial template?
-        if ($this->{$type}['partialReplace']) {
+        if ($this->{$type}['partialReplace'])
+        {
             $partial = $this->{$type}['partial'];
             $this->$type = $partial;
             // If independent keys exists, because we have removed the first key from $this->$type, we must decrement the keys in independent
-            if (array_key_exists('independent', $this->$type) && !empty($this->{$type}['independent'])) {
-                foreach ($this->{$type}['independent'] as $key => $value) {
-                    if (is_numeric($key)) {
+            if (array_key_exists('independent', $this->$type) && !empty($this->{$type}['independent']))
+            {
+                foreach ($this->{$type}['independent'] as $key => $value)
+                {
+                    if (is_numeric($key))
+                    {
                         $tempInd[$key - 1] = $value;
-                    } else {
+                    }
+                    else
+                    {
                         $tempInd[$key] = $value;
                     }
                 }
@@ -1617,13 +1999,16 @@ class BIBFORMAT
         $oldType = $this->$type;
         // Remove missing first item
         array_shift($oldType);
-        foreach ($this->{$type}['partial'] as $key => $value) {
+        foreach ($this->{$type}['partial'] as $key => $value)
+        {
             unset($oldType[$key]);
         }
         $this->$type = array_merge($this->{$type}['partial'], $oldType);
         // If independent keys exists, because we have removed the first key from $this->$type, we must decrement the keys in independent
-        if (array_key_exists('independent', $this->$type) && !empty($this->{$type}['independent'])) {
-            foreach ($this->{$type}['independent'] as $key => $value) {
+        if (array_key_exists('independent', $this->$type) && !empty($this->{$type}['independent']))
+        {
+            foreach ($this->{$type}['independent'] as $key => $value)
+            {
                 $tempInd[$key - 1] = $value;
             }
             $this->{$type}['independent'] = $tempInd;
@@ -1641,24 +2026,30 @@ class BIBFORMAT
     private function cardinalToOrdinal($cardinal, $field = FALSE)
     {
         // WIKINDX-specific
-        if ($this->wikindx && method_exists($this->wikindxLanguageClass, "cardinalToOrdinal")) {
+        if ($this->wikindx && method_exists($this->wikindxLanguageClass, "cardinalToOrdinal"))
+        {
             return $this->wikindxLanguageClass->cardinalToOrdinal($cardinal, $field);
         }
         $modulo = $cardinal % 100;
-        if (($modulo == 11) || ($modulo == 12) || ($modulo == 13)) {
+        if (($modulo == 11) || ($modulo == 12) || ($modulo == 13))
+        {
             return $cardinal . 'th';
         }
         $modulo = $cardinal % 10;
-        if (($modulo >= 4) || !$modulo) {
+        if (($modulo >= 4) || !$modulo)
+        {
             return $cardinal . 'th';
         }
-        if ($modulo == 1) {
+        if ($modulo == 1)
+        {
             return $cardinal . 'st';
         }
-        if ($modulo == 2) {
+        if ($modulo == 2)
+        {
             return $cardinal . 'nd';
         }
-        if ($modulo == 3) {
+        if ($modulo == 3)
+        {
             return $cardinal . 'rd';
         }
     }

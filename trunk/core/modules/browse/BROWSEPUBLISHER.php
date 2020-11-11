@@ -42,7 +42,8 @@ class BROWSEPUBLISHER
         $queryString = 'action=browse_BROWSEPUBLISHER_CORE&method=init&PublisherType=' . $publisherType;
         $this->sum = $this->publisher = [];
         $this->getPublishers($publisherType);
-        if (empty($this->publisher)) {
+        if (empty($this->publisher))
+        {
             GLOBALS::addTplVar('content', $this->messages->text("misc", "noPublisher"));
 
             return;
@@ -64,14 +65,18 @@ class BROWSEPUBLISHER
     {
         $lowestSum = current($this->sum);
         $highestSum = end($this->sum);
-        foreach ($this->publisher as $id => $name) {
+        foreach ($this->publisher as $id => $name)
+        {
             $colour = $this->common->colourText($lowestSum, $highestSum, $this->sum[$id]);
             $size = $this->common->sizeText($lowestSum, $highestSum, $this->sum[$id]);
-            if (array_key_exists($id, $this->miscField1)) {
+            if (array_key_exists($id, $this->miscField1))
+            {
                 $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .
                 htmlentities('action=list_LISTSOMERESOURCES_CORE&method=specialPublisherProcess&id=' . $id)) .
                 "&nbsp;[" . $this->sum[$id] . "]";
-            } else {
+            }
+            else
+            {
                 $links[] = \HTML\aBrowse($colour, $size, $name, 'index.php?' .
                 htmlentities('action=list_LISTSOMERESOURCES_CORE&method=publisherProcess&id=' . $id)) .
                 "&nbsp;[" . $this->sum[$id] . "]";
@@ -106,7 +111,8 @@ class BROWSEPUBLISHER
         $this->common->userBibCondition('resourcemiscId');
         $union[] = $this->db->selectNoExecute('resource_misc', implode(', ', $fields), FALSE, FALSE, TRUE);
         $subQ = $this->db->subQuery($this->db->union($union, TRUE), 't');
-        if ($type) {
+        if ($type)
+        {
             $this->db->formatConditions(['publisherType' => $type]);
         }
         $this->db->leftJoin('publisher', 'publisherId', 'pId');
@@ -118,8 +124,10 @@ class BROWSEPUBLISHER
             ['resourceType', 'publisherName', 'publisherLocation', 'special'],
             $subQ
         );
-        while ($row = $this->db->fetchRow($recordset)) {
-            if (array_key_exists($row['publisherId'], $this->publisher)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
+            if (array_key_exists($row['publisherId'], $this->publisher))
+            {
                 continue;
             }
             $this->collate($row, FALSE);
@@ -134,18 +142,24 @@ class BROWSEPUBLISHER
     {
         $this->sum[$row['publisherId']] = $row['count'];
         if (array_key_exists('publisherName', $row) && array_key_exists('publisherLocation', $row)
-            && $row['publisherName'] && $row['publisherLocation']) {
+            && $row['publisherName'] && $row['publisherLocation'])
+        {
             $this->publisher[$row['publisherId']] = stripslashes($row['publisherName']) .
             '&nbsp;(' . stripslashes($row['publisherLocation']) . ')';
-        } elseif (array_key_exists('publisherLocation', $row) && $row['publisherLocation']) {
+        }
+        elseif (array_key_exists('publisherLocation', $row) && $row['publisherLocation'])
+        {
             $this->publisher[$row['publisherId']] = '(' . stripslashes($row['publisherLocation']) . ')';
-        } else {
+        }
+        else
+        {
             $this->publisher[$row['publisherId']] = preg_replace("/{(.*)}/Uu", "$1", stripslashes($row['publisherName']));
         }
         // For proceedings_article and proceedings, publisher is stored in miscField1 while for books, transPublisher stored in miscField1.
         if ((($row['resourceType'] == 'proceedings_article') || ($row['resourceType'] == 'proceedings')
          || ($row['resourceType'] == 'book') || ($row['resourceType'] == 'book_article') || ($row['resourceType'] == 'book_chapter'))
-        && ($row['special'] == 'Y')) {
+        && ($row['special'] == 'Y'))
+        {
             $this->miscField1[$row['publisherId']] = TRUE;
         }
     }

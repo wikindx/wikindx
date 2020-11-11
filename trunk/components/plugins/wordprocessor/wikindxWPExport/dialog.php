@@ -15,7 +15,7 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "..", "cor
 
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "..", "core", "messages", "PLUGINMESSAGES.php"]));
 
-$script  = '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/tiny_mce_popup.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+$script = '<script src="' . WIKINDX_URL_BASE . '/core/tiny_mce/tiny_mce_popup.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
 $script .= '<script src="' . WIKINDX_URL_BASE . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/wordprocessor/wikindxWPcommon.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
 $script .= '<script src="' . WIKINDX_URL_BASE . '/' . WIKINDX_URL_COMPONENT_PLUGINS . '/wordprocessor/' . basename(__DIR__) . '/js/wikindxWPExportdialog.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
 GLOBALS::addTplVar('scripts', $script);
@@ -41,13 +41,16 @@ class WPExportDialog
         $this->session = FACTORY_SESSION::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->dirFilesName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
-        if (array_key_exists('method', $this->vars) && ($this->vars['method'] = 'save')) {
+        if (array_key_exists('method', $this->vars) && ($this->vars['method'] = 'save'))
+        {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "WPCOMMON.php"]));
             $this->common = new WPCOMMON();
             $this->common->save();
             $this->wpExport();
             FACTORY_CLOSEPOPUP::getInstance();
-        } else {
+        }
+        else
+        {
             $this->exportDialogue();
         }
     }
@@ -61,25 +64,33 @@ class WPExportDialog
         $title = base64_decode($this->session->getVar("wp_Title"));
         // Write to files/ folder
         $fullFileName = $this->dirFilesName . DIRECTORY_SEPARATOR . $hashFileName . '.rtf';
-        if ($fp = fopen("$fullFileName", "w")) {
+        if ($fp = fopen("$fullFileName", "w"))
+        {
             $text = $this->formatText();
 
-            if (!fwrite($fp, $text)) {
+            if (!fwrite($fp, $text))
+            {
                 $this->common->failure($this->errors->text("file", "write", ": $hashFileName"), $title);
             }
 
             fclose($fp);
-        } else {
+        }
+        else
+        {
             $this->common->failure($this->errors->text("file", "write", ": $hashFileName"), $title);
         }
 
         // Write exported hashed filename to session
-        if ($sessVar = $this->session->getVar("wp_PaperExports")) {
+        if ($sessVar = $this->session->getVar("wp_PaperExports"))
+        {
             $sessArray = $sessVar;
-        } else {
+        }
+        else
+        {
             $sessArray = [];
         }
-        if (array_search($hashFileName, $sessArray) === FALSE) {
+        if (array_search($hashFileName, $sessArray) === FALSE)
+        {
             $sessArray[$hashFileName] = $title . '.rtf';
             $this->session->setVar("wp_PaperExports", $sessArray);
         }
@@ -106,14 +117,17 @@ class WPExportDialog
     private function formatText()
     {
         $text = stripslashes(trim($this->vars['hdnpaperText']));
-        if ($this->session->getVar("wp_ExportFormat") == 'rtf') {
+        if ($this->session->getVar("wp_ExportFormat") == 'rtf')
+        {
             $rtf = FACTORY_RICHTEXTFORMAT::getInstance();
             $output = $rtf->header();
             $text = $rtf->parse($text);
-            if ($rtf->fontBlock) {
+            if ($rtf->fontBlock)
+            {
                 $output .= $rtf->fontBlock;
             }
-            if ($rtf->colourTable) {
+            if ($rtf->colourTable)
+            {
                 $output .= $rtf->colourTable;
             }
             $output .= $rtf->listTable;
@@ -134,85 +148,132 @@ class WPExportDialog
      */
     private function wpExportWriteSession()
     {
-        if (!array_key_exists('exportFormat', $this->vars)) {
+        if (!array_key_exists('exportFormat', $this->vars))
+        {
             return FALSE;
-        } else {
+        }
+        else
+        {
             $this->session->setVar("wp_ExportFormat", $this->vars['exportFormat']);
         }
-        if ($this->vars['exportFormat'] == 'noExport') {
+        if ($this->vars['exportFormat'] == 'noExport')
+        {
             return FALSE;
         }
-        if (array_key_exists('exportStyle', $this->vars)) {
+        if (array_key_exists('exportStyle', $this->vars))
+        {
             $this->session->setVar("wp_ExportStyle", $this->vars['exportStyle']);
         }
-        if (array_key_exists('exportPaperSize', $this->vars)) {
+        if (array_key_exists('exportPaperSize', $this->vars))
+        {
             $this->session->setVar("wp_ExportPaperSize", $this->vars['exportPaperSize']);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("wp_ExportPaperSize", 'A4');
         }
-        if (array_key_exists('exportPaperSpace', $this->vars)) {
+        if (array_key_exists('exportPaperSpace', $this->vars))
+        {
             $this->session->setVar("wp_ExportPaperSpace", $this->vars['exportPaperSpace']);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("wp_ExportPaperSpace", 'singleSpace');
         }
-        if (array_key_exists('exportSectionFtRestart', $this->vars)) {
+        if (array_key_exists('exportSectionFtRestart', $this->vars))
+        {
             $this->session->setVar("wp_ExportSectionFtRestart", $this->vars['exportSectionFtRestart']);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("wp_ExportSectionFtRestart", FALSE); // default no restart
         }
-        if (array_key_exists('exportSpaceBib', $this->vars)) {
+        if (array_key_exists('exportSpaceBib', $this->vars))
+        {
             $this->session->setVar("wp_ExportSpaceBib", $this->vars['exportSpaceBib']);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("wp_ExportSpaceBib", 'singleSpace');
         }
-        if (array_key_exists('exportIndentBib', $this->vars)) {
+        if (array_key_exists('exportIndentBib', $this->vars))
+        {
             $this->session->setVar("wp_ExportIindentBib", $this->vars['exportIndentBib']);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("wp_ExportIndentBib", 'none');
         }
-        if (array_key_exists('exportSpaceFt', $this->vars)) {
+        if (array_key_exists('exportSpaceFt', $this->vars))
+        {
             $this->session->setVar("wp_ExportSpaceFt", $this->vars['exportSpaceFt']);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("wp_ExportSpaceFt", 'singleSpace');
         }
-        if (array_key_exists('exportIndentFt', $this->vars)) {
+        if (array_key_exists('exportIndentFt', $this->vars))
+        {
             $this->session->setVar("wp_ExportIndentFt", $this->vars['exportIndentFt']);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("wp_ExportIndentFt", 'none');
         }
-        if (array_key_exists('exportFontSizeFt', $this->vars)) {
+        if (array_key_exists('exportFontSizeFt', $this->vars))
+        {
             $this->session->setVar("wp_ExportFontSizeFt", $this->vars['exportFontSizeFt']);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("wp_ExportFontSizeFt", 1);
         }
-        if (array_key_exists('exportPageNumber', $this->vars)) {
+        if (array_key_exists('exportPageNumber', $this->vars))
+        {
             $this->session->setVar("wp_ExportPageNumber", $this->vars['exportPageNumber']);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("wp_ExportPageNumber", 1);
         }
-        if (array_key_exists('exportPageNumberAlign', $this->vars)) {
+        if (array_key_exists('exportPageNumberAlign', $this->vars))
+        {
             $this->session->setVar("wp_ExportPageNumberAlign", $this->vars['exportPageNumberAlign']);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("wp_ExportPageNumberAlign", 0);
         }
-        if (array_key_exists('exportIndentQuoteWords', $this->vars)) {
+        if (array_key_exists('exportIndentQuoteWords', $this->vars))
+        {
             $this->session->setVar("wp_ExportIndentQuoteWords", $this->vars['exportIndentQuoteWords']);
-        } else {
+        }
+        else
+        {
             $this->session->delVar("wp_ExportIndentQuoteWords");
         }
-        if (array_key_exists('exportSpaceIndentQ', $this->vars)) {
+        if (array_key_exists('exportSpaceIndentQ', $this->vars))
+        {
             $this->session->setVar("wp_ExportSpaceIndentQ", $this->vars['exportSpaceIndentQ']);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("wp_ExportSpaceIndentQ", 'singleSpace');
         }
-        if (array_key_exists('exportIndentQuoteFontSize', $this->vars)) {
+        if (array_key_exists('exportIndentQuoteFontSize', $this->vars))
+        {
             $this->session->setVar("wp_ExportIndentQuoteFontSize", $this->vars['exportIndentQuoteFontSize']);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("wp_ExportIndentQuoteFontSize", 1);
         }
-        if (array_key_exists('exportIndentQuoteMarks', $this->vars)) {
+        if (array_key_exists('exportIndentQuoteMarks', $this->vars))
+        {
             $this->session->setVar("wp_ExportIndentQuoteMarks", $this->vars['exportIndentQuoteMarks']);
-        } else {
+        }
+        else
+        {
             $this->session->delVar("wp_ExportIndentQuoteMarks");
         }
     }
@@ -228,16 +289,21 @@ class WPExportDialog
         $js = "onsubmit=\"return wordprocessorExport('$savedMessage', '$notSavedMessage');\"";
         $pString .= FORM\formHeaderVisibleAction("dialog.php", "wpExport", $js);
         $pString .= FORM\hidden("method", "save");
-        if ($hashFilename = $this->session->getVar("wp_HashFilename")) {
+        if ($hashFilename = $this->session->getVar("wp_HashFilename"))
+        {
             $pString .= FORM\hidden("hashFilename", $hashFilename);
         }
-        if ($id = $this->session->getVar("wp_Id")) {
+        if ($id = $this->session->getVar("wp_Id"))
+        {
             $pString .= FORM\hidden("id", $id);
         }
         $pString .= "<input type=\"hidden\" id=\"hdnpaperText\" name=\"hdnpaperText\" value=\"\">";
-        if ($this->session->getVar("wp_Title")) {
+        if ($this->session->getVar("wp_Title"))
+        {
             $title = base64_decode($this->session->getVar("wp_Title"));
-        } else {
+        }
+        else
+        {
             $title = '';
         }
         $pString .= HTML\p(FORM\textInput($this->pluginmessages->text("paperTitle"), "title", $title, 40) . BR .
@@ -261,7 +327,8 @@ class WPExportDialog
         $pString = HTML\hr();
         $pString .= HTML\tableStart('borderStyleSolid');
         $pString .= HTML\trStart();
-        if ($format = $this->session->getVar("wp_ExportFormat")) {
+        if ($format = $this->session->getVar("wp_ExportFormat"))
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("export"),
                 "exportFormat",
@@ -269,7 +336,9 @@ class WPExportDialog
                 $format,
                 1
             ));
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("export"),
                 "exportFormat",
@@ -286,7 +355,8 @@ class WPExportDialog
             'legal' => 'Legal',
             'executive' => 'Executive',
         ];
-        if ($size = $this->session->getVar("wp_ExportPaperSize")) {
+        if ($size = $this->session->getVar("wp_ExportPaperSize"))
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("paperSize"),
                 "exportPaperSize",
@@ -294,7 +364,9 @@ class WPExportDialog
                 $size,
                 3
             ), 'bottom');
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("paperSize"),
                 "exportPaperSize",
@@ -310,7 +382,8 @@ class WPExportDialog
             'doubleSpace' => $this->pluginmessages->text("doubleSpace"),
         ];
         $fontSizeArray = [8 => 8, 10 => 10, 12 => 12, 14 => 14, 18 => 18, 24 => 24, 36 => 36];
-        if ($space = $this->session->getVar("wp_ExportPaperSpace")) {
+        if ($space = $this->session->getVar("wp_ExportPaperSpace"))
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("lineSpacePaper"),
                 "exportPaperSpace",
@@ -318,7 +391,9 @@ class WPExportDialog
                 $space,
                 3
             ), 'bottom');
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("lineSpacePaper"),
                 "exportPaperSpace",
@@ -333,7 +408,8 @@ class WPExportDialog
             2 => $this->pluginmessages->text("pageNumberHeader"),
             0 => $this->pluginmessages->text("pageNumberNone"),
         ];
-        if (($pn = $this->session->getVar("wp_ExportPageNumber")) !== FALSE) {
+        if (($pn = $this->session->getVar("wp_ExportPageNumber")) !== FALSE)
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("pageNumber"),
                 "exportPageNumber",
@@ -341,7 +417,9 @@ class WPExportDialog
                 $pn,
                 3
             ), 'bottom');
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("pageNumber"),
                 "exportPageNumber",
@@ -356,7 +434,8 @@ class WPExportDialog
             1 => $this->pluginmessages->text("pageNumberAlignLeft"),
             2 => $this->pluginmessages->text("pageNumberAlignRight"),
         ];
-        if (($pn = $this->session->getVar("wp_ExportPageNumberAlign")) !== FALSE) {
+        if (($pn = $this->session->getVar("wp_ExportPageNumberAlign")) !== FALSE)
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("pageNumberAlign"),
                 "exportPageNumberAlign",
@@ -364,7 +443,9 @@ class WPExportDialog
                 $pn,
                 3
             ), 'bottom');
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("pageNumberAlign"),
                 "exportPageNumberAlign",
@@ -381,7 +462,8 @@ class WPExportDialog
         $pString .= HTML\trStart();
         // bibliographic/citation export style
         $styles = LOADSTYLE\loadDir();
-        if ($style = $this->session->getVar("wp_ExportStyle")) {
+        if ($style = $this->session->getVar("wp_ExportStyle"))
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->coremessages->text("config", "style"),
                 "exportStyle",
@@ -389,7 +471,9 @@ class WPExportDialog
                 $style,
                 4
             ), 'bottom');
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->coremessages->text("config", "style"),
                 "exportStyle",
@@ -399,7 +483,8 @@ class WPExportDialog
             ), 'bottom');
         }
         // Line spacing for appended bibliography
-        if ($space = $this->session->getVar("wp_ExportSpaceBib")) {
+        if ($space = $this->session->getVar("wp_ExportSpaceBib"))
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("lineSpaceBib"),
                 "exportSpaceBib",
@@ -407,7 +492,9 @@ class WPExportDialog
                 $space,
                 3
             ), 'bottom');
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("lineSpaceBib"),
                 "exportSpaceBib",
@@ -423,7 +510,8 @@ class WPExportDialog
             'indentFL' => $this->pluginmessages->text("indentFL"),
             'indentNotFL' => $this->pluginmessages->text("indentNotFL"),
         ];
-        if ($indent = $this->session->getVar("wp_ExportIndentBib")) {
+        if ($indent = $this->session->getVar("wp_ExportIndentBib"))
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("indentBib"),
                 "exportIndentBib",
@@ -431,7 +519,9 @@ class WPExportDialog
                 $indent,
                 4
             ), 'bottom');
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("indentBib"),
                 "exportIndentBib",
@@ -447,7 +537,8 @@ class WPExportDialog
         $pString .= HTML\tableStart('borderStyleSolid');
         $pString .= HTML\trStart();
         // Line spacing for footnotes
-        if ($space = $this->session->getVar("wp_ExportSpaceFt")) {
+        if ($space = $this->session->getVar("wp_ExportSpaceFt"))
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("lineSpaceFt"),
                 "exportSpaceFt",
@@ -455,7 +546,9 @@ class WPExportDialog
                 $space,
                 3
             ), 'bottom');
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("lineSpaceFt"),
                 "exportSpaceFt",
@@ -471,7 +564,8 @@ class WPExportDialog
             'indentFL' => $this->pluginmessages->text("indentFL"),
             'indentNotFL' => $this->pluginmessages->text("indentNotFL"),
         ];
-        if ($indent = $this->session->getVar("wp_ExportIndentFt")) {
+        if ($indent = $this->session->getVar("wp_ExportIndentFt"))
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("indentFt"),
                 "exportIndentFt",
@@ -479,7 +573,9 @@ class WPExportDialog
                 $indent,
                 4
             ), 'bottom');
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("indentFt"),
                 "exportIndentFt",
@@ -489,7 +585,8 @@ class WPExportDialog
             ), 'bottom');
         }
         // footnote font size
-        if (($fontSize = $this->session->getVar("wp_ExportFontSizeFt")) !== FALSE) {
+        if (($fontSize = $this->session->getVar("wp_ExportFontSizeFt")) !== FALSE)
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("fontSizeFt"),
                 "exportFontSizeFt",
@@ -497,7 +594,9 @@ class WPExportDialog
                 $fontSize,
                 3
             ), 'bottom');
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("fontSizeFt"),
                 "exportFontSizeFt",
@@ -524,7 +623,8 @@ class WPExportDialog
             4
         ));
         // Line spacing for indented quotations
-        if ($space = $this->session->getVar("wp_ExportSpaceIndentQ")) {
+        if ($space = $this->session->getVar("wp_ExportSpaceIndentQ"))
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("lineSpaceIndentQ"),
                 "exportSpaceIndentQ",
@@ -532,7 +632,9 @@ class WPExportDialog
                 $space,
                 3
             ), 'bottom');
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("lineSpaceIndentQ"),
                 "exportSpaceIndentQ",
@@ -541,7 +643,8 @@ class WPExportDialog
                 3
             ), 'bottom');
         }
-        if (($fontSize = $this->session->getVar("wp_ExportIndentQuoteFontSize")) !== FALSE) {
+        if (($fontSize = $this->session->getVar("wp_ExportIndentQuoteFontSize")) !== FALSE)
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("indentQuoteFontSize"),
                 "exportIndentQuoteFontSize",
@@ -549,7 +652,9 @@ class WPExportDialog
                 $fontSize,
                 3
             ), 'bottom');
-        } else {
+        }
+        else
+        {
             $pString .= HTML\td(FORM\selectedBoxValue(
                 $this->pluginmessages->text("indentQuoteFontSize"),
                 "exportIndentQuoteFontSize",

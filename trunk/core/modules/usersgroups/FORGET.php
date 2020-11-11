@@ -43,7 +43,8 @@ class FORGET
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "forget"));
         $pString = \FORM\formHeader('usersgroups_FORGET_CORE');
         $pString .= \FORM\hidden('method', 'forgetInitStage2');
-        if ($error) {
+        if ($error)
+        {
             $pString .= $error;
         }
         $pString .= \HTML\p($this->messages->text("user", "forget7"));
@@ -77,36 +78,46 @@ class FORGET
     public function forgetInitStage2($error = FALSE)
     {
         $this->badInput->closeType = 'closeNoMenu';
-        if (array_key_exists('usersUsername', $this->vars) && ($usersUsername = \UTF8\mb_trim($this->vars['usersUsername']))) {
+        if (array_key_exists('usersUsername', $this->vars) && ($usersUsername = \UTF8\mb_trim($this->vars['usersUsername'])))
+        {
             $this->db->formatConditions(['usersUsername' => $usersUsername]);
-        } elseif (array_key_exists('email', $this->vars) && ($email = \UTF8\mb_trim($this->vars['email']))) {
+        }
+        elseif (array_key_exists('email', $this->vars) && ($email = \UTF8\mb_trim($this->vars['email'])))
+        {
             $this->db->formatConditions(['usersEmail' => $email]);
-        } else {
+        }
+        else
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'forgetInitStage1');
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "forget"));
         $pString = \FORM\formHeader('usersgroups_FORGET_CORE');
         $pString .= \FORM\hidden('method', 'forgetProcess');
-        if ($error) {
+        if ($error)
+        {
             $pString .= $error;
         }
         $pString .= \HTML\p($this->messages->text("user", "forget8"));
-        for ($i = 1; $i < 4; $i++) {
+        for ($i = 1; $i < 4; $i++)
+        {
             $userArray[] = "usersPasswordQuestion$i";
             $userArray[] = "usersPasswordAnswer$i";
         }
         $userArray[] = "usersUsername";
         $userArray[] = "usersEmail";
         $recordSet = $this->db->select('users', $userArray);
-        if ($this->db->numRows($recordSet) > 1) {
+        if ($this->db->numRows($recordSet) > 1)
+        {
             $this->badInput->close($this->errors->text("warning", "forget2"), $this, 'forgetInitStage1');
         }
         $row = $this->db->fetchRow($recordSet);
         $pString .= \FORM\hidden("usersUsername", $row['usersUsername']);
         $pString .= \FORM\hidden("email", $row['usersEmail']);
         $questionFound = FALSE;
-        for ($i = 1; $i < 4; $i++) {
-            if (!$row["usersPasswordQuestion$i"]) {
+        for ($i = 1; $i < 4; $i++)
+        {
+            if (!$row["usersPasswordQuestion$i"])
+            {
                 continue;
             }
             $answer = array_key_exists("answer$i", $this->formData) ? $this->formData["answer$i"] : FALSE;
@@ -116,13 +127,17 @@ class FORGET
             $pString .= \HTML\p($string);
             $questionFound = TRUE;
         }
-        if (!$questionFound) {
+        if (!$questionFound)
+        {
             $email = WIKINDX_CONTACT_EMAIL;
-            if ($email) {
+            if ($email)
+            {
                 $email = \HTML\nlToHtml($email);
                 $email = \HTML\a("link", $email, "mailto:$email");
                 $contact = "&nbsp;($email).";
-            } else {
+            }
+            else
+            {
                 $contact = ".";
             }
             $this->badInput->close($this->errors->text("warning", "forget1", $contact));
@@ -137,45 +152,54 @@ class FORGET
      */
     public function forgetProcess()
     {
-    	$error = '';
+        $error = '';
         $this->badInput->closeType = 'closeNoMenu';
         $usersUsername = \UTF8\mb_trim($this->vars['usersUsername']);
         $this->db->formatConditions(['usersUsername' => $usersUsername]);
-        for ($i = 1; $i < 4; $i++) {
+        for ($i = 1; $i < 4; $i++)
+        {
             $userArray[] = "usersPasswordQuestion$i";
             $userArray[] = "usersPasswordAnswer$i";
         }
         $row = $this->db->selectFirstRow('users', $userArray);
-        for ($i = 1; $i < 4; $i++) {
-            if (!array_key_exists("answer$i", $this->vars)) {
+        for ($i = 1; $i < 4; $i++)
+        {
+            if (!array_key_exists("answer$i", $this->vars))
+            {
                 continue;
             }
             $this->formData["answer$i"] = \UTF8\mb_trim($this->vars["answer$i"]);
             $answer = sha1(mb_strtolower($this->formData["answer$i"]));
-            if ($answer != $row["usersPasswordAnswer$i"]) {
-            	$error = $this->errors->text("inputError", "incorrect");
+            if ($answer != $row["usersPasswordAnswer$i"])
+            {
+                $error = $this->errors->text("inputError", "incorrect");
             }
         }
-        if ($error) {
+        if ($error)
+        {
             $this->badInput->close($error, $this, 'forgetInitStage2');
         }
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
         $password = time();
-        if (!$emailClass->forgetProcess($usersUsername, $password)) {
+        if (!$emailClass->forgetProcess($usersUsername, $password))
+        {
             $email = WIKINDX_CONTACT_EMAIL;
-            if ($email) {
+            if ($email)
+            {
                 $email = \HTML\nlToHtml($email);
                 $email = \HTML\a("link", $email, "mailto:$email");
                 $contact = "&nbsp;($email).";
-            } else {
+            }
+            else
+            {
                 $contact = ".";
             }
             $this->badInput->close($this->errors->text("warning", "forget3", $contact), $this, 'forgetInitStage1');
         }
         // If we get here, all questions have been correctly answered so write temp pass word to database.
-        // NB  This is done after sending out email. If email fails, we don't want to change the user's password.  
-        // However, the risk is that a password may be sent and then the update code below will fail. 
+        // NB  This is done after sending out email. If email fails, we don't want to change the user's password.
+        // However, the risk is that a password may be sent and then the update code below will fail.
         // This is judged to be the lesser of two evils.
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "forget"));
         $cryptPassword = \UTILS\password_hash($password);
@@ -186,7 +210,6 @@ class FORGET
     }
     /**
      * Successfully written temporary password
-     *
      */
     public function success()
     {

@@ -53,14 +53,16 @@ class PAGING
     public function getPaging()
     {
         $this->getPagingStart();
-        if (!$this->total = GLOBALS::getTempStorage('setup_PagingTotal')) {
-        	$this->total = $this->session->getVar("setup_PagingTotal");
+        if (!$this->total = GLOBALS::getTempStorage('setup_PagingTotal'))
+        {
+            $this->total = $this->session->getVar("setup_PagingTotal");
         }
         $this->paging = GLOBALS::getUserVar('Paging');
         $this->maxLinks = GLOBALS::getUserVar('PagingMaxLinks');
         $this->maxLinksHalf = round($this->maxLinks / 2);
         // Has the paging limit been overriden in user preferences for this selection?
-        if ($this->paging == -1) {
+        if ($this->paging == -1)
+        {
             return;
         }
         $this->createLinks();
@@ -73,17 +75,21 @@ class PAGING
         $DefaultStart = 0;
         $start = FALSE;
         
-        if (array_key_exists('PagingStart', $this->vars)) {
+        if (array_key_exists('PagingStart', $this->vars))
+        {
             $start = filter_var($this->vars['PagingStart'], FILTER_VALIDATE_INT);
         }
         
-        if ($start === FALSE) {
-        	if (!$start = GLOBALS::getTempStorage('mywikindx_PagingStart')) {
-	            $start = $this->session->getVar("mywikindx_PagingStart", FALSE);
-	        }
+        if ($start === FALSE)
+        {
+            if (!$start = GLOBALS::getTempStorage('mywikindx_PagingStart'))
+            {
+                $start = $this->session->getVar("mywikindx_PagingStart", FALSE);
+            }
         }
         
-        if ($start === FALSE) {
+        if ($start === FALSE)
+        {
             $start = $DefaultStart;
         }
         
@@ -99,19 +105,24 @@ class PAGING
      */
     public function linksInfo($bibTitle = FALSE)
     {
-        if (!$this->total) {
+        if (!$this->total)
+        {
             return $this->messages->text("resources", "noResult");
         }
         $displayEnd = $this->start + $this->paging;
-        if (($this->paging <= 0) || ($displayEnd > $this->total)) {
+        if (($this->paging <= 0) || ($displayEnd > $this->total))
+        {
             $displayEnd = $this->total;
         }
         $displayStart = $this->start + 1;
         $bib = FALSE;
-        if ($bibTitle) {
+        if ($bibTitle)
+        {
             $bib = ' (' . $this->messages->text("user", "bibliography") . ': ' .
             \HTML\nlToHtml($bibTitle) . ")";
-        } elseif (WIKINDX_MULTIUSER) {
+        }
+        elseif (WIKINDX_MULTIUSER)
+        {
             $bib = ' (' . $this->messages->text("user", "bibliography") . ': ' .
                 $this->messages->text("user", "masterBib") . ")";
         }
@@ -127,25 +138,31 @@ class PAGING
      */
     private function createLinks()
     {
-        if (($this->paging <= 0) || ($this->total <= $this->paging)) {
+        if (($this->paging <= 0) || ($this->total <= $this->paging))
+        {
             return;
         }
         $BT = $this->browserTabID ? '&browserTabID=' . $this->browserTabID : FALSE;
         $end = $advanced = 0;
         $index = $maxLinks = 1;
         $advance = $this->start;
-        if (mb_strpos($this->queryString, '?') !== FALSE) {
+        if (mb_strpos($this->queryString, '?') !== FALSE)
+        {
             $rootFile = FALSE;
-        } else {
+        }
+        else
+        {
             $rootFile = 'index.php?';
         }
-        while ($advance >= (($this->maxLinksHalf * $this->paging) - $this->paging)) {
+        while ($advance >= (($this->maxLinksHalf * $this->paging) - $this->paging))
+        {
             $end += $this->paging;
             $index += $this->paging;
             $advance -= $this->paging;
             $advanced++;
         }
-        if ($advanced) {
+        if ($advanced)
+        {
             $links[] = \HTML\a(
                 "page",
                 $this->messages->text("resources", "pagingStart"),
@@ -153,34 +170,45 @@ class PAGING
             );
             $maxLinks++;
         }
-        while ($index <= $this->total) {
-            if ($maxLinks++ >= $this->maxLinks) {
+        while ($index <= $this->total)
+        {
+            if ($maxLinks++ >= $this->maxLinks)
+            {
                 break;
             }
             $end += $this->paging;
-            if ($end > $this->total) {
+            if ($end > $this->total)
+            {
                 $end = $this->total;
             }
             $start = $index - 1;
             $link = htmlentities($this->queryString . "&PagingStart=$start") . $BT;
             $name = $index . " - " . $end;
-            if ($this->start == $start) {
+            if ($this->start == $start)
+            {
                 $links[] = $name;
-            } else {
+            }
+            else
+            {
                 $links[] = \HTML\a("page", $name, $rootFile . $link);
             }
             $index += $this->paging;
         }
-        if ($end < $this->total) {
-            if ($this->start && count($links) == 1) {
+        if ($end < $this->total)
+        {
+            if ($this->start && count($links) == 1)
+            {
                 $links = [\HTML\a(
                     "page",
                     $this->messages->text("resources", "pagingStart"),
                     $rootFile . htmlentities($this->queryString . "&PagingStart=0") . $BT
                 )];
-            } elseif (count($links) > 1) {
+            }
+            elseif (count($links) > 1)
+            {
                 $start = $this->total - ($this->total % $this->paging);
-                if ($start == $this->total) {
+                if ($start == $this->total)
+                {
                     $start = $this->total - $this->paging;
                 }
                 $links[] = \HTML\a(

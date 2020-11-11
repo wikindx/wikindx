@@ -39,10 +39,12 @@ class MYWIKINDX
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->badInput = FACTORY_BADINPUT::getInstance();
-        if ($this->session->getVar("setup_UserId")) {
+        if ($this->session->getVar("setup_UserId"))
+        {
             $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $recordset = $this->db->select('users', ['usersUsername', 'usersEmail']);
-            if (!$this->db->numRows($recordset)) {
+            if (!$this->db->numRows($recordset))
+            {
                 die($this->errors->text("dbError", "read"));
             }
             $row = $this->db->fetchRow($recordset);
@@ -58,25 +60,33 @@ class MYWIKINDX
      */
     public function init($message = FALSE)
     {
-    	// Cleanup if necessary
-        if (array_key_exists('uuid', $this->vars)) {
-	        \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
-	    }
-        if (is_array($message)) {
+        // Cleanup if necessary
+        if (array_key_exists('uuid', $this->vars))
+        {
+            \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+        }
+        if (is_array($message))
+        {
             $this->messageString = $message[0];
             $item = $message[1];
-        } elseif (array_key_exists('message', $this->vars) && array_key_exists('selectItem', $this->vars)) {
-        	$this->messageString = $this->vars['message'];
-        	$item = $this->vars['selectItem'];
-        } elseif (array_key_exists('selectItem', $this->vars)) { // e.g. javascript redirect from e.g. tags, groups, bibs operations
-        	$item = $this->vars['selectItem'];
         }
-         else {
+        elseif (array_key_exists('message', $this->vars) && array_key_exists('selectItem', $this->vars))
+        {
+            $this->messageString = $this->vars['message'];
+            $item = $this->vars['selectItem'];
+        }
+        elseif (array_key_exists('selectItem', $this->vars))
+        { // e.g. javascript redirect from e.g. tags, groups, bibs operations
+            $item = $this->vars['selectItem'];
+        }
+        else
+        {
             $this->messageString = $message;
             $item = FALSE;
         }
         $configGroups = $this->getConfigGroups();
-        if (empty($configGroups)) {
+        if (empty($configGroups))
+        {
             return FALSE;
         }
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
@@ -94,12 +104,15 @@ class MYWIKINDX
         $js = \AJAX\jActionForm('onchange', $jsonArray);
         $pString = \HTML\tableStart('');
         $pString .= \HTML\trStart();
-        if ($item) {
+        if ($item)
+        {
             $pString .= \HTML\td(\FORM\selectedBoxValue($this->messages->text(
                 'config',
                 'options'
             ), 'configMenu', $configGroups, $item, count($configGroups), FALSE, $js));
-        } else {
+        }
+        else
+        {
             $pString .= \HTML\td(\FORM\selectFBoxValue($this->messages->text(
                 'config',
                 'options'
@@ -127,39 +140,48 @@ class MYWIKINDX
     public function userConfigEdit()
     {
         $error = '';
-    	if ($this->session->getVar('setup_UserId') == WIKINDX_SUPERADMIN_ID)
-    	{
-			if ((!$email = \UTF8\mb_trim($this->vars['email'])) || !\UTF8\mb_trim($this->vars['usersUsername']) || 
-				!\UTF8\mb_trim($this->vars['password']) || !\UTF8\mb_trim($this->vars['passwordConfirm'])) {
-				$error = $this->errors->text("inputError", "missing");
-			} else {
-// Reinject the username after a change otherwise the value is taken from the db before the change
-        		$this->usersUsername = \UTF8\mb_trim($this->vars['usersUsername']);
-			}
-			$this->formData['usersUsername'] = \UTF8\mb_trim($this->vars['usersUsername']);
+        if ($this->session->getVar('setup_UserId') == WIKINDX_SUPERADMIN_ID)
+        {
+            if ((!$email = \UTF8\mb_trim($this->vars['email'])) || !\UTF8\mb_trim($this->vars['usersUsername']) ||
+                !\UTF8\mb_trim($this->vars['password']) || !\UTF8\mb_trim($this->vars['passwordConfirm']))
+            {
+                $error = $this->errors->text("inputError", "missing");
+            }
+            else
+            {
+                // Reinject the username after a change otherwise the value is taken from the db before the change
+                $this->usersUsername = \UTF8\mb_trim($this->vars['usersUsername']);
+            }
+            $this->formData['usersUsername'] = \UTF8\mb_trim($this->vars['usersUsername']);
         }
-        elseif ((!$email = \UTF8\mb_trim($this->vars['email'])) || !\UTF8\mb_trim($this->vars['password']) || 
-        	!\UTF8\mb_trim($this->vars['passwordConfirm'])) {
-			$error = $this->errors->text("inputError", "missing");
+        elseif ((!$email = \UTF8\mb_trim($this->vars['email'])) || !\UTF8\mb_trim($this->vars['password']) ||
+            !\UTF8\mb_trim($this->vars['passwordConfirm']))
+        {
+            $error = $this->errors->text("inputError", "missing");
         }
-        elseif (\UTF8\mb_trim($this->vars['password']) != \UTF8\mb_trim($this->vars['passwordConfirm'])) {
+        elseif (\UTF8\mb_trim($this->vars['password']) != \UTF8\mb_trim($this->vars['passwordConfirm']))
+        {
             $error = $this->errors->text("inputError", "invalid");
         }
-		if (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE) {
-			$error = $this->errors->text('inputError', 'invalidMail');
-		}
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) === FALSE)
+        {
+            $error = $this->errors->text('inputError', 'invalidMail');
+        }
         $this->formData['email'] = $email;
         $this->formData['fullname'] = \UTF8\mb_trim($this->vars['fullname']);
-		if (array_key_exists('cookie', $this->vars)) {
-			$this->formData['cookie'] = TRUE;
-		}
-        if ($error) {
-        	$this->badInputLoad($error, 'user');
+        if (array_key_exists('cookie', $this->vars))
+        {
+            $this->formData['cookie'] = TRUE;
+        }
+        if ($error)
+        {
+            $this->badInputLoad($error, 'user');
         }
         $this->user->writeUser(FALSE); // FALSE = editing user
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "email", "EMAIL.php"]));
         $emailClass = new EMAIL();
-        if (!$emailClass->userEdit()) {
+        if (!$emailClass->userEdit())
+        {
             $this->badInputLoad($this->errors->text("inputError", "mail", GLOBALS::getError()), 'user');
         }
         $message = rawurlencode($this->success->text("userEdit"));
@@ -176,23 +198,24 @@ class MYWIKINDX
         // If this is a logged on user, write preferences to user table
         if ($this->session->getVar("setup_UserId"))
         {
-			foreach (["Paging", "PagingMaxLinks", "StringLimit", "PagingTagCloud", "PagingStyle"] as $key)
-			{
-				$updateArray['users' . $key] = $this->formData[$key];
-				GLOBALS::setUserVar($key, $this->formData[$key]);
-			}
-        	foreach (['UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key)
-        	{
-        		$value = 0;
-        		if (array_key_exists($key, $this->formData)) {
-        			$value = 1;
-        		}
-        		GLOBALS::setUserVar($key, $value);
-        		$value = is_bool($value) ? var_export($value, true) : $value;
-				$updateArray['users' . $key] = $value;
-        	}
-			$this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
-			$this->db->update('users', $updateArray);
+            foreach (["Paging", "PagingMaxLinks", "StringLimit", "PagingTagCloud", "PagingStyle"] as $key)
+            {
+                $updateArray['users' . $key] = $this->formData[$key];
+                GLOBALS::setUserVar($key, $this->formData[$key]);
+            }
+            foreach (['UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key)
+            {
+                $value = 0;
+                if (array_key_exists($key, $this->formData))
+                {
+                    $value = 1;
+                }
+                GLOBALS::setUserVar($key, $value);
+                $value = is_bool($value) ? var_export($value, TRUE) : $value;
+                $updateArray['users' . $key] = $value;
+            }
+            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
+            $this->db->update('users', $updateArray);
         }
         $message = rawurlencode($this->success->text("config"));
         $selectItem = $this->vars['selectItem'];
@@ -204,32 +227,45 @@ class MYWIKINDX
      */
     public function checkResourcesInput()
     {
-    	$error = '';
+        $error = '';
         $required = ["Paging", "PagingMaxLinks", "StringLimit", "PagingTagCloud"];
-        foreach ($required as $key) {
-            if (!is_numeric($this->vars[$key]) || !is_int($this->vars[$key] + 0)) { // cast to number
+        foreach ($required as $key)
+        {
+            if (!is_numeric($this->vars[$key]) || !is_int($this->vars[$key] + 0))
+            { // cast to number
                 $error = $this->errors->text("inputError", "nan", " ($key) ");
-            } else {
-            	$this->formData[$key] = $this->vars[$key];
             }
-            if (!array_key_exists($key, $this->vars) || !$this->vars[$key]) {
+            else
+            {
+                $this->formData[$key] = $this->vars[$key];
+            }
+            if (!array_key_exists($key, $this->vars) || !$this->vars[$key])
+            {
                 $error = $this->errors->text("inputError", "missing", " ($key) ");
-            } else {
-            	$this->formData[$key] = $this->vars[$key];
             }
-            if (($key == 'PagingMaxLinks') && ($this->vars[$key] < 4)) {
+            else
+            {
+                $this->formData[$key] = $this->vars[$key];
+            }
+            if (($key == 'PagingMaxLinks') && ($this->vars[$key] < 4))
+            {
                 $this->formData[$key] = 11;
-            } elseif ($this->vars[$key] < 0) {
+            }
+            elseif ($this->vars[$key] < 0)
+            {
                 $this->formData[$key] = -1;
             }
         }
-        foreach (['PagingStyle', 'UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key) {
-        	if (array_key_exists($key, $this->vars)) {
-	        	$this->formData[$key] = $this->vars[$key];
-	        }
+        foreach (['PagingStyle', 'UseWikindxKey', 'UseBibtexKey', 'DisplayBibtexLink', 'DisplayCmsLink', 'ListLink'] as $key)
+        {
+            if (array_key_exists($key, $this->vars))
+            {
+                $this->formData[$key] = $this->vars[$key];
+            }
         }
-        if ($error) {
-        	$this->badInputLoad($error, 'resources');
+        if ($error)
+        {
+            $this->badInputLoad($error, 'resources');
         }
         $this->session->delVar("sql_LastMulti"); // always reset in case of paging changes
         $this->session->delVar("sql_LastIdeaSearch"); // always reset in case of paging changes
@@ -250,8 +286,8 @@ class MYWIKINDX
         // Display the global template but change the default selection of the list to the default template when no template is defined or a template not enabled is defined,
         // this avoid a crash when this option is written without value selected.
         $templates = FACTORY_TEMPLATE::getInstance()->loadDir();
-        $field = array_key_exists('Template', $this->formData) 
-        	? $this->formData['Template'] : GLOBALS::getUserVar("Template", WIKINDX_TEMPLATE_DEFAULT);
+        $field = array_key_exists('Template', $this->formData)
+            ? $this->formData['Template'] : GLOBALS::getUserVar("Template", WIKINDX_TEMPLATE_DEFAULT);
         $field = array_key_exists($field, $templates) ? $field : WIKINDX_TEMPLATE_DEFAULT;
         $subTd .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "template"),
@@ -281,21 +317,22 @@ class MYWIKINDX
         $languages[$LanguageNeutralChoice] = "Auto";
         $languages = array_merge($languages, \LOCALES\getSystemLocales());
         $field = array_key_exists('Language', $this->formData) ? $this->formData['Language'] : FALSE;
-        if (!$field) {
-			// The chooseLanguage plugin will write to the database for a logged-in user else it will use setup_Language
-			$userId = $this->session->getVar('setup_UserId');
-			if ($userId)
-			{
-				$this->db->formatConditions(['usersId' => $userId]);
-				$field = $this->db->selectFirstField("users", "usersLanguage");
-				$field = array_key_exists($field, $languages) ? $field : $LanguageNeutralChoice;
-			}
-			else // i.e. read-only so use a session
-			{
-				$field = $this->session->getVar("setup_Language", $LanguageNeutralChoice);
-				$field = array_key_exists($field, $languages) ? $field : $LanguageNeutralChoice;
-			}
-		}
+        if (!$field)
+        {
+            // The chooseLanguage plugin will write to the database for a logged-in user else it will use setup_Language
+            $userId = $this->session->getVar('setup_UserId');
+            if ($userId)
+            {
+                $this->db->formatConditions(['usersId' => $userId]);
+                $field = $this->db->selectFirstField("users", "usersLanguage");
+                $field = array_key_exists($field, $languages) ? $field : $LanguageNeutralChoice;
+            }
+            else
+            { // i.e. read-only so use a session
+                $field = $this->session->getVar("setup_Language", $LanguageNeutralChoice);
+                $field = array_key_exists($field, $languages) ? $field : $LanguageNeutralChoice;
+            }
+        }
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "language"),
             "Language",
@@ -303,12 +340,12 @@ class MYWIKINDX
             $field
         ));
         
-        // Display the user style but change the default selection of the list to the default style when no style is defined or a 
+        // Display the user style but change the default selection of the list to the default style when no style is defined or a
         // style not enabled is selected,
         // this avoid a crash when this option is written without value selected.
         $styles = \LOADSTYLE\loadDir();
-        $field = array_key_exists('Style', $this->formData) 
-        	? $this->formData['Style'] : GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT);
+        $field = array_key_exists('Style', $this->formData)
+            ? $this->formData['Style'] : GLOBALS::getUserVar("Style", WIKINDX_STYLE_DEFAULT);
         $field = array_key_exists($field, $styles) ? $field : WIKINDX_STYLE_DEFAULT;
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\selectedBoxValue(
             $this->messages->text("config", "style"),
@@ -329,7 +366,8 @@ class MYWIKINDX
     {
         $this->checkAppearanceInput();
         // If this is a logged on user, write preferences to WKX_user_preferences
-        if ($this->session->getVar("setup_UserId")) {
+        if ($this->session->getVar("setup_UserId"))
+        {
             $user = FACTORY_USER::getInstance();
             $user->writePreferences($this->session->getVar("setup_UserId"));
         }
@@ -343,64 +381,92 @@ class MYWIKINDX
      */
     public function checkAppearanceInput()
     {
-    	$error = '';
+        $error = '';
         $required = ["Language", "Template", "TemplateMenu", "Style"];
-        foreach ($required as $key) {
-            if (!array_key_exists($key, $this->vars) || (!$this->vars[$key] && ($key != 'TemplateMenu'))) {
+        foreach ($required as $key)
+        {
+            if (!array_key_exists($key, $this->vars) || (!$this->vars[$key] && ($key != 'TemplateMenu')))
+            {
                 $error = $this->errors->text("inputError", "missing", " ($key) ");
             }
             $this->formData[$key] = $this->vars[$key];
         }
-        if ($error) {
-        	$this->badInputLoad($error, 'appearance');
-        } else foreach ($required as $key) {
-	        GLOBALS::setUserVar($key, $this->vars[$key]);
-	    }
+        if ($error)
+        {
+            $this->badInputLoad($error, 'appearance');
+        }
+        else
+        {
+            foreach ($required as $key)
+            {
+                GLOBALS::setUserVar($key, $this->vars[$key]);
+            }
+        }
     }
     /**
      * Set email notification
      */
     public function notificationConfigEdit()
     {
-    	$error = '';
-        if (!array_key_exists('Notify', $this->vars) || !$this->vars['Notify']) {
+        $error = '';
+        if (!array_key_exists('Notify', $this->vars) || !$this->vars['Notify'])
+        {
             $error = $this->errors->text("inputError", "missing");
-        } else {
-        	$this->formData['Notify'] = $this->vars['Notify'];
         }
-        if (array_key_exists('NotifyAdd', $this->vars)) {
-	        $this->formData['NotifyAdd'] = $this->vars['NotifyAdd'];
-	    }
-        if (array_key_exists('NotifyEdit', $this->vars)) {
-	        $this->formData['NotifyEdit'] = $this->vars['NotifyEdit'];
-	    }
-        if (array_key_exists('NotifyThreshold', $this->vars)) {
-	        $this->formData['NotifyThreshold'] = $this->vars['NotifyThreshold'];
-	    }
-        if (array_key_exists('DigestThreshold', $this->vars)) {
-	        $this->formData['DigestThreshold'] = $this->vars['DigestThreshold'];
-	    }
-        if ($error) {
-        	$this->badInputLoad($error, 'notification');
+        else
+        {
+            $this->formData['Notify'] = $this->vars['Notify'];
+        }
+        if (array_key_exists('NotifyAdd', $this->vars))
+        {
+            $this->formData['NotifyAdd'] = $this->vars['NotifyAdd'];
+        }
+        if (array_key_exists('NotifyEdit', $this->vars))
+        {
+            $this->formData['NotifyEdit'] = $this->vars['NotifyEdit'];
+        }
+        if (array_key_exists('NotifyThreshold', $this->vars))
+        {
+            $this->formData['NotifyThreshold'] = $this->vars['NotifyThreshold'];
+        }
+        if (array_key_exists('DigestThreshold', $this->vars))
+        {
+            $this->formData['DigestThreshold'] = $this->vars['DigestThreshold'];
+        }
+        if ($error)
+        {
+            $this->badInputLoad($error, 'notification');
         }
         $updateArray = ['usersNotify' => $this->vars['Notify']];
-        if (array_key_exists('NotifyAdd', $this->vars) && array_key_exists('NotifyEdit', $this->vars)) {
-            $updateArray['usersNotifyAddEdit'] = 'A';
-        } elseif (array_key_exists('NotifyAdd', $this->vars)) {
-            $updateArray['usersNotifyAddEdit'] = 'N';
-        } elseif (array_key_exists('NotifyEdit', $this->vars)) {
-            $updateArray['usersNotifyAddEdit'] = 'E';
-        } else {
+        if (array_key_exists('NotifyAdd', $this->vars) && array_key_exists('NotifyEdit', $this->vars))
+        {
             $updateArray['usersNotifyAddEdit'] = 'A';
         }
-        if (array_key_exists('NotifyThreshold', $this->vars)) {
+        elseif (array_key_exists('NotifyAdd', $this->vars))
+        {
+            $updateArray['usersNotifyAddEdit'] = 'N';
+        }
+        elseif (array_key_exists('NotifyEdit', $this->vars))
+        {
+            $updateArray['usersNotifyAddEdit'] = 'E';
+        }
+        else
+        {
+            $updateArray['usersNotifyAddEdit'] = 'A';
+        }
+        if (array_key_exists('NotifyThreshold', $this->vars))
+        {
             $updateArray['usersNotifyThreshold'] = $this->vars['NotifyThreshold'];
         }
-        if (array_key_exists('DigestThreshold', $this->vars)) {
+        if (array_key_exists('DigestThreshold', $this->vars))
+        {
             $input = \UTF8\mb_trim($this->vars['DigestThreshold']) + 0;
-            if (is_int($input) && ($input > 0)) {
+            if (is_int($input) && ($input > 0))
+            {
                 $updateArray['usersNotifyDigestThreshold'] = \UTF8\mb_trim($this->vars['DigestThreshold']);
-            } else {
+            }
+            else
+            {
                 $updateArray['usersNotifyDigestThreshold'] = 100;
             }
         }
@@ -422,11 +488,14 @@ class MYWIKINDX
         $pString .= \FORM\hidden("method", "userGroupsConfigEdit");
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
-        if (!$groups = $this->user->listUserGroups()) {
+        if (!$groups = $this->user->listUserGroups())
+        {
             $pString .= \HTML\td($this->messages->text("user", "noGroups"));
             $radios = \HTML\p(\FORM\radioButton(FALSE, "method", "createUserGroupInit", TRUE) . "&nbsp;&nbsp;" .
                 $this->messages->text("user", "createGroup"), FALSE, "left");
-        } else {
+        }
+        else
+        {
             $pString .= \HTML\td(\FORM\selectFBoxValue($this->messages->text("user", "groups"), "groupId", $groups, 5));
             $radios = \HTML\p(\FORM\radioButton(FALSE, "method", "createUserGroupInit", TRUE) .
                 "&nbsp;&nbsp;" . $this->messages->text("user", "createGroup"), FALSE, "left");
@@ -439,10 +508,10 @@ class MYWIKINDX
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \HTML\p(\FORM\formSubmitButton(
-                $this->messages->text("submit", "Proceed"),
-                FALSE,
-                'onclick="return getMywikindxInputGroups();"'
-            ));
+            $this->messages->text("submit", "Proceed"),
+            FALSE,
+            'onclick="return getMywikindxInputGroups();"'
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -462,11 +531,13 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "createGroup")
         ));
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
-        if (array_key_exists('uuid', $this->vars)) {
-        	$uuid = $this->vars['uuid'];
+        if (array_key_exists('uuid', $this->vars))
+        {
+            $uuid = $this->vars['uuid'];
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -475,27 +546,33 @@ class MYWIKINDX
         $pString .= \FORM\hidden("method", "createUserGroup");
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-    	if ($uuid) { // Back here after editing group so fetch details from temp_storage
-        	$data = \TEMPSTORAGE\fetch($this->db, $uuid);
-        	$pString .= \FORM\hidden("uuid", $uuid);
-        	$title = $data['title'];
-        	$description = $data['description'];
-        	if (!empty($data['selectedUsers'])) {
-        		$this->db->formatConditionsOneField($data['selectedUsers'], 'usersId');
-				$recordset = $this->db->select('users', ['usersId', 'usersUsername', 'usersFullname', 'usersAdmin']);
-				while ($row = $this->db->fetchRow($recordset)) {
-					if ($row['usersId'] == $this->session->getVar("setup_UserId")) {
-						continue;
-					}
-					$groupUsers[$row['usersId']] = \HTML\dbToFormTidy($row['usersUsername']);
-					if ($row['usersFullname']) {
-						$groupUsers[$row['usersId']] .= " (" . \HTML\dbToFormTidy($row['usersFullname']) . ")";
-					}
-					if ($row['usersAdmin']) {
-						$groupUsers[$row['usersId']] .= " ADMIN";
-					}
-				}
-			}
+        if ($uuid)
+        { // Back here after editing group so fetch details from temp_storage
+            $data = \TEMPSTORAGE\fetch($this->db, $uuid);
+            $pString .= \FORM\hidden("uuid", $uuid);
+            $title = $data['title'];
+            $description = $data['description'];
+            if (!empty($data['selectedUsers']))
+            {
+                $this->db->formatConditionsOneField($data['selectedUsers'], 'usersId');
+                $recordset = $this->db->select('users', ['usersId', 'usersUsername', 'usersFullname', 'usersAdmin']);
+                while ($row = $this->db->fetchRow($recordset))
+                {
+                    if ($row['usersId'] == $this->session->getVar("setup_UserId"))
+                    {
+                        continue;
+                    }
+                    $groupUsers[$row['usersId']] = \HTML\dbToFormTidy($row['usersUsername']);
+                    if ($row['usersFullname'])
+                    {
+                        $groupUsers[$row['usersId']] .= " (" . \HTML\dbToFormTidy($row['usersFullname']) . ")";
+                    }
+                    if ($row['usersAdmin'])
+                    {
+                        $groupUsers[$row['usersId']] .= " ADMIN";
+                    }
+                }
+            }
         }
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "groupTitle"),
@@ -520,11 +597,14 @@ class MYWIKINDX
         $pString .= \HTML\tableEnd();
         $users = $this->user->grabAll(TRUE);
         $potentialUsers = [];
-        foreach ($users as $key => $value) {
-            if ($key == $this->session->getVar("setup_UserId")) {
+        foreach ($users as $key => $value)
+        {
+            if ($key == $this->session->getVar("setup_UserId"))
+            {
                 continue;
             }
-            if (array_key_exists($key, $groupUsers)) {
+            if (array_key_exists($key, $groupUsers))
+            {
                 continue;
             }
             $potentialUsers[$key] = $value;
@@ -533,18 +613,18 @@ class MYWIKINDX
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "multiples"));
-		$pString .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text(
-			"user",
-			"selectedUsers"
-		), "selectedUsers", $groupUsers, 10) . BR . \HTML\span($hint, 'hint'));
+        $pString .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text(
+            "user",
+            "selectedUsers"
+        ), "selectedUsers", $groupUsers, 10) . BR . \HTML\span($hint, 'hint'));
         list($toRightImage, $toLeftImage) = $this->transferArrows();
         $pString .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
-		$pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
-			$this->messages->text("user", "potentialUsers"),
-			"potentialUsers",
-			$potentialUsers,
-			10
-		) . BR . \HTML\span($hint, 'hint'));
+        $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
+            $this->messages->text("user", "potentialUsers"),
+            "potentialUsers",
+            $potentialUsers,
+            10
+        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Add")));
@@ -560,31 +640,39 @@ class MYWIKINDX
      */
     public function createUserGroup()
     {
-    	$error = '';
-        if (!$title = \UTF8\mb_trim($this->vars['title'])) {
+        $error = '';
+        if (!$title = \UTF8\mb_trim($this->vars['title']))
+        {
             $error = $this->errors->text("inputError", "missing");
         }
-        if (empty($this->vars['selectedUsers'])) {
+        if (empty($this->vars['selectedUsers']))
+        {
             $error = $this->errors->text("inputError", "missing");
         }
-    	if (!$this->checkUserGroupExists($title, FALSE)) {
+        if (!$this->checkUserGroupExists($title, FALSE))
+        {
             $error = $this->errors->text("inputError", "groupExists");
         }
-        if (array_key_exists('description', $this->vars) && \UTF8\mb_trim($this->vars['description'])) {
+        if (array_key_exists('description', $this->vars) && \UTF8\mb_trim($this->vars['description']))
+        {
             $description = \UTF8\mb_trim($this->vars['description']);
         }
-        if ($error) {
-        	if (array_key_exists('uuid', $this->vars)) {
-        		$uuid = $this->vars['uuid'];
-				\TEMPSTORAGE\delete($this->db, $uuid);
-        	} else {
-				$uuid = \TEMPSTORAGE\getUuid($this->db);
-			}
-	        \TEMPSTORAGE\store($this->db, $uuid, ['title' => $title, 'description' => $description, 
-	        	'selectedUsers' => $this->vars['selectedUsers']]);
-			$message = rawurlencode($error);
-        	header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserGroupInit&message=$message&uuid=$uuid");
-			die;
+        if ($error)
+        {
+            if (array_key_exists('uuid', $this->vars))
+            {
+                $uuid = $this->vars['uuid'];
+                \TEMPSTORAGE\delete($this->db, $uuid);
+            }
+            else
+            {
+                $uuid = \TEMPSTORAGE\getUuid($this->db);
+            }
+            \TEMPSTORAGE\store($this->db, $uuid, ['title' => $title, 'description' => $description,
+                'selectedUsers' => $this->vars['selectedUsers'], ]);
+            $message = rawurlencode($error);
+            header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=createUserGroupInit&message=$message&uuid=$uuid");
+            die;
         }
         $userId = $this->session->getVar("setup_UserId");
         $fields[] = 'usergroupsTitle';
@@ -596,14 +684,17 @@ class MYWIKINDX
         $this->db->insert('user_groups', $fields, $values);
         $groupId = $this->db->lastAutoId();
         $userIds[] = $userId;
-        foreach ($this->vars['selectedUsers'] as $userId) {
-            if (!$userId) { // IGNORE
+        foreach ($this->vars['selectedUsers'] as $userId)
+        {
+            if (!$userId)
+            { // IGNORE
                 continue;
             }
             $userIds[] = $userId;
         }
         // Insert new users
-        foreach ($userIds as $id) {
+        foreach ($userIds as $id)
+        {
             $this->db->insert('user_groups_users', ['usergroupsusersUserId', 'usergroupsusersGroupId'], [$id, $groupId]);
         }
         $message = rawurlencode($this->success->text("groupAdd"));
@@ -618,17 +709,19 @@ class MYWIKINDX
      */
     public function editUserGroupInit($message = FALSE)
     {
-    	$uuid = FALSE;
+        $uuid = FALSE;
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
             ": " . $this->messages->text("user", "editGroup")
         ));
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
-        if (array_key_exists('uuid', $this->vars)) {
-        	$uuid = $this->vars['uuid'];
+        if (array_key_exists('uuid', $this->vars))
+        {
+            $uuid = $this->vars['uuid'];
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -637,42 +730,50 @@ class MYWIKINDX
         $pString .= \FORM\hidden("method", "editUserGroup");
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        if (!$uuid) {
+        if (!$uuid)
+        {
             $groupId = $this->vars['groupId'];
             $this->db->formatConditions(['usergroupsId' => $groupId]);
             $recordset = $this->db->select('user_groups', ['usergroupsTitle', 'usergroupsDescription']);
             $row = $this->db->fetchRow($recordset);
             $title = \HTML\dbToFormTidy($row['usergroupsTitle']);
             $description = \HTML\dbToFormTidy($row['usergroupsDescription']);
-			$groupUsers = $this->getGroupUsers($groupId);
-        	$pString .= \FORM\hidden("groupId", $groupId);
+            $groupUsers = $this->getGroupUsers($groupId);
+            $pString .= \FORM\hidden("groupId", $groupId);
         }
-        else { // Back here after editing group so fetch details from temp_storage
-        	$data = \TEMPSTORAGE\fetch($this->db, $uuid);
-        	$groupId = $data['groupId'];
-        	$pString .= \FORM\hidden("groupId", $groupId);
-        	$pString .= \FORM\hidden("uuid", $uuid);
-        	$title = $data['title'];
-        	$description = $data['description'];
-        	$groupUsers = [];
-        	if (!empty($data['selectedUsers'])) {
-        		$this->db->formatConditionsOneField($data['selectedUsers'], 'usersId');
-				$recordset = $this->db->select('users', ['usersId', 'usersUsername', 'usersFullname', 'usersAdmin']);
-				while ($row = $this->db->fetchRow($recordset)) {
-					if ($row['usersId'] == $this->session->getVar("setup_UserId")) {
-						continue;
-					}
-					$groupUsers[$row['usersId']] = \HTML\dbToFormTidy($row['usersUsername']);
-					if ($row['usersFullname']) {
-						$groupUsers[$row['usersId']] .= " (" . \HTML\dbToFormTidy($row['usersFullname']) . ")";
-					}
-					if ($row['usersAdmin']) {
-						$groupUsers[$row['usersId']] .= " ADMIN";
-					}
-				}
-			}
+        else
+        { // Back here after editing group so fetch details from temp_storage
+            $data = \TEMPSTORAGE\fetch($this->db, $uuid);
+            $groupId = $data['groupId'];
+            $pString .= \FORM\hidden("groupId", $groupId);
+            $pString .= \FORM\hidden("uuid", $uuid);
+            $title = $data['title'];
+            $description = $data['description'];
+            $groupUsers = [];
+            if (!empty($data['selectedUsers']))
+            {
+                $this->db->formatConditionsOneField($data['selectedUsers'], 'usersId');
+                $recordset = $this->db->select('users', ['usersId', 'usersUsername', 'usersFullname', 'usersAdmin']);
+                while ($row = $this->db->fetchRow($recordset))
+                {
+                    if ($row['usersId'] == $this->session->getVar("setup_UserId"))
+                    {
+                        continue;
+                    }
+                    $groupUsers[$row['usersId']] = \HTML\dbToFormTidy($row['usersUsername']);
+                    if ($row['usersFullname'])
+                    {
+                        $groupUsers[$row['usersId']] .= " (" . \HTML\dbToFormTidy($row['usersFullname']) . ")";
+                    }
+                    if ($row['usersAdmin'])
+                    {
+                        $groupUsers[$row['usersId']] .= " ADMIN";
+                    }
+                }
+            }
         }
-        if (!$this->checkValidUserGroup($groupId)) {
+        if (!$this->checkValidUserGroup($groupId))
+        {
             $this->catastrophic($this->errors->text("inputError", "invalid"), 'userGroups');
         }
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
@@ -698,11 +799,14 @@ class MYWIKINDX
         $pString .= \HTML\tableEnd();
         $users = $this->user->grabAll(TRUE);
         $potentialUsers = [];
-        foreach ($users as $key => $value) {
-            if ($key == $this->session->getVar("setup_UserId")) {
+        foreach ($users as $key => $value)
+        {
+            if ($key == $this->session->getVar("setup_UserId"))
+            {
                 continue;
             }
-            if (array_key_exists($key, $groupUsers)) {
+            if (array_key_exists($key, $groupUsers))
+            {
                 continue;
             }
             $potentialUsers[$key] = $value;
@@ -711,18 +815,18 @@ class MYWIKINDX
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "multiples"));
-		$pString .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text(
-			"user",
-			"selectedUsers"
-		), "selectedUsers", $groupUsers, 10) . BR . \HTML\span($hint, 'hint'));
+        $pString .= \HTML\td(\FORM\selectFBoxValueMultiple($this->messages->text(
+            "user",
+            "selectedUsers"
+        ), "selectedUsers", $groupUsers, 10) . BR . \HTML\span($hint, 'hint'));
         list($toRightImage, $toLeftImage) = $this->transferArrows();
         $pString .= \HTML\td(\HTML\p($toRightImage) . \HTML\p($toLeftImage), 'padding3px left width5percent');
-		$pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
-			$this->messages->text("user", "potentialUsers"),
-			"potentialUsers",
-			$potentialUsers,
-			10
-		) . BR . \HTML\span($hint, 'hint'));
+        $pString .= \HTML\td(\FORM\selectFBoxValueMultiple(
+            $this->messages->text("user", "potentialUsers"),
+            "potentialUsers",
+            $potentialUsers,
+            10
+        ) . BR . \HTML\span($hint, 'hint'));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Edit")));
@@ -734,97 +838,78 @@ class MYWIKINDX
         FACTORY_CLOSENOMENU::getInstance();
     }
     /**
-     * Get group users
-     *
-     * @param int $groupId
-     *
-     * @return array
-     */
-    private function getGroupUsers($groupId)
-    {
-    	$groupUsers = [];
-		$this->db->formatConditions(['usergroupsusersGroupId' => $groupId]);
-		$this->db->leftJoin('users', 'usersId', 'usergroupsusersUserId');
-		$recordset = $this->db->select(
-			'user_groups_users',
-			['usergroupsusersUserId', 'usersUsername', 'usersFullname', 'usersAdmin']
-		);
-		while ($row = $this->db->fetchRow($recordset)) {
-			if (!$row['usergroupsusersUserId']) {
-				continue;
-			}
-			if ($row['usergroupsusersUserId'] == $this->session->getVar("setup_UserId")) {
-				continue;
-			}
-			$groupUsers[$row['usergroupsusersUserId']] = \HTML\dbToFormTidy($row['usersUsername']);
-			if ($row['usersFullname']) {
-				$groupUsers[$row['usergroupsusersUserId']] .= " (" . \HTML\dbToFormTidy($row['usersFullname']) . ")";
-			}
-			if ($row['usersAdmin']) {
-				$groupUsers[$row['usergroupsusersUserId']] .= " ADMIN";
-			}
-		}
-		return $groupUsers;
-	}
-    /**
      * edit a user group
      */
     public function editUserGroup()
     {
-    	$error = '';
-    	$groupId = FALSE;
-    	if (!array_key_exists('groupId', $this->vars) || (!$groupId = $this->vars['groupId'])) {
+        $error = '';
+        $groupId = FALSE;
+        if (!array_key_exists('groupId', $this->vars) || (!$groupId = $this->vars['groupId']))
+        {
             $error = $this->errors->text("inputError", "missing");
         }
-        if (!$title = \UTF8\mb_trim($this->vars['title'])) {
+        if (!$title = \UTF8\mb_trim($this->vars['title']))
+        {
             $error = $this->errors->text("inputError", "missing");
         }
-        if (empty($this->vars['selectedUsers'])) {
+        if (empty($this->vars['selectedUsers']))
+        {
             $error = $this->errors->text("inputError", "missing");
         }
         $description = \UTF8\mb_trim($this->vars['description']);
-        if (!$this->checkValidUserGroup($groupId)) {
+        if (!$this->checkValidUserGroup($groupId))
+        {
             $this->catastrophic($this->errors->text("inputError", "invalid"), 'userGroups');
         }
-        if (!$this->checkUserGroupExists($title, $this->vars['groupId'])) {
+        if (!$this->checkUserGroupExists($title, $this->vars['groupId']))
+        {
             $this->catastrophic($this->errors->text("inputError", "groupExists"), 'userGroups');
         }
-        if ($error) {
-        	if (array_key_exists('uuid', $this->vars)) {
-        		$uuid = $this->vars['uuid'];
-				\TEMPSTORAGE\delete($this->db, $uuid);
-        	} else {
-				$uuid = \TEMPSTORAGE\getUuid($this->db);
-			}
-	        \TEMPSTORAGE\store($this->db, $uuid, ['title' => $title, 'description' => $description, 'groupId' => $groupId, 
-	        	'selectedUsers' => $this->vars['selectedUsers']]);
-			$message = rawurlencode($error);
-        	header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserGroupInit&message=$message&uuid=$uuid");
-			die;
+        if ($error)
+        {
+            if (array_key_exists('uuid', $this->vars))
+            {
+                $uuid = $this->vars['uuid'];
+                \TEMPSTORAGE\delete($this->db, $uuid);
+            }
+            else
+            {
+                $uuid = \TEMPSTORAGE\getUuid($this->db);
+            }
+            \TEMPSTORAGE\store($this->db, $uuid, ['title' => $title, 'description' => $description, 'groupId' => $groupId,
+                'selectedUsers' => $this->vars['selectedUsers'], ]);
+            $message = rawurlencode($error);
+            header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserGroupInit&message=$message&uuid=$uuid");
+            die;
         }
-        if (!$description) {
+        if (!$description)
+        {
             $this->db->formatConditions(['usergroupsId' => $this->vars['groupId']]);
             $this->db->updateNull('user_groups', 'usergroupsDescription');
-        } else {
-        	$updateArray['usergroupsDescription'] = $description;
+        }
+        else
+        {
+            $updateArray['usergroupsDescription'] = $description;
         }
         $updateArray['usergroupsTitle'] = $title;
         $this->db->formatConditions(['usergroupsId' => $this->vars['groupId']]);
         $this->db->update('user_groups', $updateArray);
         // delete any users before inserting them
-		$this->db->formatConditions(['usergroupsusersGroupId' => $this->vars['groupId']]);
-		$this->db->delete('user_groups_users');
+        $this->db->formatConditions(['usergroupsusersGroupId' => $this->vars['groupId']]);
+        $this->db->delete('user_groups_users');
         // Insert new users
-        foreach ($this->vars['selectedUsers'] as $id) {
+        foreach ($this->vars['selectedUsers'] as $id)
+        {
             $this->db->insert(
                 'user_groups_users',
                 ['usergroupsusersUserId', 'usergroupsusersGroupId'],
                 [$id, $this->vars['groupId']]
             );
         }
-        if (array_key_exists('uuid', $this->vars)) {
-	        \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
-	    }
+        if (array_key_exists('uuid', $this->vars))
+        {
+            \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+        }
         $message = rawurlencode($this->success->text("groupEdit"));
         header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserGroupInit&message=$message&groupId=$groupId");
         die;
@@ -836,13 +921,14 @@ class MYWIKINDX
      */
     public function deleteUserGroupInit($message = FALSE)
     {
-    	GLOBALS::setTplVar('heading', $this->messages->text(
+        GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
             ": " . $this->messages->text("user", "deleteGroup")
         ));
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
         $pString = $message;
         $this->db->formatConditions(['usergroupsId' => $this->vars['groupId']]);
@@ -871,10 +957,12 @@ class MYWIKINDX
         // Get any bibliographyIds and delete those bibliographies
         $this->db->formatConditions(['userbibliographyUserGroupId' => $this->vars['groupId']]);
         $recordset = $this->db->select('user_bibliography', 'userbibliographyId');
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             $bibIds[] = $row['userbibliographyId'];
         }
-        if (isset($bibIds)) {
+        if (isset($bibIds))
+        {
             $this->db->formatConditionsOneField($bibIds, 'userbibliographyresourceBibliographyId');
             $this->db->delete('user_bibliography_resource');
         }
@@ -902,8 +990,9 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "deleteGroup")
         ));
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -929,11 +1018,14 @@ class MYWIKINDX
         $pString .= \FORM\hidden("method", "userTagsConfigEdit");
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
-        if (empty($userTags)) {
+        if (empty($userTags))
+        {
             $pString .= \HTML\td($this->messages->text("user", "noUserTags"));
             $radios = \HTML\p(\FORM\radioButton(FALSE, "method", "createUserTagInit", TRUE) . "&nbsp;&nbsp;" .
                 $this->messages->text("user", "createUserTag"), FALSE, "left");
-        } else {
+        }
+        else
+        {
             $pString .= \HTML\td(\FORM\selectFBoxValue(FALSE, "tagId", $userTags, 5));
             $radios = \HTML\p(\FORM\radioButton(FALSE, "method", "createUserTagInit", TRUE) . "&nbsp;&nbsp;" .
                 $this->messages->text("user", "createUserTag"), FALSE, "left");
@@ -946,10 +1038,10 @@ class MYWIKINDX
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \HTML\p(\FORM\formSubmitButton(
-		   $this->messages->text("submit", "Proceed"),
-		   FALSE,
-		   'onclick="return getMywikindxInputTags();"'
-    	));
+            $this->messages->text("submit", "Proceed"),
+            FALSE,
+            'onclick="return getMywikindxInputTags();"'
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
@@ -967,8 +1059,9 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "createUserTag")
         ));
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -999,16 +1092,19 @@ class MYWIKINDX
      */
     public function createUserTag()
     {
-	    $error = '';
-        if (!$title = \UTF8\mb_trim($this->vars['title'])) {
+        $error = '';
+        if (!$title = \UTF8\mb_trim($this->vars['title']))
+        {
             $error = $this->errors->text("inputError", "missing");
         }
         $userTagsObject = FACTORY_USERTAGS::getInstance();
-        if ($userTagsObject->checkExists($title)) {
+        if ($userTagsObject->checkExists($title))
+        {
             $error = $this->errors->text('inputError', 'userTagExists');
         }
-        if ($error) {
-        	$this->badInputPopup($error, 'createUserTagInit');
+        if ($error)
+        {
+            $this->badInputPopup($error, 'createUserTagInit');
         }
         $fields[] = 'usertagsTag';
         $values[] = $title;
@@ -1026,17 +1122,19 @@ class MYWIKINDX
      */
     public function editUserTagInit($message = FALSE)
     {
-    	$uuid = FALSE;
+        $uuid = FALSE;
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
             ": " . $this->messages->text("user", "editUserTag")
         ));
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
-        if (array_key_exists('uuid', $this->vars)) {
-        	$uuid = $this->vars['uuid'];
+        if (array_key_exists('uuid', $this->vars))
+        {
+            $uuid = $this->vars['uuid'];
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -1045,18 +1143,20 @@ class MYWIKINDX
         $pString .= \FORM\hidden("method", "editUserTag");
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        if (!$uuid) {
+        if (!$uuid)
+        {
             $this->db->formatConditions(['usertagsId' => $this->vars['tagId']]);
             $recordset = $this->db->select('user_tags', 'usertagsTag');
             $row = $this->db->fetchRow($recordset);
             $title = \HTML\dbToFormTidy($row['usertagsTag']);
-        	$pString .= \FORM\hidden("tagId", $this->vars['tagId']);
+            $pString .= \FORM\hidden("tagId", $this->vars['tagId']);
         }
-        else { // Back here after editing tag so fetch details from temp_storage
-        	$data = \TEMPSTORAGE\fetch($this->db, $uuid);
-        	$pString .= \FORM\hidden("tagId", $data['tagId']);
-        	$pString .= \FORM\hidden("uuid", $uuid);
-        	$title = $data['title'];
+        else
+        { // Back here after editing tag so fetch details from temp_storage
+            $data = \TEMPSTORAGE\fetch($this->db, $uuid);
+            $pString .= \FORM\hidden("tagId", $data['tagId']);
+            $pString .= \FORM\hidden("uuid", $uuid);
+            $title = $data['title'];
         }
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "tagTitle"),
@@ -1069,9 +1169,10 @@ class MYWIKINDX
         $pString .= \HTML\tableEnd();
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Edit")));
         $pString .= \FORM\formEnd();
-        if ($uuid) {
-			GLOBALS::addTplVar('scripts', '<script>var uuid = ' . $uuid . '; </script>');
-		}
+        if ($uuid)
+        {
+            GLOBALS::addTplVar('scripts', '<script>var uuid = ' . $uuid . '; </script>');
+        }
         $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
         $pString .= \FORM\formEnd();
@@ -1083,36 +1184,44 @@ class MYWIKINDX
      */
     public function editUserTag()
     {
-    	$error = '';
-        if (!$title = \UTF8\mb_trim($this->vars['title'])) {
+        $error = '';
+        if (!$title = \UTF8\mb_trim($this->vars['title']))
+        {
             $error = $this->errors->text("inputError", "missing");
         }
-        if (!$tagId = $this->vars['tagId']) {
+        if (!$tagId = $this->vars['tagId'])
+        {
             $error = $this->errors->text("inputError", "missing");
         }
         $userTagsObject = FACTORY_USERTAGS::getInstance();
         $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['usertagsId' => $tagId]);
         $recordSet = $this->db->select('user_tags', 'usertagsId');
-        if (!$this->db->numRows($recordSet)) {
+        if (!$this->db->numRows($recordSet))
+        {
             $error = $this->errors->text('inputError', 'invalid');
         }
-        if ($error) {
-        	if (array_key_exists('uuid', $this->vars)) {
-        		$uuid = $this->vars['uuid'];
-        	} else {
-				$uuid = \TEMPSTORAGE\getUuid($this->db);
-				\TEMPSTORAGE\store($this->db, $uuid, ['title' => $title, 'tagId' => $tagId]);
-			}
-			$message = rawurlencode($error);
-			header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserTagInit&message=$message&uuid=$uuid");
-			die;
+        if ($error)
+        {
+            if (array_key_exists('uuid', $this->vars))
+            {
+                $uuid = $this->vars['uuid'];
+            }
+            else
+            {
+                $uuid = \TEMPSTORAGE\getUuid($this->db);
+                \TEMPSTORAGE\store($this->db, $uuid, ['title' => $title, 'tagId' => $tagId]);
+            }
+            $message = rawurlencode($error);
+            header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserTagInit&message=$message&uuid=$uuid");
+            die;
         }
         $this->db->formatConditions(['usertagsId' => $tagId]);
         $this->db->update('user_tags', ['usertagsTag' => $title]);
-        if (array_key_exists('uuid', $this->vars)) {
-	        \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
-	    }
+        if (array_key_exists('uuid', $this->vars))
+        {
+            \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+        }
         $message = rawurlencode($this->success->text("usertagEdit"));
         header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editUserTagInit&message=$message&tagId=$tagId");
         die;
@@ -1124,13 +1233,15 @@ class MYWIKINDX
      */
     public function deleteUserTagInit($message = FALSE)
     {
-        if (!$tagId = $this->vars['tagId']) {
+        if (!$tagId = $this->vars['tagId'])
+        {
             $this->badInputPopup($this->errors->text("inputError", "missing"), 'userTags');
         }
         $this->db->formatConditions(['usertagsUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['usertagsId' => $tagId]);
         $recordSet = $this->db->select('user_tags', 'usertagsId');
-        if (!$this->db->numRows($recordSet)) {
+        if (!$this->db->numRows($recordSet))
+        {
             $this->badInputPopup($this->errors->text('inputError', 'invalid'), 'userTags');
         }
         GLOBALS::setTplVar('heading', $this->messages->text(
@@ -1138,8 +1249,9 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "deleteUserTag")
         ));
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
         $pString = $message;
         $this->db->formatConditions(['usertagsId' => $this->vars['tagId']]);
@@ -1186,8 +1298,9 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "deleteUserTag")
         ));
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -1210,22 +1323,28 @@ class MYWIKINDX
         $pString .= \HTML\trStart();
         $groups = FALSE;
         $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar("setup_UserId")]);
-        if ($this->db->numRows($this->db->select('user_groups', ['usergroupsId', 'usergroupsTitle']))) {
+        if ($this->db->numRows($this->db->select('user_groups', ['usergroupsId', 'usergroupsTitle'])))
+        {
             $groups = TRUE;
         }
-        if (empty($bibs)) {
+        if (empty($bibs))
+        {
             $pString .= \HTML\td($this->messages->text("user", "noBibs"));
             $radios = \HTML\p(\FORM\radioButton(FALSE, "method", "createUserBibInit", TRUE) . "&nbsp;&nbsp;" .
                 $this->messages->text("user", "createBib"), FALSE, "left");
-            if ($groups) {
+            if ($groups)
+            {
                 $radios .= \HTML\p(\FORM\radioButton(FALSE, "method", "createGroupBibInit", FALSE) . "&nbsp;&nbsp;" .
                     $this->messages->text("user", "createGroupBib"), FALSE, "left");
             }
-        } else {
+        }
+        else
+        {
             $pString .= \HTML\td(\FORM\selectFBoxValue($this->messages->text("user", "bib"), "bibId", $bibs, 5));
             $radios = \HTML\p(\FORM\radioButton(FALSE, "method", "createUserBibInit", TRUE) . "&nbsp;&nbsp;" .
                 $this->messages->text("user", "createBib"), FALSE, "left");
-            if ($groups) {
+            if ($groups)
+            {
                 $radios .= \HTML\p(\FORM\radioButton(FALSE, "method", "createGroupBibInit", FALSE) . "&nbsp;&nbsp;" .
                     $this->messages->text("user", "createGroupBib"), FALSE, "left");
             }
@@ -1238,13 +1357,14 @@ class MYWIKINDX
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
-		$pString .= \HTML\p(\FORM\formSubmitButton(
-			$this->messages->text("submit", "Proceed"),
-			FALSE,
-			'onclick="return getMywikindxInputBibs();"'
-		));
+        $pString .= \HTML\p(\FORM\formSubmitButton(
+            $this->messages->text("submit", "Proceed"),
+            FALSE,
+            'onclick="return getMywikindxInputBibs();"'
+        ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
+
         return $pString;
     }
     /**
@@ -1256,7 +1376,8 @@ class MYWIKINDX
     public function createUserBibInit($message = FALSE, $groupBib = FALSE)
     {
         // If creating a group bibliography, this user must own groups
-        if ($groupBib) {
+        if ($groupBib)
+        {
             GLOBALS::setTplVar('heading', $this->messages->text(
                 "heading",
                 "myWikindx",
@@ -1265,10 +1386,12 @@ class MYWIKINDX
             $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar("setup_UserId")]);
             $this->db->orderBy('usergroupsTitle');
             $recordset = $this->db->select('user_groups', ['usergroupsId', 'usergroupsTitle']);
-            if (!$this->db->numRows($recordset)) {
+            if (!$this->db->numRows($recordset))
+            {
                 $this->catastrophic($this->errors->text("inputError", "userHasNoGroups"), 'userBibs');
             }
-            while ($row = $this->db->fetchRow($recordset)) {
+            while ($row = $this->db->fetchRow($recordset))
+            {
                 $groups[$row['usergroupsId']] = \HTML\dbToFormTidy($row['usergroupsTitle']);
             }
             $groupString = \HTML\p(\FORM\selectFBoxValue(
@@ -1277,7 +1400,9 @@ class MYWIKINDX
                 $groups,
                 10
             ));
-        } else {
+        }
+        else
+        {
             $groupString = FALSE;
             GLOBALS::setTplVar('heading', $this->messages->text(
                 "heading",
@@ -1285,16 +1410,20 @@ class MYWIKINDX
                 ": " . $this->messages->text("user", "createBib")
             ));
         }
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
         GLOBALS::addTplVar('scripts', '<script>var selectItem = "userBibs"; </script>');
         $pString .= \FORM\formHeader("usersgroups_MYWIKINDX_CORE");
-        if ($groupBib) {
+        if ($groupBib)
+        {
             $pString .= \FORM\hidden("method", "createGroupBib");
-        } else {
+        }
+        else
+        {
             $pString .= \FORM\hidden("method", "createUserBib");
         }
         $pString .= \HTML\tableStart();
@@ -1337,12 +1466,13 @@ class MYWIKINDX
      */
     public function createGroupBibInit($message = FALSE)
     {
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
         $this->createUserBibInit($message, TRUE);
     }
-// NOT USED?????
+    // NOT USED?????
     /**
      * create a user/group bibliography
      */
@@ -1355,40 +1485,50 @@ class MYWIKINDX
      */
     public function createUserBib()
     {
-    	$error = '';
-        if (array_key_exists('description', $this->vars)) {
+        $error = '';
+        if (array_key_exists('description', $this->vars))
+        {
             $description = \UTF8\mb_trim($this->vars['description']);
-            if ($description) {
+            if ($description)
+            {
                 $fields[] = 'userbibliographyDescription';
                 $values[] = $description;
             }
             $this->formData['description'] = $description;
         }
-        if (!$title = \UTF8\mb_trim($this->vars['title'])) {
+        if (!$title = \UTF8\mb_trim($this->vars['title']))
+        {
             $error = $this->errors->text("inputError", "missing");
         }
         $this->formData['title'] = $title;
-        if (!$this->checkBibliographyExists($title)) {
-        	$error = $this->errors->text("inputError", "bibExists");
+        if (!$this->checkBibliographyExists($title))
+        {
+            $error = $this->errors->text("inputError", "bibExists");
         }
-        if ($error) {
-        	if (array_key_exists('addUsers', $this->vars)) {
-	        	$this->badInputPopup($error, 'createGroupBibInit');
-        	} else {
-	        	$this->badInputPopup($error, 'createUserBibInit');
-	        }
+        if ($error)
+        {
+            if (array_key_exists('addUsers', $this->vars))
+            {
+                $this->badInputPopup($error, 'createGroupBibInit');
+            }
+            else
+            {
+                $this->badInputPopup($error, 'createUserBibInit');
+            }
         }
         $fields[] = 'userbibliographyTitle';
         $values[] = $title;
         $fields[] = 'userbibliographyUserId';
         $values[] = $this->session->getVar("setup_UserId");
-        if (array_key_exists('addUsers', $this->vars)) {
-			$groupIds = $this->vars['addUsers'];
-			if ($groupIds[0]) { // [0] will be '0' if not a group bibliography
-				$groupId = $groupIds[0];
-				$fields[] = 'userbibliographyUserGroupId';
-				$values[] = $groupId;
-			}
+        if (array_key_exists('addUsers', $this->vars))
+        {
+            $groupIds = $this->vars['addUsers'];
+            if ($groupIds[0])
+            { // [0] will be '0' if not a group bibliography
+                $groupId = $groupIds[0];
+                $fields[] = 'userbibliographyUserGroupId';
+                $values[] = $groupId;
+            }
         }
         $this->db->insert('user_bibliography', $fields, $values);
         $this->session->setVar("setup_Bibliographies", TRUE);
@@ -1404,18 +1544,20 @@ class MYWIKINDX
      */
     public function editBibInit($message = FALSE)
     {
-    	$uuid = FALSE;
+        $uuid = FALSE;
         GLOBALS::setTplVar('heading', $this->messages->text(
             "heading",
             "myWikindx",
             ": " . $this->messages->text("user", "editBib")
         ));
         $groupUsers = [];
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
-        if (array_key_exists('uuid', $this->vars)) {
-        	$uuid = $this->vars['uuid'];
+        if (array_key_exists('uuid', $this->vars))
+        {
+            $uuid = $this->vars['uuid'];
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -1424,32 +1566,36 @@ class MYWIKINDX
         $pString .= \FORM\hidden("method", "editBib");
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
-        if (!$uuid) {
+        if (!$uuid)
+        {
             $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
             $this->db->formatConditions(['userbibliographyId' => $this->vars['bibId']]);
             $recordset = $this->db->select(
                 'user_bibliography',
                 ['userbibliographyTitle', 'userbibliographyDescription', 'userbibliographyUserGroupId']
             );
-            if (!$this->db->numRows($recordset)) {
-            	$this->catastrophic($this->errors->text("inputError", "invalid"), 'userBibs');
+            if (!$this->db->numRows($recordset))
+            {
+                $this->catastrophic($this->errors->text("inputError", "invalid"), 'userBibs');
             }
             $row = $this->db->fetchRow($recordset);
             $description = \HTML\dbToFormTidy($row['userbibliographyDescription']);
             $title = \HTML\dbToFormTidy($row['userbibliographyTitle']);
             $groupId = $row['userbibliographyUserGroupId'];
-        	$pString .= \FORM\hidden("bibId", $this->vars['bibId']);
+            $pString .= \FORM\hidden("bibId", $this->vars['bibId']);
         }
-        else { // Back here after editing bib so fetch details from temp_storage
-        	$data = \TEMPSTORAGE\fetch($this->db, $uuid);
-        	$pString .= \FORM\hidden("bibId", $data['bibId']);
-        	$pString .= \FORM\hidden("uuid", $uuid);
-        	$title = $data['title'];
-        	$description = $data['description'];
-        	$groupId = array_key_exists('groupId', $data) ? $data['groupId'] : FALSE;
-        	if ($groupId) {
-        		$pString .= \FORM\hidden("groupId", $groupId);
-        	}
+        else
+        { // Back here after editing bib so fetch details from temp_storage
+            $data = \TEMPSTORAGE\fetch($this->db, $uuid);
+            $pString .= \FORM\hidden("bibId", $data['bibId']);
+            $pString .= \FORM\hidden("uuid", $uuid);
+            $title = $data['title'];
+            $description = $data['description'];
+            $groupId = array_key_exists('groupId', $data) ? $data['groupId'] : FALSE;
+            if ($groupId)
+            {
+                $pString .= \FORM\hidden("groupId", $groupId);
+            }
         }
         $pString .= \HTML\td(\HTML\span('*', 'required') . \FORM\textInput(
             $this->messages->text("user", "bibTitle"),
@@ -1472,7 +1618,8 @@ class MYWIKINDX
         ));
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
-        if ($groupId) { // This is a user group bibliography
+        if ($groupId)
+        { // This is a user group bibliography
             $pString .= BR . "&nbsp;" . BR;
             $pString .= \HTML\tableStart();
             $pString .= \HTML\trStart();
@@ -1480,7 +1627,8 @@ class MYWIKINDX
             $this->db->formatConditions(['usergroupsAdminId' => $this->session->getVar("setup_UserId")]);
             $this->db->orderBy('usergroupsTitle');
             $recordset = $this->db->select('user_groups', ['usergroupsId', 'usergroupsTitle']);
-            while ($row = $this->db->fetchRow($recordset)) {
+            while ($row = $this->db->fetchRow($recordset))
+            {
                 $groups[$row['usergroupsId']] = \HTML\dbToFormTidy($row['usergroupsTitle']);
             }
             $pString .= \HTML\p(\FORM\selectedBoxValue(
@@ -1496,9 +1644,10 @@ class MYWIKINDX
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Edit")));
         $pString .= \FORM\formEnd();
         $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
-        if ($uuid) {
-			GLOBALS::addTplVar('scripts', '<script>var uuid = ' . $uuid . '; </script>');
-		}
+        if ($uuid)
+        {
+            GLOBALS::addTplVar('scripts', '<script>var uuid = ' . $uuid . '; </script>');
+        }
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
         $pString .= \FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);
@@ -1509,42 +1658,56 @@ class MYWIKINDX
      */
     public function editBib()
     {
-    	$error = '';
-        if (!$bibId = $this->vars['bibId']) {
+        $error = '';
+        if (!$bibId = $this->vars['bibId'])
+        {
             $error = $this->errors->text("inputError", "missing");
         }
-        if (!$this->checkValidBibliography($bibId)) {
-        	$error = $this->errors->text("inputError", "invalid");
+        if (!$this->checkValidBibliography($bibId))
+        {
+            $error = $this->errors->text("inputError", "invalid");
         }
-        if (!$title = \UTF8\mb_trim($this->vars['title'])) {
+        if (!$title = \UTF8\mb_trim($this->vars['title']))
+        {
             $error = $this->errors->text("inputError", "missing");
         }
-        if (!$this->checkBibliographyExists($title, $bibId)) {
-        	$error = $this->errors->text("inputError", "bibExists");
+        if (!$this->checkBibliographyExists($title, $bibId))
+        {
+            $error = $this->errors->text("inputError", "bibExists");
         }
         $description = \UTF8\mb_trim($this->vars['description']);
-        if (array_key_exists('groupId', $this->vars)) { // user group bibliography
-        	$groupId = $this->vars['groupId'];
-        	$tsArray = ['title' => $title, 'bibId' => $bibId, 'description' => $description, 'groupId' => $groupId];
+        if (array_key_exists('groupId', $this->vars))
+        { // user group bibliography
+            $groupId = $this->vars['groupId'];
+            $tsArray = ['title' => $title, 'bibId' => $bibId, 'description' => $description, 'groupId' => $groupId];
             $updateArray['userbibliographyUserGroupId'] = $groupId;
-        } else {
-	        $tsArray = ['title' => $title, 'bibId' => $bibId, 'description' => $description];
-	    }
-        if ($error) {
-        	if (array_key_exists('uuid', $this->vars)) {
-        		$uuid = $this->vars['uuid'];
-				\TEMPSTORAGE\delete($this->db, $uuid);
-        	} else {
-				$uuid = \TEMPSTORAGE\getUuid($this->db);
-			}
-	        \TEMPSTORAGE\store($this->db, $uuid, $tsArray);
-			$message = rawurlencode($error);
-        	header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editBibInit&message=$message&uuid=$uuid");
-			die;
         }
-        if ($description) {
+        else
+        {
+            $tsArray = ['title' => $title, 'bibId' => $bibId, 'description' => $description];
+        }
+        if ($error)
+        {
+            if (array_key_exists('uuid', $this->vars))
+            {
+                $uuid = $this->vars['uuid'];
+                \TEMPSTORAGE\delete($this->db, $uuid);
+            }
+            else
+            {
+                $uuid = \TEMPSTORAGE\getUuid($this->db);
+            }
+            \TEMPSTORAGE\store($this->db, $uuid, $tsArray);
+            $message = rawurlencode($error);
+            header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editBibInit&message=$message&uuid=$uuid");
+            die;
+        }
+        if ($description)
+        {
             $updateArray['userbibliographyDescription'] = $description;
-        } else {
+        }
+        else
+        {
             $this->db->formatConditions(['userbibliographyId' => $bibId]);
             $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
             $this->db->updateNull('user_bibliography', 'userbibliographyDescription');
@@ -1553,9 +1716,10 @@ class MYWIKINDX
         $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['userbibliographyId' => $bibId]);
         $this->db->update('user_bibliography', $updateArray);
-        if (array_key_exists('uuid', $this->vars)) {
-	        \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
-	    }
+        if (array_key_exists('uuid', $this->vars))
+        {
+            \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+        }
         $message = rawurlencode($this->success->text("bibliographyEdit"));
         header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=editBibInit&message=$message&bibId=$bibId");
         die;
@@ -1572,8 +1736,9 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "deleteBib")
         ));
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
         $pString = $message;
         $bibId = $this->vars['bibId'];
@@ -1599,15 +1764,18 @@ class MYWIKINDX
      */
     public function deleteBib()
     {
-    	$error = '';
-        if (!$bibId = $this->vars['bibId']) {
+        $error = '';
+        if (!$bibId = $this->vars['bibId'])
+        {
             $error = $this->errors->text("inputError", "missing");
         }
-        if (!$this->checkValidBibliography($bibId)) {
-        	$error = $this->errors->text("inputError", "invalid");
+        if (!$this->checkValidBibliography($bibId))
+        {
+            $error = $this->errors->text("inputError", "invalid");
         }
-        if ($error) {
-        	$this->catastrophic($error, 'userBibs');
+        if ($error)
+        {
+            $this->catastrophic($error, 'userBibs');
         }
         $this->checkValidBibliography($bibId, 'userBibs');
         $this->db->formatConditions(['userbibliographyUserId' => $this->session->getVar("setup_UserId")]);
@@ -1616,13 +1784,15 @@ class MYWIKINDX
         // Get any bibliographyIds and delete those bibliographies
         $this->db->formatConditions(['userbibliographyresourceBibliographyId' => $bibId]);
         $this->db->delete('user_bibliography_resource');
-        if ($bibId == GLOBALS::getUserVar('BrowseBibliography')) {
-			$this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
-			$this->db->update('users', ['usersBrowseBibliography' => 0]);
+        if ($bibId == GLOBALS::getUserVar('BrowseBibliography'))
+        {
+            $this->db->formatConditions(['usersId' => $this->session->getVar('setup_UserId')]);
+            $this->db->update('users', ['usersBrowseBibliography' => 0]);
         }
         $bibsU = $this->bib->getUserBibs();
         $bibsUG = $this->bib->getGroupBibs();
-        if (empty($bibsU) && empty($bibsUG)) {
+        if (empty($bibsU) && empty($bibsUG))
+        {
             $this->session->delVar("setup_Bibliographies");
         }
         $message = rawurlencode($this->success->text("bibliographyDelete"));
@@ -1641,8 +1811,9 @@ class MYWIKINDX
             "myWikindx",
             ": " . $this->messages->text("user", "deleteBib")
         ));
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
         $pString = $message;
         $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
@@ -1654,6 +1825,128 @@ class MYWIKINDX
         FACTORY_CLOSENOMENU::getInstance();
     }
     /**
+     * Edit forgotten password details
+     */
+    public function forgetConfigEdit()
+    {
+        $error = '';
+        $array = ["usersPasswordQuestion1", "usersAnswer1", "usersPasswordQuestion2", "usersAnswer2", "usersPasswordQuestion3", "usersAnswer3"];
+        foreach ($array as $key)
+        {
+            if (array_key_exists($key, $this->vars) && \UTF8\mb_trim($this->vars[$key]))
+            {
+                $this->formData[$key] = \UTF8\mb_trim($this->vars[$key]);
+            }
+            else
+            {
+                $this->formData[$key] = FALSE;
+            }
+        }
+        $inputArray = [];
+        for ($i = 1; $i < 4; $i++)
+        {
+            if ($this->formData["usersPasswordQuestion$i"] && !$this->formData["usersAnswer$i"])
+            {
+                $error = $this->errors->text("inputError", "missing");
+            }
+            elseif ($this->formData["usersPasswordQuestion$i"] && $this->formData["usersAnswer$i"])
+            {
+                $inputArray[$this->formData["usersPasswordQuestion$i"]] = sha1(mb_strtolower($this->formData["usersAnswer$i"]));
+            }
+        }
+        if ($error)
+        {
+            $this->badInputLoad($error, 'forget');
+        }
+        $index = 1;
+        foreach ($inputArray as $q => $a)
+        {
+            $update["usersPasswordQuestion$index"] = $q;
+            $update["usersPasswordAnswer$index"] = $a;
+            $index++;
+        }
+        if (isset($update))
+        { // values to update
+            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
+            $this->db->update('users', $update);
+        }
+        // Set remaining fields to ''
+        while ($index < 4)
+        {
+            $nulls["usersPasswordQuestion$index"] = '';
+            $nulls["usersPasswordAnswer$index"] = '';
+            $index++;
+        }
+        if (isset($nulls))
+        {
+            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
+            $this->db->update('users', $nulls);
+        }
+        $message = rawurlencode($this->success->text("forgetUpdate"));
+        $selectItem = $this->vars['selectItem'];
+        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=$selectItem");
+        die;
+    }
+    /**
+     * Make the select transfer arrows to transfer users between select boxes with onclick
+     *
+     * @return array (toRightImage, toLeftImage)
+     */
+    public function transferArrows()
+    {
+        $jsonArray = [];
+        $jsonArray[] = [
+            'startFunction' => 'selectedUsers',
+        ];
+        $toRightImage = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
+        $jsonArray = [];
+        $jsonArray[] = [
+            'startFunction' => 'potentialUsers',
+        ];
+        $toLeftImage = \AJAX\jActionIcon('toLeft', 'onclick', $jsonArray);
+
+        return [$toRightImage, $toLeftImage];
+    }
+    /**
+     * Get group users
+     *
+     * @param int $groupId
+     *
+     * @return array
+     */
+    private function getGroupUsers($groupId)
+    {
+        $groupUsers = [];
+        $this->db->formatConditions(['usergroupsusersGroupId' => $groupId]);
+        $this->db->leftJoin('users', 'usersId', 'usergroupsusersUserId');
+        $recordset = $this->db->select(
+            'user_groups_users',
+            ['usergroupsusersUserId', 'usersUsername', 'usersFullname', 'usersAdmin']
+        );
+        while ($row = $this->db->fetchRow($recordset))
+        {
+            if (!$row['usergroupsusersUserId'])
+            {
+                continue;
+            }
+            if ($row['usergroupsusersUserId'] == $this->session->getVar("setup_UserId"))
+            {
+                continue;
+            }
+            $groupUsers[$row['usergroupsusersUserId']] = \HTML\dbToFormTidy($row['usersUsername']);
+            if ($row['usersFullname'])
+            {
+                $groupUsers[$row['usergroupsusersUserId']] .= " (" . \HTML\dbToFormTidy($row['usersFullname']) . ")";
+            }
+            if ($row['usersAdmin'])
+            {
+                $groupUsers[$row['usergroupsusersUserId']] .= " ADMIN";
+            }
+        }
+
+        return $groupUsers;
+    }
+    /**
      * create array of config menu items
      */
     private function getConfigGroups()
@@ -1661,24 +1954,29 @@ class MYWIKINDX
         $groups = ['resources' => $this->messages->text('config', 'resources'),
             'appearance' => $this->messages->text('config', 'appearance'),
         ];
-        if ($this->session->getVar("setup_UserId") != WIKINDX_RESTRICT_USERID) {
-            if ($this->usersEmail && WIKINDX_MAIL_USE) {
+        if ($this->session->getVar("setup_UserId") != WIKINDX_RESTRICT_USERID)
+        {
+            if ($this->usersEmail && WIKINDX_MAIL_USE)
+            {
                 $groups['forget'] = $this->messages->text('config', 'forget');
-            	$groups['notification'] = $this->messages->text('config', 'notification');
+                $groups['notification'] = $this->messages->text('config', 'notification');
             }
         }
         // Only for logged on users
-        if ($this->session->getVar("setup_UserId")) {
+        if ($this->session->getVar("setup_UserId"))
+        {
             $groups['userTags'] = $this->messages->text("user", "userTags");
             $groups['userBibs'] = $this->messages->text('user', 'bib');
             // Add user group administration only if there is more than one user.
             $resourceId = $this->db->select('users', 'usersId');
-            if ($this->db->numRows($resourceId) > 1) {
+            if ($this->db->numRows($resourceId) > 1)
+            {
                 $groups['userGroups'] = $this->messages->text("user", "groups");
             }
             $user = [];
-            if ($this->session->getVar("setup_UserId") != WIKINDX_RESTRICT_USERID) {
-	            $user = ['user' => $this->messages->text('user', 'user')];
+            if ($this->session->getVar("setup_UserId") != WIKINDX_RESTRICT_USERID)
+            {
+                $user = ['user' => $this->messages->text('user', 'user')];
             }
             $groups = $user + $groups;
         }
@@ -1693,36 +1991,53 @@ class MYWIKINDX
      */
     private function getConfigDetails($groups, $item = FALSE)
     {
-        if (array_key_exists('ajaxReturn', $this->vars)) {
+        if (array_key_exists('ajaxReturn', $this->vars))
+        {
             $item = $this->vars['ajaxReturn'];
-        } elseif (!$item) { // grab the first of the list
-            foreach ($groups as $item => $null) {
+        }
+        elseif (!$item)
+        { // grab the first of the list
+            foreach ($groups as $item => $null)
+            {
                 break;
             }
         }
-        if (($item != 'resources') || ($item != 'appearance')) {
+        if (($item != 'resources') || ($item != 'appearance'))
+        {
             $gatekeep = FACTORY_GATEKEEP::getInstance();
             $gatekeep->requireSuper = FALSE;
             $gatekeep->init();
         }
-        if ($item == 'user') {
+        if ($item == 'user')
+        {
             $password = FACTORY_PASSWORD::getInstance();
-            if ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID) {
-    	        list($formText, $jsString) = $password->createElements($this->usersUsername, TRUE, $this->formData);
-    	    } else {
-    	        list($formText, $jsString) = $password->createElements(FALSE);
-    	    }
+            if ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID)
+            {
+                list($formText, $jsString) = $password->createElements($this->usersUsername, TRUE, $this->formData);
+            }
+            else
+            {
+                list($formText, $jsString) = $password->createElements(FALSE);
+            }
             $pString = \FORM\formHeader("usersgroups_MYWIKINDX_CORE", 'onsubmit="return checkForm(' . $jsString . ');"');
-        } elseif (($item == 'userGroups')) {
+        }
+        elseif (($item == 'userGroups'))
+        {
             $pString = \FORM\formHeader(FALSE);
             $pString .= \FORM\hidden("method", 'userGroupsConfigDisplay');
-        } elseif (($item == 'userTags')) {
+        }
+        elseif (($item == 'userTags'))
+        {
             $pString = \FORM\formHeader(FALSE);
             $pString .= \FORM\hidden("method", 'userTagsConfigDisplay');
-        } elseif (($item == 'userBibs')) {
+        }
+        elseif (($item == 'userBibs'))
+        {
             $pString = \FORM\formHeader(FALSE);
             $pString .= \FORM\hidden("method", 'userBibsConfigDisplay');
-        } else {
+        }
+        else
+        {
             $pString = \FORM\formHeader("usersgroups_MYWIKINDX_CORE");
         }
         $pString .= \FORM\hidden("selectItem", $item);
@@ -1783,7 +2098,8 @@ class MYWIKINDX
         $userArray = [['usersEmail' => 'Email'], ['usersFullname' => 'Fullname'], ['usersCookie' => 'Cookie']];
         $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
         $recordset = $this->db->select('users', $userArray);
-        if (!$this->db->numRows($recordset)) {
+        if (!$this->db->numRows($recordset))
+        {
             $this->badInputLoad($this->errors->text("dbError", "read"), 'user');
         }
         $row = $this->db->fetchRow($recordset);
@@ -1816,15 +2132,20 @@ class MYWIKINDX
             30
         ));
         $field = FALSE;
-        if (!empty($this->formData)) {
-        	if (array_key_exists('cookie', $this->formData)) {
-	        	 $field = TRUE;
-	        } else {
-	        	$field = FALSE;
-	        }
+        if (!empty($this->formData))
+        {
+            if (array_key_exists('cookie', $this->formData))
+            {
+                $field = TRUE;
+            }
+            else
+            {
+                $field = FALSE;
+            }
         }
-        elseif ($row["Cookie"] == 'Y') {
-        	$field = TRUE;
+        elseif ($row["Cookie"] == 'Y')
+        {
+            $field = TRUE;
         }
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("user", "cookie"), "cookie", $field));
         $pString .= \HTML\trEnd();
@@ -1857,7 +2178,8 @@ class MYWIKINDX
             $field,
             5
         ) . BR . \HTML\span($hint, 'hint'));
-        if (!GLOBALS::getUserVar("PagingTagCloud")) {
+        if (!GLOBALS::getUserVar("PagingTagCloud"))
+        {
             GLOBALS::setUserVar("PagingTagCloud", WIKINDX_PAGING_TAG_CLOUD_DEFAULT);
         }
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "pagingLimit"));
@@ -1892,23 +2214,29 @@ class MYWIKINDX
             $field,
             2
         ));
-        $field = FALSE; 
-        if (array_key_exists('UseWikindxKey', $this->formData)) {
-        	$field = 'CHECKED';
-        } elseif (GLOBALS::getUserVar("UseWikindxKey")) {
-         	$field = 'CHECKED';
-		}
+        $field = FALSE;
+        if (array_key_exists('UseWikindxKey', $this->formData))
+        {
+            $field = 'CHECKED';
+        }
+        elseif (GLOBALS::getUserVar("UseWikindxKey"))
+        {
+            $field = 'CHECKED';
+        }
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "useWikindxKey"),
             "UseWikindxKey",
             $field
         ));
-        $field = FALSE; 
-        if (array_key_exists('UseBibtexKey', $this->formData)) {
-        	$field = 'CHECKED';
-        } elseif (GLOBALS::getUserVar("UseBibtexKey")) {
-         	$field = 'CHECKED';
-		}
+        $field = FALSE;
+        if (array_key_exists('UseBibtexKey', $this->formData))
+        {
+            $field = 'CHECKED';
+        }
+        elseif (GLOBALS::getUserVar("UseBibtexKey"))
+        {
+            $field = 'CHECKED';
+        }
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "useBibtexKey"),
             "UseBibtexKey",
@@ -1923,38 +2251,47 @@ class MYWIKINDX
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
         $pString .= \HTML\trStart();
-        $field = FALSE; 
-        if (array_key_exists('DisplayBibtexLink', $this->formData)) {
-        	$field = 'CHECKED';
-        } elseif (GLOBALS::getUserVar("DisplayBibtexLink")) {
-         	$field = 'CHECKED';
-		}
+        $field = FALSE;
+        if (array_key_exists('DisplayBibtexLink', $this->formData))
+        {
+            $field = 'CHECKED';
+        }
+        elseif (GLOBALS::getUserVar("DisplayBibtexLink"))
+        {
+            $field = 'CHECKED';
+        }
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "displayBibtexLink"),
             "DisplayBibtexLink",
             $field
         ));
-        $field = FALSE; 
-        if (array_key_exists('DisplayCmsLink', $this->formData)) {
-        	$field = 'CHECKED';
-        } elseif (GLOBALS::getUserVar("DisplayCmsLink")) {
-         	$field = 'CHECKED';
-		}
+        $field = FALSE;
+        if (array_key_exists('DisplayCmsLink', $this->formData))
+        {
+            $field = 'CHECKED';
+        }
+        elseif (GLOBALS::getUserVar("DisplayCmsLink"))
+        {
+            $field = 'CHECKED';
+        }
         $pString .= \HTML\td(\FORM\checkbox(
             $this->messages->text("config", "displayCmsLink"),
             "DisplayCmsLink",
             $field
         ));
-        $field = FALSE; 
-        if (array_key_exists('ListLink', $this->formData)) {
-        	$field = 'CHECKED';
-        } elseif (GLOBALS::getUserVar("ListLink")) {
-         	$field = 'CHECKED';
-		}
+        $field = FALSE;
+        if (array_key_exists('ListLink', $this->formData))
+        {
+            $field = 'CHECKED';
+        }
+        elseif (GLOBALS::getUserVar("ListLink"))
+        {
+            $field = 'CHECKED';
+        }
         $pString .= \HTML\td(\FORM\checkbox(
-        	$this->messages->text("config", "ListLink"),
-        	"ListLink", 
-        	$field
+            $this->messages->text("config", "ListLink"),
+            "ListLink",
+            $field
         ));
         $pString .= \HTML\td('&nbsp;');
         $pString .= \HTML\trEnd();
@@ -1967,29 +2304,33 @@ class MYWIKINDX
      */
     private function forgetConfigDisplay()
     {
-    	if (empty($this->formData)) {
+        if (empty($this->formData))
+        {
             $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
-    	 	$resultSet = $this->db->select('users', ["usersPasswordQuestion1", "usersPasswordQuestion2", "usersPasswordQuestion3"]);
-    	 	while ($row = $this->db->fetchRow($resultSet)) {
-    	 		$fields["usersPasswordQuestion1"] = $row["usersPasswordQuestion1"];
-    	 		$fields["usersPasswordQuestion2"] = $row["usersPasswordQuestion2"];
-    	 		$fields["usersPasswordQuestion3"] = $row["usersPasswordQuestion3"];
-    	 		$fields["usersAnser1"] = FALSE;
-    	 		$fields["usersAnser2"] = FALSE;
-    	 		$fields["usersAnser3"] = FALSE;
-    	 	}
-    	}
-    	else {
-    		$fields = $this->formData;
-    	}
+            $resultSet = $this->db->select('users', ["usersPasswordQuestion1", "usersPasswordQuestion2", "usersPasswordQuestion3"]);
+            while ($row = $this->db->fetchRow($resultSet))
+            {
+                $fields["usersPasswordQuestion1"] = $row["usersPasswordQuestion1"];
+                $fields["usersPasswordQuestion2"] = $row["usersPasswordQuestion2"];
+                $fields["usersPasswordQuestion3"] = $row["usersPasswordQuestion3"];
+                $fields["usersAnser1"] = FALSE;
+                $fields["usersAnser2"] = FALSE;
+                $fields["usersAnser3"] = FALSE;
+            }
+        }
+        else
+        {
+            $fields = $this->formData;
+        }
         $pString = $this->messageString;
         $pString .= \FORM\hidden("method", "forgetConfigEdit");
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
-		$td = $this->messages->text("user", "forget1");
+        $td = $this->messages->text("user", "forget1");
         $td .= \HTML\p($this->messages->text("user", "forget5"));
         $td .= \HTML\p($this->messages->text("user", "forget2"));
-        for ($i = 1; $i < 4; $i++) {
+        for ($i = 1; $i < 4; $i++)
+        {
             $question = array_key_exists("usersPasswordQuestion$i", $fields) ?
                 \HTML\dbToFormTidy($fields["usersPasswordQuestion$i"]) : FALSE;
             $answer = array_key_exists("usersAnswer$i", $fields) ?
@@ -2010,61 +2351,11 @@ class MYWIKINDX
             );
             $td .= \HTML\p($string);
         }
-		$pString .= \HTML\td($td);
+        $pString .= \HTML\td($td);
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 
         return $pString;
-    }
-    /**
-     * Edit forgotten password details
-     */
-    public function forgetConfigEdit()
-    {
-    	$error = '';
-        $array = ["usersPasswordQuestion1", "usersAnswer1", "usersPasswordQuestion2", "usersAnswer2", "usersPasswordQuestion3", "usersAnswer3"];
-        foreach ($array as $key) {
-            if (array_key_exists($key, $this->vars) && \UTF8\mb_trim($this->vars[$key])) {
-                $this->formData[$key] = \UTF8\mb_trim($this->vars[$key]);
-            } else {
-            	$this->formData[$key] = FALSE;
-            }
-        }
-        $inputArray = [];
-        for ($i = 1; $i < 4; $i++) {
-            if ($this->formData["usersPasswordQuestion$i"] && !$this->formData["usersAnswer$i"]) {
-            	$error = $this->errors->text("inputError", "missing");
-            } elseif ($this->formData["usersPasswordQuestion$i"] && $this->formData["usersAnswer$i"]) {
-                $inputArray[$this->formData["usersPasswordQuestion$i"]] = sha1(mb_strtolower($this->formData["usersAnswer$i"]));
-            }
-        }
-        if ($error) {
-        	$this->badInputLoad($error, 'forget');
-        }
-        $index = 1;
-        foreach ($inputArray as $q => $a) {
-            $update["usersPasswordQuestion$index"] = $q;
-            $update["usersPasswordAnswer$index"] = $a;
-            $index++;
-        }
-        if (isset($update)) { // values to update
-            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
-            $this->db->update('users', $update);
-        }
-        // Set remaining fields to ''
-        while ($index < 4) {
-            $nulls["usersPasswordQuestion$index"] = '';
-            $nulls["usersPasswordAnswer$index"] = '';
-            $index++;
-        }
-        if (isset($nulls)) {
-            $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
-            $this->db->update('users', $nulls);
-        }
-        $message = rawurlencode($this->success->text("forgetUpdate"));
-        $selectItem = $this->vars['selectItem'];
-        header("Location: index.php?action=usersgroups_MYWIKINDX_CORE&method=init&message=$message&selectItem=$selectItem");
-        die;
     }
     /**
      * Email notification config options
@@ -2075,7 +2366,8 @@ class MYWIKINDX
         $pString .= \FORM\hidden("method", "notificationConfigEdit");
         $pString .= \HTML\tableStart('generalTable borderStyleSolid left');
         $pString .= \HTML\trStart();
-        if (empty($this->formData)) {
+        if (empty($this->formData))
+        {
             $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
             $recordset = $this->db->select('users', ['usersNotify', 'usersNotifyAddEdit',
                 'usersNotifyThreshold', 'usersNotifyTimestamp', 'usersNotifyDigestThreshold', ]);
@@ -2083,82 +2375,112 @@ class MYWIKINDX
         }
         $pString .= \HTML\tdStart();
         $checked = $add = $edit = $nThreshold = $dThreshold = FALSE;
-        if (array_key_exists('Notify', $this->formData)) {
-        	if ($this->formData['Notify'] == 'N') {
-				$checked = TRUE;
-			}
-        } elseif ($row["usersNotify"] == 'N') {
-        	 $checked = TRUE;
+        if (array_key_exists('Notify', $this->formData))
+        {
+            if ($this->formData['Notify'] == 'N')
+            {
+                $checked = TRUE;
+            }
+        }
+        elseif ($row["usersNotify"] == 'N')
+        {
+            $checked = TRUE;
         }
         $pString .= \HTML\p(\FORM\radioButton(FALSE, "Notify", "N", $checked) . "&nbsp;&nbsp;" .
             $this->messages->text("user", "notifyNone"));
         $checked = FALSE;
-        if (!$checked) {
-			if (array_key_exists('Notify', $this->formData)) {
-				if ($this->formData['Notify'] == 'A') {
-					$checked = TRUE;
-				}
-			} elseif ($row["usersNotify"] == 'A') {
-				 $checked = TRUE;
-			}
+        if (!$checked)
+        {
+            if (array_key_exists('Notify', $this->formData))
+            {
+                if ($this->formData['Notify'] == 'A')
+                {
+                    $checked = TRUE;
+                }
+            }
+            elseif ($row["usersNotify"] == 'A')
+            {
+                $checked = TRUE;
+            }
         }
         $pString .= \HTML\p(\FORM\radioButton(FALSE, "Notify", "A", $checked) . "&nbsp;&nbsp;" .
             $this->messages->text("user", "notifyAll"));
         $checked = FALSE;
-        if (!$checked) {
-			if (array_key_exists('Notify', $this->formData)) {
-				if ($this->formData['Notify'] == 'M') {
-					$checked = TRUE;
-				}
-			} elseif ($row["usersNotify"] == 'M') {
-				 $checked = TRUE;
-			}
+        if (!$checked)
+        {
+            if (array_key_exists('Notify', $this->formData))
+            {
+                if ($this->formData['Notify'] == 'M')
+                {
+                    $checked = TRUE;
+                }
+            }
+            elseif ($row["usersNotify"] == 'M')
+            {
+                $checked = TRUE;
+            }
         }
         $pString .= \HTML\p(\FORM\radioButton(FALSE, "Notify", "M", $checked) . "&nbsp;&nbsp;" .
             $this->messages->text("user", "notifyMyBib"));
         $checked = FALSE;
-        if (!$checked) {
-			if (array_key_exists('Notify', $this->formData)) {
-				if ($this->formData['Notify'] == 'C') {
-					$checked = TRUE;
-				}
-			} elseif ($row["usersNotify"] == 'C') {
-				 $checked = TRUE;
-			}
+        if (!$checked)
+        {
+            if (array_key_exists('Notify', $this->formData))
+            {
+                if ($this->formData['Notify'] == 'C')
+                {
+                    $checked = TRUE;
+                }
+            }
+            elseif ($row["usersNotify"] == 'C')
+            {
+                $checked = TRUE;
+            }
         }
         $pString .= \HTML\p(\FORM\radioButton(FALSE, "Notify", "C", $checked) . "&nbsp;&nbsp;" .
             $this->messages->text("user", "notifyMyCreator"));
-        if (empty($this->formData)) {
-        	if ($row["usersNotifyAddEdit"] == 'A') {
-				 $add = 'CHECKED';
-				 $edit = 'CHECKED';
-        	}
-        	elseif ($row["usersNotifyAddEdit"] == 'N') {
-				 $add = 'CHECKED';
-        	}
-        	elseif ($row["usersNotifyAddEdit"] == 'E') {
-				 $edit = 'CHECKED';
-        	}
+        if (empty($this->formData))
+        {
+            if ($row["usersNotifyAddEdit"] == 'A')
+            {
+                $add = 'CHECKED';
+                $edit = 'CHECKED';
+            }
+            elseif ($row["usersNotifyAddEdit"] == 'N')
+            {
+                $add = 'CHECKED';
+            }
+            elseif ($row["usersNotifyAddEdit"] == 'E')
+            {
+                $edit = 'CHECKED';
+            }
         }
-        else {
-        	if (array_key_exists('NotifyAdd', $this->formData)) {
-        		$add = 'CHECKED';
-        	} 
-			if (array_key_exists('NotifyEdit', $this->formData)) {
-				$edit = 'CHECKED';
-			}
-		}
+        else
+        {
+            if (array_key_exists('NotifyAdd', $this->formData))
+            {
+                $add = 'CHECKED';
+            }
+            if (array_key_exists('NotifyEdit', $this->formData))
+            {
+                $edit = 'CHECKED';
+            }
+        }
         $pString .= \HTML\p($this->messages->text("user", "notifyAdd") . ":&nbsp;&nbsp;" .
             \FORM\checkbox(FALSE, "NotifyAdd", $add) . BR .
             $this->messages->text("user", "notifyEdit") . ":&nbsp;&nbsp;" .
             \FORM\checkbox(FALSE, "NotifyEdit", $edit));
         $array = [0 => $this->messages->text("user", "notifyImmediate"), 1 => 1, 7 => 7, 14 => 14, 28 => 28];
-        if (array_key_exists('NotifyThreshold', $this->formData)) {
-        	$nThreshold = $this->formData['NotifyThreshold'];
-        } elseif ($row["usersNotifyThreshold"]) {
-        	 $nThreshold = $this->session->getVar("mywikindx_NotifyThreshold");
+        if (array_key_exists('NotifyThreshold', $this->formData))
+        {
+            $nThreshold = $this->formData['NotifyThreshold'];
         }
-        if ($nThreshold) {
+        elseif ($row["usersNotifyThreshold"])
+        {
+            $nThreshold = $this->session->getVar("mywikindx_NotifyThreshold");
+        }
+        if ($nThreshold)
+        {
             $pString .= \HTML\p(\FORM\selectedBoxValue(
                 $this->messages->text("user", "notifyThreshold"),
                 "NotifyThreshold",
@@ -2166,7 +2488,9 @@ class MYWIKINDX
                 $nThreshold,
                 5
             ));
-        } else {
+        }
+        else
+        {
             $pString .= \HTML\p(\FORM\selectFBoxValue(
                 $this->messages->text("user", "notifyThreshold"),
                 "NotifyThreshold",
@@ -2174,8 +2498,8 @@ class MYWIKINDX
                 5
             ));
         }
-        $dThreshold = array_key_exists('DigestThreshold', $this->formData) ? 
-        	$this->formData['DigestThreshold'] : $row["usersNotifyDigestThreshold"];
+        $dThreshold = array_key_exists('DigestThreshold', $this->formData) ?
+            $this->formData['DigestThreshold'] : $row["usersNotifyDigestThreshold"];
         $pString .= \HTML\p(\FORM\textInput(
             $this->messages->text("user", "notifyDigestThreshold"),
             "DigestThreshold",
@@ -2196,30 +2520,38 @@ class MYWIKINDX
     {
         $bibsArray = [];
         // Get this user's bibliographies
-        if ($this->session->getVar("mywikindx_Bibliographies")) {
+        if ($this->session->getVar("mywikindx_Bibliographies"))
+        {
             $bibsRaw = unserialize($this->session->getVar("mywikindx_Bibliographies"));
-            foreach ($bibsRaw as $key => $value) {
+            foreach ($bibsRaw as $key => $value)
+            {
                 $bibsU[$key] = \HTML\dbToFormTidy($value);
             }
         }
         // Get this user's user group bibliographies
-        if ($this->session->getVar("mywikindx_Groupbibliographies")) {
+        if ($this->session->getVar("mywikindx_Groupbibliographies"))
+        {
             $bibsRaw = unserialize($this->session->getVar("mywikindx_Groupbibliographies"));
-            foreach ($bibsRaw as $key => $value) {
+            foreach ($bibsRaw as $key => $value)
+            {
                 $bibsUG[$key] = \HTML\dbToFormTidy($value);
             }
         }
         $bibsU = $this->bib->getUserBibs();
         $bibsUG = $this->bib->getGroupBibs();
-        if (!empty($bibsU)) {
+        if (!empty($bibsU))
+        {
             $bibsArray[-1] = $this->messages->text('user', 'userBibs');
-            foreach ($bibsU as $key => $value) {
+            foreach ($bibsU as $key => $value)
+            {
                 $bibsArray[$key] = $value;
             }
         }
-        if (!empty($bibsUG)) {
+        if (!empty($bibsUG))
+        {
             $bibsArray[-2] = $this->messages->text('user', 'userGroupBibs');
-            foreach ($bibsUG as $key => $value) {
+            foreach ($bibsUG as $key => $value)
+            {
                 $bibsArray[$key] = $value;
             }
         }
@@ -2237,15 +2569,19 @@ class MYWIKINDX
      */
     private function checkUserGroupExists($title, $groupId = FALSE)
     {
-        if ($groupId) {
+        if ($groupId)
+        {
             $this->db->formatConditions(['usergroupsId' => $groupId], TRUE); // Not this $groupId
         }
         $recordset = $this->db->select('user_groups', ['usergroupsTitle', 'usergroupsId']);
-        while ($row = $this->db->fetchRow($recordset)) {
-            if (mb_strtolower($title) == mb_strtolower($row['usergroupsTitle'])) {
-            	return FALSE;
+        while ($row = $this->db->fetchRow($recordset))
+        {
+            if (mb_strtolower($title) == mb_strtolower($row['usergroupsTitle']))
+            {
+                return FALSE;
             }
         }
+
         return TRUE;
     }
     /**
@@ -2260,9 +2596,11 @@ class MYWIKINDX
     {
         $this->db->formatConditions(['userbibliographyId' => $bibId]);
         $adminId = $this->db->selectFirstField('user_bibliography', 'userbibliographyUserId');
-        if ($this->session->getVar("setup_UserId") != $adminId) {
-        	return FALSE;
+        if ($this->session->getVar("setup_UserId") != $adminId)
+        {
+            return FALSE;
         }
+
         return TRUE;
     }
     /**
@@ -2276,15 +2614,19 @@ class MYWIKINDX
      */
     private function checkBibliographyExists($title, $bibId = FALSE)
     {
-        if ($bibId) {
+        if ($bibId)
+        {
             $this->db->formatConditions(['userbibliographyId' => $bibId], TRUE); // NOT this $bibId
         }
         $recordset = $this->db->select('user_bibliography', ['userbibliographyTitle']);
-        while ($row = $this->db->fetchRow($recordset)) {
-            if (mb_strtolower($title) == mb_strtolower($row['userbibliographyTitle'])) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
+            if (mb_strtolower($title) == mb_strtolower($row['userbibliographyTitle']))
+            {
                 return FALSE;
             }
         }
+
         return TRUE;
     }
     /**
@@ -2298,9 +2640,11 @@ class MYWIKINDX
     {
         $this->db->formatConditions(['usergroupsId' => $groupId]);
         $adminId = $this->db->selectFirstField('user_groups', 'usergroupsAdminId');
-        if ($this->session->getVar("setup_UserId") != $adminId) {
+        if ($this->session->getVar("setup_UserId") != $adminId)
+        {
             return FALSE;
         }
+
         return TRUE;
     }
     /**
@@ -2311,9 +2655,12 @@ class MYWIKINDX
      */
     private function badInputLoad($error, $item = FALSE)
     {
-        if ($item) {
+        if ($item)
+        {
             $this->badInput->close($error, $this, ['init', $item]);
-        } else {
+        }
+        else
+        {
             $this->badInput->close($error, $this, 'init');
         }
     }
@@ -2325,7 +2672,7 @@ class MYWIKINDX
      */
     private function badInputPopup($error, $item)
     {
-    	$this->badInput->closeType = 'closeNoMenu';
+        $this->badInput->closeType = 'closeNoMenu';
         $this->badInput->close($error, $this, $item);
     }
     /**
@@ -2336,33 +2683,13 @@ class MYWIKINDX
      */
     private function catastrophic($error, $selectItem)
     {
-		$pString = $error;
-		$pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
-		$pString .= '<script>var selectItem = "' . $selectItem . '";</script>';
-		$pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
-		$pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
-		$pString .= \FORM\formEnd();
-		$this->badInput->closeType = 'closeNoMenu';
-		$this->badInput->close($pString);
-    }
-    /**
-     * Make the select transfer arrows to transfer users between select boxes with onclick
-     *
-     * @return array (toRightImage, toLeftImage)
-     */
-    public function transferArrows()
-    {
-        $jsonArray = [];
-        $jsonArray[] = [
-            'startFunction' => 'selectedUsers',
-        ];
-        $toRightImage = \AJAX\jActionIcon('toRight', 'onclick', $jsonArray);
-        $jsonArray = [];
-        $jsonArray[] = [
-            'startFunction' => 'potentialUsers',
-        ];
-        $toLeftImage = \AJAX\jActionIcon('toLeft', 'onclick', $jsonArray);
-
-        return [$toRightImage, $toLeftImage];
+        $pString = $error;
+        $pString .= '<script src="' . WIKINDX_URL_BASE . '/core/modules/usersgroups/mywikindx.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>';
+        $pString .= '<script>var selectItem = "' . $selectItem . '";</script>';
+        $pString .= \FORM\formHeader(FALSE, "onsubmit=\"window.closeAndRedirect();return true;\"");
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
+        $pString .= \FORM\formEnd();
+        $this->badInput->closeType = 'closeNoMenu';
+        $this->badInput->close($pString);
     }
 }

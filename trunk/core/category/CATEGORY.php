@@ -44,37 +44,48 @@ class CATEGORY
      */
     public function grabAll($userBib = FALSE, $extant = FALSE, $typeArray = FALSE, $withGeneral = TRUE)
     {
-        if ($userBib) {
+        if ($userBib)
+        {
             $this->db->leftJoin('resource_category', 'resourcecategoryCategoryId', 'categoryId');
             $this->commonBib->userBibCondition('resourceCategoryId');
-        } else {
-            if ($extant) {
+        }
+        else
+        {
+            if ($extant)
+            {
                 $this->db->leftJoin('resource_category', 'resourcecategoryCategoryId', 'categoryId');
                 $userBib = TRUE;
             }
         }
-        if (is_array($typeArray) && !empty($typeArray)) {
-            if (!$userBib) {
+        if (is_array($typeArray) && !empty($typeArray))
+        {
+            if (!$userBib)
+            {
                 $this->db->leftJoin('resource_category', 'resourcecategoryCategoryId', 'categoryId');
             }
             $this->db->leftJoin('resource', 'resourceId', 'resourcecategoryResourceId');
-            foreach ($typeArray as $type) {
+            foreach ($typeArray as $type)
+            {
                 $conditions[] = $type;
             }
             $this->db->formatConditionsOneField($conditions, 'resourceType');
         }
-        if ($withGeneral) {
+        if ($withGeneral)
+        {
             $categories[1] = 'General';
         }
         $this->db->orderBy('categoryCategory');
         $recordset = $this->db->select('category', ["categoryId", "categoryCategory"], TRUE);
-        while ($row = $this->db->fetchRow($recordset)) {
-            if ($withGeneral && $row['categoryCategory'] == 'General') {
+        while ($row = $this->db->fetchRow($recordset))
+        {
+            if ($withGeneral && $row['categoryCategory'] == 'General')
+            {
                 continue;
             }
             $categories[$row['categoryId']] = \HTML\dbToFormTidy($row['categoryCategory']);
         }
-        if (isset($categories)) {
+        if (isset($categories))
+        {
             // $categories[1] is hard-wired to 'General' in the database -- for display, change it to the required localization
             // 4/March/2013 -- keep 'General' as is in database but ensure it is placed first in list
             //			$categories[1] = $this->messages->text('resources', 'general');
@@ -95,27 +106,36 @@ class CATEGORY
      */
     public function grabSubAll($withCategory = FALSE, $userBib = FALSE, $matchCategoryIds = FALSE, $extant = FALSE)
     {
-        if ($userBib) {
+        if ($userBib)
+        {
             $this->db->leftJoin('resource_category', 'resourcecategorySubcategoryId', 'subcategoryId');
             $this->commonBib->userBibCondition('resourceCategoryId');
-        } else {
-            if ($extant) {
+        }
+        else
+        {
+            if ($extant)
+            {
                 $this->db->leftJoin('resource_category', 'resourcecategorySubcategoryId', 'subcategoryId');
             }
         }
         $this->db->orderBy('subcategorySubcategory');
         $recordset = $this->db->select('subcategory', ["subcategoryId", "subcategorySubcategory", "subcategoryCategoryId"], TRUE);
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             // Gather only subcategories within specified categories if $matchCategoryIds is given
             if (!$matchCategoryIds ||
-                (is_array($matchCategoryIds) && (array_search($row['subcategoryCategoryId'], $matchCategoryIds) !== FALSE))) {
+                (is_array($matchCategoryIds) && (array_search($row['subcategoryCategoryId'], $matchCategoryIds) !== FALSE)))
+            {
                 $subcategories[$row['subcategoryId']] = \HTML\dbToFormTidy($row['subcategorySubcategory']);
             }
         }
-        if (isset($subcategories)) {
-            if ($withCategory) {
+        if (isset($subcategories))
+        {
+            if ($withCategory)
+            {
                 $categories = $this->grabAll($userBib);
-                foreach ($subcategories as $key => $value) {
+                foreach ($subcategories as $key => $value)
+                {
                     $this->db->formatConditions(['subcategoryId' => $key]);
                     $catKey = $this->db->selectFirstField('subcategory', 'subcategoryCategoryId');
                     $list[$key] = $categories[$catKey] . ' -- ' . $value;
@@ -123,7 +143,9 @@ class CATEGORY
                 natcasesort($list);
 
                 return $list;
-            } else {
+            }
+            else
+            {
                 return $subcategories;
             }
         }

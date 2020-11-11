@@ -46,7 +46,8 @@ namespace FILE
      */
     function readfile_chunked($file)
     {
-        if ($handle = fopen($file, 'rb')) {
+        if ($handle = fopen($file, 'rb'))
+        {
             // Always clear the buffer before sending
             // because sometimes there are barbage
             // and it's very difficult to find
@@ -61,7 +62,8 @@ namespace FILE
             $buffer = '';
 
             // Send the file by chunk
-            while (!feof($handle)) {
+            while (!feof($handle))
+            {
                 $buffer = fread($handle, $chunksize);
                 echo $buffer;
                 ob_flush();
@@ -71,7 +73,9 @@ namespace FILE
             fclose($handle);
 
             return TRUE;
-        } else {
+        }
+        else
+        {
             return FALSE;
         }
     }
@@ -101,9 +105,12 @@ namespace FILE
     {
         $postMax = return_bytes(ini_get('post_max_size'));
         $uploadMax = return_bytes(ini_get('upload_max_filesize'));
-        if ($postMax < $uploadMax) {
+        if ($postMax < $uploadMax)
+        {
             return $postMax;
-        } else {
+        }
+        else
+        {
             return $uploadMax;
         }
     }
@@ -126,7 +133,8 @@ namespace FILE
 
         // If the unit is not defined, VAL is already in bytes
         // Otherwise, compute it
-        if (!is_int($unit)) {
+        if (!is_int($unit))
+        {
             $val = intval(mb_substr($val, 0, mb_strlen($val) - 1));
 
             $factor = 1024;
@@ -156,13 +164,17 @@ namespace FILE
     {
         $result = [];
 
-        if (file_exists($dir)) {
+        if (file_exists($dir))
+        {
             $cdir = scandir($dir);
 
-            if ($cdir !== FALSE) {
-                foreach ($cdir as $v) {
+            if ($cdir !== FALSE)
+            {
+                foreach ($cdir as $v)
+                {
                     // Without hidden files
-                    if (!in_array($v, ['.', '..'])) {
+                    if (!in_array($v, ['.', '..']))
+                    {
                         $result[] = $v;
                     }
                 }
@@ -187,9 +199,12 @@ namespace FILE
 
         $cdir = dirToArray($dir);
 
-        if (count($cdir) > 0) {
-            foreach ($cdir as $v) {
-                if (is_dir($dir . DIRECTORY_SEPARATOR . $v)) {
+        if (count($cdir) > 0)
+        {
+            foreach ($cdir as $v)
+            {
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $v))
+                {
                     $result[] = $v;
                 }
             }
@@ -213,9 +228,12 @@ namespace FILE
 
         $cdir = dirToArray($dir);
 
-        if (count($cdir) > 0) {
-            foreach ($cdir as $v) {
-                if (is_file($dir . DIRECTORY_SEPARATOR . $v)) {
+        if (count($cdir) > 0)
+        {
+            foreach ($cdir as $v)
+            {
+                if (is_file($dir . DIRECTORY_SEPARATOR . $v))
+                {
                     $result[] = $v;
                 }
             }
@@ -237,14 +255,19 @@ namespace FILE
     {
         $result = [];
         
-        if (file_exists($dir)) {
+        if (file_exists($dir))
+        {
             $cdir = scandir($dir);
             
-            if ($cdir !== FALSE) {
-                foreach ($cdir as $k => $v) {
-                    if (!in_array($v, ['.', '..'])) {
+            if ($cdir !== FALSE)
+            {
+                foreach ($cdir as $k => $v)
+                {
+                    if (!in_array($v, ['.', '..']))
+                    {
                         $result[] = $dir . DIRECTORY_SEPARATOR . $v;
-                        if (is_dir($dir . DIRECTORY_SEPARATOR . $v)) {
+                        if (is_dir($dir . DIRECTORY_SEPARATOR . $v))
+                        {
                             $result = array_merge($result, recurse_AbsoluteDirToArray($dir . DIRECTORY_SEPARATOR . $v));
                         }
                     }
@@ -271,17 +294,25 @@ namespace FILE
         
         $cdir = dirToArray($dir);
         
-        if (count($cdir) > 0) {
-            foreach ($cdir as $k => $v) {
-                if (is_dir($dir . DIRECTORY_SEPARATOR . $v)) {
-                    foreach (recurse_fileInDirToArray($dir . DIRECTORY_SEPARATOR . $v) as $sk => $sv) {
+        if (count($cdir) > 0)
+        {
+            foreach ($cdir as $k => $v)
+            {
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $v))
+                {
+                    foreach (recurse_fileInDirToArray($dir . DIRECTORY_SEPARATOR . $v) as $sk => $sv)
+                    {
                         $result[] = $v . DIRECTORY_SEPARATOR . (($sv == ".") ? "" : $sv);
                     }
-                } else {
+                }
+                else
+                {
                     $result[] = $v;
                 }
             }
-        } else {
+        }
+        else
+        {
             $result[] = ".";
         }
         
@@ -301,11 +332,14 @@ namespace FILE
         touch($dir, $time, $time);
         $cdir = dirToArray($dir);
         
-        if (count($cdir) > 0) {
-            foreach ($cdir as $k => $v) {
+        if (count($cdir) > 0)
+        {
+            foreach ($cdir as $k => $v)
+            {
                 touch($dir . DIRECTORY_SEPARATOR . $v, $time, $time);
 
-                if (is_dir($dir . DIRECTORY_SEPARATOR . $v)) {
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $v))
+                {
                     recurse_ChangeDateOfFiles($dir . DIRECTORY_SEPARATOR . $v, $time);
                 }
             }
@@ -320,18 +354,25 @@ namespace FILE
      */
     function recurse_dir_copy($src, $dst)
     {
-        if (PHP_SAPI === 'cli') {
+        if (PHP_SAPI === 'cli')
+        {
             echo "COPY $src\n";
         }
-        if (!file_exists($dst)) {
+        if (!file_exists($dst))
+        {
             mkdir($dst, WIKINDX_UNIX_PERMS_DEFAULT, TRUE);
         }
         
-        foreach (dirToArray($src) as $fsobject) {
-            if (is_dir($src . DIRECTORY_SEPARATOR . $fsobject)) {
+        foreach (dirToArray($src) as $fsobject)
+        {
+            if (is_dir($src . DIRECTORY_SEPARATOR . $fsobject))
+            {
                 recurse_dir_copy($src . DIRECTORY_SEPARATOR . $fsobject, $dst . DIRECTORY_SEPARATOR . $fsobject);
-            } else {
-                if (PHP_SAPI === 'cli') {
+            }
+            else
+            {
+                if (PHP_SAPI === 'cli')
+                {
                     echo "COPY " . $src . DIRECTORY_SEPARATOR . $fsobject . "\n";
                 }
                 copy($src . DIRECTORY_SEPARATOR . $fsobject, $dst . DIRECTORY_SEPARATOR . $fsobject);
@@ -346,21 +387,30 @@ namespace FILE
      */
     function recurse_rmdir($dir)
     {
-        foreach (dirToArray($dir) as $fsobject) {
-            if (is_dir($dir . DIRECTORY_SEPARATOR . $fsobject)) {
+        foreach (dirToArray($dir) as $fsobject)
+        {
+            if (is_dir($dir . DIRECTORY_SEPARATOR . $fsobject))
+            {
                 recurse_rmdir($dir . DIRECTORY_SEPARATOR . $fsobject);
-            } else {
+            }
+            else
+            {
                 unlink($dir . DIRECTORY_SEPARATOR . $fsobject);
             }
         }
         
-        if (file_exists($dir)) {
-            if (is_dir($dir)) {
-                if (PHP_SAPI === 'cli') {
+        if (file_exists($dir))
+        {
+            if (is_dir($dir))
+            {
+                if (PHP_SAPI === 'cli')
+                {
                     echo "RMDIR $dir\n";
                 }
                 rmdir($dir);
-            } else {
+            }
+            else
+            {
                 unlink($dir);
             }
         }
@@ -373,8 +423,10 @@ namespace FILE
      */
     function rmfile($file)
     {
-        if (file_exists($file)) {
-            if (PHP_SAPI === 'cli') {
+        if (file_exists($file))
+        {
+            if (PHP_SAPI === 'cli')
+            {
                 echo "RMFILE $file\n";
             }
             unlink($file);
@@ -391,22 +443,30 @@ namespace FILE
      */
     function fileUpload($filename = FALSE, $multiple = FALSE)
     {
-        if (isset($_FILES) && array_key_exists('file', $_FILES)) {
+        if (isset($_FILES) && array_key_exists('file', $_FILES))
+        {
             $finfo = new \finfo(FILEINFO_MIME); // return mime type ala mimetype extension
-            if ($multiple) {
+            if ($multiple)
+            {
                 $fileArrays = rearrangeFilesArray($_FILES);
                 $array = [];
                 $fileArray = $fileArrays['file'];
-                foreach ($fileArray['name'] as $index => $value) {
-                    if (!$value) {
+                foreach ($fileArray['name'] as $index => $value)
+                {
+                    if (!$value)
+                    {
                         return [];
                     }
-                    if (trim($filename)) {
+                    if (trim($filename))
+                    {
                         $fileName = trim($filename);
-                    } else {
+                    }
+                    else
+                    {
                         $fileName = addslashes($value);
                     }
-                    if (($fileName == '.') || ($fileName == '..')) {
+                    if (($fileName == '.') || ($fileName == '..'))
+                    {
                         continue;
                     }
                     $info = \UTF8\mb_explode(';', $finfo->file($fileArray['tmp_name'][$index]));
@@ -414,19 +474,28 @@ namespace FILE
                 }
 
                 return $array;
-            } elseif ($_FILES['file']['tmp_name']) {
-                if (trim($filename)) {
+            }
+            elseif ($_FILES['file']['tmp_name'])
+            {
+                if (trim($filename))
+                {
                     $fileName = trim($filename);
-                } else {
+                }
+                else
+                {
                     $fileName = addslashes($_FILES['file']['name']);
                 }
-                if (($fileName == '.') || ($fileName == '..')) {
+                if (($fileName == '.') || ($fileName == '..'))
+                {
                     return [FALSE, FALSE, FALSE, FALSE];
                 }
                 $info = \UTF8\mb_explode(';', $finfo->file($_FILES['file']['tmp_name']));
+
                 return [$fileName, sha1_file($_FILES['file']['tmp_name']),
                     $info[0], $_FILES['file']['size'], ];
-            } else {
+            }
+            else
+            {
                 return [FALSE, FALSE, FALSE, FALSE];
             }
         }
@@ -443,11 +512,14 @@ namespace FILE
     function rearrangeFilesArray($files)
     {
         $names = ['name' => 1, 'type' => 1, 'tmp_name' => 1, 'error' => 1, 'size' => 1];
-        foreach ($files as $key => $part) {
+        foreach ($files as $key => $part)
+        {
             // only deal with valid keys and multiple files
             $key = (string) $key;
-            if (isset($names[$key]) && is_array($part)) {
-                foreach ($part as $position => $value) {
+            if (isset($names[$key]) && is_array($part))
+            {
+                foreach ($part as $position => $value)
+                {
                     $files[$position][$key] = $value;
                 }
                 // remove old key reference
@@ -469,12 +541,17 @@ namespace FILE
      */
     function fileStore($dirName, $name, $index = FALSE)
     {
-        if ($index !== FALSE) {
-            if (!move_uploaded_file($_FILES['file']['tmp_name'][$index], $dirName . DIRECTORY_SEPARATOR . $name)) {
+        if ($index !== FALSE)
+        {
+            if (!move_uploaded_file($_FILES['file']['tmp_name'][$index], $dirName . DIRECTORY_SEPARATOR . $name))
+            {
                 return FALSE;
             }
-        } else {
-            if (!move_uploaded_file($_FILES['file']['tmp_name'], $dirName . DIRECTORY_SEPARATOR . $name)) {
+        }
+        else
+        {
+            if (!move_uploaded_file($_FILES['file']['tmp_name'], $dirName . DIRECTORY_SEPARATOR . $name))
+            {
                 return FALSE;
             }
         }
@@ -492,20 +569,24 @@ namespace FILE
         $session = \FACTORY_SESSION::getInstance();
 
         $fileExports = $session->getVar("fileExports");
-        if (!$fileExports) {
+        if (!$fileExports)
+        {
             // no files in directory
             return [FALSE, FALSE, FALSE];
         }
-        if (!file_exists(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]))) {
+        if (!file_exists(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES])))
+        {
             return [FALSE, FALSE, TRUE];
         }
 
         $fileArray = [];
 
-        if ($fileExports) {
+        if ($fileExports)
+        {
             $files = array_intersect($fileExports, fileInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES])));
 
-            foreach ($files as $file) {
+            foreach ($files as $file)
+            {
                 $fileArray[$file] = filemtime(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, $file]));
             }
 
@@ -521,35 +602,47 @@ namespace FILE
      */
     function tidyFiles()
     {
-        if (file_exists(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]))) {
+        if (file_exists(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES])))
+        {
             $now = time();
             $maxTime = WIKINDX_FILE_DELETE_SECONDS;
             
             $fileDeleteArray = [];
             $fileKeepArray = [];
             
-            foreach (fileInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES])) as $f) {
+            foreach (fileInDirToArray(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES])) as $f)
+            {
                 $file = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, $f]);
-                if (($now - filemtime($file)) >= $maxTime) {
+                if (($now - filemtime($file)) >= $maxTime)
+                {
                     @unlink($file);
                     $fileDeleteArray[] = $f;
-                } else {
+                }
+                else
+                {
                     $fileKeepArray[] = $f;
                 }
             }
 
             // Remove reference to these files in session
             $session = \FACTORY_SESSION::getInstance();
-            if (($sessArray = $session->getVar("fileExports")) && !empty($fileDeleteArray)) {
-                foreach ($fileDeleteArray as $f) {
+            if (($sessArray = $session->getVar("fileExports")) && !empty($fileDeleteArray))
+            {
+                foreach ($fileDeleteArray as $f)
+                {
                     unset($sessArray[array_search($f, $sessArray)]);
                 }
-                if (!empty($sessArray)) {
+                if (!empty($sessArray))
+                {
                     $session->setVar("fileExports", $sessArray);
-                } else {
+                }
+                else
+                {
                     $session->delVar("fileExports");
                 }
-            } elseif (!empty($fileKeepArray)) {
+            }
+            elseif (!empty($fileKeepArray))
+            {
                 $session->setVar("fileExports", $fileKeepArray);
             }
         }
@@ -571,14 +664,18 @@ namespace FILE
         // If we can't create a Zip archive or add all files to it,
         // abort, clean Zip archive and return FALSE
         $allFilesZipped = TRUE;
-        if (!class_exists('\ZipArchive')) {
+        if (!class_exists('\ZipArchive'))
+        {
             return FALSE;
         }
         $zip = new \ZipArchive;
 
-        if ($zip->open($zipFile, \ZipArchive::CREATE)) {
-            foreach ($files as $label => $file) {
-                if (!$zip->addFile($path . DIRECTORY_SEPARATOR . $file, $label)) {
+        if ($zip->open($zipFile, \ZipArchive::CREATE))
+        {
+            foreach ($files as $label => $file)
+            {
+                if (!$zip->addFile($path . DIRECTORY_SEPARATOR . $file, $label))
+                {
                     $allFilesZipped = FALSE;
 
                     break;
@@ -586,15 +683,21 @@ namespace FILE
             }
 
             $zip->close();
-        } else {
+        }
+        else
+        {
             $allFilesZipped = FALSE;
         }
 
 
-        if ($allFilesZipped) {
+        if ($allFilesZipped)
+        {
             return $zipFile;
-        } else {
-            if (file_exists($zipFile)) {
+        }
+        else
+        {
+            if (file_exists($zipFile))
+            {
                 unlink($zipFile);
             }
 
@@ -635,13 +738,16 @@ namespace FILE
      */
     function extractComponentPackage($ComponentPackageFile, $DestinationFolder)
     {
-        if (\UTILS\matchSuffix($ComponentPackageFile, ".zip")) {
+        if (\UTILS\matchSuffix($ComponentPackageFile, ".zip"))
+        {
             $success = TRUE;
             $zip = new \ZipArchive;
             
-            if ($zip->open($ComponentPackageFile)) {
+            if ($zip->open($ComponentPackageFile))
+            {
                 // On macOS extractTo() doesn't work, so we emulate it
-                for ($k = 0; $k < $zip->numFiles; $k++) {
+                for ($k = 0; $k < $zip->numFiles; $k++)
+                {
                     // Get a stream from the original name
                     $filename = $zip->getNameIndex($k);
                     $fp_src = $zip->getStream($filename);
@@ -651,10 +757,13 @@ namespace FILE
                     
                     // Restore the directory of the file first
                     $dir = dirname($filename);
-                    if ($dir != "." && $dir != DIRECTORY_SEPARATOR) {
+                    if ($dir != "." && $dir != DIRECTORY_SEPARATOR)
+                    {
                         $dir = $DestinationFolder . DIRECTORY_SEPARATOR . $dir;
-                        if (!file_exists($dir)) {
-                            if (!mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
+                        if (!file_exists($dir))
+                        {
+                            if (!mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
+                            {
                                 $success = FALSE;
                             }
                         }
@@ -662,19 +771,25 @@ namespace FILE
                     
                     // Don't restore config.php and "plugintype.txt files of plugins if they already exist
                     // THIS IS A TEMPORARY FIX FOR THE 5.9.1 MIGRATION
-                    if (in_array(basename($filename), ["config.php", "plugintype.txt"]) && dirname(dirname($filename)) == ".") {
-                        if (file_exists($DestinationFolder . DIRECTORY_SEPARATOR . $filename)) {
+                    if (in_array(basename($filename), ["config.php", "plugintype.txt"]) && dirname(dirname($filename)) == ".")
+                    {
+                        if (file_exists($DestinationFolder . DIRECTORY_SEPARATOR . $filename))
+                        {
                             // continue;
                         }
                     }
                     
                     // Restore the file
-                    if ($fp_src !== FALSE) {
+                    if ($fp_src !== FALSE)
+                    {
                         $fp_dst = fopen($DestinationFolder . DIRECTORY_SEPARATOR . $filename, "wb");
-                        if ($fp_dst !== FALSE) {
+                        if ($fp_dst !== FALSE)
+                        {
                             stream_copy_to_stream($fp_src, $fp_dst);
                             fclose($fp_dst);
-                        } else {
+                        }
+                        else
+                        {
                             $success = FALSE;
                         }
                         fclose($fp_src);
@@ -686,46 +801,62 @@ namespace FILE
                 // To treat this case would add a lot of complexity and bring no added value.
                 // A second decompression will remove the empty folder later anyway.
                 $aExtractedFiles = [];
-                for ($k = 0; $k < $zip->numFiles; $k++) {
+                for ($k = 0; $k < $zip->numFiles; $k++)
+                {
                     $aExtractedFiles[] = str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $zip->getNameIndex($k));
                 }
                 
                 // Descends a folder lower than the destination because the package contains a root folder named with the component id
                 $cmprootfolder = strrev(basename(strrev($aExtractedFiles[0])));
                 $aExistingFiles = \FILE\recurse_fileInDirToArray($DestinationFolder . DIRECTORY_SEPARATOR . $cmprootfolder);
-                foreach ($aExistingFiles as $k => $v) {
+                foreach ($aExistingFiles as $k => $v)
+                {
                     $aExistingFiles[$k] = $cmprootfolder . DIRECTORY_SEPARATOR . $v;
                 }
                 
                 $aFilesInExcess = array_diff($aExistingFiles, $aExtractedFiles);
-                foreach ($aFilesInExcess as $file) {
+                foreach ($aFilesInExcess as $file)
+                {
                     $file = $DestinationFolder . DIRECTORY_SEPARATOR . $file;
-                    if (is_dir($file)) {
+                    if (is_dir($file))
+                    {
                         rmdir($file);
-                    } else {
+                    }
+                    else
+                    {
                         unlink($file);
                     }
                 }
                 
                 $zip->close();
-            } else {
+            }
+            else
+            {
                 $success = FALSE;
             }
             
             unset($zip);
 
             return $success;
-        } elseif (\UTILS\matchSuffix($ComponentPackageFile, ".tar.gz") || \UTILS\matchSuffix($ComponentPackageFile, ".tar.bz2")) {
-            try {
+        }
+        elseif (\UTILS\matchSuffix($ComponentPackageFile, ".tar.gz") || \UTILS\matchSuffix($ComponentPackageFile, ".tar.bz2"))
+        {
+            try
+            {
                 $phar = new \PharData($ComponentPackageFile);
-            } catch (UnexpectedValueException $e) {
+            }
+            catch (UnexpectedValueException $e)
+            {
                 return FALSE;
             }
             
             // creates a temporary tar file
-            try {
+            try
+            {
                 $tar = $phar->decompress();
-            } catch (BadMethodCallException $e) {
+            }
+            catch (BadMethodCallException $e)
+            {
                 return FALSE;
             }
             
@@ -742,17 +873,21 @@ namespace FILE
             $tarroot = str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $tarroot);
             
             // On macOS extractTo() doesn't work, so we emulate it
-            foreach (new \RecursiveIteratorIterator($tar) as $file) {
+            foreach (new \RecursiveIteratorIterator($tar) as $file)
+            {
                 $fileorig = $file;
                 $file = str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $file);
                 $file = str_replace($tarroot, "", $file);
                 
                 // Restore the directory of the file first
                 $dir = dirname($file);
-                if ($dir != "." && $dir != DIRECTORY_SEPARATOR) {
+                if ($dir != "." && $dir != DIRECTORY_SEPARATOR)
+                {
                     $dir = $DestinationFolder . DIRECTORY_SEPARATOR . $dir;
-                    if (!file_exists($dir)) {
-                        if (!mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE)) {
+                    if (!file_exists($dir))
+                    {
+                        if (!mkdir($dir, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
+                        {
                             $success = FALSE;
                         }
                     }
@@ -760,22 +895,30 @@ namespace FILE
                 
                 // Don't restore config.php and "plugintype.txt files of plugins if they already exist
                 // THIS IS A TEMPORARY FIX FOR THE 5.9.1 MIGRATION
-                if (in_array(basename($file), ["config.php", "plugintype.txt"]) && dirname(dirname($file)) == ".") {
-                    if (file_exists($DestinationFolder . DIRECTORY_SEPARATOR . $file)) {
+                if (in_array(basename($file), ["config.php", "plugintype.txt"]) && dirname(dirname($file)) == ".")
+                {
+                    if (file_exists($DestinationFolder . DIRECTORY_SEPARATOR . $file))
+                    {
                         //continue;
                     }
                 }
                 
                 // Restore the file
-                try {
-                    try {
+                try
+                {
+                    try
+                    {
                         $filephar = new PharFileInfo($fileorig);
                         file_put_contents($DestinationFolder . DIRECTORY_SEPARATOR . $file, $filephar->getContent());
                         unset($filephar);
-                    } catch (BadMethodCallException $e) {
+                    }
+                    catch (BadMethodCallException $e)
+                    {
                         $success = FALSE;
                     }
-                } catch (UnexpectedValueException $e) {
+                }
+                catch (UnexpectedValueException $e)
+                {
                     $success = FALSE;
                 }
                 
@@ -785,16 +928,21 @@ namespace FILE
             // Descends a folder lower than the destination because the package contains a root folder named with the component id
             $cmprootfolder = strrev(basename(strrev($aExtractedFiles[0])));
             $aExistingFiles = \FILE\recurse_fileInDirToArray($DestinationFolder . DIRECTORY_SEPARATOR . $cmprootfolder);
-            foreach ($aExistingFiles as $k => $v) {
+            foreach ($aExistingFiles as $k => $v)
+            {
                 $aExistingFiles[$k] = $cmprootfolder . DIRECTORY_SEPARATOR . $v;
             }
             
             $aFilesInExcess = array_diff($aExistingFiles, $aExtractedFiles);
-            foreach ($aFilesInExcess as $file) {
+            foreach ($aFilesInExcess as $file)
+            {
                 $file = $DestinationFolder . DIRECTORY_SEPARATOR . $file;
-                if (is_dir($file)) {
+                if (is_dir($file))
+                {
                     rmdir($file);
-                } else {
+                }
+                else
+                {
                     unlink($file);
                 }
             }
@@ -806,7 +954,9 @@ namespace FILE
             unset($phar);
             
             return TRUE;
-        } else {
+        }
+        else
+        {
             // Unsupported format
             return FALSE;
         }
@@ -826,21 +976,27 @@ namespace FILE
      */
     function extractComponentPackageDefinition($ComponentPackageFile)
     {
-        if (\UTILS\matchSuffix($ComponentPackageFile, ".zip")) {
+        if (\UTILS\matchSuffix($ComponentPackageFile, ".zip"))
+        {
             $componentDef = [];
             $zip = new \ZipArchive;
             
-            if ($zip->open($ComponentPackageFile)) {
+            if ($zip->open($ComponentPackageFile))
+            {
                 // Search for the component.json only in the root directory
-                for ($k = 0; $k < $zip->numFiles; $k++) {
+                for ($k = 0; $k < $zip->numFiles; $k++)
+                {
                     $filename = $zip->getNameIndex($k);
-                    if (basename($filename) == "component.json" && dirname(dirname($filename)) == ".") {
+                    if (basename($filename) == "component.json" && dirname(dirname($filename)) == ".")
+                    {
                         $fp = $zip->getStream($filename);
-                        if ($fp !== FALSE) {
+                        if ($fp !== FALSE)
+                        {
                             $json = stream_get_contents($fp);
                             fclose($fp);
                             
-                            if ($json !== FALSE) {
+                            if ($json !== FALSE)
+                            {
                                 $componentDef = json_decode($json, TRUE);
                             }
                         }
@@ -855,19 +1011,27 @@ namespace FILE
             unset($zip);
             
             return $componentDef;
-        } elseif (\UTILS\matchSuffix($ComponentPackageFile, ".tar.gz") || \UTILS\matchSuffix($ComponentPackageFile, ".tar.bz2")) {
+        }
+        elseif (\UTILS\matchSuffix($ComponentPackageFile, ".tar.gz") || \UTILS\matchSuffix($ComponentPackageFile, ".tar.bz2"))
+        {
             $componentDef = [];
 
-            try {
+            try
+            {
                 $phar = new \PharData($ComponentPackageFile);
-            } catch (UnexpectedValueException $e) {
+            }
+            catch (UnexpectedValueException $e)
+            {
                 return FALSE;
             }
             
             // creates a temporary tar file
-            try {
+            try
+            {
                 $tar = $phar->decompress();
-            } catch (BadMethodCallException $e) {
+            }
+            catch (BadMethodCallException $e)
+            {
                 return FALSE;
             }
             
@@ -878,21 +1042,29 @@ namespace FILE
             $tarroot = str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $tarroot);
             
             // Search for the component.json only in the root directory
-            foreach (new \RecursiveIteratorIterator($tar) as $file) {
+            foreach (new \RecursiveIteratorIterator($tar) as $file)
+            {
                 $fileorig = $file;
                 $file = str_replace(["\\", "/"], DIRECTORY_SEPARATOR, $file);
                 $file = str_replace($tarroot, "", $file);
                 
-                if (basename($file) == "component.json" && dirname(dirname($file)) == ".") {
-                    try {
-                        try {
+                if (basename($file) == "component.json" && dirname(dirname($file)) == ".")
+                {
+                    try
+                    {
+                        try
+                        {
                             $filephar = new PharFileInfo($fileorig);
                             $json = $filephar->getContent();
                             unset($filephar);
-                        } catch (BadMethodCallException $e) {
+                        }
+                        catch (BadMethodCallException $e)
+                        {
                             return [];
                         }
-                    } catch (UnexpectedValueException $e) {
+                    }
+                    catch (UnexpectedValueException $e)
+                    {
                         return [];
                     }
                     
@@ -909,7 +1081,9 @@ namespace FILE
             unset($phar);
             
             return $componentDef;
-        } else {
+        }
+        else
+        {
             // Unsupported format
             return [];
         }
@@ -934,7 +1108,8 @@ namespace FILE
 
         $Format = strtoupper(trim($Format));
         // Unsupported format is replaced by a ZIP archive
-        if (!in_array($Format, ["ZIP", "GZ", "BZIP2"])) {
+        if (!in_array($Format, ["ZIP", "GZ", "BZIP2"]))
+        {
             $Format = "ZIP";
         }
         
@@ -980,7 +1155,8 @@ namespace FILE
 
         $Format = strtoupper(trim($Format));
         // Unsupported format is replaced by a ZIP archive
-        if (!in_array($Format, ["ZIP", "GZ", "BZIP2"])) {
+        if (!in_array($Format, ["ZIP", "GZ", "BZIP2"]))
+        {
             $Format = "ZIP";
         }
         
@@ -1094,7 +1270,8 @@ namespace FILE
 
         $Format = strtoupper(trim($Format));
         // Unsupported format is replaced by a ZIP archive
-        if (!in_array($Format, ["ZIP", "GZ", "BZIP2"])) {
+        if (!in_array($Format, ["ZIP", "GZ", "BZIP2"]))
+        {
             $Format = "ZIP";
         }
         
@@ -1176,19 +1353,27 @@ namespace FILE
         $rootdir = basename($SrcDir);
         
         $zip = new \ZipArchive;
-        if ($zip->open($DstFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
-            foreach (recurse_fileInDirToArray($SrcDir) as $f) {
-                if (\UTILS\matchSuffix($f, DIRECTORY_SEPARATOR) && $f != DIRECTORY_SEPARATOR) {
+        if ($zip->open($DstFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE))
+        {
+            foreach (recurse_fileInDirToArray($SrcDir) as $f)
+            {
+                if (\UTILS\matchSuffix($f, DIRECTORY_SEPARATOR) && $f != DIRECTORY_SEPARATOR)
+                {
                     $f = mb_substr($f, 0, mb_strlen($f) - mb_strlen(DIRECTORY_SEPARATOR));
                     $zip->addEmptyDir($rootdir . DIRECTORY_SEPARATOR . $f);
-                } else {
+                }
+                else
+                {
                     $zip->addFile($SrcDir . DIRECTORY_SEPARATOR . $f, $rootdir . DIRECTORY_SEPARATOR . $f);
                 }
             }
             
             $zip->close();
-        } else {
-            if (PHP_SAPI === 'cli') {
+        }
+        else
+        {
+            if (PHP_SAPI === 'cli')
+            {
                 echo "Could not open " . $DstFile . "\n";
             }
         }
@@ -1211,10 +1396,14 @@ namespace FILE
         $Archive = $DstDir . DIRECTORY_SEPARATOR . \UTILS\uuid() . ".tar";
         
         // Open temporary tar file
-        try {
+        try
+        {
             $phar = new \PharData($Archive);
-        } catch (UnexpectedValueException $e) {
-            if (PHP_SAPI === 'cli') {
+        }
+        catch (UnexpectedValueException $e)
+        {
+            if (PHP_SAPI === 'cli')
+            {
                 echo "Could not open " . $Archive . "\n";
             }
 
@@ -1222,20 +1411,28 @@ namespace FILE
         }
         
         // Create temporary tar file
-        try {
+        try
+        {
             $basedir = mb_substr($SrcDir, 0, mb_strlen($SrcDir) - mb_strlen(basename($SrcDir)));
             
-            foreach (recurse_AbsoluteDirToArray($SrcDir) as $dir => $v) {
+            foreach (recurse_AbsoluteDirToArray($SrcDir) as $dir => $v)
+            {
                 $tarpath = mb_substr($v, 0 + mb_strlen($basedir), mb_strlen($v) - mb_strlen($basedir));
 
-                if (is_dir($v)) {
+                if (is_dir($v))
+                {
                     $phar->addEmptyDir($tarpath);
-                } else {
+                }
+                else
+                {
                     $phar->addFile($v, $tarpath);
                 }
             }
-        } catch (PharException $e) {
-            if (PHP_SAPI === 'cli') {
+        }
+        catch (PharException $e)
+        {
+            if (PHP_SAPI === 'cli')
+            {
                 echo "Fail to make " . $Archive . "\n";
             }
         }
@@ -1255,7 +1452,8 @@ namespace FILE
      */
     function command_exists($command)
     {
-        if (suhosin_function_exists('proc_open')) {
+        if (suhosin_function_exists('proc_open'))
+        {
             $whereIsCommand = (PHP_OS == 'WINNT') ? 'where' : 'which';
 
             $process = proc_open(
@@ -1268,7 +1466,8 @@ namespace FILE
                 $pipes
             );
 
-            if ($process !== FALSE) {
+            if ($process !== FALSE)
+            {
                 $stdout = stream_get_contents($pipes[1]);
                 $stderr = stream_get_contents($pipes[2]);
                 fclose($pipes[1]);
@@ -1296,9 +1495,11 @@ namespace FILE
      */
     function suhosin_function_exists($func)
     {
-        if (extension_loaded('suhosin')) {
+        if (extension_loaded('suhosin'))
+        {
             $suhosin = @ini_get("suhosin.executor.func.blacklist");
-            if (empty($suhosin) == FALSE) {
+            if (empty($suhosin) == FALSE)
+            {
                 $suhosin = explode(',', $suhosin);
                 $suhosin = array_map('trim', $suhosin);
                 $suhosin = array_map('strtolower', $suhosin);
@@ -1323,12 +1524,16 @@ namespace FILE
      */
     function read_json_file($file)
     {
-        if (file_exists($file)) {
-            if (is_readable($file)) {
+        if (file_exists($file))
+        {
+            if (is_readable($file))
+            {
                 $data = file_get_contents($file);
-                if ($data !== FALSE) {
+                if ($data !== FALSE)
+                {
                     $data = json_decode($data, TRUE);
-                    if (json_last_error() == JSON_ERROR_NONE) {
+                    if (json_last_error() == JSON_ERROR_NONE)
+                    {
                         return $data;
                     }
                 }
@@ -1353,9 +1558,12 @@ namespace FILE
     function write_json_file($file, $data)
     {
         $data = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        if ($data !== FALSE) {
+        if ($data !== FALSE)
+        {
             return (file_put_contents($file, $data) === FALSE) ? JSON_ERROR_NONE - 1 : JSON_ERROR_NONE;
-        } else {
+        }
+        else
+        {
             return json_last_error();
         }
     }
@@ -1372,16 +1580,21 @@ namespace FILE
 
         $size = round($size, 2);
 
-        foreach ($sizes as $s => $p) {
-            if ($size >= $s) {
+        foreach ($sizes as $s => $p)
+        {
+            if ($size >= $s)
+            {
                 $prefix = $p;
                 $factor = $s;
-            } else {
+            }
+            else
+            {
                 break;
             }
         }
 
-        if (!$factor) {
+        if (!$factor)
+        {
             $factor = 1;
         }
 

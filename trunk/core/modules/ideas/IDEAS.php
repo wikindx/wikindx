@@ -51,14 +51,17 @@ class IDEAS
         $help = new HELPMESSAGES();
         GLOBALS::setTplVar('help', $help->createLink('ideas'));
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "ideas"));
-        if ($this->session->getVar("setup_ReadOnly")) {
+        if ($this->session->getVar("setup_ReadOnly"))
+        {
             $this->badInput->close($this->errors->text("inputError", "invalid"));
         }
-        if (!array_key_exists('method', $this->vars)) {
+        if (!array_key_exists('method', $this->vars))
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $function = $this->vars['method'];
-        if (!method_exists($this, $function)) {
+        if (!method_exists($this, $function))
+        {
             $this->badInput->close($this->errors->text("inputError", "invalid"));
         }
     }
@@ -67,25 +70,31 @@ class IDEAS
      */
     public function keywordIdeaList()
     {
-// single metadata keyword
-        if ((array_key_exists('resourcekeywordKeywordId', $this->vars) && $this->vars['resourcekeywordKeywordId'])) {
-        	$this->keywordIdeas[] = $this->vars['resourcekeywordKeywordId'];
+        // single metadata keyword
+        if ((array_key_exists('resourcekeywordKeywordId', $this->vars) && $this->vars['resourcekeywordKeywordId']))
+        {
+            $this->keywordIdeas[] = $this->vars['resourcekeywordKeywordId'];
         }
-// or metadata keywords from a keyword group
-        elseif (((array_key_exists('userkeywordgroupsId', $this->vars) && $this->vars['userkeywordgroupsId']))) {
-// Get keywords in this keyword group
-			$this->db->leftJoin('user_kg_keywords', 'userkgkeywordsKeywordGroupId', 'userkeywordgroupsId');
-			$this->db->formatConditionsOneField($this->vars['userkeywordgroupsId'], 'userkeywordgroupsId');
-			$recordset = $this->db->select('user_keywordgroups', 'userkgkeywordsKeywordId');
-			while ($row = $this->db->fetchRow($recordset)) {
-				$this->keywordIdeas[] = $row['userkgkeywordsKeywordId'];
-			}
-			if (empty($this->keywordIdeas)) {
-				GLOBALS::addTplVar('content', $this->messages->text("misc", "noKeywords"));
-				return;
-			}
+        // or metadata keywords from a keyword group
+        elseif (((array_key_exists('userkeywordgroupsId', $this->vars) && $this->vars['userkeywordgroupsId'])))
+        {
+            // Get keywords in this keyword group
+            $this->db->leftJoin('user_kg_keywords', 'userkgkeywordsKeywordGroupId', 'userkeywordgroupsId');
+            $this->db->formatConditionsOneField($this->vars['userkeywordgroupsId'], 'userkeywordgroupsId');
+            $recordset = $this->db->select('user_keywordgroups', 'userkgkeywordsKeywordId');
+            while ($row = $this->db->fetchRow($recordset))
+            {
+                $this->keywordIdeas[] = $row['userkgkeywordsKeywordId'];
+            }
+            if (empty($this->keywordIdeas))
+            {
+                GLOBALS::addTplVar('content', $this->messages->text("misc", "noKeywords"));
+
+                return;
+            }
         }
-        else{
+        else
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $this->ideaList(TRUE);
@@ -97,14 +106,16 @@ class IDEAS
      */
     public function ideaList($keywordList = FALSE)
     {
-        if (array_key_exists('message', $this->vars)) {
+        if (array_key_exists('message', $this->vars))
+        {
             GLOBALS::setTplVar('content', $this->vars['message']);
             $this->db->formatConditions(['resourcemetadataType' => 'i']);
             $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
             $this->db->limit(1, 0);
             $resultSet = $this->db->select('resource_metadata', ['resourcemetadataId']);
-            if (!$this->db->numRows($resultSet)) {
-        		FACTORY_CLOSE::getInstance();
+            if (!$this->db->numRows($resultSet))
+            {
+                FACTORY_CLOSE::getInstance();
             }
         }
         $this->session->delVar("search_Highlight");
@@ -116,60 +127,82 @@ class IDEAS
         $ideaList = $ideaListInfo = [];
         $index = 0;
         $backupPagingTotal = $this->session->getVar("setup_PagingTotal"); // Required for normal list operations 'last multi'
-        if ($total = $this->session->getVar("setup_IdeaPagingTotal")) {
+        if ($total = $this->session->getVar("setup_IdeaPagingTotal"))
+        {
             $this->session->setVar("setup_PagingTotal", $total);
         }
-        if ((!array_key_exists('PagingStart', $this->vars) || !$this->vars['PagingStart'])) {
+        if ((!array_key_exists('PagingStart', $this->vars) || !$this->vars['PagingStart']))
+        {
             $this->session->delVar("mywikindx_PagingStart"); // might be set from last multi resource list display
             $this->session->delVar("list_IdeaAllIds");
         }
-        if (array_key_exists('order', $this->vars)) {
+        if (array_key_exists('order', $this->vars))
+        {
             $order = $this->vars['order'];
-        } else {
+        }
+        else
+        {
             $order = 'timestamp'; // currently the only one
         }
         $this->session->setVar("list_IdeaOrder", $order); // Just one means of ordering for now
-        if (array_key_exists('ascDesc', $this->vars)) {
+        if (array_key_exists('ascDesc', $this->vars))
+        {
             $this->db->ascDesc = $this->vars['ascDesc'];
-        } elseif ($this->session->issetVar("list_IdeaAscDesc")) {
+        }
+        elseif ($this->session->issetVar("list_IdeaAscDesc"))
+        {
             $this->db->ascDesc = $this->session->getVar("list_IdeaAscDesc");
-        } else {
+        }
+        else
+        {
             $this->db->ascDesc = $this->db->asc;
         }
         $this->session->setVar("list_IdeaAscDesc", $this->db->ascDesc);
-        if ($order == 'timestamp') {
+        if ($order == 'timestamp')
+        {
             $this->db->orderBy('resourcemetadataTimestamp', TRUE, FALSE);
         }
         // Check this user is allowed to read the idea.
         $this->metadata->setCondition('i');
-        if ($keywordList) {
+        if ($keywordList)
+        {
             $this->db->leftJoin('resource_keyword', 'resourcekeywordMetadataId', 'resourcemetadataId');
             $this->db->formatConditionsOneField($this->keywordIdeas, 'resourcekeywordKeywordId');
             $this->db->formatConditions(['resourcekeywordMetadataId' => ' IS NOT NULL']);
             $this->db->formatConditions(['resourcemetadataType' => 'i']);
-        	if ((array_key_exists('resourcekeywordKeywordId', $this->vars) && $this->vars['resourcekeywordKeywordId'])) {
-            	$queryString = "index.php?action=ideas_IDEAS_CORE" .
-                	"&method=" . 'keywordIdeaList' . "&resourcekeywordKeywordId=" . $this->vars['resourcekeywordKeywordId'];
+            if ((array_key_exists('resourcekeywordKeywordId', $this->vars) && $this->vars['resourcekeywordKeywordId']))
+            {
+                $queryString = "index.php?action=ideas_IDEAS_CORE" .
+                    "&method=" . 'keywordIdeaList' . "&resourcekeywordKeywordId=" . $this->vars['resourcekeywordKeywordId'];
             }
-            else {
-            	$queryString = "index.php?action=ideas_IDEAS_CORE" .
-                	"&method=" . 'keywordIdeaList' . "&'userkeywordgroupsId'=" . $this->vars['userkeywordgroupsId'];
+            else
+            {
+                $queryString = "index.php?action=ideas_IDEAS_CORE" .
+                    "&method=" . 'keywordIdeaList' . "&'userkeywordgroupsId'=" . $this->vars['userkeywordgroupsId'];
             }
-        } else {
+        }
+        else
+        {
             $queryString = "index.php?action=ideas_IDEAS_CORE" . "&method=" . 'ideaList';
         }
         $ids = $threadIds = [];
-        if (!$this->session->getVar("list_IdeaAllIds")) {
+        if (!$this->session->getVar("list_IdeaAllIds"))
+        {
             $resultSet = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataMetadataId']);
-            while ($row = $this->db->fetchRow($resultSet)) {
+            while ($row = $this->db->fetchRow($resultSet))
+            {
                 $ids[] = $row['resourcemetadataId'];
-                if (!$row['resourcemetadataMetadataId']) {
+                if (!$row['resourcemetadataMetadataId'])
+                {
                     $threadIds[] = $row['resourcemetadataId'];
-                } elseif (array_search($row['resourcemetadataMetadataId'], $threadIds) === FALSE) {
+                }
+                elseif (array_search($row['resourcemetadataMetadataId'], $threadIds) === FALSE)
+                {
                     $threadIds[] = $row['resourcemetadataMetadataId'];
                 }
             }
-            if (empty($ids)) {
+            if (empty($ids))
+            {
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
             $this->session->setVar("setup_PagingTotal", count($ids));
@@ -177,10 +210,13 @@ class IDEAS
             $this->session->setVar("list_IdeaAllIds", base64_encode(serialize($ids)));
             $this->db->formatConditionsOneField($ids, 'resourcemetadataId');
             $threadIds = array_unique($threadIds);
-            if (!empty($threadIds)) {
+            if (!empty($threadIds))
+            {
                 $this->session->setVar("list_IdeaAllThreadIds", base64_encode(serialize($threadIds)));
             }
-        } else {
+        }
+        else
+        {
             $this->db->formatConditionsOneField(unserialize(base64_decode($this->session->getVar("list_IdeaAllIds"))), 'resourcemetadataId');
         }
         $pagingObject->queryString = $queryString;
@@ -188,37 +224,48 @@ class IDEAS
         $this->session->setVar("setup_PagingTotal", $backupPagingTotal);
         // now get ideas
         $this->db->ascDesc = $this->session->getVar("list_IdeaAscDesc");
-        if ($order == 'timestamp') {
+        if ($order == 'timestamp')
+        {
             $this->db->orderBy('resourcemetadataTimestamp', TRUE, FALSE);
         }
         $this->db->limit(GLOBALS::getUserVar('Paging'), $pagingObject->start);
         $resultset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataTimestamp', 'resourcemetadataTimestampEdited',
             'resourcemetadataMetadataId', 'resourcemetadataText', 'resourcemetadataAddUserId', 'resourcemetadataPrivate', ]);
         $threadIds = [];
-        while ($row = $this->db->fetchRow($resultset)) {
-            if ($multiUser) {
+        while ($row = $this->db->fetchRow($resultset))
+        {
+            if ($multiUser)
+            {
                 list($user) = $userObj->displayUserAddEdit($row['resourcemetadataAddUserId'], FALSE, 'idea');
-                if (!$row['resourcemetadataTimestampEdited']) {
+                if (!$row['resourcemetadataTimestampEdited'])
+                {
                     $ideaList[$index]['user'] = $this->messages->text('hint', 'addedBy', $user . '&nbsp;' . $row['resourcemetadataTimestamp']);
-                } else {
+                }
+                else
+                {
                     $ideaList[$index]['user'] = $this->messages->text('hint', 'addedBy', $user . '&nbsp;' . $row['resourcemetadataTimestamp']) .
                     ',&nbsp;' . $this->messages->text('hint', 'editedBy', $user . '&nbsp;' . $row['resourcemetadataTimestampEdited']);
                 }
                 GLOBALS::addTplVar('multiUser', TRUE);
             }
-            if ($row['resourcemetadataAddUserId'] == $this->session->getVar("setup_UserId")) {
+            if ($row['resourcemetadataAddUserId'] == $this->session->getVar("setup_UserId"))
+            {
                 $ideaList[$index]['links'] = $this->metadata->createLinks($row, TRUE, TRUE, TRUE);
-            } else { // all others can add to the thread
+            }
+            else
+            { // all others can add to the thread
                 $ideaList[$index]['links'] = $this->metadata->createLinks($row, TRUE, FALSE, FALSE);
             }
             $ideaList[$index]['metadata'] = $cite->parseCitations($row['resourcemetadataText'], 'html');
             ++$index;
         }
         GLOBALS::addTplVar('ideaTemplate', TRUE);
-        if ($index > 1) {
+        if ($index > 1)
+        {
             $pString = \FORM\formHeader('ideas_IDEAS_CORE');
             $pString .= \FORM\hidden('method', 'ideaList');
-            if ($selected = $this->session->getVar("list_IdeaOrder")) {
+            if ($selected = $this->session->getVar("list_IdeaOrder"))
+            {
                 $pString .= \FORM\selectedBoxValue(
                     $this->messages->text("list", "order"),
                     "order",
@@ -226,7 +273,9 @@ class IDEAS
                     $selected,
                     1
                 );
-            } else {
+            }
+            else
+            {
                 $pString .= \FORM\selectFBoxValue(
                     $this->messages->text("list", "order"),
                     "order",
@@ -234,15 +283,21 @@ class IDEAS
                     1
                 );
             }
-            if ($ascDesc = trim($this->session->getVar("list_IdeaAscDesc"))) {
-                if ($ascDesc == 'ASC') {
+            if ($ascDesc = trim($this->session->getVar("list_IdeaAscDesc")))
+            {
+                if ($ascDesc == 'ASC')
+                {
                     $pString .= \HTML\p(\FORM\radioButton(FALSE, "ascDesc", 'ASC', TRUE) . $this->messages->text("list", "ascending") .
                         BR . \FORM\radioButton(FALSE, "ascDesc", 'DESC') . $this->messages->text("list", "descending"));
-                } else {
+                }
+                else
+                {
                     $pString .= \HTML\p(\FORM\radioButton(FALSE, "ascDesc", 'ASC') . $this->messages->text("list", "ascending") .
                         BR . \FORM\radioButton(FALSE, "ascDesc", 'DESC', TRUE) . $this->messages->text("list", "descending"));
                 }
-            } else {
+            }
+            else
+            {
                 $pString .= \HTML\p(\FORM\radioButton(FALSE, "ascDesc", 'ASC', TRUE) . $this->messages->text("list", "ascending") .
                     BR . \FORM\radioButton(FALSE, "ascDesc", 'DESC') . $this->messages->text("list", "descending"));
             }
@@ -262,27 +317,33 @@ class IDEAS
      */
     public function threadView($ideaId = FALSE, $message = FALSE)
     {
-        if (array_key_exists('returnId', $this->vars)) {
-        	$ideaId = $this->vars['returnId'];
+        if (array_key_exists('returnId', $this->vars))
+        {
+            $ideaId = $this->vars['returnId'];
         }
-        if (!$ideaId && (!array_key_exists('resourcemetadataId', $this->vars) || !$this->vars['resourcemetadataId'])) {
+        if (!$ideaId && (!array_key_exists('resourcemetadataId', $this->vars) || !$this->vars['resourcemetadataId']))
+        {
             $this->session->setVar("sql_LastThread", FALSE);
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        if (!$ideaId) {
+        if (!$ideaId)
+        {
             $ideaId = $this->vars['resourcemetadataId'];
         }
-        if (array_key_exists('message', $this->vars)) {
-        	$message = $this->vars['message'];
+        if (array_key_exists('message', $this->vars))
+        {
+            $message = $this->vars['message'];
         }
-        if ($message) {
+        if ($message)
+        {
             GLOBALS::addTplVar('content', $message);
         }
         // Check this user is allowed to read the idea.
         $this->metadata->setCondition('i');
         $this->db->formatConditions(['resourcemetadataId' => $ideaId]);
         $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
-        if (!$this->db->numRows($resultset)) {
+        if (!$this->db->numRows($resultset))
+        {
             $this->session->setVar("sql_LastThread", FALSE);
             $this->badInput->close($this->errors->text("inputError", "invalid"));
         }
@@ -293,14 +354,16 @@ class IDEAS
     /**
      * display the adding/editing form for a sub idea
      *
-	 * @param mixed $message
+     * @param mixed $message
      */
     public function subIdeaForm($message = FALSE)
     {
-        if (!array_key_exists('resourcemetadataId', $this->vars)) {
+        if (!array_key_exists('resourcemetadataId', $this->vars))
+        {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        if (!$this->session->getVar("setup_UserId")) {
+        if (!$this->session->getVar("setup_UserId"))
+        {
             $this->badInput->close($this->errors->text("inputError", "invalid"));
         }
         $this->ideas = [];
@@ -313,12 +376,14 @@ class IDEAS
         $hidden .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
         $metadataId = $this->vars['resourcemetadataId'];
         // are we editing or adding?
-        if (array_key_exists('resourcemetadataMetadataId', $this->vars)) { // editing
+        if (array_key_exists('resourcemetadataMetadataId', $this->vars))
+        { // editing
             // Check this user is allowed to edit the idea.
             $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
             $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
             $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
-            if (!$this->db->numRows($resultset)) {
+            if (!$this->db->numRows($resultset))
+            {
                 $this->session->setVar("sql_LastThread", FALSE);
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
@@ -333,7 +398,9 @@ class IDEAS
             $add = $icons->getHTML("add");
             $idea['add'] = \HTML\a($icons->getClass("add"), $add, "index.php?action=ideas_IDEAS_CORE" . "&method=" . 'subIdeaForm' .
                 "&resourcemetadataId=" . $this->vars['resourcemetadataMetadataId']);
-        } else {
+        }
+        else
+        {
             $idea['keyword'] = $this->textqp->displayKeywordForm($this->formData);
         }
         $idea['hidden'] = $pString . $hidden;
@@ -350,52 +417,61 @@ class IDEAS
     }
     /**
      * display the adding/editing form for the main idea
-	 *
-	 * @param mixed $message
+     *
+     * @param mixed $message
      */
     public function ideaEdit($message = FALSE)
     {
         $text = $metadataId = $owner = FALSE;
         $thisUserId = $this->session->getVar("setup_UserId");
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
-        if (array_key_exists('message', $this->vars)) {
-        	$pString = $this->vars['message'];
-        } else {
-        	$pString = $message;
+        if (array_key_exists('message', $this->vars))
+        {
+            $pString = $this->vars['message'];
+        }
+        else
+        {
+            $pString = $message;
         }
         $pString .= $tinymce->loadMetadataTextarea(['Text']);
         $pString .= \FORM\formHeader('ideas_IDEAS_CORE');
         $hidden = \FORM\hidden('method', 'edit');
         $idea['hidden'] = $pString;
-		if (!empty($this->formData)) {
-			$private = $this->formData['private'];
-		}
+        if (!empty($this->formData))
+        {
+            $private = $this->formData['private'];
+        }
         // are we editing or adding?
-        elseif (array_key_exists('resourcemetadataId', $this->vars)) { // editing
+        elseif (array_key_exists('resourcemetadataId', $this->vars))
+        { // editing
             // Check this user is allowed to edit the idea.
             $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
             $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
             $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
-            if (!$this->db->numRows($resultset)) {
+            if (!$this->db->numRows($resultset))
+            {
                 $this->session->setVar("sql_LastThread", FALSE);
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
-			$hidden .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
-			$metadataId = $this->vars['resourcemetadataId'];
-			$this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
-			$recordset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataText',
-				'resourcemetadataPrivate', 'resourcemetadataAddUserId', ]);
-			$row = $this->db->fetchRow($recordset);
-			if ($row['resourcemetadataAddUserId'] == $thisUserId) {
-				$owner = TRUE;
-			}
-			$text = \HTML\dbToTinyMCE($row['resourcemetadataText']);
-			$private = $row['resourcemetadataPrivate'];
-			$icons = FACTORY_LOADICONS::getInstance();
-			$add = $icons->getHTML("add");
-			$idea['add'] = \HTML\a($icons->getClass("add"), $add, "index.php?action=ideas_IDEAS_CORE" . "&method=" . 'subIdeaForm' .
-				"&resourcemetadataId=" . $this->vars['resourcemetadataId']);
-        } else {
+            $hidden .= \FORM\hidden("resourcemetadataId", $this->vars['resourcemetadataId']);
+            $metadataId = $this->vars['resourcemetadataId'];
+            $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
+            $recordset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataText',
+                'resourcemetadataPrivate', 'resourcemetadataAddUserId', ]);
+            $row = $this->db->fetchRow($recordset);
+            if ($row['resourcemetadataAddUserId'] == $thisUserId)
+            {
+                $owner = TRUE;
+            }
+            $text = \HTML\dbToTinyMCE($row['resourcemetadataText']);
+            $private = $row['resourcemetadataPrivate'];
+            $icons = FACTORY_LOADICONS::getInstance();
+            $add = $icons->getHTML("add");
+            $idea['add'] = \HTML\a($icons->getClass("add"), $add, "index.php?action=ideas_IDEAS_CORE" . "&method=" . 'subIdeaForm' .
+                "&resourcemetadataId=" . $this->vars['resourcemetadataId']);
+        }
+        else
+        {
             $private = 'Y';
         }
         $idea['keyword'] = $hidden . $this->textqp->displayKeywordForm($this->formData);
@@ -407,8 +483,10 @@ class IDEAS
         $recordset3 = $this->db->select('user_groups_users', ['usergroupsusersGroupId', 'usergroupsTitle']);
         $privateArray = ['Y' => $this->messages->text("resources", "private"),
             'N' => $this->messages->text("resources", "public"), ];
-        if ($this->db->numRows($recordset3)) {
-            while ($row = $this->db->fetchRow($recordset3)) {
+        if ($this->db->numRows($recordset3))
+        {
+            while ($row = $this->db->fetchRow($recordset3))
+            {
                 $privateArray[$row['usergroupsusersGroupId']] =
                     $this->messages->text("resources", "availableToGroups", \HTML\dbToFormTidy($row['usergroupsTitle']));
             }
@@ -419,7 +497,9 @@ class IDEAS
                 $private,
                 3
             );
-        } else {
+        }
+        else
+        {
             $idea['form']['private'] = \FORM\selectedBoxValue(
                 $this->messages->text("resources", "ideaPrivate"),
                 "private",
@@ -430,7 +510,8 @@ class IDEAS
         }
         $idea['form']['submit'] = \FORM\formSubmit($this->messages->text("submit", "Save"));
         $idea['formfoot'] = \FORM\formEnd();
-        if ($metadataId) {
+        if ($metadataId)
+        {
             $this->otherIdeas($metadataId);
             $idea['otherIdeas'] = $this->ideas;
         }
@@ -447,26 +528,34 @@ class IDEAS
         $userId = $this->session->getVar("setup_UserId");
         $this->checkInput();
         // insert
-        if (!array_key_exists('resourcemetadataId', $this->vars)) {
-        	if (array_key_exists('uuid', $this->vars)) { // i.e. from ideaGen plugin
-        		\TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
-        	}
+        if (!array_key_exists('resourcemetadataId', $this->vars))
+        {
+            if (array_key_exists('uuid', $this->vars))
+            { // i.e. from ideaGen plugin
+                \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
+            }
             $message = $this->success->text("ideaAdd");
             $fields[] = 'resourcemetadataText';
             $values[] = \UTF8\mb_trim($this->vars['Text']);
             $fields[] = 'resourcemetadataPrivate';
-            if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N')) {
+            if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N'))
+            {
                 $values[] = 'N';
-            } elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private']))) {
+            }
+            elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private'])))
+            {
                 $values[] = $this->vars['private'];
-            } else {
+            }
+            else
+            {
                 $values[] = 'Y';
             }
             $fields[] = 'resourcemetadataTimestamp';
             $values[] = $this->db->formatTimestamp();
             $fields[] = 'resourcemetadataType';
             $values[] = 'i';
-            if ($userId) {
+            if ($userId)
+            {
                 $fields[] = "resourcemetadataAddUserId";
                 $values[] = $userId;
             }
@@ -475,12 +564,14 @@ class IDEAS
             $this->textqp->writeKeywords($lastAutoId, 'resourcekeywordMetadataId');
         }
         // else edit/delete?
-        else {
+        else
+        {
             // Check this user is allowed to edit the idea.
             $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
             $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
             $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
-            if (!$this->db->numRows($resultset)) {
+            if (!$this->db->numRows($resultset))
+            {
                 $this->session->setVar("sql_LastThread", FALSE);
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
@@ -488,14 +579,18 @@ class IDEAS
             // is this the main idea?
             $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
             $row = $this->db->selectFirstRow('resource_metadata', 'resourcemetadataMetadataId');
-            if (!$row['resourcemetadataMetadataId']) { // main idea
+            if (!$row['resourcemetadataMetadataId'])
+            { // main idea
                 $ideaId = $this->vars['resourcemetadataId'];
                 $mainIdea = TRUE;
-            } else {
+            }
+            else
+            {
                 $ideaId = $row['resourcemetadataMetadataId'];
             }
             // if Text is empty, delete the row
-            if (!$this->vars['Text']) {
+            if (!$this->vars['Text'])
+            {
                 $message = $this->success->text("ideaDelete");
                 $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                 $this->db->delete('resource_metadata');
@@ -505,18 +600,25 @@ class IDEAS
                 $this->db->delete('resource_keyword');
                 $keyword = FACTORY_KEYWORD::getInstance();
                 $keyword->removeHanging();
-        		$message = rawurlencode($message);
-				header("Location: index.php?action=ideas_IDEAS_CORE&method=ideaList&message=$message");
-				die;
-            } else {
+                $message = rawurlencode($message);
+                header("Location: index.php?action=ideas_IDEAS_CORE&method=ideaList&message=$message");
+                die;
+            }
+            else
+            {
                 $message = $this->success->text("ideaEdit");
                 $updateArray = [];
                 $updateArray['resourcemetadataText'] = \UTF8\mb_trim($this->vars['Text']);
-                if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N')) {
+                if (array_key_exists('private', $this->vars) && ($this->vars['private'] == 'N'))
+                {
                     $updateArray['resourcemetadataPrivate'] = 'N';
-                } elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private']))) {
+                }
+                elseif (array_key_exists('private', $this->vars) && (is_numeric($this->vars['private'])))
+                {
                     $updateArray['resourcemetadataPrivate'] = $this->vars['private'];
-                } else {
+                }
+                else
+                {
                     $updateArray['resourcemetadataPrivate'] = 'Y';
                 }
                 $updateArray['resourcemetadataTimestampEdited'] = $this->db->formatTimestamp();
@@ -525,7 +627,8 @@ class IDEAS
                 $this->db->formatConditions(['resourcemetadataMetadataId' => $this->vars['resourcemetadataId']]);
                 $this->db->update('resource_metadata', ['resourcemetadataPrivate' => $updateArray['resourcemetadataPrivate']]);
                 $updateArray = [];
-                if (!empty($updateArray)) {
+                if (!empty($updateArray))
+                {
                     $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                     $this->db->update('resource_metadata', $updateArray);
                 }
@@ -533,12 +636,15 @@ class IDEAS
             }
         }
         $message = rawurlencode($message);
-        if (array_key_exists('resourcemetadataId', $this->vars)) { // editing
-			header("Location: index.php?action=ideas_IDEAS_CORE&method=ideaList&message=$message");
-        } else {
-			header("Location: index.php?action=ideas_IDEAS_CORE&method=ideaEdit&message=$message");
-		}
-		die;
+        if (array_key_exists('resourcemetadataId', $this->vars))
+        { // editing
+            header("Location: index.php?action=ideas_IDEAS_CORE&method=ideaList&message=$message");
+        }
+        else
+        {
+            header("Location: index.php?action=ideas_IDEAS_CORE&method=ideaEdit&message=$message");
+        }
+        die;
     }
     /**
      * Write to the database a subidea
@@ -552,7 +658,8 @@ class IDEAS
         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
         $row = $this->db->selectFirstRow('resource_metadata', 'resourcemetadataPrivate');
         // insert
-        if (!array_key_exists('resourcemetadataMetadataId', $this->vars)) {
+        if (!array_key_exists('resourcemetadataMetadataId', $this->vars))
+        {
             $message = $this->success->text("ideaAdd");
             $fields[] = 'resourcemetadataText';
             $values[] = \UTF8\mb_trim($this->vars['Text']);
@@ -564,7 +671,8 @@ class IDEAS
             $values[] = $this->db->formatTimestamp();
             $fields[] = 'resourcemetadataType';
             $values[] = 'i';
-            if ($userId) {
+            if ($userId)
+            {
                 $fields[] = "resourcemetadataAddUserId";
                 $values[] = $userId;
             }
@@ -573,17 +681,20 @@ class IDEAS
             $returnId = $this->vars['resourcemetadataId'];
         }
         // else edit/delete?
-        else {
+        else
+        {
             // Check this user is allowed to edit the idea.
             $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
             $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
             $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
-            if (!$this->db->numRows($resultset)) {
+            if (!$this->db->numRows($resultset))
+            {
                 $this->session->setVar("sql_LastThread", FALSE);
                 $this->badInput->close($this->errors->text("inputError", "invalid"));
             }
             // if Text is empty, delete the row
-            if (!$this->vars['Text']) {
+            if (!$this->vars['Text'])
+            {
                 $message = $this->success->text("ideaDelete");
                 $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
                 $this->db->delete('resource_metadata');
@@ -594,7 +705,9 @@ class IDEAS
                 $keyword = FACTORY_KEYWORD::getInstance();
                 $keyword->removeHanging();
                 $returnId = $this->vars['resourcemetadataMetadataId'];
-            } else {
+            }
+            else
+            {
                 $message = $this->success->text("ideaEdit");
                 $updateArray = [];
                 $updateArray['resourcemetadataText'] = \UTF8\mb_trim($this->vars['Text']);
@@ -606,49 +719,54 @@ class IDEAS
             }
         }
         $message = rawurlencode($message);
-		header("Location: index.php?action=ideas_IDEAS_CORE&method=threadView&message=$message&returnId=$returnId");
-		die;
+        header("Location: index.php?action=ideas_IDEAS_CORE&method=threadView&message=$message&returnId=$returnId");
+        die;
     }
     /**
      * Delete a subIdea
      */
     public function delete()
     {
-        if (!array_key_exists('resourcemetadataId', $this->vars) || !$this->vars['resourcemetadataId']) {
+        if (!array_key_exists('resourcemetadataId', $this->vars) || !$this->vars['resourcemetadataId'])
+        {
             $this->error($this->errors->text("inputError", "missing"));
         }
         // Check this user is allowed to delete the idea.
         $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
         $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
-        if (!$this->db->numRows($resultset)) {
+        if (!$this->db->numRows($resultset))
+        {
             $this->error($this->errors->text("inputError", "invalid"));
         }
         $message = $this->success->text("ideaDelete");
         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
         $this->db->delete('resource_metadata');
-        if (array_key_exists('resourcemetadataMetadataId', $this->vars)) {
+        if (array_key_exists('resourcemetadataMetadataId', $this->vars))
+        {
             $this->threadView($this->vars['resourcemetadataMetadataId'], $message);
             FACTORY_CLOSE::getInstance();
         }
         $message = rawurlencode($message);
         $returnId = $this->vars['resourcemetadataId'];
-		header("Location: index.php?action=ideas_IDEAS_CORE&method=threadView&message=$message&returnId=$returnId");
-		die;
+        header("Location: index.php?action=ideas_IDEAS_CORE&method=threadView&message=$message&returnId=$returnId");
+        die;
     }
     /**
      * When deleting a thread, ask for confirmation
      */
     public function deleteConfirm()
     {
-        if (!array_key_exists('resourcemetadataId', $this->vars) || !$this->vars['resourcemetadataId']) {
+        if (!array_key_exists('resourcemetadataId', $this->vars) || !$this->vars['resourcemetadataId'])
+        {
             $this->error($this->errors->text("inputError", "missing"));
         }
         // Check this user is allowed to delete the idea.
         $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
         $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
-        if (!$this->db->numRows($resultset)) {
+        if (!$this->db->numRows($resultset))
+        {
             $this->error($this->errors->text("inputError", "invalid"));
         }
         $pString = \FORM\formHeader('ideas_IDEAS_CORE');
@@ -664,14 +782,16 @@ class IDEAS
      */
     public function deleteThread()
     {
-        if (!array_key_exists('resourcemetadataId', $this->vars) || !$this->vars['resourcemetadataId']) {
+        if (!array_key_exists('resourcemetadataId', $this->vars) || !$this->vars['resourcemetadataId'])
+        {
             $this->error($this->errors->text("inputError", "missing"));
         }
         // Check this user is allowed to delete the idea.
         $this->db->formatConditions(['resourcemetadataAddUserId' => $this->session->getVar("setup_UserId")]);
         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
         $resultset = $this->db->select('resource_metadata', 'resourcemetadataId');
-        if (!$this->db->numRows($resultset)) {
+        if (!$this->db->numRows($resultset))
+        {
             $this->error($this->errors->text("inputError", "invalid"));
         }
         $this->db->formatConditions(['resourcemetadataId' => $this->vars['resourcemetadataId']]);
@@ -683,8 +803,8 @@ class IDEAS
         $keyword = FACTORY_KEYWORD::getInstance();
         $keyword->removeHanging();
         $message = rawurlencode($this->success->text("ideaDelete"));
-		header("Location: index.php?action=ideas_IDEAS_CORE&method=ideaList&message=$message");
-		die;
+        header("Location: index.php?action=ideas_IDEAS_CORE&method=ideaList&message=$message");
+        die;
     }
     /**
      * error function
@@ -693,11 +813,16 @@ class IDEAS
      */
     private function error($error)
     {
-        if (array_key_exists('resourcemetadataMetadataId', $this->vars)) {
+        if (array_key_exists('resourcemetadataMetadataId', $this->vars))
+        {
             $this->threadView($this->vars['resourcemetadataMetadataId'], $error);
-        } elseif (array_key_exists('resourcemetadataId', $this->vars)) {
+        }
+        elseif (array_key_exists('resourcemetadataId', $this->vars))
+        {
             $this->threadView($this->vars['resourcemetadataId'], $error);
-        } else {
+        }
+        else
+        {
             $this->session->setVar("sql_LastThread", FALSE);
             $this->badInput->close($this->errors->text("inputError", "invalid"));
         }
@@ -715,29 +840,38 @@ class IDEAS
         $cite = FACTORY_CITE::getInstance();
         $userObj = FACTORY_USER::getInstance();
         $multiUser = WIKINDX_MULTIUSER;
-        if ($main) {
+        if ($main)
+        {
             $icons = FACTORY_LOADICONS::getInstance();
             $view = $icons->getHTML("viewmeta");
             $this->ideas[$index]['links'][] = \HTML\a($icons->getClass("viewmeta"), $view, "index.php?action=ideas_IDEAS_CORE" .
                 "&method=threadView&resourcemetadataId=" . $metadataId);
             $this->db->formatConditions(['resourcemetadataId' => $metadataId]);
-        } else {
+        }
+        else
+        {
             $this->db->formatConditions(['resourcemetadataMetadataId' => $metadataId]);
         }
         $this->db->orderBy('resourcemetadataTimestamp', TRUE, FALSE);
         $recordset = $this->db->select('resource_metadata', ['resourcemetadataId', 'resourcemetadataTimestamp', 'resourcemetadataTimestampEdited',
             'resourcemetadataText', 'resourcemetadataMetadataId', 'resourcemetadataAddUserId', ]);
-        while ($row = $this->db->fetchRow($recordset)) {
+        while ($row = $this->db->fetchRow($recordset))
+        {
             if ((!$main && $row['resourcemetadataId'] == $metadataId) ||
-                (array_key_exists('resourcemetadataMetadataId', $this->vars) && ($this->vars['resourcemetadataId'] == $row['resourcemetadataId']))) {
+                (array_key_exists('resourcemetadataMetadataId', $this->vars) && ($this->vars['resourcemetadataId'] == $row['resourcemetadataId'])))
+            {
                 continue;
             }
-            if ($multiUser) {
+            if ($multiUser)
+            {
                 list($user) = $userObj->displayUserAddEdit($row['resourcemetadataAddUserId'], FALSE, 'idea');
-                if (!$row['resourcemetadataTimestampEdited']) {
+                if (!$row['resourcemetadataTimestampEdited'])
+                {
                     $this->ideas[$index]['user'] = $ideaList[0]['user'] =
                         $this->messages->text('hint', 'addedBy', $user . '&nbsp;' . $row['resourcemetadataTimestamp']);
-                } else {
+                }
+                else
+                {
                     $this->ideas[$index]['user'] = $ideaList[0]['user'] =
                     $this->messages->text('hint', 'addedBy', $user . '&nbsp;' . $row['resourcemetadataTimestamp']) .
                     ',&nbsp;' . $this->messages->text('hint', 'editedBy', $user . '&nbsp;' . $row['resourcemetadataTimestampEdited']);
@@ -749,26 +883,32 @@ class IDEAS
     }
     /**
      * Check input
-     *
      */
     private function checkInput()
     {
-		$this->formData['keywords'] = \UTF8\mb_trim($this->vars['keywords']);
-		if (array_key_exists('private', $this->vars)) {
-			$this->formData['private'] = $this->vars['private'];
-    	}
-    	if (!array_key_exists('Text', $this->vars) || !\UTF8\mb_trim($this->vars['Text'])) {
-    		if (array_key_exists('ideaGen', $this->vars)) { // Being used in the ideaGen plugin
-    			$uuid = $this->vars['uuid'];
-    			\TEMPSTORAGE\store($this->db, $uuid, $this->formData);
-    			header("Location: index.php?action=ideagen_ideaAddError&uuid=$uuid");
-    			die;
-			} elseif (($this->vars['method'] == 'edit') && !array_key_exists('resourcemetadataId', $this->vars)) { // inserting so need text
-	        	$this->badInput->close($this->errors->text("inputError", "missing"), $this, 'ideaEdit');
-		    } elseif (($this->vars['method'] == 'subIdeaAdd') && !array_key_exists('resourcemetadataMetadataId', $this->vars)) { // Inserting
-		    	$this->badInput->close($this->errors->text("inputError", "missing"), $this, 'subIdeaForm');
-		    }
+        $this->formData['keywords'] = \UTF8\mb_trim($this->vars['keywords']);
+        if (array_key_exists('private', $this->vars))
+        {
+            $this->formData['private'] = $this->vars['private'];
         }
-		$this->formData['Text'] = \UTF8\mb_trim($this->vars['Text']);
+        if (!array_key_exists('Text', $this->vars) || !\UTF8\mb_trim($this->vars['Text']))
+        {
+            if (array_key_exists('ideaGen', $this->vars))
+            { // Being used in the ideaGen plugin
+                $uuid = $this->vars['uuid'];
+                \TEMPSTORAGE\store($this->db, $uuid, $this->formData);
+                header("Location: index.php?action=ideagen_ideaAddError&uuid=$uuid");
+                die;
+            }
+            elseif (($this->vars['method'] == 'edit') && !array_key_exists('resourcemetadataId', $this->vars))
+            { // inserting so need text
+                $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'ideaEdit');
+            }
+            elseif (($this->vars['method'] == 'subIdeaAdd') && !array_key_exists('resourcemetadataMetadataId', $this->vars))
+            { // Inserting
+                $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'subIdeaForm');
+            }
+        }
+        $this->formData['Text'] = \UTF8\mb_trim($this->vars['Text']);
     }
 }

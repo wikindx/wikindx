@@ -6,8 +6,8 @@
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  * @license https://www.gnu.org/licenses/gpl-2.0.html GNU General Public License, version 2 (one or other)
  */
-
-if (!defined('WIKINDX_ADMINER_CALLER')) {
+if (!defined('WIKINDX_ADMINER_CALLER'))
+{
     header("HTTP/1.1 403 Forbidden");
     die("Access forbidden.");
 }
@@ -23,10 +23,13 @@ class AdminerPlugin extends Adminer
      */
     public function __construct($plugins)
     {
-        if ($plugins === NULL) {
+        if ($plugins === NULL)
+        {
             $plugins = [];
-            foreach (get_declared_classes() as $class) {
-                if (preg_match('~^Adminer.~i', $class) && strcasecmp($this->_findRootClass($class), 'Adminer')) { //! can use interface
+            foreach (get_declared_classes() as $class)
+            {
+                if (preg_match('~^Adminer.~i', $class) && strcasecmp($this->_findRootClass($class), 'Adminer'))
+                { //! can use interface
                     $plugins[$class] = new $class;
                 }
             }
@@ -37,7 +40,8 @@ class AdminerPlugin extends Adminer
     
     public function _findRootClass($class)
     { // is_subclass_of(string, string) is available since PHP 5.0.3
-        do {
+        do
+        {
             $return = $class;
         } while ($class = get_parent_class($class));
 
@@ -51,8 +55,10 @@ class AdminerPlugin extends Adminer
     
     public function _applyPlugin($function, $args)
     {
-        foreach ($this->plugins as $plugin) {
-            if (method_exists($plugin, $function)) {
+        foreach ($this->plugins as $plugin)
+        {
+            if (method_exists($plugin, $function))
+            {
                 switch (count($args)) { // call_user_func_array() doesn't work well with references
                     case 0: $return = $plugin->$function();
 
@@ -77,7 +83,8 @@ break;
 break;
                     default: trigger_error('Too many parameters.', E_USER_WARNING);
                 }
-                if ($return !== NULL) {
+                if ($return !== NULL)
+                {
                     return $return;
                 }
             }
@@ -89,10 +96,13 @@ break;
     public function _appendPlugin($function, $args)
     {
         $return = $this->_callParent($function, $args);
-        foreach ($this->plugins as $plugin) {
-            if (method_exists($plugin, $function)) {
+        foreach ($this->plugins as $plugin)
+        {
+            if (method_exists($plugin, $function))
+            {
                 $value = call_user_func_array([$plugin, $function], $args);
-                if ($value) {
+                if ($value)
+                {
                     $return += $value;
                 }
             }

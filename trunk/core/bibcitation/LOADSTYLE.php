@@ -36,15 +36,18 @@ const ROOT_DIR = WIKINDX_DIR_BASE . DIRECTORY_SEPARATOR . WIKINDX_DIR_COMPONENT_
         
         $componentsInstalled = \UTILS\readComponentsList();
         
-        foreach ($componentsInstalled as $cmp) {
-            if ($cmp["component_type"] == "style" && ($cmp["component_status"] == "enabled" || $all)) {
+        foreach ($componentsInstalled as $cmp)
+        {
+            if ($cmp["component_type"] == "style" && ($cmp["component_status"] == "enabled" || $all))
+            {
                 $fileName = $cmp["component_id"] . ".xml";
                 $filePath = \LOADSTYLE\ROOT_DIR . DIRECTORY_SEPARATOR . $cmp["component_id"] . DIRECTORY_SEPARATOR . $fileName;
                 
-                if (file_exists($filePath)) {
-	                $arrayStyleInfo = \LOADSTYLE\loadStyleInfo($filePath);
-	                $array[$cmp["component_id"]] = $arrayStyleInfo['description'];
-	            }
+                if (file_exists($filePath))
+                {
+                    $arrayStyleInfo = \LOADSTYLE\loadStyleInfo($filePath);
+                    $array[$cmp["component_id"]] = $arrayStyleInfo['description'];
+                }
             }
         }
         
@@ -90,57 +93,72 @@ const ROOT_DIR = WIKINDX_DIR_BASE . DIRECTORY_SEPARATOR . WIKINDX_DIR_COMPONENT_
 
         $pXML = new \XMLReader();
 
-        if ($pXML->open($file)) {
-            while ($pXML->read()) {
+        if ($pXML->open($file))
+        {
+            while ($pXML->read())
+            {
                 // Stop parsing when we are at the end of 'info' node
-                if ($pXML->nodeType == \XMLReader::END_ELEMENT && mb_strtolower($pXML->name) == 'info') {
+                if ($pXML->nodeType == \XMLReader::END_ELEMENT && mb_strtolower($pXML->name) == 'info')
+                {
                     break;
                 }
                 // When we are on a data that is not a begin of node, we skip it
-                elseif ($pXML->nodeType != \XMLReader::ELEMENT) {
+                elseif ($pXML->nodeType != \XMLReader::ELEMENT)
+                {
                     continue;
                 }
                 // When we are on a data that is a begin of node, we memorize its name
                 // and sse if we can explore its childs or get its value
-                else {
+                else
+                {
                     $nodeId = mb_strtolower($pXML->name);
                 }
 
                 // If we find 'style' root node, keep it in memory, we explore its child nodes now
-                if (!$nodeStyle && $nodeId == 'style') {
+                if (!$nodeStyle && $nodeId == 'style')
+                {
                     $nodeStyle = TRUE;
 
                     continue;
-                } else {
+                }
+                else
+                {
                     // If we find 'info' node, keep it in memory, we explore its child nodes now
-                    if (!$nodeInfo && $nodeId == 'info') {
+                    if (!$nodeInfo && $nodeId == 'info')
+                    {
                         $nodeInfo = TRUE;
 
                         continue;
-                    } else {
+                    }
+                    else
+                    {
                         // Read each value needed
-                        if (!$nodeName && $nodeId == 'name') {
+                        if (!$nodeName && $nodeId == 'name')
+                        {
                             $pXML->read();
                             $nodeName = $pXML->value;
 
                             continue;
                         }
 
-                        if (!$nodeDescription && $nodeId == 'description') {
+                        if (!$nodeDescription && $nodeId == 'description')
+                        {
                             $pXML->read();
                             $nodeDescription = $pXML->value;
 
                             continue;
                         }
 
-                        if (!$nodeLanguage && $nodeId == 'language') {
+                        if (!$nodeLanguage && $nodeId == 'language')
+                        {
                             $pXML->read();
                             $nodeLanguage = $pXML->value;
 
                             continue;
                         }
 
-                        if (!$nodeOsbibVersion && $nodeId == 'osbibversion') {
+                        if (!$nodeOsbibVersion && $nodeId == 'osbibversion')
+                        {
                             $pXML->read();
                             $nodeOsbibVersion = $pXML->value;
 

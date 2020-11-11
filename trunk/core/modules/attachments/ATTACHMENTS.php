@@ -46,21 +46,24 @@ class ATTACHMENTS
     {
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
         $this->gatekeep->init();
-        if (!array_key_exists('resourceId', $this->vars) || !array_key_exists('function', $this->vars)) {
-    		$message = rawurlencode($this->errors->text("inputError", "missing"));
-        	header("Location: index.php?action=front&message=$message");
-        	die;
+        if (!array_key_exists('resourceId', $this->vars) || !array_key_exists('function', $this->vars))
+        {
+            $message = rawurlencode($this->errors->text("inputError", "missing"));
+            header("Location: index.php?action=front&message=$message");
+            die;
         }
         $this->resourceId = $this->vars['resourceId'];
-// Warnings about file size are handled BEFORE the script so set a custom error handler here and redirect with header()
-		if (isset($_SERVER["CONTENT_LENGTH"])) {
-			if ($_SERVER["CONTENT_LENGTH"] > \FILE\fileMaxSize()) {
-				$error = rawurlencode($this->errors->text('file', 'uploadSize'));
-				$url = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $error;
-				header("Location: $url");
-				die;
-			}
-		}
+        // Warnings about file size are handled BEFORE the script so set a custom error handler here and redirect with header()
+        if (isset($_SERVER["CONTENT_LENGTH"]))
+        {
+            if ($_SERVER["CONTENT_LENGTH"] > \FILE\fileMaxSize())
+            {
+                $error = rawurlencode($this->errors->text('file', 'uploadSize'));
+                $url = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $error;
+                header("Location: $url");
+                die;
+            }
+        }
         $function = $this->vars['function'];
         $this->{$function}();
     }
@@ -69,17 +72,18 @@ class ATTACHMENTS
      */
     public function deleteConfirmAll()
     {
-        if (!array_key_exists('deleteAll', $this->vars)) {
-        	$id = $this->resourceId;
-    		$message = rawurlencode($this->errors->text("inputError", "missing"));
-        	header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
-        	die;
+        if (!array_key_exists('deleteAll', $this->vars))
+        {
+            $id = $this->resourceId;
+            $message = rawurlencode($this->errors->text("inputError", "missing"));
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+            die;
         }
         $return = \HTML\a(
-			$this->icons->getClass("edit"),
-			$this->icons->getHTML("Return"),
-			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
-		);
+            $this->icons->getClass("edit"),
+            $this->icons->getHTML("Return"),
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
+        );
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete') . '&nbsp;&nbsp;' . $return));
         $pString = \FORM\formHeader("attachments_ATTACHMENTS_CORE");
         $pString .= \FORM\hidden('function', 'delete');
@@ -90,7 +94,8 @@ class ATTACHMENTS
             ["resource_attachments"],
             ['resourceattachmentsId', 'resourceattachmentsHashFilename', 'resourceattachmentsFileName']
         );
-        while ($row = $this->db->fetchRow($recordSet)) {
+        while ($row = $this->db->fetchRow($recordSet))
+        {
             $pString .= \FORM\checkBox(
                 FALSE,
                 'attachmentDelete_' . $row['resourceattachmentsId'] . '_' . $row['resourceattachmentsHashFilename'],
@@ -120,10 +125,11 @@ class ATTACHMENTS
         $filename = $row['resourceattachmentsFileName'];
         $lastmodified = date('r', strtotime($row['resourceattachmentsTimestamp']));
         unset($row);
-        if (file_exists($dirName . DIRECTORY_SEPARATOR . $hash) === FALSE) {
-        	$id = $this->vars['resourceId'];
- 	   		$message = rawurlencode($this->errors->text("file", "missing"));
-    	    header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+        if (file_exists($dirName . DIRECTORY_SEPARATOR . $hash) === FALSE)
+        {
+            $id = $this->vars['resourceId'];
+            $message = rawurlencode($this->errors->text("file", "missing"));
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
             die;
         }
         FILE\setHeaders($type, $size, $filename, $lastmodified);
@@ -137,18 +143,21 @@ class ATTACHMENTS
     private function editInit()
     {
         $return = \HTML\a(
-			$this->icons->getClass("edit"),
-			$this->icons->getHTML("Return"),
-			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
-		);
+            $this->icons->getClass("edit"),
+            $this->icons->getHTML("Return"),
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
+        );
         $fields = $this->attachment->listFiles($this->resourceId);
-        if (!empty($fields)) { // attachments exist for this resource
-            GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", '(' . $this->messages->text('misc', 'edit') . ')' . 
-            	'&nbsp;&nbsp;' . $return));
+        if (!empty($fields))
+        { // attachments exist for this resource
+            GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", '(' . $this->messages->text('misc', 'edit') . ')' .
+                '&nbsp;&nbsp;' . $return));
             GLOBALS::addTplVar('content', $this->fileAttachEdit($fields));
-        } else { // add a new attachment
-            GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", '(' . $this->messages->text('misc', 'add') . ')' . 
-            	'&nbsp;&nbsp;' . $return));
+        }
+        else
+        { // add a new attachment
+            GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", '(' . $this->messages->text('misc', 'add') . ')' .
+                '&nbsp;&nbsp;' . $return));
             GLOBALS::addTplVar('content', HTML\p($this->messages->text("resources", "fileAttachments")));
             GLOBALS::addTplVar('content', $this->fileAttachAdd());
         }
@@ -160,9 +169,10 @@ class ATTACHMENTS
     {
         $id = $this->resourceId;
         $this->getEmbargo();
-        if (!$this->storeFile()) { // FALSE if attachment already exists
- 	   		$message = rawurlencode($this->errors->text("file", "attachmentExists"));
-    	    header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+        if (!$this->storeFile())
+        { // FALSE if attachment already exists
+            $message = rawurlencode($this->errors->text("file", "attachmentExists"));
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
             die;
         }
         // send back to view this resource with success message
@@ -178,7 +188,8 @@ class ATTACHMENTS
     private function addDragAndDrop()
     {
         $this->getEmbargo();
-        if (!$this->storeFile()) { // FALSE if attachment already exists
+        if (!$this->storeFile())
+        { // FALSE if attachment already exists
             return;
         }
     }
@@ -191,15 +202,16 @@ class ATTACHMENTS
     {
         $this->getEmbargo();
         $id = $this->resourceId;
-        if (!$this->storeFile(TRUE)) { // FALSE if attachment already exists
-       		$message = rawurlencode($this->errors->text("file", "attachmentExists"));
-        	header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
-			die;
+        if (!$this->storeFile(TRUE))
+        { // FALSE if attachment already exists
+            $message = rawurlencode($this->errors->text("file", "attachmentExists"));
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+            die;
         }
         // send back to view this resource with success message
-       	$message = rawurlencode($this->success->text("attachAdd"));
-    	header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
-    	die;
+        $message = rawurlencode($this->success->text("attachAdd"));
+        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+        die;
     }
     /**
      * edit attachments
@@ -209,42 +221,58 @@ class ATTACHMENTS
         // Get primary attachment if multiple attachments
         $primary = array_key_exists('attachmentPrimary', $this->vars) ? $this->vars['attachmentPrimary'] : FALSE;
         // find any files to edit and files to delete
-        foreach ($this->vars as $key => $var) {
+        foreach ($this->vars as $key => $var)
+        {
             $split = \UTF8\mb_explode('_', $key);
-            if ($split[0] == 'attachmentEdit') {
+            if ($split[0] == 'attachmentEdit')
+            {
                 $edits[$split[1]] = $var;
             }
-            if ($key == 'embargo') {
+            if ($key == 'embargo')
+            {
                 $this->getEmbargo();
-            } elseif ($split[0] == 'embargo') { // checkbox
+            }
+            elseif ($split[0] == 'embargo')
+            { // checkbox
                 $this->getEmbargo($split[1]);
             }
-            if ($split[0] == 'attachmentDelete') {
+            if ($split[0] == 'attachmentDelete')
+            {
                 $deletes[$split[1]] = $var;
             }
-            if ($split[0] == 'attachmentDescription') {
+            if ($split[0] == 'attachmentDescription')
+            {
                 $descriptions[$split[1]] = $var;
             }
         }
         // Edit files
-        if (isset($edits)) {
-            foreach ($edits as $hash => $filename) {
-            	if (!trim($filename)) { // Must have a name . . .
+        if (isset($edits))
+        {
+            foreach ($edits as $hash => $filename)
+            {
+                if (!trim($filename))
+                { // Must have a name . . .
                     $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);
                     $this->db->formatConditions(["resourceattachmentsHashFilename" => $hash]);
                     $filename = $this->db->selectFirstField('resource_attachments', 'resourceattachmentsFileName');
                 }
                 $updateArray = [];
                 $updateArray['resourceattachmentsFileName'] = $filename;
-                if (array_key_exists($hash, $this->embargoArray)) {
+                if (array_key_exists($hash, $this->embargoArray))
+                {
                     $updateArray['resourceattachmentsEmbargo'] = 'Y';
                     $updateArray['resourceattachmentsEmbargoUntil'] = $this->embargoArray[$hash];
-                } else {
+                }
+                else
+                {
                     $updateArray['resourceattachmentsEmbargo'] = 'N';
                 }
-                if ($descriptions[$hash]) {
+                if ($descriptions[$hash])
+                {
                     $updateArray['resourceattachmentsDescription'] = $descriptions[$hash];
-                } else {
+                }
+                else
+                {
                     $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);
                     $this->db->formatConditions(["resourceattachmentsHashFilename" => $hash]);
                     $this->db->updateNull('resource_attachments', 'resourceattachmentsDescription');
@@ -258,22 +286,25 @@ class ATTACHMENTS
         $this->setPrimaryAttachment($primary);
         $id = $this->resourceId;
         // Store any new file
-        if (array_key_exists('file', $_FILES) && $_FILES['file']['tmp_name']) {
-            if (!$this->storeFile()) { // FALSE if attachment already exists
-       			$message = rawurlencode($this->errors->text("file", "attachmentExists"));
-        		header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
-				die;
+        if (array_key_exists('file', $_FILES) && $_FILES['file']['tmp_name'])
+        {
+            if (!$this->storeFile())
+            { // FALSE if attachment already exists
+                $message = rawurlencode($this->errors->text("file", "attachmentExists"));
+                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+                die;
             }
         }
-        if (isset($deletes)) {
+        if (isset($deletes))
+        {
             $this->deleteConfirm($deletes);
 
             return;
         }
         // send back to view this resource with success message (deleteConfirm breaks out before this)
-       	$message = rawurlencode($this->success->text("attachEdit"));
-		header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
-		die;
+        $message = rawurlencode($this->success->text("attachEdit"));
+        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+        die;
     }
     /**
      * Grab and sort embargo date
@@ -282,36 +313,50 @@ class ATTACHMENTS
      */
     private function getEmbargo($hash = FALSE)
     {
-        if ($hash) {
+        if ($hash)
+        {
             $arrayIndex = $hash;
             $hash = "_$hash";
             $date = 'date' . $hash;
         }
-        else {
-        	$date = 'date';
+        else
+        {
+            $date = 'date';
         }
         // date comes in as 'yyyy-mm-dd' (but displayed on web form as 'dd / mm / yyyy').
         // all three fields must have a valid value else $this->vars["date"] is FALSE
-        if (array_key_exists($date, $this->vars) && $this->vars[$date]) {
+        if (array_key_exists($date, $this->vars) && $this->vars[$date])
+        {
             list($year, $month, $day) = \UTILS\splitDate($this->vars[$date]);
-        } else {
+        }
+        else
+        {
             return;
         }
         $timestamp = mktime(0, 0, 0, $month, $day, $year);
-        if ($timestamp === FALSE) { // exceed UNIX timestamp capacity
-            if ($hash) {
+        if ($timestamp === FALSE)
+        { // exceed UNIX timestamp capacity
+            if ($hash)
+            {
                 $this->embargoArray[$arrayIndex] = "$year-$month-$day 00:00:00";
-            } else {
+            }
+            else
+            {
                 $this->embargoNew = "$year-$month-$day 00:00:00";
             }
 
             return;
-        } elseif ($timestamp <= time()) {
+        }
+        elseif ($timestamp <= time())
+        {
             return;
         }
-        if ($hash) {
+        if ($hash)
+        {
             $this->embargoArray[$arrayIndex] = $this->db->formatTimestamp($timestamp);
-        } else {
+        }
+        else
+        {
             $this->embargoNew = $this->db->formatTimestamp($timestamp);
         }
     }
@@ -336,11 +381,11 @@ class ATTACHMENTS
     private function deleteConfirm($deletes)
     {
         $return = \HTML\a(
-			$this->icons->getClass("edit"),
-			$this->icons->getHTML("Return"),
-			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
-		);
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete') . 
+            $this->icons->getClass("edit"),
+            $this->icons->getHTML("Return"),
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
+        );
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete') .
             '&nbsp;&nbsp;' . $return));
         $pString = \FORM\formHeader("attachments_ATTACHMENTS_CORE");
         $pString .= \FORM\hidden('function', 'delete');
@@ -351,8 +396,10 @@ class ATTACHMENTS
             ["resource_attachments"],
             ['resourceattachmentsId', 'resourceattachmentsHashFilename', 'resourceattachmentsFileName']
         );
-        while ($row = $this->db->fetchRow($recordSet)) {
-            if (array_key_exists($row['resourceattachmentsHashFilename'], $deletes)) {
+        while ($row = $this->db->fetchRow($recordSet))
+        {
+            if (array_key_exists($row['resourceattachmentsHashFilename'], $deletes))
+            {
                 $pString .= \FORM\checkBox(
                     FALSE,
                     'attachmentDelete_' . $row['resourceattachmentsId'] . '_' . $row['resourceattachmentsHashFilename'],
@@ -370,27 +417,31 @@ class ATTACHMENTS
     private function delete()
     {
         $return = \HTML\a(
-			$this->icons->getClass("edit"),
-			$this->icons->getHTML("Return"),
-			'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
-		);
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete') . 
+            $this->icons->getClass("edit"),
+            $this->icons->getHTML("Return"),
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
+        );
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete') .
             '&nbsp;&nbsp;' . $return));
-        foreach ($this->vars as $key => $var) {
+        foreach ($this->vars as $key => $var)
+        {
             $split = \UTF8\mb_explode('_', $key);
-            if ($split[0] == 'attachmentDelete') {
+            if ($split[0] == 'attachmentDelete')
+            {
                 $deletes[] = $split[2];
                 $attachmentIds[] = $split[1];
             }
         }
         // remove reference from this resource first
-        foreach ($deletes as $hash) {
+        foreach ($deletes as $hash)
+        {
             $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);
             $this->db->formatConditions(["resourceattachmentsHashFilename" => $hash]);
             $this->db->delete('resource_attachments');
             // remove file from attachments and cache directories if there's no reference to it in any other resource
             $this->db->formatConditions(["resourceattachmentsHashFilename" => $hash]);
-            if (!$this->db->numRows($this->db->select('resource_attachments', 'resourceattachmentsHashFilename'))) {
+            if (!$this->db->numRows($this->db->select('resource_attachments', 'resourceattachmentsHashFilename')))
+            {
                 @unlink(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $hash]));
                 @unlink(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS, $hash]));
             }
@@ -401,9 +452,9 @@ class ATTACHMENTS
         }
         // send back to view this resource with success message
         $id = $this->resourceId;
-       	$message = rawurlencode($this->success->text("attachDelete"));
-		header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
-		die;
+        $message = rawurlencode($this->success->text("attachDelete"));
+        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+        die;
     }
     /**
      * Store attachment
@@ -416,36 +467,45 @@ class ATTACHMENTS
     {
         $varFileName = array_key_exists('fileName', $this->vars) ? $this->vars['fileName'] : FALSE;
         $id = $this->resourceId;
-        if ($multiple) {
+        if ($multiple)
+        {
             $filesArray = FILE\fileUpload($varFileName, $multiple);
-            if (empty($filesArray)) {
- 	       		$message = rawurlencode($this->errors->text("file", "upload"));
-    	    	header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
-    	    	die;
+            if (empty($filesArray))
+            {
+                $message = rawurlencode($this->errors->text("file", "upload"));
+                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+                die;
             }
-            foreach ($filesArray as $array) {
+            foreach ($filesArray as $array)
+            {
                 // $array[0] = file name
                 // $array[1] = hash name
                 // $array[2] = file type
                 // $array[3] = file size
                 // $array[4] = index of array in $_FILES['file']
-                if (!$array[1]) {
-					$message = rawurlencode($this->errors->text("file", "upload"));
-					header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
-					die;
+                if (!$array[1])
+                {
+                    $message = rawurlencode($this->errors->text("file", "upload"));
+                    header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+                    die;
                 }
-                if (!$this->actuallyStoreFile($array[0], $array[1], $array[2], $array[3], $array[4])) {
+                if (!$this->actuallyStoreFile($array[0], $array[1], $array[2], $array[3], $array[4]))
+                {
                     return FALSE;
                 }
             }
-        } else {
+        }
+        else
+        {
             list($filename, $hash, $type, $size) = FILE\fileUpload($varFileName);
-            if (!$hash) {
- 	       		$message = rawurlencode($this->errors->text("file", "upload"));
-    	    	header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
-    	    	die;
+            if (!$hash)
+            {
+                $message = rawurlencode($this->errors->text("file", "upload"));
+                header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+                die;
             }
-            if (!$this->actuallyStoreFile($filename, $hash, $type, $size, FALSE)) {
+            if (!$this->actuallyStoreFile($filename, $hash, $type, $size, FALSE))
+            {
                 return FALSE;
             }
         }
@@ -465,41 +525,44 @@ class ATTACHMENTS
      */
     private function actuallyStoreFile($filename, $hash, $type, $size, $index)
     {
-        if (!FILE\fileStore(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]), $hash, $index)) {
-        	$id = $this->resourceId;
-			$message = rawurlencode($this->errors->text("file", "upload"));
-			header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
-			die;
+        if (!FILE\fileStore(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]), $hash, $index))
+        {
+            $id = $this->resourceId;
+            $message = rawurlencode($this->errors->text("file", "upload"));
+            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+            die;
         }
         // Convert to text and store in the cache directory if of PDF, DOC or DOCX type
         $fileNameCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS, $hash]);
         if (!file_exists($fileNameCache))
         {
-	        switch ($type)
-	        {
-	        	case WIKINDX_MIMETYPE_PDF:
-	        	case WIKINDX_MIMETYPE_DOCX:
-	        	case WIKINDX_MIMETYPE_DOC:
+            switch ($type) {
+                case WIKINDX_MIMETYPE_PDF:
+                case WIKINDX_MIMETYPE_DOCX:
+                case WIKINDX_MIMETYPE_DOC:
                     include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "list", "FILETOTEXT.php"]));
-		            $ftt = new FILETOTEXT();
-		            $fileName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $hash]);
-		            @file_put_contents($fileNameCache, $ftt->convertToText($fileName, $type)); // we do not halt on failure
-	        	break;
-	        	case WIKINDX_MIMETYPE_TXT:
-		            $fileName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $hash]);
-		            @file_put_contents($fileNameCache, $fileName); // we do not halt on failure
-	        	break;
-	        	default:
-	        		// Type not handled
-	        	break;
-	        }
+                    $ftt = new FILETOTEXT();
+                    $fileName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $hash]);
+                    @file_put_contents($fileNameCache, $ftt->convertToText($fileName, $type)); // we do not halt on failure
+                break;
+                case WIKINDX_MIMETYPE_TXT:
+                    $fileName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $hash]);
+                    @file_put_contents($fileNameCache, $fileName); // we do not halt on failure
+                break;
+                default:
+                    // Type not handled
+                break;
+            }
         }
         $this->db->formatConditions(["resourceattachmentsHashFilename" => $hash]);
         $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);
         $recordSet = $this->db->select('resource_attachments', 'resourceattachmentsId');
-        if ($this->db->numRows($recordSet)) { // attachment already part of this resource
+        if ($this->db->numRows($recordSet))
+        { // attachment already part of this resource
             return FALSE;
-        } else {	// insert
+        }
+        else
+        {	// insert
             $fields[] = 'resourceattachmentsResourceId';
             $values[] = $this->resourceId;
             $fields[] = 'resourceattachmentsHashFilename';
@@ -510,18 +573,22 @@ class ATTACHMENTS
             $values[] = $type;
             $fields[] = 'resourceattachmentsFileSize';
             $values[] = $size;
-            if (array_key_exists('embargo', $this->vars) && $this->embargoNew) {
+            if (array_key_exists('embargo', $this->vars) && $this->embargoNew)
+            {
                 $fields[] = 'resourceattachmentsEmbargo';
                 $values[] = 'Y';
                 $fields[] = 'resourceattachmentsEmbargoUntil';
                 $values[] = $this->embargoNew;
-            } else {
+            }
+            else
+            {
                 $fields[] = 'resourceattachmentsEmbargoUntil';
                 $values[] = '2012-01-01 01:01:01';
             }
             $field[] = 'resourceattachmentsTimestamp';
             $value[] = '2012-01-01 01:01:01';
-            if (array_key_exists('fileDescription', $this->vars) && $this->vars['fileDescription']) {
+            if (array_key_exists('fileDescription', $this->vars) && $this->vars['fileDescription'])
+            {
                 $fields[] = 'resourceattachmentsDescription';
                 $values[] = $this->vars['fileDescription'];
             }
@@ -541,7 +608,8 @@ class ATTACHMENTS
     {
         $tinymce = FACTORY_LOADTINYMCE::getInstance();
         $tinyEditors[] = 'fileDescription';
-        foreach ($fields as $hash => $null) {
+        foreach ($fields as $hash => $null)
+        {
             $tinyEditors[] = $hash;
         }
         $maxSize = FILE\fileMaxSize();
@@ -549,8 +617,8 @@ class ATTACHMENTS
         $pString = \HTML\tableStart('generalTable left');
         $pString .= \HTML\trStart();
         // Quick and dirty multiple upload
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/modules/attachments/multipleUpload.js?ver=' . 
-        	WIKINDX_PUBLIC_VERSION . '"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/modules/attachments/multipleUpload.js?ver=' .
+            WIKINDX_PUBLIC_VERSION . '"></script>');
         GLOBALS::addTplVar('scripts', '<script>var rId = ' . $this->resourceId . '; </script>');
         $error = rawurlencode($this->errors->text("file", "upload"));
         $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $error;
@@ -606,7 +674,8 @@ class ATTACHMENTS
         $numFiles = count($fields);
         $index = $count = 1;
         // Delete all attachments if more than 1
-        if ($numFiles > 1) {
+        if ($numFiles > 1)
+        {
             $pString .= \HTML\tableStart('generalTable left');
             $pString .= \HTML\trStart();
             $td = \FORM\formMultiHeader("attachments_ATTACHMENTS_CORE");
@@ -627,7 +696,8 @@ class ATTACHMENTS
         // Edit individual attachments
         $pString .= \HTML\tableStart('generalTable left');
         $pString .= \HTML\trStart();
-        foreach ($fields as $hash => $fileName) {
+        foreach ($fields as $hash => $fileName)
+        {
             $td = \FORM\textInput(
                 $this->messages->text('resources', 'fileName'),
                 "attachmentEdit_$hash",
@@ -638,14 +708,20 @@ class ATTACHMENTS
                 FALSE,
                 "attachmentDelete_$hash"
             );
-            if ($numFiles > 1) {
+            if ($numFiles > 1)
+            {
                 $td1 .= '&nbsp;&nbsp;' . $this->messages->text('resources', 'primaryAttachment') . ':&nbsp;';
-                if (($index == 1) && !$this->attachment->primary) {
+                if (($index == 1) && !$this->attachment->primary)
+                {
                     $td1 .= \FORM\radioButton(FALSE, 'attachmentPrimary', $hash, TRUE);
                     ++$index;
-                } elseif ($this->attachment->primary == $hash) {
+                }
+                elseif ($this->attachment->primary == $hash)
+                {
                     $td1 .= \FORM\radioButton(FALSE, 'attachmentPrimary', $hash, TRUE);
-                } else {
+                }
+                else
+                {
                     $td1 .= \FORM\radioButton(FALSE, 'attachmentPrimary', $hash);
                 }
             }
@@ -661,15 +737,18 @@ class ATTACHMENTS
                 60
             ), '', 2);
             $pString .= \HTML\td($td, 'attachmentBorder');
-            if ($count % 2 === 0) {
+            if ($count % 2 === 0)
+            {
                 $pString .= \HTML\trEnd();
-                if ($count != $numFiles) {
+                if ($count != $numFiles)
+                {
                     $pString .= \HTML\trStart();
                 }
             }
             ++$count;
         }
-        if ($count % 2 === 0) {
+        if ($count % 2 === 0)
+        {
             $pString .= \HTML\trEnd();
         }
         $pString .= \HTML\trStart();
@@ -691,8 +770,8 @@ class ATTACHMENTS
         $maxSize = FILE\fileMaxSize();
         // Three ways to do this:
         // Quick and dirty multiple upload
-        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/modules/attachments/multipleUpload.js?ver=' . 
-        	WIKINDX_PUBLIC_VERSION . '"></script>');
+        GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/modules/attachments/multipleUpload.js?ver=' .
+            WIKINDX_PUBLIC_VERSION . '"></script>');
         GLOBALS::addTplVar('scripts', '<script>var rId = ' . $this->resourceId . '; </script>');
         $error = rawurlencode($this->errors->text("file", "upload"));
         $closeUrl = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&message=' . $error;
@@ -753,28 +832,34 @@ class ATTACHMENTS
      */
     private function embargoForm($hash = FALSE, $multiple = FALSE)
     {
-        if (!$this->session->getVar("setup_Superadmin")) {
+        if (!$this->session->getVar("setup_Superadmin"))
+        {
             return '&nbsp;';
         }
         $day = $month = 01;
         $embargo = $year = $dateString = FALSE;
-        if ($hash) {
+        if ($hash)
+        {
             $this->db->formatConditions(['resourceattachmentsHashFilename' => $hash]);
             $this->db->formatConditions(['resourceattachmentsResourceId' => $this->resourceId]);
             $row = $this->db->selectFirstRow('resource_attachments', ['resourceattachmentsEmbargo', 'resourceattachmentsEmbargoUntil']);
-            if ($row['resourceattachmentsEmbargo'] == 'Y') {
+            if ($row['resourceattachmentsEmbargo'] == 'Y')
+            {
                 $embargo = 'CHECKED';
             }
             $hash = '_' . $hash;
             $split = \UTF8\mb_explode(' ', $row['resourceattachmentsEmbargoUntil']);
             $date = \UTF8\mb_explode('-', $split[0]);
-            if ($date[0] != '0000') {
+            if ($date[0] != '0000')
+            {
                 $year = $date[0];
             }
-            if ($date[1] != '00') {
+            if ($date[1] != '00')
+            {
                 $month = $date[1];
             }
-            if ($date[2] != '00') {
+            if ($date[2] != '00')
+            {
                 $day = $date[2];
             }
             $year ? $dateString = $year . '-' . $month . '-' . $day : FALSE;

@@ -19,7 +19,8 @@ include_once("core/startup/CONSTANTS.php");
 
 function preserve_qs()
 {
-    if (empty($_SERVER['QUERY_STRING']) && mb_strpos($_SERVER['REQUEST_URI'], '?') === FALSE) {
+    if (empty($_SERVER['QUERY_STRING']) && mb_strpos($_SERVER['REQUEST_URI'], '?') === FALSE)
+    {
         return '';
     }
 
@@ -32,9 +33,12 @@ function preserve_qs()
 // HTTP/1.0 301 Moved Permanently
 
 // Check if request is to parse text for [cite]...[/cite] tags
-if (array_key_exists('action', $_GET) && ($_GET['action'] == 'parseText' || $_GET['action'] == 'parseSql')) {
+if (array_key_exists('action', $_GET) && ($_GET['action'] == 'parseText' || $_GET['action'] == 'parseSql'))
+{
     header('Location: ' . WIKINDX_CMS_PAGE . str_replace('action=', 'method=', preserve_qs()), TRUE, 301);
-} else {
+}
+else
+{
     header('Location: ' . WIKINDX_CMS_PAGE . str_replace('action=', 'type=', preserve_qs()) . ((!array_key_exists('method', $_GET)) ? '&method=queryDb' : ''), TRUE, 301);
 }
 

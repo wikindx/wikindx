@@ -34,7 +34,7 @@ namespace HTML
      */
     function _inlineHtmlAttribute($name = '', $value = '')
     {
-        return ' ' . rtrim($name) . '="' . $value . '"';
+        return ' ' . rtrim($name) . '="' . str_replace('"', "&quot;", $value) . '"';
     }
 /// HTML BLOCK TAGS (memento)
 /// * HTML strict: address, blockquote, dl, div, fieldset, form, h(1-6), hr, noscript, ol, p, pre, table, ul

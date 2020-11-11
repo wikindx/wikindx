@@ -244,7 +244,7 @@ define('WIKINDX_LDAP_SERVER_RESPONSE_TIMEOUT', 15); // In seconds
 define('WIKINDX_LDAP_USE_REFERRALS', 0); // 1/0 = On/off
 define('WIKINDX_LDAP_SERVER_ENCRYPTION_LIST', ['none' => 'none', 'ssl' => 'ssl', 'starttls' => 'starttls']);
 define('WIKINDX_LDAP_SERVER_BIND_TYPE_LIST', ['anonymous' => 'anonymous', 'proxyuser' => 'proxyuser', 'user' => 'user']);
-define('WIKINDX_LDAP_SEARCH_TYPE_LIST', ['list' => 'list', 'tree' => 'tree']);
+define('WIKINDX_LDAP_SEARCH_METHOD_LIST', ['list' => 'list', 'tree' => 'tree']);
 define('WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT_LIST', ['none' => 'none', 'sam' => 'sam', 'upn' => 'upn']);
 define('WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL', 'mail');
 define('WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME', 'displayname');
@@ -354,7 +354,7 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configLastChangesDayLimit"       => ["constname" => "WIKINDX_LAST_CHANGES_DAY_LIMIT",        "type" => "configInt"],
     "configLastChangesType"           => ["constname" => "WIKINDX_LAST_CHANGES_TYPE",             "type" => "configVarchar"],
     "configLdapPort"                  => ["constname" => "WIKINDX_LDAP_PORT",                     "type" => "configInt"],
-    "configLdapSearchType"            => ["constname" => "WIKINDX_LDAP_SEARCH_TYPE",              "type" => "configVarchar"],
+    "configLdapSearchMethod"          => ["constname" => "WIKINDX_LDAP_SEARCH_METHOD",            "type" => "configVarchar"],
     "configLdapServer"                => ["constname" => "WIKINDX_LDAP_SERVER",                   "type" => "configVarchar"],
     "configLdapServerBindDomain"      => ["constname" => "WIKINDX_LDAP_SERVER_BIND_DOMAIN",       "type" => "configVarchar"],
     "configLdapServerBindDomainFormat"=> ["constname" => "WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT","type" => "configVarchar"],

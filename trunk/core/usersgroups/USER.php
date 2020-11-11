@@ -545,8 +545,8 @@ class USER
             {
                 $ldap_search_func = \UTILS\array_value_select(
                     ["tree" => "ldap_search", "list" => "ldap_list"],
-                    WIKINDX_LDAP_SEARCH_TYPE,
-                    WIKINDX_LDAP_SEARCH_TYPE_DEFAULT
+                    WIKINDX_LDAP_SEARCH_METHOD,
+                    WIKINDX_LDAP_SEARCH_METHOD_DEFAULT
                 );
                 
                 // filter on user type AND user login

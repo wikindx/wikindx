@@ -1149,38 +1149,135 @@ class CONFIGURE
         $pString .= \HTML\trStart();
         $input = array_key_exists("configLdapUse", $this->formData) && ($this->formData['configLdapUse']) ? "CHECKED" : WIKINDX_LDAP_USE_DEFAULT;
         $pString .= \HTML\td(
-            \FORM\checkbox($this->messages->text("config", "ldapUse"), "configLdapUse", $input)
+            \FORM\checkbox($this->messages->text("config", "LdapUse"), "configLdapUse", $input)
             . BR . \HTML\span(
-                \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapUse")),
+                \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapUse")),
                 'hint'
             )
         );
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapServer"));
         array_key_exists("configLdapServer", $this->formData) ? $input = $this->formData["configLdapServer"] : $input = WIKINDX_LDAP_SERVER_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
-            $this->messages->text("config", "ldapServer"),
+            $this->messages->text("config", "LdapServer"),
             "configLdapServer",
             $input,
             30,
             255
-        ));
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapDn"));
-        array_key_exists("configLdapUserDn", $this->formData) ? $input = $this->formData["configLdapUserDn"] : $input = WIKINDX_LDAP_USER_DN_DEFAULT;
-        $pString .= \HTML\td(\FORM\textInput(
-            $this->messages->text("config", "ldapDn"),
-            "configLdapUserDn",
-            $input,
-            30,
-            255
         ) . BR . \HTML\span($hint, 'hint'));
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapPort"));
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapPort"));
         array_key_exists("configLdapPort", $this->formData) ? $input = $this->formData["configLdapPort"] : $input = WIKINDX_LDAP_PORT_DEFAULT;
         $pString .= \HTML\td(\FORM\textInput(
-            $this->messages->text("config", "ldapPort"),
+            $this->messages->text("config", "LdapPort"),
             "configLdapPort",
             $input,
             6,
             6
         ) . BR . \HTML\span($hint, 'hint'));
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapServerEncryption"));
+        array_key_exists("configLdapServerEncryption", $this->formData) ? $input = $this->formData["configLdapServerEncryption"] : $input = WIKINDX_LDAP_SERVER_ENCRYPTION_DEFAULT;
+        $pString .= \HTML\td(\FORM\selectedBoxValue(
+            $this->messages->text("config", "LdapServerEncryption"),
+            "configLdapServerEncryption",
+            WIKINDX_LDAP_SERVER_ENCRYPTION_LIST,
+            $input,
+            count(WIKINDX_LDAP_SERVER_ENCRYPTION_LIST)
+        ) . BR . \HTML\span($hint, 'hint'));
+        $pString .= \HTML\td("&nbsp;");
+        $pString .= \HTML\trEnd();
+        
+        $pString .= \HTML\trStart();
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapServerBindType"));
+        array_key_exists("configLdapServerBindMethod", $this->formData) ? $input = $this->formData["configLdapServerBindMethod"] : $input = WIKINDX_LDAP_SERVER_BIND_TYPE_DEFAULT;
+        $pString .= \HTML\td(\FORM\selectedBoxValue(
+            $this->messages->text("config", "LdapServerBindType"),
+            "configLdapServerBindMethod",
+            WIKINDX_LDAP_SERVER_BIND_TYPE_LIST,
+            $input,
+            count(WIKINDX_LDAP_SERVER_BIND_TYPE_LIST)
+        ) . BR . \HTML\span($hint, 'hint'));
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapServerBindLogin"));
+        array_key_exists("configLdapServerBindLogin", $this->formData) ? $input = $this->formData["configLdapServerBindLogin"] : $input = WIKINDX_LDAP_SERVER_BIND_LOGIN_DEFAULT;
+        $pString .= \HTML\td(\FORM\textInput(
+            $this->messages->text("config", "LdapServerBindLogin"),
+            "configLdapServerBindLogin",
+            $input,
+            30,
+            255
+        ) . BR . \HTML\span($hint, 'hint'));
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapServerBindPassword"));
+        array_key_exists("configLdapServerBindPassword", $this->formData) ? $input = $this->formData["configLdapServerBindPassword"] : $input = WIKINDX_LDAP_SERVER_BIND_PASSWORD_DEFAULT;
+        $pString .= \HTML\td(\FORM\passwordInput(
+            $this->messages->text("config", "LdapServerBindPassword"),
+            "configLdapServerBindPassword",
+            $input,
+            20,
+            255
+        ) . BR . \HTML\span($hint, 'hint'));
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapServerBindDomain"));
+        array_key_exists("configLdapServerBindDomain", $this->formData) ? $input = $this->formData["configLdapServerBindDomain"] : $input = WIKINDX_LDAP_SERVER_BIND_DOMAIN_DEFAULT;
+        $pString .= \HTML\td(\FORM\textInput(
+            $this->messages->text("config", "LdapServerBindDomain"),
+            "configLdapServerBindDomain",
+            $input,
+            30,
+            255
+        ) . BR . \HTML\span($hint, 'hint'));
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapServerBindDomainFormat"));
+        array_key_exists("configLdapServerBindDomainFormat", $this->formData) ? $input = $this->formData["configLdapServerBindDomainFormat"] : $input = WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT_DEFAULT;
+        $pString .= \HTML\td(\FORM\selectedBoxValue(
+            $this->messages->text("config", "LdapServerBindDomainFormat"),
+            "configLdapServerBindDomainFormat",
+            WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT_LIST,
+            $input,
+            count(WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT_LIST)
+        ) . BR . \HTML\span($hint, 'hint'));
+        $pString .= \HTML\trEnd();
+        
+        $pString .= \HTML\trStart();
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapSearchMethod"));
+        array_key_exists("configLdapSearchMethod", $this->formData) ? $input = $this->formData["configLdapSearchMethod"] : $input = WIKINDX_LDAP_SEARCH_METHOD_DEFAULT;
+        $pString .= \HTML\td(\FORM\selectedBoxValue(
+            $this->messages->text("config", "LdapSearchMethod"),
+            "configLdapSearchMethod",
+            WIKINDX_LDAP_SEARCH_METHOD_LIST,
+            $input,
+            count(WIKINDX_LDAP_SEARCH_METHOD_LIST)
+        ) . BR . \HTML\span($hint, 'hint'));
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapUserAttributLogin"));
+        array_key_exists("configLdapUserAttributLogin", $this->formData) ? $input = $this->formData["configLdapUserAttributLogin"] : $input = WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN_DEFAULT;
+        $pString .= \HTML\td(\FORM\selectedBoxValue(
+            $this->messages->text("config", "LdapUserAttributLogin"),
+            "configLdapUserAttributLogin",
+            WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN_LIST,
+            $input,
+            count(WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN_LIST)
+        ) . BR . \HTML\span($hint, 'hint'));
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapUserDn"));
+        array_key_exists("configLdapUserDn", $this->formData) ? $input = $this->formData["configLdapUserDn"] : $input = WIKINDX_LDAP_USER_DN_DEFAULT;
+        $pString .= \HTML\td(\FORM\textareaInput(
+            $this->messages->text("config", "LdapUserDn"),
+            "configLdapUserDn",
+            $input,
+            30,
+            3
+        ) . BR . \HTML\span($hint, 'hint'));
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapGroupCn"));
+        array_key_exists("configLdapGroupCn", $this->formData) ? $input = $this->formData["configLdapGroupCn"] : $input = WIKINDX_LDAP_GROUP_CN_DEFAULT;
+        $pString .= \HTML\td(\FORM\textareaInput(
+            $this->messages->text("config", "LdapGroupCn"),
+            "configLdapGroupCn",
+            $input,
+            30,
+            3
+        ) . BR . \HTML\span($hint, 'hint'));
+        $input = array_key_exists("configLdapUserCreate", $this->formData) && ($this->formData['configLdapUserCreate']) ? "CHECKED" : WIKINDX_LDAP_USER_CREATE_DEFAULT;
+        $pString .= \HTML\td(
+            \FORM\checkbox($this->messages->text("config", "LdapUserCreate"), "configLdapUserCreate", $input)
+            . BR . \HTML\span(
+                \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapUserCreate")),
+                'hint'
+            )
+        );
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 

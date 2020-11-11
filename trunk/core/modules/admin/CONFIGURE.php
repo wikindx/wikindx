@@ -1187,10 +1187,10 @@ class CONFIGURE
         
         $pString .= \HTML\trStart();
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapServerBindType"));
-        array_key_exists("configLdapServerBindMethod", $this->formData) ? $input = $this->formData["configLdapServerBindMethod"] : $input = WIKINDX_LDAP_SERVER_BIND_TYPE_DEFAULT;
+        array_key_exists("configLdapServerBindType", $this->formData) ? $input = $this->formData["configLdapServerBindType"] : $input = WIKINDX_LDAP_SERVER_BIND_TYPE_DEFAULT;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
             $this->messages->text("config", "LdapServerBindType"),
-            "configLdapServerBindMethod",
+            "configLdapServerBindType",
             WIKINDX_LDAP_SERVER_BIND_TYPE_LIST,
             $input,
             count(WIKINDX_LDAP_SERVER_BIND_TYPE_LIST)
@@ -1732,10 +1732,20 @@ class CONFIGURE
                 $array = [
                     "configAuthGate",
                     "configAuthGateMessage",
-                    "configLdapUserOu",
+                    "configLdapGroupCn",
                     "configLdapPort",
+                    "configLdapSearchMethod",
                     "configLdapServer",
+                    "configLdapServerBindDomain",
+                    "configLdapServerBindDomainFormat",
+                    "configLdapServerBindLogin",
+                    "configLdapServerBindPassword",
+                    "configLdapServerBindType",
+                    "configLdapServerEncryption",
                     "configLdapUse",
+                    "configLdapUserAttributLogin",
+                    "configLdapUserCreate",
+                    "configLdapUserOu",
                     "configPasswordSize",
                     "configPasswordStrength",
                 ];
@@ -2028,7 +2038,7 @@ class CONFIGURE
         $this->dependencies('configCmsAllow', ['configCmsBibstyle']);
         $this->dependencies('configCmsSql', ['configCmsDbUser', 'configCmsDbPassword']);
         $this->dependencies('configMailUse', ['configMailBackend']);
-        $this->dependencies('configLdapUse', ['configLdapServer', 'configLdapPort', 'configLdapUserOu']);
+        $this->dependencies('configLdapUse', ['configLdapServer', 'configLdapPort', 'configLdapServerEncryption', 'configLdapServerBindType', 'configLdapSearchMethod', 'configLdapUserAttributLogin']);
         $this->dependencies('configAuthGate', ['configAuthGateMessage']);
         $this->dependencies('configUserRegistrationModerate', ['configEmailNewRegistrations']);
         if (array_key_exists('configMailUse', $this->formData) && ($this->formData['configMailBackend'] == 'sendmail'))

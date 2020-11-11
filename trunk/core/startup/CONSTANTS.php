@@ -365,7 +365,7 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configLdapUse"                   => ["constname" => "WIKINDX_LDAP_USE",                      "type" => "configBoolean"],
     "configLdapUserAttributLogin"     => ["constname" => "WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN",     "type" => "configVarchar"],
     "configLdapUserCreate"            => ["constname" => "WIKINDX_LDAP_USER_CREATE",              "type" => "configBoolean"],
-    "configLdapUserDn"                => ["constname" => "WIKINDX_LDAP_USER_DN",                  "type" => "configVarchar"],
+    "configLdapUserOu"                => ["constname" => "WIKINDX_LDAP_USER_OU",                  "type" => "configVarchar"],
     "configLdapGroupCn"               => ["constname" => "WIKINDX_LDAP_GROUP_CN",                 "type" => "configVarchar"],
     "configListLink"                  => ["constname" => "WIKINDX_LIST_LINK",                     "type" => "configBoolean"],
     "configMailBackend"               => ["constname" => "WIKINDX_MAIL_BACKEND",                  "type" => "configVarchar"],

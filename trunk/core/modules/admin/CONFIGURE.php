@@ -1252,11 +1252,11 @@ class CONFIGURE
             $input,
             count(WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN_LIST)
         ) . BR . \HTML\span($hint, 'hint'));
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapUserDn"));
-        array_key_exists("configLdapUserDn", $this->formData) ? $input = $this->formData["configLdapUserDn"] : $input = WIKINDX_LDAP_USER_DN_DEFAULT;
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapUserOu"));
+        array_key_exists("configLdapUserOu", $this->formData) ? $input = $this->formData["configLdapUserOu"] : $input = WIKINDX_LDAP_USER_OU_DEFAULT;
         $pString .= \HTML\td(\FORM\textareaInput(
-            $this->messages->text("config", "LdapUserDn"),
-            "configLdapUserDn",
+            $this->messages->text("config", "LdapUserOu"),
+            "configLdapUserOu",
             $input,
             30,
             3
@@ -1729,7 +1729,7 @@ class CONFIGURE
                 $array = [
                     "configAuthGate",
                     "configAuthGateMessage",
-                    "configLdapUserDn",
+                    "configLdapUserOu",
                     "configLdapPort",
                     "configLdapServer",
                     "configLdapUse",
@@ -2025,7 +2025,7 @@ class CONFIGURE
         $this->dependencies('configCmsAllow', ['configCmsBibstyle']);
         $this->dependencies('configCmsSql', ['configCmsDbUser', 'configCmsDbPassword']);
         $this->dependencies('configMailUse', ['configMailBackend']);
-        $this->dependencies('configLdapUse', ['configLdapServer', 'configLdapPort', 'configLdapUserDn']);
+        $this->dependencies('configLdapUse', ['configLdapServer', 'configLdapPort', 'configLdapUserOu']);
         $this->dependencies('configAuthGate', ['configAuthGateMessage']);
         $this->dependencies('configUserRegistrationModerate', ['configEmailNewRegistrations']);
         if (array_key_exists('configMailUse', $this->formData) && ($this->formData['configMailBackend'] == 'sendmail'))

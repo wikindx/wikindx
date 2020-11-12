@@ -191,7 +191,28 @@ class HELP
 . dgettext($domain, "<p>Some of the settings here, such as no. resources to display per page or the bibliographic style, are defaults that users can override in My Wikindx.</p>")
 . dgettext($domain, "<p>You can add system users from the Admin menu.</p>")
 . dgettext($domain, "<p>When adding or editing resources, each resource can belong to multiple categories and subcategories, be assigned custom fields or defined as belonging to a language -- admins can add new categories, subcategories, custom fields and languages from the Admin menu.</p>")
-. dgettext($domain, "<p><strong>Because user sessions are created only once on login, changes to the configuration will not be registered until a user (logs out and) logs in.</strong></p>"),
+. dgettext($domain, "<p><strong>Because user sessions are created only once on login, changes to the configuration will not be registered until a user (logs out and) logs in.</strong></p>")
+
+. dgettext($domain, "<h4>LDAP authentification</h4>")
+
+. dgettext($domain, "<p>The meaning of each option is given by the tooltips. In addition this help explains how LDAP authentication is done so that you choose the best configuration according to your domain controller.</p>")
+. dgettext($domain, "<p>The code should work with all LDAP servers. However, it has only been tested with Active Directory and ApacheDS servers. In particular, your user login (or FullName / email) attribute may not be in the proposed list even if the most frequently used are there. You can request an add from the developers.</p>")
+. dgettext($domain, "<p>Wikindx is not able to renew LDAP password on expiration or bulk import users from a group or OU. It is limited to authentication.</p>")
+. dgettext($domain, "<p>When LDAP authentication is enabled, native authentication is not used except for an attempt to connect the Super Admin. If its LDAP authentication fails, bluitin authentication is tried.</p>")
+. dgettext($domain, "<p>When LDAP authentication is successful, the user is created in Wikindx if it does not already exist. The Username (login), Fullname and Email fields are filled in with data from the LDAP directory. The following times the attributes are not synchronized.</p>")
+. dgettext($domain, "<p>The password is not written in Wikindx when the user is created during LDAP authentication. If the LDAP server is offline or any error during dialogue with the server occurs the authentication will fail.</p>")
+. dgettext($domain, "<p>If the Super Admin subsequently disables LDAP authentication, users created in this way will not be able to log in with builtin authentication without changing their password or asking Super Admin to register one.</p>")
+. dgettext($domain, "<p>The user MUST enter his login WITHOUT domain information. When you have specified the domain name and the 'user' or 'prtoxyuser' binding methods (connection to the server) are set, the domain name will be added automatically according to the configuration.</p>")
+. dgettext($domain, "<p>First, the binding is configured with the chosen protocol. If the binding is encrypted, the certificates will be ignored. Referrals are always ignored. The network connection timeout is set to 10 s. The LDAP search timeout is set to 15 s. The server is contacted and if the connection is successful then the user is searched for in the directory and his password verified.</p>")
+. dgettext($domain, "<p>The user is found in five steps:</p>")
+. dgettext($domain, "<ol>")
+. dgettext($domain, "<li>The CN of all user-type objects (SAM_NORMAL_USER_ACCOUNT: sAMAccountType = 805306368) whose login attribute corresponds to the input, which are in one of the configured OUs, is extracted in a first list.</li>")
+. dgettext($domain, "<li>The CN of all member objects of group-type objects configured (SAM_GROUP_OBJECT: sAMAccountType = 268435456 or SAM_NON_SECURITY_GROUP_OBJECT: sAMAccountType = 268435457) is extracted in a second list.</li>")
+. dgettext($domain, "<li><ol><li>If the search by OU has been configured but not the search by group, the CNs of the first list are kept.</li><li>If the search by group has been configured but not the search by OU, the CNs in the second list are kept.</li><li>If both searches are configured, the entries common to both lists are kept.</li><li>If no search has been configured, authentication fails.</li></ol></li>")
+. dgettext($domain, "<li>The remaining entries are filtered to retain only the user objects whose login is the one entered.</li>")
+. dgettext($domain, "<li>Finally the password of each remaining CN is verified. The first one with a matching password will be authenticated.</li>")
+. dgettext($domain, "</ol>")
+. dgettext($domain, "<p>A user should not have more than one CN but in the unlikely event that he has two with the same password only the first of the CNs in alphabetical order (regardless of locale) will be authenticated.</p>"),
 
 "front" => "<h3>WIKINDX</h3>"
 . dgettext($domain, "<p><strong>General tips</strong></p>")

@@ -148,9 +148,75 @@ class CONFIGURE
     /**
      * Open popup for ldap transaction report
      */
-    public function ldapTransactionReport()
+    public function ldapTester()
     {
-        $pString = "<pre>" . $this->session->getVar("ldapTransactionLog") . "</pre>";
+        $isLdapExtAvailable = in_array("ldap", get_loaded_extensions());
+        
+        $log = "";
+        $status = "";
+              
+        if (
+            array_key_exists('configLdapTestUser', $this->vars) && $this->vars['configLdapTestUser']
+            && array_key_exists('configLdapTestPassword', $this->vars) && $this->vars['configLdapTestPassword']
+        ) {            
+            $login = $this->vars['configLdapTestUser'];
+            $pwd = $this->vars['configLdapTestPassword'];
+            $ldapUserEntry = [];
+            
+            $user = FACTORY_USER::getInstance();
+            $status = $user->checkPasswordLdap($login, $pwd, $ldapUserEntry, $log);
+            $status = $status ? "success" : "error";
+        }
+        
+        GLOBALS::setTplVar('heading', $this->messages->text("heading", "ldapTester"));
+        $pString = $this->session->getVar("configmessage");
+        $this->session->delVar("configmessage");
+        $pString .= \HTML\p($this->messages->text("hint", "ldapTest"));
+        
+        $pString .= \FORM\formHeader("admin_CONFIGURE_CORE");
+        $pString .= \FORM\hidden("method", "ldapTester");
+        
+        $pString .= \HTML\tableStart();
+        $pString .= \HTML\trStart();
+        
+            $pString .= \HTML\tdStart();
+            array_key_exists("configLdapTestUser", $this->vars) ? $input = $this->vars["configLdapTestUser"] : $input = FALSE;
+            $pString .= \HTML\p(\FORM\textInput($this->messages->text("config", "ldapTestUsername"), "configLdapTestUser", $input, 30, 255));
+            $pString .= \HTML\tdEnd();
+            
+            $pString .= \HTML\tdStart("width100percent");
+            array_key_exists("configLdapTestPassword", $this->vars) ? $input = $this->vars["configLdapTestPassword"] : $input = FALSE;
+            $pString .= \HTML\p(\FORM\passwordInput($this->messages->text("config", "ldapTestPassword"), "configLdapTestPassword", $input, 30, 255));
+            $pString .= \HTML\tdEnd();
+            
+        $pString .= \HTML\trEnd();
+        $pString .= \HTML\tableEnd();
+        
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Proceed")));
+
+        $pString .= \FORM\formEnd();
+        
+        $close = \FORM\formHeader("admin_CONFIGURE_CORE&amp;method=init&amp;selectItem=front", "onsubmit=\"window.close();return true;\"");
+        $close .= \FORM\hidden("selectItem", "email");
+        $close .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
+        $close .= \FORM\formEnd();
+        $pString .= \HTML\p($close);
+            
+        if ($status)
+        {
+            $pString .= "<hr>";
+            $pString .= "<h4>Log</h4>";
+            if ($status == "error")
+            {
+                $pString .= \HTML\p("The test failed", "error", "center");
+            }
+            else
+            {
+                $pString .= \HTML\p("The test passed", "success", "center");
+            }
+            $pString .= "<pre>" . htmlentities($log) . "</pre>";
+        }
+        
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSENOMENU::getInstance();
     }
@@ -356,7 +422,7 @@ class CONFIGURE
                 $this->messages->text('config', 'mailTestSuccess')
             ))
             {
-                $content .= \HTML\p("The test fails", "error", "center");
+                $content .= \HTML\p("The test failed", "error", "center");
             }
             else
             {
@@ -367,6 +433,7 @@ class CONFIGURE
         $close = \FORM\formHeader("admin_CONFIGURE_CORE&amp;method=init&amp;selectItem=front", "onsubmit=\"window.close();return true;\"");
         $close .= \FORM\hidden("selectItem", "email");
         $close .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Close")));
+        $close .= \FORM\formEnd();
         $content .= \HTML\p($close);
         GLOBALS::addTplVar('content', $content);
         FACTORY_CLOSENOMENU::getInstance();
@@ -1093,24 +1160,8 @@ class CONFIGURE
     private function authenticationConfigDisplay()
     {
         $isLdapExtAvailable = in_array("ldap", get_loaded_extensions());
-        $mailMessage = FALSE;
-
-        if ($isLdapExtAvailable)
-        {
-            if (array_key_exists("configLdapUse", $this->formData) && $this->formData['configLdapUse'])
-            {
-                if (
-                    array_key_exists('configLdapTestUser', $this->formData) && $this->formData['configLdapTestUser']
-                    && array_key_exists('configLdapTestPassword', $this->formData) && $this->formData['configLdapTestPassword']
-                ) {
-                    $this->testLdap();
-                    $jScript = "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=ldapTransactionReport', 80)";
-                    $colour = $this->session->getVar("ldapTransactionLogStatus") == 'success' ? 'green' : 'red';
-                    $mailMessage = \HTML\p(\HTML\aBrowse($colour, '', $this->messages->text("config", "ldapTransactionReport"), $jScript));
-                }
-            }
-        }
-        $pString = $this->messageString . $mailMessage;
+        
+        $pString = "";
         $pString .= \HTML\h("Builtin auth");
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
@@ -1142,10 +1193,6 @@ class CONFIGURE
         $pString .= \HTML\tableEnd();
         
         $pString .= \HTML\h("Ldap auth");
-        if (!in_array("ldap", get_loaded_extensions()))
-        {
-            $pString .= \HTML\p($this->messages->text("hint", "ldapExtDisabled"), "bold");
-        }
         
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
@@ -1184,7 +1231,18 @@ class CONFIGURE
             $input,
             count(WIKINDX_LDAP_SERVER_ENCRYPTION_LIST)
         ) . BR . \HTML\span($hint, 'hint'));
-        $pString .= \HTML\td("&nbsp;");
+        
+        $pString .= \HTML\tdStart();
+            if (!in_array("ldap", get_loaded_extensions()))
+            {
+                $pString .= \HTML\p($this->messages->text("hint", "ldapExtDisabled"), "bold");
+            }
+            else
+            {
+                $jScript = "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=ldapTester', 80)";
+                $pString .= \HTML\p(\HTML\aBrowse("green", '', $this->messages->text("config", "ldapTester"), $jScript));
+            }
+        $pString .= \HTML\tdEnd();
         $pString .= \HTML\trEnd();
         
         $pString .= \HTML\trStart();
@@ -1286,12 +1344,12 @@ class CONFIGURE
         if ($isLdapExtAvailable)
         {
             // Extra field not in the database used for test purposes only
-            $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapTest"));
+            /*$hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "ldapTest"));
             array_key_exists("configLdapTestUser", $this->vars) ? $input = $this->vars["configLdapTestUser"] : $input = FALSE;
             $pString .= \HTML\p(\FORM\textInput($this->messages->text("config", "ldapTestUsername"), "configLdapTestUser", $input, 30, 255));
             array_key_exists("configLdapTestPassword", $this->vars) ? $input = $this->vars["configLdapTestPassword"] : $input = FALSE;
             $pString .= \HTML\p(\FORM\passwordInput($this->messages->text("config", "ldapTestPassword"), "configLdapTestPassword", $input, 30, 255) .
-                BR . \HTML\span($hint, 'hint'));
+                BR . \HTML\span($hint, 'hint'));*/
         }
         else
         {
@@ -1476,25 +1534,6 @@ class CONFIGURE
         );
 
         return $pString;
-    }
-    /**
-     * Test the ldap configuration and extract some traces
-     *
-     * @return bool
-     */
-    private function testLdap()
-    {
-        $user = FACTORY_USER::getInstance();
-        
-        $login = $this->formData['configLdapTestUser'];
-        $pwd = $this->formData['configLdapTestPassword'];
-        $ldapUserEntry = [];
-        $log = "";
-        
-        $status = $user->checkPasswordLdap($login, $pwd, $ldapUserEntry, $log);
-        
-        $this->session->setVar("ldapTransactionLog", $log);
-        $this->session->setVar("ldapTransactionLogStatus", $status ? "success" : "failure");
     }
     /**
      * Display file/attachment config options

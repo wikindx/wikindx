@@ -378,6 +378,9 @@ class USER
         $trace = "";
         ob_start();
         
+        $html_errors = ini_get("html_errors");
+        ini_set("html_errors", 0);
+        
         // WARNING ----------------------------------------------
         // The empty password is never allowed because the ldap_bind() function allows unconditional access in this case.
         // See parameter bind_password of ldap_bind()
@@ -401,7 +404,7 @@ class USER
         if (!$fail && ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, WIKINDX_LDAP_DEBUG_LEVEL) === FALSE)
         {
             $fail = TRUE;
-            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
+            $trace .= $this->errors->text("inputError", "ldapSetOption", "", FALSE) . LF;
         }
         
         // Choice the encryption mode and connect
@@ -428,7 +431,7 @@ class USER
             if ($ds === FALSE)
             {
                 $fail = TRUE;
-                $trace .= $this->errors->text("inputError", "ldapConnect") . LF;
+                $trace .= $this->errors->text("inputError", "ldapConnect", "", FALSE) . LF;
             }
         }
         
@@ -438,7 +441,7 @@ class USER
         if (!$fail && ldap_set_option($ds, LDAP_OPT_REFERRALS, WIKINDX_LDAP_USE_REFERRALS) === FALSE)
         {
             $fail = TRUE;
-            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
+            $trace .= $this->errors->text("inputError", "ldapSetOption", "", FALSE) . LF;
         }
         
         // Set a network timeout in seconds
@@ -446,7 +449,7 @@ class USER
         if (!$fail && ldap_set_option($ds, LDAP_OPT_NETWORK_TIMEOUT, WIKINDX_LDAP_SERVER_NETWORK_TIMEOUT) === FALSE)
         {
             $fail = TRUE;
-            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
+            $trace .= $this->errors->text("inputError", "ldapSetOption", "", FALSE) . LF;
         }
         
         // Set a response timeout in seconds
@@ -455,7 +458,7 @@ class USER
         if (!$fail && ldap_set_option($ds, LDAP_OPT_TIMELIMIT, WIKINDX_LDAP_SERVER_RESPONSE_TIMEOUT) === FALSE)
         {
             $fail = TRUE;
-            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
+            $trace .= $this->errors->text("inputError", "ldapSetOption", "", FALSE) . LF;
         }
         
         // Don't verify the certificate in TLS mode (and SSL?)
@@ -468,7 +471,7 @@ class USER
         if (!$fail && ldap_set_option($ds, LDAP_OPT_X_TLS_REQUIRE_CERT, 0) === FALSE)
         {
             $fail = TRUE;
-            $trace .= $this->errors->text("inputError", "ldapSetOption") . LF;
+            $trace .= $this->errors->text("inputError", "ldapSetOption", "", FALSE) . LF;
         }
         
         // Start TLS over a non encrypted connection
@@ -501,7 +504,7 @@ class USER
                     if ($ldapbind_login = "" || $ldapbind_pwd == "")
                     {
                         $fail = TRUE;
-                        $trace .= $this->errors->text("inputError", "ldapEmptyBindCredentials") . LF;
+                        $trace .= $this->errors->text("inputError", "ldapEmptyBindCredentials", "", FALSE) . LF;
                     }
                     
                     $ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
@@ -515,7 +518,7 @@ class USER
                     if ($ldapbind_login = "" || $ldapbind_pwd == "")
                     {
                         $fail = TRUE;
-                        $trace .= $this->errors->text("inputError", "ldapEmptyBindCredentials") . LF;
+                        $trace .= $this->errors->text("inputError", "ldapEmptyBindCredentials", "", FALSE) . LF;
                     }
                     
                     $ldapbind = ldap_bind($ds, $ldapbind_login, $ldapbind_pwd);
@@ -532,7 +535,7 @@ class USER
             if ($ldapbind === FALSE)
             {
                 $fail = TRUE;
-                $trace .= $this->errors->text("inputError", "ldapBind") . LF;
+                $trace .= $this->errors->text("inputError", "ldapBind", "", FALSE) . LF;
             }
         }
         
@@ -580,7 +583,7 @@ class USER
                 if ($aSR === FALSE || count($aSR) == 0)
                 {
                     $fail = TRUE;
-                    $trace .= $this->errors->text("inputError", "ldapSearch") . LF;
+                    $trace .= $this->errors->text("inputError", "ldapSearch", "", FALSE) . LF;
                 }
             }
             
@@ -594,7 +597,7 @@ class USER
                     if ($entries === FALSE)
                     {
                         $fail = TRUE;
-                        $trace .= $this->errors->text("inputError", "ldapGetEntries") . LF;
+                        $trace .= $this->errors->text("inputError", "ldapGetEntries", "", FALSE) . LF;
                     }
                     else
                     {
@@ -645,7 +648,7 @@ class USER
                 if ($aSR === FALSE || count($aSR) == 0)
                 {
                     $fail = TRUE;
-                    $trace .= $this->errors->text("inputError", "ldapSearch") . LF;
+                    $trace .= $this->errors->text("inputError", "ldapSearch", "", FALSE) . LF;
                 }
             }
             
@@ -659,7 +662,7 @@ class USER
                     if ($entries === FALSE)
                     {
                         $fail = TRUE;
-                        $trace .= $this->errors->text("inputError", "ldapGetEntries") . LF;
+                        $trace .= $this->errors->text("inputError", "ldapGetEntries", "", FALSE) . LF;
                     }
                     else
                     {
@@ -732,7 +735,7 @@ class USER
                 if ($sr === FALSE)
                 {
                     $fail = TRUE;
-                    $trace .= $this->errors->text("inputError", "ldapSearch") . LF;
+                    $trace .= $this->errors->text("inputError", "ldapSearch", "", FALSE) . LF;
 
                     break;
                 }
@@ -743,7 +746,7 @@ class USER
                     if ($entries === FALSE)
                     {
                         $fail = TRUE;
-                        $trace .= $this->errors->text("inputError", "ldapGetEntries") . LF;
+                        $trace .= $this->errors->text("inputError", "ldapGetEntries", "", FALSE) . LF;
 
                         break;
                     }
@@ -786,6 +789,8 @@ class USER
         // Add the debug trace of the library
         $trace .= LF;
         $trace .= trim(ob_get_clean());
+        
+        ini_set("html_errors", $html_errors);
         
         return ($auth === TRUE) && ($fail === FALSE);
     }

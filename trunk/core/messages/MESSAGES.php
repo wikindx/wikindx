@@ -185,6 +185,7 @@ class MESSAGES
 				"addCitation" => dgettext($domain, "Add Citation"),
 /// heading_exportCoins COinS is a bibliographic format used by, for instance, Zotero. Don't translate 'COinS'
 				"exportCoins" => dgettext($domain, "Export COinS"),
+				"ldapTester" => dgettext($domain, "LDAP Tester"),
 			),
 /// authorize_ User authorization
 		    "authorize" => array(
@@ -230,9 +231,9 @@ class MESSAGES
 				"LdapUserOu" => dgettext($domain, "Users Organizational Units (OU)"),
 				"LdapGroupCn" => dgettext($domain, "Groups Common Names (CN)"),
 				"LdapUserCreate" => dgettext($domain, "Create user"),
-				"ldapTestUsername" => dgettext($domain, "Test LDAP user"),
-				"ldapTestPassword" => dgettext($domain, "Test LDAP password"),
-				"ldapTransactionReport" => dgettext($domain, "LDAP Test Transaction Report"),
+				"ldapTestUsername" => dgettext($domain, "Login"),
+				"ldapTestPassword" => dgettext($domain, "Password"),
+				"ldapTester" => dgettext($domain, "Open LDAP Tester"),
 				"ldapTestSuccess" => dgettext($domain, "LDAP successfully configured"),
 /// config_authGate If checked, user must click on OK after login in order to proceed. Used for situations such as notification about privacy policies such as that mandated by the EU's GDPR
 				"authGate" => dgettext($domain, "Authentication gate"),
@@ -782,7 +783,7 @@ class MESSAGES
 				"LdapGroupCn" => dgettext($domain, "One or more group CNs to which the users to be authenticated belong, separated by line breaks.\n Note: if a component of the OU contains special characters for the ldap protocol, they must be escaped by a \\\\ character preceding them. The special characters are: leading or trailing spaces and \\\\#+<>,;\"=.\n For example:\n CN=teachers,OU=interns,DC=cahors,DC=edu,DC=fr\n CN=students,OU=interns,DC=cahors,DC=edu,DC=fr\n CN=lecture\\\\+amphitheater,DC=cahors,DC=edu,DC=fr"),
 				"LdapUserCreate" => dgettext($domain, "This option activates the creation of the user account if it does not already exist from the attributes of the ldap directory, during its first successful authentication. The following times the attributes are not synchronized. The copied attributes (in brackets) are: login (the one configured), full name (displayName), email (mail)."),
 				"ldapExtDisabled" => dgettext($domain, "The PHP LDAP extension is disabled or not installed. As long as it is not available the LDAP auth mode will be ignored."),
-				"ldapTest" => dgettext($domain, "Enter a valid LDAP username/password here to test the LDAP configuration when you click on Proceed"),
+				"ldapTest" => dgettext($domain, "Enter a valid LDAP username/password here to test the LDAP configuration when you click on Proceed."),
 				"authGate" => dgettext($domain, "If checked, user must click on OK after login in order to proceed. Used for situations such as notification about privacy policies such as that mandated by the EU's GDPR. Once the user has clicked on OK, they are not required to do so again until the authentication gate flag is reset."),
 				"passwordSize" => dgettext($domain, "Minimum of 6 characters."),
 				"passwordStrength" => dgettext($domain, "Weak: Password must  be a mix of UPPER/lowercase. Spaces are not allowed. Medium: Password must be a mix of UPPER/lowercase and numbers. Spaces are not allowed. Strong: Password must be a mix of UPPER/lowercase, numbers, and non-alphanumeric characters ($ @ # ! % * ? & €). Spaces are not allowed."),

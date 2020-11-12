@@ -7,4 +7,4 @@
 -- Remove LDAP protocol version option
 
 DELETE FROM %%WIKINDX_DB_TABLEPREFIX%%config
-WHERE configName = 'configLdapProtocolVersion'
+WHERE configName = 'configLdapProtocolVersion';

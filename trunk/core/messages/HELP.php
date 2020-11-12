@@ -196,6 +196,8 @@ class HELP
 . dgettext($domain, "<h4>LDAP authentification</h4>")
 
 . dgettext($domain, "<p>The meaning of each option is given by the tooltips. In addition this help explains how LDAP authentication is done so that you choose the best configuration according to your domain controller.</p>")
+. dgettext($domain, "<p>The meaning of each option is given by the tooltips. In addition this help explains how LDAP authentication is done so that you choose the best configuration according to your domain controller.</p>")
+. dgettext($domain, "<p>The LDAP connection test function runs exactly the same code as during user connection. The debugging trace is very comprehensive but the level of detail depends on the loquacity of your server.</p>")
 . dgettext($domain, "<p>The code should work with all LDAP servers. However, it has only been tested with Active Directory and ApacheDS servers. In particular, your user login (or FullName / email) attribute may not be in the proposed list even if the most frequently used are there. You can request an add from the developers.</p>")
 . dgettext($domain, "<p>Wikindx is not able to renew LDAP password on expiration or bulk import users from a group or OU. It is limited to authentication.</p>")
 . dgettext($domain, "<p>When LDAP authentication is enabled, native authentication is not used except for an attempt to connect the Super Admin. If its LDAP authentication fails, bluitin authentication is tried.</p>")

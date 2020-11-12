@@ -694,6 +694,10 @@ class USER
             $Users = [];
         }
         
+        // Always try to keep the same order when checking CN
+        // Independence from the local is intentional
+        sort($Users, SORT_STRING);
+        
         // Stop if the list is empty
         if (!$fail && count($Users) == 0)
         {

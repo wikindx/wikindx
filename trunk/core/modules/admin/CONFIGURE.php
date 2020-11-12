@@ -1099,8 +1099,10 @@ class CONFIGURE
         {
             if (array_key_exists("configLdapUse", $this->formData) && $this->formData['configLdapUse'])
             {
-                if (array_key_exists('configLdapTestUser', $this->vars) && $this->vars['configLdapTestUser'])
-                {
+                if (
+                    array_key_exists('configLdapTestUser', $this->formData) && $this->formData['configLdapTestUser']
+                    && array_key_exists('configLdapTestPassword', $this->formData) && $this->formData['configLdapTestPassword']
+                ) {
                     $this->testLdap();
                     $jScript = "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=ldapTransactionReport', 80)";
                     $colour = $this->session->getVar("ldapTransactionLogStatus") == 'success' ? 'green' : 'red';

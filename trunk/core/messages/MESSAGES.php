@@ -261,6 +261,7 @@ class MESSAGES
 				"mailTestSuccess" => dgettext($domain, "If you are reading this email, you have correctly configured email for WIKINDX"),
 				"mailTransactionReport" => dgettext($domain, "Mail Test Transaction Report"),
 				"siteMapAllow" => dgettext($domain, "Enable SiteMap"),
+				"browserTabID" => dgettext($domain, "Enable BrowserTabID"),
 				"rssAllow" => dgettext($domain, "Enable RSS"),
 				"rssDisplay" => dgettext($domain, "Display"),
 				"rssLanguage" => dgettext($domain, "Language"),

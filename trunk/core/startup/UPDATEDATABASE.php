@@ -374,6 +374,11 @@ class UPDATEDATABASE
                 $this->numStages = 1;
                 $this->stage29();
             }
+            elseif ($dbVersion < 30.0)
+            { // upgrade v6.3.11 to 6.4.0
+                $this->numStages = 1;
+                $this->stage30();
+            }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
             // Refresh the locales list
@@ -1123,6 +1128,17 @@ class UPDATEDATABASE
         $this->updateSoftwareVersion(29);
         $this->checkStatus('stage29');
         $this->pauseExecution('stage29');
+    }
+    /**
+     * Remove mistakenly named configBrowserTagID from config table
+     */
+    private function stage30()
+    {
+        $this->db->formatConditions(['configName' => 'configBrowserTagID']);
+        $this->db->delete('config');
+        $this->updateSoftwareVersion(30);
+        $this->checkStatus('stage30');
+        $this->pauseExecution('stage30');
     }
 
     /**

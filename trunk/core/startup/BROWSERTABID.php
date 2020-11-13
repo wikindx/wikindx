@@ -31,7 +31,7 @@ class BROWSERTABID
     {
         $active = ['list_QUICKSEARCH_CORE', 'resource_RESOURCEVIEW_CORE', 'admin_DELETERESOURCE_CORE'];
         $tempSession = [];
-        if (WIKINDX_BROWSER_TAG_ID && array_key_exists('action', $this->vars) && in_array($this->vars['action'], $active))
+        if (WIKINDX_BROWSER_TAB_ID && array_key_exists('action', $this->vars) && in_array($this->vars['action'], $active))
         {
             GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/gatekeeper.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
             $script = WIKINDX_URL_BASE . '/gatekeeper.js?ver=' . WIKINDX_PUBLIC_VERSION;

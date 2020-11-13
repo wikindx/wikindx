@@ -44,7 +44,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.4.0');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 29.0);
+define('WIKINDX_INTERNAL_VERSION', 30.0);
 /**
  * WIKINDX minimum internal version upgradable
  *
@@ -320,6 +320,7 @@ define('WIKINDX_POPULARITY_DOWNLOADS_WEIGHT', 0.75);
 define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configAuthGate"                  => ["constname" => "WIKINDX_AUTHGATE_USE",                  "type" => "configBoolean"],
     "configAuthGateMessage"           => ["constname" => "WIKINDX_AUTHGATE_MESSAGE",              "type" => "configVarchar"],
+    "configBrowserTabID"         	  => ["constname" => "WIKINDX_BROWSER_TAB_ID",    			  "type" => "configBoolean"],
     "configBypassSmartyCompile"       => ["constname" => "WIKINDX_BYPASS_SMARTY_COMPILATION",     "type" => "configBoolean"],
     "configCmsAllow"                  => ["constname" => "WIKINDX_CMS_ALLOW",                     "type" => "configBoolean"],
     "configCmsBibstyle"               => ["constname" => "WIKINDX_CMS_BIBSTYLE",                  "type" => "configVarchar"],
@@ -395,6 +396,7 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configPasswordStrength"          => ["constname" => "WIKINDX_PASSWORD_STRENGTH",             "type" => "configVarchar"],
     "configQuarantine"                => ["constname" => "WIKINDX_QUARANTINE",                    "type" => "configBoolean"],
     "configReadOnlyAccess"            => ["constname" => "WIKINDX_READ_ONLY_ACCESS",              "type" => "configBoolean"],
+    "configResourceUrlPrefix"         => ["constname" => "WIKINDX_RESOURCE_URL_PREFIX",           "type" => "configVarchar"],
     "configRestrictUserId"            => ["constname" => "WIKINDX_RESTRICT_USERID",               "type" => "configInt"],
     "configRssAllow"                  => ["constname" => "WIKINDX_RSS_ALLOW",                     "type" => "configBoolean"],
     "configRssBibstyle"               => ["constname" => "WIKINDX_RSS_BIBSTYLE",                  "type" => "configVarchar"],
@@ -416,6 +418,4 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configTitle"                     => ["constname" => "WIKINDX_TITLE",                         "type" => "configVarchar"],
     "configUserRegistration"          => ["constname" => "WIKINDX_USER_REGISTRATION",             "type" => "configBoolean"],
     "configUserRegistrationModerate"  => ["constname" => "WIKINDX_USER_REGISTRATION_MODERATE",    "type" => "configBoolean"],
-    "configResourceUrlPrefix"         => ["constname" => "WIKINDX_RESOURCE_URL_PREFIX",           "type" => "configVarchar"],
-    "configBrowserTagID"         	  => ["constname" => "WIKINDX_BROWSER_TAG_ID",    			  "type" => "configBoolean"],
 ]);

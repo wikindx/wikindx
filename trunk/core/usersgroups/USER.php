@@ -549,7 +549,7 @@ class USER
         $UserOU = array_diff($UserOU, [""]);
         
         // Search the user in the tree under an Organizational Unit (OU) or a Domain Controller (DC)
-        $UsersInDn = [];
+        $UsersInOU = [];
         if (!$fail && count($UserOU) > 0)
         {
             $sr = FALSE;
@@ -605,7 +605,7 @@ class USER
                         $trace .= "USERS=" . print_r($entries, TRUE) . LF;
                         for ($k = 0; $k < $entries["count"]; $k++)
                         {
-                            $UsersInDn[] = $entries[$k]["dn"];
+                            $UsersInOU[] = $entries[$k]["dn"];
                         }
                     }
                 }
@@ -613,16 +613,16 @@ class USER
         }
         
         // Extract all groups CN
-        $GroupCN = \UTF8\mb_explode(";", WIKINDX_LDAP_GROUP_CN);
-        foreach ($GroupCN as $k => $v)
+        $GroupDN = \UTF8\mb_explode(";", WIKINDX_LDAP_GROUP_DN);
+        foreach ($GroupDN as $k => $v)
         {
-            $GroupCN[$k] = trim($v);
+            $GroupDN[$k] = trim($v);
         }
-        $GroupCN = array_diff($GroupCN, [""]);
+        $GroupDN = array_diff($GroupDN, [""]);
         
         // Search the users in a groups CN
         $UsersInGroup = [];
-        if (!$fail && count($GroupCN) > 0)
+        if (!$fail && count($GroupDN) > 0)
         {
             $sr = FALSE;
             if (!$fail)
@@ -633,19 +633,19 @@ class USER
                 // Attributs retrived
                 $group_filter_attributs = ["dn", "member"];
                 
-                $trace .= "GROUP_CN=" . LF;
-                $trace .= implode(LF, $GroupCN) . LF;
+                $trace .= "GROUP_DN=" . LF;
+                $trace .= implode(LF, $GroupDN) . LF;
                 $trace .= "GROUP_FILTER=" . WIKINDX_LDAP_GROUP_TYPE_FILTER . LF;
                 $trace .= "GROUP_ATTRIBUTES=dn,member" . LF;
                 $trace .= "GROUP_FILTER_ATTRIBUTES=" . implode(", ", $group_filter_attributs) . LF;
                 
                 // The search needs one connection by CN
                 $aDS = [];
-                foreach($GroupCN as $cn)
+                foreach($GroupDN as $cn)
                 {
                     $aDS[] = $ds;
                 }
-                $aSR = ldap_read($aDS, $GroupCN, $group_filter, $group_filter_attributs);
+                $aSR = ldap_read($aDS, $GroupDN, $group_filter, $group_filter_attributs);
                 if ($aSR === FALSE || count($aSR) == 0)
                 {
                     $fail = TRUE;
@@ -681,20 +681,20 @@ class USER
         }
         
         // Calculate the intersection of the two user lists
-        if (count($UserOU) > 0 && count($GroupCN) > 0 && WIKINDX_LDAP_SEARCH_OPERATOR == "and")
+        if (count($UserOU) > 0 && count($GroupDN) > 0 && WIKINDX_LDAP_SEARCH_OPERATOR == "and")
         {
-            $Users = array_intersect($UsersInDn, $UsersInGroup);
+            $Users = array_intersect($UsersInOU, $UsersInGroup);
         }
         // Calculate the union of the two user lists
-        elseif (count($UserOU) > 0 && count($GroupCN) > 0 && WIKINDX_LDAP_SEARCH_OPERATOR == "or")
+        elseif (count($UserOU) > 0 && count($GroupDN) > 0 && WIKINDX_LDAP_SEARCH_OPERATOR == "or")
         {
-            $Users = array_merge($UsersInDn, $UsersInGroup);
+            $Users = array_merge($UsersInOU, $UsersInGroup);
         }
         elseif (count($UserOU) > 0)
         {
-            $Users = $UsersInDn;
+            $Users = $UsersInOU;
         }
-        elseif (count($GroupCN) > 0)
+        elseif (count($GroupDN) > 0)
         {
             $Users = $UsersInGroup;
         }

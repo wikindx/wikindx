@@ -1341,11 +1341,11 @@ class CONFIGURE
             30,
             3
         ) . BR . \HTML\span($hint, 'hint'));
-        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapGroupCn"));
-        array_key_exists("configLdapGroupCn", $this->formData) ? $input = $this->formData["configLdapGroupCn"] : $input = WIKINDX_LDAP_GROUP_CN_DEFAULT;
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapGroupDn"));
+        array_key_exists("configLdapGroupDn", $this->formData) ? $input = $this->formData["configLdapGroupDn"] : $input = WIKINDX_LDAP_GROUP_DN_DEFAULT;
         $pString .= \HTML\td(\FORM\textareaInput(
-            $this->messages->text("config", "LdapGroupCn"),
-            "configLdapGroupCn",
+            $this->messages->text("config", "LdapGroupDn"),
+            "configLdapGroupDn",
             $input,
             30,
             3
@@ -1788,7 +1788,7 @@ class CONFIGURE
                 $array = [
                     "configAuthGate",
                     "configAuthGateMessage",
-                    "configLdapGroupCn",
+                    "configLdapGroupDn",
                     "configLdapPort",
                     "configLdapSearchMethod",
                     "configLdapSearchOperator",

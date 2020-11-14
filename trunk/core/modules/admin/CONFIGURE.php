@@ -1242,6 +1242,14 @@ class CONFIGURE
                 $jScript = "javascript:coreOpenPopup('index.php?action=admin_CONFIGURE_CORE&amp;method=ldapTester', 80)";
                 $pString .= \HTML\p(\HTML\aBrowse("green", '', $this->messages->text("config", "ldapTester"), $jScript));
             }
+            
+            $input = array_key_exists("configLdapUserCreate", $this->formData) && ($this->formData['configLdapUserCreate']) ? "CHECKED" : WIKINDX_LDAP_USER_CREATE_DEFAULT;
+            $pString .=
+                \FORM\checkbox($this->messages->text("config", "LdapUserCreate"), "configLdapUserCreate", $input)
+                . BR . \HTML\span(
+                    \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapUserCreate")),
+                    'hint'
+                );
         $pString .= \HTML\tdEnd();
         $pString .= \HTML\trEnd();
         
@@ -1342,14 +1350,6 @@ class CONFIGURE
             30,
             3
         ) . BR . \HTML\span($hint, 'hint'));
-        $input = array_key_exists("configLdapUserCreate", $this->formData) && ($this->formData['configLdapUserCreate']) ? "CHECKED" : WIKINDX_LDAP_USER_CREATE_DEFAULT;
-        $pString .= \HTML\td(
-            \FORM\checkbox($this->messages->text("config", "LdapUserCreate"), "configLdapUserCreate", $input)
-            . BR . \HTML\span(
-                \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapUserCreate")),
-                'hint'
-            )
-        );
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
 

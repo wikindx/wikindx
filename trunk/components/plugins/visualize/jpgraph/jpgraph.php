@@ -19,7 +19,7 @@ require_once('jpgraph_theme.inc.php');
 require_once('gd_image.inc.php');
 
 // Version info
-define('JPG_VERSION','4.2.10');
+define('JPG_VERSION','4.3.4');
 
 // Minimum required PHP version
 define('MIN_PHPVERSION','5.1.0');
@@ -3642,7 +3642,6 @@ class Grid {
             // assumption offset==0 so we might end up drawing one
             // to many gridlines
             $i=0;
-            $x=$aTicksPos[$i];
             while( $i<count($aTicksPos) && ($x=$aTicksPos[$i]) <= $limit ) {
                 if    ( $aType == 'solid' )      $this->img->Line($x,$yl,$x,$yu);
                 elseif( $aType == 'dotted' )     $this->img->DashedLineForGrid($x,$yl,$x,$yu,1,6);

@@ -2264,7 +2264,7 @@ class ImgStreamCache {
     // image file doesn't exist or exists but is to old
     function GetAndStream($aImage,$aCacheFileName) {
         if( $this->Isvalid($aCacheFileName) ) {
-            $this->StreamImgFile($aImage,$aCacheFileName);
+            return $this->StreamImgFile($aImage,$aCacheFileName);
         }
         else {
             return false;

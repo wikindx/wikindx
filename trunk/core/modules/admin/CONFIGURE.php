@@ -153,7 +153,8 @@ class CONFIGURE
         $isLdapExtAvailable = in_array("ldap", get_loaded_extensions());
         
         $log = "";
-        $status = "";
+        $status = FALSE;
+        $executionStatus = NULL;
               
         if (
             array_key_exists('configLdapTestUser', $this->vars) && $this->vars['configLdapTestUser']
@@ -164,8 +165,7 @@ class CONFIGURE
             $ldapUserEntry = [];
             
             $user = FACTORY_USER::getInstance();
-            $status = $user->checkPasswordLdap($login, $pwd, $ldapUserEntry, $log);
-            $status = $status ? "success" : "error";
+            $status = $user->checkPasswordLdap($login, $pwd, $ldapUserEntry, $log, $executionStatus);
         }
         
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "ldapTester"));
@@ -202,18 +202,18 @@ class CONFIGURE
         $close .= \FORM\formEnd();
         $pString .= \HTML\p($close);
             
-        if ($status)
+        if ($executionStatus !== NULL)
         {
             $pString .= "<hr>";
             $pString .= "<h4>Log</h4>";
-            if ($status == "error")
-            {
-                $pString .= \HTML\p("The test failed", "error", "center");
-            }
-            else
-            {
+            if ($executionStatus)
                 $pString .= \HTML\p("The test passed", "success", "center");
-            }
+            else
+                $pString .= \HTML\p("The test failed", "error", "center");
+            if ($status)
+                $pString .= \HTML\p("The user has been authenticated.", "success", "center");
+            else
+                $pString .= \HTML\p("The user has not been authenticated", "error", "center");
             $pString .= "<pre>" . htmlentities($log) . "</pre>";
         }
         

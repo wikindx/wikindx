@@ -366,10 +366,11 @@ class USER
      * @param string $pwdInput
      * @param array $ldapUserEntry User ldap info
      * @param string $trace
+     * @param bool $executionStatus
      *
      * @return bool
      */
-    public function checkPasswordLdap($usersUsername, $pwdInput, &$ldapUserEntry = [], &$trace = "")
+    public function checkPasswordLdap($usersUsername, $pwdInput, &$ldapUserEntry = [], &$trace = "", &$executionStatus = FALSE)
     {
         $auth = FALSE; // Reject unless the password match and all goes well
         $fail = FALSE; // Allow to skip operations if a step has failed
@@ -796,6 +797,8 @@ class USER
         $trace .= trim(ob_get_clean());
         
         ini_set("html_errors", $html_errors);
+        
+        $executionStatus = !$fail;
         
         return ($auth === TRUE) && ($fail === FALSE);
     }

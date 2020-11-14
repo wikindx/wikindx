@@ -599,6 +599,11 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
             case IMAGETYPE_PNG:
                 $blipType = '\pngblip';
             break;
+            case IMAGETYPE_WEBP:
+                $blipType = '\pngblip';
+                imagepng(imagecreatefromwebp($file), $tempFile, 9);
+                $file = $tempFile;
+            break;
             default:
                 return $matchArray[0]; // unable to read file so return link
             break;

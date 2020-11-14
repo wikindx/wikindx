@@ -592,33 +592,12 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
                 $blipType = '\pngblip';
                 imagepng(imagecreatefromgif($file), $tempFile, 9);
                 $file = $tempFile;
-
             break;
             case IMAGETYPE_JPEG:
                 $blipType = '\jpegblip';
-
             break;
             case IMAGETYPE_PNG:
                 $blipType = '\pngblip';
-
-            break;
-            case IMAGETYPE_BMP:
-                $blipType = '\pngblip';
-                imagepng(imagecreatefrombmp($file), $tempFile, 9);
-                $file = $tempFile;
-
-            break;
-            case IMAGETYPE_WBMP:
-                $blipType = '\pngblip';
-                imagepng(imagecreatefromwbmp($file), $tempFile, 9);
-                $file = $tempFile;
-
-            break;
-            case IMAGETYPE_XBM:
-                $blipType = '\pngblip';
-                imagepng(imagecreatefromxbm($file), $tempFile, 9);
-                $file = $tempFile;
-
             break;
             default:
                 return $matchArray[0]; // unable to read file so return link

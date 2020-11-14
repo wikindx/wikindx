@@ -44,7 +44,7 @@ define('WIKINDX_PUBLIC_VERSION', '6.4.0');
  *
  * @name WIKINDX_INTERNAL_VERSION
  */
-define('WIKINDX_INTERNAL_VERSION', 30.0);
+define('WIKINDX_INTERNAL_VERSION', 32.0);
 /**
  * WIKINDX minimum internal version upgradable
  *
@@ -200,6 +200,8 @@ define('WIKINDX_FILE_REPAIRKIT_DB_SCHEMA', implode(DIRECTORY_SEPARATOR, [WIKINDX
  */
 define('WIKINDX_CHARSET', 'UTF-8');
 
+// Database
+define('WIKINDX_DB_TABLEPREFIX', 'wkx_');
 
 // List of mime types used in the code base
 define('WIKINDX_MIMETYPE_BIB', 'application/x-bibtex');

@@ -55,6 +55,7 @@ MAINTENANCE:
 18. Drop PHP 7.1 support.
 19. Drop PHP 7.2 support.
 20. Update PHPMailer to version 6.1.8.
+21. Remove WIKINDX_DB_TABLEPREFIX: It is no longer possible to modify the prefix of the tables in the database. This functionality is only useful for several programs sharing the same database with the same table names or several wikindx installations in the same database. These two practices are to be avoided because they are a good way to lost your data. Each software should be isolated in its own database for privacy, security, bug resistance and ease of maintenance. Firstly, the "wkx_" prefix will be kept for some versions and cannot be changed. Secondly, it will be deleted.
 
 SECURITY:
 1. Replace crypt/hash_equals() by password_hash/password_verify() which is stronger by default.

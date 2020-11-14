@@ -132,18 +132,6 @@ function loadStaticConfig()
         $config->WIKINDX_DB_PASSWORD = "";
     }
 
-    // Set database table prefix
-    if (!property_exists($config, 'WIKINDX_DB_TABLEPREFIX'))
-    {
-        $errors[] = $dieMsgMissing . 'WIKINDX_DB_TABLEPREFIX';
-    }
-    elseif (!is_string($config->WIKINDX_DB_TABLEPREFIX))
-    {
-        $errors[] = 'WIKINDX_DB_TABLEPREFIX must be a string.';
-    }
-    // Use always a lowercase prefix to prevent problem with case sensitive database
-    $config->WIKINDX_DB_TABLEPREFIX = mb_strtolower($config->WIKINDX_DB_TABLEPREFIX);
-
     // Attempt to set the memory the script uses -- does not work in safe mode
     if (!property_exists($config, 'WIKINDX_MEMORY_LIMIT'))
     {
@@ -224,7 +212,6 @@ function loadStaticConfig()
         "WIKINDX_DB",
         "WIKINDX_DB_USER",
         "WIKINDX_DB_PASSWORD",
-        "WIKINDX_DB_TABLEPREFIX",
         "WIKINDX_PATH_AUTO_DETECTION",
         "WIKINDX_URL_BASE",
         "WIKINDX_MEMORY_LIMIT",

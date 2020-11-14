@@ -47,9 +47,6 @@ public $WIKINDX_DB = "wikindx6";
 // (it is strongly recommended that you change these default values):
 public $WIKINDX_DB_USER = "wikindx";
 public $WIKINDX_DB_PASSWORD = "wikindx";
-// If using WIKINDX on a shared database, set the WIKINDX table prefix here (lowercase only)
-// (do NOT change after running WIKINDX and creating the tables!).
-public $WIKINDX_DB_TABLEPREFIX = "wkx_";
 /*****
 * END DATABASE CONFIGURATION
 *****/

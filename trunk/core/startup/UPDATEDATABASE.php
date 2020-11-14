@@ -384,6 +384,11 @@ class UPDATEDATABASE
                 $this->numStages = 1;
                 $this->stage31();
             }
+            elseif ($dbVersion < 32.0)
+            { // upgrade v6.3.11 to 6.4.0
+                $this->numStages = 1;
+                $this->stage32();
+            }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
             // Refresh the locales list
@@ -1036,7 +1041,8 @@ class UPDATEDATABASE
      */
     private function stage24()
     {
-        $this->writeConfigFile6_3_11(); // dies if not possible
+        // This code removed fields from the configuration file.
+        // It has been moved to step 32 which removes others.
         
         $this->updateSoftwareVersion(24);
         $this->checkStatus('stage24');
@@ -1157,6 +1163,18 @@ class UPDATEDATABASE
         $this->updateSoftwareVersion(31);
         $this->checkStatus('stage31');
         $this->pauseExecution('stage31');
+    }
+    /**
+     * Upgrade database schema to version 24 (6.3.11)
+     */
+    private function stage32()
+    {
+        // Remove option WIKINDX_DB_TABLEPREFIX that is now hardcoded
+        $this->writeConfigFile6_4_0(); // dies if not possible
+        
+        $this->updateSoftwareVersion(32);
+        $this->checkStatus('stage32');
+        $this->pauseExecution('stage32');
     }
 
     /**
@@ -1803,7 +1821,7 @@ class UPDATEDATABASE
     /**
      * Write new config.php with upgrade to >= WIKINDX v6.3.11
      */
-    private function writeConfigFile6_3_11()
+    private function writeConfigFile6_4_0()
     {
         // Load a separate config class that containts original constant names
         $tmpconfig = new CONFIG();
@@ -1860,9 +1878,6 @@ END;
                    '// (it is strongly recommended that you change these default values):' . "\n" .
                    'public $WIKINDX_DB_USER = "' . $tmpconfig->WIKINDX_DB_USER . '";' . "\n" .
                    'public $WIKINDX_DB_PASSWORD = "' . $tmpconfig->WIKINDX_DB_PASSWORD . '";' . "\n";
-        $string .= '// If using WIKINDX on a shared database, set the WIKINDX table prefix here (lowercase only)' . "\n" .
-                   '// (do not change after running WIKINDX and creating the tables!).' . "\n" .
-                   'public $WIKINDX_DB_TABLEPREFIX = "' . $tmpconfig->WIKINDX_DB_TABLEPREFIX . '";' . "\n";
         $string .= <<<END
 /*****
 * END DATABASE CONFIGURATION

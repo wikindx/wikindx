@@ -1303,6 +1303,18 @@ class CONFIGURE
             $input,
             count(WIKINDX_LDAP_SEARCH_METHOD_LIST)
         ) . BR . \HTML\span($hint, 'hint'));
+
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapSearchOperator"));
+        array_key_exists("configLdapSearchOperator", $this->formData) ? $input = $this->formData["configLdapSearchOperator"] : $input = WIKINDX_LDAP_SEARCH_OPERATOR_DEFAULT;
+        $pString .= \HTML\td(\FORM\selectedBoxValue(
+            $this->messages->text("config", "LdapSearchOperator"),
+            "configLdapSearchOperator",
+            WIKINDX_LDAP_SEARCH_OPERATOR_LIST,
+            $input,
+            count(WIKINDX_LDAP_SEARCH_OPERATOR_LIST)
+        ) . BR . \HTML\span($hint, 'hint'));
+
+
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "LdapUserAttributLogin"));
         array_key_exists("configLdapUserAttributLogin", $this->formData) ? $input = $this->formData["configLdapUserAttributLogin"] : $input = WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN_DEFAULT;
         $pString .= \HTML\td(\FORM\selectedBoxValue(
@@ -1779,6 +1791,7 @@ class CONFIGURE
                     "configLdapGroupCn",
                     "configLdapPort",
                     "configLdapSearchMethod",
+                    "configLdapSearchOperator",
                     "configLdapServer",
                     "configLdapServerBindDomain",
                     "configLdapServerBindDomainFormat",

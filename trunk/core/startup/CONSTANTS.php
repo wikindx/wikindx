@@ -243,8 +243,9 @@ define('WIKINDX_LDAP_SERVER_NETWORK_TIMEOUT', 10); // In seconds
 define('WIKINDX_LDAP_SERVER_RESPONSE_TIMEOUT', 15); // In seconds
 define('WIKINDX_LDAP_USE_REFERRALS', 0); // 1/0 = On/off
 define('WIKINDX_LDAP_SERVER_ENCRYPTION_LIST', ['none' => 'none', 'ssl' => 'ssl', 'starttls' => 'starttls']);
-define('WIKINDX_LDAP_SERVER_BIND_TYPE_LIST', ['anonymous' => 'anonymous', 'proxyuser' => 'proxyuser', 'user' => 'user']);
+define('WIKINDX_LDAP_SERVER_BIND_TYPE_LIST', ['anonymous' => 'anonymous', 'binduser' => 'binduser', 'user' => 'user']);
 define('WIKINDX_LDAP_SEARCH_METHOD_LIST', ['list' => 'list', 'tree' => 'tree']);
+define('WIKINDX_LDAP_SEARCH_OPERATOR_LIST', ['or' => 'or', 'and' => 'and']);
 define('WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT_LIST', ['none' => 'none', 'sam' => 'sam', 'upn' => 'upn']);
 define('WIKINDX_LDAP_USER_ATTRIBUTE_EMAIL', 'mail');
 define('WIKINDX_LDAP_USER_ATTRIBUTE_FULLNAME', 'displayname');
@@ -320,7 +321,7 @@ define('WIKINDX_POPULARITY_DOWNLOADS_WEIGHT', 0.75);
 define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configAuthGate"                  => ["constname" => "WIKINDX_AUTHGATE_USE",                  "type" => "configBoolean"],
     "configAuthGateMessage"           => ["constname" => "WIKINDX_AUTHGATE_MESSAGE",              "type" => "configVarchar"],
-    "configBrowserTabID"         	  => ["constname" => "WIKINDX_BROWSER_TAB_ID",    			  "type" => "configBoolean"],
+    "configBrowserTabID"              => ["constname" => "WIKINDX_BROWSER_TAB_ID",                "type" => "configBoolean"],
     "configBypassSmartyCompile"       => ["constname" => "WIKINDX_BYPASS_SMARTY_COMPILATION",     "type" => "configBoolean"],
     "configCmsAllow"                  => ["constname" => "WIKINDX_CMS_ALLOW",                     "type" => "configBoolean"],
     "configCmsBibstyle"               => ["constname" => "WIKINDX_CMS_BIBSTYLE",                  "type" => "configVarchar"],
@@ -354,8 +355,10 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configLastChanges"               => ["constname" => "WIKINDX_LAST_CHANGES",                  "type" => "configInt"],
     "configLastChangesDayLimit"       => ["constname" => "WIKINDX_LAST_CHANGES_DAY_LIMIT",        "type" => "configInt"],
     "configLastChangesType"           => ["constname" => "WIKINDX_LAST_CHANGES_TYPE",             "type" => "configVarchar"],
+    "configLdapGroupCn"               => ["constname" => "WIKINDX_LDAP_GROUP_CN",                 "type" => "configVarchar"],
     "configLdapPort"                  => ["constname" => "WIKINDX_LDAP_PORT",                     "type" => "configInt"],
     "configLdapSearchMethod"          => ["constname" => "WIKINDX_LDAP_SEARCH_METHOD",            "type" => "configVarchar"],
+    "configLdapSearchOperator"        => ["constname" => "WIKINDX_LDAP_SEARCH_OPERATOR",          "type" => "configVarchar"],
     "configLdapServer"                => ["constname" => "WIKINDX_LDAP_SERVER",                   "type" => "configVarchar"],
     "configLdapServerBindDomain"      => ["constname" => "WIKINDX_LDAP_SERVER_BIND_DOMAIN",       "type" => "configVarchar"],
     "configLdapServerBindDomainFormat"=> ["constname" => "WIKINDX_LDAP_SERVER_BIND_DOMAIN_FORMAT","type" => "configVarchar"],
@@ -367,7 +370,6 @@ define('WIKINDX_LIST_CONFIG_OPTIONS', [
     "configLdapUserAttributLogin"     => ["constname" => "WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN",     "type" => "configVarchar"],
     "configLdapUserCreate"            => ["constname" => "WIKINDX_LDAP_USER_CREATE",              "type" => "configBoolean"],
     "configLdapUserOu"                => ["constname" => "WIKINDX_LDAP_USER_OU",                  "type" => "configVarchar"],
-    "configLdapGroupCn"               => ["constname" => "WIKINDX_LDAP_GROUP_CN",                 "type" => "configVarchar"],
     "configListLink"                  => ["constname" => "WIKINDX_LIST_LINK",                     "type" => "configBoolean"],
     "configMailBackend"               => ["constname" => "WIKINDX_MAIL_BACKEND",                  "type" => "configVarchar"],
     "configMailFrom"                  => ["constname" => "WIKINDX_MAIL_FROM",                     "type" => "configVarchar"],

@@ -496,12 +496,12 @@ class USER
         {
             $trace .= "SERVER_BIND_TYPE=" . WIKINDX_LDAP_SERVER_BIND_TYPE . LF;
             switch (WIKINDX_LDAP_SERVER_BIND_TYPE) {
-                case "proxyuser":
+                case "binduser":
                     $ldapbind_pwd = WIKINDX_LDAP_SERVER_BIND_PASSWORD;
                     $ldapbind_login = $this->formatLdapLogin(WIKINDX_LDAP_SERVER_BIND_LOGIN);
                     $trace .= "SERVER_BIND_USER=" . $ldapbind_login . LF;
                     
-                    if ($ldapbind_login = "" || $ldapbind_pwd == "")
+                    if ($ldapbind_login == "" || $ldapbind_pwd == "")
                     {
                         $fail = TRUE;
                         $trace .= $this->errors->text("inputError", "ldapEmptyBindCredentials", "", FALSE) . LF;
@@ -515,7 +515,7 @@ class USER
                     $ldapbind_login = $this->formatLdapLogin($usersUsername);
                     $trace .= "SERVER_BIND_USER=" . $ldapbind_login . LF;
                     
-                    if ($ldapbind_login = "" || $ldapbind_pwd == "")
+                    if ($ldapbind_login == "" || $ldapbind_pwd == "")
                     {
                         $fail = TRUE;
                         $trace .= $this->errors->text("inputError", "ldapEmptyBindCredentials", "", FALSE) . LF;
@@ -540,7 +540,7 @@ class USER
         }
         
         // Extract all users OU
-        $UserOU = \UTF8\mb_explode("\n", WIKINDX_LDAP_USER_OU);
+        $UserOU = \UTF8\mb_explode(";", WIKINDX_LDAP_USER_OU);
         foreach ($UserOU as $k => $v)
         {
             $UserOU[$k] = trim($v);
@@ -574,7 +574,7 @@ class USER
                 
                 // The search needs one connection by OU
                 $aDS = [];
-                foreach($UserOU As $ou)
+                foreach($UserOU as $ou)
                 {
                     $aDS[] = $ds;
                 }
@@ -612,7 +612,7 @@ class USER
         }
         
         // Extract all groups CN
-        $GroupCN = \UTF8\mb_explode("\n", WIKINDX_LDAP_GROUP_CN);
+        $GroupCN = \UTF8\mb_explode(";", WIKINDX_LDAP_GROUP_CN);
         foreach ($GroupCN as $k => $v)
         {
             $GroupCN[$k] = trim($v);
@@ -640,11 +640,11 @@ class USER
                 
                 // The search needs one connection by CN
                 $aDS = [];
-                foreach($GroupCN As $ou)
+                foreach($GroupCN as $cn)
                 {
                     $aDS[] = $ds;
                 }
-                $aSR = ldap_read($ds, $GroupCN, $group_filter, $group_filter_attributs);
+                $aSR = ldap_read($aDS, $GroupCN, $group_filter, $group_filter_attributs);
                 if ($aSR === FALSE || count($aSR) == 0)
                 {
                     $fail = TRUE;
@@ -680,9 +680,14 @@ class USER
         }
         
         // Calculate the intersection of the two user lists
-        if (count($UserOU) > 0 && count($GroupCN) > 0)
+        if (count($UserOU) > 0 && count($GroupCN) > 0 && WIKINDX_LDAP_SEARCH_OPERATOR == "and")
         {
             $Users = array_intersect($UsersInDn, $UsersInGroup);
+        }
+        // Calculate the union of the two user lists
+        elseif (count($UserOU) > 0 && count($GroupCN) > 0 && WIKINDX_LDAP_SEARCH_OPERATOR == "or")
+        {
+            $Users = array_merge($UsersInDn, $UsersInGroup);
         }
         elseif (count($UserOU) > 0)
         {

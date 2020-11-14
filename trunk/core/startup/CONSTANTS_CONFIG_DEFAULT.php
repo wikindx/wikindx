@@ -63,7 +63,7 @@ define('WIKINDX_TAG_HIGH_FACTOR_DEFAULT', 200);
 define('WIKINDX_TAG_LOW_COLOUR_DEFAULT', 'a0a0a0');
 define('WIKINDX_TAG_LOW_FACTOR_DEFAULT', 100);
 define('WIKINDX_TEMPLATE_DEFAULT', 'default');
-/** Default time zone (GMT) */
+/** Default time zone (UTC) */
 define('WIKINDX_TIMEZONE_DEFAULT', 'UTC');
 define('WIKINDX_TITLE_DEFAULT', 'WIKINDX');
 

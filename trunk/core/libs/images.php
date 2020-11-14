@@ -230,7 +230,7 @@ class FileManager
         $mime_type = FileServer::getFileMime($userfile['tmp_name']);
         $hash = sha1_file($userfile['tmp_name']);
         $extension = FileServer::getFileExtension($userfile['name']);
-        $extensions = ['jpeg', 'png', 'jpg', 'gif'];
+        $extensions = ['gif', 'jpeg', 'jpg', 'png', 'webp'];
         $upload_file .= '_' . $hash . '.' . $extension;
         $postMax = FILE\return_bytes(ini_get('post_max_size'));
         $uploadMax = FILE\return_bytes(ini_get('upload_max_filesize'));
@@ -321,7 +321,7 @@ class FileManager
             if ($object != "." && $object != "..")
             {
                 $ext = FileServer::getFileExtension($object);
-                if (($ext == 'jpeg') || ($ext == 'jpg') || ($ext == 'gif') || ($ext == 'png'))
+                if (($ext == 'gif') || ($ext == 'jpeg') || ($ext == 'jpg') || ($ext == 'png') || ($ext == 'webp'))
                 {
                     $this->files[] = $object;
                 }
@@ -489,7 +489,7 @@ class FileServer
      */
     public function isImage()
     {
-        return in_array($this->getType(), ['png', 'jpg', 'gif', 'jpeg']);
+        return in_array($this->getType(), ['gif', 'jpeg', 'jpg', 'png', 'webp']);
     }
     /**
      * Is the file an image and therefore valid for thumbnail treatment?
@@ -620,7 +620,7 @@ class EncodeExplorer
         {
             if ($object != "." && $object != "..")
             {
-                if (in_array(FileServer::getFileExtension($object), ['jpeg', 'jpg', 'gif', 'png']) === TRUE)
+                if (in_array(FileServer::getFileExtension($object), ['gif', 'jpeg', 'jpg', 'png', 'webp']) === TRUE)
                 {
                     $this->files[] = new FileServer($object, $this->location);
                 }
@@ -738,6 +738,10 @@ class EncodeExplorer
         elseif ($l == 'png')
         {
             $img = 'img/png.png';
+        }
+        elseif ($l == 'webp')
+        {
+            $img = 'img/webp.webp';
         }
         else
         {

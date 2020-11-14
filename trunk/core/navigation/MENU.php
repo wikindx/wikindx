@@ -856,7 +856,7 @@ class MENU
             if ($object != "." && $object != "..")
             {
                 $ext = mb_strtolower(pathinfo(implode(DIRECTORY_SEPARATOR, [$open_dir, $object]), PATHINFO_EXTENSION));
-                if (($ext == 'jpeg') || ($ext == 'jpg') || ($ext == 'gif') || ($ext == 'png'))
+                if  (($ext == 'gif') || ($ext == 'jpeg') || ($ext == 'jpg') || ($ext == 'png') || ($ext == 'webp'))
                 {
                     $imagesExists = TRUE;
 

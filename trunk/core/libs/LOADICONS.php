@@ -195,7 +195,7 @@ class LOADICONS
      *
      * Return the path of the first icon available in the user's preferred template
      * and in the default template if missing. The file is searched with the extensions
-     * in the following order: png, jpg, svg.
+     * in the following order: gif, jpg, png, svg, webp.
      *
      * @param string $basename Basename of a file icon
      * @param string $filenameFallback A fallback path
@@ -220,7 +220,7 @@ class LOADICONS
         // Search the best icon
         foreach ($tplSearch as $tpl)
         {
-            foreach (["png", "jpg", "svg"] as $ext)
+            foreach (["gif", "jpeg", "jpg", "png", "svg", "webp"] as $ext)
             {
                 $tmp = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_TEMPLATES, $tpl, "icons", $basename . "." . $ext]);
                 if (file_exists($tmp))

@@ -442,6 +442,121 @@ class UPDATEDATABASE
         $this->statusString = $pString;
     }
     /**
+     * If required to pause execution, store current position and any $tableArray arrays in session and present continuation form to user
+     *
+     * @param string $finished
+     */
+    private function pauseExecution($finished)
+    {
+        // Print form and die
+        //      $pString = "php.ini's max_execution time (" . ini_get("max_execution_time") . " seconds) was about
+        //          to be exceeded.  Please click on the button to continue the upgrade.&nbsp;&nbsp;Do <strong>not</strong> click
+        //          until each script has finished.";
+        $pString = \HTML\p(\HTML\strong($this->installMessages->text("upgradeDBHeading")));
+        $pString .= \HTML\p($this->statusString);
+        if ($this->stageInterruptMessage)
+        {
+            $pString .= \HTML\p($this->stageInterruptMessage);
+        }
+        else
+        {
+            $pString .= \HTML\p("`$finished` of " . $this->numStages .
+            " finished.  Please click on the button to continue the upgrade.&nbsp;&nbsp;Do <b>not</b> click
+            until each script has finished.");
+        }
+        $pString .= \FORM\formHeader('continueExecution');
+        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Continue")) . \FORM\formEnd());
+        $this->close($pString);
+    }
+    /**
+     * Continue execution of upgrade after a pause
+     */
+    private function continueExecution()
+    {
+        // Nothing to do
+    }
+    /**
+     * Only the superadmin may update the database -- ask for login
+     *
+     * @param string $currentdbVersion
+     */
+    private function confirmUpdateDisplay($currentdbVersion)
+    {
+        $pString = \HTML\p(\HTML\strong($this->installMessages->text("upgradeDBHeading")));
+
+        $vars = GLOBALS::getVars();
+        $vars['usersUsername'] = isset($vars['usersUsername']) ? $vars['usersUsername'] : '';
+        $vars['password'] = isset($vars['password']) ? $vars['password'] : '';
+        if (\UPDATE\logonCheckUpgradeDB($this->db, $vars['usersUsername'], $vars['password'], $currentdbVersion))
+        {
+            $this->session->clearSessionData();
+            $this->session->setVar("setup_Superadmin", TRUE);
+            $this->session->setVar("setup_Write", TRUE);
+            
+            $pString .= \HTML\p(
+                'CURRENT MAX EXECUTION TIME: ' . ini_get("max_execution_time") . ' secs' . BR
+                . 'CURRENT PHP MEMORY LIMIT: ' . ini_get("memory_limit")
+            );
+            $pString .= \HTML\p($this->installMessages->text("upgradeDB1"));
+            $pString .= \HTML\p($this->installMessages->text("upgradeDB3"));
+            $pString .= \FORM\formHeader("upgradeDB");
+            $pString .= \HTML\p(\FORM\formSubmit($this->installMessages->text("upgradeDBSubmit")), FALSE, 'right');
+            $pString .= \FORM\formEnd();
+        }
+        else
+        {
+            $email = \UPDATE\getConfigContactEmail($this->db);
+            $email = $email ? "(" . $email . ")" : "";
+            $pString .= \HTML\p($this->installMessages->text("upgradeDB2", $email));
+            
+            $pString .= \HTML\p($this->messages->text("authorize", "logonSuperadmin"));
+            
+            $pString .= \FORM\formHeader("upgradeDBLogon");
+            $pString .= \HTML\tableStart('left width50percent');
+            $pString .= \HTML\trStart();
+            $pString .= \HTML\td($this->messages->text("user", "username") . ":&nbsp;&nbsp;");
+            $pString .= \HTML\td(\FORM\textInput(FALSE, "usersUsername"));
+            $pString .= \HTML\trEnd();
+            $pString .= \HTML\trStart();
+            $pString .= \HTML\td($this->messages->text("user", "password") . ":&nbsp;&nbsp;");
+            $pString .= \HTML\td(\FORM\passwordInput(FALSE, "password"));
+            $pString .= \HTML\trEnd();
+            $pString .= \HTML\trStart();
+            $pString .= \HTML\td("&nbsp;");
+            $pString .= \HTML\td(\FORM\formSubmit($this->messages->text("submit", "Submit")), 'right');
+            $pString .= \HTML\trEnd();
+            $pString .= \HTML\tableEnd();
+            $pString .= \FORM\formEnd();
+        }
+        $this->close($pString);
+    }
+    /**
+     * Special CLOSE function for pre v4.0 databases
+     *
+     * @param string $pString
+     */
+    private function close($pString)
+    {
+        $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
+        $string = <<<END
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WIKINDX Upgrade</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="$styledir/template.css" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
+</head>
+<body>
+    $pString
+</body>
+</html>
+END;
+        echo $string;
+        ob_end_flush();
+        die;
+    }
+    /**
      * Write the internal version in the database
      *
      * @param string $version
@@ -2076,120 +2191,5 @@ END;
             $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerLabel` varchar(1020) DEFAULT NOT NULL;");
             $this->db->queryNoError("ALTER TABLE " . WIKINDX_DB_TABLEPREFIX . "plugin_soundexplorer MODIFY COLUMN `pluginsoundexplorerArray` text DEFAULT NOT NULL;");
         }
-    }
-    /**
-     * If required to pause execution, store current position and any $tableArray arrays in session and present continuation form to user
-     *
-     * @param string $finished
-     */
-    private function pauseExecution($finished)
-    {
-        // Print form and die
-        //      $pString = "php.ini's max_execution time (" . ini_get("max_execution_time") . " seconds) was about
-        //          to be exceeded.  Please click on the button to continue the upgrade.&nbsp;&nbsp;Do <strong>not</strong> click
-        //          until each script has finished.";
-        $pString = \HTML\p(\HTML\strong($this->installMessages->text("upgradeDBHeading")));
-        $pString .= \HTML\p($this->statusString);
-        if ($this->stageInterruptMessage)
-        {
-            $pString .= \HTML\p($this->stageInterruptMessage);
-        }
-        else
-        {
-            $pString .= \HTML\p("`$finished` of " . $this->numStages .
-            " finished.  Please click on the button to continue the upgrade.&nbsp;&nbsp;Do <b>not</b> click
-            until each script has finished.");
-        }
-        $pString .= \FORM\formHeader('continueExecution');
-        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Continue")) . \FORM\formEnd());
-        $this->close($pString);
-    }
-    /**
-     * Continue execution of upgrade after a pause
-     */
-    private function continueExecution()
-    {
-        // Nothing to do
-    }
-    /**
-     * Only the superadmin may update the database -- ask for login
-     *
-     * @param string $currentdbVersion
-     */
-    private function confirmUpdateDisplay($currentdbVersion)
-    {
-        $pString = \HTML\p(\HTML\strong($this->installMessages->text("upgradeDBHeading")));
-
-        $vars = GLOBALS::getVars();
-        $vars['usersUsername'] = isset($vars['usersUsername']) ? $vars['usersUsername'] : '';
-        $vars['password'] = isset($vars['password']) ? $vars['password'] : '';
-        if (\UPDATE\logonCheckUpgradeDB($this->db, $vars['usersUsername'], $vars['password'], $currentdbVersion))
-        {
-            $this->session->clearSessionData();
-            $this->session->setVar("setup_Superadmin", TRUE);
-            $this->session->setVar("setup_Write", TRUE);
-            
-            $pString .= \HTML\p(
-                'CURRENT MAX EXECUTION TIME: ' . ini_get("max_execution_time") . ' secs' . BR
-                . 'CURRENT PHP MEMORY LIMIT: ' . ini_get("memory_limit")
-            );
-            $pString .= \HTML\p($this->installMessages->text("upgradeDB1"));
-            $pString .= \HTML\p($this->installMessages->text("upgradeDB3"));
-            $pString .= \FORM\formHeader("upgradeDB");
-            $pString .= \HTML\p(\FORM\formSubmit($this->installMessages->text("upgradeDBSubmit")), FALSE, 'right');
-            $pString .= \FORM\formEnd();
-        }
-        else
-        {
-            $email = \UPDATE\getConfigContactEmail($this->db);
-            $email = $email ? "(" . $email . ")" : "";
-            $pString .= \HTML\p($this->installMessages->text("upgradeDB2", $email));
-            
-            $pString .= \HTML\p($this->messages->text("authorize", "logonSuperadmin"));
-            
-            $pString .= \FORM\formHeader("upgradeDBLogon");
-            $pString .= \HTML\tableStart('left width50percent');
-            $pString .= \HTML\trStart();
-            $pString .= \HTML\td($this->messages->text("user", "username") . ":&nbsp;&nbsp;");
-            $pString .= \HTML\td(\FORM\textInput(FALSE, "usersUsername"));
-            $pString .= \HTML\trEnd();
-            $pString .= \HTML\trStart();
-            $pString .= \HTML\td($this->messages->text("user", "password") . ":&nbsp;&nbsp;");
-            $pString .= \HTML\td(\FORM\passwordInput(FALSE, "password"));
-            $pString .= \HTML\trEnd();
-            $pString .= \HTML\trStart();
-            $pString .= \HTML\td("&nbsp;");
-            $pString .= \HTML\td(\FORM\formSubmit($this->messages->text("submit", "Submit")), 'right');
-            $pString .= \HTML\trEnd();
-            $pString .= \HTML\tableEnd();
-            $pString .= \FORM\formEnd();
-        }
-        $this->close($pString);
-    }
-    /**
-     * Special CLOSE function for pre v4.0 databases
-     *
-     * @param string $pString
-     */
-    private function close($pString)
-    {
-        $styledir = WIKINDX_URL_COMPONENT_TEMPLATES . "/" . WIKINDX_TEMPLATE_DEFAULT;
-        $string = <<<END
-<!DOCTYPE html>
-<html>
-<head>
-    <title>WIKINDX Upgrade</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="$styledir/template.css" type="text/css">
-    <link rel="shortcut icon" type="image/x-icon" href="$styledir/images/favicon.ico">
-</head>
-<body>
-    $pString
-</body>
-</html>
-END;
-        echo $string;
-        ob_end_flush();
-        die;
     }
 }

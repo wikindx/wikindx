@@ -57,7 +57,7 @@ tinyMCE.init({
 		editor_deselector : "mceNoEditor",
         theme : "advanced",
         element_format : "html",
-// Keep as UTF8
+        // Keep as UTF8
         entity_encoding : "raw",
         plugins : "autolink,lists,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,wikindxContextMenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,wikindxCite,wikindxSpecialChars",
 
@@ -121,17 +121,11 @@ tinyMCE.init({
 		$ids,
         theme : "advanced",
         element_format : "html",
-// Keep as UTF8
+        // Keep as UTF8
         entity_encoding : "raw",
         plugins : "paste, wikindxCite, wikindxImage, advlist, wikindxLink, wikindxContextMenu, directionality, nonbreaking, wikindxSpecialChars",
 		editor_deselector : "mceNoEditor",
 		nonbreaking_force_tab : true,
-//		forced_root_block : false,
-//		force_br_newlines : true,
-//		force_p_newlines : false,
-
-
-
 
         // Theme options
         theme_advanced_buttons1 : "cut,copy,paste,pastetext,pasteword,|,bold,italic,underline,removeformat,code,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontselect,fontsizeselect,",
@@ -205,7 +199,7 @@ tinyMCE.init({
 		editor_deselector : "mceNoEditor",
         theme : "advanced",
         element_format : "html",
-// Keep as UTF8
+        // Keep as UTF8
         entity_encoding : "raw",
         $plugins,
 
@@ -269,7 +263,7 @@ tinyMCE.init({
 		editor_deselector : "mceNoEditor",
         theme : "advanced",
         element_format : "html",
-// Keep as UTF8
+        // Keep as UTF8
         entity_encoding : "raw",
         remove_linebreaks : true,
         forced_root_block:  false,

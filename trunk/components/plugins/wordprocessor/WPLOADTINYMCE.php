@@ -160,7 +160,7 @@ tinyMCE.init({
 		editor_deselector : "mceNoEditor",
         theme : "advanced",
         element_format : "html",
-// Keep as UTF8
+        // Keep as UTF8
         entity_encoding : "raw",
         plugins : "$plugins_list",
 
@@ -182,8 +182,8 @@ tinyMCE.init({
 
         // Example content CSS (should be your site CSS)
         content_css : "$cssPath",
-// This is removed for the word processor tiny_mce instance because we want to use the original searchreplace CSS, for example.
-//        popup_css : "$cssPopupPath",
+        // This is removed for the word processor tiny_mce instance because we want to use the original searchreplace CSS, for example.
+        // popup_css : "$cssPopupPath",
 
 		onchange_callback     : "resetMessageCell",
 		handle_event_callback : "resetMessageCell"

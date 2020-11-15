@@ -345,47 +345,47 @@ class UPDATEDATABASE
                 $this->stage23();
             }
             elseif ($dbVersion < 24.0)
-            { // upgrade v6.3.11 to 6.4.0
+            { // upgrade v6.3.10 to 6.4.0
                 $this->numStages = 1;
                 $this->stage24();
             }
             elseif ($dbVersion < 25.0)
-            { // upgrade v6.3.11 to 6.4.0
+            { // upgrade v6.3.10 to 6.4.0
                 $this->numStages = 1;
                 $this->stage25();
             }
             elseif ($dbVersion < 26.0)
-            { // upgrade v6.3.11 to 6.4.0
+            { // upgrade v6.3.10 to 6.4.0
                 $this->numStages = 1;
                 $this->stage26();
             }
             elseif ($dbVersion < 27.0)
-            { // upgrade v6.3.11 to 6.4.0
+            { // upgrade v6.3.10 to 6.4.0
                 $this->numStages = 1;
                 $this->stage27();
             }
             elseif ($dbVersion < 28.0)
-            { // upgrade v6.3.11 to 6.4.0 (userHomeBib)
+            { // upgrade v6.3.10 to 6.4.0 (userHomeBib)
                 $this->numStages = 1;
                 $this->stage28();
             }
             elseif ($dbVersion < 29.0)
-            { // upgrade v6.3.11 to 6.4.0
+            { // upgrade v6.3.10 to 6.4.0
                 $this->numStages = 1;
                 $this->stage29();
             }
             elseif ($dbVersion < 30.0)
-            { // upgrade v6.3.11 to 6.4.0
+            { // upgrade v6.3.10 to 6.4.0
                 $this->numStages = 1;
                 $this->stage30();
             }
             elseif ($dbVersion < 31.0)
-            { // upgrade v6.3.11 to 6.4.0
+            { // upgrade v6.3.10 to 6.4.0
                 $this->numStages = 1;
                 $this->stage31();
             }
             elseif ($dbVersion < 32.0)
-            { // upgrade v6.3.11 to 6.4.0
+            { // upgrade v6.3.10 to 6.4.0
                 $this->numStages = 1;
                 $this->stage32();
             }
@@ -1025,7 +1025,7 @@ class UPDATEDATABASE
         $this->pauseExecution('stage22');
     }
     /**
-     * Upgrade database schema to version 23 (6.3.11)
+     * Upgrade database schema to version 23 (6.3.10)
      */
     private function stage23()
     {
@@ -1037,7 +1037,7 @@ class UPDATEDATABASE
         $this->pauseExecution('stage23');
     }
     /**
-     * Upgrade database schema to version 24 (6.3.11)
+     * Upgrade database schema to version 24 (6.3.10)
      */
     private function stage24()
     {
@@ -1049,7 +1049,7 @@ class UPDATEDATABASE
         $this->pauseExecution('stage24');
     }
     /**
-     * Upgrade database schema to version 25 (6.3.11)
+     * Upgrade database schema to version 25 (6.3.10)
      */
     private function stage25()
     {
@@ -1094,7 +1094,7 @@ class UPDATEDATABASE
         $this->pauseExecution('stage25');
     }
     /**
-     * Upgrade database schema to version 26 (6.3.11)
+     * Upgrade database schema to version 26 (6.3.10)
      */
     private function stage26()
     {
@@ -1106,7 +1106,7 @@ class UPDATEDATABASE
         $this->pauseExecution('stage26');
     }
     /**
-     * Upgrade database schema to version 27 (6.3.11)
+     * Upgrade database schema to version 27 (6.3.10)
      */
     private function stage27()
     {
@@ -1118,7 +1118,7 @@ class UPDATEDATABASE
         $this->pauseExecution('stage27');
     }
     /**
-     * Upgrade database schema to version 28 (6.3.11)
+     * Upgrade database schema to version 28 (6.3.10)
      */
     private function stage28()
     {
@@ -1165,7 +1165,7 @@ class UPDATEDATABASE
         $this->pauseExecution('stage31');
     }
     /**
-     * Upgrade database schema to version 24 (6.3.11)
+     * Upgrade database schema to version 24 (6.3.10)
      */
     private function stage32()
     {
@@ -1819,7 +1819,7 @@ class UPDATEDATABASE
         $this->db->updateNull('resource_metadata', 'resourcemetadataTimestampEdited'); // default is NULL
     }
     /**
-     * Write new config.php with upgrade to >= WIKINDX v6.3.11
+     * Write new config.php with upgrade to >= WIKINDX v6.3.10
      */
     private function writeConfigFile6_4_0()
     {

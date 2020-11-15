@@ -37,8 +37,8 @@ class UPDATEDATABASE
     private $stageInterruptMessage = FALSE;
     /** string */
     private $statusString;
-    /** integer */
-    private $numStages;
+    /** float */
+    private $stageExecuted;
     /**
      * UPDATEDATABASE
      */
@@ -221,173 +221,54 @@ class UPDATEDATABASE
 
             if ($dbVersion < 5.2)
             { // upgrade v5.1 to 5.2.2
-                $this->numStages = 1;
+                $this->stageExecuted = 5.2;
                 $this->stage5_2();
             }
             elseif ($dbVersion < 5.4)
             { // upgrade v5.2.2 to 5.4
-                $this->numStages = 1;
+                $this->stageExecuted = 5.4;
                 $this->stage5_4();
             }
             elseif ($dbVersion < 5.5)
             { // upgrade v5.4 to 5.5
-                $this->numStages = 1;
+                $this->stageExecuted = 5.5;
                 $this->stage5_5();
             }
             elseif ($dbVersion < 5.6)
             { // upgrade v5.5 to 5.6
-                $this->numStages = 1;
+                $this->stageExecuted = 5.6;
                 $this->stage5_6();
             }
             elseif ($dbVersion < 5.7)
             { // upgrade v5.6 to 5.7
-                $this->numStages = 1;
+                $this->stageExecuted = 5.7;
                 $this->stage5_7();
             }
             elseif ($dbVersion < 5.8)
             { // upgrade v5.7 to 5.8
-                $this->numStages = 1;
+                $this->stageExecuted = 5.8;
                 $this->stage5_8();
             }
             elseif ($dbVersion < 5.9)
             { // upgrade v5.8 to 5.9
-                $this->numStages = 1;
+                $this->stageExecuted = 5.9;
                 $this->stage5_9();
             }
             elseif ($dbVersion < 6.0)
             { // upgrade v5.9 to 6
-                $this->numStages = 1;
+                $this->stageExecuted = 6;
                 $this->stage6();
             }
-            elseif ($dbVersion < 7.0)
-            { // upgrade v6 to 6.0.4
-                $this->numStages = 1;
-                $this->stage7();
-            }
-            elseif ($dbVersion < 8.0)
-            { // upgrade v6.0.4 to 6.0.5
-                $this->numStages = 1;
-                $this->stage8();
-            }
-            elseif ($dbVersion < 9.0)
-            { // upgrade v6.0.5 to 6.0.6
-                $this->numStages = 1;
-                $this->stage9();
-            }
-            elseif ($dbVersion < 10.0)
-            { // upgrade v6.0.6 to 6.2.0
-                $this->numStages = 1;
-                $this->stage10();
-            }
-            elseif ($dbVersion < 11.0)
-            { // upgrade v6.2.0 to 6.2.1
-                $this->numStages = 1;
-                $this->stage11();
-            }
-            elseif ($dbVersion < 12.0)
-            { // upgrade v6.2.1 to 6.2.2 part A
-                $this->numStages = 1;
-                $this->stage12();
-            }
-            elseif ($dbVersion < 13.0)
-            { // upgrade v6.2.1 to 6.2.2 part B
-                $this->numStages = 1;
-                $this->stage13();
-            }
-            elseif ($dbVersion < 14.0)
-            { // upgrade v6.2.1 to 6.2.2 part C
-                $this->numStages = 1;
-                $this->stage14();
-            }
-            elseif ($dbVersion < 15.0)
-            { // upgrade v6.2.2 to 6.3.8
-                $this->numStages = 1;
-                $this->stage15();
-            }
-            elseif ($dbVersion < 16.0)
-            { // upgrade v6.3.8 to 6.3.8
-                $this->numStages = 1;
-                $this->stage16();
-            }
-            elseif ($dbVersion < 17.0)
-            { // upgrade v6.3.8 to 6.3.8
-                $this->numStages = 1;
-                $this->stage17();
-            }
-            elseif ($dbVersion < 18.0)
-            { // upgrade v6.3.8 to 6.3.8
-                $this->numStages = 1;
-                $this->stage18();
-            }
-            elseif ($dbVersion < 19.0)
-            { // upgrade v6.3.8 to 6.3.8
-                $this->numStages = 1;
-                $this->stage19();
-            }
-            elseif ($dbVersion < 20.0)
-            { // upgrade v6.3.8 to 6.3.8
-                $this->numStages = 1;
-                $this->stage20();
-            }
-            elseif ($dbVersion < 21.0)
-            { // upgrade v6.3.8 to 6.3.8
-                $this->numStages = 1;
-                $this->stage21();
-            }
-            elseif ($dbVersion < 22.0)
-            { // upgrade v6.3.8 to 6.3.8
-                $this->numStages = 1;
-                $this->stage22();
-            }
-            elseif ($dbVersion < 23.0)
-            { // upgrade v6.3.10 to 6.4.0
-                $this->numStages = 1;
-                $this->stage23();
-            }
-            elseif ($dbVersion < 24.0)
-            { // upgrade v6.3.10 to 6.4.0
-                $this->numStages = 1;
-                $this->stage24();
-            }
-            elseif ($dbVersion < 25.0)
-            { // upgrade v6.3.10 to 6.4.0
-                $this->numStages = 1;
-                $this->stage25();
-            }
-            elseif ($dbVersion < 26.0)
-            { // upgrade v6.3.10 to 6.4.0
-                $this->numStages = 1;
-                $this->stage26();
-            }
-            elseif ($dbVersion < 27.0)
-            { // upgrade v6.3.10 to 6.4.0
-                $this->numStages = 1;
-                $this->stage27();
-            }
-            elseif ($dbVersion < 28.0)
-            { // upgrade v6.3.10 to 6.4.0 (userHomeBib)
-                $this->numStages = 1;
-                $this->stage28();
-            }
-            elseif ($dbVersion < 29.0)
-            { // upgrade v6.3.10 to 6.4.0
-                $this->numStages = 1;
-                $this->stage29();
-            }
-            elseif ($dbVersion < 30.0)
-            { // upgrade v6.3.10 to 6.4.0
-                $this->numStages = 1;
-                $this->stage30();
-            }
-            elseif ($dbVersion < 31.0)
-            { // upgrade v6.3.10 to 6.4.0
-                $this->numStages = 1;
-                $this->stage31();
-            }
-            elseif ($dbVersion < 32.0)
-            { // upgrade v6.3.10 to 6.4.0
-                $this->numStages = 1;
-                $this->stage32();
+            elseif ($dbVersion < WIKINDX_INTERNAL_VERSION)
+            {
+                // upgrade v6 to X.Y.Z
+                $this->stageExecuted = $dbVersion + 1;
+                $func_stage = "stage" . strval($this->stageExecuted);
+                
+                if (method_exists($this, $func_stage))
+                    $this->$func_stage();
+                else
+                    die("Upgrade function {$func_stage}() is not yet implemented");
             }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
@@ -427,13 +308,11 @@ class UPDATEDATABASE
     }
     /**
      * Check and print status of update scripts
-     *
-     * @param string $stage
      */
-    private function checkStatus($stage)
+    private function checkStatus()
     {
         $pString = "MAX EXECUTION TIME: " . ini_get("max_execution_time") . ' secs' . BR;
-        $pString .= "ELAPSED TIME ($stage): ";
+        $pString .= "ELAPSED TIME (Stage " . $this->stageExecuted . "): ";
         $pString .= time() - $this->oldTime . " secs.";
         $pString .= BR;
         $pString .= "Database queries: " . GLOBALS::getDbQueries() . BR;
@@ -443,10 +322,8 @@ class UPDATEDATABASE
     }
     /**
      * If required to pause execution, store current position and any $tableArray arrays in session and present continuation form to user
-     *
-     * @param string $finished
      */
-    private function pauseExecution($finished)
+    private function pauseExecution()
     {
         // Print form and die
         //      $pString = "php.ini's max_execution time (" . ini_get("max_execution_time") . " seconds) was about
@@ -460,9 +337,9 @@ class UPDATEDATABASE
         }
         else
         {
-            $pString .= \HTML\p("`$finished` of " . $this->numStages .
-            " finished.  Please click on the button to continue the upgrade.&nbsp;&nbsp;Do <b>not</b> click
-            until each script has finished.");
+            $pString .= \HTML\p("<b>Stage $finished</b> finished.");
+            $pString .= \HTML\p("Please click on the button to continue the upgrade.");
+            $pString .= \HTML\p("Do <b>not</b> click until each script has finished.");
         }
         $pString .= \FORM\formHeader('continueExecution');
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Continue")) . \FORM\formEnd());
@@ -608,8 +485,8 @@ END;
         $this->updateDbSchema('5.2');
         
         $this->updateSoftwareVersion(5.2);
-        $this->checkStatus('stage5_2');
-        $this->pauseExecution('stage5_2');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 5.4.
@@ -802,8 +679,8 @@ END;
         $user->writeSessionPreferences(FALSE);
         
         $this->updateSoftwareVersion(5.4);
-        $this->checkStatus('stage5_4');
-        $this->pauseExecution('stage5_4');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 5.5.
@@ -815,8 +692,8 @@ END;
         $this->updatePluginTables();
         
         $this->updateSoftwareVersion(5.5);
-        $this->checkStatus('stage5_5');
-        $this->pauseExecution('stage5_5');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 5.6.
@@ -827,8 +704,8 @@ END;
         $this->updateDbSchema('5.6');
         
         $this->updateSoftwareVersion(5.6);
-        $this->checkStatus('stage5_6');
-        $this->pauseExecution('stage5_6');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 5.7.
@@ -842,8 +719,8 @@ END;
         $this->correctDatetimeFields();
         
         $this->updateSoftwareVersion(5.7);
-        $this->checkStatus('stage5_7');
-        $this->pauseExecution('stage5_7');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 5.8. There are no changes to DB structure so no call to updateDbSchema('5.8').
@@ -856,8 +733,8 @@ END;
         $this->correctCreators();
         
         $this->updateSoftwareVersion(5.8);
-        $this->checkStatus('stage5_8');
-        $this->pauseExecution('stage5_8');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 5.9
@@ -902,8 +779,8 @@ END;
         $this->updateSoftwareVersion(5.9);
         
         echo $this->installMessages->text("upgradeDBv5.9");
-        $this->checkStatus('stage5_9');
-        $this->pauseExecution('stage5_9');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 6
@@ -929,8 +806,8 @@ END;
         $this->updateSoftwareVersion(6);
         
         echo $this->installMessages->text("upgradeDBv6");
-        $this->checkStatus('stage6');
-        $this->pauseExecution('stage6');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 7 (6.0.4)
@@ -939,8 +816,8 @@ END;
     {
         $this->updateDbSchema('7');
         $this->updateSoftwareVersion(7);
-        $this->checkStatus('stage7');
-        $this->pauseExecution('stage7');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 8 (6.0.5)
@@ -949,8 +826,8 @@ END;
     {
         $this->updateDbSchema('8');
         $this->updateSoftwareVersion(8);
-        $this->checkStatus('stage8');
-        $this->pauseExecution('stage8');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 9 (6.0.6)
@@ -965,8 +842,8 @@ END;
         }
         
         $this->updateSoftwareVersion(9);
-        $this->checkStatus('stage9');
-        $this->pauseExecution('stage9');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 10 (6.0.8)
@@ -977,8 +854,8 @@ END;
         $this->updateDbSchema('10');
         
         $this->updateSoftwareVersion(10);
-        $this->checkStatus('stage10');
-        $this->pauseExecution('stage10');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 11 (6.2.1)
@@ -989,11 +866,11 @@ END;
         $this->updateDbSchema('11');
         
         $this->updateSoftwareVersion(11);
-        $this->checkStatus('stage11');
-        $this->pauseExecution('stage11');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
-     * Upgrade database schema to version 12 (6.2.2)
+     * Upgrade database schema to version 12 (6.2.2 - part A)
      */
     private function stage12()
     {
@@ -1001,12 +878,12 @@ END;
         $this->updateDbSchema('12');
         
         $this->updateSoftwareVersion(12);
-        $this->checkStatus('stage12');
+        $this->checkStatus();
         $this->stageInterruptMessage = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
-        $this->pauseExecution('stage12');
+        $this->pauseExecution();
     }
     /**
-     * Upgrade database schema to version 13 (6.2.2)
+     * Upgrade database schema to version 13 (6.2.2 - part B)
      */
     private function stage13()
     {
@@ -1030,11 +907,11 @@ END;
         }
         
         $this->updateSoftwareVersion(13);
-        $this->checkStatus('stage13');
-        $this->pauseExecution('stage13');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
-     * Upgrade database schema to version 14 (6.2.2)
+     * Upgrade database schema to version 14 (6.2.2 - part C)
      */
     private function stage14()
     {
@@ -1042,8 +919,8 @@ END;
         $this->updateDbSchema('14');
         
         $this->updateSoftwareVersion(14);
-        $this->checkStatus('stage14');
-        $this->pauseExecution('stage14');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 15 (6.3.8)
@@ -1054,8 +931,8 @@ END;
         $this->updateDbSchema('15');
         
         $this->updateSoftwareVersion(15);
-        $this->checkStatus('stage15');
-        $this->pauseExecution('stage15');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 16 (6.3.8)
@@ -1064,8 +941,8 @@ END;
     {
         // This stage was doing a config change that have been moved to stage 24
         $this->updateSoftwareVersion(16);
-        $this->checkStatus('stage16');
-        $this->pauseExecution('stage16');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 17 (6.3.8)
@@ -1076,8 +953,8 @@ END;
         $this->updateDbSchema('17');
         
         $this->updateSoftwareVersion(17);
-        $this->checkStatus('stage17');
-        $this->pauseExecution('stage17');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 18 (6.3.8)
@@ -1088,8 +965,8 @@ END;
         $this->updateDbSchema('18');
         
         $this->updateSoftwareVersion(18);
-        $this->checkStatus('stage18');
-        $this->pauseExecution('stage18');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 19 (6.3.8)
@@ -1100,8 +977,8 @@ END;
         $this->updateDbSchema('19');
         
         $this->updateSoftwareVersion(19);
-        $this->checkStatus('stage19');
-        $this->pauseExecution('stage19');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 20 (6.3.8)
@@ -1112,8 +989,8 @@ END;
         $this->updateDbSchema('20');
         
         $this->updateSoftwareVersion(20);
-        $this->checkStatus('stage20');
-        $this->pauseExecution('stage20');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 21 (6.3.8)
@@ -1124,8 +1001,8 @@ END;
         $this->updateDbSchema('21');
         
         $this->updateSoftwareVersion(21);
-        $this->checkStatus('stage21');
-        $this->pauseExecution('stage21');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 22 (6.3.8)
@@ -1136,11 +1013,11 @@ END;
         $this->updateDbSchema('22');
         
         $this->updateSoftwareVersion(22);
-        $this->checkStatus('stage22');
-        $this->pauseExecution('stage22');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
-     * Upgrade database schema to version 23 (6.3.10)
+     * Upgrade database schema to version 23 (6.4.0)
      */
     private function stage23()
     {
@@ -1148,11 +1025,11 @@ END;
         $this->updateDbSchema('23');
         
         $this->updateSoftwareVersion(23);
-        $this->checkStatus('stage23');
-        $this->pauseExecution('stage23');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
-     * Upgrade database schema to version 24 (6.3.10)
+     * Upgrade database schema to version 24 (6.4.0)
      */
     private function stage24()
     {
@@ -1160,11 +1037,11 @@ END;
         // It has been moved to step 32 which removes others.
         
         $this->updateSoftwareVersion(24);
-        $this->checkStatus('stage24');
-        $this->pauseExecution('stage24');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
-     * Upgrade database schema to version 25 (6.3.10)
+     * Upgrade database schema to version 25 (6.4.0)
      */
     private function stage25()
     {
@@ -1205,11 +1082,11 @@ END;
         }
         
         $this->updateSoftwareVersion(25);
-        $this->checkStatus('stage25');
-        $this->pauseExecution('stage25');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
-     * Upgrade database schema to version 26 (6.3.10)
+     * Upgrade database schema to version 26 (6.4.0)
      */
     private function stage26()
     {
@@ -1217,11 +1094,11 @@ END;
         $this->updateDbSchema('26');
         
         $this->updateSoftwareVersion(26);
-        $this->checkStatus('stage26');
-        $this->pauseExecution('stage26');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
-     * Upgrade database schema to version 27 (6.3.10)
+     * Upgrade database schema to version 27 (6.4.0)
      */
     private function stage27()
     {
@@ -1229,11 +1106,11 @@ END;
         $this->updateDbSchema('27');
         
         $this->updateSoftwareVersion(27);
-        $this->checkStatus('stage27');
-        $this->pauseExecution('stage27');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
-     * Upgrade database schema to version 28 (6.3.10)
+     * Upgrade database schema to version 28 (6.4.0)
      */
     private function stage28()
     {
@@ -1241,22 +1118,22 @@ END;
         $this->updateDbSchema('28');
         
         $this->updateSoftwareVersion(28);
-        $this->checkStatus('stage28');
-        $this->pauseExecution('stage28');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
-     * Remove unwanted rows in user_bibliography_resource
+     * Remove unwanted rows in user_bibliography_resource (6.4.0)
      */
     private function stage29()
     {
         $this->db->formatConditionsOneField([-1, -2], 'userbibliographyresourceBibliographyId');
         $this->db->delete('user_bibliography_resource');
         $this->updateSoftwareVersion(29);
-        $this->checkStatus('stage29');
-        $this->pauseExecution('stage29');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
-     * Remove mistakenly named configBrowserTagID from config table
+     * Remove mistakenly named configBrowserTagID from config table (6.4.0)
      */
     private function stage30()
     {
@@ -1264,8 +1141,8 @@ END;
         $this->updateDbSchema('30');
         
         $this->updateSoftwareVersion(30);
-        $this->checkStatus('stage30');
-        $this->pauseExecution('stage30');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
      * Upgrade database schema to version 31 (6.4.0)
@@ -1276,11 +1153,11 @@ END;
         $this->updateDbSchema('31');
         
         $this->updateSoftwareVersion(31);
-        $this->checkStatus('stage31');
-        $this->pauseExecution('stage31');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
     /**
-     * Upgrade database schema to version 24 (6.3.10)
+     * Upgrade database schema to version 32 (6.4.0)
      */
     private function stage32()
     {
@@ -1288,8 +1165,8 @@ END;
         $this->writeConfigFile6_4_0(); // dies if not possible
         
         $this->updateSoftwareVersion(32);
-        $this->checkStatus('stage32');
-        $this->pauseExecution('stage32');
+        $this->checkStatus();
+        $this->pauseExecution();
     }
 
     /**
@@ -1396,10 +1273,10 @@ END;
             // Check we have more than 6 seconds buffer before max_execution_time times out.
             if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)) || $countTransfered >= 200000)
             {
-                $this->checkStatus('stage13');
+                $this->checkStatus();
                 $this->stageInterruptMessage = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
                 $this->stageInterruptMessage .= "<br>stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
-                $this->pauseExecution('stage13', 'stage13');
+                $this->pauseExecution();
             }
         }
         // Remaining past statistics
@@ -1425,10 +1302,10 @@ END;
         // Check we have more than 6 seconds buffer before max_execution_time times out.
         if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)))
         {
-            $this->checkStatus('stage13');
+            $this->checkStatus();
             $this->stageInterruptMessage = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
             $this->stageInterruptMessage .= "<br>stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
-            $this->pauseExecution('stage13', 'stage13');
+            $this->pauseExecution();
         }
     
         // 2. Current statistics for views

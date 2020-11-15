@@ -229,7 +229,14 @@ class UPDATEDATABASE
 
             // Disable temporarily all SQL mode to update old databases
             $this->db->setSqlMode('');
-
+            
+            // Operations always carried out at the start of the last upgrade
+            if ($dbVersion + 1 == WIKINDX_INTERNAL_VERSION)
+            {
+                // Refresh the locales list
+                \LOCALES\refreshSystemLocalesCache(TRUE);
+            }
+            
             if ($dbVersion < 5.2)
             { // upgrade v5.1 to 5.2.2
                 $this->targetVersion = 5.2;
@@ -282,11 +289,7 @@ class UPDATEDATABASE
                 else
                     die("Fatal error: upgrade function {$func_upgrade}() is not yet implemented");
             }
-            $attachment = FACTORY_ATTACHMENT::getInstance();
-            $attachment->checkAttachmentRows();
-            // Refresh the locales list
-            \LOCALES\refreshSystemLocalesCache(TRUE);
-            $this->updateSoftwareVersion(WIKINDX_INTERNAL_VERSION);
+            
             $this->upgradeCompleted = TRUE;
         }
 
@@ -323,9 +326,11 @@ class UPDATEDATABASE
      */
     private function checkStatus()
     {
-        $pString  = "Upgrade to internal version: " . $this->targetVersion . BR;
+        $pString  = \HTML\p("Do <b>not</b> click until each script has finished.");
+        $pString .= "INTERMEDIATE INTERNAL VERSION: <b>" . $this->targetVersion . "</b>" . BR;
+        $pString .= "FINAL INTERNAL VERSION: <b>" . WIKINDX_INTERNAL_VERSION . "</b>" . BR;
         $pString .= "MAX EXECUTION TIME: " . ini_get("max_execution_time") . " secs." . BR;
-        $pString .= "ELAPSED TIME: "       . time() - $this->oldTime . " secs." . BR;
+        $pString .= "ELAPSED TIME: "       . (time() - $this->oldTime) . " secs." . BR;
         $pString .= "DATABASE QUERIES: " . GLOBALS::getDbQueries() . BR;
         $pString .= "MEMORY LIMIT: " . ini_get("memory_limit") . BR;
         $pString .= "MEMORY USED: " . memory_get_peak_usage() / 1000000 . " MB";
@@ -348,9 +353,16 @@ class UPDATEDATABASE
         }
         else
         {
-            $pString .= \HTML\p("<b>Upgrade to internal version $finished</b> finished.");
-            $pString .= \HTML\p("Please click on the button to continue the upgrade.");
-            $pString .= \HTML\p("Do <b>not</b> click until each script has finished.");
+            if ($this->targetVersion == WIKINDX_INTERNAL_VERSION)
+            {
+                $pString .= \HTML\p("<b>Upgrade finished.</b>");
+                $pString .= \HTML\p("Please click on the button to return to the home page.");
+            }
+            else
+            {
+                $pString .= \HTML\p("Upgrade to internal version <b>" . $this->targetVersion . "</b> finished.");
+                $pString .= \HTML\p("Please click on the button to continue the upgrade.");
+            }
         }
         $pString .= \FORM\formHeader('continueExecution');
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Continue")) . \FORM\formEnd());
@@ -1147,11 +1159,16 @@ END;
      * Upgrade database schema to version 32 (6.4.0)
      *
      * Remove option WIKINDX_DB_TABLEPREFIX that is now hardcoded
+     * Clear missing attachments
      */
     private function upgradeTo32()
     {
         // dies if not possible
         $this->writeConfigFile6_4_0();
+        
+        // Clear attachments
+        $attachment = FACTORY_ATTACHMENT::getInstance();
+        $attachment->checkAttachmentRows();
         
         $this->updateSoftwareVersion();
         $this->checkStatus();

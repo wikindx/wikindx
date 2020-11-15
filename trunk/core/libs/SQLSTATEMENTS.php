@@ -275,7 +275,11 @@ class SQLSTATEMENTS
      */
     public function listList($order = 'creator', $table = 'resource', $subQ = FALSE)
     {
-        if (!$this->allIds && !$this->session->getVar("list_AllIds"))
+        if (!$allIds = GLOBALS::getTempStorage('list_AllIds'))
+        {
+            $allIds = $this->session->getVar("list_AllIds");
+        }
+        if (!$this->allIds && !$allIds)
         {
             return FALSE; // Perhaps browsing metadata keywords where the keyword is not attached to resources but only to ideas.
         }
@@ -398,6 +402,10 @@ class SQLSTATEMENTS
             $listQuery = $this->db->queryNoExecute($this->db->selectNoExecute('resource', $this->listFields));
         }
         $this->session->setVar("sql_ListStmt", $listQuery);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_ListStmt' => $listQuery]);
+        }
 
         return $listQuery . $limit;
     }
@@ -504,37 +512,39 @@ class SQLSTATEMENTS
         {
             $this->totalResourceSubquery = $this->db->subQuery($totalSubQuery, 't1', TRUE, TRUE);
             $this->session->delVar("list_AllIds");
+			GLOBALS::unsetTempStorage(['list_AllIds']);
         }
-        if (!$this->session->getVar("list_AllIds"))
-        {
-            if ($this->allIds and !GLOBALS::getUserVar('BrowseBibliography'))
-            {
-                $total = $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources');
-                $this->session->setVar("setup_PagingTotal", $total);
-                $this->session->setVar("list_AllIds", 'all');
-            }
-            else
-            {
-                $resultSet = $this->db->query($totalSubQuery);
-                while ($row = $this->db->fetchRow($resultSet))
-                {
-                    $ids[] = $row['rId'];
-                }
-                if (empty($ids))
-                {
-                    return FALSE;
-                }
-                $ids = array_filter($ids); // array_filter() to ensure no null ids
-                $total = count($ids);
-                $this->session->setVar("setup_PagingTotal", $total);
-                $this->session->setVar("list_AllIds", $ids);
-                $this->session->delVar("sql_CountAlphaStmt");
-                if ($this->browserTabID)
-                {
-                    GLOBALS::unsetTempStorage(['sql_CountAlphaStmt']);
-                }
-            }
-        }
+		if ($this->allIds and !GLOBALS::getUserVar('BrowseBibliography'))
+		{
+			$total = $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources');
+			$this->session->setVar("setup_PagingTotal", $total);
+			$this->session->setVar("list_AllIds", 'all');
+			if ($this->browserTabID) {
+				GLOBALS::setTempStorage(['setup_PagingTotal' => $total, 'list_AllIds' => 'all']);
+			}
+		}
+		else
+		{
+			$resultSet = $this->db->query($totalSubQuery);
+			while ($row = $this->db->fetchRow($resultSet))
+			{
+				$ids[] = $row['rId'];
+			}
+			if (empty($ids))
+			{
+				return FALSE;
+			}
+			$ids = array_filter($ids); // array_filter() to ensure no null ids
+			$total = count($ids);
+			$this->session->setVar("setup_PagingTotal", $total);
+			$this->session->setVar("list_AllIds", $ids);
+			$this->session->delVar("sql_CountAlphaStmt");
+			if ($this->browserTabID)
+			{
+				GLOBALS::setTempStorage(['setup_PagingTotal' => $total, 'list_AllIds' => $ids]);
+				GLOBALS::unsetTempStorage(['sql_CountAlphaStmt']);
+			}
+		}
         $this->common->pagingStyle(
             $this->countQuery,
             $this->listType,
@@ -554,8 +564,12 @@ class SQLSTATEMENTS
             $clause = ' ' . $orderBy . ' ' . $limit;
             $this->totalResourceSubquery = str_replace('W!K!NDXW!K!NDXW!K!NDX', $clause, $this->totalResourceSubquery);
         }
-        if (!$this->session->getVar("list_AllIds"))
+        if (!$ids = GLOBALS::getTempStorage('list_AllIds'))
         {
+            $ids = $this->session->getVar("list_AllIds");
+        }
+        if (is_bool($ids) || empty($ids))
+        { // FALSE
             return FALSE;
         }
 

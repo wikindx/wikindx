@@ -28,22 +28,19 @@ function redirectSet(url, qs)
  * If the same as the session, URL is opened in existing tab/window so return doing nothing.
  * If not the same as the session (session is null probably), URL is opened in a new tab/window so generate browserTabID and redirect
  */
-function getBrowserTabID(url, qs, browserTabID)
+function getBrowserTabID(url, qs, oldBrowserTabID)
 {
 	if (typeof sessionStorage.getItem !== "function") {
 		return;
 	}
-	if (browserTabID == sessionStorage.getItem('browserTabID')) { // Continuing in same tab/window
+	if (oldBrowserTabID == sessionStorage.getItem('browserTabID')) { // Continuing in same tab/window
 		return;
 	}
+	url = url.replace('browserTabID=' + oldBrowserTabID, '');
 // User has opened a link in a new tab/window – generate a new ID
 	browserTabID = uuidv4();
 	sessionStorage.setItem('browserTabID', browserTabID);
-	if (qs) {
-		url = url + '&browserTabID=' + browserTabID;
-	} else { // plain index.php
-		url = url + '?browserTabID=' + browserTabID;
-	}
+	url = url + 'browserTabID=' + browserTabID;
 	window.location.href = url;
 }
 

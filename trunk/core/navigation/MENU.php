@@ -606,19 +606,27 @@ class MENU
         {
             $this->search = [
                 $messages->text("menu", "search") => 'index.php?action=noMenu&method=search',
-                $messages->text("menu", "quickSearch") => 'index.php?action=list_QUICKSEARCH_CORE',
+                $messages->text("menu", "quickSearch") => 'index.php?action=list_QUICKSEARCH_CORE' 
+                	. "&browserTabID=" . $this->browserTabID,
                 $messages->text("menu", "advancedSearch") => 'index.php?action=list_SEARCH_CORE',
                 'listSub' => [
                     $messages->text("menu", "listSub") => FALSE,
-                    $messages->text("menu", "listCreator") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=creator',
-                    $messages->text("menu", "listTitle") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=title',
-                    $messages->text("menu", "listPublisher") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=publisher',
-                    $messages->text("menu", "listYear") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=year',
-                    $messages->text("menu", "listTimestamp") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=timestamp',
+                    $messages->text("menu", "listCreator") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=creator' 
+                    .  "&browserTabID=" . $this->browserTabID,
+                    $messages->text("menu", "listTitle") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=title' 
+                    .  "&browserTabID=" . $this->browserTabID,
+                    $messages->text("menu", "listPublisher") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=publisher'
+                     .  "&browserTabID=" . $this->browserTabID,
+                    $messages->text("menu", "listYear") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=year' 
+                    .  "&browserTabID=" . $this->browserTabID,
+                    $messages->text("menu", "listTimestamp") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=timestamp'
+                     .  "&browserTabID=" . $this->browserTabID,
                     //                    $messages->text("menu", "listPopularity") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=popularityIndex',
                     //                    $messages->text("menu", "listViews") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=viewsIndex',
                     //                    $messages->text("menu", "listDownloads") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=downloadsIndex',
-                    $messages->text("menu", "listMaturity") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=maturityIndex',
+                    $messages->text("menu", "listMaturity") => 		
+                    'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=maturityIndex' 
+                    . "&browserTabID=" . $this->browserTabID,
                 ],
                 'browseSub' => [
                     $messages->text("menu", "browseSub") => FALSE,
@@ -651,17 +659,25 @@ class MENU
         {
             $this->search = [
                 $messages->text("menu", "search") => 'index.php?action=noMenu&method=search',
-                $messages->text("menu", "quickSearch") => 'index.php?action=list_QUICKSEARCH_CORE',
+                $messages->text("menu", "quickSearch") => 'index.php?action=list_QUICKSEARCH_CORE' 
+                	. "&browserTabID=" . $this->browserTabID,
                 $messages->text("menu", "advancedSearch") => 'index.php?action=list_SEARCH_CORE',
                 'listSub' => [
                     $messages->text("menu", "listSub") => FALSE,
-                    $messages->text("menu", "listCreator") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=creator',
-                    $messages->text("menu", "listTitle") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=title',
-                    $messages->text("menu", "listPublisher") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=publisher',
-                    $messages->text("menu", "listYear") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=year',
-                    $messages->text("menu", "listTimestamp") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=timestamp',
-                    $messages->text("menu", "listViews") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=viewsIndex',
-                    $messages->text("menu", "listMaturity") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=maturityIndex',
+                    $messages->text("menu", "listCreator") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=creator' 
+                    . "&browserTabID=" . $this->browserTabID,
+                    $messages->text("menu", "listTitle") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=title' 
+                    . "&browserTabID=" . $this->browserTabID,
+                    $messages->text("menu", "listPublisher") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=publisher' 
+                    . "&browserTabID=" . $this->browserTabID,
+                    $messages->text("menu", "listYear") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=year' 
+                    . "&browserTabID=" . $this->browserTabID,
+                    $messages->text("menu", "listTimestamp") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=timestamp' 
+                    . "&browserTabID=" . $this->browserTabID,
+//                    $messages->text("menu", "listViews") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=viewsIndex' . 
+//            	"&browserTabID=" . $this->browserTabID,
+                    $messages->text("menu", "listMaturity") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=maturityIndex' 
+                    . "&browserTabID=" . $this->browserTabID,
                 ],
                 'browseSub' => [
                     $messages->text("menu", "browseSub") => FALSE,
@@ -773,7 +789,8 @@ class MENU
         }
         if ($this->lastSolo)
         {
-            $this->res[$messages->text("menu", "lastSolo")] = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->lastSolo;
+            $this->res[$messages->text("menu", "lastSolo")] = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->lastSolo  . 
+            	"&browserTabID=" . $this->browserTabID;
         }
         if ($this->lastMulti)
         {

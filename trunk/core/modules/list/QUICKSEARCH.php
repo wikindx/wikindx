@@ -57,7 +57,6 @@ class QUICKSEARCH
             // 2. Store in and extract data from $tempStorage
             // 3. Finally, put back $tempStorage into temp_storage using $this->common->updateTempStorage();
             GLOBALS::initTempStorage($this->db, $this->browserTabID);
-            $order = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'search_Order');
             $order = GLOBALS::getTempStorage('search_Order');
             if (!$order)
             {

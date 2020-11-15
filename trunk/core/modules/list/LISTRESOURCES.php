@@ -19,12 +19,17 @@ class LISTRESOURCES
     private $vars;
     private $stmt;
     private $messages;
+    private $errors;
+    private $badInput;
     private $session;
     private $common;
     private $commonBib;
     private $user;
     private $count = 0;
     private $params;
+    private $browserTabID = FALSE;
+    private $order;
+    private $ascDesc = FALSE;
 
     public function __construct($method = FALSE)
     {
@@ -32,103 +37,81 @@ class LISTRESOURCES
         $this->vars = GLOBALS::getVars();
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
         $this->messages = FACTORY_MESSAGES::getInstance();
-        $errors = FACTORY_ERRORS::getInstance();
+        $this->errors = FACTORY_ERRORS::getInstance();
         $this->common = FACTORY_LISTCOMMON::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->user = FACTORY_USER::getInstance();
-        $badInput = FACTORY_BADINPUT::getInstance();
+        $this->badInput = FACTORY_BADINPUT::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "list"));
+        $this->checkInput();
+    }
+	/**
+	 * Initialize the process
+	 */
+	private function checkInput()
+	{
         if (!$this->common->resourcesExist())
         {
-            $badInput->close($this->messages->text("misc", "noResources"));
+            $this->badInput->close($this->messages->text("misc", "noResources"));
+        } 
+        if (!array_key_exists('method', $this->vars) || !array_key_exists('list_Order', $this->vars))
+        {
+            $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        // Clear previous list info except AscDesc when paging
-        $ascDesc = $this->session->getVar('list_AscDesc');
-        $this->session->clearArray('list');
-        if (array_key_exists('PagingStart', $this->vars))
-        { // paging
-            $this->session->setVar('list_AscDesc', $ascDesc);
+        $method = $this->vars['method'];
+        if (!method_exists($this, $method))
+        {
+            $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        $this->session->delVar("mywikindx_PagingStart");
-        $this->session->delVar("mywikindx_PagingStartAlpha");
         $linksInfo['info'] = $this->commonBib->displayBib();
         GLOBALS::setTplVar('resourceListInfo', $linksInfo);
         unset($linksInfo);
-        GLOBALS::setTplVar('heading', $this->messages->text("heading", "list"));
-        if (!$method)
+        if ($this->browserTabID)
         {
-            if (!array_key_exists('method', $this->vars))
-            {
-                $badInput->close($errors->text("inputError", "missing"));
-            }
-            $method = $this->vars['method'];
-            if (array_key_exists('list_Order', $this->vars))
-            {
-                $this->session->setVar("list_Order", $this->vars['list_Order']);
-            }
-            elseif (!array_key_exists('type', $this->vars) || ($this->vars['type'] != 'lastMulti'))
-            {
-                if ($method != 'reorder')
-                {
-                    $badInput->close($errors->text("inputError", "missing"));
-                }
-            }
+            // 1. Load any pre-existing search data into GLOBALS $tempStorage
+            // 2. Store in and extract data from $tempStorage
+            // 3. Finally, put back $tempStorage into temp_storage using $this->common->updateTempStorage();
+            GLOBALS::initTempStorage($this->db, $this->browserTabID);
         }
-        $this->session->setVar("sql_LastOrder", $this->session->getVar("list_Order"));
-        if (!method_exists($this, $method))
+		$this->order = $this->vars['list_Order'];
+		$orders = ['creator', 'title', 'publisher', 'year', 'timestamp', 'popularityIndex', 'viewsIndex', 'downloadsIndex', 'maturityIndex'];
+        if (!in_array($this->order, $orders))
         {
-            $badInput->close($errors->text("inputError", "missing"));
+            $this->badInput->close($this->errors->text("inputError", "invalid"));
         }
-        if (($method != 'reorder') && !$this->session->issetVar("list_AscDesc"))
+		if (array_key_exists('list_AscDesc', $this->vars)) {
+			$this->ascDesc = $this->vars['list_AscDesc'];
+		}
+		else {
+			if ($method == 'reorder') {
+				if (!$this->ascDesc = GLOBALS::getTempStorage('list_AscDesc')) {
+					$this->ascDesc = $this->session->getVar("list_AscDesc");
+				}
+			}
+			if (!$this->ascDesc && in_array($this->order, ['creator', 'title', 'publisher'])) {
+			   $this->ascDesc = $this->db->asc;
+			}
+			else if (!$this->ascDesc && in_array($this->order, ['year', 'timestamp', 'viewsIndex', 'popularityIndex', 
+				'downloadsIndex', 'maturityIndex'])) {
+			   $this->ascDesc = $this->db->desc;
+			}
+		}
+        $this->session->delVar("mywikindx_PagingStart");
+        $this->session->delVar("mywikindx_PagingStartAlpha");
+        if ($this->browserTabID)
         {
-            switch ($this->session->getVar("list_Order")) {
-                case 'creator':
-                    $this->session->setVar("list_AscDesc", $this->db->asc);
-
-                break;
-                case 'title':
-                    $this->session->setVar("list_AscDesc", $this->db->asc);
-
-                break;
-                case 'publisher':
-                    $this->session->setVar("list_AscDesc", $this->db->asc);
-
-                break;
-                case 'year':
-                    $this->session->setVar("list_AscDesc", $this->db->desc);
-
-                break;
-                case 'timestamp':
-                    $this->session->setVar("list_AscDesc", $this->db->desc);
-
-                break;
-                case 'viewsIndex':
-                    $this->session->setVar("list_AscDesc", $this->db->desc);
-
-                break;
-                case 'popularityIndex':
-                    $this->session->setVar("list_AscDesc", $this->db->desc);
-
-                break;
-                case 'downloadsIndex':
-                    $this->session->setVar("list_AscDesc", $this->db->desc);
-
-                break;
-                case 'maturityIndex':
-                    $this->session->setVar("list_AscDesc", $this->db->desc);
-
-                break;
-                default:
-                    $this->session->setVar("list_AscDesc", $this->db->asc);
-
-                break;
-            }
+            GLOBALS::unsetTempStorage(['mywikindx_PagingStart', 'mywikindx_PagingStartAlpha']);
+			GLOBALS::setTempStorage(['list_Order' => $this->order]);
+			GLOBALS::setTempStorage(['sql_LastOrder' => $this->order]);
+			GLOBALS::setTempStorage(['list_AscDesc' => $this->ascDesc]);
         }
-        if (!$this->session->getVar("list_Order"))
-        {
-            $this->session->setVar("list_Order", "creator");
-        }
+    	else {
+    		$this->session->setVar("list_Order", $this->order);
+    		$this->session->setVar("sql_LastOrder", $this->order);
+    		$this->session->setVar("list_AscDesc", $this->ascDesc);
+    	}
         // if browsing on the master bib, setting allIds = TRUE makes the execution marginally quicker for large databases.
         if (!GLOBALS::getUserVar('BrowseBibliography'))
         {
@@ -138,11 +121,11 @@ class LISTRESOURCES
         $this->session->delVar("sql_ListParams");
         if (!array_key_exists('url', $this->vars))
         {
-            $this->{$method}();
+//            $this->{$method}();
         }
     }
     /**
-     * With a reorder list request, which type of process do we want?
+     * With a reorder list request, print any message first
      */
     public function reorder()
     {
@@ -150,20 +133,10 @@ class LISTRESOURCES
         {
             GLOBALS::addTplVar('content', $this->vars['message']);
         }
-        $this->session->setVar("sql_ListParams", $this->params);
-        if (array_key_exists("list_Order", $this->vars) && $this->vars["list_Order"])
-        {
-            $this->session->setVar("search_Order", $this->vars["list_Order"]);
-            $this->session->setVar("sql_LastOrder", $this->vars["list_Order"]);
-        }
-        if (array_key_exists('list_AscDesc', $this->vars))
-        {
-            $this->session->setVar("list_AscDesc", $this->vars['list_AscDesc']);
-        }
         $this->processGeneral();
     }
     /**
-     * Display titles....
+     * Display resources ....
      */
     public function processGeneral()
     {
@@ -176,25 +149,18 @@ class LISTRESOURCES
         ++$this->count;
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
-        $orders = ['creator', 'title', 'publisher', 'year', 'timestamp', 'popularityIndex', 'viewsIndex', 'downloadsIndex', 'maturityIndex'];
-        $order = $this->session->getVar("list_Order");
-        if (array_search($order, $orders) === FALSE)
-        {
-            $errors = FACTORY_ERRORS::getInstance();
-            $badInput = FACTORY_BADINPUT::getInstance();
-            $badInput->close($errors->text("inputError", "invalid"));
-        }
-        $queryString = 'action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=' . $order;
+        $queryString = 'action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=' . $this->order;
         // NB. Ordering by popularity index uses temporary tables which must be created for each call (so cannot use the shortcuts for lastMulti)
-        if (($order != 'popularityIndex') && $this->lastMulti($queryString))
+        if ((!$this->vars['method'] == 'processGeneral') && ($this->order != 'popularityIndex') && $this->lastMulti($queryString))
         {
             return;
         }
-        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A') || in_array($order, ['popularityIndex', 'downloadsIndex', 'viewsIndex']))
+        if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A') || 
+        	in_array($this->order, ['popularityIndex', 'downloadsIndex', 'viewsIndex']))
         {
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($order, $queryString, $subStmt);
-            $sql = $this->stmt->listList($order);
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -206,10 +172,15 @@ class LISTRESOURCES
             $badInput = FACTORY_BADINPUT::getInstance();
             $badInput->close($errors->text("inputError", "invalid"));
         }
+        $this->common->display($sql, 'list');
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString]);
+        }
         $this->session->saveState(['search', 'sql', 'bookmark', 'list']);
-        $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * Quicker querying when paging
@@ -218,7 +189,9 @@ class LISTRESOURCES
      */
     private function quickQuery($queryString)
     {
-        $sql = $this->session->getVar("sql_ListStmt");
+    	if (!$sql = GLOBALS::getTempStorage('sql_ListStmt')) {
+	        $sql = $this->session->getVar("sql_ListStmt");
+	    }
         $this->pagingObject = FACTORY_PAGING::getInstance();
         $this->pagingObject->queryString = $queryString;
         $this->pagingObject->getPaging();
@@ -253,8 +226,8 @@ class LISTRESOURCES
      */
     private function setSubQuery()
     {
-        $this->db->ascDesc = $this->session->getVar("list_AscDesc");
-        switch ($this->session->getVar("list_Order")) {
+    	$this->db->ascDesc = $this->ascDesc;
+    	switch ($this->order) {
             case 'title':
                 $this->stmt->quarantine(FALSE, 'resourceId');
                 $this->stmt->useBib('resourceId');

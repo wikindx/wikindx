@@ -890,7 +890,8 @@ class RESOURCEVIEW
             $array['back'] = \HTML\a(
                 $this->icons->getClass("previous"),
                 $this->icons->getHTML("previous"),
-                "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $allIds[$thisKey - 1])
+                "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $allIds[$thisKey - 1]) . 
+            	"&browserTabID=" . $this->browserTabID
             );
         }
         elseif ($start && !$alpha)
@@ -898,7 +899,8 @@ class RESOURCEVIEW
             $array['back'] = \HTML\a(
                 $this->icons->getClass("previous"),
                 $this->icons->getHTML("previous"),
-                "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&np=backward")
+                "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&np=backward") . 
+            	"&browserTabID=" . $this->browserTabID
             );
         }
         else
@@ -910,7 +912,8 @@ class RESOURCEVIEW
             $array['forward'] = \HTML\a(
                 $this->icons->getClass("next"),
                 $this->icons->getHTML("next"),
-                "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $allIds[$thisKey + 1])
+                "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $allIds[$thisKey + 1]) . 
+            	"&browserTabID=" . $this->browserTabID
             );
         }
         elseif (($start + GLOBALS::getUserVar('Paging') < $total) && !$alpha)
@@ -918,7 +921,8 @@ class RESOURCEVIEW
             $array['forward'] = \HTML\a(
                 $this->icons->getClass("next"),
                 $this->icons->getHTML("next"),
-                "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&np=forward")
+                "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&np=forward") . 
+            	"&browserTabID=" . $this->browserTabID
             );
         }
         else
@@ -1051,11 +1055,13 @@ class RESOURCEVIEW
             if ($this->nextDelete)
             {
                 $links['delete'] .= htmlentities('&navigate=nextResource&resource_id=' . $row['resourceId']) .
-                htmlentities('&nextResourceId=') . $this->nextDelete;
+                htmlentities('&nextResourceId=') . $this->nextDelete . 
+            	"&browserTabID=" . $this->browserTabID;
             }
             else
             {
-                $links['delete'] .= htmlentities('&navigate=front&resource_id=' . $row['resourceId']);
+                $links['delete'] .= htmlentities('&navigate=front&resource_id=' . $row['resourceId']) . 
+            	"&browserTabID=" . $this->browserTabID;
             }
             $links['delete'] = \HTML\a($this->icons->getClass("delete"), $this->icons->getHTML("delete"), $links['delete']);
         }

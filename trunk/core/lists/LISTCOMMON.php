@@ -155,13 +155,8 @@ class LISTCOMMON
         {
             GLOBALS::unsetTempStorage(['list_NextPreviousIds', 'mywikindx_PagingStart']);
         }
-        if ($this->browserTabID)
-        {
-            $sql = GLOBALS::getTempStorage('sql_ListStmt');
-        }
-        else
-        {
-            $sql = $this->session->getVar("sql_ListStmt");
+        if (!$sql = GLOBALS::getTempStorage('sql_ListStmt')) {
+        	$sql = $this->session->getVar("sql_ListStmt");
         }
         // set back to beginning
         $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
@@ -1002,23 +997,23 @@ class LISTCOMMON
             $linksInfo['select'] = $this->createAddToBox($bibUserId, $bibs, $listType);
             if ($listType == 'list')
             {
-                if ($this->session->getVar("list_SomeResources"))
-                {
+                if (GLOBALS::getTempStorage("list_SomeResources")) {
                     $formHeader = 'list_LISTSOMERESOURCES_CORE';
                 }
-                else
-                {
+                else {
                     $formHeader = 'list_LISTRESOURCES_CORE';
                 }
                 $type = array_key_exists('type', $this->vars) ? \FORM\hidden("type", $this->vars['type']) : FALSE;
                 $linksInfo['reorder'] = $type .
-                    \FORM\hidden("method", "reorder") . $this->displayOrder($listType, TRUE) .
+                    \FORM\hidden("method", "reorder") . \FORM\hidden("browserTabID", $this->browserTabID) . 
+        			$this->displayOrder($listType, TRUE) .
                     BR . \FORM\formSubmit($this->messages->text("submit", "Proceed"), 'Submit', "onclick=\"document.forms['formSortingAddingListInfo'].elements['action'].value='$formHeader'\"");
             }
             elseif ($listType == 'basket')
             {
                 $linksInfo['reorder'] =
-                    \FORM\hidden("method", "reorder") . $this->displayOrder('basket', TRUE) .
+                    \FORM\hidden("method", "reorder") . \FORM\hidden("browserTabID", $this->browserTabID) . 
+                    $this->displayOrder('basket', TRUE) .
                     BR . \FORM\formSubmit($this->messages->text("submit", "Proceed"), 'Submit', "onclick=\"document.forms['formSortingAddingListInfo'].elements['action'].value='basket_BASKET_CORE'\"");
             }
             elseif ($listType == 'search')
@@ -1038,7 +1033,8 @@ class LISTCOMMON
                 else
                 {
                     $linksInfo['reorder'] =
-                        \FORM\hidden("method", "reprocess") . $this->displayOrder($listType, TRUE) .
+                        \FORM\hidden("method", "reprocess") . \FORM\hidden("browserTabID", $this->browserTabID) . 
+                        $this->displayOrder($listType, TRUE) .
                         BR . \FORM\formSubmit($this->messages->text("submit", "Proceed"), 'Submit', "onclick=\"document.forms['formSortingAddingListInfo'].elements['action'].value='list_SEARCH_CORE'\"");
                 }
             }
@@ -1617,8 +1613,12 @@ class LISTCOMMON
 
             return FALSE;
         }
-        $this->session->setVar("sql_ListParams", $strings);
-
+		if ($this->browserTabID)
+		{
+			GLOBALS::setTempStorage(['sql_ListParams' => $strings]);
+        } else {
+        	$this->session->setVar("sql_ListParams", $strings);
+		}
         return $this->messages->text('listParams', 'listParams') . BR . implode(BR, $strings);
     }
 }

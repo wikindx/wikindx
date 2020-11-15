@@ -127,7 +127,7 @@ class UPDATEDATABASE
         }
         else
         {
-            die("Upgrade not possible. " . $dbSchemaPath . " is not a directory or doesn't exist.");    
+            die("Fatal error: upgrade not possible. " . $dbSchemaPath . " is not a directory or doesn't exist.");    
         }
     }
     /**
@@ -280,7 +280,7 @@ class UPDATEDATABASE
                 if (method_exists($this, $func_upgrade))
                     $this->$func_upgrade();
                 else
-                    die("Upgrade function {$func_upgrade}() is not yet implemented");
+                    die("Fatal error: upgrade function {$func_upgrade}() is not yet implemented");
             }
             $attachment = FACTORY_ATTACHMENT::getInstance();
             $attachment->checkAttachmentRows();
@@ -516,7 +516,7 @@ END;
         }
         else
         {
-            die("Error: upgrade target version undefined. Inconsistent state!");
+            die("Fatal error: upgrade target version undefined. Inconsistent state!");
         }
     }
     /**
@@ -550,7 +550,7 @@ END;
         {
             // Update db summary no. in case we have attempted to upgrade a database less than 5.3 (we've been through the previous stages successfully)
             $this->updateSoftwareVersion();
-            die("Unable to create 'configtemp' table in the database. Check the database permissions.");
+            die("Fatal error: unable to create 'configtemp' table in the database. Check the database permissions.");
         }
         // Read old config and transfer values to temp table
         $row = $this->db->queryFetchFirstRow($this->db->selectNoExecute('config', '*'));

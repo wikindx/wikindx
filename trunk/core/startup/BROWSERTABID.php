@@ -29,7 +29,8 @@ class BROWSERTABID
      */
     public function js()
     {
-        $active = ['list_QUICKSEARCH_CORE', 'resource_RESOURCEVIEW_CORE', 'admin_DELETERESOURCE_CORE', 'list_LISTRESOURCES_CORE'];
+        $active = ['list_QUICKSEARCH_CORE', 'resource_RESOURCEVIEW_CORE', 'admin_DELETERESOURCE_CORE', 'list_LISTRESOURCES_CORE', 
+        	'basket_BASKET_CORE'];
         $tempSession = [];
         if (WIKINDX_BROWSER_TAB_ID && array_key_exists('action', $this->vars) && in_array($this->vars['action'], $active))
         {

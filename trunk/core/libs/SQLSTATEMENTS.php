@@ -331,7 +331,7 @@ class SQLSTATEMENTS
             elseif (!$this->allIds)
             {
                 $this->db->formatConditions($this->db->formatFields('resourceId') .
-                    $this->db->inClause(implode(',', $this->session->getVar("list_AllIds"))));
+                    $this->db->inClause(implode(',', $allIds)));
             }
         }
         elseif ($order == 'creator')
@@ -367,13 +367,13 @@ class SQLSTATEMENTS
             elseif (!$this->allIds)
             {
                 $this->db->formatConditions($this->db->formatFields('resourceId') .
-                    $this->db->inClause(implode(',', $this->session->getVar("list_AllIds"))));
+                    $this->db->inClause(implode(',', $allIds)));
             }
         }
         elseif (!in_array($order, ['popularityIndex', 'downloadsIndex', 'viewsIndex']) && !$this->allIds)
         { // all other orders
             $this->db->formatConditions($this->db->formatFields('resourceId') .
-                $this->db->inClause(implode(',', $this->session->getVar("list_AllIds"))));
+                $this->db->inClause(implode(',', $allIds)));
         }
         $this->listJoins($order);
         if (($order == 'popularityIndex') || ($order == 'downloadsIndex') || ($order == 'viewsIndex'))

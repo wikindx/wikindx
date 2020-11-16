@@ -21,6 +21,7 @@ class BASKET
     private $success;
     private $session;
     private $stmt;
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
@@ -30,19 +31,23 @@ class BASKET
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
-        switch ($this->session->getVar("list_Order")) {
-            case 'title':
-                break;
-            case 'creator':
-                break;
-            case 'publisher':
-                break;
-            case 'year':
-                break;
-            case 'timestamp':
-                break;
-            default:
-                $this->session->setVar("list_Order", 'creator');
+        $this->browserTabID = GLOBALS::getBrowserTabID();
+        if ($this->browserTabID)
+        {
+            // 1. Load any pre-existing search data into GLOBALS $tempStorage
+            // 2. Store in and extract data from $tempStorage
+            // 3. Finally, put back $tempStorage into temp_storage using $this->common->updateTempStorage();
+            GLOBALS::initTempStorage($this->db, $this->browserTabID);
+        }
+        if (!$order = GLOBALS::getTempStorage('list_Order')) {
+        	$order = $this->session->getVar("list_Order");
+        }
+        if (!in_array($order, ['title', 'creator', 'publisher', 'year', 'timestamp'])) {
+        	$this->session->setVar("list_Order", 'creator');
+        	if ($this->browserTabID)
+        	{
+        		GLOBALS::getTempStorage(['list_Order' => 'creator']);
+        	}
         }
     }
     /**
@@ -50,7 +55,12 @@ class BASKET
      */
     public function init()
     {
-        $basket = $this->session->getVar("basket_List", []);
+        if (!$basket = GLOBALS::getTempStorage('basket_List')) {
+        	$basket = $this->session->getVar("basket_List");
+        }
+        if (!is_array($basket)) {
+        	$basket = [];
+        }
         if (array_key_exists('resourceId', $this->vars))
         {
             $resourceId = $this->vars['resourceId'];
@@ -62,30 +72,49 @@ class BASKET
         // Ensure array is unique
         array_unique($basket);
         $this->session->setVar("basket_List", $basket);
+        if ($this->browserTabID) {
+        	GLOBALS::setTempStorage(['basket_List' => $basket]);
+        	\TEMPSTORAGE\store($this->db, $this->browserTabID, GLOBALS::getTempStorage());
+        }
         $this->session->saveState('basket');
         // send back to view this resource with success message
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
         $resource = new RESOURCEVIEW();
-        $resource->init($this->session->getVar("sql_LastSolo"));
+        if (!$solo = GLOBALS::getTempStorage('sql_LastSolo')) {
+        	$solo = $this->session->getVar("sql_LastSolo");
+        }
+        $resource->init($solo);
         GLOBALS::addTplVar('content', $this->success->text("basketAdd"));
     }
     /**
-     * Remove resource from basket
+     * Remove single resource from basket
      */
     public function remove()
     {
-        $basket = $this->session->getVar("basket_List", []);
+        if (!$basket = GLOBALS::getTempStorage('basket_List')) {
+        	$basket = $this->session->getVar("basket_List");
+        }
+        if (!is_array($basket)) {
+        	$basket = [];
+        }
         $resourceId = $this->vars['resourceId'];
         if (($key = array_search($resourceId, $basket)) !== FALSE)
         {
             unset($basket[$key]);
         }
         $this->session->setVar("basket_List", $basket);
+        if ($this->browserTabID) {
+        	GLOBALS::setTempStorage(['basket_List' => $basket]);
+        	\TEMPSTORAGE\store($this->db, $this->browserTabID, GLOBALS::getTempStorage());
+        }
         $this->session->saveState('basket');
         // send back to view this resource with success message
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
         $resource = new RESOURCEVIEW();
-        $resource->init($this->session->getVar("sql_LastSolo"));
+        if (!$solo = GLOBALS::getTempStorage('sql_LastSolo')) {
+        	$solo = $this->session->getVar("sql_LastSolo");
+        }
+        $resource->init($solo);
         GLOBALS::addTplVar('content', $this->success->text("basketRemove"));
     }
     /**
@@ -94,6 +123,9 @@ class BASKET
     public function reorder()
     {
         $this->session->setVar("list_AscDesc", $this->vars['list_AscDesc']);
+        if ($this->browserTabID) {
+        	GLOBALS::setTempStorage(['list_AscDesc' => $this->vars['list_AscDesc']]);
+        }
         $this->view();
     }
     /**
@@ -101,17 +133,36 @@ class BASKET
      */
     public function view()
     {
+    	if ($this->browserTabID) {
+			if (!$bl = GLOBALS::getTempStorage('basket_List')) {
+		        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
+        		new FRONT(); // __construct() runs on autopilot
+        		return;
+        	}
+		} else {
+			$bl = $this->session->getVar("basket_List");
+		}
+        if (!is_array($bl)) {
+        	$bl = [];
+        }
         if (array_key_exists('message', $this->vars))
         {
             GLOBALS::addTplVar('content', $this->vars['message']);
         }
         $sql = FALSE;
         $this->session->delVar('sql_ListParams');
+		if ($this->browserTabID)
+		{
+			GLOBALS::unsetTempStorage(['sql_ListParams']);
+		}
         $this->common = FACTORY_LISTCOMMON::getInstance();
         $queryString = 'action=basket_BASKET_CORE&method=view';
-        $bl = $this->session->getVar("basket_List");
         $sizeOfbl = is_array($bl) ? count($bl) : 0;
         $this->session->setVar("setup_PagingTotal", $sizeOfbl);
+		if ($this->browserTabID)
+		{
+			GLOBALS::setTempStorage(['setup_PagingTotal' => $sizeOfbl]);
+		}
         $this->pagingObject = FACTORY_PAGING::getInstance();
         $this->pagingObject->queryString = $queryString;
         $this->pagingObject->getPaging();
@@ -120,9 +171,15 @@ class BASKET
         if (array_key_exists('list_Order', $this->vars))
         {
             $this->session->setVar("list_Order", $this->vars['list_Order']);
+            GLOBALS::setTempStorage(['list_Order' => $this->session->getVar("list_Order")]);
         }
         $this->session->delVar("mywikindx_PagingStart");
         $this->session->delVar("mywikindx_PagingStartAlpha");
+		if ($this->browserTabID)
+		{
+			GLOBALS::unsetTempStorage(['mywikindx_PagingStart', 'mywikindx_PagingStartAlpha']);
+			$this->common->updateTempStorage();
+		}
         if ($this->lastMulti($queryString))
         {
             return;
@@ -132,6 +189,11 @@ class BASKET
             $this->session->delVar("list_PagingAlphaLinks");
             $this->session->delVar("list_AllIds");
             $this->session->setVar("list_AllIds", $this->session->getVar("basket_List"));
+			if ($this->browserTabID)
+			{
+				GLOBALS::unsetTempStorage(['list_PagingAlphaLinks', 'list_AllIds']);
+				GLOBALS::setTempStorage(['list_AllIds' => $this->session->getVar("basket_List")]);
+			}
             $sql = $this->returnBasketSql($queryString);
         }
         else
@@ -146,10 +208,15 @@ class BASKET
         }
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString]);
+        }
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
         $this->session->saveState(['list', 'basket', 'bookmark']);
         $this->common->display($sql, 'basket');
+        $this->common->updateTempStorage();
     }
     /**
      * Get basket SQL statement.
@@ -162,14 +229,21 @@ class BASKET
      */
     public function returnBasketSql($queryString = FALSE, $order = FALSE)
     {
-        if (!$order)
-        {
-            $order = $this->session->getVar("list_Order");
+        if (!$order) {
+			if (!$order = GLOBALS::getTempStorage('list_Order')) {
+				$order = $this->session->getVar("list_Order");
+			}
         }
-        $subStmt = $this->setSubQuery($this->session->getVar("basket_List"));
+        if (!$bl = GLOBALS::getTempStorage('basket_List')) {
+        	$bl = $this->session->getVar("basket_List");
+        }
+        if (!is_array($bl)) {
+        	$bl = [];
+        }
+        $subStmt = $this->setSubQuery($bl);
         $this->stmt->listSubQuery($order, $queryString, $subStmt);
 
-        return $this->stmt->listList($this->session->getVar("list_Order"));
+        return $this->stmt->listList($order);
     }
     /**
      * Delete the basket
@@ -180,6 +254,13 @@ class BASKET
      */
     public function delete($confirm = FALSE)
     {
+    	if ($this->browserTabID) {
+			if (!GLOBALS::getTempStorage('basket_List')) {
+		        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
+        		new FRONT(); // __construct() runs on autopilot
+        		return;
+        	}
+		}
         if ($confirm)
         {
             $this->session->clearArray('basket');
@@ -203,7 +284,11 @@ class BASKET
     public function deleteConfirm()
     {
         $this->session->clearArray('basket');
-        $front = new FRONT($this->success->text("basketDelete")); // __construct() runs on autopilot
+        if ($this->browserTabID) {
+        	\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['basket_List']);
+        }
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "libs", "FRONT.php"]));
+        new FRONT($this->success->text("basketDelete")); // __construct() runs on autopilot
     }
     /**
      * Quicker querying when paging
@@ -214,7 +299,9 @@ class BASKET
      */
     private function quickQuery($queryString)
     {
-        $sql = $this->session->getVar("sql_ListStmt");
+        if (!$sql = GLOBALS::getTempStorage('sql_ListStmt')) {
+        	$sql = $this->session->getVar("sql_ListStmt");
+        }
         $sql .= $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         return $sql;
     }
@@ -249,12 +336,13 @@ class BASKET
      */
     private function setSubQuery($ids)
     {
-        if (!$this->session->getVar("list_Order"))
-        {
-            $this->session->setVar("list_Order", "creator");
+        if (!$order = GLOBALS::getTempStorage('list_Order')) {
+        	$order = $this->session->getVar("list_Order");
         }
-        $this->db->ascDesc = $this->session->getVar("list_AscDesc");
-        switch ($this->session->getVar("list_Order")) {
+        if (!$this->db->ascDesc = GLOBALS::getTempStorage('list_AscDesc')) {
+        	$this->db->ascDesc = $this->session->getVar("list_AscDesc");
+        }
+        switch ($order) {
             case 'title':
                 $this->stmt->quarantine(FALSE, 'resourceId');
                 $this->stmt->useBib('resourceId');
@@ -288,6 +376,7 @@ class BASKET
                 $this->stmt->quarantine(FALSE, 'resourcemiscId');
                 $this->stmt->useBib('resourcemiscId');
                 $this->stmt->conditionsOneField['resourcemiscId'] = $ids;
+                $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
                 $this->stmt->joins['publisher'] = ['resourcemiscPublisher', 'publisherId'];
                 $this->stmt->executeCondJoins();
 

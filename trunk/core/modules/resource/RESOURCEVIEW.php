@@ -1686,15 +1686,20 @@ class RESOURCEVIEW
      */
     private function displayBasket($row)
     {
-        if ($this->session->issetVar("basket_List"))
+    	if ($this->browserTabID) {
+    		$basket = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List');
+    	} else {
+    		$basket = $this->session->getVar("basket_List");
+    	}
+        if (is_array($basket) && !empty($basket))
         {
-            $basket = $this->session->getVar("basket_List");
             if (array_search($row['resourceId'], $basket) !== FALSE)
             {
                 return \HTML\a(
                     $this->icons->getClass("remove"),
                     $this->icons->getHTML("basketRemove"),
-                    "index.php?" . htmlentities("action=basket_BASKET_CORE&method=remove&resourceId=" . $row['resourceId'])
+                    "index.php?" . htmlentities("action=basket_BASKET_CORE&method=remove&resourceId=" . $row['resourceId']) . 
+                    	"&browserTabID=" . $this->browserTabID
                 );
             }
         }
@@ -1702,7 +1707,7 @@ class RESOURCEVIEW
         return \HTML\a(
             $this->icons->getClass("add"),
             $this->icons->getHTML("basketAdd"),
-            "index.php?" . htmlentities("action=basket_BASKET_CORE&resourceId=" . $row['resourceId'])
+            "index.php?" . htmlentities("action=basket_BASKET_CORE&resourceId=" . $row['resourceId']) . "&browserTabID=" . $this->browserTabID
         );
     }
     /**

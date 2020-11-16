@@ -44,7 +44,10 @@ class NAVIGATE
     public function listView($message = FALSE)
     {
         $message = rawurlencode($message);
+        if (!$queryString = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_LastMulti'))
+        	
         $queryString = $this->session->getVar("sql_LastMulti");
+    }
         if (!$queryString)
         {// default
             header("Location: index.php?message=$message");
@@ -62,7 +65,11 @@ class NAVIGATE
             {
                 $ideasFound = 0;
             }
-            $patterns = base64_encode(serialize($this->session->getVar("search_Patterns")));
+            if (!$patterns = GLOBALS::getTempStorage('search_Patterns'))
+            {
+                $patterns = $this->session->getVar("search_Patterns");
+            }
+            $patterns = base64_encode(serialize($patterns));
             header("Location: index.php?action=list_QUICKSEARCH_CORE&method=reprocess&message=$message&quickSearch=0&keepHighlight=1&ideasFound=$ideasFound&patterns=$patterns");
             die;
         }

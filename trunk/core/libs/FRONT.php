@@ -29,6 +29,8 @@ class FRONT
     private $listCommon;
     /** string */
     private $externalMessage;
+    /** string */
+    private $browserTabID = FALSE;
 
     /**
      * FRONT
@@ -52,6 +54,7 @@ class FRONT
         $this->stmt = FACTORY_SQLSTATEMENTS::getInstance();
         $this->listCommon = FACTORY_LISTCOMMON::getInstance();
         $this->listCommon->navigate = 'front';
+        $this->browserTabID = GLOBALS::getBrowserTabID();
         GLOBALS::setTplVar('heading', ''); // blank
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
@@ -66,6 +69,9 @@ class FRONT
     {
         $this->session->delVar("search_Highlight");
         $this->session->delVar("list_AllIds");
+        if ($this->browserTabID) {
+        	\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['search_Highlight', 'list_AllIds']);
+        }
         
         $this->db->formatConditions(['configName' => 'configDescription_' . \LOCALES\determine_locale()]);
         $input = $this->db->fetchOne($this->db->select('config', 'configText'));

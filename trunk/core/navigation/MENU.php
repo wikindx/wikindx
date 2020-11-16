@@ -212,20 +212,21 @@ class MENU
         $stateArray[] = $this->stmt = $stmt;
         if ($stmt)
         { // Don't display for 0 results
-            if ($this->browserTabID)
-            {
-                $lastMulti = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_LastMulti');
-            }
-            else
-            {
-                $lastMulti = $this->session->getVar("sql_LastMulti");
+            if (!$lastMulti = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_LastMulti')) {
+           		$lastMulti = $this->session->getVar("sql_LastMulti");
             }
             $stateArray[] = $this->lastMulti = $lastMulti;
         }
         $stateArray[] = $this->lastThread = $this->session->getVar("sql_LastThread");
         $stateArray[] = $this->lastMultiMeta = $this->session->getVar("sql_LastMultiMeta");
         $stateArray[] = $this->lastIdeaSearch = $this->session->getVar("sql_LastIdeaSearch");
-        $stateArray[] = $this->basketList = $this->session->getVar("basket_List");
+        
+        if ($this->browserTabID) {
+        	$this->basketList = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List');
+        } else {
+        	$this->basketList = $this->session->getVar("basket_List");
+        }
+        $stateArray[] = $this->basketList;
         $stateArray[] = defined("WIKINDX_IMPORT_BIB") ? WIKINDX_IMPORT_BIB : WIKINDX_IMPORT_BIB_DEFAULT;
         $state = base64_encode(serialize($stateArray));
         if (($state == $this->session->getVar("menu_state")) && ($menu = $this->session->getVar("menu_menu", FALSE) !== FALSE))
@@ -520,7 +521,8 @@ class MENU
                 'bookmarkSub' => [
                     $messages->text("menu", "bookmarkSub") => FALSE,
                 ],
-                $messages->text("menu", "randomResource") => 'index.php?action=resource_RESOURCEVIEW_CORE&method=random',
+                $messages->text("menu", "randomResource") => 'index.php?action=resource_RESOURCEVIEW_CORE&method=random' . 
+                	"&browserTabID=" . $this->browserTabID,
             ];
             if (empty($collEditSub))
             {
@@ -534,7 +536,8 @@ class MENU
                 'bookmarkSub' => [
                     $messages->text("menu", "bookmarkSub") => FALSE,
                 ],
-                $messages->text("menu", "randomResource") => 'index.php?action=resource_RESOURCEVIEW_CORE&method=random',
+                $messages->text("menu", "randomResource") => 'index.php?action=resource_RESOURCEVIEW_CORE&method=random' . 
+                	"&browserTabID=" . $this->browserTabID,
             ];
         }
         if (empty($collBrowseSub))
@@ -798,13 +801,14 @@ class MENU
             $this->res[$messages->text("menu", "lastMulti")] = 'index.php?' . $this->lastMulti .
                 '&type=lastMulti' . $BT;
         }
-        $basket = $this->basketList;
-        if ($this->basketList && !empty($basket))
+        if (!empty($this->basketList))
         {
             $this->res['basketSub'] = [
                 $messages->text("menu", "basketSub") => FALSE,
-                $messages->text("menu", "basketView") => 'index.php?action=basket_BASKET_CORE&method=view',
-                $messages->text("menu", "basketDelete") => 'index.php?action=basket_BASKET_CORE&method=delete',
+                $messages->text("menu", "basketView") => 'index.php?action=basket_BASKET_CORE&method=view' . 
+                	"&browserTabID=" . $this->browserTabID,
+                $messages->text("menu", "basketDelete") => 'index.php?action=basket_BASKET_CORE&method=delete' . 
+                	"&browserTabID=" . $this->browserTabID,
             ];
         }
         if ($this->lastMultiMeta && $this->metadataExist)

@@ -439,15 +439,24 @@ class DELETERESOURCE
         $this->db->formatConditionsOneField($this->idsRaw, 'statisticsattachmentdownloadsResourceId');
         $this->db->delete('statistics_attachment_downloads');
         // Delete resource from basket
-        $basketIds = array_diff($this->session->getVar("basket_List"), $this->idsRaw);
-        if (empty($basketIds))
-        {
-            $this->session->delVar("basket_List");
+        if (!$basket = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List')) {
+        	$this->session->getVar("basket_List");
         }
-        else
-        {
-            $this->session->setVar("basket_List", $basketIds);
-        }
+        if (is_array($basket)) {
+			$basketIds = array_diff($basket, $this->idsRaw);
+			if (empty($basketIds))
+			{
+				$this->session->delVar("basket_List");
+				\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['basket_List']);
+			}
+			else
+			{
+				$this->session->setVar("basket_List", $basketIds);
+				if ($this->browserTabID) {
+					\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basketIds]);
+				}
+			}
+		}
         $this->deleteMetadata();
         $this->checkBibtexStringTable();
         // delete these ids from any user bibliographies
@@ -484,6 +493,9 @@ class DELETERESOURCE
      */
     private function resetSummary()
     {
+    	$resultSet = $this->db->selectCount('resource', 'resourceId');
+    	$num = $this->db->fetchOne($resultSet);
+    	print $num;
         $num = $this->db->numRows($this->db->select('resource', 'resourceId'));
         $this->db->update('database_summary', ['databasesummaryTotalResources' => $num]);
         $this->db->formatConditions(['resourcemetadataType' => 'p']);

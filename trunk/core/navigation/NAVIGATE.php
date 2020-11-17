@@ -44,12 +44,10 @@ class NAVIGATE
     public function listView($message = FALSE)
     {
         $message = rawurlencode($message);
-        if (!$queryString = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_LastMulti'))
-        	
-        $queryString = $this->session->getVar("sql_LastMulti");
-    }
-        if (!$queryString)
-        {// default
+        if (!$queryString = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_LastMulti')) {
+	        $queryString = $this->session->getVar("sql_LastMulti");
+	    }
+        if (!$queryString) {// default
             header("Location: index.php?message=$message");
             die;
         }

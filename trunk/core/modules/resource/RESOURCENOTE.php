@@ -24,19 +24,20 @@ class RESOURCENOTE
     private $common;
     private $cite;
     private $userId;
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
-
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->user = FACTORY_USER::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
         $this->cite = FACTORY_CITE::getInstance();
         $this->userId = $this->session->getVar("setup_UserId");
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * Display resource's note
@@ -63,7 +64,7 @@ class RESOURCENOTE
                     $this->icons->getClass("add"),
                     $this->icons->getHTML("add"),
                     "index.php?action=metadata_EDITMETADATA_CORE" .
-                    htmlentities("&type=noteInit&id=" . $row['resourceId'])
+                    htmlentities("&type=noteInit&id=" . $row['resourceId'] . '&browserTabID=' . $this->browserTabID)
                 );
 
                 return $note;
@@ -74,13 +75,13 @@ class RESOURCENOTE
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
                     "index.php?action=metadata_EDITMETADATA_CORE" .
-                    htmlentities("&type=noteInit&id=" . $row['resourceId'])
+                    htmlentities("&type=noteInit&id=" . $row['resourceId'] . '&browserTabID=' . $this->browserTabID)
                 );
                 $note['deleteLink'] = \HTML\a(
                     $this->icons->getClass("delete"),
                     $this->icons->getHTML("delete"),
                     "index.php?action=metadata_EDITMETADATA_CORE" .
-                    htmlentities("&type=noteDeleteInit&id=" . $row['resourceId'])
+                    htmlentities("&type=noteDeleteInit&id=" . $row['resourceId'] . '&browserTabID=' . $this->browserTabID)
                 );
             }
         }

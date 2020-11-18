@@ -652,7 +652,9 @@ class SQLSTATEMENTS
         }
         $total = count($ids);
         $this->session->setVar("setup_PagingTotal", $total);
-        GLOBALS::setTempStorage(['setup_PagingTotal' => $total]);
+        if ($this->browserTabID) {
+	        GLOBALS::setTempStorage(['setup_PagingTotal' => $total]);
+	    }
         $this->session->delVar("sql_CountAlphaStmt");
         if ($this->browserTabID)
         {

@@ -48,6 +48,7 @@ class RESOURCEFORM
     private $tinymce;
     private $formData = [];
     private $uuid;
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
@@ -69,6 +70,7 @@ class RESOURCEFORM
         $this->creator = FACTORY_CREATOR::getInstance();
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->tinymce = FACTORY_LOADTINYMCE::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
         $this->loadElementDefinitions();
         if (array_key_exists('uuid', $this->vars))
         {
@@ -98,7 +100,7 @@ class RESOURCEFORM
             $return = '&nbsp;&nbsp;' . \HTML\a(
                 $this->icons->getClass("edit"),
                 $this->icons->getHTML("Return"),
-                'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id']
+                'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id'] . '&browserTabID=' . $this->browserTabID
             );
             GLOBALS::setTplVar('heading', $this->messages->text('heading', 'editResource') . $return);
             if (!$error)

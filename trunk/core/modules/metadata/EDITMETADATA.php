@@ -25,6 +25,7 @@ class EDITMETADATA
     private $tinymce;
     private $icons;
     private $return;
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
@@ -38,6 +39,7 @@ class EDITMETADATA
         $this->session = FACTORY_SESSION::getInstance();
         $this->tinymce = FACTORY_LOADTINYMCE::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * init
@@ -62,7 +64,7 @@ class EDITMETADATA
         $this->return = '&nbsp;&nbsp;' . \HTML\a(
             $this->icons->getClass("edit"),
             $this->icons->getHTML("Return"),
-            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id']
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id'] . '&browserTabID=' . $this->browserTabID
         );
         // proceed
         $type = $this->vars['type'];

@@ -24,6 +24,7 @@ class URLS
     private $formData = [];
     private $error = '';
     private $icons;
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
@@ -35,6 +36,7 @@ class URLS
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->resourceId = $this->vars['resourceId'];
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * add, edit, delete resource attachments
@@ -61,7 +63,7 @@ class URLS
         $return = \HTML\a(
             $this->icons->getClass("edit"),
             $this->icons->getHTML("Return"),
-            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&browserTabID=' . $this->browserTabID
         );
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "url", $this->messages->text('misc', 'edit') . '&nbsp;&nbsp;' . $return));
         $this->db->formatConditions(['resourcetextId' => $this->resourceId]);

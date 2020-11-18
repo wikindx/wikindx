@@ -461,7 +461,7 @@ class RESOURCEVIEW
             $typeLabel = $this->messages->text('resourceType', $row['resourceType']);
             $resourceSingle['info']['type'] = $this->messages->text('viewResource', 'type') . ':&nbsp;' .
                 \HTML\a('link', $typeLabel, 'index.php?action=list_LISTSOMERESOURCES_CORE' .
-                htmlentities('&method=typeProcess&id=' . $row['resourceType']));
+                htmlentities('&method=typeProcess&id=' . $row['resourceType'] . '&browserTabID=' . $this->browserTabID));
         }
         if ($return = $this->displayLanguages($row))
         {
@@ -729,7 +729,7 @@ class RESOURCEVIEW
                         $this->icons->getClass("edit"),
                         $this->icons->getHTML("edit"),
                         'index.php?action=attachments_ATTACHMENTS_CORE' .
-                        htmlentities('&function=editInit&resourceId=' . $resourceId)
+                        htmlentities('&function=editInit&resourceId=' . $resourceId) . '&browserTabID=' . $this->browserTabID
                     );
             }
             else
@@ -739,7 +739,7 @@ class RESOURCEVIEW
                     $this->icons->getClass("add"),
                     $this->icons->getHTML("add"),
                     'index.php?action=attachments_ATTACHMENTS_CORE' .
-                    htmlentities('&function=editInit&resourceId=' . $resourceId)
+                    htmlentities('&function=editInit&resourceId=' . $resourceId) . '&browserTabID=' . $this->browserTabID
                 );
             }
         }
@@ -802,7 +802,8 @@ class RESOURCEVIEW
                     $return['editLink'] = \HTML\a(
                         $this->icons->getClass("edit"),
                         $this->icons->getHTML("edit"),
-                        'index.php?action=urls_URLS_CORE' . htmlentities("&function=editInit&resourceId=" . $resourceId)
+                        'index.php?action=urls_URLS_CORE' . htmlentities("&function=editInit&resourceId=" . $resourceId
+                         . '&browserTabID=' . $this->browserTabID)
                     );
                 }
             }
@@ -812,7 +813,8 @@ class RESOURCEVIEW
                 $return['editLink'] = \HTML\a(
                     $this->icons->getClass("add"),
                     $this->icons->getHTML("add"),
-                    'index.php?action=urls_URLS_CORE' . htmlentities("&function=editInit&resourceId=" . $resourceId)
+                    'index.php?action=urls_URLS_CORE' . htmlentities("&function=editInit&resourceId=" . $resourceId
+                     . '&browserTabID=' . $this->browserTabID)
                 );
             }
         }
@@ -1029,12 +1031,13 @@ class RESOURCEVIEW
                 $this->icons->getClass("edit"),
                 $this->icons->getHTML("edit"),
                 "index.php?action=resource_RESOURCEFORM_CORE&type=edit" . htmlentities("&id=" . $row['resourceId'])
+                . "&browserTabID=" . $this->browserTabID
             );
             if ($row['resourcemiscAddUserIdResource'] == $this->userId)
             {
                 $links['delete'] =
                     "index.php?action=admin_DELETERESOURCE_CORE" . htmlentities('&function=deleteResourceConfirm') .
-                    htmlentities('&navigate=front&resource_id=' . $row['resourceId']);
+                    htmlentities('&navigate=front&resource_id=' . $row['resourceId']. "&browserTabID=" . $this->browserTabID);
                 $links['delete'] = \HTML\a($this->icons->getClass("delete"), $this->icons->getHTML("delete"), $links['delete']);
             }
             $edit = $this->allowEdit = TRUE;
@@ -1048,6 +1051,7 @@ class RESOURCEVIEW
                     $this->icons->getClass("edit"),
                     $this->icons->getHTML("edit"),
                     "index.php?action=resource_RESOURCEFORM_CORE&type=edit" . htmlentities("&id=" . $row['resourceId'])
+                    . "&browserTabID=" . $this->browserTabID
                 );
             }
             $links['delete'] =
@@ -1104,7 +1108,7 @@ class RESOURCEVIEW
             return '&nbsp;&nbsp;' . \HTML\a(
                 $this->icons->getClass("edit"),
                 $this->icons->getHTML("edit"),
-                "index.php?action=resource_RESOURCECATEGORYEDIT_CORE" . htmlentities("&id=" . $resourceId)
+                "index.php?action=resource_RESOURCECATEGORYEDIT_CORE" . htmlentities("&id=" . $resourceId) . '&browserTabID=' . $this->browserTabID
             );
         }
         else
@@ -1137,7 +1141,8 @@ class RESOURCEVIEW
             if ($row2['count'] > 1)
             { // i.e. more than one resource for this language
                 $array[] = \HTML\a("link", \HTML\nlToHtml($row['languageLanguage']), 'index.php?' .
-                    htmlentities('action=list_LISTSOMERESOURCES_CORE&method=languageProcess&id=' . $row2['resourcelanguageLanguageId']));
+                    htmlentities('action=list_LISTSOMERESOURCES_CORE&method=languageProcess&id=' . $row2['resourcelanguageLanguageId']
+                     . '&browserTabID=' . $this->browserTabID));
             }
             else
             {
@@ -1190,7 +1195,8 @@ class RESOURCEVIEW
             if ($row2['count'] > 1)
             { // i.e. more than one resource for this category
                 $array[] = \HTML\a("link", \HTML\nlToHtml($row['categoryCategory']), 'index.php?' .
-                    htmlentities('action=list_LISTSOMERESOURCES_CORE&method=categoryProcess&id=' . $row2['resourcecategoryCategoryId']));
+                    htmlentities('action=list_LISTSOMERESOURCES_CORE&method=categoryProcess&id=' . $row2['resourcecategoryCategoryId']
+                     . '&browserTabID=' . $this->browserTabID));
             }
             else
             {
@@ -1244,7 +1250,8 @@ class RESOURCEVIEW
             if ($row2['count'] > 1)
             { // i.e. more than one resource for this subcategory
                 $array[] = \HTML\a("link", \HTML\nlToHtml($row['subcategorySubcategory']), 'index.php?' .
-                    htmlentities('action=list_LISTSOMERESOURCES_CORE&method=subcategoryProcess&id=' . $row2['resourcecategorySubcategoryId']));
+                    htmlentities('action=list_LISTSOMERESOURCES_CORE&method=subcategoryProcess&id=' . $row2['resourcecategorySubcategoryId']
+                     . '&browserTabID=' . $this->browserTabID));
             }
             else
             {
@@ -1308,7 +1315,8 @@ class RESOURCEVIEW
         if ($countRow['count'] > 1)
         { // i.e. more than one resource for this publisher
             $name = \HTML\a("link", $name, 'index.php?' .
-                htmlentities('action=list_LISTSOMERESOURCES_CORE&method=publisherProcess&id=' . $publisherId));
+                htmlentities('action=list_LISTSOMERESOURCES_CORE&method=publisherProcess&id=' . $publisherId 
+                . '&browserTabID=' . $this->browserTabID));
         }
         $title = $this->messages->text("resources", "publisher");
 
@@ -1340,7 +1348,7 @@ class RESOURCEVIEW
         { // i.e. more than one resource for this collection
             $name = \HTML\a("link", $name, 'index.php?' .
                 htmlentities('action=list_LISTSOMERESOURCES_CORE&method=collectionProcess&id=' .
-                $row['resourcemiscCollection']));
+                $row['resourcemiscCollection'] . '&browserTabID=' . $this->browserTabID));
         }
         $title = $this->messages->text("resources", "collection");
 
@@ -1375,7 +1383,8 @@ class RESOURCEVIEW
                     "link",
                     \HTML\nlToHtml($row['keywordKeyword']),
                     'index.php?' .
-                    htmlentities('action=list_LISTSOMERESOURCES_CORE&method=keywordProcess&id=' . $row2['resourcekeywordKeywordId']),
+                    htmlentities('action=list_LISTSOMERESOURCES_CORE&method=keywordProcess&id=' . $row2['resourcekeywordKeywordId']) 
+                     . '&browserTabID=' . $this->browserTabID,
                     "",
                     \HTML\dbToHtmlPopupTidy($row['keywordGlossary'])
                 );
@@ -1445,7 +1454,8 @@ class RESOURCEVIEW
             if ($row2['count'] > 1)
             { // i.e. more than one resource for this usertag
                 $array[] = \HTML\a("link", \HTML\nlToHtml($row['usertagsTag']), 'index.php?' .
-                    htmlentities('action=list_LISTSOMERESOURCES_CORE&method=usertagProcess&id=' . $row2['resourceusertagsTagId']));
+                    htmlentities('action=list_LISTSOMERESOURCES_CORE&method=usertagProcess&id=' . $row2['resourceusertagsTagId']
+                     . '&browserTabID=' . $this->browserTabID));
             }
             else
             {
@@ -1528,7 +1538,8 @@ class RESOURCEVIEW
                     "link",
                     $name,
                     'index.php?' .
-                    htmlentities('action=list_LISTSOMERESOURCES_CORE&method=creatorProcess&id=' . $catRow['resourcecreatorCreatorId']),
+                    htmlentities('action=list_LISTSOMERESOURCES_CORE&method=creatorProcess&id=' . $catRow['resourcecreatorCreatorId']
+                     . '&browserTabID=' . $this->browserTabID),
                     FALSE,
                     $aliastmp
                 );

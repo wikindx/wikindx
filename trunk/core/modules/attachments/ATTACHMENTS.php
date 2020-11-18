@@ -26,6 +26,7 @@ class ATTACHMENTS
     private $resourceId;
     private $embargoArray = [];
     private $embargoNew;
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
@@ -38,6 +39,7 @@ class ATTACHMENTS
         $this->success = FACTORY_SUCCESS::getInstance();
         $this->attachment = FACTORY_ATTACHMENT::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * add, edit, delete resource attachments
@@ -82,7 +84,7 @@ class ATTACHMENTS
         $return = \HTML\a(
             $this->icons->getClass("edit"),
             $this->icons->getHTML("Return"),
-            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&browserTabID=' . $this->browserTabID
         );
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete') . '&nbsp;&nbsp;' . $return));
         $pString = \FORM\formHeader("attachments_ATTACHMENTS_CORE");
@@ -145,7 +147,7 @@ class ATTACHMENTS
         $return = \HTML\a(
             $this->icons->getClass("edit"),
             $this->icons->getHTML("Return"),
-            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&browserTabID=' . $this->browserTabID
         );
         $fields = $this->attachment->listFiles($this->resourceId);
         if (!empty($fields))
@@ -383,7 +385,7 @@ class ATTACHMENTS
         $return = \HTML\a(
             $this->icons->getClass("edit"),
             $this->icons->getHTML("Return"),
-            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&browserTabID=' . $this->browserTabID
         );
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete') .
             '&nbsp;&nbsp;' . $return));
@@ -419,7 +421,7 @@ class ATTACHMENTS
         $return = \HTML\a(
             $this->icons->getClass("edit"),
             $this->icons->getHTML("Return"),
-            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->resourceId . '&browserTabID=' . $this->browserTabID
         );
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "attach", $this->messages->text('misc', 'delete') .
             '&nbsp;&nbsp;' . $return));

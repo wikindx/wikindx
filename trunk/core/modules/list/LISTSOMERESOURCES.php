@@ -25,7 +25,9 @@ class LISTSOMERESOURCES
     private $session;
     private $badInput;
     private $order = 'creator';
+    private $ascDesc;
     private $params;
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
@@ -40,30 +42,82 @@ class LISTSOMERESOURCES
         $this->badInput = FACTORY_BADINPUT::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));
         $this->commonBrowse = new BROWSECOMMON();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "list"));
+        $this->checkInput();
+    }
+    /**
+	 * Initialize the process
+	 */
+	private function checkInput()
+	{
+        if (!$this->common->resourcesExist()) {
+            $this->badInput->close($this->messages->text("misc", "noResources"));
+        } 
+        if (!array_key_exists('method', $this->vars)) {
+            $this->badInput->close($this->errors->text("inputError", "missing"));
+        }
+        $method = $this->vars['method'];
+        if (!method_exists($this, $method)) {
+            $this->badInput->close($this->errors->text("inputError", "missing"));
+        }
+        if (!in_array($method, ['creator', 'quarantine', 'reorder']) && (!array_key_exists('id', $this->vars) || !$this->vars['id'])) {
+            $this->badInput->close($this->errors->text("inputError", "missing"));
+        }
+        if ($this->browserTabID)
+        {
+            // 1. Load any pre-existing search data into GLOBALS $tempStorage
+            // 2. Store in and extract data from $tempStorage
+            // 3. Finally, put back $tempStorage into temp_storage using $this->common->updateTempStorage();
+            GLOBALS::initTempStorage($this->db, $this->browserTabID);
+        }
+        if (array_key_exists('list_Order', $this->vars)) {
+			$this->order = $this->vars['list_Order'];
+		}
+		else if (!$this->order = GLOBALS::getTempStorage('list_Order')) {
+			$this->order = $this->session->getVar("list_Order");
+		}
+		$orders = ['creator', 'title', 'publisher', 'year', 'timestamp'];
+        if (!$this->order || !in_array($this->order, $orders)) {
+			$this->order = 'creator';
+        }
+		if (array_key_exists('list_AscDesc', $this->vars)) {
+			$this->ascDesc = $this->vars['list_AscDesc'];
+		}
+		else {
+			if ($method == 'reorder') {
+				if (!$this->ascDesc = GLOBALS::getTempStorage('list_AscDesc')) {
+					$this->ascDesc = $this->session->getVar("list_AscDesc");
+				}
+			}
+			if (!$this->ascDesc && in_array($this->order, ['creator', 'title', 'publisher'])) {
+			   $this->ascDesc = $this->db->asc;
+			}
+			else if (!$this->ascDesc && in_array($this->order, ['year', 'timestamp'])) {
+			   $this->ascDesc = $this->db->desc;
+			}
+		}
+        $this->session->delVar("mywikindx_PagingStart");
+        $this->session->delVar("mywikindx_PagingStartAlpha");
+        if ($this->browserTabID) {
+            GLOBALS::unsetTempStorage(['mywikindx_PagingStart', 'mywikindx_PagingStartAlpha']);
+			GLOBALS::setTempStorage(['list_Order' => $this->order]);
+			GLOBALS::setTempStorage(['sql_LastOrder' => $this->order]);
+			GLOBALS::setTempStorage(['list_AscDesc' => $this->ascDesc]);
+        }
+    	else {
+    		$this->session->setVar("list_Order", $this->order);
+    		$this->session->setVar("sql_LastOrder", $this->order);
+    		$this->session->setVar("list_AscDesc", $this->ascDesc);
+    	}
+// temporarily store list parameters for use if reordering
+		if (!$this->params = GLOBALS::getTempStorage('sql_ListParams')) {
+			$this->params = $this->session->getVar("sql_ListParams"); 
+		}
+        $this->session->delVar("sql_ListParams");
+        GLOBALS::unsetTempStorage(['sql_ListParams']);
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
-        if (!$this->session->getVar("list_Order"))
-        {
-            $this->session->setVar("list_Order", "creator");
-        }
-        $this->session->setVar("sql_LastOrder", $this->session->getVar("list_Order"));
-        switch ($this->session->getVar("list_Order")) {
-            case 'title':
-                break;
-            case 'creator':
-                break;
-            case 'publisher':
-                break;
-            case 'year':
-                break;
-            case 'timestamp':
-                break;
-            default:
-                $this->session->setVar("list_Order", "creator");
-        }
-        $this->params = $this->session->getVar("sql_ListParams"); // temporarily store list parameters for use if reordering
-        $this->session->delVar("sql_ListParams");
     }
     /**
      * With a reorder list request, which type of process do we want?
@@ -75,113 +129,110 @@ class LISTSOMERESOURCES
             GLOBALS::addTplVar('content', $this->vars['message']);
         }
         $this->session->setVar("sql_ListParams", $this->params);
-        if (array_key_exists('list_AscDesc', $this->vars))
-        {
-            $this->session->setVar("list_AscDesc", $this->vars['list_AscDesc']);
+        if ($this->browserTabID) {
+        	GLOBALS::setTempStorage(["sql_ListParams" => $this->params]);
         }
-        if (array_key_exists('list_Order', $this->vars))
-        {
-            $this->session->setVar("list_Order", $this->vars['list_Order']);
-            $this->session->setVar("sql_LastOrder", $this->vars['list_Order']);
-            $this->order = $this->vars['list_Order'];
-        }
-        if ($this->session->getVar("list_SomeResources_catId"))
+        
+        if (!$this->vars['catId'] = GLOBALS::getTempStorage("list_SomeResources_catId"))
         {
             $this->vars['catId'] = $this->session->getVar("list_SomeResources_catId");
         }
-        if ($this->session->getVar("list_SomeResources_id"))
+        if (!$this->vars['id'] = GLOBALS::getTempStorage("list_SomeResources_id"))
         {
             $this->vars['id'] = $this->session->getVar("list_SomeResources_id");
         }
-        elseif ($this->session->getVar("list_SomeResources_department"))
+        elseif (!$this->vars['department'] = GLOBALS::getTempStorage("list_SomeResources_department"))
         {
             $this->vars['department'] = $this->session->getVar("list_SomeResources_department");
         }
-        elseif ($this->session->getVar("list_SomeResources_institution"))
+        elseif (!$this->vars['institution'] = GLOBALS::getTempStorage("list_SomeResources_institution"))
         {
             $this->vars['institution'] = $this->session->getVar("list_SomeResources_institution");
         }
-        if ($this->session->getVar("list_SomeResources") == 'category')
+        if (!$process = GLOBALS::getTempStorage("list_SomeResources")) {
+        	$process = $this->session->getVar("list_SomeResources");
+        }
+        if ($process == 'category')
         {
             $this->categoryProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'subcategory')
+        elseif ($process == 'subcategory')
         {
             $this->subcategoryProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'userResource')
+        elseif ($process == 'userResource')
         {
             $this->userResourceProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'userQuote')
+        elseif ($process == 'userQuote')
         {
             $this->userQuoteProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'userParaphrase')
+        elseif ($process == 'userParaphrase')
         {
             $this->userParaphraseProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'cite')
+        elseif ($process == 'cite')
         {
             $this->citeProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'citeCreator')
+        elseif ($process == 'citeCreator')
         {
             $this->citeProcessCreator();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'type')
+        elseif ($process == 'type')
         {
             $this->typeProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'language')
+        elseif ($process == 'language')
         {
             $this->languageProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'keyword')
+        elseif ($process == 'keyword')
         {
             $this->keywordProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'keywordGroup')
+        elseif ($process == 'keywordGroup')
         {
             $this->keywordGroupProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'metaKeyword')
+        elseif ($process == 'metaKeyword')
         {
             $this->metaKeywordProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'metaKeywordGroup')
+        elseif ($process == 'metaKeywordGroup')
         {
             $this->metaKeywordGroupProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'publisher')
+        elseif ($process == 'publisher')
         {
             $this->publisherProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'specialPublisher')
+        elseif ($process == 'specialPublisher')
         {
             $this->specialPublisherProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'collection')
+        elseif ($process == 'collection')
         {
             $this->collectionProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'creator')
+        elseif ($process == 'creator')
         {
             $this->creatorProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'year')
+        elseif ($process == 'year')
         {
             $this->yearProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'userTag')
+        elseif ($process == 'userTag')
         {
             $this->userTagProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'bibliography')
+        elseif ($process == 'bibliography')
         {
             $this->bibliographyProcess();
         }
-        elseif ($this->session->getVar("list_SomeResources") == 'quarantine')
+        elseif ($process == 'quarantine')
         {
             $this->quarantineProcess();
         }
@@ -192,10 +243,6 @@ class LISTSOMERESOURCES
      */
     public function citeProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = 'action=list_LISTSOMERESOURCES_CORE&method=citeProcess&id=' . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -208,8 +255,8 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = $this->db->formatFields('resourceId') . ' ' .
                 $this->db->inClause($resCommon->showCitations($this->vars["id"]));
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -219,17 +266,18 @@ class LISTSOMERESOURCES
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'cite', 'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * citeProcess - display resources citing creators
      */
     public function citeProcessCreator()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = 'action=list_LISTSOMERESOURCES_CORE&method=citeProcessCreator&id=' . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -252,8 +300,8 @@ class LISTSOMERESOURCES
                 $this->stmt->conditions[] = ['resourceId' => $this->vars['id']];
             }
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -261,19 +309,20 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'citeCreator');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'citeCreator', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * userResourceProcess - display resources input by this user
      */
     public function userResourceProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=userResourceProcess&id=" . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -285,8 +334,8 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourcemiscAddUserIdResource' => $this->vars['id']];
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -294,19 +343,20 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'userResource');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'userResource', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * userQuoteProcess - display resources with quotes input by this user
      */
     public function userQuoteProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=userQuoteProcess&id=" . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -319,8 +369,8 @@ class LISTSOMERESOURCES
                 $this->db->and . $this->db->formatFields('resourcemetadataType') . '=' . $this->db->tidyInput('q') . ')';
             $this->stmt->joins['resource_metadata'] = ['resourcemetadataResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -328,19 +378,20 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'userQuote');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'userQuote', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * userParaphraseProcess - display resources with paraphrases input by this user
      */
     public function userParaphraseProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=userParaphraseProcess&id=" . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -353,8 +404,8 @@ class LISTSOMERESOURCES
                 $this->db->and . $this->db->formatFields('resourcemetadataType') . '=' . $this->db->tidyInput('p') . ')';
             $this->stmt->joins['resource_metadata'] = ['resourcemetadataResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -362,20 +413,20 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'userParaphrase');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
-        $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'userParaphrase', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * userMusingProcess - display resources with public musings input by this user
      */
     public function userMusingProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=userMusingProcess&id=" . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -389,8 +440,8 @@ class LISTSOMERESOURCES
                 $this->db->and . $this->db->formatFields('resourcemetadataType') . '=' . $this->db->tidyInput('m') . ')';
             $this->stmt->joins['resource_metadata'] = ['resourcemetadataResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -398,19 +449,20 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'userMusing');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'userMusing', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * languageProcess - display resources with this language
      */
     public function languageProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=languageProcess&id=" . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -422,8 +474,8 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourcelanguageLanguageId' => $this->vars['id']];
             $this->stmt->joins['resource_language'] = ['resourcelanguageResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -431,19 +483,20 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'language');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'language', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * keywordProcess - display resources with this keyword
      */
     public function keywordProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $catId = array_key_exists('catId', $this->vars) ? $this->vars["catId"] : $this->session->getVar("list_SomeResources_catId");
         if ($catId)
         { // From Category Tree browsing
@@ -468,8 +521,8 @@ class LISTSOMERESOURCES
         {
             $this->stmt->joins['resource_keyword'] = ['resourcekeywordResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -477,9 +530,14 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'keyword');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'keyword', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * keywordGroupProcess - display resources with this keyword group
@@ -492,11 +550,6 @@ class LISTSOMERESOURCES
 
             return;
         }
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
-
         $userId = $this->session->getVar('setup_UserId');
         // Get groups this user is a member of
         $this->db->formatConditions(['usergroupsusersUserId' => $userId]);
@@ -549,8 +602,8 @@ class LISTSOMERESOURCES
         {
             $this->stmt->joins['resource_keyword'] = ['resourcekeywordResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -558,19 +611,20 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'keywordGroup');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'keywordGroup', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * metaKeywordProcess - display resources with metadata having this keyword
      */
     public function metaKeywordProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $typeArray = ['all', 'quotes', 'paraphrases', 'musings', 'ideas', 'notIdeas', 'lastMulti'];
         if (!array_key_exists("type", $this->vars) || $this->vars["type"])
         {
@@ -606,7 +660,13 @@ class LISTSOMERESOURCES
             $this->session->setVar("list_SomeResources_id", $this->vars['id']);
             // set the lastMulti session variable for quick return to this process.
             $this->session->setVar("sql_LastMulti", $queryString);
+			if ($this->browserTabID)
+			{
+            	GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'metaKeyword', 
+            		'list_SomeResources_id' => $this->vars['id']]);
+			}
             $this->common->display(FALSE, 'list');
+        	$this->common->updateTempStorage();
 
             return;
         }
@@ -644,8 +704,8 @@ class LISTSOMERESOURCES
                 $this->db->formatConditions(['resourcemetadataType' => 'p']);
             }
             $subStmt = $this->setSubQuery('resource_metadata');
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt, 'resource_metadata');
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"), 'resource_metadata');
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt, 'resource_metadata');
+            $sql = $this->stmt->listList($this->order, 'resource_metadata');
         }
         else
         {
@@ -653,9 +713,14 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'metaKeyword');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'metaKeyword', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * keywordGroupProcess - display metadata with this keyword group
@@ -667,10 +732,6 @@ class LISTSOMERESOURCES
             GLOBALS::addTplVar('content', $this->errors->text('inputError', 'notRegistered'));
 
             return;
-        }
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         $typeArray = ['all', 'quotes', 'paraphrases', 'musings', 'ideas', 'notIdeas', 'lastMulti'];
         if (!array_key_exists("type", $this->vars) || !$this->vars["type"] || (array_search($this->vars['type'], $typeArray) === FALSE))
@@ -739,7 +800,13 @@ class LISTSOMERESOURCES
             $this->session->setVar("list_SomeResources_id", $this->vars['id']);
             // set the lastMulti session variable for quick return to this process.
             $this->session->setVar("sql_LastMulti", $queryString);
+			if ($this->browserTabID)
+			{
+            	GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'metaKeywordGroup', 
+            		'list_SomeResources_id' => $this->vars['id']]);
+			}
             $this->common->display(FALSE, 'list');
+        	$this->common->updateTempStorage();
 
             return;
         }
@@ -776,8 +843,8 @@ class LISTSOMERESOURCES
                 $this->db->formatConditions(['resourcemetadataType' => 'p']);
             }
             $subStmt = $this->setSubQuery('resource_metadata');
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt, 'resource_metadata');
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"), 'resource_metadata');
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt, 'resource_metadata');
+            $sql = $this->stmt->listList($this->order, 'resource_metadata');
         }
         else
         {
@@ -785,19 +852,20 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'metaKeywordGroup');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'metaKeywordGroup', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * yearProcess - display resources in this publication year
      */
     public function yearProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=yearProcess&id=" . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -809,8 +877,8 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourceyearYear1' => base64_decode($this->vars["id"])];
             $this->stmt->joins['resource_year'] = ['resourceyearId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -818,19 +886,20 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'year');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'year', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * typeProcess - display resources in this resource type
      */
     public function typeProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=typeProcess&id=" . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -841,8 +910,8 @@ class LISTSOMERESOURCES
         {
             $this->stmt->conditions[] = ['resourceType' => $this->vars["id"]];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -850,19 +919,20 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'type');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'type', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * categoryProcess - display resources in this category
      */
     public function categoryProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=categoryProcess&id=" . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -874,8 +944,8 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourcecategoryCategoryId' => $this->vars["id"]];
             $this->stmt->joins['resource_category'] = ['resourcecategoryResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -883,19 +953,20 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'category');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'category', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * userTagProcess - display resources in this user tag
      */
     public function userTagProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=userTagProcess&id=" . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -907,8 +978,8 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourceusertagsTagId' => $this->vars["id"]];
             $this->stmt->joins['resource_user_tags'] = ['resourceusertagsResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -916,19 +987,20 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'userTag');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'userTag', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * subcategoryProcess - display resources in this category
      */
     public function subcategoryProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=subcategoryProcess&id=" . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -940,8 +1012,8 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourcecategorySubcategoryId' => $this->vars["id"]];
             $this->stmt->joins['resource_category'] = ['resourcecategoryResourceId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -949,9 +1021,14 @@ class LISTSOMERESOURCES
         }
         $this->session->setVar("list_SomeResources", 'subcategory');
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'subcategory', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * creatorProcess - display resources by this creator
@@ -966,6 +1043,10 @@ class LISTSOMERESOURCES
             $this->session->setVar("list_SomeResources_id", $this->vars['id']);
             $this->session->delVar("list_SomeResources_department");
             $this->session->delVar("list_SomeResources_institution");
+            if ($this->browserTabID) {
+	            GLOBALS::setTempStorage(['list_SomeResources_id' => $this->vars['id']]);
+	            GLOBALS::unsetTempStorage(['list_SomeResources_department', 'list_SomeResources_institution']);
+	        }
             $queryString = "action=list_LISTSOMERESOURCES_CORE&method=creatorProcess&id=" . $this->vars["id"];
             $this->db->formatConditions(['creatorId' => $this->vars["id"]]);
             $sameAsId = $this->db->selectFirstField('creator', 'creatorSameAs');
@@ -994,6 +1075,10 @@ class LISTSOMERESOURCES
             $this->session->setVar("list_SomeResources_department", $this->vars['department']);
             $this->session->delVar("list_SomeResources_id");
             $this->session->delVar("list_SomeResources_institution");
+            if ($this->browserTabID) {
+	            GLOBALS::setTempStorage(['list_SomeResources_department' => $this->vars['department']]);
+	            GLOBALS::unsetTempStorage(['list_SomeResources_id', 'list_SomeResources_institution']);
+	        }
             $queryString = "action=list_LISTSOMERESOURCES_CORE&method=creatorProcess&department=" . $this->vars["department"];
             $this->db->formatConditions(['usersDepartment' => base64_decode($this->vars["department"]),
                 'usersIsCreator' => 'IS NOT NULL', ]);
@@ -1010,6 +1095,10 @@ class LISTSOMERESOURCES
             $this->session->setVar("list_SomeResources_institution", $this->vars['institution']);
             $this->session->delVar("list_SomeResources_id");
             $this->session->delVar("list_SomeResources_department");
+            if ($this->browserTabID) {
+	            GLOBALS::setTempStorage(['list_SomeResources_institution' => $this->vars['institution']]);
+	            GLOBALS::unsetTempStorage(['list_SomeResources_id', 'list_SomeResources_department']);
+	        }
             $queryString = "action=list_LISTSOMERESOURCES_CORE&method=creatorProcess&institution=" . $this->vars["institution"];
             $this->db->formatConditions(['usersInstitution' => base64_decode($this->vars["institution"]),
                 'usersIsCreator' => 'IS NOT NULL', ]);
@@ -1033,8 +1122,8 @@ class LISTSOMERESOURCES
             $this->stmt->joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
             $this->stmt->joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -1048,13 +1137,22 @@ class LISTSOMERESOURCES
             $this->common->display($sql, 'list');
             $this->session->setVar("list_SubQuery", $this->session->getVar("list_SubQueryMulti"));
             $this->session->delVar("list_NextPreviousIds");
+            if ($this->browserTabID) {
+	            GLOBALS::setTempStorage(['list_SubQuery' => $this->session->getVar("list_SubQueryMulti")]);
+	            GLOBALS::unsetTempStorage(['list_NextPreviousIds']);
+	        }
+        	$this->common->updateTempStorage();
 
             return;
         }
         $this->session->setVar("list_SomeResources", 'creator');
-        // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'creator']);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * Publishers (conference, translated books) where publisher is stored in resourcemiscField1
@@ -1070,10 +1168,6 @@ class LISTSOMERESOURCES
      */
     public function publisherProcess($miscField1 = FALSE)
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         if ($miscField1)
         {
             $queryString = "action=list_LISTSOMERESOURCES_CORE&method=specialPublisherProcess&id=" . $this->vars["id"];
@@ -1092,6 +1186,10 @@ class LISTSOMERESOURCES
             if ($miscField1)
             { // conference and translated publisher
                 $this->session->setVar("list_SomeResources", 'specialPublisher');
+				if ($this->browserTabID)
+				{
+					GLOBALS::setTempStorage(['list_SomeResources' => 'specialPublisher']);
+				}
                 $this->stmt->conditions[] = $this->db->formatFields('resourcemiscField1') . '=' . $this->db->tidyInput($this->vars["id"]) .
                     $this->db->and . '(' . $this->db->formatFields('resourceType') . '=' . $this->db->tidyInput('proceedings') .
                     $this->db->or . $this->db->formatFields('resourceType') . '=' . $this->db->tidyInput('proceedings_article') .
@@ -1102,13 +1200,17 @@ class LISTSOMERESOURCES
             else
             {
                 $this->session->setVar("list_SomeResources", 'publisher');
+        		if ($this->browserTabID)
+        		{
+                	GLOBALS::setTempStorage(['list_SomeResources' => 'publisher']);
+                }
                 $this->stmt->conditions[] = ['resourcemiscPublisher' => $this->vars["id"]];
             }
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
             $this->stmt->joins['publisher'] = ['publisherId', 'resourcemiscPublisher'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -1117,17 +1219,18 @@ class LISTSOMERESOURCES
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * collection Process - display resources by this collection
      */
     public function collectionProcess()
     {
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=collectionProcess&id=" . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -1139,8 +1242,8 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourcemiscCollection' => $this->vars["id"]];
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -1150,7 +1253,13 @@ class LISTSOMERESOURCES
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'collection', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * bibliographyProcess - display resources in this user bibliography
@@ -1159,10 +1268,6 @@ class LISTSOMERESOURCES
     {
         $gatekeep = FACTORY_GATEKEEP::getInstance();
         $gatekeep->init(); // No Read-only access allowed
-        if (!array_key_exists("id", $this->vars) || !$this->vars["id"])
-        {
-            $this->badInput->close($this->errors->text("inputError", "missing"));
-        }
         $queryString = "action=list_LISTSOMERESOURCES_CORE&method=bibliographyProcess&id=" . $this->vars["id"];
         if ($this->lastMulti($queryString))
         {
@@ -1171,10 +1276,11 @@ class LISTSOMERESOURCES
         $this->pagingReset();
         if (!array_key_exists('PagingStart', $this->vars) || (GLOBALS::getUserVar('PagingStyle') == 'A'))
         {
+        	$this->stmt->joins['user_bibliography_resource'] = ['userbibliographyresourceResourceId', 'resourceId'];
             $this->stmt->conditions[] = ['userbibliographyresourceBibliographyId' => $this->vars["id"]];
-            $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $subStmt = $this->setSubQuery('resource', TRUE);
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -1184,7 +1290,13 @@ class LISTSOMERESOURCES
         $this->session->setVar("list_SomeResources_id", $this->vars['id']);
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'bibliography', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * List quarantined resources
@@ -1206,8 +1318,8 @@ class LISTSOMERESOURCES
             $this->stmt->conditions[] = ['resourcemiscQuarantine' => 'Y'];
             $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
             $subStmt = $this->setSubQuery();
-            $this->stmt->listSubQuery($this->session->getVar("list_Order"), $queryString, $subStmt);
-            $sql = $this->stmt->listList($this->session->getVar("list_Order"));
+            $this->stmt->listSubQuery($this->order, $queryString, $subStmt);
+            $sql = $this->stmt->listList($this->order);
         }
         else
         {
@@ -1216,8 +1328,14 @@ class LISTSOMERESOURCES
         $this->session->setVar("list_SomeResources", 'quarantine');
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+        if ($this->browserTabID)
+        {
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'quarantine', 
+            	'list_SomeResources_id' => $this->vars['id']]);
+        }
         $this->common->quarantineList = TRUE;
         $this->common->display($sql, 'list');
+        $this->common->updateTempStorage();
     }
     /**
      * If this is a different resource listing to the previous one, reset the paging counter.
@@ -1231,6 +1349,8 @@ class LISTSOMERESOURCES
             $this->session->delVar("list_AllIds");
             $this->session->delVar("list_PagingAlphaLinks");
             $this->session->delVar("sql_ListStmt");
+            GLOBALS::unsetTempStorage(['mywikindx_PagingStart', 'mywikindx_PagingStartAlpha', 'list_AllIds', 
+            	'list_PagingAlphaLinks', 'sql_ListStmt']);
         }
     }
     /**
@@ -1242,7 +1362,9 @@ class LISTSOMERESOURCES
      */
     private function quickQuery($queryString)
     {
-        $sql = $this->session->getVar("sql_ListStmt");
+    	if (!$sql = GLOBALS::getTempStorage('sql_ListStmt')) {
+	        $sql = $this->session->getVar("sql_ListStmt");
+	    }
         $this->pagingObject = FACTORY_PAGING::getInstance();
         $this->pagingObject->queryString = $queryString;
         $this->pagingObject->getPaging();
@@ -1262,6 +1384,7 @@ class LISTSOMERESOURCES
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A'))
         {
             $this->session->delVar("mywikindx_PagingStart");
+            GLOBALS::unsetTempStorage(['mywikindx_PagingStart']);
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
@@ -1277,14 +1400,17 @@ class LISTSOMERESOURCES
      * Set the subQuery
      *
      * @param mixed $table
+     * @param bool $bib
      */
-    private function setSubQuery($table = 'resource')
+    private function setSubQuery($table = 'resource', $bib = FALSE)
     {
-        $this->db->ascDesc = $this->session->getVar("list_AscDesc");
-        switch ($this->session->getVar("list_Order")) {
+        $this->db->ascDesc = $this->ascDesc;
+        switch ($this->order) {
             case 'title':
                 $this->stmt->quarantine(FALSE, 'resourceId');
-                $this->stmt->useBib('resourceId');
+                if (!$bib) {
+	                $this->stmt->useBib('resourceId');
+	            }
                 $this->stmt->executeCondJoins();
                 $this->db->groupBy(['rId']);
                 if (GLOBALS::getUserVar('PagingStyle') == 'A')
@@ -1300,7 +1426,9 @@ class LISTSOMERESOURCES
                 $this->stmt->joins['resource_creator'] = ['resourcecreatorResourceId', 'resourceId'];
                 $this->stmt->joins['creator'] = ['creatorId', 'resourcecreatorCreatorId'];
                 $this->stmt->quarantine(FALSE, 'resourcecreatorResourceId');
-                $this->stmt->useBib('resourcecreatorResourceId');
+                if (!$bib) {
+                	$this->stmt->useBib('resourcecreatorResourceId');
+                }
                 $this->stmt->executeCondJoins();
                 $this->db->groupBy(['resourcecreatorResourceId']);
 
@@ -1309,7 +1437,9 @@ class LISTSOMERESOURCES
                 $this->stmt->joins['resource_misc'] = ['resourcemiscId', 'resourceId'];
                 $this->stmt->joins['publisher'] = ['publisherId', 'resourcemiscPublisher'];
                 $this->stmt->quarantine(FALSE, 'resourcemiscId', FALSE);
-                $this->stmt->useBib('resourcemiscId');
+                if (!$bib) {
+	                $this->stmt->useBib('resourcemiscId');
+	            }
                 $this->stmt->executeCondJoins();
                 $this->db->groupBy(['rId']);
 
@@ -1317,7 +1447,9 @@ class LISTSOMERESOURCES
             case 'year':
                 $this->stmt->joins['resource_year'] = ['resourceyearId', 'resourceId'];
                 $this->stmt->quarantine(FALSE, 'resourceyearId');
-                $this->stmt->useBib('resourceyearId');
+                if (!$bib) {
+	                $this->stmt->useBib('resourceyearId');
+	            }
                 $this->stmt->executeCondJoins();
                 $this->db->groupBy(['rId']);
 
@@ -1325,7 +1457,9 @@ class LISTSOMERESOURCES
             case 'timestamp':
                 $this->stmt->joins['resource_timestamp'] = ['resourcetimestampId', 'resourceId'];
                 $this->stmt->quarantine(FALSE, 'resourcetimestampId');
-                $this->stmt->useBib('resourcetimestampId');
+                if (!$bib) {
+	                $this->stmt->useBib('resourcetimestampId');
+	            }
                 $this->stmt->executeCondJoins();
                 $this->db->groupBy(['rId']);
 

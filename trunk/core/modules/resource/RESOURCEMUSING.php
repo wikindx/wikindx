@@ -28,6 +28,7 @@ class RESOURCEMUSING
     private $navigate;
     private $badInput;
     private $formData = [];
+    private $browserTabID = FALSE;
 
     // Constructor
     public function __construct()
@@ -46,6 +47,7 @@ class RESOURCEMUSING
         $this->navigate = FACTORY_NAVIGATE::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
         if (!array_key_exists('resourceId', $this->vars) || !$this->vars['resourceId'] ||
             !array_key_exists('method', $this->vars) || !$this->vars['method'])
         {
@@ -59,7 +61,7 @@ class RESOURCEMUSING
         $this->return = '&nbsp;&nbsp;' . \HTML\a(
             $this->icons->getClass("edit"),
             $this->icons->getHTML("Return"),
-            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['resourceId']
+            'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['resourceId'] . '&browserTabID=' . $this->browserTabID
         );
     }
     /**

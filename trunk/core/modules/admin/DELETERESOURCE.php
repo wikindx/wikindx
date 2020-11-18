@@ -95,7 +95,7 @@ class DELETERESOURCE
             $return = '&nbsp;&nbsp;' . \HTML\a(
                 $this->icons->getClass("edit"),
                 $this->icons->getHTML("Return"),
-                'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['resource_id']
+                'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['resource_id'] . '&browserTabID=' . $this->browserTabID
             );
         }
         $recordset = $res->getResource(FALSE, $this->db->formatFields('creatorSurname'));

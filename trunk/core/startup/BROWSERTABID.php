@@ -30,7 +30,9 @@ class BROWSERTABID
     public function js()
     {
         $active = ['list_QUICKSEARCH_CORE', 'resource_RESOURCEVIEW_CORE', 'admin_DELETERESOURCE_CORE', 'list_LISTRESOURCES_CORE', 
-        	'basket_BASKET_CORE'];
+        	'list_LISTSOMERESOURCES_CORE', 'basket_BASKET_CORE', 'attachments_ATTACHMENTS_CORE', 'resource_RESOURCECATEGORYEDIT_CORE', 
+        	'urls_URLS_CORE', 'resource_RESOURCEQUOTE_CORE', 'resource_RESOURCEPARAPHRASE_CORE', 'resource_RESOURCEMUSING_CORE', 
+        	'metadata_EDITMETADATA_CORE', 'resource_RESOURCEFORM_CORE'];
         $tempSession = [];
         if (WIKINDX_BROWSER_TAB_ID && array_key_exists('action', $this->vars) && in_array($this->vars['action'], $active))
         {

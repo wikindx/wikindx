@@ -28,7 +28,7 @@ class LISTRESOURCES
     private $count = 0;
     private $params;
     private $browserTabID = FALSE;
-    private $order;
+    private $order = 'creator';
     private $ascDesc = FALSE;
 
     public function __construct($method = FALSE)
@@ -56,7 +56,7 @@ class LISTRESOURCES
         {
             $this->badInput->close($this->messages->text("misc", "noResources"));
         } 
-        if (!array_key_exists('method', $this->vars) || !array_key_exists('list_Order', $this->vars))
+        if (!array_key_exists('method', $this->vars) || (($this->vars['method'] != 'reorder') && !array_key_exists('list_Order', $this->vars)))
         {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
@@ -74,8 +74,12 @@ class LISTRESOURCES
             // 2. Store in and extract data from $tempStorage
             // 3. Finally, put back $tempStorage into temp_storage using $this->common->updateTempStorage();
             GLOBALS::initTempStorage($this->db, $this->browserTabID);
+            // As LISTSOMERESOURCES shares some resources with LISTRESOURCES, need to ensure the data are clean . . .
+            GLOBALS::unsetTempStorage(["list_SomeResources"]);
         }
-		$this->order = $this->vars['list_Order'];
+        if (array_key_exists('list_Order', $this->vars)) {
+			$this->order = $this->vars['list_Order'];
+		}
 		$orders = ['creator', 'title', 'publisher', 'year', 'timestamp', 'popularityIndex', 'viewsIndex', 'downloadsIndex', 'maturityIndex'];
         if (!in_array($this->order, $orders))
         {
@@ -117,12 +121,12 @@ class LISTRESOURCES
         {
             $this->stmt->allIds = TRUE;
         }
-        $this->params = $this->session->getVar("sql_ListParams"); // temporarily store list parameters for use if reordering
+// temporarily store list parameters for use if reordering
+		if (!$this->params = GLOBALS::getTempStorage('sql_ListParams')) {
+			$this->params = $this->session->getVar("sql_ListParams"); 
+		}
         $this->session->delVar("sql_ListParams");
-        if (!array_key_exists('url', $this->vars))
-        {
-//            $this->{$method}();
-        }
+        GLOBALS::unsetTempStorage(['sql_ListParams']);
     }
     /**
      * With a reorder list request, print any message first
@@ -132,6 +136,10 @@ class LISTRESOURCES
         if (array_key_exists('message', $this->vars))
         {
             GLOBALS::addTplVar('content', $this->vars['message']);
+        }
+        $this->session->setVar("sql_ListParams", $this->params);
+        if ($this->browserTabID) {
+        	GLOBALS::setTempStorage(["sqlListParams" => $this->params]);
         }
         $this->processGeneral();
     }

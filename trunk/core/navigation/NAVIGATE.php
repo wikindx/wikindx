@@ -83,7 +83,7 @@ class NAVIGATE
         }
         elseif ($match[1] == 'LISTRESOURCES')
         {
-            header("Location: index.php?action=list_LISTRESOURCES_CORE&method=reorder&message=$message&url=1");
+            header("Location: index.php?action=list_LISTRESOURCES_CORE&method=reorder&message=$message");
             die;
         }
         elseif ($match[1] == 'LISTSOMERESOURCES')

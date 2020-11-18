@@ -1150,11 +1150,14 @@ class LISTCOMMON
     private function listParams($listType)
     {
         $strings = [];
+            
         // Bookmarked multi view?
         if ($this->session->getVar("bookmark_MultiView"))
         {
-            $strings = $this->session->getVar("sql_ListParams");
-            if (!is_array($strings) && $strings)
+			if (!$strings = GLOBALS::getTempStorage('sql_ListParams')) {
+				$strings = $this->session->getVar("sql_ListParams");
+			}
+            if (!is_array($strings) && !empty($strings))
             { // From advanced search
                 return \HTML\aBrowse(
                     'green',
@@ -1173,10 +1176,12 @@ class LISTCOMMON
 
             return $this->messages->text('listParams', 'listParams') . BR . implode(BR, $strings);
         }
-        if (($listType != 'search') && $this->session->getVar("sql_ListParams"))
+        if (($listType != 'search'))
         {
-            $strings = $this->session->getVar("sql_ListParams");
-            if (is_array($strings) && $strings)
+			if (!$strings = GLOBALS::getTempStorage('sql_ListParams')) {
+				$strings = $this->session->getVar("sql_ListParams");
+			}
+        	if (is_array($strings) && !empty($strings))
             {
                 return $this->messages->text('listParams', 'listParams') . BR . implode(BR, $strings);
             }
@@ -1616,9 +1621,8 @@ class LISTCOMMON
 		if ($this->browserTabID)
 		{
 			GLOBALS::setTempStorage(['sql_ListParams' => $strings]);
-        } else {
-        	$this->session->setVar("sql_ListParams", $strings);
-		}
+        }
+        $this->session->setVar("sql_ListParams", $strings);
         return $this->messages->text('listParams', 'listParams') . BR . implode(BR, $strings);
     }
 }

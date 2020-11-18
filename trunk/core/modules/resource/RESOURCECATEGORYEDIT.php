@@ -32,6 +32,7 @@ class RESOURCECATEGORYEDIT
     private $subcategories = [];
     private $keywords = [];
     private $subcatArray = [];
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
@@ -47,6 +48,7 @@ class RESOURCECATEGORYEDIT
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->category = FACTORY_CATEGORY::getInstance();
         $this->keyword = FACTORY_KEYWORD::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
 
         $this->session->clearArray('edit');
         $this->categories = $this->category->grabAll();
@@ -58,7 +60,7 @@ class RESOURCECATEGORYEDIT
             $return = '&nbsp;&nbsp;' . \HTML\a(
                 $this->icons->getClass("edit"),
                 $this->icons->getHTML("Return"),
-                'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id']
+                'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['id'] . '&browserTabID=' . $this->browserTabID
             );
         }
         else

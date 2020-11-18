@@ -27,19 +27,20 @@ class RESOURCEMETA
     private $paraphrase = [];
     private $musing = [];
     private $userId;
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
         $this->db = FACTORY_DB::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->session = FACTORY_SESSION::getInstance();
-
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->user = FACTORY_USER::getInstance();
         $this->icons = FACTORY_LOADICONS::getInstance();
         $this->common = FACTORY_RESOURCECOMMON::getInstance();
         $this->cite = FACTORY_CITE::getInstance();
         $this->userId = $this->session->getVar("setup_UserId");
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * Display resource's quotes
@@ -70,7 +71,8 @@ class RESOURCEMETA
             $this->quote['editLink'] = \HTML\a(
                 $this->icons->getClass("add"),
                 $this->icons->getHTML("add"),
-                "index.php?action=resource_RESOURCEQUOTE_CORE&method=quoteEdit" . htmlentities("&resourceId=" . $row['resourceId'])
+                "index.php?action=resource_RESOURCEQUOTE_CORE&method=quoteEdit" . htmlentities("&resourceId=" . $row['resourceId']
+                 . '&browserTabID=' . $this->browserTabID)
             );
         }
         $this->view($row['resourceId'], $recordset, 'quote');
@@ -106,7 +108,8 @@ class RESOURCEMETA
             $this->paraphrase['editLink'] = \HTML\a(
                 $this->icons->getClass("add"),
                 $this->icons->getHTML("add"),
-                "index.php?action=resource_RESOURCEPARAPHRASE_CORE&method=paraphraseEdit" . htmlentities("&resourceId=" . $row['resourceId'])
+                "index.php?action=resource_RESOURCEPARAPHRASE_CORE&method=paraphraseEdit" . htmlentities("&resourceId=" . $row['resourceId']
+                 . '&browserTabID=' . $this->browserTabID)
             );
         }
         $this->view($row['resourceId'], $recordset, 'paraphrase');
@@ -143,7 +146,8 @@ class RESOURCEMETA
             $this->musing['editLink'] = \HTML\a(
                 $this->icons->getClass("add"),
                 $this->icons->getHTML("add"),
-                "index.php?action=resource_RESOURCEMUSING_CORE&method=musingEdit" . htmlentities("&resourceId=" . $row['resourceId'])
+                "index.php?action=resource_RESOURCEMUSING_CORE&method=musingEdit" . htmlentities("&resourceId=" . $row['resourceId']
+                 . '&browserTabID=' . $this->browserTabID)
             );
         }
         $patterns = FALSE;

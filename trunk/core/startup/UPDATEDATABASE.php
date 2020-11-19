@@ -350,10 +350,6 @@ class UPDATEDATABASE
             ");
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
-        
-        // Should never be reached because all other cases either terminate execution immediately or return.
-        // Keep only so that the function returns a value if it is not true
-        return TRUE;
     }
     /**
      * Intercept for initial configuration by admin and, if necessary, display admin configuration interface (new installation means users table is empty).
@@ -1224,7 +1220,7 @@ END;
     private function upgradeTo32()
     {
         // dies if not possible
-        $this->writeConfigFile6_4_0();
+        $this->rewriteConfigFile6_4_0();
         
         // Clear attachments
         $attachment = FACTORY_ATTACHMENT::getInstance();
@@ -1879,7 +1875,7 @@ END;
     /**
      * Write new config.php with upgrade to >= WIKINDX v6.3.10
      */
-    private function writeConfigFile6_4_0()
+    private function rewriteConfigFile6_4_0()
     {
         // Load a separate config class that containts original constant names
         $tmpconfig = new CONFIG();

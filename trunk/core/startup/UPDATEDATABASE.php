@@ -182,11 +182,6 @@ class UPDATEDATABASE
      */
     private function updateDatabase($confirm, $error = FALSE)
     {
-        if ($error)
-        {
-            echo HTML\p("<font color=\"red\">$error</font>");
-        }
-        
         $dbVersion = \UPDATE\getDatabaseVersion($this->db);
         
         // These versions are too old to be upgradable
@@ -218,6 +213,11 @@ class UPDATEDATABASE
         }
         elseif ($dbVersion < WIKINDX_INTERNAL_VERSION)
         {
+            if ($error)
+            {
+                echo HTML\p("<font color=\"red\">$error</font>");
+            }
+            
             // As WIKINDX v5.3, v5.9 and v6.2.2 (DB version 12.0) transfers config.php variables to the database, config.php must be writeable before we can proceed
             // Previously, each of these versions modified the configuration, but since they are backward compatible, only the last one is kept.
             if ($dbVersion < 12.0)

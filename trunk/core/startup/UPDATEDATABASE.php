@@ -173,7 +173,7 @@ class UPDATEDATABASE
         $this->checkUsersTable();
     }
     /**
-     * Update the database if required
+     * Update the database if required based on the currrent version
      *
      * @param bool $confirm
      * @param mixed $error
@@ -186,9 +186,10 @@ class UPDATEDATABASE
         {
             echo HTML\p("<font color=\"red\">$error</font>");
         }
+        
         $dbVersion = \UPDATE\getDatabaseVersion($this->db);
-
-        // Check the minimum db version upgradable
+        
+        // These versions are too old to be upgradable
         if ($dbVersion < WIKINDX_INTERNAL_VERSION_UPGRADE_MIN)
         {
             GLOBALS::addTplVar("content", "
@@ -199,10 +200,8 @@ class UPDATEDATABASE
             ");
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
-
-        // Check the maximum db version upgradable
-        // Don't check for equality because that prevents the creation of the superadmin account
-        if ($dbVersion > WIKINDX_INTERNAL_VERSION)
+        // Something's wrong, we shouldn't be on a future release!
+        elseif ($dbVersion > WIKINDX_INTERNAL_VERSION)
         {
             GLOBALS::addTplVar("content", "
                 Your WIKINDX database version is $dbVersion.
@@ -211,8 +210,13 @@ class UPDATEDATABASE
             ");
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
-        
-        if ($dbVersion < WIKINDX_INTERNAL_VERSION)
+        // Hey, we're already on the right version!
+        elseif ($dbVersion == WIKINDX_INTERNAL_VERSION)
+        {
+            // We answer TRUE and the calling code will create the super administrator account
+            return TRUE;
+        }
+        elseif ($dbVersion < WIKINDX_INTERNAL_VERSION)
         {
             // As WIKINDX v5.3, v5.9 and v6.2.2 (DB version 12.0) transfers config.php variables to the database, config.php must be writeable before we can proceed
             // Previously, each of these versions modified the configuration, but since they are backward compatible, only the last one is kept.
@@ -235,6 +239,45 @@ class UPDATEDATABASE
             {
                 // Refresh the locales list
                 \LOCALES\refreshSystemLocalesCache(TRUE);
+            }
+            
+            // Set the target version of the current version
+            if ($dbVersion < 5.2)
+            { // upgrade v5.1 to 5.2.2
+                $this->targetVersion = 5.2;
+            }
+            elseif ($dbVersion < 5.4)
+            { // upgrade v5.2.2 to 5.4
+                $this->targetVersion = 5.4;
+            }
+            elseif ($dbVersion < 5.5)
+            { // upgrade v5.4 to 5.5
+                $this->targetVersion = 5.5;
+            }
+            elseif ($dbVersion < 5.6)
+            { // upgrade v5.5 to 5.6
+                $this->targetVersion = 5.6;
+            }
+            elseif ($dbVersion < 5.7)
+            { // upgrade v5.6 to 5.7
+                $this->targetVersion = 5.7;
+            }
+            elseif ($dbVersion < 5.8)
+            { // upgrade v5.7 to 5.8
+                $this->targetVersion = 5.8;
+            }
+            elseif ($dbVersion < 5.9)
+            { // upgrade v5.8 to 5.9
+                $this->targetVersion = 5.9;
+            }
+            elseif ($dbVersion < 6.0)
+            { // upgrade v5.9 to 6
+                $this->targetVersion = 6;
+            }
+            elseif ($dbVersion < WIKINDX_INTERNAL_VERSION)
+            {
+                // Since version 6, the version number is an integer incremented by one
+                $this->targetVersion = $dbVersion + 1;
             }
             
             if ($dbVersion < 5.2)
@@ -292,7 +335,24 @@ class UPDATEDATABASE
             
             $this->upgradeCompleted = TRUE;
         }
-
+        // Impossible case except error during delivery or development
+        // Constants can be wrong
+        else
+        {
+            GLOBALS::addTplVar("content", "
+                <p>Your WIKINDX database version is $dbVersion.</p>
+                <p>You encountered an unexpected error. Probably a problem with the configuration of the internal versions. Please check the constants:</p>
+                <ul>
+                    <li>WIKINDX_PUBLIC_VERSION = " . WIKINDX_PUBLIC_VERSION . "</li>
+                    <li>WIKINDX_INTERNAL_VERSION = " . WIKINDX_INTERNAL_VERSION . "/li>
+                    <li>WIKINDX_INTERNAL_VERSION_UPGRADE_MIN = " . WIKINDX_INTERNAL_VERSION_UPGRADE_MIN . "/li>
+                </ul>
+            ");
+            FACTORY_CLOSENOMENU::getInstance(); // die
+        }
+        
+        // Should never be reached because all other cases either terminate execution immediately or return.
+        // Keep only so that the function returns a value if it is not true
         return TRUE;
     }
     /**

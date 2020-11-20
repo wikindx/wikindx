@@ -59,7 +59,7 @@ class UPDATEDATABASE
         $this->vars = GLOBALS::getVars();
         $this->oldTime = time();
         
-        GLOBALS::addTplVar('heading', \HTML\strong($this->installMessages->text("upgradeDBHeading")));
+        $this->startDisplay();
         
         $this->checkDatabase();
         
@@ -67,7 +67,7 @@ class UPDATEDATABASE
         
         if (GLOBALS::tplVarExists('content'))
         {
-            $this->close();
+            $this->endDisplay();
         }
     }
     /**
@@ -123,7 +123,8 @@ class UPDATEDATABASE
         }
         else
         {
-            die("Fatal error: upgrade not possible. " . $dbSchemaPath . " is not a directory or doesn't exist.");    
+            GLOBALS::addTplVar('content', "Fatal error: upgrade not possible. " . $dbSchemaPath . " is not a directory or doesn't exist.");
+            $this->endDisplay();
         }
     }
     /**
@@ -201,7 +202,7 @@ class UPDATEDATABASE
                 v6.0.8 is recommended as a transition version if you need yet PHP 5.6 support.
                 v6.1.0 is recommended as a transition version if you don't need PHP 5.6 support (PHP 7.0 minimum).
             ");
-            $this->close(); // die
+            $this->endDisplay();
         }
         // Something's wrong, we shouldn't be on a future release!
         elseif ($dbVersion > WIKINDX_INTERNAL_VERSION)
@@ -211,7 +212,7 @@ class UPDATEDATABASE
                 This version of the application (" . WIKINDX_PUBLIC_VERSION . ") is not compatible with a version of the database greater than " . WIKINDX_INTERNAL_VERSION . ".
                 Please upgrade the application or restore a previous database.
             ");
-            $this->close(); // die
+            $this->endDisplay();
         }
         // Hey, we're already on the right version!
         elseif ($dbVersion == WIKINDX_INTERNAL_VERSION)
@@ -262,7 +263,7 @@ class UPDATEDATABASE
             if (!method_exists($this, $func_upgrade))
             {    
                 GLOBALS::addTplVar("content", "Fatal error: upgrade function {$func_upgrade}() is not yet implemented!");
-                $this->close(); // die
+                $this->endDisplay();
             }
             
             // Announces the start of the next step to the superadmin
@@ -292,7 +293,7 @@ class UPDATEDATABASE
                     <li>WIKINDX_INTERNAL_VERSION_UPGRADE_MIN = " . WIKINDX_INTERNAL_VERSION_UPGRADE_MIN . "/li>
                 </ul>
             ");
-            $this->close(); // die
+            $this->endDisplay();
         }
     }
     /**
@@ -317,7 +318,7 @@ class UPDATEDATABASE
                 // superadmin userId is always WIKINDX_SUPERADMIN_ID
                 $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID);
                 GLOBALS::addTplVar('content', $config->init(\HTML\p($this->installMessages->text("install"), "error", "center")));
-                $this->close(); // die
+                $this->endDisplay();
             }
         }
     }
@@ -327,24 +328,28 @@ class UPDATEDATABASE
     private function checkStatus()
     {
         $pString  = \HTML\p("Do <b>not</b> click until each script has finished.");
-        $pString .= "INTERMEDIATE INTERNAL VERSION: <b>" . $this->targetVersion . "</b>" . BR;
-        $pString .= "FINAL INTERNAL VERSION: <b>" . WIKINDX_INTERNAL_VERSION . "</b>" . BR;
-        $pString .= "MAX EXECUTION TIME: " . ini_get("max_execution_time") . " secs." . BR;
-        $pString .= "ELAPSED TIME: "       . (time() - $this->oldTime) . " secs." . BR;
-        $pString .= "DATABASE QUERIES: " . GLOBALS::getDbQueries() . BR;
-        $pString .= "MEMORY LIMIT: " . ini_get("memory_limit") . BR;
+        $pString .= "<ul>";
+        $pString .= "<li>INTERMEDIATE INTERNAL VERSION: <b>" . $this->targetVersion . "</b></li>";
+        $pString .= "<li>FINAL INTERNAL VERSION: <b>" . WIKINDX_INTERNAL_VERSION . "</b></li>";
+        $pString .= "<li>MAX EXECUTION TIME: " . ini_get("max_execution_time") . " secs.</li>";
+        $pString .= "<li>MEMORY LIMIT: " . ini_get("memory_limit") . "</li>";
         GLOBALS::addTplVar('content', $pString);
     }
     /**
-     * If required to pause execution, store current position and any $tableArray arrays in session and present continuation form to user
+     * End an upgrade step by displaying a message and a form
+     *
+     * Can be a pause during a too long operation or the end of a step
+     *
+     * - For an interrupt, fill in the $interruptStepMessage member before calling the function.
+     * - For a normal end of step, fill in the endStepMessage member before calling the function.
      */
     private function pauseExecution()
     {
-        // Print form and die
-        //      $pString = "php.ini's max_execution time (" . ini_get("max_execution_time") . " seconds) was about
-        //          to be exceeded.  Please click on the button to continue the upgrade.&nbsp;&nbsp;Do <strong>not</strong> click
-        //          until each script has finished.";
-        $pString = "MEMORY USED: " . memory_get_peak_usage() / 1000000 . " MB";
+        // Display the memory used and the tim elapsed after the upgrade step
+        $pString  = "<li>ELAPSED TIME: " . (time() - $this->oldTime) . " secs.</li>";
+        $pString .= "<li>MEMORY USED: " . memory_get_peak_usage() / 1000000 . " MB</li>";
+        $pString .= "<li>DATABASE QUERIES: " . GLOBALS::getDbQueries() . "</li>";
+        $pString .= "</ul>";
         if ($this->interruptStepMessage)
         {
             $pString .= \HTML\p($this->interruptStepMessage);
@@ -369,7 +374,7 @@ class UPDATEDATABASE
         $pString .= \FORM\formHeader('continueExecution');
         $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Continue")) . \FORM\formEnd());
         GLOBALS::addTplVar('content', $pString);
-        $this->close(); // die
+        $this->endDisplay();
     }
     /**
      * Continue execution of upgrade after a pause
@@ -434,30 +439,19 @@ class UPDATEDATABASE
         }
         GLOBALS::addTplVar('content', $pString);
         
-        $this->close(); // die
+        $this->endDisplay();
     }
     /**
-     * Special CLOSE function
+     * Start to emit the HTML page of the upgrade process
      *
      * The upgrade process needs a separate display function so that it does not depend on
-     // the template system while the configuration is incomplete.
-     *
-     * @param string $pString
+     * the template system while the configuration is incomplete.
      */
-    private function close()
+    private function startDisplay()
     {
-        $heading = "";
-        foreach (GLOBALS::getTplVar('heading') as $h)
-        { 
-            $heading .= $h;
-        }
-        $content = "";
-        foreach (GLOBALS::getTplVar('content') as $h)
-        { 
-            $content .= $h;
-        }
+        $heading = $this->installMessages->text("upgradeDBHeading");
         $apptilte = WIKINDX_TITLE_DEFAULT;
-        $version = WIKINDX_PUBLIC_VERSION;
+        
         $string = <<<END
 <!DOCTYPE html>
 <html>
@@ -489,6 +483,26 @@ class UPDATEDATABASE
 </head>
 <body>
     <h1>$apptilte - $heading</h1>
+END;
+        echo $string;
+        ob_flush();
+    }
+    /**
+     * End to emit the HTML page of the upgrade process
+     *
+     * The upgrade process needs a separate display function so that it does not depend on
+     * the template system while the configuration is incomplete.
+     */
+    private function endDisplay()
+    {
+        $content = "";
+        foreach (GLOBALS::getTplVar('content') as $h)
+        { 
+            $content .= $h;
+        }
+        $apptilte = WIKINDX_TITLE_DEFAULT;
+        $version = WIKINDX_PUBLIC_VERSION;
+        $string = <<<END
     $content
     <hr>
     <p style='text-align:right'>$apptilte $version</p>
@@ -548,7 +562,7 @@ END;
         else
         {
             GLOBALS::addTplVar('content', \HTML\p("Fatal error: upgrade target version undefined. Inconsistent state!"));
-            $this->close(); // die
+            $this->endDisplay();
         }
     }
     /**
@@ -589,7 +603,8 @@ END;
         {
             // Update db summary no. in case we have attempted to upgrade a database less than 5.3 (we've been through the previous stages successfully)
             $this->updateSoftwareVersion();
-            die("Fatal error: unable to create 'configtemp' table in the database. Check the database permissions.");
+            GLOBALS::addTplVar('content', "Fatal error: unable to create 'configtemp' table in the database. Check the database permissions.");
+            $this->endDisplay();
         }
         // Read old config and transfer values to temp table
         $row = $this->db->queryFetchFirstRow($this->db->selectNoExecute('config', '*'));
@@ -1832,9 +1847,9 @@ END;
         $fic_config = implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]);
         if (!file_exists($fic_config))
         {
-            // Without a configuration file we are forced to die unceremoniously
             $message .= HTML\p("Fatal error: {$fic_config} does not exist.");
-            die($message);
+            GLOBALS::addTplVar("content", $message);
+            $this->endDisplay();
         }
         elseif (!is_writable($fic_config))
         {
@@ -1842,7 +1857,7 @@ END;
             $message .= HTML\p("The permissions on config.php are currently: " . $permissions . ". The upgrade requires the file to be writeable.");
             
             GLOBALS::addTplVar("content", $message);
-            $this->close(); // die
+            $this->endDisplay();
         }
     }
     /**
@@ -1852,7 +1867,7 @@ END;
     {
         // As WIKINDX v5.3, v5.9, v6.2.2 and v6.4.0 (DB version 12.0) transfers config.php variables to the database, config.php must be writeable before we can proceed
         // Previously, each of these versions modified the configuration, but since they are backward compatible, only the last one is kept.
-        $this->checkConfigFile(); // dies if not writeable or file does not exist.
+        $this->checkConfigFile(); // die if not writeable or file does not exist.
         
         // Load a separate config class that containts original constant names
         $tmpconfig = new CONFIG();
@@ -2032,17 +2047,20 @@ END;
             {
                 if (file_put_contents($cf, $string) === FALSE)
                 {
-                    die("Fatal error: an error occurred when writing to $cf");
+                    GLOBALS::addTplVar('content', "Fatal error: an error occurred when writing to $cf");
+                    $this->endDisplay();
                 }
             }
             else
             {
-                die("Fatal error: $cf is not writable");
+                GLOBALS::addTplVar('content', "Fatal error: $cf is not writable");
+                $this->endDisplay();
             }
         }
         else
         {
-            die("Fatal error: could not backup $cf to $bf");
+            GLOBALS::addTplVar('content', "Fatal error: could not backup $cf to $bf");
+            $this->endDisplay();
         }
     }
     /**

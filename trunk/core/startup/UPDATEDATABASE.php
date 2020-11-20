@@ -184,6 +184,18 @@ class UPDATEDATABASE
     {
         $dbVersion = \UPDATE\getDatabaseVersion($this->db);
         
+        if ($error)
+        {
+            GLOBALS::addTplVar("content", "<font color=\"red\">$error</font>");
+        }
+        
+        if (!$confirm)
+        {
+            $this->confirmUpdateDisplay($dbVersion);
+
+            return FALSE;
+        }
+        
         // These versions are too old to be upgradable
         if ($dbVersion < WIKINDX_INTERNAL_VERSION_UPGRADE_MIN)
         {
@@ -213,24 +225,6 @@ class UPDATEDATABASE
         }
         elseif ($dbVersion < WIKINDX_INTERNAL_VERSION)
         {
-            if ($error)
-            {
-                echo HTML\p("<font color=\"red\">$error</font>");
-            }
-            
-            // As WIKINDX v5.3, v5.9 and v6.2.2 (DB version 12.0) transfers config.php variables to the database, config.php must be writeable before we can proceed
-            // Previously, each of these versions modified the configuration, but since they are backward compatible, only the last one is kept.
-            if ($dbVersion < 12.0)
-            {
-                $this->checkConfigFile(); // dies if not writeable or file does not exist.
-            }
-            if (!$confirm)
-            {
-                $this->confirmUpdateDisplay($dbVersion);
-
-                return FALSE;
-            }
-
             // Disable temporarily all SQL mode to update old databases
             $this->db->setSqlMode('');
             
@@ -536,28 +530,6 @@ END;
             $field = "databasesummarySoftwareVersion";
         }
         $this->db->update('database_summary', [$field => $version]);
-    }
-    /**
-     * Check permissions on config.php
-     */
-    private function checkConfigFile()
-    {
-        $message = HTML\p("
-            Part of the upgrade process for a WIKINDX that is younger than v6.2.2 is the transfer of many settings in config.php to the database (from where they can be configured via the Admin|Configure menu).
-            In order to accomplish this, config.php must be writeable by the web server user and the upgrade will not proceed until this is the case.
-            Equally, some settings are removed from config.php where the WIKINDX is 5.3 and older but younger than 6.2.2.
-            Once the upgrade has completed, you can then return the file permissions on config.php to read only.
-        ");
-        if (!file_exists('config.php'))
-        {
-            die("Fatal error: config.php does not exist.");
-        }
-        elseif (!is_writable('config.php'))
-        {
-            $permissions = mb_substr(sprintf('%o', fileperms('config.php')), -4);
-            $message .= HTML\p("The permissions on config.php are currently: " . $permissions . ". The upgrade requires the file to be writeable.");
-            die($message);
-        }
     }
     /**
      * Performs the most common kind of upgrade
@@ -1873,10 +1845,43 @@ END;
         $this->db->updateNull('resource_metadata', 'resourcemetadataTimestampEdited'); // default is NULL
     }
     /**
+     * Check permissions on config.php
+     *
+     * 6.4.0 (internal version 32) is the last version to modify the config file
+     */
+    private function checkConfigFile()
+    {
+        $message = HTML\p("
+            Part of the upgrade process for a WIKINDX that is younger than v6.2.2 is the transfer of many settings in config.php to the database (from where they can be configured via the Admin|Configure menu).
+            In order to accomplish this, config.php must be writeable by the web server user and the upgrade will not proceed until this is the case.
+            Equally, some settings are removed from config.php by 6.4.0.
+            Once the upgrade has completed, you can then return the file permissions on config.php to read only.
+        ");
+        $fic_config = implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]);
+        if (!file_exists($fic_config))
+        {
+            $message .= HTML\p("Fatal error: {$fic_config} does not exist.");
+            // Without a configuration file we are forced to die unceremoniously
+            die($message);
+        }
+        elseif (!is_writable($fic_config))
+        {
+            $permissions = mb_substr(sprintf('%o', fileperms($fic_config)), -4);
+            $message .= HTML\p("The permissions on config.php are currently: " . $permissions . ". The upgrade requires the file to be writeable.");
+            
+            GLOBALS::addTplVar("content", $message);
+            FACTORY_CLOSENOMENU::getInstance(); // die
+        }
+    }
+    /**
      * Write new config.php with upgrade to >= WIKINDX v6.3.10
      */
     private function rewriteConfigFile6_4_0()
     {
+        // As WIKINDX v5.3, v5.9, v6.2.2 and v6.4.0 (DB version 12.0) transfers config.php variables to the database, config.php must be writeable before we can proceed
+        // Previously, each of these versions modified the configuration, but since they are backward compatible, only the last one is kept.
+        $this->checkConfigFile(); // dies if not writeable or file does not exist.
+        
         // Load a separate config class that containts original constant names
         $tmpconfig = new CONFIG();
         

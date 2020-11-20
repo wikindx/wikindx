@@ -224,10 +224,7 @@ class UPDATEDATABASE
             return TRUE;
         }
         elseif ($dbVersion < WIKINDX_INTERNAL_VERSION)
-        {
-            // Disable temporarily all SQL mode to update old databases
-            $this->db->setSqlMode('');
-            
+        {            
             // Operations always carried out at the start of the last upgrade
             if ($dbVersion + 1 == WIKINDX_INTERNAL_VERSION)
             {
@@ -236,96 +233,46 @@ class UPDATEDATABASE
             }
             
             // Set the target version of the current version
-            if ($dbVersion < 5.2)
-            { // upgrade v5.1 to 5.2.2
-                $this->targetVersion = 5.2;
+            // Before 6.0 the internal version is a float incremented by 1/10
+            if ($dbVersion < 6.0)
+            {
+                // 5.2 = upgrade v5.1 to 5.2.2
+                // 5.4 = upgrade v5.2.2 to 5.4
+                // 5.5 = upgrade v5.4 to 5.5
+                // 5.6 = upgrade v5.5 to 5.6
+                // 5.7 = upgrade v5.6 to 5.7
+                // 5.8 = upgrade v5.7 to 5.8
+                // 5.9 = upgrade v5.8 to 5.9
+                // 6.0 = upgrade v5.9 to 6
+                $this->targetVersion = $dbVersion + 0.1;
+                
+                // 5.3 IS A MISSING INTERNAL VERSION, GO TO 5.4 DIRECTLY
+                if ($this->targetVersion == 5.3)
+                {
+                    $this->targetVersion = $dbVersion + 0.1;
+                }
             }
-            elseif ($dbVersion < 5.4)
-            { // upgrade v5.2.2 to 5.4
-                $this->targetVersion = 5.4;
-            }
-            elseif ($dbVersion < 5.5)
-            { // upgrade v5.4 to 5.5
-                $this->targetVersion = 5.5;
-            }
-            elseif ($dbVersion < 5.6)
-            { // upgrade v5.5 to 5.6
-                $this->targetVersion = 5.6;
-            }
-            elseif ($dbVersion < 5.7)
-            { // upgrade v5.6 to 5.7
-                $this->targetVersion = 5.7;
-            }
-            elseif ($dbVersion < 5.8)
-            { // upgrade v5.7 to 5.8
-                $this->targetVersion = 5.8;
-            }
-            elseif ($dbVersion < 5.9)
-            { // upgrade v5.8 to 5.9
-                $this->targetVersion = 5.9;
-            }
-            elseif ($dbVersion < 6.0)
-            { // upgrade v5.9 to 6
-                $this->targetVersion = 6;
-            }
-            elseif ($dbVersion < WIKINDX_INTERNAL_VERSION)
+            // From 6.0 the internal version is an integer incremented by 1
+            else
             {
                 // Since version 6, the version number is an integer incremented by one
                 $this->targetVersion = $dbVersion + 1;
             }
             
-            if ($dbVersion < 5.2)
-            { // upgrade v5.1 to 5.2.2
-                $this->targetVersion = 5.2;
-                $this->upgradeTo5_2();
+            // Set the upgrade function from the target version
+            $func_upgrade = "upgradeTo" . str_replace(".", "_", strval($this->targetVersion));
+            
+            // Execute the upgrade code OR die if the code is missing
+            if (!method_exists($this, $func_upgrade))
+            {    
+                GLOBALS::addTplVar("content", "Fatal error: upgrade function {$func_upgrade}() is not yet implemented!");
+                FACTORY_CLOSENOMENU::getInstance(); // die
             }
-            elseif ($dbVersion < 5.4)
-            { // upgrade v5.2.2 to 5.4
-                $this->targetVersion = 5.4;
-                $this->upgradeTo5_4();
-            }
-            elseif ($dbVersion < 5.5)
-            { // upgrade v5.4 to 5.5
-                $this->targetVersion = 5.5;
-                $this->upgradeTo5_5();
-            }
-            elseif ($dbVersion < 5.6)
-            { // upgrade v5.5 to 5.6
-                $this->targetVersion = 5.6;
-                $this->upgradeTo5_6();
-            }
-            elseif ($dbVersion < 5.7)
-            { // upgrade v5.6 to 5.7
-                $this->targetVersion = 5.7;
-                $this->upgradeTo5_7();
-            }
-            elseif ($dbVersion < 5.8)
-            { // upgrade v5.7 to 5.8
-                $this->targetVersion = 5.8;
-                $this->upgradeTo5_8();
-            }
-            elseif ($dbVersion < 5.9)
-            { // upgrade v5.8 to 5.9
-                $this->targetVersion = 5.9;
-                $this->upgradeTo5_9();
-            }
-            elseif ($dbVersion < 6.0)
-            { // upgrade v5.9 to 6
-                $this->targetVersion = 6;
-                $this->upgradeTo6();
-            }
-            elseif ($dbVersion < WIKINDX_INTERNAL_VERSION)
-            {
-                // Since version 6, the version number is an integer incremented by one
-                $this->targetVersion = $dbVersion + 1;
-                $func_upgrade = "upgradeTo" . strval($this->targetVersion);
-                
-                // Execute the upgrade code OR die if the code is missing
-                if (method_exists($this, $func_upgrade))
-                    $this->$func_upgrade();
-                else
-                    die("Fatal error: upgrade function {$func_upgrade}() is not yet implemented");
-            }
+            
+            // Finally we upgrade!
+            // Disable temporarily all SQL mode to update old databases
+            $this->db->setSqlMode('');
+            $this->$func_upgrade();
             
             $this->upgradeCompleted = TRUE;
         }

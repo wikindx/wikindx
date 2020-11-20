@@ -579,7 +579,7 @@ class LISTCOMMON
         $this->db->formatConditions(['resourcekeywordMetadataId' => ' IS NOT NULL']);
         $this->db->formatConditions(['resourcemetadataResourceId' => $resourceId]);
         $this->db->leftJoin('resource_metadata', 'resourcemetadataId', 'resourcekeywordMetadataId');
-        $resultset = $this->db->select('resource_keyword', 'resourcemetadataText');
+        $resultset = $this->db->select('resource_keyword', 'resourcemetadataText', TRUE);
         while ($row = $this->db->fetchRow($resultset))
         {
             $array[] = $this->cite->parseCitations(\HTML\nlToHtml($row['resourcemetadataText']), 'htmlNoBib', FALSE);
@@ -1003,7 +1003,7 @@ class LISTCOMMON
                 else {
                     $formHeader = 'list_LISTRESOURCES_CORE';
                 }
-                $type = array_key_exists('type', $this->vars) ? \FORM\hidden("type", $this->vars['type']) : FALSE;
+                $type = array_key_exists('mType', $this->vars) ? \FORM\hidden("mType", $this->vars['mType']) : FALSE;
                 $linksInfo['reorder'] = $type .
                     \FORM\hidden("method", "reorder") . \FORM\hidden("browserTabID", $this->browserTabID) . 
         			$this->displayOrder($listType, TRUE) .

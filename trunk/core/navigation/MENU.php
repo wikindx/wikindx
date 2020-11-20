@@ -733,23 +733,23 @@ class MENU
 
                 $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordSub")] = FALSE;
                 $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordAll")] =
-                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=all';
+                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=all';
                 $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordQuotes")] =
-                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=quotes';
+                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=quotes';
                 $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordParaphrases")] =
-                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=paraphrases';
+                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=paraphrases';
                 $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordMusings")] =
-                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=musings';
+                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=musings';
                 
                 $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordGroupSub")] = FALSE;
                 $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordAll")] =
-                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=all';
+                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=all';
                 $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordQuotes")] =
-                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=quotes';
+                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=quotes';
                 $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordParaphrases")] =
-                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=paraphrases';
+                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=paraphrases';
                 $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordMusings")] =
-                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=musings';
+                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=musings';
             }
             if ($this->ideasExist)
             {
@@ -768,13 +768,13 @@ class MENU
                 $this->text['randomSub'][$messages->text("menu", "randomIdeas")] = 'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomIdea';
                 $this->text[$messages->text("menu", "listIdeas")] = 'index.php?action=ideas_IDEAS_CORE&method=ideaList';
                 $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordIdeas")] =
-                     'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=ideas';
+                     'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=ideas';
                 $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordNotIdeas")] =
-                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&type=notIdeas';
+                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=notIdeas';
                 $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordIdeas")] =
-                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=ideas';
+                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=ideas';
                 $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordNotIdeas")] =
-                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&type=notIdeas';
+                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=notIdeas';
             }
             // readOnly user
             if (!$this->write)

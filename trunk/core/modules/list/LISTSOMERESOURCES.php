@@ -626,21 +626,21 @@ class LISTSOMERESOURCES
     public function metaKeywordProcess()
     {
         $typeArray = ['all', 'quotes', 'paraphrases', 'musings', 'ideas', 'notIdeas', 'lastMulti'];
-        if (!array_key_exists("type", $this->vars) || $this->vars["type"])
+        if (!array_key_exists("mType", $this->vars) || $this->vars["mType"])
         {
             $type = 'all';
         }
-        elseif (array_search($this->vars['type'], $typeArray) === FALSE)
+        elseif (array_search($this->vars['mType'], $typeArray) === FALSE)
         {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         else
         {
-            $type = $this->vars['type'];
+            $type = $this->vars['mType'];
         }
         $this->stmt->metadataPaging = TRUE;
         $this->common->metadataKeyword = $this->vars["id"];
-        $queryString = "action=list_LISTSOMERESOURCES_CORE&method=metaKeywordProcess&type=" . $type . "&id=" . $this->vars["id"];
+        $queryString = "action=list_LISTSOMERESOURCES_CORE&method=metaKeywordProcess&mType=" . $type . "&id=" . $this->vars["id"];
         if (($type == 'all') || ($type == 'ideas'))
         {
             // check for ideas with this keyword
@@ -734,13 +734,13 @@ class LISTSOMERESOURCES
             return;
         }
         $typeArray = ['all', 'quotes', 'paraphrases', 'musings', 'ideas', 'notIdeas', 'lastMulti'];
-        if (!array_key_exists("type", $this->vars) || !$this->vars["type"] || (array_search($this->vars['type'], $typeArray) === FALSE))
+        if (!array_key_exists("mType", $this->vars) || !$this->vars["mType"] || (array_search($this->vars['mType'], $typeArray) === FALSE))
         {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         else
         {
-            $type = $this->vars['type'];
+            $type = $this->vars['mType'];
         }
         $userId = $this->session->getVar('setup_UserId');
         // Check user is a member of the keyword group or owns it
@@ -780,7 +780,7 @@ class LISTSOMERESOURCES
         // If we reach here, we're set to go!
         $this->stmt->metadataPaging = TRUE;
         $this->common->metadataKeyword = $this->vars["id"];
-        $queryString = "action=list_LISTSOMERESOURCES_CORE&method=metaKeywordGroupProcess&type=" . $type . "&id=" . $this->vars["id"];
+        $queryString = "action=list_LISTSOMERESOURCES_CORE&method=metaKeywordGroupProcess&mType=" . $type . "&id=" . $this->vars["id"];
         if (($type == 'all') || ($type == 'ideas'))
         {
             // check for ideas with this keyword

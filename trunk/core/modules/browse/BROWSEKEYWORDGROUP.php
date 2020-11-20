@@ -161,9 +161,9 @@ class BROWSEKEYWORDGROUP
      */
     private function getMetaKeywordGroups()
     {
-        if (array_key_exists('type', $this->vars))
+        if (array_key_exists('mType', $this->vars))
         {
-            $this->type = $this->vars['type'];
+            $this->type = $this->vars['mType'];
         }
         if (($this->type != 'all') && ($this->type != 'quotes') && ($this->type != 'paraphrases') && ($this->type != 'musings') &&
             ($this->type != 'ideas') && ($this->type != 'notIdeas'))
@@ -365,7 +365,7 @@ class BROWSEKEYWORDGROUP
             {
                 if ($this->type)
                 {
-                    $type = '&type=' . $this->type;
+                    $type = '&mType=' . $this->type;
                 }
                 $links[] = \HTML\aBrowse(
                     $colour,

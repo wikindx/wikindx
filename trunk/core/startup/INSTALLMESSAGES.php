@@ -62,9 +62,14 @@ class INSTALLMESSAGES
     private function loadArray()
     {
         $array = [
+            "continue" => "Continue",
+            "username" => "Username",
+            "password" => "Password",
+            "submit" => "Submit",
+			"logonSuperadmin" => "Logon as superAdmin:",
             "install" => "Before being able to use WIKINDX, you must configure it. The minimum initially required are username, password and email. From the Admin menu, after configuration, you can add and edit other settings.",
             // upgradeDB After installing a new version of wikindx, the database may require upgrading
-            "upgradeDBHeading" => "Upgrade the Database",
+            "upgradeDBHeading" => "Upgrade",
             // upgradeDB To upgrade the database for an upgraded WIKINDX
             "upgradeDBSubmit" => "Upgrade the database",
             // A warning issued if a newly upgraded wikindx requires database upgrading.

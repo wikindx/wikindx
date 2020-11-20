@@ -52,7 +52,6 @@ class UPDATEDATABASE
         $this->db = FACTORY_DB::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         
-        $this->messages = FACTORY_MESSAGES::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "INSTALLMESSAGES.php"]));
         $this->installMessages = new INSTALLMESSAGES;
         $this->errors = FACTORY_ERRORS::getInstance();
@@ -372,7 +371,7 @@ class UPDATEDATABASE
             }
         }
         $pString .= \FORM\formHeader('continueExecution');
-        $pString .= \HTML\p(\FORM\formSubmit($this->messages->text("submit", "Continue")) . \FORM\formEnd());
+        $pString .= \HTML\p(\FORM\formSubmit($this->installMessages->text("continue")) . \FORM\formEnd());
         GLOBALS::addTplVar('content', $pString);
         $this->endDisplay();
     }
@@ -418,21 +417,21 @@ class UPDATEDATABASE
             $email = $email ? "(" . $email . ")" : "";
             $pString .= \HTML\p($this->installMessages->text("upgradeDB2", $email));
             
-            $pString .= \HTML\p($this->messages->text("authorize", "logonSuperadmin"));
+            $pString .= \HTML\p($this->installMessages->text("logonSuperadmin"));
             
             $pString .= \FORM\formHeader("upgradeDBLogon");
             $pString .= \HTML\tableStart('left width50percent');
             $pString .= \HTML\trStart();
-            $pString .= \HTML\td($this->messages->text("user", "username") . ":&nbsp;&nbsp;");
+            $pString .= \HTML\td($this->installMessages->text("username") . ":&nbsp;&nbsp;");
             $pString .= \HTML\td(\FORM\textInput(FALSE, "usersUsername"));
             $pString .= \HTML\trEnd();
             $pString .= \HTML\trStart();
-            $pString .= \HTML\td($this->messages->text("user", "password") . ":&nbsp;&nbsp;");
+            $pString .= \HTML\td($this->installMessages->text("password") . ":&nbsp;&nbsp;");
             $pString .= \HTML\td(\FORM\passwordInput(FALSE, "password"));
             $pString .= \HTML\trEnd();
             $pString .= \HTML\trStart();
             $pString .= \HTML\td("&nbsp;");
-            $pString .= \HTML\td(\FORM\formSubmit($this->messages->text("submit", "Submit")), 'right');
+            $pString .= \HTML\td(\FORM\formSubmit($this->installMessages->text("submit")), 'right');
             $pString .= \HTML\trEnd();
             $pString .= \HTML\tableEnd();
             $pString .= \FORM\formEnd();
@@ -468,6 +467,7 @@ class UPDATEDATABASE
             font-family: arial, helvetica, serif;
             font-size: 0.9em;
         }
+        
         h1, h2, h3, h4 {
             color: #F90;
             margin: 0 0 0.5em 0;
@@ -477,7 +477,18 @@ class UPDATEDATABASE
             height:38px;
             margin:0.5em 0 1em 0;
             padding:0;
+        }
         
+        input {
+            background-color: #FFF;
+            border: 1px sold black;
+            padding: 2px;
+        }
+        
+        input[type=submit] {
+            background-color: #FFF;
+            border: 1px sold black;
+            padding: 0.3em;
         }
     </style>
 </head>

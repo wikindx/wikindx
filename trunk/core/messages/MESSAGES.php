@@ -192,7 +192,6 @@ class MESSAGES
 				"writeLogon" => dgettext($domain, "Enter your username and password to logon to the system. Your browser preferences must allow cookies for this domain."),
 				"superLogon" => dgettext($domain, "Enter your superadmin username and password to logon"),
 				"readOnly" => dgettext($domain, "READ-ONLY access"),
-				"logonSuperadmin" => dgettext($domain, "Logon as superAdmin:"),
 			),
 /// config_ WIKINDX administrator/default configuration
 		    "config" => array(

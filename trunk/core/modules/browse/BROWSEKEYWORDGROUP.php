@@ -29,6 +29,7 @@ class BROWSEKEYWORDGROUP
     private $metadata = FALSE;
     private $groups;
     private $kgKeywords;
+    private $type = 'all';
 
     public function __construct()
     {

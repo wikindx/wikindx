@@ -88,10 +88,6 @@ class NAVIGATE
         }
         elseif ($match[1] == 'LISTSOMERESOURCES')
         {
-            GLOBALS::addTplVar('content', $message);
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "list", "LISTSOMERESOURCES.php"]));
-            $list = new LISTSOMERESOURCES();
-            $list->reorder();
             header("Location: index.php?action=list_LISTSOMERESOURCES_CORE&method=reorder&message=$message");
             die;
         }

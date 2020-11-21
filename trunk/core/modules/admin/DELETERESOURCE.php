@@ -495,7 +495,6 @@ class DELETERESOURCE
     {
     	$resultSet = $this->db->selectCount('resource', 'resourceId');
     	$num = $this->db->fetchOne($resultSet);
-    	print $num;
         $num = $this->db->numRows($this->db->select('resource', 'resourceId'));
         $this->db->update('database_summary', ['databasesummaryTotalResources' => $num]);
         $this->db->formatConditions(['resourcemetadataType' => 'p']);

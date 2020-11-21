@@ -827,7 +827,8 @@ class LISTCOMMON
                 }
                 if ($isHyperlinked)
                 {
-                    $resourceLink = "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $resourceId);
+                    $resourceLink = "index.php?action=resource_RESOURCEVIEW_CORE" . htmlentities("&id=" . $resourceId) . 
+                    	'&browserTabID=' . $this->browserTabID;
                     $resourceList[$resourceId]['resource'] =
                         \HTML\a('rLink', $resourceList[$resourceId]['resource'], $resourceLink);
                 }
@@ -849,7 +850,8 @@ class LISTCOMMON
                             $this->icons->getClass("delete"),
                             $this->icons->getHTML("delete"),
                             "index.php?action=admin_DELETERESOURCE_CORE" . htmlentities('&function=deleteResourceConfirm&navigate=' .
-                            $this->navigate . '&resource_id=' . $resourceId)
+                            $this->navigate . '&resource_id=' . $resourceId) . 
+                    		'&browserTabID=' . $this->browserTabID
                         );
                     }
                     $edit = TRUE;
@@ -865,7 +867,8 @@ class LISTCOMMON
                         $this->icons->getClass("delete"),
                         $this->icons->getHTML("delete"),
                         "index.php?action=admin_DELETERESOURCE_CORE" . htmlentities('&function=deleteResourceConfirm&navigate=' .
-                        $this->navigate . '&resource_id=' . $resourceId)
+                        $this->navigate . '&resource_id=' . $resourceId) . 
+                    	'&browserTabID=' . $this->browserTabID
                     );
                     $edit = TRUE;
                 }
@@ -883,7 +886,8 @@ class LISTCOMMON
                         $this->icons->getClass("delete"),
                         $this->icons->getHTML("delete"),
                         "index.php?action=admin_DELETERESOURCE_CORE" . htmlentities('&function=deleteResourceConfirm&navigate=' .
-                        $this->navigate . '&resource_id=' . $resourceId)
+                        $this->navigate . '&resource_id=' . $resourceId) . 
+                    	'&browserTabID=' . $this->browserTabID
                     );
                 }
                 // display CMS link if required
@@ -909,8 +913,10 @@ class LISTCOMMON
                     );
                 }
                 // Display a resource
-                $resourceList[$resourceId]['links']['view'] = \HTML\a($this->icons->getClass("view"), $view, "index.php?action=resource_RESOURCEVIEW_CORE" .
-                    htmlentities("&id=" . $resourceId));
+                $resourceList[$resourceId]['links']['view'] = \HTML\a($this->icons->getClass("view"), $view,
+                	"index.php?action=resource_RESOURCEVIEW_CORE" .
+                    htmlentities("&id=" . $resourceId) . 
+                    	'&browserTabID=' . $this->browserTabID);
             }
 
             unset($resources);

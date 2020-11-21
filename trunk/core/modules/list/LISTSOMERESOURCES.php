@@ -626,7 +626,7 @@ class LISTSOMERESOURCES
     public function metaKeywordProcess()
     {
         $typeArray = ['all', 'quotes', 'paraphrases', 'musings', 'ideas', 'notIdeas', 'lastMulti'];
-        if (!array_key_exists("mType", $this->vars) || $this->vars["mType"])
+        if (!array_key_exists("mType", $this->vars) || !$this->vars["mType"])
         {
             $type = 'all';
         }
@@ -733,7 +733,7 @@ class LISTSOMERESOURCES
 
             return;
         }
-        $typeArray = ['all', 'quotes', 'paraphrases', 'musings', 'ideas', 'notIdeas', 'lastMulti'];
+        $typeArray = ['all', 'quotes', 'paraphrases', 'musings', 'ideas', 'notIdeas'];
         if (!array_key_exists("mType", $this->vars) || !$this->vars["mType"] || (array_search($this->vars['mType'], $typeArray) === FALSE))
         {
             $this->badInput->close($this->errors->text("inputError", "missing"));

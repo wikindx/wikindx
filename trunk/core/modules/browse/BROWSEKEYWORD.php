@@ -23,6 +23,7 @@ class BROWSEKEYWORD
     private $common;
     private $messages;
     private $metadataType = FALSE;
+    private $type = 'all';
 
     public function __construct()
     {
@@ -71,7 +72,7 @@ class BROWSEKEYWORD
         {
             if ($this->type)
             {
-                $type = '&type=' . $this->type;
+                $type = '&mType=' . $this->type;
             }
             $this->common->pagingLinks('action=browse_BROWSEKEYWORD_CORE&metadata=1' . $type);
         }

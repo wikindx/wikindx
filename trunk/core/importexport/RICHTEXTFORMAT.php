@@ -1165,7 +1165,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
         {
             $header = @get_headers($url);
 
-            return stripos($header[0], "200 OK") ? TRUE : FALSE;
+            return !is_bool($header) && stripos($header[0], "200 OK") ? TRUE : FALSE;
         }
         // Use curl as a fallback if allow_url_fopen is disabled
         elseif (extension_loaded('curl'))
@@ -1221,7 +1221,10 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
      */
     private function convertColour($colour)
     {
-        $colour = rtrim(ltrim($colour));
+    	$colour = ltrim($colour, '#');
+    	if (!ctype_xdigit($colour)) {
+    		return FALSE;
+    	}
         $colorVal = hexdec($colour);
         $rgbArray['red'] = 0xFF & ($colorVal >> 0x10);
         $rgbArray['green'] = 0xFF & ($colorVal >> 0x8);

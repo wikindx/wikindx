@@ -23,6 +23,7 @@ class HTMLEXPORT
     private $errors;
     private $common;
     private $parentClass;
+    private $browserTabID = FALSE;
 
     /**
      * Constructor
@@ -41,6 +42,7 @@ class HTMLEXPORT
         $this->errors = FACTORY_ERRORS::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTCOMMON.php"]));
         $this->common = new EXPORTCOMMON('html');
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * Display options for exporting
@@ -49,9 +51,10 @@ class HTMLEXPORT
      */
     public function exportOptions()
     {
-        if (!$this->session->getVar("sql_ListStmt"))
-        {
-            $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
+        if ($this->browserTabID && !\TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_ListStmt')) {
+        	if (!$this->session->getVar("sql_ListStmt")) {
+            	$this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
+            }
         }
         $pString = FORM\formHeader("importexportbib_exportHtml");
         $pString .= FORM\hidden('method', 'process');

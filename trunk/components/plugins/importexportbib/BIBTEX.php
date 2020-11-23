@@ -23,6 +23,7 @@ class BIBTEX
     private $common;
     private $bibtex;
     private $parentClass;
+    private $browserTabID = FALSE;
 
     /**
      * Constructor
@@ -42,6 +43,7 @@ class BIBTEX
         $this->common = new EXPORTCOMMON();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "resource", "VIEWBIBTEX.php"]));
         $this->bibtex = new VIEWBIBTEX();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * Display options for exporting
@@ -50,9 +52,10 @@ class BIBTEX
      */
     public function exportOptions()
     {
-        if (!$this->session->getVar("sql_ListStmt"))
-        {
-            $this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
+        if ($this->browserTabID && !\TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_ListStmt')) {
+        	if (!$this->session->getVar("sql_ListStmt")) {
+            	$this->failure(HTML\p($this->pluginmessages->text("noList"), 'error'));
+            }
         }
         $cString = $this->common->getCustomFields();
         $pString = FORM\formHeader("importexportbib_exportBibtex");

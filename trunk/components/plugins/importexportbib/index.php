@@ -31,6 +31,7 @@ class importexportbib_MODULE
     private $configImport;
     private $bibutilsImport;
     private $common;
+    private $browserTabID = FALSE;
 
     /**
      * Constructor
@@ -49,6 +50,7 @@ class importexportbib_MODULE
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "EXPORTCOMMON.php"]));
         $this->common = new EXPORTCOMMON();
         $this->db = FACTORY_DB::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
         if (!$this->configImport->bibutilsPath)
         {
             $this->configImport->bibutilsPath = '/usr/local/bin/'; // default *NIX location
@@ -631,96 +633,102 @@ class importexportbib_MODULE
                 ],
             ];
         }
+		if (!$lastMulti = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_LastMulti')) {
+			$lastMulti = $this->session->getVar("sql_LastMulti");
+		}
+		if (!$basket = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List')) {
+			$basket = $this->session->getVar("basket_List");
+		}
         if (($type == 'bibutils') && (FILE\command_exists($this->configImport->bibutilsPath . 'bib2xml')))
         {
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuBibutils')] = "initBibutils";
         }
-        elseif (($type == 'export') && ($this->session->getVar("sql_LastMulti") || $this->session->getVar("basket_List")))
+        elseif (($type == 'export') && ($lastMulti || $basket))
         {
-            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List"))
+            if ($lastMulti && $basket)
             {
                 $array = [$this->pluginmessages->text('menuRtfExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initRtfExportB",
                     $this->pluginmessages->text('menuExportList') => "initRtfExportL", ];
             }
-            elseif ($this->session->getVar("basket_List"))
+            elseif ($basket)
             {
                 $array = [$this->pluginmessages->text('menuRtfExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initRtfExportB", ];
             }
-            elseif ($this->session->getVar("sql_LastMulti"))
+            elseif ($lastMulti)
             {
                 $array = [$this->pluginmessages->text('menuRtfExport') => FALSE,
                     $this->pluginmessages->text('menuExportList') => "initRtfExportL", ];
             }
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
 
-            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List"))
+            if ($lastMulti && $basket)
             {
                 $array = [$this->pluginmessages->text('menuBibtexExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initBibtexExportB",
                     $this->pluginmessages->text('menuExportList') => "initBibtexExportL", ];
             }
-            elseif ($this->session->getVar("basket_List"))
+            elseif ($basket)
             {
                 $array = [$this->pluginmessages->text('menuBibtexExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initBibtexExportB", ];
             }
-            elseif ($this->session->getVar("sql_LastMulti"))
+            elseif ($lastMulti)
             {
                 $array = [$this->pluginmessages->text('menuBibtexExport') => FALSE,
                     $this->pluginmessages->text('menuExportList') => "initBibtexExportL", ];
             }
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
 
-            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List"))
+            if ($lastMulti && $basket)
             {
                 $array = [$this->pluginmessages->text('menuHtmlExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initHtmlExportB",
                     $this->pluginmessages->text('menuExportList') => "initHtmlExportL", ];
             }
-            elseif ($this->session->getVar("basket_List"))
+            elseif ($basket)
             {
                 $array = [$this->pluginmessages->text('menuHtmlExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initHtmlExportB", ];
             }
-            elseif ($this->session->getVar("sql_LastMulti"))
+            elseif ($lastMulti)
             {
                 $array = [$this->pluginmessages->text('menuHtmlExport') => FALSE,
                     $this->pluginmessages->text('menuExportList') => "initHtmlExportL", ];
             }
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
 
-            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List"))
+            if ($lastMulti && $basket)
             {
                 $array = [$this->pluginmessages->text('menuEndnoteExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initEndnoteExportB",
                     $this->pluginmessages->text('menuExportList') => "initEndnoteExportL", ];
             }
-            elseif ($this->session->getVar("basket_List"))
+            elseif ($basket)
             {
                 $array = [$this->pluginmessages->text('menuEndnoteExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initEndnoteExportB", ];
             }
-            elseif ($this->session->getVar("sql_LastMulti"))
+            elseif ($lastMulti)
             {
                 $array = [$this->pluginmessages->text('menuEndnoteExport') => FALSE,
                     $this->pluginmessages->text('menuExportList') => "initEndnoteExportL", ];
             }
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
 
-            if ($this->session->getVar("sql_LastMulti") && $this->session->getVar("basket_List"))
+            if ($lastMulti && $basket)
             {
                 $array = [$this->pluginmessages->text('menuRisExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initRisExportB",
                     $this->pluginmessages->text('menuExportList') => "initRisExportL", ];
             }
-            elseif ($this->session->getVar("basket_List"))
+            elseif ($basket)
             {
                 $array = [$this->pluginmessages->text('menuRisExport') => FALSE,
                     $this->pluginmessages->text('menuExportBasket') => "initRisExportB", ];
             }
-            elseif ($this->session->getVar("sql_LastMulti"))
+            elseif ($lastMulti)
             {
                 $array = [$this->pluginmessages->text('menuRisExport') => FALSE,
                     $this->pluginmessages->text('menuExportList') => "initRisExportL", ];

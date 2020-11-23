@@ -25,6 +25,7 @@ class EXPORTCOMMON
     private $messages;
     private $errors;
     private $cite;
+    private $browserTabID = FALSE;
 
     /*
      * Constructor
@@ -39,6 +40,7 @@ class EXPORTCOMMON
         $this->errors = FACTORY_ERRORS::getInstance();
         $this->cite = FACTORY_CITE::getInstance($outputType);
         $this->filesDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
+        $this->browserTabID = GLOBALS::getBrowserTabID();
         // Perform some system admin
         FILE\tidyFiles();
     }
@@ -161,14 +163,27 @@ class EXPORTCOMMON
         $stmt = FACTORY_SQLSTATEMENTS::getInstance();
         if ($this->session->getVar("exportBasket"))
         {
-            $tempAllIds = $this->session->getVar("list_AllIds");
-            $tempListStmt = $this->session->getVar("sql_ListStmt");
-            $this->session->setVar("list_AllIds", $this->session->getVar("basket_List"));
+        	if (!$tempAllIds = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_AllIds')) {
+	            $tempAllIds = $this->session->getVar("list_AllIds");
+	        }
+        	if (!$tempListStmt = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_ListStmt')) {
+	            $tempListStmt = $this->session->getVar("sql_ListStmt");
+	        }
+        	if (!$basket = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List')) {
+	            $basket = $this->session->getVar("basket_List");
+	        }
+            $this->session->setVar("list_AllIds", $basket);
+            if ($this->browserTabID) {
+            	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basket]);
+            }
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "core", "modules", "basket", "BASKET.php"]));
             $basket = new BASKET();
             $sqlEncoded = base64_encode(serialize([$basket->returnBasketSql(FALSE, 'creator')]));
             $this->session->setVar("list_AllIds", $tempAllIds);
             $this->session->setVar("sql_ListStmt", $tempListStmt);
+            if ($this->browserTabID) {
+            	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['list_AllIds' => $tempAllIds, 'sql_ListStmt' => $tempListStmt]);
+            }
 
             return $sqlEncoded;
         }

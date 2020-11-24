@@ -23,10 +23,8 @@ class HOUSEKEEPING
     private $db;
     /**
      * HOUSEKEEPING
-     *
-     * @param string $upgradeCompleted
      */
-    public function __construct($upgradeCompleted)
+    public function __construct()
     {
         $this->session = FACTORY_SESSION::getInstance();
         $this->db = FACTORY_DB::getInstance();
@@ -34,15 +32,13 @@ class HOUSEKEEPING
         $this->tempStorage();
         if ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID)
         { // superadmin logging on – caching requires the superadmin to click further
-            $this->cacheAttachments($upgradeCompleted);
+            $this->cacheAttachments();
         }
     }
     /**
      * Check if any attachments need caching and create them one at a time
-     *
-     * @param string $upgradeCompleted
      */
-    public function cacheAttachments($upgradeCompleted)
+    public function cacheAttachments()
     {
         $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
         $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);

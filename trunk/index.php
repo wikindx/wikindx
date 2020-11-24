@@ -81,7 +81,7 @@ if (!array_key_exists('action', $vars) || ($vars['action'] == 'front'))
      */
     if (!array_key_exists('action', $vars))
     {
-        FACTORY_HOUSEKEEPING::getInstance($upgradeCompleted); // runs on autopilot
+        FACTORY_HOUSEKEEPING::getInstance(); // runs on autopilot
     }
     $front = new FRONT($message); // __construct() runs on autopilot
     unset($front);

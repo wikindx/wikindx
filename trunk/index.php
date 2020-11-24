@@ -96,12 +96,6 @@ elseif (array_key_exists('action', $vars) && ($vars['action'] == 'noMenu' || $va
     $actionFound = TRUE;
     unset($menu);
 }
-elseif (array_key_exists('action', $vars))
-{
-    $front = new FRONT(); // __construct() runs on autopilot
-    unset($front);
-    $actionFound = TRUE;
-}
 /**
  * Core wikindx modules have the querystring 'action' as <directory>_<FILE>_CORE the assumption being that <directory>
  * is under 'core/modules/'.

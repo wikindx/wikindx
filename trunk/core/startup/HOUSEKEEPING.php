@@ -30,10 +30,7 @@ class HOUSEKEEPING
         $this->db = FACTORY_DB::getInstance();
         $this->statistics();
         $this->tempStorage();
-        if ($this->session->getVar("setup_UserId") == WIKINDX_SUPERADMIN_ID)
-        { // superadmin logging on – caching requires the superadmin to click further
-            $this->cacheAttachments();
-        }
+        $this->cacheAttachments();
     }
     /**
      * Check if any attachments need caching and create them one at a time

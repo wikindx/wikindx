@@ -27,7 +27,7 @@ class CURL
         header('resourceattachmentsHashFilename: ' . $_GET['id']);
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "list", "FILETOTEXT.php"]));
         $ftt = new FILETOTEXT();
-        echo $ftt->convertToText($_GET['file'], $_GET['fileType']);
+        echo $ftt->convertToText($_GET['file']);
         FACTORY_CLOSERAW::getInstance(); // die
     }
 }

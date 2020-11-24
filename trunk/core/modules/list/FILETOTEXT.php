@@ -139,7 +139,7 @@ class FILETOTEXT
             {
                 try
                 {
-                    file_put_contents($fileNameCache, $this->convertToText($fileName, $row['resourceattachmentsFileType']));
+                    file_put_contents($fileNameCache, $this->convertToText($fileName));
                 }
                 catch (Exception $e)
                 {
@@ -231,13 +231,16 @@ class FILETOTEXT
     /**
      * convertToText
      *
-     * @param mixed $filename
-     * @param mixed $mimeType
+     * @param string $filename
      *
-     * @return false|string
+     * @return string
      */
-    public function convertToText($filename, $mimeType)
+    public function convertToText($filename)
     {
+        // Retrieve the mime type of the original file
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->file($filename);
+        
         $this->fileName = $filename;
         if (isset($this->fileName) && !file_exists($this->fileName))
         {

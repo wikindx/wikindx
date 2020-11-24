@@ -534,28 +534,9 @@ class ATTACHMENTS
             header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
             die;
         }
-        // Convert to text and store in the cache directory if of PDF, DOC or DOCX type
-        $fileNameCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS, $hash]);
-        if (!file_exists($fileNameCache))
-        {
-            switch ($type) {
-                case WIKINDX_MIMETYPE_PDF:
-                case WIKINDX_MIMETYPE_DOCX:
-                case WIKINDX_MIMETYPE_DOC:
-                    include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "list", "FILETOTEXT.php"]));
-                    $ftt = new FILETOTEXT();
-                    $fileName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $hash]);
-                    @file_put_contents($fileNameCache, $ftt->convertToText($fileName, $type)); // we do not halt on failure
-                break;
-                case WIKINDX_MIMETYPE_TXT:
-                    $fileName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS, $hash]);
-                    @file_put_contents($fileNameCache, $fileName); // we do not halt on failure
-                break;
-                default:
-                    // Type not handled
-                break;
-            }
-        }
+        
+        $this->refreshCache($hash, $hash);
+        
         $this->db->formatConditions(["resourceattachmentsHashFilename" => $hash]);
         $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);
         $recordSet = $this->db->select('resource_attachments', 'resourceattachmentsId');
@@ -599,6 +580,49 @@ class ATTACHMENTS
 
         return TRUE;
     }
+    
+    /**
+     * Write or update the cache file of an attachment file
+     *
+     * @param string $filenameData // Attachment file stored in data
+     * @param string $filenameCache // Cached version of the file attachment
+     *
+     * @return bool TRUE on success, FALSE otherwise
+     */
+    private function refreshCache($filenameData, $filenameCache)
+    {
+        $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
+        $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
+        
+        $pathData = implode(DIRECTORY_SEPARATOR, [$dirData, $filenameData]);
+        $pathCache = implode(DIRECTORY_SEPARATOR, [$dirCache, $filenameCache]);
+        
+        // Impossible to go further without the original file
+        if (!file_exists($pathData))
+        {
+            return FALSE;
+        }
+        
+        // When the cache file exists and is newer than (or equal) the original file there is nothing to do
+        if (file_exists($pathCache) && filemtime($pathCache) >= filemtime($pathData))
+        {
+            return TRUE;
+        }
+        
+        // Make the cachd file
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "list", "FILETOTEXT.php"]));
+        $ftt = new FILETOTEXT();
+        $contentCache = $ftt->convertToText($pathData);
+        if (file_put_contents($pathCache, $contentCache) === FALSE)
+        {
+            return FALSE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
+    
     /**
      * form for editing, deleting and adding (another) attachments
      *

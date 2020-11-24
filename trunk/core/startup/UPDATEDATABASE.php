@@ -230,9 +230,8 @@ class UPDATEDATABASE
                 // Refresh the locales list
                 \LOCALES\refreshSystemLocalesCache(TRUE);
                 
-                // Use the default template
+                // Clear the Smarty cache
                 $this->session->setVar("setup_Template", WIKINDX_TEMPLATE_DEFAULT);
-                // need to do this so the correct cache folder is set for the smarty cacheDir
                 FACTORY_TEMPLATE::getInstance()->loadTemplate(TRUE);
                 FACTORY_TEMPLATE::getInstance()->clearAllCache();
             }

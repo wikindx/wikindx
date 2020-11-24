@@ -51,7 +51,7 @@ class GLOBALS
     /**
      * The ending time of the entire page
      */
-    private static $WIKINDX_PAGE_ENDING_TIME_CHRONO;
+    private static $WIKINDX_PAGE_ENDING_TIME_CHRONO = NULL;
     /**
      * Error messages. A convenient place to store a single error message
      */
@@ -384,10 +384,17 @@ class GLOBALS
     {
         $tmp = \UTF8\mb_explode(' ', self::$WIKINDX_PAGE_STARTING_TIME_CHRONO);
         $beginTimer = $tmp[0] + $tmp[1];
-
-        $tmp = \UTF8\mb_explode(' ', self::$WIKINDX_PAGE_ENDING_TIME_CHRONO);
-        $endTimer = $tmp[0] + $tmp[1];
-
+        
+        if (self::$WIKINDX_PAGE_ENDING_TIME_CHRONO == NULL)
+        {
+            $tmp = microtime();
+            $endTimer = $tmp[0] + $tmp[1];
+        }
+        else
+        {
+            $tmp = \UTF8\mb_explode(' ', self::$WIKINDX_PAGE_ENDING_TIME_CHRONO);
+            $endTimer = $tmp[0] + $tmp[1];
+        }
         return round($endTimer - $beginTimer, 5);
     }
     /**

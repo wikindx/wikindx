@@ -358,8 +358,10 @@ if (mb_strripos(WIKINDX_DIR_COMPONENT_PLUGINS . DIRECTORY_SEPARATOR, $_SERVER['S
         // Upgrade database
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "UPDATEDATABASE.php"]));
         $update = new UPDATEDATABASE(); // __construct() runs on autopilot
-        $upgradeCompleted = $update->upgradeCompleted;
-        unset($update);
+        // We should never reach this point because the uprgade process has its own display
+        // and the only way to escape it is finishing all steps
+        // and following the final link returning to the front page
+        die("Fatal error: upgrade / install had not ended successfully");
     }
 }
 

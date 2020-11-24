@@ -54,23 +54,6 @@ $actionFound = FALSE;
 if (!array_key_exists('action', $vars) || ($vars['action'] == 'front'))
 { // ready for displaying front page
     $message = FALSE;
-    if (isset($upgradeCompleted))
-    {
-        if ($upgradeCompleted === TRUE)
-        {
-            include_once('core/startup/INSTALLMESSAGES.php');
-            $installMessages = new INSTALLMESSAGES;
-            $message = \HTML\p($installMessages->text("upgradeDBSuccess"), "success", "center");
-            if (WIKINDX_INTERNAL_VERSION >= 5.3)
-            {
-                $message .= \HTML\p($installMessages->text("upgradeDBv5.3"), "success", "center");
-            }
-        }
-    }
-    else
-    {
-        $upgradeCompleted = FALSE;
-    }
     if (array_key_exists('message', $vars))
     {
         $message = $vars['message'];

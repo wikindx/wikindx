@@ -17,8 +17,6 @@
  */
 class UPDATEDATABASE
 {
-    /** boolean */
-    public $upgradeCompleted = FALSE;
     /** object */
     private $session;
     /** object */
@@ -278,8 +276,6 @@ class UPDATEDATABASE
             
             // Announces the end of the next step to the superadmin
             $this->pauseExecution();
-            
-            $this->upgradeCompleted = TRUE;
         }
         // Impossible case except error during delivery or development
         // Constants can be wrong

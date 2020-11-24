@@ -55,16 +55,14 @@ class FACTORY_BROWSERTABID
     /**
      * Get instance
      *
-     * @param string $upgradeCompleted (Default is FALSE)
-     *
      * @return object (self::$instance)
      */
-    public static function getInstance($upgradeCompleted = FALSE)
+    public static function getInstance()
     {
         if (empty(self::$instance))
         {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BROWSERTABID.php"]));
-            self::$instance = new BROWSERTABID($upgradeCompleted);
+            self::$instance = new BROWSERTABID();
         }
 
         return self::$instance;
@@ -94,16 +92,14 @@ class FACTORY_HOUSEKEEPING
     /**
      * Get instance
      *
-     * @param string $upgradeCompleted (Default is FALSE)
-     *
      * @return object (self::$instance)
      */
-    public static function getInstance($upgradeCompleted = FALSE)
+    public static function getInstance()
     {
         if (empty(self::$instance))
         {
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "HOUSEKEEPING.php"]));
-            self::$instance = new HOUSEKEEPING($upgradeCompleted);
+            self::$instance = new HOUSEKEEPING();
         }
 
         return self::$instance;

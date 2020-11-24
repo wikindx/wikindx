@@ -127,6 +127,7 @@ class ATTACHMENTS
         $filename = $row['resourceattachmentsFileName'];
         $lastmodified = date('r', strtotime($row['resourceattachmentsTimestamp']));
         unset($row);
+        
         if (file_exists($dirName . DIRECTORY_SEPARATOR . $hash) === FALSE)
         {
             $id = $this->vars['resourceId'];
@@ -134,6 +135,9 @@ class ATTACHMENTS
             header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
             die;
         }
+        
+        $this->refreshCache($hash, $hash);
+        
         FILE\setHeaders($type, $size, $filename, $lastmodified);
         FILE\readfile_chunked($dirName . DIRECTORY_SEPARATOR . $hash);
         $this->attachment->incrementDownloadCounter($this->vars['id'], $this->vars['resourceId']);

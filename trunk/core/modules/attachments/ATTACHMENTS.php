@@ -589,10 +589,11 @@ class ATTACHMENTS
      * Write or update the cache file of an attachment file
      *
      * @param string $filename // Attachment filename
+     * @param bool $force
      *
      * @return bool TRUE on success, FALSE otherwise
      */
-    public function refreshCache($filename)
+    public function refreshCache($filename, $force = FALSE)
     {
         $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
         $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
@@ -607,7 +608,7 @@ class ATTACHMENTS
         }
         
         // When the cache file exists and is newer than (or equal) the original file there is nothing to do
-        if (file_exists($pathCache) && filemtime($pathCache) >= filemtime($pathData))
+        if (!$force && file_exists($pathCache) && filemtime($pathCache) >= filemtime($pathData))
         {
             return TRUE;
         }

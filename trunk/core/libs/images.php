@@ -461,12 +461,8 @@ class FileServer
      */
     public static function getFileMime($filepath)
     {
-        $fhandle = finfo_open(FILEINFO_MIME);
+        $fhandle = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($fhandle, $filepath);
-        $mime_type_chunks = preg_split('/\s+/u', $mime_type);
-        $mime_type = $mime_type_chunks[0];
-        $mime_type_chunks = \UTF8\mb_explode(";", $mime_type);
-        $mime_type = $mime_type_chunks[0];
 
         return $mime_type;
     }

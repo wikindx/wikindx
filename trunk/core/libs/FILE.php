@@ -445,7 +445,7 @@ namespace FILE
     {
         if (isset($_FILES) && array_key_exists('file', $_FILES))
         {
-            $finfo = new \finfo(FILEINFO_MIME); // return mime type ala mimetype extension
+            $finfo = new \finfo(FILEINFO_MIME_TYPE);
             if ($multiple)
             {
                 $fileArrays = rearrangeFilesArray($_FILES);
@@ -469,8 +469,8 @@ namespace FILE
                     {
                         continue;
                     }
-                    $info = \UTF8\mb_explode(';', $finfo->file($fileArray['tmp_name'][$index]));
-                    $array[] = [$fileName, sha1_file($fileArray['tmp_name'][$index]), $info[0], $fileArray['size'][$index], $index];
+                    $mimeType = $finfo->file($fileArray['tmp_name'][$index]);
+                    $array[] = [$fileName, sha1_file($fileArray['tmp_name'][$index]), $mimeType, $fileArray['size'][$index], $index];
                 }
 
                 return $array;
@@ -489,10 +489,10 @@ namespace FILE
                 {
                     return [FALSE, FALSE, FALSE, FALSE];
                 }
-                $info = \UTF8\mb_explode(';', $finfo->file($_FILES['file']['tmp_name']));
+                $mimeType = $finfo->file($_FILES['file']['tmp_name']);
 
                 return [$fileName, sha1_file($_FILES['file']['tmp_name']),
-                    $info[0], $_FILES['file']['size'], ];
+                    $mimeType, $_FILES['file']['size'], ];
             }
             else
             {

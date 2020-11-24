@@ -361,18 +361,10 @@ class UPDATEDATABASE
             {
                 $pString .= \HTML\p($this->endStepMessage);
             }
-            if ($this->targetVersion == WIKINDX_INTERNAL_VERSION)
+            if ($this->targetVersion == WIKINDX_INTERNAL_VERSION && \UPDATE\getDatabaseVersion($this->db) == WIKINDX_INTERNAL_VERSION)
             {
-                if (\UPDATE\getDatabaseVersion($this->db) == WIKINDX_INTERNAL_VERSION)
-                {                
-                    $pString .= \HTML\p("<b>Upgrade finished.</b>");
-                    $pString .= \HTML\p("Please click on the button to return to the home page.");
-                }
-                else
-                {
-                    $pString .= \HTML\p("Upgrade to internal version <b>" . $this->targetVersion . "</b> paused.");
-                    $pString .= \HTML\p("Please click on the button to continue the upgrade.");
-                }
+                $pString .= \HTML\p("<b>Upgrade finished.</b>");
+                $pString .= \HTML\p("Please click on the button to return to the home page.");
             }
             else
             {

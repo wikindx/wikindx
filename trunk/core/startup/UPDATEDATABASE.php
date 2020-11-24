@@ -58,6 +58,9 @@ class UPDATEDATABASE
         $this->vars = GLOBALS::getVars();
         $this->oldTime = time();
         
+        // Force the update of the components.json files in case WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"] changes
+        \UTILS\refreshComponentsListCache(TRUE);
+        
         $this->startDisplay();
         
         $this->checkDatabase();

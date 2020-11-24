@@ -378,8 +378,3 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "LOCALES.php"]
 \LOCALES\load_locales();
 
 $vars = GLOBALS::getVars();
-
-if (array_key_exists('action', $vars) && ($vars['action'] == 'continueExecution'))
-{
-    unset($vars['action']);
-}

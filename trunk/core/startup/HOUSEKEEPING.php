@@ -38,75 +38,78 @@ class HOUSEKEEPING
         }
     }
     /**
-     * Check if any attachments need caching
+     * Check if any attachments need caching and create them one at a time
      *
      * @param string $upgradeCompleted
      */
     public function cacheAttachments($upgradeCompleted)
     {
-        $messages = FACTORY_MESSAGES::getInstance();
-        $count = 0;
-        $attachDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
-        $cacheDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
-        $cacheDirFiles = scandir($cacheDir);
-        foreach ($cacheDirFiles as $key => $value)
+        $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
+        $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
+        
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CORE, "modules", "attachments", "ATTACHMENTS.php"]));
+        $att = new ATTACHMENTS();
+        
+        $mem = ini_get('memory_limit');
+        ini_set('memory_limit', '-1'); // NB not always possible to set
+        if (ini_get('memory_limit') == -1)
         {
-            if (strpos($value, '.') === 0)
-            {
-                unset($cacheDirFiles[$key]);
-            }
+            $maxSize = FALSE;
         }
-        $this->session->setVar("cache_Attachments", count($cacheDirFiles));
-        $mimeTypes = [WIKINDX_MIMETYPE_PDF, WIKINDX_MIMETYPE_DOCX, WIKINDX_MIMETYPE_DOC, WIKINDX_MIMETYPE_TXT];
-        $this->db->formatConditionsOneField($mimeTypes, 'resourceattachmentsFileType');
-        $resultset = $this->db->select('resource_attachments', ['resourceattachmentsHashFilename']);
-        while ($row = $this->db->fetchRow($resultset))
+        elseif (ini_get('memory_limit') >= 129)
         {
-            $f = $row['resourceattachmentsHashFilename'];
-            $fileName = $attachDir . DIRECTORY_SEPARATOR . $f;
-            $fileNameCache = $cacheDir . DIRECTORY_SEPARATOR . $f;
-            if (!file_exists($fileName) || (file_exists($fileNameCache) && filemtime($fileNameCache) >= filemtime($fileName)))
-            {
-                continue;
-            }
-            ++$count;
+            $maxSize = 30000000; // 30MB
         }
-        if ($count)
+        elseif (ini_get('memory_limit') >= 65)
         {
-            $pString = \HTML\p($messages->text("misc", "attachmentCache1"));
-            $pString .= \HTML\p($messages->text("misc", "attachmentCache2", $count));
-            $lastCache = $this->session->getVar("cache_Attachments");
-            if ($lastCache)
-            {
-                $pString .= \HTML\p($messages->text("misc", "attachmentCache3", $lastCache));
-            }
-            $pString .= \FORM\formHeader("list_FILETOTEXT_CORE");
-            $pString .= \FORM\hidden("method", "checkCache");
-            $value = $this->session->getVar("cache_Limit");
-            $pString .= \HTML\p($messages->text("misc", "attachmentCache5", \FORM\textInput(FALSE, "cacheLimit", $value, 3)));
-            $pString .= \HTML\p(\FORM\formSubmit($messages->text("submit", "Cache")) . \FORM\formEnd());
-            $pString .= \HTML\p(\HTML\a("skip", $messages->text("misc", "attachmentCache6"), htmlentities("index.php?action=skipCaching")));
-            GLOBALS::addTplVar('content', $pString);
-            FACTORY_CLOSENOMENU::getInstance(); // die
+            $maxSize = 15000000; // 15MB
         }
         else
         {
-            if ($upgradeCompleted == TRUE)
+            $maxSize = 5000000; // 5MB
+        }
+        
+        $maxExecTime = ini_get('max_execution_time');
+        $maxCount = 1;
+        
+        $count = 0;
+        $size = 0;
+        
+        $listDataFiles = \FILE\fileInDirToArray($dirData);
+        $listCacheFiles = \FILE\fileInDirToArray($dirCache);
+        
+        $listCacheFilesMissing = array_diff($listDataFiles, $listCacheFiles);
+        
+        foreach($listCacheFilesMissing as $k => $file)
+        {
+            $att->refreshCache($file);
+            
+            $count++;
+            $size += filesize(implode(DIRECTORY_SEPARATOR, [$dirData, $file]));
+            
+            // Stop if there is less than a second left
+            if ($maxExecTime - GLOBALS::getPageElapsedTime() <= 1)
             {
-                include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "INSTALLMESSAGES.php"]));
-                $installMessages = new INSTALLMESSAGES;
-                $message = \HTML\p($installMessages->text("upgradeDBSuccess"), "success", "center");
-                if (WIKINDX_INTERNAL_VERSION >= 5.3)
+                break;
+            }
+            
+            // Stop if the maximum number of attachments has been reached
+            if ($maxCount)
+            {
+                if ($count >= $maxCount)
                 {
-                    $message .= \HTML\p($installMessages->text("upgradeDBv5.3"), "success", "center");
+                    break;
                 }
             }
-            else
+            
+            // Stop if all allocated memory has been consumed
+            if ($maxSize)
             {
-                $message = '';
+                if ($size >= $maxSize)
+                {
+                    break;
+                }
             }
-            $front = new FRONT($message); // __construct() runs on autopilot
-            FACTORY_CLOSE::getInstance();
         }
     }
     /**

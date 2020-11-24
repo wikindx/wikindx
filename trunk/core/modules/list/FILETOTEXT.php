@@ -21,115 +21,6 @@ class FILETOTEXT
     public function __construct()
     {
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "pdftotext", "PdfToText.phpclass"]));
-        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CORE, "modules", "attachments", "ATTACHMENTS.php"]));
-    }
-
-    /**
-     * Check files in WIKINDX_DIR_DATA_ATTACHMENTS have been cached (only PDF, DOC, DOCX)
-     */
-    public function checkCache()
-    {
-        $db = FACTORY_DB::getInstance();
-        $vars = GLOBALS::getVars();
-        $session = FACTORY_SESSION::getInstance();
-        $attachDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
-        $cacheDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
-        $mem = ini_get('memory_limit');
-        ini_set('memory_limit', '-1'); // NB not always possible to set
-        $maxExecTime = ini_get('max_execution_time');
-        // Turn error display off so that errors from PdfToText don't get written to screen (still written to the cache files)
-        $errorDisplay = ini_get('display_errors');
-        ini_set('display_errors', FALSE);
-        
-        // Attempting to avoid timeouts if max execution time cannot be set. This is done on a trial and error basis.
-        if (ini_get('memory_limit') == -1)
-        { // unlimited
-            $maxCount = FALSE;
-            $maxSize = FALSE;
-        }
-        elseif (ini_get('memory_limit') >= 129)
-        {
-            $maxCount = 30;
-            $maxSize = 30000000; // 30MB
-        }
-        elseif (ini_get('memory_limit') >= 65)
-        {
-            $maxCount = 20;
-            $maxSize = 15000000; // 15MB
-        }
-        else
-        {
-            $maxCount = 10;
-            $maxSize = 5000000; // 5MB
-        }
-        $input = FALSE;
-        if (array_key_exists('cacheLimit', $vars))
-        {
-            $input = trim($vars['cacheLimit']);
-            if (is_numeric($input) && is_int($input + 0))
-            { // include cast to number
-                $maxCount = $input;
-                $session->setVar("cache_Limit", $input);
-            }
-        }
-        if (!$input)
-        {
-            $session->delVar("cache_Limit");
-        }
-        $count = 0;
-        $size = 0;
-        $mimeTypes = [WIKINDX_MIMETYPE_PDF, WIKINDX_MIMETYPE_DOCX, WIKINDX_MIMETYPE_DOC, WIKINDX_MIMETYPE_TXT];
-        $db->formatConditionsOneField($mimeTypes, 'resourceattachmentsFileType');
-        $resultset = $db->select(
-            'resource_attachments',
-            ['resourceattachmentsResourceId', 'resourceattachmentsHashFilename', 'resourceattachmentsFileType', 'resourceattachmentsFileSize']
-        );
-        while ($row = $db->fetchRow($resultset))
-        {
-            $att = new ATTACHMENTS();
-            $att->refreshCache($row['resourceattachmentsHashFilename']);
-            
-            ++$count;
-            $size += $row['resourceattachmentsFileSize'];
-            
-            // Stop if there is less than a second left
-            if ($maxExecTime - GLOBALS::getPageElapsedTime() <= 1)
-            {
-                break;
-            }
-            
-            // Stop if the maximum number of attachments has been reached
-            if ($maxCount)
-            {
-                if ($count >= $maxCount)
-                {
-                    break;
-                }
-            }
-            
-            // Stop if all allocated memory has been consumed
-            if ($maxSize)
-            {
-                if ($size >= $maxSize)
-                {
-                    break;
-                }
-            }
-        }
-        
-        $cacheDirFiles = scandir($cacheDir);
-        foreach ($cacheDirFiles as $key => $value)
-        {
-            if (strpos($value, '.') === 0)
-            {
-                unset($cacheDirFiles[$key]);
-            }
-        }
-        $session->setVar("cache_Attachments", count($cacheDirFiles));
-        ini_set('display_errors', $errorDisplay);
-        ini_set('memory_limit', $mem);
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "startup", "HOUSEKEEPING.php"]));
-        $hk = new HOUSEKEEPING(FALSE);
     }
 
     /**
@@ -184,6 +75,10 @@ class FILETOTEXT
     {
         // PDF objects can be large – memory is reset at the next script
         ini_set('memory_limit', '-1');
+        
+        $errorDisplay = ini_get('display_errors');
+        ini_set('display_errors', FALSE);
+        
         $importPDF = new PdfToText();
         
         // Note:
@@ -195,7 +90,7 @@ class FILETOTEXT
         $importPDF->Options = PdfToText::PDFOPT_NO_HYPHENATED_WORDS | PdfToText::PDFOPT_ENFORCE_EXECUTION_TIME;
         
         // Will consume all available runtime except 2 seconds (if this point is reached in less than 2 seconds)
-        $importPDF->MaxExecutionTime = ini_get('max_execution_time') - GLOBALS::getPageElapsedTime() - 2;
+        $importPDF->MaxExecutionTime = ini_get('max_execution_time') - GLOBALS::getPageElapsedTime() - 3;
         
         
         try
@@ -213,6 +108,8 @@ class FILETOTEXT
         ) {
             $text = "PdfToTextTimeoutException " . $e->getMessage();
         }
+        
+        ini_set('display_errors', $errorDisplay);
         
         return $text;
     }

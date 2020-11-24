@@ -96,7 +96,7 @@ elseif (array_key_exists('action', $vars) && ($vars['action'] == 'noMenu' || $va
     $actionFound = TRUE;
     unset($menu);
 }
-elseif (array_key_exists('action', $vars) && ($vars['action'] == 'skipCaching'))
+elseif (array_key_exists('action', $vars))
 {
     $front = new FRONT(); // __construct() runs on autopilot
     unset($front);

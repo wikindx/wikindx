@@ -18,12 +18,10 @@
  */
 class FILETOTEXT
 {
-    /** string */
-    private $fileName;
-
     public function __construct()
     {
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "pdftotext", "PdfToText.phpclass"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CORE, "modules", "attachments", "ATTACHMENTS.php"]));
     }
 
     /**
@@ -37,32 +35,12 @@ class FILETOTEXT
         $attachDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
         $cacheDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
         $mem = ini_get('memory_limit');
-        $maxExecTime = ini_get('max_execution_time');
         ini_set('memory_limit', '-1'); // NB not always possible to set
-        ini_set('max_execution_time', '-1'); // NB not always possible to set
+        $maxExecTime = ini_get('max_execution_time');
         // Turn error display off so that errors from PdfToText don't get written to screen (still written to the cache files)
         $errorDisplay = ini_get('display_errors');
         ini_set('display_errors', FALSE);
-        if (array_key_exists('cacheCurl', $vars) && ($vars['cacheCurl'] == 'on'))
-        {
-            $session->setVar("cache_Curl", TRUE);
-            if (function_exists('curl_multi_exec'))
-            {
-                $ch = [];
-                $mh = curl_multi_init();
-                $script = $_SERVER['SERVER_NAME'] . $_SERVER['SCRIPT_NAME'];
-                $curlExists = TRUE;
-            }
-            else
-            {
-                $curlExists = FALSE;
-            }
-        }
-        else
-        {
-            $session->delVar("cache_Curl");
-            $curlExists = FALSE;
-        }
+        
         // Attempting to avoid timeouts if max execution time cannot be set. This is done on a trial and error basis.
         if (ini_get('memory_limit') == -1)
         { // unlimited
@@ -108,42 +86,19 @@ class FILETOTEXT
         );
         while ($row = $db->fetchRow($resultset))
         {
-            $f = $row['resourceattachmentsHashFilename'];
-            $fileName = $attachDir . DIRECTORY_SEPARATOR . $f;
-            $fileNameCache = $cacheDir . DIRECTORY_SEPARATOR . $f;
-            if (!file_exists($fileName) || (file_exists($fileNameCache) && filemtime($fileNameCache) > filemtime($fileName)))
-            {
-                continue; // already cached
-            }
-            elseif ($curlExists)
-            {
-                $curlTarget = $script . '?' .
-                'action=curl_CURL_CORE' .
-                '&method=attachmentCache' .
-                '&file=' . urlencode($fileName) .
-                '&fileType=' . urlencode($row['resourceattachmentsFileType']) .
-                '&id=' . $f;
-                $ch_x = curl_init($curlTarget);
-                $ch[$row['resourceattachmentsHashFilename']] = $ch_x;
-                curl_setopt($ch_x, CURLOPT_RETURNTRANSFER, TRUE);
-                // Get the headers too
-                curl_setopt($ch_x, CURLOPT_HEADER, TRUE);
-                curl_setopt($ch_x, CURLOPT_TIMEOUT, ini_get('max_execution_time'));
-                curl_multi_add_handle($mh, $ch_x);
-            }
-            else
-            {
-                try
-                {
-                    file_put_contents($fileNameCache, $this->convertToText($fileName));
-                }
-                catch (Exception $e)
-                {
-                    file_put_contents($fileNameCache, '');
-                }
-            }
+            $att = new ATTACHMENTS();
+            $att->refreshCache($row['resourceattachmentsHashFilename'], $row['resourceattachmentsHashFilename']);
+            
             ++$count;
             $size += $row['resourceattachmentsFileSize'];
+            
+            // Stop if there is less than a second left
+            if ($maxExecTime - GLOBALS::getPageElapsedTime() <= 1)
+            {
+                break;
+            }
+            
+            // Stop if the maximum number of attachments has been reached
             if ($maxCount)
             {
                 if ($count >= $maxCount)
@@ -151,6 +106,8 @@ class FILETOTEXT
                     break;
                 }
             }
+            
+            // Stop if all allocated memory has been consumed
             if ($maxSize)
             {
                 if ($size >= $maxSize)
@@ -159,55 +116,7 @@ class FILETOTEXT
                 }
             }
         }
-        if ($curlExists)
-        {
-            $running = NULL;
-            do
-            {
-                curl_multi_exec($mh, $running);
-            } while ($running);
-            foreach ($ch as $ch_x)
-            {
-                $return = curl_multi_getcontent($ch_x);
-                curl_multi_remove_handle($mh, $ch_x);
-                curl_close($ch_x);
-
-                // Identify the file parsed with its custom header 'resourceattachmentsHashFilename'
-                // This is mandatory because the output of PdfToText could be altered at byte level
-                $split = \UTF8\mb_explode("\r\n\r\n", $return, 2);
-                if (count($split) == 2)
-                {
-                    $headers = $split[0];
-                    $body = $split[1];
-
-                    // Split headers / body
-                    $headers = \UTF8\mb_explode("\r\n", $headers);
-                    foreach ($headers as $h)
-                    {
-                        // Split each header in key / value
-                        $h = \UTF8\mb_explode(":", $h);
-                        if (count($split) == 2)
-                        {
-                            // Identify the file parsed
-                            if ($h[0] == 'resourceattachmentsHashFilename')
-                            {
-                                $texts[trim($h[1])] = trim($body);
-
-                                try
-                                {
-                                    file_put_contents($cacheDir . DIRECTORY_SEPARATOR . trim($h[1]), $texts[trim($h[1])]);
-                                }
-                                catch (Exception $e)
-                                {
-                                    file_put_contents($cacheDir . DIRECTORY_SEPARATOR . trim($h[1]), '');
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            curl_multi_close($mh);
-        }
+        
         $cacheDirFiles = scandir($cacheDir);
         foreach ($cacheDirFiles as $key => $value)
         {
@@ -219,7 +128,6 @@ class FILETOTEXT
         $session->setVar("cache_Attachments", count($cacheDirFiles));
         ini_set('display_errors', $errorDisplay);
         ini_set('memory_limit', $mem);
-        ini_set('max_execution_time', $maxExecTime);
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "startup", "HOUSEKEEPING.php"]));
         $hk = new HOUSEKEEPING(FALSE);
     }

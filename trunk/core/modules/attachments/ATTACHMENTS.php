@@ -593,7 +593,7 @@ class ATTACHMENTS
      *
      * @return bool TRUE on success, FALSE otherwise
      */
-    private function refreshCache($filenameData, $filenameCache)
+    public function refreshCache($filenameData, $filenameCache)
     {
         $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
         $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);

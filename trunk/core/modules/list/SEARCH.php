@@ -98,8 +98,6 @@ class SEARCH
             default:
                 $this->session->setVar("search_Order", 'creator');
         }
-        //		if(array_key_exists('action', $_GET) && ($_GET['action'] == 'curlFile'))
-//			$this->curlFile();
     }
     /**
      * display form options

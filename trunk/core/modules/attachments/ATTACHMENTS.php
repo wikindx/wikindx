@@ -136,7 +136,7 @@ class ATTACHMENTS
             die;
         }
         
-        $this->refreshCache($hash, $hash);
+        $this->refreshCache($hash);
         
         FILE\setHeaders($type, $size, $filename, $lastmodified);
         FILE\readfile_chunked($dirName . DIRECTORY_SEPARATOR . $hash);
@@ -539,7 +539,7 @@ class ATTACHMENTS
             die;
         }
         
-        $this->refreshCache($hash, $hash);
+        $this->refreshCache($hash);
         
         $this->db->formatConditions(["resourceattachmentsHashFilename" => $hash]);
         $this->db->formatConditions(["resourceattachmentsResourceId" => $this->resourceId]);
@@ -588,18 +588,17 @@ class ATTACHMENTS
     /**
      * Write or update the cache file of an attachment file
      *
-     * @param string $filenameData // Attachment file stored in data
-     * @param string $filenameCache // Cached version of the file attachment
+     * @param string $filename // Attachment filename
      *
      * @return bool TRUE on success, FALSE otherwise
      */
-    public function refreshCache($filenameData, $filenameCache)
+    public function refreshCache($filename)
     {
         $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
         $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
         
-        $pathData = implode(DIRECTORY_SEPARATOR, [$dirData, $filenameData]);
-        $pathCache = implode(DIRECTORY_SEPARATOR, [$dirCache, $filenameCache]);
+        $pathData = implode(DIRECTORY_SEPARATOR, [$dirData, $filename]);
+        $pathCache = implode(DIRECTORY_SEPARATOR, [$dirCache, $filename]);
         
         // Impossible to go further without the original file
         if (!file_exists($pathData))

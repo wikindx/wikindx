@@ -87,7 +87,7 @@ class FILETOTEXT
         while ($row = $db->fetchRow($resultset))
         {
             $att = new ATTACHMENTS();
-            $att->refreshCache($row['resourceattachmentsHashFilename'], $row['resourceattachmentsHashFilename']);
+            $att->refreshCache($row['resourceattachmentsHashFilename']);
             
             ++$count;
             $size += $row['resourceattachmentsFileSize'];

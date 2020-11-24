@@ -387,7 +387,7 @@ class GLOBALS
         
         if (self::$WIKINDX_PAGE_ENDING_TIME_CHRONO == NULL)
         {
-            $tmp = microtime();
+            $tmp = \UTF8\mb_explode(' ', microtime());
             $endTimer = $tmp[0] + $tmp[1];
         }
         else

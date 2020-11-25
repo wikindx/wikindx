@@ -112,7 +112,8 @@ class UPDATEDATABASE
         }
         
         // Request SuperAdmin login if not yet
-        if ($this->session->getVar("setup_UserId", -1) != WIKINDX_SUPERADMIN_ID)
+        // and force it once if yet logged
+        if ($this->session->getVar("setup_UserId", -1) != WIKINDX_SUPERADMIN_ID || $this->session->getVar("upgrade_ForceLogin", TRUE) == TRUE)
         {
             $this->startUpdateDisplay();
             $this->requestSuperAdminLogin($dbVersion);
@@ -383,6 +384,8 @@ class UPDATEDATABASE
             }
             if ($this->targetVersion == WIKINDX_INTERNAL_VERSION && \UPDATE\getDatabaseVersion($this->db) == WIKINDX_INTERNAL_VERSION)
             {
+                $this->session->delVar("upgrade_ForceLogin");
+                
                 $message = \HTML\p($this->installMessages->text("upgradeDBSuccess"), "success", "center");
                 $pString .= $message;
                 $pString .= \HTML\p("Please click on the button to return to the home page.");
@@ -429,6 +432,8 @@ class UPDATEDATABASE
         {
             $this->session->setVar("setup_Write", TRUE);
             $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID);
+            // Don't request to login twice
+            $this->session->setVar("upgrade_ForceLogin", FALSE);
             
             $pString .= \HTML\p(
                   'CURRENT MAX EXECUTION TIME: ' . ini_get("max_execution_time") . ' secs' . BR

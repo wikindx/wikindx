@@ -91,18 +91,21 @@ class AUTHORIZE
                 $this->initLogon(); // login prompt
                 FACTORY_CLOSENOMENU::getInstance();
             }
-            if (array_key_exists('method', $this->vars) &&
-            (($this->vars["method"] == 'forgetInitStage1') ||
-            ($this->vars["method"] == 'forgetInitStage2') ||
-            ($this->vars["method"] == 'forgetProcess')))
-            {
+            if (
+                array_key_exists('method', $this->vars) &&
+                (($this->vars["method"] == 'forgetInitStage1') ||
+                ($this->vars["method"] == 'forgetInitStage2') ||
+                ($this->vars["method"] == 'forgetProcess'))
+            ) {
                 return TRUE;
             }
             // User supplying username and password to logon to WIKINDX.
             // $auth->logonCheck() dies after printing logon screen if bad comparison.
-            elseif (($this->vars["action"] == 'logon') &&
-                array_key_exists("password", $this->vars) && array_key_exists("usersUsername", $this->vars))
-            {
+            elseif (
+                ($this->vars["action"] == 'logon')
+                && array_key_exists("password", $this->vars)
+                && array_key_exists("usersUsername", $this->vars)
+            ) {
                 $this->logonCheck($this->vars['usersUsername'], $this->vars['password']);
                 // tidy up old files
                 FILE\tidyFiles();

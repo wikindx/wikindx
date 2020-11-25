@@ -32,13 +32,13 @@ namespace UPDATE
         {
             return TRUE;
         }
-        // Check if the database version number is not the same as source code version number
-        elseif (getDatabaseVersion($dbo) != WIKINDX_INTERNAL_VERSION)
+        // Check if 'users' table has not been filled with the superadmin account
+        elseif (!existsSuperadminAccount($dbo))
         {
             return TRUE;
         }
-        // Check if 'users' table has not been filled with the superadmin account
-        elseif (!existsSuperadminAccount($dbo))
+        // Check if the database version number is not the same as source code version number
+        elseif (getDatabaseVersion($dbo) != WIKINDX_INTERNAL_VERSION)
         {
             return TRUE;
         }

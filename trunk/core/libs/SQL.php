@@ -3004,7 +3004,6 @@ class SQL
             "read" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "Unable to read database."),
             "config" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "Missing Configuration Parameter in config.php."),
             "fileOpen" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "Unable to open update/createMySQL.txt."),
-            "updateMySQL" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "Unable to update database with update/updateMySQL.txt."),
             "dbSpecified" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "No RDBMS type selected in config.php."),
             "subQuery" => dgettext(WIKINDX_LANGUAGE_DOMAIN_DEFAULT, "Missing subQuery statement."),
         ];

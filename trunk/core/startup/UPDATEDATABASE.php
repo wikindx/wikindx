@@ -24,12 +24,8 @@ class UPDATEDATABASE
     /** array */
     private $vars;
     /** object */
-    private $messages;
-    /** object */
     private $installMessages;
-    /** object */
-    private $errors;
-    /**  int */
+    /** int */
     private $oldTime;
     /** string */
     private $interruptStepMessage = FALSE;
@@ -37,6 +33,7 @@ class UPDATEDATABASE
     private $endStepMessage = FALSE;
     /** float */
     private $targetVersion = NULL;
+    
     /**
      * UPDATEDATABASE
      */
@@ -52,24 +49,88 @@ class UPDATEDATABASE
         
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "INSTALLMESSAGES.php"]));
         $this->installMessages = new INSTALLMESSAGES;
-        $this->errors = FACTORY_ERRORS::getInstance();
         $this->vars = GLOBALS::getVars();
         $this->oldTime = time();
         
         // Force the update of the components.json files in case WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"] changes
         \UTILS\refreshComponentsListCache(TRUE);
         
-        $this->startDisplay();
-        
-        $this->checkDatabase();
-        
-        $this->session->clearSessionData();
-        
-        if (GLOBALS::tplVarExists('content'))
+        // Initialize the database
+        if (!\UPDATE\existsTableDatabaseVersion($this->db))
         {
+            $this->startInstallDisplay();
+            
+            if (array_key_exists('action', $this->vars) && ($this->vars['action'] == 'createdatabase'))
+            {
+                $this->createDbSchema();
+                
+                // NB: The config table is initialized with default values by the LOADCONFIG class that know the name and type of each option
+                $this->updateSoftwareVersion(WIKINDX_INTERNAL_VERSION);
+                
+                $pString  = \HTML\p($this->installMessages->text("installDB2"), "success", "center");
+                $pString .= \HTML\p("Please click on the button to continue the installation.");
+                $pString .= \HTML\p(
+                      \FORM\formHeader('continueExecution')
+                    . \FORM\formSubmit($this->installMessages->text("continue"))
+                    . \FORM\formEnd()
+                );
+                GLOBALS::addTplVar('content', $pString);
+            }
+            // The very first time displays an install message
+            else
+            {
+                $pString  = \HTML\p($this->installMessages->text("installDB1"));
+                $pString .= \HTML\p("Please click on the button to create the database.");
+                $pString .= \HTML\p(
+                      \FORM\formHeader('createdatabase')
+                    . \FORM\formSubmit($this->installMessages->text("continue"))
+                    . \FORM\formEnd()
+                );
+                GLOBALS::addTplVar('content', $pString);
+            }
+            
+            // Announces the end of the next step to the superadmin
             $this->endDisplay();
         }
+        
+        // At this step we can retrieve the current version of the database
+        $dbVersion = \UPDATE\getDatabaseVersion($this->db);
+        
+        // Initialize the system
+        // The dynamic part of the config is loaded (db).
+        // We need that for ther session
+        FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
+        
+        FACTORY_LOADCONFIG::getInstance()->loadUserVars();
+        
+        // Required for gatekeep function in CONFIG.php
+        $this->session->setVar("setup_Superadmin", TRUE);
+        
+        // Request SuperAdmin creation if missing
+        if (!\UPDATE\existsSuperadminAccount($this->db))
+        {
+            $this->startInstallDisplay();
+            $this->createSuperAdmin();
+        }
+        
+        // Request SuperAdmin login if not yet
+        if ($this->session->getVar("setup_UserId", -1) != WIKINDX_SUPERADMIN_ID)
+        {
+            $this->startUpdateDisplay();
+            $this->requestSuperAdminLogin($dbVersion);
+        }
+        
+        // Upgrade if the database is lagging behind the last version
+        if ($dbVersion != WIKINDX_INTERNAL_VERSION)
+        {
+            $this->startUpdateDisplay();
+            $this->updateDatabase($dbVersion);
+        }
+        
+        // If the execution is not finished before at the end of a step, finished cleanly
+        $this->endDisplay();
     }
+    
     /**
      * Create the database structure with the definitions of the dbschema store
      *
@@ -90,6 +151,7 @@ class UPDATEDATABASE
             $this->db->queryNoError($sql);
         }
     }
+    
     /**
      * Update the database structure with the definitions of the dbschema store for a specific version
      *
@@ -127,72 +189,14 @@ class UPDATEDATABASE
             $this->endDisplay();
         }
     }
-    /**
-     * We know we have a database as, if we've reached this stage, we're able to connect to it.
-     *
-     * Here,
-     * 1/ we check we have tables, if not, populate the database with tables and set defaults in
-     * database_summary and category table and
-     * 2/ populate the config table displaying configuration interface if necessary
-     * If no admins yet exist, ask for admin configuration to force the input of at least one admin username/password.
-     *
-     * @param mixed $error
-     */
-    private function checkDatabase($error = FALSE)
-    {
-        // Some users may have one database shared for several different purposes so check for presence of config table
-        // 1/
-        if (!$this->db->tableExists('config'))
-        {
-            $this->createDbSchema();
-            // NB: The config table is initialized with default values by the LOADCONFIG class that know the name and type of each option
-            $this->updateSoftwareVersion(WIKINDX_INTERNAL_VERSION);
-            $this->session->setVar("setup_Superadmin", TRUE); // required for gatekeep function in CONFIG.php
-        }
-        if (array_key_exists('action', $this->vars) && $this->session->getVar("setup_Superadmin") &&
-            (($this->vars['action'] == 'continueExecution') || ($this->vars['action'] == 'upgradeDB')))
-        {
-            $confirm = TRUE;
-        }
-        else
-        {
-            $confirm = FALSE;
-        }
-        if ($error)
-        {
-            $confirm = FALSE;
-        }
-        if (!$this->updateDatabase($confirm, $error))
-        {
-            GLOBALS::addTplVar('content', $this->error->text("dbError", "updateMySQL"));
-        }
-        // 2/
-        $this->checkUsersTable();
-    }
+    
     /**
      * Update the database if required based on the currrent version
      *
-     * @param bool $confirm
-     * @param mixed $error
-     *
-     * @return bool
+     * @param float $dbVersion
      */
-    private function updateDatabase($confirm, $error = FALSE)
+    private function updateDatabase($dbVersion)
     {
-        $dbVersion = \UPDATE\getDatabaseVersion($this->db);
-        
-        if ($error)
-        {
-            GLOBALS::addTplVar("content", "<font color=\"red\">$error</font>");
-        }
-        
-        if (!$confirm)
-        {
-            $this->confirmUpdateDisplay($dbVersion);
-
-            return FALSE;
-        }
-        
         // These versions are too old to be upgradable
         if ($dbVersion < WIKINDX_INTERNAL_VERSION_UPGRADE_MIN)
         {
@@ -266,7 +270,7 @@ class UPDATEDATABASE
             }
             
             // Announces the start of the next step to the superadmin
-            $this->checkStatus();
+            $this->displayUpdatePreambule();
             
             // Disable temporarily all SQL mode to update old databases
             $this->db->setSqlMode('');
@@ -275,7 +279,7 @@ class UPDATEDATABASE
             $this->$func_upgrade();
             
             // Announces the end of the next step to the superadmin
-            $this->pauseExecution();
+            $this->pauseUpdateDisplay();
         }
         // Impossible case except error during delivery or development
         // Constants can be wrong
@@ -293,36 +297,52 @@ class UPDATEDATABASE
             $this->endDisplay();
         }
     }
+    
     /**
      * Intercept for initial configuration by admin and, if necessary, display admin configuration interface (new installation means users table is empty).
      */
-    private function checkUsersTable()
+    private function createSuperAdmin()
     {
-        if ($this->db->tableIsEmpty('users'))
+        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "usersgroups", "INITSUPERADMIN.php"]));
+        $config = new INITSUPERADMIN(TRUE);
+        if (array_key_exists('action', $this->vars) && ($this->vars['action'] == 'usersgroups_INITSUPERADMIN_CORE'))
         {
-            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "usersgroups", "INITSUPERADMIN.php"]));
-            $config = new INITSUPERADMIN(TRUE);
-            if (array_key_exists('action', $this->vars) && ($this->vars['action'] == 'usersgroups_INITSUPERADMIN_CORE'))
+            $status = $config->writeDb();
+            if ($status === TRUE)
             {
-                GLOBALS::addTplVar('content', $config->writeDb());
+                $this->session->clearSessionData();
+                
+                // On success display the success message with a form going to the front page
+                $pString  = \HTML\p($this->installMessages->text("installDB3"), "success", "center");
+                $pString .= \HTML\p("Please click on the button to return to the home page.");
+                $pString .= \HTML\p(
+                      \FORM\formHeader('front')
+                    . \FORM\formSubmit($this->installMessages->text("continue"))
+                    . \FORM\formEnd()
+                );
+                GLOBALS::addTplVar('content', $pString);
             }
             else
             {
-                // write preliminary stringLimit, write and superadmin to session and display super configuration screen
-                $this->session->setVar("setup_StringLimit", WIKINDX_STRING_LIMIT_DEFAULT);
-                $this->session->setVar("setup_Write", TRUE);
-                $this->session->setVar("setup_Superadmin", TRUE);
-                // superadmin userId is always WIKINDX_SUPERADMIN_ID
-                $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID);
-                GLOBALS::addTplVar('content', $config->init(\HTML\p($this->installMessages->text("install"), "error", "center")));
-                $this->endDisplay();
+                // On error display again the form
+                $pString  = \HTML\p($this->installMessages->text("install"));
+                $pString .= \HTML\p($status, "error", "center");
+                GLOBALS::addTplVar('content', $config->init($pString));
             }
         }
+        else
+        {
+            // The first time display the form
+            $pString  = \HTML\p($this->installMessages->text("install"));
+            GLOBALS::addTplVar('content', $config->init($pString));
+        }
+        $this->endDisplay();
     }
+    
     /**
      * Check and print status of update scripts
      */
-    private function checkStatus()
+    private function displayUpdatePreambule()
     {
         $pString  = \HTML\p("Do <b>not</b> click until each script has finished.");
         $pString .= "<ul>";
@@ -332,6 +352,7 @@ class UPDATEDATABASE
         $pString .= "<li>MEMORY LIMIT: " . ini_get("memory_limit") . "</li>";
         GLOBALS::addTplVar('content', $pString);
     }
+    
     /**
      * End an upgrade step by displaying a message and a form
      *
@@ -340,7 +361,7 @@ class UPDATEDATABASE
      * - For an interrupt, fill in the $interruptStepMessage member before calling the function.
      * - For a normal end of step, fill in the endStepMessage member before calling the function.
      */
-    private function pauseExecution()
+    private function pauseUpdateDisplay()
     {
         // Display the memory used and the tim elapsed after the upgrade step
         $pString  = "<li>ELAPSED TIME: " . (time() - $this->oldTime) . " secs.</li>";
@@ -349,7 +370,12 @@ class UPDATEDATABASE
         $pString .= "</ul>";
         if ($this->interruptStepMessage)
         {
-            $pString .= \HTML\p($this->interruptStepMessage);
+            $pString .= \HTML\p("<span style='color:red'>" . $this->interruptStepMessage . "</span>");
+            $pString .= \HTML\p(
+                  \FORM\formHeader('continueExecution')
+                . \FORM\formSubmit($this->installMessages->text("continue"))
+                . \FORM\formEnd()
+            );
         }
         else
         {
@@ -359,48 +385,55 @@ class UPDATEDATABASE
             }
             if ($this->targetVersion == WIKINDX_INTERNAL_VERSION && \UPDATE\getDatabaseVersion($this->db) == WIKINDX_INTERNAL_VERSION)
             {
-                $pString .= \HTML\p("<b>Upgrade finished.</b>");
+                $message = \HTML\p($this->installMessages->text("upgradeDBSuccess"), "success", "center");
+                $pString .= $message;
                 $pString .= \HTML\p("Please click on the button to return to the home page.");
+                $pString .= \HTML\p(
+                      \FORM\formHeader('front')
+                    . \FORM\formSubmit($this->installMessages->text("continue"))
+                    . \FORM\formEnd()
+                );
             }
             else
             {
                 $pString .= \HTML\p("Upgrade to internal version <b>" . $this->targetVersion . "</b> finished.");
                 $pString .= \HTML\p("Please click on the button to continue the upgrade.");
+                $pString .= \HTML\p(
+                      \FORM\formHeader('continueExecution')
+                    . \FORM\formSubmit($this->installMessages->text("continue"))
+                    . \FORM\formEnd()
+                );
             }
         }
-        $pString .= \FORM\formHeader('continueExecution');
-        $pString .= \HTML\p(\FORM\formSubmit($this->installMessages->text("continue")) . \FORM\formEnd());
         GLOBALS::addTplVar('content', $pString);
         $this->endDisplay();
     }
-    /**
-     * Continue execution of upgrade after a pause
-     */
-    private function continueExecution()
-    {
-        // Nothing to do
-    }
+    
     /**
      * Only the superadmin may update the database -- ask for login
      *
      * @param string $currentdbVersion
      */
-    private function confirmUpdateDisplay($currentdbVersion)
+    private function requestSuperAdminLogin($currentdbVersion)
     {
+        $this->session->clearSessionData();
+        
+        // Required for gatekeep function in CONFIG.php
+        $this->session->setVar("setup_Superadmin", TRUE);
         
         $pString = "";
-
+        
         $vars = GLOBALS::getVars();
         $vars['usersUsername'] = isset($vars['usersUsername']) ? $vars['usersUsername'] : '';
         $vars['password'] = isset($vars['password']) ? $vars['password'] : '';
+        
         if (\UPDATE\logonCheckUpgradeDB($this->db, $vars['usersUsername'], $vars['password'], $currentdbVersion))
         {
-            $this->session->clearSessionData();
-            $this->session->setVar("setup_Superadmin", TRUE);
             $this->session->setVar("setup_Write", TRUE);
+            $this->session->setVar("setup_UserId", WIKINDX_SUPERADMIN_ID);
             
             $pString .= \HTML\p(
-                'CURRENT MAX EXECUTION TIME: ' . ini_get("max_execution_time") . ' secs' . BR
+                  'CURRENT MAX EXECUTION TIME: ' . ini_get("max_execution_time") . ' secs' . BR
                 . 'CURRENT PHP MEMORY LIMIT: ' . ini_get("memory_limit")
             );
             $pString .= \HTML\p($this->installMessages->text("upgradeDB1"));
@@ -438,13 +471,89 @@ class UPDATEDATABASE
         
         $this->endDisplay();
     }
+    
     /**
      * Start to emit the HTML page of the upgrade process
      *
      * The upgrade process needs a separate display function so that it does not depend on
      * the template system while the configuration is incomplete.
      */
-    private function startDisplay()
+    private function startInstallDisplay()
+    {
+        $heading = $this->installMessages->text("installDBHeading");
+        $apptilte = WIKINDX_TITLE_DEFAULT;
+        
+        $string = <<<END
+<!DOCTYPE html>
+<html>
+<head>
+    <title>$apptilte $heading</title>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        body {
+            width: 96%;
+            margin: auto;
+            padding: 0;
+            background-color: #FBF5EF;
+            font-family: arial, helvetica, serif;
+            font-size: 0.9em;
+        }
+        
+        h1, h2, h3, h4 {
+            color: #F90;
+            margin: 0 0 0.5em 0;
+        }
+        
+        h1 {
+            height:38px;
+            margin:0.5em 0 1em 0;
+            padding:0;
+        }
+        
+        input {
+            background-color: #FFF;
+            border: 1px sold black;
+            padding: 2px;
+        }
+        
+        input[type=submit] {
+            background-color: #FFF;
+            border: 1px sold black;
+            padding: 0.3em;
+        }
+
+        /**
+        * .error: <p>error messages</p>
+        */
+        .error {
+         background: #C96D63;
+         color: #FFF;
+        }
+        
+        /**
+        * .success: <p>success messages</p>
+        */
+        .success {
+         background: #729179;
+         color: #FFF;
+        }
+    </style>
+</head>
+<body>
+    <h1>$apptilte - $heading</h1>
+END;
+        echo $string;
+        ob_flush();
+    }
+    
+    /**
+     * Start to emit the HTML page of the upgrade process
+     *
+     * The upgrade process needs a separate display function so that it does not depend on
+     * the template system while the configuration is incomplete.
+     */
+    private function startUpdateDisplay()
     {
         $heading = $this->installMessages->text("upgradeDBHeading");
         $apptilte = WIKINDX_TITLE_DEFAULT;
@@ -488,6 +597,22 @@ class UPDATEDATABASE
             border: 1px sold black;
             padding: 0.3em;
         }
+
+        /**
+        * .error: <p>error messages</p>
+        */
+        .error {
+         background: #C96D63;
+         color: #FFF;
+        }
+        
+        /**
+        * .success: <p>success messages</p>
+        */
+        .success {
+         background: #729179;
+         color: #FFF;
+        }
     </style>
 </head>
 <body>
@@ -496,6 +621,7 @@ END;
         echo $string;
         ob_flush();
     }
+    
     /**
      * End to emit the HTML page of the upgrade process
      *
@@ -522,6 +648,7 @@ END;
         ob_end_flush();
         die;
     }
+    
     /**
      * Write the internal version in the database
      *
@@ -547,6 +674,7 @@ END;
         }
         $this->db->update('database_summary', [$field => $version]);
     }
+    
     /**
      * Performs the most common kind of upgrade
      *
@@ -574,6 +702,7 @@ END;
             $this->endDisplay();
         }
     }
+    
     /**
      * Upgrade database schema to version 5.2
      *
@@ -585,6 +714,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 5.3
      *
@@ -594,6 +724,7 @@ END;
     {
         $this->updateSoftwareVersion();
     }
+    
     /**
      * Upgrade database schema to version 5.4.
      *
@@ -788,6 +919,7 @@ END;
         
         $this->updateSoftwareVersion();
     }
+    
     /**
      * Upgrade database schema to version 5.5.
      *
@@ -800,6 +932,7 @@ END;
         
         $this->updateSoftwareVersion();
     }
+    
     /**
      * Upgrade database schema to version 5.6.
      *
@@ -809,6 +942,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 5.7.
      *
@@ -823,6 +957,7 @@ END;
         
         $this->updateSoftwareVersion();
     }
+    
     /**
      * Upgrade database schema to version 5.8. There are no changes to DB structure so no call to updateDbSchema('5.8').
      *
@@ -836,6 +971,7 @@ END;
         
         $this->updateSoftwareVersion();
     }
+    
     /**
      * Upgrade database schema to version 5.9
      *
@@ -848,24 +984,35 @@ END;
         // Copy files in various old directories to their new directories
         // Order is important – ned to know if files or attachments returns FALSE
         $return = $this->copyFolderContents('attachments_cache', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]));
+        // Stop on error
         if ($return !== TRUE)
         {
-            $this->checkDatabase($return);
+            $this->endStepMessage .= $return;
+            $this->pauseUpdateDisplay();
         }
+        
         $return = $this->copyFolderContents('images', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES]));
+        // Stop on error
         if ($return !== TRUE)
         {
-            $this->checkDatabase($return);
+            $this->endStepMessage .= $return;
+            $this->pauseUpdateDisplay();
         }
+        
         $return = $this->copyFolderContents('files', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]));
+        // Stop on error
         if ($return !== TRUE)
         {
-            $this->checkDatabase($return);
+            $this->endStepMessage .= $return;
+            $this->pauseUpdateDisplay();
         }
+        
         $return = $this->copyFolderContents('attachments', implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]));
+        // Stop on error
         if ($return !== TRUE)
         {
-            $this->checkDatabase($return);
+            $this->endStepMessage .= $return;
+            $this->pauseUpdateDisplay();
         }
         
         // NB: At this location a migration of the config.php configuration file was necessary
@@ -880,6 +1027,7 @@ END;
         
         $this->endStepMessage = $this->installMessages->text("upgradeDBv5.9");
     }
+    
     /**
      * Upgrade database schema to version 6
      *
@@ -890,21 +1038,28 @@ END;
         // Copy files in various old directories to their new directories
         // Order is important – ned to know if files or attachments returns FALSE
         $return = $this->copyWpContents();
+        // Stop on error
         if ($return !== TRUE)
         {
-            $this->checkDatabase($return);
+            $this->endStepMessage .= $return;
+            $this->pauseUpdateDisplay();
         }
+        
         $return = $this->copyBibContents();
+        // Stop on error
         if ($return !== TRUE)
         {
-            $this->checkDatabase($return);
+            $this->endStepMessage .= $return;
+            $this->pauseUpdateDisplay();
         }
+        
         $this->updateDbSchema('6');
         
         $this->updateSoftwareVersion();
         
-        $this->endStepMessage = $this->installMessages->text("upgradeDBv6");
+        $this->endStepMessage .= $this->installMessages->text("upgradeDBv6");
     }
+    
     /**
      * Upgrade database schema to version 7 (6.0.4)
      */
@@ -912,6 +1067,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 8 (6.0.5)
      */
@@ -919,6 +1075,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 9 (6.0.6)
      */
@@ -926,13 +1083,16 @@ END;
     {
         $this->updateImageLinks();
         $return = $this->copyWpContents();
+        // Stop on error
         if ($return !== TRUE)
         {
-            $this->checkDatabase($return);
+            $this->endStepMessage .= $return;
+            $this->pauseUpdateDisplay();
         }
         
         $this->updateSoftwareVersion();
     }
+    
     /**
      * Upgrade database schema to version 10 (6.0.8)
      *
@@ -942,6 +1102,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 11 (6.2.1)
      *
@@ -951,6 +1112,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 12 (6.2.2 - part A)
      *
@@ -964,6 +1126,7 @@ END;
         
         $this->endStepMessage = $this->installMessages->text("upgradeDBv12");
     }
+    
     /**
      * Upgrade database schema to version 13 (6.2.2 - part B)
      */
@@ -990,6 +1153,7 @@ END;
         
         $this->updateSoftwareVersion();
     }
+    
     /**
      * Upgrade database schema to version 14 (6.2.2 - part C)
      *
@@ -999,6 +1163,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 15 (6.3.8)
      *
@@ -1008,6 +1173,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 16 (6.3.8)
      *
@@ -1017,6 +1183,7 @@ END;
     {
         $this->updateSoftwareVersion();
     }
+    
     /**
      * Upgrade database schema to version 17 (6.3.8)
      *
@@ -1026,6 +1193,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 18 (6.3.8)
      */
@@ -1033,6 +1201,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 19 (6.3.8)
      *
@@ -1042,6 +1211,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 20 (6.3.8)
      *
@@ -1051,6 +1221,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 21 (6.3.8)
      *
@@ -1060,6 +1231,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 22 (6.3.8)
      *
@@ -1069,6 +1241,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 23 (6.4.0)
      *
@@ -1078,6 +1251,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 24 (6.4.0)
      *
@@ -1088,6 +1262,7 @@ END;
     {
         $this->updateSoftwareVersion();
     }
+    
     /**
      * Upgrade database schema to version 25 (6.4.0)
      */
@@ -1131,6 +1306,7 @@ END;
         
         $this->updateSoftwareVersion();
     }
+    
     /**
      * Upgrade database schema to version 26 (6.4.0)
      *
@@ -1140,6 +1316,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 27 (6.4.0)
      *
@@ -1149,6 +1326,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 28 (6.4.0)
      *
@@ -1158,6 +1336,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Remove unwanted rows in user_bibliography_resource (6.4.0)
      */
@@ -1165,6 +1344,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Remove mistakenly named configBrowserTagID from config table (6.4.0)
      *
@@ -1174,6 +1354,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 31 (6.4.0)
      *
@@ -1183,6 +1364,7 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
     /**
      * Upgrade database schema to version 32 (6.4.0)
      *
@@ -1307,7 +1489,7 @@ END;
             {
                 $this->interruptStepMessage  = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
                 $this->interruptStepMessage .= "<br>stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
-                $this->pauseExecution();
+                $this->pauseUpdateDisplay();
             }
         }
         // Remaining past statistics
@@ -1335,7 +1517,7 @@ END;
         {
             $this->interruptStepMessage  = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
             $this->interruptStepMessage .= "<br>stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
-            $this->pauseExecution();
+            $this->pauseUpdateDisplay();
         }
     
         // 2. Current statistics for views
@@ -1417,6 +1599,7 @@ END;
             );
         }
     }
+    
     /**
      * Copy non-official bibliographic styles (if they exist)
      */
@@ -1456,6 +1639,7 @@ END;
 
         return TRUE;
     }
+    
     /**
      * Copy and update papers in the word processor plugin (if it/they exist)
      */
@@ -1509,6 +1693,7 @@ END;
 
         return TRUE;
     }
+    
     /**
      * Update 'images' links in metadata to new images folder location
      */
@@ -1538,6 +1723,7 @@ END;
             $this->db->update('resource_metadata', ['resourcemetadataText' => $text]);
         }
     }
+    
     /**
      * Copy folder contents
      * Code modified from: https://stackoverflow.com/questions/2082138/move-all-files-in-a-folder-to-another
@@ -1580,6 +1766,7 @@ END;
 
         return TRUE;
     }
+    
     /**
      * Correct resource totals.
      */
@@ -1597,6 +1784,7 @@ END;
         $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
         $this->db->update('database_summary', ['databasesummaryTotalMusings' => $num]);
     }
+    
     /**
      * Fix creator errors
      * In some cases, 'resourcecreatorCreatorSurname' does not match the id in resourcecreatorCreatorMain
@@ -1647,6 +1835,7 @@ END;
             $this->db->multiUpdate('resource_creator', 'resourcecreatorCreatorSurname', 'resourcecreatorCreatorMain', $updateArray);
         }
     }
+    
     /**
      * Correct parameters of indices that are varchars by ensuring they have a limited prefix of (100)
      *
@@ -1713,6 +1902,7 @@ END;
             }
         }
     }
+    
     /**
      * Correct anomalies in the datetime fields Рthere should be no occurrence of '0000-00-00 00:00:00' as a value.
      *
@@ -1840,6 +2030,7 @@ END;
         $this->db->formatConditions(['resourcemetadataTimestampEdited' => '0000-00-00 00:00:00']);
         $this->db->updateNull('resource_metadata', 'resourcemetadataTimestampEdited'); // default is NULL
     }
+    
     /**
      * Check permissions on config.php
      *
@@ -1869,6 +2060,7 @@ END;
             $this->endDisplay();
         }
     }
+    
     /**
      * Write new config.php with upgrade to >= WIKINDX v6.3.10
      */
@@ -1881,7 +2073,7 @@ END;
         // Load a separate config class that containts original constant names
         $tmpconfig = new CONFIG();
         
-        $string = <<<END
+        $newConfig = <<<END
 <?php
 /**********************************************************************************
  WIKINDX : Bibliographic Management system.
@@ -1926,14 +2118,14 @@ class CONFIG
 // where 'xxxx' is the non-standard socket.
 
 END;
-        $string .= 'public $WIKINDX_DB_HOST = "' . $tmpconfig->WIKINDX_DB_HOST . '";' . "\n";
-        $string .= '// name of the database which these scripts interface with (case-sensitive):' . "\n" .
+        $newConfig .= 'public $WIKINDX_DB_HOST = "' . $tmpconfig->WIKINDX_DB_HOST . '";' . "\n";
+        $newConfig .= '// name of the database which these scripts interface with (case-sensitive):' . "\n" .
                    'public $WIKINDX_DB = "' . $tmpconfig->WIKINDX_DB . '";' . "\n";
-        $string .= '// username and password required to connect to and open the database' . "\n" .
+        $newConfig .= '// username and password required to connect to and open the database' . "\n" .
                    '// (it is strongly recommended that you change these default values):' . "\n" .
                    'public $WIKINDX_DB_USER = "' . $tmpconfig->WIKINDX_DB_USER . '";' . "\n" .
                    'public $WIKINDX_DB_PASSWORD = "' . $tmpconfig->WIKINDX_DB_PASSWORD . '";' . "\n";
-        $string .= <<<END
+        $newConfig .= <<<END
 /*****
 * END DATABASE CONFIGURATION
 *****/
@@ -1949,9 +2141,9 @@ END;
 // If you don't define this option, auto-detection is enabled by default.
 
 END;
-        $string .= 'public $WIKINDX_PATH_AUTO_DETECTION = TRUE;' . "\n";
+        $newConfig .= 'public $WIKINDX_PATH_AUTO_DETECTION = TRUE;' . "\n";
 
-        $string .= <<<END
+        $newConfig .= <<<END
 // If option auto-detection is disabled you must define the base URL for the WIKINDX installation.
 // You have to indicate protocol HTTP / HTTPS and remove the terminal /.
 // e.g. if wikindx's index.php file is in /wikindx/ under the httpd/ (or similar)
@@ -1962,18 +2154,18 @@ END;
 END;
         if (property_exists($tmpconfig, 'WIKINDX_BASE_URL'))
         {
-            $string .= 'public $WIKINDX_URL_BASE = "' . $tmpconfig->WIKINDX_BASE_URL . '";' . "\n";
+            $newConfig .= 'public $WIKINDX_URL_BASE = "' . $tmpconfig->WIKINDX_BASE_URL . '";' . "\n";
         }
         elseif (property_exists($tmpconfig, 'WIKINDX_URL_BASE'))
         {
-            $string .= 'public $WIKINDX_URL_BASE = "' . $tmpconfig->WIKINDX_URL_BASE . '";' . "\n";
+            $newConfig .= 'public $WIKINDX_URL_BASE = "' . $tmpconfig->WIKINDX_URL_BASE . '";' . "\n";
         }
         else
         {
-            $string .= 'public $WIKINDX_URL_BASE = "";' . "\n";
+            $newConfig .= 'public $WIKINDX_URL_BASE = "";' . "\n";
         }
         
-        $string .= <<<END
+        $newConfig .= <<<END
 /*****
 * END PATHS CONFIGURATION
 *****/
@@ -1993,13 +2185,13 @@ END;
 END;
         if (property_exists($tmpconfig, 'WIKINDX_MEMORY_LIMIT') && ($tmpconfig->WIKINDX_MEMORY_LIMIT !== FALSE))
         {
-            $string .= 'public $WIKINDX_MEMORY_LIMIT = "' . $tmpconfig->WIKINDX_MEMORY_LIMIT . '";' . "\n";
+            $newConfig .= 'public $WIKINDX_MEMORY_LIMIT = "' . $tmpconfig->WIKINDX_MEMORY_LIMIT . '";' . "\n";
         }
         else
         {
-            $string .= 'public $WIKINDX_MEMORY_LIMIT = FALSE;' . "\n";
+            $newConfig .= 'public $WIKINDX_MEMORY_LIMIT = FALSE;' . "\n";
         }
-        $string .= <<<END
+        $newConfig .= <<<END
 // WIKINDX should run fine with the PHP standard execution timeouts (typically 30 seconds) but,
 // in some cases such as database upgrading of a large database on a slow server, you will need to increase the timeout figure.
 // If this is FALSE, the value set in php.ini is used.
@@ -2011,13 +2203,13 @@ END;
 END;
         if (property_exists($tmpconfig, 'WIKINDX_MAX_EXECUTION_TIMEOUT') && ($tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT !== FALSE))
         {
-            $string .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = ' . $tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT . ';' . "\n";
+            $newConfig .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = ' . $tmpconfig->WIKINDX_MAX_EXECUTION_TIMEOUT . ';' . "\n";
         }
         else
         {
-            $string .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = FALSE;' . "\n";
+            $newConfig .= 'public $WIKINDX_MAX_EXECUTION_TIMEOUT = FALSE;' . "\n";
         }
-        $string .= <<<END
+        $newConfig .= <<<END
 // WIKINDX_MAX_WRITECHUNK concerns how many resources are exported and written to file in one go.
 // If your WIKINDX contains several thousands of resources and you wish to export them all (e.g. to bibTeX or Endnote),
 // then you may run into memory problems which will manifest as either
@@ -2031,47 +2223,70 @@ END;
 END;
         if (property_exists($tmpconfig, 'WIKINDX_MAX_WRITECHUNK') && ($tmpconfig->WIKINDX_MAX_WRITECHUNK !== FALSE))
         {
-            $string .= 'public $WIKINDX_MAX_WRITECHUNK = ' . $tmpconfig->WIKINDX_MAX_WRITECHUNK . ';' . "\n";
+            $newConfig .= 'public $WIKINDX_MAX_WRITECHUNK = ' . $tmpconfig->WIKINDX_MAX_WRITECHUNK . ';' . "\n";
         }
         else
         {
-            $string .= 'public $WIKINDX_MAX_WRITECHUNK = FALSE;' . "\n";
+            $newConfig .= 'public $WIKINDX_MAX_WRITECHUNK = FALSE;' . "\n";
         }
-        $string .= <<<END
+        $newConfig .= <<<END
 /*****
 * END PHP MEMORY AND EXECUTION CONFIGURATION
 *****/
 }
 END;
-        $string .= "\n";
-
-
+        $newConfig .= "\n";
+        
+        // Config file paths
+        $cf = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'config.php']);
+        $bf = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, 'config.' . date('YmdHis') . '.php']);
+        
         // Save the old config file before writing it
         // Something could go wrong and configuration lost otherwise
-        $cf = 'config.php';
-        $bf = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES, $cf . '.' . date('YmdHis')]);
-        if (copy($cf, $bf))
+        if (!is_readable($cf))
         {
-            if (is_writable($cf))
-            {
-                if (file_put_contents($cf, $string) === FALSE)
-                {
-                    GLOBALS::addTplVar('content', "Fatal error: an error occurred when writing to $cf");
-                    $this->endDisplay();
-                }
-            }
-            else
-            {
-                GLOBALS::addTplVar('content', "Fatal error: $cf is not writable");
-                $this->endDisplay();
-            }
-        }
-        else
-        {
-            GLOBALS::addTplVar('content', "Fatal error: could not backup $cf to $bf");
+            GLOBALS::addTplVar('content', "Fatal error: could not backup $cf to $bf (file not readable)");
             $this->endDisplay();
         }
+        
+        $oldConfig = file_get_contents($cf);
+        if ($oldConfig === FALSE)
+        {
+            GLOBALS::addTplVar('content', "Fatal error: could not backup $cf to $bf (read error)");
+            $this->endDisplay();
+        }
+        
+        // Add an header to block any direct read of the backup file from the browser
+        // This prevents unauthorized access even if the admin never deletes the file
+        $oldConfig =
+              "<?php" . LF
+            . "header('HTTP/1.1 403 Forbidden');" . LF
+            . "die('Access forbidden.');" . LF
+            . "?>" . LF
+            . $oldConfig;
+        
+        if (file_put_contents($bf, $oldConfig) === FALSE)
+        {
+            GLOBALS::addTplVar('content', "Fatal error: could not backup $cf to $bf (write error)");
+            $this->endDisplay();
+        }
+        
+        if (!is_writable($cf))
+        {
+            GLOBALS::addTplVar('content', "Fatal error: $cf is not writable");
+            $this->endDisplay();
+        }
+        
+        if (file_put_contents($cf, $newConfig) === FALSE)
+        {
+            GLOBALS::addTplVar('content', "Fatal error: an error occurred when writing to $cf");
+            $this->endDisplay();
+        }
+        
+        // Draws attention to the backup copy of the configuration file
+        $this->endStepMessage .= $this->installMessages->text("upgradeDBClearConfigBackupFile");
     }
+    
     /**
      * Copy papers table (word processor) to new format if it exists then drop it. Upgrade the soundExplorer table
      */

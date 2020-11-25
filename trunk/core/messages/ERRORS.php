@@ -94,7 +94,6 @@ class ERRORS
 				"read" => dgettext($domain, "Unable to read database."),
 				"config" => dgettext($domain, "Missing Configuration Parameter in config.php."),
 				"fileOpen" => dgettext($domain, "Unable to open update/createMySQL.txt."),
-				"updateMySQL" => dgettext($domain, "Unable to update database with update/updateMySQL.txt."),
 				"dbSpecified" => dgettext($domain, "No RDBMS type selected in config.php."),
 				"subQuery" => dgettext($domain, "Missing subQuery statement."),
 				"formData" => dgettext($domain, "Unable to write temporary form data to the database."),
@@ -133,6 +132,7 @@ class ERRORS
 				"mail2" => dgettext($domain, "Unable to complete the operation due to a mail server error (ERROR: ###)"),
 /// inputError_passwordMismatch typed passwords do not match
 				"passwordMismatch" => dgettext($domain, "Passwords do not match."),
+				"invalidPassword0" => dgettext($domain, "Password must contain at least ### characters."),
 				"invalidPassword1" => dgettext($domain, "Password must contain at least ### characters and be a mix of UPPER/lowercase. Spaces are not allowed."),
 				"invalidPassword2" => dgettext($domain, "Password must contain at least ### characters and be a mix of UPPER/lowercase and numbers. Spaces are not allowed."),
 				"invalidPassword3" => dgettext($domain, "Password must contain at least ### characters and be a mix of UPPER/lowercase, numbers, and non-alphanumeric characters ($ @ # ! % * ? & €). Spaces are not allowed."),

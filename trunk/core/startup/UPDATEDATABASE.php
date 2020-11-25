@@ -98,10 +98,8 @@ class UPDATEDATABASE
         
         // Initialize the system
         // The dynamic part of the config is loaded (db).
-        // We need that for ther session
+        // We need that for ther SESSION ONLY
         FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
-        
-        FACTORY_LOADCONFIG::getInstance()->loadUserVars();
         
         // Required for gatekeep function in CONFIG.php
         $this->session->setVar("setup_Superadmin", TRUE);

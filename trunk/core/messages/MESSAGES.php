@@ -800,6 +800,7 @@ class MESSAGES
 				"mailTest" => dgettext($domain, "Save the configuration by clicking on 'Proceed'. After that, enter a valid email address here to test the mail configuration when you click on 'Test'"),
 				"maxPaste" => dgettext($domain, "To disable registered users from pasting BibTeX entries, set the value to 0. Default is 10"),
 				"siteMapAllow" => dgettext($domain, "This is only required if you wish to run a Sitemap. Sitemaps are an easy way for webmasters to inform search engines about pages on their sites that are available for crawling. For details, see <a href='https://www.sitemaps.org/'>sitemaps.org</a>."),
+				"browserTabID" => dgettext($domain, "Enable independent searching and listing across browser tabs/windows. This is experimental – see the help for further details."),
 				"rssAllow" => dgettext($domain, "This is only required if you wish to run a RSS news feed for the latest additions to your WIKINDX. See README_RSS. If you do do not check this, WIKINDX will block RSS access and will not display any RSS icon in the Firefox location bar. If checked, to allow RSS feed users to then click on the RSS link and access WIKINDX, you must also enable read only access"),
 				"rssDisplay" => dgettext($domain, "Uncheck to display only recently added resources or check to display recently added AND edited resources"),
 				"rssLimit" => dgettext($domain, "Number of recent items to send to the feed. Default is 10"),

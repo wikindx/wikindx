@@ -1658,8 +1658,10 @@ class CONFIGURE
         $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "siteMapAllow"), "configSiteMapAllow", $input) .
             BR . \HTML\span($hint, 'hint'));
         
+        $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "browserTabID"));
         $input = array_key_exists("configBrowserTabID", $this->formData) && ($this->formData['configBrowserTabID']) ? "CHECKED" : WIKINDX_SITEMAP_ALLOW_DEFAULT;
-        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "browserTabID"), "configBrowserTabID", $input));
+        $pString .= \HTML\td(\FORM\checkbox($this->messages->text("config", "browserTabID"), "configBrowserTabID", $input) .
+            BR . \HTML\span($hint, 'hint'));
         
         $hint = \HTML\aBrowse('green', '', $this->messages->text("hint", "hint"), '#', "", $this->messages->text("hint", "restrictUserId"));
         array_key_exists("configRestrictUserId", $this->formData) ? $input = $this->formData["configRestrictUserId"] : WIKINDX_RESTRICT_USERID_DEFAULT;

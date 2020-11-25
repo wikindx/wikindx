@@ -1714,7 +1714,7 @@ class USER
      */
     private function checkDisallowedInSingleMode($login)
     {
-        $this->db->formatConditions(['usersUsername' => $usersUsername], '=');
+        $this->db->formatConditions(['usersUsername' => $login], '=');
         $this->db->formatConditions(['usersId' => WIKINDX_SUPERADMIN_ID], '=');
         $recordset = $this->db->select('users', ['usersId']);
 

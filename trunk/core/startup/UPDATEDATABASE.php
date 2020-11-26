@@ -2116,7 +2116,7 @@ class CONFIG
 //
 // Host on which the relational db management system (i.e. the MySQL server) is running (usually localhost if
 // the web files are on the same server as the RDBMS although some web hosting services may specify something like
-// localhost:/tmp/mysql5.sock)
+// localhost:/tmp/mysql5.sock).
 // If your DB server is on a non-standard socket (i.e. not port 3306), then you should set something like localhost:xxxx
 // where 'xxxx' is the non-standard socket.
 

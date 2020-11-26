@@ -38,12 +38,18 @@ class EnchantSpell extends SpellChecker
             }
 
             return $returnData;
-            enchant_broker_free_dict($d);
+            // PHP 8.0 fix, LkpPo, 20201126
+            // enchant_broker_free() and enchant_broker_free_dict() are deprecated; unset the object instead.
+            //enchant_broker_free_dict($d);
+            unset($d)
         }
         else
         {
         }
-        enchant_broker_free($r);
+        // PHP 8.0 fix, LkpPo, 20201126
+        // enchant_broker_free() and enchant_broker_free_dict() are deprecated; unset the object instead.
+        //enchant_broker_free($d);
+        unset($r);
     }
 
     /**
@@ -69,14 +75,20 @@ class EnchantSpell extends SpellChecker
                 $suggs = [];
             }
 
-            enchant_broker_free_dict($d);
+            // PHP 8.0 fix, LkpPo, 20201126
+            // enchant_broker_free() and enchant_broker_free_dict() are deprecated; unset the object instead.
+            //enchant_broker_free_dict($d);
+            unset($d);
         }
         else
         {
             $suggs = [];
         }
 
-        enchant_broker_free($r);
+        // PHP 8.0 fix, LkpPo, 20201126
+        // enchant_broker_free() and enchant_broker_free_dict() are deprecated; unset the object instead.
+        //enchant_broker_free($d);
+        unset($r);
 
         return $suggs;
     }

@@ -60,6 +60,7 @@ MAINTENANCE:
 21. Remove WIKINDX_DB_TABLEPREFIX: It is no longer possible to modify the prefix of the tables in the database. This functionality is only useful for several programs sharing the same database with the same table names or several wikindx installations in the same database. These two practices are to be avoided because they are a good way to lost your data. Each software should be isolated in its own database for privacy, security, bug resistance and ease of maintenance. Firstly, the "wkx_" prefix will be kept for some versions and cannot be changed. Secondly, it will be deleted.
 22. Update jpGraph from 4.2.10 to 4.3.4.
 23. Remove multistage in upgrade.
+24. enchant_broker_free() and enchant_broker_free_dict() are deprecated; unset the object instead (PHP 8.0 support).
 
 
 SECURITY:

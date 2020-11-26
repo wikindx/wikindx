@@ -505,14 +505,24 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
 
                     if (curl_exec($ch) !== FALSE)
                     {
-                        curl_close($ch);
+                        // PHP 8.0, LkpPo, 20201126
+                        // The curl_close() function no longer has an effect
+                        if (version_compare(PHP_VERSION, '8.0.0', '<'))
+                        {
+                            curl_close($ch);
+                        }
                         fclose($fp);
                         $file = $dlTempFile;
                         $webimage = TRUE;
                     }
                     else
                     {
-                        curl_close($ch);
+                        // PHP 8.0, LkpPo, 20201126
+                        // The curl_close() function no longer has an effect
+                        if (version_compare(PHP_VERSION, '8.0.0', '<'))
+                        {
+                            curl_close($ch);
+                        }
                         fclose($fp);
                         @unlink($dlTempFile);
 
@@ -1178,7 +1188,12 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
             $output = curl_exec($ch);
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
+            // PHP 8.0, LkpPo, 20201126
+            // The curl_close() function no longer has an effect
+            if (version_compare(PHP_VERSION, '8.0.0', '<'))
+            {
+                curl_close($ch);
+            }
 
             return ($httpcode >= 200 && $httpcode < 300);
         }

@@ -61,6 +61,7 @@ MAINTENANCE:
 22. Update jpGraph from 4.2.10 to 4.3.4.
 23. Remove multistage in upgrade.
 24. enchant_broker_free() and enchant_broker_free_dict() are deprecated; unset the object instead (PHP 8.0 support).
+25. The curl_close() function no longer has an effect (PHP 8.0 support).
 
 
 SECURITY:

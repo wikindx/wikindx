@@ -796,7 +796,12 @@ namespace UTILS
         curl_setopt($ch, CURLOPT_FILE, $fp);
         
         $ccode = curl_exec($ch);
-        curl_close($ch);
+        // PHP 8.0, LkpPo, 20201126
+        // The curl_close() function no longer has an effect
+        if (version_compare(PHP_VERSION, '8.0.0', '<'))
+        {
+            curl_close($ch);
+        }
         fclose($fp);
         
         // On error remove the file

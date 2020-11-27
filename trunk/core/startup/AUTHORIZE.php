@@ -478,7 +478,7 @@ class AUTHORIZE
             }
             //			$this->session->delVar("paperExports");
         }
-        // Store this user's previous user settings for use below if necessary
+        // Store this previous user settings for use below if necessary
         $keys = ["Paging", "PagingMaxLinks", "StringLimit", "Language", "Style", "Template", "PagingTagCloud", "ListLink"];
         foreach ($keys as $key)
         {

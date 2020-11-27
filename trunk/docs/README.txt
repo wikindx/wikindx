@@ -110,9 +110,6 @@ Wikindx         [PHP]             [MySQL]  [MariaDB]
 5.3.1 to 5.3.2  >= 5.5 and <= 7.1 >= 5.7.5 >= 10.2
 5.2.1 to 5.2.2  >= 5.5 and <= 5.6 >= 5.7.5 >= 10.2
 5.2.0           >= 5.1 and <= 5.6 >= 5.7.5 >= 10.2
-4.2.0 to 4.2.2  >= 5.1 and <= ??? >= 4.1   >= 10.1
-4.0.0 to 4.0.5  >= 5.1 and <= ??? ???      >= 10.1
-3.8.1           >= 4.3 and <= ??? ???      --
 
 PHP support is tested for the core, extentions, and third party software
 included. For security purpose we recommend you use an [officialy

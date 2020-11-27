@@ -62,7 +62,7 @@ MAINTENANCE:
 23. Remove multistage in upgrade.
 24. enchant_broker_free() and enchant_broker_free_dict() are deprecated; unset the object instead (PHP 8.0 support).
 25. The curl_close() function no longer has an effect (PHP 8.0 support).
-
+26. Stop storing a copy of the session state in db and use only PHP plain session.
 
 SECURITY:
 1. Replace crypt/hash_equals() by password_hash/password_verify() which is stronger by default.

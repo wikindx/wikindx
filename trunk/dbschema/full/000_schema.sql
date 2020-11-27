@@ -434,7 +434,6 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%users` (
   `usersPasswordAnswer2` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
   `usersPasswordQuestion3` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
   `usersPasswordAnswer3` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
-  `usersUserSession` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `usersUseBibtexKey` tinyint(1) NOT NULL DEFAULT 0,
   `usersUseWikindxKey` tinyint(1) NOT NULL DEFAULT 0,
   `usersDisplayBibtexLink` tinyint(1) NOT NULL DEFAULT 0,

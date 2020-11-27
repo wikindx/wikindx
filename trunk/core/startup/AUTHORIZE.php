@@ -121,8 +121,6 @@ class AUTHORIZE
                 $this->session->setVar("setup_Write", TRUE);
                 $this->session->delVar("setup_ReadOnly");
                 $user->writeSessionPreferences(FALSE);
-                // restore some session variables if stored from last logout
-                $this->restoreEnvironment();
 
                 return FALSE;
             }
@@ -186,9 +184,6 @@ class AUTHORIZE
             // grabCookie() returns TRUE if valid cookie - otherwise, proceed to manual logon
             if ($cookie->grabCookie())
             {
-                // Success - so restore some session variables if stored from last logout
-                $this->restoreEnvironment();
-
                 return TRUE;
             }
         }
@@ -281,8 +276,7 @@ class AUTHORIZE
             $error = FACTORY_ERRORS::getInstance();
             $this->failure($error->text('inputError', 'invalid'));
         }
-        // Success - so restore some session variables if stored from last logout
-        $this->restoreEnvironment();
+        // Success
         $this->clearEmbargoes();
         // Run AuthGate (e.g. GDPR and/or privacy notification if required)
         $this->authGate();
@@ -394,38 +388,6 @@ class AUTHORIZE
     {
         $this->db->formatConditions('resourceattachmentsEmbargoUntil' . $this->db->less . 'CURRENT_TIMESTAMP');
         $this->db->update('resource_attachments', ['resourceattachmentsEmbargo' => 'N']);
-    }
-    /**
-     * Successful registered user logon so restore some session variables if they've been stored
-     */
-    private function restoreEnvironment()
-    {
-        // Restore the user's session state
-        $this->db->formatConditions(['usersId' => $this->session->getVar("setup_UserId")]);
-        $state = $this->db->selectFirstField('users', 'usersUserSession');
-        if ($state)
-        {
-            $sessionData = unserialize(base64_decode($state));
-            foreach ($sessionData as $key => $array)
-            {
-                $array = unserialize(base64_decode($array));
-                if (!is_array($array))
-                {
-                    continue;
-                }
-                foreach ($array as $subKey => $value)
-                {
-                    // A hang-over from when sessions were switched over to GLOBALS . . . We don't want ReadOnly set when this is a logged-in user
-                    if ($subKey != 'ReadOnly')
-                    {
-                        $this->session->setVar($key . '_' . $subKey, $value);
-                    }
-                }
-            }
-        }
-        $this->checkNews();
-        // A bit of a hack but it forces the language and display to what the logged on user wants.
-        header("Location: index.php");
     }
     /**
      * Check for any news items in the database

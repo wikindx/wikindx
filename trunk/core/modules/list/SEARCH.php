@@ -270,7 +270,6 @@ class SEARCH
     public function reset()
     {
         $this->session->clearArray('advancedSearch');
-        $this->session->saveState('advancedSearch');
         $this->init();
     }
     /**
@@ -1344,7 +1343,6 @@ class SEARCH
         $this->common->display($sql, "search");
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
-        $this->session->saveState(['advancedSearch', 'sql', 'bookmark', 'list']);
     }
     /**
      * Search ideas for search words and display
@@ -3984,7 +3982,6 @@ class SEARCH
                 $this->badInput->close($this->errors->text("inputError", "missing"), $this, 'init');
             }
         }
-        $this->session->saveState('advancedSearch');
         //$this->badInput->close(\HTML\p('still working on it . . .', 'error'), $this, 'init');
     }
     /**

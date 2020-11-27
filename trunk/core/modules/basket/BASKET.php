@@ -76,7 +76,6 @@ class BASKET
         	GLOBALS::setTempStorage(['basket_List' => $basket]);
         	\TEMPSTORAGE\store($this->db, $this->browserTabID, GLOBALS::getTempStorage());
         }
-        $this->session->saveState('basket');
         // send back to view this resource with success message
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
         $resource = new RESOURCEVIEW();
@@ -107,7 +106,6 @@ class BASKET
         	GLOBALS::setTempStorage(['basket_List' => $basket]);
         	\TEMPSTORAGE\store($this->db, $this->browserTabID, GLOBALS::getTempStorage());
         }
-        $this->session->saveState('basket');
         // send back to view this resource with success message
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
         $resource = new RESOURCEVIEW();
@@ -214,7 +212,6 @@ class BASKET
         }
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
-        $this->session->saveState(['list', 'basket', 'bookmark']);
         $this->common->display($sql, 'basket');
         $this->common->updateTempStorage();
     }

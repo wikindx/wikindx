@@ -449,7 +449,6 @@ class QUICKSEARCH
         {
             GLOBALS::setTempStorage(['sql_LastMulti' => $queryString]);
         }
-        $this->session->saveState(['search', 'sql', 'setup', 'bookmark', 'list']);
         $this->session->delVar("bookmarkRead");
         $this->common->updateTempStorage();
     }

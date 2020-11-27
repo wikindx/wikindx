@@ -168,7 +168,6 @@ if ($_SERVER['REQUEST_URI'])
         $qs[0] = $_SERVER['REQUEST_URI'];
     }
     $session->writeArray($qs, 'QueryStrings');
-    $session->saveState('QueryStrings');
 }
 unset($session);
 

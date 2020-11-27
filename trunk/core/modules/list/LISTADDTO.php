@@ -828,7 +828,6 @@ class LISTADDTO
         // Ensure array is unique
         array_unique($basket);
         $this->session->setVar("basket_List", $basket);
-        $this->session->saveState('basket');
         $success = FACTORY_SUCCESS::getInstance();
         $this->navigate->listView($success->text("basketAdd"));
         FACTORY_CLOSE::getInstance(); // die
@@ -878,7 +877,6 @@ class LISTADDTO
         {
             $this->session->setVar("basket_List", $basket);
         }
-        $this->session->saveState('basket');
         $success = FACTORY_SUCCESS::getInstance();
         if (empty($basket))
         {

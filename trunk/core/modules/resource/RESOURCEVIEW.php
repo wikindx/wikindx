@@ -631,7 +631,6 @@ class RESOURCEVIEW
         }
         $this->session->setVar("sql_LastSolo", $row['resourceId']);
         \TEMPSTORAGE\store($this->db, $this->browserTabID, ['sql_LastSolo' => $row['resourceId']]);
-        $this->session->saveState('sql');
         // Turn on the 'add bookmark' menu item
         $this->session->setVar("bookmark_DisplayAdd", TRUE);
         $this->session->setVar("bookmark_View", 'solo');

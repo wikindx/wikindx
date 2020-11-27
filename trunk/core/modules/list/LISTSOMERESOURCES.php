@@ -236,7 +236,6 @@ class LISTSOMERESOURCES
         {
             $this->quarantineProcess();
         }
-        $this->session->saveState(['search', 'sql', 'bookmark', 'list']);
     }
     /**
      * citeProcess - display resources citing this one

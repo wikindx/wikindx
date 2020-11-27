@@ -110,7 +110,6 @@ class soundexplorer_MODULE
             $script = LF . "<script>window.onload = seChangeStatus('$innerHtml');</script>" . LF;
             GLOBALS::addTplVar('scripts', $script);
         }
-        $this->session->saveState('seplugin');
         $pString .= HTML\p($this->pluginmessages->text('seToggleSuccess'), 'success', 'center');
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSEPOPUP::getInstance();

@@ -306,7 +306,6 @@ class IDEAS
             $ideaListInfo['reorder'] = $pString;
             GLOBALS::setTplVar('ideaListInfo', $ideaListInfo);
         }
-        $this->session->saveState('list');
         GLOBALS::addTplVar('ideaList', $ideaList);
     }
     /**

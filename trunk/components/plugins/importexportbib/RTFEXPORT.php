@@ -1149,7 +1149,6 @@ class RTFEXPORT
             $temp['exportRtf_done'] = TRUE;
             $this->session->writeArray($temp);
         }
-        $this->session->saveState('exportRtf');
     }
     /*
      * failure

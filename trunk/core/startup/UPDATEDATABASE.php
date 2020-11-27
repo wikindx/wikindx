@@ -1385,6 +1385,16 @@ END;
         
         $this->updateSoftwareVersion();
     }
+    
+    /**
+     * Upgrade database schema to version 33 (6.4.0)
+     *
+     * Remove session state from the database
+     */
+    private function upgradeTo33()
+    {
+        $this->upgradeToTargetVersion();
+    }
 
     /**
      * Transfer statistics data to new tables then drop old table

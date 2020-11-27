@@ -128,7 +128,6 @@ class BOOKMARK
         if ($this->session->getVar("bookmark_View") == 'solo')
         {
             $this->session->setVar("bookmark_" . $id . "_id", $this->session->getVar("sql_LastSolo"));
-            $this->session->saveState('bookmark');
             // send back to view this resource with success message
             GLOBALS::addTplVar('content', $this->success->text("bookmark"));
             include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "resource", "RESOURCEVIEW.php"]));
@@ -171,7 +170,6 @@ class BOOKMARK
             $bookmark['listType'] = $listType;
             $bookmark['listTypeArray'] = base64_encode(serialize($this->session->getArray($listType)));
             $this->session->setVar("bookmark_" . $id . "_multi", serialize($bookmark));
-            $this->session->saveState('bookmark');
             // send back to view list with success message
             $navigate = FACTORY_NAVIGATE::getInstance();
             $navigate->listView($this->success->text("bookmark"));
@@ -252,7 +250,6 @@ class BOOKMARK
                 ++$deletes;
             }
         }
-        $this->session->saveState('bookmark');
         // Any bookmarks left?
         if (count($this->session->getArray("bookmark")) == 2)
         { // Send back to front

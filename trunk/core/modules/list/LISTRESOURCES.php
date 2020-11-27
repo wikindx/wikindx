@@ -187,7 +187,6 @@ class LISTRESOURCES
         {
             GLOBALS::setTempStorage(['sql_LastMulti' => $queryString]);
         }
-        $this->session->saveState(['search', 'sql', 'bookmark', 'list']);
         $this->common->updateTempStorage();
     }
     /**

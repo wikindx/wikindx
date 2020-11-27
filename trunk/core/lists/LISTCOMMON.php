@@ -161,7 +161,6 @@ class LISTCOMMON
         // set back to beginning
         $limit = $this->db->limit(GLOBALS::getUserVar('Paging'), $this->pagingObject->start, TRUE); // "LIMIT $limitStart, $limit";
         $this->display($sql . $limit, $listType);
-        $this->session->saveState(['list', 'sql', 'bookmark']);
         $this->session->setVar("list_SubQuery", $this->session->getVar("list_SubQueryMulti"));
         if ($this->browserTabID)
         {

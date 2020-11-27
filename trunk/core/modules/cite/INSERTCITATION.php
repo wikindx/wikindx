@@ -108,7 +108,6 @@ class INSERTCITATION
             $pString .= \HTML\hr();
             $pString .= $this->process();
         }
-        $this->session->saveState(['search', 'sql', 'list']);
         GLOBALS::addTplVar('content', $pString);
         FACTORY_CLOSEPOPUP::getInstance();
     }

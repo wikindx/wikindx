@@ -103,27 +103,63 @@ class LOADCONFIG
                 $rowKey = $table . $key;
                 if ($session->issetVar("setup_" . $key))
                 {
+                    // Options inherited from the global config
                     $row[$rowKey] = $session->getVar("setup_" . $key);
-                // Options inherited from the global config
+                }
+                elseif ($key == "Language")
+                {
+                    // Language should be inherited but it needs a special default
+                    // which allows the browser to control the preferred language first
+                    $row[$rowKey] = "auto";
                 }
                 elseif (array_key_exists($rowKey, WIKINDX_LIST_CONFIG_OPTIONS))
                 {
                     $constName = WIKINDX_LIST_CONFIG_OPTIONS[$rowKey]["constname"];
                     $row[$rowKey] = constant($constName);
                 }
+                // Options unique to users
+                elseif ($key == "DisplayBibtexLink")
+                {
+                    $row[$rowKey] = WIKINDX_DISPLAY_BIBTEX_LINK_DEFAULT;
+                }
+                elseif ($key == "DisplayCmsLink")
+                {
+                    $row[$rowKey] = WIKINDX_DISPLAY_CMS_LINK_DEFAULT;
+                }
+                elseif ($key == "PagingStyle")
+                {
+                    $row[$rowKey] = WIKINDX_USER_PAGING_STYLE_DEFAULT;
+                }
+                elseif ($key == "TemplateMenu")
+                {
+                    $row[$rowKey] = WIKINDX_TEMPLATE_MENU_DEFAULT;
+                }
+                elseif ($key == "UseBibtexKey")
+                {
+                    $row[$rowKey] = WIKINDX_USE_BIBTEX_KEY_DEFAULT;
+                }
+                elseif ($key == "UseWikindxKey")
+                {
+                    $row[$rowKey] = WIKINDX_USE_WIKINDX_KEY_DEFAULT;
+                }
+                elseif ($key == "BrowseBibliography")
+                {
+                    // TODO(LkpPo): what is the default value for this case?
+                    $row[$rowKey] = FALSE;
+                }
+                elseif ($key == "HomeBib")
+                {
+                    // TODO(LkpPo): what is the default value for this case?
+                    $row[$rowKey] = FALSE;
+                }
+                elseif ($key == "CmsTag")
+                {
+                    // TODO(LkpPo): what is the default value for this case?
+                    $row[$rowKey] = FALSE;
+                }
                 else
                 {
-                    // Language should be inherited but it needs a special default
-                    // which allows the browser to control the preferred language first
-                    $row[$rowKey] = WIKINDX_USER_LANGUAGE_DEFAULT;
-                    
-                    // Options unique to users
-                    $row[$rowKey] = WIKINDX_DISPLAY_BIBTEX_LINK_DEFAULT;
-                    $row[$rowKey] = WIKINDX_DISPLAY_CMS_LINK_DEFAULT;
-                    $row[$rowKey] = WIKINDX_USER_PAGING_STYLE_DEFAULT;
-                    $row[$rowKey] = WIKINDX_TEMPLATE_MENU_DEFAULT;
-                    $row[$rowKey] = WIKINDX_USE_BIBTEX_KEY_DEFAULT;
-                    $row[$rowKey] = WIKINDX_USE_WIKINDX_KEY_DEFAULT;
+                    die("Fatal error: missing default value for '{$key}' user config on loading");
                 }
             }
         }

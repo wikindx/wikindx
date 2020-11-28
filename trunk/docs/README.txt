@@ -491,6 +491,7 @@ for their work:
  * [Smarty], PHP templating system ([LGPL 3.0])
  * [SmartyMenu], menu plugin for Smarty ([LGPL 2.1])
  * [PdfToText], PHP library to extract data from a PDF ([LGPL 3.0])
+ * [RtfTools], PHP library to handle handle RTF data ([LGPL 3.0])
  * [PHPMailer], PHP email sending library ([LGPL 2.1])
  * [json2.js], JSON in JavaScript (Public Domain)
  * [jpGraph], Graph creating library ([QPL 1.0])

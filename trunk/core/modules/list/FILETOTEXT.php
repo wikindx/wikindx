@@ -179,32 +179,21 @@ class FILETOTEXT
      *
      * @return string
      */
-    private function readDocx($filename)
+    private function readDocx2($filename)
     {
-        $striped_content = '';
-        $content = '';
-        $zip = zip_open($filename);
-        if (!$zip || is_numeric($zip))
+        $striped_content = "";
+        $content = "";
+        
+        $za = new \ZipArchive();
+        
+        if ($za->open($filename, \ZipArchive::RDONLY))
         {
-            return FALSE;
+            $content = $za->getFromName("word/document.xml");
+            if ($content === FALSE) $content = "";
         }
-        while ($zip_entry = zip_read($zip))
-        {
-            if (zip_entry_open($zip, $zip_entry) == FALSE)
-            {
-                continue;
-            }
-            if (zip_entry_name($zip_entry) != "word/document.xml")
-            {
-                continue;
-            }
-            $content .= zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-            zip_entry_close($zip_entry);
-        }
-        zip_close($zip);
-        unset($zip);
+        
         $content = str_replace('</w:r></w:p></w:tc><w:tc>', " ", $content);
-        $content = str_replace('</w:r></w:p>', CR . LF, $content);
+        $content = str_replace('</w:r></w:p>', LF, $content);
         $striped_content = strip_tags($content);
         $striped_content = html_entity_decode($striped_content, ENT_QUOTES | ENT_XML1, 'UTF-8');
         

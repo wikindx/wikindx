@@ -21,6 +21,7 @@ class FILETOTEXT
     public function __construct()
     {
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "pdftotext", "PdfToText.phpclass"]));
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "rtftools", "RtfTexter.phpclass"]));
     }
 
     /**
@@ -49,6 +50,10 @@ class FILETOTEXT
             break;
             case WIKINDX_MIMETYPE_PDF:
                 $text = $this->readPdf($filename);
+            break;
+            case WIKINDX_MIMETYPE_RTF:
+            case WIKINDX_MIMETYPE_RTF2:
+                $text = $this->readRtf($filename);
             break;
             case WIKINDX_MIMETYPE_TXT:
                 $text = $this->readText($filename);
@@ -321,6 +326,32 @@ class FILETOTEXT
         }
         
         unset($pXML);
+        
+        return $striped_content;
+    }
+    
+    
+    /**
+     * readRtf
+     *
+     * cf. https://interoperability.blob.core.windows.net/files/Archive_References/%5bMSFT-RTF%5d.pdf
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    private function readRtf($filename)
+    {
+        $striped_content = "";
+        $content = "";
+        
+        // Extract the content
+        $content = file_get_contents($filename);
+        
+        $texter = new RtfStringTexter($content);
+        $striped_content = $texter->AsString();
+        
+        unset($texter);
         
         return $striped_content;
     }

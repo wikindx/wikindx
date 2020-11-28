@@ -215,6 +215,7 @@ define('WIKINDX_MIMETYPE_PDF',     'application/pdf');
 define('WIKINDX_MIMETYPE_RIS',     'application/x-research-info-systems');
 define('WIKINDX_MIMETYPE_RSS',     'application/rss+xml');
 define('WIKINDX_MIMETYPE_RTF',     'application/rtf');
+define('WIKINDX_MIMETYPE_RTF2',    'text/rtf'); // finfo() mistakenly identifies RTF documents with this MIME type
 define('WIKINDX_MIMETYPE_TXT',     'text/plain');
 define('WIKINDX_MIMETYPE_XML',     'application/xml');
 define('WIKINDX_HTTP_CONTENT_TYPE_DEFAULT', WIKINDX_MIMETYPE_HTM);

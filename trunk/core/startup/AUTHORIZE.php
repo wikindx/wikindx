@@ -357,7 +357,6 @@ class AUTHORIZE
         $pString .= \HTML\trEnd();
         $pString .= \HTML\tableEnd();
         $pString .= \FORM\formEnd();
-        $this->session->destroy();
 
         return $pString;
     }

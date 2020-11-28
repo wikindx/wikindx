@@ -23,8 +23,6 @@ class UPDATEDATABASE
     private $db;
     /** array */
     private $vars;
-    /** object */
-    private $installMessages;
     /** int */
     private $oldTime;
     /** string */
@@ -47,8 +45,6 @@ class UPDATEDATABASE
         $this->db = FACTORY_DB::getInstance();
         $this->session = FACTORY_SESSION::getInstance();
         
-        include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "INSTALLMESSAGES.php"]));
-        $this->installMessages = new INSTALLMESSAGES;
         $this->vars = GLOBALS::getVars();
         $this->oldTime = time();
         
@@ -67,11 +63,12 @@ class UPDATEDATABASE
                 // NB: The config table is initialized with default values by the LOADCONFIG class that know the name and type of each option
                 $this->updateSoftwareVersion(WIKINDX_INTERNAL_VERSION);
                 
-                $pString  = \HTML\p($this->installMessages->text("installDB2"), "success", "center");
+                $pString  = \HTML\p("Database successfully created", "success", "center");
+                $pString .= "<p>The next step you will be asked to create a SuperAdmin account, essential for the maintenance of your new software.</p>";
                 $pString .= \HTML\p("Please click on the button to continue the installation.");
                 $pString .= \HTML\p(
                       \FORM\formHeader('continueExecution')
-                    . \FORM\formSubmit($this->installMessages->text("continue"))
+                    . \FORM\formSubmit("Continue")
                     . \FORM\formEnd()
                 );
                 GLOBALS::addTplVar('content', $pString);
@@ -79,11 +76,12 @@ class UPDATEDATABASE
             // The very first time displays an install message
             else
             {
-                $pString  = \HTML\p($this->installMessages->text("installDB1"));
-                $pString .= \HTML\p("Please click on the button to create the database.");
+                $pString  = "<p>WIKINDX has detected that this is a first installation will proceed with the creation of the database.</p>";
+                $pString .= "<p>To report bugs etc., go to: <a href='https://sourceforge.net/p/wikindx/v5bugs/'>https://sourceforge.net/p/wikindx/v5bugs/</a></strong></p>";
+                $pString .= "<p>Please click on the button to create the database.</p>";
                 $pString .= \HTML\p(
                       \FORM\formHeader('createdatabase')
-                    . \FORM\formSubmit($this->installMessages->text("continue"))
+                    . \FORM\formSubmit("Continue")
                     . \FORM\formEnd()
                 );
                 GLOBALS::addTplVar('content', $pString);
@@ -289,8 +287,8 @@ class UPDATEDATABASE
                 <p>You encountered an unexpected error. Probably a problem with the configuration of the internal versions. Please check the constants:</p>
                 <ul>
                     <li>WIKINDX_PUBLIC_VERSION = " . WIKINDX_PUBLIC_VERSION . "</li>
-                    <li>WIKINDX_INTERNAL_VERSION = " . WIKINDX_INTERNAL_VERSION . "/li>
-                    <li>WIKINDX_INTERNAL_VERSION_UPGRADE_MIN = " . WIKINDX_INTERNAL_VERSION_UPGRADE_MIN . "/li>
+                    <li>WIKINDX_INTERNAL_VERSION = " . WIKINDX_INTERNAL_VERSION . "</li>
+                    <li>WIKINDX_INTERNAL_VERSION_UPGRADE_MIN = " . WIKINDX_INTERNAL_VERSION_UPGRADE_MIN . "</li>
                 </ul>
             ");
             $this->endDisplay();
@@ -304,6 +302,13 @@ class UPDATEDATABASE
     {
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "modules", "usersgroups", "INITSUPERADMIN.php"]));
         $config = new INITSUPERADMIN(TRUE);
+        
+        $preamble = \HTML\p("
+            Before being able to use WIKINDX, you must configure it.
+            The minimum initially required are username, password and email.
+            From the Admin menu, after configuration, you can add and edit other settings.
+        ");
+        
         if (array_key_exists('action', $this->vars) && ($this->vars['action'] == 'usersgroups_INITSUPERADMIN_CORE'))
         {
             $status = $config->writeDb();
@@ -312,29 +317,28 @@ class UPDATEDATABASE
                 $this->session->clearSessionData();
                 
                 // On success display the success message with a form going to the front page
-                $pString  = \HTML\p($this->installMessages->text("installDB3"), "success", "center");
+                $pString  = \HTML\p("Successfully configured WIKINDX", "success", "center");
                 $pString .= \HTML\p("Please click on the button to return to the home page.");
                 $pString .= \HTML\p(
                       \FORM\formHeader('front')
-                    . \FORM\formSubmit($this->installMessages->text("continue"))
+                    . \FORM\formSubmit("Continue")
                     . \FORM\formEnd()
                 );
-                GLOBALS::addTplVar('content', $pString);
             }
             else
             {
                 // On error display again the form
-                $pString  = \HTML\p($this->installMessages->text("install"));
+                $pString  = $preamble;
                 $pString .= \HTML\p($status, "error", "center");
-                GLOBALS::addTplVar('content', $config->init($pString));
             }
         }
         else
         {
             // The first time display the form
-            $pString  = \HTML\p($this->installMessages->text("install"));
-            GLOBALS::addTplVar('content', $config->init($pString));
+            $pString = $preamble;
         }
+        
+        GLOBALS::addTplVar('content', $config->init($pString));
         $this->endDisplay();
     }
     
@@ -349,6 +353,7 @@ class UPDATEDATABASE
         $pString .= "<li>FINAL INTERNAL VERSION: <b>" . WIKINDX_INTERNAL_VERSION . "</b></li>";
         $pString .= "<li>MAX EXECUTION TIME: " . ini_get("max_execution_time") . " secs.</li>";
         $pString .= "<li>MEMORY LIMIT: " . ini_get("memory_limit") . "</li>";
+        $pString .= "</ul>";
         GLOBALS::addTplVar('content', $pString);
     }
     
@@ -363,7 +368,8 @@ class UPDATEDATABASE
     private function pauseUpdateDisplay()
     {
         // Display the memory used and the tim elapsed after the upgrade step
-        $pString  = "<li>ELAPSED TIME: " . (time() - $this->oldTime) . " secs.</li>";
+        $pString  = "<ul>";
+        $pString .= "<li>ELAPSED TIME: " . (time() - $this->oldTime) . " secs.</li>";
         $pString .= "<li>MEMORY USED: " . memory_get_peak_usage() / 1000000 . " MB</li>";
         $pString .= "<li>DATABASE QUERIES: " . GLOBALS::getDbQueries() . "</li>";
         $pString .= "</ul>";
@@ -372,7 +378,7 @@ class UPDATEDATABASE
             $pString .= \HTML\p("<span style='color:red'>" . $this->interruptStepMessage . "</span>");
             $pString .= \HTML\p(
                   \FORM\formHeader('continueExecution')
-                . \FORM\formSubmit($this->installMessages->text("continue"))
+                . \FORM\formSubmit("Continue")
                 . \FORM\formEnd()
             );
         }
@@ -386,12 +392,12 @@ class UPDATEDATABASE
             {
                 $this->session->delVar("upgrade_ForceLogin");
                 
-                $message = \HTML\p($this->installMessages->text("upgradeDBSuccess"), "success", "center");
+                $message = \HTML\p("Database successfully upgraded", "success", "center");
                 $pString .= $message;
                 $pString .= \HTML\p("Please click on the button to return to the home page.");
                 $pString .= \HTML\p(
                       \FORM\formHeader('front')
-                    . \FORM\formSubmit($this->installMessages->text("continue"))
+                    . \FORM\formSubmit("Continue")
                     . \FORM\formEnd()
                 );
             }
@@ -401,7 +407,7 @@ class UPDATEDATABASE
                 $pString .= \HTML\p("Please click on the button to continue the upgrade.");
                 $pString .= \HTML\p(
                       \FORM\formHeader('continueExecution')
-                    . \FORM\formSubmit($this->installMessages->text("continue"))
+                    . \FORM\formSubmit("Continue")
                     . \FORM\formEnd()
                 );
             }
@@ -439,33 +445,69 @@ class UPDATEDATABASE
                   'CURRENT MAX EXECUTION TIME: ' . ini_get("max_execution_time") . ' secs' . BR
                 . 'CURRENT PHP MEMORY LIMIT: ' . ini_get("memory_limit")
             );
-            $pString .= \HTML\p($this->installMessages->text("upgradeDB1"));
-            $pString .= \HTML\p($this->installMessages->text("upgradeDB3"));
+            $pString .= "
+                <p>Minimum version upgradable: <span style='color:red;font-weight:bold'>5.1</span></p>
+                
+                <p style='color:red;font-weight:bold'If you have downloaded beta/SVN code,
+                then you are strongly advised not to run it on a production server -- if you wish to test it,
+                either create a new database or make a copy of your existing WIKINDX database and point config.php at it.
+                Wait until all bugs have been dealt with, and the final release version provided, before using the WIKINDX code on a production server.</p>
+                
+                <p>To report bugs etc., go to: <a href='https://sourceforge.net/p/wikindx/v5bugs/'>https://sourceforge.net/p/wikindx/v5bugs/</a></p>
+                
+                <p>WIKINDX has detected that this is the first time a new version is being run
+                and that the database requires upgrading. This upgrading is automatic
+                but only the WIKINDX superAdmin may carry it out.</p>
+                
+                <p>You are <strong>strongly advised</strong> to <strong>back up your old database</strong> first.
+                If you do not do this and you experience the memory errors detailed below when upgrading your only copy of the database,
+                then you will have irrevocably corrupted the database: <em>caveat upgrader</em></p>
+            ";
+            $pString .= "
+                <p>The upgrade process may take some time depending upon a number of factors.
+                If your database is large or your server is slow,
+                it is advised to temporarily increase 'max_execution_time' and 'memory_limit' in php.ini
+                and to restart the web server before upgrading.
+                (You can try to increase memory first in config.php -- WIKINDX_MEMORY_LIMIT -- in which case you do not need to restart the server.)
+                During upgrading, PHP error reporting is turned on regardless of your config.php settings.</p>
+                
+                <p>If you get a blank page or an error similar to: 'Fatal error: Allowed memory size of 16777216 bytes exhausted (tried to allocate 38 bytes)',
+                then you must start the upgrade process from the <strong>beginning</strong>:</p>
+                
+                <ol>
+                    <li>Reload your backed-up database or database tables (you have backed up haven't you?);</li>
+                    <li>Increase PHP memory as per the instructions above (after upgrading, you can set it back to the default 64MB);</li>
+                    <li>Restart the upgrade process. Do not break the process or use browser back or forward buttons.</li>
+                </ol>
+                
+                <p><strong>Before upgrading, you should ensure that all attachments in wikindx3 or wikindx4 have been copied to the new wikindx/data/attachments/ folder
+                -- the upgrade process will remove references to attachments in the database if the attachment files do not exist in the new location.</strong></p>
+            ";
             $pString .= \FORM\formHeader("upgradeDB");
-            $pString .= \HTML\p(\FORM\formSubmit($this->installMessages->text("upgradeDBSubmit")), FALSE, 'right');
+            $pString .= \HTML\p(\FORM\formSubmit("Upgrade the database"), FALSE, 'right');
             $pString .= \FORM\formEnd();
         }
         else
         {
             $email = \UPDATE\getConfigContactEmail($this->db);
             $email = $email ? "(" . $email . ")" : "";
-            $pString .= \HTML\p($this->installMessages->text("upgradeDB2", $email));
+            $pString .= "<p>You are not logged on as the superAdmin: please ask that person {$email} to carry out the upgrade through their web browser.</p>";
             
-            $pString .= \HTML\p($this->installMessages->text("logonSuperadmin"));
+            $pString .= \HTML\p("Logon as superAdmin:");
             
             $pString .= \FORM\formHeader("upgradeDBLogon");
             $pString .= \HTML\tableStart('left width50percent');
             $pString .= \HTML\trStart();
-            $pString .= \HTML\td($this->installMessages->text("username") . ":&nbsp;&nbsp;");
+            $pString .= \HTML\td("Username" . ":&nbsp;&nbsp;");
             $pString .= \HTML\td(\FORM\textInput(FALSE, "usersUsername"));
             $pString .= \HTML\trEnd();
             $pString .= \HTML\trStart();
-            $pString .= \HTML\td($this->installMessages->text("password") . ":&nbsp;&nbsp;");
+            $pString .= \HTML\td("Password" . ":&nbsp;&nbsp;");
             $pString .= \HTML\td(\FORM\passwordInput(FALSE, "password"));
             $pString .= \HTML\trEnd();
             $pString .= \HTML\trStart();
             $pString .= \HTML\td("&nbsp;");
-            $pString .= \HTML\td(\FORM\formSubmit($this->installMessages->text("submit")), 'right');
+            $pString .= \HTML\td(\FORM\formSubmit("Submit"), 'right');
             $pString .= \HTML\trEnd();
             $pString .= \HTML\tableEnd();
             $pString .= \FORM\formEnd();
@@ -483,7 +525,7 @@ class UPDATEDATABASE
      */
     private function startInstallDisplay()
     {
-        $heading = $this->installMessages->text("installDBHeading");
+        $heading = "Install";
         $apptilte = WIKINDX_TITLE_DEFAULT;
         
         $string = <<<END
@@ -525,21 +567,15 @@ class UPDATEDATABASE
             border: 1px sold black;
             padding: 0.3em;
         }
-
-        /**
-        * .error: <p>error messages</p>
-        */
+        
         .error {
-         background: #C96D63;
-         color: #FFF;
+            background: #C96D63;
+            color: #FFF;
         }
         
-        /**
-        * .success: <p>success messages</p>
-        */
         .success {
-         background: #729179;
-         color: #FFF;
+            background: #729179;
+            color: #FFF;
         }
     </style>
 </head>
@@ -558,7 +594,7 @@ END;
      */
     private function startUpdateDisplay()
     {
-        $heading = $this->installMessages->text("upgradeDBHeading");
+        $heading = "Upgrade";
         $apptilte = WIKINDX_TITLE_DEFAULT;
         
         $string = <<<END
@@ -600,21 +636,15 @@ END;
             border: 1px sold black;
             padding: 0.3em;
         }
-
-        /**
-        * .error: <p>error messages</p>
-        */
+        
         .error {
-         background: #C96D63;
-         color: #FFF;
+            background: #C96D63;
+            color: #FFF;
         }
         
-        /**
-        * .success: <p>success messages</p>
-        */
         .success {
-         background: #729179;
-         color: #FFF;
+            background: #729179;
+            color: #FFF;
         }
     </style>
 </head>
@@ -1028,7 +1058,17 @@ END;
         
         $this->updateSoftwareVersion();
         
-        $this->endStepMessage = $this->installMessages->text("upgradeDBv5.9");
+        $this->endStepMessage = "
+            <p style='color:red;font-weight:bold'>In WIKINDX 5.9, for security reasons,
+            default file locations have been changed and the option to configure the paths
+            has been removed from config.php. If you had NOT changed the default locations
+            for attachments and files, then these files have been copied to their new locations
+            in data/. Otherwise, you should copy all files in your attachments and files folders
+            to the appropriate folders in the data/ folder. Once you have done this,
+            and if WIKINDX has been unable to do so,
+            you can manually remove the following folders (or equivalents depending on your config.php):
+            attachments/, attachments_cache/, files/, images/, sessionData/.</p>
+        ";
     }
     
     /**
@@ -1060,7 +1100,14 @@ END;
         
         $this->updateSoftwareVersion();
         
-        $this->endStepMessage .= $this->installMessages->text("upgradeDBv6");
+        $this->endStepMessage .= "
+            <p style='color:red;font-weight:bold'>In WIKINDX 5.10, component locations have been changed
+            and are installed in components/languages, components/plugins, components/styles, components/templates, and components/vendor folders.
+            If you created custom components or changed the configuration of the official components,
+            the code for the old components remained in place.
+            You have to migrate them manually according to the documentation
+            then delete the languages, plugins, styles, and vendor folders.</p>
+        ";
     }
     
     /**
@@ -1127,7 +1174,10 @@ END;
         
         $this->updateSoftwareVersion();
         
-        $this->endStepMessage = $this->installMessages->text("upgradeDBv12");
+        $this->endStepMessage = "
+            <p style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT)
+            if you have a lot of statistics entry (you've been using Wikindx for a long time).</p>
+        ";
     }
     
     /**
@@ -2297,7 +2347,11 @@ END;
         }
         
         // Draws attention to the backup copy of the configuration file
-        $this->endStepMessage .= $this->installMessages->text("upgradeDBClearConfigBackupFile");
+        $this->endStepMessage .= "
+            <p><strong>Before its migration, a time-stamped backup of your configuration file was copied to the site root directory.
+            You can refer to this file when editing the configuration further through the Admin|Configure interface – otherwise,
+            you can safely delete the file.</strong></p>
+        ";
     }
     
     /**

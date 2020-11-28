@@ -44,6 +44,9 @@ class FILETOTEXT
             case WIKINDX_MIMETYPE_DOCX:
                 $text = $this->readDocx($filename);
             break;
+            case WIKINDX_MIMETYPE_ODT:
+                $text = $this->readOdt($filename);
+            break;
             case WIKINDX_MIMETYPE_PDF:
                 $text = $this->readPdf($filename);
             break;
@@ -175,6 +178,8 @@ class FILETOTEXT
     /**
      * readDocx
      *
+     * cf. https://www.ecma-international.org/publications/standards/Ecma-376.htm
+     *
      * @param string $filename
      *
      * @return string
@@ -184,18 +189,138 @@ class FILETOTEXT
         $striped_content = "";
         $content = "";
         
+        // Extract the content parts
         $za = new \ZipArchive();
         
         if ($za->open($filename, \ZipArchive::RDONLY))
         {
-            $content = $za->getFromName("word/document.xml");
+            $content .= $za->getFromName("word/document.xml");
+            $content .= $za->getFromName("word/comments.xml");
+            $content .= $za->getFromName("word/endnotes.xml");
+            $content .= $za->getFromName("word/footnotes.xml");
             if ($content === FALSE) $content = "";
         }
         
-        $content = str_replace('</w:r></w:p></w:tc><w:tc>', " ", $content);
-        $content = str_replace('</w:r></w:p>', LF, $content);
-        $striped_content = strip_tags($content);
-        $striped_content = html_entity_decode($striped_content, ENT_QUOTES | ENT_XML1, 'UTF-8');
+        // Extract the text part of the body and rudimentary formats major blocks with newlines
+        // We assume that the document is well formed and that the tags do not intersect
+        $pXML = new \XMLReader();
+        
+        if ($pXML->XML($content))
+        {
+            $bExtract = FALSE;
+            $bExtractElement = FALSE;
+            
+            while ($pXML->read())
+            {
+                // Start extracting at the start of the text of each major part
+                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["w:body", "w:comments", "w:endnotes", "w:footnotes"]))
+                {
+                    $bExtract = TRUE;
+                }
+                // Stop extracting at the end of the text of each major part
+                if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["w:body", "w:comments", "w:endnotes", "w:footnotes"]))
+                {
+                    $bExtract = FALSE;
+                }
+                
+                // Start extracting at the start of the text of a paragraph
+                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["w:p"]))
+                {
+                    $bExtractElement = TRUE;
+                }
+                // Stop extracting at the end of the text of a paragraph
+                if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["w:p"]))
+                {
+                    $bExtractElement = FALSE;
+                }
+                
+                // Extract all node and add new lines on blocks
+                if ($bExtract && $bExtractElement)
+                {
+                    $striped_content .= $pXML->value;
+                    if (in_array($pXML->name, ["w:p"]))
+                    {
+                        $striped_content .= LF.LF;
+                    }
+                }
+            }
+        }
+        
+        unset($pXML);
+        
+        return $striped_content;
+    }
+    
+    
+    /**
+     * readOdt
+     *
+     * cf. https://www.oasis-open.org/standards/#opendocumentv1.2
+     *
+     * @param string $filename
+     *
+     * @return string
+     */
+    private function readOdt($filename)
+    {
+        $striped_content = "";
+        $content = "";
+        
+        // Extract the content file
+        $za = new \ZipArchive();
+        
+        if ($za->open($filename, \ZipArchive::RDONLY))
+        {
+            $content = $za->getFromName("content.xml");
+            if ($content === FALSE) $content = "";
+        }
+        
+        // Extract the text part of the body and rudimentary formats major blocks with newlines
+        // We assume that the document is well formed and that the tags do not intersect
+        $pXML = new \XMLReader();
+        
+        if ($pXML->XML($content))
+        {
+            $bExtract = FALSE;
+            $bExtractElement = FALSE;
+            
+            while ($pXML->read())
+            {
+                // Start extracting at the start of the text of the body
+                if ($pXML->nodeType == \XMLReader::ELEMENT && $pXML->name == "office:text")
+                {
+                    $bExtract = TRUE;
+                }
+                // Stop extracting at the end of the text of the body
+                if ($pXML->nodeType == \XMLReader::END_ELEMENT && $pXML->name == "office:text")
+                {
+                    $bExtract = FALSE;
+                }
+                
+                // Start extracting at the start of the text of the body
+                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["text:h", "text:p", "text:list", "text:note", "text:numbered-paragraph", "text:ruby"]))
+                {
+                    $bExtractElement = TRUE;
+                }
+                // Stop extracting at the end of the text of the body
+                if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["text:h", "text:p", "text:list", "text:note", "text:numbered-paragraph", "text:ruby"]))
+                {
+                    $bExtractElement = FALSE;
+                }
+                
+                // Extract all node and add new lines on blocks
+                if ($bExtract && $bExtractElement)
+                {
+                    $striped_content .= $pXML->value;
+                    if (in_array($pXML->name, ["text:h", "text:p", "text:list", "text:note", "text:numbered-paragraph", "text:ruby"]))
+                    {
+                        $striped_content .= LF.LF;
+                    }
+                }
+            }
+        }
+        
+        unset($pXML);
         
         return $striped_content;
     }

@@ -206,7 +206,8 @@ class FILETOTEXT
         $content = str_replace('</w:r></w:p></w:tc><w:tc>', " ", $content);
         $content = str_replace('</w:r></w:p>', CR . LF, $content);
         $striped_content = strip_tags($content);
-
+        $striped_content = html_entity_decode($striped_content, ENT_QUOTES | ENT_XML1, 'UTF-8');
+        
         return $striped_content;
     }
 }

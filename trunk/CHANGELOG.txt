@@ -22,6 +22,7 @@ BUG FIXES:
 13. When importing bibTeX or Endnote bibliographies, ensure certain fields are integers if required by the database structure.
 14. Update the locales list on each last step of an upgrade.
 15. Session was lost when visiting the login page.
+16. Properly decode the HTML entities of texts extracted from a DOCX file.
 
 FEATURE ENHANCEMENT:
 1. When editing a form, use internal representations to repopulate the form in case of error and lessen the load on sessions. Also, restructure form management by splitting form presentation from DB data writing and use redirects to mitigate errors caused when attempting to reload a submitted form.

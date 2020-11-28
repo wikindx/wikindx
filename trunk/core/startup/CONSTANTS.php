@@ -204,18 +204,19 @@ define('WIKINDX_CHARSET', 'UTF-8');
 define('WIKINDX_DB_TABLEPREFIX', 'wkx_');
 
 // List of mime types used in the code base
-define('WIKINDX_MIMETYPE_BIB', 'application/x-bibtex');
-define('WIKINDX_MIMETYPE_DOC', 'application/msword');
-define('WIKINDX_MIMETYPE_DOCX', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+define('WIKINDX_MIMETYPE_BIB',     'application/x-bibtex');
+define('WIKINDX_MIMETYPE_DOC',     'application/msword');
+define('WIKINDX_MIMETYPE_DOCX',    'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 define('WIKINDX_MIMETYPE_ENDNOTE', 'application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml');
-define('WIKINDX_MIMETYPE_HTM', 'text/html');
-define('WIKINDX_MIMETYPE_JSON', 'application/json');
-define('WIKINDX_MIMETYPE_PDF', 'application/pdf');
-define('WIKINDX_MIMETYPE_RIS', 'application/x-research-info-systems');
-define('WIKINDX_MIMETYPE_RSS', 'application/rss+xml');
-define('WIKINDX_MIMETYPE_RTF', 'application/rtf');
-define('WIKINDX_MIMETYPE_TXT', 'text/plain');
-define('WIKINDX_MIMETYPE_XML', 'application/xml');
+define('WIKINDX_MIMETYPE_HTM',     'text/html');
+define('WIKINDX_MIMETYPE_JSON',    'application/json');
+define('WIKINDX_MIMETYPE_ODT',     'application/vnd.oasis.opendocument.text');
+define('WIKINDX_MIMETYPE_PDF',     'application/pdf');
+define('WIKINDX_MIMETYPE_RIS',     'application/x-research-info-systems');
+define('WIKINDX_MIMETYPE_RSS',     'application/rss+xml');
+define('WIKINDX_MIMETYPE_RTF',     'application/rtf');
+define('WIKINDX_MIMETYPE_TXT',     'text/plain');
+define('WIKINDX_MIMETYPE_XML',     'application/xml');
 define('WIKINDX_HTTP_CONTENT_TYPE_DEFAULT', WIKINDX_MIMETYPE_HTM);
 
 

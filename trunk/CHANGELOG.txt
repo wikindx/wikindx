@@ -38,6 +38,7 @@ FEATURE ENHANCEMENT:
 11. Complete reimplementation of LDAP authentication. (https://sourceforge.net/p/wikindx/v5bugs/254/).
 12. Accept the webp image format because since September 2020 all browsers support it. However TinyMCE does not support it yet.
 13. Better content extractor for DOCX files.
+14. New format supported for document extractor: OpenDocument Writer (ODT).
 
 MAINTENANCE:
 1. Remove the need of WIKINDX_WIKINDX_PATH and use automatically WIKINDX_DIR_BASE instead.

@@ -179,7 +179,7 @@ class FILETOTEXT
      *
      * @return string
      */
-    private function readDocx2($filename)
+    private function readDocx($filename)
     {
         $striped_content = "";
         $content = "";

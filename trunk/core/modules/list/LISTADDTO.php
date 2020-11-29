@@ -25,6 +25,7 @@ class LISTADDTO
     private $badInput;
     private $navigate;
     private $catForm;
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
@@ -39,6 +40,7 @@ class LISTADDTO
         $this->user = FACTORY_USER::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         $this->navigate = FACTORY_NAVIGATE::getInstance();
+        $this->browserTabID = GLOBALS::getBrowserTabID();
     }
     /**
      * init
@@ -50,6 +52,9 @@ class LISTADDTO
             $this->badInput->close($this->errors->text("inputError", "missing"), $this->navigate, 'listView');
         }
         $this->session->setVar("resourceSelectedTo", $this->vars['resourceSelectedTo']);
+        if ($this->browserTabID) {
+	    	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['resourceSelectedTo' => $this->vars['resourceSelectedTo']]);
+	    }
         if ($this->vars['resourceSelectedTo'] == 1)
         {	// add to categories
             return $this->organizeInit();
@@ -531,7 +536,9 @@ class LISTADDTO
         }
         if (!is_array($string) && ($string == 'display'))
         {
-            $ids = $this->session->getVar("list_NextPreviousIds");
+        	if (is_bool($ids = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_NextPreviousIds'))) {
+	            $ids = $this->session->getVar("list_NextPreviousIds");
+	        }
         }
         elseif (!is_array($string) && ($string == 'all'))
         {
@@ -565,6 +572,7 @@ class LISTADDTO
         $pString .= \HTML\strong($this->messages->text("resources", "warningOrganize"));
         $pString .= \FORM\formHeader('list_LISTADDTO_CORE', "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden("method", "organize");
+        $pString .= \FORM\hidden('browserTabID', $this->browserTabID);
         $display = ['categoryDisplay' => $this->messages->text("resources", "categories"),
             'subcategoryDisplay' => $this->messages->text("resources", "subcategories"),
             'languageDisplay' => $this->messages->text("resources", "languages"),
@@ -654,6 +662,7 @@ class LISTADDTO
             $pString .= \FORM\formHeader('list_LISTADDTO_CORE');
             $pString .= \FORM\hidden("method", "addResourceToBib");
             $pString .= \FORM\hidden('uuid', $uuid);
+        	$pString .= \FORM\hidden('browserTabID', $this->browserTabID);
             $pString .= \HTML\tableStart();
             $pString .= \HTML\trStart();
             $sessVar = $this->session->getVar("mywikindx_Bibliography_add");
@@ -733,7 +742,9 @@ class LISTADDTO
         $ids = [];
         if (!is_array($string) && ($string == 'display'))
         {
-            $ids = $this->session->getVar("list_NextPreviousIds");
+        	if (is_bool($ids = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_NextPreviousIds'))) {
+	            $ids = $this->session->getVar("list_NextPreviousIds");
+	        }
         }
         elseif (!is_array($string) && ($string == 'all'))
         {
@@ -800,7 +811,9 @@ class LISTADDTO
         }
         if (!is_array($string) && ($string == 'display'))
         {
-            $ids = $this->session->getVar("list_NextPreviousIds");
+        	if (is_bool($ids = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_NextPreviousIds'))) {
+	            $ids = $this->session->getVar("list_NextPreviousIds");
+	        }
         }
         elseif (!is_array($string) && ($string == 'all'))
         {
@@ -810,12 +823,10 @@ class LISTADDTO
         {
             $ids = unserialize(base64_decode($string));
         }
-        if ($this->session->issetVar("basket_List"))
-        {
-            $basket = $this->session->getVar("basket_List");
-        }
-        else
-        {
+        if (is_bool($basket = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List'))) {
+	        $basket = $this->session->getVar("basket_List");
+	    }
+        if (!is_array($basket)) {
             $basket = [];
         }
         foreach ($ids as $resourceId)
@@ -828,6 +839,9 @@ class LISTADDTO
         // Ensure array is unique
         array_unique($basket);
         $this->session->setVar("basket_List", $basket);
+        if ($this->browserTabID) {
+	    	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basket]);
+	    }
         $success = FACTORY_SUCCESS::getInstance();
         $this->navigate->listView($success->text("basketAdd"));
         FACTORY_CLOSE::getInstance(); // die
@@ -854,12 +868,10 @@ class LISTADDTO
         {
             $ids = unserialize(base64_decode($string));
         }
-        if ($this->session->issetVar("basket_List"))
-        {
-            $basket = $this->session->getVar("basket_List");
-        }
-        else
-        {
+        if (is_bool($basket = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List'))) {
+	        $basket = $this->session->getVar("basket_List");
+	    }
+        if (!is_array($basket)) {
             $basket = [];
         }
         foreach ($ids as $resourceId)
@@ -872,10 +884,14 @@ class LISTADDTO
         if (empty($basket))
         {
             $this->session->delVar("basket_List");
+            \TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['basket_List']);
         }
         else
         {
             $this->session->setVar("basket_List", $basket);
+            if ($this->browserTabID) {
+	    		\TEMPSTORAGE\store($this->db, $this->browserTabID, ['basket_List' => $basket]);
+	    	}
         }
         $success = FACTORY_SUCCESS::getInstance();
         if (empty($basket))
@@ -902,7 +918,9 @@ class LISTADDTO
         \TEMPSTORAGE\delete($this->db, $this->vars['uuid']);
         if ($idsString == 'display')
         {
-            $ids = $this->session->getVar("list_NextPreviousIds");
+        	if (is_bool($ids = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_NextPreviousIds'))) {
+	            $ids = $this->session->getVar("list_NextPreviousIds");
+	        }
         }
         elseif ($idsString == 'all')
         {
@@ -931,7 +949,9 @@ class LISTADDTO
         }
         if (!is_array($string) && ($string == 'display'))
         {
-            $ids = $this->session->getVar("list_NextPreviousIds");
+        	if (is_bool($ids = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_NextPreviousIds'))) {
+	            $ids = $this->session->getVar("list_NextPreviousIds");
+	        }
         }
         elseif (!is_array($string) && ($string == 'all'))
         {
@@ -978,7 +998,9 @@ class LISTADDTO
         }
         if (!is_array($string) && ($string == 'display'))
         {
-            $ids = $this->session->getVar("list_NextPreviousIds");
+        	if (is_bool($ids = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_NextPreviousIds'))) {
+	            $ids = $this->session->getVar("list_NextPreviousIds");
+	        }
         }
         elseif (!is_array($string) && ($string == 'all'))
         {
@@ -1010,6 +1032,9 @@ class LISTADDTO
      */
     private function getAllIds()
     {
-        return $this->session->getVar('list_AllIds');
+    	if (is_bool($ids = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'list_AllIds'))) {
+	        $ids = $this->session->getVar("list_AllIds");
+	    }
+        return $ids;
     }
 }

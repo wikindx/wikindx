@@ -1083,6 +1083,7 @@ class LISTCOMMON
         elseif ($this->session->getVar("resourceSelectedTo") == '3')
         { // previous operation was 'deleteFromBib'
             $this->session->delVar("resourceSelectedTo");
+            \TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['resourceSelectedTo']);
         }
         if ($listType == 'basket')
         {
@@ -1107,7 +1108,9 @@ class LISTCOMMON
         }
         $t = \HTML\tableStart('right');
         $t .= \HTML\trStart('right');
-        $sessVar = $this->session->getVar("resourceSelectedTo");
+        if (!$sessVar = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'resourceSelectedTo')) {
+	        $sessVar = $this->session->getVar("resourceSelectedTo");
+	    }
         /*
         if (GLOBALS::getUserVar('PagingStyle') == 'A')
             $radios = $this->messages->text("resources", "selectCheck") . '&nbsp;' . \FORM\radioButton(FALSE, 'selectWhat', 'checked') .

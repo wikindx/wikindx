@@ -144,18 +144,15 @@ class LOADCONFIG
                 }
                 elseif ($key == "BrowseBibliography")
                 {
-                    // TODO(LkpPo): what is the default value for this case?
-                    $row[$rowKey] = FALSE;
+                    $row[$rowKey] = WIKINDX_BROWSEBIBLIOGRAPHY_DEFAULT;
                 }
                 elseif ($key == "HomeBib")
                 {
-                    // TODO(LkpPo): what is the default value for this case?
-                    $row[$rowKey] = FALSE;
+                    $row[$rowKey] = WIKINDX_HOMEBIB_DEFAULT;
                 }
                 elseif ($key == "CmsTag")
                 {
-                    // TODO(LkpPo): what is the default value for this case?
-                    $row[$rowKey] = FALSE;
+                    $row[$rowKey] = WIKINDX_CMS_TAG_DEFAULT;
                 }
                 else
                 {

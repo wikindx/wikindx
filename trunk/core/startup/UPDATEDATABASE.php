@@ -480,7 +480,7 @@ class UPDATEDATABASE
                     <li>Restart the upgrade process. Do not break the process or use browser back or forward buttons.</li>
                 </ol>
                 
-                <p><strong>Before upgrading, you should ensure that all attachments in wikindx3 or wikindx4 have been copied to the new wikindx/data/attachments/ folder
+                <p><strong>Before upgrading, you should ensure that all attachments in the old folder have been copied to the new wikindx/data/attachments/ folder
                 -- the upgrade process will remove references to attachments in the database if the attachment files do not exist in the new location.</strong></p>
             ";
             $pString .= \FORM\formHeader("upgradeDB");

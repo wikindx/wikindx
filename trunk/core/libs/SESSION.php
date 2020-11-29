@@ -72,6 +72,7 @@ class SESSION
      */
     public function delVar($key)
     {
+        //debug_print_backtrace();
         unset($_SESSION[$key]);
     }
     /**
@@ -90,6 +91,7 @@ class SESSION
      */
     public function destroy()
     {
+        //debug_print_backtrace();
         $_SESSION = [];
     }
     /**
@@ -153,6 +155,7 @@ class SESSION
      */
     public function clearArray($prefix)
     {
+        //debug_print_backtrace();
         $prefix .= '_';
         $prefixLength = mb_strlen($prefix);
         foreach ($_SESSION as $key => $value)
@@ -168,6 +171,7 @@ class SESSION
      */
     public function clearSessionData()
     {
+        //debug_print_backtrace();
         $prefix = "setup_";
         $prefixLength = mb_strlen($prefix);
         foreach ($_SESSION as $key => $value)

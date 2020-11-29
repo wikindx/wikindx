@@ -67,6 +67,7 @@ class BADINPUT
                 }
                 if (!$methodName)
                 {
+                    debug_print_backtrace();
                     echo "Object defined but no method defined for object in BADINPUT";
                     die;
                 }
@@ -101,6 +102,7 @@ class BADINPUT
 
             break;
             default:
+                debug_print_backtrace();
                 print "Incorrect CLOSE object defined in BADINPUT";
                 die;
 

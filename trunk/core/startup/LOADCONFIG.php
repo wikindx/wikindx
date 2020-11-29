@@ -231,6 +231,7 @@ class LOADCONFIG
                 $configType = WIKINDX_LIST_CONFIG_OPTIONS[$configName]["type"];
                 if (!defined($constName . "_DEFAULT"))
                 {
+                    debug_print_backtrace();
                     die("A default constant value for $constName option is missing (" . $constName . "_DEFAULT expected).");
                 }
                 
@@ -281,6 +282,7 @@ class LOADCONFIG
             }
             else
             {
+                debug_print_backtrace();
                 die("db config type unsupported: $configType");
             }
             

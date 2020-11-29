@@ -155,6 +155,7 @@ class USER
             }
             else
             {
+                debug_print_backtrace();
                 die("admin param value unknown: " . $admin);
             }
             if (isset($nulls))

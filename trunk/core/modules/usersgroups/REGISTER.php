@@ -342,6 +342,7 @@ class REGISTER
         }
         else
         {
+            debug_print_backtrace();
             die("Cannot Create image");
         }
         $challengeText = $lterm . ' ' . $operator . ' ' . $rterm . ' =';

@@ -45,6 +45,7 @@ class MYWIKINDX
             $recordset = $this->db->select('users', ['usersUsername', 'usersEmail']);
             if (!$this->db->numRows($recordset))
             {
+                debug_print_backtrace();
                 die($this->errors->text("dbError", "read"));
             }
             $row = $this->db->fetchRow($recordset);

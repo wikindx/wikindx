@@ -42,6 +42,7 @@ class CONFIGDBSTRUCTURE
     {
         if (!array_key_exists($field, WIKINDX_LIST_CONFIG_OPTIONS))
         {
+            debug_print_backtrace();
             die('CONFIGDBSTRUCTURE->getOne(): bad config option name requested:' . $field);
         }
         $column = WIKINDX_LIST_CONFIG_OPTIONS[$field]["type"];
@@ -77,6 +78,7 @@ class CONFIGDBSTRUCTURE
         {
             if (!array_key_exists($configName, WIKINDX_LIST_CONFIG_OPTIONS))
             {
+                debug_print_backtrace();
                 die('CONFIGDBSTRUCTURE->getData(): bad config option name requested:' . $configName);
             }
         }
@@ -141,6 +143,7 @@ class CONFIGDBSTRUCTURE
     {
         if (!array_key_exists($name, WIKINDX_LIST_CONFIG_OPTIONS))
         {
+            debug_print_backtrace();
             die('CONFIGDBSTRUCTURE->updateOne(): bad config option name updated:' . $name);
         }
         

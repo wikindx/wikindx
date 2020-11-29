@@ -55,7 +55,10 @@ private $catalogLanguage = array();
 	public function text($indexName, $extra = "")
 	{
 		if(!array_key_exists($indexName, $this->catalogLanguage))
+		{
+		    debug_print_backtrace();
 			die("<p>Message <strong>$indexName</strong> not found in translations.</p>");
+		}
 		
 		$message = $this->catalogLanguage[$indexName];
 		$message = preg_replace("/###/u", str_replace("\\", "\\\\", trim($extra . "")), $message);

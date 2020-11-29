@@ -70,6 +70,7 @@ class BIBTEXPARSE
     {
         if (!is_file($file))
         {
+            debug_print_backtrace();
             die;
         }
         $this->fid = fopen($file, 'r');

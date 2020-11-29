@@ -31,6 +31,7 @@ class CMS
         if (!WIKINDX_CMS_ALLOW)
         {
             // deny access
+            header('HTTP/1.1 403 Forbidden');
             die("CMS access denied by WIKINDX configuration");
         }
 

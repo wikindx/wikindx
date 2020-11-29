@@ -192,66 +192,74 @@ class FILETOTEXT
     private function readDocx($filename)
     {
         $striped_content = "";
-        $content = "";
         
-        // Extract the content parts
-        $za = new \ZipArchive();
-        
-        if ($za->open($filename, \ZipArchive::RDONLY))
+        foreach (["word/document.xml", "word/comments.xml", "word/endnotes.xml", "word/footnotes.xml"] as $f)
         {
-            $content .= $za->getFromName("word/document.xml");
-            $content .= $za->getFromName("word/comments.xml");
-            $content .= $za->getFromName("word/endnotes.xml");
-            $content .= $za->getFromName("word/footnotes.xml");
-            if ($content === FALSE) $content = "";
-        }
-        
-        // Extract the text part of the body and rudimentary formats major blocks with newlines
-        // We assume that the document is well formed and that the tags do not intersect
-        $pXML = new \XMLReader();
-        
-        if ($pXML->XML($content))
-        {
-            $bExtract = FALSE;
-            $bExtractElement = FALSE;
+            $content = "";
             
-            while ($pXML->read())
+            // Extract the content parts
+            $za = new \ZipArchive();
+            
+            if ($za->open($filename, \ZipArchive::RDONLY))
             {
-                // Start extracting at the start of the text of each major part
-                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["w:body", "w:comments", "w:endnotes", "w:footnotes"]))
-                {
-                    $bExtract = TRUE;
-                }
-                // Stop extracting at the end of the text of each major part
-                if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["w:body", "w:comments", "w:endnotes", "w:footnotes"]))
+                $content = $za->getFromName($f);
+                if ($content === FALSE) $content = "";
+            }
+            
+            if ($content != "")
+            {
+                // Extract the text part of the body and rudimentary formats major blocks with newlines
+                // We assume that the document is well formed and that the tags do not intersect
+                $pXML = new \XMLReader();
+                
+                if ($pXML->XML($content))
                 {
                     $bExtract = FALSE;
-                }
-                
-                // Start extracting at the start of the text of a paragraph
-                if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["w:p"]))
-                {
-                    $bExtractElement = TRUE;
-                }
-                // Stop extracting at the end of the text of a paragraph
-                if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["w:p"]))
-                {
                     $bExtractElement = FALSE;
-                }
-                
-                // Extract all node and add new lines on blocks
-                if ($bExtract && $bExtractElement)
-                {
-                    $striped_content .= $pXML->value;
-                    if (in_array($pXML->name, ["w:p"]))
+                    
+                    while ($pXML->read())
                     {
-                        $striped_content .= LF.LF;
+                        // Start extracting at the start of the text of each major part
+                        if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["w:body", "w:comments", "w:endnotes", "w:footnotes"]))
+                        {
+                            $bExtract = TRUE;
+                        }
+                        // Stop extracting at the end of the text of each major part
+                        if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["w:body", "w:comments", "w:endnotes", "w:footnotes"]))
+                        {
+                            $bExtract = FALSE;
+                        }
+                        
+                        // Start extracting at the start of the text of a paragraph
+                        if ($pXML->nodeType == \XMLReader::ELEMENT && in_array($pXML->name, ["w:p"]))
+                        {
+                            $bExtractElement = TRUE;
+                        }
+                        // Stop extracting at the end of the text of a paragraph
+                        if ($pXML->nodeType == \XMLReader::END_ELEMENT && in_array($pXML->name, ["w:p"]))
+                        {
+                            $bExtractElement = FALSE;
+                        }
+                        
+                        // Extract all node and add new lines on blocks
+                        if ($bExtract && $bExtractElement)
+                        {
+                            $striped_content .= $pXML->value;
+                            if (in_array($pXML->name, ["w:p"]))
+                            {
+                                $striped_content .= LF.LF;
+                            }
+                        }
                     }
                 }
+                
+                $striped_content .= LF.LF;
+                
+                unset($pXML);
             }
+            
+            unset($za);
         }
-        
-        unset($pXML);
         
         return $striped_content;
     }

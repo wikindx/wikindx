@@ -156,6 +156,7 @@ class LOADCONFIG
                 }
                 else
                 {
+                    debug_print_backtrace();
                     die("Fatal error: missing default value for '{$key}' user config on loading");
                 }
             }

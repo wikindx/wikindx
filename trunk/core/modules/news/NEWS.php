@@ -296,7 +296,7 @@ class NEWS
         {
             $this->badInput->close($this->errors->text("inputError", "invalid"), $this, 'init');
         }
-        if (!array_key_exists('title', $this->vars) || !t\UTF8\mb_trim($this->vars['title']) ||
+        if (!array_key_exists('title', $this->vars) || !\UTF8\mb_trim($this->vars['title']) ||
             !array_key_exists('body', $this->vars) || !\UTF8\mb_trim($this->vars['body']))
         {
             $this->formData["editId"] = $this->vars['editId'];

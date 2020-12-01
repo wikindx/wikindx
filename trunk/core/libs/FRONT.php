@@ -73,10 +73,40 @@ class FRONT
         	\TEMPSTORAGE\deleteKeys($this->db, $this->browserTabID, ['search_Highlight', 'list_AllIds']);
         }
         
-        $this->db->formatConditions(['configName' => 'configDescription_' . \LOCALES\determine_locale()]);
-        $input = $this->db->fetchOne($this->db->select('config', 'configText'));
+        $input = WIKINDX_DESCRIPTION;
         
-        $pString = $input ? $input : WIKINDX_DESCRIPTION;
+        if ($this->db->tableExists("plugin_localedescription"))
+        {
+            $recordset = $this->db->select('plugin_localedescription', ['pluginlocaledescriptionLocale', 'pluginlocaledescriptionText']);
+            if ($this->db->numRows($recordset) > 0)
+            {
+                $aLocales = \LOCALES\determine_locale_priority_stack();
+                foreach ($aLocales as $loc => $null)
+                {
+                    // Find the first exact matching localized description
+                    foreach ($recordset as $row)
+                    {
+                        if ($row['pluginlocaledescriptionLocale'] == $loc)
+                        {
+                            $input = $row['pluginlocaledescriptionText'];
+                            break 2;
+                        }
+                    }
+                    
+                    // Find the first matching localized description for a family of language only
+                    foreach ($recordset as $row)
+                    {
+                        if ($row['pluginlocaledescriptionLocale'] == \Locale::getPrimaryLanguage($loc))
+                        {
+                            $input = $row['pluginlocaledescriptionText'];
+                            break 2;
+                        }
+                    }
+                }
+            }
+        }
+        
+        $pString = $input;
         $pString = \HTML\nlToHtml($pString);
 
         // Do we want the quick search form to be displayed?

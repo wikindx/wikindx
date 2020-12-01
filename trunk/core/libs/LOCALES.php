@@ -308,6 +308,28 @@ namespace LOCALES
         // of the previous execution on macOS, sometimes.
         textdomain(WIKINDX_LANGUAGE_DOMAIN_DEFAULT);
     }
+    
+    /**
+     * Determine the user's preferred language.
+     *
+     * This function builds a language priority stack and return the first entry as the user's preferred language.
+     *
+     * If $force_locale is passed, this function will try to use this locale first.
+     *
+     * @param null|string $force_locale Code of a locale (format: ll[_CC][@variant])(optional, NULL by default)
+     *
+     * @return string
+     */
+    function determine_locale($force_locale = NULL)
+    {
+        $langPriorityStack = determine_locale_priority_stack($force_locale);
+        
+        foreach ($langPriorityStack as $code)
+        {
+            return $code;
+        }
+    }
+    
     /**
      * Determine the user's preferred language.
      *
@@ -315,13 +337,11 @@ namespace LOCALES
      *
      * If $force_locale is passed, this function will try to use this locale first.
      *
-     * $param $force_locale Code of a locale (format: ll[_CC][@variant])
+     * @param null|string $force_locale Code of a locale (format: ll[_CC][@variant])(optional, NULL by default)
      *
-     * @param null|mixed $force_locale (optional, NULL by default)
-     *
-     * @return string
+     * @return string[]
      */
-    function determine_locale($force_locale = NULL)
+    function determine_locale_priority_stack($force_locale = NULL)
     {
         $langPriorityStack = [];
         
@@ -365,16 +385,19 @@ namespace LOCALES
         // Extract the top priority language
         // NB. The index is not always 0 because the array is not reordered after filtering.
         assert(count($langPriorityStack) > 0);
+        $aFinalStack = [];
         foreach ($langPriorityStack as $lang_lowercase)
         {
             foreach ($locales as $lang => $v)
             {
                 if ($v == $lang_lowercase)
                 {
-                    return $lang;
+                    $aFinalStack[$lang] = $lang;
                 }
             }
         }
+        
+        return $aFinalStack;
     }
 
     /**
@@ -1126,5 +1149,30 @@ namespace LOCALES
         ];
         
         return array_key_exists($locale, $bcp47) ? $bcp47[$locale] : "";
+    }
+    
+    /**
+     * Get a list of translatable locales sorted by locale name
+     *
+     * This is a list of locales that a translator can use
+     * to translate a text and not a list of locales currently available
+     * on the system.
+     *
+     * Each key is a locale code and its value a displayname.
+     *
+     * return string[]
+     */
+    function getTranslatableLocales($in_locale)
+    {
+        $aLocales = [];
+        
+        foreach (\ResourceBundle::getLocales("") as $code)
+        {
+            $aLocales[$code] = \Locale::getDisplayName($code, $in_locale);
+        }
+        
+        asort($aLocales, SORT_LOCALE_STRING);
+        
+        return $aLocales;
     }
 }

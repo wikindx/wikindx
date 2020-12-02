@@ -781,7 +781,7 @@ class VIEWBIBTEX
         while ($row = $this->db->fetchRow($resultset))
         {
             $array = [];
-            $array[] = preg_replace('/[^\da-z]/iu', '', $this->resourceTitle) . '-' . $row['resourceattachmentsFileName'];
+            $array[] = $this->resourceTitle . '-' . $row['resourceattachmentsFileName'];
             $array[] = implode("/", [$path, $row['resourceattachmentsHashFilename']]);
             $split = \UTF8\mb_explode('/', $row['resourceattachmentsFileType']);
             $array[] = $split[1];
@@ -790,7 +790,7 @@ class VIEWBIBTEX
         }
         foreach ($files as $rId => $fileArray)
         {
-            $entryArray[$rId][] = "file = " . $this->startField . implode(';', $fileArray) . $this->endField;
+            $entryArray[$rId][] = "file = " . $this->startField . $this->convertStringTex(implode(';', $fileArray)) . $this->endField;
         }
     }
     /**
@@ -1121,6 +1121,26 @@ class VIEWBIBTEX
     {
         $c = $string;
 
+        // Convert some BBCode and any citeKeys to TeX and strip the rest
+        $bbCode = [
+            '/<strong>(.*?)<\/strong>/usi',
+            '/<span style="text-decoration: underline;">(.*?)<\/span>/usi',
+            '/<em>(.*?)<\/em>/usi',
+            '/<sup>(.*?)<\/sup>/usi',
+            '/<sub>(.*?)<\/sub>/usi',
+            '/WIKINDXCITEKEYSTART(.*?)WIKINDXCITEKEYEND/usi',
+        ];
+        $tex = [
+            '\\textbf{\\1}',
+            '\\underline{\\1}',
+            '\\textit{\\1}',
+            '^{\\1}',
+            '_{\\1}',
+            '\\cite{\\1}',
+        ];
+
+        $c = preg_replace($bbCode, $tex, $c);
+
         if ($encoding == 'ISO-8859-1')
         {
             if ($type == 'plain')
@@ -1149,26 +1169,6 @@ class VIEWBIBTEX
         {
             $c = preg_replace('/"/u', '{"}', $c);
         }
-
-        // Convert some BBCode and any citeKeys to TeX and strip the rest
-        $bbCode = [
-            '/<strong>(.*?)<\/strong>/usi',
-            '/<span style="text-decoration: underline;">(.*?)<\/span>/usi',
-            '/<em>(.*?)<\/em>/usi',
-            '/<sup>(.*?)<\/sup>/usi',
-            '/<sub>(.*?)<\/sub>/usi',
-            '/WIKINDXCITEKEYSTART(.*?)WIKINDXCITEKEYEND/usi',
-        ];
-        $tex = [
-            '\\textbf{\\1}',
-            '\\underline{\\1}',
-            '\\textit{\\1}',
-            '^{\\1}',
-            '_{\\1}',
-            '\\cite{\\1}',
-        ];
-
-        $c = preg_replace($bbCode, $tex, $c);
 
         // As web browser encoding is set to UTF-8, all input in the db is stored as UTF-8 - convert back to ISO-8859-1
         if ($encoding == 'ISO-8859-1')

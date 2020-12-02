@@ -26,6 +26,7 @@ BUG FIXES:
 17. Crash in news edition.
 18. Restore front page description translation functionality (bugs #211 and #228).
 19. Bibtex export : encode HTML before regular characters.
+20. Bibtex export : use file links that return appropriate HTTP code with the correct mime type.
 
 FEATURE ENHANCEMENT:
 1. When editing a form, use internal representations to repopulate the form in case of error and lessen the load on sessions. Also, restructure form management by splitting form presentation from DB data writing and use redirects to mitigate errors caused when attempting to reload a submitted form.

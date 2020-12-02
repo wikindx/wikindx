@@ -771,22 +771,27 @@ class VIEWBIBTEX
      */
     private function grabAttachments(&$entryArray, $rIds)
     {
-        $path = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_DATA_ATTACHMENTS]);
+        
         $files = [];
         $this->db->formatConditionsOneField($rIds, 'resourceattachmentsResourceId');
         $resultset = $this->db->select(
             'resource_attachments',
-            ['resourceattachmentsResourceId', 'resourceattachmentsHashFilename', 'resourceattachmentsFileType', 'resourceattachmentsFileName']
+            ['resourceattachmentsId', 'resourceattachmentsResourceId', 'resourceattachmentsHashFilename', 'resourceattachmentsFileType', 'resourceattachmentsFileName']
         );
         while ($row = $this->db->fetchRow($resultset))
         {
-            $array = [];
-            $array[] = $this->resourceTitle . '-' . $row['resourceattachmentsFileName'];
-            $array[] = implode("/", [$path, $row['resourceattachmentsHashFilename']]);
-            $split = \UTF8\mb_explode('/', $row['resourceattachmentsFileType']);
-            $array[] = $split[1];
-            $files[$row['resourceattachmentsResourceId']][] = implode(':', $array);
-            unset($row);
+            $title = $this->resourceTitle . '-' . $row['resourceattachmentsFileName'];
+            // Fix(LkpPo): 20201202, bug #327.
+            // The file field is a specific extension in Bibtex format.
+            // Impossible to know the constraints of this miniformat.
+            // In doubt I put a link that will return the correct HTTP headers with the file,
+            // and I keep the old code if I have to go back.
+            $path = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_DATA_ATTACHMENTS, $row['resourceattachmentsHashFilename']]);
+            //$path =  WIKINDX_URL_BASE . "index.php?action=attachments_ATTACHMENTS_CORE&method=downloadAttachment&id=" . $row['resourceattachmentsId'] . "&resourceId=" . $row['resourceattachmentsResourceId'] . "&filename=" . $row['resourceattachmentsHashFilename'];
+            $mimeType = \UTF8\mb_explode('/', $row['resourceattachmentsFileType']);
+            $mimeType = $mimeType[1];
+            
+            $files[$row['resourceattachmentsResourceId']][] = implode(':', [$title, $path, $mimeType]);
         }
         foreach ($files as $rId => $fileArray)
         {

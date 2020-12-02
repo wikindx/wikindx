@@ -143,6 +143,7 @@ class backupmysql_MODULE
         }
         else
         {
+            header('HTTP/1.0 404 Not Found');
             $this->badInput->closeType = 'closePopup';
             $this->badInput->close($this->errors->text("file", "missing"));
         }

@@ -114,34 +114,39 @@ class ATTACHMENTS
     public function downloadAttachment()
     {
         $dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
+        
+        $id = $this->vars['id'];
         $hash = $this->vars['filename'];
-        $this->db->formatConditions(['resourceattachmentsId' => $this->vars['id']]);
+        $resourceId = $this->vars['resourceId'];
+        
+        $this->db->formatConditions(['resourceattachmentsId' => $id]);
+        $this->db->formatConditions(['resourceattachmentsHashFilename' => $hash]);
         $recordset = $this->db->select(
             'resource_attachments',
             ['resourceattachmentsFileType', 'resourceattachmentsFileSize',
                 'resourceattachmentsHashFilename', 'resourceattachmentsFileName', 'resourceattachmentsTimestamp', ]
         );
-        $row = $this->db->fetchRow($recordset);
-        $type = $row['resourceattachmentsFileType'];
-        $size = $row['resourceattachmentsFileSize'];
-        $filename = $row['resourceattachmentsFileName'];
-        $lastmodified = date('r', strtotime($row['resourceattachmentsTimestamp']));
-        unset($row);
         
-        if (file_exists($dirName . DIRECTORY_SEPARATOR . $hash) === FALSE)
+        if ($this->db->numRows($recordset) == 0 || file_exists($dirName . DIRECTORY_SEPARATOR . $hash) === FALSE)
         {
-            $id = $this->vars['resourceId'];
-            $message = rawurlencode($this->errors->text("file", "missing"));
-            header("Location: index.php?action=resource_RESOURCEVIEW_CORE&id=$id&message=$message");
+            header('HTTP/1.0 404 Not Found');
+            die($this->errors->text("file", "missing"));
+        }
+        else
+        {
+            $row = $this->db->fetchRow($recordset);
+            $type = $row['resourceattachmentsFileType'];
+            $size = $row['resourceattachmentsFileSize'];
+            $filename = $row['resourceattachmentsFileName'];
+            $lastmodified = date('r', strtotime($row['resourceattachmentsTimestamp']));
+            
+            $this->refreshCache($hash);
+            
+            FILE\setHeaders($type, $size, $filename, $lastmodified);
+            FILE\readfile_chunked($dirName . DIRECTORY_SEPARATOR . $hash);
+            $this->attachment->incrementDownloadCounter($id, $resourceId);
             die;
         }
-        
-        $this->refreshCache($hash);
-        
-        FILE\setHeaders($type, $size, $filename, $lastmodified);
-        FILE\readfile_chunked($dirName . DIRECTORY_SEPARATOR . $hash);
-        $this->attachment->incrementDownloadCounter($this->vars['id'], $this->vars['resourceId']);
-        die;
     }
     /**
      * Initial editing/adding form

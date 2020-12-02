@@ -786,8 +786,8 @@ class VIEWBIBTEX
             // Impossible to know the constraints of this miniformat.
             // In doubt I put a link that will return the correct HTTP headers with the file,
             // and I keep the old code if I have to go back.
-            $path = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_DATA_ATTACHMENTS, $row['resourceattachmentsHashFilename']]);
-            //$path =  WIKINDX_URL_BASE . "index.php?action=attachments_ATTACHMENTS_CORE&method=downloadAttachment&id=" . $row['resourceattachmentsId'] . "&resourceId=" . $row['resourceattachmentsResourceId'] . "&filename=" . $row['resourceattachmentsHashFilename'];
+            //$path = implode("/", [WIKINDX_URL_BASE, WIKINDX_URL_DATA_ATTACHMENTS, $row['resourceattachmentsHashFilename']]);
+            $path =  WIKINDX_URL_BASE . "index.php?action=attachments_ATTACHMENTS_CORE&method=downloadAttachment&id=" . $row['resourceattachmentsId'] . "&resourceId=" . $row['resourceattachmentsResourceId'] . "&filename=" . $row['resourceattachmentsHashFilename'];
             $mimeType = \UTF8\mb_explode('/', $row['resourceattachmentsFileType']);
             $mimeType = $mimeType[1];
             

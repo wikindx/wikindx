@@ -75,6 +75,7 @@ MAINTENANCE:
 26. Stop storing a copy of the session state in db and use only PHP plain session.
 27. Support PHP 8.0 for zip files.
 28. New vendor component RtfTools for RTF format handling.
+29. Keep internal version numbers in a dedicated table (#268).
 
 SECURITY:
 1. Replace crypt/hash_equals() by password_hash/password_verify() which is stronger by default.

@@ -529,3 +529,10 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%user_tags` (
   `usertagsTag` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   PRIMARY KEY (`usertagsId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+
+CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%version` (
+  `versionComponentId` varchar(256) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `versionInternalVersion` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`versionComponentId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

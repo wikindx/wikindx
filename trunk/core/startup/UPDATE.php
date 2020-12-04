@@ -38,7 +38,7 @@ namespace UPDATE
             return TRUE;
         }
         // Check if the database version number is not the same as source code version number
-        elseif (getDatabaseVersion($dbo) != WIKINDX_INTERNAL_VERSION)
+        elseif (getInternalVersion($dbo, "core") != WIKINDX_INTERNAL_VERSION)
         {
             return TRUE;
         }
@@ -63,37 +63,117 @@ namespace UPDATE
     }
     
     /**
-     * Return the version number stored in the database, depending on the software version
+     * Return the internal version stored in the database of a component or the core
      *
      * This function is used only during the upgrade process, and the value should be looked up
      * in the field regardless of the version.
      *
      * @param object $dbo An SQL object
+     * @param string $ComponentId Id of a component or 'core' the Wikindx core
      *
      * @return float
      */
-    function getDatabaseVersion($dbo)
+    function getInternalVersion($dbo, $ComponentId)
     {
-        $dbVersion = 0.0;
-        $recordset = $dbo->queryNoError($dbo->selectNoExecute('database_summary', '*'));
-        if ($recordset !== FALSE)
+        $version = 0.0;
+        
+        // Core version
+        if ($ComponentId == "core")
         {
-            $row = $dbo->fetchRow($recordset);
-            // From version 6
-            if (array_key_exists('databasesummarySoftwareVersion', $row))
+            $dbo->formatConditions(['versionComponentId' => $ComponentId]);
+            $recordset = $dbo->queryNoError($dbo->selectNoExecute('version', 'versionInternalVersion'));
+            // From version 34 (6.4.0)
+            if ($recordset !== FALSE)
             {
-                $field = "databasesummarySoftwareVersion";
+                $row = $dbo->fetchRow($recordset);
+                $version = (float) $row['versionInternalVersion'];
             }
-            // Up to version 5.9.1
-            if (array_key_exists('databasesummaryDbVersion', $row))
+            // Up to version 33 (6.4.0)
+            else
             {
-                $field = "databasesummaryDbVersion";
+                if ($ComponentId == "core")
+                {
+                    $recordset = $dbo->queryNoError($dbo->selectNoExecute('database_summary', '*'));
+                    if ($recordset !== FALSE)
+                    {
+                        $row = $dbo->fetchRow($recordset);
+                        // Up to version 33 (6.4.0)
+                        if (array_key_exists('databasesummarySoftwareVersion', $row))
+                        {
+                            $field = "databasesummarySoftwareVersion";
+                        }
+                        // Up to version 5.9 (5.9.1)
+                        if (array_key_exists('databasesummaryDbVersion', $row))
+                        {
+                            $field = "databasesummaryDbVersion";
+                        }
+                        $version = floatval($row[$field]);
+                    }
+                }
             }
-            $dbVersion = floatval($row[$field]);
-            unset($row);
         }
-
-        return $dbVersion;
+        // Components version
+        else
+        {
+            $dbo->formatConditions(['versionComponentId' => $ComponentId]);
+            $recordset = $dbo->queryNoError($dbo->selectNoExecute('version', 'versionInternalVersion'));
+            if ($recordset !== FALSE)
+            {
+                $row = $dbo->fetchRow($recordset);
+                $version = (float) $row['versionInternalVersion'];
+            }
+        }
+        
+        return $version;
+    }
+    
+    /**
+     * Write an internal version in the database of a component or the core
+     *
+     * This function is used only during the upgrade process, and the value should be written
+     * in the field regardless of the version.
+     *
+     * If $version is NULL, the version number used it 0.0.
+     *
+     * @param object $dbo An SQL object
+     * @param string $ComponentId Id of a component or 'core' the Wikindx core
+     * @param string $version (Default is NULL)
+     */
+    function setInternalVersion($dbo, $ComponentId, $version = NULL)
+    {
+        if ($version == NULL)
+            $version = (string) 0.0;
+        else
+            $version = (string) $version;
+        
+        $version = str_replace(",", ".", $version);
+        
+        // Core version
+        if ($ComponentId == "core")
+        {
+            // Up to version 5.9 (5.9.1)
+            if ($version <= 5.9 && $ComponentId == "core")
+            {
+                $dbo->update("database_summary", ["databasesummaryDbVersion" => $version]);
+            }
+            // Up to version 33 (6.4.0)
+            if ($version <= 33.0 && $ComponentId == "core")
+            {
+                $dbo->update("database_summary", ["databasesummarySoftwareVersion" => $version]);
+            }
+            // From version 34 (6.4.0)
+            if ($version >= 34.0)
+            {
+                $dbo->formatConditions(["versionComponentId" => $ComponentId]);
+                $dbo->update("version", ["versionInternalVersion" => $version]);
+            }
+        }
+        // Components version
+        else
+        {
+            $dbo->formatConditions(["versionComponentId" => $ComponentId]);
+            $dbo->update("version", ["versionInternalVersion" => $version]);
+        }
     }
     
     /**

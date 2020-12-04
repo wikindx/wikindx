@@ -33,3 +33,11 @@ INSERT INTO %%WIKINDX_DB_TABLEPREFIX%%database_summary (
 	0,
 	'0'
 );
+
+INSERT INTO %%WIKINDX_DB_TABLEPREFIX%%version (
+	versionComponentId,
+	versionInternalVersion
+) VALUES (
+    'core',
+	0
+);

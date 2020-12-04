@@ -61,7 +61,7 @@ class UPDATEDATABASE
                 $this->createDbSchema();
                 
                 // NB: The config table is initialized with default values by the LOADCONFIG class that know the name and type of each option
-                $this->updateSoftwareVersion(WIKINDX_INTERNAL_VERSION);
+                $this->updateCoreInternalVersion(WIKINDX_INTERNAL_VERSION);
                 
                 $pString  = \HTML\p("Database successfully created", "success", "center");
                 $pString .= "<p>The next step you will be asked to create a SuperAdmin account, essential for the maintenance of your new software.</p>";
@@ -92,7 +92,7 @@ class UPDATEDATABASE
         }
         
         // At this step we can retrieve the current version of the database
-        $dbVersion = \UPDATE\getDatabaseVersion($this->db);
+        $dbVersion = \UPDATE\getInternalVersion($this->db, "core");
         
         // Initialize the system
         // The dynamic part of the config is loaded (db).
@@ -388,7 +388,7 @@ class UPDATEDATABASE
             {
                 $pString .= \HTML\p($this->endStepMessage);
             }
-            if ($this->targetVersion == WIKINDX_INTERNAL_VERSION && \UPDATE\getDatabaseVersion($this->db) == WIKINDX_INTERNAL_VERSION)
+            if ($this->targetVersion == WIKINDX_INTERNAL_VERSION && \UPDATE\getInternalVersion($this->db, "core") == WIKINDX_INTERNAL_VERSION)
             {
                 $this->session->delVar("upgrade_ForceLogin");
                 
@@ -689,23 +689,14 @@ END;
      *
      * @param string $version (Default is NULL)
      */
-    private function updateSoftwareVersion($version = NULL)
+    private function updateCoreInternalVersion($version = NULL)
     {
         if ($version == NULL)
-            $version = (string)$this->targetVersion;
+            $version = (string) $this->targetVersion;
         else
-            $version = (string)$version;
-        
-        $version = str_replace(",", ".", $version);
-        if ($version <= 5.9)
-        {
-            $field = "databasesummaryDbVersion";
-        }
-        if ($version >= 6.0)
-        {
-            $field = "databasesummarySoftwareVersion";
-        }
-        $this->db->update('database_summary', [$field => $version]);
+            $version = (string) $version;
+            
+        \UPDATE\setInternalVersion($this->db, "core", $version);
     }
     
     /**
@@ -727,7 +718,7 @@ END;
         if ($this->targetVersion != NULL)
         {
             $this->updateDbSchema();
-            $this->updateSoftwareVersion();
+            $this->updateCoreInternalVersion();
         }
         else
         {
@@ -755,7 +746,7 @@ END;
      */
     private function upgradeTo5_3()
     {
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
     }
     
     /**
@@ -775,7 +766,7 @@ END;
         if (!$this->db->tableExists('configtemp'))
         {
             // Update db summary no. in case we have attempted to upgrade a database less than 5.3 (we've been through the previous stages successfully)
-            $this->updateSoftwareVersion();
+            $this->updateCoreInternalVersion();
             GLOBALS::addTplVar('content', "Fatal error: unable to create 'configtemp' table in the database. Check the database permissions.");
             $this->endDisplay();
         }
@@ -950,7 +941,7 @@ END;
         $user = FACTORY_USER::getInstance();
         $user->writeSessionPreferences(FALSE);
         
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
     }
     
     /**
@@ -963,7 +954,7 @@ END;
         $this->updateDbSchema('5.5');
         $this->updatePluginTables();
         
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
     }
     
     /**
@@ -988,7 +979,7 @@ END;
         $this->updateDbSchema('5.7');
         $this->correctDatetimeFields();
         
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
     }
     
     /**
@@ -1002,7 +993,7 @@ END;
         $this->correctTotals();
         $this->correctCreators();
         
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
     }
     
     /**
@@ -1056,7 +1047,7 @@ END;
         $this->updateDbSchema('5.9');
         $this->updateImageLinks();
         
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
         
         $this->endStepMessage = "
             <p style='color:red;font-weight:bold'>In WIKINDX 5.9, for security reasons,
@@ -1098,7 +1089,7 @@ END;
         
         $this->updateDbSchema('6');
         
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
         
         $this->endStepMessage .= "
             <p style='color:red;font-weight:bold'>In WIKINDX 5.10, component locations have been changed
@@ -1140,7 +1131,7 @@ END;
             $this->pauseUpdateDisplay();
         }
         
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
     }
     
     /**
@@ -1172,7 +1163,7 @@ END;
     {
         $this->updateDbSchema('12');
         
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
         
         $this->endStepMessage = "
             <p style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT)
@@ -1204,7 +1195,7 @@ END;
             $this->db->updateTimestamp('resource_attachments', ['resourceattachmentsTimestamp' => '']); // default is CURRENT_TIMESTAMP
         }
         
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
     }
     
     /**
@@ -1234,7 +1225,7 @@ END;
      */
     private function upgradeTo16()
     {
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
     }
     
     /**
@@ -1313,7 +1304,7 @@ END;
      */
     private function upgradeTo24()
     {
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
     }
     
     /**
@@ -1357,7 +1348,7 @@ END;
             $this->db->multiUpdate('resource_attachments', 'resourceattachmentsDescription', 'resourceattachmentsId', $updateArray);
         }
         
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
     }
     
     /**
@@ -1433,7 +1424,7 @@ END;
         $attachment = FACTORY_ATTACHMENT::getInstance();
         $attachment->checkAttachmentRows();
         
-        $this->updateSoftwareVersion();
+        $this->updateCoreInternalVersion();
     }
     
     /**
@@ -1442,6 +1433,16 @@ END;
      * Remove session state from the database
      */
     private function upgradeTo33()
+    {
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
+     * Upgrade database schema to version 34 (6.4.0)
+     *
+     * Add new table to keep the current internal version number of components and core
+     */
+    private function upgradeTo34()
     {
         $this->upgradeToTargetVersion();
     }

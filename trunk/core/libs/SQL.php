@@ -903,6 +903,23 @@ class SQL
         return $this->queryFetchFirstField("SELECT FROM_UNIXTIME(AVG(UNIX_TIMESTAMP($field))) AS $field FROM $table");
     }
     /**
+     * Execute a "SELECT COUNT($field) AS count FROM $table" statement
+     *
+     * NB 'count' field in recordset
+     *
+     * @param string $table
+     * @param string $field (Default is "*")
+     *
+     * @return int
+     */
+    public function selectCountOnly($table, $field = "*")
+    {
+        $table = $this->formatTables($table);
+        $field = $this->formatFields($field);
+
+        return $this->queryFetchFirstField("SELECT COUNT($field) AS count FROM $table", FALSE);
+    }
+    /**
      * Execute a "SELECT COUNT(*) AS count, $field FROM $table" statement
      *
      * NB 'count' field in recordset

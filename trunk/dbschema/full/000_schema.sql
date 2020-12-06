@@ -91,20 +91,13 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%custom` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 
-CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%database_summary` (
-  `databasesummaryTotalResources` int(11) NOT NULL DEFAULT 0,
-  `databasesummaryTotalQuotes` int(11) NOT NULL DEFAULT 0,
-  `databasesummaryTotalParaphrases` int(11) NOT NULL DEFAULT 0,
-  `databasesummaryTotalMusings` int(11) NOT NULL DEFAULT 0,
-  `databasesummarySoftwareVersion` varchar(16) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
 CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%temp_storage` (
   `tempstorageId` char(36) NOT NULL,
   `tempstorageData` longtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `tempstorageTimestamp` datetime DEFAULT current_timestamp() NOT NULL,
   PRIMARY KEY (`tempstorageId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
 
 CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%import_raw` (
   `importrawId` int(11) NOT NULL,

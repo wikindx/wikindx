@@ -24,11 +24,11 @@ namespace UPDATE
      */
     function needUpdate($dbo)
     {
-        // NB: existsTableDatabaseVersion must be the first operation because
+        // NB: existsTableVersion must be the first operation because
         // it reads the db system catalog and can't fail if the db exists
         
         // Check if 'database_summary' table doesn't exist
-        if (!existsTableDatabaseVersion($dbo))
+        if (!existsTableVersion($dbo))
         {
             return TRUE;
         }
@@ -57,9 +57,9 @@ namespace UPDATE
      *
      * @return bool
      */
-    function existsTableDatabaseVersion($dbo)
+    function existsTableVersion($dbo)
     {
-        return $dbo->tableExists('database_summary');
+        return $dbo->tableExists('version') || $dbo->tableExists('database_summary');
     }
     
     /**

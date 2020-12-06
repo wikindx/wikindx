@@ -802,11 +802,6 @@ class RESOURCEWRITE
         }
         else
         {
-            $this->db->updateSingle(
-                'database_summary',
-                $this->db->formatFields('databasesummaryTotalResources') . $this->db->equal .
-                $this->db->formatFields('databasesummaryTotalResources') . $this->db->plus . $this->db->tidyInput(1)
-            );
             $writeArray['resourcetimestampId'] = $this->resourceId;
             $writeArray['resourcetimestampTimestamp'] = $this->db->formatTimestamp();
             $writeArray['resourcetimestampTimestampAdd'] = $this->db->formatTimestamp();

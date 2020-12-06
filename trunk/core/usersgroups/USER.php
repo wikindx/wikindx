@@ -1526,15 +1526,6 @@ class USER
                 $this->db->formatConditions(['resourcemetadataAddUserId' => $userId]);
                 $this->db->delete('resource_metadata');
             }
-            $this->db->formatConditions(['resourcemetadataType' => 'q']);
-            $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-            $this->db->update('database_summary', ['databasesummaryTotalQuotes' => $num]);
-            $this->db->formatConditions(['resourcemetadataType' => 'p']);
-            $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-            $this->db->update('database_summary', ['databasesummaryTotalParaphrases' => $num]);
-            $this->db->formatConditions(['resourcemetadataType' => 'm']);
-            $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-            $this->db->update('database_summary', ['databasesummaryTotalMusings' => $num]);
             // remove any keywords associated with metadata
             $subStmt = $this->db->subQuery($this->db->selectNoExecute('resource_metadata', 'resourcemetadataId'), FALSE, FALSE, TRUE);
             $this->db->formatConditions($this->db->formatFields('resourcekeywordMetadataId') . $this->db->inClause($subStmt, TRUE));

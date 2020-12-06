@@ -42,7 +42,7 @@ class CLOSE
         $styles = \LOADSTYLE\loadDir();
 
         // Preparation of values
-        $numberOfResources = $this->db->selectFirstField("database_summary", "databasesummaryTotalResources");
+        $numberOfResources = $this->db->selectCountOnly("resource", "resourceId");
 
         // if this is a logged in user, display the username after the heading
         if ($userId = $this->session->getVar("setup_UserId"))

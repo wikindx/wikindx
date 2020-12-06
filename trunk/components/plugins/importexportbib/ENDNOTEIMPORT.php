@@ -271,10 +271,6 @@ class ENDNOTEIMPORT
      */
     private function cleanUp($finalInput)
     {
-        // update total no. resources in summary table
-        $recordset = $this->db->select('database_summary', 'databasesummaryTotalResources');
-        $totalResources = $this->db->fetchOne($recordset) + $this->resourceAddedThisRound;
-        $this->db->update('database_summary', ['databasesummaryTotalResources' => $totalResources]);
         $uuid = \TEMPSTORAGE\getUuid($this->db);
         if ($finalInput)
         {

@@ -159,13 +159,18 @@ class STATS
                         break;
             }
         }
-        $recordset = $this->db->select('database_summary', ['databasesummaryTotalResources',
-            'databasesummaryTotalQuotes', 'databasesummaryTotalParaphrases', 'databasesummaryTotalMusings', ]);
-        $row = $this->db->fetchRow($recordset);
-        $totR = $row['databasesummaryTotalResources'];
-        $totQ = $row['databasesummaryTotalQuotes'];
-        $totP = $row['databasesummaryTotalParaphrases'];
-        $totM = $row['databasesummaryTotalMusings'];
+        
+        $totR = $this->db->selectCountOnly("resource", "resourceId");
+        
+        $this->db->formatConditions(['resourcemetadataType' => 'q']);
+        $totQ = $this->db->selectCountOnly("resource_metadata", "resourcemetadataId");
+        
+        $this->db->formatConditions(['resourcemetadataType' => 'p']);
+        $totP = $this->db->selectCountOnly("resource_metadata", "resourcemetadataId");
+        
+        $this->db->formatConditions(['resourcemetadataType' => 'm']);
+        $totM = $this->db->selectCountOnly("resource_metadata", "resourcemetadataId");
+        
         $pString = \HTML\p($this->messages->text("statistics", "userStats"));
         $pString .= \HTML\tableStart('generalTable borderStyleSolid');
         $pString .= \HTML\trStart();
@@ -625,20 +630,29 @@ class STATS
      */
     private function getTotals()
     {
-        $recordset = $this->db->select('database_summary', ['databasesummaryTotalResources',
-            'databasesummaryTotalQuotes', 'databasesummaryTotalParaphrases', 'databasesummaryTotalMusings', ]);
-        $row = $this->db->fetchRow($recordset);
-        $this->totalResources = $row['databasesummaryTotalResources'];
+        $nbTotalResources = $this->db->selectCountOnly("resource", "resourceId");
+        $this->totalResources = $nbTotalResources;
+        
+        $this->db->formatConditions(['resourcemetadataType' => 'q']);
+        $nbTotalQuotes = $this->db->selectCountOnly("resource_metadata", "resourcemetadataId");
+        
+        $this->db->formatConditions(['resourcemetadataType' => 'p']);
+        $nbTotalParaphrases = $this->db->selectCountOnly("resource_metadata", "resourcemetadataId");
+        
+        $this->db->formatConditions(['resourcemetadataType' => 'm']);
+        $nbTotalMusings = $this->db->selectCountOnly("resource_metadata", "resourcemetadataId");
+        
         $string = BR . $this->messages->text("statistics", "totalResources") .
-            "&nbsp;&nbsp;" . \HTML\em($this->totalResources);
+            "&nbsp;&nbsp;" . \HTML\em($nbTotalResources);
+        
         if (WIKINDX_METADATA_ALLOW)
         {
             $string .= BR . $this->messages->text("statistics", "totalQuotes") .
-                "&nbsp;&nbsp;" . \HTML\em($row['databasesummaryTotalQuotes']);
+                "&nbsp;&nbsp;" . \HTML\em($nbTotalQuotes);
             $string .= BR . $this->messages->text("statistics", "totalParaphrases") .
-                "&nbsp;&nbsp;" . \HTML\em($row['databasesummaryTotalParaphrases']);
+                "&nbsp;&nbsp;" . \HTML\em($nbTotalParaphrases);
             $string .= BR . $this->messages->text("statistics", "totalMusings") .
-                "&nbsp;&nbsp;" . \HTML\em($row['databasesummaryTotalMusings']);
+                "&nbsp;&nbsp;" . \HTML\em($nbTotalMusings);
         }
 
         return \HTML\p($string);
@@ -1159,9 +1173,6 @@ class STATS
      */
     private function getTotalsB()
     {
-        $recordset = $this->db->select('database_summary', ['databasesummaryTotalResources',
-            'databasesummaryTotalQuotes', 'databasesummaryTotalParaphrases', 'databasesummaryTotalMusings', ]);
-        $row = $this->db->fetchRow($recordset);
-        $this->totalResources = $row['databasesummaryTotalResources'];
+        $this->totalResources = $this->db->selectCountOnly("resource", "resourceId");
     }
 }

@@ -352,26 +352,6 @@ class repairkit_MODULE
         return $this->missingrowsDisplay();
     }
     /**
-     * totalsInit
-     */
-    public function totalsInit()
-    {
-        if (array_key_exists('message', $this->vars))
-        {
-            $pString = $this->vars['message'];
-        }
-        else
-        {
-            $pString = '';
-        }
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingTotals'));
-        $pString .= HTML\p($this->pluginmessages->text('preamble1'));
-        $pString .= HTML\p($this->pluginmessages->text('preamble2'));
-        GLOBALS::addTplVar('content', $pString);
-
-        return $this->totalsDisplay();
-    }
-    /**
      * AJAX-based DIV content creator
      */
     public function getFixMessageAjax()
@@ -476,27 +456,6 @@ class repairkit_MODULE
         die;
     }
     /**
-     * Fix totals in database_summary table
-     */
-    public function totals()
-    {
-        $this->errorsOn();
-        $num = $this->db->numRows($this->db->select('resource', 'resourceId'));
-        $this->db->update('database_summary', ['databasesummaryTotalResources' => $num]);
-        $this->db->formatConditions(['resourcemetadataType' => 'q']);
-        $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-        $this->db->update('database_summary', ['databasesummaryTotalQuotes' => $num]);
-        $this->db->formatConditions(['resourcemetadataType' => 'p']);
-        $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-        $this->db->update('database_summary', ['databasesummaryTotalParaphrases' => $num]);
-        $this->db->formatConditions(['resourcemetadataType' => 'm']);
-        $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-        $this->db->update('database_summary', ['databasesummaryTotalMusings' => $num]);
-        $message = rawurlencode(HTML\p($this->pluginmessages->text('success'), 'success', 'center'));
-        header("Location: index.php?action=repairkit_totalsInit&message=$message");
-        die;
-    }
-    /**
      * Fix various creator errors
      */
     public function creators()
@@ -542,7 +501,6 @@ class repairkit_MODULE
             ],
         ];
         $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuMissingrows')] = "missingrowsInit";
-        $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuTotals')] = "totalsInit";
         $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuCreators')] = "creatorsInit";
         $this->menus[$menuArray[0]]['repairkitpluginSub'][$this->pluginmessages->text('menuDbIntegrity')] = "dbIntegrityInit";
     }
@@ -1021,17 +979,6 @@ class repairkit_MODULE
     {
         $pString = HTML\p($this->pluginmessages->text('creatorsPreamble'));
         $pString .= FORM\formHeader("repairkit_creators");
-        $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
-        $pString .= FORM\formEnd();
-        GLOBALS::addTplVar('content', $pString);
-    }
-    /**
-     * totalsDisplay
-     */
-    private function totalsDisplay()
-    {
-        $pString = HTML\p($this->pluginmessages->text('totalsPreamble'));
-        $pString .= FORM\formHeader("repairkit_totals");
         $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Submit")));
         $pString .= FORM\formEnd();
         GLOBALS::addTplVar('content', $pString);

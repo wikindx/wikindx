@@ -246,7 +246,7 @@ class SQLSTATEMENTS
         $totalPossible = WIKINDX_MAX_WRITECHUNK;
         if (!is_array($this->session->getVar("list_AllIds")) && ($this->session->getVar("list_AllIds") == 'all'))
         {
-            $total = $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources');
+            $total = $this->db->selectCountOnly("resource", "resourceId");
         }
         else
         {
@@ -516,7 +516,7 @@ class SQLSTATEMENTS
         }
 		if ($this->allIds and !GLOBALS::getUserVar('BrowseBibliography'))
 		{
-			$total = $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources');
+			$total = $this->db->selectCountOnly("resource", "resourceId");
 			$this->session->setVar("setup_PagingTotal", $total);
 			$this->session->setVar("list_AllIds", 'all');
 			if ($this->browserTabID) {

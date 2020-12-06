@@ -702,9 +702,6 @@ class TEXTQP
             $this->db->delete('resource_summary');
             $metadataExists = FALSE;
         }
-        // update master summary table
-        $this->db->updateSingle('database_summary', $this->db->formatFields($totalsField) .
-            "=" . $this->db->formatFields($totalsField) . "+" . $this->db->tidyInput($incDec));
 
         return $metadataExists;
     }

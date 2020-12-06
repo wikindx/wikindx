@@ -20,20 +20,6 @@ INSERT INTO %%WIKINDX_DB_TABLEPREFIX%%category (
 	'General'
 );
 
-INSERT INTO %%WIKINDX_DB_TABLEPREFIX%%database_summary (
-	databasesummaryTotalResources,
-	databasesummaryTotalQuotes,
-	databasesummaryTotalParaphrases,
-	databasesummaryTotalMusings,
-	databasesummarySoftwareVersion
-) VALUES (
-	0,
-	0,
-	0,
-	0,
-	'0'
-);
-
 INSERT INTO %%WIKINDX_DB_TABLEPREFIX%%version (
 	versionComponentId,
 	versionInternalVersion

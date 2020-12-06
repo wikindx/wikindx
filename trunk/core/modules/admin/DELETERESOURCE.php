@@ -252,10 +252,9 @@ class DELETERESOURCE
         }
         $this->reallyDelete();
         $this->checkHanging();
-        $this->resetSummary();
         // If we have 0 resources left, remove 'sql_stmt' etc. from session so it doesn't cause problems with
         // exporting bibliographies etc.
-        if (!$this->db->selectFirstField('database_summary', 'databasesummaryTotalResources'))
+        if ($this->db->selectCountOnly("resource", "resourceId") == 0)
         {
             $this->session->delVar("sql_ListStmt");
             $this->session->delVar("sql_LastMulti");
@@ -487,25 +486,6 @@ class DELETERESOURCE
                 }
             }
         }
-    }
-    /**
-     * decrement summary table
-     */
-    private function resetSummary()
-    {
-    	$resultSet = $this->db->selectCount('resource', 'resourceId');
-    	$num = $this->db->fetchOne($resultSet);
-        $num = $this->db->numRows($this->db->select('resource', 'resourceId'));
-        $this->db->update('database_summary', ['databasesummaryTotalResources' => $num]);
-        $this->db->formatConditions(['resourcemetadataType' => 'p']);
-        $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-        $this->db->update('database_summary', ['databasesummaryTotalParaphrases' => $num]);
-        $this->db->formatConditions(['resourcemetadataType' => 'q']);
-        $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-        $this->db->update('database_summary', ['databasesummaryTotalQuotes' => $num]);
-        $this->db->formatConditions(['resourcemetadataType' => 'm']);
-        $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-        $this->db->update('database_summary', ['databasesummaryTotalMusings' => $num]);
     }
     /**
      * checkHanging

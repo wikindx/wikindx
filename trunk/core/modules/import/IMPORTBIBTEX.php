@@ -447,10 +447,6 @@ class IMPORTBIBTEX
      */
     private function cleanUp($finalInput)
     {
-        // update total no. resources in summary table
-        $totalResources = $this->db->selectFirstField('database_summary', 'databasesummaryTotalResources');
-        $totalResources += $this->resourceAddedThisRound;
-        $this->db->update('database_summary', ['databasesummaryTotalResources' => $totalResources]);
         $uuid = \TEMPSTORAGE\getUuid($this->db);
         if ($finalInput)
         {

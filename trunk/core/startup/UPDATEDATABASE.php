@@ -52,7 +52,7 @@ class UPDATEDATABASE
         \UTILS\refreshComponentsListCache(TRUE);
         
         // Initialize the database
-        if (!\UPDATE\existsTableDatabaseVersion($this->db))
+        if (!\UPDATE\existsTableVersion($this->db))
         {
             $this->startInstallDisplay();
             
@@ -990,7 +990,6 @@ END;
      */
     private function upgradeTo5_8()
     {
-        $this->correctTotals();
         $this->correctCreators();
         
         $this->updateCoreInternalVersion();
@@ -1446,6 +1445,16 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
+    /**
+     * Upgrade database schema to version 35 (6.4.0)
+     *
+     * Remove database_summary table
+     */
+    private function upgradeTo35()
+    {
+        $this->upgradeToTargetVersion();
+    }
 
     /**
      * Transfer statistics data to new tables then drop old table
@@ -1829,24 +1838,6 @@ END;
         @unlink($old);
 
         return TRUE;
-    }
-    
-    /**
-     * Correct resource totals.
-     */
-    private function correctTotals()
-    {
-        $num = $this->db->numRows($this->db->select('resource', 'resourceId'));
-        $this->db->update('database_summary', ['databasesummaryTotalResources' => $num]);
-        $this->db->formatConditions(['resourcemetadataType' => 'q']);
-        $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-        $this->db->update('database_summary', ['databasesummaryTotalQuotes' => $num]);
-        $this->db->formatConditions(['resourcemetadataType' => 'p']);
-        $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-        $this->db->update('database_summary', ['databasesummaryTotalParaphrases' => $num]);
-        $this->db->formatConditions(['resourcemetadataType' => 'm']);
-        $num = $this->db->numRows($this->db->select('resource_metadata', 'resourcemetadataId'));
-        $this->db->update('database_summary', ['databasesummaryTotalMusings' => $num]);
     }
     
     /**

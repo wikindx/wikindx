@@ -73,8 +73,8 @@ class INSERTCITATION
      */
     public function init($error = FALSE)
     {
-        //First check, do we have resources?
-        if (!$this->db->selectFirstField('database_summary', 'databaseSummaryTotalResources'))
+        // First check, do we have resources?
+        if ($this->db->selectCountOnly("resource", "resourceId") == 0)
         {
             $pString = $this->messages->text('misc', 'noResources');
             GLOBALS::addTplVar('content', $pString);

@@ -110,8 +110,7 @@ class LISTCOMMON
      */
     public function resourcesExist()
     {
-        $recordset = $this->db->select('database_summary', 'databaseSummaryTotalResources');
-        if (!$this->db->fetchOne($recordset))
+        if ($this->db->selectCountOnly("resource", "resourceId") == 0)
         {
             GLOBALS::addTplVar('content', $this->messages->text('misc', 'noResources'));
 

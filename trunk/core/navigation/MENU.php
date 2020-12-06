@@ -108,9 +108,19 @@ class MENU
         {
             $this->reduceMenuLevelPretext = $this->session->getVar("setup_ReduceMenuLevelPretext");
         }
-        $row = $this->db->selectFirstRow('database_summary', ['databaseSummaryTotalResources',
-            'databaseSummaryTotalQuotes', 'databaseSummaryTotalParaphrases', 'databaseSummaryTotalMusings', ]);
-        if ($row['databaseSummaryTotalResources'])
+        
+        $totR = $this->db->selectCountOnly("resource", "resourceId");
+        
+        $this->db->formatConditions(['resourcemetadataType' => 'q']);
+        $totQ = $this->db->selectCountOnly("resource_metadata", "resourcemetadataId");
+        
+        $this->db->formatConditions(['resourcemetadataType' => 'p']);
+        $totP = $this->db->selectCountOnly("resource_metadata", "resourcemetadataId");
+        
+        $this->db->formatConditions(['resourcemetadataType' => 'm']);
+        $totM = $this->db->selectCountOnly("resource_metadata", "resourcemetadataId");
+        
+        if ($totR > 0)
         {
             $this->resourcesExist = TRUE;
         }
@@ -127,9 +137,7 @@ class MENU
             $this->enableMetadataMenu = TRUE;
         }
         // Admin may have turned off metadata subsystem. Default for $this->metadataExist is FALSE in the class constructor
-        if ($this->session->getVar("setup_Superadmin")
-            &&
-            ($row['databaseSummaryTotalQuotes'] || $row['databaseSummaryTotalParaphrases'] || $row['databaseSummaryTotalMusings']))
+        if ($this->session->getVar("setup_Superadmin") && ($totQ || $totP || $totM))
         {
             $this->metadataExist = TRUE;
             if ($this->setIdeasCondition())
@@ -154,7 +162,7 @@ class MENU
         {
             if ((WIKINDX_METADATA_USERONLY) && $this->session->getVar("setup_UserId"))
             {
-                if ($row['databaseSummaryTotalQuotes'] || $row['databaseSummaryTotalParaphrases'] || $row['databaseSummaryTotalMusings'])
+                if ($totQ || $totP || $totM)
                 {
                     $this->metadataExist = TRUE;
                 }
@@ -169,7 +177,7 @@ class MENU
         }
         elseif (WIKINDX_METADATA_ALLOW)
         {
-            if ($row['databaseSummaryTotalQuotes'] || $row['databaseSummaryTotalParaphrases'] || $row['databaseSummaryTotalMusings'])
+            if ($totQ || $totP || $totM)
             {
                 $this->metadataExist = TRUE;
             }

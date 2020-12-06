@@ -26,7 +26,6 @@ class repairkitMessages
              */
             "menu" => dgettext($domain, "Repair kit..."),
             "menuMissingrows" => dgettext($domain, "Missing rows"),
-            "menuTotals" => dgettext($domain, "Fix totals"),
             "menuDumpSchema" => dgettext($domain, "Dump DB schema"),
             "menuDbIntegrity" => dgettext($domain, "DB integrity"),
             "menuCreators" => dgettext($domain, "Fix creators"),
@@ -34,21 +33,15 @@ class repairkitMessages
              * Headings
              */
             "headingMissingrows" => dgettext($domain, "Missing Rows"),
-            "headingTotals" => dgettext($domain, "Fix Totals"),
             "headingDumpSchema" => dgettext($domain, "Dump Database Schema"),
             "headingDbIntegrity" => dgettext($domain, "Database Integrity"),
             "headingCreators" => dgettext($domain, "Fix Creators"),
             /**
              * Text
              */
-            "preamble1" => dgettext($domain, "Depending on the size of your database, this operation can be memory intensive.  The
-				plugin turns on error reporting so, if you see a memory error, adjust memory in config.php and
-				try again."),
+            "preamble1" => dgettext($domain, "Depending on the size of your database, this operation can be memory intensive. The plugin turns on error reporting so, if you see a memory error, adjust memory in config.php and try again."),
             "preamble2" => dgettext($domain, "It is assumed you have backed up your database."),
-            "missingrowsPreamble" => dgettext($domain, "Sometimes rows required in other tables are not created when new resources are added and this
-			can lead to problems in searching etc.  If such missing rows are identified, they will be created and filled with
-			default (usually NULL) data."),
-            "totalsPreamble" => dgettext($domain, "Fix totals of resources, quotes, paraphrases and musings in the database_summary table."),
+            "missingrowsPreamble" => dgettext($domain, "Sometimes rows required in other tables are not created when new resources are added and this can lead to problems in searching etc. If such missing rows are identified, they will be created and filled with default (usually NULL) data."),
             "creatorsPreamble" => dgettext($domain, "Fix various errors regarding creators."),
             "dbIntegrityPreamble1a" => dgettext($domain, "Before checking the database integrity, you should ensure that your database (currently version ###)"),
             "dbIntegrityPreamble1b" => dgettext($domain, "matches the WIKINDX version (currently version ###)."),

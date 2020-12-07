@@ -165,12 +165,22 @@ namespace UPDATE
             if ($version >= 34.0)
             {
                 $dbo->formatConditions(["versionComponentId" => $ComponentId]);
+                if ($dbo->selectCountOnly("version", "versionComponentId") == 0)
+                {
+                    $dbo->insert("version", ["versionComponentId"], [$ComponentId]);
+                }
+                $dbo->formatConditions(["versionComponentId" => $ComponentId]);
                 $dbo->update("version", ["versionInternalVersion" => $version]);
             }
         }
         // Components version
         else
         {
+            $dbo->formatConditions(["versionComponentId" => $ComponentId]);
+            if ($dbo->selectCountOnly("version", "versionComponentId") == 0)
+            {
+                $dbo->insert("version", ["versionComponentId"], [$ComponentId]);
+            }
             $dbo->formatConditions(["versionComponentId" => $ComponentId]);
             $dbo->update("version", ["versionInternalVersion" => $version]);
         }

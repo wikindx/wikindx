@@ -146,23 +146,30 @@ class localedescription_MODULE
      */
     private function checkTables()
     {
-        // NB: Windows MySQL lowercases any table name
-        // To be sure, it is necessary to lowercase all table elements
-        $tables = $this->db->listTables(FALSE);
-        foreach ($tables as $k => $v)
+        $version = \UPDATE\getInternalVersion($this->db, mb_strtolower(basename(__DIR__)));
+        
+        if ($version == 0)
         {
-            $tables[$k] = mb_strtolower($v);
-        }
-
-        if (array_search('plugin_localedescription', $tables) === FALSE)
-        {
-            $this->db->queryNoError("
-                CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_localedescription` (
-                    `pluginlocaledescriptionLocale` varchar(16) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-                    `pluginlocaledescriptionText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
-                    PRIMARY KEY (`pluginlocaledescriptionLocale`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-			");
+            // NB: Windows MySQL lowercases any table name
+            // To be sure, it is necessary to lowercase all table elements
+            $tables = $this->db->listTables(FALSE);
+            foreach ($tables as $k => $v)
+            {
+                $tables[$k] = mb_strtolower($v);
+            }
+            
+            if (array_search('plugin_localedescription', $tables) === FALSE)
+            {
+                $this->db->queryNoError("
+                    CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_localedescription` (
+                        `pluginlocaledescriptionLocale` varchar(16) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+                        `pluginlocaledescriptionText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
+                        PRIMARY KEY (`pluginlocaledescriptionLocale`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+    			");
+            }
+            
+            \UPDATE\setInternalVersion($this->db, mb_strtolower(basename(__DIR__)), 1);
         }
     }
     /**

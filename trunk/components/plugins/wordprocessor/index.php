@@ -60,6 +60,7 @@ class wordprocessor_MODULE
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
         $this->db = FACTORY_DB::getInstance();
+        $this->checkTables();
         $this->vars = GLOBALS::getVars();
         $this->errors = FACTORY_ERRORS::getInstance();
 
@@ -71,6 +72,42 @@ class wordprocessor_MODULE
         $link = HTML\a($icons->getClass("help"), $icons->getHTML("help"), $jScript);
         GLOBALS::setTplVar('help', $link);
     }
+    
+    /**
+     * checkTables
+     */
+    private function checkTables()
+    {
+        $version = \UPDATE\getInternalVersion($this->db, mb_strtolower(basename(__DIR__)));
+        
+        if ($version == 0)
+        {
+            // NB: Windows MySQL lowercases any table name
+            // To be sure, it is necessary to lowercase all table elements
+            $tables = $this->db->listTables(FALSE);
+            foreach ($tables as $k => $v)
+            {
+                $tables[$k] = mb_strtolower($v);
+            }
+            
+            if (array_search('plugin_wordprocessor', $tables) === FALSE)
+            {
+                $this->db->queryNoError("
+                    CREATE TABLE `" . WIKINDX_DB_TABLEPREFIX . "plugin_wordprocessor` (
+                        `pluginwordprocessorId` int(11) NOT NULL AUTO_INCREMENT,
+                        `pluginwordprocessorHashFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+                        `pluginwordprocessorFilename` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+                        `pluginwordprocessorUserId` int(11) NOT NULL,
+                        `pluginwordprocessorTimestamp` datetime NOT NULL,
+                        PRIMARY KEY (`pluginwordprocessorId`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+    			");
+            }
+            
+            \UPDATE\setInternalVersion($this->db, mb_strtolower(basename(__DIR__)), 1);
+        }
+    }
+    
     /**
      * display the help file
      */

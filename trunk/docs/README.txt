@@ -249,7 +249,7 @@ component_name        string  Y Component short name.
 component_description string  Y Component short description (without line break). Use the README.txt file for long description, notes...
 component_licence     string  N Component license name or abbreviation (abbreviation recommended).
 component_website     string  N A single full URL to the vendor or maintainer website to use as a link.
-component_sha256      string  Y Unique signature corresponding to a sha256 hash of the component files. Use sign-components.php to compute it.
+component_sha256      string  Y Unique signature corresponding to a sha256 hash of the component files. Use cli-sign-components.php to compute it.
 component_authors     array   N An array of objects unserialized as a PHP array of PHP arrays. Each object is an author or contributor.
 author_name           string  Y Name of the author.
 author_role           string  Y Role of the author. Something like: developper, packager, translator, tester, maintainer.

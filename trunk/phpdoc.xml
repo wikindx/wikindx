@@ -16,10 +16,11 @@
       <!--Optional:-->
       <ignore hidden="true" symlinks="true">
 		<path>cache</path>
+		<path>cli-*.php</path>
 		<path>cmsprint.php</path>
 		<path>components</path>
+		<path>config*.php</path>
 		<path>config.php.dist</path>
-		<path>config.php</path>
 		<path>core/javascript</path>
 		<path>core/modules/</path>
 		<path>core/tiny_mce/*.js</path>
@@ -31,11 +32,8 @@
 		<path>data</path>
 		<path>dbschema</path>
 		<path>docs</path>
-		<path>dump-repairkit-schema.php</path>
 		<path>index.php</path>
-		<path>make-languages.php</path>
 		<path>phpdoc.xml</path>
-		<path>sign-components.php</path>
       </ignore>
       <!--Optional:-->
       <extensions>

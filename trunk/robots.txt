@@ -8,13 +8,11 @@ Disallow: /dbschema/
 Disallow: /docs/
 # Files
 Disallow: /CHANGELOG.txt
+Disallow: /cli-*.php
 Disallow: /cmsprint.php
-Disallow: /config.php
+Disallow: /config*.php
 Disallow: /config.php.dist
-Disallow: /dump-repairkit-schema.php
-Disallow: /make-languages.php
 Disallow: /phpdoc.xml
 Disallow: /README.txt
-Disallow: /sign-components.php
 # Sitemap
 Sitemap: /index.php?action=sitemap_SITEMAP_CORE

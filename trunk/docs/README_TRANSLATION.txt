@@ -235,11 +235,11 @@ already exists use the language part of the code only. If in doubt,
 ask the core developers.
 
 Open a console, `chdir` to the WIKINDX installation directory and run the
-__make-languages.php__ script.
+__cli-make-languages.php__ script.
 
 ~~~~
 $ cd /my/wikindx/directory
-$ php make-languages.php
+$ php cli-make-languages.php
 ~~~~
 
 If all goes well, this script will create a subdirectory named after the
@@ -285,7 +285,7 @@ core/languages
 On transifex, download each catalog of your language and copy them into
 that `core/languages/src/<ll_CC>` subdirectory.
 
-Execute again the __make-languages.php__ script.
+Execute again the __cli-make-languages.php__ script.
 
 This time, the script extracts the translations from your __PO__ files
 and turns them into __MO__ files. These are in a more suitable format and
@@ -348,7 +348,7 @@ account the sub-key partitioning.
 However, messages can be defined in any PHP file as long as they use the
 official PHP Gettext functions, and that the PHP files are placed
 elsewhere than in the components, cache, and data directories. For the
-exact list see make-languages.php. For the moment we have chosen to
+exact list see cli-make-languages.php. For the moment we have chosen to
 group the messages in the `core/messages` folder.
 
 These classes do not load the translation catalogs. It is assumed that

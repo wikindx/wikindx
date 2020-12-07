@@ -75,7 +75,7 @@ I. Code preparation and checks
 
 18. Update the db schema of the Repair Kit.
 
-    $ php dump-repairkit-schema.php
+    $ php cli-dump-repairkit-schema.php
 
 19. Update translations in SVN and push POT files on Transifex via the
     /home/project-web/wikindx/htdocs/transifex/pot directory on the SF
@@ -84,12 +84,12 @@ I. Code preparation and checks
     file online before. Announce on Transifex a deadline for updating
     translations before the release.
 
-    $ php make-languages.php
+    $ php cli-make-languages.php
 
 20. On the translation deadline, copy the PO files from Transifex to SVN
     and compile the MO files for Gettext.
 
-    $ php make-languages.php
+    $ php cli-make-languages.php
 
 21. Update the changelog and component.json file of language components.
 
@@ -99,7 +99,7 @@ I. Code preparation and checks
     the component.json file is up to date. Sign them again (the hash
     doesn't change if the code doesn't change).
 
-    $ php sign-components.php
+    $ php cli-sign-components.php
 
 23. When the components are up to date, build their packages from the
     trunk with the release script release/make.php.

@@ -36,8 +36,7 @@ class BROWSERTABID
         $tempSession = [];
         if (WIKINDX_BROWSER_TAB_ID && array_key_exists('action', $this->vars) && in_array($this->vars['action'], $active))
         {
-            GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/gatekeeper.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
-            $script = WIKINDX_URL_BASE . '/gatekeeper.js?ver=' . WIKINDX_PUBLIC_VERSION;
+            GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/javascript/gatekeeper.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
             if ($_SERVER['REQUEST_METHOD'] == 'POST')
             {
                 foreach ($this->vars as $key => $value)

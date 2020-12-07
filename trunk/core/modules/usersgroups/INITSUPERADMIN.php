@@ -120,8 +120,6 @@ class INITSUPERADMIN
             // if inserting after initial install, write superadmin's preferences to users table and create user session
             $usersFieldArray[] = 'usersUsername';
             $usersValueArray[] = $this->vars['usersUsername'];
-            $usersFieldArray[] = 'usersPassword';
-            $usersValueArray[] = \UTILS\password_hash($this->vars['password']);
             $usersFieldArray[] = 'usersEmail';
             $usersValueArray[] = $this->vars['usersEmail'];
             $usersFieldArray[] = 'usersAdmin';
@@ -144,6 +142,9 @@ class INITSUPERADMIN
                 $usersValueArray[] = 'Y';
             }
             $this->db->insert('users', $usersFieldArray, $usersValueArray);
+            $userId = $this->db->lastAutoId();
+            
+            \UTILS\writeUserPassword($this->db, $userId, $this->vars['password']);
         }
         
         return $status;

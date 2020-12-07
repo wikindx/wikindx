@@ -251,12 +251,12 @@ namespace UPDATE
     {
         // superAdmin is id '1'
         $dbo->formatConditions(['usersUsername' => $username, 'usersId' => WIKINDX_SUPERADMIN_ID]);
-        $recordset = $dbo->select('users', ['usersId', 'usersPassword']);
+        $recordset = $dbo->select('users', ['usersId']);
         if ($dbo->numRows($recordset) == 1)
         {
             // verify the password
             $row = $dbo->fetchRow($recordset);
-            if (\UTILS\password_verify($password, $row['usersPassword']))
+            if (\UTILS\verifyUserPassword($dbo, $row['usersId'], $password))
             {
                 return TRUE;
             }

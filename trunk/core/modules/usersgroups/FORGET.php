@@ -201,10 +201,10 @@ class FORGET
         // NB  This is done after sending out email. If email fails, we don't want to change the user's password.
         // However, the risk is that a password may be sent and then the update code below will fail.
         // This is judged to be the lesser of two evils.
+        $userId = $this->db->selectFirstField('users', ['usersId']);
+        \UTILS\writeUserPassword($this->db, $userId, $password);
+        
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "forget"));
-        $cryptPassword = \UTILS\password_hash($password);
-        $this->db->formatConditions(['usersUsername' => $usersUsername]);
-        $this->db->updateSingle('users', $this->db->formatFields('usersPassword') . $this->db->equal . $this->db->tidyInput($cryptPassword));
         header("Location: index.php?action=usersgroups_FORGET_CORE&method=success");
         die;
     }

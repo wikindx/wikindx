@@ -171,18 +171,12 @@ class USER
                 // want to encrypt the encrypted password!
                 if ($this->db->numRows($recordset))
                 {
-                    $this->pwdInputEncrypted = FALSE;
                     $pwd = $this->db->fetchOne($recordset);
                     if ($password != $pwd)
                     {
-                        $password = \UTILS\password_hash($password);
-                    }
-                    else
-                    {
-                        $this->pwdInputEncrypted = TRUE;
+                        \UTILS\writeUserPassword($this->db, $userId, $password);
                     }
                 }
-                $update['usersPassword'] = $password;
             }
             if (array_key_exists('fullname', $this->vars) &&
                 $fullname = $this->db->tidyInput(\HTML\removeNl($this->vars['fullname'])))
@@ -212,11 +206,8 @@ class USER
         }
         else
         { // insert new user
-            $password = \UTILS\password_hash($password);
             $field[] = 'usersUsername';
             $value[] = $usersUsername;
-            $field[] = 'usersPassword';
-            $value[] = $password;
             if (array_key_exists('email', $this->vars) &&
                 $fullname = \HTML\removeNl($this->vars['email']))
             {
@@ -274,6 +265,8 @@ class USER
             $userId = $this->db->lastAutoId();
             // insert preferences to table
             $this->writePreferences($userId, TRUE);
+            
+            \UTILS\writeUserPassword($this->db, $userId, $password);
         }
 
         return FALSE; // success!
@@ -1671,7 +1664,7 @@ class USER
         {
             $row = $this->db->fetchRow($recordset);
 
-            return \UTILS\password_verify($pwdInput, $row['usersPassword']);
+            return \UTILS\verifyUserPassword($this->db, $row['usersId'], $pwdInput);
         }
         
         return FALSE;

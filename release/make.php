@@ -191,7 +191,7 @@ if ($ManualRebuildingFlag) build_manual(DIR_DST_SRC, 'WIKINDX Documentation ' . 
 //foreach (["ZIP"] as $archformat)
 foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
 {                
-    $pkgarch = \FILE\createComponentPackageReproducible(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'manual', DIR_DST_COR_ARC, $pkg, $archformat);
+    $pkgarch = \FILE\createComponentPackage(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'manual', DIR_DST_COR_ARC, $pkg, $archformat);
     copy($pkgarch, DIR_DST_COR . DIRECTORY_SEPARATOR . basename($pkgarch));
     echo " - $archformat arch: " . $pkgarch . "\n";
     
@@ -348,7 +348,7 @@ foreach ($componentPath as $rootpath => $paths)
                 //foreach (["ZIP"] as $archformat)
                 foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
                 {                
-                    $pkgarch = \FILE\createComponentPackageReproducible($componentDir, DIR_DST_CMP_ARC[$componentConfig["component_type"]], $pkg, $archformat);
+                    $pkgarch = \FILE\createComponentPackage($componentDir, DIR_DST_CMP_ARC[$componentConfig["component_type"]], $pkg, $archformat);
                     copy($pkgarch, DIR_DST_CMP . DIRECTORY_SEPARATOR . basename($pkgarch));
                     echo " - $archformat arch: " . $pkgarch . "\n";
                     
@@ -422,7 +422,7 @@ echo "Package " . $pkg . "\n";
 //foreach (["ZIP"] as $archformat)
 foreach (["BZIP2", "GZ", "ZIP"] as $archformat)
 {                
-    $pkgarch = \FILE\createComponentPackageReproducible(DIR_DST_SRC, DIR_DST_COR_ARC, $pkg, $archformat);
+    $pkgarch = \FILE\createComponentPackage(DIR_DST_SRC, DIR_DST_COR_ARC, $pkg, $archformat);
     copy($pkgarch, DIR_DST_COR . DIRECTORY_SEPARATOR . basename($pkgarch));
     echo " - $archformat arch: " . $pkgarch . "\n";
     
@@ -517,7 +517,7 @@ function build_manual($Appdir, $ManualTitle)
     chdir($Appdir);
     
     echo "Buiding manual with phpDocumentor\n";
-    $cmd = 'php "' . BIN_PHPDOC . '" -vvv -c phpdoc.xml --cache-folder ..' . DIRECTORY_SEPARATOR . 'phpdoc_cache --title="' . $ManualTitle . '" 2>&1';
+    $cmd = 'php cli-make-manual.php 2>&1';
     echo $cmd;
     
     $fp = popen($cmd, 'r');
@@ -529,20 +529,6 @@ function build_manual($Appdir, $ManualTitle)
     }
     
     pclose($fp);
-    
-    echo "Clear phpDocumentor cache\n";
-    $ManualDir = $Appdir . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'manual';
-    foreach(\FILE\dirInDirToArray($ManualDir) as $dir)
-    {
-        if (mb_substr($dir , 0, mb_strlen('phpdoc-cache-')) == 'phpdoc-cache-')
-        {
-            \FILE\recurse_rmdir($ManualDir . DIRECTORY_SEPARATOR . $dir);
-        }
-    }
-    
-    \FILE\recurse_rmdir($Appdir . DIRECTORY_SEPARATOR . "build");
-    \FILE\recurse_rmdir($Appdir . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "phpdoc_cache");
-    \FILE\rmfile($Appdir . DIRECTORY_SEPARATOR . "ast.dump");
     
     // Restores current directory
     echo "CD " . $oldCurrentDir . "\n";

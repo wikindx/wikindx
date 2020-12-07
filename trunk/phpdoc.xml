@@ -34,6 +34,7 @@
 		<path>docs</path>
 		<path>index.php</path>
 		<path>phpdoc.xml</path>
+		<path>tools</path>
       </ignore>
       <!--Optional:-->
       <extensions>

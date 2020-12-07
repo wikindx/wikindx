@@ -135,7 +135,7 @@ class CLOSE
         GLOBALS::addTplVar('wkx_mimetype_rss', WIKINDX_MIMETYPE_RSS);
 
         // Get the time elapsed before template rendering
-        GLOBALS::setPageEndingTime(microtime());
+        GLOBALS::stopPageTimer();
         $scriptExecutionTimeBeforeRendering = GLOBALS::getPageElapsedTime();
 
         // RENDER PAGE
@@ -235,7 +235,7 @@ class CLOSE
 
         // Get the time elapsed after template rendering
         // which is also the total time elapsed
-        GLOBALS::setPageEndingTime(microtime());
+        GLOBALS::stopPageTimer();
         $scriptExecutionTimeAfterRendering = GLOBALS::getPageElapsedTime();
 
         // Time elapsed in db queries

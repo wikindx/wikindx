@@ -3041,13 +3041,8 @@ class SQL
         // Stop the timer, if not done
         if (empty($endTimer))
         {
-            $endTimer = microtime();
+            $endTimer = microtime(TRUE);
         }
-
-        $tmp = \UTF8\mb_explode(" ", $startTimer);
-        $startTimer = $tmp[0] + $tmp[1];
-        $tmp = \UTF8\mb_explode(" ", $endTimer);
-        $endTimer = $tmp[0] + $tmp[1];
 
         return $endTimer - $startTimer;
     }
@@ -3056,14 +3051,14 @@ class SQL
      */
     private function sqlTimerOn()
     {
-        $this->startTimer = microtime();
+        $this->startTimer = microtime(TRUE);
     }
     /**
      * Turn SQL timer OFF
      */
     private function sqlTimerOff()
     {
-        $this->endTimer = microtime();
+        $this->endTimer = microtime(TRUE);
         GLOBALS::incrementDbTimeElapsed($this->elapsedTime());
     }
     /**

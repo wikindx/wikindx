@@ -66,10 +66,7 @@ class GLOBALS
      */
     public function __construct()
     {
-        if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL)
-        {
-            $this->setPageStartingTime(microtime());
-        }
+        $this->startPageTimer();
     }
     /**
      * Set $vars
@@ -354,26 +351,22 @@ class GLOBALS
         return array_keys(self::$WIKINDX_TEMPLATE_VARIABLE_STORE);
     }
     /**
-     * set starting time of the page
-     *
-     * @param mixed $pageStartingTime
+     * Start the global page timer with the current UNIX timestamp
      */
-    public static function setPageStartingTime($pageStartingTime)
+    public static function startPageTimer()
     {
         // Don't launch again start timer if we include this file twice
         if (self::$WIKINDX_PAGE_STARTING_TIME_CHRONO == NULL)
         {
-            self::$WIKINDX_PAGE_STARTING_TIME_CHRONO = $pageStartingTime;
+            self::$WIKINDX_PAGE_STARTING_TIME_CHRONO = microtime(TRUE);
         }
     }
     /**
-     * set ending time of the page
-     *
-     * @param mixed $pageEndingTime
+     * Stop the global page timer with the current UNIX timestamp
      */
-    public static function setPageEndingTime($pageEndingTime)
+    public static function stopPageTimer()
     {
-        self::$WIKINDX_PAGE_ENDING_TIME_CHRONO = $pageEndingTime;
+        self::$WIKINDX_PAGE_ENDING_TIME_CHRONO = microtime(TRUE);
     }
     /**
      * Get elapsed time of the page
@@ -382,19 +375,8 @@ class GLOBALS
      */
     public static function getPageElapsedTime()
     {
-        $tmp = \UTF8\mb_explode(' ', self::$WIKINDX_PAGE_STARTING_TIME_CHRONO);
-        $beginTimer = $tmp[0] + $tmp[1];
-        
-        if (self::$WIKINDX_PAGE_ENDING_TIME_CHRONO == NULL)
-        {
-            $tmp = \UTF8\mb_explode(' ', microtime());
-            $endTimer = $tmp[0] + $tmp[1];
-        }
-        else
-        {
-            $tmp = \UTF8\mb_explode(' ', self::$WIKINDX_PAGE_ENDING_TIME_CHRONO);
-            $endTimer = $tmp[0] + $tmp[1];
-        }
+        $beginTimer = self::$WIKINDX_PAGE_STARTING_TIME_CHRONO;
+        $endTimer = self::$WIKINDX_PAGE_ENDING_TIME_CHRONO ?? microtime(TRUE);
         return round($endTimer - $beginTimer, 5);
     }
     /**
@@ -418,4 +400,4 @@ class GLOBALS
 }
 
 // Always start global execution timer when we load GLOBALS static class
-GLOBALS::setPageStartingTime(microtime());
+GLOBALS::startPageTimer();

@@ -243,11 +243,10 @@ namespace UPDATE
      * @param object $dbo An SQL object
      * @param string $username
      * @param string $password
-     * @param float $dbVersion default = WIKINDX_INTERNAL_VERSION
      *
      * @return bool TRUE if able to authenticate
      */
-    function logonCheckUpgradeDB($dbo, $username, $password, $dbVersion = WIKINDX_INTERNAL_VERSION)
+    function logonCheckUpgradeDB($dbo, $username, $password)
     {
         // superAdmin is id '1'
         $dbo->formatConditions(['usersUsername' => $username, 'usersId' => WIKINDX_SUPERADMIN_ID]);

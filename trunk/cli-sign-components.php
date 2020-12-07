@@ -8,6 +8,32 @@
  * @license https://www.isc.org/licenses/ ISC License
  */
 
+/**
+ * cli-sign-components.php
+ *
+ * Script to sign and fix the version of components.
+ *
+ * This script must be systematically launched before tagging a release,
+ * but after the last modification of a component because it is the change
+ * of signature which controls the update of the packages.
+ *
+ * The signature is a hash stored in the component.json file
+ * that uniquely identifies the final code for each component.
+ *
+ * The version number is used to publish several versions of the same component
+ * for compatible cores. The update server is responsible for publishing only
+ * the latest available version of each combination of core and component.
+ * To avoid downgrades and errors, the version number is calculated in days
+ * elapsed since 2020-01-12 (start day of the component update server).
+ *
+ * Limits: it is possible to publish twice on the same day (publicly on the update server)
+ * but this is not recommended because users who have already downloaded the list
+ * from the server will see the hash changed for the same version.
+ * This prevents updating until they update their list again.
+ *
+ * @package wikindx\release\components
+ */
+ 
 ///////////////////////////////////////////////////////////////////////
 /// Configuration
 ///////////////////////////////////////////////////////////////////////

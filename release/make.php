@@ -8,6 +8,13 @@
  * @license https://www.isc.org/licenses/ ISC License
  */
 
+/**
+ * make.php
+ *
+ * Release script.
+ *
+ * @package wikindx\release
+ */
 $Start = microtime();
 
 ///////////////////////////////////////////////////////////////////////

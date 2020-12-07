@@ -8,6 +8,21 @@
  * @license https://www.isc.org/licenses/ ISC License
  */
 
+/**
+ * cli-dump-repairkit-schema.php
+ *
+ * Script to extract a copy of the db schema for the repairkit
+ * in dbschema/repairkit.schema file.
+ *
+ * Use this script with a fresh install of a pre-version of a release
+ * otherwise you could export changes to your development schema
+ * that are not in the release.
+ *
+ * Save the exported file in SVN before tagging the release.
+ *
+ * @package wikindx\release\repairkit
+ */
+ 
 // Include the config file and check if the CONFIG class is in place
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "config.php"]));
 

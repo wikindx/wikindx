@@ -8,6 +8,15 @@
  * @license https://www.isc.org/licenses/ ISC License
  */
 
+/**
+ * cli-make-languages.php
+ *
+ * Script to extract and merge gettext language catalogs.
+ *
+ * Read docs/README_TRANSLATION.txt for details.
+ *
+ * @package wikindx\release\language
+ */
 include_once("core/startup/CONSTANTS.php");
 include_once("core/libs/FILE.php");
 include_once("core/libs/LOCALES.php");

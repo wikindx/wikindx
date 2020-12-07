@@ -187,11 +187,6 @@ echo "Build manual package\n";
 $pkg = APP_PKG_PREFIX . '_api_manual';
 echo "Package " . $pkg . "\n";
 
-// Create a fake file
-$FakeContent  = "Fake file to prevent the make process to hang";
-$FakeContent .= "if the manual is not built for any reason.";
-file_put_contents(DIR_DST_SRC . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'manual' . DIRECTORY_SEPARATOR . 'fake.txt', $FakeContent);
-
 if ($ManualRebuildingFlag) build_manual(DIR_DST_SRC, 'WIKINDX Documentation ' . $VersionPackaged);
 
 \FILE\recurse_ChangeDateOfFiles(DIR_DST_SRC, WIKINDX_RELEASE_TIMESTAMP);

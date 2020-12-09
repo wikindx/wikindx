@@ -38,7 +38,7 @@ namespace UPDATE
             return TRUE;
         }
         // Check if the database version number is not the same as source code version number
-        elseif (getInternalVersion($dbo, "core", "core") != WIKINDX_INTERNAL_VERSION)
+        elseif (getCoreInternalVersion($dbo) != WIKINDX_INTERNAL_VERSION)
         {
             return TRUE;
         }
@@ -63,71 +63,48 @@ namespace UPDATE
     }
     
     /**
-     * Return the internal version stored in the database of a component or the core
+     * Return the internal version stored in the database of the core
      *
      * This function is used only during the upgrade process, and the value should be looked up
      * in the field regardless of the version.
      *
      * @param object $dbo An SQL object
-     * @param string $ComponentType Type of a component or 'core' for the Wikindx core
-     * @param string $ComponentId Id of a component or 'core' for the Wikindx core
      *
      * @return float
      */
-    function getInternalVersion($dbo, $ComponentType, $ComponentId)
+    function getCoreInternalVersion($dbo)
     {
         $version = 0.0;
+        $ComponentType = "core";
+        $ComponentId = "core";
         
-        // Core
-        if ($ComponentType == "core")
+        $dbo->formatConditions(["versionComponentType" => $ComponentType]);
+        $dbo->formatConditions(['versionComponentId' => $ComponentId]);
+        $recordset = $dbo->queryNoError($dbo->selectNoExecute('version', 'versionInternalVersion'));
+        // From version 34 (6.4.0)
+        if ($recordset !== FALSE)
         {
-            // Core version
-            if ($ComponentId == "core")
-            {
-                $dbo->formatConditions(['versionComponentId' => $ComponentId]);
-                $recordset = $dbo->queryNoError($dbo->selectNoExecute('version', 'versionInternalVersion'));
-                // From version 34 (6.4.0)
-                if ($recordset !== FALSE)
-                {
-                    $row = $dbo->fetchRow($recordset);
-                    $version = (float) $row['versionInternalVersion'];
-                }
-                // Up to version 33 (6.4.0)
-                else
-                {
-                    $recordset = $dbo->queryNoError($dbo->selectNoExecute('database_summary', '*'));
-                    if ($recordset !== FALSE)
-                    {
-                        $row = $dbo->fetchRow($recordset);
-                        // Up to version 33 (6.4.0)
-                        if (array_key_exists('databasesummarySoftwareVersion', $row))
-                        {
-                            $field = "databasesummarySoftwareVersion";
-                        }
-                        // Up to version 5.9 (5.9.1)
-                        if (array_key_exists('databasesummaryDbVersion', $row))
-                        {
-                            $field = "databasesummaryDbVersion";
-                        }
-                        $version = floatval($row[$field]);
-                    }
-                }
-            }
-            else
-            {
-                // NOt yet any core component (v35)
-                die("Fatal Error: the core has no component.");
-            }
+            $row = $dbo->fetchRow($recordset);
+            $version = (float) $row['versionInternalVersion'];
         }
-        // Additional Components version
+        // Up to version 33 (6.4.0)
         else
         {
-            $dbo->formatConditions(['versionComponentId' => $ComponentId]);
-            $recordset = $dbo->queryNoError($dbo->selectNoExecute('version', 'versionInternalVersion'));
+            $recordset = $dbo->queryNoError($dbo->selectNoExecute('database_summary', '*'));
             if ($recordset !== FALSE)
             {
                 $row = $dbo->fetchRow($recordset);
-                $version = (float) $row['versionInternalVersion'];
+                // Up to version 33 (6.4.0)
+                if (array_key_exists('databasesummarySoftwareVersion', $row))
+                {
+                    $field = "databasesummarySoftwareVersion";
+                }
+                // Up to version 5.9 (5.9.1)
+                if (array_key_exists('databasesummaryDbVersion', $row))
+                {
+                    $field = "databasesummaryDbVersion";
+                }
+                $version = floatval($row[$field]);
             }
         }
         
@@ -143,11 +120,9 @@ namespace UPDATE
      * If $version is NULL, the version number used it 0.0.
      *
      * @param object $dbo An SQL object
-     * @param string $ComponentType Type of a component or 'core' for the Wikindx core
-     * @param string $ComponentId Id of a component or 'core' for the Wikindx core
      * @param string $version (Default is NULL)
      */
-    function setInternalVersion($dbo, $ComponentType, $ComponentId, $version = NULL)
+    function setCoreInternalVersion($dbo, $version = NULL)
     {
         if ($version == NULL)
             $version = (string) 0.0;
@@ -156,44 +131,21 @@ namespace UPDATE
         
         $version = str_replace(",", ".", $version);
         
-        // Core components
-        if ($ComponentType == "core")
+        $ComponentType = "core";
+        $ComponentId = "core";
+        
+        // Up to version 5.9 (5.9.1)
+        if ($version <= 5.9 && $ComponentId == "core")
         {
-            // Core version
-            if ($ComponentId == "core")
-            {
-                // Up to version 5.9 (5.9.1)
-                if ($version <= 5.9 && $ComponentId == "core")
-                {
-                    $dbo->update("database_summary", ["databasesummaryDbVersion" => $version]);
-                }
-                // Up to version 33 (6.4.0)
-                if ($version <= 33.0 && $ComponentId == "core")
-                {
-                    $dbo->update("database_summary", ["databasesummarySoftwareVersion" => $version]);
-                }
-                // From version 34 (6.4.0)
-                if ($version >= 34.0)
-                {
-                    $dbo->formatConditions(["versionComponentType" => $ComponentType]);
-                    $dbo->formatConditions(["versionComponentId" => $ComponentId]);
-                    if ($dbo->selectCountOnly("version", "versionComponentId") == 0)
-                    {
-                        $dbo->insert("version", ["versionComponentType", "versionComponentId"], [$ComponentType, $ComponentId]);
-                    }
-                    $dbo->formatConditions(["versionComponentType" => $ComponentType]);
-                    $dbo->formatConditions(["versionComponentId" => $ComponentId]);
-                    $dbo->update("version", ["versionInternalVersion" => $version]);
-                }
-            }
-            else
-            {
-                // Not yet any core component (v35)
-                die("Fatal Error: the core has no component.");
-            }
+            $dbo->update("database_summary", ["databasesummaryDbVersion" => $version]);
         }
-        // Additional Components version
-        else
+        // Up to version 33 (6.4.0)
+        if ($version <= 33.0 && $ComponentId == "core")
+        {
+            $dbo->update("database_summary", ["databasesummarySoftwareVersion" => $version]);
+        }
+        // From version 34 (6.4.0)
+        if ($version >= 34.0)
         {
             $dbo->formatConditions(["versionComponentType" => $ComponentType]);
             $dbo->formatConditions(["versionComponentId" => $ComponentId]);
@@ -205,6 +157,68 @@ namespace UPDATE
             $dbo->formatConditions(["versionComponentId" => $ComponentId]);
             $dbo->update("version", ["versionInternalVersion" => $version]);
         }
+    }
+    
+    /**
+     * Return the internal version stored in the database of a plugin
+     *
+     * This function is used only during the upgrade process, and the value should be looked up
+     * in the field regardless of the version.
+     *
+     * @param object $dbo An SQL object
+     * @param string $ComponentId Id of a component or 'core' for the Wikindx core
+     *
+     * @return float
+     */
+    function getPluginInternalVersion($dbo, $ComponentId)
+    {
+        $version = 0.0;
+        $ComponentType = "plugin";
+        
+        $dbo->formatConditions(['versionComponentType' => $ComponentType]);
+        $dbo->formatConditions(['versionComponentId' => $ComponentId]);
+        $recordset = $dbo->queryNoError($dbo->selectNoExecute('version', 'versionInternalVersion'));
+        if ($recordset !== FALSE)
+        {
+            $row = $dbo->fetchRow($recordset);
+            $version = (float) $row['versionInternalVersion'];
+        }
+        
+        return $version;
+    }
+    
+    /**
+     * Write an internal version in the database of a plugin
+     *
+     * This function is used only during the upgrade process, and the value should be written
+     * in the field regardless of the version.
+     *
+     * If $version is NULL, the version number used it 0.0.
+     *
+     * @param object $dbo An SQL object
+     * @param string $ComponentId Id of a component or 'core' for the Wikindx core
+     * @param string $version (Default is NULL)
+     */
+    function setPluginInternalVersion($dbo, $ComponentId, $version = NULL)
+    {
+        if ($version == NULL)
+            $version = (string) 0.0;
+        else
+            $version = (string) $version;
+        
+        $version = str_replace(",", ".", $version);
+        
+        $ComponentType = "plugin";
+        
+        $dbo->formatConditions(["versionComponentType" => $ComponentType]);
+        $dbo->formatConditions(["versionComponentId" => $ComponentId]);
+        if ($dbo->selectCountOnly("version", "versionComponentId") == 0)
+        {
+            $dbo->insert("version", ["versionComponentType", "versionComponentId"], [$ComponentType, $ComponentId]);
+        }
+        $dbo->formatConditions(["versionComponentType" => $ComponentType]);
+        $dbo->formatConditions(["versionComponentId" => $ComponentId]);
+        $dbo->update("version", ["versionInternalVersion" => $version]);
     }
     
     /**

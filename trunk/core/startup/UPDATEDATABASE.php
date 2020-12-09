@@ -92,7 +92,7 @@ class UPDATEDATABASE
         }
         
         // At this step we can retrieve the current version of the database
-        $dbVersion = \UPDATE\getInternalVersion($this->db, "core", "core");
+        $dbVersion = \UPDATE\getCoreInternalVersion($this->db);
         
         // Initialize the system
         // The dynamic part of the config is loaded (db).
@@ -388,7 +388,7 @@ class UPDATEDATABASE
             {
                 $pString .= \HTML\p($this->endStepMessage);
             }
-            if ($this->targetVersion == WIKINDX_INTERNAL_VERSION && \UPDATE\getInternalVersion($this->db, "core", "core") == WIKINDX_INTERNAL_VERSION)
+            if ($this->targetVersion == WIKINDX_INTERNAL_VERSION && \UPDATE\getCoreInternalVersion($this->db) == WIKINDX_INTERNAL_VERSION)
             {
                 $this->session->delVar("upgrade_ForceLogin");
                 
@@ -696,7 +696,7 @@ END;
         else
             $version = (string) $version;
             
-        \UPDATE\setInternalVersion($this->db, "core", "core", $version);
+        \UPDATE\setCoreInternalVersion($this->db, $version);
     }
     
     /**

@@ -146,7 +146,7 @@ class localedescription_MODULE
      */
     private function checkTables()
     {
-        $version = \UPDATE\getInternalVersion($this->db, "plugin", mb_strtolower(basename(__DIR__)));
+        $version = \UPDATE\getPluginInternalVersion($this->db, mb_strtolower(basename(__DIR__)));
         
         if ($version == 0)
         {
@@ -169,7 +169,7 @@ class localedescription_MODULE
     			");
             }
             
-            \UPDATE\setInternalVersion($this->db, "plugin", mb_strtolower(basename(__DIR__)), 1);
+            \UPDATE\setPluginInternalVersion($this->db, mb_strtolower(basename(__DIR__)), 1);
         }
     }
     /**

@@ -79,7 +79,7 @@ class repairkit_MODULE
         }
         GLOBALS::setTplVar('heading', $this->pluginmessages->text('headingDbIntegrity'));
         $wVersion = WIKINDX_INTERNAL_VERSION;
-        $dbVersion = \UPDATE\getInternalVersion($this->db, "core", "core");
+        $dbVersion = \UPDATE\getCoreInternalVersion($this->db);
         if (floatval($dbVersion) != floatval($wVersion))
         { // Shouldn't ever happen if UPDATEDATABASE is functioning correctly . . .
             $pString .= HTML\p($this->pluginmessages->text('dbIntegrityPreamble1a', $dbVersion) . '&nbsp;' .

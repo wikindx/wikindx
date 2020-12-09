@@ -840,7 +840,8 @@ class LISTCOMMON
                     $resourceList[$resourceId]['links']['edit'] = \HTML\a(
                         $this->icons->getClass("edit"),
                         $this->icons->getHTML("edit"),
-                        "index.php?action=resource_RESOURCEFORM_CORE&amp;type=edit" . htmlentities("&id=" . $resourceId)
+                        "index.php?action=resource_RESOURCEFORM_CORE&amp;type=edit" . htmlentities("&id=" . $resourceId) . 
+                    		'&browserTabID=' . $this->browserTabID
                     );
                     if (is_array($row) && $row['resourcemiscAddUserIdResource'] == $userId)
                     {
@@ -859,7 +860,8 @@ class LISTCOMMON
                     $resourceList[$resourceId]['links']['edit'] = \HTML\a(
                         $this->icons->getClass("edit"),
                         $this->icons->getHTML("edit"),
-                        "index.php?action=resource_RESOURCEFORM_CORE&amp;type=edit" . htmlentities("&id=" . $resourceId)
+                        "index.php?action=resource_RESOURCEFORM_CORE&amp;type=edit" . htmlentities("&id=" . $resourceId) . 
+                    		'&browserTabID=' . $this->browserTabID
                     );
                     $resourceList[$resourceId]['links']['delete'] = \HTML\a(
                         $this->icons->getClass("delete"),
@@ -877,7 +879,8 @@ class LISTCOMMON
                         $resourceList[$resourceId]['links']['edit'] = \HTML\a(
                             $this->icons->getClass("edit"),
                             $this->icons->getHTML("edit"),
-                            "index.php?action=resource_RESOURCEFORM_CORE&amp;type=edit" . htmlentities("&id=" . $resourceId)
+                            "index.php?action=resource_RESOURCEFORM_CORE&amp;type=edit" . htmlentities("&id=" . $resourceId) . 
+                    		'&browserTabID=' . $this->browserTabID
                         );
                     }
                     $resourceList[$resourceId]['links']['delete'] = \HTML\a(

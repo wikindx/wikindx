@@ -2138,7 +2138,11 @@ class CITEFORMAT
     public function formatTitle($pString, $delimitLeft = FALSE, $delimitRight = FALSE)
     {
         $split = \UTF8\mb_explode($this->style['titleSubtitleSeparator'], $pString);
-        $this->items[$this->count]['mainTitle'] = $split[0];
+        if (is_array($split)) {
+	        $this->items[$this->count]['mainTitle'] = $split[0];
+	    } else {
+	    	$this->items[$this->count]['mainTitle'] = $pString;
+	    }
 
         $title = BIBFORMAT::titleCapitalization($pString, $delimitLeft, $delimitRight, $this->style['titleCapitalization']);
         $title = preg_replace("/{(.*)}/Uu", "$1", $title);

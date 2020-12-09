@@ -949,7 +949,7 @@ class SEARCH
         {
             if ($this->vars['ideasFound'])
             {
-                $this->common->kideasFound = TRUE;
+                $this->common->ideasFound = TRUE;
             }
             else
             {
@@ -1056,9 +1056,11 @@ class SEARCH
             if (GLOBALS::getTempStorage('sql_LastIdeaSearch')) {
             	$this->common->ideasFound = TRUE;
             }
-            else if ($this->session->getVar('sql_LastIdeaSearch'))
-            {
+            else if ($this->session->getVar('sql_LastIdeaSearch')) {
                 $this->common->ideasFound = TRUE;
+            }
+            else {
+            	$this->common->ideasFound = FALSE;
             }
             $this->common->lastMulti('search');
 

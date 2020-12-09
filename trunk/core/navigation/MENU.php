@@ -619,7 +619,8 @@ class MENU
                 $messages->text("menu", "search") => 'index.php?action=noMenu&method=search',
                 $messages->text("menu", "quickSearch") => 'index.php?action=list_QUICKSEARCH_CORE' 
                 	. "&browserTabID=" . $this->browserTabID,
-                $messages->text("menu", "advancedSearch") => 'index.php?action=list_SEARCH_CORE',
+                $messages->text("menu", "advancedSearch") => 'index.php?action=list_SEARCH_CORE'
+                	. "&browserTabID=" . $this->browserTabID,
                 'listSub' => [
                     $messages->text("menu", "listSub") => FALSE,
                     $messages->text("menu", "listCreator") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=creator' 

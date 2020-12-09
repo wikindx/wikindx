@@ -54,6 +54,7 @@ class SEARCH
     private $unionResourceIds = [];
     private $subQ;
     private $backupPT;
+    private $browserTabID = FALSE;
 
     public function __construct()
     {
@@ -79,24 +80,30 @@ class SEARCH
         $this->parsePhrase = FACTORY_PARSEPHRASE::getInstance();
         $this->commonBib = FACTORY_BIBLIOGRAPHYCOMMON::getInstance();
         $this->metadata = FACTORY_METADATA::getInstance();
-        if (!$this->session->getVar("search_Order"))
+        $this->browserTabID = GLOBALS::getBrowserTabID();
+        if ($this->browserTabID)
         {
-            $this->session->setVar("search_Order", 'creator');
+            // 1. Load any pre-existing search data into GLOBALS $tempStorage
+            // 2. Store in and extract data from $tempStorage
+            // 3. Finally, put back $tempStorage into temp_storage using $this->common->updateTempStorage();
+            GLOBALS::initTempStorage($this->db, $this->browserTabID);
+            $order = GLOBALS::getTempStorage('search_Order');
+            if (!$order)
+            {
+                $order = 'creator';
+            }
+        }
+        else
+        {
+            $order = $this->session->getVar("search_Order");
+            if (!in_array($order, ['title', 'creator', 'publisher', 'year', 'timestamp']))
+            { // set default
+                $this->session->setVar("search_Order", "creator");
+            }
         }
         $this->session->setVar("sql_LastOrder", $this->session->getVar("search_Order"));
-        switch ($this->session->getVar("search_Order")) {
-            case 'title':
-                break;
-            case 'creator':
-                break;
-            case 'publisher':
-                break;
-            case 'year':
-                break;
-            case 'timestamp':
-                break;
-            default:
-                $this->session->setVar("search_Order", 'creator');
+        if ($this->browserTabID) {
+            GLOBALS::setTempStorage(['sql_LastOrder' => $this->session->getVar("search_Order")]);
         }
     }
     /**
@@ -114,7 +121,14 @@ class SEARCH
         {
             return;
         }
-        $this->input = $this->session->getArray('advancedSearch');
+        if ($this->browserTabID) {
+        	$this->input = GLOBALS::getTempStorage('advancedSearch');
+        	if (!is_array($this->input)) {
+        		$this->input = [];
+        	}
+        } else {
+	        $this->input = $this->session->getArray('advancedSearch');
+	    }
         $this->checkAvailableFields();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "help", "HELPMESSAGES.php"]));
         $help = new HELPMESSAGES();
@@ -125,13 +139,25 @@ class SEARCH
         }
         $this->session->delVar("mywikindx_PagingStart");
         $this->session->delVar("mywikindx_PagingStartAlpha");
+        if ($this->browserTabID)
+        {
+            GLOBALS::unsetTempStorage(['mywikindx_PagingStart', 'mywikindx_PagingStartAlpha']);
+        }
         $this->session->setVar("advancedSearch_elementIndex", 1);
+        if ($this->browserTabID) {
+            GLOBALS::setTempStorage(['advancedSearch_elementIndex' => 1]);
+        }
 
         $pString = '';
         $pString .= $error;
-        $pString .= \HTML\p(\FORM\formHeader("list_SEARCH_CORE") . \FORM\hidden("method", "reset") . \FORM\formSubmit($this->messages->text("submit", "Reset")) . \FORM\formEnd());
+        $pString .= \HTML\p(\FORM\formHeader("list_SEARCH_CORE") . 
+        	\FORM\hidden("method", "reset") . 
+        	\FORM\hidden("browserTabID", $this->browserTabID) . 
+        	\FORM\formSubmit($this->messages->text("submit", "Reset")) . 
+        	\FORM\formEnd());
         $pString .= \FORM\formHeader("list_SEARCH_CORE", "onsubmit=\"selectAll();return true;\"");
         $pString .= \FORM\hidden("method", "process");
+        $pString .= \FORM\hidden("browserTabID", $this->browserTabID);
         $pString .= \HTML\tableStart();
         $pString .= \HTML\trStart();
         $pString .= \HTML\td($this->firstDisplay());
@@ -236,6 +262,9 @@ class SEARCH
                 $div .= \HTML\tableEnd();
                 $pString .= \HTML\p(\HTML\div("searchElement_$i", $div));
                 $this->session->setVar("advancedSearch_elementIndex", $i);
+				if ($this->browserTabID) {
+					GLOBALS::setTempStorage(['advancedSearch_elementIndex' => $i]);
+				}
                 $updateJSElementIndex = TRUE;
             }
             else
@@ -243,10 +272,12 @@ class SEARCH
                 $pString .= \HTML\div("searchElement_$i", '');
             }
         }
-
+		if (!$elementIndex = GLOBALS::getTempStorage('advancedSearch_elementIndex')) {
+			$this->session->getVar("advancedSearch_elementIndex");
+		}
         $pString .= \HTML\p(\HTML\div(
             'searchElement_addIcon',
-            $this->addRemoveIcon($this->session->getVar("advancedSearch_elementIndex"), TRUE, $updateJSElementIndex)
+            $this->addRemoveIcon($elementIndex, TRUE, $updateJSElementIndex)
         ));
         $pString .= \HTML\p($this->options());
 
@@ -270,6 +301,9 @@ class SEARCH
     public function reset()
     {
         $this->session->clearArray('advancedSearch');
+		if ($this->browserTabID) {
+			GLOBALS::unsetTempStorage(['advancedSearch']);
+		}
         $this->init();
     }
     /**
@@ -696,6 +730,9 @@ class SEARCH
         $jArray = \AJAX\decode_jString($vars['ajaxReturn']);
         $div = \HTML\p($this->wordSearch($jArray['elementIndex'], TRUE));
         $this->session->setVar("advancedSearch_elementIndex", $jArray['elementIndex']);
+		if ($this->browserTabID) {
+			GLOBALS::setTempStorage(['advancedSearch_elementIndex' => $jArray['elementIndex']]);
+		}
         $jsonResponseArray = [
             'innerHTML' => "$div",
         ];
@@ -728,6 +765,19 @@ class SEARCH
         $this->session->delVar("advancedSearch_Comparison_" . $jArray['elementIndex']);
         $this->session->delVar("advancedSearch_Value1_" . $jArray['elementIndex']);
         $this->session->delVar("advancedSearch_Value2_" . $jArray['elementIndex']);
+		if ($this->browserTabID) {
+			GLOBALS::unsetTempStorage([
+				"advancedSearch_Field_" . $jArray['elementIndex'], 
+				"advancedSearch_Word_" . $jArray['elementIndex'],
+				"advancedSearch_Partial_" . $jArray['elementIndex'],
+				"advancedSearch_Button1_" . $jArray['elementIndex'],
+				"advancedSearch_Button2_" . $jArray['elementIndex'],
+				"advancedSearch_Select_" . $jArray['elementIndex'],
+				"advancedSearch_Comparison_" . $jArray['elementIndex'],
+				"advancedSearch_Value1_" . $jArray['elementIndex'],
+				"advancedSearch_Value2_" . $jArray['elementIndex']
+				]);
+		}
         $div = ' ';
         $jsonResponseArray = [
             'innerHTML' => $div,
@@ -910,7 +960,14 @@ class SEARCH
         {
             $this->common->patterns = unserialize(base64_decode($this->vars['patterns']));
         }
-        $this->input = $this->session->getArray("advancedSearch");
+		if ($this->browserTabID) {
+			$this->input = GLOBALS::getTempStorage('advancedSearch');
+			if (!is_array($this->input)) {
+				$this->input = [];
+			}
+		} else {
+	        $this->input = $this->session->getArray("advancedSearch");
+	    }
         if (array_key_exists("search_Order", $this->vars) && $this->vars["search_Order"])
         {
             $this->input['Order'] = $this->vars["search_Order"];
@@ -919,12 +976,23 @@ class SEARCH
             $this->session->setVar("sql_LastOrder", $this->input['Order']);
             $this->session->setVar("search_AscDesc", $this->vars['search_AscDesc']);
             $this->session->setVar("advancedSearch_AscDesc", $this->vars['search_AscDesc']);
+			if ($this->browserTabID) {
+				GLOBALS::setTempStorage([
+					"search_Order" => $this->input['Order'],
+					"advancedSearch_Order" => $this->input['Order'],
+					"sql_LastOrder" => $this->input['Order'],
+					"search_AscDesc" => $this->vars['search_AscDesc'],
+					"advancedSearch_AscDesc" => $this->vars['search_AscDesc']
+					]);
+			}
         }
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'displayIdeas'))
         {
             // Store paging total for reseources and restore after calculating paging for ideas
             // only (so paging for resources is correctly displayed with lastmulti
-            $this->backupPT = $this->session->getVar("setup_PagingTotal");
+            if (!$this->backupPT = GLOBALS::getTempStorage('setup_PagingTotal')) {
+	            $this->backupPT = $this->session->getVar("setup_PagingTotal");
+	        }
         }
         $this->process(TRUE);
     }
@@ -941,8 +1009,13 @@ class SEARCH
             {
                 // Store paging total for reseources and restore after calculating paging for ideas
                 // only (so paging for resources is correctly displayed with lastmulti
-                $this->backupPT = $this->session->getVar("setup_PagingTotal");
+                if (!$this->backupPT = GLOBALS::getTempStorage('setup_PagingTotal')) {
+	            	$this->backupPT = $this->session->getVar("setup_PagingTotal");
+	        	}
                 $this->session->delVar("setup_PagingTotal");
+				if ($this->browserTabID) {
+					GLOBALS::unsetTempStorage(['setup_PagingTotal']);
+				}
             }
         }
         GLOBALS::setTplVar('heading', $this->messages->text("heading", "search"));
@@ -950,25 +1023,40 @@ class SEARCH
         {
             $this->session->delVar("list_AllIds");
             $this->session->delVar("list_PagingAlphaLinks");
+            if ($this->browserTabID) {
+				GLOBALS::unsetTempStorage(['list_AllIds', 'list_PagingAlphaLinks']);
+			}
         }
         if (!$reprocess || (GLOBALS::getUserVar('PagingStyle') == 'A'))
         {
             $this->session->delVar("sql_ListStmt");
             $this->session->delVar("advancedSearch_listParams");
+            if ($this->browserTabID) {
+				GLOBALS::unsetTempStorage(['sql_ListStmt', 'advancedSearch_listParams']);
+			}
         }
         $this->session->delVar("search_Highlight");
         $this->session->delVar("search_HighlightIdea");
+		if ($this->browserTabID) {
+			GLOBALS::unsetTempStorage(['search_Highlight', 'search_HighlightIdea']);
+		}
         $this->stmt->listMethodAscDesc = 'advancedSearch_AscDesc';
         $this->stmt->listType = 'search';
         $queryString = 'action=list_SEARCH_CORE&method=reprocess';
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'lastMulti') && (GLOBALS::getUserVar('PagingStyle') != 'A'))
         {
             $this->session->delVar("mywikindx_PagingStart");
+			if ($this->browserTabID) {
+				GLOBALS::unsetTempStorage(['mywikindx_PagingStart']);
+			}
             $this->pagingObject = FACTORY_PAGING::getInstance();
             $this->pagingObject->queryString = $queryString;
             $this->pagingObject->getPaging();
             $this->common->pagingObject = $this->pagingObject;
-            if ($this->session->getVar('sql_LastIdeaSearch'))
+            if (GLOBALS::getTempStorage('sql_LastIdeaSearch')) {
+            	$this->common->ideasFound = TRUE;
+            }
+            else if ($this->session->getVar('sql_LastIdeaSearch'))
             {
                 $this->common->ideasFound = TRUE;
             }
@@ -1208,10 +1296,16 @@ class SEARCH
             {
                 $this->common->ideasFound = TRUE;
                 $this->session->setVar("sql_LastIdeaSearch", "index.php?action=list_SEARCH_CORE&method=reprocess&type=displayIdeas");
+                if ($this->browserTabID) {
+                	GLOBALS::setTempStorage(['sql_LastIdeaSearch' => 'index.php?action=list_SEARCH_CORE&method=reprocess&type=displayIdeas']);
+                }
             }
             else
             {
                 $this->session->delVar("sql_LastIdeaSearch");
+                if ($this->browserTabID) {
+                	GLOBALS::unsetTempStorage(['sql_LastIdeaSearch']);
+                }
             }
         }
         elseif (!empty($this->ideas))
@@ -1223,9 +1317,15 @@ class SEARCH
         else
         {
             $this->session->delVar("sql_LastIdeaSearch");
+			if ($this->browserTabID) {
+				GLOBALS::unsetTempStorage(['sql_LastIdeaSearch']);
+			}
         }
-        if ($bibId = $this->session->getVar("advancedSearch_BibId"))
-        {
+        $bibId = FALSE;
+        if (!$bibId = GLOBALS::getTempStorage('advancedSearch_BibId')) {
+        	$bibId = $this->session->getVar("advancedSearch_BibId");
+        }
+        if ($bibId) {
             $bibIdArray[] = $bibId;
             $this->stmt->excludeBib($bibId, 'rId');
         }
@@ -1268,6 +1368,9 @@ class SEARCH
          */
         $this->session->delVar("search_DisplayAttachment");
         $this->session->delVar("search_DisplayAttachmentZip");
+		if ($this->browserTabID) {
+			GLOBALS::unsetTempStorage(['search_DisplayAttachment', 'search_DisplayAttachmentZip']);
+		}
         if (array_search('noAttachment', $options) !== FALSE)
         {
             $attach = 'noAttachment';
@@ -1282,9 +1385,15 @@ class SEARCH
             if ($order == 'attachments')
             { // displaying attachments only
                 $this->session->setVar("search_DisplayAttachment", TRUE);
+				if ($this->browserTabID) {
+					GLOBALS::setTempStorage(['search_DisplayAttachment' => TRUE]);
+				}
                 if (array_search('zipAttachment', $options) !== FALSE)
                 {
                     $this->session->setVar("search_DisplayAttachmentZip", TRUE);
+					if ($this->browserTabID) {
+						GLOBALS::setTempStorage(['search_DisplayAttachmentZip' => TRUE]);
+					}
                 }
             }
         }
@@ -1295,16 +1404,28 @@ class SEARCH
                 $this->session->setVar("search_Order", 'creator');
                 $this->session->setVar("sql_LastOrder", 'creator');
                 $this->session->setVar("search_AscDesc", $this->db->asc);
+				if ($this->browserTabID) {
+					GLOBALS::setTempStorage(['search_Order' => 'creator', 'sql_LastOrder' => 'creator', 'search_AscDesc' => $this->db->asc]);
+				}
             }
             else
             {
                 $this->session->setVar("sql_LastOrder", $this->input['Order']);
+				if ($this->browserTabID) {
+					GLOBALS::setTempStorage(['sql_LastOrder' => $this->input['Order']]);
+				}
             }
             // Turn on the 'add bookmark' menu item
             $this->session->setVar("bookmark_DisplayAdd", TRUE);
             $this->session->setVar("search_Order", $order);
+			if ($this->browserTabID) {
+				GLOBALS::setTempStorage(['sql_Order' => $order]);
+			}
             $subStmt = $this->setSubQuery($attach);
-            $resourcesFound = $this->stmt->listSubQuery($this->session->getVar("search_Order"), $queryString, $subStmt, FALSE, $this->subQ);
+            if (!$order = GLOBALS::getTempStorage('search_Order')) {
+            	$order = $this->session->getVar("search_Order");
+            }
+            $resourcesFound = $this->stmt->listSubQuery($order, $queryString, $subStmt, FALSE, $this->subQ);
             if (!$resourcesFound)
             {
                 $this->common->noResources('search');
@@ -1312,7 +1433,9 @@ class SEARCH
                 return;
             }
         }
-        $searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_Highlight"));
+		if (!$searchTerms = GLOBALS::getTempStorage('search_Highlight')) {
+			$searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_Highlight"));
+		}
         foreach ($searchTerms as $term)
         {
             if (trim($term))
@@ -1324,11 +1447,17 @@ class SEARCH
         if (!isset($patterns))
         {
             $this->session->setVar("search_Patterns", []);
+			if ($this->browserTabID) {
+				GLOBALS::setTempStorage(['search_Patterns' => []]);
+			}
             $this->common->patterns = FALSE;
         }
         else
         {
             $this->session->setVar("search_Patterns", $patterns);
+			if ($this->browserTabID) {
+				GLOBALS::setTempStorage(['search_Patterns' => []]);
+			}
             $this->common->patterns = $patterns;
         }
         $this->common->keepHighlight = TRUE;
@@ -1338,11 +1467,18 @@ class SEARCH
         }
         else
         {
-            $sql = $this->stmt->listList($this->session->getVar("search_Order"), FALSE, $this->subQ);
+            if (!$order = GLOBALS::getTempStorage('search_Order')) {
+            	$order = $this->session->getVar("search_Order");
+            }
+            $sql = $this->stmt->listList($order, FALSE, $this->subQ);
         }
         $this->common->display($sql, "search");
         // set the lastMulti session variable for quick return to this process.
         $this->session->setVar("sql_LastMulti", $queryString);
+		if ($this->browserTabID) {
+			GLOBALS::setTempStorage(['sql_LastMulti' => $queryString]);
+		}
+        $this->common->updateTempStorage();
     }
     /**
      * Search ideas for search words and display
@@ -1361,6 +1497,9 @@ class SEARCH
         if ((!array_key_exists('PagingStart', $this->vars) || !$this->vars['PagingStart']))
         {
             $this->session->delVar("mywikindx_PagingStart"); // might be set from last multi resource list display
+			if ($this->browserTabID) {
+				GLOBALS::unsetTempStorage(['mywikindx_PagingStart']);
+			}
         }
         $queryString = "index.php?action=list_SEARCH_CORE&method=reprocess&type=displayIdeas";
         // Check this user is allowed to read the idea.
@@ -1372,9 +1511,14 @@ class SEARCH
         $this->db->formatConditions(implode($this->db->or, $conditions));
         $countQuery = $this->db->selectCountDistinctField('resource_metadata', 'resourcemetadataId');
         $this->session->setVar("setup_PagingTotal", $countQuery[0]['count']);
+		if ($this->browserTabID) {
+			GLOBALS::setTempStorage(['setup_PagingTotal' => $countQuery[0]['count']]);
+		}
         $pagingObject->queryString = $queryString;
         $pagingObject->getPaging();
-        $searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_HighlightIdea"));
+        if (!$searchTerms = GLOBALS::getTempStorage('search_HighlightIdea')) {
+			$searchTerms = \UTF8\mb_explode(",", $this->session->getVar("search_HighlightIdea"));
+		}
         foreach ($searchTerms as $term)
         {
             if (trim($term))
@@ -1417,10 +1561,16 @@ class SEARCH
             ++$index;
         }
         $this->session->setVar("sql_LastIdeaSearch", $queryString);
+		if ($this->browserTabID) {
+			GLOBALS::setTempStorage(['sql_LastIdeaSearch' => $queryString]);
+		}
         GLOBALS::addTplVar('ideaTemplate', TRUE);
         GLOBALS::addTplVar('ideaList', $ideaList);
         $this->common->pagingStyle($countQuery, FALSE, FALSE, $queryString);
         $this->session->setVar("setup_PagingTotal", $this->backupPT);
+		if ($this->browserTabID) {
+			GLOBALS::setTempStorage(['setup_PagingTotal' => $this->backupPT]);
+		}
     }
     /**
      * Display the first field of the search form
@@ -1707,7 +1857,11 @@ class SEARCH
             'startFunction' => "attachmentOptions",
         ];
         $js = \AJAX\jActionForm('onchange', $jsonArray);
-        if ($selected = $this->session->getVar("advancedSearch_Options"))
+        $selected = FALSE;
+        if (!$selected = GLOBALS::getTempStorage('advancedSearch_Options')) {
+        	$selected = $this->session->getVar("advancedSearch_Options");
+        }
+        if ($selected)
         {
             $selected = unserialize(base64_decode($selected));
             if (($key = array_search('ignore', $selected)) !== FALSE)
@@ -1777,7 +1931,10 @@ class SEARCH
         {
             $temp[$key] = $value;
         }
-        $selected = $this->session->getVar("advancedSearch_BibId");
+        $selected = FALSE;
+        if (!$selected = GLOBALS::getTempStorage('advancedSearch_BibId')) {
+        	$selected = $this->session->getVar("advancedSearch_BibId");
+        }
         if ($selected && array_key_exists($selected, $temp))
         {
             $pString = \FORM\selectedBoxValue(
@@ -3258,11 +3415,13 @@ class SEARCH
             {
                 if ($valueArray['Button1'] == 'AND')
                 {
-                    $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . $this->db->inClause($subQ), FALSE, TRUE);
+                    $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . 
+                    	$this->db->inClause($subQ), FALSE, TRUE);
                 }
                 else
                 {
-                    $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . $this->db->inClause($subQ, TRUE), FALSE, TRUE);
+                    $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . 
+                    	$this->db->inClause($subQ, TRUE), FALSE, TRUE);
                 }
             }
             $this->unionFragments[$lastUFKey] .= $fc;
@@ -3381,11 +3540,13 @@ class SEARCH
             {
                 if ($valueArray['Button1'] == 'AND')
                 {
-                    $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . $this->db->inClause($subQ), FALSE, TRUE);
+                    $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . 
+                    	$this->db->inClause($subQ), FALSE, TRUE);
                 }
                 else
                 {
-                    $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . $this->db->inClause($subQ, TRUE), FALSE, TRUE);
+                    $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . 
+                    	$this->db->inClause($subQ, TRUE), FALSE, TRUE);
                 }
             }
             $this->unionFragments[$lastUFKey] .= $fc;
@@ -3452,11 +3613,13 @@ class SEARCH
             $lastUFKey = key(array_slice($this->unionFragments, -1, 1, TRUE));
             if ($valueArray['Button1'] == 'AND')
             {
-                $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . $this->db->inClause($subQ), FALSE, TRUE);
+                $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . 
+                	$this->db->inClause($subQ), FALSE, TRUE);
             }
             else
             {
-                $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . $this->db->inClause($subQ, TRUE), FALSE, TRUE);
+                $fc = $this->db->formatConditions($this->db->formatFields($this->lastUnionResourceId) . 
+                	$this->db->inClause($subQ, TRUE), FALSE, TRUE);
             }
             $this->unionFragments[$lastUFKey] .= $fc;
         }
@@ -3510,7 +3673,12 @@ class SEARCH
     private function setSubQuery($attach)
     {
         $unions = $this->db->union($this->unionFragments);
-        $this->db->ascDesc = $this->session->getVar("search_AscDesc");
+        if (!$this->db->ascDesc = GLOBALS::getTempStorage('search_AscDesc')) {
+	        $this->db->ascDesc = $this->session->getVar("search_AscDesc");
+	    }
+        if (!$order = GLOBALS::getTempStorage('search_Order')) {
+	        $order = $this->session->getVar("search_Order");
+	    }
         if ($attach == 'noAttachment')
         {
             $this->stmt->conditions[] = ['resourceattachmentsId' => ' IS NULL'];
@@ -3521,7 +3689,7 @@ class SEARCH
             $this->stmt->conditions[] = (['resourceattachmentsId' => ' IS NOT NULL']);
             $this->stmt->joins['resource_attachments'] = ['resourceattachmentsResourceId', 'rId'];
         }
-        switch ($this->session->getVar("search_Order")) {
+        switch ($order) {
             case 'title':
                 $this->stmt->useBib('rId');
                 $this->stmt->quarantine(FALSE, 'rId');
@@ -3919,11 +4087,17 @@ class SEARCH
             $temp['AscDesc'] = $this->vars['advancedSearch_AscDesc'];
         }
         $this->session->clearArray("advancedSearch");
+        if ($this->browserTabID) {
+        	GLOBALS::unsetTempStorage(['advancedSearch']);
+        }
         if (!empty($temp))
         {
             $this->session->writeArray($temp, 'advancedSearch', TRUE);
             $this->session->setVar("search_Order", $temp['Order']);
             $this->session->setVar("search_AscDesc", $temp['AscDesc']);
+			if ($this->browserTabID) {
+				GLOBALS::setTempStorage(['advancedSearch' => $temp, 'search_Order' => $temp['Order'], 'search_AscDesc' => $temp['AscDesc']]);
+			}
         }
     }
     /**
@@ -3934,7 +4108,15 @@ class SEARCH
     private function checkInput()
     {
         $this->writeSession();
-        $this->input = $this->session->getArray("advancedSearch");
+        if ($this->browserTabID) {
+	        $this->input = GLOBALS::getTempStorage('advancedSearch');
+	        if (!is_array($this->input)) {
+	        	$this->input = [];
+	        }
+	    }
+        else {
+	        $this->input = $this->session->getArray("advancedSearch");
+	    }
         for ($i = 1; $i <= 50; $i++)
         {
             if (!array_key_exists("Field_$i", $this->input))

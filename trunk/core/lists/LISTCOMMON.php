@@ -970,8 +970,9 @@ class LISTCOMMON
         {
             if ($listType == 'search')
             {
+            	$bTID = $this->browserTabID ? '&browserTabID=' . $this->browserTabID : FALSE;
                 $linksInfo['info'] .= '&nbsp;' . \HTML\a('link', $this->messages->text('search', 'ideasFound'), "index.php?action=list_SEARCH_CORE" .
-                    htmlentities("&method=reprocess&type=displayIdeas"));
+                    htmlentities("&method=reprocess&type=displayIdeas") . $bTID);
             }
             else
             {

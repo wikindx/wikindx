@@ -38,7 +38,7 @@ namespace UPDATE
             return TRUE;
         }
         // Check if the database version number is not the same as source code version number
-        elseif (getInternalVersion($dbo, "core") != WIKINDX_INTERNAL_VERSION)
+        elseif (getInternalVersion($dbo, "core", "core") != WIKINDX_INTERNAL_VERSION)
         {
             return TRUE;
         }
@@ -69,29 +69,31 @@ namespace UPDATE
      * in the field regardless of the version.
      *
      * @param object $dbo An SQL object
-     * @param string $ComponentId Id of a component or 'core' the Wikindx core
+     * @param string $ComponentType Type of a component or 'core' for the Wikindx core
+     * @param string $ComponentId Id of a component or 'core' for the Wikindx core
      *
      * @return float
      */
-    function getInternalVersion($dbo, $ComponentId)
+    function getInternalVersion($dbo, $ComponentType, $ComponentId)
     {
         $version = 0.0;
         
-        // Core version
-        if ($ComponentId == "core")
+        // Core
+        if ($ComponentType == "core")
         {
-            $dbo->formatConditions(['versionComponentId' => $ComponentId]);
-            $recordset = $dbo->queryNoError($dbo->selectNoExecute('version', 'versionInternalVersion'));
-            // From version 34 (6.4.0)
-            if ($recordset !== FALSE)
+            // Core version
+            if ($ComponentId == "core")
             {
-                $row = $dbo->fetchRow($recordset);
-                $version = (float) $row['versionInternalVersion'];
-            }
-            // Up to version 33 (6.4.0)
-            else
-            {
-                if ($ComponentId == "core")
+                $dbo->formatConditions(['versionComponentId' => $ComponentId]);
+                $recordset = $dbo->queryNoError($dbo->selectNoExecute('version', 'versionInternalVersion'));
+                // From version 34 (6.4.0)
+                if ($recordset !== FALSE)
+                {
+                    $row = $dbo->fetchRow($recordset);
+                    $version = (float) $row['versionInternalVersion'];
+                }
+                // Up to version 33 (6.4.0)
+                else
                 {
                     $recordset = $dbo->queryNoError($dbo->selectNoExecute('database_summary', '*'));
                     if ($recordset !== FALSE)
@@ -111,8 +113,13 @@ namespace UPDATE
                     }
                 }
             }
+            else
+            {
+                // NOt yet any core component (v35)
+                die("Fatal Error: the core has no component.");
+            }
         }
-        // Components version
+        // Additional Components version
         else
         {
             $dbo->formatConditions(['versionComponentId' => $ComponentId]);
@@ -136,10 +143,11 @@ namespace UPDATE
      * If $version is NULL, the version number used it 0.0.
      *
      * @param object $dbo An SQL object
-     * @param string $ComponentId Id of a component or 'core' the Wikindx core
+     * @param string $ComponentType Type of a component or 'core' for the Wikindx core
+     * @param string $ComponentId Id of a component or 'core' for the Wikindx core
      * @param string $version (Default is NULL)
      */
-    function setInternalVersion($dbo, $ComponentId, $version = NULL)
+    function setInternalVersion($dbo, $ComponentType, $ComponentId, $version = NULL)
     {
         if ($version == NULL)
             $version = (string) 0.0;
@@ -148,39 +156,52 @@ namespace UPDATE
         
         $version = str_replace(",", ".", $version);
         
-        // Core version
-        if ($ComponentId == "core")
+        // Core components
+        if ($ComponentType == "core")
         {
-            // Up to version 5.9 (5.9.1)
-            if ($version <= 5.9 && $ComponentId == "core")
+            // Core version
+            if ($ComponentId == "core")
             {
-                $dbo->update("database_summary", ["databasesummaryDbVersion" => $version]);
-            }
-            // Up to version 33 (6.4.0)
-            if ($version <= 33.0 && $ComponentId == "core")
-            {
-                $dbo->update("database_summary", ["databasesummarySoftwareVersion" => $version]);
-            }
-            // From version 34 (6.4.0)
-            if ($version >= 34.0)
-            {
-                $dbo->formatConditions(["versionComponentId" => $ComponentId]);
-                if ($dbo->selectCountOnly("version", "versionComponentId") == 0)
+                // Up to version 5.9 (5.9.1)
+                if ($version <= 5.9 && $ComponentId == "core")
                 {
-                    $dbo->insert("version", ["versionComponentId"], [$ComponentId]);
+                    $dbo->update("database_summary", ["databasesummaryDbVersion" => $version]);
                 }
-                $dbo->formatConditions(["versionComponentId" => $ComponentId]);
-                $dbo->update("version", ["versionInternalVersion" => $version]);
+                // Up to version 33 (6.4.0)
+                if ($version <= 33.0 && $ComponentId == "core")
+                {
+                    $dbo->update("database_summary", ["databasesummarySoftwareVersion" => $version]);
+                }
+                // From version 34 (6.4.0)
+                if ($version >= 34.0)
+                {
+                    $dbo->formatConditions(["versionComponentType" => $ComponentType]);
+                    $dbo->formatConditions(["versionComponentId" => $ComponentId]);
+                    if ($dbo->selectCountOnly("version", "versionComponentId") == 0)
+                    {
+                        $dbo->insert("version", ["versionComponentType", "versionComponentId"], [$ComponentType, $ComponentId]);
+                    }
+                    $dbo->formatConditions(["versionComponentType" => $ComponentType]);
+                    $dbo->formatConditions(["versionComponentId" => $ComponentId]);
+                    $dbo->update("version", ["versionInternalVersion" => $version]);
+                }
+            }
+            else
+            {
+                // Not yet any core component (v35)
+                die("Fatal Error: the core has no component.");
             }
         }
-        // Components version
+        // Additional Components version
         else
         {
+            $dbo->formatConditions(["versionComponentType" => $ComponentType]);
             $dbo->formatConditions(["versionComponentId" => $ComponentId]);
             if ($dbo->selectCountOnly("version", "versionComponentId") == 0)
             {
-                $dbo->insert("version", ["versionComponentId"], [$ComponentId]);
+                $dbo->insert("version", ["versionComponentType", "versionComponentId"], [$ComponentType, $ComponentId]);
             }
+            $dbo->formatConditions(["versionComponentType" => $ComponentType]);
             $dbo->formatConditions(["versionComponentId" => $ComponentId]);
             $dbo->update("version", ["versionInternalVersion" => $version]);
         }

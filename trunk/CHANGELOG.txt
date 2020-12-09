@@ -82,7 +82,7 @@ MAINTENANCE:
 
 SECURITY:
 1. Replace crypt/hash_equals() by password_hash/password_verify() which is stronger by default.
-2. Disallow access to backups of config.php during an uprgade.
+2. Disallow access to backups of config.php.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

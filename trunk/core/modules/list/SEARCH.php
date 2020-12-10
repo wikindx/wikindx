@@ -3234,7 +3234,7 @@ class SEARCH
         {
             foreach($array as $key2 => $id)
             {
-                if(!array_search($id, $matchedIds))
+                if (!array_search($id, $matchedIds))
                     unset($temp[$key1][$key2]);
                 else
                     $matchedIds[] = $id;

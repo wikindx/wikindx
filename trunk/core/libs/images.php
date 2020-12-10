@@ -869,7 +869,7 @@ class EncodeExplorer
 					$("#thumb").css("left",(e.clientX + xOffset) + "px");
 		
 					diff = 0;
-					if(e.clientY + $("#thumb").height() > $(window).height())
+					if (e.clientY + $("#thumb").height() > $(window).height())
 						diff = e.clientY + $("#thumb").height() - $(window).height();
 		
 					$("#thumb").css("top",(e.pageY - yOffset - diff) + "px");
@@ -884,17 +884,17 @@ class EncodeExplorer
 		            var width = 0;
 		            var height = 0;
 		
-					if(parts.length == 2) // xxx.jpg?width=64&height=5684
+					if (parts.length == 2) // xxx.jpg?width=64&height=5684
 					{
 		                var query = parts.pop();
 		                image = parts.pop();
 		
 		                parts = query.split("&");
-		                if(parts.length == 2) // width=64&height=5684
+		                if (parts.length == 2) // width=64&height=5684
 		                {
 		                    var q1 = parts.pop();
 		                    var p1 = q1.split("=");
-		                    if(p1.length == 2) // width=64
+		                    if (p1.length == 2) // width=64
 		                    {
 		                        var v1 = p1.pop();
 		                        var n1 = p1.pop();
@@ -903,7 +903,7 @@ class EncodeExplorer
 		                    }
 		                    var q2 = parts.pop();
 		                    var p2 = q2.split("=");
-		                    if(p2.length == 2) // height=5684
+		                    if (p2.length == 2) // height=5684
 		                    {
 		                        var v2 = p2.pop();
 		                        var n2 = p2.pop();
@@ -931,17 +931,17 @@ class EncodeExplorer
 		            var width = 0;
 		            var height = 0;
 		
-					if(parts.length == 2) // xxx.jpg?width=64&height=5684
+					if (parts.length == 2) // xxx.jpg?width=64&height=5684
 					{
 		                var query = parts.pop();
 		                image = parts.pop();
 		
 		                parts = query.split("&");
-		                if(parts.length == 2) // width=64&height=5684
+		                if (parts.length == 2) // width=64&height=5684
 		                {
 		                    var q1 = parts.pop();
 		                    var p1 = q1.split("=");
-		                    if(p1.length == 2) // width=64
+		                    if (p1.length == 2) // width=64
 		                    {
 		                        var v1 = p1.pop();
 		                        var n1 = p1.pop();
@@ -950,7 +950,7 @@ class EncodeExplorer
 		                    }
 		                    var q2 = parts.pop();
 		                    var p2 = q2.split("=");
-		                    if(p2.length == 2) // height=5684
+		                    if (p2.length == 2) // height=5684
 		                    {
 		                        var v2 = p2.pop();
 		                        var n2 = p2.pop();

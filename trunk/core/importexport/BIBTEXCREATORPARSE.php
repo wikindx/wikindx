@@ -371,12 +371,12 @@ class BIBTEXCREATORPARSE
         $remain = [];
         foreach ($name as $part)
         {
-            //			if(preg_match("/[a-zA-Z]{2,}/u", trim($part)))
+            //			if (preg_match("/[a-zA-Z]{2,}/u", trim($part)))
             if (preg_match("/\\.$/u", trim($part)))
             { // find initials indicated by '.' at the end
                 $initials[] = str_replace(".", " ", trim($part));
             }
-            //			if(preg_match("/\p{L}{2,}/u", trim($part))) // match unicode characters
+            //			if (preg_match("/\p{L}{2,}/u", trim($part))) // match unicode characters
             else
             {
                 $remain[] = trim($part);

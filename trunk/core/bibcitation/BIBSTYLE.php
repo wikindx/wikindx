@@ -444,7 +444,7 @@ class BIBSTYLE
             {
                 /*
                 Why should there be no linebreak and two spaces between title and subtitle?
-                if($this->output == 'html')
+                if ($this->output == 'html')
                     $pString .= "&nbsp;&nbsp;";
                 else
                 */

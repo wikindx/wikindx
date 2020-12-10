@@ -359,7 +359,7 @@ class RESOURCECOMMON
         {
             $this->db->orderBy($order3, FALSE);
         }
-        //		if($this->groupByResourceId)
+        //		if ($this->groupByResourceId)
         //			$this->db->groupBy('resourceId');
         if ($this->withUnixTimestamp)
         {
@@ -378,7 +378,7 @@ class RESOURCECOMMON
                     $this->collectionFields,
                     $this->publisherFields
                 );
-                //				if($this->groupByResourceId)
+                //				if ($this->groupByResourceId)
                 //					$this->db->group .= ', ' . $this->db->formatFields($fields);
                 return $this->db->selectNoExecuteFromSubQuery(
                     FALSE,
@@ -406,7 +406,7 @@ class RESOURCECOMMON
             {
                 $this->db->limit($this->limit, 0);
             }
-            //			if($this->groupByResourceId)
+            //			if ($this->groupByResourceId)
             //				$this->db->group .= ', ' . $this->db->formatFields($fields);
             return $this->db->query($this->db->selectNoExecuteFromSubQuery(
                 FALSE,
@@ -433,7 +433,7 @@ class RESOURCECOMMON
                     $this->collectionFields,
                     $this->publisherFields
                 );
-                //				if($this->groupByResourceId)
+                //				if ($this->groupByResourceId)
                 //					$this->db->group .= ', ' . $this->db->formatFields($fields);
                 return $this->db->selectNoExecuteFromSubQuery(
                     FALSE,
@@ -460,7 +460,7 @@ class RESOURCECOMMON
             {
                 $this->db->limit($this->limit, 0);
             }
-            //			if($this->groupByResourceId)
+            //			if ($this->groupByResourceId)
             //				$this->db->group .= ', ' . $this->db->formatFields($fields);
             return $this->db->query($this->db->selectNoExecuteFromSubQuery(
                 FALSE,

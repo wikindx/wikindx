@@ -1864,9 +1864,9 @@ class RESOURCEVIEW
         /*
         if ($this->session->getVar("setup_Superadmin"))
         {
-            if(array_key_exists($thisKey + 1, $allIds))
+            if (array_key_exists($thisKey + 1, $allIds))
                 $this->nextDelete = $allIds[$thisKey + 1];
-            else if(array_key_exists($thisKey - 1, $allIds))
+            else if (array_key_exists($thisKey - 1, $allIds))
                 $this->nextDelete = $allIds[$thisKey - 1];
         }
         */

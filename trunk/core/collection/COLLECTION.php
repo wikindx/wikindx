@@ -208,7 +208,7 @@ class COLLECTION
             '',
             FALSE
         ) . $this->db->equal . $this->db->tidyInput($collection));
-        //		if($id)
+        //		if ($id)
         //			$this->db->formatConditions(array('collectionId' => $id));
         $resultset = $this->db->select('collection', 'collectionId');
         while ($row = $this->db->fetchRow($resultset))

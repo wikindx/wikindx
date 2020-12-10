@@ -87,7 +87,7 @@ class ENDNOTEEXPORT
             $this->badInput->close($this->errors->text("inputError", "duplicateCustomMap"), $this->parentClass, 'initEndnoteExportL');
         }
         // Disabled due to tabbed file bug above
-        /*		if(array_key_exists('endnoteFileType', $this->vars))
+        /*		if (array_key_exists('endnoteFileType', $this->vars))
                     $this->session->setVar("exportEndnoteFileType", $this->vars['endnoteFileType']);
                 else
                     $this->session->delVar("exportEndnoteFileType");

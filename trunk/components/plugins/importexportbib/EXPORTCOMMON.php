@@ -42,7 +42,7 @@ class EXPORTCOMMON
         $this->filesDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
         $this->browserTabID = GLOBALS::getBrowserTabID();
         // Perform some system admin
-        FILE\tidyFiles();
+        \FILE\tidyFiles();
     }
     /**
      * Create a file name

@@ -242,16 +242,16 @@ function paperExported(savedMessage, notSavedMessage, title)
 	var messageCell = document.getElementById("wpTitle");
 	messageCell.innerHTML = title;
 	var messageCell2 = document.getElementById("wpExportFile");
-//	if(title)
+//	if (title)
 //		messageCell2.innerHTML = 'exportFile Link will go here!';
-	if(!title)
+	if (!title)
 		messageCell2.innerHTML = '';
 }
 
 // Reset message field (paper status) in parent window
 function resetMessageCell()
 {
-//	if(!iframeMessageSet)
+//	if (!iframeMessageSet)
 //	{
 		var messageCell = document.getElementById("wpStatus");
 		messageCell.innerHTML = paperStatusMessage;

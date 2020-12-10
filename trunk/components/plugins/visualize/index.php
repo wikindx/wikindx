@@ -200,9 +200,9 @@ class visualize_MODULE
         //		$min = min($this->yAxis);
         $max = max($this->yAxis);
         /*		$diff = $max - $min;
-                if($aVal < ($diff / 3))
+                if ($aVal < ($diff / 3))
                     $c = "blue";
-                elseif($aVal < (2 * ($diff / 3)))
+                elseif ($aVal < (2 * ($diff / 3)))
                     $c = "green";
                 else
                     $c="red";

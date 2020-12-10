@@ -332,7 +332,7 @@ class BIBTEXPARSE
                 $string = mb_substr($string, 0, -1);
             }
             /* Commented out to handle  undelimited strings such as months.  The bibtex entry is expected to be properly formatted.
-                    else if(!is_numeric($string) && !array_key_exists($string, $this->strings))
+                    else if (!is_numeric($string) && !array_key_exists($string, $this->strings))
                     { // Undefined string that is not a year
             print "NO DELIMITERS: $string<P>";
                         if (array_search($string, $this->undefinedStrings) === FALSE)
@@ -602,11 +602,11 @@ class BIBTEXPARSE
         }
         // EZ: Remove this to be able to use the same instance for parsing several files,
         // e.g., parsing a entry file with its associated abbreviation file
-        //		if(empty($this->preamble))
+        //		if (empty($this->preamble))
         //			$this->preamble = FALSE;
-        //		if(empty($this->strings))
+        //		if (empty($this->strings))
         //			$this->strings = FALSE;
-        //		if(empty($this->entries))
+        //		if (empty($this->entries))
         //			$this->entries = FALSE;
         return [$this->preamble, $this->strings, $this->entries, $this->undefinedStrings];
     }

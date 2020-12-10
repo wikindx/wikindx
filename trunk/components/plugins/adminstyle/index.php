@@ -1778,7 +1778,7 @@ class adminstyle_MODULE
         ));
         $td .= FORM\textInput(FALSE, $prefix . "_primaryCreatorRepeatString", $repeatString, 15, 255);
         $pString .= HTML\td($td, 'padding5px');
-        //		if(!$footnote)
+        //		if (!$footnote)
         //		{
         // Other creators (editors, translators etc.)
         $firstStyle = base64_decode($this->session->getVar($prefix . "_otherCreatorFirstStyle"));

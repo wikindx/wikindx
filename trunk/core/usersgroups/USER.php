@@ -971,9 +971,9 @@ class USER
             {
                 $userAdd = $this->messages->text("hint", "addedBy", $this->messages->text("user", "unknown"));
             }
-            /*			if(!$both) // usually for list views where we display only either added by or edited by
+            /*			if (!$both) // usually for list views where we display only either added by or edited by
                         {
-                            if(!$edit
+                            if (!$edit
                                 &&
                                 array_key_exists('resourcetimestampTimestamp', $row) // i.e. edited
                                 &&
@@ -988,9 +988,9 @@ class USER
                         }
                         $this->db->formatConditions(array('usersId' => $edit));
                         $resultset = $this->db->select('users', array('usersUsername', 'usersFullname'));
-                        if(!$this->db->numRows($resultset))
+                        if (!$this->db->numRows($resultset))
                         {
-                            if(!$edit
+                            if (!$edit
                                 &&
                                 array_key_exists('resourcetimestampTimestamp', $row) // i.e. edited
                                 &&
@@ -1002,9 +1002,9 @@ class USER
                             return array($userAdd, $userEdit);
                         }
                         $row = $this->db->fetchRow($resultset);
-                        if(is_array($row) && array_key_exists('usersFullname', $row) && $row['usersFullname'])
+                        if (is_array($row) && array_key_exists('usersFullname', $row) && $row['usersFullname'])
                             $userEdit = $this->messages->text("hint", "editedBy", stripslashes($row['usersFullname']));
-                        else if(is_array($row) && array_key_exists('usersUsername', $row) && $row['usersUsername'])
+                        else if (is_array($row) && array_key_exists('usersUsername', $row) && $row['usersUsername'])
                             $userEdit = $this->messages->text("hint", "editedBy", stripslashes($row['usersUsername']));
                         else
                             $userEdit = $this->messages->text("hint", "editedBy", $this->messages->text("user", "unknown"));

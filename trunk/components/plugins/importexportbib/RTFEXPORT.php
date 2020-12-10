@@ -871,7 +871,7 @@ class RTFEXPORT
                 0
             );
         }
-        //		if(array_key_exists("bibliography", $this->input)) // This type is used for other purposes too so always prepare it.
+        //		if (array_key_exists("bibliography", $this->input)) // This type is used for other purposes too so always prepare it.
         //		{
         $this->rtfFontBlock(
             "bibliography",

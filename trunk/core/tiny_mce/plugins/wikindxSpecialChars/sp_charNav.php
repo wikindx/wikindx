@@ -43,14 +43,14 @@ include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "..", "startup",
 
 	function goto_URL(object)
 	{
-		if(object.options[object.selectedIndex].value)
+		if (object.options[object.selectedIndex].value)
 			parent.main.location.href = object.options[object.selectedIndex].value;
 	}
 
 	function insertAndClose()
 	{
 		var spChar = parent.nav.document.getElementById("textBox").value
-		if(spChar != '') tinyMCEPopup.execCommand('mceInsertContent', false, spChar);
+		if (spChar != '') tinyMCEPopup.execCommand('mceInsertContent', false, spChar);
 
 		// Refocus in window and close
 		if (tinyMCEPopup.isWindow) {

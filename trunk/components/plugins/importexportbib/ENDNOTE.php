@@ -76,7 +76,7 @@ class ENDNOTE
         /*
         $types = array(1 => $this->pluginmessages->text("exportEndnoteTabbed"),
                     2 => $this->pluginmessages->text("exportEndnoteXml"));
-        if($selected = $this->session->getVar("exportEndnoteFileType"))
+        if ($selected = $this->session->getVar("exportEndnoteFileType"))
             $pString .= HTML\td(FORM\selectedBoxValue($this->pluginmessages->text("exportEndnoteFileType"),
                 "endnoteFileType", $types, $selected, 2));
         else

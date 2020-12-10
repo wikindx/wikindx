@@ -692,15 +692,15 @@ class CITEFORMAT
                 }
                 // If an intervening but different work by the same creators is in $this->inTextDoneIds, we don't use the subsequent template.
                 // Commented out as not needed.
-                /*				if(array_key_exists('creatorIds', $this->item))
+                /*				if (array_key_exists('creatorIds', $this->item))
                                 {
                                     foreach($creatorIdStrings as $CISarray)
                                     {
                                         $CIScitationID = $CISarray[0];
                                         $CISstring = $CISarray[1];
-                                        if($CISstring == $this->item['creatorIds'])
+                                        if ($CISstring == $this->item['creatorIds'])
                                         {
-                                            if(($this->item['id'] == $CIScitationID))
+                                            if (($this->item['id'] == $CIScitationID))
                                                 $trySubsequent = TRUE;
                                             else
                                                 $trySubsequent = FALSE;
@@ -710,9 +710,9 @@ class CITEFORMAT
                                 }
                 */
                 // If single subsequent citation later in the text, use subsequentCitationTemplate
-                //				if(!$this->matchNameSplit && !$this->nameInSameSentence &&
+                //				if (!$this->matchNameSplit && !$this->nameInSameSentence &&
                 //					array_search($this->item['id'], $this->inTextDoneIds) !== FALSE)
-                //				if($trySubsequent && (array_search($this->item['id'], $this->inTextDoneIds) !== FALSE))
+                //				if ($trySubsequent && (array_search($this->item['id'], $this->inTextDoneIds) !== FALSE))
                 if ($trySubsequent)
                 {
                     if (isset($this->subsequentCreatorTemplate) &&
@@ -825,7 +825,7 @@ class CITEFORMAT
             }
             // Debugging
             /*
-            if(isset($templateName))
+            if (isset($templateName))
             {
                 print "TEMPLATENAME $templateName: ";
                 unset($templateName);

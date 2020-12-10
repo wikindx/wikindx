@@ -237,9 +237,7 @@ class SQL
     public function queryNoExecute(string $querystring)
     {
         $querystring .= $this->subClause();
-
-        $this->printSQLDebug($querystring, 'queryNoExecute');
-
+        
         $this->resetSubs();
 
         return $querystring;

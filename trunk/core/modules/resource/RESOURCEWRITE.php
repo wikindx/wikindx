@@ -1023,7 +1023,8 @@ class RESOURCEWRITE
         $this->formData['resource']['resourceType'] = $this->formData['resourceType'];
         $noSortFound = FALSE;
         // tinyMCE adds P and BR tags in some cases
-        $input['resourceTitle'] = str_ireplace(["<p>", "</p>", "</br>", "<br>"], '', $input['resourceTitle']);
+        // Fix(LkpPo): Enumerate all case because str_ireplace is very slow
+        $input['resourceTitle'] = str_replace(["<p>", "</p>", "<P>", "</P>", "<br/>", "<br>", "<BR/>", "<BR>", "<bR/>", "<bR>", "<Br/>", "<Br>"], '', $input['resourceTitle']);
         $input['resourceTitle'] = $this->trimString($input['resourceTitle']);
         foreach (WIKINDX_NO_SORT as $pattern)
         {
@@ -1053,7 +1054,8 @@ class RESOURCEWRITE
         if (array_key_exists('resourceSubtitle', $input))
         {
             // tinyMCE adds P and BR tags in some cases
-            $subTitle = str_ireplace(["<p>", "</p>", "</br>", "<br>"], '', $input['resourceSubtitle']);
+            // Fix(LkpPo): Enumerate all case because str_ireplace is very slow
+            $subTitle = str_replace(["<p>", "</p>", "<P>", "</P>", "<br/>", "<br>", "<BR/>", "<BR>", "<bR/>", "<bR>", "<Br/>", "<Br>"], '', $input['resourceSubtitle']);
             $subTitle = $this->trimString($subTitle);
             if ($subTitle)
             {

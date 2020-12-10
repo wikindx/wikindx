@@ -97,7 +97,8 @@ class CITESTYLE
             {
                 // Wikindx v4 runs in HTML 4.01 but TinyMCE was configured for XHTML in v3.8.
                 // For the precaution, treating the two notations which can be mixed after migrating to v4.
-                $this->matches[1][] = rtrim(str_ireplace(['<br />', '<br/>', '<br>'], '', $value));
+                // Fix(LkpPo): Enumerate all case because str_ireplace is very slow
+                $this->matches[1][] = rtrim(str_replace(["<br/>", "<br>", "<BR/>", "<BR>", "<bR/>", "<bR>", "<Br/>", "<Br>"], '', $value));
             }
         }
         $this->citeFormat->count = 0;
@@ -105,7 +106,8 @@ class CITESTYLE
         {
             // Wikindx v4 runs in HTML 4.01 but TinyMCE was configured for XHTML in v3.8.
             // For the precaution, treating the two notations which can be mixed after migrating to v4.
-            if ($id = $this->parseCiteTag($index, str_ireplace(['<br />', '<br/>', '<br>'], '', $value)))
+            // Fix(LkpPo): Enumerate all case because str_ireplace is very slow
+            if ($id = $this->parseCiteTag($index, str_replace(["<br/>", "<br>", "<BR/>", "<BR>", "<bR/>", "<bR>", "<Br/>", "<Br>"], '', $value)))
             {
                 $this->citeIds[] = $id;
             }

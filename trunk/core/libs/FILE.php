@@ -1484,6 +1484,49 @@ namespace FILE
     }
 
     /**
+     * Does an unix command exist?
+     *
+     * @param string $command Command to test with the default shell
+     *
+     * @return bool TRUE on success
+     */
+    function command_exists2($command)
+    {
+        if (suhosin_function_exists('proc_open'))
+        {
+            if (\UTILS\OSName() == 'windows')
+            {
+                $execoutput = [];
+                $errorcode = 0;
+                exec("where /Q $command", $execoutput, $errorcode);
+                
+                // The WHERE command returns an error code
+                // 0: the search matched a binary
+                // 1: no match
+                // 2: error, no matching possible
+                if ($errorcode == 0)
+                    return TRUE;
+                else
+                    return FALSE;
+            }
+            else
+            {
+                $execoutput = [];
+                exec("which $command", $execoutput);
+                
+                // The WHICH command returns a list of binary that matchs the request or an empty string
+                if (count($execoutput) > 0 && trim($execoutput[0]) != "")
+                    return TRUE;
+                else
+                    return FALSE;
+            }
+        }
+
+        // Fallback
+        return FALSE;
+    }
+
+    /**
      * Does a function exist ou is enabled with or without the suhosin security extension?
      *
      * @see https://suhosin.org/stories/index.html

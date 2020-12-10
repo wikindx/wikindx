@@ -2967,8 +2967,15 @@ class SQL
      */
     public function printSQLDebug($querystring = '', $executionType = 'SQL')
     {
-        $beautified = $this->beautify($querystring, $executionType);
-        GLOBALS::addTplVar('logsql', $beautified);
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
+        {
+            $beautified = $this->beautify($querystring, $executionType);
+            GLOBALS::addTplVar('logsql', $beautified);
+        }
+        else
+        {
+            $beautified = $querystring;
+        }
 
         return $beautified;
     }
@@ -3122,7 +3129,11 @@ class SQL
     private function internalQuery($querystring, $bNoError)
     {
         $querystring .= $this->subClause();
-        $beautified = $this->printSQLDebug($querystring, 'query');
+        
+        if (!defined("WIKINDX_DEBUG_SQL") || WIKINDX_DEBUG_SQL)
+        {
+            GLOBALS::addTplVar('logsql', $this->beautify($querystring, "SQL"));
+        }
 
         $this->sqlTimerOn();
 
@@ -3163,8 +3174,7 @@ class SQL
 
         if (!$execOk && !$bNoError)
         {
-            $this->printSQLDebug($querystring, "EXEC ERROR");
-            $this->sqlDie($this->error, $beautified);
+            $this->sqlDie($this->error, $this->beautify($querystring, "SQL ERROR"));
         }
 
         GLOBALS::incrementDbQueries();

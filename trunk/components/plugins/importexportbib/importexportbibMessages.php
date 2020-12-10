@@ -44,9 +44,8 @@ class importexportbibMessages
             "bibutilsoutputType" => dgettext($domain, "Output Type"),
             "bibutilsinputFile" => dgettext($domain, "Input File"),
             "bibutilsoutputFile" => dgettext($domain, "Output File"),
-            "bibutilscredit" => dgettext($domain, "The Bibutils plugin uses C binaries written by Chris Putnam at ###. Most conversions use the MODS XML
-			intermediate format."),
-            "bibutilsnoPrograms" => dgettext($domain, "No Bibutils programs found in ###"),
+            "bibutilscredit" => dgettext($domain, "The Bibutils plugin uses C binaries written by Chris Putnam at ###. It allows for the format conversion of many different types of bibliographies so that there is usually a way to import your bibliography into WIKINDX. Most conversions use the MODS XML intermediate format."),
+            "bibutilsnoPrograms" => dgettext($domain, "No Bibutils programs found in ###. Either Bibutils is not installed or the path is incorrect (edit the plugin's config.php)"),
             "bibutilsnoInputType" => dgettext($domain, "No input type specified"),
             "bibutilsnoOutputType" => dgettext($domain, "No output type specified"),
             "bibutilsnoFileInput" => dgettext($domain, "Missing input file"),
@@ -142,6 +141,7 @@ class importexportbibMessages
             "importPubMedIntro" => dgettext($domain, "Search PubMed: please enter one or more fields – if the ID field is 
             	completed, only one result will be returned if found. Multiple items within a field
 				should be separated by a space. Per NCBI policy, a maximum of 100 search results can be obtained."),
+            "importPubMedNoBibutils" => dgettext($domain, "PubMed imports require Bibutils to be installed."),
             "importPubMedId" => dgettext($domain, "PubMed ID"),
             "importPubMedFields" => dgettext($domain, "All Fields"),
             "importPubMedAuthor" => dgettext($domain, "Author"),

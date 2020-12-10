@@ -244,6 +244,19 @@ class importexportbib_MODULE
             $auth->initLogon();
             FACTORY_CLOSE::getInstance();
         }
+        if (!\FILE\command_exists($this->configImport->bibutilsPath . 'med2xml')) {
+			GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerPubMedImport"));
+			$pString = \HTML\p($this->pluginmessages->text("bibutilsnoPrograms", $this->configImport->bibutilsPath), "error", "center");
+			$pString .= \HTML\p($this->pluginmessages->text("importPubMedNoBibutils"));
+			$pString .= \HTML\p($this->pluginmessages->text("bibutilscredit", \HTML\a(
+				"link",
+				'Bibutils',
+				'https://sourceforge.net/p/bibutils/home/Bibutils/',
+				'_blank'
+			)));
+			GLOBALS::addTplVar('content', $pString);
+            FACTORY_CLOSE::getInstance();
+        }
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "PUBMED.php"]));
         $pubmed = new PUBMED($this);
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'wikindx'))
@@ -265,6 +278,18 @@ class importexportbib_MODULE
      */
     public function initBibutils($message = FALSE)
     {
+    	if (!\FILE\command_exists($this->configImport->bibutilsPath . 'bib2xml')) {
+			GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerBibutils"));
+			$pString = \HTML\p($this->pluginmessages->text("bibutilsnoPrograms", $this->configImport->bibutilsPath), "error", "center");
+			$pString .= \HTML\p($this->pluginmessages->text("bibutilscredit", \HTML\a(
+				"link",
+				'Bibutils',
+				'https://sourceforge.net/p/bibutils/home/Bibutils/',
+				'_blank'
+			)));
+			GLOBALS::addTplVar('content', $pString);
+            FACTORY_CLOSE::getInstance();
+        }
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "BIBUTILS.php"]));
         $bibutils = new BIBUTILS($this);
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'ajax'))
@@ -640,7 +665,7 @@ class importexportbib_MODULE
 		if (!$basket = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'basket_List')) {
 			$basket = $this->session->getVar("basket_List");
 		}
-        if (($type == 'bibutils') && (FILE\command_exists($this->configImport->bibutilsPath . 'bib2xml')))
+        if ($type == 'bibutils') // Test for existence later as command_exists command slows things down (which we don't want on every page).
         {
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuBibutils')] = "initBibutils";
         }
@@ -744,10 +769,7 @@ class importexportbib_MODULE
         elseif ($type == 'import')
         { // import
             $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuEndnoteImport')] = "initEndnoteImport";
-            if (FILE\command_exists($this->configImport->bibutilsPath . 'med2xml'))
-            {
-                $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuPubMedImport')] = "initPubMedImport";
-            }
-        }
+			$this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuPubMedImport')] = "initPubMedImport";
+		}
     }
 }

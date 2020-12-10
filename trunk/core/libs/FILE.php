@@ -1468,8 +1468,9 @@ namespace FILE
 
             if ($process !== FALSE)
             {
-                $stdout = stream_get_contents($pipes[1]);
-                $stderr = stream_get_contents($pipes[2]);
+                $stdout = stream_get_contents($pipes[1], 8);
+                // Don't read STDERR. That's slow down the process.
+                // Close immediatly pipes to speed proc_close()
                 fclose($pipes[1]);
                 fclose($pipes[2]);
                 proc_close($process);

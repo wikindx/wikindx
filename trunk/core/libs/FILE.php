@@ -1454,7 +1454,7 @@ namespace FILE
     {
         if (suhosin_function_exists('proc_open'))
         {
-            $whereIsCommand = (PHP_OS == 'WINNT') ? 'where' : 'which';
+            $whereIsCommand = (\UTILS\OSName() == 'windows') ? 'where' : 'which';
 
             $process = proc_open(
                 "$whereIsCommand $command",

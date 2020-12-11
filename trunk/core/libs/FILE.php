@@ -1450,7 +1450,7 @@ namespace FILE
      *
      * @return bool TRUE on success
      */
-    function command_exists($command)
+    function command_exists2($command)
     {
         if (suhosin_function_exists('proc_open'))
         {
@@ -1491,7 +1491,7 @@ namespace FILE
      *
      * @return bool TRUE on success
      */
-    function command_exists2($command)
+    function command_exists($command)
     {
         if (suhosin_function_exists('proc_open'))
         {

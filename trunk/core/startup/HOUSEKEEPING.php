@@ -33,76 +33,65 @@ class HOUSEKEEPING
         $this->cacheAttachments();
     }
     /**
-     * Check if any attachments need caching and create them one at a time
+     * Check if any attachments need caching and provide a scrren to built the cache
      */
     public function cacheAttachments()
     {
+        // superadmin logging on – caching requires the superadmin to click further
+        if ($this->session->getVar("setup_UserId") != WIKINDX_SUPERADMIN_ID || $this->session->getVar("skipCachingAttachments", FALSE))
+        {
+            return;
+        }
+        
         $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
-        $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
+        $cacheDir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
         
-        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_CORE, "modules", "attachments", "ATTACHMENTS.php"]));
-        $att = new ATTACHMENTS();
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "list", "FILETOTEXT.php"]));
+        $f2t = new FILETOTEXT();
         
-        $mem = ini_get('memory_limit');
-        ini_set('memory_limit', '-1'); // NB not always possible to set
-        if (ini_get('memory_limit') == -1)
+        $nbMissingCacheFile = $f2t->countMissingCacheFile();
+        
+        if ($nbMissingCacheFile > 0)
         {
-            $maxSize = FALSE;
-        }
-        elseif (ini_get('memory_limit') >= 129)
-        {
-            $maxSize = 30000000; // 30MB
-        }
-        elseif (ini_get('memory_limit') >= 65)
-        {
-            $maxSize = 15000000; // 15MB
+            $this->session->setVar("cache_Attachments", $nbMissingCacheFile);
+            
+            $messages = FACTORY_MESSAGES::getInstance();
+            
+            $pString = \HTML\p($messages->text("misc", "attachmentCache1"));
+            $pString .= \HTML\p($messages->text("misc", "attachmentCache2", $nbMissingCacheFile));
+            $lastCache = $this->session->getVar("cache_Attachments");
+            if ($lastCache)
+            {
+                $pString .= \HTML\p($messages->text("misc", "attachmentCache3", $lastCache));
+            }
+            $pString .= \FORM\formHeader("list_FILETOTEXT_CORE");
+            $pString .= \FORM\hidden("method", "checkCache");
+            if (function_exists('curl_multi_exec'))
+            {
+                if (!$this->session->getVar("cache_Attachments"))
+                { // At beginning
+                    $checked = 'CHECKED';
+                }
+                elseif ($this->session->getVar("cache_Curl"))
+                {
+                    $checked = 'CHECKED';
+                }
+                else
+                {
+                    $checked = FALSE;
+                }
+                $pString .= \HTML\p(\FORM\checkbox($messages->text("misc", "attachmentCache4"), "cacheCurl", $checked));
+            }
+            $value = $this->session->getVar("cache_Limit");
+            $pString .= \HTML\p($messages->text("misc", "attachmentCache5", \FORM\textInput(FALSE, "cacheLimit", $value, 3)));
+            $pString .= \HTML\p(\FORM\formSubmit($messages->text("submit", "Cache")) . \FORM\formEnd());
+            $pString .= \HTML\p(\HTML\a("skip", $messages->text("misc", "attachmentCache6"), htmlentities(WIKINDX_URL_BASE . "/index.php?action=attachments_ATTACHMENTS_CORE&method=skipCaching")));
+            GLOBALS::addTplVar('content', $pString);
+            FACTORY_CLOSENOMENU::getInstance(); // die
         }
         else
         {
-            $maxSize = 5000000; // 5MB
-        }
-        
-        $maxExecTime = ini_get('max_execution_time');
-        $maxCount = 1;
-        
-        $count = 0;
-        $size = 0;
-        
-        $listDataFiles = \FILE\fileInDirToArray($dirData);
-        $listCacheFiles = \FILE\fileInDirToArray($dirCache);
-        
-        $listCacheFilesMissing = array_diff($listDataFiles, $listCacheFiles);
-        
-        foreach($listCacheFilesMissing as $k => $file)
-        {
-            $att->refreshCache($file);
-            
-            $count++;
-            $size += filesize(implode(DIRECTORY_SEPARATOR, [$dirData, $file]));
-            
-            // Stop if there is less than a second left
-            if ($maxExecTime - GLOBALS::getPageElapsedTime() <= 1)
-            {
-                break;
-            }
-            
-            // Stop if the maximum number of attachments has been reached
-            if ($maxCount)
-            {
-                if ($count >= $maxCount)
-                {
-                    break;
-                }
-            }
-            
-            // Stop if all allocated memory has been consumed
-            if ($maxSize)
-            {
-                if ($size >= $maxSize)
-                {
-                    break;
-                }
-            }
+            $this->session->delvar("cache_Attachments");
         }
     }
     /**

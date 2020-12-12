@@ -1209,8 +1209,10 @@ class MESSAGES
 				"attachmentCache1" => dgettext($domain, "Before proceeding, attachments need to be converted to text files and cached in order to speed up full-text searches. This process might take some time if you have a large number of attachments and/or large files so leave the script running until activity stops. Keep on eye on activity in the cache/attachments/ folder. WIKINDX tries to deal with max execution timeouts but if you find that caching is not proceeding, you might need to adjust PHP's max_execution_time. If you get a blank page, it means a timeout has occurred. If CURL is part of the PHP installation and you select this option, WIKINDX will attempt to convert files in multiple, simultaneous instances and, if a timeout occurs, the error message will be written to the cached file: you should either increase max_execution_time or turn off the use of CURL. In the latter case, conversion proceeds sequentially and slowly and, unless the file to be converted is far too large and WIKINDX does not have enough time to convert the one file, the converted files are guaranteed to be cached. The option of limiting the number of files cached at any one time is also provided. At any time, you can skip over caching of files until the next time you login or go to the front page."),
 				"attachmentCache2" => dgettext($domain, "### attachments remain to be cached."),
 				"attachmentCache3" => dgettext($domain, "### attachments cached thus far."),
+/// misc_attachmentCache4 Don't translate 'CURL'
+				"attachmentCache4" => dgettext($domain, "Use CURL"),
 				"attachmentCache5" => dgettext($domain, "Attempt to only cache this number of files at a time: ###"),
-				"attachmentCache6" => dgettext($domain, "Skip caching"),
+				"attachmentCache6" => dgettext($domain, "Skip caching until the next login."),
 				"fileAttachDeleteAll" => dgettext($domain, "Delete all attachments for this resource"),
 			),
 /// collection_ Messages relating to collections and publisher types

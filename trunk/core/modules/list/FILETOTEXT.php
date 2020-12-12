@@ -23,6 +23,206 @@ class FILETOTEXT
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "pdftotext", "PdfToText.phpclass"]));
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_VENDOR, "rtftools", "RtfTexter.phpclass"]));
     }
+    
+    /**
+     * readText
+     *
+     * @param mixed $filename
+     *
+     * @return string
+     */
+    public function countMissingCacheFile()
+    {
+        $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
+        $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
+        
+        $listDataFiles = \FILE\fileInDirToArray($dirData);
+        
+        $nbFilesMissing = 0;
+        
+        foreach($listDataFiles as $k => $file)
+        {
+            $pathData = implode(DIRECTORY_SEPARATOR, [$dirData, $file]);
+            $pathCache = implode(DIRECTORY_SEPARATOR, [$dirCache, $file]);
+            
+            // When the cache file exists and is newer than (or equal) the original file there is nothing to do
+            if (!file_exists($pathCache) || filemtime($pathCache) < filemtime($pathData))
+            {
+                $nbFilesMissing++;
+            }
+        }
+        
+        return $nbFilesMissing;
+    }
+
+    /**
+     * Generate every file missing in attachments cache
+     */
+    public function checkCache()
+    {
+        $db = FACTORY_DB::getInstance();
+        $vars = GLOBALS::getVars();
+        $session = FACTORY_SESSION::getInstance();
+        
+        $dirData = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_ATTACHMENTS]);
+        $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
+        
+        include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "attachments", "ATTACHMENTS.php"]));
+        $att = new ATTACHMENTS();
+        
+        $mem = ini_get('memory_limit');
+        $maxExecTime = ini_get('max_execution_time');
+        ini_set('memory_limit', '-1'); // NB not always possible to set
+        ini_set('max_execution_time', '-1'); // NB not always possible to set
+        // Turn error display off so that errors from PdfToText don't get written to screen (still written to the cache files)
+        $errorDisplay = ini_get('display_errors');
+        ini_set('display_errors', FALSE);
+        if (array_key_exists('cacheCurl', $vars) && ($vars['cacheCurl'] == 'on') && function_exists('curl_multi_exec'))
+        {
+            $session->setVar("cache_Curl", TRUE);
+            $curlExists = TRUE;
+        }
+        else
+        {
+            $session->delVar("cache_Curl");
+            $curlExists = FALSE;
+        }
+        // Attempting to avoid timeouts if max execution time cannot be set. This is done on a trial and error basis.
+        if (ini_get('memory_limit') == -1)
+        { // unlimited
+            $maxCount = FALSE;
+            $maxSize = FALSE;
+        }
+        elseif (ini_get('memory_limit') >= 129)
+        {
+            $maxCount = 30;
+            $maxSize = 30000000; // 30MB
+        }
+        elseif (ini_get('memory_limit') >= 65)
+        {
+            $maxCount = 20;
+            $maxSize = 15000000; // 15MB
+        }
+        else
+        {
+            $maxCount = 10;
+            $maxSize = 5000000; // 5MB
+        }
+        $input = FALSE;
+        if (array_key_exists('cacheLimit', $vars))
+        {
+            $input = trim($vars['cacheLimit']);
+            if (is_numeric($input) && is_int($input + 0))
+            { // include cast to number
+                $maxCount = $input;
+                $session->setVar("cache_Limit", $input);
+            }
+        }
+        if (!$input)
+        {
+            $session->delVar("cache_Limit");
+        }
+        
+        $count = 0;
+        $size = 0;
+        
+        if ($curlExists)
+        {
+            $ch = [];
+            $mh = curl_multi_init();
+        }
+        
+        $listDataFiles = \FILE\fileInDirToArray($dirData);
+        shuffle($listDataFiles);
+        
+        foreach($listDataFiles as $k => $file)
+        {
+            $pathData = implode(DIRECTORY_SEPARATOR, [$dirData, $file]);
+            $pathCache = implode(DIRECTORY_SEPARATOR, [$dirCache, $file]);
+            
+            // When the cache file exists and is newer than (or equal) the original file there is nothing to do
+            if (!file_exists($pathCache) || filemtime($pathCache) < filemtime($pathData))
+            {
+                if ($curlExists)
+                {
+                    $curlTarget = WIKINDX_URL_BASE . '/index.php?' .
+                    'action=attachments_ATTACHMENTS_CORE' .
+                    '&method=curlRefreshCache' .
+                    '&filename=' . urlencode($file);
+                    $ch_x = curl_init($curlTarget);
+                    $ch[$file] = $ch_x;
+                    curl_setopt($ch_x, CURLOPT_RETURNTRANSFER, TRUE);
+                    // Get the headers too
+                    curl_setopt($ch_x, CURLOPT_HEADER, TRUE);
+                    curl_setopt($ch_x, CURLOPT_TIMEOUT, ini_get('max_execution_time'));
+                    curl_multi_add_handle($mh, $ch_x);
+                }
+                else
+                {
+                    
+                    try
+                    {
+                        $att->refreshCache($file);
+                    }
+                    catch (Exception $e)
+                    {
+                        file_put_contents($pathCache, "");
+                    }
+                }
+                
+                ++$count;
+                $size += filesize($pathData);
+                
+                if ($maxCount)
+                {
+                    if ($count >= $maxCount)
+                    {
+                        break;
+                    }
+                }
+                if ($maxSize)
+                {
+                    if ($size >= $maxSize)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if ($curlExists)
+        {
+            $running = NULL;
+            do
+            {
+                curl_multi_exec($mh, $running);
+            } while ($running);
+            foreach ($ch as $ch_x)
+            {
+                curl_multi_remove_handle($mh, $ch_x);
+                curl_close($ch_x);
+            }
+            curl_multi_close($mh);
+        }
+        
+        $nbFilesMissing = $this->countMissingCacheFile();
+        $session->setVar("cache_Attachments", $nbFilesMissing);
+        
+        ini_set('display_errors', $errorDisplay);
+        ini_set('memory_limit', $mem);
+        ini_set('max_execution_time', $maxExecTime);
+        
+        if ($nbFilesMissing > 0)
+        {
+            include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "startup", "HOUSEKEEPING.php"]));
+            $hk = new HOUSEKEEPING(FALSE);
+        }
+        else
+        {
+            header("Location: index.php");
+            die();
+        }
+    }
 
     /**
      * convertToText
@@ -82,6 +282,7 @@ class FILETOTEXT
     private function readPdf($filename)
     {
         // PDF objects can be large – memory is reset at the next script
+        $mem = ini_get('memory_limit');
         ini_set('memory_limit', '-1');
         
         $errorDisplay = ini_get('display_errors');
@@ -95,10 +296,11 @@ class FILETOTEXT
         
         // PDFOPT_NO_HYPHENATED_WORDS: tries to join back hyphenated words into a single word
         // PDFOPT_ENFORCE_EXECUTION_TIME: throw a PdfToTextTimeout exception if the extraction run more than MaxExecutionTime
-        $importPDF->Options = PdfToText::PDFOPT_NO_HYPHENATED_WORDS | PdfToText::PDFOPT_ENFORCE_EXECUTION_TIME;
+        $importPDF->Options = PdfToText::PDFOPT_NO_HYPHENATED_WORDS;
+        //$importPDF->Options = PdfToText::PDFOPT_NO_HYPHENATED_WORDS | PdfToText::PDFOPT_ENFORCE_EXECUTION_TIME;
         
         // Will consume all available runtime except 2 seconds (if this point is reached in less than 2 seconds)
-        $importPDF->MaxExecutionTime = ini_get('max_execution_time') - GLOBALS::getPageElapsedTime() - 3;
+        //$importPDF->MaxExecutionTime = ini_get('max_execution_time') - GLOBALS::getPageElapsedTime() - 3;
         
         
         try
@@ -118,6 +320,7 @@ class FILETOTEXT
         }
         
         ini_set('display_errors', $errorDisplay);
+        ini_set('memory_limit', $mem);
         
         return $text;
     }

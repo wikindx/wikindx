@@ -140,8 +140,6 @@ class ATTACHMENTS
             $filename = $row['resourceattachmentsFileName'];
             $lastmodified = date('r', strtotime($row['resourceattachmentsTimestamp']));
             
-            $this->refreshCache($hash);
-            
             FILE\setHeaders($type, $size, $filename, $lastmodified);
             FILE\readfile_chunked($dirName . DIRECTORY_SEPARATOR . $hash);
             $this->attachment->incrementDownloadCounter($id, $resourceId);
@@ -591,6 +589,30 @@ class ATTACHMENTS
     }
     
     /**
+     * Disables the generation of attachment cache files until the next SuperAmin connection
+     */
+    public function skipCaching()
+    {
+        $this->session->setVar("skipCachingAttachments", TRUE);
+        header("Location: " . WIKINDX_URL_BASE . "/index.php");
+        die();
+    }
+    
+    /**
+     * Launch the update of one attachment cache file
+     *
+     * This function should only be called from an HTTP request that does not expect a return.
+     */
+    public function curlRefreshCache()
+    {
+        if (array_key_exists("filename", $this->vars))
+        {
+            $this->refreshCache($this->vars['filename'], TRUE);
+        }
+        die();
+    }
+    
+    /**
      * Write or update the cache file of an attachment file
      *
      * @param string $filename // Attachment filename
@@ -618,7 +640,7 @@ class ATTACHMENTS
             return TRUE;
         }
         
-        // Make the cachd file
+        // Make the cached file
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "list", "FILETOTEXT.php"]));
         $ftt = new FILETOTEXT();
         $contentCache = $ftt->convertToText($pathData);

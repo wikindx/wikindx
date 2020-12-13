@@ -486,7 +486,7 @@ class UPDATEDATABASE
                 -- the upgrade process will remove references to attachments in the database if the attachment files do not exist in the new location.</strong></p>
             ";
             $pString .= \FORM\formHeader("upgradeDB");
-            $pString .= \HTML\p(\FORM\formSubmit("Upgrade the database"), FALSE, 'right');
+            $pString .= \HTML\p(\FORM\formSubmit("Continue"), FALSE, 'right');
             $pString .= \FORM\formEnd();
         }
         else
@@ -1175,8 +1175,9 @@ END;
         $this->updateCoreInternalVersion();
         
         $this->endStepMessage = "
-            <p style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT)
-            if you have a lot of statistics entry (you've been using Wikindx for a long time).</p>
+            <p style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX_MEMORY_LIMIT)
+            if you have a lot of statistics entry (you've been using Wikindx for a long time).
+             This step can also take many pauses depending on the amount of statistics accumulated.</p>
         ";
     }
     
@@ -1580,7 +1581,7 @@ END;
             // Check we have more than 6 seconds buffer before max_execution_time times out.
             if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)) || $countTransfered >= 200000)
             {
-                $this->interruptStepMessage  = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
+                $this->interruptStepMessage  = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX_MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time). This step can also take many pauses depending on the amount of statistics accumulated.</span>";
                 $this->interruptStepMessage .= "<br>stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
                 $this->pauseUpdateDisplay();
             }
@@ -1608,7 +1609,7 @@ END;
         // Check we have more than 6 seconds buffer before max_execution_time times out.
         if (((time() - $this->oldTime) >= (ini_get("max_execution_time") - 6)))
         {
-            $this->interruptStepMessage  = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time).</span>";
+            $this->interruptStepMessage  = "<span style='color:red;font-weight:bold'>Caution : stage 13 could require you increase the memory limit (\$WIKINDX_MEMORY_LIMIT) if you have a lot of statistics entry (you've been using Wikindx for a long time). This step can also take many pauses depending on the amount of statistics accumulated.</span>";
             $this->interruptStepMessage .= "<br>stage13 continuing: $countTransfered statistics records created this pass.&nbsp;&nbsp;";
             $this->pauseUpdateDisplay();
         }

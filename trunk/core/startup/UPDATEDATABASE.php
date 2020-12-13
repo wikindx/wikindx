@@ -76,7 +76,7 @@ class UPDATEDATABASE
             // The very first time displays an install message
             else
             {
-                $pString  = "<p>WIKINDX has detected that this is a first installation will proceed with the creation of the database.</p>";
+                $pString  = "<p>WIKINDX has detected that this is a first installation and will proceed with the creation of the database.</p>";
                 $pString .= "<p>To report bugs etc., go to: <a href='https://sourceforge.net/p/wikindx/v5bugs/'>https://sourceforge.net/p/wikindx/v5bugs/</a></strong></p>";
                 $pString .= "<p>Please click on the button to create the database.</p>";
                 $pString .= \HTML\p(
@@ -324,21 +324,23 @@ class UPDATEDATABASE
                     . \FORM\formSubmit("Continue")
                     . \FORM\formEnd()
                 );
+                GLOBALS::addTplVar('content', $pString);
             }
             else
             {
                 // On error display again the form
                 $pString  = $preamble;
                 $pString .= \HTML\p($status, "error", "center");
+                GLOBALS::addTplVar('content', $config->init($pString));
             }
         }
         else
         {
             // The first time display the form
             $pString = $preamble;
+            GLOBALS::addTplVar('content', $config->init($pString));
         }
         
-        GLOBALS::addTplVar('content', $config->init($pString));
         $this->endDisplay();
     }
     
@@ -577,6 +579,10 @@ class UPDATEDATABASE
             background: #729179;
             color: #FFF;
         }
+        
+        .required {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -645,6 +651,10 @@ END;
         .success {
             background: #729179;
             color: #FFF;
+        }
+        
+        .required {
+            color: red;
         }
     </style>
 </head>
@@ -1452,6 +1462,16 @@ END;
      * Remove database_summary table
      */
     private function upgradeTo35()
+    {
+        $this->upgradeToTargetVersion();
+    }
+    
+    /**
+     * Upgrade database schema to version 36 (6.4.0)
+     *
+     * Add a default value to users.usersPassword
+     */
+    private function upgradeTo36()
     {
         $this->upgradeToTargetVersion();
     }

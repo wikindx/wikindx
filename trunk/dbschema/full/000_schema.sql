@@ -400,7 +400,7 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%tag` (
 CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%users` (
   `usersId` int(11) NOT NULL AUTO_INCREMENT,
   `usersUsername` varchar(188) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `usersPassword` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `usersPassword` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
   `usersFullname` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `usersEmail` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
   `usersDepartment` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -528,5 +528,5 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%version` (
   `versionComponentType` varchar(32) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `versionComponentId` varchar(256) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `versionInternalVersion` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`versionComponentId`, `versionComponentId`)
+  PRIMARY KEY (`versionComponentType`, `versionComponentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

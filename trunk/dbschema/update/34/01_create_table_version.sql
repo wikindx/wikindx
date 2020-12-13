@@ -19,10 +19,12 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%version` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 INSERT INTO %%WIKINDX_DB_TABLEPREFIX%%version (
+	versionComponentType,
 	versionComponentId,
 	versionInternalVersion
 )
     SELECT
+        'core',
         'core',
         databasesummarySoftwareVersion
     FROM %%WIKINDX_DB_TABLEPREFIX%%database_summary;

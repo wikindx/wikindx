@@ -28,7 +28,7 @@ class importexportbib_IMPORTCONFIG
     // Path to bibUtils (e.g. '/usr/bin/' for *NIX or
     // "D:/wamp/www/wikindx/bibutils/" for windows).
     // If this is FALSE, the plugin's export function
-    // will assume *NIX and look by default in '/usr/local/bin/'.
+    // will assume *NIX and look by default in $PATH.
     // Needs the trailing '/'
     public $bibutilsPath = FALSE;
 }
@@ -41,7 +41,7 @@ class importexportbib_BIBUTILSCONFIG
     // Path to bibUtils (e.g. '/usr/bin/' for *NIX or
     // "D:/wamp/www/wikindx/bibutils/" for windows).
     // If this is FALSE, the plugin's export function
-    // will assume *NIX and look by default in '/usr/local/bin/'.
+    // will assume *NIX and look by default in $PATH.
     // Needs the trailing '/'
     public $bibutilsPath = FALSE;
 }

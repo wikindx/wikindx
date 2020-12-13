@@ -38,8 +38,7 @@ class HOUSEKEEPING
     public function cacheAttachments()
     {
         // superadmin logging on – caching requires the superadmin to click further
-        if ($this->session->getVar("setup_UserId") != WIKINDX_SUPERADMIN_ID || $this->session->getVar("skipCachingAttachments", FALSE))
-        {
+        if ($this->session->getVar("setup_UserId") != WIKINDX_SUPERADMIN_ID || $this->session->getVar("skipCachingAttachments", FALSE)) {
             return;
         }
         
@@ -48,36 +47,30 @@ class HOUSEKEEPING
         
         include_once(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CORE, "modules", "list", "FILETOTEXT.php"]));
         $f2t = new FILETOTEXT();
+        list($nbMissingCacheFile, $nbFilesTotal) = $f2t->countMissingCacheFile();
         
-        $nbMissingCacheFile = $f2t->countMissingCacheFile();
-        
-        if ($nbMissingCacheFile > 0)
-        {
-            $this->session->setVar("cache_Attachments", $nbMissingCacheFile);
+        if ($nbMissingCacheFile > 0) {
+            $this->session->setVar("cache_AttachmentsRemain", $nbMissingCacheFile);
             
             $messages = FACTORY_MESSAGES::getInstance();
             
+			if (!$doneCache = $this->session->getVar("cache_AttachmentsDone")) {
+				$doneCache = 0;
+				$this->session->setVar("cache_AttachmentsDone", 0);
+			}
             $pString = \HTML\p($messages->text("misc", "attachmentCache1"));
             $pString .= \HTML\p($messages->text("misc", "attachmentCache2", $nbMissingCacheFile));
-            $lastCache = $this->session->getVar("cache_Attachments");
-            if ($lastCache)
-            {
-                $pString .= \HTML\p($messages->text("misc", "attachmentCache3", $lastCache));
-            }
+            $pString .= \HTML\p($messages->text("misc", "attachmentCache3", $doneCache));
             $pString .= \FORM\formHeader("list_FILETOTEXT_CORE");
             $pString .= \FORM\hidden("method", "checkCache");
-            if (function_exists('curl_multi_exec'))
-            {
-                if (!$this->session->getVar("cache_Attachments"))
-                { // At beginning
+            if (function_exists('curl_multi_exec')) {
+                if (!$this->session->getVar("cache_AttachmentsRemain")) { // At beginning
                     $checked = 'CHECKED';
                 }
-                elseif ($this->session->getVar("cache_Curl"))
-                {
+                elseif ($this->session->getVar("cache_Curl")) {
                     $checked = 'CHECKED';
                 }
-                else
-                {
+                else {
                     $checked = FALSE;
                 }
                 $pString .= \HTML\p(\FORM\checkbox($messages->text("misc", "attachmentCache4"), "cacheCurl", $checked));
@@ -89,9 +82,9 @@ class HOUSEKEEPING
             GLOBALS::addTplVar('content', $pString);
             FACTORY_CLOSENOMENU::getInstance(); // die
         }
-        else
-        {
-            $this->session->delvar("cache_Attachments");
+        else {
+            $this->session->delVar("cache_AttachmentsRemain");
+            $this->session->delVar("cache_AttachmentsDone");
         }
     }
     /**

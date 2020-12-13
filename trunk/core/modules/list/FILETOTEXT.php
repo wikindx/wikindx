@@ -29,7 +29,7 @@ class FILETOTEXT
      *
      * @param mixed $filename
      *
-     * @return string
+     * @return array
      */
     public function countMissingCacheFile()
     {
@@ -38,21 +38,20 @@ class FILETOTEXT
         
         $listDataFiles = \FILE\fileInDirToArray($dirData);
         
-        $nbFilesMissing = 0;
+        $nbFilesMissing = $nbFilesTotal = 0;
         
         foreach($listDataFiles as $k => $file)
         {
             $pathData = implode(DIRECTORY_SEPARATOR, [$dirData, $file]);
             $pathCache = implode(DIRECTORY_SEPARATOR, [$dirCache, $file]);
-            
             // When the cache file exists and is newer than (or equal) the original file there is nothing to do
-            if (!file_exists($pathCache) || filemtime($pathCache) < filemtime($pathData))
+            if (!file_exists($pathCache)  || filemtime($pathCache) < filemtime($pathData))
             {
                 $nbFilesMissing++;
             }
+            $nbFilesTotal++;
         }
-        
-        return $nbFilesMissing;
+        return array($nbFilesMissing, $nbFilesTotal);
     }
 
     /**
@@ -205,8 +204,11 @@ class FILETOTEXT
             curl_multi_close($mh);
         }
         
-        $nbFilesMissing = $this->countMissingCacheFile();
-        $session->setVar("cache_Attachments", $nbFilesMissing);
+        list($nbFilesMissing, $nbFilesTotal) = $this->countMissingCacheFile();
+        $previousRemain = $session->getVar("cache_AttachmentsRemain");
+        $session->setVar("cache_AttachmentsRemain", $nbFilesMissing);
+        $done = $session->getVar("cache_AttachmentsDone") + ($previousRemain - $nbFilesMissing);
+        $session->setVar("cache_AttachmentsDone", $done);
         
         ini_set('display_errors', $errorDisplay);
         ini_set('memory_limit', $mem);

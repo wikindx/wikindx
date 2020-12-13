@@ -53,11 +53,15 @@ class importexportbib_MODULE
         $this->browserTabID = GLOBALS::getBrowserTabID();
         if (!$this->configImport->bibutilsPath)
         {
-            $this->configImport->bibutilsPath = '/usr/local/bin/'; // default *NIX location
+//            $this->configImport->bibutilsPath = '/usr/local/bin/'; // default *NIX location
+// Almost all *NIX have bibutils packaged and in the PATH
+			$this->configImport->bibutilsPath = '';
         }
         if (!$this->bibutilsImport->bibutilsPath)
         {
-            $this->bibutilsImport->bibutilsPath = '/usr/local/bin/'; // default *NIX location
+//            $this->bibutilsImport->bibutilsPath = '/usr/local/bin/'; // default *NIX location
+// Almost all *NIX have bibutils packaged and in the PATH
+			$this->bibutilsImport->bibutilsPath = '';
         }
 
         $authorize = FACTORY_AUTHORIZE::getInstance();

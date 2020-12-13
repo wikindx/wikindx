@@ -103,7 +103,7 @@ class BADINPUT
             break;
             default:
                 debug_print_backtrace();
-                print "Incorrect CLOSE object defined in BADINPUT";
+                echo "Incorrect CLOSE object defined in BADINPUT";
                 die;
 
             break;

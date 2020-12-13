@@ -823,14 +823,6 @@ class CITEFORMAT
             {
                 $creatorIdStrings[] = [$this->item['id'], $this->item['creatorIds']];
             }
-            // Debugging
-            /*
-            if (isset($templateName))
-            {
-                print "TEMPLATENAME $templateName: ";
-                unset($templateName);
-            }
-            */
             // Reset temporary replcement type template
             if (isset($this->$type))
             {

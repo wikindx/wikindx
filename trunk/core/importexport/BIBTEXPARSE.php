@@ -334,7 +334,7 @@ class BIBTEXPARSE
             /* Commented out to handle  undelimited strings such as months.  The bibtex entry is expected to be properly formatted.
                     else if (!is_numeric($string) && !array_key_exists($string, $this->strings))
                     { // Undefined string that is not a year
-            print "NO DELIMITERS: $string<P>";
+            echo "NO DELIMITERS: $string<P>";
                         if (array_search($string, $this->undefinedStrings) === FALSE)
                          // if not already in the undefinedStrings array
                             $this->undefinedStrings[] = $string;

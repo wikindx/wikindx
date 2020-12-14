@@ -64,7 +64,7 @@ class UPDATEDATABASE
                 $this->updateCoreInternalVersion(WIKINDX_INTERNAL_VERSION);
                 
                 $pString  = \HTML\p("Database successfully created", "success", "center");
-                $pString .= "<p>The next step you will be asked to create a SuperAdmin account, essential for the maintenance of your new software.</p>";
+                $pString .= "<p>In the next step, you will be asked to create a SuperAdmin account, essential for the maintenance and configuration of your new WIKINDX.</p>";
                 $pString .= \HTML\p(
                       \FORM\formHeader('continueExecution')
                     . \FORM\formSubmit("Continue")
@@ -75,12 +75,12 @@ class UPDATEDATABASE
             // The very first time displays an install message
             else
             {
-                $pString  = "<p>WIKINDX has detected that this is a first installation and will proceed with the creation of the database in two steps:</p>";
+                $pString  = "<p>WIKINDX has detected that this is an initial installation and so will proceed with the creation of the database in two steps:</p>";
                 $pString .= "<ul>";
                     $pString .= "<li>The tables.</li>";
                     $pString .= "<li>A SuperAdmin account.</li>";
                 $pString .= "</ul>";
-                $pString .= "<p>At the end of the step, a status page is displayed. The creation of tables may take quite a long time depending on the capacity of your server.</p>";
+                $pString .= "<p>At the end of the step, a status page is displayed. The creation of tables might take quite a long time depending on the capacity of your server.</p>";
                 $pString .= "<p>To report bugs during install, go to: <a href='https://sourceforge.net/p/wikindx/v5bugs/'>https://sourceforge.net/p/wikindx/v5bugs/</a></p>";
                 $pString .= \HTML\p(
                       \FORM\formHeader('createdatabase')
@@ -203,7 +203,7 @@ class UPDATEDATABASE
             GLOBALS::addTplVar("content", "
                 Your WIKINDX internal version is $dbVersion. WIKINDX requires that you first upgrade
                 to WIKINDX v" . WIKINDX_INTERNAL_VERSION_UPGRADE_MIN . " or later before attempting to upgrade to the latest version.
-                v6.0.8 is recommended as a transition version if you need yet PHP 5.6 support.
+                v6.0.8 is recommended as a transition version if you require PHP 5.6 support.
                 v6.1.0 is recommended as a transition version if you don't need PHP 5.6 support (PHP 7.0 minimum).
             ");
             $this->endDisplay();
@@ -287,7 +287,7 @@ class UPDATEDATABASE
         {
             GLOBALS::addTplVar("content", "
                 <p>Your WIKINDX internal version is $dbVersion.</p>
-                <p>You encountered an unexpected error. Probably a problem with the configuration of the internal versions. Please check the constants:</p>
+                <p>An unexpected error was encountered. This is probably an issue with the configuration of the internal versions. Please check the constants:</p>
                 <ul>
                     <li>WIKINDX_PUBLIC_VERSION = " . WIKINDX_PUBLIC_VERSION . "</li>
                     <li>WIKINDX_INTERNAL_VERSION = " . WIKINDX_INTERNAL_VERSION . "</li>
@@ -449,7 +449,7 @@ class UPDATEDATABASE
             $pString .= "
                 <p>WIKINDX has detected that this is the first time a new version is being run
                 and that the database requires upgrading. This upgrading is automatic
-                but only the WIKINDX superAdmin may carry it out.</p>
+                but only the WIKINDX SuperAdmin may carry it out.</p>
                 
                 <p><span style='color:red;font-weight:bold'>If you have downloaded SVN code,
                 then you are strongly advised not to run it on a production server</span>,
@@ -470,7 +470,7 @@ class UPDATEDATABASE
                 and to restart the web server before upgrading. 
                 (You can try to increase memory first in config.php -- WIKINDX_MEMORY_LIMIT -- in which case you do not need to restart the server.)</p>
                 
-                <p>During upgrading, PHP error reporting is turned on regardless of your config.php settings.</p>
+                <p>During upgrading, PHP error reporting is enabled.</p>
                 
                 <p>If you get a blank page or an error similar to: 'Fatal error: Allowed memory size of 16777216 bytes exhausted (tried to allocate 38 bytes)',
                 then you must start the upgrade process from the <strong>beginning</strong>:</p>
@@ -492,7 +492,7 @@ class UPDATEDATABASE
             
             $pString .= "
                 <p>Each step is a partial (with pauses when the execution is too long) or complete update to an internal version.
-                An internal version corresponds to a structural change valid for one or more public version of Wikindx.
+                An internal version corresponds to a structural change valid for one or more public versions of Wikindx.
                 A public version can also have many internal versions. The update ends when the last internal version is reached.
                 It is useful to know which internal version you are on if you encounter a bug.<p>
                 
@@ -531,9 +531,9 @@ class UPDATEDATABASE
         {
             $email = \UPDATE\getConfigContactEmail($this->db);
             $email = $email ? "(" . $email . ")" : "";
-            $pString .= "<p>You are not logged on as the superAdmin: please ask that person {$email} to carry out the upgrade through their web browser.</p>";
+            $pString .= "<p>You are not logged on as the SuperAdmin: if you are not the SuperAdmin, please ask that person {$email} to carry out the upgrade through their web browser.</p>";
             
-            $pString .= \HTML\p("Logon as superAdmin:");
+            $pString .= \HTML\p("Logon as SuperAdmin:");
             
             $pString .= \FORM\formHeader("upgradeDBLogon");
             $pString .= \HTML\tableStart('left width50percent');
@@ -2202,9 +2202,9 @@ END;
     private function checkConfigFile()
     {
         $message = HTML\p("
-            Part of the upgrade process for a WIKINDX that is younger than v6.2.2 is the transfer of many settings in config.php to the database (from where they can be configured via the Admin|Configure menu).
+            Part of the upgrade process for a WIKINDX that is older than v6.2.2 is the transfer of many settings in config.php to the database (from where they can be configured via the Admin|Configure menu).
             In order to accomplish this, config.php must be writeable by the web server user and the upgrade will not proceed until this is the case.
-            Equally, some settings are removed from config.php by 6.4.0.
+            Equally, some settings are removed from config.php from v6.4.0.
             Once the upgrade has completed, you can then return the file permissions on config.php to read only.
         ");
         $fic_config = implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "config.php"]);

@@ -9890,9 +9890,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#~ msgid "Remove users from this group"
-#~ msgstr "Benutzer aus dieser Benutzergruppe entfernen"
-
 #~ msgid ""
 #~ "If you have languages and styles that are in your WIKINDX installation "
 #~ "folders but they do not show here, then they are not compatible with this "
@@ -10108,6 +10105,9 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ msgstr ""
 #~ "Sperre neue Ressourcen aus der öffentlichen Ansicht, bis sie von einem "
 #~ "Administrator freigegeben werden."
+
+#~ msgid "Remove users from this group"
+#~ msgstr "Benutzer aus dieser Benutzergruppe entfernen"
 
 #~ msgid "Enabled Languages"
 #~ msgstr "Aktivierte Sprachen"

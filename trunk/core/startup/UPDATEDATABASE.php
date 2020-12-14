@@ -65,7 +65,6 @@ class UPDATEDATABASE
                 
                 $pString  = \HTML\p("Database successfully created", "success", "center");
                 $pString .= "<p>The next step you will be asked to create a SuperAdmin account, essential for the maintenance of your new software.</p>";
-                $pString .= \HTML\p("Please click on the button to continue the installation.");
                 $pString .= \HTML\p(
                       \FORM\formHeader('continueExecution')
                     . \FORM\formSubmit("Continue")
@@ -76,9 +75,13 @@ class UPDATEDATABASE
             // The very first time displays an install message
             else
             {
-                $pString  = "<p>WIKINDX has detected that this is a first installation and will proceed with the creation of the database.</p>";
-                $pString .= "<p>To report bugs etc., go to: <a href='https://sourceforge.net/p/wikindx/v5bugs/'>https://sourceforge.net/p/wikindx/v5bugs/</a></strong></p>";
-                $pString .= "<p>Please click on the button to create the database.</p>";
+                $pString  = "<p>WIKINDX has detected that this is a first installation and will proceed with the creation of the database in two steps:</p>";
+                $pString .= "<ul>";
+                    $pString .= "<li>The tables.</li>";
+                    $pString .= "<li>A SuperAdmin account.</li>";
+                $pString .= "</ul>";
+                $pString .= "<p>At the end of the step, a status page is displayed. The creation of tables may take quite a long time depending on the capacity of your server.</p>";
+                $pString .= "<p>To report bugs during install, go to: <a href='https://sourceforge.net/p/wikindx/v5bugs/'>https://sourceforge.net/p/wikindx/v5bugs/</a></p>";
                 $pString .= \HTML\p(
                       \FORM\formHeader('createdatabase')
                     . \FORM\formSubmit("Continue")
@@ -198,7 +201,7 @@ class UPDATEDATABASE
         if ($dbVersion < WIKINDX_INTERNAL_VERSION_UPGRADE_MIN)
         {
             GLOBALS::addTplVar("content", "
-                Your WIKINDX database version is $dbVersion. WIKINDX requires that you first upgrade
+                Your WIKINDX internal version is $dbVersion. WIKINDX requires that you first upgrade
                 to WIKINDX v" . WIKINDX_INTERNAL_VERSION_UPGRADE_MIN . " or later before attempting to upgrade to the latest version.
                 v6.0.8 is recommended as a transition version if you need yet PHP 5.6 support.
                 v6.1.0 is recommended as a transition version if you don't need PHP 5.6 support (PHP 7.0 minimum).
@@ -209,8 +212,8 @@ class UPDATEDATABASE
         elseif ($dbVersion > WIKINDX_INTERNAL_VERSION)
         {
             GLOBALS::addTplVar("content", "
-                Your WIKINDX database version is $dbVersion.
-                This version of the application (" . WIKINDX_PUBLIC_VERSION . ") is not compatible with a version of the database greater than " . WIKINDX_INTERNAL_VERSION . ".
+                Your WIKINDX internal version is $dbVersion.
+                This version of the application (" . WIKINDX_PUBLIC_VERSION . ") is not compatible with an internal version greater than " . WIKINDX_INTERNAL_VERSION . ".
                 Please upgrade the application or restore a previous database.
             ");
             $this->endDisplay();
@@ -239,8 +242,8 @@ class UPDATEDATABASE
             // Before 6.0 the internal version is a float incremented by 1/10
             if ($dbVersion < 6.0)
             {
-                // 5.2 = upgrade v5.1 to 5.2.2
-                // 5.3 = upgrade v5.2.2 to v5.2.2
+                // 5.2 = upgrade v5.1 to 5.2.1
+                // 5.3 = upgrade v5.2.1 to v5.2.2
                 // 5.4 = upgrade v5.2.2 to 5.4
                 // 5.5 = upgrade v5.4 to 5.5
                 // 5.6 = upgrade v5.5 to 5.6
@@ -283,7 +286,7 @@ class UPDATEDATABASE
         else
         {
             GLOBALS::addTplVar("content", "
-                <p>Your WIKINDX database version is $dbVersion.</p>
+                <p>Your WIKINDX internal version is $dbVersion.</p>
                 <p>You encountered an unexpected error. Probably a problem with the configuration of the internal versions. Please check the constants:</p>
                 <ul>
                     <li>WIKINDX_PUBLIC_VERSION = " . WIKINDX_PUBLIC_VERSION . "</li>
@@ -351,8 +354,8 @@ class UPDATEDATABASE
     {
         $pString  = \HTML\p("Do <b>not</b> click until each script has finished.");
         $pString .= "<ul>";
-        $pString .= "<li>INTERMEDIATE INTERNAL VERSION: <b>" . $this->targetVersion . "</b></li>";
-        $pString .= "<li>FINAL INTERNAL VERSION: <b>" . WIKINDX_INTERNAL_VERSION . "</b></li>";
+        $pString .= "<li>INTERMEDIATE INTERNAL VERSION: <b>" . $this->targetVersion . "</b> (" . $this->intervalVersion2publicVersion($this->targetVersion) . ")</li>";
+        $pString .= "<li>FINAL INTERNAL VERSION: <b>" . WIKINDX_INTERNAL_VERSION . "</b> (" . $this->intervalVersion2publicVersion(WIKINDX_INTERNAL_VERSION) . ")</li>";
         $pString .= "<li>MAX EXECUTION TIME: " . ini_get("max_execution_time") . " secs.</li>";
         $pString .= "<li>MEMORY LIMIT: " . ini_get("memory_limit") . "</li>";
         $pString .= "</ul>";
@@ -405,7 +408,7 @@ class UPDATEDATABASE
             }
             else
             {
-                $pString .= \HTML\p("Upgrade to internal version <b>" . $this->targetVersion . "</b> finished.");
+                $pString .= \HTML\p("Upgrade to internal version <b>" . $this->targetVersion . "</b> (" . $this->intervalVersion2publicVersion($this->targetVersion) . ") finished.");
                 $pString .= \HTML\p("Please click on the button to continue the upgrade.");
                 $pString .= \HTML\p(
                       \FORM\formHeader('continueExecution')
@@ -443,35 +446,31 @@ class UPDATEDATABASE
             // Don't request to login twice
             $this->session->setVar("upgrade_ForceLogin", FALSE);
             
-            $pString .= \HTML\p(
-                  'CURRENT MAX EXECUTION TIME: ' . ini_get("max_execution_time") . ' secs' . BR
-                . 'CURRENT PHP MEMORY LIMIT: ' . ini_get("memory_limit")
-            );
             $pString .= "
-                <p>Minimum version upgradable: <span style='color:red;font-weight:bold'>5.1</span></p>
-                
-                <p style='color:red;font-weight:bold'If you have downloaded beta/SVN code,
-                then you are strongly advised not to run it on a production server -- if you wish to test it,
-                either create a new database or make a copy of your existing WIKINDX database and point config.php at it.
-                Wait until all bugs have been dealt with, and the final release version provided, before using the WIKINDX code on a production server.</p>
-                
-                <p>To report bugs etc., go to: <a href='https://sourceforge.net/p/wikindx/v5bugs/'>https://sourceforge.net/p/wikindx/v5bugs/</a></p>
-                
                 <p>WIKINDX has detected that this is the first time a new version is being run
                 and that the database requires upgrading. This upgrading is automatic
                 but only the WIKINDX superAdmin may carry it out.</p>
                 
+                <p><span style='color:red;font-weight:bold'>If you have downloaded SVN code,
+                then you are strongly advised not to run it on a production server</span>,
+                unless you know how to update the code to a particular revision (see the <a href='https://sourceforge.net/p/wikindx/svn/HEAD/tree/'>readme</a> from the SVN repository).</p>
+                
+                <p>If you wish to test it, either create a new database or make a copy
+                of your existing WIKINDX database and point config.php at it.
+                Wait until all bugs have been dealt with, and the final release version provided,
+                before using the WIKINDX code on a production server.</p>
+                
                 <p>You are <strong>strongly advised</strong> to <strong>back up your old database</strong> first.
                 If you do not do this and you experience the memory errors detailed below when upgrading your only copy of the database,
                 then you will have irrevocably corrupted the database: <em>caveat upgrader</em></p>
-            ";
-            $pString .= "
+                
                 <p>The upgrade process may take some time depending upon a number of factors.
                 If your database is large or your server is slow,
                 it is advised to temporarily increase 'max_execution_time' and 'memory_limit' in php.ini
-                and to restart the web server before upgrading.
-                (You can try to increase memory first in config.php -- WIKINDX_MEMORY_LIMIT -- in which case you do not need to restart the server.)
-                During upgrading, PHP error reporting is turned on regardless of your config.php settings.</p>
+                and to restart the web server before upgrading. 
+                (You can try to increase memory first in config.php -- WIKINDX_MEMORY_LIMIT -- in which case you do not need to restart the server.)</p>
+                
+                <p>During upgrading, PHP error reporting is turned on regardless of your config.php settings.</p>
                 
                 <p>If you get a blank page or an error similar to: 'Fatal error: Allowed memory size of 16777216 bytes exhausted (tried to allocate 38 bytes)',
                 then you must start the upgrade process from the <strong>beginning</strong>:</p>
@@ -481,9 +480,48 @@ class UPDATEDATABASE
                     <li>Increase PHP memory as per the instructions above (after upgrading, you can set it back to the default 64MB);</li>
                     <li>Restart the upgrade process. Do not break the process or use browser back or forward buttons.</li>
                 </ol>
+            ";
+            
+            if ($currentdbVersion < 6)
+            {
+                $pString .= "
+                    <p><strong>Before upgrading, you should ensure that all attachments in the old folder have been copied to the new wikindx/data/attachments/ folder
+                    -- the upgrade process will remove references to attachments in the database if the attachment files do not exist in the new location.</strong></p>
+                ";
+            }
+            
+            $pString .= "
+                <p>Each step is a partial (with pauses when the execution is too long) or complete update to an internal version.
+                An internal version corresponds to a structural change valid for one or more public version of Wikindx.
+                A public version can also have many internal versions. The update ends when the last internal version is reached.
+                It is useful to know which internal version you are on if you encounter a bug.<p>
                 
-                <p><strong>Before upgrading, you should ensure that all attachments in the old folder have been copied to the new wikindx/data/attachments/ folder
-                -- the upgrade process will remove references to attachments in the database if the attachment files do not exist in the new location.</strong></p>
+                <table>
+                    <tr>
+                        <td>Target internal version</td>
+                        <td><strong>" . WIKINDX_INTERNAL_VERSION . "</strong> (" . $this->intervalVersion2publicVersion(WIKINDX_INTERNAL_VERSION) . ")</td>
+                    </tr>
+                    <tr>
+                        <td>Current internal version</td>
+                        <td><strong>" . $currentdbVersion . "</strong> (" . $this->intervalVersion2publicVersion($currentdbVersion) . ")</td>
+                    </tr>
+                    <tr>
+                        <td>Minimum internal version upgradable</td>
+                        <td><strong>" . WIKINDX_INTERNAL_VERSION_UPGRADE_MIN . "</strong> (" . $this->intervalVersion2publicVersion(WIKINDX_INTERNAL_VERSION_UPGRADE_MIN) . ")</td>
+                    </tr>
+                    <tr>
+                        <td>Max execution time</td>
+                        <td>" . ini_get("max_execution_time") . ' secs' . "</td>
+                    </tr>
+                    <tr>
+                        <td>Max memory limit</td>
+                        <td>" . ini_get("memory_limit") . "</td>
+                    </tr>
+                </table>
+            ";
+            
+            $pString .= "
+                <p>To report bugs etc., go to: <a href='https://sourceforge.net/p/wikindx/v5bugs/'>https://sourceforge.net/p/wikindx/v5bugs/</a></p>
             ";
             $pString .= \FORM\formHeader("upgradeDB");
             $pString .= \HTML\p(\FORM\formSubmit("Continue"), FALSE, 'right');
@@ -545,6 +583,7 @@ class UPDATEDATABASE
             background-color: #FBF5EF;
             font-family: arial, helvetica, serif;
             font-size: 0.9em;
+            max-width: 60em;
         }
         
         h1, h2, h3, h4 {
@@ -618,6 +657,7 @@ END;
             background-color: #FBF5EF;
             font-family: arial, helvetica, serif;
             font-size: 0.9em;
+            max-width: 60em;
         }
         
         h1, h2, h3, h4 {
@@ -690,6 +730,51 @@ END;
         echo $string;
         ob_end_flush();
         die;
+    }
+    
+    /**
+     * Get the minimum public version corresponding to an internal version
+     *
+     * @param float $version Internal version number
+     *
+     * @return string Public version number
+     */
+    private function intervalVersion2publicVersion($version)
+    {
+        if ($version == WIKINDX_INTERNAL_VERSION)
+            return WIKINDX_PUBLIC_VERSION;
+        elseif ($version >= 23)
+            return "6.4.0";
+        elseif ($version >= 15)
+            return "6.3.8";
+        elseif ($version >= 12)
+            return "6.2.2";
+        elseif ($version >= 11)
+            return "6.2.1";
+        elseif ($version >= 10)
+            return "6.0.8";
+        elseif ($version >= 9)
+            return "6.0.6";
+        elseif ($version >= 8)
+            return "6.0.5";
+        elseif ($version >= 7)
+            return "6.0.4";
+        elseif ($version >= 6)
+            return "6.0.0";
+        elseif ($version >= 5.9)
+            return "5.9.1";
+        elseif ($version >= 5.8)
+            return "5.8.2";
+        elseif ($version >= 5.5)
+            return "5.7.0";
+        elseif ($version >= 5.4)
+            return "5.3.1";
+        elseif ($version >= 5.3)
+            return "5.2.2";
+        elseif ($version >= 5.2)
+            return "5.2.0";
+        elseif ($version >= 5.1)
+            return "5.1";
     }
     
     /**

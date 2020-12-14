@@ -1,9 +1,10 @@
 # Wikindx's Translation ressource: Français.
 # For copyright see the component.json file
 # This file is distributed under the same license as the backupmysql package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Stéphane Aulery <saulery@legtux.org>, 2019
+# Stéphane Aulery <saulery@legtux.org>, 2020
 #
 #, fuzzy
 msgid ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
 "POT-Creation-Date: 2020-07-18 02:48+0200\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
-"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2019\n"
+"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -23,23 +24,19 @@ msgstr ""
 #: components/plugins/backupmysql/backupmysqlmessages.php:20
 #: components/plugins/backupmysql/backupmysqlmessages.php:21
 msgid "Backup Database"
-msgstr "Sauvegarde de la base de données"
+msgstr "Sauvegarde BDD"
 
 #: components/plugins/backupmysql/backupmysqlmessages.php:22
 msgid "Backup"
 msgstr "Sauvegarde"
 
 #: components/plugins/backupmysql/backupmysqlmessages.php:23
-#, fuzzy
-#| msgid ""
-#| "plugins/backupMysql/dumps/ is not writeable by the web server user.  It "
-#| "currently has the permissions: ###"
 msgid ""
 "cache/plugins/backupmysql/ is not writeable by the web server user.  It "
 "currently has the permissions: ###"
 msgstr ""
-"Le serveur web n'a pas d'autorisation d'écriture sur plugins/backupMysql/"
-"dumps/. Les permissions actuels sont : ###."
+"cache/plugins/backupmysql/ n'est pas modifiable par le serveur web. Les "
+"permissions actuelles sont : ###"
 
 #: components/plugins/backupmysql/backupmysqlmessages.php:24
 msgid "Files deleted"
@@ -47,16 +44,16 @@ msgstr "Fichiers supprimés"
 
 #: components/plugins/backupmysql/backupmysqlmessages.php:25
 msgid "New file name"
-msgstr ""
+msgstr "Nouveau fichier"
 
 #: components/plugins/backupmysql/backupmysqlmessages.php:26
 msgid "Rename file"
-msgstr ""
+msgstr "Renommer le fichier"
 
 #: components/plugins/backupmysql/backupmysqlmessages.php:27
 msgid "File successfully renamed"
-msgstr ""
+msgstr "Renommage réussi"
 
 #: components/plugins/backupmysql/backupmysqlmessages.php:28
 msgid "Invalid characters will be removed: #%&{}\\<>*?/$!'\":@+`|="
-msgstr ""
+msgstr "Caractères invalides supprimés : #%&{}\\<>*?/$!'\":@+`|="

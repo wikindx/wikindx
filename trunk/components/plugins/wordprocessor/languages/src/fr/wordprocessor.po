@@ -1,15 +1,20 @@
 # Wikindx's Translation ressource: Français.
 # For copyright see the component.json file
 # This file is distributed under the same license as the wordprocessor package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# Stéphane Aulery <saulery@legtux.org>, 2020
+#
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: wordprocessor\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
 "POT-Creation-Date: 2020-12-14 23:33+0100\n"
-"PO-Revision-Date: 2019-09-27 01:50+0200\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2019-09-26 21:03+0000\n"
+"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
+"Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,317 +46,344 @@ msgid ""
 "</ul>\n"
 "\t\t"
 msgstr ""
+"\n"
+"<h3>Word Processor</h3>\n"
+"<p>Le traitement de texte WYSISWYG vous permet d'écrire vos articles et "
+"publications entièrement dans WIKINDX, puis de les exporter vers un "
+"traitement de texte externe tel que LibreOffice ou Word pour la finission. "
+"Lors de l'exportation, vous pouvez choisir le style de citation et toutes les "
+"citations que vous avez insérées seront formatées dans ce style avec une "
+"bibliographie ajoutée. Le plugin peut gérer les styles de note de bas de page "
+"et de fin de document ainsi que les citations intra-texte qui sont sensibles "
+"au contexte.</p>\n"
+"<ul>\n"
+"<li>Les papiers peuvent être sauvegardés sur des sources externes et "
+"réimportés dans le traitement de texte à l'aide de la fonction Importer du "
+"papier.</li>\n"
+"<li>Si vous enregistrez un article existant avec un nouveau titre, les "
+"versions précédentes avec l'ancien titre seront supprimées, sauf si vous "
+"cochez la case \"Enregistrer la nouvelle version\".</li>\n"
+"<li>Une ligne horizontale insérée dans l'éditeur deviendra une nouvelle "
+"section lors de l'exportation (au format RTF par exemple). Certains styles de "
+"citation mettront en forme les éléments en fonction des sections.</li>\n"
+"<li><strong>Attention</strong>: il n'y a pas de sauvegarde automatique et "
+"d'avertissement si vous quittez l'éditeur sans enregistrer au préalable.</"
+"li>\n"
+"</ul>\n"
+"\t\t"
 
 #. *
 #. * Menu items
 #.
 #: components/plugins/wordprocessor/wordprocessormessages.php:27
 msgid "Word Processor..."
-msgstr ""
+msgstr "Word Processor..."
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:28
 #: components/plugins/wordprocessor/wordprocessormessages.php:38
 msgid "Open Paper"
-msgstr ""
+msgstr "Modifier un papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:29
 #: components/plugins/wordprocessor/wordprocessormessages.php:40
 msgid "List Papers"
-msgstr ""
+msgstr "Liste des papiers"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:30
 #: components/plugins/wordprocessor/wordprocessormessages.php:39
 msgid "Delete Paper"
-msgstr ""
+msgstr "Supprimer un papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:31
 #: components/plugins/wordprocessor/wordprocessormessages.php:37
 msgid "Import Paper"
-msgstr ""
+msgstr "Importer un papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:32
 msgid "New Paper"
-msgstr ""
+msgstr "Nouveau papier"
 
 #. *
 #. * Other messages
 #.
 #: components/plugins/wordprocessor/wordprocessormessages.php:36
 msgid "Word Processor"
-msgstr ""
+msgstr "Word Processor"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:41
 msgid "Save Paper"
-msgstr ""
+msgstr "Enregistrer le papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:42
 msgid "Export & Save Paper"
-msgstr ""
+msgstr "Enregistrer et exporter le papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:43
 msgid "Add Footnote"
-msgstr ""
+msgstr "Ajouter une note de bas de page"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:44
 msgid "Add Table"
-msgstr ""
+msgstr "Ajouter un tableau"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:45
 msgid "Add Image"
-msgstr ""
+msgstr "Ajouter une image"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:46
 msgid "Add Link"
-msgstr ""
+msgstr "Ajouter un lien"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:47
 msgid "Add Citation"
-msgstr ""
+msgstr "Ajouter une citation"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:48
 msgid "Title of Paper"
-msgstr ""
+msgstr "Titre du papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:49
 msgid "Revert to saved version"
-msgstr ""
+msgstr "Revenir à la version enregistrée"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:50
 msgid "Are you sure you wish to revert to the saved version?"
-msgstr ""
+msgstr "Êtes-vous certain de vouloir revenir à la version sauvegardée ?"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:51
 msgid "New paper"
-msgstr ""
+msgstr "Nouveau papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:52
 msgid "Open paper"
-msgstr ""
+msgstr "Modifier un papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:53
 msgid "Delete paper"
-msgstr ""
+msgstr "Supprimer un papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:54
 msgid "Delete paper(s): "
-msgstr ""
+msgstr "Papiers supprimés :"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:55
 #: components/plugins/wordprocessor/wordprocessormessages.php:65
 msgid "Successfully deleted paper(s)"
-msgstr ""
+msgstr "Suppression des papiers réussie."
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:56
 msgid "List papers"
-msgstr ""
+msgstr "Liste des papiers"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:57
 msgid ""
 "You can download and backup papers if you wish. The newest files are "
 "displayed first."
 msgstr ""
+"Vous pouvez télécharger et faire une copie des papiers si vous le voulez. Les "
+"fichiers les plus récents sont affichés en premier."
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:58
 msgid "You have no papers"
-msgstr ""
+msgstr "Aucun papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:59
 msgid "Import paper"
-msgstr ""
+msgstr "Importer un papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:60
 msgid ""
 "You can import a paper here which should be a plain text or HTML file (basic "
 "HTML only)."
-msgstr ""
+msgstr "Vous pouvez importer un papier au format texte ou HTML (HTML basique)."
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:61
 msgid "Filename"
-msgstr ""
+msgstr "Nom du fichier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:62
 msgid "Paper has now been loaded ready for appending"
-msgstr ""
+msgstr "Le papier est chargé et prêt pour des modifications"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:63
 msgid "The paper you are trying to import already exists in this wikindx"
-msgstr ""
+msgstr "Le papier que vous tentez d'importer existe déjà."
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:64
 msgid "Successfully saved paper"
-msgstr ""
+msgstr "Enregistrement du papier réussi"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:66
 msgid "Successfully imported paper"
-msgstr ""
+msgstr "Import du papier réussi"
 
 #. / loadAppendPaper Load a paper ready for appending one paper to another in the WP
 #: components/plugins/wordprocessor/wordprocessormessages.php:68
 msgid "Load paper"
-msgstr ""
+msgstr "Chargement du papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:69
 msgid "You have already deleted that paper"
-msgstr ""
+msgstr "Vous avez déjà supprimé ce papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:70
 msgid "Paper saved"
-msgstr ""
+msgstr "Papier enregistré"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:71
 msgid "Paper not yet saved"
-msgstr ""
+msgstr "Papier non enregistré"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:72
 msgid "Paper not saved: write error"
-msgstr ""
+msgstr "Papier non enregistré : erreur d'écriture"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:73
 msgid "Paper not saved: invalid title"
-msgstr ""
+msgstr "Papier non enregistré : titre incorrect"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:74
 msgid "Save new version"
-msgstr ""
+msgstr "Enregistrer une nouvelle version"
 
 #. / Export functions
 #: components/plugins/wordprocessor/wordprocessormessages.php:76
 msgid "Export paper to"
-msgstr ""
+msgstr "Exporter le papier vers..."
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:77
 msgid "Rich Text Format (RTF)"
-msgstr ""
+msgstr "Rich Text Format (RTF)"
 
 #. / lineSpacePaper Line spacing for paper exporting to RTF etc.
 #: components/plugins/wordprocessor/wordprocessormessages.php:79
 msgid "Paper line space"
-msgstr ""
+msgstr "Interligne générale"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:80
 msgid "Bibliography line space"
-msgstr ""
+msgstr "Interligne de la bibliogrpahie"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:81
 msgid "Single"
-msgstr ""
+msgstr "Simple"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:82
 msgid "1.5 lines"
-msgstr ""
+msgstr "1,5 lignes"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:83
 msgid "Double"
-msgstr ""
+msgstr "Double"
 
 #. / indentBib Bibliography indentation for exporting to RTF etc.
 #: components/plugins/wordprocessor/wordprocessormessages.php:85
 msgid "Bibliography indentation"
-msgstr ""
+msgstr "Indentation de la bibliographie"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:86
 #: components/plugins/wordprocessor/wordprocessormessages.php:98
 msgid "None"
-msgstr ""
+msgstr "Aucune"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:87
 msgid "All"
-msgstr ""
+msgstr "Toutes"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:88
 msgid "First line"
-msgstr ""
+msgstr "Première ligne"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:89
 msgid "All but first line"
-msgstr ""
+msgstr "Toutes sauf la 1ère ligne"
 
 #. / indentFt Spacing, font size and indentation for footnotes
 #: components/plugins/wordprocessor/wordprocessormessages.php:91
 msgid "Footnote indentation"
-msgstr ""
+msgstr "Indentation des notes de bas de page"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:92
 msgid "Footnote line space"
-msgstr ""
+msgstr "Interligne des notes de bas de page"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:93
 msgid "Footnote font size"
-msgstr ""
+msgstr "Taille de la police de caractères des notes de bas de page"
 
 #. / pageNumber Page numbering for RTF exports
 #: components/plugins/wordprocessor/wordprocessormessages.php:95
 msgid "Page numbering"
-msgstr ""
+msgstr "Numérotation des pages"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:96
 msgid "Footer"
-msgstr ""
+msgstr "Pied de page"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:97
 msgid "Header"
-msgstr ""
+msgstr "Entête"
 
 #. / pageNumberalign Page number alignment for RTF exports
 #: components/plugins/wordprocessor/wordprocessormessages.php:100
 msgid "Page number alignment"
-msgstr ""
+msgstr "Alignement du numéro de page"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:101
 msgid "Centre"
-msgstr ""
+msgstr "Centre"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:102
 msgid "Left"
-msgstr ""
+msgstr "Gauche"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:103
 msgid "Right"
-msgstr ""
+msgstr "Droite"
 
 #. / indentQuoteWords Indentation options for large quotations
 #: components/plugins/wordprocessor/wordprocessormessages.php:105
 msgid "Indent quotations with at least this number of words"
-msgstr ""
+msgstr "Indenter les citations ayant au X mots"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:106
 msgid "Quotation line space"
-msgstr ""
+msgstr "Interligne des citations"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:107
 msgid "Font size"
-msgstr ""
+msgstr "Taille de la police de caractères"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:108
 msgid "Keep quotation marks"
-msgstr ""
+msgstr "Conserver les guillemets des citations"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:109
 msgid "Export and Save"
-msgstr ""
+msgstr "Exporter et enregistrer"
 
 #. / sectionFtRestart If a section has been inserted in the paper, any footnotes are renumbered from 1 at each section
 #: components/plugins/wordprocessor/wordprocessormessages.php:111
 msgid "Restart footnotes at each section"
-msgstr ""
+msgstr "Redémarrer la numérotation les notes bas de page à chaque section"
 
 #. / paperSize Size of exported paper (letter, A4 etc.)
 #: components/plugins/wordprocessor/wordprocessormessages.php:113
 msgid "Paper size"
-msgstr ""
+msgstr "Format de papier"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:114
 msgid "Columns"
-msgstr ""
+msgstr "Colonnes"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:115
 msgid "Rows"
-msgstr ""
+msgstr "Rangées"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:116
 msgid "Image URL"
-msgstr ""
+msgstr "URL de l'image"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:117
 msgid "URL"
-msgstr ""
+msgstr "URL"

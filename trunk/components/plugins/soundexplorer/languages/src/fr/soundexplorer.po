@@ -1,9 +1,10 @@
 # Wikindx's Translation ressource: Français.
 # For copyright see the component.json file
 # This file is distributed under the same license as the soundexplorer package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Stéphane Aulery <saulery@legtux.org>, 2019
+# Stéphane Aulery <saulery@legtux.org>, 2020
 #
 #, fuzzy
 msgid ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
 "POT-Creation-Date: 2020-07-18 02:48+0200\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
-"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2019\n"
+"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -43,14 +44,26 @@ msgid ""
 "\t\t\t\tprototype and has been tested in the Firefox, Safari, and Chrome web "
 "browsers. Other browsers are untested."
 msgstr ""
+"Sound Explorer stockera les recherches puis, à tout moment dans le futur, "
+"jouera un son si une ressource correspondant à une recherche antérieure est "
+"trouvée dans une opération de liste en cours. il fonctionne sur le principe "
+"d'une conjonction fortuite de recherches antérieures avec un résultat de "
+"recherche actuel, vous permettant, espérons-le, d'établir de nouvelles "
+"connexions créatives aux limites de votre espace conceptuel actuel. Mais il "
+"est également utile dans un WIKINDX multi-utilisateur où il fonctionne comme "
+"une alerte. Le son sera lu si une nouvelle ressource ou métadonnée a été "
+"ajoutée par un autre utilisateur qui correspond à une recherche stockée (si "
+"la ressource est affichée dans une liste). Il s'agit actuellement d'un "
+"prototype expérimental et a été testé dans les navigateurs Web Firefox, "
+"Safari et Chrome. Les autres navigateurs n'ont pas été testés."
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:35
 msgid "Sound Explorer On"
-msgstr "Sound Explorer On"
+msgstr "Sound Explorer Actif"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:36
 msgid "Sound Explorer Off"
-msgstr "Sound Explorer Off"
+msgstr "Sound Explorer Inactif"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:37
 msgid "Search Label"
@@ -86,7 +99,7 @@ msgstr "Notes"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:45
 msgid "Matched searches for current list"
-msgstr ""
+msgstr "Correspondances pour la liste actuelle"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:46
 msgid "Sound Explorer successfully configured"
@@ -94,12 +107,12 @@ msgstr "Sound Explorer a été configuré avec succès"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:47
 msgid "Store the Sound Explorer search"
-msgstr ""
+msgstr "Enregistrer la recherche Sound Explorer"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:48
 msgid "Sound Explorer search successfully stored"
-msgstr ""
+msgstr "Enregistrement de la recherche Sound Explorer réussi"
 
 #: components/plugins/soundexplorer/soundexplorermessages.php:49
 msgid "Sound Explorer search successfully deleted"
-msgstr ""
+msgstr "Suppression de la recherche Sound Explorer réussie"

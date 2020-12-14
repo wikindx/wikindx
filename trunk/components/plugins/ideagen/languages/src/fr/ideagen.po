@@ -1,16 +1,20 @@
-# French translations for ideagen package.
-# Copyright (C) 2020 THE ideagen'S COPYRIGHT HOLDER
+# Wikindx's Translation ressource: Français.
+# For copyright see the component.json file
 # This file is distributed under the same license as the ideagen package.
-# Automatically generated, 2020.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# Stéphane Aulery <saulery@legtux.org>, 2020
+#
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ideagen\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
 "POT-Creation-Date: 2020-07-18 02:48+0200\n"
-"PO-Revision-Date: 2020-06-01 13:44+0200\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2020-06-12 11:43+0000\n"
+"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
+"Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,19 +23,19 @@ msgstr ""
 
 #: components/plugins/ideagen/ideagenmessages.php:20
 msgid "IdeaGen"
-msgstr ""
+msgstr "IdeaGen"
 
 #: components/plugins/ideagen/ideagenmessages.php:21
 msgid "Idea Generator"
-msgstr ""
+msgstr "Générateur d'idées"
 
 #: components/plugins/ideagen/ideagenmessages.php:22
 msgid "Generate"
-msgstr ""
+msgstr "Générer"
 
 #: components/plugins/ideagen/ideagenmessages.php:23
 msgid "Generate again"
-msgstr ""
+msgstr "Générer à nouveau"
 
 #: components/plugins/ideagen/ideagenmessages.php:24
 msgid ""
@@ -40,41 +44,47 @@ msgid ""
 "might be serendipitous. The greater the number of metadata, the greater the "
 "variety of juxtaposition."
 msgstr ""
+"Le générateur d'idée sélectionne et affiche aléatoirement deux métadonnées "
+"(citations, paraphrases, réflexions, idées) avec l'espoir que cette "
+"juxtaposition sera heureuse. Plus il y a de métadonnées plus les "
+"juxtapositions seront variées."
 
 #: components/plugins/ideagen/ideagenmessages.php:25
 msgid "Create new idea"
-msgstr ""
+msgstr "Créer une nouvelle idée"
 
 #: components/plugins/ideagen/ideagenmessages.php:26
 msgid "Idea"
-msgstr ""
+msgstr "Idée"
 
 #: components/plugins/ideagen/ideagenmessages.php:27
 msgid "Musing"
-msgstr ""
+msgstr "Réflexion"
 
 #: components/plugins/ideagen/ideagenmessages.php:28
 msgid "Paraphrase"
-msgstr ""
+msgstr "Paraphrase"
 
 #: components/plugins/ideagen/ideagenmessages.php:29
 msgid "Quote"
-msgstr ""
+msgstr "Citation"
 
 #: components/plugins/ideagen/ideagenmessages.php:30
 msgid "Paraphrase Comment"
-msgstr ""
+msgstr "Commentaire de paraphrase"
 
 #: components/plugins/ideagen/ideagenmessages.php:31
 msgid "Quote Comment"
-msgstr ""
+msgstr "Commentaire de citation"
 
 #: components/plugins/ideagen/ideagenmessages.php:32
 msgid "Add a new idea"
-msgstr ""
+msgstr "Ajouter une nouvelle idée"
 
 #: components/plugins/ideagen/ideagenmessages.php:33
 msgid ""
 "In order to work, Idea Generator needs at least 3 items of metadata available "
 "to you."
 msgstr ""
+"Pour fonctionner, le générateur d'idées a besoin d'au moins 3 éléments de "
+"métadonnées de votre part."

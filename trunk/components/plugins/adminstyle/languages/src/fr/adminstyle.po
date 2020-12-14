@@ -1,15 +1,20 @@
 # Wikindx's Translation ressource: Français.
 # For copyright see the component.json file
 # This file is distributed under the same license as the adminstyle package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# Stéphane Aulery <saulery@legtux.org>, 2020
+#
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: adminstyle\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
 "POT-Creation-Date: 2020-05-24 21:54+0200\n"
-"PO-Revision-Date: 2019-09-27 01:50+0200\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2019-09-26 21:03+0000\n"
+"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
+"Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,27 +26,27 @@ msgstr ""
 #.
 #: components/plugins/adminstyle/adminstylemessages.php:27
 msgid "Styles..."
-msgstr ""
+msgstr "Styles..."
 
 #: components/plugins/adminstyle/adminstylemessages.php:28
 msgid "Create Style"
-msgstr ""
+msgstr "Créer un style"
 
 #: components/plugins/adminstyle/adminstylemessages.php:29
 msgid "Copy Style"
-msgstr ""
+msgstr "Copier un style"
 
 #: components/plugins/adminstyle/adminstylemessages.php:30
 msgid "Edit Style"
-msgstr ""
+msgstr "Modifier un style"
 
 #: components/plugins/adminstyle/adminstylemessages.php:31
 msgid "Short Name"
-msgstr ""
+msgstr "Nom court"
 
 #: components/plugins/adminstyle/adminstylemessages.php:32
 msgid "Long Name"
-msgstr ""
+msgstr "Nom long"
 
 #. *
 #. * General
@@ -95,27 +100,27 @@ msgstr ""
 
 #: components/plugins/adminstyle/adminstylemessages.php:50
 msgid "First"
-msgstr ""
+msgstr "Premier"
 
 #: components/plugins/adminstyle/adminstylemessages.php:51
 msgid "Others"
-msgstr ""
+msgstr "Autres"
 
 #: components/plugins/adminstyle/adminstylemessages.php:52
 msgid "Initials"
-msgstr ""
+msgstr "Initiales"
 
 #: components/plugins/adminstyle/adminstylemessages.php:53
 msgid "First name"
-msgstr ""
+msgstr "Prénom"
 
 #: components/plugins/adminstyle/adminstylemessages.php:54
 msgid "Full"
-msgstr ""
+msgstr "Entier"
 
 #: components/plugins/adminstyle/adminstylemessages.php:55
 msgid "Initial"
-msgstr ""
+msgstr "Initiale"
 
 #: components/plugins/adminstyle/adminstylemessages.php:56
 msgid "Primary creator list abbreviation"
@@ -127,78 +132,78 @@ msgstr ""
 
 #: components/plugins/adminstyle/adminstylemessages.php:58
 msgid "Full list"
-msgstr ""
+msgstr "Liste entière"
 
 #: components/plugins/adminstyle/adminstylemessages.php:59
 msgid "Limit list"
-msgstr ""
+msgstr "Liste limitée"
 
 #. translators: The next 3 surround form text boxes: "If xx or more creators, list the first xx and abbreviate with xx".  For example: "If 4 or more creators, list the first 1 and abbreviate with ,et. al"
 #: components/plugins/adminstyle/adminstylemessages.php:61
 msgid "If"
-msgstr ""
+msgstr "Si"
 
 #: components/plugins/adminstyle/adminstylemessages.php:62
 msgid "or more creators, list the first"
-msgstr ""
+msgstr "ou plus d'auteurs, afficher le premier"
 
 #: components/plugins/adminstyle/adminstylemessages.php:63
 msgid "and abbreviate with"
-msgstr ""
+msgstr "et abrégé avec"
 
 #: components/plugins/adminstyle/adminstylemessages.php:64
 msgid "Title capitalization"
-msgstr ""
+msgstr "Titre en capitales"
 
 #. Title as entered with no changes to capitalization
 #: components/plugins/adminstyle/adminstylemessages.php:66
 msgid "As entered"
-msgstr ""
+msgstr "Comme entré"
 
 #: components/plugins/adminstyle/adminstylemessages.php:67
 msgid "Available fields:"
-msgstr ""
+msgstr "Champs disponibles :"
 
 #: components/plugins/adminstyle/adminstylemessages.php:68
 msgid "Available fields (Bibliography)"
-msgstr ""
+msgstr "Champs disponibles (bibliographie)"
 
 #: components/plugins/adminstyle/adminstylemessages.php:69
 msgid "Available fields (Footnote)"
-msgstr ""
+msgstr "Champs disponibles (notes de bas de page)"
 
 #: components/plugins/adminstyle/adminstylemessages.php:70
 msgid "Disable fields"
-msgstr ""
+msgstr "Désactiver les champs"
 
 #: components/plugins/adminstyle/adminstylemessages.php:71
 msgid "RESET"
-msgstr ""
+msgstr "REINITIALISER"
 
 #: components/plugins/adminstyle/adminstylemessages.php:72
 msgid "Edition format"
-msgstr ""
+msgstr "Modification de format"
 
 #: components/plugins/adminstyle/adminstylemessages.php:73
 msgid "Month format"
-msgstr ""
+msgstr "Format du mois"
 
 #: components/plugins/adminstyle/adminstylemessages.php:74
 msgid "Date format"
-msgstr ""
+msgstr "Format de date"
 
 #: components/plugins/adminstyle/adminstylemessages.php:75
 msgid "Day format"
-msgstr ""
+msgstr "Format du jour"
 
 #. Add a leading zero to day if less than 10.
 #: components/plugins/adminstyle/adminstylemessages.php:77
 msgid "Add leading zero"
-msgstr ""
+msgstr "Ajouter les zéros initiaux"
 
 #: components/plugins/adminstyle/adminstylemessages.php:78
 msgid "Page format"
-msgstr ""
+msgstr "Format de page"
 
 #. Length of film, broadcast etc.
 #: components/plugins/adminstyle/adminstylemessages.php:80
@@ -216,11 +221,11 @@ msgstr ""
 
 #: components/plugins/adminstyle/adminstylemessages.php:84
 msgid "Yes"
-msgstr ""
+msgstr "Oui"
 
 #: components/plugins/adminstyle/adminstylemessages.php:85
 msgid "No"
-msgstr ""
+msgstr "Non"
 
 #: components/plugins/adminstyle/adminstylemessages.php:86
 msgid "If 'Yes', replace editor field in style definitions with"
@@ -229,7 +234,7 @@ msgstr ""
 #. Uppercase creator names?
 #: components/plugins/adminstyle/adminstylemessages.php:88
 msgid "Uppercase all names"
-msgstr ""
+msgstr "Tous les noms en majuscules"
 
 #. For repeated creator names in next bibliographic item
 #: components/plugins/adminstyle/adminstylemessages.php:90
@@ -255,11 +260,11 @@ msgstr ""
 
 #: components/plugins/adminstyle/adminstylemessages.php:96
 msgid "Bibliography Formatting"
-msgstr ""
+msgstr "Format de la bibliographie"
 
 #: components/plugins/adminstyle/adminstylemessages.php:97
 msgid "Italics"
-msgstr ""
+msgstr "Italique"
 
 #. For user specific month naming
 #: components/plugins/adminstyle/adminstylemessages.php:99
@@ -280,7 +285,7 @@ msgstr ""
 #. Date ranges for e.g. conferences
 #: components/plugins/adminstyle/adminstylemessages.php:103
 msgid "Date range"
-msgstr ""
+msgstr "Intervalle de date"
 
 #: components/plugins/adminstyle/adminstylemessages.php:104
 msgid "Delimiter between start and end dates if day and month given"
@@ -323,7 +328,7 @@ msgstr ""
 #. Which language localization to use for ordinals and months.
 #: components/plugins/adminstyle/adminstylemessages.php:116
 msgid "Localization"
-msgstr ""
+msgstr "Localisation"
 
 #. Re-write creator(s) portion of templates to handle styles such as DIN 1505.
 #: components/plugins/adminstyle/adminstylemessages.php:118
@@ -340,15 +345,15 @@ msgstr ""
 
 #: components/plugins/adminstyle/adminstylemessages.php:121
 msgid "Before name:"
-msgstr ""
+msgstr "Avant le nom :"
 
 #: components/plugins/adminstyle/adminstylemessages.php:122
 msgid "To each name:"
-msgstr ""
+msgstr "A chaque nom :"
 
 #: components/plugins/adminstyle/adminstylemessages.php:123
 msgid "Bibliography template"
-msgstr ""
+msgstr "Modèle de bibliographie"
 
 #. Don't translate 'pages'
 #: components/plugins/adminstyle/adminstylemessages.php:125
@@ -413,12 +418,12 @@ msgstr ""
 #. Characters separating title and subtitle
 #: components/plugins/adminstyle/adminstylemessages.php:139
 msgid "Title/subtitle separator"
-msgstr ""
+msgstr "Séparateur de titre et sous-titre"
 
 #. See "templateHelp6" above
 #: components/plugins/adminstyle/adminstylemessages.php:141
 msgid "Partial template"
-msgstr ""
+msgstr "Modèle partiel"
 
 #. Use the partial template to replace all of the bibliography template.
 #: components/plugins/adminstyle/adminstylemessages.php:143
@@ -427,31 +432,31 @@ msgstr ""
 
 #: components/plugins/adminstyle/adminstylemessages.php:144
 msgid "Generic book-type"
-msgstr ""
+msgstr "Type générique de livre"
 
 #: components/plugins/adminstyle/adminstylemessages.php:145
 msgid "Generic article-type"
-msgstr ""
+msgstr "Type générique d'article"
 
 #: components/plugins/adminstyle/adminstylemessages.php:146
 msgid "Generic miscellaneous"
-msgstr ""
+msgstr "Type générique divers"
 
 #: components/plugins/adminstyle/adminstylemessages.php:147
 msgid "Preview bibliography"
-msgstr ""
+msgstr "Aperçu de la bibliographie"
 
 #: components/plugins/adminstyle/adminstylemessages.php:148
 msgid "Preview in-text citation"
-msgstr ""
+msgstr "Aperçu de citation intra-texte"
 
 #: components/plugins/adminstyle/adminstylemessages.php:149
 msgid "Preview footnote"
-msgstr ""
+msgstr "Aperçu de note de bas de page"
 
 #: components/plugins/adminstyle/adminstylemessages.php:150
 msgid "ERROR"
-msgstr ""
+msgstr "ERREUR"
 
 #. *
 #. * Citation
@@ -459,20 +464,20 @@ msgstr ""
 #. The displayed hyperlink next to the textarea form input
 #: components/plugins/adminstyle/adminstylemessages.php:155
 msgid "Cite"
-msgstr ""
+msgstr "Citer"
 
 #: components/plugins/adminstyle/adminstylemessages.php:156
 msgid "Citation Formatting"
-msgstr ""
+msgstr "Format de citation"
 
 #. In-text citation style as opposed to endnote style citations.
 #: components/plugins/adminstyle/adminstylemessages.php:158
 msgid "In-text style"
-msgstr ""
+msgstr "Style intra-texte"
 
 #: components/plugins/adminstyle/adminstylemessages.php:159
 msgid "Endnote style"
-msgstr ""
+msgstr "Style de fin de document"
 
 #: components/plugins/adminstyle/adminstylemessages.php:160
 msgid "Footnote creators"
@@ -496,7 +501,7 @@ msgstr ""
 
 #: components/plugins/adminstyle/adminstylemessages.php:165
 msgid "Last name only"
-msgstr ""
+msgstr "Seulement le patronyme"
 
 #. 'Last name only' is a choice in a select box and should not be translated
 #: components/plugins/adminstyle/adminstylemessages.php:167
@@ -518,7 +523,7 @@ msgstr ""
 #. The template is something like '(author|, year)' that the user is asked to enter
 #: components/plugins/adminstyle/adminstylemessages.php:172
 msgid "Template"
-msgstr ""
+msgstr "Modèle"
 
 #: components/plugins/adminstyle/adminstylemessages.php:173
 msgid "Separate consecutive citations with"
@@ -527,20 +532,20 @@ msgstr ""
 #. Formatting of years
 #: components/plugins/adminstyle/adminstylemessages.php:175
 msgid "Year format"
-msgstr ""
+msgstr "Format de l'année"
 
 #. Normal, superscript or subscript of citation
 #: components/plugins/adminstyle/adminstylemessages.php:177
 msgid "Normal text"
-msgstr ""
+msgstr "Texte normal"
 
 #: components/plugins/adminstyle/adminstylemessages.php:178
 msgid "Superscript"
-msgstr ""
+msgstr "En exposant"
 
 #: components/plugins/adminstyle/adminstylemessages.php:179
 msgid "Subscript"
-msgstr ""
+msgstr "En indice"
 
 #: components/plugins/adminstyle/adminstylemessages.php:180
 msgid "Parentheses or other characters enclosing the citation"
@@ -549,7 +554,7 @@ msgstr ""
 #. Ambiguous citations
 #: components/plugins/adminstyle/adminstylemessages.php:182
 msgid "Ambiguous citations"
-msgstr ""
+msgstr "Citations ambiguës"
 
 #: components/plugins/adminstyle/adminstylemessages.php:183
 msgid "Use the following template"
@@ -579,11 +584,11 @@ msgstr ""
 #. For endnote-style citations
 #: components/plugins/adminstyle/adminstylemessages.php:190
 msgid "Format like bibliography"
-msgstr ""
+msgstr "Formater comme la bibliographie"
 
 #: components/plugins/adminstyle/adminstylemessages.php:191
 msgid "Format like in-text citations"
-msgstr ""
+msgstr "Formater comme les citations intra-texte"
 
 #: components/plugins/adminstyle/adminstylemessages.php:192
 msgid ""
@@ -628,7 +633,7 @@ msgstr ""
 #. Ordering of the appended bibliography for in-text citations and endnote-style citations using the same id number for each cited resource
 #: components/plugins/adminstyle/adminstylemessages.php:202
 msgid "Bibliography ordering"
-msgstr ""
+msgstr "Tri de la bibliographie"
 
 #: components/plugins/adminstyle/adminstylemessages.php:203
 msgid ""
@@ -642,23 +647,23 @@ msgstr ""
 
 #: components/plugins/adminstyle/adminstylemessages.php:205
 msgid "1st. sort by"
-msgstr ""
+msgstr "1er tri par"
 
 #: components/plugins/adminstyle/adminstylemessages.php:206
 msgid "2nd. sort by"
-msgstr ""
+msgstr "2e tri par"
 
 #: components/plugins/adminstyle/adminstylemessages.php:207
 msgid "3rd. sort by"
-msgstr ""
+msgstr "3e tri par"
 
 #: components/plugins/adminstyle/adminstylemessages.php:208
 msgid "Ascending"
-msgstr ""
+msgstr "Croissant"
 
 #: components/plugins/adminstyle/adminstylemessages.php:209
 msgid "Descending"
-msgstr ""
+msgstr "Décroissant"
 
 #. For a particular resource type (personal communication for example), replace the in-text citation template with another template
 #: components/plugins/adminstyle/adminstylemessages.php:211
@@ -668,11 +673,11 @@ msgstr ""
 #. Text preceeding and following citations e.g. (see Grimshaw 1999; Boulanger 2004 for example): 'see' is preText and 'for example' is postText
 #: components/plugins/adminstyle/adminstylemessages.php:213
 msgid "Preliminary text"
-msgstr ""
+msgstr "Texte préliminaire"
 
 #: components/plugins/adminstyle/adminstylemessages.php:214
 msgid "Following text"
-msgstr ""
+msgstr "Texte postérieur"
 
 #. Formatting of the id number in the endnotes for endnote-style citations
 #: components/plugins/adminstyle/adminstylemessages.php:216
@@ -714,7 +719,7 @@ msgstr ""
 
 #: components/plugins/adminstyle/adminstylemessages.php:227
 msgid "Footnote template"
-msgstr ""
+msgstr "Modèle de note de bas de page"
 
 #. Set the range of text within which the subsequent creator template (for in-text citations) is used
 #: components/plugins/adminstyle/adminstylemessages.php:229
@@ -723,15 +728,15 @@ msgstr ""
 
 #: components/plugins/adminstyle/adminstylemessages.php:230
 msgid "Entire text"
-msgstr ""
+msgstr "Texte entier"
 
 #: components/plugins/adminstyle/adminstylemessages.php:231
 msgid "Paragraph"
-msgstr ""
+msgstr "Paragraphe"
 
 #: components/plugins/adminstyle/adminstylemessages.php:232
 msgid "Section"
-msgstr ""
+msgstr "Section"
 
 #: components/plugins/adminstyle/adminstylemessages.php:233
 msgid ""
@@ -741,26 +746,26 @@ msgstr ""
 
 #: components/plugins/adminstyle/adminstylemessages.php:234
 msgid "First Creator"
-msgstr ""
+msgstr "Auteur principal"
 
 #: components/plugins/adminstyle/adminstylemessages.php:235
 msgid "Title"
-msgstr ""
+msgstr "Titre"
 
 #: components/plugins/adminstyle/adminstylemessages.php:236
 msgid "Publication Year"
-msgstr ""
+msgstr "Année de publication"
 
 #. *
 #. * Hints
 #.
 #: components/plugins/adminstyle/adminstylemessages.php:240
 msgid "(No spaces)"
-msgstr ""
+msgstr "(Pas d'espace)"
 
 #: components/plugins/adminstyle/adminstylemessages.php:241
 msgid "(Fields are case-sensitive)"
-msgstr ""
+msgstr "(Champs sensibles à la casse)"
 
 #: components/plugins/adminstyle/help.php:27
 msgid ""
@@ -858,7 +863,7 @@ msgstr ""
 
 #: components/plugins/adminstyle/help.php:46
 msgid "SYNTAX"
-msgstr ""
+msgstr "SYNTAXE"
 
 #: components/plugins/adminstyle/help.php:47
 msgid ""
@@ -977,14 +982,14 @@ msgstr ""
 
 #: components/plugins/adminstyle/help.php:74
 msgid "EXAMPLES"
-msgstr ""
+msgstr "EXEMPLES"
 
 #: components/plugins/adminstyle/help.php:76
 #: components/plugins/adminstyle/help.php:92
 #: components/plugins/adminstyle/help.php:101
 #: components/plugins/adminstyle/help.php:108
 msgid "<em>might produce:</em>"
-msgstr ""
+msgstr "<em>produira :</em>"
 
 #: components/plugins/adminstyle/help.php:78
 msgid ""
@@ -994,7 +999,7 @@ msgstr ""
 
 #: components/plugins/adminstyle/help.php:84
 msgid "<em>might produce:</em></code>"
-msgstr ""
+msgstr "<em>produra :</em></code>"
 
 #: components/plugins/adminstyle/help.php:86
 msgid ""
@@ -1027,7 +1032,7 @@ msgstr ""
 
 #: components/plugins/adminstyle/help.php:110
 msgid "<em>and:</em>"
-msgstr ""
+msgstr "<em>et :</em>"
 
 #: components/plugins/adminstyle/help.php:112
 msgid "Bibliographic styles requiring this complexity are few and far between."

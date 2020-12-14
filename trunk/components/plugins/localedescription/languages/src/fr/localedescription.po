@@ -1,9 +1,10 @@
 # Wikindx's Translation ressource: Français.
 # For copyright see the component.json file
 # This file is distributed under the same license as the localedescription package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Stéphane Aulery <saulery@legtux.org>, 2019
+# Stéphane Aulery <saulery@legtux.org>, 2020
 #
 #, fuzzy
 msgid ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
 "POT-Creation-Date: 2020-12-14 01:37+0100\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
-"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2019\n"
+"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -22,11 +23,11 @@ msgstr ""
 
 #: components/plugins/localedescription/localedescriptionmessages.php:20
 msgid "Localize Front Page"
-msgstr ""
+msgstr "Localisation de la page d'accueil"
 
 #: components/plugins/localedescription/localedescriptionmessages.php:21
 msgid "Localize Front Page Description"
-msgstr ""
+msgstr "Localisation de la description en page d'accueil"
 
 #: components/plugins/localedescription/localedescriptionmessages.php:22
 msgid ""
@@ -39,19 +40,29 @@ msgid ""
 "only French (Canada) for Canadian. In the list a locale preceded by an "
 "asterisk has a translation."
 msgstr ""
+"Vous pouvez définir une description en page d'accueil pour chaque locale "
+"installée. Ces descriptions sont stockées dans la table "
+"plugin_localedescription de la base de données à raison d'un enregistrement "
+"par traduction. La description originale, celle définie dans la configuration "
+"générale, est affichée lorsqu'il n'existe pas de traduction pour la locale "
+"préférée de l'utilisateur. Vous pouvez traduire pour une locale très "
+"spécifique ou une famille de langue. Par exemple le français en général ou "
+"seulement le français canadien (pour le Canada). Dans la liste, une locale "
+"précédée d'un astérisque a déjà une traduction."
 
 #: components/plugins/localedescription/localedescriptionmessages.php:23
 msgid ""
 "If you empty the description and submit, you are removing the database field."
 msgstr ""
+"Si vous effacez la description et enregistrez, la description sera supprimée."
 
 #: components/plugins/localedescription/localedescriptionmessages.php:24
 msgid "Choose localization"
-msgstr ""
+msgstr "Choisir une localisation"
 
 #: components/plugins/localedescription/localedescriptionmessages.php:25
 msgid "Original Admin|Configure description"
-msgstr ""
+msgstr "Description Admin|Configure initiale"
 
 #: components/plugins/localedescription/localedescriptionmessages.php:26
 msgid "Missing language"
@@ -59,10 +70,12 @@ msgstr "Langue manquante"
 
 #: components/plugins/localedescription/localedescriptionmessages.php:27
 msgid "Successfully edited ###"
-msgstr ""
+msgstr "### modifiée avec succès"
 
 #: components/plugins/localedescription/localedescriptionmessages.php:28
 msgid ""
 "Your system does not offer an alternative locale to ###. You need to install "
 "more before you can translate."
 msgstr ""
+"Votre système n'offre pas de locale alternative à ###. Vous devriez en "
+"installer avant de pourvoir traduire."

@@ -1,9 +1,10 @@
 # Wikindx's Translation ressource: Français.
 # For copyright see the component.json file
 # This file is distributed under the same license as the visualize package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Stéphane Aulery <saulery@legtux.org>, 2019
+# Stéphane Aulery <saulery@legtux.org>, 2020
 #
 #, fuzzy
 msgid ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
 "POT-Creation-Date: 2020-07-18 02:48+0200\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
-"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2019\n"
+"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -25,11 +26,11 @@ msgstr ""
 #: components/plugins/visualize/visualizemessages.php:22
 #: components/plugins/visualize/visualizemessages.php:43
 msgid "Visualize"
-msgstr ""
+msgstr "Visualisation"
 
 #: components/plugins/visualize/visualizemessages.php:23
 msgid "No data in the database of selected type."
-msgstr ""
+msgstr "Aucune données dans la base pour le type sélectionné."
 
 #: components/plugins/visualize/visualizemessages.php:24
 msgid "Y axis"
@@ -37,72 +38,72 @@ msgstr "Axe Y"
 
 #: components/plugins/visualize/visualizemessages.php:25
 msgid "X axis"
-msgstr ""
+msgstr "Axe X"
 
 #: components/plugins/visualize/visualizemessages.php:26
 msgid "Maximum no. items on the X axis"
-msgstr ""
+msgstr "Nombre maximum d'éléments sur l'axe X"
 
 #: components/plugins/visualize/visualizemessages.php:27
 msgid "-1 is unlimited"
-msgstr ""
+msgstr "-1 (illimité)"
 
 #: components/plugins/visualize/visualizemessages.php:28
 msgid "No. resources"
-msgstr ""
+msgstr "Id ressource"
 
 #: components/plugins/visualize/visualizemessages.php:29
 msgid "Resource type"
-msgstr ""
+msgstr "Type de ressource"
 
 #: components/plugins/visualize/visualizemessages.php:30
 msgid "Publication year"
-msgstr ""
+msgstr "Année de publication"
 
 #: components/plugins/visualize/visualizemessages.php:31
 msgid "Keyword"
-msgstr ""
+msgstr "Mot-clef"
 
 #: components/plugins/visualize/visualizemessages.php:32
 msgid "Category"
-msgstr ""
+msgstr "Catégorie"
 
 #: components/plugins/visualize/visualizemessages.php:33
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #: components/plugins/visualize/visualizemessages.php:34
 msgid "Proceedings"
-msgstr ""
+msgstr "Procédure"
 
 #: components/plugins/visualize/visualizemessages.php:35
 msgid "Missing input"
-msgstr ""
+msgstr "Entrée manquante"
 
 #: components/plugins/visualize/visualizemessages.php:36
 msgid "Type of plot"
-msgstr ""
+msgstr "Type de graphique"
 
 #: components/plugins/visualize/visualizemessages.php:37
 msgid "Line plot"
-msgstr ""
+msgstr "Ligne"
 
 #: components/plugins/visualize/visualizemessages.php:38
 msgid "Bar plot"
-msgstr ""
+msgstr "Barre"
 
 #: components/plugins/visualize/visualizemessages.php:39
 msgid "Combined bar/line plot"
-msgstr ""
+msgstr "Combinaison ligne/barre"
 
 #: components/plugins/visualize/visualizemessages.php:40
 msgid "Scatter plot"
-msgstr ""
+msgstr "Nuage de points"
 
 #: components/plugins/visualize/visualizemessages.php:41
 msgid "Scatter plot with line"
-msgstr ""
+msgstr "Nuage de points et ligne"
 
 #: components/plugins/visualize/visualizemessages.php:42
 msgid "Balloon plot"
-msgstr ""
+msgstr "Bulle"

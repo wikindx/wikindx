@@ -9808,6 +9808,9 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
+#~ msgid "Select the creators you wish to remove from the group"
+#~ msgstr "Seleziona i creatori che desideri rimuovere dal gruppo."
+
 #~ msgid ""
 #~ "If you have languages and styles that are in your WIKINDX installation "
 #~ "folders but they do not show here, then they are not compatible with this "
@@ -9835,9 +9838,6 @@ msgstr "Risorsa approvata con successo"
 
 #~ msgid "Ungroup"
 #~ msgstr "Scorpora"
-
-#~ msgid "Select the creators you wish to remove from the group"
-#~ msgstr "Seleziona i creatori che desideri rimuovere dal gruppo."
 
 #~ msgid ""
 #~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
@@ -9988,9 +9988,6 @@ msgstr "Risorsa approvata con successo"
 #~ msgid "Enabled Languages"
 #~ msgstr "Lingue Abilitate"
 
-#~ msgid "Logon as superAdmin:"
-#~ msgstr "Accesso come superAmministratore:"
-
 #~ msgid "Unable to update database with update/updateMySQL.txt."
 #~ msgstr "Impossibile aggiornare il database con update/updateMySQL.txt."
 
@@ -10001,3 +9998,6 @@ msgstr "Risorsa approvata con successo"
 #~ msgstr ""
 #~ "Metti in quarantena le nuove risorse dalla vista pubblica fino "
 #~ "all'approvazione di un ADMIN"
+
+#~ msgid "Logon as superAdmin:"
+#~ msgstr "Accesso come superAmministratore:"

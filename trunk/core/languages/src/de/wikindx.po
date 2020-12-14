@@ -9890,18 +9890,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#, fuzzy
-#~| msgid "My Wikindx"
-#~ msgid "My Wikindxx"
-#~ msgstr "Mein Wikindx"
-
-#~ msgid ""
-#~ "You are not logged on as the superAdmin: please ask that person ### to "
-#~ "carry out the upgrade through their web browser."
-#~ msgstr ""
-#~ "Sie sind nicht als Superadmin angemeldet: bitten Sie ###, die "
-#~ "Aktualisierung des Datenbankschemas vorzunehmen."
-
 #~ msgid "Upgrade the Database"
 #~ msgstr "Datenbankschema aktualisieren"
 
@@ -10108,6 +10096,18 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ "dieser Version von WIKINDX. Von der WIKINDX-Sourceforge-Downloadseite "
 #~ "(https://sourceforge.net/projects/wikindx//files/pluginsxxx/) können sie "
 #~ "die aktuellen Lokalisierungen und Adminstyle-Plugins herunterladen."
+
+#, fuzzy
+#~| msgid "My Wikindx"
+#~ msgid "My Wikindxx"
+#~ msgstr "Mein Wikindx"
+
+#~ msgid ""
+#~ "You are not logged on as the superAdmin: please ask that person ### to "
+#~ "carry out the upgrade through their web browser."
+#~ msgstr ""
+#~ "Sie sind nicht als Superadmin angemeldet: bitten Sie ###, die "
+#~ "Aktualisierung des Datenbankschemas vorzunehmen."
 
 #~ msgid "Enabled Languages"
 #~ msgstr "Aktivierte Sprachen"

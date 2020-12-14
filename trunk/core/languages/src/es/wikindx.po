@@ -9419,11 +9419,11 @@ msgstr "La palabra clave ha sido editada correctamente"
 msgid "Successfully approved resource(s)"
 msgstr "Recurso eliminado correctamente del cesto"
 
-#~ msgid "Logon as superAdmin:"
-#~ msgstr "Conectarse como superadministrador:"
-
 #~ msgid "Remove users from this group"
 #~ msgstr "Eliminar usuarios de este grupo"
+
+#~ msgid "Logon as superAdmin:"
+#~ msgstr "Conectarse como superadministrador:"
 
 #, fuzzy
 #~| msgid "My Wikindx"
@@ -9474,6 +9474,9 @@ msgstr "Recurso eliminado correctamente del cesto"
 #~ msgid "My Bibliographies"
 #~ msgstr "Mis bibliografías"
 
+#~ msgid "Upgrade the database"
+#~ msgstr "Actualizar la base de datos"
+
 #~ msgid ""
 #~ "The upgrade process may take some time depending upon a number of factors. "
 #~ "If your database is large or your server is slow, it is advised to "
@@ -9512,6 +9515,3 @@ msgstr "Recurso eliminado correctamente del cesto"
 #~ "lento, es recomendable incrementar temporalmente el'max_execution_time' en "
 #~ "php.ini y reiniciar el servidor web antes de la actualización. Es muy "
 #~ "recomendable salvaguardar primero su antigua base de datos."
-
-#~ msgid "Upgrade the database"
-#~ msgstr "Actualizar la base de datos"

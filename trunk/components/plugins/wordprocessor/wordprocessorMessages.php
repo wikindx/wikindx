@@ -57,7 +57,7 @@ class wordprocessorMessages
             "backup" => dgettext($domain, "You can download and backup papers if you wish. The newest files are displayed first."),
             "noPapers" => dgettext($domain, "You have no papers"),
             "import" => dgettext($domain, "Import paper"),
-            "import2" => dgettext($domain, "You can import a paper here which should be a plain file as backed up from WIKINDX"),
+            "import2" => dgettext($domain, "You can import a paper here which should be a plain text or HTML file (basic HTML only)."),
             "import3" => dgettext($domain, "Filename"),
             /// browserTry When WIKINDX detects what is probably an incompatible browser for the SUWP, issue a warning and give the option to give it a try anyway
             "browserTry" => dgettext($domain, "Try to use the SUWP anyway"),

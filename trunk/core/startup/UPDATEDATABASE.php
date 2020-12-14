@@ -775,6 +775,8 @@ END;
             return "5.2.0";
         elseif ($version >= 5.1)
             return "5.1";
+        else
+            return "";
     }
     
     /**

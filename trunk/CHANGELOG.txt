@@ -79,7 +79,7 @@ MAINTENANCE:
 30. Update Adminer to version 4.7.8 (PHP 8.0 support).
 31. Remove table database_summary and count resources on the fly.
 32. Use an internal version for plugins.
-33. Tweak \FILE\command_exists() to gain some execution time.
+33. Assume the bibUtils are in the system PATH.
 
 SECURITY:
 1. Replace crypt/hash_equals() by password_hash/password_verify() which is stronger by default.

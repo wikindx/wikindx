@@ -9787,11 +9787,6 @@ msgstr "Groupe ajouté avec succès"
 msgid "Successfully approved resource(s)"
 msgstr "Approbation des références réussie"
 
-#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
-#~ msgstr ""
-#~ "Nouvelles références non visibles : en attente d'approbation par les "
-#~ "administrateurs"
-
 #~ msgid "Remove users from this group"
 #~ msgstr "Supprimer des utilisateurs de ce groupe"
 
@@ -9989,8 +9984,13 @@ msgstr "Approbation des références réussie"
 #~ msgid "Logon as superAdmin:"
 #~ msgstr "Connexion comme administrateur principal"
 
-#~ msgid "Enabled Languages"
-#~ msgstr "Activer les langues"
+#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
+#~ msgstr ""
+#~ "Nouvelles références non visibles : en attente d'approbation par les "
+#~ "administrateurs"
 
 #~ msgid "My Bibliographies"
 #~ msgstr "Mes bibliographies"
+
+#~ msgid "Enabled Languages"
+#~ msgstr "Activer les langues"

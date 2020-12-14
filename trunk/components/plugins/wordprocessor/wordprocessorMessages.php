@@ -59,17 +59,7 @@ class wordprocessorMessages
             "import" => dgettext($domain, "Import paper"),
             "import2" => dgettext($domain, "You can import a paper here which should be a plain text or HTML file (basic HTML only)."),
             "import3" => dgettext($domain, "Filename"),
-            /// browserTry When WIKINDX detects what is probably an incompatible browser for the SUWP, issue a warning and give the option to give it a try anyway
-            "browserTry" => dgettext($domain, "Try to use the SUWP anyway"),
-            /// noAutoSave Warning that there is no autosave or prompt to save when user accesses another menu item without saving first!
-            "noAutosave" => dgettext($domain, "There is no autosave or save prompt"),
-            /// menuRestore The SUWP menu is hidden for safety reasons when an edit has been made to the paper.  This is a hyperlink that restores it.
-            "menuRestore" => dgettext($domain, "Restore menu"),
             "appendPaper" => dgettext($domain, "Paper has now been loaded ready for appending"),
-            /// addSection Add a section break before appending the paper
-            "addSection" => dgettext($domain, "Add section break before appended paper:"),
-            /// citeTagOnly When searching and inserting metadata in the SUWP, insert only the cite tag (and any pages)
-            "citeTagOnly" => dgettext($domain, "Insert only the cite tag"),
             "paperExists" => dgettext($domain, "The paper you are trying to import already exists in this wikindx"),
             "savePaper" => dgettext($domain, "Successfully saved paper"),
             "deletePaper" => dgettext($domain, "Successfully deleted paper(s)"),

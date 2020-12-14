@@ -9890,11 +9890,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
-#~ msgstr ""
-#~ "Sperre neue Ressourcen aus der öffentlichen Ansicht, bis sie von einem "
-#~ "Administrator freigegeben werden."
-
 #~ msgid "Remove users from this group"
 #~ msgstr "Benutzer aus dieser Benutzergruppe entfernen"
 
@@ -10108,6 +10103,11 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 
 #~ msgid "Logon as superAdmin:"
 #~ msgstr "Anmeldung als Superadmin:"
+
+#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
+#~ msgstr ""
+#~ "Sperre neue Ressourcen aus der öffentlichen Ansicht, bis sie von einem "
+#~ "Administrator freigegeben werden."
 
 #~ msgid "Enabled Languages"
 #~ msgstr "Aktivierte Sprachen"

@@ -9787,9 +9787,6 @@ msgstr "Groupe ajouté avec succès"
 msgid "Successfully approved resource(s)"
 msgstr "Approbation des références réussie"
 
-#~ msgid "Images not used in metadata"
-#~ msgstr "Images inutilisées dans les métadonnées"
-
 #~ msgid "Upgrade the database"
 #~ msgstr "Mettre à jour la base de données"
 
@@ -9989,8 +9986,11 @@ msgstr "Approbation des références réussie"
 #~ msgid "Remove users from this group"
 #~ msgstr "Supprimer des utilisateurs de ce groupe"
 
-#~ msgid "Enabled Languages"
-#~ msgstr "Activer les langues"
+#~ msgid "Images not used in metadata"
+#~ msgstr "Images inutilisées dans les métadonnées"
 
 #~ msgid "My Bibliographies"
 #~ msgstr "Mes bibliographies"
+
+#~ msgid "Enabled Languages"
+#~ msgstr "Activer les langues"

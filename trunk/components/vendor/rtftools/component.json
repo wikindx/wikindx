@@ -1,7 +1,7 @@
 {
     "component_type": "vendor",
     "component_id": "rtftools",
-    "component_version": "175",
+    "component_version": "337",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "RtfTools",
@@ -31,5 +31,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "5e1ac8f70e270c05437830b2ffca89382df35cdf2db94dc213878479b14c1a1p"
+    "component_sha256": "49b1e6e085a8dec777e12dfe56bda8cb4580a57034204f73b1e69b4073fcb19e"
 }

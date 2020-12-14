@@ -113,7 +113,9 @@ if (version_compare(PHP_VERSION, WIKINDX_PHP_VERSION_MIN, '<'))
    but it is definitely not recommended for good functionality of all parts of
    the software and for the security of permanently disabling it.</p>
    
-<p>Please upgrade PHPas soon as possible.</p>
+<p>A list of compatibility with PHP is available in the documentation (see docs/README.txt).</p>
+   
+<p>Please upgrade PHP as soon as possible.</p>
 
 <p>After that, refresh this page (with Ctrl+F5) or <a href="index.php">follow this link</a>.</p>
 

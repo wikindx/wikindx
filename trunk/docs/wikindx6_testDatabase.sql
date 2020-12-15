@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.4
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 31, 2020 at 12:09 PM
--- Server version: 10.1.37-MariaDB
--- PHP Version: 7.3.1
+-- Generation Time: Dec 15, 2020 at 08:40 AM
+-- Server version: 10.4.14-MariaDB
+-- PHP Version: 7.4.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -40,21 +39,21 @@ CREATE TABLE `wkx_bibtex_string` (
 --
 
 CREATE TABLE `wkx_cache` (
-  `cacheResourceCreators` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheMetadataCreators` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheResourceKeywords` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheMetadataKeywords` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheQuoteKeywords` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheParaphraseKeywords` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheMusingKeywords` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheResourcePublishers` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheMetadataPublishers` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheConferenceOrganisers` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheResourceCollections` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheMetadataCollections` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheResourceCollectionTitles` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheResourceCollectionShorts` longtext COLLATE utf8mb4_unicode_520_ci,
-  `cacheKeywords` longtext COLLATE utf8mb4_unicode_520_ci
+  `cacheResourceCreators` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheMetadataCreators` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheResourceKeywords` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheMetadataKeywords` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheQuoteKeywords` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheParaphraseKeywords` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheMusingKeywords` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheResourcePublishers` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheMetadataPublishers` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheConferenceOrganisers` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheResourceCollections` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheMetadataCollections` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheResourceCollectionTitles` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheResourceCollectionShorts` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `cacheKeywords` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
@@ -96,7 +95,7 @@ CREATE TABLE `wkx_collection` (
   `collectionTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `collectionTitleShort` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `collectionType` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `collectionDefault` longtext COLLATE utf8mb4_unicode_520_ci
+  `collectionDefault` longtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
@@ -132,7 +131,7 @@ CREATE TABLE `wkx_config` (
   `configName` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `configInt` int(11) DEFAULT NULL,
   `configVarchar` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `configText` mediumtext COLLATE utf8mb4_unicode_520_ci,
+  `configText` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `configBoolean` tinyint(1) DEFAULT NULL,
   `configDatetime` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -226,16 +225,28 @@ INSERT INTO `wkx_config` (`configId`, `configName`, `configInt`, `configVarchar`
 (84, 'configAuthGateMessage', NULL, '', NULL, NULL, NULL),
 (85, 'configDebugSql', NULL, NULL, NULL, 0, NULL),
 (86, 'configIsTrunk', NULL, NULL, NULL, 0, NULL),
-(87, 'configLdapDn', NULL, '', NULL, NULL, NULL),
 (88, 'configLdapPort', 389, NULL, NULL, NULL, NULL),
-(89, 'configLdapProtocolVersion', 3, NULL, NULL, NULL, NULL),
 (90, 'configLdapServer', NULL, 'localhost', NULL, NULL, NULL),
 (91, 'configLdapUse', NULL, NULL, NULL, 0, NULL),
 (92, 'configListLink', NULL, NULL, NULL, 1, NULL),
 (93, 'configPasswordSize', 6, NULL, NULL, NULL, NULL),
 (94, 'configPasswordStrength', NULL, 'strong', NULL, NULL, NULL),
 (95, 'configSiteMapAllow', NULL, NULL, NULL, 0, NULL),
-(96, 'configUserRegistrationModerate', NULL, NULL, NULL, 0, NULL);
+(96, 'configUserRegistrationModerate', NULL, NULL, NULL, 0, NULL),
+(97, 'configBrowserTabID', NULL, NULL, NULL, 0, NULL),
+(98, 'configLdapGroupDn', NULL, '', NULL, NULL, NULL),
+(99, 'configLdapSearchMethod', NULL, 'tree', NULL, NULL, NULL),
+(100, 'configLdapSearchOperator', NULL, 'and', NULL, NULL, NULL),
+(101, 'configLdapServerBindDomain', NULL, '', NULL, NULL, NULL),
+(102, 'configLdapServerBindDomainFormat', NULL, 'upn', NULL, NULL, NULL),
+(103, 'configLdapServerBindLogin', NULL, '', NULL, NULL, NULL),
+(104, 'configLdapServerBindPassword', NULL, '', NULL, NULL, NULL),
+(105, 'configLdapServerBindType', NULL, 'anonymous', NULL, NULL, NULL),
+(106, 'configLdapServerEncryption', NULL, 'ssl', NULL, NULL, NULL),
+(107, 'configLdapUserAttributLogin', NULL, 'sAMAccountName', NULL, NULL, NULL),
+(108, 'configLdapUserCreate', NULL, NULL, NULL, 1, NULL),
+(109, 'configLdapUserOu', NULL, '', NULL, NULL, NULL),
+(110, 'configResourceUrlPrefix', NULL, '', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -316,23 +327,14 @@ CREATE TABLE `wkx_custom` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wkx_database_summary`
+-- Table structure for table `wkx_form_data`
 --
 
-CREATE TABLE `wkx_database_summary` (
-  `databasesummaryTotalResources` int(11) NOT NULL,
-  `databasesummaryTotalQuotes` int(11) DEFAULT NULL,
-  `databasesummaryTotalParaphrases` int(11) DEFAULT NULL,
-  `databasesummaryTotalMusings` int(11) DEFAULT NULL,
-  `databasesummarySoftwareVersion` varchar(16) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
+CREATE TABLE `wkx_form_data` (
+  `formdataId` varchar(128) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `formdataData` text COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `formdataTimestamp` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
-
---
--- Dumping data for table `wkx_database_summary`
---
-
-INSERT INTO `wkx_database_summary` (`databasesummaryTotalResources`, `databasesummaryTotalQuotes`, `databasesummaryTotalParaphrases`, `databasesummaryTotalMusings`, `databasesummarySoftwareVersion`) VALUES
-(83, 8, 4, 4, '16');
 
 -- --------------------------------------------------------
 
@@ -356,7 +358,7 @@ CREATE TABLE `wkx_import_raw` (
 CREATE TABLE `wkx_keyword` (
   `keywordId` int(11) NOT NULL,
   `keywordKeyword` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `keywordGlossary` mediumtext COLLATE utf8mb4_unicode_520_ci
+  `keywordGlossary` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
@@ -390,9 +392,20 @@ CREATE TABLE `wkx_language` (
 CREATE TABLE `wkx_news` (
   `newsId` int(11) NOT NULL,
   `newsTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `newsNews` mediumtext COLLATE utf8mb4_unicode_520_ci,
-  `newsTimestamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  `newsNews` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `newsTimestamp` datetime DEFAULT current_timestamp(),
   `newsEmailSent` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wkx_plugin_localedescription`
+--
+
+CREATE TABLE `wkx_plugin_localedescription` (
+  `pluginlocaledescriptionLocale` varchar(16) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `pluginlocaledescriptionText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
@@ -480,11 +493,11 @@ INSERT INTO `wkx_publisher` (`publisherId`, `publisherName`, `publisherLocation`
 CREATE TABLE `wkx_resource` (
   `resourceId` int(11) NOT NULL,
   `resourceType` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourceTitle` mediumtext COLLATE utf8mb4_unicode_520_ci,
-  `resourceSubtitle` mediumtext COLLATE utf8mb4_unicode_520_ci,
+  `resourceTitle` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `resourceSubtitle` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceShortTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourceTransTitle` mediumtext COLLATE utf8mb4_unicode_520_ci,
-  `resourceTransSubtitle` mediumtext COLLATE utf8mb4_unicode_520_ci,
+  `resourceTransTitle` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `resourceTransSubtitle` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceTransShortTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceField1` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceField2` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
@@ -495,12 +508,12 @@ CREATE TABLE `wkx_resource` (
   `resourceField7` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceField8` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceField9` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourceNoSort` mediumtext COLLATE utf8mb4_unicode_520_ci,
-  `resourceTransNoSort` mediumtext COLLATE utf8mb4_unicode_520_ci,
+  `resourceNoSort` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `resourceTransNoSort` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceIsbn` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceBibtexKey` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceDoi` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourceTitleSort` mediumtext COLLATE utf8mb4_unicode_520_ci
+  `resourceTitleSort` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
@@ -606,10 +619,10 @@ CREATE TABLE `wkx_resource_attachments` (
   `resourceattachmentsFileType` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceattachmentsFileSize` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourceattachmentsPrimary` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
-  `resourceattachmentsTimestamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  `resourceattachmentsTimestamp` datetime DEFAULT current_timestamp(),
   `resourceattachmentsEmbargo` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
-  `resourceattachmentsEmbargoUntil` datetime DEFAULT CURRENT_TIMESTAMP,
-  `resourceattachmentsDescription` mediumtext COLLATE utf8mb4_unicode_520_ci
+  `resourceattachmentsEmbargoUntil` datetime DEFAULT current_timestamp(),
+  `resourceattachmentsDescription` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
@@ -915,7 +928,7 @@ CREATE TABLE `wkx_resource_custom` (
   `resourcecustomCustomId` int(11) NOT NULL,
   `resourcecustomResourceId` int(11) NOT NULL,
   `resourcecustomShort` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `resourcecustomLong` mediumtext COLLATE utf8mb4_unicode_520_ci,
+  `resourcecustomLong` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourcecustomAddUserIdCustom` int(11) DEFAULT NULL,
   `resourcecustomEditUserIdCustom` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -1047,7 +1060,7 @@ CREATE TABLE `wkx_resource_metadata` (
   `resourcemetadataType` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
   `resourcemetadataPrivate` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   `resourcemetadataText` mediumtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `resourcemetadataTimestamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  `resourcemetadataTimestamp` datetime DEFAULT current_timestamp(),
   `resourcemetadataTimestampEdited` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
@@ -1099,7 +1112,7 @@ CREATE TABLE `wkx_resource_misc` (
   `resourcemiscTag` int(11) DEFAULT NULL,
   `resourcemiscAddUserIdResource` int(11) DEFAULT NULL,
   `resourcemiscEditUserIdResource` int(11) DEFAULT NULL,
-  `resourcemiscMaturityIndex` double DEFAULT '0',
+  `resourcemiscMaturityIndex` double DEFAULT 0,
   `resourcemiscPeerReviewed` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
   `resourcemiscQuarantine` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
@@ -1263,10 +1276,10 @@ INSERT INTO `wkx_resource_summary` (`resourcesummaryId`, `resourcesummaryQuotes`
 
 CREATE TABLE `wkx_resource_text` (
   `resourcetextId` int(11) NOT NULL,
-  `resourcetextNote` mediumtext COLLATE utf8mb4_unicode_520_ci,
-  `resourcetextAbstract` mediumtext COLLATE utf8mb4_unicode_520_ci,
-  `resourcetextUrls` mediumtext COLLATE utf8mb4_unicode_520_ci,
-  `resourcetextUrlText` mediumtext COLLATE utf8mb4_unicode_520_ci,
+  `resourcetextNote` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `resourcetextAbstract` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `resourcetextUrls` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
+  `resourcetextUrlText` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `resourcetextEditUserIdNote` int(11) DEFAULT NULL,
   `resourcetextAddUserIdNote` int(11) DEFAULT NULL,
   `resourcetextEditUserIdAbstract` int(11) DEFAULT NULL,
@@ -1319,8 +1332,8 @@ INSERT INTO `wkx_resource_text` (`resourcetextId`, `resourcetextNote`, `resource
 
 CREATE TABLE `wkx_resource_timestamp` (
   `resourcetimestampId` int(11) NOT NULL,
-  `resourcetimestampTimestamp` datetime DEFAULT CURRENT_TIMESTAMP,
-  `resourcetimestampTimestampAdd` datetime DEFAULT CURRENT_TIMESTAMP
+  `resourcetimestampTimestamp` datetime DEFAULT current_timestamp(),
+  `resourcetimestampTimestampAdd` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
@@ -1537,8 +1550,8 @@ CREATE TABLE `wkx_statistics_attachment_downloads` (
   `statisticsattachmentdownloadsId` int(11) NOT NULL,
   `statisticsattachmentdownloadsResourceId` int(11) NOT NULL,
   `statisticsattachmentdownloadsAttachmentId` int(11) NOT NULL,
-  `statisticsattachmentdownloadsCount` int(11) DEFAULT '0',
-  `statisticsattachmentdownloadsMonth` int(11) DEFAULT '0'
+  `statisticsattachmentdownloadsCount` int(11) DEFAULT 0,
+  `statisticsattachmentdownloadsMonth` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
@@ -1550,8 +1563,8 @@ CREATE TABLE `wkx_statistics_attachment_downloads` (
 CREATE TABLE `wkx_statistics_resource_views` (
   `statisticsresourceviewsId` int(11) NOT NULL,
   `statisticsresourceviewsResourceId` int(11) NOT NULL,
-  `statisticsresourceviewsCount` int(11) DEFAULT '0',
-  `statisticsresourceviewsMonth` int(11) DEFAULT '0'
+  `statisticsresourceviewsCount` int(11) DEFAULT 0,
+  `statisticsresourceviewsMonth` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
@@ -7723,60 +7736,73 @@ CREATE TABLE `wkx_tag` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `wkx_temp_storage`
+--
+
+CREATE TABLE `wkx_temp_storage` (
+  `tempstorageId` char(36) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `tempstorageData` longtext COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `tempstorageTimestamp` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `wkx_users`
 --
 
 CREATE TABLE `wkx_users` (
   `usersId` int(11) NOT NULL,
   `usersUsername` varchar(188) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `usersPassword` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `usersFullname` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `usersPassword` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
+  `usersFullname` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
   `usersEmail` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
-  `usersTimestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `usersAdmin` tinyint(1) NOT NULL DEFAULT '0',
+  `usersTimestamp` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `usersAdmin` tinyint(1) NOT NULL DEFAULT 0,
   `usersCookie` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
-  `usersPaging` int(11) NOT NULL DEFAULT '20',
-  `usersPagingMaxLinks` int(11) NOT NULL DEFAULT '11',
+  `usersPaging` int(11) NOT NULL DEFAULT 20,
+  `usersPagingMaxLinks` int(11) NOT NULL DEFAULT 11,
   `usersPagingStyle` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
-  `usersStringLimit` int(11) NOT NULL DEFAULT '40',
+  `usersStringLimit` int(11) NOT NULL DEFAULT 40,
   `usersLanguage` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'auto',
   `usersStyle` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'apa',
   `usersTemplate` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'default',
   `usersNotify` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
   `usersNotifyAddEdit` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'A',
-  `usersNotifyThreshold` int(2) NOT NULL DEFAULT '0',
-  `usersNotifyTimestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `usersPagingTagCloud` int(11) NOT NULL DEFAULT '100',
+  `usersNotifyThreshold` int(2) NOT NULL DEFAULT 0,
+  `usersNotifyTimestamp` datetime NOT NULL DEFAULT current_timestamp(),
+  `usersPagingTagCloud` int(11) NOT NULL DEFAULT 100,
   `usersPasswordQuestion1` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
   `usersPasswordAnswer1` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
   `usersPasswordQuestion2` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
   `usersPasswordAnswer2` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
   `usersPasswordQuestion3` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
   `usersPasswordAnswer3` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT '',
-  `usersUserSession` longtext COLLATE utf8mb4_unicode_520_ci,
-  `usersUseBibtexKey` tinyint(1) NOT NULL DEFAULT '0',
-  `usersUseWikindxKey` tinyint(1) NOT NULL DEFAULT '0',
-  `usersDisplayBibtexLink` tinyint(1) NOT NULL DEFAULT '0',
-  `usersDisplayCmsLink` tinyint(1) NOT NULL DEFAULT '0',
+  `usersUseBibtexKey` tinyint(1) NOT NULL DEFAULT 0,
+  `usersUseWikindxKey` tinyint(1) NOT NULL DEFAULT 0,
+  `usersDisplayBibtexLink` tinyint(1) NOT NULL DEFAULT 0,
+  `usersDisplayCmsLink` tinyint(1) NOT NULL DEFAULT 0,
   `usersCmsTag` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `usersIsCreator` int(11) DEFAULT NULL,
-  `usersListlink` tinyint(1) NOT NULL DEFAULT '0',
+  `usersListlink` tinyint(1) NOT NULL DEFAULT 0,
   `usersDepartment` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `usersTemplateMenu` int(11) NOT NULL DEFAULT '0',
+  `usersTemplateMenu` int(11) NOT NULL DEFAULT 0,
   `usersInstitution` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `usersNotifyDigestThreshold` int(11) NOT NULL DEFAULT '100',
+  `usersNotifyDigestThreshold` int(11) NOT NULL DEFAULT 100,
   `usersGDPR` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
-  `usersBlock` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N'
+  `usersBlock` varchar(1) COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT 'N',
+  `usersHomeBib` tinyint(1) NOT NULL DEFAULT 0,
+  `usersBrowseBibliography` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
 -- Dumping data for table `wkx_users`
 --
 
-INSERT INTO `wkx_users` (`usersId`, `usersUsername`, `usersPassword`, `usersFullname`, `usersEmail`, `usersTimestamp`, `usersAdmin`, `usersCookie`, `usersPaging`, `usersPagingMaxLinks`, `usersPagingStyle`, `usersStringLimit`, `usersLanguage`, `usersStyle`, `usersTemplate`, `usersNotify`, `usersNotifyAddEdit`, `usersNotifyThreshold`, `usersNotifyTimestamp`, `usersPagingTagCloud`, `usersPasswordQuestion1`, `usersPasswordAnswer1`, `usersPasswordQuestion2`, `usersPasswordAnswer2`, `usersPasswordQuestion3`, `usersPasswordAnswer3`, `usersUserSession`, `usersUseBibtexKey`, `usersUseWikindxKey`, `usersDisplayBibtexLink`, `usersDisplayCmsLink`, `usersCmsTag`, `usersIsCreator`, `usersListlink`, `usersDepartment`, `usersTemplateMenu`, `usersInstitution`, `usersNotifyDigestThreshold`, `usersGDPR`, `usersBlock`) VALUES
-(1, 'super', '36066C6rn7.oA', '', '', '2020-07-31 12:08:44', 1, 'N', 15, 11, 'N', 40, 'en_GB', 'apa', 'bryophyta', 'N', 'A', 0, '2010-10-10 11:32:52', 100, '', '', '', '', '', '', 'YToxOntzOjEyOiJRdWVyeVN0cmluZ3MiO3M6MTExMjoiWVRveE1EcDdhVG93TzNNNk56azZJaTkzYVd0cGJtUjROUzkzYVd0cGJtUjRMM1J5ZFc1ckwybHVaR1Y0TG5Cb2NEOWhZM1JwYjI0OWRYTmxjbk5uY205MWNITmZUVmxYU1V0SlRrUllYME5QVWtVbWJXVjBhRzlrUFdsdWFYUWlPMms2TVR0ek9qWTNPaUl2ZDJscmFXNWtlRFV2ZDJscmFXNWtlQzkwY25WdWF5OXBibVJsZUM1d2FIQS9ZV04wYVc5dVBYVnpaWEp6WjNKdmRYQnpYMDFaVjBsTFNVNUVXRjlEVDFKRklqdHBPakk3Y3pvMk56b2lMM2RwYTJsdVpIZzFMM2RwYTJsdVpIZ3ZkSEoxYm1zdmFXNWtaWGd1Y0dod1AyRmpkR2x2YmoxMWMyVnljMmR5YjNWd2MxOU5XVmRKUzBsT1JGaGZRMDlTUlNJN2FUb3pPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzBPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzFPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzJPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzNPM002TmprNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5YVcxd2IzSjBaWGh3YjNKMFltbGlYMmx1YVhSQ2FXSjFkR2xzY3lJN2FUbzRPM002TnpRNklpOTNhV3RwYm1SNE5TOTNhV3RwYm1SNEwzUnlkVzVyTDJsdVpHVjRMbkJvY0Q5aFkzUnBiMjQ5WW1GemEyVjBYMEpCVTB0RlZGOURUMUpGSm5KbGMyOTFjbU5sU1dROU5UYzBJanRwT2prN2N6bzNORG9pTDNkcGEybHVaSGcxTDNkcGEybHVaSGd2ZEhKMWJtc3ZhVzVrWlhndWNHaHdQMkZqZEdsdmJqMXlaWE52ZFhKalpWOVNSVk5QVlZKRFJWWkpSVmRmUTA5U1JTWnBaRDAxTnpRaU8zMD0iO30=', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N'),
-(2, 'user1', '76Rgfb2tSgYHA', '', 'blah@blah.com', '2020-07-31 12:08:44', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:07', 100, '', '', '', '', '', '', NULL, 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N'),
-(3, 'user2', '29pVL2tfNr34E', '', 'blah@blah.com', '2020-07-31 12:08:44', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:32', 100, '', '', '', '', '', '', NULL, 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N');
+INSERT INTO `wkx_users` (`usersId`, `usersUsername`, `usersPassword`, `usersFullname`, `usersEmail`, `usersTimestamp`, `usersAdmin`, `usersCookie`, `usersPaging`, `usersPagingMaxLinks`, `usersPagingStyle`, `usersStringLimit`, `usersLanguage`, `usersStyle`, `usersTemplate`, `usersNotify`, `usersNotifyAddEdit`, `usersNotifyThreshold`, `usersNotifyTimestamp`, `usersPagingTagCloud`, `usersPasswordQuestion1`, `usersPasswordAnswer1`, `usersPasswordQuestion2`, `usersPasswordAnswer2`, `usersPasswordQuestion3`, `usersPasswordAnswer3`, `usersUseBibtexKey`, `usersUseWikindxKey`, `usersDisplayBibtexLink`, `usersDisplayCmsLink`, `usersCmsTag`, `usersIsCreator`, `usersListlink`, `usersDepartment`, `usersTemplateMenu`, `usersInstitution`, `usersNotifyDigestThreshold`, `usersGDPR`, `usersBlock`, `usersHomeBib`, `usersBrowseBibliography`) VALUES
+(1, 'super', '$2y$10$ro26Z/o/iU31HnEqjEYOjOZxaB4Qi64TagMjuxTfoWCUkVvqW4VR.', '', '', '2020-12-15 08:39:41', 1, 'N', 15, 11, 'N', 40, 'en_GB', 'apa', 'bryophyta', 'N', 'A', 0, '2010-10-10 11:32:52', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0),
+(2, 'user1', '76Rgfb2tSgYHA', '', 'blah@blah.com', '2020-07-31 12:08:44', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:07', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0),
+(3, 'user2', '29pVL2tfNr34E', '', 'blah@blah.com', '2020-07-31 12:08:44', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:32', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -7789,7 +7815,7 @@ CREATE TABLE `wkx_user_bibliography` (
   `userbibliographyUserId` int(11) DEFAULT NULL,
   `userbibliographyUserGroupId` int(11) DEFAULT NULL,
   `userbibliographyTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `userbibliographyDescription` mediumtext COLLATE utf8mb4_unicode_520_ci
+  `userbibliographyDescription` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 --
@@ -7856,7 +7882,7 @@ INSERT INTO `wkx_user_bibliography_resource` (`userbibliographyresourceId`, `use
 CREATE TABLE `wkx_user_groups` (
   `usergroupsId` int(11) NOT NULL,
   `usergroupsTitle` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
-  `usergroupsDescription` mediumtext COLLATE utf8mb4_unicode_520_ci,
+  `usergroupsDescription` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `usergroupsAdminId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
@@ -7890,6 +7916,43 @@ INSERT INTO `wkx_user_groups_users` (`usergroupsusersId`, `usergroupsusersGroupI
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `wkx_user_keywordgroups`
+--
+
+CREATE TABLE `wkx_user_keywordgroups` (
+  `userkeywordgroupsId` int(11) NOT NULL,
+  `userkeywordgroupsUserId` int(11) NOT NULL,
+  `userkeywordgroupsName` varchar(1020) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `userkeywordgroupsDescription` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wkx_user_kg_keywords`
+--
+
+CREATE TABLE `wkx_user_kg_keywords` (
+  `userkgkeywordsId` int(11) NOT NULL,
+  `userkgkeywordsKeywordGroupId` int(11) NOT NULL,
+  `userkgkeywordsKeywordId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wkx_user_kg_usergroups`
+--
+
+CREATE TABLE `wkx_user_kg_usergroups` (
+  `userkgusergroupsId` int(11) NOT NULL,
+  `userkgusergroupsKeywordGroupId` int(11) NOT NULL,
+  `userkgusergroupsUserGroupId` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `wkx_user_register`
 --
 
@@ -7897,9 +7960,9 @@ CREATE TABLE `wkx_user_register` (
   `userregisterId` int(11) NOT NULL,
   `userregisterHashKey` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
   `userregisterEmail` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-  `userregisterTimestamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  `userregisterTimestamp` datetime DEFAULT current_timestamp(),
   `userregisterConfirmed` varchar(1) COLLATE utf8mb4_unicode_520_ci DEFAULT 'N',
-  `userregisterRequest` mediumtext COLLATE utf8mb4_unicode_520_ci
+  `userregisterRequest` mediumtext COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 -- --------------------------------------------------------
@@ -7913,6 +7976,27 @@ CREATE TABLE `wkx_user_tags` (
   `usertagsUserId` int(11) DEFAULT NULL,
   `usertagsTag` varchar(1020) COLLATE utf8mb4_unicode_520_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wkx_version`
+--
+
+CREATE TABLE `wkx_version` (
+  `versionComponentType` varchar(32) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `versionComponentId` varchar(256) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `versionInternalVersion` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+--
+-- Dumping data for table `wkx_version`
+--
+
+INSERT INTO `wkx_version` (`versionComponentType`, `versionComponentId`, `versionInternalVersion`) VALUES
+('core', 'core', 36),
+('plugin', 'localedescription', 1),
+('plugin', 'soundexplorer', 1);
 
 --
 -- Indexes for dumped tables
@@ -7960,6 +8044,12 @@ ALTER TABLE `wkx_custom`
   ADD PRIMARY KEY (`customId`);
 
 --
+-- Indexes for table `wkx_form_data`
+--
+ALTER TABLE `wkx_form_data`
+  ADD PRIMARY KEY (`formdataId`);
+
+--
 -- Indexes for table `wkx_import_raw`
 --
 ALTER TABLE `wkx_import_raw`
@@ -7983,6 +8073,12 @@ ALTER TABLE `wkx_language`
 --
 ALTER TABLE `wkx_news`
   ADD PRIMARY KEY (`newsId`);
+
+--
+-- Indexes for table `wkx_plugin_localedescription`
+--
+ALTER TABLE `wkx_plugin_localedescription`
+  ADD PRIMARY KEY (`pluginlocaledescriptionLocale`);
 
 --
 -- Indexes for table `wkx_plugin_soundexplorer`
@@ -8147,11 +8243,17 @@ ALTER TABLE `wkx_tag`
   ADD PRIMARY KEY (`tagId`);
 
 --
+-- Indexes for table `wkx_temp_storage`
+--
+ALTER TABLE `wkx_temp_storage`
+  ADD PRIMARY KEY (`tempstorageId`);
+
+--
 -- Indexes for table `wkx_users`
 --
 ALTER TABLE `wkx_users`
   ADD PRIMARY KEY (`usersId`),
-  ADD UNIQUE KEY `usersUsernameUnique` (`usersUsername`) USING HASH;
+  ADD UNIQUE KEY `usersUsernameUnique` (`usersUsername`);
 
 --
 -- Indexes for table `wkx_user_bibliography`
@@ -8180,6 +8282,27 @@ ALTER TABLE `wkx_user_groups_users`
   ADD PRIMARY KEY (`usergroupsusersId`);
 
 --
+-- Indexes for table `wkx_user_keywordgroups`
+--
+ALTER TABLE `wkx_user_keywordgroups`
+  ADD PRIMARY KEY (`userkeywordgroupsId`);
+
+--
+-- Indexes for table `wkx_user_kg_keywords`
+--
+ALTER TABLE `wkx_user_kg_keywords`
+  ADD PRIMARY KEY (`userkgkeywordsId`),
+  ADD KEY `userkgkeywordsKeywordId` (`userkgkeywordsKeywordId`);
+
+--
+-- Indexes for table `wkx_user_kg_usergroups`
+--
+ALTER TABLE `wkx_user_kg_usergroups`
+  ADD PRIMARY KEY (`userkgusergroupsId`),
+  ADD KEY `userkgusergroupsUserGroupId` (`userkgusergroupsUserGroupId`),
+  ADD KEY `userkgusergroupsKeywordGroupId` (`userkgusergroupsKeywordGroupId`);
+
+--
 -- Indexes for table `wkx_user_register`
 --
 ALTER TABLE `wkx_user_register`
@@ -8190,6 +8313,12 @@ ALTER TABLE `wkx_user_register`
 --
 ALTER TABLE `wkx_user_tags`
   ADD PRIMARY KEY (`usertagsId`);
+
+--
+-- Indexes for table `wkx_version`
+--
+ALTER TABLE `wkx_version`
+  ADD PRIMARY KEY (`versionComponentType`,`versionComponentId`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -8217,7 +8346,7 @@ ALTER TABLE `wkx_collection`
 -- AUTO_INCREMENT for table `wkx_config`
 --
 ALTER TABLE `wkx_config`
-  MODIFY `configId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
+  MODIFY `configId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
 
 --
 -- AUTO_INCREMENT for table `wkx_creator`
@@ -8374,6 +8503,24 @@ ALTER TABLE `wkx_user_groups`
 --
 ALTER TABLE `wkx_user_groups_users`
   MODIFY `usergroupsusersId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `wkx_user_keywordgroups`
+--
+ALTER TABLE `wkx_user_keywordgroups`
+  MODIFY `userkeywordgroupsId` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `wkx_user_kg_keywords`
+--
+ALTER TABLE `wkx_user_kg_keywords`
+  MODIFY `userkgkeywordsId` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `wkx_user_kg_usergroups`
+--
+ALTER TABLE `wkx_user_kg_usergroups`
+  MODIFY `userkgusergroupsId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `wkx_user_register`

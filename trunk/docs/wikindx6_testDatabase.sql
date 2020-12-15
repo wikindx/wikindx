@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 15, 2020 at 08:40 AM
+-- Generation Time: Dec 15, 2020 at 02:52 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.9
 
@@ -172,7 +172,7 @@ INSERT INTO `wkx_config` (`configId`, `configName`, `configInt`, `configVarchar`
 (29, 'configSearchFilter', NULL, NULL, 'YTo1OntpOjA7czoyOiJhbiI7aToxO3M6MToiYSI7aToyO3M6MzoidGhlIjtpOjM7czozOiJhbmQiO2k6NDtzOjI6InRvIjt9', NULL, NULL),
 (30, 'configListlink', NULL, NULL, NULL, NULL, NULL),
 (31, 'configEmailStatistics', NULL, NULL, NULL, NULL, NULL),
-(32, 'configStatisticsCompiled', NULL, NULL, NULL, NULL, '2020-07-01 00:00:00'),
+(32, 'configStatisticsCompiled', NULL, NULL, NULL, NULL, '2020-12-01 00:00:00'),
 (33, 'configMetadataAllow', NULL, NULL, NULL, 1, NULL),
 (34, 'configMetadataUserOnly', NULL, NULL, NULL, NULL, NULL),
 (35, 'configDenyReadOnly', NULL, NULL, NULL, NULL, NULL),
@@ -7801,8 +7801,8 @@ CREATE TABLE `wkx_users` (
 
 INSERT INTO `wkx_users` (`usersId`, `usersUsername`, `usersPassword`, `usersFullname`, `usersEmail`, `usersTimestamp`, `usersAdmin`, `usersCookie`, `usersPaging`, `usersPagingMaxLinks`, `usersPagingStyle`, `usersStringLimit`, `usersLanguage`, `usersStyle`, `usersTemplate`, `usersNotify`, `usersNotifyAddEdit`, `usersNotifyThreshold`, `usersNotifyTimestamp`, `usersPagingTagCloud`, `usersPasswordQuestion1`, `usersPasswordAnswer1`, `usersPasswordQuestion2`, `usersPasswordAnswer2`, `usersPasswordQuestion3`, `usersPasswordAnswer3`, `usersUseBibtexKey`, `usersUseWikindxKey`, `usersDisplayBibtexLink`, `usersDisplayCmsLink`, `usersCmsTag`, `usersIsCreator`, `usersListlink`, `usersDepartment`, `usersTemplateMenu`, `usersInstitution`, `usersNotifyDigestThreshold`, `usersGDPR`, `usersBlock`, `usersHomeBib`, `usersBrowseBibliography`) VALUES
 (1, 'super', '$2y$10$ro26Z/o/iU31HnEqjEYOjOZxaB4Qi64TagMjuxTfoWCUkVvqW4VR.', '', '', '2020-12-15 08:39:41', 1, 'N', 15, 11, 'N', 40, 'en_GB', 'apa', 'bryophyta', 'N', 'A', 0, '2010-10-10 11:32:52', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0),
-(2, 'user1', '76Rgfb2tSgYHA', '', 'blah@blah.com', '2020-07-31 12:08:44', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:07', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0),
-(3, 'user2', '29pVL2tfNr34E', '', 'blah@blah.com', '2020-07-31 12:08:44', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:32', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0);
+(2, 'user1', '$2y$10$fUNsiFxdWCET0ZfG1wKzSudRPrmHkTVdJ.18xe1sh/Eoa6ztcBqSy', '', 'blah@blah.com', '2020-12-15 14:51:15', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:07', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0),
+(3, 'user2', '$2y$10$UtCjwRv.mIh6Mj4NVXy2fOCohpR06aLLOG4d.MDS.AGLXeWBCO3Wa', '', 'blah@blah.com', '2020-12-15 14:51:38', 0, 'N', 10, 11, 'N', 40, 'en_GB', 'apa', 'default', 'N', 'A', 0, '2010-12-27 07:51:32', 100, '', '', '', '', '', '', 0, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL, 100, 'N', 'N', 0, 0);
 
 -- --------------------------------------------------------
 

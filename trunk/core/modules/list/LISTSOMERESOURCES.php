@@ -38,6 +38,7 @@ class LISTSOMERESOURCES
         $this->messages = FACTORY_MESSAGES::getInstance();
         $this->common = FACTORY_LISTCOMMON::getInstance();
         $this->common->browse = TRUE;
+        $this->common->listSomeResources = TRUE;
         $this->session = FACTORY_SESSION::getInstance();
         $this->badInput = FACTORY_BADINPUT::getInstance();
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "..", "browse", "BROWSECOMMON.php"]));

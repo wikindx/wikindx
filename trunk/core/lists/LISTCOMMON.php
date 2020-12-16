@@ -79,6 +79,8 @@ class LISTCOMMON
     private $rows = [];
     /** string */
     private $browserTabID = FALSE;
+    /** bool */
+    public $listSomeResources = FALSE;
 
 
     /**
@@ -1005,7 +1007,7 @@ class LISTCOMMON
             $linksInfo['select'] = $this->createAddToBox($bibUserId, $bibs, $listType);
             if ($listType == 'list')
             {
-                if (GLOBALS::getTempStorage("list_SomeResources")) {
+                if ($this->listSomeResources) {
                     $formHeader = 'list_LISTSOMERESOURCES_CORE';
                 }
                 else {

@@ -169,7 +169,7 @@ msgstr "Papiers supprimés :"
 #: components/plugins/wordprocessor/wordprocessormessages.php:55
 #: components/plugins/wordprocessor/wordprocessormessages.php:65
 msgid "Successfully deleted paper(s)"
-msgstr "Suppression des papiers réussie."
+msgstr "Suppression des papiers réussie"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:56
 msgid "List papers"
@@ -207,7 +207,7 @@ msgstr "Le papier est chargé et prêt pour des modifications"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:63
 msgid "The paper you are trying to import already exists in this wikindx"
-msgstr "Le papier que vous tentez d'importer existe déjà."
+msgstr "Le papier que vous tentez d'importer existe déjà"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:64
 msgid "Successfully saved paper"
@@ -262,7 +262,7 @@ msgstr "Interligne générale"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:80
 msgid "Bibliography line space"
-msgstr "Interligne de la bibliogrpahie"
+msgstr "Interligne de la bibliographie"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:81
 msgid "Single"
@@ -296,7 +296,7 @@ msgstr "Première ligne"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:89
 msgid "All but first line"
-msgstr "Toutes sauf la 1ère ligne"
+msgstr "Toutes sauf la 1re ligne"
 
 #. / indentFt Spacing, font size and indentation for footnotes
 #: components/plugins/wordprocessor/wordprocessormessages.php:91
@@ -344,7 +344,7 @@ msgstr "Droite"
 #. / indentQuoteWords Indentation options for large quotations
 #: components/plugins/wordprocessor/wordprocessormessages.php:105
 msgid "Indent quotations with at least this number of words"
-msgstr "Indenter les citations ayant au X mots"
+msgstr "Indenter les citations ayant au moins X mots"
 
 #: components/plugins/wordprocessor/wordprocessormessages.php:106
 msgid "Quotation line space"
@@ -365,7 +365,7 @@ msgstr "Exporter et enregistrer"
 #. / sectionFtRestart If a section has been inserted in the paper, any footnotes are renumbered from 1 at each section
 #: components/plugins/wordprocessor/wordprocessormessages.php:111
 msgid "Restart footnotes at each section"
-msgstr "Redémarrer la numérotation les notes bas de page à chaque section"
+msgstr "Redémarrer la numérotation des notes bas de page à chaque section"
 
 #. / paperSize Size of exported paper (letter, A4 etc.)
 #: components/plugins/wordprocessor/wordprocessormessages.php:113

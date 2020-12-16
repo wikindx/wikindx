@@ -9694,9 +9694,6 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
-#~ msgid "Logon as superAdmin:"
-#~ msgstr "Accesso come superAmministratore:"
-
 #~ msgid "Quarantine new resources from public view until approved by an ADMIN"
 #~ msgstr ""
 #~ "Metti in quarantena le nuove risorse dalla vista pubblica fino "
@@ -9917,8 +9914,8 @@ msgstr "Risorsa approvata con successo"
 #~ msgid "Available Languages"
 #~ msgstr "Lingue Disabilitate"
 
-#~ msgid "Disabled Styles"
-#~ msgstr "Stili Disabilitati"
+#~ msgid "Logon as superAdmin:"
+#~ msgstr "Accesso come superAmministratore:"
 
 #~ msgid "Enabled Styles"
 #~ msgstr "Stili Abilitati"
@@ -9931,3 +9928,6 @@ msgstr "Risorsa approvata con successo"
 
 #~ msgid "Disabled Languages"
 #~ msgstr "Lingue Disabilitate"
+
+#~ msgid "Disabled Styles"
+#~ msgstr "Stili Disabilitati"

@@ -9776,9 +9776,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#~ msgid "Enabled Plugins"
-#~ msgstr "Plugins aktivieren"
-
 #~ msgid "Disabled Plugins"
 #~ msgstr "Plugins deaktivieren"
 
@@ -10008,8 +10005,8 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ "Sperre neue Ressourcen aus der öffentlichen Ansicht, bis sie von einem "
 #~ "Administrator freigegeben werden."
 
-#~ msgid "Remove users from this group"
-#~ msgstr "Benutzer aus dieser Benutzergruppe entfernen"
+#~ msgid "Enabled Plugins"
+#~ msgstr "Plugins aktivieren"
 
 #~ msgid ""
 #~ "If you have languages and styles that are in your WIKINDX installation "
@@ -10041,3 +10038,6 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 
 #~ msgid "Configurable Menu Plugins"
 #~ msgstr "konfigurierbare Menüplugins"
+
+#~ msgid "Remove users from this group"
+#~ msgstr "Benutzer aus dieser Benutzergruppe entfernen"

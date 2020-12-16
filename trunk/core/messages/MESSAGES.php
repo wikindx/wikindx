@@ -1472,7 +1472,7 @@ class MESSAGES
 				"OK" => dgettext($domain, "OK"),
 				"Close" => dgettext($domain, "Close"),
 /// submit_Return Not really a submit button but ALT text on the 'Return' icon used for navigation
-				"Return" => dgettext($domain, "Return"),
+				"return" => dgettext($domain, "Return"),
 			),
 /// import_ Bibliography import messages
 		    "import" => array(

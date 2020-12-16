@@ -9685,9 +9685,6 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
-#~ msgid "Disabled Styles"
-#~ msgstr "Stili Disabilitati"
-
 #~ msgid "Disabled Languages"
 #~ msgstr "Lingue Disabilitate"
 
@@ -9906,8 +9903,8 @@ msgstr "Risorsa approvata con successo"
 #~ "templates (e tutti i file in essa contenuti) possono essere scritti "
 #~ "dall'utente web server.</p>"
 
-#~ msgid "Upgrade the database"
-#~ msgstr "Aggiornare il database"
+#~ msgid "Disabled Styles"
+#~ msgstr "Stili Disabilitati"
 
 #~ msgid "Enabled Languages"
 #~ msgstr "Lingue Abilitate"
@@ -9922,3 +9919,6 @@ msgstr "Risorsa approvata con successo"
 #~ msgstr ""
 #~ "Metti in quarantena le nuove risorse dalla vista pubblica fino "
 #~ "all'approvazione di un ADMIN"
+
+#~ msgid "Upgrade the database"
+#~ msgstr "Aggiornare il database"

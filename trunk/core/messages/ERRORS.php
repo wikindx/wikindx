@@ -142,7 +142,6 @@ class ERRORS
 /// inputError_maxInputVars Too many input vars for PHP to handle
 				"maxInputVars" => dgettext($domain, "Too many input variables selected for PHP to handle (input > ###). You can adjust this increasing max_input_vars in php.ini."),
 				"ldapConnect" => dgettext($domain, "Cannot connect to LDAP server. Server and/or port are not plausible"),
-				"ldapTooManyUsers" => dgettext($domain, "Cannot connect to LDAP server. Too many users on that login"),
 				"ldapSetOption" => dgettext($domain, "Error while setting LDAP options"),
 				"ldapBind" => dgettext($domain, "Cannot connect to LDAP server. Unable to bind"),
 				"ldapEmptyBindCredentials" => dgettext($domain, "Cannot connect to LDAP server. Unable to bind"),

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: importexportbib\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-12-14 01:37+0100\n"
+"POT-Creation-Date: 2020-12-17 05:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,7 +114,7 @@ msgid "Input File"
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:46
-#: components/plugins/importexportbib/importexportbibmessages.php:165
+#: components/plugins/importexportbib/importexportbibmessages.php:164
 msgid "Output File"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgid "Missing input file"
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:52
-#: components/plugins/importexportbib/importexportbibmessages.php:167
+#: components/plugins/importexportbib/importexportbibmessages.php:166
 msgid "FAILED to convert (###)"
 msgstr ""
 
@@ -179,7 +179,7 @@ msgid "Unicode in, unicode out"
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:60
-#: components/plugins/importexportbib/importexportbibmessages.php:164
+#: components/plugins/importexportbib/importexportbibmessages.php:163
 msgid "Successfully converted ###"
 msgstr ""
 
@@ -326,152 +326,148 @@ msgid ""
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:97
-msgid "Bibliography exports:"
-msgstr ""
-
-#: components/plugins/importexportbib/importexportbibmessages.php:98
 msgid "Export bibliographic entries:"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:99
+#: components/plugins/importexportbib/importexportbibmessages.php:98
 msgid "Font size"
 msgstr ""
 
 #. Font type e.g. 'Times New Roman', 'Courier'
-#: components/plugins/importexportbib/importexportbibmessages.php:101
+#: components/plugins/importexportbib/importexportbibmessages.php:100
 msgid "Font"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:102
+#: components/plugins/importexportbib/importexportbibmessages.php:101
 msgid "Export abstract:"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:103
+#: components/plugins/importexportbib/importexportbibmessages.php:102
 msgid "Export notes:"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:104
+#: components/plugins/importexportbib/importexportbibmessages.php:103
 msgid "Export quotes:"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:105
+#: components/plugins/importexportbib/importexportbibmessages.php:104
 msgid "Export paraphrases:"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:106
+#: components/plugins/importexportbib/importexportbibmessages.php:105
 msgid "Export musings:"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:107
+#: components/plugins/importexportbib/importexportbibmessages.php:106
 msgid "Export comments:"
 msgstr ""
 
 #. Number of indents (tabulation - TAB)
-#: components/plugins/importexportbib/importexportbibmessages.php:109
+#: components/plugins/importexportbib/importexportbibmessages.php:108
 msgid "Left indent"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:110
+#: components/plugins/importexportbib/importexportbibmessages.php:109
 msgid "Right indent"
 msgstr ""
 
 #. 'CR' = carriage return (newlines)
-#: components/plugins/importexportbib/importexportbibmessages.php:112
+#: components/plugins/importexportbib/importexportbibmessages.php:111
 msgid "CR following"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:113
+#: components/plugins/importexportbib/importexportbibmessages.php:112
 msgid "CR between"
 msgstr ""
 
 #. bold, italics, underline
-#: components/plugins/importexportbib/importexportbibmessages.php:115
+#: components/plugins/importexportbib/importexportbibmessages.php:114
 msgid "Text format"
 msgstr ""
 
 #. 'tag' = label given to each section (abstract, quotes, quote comments etc.)
-#: components/plugins/importexportbib/importexportbibmessages.php:117
+#: components/plugins/importexportbib/importexportbibmessages.php:116
 msgid "Tag"
 msgstr ""
 
 #. Some text or characters to visually divide resources in the RT output
-#: components/plugins/importexportbib/importexportbibmessages.php:119
+#: components/plugins/importexportbib/importexportbibmessages.php:118
 msgid "Divider between entries"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:120
+#: components/plugins/importexportbib/importexportbibmessages.php:119
 msgid "CR after entries"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:121
+#: components/plugins/importexportbib/importexportbibmessages.php:120
 msgid "Include ID no. (ISBN etc.)"
 msgstr ""
 
 #. Metadata export options
-#: components/plugins/importexportbib/importexportbibmessages.php:123
+#: components/plugins/importexportbib/importexportbibmessages.php:122
 msgid "If exporting quote and paraphrase comments or musings"
 msgstr ""
 
 #. These two are in a select box and follow on from the string above
-#: components/plugins/importexportbib/importexportbibmessages.php:125
+#: components/plugins/importexportbib/importexportbibmessages.php:124
 msgid "Export only mine"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:126
+#: components/plugins/importexportbib/importexportbibmessages.php:125
 msgid "Export my data and all public data"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:127
+#: components/plugins/importexportbib/importexportbibmessages.php:126
 msgid "Add resource's primary creator and publication year to metadata"
 msgstr ""
 
 #. Default text for labelling metadata in the RTF export
-#: components/plugins/importexportbib/importexportbibmessages.php:129
+#: components/plugins/importexportbib/importexportbibmessages.php:128
 msgid "QUOTES:"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:130
+#: components/plugins/importexportbib/importexportbibmessages.php:129
 msgid "PARAPHRASES:"
 msgstr ""
 
+#: components/plugins/importexportbib/importexportbibmessages.php:130
 #: components/plugins/importexportbib/importexportbibmessages.php:131
-#: components/plugins/importexportbib/importexportbibmessages.php:132
 msgid "COMMENTS:"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:133
+#: components/plugins/importexportbib/importexportbibmessages.php:132
 msgid "MUSINGS:"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:134
+#: components/plugins/importexportbib/importexportbibmessages.php:133
 msgid "ABSTRACT:"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:135
+#: components/plugins/importexportbib/importexportbibmessages.php:134
 msgid "NOTES:"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:136
+#: components/plugins/importexportbib/importexportbibmessages.php:135
 msgid "Include resource keywords"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:137
+#: components/plugins/importexportbib/importexportbibmessages.php:136
 msgid "Include a hyperlink to the resource in this WIKINDX:"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:138
+#: components/plugins/importexportbib/importexportbibmessages.php:137
 msgid "Endnote file type"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:139
+#: components/plugins/importexportbib/importexportbibmessages.php:138
 msgid "Endnote XML"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:140
+#: components/plugins/importexportbib/importexportbibmessages.php:139
 msgid "Endnote tabbed"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:141
+#: components/plugins/importexportbib/importexportbibmessages.php:140
 msgid ""
 "Search PubMed: please enter one or more fields – if the ID field is \n"
 "            \tcompleted, only one result will be returned if found. Multiple "
@@ -480,95 +476,95 @@ msgid ""
 "search results can be obtained."
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:144
+#: components/plugins/importexportbib/importexportbibmessages.php:143
 msgid "PubMed imports require Bibutils to be installed."
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:145
+#: components/plugins/importexportbib/importexportbibmessages.php:144
 msgid "PubMed ID"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:146
+#: components/plugins/importexportbib/importexportbibmessages.php:145
 msgid "All Fields"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:147
+#: components/plugins/importexportbib/importexportbibmessages.php:146
 msgid "Author"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:148
+#: components/plugins/importexportbib/importexportbibmessages.php:147
 msgid "First Author"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:149
+#: components/plugins/importexportbib/importexportbibmessages.php:148
 msgid "Last Author"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:150
+#: components/plugins/importexportbib/importexportbibmessages.php:149
 msgid "Title"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:151
+#: components/plugins/importexportbib/importexportbibmessages.php:150
 msgid "Abstract"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:152
+#: components/plugins/importexportbib/importexportbibmessages.php:151
 msgid "Year"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:153
+#: components/plugins/importexportbib/importexportbibmessages.php:152
 msgid "Journal"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:154
+#: components/plugins/importexportbib/importexportbibmessages.php:153
 msgid "Volume"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:155
+#: components/plugins/importexportbib/importexportbibmessages.php:154
 msgid "Issue"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:156
+#: components/plugins/importexportbib/importexportbibmessages.php:155
 msgid "Language"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:157
+#: components/plugins/importexportbib/importexportbibmessages.php:156
 msgid "Limit search to the last n days"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:158
+#: components/plugins/importexportbib/importexportbibmessages.php:157
 msgid "Max. Results"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:159
+#: components/plugins/importexportbib/importexportbibmessages.php:158
 msgid "Import the PubMed import directly into WIKINDX"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:160
+#: components/plugins/importexportbib/importexportbibmessages.php:159
 msgid "Please enter an integer up to 100 for Max. Results"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:161
+#: components/plugins/importexportbib/importexportbibmessages.php:160
 msgid "Please enter one or more fields"
 msgstr ""
 
+#: components/plugins/importexportbib/importexportbibmessages.php:161
 #: components/plugins/importexportbib/importexportbibmessages.php:162
-#: components/plugins/importexportbib/importexportbibmessages.php:163
 msgid "result"
 msgid_plural "results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:166
+#: components/plugins/importexportbib/importexportbibmessages.php:165
 msgid "No Results Found"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:168
+#: components/plugins/importexportbib/importexportbibmessages.php:167
 msgid ""
 "XML file is not compatible with Endnote v8 which is required for this import "
 "script."
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:169
+#: components/plugins/importexportbib/importexportbibmessages.php:168
 msgid "Successfully imported Endnote file."
 msgstr ""

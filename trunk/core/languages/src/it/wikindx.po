@@ -9685,9 +9685,6 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
-#~ msgid "Disabled Languages"
-#~ msgstr "Lingue Disabilitate"
-
 #~ msgid "Disabled Plugins"
 #~ msgstr "Plugins Disabilitati"
 
@@ -9906,8 +9903,8 @@ msgstr "Risorsa approvata con successo"
 #~ msgid "Disabled Styles"
 #~ msgstr "Stili Disabilitati"
 
-#~ msgid "Enabled Languages"
-#~ msgstr "Lingue Abilitate"
+#~ msgid "Disabled Languages"
+#~ msgstr "Lingue Disabilitate"
 
 #~ msgid "Unable to update database with update/updateMySQL.txt."
 #~ msgstr "Impossibile aggiornare il database con update/updateMySQL.txt."
@@ -9922,3 +9919,6 @@ msgstr "Risorsa approvata con successo"
 
 #~ msgid "Upgrade the database"
 #~ msgstr "Aggiornare il database"
+
+#~ msgid "Enabled Languages"
+#~ msgstr "Lingue Abilitate"

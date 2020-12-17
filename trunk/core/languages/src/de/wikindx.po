@@ -9767,9 +9767,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#~ msgid "Configurable Menu Plugins"
-#~ msgstr "konfigurierbare Menüplugins"
-
 #~ msgid "Enabled Languages"
 #~ msgstr "Aktivierte Sprachen"
 
@@ -10013,8 +10010,8 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ msgid "Remove users from this group"
 #~ msgstr "Benutzer aus dieser Benutzergruppe entfernen"
 
-#~ msgid "Disabled Languages"
-#~ msgstr "Deaktivierte Sprachen"
+#~ msgid "Configurable Menu Plugins"
+#~ msgstr "konfigurierbare Menüplugins"
 
 #, fuzzy
 #~| msgid "Disabled Languages"
@@ -10032,3 +10029,6 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 
 #~ msgid "Enabled Templates"
 #~ msgstr "Aktivierte Vorlagen"
+
+#~ msgid "Disabled Languages"
+#~ msgstr "Deaktivierte Sprachen"

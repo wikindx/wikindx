@@ -94,7 +94,6 @@ class importexportbibMessages
             "contents" => dgettext($domain, "Contents of your temporary folder (newest first):"),
             "noContents" => dgettext($domain, "Directory is empty"),
             "warning" => dgettext($domain, "These files will be available for ### minutes or while you keep your browser open (whichever is the shorter) so download and save them elsewhere immediately"),
-            "bibliographies" => dgettext($domain, "Bibliography exports:"),
             "bibliography" => dgettext($domain, "Export bibliographic entries:"),
             "fontSize" => dgettext($domain, "Font size"),
             // Font type e.g. 'Times New Roman', 'Courier'

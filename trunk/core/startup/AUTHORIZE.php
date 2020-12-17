@@ -89,7 +89,6 @@ class AUTHORIZE
                 // First delete any pre-existing session in case this user has been logging on and off as different users --
                 // keep template and language etc.
                 $this->initLogon(); // login prompt
-                FACTORY_CLOSENOMENU::getInstance();
             }
             if (
                 array_key_exists('method', $this->vars) &&
@@ -201,7 +200,6 @@ class AUTHORIZE
                 return TRUE;
             }
             $this->initLogon(); // login prompt
-            FACTORY_CLOSENOMENU::getInstance();
         }
         // FALSE indicates that index.php will print the front page of WIKINDX
         return FALSE;
@@ -257,6 +255,8 @@ class AUTHORIZE
         }
         $pString .= \HTML\p($links, FALSE, 'right');
         GLOBALS::addTplVar('content', $pString);
+        $this->session->setVar('destroySession', TRUE);
+        FACTORY_CLOSENOMENU::getInstance();
     }
     /**
      * Initial logon to the system.

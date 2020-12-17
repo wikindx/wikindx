@@ -28,6 +28,7 @@ BUG FIXES:
 19. Bibtex export : encode HTML before regular characters.
 20. Bibtex export : use file links that return appropriate HTTP code with the correct mime type.
 21. Migrate option configEmailnewRegistration to configEmailnewRegistration with several versions of delay.
+22. Ensure the session is actually destroyed on logout.
 
 FEATURE ENHANCEMENT:
 1. When editing a form, use internal representations to repopulate the form in case of error and lessen the load on sessions. Also, restructure form management by splitting form presentation from DB data writing and use redirects to mitigate errors caused when attempting to reload a submitted form.

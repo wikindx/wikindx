@@ -5,7 +5,7 @@
 -- @license https://www.isc.org/licenses/ ISC License
 --
 
--- Copy the value of configLdapDn to configLdapUserOu option
+-- Copy the value of option configLdapDn to configLdapUserOu
 UPDATE %%WIKINDX_DB_TABLEPREFIX%%config AS t1
     INNER JOIN %%WIKINDX_DB_TABLEPREFIX%%config AS t2
         ON t1.configName = 'configLdapDn'

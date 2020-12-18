@@ -616,11 +616,11 @@ msgstr ""
 
 #: components/plugins/adminstyle/adminstylemessages.php:197
 msgid "Endnote/Footnote"
-msgstr ""
+msgstr "Notes de base de page / de fin"
 
 #: components/plugins/adminstyle/adminstylemessages.php:198
 msgid "Endnotes: incrementing"
-msgstr ""
+msgstr "Notes de fin : incrémentation"
 
 #: components/plugins/adminstyle/adminstylemessages.php:199
 msgid "Endnotes: same ID for same resource"
@@ -628,7 +628,7 @@ msgstr ""
 
 #: components/plugins/adminstyle/adminstylemessages.php:200
 msgid "Footnotes: incrementing"
-msgstr ""
+msgstr "Notes de bas de page : incrémentation"
 
 #. Ordering of the appended bibliography for in-text citations and endnote-style citations using the same id number for each cited resource
 #: components/plugins/adminstyle/adminstylemessages.php:202
@@ -705,7 +705,7 @@ msgstr ""
 #. When compiling the appended bibliography for in-text citations, certain resources (e.g. APA personal communication) are not added.
 #: components/plugins/adminstyle/adminstylemessages.php:224
 msgid "Do not add to the bibliography when cited:"
-msgstr ""
+msgstr "Ne pas ajouter à la bibliographie quand elle est citée :"
 
 #. When using endnote-style citations and defining templates using fields such as 'creator', 'pages', 'year' or 'title'.  Don't translate 'creator', 'pages' or 'citation'.
 #: components/plugins/adminstyle/adminstylemessages.php:226
@@ -872,7 +872,7 @@ msgstr ""
 
 #: components/plugins/adminstyle/help.php:49
 msgid "The character '|' separates fields from one another."
-msgstr ""
+msgstr "Le caractère '|' sépare les champs."
 
 #: components/plugins/adminstyle/help.php:50
 msgid ""

@@ -2118,7 +2118,7 @@ class CONFIGURE
         // Check email validity
         if (array_key_exists('configEmailNewRegistrations', $this->formData))
         {
-            if (filter_var($this->formData['configEmailNewRegistrations'], FILTER_VALIDATE_EMAIL) === FALSE)
+            if (filter_var($this->formData['configEmailNewRegistrations'], FILTER_VALIDATE_EMAIL) === FALSE && $this->formData['configEmailNewRegistrations'] != "")
             {
                 $error = $this->errors->text('inputError', 'invalidMail');
             }

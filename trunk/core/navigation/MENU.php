@@ -282,8 +282,8 @@ class MENU
         {
             $this->createMenuArray($this->text, 'metadata', $metadataSub);
             array_push($this->menuSub, $metadataSub);
+            unset($metadataSub);
         }
-        unset($metadataSub);
         // If not admin, don't display admin menu
         if ($this->superAdmin)
         {
@@ -294,20 +294,20 @@ class MENU
         {
             $this->createMenuArray($this->plugin1, 'plugin1', $plugin1Sub);
             array_push($this->menuSub, $plugin1Sub);
+            unset($plugin1Sub);
         }
-        unset($plugin1Sub);
         if (count($this->plugin2) > 1)
         {
             $this->createMenuArray($this->plugin2, 'plugin2', $plugin2Sub);
             array_push($this->menuSub, $plugin2Sub);
+            unset($plugin2Sub);
         }
-        unset($plugin2Sub);
         if (count($this->plugin3) > 1)
         {
             $this->createMenuArray($this->plugin3, 'plugin3', $plugin3Sub);
             array_push($this->menuSub, $plugin3Sub);
+            unset($plugin3Sub);
         }
-        unset($plugin3Sub);
         $browserTabID = GLOBALS::getBrowserTabID();
         if ($browserTabID)
         {

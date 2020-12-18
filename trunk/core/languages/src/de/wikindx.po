@@ -9767,9 +9767,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#~ msgid "Enabled Plugins"
-#~ msgstr "Plugins aktivieren"
-
 #~ msgid "Quarantine new resources from public view until approved by an ADMIN"
 #~ msgstr ""
 #~ "Sperre neue Ressourcen aus der öffentlichen Ansicht, bis sie von einem "
@@ -10013,8 +10010,8 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ "(https://sourceforge.net/projects/wikindx//files/pluginsxxx/) können sie "
 #~ "die aktuellen Lokalisierungen und Adminstyle-Plugins herunterladen."
 
-#~ msgid "Enabled Templates"
-#~ msgstr "Aktivierte Vorlagen"
+#~ msgid "Enabled Plugins"
+#~ msgstr "Plugins aktivieren"
 
 #~ msgid "Disabled Languages"
 #~ msgstr "Deaktivierte Sprachen"
@@ -10032,3 +10029,6 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 
 #~ msgid "Disabled Plugins"
 #~ msgstr "Plugins deaktivieren"
+
+#~ msgid "Enabled Templates"
+#~ msgstr "Aktivierte Vorlagen"

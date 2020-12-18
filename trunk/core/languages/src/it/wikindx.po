@@ -9685,9 +9685,6 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
-#~ msgid "Enabled Templates"
-#~ msgstr "Templates Abilitati"
-
 #~ msgid "Disabled Templates"
 #~ msgstr "Templates Disabilitati"
 
@@ -9906,8 +9903,8 @@ msgstr "Risorsa approvata con successo"
 #~ msgid "Configurable Menu Plugins"
 #~ msgstr "Plugins menu configurabili"
 
-#~ msgid "Remove users from this group"
-#~ msgstr "Rimuovi utenti da questo gruppo"
+#~ msgid "Enabled Templates"
+#~ msgstr "Templates Abilitati"
 
 #~ msgid "Quarantine new resources from public view until approved by an ADMIN"
 #~ msgstr ""
@@ -9922,3 +9919,6 @@ msgstr "Risorsa approvata con successo"
 
 #~ msgid "Unable to update database with update/updateMySQL.txt."
 #~ msgstr "Impossibile aggiornare il database con update/updateMySQL.txt."
+
+#~ msgid "Remove users from this group"
+#~ msgstr "Rimuovi utenti da questo gruppo"

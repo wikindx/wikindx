@@ -27,7 +27,7 @@ class adminstyle_help
         $pString = HTML\p(dgettext($domain, "If you have WIKINDX admin rights, you can create and edit bibliographic styles for on-the-fly formatting when displaying or exporting bibliographic lists."));
         
         // translators: #linkSfWikindx# unchanged. This pattern is replaced by a link
-        $pString .= HTML\p(dgettext($domain, "These styles are stored as XML files each within its own directory in the components/styles/ directory. This directory <strong>must</strong> be writeable by everyone or at least the web server user. Additionally, when editing an existing style, the XML style file within its named directory in the components/styles/ directory <strong>must also</strong> be writeable by everyone or the web server user. As new bibliographic styles are created, the WIKINDX team will make these available on the #linkSfWikindx# downloads site as plug-ins. Once you have a downloaded file, simply unzip the contents to the components/styles/ directory."));
+        $pString .= HTML\p(dgettext($domain, "These styles are stored as XML files each within its own directory in the components/styles/ directory. This directory <strong>must</strong> be writeable by everyone or at least the web server user. Additionally, when editing an existing style, the XML style file <strong>must also</strong> have the same rights."));
         
         // translators: #linkSfWikindx# unchanged. This pattern is replaced by a link
         $pString .= HTML\p(dgettext($domain, "If you develop new styles yourself, you are strongly encouraged to contact the WIKINDX developers at #linkSfWikindx# to make them available to other users."));

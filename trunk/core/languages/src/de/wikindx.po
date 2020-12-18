@@ -9767,9 +9767,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#~ msgid "Logon as superAdmin:"
-#~ msgstr "Anmeldung als Superadmin:"
-
 #~ msgid "Select the creators you wish to remove from the group"
 #~ msgstr "Wählen Sie die Urheber, die aus der Gruppe entfernt werden sollen."
 
@@ -10013,10 +10010,8 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ "Sperre neue Ressourcen aus der öffentlichen Ansicht, bis sie von einem "
 #~ "Administrator freigegeben werden."
 
-#, fuzzy
-#~| msgid "Disabled Languages"
-#~ msgid "Available Languages"
-#~ msgstr "Deaktivierte Sprachen"
+#~ msgid "Logon as superAdmin:"
+#~ msgstr "Anmeldung als Superadmin:"
 
 #~ msgid "Disabled Styles"
 #~ msgstr "Deaktivierte Stile"
@@ -10031,4 +10026,9 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ msgstr "Aktivierte Vorlagen"
 
 #~ msgid "Disabled Languages"
+#~ msgstr "Deaktivierte Sprachen"
+
+#, fuzzy
+#~| msgid "Disabled Languages"
+#~ msgid "Available Languages"
 #~ msgstr "Deaktivierte Sprachen"

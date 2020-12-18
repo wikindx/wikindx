@@ -9767,9 +9767,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#~ msgid "Ungroup"
-#~ msgstr "Gruppierung aufheben"
-
 #~ msgid "My Bibliographies"
 #~ msgstr "Meine Bibliographien"
 
@@ -10013,8 +10010,8 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ msgid "Select the creators you wish to remove from the group"
 #~ msgstr "Wählen Sie die Urheber, die aus der Gruppe entfernt werden sollen."
 
-#~ msgid "Enabled Styles"
-#~ msgstr "Aktivierte Stile"
+#~ msgid "Ungroup"
+#~ msgstr "Gruppierung aufheben"
 
 #~ msgid "Disabled Plugins"
 #~ msgstr "Plugins deaktivieren"
@@ -10032,3 +10029,6 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 
 #~ msgid "Disabled Styles"
 #~ msgstr "Deaktivierte Stile"
+
+#~ msgid "Enabled Styles"
+#~ msgstr "Aktivierte Stile"

@@ -867,7 +867,7 @@ msgid ""
 msgstr ""
 "Vous pouvez créer un nouveau style en dupliquant un style existant. Pour "
 "supprimer un style de la liste disponible pour vos utilisateurs, désactivez "
-"ce style dans le menu Admin | Composants."
+"ce style dans le menu Administration > Composants."
 
 #: components/plugins/adminstyle/help.php:35
 msgid ""

@@ -9431,9 +9431,6 @@ msgstr "Ключевое слово успешно отредактирован�
 msgid "Successfully approved resource(s)"
 msgstr "Источник успешно одобрен"
 
-#~ msgid "Configurable Inline Plugins"
-#~ msgstr "Настраиваемые встроенные плагины"
-
 #~ msgid "Menu Location"
 #~ msgstr "Положение меню"
 
@@ -9602,6 +9599,31 @@ msgstr "Источник успешно одобрен"
 #~ msgid "Disabled Templates"
 #~ msgstr "Деактивированные шаблоны"
 
+#~ msgid "Configurable Inline Plugins"
+#~ msgstr "Настраиваемые встроенные плагины"
+
+#~ msgid "Fix UTF8:"
+#~ msgstr "Починить UTF8:"
+
+#~ msgid "Upgrade the database"
+#~ msgstr "Обновить БД"
+
+#~ msgid ""
+#~ "If you have languages and styles that are in your WIKINDX installation "
+#~ "folders but they do not show here, then they are not compatible with this "
+#~ "version of WIKINDX.  Go to the WIKINDX Sourceforge download page (https://"
+#~ "sourceforge.net/projects/wikindx/files/pluginsxxx/), download the latest "
+#~ "localization and adminstyle plug-ins and use them to update your files."
+#~ msgstr ""
+#~ "Если у Вас есть языки или стили, которые Вы установли в WIKINDX, но они не "
+#~ "отображаются здесь, значит они не совместимы с текущей версией WIKINDX. "
+#~ "Перейдите на страницу скачивания (https://sourceforge.net/projects/"
+#~ "wikindx//files/pluginsxxx/), скачайте последнии локализации и плагины. "
+#~ "Используйте их для обновления Ваших файлов."
+
+#~ msgid "Select the creators you wish to remove from the group"
+#~ msgstr "Выберите авторов, которых вы хотите удалить из группы."
+
 #~ msgid ""
 #~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
 #~ "you are strongly advised not to run it on a production server -- if you "
@@ -9625,25 +9647,3 @@ msgstr "Источник успешно одобрен"
 #~ "первую очередь. Если вы не сделаете этого, тогда в случае ошибки памяти "
 #~ "(подробно ниже) при обновлении, Вы безвозвратно потеряете свои данные: "
 #~ "<em>нюансы обновления</em><p>"
-
-#~ msgid "Fix UTF8:"
-#~ msgstr "Починить UTF8:"
-
-#~ msgid "Upgrade the database"
-#~ msgstr "Обновить БД"
-
-#~ msgid ""
-#~ "If you have languages and styles that are in your WIKINDX installation "
-#~ "folders but they do not show here, then they are not compatible with this "
-#~ "version of WIKINDX.  Go to the WIKINDX Sourceforge download page (https://"
-#~ "sourceforge.net/projects/wikindx/files/pluginsxxx/), download the latest "
-#~ "localization and adminstyle plug-ins and use them to update your files."
-#~ msgstr ""
-#~ "Если у Вас есть языки или стили, которые Вы установли в WIKINDX, но они не "
-#~ "отображаются здесь, значит они не совместимы с текущей версией WIKINDX. "
-#~ "Перейдите на страницу скачивания (https://sourceforge.net/projects/"
-#~ "wikindx//files/pluginsxxx/), скачайте последнии локализации и плагины. "
-#~ "Используйте их для обновления Ваших файлов."
-
-#~ msgid "Select the creators you wish to remove from the group"
-#~ msgstr "Выберите авторов, которых вы хотите удалить из группы."

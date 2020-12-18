@@ -9685,9 +9685,6 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
-#~ msgid "Configurable Inline Plugins"
-#~ msgstr "Plugins Inline configurabili"
-
 #~ msgid "Menu Location"
 #~ msgstr "Posizione Menu"
 
@@ -9906,8 +9903,8 @@ msgstr "Risorsa approvata con successo"
 #~ msgid "Disabled Templates"
 #~ msgstr "Templates Disabilitati"
 
-#~ msgid "Upgrade the database"
-#~ msgstr "Aggiornare il database"
+#~ msgid "Configurable Inline Plugins"
+#~ msgstr "Plugins Inline configurabili"
 
 #~ msgid "Enabled Languages"
 #~ msgstr "Lingue Abilitate"
@@ -9922,3 +9919,6 @@ msgstr "Risorsa approvata con successo"
 #~ msgstr ""
 #~ "Metti in quarantena le nuove risorse dalla vista pubblica fino "
 #~ "all'approvazione di un ADMIN"
+
+#~ msgid "Upgrade the database"
+#~ msgstr "Aggiornare il database"

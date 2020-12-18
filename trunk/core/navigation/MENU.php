@@ -255,29 +255,32 @@ class MENU
     {
         $this->configure();
         $this->smartyMenu->initMenu($subMenu);
+        
         // Check for plug-in modules
         $this->menuInsert();
+        
         $this->createMenuArray($this->wikindx, 'wikindx', $wikindxSub);
         array_push($this->menuSub, $wikindxSub);
         unset($wikindxSub);
+        
         if (isset($this->bookmark))
         {
             $this->createMenuArray($this->bookmark, 'bookmark', $bookmarkSub);
             array_push($this->menuSub, $bookmarkSub);
+            unset($bookmarkSub);
         }
-        unset($bookmarkSub);
         if ($this->resourcesExist || $this->write)
         {
             $this->createMenuArray($this->res, 'resource', $resourceSub);
             array_push($this->menuSub, $resourceSub);
+            unset($resourceSub);
         }
-        unset($resourceSub);
         if ($this->resourcesExist)
         {
             $this->createMenuArray($this->search, 'search', $searchSub);
             array_push($this->menuSub, $searchSub);
+            unset($searchSub);
         }
-        unset($searchSub);
         if ($this->resourcesExist && !empty($this->text))
         {
             $this->createMenuArray($this->text, 'metadata', $metadataSub);
@@ -289,6 +292,7 @@ class MENU
         {
             $this->createMenuArray($this->admin, 'admin', $adminSub);
             array_push($this->menuSub, $adminSub);
+            unset($adminSub);
         }
         if (count($this->plugin1) > 1)
         {

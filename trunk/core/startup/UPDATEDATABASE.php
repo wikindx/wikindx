@@ -2225,6 +2225,16 @@ END;
     }
     
     /**
+     * Escape a string that should be used as a double quoted string value in PHP code
+     *
+     * cf. https://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.double
+     */
+    private function escapePHPDoubleQuotedString($str)
+    {
+        return str_replace(["\\", "\n", "\r", "\t", "\v", "\e", "\f", "\$", "\""], ["\\\\", "\\n", "\\r", "\\t", "\\v", "\\e", "\\f", "\\\$", "\\\""], $str);
+    }
+    
+    /**
      * Write new config.php with upgrade to >= WIKINDX v6.3.10
      */
     private function rewriteConfigFile6_4_0()
@@ -2281,13 +2291,13 @@ class CONFIG
 // where 'xxxx' is the non-standard socket.
 
 END;
-        $newConfig .= 'public $WIKINDX_DB_HOST = "' . $tmpconfig->WIKINDX_DB_HOST . '";' . "\n";
+        $newConfig .= 'public $WIKINDX_DB_HOST = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_DB_HOST) . '";' . "\n";
         $newConfig .= '// name of the database which these scripts interface with (case-sensitive):' . "\n" .
-                   'public $WIKINDX_DB = "' . $tmpconfig->WIKINDX_DB . '";' . "\n";
+                   'public $WIKINDX_DB = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_DB) . '";' . "\n";
         $newConfig .= '// username and password required to connect to and open the database' . "\n" .
                    '// (it is strongly recommended that you change these default values):' . "\n" .
-                   'public $WIKINDX_DB_USER = "' . $tmpconfig->WIKINDX_DB_USER . '";' . "\n" .
-                   'public $WIKINDX_DB_PASSWORD = "' . $tmpconfig->WIKINDX_DB_PASSWORD . '";' . "\n";
+                   'public $WIKINDX_DB_USER = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_DB_USER) . '";' . "\n" .
+                   'public $WIKINDX_DB_PASSWORD = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_DB_PASSWORD) . '";' . "\n";
         $newConfig .= <<<END
 /*****
 * END DATABASE CONFIGURATION
@@ -2317,11 +2327,11 @@ END;
 END;
         if (property_exists($tmpconfig, 'WIKINDX_BASE_URL'))
         {
-            $newConfig .= 'public $WIKINDX_URL_BASE = "' . $tmpconfig->WIKINDX_BASE_URL . '";' . "\n";
+            $newConfig .= 'public $WIKINDX_URL_BASE = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_BASE_URL) . '";' . "\n";
         }
         elseif (property_exists($tmpconfig, 'WIKINDX_URL_BASE'))
         {
-            $newConfig .= 'public $WIKINDX_URL_BASE = "' . $tmpconfig->WIKINDX_URL_BASE . '";' . "\n";
+            $newConfig .= 'public $WIKINDX_URL_BASE = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_URL_BASE) . '";' . "\n";
         }
         else
         {
@@ -2348,7 +2358,7 @@ END;
 END;
         if (property_exists($tmpconfig, 'WIKINDX_MEMORY_LIMIT') && ($tmpconfig->WIKINDX_MEMORY_LIMIT !== FALSE))
         {
-            $newConfig .= 'public $WIKINDX_MEMORY_LIMIT = "' . $tmpconfig->WIKINDX_MEMORY_LIMIT . '";' . "\n";
+            $newConfig .= 'public $WIKINDX_MEMORY_LIMIT = "' . $this->escapePHPDoubleQuotedString($tmpconfig->WIKINDX_MEMORY_LIMIT) . '";' . "\n";
         }
         else
         {

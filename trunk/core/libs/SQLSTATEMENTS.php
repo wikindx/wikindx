@@ -244,7 +244,7 @@ class SQLSTATEMENTS
     public function getExportSql()
     {
         $totalPossible = WIKINDX_MAX_WRITECHUNK;
-        if (!is_array($this->session->getVar("list_AllIds")) && ($this->session->getVar("list_AllIds") == 'all'))
+        if (!is_array($this->session->getVar("list_AllIds")) || ($this->session->getVar("list_AllIds") == 'all'))
         {
             $total = $this->db->selectCountOnly("resource", "resourceId");
         }

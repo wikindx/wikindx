@@ -17,7 +17,7 @@ class importexportbibMessages
         $domain = mb_strtolower(basename(__DIR__));
         
         $this->text = [
-            "menu" => dgettext($domain, "Import & Export..."),
+            "menu" => dgettext($domain, "Bib Imp/Exp..."),
             "menuEndnoteImport" => dgettext($domain, "Import Endnote"),
             "headerEndnoteImport" => dgettext($domain, "Import Endnote XML Bibliography"),
             "menuPubMedImport" => dgettext($domain, "Import PubMed"),

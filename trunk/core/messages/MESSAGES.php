@@ -93,8 +93,6 @@ class MESSAGES
 				"list" => dgettext($domain, "List Resources"),
 				"search" => dgettext($domain, "Search Resources"),
 				"select" => dgettext($domain, "Select Resources"),
-				"selectMeta" => dgettext($domain, "Select Metadata"),
-				"searchMeta" => dgettext($domain, "Search Metadata"),
 				"addToBib" => dgettext($domain, "Add selected to bibliography"),
 				"addToCategory" => dgettext($domain, "Add selected to categories"),
 				"addToSubcategory" => dgettext($domain, "Add selected to subcategories"),
@@ -871,6 +869,8 @@ class MESSAGES
 		    "menu" => array(
 /// menu_home Wikindx menu starts here
 				"home" => dgettext($domain, "Home"),
+				"importSub" => dgettext($domain, "Importer"),
+				"exportSub" => dgettext($domain, "Exporter"),
 				"news" => dgettext($domain, "News"),
 				"prefs" => dgettext($domain, "Preferences"),
 				"register" => dgettext($domain, "Register"),
@@ -916,7 +916,8 @@ class MESSAGES
 				"basketView" => dgettext($domain, "View Basket"),
 				"basketDelete" => dgettext($domain, "Delete Basket"),
 /// menu_pasteBibtex Ordinary user can paste a bibtex file into a textarea for importing
-				"pasteBibtex" => dgettext($domain, "Paste BibTeX"),
+				"pasteBibtex" => dgettext($domain, "BibTeX (Copy/Paste)"),
+				"importBibtex" => dgettext($domain, "BibTeX (.bib file)"),
 /// menu_search Search menu starts here
 				"advancedSearch" => dgettext($domain, "Advanced Search"),
 				"search" => dgettext($domain, "Search"),
@@ -1013,7 +1014,6 @@ class MESSAGES
 				"userDelete" => dgettext($domain, "Delete"),
 				"userBlock" => dgettext($domain, "Block/Unblock"),
 				"userRegistration" => dgettext($domain, "Registrations"),
-				"importBibtex" => dgettext($domain, "Import BibTeX"),
 				"quarantine" => dgettext($domain, "Quarantine"),
 				"components" => dgettext($domain, "Components"),
 /// menu_customSub The admin can administer custom database fields for resources

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: importexportbib\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-12-17 05:37+0100\n"
+"POT-Creation-Date: 2020-12-18 23:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:20
-msgid "Import & Export..."
+msgid "Bib Imp/Exp..."
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:21

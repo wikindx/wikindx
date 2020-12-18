@@ -811,6 +811,10 @@ class USER
         {
             $this->session->setVar("setup_Superadmin", TRUE);
         }
+        if (array_key_exists('usersId', $row) && $row['usersId'] == WIKINDX_SUPERADMIN_ID)
+        {
+            $this->session->setVar("setup_Superadmin", TRUE);
+        }
         $this->session->setVar("setup_UserId", $row['usersId']);
         $this->session->setVar("setup_Write", TRUE);
         $this->session->delVar("setup_ReadOnly");

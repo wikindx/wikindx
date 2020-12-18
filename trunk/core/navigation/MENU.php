@@ -198,7 +198,7 @@ class MENU
         {
             $stateArray[] = $this->bookmarkView = $this->bookmarkArray['View'];
         }
-        $stateArray[] = defined("WIKINDX_MULTIUSER") ? WIKINDX_MULTIUSER : WIKINDX_MULTIUSER_DEFAULT;
+        $stateArray[] = WIKINDX_MULTIUSER;
         $stateArray[] = $this->bibliographies = $this->session->getVar("setup_Bibliographies");
         if ($this->browserTabID)
         {
@@ -235,7 +235,7 @@ class MENU
         	$this->basketList = $this->session->getVar("basket_List");
         }
         $stateArray[] = $this->basketList;
-        $stateArray[] = defined("WIKINDX_IMPORT_BIB") ? WIKINDX_IMPORT_BIB : WIKINDX_IMPORT_BIB_DEFAULT;
+        $stateArray[] = WIKINDX_IMPORT_BIB;
         $state = base64_encode(serialize($stateArray));
         if (($state == $this->session->getVar("menu_state")) && ($menu = $this->session->getVar("menu_menu", FALSE) !== FALSE))
         {
@@ -281,9 +281,9 @@ class MENU
             array_push($this->menuSub, $searchSub);
             unset($searchSub);
         }
-        if ($this->resourcesExist && !empty($this->text))
+        if ($this->resourcesExist && !empty($this->metadata))
         {
-            $this->createMenuArray($this->text, 'metadata', $metadataSub);
+            $this->createMenuArray($this->metadata, 'metadata', $metadataSub);
             array_push($this->menuSub, $metadataSub);
             unset($metadataSub);
         }
@@ -331,11 +331,10 @@ class MENU
         }
         GLOBALS::setTplVar('menu', $menu);
         $this->session->setVar("menu_menu", $menu);
-        /** $this->menus is public and available to, for example, the admin to remove messages etc.
-         */
-        foreach (['wikindx', 'res', 'search', 'text', 'admin', 'plugin1', 'plugin2', 'plugin3'] as $menuItem)
+        // $this->menus is public and available to, for example, the admin to remove messages etc.
+        foreach (['wikindx', 'bookmark', 'res', 'search', 'metadata', 'admin', 'plugin1', 'plugin2', 'plugin3'] as $menuItem)
         {
-            if (is_array($this->{$menuItem}) and (count($this->{$menuItem}) > 1))
+            if (property_exists($this, $menuItem)  and is_array($this->{$menuItem}) and (count($this->{$menuItem}) > 1))
             {
                 $this->menus[$menuItem] = $this->{$menuItem};
             }
@@ -394,9 +393,9 @@ class MENU
     {
         $vars = GLOBALS::getVars();
         $array = unserialize(base64_decode($vars['array']));
-        //		$this->configure();
+        // $this->configure();
         // Check for plug-in modules
-        //		$this->menuInsert();
+        // $this->menuInsert();
         $messages = FACTORY_MESSAGES::getInstance();
         $content = $messages->text("menuReduced", $vars['method']);
         $content = ($content == $vars['method']) ? "" : $content;
@@ -413,14 +412,12 @@ class MENU
     private function configure()
     {
         $messages = FACTORY_MESSAGES::getInstance();
-        // Build dummy plugin array
-        $this->plugin1 = [$messages->text("menu", "plugin1") => 'index.php?action=noMenu&method=plugin1'];
-        $this->plugin2 = [$messages->text("menu", "plugin2") => 'index.php?action=noMenu&method=plugin2'];
-        $this->plugin3 = [$messages->text("menu", "plugin3") => 'index.php?action=noMenu&method=plugin3'];
         // Build arrays of menus items.  First element of array name is main menu item name, subsequent elements are the names
         // of the submenu with its
         // hyperlink.  This provides easy access for both building CSS menus and for displaying links for non-CSS drop-down
         // web browsers.
+        
+        // WIKINDX MENU
         $this->wikindx = [
             'Wikindx' => 'index.php?action=noMenu&method=wikindx',
             $messages->text("menu", "home") => 'index.php',
@@ -441,68 +438,38 @@ class MENU
         {
             $this->wikindx[$messages->text("menu", "prefs")] = 'index.php?action=usersgroups_PREFERENCES_CORE';
         }
-        if ($this->userId)
+        
+        $this->wikindx['statisticsSub'] = [
+            $messages->text("menu", "statisticsSub") => FALSE,
+        ];
+        
+        if ($this->userId || WIKINDX_DISPLAY_STATISTICS)
         {
-            $this->wikindx['statisticsSub'] = [
-                $messages->text("menu", "statisticsSub") => FALSE,
-                $messages->text("menu", "statisticsTotals") => 'index.php?action=statistics_STATS_CORE&method=totals',
-                $messages->text("menu", "statisticsKeywords") => 'index.php?action=statistics_STATS_CORE&method=keywords',
-                $messages->text("menu", "statisticsYears") => 'index.php?action=statistics_STATS_CORE&method=years',
-                $messages->text("menu", "statisticsAllCreators") => 'index.php?action=statistics_STATS_CORE&method=allCreators',
-                $messages->text("menu", "statisticsMainCreators") => 'index.php?action=statistics_STATS_CORE&method=mainCreators',
-                $messages->text("menu", "statisticsPublishers") => 'index.php?action=statistics_STATS_CORE&method=publishers',
-                $messages->text("menu", "statisticsCollections") => 'index.php?action=statistics_STATS_CORE&method=collections',
-                $messages->text("menu", "statisticsUsers") => 'index.php?action=statistics_STATS_CORE&method=users',
-                // Disabled temporarily for some later dates when statistics can be calculated in the database code.
-                /*                $messages->text("menu", "listDownloads") =>
-                	'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=downloadsIndex',
-                $messages->text("menu", "listPopularity") =>
-                    'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=popularityIndex',
-*/
-            ];
+            $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsSub")] = FALSE;
+            $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsTotals")] = 'index.php?action=statistics_STATS_CORE&method=totals';
+            $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsKeywords")] = 'index.php?action=statistics_STATS_CORE&method=keywords';
+            $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsYears")] = 'index.php?action=statistics_STATS_CORE&method=years';
+            $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsAllCreators")] = 'index.php?action=statistics_STATS_CORE&method=allCreators';
+            $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsMainCreators")] = 'index.php?action=statistics_STATS_CORE&method=mainCreators';
+            $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsPublishers")] = 'index.php?action=statistics_STATS_CORE&method=publishers';
+            $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsCollections")] = 'index.php?action=statistics_STATS_CORE&method=collections';
         }
-        elseif (WIKINDX_DISPLAY_STATISTICS)
+        
+        if ($this->userId || WIKINDX_DISPLAY_USER_STATISTICS)
         {
-            $this->wikindx['statisticsSub'] = [
-                $messages->text("menu", "statisticsSub") => FALSE,
-                $messages->text("menu", "statisticsTotals") => 'index.php?action=statistics_STATS_CORE&method=totals',
-                $messages->text("menu", "statisticsKeywords") => 'index.php?action=statistics_STATS_CORE&method=keywords',
-                $messages->text("menu", "statisticsYears") => 'index.php?action=statistics_STATS_CORE&method=years',
-                $messages->text("menu", "statisticsAllCreators") => 'index.php?action=statistics_STATS_CORE&method=allCreators',
-                $messages->text("menu", "statisticsMainCreators") => 'index.php?action=statistics_STATS_CORE&method=mainCreators',
-                $messages->text("menu", "statisticsPublishers") => 'index.php?action=statistics_STATS_CORE&method=publishers',
-                $messages->text("menu", "statisticsCollections") => 'index.php?action=statistics_STATS_CORE&method=collections',
-            ];
-            if (WIKINDX_DISPLAY_USER_STATISTICS)
-            {
-                $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsUsers")] = 'index.php?action=statistics_STATS_CORE&method=users';
-                // Disabled temporarily for some later dates when statistics can be calculated in the database code.
-/*
-                $this->wikindx['statisticsSub'][$messages->text("menu", "listDownloads")] =
-                    'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=downloadsIndex';
-                $this->wikindx['statisticsSub'][$messages->text("menu", "listPopularity")] =
-                    'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=popularityIndex';
-*/
-            }
+            $this->wikindx['statisticsSub'][$messages->text("menu", "statisticsUsers")] = 'index.php?action=statistics_STATS_CORE&method=users';
+            // Disabled temporarily for some later dates when statistics can be calculated in the database code.
+            // $this->wikindx['statisticsSub'][$messages->text("menu", "listDownloads")] = 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=downloadsIndex';
+            // $this->wikindx['statisticsSub'][$messages->text("menu", "listPopularity")] = 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=popularityIndex';
         }
-        elseif ((defined("WIKINDX_MULTIUSER") ? WIKINDX_MULTIUSER : WIKINDX_MULTIUSER_DEFAULT) && (defined("WIKINDX_USER_REGISTRATION") ? WIKINDX_USER_REGISTRATION : WIKINDX_USER_REGISTRATION_DEFAULT) && !$this->userId)
-        {
-            $this->wikindx[$messages->text("menu", "statistics")] = 'index.php?action=statistics_STATS_CORE&method=totals';
-        }
-        elseif (WIKINDX_MULTIUSER && !$this->userId)
-        {
-            $this->wikindx[$messages->text("menu", "statistics")] = 'index.php?action=statistics_STATS_CORE&method=totals';
-        }
+        
         if ($this->write)
         {
             // On the first run after a fresh install this screen is displayed immediatly
             // and these two options are not yet set, so we avoid to check the READONLY mode strictly.
-            if (defined('WIKINDX_DENY_READONLY') && defined('WIKINDX_READ_ONLY_ACCESS'))
+            if (!WIKINDX_DENY_READONLY && WIKINDX_READ_ONLY_ACCESS)
             {
-                if (!WIKINDX_DENY_READONLY && WIKINDX_READ_ONLY_ACCESS)
-                {
-                    $this->wikindx[$messages->text("menu", "readOnly")] = 'index.php?action=readOnly';
-                }
+                $this->wikindx[$messages->text("menu", "readOnly")] = 'index.php?action=readOnly';
             }
             $this->wikindx[$messages->text("menu", "logout")] = 'index.php?action=logout';
         }
@@ -510,72 +477,78 @@ class MENU
         {
             $this->wikindx[$messages->text("menu", "userLogon")] = 'index.php?action=initLogon';
         }
-        if ((defined("WIKINDX_MULTIUSER") ? WIKINDX_MULTIUSER : WIKINDX_MULTIUSER_DEFAULT) && (defined("WIKINDX_USER_REGISTRATION") ? WIKINDX_USER_REGISTRATION : WIKINDX_USER_REGISTRATION_DEFAULT) && (defined("WIKINDX_MAIL_USE") ? WIKINDX_MAIL_USE : WIKINDX_MAIL_USE_DEFAULT) && !$this->userId)
+        if (WIKINDX_MULTIUSER && WIKINDX_USER_REGISTRATION && WIKINDX_MAIL_USE && !$this->userId)
         {
             $this->wikindx[$messages->text("menu", "register")] = 'index.php?action=initRegisterUser';
         }
         $this->wikindx[$messages->text("menu", "about")] = 'index.php?action=help_ABOUT_CORE';
+        
+                
+        // RESOURCE MENU
         list($collBrowseSub, $collEditSub) = $this->collectionArray();
         list($pubBrowseSub, $pubEditSub) = $this->publisherArray();
+        
+        $this->res = [
+            $messages->text("menu", "res") => 'index.php?action=noMenu&method=res',
+        ];
+        // Disable menu items if there are not yet resources
+        if ($this->resourcesExist)
+        {
+            $this->res[$messages->text("menu", "randomResource")] = 'index.php?action=resource_RESOURCEVIEW_CORE&method=random' . "&browserTabID=" . $this->browserTabID;
+        }
+            
+        $this->res['bookmarkSub'] = [
+            $messages->text("menu", "bookmarkSub") => FALSE,
+        ];
         if ($this->write)
         {
-            $this->res = [
-                $messages->text("menu", "res") => 'index.php?action=noMenu&method=res',
-                $messages->text("menu", "new") => 'index.php?action=resource_RESOURCEFORM_CORE',
-                'editSub' => [
-                    $messages->text("menu", "editSub") => FALSE,
-                    $messages->text("menu", "creator") => 'index.php?action=edit_EDITCREATOR_CORE',
-                    $collEditSub,
-                    $pubEditSub,
-                    $messages->text("menu", "keyword") => 'index.php?action=edit_EDITKEYWORD_CORE',
-                    $messages->text("menu", "keywordGroup") => 'index.php?action=edit_EDITKEYWORDGROUP_CORE',
-                ],
-                'bookmarkSub' => [
-                    $messages->text("menu", "bookmarkSub") => FALSE,
-                ],
-                $messages->text("menu", "randomResource") => 'index.php?action=resource_RESOURCEVIEW_CORE&method=random' . 
-                	"&browserTabID=" . $this->browserTabID,
-            ];
-            if (empty($collEditSub))
+            $this->res[$messages->text("menu", "new")] = 'index.php?action=resource_RESOURCEFORM_CORE';
+            
+            // Disable menu items if there are not yet resources
+            if ($this->resourcesExist)
             {
-                unset($this->res['editSub'][0]);
+                if (($this->write && WIKINDX_GLOBAL_EDIT) || $this->superAdmin)
+                {
+                    $this->res['editSub'] = [
+                        $messages->text("menu", "editSub") => FALSE,
+                        $messages->text("menu", "creator") => 'index.php?action=edit_EDITCREATOR_CORE',
+                        $messages->text("menu", "keyword") => 'index.php?action=edit_EDITKEYWORD_CORE',
+                        $messages->text("menu", "keywordGroup") => 'index.php?action=edit_EDITKEYWORDGROUP_CORE',
+                    ];
+                    
+                    if (!empty($collEditSub))
+                    {
+                        array_push($this->res['editSub'], $collEditSub);
+                    }
+                    
+                    if (!empty($collEditSub))
+                    {
+                        array_push($this->res['editSub'], $pubEditSub);
+                    }
+                }
             }
         }
-        else
-        {
-            $this->res = [
-                $messages->text("menu", "res") => 'index.php?action=noMenu&method=res',
-                'bookmarkSub' => [
-                    $messages->text("menu", "bookmarkSub") => FALSE,
-                ],
-                $messages->text("menu", "randomResource") => 'index.php?action=resource_RESOURCEVIEW_CORE&method=random' . 
-                	"&browserTabID=" . $this->browserTabID,
-            ];
-        }
-        if (empty($collBrowseSub))
-        {
-            unset($this->res['browseSub'][0]);
-        }
-        if (empty($pubBrowseSub))
-        {
-            unset($this->res['browseSub'][1]);
-        }
-        $requireBookmark = FALSE;
+        
         if ($this->bookmarkAdd)
         {
             $found = FALSE;
             for ($i = 1; $i <= 6; $i++)
             {
-                if (array_key_exists($i . "_name", $this->bookmarkArray) && array_key_exists($i . "_id", $this->bookmarkArray)
-                    && $this->bookmarkArray[$i . "_id"] == $this->lastSolo && ($this->bookmarkView == 'solo'))
-                {
+                if (
+                    array_key_exists($i . "_name", $this->bookmarkArray)
+                    && array_key_exists($i . "_id", $this->bookmarkArray)
+                    && $this->bookmarkArray[$i . "_id"] == $this->lastSolo
+                    && $this->bookmarkView == 'solo'
+                ) {
                     $found = TRUE;
 
                     break;
                 }
-                elseif (array_key_exists($i . "_name", $this->bookmarkArray) &&
-                    array_key_exists($i . "_multi", $this->bookmarkArray) && ($this->bookmarkView == 'multi'))
-                {
+                elseif (
+                    array_key_exists($i . "_name", $this->bookmarkArray)
+                    && array_key_exists($i . "_multi", $this->bookmarkArray)
+                    && ($this->bookmarkView == 'multi')
+                ) {
                     $encodedSql = base64_encode($this->stmt);
                     $bk = \UTF8\mb_explode('|', $this->bookmarkArray[$i . "_multi"]); // statement, multi, listParams
                     if ($bk[0] == $encodedSql)
@@ -589,359 +562,265 @@ class MENU
             if (!$found)
             {
                 $this->res['bookmarkSub'][$messages->text("menu", "bookmarkAdd")] = 'index.php?action=bookmarks_BOOKMARK_CORE';
-                $requireBookmark = TRUE;
             }
         }
         if (count($this->bookmarkArray) > 2)
         {
-            $this->res['bookmarkSub'][$messages->text("menu", "bookmarkDelete")] =
-                'index.php?action=bookmarks_BOOKMARK_CORE&method=deleteInit';
+            $this->res['bookmarkSub'][$messages->text("menu", "bookmarkDelete")] = 'index.php?action=bookmarks_BOOKMARK_CORE&method=deleteInit';
             for ($i = 1; $i <= 20; $i++)
             {
-                if (array_key_exists($i . "_name", $this->bookmarkArray) &&
-                    array_key_exists($i . "_id", $this->bookmarkArray))
+                if (array_key_exists($i . "_name", $this->bookmarkArray) && array_key_exists($i . "_id", $this->bookmarkArray))
                 {
-                    $this->res['bookmarkSub'][stripslashes($this->bookmarkArray[$i . "_name"])] =
-                    "index.php?action=resource_RESOURCEVIEW_CORE&id=" . $this->bookmarkArray[$i . "_id"];
+                    $this->res['bookmarkSub'][stripslashes($this->bookmarkArray[$i . "_name"])] = "index.php?action=resource_RESOURCEVIEW_CORE&id=" . $this->bookmarkArray[$i . "_id"];
                 }
-                elseif (array_key_exists($i . "_name", $this->bookmarkArray) &&
-                    array_key_exists($i . "_multi", $this->bookmarkArray))
+                elseif (array_key_exists($i . "_name", $this->bookmarkArray) && array_key_exists($i . "_multi", $this->bookmarkArray))
                 {
-                    $this->res['bookmarkSub'][stripslashes($this->bookmarkArray[$i . "_name"])] =
-                    'index.php?action=bookmarks_BOOKMARK_CORE&method=multiView&id=' . $i;
+                    $this->res['bookmarkSub'][stripslashes($this->bookmarkArray[$i . "_name"])] = 'index.php?action=bookmarks_BOOKMARK_CORE&method=multiView&id=' . $i;
                 }
             }
-            $requireBookmark = TRUE;
         }
-        if (!$requireBookmark)
+        
+        if ($this->lastSolo)
         {
-            unset($this->res['bookmarkSub']);
+            $this->res[$messages->text("menu", "lastSolo")] = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->lastSolo . "&browserTabID=" . $this->browserTabID;
         }
+        if ($this->lastMulti)
+        {
+            $BT = $this->browserTabID ? '&browserTabID=' . $this->browserTabID : FALSE;
+            $this->res[$messages->text("menu", "lastMulti")] = 'index.php?' . $this->lastMulti . '&type=lastMulti' . $BT;
+        }
+        if (!empty($this->basketList))
+        {
+            $this->res['basketSub'] = [
+                $messages->text("menu", "basketSub") => FALSE,
+                $messages->text("menu", "basketView") => 'index.php?action=basket_BASKET_CORE&method=view' . "&browserTabID=" . $this->browserTabID,
+                $messages->text("menu", "basketDelete") => 'index.php?action=basket_BASKET_CORE&method=delete' . "&browserTabID=" . $this->browserTabID,
+            ];
+        }
+        
         if ($this->write)
         {
-            $this->search = [
-                $messages->text("menu", "search") => 'index.php?action=noMenu&method=search',
-                $messages->text("menu", "quickSearch") => 'index.php?action=list_QUICKSEARCH_CORE' 
-                	. "&browserTabID=" . $this->browserTabID,
-                $messages->text("menu", "advancedSearch") => 'index.php?action=list_SEARCH_CORE'
-                	. "&browserTabID=" . $this->browserTabID,
-                'listSub' => [
-                    $messages->text("menu", "listSub") => FALSE,
-                    $messages->text("menu", "listCreator") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=creator' 
-                    .  "&browserTabID=" . $this->browserTabID,
-                    $messages->text("menu", "listTitle") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=title' 
-                    .  "&browserTabID=" . $this->browserTabID,
-                    $messages->text("menu", "listPublisher") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=publisher'
-                     .  "&browserTabID=" . $this->browserTabID,
-                    $messages->text("menu", "listYear") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=year' 
-                    .  "&browserTabID=" . $this->browserTabID,
-                    $messages->text("menu", "listTimestamp") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=timestamp'
-                     .  "&browserTabID=" . $this->browserTabID,
-                    //                    $messages->text("menu", "listPopularity") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=popularityIndex',
-                    //                    $messages->text("menu", "listViews") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=viewsIndex',
-                    //                    $messages->text("menu", "listDownloads") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=downloadsIndex',
-                    $messages->text("menu", "listMaturity") => 		
-                    'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=maturityIndex' 
-                    . "&browserTabID=" . $this->browserTabID,
-                ],
-                'browseSub' => [
-                    $messages->text("menu", "browseSub") => FALSE,
-                    $messages->text("menu", "browseType") => 'index.php?action=browse_BROWSETYPE_CORE',
-                    $messages->text("menu", "browseCreator") => 'index.php?action=browse_BROWSECREATOR_CORE',
-                    $messages->text("menu", "browseCited") => 'index.php?action=browse_BROWSECITED_CORE',
-                    $collBrowseSub,
-                    $pubBrowseSub,
-                    $messages->text("menu", "browseYear") => 'index.php?action=browse_BROWSEYEAR_CORE',
-                    $messages->text("menu", "browseKeyword") => 'index.php?action=browse_BROWSEKEYWORD_CORE',
-                    $messages->text("menu", "browseKeywordGroup") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE',
-                    $messages->text("menu", "browseCategory") => 'index.php?action=browse_BROWSECATEGORY_CORE',
-                    $messages->text("menu", "browseSubcategory") => 'index.php?action=browse_BROWSESUBCATEGORY_CORE',
-                    $messages->text("menu", "browseLanguage") => 'index.php?action=browse_BROWSELANGUAGE_CORE',
-                    $messages->text("menu", "browseBibliography") => 'index.php?action=browse_BROWSEBIBLIOGRAPHY_CORE',
-                    $messages->text("menu", "browseUser") => 'index.php?action=browse_BROWSEUSER_CORE&method=user',
-                    $messages->text("menu", "browseDept") => 'index.php?action=browse_BROWSEUSER_CORE&method=department',
-                    $messages->text("menu", "browseInst") => 'index.php?action=browse_BROWSEUSER_CORE&method=institution',
-                ],
-                $messages->text("menu", "categoryTree") => 'index.php?action=browse_CATEGORYTREE_CORE',
+            $this->res['importSub'] = [
+                $messages->text("menu", "importSub") => FALSE,
             ];
+            $this->res['exportSub'] = [
+                $messages->text("menu", "exportSub") => FALSE,
+            ];
+            
+            if (WIKINDX_MAX_PASTE > 0 || $this->superAdmin)
+            {
+                $this->res['importSub'][$messages->text("menu", "pasteBibtex")] = 'index.php?action=import_PASTEBIBTEX_CORE';
+            }
+            if (WIKINDX_IMPORT_BIB || $this->superAdmin)
+            {
+                $this->res['importSub'][$messages->text("menu", "importBibtex")] = 'index.php?action=import_BIBTEXFILE_CORE';
+            }
+        }
+        
+        
+        // SEARCH MENU
+        $this->search = [];
+        
+        $this->search[$messages->text("menu", "search")] = 'index.php?action=noMenu&method=search';
+        $this->search[$messages->text("menu", "quickSearch")] = 'index.php?action=list_QUICKSEARCH_CORE' . "&browserTabID=" . $this->browserTabID;
+        $this->search[$messages->text("menu", "advancedSearch")] = 'index.php?action=list_SEARCH_CORE' . "&browserTabID=" . $this->browserTabID;
+        if ($this->resourcesExist)
+        {
+            $this->search[$messages->text("menu", "categoryTree")] = 'index.php?action=browse_CATEGORYTREE_CORE';
+        }
+        $this->search['listSub'] = [
+            $messages->text("menu", "listSub") => FALSE,
+            $messages->text("menu", "listCreator") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=creator' . "&browserTabID=" . $this->browserTabID,
+            $messages->text("menu", "listTitle") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=title' . "&browserTabID=" . $this->browserTabID,
+            $messages->text("menu", "listPublisher") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=publisher' . "&browserTabID=" . $this->browserTabID,
+            $messages->text("menu", "listYear") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=year' . "&browserTabID=" . $this->browserTabID,
+            $messages->text("menu", "listTimestamp") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=timestamp' . "&browserTabID=" . $this->browserTabID,
+            $messages->text("menu", "listMaturity") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=maturityIndex' . "&browserTabID=" . $this->browserTabID,
+            // $messages->text("menu", "listViews") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=viewsIndex' . "&browserTabID=" . $this->browserTabID,
+        ];
+        $this->search['browseSub'] = [
+            $messages->text("menu", "browseSub") => FALSE,
+            $messages->text("menu", "browseType") => 'index.php?action=browse_BROWSETYPE_CORE',
+            $messages->text("menu", "browseCreator") => 'index.php?action=browse_BROWSECREATOR_CORE',
+            $messages->text("menu", "browseCited") => 'index.php?action=browse_BROWSECITED_CORE',
+            $messages->text("menu", "browseYear") => 'index.php?action=browse_BROWSEYEAR_CORE',
+            $messages->text("menu", "browseKeyword") => 'index.php?action=browse_BROWSEKEYWORD_CORE',
+            $messages->text("menu", "browseKeywordGroup") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE',
+            $messages->text("menu", "browseCategory") => 'index.php?action=browse_BROWSECATEGORY_CORE',
+            $messages->text("menu", "browseSubcategory") => 'index.php?action=browse_BROWSESUBCATEGORY_CORE',
+            $messages->text("menu", "browseLanguage") => 'index.php?action=browse_BROWSELANGUAGE_CORE',
+            $messages->text("menu", "browseUser") => 'index.php?action=browse_BROWSEUSER_CORE&method=user',
+            $messages->text("menu", "browseDept") => 'index.php?action=browse_BROWSEUSER_CORE&method=department',
+            $messages->text("menu", "browseInst") => 'index.php?action=browse_BROWSEUSER_CORE&method=institution',
+        ];
+        
+        if (!empty($collBrowseSub))
+        {
+            array_push($this->search['browseSub'], $collBrowseSub);
+        }
+        if (!empty($pubBrowseSub))
+        {
+            array_push($this->search['browseSub'], $pubBrowseSub);
+        }
+        
+        if ($this->write)
+        {
+            $this->search['browseSub'][$messages->text("menu", "browseBibliography")] = 'index.php?action=browse_BROWSEBIBLIOGRAPHY_CORE';
+            
             $userTagsObject = FACTORY_USERTAGS::getInstance();
             $userTags = $userTagsObject->grabAll(GLOBALS::getUserVar('BrowseBibliography'));
             if (!empty($userTags))
             {
                 $this->search['browseSub'][$messages->text("menu", "browseUserTags")] = 'index.php?action=browse_BROWSEUSERTAGS_CORE';
             }
+            
+            // $this->search['listSub'][$messages->text("menu", "listDownloads")] = 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=downloadsIndex' . "&browserTabID=" . $this->browserTabID;
+            // $this->search['listSub'][$messages->text("menu", "listPopularity")] = 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=popularityIndex' . "&browserTabID=" . $this->browserTabID;
         }
-        else
-        {
-            $this->search = [
-                $messages->text("menu", "search") => 'index.php?action=noMenu&method=search',
-                $messages->text("menu", "quickSearch") => 'index.php?action=list_QUICKSEARCH_CORE' 
-                	. "&browserTabID=" . $this->browserTabID,
-                $messages->text("menu", "advancedSearch") => 'index.php?action=list_SEARCH_CORE',
-                'listSub' => [
-                    $messages->text("menu", "listSub") => FALSE,
-                    $messages->text("menu", "listCreator") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=creator' 
-                    . "&browserTabID=" . $this->browserTabID,
-                    $messages->text("menu", "listTitle") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=title' 
-                    . "&browserTabID=" . $this->browserTabID,
-                    $messages->text("menu", "listPublisher") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=publisher' 
-                    . "&browserTabID=" . $this->browserTabID,
-                    $messages->text("menu", "listYear") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=year' 
-                    . "&browserTabID=" . $this->browserTabID,
-                    $messages->text("menu", "listTimestamp") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=timestamp' 
-                    . "&browserTabID=" . $this->browserTabID,
-//                    $messages->text("menu", "listViews") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=viewsIndex' . 
-//            	"&browserTabID=" . $this->browserTabID,
-                    $messages->text("menu", "listMaturity") => 'index.php?action=list_LISTRESOURCES_CORE&method=processGeneral&list_Order=maturityIndex' 
-                    . "&browserTabID=" . $this->browserTabID,
-                ],
-                'browseSub' => [
-                    $messages->text("menu", "browseSub") => FALSE,
-                    $messages->text("menu", "browseType") => 'index.php?action=browse_BROWSETYPE_CORE',
-                    $messages->text("menu", "browseCreator") => 'index.php?action=browse_BROWSECREATOR_CORE',
-                    $messages->text("menu", "browseCited") => 'index.php?action=browse_BROWSECITED_CORE',
-                    $collBrowseSub,
-                    $pubBrowseSub,
-                    $messages->text("menu", "browseYear") => 'index.php?action=browse_BROWSEYEAR_CORE',
-                    $messages->text("menu", "browseKeyword") => 'index.php?action=browse_BROWSEKEYWORD_CORE',
-                    $messages->text("menu", "browseKeywordGroup") => 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE',
-                    $messages->text("menu", "browseCategory") => 'index.php?action=browse_BROWSECATEGORY_CORE',
-                    $messages->text("menu", "browseSubcategory") => 'index.php?action=browse_BROWSESUBCATEGORY_CORE',
-                    $messages->text("menu", "browseLanguage") => 'index.php?action=browse_BROWSELANGUAGE_CORE',
-                    $messages->text("menu", "browseUser") => 'index.php?action=browse_BROWSEUSER_CORE&method=user',
-                    $messages->text("menu", "browseDept") => 'index.php?action=browse_BROWSEUSER_CORE&method=department',
-                    $messages->text("menu", "browseInst") => 'index.php?action=browse_BROWSEUSER_CORE&method=institution',
-                ],
-                $messages->text("menu", "categoryTree") => 'index.php?action=browse_CATEGORYTREE_CORE',
-            ];
-        }
-        // There is no collection, an empty menu entry can be injected.
-        // We remove it before rendering.
-        foreach ($this->search['browseSub'] as $k => $v)
-        {
-            if ($v === NULL)
-            {
-                unset($this->search['browseSub'][$k]);
-            }
-        }
-        $this->text = [];
+        
+        
+        // METADATA MENU
         if ($this->enableMetadataMenu)
         {
-            $this->text[$messages->text("menu", "text")] = 'index.php?action=noMenu&method=text';
-            $this->text[$messages->text("menu", "addIdea")] = 'index.php?action=ideas_IDEAS_CORE&method=ideaEdit';
-            if (!$this->metadataExist)
+            $this->metadata = [];
+            $this->metadata[$messages->text("menu", "text")] = 'index.php?action=noMenu&method=text';
+            
+            if ($this->write)
             {
-                unset($this->search[$messages->text("menu", "selectMeta")]);
-                unset($this->search[$messages->text("menu", "searchMeta")]);
+                $this->metadata[$messages->text("menu", "addIdea")] = 'index.php?action=ideas_IDEAS_CORE&method=ideaEdit';
             }
-            else
+            
+            $this->metadata['randomSub'] = [
+                $messages->text("menu", "randomSub") => FALSE,
+            ];
+            
+            $this->metadata['browseKeywordSub'] = [
+                $messages->text("menu", "browseKeywordSub") => FALSE,
+            ];
+            
+            $this->metadata['browseKeywordGroupSub'] = [
+                $messages->text("menu", "browseKeywordGroupSub") => FALSE,
+            ];
+            
+            if ($this->metadataExist)
             {
-                $this->text['randomSub'][$messages->text("menu", "randomSub")] = FALSE;
-                $this->text['randomSub'][$messages->text("menu", "randomQuotes")] =
-                    'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomQuote';
-                $this->text['randomSub'][$messages->text("menu", "randomParaphrases")] =
-                    'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomParaphrase';
-                $this->text['randomSub'][$messages->text("menu", "randomMusings")] =
-                    'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomMusing';
-
-                $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordSub")] = FALSE;
-                $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordAll")] =
-                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=all';
-                $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordQuotes")] =
-                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=quotes';
-                $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordParaphrases")] =
-                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=paraphrases';
-                $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordMusings")] =
-                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=musings';
+                $this->metadata['randomSub'][$messages->text("menu", "randomQuotes")] = 'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomQuote';
+                $this->metadata['randomSub'][$messages->text("menu", "randomParaphrases")] = 'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomParaphrase';
                 
-                $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordGroupSub")] = FALSE;
-                $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordAll")] =
-                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=all';
-                $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordQuotes")] =
-                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=quotes';
-                $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordParaphrases")] =
-                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=paraphrases';
-                $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordMusings")] =
-                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=musings';
+                if ($this->write)
+                {
+                    $this->metadata['randomSub'][$messages->text("menu", "randomMusings")] = 'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomMusing';
+                }
+                
+                $this->metadata['browseKeywordSub'][$messages->text("menu", "browseKeywordAll")] = 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=all';
+                $this->metadata['browseKeywordSub'][$messages->text("menu", "browseKeywordQuotes")] = 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=quotes';
+                $this->metadata['browseKeywordSub'][$messages->text("menu", "browseKeywordParaphrases")] = 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=paraphrases';
+                $this->metadata['browseKeywordSub'][$messages->text("menu", "browseKeywordMusings")] = 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=musings';
+                
+                $this->metadata['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordAll")] = 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=all';
+                $this->metadata['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordQuotes")] = 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=quotes';
+                $this->metadata['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordParaphrases")] = 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=paraphrases';
+                $this->metadata['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordMusings")] = 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=musings';
+                        
+                if ($this->lastMultiMeta)
+                {
+                    $this->metadata[$messages->text("menu", "lastMultiMeta")] = 'index.php?action=lastMultiMeta';
+                    $this->metadata[$messages->text("menu", "rtfexp")] = 'index.php?action=metaExportRtf';
+                }
+                if ($this->lastIdeaSearch)
+                {
+                    $this->metadata[$messages->text("menu", "lastIdeaSearch")] = "index.php?action=list_SEARCH_CORE&method=reprocess&type=displayIdeas";
+                }
             }
             if ($this->ideasExist)
             {
-                if (!array_key_exists('randomSub', $this->text))
+                $this->metadata[$messages->text("menu", "listIdeas")] = 'index.php?action=ideas_IDEAS_CORE&method=ideaList';
+                
+                if ($this->write)
                 {
-                    $this->text['randomSub'][$messages->text("menu", "randomSub")] = FALSE;
+                    $this->metadata['randomSub'][$messages->text("menu", "randomIdeas")] = 'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomIdea';
                 }
-                if (!array_key_exists('browseKeywordSub', $this->text))
+                
+                $this->metadata['browseKeywordSub'][$messages->text("menu", "browseKeywordIdeas")] = 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=ideas';
+                $this->metadata['browseKeywordSub'][$messages->text("menu", "browseKeywordNotIdeas")] = 'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=notIdeas';
+                                
+                $this->metadata['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordIdeas")] = 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=ideas';
+                $this->metadata['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordNotIdeas")] = 'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=notIdeas';
+                
+                if ($this->lastThread)
                 {
-                    $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordSub")] = FALSE;
+                    $this->metadata[$messages->text("menu", "lastIdea")] ='index.php?action=ideas_IDEAS_CORE&method=threadView&resourcemetadataId=' . $this->lastThread;
                 }
-                if (!array_key_exists('browseKeywordGroupSub', $this->text))
-                {
-                    $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordGroupSub")] = FALSE;
-                }
-                $this->text['randomSub'][$messages->text("menu", "randomIdeas")] = 'index.php?action=metadata_RANDOMMETADATA_CORE&method=randomIdea';
-                $this->text[$messages->text("menu", "listIdeas")] = 'index.php?action=ideas_IDEAS_CORE&method=ideaList';
-                $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordIdeas")] =
-                     'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=ideas';
-                $this->text['browseKeywordSub'][$messages->text("menu", "browseKeywordNotIdeas")] =
-                    'index.php?action=browse_BROWSEKEYWORD_CORE&metadata=1&mType=notIdeas';
-                $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordIdeas")] =
-                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=ideas';
-                $this->text['browseKeywordGroupSub'][$messages->text("menu", "browseKeywordNotIdeas")] =
-                    'index.php?action=browse_BROWSEKEYWORDGROUP_CORE&metadata=1&mType=notIdeas';
-            }
-            // readOnly user
-            if (!$this->write)
-            {
-                unset($this->text['randomSub'][$messages->text("menu", "randomMusings")]);
-                unset($this->text['randomSub'][$messages->text("menu", "randomIdeas")]);
-                unset($this->text[$messages->text("menu", "addIdea")]);
-                unset($this->text[$messages->text("menu", "listIdeas")]);
-            }
-            if ($this->lastThread && $this->ideasExist)
-            {
-                $this->text[$messages->text("menu", "lastIdea")] =
-                    'index.php?action=ideas_IDEAS_CORE&method=threadView&resourcemetadataId=' . $this->lastThread;
             }
         }
-        if ($this->lastSolo)
-        {
-            $this->res[$messages->text("menu", "lastSolo")] = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->lastSolo  . 
-            	"&browserTabID=" . $this->browserTabID;
-        }
-        if ($this->lastMulti)
-        {
-            $BT = $this->browserTabID ? '&browserTabID=' . $this->browserTabID : FALSE;
-            $this->res[$messages->text("menu", "lastMulti")] = 'index.php?' . $this->lastMulti .
-                '&type=lastMulti' . $BT;
-        }
-        if (!empty($this->basketList))
-        {
-            $this->res['basketSub'] = [
-                $messages->text("menu", "basketSub") => FALSE,
-                $messages->text("menu", "basketView") => 'index.php?action=basket_BASKET_CORE&method=view' . 
-                	"&browserTabID=" . $this->browserTabID,
-                $messages->text("menu", "basketDelete") => 'index.php?action=basket_BASKET_CORE&method=delete' . 
-                	"&browserTabID=" . $this->browserTabID,
-            ];
-        }
-        if ($this->lastMultiMeta && $this->metadataExist)
-        {
-            $this->text[$messages->text("menu", "lastMultiMeta")] = 'index.php?action=lastMultiMeta';
-            $this->text[$messages->text("menu", "rtfexp")] = 'index.php?action=metaExportRtf';
-        }
-        if ($this->lastIdeaSearch && $this->metadataExist)
-        {
-            $this->text[$messages->text("menu", "lastIdeaSearch")] = "index.php?action=list_SEARCH_CORE&method=reprocess&type=displayIdeas";
-        }
-        if ($this->write)
-        {
-            if ((defined("WIKINDX_MAX_PASTE") ? WIKINDX_MAX_PASTE : WIKINDX_MAX_PASTE_DEFAULT) || $this->superAdmin)
-            {
-                $this->res[$messages->text("menu", "pasteBibtex")] = 'index.php?action=import_PASTEBIBTEX_CORE';
-            }
-            if ((defined("WIKINDX_IMPORT_BIB") ? WIKINDX_IMPORT_BIB : WIKINDX_IMPORT_BIB_DEFAULT) && !$this->superAdmin)
-            {
-                $this->res[$messages->text("menu", "importBibtex")] = 'index.php?action=import_BIBTEXFILE_CORE';
-            }
-        }
-        else
-        { // Read Only
-            unset($this->res['browseSub'][$messages->text("menu", "browseBibliography")]);
-        }
+        
+        
+        // ADMIN MENU
         $this->admin = [
             $messages->text("menu", "admin") => 'index.php?action=noMenu&method=admin',
             $messages->text("menu", "conf") => 'index.php?action=admin_CONFIGURE_CORE',
+            $messages->text("menu", "components") => 'index.php?action=admin_ADMINCOMPONENTS_CORE',
             $messages->text("menu", "news") => 'index.php?action=news_NEWS_CORE&method=init',
             $messages->text("menu", "categories") => 'index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit',
             $messages->text("menu", "subcategories") => 'index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit',
             $messages->text("menu", "custom") => 'index.php?action=admin_ADMINCUSTOM_CORE&method=init',
+            $messages->text("menu", "images") => 'index.php?action=admin_DELETEIMAGES_CORE',
             $messages->text("menu", "language") => 'index.php?action=admin_ADMINLANGUAGES_CORE&method=init',
-            'userSub' => [
+        ];
+        
+        if (WIKINDX_MULTIUSER)
+        {
+            $this->admin['userSub'] = [
                 $messages->text("menu", "userSub") => FALSE,
                 $messages->text("menu", "userAdd") => 'index.php?action=admin_ADMINUSER_CORE&method=addInit',
                 $messages->text("menu", "userEdit") => 'index.php?action=admin_ADMINUSER_CORE&method=editInit',
                 $messages->text("menu", "userDelete") => 'index.php?action=admin_ADMINUSER_CORE&method=deleteInit',
                 $messages->text("menu", "userBlock") => 'index.php?action=admin_ADMINUSER_CORE&method=blockInit',
                 $messages->text("menu", "userRegistration") => 'index.php?action=admin_ADMINUSER_CORE&method=registrationInit',
-            ],
-            'keywordSub' => [
+            ];
+        }
+        
+        if ($this->resourcesExist)
+        {
+            $this->admin['keywordSub'] = [
                 $messages->text("menu", "keywordSub") => FALSE,
                 $messages->text("menu", "keywordEdit") => 'index.php?action=admin_ADMINKEYWORD_CORE&method=editInit',
                 $messages->text("menu", "keywordMerge") => 'index.php?action=admin_ADMINKEYWORD_CORE&method=mergeInit',
                 $messages->text("menu", "keywordDelete") => 'index.php?action=admin_ADMINKEYWORD_CORE&method=deleteInit',
-            ],
-            'creatorSub' => [
+            ];
+            $this->admin['creatorSub'] = [
                 $messages->text("menu", "creatorSub") => FALSE,
                 $messages->text("menu", "creatorEdit") => 'index.php?action=edit_EDITCREATOR_CORE',
                 $messages->text("menu", "creatorMerge") => 'index.php?action=admin_ADMINCREATOR_CORE&method=mergeInit',
                 $messages->text("menu", "creatorGroup") => 'index.php?action=admin_ADMINCREATOR_CORE&method=groupInit',
-            ],
-            $messages->text("menu", "delete") => 'index.php?action=admin_DELETERESOURCE_CORE',
-            $messages->text("menu", "importBibtex") => 'index.php?action=import_BIBTEXFILE_CORE',
-        ];
-        if ($this->superAdmin)
-        {
-            $this->admin[$messages->text("menu", "components")] = 'index.php?action=admin_ADMINCOMPONENTS_CORE';
+            ];
+            
+            $this->admin[$messages->text("menu", "delete")] = 'index.php?action=admin_DELETERESOURCE_CORE';
         }
-        $imagesExists = FALSE;
-        $open_dir = opendir(implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_IMAGES]));
-        while ($object = readdir($open_dir))
-        {
-            if ($object != "." && $object != "..")
-            {
-                $ext = mb_strtolower(pathinfo(implode(DIRECTORY_SEPARATOR, [$open_dir, $object]), PATHINFO_EXTENSION));
-                if  (($ext == 'gif') || ($ext == 'jpeg') || ($ext == 'jpg') || ($ext == 'png') || ($ext == 'webp'))
-                {
-                    $imagesExists = TRUE;
-
-                    break;
-                }
-            }
-        }
-        closedir($open_dir);
-        if ($imagesExists)
-        {
-            $this->admin[$messages->text("menu", "images")] = 'index.php?action=admin_DELETEIMAGES_CORE';
-        }
-        if ((defined("WIKINDX_QUARANTINE") ? WIKINDX_QUARANTINE : WIKINDX_QUARANTINE_DEFAULT) && $this->checkQuarantine())
+        
+        if (WIKINDX_QUARANTINE && $this->checkQuarantine())
         {
             $this->admin[$messages->text("menu", "quarantine")] = 'index.php?action=list_LISTSOMERESOURCES_CORE&method=quarantineProcess';
         }
-        if (!(defined("WIKINDX_MULTIUSER") ? WIKINDX_MULTIUSER : WIKINDX_MULTIUSER_DEFAULT))
-        {
-            unset($this->admin['userSub']);
-        }
-        // Disable menu items if there are not yet resources
-        if (!$this->resourcesExist)
-        {
-            unset($this->admin[$messages->text("menu", "delete")]);
-            unset($this->admin['keywordSub']);
-            unset($this->admin['creatorSub']);
-            unset($this->res['searchSub']);
-            if ($this->write)
-            {
-                unset($this->res['editSub']);
-            }
-            unset($this->res['browseSub']);
-            unset($this->res[$messages->text("menu", "categoryTree")]);
-            unset($this->res[$messages->text("menu", "randomResource")]);
-            unset($this->wikindx[$messages->text("menu", "statistics")]);
-        }
-        // Remove 'edit' array from resource array if non-admins not allowed to edit
-        if ($this->resourcesExist && $this->write)
-        { // if no resources, editSub does not exist anyway
-            if (!WIKINDX_GLOBAL_EDIT && !$this->superAdmin)
-            {
-                array_splice($this->res, array_search('editSub', array_keys($this->res)), 1);
-            }
-        }
+        
+        
+        // PLUGIN1 MENU
+        $this->plugin1 = [$messages->text("menu", "plugin1") => 'index.php?action=noMenu&method=plugin1'];
+        
+        
+        // PLUGIN2 MENU
+        $this->plugin2 = [$messages->text("menu", "plugin2") => 'index.php?action=noMenu&method=plugin2'];
+        
+        
+        // PLUGIN3 MENU
+        $this->plugin3 = [$messages->text("menu", "plugin3") => 'index.php?action=noMenu&method=plugin3'];
     }
     /**
      * Insert available modules into menu system
      */
     private function menuInsert()
     {
-        $menuHeadings = ["wikindx", "res", "search", "text", "admin", "plugin1", "plugin2", "plugin3"];
+        $menuHeadings = ["wikindx", "res", "search", "text", "admin", "importexport", "plugin1", "plugin2", "plugin3"];
         
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "startup", "LOADPLUGINS.php"]));
         $loadmodules = new LOADPLUGINS();
@@ -1289,19 +1168,15 @@ class MENU
         $browseArray[$messages->text("menu", "browseSubCollection")] = FALSE;
         $browseArray[$messages->text("collection", 'all')] = 'index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=0';
         $editArray[$messages->text("menu", "editSubCollection")] = FALSE;
-        $editArray[$messages->text("collection", 'all')] =
-            'index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&collectionType=0';
+        $editArray[$messages->text("collection", 'all')] = 'index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&collectionType=0';
         while ($row = $this->db->fetchRow($recordset))
         {
             if (!$row['collectionType'])
             {
                 continue;
             }
-            $browseArray[$messages->text("collection", $row['collectionType'])] =
-                'index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=' . $row['collectionType'];
-            $editArray[$messages->text("collection", $row['collectionType'])] =
-                'index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&collectionType=' .
-                $row['collectionType'];
+            $browseArray[$messages->text("collection", $row['collectionType'])] = 'index.php?action=browse_BROWSECOLLECTION_CORE&method=display&collectionType=' . $row['collectionType'];
+            $editArray[$messages->text("collection", $row['collectionType'])] = 'index.php?action=edit_EDITCOLLECTION_CORE&method=editChooseCollection&collectionType=' . $row['collectionType'];
         }
 
         return [$browseArray, $editArray];

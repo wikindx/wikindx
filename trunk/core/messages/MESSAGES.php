@@ -1742,7 +1742,6 @@ class MESSAGES
 			),
 /// news_ Administering and display of news items
 		    "news" => array(
-				"noNews" => dgettext($domain, "There is no news available to view"),
 				"deleteConfirm" => dgettext($domain, "Delete news ###"),
 				"title" => dgettext($domain, "Title"),
 				"body" => dgettext($domain, "Main Text"),

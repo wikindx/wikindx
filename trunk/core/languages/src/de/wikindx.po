@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-12-16 06:07+0100\n"
+"POT-Creation-Date: 2020-12-18 18:13+0100\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -4427,7 +4427,7 @@ msgstr "Bibliographie-Stil"
 #: core/messages/messages.php:269 core/messages/messages.php:438
 #: core/messages/messages.php:1216 core/messages/messages.php:1291
 #: core/messages/messages.php:1548 core/messages/messages.php:1593
-#: core/messages/messages.php:1599 core/messages/messages.php:1747
+#: core/messages/messages.php:1599 core/messages/messages.php:1746
 msgid "Title"
 msgstr "Titel"
 
@@ -4852,7 +4852,7 @@ msgstr ""
 msgid "Check for updates"
 msgstr ""
 
-#: core/messages/messages.php:366 core/messages/messages.php:1762
+#: core/messages/messages.php:366 core/messages/messages.php:1761
 msgid "Last updated"
 msgstr ""
 
@@ -5591,7 +5591,7 @@ msgid "Current attachments"
 msgstr ""
 
 #. / resources_url For adding URLs to resources
-#: core/messages/messages.php:580 core/messages/messages.php:1759
+#: core/messages/messages.php:580 core/messages/messages.php:1758
 msgid "URL"
 msgstr "URL"
 
@@ -9288,54 +9288,50 @@ msgid "Generated tag"
 msgstr "Erzeugtes Kennzeichen"
 
 #: core/messages/messages.php:1745
-msgid "There is no news available to view"
-msgstr "Es gibt keine Nachrichten"
-
-#: core/messages/messages.php:1746
 msgid "Delete news ###"
 msgstr "Nachricht ### löschen"
 
-#: core/messages/messages.php:1748
+#: core/messages/messages.php:1747
 msgid "Main Text"
 msgstr "Haupttext"
 
-#: core/messages/messages.php:1749
+#: core/messages/messages.php:1748
 msgid "Email the edited news to registered users"
 msgstr "E-maile die bearbeitete Nachricht an registrierte Benutzer"
 
-#: core/messages/messages.php:1753
+#: core/messages/messages.php:1752
 msgid "Add Table"
 msgstr "Tabelle hinzufügen"
 
-#: core/messages/messages.php:1754
+#: core/messages/messages.php:1753
 msgid "Add Image"
 msgstr "Bild hinzufügen"
 
-#: core/messages/messages.php:1755
+#: core/messages/messages.php:1754
 msgid "Add Link"
 msgstr "Link hinzufügen"
 
-#: core/messages/messages.php:1756
+#: core/messages/messages.php:1755
 msgid "Columns"
 msgstr "Spalten"
 
-#: core/messages/messages.php:1757
+#: core/messages/messages.php:1756
 msgid "Rows"
 msgstr "Reihen"
 
-#: core/messages/messages.php:1758
+#: core/messages/messages.php:1757
 msgid "Image URL"
 msgstr "Bild-URL"
 
-#: core/messages/messages.php:1760
+#: core/messages/messages.php:1759
 msgid "File name"
 msgstr ""
 
-#: core/messages/messages.php:1761
+#: core/messages/messages.php:1760
 msgid "Size"
 msgstr ""
 
-#: core/messages/messages.php:1763
+#: core/messages/messages.php:1762
 msgid "Upload file"
 msgstr ""
 
@@ -10013,8 +10009,8 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ msgid "Ungroup"
 #~ msgstr "Gruppierung aufheben"
 
-#~ msgid "Disabled Plugins"
-#~ msgstr "Plugins deaktivieren"
+#~ msgid "There is no news available to view"
+#~ msgstr "Es gibt keine Nachrichten"
 
 #~ msgid "Enabled Templates"
 #~ msgstr "Aktivierte Vorlagen"
@@ -10032,3 +10028,6 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 
 #~ msgid "Enabled Styles"
 #~ msgstr "Aktivierte Stile"
+
+#~ msgid "Disabled Plugins"
+#~ msgstr "Plugins deaktivieren"

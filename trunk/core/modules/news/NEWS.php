@@ -343,10 +343,6 @@ class NEWS
                     '&nbsp;&nbsp;' . \HTML\em($this->newsTimestamp[$id]));
             }
         }
-        else
-        {
-            $pString .= $this->messages->text("news", "noNews");
-        }
         GLOBALS::addTplVar('content', $pString);
     }
     /**

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-12-16 06:07+0100\n"
+"POT-Creation-Date: 2020-12-18 18:13+0100\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
@@ -4187,7 +4187,7 @@ msgstr "Style bibliographique par défaut"
 #: core/messages/messages.php:269 core/messages/messages.php:438
 #: core/messages/messages.php:1216 core/messages/messages.php:1291
 #: core/messages/messages.php:1548 core/messages/messages.php:1593
-#: core/messages/messages.php:1599 core/messages/messages.php:1747
+#: core/messages/messages.php:1599 core/messages/messages.php:1746
 msgid "Title"
 msgstr "Titre"
 
@@ -4597,7 +4597,7 @@ msgstr "Hash du fichier téléchargé :"
 msgid "Check for updates"
 msgstr "Vérifier les mises à jour"
 
-#: core/messages/messages.php:366 core/messages/messages.php:1762
+#: core/messages/messages.php:366 core/messages/messages.php:1761
 msgid "Last updated"
 msgstr "Dernière mise à jour"
 
@@ -5327,7 +5327,7 @@ msgid "Current attachments"
 msgstr "Pièces jointes actuelles"
 
 #. / resources_url For adding URLs to resources
-#: core/messages/messages.php:580 core/messages/messages.php:1759
+#: core/messages/messages.php:580 core/messages/messages.php:1758
 msgid "URL"
 msgstr "Lien URL"
 
@@ -8913,54 +8913,50 @@ msgid "Generated tag"
 msgstr "Étiquette générée"
 
 #: core/messages/messages.php:1745
-msgid "There is no news available to view"
-msgstr "Il n'y a aucune nouvelle à afficher"
-
-#: core/messages/messages.php:1746
 msgid "Delete news ###"
 msgstr "Supprimer la(les) nouvelle(s) ###"
 
-#: core/messages/messages.php:1748
+#: core/messages/messages.php:1747
 msgid "Main Text"
 msgstr "Texte principal"
 
-#: core/messages/messages.php:1749
+#: core/messages/messages.php:1748
 msgid "Email the edited news to registered users"
 msgstr "Envoyer par courriel les nouvelles modifiée aux utilisateurs inscrits"
 
-#: core/messages/messages.php:1753
+#: core/messages/messages.php:1752
 msgid "Add Table"
 msgstr "Ajouter un tableau"
 
-#: core/messages/messages.php:1754
+#: core/messages/messages.php:1753
 msgid "Add Image"
 msgstr "Ajouter une image"
 
-#: core/messages/messages.php:1755
+#: core/messages/messages.php:1754
 msgid "Add Link"
 msgstr "Ajouter un lien"
 
-#: core/messages/messages.php:1756
+#: core/messages/messages.php:1755
 msgid "Columns"
 msgstr "Colonnes"
 
-#: core/messages/messages.php:1757
+#: core/messages/messages.php:1756
 msgid "Rows"
 msgstr "Rangées"
 
-#: core/messages/messages.php:1758
+#: core/messages/messages.php:1757
 msgid "Image URL"
 msgstr "URL de l'image"
 
-#: core/messages/messages.php:1760
+#: core/messages/messages.php:1759
 msgid "File name"
 msgstr "Nom de fichier"
 
-#: core/messages/messages.php:1761
+#: core/messages/messages.php:1760
 msgid "Size"
 msgstr "Taille"
 
-#: core/messages/messages.php:1763
+#: core/messages/messages.php:1762
 msgid "Upload file"
 msgstr "Fichier téléversé"
 
@@ -9357,3 +9353,6 @@ msgstr "Modification du groupe de mots clefs réussie"
 #: core/messages/success.php:182
 msgid "Successfully approved resource(s)"
 msgstr "Approbation des références réussie"
+
+#~ msgid "There is no news available to view"
+#~ msgstr "Il n'y a aucune nouvelle à afficher"

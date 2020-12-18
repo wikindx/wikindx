@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-12-16 06:07+0100\n"
+"POT-Creation-Date: 2020-12-18 18:13+0100\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -4416,7 +4416,7 @@ msgstr "Stile Bibliografico"
 #: core/messages/messages.php:269 core/messages/messages.php:438
 #: core/messages/messages.php:1216 core/messages/messages.php:1291
 #: core/messages/messages.php:1548 core/messages/messages.php:1593
-#: core/messages/messages.php:1599 core/messages/messages.php:1747
+#: core/messages/messages.php:1599 core/messages/messages.php:1746
 msgid "Title"
 msgstr "Titolo"
 
@@ -4833,7 +4833,7 @@ msgstr ""
 msgid "Check for updates"
 msgstr ""
 
-#: core/messages/messages.php:366 core/messages/messages.php:1762
+#: core/messages/messages.php:366 core/messages/messages.php:1761
 msgid "Last updated"
 msgstr ""
 
@@ -5570,7 +5570,7 @@ msgid "Current attachments"
 msgstr ""
 
 #. / resources_url For adding URLs to resources
-#: core/messages/messages.php:580 core/messages/messages.php:1759
+#: core/messages/messages.php:580 core/messages/messages.php:1758
 msgid "URL"
 msgstr "URL"
 
@@ -9206,54 +9206,50 @@ msgid "Generated tag"
 msgstr "Tag generato"
 
 #: core/messages/messages.php:1745
-msgid "There is no news available to view"
-msgstr "Non ci sono news disponibili da visualizzare"
-
-#: core/messages/messages.php:1746
 msgid "Delete news ###"
 msgstr "Eliminare le news ###"
 
-#: core/messages/messages.php:1748
+#: core/messages/messages.php:1747
 msgid "Main Text"
 msgstr "Testo Principale"
 
-#: core/messages/messages.php:1749
+#: core/messages/messages.php:1748
 msgid "Email the edited news to registered users"
 msgstr "Invia per email le news modificate agli utenti registrati"
 
-#: core/messages/messages.php:1753
+#: core/messages/messages.php:1752
 msgid "Add Table"
 msgstr "Aggiungi Tabella"
 
-#: core/messages/messages.php:1754
+#: core/messages/messages.php:1753
 msgid "Add Image"
 msgstr "Aggiungi Immagine"
 
-#: core/messages/messages.php:1755
+#: core/messages/messages.php:1754
 msgid "Add Link"
 msgstr "Aggiungi Link"
 
-#: core/messages/messages.php:1756
+#: core/messages/messages.php:1755
 msgid "Columns"
 msgstr "colonne"
 
-#: core/messages/messages.php:1757
+#: core/messages/messages.php:1756
 msgid "Rows"
 msgstr "Righe"
 
-#: core/messages/messages.php:1758
+#: core/messages/messages.php:1757
 msgid "Image URL"
 msgstr "URL Immagine"
 
-#: core/messages/messages.php:1760
+#: core/messages/messages.php:1759
 msgid "File name"
 msgstr ""
 
-#: core/messages/messages.php:1761
+#: core/messages/messages.php:1760
 msgid "Size"
 msgstr ""
 
-#: core/messages/messages.php:1763
+#: core/messages/messages.php:1762
 msgid "Upload file"
 msgstr ""
 
@@ -9903,8 +9899,8 @@ msgstr "Risorsa approvata con successo"
 #~ msgid "Disabled Templates"
 #~ msgstr "Templates Disabilitati"
 
-#~ msgid "Configurable Inline Plugins"
-#~ msgstr "Plugins Inline configurabili"
+#~ msgid "There is no news available to view"
+#~ msgstr "Non ci sono news disponibili da visualizzare"
 
 #~ msgid "Enabled Languages"
 #~ msgstr "Lingue Abilitate"
@@ -9922,3 +9918,6 @@ msgstr "Risorsa approvata con successo"
 
 #~ msgid "Upgrade the database"
 #~ msgstr "Aggiornare il database"
+
+#~ msgid "Configurable Inline Plugins"
+#~ msgstr "Plugins Inline configurabili"

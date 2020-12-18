@@ -9767,9 +9767,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#~ msgid "Enabled Languages"
-#~ msgstr "Aktivierte Sprachen"
-
 #~ msgid ""
 #~ "You are not logged on as the superAdmin: please ask that person ### to "
 #~ "carry out the upgrade through their web browser."
@@ -10013,10 +10010,8 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ msgid "Configurable Menu Plugins"
 #~ msgstr "konfigurierbare Menüplugins"
 
-#, fuzzy
-#~| msgid "Disabled Languages"
-#~ msgid "Available Languages"
-#~ msgstr "Deaktivierte Sprachen"
+#~ msgid "Enabled Languages"
+#~ msgstr "Aktivierte Sprachen"
 
 #~ msgid "Disabled Styles"
 #~ msgstr "Deaktivierte Stile"
@@ -10031,4 +10026,9 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ msgstr "Aktivierte Vorlagen"
 
 #~ msgid "Disabled Languages"
+#~ msgstr "Deaktivierte Sprachen"
+
+#, fuzzy
+#~| msgid "Disabled Languages"
+#~ msgid "Available Languages"
 #~ msgstr "Deaktivierte Sprachen"

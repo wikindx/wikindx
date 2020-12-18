@@ -9431,9 +9431,6 @@ msgstr "Ключевое слово успешно отредактирован�
 msgid "Successfully approved resource(s)"
 msgstr "Источник успешно одобрен"
 
-#~ msgid "Disabled Plugins"
-#~ msgstr "Деактивированные плагины"
-
 #~ msgid "Enabled Plugins"
 #~ msgstr "Активированные плагины"
 
@@ -9602,8 +9599,8 @@ msgstr "Источник успешно одобрен"
 #~ msgid "Disabled Languages"
 #~ msgstr "Деактивированные языки"
 
-#~ msgid "Upgrade the database"
-#~ msgstr "Обновить БД"
+#~ msgid "Disabled Plugins"
+#~ msgstr "Деактивированные плагины"
 
 #~ msgid ""
 #~ "If you have languages and styles that are in your WIKINDX installation "
@@ -9647,3 +9644,6 @@ msgstr "Источник успешно одобрен"
 
 #~ msgid "Fix UTF8:"
 #~ msgstr "Починить UTF8:"
+
+#~ msgid "Upgrade the database"
+#~ msgstr "Обновить БД"

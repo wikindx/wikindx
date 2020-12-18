@@ -68,7 +68,7 @@ msgstr "Panier"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:32
 msgid "Last List"
-msgstr ""
+msgstr "Dernière liste"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:33
 #: components/plugins/importexportbib/importexportbibmessages.php:41
@@ -128,12 +128,20 @@ msgid ""
 "there is usually a way to import your bibliography into WIKINDX. Most "
 "conversions use the MODS XML intermediate format."
 msgstr ""
+"Le plugin Bibutils utilise des utilitaires en C écrits par Chris Putnam à "
+"###. Il permet la conversion de nombreux formats de bibliographie de sorte "
+"qu'il existe généralement un moyen d'importer votre bibliographie dans "
+"WIKINDX. La plupart des conversions utilisent le format intermédiaire XML "
+"MODS."
 
 #: components/plugins/importexportbib/importexportbibmessages.php:48
 msgid ""
 "No Bibutils programs found in ###. Either Bibutils is not installed or the "
 "path is incorrect (edit the plugin's config.php) or $PATH"
 msgstr ""
+"Aucun programme Bibutils trouvé dans ###. Soit les Bibutils ne sont pas "
+"installés, soit le chemin est incorrect (éditez le fichier config.php du "
+"plugin) ou le PATH"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:49
 msgid "No input type specified"
@@ -154,7 +162,7 @@ msgstr "Échec de la conversion de ###"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:53
 msgid "Conversion options for intermediate MODS XML"
-msgstr ""
+msgstr "Options de conversion pour le XML MODS intermédiaire"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:54
 msgid "IGNORE"
@@ -164,10 +172,12 @@ msgstr "IGNORER"
 msgid ""
 "Encode unicode characters directly in the file rather than as XML entities"
 msgstr ""
+"Encoder les caractères Unicode directement dans le fichier plutôt qu'en tant "
+"qu'entités XML"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:56
 msgid "Don't put citation key in the MODS id field"
-msgstr ""
+msgstr "Ne mettez pas la clef de citation dans le champ Id MODS"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:57
 msgid "Don't split titles into TITLE/SUBTITLE pairs"
@@ -175,7 +185,7 @@ msgstr "Ne pas scinder les titres en titre et sous-titre"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:58
 msgid "Don't covert latex character combinations"
-msgstr ""
+msgstr "Ne pas convertir les combinaisons de caractères LaTeX"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:59
 msgid "Unicode in, unicode out"
@@ -198,6 +208,16 @@ msgid ""
 "first in the WIKINDX database (the Admin menu) so that you can then map\n"
 "\t\t\t\tthe import custom fields."
 msgstr ""
+"Vous pouvez importer des bibliographies XML Endnote (fichiers .xml) ici. Les "
+"fichiers volumineux peuvent prendre un certain temps à traiter, donc si "
+"WIKINDX détecte que la variable «max_execution_time» de php.ini est sur le "
+"point d'être dépassée, il importera la bibliographie par lots. S'il y a un "
+"champ de date, le format doit être JJ/MM/AAAA ou AAAA/MM/JJ et AAAA "
+"remplacera tout champ année de l'enregistrement. Si vous avez des champs "
+"personnalisés dans votre fichier à importer, créez d'abord des champs "
+"personnalisés dans la base de données WIKINDX (via le menu Admin) afin de "
+"pouvoir ensuite mapper les champs personnalisés de la base et les champs "
+"personnalisés du fichier."
 
 #: components/plugins/importexportbib/importexportbibmessages.php:66
 msgid ""
@@ -205,6 +225,9 @@ msgid ""
 "numbers of resources might\n"
 "\t\t\t\ttake some time and memory so you might need to adjust php.ini."
 msgstr ""
+"Vous pouvez exporter au format RTF votre plus récente bibliographie. Un grand "
+"nombre de références à exporter peut-être consommateur de temps et de "
+"mémoire. Vous devriez peut-être ajuster votre fichier php.ini."
 
 #: components/plugins/importexportbib/importexportbibmessages.php:68
 msgid "Category"
@@ -234,6 +257,9 @@ msgid ""
 "later exported to Endnote can include this original unchanged data. Store "
 "unused fields:"
 msgstr ""
+"Vous pouvez stocker les champs Endnote que WIKINDX n'utilise pas afin que "
+"toutes les références exportées ultérieurement vers Endnote puissent inclure "
+"ces données d'origine inchangées. Stocker les champs inutilisés :"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:74
 msgid "File is empty"
@@ -245,7 +271,7 @@ msgstr "Nb. de références ajoutées : ###"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:76
 msgid "No. resources discarded (duplicates or no titles): ###"
-msgstr ""
+msgstr "Nombre de ressources ignorées (doublons ou aucun titre) : ###"
 
 #. invalidField1 If non-standard import fields are found in the input file, invite the user to map these fields to wikindx fields
 #: components/plugins/importexportbib/importexportbibmessages.php:78
@@ -302,7 +328,7 @@ msgstr "Erreur de chargement de fichier."
 
 #: components/plugins/importexportbib/importexportbibmessages.php:88
 msgid "You must create a list from the Search menu first"
-msgstr ""
+msgstr "Vous devez d'abord créer une liste à partir du menu Rechercher"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:89
 msgid "You have no ideas"
@@ -326,7 +352,7 @@ msgstr "Données importées avec succès"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:94
 msgid "Contents of your temporary folder (newest first):"
-msgstr ""
+msgstr "Contenu de votre dossier temporaire (le plus récent en premier) :"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:95
 msgid "Directory is empty"
@@ -338,6 +364,9 @@ msgid ""
 "open (whichever is the shorter) so download and save them elsewhere "
 "immediately"
 msgstr ""
+"Ces fichiers seront disponibles pendant ### minutes ou tant le navigateur "
+"reste ouvert (selon ce qui est le plus court), donc téléchargez-les "
+"rapidement."
 
 #: components/plugins/importexportbib/importexportbibmessages.php:97
 msgid "Export bibliographic entries:"
@@ -421,6 +450,8 @@ msgstr "Inclure l'id. (ISSN, etc)"
 #: components/plugins/importexportbib/importexportbibmessages.php:122
 msgid "If exporting quote and paraphrase comments or musings"
 msgstr ""
+"Si vous exportez des commentaires de paraphrase ou de citation, ou des "
+"réflexions"
 
 #. These two are in a select box and follow on from the string above
 #: components/plugins/importexportbib/importexportbibmessages.php:124
@@ -434,6 +465,8 @@ msgstr "Exporter les données publiques et les miennes"
 #: components/plugins/importexportbib/importexportbibmessages.php:126
 msgid "Add resource's primary creator and publication year to metadata"
 msgstr ""
+"Ajouter le créateur principal et l'année de publication de la référence aux "
+"métadonnées"
 
 #. Default text for labelling metadata in the RTF export
 #: components/plugins/importexportbib/importexportbibmessages.php:128
@@ -467,7 +500,7 @@ msgstr "Inclure les mots clefs des références"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:136
 msgid "Include a hyperlink to the resource in this WIKINDX:"
-msgstr ""
+msgstr "Inclure un lien vers la fiche de la référence du site"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:137
 msgid "Endnote file type"
@@ -489,6 +522,10 @@ msgid ""
 "\t\t\t\tshould be separated by a space. Per NCBI policy, a maximum of 100 "
 "search results can be obtained."
 msgstr ""
+"Rechercher dans PubMed : veuillez indiquer un ou plusieurs champs - si le "
+"champ Id est rempli, un seul résultat sera renvoyé s'il est trouvé. Plusieurs "
+"éléments dans un champ doivent être séparés par un espace. Conformément à la "
+"politique NCBI, un maximum de 100 résultats de recherche peuvent être obtenus."
 
 #: components/plugins/importexportbib/importexportbibmessages.php:143
 msgid "PubMed imports require Bibutils to be installed."
@@ -556,7 +593,7 @@ msgstr "Importer le fichier PubMed directement dans Wikindx"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:159
 msgid "Please enter an integer up to 100 for Max. Results"
-msgstr ""
+msgstr "Veuillez entrer un entier jusqu'à 100 pour le nb. max. de résultats"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:160
 msgid "Please enter one or more fields"

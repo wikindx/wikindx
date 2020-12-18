@@ -9427,9 +9427,6 @@ msgstr "Ключевое слово успешно отредактирован�
 msgid "Successfully approved resource(s)"
 msgstr "Источник успешно одобрен"
 
-#~ msgid "Menu Location"
-#~ msgstr "Положение меню"
-
 #~ msgid "Container Location"
 #~ msgstr "Местоположение контейнера"
 
@@ -9598,8 +9595,8 @@ msgstr "Источник успешно одобрен"
 #~ msgid "There is no news available to view"
 #~ msgstr "Нет доступных для просмотра новостей"
 
-#~ msgid "Fix UTF8:"
-#~ msgstr "Починить UTF8:"
+#~ msgid "Menu Location"
+#~ msgstr "Положение меню"
 
 #~ msgid "Upgrade the database"
 #~ msgstr "Обновить БД"
@@ -9646,3 +9643,6 @@ msgstr "Источник успешно одобрен"
 
 #~ msgid "Configurable Inline Plugins"
 #~ msgstr "Настраиваемые встроенные плагины"
+
+#~ msgid "Fix UTF8:"
+#~ msgstr "Починить UTF8:"

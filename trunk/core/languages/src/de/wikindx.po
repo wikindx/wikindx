@@ -9763,9 +9763,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#~ msgid "My Bibliographies"
-#~ msgstr "Meine Bibliographien"
-
 #~ msgid ""
 #~ "The upgrade process may take some time depending upon a number of factors. "
 #~ "If your database is large or your server is slow, it is advised to "
@@ -10012,8 +10009,8 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ msgid "There is no news available to view"
 #~ msgstr "Es gibt keine Nachrichten"
 
-#~ msgid "Enabled Templates"
-#~ msgstr "Aktivierte Vorlagen"
+#~ msgid "My Bibliographies"
+#~ msgstr "Meine Bibliographien"
 
 #~ msgid "Disabled Languages"
 #~ msgstr "Deaktivierte Sprachen"
@@ -10031,3 +10028,6 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 
 #~ msgid "Disabled Plugins"
 #~ msgstr "Plugins deaktivieren"
+
+#~ msgid "Enabled Templates"
+#~ msgstr "Aktivierte Vorlagen"

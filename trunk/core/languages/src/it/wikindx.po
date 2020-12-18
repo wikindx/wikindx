@@ -9681,9 +9681,6 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
-#~ msgid "Menu Location"
-#~ msgstr "Posizione Menu"
-
 #~ msgid "Container Location"
 #~ msgstr "Posizione del Contenitore"
 
@@ -9902,8 +9899,8 @@ msgstr "Risorsa approvata con successo"
 #~ msgid "There is no news available to view"
 #~ msgstr "Non ci sono news disponibili da visualizzare"
 
-#~ msgid "Enabled Languages"
-#~ msgstr "Lingue Abilitate"
+#~ msgid "Menu Location"
+#~ msgstr "Posizione Menu"
 
 #~ msgid "Unable to update database with update/updateMySQL.txt."
 #~ msgstr "Impossibile aggiornare il database con update/updateMySQL.txt."
@@ -9921,3 +9918,6 @@ msgstr "Risorsa approvata con successo"
 
 #~ msgid "Configurable Inline Plugins"
 #~ msgstr "Plugins Inline configurabili"
+
+#~ msgid "Enabled Languages"
+#~ msgstr "Lingue Abilitate"

@@ -9685,9 +9685,6 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
-#~ msgid "Enabled Styles"
-#~ msgstr "Stili Abilitati"
-
 #~ msgid "Logon as superAdmin:"
 #~ msgstr "Accesso come superAmministratore:"
 
@@ -9906,10 +9903,8 @@ msgstr "Risorsa approvata con successo"
 #~ msgid "Enabled Plugins"
 #~ msgstr "Plugins Abilitati"
 
-#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
-#~ msgstr ""
-#~ "Metti in quarantena le nuove risorse dalla vista pubblica fino "
-#~ "all'approvazione di un ADMIN"
+#~ msgid "Enabled Styles"
+#~ msgstr "Stili Abilitati"
 
 #~ msgid "Upgrade the database"
 #~ msgstr "Aggiornare il database"
@@ -9922,3 +9917,8 @@ msgstr "Risorsa approvata con successo"
 
 #~ msgid "Remove users from this group"
 #~ msgstr "Rimuovi utenti da questo gruppo"
+
+#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
+#~ msgstr ""
+#~ "Metti in quarantena le nuove risorse dalla vista pubblica fino "
+#~ "all'approvazione di un ADMIN"

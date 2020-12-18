@@ -48,7 +48,7 @@ class adminstyle_help
         
         $list = HTML\li(dgettext($domain, "The character '|' separates fields from one another."));
         $list .= HTML\li(dgettext($domain, "If a field does not exist or is blank in the database, none of the definition for that field is printed."));
-        $list .= HTML\li(dgettext($domain, "<strong>Field names are case-sensitive</strong>&nbsp;and need not all be used."));
+        $list .= HTML\li(dgettext($domain, "<strong>Field names are case-sensitive</strong> and need not all be used."));
         $list .= HTML\li(dgettext($domain, "Within a field, you can add any punctuation characters or phrases you like before and after the field name."));
         $list .= HTML\li(dgettext($domain, "Any word that you wish to be printed and that is the same (even a partial word) as a field name should be enclosed in backticks '`'."));
         $list .= HTML\li(dgettext($domain, "For creator lists (editors, revisers, directors etc.) and pages, alternative singular and plural text can be specified with '^' (e.g. |^p.^pp.^pages| would print the field 'pages' preceded by 'pp.' if there were multiple pages or 'p.' if not)."));

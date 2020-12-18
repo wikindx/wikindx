@@ -9767,11 +9767,6 @@ msgstr "Schlagwort wurde erfolgreich bearbeitet."
 msgid "Successfully approved resource(s)"
 msgstr "Ressource wurde erfolgreich freigegeben."
 
-#, fuzzy
-#~| msgid "My Wikindx"
-#~ msgid "My Wikindxx"
-#~ msgstr "Mein Wikindx"
-
 #~ msgid ""
 #~ "If you have languages and styles that are in your WIKINDX installation "
 #~ "folders but they do not show here, then they are not compatible with this "
@@ -10013,8 +10008,10 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 #~ "Sie sind nicht als Superadmin angemeldet: bitten Sie ###, die "
 #~ "Aktualisierung des Datenbankschemas vorzunehmen."
 
-#~ msgid "Enabled Styles"
-#~ msgstr "Aktivierte Stile"
+#, fuzzy
+#~| msgid "My Wikindx"
+#~ msgid "My Wikindxx"
+#~ msgstr "Mein Wikindx"
 
 #~ msgid "Disabled Plugins"
 #~ msgstr "Plugins deaktivieren"
@@ -10032,3 +10029,6 @@ msgstr "Ressource wurde erfolgreich freigegeben."
 
 #~ msgid "Disabled Styles"
 #~ msgstr "Deaktivierte Stile"
+
+#~ msgid "Enabled Styles"
+#~ msgstr "Aktivierte Stile"

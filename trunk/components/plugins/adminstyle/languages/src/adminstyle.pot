@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: adminstyle\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-05-24 21:54+0200\n"
+"POT-Creation-Date: 2020-12-18 14:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -878,7 +878,7 @@ msgstr ""
 
 #: components/plugins/adminstyle/help.php:51
 msgid ""
-"<strong>Field names are case-sensitive</strong>&nbsp;and need not all be used."
+"<strong>Field names are case-sensitive</strong> and need not all be used."
 msgstr ""
 
 #: components/plugins/adminstyle/help.php:52

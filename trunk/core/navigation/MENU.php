@@ -1077,8 +1077,19 @@ class MENU
             {
                 if (is_array($subLink))
                 {
-                    if ($this->reduceMenuLevel == 1)
-                    { // remove one submenu level
+                    // Ignore empty sub-menu
+                    if (count($subLink) == 0)
+                    {
+                        continue;
+                    }
+                    // Ignore empty sub-menu
+                    elseif (count($subLink) == 1 && $link[array_key_first($subLink)] == FALSE)
+                    {
+                        continue;
+                    }
+                    elseif ($this->reduceMenuLevel == 1)
+                    {
+                        // remove one submenu level
                         $index = 0;
                         foreach ($subLink as $subText1 => $subLink1)
                         {
@@ -1096,7 +1107,8 @@ class MENU
                         }
                     }
                     else
-                    { // keep all submenus
+                    {
+                        // keep all submenus
                         $this->doSubSubMenu($subLink, $itemSub);
                         $this->smartyMenu->addMenuItem($sub, $itemSub);
                     }
@@ -1137,7 +1149,17 @@ class MENU
             {
                 if (is_array($link))
                 {
-                    if ($this->reduceMenuLevel == 2)
+                    // Ignore empty sub-menu
+                    if (count($link) == 0)
+                    {
+                        continue;
+                    }
+                    // Ignore empty sub-menu
+                    elseif (count($link) == 1 && $link[array_key_first($link)] == FALSE)
+                    {
+                        continue;
+                    }
+                    elseif ($this->reduceMenuLevel == 2)
                     { // remove all submenu levels
                         $index = 0;
                         $subArray = [];

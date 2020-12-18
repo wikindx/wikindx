@@ -53,50 +53,50 @@ msgstr "Nom long"
 #.
 #: components/plugins/adminstyle/adminstylemessages.php:36
 msgid "Successfully edited style"
-msgstr ""
+msgstr "Style modifié avec succès"
 
 #: components/plugins/adminstyle/adminstylemessages.php:37
 msgid "Successfully added style"
-msgstr ""
+msgstr "Style ajouté avec succès"
 
 #. *
 #. * Styles
 #.
 #: components/plugins/adminstyle/adminstylemessages.php:41
 msgid "Primary creator delimiters"
-msgstr ""
+msgstr "Séparateurs du premier auteur"
 
 #: components/plugins/adminstyle/adminstylemessages.php:42
 msgid "Other creator delimiters"
-msgstr ""
+msgstr "Séparateurs des autres auteurs"
 
 #: components/plugins/adminstyle/adminstylemessages.php:43
 msgid "If only two creators"
-msgstr ""
+msgstr "Si 2 auteurs seulement"
 
 #: components/plugins/adminstyle/adminstylemessages.php:44
 msgid "between"
-msgstr ""
+msgstr "entre"
 
 #: components/plugins/adminstyle/adminstylemessages.php:45
 msgid "before last"
-msgstr ""
+msgstr "avant dernier"
 
 #: components/plugins/adminstyle/adminstylemessages.php:46
 msgid "Between first two creators"
-msgstr ""
+msgstr "Entre les deux premiers auteurs"
 
 #: components/plugins/adminstyle/adminstylemessages.php:47
 msgid "Between following creators"
-msgstr ""
+msgstr "Entre les auteurs suivants"
 
 #: components/plugins/adminstyle/adminstylemessages.php:48
 msgid "Primary creator style"
-msgstr ""
+msgstr "Style du premier auteur"
 
 #: components/plugins/adminstyle/adminstylemessages.php:49
 msgid "Other creator styles"
-msgstr ""
+msgstr "Style des autres auteurs"
 
 #: components/plugins/adminstyle/adminstylemessages.php:50
 msgid "First"
@@ -124,11 +124,11 @@ msgstr "Initiale"
 
 #: components/plugins/adminstyle/adminstylemessages.php:56
 msgid "Primary creator list abbreviation"
-msgstr ""
+msgstr "Abréviation de la liste : premier auteur"
 
 #: components/plugins/adminstyle/adminstylemessages.php:57
 msgid "Other creator list abbreviation"
-msgstr ""
+msgstr "Abréviation de la liste : autres auteurs"
 
 #: components/plugins/adminstyle/adminstylemessages.php:58
 msgid "Full list"
@@ -208,16 +208,18 @@ msgstr "Format de page"
 #. Length of film, broadcast etc.
 #: components/plugins/adminstyle/adminstylemessages.php:80
 msgid "Running time format"
-msgstr ""
+msgstr "Format des durées"
 
 #. When displaying a book that has no author but has an editor, do we put the editor in the position occupied by the author?
 #: components/plugins/adminstyle/adminstylemessages.php:82
 msgid "Editor switch"
-msgstr ""
+msgstr "Substitution auteur / éditeur"
 
 #: components/plugins/adminstyle/adminstylemessages.php:83
 msgid "For books with no author but an editor, put editor in author position"
 msgstr ""
+"Pour les livres sans auteur mais avec un éditeur, mettre l'éditeur en "
+"position d'auteur"
 
 #: components/plugins/adminstyle/adminstylemessages.php:84
 msgid "Yes"
@@ -229,7 +231,7 @@ msgstr "Non"
 
 #: components/plugins/adminstyle/adminstylemessages.php:86
 msgid "If 'Yes', replace editor field in style definitions with"
-msgstr ""
+msgstr "Si 'Oui', remplace le champ éditeur dans les définitions de style par"
 
 #. Uppercase creator names?
 #: components/plugins/adminstyle/adminstylemessages.php:88
@@ -239,24 +241,24 @@ msgstr "Tous les noms en majuscules"
 #. For repeated creator names in next bibliographic item
 #: components/plugins/adminstyle/adminstylemessages.php:90
 msgid "For works immediately following by the same creators"
-msgstr ""
+msgstr "Pour les œuvres immédiatement suivies par les mêmes auteurs"
 
 #: components/plugins/adminstyle/adminstylemessages.php:91
 msgid "Print the creator list"
-msgstr ""
+msgstr "Affiche la liste des auteurs"
 
 #: components/plugins/adminstyle/adminstylemessages.php:92
 msgid "Do not print the creator list"
-msgstr ""
+msgstr "Ne pas afficher la liste des auteurs"
 
 #: components/plugins/adminstyle/adminstylemessages.php:93
 msgid "Replace creator list with text below"
-msgstr ""
+msgstr "Remplace la liste d'auteurs par le texte si dessous"
 
 #. Fallback formatting style when a specific resource type has none defined
 #: components/plugins/adminstyle/adminstylemessages.php:95
 msgid "Fallback style"
-msgstr ""
+msgstr "Style par défaut"
 
 #: components/plugins/adminstyle/adminstylemessages.php:96
 msgid "Bibliography Formatting"
@@ -269,18 +271,22 @@ msgstr "Italique"
 #. For user specific month naming
 #: components/plugins/adminstyle/adminstylemessages.php:99
 msgid "Use month names defined below"
-msgstr ""
+msgstr "Utiliser les noms de mois définis ci-dessous"
 
 #: components/plugins/adminstyle/adminstylemessages.php:100
 msgid ""
 "User-defined month names (all fields must be completed if selected above)"
 msgstr ""
+"Mois personnalisées (tous les champs sont obligatoires si vous avez activé la "
+"personnalisation)"
 
 #: components/plugins/adminstyle/adminstylemessages.php:101
 msgid ""
 "User-defined seasons (all fields must be completed if month format above is "
 "set to user-defined)"
 msgstr ""
+"Saisons personnalisées (tous les champs sont obligatoires si vous avez activé "
+"la personnalisation)"
 
 #. Date ranges for e.g. conferences
 #: components/plugins/adminstyle/adminstylemessages.php:103
@@ -289,41 +295,41 @@ msgstr "Intervalle de date"
 
 #: components/plugins/adminstyle/adminstylemessages.php:104
 msgid "Delimiter between start and end dates if day and month given"
-msgstr ""
+msgstr "Séparateur de dates si le jour et le mois sont précisés"
 
 #: components/plugins/adminstyle/adminstylemessages.php:105
 msgid "Delimiter between start and end dates if month only given"
-msgstr ""
+msgstr "Séparateur de mois si le dates ne comporte que la partie mois"
 
 #: components/plugins/adminstyle/adminstylemessages.php:106
 msgid "If start and end months are equal"
-msgstr ""
+msgstr "Si les mois de début et de fin son identique"
 
 #: components/plugins/adminstyle/adminstylemessages.php:107
 msgid "Print both months"
-msgstr ""
+msgstr "Afficher les deux mois"
 
 #: components/plugins/adminstyle/adminstylemessages.php:108
 msgid "Print start month only"
-msgstr ""
+msgstr "Afficher seulement le mois de départ"
 
 #. Different puncutation may be required if a month is given with no day.
 #: components/plugins/adminstyle/adminstylemessages.php:110
 msgid "If a date has a month but no day"
-msgstr ""
+msgstr "Si une date a un mois mais pas de jour"
 
 #: components/plugins/adminstyle/adminstylemessages.php:111
 msgid "Use style definition unchanged"
-msgstr ""
+msgstr "Utiliser la définition de style inchangée"
 
 #: components/plugins/adminstyle/adminstylemessages.php:112
 msgid "Replace date field in template with:"
-msgstr ""
+msgstr "Remplace le champ date dans le modèle par :"
 
 #. Don't translate 'date'
 #: components/plugins/adminstyle/adminstylemessages.php:114
 msgid "(Use 'date' as the field)"
-msgstr ""
+msgstr "(Utiliser 'date' comme champ)"
 
 #. Which language localization to use for ordinals and months.
 #: components/plugins/adminstyle/adminstylemessages.php:116
@@ -333,15 +339,15 @@ msgstr "Localisation"
 #. Re-write creator(s) portion of templates to handle styles such as DIN 1505.
 #: components/plugins/adminstyle/adminstylemessages.php:118
 msgid "Split creator lists and add strings"
-msgstr ""
+msgstr "Diviser les listes d'auteur et ajouter des chaînes"
 
 #: components/plugins/adminstyle/adminstylemessages.php:119
 msgid "Add string to first name in list"
-msgstr ""
+msgstr "Ajouter une chaîne au premier nom de la liste"
 
 #: components/plugins/adminstyle/adminstylemessages.php:120
 msgid "Add string to remaining names"
-msgstr ""
+msgstr "Ajouter une chaîne aux autres noms de la liste"
 
 #: components/plugins/adminstyle/adminstylemessages.php:121
 msgid "Before name:"
@@ -358,7 +364,7 @@ msgstr "Modèle de bibliographie"
 #. Don't translate 'pages'
 #: components/plugins/adminstyle/adminstylemessages.php:125
 msgid "(Footnote template may also use 'pages')"
-msgstr ""
+msgstr "(Le modèle de notes de bas de page peut aussi utiliser 'pages')"
 
 #. Some general help for using templates displayed in the Admin|Style page
 #: components/plugins/adminstyle/adminstylemessages.php:127
@@ -366,6 +372,8 @@ msgid ""
 "1. The three generic bibliography templates are required and will be used if "
 "a displayed resource has no bibliographic template."
 msgstr ""
+"1. Les trois modèles génériques de bibliographies ont obligatoires et seront "
+"utilisés si une référence affichée n'a pas de modèle bibliographique."
 
 #: components/plugins/adminstyle/adminstylemessages.php:128
 msgid ""
@@ -374,6 +382,11 @@ msgid ""
 "cited') for footnote styles, as well as for endnote and in-text styles, uses "
 "the bibliography template."
 msgstr ""
+"2. Les modèles de notes de bas de page ne sont requis que pour les styles qui "
+"utilisent des notes de bas de page pour les citations. Dans tous les cas, la "
+"bibliographie complète (« ouvrages cités ») pour les styles de note de bas de "
+"page, ainsi que pour les styles de note de fin et intra-texte, utilise le "
+"modèle de bibliographie."
 
 #. Don't translate 'citation'
 #: components/plugins/adminstyle/adminstylemessages.php:130
@@ -382,6 +395,9 @@ msgid ""
 "template or, if that does not exist, to the bibliography template or, if that "
 "does not exist, to the fallback style."
 msgstr ""
+"3. Pour les citations en notes de bas de page, le champ « citation » ci-"
+"dessus fait référence au modèle de note de bas de page ou, s'il n'existe pas, "
+"au modèle de bibliographie ou, s'il n'existe pas, au style de secours."
 
 #. Don't translate 'pages'
 #: components/plugins/adminstyle/adminstylemessages.php:132
@@ -390,12 +406,17 @@ msgid ""
 "article page range; in the footnote template, it refers to the specific "
 "citation page(s)."
 msgstr ""
+"4. Le champ « pages » du modèle de bibliographie fait référence à "
+"l'intervalle complète de pages de l'article ; dans le modèle de note de bas "
+"de page, il fait référence à la ou aux pages de citation spécifiques."
 
 #: components/plugins/adminstyle/adminstylemessages.php:133
 msgid ""
 "5. If you define a footnote template for a resource you must also define the "
 "bibliography template for that resource."
 msgstr ""
+"5. Si vous définissez un modèle de note de bas de page pour une référence, "
+"vous devez également définir le modèle de bibliographie pour cette référence."
 
 #: components/plugins/adminstyle/adminstylemessages.php:134
 msgid ""
@@ -403,17 +424,22 @@ msgid ""
 "may replace that field with the fields in the partial template (this allows a "
 "reordering of the initial fields)."
 msgstr ""
+"6. Si une référence ne contient pas le premier champ du modèle de "
+"bibliographie, vous pouvez remplacer ce champ par les champs du modèle "
+"partiel (cela permet une réorganisation des champs initiaux)."
 
 #: components/plugins/adminstyle/adminstylemessages.php:135
 msgid ""
 "7. In the bibliography template for Book Chapter, the field 'title' refers to "
 "the chapter number."
 msgstr ""
+"7. Dans le modèle de bibliographie « chapitre de livre », le champ « title » "
+"fait référence au numéro du chapitre."
 
 #. For template previewing, allow the use to preview by turning various fields on and off.
 #: components/plugins/adminstyle/adminstylemessages.php:137
 msgid "Preview with the following fields"
-msgstr ""
+msgstr "Aperçu avec les champs suivants"
 
 #. Characters separating title and subtitle
 #: components/plugins/adminstyle/adminstylemessages.php:139
@@ -428,7 +454,7 @@ msgstr "Modèle partiel"
 #. Use the partial template to replace all of the bibliography template.
 #: components/plugins/adminstyle/adminstylemessages.php:143
 msgid "Replace all of original template with partial template"
-msgstr ""
+msgstr "Tout remplacer du modèle d'origine par un modèle partiel"
 
 #: components/plugins/adminstyle/adminstylemessages.php:144
 msgid "Generic book-type"
@@ -481,23 +507,23 @@ msgstr "Style de fin de document"
 
 #: components/plugins/adminstyle/adminstylemessages.php:160
 msgid "Footnote creators"
-msgstr ""
+msgstr "Auteurs en notes de bas de page"
 
 #: components/plugins/adminstyle/adminstylemessages.php:161
 msgid "Creator list abbreviation"
-msgstr ""
+msgstr "Abréviation de la liste des auteurs"
 
 #: components/plugins/adminstyle/adminstylemessages.php:162
 msgid "Creator list abbreviation (subsequent appearances)"
-msgstr ""
+msgstr "Abréviation de la liste des auteurs (autres apparitions)"
 
 #: components/plugins/adminstyle/adminstylemessages.php:163
 msgid "Creator delimiters"
-msgstr ""
+msgstr "Séparateurs d'auteurs"
 
 #: components/plugins/adminstyle/adminstylemessages.php:164
 msgid "Creator style"
-msgstr ""
+msgstr "Style des auteurs"
 
 #: components/plugins/adminstyle/adminstylemessages.php:165
 msgid "Last name only"
@@ -509,16 +535,20 @@ msgid ""
 "If 'Last name only', use initials to differentiate between creators with the "
 "same surname"
 msgstr ""
+"Si \"Patronyme seulement\", utilise les initiales pour différencier les "
+"auteurs ayant le même patronyme "
 
 #. For consecutive citations by the same creator(s)
 #: components/plugins/adminstyle/adminstylemessages.php:169
 msgid ""
 "For consecutive citations by the same creator(s) use the following template:"
 msgstr ""
+"Pour les citations consécutives du (des) même(s) auteur(s), utilise le modèle "
+"suivant :"
 
 #: components/plugins/adminstyle/adminstylemessages.php:170
 msgid "and separate citations with:"
-msgstr ""
+msgstr "et séparer les citation par :"
 
 #. The template is something like '(author|, year)' that the user is asked to enter
 #: components/plugins/adminstyle/adminstylemessages.php:172
@@ -527,7 +557,7 @@ msgstr "Modèle"
 
 #: components/plugins/adminstyle/adminstylemessages.php:173
 msgid "Separate consecutive citations with"
-msgstr ""
+msgstr "Séparer les citations consécutive par"
 
 #. Formatting of years
 #: components/plugins/adminstyle/adminstylemessages.php:175
@@ -549,7 +579,7 @@ msgstr "En indice"
 
 #: components/plugins/adminstyle/adminstylemessages.php:180
 msgid "Parentheses or other characters enclosing the citation"
-msgstr ""
+msgstr "Les parenthèses et autres caractères entourant la citation"
 
 #. Ambiguous citations
 #: components/plugins/adminstyle/adminstylemessages.php:182
@@ -558,21 +588,23 @@ msgstr "Citations ambiguës"
 
 #: components/plugins/adminstyle/adminstylemessages.php:183
 msgid "Use the following template"
-msgstr ""
+msgstr "Utilise le modèle suivant"
 
 #: components/plugins/adminstyle/adminstylemessages.php:184
 msgid "Add a letter after the year"
-msgstr ""
+msgstr "Ajouter une lettre après l'année"
 
 #: components/plugins/adminstyle/adminstylemessages.php:185
 msgid "Leave citation unchanged"
-msgstr ""
+msgstr "Laisser la citation inchangée"
 
 #: components/plugins/adminstyle/adminstylemessages.php:186
 msgid ""
 "Use template below if a single citation is in the same sentence as the first "
 "creator's surname"
 msgstr ""
+"Utilise le modèle ci-dessous si une seule citation est dans la même phrase "
+"que le patronyme du premier auteur"
 
 #. This follows on from sentence above....  Split the pages from the main citation placing the main citation immediately after the creator names in the text and the pages immediately following the quote.  e.g. if the citation is in the form: Grimshaw states:  "WIKINDX is wonderful" [cite]123:25[/cite], the result will be Grimshaw (2005) states:  "WIKINDX is wonderful" (p.25) rather than Grimshaw states:  "WIKINDX is wonderful" (2005, p.25).
 #: components/plugins/adminstyle/adminstylemessages.php:188
@@ -580,6 +612,8 @@ msgid ""
 "and split the citation placing the main citation after the creator names and "
 "the page number after the quote:"
 msgstr ""
+"et diviser la citation en plaçant la citation principale après les noms "
+"d'auteur et le numéro de page après la citation :"
 
 #. For endnote-style citations
 #: components/plugins/adminstyle/adminstylemessages.php:190
@@ -595,24 +629,28 @@ msgid ""
 "Replace consecutive citations for the same resource and the same page with "
 "this template"
 msgstr ""
+"Remplace les citations consécutives de la même référence et de la même page "
+"pas le modèle"
 
 #: components/plugins/adminstyle/adminstylemessages.php:193
 msgid ""
 "Replace consecutive citations for the same resource but a different page with "
 "this template"
 msgstr ""
+"Remplace les citations consécutives de la même référence et mais de page "
+"différente pas le modèle"
 
 #: components/plugins/adminstyle/adminstylemessages.php:194
 msgid "Replace previously cited resources with this template"
-msgstr ""
+msgstr "Remplace les références précédemment citées par le modèle"
 
 #: components/plugins/adminstyle/adminstylemessages.php:195
 msgid "Format of the citation in the text"
-msgstr ""
+msgstr "Format de la citation intra-texte"
 
 #: components/plugins/adminstyle/adminstylemessages.php:196
 msgid "Format of the citation in the endnotes"
-msgstr ""
+msgstr "Format de la citation en notes de fin"
 
 #: components/plugins/adminstyle/adminstylemessages.php:197
 msgid "Endnote/Footnote"
@@ -624,7 +662,7 @@ msgstr "Notes de fin : incrémentation"
 
 #: components/plugins/adminstyle/adminstylemessages.php:199
 msgid "Endnotes: same ID for same resource"
-msgstr ""
+msgstr "Notes de fin : même id pour la même référence"
 
 #: components/plugins/adminstyle/adminstylemessages.php:200
 msgid "Footnotes: incrementing"
@@ -640,10 +678,15 @@ msgid ""
 "(For in-text citations, endnote-style citations using the same ID number and "
 "bibliographies appended to papers using footnotes.)"
 msgstr ""
+"(Pour les citations intra-texte, les citations en note de fin utilisant le "
+"même numéro d'identification, et les bibliographies jointes aux publications "
+"en utilisant en notes de bas de page.)"
 
 #: components/plugins/adminstyle/adminstylemessages.php:204
 msgid "Use this order for endnote-style citations using the same ID number:"
 msgstr ""
+"Utilisez cet ordre pour les citations en note de fin utilisant le même numéro "
+"d'identification :"
 
 #: components/plugins/adminstyle/adminstylemessages.php:205
 msgid "1st. sort by"
@@ -669,6 +712,7 @@ msgstr "Décroissant"
 #: components/plugins/adminstyle/adminstylemessages.php:211
 msgid "For in-text citations, replace the citation template with this template"
 msgstr ""
+"Pour les citations intra-texte, remplacer le modèle de citation par ce modèle"
 
 #. Text preceeding and following citations e.g. (see Grimshaw 1999; Boulanger 2004 for example): 'see' is preText and 'for example' is postText
 #: components/plugins/adminstyle/adminstylemessages.php:213
@@ -682,13 +726,15 @@ msgstr "Texte postérieur"
 #. Formatting of the id number in the endnotes for endnote-style citations
 #: components/plugins/adminstyle/adminstylemessages.php:216
 msgid "Parentheses or other characters enclosing the ID number"
-msgstr ""
+msgstr "Parenthèses et autres caractères entourant le numéro (Id number)"
 
 #. For subsequent citations from the same resource
 #: components/plugins/adminstyle/adminstylemessages.php:218
 msgid ""
 "For subsequent citations from the same resource use the following template:"
 msgstr ""
+"Pour les citations suivantes de la même référence, utiliser le modèle "
+"suivant :"
 
 #. This follows on from the text in 'subsequentCreator'
 #: components/plugins/adminstyle/adminstylemessages.php:220
@@ -696,11 +742,13 @@ msgid ""
 "only if the sentence containing the citation has the creator surname, title "
 "or shortTitle in it:"
 msgstr ""
+"seulement si la phrase contenant la citation a un surnom d'auteur, un titre "
+"ou un titre court dans :"
 
 #. If no year for in-text citations, replace year field
 #: components/plugins/adminstyle/adminstylemessages.php:222
 msgid "If no year, replace year field with the following"
-msgstr ""
+msgstr "Si l'année est absente, remplacer le champ année par ce qui suit"
 
 #. When compiling the appended bibliography for in-text citations, certain resources (e.g. APA personal communication) are not added.
 #: components/plugins/adminstyle/adminstylemessages.php:224
@@ -716,6 +764,12 @@ msgid ""
 "section. If the 'citation' field is used, it should be by itself and it "
 "refers to the bibliographic/footnote templates below."
 msgstr ""
+"Les champs sont formatés comme défini dans la mise en forme des citations "
+"intra-texte ci-dessus, à moins d'utiliser des notes de bas de page, auquel "
+"cas le champ 'creator' est défini ci-dessous et le format du champ 'pages' "
+"est défini dans le modèle de note de bas de page dans la section "
+"bibliographie. Si le champ 'citation' est utilisé, il doit l'être seul et il "
+"renvoie aux modèles bibliographiques / de note de bas de page ci-dessous."
 
 #: components/plugins/adminstyle/adminstylemessages.php:227
 msgid "Footnote template"
@@ -724,7 +778,7 @@ msgstr "Modèle de note de bas de page"
 #. Set the range of text within which the subsequent creator template (for in-text citations) is used
 #: components/plugins/adminstyle/adminstylemessages.php:229
 msgid "Range within which subsequent citations are searched for"
-msgstr ""
+msgstr "Plage dans laquelle les citations suivantes sont recherchées"
 
 #: components/plugins/adminstyle/adminstylemessages.php:230
 msgid "Entire text"
@@ -743,6 +797,8 @@ msgid ""
 "Remove title and shortTitle fields from the citation if either of those "
 "fields is in the same sentence:"
 msgstr ""
+"Supprimer les champs titre et le titre court de la citation si l'un des deux "
+"est dans la même phrase :"
 
 #: components/plugins/adminstyle/adminstylemessages.php:234
 msgid "First Creator"
@@ -773,6 +829,9 @@ msgid ""
 "styles for on-the-fly formatting when displaying or exporting bibliographic "
 "lists."
 msgstr ""
+"Si vous disposez de droits d'administrateur, vous pouvez créer et modifier "
+"des styles bibliographiques pour le formatage à la volée lors de l'affichage "
+"ou de l'exportation de listes bibliographiques."
 
 #. translators: #linkSfWikindx# unchanged. This pattern is replaced by a link
 #: components/plugins/adminstyle/help.php:30
@@ -783,6 +842,11 @@ msgid ""
 "editing an existing style, the XML style file <strong>must also</strong> have "
 "the same rights."
 msgstr ""
+"Ces styles sont stockés sous forme de fichiers XML chacun dans son propre "
+"répertoire dans le répertoire components/styles/. Le répertoire <strong>doit</"
+"strong> être autorisé en écriture pour tous ou au moins le compte utilisateur "
+"du  serveur web. De plus, lors de la modification d'un style existant, le "
+"fichier de style XML  <strong>doit aussi</strong> avoir les mêmes droits."
 
 #. translators: #linkSfWikindx# unchanged. This pattern is replaced by a link
 #: components/plugins/adminstyle/help.php:33
@@ -791,6 +855,9 @@ msgid ""
 "the WIKINDX developers at #linkSfWikindx# to make them available to other "
 "users."
 msgstr ""
+"Si vous développez de nouveaux styles, nous vous encourageons vivement à "
+"contacter les développeurs de WIKINDX à #linkSfWikindx# pour les mettre à la "
+"disposition des autres utilisateurs."
 
 #: components/plugins/adminstyle/help.php:34
 msgid ""
@@ -798,6 +865,9 @@ msgid ""
 "style. To remove a style from the list available to your users, disable that "
 "style in the Admin|Components menu."
 msgstr ""
+"Vous pouvez créer un nouveau style en dupliquant un style existant. Pour "
+"supprimer un style de la liste disponible pour vos utilisateurs, désactivez "
+"ce style dans le menu Admin | Composants."
 
 #: components/plugins/adminstyle/help.php:35
 msgid ""
@@ -811,6 +881,11 @@ msgid ""
 "from another browser window then you are unlikely to see changes when you "
 "refresh your bibliographic list."
 msgstr ""
+"Veuillez noter que pour modifier un style, vous devez le faire à partir de la "
+"même fenêtre de navigateur que vous utilisez pour afficher une liste "
+"bibliographique car le fichier de définition des styles est intégralement "
+"réécrit à l'enregistrement puis rechargée. Une variable de session PHP "
+"prévient la multiédition."
 
 #: components/plugins/adminstyle/help.php:39
 msgid ""
@@ -823,6 +898,15 @@ msgid ""
 "alphanumeric characters only). The 'Long Name' is the description of the "
 "style that is displayed to users."
 msgstr ""
+"Chaque style a un ensemble d'options qui définissent le style des titres, "
+"comment afficher les nombres et les dates, etc., puis une définition de style "
+"distincte pour chaque type de référence que WIKINDX gère. Le \"nom court\" "
+"est utilisé à la fois comme nom de dossier et de fichier et pour cette "
+"raison, il ne doit pas seulement être un nom unique dans components/styles/, "
+"mais doit également ne pas comporter d'espaces ou tout autre caractères "
+"pouvant entraîner une confusion avec votre système d'exploitation (c'est-à-"
+"dire des caractères alphanumériques uniquement). Le 'nom long' est la "
+"description du style qui est affiché aux utilisateurs."
 
 #: components/plugins/adminstyle/help.php:40
 msgid ""
@@ -833,6 +917,14 @@ msgid ""
 "note that if the switch occurs, the editor(s) formatting will be inherited "
 "from the global settings you supplied for the author. See the examples below."
 msgstr ""
+"Le \"Substitution auteur / éditeur\" requiert une attention particulière. "
+"Certains styles bibliographiques exigent que les livres et chapitres de "
+"livres, où il existe un éditeur mais pas d'auteur, la position occupée par "
+"l'auteur soit prise par l'éditeur. Si vous sélectionnez \"Oui\", vous devez "
+"alors fournir un champ d'éditeur de remplacement.  Notez que si la "
+"substitution se produit, la mise en forme des éditeurs sera héritée des "
+"paramètres généraux que vous avez fournis pour l'auteur. Voir les exemples ci-"
+"dessous."
 
 #: components/plugins/adminstyle/help.php:41
 msgid ""
@@ -847,6 +939,17 @@ msgid ""
 "is strange for a particular resource type then you should explicitly define a "
 "style definition for that type."
 msgstr ""
+"Les trois définitions de style génériques sont obligatoires et sont utilisées "
+"pour afficher tout type de référence pour lequel il n'existe pas encore de "
+"définition de style. Cela vous permet de créer vos définitions de style petit "
+"à petit. En outre, certains styles bibliographiques ne fournissent pas de "
+"règles de mise en forme pour des types particuliers de référence, auquel cas "
+"les styles génériques fourniront une certaine mise en forme pour ces "
+"références conformément aux directives générales pour ce style "
+"bibliographique. Chaque référence pour laquelle il n'y a pas de définition de "
+"style reviendra au style générique choisi. Les styles génériques font de leur "
+"mieux, mais si le résultat est étrange pour un type de référence particulier, "
+"vous devriez définir explicitement un style pour ce type."
 
 #: components/plugins/adminstyle/help.php:42
 msgid ""
@@ -856,6 +959,12 @@ msgid ""
 "database fields that have been populated for each resource in the WIKINDX, "
 "the more likely it is that the formatting will be correct."
 msgstr ""
+"Chaque définition de style a une liste de champs disponibles répertoriés à "
+"droite de la zone de saisie. Ces champs sont <strong>sensibles à la casse</"
+"strong> et ne doivent pas tous être utilisés. Cependant, avec certains des "
+"styles les plus ésotériques, plus il y a de champs renseignés en base de "
+"données pour chaque référence, plus il est probable que le formatage sera "
+"correct."
 
 #: components/plugins/adminstyle/help.php:46
 msgid "SYNTAX"
@@ -865,6 +974,8 @@ msgstr "SYNTAXE"
 msgid ""
 "The style definition syntax uses a number of rules and special characters:"
 msgstr ""
+"La syntaxe de la définition de style utilise un certain nombre de règles et "
+"de caractères spéciaux :"
 
 #: components/plugins/adminstyle/help.php:49
 msgid "The character '|' separates fields from one another."
@@ -875,23 +986,31 @@ msgid ""
 "If a field does not exist or is blank in the database, none of the definition "
 "for that field is printed."
 msgstr ""
+"Si un champ n'existe pas ou est vide dans la base de données, aucune des "
+"définitions de ce champ n'est affichée."
 
 #: components/plugins/adminstyle/help.php:51
 msgid ""
 "<strong>Field names are case-sensitive</strong> and need not all be used."
 msgstr ""
+"<strong>Les noms de champ sont sensible à la casse</strong> et n'ont pas "
+"besoin d'être tous utilisés."
 
 #: components/plugins/adminstyle/help.php:52
 msgid ""
 "Within a field, you can add any punctuation characters or phrases you like "
 "before and after the field name."
 msgstr ""
+"Dans un champ, vous pouvez ajouter des caractères de ponctuation ou des "
+"phrases de votre choix avant et après le nom du champ."
 
 #: components/plugins/adminstyle/help.php:53
 msgid ""
 "Any word that you wish to be printed and that is the same (even a partial "
 "word) as a field name should be enclosed in backticks '`'."
 msgstr ""
+"Tout mot que vous souhaitez imprimer et qui est le même (même un mot partiel) "
+"qu'un nom de champ doit être entouré de '`' (backticks)."
 
 #: components/plugins/adminstyle/help.php:54
 msgid ""
@@ -900,6 +1019,10 @@ msgid ""
 "would print the field 'pages' preceded by 'pp.' if there were multiple pages "
 "or 'p.' if not)."
 msgstr ""
+"Pour les listes d'auteurs (éditeurs, correcteurs, directeurs, etc.) et les "
+"pages, un texte alternatif au singulier et au pluriel peut être spécifié avec "
+"'^' (par exemple |^p.^pp.^pages| afficherait le champ 'pages' précédé de "
+"'pp.' s'il y avait plusieurs pages ou 'p.' autrement)."
 
 #: components/plugins/adminstyle/help.php:55
 msgid ""
@@ -907,6 +1030,10 @@ msgid ""
 "code>, <code>[sup]..[/sup]</code> and <code>[sub]..[/sub]</code> can be used "
 "to specify underline, italics, bold, superscript and subscript."
 msgstr ""
+"BBCode <code>[u]..[/u]</code>, <code>[i]..[/i]</code>, <code>[b]..[/b]</"
+"code>, <code>[sup]..[/sup]</code> and <code>[sub]..[/sub]</code> peuvent être "
+"utilisés pour spécifier le soulignement, l'italique, le gras, l'exposant et "
+"l'indice."
 
 #: components/plugins/adminstyle/help.php:56
 msgid ""
@@ -923,6 +1050,18 @@ msgid ""
 "<code>'%: %. %'</code> will print <code>': '</code> if the target field "
 "exists else <code>'. '</code> if it does not."
 msgstr ""
+"Le caractère '%' entourant un texte ou une ponctuation <em>avant</em> le nom "
+"d'un champ déclare que le texte ou la ponctuation seront affichés si le champ "
+"<em>précédent</em> existe ou s'il n'est pas vide dans la base de données. Le "
+"caractère <code>'%'</code> entourant un texte ou une ponctuation  <em>après</"
+"em> le nom d'un champ déclare que le texte ou la ponctuation seront affichés "
+"si le champ <em>suivant</em> existe ou s'il n'est pas vide dans la base de "
+"données. La seconde paire est optionnelle et dans ce cas la construction se "
+"lit <code>'si le champ cible existe, afficher ceci, sinon, si le champ cible "
+"n'existe pas, afficher cela'</code>.  Par exemple, <code>'%: %'</code> "
+"affichera <code>': '</code> si le champ cible existe ou rien s'il n'existe "
+"pas. Alors que <code>'%: %. %'</code> affichera <code>': '</code> si le champ "
+"cible existe ou <code>'. '</code> s'il n'existe pas."
 
 #: components/plugins/adminstyle/help.php:57
 msgid ""
@@ -932,6 +1071,12 @@ msgid ""
 "for enclosing groups of fields in brackets where <em>at least</em> one of the "
 "enclosed fields exists or is not blank in the database."
 msgstr ""
+"Les caractères dans des champs qui n'incluent pas de nom de champ doivent "
+"être associés à un autre ensemble et englober ensemble un groupe de champs. "
+"Si ces champs spéciaux ne sont pas associés, des résultats inattendus peuvent "
+"se produire. Ceux-ci sont destinés à être utilisés pour inclure des groupes "
+"de champs entre crochets où <em>au moins</em> l'un des champs inclus existe "
+"ou n'est pas vide dans la base de données."
 
 #: components/plugins/adminstyle/help.php:58
 msgid ""
@@ -945,12 +1090,25 @@ msgid ""
 "<em>only</em> if the <em>following</em> field exists (else nothing will be "
 "printed).</p>"
 msgstr ""
+"<p>Les deux règles ci-dessous son combinables pour définir des styles "
+"bibliographiques particulièrement complexes  (voir l'exemple suivant). La "
+"paire </p>\n"
+"\t\t<p><code>|%, %. %|xxxxx|xxxxx|%: %; %|</code></p>\n"
+"\t\t<p>définit que si au moins un des champ considérés existe, alors la "
+"virgule et les deux points seront affichés ; Si un des champs considérés "
+"n'existe pas, alors un point sera affiché <em>seulement</em> si le "
+"champ<em>précédent</em> existe (sinon rien ne sera affiché) et le point "
+"virgule sera affiché <em>seulement</em> si le champ <em>suivant</em> existe "
+"(sinon rien ne sera afficher).</p>"
 
 #: components/plugins/adminstyle/help.php:61
 msgid ""
 "If the final set of characters in the style definition is '|.' for example, "
 "the '.' is taken as the ultimate punctuation printed at the very end."
 msgstr ""
+"Si le dernier jeu de caractères de la définition de style est «|». Par "
+"exemple, le \".\" est considérée comme la ponctuation finale imprimée à la "
+"toute fin."
 
 #: components/plugins/adminstyle/help.php:62
 msgid ""
@@ -963,10 +1121,18 @@ msgid ""
 "\t\t<p>prints the ISBN field if edition exists otherwise it prints nothing.</"
 "p>"
 msgstr ""
+"<p>les champs peuvent être affichés ou nonen fonction de l'existence des "
+"champs adjacents. Par exemple,</p>\n"
+"\t\t<p><code>creator. |$shortTitle. $title. $|publicationYear.</code></p>\n"
+"\t\t<p>affichera le champ shortTitle si l'auteur a été renseigné sinon if "
+"affichera le champ title.</p>\n"
+"\t\t<p><code>creator. |title. |#ISBN. ##|edition.</code></p>\n"
+"\t\t<p>affiche le champ ISBN si l'édition existe autre, il n'affiche rien.</p>"
 
 #: components/plugins/adminstyle/help.php:67
 msgid "Newlines may be added with the special string NEWLINE."
 msgstr ""
+"Les nouvelles lignes peuvent être ajoutées avec le code spécial NEWLINE."
 
 #: components/plugins/adminstyle/help.php:70
 msgid ""
@@ -975,6 +1141,10 @@ msgid ""
 "following field. This is especially the case with finite punctuation such as "
 "full stops."
 msgstr ""
+"Astuce : dans la plupart des cas, il est plus facile d'attacher la "
+"ponctuation et l'espacement à la fin du champ précédent plutôt qu'au début du "
+"champ suivant. C'est particulièrement le cas avec la ponctuation finale telle "
+"que les points."
 
 #: components/plugins/adminstyle/help.php:74
 msgid "EXAMPLES"
@@ -992,6 +1162,8 @@ msgid ""
 "<em>and, if there were no publisher location or edition entered for that "
 "resource and only one page number given, it would produce:</em>"
 msgstr ""
+"<em>et, s'il n'y avait pas de lieu d'édition ou d'édition pour cette "
+"référence et qu'un seul numéro de page était donné, cela produirait :</em>"
 
 #: components/plugins/adminstyle/help.php:84
 msgid "<em>might produce:</em></code>"
@@ -1002,29 +1174,39 @@ msgid ""
 "<em>and, if there were no publisher location or publication year entered for "
 "that resource, it would produce:</em><br>"
 msgstr ""
+"<em>et, s'il n'y avait pas de lieu d'édition ou d'année de publication pour "
+"cette référence, il produirait :</em><br>"
 
 #: components/plugins/adminstyle/help.php:94
 msgid ""
 "<em>and, if there were no author entered for that resource and the "
 "replacement editor field were 'editor ^ed.^eds.^ ', it would produce:</em>"
 msgstr ""
+"<em>et, s'il n'y avait aucun auteur indiqué pour cette référence et que le "
+"champ remplaçant l'éditeur était 'editor ^ed. ^eds.^', cela produirait :</em>"
 
 #: components/plugins/adminstyle/help.php:99
 msgid ""
 "Consider the following (IEEE-type) generic style definition and what it does "
 "with a resource type lacking certain fields:"
 msgstr ""
+"Voyez la définition de style générique suivante (type IEEE) et ce qu'elle "
+"fait avec un type de référence en l'absence de certains champs :"
 
 #: components/plugins/adminstyle/help.php:103
 msgid ""
 "<em>and, when applied to a resource type with editor and edition fields:</em>"
 msgstr ""
+"<em>et, lorsqu'il est appliqué à un type de référence avec des champs éditeur "
+"et édition :</em>"
 
 #: components/plugins/adminstyle/help.php:106
 msgid ""
 "Clearly there is a problem here, notably at the end of the resource title. "
 "The solution is to use rule no. 10 above:"
 msgstr ""
+"Il y a clairement un problème ici, notamment à la fin du titre de la "
+"référence. La solution consiste à utiliser la règle 10 ci-dessus :"
 
 #: components/plugins/adminstyle/help.php:110
 msgid "<em>and:</em>"
@@ -1032,7 +1214,7 @@ msgstr "<em>et :</em>"
 
 #: components/plugins/adminstyle/help.php:112
 msgid "Bibliographic styles requiring this complexity are few and far between."
-msgstr ""
+msgstr "Les styles bibliographiques exigeant cette complexité sont rares."
 
 #: components/plugins/adminstyle/help.php:116
 msgid ""
@@ -1040,6 +1222,9 @@ msgid ""
 "characters, then, despite having set the global setting for the edition "
 "format to ordinal (3rd. etc.), no conversion will take place."
 msgstr ""
+"Si la valeur saisie pour l'édition d'une référence contient des caractères "
+"non numériques, alors, bien que le paramètre global du format d'édition soit "
+"défini sur ordinal (3e, etc.), aucune conversion n'aura lieu."
 
 #: components/plugins/adminstyle/help.php:117
 msgid ""
@@ -1047,3 +1232,6 @@ msgid ""
 "of the title depends on the global settings provided for your bibliographic "
 "style."
 msgstr ""
+"La mise en forme des noms, des numéros d'édition et de page et la "
+"capitalisation du titre dépendent des paramètres généraux fournis pour votre "
+"style bibliographique."

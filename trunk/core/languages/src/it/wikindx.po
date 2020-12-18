@@ -9685,9 +9685,6 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
-#~ msgid "Disabled Templates"
-#~ msgstr "Templates Disabilitati"
-
 #~ msgid "Configurable Inline Plugins"
 #~ msgstr "Plugins Inline configurabili"
 
@@ -9906,10 +9903,8 @@ msgstr "Risorsa approvata con successo"
 #~ msgid "Enabled Templates"
 #~ msgstr "Templates Abilitati"
 
-#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
-#~ msgstr ""
-#~ "Metti in quarantena le nuove risorse dalla vista pubblica fino "
-#~ "all'approvazione di un ADMIN"
+#~ msgid "Disabled Templates"
+#~ msgstr "Templates Disabilitati"
 
 #~ msgid "Upgrade the database"
 #~ msgstr "Aggiornare il database"
@@ -9922,3 +9917,8 @@ msgstr "Risorsa approvata con successo"
 
 #~ msgid "Remove users from this group"
 #~ msgstr "Rimuovi utenti da questo gruppo"
+
+#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
+#~ msgstr ""
+#~ "Metti in quarantena le nuove risorse dalla vista pubblica fino "
+#~ "all'approvazione di un ADMIN"

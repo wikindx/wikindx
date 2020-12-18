@@ -83,12 +83,21 @@ class AUTHORIZE
             {
                 $this->readOnly();
             }
+            // User requesting logout - clear previous sessions
+            elseif ($this->vars["action"] == 'logout')
+            {
+                // First delete any pre-existing session in case this user has been logging on and off as different users --
+                // keep template and language etc.
+                $this->logout(); // login prompt
+                FACTORY_CLOSENOMENU::getInstance();
+            }
             // User logging in from readOnly mode
             elseif ($this->vars["action"] == 'initLogon')
             {
                 // First delete any pre-existing session in case this user has been logging on and off as different users --
                 // keep template and language etc.
                 $this->initLogon(); // login prompt
+                FACTORY_CLOSENOMENU::getInstance();
             }
             if (
                 array_key_exists('method', $this->vars) &&
@@ -200,6 +209,7 @@ class AUTHORIZE
                 return TRUE;
             }
             $this->initLogon(); // login prompt
+            FACTORY_CLOSENOMENU::getInstance();
         }
         // FALSE indicates that index.php will print the front page of WIKINDX
         return FALSE;
@@ -255,8 +265,6 @@ class AUTHORIZE
         }
         $pString .= \HTML\p($links, FALSE, 'right');
         GLOBALS::addTplVar('content', $pString);
-        $this->session->setVar('destroySession', TRUE);
-        FACTORY_CLOSENOMENU::getInstance();
     }
     /**
      * Initial logon to the system.
@@ -458,6 +466,63 @@ class AUTHORIZE
             $this->session->setVar("setup_" . $key, $sessArray[$key]);
         }
         $this->session->setVar("setup_ReadOnly", TRUE);
+        header("Location: index.php");
+    }
+    /**
+     * log out user
+     *
+     * Various bits of garbage disposal, session is destroyed, cookie is deleted and user is presented with logon prompt
+     */
+    private function logout()
+    {
+        // Garbage disposal
+        // remove this session's files
+        $dir = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
+        if ($sessArray = $this->session->getVar("fileExports"))
+        {
+            foreach (\FILE\fileInDirToArray($dir) as $f)
+            {
+                if (array_search($f, $sessArray) === FALSE)
+                {
+                    continue;
+                }
+                $file = $dir . DIRECTORY_SEPARATOR . $f;
+                unlink($file);
+            }
+            //			$this->session->delVar("fileExports");
+        }
+        if ($sessArray = $this->session->getVar("wp_PaperExports"))
+        {
+            foreach (\FILE\fileInDirToArray($dir) as $f)
+            {
+                if (!array_key_exists($f, $sessArray))
+                {
+                    continue;
+                }
+                $file = $dir . DIRECTORY_SEPARATOR . $f;
+                unlink($file);
+            }
+            //			$this->session->delVar("paperExports");
+        }
+        // Store this previous user settings for use below if necessary
+        $keys = ["Paging", "PagingMaxLinks", "StringLimit", "Language", "Style", "Template", "PagingTagCloud", "ListLink"];
+        foreach ($keys as $key)
+        {
+            $sessArray[$key] = GLOBALS::getUserVar($key);
+        }
+        $this->session->destroy();
+        // set the default language prior to displaying the login prompt
+        $user = FACTORY_USER::getInstance();
+        // remove any wikindx cookie that has been set
+        $cookie = FACTORY_COOKIE::getInstance();
+        $cookie->deleteCookie();
+        // send back to front page
+        // Restore this user's previous user settings (e.g. so language and appearance does not suddenly change to the default from config)
+        foreach ($keys as $key)
+        {
+            $this->session->setVar("setup_" . $key, $sessArray[$key]);
+        }
+        $this->session->delVar("setup_ReadOnly");
         header("Location: index.php");
     }
     /**

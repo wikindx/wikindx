@@ -500,7 +500,7 @@ class MENU
                     $this->wikindx[$messages->text("menu", "readOnly")] = 'index.php?action=readOnly';
                 }
             }
-            $this->wikindx[$messages->text("menu", "logout")] = 'index.php?action=initLogon';
+            $this->wikindx[$messages->text("menu", "logout")] = 'index.php?action=logout';
         }
         else
         {

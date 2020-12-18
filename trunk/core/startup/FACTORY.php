@@ -846,7 +846,7 @@ class FACTORY_CLOSENOMENU
      *
      * @return object (self::$instance)
      */
-    public static function getInstance($destroyMenu = FALSE)
+    public static function getInstance()
     {
         if (empty(self::$instance) && empty(FACTORY_CLOSEPOPUP::$instance) && empty(FACTORY_CLOSE::$instance) && empty(FACTORY_CLOSERAW::$instance))
         {

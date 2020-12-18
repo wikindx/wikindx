@@ -282,9 +282,7 @@ class CLOSE
 
         // Send page code to browser
         echo $outputString;
-		if ($this->session->getVar('destroySession')) {
-			$this->session->destroy();
-		}
+
         // If this function have been called directly (not inherited), we must die
         if (__CLASS__ == get_called_class())
         {

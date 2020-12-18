@@ -9685,9 +9685,6 @@ msgstr "Keyword modificata con successo"
 msgid "Successfully approved resource(s)"
 msgstr "Risorsa approvata con successo"
 
-#~ msgid "Logon as superAdmin:"
-#~ msgstr "Accesso come superAmministratore:"
-
 #, fuzzy
 #~| msgid "Disabled Languages"
 #~ msgid "Available Languages"
@@ -9906,8 +9903,8 @@ msgstr "Risorsa approvata con successo"
 #~ msgid "Enabled Styles"
 #~ msgstr "Stili Abilitati"
 
-#~ msgid "Upgrade the database"
-#~ msgstr "Aggiornare il database"
+#~ msgid "Logon as superAdmin:"
+#~ msgstr "Accesso come superAmministratore:"
 
 #~ msgid "Enabled Languages"
 #~ msgstr "Lingue Abilitate"
@@ -9922,3 +9919,6 @@ msgstr "Risorsa approvata con successo"
 #~ msgstr ""
 #~ "Metti in quarantena le nuove risorse dalla vista pubblica fino "
 #~ "all'approvazione di un ADMIN"
+
+#~ msgid "Upgrade the database"
+#~ msgstr "Aggiornare il database"

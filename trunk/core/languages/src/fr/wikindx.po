@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-12-19 02:55+0100\n"
+"POT-Creation-Date: 2020-12-19 03:16+0100\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
@@ -3510,11 +3510,7 @@ msgstr ""
 #: core/messages/help.php:360
 msgid ""
 "<p>At least one template, one bibliographic style and one language must "
-"remain enabled. WIKINDX expects that the English language pack is available "
-"on the server (i.e. that you do not physically remove it from the wikindx/"
-"languages/ folder) whether it has been disabled or not.  This is because the "
-"English language pack is used to supply any messages that might be missing "
-"from other language packs.</p>"
+"remain enabled.</p>"
 msgstr ""
 
 #: core/messages/messages.php:91
@@ -9397,13 +9393,13 @@ msgstr "Modification du groupe de mots clefs réussie"
 msgid "Successfully approved resource(s)"
 msgstr "Approbation des références réussie"
 
-#~ msgid "bibtex"
-#~ msgstr "BibTeX"
-
-#~ msgid "Import BibTeX"
-#~ msgstr "Importer du code BibTeX (fichier .bib)"
-
 #, fuzzy
 #~| msgid "Import tag"
 #~ msgid "Import/Export"
 #~ msgstr "Étiquette d'import"
+
+#~ msgid "Import BibTeX"
+#~ msgstr "Importer du code BibTeX (fichier .bib)"
+
+#~ msgid "bibtex"
+#~ msgstr "BibTeX"

@@ -357,7 +357,7 @@ class adminstyle_CONFIG {
 
 . dgettext($domain, "<p>Inline plugins return output that is displayed in one of four containers that can be positioned anywhere in any of the template .tpl files.  To change the position of a container, you will need to edit the appropriate .tpl file.</p>")
 
-. dgettext($domain, "<p>At least one template, one bibliographic style and one language must remain enabled. WIKINDX expects that the English language pack is available on the server (i.e. that you do not physically remove it from the wikindx/languages/ folder) whether it has been disabled or not.  This is because the English language pack is used to supply any messages that might be missing from other language packs.</p>"),
+. dgettext($domain, "<p>At least one template, one bibliographic style and one language must remain enabled.</p>"),
 		);
 		
 		$search = implode(", ", defined('WIKINDX_SEARCH_FILTER') ? WIKINDX_SEARCH_FILTER : unserialize(base64_decode(WIKINDX_SEARCH_FILTER_DEFAULT)));

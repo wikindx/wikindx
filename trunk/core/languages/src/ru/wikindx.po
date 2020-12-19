@@ -9503,9 +9503,6 @@ msgstr "Ключевое слово успешно отредактирован�
 msgid "Successfully approved resource(s)"
 msgstr "Источник успешно одобрен"
 
-#~ msgid "Upgrade the Database"
-#~ msgstr "Обновить БД"
-
 #~ msgid ""
 #~ "Depending on what the sources were for your resources, you may have broken "
 #~ "UTF-8 characters.  If you opt not to fix such instances now and discover "
@@ -9680,7 +9677,7 @@ msgstr "Источник успешно одобрен"
 #~ msgid "Fix UTF8:"
 #~ msgstr "Починить UTF8:"
 
-#~ msgid "Upgrade the database"
+#~ msgid "Upgrade the Database"
 #~ msgstr "Обновить БД"
 
 #~ msgid ""
@@ -9728,3 +9725,6 @@ msgstr "Источник успешно одобрен"
 
 #~ msgid "bibtex"
 #~ msgstr "bibtex"
+
+#~ msgid "Upgrade the database"
+#~ msgstr "Обновить БД"

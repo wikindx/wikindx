@@ -9441,23 +9441,6 @@ msgstr "Ключевое слово успешно отредактирован�
 msgid "Successfully approved resource(s)"
 msgstr "Источник успешно одобрен"
 
-#~ msgid "Plugin has no README file or the README file is empty"
-#~ msgstr "У плагина нет файла README"
-
-#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
-#~ msgstr ""
-#~ "Отправить в карантин новые источники (не отображаются публично) до "
-#~ "утверждения администратором"
-
-#~ msgid "Remove users from this group"
-#~ msgstr "Удалить пользователей из этой группы"
-
-#~ msgid "Enabled Languages"
-#~ msgstr "Активированные языки"
-
-#~ msgid "Logon as superAdmin:"
-#~ msgstr "Войти как Главный администратор:"
-
 #~ msgid ""
 #~ "You are not logged on as the superAdmin: please ask that person ### to "
 #~ "carry out the upgrade through their web browser."
@@ -9618,6 +9601,26 @@ msgstr "Источник успешно одобрен"
 #~ msgid "Paste BibTeX"
 #~ msgstr "Вставить код BibTeX"
 
+#~ msgid "Plugin has no README file or the README file is empty"
+#~ msgstr "У плагина нет файла README"
+
+#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
+#~ msgstr ""
+#~ "Отправить в карантин новые источники (не отображаются публично) до "
+#~ "утверждения администратором"
+
+#~ msgid "Remove users from this group"
+#~ msgstr "Удалить пользователей из этой группы"
+
+#~ msgid "Enabled Languages"
+#~ msgstr "Активированные языки"
+
+#~ msgid "Logon as superAdmin:"
+#~ msgstr "Войти как Главный администратор:"
+
+#~ msgid "Configurable Inline Plugins"
+#~ msgstr "Настраиваемые встроенные плагины"
+
 #~ msgid "Fix UTF8:"
 #~ msgstr "Починить UTF8:"
 
@@ -9663,6 +9666,3 @@ msgstr "Источник успешно одобрен"
 #~ "первую очередь. Если вы не сделаете этого, тогда в случае ошибки памяти "
 #~ "(подробно ниже) при обновлении, Вы безвозвратно потеряете свои данные: "
 #~ "<em>нюансы обновления</em><p>"
-
-#~ msgid "Configurable Inline Plugins"
-#~ msgstr "Настраиваемые встроенные плагины"

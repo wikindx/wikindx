@@ -229,7 +229,7 @@ class importexportbib_MODULE
         }
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "ENDNOTE.php"]));
         $endnote = new ENDNOTE($this);
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerEndnoteImport"));
+        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerImportEndnote"));
         $pString = $message ? $message : FALSE;
         $pString .= HTML\p($this->pluginmessages->text('introEndnoteImport'));
         $endnote->displayImport($pString);
@@ -249,7 +249,7 @@ class importexportbib_MODULE
             FACTORY_CLOSE::getInstance();
         }
         if (!\FILE\command_exists($this->configImport->bibutilsPath . 'med2xml')) {
-			GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerPubMedImport"));
+			GLOBALS::setTplVar('heading', $this->pluginmessages->text("hheaderImportPubMedh"));
 			$pString = \HTML\p($this->pluginmessages->text("bibutilsnoPrograms", $this->configImport->bibutilsPath), "error", "center");
 			$pString .= \HTML\p($this->pluginmessages->text("importPubMedNoBibutils"));
 			$pString .= \HTML\p($this->pluginmessages->text("bibutilscredit", \HTML\a(
@@ -270,7 +270,7 @@ class importexportbib_MODULE
 
             return;
         }
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerPubMedImport"));
+        GLOBALS::setTplVar('heading', $this->pluginmessages->text("hheaderImportPubMedh"));
         $pString = $message ? $message : FALSE;
         $pString .= $pubmed->displayImport();
         GLOBALS::addTplVar('content', $pString);
@@ -446,7 +446,7 @@ class importexportbib_MODULE
             $auth->initLogon();
             FACTORY_CLOSE::getInstance();
         }
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerEndnoteImport"));
+        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerImportEndnote"));
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
         {
             include_once(__DIR__ . DIRECTORY_SEPARATOR . 'ENDNOTEIMPORT.php');
@@ -480,7 +480,7 @@ class importexportbib_MODULE
         }
         if (array_key_exists('method', $this->vars) && ($this->vars['method'] == 'process'))
         {
-            GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerPubMedImport"));
+            GLOBALS::setTplVar('heading', $this->pluginmessages->text("hheaderImportPubMedh"));
             include_once(__DIR__ . DIRECTORY_SEPARATOR . 'PUBMED.php');
             $pubmed = new PUBMED($this);
             $pubmed->processPubMed();
@@ -657,9 +657,19 @@ class importexportbib_MODULE
         if (empty($this->menus))
         { // initialization of menu structure
             $this->menus = [
-                $menuArray[0] => ['importexportbibpluginSub' => [
-                    $this->pluginmessages->text('menu') => FALSE,
-                ],
+                $menuArray[0] => [
+                    'importexportbibpluginSub' => [
+                        $this->pluginmessages->text('menu') => FALSE,
+                        'importexportbibpluginImportSub' => [
+                            $this->pluginmessages->text('menuimport') => FALSE,
+                        ],
+                        'importexportbibpluginExportBasketSub' => [
+                            $this->pluginmessages->text('menuexportbasket') => FALSE,
+                        ],
+                        'importexportbibpluginExportListSub' => [
+                            $this->pluginmessages->text('menuexportlist') => FALSE,
+                        ],
+                    ],
                 ],
             ];
         }
@@ -675,96 +685,22 @@ class importexportbib_MODULE
         }
         elseif (($type == 'export') && ($lastMulti || $basket))
         {
-            if ($lastMulti && $basket)
+            if ($basket)
             {
-                $array = [$this->pluginmessages->text('menuRtfExport') => FALSE,
-                    $this->pluginmessages->text('menuExportBasket') => "initRtfExportB",
-                    $this->pluginmessages->text('menuExportList') => "initRtfExportL", ];
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->pluginmessages->text('menuExportRtf')] = "initRtfExportB";
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->pluginmessages->text('menuExportBibtex')] = "initBibtexExportB";
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->pluginmessages->text('menuExportHTML')] = 'initHtmlExportB';
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->pluginmessages->text('menuExportEndNote')] = 'initEndnoteExportB';
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportBasketSub'][$this->pluginmessages->text('menuExportRIS')] = 'initRisExportB';
             }
-            elseif ($basket)
+            if ($lastMulti)
             {
-                $array = [$this->pluginmessages->text('menuRtfExport') => FALSE,
-                    $this->pluginmessages->text('menuExportBasket') => "initRtfExportB", ];
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->pluginmessages->text('menuExportRtf')] = "initRtfExportL";
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->pluginmessages->text('menuExportBibtex')] = "initBibtexExportL";
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->pluginmessages->text('menuExportHTML')] = 'initHtmlExportL';
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->pluginmessages->text('menuExportEndNote')] = 'initEndnoteExportL';
+                $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginExportListSub'][$this->pluginmessages->text('menuExportRIS')] = 'initRisExportL';
             }
-            elseif ($lastMulti)
-            {
-                $array = [$this->pluginmessages->text('menuRtfExport') => FALSE,
-                    $this->pluginmessages->text('menuExportList') => "initRtfExportL", ];
-            }
-            $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
-
-            if ($lastMulti && $basket)
-            {
-                $array = [$this->pluginmessages->text('menuBibtexExport') => FALSE,
-                    $this->pluginmessages->text('menuExportBasket') => "initBibtexExportB",
-                    $this->pluginmessages->text('menuExportList') => "initBibtexExportL", ];
-            }
-            elseif ($basket)
-            {
-                $array = [$this->pluginmessages->text('menuBibtexExport') => FALSE,
-                    $this->pluginmessages->text('menuExportBasket') => "initBibtexExportB", ];
-            }
-            elseif ($lastMulti)
-            {
-                $array = [$this->pluginmessages->text('menuBibtexExport') => FALSE,
-                    $this->pluginmessages->text('menuExportList') => "initBibtexExportL", ];
-            }
-            $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
-
-            if ($lastMulti && $basket)
-            {
-                $array = [$this->pluginmessages->text('menuHtmlExport') => FALSE,
-                    $this->pluginmessages->text('menuExportBasket') => "initHtmlExportB",
-                    $this->pluginmessages->text('menuExportList') => "initHtmlExportL", ];
-            }
-            elseif ($basket)
-            {
-                $array = [$this->pluginmessages->text('menuHtmlExport') => FALSE,
-                    $this->pluginmessages->text('menuExportBasket') => "initHtmlExportB", ];
-            }
-            elseif ($lastMulti)
-            {
-                $array = [$this->pluginmessages->text('menuHtmlExport') => FALSE,
-                    $this->pluginmessages->text('menuExportList') => "initHtmlExportL", ];
-            }
-            $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
-
-            if ($lastMulti && $basket)
-            {
-                $array = [$this->pluginmessages->text('menuEndnoteExport') => FALSE,
-                    $this->pluginmessages->text('menuExportBasket') => "initEndnoteExportB",
-                    $this->pluginmessages->text('menuExportList') => "initEndnoteExportL", ];
-            }
-            elseif ($basket)
-            {
-                $array = [$this->pluginmessages->text('menuEndnoteExport') => FALSE,
-                    $this->pluginmessages->text('menuExportBasket') => "initEndnoteExportB", ];
-            }
-            elseif ($lastMulti)
-            {
-                $array = [$this->pluginmessages->text('menuEndnoteExport') => FALSE,
-                    $this->pluginmessages->text('menuExportList') => "initEndnoteExportL", ];
-            }
-            $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
-
-            if ($lastMulti && $basket)
-            {
-                $array = [$this->pluginmessages->text('menuRisExport') => FALSE,
-                    $this->pluginmessages->text('menuExportBasket') => "initRisExportB",
-                    $this->pluginmessages->text('menuExportList') => "initRisExportL", ];
-            }
-            elseif ($basket)
-            {
-                $array = [$this->pluginmessages->text('menuRisExport') => FALSE,
-                    $this->pluginmessages->text('menuExportBasket') => "initRisExportB", ];
-            }
-            elseif ($lastMulti)
-            {
-                $array = [$this->pluginmessages->text('menuRisExport') => FALSE,
-                    $this->pluginmessages->text('menuExportList') => "initRisExportL", ];
-            }
-            $this->menus[$menuArray[0]]['importexportbibpluginSub'][] = $array;
-
             if ($this->session->getVar("fileExports"))
             {
                 $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuListFiles')] = 'listFiles';
@@ -772,8 +708,8 @@ class importexportbib_MODULE
         }
         elseif ($type == 'import')
         { // import
-            $this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuEndnoteImport')] = "initEndnoteImport";
-			$this->menus[$menuArray[0]]['importexportbibpluginSub'][$this->pluginmessages->text('menuPubMedImport')] = "initPubMedImport";
+            $this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginImportSub'][$this->pluginmessages->text('menuImportEndnote')] = "initEndnoteImport";
+			$this->menus[$menuArray[0]]['importexportbibpluginSub']['importexportbibpluginImportSub'][$this->pluginmessages->text('menuImportPubMed')] = "initPubMedImport";
 		}
     }
 }

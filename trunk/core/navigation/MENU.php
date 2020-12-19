@@ -868,8 +868,14 @@ class MENU
                                     {
                                         $subMenu[$key] = $value;
                                     }
-                                    elseif (is_array($value))
+                                    // Ignore empty sub-menus
+                                    elseif (is_array($value) && count($value) > 0)
                                     {
+                                        // Ignore empty sub-menus
+                                        if (count($value) == 1 && $value[array_key_first($value)] == FALSE)
+                                        {
+                                            continue;
+                                        }
                                         foreach ($value as $subKey => $subValue)
                                         {
                                             if ($subValue === FALSE)

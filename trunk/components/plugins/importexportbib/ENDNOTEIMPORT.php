@@ -86,7 +86,7 @@ class ENDNOTEIMPORT
         $this->creators = ['creator1', 'creator2', 'creator3', 'creator4', 'creator5'];
         $this->oldTime = time();
         $this->dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_DATA_FILES]);
-        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerEndnoteImport"));
+        GLOBALS::setTplVar('heading', $this->pluginmessages->text("headerImportEndnote"));
     }
     /**
      * start the process
@@ -256,7 +256,7 @@ class ENDNOTEIMPORT
             else
             {
                 @unlink($this->fileName); // remove garbage - ignore errors
-                \TEMPSTORAGE\store($this->db, $uuid, ['form' => $pString, 'heading' => $this->pluginmessages->text("headerEndnoteImport")]);
+                \TEMPSTORAGE\store($this->db, $uuid, ['form' => $pString, 'heading' => $this->pluginmessages->text("headerImportEndnote")]);
                 header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importInvalidFields&uuid=$uuid");
                 die;
             }
@@ -343,7 +343,7 @@ class ENDNOTEIMPORT
             $pString .= \FORM\hidden('uuid', $uuid);
             $pString .= HTML\p(FORM\formSubmit($this->coremessages->text("submit", "Continue")));
             $pString .= FORM\formEnd();
-            $tsArray['heading'] = $this->pluginmessages->text("headerEndnoteImport");
+            $tsArray['heading'] = $this->pluginmessages->text("headerImportEndnote");
             $tsArray['form'] = $pString;
             \TEMPSTORAGE\store($this->db, $uuid, $tsArray);
             header("Location: index.php?action=import_IMPORTCOMMON_CORE&method=importContinue&uuid=$uuid");

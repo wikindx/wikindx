@@ -343,7 +343,7 @@ class MESSAGES
 				"emailNewRegistrations" => dgettext($domain, "When a new user registers, notify the administrator at this email address"),
 				"metadataAllow" => dgettext($domain, "Enable the metadata subsystem (quotes, paraphrases, comments etc.) for all users"),
 				"metadataUserOnly" => dgettext($domain, "If disabled, allow registered users to still use the metadata subsystem"),
-				"displayBibtexLink" => dgettext($domain, "When viewing lists of resources, display an icon to view the bibtex version of each resource"),
+				"displayBibtexLink" => dgettext($domain, "When viewing lists of resources, display an icon to view the BibTeX version of each resource"),
 				"displayCmsLink" => dgettext($domain, "When viewing lists of resources, display a hyperlink to a pop-up window to generate a CMS (Content Management System) 'replacement tag' for each resource"),
 				"pagingStyle" => dgettext($domain, "When viewing lists ordered by creator or title, replace the numerical paging links with an alphabetical list"),
 				"quarantine" => dgettext($domain, "Allow new resources to be quarantined from non-admin view until approved"),
@@ -858,7 +858,7 @@ class MESSAGES
 				"hashFile" => dgettext($domain, "The hash file is optional – use it to check the integrity of the uploaded package."),
 				"glossary" => dgettext($domain, "The glossary appears when hovering over a keyword."),
 /// hint_storeRawBibtex Do not translate '@string'
-				"storeRawBibtex" => dgettext($domain, "You may store BibTeX fields that WIKINDX does not use so that any resources later exported to BibTeX can include this original unchanged data.  Doing this, also stores the bibtex key and any @string strings that are in the imported BibTeX file."),
+				"storeRawBibtex" => dgettext($domain, "You may store BibTeX fields that WIKINDX does not use so that any resources later exported to BibTeX can include this original unchanged data.  Doing this, also stores the BibTeX key and any @string strings that are in the imported BibTeX file."),
 				"replaceExisting" => dgettext($domain, "When adding items, you may either append the selections above to an existing set for each resource or replace the existing set with the selections."),
 				"tagImport" => dgettext($domain, "Tag this import so you can do a mass select or delete later."),
 				"splitImport" => dgettext($domain, "Split the title and subtitle in the source bibliography on the first occurrence of the chosen character(s)."),
@@ -915,7 +915,7 @@ class MESSAGES
 /// menu_basketView Resource basket is a temporary collection of resources while the user is logged on
 				"basketView" => dgettext($domain, "View Basket"),
 				"basketDelete" => dgettext($domain, "Delete Basket"),
-/// menu_pasteBibtex Ordinary user can paste a bibtex file into a textarea for importing
+/// menu_pasteBibtex Ordinary user can paste a BibTeX file into a textarea for importing
 				"pasteBibtex" => dgettext($domain, "BibTeX (Copy/Paste)"),
 				"importBibtex" => dgettext($domain, "BibTeX (.bib file)"),
 /// menu_search Search menu starts here
@@ -1045,7 +1045,7 @@ class MESSAGES
 				"remove" => dgettext($domain, "remove"),
 				"edit" => dgettext($domain, "edit"),
 				"delete" => dgettext($domain, "delete"),
-				"bibtex" => dgettext($domain, "bibtex"),
+				"bibtex" => dgettext($domain, "BibTeX"),
 				"view" => dgettext($domain, "view"),
 				"viewAttach" => dgettext($domain, "view"),
 				"viewmeta" => dgettext($domain, "view"),
@@ -1100,7 +1100,7 @@ class MESSAGES
 				"publisherExists" => dgettext($domain, "If you proceed, this edited publisher will be deleted and all references in the database to it will be replaced by references to the pre-existing publisher."),
 /// misc_emailToFriend Email a single resource link to a friend.
 				"emailToFriend" => dgettext($domain, "Email resource to friend"),
-/// misc_bibtexKey When viewing a single resource, display the bibtex citation key (such as 'aarseth.321')
+/// misc_bibtexKey When viewing a single resource, display the BibTeX citation key (such as 'aarseth.321')
 				"bibtexKey" => dgettext($domain, "BibTeX citation key"),
 /// misc_bookmarks User bookmarks
 				"bookmark" => dgettext($domain, "You may store up to 20 bookmarks for returning to a single or multi-resource view."),
@@ -1124,7 +1124,7 @@ class MESSAGES
 				"creatorGroupAvailable" => dgettext($domain, "Available creators"),
 				"creatorGroupMaster" => dgettext($domain, "Group master"),
 				"creatorOnlyMasters" => dgettext($domain, "Show only group masters"),
-/// misc_tag Tag - when importing bibtex resources, the administrator can give a label to each import which makes it possible to later delete in one go resources that were imported under this label.
+/// misc_tag Tag - when importing BibTeX resources, the administrator can give a label to each import which makes it possible to later delete in one go resources that were imported under this label.
 				"tag" => dgettext($domain, "Delete resources by import tag"),
 /// misc_emailToFriend Email a single resource link to a friend.
 				"emailToFriend" => dgettext($domain, "Email resource to friend"),
@@ -1138,7 +1138,7 @@ class MESSAGES
 				"keywordImport3" => dgettext($domain, "Commas or Semicolons"),
 				"keywordImport4" => dgettext($domain, "SPACES"),
 				"keywordIgnore" => dgettext($domain, "Ignore keywords"),
-/// misc_titleSubtitleSeparator When importing bibtex and endnote bibliographies, split title and subtitle on specified characters
+/// misc_titleSubtitleSeparator When importing BibTeX and endnote bibliographies, split title and subtitle on specified characters
 				"titleSubtitleSeparator" => dgettext($domain, "Title/subtitle split"),
 				"titleSubtitleSeparator1" => dgettext($domain, "NO SPLIT"),
 				"titleSubtitleSeparator2" => dgettext($domain, ": (colon)"),
@@ -1146,22 +1146,22 @@ class MESSAGES
 				"titleSubtitleSeparator4" => dgettext($domain, ". or ! or ?"),
 				"titleSubtitleSeparator5" => dgettext($domain, "-- (dash dash)"),
 				"titleSubtitleSeparator6" => dgettext($domain, "- (dash)"),
-/// misc_mergeStored When importing a bibliography (e.g. bibTeX), the admin has the choice of storing fields that wikindx does not recognise. Later, when exporting a bibliography, the user will have the choice of merging these unrecognised fields into the wikindx export. Additionally, any stored citation keys from the original import can be used in preference to a WIKINDX-generated one.
+/// misc_mergeStored When importing a bibliography (e.g. BibTeX), the admin has the choice of storing fields that wikindx does not recognise. Later, when exporting a bibliography, the user will have the choice of merging these unrecognised fields into the wikindx export. Additionally, any stored citation keys from the original import can be used in preference to a WIKINDX-generated one.
 				"mergeStored" => dgettext($domain, "If any fields that WIKINDX does not recognise are stored from an original import, merge these fields into this export:"),
 				"useOriginalCitation" => dgettext($domain, "Use the citation keys from the original import (where available) in preference to WIKINDX generated keys:"),
-/// misc_shortString When exporting to bibTeX.  Don't translate @STRING.
+/// misc_shortString When exporting to BibTeX.  Don't translate @STRING.
 				"shortString" => dgettext($domain, "Use short titles for any @STRING values:"),
-/// misc_bibExportQuotes When exporting to bibtex, use either double quotes or braces to enclose field values. \"...\" must be given exactly as it is here
+/// misc_bibExportQuotes When exporting to BibTeX, use either double quotes or braces to enclose field values. \"...\" must be given exactly as it is here
 				"bibExportQuotes" => dgettext($domain, "Use double quotes \"...\" to enclose field values"),
 				"bibExportBraces" => dgettext($domain, "Use braces {...} to enclose field values"),
 				"bibExportCharacterSetUTF" => dgettext($domain, "Use UTF-8 character encoding"),
 				"bibExportCharacterSetTex" => dgettext($domain, "Use ISO-8859-1 and TeX character encoding"),
 				"bibExportKeywordSeparatorSemicolon" => dgettext($domain, "Use semicolons ';' to separate keywords"),
 				"bibExportKeywordSeparatorComma" => dgettext($domain, "Use commas ',' to separate keywords"),
-/// misc_exportMetadata1 User has option of exporting metadata to bibtex when exporting a bibliography
-				"exportMetadata1" => dgettext($domain, "Export metadata to bibtex."),
+/// misc_exportMetadata1 User has option of exporting metadata to BibTeX when exporting a bibliography
+				"exportMetadata1" => dgettext($domain, "Export metadata to BibTeX."),
 				"exportMetadata2" => dgettext($domain, "Enter a unique field name for each metadata field you wish to export:"),
-/// misc_customFieldMap When exporting a bibliography to bibtex or endnote, if any custom fields exist in the SQL set, the user can map these to specified bibtex or endnote custom fields
+/// misc_customFieldMap When exporting a bibliography to BibTeX or endnote, if any custom fields exist in the SQL set, the user can map these to specified BibTeX or endnote custom fields
 				"customFieldMap" => dgettext($domain, "Map WIKINDX custom fields to export fields."),
 				"customFieldMap2" => dgettext($domain, "Enter a unique field name for each custom field you wish to export:"),
 				"help" => dgettext($domain, "Help"),
@@ -1476,19 +1476,19 @@ class MESSAGES
 			),
 /// import_ Bibliography import messages
 		    "import" => array(
-		    	"bibtexImport" => dgettext($domain, "You may import BibteX bibliographies (.bib files) here. Large files may take some time so if WIKINDX senses that php.ini's 'max_execution_time' variable is about to be exceeded, it will start importing the bibliography in chunks. If you have custom fields in your import file, create custom fields first in the WIKINDX database (the Admin menu) so that you can then map the import custom fields."),
+		    	"bibtexImport" => dgettext($domain, "You may import BibTeX bibliographies (.bib files) here. Large files may take some time so if WIKINDX senses that php.ini's 'max_execution_time' variable is about to be exceeded, it will start importing the bibliography in chunks. If you have custom fields in your import file, create custom fields first in the WIKINDX database (the Admin menu) so that you can then map the import custom fields."),
 				"category" => dgettext($domain, "Category"),
 				"categoryPrompt" => dgettext($domain, "All WIKINDX resources belong to at least one category which you chose here.  The category(s) a resource belongs to can always be edited later."),
-/// import_pasteBibtex An ordinary user may cut 'n' paste bibtex entries into a textarea box for importing into the bibliography. '###' is the maximum number that the admin allows. Don't translate '@string'
-				"pasteBibtex" => dgettext($domain, "You may paste up to ### bibTeX entries here in addition to @string types."),
-				"pasteBibtex2" => dgettext($domain, "Paste the bibtex entries here"),
+/// import_pasteBibtex An ordinary user may cut 'n' paste BibTeX entries into a textarea box for importing into the bibliography. '###' is the maximum number that the admin allows. Don't translate '@string'
+				"pasteBibtex" => dgettext($domain, "You may paste up to ### BibTeX entries here in addition to @string types."),
+				"pasteBibtex2" => dgettext($domain, "Paste the BibTeX entries here"),
 /// import_importDuplicates For file imports, allow duplicates?
 				"importDuplicates" => dgettext($domain, "Import duplicates:"),
 				"storeRawLabel" => dgettext($domain, "Store unused fields:"),
 				"empty" => dgettext($domain, "File is empty"),
 				"added" => dgettext($domain, "No. resources added: ###"),
 				"discarded" => dgettext($domain, "No. resources discarded (duplicates, no titles, or in the deactivated resource type list): ###"),
-/// import_invalidField1 If non-standard bibtex fields are found in the input file, invite the user to map these fields to wikindx fields
+/// import_invalidField1 If non-standard BibTeX fields are found in the input file, invite the user to map these fields to wikindx fields
 				"invalidField1" => dgettext($domain, "Unknown fields have been found. You may map these fields to WIKINDX fields -- no duplicate mapping is allowed."),
 				"invalidField2" => dgettext($domain, "Where an unknown field is mapped to a WIKINDX field that would normally be automatically mapped to a standard input field, the unknown field mapping takes precedence"),
 				"invalidField3" => dgettext($domain, "Unknown fields have been found. You may map these fields to custom fields -- no duplicate mapping is allowed."),

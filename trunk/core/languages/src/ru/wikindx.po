@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-12-19 02:29+0100\n"
+"POT-Creation-Date: 2020-12-19 02:43+0100\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -4451,8 +4451,12 @@ msgstr ""
 "подсистему метаданных"
 
 #: core/messages/messages.php:346
+#, fuzzy
+#| msgid ""
+#| "When viewing lists of resources, display an icon to view the bibtex "
+#| "version of each resource"
 msgid ""
-"When viewing lists of resources, display an icon to view the bibtex version "
+"When viewing lists of resources, display an icon to view the BibTeX version "
 "of each resource"
 msgstr ""
 "При просмотре списков источников, отображать возле каждого из них иконку для "
@@ -6411,10 +6415,16 @@ msgstr ""
 
 #. / hint_storeRawBibtex Do not translate '@string'
 #: core/messages/messages.php:861
+#, fuzzy
+#| msgid ""
+#| "You may store BibTeX fields that WIKINDX does not use so that any "
+#| "resources later exported to BibTeX can include this original unchanged "
+#| "data.  Doing this, also stores the bibtex key and any @string strings that "
+#| "are in the imported BibTeX file."
 msgid ""
 "You may store BibTeX fields that WIKINDX does not use so that any resources "
 "later exported to BibTeX can include this original unchanged data.  Doing "
-"this, also stores the bibtex key and any @string strings that are in the "
+"this, also stores the BibTeX key and any @string strings that are in the "
 "imported BibTeX file."
 msgstr ""
 "Вы можете хранить BibTeX поля, которые WIKINDX не использует. Позже их можно "
@@ -6608,7 +6618,7 @@ msgstr "Рюкзачок..."
 msgid "View Basket"
 msgstr "Осмотреть рюкзачок"
 
-#. / menu_pasteBibtex Ordinary user can paste a bibtex file into a textarea for importing
+#. / menu_pasteBibtex Ordinary user can paste a BibTeX file into a textarea for importing
 #: core/messages/messages.php:919
 msgid "BibTeX (Copy/Paste)"
 msgstr ""
@@ -6893,8 +6903,10 @@ msgid "delete"
 msgstr "удалить"
 
 #: core/messages/messages.php:1048
-msgid "bibtex"
-msgstr "bibtex"
+#, fuzzy
+#| msgid "Paste BibTeX"
+msgid "BibTeX"
+msgstr "Вставить код BibTeX"
 
 #: core/messages/messages.php:1049 core/messages/messages.php:1050
 #: core/messages/messages.php:1051 core/messages/messages.php:1052
@@ -7090,7 +7102,7 @@ msgstr ""
 "ссылки в базе данных на него будут заменены ссылками на уже существующего "
 "издателя."
 
-#. / misc_bibtexKey When viewing a single resource, display the bibtex citation key (such as 'aarseth.321')
+#. / misc_bibtexKey When viewing a single resource, display the BibTeX citation key (such as 'aarseth.321')
 #: core/messages/messages.php:1104
 msgid "BibTeX citation key"
 msgstr "Ключ BibTeX citation"
@@ -7196,7 +7208,7 @@ msgstr "Мастер группы"
 msgid "Show only group masters"
 msgstr "Мастер группы"
 
-#. / misc_tag Tag - when importing bibtex resources, the administrator can give a label to each import which makes it possible to later delete in one go resources that were imported under this label.
+#. / misc_tag Tag - when importing BibTeX resources, the administrator can give a label to each import which makes it possible to later delete in one go resources that were imported under this label.
 #: core/messages/messages.php:1128
 msgid "Delete resources by import tag"
 msgstr "Удалить источники путем импорта тега"
@@ -7242,7 +7254,7 @@ msgstr "ПРОБЕЛЫ"
 msgid "Ignore keywords"
 msgstr "Игнорировать ключевые слова"
 
-#. / misc_titleSubtitleSeparator When importing bibtex and endnote bibliographies, split title and subtitle on specified characters
+#. / misc_titleSubtitleSeparator When importing BibTeX and endnote bibliographies, split title and subtitle on specified characters
 #: core/messages/messages.php:1142
 msgid "Title/subtitle split"
 msgstr ""
@@ -7271,7 +7283,7 @@ msgstr "-- (двойное тире)"
 msgid "- (dash)"
 msgstr "-- (тире)"
 
-#. / misc_mergeStored When importing a bibliography (e.g. bibTeX), the admin has the choice of storing fields that wikindx does not recognise. Later, when exporting a bibliography, the user will have the choice of merging these unrecognised fields into the wikindx export. Additionally, any stored citation keys from the original import can be used in preference to a WIKINDX-generated one.
+#. / misc_mergeStored When importing a bibliography (e.g. BibTeX), the admin has the choice of storing fields that wikindx does not recognise. Later, when exporting a bibliography, the user will have the choice of merging these unrecognised fields into the wikindx export. Additionally, any stored citation keys from the original import can be used in preference to a WIKINDX-generated one.
 #: core/messages/messages.php:1150
 msgid ""
 "If any fields that WIKINDX does not recognise are stored from an original "
@@ -7288,12 +7300,12 @@ msgstr ""
 "Предпочтительно использовать ключи цитирования из оригинального импорта (если "
 "таковые имеются) вместо ключей сгенерированных WIKINDX:"
 
-#. / misc_shortString When exporting to bibTeX.  Don't translate @STRING.
+#. / misc_shortString When exporting to BibTeX.  Don't translate @STRING.
 #: core/messages/messages.php:1153
 msgid "Use short titles for any @STRING values:"
 msgstr "Использовать короткие названия для любых значений @STRING:"
 
-#. / misc_bibExportQuotes When exporting to bibtex, use either double quotes or braces to enclose field values. \"...\" must be given exactly as it is here
+#. / misc_bibExportQuotes When exporting to BibTeX, use either double quotes or braces to enclose field values. \"...\" must be given exactly as it is here
 #: core/messages/messages.php:1155
 msgid "Use double quotes \"...\" to enclose field values"
 msgstr "Использовать двойные кавычки \"...\" для обрамления значений полей"
@@ -7318,16 +7330,18 @@ msgstr "Использовать точку с запятой ';' для раз�
 msgid "Use commas ',' to separate keywords"
 msgstr "Использовать запятую ',' для разделения ключевых слов"
 
-#. / misc_exportMetadata1 User has option of exporting metadata to bibtex when exporting a bibliography
+#. / misc_exportMetadata1 User has option of exporting metadata to BibTeX when exporting a bibliography
 #: core/messages/messages.php:1162
-msgid "Export metadata to bibtex."
+#, fuzzy
+#| msgid "Export metadata to bibtex."
+msgid "Export metadata to BibTeX."
 msgstr "Экспортировать метаданные в bibtex."
 
 #: core/messages/messages.php:1163
 msgid "Enter a unique field name for each metadata field you wish to export:"
 msgstr "Введите уникальное имя для каждого экспортируемого поля метаданных:"
 
-#. / misc_customFieldMap When exporting a bibliography to bibtex or endnote, if any custom fields exist in the SQL set, the user can map these to specified bibtex or endnote custom fields
+#. / misc_customFieldMap When exporting a bibliography to BibTeX or endnote, if any custom fields exist in the SQL set, the user can map these to specified BibTeX or endnote custom fields
 #: core/messages/messages.php:1165
 msgid "Map WIKINDX custom fields to export fields."
 msgstr "Привязать дополнительные поля WIKINDX к экспортируемым полям."
@@ -8045,7 +8059,7 @@ msgstr ""
 
 #: core/messages/messages.php:1479
 msgid ""
-"You may import BibteX bibliographies (.bib files) here. Large files may take "
+"You may import BibTeX bibliographies (.bib files) here. Large files may take "
 "some time so if WIKINDX senses that php.ini's 'max_execution_time' variable "
 "is about to be exceeded, it will start importing the bibliography in chunks. "
 "If you have custom fields in your import file, create custom fields first in "
@@ -8061,14 +8075,17 @@ msgstr ""
 "Для каждого ресурса Вы должны указать хотя бы одну категорию. Категории могут "
 "быть изменены позже."
 
-#. / import_pasteBibtex An ordinary user may cut 'n' paste bibtex entries into a textarea box for importing into the bibliography. '###' is the maximum number that the admin allows. Don't translate '@string'
+#. / import_pasteBibtex An ordinary user may cut 'n' paste BibTeX entries into a textarea box for importing into the bibliography. '###' is the maximum number that the admin allows. Don't translate '@string'
 #: core/messages/messages.php:1483
+#, fuzzy
+#| msgid ""
+#| "You may paste up to ### bibTeX entries here in addition to @string types."
 msgid ""
-"You may paste up to ### bibTeX entries here in addition to @string types."
+"You may paste up to ### BibTeX entries here in addition to @string types."
 msgstr "Вы можете вставить до ### записей BibTeX в дополнение к @string типам."
 
 #: core/messages/messages.php:1484
-msgid "Paste the bibtex entries here"
+msgid "Paste the BibTeX entries here"
 msgstr ""
 
 #. / import_importDuplicates For file imports, allow duplicates?
@@ -8098,7 +8115,7 @@ msgid ""
 "resource type list): ###"
 msgstr "Источников проигнорировано (дубликаты или нет заголовка): ###"
 
-#. / import_invalidField1 If non-standard bibtex fields are found in the input file, invite the user to map these fields to wikindx fields
+#. / import_invalidField1 If non-standard BibTeX fields are found in the input file, invite the user to map these fields to wikindx fields
 #: core/messages/messages.php:1492
 msgid ""
 "Unknown fields have been found. You may map these fields to WIKINDX fields -- "
@@ -9441,142 +9458,30 @@ msgstr "Ключевое слово успешно отредактирован�
 msgid "Successfully approved resource(s)"
 msgstr "Источник успешно одобрен"
 
-#~ msgid "Configurable Inline Plugins"
-#~ msgstr "Настраиваемые встроенные плагины"
-
-#~ msgid ""
-#~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
-#~ "you are strongly advised not to run it on a production server -- if you "
-#~ "wish to test it, either create a new database or make a copy of your "
-#~ "existing WIKINDX database and point config.php at it. Wait until all bugs "
-#~ "have been dealt with, and the final release version provided, before using "
-#~ "the WIKINDX code on a production server.</font> <p>To report bugs etc., go "
-#~ "to: https://sourceforge.net/p/wikindx/v5bugs/</strong></p> WIKINDX has "
-#~ "detected that this is the first time a new version is being run and that "
-#~ "the database requires upgrading. This upgrading is automatic but only the "
-#~ "WIKINDX superAdmin may carry it out.<p> You are <strong>strongly advised</"
-#~ "strong> to <strong>back up your old database</strong> first. If you do not "
-#~ "do this and you experience the memory errors detailed below when upgrading "
-#~ "your only copy of the database, then you will have irrevocably corrupted "
-#~ "the database: <em>caveat upgrader</em><p>"
-#~ msgstr ""
-#~ "WIKINDX обнаружил, что это первый запуск новой версии. Ваша база данных "
-#~ "требует модернизации. Это обновление произойдет автоматически, но только "
-#~ "главный администратор может его выполнить. <p><strong>Настоятельно "
-#~ "рекомендуется создать резервную копию вашей старой базы данных</strong> в "
-#~ "первую очередь. Если вы не сделаете этого, тогда в случае ошибки памяти "
-#~ "(подробно ниже) при обновлении, Вы безвозвратно потеряете свои данные: "
-#~ "<em>нюансы обновления</em><p>"
-
-#~ msgid "Select the creators you wish to remove from the group"
-#~ msgstr "Выберите авторов, которых вы хотите удалить из группы."
-
-#~ msgid ""
-#~ "If you have languages and styles that are in your WIKINDX installation "
-#~ "folders but they do not show here, then they are not compatible with this "
-#~ "version of WIKINDX.  Go to the WIKINDX Sourceforge download page (https://"
-#~ "sourceforge.net/projects/wikindx/files/pluginsxxx/), download the latest "
-#~ "localization and adminstyle plug-ins and use them to update your files."
-#~ msgstr ""
-#~ "Если у Вас есть языки или стили, которые Вы установли в WIKINDX, но они не "
-#~ "отображаются здесь, значит они не совместимы с текущей версией WIKINDX. "
-#~ "Перейдите на страницу скачивания (https://sourceforge.net/projects/"
-#~ "wikindx//files/pluginsxxx/), скачайте последнии локализации и плагины. "
-#~ "Используйте их для обновления Ваших файлов."
-
-#~ msgid "Upgrade the database"
+#~ msgid "Upgrade the Database"
 #~ msgstr "Обновить БД"
 
-#~ msgid "Fix UTF8:"
-#~ msgstr "Починить UTF8:"
-
 #~ msgid ""
-#~ "You are not logged on as the superAdmin: please ask that person ### to "
-#~ "carry out the upgrade through their web browser."
+#~ "Depending on what the sources were for your resources, you may have broken "
+#~ "UTF-8 characters.  If you opt not to fix such instances now and discover "
+#~ "after the upgrade that you do have broken UTF-8 characters, you can either "
+#~ "run the upgrade again, reloading the original database, and check the "
+#~ "checkbox here or you can download and run the repairkit plugin (which "
+#~ "gives more control over what is fixed)."
 #~ msgstr ""
-#~ "Вы не вошли в систему как главный администратор: попросите этого человека "
-#~ "### выполнить обновление через свой веб-браузер."
+#~ "В зависимости от того, какие значения были у ваших источников, у Вас могут "
+#~ "быть неверно отображаемые UTF-8 символы. Если это так, тогда Вы можете "
+#~ "либо запустить обновление еще раз и установите флажок здесь или загрузите "
+#~ "и запустить Repairkit-плагин (который дает гораздо больший контроль над "
+#~ "исправлением неверных значений)."
 
-#~ msgid "Logon as superAdmin:"
-#~ msgstr "Войти как Главный администратор:"
-
-#~ msgid "Enabled Languages"
-#~ msgstr "Активированные языки"
-
-#~ msgid "Remove users from this group"
-#~ msgstr "Удалить пользователей из этой группы"
-
-#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
-#~ msgstr ""
-#~ "Отправить в карантин новые источники (не отображаются публично) до "
-#~ "утверждения администратором"
-
-#~ msgid "Plugin has no README file or the README file is empty"
-#~ msgstr "У плагина нет файла README"
-
-#~ msgid "Paste BibTeX"
-#~ msgstr "Вставить код BibTeX"
-
-#~ msgid "Plugin Commands"
-#~ msgstr "Команды плагина"
-
-#~ msgid "Import BibTeX"
-#~ msgstr "Импорт из файла BibTeX"
-
-#~ msgid "Container Location"
-#~ msgstr "Местоположение контейнера"
-
-#~ msgid "Menu Location"
-#~ msgstr "Положение меню"
-
-#~ msgid "There is no news available to view"
-#~ msgstr "Нет доступных для просмотра новостей"
-
-#~ msgid "Disabled Templates"
-#~ msgstr "Деактивированные шаблоны"
-
-#~ msgid "Enabled Templates"
-#~ msgstr "Активированные шаблоны"
-
-#~ msgid "Configurable Menu Plugins"
-#~ msgstr "Настраиваемое меню плагинов"
+#~ msgid "My Bibliographies"
+#~ msgstr "Мои Библиографии"
 
 #, fuzzy
-#~| msgid "Disabled Languages"
-#~ msgid "Available Languages"
-#~ msgstr "Деактивированные языки"
-
-#~ msgid "Ungroup"
-#~ msgstr "Убрать группировку"
-
-#~ msgid "Enabled Styles"
-#~ msgstr "Активированные стили"
-
-#~ msgid "Enabled Plugins"
-#~ msgstr "Активированные плагины"
-
-#~ msgid "Disabled Plugins"
-#~ msgstr "Деактивированные плагины"
-
-#~ msgid "Disabled Languages"
-#~ msgstr "Деактивированные языки"
-
-#~ msgid "Disabled Styles"
-#~ msgstr "Деактивированные стили"
-
-#~ msgid "Unable to update database with update/updateMySQL.txt."
-#~ msgstr "Невозможно обновить БД с помощью update/updateMySQL.txt."
-
-#~ msgid ""
-#~ "Before being able to use WIKINDX, you must configure it. The minimum "
-#~ "initially required are username, password and email. From the Admin menu, "
-#~ "after configuration, you can add and edit other settings."
-#~ msgstr ""
-#~ "Перед тем как начать использовать WIKINDX, Вы должны его настроить. "
-#~ "Минимальная настройка включает ввод имени пользователя, пароль и почтовый "
-#~ "ящик. Из меню Управления, после настройки, Вы можете добавлять категории, "
-#~ "подкатегории, языки, дополнительные типы записей (все они могут быть "
-#~ "привязаны к конкретному источнику) и системных пользователей."
+#~| msgid "My Wikindx"
+#~ msgid "My Wikindxx"
+#~ msgstr "Мой Wikindx"
 
 #~ msgid ""
 #~ "The upgrade process may take some time depending upon a number of factors. "
@@ -9642,27 +9547,139 @@ msgstr "Источник успешно одобрен"
 #~ "wikindx4/attachments/ -- процесс обновления удалит ссылки на вложения если "
 #~ "в базе данных вложений файлы не существуют в новом месте."
 
-#, fuzzy
-#~| msgid "My Wikindx"
-#~ msgid "My Wikindxx"
-#~ msgstr "Мой Wikindx"
+#~ msgid ""
+#~ "Before being able to use WIKINDX, you must configure it. The minimum "
+#~ "initially required are username, password and email. From the Admin menu, "
+#~ "after configuration, you can add and edit other settings."
+#~ msgstr ""
+#~ "Перед тем как начать использовать WIKINDX, Вы должны его настроить. "
+#~ "Минимальная настройка включает ввод имени пользователя, пароль и почтовый "
+#~ "ящик. Из меню Управления, после настройки, Вы можете добавлять категории, "
+#~ "подкатегории, языки, дополнительные типы записей (все они могут быть "
+#~ "привязаны к конкретному источнику) и системных пользователей."
 
-#~ msgid "My Bibliographies"
-#~ msgstr "Мои Библиографии"
+#~ msgid "Unable to update database with update/updateMySQL.txt."
+#~ msgstr "Невозможно обновить БД с помощью update/updateMySQL.txt."
+
+#~ msgid "Disabled Styles"
+#~ msgstr "Деактивированные стили"
+
+#~ msgid "Disabled Languages"
+#~ msgstr "Деактивированные языки"
+
+#~ msgid "Disabled Plugins"
+#~ msgstr "Деактивированные плагины"
+
+#~ msgid "Enabled Plugins"
+#~ msgstr "Активированные плагины"
+
+#~ msgid "Enabled Styles"
+#~ msgstr "Активированные стили"
+
+#~ msgid "Ungroup"
+#~ msgstr "Убрать группировку"
+
+#, fuzzy
+#~| msgid "Disabled Languages"
+#~ msgid "Available Languages"
+#~ msgstr "Деактивированные языки"
+
+#~ msgid "Configurable Menu Plugins"
+#~ msgstr "Настраиваемое меню плагинов"
+
+#~ msgid "Enabled Templates"
+#~ msgstr "Активированные шаблоны"
+
+#~ msgid "Disabled Templates"
+#~ msgstr "Деактивированные шаблоны"
+
+#~ msgid "There is no news available to view"
+#~ msgstr "Нет доступных для просмотра новостей"
+
+#~ msgid "Menu Location"
+#~ msgstr "Положение меню"
+
+#~ msgid "Container Location"
+#~ msgstr "Местоположение контейнера"
+
+#~ msgid "Import BibTeX"
+#~ msgstr "Импорт из файла BibTeX"
+
+#~ msgid "Plugin Commands"
+#~ msgstr "Команды плагина"
+
+#~ msgid "Plugin has no README file or the README file is empty"
+#~ msgstr "У плагина нет файла README"
+
+#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
+#~ msgstr ""
+#~ "Отправить в карантин новые источники (не отображаются публично) до "
+#~ "утверждения администратором"
+
+#~ msgid "Remove users from this group"
+#~ msgstr "Удалить пользователей из этой группы"
+
+#~ msgid "Enabled Languages"
+#~ msgstr "Активированные языки"
+
+#~ msgid "Logon as superAdmin:"
+#~ msgstr "Войти как Главный администратор:"
 
 #~ msgid ""
-#~ "Depending on what the sources were for your resources, you may have broken "
-#~ "UTF-8 characters.  If you opt not to fix such instances now and discover "
-#~ "after the upgrade that you do have broken UTF-8 characters, you can either "
-#~ "run the upgrade again, reloading the original database, and check the "
-#~ "checkbox here or you can download and run the repairkit plugin (which "
-#~ "gives more control over what is fixed)."
+#~ "You are not logged on as the superAdmin: please ask that person ### to "
+#~ "carry out the upgrade through their web browser."
 #~ msgstr ""
-#~ "В зависимости от того, какие значения были у ваших источников, у Вас могут "
-#~ "быть неверно отображаемые UTF-8 символы. Если это так, тогда Вы можете "
-#~ "либо запустить обновление еще раз и установите флажок здесь или загрузите "
-#~ "и запустить Repairkit-плагин (который дает гораздо больший контроль над "
-#~ "исправлением неверных значений)."
+#~ "Вы не вошли в систему как главный администратор: попросите этого человека "
+#~ "### выполнить обновление через свой веб-браузер."
 
-#~ msgid "Upgrade the Database"
+#~ msgid "Fix UTF8:"
+#~ msgstr "Починить UTF8:"
+
+#~ msgid "Upgrade the database"
 #~ msgstr "Обновить БД"
+
+#~ msgid ""
+#~ "If you have languages and styles that are in your WIKINDX installation "
+#~ "folders but they do not show here, then they are not compatible with this "
+#~ "version of WIKINDX.  Go to the WIKINDX Sourceforge download page (https://"
+#~ "sourceforge.net/projects/wikindx/files/pluginsxxx/), download the latest "
+#~ "localization and adminstyle plug-ins and use them to update your files."
+#~ msgstr ""
+#~ "Если у Вас есть языки или стили, которые Вы установли в WIKINDX, но они не "
+#~ "отображаются здесь, значит они не совместимы с текущей версией WIKINDX. "
+#~ "Перейдите на страницу скачивания (https://sourceforge.net/projects/"
+#~ "wikindx//files/pluginsxxx/), скачайте последнии локализации и плагины. "
+#~ "Используйте их для обновления Ваших файлов."
+
+#~ msgid "Select the creators you wish to remove from the group"
+#~ msgstr "Выберите авторов, которых вы хотите удалить из группы."
+
+#~ msgid ""
+#~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
+#~ "you are strongly advised not to run it on a production server -- if you "
+#~ "wish to test it, either create a new database or make a copy of your "
+#~ "existing WIKINDX database and point config.php at it. Wait until all bugs "
+#~ "have been dealt with, and the final release version provided, before using "
+#~ "the WIKINDX code on a production server.</font> <p>To report bugs etc., go "
+#~ "to: https://sourceforge.net/p/wikindx/v5bugs/</strong></p> WIKINDX has "
+#~ "detected that this is the first time a new version is being run and that "
+#~ "the database requires upgrading. This upgrading is automatic but only the "
+#~ "WIKINDX superAdmin may carry it out.<p> You are <strong>strongly advised</"
+#~ "strong> to <strong>back up your old database</strong> first. If you do not "
+#~ "do this and you experience the memory errors detailed below when upgrading "
+#~ "your only copy of the database, then you will have irrevocably corrupted "
+#~ "the database: <em>caveat upgrader</em><p>"
+#~ msgstr ""
+#~ "WIKINDX обнаружил, что это первый запуск новой версии. Ваша база данных "
+#~ "требует модернизации. Это обновление произойдет автоматически, но только "
+#~ "главный администратор может его выполнить. <p><strong>Настоятельно "
+#~ "рекомендуется создать резервную копию вашей старой базы данных</strong> в "
+#~ "первую очередь. Если вы не сделаете этого, тогда в случае ошибки памяти "
+#~ "(подробно ниже) при обновлении, Вы безвозвратно потеряете свои данные: "
+#~ "<em>нюансы обновления</em><p>"
+
+#~ msgid "Configurable Inline Plugins"
+#~ msgstr "Настраиваемые встроенные плагины"
+
+#~ msgid "bibtex"
+#~ msgstr "bibtex"

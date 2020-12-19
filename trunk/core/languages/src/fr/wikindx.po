@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-12-19 02:29+0100\n"
+"POT-Creation-Date: 2020-12-19 02:43+0100\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
@@ -4509,8 +4509,12 @@ msgstr ""
 "utiliser le sous-système de métadonnées"
 
 #: core/messages/messages.php:346
+#, fuzzy
+#| msgid ""
+#| "When viewing lists of resources, display an icon to view the bibtex "
+#| "version of each resource"
 msgid ""
-"When viewing lists of resources, display an icon to view the bibtex version "
+"When viewing lists of resources, display an icon to view the BibTeX version "
 "of each resource"
 msgstr ""
 "Lors de l'affichage des listes de références, montrer une icône pour afficher "
@@ -6445,10 +6449,16 @@ msgstr "Le glossaire apparaît au survol du mot clef."
 
 #. / hint_storeRawBibtex Do not translate '@string'
 #: core/messages/messages.php:861
+#, fuzzy
+#| msgid ""
+#| "You may store BibTeX fields that WIKINDX does not use so that any "
+#| "resources later exported to BibTeX can include this original unchanged "
+#| "data.  Doing this, also stores the bibtex key and any @string strings that "
+#| "are in the imported BibTeX file."
 msgid ""
 "You may store BibTeX fields that WIKINDX does not use so that any resources "
 "later exported to BibTeX can include this original unchanged data.  Doing "
-"this, also stores the bibtex key and any @string strings that are in the "
+"this, also stores the BibTeX key and any @string strings that are in the "
 "imported BibTeX file."
 msgstr ""
 "Vous pouvez stocker les champs BibTex que WIKINDX n'utilise pas de telle "
@@ -6630,7 +6640,7 @@ msgstr "Panier..."
 msgid "View Basket"
 msgstr "Consulter"
 
-#. / menu_pasteBibtex Ordinary user can paste a bibtex file into a textarea for importing
+#. / menu_pasteBibtex Ordinary user can paste a BibTeX file into a textarea for importing
 #: core/messages/messages.php:919
 msgid "BibTeX (Copy/Paste)"
 msgstr ""
@@ -6911,8 +6921,10 @@ msgid "delete"
 msgstr "supprimer"
 
 #: core/messages/messages.php:1048
-msgid "bibtex"
-msgstr "BibTeX"
+#, fuzzy
+#| msgid "Paste BibTeX"
+msgid "BibTeX"
+msgstr "Importer du code BibTeX (copier/coller)"
 
 #: core/messages/messages.php:1049 core/messages/messages.php:1050
 #: core/messages/messages.php:1051 core/messages/messages.php:1052
@@ -7106,7 +7118,7 @@ msgstr ""
 "rapportent dans la base de données seront remplacées par des références à "
 "l'éditeur que vous venez d'indiquer."
 
-#. / misc_bibtexKey When viewing a single resource, display the bibtex citation key (such as 'aarseth.321')
+#. / misc_bibtexKey When viewing a single resource, display the BibTeX citation key (such as 'aarseth.321')
 #: core/messages/messages.php:1104
 msgid "BibTeX citation key"
 msgstr "Clef de citation BibTeX"
@@ -7202,7 +7214,7 @@ msgstr "Responsable du groupe"
 msgid "Show only group masters"
 msgstr "Afficher seulement les maîtres de groupe"
 
-#. / misc_tag Tag - when importing bibtex resources, the administrator can give a label to each import which makes it possible to later delete in one go resources that were imported under this label.
+#. / misc_tag Tag - when importing BibTeX resources, the administrator can give a label to each import which makes it possible to later delete in one go resources that were imported under this label.
 #: core/messages/messages.php:1128
 msgid "Delete resources by import tag"
 msgstr "Supprimer des références en fonction de l'étiquette d'import"
@@ -7244,7 +7256,7 @@ msgstr "Espaces"
 msgid "Ignore keywords"
 msgstr "Ignorer les mots clefs"
 
-#. / misc_titleSubtitleSeparator When importing bibtex and endnote bibliographies, split title and subtitle on specified characters
+#. / misc_titleSubtitleSeparator When importing BibTeX and endnote bibliographies, split title and subtitle on specified characters
 #: core/messages/messages.php:1142
 msgid "Title/subtitle split"
 msgstr "Découpage en titre et sous-titre"
@@ -7273,7 +7285,7 @@ msgstr "-- (double tiret)"
 msgid "- (dash)"
 msgstr "- (tiret)"
 
-#. / misc_mergeStored When importing a bibliography (e.g. bibTeX), the admin has the choice of storing fields that wikindx does not recognise. Later, when exporting a bibliography, the user will have the choice of merging these unrecognised fields into the wikindx export. Additionally, any stored citation keys from the original import can be used in preference to a WIKINDX-generated one.
+#. / misc_mergeStored When importing a bibliography (e.g. BibTeX), the admin has the choice of storing fields that wikindx does not recognise. Later, when exporting a bibliography, the user will have the choice of merging these unrecognised fields into the wikindx export. Additionally, any stored citation keys from the original import can be used in preference to a WIKINDX-generated one.
 #: core/messages/messages.php:1150
 msgid ""
 "If any fields that WIKINDX does not recognise are stored from an original "
@@ -7290,12 +7302,12 @@ msgstr ""
 "Utiliser les clés BibTex du fichier d'import original (si disponibles) au "
 "lieu des clés générées par Wikindx :"
 
-#. / misc_shortString When exporting to bibTeX.  Don't translate @STRING.
+#. / misc_shortString When exporting to BibTeX.  Don't translate @STRING.
 #: core/messages/messages.php:1153
 msgid "Use short titles for any @STRING values:"
 msgstr "Utiliser les titres abrégés pour chaque @STRING values :"
 
-#. / misc_bibExportQuotes When exporting to bibtex, use either double quotes or braces to enclose field values. \"...\" must be given exactly as it is here
+#. / misc_bibExportQuotes When exporting to BibTeX, use either double quotes or braces to enclose field values. \"...\" must be given exactly as it is here
 #: core/messages/messages.php:1155
 msgid "Use double quotes \"...\" to enclose field values"
 msgstr "Utiliser les guillemets \"...\" pour délimiter les valeurs des champs"
@@ -7320,9 +7332,11 @@ msgstr "Utiliser des points-virgules \";\" pour séparer les mots cléefs"
 msgid "Use commas ',' to separate keywords"
 msgstr "Utiliser des virgules \";\" pour séparer les mots clefs"
 
-#. / misc_exportMetadata1 User has option of exporting metadata to bibtex when exporting a bibliography
+#. / misc_exportMetadata1 User has option of exporting metadata to BibTeX when exporting a bibliography
 #: core/messages/messages.php:1162
-msgid "Export metadata to bibtex."
+#, fuzzy
+#| msgid "Export metadata to bibtex."
+msgid "Export metadata to BibTeX."
 msgstr "Exporter les métadonnées vers bibTeX"
 
 #: core/messages/messages.php:1163
@@ -7331,7 +7345,7 @@ msgstr ""
 "Entrer un nom de champ unique pour chaque champ métadonnée que vous voulez "
 "exporter"
 
-#. / misc_customFieldMap When exporting a bibliography to bibtex or endnote, if any custom fields exist in the SQL set, the user can map these to specified bibtex or endnote custom fields
+#. / misc_customFieldMap When exporting a bibliography to BibTeX or endnote, if any custom fields exist in the SQL set, the user can map these to specified BibTeX or endnote custom fields
 #: core/messages/messages.php:1165
 msgid "Map WIKINDX custom fields to export fields."
 msgstr "Mapper les champs personnalisés WIKINDX pour exporter les champs :"
@@ -8047,7 +8061,7 @@ msgstr "Retour"
 
 #: core/messages/messages.php:1479
 msgid ""
-"You may import BibteX bibliographies (.bib files) here. Large files may take "
+"You may import BibTeX bibliographies (.bib files) here. Large files may take "
 "some time so if WIKINDX senses that php.ini's 'max_execution_time' variable "
 "is about to be exceeded, it will start importing the bibliography in chunks. "
 "If you have custom fields in your import file, create custom fields first in "
@@ -8064,15 +8078,20 @@ msgstr ""
 "choisissez ici. Les catégories auxquelles appartient une référence peuvent "
 "toujours être éditées plus tard."
 
-#. / import_pasteBibtex An ordinary user may cut 'n' paste bibtex entries into a textarea box for importing into the bibliography. '###' is the maximum number that the admin allows. Don't translate '@string'
+#. / import_pasteBibtex An ordinary user may cut 'n' paste BibTeX entries into a textarea box for importing into the bibliography. '###' is the maximum number that the admin allows. Don't translate '@string'
 #: core/messages/messages.php:1483
+#, fuzzy
+#| msgid ""
+#| "You may paste up to ### bibTeX entries here in addition to @string types."
 msgid ""
-"You may paste up to ### bibTeX entries here in addition to @string types."
+"You may paste up to ### BibTeX entries here in addition to @string types."
 msgstr ""
 "Vous pouvez coller jusqu'à ### entrées bibTeX ici en plus des types @string."
 
 #: core/messages/messages.php:1484
-msgid "Paste the bibtex entries here"
+#, fuzzy
+#| msgid "Paste the bibtex entries here"
+msgid "Paste the BibTeX entries here"
 msgstr "Coller les entrées BibTeX ici"
 
 #. / import_importDuplicates For file imports, allow duplicates?
@@ -8098,7 +8117,7 @@ msgid ""
 "resource type list): ###"
 msgstr "Nb. de références rejetées (doublons) : ###"
 
-#. / import_invalidField1 If non-standard bibtex fields are found in the input file, invite the user to map these fields to wikindx fields
+#. / import_invalidField1 If non-standard BibTeX fields are found in the input file, invite the user to map these fields to wikindx fields
 #: core/messages/messages.php:1492
 msgid ""
 "Unknown fields have been found. You may map these fields to WIKINDX fields -- "
@@ -9378,13 +9397,13 @@ msgstr "Modification du groupe de mots clefs réussie"
 msgid "Successfully approved resource(s)"
 msgstr "Approbation des références réussie"
 
-#~ msgid "Paste BibTeX"
-#~ msgstr "Importer du code BibTeX (copier/coller)"
-
-#~ msgid "Import BibTeX"
-#~ msgstr "Importer du code BibTeX (fichier .bib)"
-
 #, fuzzy
 #~| msgid "Import tag"
 #~ msgid "Import/Export"
 #~ msgstr "Étiquette d'import"
+
+#~ msgid "Import BibTeX"
+#~ msgstr "Importer du code BibTeX (fichier .bib)"
+
+#~ msgid "bibtex"
+#~ msgstr "BibTeX"

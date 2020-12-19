@@ -491,43 +491,23 @@ class MENU
         $this->res = [
             $messages->text("menu", "res") => 'index.php?action=noMenu&method=res',
         ];
-        // Disable menu items if there are not yet resources
-        if ($this->resourcesExist)
+        if ($this->write)
         {
-            $this->res[$messages->text("menu", "randomResource")] = 'index.php?action=resource_RESOURCEVIEW_CORE&method=random' . "&browserTabID=" . $this->browserTabID;
+            $this->res[$messages->text("menu", "new")] = 'index.php?action=resource_RESOURCEFORM_CORE';
+        }
+        
+        if (!empty($this->basketList))
+        {
+            $this->res['basketSub'] = [
+                $messages->text("menu", "basketSub") => FALSE,
+                $messages->text("menu", "basketView") => 'index.php?action=basket_BASKET_CORE&method=view' . "&browserTabID=" . $this->browserTabID,
+                $messages->text("menu", "basketDelete") => 'index.php?action=basket_BASKET_CORE&method=delete' . "&browserTabID=" . $this->browserTabID,
+            ];
         }
             
         $this->res['bookmarkSub'] = [
             $messages->text("menu", "bookmarkSub") => FALSE,
         ];
-        if ($this->write)
-        {
-            $this->res[$messages->text("menu", "new")] = 'index.php?action=resource_RESOURCEFORM_CORE';
-            
-            // Disable menu items if there are not yet resources
-            if ($this->resourcesExist)
-            {
-                if (($this->write && WIKINDX_GLOBAL_EDIT) || $this->superAdmin)
-                {
-                    $this->res['editSub'] = [
-                        $messages->text("menu", "editSub") => FALSE,
-                        $messages->text("menu", "creator") => 'index.php?action=edit_EDITCREATOR_CORE',
-                        $messages->text("menu", "keyword") => 'index.php?action=edit_EDITKEYWORD_CORE',
-                        $messages->text("menu", "keywordGroup") => 'index.php?action=edit_EDITKEYWORDGROUP_CORE',
-                    ];
-                    
-                    if (!empty($collEditSub))
-                    {
-                        array_push($this->res['editSub'], $collEditSub);
-                    }
-                    
-                    if (!empty($collEditSub))
-                    {
-                        array_push($this->res['editSub'], $pubEditSub);
-                    }
-                }
-            }
-        }
         
         if ($this->bookmarkAdd)
         {
@@ -580,6 +560,11 @@ class MENU
             }
         }
         
+        // Disable menu items if there are not yet resources
+        if ($this->resourcesExist)
+        {
+            $this->res[$messages->text("menu", "randomResource")] = 'index.php?action=resource_RESOURCEVIEW_CORE&method=random' . "&browserTabID=" . $this->browserTabID;
+        }
         if ($this->lastSolo)
         {
             $this->res[$messages->text("menu", "lastSolo")] = 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->lastSolo . "&browserTabID=" . $this->browserTabID;
@@ -589,13 +574,32 @@ class MENU
             $BT = $this->browserTabID ? '&browserTabID=' . $this->browserTabID : FALSE;
             $this->res[$messages->text("menu", "lastMulti")] = 'index.php?' . $this->lastMulti . '&type=lastMulti' . $BT;
         }
-        if (!empty($this->basketList))
+        
+        if ($this->write)
         {
-            $this->res['basketSub'] = [
-                $messages->text("menu", "basketSub") => FALSE,
-                $messages->text("menu", "basketView") => 'index.php?action=basket_BASKET_CORE&method=view' . "&browserTabID=" . $this->browserTabID,
-                $messages->text("menu", "basketDelete") => 'index.php?action=basket_BASKET_CORE&method=delete' . "&browserTabID=" . $this->browserTabID,
-            ];
+            // Disable menu items if there are not yet resources
+            if ($this->resourcesExist)
+            {
+                if (($this->write && WIKINDX_GLOBAL_EDIT) || $this->superAdmin)
+                {
+                    $this->res['editSub'] = [
+                        $messages->text("menu", "editSub") => FALSE,
+                        $messages->text("menu", "creator") => 'index.php?action=edit_EDITCREATOR_CORE',
+                        $messages->text("menu", "keyword") => 'index.php?action=edit_EDITKEYWORD_CORE',
+                        $messages->text("menu", "keywordGroup") => 'index.php?action=edit_EDITKEYWORDGROUP_CORE',
+                    ];
+                    
+                    if (!empty($collEditSub))
+                    {
+                        array_push($this->res['editSub'], $collEditSub);
+                    }
+                    
+                    if (!empty($collEditSub))
+                    {
+                        array_push($this->res['editSub'], $pubEditSub);
+                    }
+                }
+            }
         }
         
         if ($this->write)
@@ -756,17 +760,11 @@ class MENU
         
         
         // ADMIN MENU
-        $this->admin = [
-            $messages->text("menu", "admin") => 'index.php?action=noMenu&method=admin',
-            $messages->text("menu", "conf") => 'index.php?action=admin_CONFIGURE_CORE',
-            $messages->text("menu", "components") => 'index.php?action=admin_ADMINCOMPONENTS_CORE',
-            $messages->text("menu", "news") => 'index.php?action=news_NEWS_CORE&method=init',
-            $messages->text("menu", "categories") => 'index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit',
-            $messages->text("menu", "subcategories") => 'index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit',
-            $messages->text("menu", "custom") => 'index.php?action=admin_ADMINCUSTOM_CORE&method=init',
-            $messages->text("menu", "images") => 'index.php?action=admin_DELETEIMAGES_CORE',
-            $messages->text("menu", "language") => 'index.php?action=admin_ADMINLANGUAGES_CORE&method=init',
-        ];
+        $this->admin = [];
+        
+        $this->admin[$messages->text("menu", "admin")] = 'index.php?action=noMenu&method=admin';
+        $this->admin[$messages->text("menu", "conf")] = 'index.php?action=admin_CONFIGURE_CORE';
+        $this->admin[$messages->text("menu", "components")] = 'index.php?action=admin_ADMINCOMPONENTS_CORE';
         
         if (WIKINDX_MULTIUSER)
         {
@@ -779,6 +777,14 @@ class MENU
                 $messages->text("menu", "userRegistration") => 'index.php?action=admin_ADMINUSER_CORE&method=registrationInit',
             ];
         }
+        
+        $this->admin[$messages->text("menu", "news")] = 'index.php?action=news_NEWS_CORE&method=init';
+        $this->admin[$messages->text("menu", "categories")] = 'index.php?action=admin_ADMINCATEGORIES_CORE&method=catInit';
+        $this->admin[$messages->text("menu", "subcategories")] = 'index.php?action=admin_ADMINCATEGORIES_CORE&method=subInit';
+        $this->admin[$messages->text("menu", "custom")] = 'index.php?action=admin_ADMINCUSTOM_CORE&method=init';
+        $this->admin[$messages->text("menu", "images")] = 'index.php?action=admin_DELETEIMAGES_CORE';
+        $this->admin[$messages->text("menu", "language")] = 'index.php?action=admin_ADMINLANGUAGES_CORE&method=init';
+        
         
         if ($this->resourcesExist)
         {

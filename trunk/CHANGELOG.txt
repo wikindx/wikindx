@@ -4,7 +4,11 @@ RELEASES:
 v6.4.0
 Focus: Minor bug fixes, major feature enhancement, and maintenance
 
-NB: THIS VERSION SUPPORTS PHP 7.3 AND 7.4 ONLY. PHP 8.0 SUPPORT IS A WORK IN PROGRESS.
+IMPORTANT INFORMATION:
+
+This version supports php 7.3 and 7.4 only. php 8.0 support is a work in progress.
+
+It is no longer possible to modify the prefix of the tables in the database. This functionality is only useful for several programs sharing the same database with the same table names or several wikindx installations in the same database. These two practices are to be avoided because they are a good way to lost your data. Each software should be isolated in its own database for privacy, security, bug resistance and ease of maintenance. Firstly, the "wkx_" prefix will be kept for some versions and cannot be changed. Secondly, it will be deleted.
 
 BUG FIXES:
 1. When merging or deleting keywords, ensure integrity of keyword_groups is maintained.
@@ -19,7 +23,7 @@ BUG FIXES:
 10. When copying a bibliographic style in the adminstyle plugin, ensure the appropriate component.json file is written too.
 11. Unbreak the plugin configuration.
 12. Fix a regression preventing ldap auth.
-13. When importing bibTeX or Endnote bibliographies, ensure certain fields are integers if required by the database structure.
+13. When importing bibTeX or EndNote bibliographies, ensure certain fields are integers if required by the database structure.
 14. Update the locales list on each last step of an upgrade.
 15. Session was lost when visiting the login page.
 16. Properly decode the HTML entities of texts extracted from a DOCX file.

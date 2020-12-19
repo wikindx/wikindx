@@ -330,7 +330,7 @@ class HELP
         <li>'plugin3'</li>
     </ul>
 </li>
-<li>" . dgettext($domain, "'admin' is only available when logged in as admin, 'text' will only show if there are metadata (quotes etc.), and the three 'pluginX' menu trees only show if they are populated.") . "</li>
+<li>" . dgettext($domain, "'admin' is only available when logged in as admin, 'metadata' will only show if there are metadata (quotes etc.), and the three 'pluginX' menu trees only show if they are populated.") . "</li>
 <li>"
 // translators: do not edit words prefaced with '$'
  . dgettext($domain, "\$authorize should be one of the following:") . "

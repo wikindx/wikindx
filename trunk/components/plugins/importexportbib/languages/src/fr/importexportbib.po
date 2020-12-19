@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: importexportbib\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-12-19 01:08+0100\n"
+"POT-Creation-Date: 2020-12-19 01:47+0100\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
@@ -50,10 +50,9 @@ msgid "Export list..."
 msgstr "Import / Export..."
 
 #: components/plugins/importexportbib/importexportbibmessages.php:25
-#, fuzzy
-#| msgid "Endnote XML"
-msgid "Endnote"
-msgstr "Endnote XML"
+#: components/plugins/importexportbib/importexportbibmessages.php:30
+msgid "EndNote"
+msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:26
 #, fuzzy
@@ -75,10 +74,6 @@ msgstr "Exporter BibTeX"
 msgid "HTML"
 msgstr ""
 
-#: components/plugins/importexportbib/importexportbibmessages.php:30
-msgid "EndNote"
-msgstr ""
-
 #: components/plugins/importexportbib/importexportbibmessages.php:31
 msgid "RIS"
 msgstr ""
@@ -98,7 +93,9 @@ msgid "Export Ideas"
 msgstr "Export d'idées"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:35
-msgid "Import Endnote XML Bibliography"
+#, fuzzy
+#| msgid "Import Endnote XML Bibliography"
+msgid "Import EndNote XML Bibliography"
 msgstr "Import de bilbiographie XML Endnote"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:36
@@ -122,7 +119,9 @@ msgid "Export RIS"
 msgstr "Export RIS"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:41
-msgid "Export Endnote"
+#, fuzzy
+#| msgid "Export Endnote"
+msgid "Export EndNote"
 msgstr "Export Endnote"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:44
@@ -222,8 +221,20 @@ msgid "Successfully converted ###"
 msgstr "Conversion réussie ###"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:63
+#, fuzzy
+#| msgid ""
+#| "You may import Endnote XML bibliographies (.xml files) here. Large files "
+#| "may take some time so if\n"
+#| "\t\t\t\tWIKINDX senses that php.ini's 'max_execution_time' variable is "
+#| "about to be exceeded, it will start importing the bibliography in chunks.\n"
+#| "\t\t\t\tIf there is a date field, the format should be either dd/mm/yyyy "
+#| "or yyyy/mm/dd and yyyy will override any year field in the record.\n"
+#| "\t\t\t\tIf you have custom fields in your import file, create custom "
+#| "fields first in the WIKINDX database (the Admin menu) so that you can then "
+#| "map\n"
+#| "\t\t\t\tthe import custom fields."
 msgid ""
-"You may import Endnote XML bibliographies (.xml files) here. Large files may "
+"You may import EndNote XML bibliographies (.xml files) here. Large files may "
 "take some time so if\n"
 "\t\t\t\tWIKINDX senses that php.ini's 'max_execution_time' variable is about "
 "to be exceeded, it will start importing the bibliography in chunks.\n"
@@ -277,9 +288,14 @@ msgid "Ignore keywords:"
 msgstr "Ignorer les mots-clés :"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:75
+#, fuzzy
+#| msgid ""
+#| "You may store Endnote fields that WIKINDX does not use so that any "
+#| "resources later exported to Endnote can include this original unchanged "
+#| "data. Store unused fields:"
 msgid ""
-"You may store Endnote fields that WIKINDX does not use so that any resources "
-"later exported to Endnote can include this original unchanged data. Store "
+"You may store EndNote fields that WIKINDX does not use so that any resources "
+"later exported to EndNote can include this original unchanged data. Store "
 "unused fields:"
 msgstr ""
 "Vous pouvez stocker les champs Endnote que WIKINDX n'utilise pas afin que "
@@ -528,15 +544,21 @@ msgid "Include a hyperlink to the resource in this WIKINDX:"
 msgstr "Inclure un lien vers la fiche de la référence du site"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:139
-msgid "Endnote file type"
+#, fuzzy
+#| msgid "Endnote file type"
+msgid "EndNote file type"
 msgstr "Type de fichier Endnote"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:140
-msgid "Endnote XML"
+#, fuzzy
+#| msgid "Endnote XML"
+msgid "EndNote XML"
 msgstr "Endnote XML"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:141
-msgid "Endnote tabbed"
+#, fuzzy
+#| msgid "Endnote tabbed"
+msgid "EndNote tabbed"
 msgstr "Endnote tabulé"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:142
@@ -636,19 +658,22 @@ msgid "No Results Found"
 msgstr "Aucun résultat"
 
 #: components/plugins/importexportbib/importexportbibmessages.php:169
+#, fuzzy
+#| msgid ""
+#| "XML file is not compatible with Endnote v8 which is required for this "
+#| "import script."
 msgid ""
-"XML file is not compatible with Endnote v8 which is required for this import "
+"XML file is not compatible with EndNote v8 which is required for this import "
 "script."
 msgstr ""
 "Ce fichier XML n'est pas compatible avec la version 8 d'Endnote qui est la "
 "celle prise en charge."
 
 #: components/plugins/importexportbib/importexportbibmessages.php:170
-msgid "Successfully imported Endnote file."
+#, fuzzy
+#| msgid "Successfully imported Endnote file."
+msgid "Successfully imported EndNote file."
 msgstr "Fichier Endnote importé avec succès"
-
-#~ msgid "Exp. RIS..."
-#~ msgstr "Exp. RIS..."
 
 #~ msgid "Exp. Endnote..."
 #~ msgstr "Exp. Endnote..."
@@ -664,6 +689,14 @@ msgstr "Fichier Endnote importé avec succès"
 
 #~ msgid "Exp. HTML..."
 #~ msgstr "Exp. HTML..."
+
+#, fuzzy
+#~| msgid "Endnote XML"
+#~ msgid "Endnote"
+#~ msgstr "Endnote XML"
+
+#~ msgid "Exp. RIS..."
+#~ msgstr "Exp. RIS..."
 
 #~ msgid "Basket"
 #~ msgstr "Panier"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: importexportbib\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-12-19 01:08+0100\n"
+"POT-Creation-Date: 2020-12-19 01:47+0100\n"
 "PO-Revision-Date: 2019-09-27 01:50+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -38,7 +38,8 @@ msgid "Export list..."
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:25
-msgid "Endnote"
+#: components/plugins/importexportbib/importexportbibmessages.php:30
+msgid "EndNote"
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:26
@@ -55,10 +56,6 @@ msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:29
 msgid "HTML"
-msgstr ""
-
-#: components/plugins/importexportbib/importexportbibmessages.php:30
-msgid "EndNote"
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:31
@@ -80,7 +77,7 @@ msgid "Export Ideas"
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:35
-msgid "Import Endnote XML Bibliography"
+msgid "Import EndNote XML Bibliography"
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:36
@@ -104,7 +101,7 @@ msgid "Export RIS"
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:41
-msgid "Export Endnote"
+msgid "Export EndNote"
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:44
@@ -195,7 +192,7 @@ msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:63
 msgid ""
-"You may import Endnote XML bibliographies (.xml files) here. Large files may "
+"You may import EndNote XML bibliographies (.xml files) here. Large files may "
 "take some time so if\n"
 "\t\t\t\tWIKINDX senses that php.ini's 'max_execution_time' variable is about "
 "to be exceeded, it will start importing the bibliography in chunks.\n"
@@ -234,8 +231,8 @@ msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:75
 msgid ""
-"You may store Endnote fields that WIKINDX does not use so that any resources "
-"later exported to Endnote can include this original unchanged data. Store "
+"You may store EndNote fields that WIKINDX does not use so that any resources "
+"later exported to EndNote can include this original unchanged data. Store "
 "unused fields:"
 msgstr ""
 
@@ -466,15 +463,15 @@ msgid "Include a hyperlink to the resource in this WIKINDX:"
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:139
-msgid "Endnote file type"
+msgid "EndNote file type"
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:140
-msgid "Endnote XML"
+msgid "EndNote XML"
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:141
-msgid "Endnote tabbed"
+msgid "EndNote tabbed"
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:142
@@ -572,10 +569,10 @@ msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:169
 msgid ""
-"XML file is not compatible with Endnote v8 which is required for this import "
+"XML file is not compatible with EndNote v8 which is required for this import "
 "script."
 msgstr ""
 
 #: components/plugins/importexportbib/importexportbibmessages.php:170
-msgid "Successfully imported Endnote file."
+msgid "Successfully imported EndNote file."
 msgstr ""

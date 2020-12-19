@@ -22,7 +22,7 @@ class importexportbibMessages
             "menuBibutils" => dgettext($domain, "Bibutils"),
             "menuexportbasket" => dgettext($domain, "Export basket..."),
             "menuexportlist" => dgettext($domain, "Export list..."),
-            "menuImportEndnote" => dgettext($domain, "Endnote"),
+            "menuImportEndnote" => dgettext($domain, "EndNote"),
             "menuImportPubMed" => dgettext($domain, "PubMed"),
             "menuExportRtf" => dgettext($domain, "RTF"),
             "menuExportBibtex" => dgettext($domain, "BibTeX"),
@@ -32,13 +32,13 @@ class importexportbibMessages
             "menuExportList" => dgettext($domain, "Last List"),
             "menuListFiles" => dgettext($domain, "Exported Files"),
             "menuIdeaExport" => dgettext($domain, "Export Ideas"),
-            "headerImportEndnote" => dgettext($domain, "Import Endnote XML Bibliography"),
+            "headerImportEndnote" => dgettext($domain, "Import EndNote XML Bibliography"),
             "hheaderImportPubMedh" => dgettext($domain, "Import PubMed"),
             "headerRtfExport" => dgettext($domain, "Export Rich Text Format"),
             "headerBibtexExport" => dgettext($domain, "Export BibTeX"),
             "headerHtmlExport" => dgettext($domain, "Export HTML"),
             "headerRisExport" => dgettext($domain, "Export RIS"),
-            "headerEndnoteExport" => dgettext($domain, "Export Endnote"),
+            "headerEndnoteExport" => dgettext($domain, "Export EndNote"),
             "headerIdeaExport" => dgettext($domain, "Export Ideas"),
             "headerListFiles" => dgettext($domain, "Exported Files"),
             "headerBibutils" => dgettext($domain, "Bibutils Conversion"),
@@ -60,7 +60,7 @@ class importexportbibMessages
             "bibutilsoption4" => dgettext($domain, "Don't covert latex character combinations"),
             "bibutilsoption5" => dgettext($domain, "Unicode in, unicode out"),
             "bibutilsSuccess" => dgettext($domain, "Successfully converted ###"),
-            "introEndnoteImport" => dgettext($domain, "You may import Endnote XML bibliographies (.xml files) here. Large files may take some time so if
+            "introEndnoteImport" => dgettext($domain, "You may import EndNote XML bibliographies (.xml files) here. Large files may take some time so if
 				WIKINDX senses that php.ini's 'max_execution_time' variable is about to be exceeded, it will start importing the bibliography in chunks.
 				If there is a date field, the format should be either dd/mm/yyyy or yyyy/mm/dd and yyyy will override any year field in the record.
 				If you have custom fields in your import file, create custom fields first in the WIKINDX database (the Admin menu) so that you can then map
@@ -72,7 +72,7 @@ class importexportbibMessages
             // importDuplicates For file imports, allow duplicates?
             "importDuplicates" => dgettext($domain, "Import duplicates:"),
             "importKeywordIgnore" => dgettext($domain, "Ignore keywords:"),
-            "storeRawEndnoteImport" => dgettext($domain, "You may store Endnote fields that WIKINDX does not use so that any resources later exported to Endnote can include this original unchanged data. Store unused fields:"),
+            "storeRawEndnoteImport" => dgettext($domain, "You may store EndNote fields that WIKINDX does not use so that any resources later exported to EndNote can include this original unchanged data. Store unused fields:"),
             "empty" => dgettext($domain, "File is empty"),
             "added" => dgettext($domain, "No. resources added: ###"),
             "discarded" => dgettext($domain, "No. resources discarded (duplicates or no titles): ###"),
@@ -136,9 +136,9 @@ class importexportbibMessages
             "notesTag" => dgettext($domain, "NOTES:"),
             "keywords" => dgettext($domain, "Include resource keywords"),
             "exportHyperlink" => dgettext($domain, "Include a hyperlink to the resource in this WIKINDX:"),
-            "exportEndnoteFileType" => dgettext($domain, "Endnote file type"),
-            "exportEndnoteXml" => dgettext($domain, "Endnote XML"),
-            "exportEndnoteTabbed" => dgettext($domain, "Endnote tabbed"),
+            "exportEndnoteFileType" => dgettext($domain, "EndNote file type"),
+            "exportEndnoteXml" => dgettext($domain, "EndNote XML"),
+            "exportEndnoteTabbed" => dgettext($domain, "EndNote tabbed"),
             "importPubMedIntro" => dgettext($domain, "Search PubMed: please enter one or more fields – if the ID field is 
             	completed, only one result will be returned if found. Multiple items within a field
 				should be separated by a space. Per NCBI policy, a maximum of 100 search results can be obtained."),
@@ -166,8 +166,8 @@ class importexportbibMessages
             "importPubMedOutputFile" => dgettext($domain, "Output File"),
             "importPubMedNoResults" => dgettext($domain, "No Results Found"),
             "importPubMedFailConvert" => dgettext($domain, "FAILED to convert (###)"),
-            "importEndnoteNotv8" => dgettext($domain, "XML file is not compatible with Endnote v8 which is required for this import script."),
-            "importEndnoteSuccess" => dgettext($domain, "Successfully imported Endnote file."),
+            "importEndnoteNotv8" => dgettext($domain, "XML file is not compatible with EndNote v8 which is required for this import script."),
+            "importEndnoteSuccess" => dgettext($domain, "Successfully imported EndNote file."),
         ];
     }
 }

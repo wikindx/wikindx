@@ -675,14 +675,6 @@ msgstr ""
 msgid "Successfully imported EndNote file."
 msgstr "Fichier Endnote importé avec succès"
 
-#~ msgid "Exp. HTML..."
-#~ msgstr "Exp. HTML..."
-
-#, fuzzy
-#~| msgid "Endnote XML"
-#~ msgid "Endnote"
-#~ msgstr "Endnote XML"
-
 #~ msgid "Exp. RIS..."
 #~ msgstr "Exp. RIS..."
 
@@ -697,6 +689,14 @@ msgstr "Fichier Endnote importé avec succès"
 
 #~ msgid "Exp. BibTeX..."
 #~ msgstr "Exp. BibTeX..."
+
+#~ msgid "Exp. HTML..."
+#~ msgstr "Exp. HTML..."
+
+#, fuzzy
+#~| msgid "Endnote XML"
+#~ msgid "Endnote"
+#~ msgstr "Endnote XML"
 
 #~ msgid "Basket"
 #~ msgstr "Panier"

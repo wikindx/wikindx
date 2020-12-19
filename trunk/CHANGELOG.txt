@@ -84,6 +84,7 @@ MAINTENANCE:
 31. Remove table database_summary and count resources on the fly.
 32. Use an internal version for plugins.
 33. Assume the bibUtils are in the system PATH.
+34. Updated French translation.
 
 SECURITY:
 1. Replace crypt/hash_equals() by password_hash/password_verify() which is stronger by default.

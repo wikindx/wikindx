@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2020-12-19 04:52+0100\n"
+"POT-Creation-Date: 2020-12-19 04:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2789,24 +2789,54 @@ msgstr ""
 
 #. translators: do not edit words prefaced with '$'
 #: core/messages/help.php:183
+#: core/messages/help.php:222
+#: core/messages/help.php:241
+#: core/messages/help.php:257
+msgid "<ul>"
+msgstr ""
+
+#: core/messages/help.php:184
 msgid ""
-"<ul>\n"
 "<li>If you add the special string $QUICKSEARCH$ to the front page "
-"description, it will be replaced by the Quick Search form.</li>\n"
+"description, it will be replaced by the Quick Search form.</li>"
+msgstr ""
+
+#: core/messages/help.php:185
+msgid ""
 "<li>To disable registered users from pasting BibTeX entries, set the value to "
-"0.  Administrators can always paste.</li>\n"
+"0.  Administrators can always paste.</li>"
+msgstr ""
+
+#: core/messages/help.php:186
+msgid ""
 "<li>In cases where WIKINDX creates temporary files, such as when exporting "
 "bibliographies in various formats, you can define the age of a file in "
 "seconds after which the file will be deleted the next time a user logs on.</"
-"li>\n"
+"li>"
+msgstr ""
+
+#: core/messages/help.php:187
+msgid ""
 "<li>If set, statistics will be emailed at the start of each month to "
-"registered users who are named creators of resources.</li>\n"
+"registered users who are named creators of resources.</li>"
+msgstr ""
+
+#: core/messages/help.php:188
+msgid ""
 "<li>You can deny read only access.  If read only access is allowed, the login "
-"prompt can be bypassed and users will go directly into the WIKINDX.</li>\n"
+"prompt can be bypassed and users will go directly into the WIKINDX.</li>"
+msgstr ""
+
+#: core/messages/help.php:189
+msgid ""
 "<li>Printing PHP errors and SQL statements is for debugging purposes and "
 "should not be used on a live production server. Printing SQL statements will "
 "interfere with AJAX/javascript operations on pages such as Advanced Search "
-"and New/Edit Resource.</li>\n"
+"and New/Edit Resource.</li>"
+msgstr ""
+
+#: core/messages/help.php:190
+msgid ""
 "<li>Prior to v6.4.0, data relating to searches and similar were stored in PHP "
 "sessions but these are common to all tabs/windows – searches in different "
 "tabs would make use of search data (such as search parameters, last multi "
@@ -2818,8 +2848,14 @@ msgid ""
 "sessionStorage#Browser_compatibility or https://caniuse.com/?"
 "search=sessionStorage) so, for this reason, the feature is disabled by "
 "default in WIKINDX. Turn it on with the checkbox under Miscellaneous labelled "
-"'BrowserTabID'.</li>\n"
-"</ul>"
+"'BrowserTabID'.</li>"
+msgstr ""
+
+#: core/messages/help.php:191
+#: core/messages/help.php:230
+#: core/messages/help.php:253
+#: core/messages/help.php:264
+msgid "</ul>"
 msgstr ""
 
 #: core/messages/help.php:192
@@ -2988,36 +3024,56 @@ msgstr ""
 msgid "<p><strong>General tips</strong></p>"
 msgstr ""
 
-#: core/messages/help.php:222
+#: core/messages/help.php:223
+msgid "<li>Your web browser must accept cookies.</li>"
+msgstr ""
+
+#: core/messages/help.php:224
 msgid ""
-"<ul>\n"
-"<li>Your web browser must accept cookies.</li>\n"
 "<li>As WIKINDX functions as a program within a program, you should try not to "
 "use the web browser's back and forward navigation buttons but should, "
-"instead, use the navigation within WIKINDX.</li>\n"
+"instead, use the navigation within WIKINDX.</li>"
+msgstr ""
+
+#: core/messages/help.php:225
+msgid ""
 "<li>WIKINDX uses sessions to temporarily store data and sessions are unique "
 "to a web browser instance and the type of web browser.  You may experience "
 "unexpected results if you use WIKINDX with more than one web browser window "
-"or tab although you can safely do this if the web browsers are different.</"
-"li>\n"
+"or tab although you can safely do this if the web browsers are different.</li>"
+msgstr ""
+
+#: core/messages/help.php:226
+msgid ""
 "<li>A <em>resource</em> in WIKINDX is a collection of data that comprises "
 "information forming the bibliographic record, metadata (index card-like "
 "information about or taken from the record such as quotations or musings -- "
 "the administrator may have disabled this feature), categories, subcategories "
 "and keywords. There may also be further information such as notes, abstract, "
-"attachments and external URLs in addition to statistical data.</li>\n"
+"attachments and external URLs in addition to statistical data.</li>"
+msgstr ""
+
+#: core/messages/help.php:227
+msgid ""
 "<li>If you are a registered user, you may create your own user tags and apply "
-"them to resources.</li>\n"
+"them to resources.</li>"
+msgstr ""
+
+#: core/messages/help.php:228
+msgid ""
 "<li>As a registered user, you can also create your own bibliographies drawn "
-"from the WIKINDX Master Bibliography.</li>\n"
+"from the WIKINDX Master Bibliography.</li>"
+msgstr ""
+
+#: core/messages/help.php:229
+msgid ""
 "<li>Bibliographic formatting is applied in WIKINDX 'on-the-fly' using "
 "bibliographic styles compiled and defined by the administrator.  As with any "
 "bibliographic style, not all bibliographic data need be displayed. If, for "
 "example, you were to search for resources having M. Mouse as a creator, then "
 "resources might be returned where M. Mouse is, for instance, a series editor "
 "but, due to the requirements of the bibliographic style, is not displayed as "
-"such.</li>\n"
-"</ul>"
+"such.</li>"
 msgstr ""
 
 #: core/messages/help.php:231
@@ -3050,11 +3106,6 @@ msgid ""
 "<p>As a registered user, settings here will be saved for the next time you "
 "use WIKINDX. Most settings are self-explanatory but some require further "
 "explanation:</p>"
-msgstr ""
-
-#: core/messages/help.php:241
-#: core/messages/help.php:257
-msgid "<ul>"
 msgstr ""
 
 #: core/messages/help.php:242
@@ -3157,11 +3208,6 @@ msgid ""
 "notification will be sent immediately following the passing of the threshold, "
 "only that the notification will be sent the next time a resource is added or "
 "edited.</li>"
-msgstr ""
-
-#: core/messages/help.php:253
-#: core/messages/help.php:264
-msgid "</ul>"
 msgstr ""
 
 #: core/messages/help.php:255

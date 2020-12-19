@@ -180,15 +180,15 @@ class HELP
 . dgettext($domain, "<p>Most of the configuration options are self-explanatory but bear the following in mind:</p>")
 
 // translators: do not edit words prefaced with '$'
-. dgettext($domain, "<ul>
-<li>If you add the special string \$QUICKSEARCH\$ to the front page description, it will be replaced by the Quick Search form.</li>
-<li>To disable registered users from pasting BibTeX entries, set the value to 0.  Administrators can always paste.</li>
-<li>In cases where WIKINDX creates temporary files, such as when exporting bibliographies in various formats, you can define the age of a file in seconds after which the file will be deleted the next time a user logs on.</li>
-<li>If set, statistics will be emailed at the start of each month to registered users who are named creators of resources.</li>
-<li>You can deny read only access.  If read only access is allowed, the login prompt can be bypassed and users will go directly into the WIKINDX.</li>
-<li>Printing PHP errors and SQL statements is for debugging purposes and should not be used on a live production server. Printing SQL statements will interfere with AJAX/javascript operations on pages such as Advanced Search and New/Edit Resource.</li>
-<li>Prior to v6.4.0, data relating to searches and similar were stored in PHP sessions but these are common to all tabs/windows – searches in different tabs would make use of search data (such as search parameters, last multi search etc.) from the most recently conducted search in whatever tab. v6.4.0 makes use of javascript sessionStorage which allows for browser tabs/windows to be uniquely identified allowing search data to be unique to that search. Not all browsers support sessionStorage (a list of compatible browsers can be found here: https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage#Browser_compatibility or https://caniuse.com/?search=sessionStorage) so, for this reason, the feature is disabled by default in WIKINDX. Turn it on with the checkbox under Miscellaneous labelled 'BrowserTabID'.</li>
-</ul>")
+. dgettext($domain, "<ul>")
+. dgettext($domain, "<li>If you add the special string \$QUICKSEARCH\$ to the front page description, it will be replaced by the Quick Search form.</li>")
+. dgettext($domain, "<li>To disable registered users from pasting BibTeX entries, set the value to 0.  Administrators can always paste.</li>")
+. dgettext($domain, "<li>In cases where WIKINDX creates temporary files, such as when exporting bibliographies in various formats, you can define the age of a file in seconds after which the file will be deleted the next time a user logs on.</li>")
+. dgettext($domain, "<li>If set, statistics will be emailed at the start of each month to registered users who are named creators of resources.</li>")
+. dgettext($domain, "<li>You can deny read only access.  If read only access is allowed, the login prompt can be bypassed and users will go directly into the WIKINDX.</li>")
+. dgettext($domain, "<li>Printing PHP errors and SQL statements is for debugging purposes and should not be used on a live production server. Printing SQL statements will interfere with AJAX/javascript operations on pages such as Advanced Search and New/Edit Resource.</li>")
+. dgettext($domain, "<li>Prior to v6.4.0, data relating to searches and similar were stored in PHP sessions but these are common to all tabs/windows – searches in different tabs would make use of search data (such as search parameters, last multi search etc.) from the most recently conducted search in whatever tab. v6.4.0 makes use of javascript sessionStorage which allows for browser tabs/windows to be uniquely identified allowing search data to be unique to that search. Not all browsers support sessionStorage (a list of compatible browsers can be found here: https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage#Browser_compatibility or https://caniuse.com/?search=sessionStorage) so, for this reason, the feature is disabled by default in WIKINDX. Turn it on with the checkbox under Miscellaneous labelled 'BrowserTabID'.</li>")
+. dgettext($domain, "</ul>")
 . dgettext($domain, "<p>Some of the settings here, such as no. resources to display per page or the bibliographic style, are defaults that users can override in My Wikindx.</p>")
 . dgettext($domain, "<p>You can add system users from the Admin menu.</p>")
 . dgettext($domain, "<p>When adding or editing resources, each resource can belong to multiple categories and subcategories, be assigned custom fields or defined as belonging to a language -- admins can add new categories, subcategories, custom fields and languages from the Admin menu.</p>")
@@ -219,15 +219,15 @@ class HELP
 
 "front" => "<h3>WIKINDX</h3>"
 . dgettext($domain, "<p><strong>General tips</strong></p>")
-. dgettext($domain, "<ul>
-<li>Your web browser must accept cookies.</li>
-<li>As WIKINDX functions as a program within a program, you should try not to use the web browser's back and forward navigation buttons but should, instead, use the navigation within WIKINDX.</li>
-<li>WIKINDX uses sessions to temporarily store data and sessions are unique to a web browser instance and the type of web browser.  You may experience unexpected results if you use WIKINDX with more than one web browser window or tab although you can safely do this if the web browsers are different.</li>
-<li>A <em>resource</em> in WIKINDX is a collection of data that comprises information forming the bibliographic record, metadata (index card-like information about or taken from the record such as quotations or musings -- the administrator may have disabled this feature), categories, subcategories and keywords. There may also be further information such as notes, abstract, attachments and external URLs in addition to statistical data.</li>
-<li>If you are a registered user, you may create your own user tags and apply them to resources.</li>
-<li>As a registered user, you can also create your own bibliographies drawn from the WIKINDX Master Bibliography.</li>
-<li>Bibliographic formatting is applied in WIKINDX 'on-the-fly' using bibliographic styles compiled and defined by the administrator.  As with any bibliographic style, not all bibliographic data need be displayed. If, for example, you were to search for resources having M. Mouse as a creator, then resources might be returned where M. Mouse is, for instance, a series editor but, due to the requirements of the bibliographic style, is not displayed as such.</li>
-</ul>")
+. dgettext($domain, "<ul>")
+. dgettext($domain, "<li>Your web browser must accept cookies.</li>")
+. dgettext($domain, "<li>As WIKINDX functions as a program within a program, you should try not to use the web browser's back and forward navigation buttons but should, instead, use the navigation within WIKINDX.</li>")
+. dgettext($domain, "<li>WIKINDX uses sessions to temporarily store data and sessions are unique to a web browser instance and the type of web browser.  You may experience unexpected results if you use WIKINDX with more than one web browser window or tab although you can safely do this if the web browsers are different.</li>")
+. dgettext($domain, "<li>A <em>resource</em> in WIKINDX is a collection of data that comprises information forming the bibliographic record, metadata (index card-like information about or taken from the record such as quotations or musings -- the administrator may have disabled this feature), categories, subcategories and keywords. There may also be further information such as notes, abstract, attachments and external URLs in addition to statistical data.</li>")
+. dgettext($domain, "<li>If you are a registered user, you may create your own user tags and apply them to resources.</li>")
+. dgettext($domain, "<li>As a registered user, you can also create your own bibliographies drawn from the WIKINDX Master Bibliography.</li>")
+. dgettext($domain, "<li>Bibliographic formatting is applied in WIKINDX 'on-the-fly' using bibliographic styles compiled and defined by the administrator.  As with any bibliographic style, not all bibliographic data need be displayed. If, for example, you were to search for resources having M. Mouse as a creator, then resources might be returned where M. Mouse is, for instance, a series editor but, due to the requirements of the bibliographic style, is not displayed as such.</li>")
+. dgettext($domain, "</ul>")
 . dgettext($domain, "<p><strong>Personal settings</strong></p>")
 . dgettext($domain, "<p>The administrator will have defined default settings but, under the Wikindx|My Wikindx or Wikindx|Preferences menu, you can alter a number of parameters that change the way WIKINDX performs or displays its data. As a registered user, under the My Wikindx menu, these include:</p>") 
 . dgettext($domain, "<ul>

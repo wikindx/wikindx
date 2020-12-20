@@ -6,6 +6,8 @@ Focus: Minor bug fixes, major feature enhancement, and maintenance
 
 IMPORTANT INFORMATION:
 
+The attachment cache is cleared because their creation has been greatly improved and search results will be better.
+
 This version supports php 7.3 and 7.4 only. php 8.0 support is a work in progress.
 
 It is no longer possible to modify the prefix of the tables in the database. This functionality is only useful for several programs sharing the same database with the same table names or several wikindx installations in the same database. These two practices are to be avoided because they are a good way to lost your data. Each software should be isolated in its own database for privacy, security, bug resistance and ease of maintenance. Firstly, the "wkx_" prefix will be kept for some versions and cannot be changed. Secondly, it will be deleted. We believe that very few installs use this feature and we will handle it on a case-by-case basis. If you are affected by this change please contact us for help with the transition.

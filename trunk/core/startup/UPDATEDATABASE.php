@@ -1563,6 +1563,24 @@ END;
     {
         $this->upgradeToTargetVersion();
     }
+    
+    /**
+     * Upgrade database schema to version 37 (6.4.0)
+     *
+     * Clear the cache of attachments because their creation
+     * has been greatly improved and search results will be better
+     */
+    private function upgradeTo37()
+    {
+        $dirCache = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_CACHE_ATTACHMENTS]);
+        $files = \FILE\fileInDirToArray($dirCache);
+        foreach ($files as $file)
+        {
+            unlink(implode(DIRECTORY_SEPARATOR, [$dirCache, $file]));
+        }
+        
+        $this->updateCoreInternalVersion();
+    }
 
     /**
      * Transfer statistics data to new tables then drop old table

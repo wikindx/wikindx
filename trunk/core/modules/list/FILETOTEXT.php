@@ -405,7 +405,7 @@ class FILETOTEXT
             // Extract the content parts
             $za = new \ZipArchive();
             
-            if ($za->open($filename, \ZipArchive::RDONLY))
+            if ($za->open($filename))
             {
                 $content = $za->getFromName($f);
                 if ($content === FALSE) $content = "";
@@ -487,7 +487,7 @@ class FILETOTEXT
         // Extract the content file
         $za = new \ZipArchive();
         
-        if ($za->open($filename, \ZipArchive::RDONLY))
+        if ($za->open($filename))
         {
             $content = $za->getFromName("content.xml");
             if ($content === FALSE) $content = "";

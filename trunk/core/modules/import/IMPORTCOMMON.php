@@ -135,8 +135,13 @@ class IMPORTCOMMON
         if ($this->importType == 'pasteBibtex')
         {
             $paste = array_key_exists("import_Paste", $formData) ? base64_decode($formData["import_Paste"]) : FALSE;
+            if (!$this->session->getVar('setup_Superadmin')) {
+            	$extraString = $this->messages->text("import", "pasteBibtex", \HTML\strong(WIKINDX_MAX_PASTE)) . '&nbsp;';
+            } else {
+            	$extraString = '';
+            }
             $pString .= \HTML\td(\FORM\textareaInput(
-                $this->messages->text("import", "pasteBibtex2"),
+                $extraString . $this->messages->text("import", "pasteBibtex2"),
                 "import_Paste",
                 $paste,
                 80,

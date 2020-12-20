@@ -1992,6 +1992,9 @@ class CONFIGURE
         {
             if (array_key_exists($value, $this->vars) && !$this->vars[$value])
             {
+            	if (($value == 'configMaxPaste') && ($this->vars[$value] === '0')) {
+            		continue;
+            	}
                 $this->formData[$value] = $default;
             }
         }

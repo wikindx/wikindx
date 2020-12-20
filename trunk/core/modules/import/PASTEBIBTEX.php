@@ -22,6 +22,11 @@ class PASTEBIBTEX
     public function __construct()
     {
         $this->gatekeep = FACTORY_GATEKEEP::getInstance();
+        $session = FACTORY_SESSION::getInstance();
+        if ((WIKINDX_MAX_PASTE === 0) && !$session->getVar('setup_Superadmin')) {
+        	header("Location: index.php");
+        	die;
+        }
         include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "IMPORTCOMMON.php"]));
         $this->import = new IMPORTCOMMON();
         $this->import->importType = 'pasteBibtex';

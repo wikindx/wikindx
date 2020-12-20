@@ -317,7 +317,7 @@ class UPDATEDATABASE
             $status = $config->writeDb();
             if ($status === TRUE)
             {
-                $this->session->clearSessionData();
+                $this->session->destroy();
                 
                 // On success display the success message with a form going to the front page
                 $pString  = \HTML\p("Successfully configured WIKINDX", "success", "center");

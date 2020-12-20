@@ -298,7 +298,7 @@ class QUICKSEARCH
         }
         elseif (array_key_exists('patterns', $this->vars))
         {
-            $this->common->patterns = unserialize(base64_decode($this->vars['patterns']));
+            $this->common->patterns = $this->vars['patterns'];
         }
         $reprocess = TRUE;
         if (array_key_exists("search_Order", $this->vars) && $this->vars["search_Order"])

@@ -1162,6 +1162,7 @@ class CONFIGURE
         $isLdapExtAvailable = in_array("ldap", get_loaded_extensions());
         
         $pString = "";
+        $pString .= $this->messageString;
         $pString .= \HTML\h("Builtin auth");
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();

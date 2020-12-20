@@ -607,9 +607,6 @@ class MENU
             $this->res['importSub'] = [
                 $messages->text("menu", "importSub") => FALSE,
             ];
-            $this->res['exportSub'] = [
-                $messages->text("menu", "exportSub") => FALSE,
-            ];
             
             if (WIKINDX_MAX_PASTE > 0 || $this->superAdmin)
             {

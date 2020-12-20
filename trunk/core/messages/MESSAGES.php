@@ -870,7 +870,6 @@ class MESSAGES
 /// menu_home Wikindx menu starts here
 				"home" => dgettext($domain, "Home"),
 				"importSub" => dgettext($domain, "Importer..."),
-				"exportSub" => dgettext($domain, "Exporter"),
 				"news" => dgettext($domain, "News"),
 				"prefs" => dgettext($domain, "Preferences"),
 				"register" => dgettext($domain, "Register"),

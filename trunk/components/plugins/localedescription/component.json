@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "localedescription",
-    "component_version": "342",
+    "component_version": "344",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Localized Front Page",
@@ -23,5 +23,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "665013612cbd699148ecb1d157d02d5c7345d94a14b6b2bf6edcb977ef037050"
+    "component_sha256": "ab6c4d6d960f5b1f673421367fb1950ef8b072cb87e8bae5a298be3491381f2a"
 }

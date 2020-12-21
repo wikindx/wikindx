@@ -44,10 +44,17 @@ BUGS AND LIMITATIONS
 
 CHANGELOG:
 
+2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
+2020-12-21 : CHG : handle multiple tabs.
+2020-12-21 : CHG : Keep internal version numbers in a dedicated table (#268).
+2020-12-21 : CHG : separates the read / write functions of internal version numbers
+                   into two Core / plugin families to prevent mishandling in updates.
+2020-12-21 : CHG : full French translation.
+2020-12-21 : CHG : reformat source code to the prefered if/then/else style.
+2020-07-11 : CHG : relicencing under ISC License terms.
+
 v192 2020
 1. Removed statistics tables in Missing Rows.
-
-2020-07-11 : CHG : relicencing under ISC License terms.
 
 v1.8.5, 2020
 1. Wikindx compatibility version 7.

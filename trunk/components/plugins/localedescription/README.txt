@@ -18,6 +18,15 @@ Thus, plugins/localDescription/index.php etc.
 
 CHANGELOG:
 
+2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
+2020-12-21 : CHG : handle multiple tabs.
+2020-12-21 : CHG : reformat source code to the prefered if/then/else style.
+2020-12-21 : CHG : separates the read / write functions of internal version numbers
+                   into two Core / plugin families to prevent mishandling in updates.
+2020-12-21 : CHG : full French translation.
+2020-12-21 : FIX : restore front page description translation functionality (bugs #211 and #228).
+2020-12-21 : ADD : internal version number + self-upgrade.
+2020-12-21 : ADD : dedicated table plugin_localedescription.
 2020-07-11 : CHG : relicencing under ISC License terms.
 
 v1.6, 2020

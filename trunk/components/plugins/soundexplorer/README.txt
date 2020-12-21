@@ -23,6 +23,17 @@ Thus, plugins/soundexplorer/index.php etc.
 
 CHANGELOG:
 
+2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
+2020-12-21 : CHG : convert UTF8 class to a namespace.
+2020-12-21 : CHG : handle multiple tabs.
+2020-12-21 : CHG : reformat source code to the prefered if/then/else style.
+2020-12-21 : CHG : stop storing a copy of the session state in db and use only PHP plain session
+2020-12-21 : CHG : separates the read / write functions of internal version numbers.
+                   into two Core / plugin families to prevent mishandling in updates.
+2020-12-21 : CHG : full French translation.
+2020-12-21 : ADD : internal version number + self-upgrade.
+2020-07-11 : CHG : relicencing under ISC License terms.
+
 v2.5, 2020
 1. Remove use of sessions for completing form input and redirect on successful completion.
 2. Improvements to the interface.

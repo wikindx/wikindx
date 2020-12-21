@@ -20,6 +20,11 @@ Thus, plugins/visualize/index.php etc.
 
 CHANGELOG:
 
+2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
+2020-12-21 : FIX : display error.
+2020-12-21 : CHG : handle multiple tabs.
+2020-12-21 : CHG : update jpGraph from 4.2.10 to 4.3.4.
+2020-12-21 : CHG : reformat source code to the prefered if/then/else style.
 2020-07-11 : CHG : relicencing under ISC License terms.
 
 v1.5, 2020

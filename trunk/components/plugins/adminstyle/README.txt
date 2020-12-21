@@ -17,6 +17,15 @@ Thus, plugins/adminstyle/index.php etc.
 
 CHANGELOG:
 
+2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
+2020-12-21 : FIX : error reading a bibliographic style for editing.
+2020-12-21 : ADD : create the component.json file when creating or copying a style.
+2020-12-21 : CHG : enable by default private styles.
+2020-12-21 : CHG : convert UTF8 class to a namespace.
+2020-12-21 : CHG : reformat source code to the prefered if/then/else style.
+2020-12-21 : FIX : styles directory in help.
+2020-12-21 : CHG : rewords some messages.
+2020-12-21 : CHG : full French translation.
 2020-07-11 : CHG : relicencing under ISC License terms.
 
 v1.13, 2020

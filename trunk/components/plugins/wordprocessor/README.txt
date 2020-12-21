@@ -24,6 +24,20 @@ Papers can be imported from earlier versions by using the 'Import paper' functio
 
 CHANGELOG:
 
+2020-12-21 : CHG : remove the unused tinymce compressor loader.
+2020-12-21 : SEC : extends safely LOADTINYMCE.
+2020-12-21 : CHG : reset tinyMCE_mode for the wordprocessor after the parent loading.
+2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
+2020-12-21 : CHG : remove the type attribut of script elements (discouraged in HTML 5).
+2020-12-21 : CHG : convert UTF8 class to a namespace.
+2020-12-21 : CHG : reformat source code to the prefered if/then/else style.
+2020-12-21 : CHG : separates the read / write functions of internal version numbers
+                   into two Core / plugin families to prevent mishandling in updates.
+2020-12-21 : CHG : rewords depredacted help messages.
+2020-12-21 : CHG : remove dead code.
+2020-12-21 : CHG : remove unused messages.
+2020-12-21 : CHG : full French translation.
+2020-12-21 : ADD : internal version number + self-upgrade.
 2020-07-11 : CHG : relicencing under ISC License terms.
 
 v1.12, 2020

@@ -41,6 +41,10 @@ http://www.phpclasses.org/package/2779-PHP-Backup-MySQL-databases-to-files-with-
 
 CHANGELOG:
 
+2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
+2020-12-21 : CHG : reformat source code to the prefered if/then/else style.
+2020-12-21 : FIX : Send HTTP Error Code 404 for a missing download.
+2020-12-21 : CHG : full French translation.
 2020-07-11 : CHG : relicencing under ISC License terms.
 
 v1.9, 2020

@@ -23,6 +23,17 @@ Thus, components/plugins/ideagen/index.php etc.
 
 CHANGELOG:
 
+2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
+2020-12-21 : CHG : converted all instances of trim() for form input to UTF8::mb_trim().
+2020-12-21 : CHG : handle multiple tabs.
+2020-12-21 : CHG : if browsing a user bibliography, use it also for the front page
+                   (which otherwise uses the master bibliography) – set in Wikindx|Bibliographies.
+2020-12-21 : FIX : minor debugging of the ideaGen plugin.
+2020-12-21 : CHG : improved the options displayed in the Metadata menu.
+2020-12-21 : CHG : reformat source code to the prefered if/then/else style.
+2020-12-21 : CHG : full French translation.
+2020-07-11 : CHG : relicencing under ISC License terms.
+
 v1.1, 2020
 1. Some debugging to ensure metadata are returned at each generation.
 

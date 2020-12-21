@@ -19,6 +19,10 @@ Adminer website: https://www.adminer.org/
 
 CHANGELOG:
 
+2020-12-21 : CHG : make PHP includes independent of the web server layout (#244).
+2020-12-21 : CHG : reformat source code to the prefered if/then/else style.
+2020-12-21 : CHG : update Adminer to version 4.7.8 (PHP 8.0 support).
+2020-12-21 : CHG : full French translation.
 2020-07-11 : CHG : relicencing under ISC License terms.
 2020-06-24 : SEC : prevent direct access to subparts of adminer. Only the index.php
                    and adminer.php scripts can be called and it includes others.

@@ -21,7 +21,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/style/trunk/wikindx_style_turabian_213.zip",
-            "package_sha256": "85fa293c83ff2df8d9f3a85d35966ab30cafea1dc8e9575a8cf85d6df6e5fcdd",
+            "package_sha256": "ea8eb3180d7947e61dda52d1ec73d758261afd40a26c172ff9343209d3f31a1f",
             "package_size": 5465
         }
     ]

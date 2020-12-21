@@ -34,7 +34,7 @@
     ],
     "component_packages": [
         {
-            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/trunk/wikindx_vendor_pdftotext_175.zip",
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/6.4.0/wikindx_vendor_pdftotext_175.zip",
             "package_sha256": "327d9c94b52e07d61156b25228ef7377daa0fd73f4b33cfd31066feb47e9ee9e",
             "package_size": 158659
         }

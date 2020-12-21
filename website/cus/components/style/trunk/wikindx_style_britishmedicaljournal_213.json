@@ -21,7 +21,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/style/trunk/wikindx_style_britishmedicaljournal_213.zip",
-            "package_sha256": "55a30b013ed8eefb4deceee1267885ffcb1c8430eeca43301e80722178900f73",
+            "package_sha256": "12171a0771eb17e9c73de6dd2197fc6316c19789f918b803d7abb5b13f1e3540",
             "package_size": 4899
         }
     ]

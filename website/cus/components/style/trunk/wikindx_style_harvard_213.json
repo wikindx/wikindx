@@ -21,7 +21,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/style/trunk/wikindx_style_harvard_213.zip",
-            "package_sha256": "d6ed5e9fc7cd122c55b4086a99417bbbe4614079ed6589e4a26e0a3fb3dec958",
+            "package_sha256": "87a9883b98ea478aeeac30cca37131d3b11f76c71d35b9f40381b795a67df815",
             "package_size": 4937
         }
     ]

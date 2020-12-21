@@ -27,7 +27,7 @@
     ],
     "component_packages": [
         {
-            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/trunk/wikindx_vendor_licenses_191.zip",
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/6.4.0/wikindx_vendor_licenses_191.zip",
             "package_sha256": "d802d29e8f1f2a274c8366d387c0e33520848dcf50784dca228a26e7ddcd417a",
             "package_size": 22287
         }

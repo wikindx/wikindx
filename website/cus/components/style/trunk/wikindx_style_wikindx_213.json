@@ -21,7 +21,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/style/trunk/wikindx_style_wikindx_213.zip",
-            "package_sha256": "77d76d6f9c29a8d39548587336c68aea620ba1ada0cd33bb9ce0f49c90d3be65",
+            "package_sha256": "66c5f7e4a8bab91250a1a32ba32c4245856c9ae6025f6fbb4e6ce05d94c74224",
             "package_size": 5837
         }
     ]

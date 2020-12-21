@@ -33,7 +33,7 @@
     ],
     "component_packages": [
         {
-            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/trunk/wikindx_vendor_progressbarjs_175.zip",
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/6.4.0/wikindx_vendor_progressbarjs_175.zip",
             "package_sha256": "83f0f034b3a30872da17bf54807d48f8355c530a7b05c8003c2bf74038d291e2",
             "package_size": 9287
         }

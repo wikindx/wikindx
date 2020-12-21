@@ -21,7 +21,7 @@
     "component_packages": [
         {
             "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/style/trunk/wikindx_style_chicago_213.zip",
-            "package_sha256": "8adec2aa6a0508be809f87986bc5de6be16395990dad608ab74ec0e38205073a",
+            "package_sha256": "da90ee5f65524d4b2e6d7e30ef4713501736e4077a79a1f08252f89cdb81f8cf",
             "package_size": 5418
         }
     ]

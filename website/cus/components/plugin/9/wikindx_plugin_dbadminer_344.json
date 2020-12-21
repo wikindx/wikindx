@@ -1,0 +1,35 @@
+{
+    "component_version": "344",
+    "component_name": "DB Adminer",
+    "component_description": "Embedded version of the database manager Adminer, with a selection of tested plugins. This plugin can be a security vulnerability for a public site. Use with caution.",
+    "component_licence": "ISC License",
+    "component_sha256": "ced7cfde69de8f52f94355adc43d37b107612bcdaef2d4219b0facb15b5abb32",
+    "component_id": "dbadminer",
+    "component_builtin": "false",
+    "component_website": "https://www.adminer.org/",
+    "component_type": "plugin",
+    "component_updatable": "true",
+    "component_authors": [
+        {
+            "author_name": "Mark Grimshaw-Aagaard",
+            "author_role": "Developer",
+            "author_copyright": "2019-2020",
+            "author_email": "sirfragalot@users.sourceforge.net",
+            "author_website": "https://vbn.aau.dk/en/persons/126217"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Developer",
+            "author_copyright": "2019-2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/plugin/9/wikindx_plugin_dbadminer_344.zip",
+            "package_sha256": "1065fef48f1fc0e26edc90e63473aa7005b7111462c008775a01ebfbcf60234d",
+            "package_size": 327975
+        }
+    ]
+}

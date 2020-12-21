@@ -1,0 +1,33 @@
+{
+    "component_version": "235",
+    "component_sha256": "702b27cab195ab29cc9072f98f7bba271b728096e727fd1d8efb0380f6d049f2",
+    "component_licence": "LGPL-2.1 License ",
+    "component_name": "TinyMCE HTML editor 5.4.1",
+    "component_description": "TinyMCE WYSIWYG HTML editor",
+    "component_website": "https://www.tiny.cloud/",
+    "component_id": "tinymce",
+    "component_builtin": "true",
+    "component_updatable": "true",
+    "component_type": "vendor",
+    "component_authors": [
+        {
+            "author_name": "New Digital Group, Inc.",
+            "author_role": "Developers",
+            "author_copyright": "2002-2020"
+        },
+        {
+            "author_name": "Stéphane Aulery",
+            "author_role": "Packager",
+            "author_copyright": "2020",
+            "author_email": "lkppo@users.sourceforge.net",
+            "author_website": "http://saulery.legtux.org/"
+        }
+    ],
+    "component_packages": [
+        {
+            "package_location": "https://sourceforge.net/projects/wikindx/files/archives/components/vendor/6.4.0/wikindx_vendor_tinymce_235.zip",
+            "package_sha256": "b9a9363ffffd4fcd272944e545987d6edcb7e747d15968b607ed65939c9c1e64",
+            "package_size": 1798131
+        }
+    ]
+}

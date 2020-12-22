@@ -10,9 +10,7 @@
 
 <p>This version supports php 7.3 and 7.4 only. php 8.0 support is a work in progress.</p>
 
-<p>It is no longer possible to modify the prefix of the tables in the database. This functionality is only useful for several programs sharing the same database with the same table names or several wikindx installations in the same database. These two practices are to be avoided because they are a good way to lost your data. Each software should be isolated in its own database for privacy, security, bug resistance and ease of maintenance. Firstly, the "wkx_" prefix will be kept for some versions and cannot be changed. Secondly, it will be deleted. We believe that very few installs use this feature and we will handle it on a case-by-case basis. If you are affected by this change please contact us for help with the transition.</p>
-
-<p>We believe that very few installs use this feature and we will handle it on a case-by-case basis. If you are affected by this change please contact us for help with the transition.</p>
+<p>It is no longer possible to modify the prefix of the tables in the database. This functionality is only useful for several programs sharing the same database with the same table names or several wikindx installations in the same database. These two practices are to be avoided because they are a good way to lose your data. Each software should be isolated in its own database for privacy, security, bug resistance and ease of maintenance. Firstly, the "wkx_" prefix will be kept for some versions and cannot be changed. Secondly, it will be deleted. We believe that very few installs use this feature and we will handle it on a case-by-case basis. If you are affected by this change please contact us for help with the transition.</p>
 
 <h3>BUGS</h3>
 

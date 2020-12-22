@@ -34,7 +34,7 @@ define('TAB', "\t");
  *
  * @name WIKINDX_PUBLIC_VERSION
  */
-define('WIKINDX_PUBLIC_VERSION', '6.4.0');
+define('WIKINDX_PUBLIC_VERSION', '6.4.1');
 /**
  * WIKINDX internal version information
  *
@@ -101,7 +101,7 @@ define('WIKINDX_MARIADB_VERSION_MIN', '10.2');
  *
  * @name WIKINDX_COPYRIGHT_YEAR
  */
-define('WIKINDX_COPYRIGHT_YEAR', "2003-2020");
+define('WIKINDX_COPYRIGHT_YEAR', "2003-2021");
 /**
  * WIKINDX release date
  *

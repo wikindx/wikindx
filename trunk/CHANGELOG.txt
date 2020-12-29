@@ -6,6 +6,7 @@ Focus: Minor bug fixes
 
 BUG FIXES:
 1. Typo in changelog.
+2. Field userkgusergroupsUserGroupId in table user_kg_usergroups should not accept NULL on first install.
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

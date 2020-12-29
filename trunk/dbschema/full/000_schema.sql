@@ -499,7 +499,7 @@ CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%user_kg_keywords` (
 CREATE TABLE IF NOT EXISTS `%%WIKINDX_DB_TABLEPREFIX%%user_kg_usergroups` (
   `userkgusergroupsId` int(11) NOT NULL AUTO_INCREMENT,
   `userkgusergroupsKeywordGroupId` int(11) NOT NULL,
-  `userkgusergroupsUserGroupId` int(11) NOT NULL,
+  `userkgusergroupsUserGroupId` int(11) DEFAULT NULL,
   PRIMARY KEY (`userkgusergroupsId`),
   KEY `userkgusergroupsUserGroupId` (`userkgusergroupsUserGroupId`),
   KEY `userkgusergroupsKeywordGroupId` (`userkgusergroupsKeywordGroupId`)

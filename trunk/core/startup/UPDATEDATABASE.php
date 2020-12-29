@@ -743,6 +743,8 @@ END;
     {
         if ($version == WIKINDX_INTERNAL_VERSION)
             return WIKINDX_PUBLIC_VERSION;
+        elseif ($version >= 38)
+            return "6.4.1";
         elseif ($version >= 23)
             return "6.4.0";
         elseif ($version >= 15)
@@ -1580,6 +1582,16 @@ END;
         }
         
         $this->updateCoreInternalVersion();
+    }
+
+    /**
+     * Upgrade database schema to version 38 (6.4.1)
+     *
+     * Fix the wrong definition of user_kg_usergroups.userkgusergroupsUserGroupId (NULL is allowed)
+     */
+    private function upgradeTo38()
+    {
+        $this->upgradeToTargetVersion();
     }
 
     /**

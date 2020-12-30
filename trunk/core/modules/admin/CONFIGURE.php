@@ -1163,7 +1163,7 @@ class CONFIGURE
         
         $pString = "";
         $pString .= $this->messageString;
-        $pString .= \HTML\h("Builtin auth");
+        $pString .= \HTML\h("Built-in auth");
         $pString .= \HTML\tableStart('generalTable', 'borderStyleSolid', 0, "left");
         $pString .= \HTML\trStart();
         array_key_exists("configPasswordSize", $this->formData) ? $input = $this->formData["configPasswordSize"] : $input = WIKINDX_PASSWORD_SIZE_DEFAULT;

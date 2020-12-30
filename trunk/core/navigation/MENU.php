@@ -803,7 +803,8 @@ class MENU
         
         if (WIKINDX_QUARANTINE && $this->checkQuarantine())
         {
-            $this->admin[$messages->text("menu", "quarantine")] = 'index.php?action=list_LISTSOMERESOURCES_CORE&method=quarantineProcess';
+            $this->admin[$messages->text("menu", "quarantine")] = 
+            	'index.php?action=list_LISTSOMERESOURCES_CORE&method=quarantineProcess' . "&browserTabID=" . $this->browserTabID;
         }
         
         
@@ -1231,6 +1232,7 @@ class MENU
     private function checkQuarantine()
     {
         $this->db->formatConditions(['resourcemiscQuarantine' => 'Y']);
+        $this->db->limit(1, 0);
         $resultset = $this->db->select('resource_misc', 'resourcemiscId');
         $nbQuarantined = $this->db->numRows($resultset);
 

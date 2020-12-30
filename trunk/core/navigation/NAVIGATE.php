@@ -110,7 +110,11 @@ class NAVIGATE
      */
     public function resource($resourceId, $message)
     {
-        header("Location: index.php?action=resource_RESOURCEVIEW_CORE&message=$message&id=$resourceId");
+    	$url = "index.php?action=resource_RESOURCEVIEW_CORE&message=$message&id=$resourceId";
+    	if ($this->browserTabID) {
+    		$url .= '&browserTabID=' . $this->browserTabID;
+    	}
+        header("Location: " . $url);
         die;
     }
     /**

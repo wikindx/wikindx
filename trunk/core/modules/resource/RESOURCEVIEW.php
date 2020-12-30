@@ -1717,7 +1717,8 @@ class RESOURCEVIEW
         return \HTML\a(
             $this->icons->getClass("add"),
             $this->icons->getHTML("basketAdd"),
-            "index.php?" . htmlentities("action=basket_BASKET_CORE&resourceId=" . $row['resourceId']) . "&browserTabID=" . $this->browserTabID
+            "index.php?" . htmlentities("action=basket_BASKET_CORE&resourceId=" . $row['resourceId']) . 
+            "&browserTabID=" . $this->browserTabID
         );
     }
     /**
@@ -1734,7 +1735,8 @@ class RESOURCEVIEW
             return \HTML\a(
                 $this->icons->getClass("putInQuarantine"),
                 $this->icons->getHTML("removeFromQuarantine"),
-                "index.php?" . htmlentities("action=admin_QUARANTINE_CORE&method=approve&resourceId=" . $row['resourceId'])
+                "index.php?" . htmlentities("action=admin_QUARANTINE_CORE&method=approve&resourceId=" . $row['resourceId']) . 
+                "&browserTabID=" . $this->browserTabID
             );
         }
         else
@@ -1742,7 +1744,8 @@ class RESOURCEVIEW
             return \HTML\a(
                 $this->icons->getClass("removeFromQuarantine"),
                 $this->icons->getHTML("putInQuarantine"),
-                "index.php?" . htmlentities("action=admin_QUARANTINE_CORE&method=putInQuarantine&resourceId=" . $row['resourceId'])
+                "index.php?" . htmlentities("action=admin_QUARANTINE_CORE&method=putInQuarantine&resourceId=" . $row['resourceId']) . 
+                "&browserTabID=" . $this->browserTabID
             );
         }
     }

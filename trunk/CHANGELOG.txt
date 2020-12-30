@@ -7,6 +7,7 @@ Focus: Minor bug fixes
 BUG FIXES:
 1. Typo in changelog.
 2. Field userkgusergroupsUserGroupId in table user_kg_usergroups should not accept NULL on first install.
+3. Fix https://sourceforge.net/p/wikindx/v5bugs/304/ (missing input when clicking on Quarantine in Admin menu).
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

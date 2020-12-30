@@ -62,7 +62,8 @@ class LISTSOMERESOURCES
         if (!method_exists($this, $method)) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
-        if (!in_array($method, ['creator', 'quarantine', 'reorder']) && (!array_key_exists('id', $this->vars) || !$this->vars['id'])) {
+        if (!in_array($method, ['creatorProcess', 'quarantineProcess', 'reorder']) && 
+        	(!array_key_exists('id', $this->vars) || !$this->vars['id'])) {
             $this->badInput->close($this->errors->text("inputError", "missing"));
         }
         if ($this->browserTabID)
@@ -1330,8 +1331,7 @@ class LISTSOMERESOURCES
         $this->session->setVar("sql_LastMulti", $queryString);
         if ($this->browserTabID)
         {
-            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'quarantine', 
-            	'list_SomeResources_id' => $this->vars['id']]);
+            GLOBALS::setTempStorage(['sql_LastMulti' => $queryString, 'list_SomeResources' => 'quarantine']);
         }
         $this->common->quarantineList = TRUE;
         $this->common->display($sql, 'list');

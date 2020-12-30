@@ -66,7 +66,7 @@
 	&lt;string&gt;/Applications/XAMPP/xamppfiles/sbin/mysqld&lt;/string&gt;
 	&lt;key&gt;ProgramArguments&lt;/key&gt;
 	&lt;array&gt;
-		&lt;string&gt;/Applications/XAMPP/xamppfiles/sbin/mysqld&lt;/string&gt;
+		&lt;string&gt;/Applications/XAMPP/xamppfiles/sobin/mysqld&lt;/string&gt;
 		&lt;string&gt;--user=_mysql&lt;/string&gt;
 	&lt;/array&gt;
 	&lt;key&gt;QueueDirectories&lt;/key&gt;

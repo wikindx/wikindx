@@ -720,6 +720,7 @@ class MESSAGES
 				"legalStatus" => dgettext($domain, "Legal Status"),
 /// resources_assignee Who is the patent assigned to?
 				"assignee" => dgettext($domain, "Assignee"),
+				"assigneeLocation" => dgettext($domain, "Assignee Location"),
 /// resources_typeOfCommunication Personal Communication
 				"typeOfCommunication" => dgettext($domain, "Type of Communication"),
 /// resources_typeOfWork Unpublished work

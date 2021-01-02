@@ -4,7 +4,7 @@
     "component_version": "235",
     "component_builtin": "true",
     "component_updatable": "true",
-    "component_name": "TinyMCE HTML editor 5.4.1",
+    "component_name": "TinyMCE HTML editor 5.6.2",
     "component_description": "TinyMCE WYSIWYG HTML editor",
     "component_licence": "LGPL-2.1 License ",
     "component_website": "https://www.tiny.cloud/",
@@ -17,7 +17,7 @@
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Packager",
-            "author_copyright": "2020",
+            "author_copyright": "2020-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }

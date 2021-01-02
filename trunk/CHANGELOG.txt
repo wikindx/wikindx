@@ -2,13 +2,16 @@ RELEASES:
 
 
 v6.4.1
-Focus: Minor bug fixes
+Focus: Minor bug fixes and maintenance
 
 BUG FIXES:
 1. Typo in changelog.
 2. Field userkgusergroupsUserGroupId in table user_kg_usergroups should not accept NULL on first install.
 3. Fix https://sourceforge.net/p/wikindx/v5bugs/304/ (missing input when clicking on Quarantine in Admin menu).
-4. The curl_close() function no longer has an effect (PHP 8.0 support) [#265].
+
+MAINTENANCE:
+1. The curl_close() function no longer has an effect (PHP 8.0 support) [#265].
+2. Update future TinyMCE (5.6.2).
 
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---
 ---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---:::---

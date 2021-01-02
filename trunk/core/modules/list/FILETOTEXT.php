@@ -199,9 +199,16 @@ class FILETOTEXT
             foreach ($ch as $ch_x)
             {
                 curl_multi_remove_handle($mh, $ch_x);
-                curl_close($ch_x);
+
+                if (version_compare(PHP_VERSION, '8.0.0', '<'))
+                {
+                    curl_close($ch_x);
+                }
             }
-            curl_multi_close($mh);
+            if (version_compare(PHP_VERSION, '8.0.0', '<'))
+            {
+                curl_multi_close($mh);
+            }
         }
         
         list($nbFilesMissing, $nbFilesTotal) = $this->countMissingCacheFile();

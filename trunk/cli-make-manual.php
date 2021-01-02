@@ -25,7 +25,7 @@ include_once("core/libs/FILE.php");
 echo "\n";
 echo "Build API manual with phpDocumentor\n";
 
-build_manual(__DIR__, 'WIKINDX Documentation ' . WIKINDX_PUBLIC_VERSION);
+build_manual(__DIR__, 'WIKINDX API ' . WIKINDX_PUBLIC_VERSION);
 
 ///////////////////////////////////////////////////////////////////////
 /// Library

@@ -115,7 +115,6 @@ class EDITPUBLISHER
      * Display interface to edit publisher
      *
      * @param bool $initialDisplay
-     * @param int publisherId
      * @param mixed $publisherId
      */
     public function displayPublisher($initialDisplay = FALSE, $publisherId = FALSE)

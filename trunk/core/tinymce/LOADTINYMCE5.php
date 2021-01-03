@@ -40,12 +40,11 @@ class LOADTINYMCE5
     /**
      * Load tinymce -- blank textarea configuration -- no tinyMCE tools
      *
-     * @param array $elements Array of textinput ids to apply editor to. Default is array()
-     * @param mixed $Label
-     * @param mixed $Name
+     * @param string $Label
+     * @param string $Name
      * @param mixed $Value
-     * @param mixed $width
-     * @param mixed $height
+     * @param string $width
+     * @param string $height
      *
      * @return string
      */
@@ -87,8 +86,6 @@ END;
     /**
      * Include tiny_mce compressor
      *
-     * @param bool $compressorLib Default is FALSE
-     *
      * @return string
      */
     protected function getIncludeTinyMceLib()
@@ -121,12 +118,11 @@ END;
     /**
      * Include tiny_mce compressor
      *
-     * @param bool $compressorLib Default is FALSE
-     * @param mixed $locale
+     * @param string $locale code of a TinyMCE locale/language (Default is "")
      *
      * @return string
      */
-    protected function getLocalizationJS($locale)
+    protected function getLocalizationJS($locale = "")
     {
         if (empty($locale))
         {

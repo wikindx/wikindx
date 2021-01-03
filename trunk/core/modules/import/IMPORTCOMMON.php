@@ -732,8 +732,7 @@ class IMPORTCOMMON
     /**
      * Write creator and resource_creator tables
      *
-     * @param array ordered array of creators
-     * @param mixed $creators
+     * @param array $creators ordered array of creators
      */
     public function writeCreatorTables($creators)
     {

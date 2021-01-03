@@ -629,8 +629,7 @@ class TEXTQP
     /**
      * Delete the quote or paraphrase and all peripheral data
      *
-     * @param string
-     * @param mixed $summaryType
+     * @param string $summaryType
      */
     public function delete($summaryType)
     {

@@ -109,8 +109,7 @@ class GLOBALS
      * Initaliaze the tempStorage array
      *
      * @param object $db
-     * @param string uuid
-     * @param mixed $uuid
+     * @param string $uuid
      */
     public static function initTempStorage($db, $uuid)
     {
@@ -135,7 +134,6 @@ class GLOBALS
      * Set tempStorage variables
      *
      * @param array $array (assoc. array)
-     * @param mixed $value
      */
     public static function setTempStorage($array)
     {
@@ -148,7 +146,6 @@ class GLOBALS
      * Unset tempStorage variables
      *
      * @param array $array (keys to unset)
-     * @param mixed $value
      */
     public static function unsetTempStorage($array)
     {
@@ -190,7 +187,7 @@ class GLOBALS
     /**
      * Get browserTabID
      *
-     * @return $WIKINDX_BROWSER_TAB_ID
+     * @return string GLOBALS::WIKINDX_BROWSER_TAB_ID
      */
     public static function getBrowserTabID()
     {
@@ -391,7 +388,7 @@ class GLOBALS
     /**
      * get error message
      *
-     * @param string $error
+     * @return string GLOBALS::WIKINDX_ERROR
      */
     public static function getError()
     {

@@ -142,9 +142,8 @@ class EDITKEYWORDGROUP
     /**
      * Display the name textbox for editing
      *
-     * @param bool $initialDisplay Default FALSE
-     * @param int $kgID
-     * @param mixed $kgId
+     * @param bool $initialDisplay (Default is FALSE)
+     * @param mixed $kgId (Default is FALSE)
      */
     public function editDisplayName($initialDisplay = FALSE, $kgId = FALSE)
     {
@@ -190,9 +189,8 @@ class EDITKEYWORDGROUP
     /**
      * Display the description textarea for editing
      *
-     * @param bool $initialDisplay Default FALSE
-     * @param int $kgID
-     * @param mixed $kgId
+     * @param bool $initialDisplay (Default is FALSE)
+     * @param mixed $kgId (Default is FALSE)
      */
     public function editDisplayDescription($initialDisplay = FALSE, $kgId = FALSE)
     {
@@ -513,9 +511,8 @@ class EDITKEYWORDGROUP
     /**
      * get the div for the selected keyword select box for editing
      *
-     * @param bool $initialDisplay Default FALSE
-     * @param int $kgID
-     * @param mixed $kgId
+     * @param bool $initialDisplay (Default is FALSE)
+     * @param mixed $kgId (Default is FALSE)
      *
      * @return string
      */
@@ -566,9 +563,8 @@ class EDITKEYWORDGROUP
     /**
      * get the div for the selected keyword select box for editing
      *
-     * @param bool $initialDisplay Default FALSE
-     * @param int $kgID
-     * @param mixed $kgId
+     * @param bool $initialDisplay (Default is FALSE)
+     * @param mixed $kgId (Default is FALSE)
      *
      * @return string
      */

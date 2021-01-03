@@ -8,6 +8,8 @@ BUG FIXES:
 1. Typo in changelog.
 2. Field userkgusergroupsUserGroupId in table user_kg_usergroups should not accept NULL on first install.
 3. Fix https://sourceforge.net/p/wikindx/v5bugs/304/ (missing input when clicking on Quarantine in Admin menu).
+4. Syntax error in TinyMCE spellChecker code.
+5. Syntax errors in API doc.
 
 MAINTENANCE:
 1. The curl_close() function no longer has an effect (PHP 8.0 support) [#265].

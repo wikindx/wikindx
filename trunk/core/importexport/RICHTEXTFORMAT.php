@@ -131,8 +131,7 @@ class RICHTEXTFORMAT extends TINYMCETEXTEXPORT
     /**
      * Parse tinyMCE code to RTF tags
      *
-     * @param string input text
-     * @param mixed $text
+     * @param string $text input text
      *
      * @return string parsed text
      */

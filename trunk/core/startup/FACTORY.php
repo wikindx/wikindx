@@ -337,8 +337,6 @@ class FACTORY_MESSAGES
     /**
      * Get instance
      *
-     * @param string $language Language directory in languages/ Default is FALSE
-     *
      * @return object (self::$instance)
      */
     public static function getInstance()
@@ -355,8 +353,6 @@ class FACTORY_MESSAGES
      * Get fresh instance
      *
      * Get instance regardless of whether instance already exists or not
-     *
-     * @param string $language Language directory in languages/ Default is FALSE
      *
      * @return object (self::$instance)
      */

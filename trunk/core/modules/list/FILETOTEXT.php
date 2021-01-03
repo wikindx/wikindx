@@ -25,11 +25,9 @@ class FILETOTEXT
     }
     
     /**
-     * readText
+     * Count the number of [missing] attachments cached
      *
-     * @param mixed $filename
-     *
-     * @return array
+     * @return array [nbMissing, nbTotal]
      */
     public function countMissingCacheFile()
     {

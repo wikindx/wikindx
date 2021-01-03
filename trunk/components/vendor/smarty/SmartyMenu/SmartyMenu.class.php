@@ -20,7 +20,7 @@
  *
  * @link http://www.phpinsider.com/php/code/SmartyPaginate/
  * @copyright 2001-2004-2005 New Digital Group, Inc. of Lincoln, Inc.
- * @author Monte Ohrt <monte at newdigitalgroup dot com>
+ * @author Monte Ohrt <monte@newdigitalgroup.com>
  * @package SmartyMenu
  * @version 1.1
  */
@@ -86,6 +86,7 @@ class SmartyMenu {
     /**
      * set the item text
      *
+     * @param array &$item
      * @param string $text the item text
      */
     function setItemText(&$item, $text) {
@@ -95,6 +96,7 @@ class SmartyMenu {
     /**
      * set the item href link
      *
+     * @param array &$item
      * @param string $link the link text
      */
     function setItemLink(&$item, $link) {
@@ -104,6 +106,7 @@ class SmartyMenu {
     /**
      * set the item CSS class
      *
+     * @param array &$item
      * @param string $class the class text
      */
     function setItemClass(&$item, $class) {
@@ -113,7 +116,7 @@ class SmartyMenu {
     /**
      * set the item submenu
      *
-     * @param array $item the item array
+     * @param array &$item the item array
      * @param array $menu the submenu array
      */
     function setItemSubmenu(&$item, $submenu) {

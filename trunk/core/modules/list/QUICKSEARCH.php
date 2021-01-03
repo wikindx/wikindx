@@ -185,8 +185,6 @@ class QUICKSEARCH
     /**
      * create the unions
      *
-     * @param mixed $ors
-     * @param mixed $orsFT
      * @param mixed $search
      * @param mixed $searchFT
      */

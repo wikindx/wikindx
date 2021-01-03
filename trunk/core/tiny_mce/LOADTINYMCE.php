@@ -241,8 +241,6 @@ END;
     /**
      * Include tiny_mce compressor
      *
-     * @param bool $compressorLib Default is FALSE
-     *
      * @return string
      */
     protected function getIncludeTinyMceLib()

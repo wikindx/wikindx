@@ -12,10 +12,10 @@ class PSpell extends SpellChecker
     /**
      * Spellchecks an array of words.
      *
-     * @param {String} $lang Language code like sv or en.
-     * @param {Array} $words Array of words to spellcheck.
+     * @param String $lang Language code like sv or en.
+     * @param Array $words Array of words to spellcheck.
      *
-     * @return {Array} Array of misspelled words.
+     * @return Array Array of misspelled words.
      */
     public function &checkWords($lang, $words)
     {
@@ -36,10 +36,10 @@ class PSpell extends SpellChecker
     /**
      * Returns suggestions of for a specific word.
      *
-     * @param {String} $lang Language code like sv or en.
-     * @param {String} $word Specific word to get suggestions for.
+     * @param String $lang Language code like sv or en.
+     * @param String $word Specific word to get suggestions for.
      *
-     * @return {Array} Array of suggestions for the specified word.
+     * @return Array Array of suggestions for the specified word.
      */
     public function &getSuggestions($lang, $word)
     {

@@ -12,10 +12,10 @@ class PSpellShell extends SpellChecker
     /**
      * Spellchecks an array of words.
      *
-     * @param {String} $lang Language code like sv or en.
-     * @param {Array} $words Array of words to spellcheck.
+     * @param string $lang Language code like sv or en.
+     * @param array $words Array of words to spellcheck.
      *
-     * @return {Array} Array of misspelled words.
+     * @return array Array of misspelled words.
      */
     public function &checkWords($lang, $words)
     {
@@ -67,10 +67,10 @@ class PSpellShell extends SpellChecker
     /**
      * Returns suggestions of for a specific word.
      *
-     * @param {String} $lang Language code like sv or en.
-     * @param {String} $word Specific word to get suggestions for.
+     * @param string $lang Language code like sv or en.
+     * @param string $word Specific word to get suggestions for.
      *
-     * @return {Array} Array of suggestions for the specified word.
+     * @return array Array of suggestions for the specified word.
      */
     public function &getSuggestions($lang, $word)
     {
@@ -130,6 +130,11 @@ class PSpellShell extends SpellChecker
         return [];
     }
 
+    /**
+     * _getCMD
+     *
+     * @param string $lang code of a locale
+     */ 
     public function _getCMD($lang)
     {
         $this->_tmpfile = tempnam($this->_config['PSpellShell.tmp'], "tinyspell");

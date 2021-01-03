@@ -691,14 +691,10 @@ namespace UTF8
      * class '\s' for trimming), you will usually have to put *4* backslashes in the
      * PHP code - as you can see from the default value of $charlist.
      *
-     * @param string
-     * @param charlist list of characters to remove from the ends of this string.
-     * @param bool trim the left?
-     * @param bool trim the right?
-     * @param mixed $string
-     * @param mixed $charlist
-     * @param mixed $ltrim
-     * @param mixed $rtrim
+     * @param string $string The string to trim
+     * @param string $charlist charlist list of characters to remove from the ends
+     * @param bool $ltrim trim the left? (Default is TRUE)
+     * @param bool $rtrim trim the right? (Default is TRUE)
      *
      * @return string
      */

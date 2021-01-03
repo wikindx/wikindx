@@ -24,7 +24,7 @@ class SpellChecker
      *
      * @param $args.. Arguments.
      *
-     * @return {Array} Array of all input arguments.
+     * @return array Array of all input arguments.
      */
     public function &loopback(/* args.. */)
     {
@@ -34,10 +34,10 @@ class SpellChecker
     /**
      * Spellchecks an array of words.
      *
-     * @param {String} $lang Language code like sv or en.
-     * @param {Array} $words Array of words to spellcheck.
+     * @param string $lang Language code like sv or en.
+     * @param array $words Array of words to spellcheck.
      *
-     * @return {Array} Array of misspelled words.
+     * @return array Array of misspelled words.
      */
     public function &checkWords($lang, $words)
     {
@@ -47,10 +47,10 @@ class SpellChecker
     /**
      * Returns suggestions of for a specific word.
      *
-     * @param {String} $lang Language code like sv or en.
-     * @param {String} $word Specific word to get suggestions for.
+     * @param string $lang Language code like sv or en.
+     * @param string $word Specific word to get suggestions for.
      *
-     * @return {Array} Array of suggestions for the specified word.
+     * @return array Array of suggestions for the specified word.
      */
     public function &getSuggestions($lang, $word)
     {
@@ -60,7 +60,7 @@ class SpellChecker
     /**
      * Throws an error message back to the user. This will stop all execution.
      *
-     * @param {String} $str Message to send back to user.
+     * @param string $str Message to send back to user.
      */
     public function throwError($str)
     {

@@ -17,9 +17,10 @@ class AdminerPlugin extends Adminer
     /** @access protected */
     public $plugins;
     
-    /** Register plugins
-     * @param array object instances or null to register all classes starting by 'Adminer'
-     * @param mixed $plugins
+    /**
+     * Register plugins
+     *
+     * @param mixed $plugins array object instances or null to register all classes starting by 'Adminer'
      */
     public function __construct($plugins)
     {

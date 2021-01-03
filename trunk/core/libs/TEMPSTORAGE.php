@@ -34,7 +34,7 @@ namespace TEMPSTORAGE
      * @param string $uuid
      * @param array $data
      *
-     * @return bool. FALSE if $uuid not set or $data empty, otherwise TRUE
+     * @return bool FALSE if $uuid not set or $data empty, otherwise TRUE
      */
     function store($db, $uuid, $data)
     {
@@ -149,7 +149,7 @@ namespace TEMPSTORAGE
      * @param string $uuid
      * @param array $deleteKeys
      *
-     * @return bool. FALSE if row doesn't exist, otherwise TRUE
+     * @return bool FALSE if row doesn't exist, otherwise TRUE
      */
     function deleteKeys($db, $uuid, $deleteKeys)
     {

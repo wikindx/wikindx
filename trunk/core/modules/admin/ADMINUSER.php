@@ -303,8 +303,7 @@ class ADMINUSER
     /**
      * Block users display
      *
-     * @param false|string $error
-     * @param mixed $message
+     * @param false|string $message (Default is FALSE)
      */
     public function blockInit($message = FALSE)
     {

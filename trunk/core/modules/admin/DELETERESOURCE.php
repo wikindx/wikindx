@@ -94,7 +94,7 @@ class DELETERESOURCE
             $this->db->formatConditions(['resourceId' => $this->vars['resource_id']]);
             $return = '&nbsp;&nbsp;' . \HTML\a(
                 $this->icons->getClass("edit"),
-                $this->icons->getHTML("Return"),
+                $this->icons->getHTML("return"),
                 'index.php?action=resource_RESOURCEVIEW_CORE&id=' . $this->vars['resource_id'] . '&browserTabID=' . $this->browserTabID
             );
         }

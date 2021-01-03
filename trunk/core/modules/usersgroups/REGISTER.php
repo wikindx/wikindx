@@ -199,7 +199,6 @@ class REGISTER
             !array_key_exists('passwordConfirm', $this->vars) || !array_key_exists('email', $this->vars) ||
             !array_key_exists('hashKey', $this->vars))
         {
-            print_r($this->vars);
             $error = $this->errors->text('inputError', 'missing');
         }
         if (!\UTF8\mb_trim($this->vars['usersUsername']) || !\UTF8\mb_trim($this->vars['password']) ||

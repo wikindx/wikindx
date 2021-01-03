@@ -41,7 +41,7 @@ class EnchantSpell extends SpellChecker
             // PHP 8.0 fix, LkpPo, 20201126
             // enchant_broker_free() and enchant_broker_free_dict() are deprecated; unset the object instead.
             //enchant_broker_free_dict($d);
-            unset($d)
+            unset($d);
         }
         else
         {

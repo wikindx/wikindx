@@ -151,7 +151,20 @@ class SQLSTATEMENTS
             FALSE,
             FALSE
         ));
-
+        $resultSet = $this->db->query($listQuery);
+		while ($row = $this->db->fetchRow($resultSet))
+		{
+			$ids[] = $row['resourceId'];
+		}
+		$ids = array_filter($ids); // array_filter() to ensure no null ids
+		$total = count($ids);
+		if ($total > $limit) {
+			$total = $limit;
+		}
+		$this->session->setVar("setup_PagingTotal", $total);
+		if ($this->browserTabID) {
+			GLOBALS::setTempStorage(['setup_PagingTotal' => $total]);
+		}
         return $listQuery;
     }
     /**
@@ -229,7 +242,20 @@ class SQLSTATEMENTS
             FALSE,
             FALSE
         ));
-
+        $resultSet = $this->db->query($listQuery);
+		while ($row = $this->db->fetchRow($resultSet))
+		{
+			$ids[] = $row['rId'];
+		}
+		$ids = array_filter($ids); // array_filter() to ensure no null ids
+		$total = count($ids);
+		if ($total > $limit) {
+			$total = $limit;
+		}
+		$this->session->setVar("setup_PagingTotal", $total);
+		if ($this->browserTabID) {
+			GLOBALS::setTempStorage(['setup_PagingTotal' => $total]);
+		}
         return $listQuery;
     }
     /**

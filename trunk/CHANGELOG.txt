@@ -12,6 +12,7 @@ BUG FIXES:
 5. Syntax errors in API doc.
 6. Remove some leftover print_r() statements.
 7. Fix a missing icon when deleting a resource.
+8. Correct totals when paging through the front page list.
 
 MAINTENANCE:
 1. The curl_close() function no longer has an effect (PHP 8.0 support) [#265].

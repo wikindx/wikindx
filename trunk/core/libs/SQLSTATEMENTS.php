@@ -161,10 +161,7 @@ class SQLSTATEMENTS
 		if ($total > $limit) {
 			$total = $limit;
 		}
-		$this->session->setVar("setup_PagingTotal", $total);
-		if ($this->browserTabID) {
-			GLOBALS::setTempStorage(['setup_PagingTotal' => $total]);
-		}
+		$this->session->setVar("list_Front", $total);
         return $listQuery;
     }
     /**
@@ -252,10 +249,7 @@ class SQLSTATEMENTS
 		if ($total > $limit) {
 			$total = $limit;
 		}
-		$this->session->setVar("setup_PagingTotal", $total);
-		if ($this->browserTabID) {
-			GLOBALS::setTempStorage(['setup_PagingTotal' => $total]);
-		}
+		$this->session->setVar("list_Front", $total);
         return $listQuery;
     }
     /**

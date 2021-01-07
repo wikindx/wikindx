@@ -35,7 +35,8 @@ class BROWSERTABID
         	'metadata_EDITMETADATA_CORE', 'resource_RESOURCEFORM_CORE', 'list_LISTADDTO_CORE', 'list_SEARCH_CORE', 
         	'admin_QUARANTINE_CORE'];
         $tempSession = [];
-        if (WIKINDX_BROWSER_TAB_ID && array_key_exists('action', $this->vars) && in_array($this->vars['action'], $active))
+        if (WIKINDX_BROWSER_TAB_ID && 
+        	((array_key_exists('action', $this->vars) && in_array($this->vars['action'], $active)) || !array_key_exists('action', $this->vars)))
         {
             GLOBALS::addTplVar('scripts', '<script src="' . WIKINDX_URL_BASE . '/core/javascript/gatekeeper.js?ver=' . WIKINDX_PUBLIC_VERSION . '"></script>');
             if ($_SERVER['REQUEST_METHOD'] == 'POST')

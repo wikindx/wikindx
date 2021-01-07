@@ -207,6 +207,10 @@ class LISTCOMMON
         {
             $this->session->setVar("bookmark_View", 'multi');
         }
+        if ($listType != 'front')
+        {
+            $this->session->delVar('list_Front');
+        }
         // $SQL can be FALSE if browsing a keyword that is not attached to resources but only to ideas.
         if (!$sql)
         {
@@ -337,6 +341,9 @@ class LISTCOMMON
         {
             $this->session->setVar("list_NextPreviousIds", $resIds);
             GLOBALS::setTempStorage(["list_NextPreviousIds" => $resIds]);
+            if ($this->browserTabID) {
+            	\TEMPSTORAGE\store($this->db, $this->browserTabID, ['list_NextPreviousIds' => $resIds]);
+            }
             $this->formatResources($listType, $resourceList, $resources);
             $this->createLinks($listType, $resourceList, $resources);
 

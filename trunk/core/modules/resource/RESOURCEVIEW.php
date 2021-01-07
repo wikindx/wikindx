@@ -843,7 +843,7 @@ class RESOURCEVIEW
             return $this->nextRandomLink($thisId);
         }
         // Check if opening this resource from a list into a new tab (sql_ListStmt not stored in temp_storage)
-        if ($this->browserTabID && !\TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_ListStmt'))
+        if (!$this->session->getVar('list_Front') && ($this->browserTabID && !\TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_ListStmt')))
         {
             return [];
         }
@@ -877,9 +877,12 @@ class RESOURCEVIEW
         {
             return [];
         }
-        if (!$total = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'setup_PagingTotal'))
-        {
-            $total = $this->session->getVar("setup_PagingTotal");
+        $total = $this->session->getVar('list_Front');
+        if (!$total) {
+			if (!$total = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'setup_PagingTotal'))
+			{
+				$total = $this->session->getVar("setup_PagingTotal");
+			}
         }
         if (!$order = \TEMPSTORAGE\fetchOne($this->db, $this->browserTabID, 'sql_LastOrder'))
         {

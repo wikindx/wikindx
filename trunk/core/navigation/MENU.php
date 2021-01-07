@@ -420,7 +420,7 @@ class MENU
         // WIKINDX MENU
         $this->wikindx = [
             'Wikindx' => 'index.php?action=noMenu&method=wikindx',
-            $messages->text("menu", "home") => 'index.php',
+            $messages->text("menu", "home") => 'index.php' . "?browserTabID=" . $this->browserTabID,
         ];
         if ($this->session->getVar("setup_News"))
         {

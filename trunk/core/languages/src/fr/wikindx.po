@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Stéphane Aulery <saulery@legtux.org>, 2020
+# Stéphane Aulery <saulery@legtux.org>, 2021
 #
 #, fuzzy
 msgid ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
 "POT-Creation-Date: 2021-01-08 10:22+0100\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
-"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2020\n"
+"Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2021\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -3145,6 +3145,9 @@ msgid ""
 "<p>With LDAP enabled and configured, user authentication bypasses the usual "
 "WIKINDX logon protocols and is redirected to a LDAP server instead.</p>"
 msgstr ""
+"<p>Lorsque LDAP est activé et configuré, l'authentification utilisateur "
+"contourne les protocoles de connexion WIKINDX habituels et est redirigée vers "
+"un serveur LDAP à la place.</p>"
 
 #: core/messages/help.php:200
 msgid ""
@@ -6199,10 +6202,8 @@ msgid "Assignee"
 msgstr "Concessionnaire"
 
 #: core/messages/messages.php:723
-#, fuzzy
-#| msgid "Location"
 msgid "Assignee Location"
-msgstr "Lieu"
+msgstr "Emplacement du cessionnaire"
 
 #. / resources_typeOfCommunication Personal Communication
 #: core/messages/messages.php:725
@@ -6386,13 +6387,6 @@ msgstr ""
 "être choisis"
 
 #: core/messages/messages.php:769
-#, fuzzy
-#| msgid ""
-#| "This option enables authentication from an LDAP / Active Directory server "
-#| "of all users. As an exception to guarantee access in the event of a "
-#| "misconfiguration or an offline server, if the LDAP authentication of the "
-#| "Super Admin account fails, a second will be attempted with the builtin "
-#| "method."
 msgid ""
 "This option enables authentication from an LDAP / Active Directory server of "
 "all users. As an exception to guarantee access in the event of a "

@@ -1206,7 +1206,17 @@ class adminstyle_MODULE
     private function displayStyleForm($type)
     {
         $this->db = FACTORY_DB::getInstance();
-        $languages = \LOCALES\getSystemLocales();
+        // Todo(LkpPo): convert style XML file to new locale system
+        //$languages = \LOCALES\getSystemLocales();
+        // Fix(LkpPo): fakes the old language list (see bug #305)
+        $languages = [
+            "de" => "Deutsch",
+            "en" => "English",
+            "es" => "Español",
+            "fr" => "Français",
+            "it" => "Italian",
+            "ru" => "Russian",
+        ];
         $types = array_keys($this->styleMap->types);
         if ($type == 'add')
         {

@@ -13,6 +13,7 @@ BUG FIXES:
 6. Remove some leftover print_r() statements.
 7. Fix a missing icon when deleting a resource.
 8. Correct totals when paging through the front page list.
+9. Unbreak adminstyle plugin: restore temporarily the old languages list for style components (bug #305).
 
 MAINTENANCE:
 1. The curl_close() function no longer has an effect (PHP 8.0 support) [#265].

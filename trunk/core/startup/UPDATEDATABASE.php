@@ -1624,22 +1624,37 @@ END;
     private function styleLocaleFix()
     {
         $componentsInstalled = \UTILS\readComponentsList();
-        foreach ($componentsInstalled as $cmp) {
-            if ($cmp["component_type"] == "style") {
-                $fileName = $cmp["component_id"] . ".xml";
-                $filePath = \LOADSTYLE\ROOT_DIR . DIRECTORY_SEPARATOR . $cmp["component_id"] . DIRECTORY_SEPARATOR . $fileName;
-                if (file_exists($filePath)) {
-                	$fileString = file_get_contents($filePath);
-                	$fileString = str_replace("<language>English</language>", "<language>en_GB</language>", $fileString);
-                	if (!$fp = fopen("$filePath", "w")) {
-						GLOBALS::addTplVar('content', "Fatal error: could not open $filePath for writing. Ensure all style files are writable.");
+        foreach ($componentsInstalled as $cmp)
+        {
+            if ($cmp["component_type"] == "style")
+            {
+                $filePath = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES, $cmp["component_id"], $cmp["component_id"] . ".xml"]);
+                if (is_readable($filePath))
+                {
+                    if (is_writable($filePath))
+                    {
+                    	$fileString = file_get_contents($filePath);
+                    	if (strripos($fileString, "<osbibVersion>4</osbibVersion>") !== FALSE)
+                    	{
+                        	$fileString = str_ireplace("<language>Deutsch</language>", "<language>de_DE</language>", $fileString);
+                        	$fileString = str_ireplace("<language>English</language>", "<language>en_GB</language>", $fileString);
+                        	$fileString = str_ireplace("<language>Español</language>", "<language>es_ES</language>", $fileString);
+                        	$fileString = str_ireplace("<language>Français</language>", "<language>fr_FR</language>", $fileString);
+                        	$fileString = str_ireplace("<language>Italian</language>", "<language>it_IT</language>", $fileString);
+                        	$fileString = str_ireplace("<language>Russian</language>", "<language>ru_RU</language>", $fileString);
+                        	file_get_contents($filePath, $fileString);
+                    	}
+    				}
+    				else
+    				{
+    					GLOBALS::addTplVar('content', "Fatal error: could not write to $filePath. Ensure all style files are writable.");
             			$this->endDisplay();
-					}
-					if (!fwrite($fp, $fileString)) {
-						GLOBALS::addTplVar('content', "Fatal error: could not write to $filePath. Ensure all style files are writable.");
-            			$this->endDisplay();
-					}
-					fclose($fp);
+    				}
+				}
+				else
+				{
+    				GLOBALS::addTplVar('content', "Fatal error: could not open $filePath for writing. Ensure all style files are writable.");
+        			$this->endDisplay();
 				}
 			}
         }

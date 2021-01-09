@@ -1643,7 +1643,7 @@ END;
                         	$fileString = str_ireplace("<language>Italian</language>", "<language>it_IT</language>", $fileString);
                         	$fileString = str_ireplace("<language>Russian</language>", "<language>ru_RU</language>", $fileString);
                         	$fileString = str_ireplace("<osbibVersion>4</osbibVersion>", "<osbibVersion>5</osbibVersion>", $fileString);
-                        	file_get_contents($filePath, $fileString);
+                        	file_put_contents($filePath, $fileString);
                     	}
     				}
     				else

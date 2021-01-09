@@ -1,7 +1,7 @@
 {
     "component_type": "vendor",
     "component_id": "smarty",
-    "component_version": "223",
+    "component_version": "363",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "PHP Template Engine Smarty",
@@ -29,5 +29,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "d097a2299eff2541161ea130f7bd309d8e3943c78c8ae586c331dd9c5c9be0be"
+    "component_sha256": "16842227576fae9743386641a78e900994ca223648c23dffc576f7088109e606"
 }

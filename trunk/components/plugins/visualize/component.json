@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "visualize",
-    "component_version": "344",
+    "component_version": "363",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Visualize",
@@ -11,17 +11,17 @@
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2019-2020",
+            "author_copyright": "2019-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Developer",
-            "author_copyright": "2019-2020",
+            "author_copyright": "2019-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "5469b5628998268644fbad9911be7759f1b6d53e30650dc473b10b25f8fff4df"
+    "component_sha256": "948f107a088293cbb042281c7c8f7c97fcc2622b395073e6edbe835de12a9753"
 }

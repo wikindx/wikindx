@@ -1,7 +1,7 @@
 {
     "component_type": "style",
     "component_id": "apa",
-    "component_version": "213",
+    "component_version": "363",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "APA",
@@ -17,5 +17,5 @@
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         }
     ],
-    "component_sha256": "fb7be8ba1ec3fb33410f1ffde2c518fed12506b6a3c1c3a8b28fe0c6f6afec66"
+    "component_sha256": "eee874649666afc5c7e54d6a7a60e2914129ef07f6fc6acc0fc9acc15da5f74f"
 }

@@ -1,7 +1,7 @@
 {
     "component_type": "style",
     "component_id": "chicago",
-    "component_version": "213",
+    "component_version": "363",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Chicago",
@@ -17,5 +17,5 @@
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         }
     ],
-    "component_sha256": "68305e9b4af615dd56964d5ba109cbf5dc2c3971f557eca0941f7befdaee13e2"
+    "component_sha256": "7b5a6abef8e85a515400218f7dd9b1879b20a99a8114fb36898a8a612dd3cc97"
 }

@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "importexportbib",
-    "component_version": "344",
+    "component_version": "363",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Bibliography Import/Export",
@@ -17,17 +17,17 @@
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2006-2020",
+            "author_copyright": "2006-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Developer",
-            "author_copyright": "2017-2020",
+            "author_copyright": "2017-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "e30e1d696a7c62594077c91133f30ce15ce56fb29fcc3a87c85db07238688706"
+    "component_sha256": "ecec3b762a8862ce1ad972f6ea26f2921451f68a2b8da31e5672e57fc9123a48"
 }

@@ -1,7 +1,7 @@
 {
     "component_type": "style",
     "component_id": "turabian",
-    "component_version": "213",
+    "component_version": "363",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Turabian",
@@ -17,5 +17,5 @@
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         }
     ],
-    "component_sha256": "dcbf519ba40c37451e4ba233be3eaa693bdfb0d53ca814781aa63ba97b5f0a0c"
+    "component_sha256": "162d45c76565e3e6bdf0bd15540a0b4c19669a67415923c7a315fdea5a0b21d7"
 }

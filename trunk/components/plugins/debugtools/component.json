@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "debugtools",
-    "component_version": "344",
+    "component_version": "363",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Debug Tools",
@@ -11,17 +11,17 @@
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2019-2020",
+            "author_copyright": "2019-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Developer",
-            "author_copyright": "2019-2020",
+            "author_copyright": "2019-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "213e56a7dc0fcf6e5419779580243d29b460d7e77859c4e934838027eb77ef83"
+    "component_sha256": "386a760ee65faa66f74508024af141c2d3d7b67468881d894fcb3188ad88b087"
 }

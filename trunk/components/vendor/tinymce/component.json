@@ -1,7 +1,7 @@
 {
     "component_type": "vendor",
     "component_id": "tinymce",
-    "component_version": "235",
+    "component_version": "363",
     "component_builtin": "true",
     "component_updatable": "true",
     "component_name": "TinyMCE HTML editor 5.6.2",
@@ -22,5 +22,5 @@
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "702b27cab195ab29cc9072f98f7bba271b728096e727fd1d8efb0380f6d049f2"
+    "component_sha256": "46313d22fa543028af37cb7bbb585b7c8ed2ec2c29b7ace44e244b9276ea90e0"
 }

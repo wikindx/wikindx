@@ -1,7 +1,7 @@
 {
     "component_type": "style",
     "component_id": "mla",
-    "component_version": "213",
+    "component_version": "363",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "MLA",
@@ -17,5 +17,5 @@
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         }
     ],
-    "component_sha256": "d18df4937826b18546caed40bfd5bc10ff803f15c5030995525cbcbd3ffb78c9"
+    "component_sha256": "5c088c3adf88604ef1f477ba1db1f40fccfc88f4398dd25d1c519cd1f32800dc"
 }

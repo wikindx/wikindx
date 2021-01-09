@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "userwritecategory",
-    "component_version": "344",
+    "component_version": "363",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Categories Administration for Users",
@@ -11,17 +11,17 @@
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2012-2016, 2019-2020",
+            "author_copyright": "2012-2016, 2019-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Developer",
-            "author_copyright": "2016-2020",
+            "author_copyright": "2016-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "4ca1c48f22cf76cfe554e595fd2d63b2e7f9c5187c8fba28ad1d50f0b4c1c97d"
+    "component_sha256": "3aae20700deac298e102277876bd1d2ca18ee3da164276fdb9d5eb9efdab55a3"
 }

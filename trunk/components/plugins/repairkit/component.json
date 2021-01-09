@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "repairkit",
-    "component_version": "344",
+    "component_version": "363",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Repair Kit",
@@ -11,17 +11,17 @@
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2013, 2016-2017, 2019-2020",
+            "author_copyright": "2013, 2016-2017, 2019-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Developer",
-            "author_copyright": "2016-2020",
+            "author_copyright": "2016-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "6fe7e1fa46a1818eb77d634b31cf74b9988b10f398d658bf9b9ee9618d6f8ee7"
+    "component_sha256": "390bec13a591c07c1a62fce151322912285db237ab9d981b92e068b73470f8fb"
 }

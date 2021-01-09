@@ -1,7 +1,7 @@
 {
     "component_type": "plugin",
     "component_id": "wordprocessor",
-    "component_version": "344",
+    "component_version": "363",
     "component_builtin": "false",
     "component_updatable": "true",
     "component_name": "Word Processor",
@@ -11,17 +11,17 @@
         {
             "author_name": "Mark Grimshaw-Aagaard",
             "author_role": "Developer",
-            "author_copyright": "2012-2014, 2016-2020",
+            "author_copyright": "2012-2014, 2016-2021",
             "author_email": "sirfragalot@users.sourceforge.net",
             "author_website": "https://vbn.aau.dk/en/persons/126217"
         },
         {
             "author_name": "Stéphane Aulery",
             "author_role": "Developer",
-            "author_copyright": "2012, 2016-2020",
+            "author_copyright": "2012, 2016-2021",
             "author_email": "lkppo@users.sourceforge.net",
             "author_website": "http://saulery.legtux.org/"
         }
     ],
-    "component_sha256": "e62d5ae3052f7a3490b9ac51fa025420eaa494735247ececf4ee1d9853bca5e3"
+    "component_sha256": "cc7bd5ddf79acceca196510f896a6feee42812ede9208805e0d590b4518e8153"
 }

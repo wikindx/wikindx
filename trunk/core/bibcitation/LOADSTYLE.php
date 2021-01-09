@@ -71,7 +71,7 @@ const ROOT_DIR = WIKINDX_DIR_BASE . DIRECTORY_SEPARATOR . WIKINDX_DIR_COMPONENT_
      *       <name>IDSTYLE</name>
      *       <description>Identifier of my custom bibliographic Style (IDSTYLE)</description>
      *       <language>English</language>
-     *       <osbibVersion>4</osbibVersion>
+     *       <osbibVersion>5</osbibVersion>
      *    </info>
      *    [...]
      * </style>

@@ -21,6 +21,7 @@ MAINTENANCE:
 3. Add browserTabID functionality to the home page.
 4. Update Smarty (v3.1.38).
 5. Update style xml files for locales (ticket #308).
+6. Bump component compatibility version of styles to 5.
 
 SECURITY
 1. XSS injection in publisher name.

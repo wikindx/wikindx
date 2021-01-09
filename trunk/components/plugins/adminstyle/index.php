@@ -1206,17 +1206,7 @@ class adminstyle_MODULE
     private function displayStyleForm($type)
     {
         $this->db = FACTORY_DB::getInstance();
-        // Todo(LkpPo): convert style XML file to new locale system
-        //$languages = \LOCALES\getSystemLocales();
-        // Fix(LkpPo): fakes the old language list (see bug #305)
-        $languages = [
-            "de" => "Deutsch",
-            "en" => "English",
-            "es" => "Español",
-            "fr" => "Français",
-            "it" => "Italian",
-            "ru" => "Russian",
-        ];
+        $languages = \LOCALES\getSystemLocales();
         $types = array_keys($this->styleMap->types);
         if ($type == 'add')
         {
@@ -1271,8 +1261,10 @@ class adminstyle_MODULE
         ) . " " . HTML\span('*', 'required'));
 
         $language = base64_decode($this->session->getVar("style_localisation"));
-        if (!$language)
-        {
+        if (!$language) {
+            $language = WIKINDX_LANGUAGE_DEFAULT;
+        }
+        if (!array_key_exists($language, $languages)) {
             $language = WIKINDX_LANGUAGE_DEFAULT;
         }
         $pString .= HTML\td(FORM\selectedBoxValue(
@@ -2523,7 +2515,7 @@ class adminstyle_MODULE
         $fileString .= "<description>" . htmlspecialchars(trim(stripslashes($this->vars['styleLongName'])))
              . "</description>" . LF;
         // Temporary place holder
-        $fileString .= "<language>English</language>" . LF;
+        $fileString .= "<language>en_GB</language>" . LF;
         $fileString .= "<osbibVersion>$this->osbibVersion</osbibVersion>" . LF;
         $fileString .= "</info>" . LF;
         // Start citation definition
@@ -2714,7 +2706,8 @@ class adminstyle_MODULE
         if (!$fileName)
         { // called from add()
             // Create folder with lowercase styleShortName
-            $dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES, mb_strtolower(trim($this->vars['styleShortName']))]);
+            $dirName = implode(DIRECTORY_SEPARATOR, [WIKINDX_DIR_BASE, WIKINDX_DIR_COMPONENT_STYLES,
+            	mb_strtolower(trim($this->vars['styleShortName']))]);
             if (!file_exists($dirName))
             {
                 if (!mkdir($dirName, WIKINDX_UNIX_PERMS_DEFAULT, TRUE))
@@ -2722,7 +2715,7 @@ class adminstyle_MODULE
                     $this->badInput->close($error = $this->errors->text("file", "folder"), $this, 'display');
                 }
             }
-            $fileName = implode(DIRECTORY_SEPARATOR, [$dirName, mb_strtoupper(trim($this->vars['styleShortName'])) . ".xml"]);
+            $fileName = implode(DIRECTORY_SEPARATOR, [$dirName, trim($this->vars['styleShortName']) . ".xml"]);
         }
         if (!$fp = fopen("$fileName", "w"))
         {

@@ -13,13 +13,14 @@ BUG FIXES:
 6. Remove some leftover print_r() statements.
 7. Fix a missing icon when deleting a resource.
 8. Correct totals when paging through the front page list.
-9. Unbreak adminstyle plugin: restore temporarily the old languages list for style components (bug #305).
+9. Fix a missing input error in bibliographic/citation styles (bugs #249 & #305).
 
 MAINTENANCE:
 1. The curl_close() function no longer has an effect (PHP 8.0 support) [#265].
 2. Update future TinyMCE (5.6.2).
 3. Add browserTabID functionality to the home page.
 4. Update Smarty (v3.1.38).
+5. Update style xml files for locales (ticket #308).
 
 SECURITY
 1. XSS injection in publisher name.

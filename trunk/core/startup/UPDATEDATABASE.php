@@ -1595,6 +1595,57 @@ END;
     }
 
     /**
+     * Upgrade database schema to version 39 (6.4.1)
+     *
+     * Flush temp_storage table and fix locale in style XML files
+     */
+    private function upgradeTo39()
+    {
+    	$this->flushTempStorage();
+    	$this->styleLocaleFix();
+        $this->updateCoreInternalVersion();
+    }
+    
+    /**
+     * Flush the temp_storage table
+     */
+    private function flushTempStorage()
+    {
+    	if ($this->db->tableExists('temp_storage')) {
+    		$this->db->delete('temp_storage');
+    	}
+    }
+    
+    /**
+     * Fix locale in style XML files
+     *
+     * NB <language> (currently) is always English
+     */
+    private function styleLocaleFix()
+    {
+        $componentsInstalled = \UTILS\readComponentsList();
+        foreach ($componentsInstalled as $cmp) {
+            if ($cmp["component_type"] == "style") {
+                $fileName = $cmp["component_id"] . ".xml";
+                $filePath = \LOADSTYLE\ROOT_DIR . DIRECTORY_SEPARATOR . $cmp["component_id"] . DIRECTORY_SEPARATOR . $fileName;
+                if (file_exists($filePath)) {
+                	$fileString = file_get_contents($filePath);
+                	$fileString = str_replace("<language>English</language>", "<language>en_GB</language>", $fileString);
+                	if (!$fp = fopen("$filePath", "w")) {
+						GLOBALS::addTplVar('content', "Fatal error: could not open $filePath for writing. Ensure all style files are writable.");
+            			$this->endDisplay();
+					}
+					if (!fwrite($fp, $fileString)) {
+						GLOBALS::addTplVar('content', "Fatal error: could not write to $filePath. Ensure all style files are writable.");
+            			$this->endDisplay();
+					}
+					fclose($fp);
+				}
+			}
+        }
+    }
+
+    /**
      * Transfer statistics data to new tables then drop old table
      *
      * A fault in the previous statistics compilation means that each month's statistics needs to be backdated one month ...

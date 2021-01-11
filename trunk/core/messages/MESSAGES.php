@@ -117,7 +117,7 @@ class MESSAGES
 				"browsePublisher" => dgettext($domain, "Browse Publishers"),
 				"browseType" => dgettext($domain, "Browse Resource Types"),
 				"browseYear" => dgettext($domain, "Browse Publication Year"),
-				"browseBibliography" => dgettext($domain, "Browse User Bibliogaphies"),
+				"browseBibliography" => dgettext($domain, "Browse User Bibliographies"),
 				"browseUserTags" => dgettext($domain, "User Tags"),
 				"browseUser" => dgettext($domain, "Browse System Users"),
 				"browseDept" => dgettext($domain, "Browse Departments"),
@@ -455,7 +455,7 @@ class MESSAGES
 /// resources_withChecked For adding or deleting resource lists or selected resources in the list to categories, keywords or user bibliographies.  This is followed by a select box of options as 'With checked: add to categories'
 				"withChecked" => dgettext($domain, "With checked"),
 				"addToBib" => dgettext($domain, "Add to user bibliography"),
-/// resources_deleteFromBib Remove selected resources from the user bibliographay currently being browsed
+/// resources_deleteFromBib Remove selected resources from the user bibliography currently being browsed
 				"deleteFromBib" => dgettext($domain, "Remove from this user bibliography"),
 				"deleteResource" => dgettext($domain, "Delete"),
 				"addToCategory" => dgettext($domain, "Add to categories"),
@@ -552,7 +552,7 @@ class MESSAGES
 				"fileName" => dgettext($domain, "Filename"),
 /// resources_primaryAttachment User can specify one attachment from the resources attachments to be displayed first
 				"primaryAttachment" => dgettext($domain, "Display this attachment first"),
-/// resources_attachmentDescription Descritpion of the attachment
+/// resources_attachmentDescription Description of the attachment
 				"attachmentDescription" => dgettext($domain, "Attachment description"),
 /// resources_attachmentReadMe Open the attachment description.  Keep it short
 				"attachmentReadMe" => dgettext($domain, "(Desc.)"),

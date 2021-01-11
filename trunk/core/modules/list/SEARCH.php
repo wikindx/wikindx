@@ -988,7 +988,7 @@ class SEARCH
         }
         if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'displayIdeas'))
         {
-            // Store paging total for reseources and restore after calculating paging for ideas
+            // Store paging total for resources and restore after calculating paging for ideas
             // only (so paging for resources is correctly displayed with lastmulti
             if (!$this->backupPT = GLOBALS::getTempStorage('setup_PagingTotal')) {
 	            $this->backupPT = $this->session->getVar("setup_PagingTotal");
@@ -1007,7 +1007,7 @@ class SEARCH
         {
             if (array_key_exists('type', $this->vars) && ($this->vars['type'] == 'displayIdeas'))
             {
-                // Store paging total for reseources and restore after calculating paging for ideas
+                // Store paging total for resources and restore after calculating paging for ideas
                 // only (so paging for resources is correctly displayed with lastmulti
                 if (!$this->backupPT = GLOBALS::getTempStorage('setup_PagingTotal')) {
 	            	$this->backupPT = $this->session->getVar("setup_PagingTotal");

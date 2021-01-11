@@ -194,7 +194,7 @@ class HELP
 . dgettext($domain, "<p>When adding or editing resources, each resource can belong to multiple categories and subcategories, be assigned custom fields or defined as belonging to a language -- admins can add new categories, subcategories, custom fields and languages from the Admin menu.</p>")
 . dgettext($domain, "<p><strong>Because user sessions are created only once on login, changes to the configuration will not be registered until a user (logs out and) logs in.</strong></p>")
 
-. dgettext($domain, "<h4>LDAP authentification</h4>")
+. dgettext($domain, "<h4>LDAP authentication</h4>")
 
 . dgettext($domain, "<p>With LDAP enabled and configured, user authentication bypasses the usual WIKINDX logon protocols and is redirected to a LDAP server instead.</p>")
 . dgettext($domain, "<p>The meaning of each option is given by the tooltips. In addition this help explains how LDAP authentication is done so that you choose the best configuration according to your domain controller.</p>")
@@ -310,7 +310,7 @@ class HELP
 . dgettext($domain, "<p>As an administrator, you can accomplish some management of components via this interface including:</p>")
 . dgettext($domain, "<ul>
 <li>Disable plugins (and templates, styles and languages):  This does not delete the plugin, it merely temporarily disables it until you re-enable it.</li>
-<li>Position plugins:  You can reposition plugins in different menu hierachies.</li>
+<li>Position plugins:  You can reposition plugins in different menu hierarchies.</li>
 <li>Authorize: Block types of users from access to the plugins.</li>
 </ul>")
 

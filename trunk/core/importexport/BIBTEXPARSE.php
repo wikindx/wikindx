@@ -188,7 +188,7 @@ class BIBTEXPARSE
      */
     public function reduceFields($oldString)
     {
-        // 03/05/2005 G. Gardey. Do not remove all occurences, juste one
+        // 03/05/2005 G. Gardey. Do not remove all occurrences, just one
         // * correctly parse an entry ended by: somefield = {aValue}}
         $lg = mb_strlen($oldString);
         $lastChar = mb_substr($oldString, $lg - 1, 1);

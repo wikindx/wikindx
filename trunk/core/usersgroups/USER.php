@@ -558,7 +558,7 @@ class USER
                 // filter on user type AND user login
                 $user_filter = "(&" . WIKINDX_LDAP_USER_TYPE_FILTER . "(" . WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN . "=" . ldap_escape($usersUsername, "", LDAP_ESCAPE_FILTER) . "))";
                 
-                // Attributs retrived
+                // Attributes retrieved
                 $user_filter_attributs = ["dn"];
                 
                 $trace .= "USER_OU=" . LF;
@@ -624,7 +624,7 @@ class USER
                 // filter on group type only
                 $group_filter = WIKINDX_LDAP_GROUP_TYPE_FILTER;
                 
-                // Attributs retrived
+                // Attributes retrieved
                 $group_filter_attributs = ["dn", "member"];
                 
                 $trace .= "GROUP_DN=" . LF;
@@ -713,7 +713,7 @@ class USER
             // filter on user type only
             $user_filter = "(&" . WIKINDX_LDAP_USER_TYPE_FILTER . "(" . WIKINDX_LDAP_USER_ATTRIBUTE_LOGIN . "=" . ldap_escape($usersUsername, "", LDAP_ESCAPE_FILTER) . "))";
             
-            // Attributs retrived, when defined
+            // Attributes retrieved, when defined
             $user_filter_attributs = array_diff(
                 [
                     "dn",

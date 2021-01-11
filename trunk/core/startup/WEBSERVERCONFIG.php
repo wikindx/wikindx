@@ -169,7 +169,7 @@ EOM;
     die($msg);
 }
 
-// Check PHP execution environnement (CLI isn't supported)
+// Check PHP execution environment (CLI isn't supported)
 if (PHP_SAPI === 'cli')
 {
     die("WIKINDX doesn't support CLI execution.");
@@ -376,7 +376,7 @@ FACTORY_LOADCONFIG::getInstance()->loadDBConfig();
 
 FACTORY_LOADCONFIG::getInstance()->loadUserVars();
 
-// Locales setting needs to know the language prefered by the user which is now in GLOBALS
+// Locales setting needs to know the language preferred by the user which is now in GLOBALS
 include_once(implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "libs", "LOCALES.php"]));
 \LOCALES\load_locales();
 

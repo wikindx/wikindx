@@ -465,7 +465,7 @@ class MENU
         
         if ($this->write)
         {
-            // On the first run after a fresh install this screen is displayed immediatly
+            // On the first run after a fresh install this screen is displayed immediately
             // and these two options are not yet set, so we avoid to check the READONLY mode strictly.
             if (!WIKINDX_DENY_READONLY && WIKINDX_READ_ONLY_ACCESS)
             {

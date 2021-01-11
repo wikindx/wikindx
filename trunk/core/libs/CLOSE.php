@@ -170,7 +170,7 @@ class CLOSE
             {
                 // We have to assimile NULL to string because sometimes
                 // this value can be inserted unintentionally if a variable is empty.
-                // The same error happend with a mixture of string
+                // The same error happened with a mixture of string
                 // and others type but this is obviously an error
                 // and we raise an error in that case.
                 if ($t == NULL)

@@ -138,7 +138,7 @@ class ADMINCOMPONENTS
             }
         }
         
-        // abb. for hash key names that use the name of the hasing algo
+        // abb. for hash key names that use the name of the hashing algo
         $hashkeyid = "component_" . WIKINDX_PACKAGE_HASH_ALGO;
         $lasthashkeyid = "component_" . WIKINDX_PACKAGE_HASH_ALGO . "_latest";
         

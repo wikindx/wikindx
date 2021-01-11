@@ -1471,7 +1471,7 @@ namespace FILE
                 $stdout = stream_get_contents($pipes[1]);
                 $stdout = trim($stdout);
                 // Don't read STDERR. That's slow down the process.
-                // Close immediatly pipes to speed proc_close()
+                // Close immediately pipes to speed proc_close()
                 fclose($pipes[1]);
                 fclose($pipes[2]);
                 proc_close($process);

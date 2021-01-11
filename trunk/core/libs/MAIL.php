@@ -45,7 +45,7 @@ class MAIL
         $this->mail->Debugoutput = 'echo';
         $this->mail->SMTPDebug = 3;
 
-        // From (work because it's globaly defined)
+        // From (work because it's globally defined)
         if (filter_var(WIKINDX_MAIL_FROM, FILTER_VALIDATE_EMAIL) !== FALSE)
         {
             $From = WIKINDX_MAIL_FROM;
@@ -58,7 +58,7 @@ class MAIL
 
         $this->mail->setFrom(filter_var($From, FILTER_SANITIZE_EMAIL), WIKINDX_TITLE);
 
-        // ReplyTo (work because it's globaly defined)
+        // ReplyTo (work because it's globally defined)
         if (filter_var(WIKINDX_MAIL_REPLYTO, FILTER_VALIDATE_EMAIL) !== FALSE)
         {
             $ReplyTo = WIKINDX_MAIL_REPLYTO;
@@ -84,7 +84,7 @@ class MAIL
             $this->mail->SMTPAutoTLS = FALSE; // Never force TLS (some SMTP dislike it)
             $this->mail->SMTPSecure = WIKINDX_MAIL_SMTP_ENCRYPT;
 
-            // Relax verification about certificats and DNS server name
+            // Relax verification about certificates and DNS server name
             // We are not in a very sensitive context and certificates tend to pose problems during renewals
             $this->mail->SMTPOptions = [
                 'ssl' => [

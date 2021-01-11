@@ -7361,7 +7361,7 @@ tinymce.dom.TreeWalker = function(start_node, root_node) {
 					findEndPoint();
 			} catch (ex) {
 				// IE has a nasty bug where text nodes might throw "invalid argument" when you
-				// access the nodeValue or other properties of text nodes. This seems to happend when
+				// access the nodeValue or other properties of text nodes. This seems to happen when
 				// text nodes are split into two nodes by a delete/backspace call. So lets detect it and try to fix it.
 				if (ex.number == -2147024809) {
 					// Get the current selection
@@ -16703,7 +16703,7 @@ tinymce.ForceBlocks = function(editor) {
 					childCount = getChildCount(node);
 
 					// Remove empty nodes but only if there is multiple wrappers and they are not block
-					// elements so never remove single <h1></h1> since that would remove the currrent empty block element where the caret is at
+					// elements so never remove single <h1></h1> since that would remove the current empty block element where the caret is at
 					if ((newWrappers.length > 1 || !isBlock(node)) && childCount === 0) {
 						dom.remove(node, 1);
 						return;

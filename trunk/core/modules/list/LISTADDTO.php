@@ -938,7 +938,7 @@ class LISTADDTO
         return $ids;
     }
     /**
-     * Delete resources from a user bibliogaphy
+     * Delete resources from a user bibliography
      */
     private function deleteFromBib()
     {

@@ -44,7 +44,7 @@ class LOADPLUGINS
     }
 
     /**
-     * Check version compatiblility of a plugin
+     * Check version compatibility of a plugin
      *
      * @param mixed $dir
      *

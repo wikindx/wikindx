@@ -191,7 +191,7 @@ class UPDATEDATABASE
     }
     
     /**
-     * Update the database if required based on the currrent version
+     * Update the database if required based on the current version
      *
      * @param float $dbVersion
      */
@@ -961,7 +961,7 @@ END;
             }
         }
         
-        // Load a separate config class that containts original constant names
+        // Load a separate config class that contains original constant names
         $tmpconfig = new CONFIG();
         // fv = Name of the field where the option value is stored
         // fn = Name of the field where the option name is stored
@@ -1411,7 +1411,7 @@ END;
      */
     private function upgradeTo25()
     {
-        // Strip HTML from bibliograpy descriptions
+        // Strip HTML from bibliography descriptions
         $updateArray = [];
         $this->db->formatConditions(['userbibliographyDescription' => 'IS NOT NULL']);
         $resultSet = $this->db->select('user_bibliography', ['userbibliographyId', 'userbibliographyDescription']);
@@ -2340,7 +2340,7 @@ END;
         // Previously, each of these versions modified the configuration, but since they are backward compatible, only the last one is kept.
         $this->checkConfigFile(); // die if not writeable or file does not exist.
         
-        // Load a separate config class that containts original constant names
+        // Load a separate config class that contains original constant names
         $tmpconfig = new CONFIG();
         
         $newConfig = <<<END

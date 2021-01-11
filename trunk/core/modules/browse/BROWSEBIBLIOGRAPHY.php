@@ -58,7 +58,7 @@ class BROWSEBIBLIOGRAPHY
         GLOBALS::addTplVar('content', $pString);
     }
     /**
-     * Get bibliogaphries from db
+     * Get bibliographries from db
      */
     public function getBibliographies()
     {

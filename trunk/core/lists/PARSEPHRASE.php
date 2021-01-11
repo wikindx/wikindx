@@ -651,7 +651,7 @@ class PARSEPHRASE
                 $this->stringArray[$searchArrayIndex]['type'] = 'exactOR';
                 $this->extractExactPhrase($fragment, $fragments, $searchArrayIndex);
             }
-            // everthing else, treat as OR <word> -- default behaviour
+            // everything else, treat as OR <word> -- default behaviour
             else
             {
                 $this->stringArray[$searchArrayIndex]['type'] = 'OR';

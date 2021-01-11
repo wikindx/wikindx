@@ -726,7 +726,7 @@ class SQLSTATEMENTS
             $this->db->or .
             $this->db->formatFields('resourceType') . $this->db->equal . $this->db->tidyInput('conference_poster') . ')';
         $clauses[$key] = $this->db->formatFields('resourceyearYear2');
-        // Test for web_enclopedia and web_encyclopedia_article
+        // Test for web_encyclopedia and web_encyclopedia_article
         $key = '(' . $this->db->formatFields('resourceType') . $this->db->equal . $this->db->tidyInput('web_encyclopedia') .
             $this->db->or .
             $this->db->formatFields('resourceType') . $this->db->equal . $this->db->tidyInput('web_encyclopedia_article') . ')' .

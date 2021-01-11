@@ -1725,7 +1725,7 @@ class RESOURCEVIEW
         );
     }
     /**
-     * Add controls for quarantining or approving the resouce
+     * Add controls for quarantining or approving the resource
      *
      * @param mixed $row
      *

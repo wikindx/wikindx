@@ -2677,7 +2677,7 @@ class MYWIKINDX
         $this->badInput->close($error, $this, $item);
     }
     /**
-     * Catostrophic error – bail out immediately!
+     * Catastrophic error – bail out immediately!
      *
      * @param string $error
      * @param string $selectItem

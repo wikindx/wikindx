@@ -487,7 +487,7 @@ class FACTORY_CONSTANTS
     /**
      * Get fresh instance
      *
-     * @param bool $force_english Force the catalog to return english content only (usefull for Bibtex and Endnote)
+     * @param bool $force_english Force the catalog to return english content only (useful for Bibtex and Endnote)
      *
      * @return object (self::$instance)
      */

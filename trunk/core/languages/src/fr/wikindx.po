@@ -3137,10 +3137,8 @@ msgstr ""
 "déconnecte et) se reconnecte.</strong></p>"
 
 #: core/messages/help.php:197
-#, fuzzy
-#| msgid "<h4>LDAP authentification</h4>"
 msgid "<h4>LDAP authentication</h4>"
-msgstr "<h4>Authentification LDAP</h4>"
+msgstr "<h4>Authentication LDAP</h4>"
 
 #: core/messages/help.php:199
 msgid ""
@@ -3825,16 +3823,6 @@ msgstr ""
 "interface, notamment :</p>"
 
 #: core/messages/help.php:311
-#, fuzzy
-#| msgid ""
-#| "<ul>\n"
-#| "<li>Disable plugins (and templates, styles and languages):  This does not "
-#| "delete the plugin, it merely temporarily disables it until you re-enable "
-#| "it.</li>\n"
-#| "<li>Position plugins:  You can reposition plugins in different menu "
-#| "hierachies.</li>\n"
-#| "<li>Authorize: Block types of users from access to the plugins.</li>\n"
-#| "</ul>"
 msgid ""
 "<ul>\n"
 "<li>Disable plugins (and templates, styles and languages):  This does not "
@@ -4059,8 +4047,6 @@ msgid "Browse Publication Year"
 msgstr "Explorer par années de publication"
 
 #: core/messages/messages.php:120
-#, fuzzy
-#| msgid "Browse User Bibliogaphies"
 msgid "Browse User Bibliographies"
 msgstr "Explorer les bibliographies utilisateur"
 

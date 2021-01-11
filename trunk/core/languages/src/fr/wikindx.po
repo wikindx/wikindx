@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-01-08 10:22+0100\n"
+"POT-Creation-Date: 2021-01-11 14:11+0100\n"
 "PO-Revision-Date: 2019-09-26 21:03+0000\n"
 "Last-Translator: Stéphane Aulery <saulery@legtux.org>, 2021\n"
 "Language-Team: French (https://www.transifex.com/saulery/teams/103557/fr/)\n"
@@ -3137,7 +3137,9 @@ msgstr ""
 "déconnecte et) se reconnecte.</strong></p>"
 
 #: core/messages/help.php:197
-msgid "<h4>LDAP authentification</h4>"
+#, fuzzy
+#| msgid "<h4>LDAP authentification</h4>"
+msgid "<h4>LDAP authentication</h4>"
 msgstr "<h4>Authentification LDAP</h4>"
 
 #: core/messages/help.php:199
@@ -3823,13 +3825,23 @@ msgstr ""
 "interface, notamment :</p>"
 
 #: core/messages/help.php:311
+#, fuzzy
+#| msgid ""
+#| "<ul>\n"
+#| "<li>Disable plugins (and templates, styles and languages):  This does not "
+#| "delete the plugin, it merely temporarily disables it until you re-enable "
+#| "it.</li>\n"
+#| "<li>Position plugins:  You can reposition plugins in different menu "
+#| "hierachies.</li>\n"
+#| "<li>Authorize: Block types of users from access to the plugins.</li>\n"
+#| "</ul>"
 msgid ""
 "<ul>\n"
 "<li>Disable plugins (and templates, styles and languages):  This does not "
 "delete the plugin, it merely temporarily disables it until you re-enable it.</"
 "li>\n"
 "<li>Position plugins:  You can reposition plugins in different menu "
-"hierachies.</li>\n"
+"hierarchies.</li>\n"
 "<li>Authorize: Block types of users from access to the plugins.</li>\n"
 "</ul>"
 msgstr ""
@@ -4047,7 +4059,9 @@ msgid "Browse Publication Year"
 msgstr "Explorer par années de publication"
 
 #: core/messages/messages.php:120
-msgid "Browse User Bibliogaphies"
+#, fuzzy
+#| msgid "Browse User Bibliogaphies"
+msgid "Browse User Bibliographies"
 msgstr "Explorer les bibliographies utilisateur"
 
 #: core/messages/messages.php:121 core/messages/messages.php:965
@@ -5326,7 +5340,7 @@ msgstr "Cochés"
 msgid "Add to user bibliography"
 msgstr "Ajouter à une bibliographie"
 
-#. / resources_deleteFromBib Remove selected resources from the user bibliographay currently being browsed
+#. / resources_deleteFromBib Remove selected resources from the user bibliography currently being browsed
 #: core/messages/messages.php:459
 msgid "Remove from this user bibliography"
 msgstr "Enlever d'une bibliographie"
@@ -5672,7 +5686,7 @@ msgstr "Nom du fichier"
 msgid "Display this attachment first"
 msgstr "Afficher cette pièce jointe en premier"
 
-#. / resources_attachmentDescription Descritpion of the attachment
+#. / resources_attachmentDescription Description of the attachment
 #: core/messages/messages.php:556
 msgid "Attachment description"
 msgstr "Description de la pièce jointe"

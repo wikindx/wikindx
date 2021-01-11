@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-01-08 10:22+0100\n"
+"POT-Creation-Date: 2021-01-11 14:11+0100\n"
 "PO-Revision-Date: 2019-10-03 00:38+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -2932,7 +2932,7 @@ msgid ""
 msgstr ""
 
 #: core/messages/help.php:197
-msgid "<h4>LDAP authentification</h4>"
+msgid "<h4>LDAP authentication</h4>"
 msgstr ""
 
 #: core/messages/help.php:199
@@ -3417,7 +3417,7 @@ msgid ""
 "delete the plugin, it merely temporarily disables it until you re-enable it.</"
 "li>\n"
 "<li>Position plugins:  You can reposition plugins in different menu "
-"hierachies.</li>\n"
+"hierarchies.</li>\n"
 "<li>Authorize: Block types of users from access to the plugins.</li>\n"
 "</ul>"
 msgstr ""
@@ -3609,7 +3609,9 @@ msgid "Browse Publication Year"
 msgstr "Обзор годов изданий"
 
 #: core/messages/messages.php:120
-msgid "Browse User Bibliogaphies"
+#, fuzzy
+#| msgid "Browse User Bibliogaphies"
+msgid "Browse User Bibliographies"
 msgstr "Обзор пользовательский библиографий"
 
 #: core/messages/messages.php:121 core/messages/messages.php:965
@@ -4921,7 +4923,7 @@ msgstr "С отмеченными"
 msgid "Add to user bibliography"
 msgstr "Добавить в пользовательскую библиографию"
 
-#. / resources_deleteFromBib Remove selected resources from the user bibliographay currently being browsed
+#. / resources_deleteFromBib Remove selected resources from the user bibliography currently being browsed
 #: core/messages/messages.php:459
 msgid "Remove from this user bibliography"
 msgstr "Удалить из пользовательской библиографии"
@@ -5266,7 +5268,7 @@ msgstr "Имя файла"
 msgid "Display this attachment first"
 msgstr "Отображать это вложение первым"
 
-#. / resources_attachmentDescription Descritpion of the attachment
+#. / resources_attachmentDescription Description of the attachment
 #: core/messages/messages.php:556
 msgid "Attachment description"
 msgstr "Описание вложения"
@@ -9510,6 +9512,15 @@ msgstr "Ключевое слово успешно отредактирован�
 msgid "Successfully approved resource(s)"
 msgstr "Источник успешно одобрен"
 
+#~ msgid "Upgrade the Database"
+#~ msgstr "Обновить БД"
+
+#~ msgid "Fix UTF8:"
+#~ msgstr "Починить UTF8:"
+
+#~ msgid "There is no news available to view"
+#~ msgstr "Нет доступных для просмотра новостей"
+
 #~ msgid ""
 #~ "If you have languages and styles that are in your WIKINDX installation "
 #~ "folders but they do not show here, then they are not compatible with this "
@@ -9523,82 +9534,19 @@ msgstr "Источник успешно одобрен"
 #~ "wikindx//files/pluginsxxx/), скачайте последнии локализации и плагины. "
 #~ "Используйте их для обновления Ваших файлов."
 
-#~ msgid "Import BibTeX"
-#~ msgstr "Импорт из файла BibTeX"
-
-#~ msgid "Plugin Commands"
-#~ msgstr "Команды плагина"
-
-#, fuzzy
-#~| msgid "My Wikindx"
-#~ msgid "My Wikindxx"
-#~ msgstr "Мой Wikindx"
-
-#~ msgid "Plugin has no README file or the README file is empty"
-#~ msgstr "У плагина нет файла README"
-
-#~ msgid ""
-#~ "Before being able to use WIKINDX, you must configure it. The minimum "
-#~ "initially required are username, password and email. From the Admin menu, "
-#~ "after configuration, you can add and edit other settings."
-#~ msgstr ""
-#~ "Перед тем как начать использовать WIKINDX, Вы должны его настроить. "
-#~ "Минимальная настройка включает ввод имени пользователя, пароль и почтовый "
-#~ "ящик. Из меню Управления, после настройки, Вы можете добавлять категории, "
-#~ "подкатегории, языки, дополнительные типы записей (все они могут быть "
-#~ "привязаны к конкретному источнику) и системных пользователей."
-
-#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
-#~ msgstr ""
-#~ "Отправить в карантин новые источники (не отображаются публично) до "
-#~ "утверждения администратором"
-
-#~ msgid "Disabled Styles"
-#~ msgstr "Деактивированные стили"
-
-#~ msgid "Remove users from this group"
-#~ msgstr "Удалить пользователей из этой группы"
-
-#~ msgid "Disabled Plugins"
-#~ msgstr "Деактивированные плагины"
-
-#~ msgid "Enabled Languages"
-#~ msgstr "Активированные языки"
-
-#~ msgid "Enabled Styles"
-#~ msgstr "Активированные стили"
-
-#~ msgid "Logon as superAdmin:"
-#~ msgstr "Войти как Главный администратор:"
-
-#, fuzzy
-#~| msgid "Disabled Languages"
-#~ msgid "Available Languages"
-#~ msgstr "Деактивированные языки"
-
-#~ msgid ""
-#~ "You are not logged on as the superAdmin: please ask that person ### to "
-#~ "carry out the upgrade through their web browser."
-#~ msgstr ""
-#~ "Вы не вошли в систему как главный администратор: попросите этого человека "
-#~ "### выполнить обновление через свой веб-браузер."
-
-#~ msgid "Enabled Templates"
-#~ msgstr "Активированные шаблоны"
-
-#~ msgid "Fix UTF8:"
-#~ msgstr "Починить UTF8:"
-
-#~ msgid "There is no news available to view"
-#~ msgstr "Нет доступных для просмотра новостей"
-
 #, fuzzy
 #~| msgid "Reporter"
 #~ msgid "Exporter"
 #~ msgstr "Докладчик"
 
+#~ msgid "Plugin Commands"
+#~ msgstr "Команды плагина"
+
 #~ msgid "My Bibliographies"
 #~ msgstr "Мои Библиографии"
+
+#~ msgid "Plugin has no README file or the README file is empty"
+#~ msgstr "У плагина нет файла README"
 
 #~ msgid ""
 #~ "Depending on what the sources were for your resources, you may have broken "
@@ -9614,14 +9562,28 @@ msgstr "Источник успешно одобрен"
 #~ "и запустить Repairkit-плагин (который дает гораздо больший контроль над "
 #~ "исправлением неверных значений)."
 
+#~ msgid "Quarantine new resources from public view until approved by an ADMIN"
+#~ msgstr ""
+#~ "Отправить в карантин новые источники (не отображаются публично) до "
+#~ "утверждения администратором"
+
 #~ msgid "Unable to update database with update/updateMySQL.txt."
 #~ msgstr "Невозможно обновить БД с помощью update/updateMySQL.txt."
+
+#~ msgid "Remove users from this group"
+#~ msgstr "Удалить пользователей из этой группы"
 
 #~ msgid "Select the creators you wish to remove from the group"
 #~ msgstr "Выберите авторов, которых вы хотите удалить из группы."
 
+#~ msgid "Enabled Languages"
+#~ msgstr "Активированные языки"
+
 #~ msgid "Enabled Plugins"
 #~ msgstr "Активированные плагины"
+
+#~ msgid "Logon as superAdmin:"
+#~ msgstr "Войти как Главный администратор:"
 
 #~ msgid ""
 #~ "<p><strong><font color=\"red\">If you have downloaded beta/SVN code, then "
@@ -9647,23 +9609,66 @@ msgstr "Источник успешно одобрен"
 #~ "(подробно ниже) при обновлении, Вы безвозвратно потеряете свои данные: "
 #~ "<em>нюансы обновления</em><p>"
 
+#~ msgid ""
+#~ "You are not logged on as the superAdmin: please ask that person ### to "
+#~ "carry out the upgrade through their web browser."
+#~ msgstr ""
+#~ "Вы не вошли в систему как главный администратор: попросите этого человека "
+#~ "### выполнить обновление через свой веб-браузер."
+
 #~ msgid "Configurable Menu Plugins"
 #~ msgstr "Настраиваемое меню плагинов"
 
 #~ msgid "Configurable Inline Plugins"
 #~ msgstr "Настраиваемые встроенные плагины"
 
+#, fuzzy
+#~| msgid "My Wikindx"
+#~ msgid "My Wikindxx"
+#~ msgstr "Мой Wikindx"
+
 #~ msgid "Menu Location"
 #~ msgstr "Положение меню"
+
+#~ msgid "Disabled Styles"
+#~ msgstr "Деактивированные стили"
 
 #~ msgid "Disabled Languages"
 #~ msgstr "Деактивированные языки"
 
+#~ msgid "Enabled Styles"
+#~ msgstr "Активированные стили"
+
 #~ msgid "Ungroup"
 #~ msgstr "Убрать группировку"
 
+#~ msgid "Enabled Templates"
+#~ msgstr "Активированные шаблоны"
+
 #~ msgid "Disabled Templates"
 #~ msgstr "Деактивированные шаблоны"
+
+#~ msgid ""
+#~ "Before being able to use WIKINDX, you must configure it. The minimum "
+#~ "initially required are username, password and email. From the Admin menu, "
+#~ "after configuration, you can add and edit other settings."
+#~ msgstr ""
+#~ "Перед тем как начать использовать WIKINDX, Вы должны его настроить. "
+#~ "Минимальная настройка включает ввод имени пользователя, пароль и почтовый "
+#~ "ящик. Из меню Управления, после настройки, Вы можете добавлять категории, "
+#~ "подкатегории, языки, дополнительные типы записей (все они могут быть "
+#~ "привязаны к конкретному источнику) и системных пользователей."
+
+#, fuzzy
+#~| msgid "Disabled Languages"
+#~ msgid "Available Languages"
+#~ msgstr "Деактивированные языки"
+
+#~ msgid "Import BibTeX"
+#~ msgstr "Импорт из файла BibTeX"
+
+#~ msgid "Disabled Plugins"
+#~ msgstr "Деактивированные плагины"
 
 #~ msgid ""
 #~ "The upgrade process may take some time depending upon a number of factors. "
@@ -9733,7 +9738,4 @@ msgstr "Источник успешно одобрен"
 #~ msgstr "bibtex"
 
 #~ msgid "Upgrade the database"
-#~ msgstr "Обновить БД"
-
-#~ msgid "Upgrade the Database"
 #~ msgstr "Обновить БД"

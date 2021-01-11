@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wikindx\n"
 "Report-Msgid-Bugs-To: sirfragalot@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-01-08 10:22+0100\n"
+"POT-Creation-Date: 2021-01-11 14:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2885,7 +2885,7 @@ msgid ""
 msgstr ""
 
 #: core/messages/help.php:197
-msgid "<h4>LDAP authentification</h4>"
+msgid "<h4>LDAP authentication</h4>"
 msgstr ""
 
 #: core/messages/help.php:199
@@ -3358,7 +3358,7 @@ msgid ""
 "delete the plugin, it merely temporarily disables it until you re-enable it.</"
 "li>\n"
 "<li>Position plugins:  You can reposition plugins in different menu "
-"hierachies.</li>\n"
+"hierarchies.</li>\n"
 "<li>Authorize: Block types of users from access to the plugins.</li>\n"
 "</ul>"
 msgstr ""
@@ -3559,7 +3559,7 @@ msgid "Browse Publication Year"
 msgstr ""
 
 #: core/messages/messages.php:120
-msgid "Browse User Bibliogaphies"
+msgid "Browse User Bibliographies"
 msgstr ""
 
 #: core/messages/messages.php:121
@@ -4813,7 +4813,7 @@ msgstr ""
 msgid "Add to user bibliography"
 msgstr ""
 
-#. / resources_deleteFromBib Remove selected resources from the user bibliographay currently being browsed
+#. / resources_deleteFromBib Remove selected resources from the user bibliography currently being browsed
 #: core/messages/messages.php:459
 msgid "Remove from this user bibliography"
 msgstr ""
@@ -5177,7 +5177,7 @@ msgstr ""
 msgid "Display this attachment first"
 msgstr ""
 
-#. / resources_attachmentDescription Descritpion of the attachment
+#. / resources_attachmentDescription Description of the attachment
 #: core/messages/messages.php:556
 msgid "Attachment description"
 msgstr ""

@@ -51,8 +51,10 @@ class UPDATEDATABASE
         // Force the update of the components.json files in case WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"] changes
         \UTILS\refreshComponentsListCache(TRUE);
         
+        
+        // TODO(LkpPo): enable this check after 6.4.1
         // If we have not the right db engine stop immediatly
-        if (!$this->CheckDatabaseEngineVersion())
+        /*if (!$this->CheckDatabaseEngineVersion())
         {
             $this->startInstallDisplay();
             
@@ -64,7 +66,7 @@ class UPDATEDATABASE
             GLOBALS::addTplVar('content', \HTML\p($errorMessage, "error", "center"));
             
             $this->endDisplay();
-        }
+        }*/
         
         // Initialize the database
         if (!\UPDATE\existsTableVersion($this->db))

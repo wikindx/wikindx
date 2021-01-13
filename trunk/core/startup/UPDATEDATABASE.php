@@ -51,6 +51,21 @@ class UPDATEDATABASE
         // Force the update of the components.json files in case WIKINDX_COMPONENTS_COMPATIBLE_VERSION["plugin"] changes
         \UTILS\refreshComponentsListCache(TRUE);
         
+        // If we have not the right db engine stop immediatly
+        if (!$this->CheckDatabaseEngineVersion())
+        {
+            $this->startInstallDisplay();
+            
+            $errorMessage = "
+            	WIKINDX requires " . $EngineName . " " . $VersionMin . ".
+            	Your version is " . $EngineVersionRaw . ".
+            	Please upgrade your db engine first.
+            ";
+            GLOBALS::addTplVar('content', \HTML\p($errorMessage, "error", "center"));
+            
+            $this->endDisplay();
+        }
+        
         // Initialize the database
         if (!\UPDATE\existsTableVersion($this->db))
         {
@@ -129,6 +144,32 @@ class UPDATEDATABASE
         
         // If the execution is not finished before at the end of a step, finished cleanly
         $this->endDisplay();
+    }
+
+    /**
+     * Check if the MySql/MariaDB engine version is right
+     *
+     * @return bool
+     */
+    private function CheckDatabaseEngineVersion()
+    {
+        $EngineVersionRaw = $this->queryFetchFirstField("SELECT version() AS EngineVersion;");
+        $EngineVersionRaw = $EngineVersionRaw ?? "";
+        $EngineVersion = strtolower($EngineVersionRaw);
+        
+        if (strstr($EngineVersion, "mariadb"))
+        {
+            $EngineName = "MariaDB";
+            $VersionMin = WIKINDX_MARIADB_VERSION_MIN; // Check MariaDB version
+        }
+        else
+        {
+            $EngineName = "MySQL";
+            $VersionMin = WIKINDX_MYSQL_VERSION_MIN; // Check MySql or unknow engine version
+        }
+        
+        // If the current engine version is greater than or equal to the minimum required
+        return (strcmp($EngineVersion, $VersionMin) >= 0);
     }
     
     /**

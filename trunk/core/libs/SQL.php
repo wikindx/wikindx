@@ -121,16 +121,6 @@ class SQL
         }
     }
     /**
-     * Get database engine version as string
-     *
-     * @return string MySQL/mariaDB version number (e.g. 10.1.41-MariaDB-0+deb9u1)
-     */
-    public function getStringEngineVersion()
-    {
-        $EngineVersion = $this->queryFetchFirstField("SELECT version() AS EngineVersion;");
-        return $EngineVersion ?? "";
-    }
-    /**
      * Close SQL database
      *
      * @return bool
@@ -3067,41 +3057,7 @@ class SQL
         $this->errno = mysqli_errno($this->handle);
         $this->error = mysqli_error($this->handle);
     }
-
-    /**
-     * Check if the MySql/MariaDB engine version is right
-     * and emit a warning, in debug mode only
-     */
-    private function CheckEngineVersion()
-    {
-        $this->sqlTimerOn();
-        $EngineVersionRaw = $this->getStringEngineVersion();
-        $this->sqlTimerOff();
-        
-        $EngineVersion = strtolower($EngineVersionRaw);
-        
-        if (strstr($EngineVersion, "mariadb"))
-        {
-            $EngineName = "MariaDB";
-            $VersionMin = WIKINDX_MARIADB_VERSION_MIN; // Check MariaDB version
-        }
-        else
-        {
-            $EngineName = "MySQL";
-            $VersionMin = WIKINDX_MYSQL_VERSION_MIN; // Check MySql or unknow engine version
-        }
-        
-        // If the current engine version is lower than the minimum needed
-        if (strcmp($EngineVersion, $VersionMin) < 0)
-        {
-            $errorMessage = "
-            	WIKINDX requires " . $EngineName . " " . $VersionMin . ".
-            	Your version is " . $EngineVersionRaw . ".
-            	Please upgrade your db engine.
-            ";
-            GLOBALS::addTplVar('logsql', "<p style='font-weight:bold;color:red;'>" . $errorMessage . "</p>");
-        }
-    }
+    
     /**
      * execute queries and return recordset
      *

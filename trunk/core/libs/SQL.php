@@ -121,15 +121,6 @@ class SQL
         }
     }
     /**
-     * Get database engine version as number
-     *
-     * @return int
-     */
-    public function getNumberEngineVersion()
-    {
-        return mysqli_get_server_version($this->handle);
-    }
-    /**
      * Get database engine version as string
      *
      * @return string MySQL/mariaDB version number (e.g. 10.1.41-MariaDB-0+deb9u1)
